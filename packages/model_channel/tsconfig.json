@@ -1,0 +1,29 @@
+{
+  "extends": "../../config/tsconfig_base/base.tsconfig.cjs",
+  "compilerOptions": {
+    "outDir": "./build/cjs",
+    "rootDir": "./src"
+  },
+  "references": [
+    {
+      "path": "../model_constants/tsconfig.json"
+    },
+    {
+      "path": "../model_progress/tsconfig.json"
+    },
+    {
+      "path": "../model_transaction/tsconfig.json"
+    },
+    {
+      "path": "../typings/tsconfig.json"
+    }
+  ],
+  "files": [
+    "src/@types.ts",
+    "src/block.chainChannel.model.ts",
+    "src/common.chainChannel.model.ts",
+    "src/index.ts",
+    "src/peer.chainChannel.model.ts",
+    "src/transaction.chainChannel.model.ts"
+  ]
+}

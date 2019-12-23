@@ -1,0 +1,9 @@
+{
+  "extends": "./base.tsconfig.cjs",
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "declarationMap": false,
+    "sourceMap": false
+  }
+}

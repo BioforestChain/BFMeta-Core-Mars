@@ -1,0 +1,37 @@
+{
+  "extends": "../../config/tsconfig_base/base.tsconfig.cjs",
+  "compilerOptions": {
+    "outDir": "./build/cjs",
+    "rootDir": "./src"
+  },
+  "references": [
+    {
+      "path": "../model_block/tsconfig.json"
+    },
+    {
+      "path": "../model_cacher/tsconfig.json"
+    },
+    {
+      "path": "../model_channel/tsconfig.json"
+    },
+    {
+      "path": "../model_common/tsconfig.json"
+    },
+    {
+      "path": "../model_constants/tsconfig.json"
+    },
+    {
+      "path": "../model_progress/tsconfig.json"
+    },
+    {
+      "path": "../model_transaction/tsconfig.json"
+    },
+    {
+      "path": "../typings/tsconfig.json"
+    }
+  ],
+  "files": [
+    "src/@types.ts",
+    "src/index.ts"
+  ]
+}

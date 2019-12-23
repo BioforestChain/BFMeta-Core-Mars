@@ -1,0 +1,11 @@
+{
+  "extends": "../../config/tsconfig_base/base.tsconfig.cjs",
+  "files": [
+    "src/@types.ts",
+    "src/index.ts"
+  ],
+  "compilerOptions": {
+    "outDir": "./build/cjs",
+    "rootDir": "./src"
+  }
+}

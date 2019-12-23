@@ -1,0 +1,20 @@
+import { Transaction } from "@bfchain/core-model-transaction-base";
+import { AcceptVoteAssetModel } from "@bfchain/core-model-transaction-asset/acceptVote";
+import { Type, Field } from "@bfchain/protobuf";
+
+/**
+ * transfer 交易模型
+ *
+ */
+@Type.d("AcceptVoteTransaction")
+export class AcceptVoteTransaction extends Transaction<BFChainCore.AcceptVoteAssetJSON>
+  implements
+    BFChainCore.TransactionMixJSON<BFChainCore.AcceptVoteAssetJSON, { hasRecipientId: false }> {
+  toJSON!: () => BFChainCore.TransactionMixJSON<
+    BFChainCore.AcceptVoteAssetJSON,
+    { hasRecipientId: false }
+  >;
+  recipientId!: undefined;
+  @Field.d(AcceptVoteTransaction.INC++, AcceptVoteAssetModel)
+  asset!: AcceptVoteAssetModel;
+}

@@ -1,0 +1,21 @@
+{
+  "name": "@bfchain/core",
+  "version": "5.0.0-dev.0",
+  "description": "",
+  "main": "build/cjs/index.js",
+  "module": "build/esm/index.js",
+  "type": "build/cjs/index.d.ts",
+  "keywords": [
+    "core"
+  ],
+  "author": "BFChain Team",
+  "license": "MIT",
+  "files": [
+    "build"
+  ],
+  "dependencies": {
+    "@bfchain/core-helper": "^5.0.0-dev.0",
+    "@bfchain/core-model": "^5.0.0-dev.0",
+    "@bfchain/core-typings": "^5.0.0-dev.0"
+  }
+}

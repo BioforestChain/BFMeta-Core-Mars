@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig",
+  "minin": [
+    "./tsconfig.json",
+    "../../config/tsconfig_base/base.tsconfig.esm.json"
+  ],
+  "compilerOptions": {
+    "outDir": "./build/esm/src",
+    "declarationDir": ""
+  }
+}

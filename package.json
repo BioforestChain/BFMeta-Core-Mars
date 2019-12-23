@@ -1,0 +1,58 @@
+{
+  "name": "@bfchain/core",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "bdkMono": {
+    "generateConfigFiles": [
+      {
+        "packages": "*",
+        "type": "mergejson",
+        "from": "$ROOT_PROJECT/config/tsconfig_template/tsconfig.cjs.json",
+        "to": "$PACKAGE/tsconfig.json"
+      },
+      {
+        "packages": "*,-test",
+        "type": "mergejson",
+        "from": "$ROOT_PROJECT/config/tsconfig_template/tsconfig.cjs-es5.json",
+        "to": "$PACKAGE/tsconfig.cjs-es5.json"
+      },
+      {
+        "packages": "*,-test",
+        "type": "mergejson",
+        "from": "$ROOT_PROJECT/config/tsconfig_template/tsconfig.esm-es6.json",
+        "to": "$PACKAGE/tsconfig.esm-es6.json"
+      },
+      {
+        "packages": "*,-test",
+        "type": "mergejson",
+        "from": "$ROOT_PROJECT/config/tsconfig_template/tsconfig.esm.json",
+        "to": "$PACKAGE/tsconfig.esm.json"
+      },
+      {
+        "packages": "*,-test",
+        "type": "jsonfromjs",
+        "src": "$ROOT_PROJECT/config/tsconfig_template/tsconfig.@types.js",
+        "to": "$PACKAGE/tsconfig.@types.json"
+      }
+    ]
+  },
+  "scripts": {
+    "up": "yarn upgrade-interactive --latest",
+    "lsts": "bdk-lsts -p=./tsconfig.json",
+    "dev": "bdk-tsc --build -w"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "lerna": "^3.19.0"
+  },
+  "dependencies": {
+    "@bfchain/devkit": "^0.7.2"
+  }
+}

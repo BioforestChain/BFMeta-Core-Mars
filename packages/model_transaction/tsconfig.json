@@ -1,0 +1,57 @@
+{
+  "extends": "../../config/tsconfig_base/base.tsconfig.cjs",
+  "compilerOptions": {
+    "outDir": "./build/cjs",
+    "rootDir": "./src"
+  },
+  "references": [
+    {
+      "path": "../model_cacher/tsconfig.json"
+    },
+    {
+      "path": "../model_common/tsconfig.json"
+    },
+    {
+      "path": "../model_transaction_asset/tsconfig.json"
+    },
+    {
+      "path": "../model_transaction_base/tsconfig.json"
+    },
+    {
+      "path": "../typings/tsconfig.json"
+    }
+  ],
+  "files": [
+    "src/@types.ts",
+    "src/atom_transaction/acceptVote.transaction.ts",
+    "src/atom_transaction/beExchangeAsset.transaction.ts",
+    "src/atom_transaction/beExchangeSpecialAsset.transaction.ts",
+    "src/atom_transaction/custom.transaction.ts",
+    "src/atom_transaction/dapp.transaction.ts",
+    "src/atom_transaction/dappPurchasing.transaction.ts",
+    "src/atom_transaction/delegate.transaction.ts",
+    "src/atom_transaction/destoryAsset.transaction.ts",
+    "src/atom_transaction/emigrateAsset.transaction.ts",
+    "src/atom_transaction/giftAsset.transaction.ts",
+    "src/atom_transaction/grabAsset.transaction.ts",
+    "src/atom_transaction/immigrateAsset.transaction.ts",
+    "src/atom_transaction/index.ts",
+    "src/atom_transaction/issueAsset.transaction.ts",
+    "src/atom_transaction/locationName.transaction.ts",
+    "src/atom_transaction/mark.transaction.ts",
+    "src/atom_transaction/rejectVote.transaction.ts",
+    "src/atom_transaction/setLnsManager.transaction.ts",
+    "src/atom_transaction/setLnsRecordValue.transaction.ts",
+    "src/atom_transaction/signature.transaction.ts",
+    "src/atom_transaction/signForAsset.transaction.ts",
+    "src/atom_transaction/toExchangeAsset.transaction.ts",
+    "src/atom_transaction/toExchangeSpecialAsset.transaction.ts",
+    "src/atom_transaction/transferAsset.transaction.ts",
+    "src/atom_transaction/trustAsset.transaction.ts",
+    "src/atom_transaction/username.transaction.ts",
+    "src/atom_transaction/vote.transaction.ts",
+    "src/index.ts",
+    "src/someTransaction.ts",
+    "src/transactionInBlock.ts"
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "name": "@bfchain/core-test",
+  "private": true,
+  "version": "5.0.0-dev.0",
+  "description": "",
+  "main": "build/cjs/index.js",
+  "module": "build/esm/index.js",
+  "type": "build/cjs/index.d.ts",
+  "keywords": [
+    "core"
+  ],
+  "author": "BFChain Team",
+  "license": "MIT",
+  "files": [
+    "build"
+  ],
+  "dependencies": {
+    "@bfchain/core": "^5.0.0-dev.0",
+    "@bfchain/core-typings": "^5.0.0-dev.0",
+    "@types/ed2curve": "^0.2.2",
+    "@types/optimist": "^0.0.29",
+    "ed2curve": "^0.2.1",
+    "json-dry-factory": "^1.1.9",
+    "optimist": "^0.6.1",
+    "source-map-support": "^0.5.16",
+    "tweetnacl": "^1.0.1"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "extends": "./base.tsconfig.cjs",
+  "compilerOptions": {
+    "target": "es5",
+    "declaration": false,
+    "declarationMap": false,
+    "sourceMap": false
+  }
+}

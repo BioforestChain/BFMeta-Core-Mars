@@ -1,0 +1,1051 @@
+import { CustomTransaction, DAPP_TYPE, RECORD_OPERATION_TYPE, RECORD_TYPE } from "../../model";
+import {
+  AccountBaseHelper,
+  CoreExceptionGenerator,
+  BaseHelper,
+  TransactionHelper,
+  ChainAssetInfoHelper,
+  ConfigHelperMap,
+  ConfigHelper,
+} from "@bfchain/core-helper";
+import {
+  PROP_IS_INVALID,
+  NOT_EXIST,
+  PROP_IS_REQUIRE,
+  SHOULD_NOT_EXIST,
+  PERMISSION_DENIED,
+  NOT_MATCH,
+} from "../../../helper/src/exception/errorCode";
+import { parseHexToArrayBuffer, ModuleStroge, Injectable } from "@bfchain/util";
+import { ACCOUNT_STATUS } from "../../model";
+const { ArgumentIllegalException, ConsensusException } = CoreExceptionGenerator(
+  "CONTROLLER",
+  "CustomTransactionEvent",
+);
+
+@Injectable()
+export class CustomTransactionEvent {
+  constructor(
+    public accountHelper: AccountBaseHelper,
+    public baseHelper: BaseHelper,
+    public configHelper: ConfigHelper,
+    public transactionHelper: TransactionHelper,
+    public chainAssetInfoHelper: ChainAssetInfoHelper,
+    private configMap: ConfigHelperMap,
+    private moduleMap: ModuleStroge,
+  ) {}
+  verifyAddress(address: string) {
+    const Function_Exception_Detail = {
+      target: "applyResult",
+      function: "verifyAddress",
+    } as const;
+    if (!this.accountHelper.isAddress(address)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "address",
+        ...Function_Exception_Detail,
+      });
+    }
+  }
+
+  verifyPublicKey(publicKey: string) {
+    const Function_Exception_Detail = {
+      target: "applyResult",
+      function: "verifyPublicKey",
+    } as const;
+    if (!this.baseHelper.isValidPublicKey(publicKey)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "publicKey",
+        ...Function_Exception_Detail,
+      });
+    }
+  }
+
+  verifyRecipientId(recipientId: string) {
+    const Function_Exception_Detail = {
+      target: "applyResult",
+      function: "verifyRecipientId",
+    } as const;
+    if (!this.accountHelper.isAddress(recipientId)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "recipientId",
+        ...Function_Exception_Detail,
+      });
+    }
+  }
+
+  verifyPossessorAddress(possessorAddress: string) {
+    const Function_Exception_Detail = {
+      target: "applyResult",
+      function: "verifyPossessorAddress",
+    } as const;
+    if (!this.accountHelper.isAddress(possessorAddress)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "possessorAddress",
+        ...Function_Exception_Detail,
+      });
+    }
+  }
+
+  verifyAssetNumber(assetNumber: string) {
+    const Function_Exception_Detail = {
+      target: "applyResult",
+      function: "verifyPublicKey",
+    } as const;
+    if (!this.baseHelper.isValidAssetNumber(assetNumber)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "amount",
+        ...Function_Exception_Detail,
+      });
+    }
+  }
+
+  verifyMagic(magic: string) {
+    const Function_Exception_Detail = {
+      target: "applyResult",
+      function: "verifyMagic",
+    } as const;
+    if (!this.baseHelper.isValidChainMagic(magic)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "magic",
+        ...Function_Exception_Detail,
+      });
+    }
+  }
+
+  verifyAssetType(assetType: string) {
+    const Function_Exception_Detail = {
+      target: "applyResult",
+      function: "verifyAssetType",
+    } as const;
+    if (!this.baseHelper.isValidAssetType(assetType)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "assetType",
+        ...Function_Exception_Detail,
+      });
+    }
+  }
+
+  verifyChainName(chainName: string) {
+    const Function_Exception_Detail = {
+      target: "applyResult",
+      function: "verifyChainName",
+    } as const;
+    if (!this.baseHelper.isValidChainName(chainName)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "chainName",
+        ...Function_Exception_Detail,
+      });
+    }
+  }
+
+  verifyDAppid(dappid: string) {
+    const Function_Exception_Detail = {
+      target: "applyResult",
+      function: "verifyDAppid",
+    } as const;
+    if (!this.baseHelper.isValidDAppId(dappid)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "dappid",
+        ...Function_Exception_Detail,
+      });
+    }
+  }
+
+  verifyMinAndMaxEffectiveHeight(
+    minEffectiveHeight: number,
+    maxEffectiveHeight: number,
+    transaction: CustomTransaction,
+  ) {
+    const { transactionHelper } = this;
+    const Function_Exception_Detail = {
+      target: "applyResult",
+      function: "verifyMinAndMaxEffectiveHeight",
+    } as const;
+    const calMinEffectiveHeight = transactionHelper.getTransactionMinEffectiveHeight(transaction);
+    if (minEffectiveHeight !== calMinEffectiveHeight) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "minEffectiveHeight",
+        ...Function_Exception_Detail,
+      });
+    }
+    const calMaxEffectiveHeight = transactionHelper.getTransactionMaxEffectiveHeight(transaction);
+    if (maxEffectiveHeight !== calMaxEffectiveHeight) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "maxEffectiveHeight",
+        ...Function_Exception_Detail,
+      });
+    }
+  }
+
+  verifyLocationName(lns: string) {
+    const Function_Exception_Detail = {
+      target: "applyResult",
+      function: "verifyLocationName",
+    } as const;
+    if (!this.baseHelper.isValidLnsName(lns)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "locationName",
+        ...Function_Exception_Detail,
+      });
+    }
+  }
+
+  /**
+   * 校验解析值是否合法
+   *
+   * @param record
+   */
+  verifyLocationNameRecord(record: BFChainCore.LocationNameRecordJSON) {
+    const { baseHelper, accountHelper } = this;
+    const Function_Exception_Detail = {
+      target: "applyResult",
+      function: "verifyLocationNameRecord",
+    } as const;
+
+    if (!baseHelper.isValidLocationNameRecord(record)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "record",
+        type: "location name record",
+        ...Function_Exception_Detail,
+      });
+    }
+
+    const { recordType, recordValue } = record;
+
+    if (RECORD_TYPE.IPV4 === recordType) {
+      if (!baseHelper.isIpV4(recordValue)) {
+        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          prop: "recordValue",
+          type: "ipv4",
+          ...Function_Exception_Detail,
+        });
+      }
+    } else if (RECORD_TYPE.IPV6 === recordType) {
+      if (!baseHelper.isIpV6(recordValue)) {
+        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          prop: "recordValue",
+          type: "ipv6",
+          ...Function_Exception_Detail,
+        });
+      }
+    } else if (RECORD_TYPE.LNG_LAT === recordType) {
+      if (!baseHelper.isString(recordValue)) {
+        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          prop: "recordValue",
+          type: "string",
+          ...Function_Exception_Detail,
+        });
+      }
+    } else if (RECORD_TYPE.ADDRESSV1 === recordType) {
+      if (!accountHelper.isAddress(recordValue)) {
+        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          prop: "recordValue",
+          type: "block chain account address",
+          ...Function_Exception_Detail,
+        });
+      }
+    } else {
+      throw new ArgumentIllegalException(NOT_EXIST, {
+        prop: "recordType",
+        ...Function_Exception_Detail,
+      });
+    }
+  }
+
+  verifyApplyResult(applyResult: BFChainCore.ApplyResultJSON, transaction: CustomTransaction) {
+    const { baseHelper, accountHelper, transactionHelper } = this;
+    const Function_Exception_Detail = {
+      target: "applyResult",
+      function: "verifyApplyResult",
+    } as const;
+    const { address, publicKey } = applyResult.applyInfo;
+    this.verifyAddress(address);
+    if (publicKey) {
+      this.verifyPublicKey(publicKey);
+    }
+
+    if (applyResult.type === "setSecondPublicKey") {
+      const { secondPublicKey } = applyResult.applyInfo;
+      if (!baseHelper.isValidSecondPublicKey(secondPublicKey)) {
+        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          prop: "secondPublicKey",
+          ...Function_Exception_Detail,
+        });
+      }
+      return;
+    }
+
+    if (applyResult.type === "setUsername") {
+      const applyInfo = applyResult.applyInfo;
+      if (!baseHelper.isValidUsername(applyInfo.alias)) {
+        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          prop: "alias",
+          ...Function_Exception_Detail,
+        });
+      }
+      return;
+    }
+    if (
+      applyResult.type === "registerToDelegate" ||
+      applyResult.type === "acceptVote" ||
+      applyResult.type === "rejectVote"
+    ) {
+      return;
+    }
+    if (applyResult.type === "voteEquity") {
+      const { equity, recipientId } = applyResult.applyInfo;
+      if (!baseHelper.isValidAccountEquity(equity)) {
+        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          prop: "voteEquity",
+          ...Function_Exception_Detail,
+        });
+      }
+      this.verifyRecipientId(recipientId);
+      return;
+    }
+    if (applyResult.type === "asset") {
+      const { magic, assetType, amount, action } = applyResult.applyInfo;
+      this.verifyAssetNumber(amount);
+      this.verifyMagic(magic);
+      this.verifyAssetType(assetType);
+      if (!(action === "+" || action === "-")) {
+        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          prop: "action",
+          ...Function_Exception_Detail,
+        });
+      }
+      return;
+    }
+    if (applyResult.type === "destoryAsset") {
+      const { magic, assetType, amount } = applyResult.applyInfo;
+      this.verifyAssetNumber(amount);
+      this.verifyMagic(magic);
+      this.verifyAssetType(assetType);
+      return;
+    }
+    if (applyResult.type === "frozenAsset") {
+      const {
+        magic,
+        assetType,
+        amount,
+        minEffectiveHeight,
+        maxEffectiveHeight,
+      } = applyResult.applyInfo;
+      this.verifyAssetNumber(amount);
+      this.verifyMagic(magic);
+      this.verifyAssetType(assetType);
+      this.verifyMinAndMaxEffectiveHeight(minEffectiveHeight, maxEffectiveHeight, transaction);
+      return;
+    }
+    if (applyResult.type === "unfrozenAsset") {
+      const { magic, assetType, amount, frozenId, recipientId } = applyResult.applyInfo;
+      this.verifyAssetNumber(amount);
+      this.verifyMagic(magic);
+      this.verifyAssetType(assetType);
+      this.verifyRecipientId(recipientId);
+      if (
+        !(
+          transaction.storage &&
+          transaction.storage.key === "transactionSignature" &&
+          transaction.storage.value === frozenId
+        )
+      ) {
+        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          prop: "frozenId",
+          ...Function_Exception_Detail,
+        });
+      }
+      return;
+    }
+    if (applyResult.type === "frozenAccount") {
+      const { accountStatus } = applyResult.applyInfo;
+      if (ACCOUNT_STATUS[accountStatus]) {
+        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          prop: "accountStatus",
+          ...Function_Exception_Detail,
+        });
+      }
+      return;
+    }
+    if (applyResult.type === "issueDAppid") {
+      const {
+        sourceChainName,
+        sourceChainMagic,
+        dappid,
+        possessorAddress,
+        type,
+        purchaseAsset,
+      } = applyResult.applyInfo;
+      this.verifyMagic(sourceChainMagic);
+      this.verifyChainName(sourceChainName);
+      this.verifyPossessorAddress(possessorAddress);
+      this.verifyDAppid(dappid);
+      if (!DAPP_TYPE[type]) {
+        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          prop: "type",
+          ...Function_Exception_Detail,
+        });
+      }
+      if (purchaseAsset) {
+        const { sourceChainMagic, sourceChainName, assetType, amount } = purchaseAsset;
+        this.verifyMagic(sourceChainMagic);
+        this.verifyChainName(sourceChainName);
+        this.verifyAssetType(assetType);
+        this.verifyAssetNumber(amount);
+      }
+      return;
+    }
+    if (applyResult.type === "saleDAppid") {
+      const {
+        dappid,
+        sourceChainMagic,
+        minEffectiveHeight,
+        maxEffectiveHeight,
+      } = applyResult.applyInfo;
+      this.verifyDAppid(dappid);
+      this.verifyMagic(sourceChainMagic);
+      this.verifyMinAndMaxEffectiveHeight(minEffectiveHeight, maxEffectiveHeight, transaction);
+      return;
+    }
+    if (applyResult.type === "purchaseDAppid") {
+      const { dappid, possessorAddress, sourceChainMagic } = applyResult.applyInfo;
+      this.verifyDAppid(dappid);
+      this.verifyMagic(sourceChainMagic);
+      this.verifyPossessorAddress(possessorAddress);
+      return;
+    }
+    if (applyResult.type === "issueAsset") {
+      const {
+        applyAddress,
+        sourceChainName,
+        sourceChainMagic,
+        assetType,
+        genesisAddress,
+        expectedIssuedAssets,
+        remainAssets,
+      } = applyResult.applyInfo;
+      this.verifyMagic(sourceChainMagic);
+      this.verifyChainName(sourceChainName);
+      this.verifyAssetType(assetType);
+      if (!accountHelper.isAddress(applyAddress)) {
+        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          prop: "applyAddress",
+          ...Function_Exception_Detail,
+        });
+      }
+      if (!accountHelper.isAddress(genesisAddress)) {
+        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          prop: "genesisAddress",
+          ...Function_Exception_Detail,
+        });
+      }
+      if (!baseHelper.isValidAssetNumber(expectedIssuedAssets)) {
+        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          prop: "expectedIssuedAssets",
+          ...Function_Exception_Detail,
+        });
+      }
+      if (!baseHelper.isValidAssetNumber(remainAssets)) {
+        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          prop: "remainAssets",
+          ...Function_Exception_Detail,
+        });
+      }
+      return;
+    }
+    if (applyResult.type === "issueSubchain") {
+      throw new ConsensusException(PERMISSION_DENIED, {
+        operationName: "issueSubchain",
+        ...Function_Exception_Detail,
+      });
+      // const {
+      //   chainName,
+      //   assetType,
+      //   magic,
+      //   bnid,
+      //   maxTPSPerBlock,
+      //   blockPerRound,
+      //   delegates,
+      //   genesisBlock,
+      // } = applyResult.applyInfo;
+      // let subchainConfig = this.configMap.get(genesisBlock.magic);
+      // if (!subchainConfig) {
+      //   // FIXME: 没有子链的配置文件就生成一个
+      //   subchainConfig = new ConfigHelper(genesisBlock, this.configHelper.business);
+      // }
+      // const BFChainCoreFactory = this.moduleMap.get<
+      //   typeof import("../../index").BFChainCoreFactory
+      // >("BFChainCoreFactory");
+      // if (!BFChainCoreFactory) {
+      //   throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      //     prop: "BFChainCoreFactory",
+      //     ...Function_Exception_Detail,
+      //   });
+      // }
+      // const subchainCore = BFChainCoreFactory({
+      //   config: subchainConfig,
+      //   Buffer: this.moduleMap.get("Buffer"),
+      //   cryptoHelper: this.moduleMap.get("cryptoHelper"),
+      //   keypairHelper: this.moduleMap.get("keypairHelper"),
+      //   ed2curveHelper: this.moduleMap.get("ed2curveHelper"),
+      // });
+      // subchainCore.block.getBlockFactoryFromHeight(genesisBlock.height).verify(genesisBlock);
+      // const remark = genesisBlock.remark;
+      // if (remark.chainName !== chainName) {
+      //   throw new ArgumentIllegalException(NOT_MATCH, {
+      //     to_compare_prop: "chainName",
+      //     be_compare_prop: "chainName",
+      //     to_target: "genesisBlock.remark",
+      //     be_target: "applyResult",
+      //     ...Function_Exception_Detail,
+      //   });
+      // }
+      // if (remark.assetType !== assetType) {
+      //   throw new ArgumentIllegalException(NOT_MATCH, {
+      //     to_compare_prop: "assetType",
+      //     be_compare_prop: "assetType",
+      //     to_target: "genesisBlock.remark",
+      //     be_target: "applyResult",
+      //     ...Function_Exception_Detail,
+      //   });
+      // }
+      // if (remark.magic !== magic) {
+      //   throw new ArgumentIllegalException(NOT_MATCH, {
+      //     to_compare_prop: "magic",
+      //     be_compare_prop: "magic",
+      //     to_target: "genesisBlock.remark",
+      //     be_target: "applyResult",
+      //     ...Function_Exception_Detail,
+      //   });
+      // }
+      // if (remark.bnid !== bnid) {
+      //   throw new ArgumentIllegalException(NOT_MATCH, {
+      //     to_compare_prop: "bnid",
+      //     be_compare_prop: "bnid",
+      //     to_target: "genesisBlock.remark",
+      //     be_target: "applyResult",
+      //     ...Function_Exception_Detail,
+      //   });
+      // }
+      // if (remark.maxTPSPerBlock !== maxTPSPerBlock) {
+      //   throw new ArgumentIllegalException(NOT_MATCH, {
+      //     to_compare_prop: "maxTPSPerBlock",
+      //     be_compare_prop: "maxTPSPerBlock",
+      //     to_target: "genesisBlock.remark",
+      //     be_target: "applyResult",
+      //     ...Function_Exception_Detail,
+      //   });
+      // }
+      // if (remark.blockPerRound !== blockPerRound) {
+      //   throw new ArgumentIllegalException(NOT_MATCH, {
+      //     to_compare_prop: "blockPerRound",
+      //     be_compare_prop: "blockPerRound",
+      //     to_target: "genesisBlock.remark",
+      //     be_target: "applyResult",
+      //     ...Function_Exception_Detail,
+      //   });
+      // }
+      // if (remark.delegates !== delegates) {
+      //   throw new ArgumentIllegalException(NOT_MATCH, {
+      //     to_compare_prop: "delegates",
+      //     be_compare_prop: "delegates",
+      //     to_target: "genesisBlock.remark",
+      //     be_target: "applyResult",
+      //     ...Function_Exception_Detail,
+      //   });
+      // }
+    }
+    if (applyResult.type === "setLnsRecordValue") {
+      const {
+        name,
+        sourceChainMagic,
+        operationType,
+        addRecord,
+        deleteRecord,
+      } = applyResult.applyInfo;
+      this.verifyLocationName(name);
+      this.verifyMagic(sourceChainMagic);
+      if (operationType === RECORD_OPERATION_TYPE.ADD) {
+        if (!addRecord) {
+          throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+            prop: "addRecord",
+            ...Function_Exception_Detail,
+          });
+        }
+        if (deleteRecord) {
+          throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+            prop: "deleteRecord",
+            ...Function_Exception_Detail,
+          });
+        }
+        this.verifyLocationNameRecord(addRecord);
+      } else if (operationType === RECORD_OPERATION_TYPE.DELETE) {
+        if (addRecord) {
+          throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+            prop: "addRecord",
+            ...Function_Exception_Detail,
+          });
+        }
+        if (!deleteRecord) {
+          throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+            prop: "deleteRecord",
+            ...Function_Exception_Detail,
+          });
+        }
+        this.verifyLocationNameRecord(deleteRecord);
+      } else if (operationType === RECORD_OPERATION_TYPE.UPDATE) {
+        if (!addRecord) {
+          throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+            prop: "addRecord",
+            ...Function_Exception_Detail,
+          });
+        }
+        if (!deleteRecord) {
+          throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+            prop: "deleteRecord",
+            ...Function_Exception_Detail,
+          });
+        }
+        this.verifyLocationNameRecord(addRecord);
+        this.verifyLocationNameRecord(deleteRecord);
+      } else {
+        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          prop: "operationType",
+          ...Function_Exception_Detail,
+        });
+      }
+      return;
+    }
+    if (applyResult.type === "saleLocationName") {
+      const {
+        name,
+        sourceChainMagic,
+        minEffectiveHeight,
+        maxEffectiveHeight,
+      } = applyResult.applyInfo;
+      this.verifyLocationName(name);
+      this.verifyMagic(sourceChainMagic);
+      this.verifyMinAndMaxEffectiveHeight(minEffectiveHeight, maxEffectiveHeight, transaction);
+      return;
+    }
+    if (applyResult.type === "purchaseLocationName") {
+      const { possessorAddress, name, sourceChainMagic } = applyResult.applyInfo;
+      this.verifyPossessorAddress(possessorAddress);
+      this.verifyLocationName(name);
+      this.verifyMagic(sourceChainMagic);
+      return;
+    }
+    throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      prop: "type",
+      ...Function_Exception_Detail,
+    });
+  }
+
+  combineApplyEvent(
+    transaction: CustomTransaction,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
+    applyResult: BFChainCore.ApplyResultJSON,
+  ) {
+    if (applyResult.type === "setUsername") {
+      const { address, publicKey, alias } = applyResult.applyInfo;
+      return eventEmitter.emit("setUsername", {
+        type: "setUsername",
+        transaction,
+        applyInfo: {
+          address,
+          publicKeyBuffer: parseHexToArrayBuffer(publicKey),
+          alias,
+        },
+      });
+    }
+    if (applyResult.type === "setSecondPublicKey") {
+      const { address, publicKey, secondPublicKey } = applyResult.applyInfo;
+      return eventEmitter.emit("setSecondPublicKey", {
+        type: "setSecondPublicKey",
+        transaction,
+        applyInfo: {
+          address,
+          publicKeyBuffer: parseHexToArrayBuffer(publicKey),
+          secondPublicKeyBuffer: parseHexToArrayBuffer(secondPublicKey),
+        },
+      });
+    }
+    if (applyResult.type === "registerToDelegate") {
+      const { address, publicKey } = applyResult.applyInfo;
+      return eventEmitter.emit("registerToDelegate", {
+        type: "registerToDelegate",
+        transaction,
+        applyInfo: {
+          address,
+          publicKeyBuffer: parseHexToArrayBuffer(publicKey),
+        },
+      });
+    }
+    if (applyResult.type === "acceptVote") {
+      const { address, publicKey } = applyResult.applyInfo;
+      return eventEmitter.emit("acceptVote", {
+        type: "acceptVote",
+        transaction,
+        applyInfo: {
+          address,
+          publicKeyBuffer: parseHexToArrayBuffer(publicKey),
+        },
+      });
+    }
+    if (applyResult.type === "rejectVote") {
+      const { address, publicKey } = applyResult.applyInfo;
+      return eventEmitter.emit("rejectVote", {
+        type: "rejectVote",
+        transaction,
+        applyInfo: {
+          address,
+          publicKeyBuffer: parseHexToArrayBuffer(publicKey),
+        },
+      });
+    }
+    if (applyResult.type === "voteEquity") {
+      const { address, publicKey, equity, recipientId } = applyResult.applyInfo;
+      return eventEmitter.emit("voteEquity", {
+        type: "voteEquity",
+        transaction,
+        applyInfo: {
+          address,
+          publicKeyBuffer: parseHexToArrayBuffer(publicKey),
+          equity: "-" + equity,
+          sourceEquity: equity,
+          recipientId,
+        },
+      });
+    }
+    if (applyResult.type === "asset") {
+      const { address, publicKey, magic, assetType, amount, action } = applyResult.applyInfo;
+      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(magic, assetType);
+      return eventEmitter.emit("asset", {
+        type: "asset",
+        transaction,
+        applyInfo: {
+          address,
+          publicKeyBuffer: publicKey ? parseHexToArrayBuffer(publicKey) : undefined,
+          assetInfo,
+          amount: action === "-" ? "-" + amount : amount,
+          sourceAmount: amount,
+        },
+      });
+    }
+    if (applyResult.type === "destoryAsset") {
+      const { address, publicKey, magic, assetType, amount } = applyResult.applyInfo;
+      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(magic, assetType);
+      return eventEmitter.emit("destoryAsset", {
+        type: "destoryAsset",
+        transaction,
+        applyInfo: {
+          address,
+          publicKeyBuffer: parseHexToArrayBuffer(publicKey),
+          assetInfo,
+          amount: amount,
+          sourceAmount: amount,
+        },
+      });
+    }
+    if (applyResult.type === "frozenAsset") {
+      const {
+        address,
+        publicKey,
+        magic,
+        assetType,
+        amount,
+        minEffectiveHeight,
+        maxEffectiveHeight,
+        totalUnfrozenTimes,
+      } = applyResult.applyInfo;
+      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(magic, assetType);
+      return eventEmitter.emit("frozenAsset", {
+        type: "frozenAsset",
+        transaction,
+        applyInfo: {
+          address,
+          publicKeyBuffer: parseHexToArrayBuffer(publicKey),
+          assetInfo,
+          amount: `-${amount}`,
+          sourceAmount: amount,
+          frozenIdBuffer: transaction.signatureBuffer,
+          minEffectiveHeight,
+          maxEffectiveHeight,
+          totalUnfrozenTimes,
+        },
+      });
+    }
+    if (applyResult.type === "unfrozenAsset") {
+      const {
+        address,
+        publicKey,
+        magic,
+        assetType,
+        amount,
+        frozenId,
+        recipientId,
+      } = applyResult.applyInfo;
+      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(magic, assetType);
+      return eventEmitter.emit("unfrozenAsset", {
+        type: "unfrozenAsset",
+        transaction,
+        applyInfo: {
+          address,
+          publicKeyBuffer: parseHexToArrayBuffer(publicKey),
+          assetInfo,
+          amount: amount,
+          sourceAmount: amount,
+          frozenIdBuffer: parseHexToArrayBuffer(frozenId),
+          recipientId,
+        },
+      });
+    }
+    if (applyResult.type === "frozenAccount") {
+      const { address, publicKey, accountStatus } = applyResult.applyInfo;
+      return eventEmitter.emit("frozenAccount", {
+        type: "frozenAccount",
+        transaction,
+        applyInfo: {
+          address,
+          publicKeyBuffer: parseHexToArrayBuffer(publicKey),
+          accountStatus,
+        },
+      });
+    }
+    if (applyResult.type === "issueDAppid") {
+      const {
+        address,
+        publicKey,
+        sourceChainName,
+        sourceChainMagic,
+        dappid,
+        type,
+        purchaseAsset,
+      } = applyResult.applyInfo;
+      return eventEmitter.emit("issueDAppid", {
+        type: "issueDAppid",
+        transaction,
+        applyInfo: {
+          address,
+          publicKeyBuffer: parseHexToArrayBuffer(publicKey),
+          sourceChainName,
+          sourceChainMagic,
+          dappid,
+          possessorAddress: address,
+          type,
+          purchaseAsset,
+        },
+      });
+    }
+    if (applyResult.type === "saleDAppid") {
+      const {
+        address,
+        dappid,
+        sourceChainMagic,
+        minEffectiveHeight,
+        maxEffectiveHeight,
+      } = applyResult.applyInfo;
+      return eventEmitter.emit("saleDAppid", {
+        type: "saleDAppid",
+        transaction,
+        applyInfo: {
+          address,
+          sourceChainMagic,
+          dappid,
+          minEffectiveHeight,
+          maxEffectiveHeight,
+        },
+      });
+    }
+    if (applyResult.type === "purchaseDAppid") {
+      const {
+        address,
+        publicKey,
+        dappid,
+        sourceChainMagic,
+        possessorAddress,
+      } = applyResult.applyInfo;
+      return eventEmitter.emit("purchaseDAppid", {
+        type: "purchaseDAppid",
+        transaction,
+        applyInfo: {
+          address,
+          publicKeyBuffer: parseHexToArrayBuffer(publicKey),
+          sourceChainMagic,
+          dappid,
+          possessorAddress,
+        },
+      });
+    }
+    if (applyResult.type === "issueAsset") {
+      const {
+        address,
+        publicKey,
+        sourceChainName,
+        sourceChainMagic,
+        assetType,
+        genesisAddress,
+        expectedIssuedAssets,
+      } = applyResult.applyInfo;
+      return eventEmitter.emit("issueAsset", {
+        type: "issueAsset",
+        transaction,
+        applyInfo: {
+          address,
+          publicKeyBuffer: parseHexToArrayBuffer(publicKey),
+          applyAddress: address,
+          sourceChainName,
+          sourceChainMagic,
+          assetType,
+          genesisAddress,
+          expectedIssuedAssets,
+          remainAssets: expectedIssuedAssets,
+        },
+      });
+    }
+    if (applyResult.type === "issueSubchain") {
+      throw new ConsensusException(PERMISSION_DENIED, {
+        operationName: "issueSubchain",
+        function: "combineApplyEvent",
+      });
+      // const {
+      //   address,
+      //   publicKey,
+      //   chainName,
+      //   assetType,
+      //   magic,
+      //   bnid,
+      //   maxTPSPerBlock,
+      //   blockPerRound,
+      //   delegates,
+      //   genesisBlock,
+      // } = applyResult.applyInfo;
+      // return eventEmitter.emit("issueSubchain", {
+      //   type: "issueSubchain",
+      //   transaction,
+      //   applyInfo: {
+      //     address,
+      //     publicKeyBuffer: parseHexToArrayBuffer(publicKey),
+      //     chainName,
+      //     assetType,
+      //     magic,
+      //     bnid,
+      //     maxTPSPerBlock,
+      //     blockPerRound,
+      //     delegates,
+      //     genesisBlock,
+      //   },
+      // });
+    }
+    if (applyResult.type === "registerLocationName") {
+      const { address, publicKey, name, sourceChainMagic, sourceChainName } = applyResult.applyInfo;
+      return eventEmitter.emit("registerLocationName", {
+        type: "registerLocationName",
+        transaction,
+        applyInfo: {
+          address,
+          publicKeyBuffer: parseHexToArrayBuffer(publicKey),
+          name,
+          sourceChainMagic,
+          sourceChainName,
+        },
+      });
+    }
+    if (applyResult.type === "cancelLocationName") {
+      const { address, publicKey, name, sourceChainMagic } = applyResult.applyInfo;
+      return eventEmitter.emit("cancelLocationName", {
+        type: "cancelLocationName",
+        transaction,
+        applyInfo: {
+          address,
+          publicKeyBuffer: parseHexToArrayBuffer(publicKey),
+          name,
+          sourceChainMagic,
+        },
+      });
+    }
+    if (applyResult.type === "setLnsManager") {
+      const { address, publicKey, name, sourceChainMagic, manager } = applyResult.applyInfo;
+      return eventEmitter.emit("setLnsManager", {
+        type: "setLnsManager",
+        transaction,
+        applyInfo: {
+          address,
+          publicKeyBuffer: parseHexToArrayBuffer(publicKey),
+          name,
+          sourceChainMagic,
+          manager,
+        },
+      });
+    }
+    if (applyResult.type === "setLnsRecordValue") {
+      const {
+        address,
+        publicKey,
+        name,
+        sourceChainMagic,
+        operationType,
+        addRecord,
+        deleteRecord,
+      } = applyResult.applyInfo;
+      return eventEmitter.emit("setLnsRecordValue", {
+        type: "setLnsRecordValue",
+        transaction,
+        applyInfo: {
+          address,
+          publicKeyBuffer: parseHexToArrayBuffer(publicKey),
+          name,
+          sourceChainMagic,
+          operationType,
+          addRecord,
+          deleteRecord,
+        },
+      });
+    }
+    if (applyResult.type === "saleLocationName") {
+      const {
+        address,
+        name,
+        sourceChainMagic,
+        minEffectiveHeight,
+        maxEffectiveHeight,
+      } = applyResult.applyInfo;
+      return eventEmitter.emit("saleLocationName", {
+        type: "saleLocationName",
+        transaction,
+        applyInfo: {
+          address,
+          sourceChainMagic,
+          name,
+          minEffectiveHeight,
+          maxEffectiveHeight,
+        },
+      });
+    }
+    if (applyResult.type === "purchaseLocationName") {
+      const {
+        address,
+        publicKey,
+        name,
+        sourceChainMagic,
+        possessorAddress,
+      } = applyResult.applyInfo;
+      return eventEmitter.emit("purchaseLocationName", {
+        type: "purchaseLocationName",
+        transaction,
+        applyInfo: {
+          address,
+          publicKeyBuffer: parseHexToArrayBuffer(publicKey),
+          sourceChainMagic,
+          name,
+          possessorAddress,
+        },
+      });
+    }
+    throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      prop: "eventType",
+      target: "applyResult",
+      function: "combineApplyEvent",
+    });
+  }
+}

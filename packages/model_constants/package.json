@@ -1,0 +1,25 @@
+{
+  "name": "@bfchain/core-model-constants",
+  "version": "5.0.0-dev.0",
+  "description": "",
+  "main": "build/cjs/index.js",
+  "module": "build/esm/index.js",
+  "type": "build/cjs/index.d.ts",
+  "keywords": [
+    "core"
+  ],
+  "author": "BFChain Team",
+  "license": "MIT",
+  "files": [
+    "build"
+  ],
+  "dependencies": {
+    "@bfchain/core-typings": "^5.0.0-dev.0"
+  },
+  "peerDepedences": {
+    "@bfchain/protobuf": "^3.1.2"
+  },
+  "devDepedences": {
+    "@bfchain/protobuf": "^3.1.2"
+  }
+}

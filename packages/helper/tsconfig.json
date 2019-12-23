@@ -1,0 +1,33 @@
+{
+  "extends": "../../config/tsconfig_base/base.tsconfig.cjs",
+  "compilerOptions": {
+    "outDir": "./build/cjs",
+    "rootDir": "./src"
+  },
+  "references": [
+    {
+      "path": "../helper_exception_errorcode/tsconfig.json"
+    },
+    {
+      "path": "../typings/tsconfig.json"
+    }
+  ],
+  "files": [
+    "src/@types.ts",
+    "src/accountHelper.ts",
+    "src/asymmetricHelper.ts",
+    "src/base58Helper.ts",
+    "src/baseHelper.ts",
+    "src/blockBaseStatisticsHelper.ts",
+    "src/blockHelper.ts",
+    "src/chainAssetInfoHelper.ts",
+    "src/chainTimeHelper.ts",
+    "src/configHelper.ts",
+    "src/exception/ExceptionGenerator.ts",
+    "src/exception/index.ts",
+    "src/index.ts",
+    "src/jsbiHelper.ts",
+    "src/milestonesHelper.ts",
+    "src/transactionHelper.ts"
+  ]
+}

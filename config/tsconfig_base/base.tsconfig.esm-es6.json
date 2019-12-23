@@ -1,0 +1,6 @@
+{
+  "extends": "./base.tsconfig.esm",
+  "compilerOptions": {
+    "transformPlugins": ["jsbi", "es2016"]
+  }
+}

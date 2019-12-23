@@ -1,0 +1,41 @@
+{
+  "extends": "../../config/tsconfig_base/base.tsconfig.cjs",
+  "compilerOptions": {
+    "outDir": "./build/cjs",
+    "rootDir": "./src"
+  },
+  "references": [
+    {
+      "path": "../model_block_base/tsconfig.json"
+    },
+    {
+      "path": "../model_block_remark/tsconfig.json"
+    },
+    {
+      "path": "../model_cacher/tsconfig.json"
+    },
+    {
+      "path": "../model_common/tsconfig.json"
+    },
+    {
+      "path": "../model_transaction/tsconfig.json"
+    },
+    {
+      "path": "../typings/tsconfig.json"
+    }
+  ],
+  "files": [
+    "src/@types.ts",
+    "src/atom_block/commonBlock.block.ts",
+    "src/atom_block/genesisBlock.block.ts",
+    "src/atom_block/index.ts",
+    "src/atom_block/roundLastBlock.block.ts",
+    "src/block.ts",
+    "src/index.ts",
+    "src/someBlock.ts",
+    "src/statistic_info/asset.statistic.ts",
+    "src/statistic_info/countAndAmount.statistic.ts",
+    "src/statistic_info/index.ts",
+    "src/statistic_info/statisticInfo.ts"
+  ]
+}

@@ -1,0 +1,16 @@
+build/*
+bfchain__core/*
+!build/package.json
+!bfchain__core/package.json
+.node_modules
+node_modules
+package-lock.json
+.vscode
+.cache
+/docs
+log/*.log
+src/**/.*
+.idea
+.project
+.settings
+*.tsbuildinfo
