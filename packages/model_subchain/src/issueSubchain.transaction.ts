@@ -1,5 +1,5 @@
 import { Transaction } from "@bfchain/core-model-transaction-base";
-import { IssueSubchainAssetModel } from "@bfchain/core-model-transaction-asset/issueSubchain";
+import { IssueSubchainAssetModel } from "./issueSubchain.asset";
 import { Type, Field } from "@bfchain/protobuf";
 
 /**
@@ -8,13 +8,12 @@ import { Type, Field } from "@bfchain/protobuf";
  */
 @Type.d("IssueSubchainTransaction")
 export class IssueSubchainTransaction extends Transaction<BFChainCore.IssueSubchainAssetJSON>
-  implements
-    BFChainCore.TransactionMixJSON<BFChainCore.IssueSubchainAssetJSON, { hasRecipientId: false }> {
+  implements BFChainCore.IssueSubchainTransactionJSON {
+  recipientId!: undefined;
+  @Field.d(IssueSubchainTransaction.INC++, IssueSubchainAssetModel)
+  asset!: IssueSubchainAssetModel;
   toJSON!: () => BFChainCore.TransactionMixJSON<
     BFChainCore.IssueSubchainAssetJSON,
     { hasRecipientId: false }
   >;
-  recipientId!: undefined;
-  @Field.d(IssueSubchainTransaction.INC++, IssueSubchainAssetModel)
-  asset!: IssueSubchainAssetModel;
 }

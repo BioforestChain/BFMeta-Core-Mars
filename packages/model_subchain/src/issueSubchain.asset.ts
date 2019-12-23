@@ -5,7 +5,7 @@ import {
   RewardPerBlock,
   TransactionPowOfWorkConfigModel,
 } from "@bfchain/core-model-block-remark";
-import {GenesisBlock} from '@bfchain/core-model-block'
+import { GenesisBlock } from "@bfchain/core-model-block";
 import { Fraction } from "@bfchain/core-model-common";
 
 let subchain_field_index_acc = 1;

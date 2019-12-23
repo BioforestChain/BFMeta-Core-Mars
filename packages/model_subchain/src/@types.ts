@@ -28,7 +28,6 @@ declare namespace BFChainCore {
     rewardPercent: RewardPercentJSON;
     ports: PortsJSON;
     rewardPerBlock: RewardPerBlockJSON;
-    parentInfo: ParentInfoJSON;
     participationTotalChainAsset: number;
     participationNumberOfTransaction: number;
     participationNumberOfAccount: number;
