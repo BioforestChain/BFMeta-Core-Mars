@@ -1,7 +1,7 @@
 import { Message, Field, Type, MapField } from "@bfchain/protobuf";
 import { NumberKeyMap } from "@bfchain/core-model-common";
 import { cacheBytesGetter } from "@bfchain/core-model-cacher";
-import { AssetStatisticModel } from "./countAndAmount.statistic";
+import { AssetStatisticModel } from "./asset.statistic";
 
 /**
  * 区块资产统计信息

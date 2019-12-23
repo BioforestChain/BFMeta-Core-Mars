@@ -1,10 +1,4 @@
 declare namespace BFChainCore {
-  // type SomeBlockModel = import("./").SomeBlockModel<any>;
-
-  // interface SomeBlockJSON<T extends BlockJSON> {
-  //   block: T;
-  // }
-
   type Block<RJ extends CommonBlockRemarkJSON = CommonBlockRemarkJSON> = import("./block").Block<
     RJ
   >;

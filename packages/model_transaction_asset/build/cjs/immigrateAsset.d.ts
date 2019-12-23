@@ -14,7 +14,7 @@ export declare class ImmigrateAssetModel extends Message<ImmigrateAssetModel> im
     getBytes(): Uint8Array;
     toJSON(): {
         genesisDelegateSignature: BFChainCore.AccountSignatureJSON;
-        emigrateAssetTransaction: Pick<BFChainCore.TransactionJSON<BFChainCore.EmigrateAssetAssetJSON>, "applyBlockHeight" | "numberOfEffectiveBlocks" | "signature" | "signSignature" | "version" | "type" | "senderId" | "senderPublicKey" | "senderSecondPublicKey" | "rangeType" | "range" | "fee" | "timestamp" | "dappid" | "lns" | "sourceIP" | "fromMagic" | "toMagic" | "remark" | "id" | "asset" | "storage" | "storageKey" | "storageValue" | "nonce"> & {
+        emigrateAssetTransaction: Pick<BFChainCore.TransactionJSON<BFChainCore.EmigrateAssetAssetJSON>, "signature" | "signSignature" | "applyBlockHeight" | "numberOfEffectiveBlocks" | "type" | "dappid" | "version" | "senderId" | "senderPublicKey" | "senderSecondPublicKey" | "rangeType" | "range" | "fee" | "timestamp" | "lns" | "sourceIP" | "fromMagic" | "toMagic" | "remark" | "id" | "asset" | "storage" | "storageKey" | "storageValue" | "nonce"> & {
             recipientId: undefined;
         };
     };
@@ -29,7 +29,7 @@ export declare class ImmigrateAssetAssetModel extends Message<ImmigrateAssetAsse
     toJSON(): {
         immigrateAsset: {
             genesisDelegateSignature: BFChainCore.AccountSignatureJSON;
-            emigrateAssetTransaction: Pick<BFChainCore.TransactionJSON<BFChainCore.EmigrateAssetAssetJSON>, "applyBlockHeight" | "numberOfEffectiveBlocks" | "signature" | "signSignature" | "version" | "type" | "senderId" | "senderPublicKey" | "senderSecondPublicKey" | "rangeType" | "range" | "fee" | "timestamp" | "dappid" | "lns" | "sourceIP" | "fromMagic" | "toMagic" | "remark" | "id" | "asset" | "storage" | "storageKey" | "storageValue" | "nonce"> & {
+            emigrateAssetTransaction: Pick<BFChainCore.TransactionJSON<BFChainCore.EmigrateAssetAssetJSON>, "signature" | "signSignature" | "applyBlockHeight" | "numberOfEffectiveBlocks" | "type" | "dappid" | "version" | "senderId" | "senderPublicKey" | "senderSecondPublicKey" | "rangeType" | "range" | "fee" | "timestamp" | "lns" | "sourceIP" | "fromMagic" | "toMagic" | "remark" | "id" | "asset" | "storage" | "storageKey" | "storageValue" | "nonce"> & {
                 recipientId: undefined;
             };
         };

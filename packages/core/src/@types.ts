@@ -444,10 +444,7 @@ declare namespace BFChainCore {
   /**处理交易流程相关的事件 */
   interface ApplyTransactionFlowEvent<EVENTNAME, T extends Transaction = Transaction>
     extends ApplyTransactionEvent<undefined, EVENTNAME, T> {}
-  type AssetInfoJSON = {
-    magic: string;
-    assetType: string;
-  };
+
   type ApplyInfo_Asset = {
     address: string;
     publicKeyBuffer?: Uint8Array;

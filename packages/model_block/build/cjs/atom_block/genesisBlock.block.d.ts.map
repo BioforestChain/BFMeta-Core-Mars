@@ -1,0 +1,1 @@
+{"version":3,"file":"genesisBlock.block.d.ts","sourceRoot":"","sources":["../../../src/atom_block/genesisBlock.block.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,KAAK,EAAE,MAAM,gCAAgC,CAAC;AACvD,OAAO,EAAE,uBAAuB,EAAE,MAAM,kCAAkC,CAAC;AAG3E;;;GAGG;AACH,qBACa,YAAa,SAAQ,KAAK,CAAC,WAAW,CAAC,sBAAsB,CAAC;IAEzE,MAAM,EAAG,uBAAuB,CAAC;CAClC"}

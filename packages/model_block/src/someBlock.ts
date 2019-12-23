@@ -5,7 +5,7 @@ import {
   CoreExceptionGenerator,
   INVALID_BLOCK_CONSTRUCTOR,
   INVALID_BLOCK_TYPE,
-} from "../../helper/exception";
+} from "@bfchain/core-helper-exception";
 const { ArgumentFormatException } = CoreExceptionGenerator("MODEL", "blockModel");
 
 // export type SomeBlock = GenesisBlock | CommonBlock | RoundLastBlock;
@@ -44,11 +44,11 @@ export const BLOCK_TYPES_MAP = (() => {
   return {
     KM,
     MK,
-    KF: new Map<BLOCK_TYPES_BASE, BFChainCore.BlockFactoryConstructor>(),
-    VLV: new Map<BLOCK_TYPES_BASE, BFChainCore.BlockLogicVerifierConstructor<any>>(),
-    LVV: new Map<BFChainCore.BlockLogicVerifierConstructor<any>, BLOCK_TYPES_BASE>(),
-    TBT: new Map<BLOCK_TYPES_BASE, BFChainCore.BlockTickerConstructor<any>>(),
-    BTT: new Map<BFChainCore.BlockTickerConstructor<any>, BLOCK_TYPES_BASE>(),
+    // KF: new Map<BLOCK_TYPES_BASE, BFChainCore.BlockFactoryConstructor>(),
+    // VLV: new Map<BLOCK_TYPES_BASE, BFChainCore.BlockLogicVerifierConstructor<any>>(),
+    // LVV: new Map<BFChainCore.BlockLogicVerifierConstructor<any>, BLOCK_TYPES_BASE>(),
+    // TBT: new Map<BLOCK_TYPES_BASE, BFChainCore.BlockTickerConstructor<any>>(),
+    // BTT: new Map<BFChainCore.BlockTickerConstructor<any>, BLOCK_TYPES_BASE>(),
   };
 })();
 

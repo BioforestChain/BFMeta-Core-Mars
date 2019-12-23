@@ -1,4 +1,4 @@
-import { Block } from "../block";
+import { Block } from "@bfchain/core-model-block-base";
 import { GenesisBlockRemarkModel } from "@bfchain/core-model-block-remark";
 import { Type, Field } from "@bfchain/protobuf";
 

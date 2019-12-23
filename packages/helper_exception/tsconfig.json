@@ -12,5 +12,8 @@
       "path": "../typings/tsconfig.json"
     }
   ],
-  "files": ["src/ExceptionGenerator.ts", "src/index.ts"]
+  "files": [
+    "src/ExceptionGenerator.ts",
+    "src/index.ts"
+  ]
 }

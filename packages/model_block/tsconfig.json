@@ -30,12 +30,7 @@
     "src/atom_block/genesisBlock.block.ts",
     "src/atom_block/index.ts",
     "src/atom_block/roundLastBlock.block.ts",
-    "src/block.ts",
     "src/index.ts",
-    "src/someBlock.ts",
-    "src/statistic_info/asset.statistic.ts",
-    "src/statistic_info/countAndAmount.statistic.ts",
-    "src/statistic_info/index.ts",
-    "src/statistic_info/statisticInfo.ts"
+    "src/someBlock.ts"
   ]
 }

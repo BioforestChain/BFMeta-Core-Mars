@@ -4,6 +4,7 @@ function __export(m) {
 }
 Object.defineProperty(exports, "__esModule", { value: true });
 require("@bfchain/core-typings");
+require("@bfchain/core-model-block-base");
 require("./@types");
 __export(require("./commonBlockRemark"));
 __export(require("./genesisBlockRemark"));
