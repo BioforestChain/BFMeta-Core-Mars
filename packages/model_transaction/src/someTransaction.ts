@@ -1,6 +1,9 @@
 import * as ATOM_TRS from "./atom_transaction";
 
-import { CoreExceptionGenerator, INVALID_TRANSACTION_BASE_TYPE } from "@bfchain/core-helper-exception-errorcode";
+import {
+  CoreExceptionGenerator,
+  INVALID_TRANSACTION_BASE_TYPE,
+} from "@bfchain/core-helper-exception";
 import { Transaction } from "@bfchain/core-model-transaction-base";
 import { Type, Field, Message } from "@bfchain/protobuf";
 

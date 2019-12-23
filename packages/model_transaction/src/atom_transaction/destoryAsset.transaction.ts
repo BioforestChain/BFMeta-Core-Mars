@@ -1,5 +1,5 @@
 import { Transaction } from "@bfchain/core-model-transaction-base";
-import { DestoryAssetAssetModel } from "@bfchain/core-model-transaction-asset/destoryAsset";
+import { DestoryAssetAssetModel } from "@bfchain/core-model-transaction-asset";
 import { Type, Field } from "@bfchain/protobuf";
 
 /**

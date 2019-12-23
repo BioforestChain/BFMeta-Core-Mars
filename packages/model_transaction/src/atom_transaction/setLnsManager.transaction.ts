@@ -1,5 +1,5 @@
 import { Transaction } from "@bfchain/core-model-transaction-base";
-import { SetLnsManagerAssetModel } from "@bfchain/core-model-transaction-asset/setLnsManager";
+import { SetLnsManagerAssetModel } from "@bfchain/core-model-transaction-asset";
 import { Type, Field } from "@bfchain/protobuf";
 
 /**

@@ -1,5 +1,5 @@
 import { Transaction } from "@bfchain/core-model-transaction-base";
-import { BeExchangeSpecialAssetAssetModel } from "@bfchain/core-model-transaction-asset/beExchangeSpecialAsset";
+import { BeExchangeSpecialAssetAssetModel } from "@bfchain/core-model-transaction-asset";
 import { Type, Field } from "@bfchain/protobuf";
 
 /**

@@ -1,5 +1,5 @@
 import { Transaction } from "@bfchain/core-model-transaction-base";
-import { SignatureAssetModel } from "@bfchain/core-model-transaction-asset/signature";
+import { SignatureAssetModel } from "@bfchain/core-model-transaction-asset";
 import { Type, Field } from "@bfchain/protobuf";
 
 /**

@@ -1,0 +1,9 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const core_helper_exception_errorcode_1 = require("@bfchain/core-helper-exception-errorcode");
+const util_exception_1 = require("@bfchain/util-exception");
+function CoreExceptionGenerator(MODULE, FILE) {
+    return util_exception_1.UtilExceptionGenerator(MODULE, FILE, { errorCodeMap: core_helper_exception_errorcode_1.errorCode });
+}
+exports.CoreExceptionGenerator = CoreExceptionGenerator;
+//# sourceMappingURL=ExceptionGenerator.js.map

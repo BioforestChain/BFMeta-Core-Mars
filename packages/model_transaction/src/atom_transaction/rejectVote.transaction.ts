@@ -1,5 +1,5 @@
 import { Transaction } from "@bfchain/core-model-transaction-base";
-import { RejectVoteAssetModel } from "@bfchain/core-model-transaction-asset/rejectVote";
+import { RejectVoteAssetModel } from "@bfchain/core-model-transaction-asset";
 import { Type, Field } from "@bfchain/protobuf";
 
 /**

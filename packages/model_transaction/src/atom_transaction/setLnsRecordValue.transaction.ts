@@ -1,5 +1,5 @@
 import { Transaction } from "@bfchain/core-model-transaction-base";
-import { SetLnsRecordValueAssetModel } from "@bfchain/core-model-transaction-asset/setLnsRecordValue";
+import { SetLnsRecordValueAssetModel } from "@bfchain/core-model-transaction-asset";
 import { Type, Field } from "@bfchain/protobuf";
 
 /**

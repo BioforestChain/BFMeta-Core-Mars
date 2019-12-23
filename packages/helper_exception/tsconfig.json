@@ -6,11 +6,11 @@
   },
   "references": [
     {
+      "path": "../helper_exception_errorcode/tsconfig.json"
+    },
+    {
       "path": "../typings/tsconfig.json"
     }
   ],
-  "files": [
-    "src/errorCode.ts",
-    "src/index.ts"
-  ]
+  "files": ["src/ExceptionGenerator.ts", "src/index.ts"]
 }

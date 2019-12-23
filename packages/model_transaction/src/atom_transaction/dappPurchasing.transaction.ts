@@ -1,5 +1,5 @@
 import { Transaction } from "@bfchain/core-model-transaction-base";
-import { DAppPurchasingAssetModel } from "@bfchain/core-model-transaction-asset/dappPurchasing";
+import { DAppPurchasingAssetModel } from "@bfchain/core-model-transaction-asset";
 import { Type, Field } from "@bfchain/protobuf";
 
 /**

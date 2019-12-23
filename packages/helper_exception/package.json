@@ -1,5 +1,5 @@
 {
-  "name": "@bfchain/core-helper-exception-errorcode",
+  "name": "@bfchain/core-helper-exception",
   "version": "5.0.0-dev.0",
   "description": "",
   "main": "build/cjs/index.js",
@@ -20,6 +20,7 @@
     "@bfchain/util": "^4.0.0-dev.0"
   },
   "dependencies": {
+    "@bfchain/core-helper-exception-errorcode": "^5.0.0-dev.0",
     "@bfchain/core-typings": "^5.0.0-dev.0"
   }
 }

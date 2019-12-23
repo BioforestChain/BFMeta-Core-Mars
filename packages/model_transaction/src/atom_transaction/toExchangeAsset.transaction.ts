@@ -1,5 +1,5 @@
 import { Transaction } from "@bfchain/core-model-transaction-base";
-import { ToExchangeAssetAssetModel } from "@bfchain/core-model-transaction-asset/toExchangeAsset";
+import { ToExchangeAssetAssetModel } from "@bfchain/core-model-transaction-asset";
 import { Type, Field, Message } from "@bfchain/protobuf";
 import { cacheGetter } from "@bfchain/util-decorator";
 

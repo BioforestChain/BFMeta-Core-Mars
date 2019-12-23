@@ -1,1 +1,1 @@
-import "./errorCode";
+export * from "./errorCode";
