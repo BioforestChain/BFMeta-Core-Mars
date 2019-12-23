@@ -5,7 +5,7 @@ import {
   CoreExceptionGenerator,
   INVALID_BLOCK_CONSTRUCTOR,
   INVALID_BLOCK_TYPE,
-} from "@bfchain/core-helper-exception";
+} from "@bfchain/util-helper-exception";
 const { ArgumentFormatException } = CoreExceptionGenerator("MODEL", "blockModel");
 
 // export type SomeBlock = GenesisBlock | CommonBlock | RoundLastBlock;

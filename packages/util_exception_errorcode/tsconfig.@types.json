@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig",
+  "minin": [
+    "./tsconfig.json",
+    "../../config/tsconfig_base/base.tsconfig.@types.json"
+  ],
+  "compilerOptions": {
+    "declarationDir": "../@types/bfchain__util-helper-exception-errorcode",
+    "declarations": true,
+    "noEmitJs": true
+  }
+}

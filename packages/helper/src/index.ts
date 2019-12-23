@@ -1,14 +1,14 @@
 import "./@types";
-export * from "./exception/";
+export * from "@bfchain/util-helper-exception";
 export * from "./accountHelper";
 export * from "./asymmetricHelper";
-export * from "./base58Helper";
+export * from "../../helper_account/src/base58Helper";
 export * from "./baseHelper";
 export * from "./blockBaseStatisticsHelper";
 export * from "./blockHelper";
 export * from "./chainAssetInfoHelper";
 export * from "./configHelper";
-export * from "./jsbiHelper";
+export * from "../../helper_bigint/src/jsbiHelper";
 export * from "./milestonesHelper";
 export * from "./chainTimeHelper";
 export * from "./transactionHelper";

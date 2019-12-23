@@ -6,17 +6,17 @@
   },
   "references": [
     {
-      "path": "../helper_exception_errorcode/tsconfig.json"
+      "path": "../typings/tsconfig.json"
     },
     {
-      "path": "../typings/tsconfig.json"
+      "path": "../util_exception_errorcode/tsconfig.json"
     }
   ],
   "files": [
     "src/@types.ts",
     "src/accountHelper.ts",
     "src/asymmetricHelper.ts",
-    "src/base58Helper.ts",
+    "../helper_account/src/base58Helper.ts",
     "src/baseHelper.ts",
     "src/blockBaseStatisticsHelper.ts",
     "src/blockHelper.ts",
@@ -26,7 +26,7 @@
     "src/exception/ExceptionGenerator.ts",
     "src/exception/index.ts",
     "src/index.ts",
-    "src/jsbiHelper.ts",
+    "../helper_bigint/src/jsbiHelper.ts",
     "src/milestonesHelper.ts",
     "src/transactionHelper.ts"
   ]

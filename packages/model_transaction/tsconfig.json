@@ -6,9 +6,6 @@
   },
   "references": [
     {
-      "path": "../helper_exception/tsconfig.json"
-    },
-    {
       "path": "../model_cacher/tsconfig.json"
     },
     {
@@ -22,6 +19,9 @@
     },
     {
       "path": "../typings/tsconfig.json"
+    },
+    {
+      "path": "../util_exception/tsconfig.json"
     }
   ],
   "files": [

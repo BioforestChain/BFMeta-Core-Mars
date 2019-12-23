@@ -121,8 +121,8 @@ export class IssueSubchainModel extends Message<IssueSubchainModel>
   @Field.d(subchain_field_index_acc++, TransactionPowOfWorkConfigModel)
   transactionPowOfWorkConfig!: TransactionPowOfWorkConfigModel;
   /**创世块 */
-  @Field.d(subchain_field_index_acc++, "GenesisBlock")
-  genesisBlock!: import("@bfchain/core-model-block").GenesisBlock;
+  @Field.d(subchain_field_index_acc++, GenesisBlock)
+  genesisBlock!: GenesisBlock;
   toJSON() {
     return {
       chainName: this.chainName,

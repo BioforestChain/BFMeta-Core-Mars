@@ -100,9 +100,7 @@ declare namespace BFChainCore {
         rewardPercent: RewardPercentJSON;
         ports: PortsJSON;
         rewardPerBlock: RewardPerBlockJSON;
-        /**
-         * @FIXME @WMC
-         */
+        parentGenesisBlock: BlockJSON<GenesisBlockRemarkJSON>;
         blockParticipation: string;
         participationTotalChainAsset: number;
         participationNumberOfTransaction: number;

@@ -43,6 +43,7 @@
   },
   "scripts": {
     "up": "yarn upgrade-interactive --latest",
+    "publ": "lerna publish",
     "lsts": "bdk-lsts -p=./tsconfig.json",
     "dev": "bdk-tsc --build -w"
   },

@@ -1,0 +1,19 @@
+{
+  "extends": "../../config/tsconfig_base/base.tsconfig.cjs",
+  "compilerOptions": {
+    "outDir": "./build/cjs",
+    "rootDir": "./src"
+  },
+  "references": [
+    {
+      "path": "../typings/tsconfig.json"
+    },
+    {
+      "path": "../util_exception_errorcode/tsconfig.json"
+    }
+  ],
+  "files": [
+    "src/ExceptionGenerator.ts",
+    "src/index.ts"
+  ]
+}

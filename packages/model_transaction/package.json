@@ -14,12 +14,12 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-helper-exception": "^5.0.0-dev.0",
     "@bfchain/core-model-cacher": "^5.0.0-dev.0",
     "@bfchain/core-model-common": "^5.0.0-dev.0",
     "@bfchain/core-model-transaction-asset": "^5.0.0-dev.0",
     "@bfchain/core-model-transaction-base": "^5.0.0-dev.0",
-    "@bfchain/core-typings": "^5.0.0-dev.0"
+    "@bfchain/core-typings": "^5.0.0-dev.0",
+    "@bfchain/core-util-exception": "^5.0.0-dev.0"
   },
   "peerDepedences": {
     "@bfchain/protobuf": "^3.1.2"

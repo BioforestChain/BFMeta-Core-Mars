@@ -1,7 +1,7 @@
 import { Injectable } from "@bfchain/util";
 import { ConfigHelper } from "./configHelper";
 import { CoreExceptionGenerator } from "./exception";
-import { PROP_IS_INVALID } from "@bfchain/core-helper-exception-errorcode";
+import { PROP_IS_INVALID } from "@bfchain/util-helper-exception-errorcode";
 import { BaseHelper } from "./baseHelper";
 const { ArgumentFormatException } = CoreExceptionGenerator("HELPER", "milestonesHelper");
 

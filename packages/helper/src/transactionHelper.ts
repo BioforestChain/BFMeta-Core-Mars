@@ -14,7 +14,7 @@ import {
   GrabAssetModel,
   AccountSignatureModel,
 } from "../model";
-import { JSBIHelper } from "./jsbiHelper";
+import { JSBIHelper } from "../../helper_bigint/src/jsbiHelper";
 import { AsymmetricHelper } from "./asymmetricHelper";
 import { Injectable, Inject } from "@bfchain/util";
 import { AccountBaseHelper } from "./accountHelper";

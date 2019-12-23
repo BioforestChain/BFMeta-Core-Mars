@@ -155,8 +155,9 @@ let GenesisBlockRemarkModel = GenesisBlockRemarkModel_1 = class GenesisBlockRema
             participationTotalFee: this.participationTotalFee,
             transactionPowOfWorkConfig: this.transactionPowOfWorkConfig.toJSON(),
             powOfWorkExemptionBlocks: this.powOfWorkExemptionBlocks,
+            parentGenesisBlock: this.parentGenesisBlock.toJSON(),
         });
-        this.parentGenesisBlock && (res.parentGenesisBlock = this.parentGenesisBlock);
+        // this.parentGenesisBlock && ((res ).parentGenesisBlock = this.parentGenesisBlock);
         return res;
     }
     getBytes() {

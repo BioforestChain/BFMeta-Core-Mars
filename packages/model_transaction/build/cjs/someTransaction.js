@@ -18,7 +18,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 var SomeTransactionModel_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 const ATOM_TRS = __importStar(require("./atom_transaction"));
-const core_helper_exception_1 = require("@bfchain/core-helper-exception");
+const core_helper_exception_1 = require("@bfchain/util-helper-exception");
 const protobuf_1 = require("@bfchain/protobuf");
 const { ArgumentFormatException } = core_helper_exception_1.CoreExceptionGenerator("MODEL", "transactionModel");
 var TRANSACTION_TYPES_BASE;

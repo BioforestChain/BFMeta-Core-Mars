@@ -12,7 +12,7 @@ var SomeBlockModel_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 const atom_block_1 = require("./atom_block");
 const protobuf_1 = require("@bfchain/protobuf");
-const core_helper_exception_1 = require("@bfchain/core-helper-exception");
+const core_helper_exception_1 = require("@bfchain/util-helper-exception");
 const { ArgumentFormatException } = core_helper_exception_1.CoreExceptionGenerator("MODEL", "blockModel");
 /**
  * 区块类型

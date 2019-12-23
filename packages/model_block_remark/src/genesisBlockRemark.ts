@@ -179,7 +179,9 @@ export class GenesisBlockRemarkModel extends RoundDelegateRemarkModel<GenesisBlo
    * @TODO FIX Type
    */
   @Field.d(GenesisBlockRemarkModel.INC++, "GenesisBlock")
-  parentGenesisBlock!: any; //import("@bfchain/core-model-block").GenesisBlock;
+  parentGenesisBlock!: BFChainCore.JSONToModelType<
+    BFChainCore.BlockJSON<BFChainCore.GenesisBlockRemarkJSON>
+  >; //import("@bfchain/core-model-block").GenesisBlock;
   /**区块处理信息 */
   @Field.d(GenesisBlockRemarkModel.INC++, "string")
   debug!: string;
@@ -244,8 +246,9 @@ export class GenesisBlockRemarkModel extends RoundDelegateRemarkModel<GenesisBlo
       participationTotalFee: this.participationTotalFee,
       transactionPowOfWorkConfig: this.transactionPowOfWorkConfig.toJSON(),
       powOfWorkExemptionBlocks: this.powOfWorkExemptionBlocks,
+      parentGenesisBlock: this.parentGenesisBlock.toJSON(),
     });
-    this.parentGenesisBlock && ((res as any).parentGenesisBlock = this.parentGenesisBlock);
+    // this.parentGenesisBlock && ((res ).parentGenesisBlock = this.parentGenesisBlock);
     return res;
   }
   @cacheBytesGetter

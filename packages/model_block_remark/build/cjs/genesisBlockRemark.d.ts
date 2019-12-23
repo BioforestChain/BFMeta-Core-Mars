@@ -128,7 +128,7 @@ export declare class GenesisBlockRemarkModel extends RoundDelegateRemarkModel<Ge
     /**父链创世块
      * @TODO FIX Type
      */
-    parentGenesisBlock: any;
+    parentGenesisBlock: BFChainCore.JSONToModelType<BFChainCore.BlockJSON<BFChainCore.GenesisBlockRemarkJSON>>;
     /**区块处理信息 */
     debug: string;
     /**备注信息 */
@@ -216,6 +216,7 @@ export declare class GenesisBlockRemarkModel extends RoundDelegateRemarkModel<Ge
             };
         };
         powOfWorkExemptionBlocks: number;
+        parentGenesisBlock: BFChainCore.BlockJSON<BFChainCore.GenesisBlockRemarkJSON>;
     };
     getBytes(): Uint8Array;
     static fromObject<T extends Message>(this: BFChainProtobuf.Constructor<T>, object: BFChainProtobuf.ObjectFromType<GenesisBlockRemarkModel>): T;
