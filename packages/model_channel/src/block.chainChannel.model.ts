@@ -1,10 +1,7 @@
 import { Message, Type, Field } from "@bfchain/protobuf";
 import { CommonResponse, ErrorMessage } from "./common.chainChannel.model";
-import {
-  getHexFromArrayBuffer,
-  parseHexToArrayBuffer,
-} from "@bfchain/util-encoding-hex";
-import { SomeBlockModel } from "../blockModel";
+import { getHexFromArrayBuffer, parseHexToArrayBuffer } from "@bfchain/util-encoding-hex";
+import { SomeBlockModel } from "@bfchain/core-model-block";
 
 /**
  * 查询区块的查询条件

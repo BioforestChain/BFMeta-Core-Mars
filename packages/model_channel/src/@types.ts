@@ -84,7 +84,7 @@ declare namespace BFChainCore {
     /**最低手续费 */
     minFee: string;
     /**拒绝的错误码 */
-    refuseReason?: import("../model").NewTransactionRefuseReason;
+    refuseReason?: import("./").NewTransactionRefuseReason;
   }
   /**查询交易的查询条件 */
   type BlockQueryOptionsJSON = {
@@ -124,18 +124,6 @@ declare namespace BFChainCore {
   /**接收交易的返回结果 */
   interface NewBlockReturnJSON extends CommonResponseJSON, NewBlockReturnParams {}
   interface NewBlockReturnParams {}
-  type BroadcastNewTransactionEvents<DH extends import("./channel").ChainChannel> = {
-    startBroadcasting: BFChainUtil.EventInOut<{ chainChannelList: DH[] }, { break: boolean }>;
-    broadcasted: BFChainUtil.EventInOut<
-      {
-        error: boolean;
-        result: import("@bfchain/core-mode;").NewTransactionReturnModel | Error;
-        chainChannel: DH;
-      },
-      { break: boolean }
-    >;
-    endBroadcast: BFChainUtil.EventInOut<{ duraction: number }, any>;
-  };
 
   //#region WebRTC 建立连接
   //#region 第一步：握手，申请`rtcUid`资源
@@ -270,13 +258,13 @@ declare namespace BFChainCore {
     progressEvent?: BlockchainStatus.StatusProgressEventMap<S>;
   }
   namespace BlockchainStatus {
-    type OFFLINE = import("@bfchain/core-model").BLOCKCHAIN_STATUS.OFFLINE;
-    type FREE = import("@bfchain/core-model").BLOCKCHAIN_STATUS.FREE;
-    type REBUIDING = import("@bfchain/core-model").BLOCKCHAIN_STATUS.REBUIDING;
-    type PEER_SCANNING = import("@bfchain/core-model").BLOCKCHAIN_STATUS.PEER_SCANNING;
-    type REPLAY_BLOCK = import("@bfchain/core-model").BLOCKCHAIN_STATUS.REPLAY_BLOCK;
-    type GENERATING = import("@bfchain/core-model").BLOCKCHAIN_STATUS.GENERATING;
-    type ROLLBACK = import("@bfchain/core-model").BLOCKCHAIN_STATUS.ROLLBACK;
+    type OFFLINE = import("./").BLOCKCHAIN_STATUS.OFFLINE;
+    type FREE = import("./").BLOCKCHAIN_STATUS.FREE;
+    type REBUIDING = import("./").BLOCKCHAIN_STATUS.REBUIDING;
+    type PEER_SCANNING = import("./").BLOCKCHAIN_STATUS.PEER_SCANNING;
+    type REPLAY_BLOCK = import("./").BLOCKCHAIN_STATUS.REPLAY_BLOCK;
+    type GENERATING = import("./").BLOCKCHAIN_STATUS.GENERATING;
+    type ROLLBACK = import("./").BLOCKCHAIN_STATUS.ROLLBACK;
 
     type StatusProgressEventMap<S extends BLOCKCHAIN_STATUS> = S extends OFFLINE
       ? undefined

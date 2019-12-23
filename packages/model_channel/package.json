@@ -14,6 +14,7 @@
     "build"
   ],
   "dependencies": {
+    "@bfchain/core-model-block": "^5.0.0-dev.0",
     "@bfchain/core-model-common": "^5.0.0-dev.0",
     "@bfchain/core-model-constants": "^5.0.0-dev.0",
     "@bfchain/core-model-progress": "^5.0.0-dev.0",

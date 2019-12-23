@@ -1,5 +1,5 @@
 {
   "files": [],
   "include": [],
-  "references": [{ "path": "./packages/model_subchain/tsconfig.json" }]
+  "references": [{ "path": "./packages/model_channel/tsconfig.json" }]
 }

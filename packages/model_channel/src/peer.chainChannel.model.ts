@@ -10,6 +10,7 @@ import {
   PROGRESS_EVENT_MODE,
 } from "@bfchain/core-model-progress";
 import { StringKeyMap } from "@bfchain/core-model-common";
+import { BLOCKCHAIN_STATUS } from "./constants";
 
 /**缓存服务市场节点扫描信息解析结果 */
 const BUFFER_LIST_SERVICEPEERINFO_LIST_WM = new WeakMap<Uint8Array[], ServicePeerInfoModel[]>();
@@ -287,26 +288,6 @@ export class ServicePeerInfoModel extends Message<ServicePeerInfoModel>
 //   }
 // }
 
-/**区块链节点状态 */
-export enum BLOCKCHAIN_STATUS {
-  /**离线：不可用 */
-  OFFLINE,
-  /**自由状态，有空闲资源可用 */
-  FREE,
-  /**繁忙：重建区块链 */
-  REBUIDING,
-  /**繁忙：节点共识 */
-  PEER_SCANNING,
-  /**繁忙：重放区块
-   * 下载区块并校验
-   * download & verify
-   */
-  REPLAY_BLOCK,
-  /**繁忙：锻造区块 */
-  GENERATING,
-  /**繁忙：回滚区块 */
-  ROLLBACK,
-}
 
 /**区块链状态以及当下任务进度模型 */
 @Type.d("BlockchainStatus")

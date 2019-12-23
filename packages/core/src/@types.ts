@@ -391,6 +391,19 @@ declare namespace BFChainCore {
   //#endregion
 
   //#region ChannelHelper
+
+  type BroadcastNewTransactionEvents<DH extends import("./channel").ChainChannel> = {
+    startBroadcasting: BFChainUtil.EventInOut<{ chainChannelList: DH[] }, { break: boolean }>;
+    broadcasted: BFChainUtil.EventInOut<
+      {
+        error: boolean;
+        result: import("./").NewTransactionReturnModel | Error;
+        chainChannel: DH;
+      },
+      { break: boolean }
+    >;
+    endBroadcast: BFChainUtil.EventInOut<{ duraction: number }, any>;
+  };
   type ChainChannelHanlderEventMap = {
     handleMessageError: {
       in: Error;

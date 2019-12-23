@@ -1,5 +1,6 @@
 import { Message, Type, Field } from "@bfchain/protobuf";
 import { Exception } from "@bfchain/util-exception";
+import { RESPONSE_STATUS } from "./constants";
 
 @Type.d("ExceptionMessage")
 export class ErrorMessage<D = any> extends Message<ErrorMessage>
@@ -57,12 +58,6 @@ export function getCommonResponseFieldAccIndex() {
   return common_response_field_acc_index;
 }
 
-/**响应结果类型 */
-export enum RESPONSE_STATUS {
-  error = 0,
-  busy = 1,
-  success = 2,
-}
 /**
  * 通用的响应的返回值
  */

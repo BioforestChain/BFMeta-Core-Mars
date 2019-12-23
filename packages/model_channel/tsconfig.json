@@ -6,6 +6,9 @@
   },
   "references": [
     {
+      "path": "../model_block/tsconfig.json"
+    },
+    {
       "path": "../model_constants/tsconfig.json"
     },
     {
@@ -22,6 +25,7 @@
     "src/@types.ts",
     "src/block.chainChannel.model.ts",
     "src/common.chainChannel.model.ts",
+    "src/constants.ts",
     "src/index.ts",
     "src/peer.chainChannel.model.ts",
     "src/transaction.chainChannel.model.ts"
