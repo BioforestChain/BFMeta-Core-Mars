@@ -1,0 +1,46 @@
+{
+  "extends": "../../config/tsconfig_base/base.tsconfig.cjs",
+  "compilerOptions": {
+    "outDir": "./build/cjs",
+    "rootDir": "./src"
+  },
+  "references": [
+    {
+      "path": "../typings/tsconfig.json"
+    }
+  ],
+  "files": [
+    "src/@types.ts",
+    "src/atom_transactionLogicVerifier/acceptVoteLogicVerifier.ts",
+    "src/atom_transactionLogicVerifier/beExchangeAssetLogicVerifier.ts",
+    "src/atom_transactionLogicVerifier/beExchangeSpecialAssetLogicVerifier.ts",
+    "src/atom_transactionLogicVerifier/customLogicVerifier.ts",
+    "src/atom_transactionLogicVerifier/dappLogicVerifier.ts",
+    "src/atom_transactionLogicVerifier/dappPurchasingLogicVerifier.ts",
+    "src/atom_transactionLogicVerifier/delegateLogicVerifier.ts",
+    "src/atom_transactionLogicVerifier/destoryAssetLogicVerifier.ts",
+    "src/atom_transactionLogicVerifier/emigrateAssetLogicVerifier.ts",
+    "src/atom_transactionLogicVerifier/giftAssetLogicVerifier.ts",
+    "src/atom_transactionLogicVerifier/grabAssetLogicVerifier.ts",
+    "src/atom_transactionLogicVerifier/immigrateAssetLogicVerifier.ts",
+    "src/atom_transactionLogicVerifier/index.ts",
+    "src/atom_transactionLogicVerifier/issueAssetLogicVerifier.ts",
+    "src/atom_transactionLogicVerifier/issueSubchainLogicVerifier.ts",
+    "src/atom_transactionLogicVerifier/locationNameLogicVerifier.ts",
+    "src/atom_transactionLogicVerifier/markLogicVerifier.ts",
+    "src/atom_transactionLogicVerifier/rejectVoteLogicVerifier.ts",
+    "src/atom_transactionLogicVerifier/setLnsManagerLogicVerifier.ts",
+    "src/atom_transactionLogicVerifier/setLnsRecordValueLogicVerifier.ts",
+    "src/atom_transactionLogicVerifier/signatureLogicVerifier.ts",
+    "src/atom_transactionLogicVerifier/signForAssetLogicVerifier.ts",
+    "src/atom_transactionLogicVerifier/toExchangeAssetLogicVerifier.ts",
+    "src/atom_transactionLogicVerifier/toExchangeSpecialAssetLogicVerifier.ts",
+    "src/atom_transactionLogicVerifier/transferAssetLogicVerifier.ts",
+    "src/atom_transactionLogicVerifier/trustAssetLogicVerifier.ts",
+    "src/atom_transactionLogicVerifier/usernameLogicVerifier.ts",
+    "src/atom_transactionLogicVerifier/voteLogicVerifier.ts",
+    "src/atom_transactionLogicVerifier/_txbaseLogicVerifier.ts",
+    "src/index.ts",
+    "src/transactionLogicVerifier.ts"
+  ]
+}

@@ -1,6 +1,7 @@
 /// <reference types="long" />
 import { Message } from "@bfchain/protobuf";
 import { RewardPercentModel, PortsModel, RewardPerBlock, TransactionPowOfWorkConfigModel } from "@bfchain/core-model-block-remark";
+import { GenesisBlock } from "@bfchain/core-model-block";
 import { Fraction } from "@bfchain/core-model-common";
 /**
  * issueSubchain 交易 asset 模型
@@ -75,7 +76,7 @@ export declare class IssueSubchainModel extends Message<IssueSubchainModel> impl
     participationTotalFee: number;
     transactionPowOfWorkConfig: TransactionPowOfWorkConfigModel;
     /**创世块 */
-    genesisBlock: import("@bfchain/core-model-block").GenesisBlock;
+    genesisBlock: GenesisBlock;
     toJSON(): {
         chainName: string;
         assetType: string;

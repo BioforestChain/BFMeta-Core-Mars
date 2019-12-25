@@ -4,12 +4,8 @@ import { VoteAssetModel } from "@bfchain/core-model-transaction-asset";
  * vote 交易模型
  *
  */
-export declare class VoteTransaction extends Transaction<BFChainCore.VoteAssetJSON> implements BFChainCore.TransactionMixJSON<BFChainCore.VoteAssetJSON, {
-    hasRecipientId: true;
-}> {
-    toJSON: () => BFChainCore.TransactionMixJSON<BFChainCore.VoteAssetJSON, {
-        hasRecipientId: true;
-    }>;
+export declare class VoteTransaction extends Transaction<BFChainCore.VoteAssetJSON> implements BFChainCore.VoteTransactionJSON {
+    toJSON: () => BFChainCore.VoteTransactionJSON;
     recipientId: string;
     asset: VoteAssetModel;
 }

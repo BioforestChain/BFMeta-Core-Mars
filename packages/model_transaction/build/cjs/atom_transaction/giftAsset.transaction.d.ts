@@ -4,12 +4,8 @@ import { GiftAssetAssetModel } from "@bfchain/core-model-transaction-asset";
  * giftAsset 交易模型
  *
  */
-export declare class GiftAssetTransaction extends Transaction<BFChainCore.GiftAssetAssetJSON> implements BFChainCore.TransactionMixJSON<BFChainCore.GiftAssetAssetJSON, {
-    hasRecipientId: false;
-}> {
-    toJSON: () => BFChainCore.TransactionMixJSON<BFChainCore.GiftAssetAssetJSON, {
-        hasRecipientId: false;
-    }>;
+export declare class GiftAssetTransaction extends Transaction<BFChainCore.GiftAssetAssetJSON> implements BFChainCore.GiftAssetTransactionJSON {
+    toJSON: () => BFChainCore.GiftAssetTransactionJSON;
     recipientId: undefined;
     asset: GiftAssetAssetModel;
 }

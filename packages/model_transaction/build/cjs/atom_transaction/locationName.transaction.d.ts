@@ -4,12 +4,8 @@ import { LocationNameAssetModel } from "@bfchain/core-model-transaction-asset";
  * locationName 交易模型
  *
  */
-export declare class LocationNameTransaction extends Transaction<BFChainCore.LocationNameAssetJSON> implements BFChainCore.TransactionMixJSON<BFChainCore.LocationNameAssetJSON, {
-    hasRecipientId: false;
-}> {
-    toJSON: () => BFChainCore.TransactionMixJSON<BFChainCore.LocationNameAssetJSON, {
-        hasRecipientId: false;
-    }>;
+export declare class LocationNameTransaction extends Transaction<BFChainCore.LocationNameAssetJSON> implements BFChainCore.LocationNameTransactionJSON {
+    toJSON: () => BFChainCore.LocationNameTransactionJSON;
     recipientId: undefined;
     asset: LocationNameAssetModel;
 }

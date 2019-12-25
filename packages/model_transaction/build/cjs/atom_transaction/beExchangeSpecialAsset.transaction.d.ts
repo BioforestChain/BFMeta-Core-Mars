@@ -4,12 +4,8 @@ import { BeExchangeSpecialAssetAssetModel } from "@bfchain/core-model-transactio
  * beExchangeSpecialAsset 交易模型
  *
  */
-export declare class BeExchangeSpecialAssetTransaction extends Transaction<BFChainCore.BeExchangeSpecialAssetAssetJSON> implements BFChainCore.TransactionMixJSON<BFChainCore.BeExchangeSpecialAssetAssetJSON, {
-    hasRecipientId: true;
-}> {
-    toJSON: () => BFChainCore.TransactionMixJSON<BFChainCore.BeExchangeSpecialAssetAssetJSON, {
-        hasRecipientId: true;
-    }>;
+export declare class BeExchangeSpecialAssetTransaction extends Transaction<BFChainCore.BeExchangeSpecialAssetAssetJSON> implements BFChainCore.BeExchangeSpecialAssetTransactionJSON {
+    toJSON: () => BFChainCore.BeExchangeSpecialAssetTransactionJSON;
     recipientId: string;
     asset: BeExchangeSpecialAssetAssetModel;
 }

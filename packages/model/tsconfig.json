@@ -24,6 +24,9 @@
       "path": "../model_progress/tsconfig.json"
     },
     {
+      "path": "../model_subchain/tsconfig.json"
+    },
+    {
       "path": "../model_transaction/tsconfig.json"
     },
     {

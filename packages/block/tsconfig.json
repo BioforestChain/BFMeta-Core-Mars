@@ -1,0 +1,24 @@
+{
+  "extends": "../../config/tsconfig_base/base.tsconfig.cjs",
+  "compilerOptions": {
+    "outDir": "./build/cjs",
+    "rootDir": "./src"
+  },
+  "references": [
+    {
+      "path": "../helper/tsconfig.json"
+    },
+    {
+      "path": "../model/tsconfig.json"
+    },
+    {
+      "path": "../typings/tsconfig.json"
+    }
+  ],
+  "files": [
+    "src/chainChannel.ts",
+    "src/chainChannelGroup.ts",
+    "src/chainChannelHelper.ts",
+    "src/index.ts"
+  ]
+}

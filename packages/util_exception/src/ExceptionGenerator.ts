@@ -1,4 +1,4 @@
-import { errorCode } from "@bfchain/util-helper-exception-errorcode";
+import { errorCode } from "@bfchain/core-util-exception-errorcode";
 import { UtilExceptionGenerator } from "@bfchain/util-exception";
 
 export function CoreExceptionGenerator(MODULE: string, FILE: string) {

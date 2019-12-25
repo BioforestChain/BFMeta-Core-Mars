@@ -1,0 +1,7 @@
+import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
+import { ToExchangeSpecialAssetTransaction } from "@bfchain/core-model";
+export declare class ToExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifier {
+    constructor();
+    verify(transaction: ToExchangeSpecialAssetTransaction, currentBlockHeight: number, accountGetterHelper?: BFChainCore.AccountGetterHelperInterface<any> | undefined, transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface<import("@bfchain/core-channel").ChainChannel> | undefined, customTransactionCenter?: BFChainCore.CustomTrCenterInterface | undefined): Promise<boolean>;
+}
+//# sourceMappingURL=toExchangeSpecialAssetLogicVerifier.d.ts.map

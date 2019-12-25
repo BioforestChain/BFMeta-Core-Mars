@@ -4,12 +4,8 @@ import { SignForAssetAssetModel } from "@bfchain/core-model-transaction-asset";
  * signForAsset 交易模型
  *
  */
-export declare class SignForAssetTransaction extends Transaction<BFChainCore.SignForAssetAssetJSON> implements BFChainCore.TransactionMixJSON<BFChainCore.SignForAssetAssetJSON, {
-    hasRecipientId: true;
-}> {
-    toJSON: () => BFChainCore.TransactionMixJSON<BFChainCore.SignForAssetAssetJSON, {
-        hasRecipientId: true;
-    }>;
+export declare class SignForAssetTransaction extends Transaction<BFChainCore.SignForAssetAssetJSON> implements BFChainCore.SignForAssetTransactionJSON {
+    toJSON: () => BFChainCore.SignForAssetTransactionJSON;
     recipientId: string;
     asset: SignForAssetAssetModel;
 }

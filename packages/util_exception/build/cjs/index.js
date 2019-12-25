@@ -4,5 +4,5 @@ function __export(m) {
 }
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./ExceptionGenerator"));
-__export(require("@bfchain/util-helper-exception-errorcode"));
+__export(require("@bfchain/core-util-exception-errorcode"));
 //# sourceMappingURL=index.js.map

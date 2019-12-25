@@ -51,7 +51,7 @@ export declare const SHOULD_NOT_EXIST = "{prop} in {target} should not exist whe
 /**prop target value function */
 export declare const SHOULD_NOT_INCLUDE = "{prop} in {target} should not inclue {value} when {function}";
 /**prop target function */
-export declare const DUPLICATE_SIGNATURE = "{prop} in {target} should not duplicate signature when {function}";
+export declare const SHOULD_NOT_DUPLICATE = "{prop} in {target} should not duplicate when {function}";
 export declare const INVALID_PARAMS = "Invalid {function} params";
 export declare const INVALID_PARAMS_FIELD = "Invalid {function} params field: {field}";
 export declare const INVALID_TRANSACTION_BASE_TYPE = "Invalid transaction base type: {base_type}";

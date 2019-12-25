@@ -160,7 +160,7 @@ export class ConfigHelper {
   /**获取父链传世块 */
   @cacheGetter
   get parentGenesisBlock() {
-    return this.genesisBlock.remark?.parentGenesisBlock;
+    return this.genesisBlock.remark.parentGenesisBlock;
   }
 }
 @Injectable("configMap")

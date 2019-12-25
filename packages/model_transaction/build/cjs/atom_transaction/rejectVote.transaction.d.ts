@@ -4,12 +4,8 @@ import { RejectVoteAssetModel } from "@bfchain/core-model-transaction-asset";
  * transfer 交易模型
  *
  */
-export declare class RejectVoteTransaction extends Transaction<BFChainCore.RejectVoteAssetJSON> implements BFChainCore.TransactionMixJSON<BFChainCore.RejectVoteAssetJSON, {
-    hasRecipientId: false;
-}> {
-    toJSON: () => BFChainCore.TransactionMixJSON<BFChainCore.RejectVoteAssetJSON, {
-        hasRecipientId: false;
-    }>;
+export declare class RejectVoteTransaction extends Transaction<BFChainCore.RejectVoteAssetJSON> implements BFChainCore.RejectVoteTransactionJSON {
+    toJSON: () => BFChainCore.RejectVoteTransactionJSON;
     recipientId: undefined;
     asset: RejectVoteAssetModel;
 }

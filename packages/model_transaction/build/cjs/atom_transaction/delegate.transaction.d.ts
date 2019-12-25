@@ -4,12 +4,8 @@ import { DelegateAssetModel } from "@bfchain/core-model-transaction-asset";
  * delegate 交易模型
  *
  */
-export declare class DelegateTransaction extends Transaction<BFChainCore.DelegateAssetJSON> implements BFChainCore.TransactionMixJSON<BFChainCore.DelegateAssetJSON, {
-    hasRecipientId: false;
-}> {
-    toJSON: () => BFChainCore.TransactionMixJSON<BFChainCore.DelegateAssetJSON, {
-        hasRecipientId: false;
-    }>;
+export declare class DelegateTransaction extends Transaction<BFChainCore.DelegateAssetJSON> implements BFChainCore.DelegateTransactionJSON {
+    toJSON: () => BFChainCore.DelegateTransactionJSON;
     recipientId: undefined;
     asset: DelegateAssetModel;
 }

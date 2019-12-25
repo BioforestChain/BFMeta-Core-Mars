@@ -8,13 +8,9 @@ import { Type, Field } from "@bfchain/protobuf";
  */
 @Type.d("IssueAssetTransaction")
 export class IssueAssetTransaction extends Transaction<BFChainCore.IssueAssetAssetJSON>
-  implements
-    BFChainCore.TransactionMixJSON<BFChainCore.IssueAssetAssetJSON, { hasRecipientId: false }> {
-  toJSON!: () => BFChainCore.TransactionMixJSON<
-    BFChainCore.IssueAssetAssetJSON,
-    { hasRecipientId: false }
-  >;
-  recipientId!: undefined;
+  implements BFChainCore.IssueAssetTransactionJSON {
+  toJSON!: () => BFChainCore.IssueAssetTransactionJSON;
+  recipientId!: string;
   @Field.d(IssueAssetTransaction.INC++, IssueAssetAssetModel)
   asset!: IssueAssetAssetModel;
 }

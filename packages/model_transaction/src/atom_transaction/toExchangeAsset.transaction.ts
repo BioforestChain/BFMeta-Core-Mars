@@ -9,15 +9,8 @@ import { cacheGetter } from "@bfchain/util-decorator";
  */
 @Type.d("ToExchangeAssetTransaction")
 export class ToExchangeAssetTransaction extends Transaction<BFChainCore.ToExchangeAssetAssetJSON>
-  implements
-    BFChainCore.TransactionMixJSON<
-      BFChainCore.ToExchangeAssetAssetJSON,
-      { hasRecipientId: false }
-    > {
-  toJSON!: () => BFChainCore.TransactionMixJSON<
-    BFChainCore.ToExchangeAssetAssetJSON,
-    { hasRecipientId: false }
-  >;
+  implements BFChainCore.ToExchangeAssetTransactionJSON {
+  toJSON!: () => BFChainCore.ToExchangeAssetTransactionJSON;
   recipientId!: undefined;
   @Field.d(ToExchangeAssetTransaction.INC++, ToExchangeAssetAssetModel)
   asset!: ToExchangeAssetAssetModel;

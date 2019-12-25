@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const protobuf_1 = require("@bfchain/protobuf");
 const core_model_block_remark_1 = require("@bfchain/core-model-block-remark");
+const core_model_block_1 = require("@bfchain/core-model-block");
 const core_model_common_1 = require("@bfchain/core-model-common");
 let subchain_field_index_acc = 1;
 /**
@@ -203,8 +204,8 @@ __decorate([
     __metadata("design:type", core_model_block_remark_1.TransactionPowOfWorkConfigModel)
 ], IssueSubchainModel.prototype, "transactionPowOfWorkConfig", void 0);
 __decorate([
-    protobuf_1.Field.d(subchain_field_index_acc++, "GenesisBlock"),
-    __metadata("design:type", Object)
+    protobuf_1.Field.d(subchain_field_index_acc++, core_model_block_1.GenesisBlock),
+    __metadata("design:type", core_model_block_1.GenesisBlock)
 ], IssueSubchainModel.prototype, "genesisBlock", void 0);
 IssueSubchainModel = __decorate([
     protobuf_1.Type.d("IssueSubchainModel")

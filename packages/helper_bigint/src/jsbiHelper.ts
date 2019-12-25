@@ -1,6 +1,6 @@
 import { Injectable } from "@bfchain/util";
-import { PROP_IS_INVALID } from "./exception/errorCode";
-import { CoreExceptionGenerator } from "./exception/ExceptionGenerator";
+import { PROP_IS_INVALID } from "@bfchain/core-util-exception-errorcode";
+import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 
 const { ArgumentIllegalException } = CoreExceptionGenerator("HELPER", "jsbiHelper");
 type BI = bigint | number | string;

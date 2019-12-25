@@ -4,12 +4,8 @@ import { SetLnsRecordValueAssetModel } from "@bfchain/core-model-transaction-ass
  * setLnsRecordValue 交易模型
  *
  */
-export declare class SetLnsRecordValueTransaction extends Transaction<BFChainCore.SetLnsRecordValueAssetJSON> implements BFChainCore.TransactionMixJSON<BFChainCore.SetLnsRecordValueAssetJSON, {
-    hasRecipientId: false;
-}> {
-    toJSON: () => BFChainCore.TransactionMixJSON<BFChainCore.SetLnsRecordValueAssetJSON, {
-        hasRecipientId: false;
-    }>;
+export declare class SetLnsRecordValueTransaction extends Transaction<BFChainCore.SetLnsRecordValueAssetJSON> implements BFChainCore.SetLnsRecordValueTransactionJSON {
+    toJSON: () => BFChainCore.SetLnsRecordValueTransactionJSON;
     recipientId: undefined;
     asset: SetLnsRecordValueAssetModel;
 }

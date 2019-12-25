@@ -1,3 +1,3 @@
 export * from "./ExceptionGenerator";
-export * from "@bfchain/util-helper-exception-errorcode";
+export * from "@bfchain/core-util-exception-errorcode";
 //# sourceMappingURL=index.d.ts.map

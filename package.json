@@ -42,6 +42,7 @@
     ]
   },
   "scripts": {
+    "clear": "bdk-clear -p build",
     "up": "yarn upgrade-interactive --latest",
     "publ": "lerna publish",
     "lsts": "bdk-lsts -p=./tsconfig.json",

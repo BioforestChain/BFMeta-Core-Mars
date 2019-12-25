@@ -72,8 +72,8 @@ export const SHOULD_NOT_EXIST = (ec.next = "{prop} in {target} should not exist 
 export const SHOULD_NOT_INCLUDE = (ec.next =
   "{prop} in {target} should not inclue {value} when {function}");
 /**prop target function */
-export const DUPLICATE_SIGNATURE = (ec.next =
-  "{prop} in {target} should not duplicate signature when {function}");
+export const SHOULD_NOT_DUPLICATE = (ec.next =
+  "{prop} in {target} should not duplicate when {function}");
 export const INVALID_PARAMS = (ec.next = "Invalid {function} params");
 export const INVALID_PARAMS_FIELD = (ec.next = "Invalid {function} params field: {field}");
 export const INVALID_TRANSACTION_BASE_TYPE = (ec.next =

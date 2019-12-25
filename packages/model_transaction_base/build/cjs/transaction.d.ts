@@ -1,6 +1,20 @@
 import { Message } from "@bfchain/protobuf";
 import { StringKeyMap } from "@bfchain/core-model-common";
 import { RANGE_TYPE } from "@bfchain/core-model-constants";
+export declare class TemplateRemark extends Message {
+    /**交易的备注信息 */
+    remark: {
+        [key: string]: string;
+    };
+    private _remarkMap?;
+    get remarkMap(): StringKeyMap<string>;
+    toJSON(): {
+        remark: {
+            [key: string]: string;
+        };
+    };
+    getBytes(): Uint8Array;
+}
 export declare class TransactionBaseStorageModel extends Message<TransactionBaseStorageModel> implements BFChainCore.TransactionStorageJSON, BFChainUtil.JSONAble<BFChainCore.TransactionStorageJSON> {
     static INC: number;
     key: string;

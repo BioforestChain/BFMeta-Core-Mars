@@ -4,12 +4,8 @@ import { SignatureAssetModel } from "@bfchain/core-model-transaction-asset";
  * signature 交易模型
  *
  */
-export declare class SignatureTransaction extends Transaction<BFChainCore.SignatureAssetJSON> implements BFChainCore.TransactionMixJSON<BFChainCore.SignatureAssetJSON, {
-    hasRecipientId: false;
-}> {
-    toJSON: () => BFChainCore.TransactionMixJSON<BFChainCore.SignatureAssetJSON, {
-        hasRecipientId: false;
-    }>;
+export declare class SignatureTransaction extends Transaction<BFChainCore.SignatureAssetJSON> implements BFChainCore.SignatureTransactionJSON {
+    toJSON: () => BFChainCore.SignatureTransactionJSON;
     recipientId: undefined;
     asset: SignatureAssetModel;
 }

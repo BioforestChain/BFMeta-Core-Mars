@@ -1,9 +1,6 @@
 import * as ATOM_TRS from "./atom_transaction";
-
-import {
-  CoreExceptionGenerator,
-  INVALID_TRANSACTION_BASE_TYPE,
-} from "@bfchain/util-helper-exception";
+import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
+import { INVALID_TRANSACTION_BASE_TYPE } from "@bfchain/core-util-exception-errorcode";
 import { Transaction } from "@bfchain/core-model-transaction-base";
 import { Type, Field, Message } from "@bfchain/protobuf";
 
@@ -43,7 +40,6 @@ export enum TRANSACTION_TYPES_BASE {
  * K : TRANSACTION_TYPES_BASE KEY
  * V : TRANSACTION_TYPES_BASE VALUE
  * M : TransactionModelConstructror
- * F : TransactionFactoryConstructror
  */
 export const TRANSACTION_TYPES_MAP = (() => {
   const V_K = new Map<TRANSACTION_TYPES_BASE, string>();
@@ -95,8 +91,6 @@ export const TRANSACTION_TYPES_MAP = (() => {
     KV: K_V,
     VM: BASE_MODEL,
     MV: MODEL_BASE,
-    // VF: new Map<TRANSACTION_TYPES_BASE, BFChainCore.TransactionFactoryConstructor<any>>(),
-    // FV: new Map<BFChainCore.TransactionFactoryConstructor<any>, TRANSACTION_TYPES_BASE>(),
     // VLV: new Map<TRANSACTION_TYPES_BASE, BFChainCore.TransactionLogicVerifierConstructor<any>>(),
     // LVV: new Map<BFChainCore.TransactionLogicVerifierConstructor<any>, TRANSACTION_TYPES_BASE>(),
     trsTypeToV(type: string) {

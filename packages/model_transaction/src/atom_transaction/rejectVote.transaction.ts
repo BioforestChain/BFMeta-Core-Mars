@@ -8,12 +8,8 @@ import { Type, Field } from "@bfchain/protobuf";
  */
 @Type.d("RejectVoteTransaction")
 export class RejectVoteTransaction extends Transaction<BFChainCore.RejectVoteAssetJSON>
-  implements
-    BFChainCore.TransactionMixJSON<BFChainCore.RejectVoteAssetJSON, { hasRecipientId: false }> {
-  toJSON!: () => BFChainCore.TransactionMixJSON<
-    BFChainCore.RejectVoteAssetJSON,
-    { hasRecipientId: false }
-  >;
+  implements BFChainCore.RejectVoteTransactionJSON {
+  toJSON!: () => BFChainCore.RejectVoteTransactionJSON;
   recipientId!: undefined;
   @Field.d(RejectVoteTransaction.INC++, RejectVoteAssetModel)
   asset!: RejectVoteAssetModel;

@@ -4,12 +4,8 @@ import { ToExchangeAssetAssetModel } from "@bfchain/core-model-transaction-asset
  * exchangeAsset 交易模型
  *
  */
-export declare class ToExchangeAssetTransaction extends Transaction<BFChainCore.ToExchangeAssetAssetJSON> implements BFChainCore.TransactionMixJSON<BFChainCore.ToExchangeAssetAssetJSON, {
-    hasRecipientId: false;
-}> {
-    toJSON: () => BFChainCore.TransactionMixJSON<BFChainCore.ToExchangeAssetAssetJSON, {
-        hasRecipientId: false;
-    }>;
+export declare class ToExchangeAssetTransaction extends Transaction<BFChainCore.ToExchangeAssetAssetJSON> implements BFChainCore.ToExchangeAssetTransactionJSON {
+    toJSON: () => BFChainCore.ToExchangeAssetTransactionJSON;
     recipientId: undefined;
     asset: ToExchangeAssetAssetModel;
 }

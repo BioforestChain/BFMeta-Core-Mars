@@ -1,0 +1,752 @@
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const core_helper_config_1 = require("@bfchain/core-helper-config");
+const core_helper_type_1 = require("@bfchain/core-helper-type");
+const core_util_exception_1 = require("@bfchain/core-util-exception");
+const core_util_exception_errorcode_1 = require("@bfchain/core-util-exception-errorcode");
+const core_model_transaction_base_1 = require("@bfchain/core-model-transaction-base");
+const core_model_constants_1 = require("@bfchain/core-model-constants");
+const core_model_transaction_1 = require("@bfchain/core-model-transaction");
+const core_helper_bigint_1 = require("@bfchain/core-helper-bigint");
+const core_helper_asymmetric_1 = require("@bfchain/core-helper-asymmetric");
+const util_1 = require("@bfchain/util");
+const core_helper_account_1 = require("@bfchain/core-helper-account");
+const { ArgumentFormatException, ArgumentIllegalException, NoFoundException, } = core_util_exception_1.CoreExceptionGenerator("HELPER", "transactionHelper");
+let TransactionHelper = class TransactionHelper {
+    constructor(config, baseHelper, jsbiHelper, cryptoHelper, keypairHelper, Buffer, asymmetricHelper, accountBaseHelper) {
+        this.config = config;
+        this.baseHelper = baseHelper;
+        this.jsbiHelper = jsbiHelper;
+        this.cryptoHelper = cryptoHelper;
+        this.keypairHelper = keypairHelper;
+        this.Buffer = Buffer;
+        this.asymmetricHelper = asymmetricHelper;
+        this.accountBaseHelper = accountBaseHelper;
+        this.ALL_TRANSACTION_TYPES = [
+            this.SIGNATURE,
+            this.DELEGATE,
+            this.VOTE,
+            this.USERNAME,
+            this.ACCEPT_VOTE,
+            this.REJECT_VOTE,
+            this.CUSTOM,
+            this.DAPP,
+            this.DAPP_PURCHASING,
+            this.ISSUE_SUBCHAIN,
+            this.MARK,
+            this.ISSUE_ASSET,
+            this.DESTORY_ASSET,
+            this.TRANSFER_ASSET,
+            this.TO_EXCHANGE_ASSET,
+            this.BE_EXCHANGE_ASSET,
+            this.GIFT_ASSET,
+            this.GRAB_ASSET,
+            this.TRUST_ASSET,
+            this.SIGN_FOR_ASSET,
+            this.EMIGRATE_ASSET,
+            this.IMMIGRATE_ASSET,
+            this.TO_EXCHANGE_SPECIAL_ASSET,
+            this.BE_EXCHANGE_SPECIAL_ASSET,
+            this.LOCATION_NAME,
+            this.SET_LNS_RECORD_VALUE,
+            this.SET_LNS_MANAGER,
+        ];
+        this._cache_of_diff_numerator_BI = new Map();
+        this._cache_of_diff_BI = {
+            num: -1,
+            participation: "",
+            diff_BI: BigInt(0),
+        };
+    }
+    get _ASSETTYPE() {
+        return this.config.assetType;
+    }
+    get _CHAIN_NAME() {
+        return this.config.chainName.toUpperCase();
+    }
+    parseType(type) {
+        const assetType_index = type.indexOf("-");
+        const chain_name_index = type.indexOf("-", assetType_index + 1);
+        const type_val = type.substr(chain_name_index + 1);
+        return {
+            assetType: type.substr(0, assetType_index),
+            chainName: type.substring(assetType_index + 1, chain_name_index),
+            baseType: type_val,
+        }; //TRANSACTION_TYPES_MAP.VAL.get(type_val);
+    }
+    resolveType(arg) {
+        return `${arg.assetType}-${arg.chainName}-${arg.baseType}`;
+    }
+    getTypeName(type) {
+        const { baseType } = this.parseType(type);
+        return this.getTypeNameByBaseType(baseType);
+    }
+    getTypeNameByBaseType(baseType) {
+        return core_model_transaction_1.TRANSACTION_TYPES_MAP.VK.get(baseType);
+    }
+    getTransactionType(base_type) {
+        return `${this._ASSETTYPE}-${this._CHAIN_NAME}-${base_type}`;
+    }
+    /**
+     * 交易类型是否合法
+     *
+     * @param type
+     */
+    isValidType(type) {
+        return this.baseHelper.isValidTransactionType(type);
+    }
+    /**
+     * 获取交易 id
+     *
+     * @param trs
+     */
+    generateId(trs) {
+        return this.cryptoHelper
+            .sha256()
+            .update(trs.getBytes())
+            .digest("hex");
+    }
+    /**是否是合法的交易 ID */
+    isValidId(id) {
+        return this.baseHelper.isValidTransactionId(id);
+    }
+    //#region 交易类型
+    /** BSE: 基础交易 */
+    /** SIGNATURE: “签名”交易 */
+    get SIGNATURE() {
+        return this.getTransactionType(core_model_transaction_1.TRANSACTION_TYPES_BASE.SIGNATURE);
+    }
+    /** DELEGATE: 注册为受托人 */
+    get DELEGATE() {
+        return this.getTransactionType(core_model_transaction_1.TRANSACTION_TYPES_BASE.DELEGATE);
+    }
+    /** VOTE: 投票 */
+    get VOTE() {
+        return this.getTransactionType(core_model_transaction_1.TRANSACTION_TYPES_BASE.VOTE);
+    }
+    /** USERNAME: 注册用户别名地址 */
+    get USERNAME() {
+        return this.getTransactionType(core_model_transaction_1.TRANSACTION_TYPES_BASE.USERNAME);
+    }
+    /** ACCEPT_VOTE: 接收投票 */
+    get ACCEPT_VOTE() {
+        return this.getTransactionType(core_model_transaction_1.TRANSACTION_TYPES_BASE.ACCEPT_VOTE);
+    }
+    /** REJECT_VOTE: 拒绝投票 */
+    get REJECT_VOTE() {
+        return this.getTransactionType(core_model_transaction_1.TRANSACTION_TYPES_BASE.REJECT_VOTE);
+    }
+    // /** MULTI:注册多重签名帐号 */
+    // get MULTI() {
+    //   return this.getTransactionType(TRANSACTION_TYPES_BASE.MULTI);
+    // }
+    /** WOD: 拓展交易 */
+    /** CUSTOM: 自定义交易 */
+    get CUSTOM() {
+        return this.getTransactionType(core_model_transaction_1.TRANSACTION_TYPES_BASE.CUSTOM);
+    }
+    /** DAPP: 侧链应用 */
+    get DAPP() {
+        return this.getTransactionType(core_model_transaction_1.TRANSACTION_TYPES_BASE.DAPP);
+    }
+    /**DAPPPURCHASING 侧链购买应用 */
+    get DAPP_PURCHASING() {
+        return this.getTransactionType(core_model_transaction_1.TRANSACTION_TYPES_BASE.DAPP_PURCHASING);
+    }
+    /** ISSUE_SUBCHAIN: 发行子链 */
+    get ISSUE_SUBCHAIN() {
+        return this.getTransactionType(core_model_transaction_1.TRANSACTION_TYPES_BASE.ISSUE_SUBCHAIN);
+    }
+    /** EXT: 存证交易 */
+    /** MARK: 本能理财收益 */
+    get MARK() {
+        return this.getTransactionType(core_model_transaction_1.TRANSACTION_TYPES_BASE.MARK);
+    }
+    /** SOC */
+    // /** FOLLOW: 添加联系人 */
+    // get FOLLOW() {
+    //   return this.getTransactionType(TRANSACTION_TYPES_BASE.FOLLOW);
+    // }
+    /** AST: 数字资产交易 */
+    /** ISSUE_ASSET: 发行数字资产 */
+    get ISSUE_ASSET() {
+        return this.getTransactionType(core_model_transaction_1.TRANSACTION_TYPES_BASE.ISSUE_ASSET);
+    }
+    /** DESTORY_ASSET: 销毁数字资产 */
+    get DESTORY_ASSET() {
+        return this.getTransactionType(core_model_transaction_1.TRANSACTION_TYPES_BASE.DESTORY_ASSET);
+    }
+    /** TRANSFER_ASSET: 数字资产转账 */
+    get TRANSFER_ASSET() {
+        return this.getTransactionType(core_model_transaction_1.TRANSACTION_TYPES_BASE.TRANSFER_ASSET);
+    }
+    /** TO_EXCHANGE_ASSET: 发起数字资产转换 */
+    get TO_EXCHANGE_ASSET() {
+        return this.getTransactionType(core_model_transaction_1.TRANSACTION_TYPES_BASE.TO_EXCHANGE_ASSET);
+    }
+    /** BE_EXCHANGE_ASSET: 接收数字资产转换 */
+    get BE_EXCHANGE_ASSET() {
+        return this.getTransactionType(core_model_transaction_1.TRANSACTION_TYPES_BASE.BE_EXCHANGE_ASSET);
+    }
+    /**GIFT_ASSET: 资产赠送 */
+    get GIFT_ASSET() {
+        return this.getTransactionType(core_model_transaction_1.TRANSACTION_TYPES_BASE.GIFT_ASSET);
+    }
+    /**GRAB_ASSET: 抢资产(红包) */
+    get GRAB_ASSET() {
+        return this.getTransactionType(core_model_transaction_1.TRANSACTION_TYPES_BASE.GRAB_ASSET);
+    }
+    /**TRUST_ASSET: 委托资产 */
+    get TRUST_ASSET() {
+        return this.getTransactionType(core_model_transaction_1.TRANSACTION_TYPES_BASE.TRUST_ASSET);
+    }
+    /**SIGN_FOR_ASSET: 签收资产 */
+    get SIGN_FOR_ASSET() {
+        return this.getTransactionType(core_model_transaction_1.TRANSACTION_TYPES_BASE.SIGN_FOR_ASSET);
+    }
+    /**EMIGRATE_ASSET: 资产迁出 */
+    get EMIGRATE_ASSET() {
+        return this.getTransactionType(core_model_transaction_1.TRANSACTION_TYPES_BASE.EMIGRATE_ASSET);
+    }
+    /**IMMIGRATE_ASSET: 资产迁出 */
+    get IMMIGRATE_ASSET() {
+        return this.getTransactionType(core_model_transaction_1.TRANSACTION_TYPES_BASE.IMMIGRATE_ASSET);
+    }
+    /**TO_EXCHANGE_SPECIAL_ASSET: 特殊资产交换 */
+    get TO_EXCHANGE_SPECIAL_ASSET() {
+        return this.getTransactionType(core_model_transaction_1.TRANSACTION_TYPES_BASE.TO_EXCHANGE_SPECIAL_ASSET);
+    }
+    /**BE_EXCHANGE_SPECIAL_ASSET: 特殊资产交换 */
+    get BE_EXCHANGE_SPECIAL_ASSET() {
+        return this.getTransactionType(core_model_transaction_1.TRANSACTION_TYPES_BASE.BE_EXCHANGE_SPECIAL_ASSET);
+    }
+    /** LNS: 未知名称系统/Location Name System */
+    /**
+     * TOP_LEVEL_CHAIN: 一级链名(根：链名称)
+     * bnqkl.bfchain(1 级)
+     * app.bnqkl.bfchain(2 级)
+     * ark.app.bnqkl.bfchain(3 级)
+     */
+    get LOCATION_NAME() {
+        return this.getTransactionType(core_model_transaction_1.TRANSACTION_TYPES_BASE.LOCATION_NAME);
+    }
+    /** SET_RECORD_VALUE_LNS: 设置解析 */
+    get SET_LNS_RECORD_VALUE() {
+        return this.getTransactionType(core_model_transaction_1.TRANSACTION_TYPES_BASE.SET_LNS_RECORD_VALUE);
+    }
+    /** SET_MANAGER_LNS: 设置管理员 */
+    get SET_LNS_MANAGER() {
+        return this.getTransactionType(core_model_transaction_1.TRANSACTION_TYPES_BASE.SET_LNS_MANAGER);
+    }
+    /**获取创世块里所有的受托人 */
+    genesisDelegates(config = this.config) {
+        const delegatesArr = [];
+        const transactions = config.genesisBlock.transactions;
+        for (const tr of transactions) {
+            const { baseType } = this.parseType(tr.transaction.type);
+            if (baseType === core_model_transaction_1.TRANSACTION_TYPES_BASE.DELEGATE) {
+                delegatesArr.push(tr.transaction.senderId);
+            }
+        }
+        return delegatesArr;
+    }
+    //#endregion
+    /**
+     * 校验交易的签名是否合法
+     */
+    verifyTransactionSignature(transaction, opts) {
+        const taskLabel = (opts && opts.taskLabel) || "Transaction";
+        const { Buffer } = this;
+        const { signSignatureBuffer, signatureBuffer, senderSecondPublicKeyBuffer, senderPublicKeyBuffer, } = transaction;
+        const hash = this.cryptoHelper
+            .sha256()
+            .update(transaction.getBytes(true, true))
+            .digest();
+        // 验证 signature 与 publicKey
+        if (!this.keypairHelper.detached_verify(hash, Buffer.from(signatureBuffer), Buffer.from(senderPublicKeyBuffer))) {
+            throw new ArgumentFormatException(`Invalid ${taskLabel} signature`);
+        }
+        // 验证 signSignature 与 secondPublicKey
+        if ((senderSecondPublicKeyBuffer && senderSecondPublicKeyBuffer.length > 0) ||
+            (signSignatureBuffer && signSignatureBuffer.length > 0)) {
+            if (senderSecondPublicKeyBuffer && signSignatureBuffer) {
+                const shash = this.cryptoHelper
+                    .sha256()
+                    .update(transaction.getBytes(false, true))
+                    .digest();
+                if (!this.keypairHelper.detached_verify(shash, Buffer.from(signSignatureBuffer), Buffer.from(senderSecondPublicKeyBuffer))) {
+                    throw new ArgumentFormatException(`Invalid ${taskLabel} signSignature`);
+                }
+            }
+            else {
+                throw new ArgumentFormatException(`Invalid ${taskLabel} miss signSignature or senderSecondPublicKey`);
+            }
+        }
+    }
+    /**
+     * 校验交易的 remark 大小
+     *
+     * @param transaction
+     */
+    verifyTransactionRemarkSize(transaction) {
+        const templateRemark = core_model_transaction_base_1.TemplateRemark.fromObject({ remark: transaction.remark });
+        const { maxBlockRemarkSize } = this.config;
+        const remarkSize = this.Buffer.from(templateRemark.getBytes()).length;
+        if (remarkSize > maxBlockRemarkSize) {
+            throw new ArgumentIllegalException(core_util_exception_errorcode_1.PROP_SHOULD_LTE_FIELD, {
+                prop: "remark",
+                target: "block",
+                field: maxBlockRemarkSize,
+            });
+        }
+    }
+    /**计算交易手续费 */
+    calcTransactionFee(trs, minTransactionFeePerByte = this.config.genesisBlock.remark.minTransactionFeePerByte) {
+        let byte_num = trs.getBytes().length;
+        let cur_fee = trs.fee;
+        do {
+            const min_fee = this.jsbiHelper
+                .multiplyCeilFraction(byte_num, minTransactionFeePerByte)
+                .toString();
+            if (min_fee.length === cur_fee.length) {
+                return min_fee;
+            }
+            byte_num += cur_fee.length - min_fee.length;
+            cur_fee = min_fee;
+        } while (true);
+    }
+    /**
+     * 计算交易POW的难度
+     */
+    calcDiffOfTransactionProfOfWork(num, participation) {
+        const { _cache_of_diff_BI } = this;
+        let diff_BI;
+        if (_cache_of_diff_BI.num === num && _cache_of_diff_BI.participation === participation) {
+            diff_BI = _cache_of_diff_BI.diff_BI;
+        }
+        else {
+            const { growthFactor, participationRatio, } = this.config.genesisBlock.remark.transactionPowOfWorkConfig;
+            /**难度系数的分子，这个只与num有关系，所以可以进行缓存 */
+            let diff_numerator_BI = this._cache_of_diff_numerator_BI.get(num);
+            if (!diff_numerator_BI) {
+                const num_BI = BigInt(num);
+                const growthFactor_numerator_BI = BigInt(growthFactor.numerator);
+                const growthFactor_denominator_BI = BigInt(growthFactor.denominator);
+                /**(E ^ N) */
+                const BI_1 = growthFactor_numerator_BI ** num_BI / growthFactor_denominator_BI ** num_BI;
+                diff_numerator_BI = BI_1 * num_BI;
+                this._cache_of_diff_numerator_BI.set(num, diff_numerator_BI);
+            }
+            const diff_denominator_numerator_BI = BigInt(participationRatio.numerator) * BigInt(participation);
+            const diff_denominator_denominator_BI = BigInt(participationRatio.denominator);
+            /**难度系数的分母，这与账户的上一轮参与度有关系 */
+            const diff_denominator_BI = diff_denominator_numerator_BI / diff_denominator_denominator_BI + BigInt(1);
+            /**计算出难度系数 */
+            diff_BI = diff_numerator_BI / diff_denominator_BI;
+            /// 如果难度系数是0，直接跳过后面的校验计算
+            if (diff_BI === BigInt(0)) {
+                return diff_BI;
+            }
+            _cache_of_diff_BI.num = num;
+            _cache_of_diff_BI.participation = participation;
+            _cache_of_diff_BI.diff_BI = diff_BI;
+        }
+        return diff_BI;
+    }
+    /**
+     * 校验交易POW
+     * DIFF = (E ^ N) * N / (1 + B + P * R)
+     * @param transaction 交易体
+     * @param num 在一个区块中用户的第N比交易
+     */
+    checkTransactionProfOfWork(signatureBuffer, num, participation, diff_BI) {
+        diff_BI || (diff_BI = this.calcDiffOfTransactionProfOfWork(num, participation));
+        if (!diff_BI) {
+            return true;
+        }
+        /// 根据交易信息校验是否符合难度
+        const shaBuffer = this.cryptoHelper
+            .sha256()
+            .update(signatureBuffer)
+            .digest();
+        /**得分应该读取多少位数，至少8位 */
+        const X = Math.max(Math.min(Math.ceil(Math.log2(Number(diff_BI * (BigInt(1) + diff_BI)))), shaBuffer.length), 8);
+        /**总共的分数 */
+        const hit_numerator_BI = BigInt(2) << BigInt(X);
+        /**将分数基于diff来细分成diff份，得分必须小于最小的一份 */
+        const max_score_BI = hit_numerator_BI / diff_BI;
+        /**读取出交易的得分 */
+        const score_BI = this.baseHelper.getUintX(shaBuffer, X);
+        return score_BI < max_score_BI;
+    }
+    /**交易的噪点生成器 */
+    *nonceWriter(trs) {
+        /// 拷贝一份没有signature的trs
+        trs = trs.$type.decode(trs.getBytes(true, true));
+        /// 强制将nonce归零
+        if (!trs.nonce) {
+            trs.nonce = 0;
+        }
+        /// 获取最基础的交易体
+        const buf_0 = new Uint8Array(trs.$type.encode(trs).finish());
+        yield { uint8array: buf_0, nonce: 0 };
+        /// 获取nonce为1的交易体
+        trs.nonce = 1;
+        const buf_1 = new Uint8Array(trs.$type.encode(trs).finish());
+        yield { uint8array: buf_1, nonce: 1 };
+        /// 获取nonce为2的交易体
+        trs.nonce = 2;
+        const buf_2 = new Uint8Array(trs.$type.encode(trs).finish());
+        yield { uint8array: buf_2, nonce: 2 };
+        /// 对比1与2交易体的差异位，从那一位起步就是nonce的未知
+        let nonce_offset = 0;
+        for (let i = 0; i < buf_1.length; i++) {
+            if (buf_1[i] !== buf_2[i]) {
+                nonce_offset = i;
+                break;
+            }
+        }
+        for (let nonce = 3; nonce < 4294967296; nonce++) {
+            const with_nonce_length = buf_2.length;
+            const with_nonce_arraybuffer = new ArrayBuffer(with_nonce_length);
+            const with_nonce_uint8array = new Uint8Array(with_nonce_arraybuffer);
+            with_nonce_uint8array.set(buf_2, 0);
+            const with_nonce_dataview = new DataView(with_nonce_arraybuffer);
+            with_nonce_dataview.setUint32(nonce_offset, nonce, true);
+            yield { uint8array: with_nonce_uint8array, nonce };
+        }
+    }
+    hashCode(str) {
+        let hash = 0;
+        let i = 0;
+        const len = str.length;
+        while (i < len) {
+            hash = ((hash << 5) - hash + str.charCodeAt(i++)) << 0;
+        }
+        return Math.abs(hash);
+    }
+    /**
+     * 计算抢到的`Random`资产数量
+     * @param grabId
+     * @param blockSignatureBuffer
+     * @param giftTransactionSignatureBuffer
+     * @param gifterId
+     * @param totalGiftAssetNumber
+     * @param totalGrabableTimes
+     */
+    calcGrabRandomGiftAssetNumber(grabId, blockSignatureBuffer, giftTransactionSignatureBuffer, gifterId, totalGiftAssetNumber, totalGrabableTimes) {
+        const { jsbiHelper } = this;
+        const miniUnit = BigInt(0);
+        const jsbiTotalAsset = BigInt(totalGiftAssetNumber);
+        // FIXME: 随机方式待优化
+        const averageAsset = jsbiTotalAsset / BigInt(totalGrabableTimes);
+        if (averageAsset === miniUnit) {
+            return jsbiTotalAsset;
+        }
+        const grabAsset = BigInt(`0x${this.cryptoHelper
+            .md5()
+            .update(grabId)
+            .update(blockSignatureBuffer)
+            .update(giftTransactionSignatureBuffer)
+            .update(gifterId)
+            .digest("hex")}`);
+        let amount = jsbiHelper.multiplyFloorFractionString(totalGiftAssetNumber, {
+            numerator: grabAsset,
+            denominator: BigInt(2) ** BigInt(128),
+        });
+        if (amount <= miniUnit) {
+            amount = BigInt(this.config.miniUnit);
+        }
+        return amount;
+    }
+    /**
+     * 计算抢到的`RecipientRandom`的资产数量
+     * @param grabId
+     * @param blockSignatureBuffer
+     * @param giftTransactionSignatureBuffer
+     * @param gifterId
+     * @param giftTransactionRecipient
+     * @param totalGiftAssetNumber
+     * @param totalGrabableTimes
+     */
+    calcGrabRecipientRandomGiftAssetNumber(grabId, blockSignatureBuffer, giftTransactionSignatureBuffer, gifterId, giftTransactionRecipient, totalGiftAssetNumber) {
+        const weightMap = new Map();
+        let totalWeight_BI = BigInt(0);
+        for (const recipientId of giftTransactionRecipient) {
+            const weight_BI = BigInt(`0x${this.cryptoHelper
+                .md5()
+                .update(blockSignatureBuffer)
+                .update(giftTransactionSignatureBuffer)
+                .update(gifterId)
+                .update(recipientId)
+                .digest("hex")
+                .substr(0, 16)}`);
+            totalWeight_BI = totalWeight_BI + weight_BI;
+            weightMap.set(recipientId, weight_BI);
+        }
+        const grabWeight_BI = weightMap.get(grabId);
+        if (!grabWeight_BI) {
+            throw new NoFoundException(core_util_exception_errorcode_1.NOT_EXIST, {
+                prop: `grabId(${grabId})`,
+                target: "giftTransactionRecipient",
+                function: "calcGrabRecipientRandomGiftAssetNumber",
+            });
+        }
+        return (grabWeight_BI * BigInt(totalGiftAssetNumber)) / totalWeight_BI;
+    }
+    /**
+     * 计算抢到的`Average`的资产数量
+     * @param totalGiftAssetNumber
+     * @param totalGrabableTimes
+     */
+    calcGrabAverageGiftAssetNumber(totalGiftAssetNumber, totalGrabableTimes) {
+        return BigInt(totalGiftAssetNumber) / BigInt(totalGrabableTimes);
+    }
+    /**
+     * 通用的红包交易金额计算器
+     * @param grabId
+     * @param giftTransactionInBlock
+     */
+    calcGrabGiftAssetNumber(grabId, giftTransactionInBlock) {
+        const giftTransaction = giftTransactionInBlock.transaction;
+        const giftAsset = giftTransaction.asset.giftAsset;
+        switch (giftAsset.giftDistributionRule) {
+            case core_model_constants_1.GIFT_DISTRIBUTION_RULE.AVERAGE:
+                return this.calcGrabAverageGiftAssetNumber(giftAsset.amount, giftAsset.totalGrabableTimes);
+            case core_model_constants_1.GIFT_DISTRIBUTION_RULE.RANDOM:
+                return this.calcGrabRandomGiftAssetNumber(grabId, giftTransactionInBlock.signatureBuffer, giftTransaction.signatureBuffer, giftTransaction.senderId, giftAsset.amount, giftAsset.totalGrabableTimes);
+            case core_model_constants_1.GIFT_DISTRIBUTION_RULE.RECIPIENT_RANDOM:
+                return this.calcGrabRecipientRandomGiftAssetNumber(grabId, giftTransactionInBlock.signatureBuffer, giftTransaction.signatureBuffer, giftTransaction.senderId, giftTransaction.range, giftAsset.amount);
+        }
+    }
+    /**基于gift交易以及要生成grab交易的账户信息，生成grabAsset */
+    generateGrabAsset(giftTransactionInBlock, opts) {
+        const grabKeypair = this.keypairHelper.create(opts.mainSecret);
+        const giftTransaction = giftTransactionInBlock.transaction;
+        const giftAsset = giftTransaction.asset.giftAsset;
+        const { grabId = this.accountBaseHelper.getAddressFromPublicKey(grabKeypair.publicKey), grabSecret, } = opts;
+        const blockSignatureBuffer = giftTransactionInBlock.signatureBuffer;
+        const giftTransactionSignatureBuffer = giftTransaction.signatureBuffer;
+        let ciphertextSignature;
+        if (grabSecret) {
+            ciphertextSignature = core_model_transaction_1.AccountSignatureModel.fromObject({
+                signatureBuffer: this.getCiphertextSignature({
+                    secret: grabSecret,
+                    transactionSignatureBuffer: giftTransactionSignatureBuffer,
+                    senderId: grabId,
+                }),
+                publicKeyBuffer: grabKeypair.publicKey,
+            });
+        }
+        const result = core_model_transaction_1.GrabAssetModel.fromObject({
+            blockSignatureBuffer,
+            giftTransactionSignatureBuffer,
+            giftAsset,
+            ciphertextSignature,
+            transactionRangeType: giftTransaction.rangeType,
+            transactionRange: giftTransaction.range,
+            applyBlockHeight: giftTransaction.applyBlockHeight,
+            numberOfBeginUnfrozenBlocks: giftAsset.numberOfBeginUnfrozenBlocks,
+            numberOfEffectiveBlocks: giftTransaction.numberOfEffectiveBlocks,
+        });
+        // 根据共识规则计算出能抢到的金额数量
+        result.amount = this.calcGrabGiftAssetNumber(grabId, giftTransactionInBlock).toString();
+        return result;
+    }
+    /**
+     * 获取使用密文的交易的身份校验签名信息
+     *
+     * @param args `密文``gift 交易签名``发起账户地址`
+     */
+    getCiphertextSignature(args) {
+        return this.asymmetricHelper.detachedSign(this.cryptoHelper
+            .sha256()
+            .update(args.transactionSignatureBuffer)
+            .update(args.senderId)
+            .digest(), this.keypairHelper.create(args.secret).secretKey);
+    }
+    /**
+     * 校验使用密文的交易的身份校验签名信息
+     *
+     * @param args `密文公钥``密文签名``gift 交易签名``发起账户地址`
+     */
+    verifyCiphertextSignature(args) {
+        return this.asymmetricHelper.detachedVeriy(this.cryptoHelper
+            .sha256()
+            .update(args.transactionSignatureBuffer)
+            .update(args.senderId)
+            .digest(), args.ciphertextSignatureBuffer, args.secretPublicKey);
+    }
+    /**
+     * 资产迁出交易创世账户签名
+     *
+     * @param args `所属链名称``网络标识符``资产名称``发起账户地址`
+     */
+    getEmigrateAssetGenesisSignature(args) {
+        const secretKeyBuffer = this.keypairHelper.create(args.secret).secretKey;
+        return this.emigrateAssetGenesisSignature({
+            secretKeyBuffer,
+            chainName: args.chainName,
+            magic: args.magic,
+            assetType: args.assetType,
+            senderId: args.senderId,
+            genesisSignatureBuffer: args.genesisSignatureBuffer,
+        });
+    }
+    emigrateAssetGenesisSignature(args) {
+        const hash = this.cryptoHelper
+            .sha256()
+            .update(args.chainName)
+            .update(args.magic)
+            .update(args.assetType)
+            .update(args.senderId);
+        if (args.genesisSignatureBuffer) {
+            hash.update(args.genesisSignatureBuffer);
+        }
+        return this.asymmetricHelper.detachedSign(hash.digest(), args.secretKeyBuffer);
+    }
+    /**
+     * 资产迁出交易创世账户签名验证
+     *
+     * @param args `创世账户公钥``密文签名``所属链名称``网络标识符``资产名称``发起账户地址`
+     */
+    verifyEmigrateAssetGenesisSignature(args) {
+        const hash = this.cryptoHelper
+            .sha256()
+            .update(args.chainName)
+            .update(args.magic)
+            .update(args.assetType)
+            .update(args.senderId);
+        if (args.genesisSignatureBuffer) {
+            hash.update(args.genesisSignatureBuffer);
+        }
+        return this.asymmetricHelper.detachedVeriy(hash.digest(), args.signatureBuffer, args.secretPublicKey);
+    }
+    /**
+     * 资产迁入交易创世账户签名
+     *
+     * @param args `密文``to 交易签名`
+     */
+    getImmigrateAssetGenesisSignature(args) {
+        const secretKeyBuffer = this.keypairHelper.create(args.secret).secretKey;
+        return this.immigrateAssetGenesisSignature({
+            secretKeyBuffer,
+            transactionSignatureBuffer: args.transactionSignatureBuffer,
+            genesisSignatureBuffer: args.genesisSignatureBuffer,
+        });
+    }
+    immigrateAssetGenesisSignature(args) {
+        const hash = this.cryptoHelper.sha256().update(args.transactionSignatureBuffer);
+        if (args.genesisSignatureBuffer) {
+            hash.update(args.genesisSignatureBuffer);
+        }
+        return this.asymmetricHelper.detachedSign(hash.digest(), args.secretKeyBuffer);
+    }
+    /**
+     * 资产迁入交易创世账户签名验证
+     *
+     * @param args `密文公钥``密文签名``交易签名``to 交易签名`
+     */
+    verifyImmigrateAssetGenesisSignature(args) {
+        const hash = this.cryptoHelper.sha256().update(args.transactionSignatureBuffer);
+        if (args.genesisSignatureBuffer) {
+            hash.update(args.genesisSignatureBuffer);
+        }
+        return this.asymmetricHelper.detachedVeriy(hash.digest(), args.signatureBuffer, args.secretPublicKey);
+    }
+    /**
+     * 第三方签名
+     *
+     * @param args `密文``trust 交易签名``trust 交易 senderId``trust 交易 recipientId`
+     */
+    getThirdPartySignature(args) {
+        const secretKeyBuffer = this.keypairHelper.create(args.secret).secretKey;
+        return this.thirdPartySignature({
+            secretKeyBuffer,
+            transactionSignatureBuffer: args.transactionSignatureBuffer,
+            senderId: args.senderId,
+            recipientId: args.recipientId,
+            thirdPartySignatureBuffer: args.thirdPartySignatureBuffer,
+        });
+    }
+    thirdPartySignature(args) {
+        const hash = this.cryptoHelper
+            .sha256()
+            .update(args.transactionSignatureBuffer)
+            .update(args.senderId)
+            .update(args.recipientId);
+        if (args.thirdPartySignatureBuffer) {
+            hash.update(args.thirdPartySignatureBuffer);
+        }
+        return this.asymmetricHelper.detachedSign(hash.digest(), args.secretKeyBuffer);
+    }
+    /**
+     * 第三方签名验证
+     *
+     * @param args `密文公钥``密文签名``trust 交易签名``trust 交易 senderId``trust 交易 recipientId`
+     */
+    verifyThirdPartySignature(args) {
+        const hash = this.cryptoHelper
+            .sha256()
+            .update(args.transactionSignatureBuffer)
+            .update(args.senderId)
+            .update(args.recipientId);
+        if (args.thirdPartySignatureBuffer) {
+            hash.update(args.thirdPartySignatureBuffer);
+        }
+        return this.asymmetricHelper.detachedVeriy(hash.digest(), args.signatureBuffer, args.secretPublicKey);
+    }
+    /**
+     * 获取交易的最大有效区块高度
+     * @param transaction
+     */
+    getTransactionMaxEffectiveHeight(transaction) {
+        return (transaction.applyBlockHeight +
+            (transaction.numberOfEffectiveBlocks || this.config.maxApplyAndConfirmedBlockHeightDiff));
+    }
+    /**
+     * 获取交易的最小有效区块高度
+     * @param transaction
+     */
+    getTransactionMinEffectiveHeight(transaction) {
+        let minEffectiveHeight = transaction.applyBlockHeight;
+        if (transaction instanceof core_model_transaction_1.GiftAssetTransaction) {
+            minEffectiveHeight += transaction.asset.giftAsset.numberOfBeginUnfrozenBlocks || 0;
+        }
+        // if (transaction instanceof TrustAssetTransaction) {
+        //   minEffectiveHeight += transaction.asset.trustAsset.numberOfBeginUnfrozenBlocks || 0;
+        // } else if (transaction instanceof GiftAssetTransaction) {
+        //   minEffectiveHeight += transaction.asset.giftAsset.numberOfBeginUnfrozenBlocks || 0;
+        // } else if (transaction instanceof ToExchangeAssetTransaction) {
+        //   minEffectiveHeight += transaction.asset.toExchangeAsset.numberOfBeginUnfrozenBlocks || 0;
+        // } else if (transaction instanceof ToExchangeSpecialAssetTransaction) {
+        //   minEffectiveHeight +=
+        //     transaction.asset.toExchangeSpecialAsset.numberOfBeginUnfrozenBlocks || 0;
+        // }
+        return minEffectiveHeight;
+    }
+};
+TransactionHelper = __decorate([
+    util_1.Injectable(),
+    __param(3, util_1.Inject("cryptoHelper")),
+    __param(4, util_1.Inject("keypairHelper")),
+    __param(5, util_1.Inject("Buffer")),
+    __metadata("design:paramtypes", [core_helper_config_1.ConfigHelper,
+        core_helper_type_1.BaseHelper,
+        core_helper_bigint_1.JSBIHelper, Object, Object, Object, core_helper_asymmetric_1.AsymmetricHelper,
+        core_helper_account_1.AccountBaseHelper])
+], TransactionHelper);
+exports.TransactionHelper = TransactionHelper;
+//# sourceMappingURL=transactionHelper.js.map

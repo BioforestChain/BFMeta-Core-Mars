@@ -18,9 +18,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
 var SomeTransactionModel_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 const ATOM_TRS = __importStar(require("./atom_transaction"));
-const core_helper_exception_1 = require("@bfchain/util-helper-exception");
+const core_util_exception_1 = require("@bfchain/core-util-exception");
+const core_util_exception_errorcode_1 = require("@bfchain/core-util-exception-errorcode");
 const protobuf_1 = require("@bfchain/protobuf");
-const { ArgumentFormatException } = core_helper_exception_1.CoreExceptionGenerator("MODEL", "transactionModel");
+const { ArgumentFormatException } = core_util_exception_1.CoreExceptionGenerator("MODEL", "transactionModel");
 var TRANSACTION_TYPES_BASE;
 (function (TRANSACTION_TYPES_BASE) {
     TRANSACTION_TYPES_BASE["SIGNATURE"] = "BSE-01";
@@ -55,7 +56,6 @@ var TRANSACTION_TYPES_BASE;
  * K : TRANSACTION_TYPES_BASE KEY
  * V : TRANSACTION_TYPES_BASE VALUE
  * M : TransactionModelConstructror
- * F : TransactionFactoryConstructror
  */
 exports.TRANSACTION_TYPES_MAP = (() => {
     const V_K = new Map();
@@ -104,8 +104,6 @@ exports.TRANSACTION_TYPES_MAP = (() => {
         KV: K_V,
         VM: BASE_MODEL,
         MV: MODEL_BASE,
-        // VF: new Map<TRANSACTION_TYPES_BASE, BFChainCore.TransactionFactoryConstructor<any>>(),
-        // FV: new Map<BFChainCore.TransactionFactoryConstructor<any>, TRANSACTION_TYPES_BASE>(),
         // VLV: new Map<TRANSACTION_TYPES_BASE, BFChainCore.TransactionLogicVerifierConstructor<any>>(),
         // LVV: new Map<BFChainCore.TransactionLogicVerifierConstructor<any>, TRANSACTION_TYPES_BASE>(),
         trsTypeToV(type) {
@@ -123,7 +121,7 @@ let SomeTransactionModel = SomeTransactionModel_1 = class SomeTransactionModel e
         if (!trs) {
             const Model = exports.TRANSACTION_TYPES_MAP.VM.get(this._trs_base_type);
             if (!Model) {
-                throw new ArgumentFormatException(core_helper_exception_1.INVALID_TRANSACTION_BASE_TYPE, {
+                throw new ArgumentFormatException(core_util_exception_errorcode_1.INVALID_TRANSACTION_BASE_TYPE, {
                     base_type: this._trs_base_type,
                 });
             }
@@ -136,7 +134,7 @@ let SomeTransactionModel = SomeTransactionModel_1 = class SomeTransactionModel e
     set transaction(trs) {
         const base_type = exports.TRANSACTION_TYPES_MAP.trsTypeToV(trs.type);
         if (!exports.TRANSACTION_TYPES_MAP.VK.has(base_type)) {
-            throw new ArgumentFormatException(core_helper_exception_1.INVALID_TRANSACTION_BASE_TYPE, { base_type });
+            throw new ArgumentFormatException(core_util_exception_errorcode_1.INVALID_TRANSACTION_BASE_TYPE, { base_type });
         }
         if (Object.isFrozen(this)) {
             debugger;
@@ -159,7 +157,7 @@ let SomeTransactionModel = SomeTransactionModel_1 = class SomeTransactionModel e
                         const base_type = exports.TRANSACTION_TYPES_MAP.trsTypeToV(type);
                         const ModelCtor = exports.TRANSACTION_TYPES_MAP.VM.get(base_type);
                         if (!ModelCtor) {
-                            throw new ArgumentFormatException(core_helper_exception_1.INVALID_TRANSACTION_BASE_TYPE, {
+                            throw new ArgumentFormatException(core_util_exception_errorcode_1.INVALID_TRANSACTION_BASE_TYPE, {
                                 type_base: base_type,
                             });
                         }

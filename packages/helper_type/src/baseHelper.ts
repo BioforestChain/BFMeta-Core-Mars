@@ -543,7 +543,7 @@ export class BaseHelper {
       return false;
     }
     // 大小写字母、数字、下划线 1-20
-    const allowSymbols = /^[A-Za-z0-9_]{1,20}$/g;
+    const allowSymbols = /^[A-Za-z0-9_]{1,20}$/;
     if (!allowSymbols.test(username)) {
       return false;
     }
@@ -562,7 +562,7 @@ export class BaseHelper {
       return false;
     }
     // 大小写字母、数字、下划线 1-20
-    const allowSymbols = /^[A-Za-z0-9_]{1,20}$/g;
+    const allowSymbols = /^[A-Za-z0-9_]{1,20}$/;
     return allowSymbols.test(username);
   }
 
@@ -575,7 +575,7 @@ export class BaseHelper {
     if (!this.isString(stringNumber)) {
       return false;
     }
-    const allowSymbols = /^[0-9]+$/g;
+    const allowSymbols = /^[0-9]+$/;
     return allowSymbols.test(stringNumber);
   }
 

@@ -8,13 +8,9 @@ import { Type, Field } from "@bfchain/protobuf";
  */
 @Type.d("SetLnsManagerTransaction")
 export class SetLnsManagerTransaction extends Transaction<BFChainCore.SetLnsManagerAssetJSON>
-  implements
-    BFChainCore.TransactionMixJSON<BFChainCore.SetLnsManagerAssetJSON, { hasRecipientId: false }> {
-  toJSON!: () => BFChainCore.TransactionMixJSON<
-    BFChainCore.SetLnsManagerAssetJSON,
-    { hasRecipientId: false }
-  >;
-  recipientId!: undefined;
+  implements BFChainCore.SetLnsManagerTransactionJSON {
+  toJSON!: () => BFChainCore.SetLnsManagerTransactionJSON;
+  recipientId!: string;
   @Field.d(SetLnsManagerTransaction.INC++, SetLnsManagerAssetModel)
   asset!: SetLnsManagerAssetModel;
 }

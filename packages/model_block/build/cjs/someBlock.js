@@ -12,8 +12,9 @@ var SomeBlockModel_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 const atom_block_1 = require("./atom_block");
 const protobuf_1 = require("@bfchain/protobuf");
-const core_helper_exception_1 = require("@bfchain/util-helper-exception");
-const { ArgumentFormatException } = core_helper_exception_1.CoreExceptionGenerator("MODEL", "blockModel");
+const core_util_exception_1 = require("@bfchain/core-util-exception");
+const core_util_exception_errorcode_1 = require("@bfchain/core-util-exception-errorcode");
+const { ArgumentFormatException } = core_util_exception_1.CoreExceptionGenerator("MODEL", "blockModel");
 /**
  * 区块类型
  *
@@ -55,7 +56,7 @@ let SomeBlockModel = SomeBlockModel_1 = class SomeBlockModel extends protobuf_1.
         if (!block) {
             const Model = exports.BLOCK_TYPES_MAP.KM.get(this._block_type);
             if (!Model) {
-                throw new ArgumentFormatException(core_helper_exception_1.INVALID_BLOCK_TYPE, {
+                throw new ArgumentFormatException(core_util_exception_errorcode_1.INVALID_BLOCK_TYPE, {
                     type: this._block_type,
                 });
             }
@@ -68,7 +69,7 @@ let SomeBlockModel = SomeBlockModel_1 = class SomeBlockModel extends protobuf_1.
         const ctor = block.constructor;
         const block_type = exports.BLOCK_TYPES_MAP.MK.get(ctor);
         if (block_type === undefined) {
-            throw new ArgumentFormatException(core_helper_exception_1.INVALID_BLOCK_CONSTRUCTOR, { name: ctor.name });
+            throw new ArgumentFormatException(core_util_exception_errorcode_1.INVALID_BLOCK_CONSTRUCTOR, { name: ctor.name });
         }
         this._block_type = block_type;
         this._block_bytes = new Uint8Array(ctor.encode(block).finish());

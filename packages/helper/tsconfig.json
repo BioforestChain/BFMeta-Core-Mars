@@ -6,6 +6,39 @@
   },
   "references": [
     {
+      "path": "../helper_account/tsconfig.json"
+    },
+    {
+      "path": "../helper_asymmetric/tsconfig.json"
+    },
+    {
+      "path": "../helper_bigint/tsconfig.json"
+    },
+    {
+      "path": "../helper_block-base-statistics/tsconfig.json"
+    },
+    {
+      "path": "../helper_block/tsconfig.json"
+    },
+    {
+      "path": "../helper_chain-asset-info/tsconfig.json"
+    },
+    {
+      "path": "../helper_chain-time/tsconfig.json"
+    },
+    {
+      "path": "../helper_config/tsconfig.json"
+    },
+    {
+      "path": "../helper_milestones/tsconfig.json"
+    },
+    {
+      "path": "../helper_transaction/tsconfig.json"
+    },
+    {
+      "path": "../helper_type/tsconfig.json"
+    },
+    {
       "path": "../typings/tsconfig.json"
     },
     {
@@ -14,20 +47,6 @@
   ],
   "files": [
     "src/@types.ts",
-    "src/accountHelper.ts",
-    "src/asymmetricHelper.ts",
-    "../helper_account/src/base58Helper.ts",
-    "src/baseHelper.ts",
-    "src/blockBaseStatisticsHelper.ts",
-    "src/blockHelper.ts",
-    "src/chainAssetInfoHelper.ts",
-    "src/chainTimeHelper.ts",
-    "src/configHelper.ts",
-    "src/exception/ExceptionGenerator.ts",
-    "src/exception/index.ts",
-    "src/index.ts",
-    "../helper_bigint/src/jsbiHelper.ts",
-    "src/milestonesHelper.ts",
-    "src/transactionHelper.ts"
+    "src/index.ts"
   ]
 }

@@ -9,15 +9,8 @@ import { Type, Field } from "@bfchain/protobuf";
 @Type.d("ToExchangeSpecialAssetTransaction")
 export class ToExchangeSpecialAssetTransaction
   extends Transaction<BFChainCore.ToExchangeSpecialAssetAssetJSON>
-  implements
-    BFChainCore.TransactionMixJSON<
-      BFChainCore.ToExchangeSpecialAssetAssetJSON,
-      { hasRecipientId: false }
-    > {
-  toJSON!: () => BFChainCore.TransactionMixJSON<
-    BFChainCore.ToExchangeSpecialAssetAssetJSON,
-    { hasRecipientId: false }
-  >;
+  implements BFChainCore.ToExchangeSpecialAssetTransactionJSON {
+  toJSON!: () => BFChainCore.ToExchangeSpecialAssetTransactionJSON;
   recipientId!: undefined;
   @Field.d(ToExchangeSpecialAssetTransaction.INC++, ToExchangeSpecialAssetAssetModel)
   asset!: ToExchangeSpecialAssetAssetModel;

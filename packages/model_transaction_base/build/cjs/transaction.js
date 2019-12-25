@@ -24,6 +24,36 @@ const core_model_cacher_1 = require("@bfchain/core-model-cacher");
 const core_model_constants_1 = require("@bfchain/core-model-constants");
 typeof Promise.resolve().then(() => __importStar(require("@bfchain/util")));
 typeof Promise.resolve().then(() => __importStar(require("@bfchain/core-typings")));
+let TemplateRemark = class TemplateRemark extends protobuf_1.Message {
+    get remarkMap() {
+        if (!this._remarkMap) {
+            this._remarkMap = new core_model_common_1.StringKeyMap(this.remark);
+        }
+        return this._remarkMap;
+    }
+    toJSON() {
+        return {
+            remark: this.remark,
+        };
+    }
+    getBytes() {
+        return this.$type.encode(this).finish();
+    }
+};
+__decorate([
+    protobuf_1.MapField.d(1, "string", "string"),
+    __metadata("design:type", Object)
+], TemplateRemark.prototype, "remark", void 0);
+__decorate([
+    core_model_cacher_1.cacheBytesGetter,
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], TemplateRemark.prototype, "getBytes", null);
+TemplateRemark = __decorate([
+    protobuf_1.Type.d("TransactionTemplateRemark")
+], TemplateRemark);
+exports.TemplateRemark = TemplateRemark;
 // 不放在前面模型找不到
 let TransactionBaseStorageModel = TransactionBaseStorageModel_1 = class TransactionBaseStorageModel extends protobuf_1.Message {
     toJSON() {

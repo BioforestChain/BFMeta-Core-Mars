@@ -33,7 +33,6 @@ export declare enum TRANSACTION_TYPES_BASE {
  * K : TRANSACTION_TYPES_BASE KEY
  * V : TRANSACTION_TYPES_BASE VALUE
  * M : TransactionModelConstructror
- * F : TransactionFactoryConstructror
  */
 export declare const TRANSACTION_TYPES_MAP: {
     VK: Map<TRANSACTION_TYPES_BASE, string>;

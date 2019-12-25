@@ -4,12 +4,8 @@ import { DAppAssetModel } from "@bfchain/core-model-transaction-asset";
  * dapp 交易模型
  *
  */
-export declare class DAppTransaction extends Transaction<BFChainCore.DAppAssetJSON> implements BFChainCore.TransactionMixJSON<BFChainCore.DAppAssetJSON, {
-    hasRecipientId: false;
-}> {
-    toJSON: () => BFChainCore.TransactionMixJSON<BFChainCore.DAppAssetJSON, {
-        hasRecipientId: false;
-    }>;
+export declare class DAppTransaction extends Transaction<BFChainCore.DAppAssetJSON> implements BFChainCore.DAppTransactionJSON {
+    toJSON: () => BFChainCore.DAppTransactionJSON;
     recipientId: undefined;
     asset: DAppAssetModel;
 }

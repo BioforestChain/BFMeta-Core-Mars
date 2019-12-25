@@ -74,8 +74,8 @@ exports.SHOULD_NOT_EXIST = (ec.next = "{prop} in {target} should not exist when 
 exports.SHOULD_NOT_INCLUDE = (ec.next =
     "{prop} in {target} should not inclue {value} when {function}");
 /**prop target function */
-exports.DUPLICATE_SIGNATURE = (ec.next =
-    "{prop} in {target} should not duplicate signature when {function}");
+exports.SHOULD_NOT_DUPLICATE = (ec.next =
+    "{prop} in {target} should not duplicate when {function}");
 exports.INVALID_PARAMS = (ec.next = "Invalid {function} params");
 exports.INVALID_PARAMS_FIELD = (ec.next = "Invalid {function} params field: {field}");
 exports.INVALID_TRANSACTION_BASE_TYPE = (ec.next =

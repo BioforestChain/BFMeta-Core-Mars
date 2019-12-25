@@ -1,11 +1,11 @@
 import { GenesisBlock, CommonBlock, RoundLastBlock } from "./atom_block";
 
 import { Type, Field, Message } from "@bfchain/protobuf";
+import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 import {
-  CoreExceptionGenerator,
   INVALID_BLOCK_CONSTRUCTOR,
   INVALID_BLOCK_TYPE,
-} from "@bfchain/util-helper-exception";
+} from "@bfchain/core-util-exception-errorcode";
 const { ArgumentFormatException } = CoreExceptionGenerator("MODEL", "blockModel");
 
 // export type SomeBlock = GenesisBlock | CommonBlock | RoundLastBlock;

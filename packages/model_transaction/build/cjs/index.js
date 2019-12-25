@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 require("./@types");
 __export(require("@bfchain/core-model-transaction-base"));
 __export(require("@bfchain/core-model-transaction-asset"));
+__export(require("./atom_transaction"));
 __export(require("./someTransaction"));
 __export(require("./transactionInBlock"));
 //# sourceMappingURL=index.js.map

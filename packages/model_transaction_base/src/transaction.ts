@@ -6,6 +6,29 @@ import { RANGE_TYPE } from "@bfchain/core-model-constants";
 typeof import("@bfchain/util");
 typeof import("@bfchain/core-typings");
 
+@Type.d("TransactionTemplateRemark")
+export class TemplateRemark extends Message {
+  /**交易的备注信息 */
+  @MapField.d(1, "string", "string")
+  remark!: { [key: string]: string };
+  private _remarkMap?: StringKeyMap<string>;
+  get remarkMap() {
+    if (!this._remarkMap) {
+      this._remarkMap = new StringKeyMap(this.remark);
+    }
+    return this._remarkMap;
+  }
+  toJSON() {
+    return {
+      remark: this.remark,
+    };
+  }
+  @cacheBytesGetter
+  getBytes() {
+    return this.$type.encode(this).finish();
+  }
+}
+
 // 不放在前面模型找不到
 @Type.d("TransactionBaseStorageModel")
 export class TransactionBaseStorageModel extends Message<TransactionBaseStorageModel>

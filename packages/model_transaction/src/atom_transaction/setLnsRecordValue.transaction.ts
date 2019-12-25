@@ -9,15 +9,8 @@ import { Type, Field } from "@bfchain/protobuf";
 @Type.d("SetLnsRecordValueTransaction")
 export class SetLnsRecordValueTransaction
   extends Transaction<BFChainCore.SetLnsRecordValueAssetJSON>
-  implements
-    BFChainCore.TransactionMixJSON<
-      BFChainCore.SetLnsRecordValueAssetJSON,
-      { hasRecipientId: false }
-    > {
-  toJSON!: () => BFChainCore.TransactionMixJSON<
-    BFChainCore.SetLnsRecordValueAssetJSON,
-    { hasRecipientId: false }
-  >;
+  implements BFChainCore.SetLnsRecordValueTransactionJSON {
+  toJSON!: () => BFChainCore.SetLnsRecordValueTransactionJSON;
   recipientId!: undefined;
   @Field.d(SetLnsRecordValueTransaction.INC++, SetLnsRecordValueAssetModel)
   asset!: SetLnsRecordValueAssetModel;
