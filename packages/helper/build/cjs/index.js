@@ -22,5 +22,5 @@ __export(require("@bfchain/core-helper-transaction"));
 __export(require("@bfchain/core-helper-chain-asset-info"));
 __export(require("@bfchain/core-helper-block-base-statistics"));
 __export(require("@bfchain/core-helper-block"));
-// export * from "@bfchain/core-helper-milestones";
+__export(require("@bfchain/core-helper-milestones"));
 //# sourceMappingURL=index.js.map

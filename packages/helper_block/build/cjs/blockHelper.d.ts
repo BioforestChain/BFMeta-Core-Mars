@@ -56,14 +56,10 @@ export declare class BlockHelper {
     forceGetBlockIdByHeight(height: number, blockGetterHelper?: Pick<BFChainCore.BlockGetterHelperInterface, "getBlockSignatureByHeight" | "getBlockByHeight"> | undefined): Promise<string>;
     getLastBlock(blockGetterHelper?: Pick<BFChainCore.BlockGetterHelperInterface, "getLastBlock"> | undefined): Promise<import("@bfchain/core-model-block").Block<BFChainCore.CommonBlockRemarkJSON>>;
     getCurrentGenerateBlock(blockGetterHelper?: Pick<BFChainCore.BlockGetterHelperInterface, "getCurrentGenerateBlock"> | undefined): Promise<Pick<BFChainCore.NewBlockArgJSON, "height" | "previousBlockId" | "timestamp" | "totalFee" | "numberOfTransactions" | "generatorPublicKey" | "blockParticipation"> | Pick<Readonly<{
-        /**
-         * 获取交易 id
-         *
-         * @param block
-         */
         height: number;
         timestamp: number;
         blockParticipation: bigint;
+        /**是否是合法的区块 ID */
         numberOfTransactions: number;
         totalFee: bigint;
         blockId: string;
@@ -71,7 +67,8 @@ export declare class BlockHelper {
     }>, "height" | "previousBlockId" | "timestamp" | "totalFee" | "numberOfTransactions" | "blockParticipation"> | undefined>;
     getCurrentSyncBlockInfo(blockGetterHelper?: Pick<BFChainCore.BlockGetterHelperInterface, "getCurrentSyncBlockInfo"> | undefined): Promise<{
         block: import("@bfchain/core-model-block").Block<BFChainCore.CommonBlockRemarkJSON>;
-        blockGetterHelper: BFChainCore.BlockGetterHelperInterface;
+        blockGetterHelper: BFChainCore.BlockGetterHelperInterface<BFChainCore.ChainChannelInterface>;
+        chainChannelGroup?: BFChainCore.ChainChannelGroupInterface<BFChainCore.ChainChannelInterface> | undefined;
     } | undefined>;
     /**
      * 当前正在处理中的区块
@@ -81,14 +78,10 @@ export declare class BlockHelper {
     private _BTC_BLOCK_WM;
     private _BLOCK_BTC_WM;
     parseBlockToPlotChecker(block: BFChainCore.Block): Readonly<{
-        /**
-         * 获取交易 id
-         *
-         * @param block
-         */
         height: number;
         timestamp: number;
         blockParticipation: bigint;
+        /**是否是合法的区块 ID */
         numberOfTransactions: number;
         totalFee: bigint;
         blockId: string;
@@ -96,28 +89,20 @@ export declare class BlockHelper {
     }>;
     getBlockFromPlotChecker(blockPlotChecker: BFChainCore.BlockPlotChecker): import("@bfchain/core-model-block").Block<BFChainCore.CommonBlockRemarkJSON> | undefined;
     parseNewBlockToPlotChecker(newBlock: BFChainCore.NewBlockArgJSON | BFChainCore.CurrentGenerateBlockInfo): Readonly<{
-        /**
-         * 获取交易 id
-         *
-         * @param block
-         */
         height: number;
         timestamp: number;
         blockParticipation: bigint;
+        /**是否是合法的区块 ID */
         numberOfTransactions: number;
         totalFee: bigint;
         blockId: string;
         previousBlockId: string;
     }>;
     parseBlockPlotCheckerListToPlotChecker(list: BFChainCore.BlockPlotChecker[]): Readonly<{
-        /**
-         * 获取交易 id
-         *
-         * @param block
-         */
         height: number;
         timestamp: number;
         blockParticipation: bigint;
+        /**是否是合法的区块 ID */
         numberOfTransactions: number;
         totalFee: bigint;
         blockId: string;
@@ -132,7 +117,7 @@ export declare class BlockHelper {
         totalChainAsset: bigint;
         numberOfTransactions: number;
     }): string;
-    forceGetBlockGeneratorAddressByRound(round: number, blockGetterHelper?: BFChainCore.BlockGetterHelperInterface | undefined): Promise<string[]>;
+    forceGetBlockGeneratorAddressByRound(round: number, blockGetterHelper?: BFChainCore.BlockGetterHelperInterface<BFChainCore.ChainChannelInterface> | undefined): Promise<string[]>;
     /**
      * 计算链上链的hash
      * @param currentHeight

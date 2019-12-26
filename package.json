@@ -44,6 +44,7 @@
   "scripts": {
     "clear": "bdk-clear -p build",
     "up": "yarn upgrade-interactive --latest",
+    "mono": "bdk-mono",
     "publ": "lerna publish",
     "lsts": "bdk-lsts -p=./tsconfig.json",
     "dev": "bdk-tsc --build -w"
@@ -55,6 +56,6 @@
     "lerna": "^3.19.0"
   },
   "dependencies": {
-    "@bfchain/devkit": "^0.7.2"
+    "@bfchain/devkit": "^0.7.8"
   }
 }

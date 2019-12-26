@@ -1,5 +1,5 @@
 declare namespace BFChainCore {
-    interface BlockGetterHelperInterface {
+    interface BlockGetterHelperInterface<CC extends ChainChannelInterface = ChainChannelInterface> {
         /**根据高度获取区块 */
         getBlockByHeight(height: number): Promise<Block | undefined>;
         /**根据区块 id 获取区块 */
@@ -11,6 +11,7 @@ declare namespace BFChainCore {
         getCurrentSyncBlockInfo?(): Promise<{
             block: Block;
             blockGetterHelper: BlockGetterHelperInterface;
+            chainChannelGroup?: ChainChannelGroupInterface<CC>;
         } | undefined>;
         /**记录链区块分叉信息 */
         chainBlockFork?(block: BFChainCore.Block, cause: number): Promise<void>;
@@ -107,5 +108,19 @@ declare namespace BFChainCore {
     type VoteRecord = {
         [address: string]: VoteRecordInfo;
     };
+    interface ChainChannelGroupInterface<CC extends ChainChannelInterface> {
+        addChainChannel(chainChannel: CC): boolean;
+    }
+    interface ChainChannelInterface {
+        endpoint: BFChainCore.ChannelEndpointInterface<Uint8Array>;
+        close(reason?: string | undefined): void;
+    }
+    type EventListenerRemover = () => void;
+    interface ChannelEndpointInterface<T = Uint8Array> {
+        onMessage(handle: (messageData: T) => any): EventListenerRemover;
+        postMessage(messageData: T): void;
+        onClose(handle: (error: import("@bfchain/util").InterruptedException) => any): EventListenerRemover;
+        close(reason?: string): void;
+    }
 }
 //# sourceMappingURL=@types.d.ts.map

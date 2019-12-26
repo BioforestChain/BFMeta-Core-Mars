@@ -1,5 +1,5 @@
 {
-  "name": "@bfchain/core-transaction-logicVerifier",
+  "name": "@bfchain/core-transaction-logic-verifier",
   "version": "5.0.0-dev.0",
   "description": "",
   "main": "build/cjs/index.js",

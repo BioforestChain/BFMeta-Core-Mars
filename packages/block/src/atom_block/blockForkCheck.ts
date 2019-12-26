@@ -3,7 +3,6 @@ import { Injectable } from "@bfchain/util";
 import { BlockHelper, ChainTimeHelper, ConfigHelper } from "@bfchain/core-helper";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 import { ChainChannel, ChainChannelGroup } from "@bfchain/core-channel";
-import { ToBlockGetter } from "@bfchain/core-getter";
 const { warn, ConsensusException } = CoreExceptionGenerator("Core", "blockForkCheck");
 
 /**
@@ -65,7 +64,6 @@ export class BlockForkChecker {
     private blockHelper: BlockHelper,
     private timeHelper: ChainTimeHelper,
     private config: ConfigHelper,
-    private toBlockGetter: ToBlockGetter,
   ) {}
   /**
    * 检查一条新链与其对应的新区块 的共识
@@ -73,23 +71,21 @@ export class BlockForkChecker {
    * @param chainChannel_or_Group
    * @param blockGetterHelper1
    */
-  async checkNewBlockFromChainChannel(
+  async checkNewBlockFromChainChannel<CC extends ChainChannel>(
     /**
      * 收到的新区块
      */
     pc2_or_lastestBlock2: BFChainCore.BlockPlotChecker | BFChainCore.Block,
-    chainChannel_or_Group: ChainChannelGroup | ChainChannel,
-    blockGetterHelper1 = this.blockHelper.blockGetterHelper,
+    chainChannel_or_Group: ChainChannelGroup<CC> | CC,
+    blockGetterHelper1 = this.blockHelper
+      .blockGetterHelper as BFChainCore.BlockGetterHelperInterface<CC>,
   ) {
     const res = await this.checkNewBlock(
       pc2_or_lastestBlock2,
-      // chainChannel_or_Group.toBlockGetterHelper({
-      //   maxHeight: pc2_or_lastestBlock2.height,
-      // }),
-      // @Gaubee
-      this.toBlockGetter.toBlockGetterHelper({
+      chainChannel_or_Group.toBlockGetterHelper({
         maxHeight: pc2_or_lastestBlock2.height,
       }),
+
       blockGetterHelper1,
     );
     if (res.plot === BLOCK_CHAIN_PLOT.MERGE) {
@@ -449,16 +445,20 @@ export class BlockForkChecker {
         blockGetterHelper2,
       );
 
-      const pcList1 = (await this.blockHelper.forceGetBlockListByHeightRange(
-        sameBlock.height + 1,
-        pc1.height,
-        blockGetterHelper1,
-      )).map(b => this.blockHelper.parseBlockToPlotChecker(b));
-      const pcList2 = (await this.blockHelper.forceGetBlockListByHeightRange(
-        sameBlock.height + 1,
-        pc2.height,
-        blockGetterHelper2,
-      )).map(b => this.blockHelper.parseBlockToPlotChecker(b));
+      const pcList1 = (
+        await this.blockHelper.forceGetBlockListByHeightRange(
+          sameBlock.height + 1,
+          pc1.height,
+          blockGetterHelper1,
+        )
+      ).map(b => this.blockHelper.parseBlockToPlotChecker(b));
+      const pcList2 = (
+        await this.blockHelper.forceGetBlockListByHeightRange(
+          sameBlock.height + 1,
+          pc2.height,
+          blockGetterHelper2,
+        )
+      ).map(b => this.blockHelper.parseBlockToPlotChecker(b));
       const checkedPlot = this.checkSameHeightBlockListPlot_(pcList1, pcList2);
 
       if (checkedPlot === BLOCK_CHAIN_PLOT.FORK) {

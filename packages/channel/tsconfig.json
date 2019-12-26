@@ -6,6 +6,12 @@
   },
   "references": [
     {
+      "path": "../helper/tsconfig.json"
+    },
+    {
+      "path": "../model/tsconfig.json"
+    },
+    {
       "path": "../typings/tsconfig.json"
     },
     {

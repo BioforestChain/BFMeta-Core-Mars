@@ -19,10 +19,10 @@
   resolved "http://192.168.110.189:4873/@bfchain%2fdevkit-tsc/-/devkit-tsc-0.2.5.tgz#0e28fb0a13d53afac45a1cf6326e10c9e2f50518"
   integrity sha512-v4xKVgsRQc8oUQ2SnVhLuKLK8QvpCD3LzMVk1xoCCpuA5Jj3Tg75VSkCZuHttY8cWBKO+k/FI4VXnUoAPfxxtw==
 
-"@bfchain/devkit@^0.7.2":
-  version "0.7.2"
-  resolved "http://192.168.110.189:4873/@bfchain%2fdevkit/-/devkit-0.7.2.tgz#e7c21c04eb81f397dfe033bb6a7c52ca5fa35f67"
-  integrity sha512-pJayVbFXPPxrqA+a3TWQirLukoocYK2bpkp6kLuqJSAsSYRboBdFZIX8WQa7Cz6YyHQWXUrY3mAW8JriwolkrQ==
+"@bfchain/devkit@^0.7.8":
+  version "0.7.8"
+  resolved "http://192.168.110.189:4873/@bfchain%2fdevkit/-/devkit-0.7.8.tgz#eb097c8d2533eb8d3a0bb61600b6fe4697890eeb"
+  integrity sha512-3yHDJQrVhyNTcv9tqX2c5M6LcTxeHaU/YLXrUef0lNCVrmIG6uN12mcBNJYlUazbVr2guba6MivjtzrvXksWLw==
   dependencies:
     "7zip-min" "^1.1.1"
     "@bfchain/devkit-tsc" "0.2.5"

@@ -13,6 +13,9 @@
     },
     {
       "path": "../typings/tsconfig.json"
+    },
+    {
+      "path": "../channel/tsconfig.json"
     }
   ],
   "files": [

@@ -43,6 +43,10 @@ const { ArgumentFormatException, log, warn } = CoreExceptionGenerator("Core", "B
 
 type BlockFactoryCtor<T extends Block> = new (...args: any[]) => BlockFactory<T>;
 
+// const a:BFChainCore.AA<{x:1}> = {} as any
+
+// const z = a.foo()
+// z.s
 @Injectable("bfchain-core:BlockCore")
 export class BlockCore {
   constructor(
