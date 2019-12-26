@@ -1,0 +1,22 @@
+{
+  "extends": "../../config/tsconfig_base/base.tsconfig.cjs",
+  "compilerOptions": {
+    "outDir": "./build/cjs",
+    "rootDir": "./src"
+  },
+  "references": [
+    {
+      "path": "../block/tsconfig.json"
+    },
+    {
+      "path": "../transaction/tsconfig.json"
+    },
+    {
+      "path": "../typings/tsconfig.json"
+    }
+  ],
+  "files": [
+    "src/index.ts",
+    "src/issueSubchain.ts"
+  ]
+}

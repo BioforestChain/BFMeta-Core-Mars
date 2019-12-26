@@ -51,7 +51,7 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
   @Inject(ChainAssetInfoHelper)
   protected chainAssetInfoHelper!: ChainAssetInfoHelper;
   @Inject("bfchain-core:BlockCore")
-  protected blockCore!: import("../block").BlockCore;
+  protected blockCore!: import("@bfchain/core-block").BlockCore;
   @Inject(BlockGeneratorCalculator)
   protected blockGeneratorCalculator!: BlockGeneratorCalculator;
   @Inject("blockGetterHelper", { optional: true, dynamics: true })

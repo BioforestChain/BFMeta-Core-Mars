@@ -1,4 +1,4 @@
-import { TemplateRemark } from "../model/templateRemark";
+import { TemplateRemark } from "@bfchain/model";
 import { Injectable } from "@bfchain/util";
 
 @Injectable()

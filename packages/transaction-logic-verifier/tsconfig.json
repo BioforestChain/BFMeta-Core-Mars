@@ -6,7 +6,16 @@
   },
   "references": [
     {
+      "path": "../helper/tsconfig.json"
+    },
+    {
+      "path": "../model/tsconfig.json"
+    },
+    {
       "path": "../typings/tsconfig.json"
+    },
+    {
+      "path": "../util_exception/tsconfig.json"
     }
   ],
   "files": [

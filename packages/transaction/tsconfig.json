@@ -6,7 +6,16 @@
   },
   "references": [
     {
+      "path": "../helper/tsconfig.json"
+    },
+    {
+      "path": "../model/tsconfig.json"
+    },
+    {
       "path": "../typings/tsconfig.json"
+    },
+    {
+      "path": "../util_exception/tsconfig.json"
     }
   ],
   "files": [
@@ -26,7 +35,6 @@
     "src/atom_transaction/immigrateAsset.ts",
     "src/atom_transaction/index.ts",
     "src/atom_transaction/issueAsset.ts",
-    "src/atom_transaction/issueSubchain.ts",
     "src/atom_transaction/locationName.ts",
     "src/atom_transaction/mark.ts",
     "src/atom_transaction/rejectVote.ts",

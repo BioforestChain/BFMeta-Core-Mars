@@ -6,6 +6,9 @@
   },
   "references": [
     {
+      "path": "../block/tsconfig.json"
+    },
+    {
       "path": "../helper/tsconfig.json"
     },
     {

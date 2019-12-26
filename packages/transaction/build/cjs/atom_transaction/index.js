@@ -13,7 +13,6 @@ __export(require("./rejectVote"));
 __export(require("./dapp"));
 __export(require("./dappPurchasing"));
 __export(require("./mark"));
-__export(require("./issueSubchain"));
 __export(require("./issueAsset"));
 __export(require("./transferAsset"));
 __export(require("./destoryAsset"));

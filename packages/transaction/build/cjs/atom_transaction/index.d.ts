@@ -8,7 +8,6 @@ export * from "./rejectVote";
 export * from "./dapp";
 export * from "./dappPurchasing";
 export * from "./mark";
-export * from "./issueSubchain";
 export * from "./issueAsset";
 export * from "./transferAsset";
 export * from "./destoryAsset";

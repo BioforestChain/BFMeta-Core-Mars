@@ -546,39 +546,26 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
     }
 
     // FIXME: @wmc
-    // if (remark.parentGenesisBlock) {
-    //   const parentGenesisBlock = remark.parentGenesisBlock;
-    //   let chainConfig = this.configMap.get(parentGenesisBlock.magic);
-    //   if (!chainConfig) {
-    //     // FIXME: 没有子链的配置文件就生成一个
-    //     chainConfig = new ConfigHelper(parentGenesisBlock, this.config.business);
-    //   }
-    //   const BFChainCoreFactory = this.moduleMap.get<
-    //     typeof import("./_blockbase").BFChainCoreFactory
-    //   >("BFChainCoreFactory");
-    //   if (!BFChainCoreFactory) {
-    //     throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-    //       prop: "BFChainCoreFactory",
-    //       ...GenesisBlockRemark_Exception_Detail,
-    //     });
-    //   }
-    //   const bfchainCore = BFChainCoreFactory({
-    //     config: chainConfig,
-    //     Buffer: this.moduleMap.get("Buffer"),
-    //     cryptoHelper: this.moduleMap.get("cryptoHelper"),
-    //     keypairHelper: this.moduleMap.get("keypairHelper"),
-    //     ed2curveHelper: this.moduleMap.get("ed2curveHelper"),
-    //   });
-    //   const genesisBlock = bfchainCore.block.recombineBlock<
-    //     BFChainCore.Block<BFChainCore.GenesisBlockRemarkJSON>
-    //   >(parentGenesisBlock);
-    //   bfchainCore.block
-    //     .getBlockFactoryFromHeight<BFChainCore.Block<BFChainCore.GenesisBlockRemarkJSON>>(
-    //       parentGenesisBlock.height,
-    //     )
-    //     .verify(genesisBlock);
-    // }
+    if (remark.parentGenesisBlock) {
+      const parentGenesisBlock = remark.parentGenesisBlock;
+      let chainConfig = this.configMap.get(parentGenesisBlock.magic);
+      if (!chainConfig) {
+        // FIXME: 没有子链的配置文件就生成一个
+        chainConfig = new ConfigHelper(parentGenesisBlock, this.config.business);
+      }
+
+      const genesisBlock = this._blockCore.recombineBlock<
+        BFChainCore.Block<BFChainCore.GenesisBlockRemarkJSON>
+      >(parentGenesisBlock);
+      this._blockCore
+        .getBlockFactoryFromHeight<BFChainCore.Block<BFChainCore.GenesisBlockRemarkJSON>>(
+          parentGenesisBlock.height,
+        )
+        .verify(genesisBlock, chainConfig);
+    }
   }
+  @Inject("bfchain-core:BlockCore")
+  private _blockCore!: import("../").BlockCore;
 
   /**
    * 初始化 genesisBlock

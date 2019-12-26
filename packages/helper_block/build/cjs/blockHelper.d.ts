@@ -55,7 +55,7 @@ export declare class BlockHelper {
     forceGetBlockSignatureByHeight(height: number, blockGetterHelper?: Pick<BFChainCore.BlockGetterHelperInterface, "getBlockSignatureByHeight" | "getBlockByHeight"> | undefined): Promise<Uint8Array>;
     forceGetBlockIdByHeight(height: number, blockGetterHelper?: Pick<BFChainCore.BlockGetterHelperInterface, "getBlockSignatureByHeight" | "getBlockByHeight"> | undefined): Promise<string>;
     getLastBlock(blockGetterHelper?: Pick<BFChainCore.BlockGetterHelperInterface, "getLastBlock"> | undefined): Promise<import("@bfchain/core-model-block").Block<BFChainCore.CommonBlockRemarkJSON>>;
-    getCurrentGenerateBlock(blockGetterHelper?: Pick<BFChainCore.BlockGetterHelperInterface, "getCurrentGenerateBlock"> | undefined): Promise<Pick<BFChainCore.NewBlockArgJSON, "height" | "previousBlockId" | "timestamp" | "totalFee" | "numberOfTransactions" | "generatorPublicKey" | "blockParticipation"> | Pick<Readonly<{
+    getCurrentGenerateBlock(blockGetterHelper?: Pick<BFChainCore.BlockGetterHelperInterface, "getCurrentGenerateBlock"> | undefined): Promise<Pick<BFChainCore.NewBlockArgJSON, "generatorPublicKey" | "height" | "previousBlockId" | "timestamp" | "totalFee" | "numberOfTransactions" | "blockParticipation"> | Pick<Readonly<{
         height: number;
         timestamp: number;
         blockParticipation: bigint;

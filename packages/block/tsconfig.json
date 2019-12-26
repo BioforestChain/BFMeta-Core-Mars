@@ -6,16 +6,19 @@
   },
   "references": [
     {
+      "path": "../channel/tsconfig.json"
+    },
+    {
       "path": "../helper/tsconfig.json"
     },
     {
       "path": "../model/tsconfig.json"
     },
     {
-      "path": "../typings/tsconfig.json"
+      "path": "../transaction-logic-verifier/tsconfig.json"
     },
     {
-      "path": "../channel/tsconfig.json"
+      "path": "../typings/tsconfig.json"
     }
   ],
   "files": [

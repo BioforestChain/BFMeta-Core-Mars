@@ -14,6 +14,9 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-typings": "^5.0.0-dev.0"
+    "@bfchain/core-helper": "^5.0.0-dev.0",
+    "@bfchain/core-model": "^5.0.0-dev.0",
+    "@bfchain/core-typings": "^5.0.0-dev.0",
+    "@bfchain/core-util-exception": "^5.0.0-dev.0"
   }
 }

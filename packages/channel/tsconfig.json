@@ -16,6 +16,9 @@
     },
     {
       "path": "../util_exception_errorcode/tsconfig.json"
+    },
+    {
+      "path": "../transaction/tsconfig.json"
     }
   ],
   "files": [

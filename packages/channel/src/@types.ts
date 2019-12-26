@@ -47,32 +47,4 @@ declare namespace BFChainCore {
   //#endregion
 
 
-
-  // #region TransactionGetterHelperInterface
-  interface TransactionGetterHelperInterface {
-    /**根据交易 id 获取交易 */
-    getTransactionById(id: string): Promise<TransactionJSON | undefined>;
-    /**查询交易是否存在 */
-    getCountTransaction(args: {
-      /**交易类型 */
-      type?: string;
-      /**交易的发起账户 */
-      senderId?: string;
-      /**交易的接收账户 */
-      recipientId?: string;
-      /**交易的签名 */
-      id?: string;
-      /**索引值 */
-      storageValue?: string;
-    }): Promise<number>;
-    /**某个账户是否购买指定的 dappid */
-    getPurchaseDApp(address: string, dappid: string): Promise<boolean>;
-    /**查询交易是否已经在未处理交易中 */
-    checkRepeatInUntreatedTransaction(senderId: string, id: string): Promise<boolean>;
-    /**查询交易是否已经在链上 */
-    checkRepeatInBlockChainTransaction(id: string): Promise<boolean>;
-    /**查询新生成的受托人 */
-    getNewDelegates(height: number): Promise<string[]>;
-  }
-  // #endregion
 }

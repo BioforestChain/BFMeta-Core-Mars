@@ -1,4 +1,4 @@
-import { TransactionFactory, BNID_TYPE } from "./_txbase";
+import { TransactionFactory, BNID_TYPE } from "@bfchain/core-transaction";
 import { IssueSubchainTransaction, ACCOUNT_STATUS } from "@bfchain/core-model";
 import {
   TransactionHelper,
