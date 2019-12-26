@@ -55,7 +55,7 @@ export declare class TransactionPowOfWorkConfigModel extends Message<Transaction
     participationRatio: Fraction;
     toJSON(): {
         growthFactor: {
-            numerator: string;
+            numerator: string; /**分配给打块账户的奖励占区块总奖励的比例 */
             denominator: string;
         };
         participationRatio: {
@@ -207,7 +207,7 @@ export declare class GenesisBlockRemarkModel extends RoundDelegateRemarkModel<Ge
         participationTotalFee: number;
         transactionPowOfWorkConfig: {
             growthFactor: {
-                numerator: string;
+                numerator: string; /**分配给打块账户的奖励占区块总奖励的比例 */
                 denominator: string;
             };
             participationRatio: {

@@ -12,7 +12,7 @@ const { NoFoundException } = CoreExceptionGenerator("Core", "PickNextRoundDelega
  * 区块锻造者计算器
  */
 @Injectable()
-export class PickNextRoundDelegates<T extends BFChainCore.AccountBaseInfo> {
+export class PickNextRoundDelegates<T extends BFChainCore.ForSortAccountInfo> {
   constructor(
     private config: ConfigHelper,
     private blockHelper: BlockHelper,

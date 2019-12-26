@@ -14,6 +14,16 @@ const {
   OutOfRangeException,
 } = CoreExceptionGenerator("HELPER", "blockHelper");
 
+console.log([
+  [Injectable, Inject, getHexFromArrayBuffer],
+  [ConfigHelper],
+  [BaseHelper],
+  [PROP_SHOULD_LTE_FIELD, OUT_OF_RANGE],
+  [CoreExceptionGenerator, NOT_EXIST],
+  [BLOCK_TYPES_BASE],
+  [(AccountBaseHelper as any) as RoundLastBlock],
+]);
+
 @Injectable()
 export class BlockHelper {
   constructor(
@@ -533,7 +543,7 @@ export class BlockHelper {
    * @param itemA
    * @param itemB
    */
-  nextRoundDelegatesCompareFn<T extends BFChainCore.AccountBaseInfo>(itemA: T, itemB: T) {
+  nextRoundDelegatesCompareFn<T extends BFChainCore.ForSortAccountInfo>(itemA: T, itemB: T) {
     /**
      * 因为要从大到小排序，所以这里使用`b-a`
      */
@@ -560,7 +570,7 @@ export class BlockHelper {
    * 对受托人进行排序
    * @param accountInfoList
    */
-  sortInRankAccountInfoList<T extends BFChainCore.AccountBaseInfo>(accountInfoList: T[]) {
+  sortInRankAccountInfoList<T extends BFChainCore.ForSortAccountInfo>(accountInfoList: T[]) {
     return accountInfoList.sort(this.nextRoundDelegatesCompareFn);
   }
 }

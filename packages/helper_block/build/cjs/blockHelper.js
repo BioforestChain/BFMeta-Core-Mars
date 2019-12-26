@@ -20,6 +20,15 @@ const core_util_exception_1 = require("@bfchain/core-util-exception");
 const core_model_block_1 = require("@bfchain/core-model-block");
 const core_helper_account_1 = require("@bfchain/core-helper-account");
 const { ArgumentFormatException, NoFoundException, ArgumentIllegalException, OutOfRangeException, } = core_util_exception_1.CoreExceptionGenerator("HELPER", "blockHelper");
+console.log([
+    [util_1.Injectable, util_1.Inject, util_1.getHexFromArrayBuffer],
+    [core_helper_config_1.ConfigHelper],
+    [core_helper_type_1.BaseHelper],
+    [core_util_exception_errorcode_1.PROP_SHOULD_LTE_FIELD, core_util_exception_errorcode_1.OUT_OF_RANGE],
+    [core_util_exception_1.CoreExceptionGenerator, core_util_exception_1.NOT_EXIST],
+    [core_model_block_1.BLOCK_TYPES_BASE],
+    [core_helper_account_1.AccountBaseHelper],
+]);
 let BlockHelper = class BlockHelper {
     constructor(config, baseHelper, accountBaseHelper, cryptoHelper, keypairHelper, Buffer) {
         this.config = config;

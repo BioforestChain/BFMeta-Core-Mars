@@ -11,6 +11,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 require("./@types");
-typeof Promise.resolve().then(() => __importStar(require("@bfchain/core-channel")));
+typeof Promise.resolve().then(() => __importStar(require("@bfchain/core-model-channel")));
 __export(require("./blockHelper"));
 //# sourceMappingURL=index.js.map

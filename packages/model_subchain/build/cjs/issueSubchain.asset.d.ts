@@ -131,7 +131,7 @@ export declare class IssueSubchainModel extends Message<IssueSubchainModel> impl
         transactionPowOfWorkConfig: {
             growthFactor: {
                 numerator: string;
-                denominator: string;
+                denominator: string; /**最大区块 remark 长度 */
             };
             participationRatio: {
                 numerator: number;
@@ -145,12 +145,12 @@ export declare class IssueSubchainModel extends Message<IssueSubchainModel> impl
             blockSize: number;
             timestamp: number;
             blockSignature: string;
-            generatorPublicKey: string; /**发行子链最小的持有本链资产数量 */
-            numberOfTransactions: number;
+            generatorPublicKey: string;
+            numberOfTransactions: number; /**链资产和数字资产的兑换比例 */
             payloadHash: string;
             payloadLength: number;
             previousBlock: string;
-            totalAmount: string;
+            totalAmount: string; /**链资产和子链资产的兑换比例 */
             totalFee: string;
             reward: string;
             magic: string;
@@ -162,7 +162,7 @@ export declare class IssueSubchainModel extends Message<IssueSubchainModel> impl
                     assetTypes: number;
                     assetBalance: string;
                 }[];
-                signature: string; /**交易的发起高度和确认高度最大的区块高度间隔 */
+                signature: string;
             } & {
                 transaction: BFChainCore.TransactionJSON<object>;
             })[];
@@ -171,6 +171,7 @@ export declare class IssueSubchainModel extends Message<IssueSubchainModel> impl
                 totalFee: string;
                 totalAsset: string;
                 totalChainAsset: string;
+                /**创世受托人数量 */
                 totalAccount: number;
                 assetStatisticHashMap: {
                     [x: number]: import("@bfchain/core-model-block").AssetStatisticModel;
@@ -241,7 +242,7 @@ export declare class IssueSubchainAssetModel extends Message<IssueSubchainAssetM
             transactionPowOfWorkConfig: {
                 growthFactor: {
                     numerator: string;
-                    denominator: string;
+                    denominator: string; /**最大区块 remark 长度 */
                 };
                 participationRatio: {
                     numerator: number;
@@ -255,12 +256,12 @@ export declare class IssueSubchainAssetModel extends Message<IssueSubchainAssetM
                 blockSize: number;
                 timestamp: number;
                 blockSignature: string;
-                generatorPublicKey: string; /**发行子链最小的持有本链资产数量 */
-                numberOfTransactions: number;
+                generatorPublicKey: string;
+                numberOfTransactions: number; /**链资产和数字资产的兑换比例 */
                 payloadHash: string;
                 payloadLength: number;
                 previousBlock: string;
-                totalAmount: string;
+                totalAmount: string; /**链资产和子链资产的兑换比例 */
                 totalFee: string;
                 reward: string;
                 magic: string;
@@ -272,7 +273,7 @@ export declare class IssueSubchainAssetModel extends Message<IssueSubchainAssetM
                         assetTypes: number;
                         assetBalance: string;
                     }[];
-                    signature: string; /**交易的发起高度和确认高度最大的区块高度间隔 */
+                    signature: string;
                 } & {
                     transaction: BFChainCore.TransactionJSON<object>;
                 })[];
@@ -281,6 +282,7 @@ export declare class IssueSubchainAssetModel extends Message<IssueSubchainAssetM
                     totalFee: string;
                     totalAsset: string;
                     totalChainAsset: string;
+                    /**创世受托人数量 */
                     totalAccount: number;
                     assetStatisticHashMap: {
                         [x: number]: import("@bfchain/core-model-block").AssetStatisticModel;

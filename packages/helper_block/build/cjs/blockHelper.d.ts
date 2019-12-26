@@ -55,7 +55,12 @@ export declare class BlockHelper {
     forceGetBlockSignatureByHeight(height: number, blockGetterHelper?: Pick<BFChainCore.BlockGetterHelperInterface, "getBlockSignatureByHeight" | "getBlockByHeight"> | undefined): Promise<Uint8Array>;
     forceGetBlockIdByHeight(height: number, blockGetterHelper?: Pick<BFChainCore.BlockGetterHelperInterface, "getBlockSignatureByHeight" | "getBlockByHeight"> | undefined): Promise<string>;
     getLastBlock(blockGetterHelper?: Pick<BFChainCore.BlockGetterHelperInterface, "getLastBlock"> | undefined): Promise<import("@bfchain/core-model-block").Block<BFChainCore.CommonBlockRemarkJSON>>;
-    getCurrentGenerateBlock(blockGetterHelper?: Pick<BFChainCore.BlockGetterHelperInterface, "getCurrentGenerateBlock"> | undefined): Promise<Pick<BFChainCore.NewBlockArgJSON, "generatorPublicKey" | "height" | "previousBlockId" | "timestamp" | "totalFee" | "numberOfTransactions" | "blockParticipation"> | Pick<Readonly<{
+    getCurrentGenerateBlock(blockGetterHelper?: Pick<BFChainCore.BlockGetterHelperInterface, "getCurrentGenerateBlock"> | undefined): Promise<Pick<BFChainCore.NewBlockArgJSON, "height" | "previousBlockId" | "timestamp" | "totalFee" | "numberOfTransactions" | "generatorPublicKey" | "blockParticipation"> | Pick<Readonly<{
+        /**
+         * 获取交易 id
+         *
+         * @param block
+         */
         height: number;
         timestamp: number;
         blockParticipation: bigint;
@@ -66,8 +71,7 @@ export declare class BlockHelper {
     }>, "height" | "previousBlockId" | "timestamp" | "totalFee" | "numberOfTransactions" | "blockParticipation"> | undefined>;
     getCurrentSyncBlockInfo(blockGetterHelper?: Pick<BFChainCore.BlockGetterHelperInterface, "getCurrentSyncBlockInfo"> | undefined): Promise<{
         block: import("@bfchain/core-model-block").Block<BFChainCore.CommonBlockRemarkJSON>;
-        blockGetterHelper: BFChainCore.BlockGetterHelperInterface<import("@bfchain/core-channel").ChainChannel>;
-        chainChannelGroup?: any;
+        blockGetterHelper: BFChainCore.BlockGetterHelperInterface;
     } | undefined>;
     /**
      * 当前正在处理中的区块
@@ -77,6 +81,11 @@ export declare class BlockHelper {
     private _BTC_BLOCK_WM;
     private _BLOCK_BTC_WM;
     parseBlockToPlotChecker(block: BFChainCore.Block): Readonly<{
+        /**
+         * 获取交易 id
+         *
+         * @param block
+         */
         height: number;
         timestamp: number;
         blockParticipation: bigint;
@@ -87,6 +96,11 @@ export declare class BlockHelper {
     }>;
     getBlockFromPlotChecker(blockPlotChecker: BFChainCore.BlockPlotChecker): import("@bfchain/core-model-block").Block<BFChainCore.CommonBlockRemarkJSON> | undefined;
     parseNewBlockToPlotChecker(newBlock: BFChainCore.NewBlockArgJSON | BFChainCore.CurrentGenerateBlockInfo): Readonly<{
+        /**
+         * 获取交易 id
+         *
+         * @param block
+         */
         height: number;
         timestamp: number;
         blockParticipation: bigint;
@@ -96,6 +110,11 @@ export declare class BlockHelper {
         previousBlockId: string;
     }>;
     parseBlockPlotCheckerListToPlotChecker(list: BFChainCore.BlockPlotChecker[]): Readonly<{
+        /**
+         * 获取交易 id
+         *
+         * @param block
+         */
         height: number;
         timestamp: number;
         blockParticipation: bigint;
@@ -113,7 +132,7 @@ export declare class BlockHelper {
         totalChainAsset: bigint;
         numberOfTransactions: number;
     }): string;
-    forceGetBlockGeneratorAddressByRound(round: number, blockGetterHelper?: BFChainCore.BlockGetterHelperInterface<import("@bfchain/core-channel").ChainChannel> | undefined): Promise<string[]>;
+    forceGetBlockGeneratorAddressByRound(round: number, blockGetterHelper?: BFChainCore.BlockGetterHelperInterface | undefined): Promise<string[]>;
     /**
      * 计算链上链的hash
      * @param currentHeight
@@ -126,12 +145,12 @@ export declare class BlockHelper {
      * @param itemA
      * @param itemB
      */
-    nextRoundDelegatesCompareFn<T extends BFChainCore.AccountBaseInfo>(itemA: T, itemB: T): 1 | 0 | -1;
+    nextRoundDelegatesCompareFn<T extends BFChainCore.ForSortAccountInfo>(itemA: T, itemB: T): 1 | 0 | -1;
     /**
      * 对受托人进行排序
      * @param accountInfoList
      */
-    sortInRankAccountInfoList<T extends BFChainCore.AccountBaseInfo>(accountInfoList: T[]): T[];
+    sortInRankAccountInfoList<T extends BFChainCore.ForSortAccountInfo>(accountInfoList: T[]): T[];
 }
 export {};
 //# sourceMappingURL=blockHelper.d.ts.map
