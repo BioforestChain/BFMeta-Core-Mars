@@ -6,7 +6,6 @@ import { QueneEventEmitterPro, PromiseOut } from "@bfchain/util";
 export declare abstract class ChainChannelBase extends QueneEventEmitterPro<BFChainCore.ChainChannelHanlderEventMap> {
     protected abstract config: ConfigHelper;
     protected abstract baseHelper: BaseHelper;
-    abstract findBlock<B extends Block = Block>(query: BFChainCore.BlockQueryOptionsJSON, opts?: BFChainCore.ChannelRequestOptions | undefined): Promise<B | undefined>;
 }
 /**
  * 为数据收发处理器包装数据处理

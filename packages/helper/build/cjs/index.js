@@ -17,10 +17,10 @@ __export(require("@bfchain/core-helper-chain-time"));
 __export(require("@bfchain/core-helper-bigint"));
 __export(require("@bfchain/core-helper-asymmetric"));
 __export(require("@bfchain/core-helper-account"));
+__export(require("@bfchain/core-helper-type"));
 __export(require("@bfchain/core-helper-transaction"));
 __export(require("@bfchain/core-helper-chain-asset-info"));
 __export(require("@bfchain/core-helper-block-base-statistics"));
 __export(require("@bfchain/core-helper-block"));
-__export(require("@bfchain/core-helper-type"));
 __export(require("@bfchain/core-helper-milestones"));
 //# sourceMappingURL=index.js.map

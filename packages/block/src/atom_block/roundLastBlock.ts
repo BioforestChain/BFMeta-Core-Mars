@@ -1,7 +1,6 @@
 import { BlockFactory, BlockBody } from "./_blockbase";
-import { RoundLastBlock } from "../../model";
+import { RoundLastBlock } from "@bfchain/core-model-block";
 import {
-  CoreExceptionGenerator,
   BlockHelper,
   AccountBaseHelper,
   BaseHelper,
@@ -12,12 +11,13 @@ import {
   BlockBaseStatisticsHelper,
 } from "@bfchain/core-helper";
 import {
+  CoreExceptionGenerator,
   PROP_IS_REQUIRE,
   PROP_IS_INVALID,
   NOT_MATCH,
   SHOULD_BE,
   SHOULD_NOT_INCLUDE,
-} from "../../../helper/src/exception/errorCode";
+} from "@bfchain/core-util-exception";
 import { Injectable, Inject } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "RoundLastBlockFactory");
 
@@ -28,7 +28,7 @@ const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "Round
 @Injectable()
 export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
   @Inject("bfchain-core:TransactionCore")
-  public transactionCore!: import("../transaction").TransactionCore;
+  public transactionCore!: import("@bfchain/core-transaction").TransactionCore;
   constructor(
     public blockHelper: BlockHelper,
     public accountHelper: AccountBaseHelper,

@@ -1,24 +1,25 @@
 import { BlockFactory, BlockBody } from "./_blockbase";
-import { GenesisBlock } from "../../model";
+import { GenesisBlock } from "@bfchain/core-model-block";
 import {
   BlockHelper,
-  CoreExceptionGenerator,
   BaseHelper,
   AccountBaseHelper,
   ConfigHelper,
-  BNID_TYPE,
   MilestonesHelper,
   AsymmetricHelper,
   ChainAssetInfoHelper,
   BlockBaseStatisticsHelper,
+  ConfigHelperMap,
 } from "@bfchain/core-helper";
 import {
+  CoreExceptionGenerator,
   PROP_IS_REQUIRE,
   PROP_IS_INVALID,
   SHOULD_BE,
   PROP_SHOULD_GT_FIELD,
-} from "../../../helper/src/exception/errorCode";
-import { Injectable, Inject } from "@bfchain/util";
+} from "@bfchain/core-util-exception";
+import { Injectable, Inject, ModuleStroge } from "@bfchain/util";
+import { BNID_TYPE } from "@bfchain/core-transaction";
 const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "GenesisBlockFactory");
 
 /**
@@ -28,7 +29,7 @@ const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "Genes
 @Injectable()
 export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
   @Inject("bfchain-core:TransactionCore")
-  public transactionCore!: import("../transaction").TransactionCore;
+  public transactionCore!: import("@bfchain/core-transaction").TransactionCore;
   constructor(
     public blockHelper: BlockHelper,
     public accountHelper: AccountBaseHelper,
@@ -544,38 +545,39 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       });
     }
 
-    if (remark.parentGenesisBlock) {
-      const parentGenesisBlock = remark.parentGenesisBlock;
-      let chainConfig = this.configMap.get(parentGenesisBlock.magic);
-      if (!chainConfig) {
-        // FIXME: 没有子链的配置文件就生成一个
-        chainConfig = new ConfigHelper(parentGenesisBlock, this.config.business);
-      }
-      const BFChainCoreFactory = this.moduleMap.get<
-        typeof import("../../index").BFChainCoreFactory
-      >("BFChainCoreFactory");
-      if (!BFChainCoreFactory) {
-        throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-          prop: "BFChainCoreFactory",
-          ...GenesisBlockRemark_Exception_Detail,
-        });
-      }
-      const bfchainCore = BFChainCoreFactory({
-        config: chainConfig,
-        Buffer: this.moduleMap.get("Buffer"),
-        cryptoHelper: this.moduleMap.get("cryptoHelper"),
-        keypairHelper: this.moduleMap.get("keypairHelper"),
-        ed2curveHelper: this.moduleMap.get("ed2curveHelper"),
-      });
-      const genesisBlock = bfchainCore.block.recombineBlock<
-        BFChainCore.Block<BFChainCore.GenesisBlockRemarkJSON>
-      >(parentGenesisBlock);
-      bfchainCore.block
-        .getBlockFactoryFromHeight<BFChainCore.Block<BFChainCore.GenesisBlockRemarkJSON>>(
-          parentGenesisBlock.height,
-        )
-        .verify(genesisBlock);
-    }
+    // FIXME: @wmc
+    // if (remark.parentGenesisBlock) {
+    //   const parentGenesisBlock = remark.parentGenesisBlock;
+    //   let chainConfig = this.configMap.get(parentGenesisBlock.magic);
+    //   if (!chainConfig) {
+    //     // FIXME: 没有子链的配置文件就生成一个
+    //     chainConfig = new ConfigHelper(parentGenesisBlock, this.config.business);
+    //   }
+    //   const BFChainCoreFactory = this.moduleMap.get<
+    //     typeof import("./_blockbase").BFChainCoreFactory
+    //   >("BFChainCoreFactory");
+    //   if (!BFChainCoreFactory) {
+    //     throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+    //       prop: "BFChainCoreFactory",
+    //       ...GenesisBlockRemark_Exception_Detail,
+    //     });
+    //   }
+    //   const bfchainCore = BFChainCoreFactory({
+    //     config: chainConfig,
+    //     Buffer: this.moduleMap.get("Buffer"),
+    //     cryptoHelper: this.moduleMap.get("cryptoHelper"),
+    //     keypairHelper: this.moduleMap.get("keypairHelper"),
+    //     ed2curveHelper: this.moduleMap.get("ed2curveHelper"),
+    //   });
+    //   const genesisBlock = bfchainCore.block.recombineBlock<
+    //     BFChainCore.Block<BFChainCore.GenesisBlockRemarkJSON>
+    //   >(parentGenesisBlock);
+    //   bfchainCore.block
+    //     .getBlockFactoryFromHeight<BFChainCore.Block<BFChainCore.GenesisBlockRemarkJSON>>(
+    //       parentGenesisBlock.height,
+    //     )
+    //     .verify(genesisBlock);
+    // }
   }
 
   /**

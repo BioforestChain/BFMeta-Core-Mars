@@ -1,7 +1,6 @@
 import { BlockFactory, BlockBody } from "./_blockbase";
-import { CommonBlock } from "../../model";
+import { CommonBlock } from "@bfchain/core-model-block";
 import {
-  CoreExceptionGenerator,
   BlockHelper,
   BaseHelper,
   ConfigHelper,
@@ -10,7 +9,7 @@ import {
   ChainAssetInfoHelper,
   BlockBaseStatisticsHelper,
 } from "@bfchain/core-helper";
-import { PROP_IS_INVALID } from "../../../helper/src/exception/errorCode";
+import { CoreExceptionGenerator, PROP_IS_INVALID } from "@bfchain/core-util-exception";
 import { Injectable, Inject } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "CommonBlockFactory");
 
@@ -21,7 +20,7 @@ const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "Commo
 @Injectable()
 export class CommonBlockFactory extends BlockFactory<CommonBlock> {
   @Inject("bfchain-core:TransactionCore")
-  public transactionCore!: import("../transaction").TransactionCore;
+  public transactionCore!: import("@bfchain/core-transaction").TransactionCore;
   constructor(
     public blockHelper: BlockHelper,
     public baseHelper: BaseHelper,

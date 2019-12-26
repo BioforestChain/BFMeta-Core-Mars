@@ -1,12 +1,10 @@
 import { Block, RoundLastBlock } from "@bfchain/core-model-block";
 import { Injectable } from "@bfchain/util";
-import { BlockHelper, ChainTimeHelper, CoreExceptionGenerator, ConfigHelper } from "@bfchain/core-helper";
-import { ChainChannelGroup } from "../channel/ChainChannelGroup";
-import { ChainChannel } from "../channel/ChainChannel";
-const { log, warn, NoFoundException, ConsensusException } = CoreExceptionGenerator(
-  "Core",
-  "blockForkCheck",
-);
+import { BlockHelper, ChainTimeHelper, ConfigHelper } from "@bfchain/core-helper";
+import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
+import { ChainChannel, ChainChannelGroup } from "@bfchain/core-channel";
+import { ToBlockGetter } from "@bfchain/core-getter";
+const { warn, ConsensusException } = CoreExceptionGenerator("Core", "blockForkCheck");
 
 /**
  * 两条区块链的对比策略
@@ -67,6 +65,7 @@ export class BlockForkChecker {
     private blockHelper: BlockHelper,
     private timeHelper: ChainTimeHelper,
     private config: ConfigHelper,
+    private toBlockGetter: ToBlockGetter,
   ) {}
   /**
    * 检查一条新链与其对应的新区块 的共识
@@ -84,7 +83,11 @@ export class BlockForkChecker {
   ) {
     const res = await this.checkNewBlock(
       pc2_or_lastestBlock2,
-      chainChannel_or_Group.toBlockGetterHelper({
+      // chainChannel_or_Group.toBlockGetterHelper({
+      //   maxHeight: pc2_or_lastestBlock2.height,
+      // }),
+      // @Gaubee
+      this.toBlockGetter.toBlockGetterHelper({
         maxHeight: pc2_or_lastestBlock2.height,
       }),
       blockGetterHelper1,

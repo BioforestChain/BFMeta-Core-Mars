@@ -41,10 +41,6 @@ export abstract class ChainChannelBase extends QueneEventEmitterPro<
 > {
   protected abstract config: ConfigHelper;
   protected abstract baseHelper: BaseHelper;
-  abstract findBlock<B extends Block = Block>(
-    query: BFChainCore.BlockQueryOptionsJSON,
-    opts?: BFChainCore.ChannelRequestOptions | undefined,
-  ): Promise<B | undefined>;
 }
 
 /**

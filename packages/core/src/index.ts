@@ -1,22 +1,16 @@
 import "@bfchain/core-typings";
 
-export * from "./block";
-export * from "./index";
-export * from "./blockLogicVerifier";
-export * from "./blockTicker";
-export * from "./transaction";
-export * from "./transaction/index";
-export * from "./transactionLogicVerifier";
-export * from "./channel";
-export * from "./channel/index";
-export * from "./account";
-export * from "./templateRemark";
-
 export * from "@bfchain/core-model";
 export * from "@bfchain/core-helper";
 
+export * from "./index";
+export * from "./templateRemark";
+
+
 import "@bfchain/util";
-import { BlockCore, TransactionCore, ChannelCore } from "./core";
+import { TransactionCore } from "@bfchain/core-transaction";
+import { ChannelCore } from "@bfchain/core-channel";
+import { BlockCore } from "@bfchain/core-block";
 import {
   ConfigHelper,
   Base58Helper,

@@ -1,13 +1,12 @@
 import {
   BlockHelper,
   ConfigHelper,
-  CoreExceptionGenerator,
   AccountBaseHelper,
   TransactionHelper,
 } from "@bfchain/core-helper";
-import { Transaction, TransactionInBlock } from "../../model";
+import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 import { Injectable, Inject } from "@bfchain/util";
-const { log, NoFoundException } = CoreExceptionGenerator("Core", "PickNextRoundDelegates");
+const { NoFoundException } = CoreExceptionGenerator("Core", "PickNextRoundDelegates");
 
 /**
  * 区块锻造者计算器

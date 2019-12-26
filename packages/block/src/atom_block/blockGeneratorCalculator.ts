@@ -1,13 +1,12 @@
 import {
   BlockHelper,
   ConfigHelper,
-  CoreExceptionGenerator,
   AccountBaseHelper,
-  NOT_EXIST,
   TransactionHelper,
   ChainTimeHelper,
 } from "@bfchain/core-helper";
-import { Block, RoundLastBlock } from "../../model";
+import { CoreExceptionGenerator, NOT_EXIST } from "@bfchain/core-util-exception";
+import { Block, RoundLastBlock } from "@bfchain/core-model-block";
 import { Injectable, Inject, TaskList } from "@bfchain/util";
 const { log, NoFoundException } = CoreExceptionGenerator("Core", "BlockGeneratorCalculator");
 /**

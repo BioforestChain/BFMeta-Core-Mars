@@ -1,0 +1,21 @@
+{
+  "extends": "../../config/tsconfig_base/base.tsconfig.cjs",
+  "compilerOptions": {
+    "outDir": "./build/cjs",
+    "rootDir": "./src"
+  },
+  "references": [
+    {
+      "path": "../typings/tsconfig.json"
+    }
+  ],
+  "files": [
+    "src/@types.ts",
+    "src/atom_blocks/commonBlockTicker.ts",
+    "src/atom_blocks/genesisBlockTicker.ts",
+    "src/atom_blocks/index.ts",
+    "src/atom_blocks/roundLastBlockTicker.ts",
+    "src/atom_blocks/_blockbaseTicker.ts",
+    "src/index.ts"
+  ]
+}
