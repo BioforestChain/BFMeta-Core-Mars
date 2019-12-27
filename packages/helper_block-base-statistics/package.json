@@ -17,7 +17,9 @@
     "@bfchain/core-helper-chain-asset-info": "^5.0.0-dev.0",
     "@bfchain/core-helper-config": "^5.0.0-dev.0",
     "@bfchain/core-helper-transaction": "^5.0.0-dev.0",
+    "@bfchain/core-model": "^5.0.0-dev.0",
     "@bfchain/core-model-block": "^5.0.0-dev.0",
+    "@bfchain/core-model-block-base": "^5.0.0-dev.0",
     "@bfchain/core-model-common": "^5.0.0-dev.0",
     "@bfchain/core-typings": "^5.0.0-dev.0",
     "@bfchain/core-util-exception-errorcode": "^5.0.0-dev.0"

@@ -35,7 +35,7 @@ declare namespace BFChainCore {
     senderPublicKey: string;
     senderSecondPublicKey?: string;
     recipientId?: string;
-    rangeType: RANGE_TYPE;
+    rangeType: BFChainCore.RANGE_TYPE;
     range: string[];
     fee: string;
     timestamp: number;
@@ -152,7 +152,7 @@ declare namespace BFChainCore {
     toExchangeAsset: string;
     beExchangeAsset: string;
     toExchangeNumber: string;
-    exchangeRate: RateJSON<string>;
+    exchangeRate: BFChainCore.RateJSON<string>;
     // numberOfBeginUnfrozenBlocks?: number;
   }
   interface ToExchangeAssetAssetJSON {
@@ -165,7 +165,7 @@ declare namespace BFChainCore {
     applyBlockHeight: number;
     // numberOfBeginUnfrozenBlocks?: number;
     numberOfEffectiveBlocks?: number;
-    transactionRangeType: RANGE_TYPE;
+    transactionRangeType: BFChainCore.RANGE_TYPE;
     transactionRange: string[];
     toExchangeNumber: string;
     beExchangeNumber: string;
@@ -185,8 +185,8 @@ declare namespace BFChainCore {
     beExchangeAsset: string;
     exchangeNumber: string;
     // numberOfBeginUnfrozenBlocks?: number;
-    exchangeAssetType: SPECIAL_ASSET_TYPE;
-    exchangeDirection: EXCHANGE_DIRECTION;
+    exchangeAssetType: BFChainCore.SPECIAL_ASSET_TYPE;
+    exchangeDirection: BFChainCore.EXCHANGE_DIRECTION;
   }
   interface ToExchangeSpecialAssetAssetJSON {
     toExchangeSpecialAsset: ToExchangeSpecialAssetJSON;
@@ -198,7 +198,7 @@ declare namespace BFChainCore {
     applyBlockHeight: number;
     // numberOfBeginUnfrozenBlocks?: number;
     numberOfEffectiveBlocks?: number;
-    transactionRangeType: RANGE_TYPE;
+    transactionRangeType: BFChainCore.RANGE_TYPE;
     transactionRange: string[];
     exchangeSpecialAsset: ToExchangeSpecialAssetJSON;
   }
@@ -215,7 +215,7 @@ declare namespace BFChainCore {
     sourceChainName: string;
     sourceChainMagic: string;
     dappid: string;
-    type: DAPP_TYPE;
+    type: BFChainCore.DAPP_TYPE;
     purchaseAsset?: DAppPurchaseAssetJSON;
   }
   interface DAppAssetJSON {
@@ -262,14 +262,14 @@ declare namespace BFChainCore {
     name: string;
     sourceChainName: string;
     sourceChainMagic: string;
-    operationType: LOCATION_NAME_OPERATION_TYPE;
+    operationType: BFChainCore.LOCATION_NAME_OPERATION_TYPE;
   }
   interface LocationNameAssetJSON {
     locationName: LocationNameJSON;
   }
 
   interface LocationNameRecordJSON {
-    recordType: RECORD_TYPE;
+    recordType: BFChainCore.RECORD_TYPE;
     recordValue: string;
   }
   interface MarkJSON {
@@ -296,7 +296,7 @@ declare namespace BFChainCore {
     name: string;
     sourceChainName: string;
     sourceChainMagic: string;
-    operationType: RECORD_OPERATION_TYPE;
+    operationType: BFChainCore.RECORD_OPERATION_TYPE;
     addRecord?: LocationNameRecordJSON;
     deleteRecord?: LocationNameRecordJSON;
   }
@@ -343,7 +343,7 @@ declare namespace BFChainCore {
     totalGrabableTimes: number;
     // unitReserveFee: string;
     numberOfBeginUnfrozenBlocks?: number;
-    giftDistributionRule: GIFT_DISTRIBUTION_RULE;
+    giftDistributionRule: BFChainCore.GIFT_DISTRIBUTION_RULE;
   }
   interface GiftAssetAssetJSON {
     giftAsset: GiftAssetJSON;
@@ -361,7 +361,7 @@ declare namespace BFChainCore {
      * 都是能从`transactionSignature`中查询出来的，但这个仍然做了存储，是为了确保能够在独立的情况下仍然能够将之渲染出来
      */
     /**礼物交易的接收者列表、dappid、解码密文用的公钥 */
-    transactionRangeType: RANGE_TYPE;
+    transactionRangeType: BFChainCore.RANGE_TYPE;
     transactionRange: string[];
 
     applyBlockHeight: number;
@@ -376,8 +376,8 @@ declare namespace BFChainCore {
     grabAsset: GrabAssetJSON;
   }
   interface FeeRateJSON {
-    senderPaidFeeRate: FractionJSON;
-    recipientPaidFeeRate: FractionJSON;
+    senderPaidFeeRate: BFChainCore.FractionJSON;
+    recipientPaidFeeRate: BFChainCore.FractionJSON;
   }
   interface CustomJSON {
     type: string;

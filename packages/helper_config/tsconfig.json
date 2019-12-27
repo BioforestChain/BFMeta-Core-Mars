@@ -6,6 +6,9 @@
   },
   "references": [
     {
+      "path": "../model_block/tsconfig.json"
+    },
+    {
       "path": "../typings/tsconfig.json"
     },
     {

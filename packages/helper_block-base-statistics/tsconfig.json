@@ -15,10 +15,7 @@
       "path": "../helper_transaction/tsconfig.json"
     },
     {
-      "path": "../model_block/tsconfig.json"
-    },
-    {
-      "path": "../model_common/tsconfig.json"
+      "path": "../model/tsconfig.json"
     },
     {
       "path": "../typings/tsconfig.json"

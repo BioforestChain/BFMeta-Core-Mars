@@ -8,10 +8,10 @@ declare namespace BFChainCore {
   }
   type TransactionsProgressEventJSON = ProgressEventJSON & {
     /**已经下载的交易的index范围 */
-    finishedDetails: RangeJSON[];
+    finishedDetails: BFChainCore.RangeJSON[];
   };
   type BlocksProgressEventJSON = ProgressEventJSON & {
-    finishedDetails: RangeJSON[];
+    finishedDetails: BFChainCore.RangeJSON[];
     processingDetails: { [height: number]: TransactionsProgressEventJSON };
   };
   type BlockchainRebuildingProgressEventJSON = ProgressEventJSON & {

@@ -1,4 +1,3 @@
-import "./@types";
 import { Message, Type, Field } from "@bfchain/protobuf";
 
 /**范围模型 */

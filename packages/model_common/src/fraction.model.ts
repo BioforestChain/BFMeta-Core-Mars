@@ -1,4 +1,5 @@
 import { Message, Type, Field } from "@bfchain/protobuf";
+
 @Type.d("Fraction")
 export class Fraction extends Message<Fraction>
   implements BFChainUtil.JSONAble<BFChainCore.FractionJSON> {

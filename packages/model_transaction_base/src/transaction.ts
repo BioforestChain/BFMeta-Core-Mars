@@ -3,8 +3,6 @@ import { getHexFromArrayBuffer, parseHexToArrayBuffer } from "@bfchain/util-enco
 import { StringKeyMap } from "@bfchain/core-model-common";
 import { cacheBytesGetter } from "@bfchain/core-model-cacher";
 import { RANGE_TYPE } from "@bfchain/core-model-constants";
-typeof import("@bfchain/util");
-typeof import("@bfchain/core-typings");
 
 @Type.d("TransactionTemplateRemark")
 export class TemplateRemark extends Message {

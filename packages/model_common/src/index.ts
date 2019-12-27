@@ -1,4 +1,6 @@
 import "./@types";
+typeof import("@bfchain/util");
+
 export * from "./fraction.model";
 export * from "./range.model";
 export * from "./rate.model";

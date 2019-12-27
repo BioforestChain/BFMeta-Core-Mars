@@ -1,6 +1,4 @@
 import { Message, Field, Type } from "@bfchain/protobuf";
-// import '@bfchain/util';
-typeof import("@bfchain/util");
 /**
  * 比例模型
  */

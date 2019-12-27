@@ -2,8 +2,8 @@ import {
   AssetStatisticModel,
   CountAndAmountStatisticModel,
   StatisticInfoModel,
-} from "@bfchain/core-model-block-base";
-import { StringKeyMap } from "@bfchain/core-model-common";
+  StringKeyMap,
+} from "@bfchain/core-model";
 import { TransactionHelper } from "@bfchain/core-helper-transaction";
 import { ChainAssetInfoHelper, ChainAssetInfo } from "@bfchain/core-helper-chain-asset-info";
 import { ConfigHelper } from "@bfchain/core-helper-config";
