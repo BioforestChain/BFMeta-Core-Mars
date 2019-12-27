@@ -63,43 +63,6 @@ export class TransactionCore {
   }
   // #endregion
 
-  // // #region txLogicVerifier
-  // /**各种交易逻辑校验器的实例缓存 */
-  // private _txLogicVerifierCache = new Map<
-  //   BFChainCore.TransactionLogicVerifierConstructor<any>,
-  //   TransactionLogicVerifier<any>
-  // >();
-  // /**获取交易逻辑校验器 */
-  // getTransactionLogicVerifier<T extends Transaction>(
-  //   LogicVerifier: BFChainCore.TransactionLogicVerifierConstructor<T>,
-  // ) {
-  //   let transactionLogicVerifier:
-  //     | TransactionLogicVerifier<T>
-  //     | undefined = this._txLogicVerifierCache.get(LogicVerifier);
-  //   if (!transactionLogicVerifier) {
-  //     transactionLogicVerifier = Resolve(LogicVerifier, this.moduleMap);
-  //     this._txLogicVerifierCache.set(LogicVerifier, transactionLogicVerifier);
-  //   }
-  //   return transactionLogicVerifier;
-  // }
-  // /**使用交易类型获取交易的逻辑校验器 */
-  // getTransactionLogicVerifierFromType<T extends Transaction>(type: string) {
-  //   const { baseType } = this.transactionHelper.parseType(type);
-  //   return this.getTransactionLogicVerifierFromBaseType<T>(baseType);
-  // }
-
-  // /**使用交易的基础类型获取交易的逻辑校验器 */
-  // getTransactionLogicVerifierFromBaseType<T extends Transaction>(
-  //   base_type: TRANSACTION_TYPES_BASE,
-  // ) {
-  //   const TransactionLogicVerifier = TRANSACTION_TYPES_MAP.VLV.get(base_type);
-  //   if (!TransactionLogicVerifier) {
-  //     throw new ArgumentFormatException(`Invalid base type: ${base_type}`);
-  //   }
-  //   return this.getTransactionLogicVerifier<T>(TransactionLogicVerifier);
-  // }
-  // // #endregion
-
   /**
    * 创建交易
    *

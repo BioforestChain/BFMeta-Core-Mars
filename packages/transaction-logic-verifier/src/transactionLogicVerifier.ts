@@ -1,19 +1,76 @@
 import * as ATOM_TRSLGCVFR from "./atom_transactionLogicVerifier";
-import { TRANSACTION_TYPES_BASE } from "@bfchain/core-model-transaction";
+import { TRANSACTION_TYPES_BASE, Transaction } from "@bfchain/core-model-transaction";
+import {
+  AccountBaseHelper,
+  ConfigHelper,
+  TransactionHelper,
+  AsymmetricHelper,
+} from "@bfchain/core-helper";
+import { Injectable, Inject, ModuleStroge, Resolve } from "@bfchain/util";
+import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
+import { TransactionLogicVerifier } from "./atom_transactionLogicVerifier";
+
+const { ArgumentFormatException } = CoreExceptionGenerator(
+  "CONTROLLER",
+  "TransactionLogicVerifierCore",
+);
+
+@Injectable("bfchain-core:TransactionLogicVerifierCore")
+export class TransactionLogicVerifierCore {
+  constructor(
+    public transactionHelper: TransactionHelper,
+    public accountHelper: AccountBaseHelper,
+    public asymmetricHelper: AsymmetricHelper,
+    @Inject("keypairHelper")
+    public keypairHelper: BFChainCore.KeypairHelperInterface,
+    @Inject("Buffer") public Buffer: BFChainUtil.BufferConstructor,
+    public config: ConfigHelper,
+    public moduleMap: ModuleStroge,
+  ) {}
+
+  // #region txLogicVerifier
+  /**各种交易逻辑校验器的实例缓存 */
+  private _txLogicVerifierCache = new Map<
+    BFChainCore.TransactionLogicVerifierConstructor<any>,
+    TransactionLogicVerifier<any>
+  >();
+  /**获取交易逻辑校验器 */
+  getTransactionLogicVerifier<T extends Transaction>(
+    LogicVerifier: BFChainCore.TransactionLogicVerifierConstructor<T>,
+  ) {
+    let transactionLogicVerifier:
+      | TransactionLogicVerifier<T>
+      | undefined = this._txLogicVerifierCache.get(LogicVerifier);
+    if (!transactionLogicVerifier) {
+      transactionLogicVerifier = Resolve(LogicVerifier, this.moduleMap);
+      this._txLogicVerifierCache.set(LogicVerifier, transactionLogicVerifier);
+    }
+    return transactionLogicVerifier;
+  }
+  /**使用交易类型获取交易的逻辑校验器 */
+  getTransactionLogicVerifierFromType<T extends Transaction>(type: string) {
+    const { baseType } = this.transactionHelper.parseType(type);
+    return this.getTransactionLogicVerifierFromBaseType<T>(baseType);
+  }
+
+  /**使用交易的基础类型获取交易的逻辑校验器 */
+  getTransactionLogicVerifierFromBaseType<T extends Transaction>(
+    base_type: TRANSACTION_TYPES_BASE,
+  ) {
+    const TransactionLogicVerifier = TRANSACTION_LOGIC_VERIFIER_TYPES_MAP.KLV.get(base_type);
+    if (!TransactionLogicVerifier) {
+      throw new ArgumentFormatException(`Invalid base type: ${base_type}`);
+    }
+    return this.getTransactionLogicVerifier<T>(TransactionLogicVerifier);
+  }
+  // #endregion
+}
 
 /**
  * K : TRANSACTION_TYPES_BASE KEY
- * V : TRANSACTION_TYPES_BASE VALUE
- * F : LogicVerifierConstructror
+ * LV : LogicVerifierConstructror
  */
 export const TRANSACTION_LOGIC_VERIFIER_TYPES_MAP = (() => {
-  const V_K = new Map<TRANSACTION_TYPES_BASE, string>();
-  const K_V = new Map<string, TRANSACTION_TYPES_BASE>();
-  for (let tran_key in TRANSACTION_TYPES_BASE) {
-    const val = TRANSACTION_TYPES_BASE[tran_key as keyof typeof TRANSACTION_TYPES_BASE];
-    K_V.set(tran_key, val);
-    V_K.set(val, tran_key);
-  }
   const BASE_LOGIC_VERIFIER = new Map<
     TRANSACTION_TYPES_BASE,
     BFChainCore.TransactionLogicVerifierConstructor<any>
@@ -33,8 +90,6 @@ export const TRANSACTION_LOGIC_VERIFIER_TYPES_MAP = (() => {
     [TRANSACTION_TYPES_BASE.DAPP, ATOM_TRSLGCVFR.DAppLogicVerifier],
     [TRANSACTION_TYPES_BASE.DAPP_PURCHASING, ATOM_TRSLGCVFR.DAppPurchasingLogicVerifier],
     [TRANSACTION_TYPES_BASE.MARK, ATOM_TRSLGCVFR.MarkLogicVerifier],
-    // [TRANSACTION_TYPES_BASE.ISSUE_SUBCHAIN, ATOM_TRS.IssueSubchainTransaction],
-
     [TRANSACTION_TYPES_BASE.ISSUE_ASSET, ATOM_TRSLGCVFR.IssueAssetLogicVerifier],
     [TRANSACTION_TYPES_BASE.DESTORY_ASSET, ATOM_TRSLGCVFR.DestoryAssetLogicVerifier],
     [TRANSACTION_TYPES_BASE.TRANSFER_ASSET, ATOM_TRSLGCVFR.TransferAssetLogicVerifier],
@@ -66,10 +121,8 @@ export const TRANSACTION_LOGIC_VERIFIER_TYPES_MAP = (() => {
   );
 
   return {
-    VK: V_K,
-    KV: K_V,
-    VLV: BASE_LOGIC_VERIFIER,
-    LVV: LOGIC_VERIFIER_BASE,
+    KLV: BASE_LOGIC_VERIFIER,
+    LVK: LOGIC_VERIFIER_BASE,
     trsTypeToV(type: string) {
       const CHAIN_NAME_index = type.indexOf(
         "-",

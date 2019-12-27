@@ -6,16 +6,32 @@
   },
   "references": [
     {
+      "path": "../block/tsconfig.json"
+    },
+    {
+      "path": "../helper/tsconfig.json"
+    },
+    {
+      "path": "../model_block/tsconfig.json"
+    },
+    {
+      "path": "../transaction-logic-verifier/tsconfig.json"
+    },
+    {
       "path": "../typings/tsconfig.json"
+    },
+    {
+      "path": "../util_exception/tsconfig.json"
     }
   ],
   "files": [
     "src/@types.ts",
-    "src/atom_blocks/commonBlockTicker.ts",
-    "src/atom_blocks/genesisBlockTicker.ts",
-    "src/atom_blocks/index.ts",
-    "src/atom_blocks/roundLastBlockTicker.ts",
-    "src/atom_blocks/_blockbaseTicker.ts",
+    "src/atom_block/commonBlockTicker.ts",
+    "src/atom_block/genesisBlockTicker.ts",
+    "src/atom_block/index.ts",
+    "src/atom_block/roundLastBlockTicker.ts",
+    "src/atom_block/_blockbaseTicker.ts",
+    "src/blockTicker.ts",
     "src/index.ts"
   ]
 }

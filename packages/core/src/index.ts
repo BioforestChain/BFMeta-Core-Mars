@@ -3,14 +3,26 @@ import "@bfchain/core-typings";
 export * from "@bfchain/core-model";
 export * from "@bfchain/core-helper";
 
+export * from "@bfchain/core-account";
+export * from "@bfchain/core-transaction";
+export * from "@bfchain/core-transaction-logic-verifier";
+export * from "@bfchain/core-block";
+export * from "@bfchain/core-block-logic-verifier";
+export * from "@bfchain/core-block-ticker";
+export * from "@bfchain/core-transaction-subchain";
+
+export * from "@bfchain/core-channel";
+
 export * from "./index";
 export * from "./templateRemark";
 
-
 import "@bfchain/util";
 import { TransactionCore } from "@bfchain/core-transaction";
+import { TransactionLogicVerifierCore } from "@bfchain/core-transaction-logic-verifier";
 import { ChannelCore } from "@bfchain/core-channel";
 import { BlockCore } from "@bfchain/core-block";
+import { BlockLogicVerifierCore } from "@bfchain/core-block-logic-verifier";
+import { BlockTickerCore } from "@bfchain/core-block-ticker";
 import {
   ConfigHelper,
   Base58Helper,
@@ -47,8 +59,14 @@ export class BFChainCore {
     //#region 核心模块
     /**区块 */
     public block: BlockCore,
+    /**区块逻辑校验器 */
+    public blockLogicVerifier: BlockLogicVerifierCore,
+    /**区块处理器 */
+    public blockTicker: BlockTickerCore,
     /**交易 */
     public transaction: TransactionCore,
+    /**校验逻辑校验器 */
+    public transactionLogicVerifier: TransactionLogicVerifierCore,
     /**双工 */
     public channel: ChannelCore,
     /*时间 */

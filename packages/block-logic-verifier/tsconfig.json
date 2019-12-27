@@ -19,6 +19,9 @@
     },
     {
       "path": "../typings/tsconfig.json"
+    },
+    {
+      "path": "../util_exception/tsconfig.json"
     }
   ],
   "files": [

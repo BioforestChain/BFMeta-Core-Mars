@@ -19,6 +19,7 @@
     "@bfchain/core-model": "^5.0.0-dev.0",
     "@bfchain/core-transaction": "^5.0.0-dev.0",
     "@bfchain/core-transaction-logic-verifier": "^5.0.0-dev.0",
-    "@bfchain/core-typings": "^5.0.0-dev.0"
+    "@bfchain/core-typings": "^5.0.0-dev.0",
+    "@bfchain/core-util-exception": "^5.0.0-dev.0"
   }
 }

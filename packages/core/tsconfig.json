@@ -18,6 +18,9 @@
       "path": "../block/tsconfig.json"
     },
     {
+      "path": "../channel/tsconfig.json"
+    },
+    {
       "path": "../helper/tsconfig.json"
     },
     {
@@ -25,6 +28,9 @@
     },
     {
       "path": "../transaction-logic-verifier/tsconfig.json"
+    },
+    {
+      "path": "../transaction-subchain/tsconfig.json"
     },
     {
       "path": "../transaction/tsconfig.json"

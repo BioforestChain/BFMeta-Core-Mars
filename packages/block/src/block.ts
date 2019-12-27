@@ -3,39 +3,12 @@ import {
   GetBlockRemarkJSON,
   BLOCK_TYPES_BASE,
   BLOCK_TYPES_MAP,
-  RoundLastBlock,
 } from "@bfchain/core-model-block";
 import { TransactionInBlock } from "@bfchain/core-model-transaction";
 import { Reader } from "@bfchain/protobuf";
-import {
-  AsymmetricHelper,
-  ConfigHelper,
-  AccountBaseHelper,
-  BlockHelper,
-  ChainTimeHelper,
-} from "@bfchain/core-helper";
+import { AsymmetricHelper, BlockHelper } from "@bfchain/core-helper";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
-import {
-  BlockFactory,
-  BlockBody,
-  GenesisBlockFactory,
-  RoundLastBlockFactory,
-  CommonBlockFactory,
-  BlockGeneratorCalculator,
-} from "./atom_block";
-// import {
-//   GenesisBlockLogicVerifier,
-//   CommonBlockLogicVerifier,
-//   RoundLastBlockLogicVerifier,
-//   BlockLogicVerifier,
-// } from "./blockLogicVerifier/index";
-
-// import {
-//   GenesisBlockTicker,
-//   CommonBlockTicker,
-//   RoundLastBlockTicker,
-//   BlockTicker,
-// } from "./blockTicker/index";
+import { BlockFactory, BlockBody, BlockGeneratorCalculator } from "./atom_block";
 
 import { Inject, Injectable, ModuleStroge, Resolve } from "@bfchain/util";
 
@@ -43,10 +16,6 @@ const { ArgumentFormatException, log, warn } = CoreExceptionGenerator("Core", "B
 
 type BlockFactoryCtor<T extends Block> = new (...args: any[]) => BlockFactory<T>;
 
-// const a:BFChainCore.AA<{x:1}> = {} as any
-
-// const z = a.foo()
-// z.s
 @Injectable("bfchain-core:BlockCore")
 export class BlockCore {
   constructor(
@@ -57,9 +26,6 @@ export class BlockCore {
     @Inject("cryptoHelper") public cryptoHelper: BFChainCore.CryptoHelperInterface,
     @Inject("Buffer") public Buffer: BFChainUtil.BufferConstructor,
     public moduleMap: ModuleStroge,
-    private timeHelper: ChainTimeHelper,
-    private config: ConfigHelper,
-    private accountBaseHelper: AccountBaseHelper,
   ) {}
   // #region blockFactory
   /**各种区块工厂的实例缓存 */
@@ -88,74 +54,6 @@ export class BlockCore {
     }
     return this.getBlockFactory<T>(BlockFactory);
   }
-  // #endregion
-
-  // #region blockLogicVerifier
-  // /**各种区块校验器的实例缓存 */
-  // private _blockLogicVerifierCache = new Map<
-  //   BFChainCore.BlockLogicVerifierConstructor<any>,
-  //   BFChainCore.BlockLogicVerifier<any>
-  // >();
-  // /**获取区块校验器 */
-  // getBlockLogicVerifier<T extends Block>(
-  //   LogicVerifier: BFChainCore.BlockLogicVerifierConstructor<T>,
-  // ) {
-  //   let blockLogicVerifier: BlockLogicVerifier<T> | undefined = this._blockLogicVerifierCache.get(
-  //     LogicVerifier,
-  //   );
-  //   if (!blockLogicVerifier) {
-  //     blockLogicVerifier = Resolve(LogicVerifier, this.moduleMap);
-  //     this._blockLogicVerifierCache.set(LogicVerifier, blockLogicVerifier);
-  //   }
-  //   return blockLogicVerifier;
-  // }
-
-  // /**使用区块高度获取区块的校验器 */
-  // getBlockLogicVerifierFromHeight<T extends Block>(height: number) {
-  //   const baseType = this.blockHelper.parseTypeByHeight(height);
-  //   return this.getBlockLogicVerifierFromBaseType<T>(baseType);
-  // }
-
-  // /**使用区块的基础类型获取区块的校验器 */
-  // getBlockLogicVerifierFromBaseType<T extends Block>(base_type: BLOCK_TYPES_BASE) {
-  //   const BlockLogicVerifier = BLOCK_TYPES_MAP.VLV.get(base_type);
-  //   if (!BlockLogicVerifier) {
-  //     throw new ArgumentFormatException(`Invalid base type: ${base_type}`);
-  //   }
-  //   return this.getBlockLogicVerifier<T>(BlockLogicVerifier);
-  // }
-  // #endregion
-
-  // #region blockTicker
-  // /**各种区块校验器的实例缓存 */
-  // private _blockTickerCache = new Map<
-  //   BFChainCore.BlockTickerConstructor<any>,
-  //   BFChainCore.BlockTicker<any>
-  // >();
-  // /**获取区块 ticker */
-  // getBlockTicker<T extends Block>(LogicVerifier: BFChainCore.BlockTickerConstructor<T>) {
-  //   let blockTicker: BlockTicker<T> | undefined = this._blockTickerCache.get(LogicVerifier);
-  //   if (!blockTicker) {
-  //     blockTicker = Resolve(LogicVerifier, this.moduleMap);
-  //     this._blockTickerCache.set(LogicVerifier, blockTicker);
-  //   }
-  //   return blockTicker;
-  // }
-
-  // /**使用区块高度获取区块的 ticker */
-  // getBlockTickerFromHeight<T extends Block>(height: number) {
-  //   const baseType = this.blockHelper.parseTypeByHeight(height);
-  //   return this.getBlockTickerFromBaseType<T>(baseType);
-  // }
-
-  // /**使用区块的基础类型获取区块的 ticker */
-  // getBlockTickerFromBaseType<T extends Block>(base_type: BLOCK_TYPES_BASE) {
-  //   const BlockTicker = BLOCK_TYPES_MAP.TBT.get(base_type);
-  //   if (!BlockTicker) {
-  //     throw new ArgumentFormatException(`Invalid base type: ${base_type}`);
-  //   }
-  //   return this.getBlockTicker<T>(BlockTicker);
-  // }
   // #endregion
 
   /**生成区块 */
@@ -199,8 +97,7 @@ export class BlockCore {
     return block;
   }
 
-  //#region Block模型的序列化相关
-
+  // #region Block模型的序列化相关
   /**
    * blockJson => blockModel
    *
@@ -250,7 +147,7 @@ export class BlockCore {
     warn("@deprecated", "请直接使用blockHelper.getRoundLastBlockRemarkHash");
     return this.blockHelper.calcRoundLastBlockRemarkHash(...args);
   }
-  //#endregion
+  // #endregion
 }
 
 import * as ATOM_BLOCKFAC from "./atom_block";
@@ -275,7 +172,3 @@ export const BLOCK_FACTORY_TYPES_MAP = (() => {
     FK,
   };
 })();
-
-// BLOCK_TYPES_MAP.TBT.set(BLOCK_TYPES_BASE.GENESIS, GenesisBlockTicker);
-// BLOCK_TYPES_MAP.TBT.set(BLOCK_TYPES_BASE.COMMON, CommonBlockTicker);
-// BLOCK_TYPES_MAP.TBT.set(BLOCK_TYPES_BASE.ROUNDEND, RoundLastBlockTicker);
