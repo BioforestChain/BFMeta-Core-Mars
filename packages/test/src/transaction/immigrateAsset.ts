@@ -4,7 +4,9 @@ import {
   ImmigrateAssetTransactionFactory,
   ImmigrateAssetTransaction,
   RANGE_TYPE,
-  parseHexToArrayBuffer,
+  BlockCore,
+} from "@bfchain/core";
+import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,
   fullBfchainCore,
@@ -12,8 +14,8 @@ import {
   AccountModel,
   getDelegateWithoutSecondSecret,
   getDelegateWithSecondSecret,
-  BlockCore,
 } from "../include";
+import { parseHexToArrayBuffer } from "@bfchain/util";
 
 function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate: AccountModel) {
   const keypair = fullBfchainCore.accountHelper.createSecretKeypair(sender.secret);

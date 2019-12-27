@@ -1,4 +1,4 @@
-import { Message, Field, Type } from "./@bfchain/protobuf";
+import { Message, Field, Type } from "@bfchain/protobuf";
 import { OPCODE } from "./common";
 import "../types";
 

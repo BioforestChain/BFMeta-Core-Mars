@@ -1,4 +1,4 @@
-import { UsernameTransaction, UsernameTransactionFactory, RANGE_TYPE } from "../../src";
+import { UsernameTransaction, UsernameTransactionFactory, RANGE_TYPE } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,

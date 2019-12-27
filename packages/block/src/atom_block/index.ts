@@ -1,5 +1,3 @@
-import "./@types";
-
 export * from "./_blockbase";
 export * from "./commonBlock";
 export * from "./genesisBlock";

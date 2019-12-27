@@ -1,4 +1,4 @@
-import { DelegateTransaction, DelegateTransactionFactory, RANGE_TYPE } from "../../src";
+import { DelegateTransaction, DelegateTransactionFactory, RANGE_TYPE } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,

@@ -1,16 +1,14 @@
-import test from "./ava";
 import {
   Block,
   GenesisBlock,
   RoundLastBlock,
   CommonBlock,
   CommonBlockFactory,
-  AsyncIteratorGenerator,
   TransactionInBlock,
   RoundLastBlockFactory,
-  bfchainCore,
-  moduleMap,
-} from "../include";
+} from "@bfchain/core";
+import { AsyncIteratorGenerator } from "@bfchain/util";
+import { bfchainCore, moduleMap } from "../include";
 
 const delegatesArr = [
   {

@@ -12,7 +12,7 @@ import {
   AccountModel,
   getDelegateWithSecondSecret,
 } from "../include";
-import { parseHexToArrayBuffer } from "./@bfchain/util";
+import { parseHexToArrayBuffer } from "@bfchain/util";
 
 function getTrustAssetTransaction(sender: AccountModel, recipientId: string, trustees: string[]) {
   const keypair = bfchainCore.accountHelper.createSecretKeypair(sender.secret);

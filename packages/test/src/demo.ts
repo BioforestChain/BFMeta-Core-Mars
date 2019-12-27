@@ -1,7 +1,7 @@
 /// 浏览器平台
 // import sha256 from "sha.js";
 // import md5 from "md5.js";
-import Helper, { CommonBlockFactory, TransactionInBlock } from "../src/";
+import Helper, { CommonBlockFactory, TransactionInBlock } from "@bfchain/core";
 import { bfchainCore } from "./include/init";
 
 (async function test() {

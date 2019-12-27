@@ -3,10 +3,11 @@ import {
   ToExchangeAssetTransactionFactory,
   BeExchangeAssetTransaction,
   BeExchangeAssetTransactionFactory,
-  QueneEventEmitter,
   JSBIHelper,
   RANGE_TYPE,
-  parseHexToArrayBuffer,
+} from "@bfchain/core";
+import { QueneEventEmitter, parseHexToArrayBuffer } from "@bfchain/util";
+import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,
   getGenesisAccount,
@@ -15,7 +16,6 @@ import {
   bfchainCore,
   AccountModel,
 } from "../include";
-import JSBI from "./jsbi";
 
 const jsbiHelper = new JSBIHelper();
 
@@ -176,8 +176,8 @@ async function client(transaction: BFChainCore.Transaction) {
     [address: string]: {
       [magic: string]: {
         [assetType: string]: {
-          amount: JSBI;
-          paidFee: JSBI;
+          amount: bigint;
+          paidFee: bigint;
         };
       };
     };
@@ -191,13 +191,13 @@ async function client(transaction: BFChainCore.Transaction) {
     accountAssets[address] = accountAssets[address] || {};
     accountAssets[address][magic] = accountAssets[address][magic] || {};
     accountAssets[address][magic][assetType] = accountAssets[address][magic][assetType] || {
-      amount: JSBI.BigInt(0),
-      paidFee: JSBI.BigInt(0),
+      amount: BigInt(0),
+      paidFee: BigInt(0),
     };
-    const bigIntAmount = JSBI.BigInt(applyInfo.amount);
+    const bigIntAmount = BigInt(applyInfo.amount);
     const asset = accountAssets[address][magic][assetType];
-    asset.amount = JSBI.add(asset.amount, bigIntAmount);
-    asset.paidFee = JSBI.subtract(asset.paidFee, bigIntAmount);
+    asset.amount = asset.amount + bigIntAmount;
+    asset.paidFee = asset.paidFee - bigIntAmount;
     next();
   });
 
@@ -208,11 +208,11 @@ async function client(transaction: BFChainCore.Transaction) {
     accountAssets[address] = accountAssets[address] || {};
     accountAssets[address][magic] = accountAssets[address][magic] || {};
     accountAssets[address][magic][assetType] = accountAssets[address][magic][assetType] || {
-      amount: JSBI.BigInt(0),
-      paidFee: JSBI.BigInt(0),
+      amount: BigInt(0),
+      paidFee: BigInt(0),
     };
     const asset = accountAssets[address][magic][assetType];
-    asset.amount = JSBI.add(asset.amount, JSBI.BigInt(applyInfo.amount));
+    asset.amount = asset.amount + BigInt(applyInfo.amount);
     next();
   });
 
@@ -223,11 +223,11 @@ async function client(transaction: BFChainCore.Transaction) {
     accountAssets[address] = accountAssets[address] || {};
     accountAssets[address][magic] = accountAssets[address][magic] || {};
     accountAssets[address][magic][assetType] = accountAssets[address][magic][assetType] || {
-      amount: JSBI.BigInt(0),
-      paidFee: JSBI.BigInt(0),
+      amount: BigInt(0),
+      paidFee: BigInt(0),
     };
     const asset = accountAssets[address][magic][assetType];
-    asset.amount = JSBI.add(asset.amount, JSBI.BigInt(applyInfo.amount));
+    asset.amount = asset.amount + BigInt(applyInfo.amount);
     next();
   });
 
@@ -238,11 +238,11 @@ async function client(transaction: BFChainCore.Transaction) {
     accountAssets[address] = accountAssets[address] || {};
     accountAssets[address][magic] = accountAssets[address][magic] || {};
     accountAssets[address][magic][assetType] = accountAssets[address][magic][assetType] || {
-      amount: JSBI.BigInt(0),
-      paidFee: JSBI.BigInt(0),
+      amount: BigInt(0),
+      paidFee: BigInt(0),
     };
     const asset = accountAssets[address][magic][assetType];
-    asset.amount = JSBI.add(asset.amount, JSBI.BigInt(applyInfo.amount));
+    asset.amount = asset.amount + BigInt(applyInfo.amount);
     next();
   });
 

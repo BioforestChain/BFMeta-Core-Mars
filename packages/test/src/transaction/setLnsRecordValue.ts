@@ -4,7 +4,7 @@ import {
   RECORD_TYPE,
   RANGE_TYPE,
   RECORD_OPERATION_TYPE,
-} from "../../src";
+} from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,

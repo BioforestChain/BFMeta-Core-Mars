@@ -1,5 +1,5 @@
 import { NodeJsCryptoHelper, NodeJsKeypairHelper, Ed2curveHelper } from "./helper";
-import { BFChainCoreFactory, ConfigHelper, GenesisBlock } from "../../src";
+import { BFChainCoreFactory, ConfigHelper, GenesisBlock } from "@bfchain/core";
 
 export function getBfchainCore(genesisBlock: GenesisBlock) {
   return BFChainCoreFactory({

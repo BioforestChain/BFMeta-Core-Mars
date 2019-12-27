@@ -6,7 +6,9 @@ import {
   BeExchangeSpecialAssetTransaction,
   BeExchangeSpecialAssetTransactionFactory,
   RANGE_TYPE,
-  parseHexToArrayBuffer,
+} from "@bfchain/core";
+import { parseHexToArrayBuffer } from "@bfchain/util";
+import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,
   getGenesisAccount,

@@ -1,4 +1,4 @@
-import { SignatureTransaction, SignatureTransactionFactory, RANGE_TYPE } from "../../src";
+import { SignatureTransaction, SignatureTransactionFactory, RANGE_TYPE } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,

@@ -5,7 +5,7 @@ import {
   RANGE_TYPE,
   MarkTransaction,
   MarkTransactionFactory,
-} from "../../src";
+} from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,

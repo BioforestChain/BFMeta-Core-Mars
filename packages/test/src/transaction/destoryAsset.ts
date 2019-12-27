@@ -1,4 +1,4 @@
-import { DestoryAssetTransaction, DestoryAssetTransactionFactory, RANGE_TYPE } from "../../src";
+import { DestoryAssetTransaction, DestoryAssetTransactionFactory, RANGE_TYPE } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,

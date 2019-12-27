@@ -1,5 +1,5 @@
 import { ResMsg, ReqMsg } from "./base.message";
-import { Type, Field } from "./@bfchain/protobuf";
+import { Type, Field } from "@bfchain/protobuf";
 import { OPCODE } from "./common";
 
 /**

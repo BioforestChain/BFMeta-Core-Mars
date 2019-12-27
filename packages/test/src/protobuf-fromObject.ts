@@ -1,4 +1,4 @@
-import { Type, Field, Message, util } from "./@bfchain/protobuf";
+import { Type, Field, Message, util } from "@bfchain/protobuf";
 
 @Type.d("QAQ")
 class QAQ extends Message<QAQ> {

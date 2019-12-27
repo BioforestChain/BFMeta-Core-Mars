@@ -1,4 +1,4 @@
-import { Type, Field, Message, Reader } from "./@bfchain/protobuf";
+import { Type, Field, Message, Reader } from "@bfchain/protobuf";
 
 abstract class Trs<T extends object = object> extends Message<Trs<T>> {
   abstract asset: T;

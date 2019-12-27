@@ -1,4 +1,4 @@
-import { RejectVoteTransaction, RejectVoteTransactionFactory, RANGE_TYPE } from "../../src";
+import { RejectVoteTransaction, RejectVoteTransactionFactory, RANGE_TYPE } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,

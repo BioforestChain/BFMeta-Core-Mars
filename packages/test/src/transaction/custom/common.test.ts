@@ -5,11 +5,11 @@ import {
   RANGE_TYPE,
   BFChainCoreFactory,
   ConfigHelper,
-} from "../../../src";
+} from "@bfchain/core";
 import { NodeJsCryptoHelper, NodeJsKeypairHelper, Ed2curveHelper } from "../../include";
 
 import { SubChainCenter } from "./SubChainCenter";
-import { ModuleStroge } from "./@bfchain/util";
+import { ModuleStroge } from "@bfchain/util";
 
 function CreateCoreWithSubCenter(demoname: string) {
   const moduleMap = new ModuleStroge();

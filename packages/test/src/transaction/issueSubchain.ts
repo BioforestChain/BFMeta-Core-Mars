@@ -11,9 +11,7 @@ import {
   AcceptVoteTransactionFactory,
   Transaction,
   BFChainCore,
-  QueneEventEmitter,
   BlockBaseStatisticsHelper,
-  Resolve,
   TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE,
   CommonBlock,
   CommonBlockFactory,
@@ -25,6 +23,10 @@ import {
   SetLnsRecordValueTransactionFactory,
   RECORD_TYPE,
   LOCATION_NAME_OPERATION_TYPE,
+} from "@bfchain/core";
+import { QueneEventEmitter, Resolve } from "@bfchain/util";
+import * as path from "path";
+import {
   getSenderWithoutSecondSecret,
   fullBfchainCore,
   subBfchainCore,
@@ -34,7 +36,6 @@ import {
   subchainRemarkData,
   getIps,
 } from "../include";
-import * as path from "path";
 const defaultIpsPath = path.join(process.cwd(), "./assets/defaultIps.json");
 
 const subStatistics = Resolve(BlockBaseStatisticsHelper, subBfchainCore.moduleMap);

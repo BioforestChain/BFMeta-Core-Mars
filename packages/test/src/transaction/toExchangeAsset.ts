@@ -2,7 +2,7 @@ import {
   ToExchangeAssetTransaction,
   ToExchangeAssetTransactionFactory,
   RANGE_TYPE,
-} from "../../src";
+} from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,

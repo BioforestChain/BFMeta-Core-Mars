@@ -3,8 +3,8 @@
  */
 
 import "./types";
-import "../../../../src/helper/types";
-import { Reader } from "./@bfchain/protobuf";
+import "@bfchain/core/helper/types";
+import { Reader } from "@bfchain/protobuf";
 import * as WorkerMsg from "./message";
 import { Worker, MessageChannel, MessagePort, isMainThread, parentPort } from "worker_threads";
 import { WorkerMsgHelper } from "./workerMsgHelper";
@@ -161,7 +161,7 @@ export class SubChainCenter implements BFChainCore.CustomTrCenterInterface {
   verify(
     body: BFChainCore.TxBodyJSON,
     customAsset: BFChainCore.CustomAssetJSON,
-    config: import("../../../../src/helper/configHelper").ConfigHelper,
+    config: import("@bfchain/core").ConfigHelper,
   ): SubChainCenter.VERIFY_RES {
     const res = this.synchronize(() => {
       const msg = new WorkerMsg.TxVerifyReq();

@@ -42,7 +42,7 @@
     ]
   },
   "scripts": {
-    "clear": "bdk-clear -p build",
+    "clear": "node ./scripts/rmBuild.js",
     "up": "yarn upgrade-interactive --latest",
     "mono": "bdk-mono",
     "publ": "lerna publish",

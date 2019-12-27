@@ -1,11 +1,10 @@
-import { TransferAssetTransaction, TransferAssetTransactionFactory, RANGE_TYPE } from "../../src";
+import { TransferAssetTransaction, TransferAssetTransactionFactory, RANGE_TYPE } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,
   getGenesisAccount,
   bfchainCore,
   AccountModel,
-  QueneEventEmitter,
 } from "../include";
 
 const _powCount: { [add: string]: number } = {};

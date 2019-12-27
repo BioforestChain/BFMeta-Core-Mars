@@ -11,9 +11,7 @@ import {
   DestoryAssetTransaction,
   DestoryAssetTransactionFactory,
   EXCHANGE_DIRECTION,
-  QueneEventEmitter,
   BlockBaseStatisticsHelper,
-  Resolve,
   TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE,
   TransactionAssetChangeModel,
   StatisticsInfo,
@@ -24,10 +22,9 @@ import {
   BeExchangeSpecialAssetTransaction,
   BeExchangeSpecialAssetTransactionFactory,
   RANGE_TYPE,
-  bfchainCore,
-  AccountModel,
-} from "../include";
-import JSBI from "./jsbi";
+} from "@bfchain/core";
+import { QueneEventEmitter, Resolve } from "@bfchain/util";
+import { bfchainCore, AccountModel } from "../include";
 
 const jsbiHelper = new JSBIHelper();
 
@@ -102,19 +99,19 @@ function getTransferAssetTransaction(
         address: sender.address,
         magic: data.fromMagic,
         assetType: bfchainCore.config.assetType,
-        assetNumber: JSBI.BigInt("-" + data.fee),
+        assetNumber: BigInt("-" + data.fee),
       },
       {
         address: sender.address,
         magic: sourceChainMagic,
         assetType,
-        assetNumber: JSBI.BigInt("-" + transferAsset.amount),
+        assetNumber: BigInt("-" + transferAsset.amount),
       },
       {
         address: recipientId,
         magic: sourceChainMagic,
         assetType,
-        assetNumber: JSBI.BigInt(transferAsset.amount),
+        assetNumber: BigInt(transferAsset.amount),
       },
     ],
   };
@@ -177,13 +174,13 @@ function getDestoryAssetTransaction(sender: AccountModel) {
         address: sender.address,
         magic: trs.fromMagic,
         assetType: bfchainCore.config.assetType,
-        assetNumber: JSBI.BigInt("-" + data.fee),
+        assetNumber: BigInt("-" + data.fee),
       },
       {
         address: sender.address,
         magic: destoryAsset.sourceChainMagic,
         assetType: destoryAsset.assetType,
-        assetNumber: JSBI.BigInt("-" + destoryAsset.amount),
+        assetNumber: BigInt("-" + destoryAsset.amount),
       },
     ],
   };
@@ -241,13 +238,13 @@ function getToExchangeAssetTransaction(
         address: toExchangeAsset.senderId,
         magic: data.fromMagic,
         assetType: bfchainCore.config.assetType,
-        assetNumber: JSBI.BigInt("-" + data.fee),
+        assetNumber: BigInt("-" + data.fee),
       },
       {
         address: toExchangeAsset.senderId,
         magic: toExchangeAsset.toExchangeSource,
         assetType: toExchangeAsset.toExchangeAsset,
-        assetNumber: JSBI.BigInt("-" + toExchangeAsset.toExchangeNumber),
+        assetNumber: BigInt("-" + toExchangeAsset.toExchangeNumber),
       },
     ],
   };
@@ -324,19 +321,19 @@ function getBeExchangeAssetTransaction(
         address: toExchangeAssetTrs.senderId,
         magic: data.fromMagic,
         assetType: bfchainCore.config.assetType,
-        assetNumber: JSBI.BigInt("-" + data.fee),
+        assetNumber: BigInt("-" + data.fee),
       },
       {
         address: toExchangeAssetTrs.senderId,
         magic: toExchangeAsset.toExchangeSource,
         assetType: toExchangeAsset.toExchangeAsset,
-        assetNumber: JSBI.BigInt("-" + toExchangeAsset.toExchangeNumber),
+        assetNumber: BigInt("-" + toExchangeAsset.toExchangeNumber),
       },
       {
         address: trs.senderId,
         magic: toExchangeAsset.toExchangeSource,
         assetType: toExchangeAsset.toExchangeAsset,
-        assetNumber: JSBI.BigInt(toExchangeAsset.toExchangeNumber),
+        assetNumber: BigInt(toExchangeAsset.toExchangeNumber),
       },
     ],
   };
@@ -482,18 +479,18 @@ const genesisAccountInfo = {
 };
 function getTrsInBlock(height: number, statisticsInfo: StatisticsInfo) {
   //#region
-  const accountAssetMap = new Map<string, JSBI>();
+  const accountAssetMap = new Map<string, bigint>();
   accountAssetMap.set(
     `${bfchainCore.accountBaseHelper.getAddressFromPublicKeyString(
       bfchainCore.config.genesisBlock.generatorPublicKey,
     )}_${bfchainCore.config.magic}_${bfchainCore.config.assetType}`,
-    JSBI.BigInt(bfchainCore.config.genesisBlock.remark.generateTotalAmount),
+    BigInt(bfchainCore.config.genesisBlock.remark.generateTotalAmount),
   );
 
-  function setAccountAsset(key: string, assetNumber: JSBI) {
+  function setAccountAsset(key: string, assetNumber: bigint) {
     const remainAsset = accountAssetMap.get(key);
     if (remainAsset) {
-      accountAssetMap.set(key, JSBI.add(remainAsset, assetNumber));
+      accountAssetMap.set(key, remainAsset + assetNumber);
     } else {
       accountAssetMap.set(key, assetNumber);
     }
@@ -517,7 +514,7 @@ function getTrsInBlock(height: number, statisticsInfo: StatisticsInfo) {
       address: string;
       magic: string;
       assetType: string;
-      assetNumber: JSBI;
+      assetNumber: bigint;
     }[];
   }[] = [];
   const sender0 = getAccountWithSecret(delegatesSecret[0]);
@@ -592,7 +589,7 @@ function getTrsInBlock(height: number, statisticsInfo: StatisticsInfo) {
       if (trs.senderId === address) {
         transactionAssetChanges[
           transactionAssetChanges.length
-        ] = TransactionAssetChangeModel.fromObject({
+        ] = TransactionAssetChangeModel.fromObject<TransactionAssetChangeModel>({
           accountType: TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE.SENDER,
           assetTypes: assetStatistic.index,
           assetBalance: getAccountAsset(key),
@@ -600,7 +597,7 @@ function getTrsInBlock(height: number, statisticsInfo: StatisticsInfo) {
       } else {
         transactionAssetChanges[
           transactionAssetChanges.length
-        ] = TransactionAssetChangeModel.fromObject({
+        ] = TransactionAssetChangeModel.fromObject<TransactionAssetChangeModel>({
           accountType: TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE.RECIPIENT,
           assetTypes: assetStatistic.index,
           assetBalance: getAccountAsset(key),

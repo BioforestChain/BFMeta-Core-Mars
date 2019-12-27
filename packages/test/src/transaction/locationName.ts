@@ -3,7 +3,7 @@ import {
   LocationNameTransactionFactory,
   RANGE_TYPE,
   LOCATION_NAME_OPERATION_TYPE,
-} from "../../src";
+} from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,

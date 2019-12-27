@@ -5,7 +5,7 @@ import {
   AcceptVoteTransactionFactory,
   TransactionInBlock,
   RANGE_TYPE,
-} from "../../src";
+} from "@bfchain/core";
 const { dump } = require("dumper.js");
 
 import { getSenderWithoutSecondSecret, bfchainCore, AccountModel } from "../include";

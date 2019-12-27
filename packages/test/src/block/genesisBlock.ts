@@ -14,9 +14,7 @@ import {
   AcceptVoteTransaction,
   AcceptVoteTransactionFactory,
   Transaction,
-  QueneEventEmitter,
   BlockBaseStatisticsHelper,
-  Resolve,
   TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE,
   TransferAssetTransactionFactory,
   TransferAssetTransaction,
@@ -32,9 +30,10 @@ import {
   Ed2curveHelper,
   mainChainRemarkData,
 } from "../include";
-import * as optimist from "./optimist";
+import { QueneEventEmitter, Resolve } from "@bfchain/util";
+import * as optimist from "optimist";
 import * as path from "path";
-const { dump } = require("dumper.js");
+// const { dump } = require("dumper.js");
 const argv = optimist
   .usage("Usage: -b [num] -f [num] [num] -i -o [string] -p")
   .alias("b", "blockPerRound")
@@ -665,7 +664,7 @@ async function getGenesisBlockAsync() {
     );
     console.log(`Genesis block save to: ${defaultGenesisBlockPath}`);
   } else {
-    dump(genesisBlock.toJSON());
+    // dump(genesisBlock.toJSON());
   }
 }
 

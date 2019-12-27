@@ -3,7 +3,7 @@ import {
   EmigrateAssetTransactionFactory,
   EmigrateAssetModel,
   RANGE_TYPE,
-} from "../../src";
+} from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,

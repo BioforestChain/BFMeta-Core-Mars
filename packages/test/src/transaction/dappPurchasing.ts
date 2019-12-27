@@ -5,7 +5,7 @@ import {
   DAppTransactionFactory,
   DAPP_TYPE,
   RANGE_TYPE,
-} from "../../src";
+} from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,

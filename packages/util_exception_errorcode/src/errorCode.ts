@@ -98,6 +98,9 @@ export const ACCOUNT_CAN_NOT_BE_FROZEN = (ec.next =
 export const TRANSACTION_SIGN_SIGNATURE_IS_REQUIRED = (ec.next =
   "Transaction signSignature is required, id {id} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type} when {function}");
 /**id senderId applyBlockHeight type function */
+export const TRANSACTION_SENDER_SECOND_PUBLICKEY_IS_REQUIRED = (ec.next =
+  "Transaction senderSecondPublicKey is required, id {id} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type} when {function}");
+/**id senderId applyBlockHeight type function */
 export const SECOND_PUBLICKEY_ALREADY_CHANGE = (ec.next =
   "Transaction sender second secret have already change, id {id} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type} when {function}");
 /**id senderId applyBlockHeight type function */

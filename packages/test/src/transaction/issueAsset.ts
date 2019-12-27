@@ -1,4 +1,4 @@
-import { IssueAssetTransaction, IssueAssetTransactionFactory, RANGE_TYPE } from "../../src";
+import { IssueAssetTransaction, IssueAssetTransactionFactory, RANGE_TYPE } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,

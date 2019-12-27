@@ -3,7 +3,7 @@ import {
   GiftAssetTransactionFactory,
   GIFT_DISTRIBUTION_RULE,
   RANGE_TYPE,
-} from "../../src";
+} from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,

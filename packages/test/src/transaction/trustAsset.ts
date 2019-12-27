@@ -1,4 +1,4 @@
-import { TrustAssetTransaction, TrustAssetTransactionFactory, RANGE_TYPE } from "../../src";
+import { TrustAssetTransaction, TrustAssetTransactionFactory, RANGE_TYPE } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,

@@ -1,5 +1,5 @@
-import * as tweetnacl from "./tweetnacl";
-import * as ed2curve from "./ed2curve";
+import * as tweetnacl from "tweetnacl";
+import * as ed2curve from "ed2curve";
 import crypto from "crypto";
 /**type LOWLEVEL */
 const NACL_LOWLEVEL = (<any>tweetnacl)["lowlevel"] as {

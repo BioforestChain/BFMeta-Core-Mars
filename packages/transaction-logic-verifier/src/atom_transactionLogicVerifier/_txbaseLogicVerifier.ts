@@ -6,6 +6,7 @@ import {
   NOT_FOUND,
   PROP_LOSE,
   ACCOUNT_FROZEN,
+  TRANSACTION_SENDER_SECOND_PUBLICKEY_IS_REQUIRED,
   TRANSACTION_SIGN_SIGNATURE_IS_REQUIRED,
   SECOND_PUBLICKEY_ALREADY_CHANGE,
   SHOULD_NOT_HAVE_SENDER_SECOND_PUBLICKEY,
@@ -206,7 +207,17 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       function: "checkSecondPublicKey",
     } as const;
     if (accountInfo.secondPublicKey) {
-      if (!(tr.senderSecondPublicKey && tr.signSignature)) {
+      if (!tr.senderSecondPublicKey) {
+        throw new ConsensusException(TRANSACTION_SENDER_SECOND_PUBLICKEY_IS_REQUIRED, {
+          id: tr.id,
+          senderId: tr.senderId,
+          applyBlockHeight: tr.applyBlockHeight,
+          type: tr.type,
+          ...Function_Exception_Detail,
+        });
+      }
+
+      if (!tr.signSignature) {
         throw new ConsensusException(TRANSACTION_SIGN_SIGNATURE_IS_REQUIRED, {
           id: tr.id,
           senderId: tr.senderId,

@@ -1,9 +1,9 @@
-import { BFChainCoreFactory, ConfigHelper, NetType, GenesisBlock } from "../../src";
+import { BFChainCoreFactory, ConfigHelper, NetType, GenesisBlock } from "@bfchain/core";
 import { NodeJsCryptoHelper, NodeJsKeypairHelper, Ed2curveHelper } from "./helper";
-import { ModuleStroge } from "./@bfchain/util";
+import { ModuleStroge } from "@bfchain/util";
 import { subchainRemarkData, mainChainRemarkData } from "./utils";
 import * as path from "path";
-const rootPath = path.resolve(__dirname, "../../../assets");
+const rootPath = path.resolve(__dirname, "../../../../../assets");
 const genesisBlock: BFChainCore.BlockJSON<
   BFChainCore.GenesisBlockRemarkJSON
 > = require(`${rootPath}/genesisBlock.json`);

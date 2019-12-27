@@ -3,10 +3,12 @@ import {
   GiftAssetTransactionFactory,
   GrabAssetTransaction,
   GrabAssetTransactionFactory,
-  parseHexToArrayBuffer,
   GIFT_DISTRIBUTION_RULE,
   RANGE_TYPE,
   BFChainCore,
+} from "@bfchain/core";
+import { parseHexToArrayBuffer } from "@bfchain/util";
+import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,
   getRecipientWithSecondSecret,

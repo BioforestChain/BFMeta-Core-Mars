@@ -4,7 +4,7 @@ import {
   EXCHANGE_DIRECTION,
   SPECIAL_ASSET_TYPE,
   RANGE_TYPE,
-} from "../../src";
+} from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,

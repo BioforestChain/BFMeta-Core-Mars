@@ -1,4 +1,4 @@
-import { SetLnsManagerTransaction, SetLnsManagerTransactionFactory, RANGE_TYPE } from "../../src";
+import { SetLnsManagerTransaction, SetLnsManagerTransactionFactory, RANGE_TYPE } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,
