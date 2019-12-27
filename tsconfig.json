@@ -1,5 +1,5 @@
 {
   "files": [],
   "include": [],
-  "references": [{ "path": "./packages/helper/tsconfig.json" }]
+  "references": [{ "path": "./packages/block-logic-verifier/tsconfig.json" }]
 }
