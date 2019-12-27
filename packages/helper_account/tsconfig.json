@@ -6,7 +6,13 @@
   },
   "references": [
     {
+      "path": "../helper_config/tsconfig.json"
+    },
+    {
       "path": "../typings/tsconfig.json"
+    },
+    {
+      "path": "../util_base58/tsconfig.json"
     }
   ],
   "files": [

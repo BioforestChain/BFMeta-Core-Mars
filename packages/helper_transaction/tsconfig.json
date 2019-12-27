@@ -6,13 +6,28 @@
   },
   "references": [
     {
+      "path": "../helper_account/tsconfig.json"
+    },
+    {
+      "path": "../helper_asymmetric/tsconfig.json"
+    },
+    {
+      "path": "../helper_bigint/tsconfig.json"
+    },
+    {
+      "path": "../helper_config/tsconfig.json"
+    },
+    {
+      "path": "../helper_type/tsconfig.json"
+    },
+    {
+      "path": "../model_constants/tsconfig.json"
+    },
+    {
       "path": "../model_transaction/tsconfig.json"
     },
     {
       "path": "../typings/tsconfig.json"
-    },
-    {
-      "path": "../util_exception_errorcode/tsconfig.json"
     },
     {
       "path": "../util_exception/tsconfig.json"

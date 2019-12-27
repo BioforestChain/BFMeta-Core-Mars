@@ -12,13 +12,13 @@
       "path": "../model/tsconfig.json"
     },
     {
+      "path": "../transaction/tsconfig.json"
+    },
+    {
       "path": "../typings/tsconfig.json"
     },
     {
       "path": "../util_exception_errorcode/tsconfig.json"
-    },
-    {
-      "path": "../transaction/tsconfig.json"
     }
   ],
   "files": [

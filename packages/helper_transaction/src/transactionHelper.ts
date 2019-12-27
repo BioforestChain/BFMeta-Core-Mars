@@ -1,8 +1,10 @@
 import { ConfigHelper } from "@bfchain/core-helper-config";
 import { BaseHelper } from "@bfchain/core-helper-type";
-import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
-import { PROP_SHOULD_LTE_FIELD, NOT_EXIST } from "@bfchain/core-util-exception-errorcode";
-import { TemplateRemark } from "@bfchain/core-model-transaction-base";
+import {
+  CoreExceptionGenerator,
+  PROP_SHOULD_LTE_FIELD,
+  NOT_EXIST,
+} from "@bfchain/core-util-exception";
 import { GIFT_DISTRIBUTION_RULE } from "@bfchain/core-model-constants";
 import {
   TRANSACTION_TYPES_MAP,
@@ -10,6 +12,7 @@ import {
   GiftAssetTransaction,
   GrabAssetModel,
   AccountSignatureModel,
+  TemplateRemark,
 } from "@bfchain/core-model-transaction";
 import { JSBIHelper } from "@bfchain/core-helper-bigint";
 import { AsymmetricHelper } from "@bfchain/core-helper-asymmetric";

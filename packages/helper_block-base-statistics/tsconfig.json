@@ -6,7 +6,19 @@
   },
   "references": [
     {
+      "path": "../helper_chain-asset-info/tsconfig.json"
+    },
+    {
+      "path": "../helper_config/tsconfig.json"
+    },
+    {
+      "path": "../helper_transaction/tsconfig.json"
+    },
+    {
       "path": "../model_block/tsconfig.json"
+    },
+    {
+      "path": "../model_common/tsconfig.json"
     },
     {
       "path": "../typings/tsconfig.json"
