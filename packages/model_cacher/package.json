@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-model-cacher",
-  "version": "5.0.0-dev.0",
+  "version": "5.0.0-dev.1",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,7 +14,7 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-typings": "^5.0.0-dev.0"
+    "@bfchain/core-typings": "^5.0.0-dev.1"
   },
   "devDependencies": {
     "@bfchain/protobuf": "^4.0.0-dev.1"
