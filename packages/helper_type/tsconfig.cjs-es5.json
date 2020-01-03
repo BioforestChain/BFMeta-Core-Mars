@@ -5,7 +5,6 @@
     "../../config/tsconfig_base/base.tsconfig.cjs-es5.json"
   ],
   "compilerOptions": {
-    "outDir": "./build/cjs-es5",
-    "declarationDir": ""
+    "outDir": "./build/cjs-es5"
   }
 }

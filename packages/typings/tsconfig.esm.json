@@ -5,7 +5,6 @@
     "../../config/tsconfig_base/base.tsconfig.esm.json"
   ],
   "compilerOptions": {
-    "outDir": "./build/esm/src",
-    "declarationDir": ""
+    "outDir": "./build/esm/src"
   }
 }

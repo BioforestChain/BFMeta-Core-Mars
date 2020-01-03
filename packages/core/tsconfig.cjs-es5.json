@@ -1,11 +1,120 @@
 {
   "extends": "./tsconfig",
-  "minin": [
-    "./tsconfig.json",
-    "../../config/tsconfig_base/base.tsconfig.cjs-es5.json"
-  ],
+  "minin": ["./tsconfig.json", "../../config/tsconfig_base/base.tsconfig.cjs-es5.json"],
   "compilerOptions": {
-    "outDir": "./build/cjs-es5",
-    "declarationDir": "../../config/tsconfig_base/packages/@types/bfchain__core/core/build/cjs-es5"
-  }
+    "outDir": "./build/cjs-es5"
+  },
+  "references": [
+    {
+      "path": "../account/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../block/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../block-logic-verifier/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../block-ticker/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../channel/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../helper/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../helper_account/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../helper_asymmetric/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../helper_bigint/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../helper_block/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../helper_block-base-statistics/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../helper_chain-asset-info/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../helper_chain-time/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../helper_config/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../helper_milestones/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../helper_transaction/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../helper_type/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../model/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../model_block/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../model_block_base/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../model_block_remark/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../model_cacher/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../model_channel/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../model_common/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../model_constants/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../model_progress/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../model_subchain/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../model_transaction/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../model_transaction_asset/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../model_transaction_base/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../transaction/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../transaction-logic-verifier/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../transaction-subchain/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../typings/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../util_base58/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../util_exception/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../util_exception_errorcode/tsconfig.cjs-es5.json"
+    }
+  ]
 }
