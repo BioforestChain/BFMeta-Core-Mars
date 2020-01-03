@@ -1,9 +1,9 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { CustomTransaction } from "@bfchain/core-model";
 import { Injectable, Inject } from "@bfchain/util";
-import { CoreExceptionGenerator, NOT_EXIST } from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, NOT_EXIST, PROP_IS_INVALID } from "@bfchain/core-util-exception";
 
-const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
+const { ConsensusException, NoFoundException, ArgumentIllegalException } = CoreExceptionGenerator(
   "VERIFIER",
   "CustomLogicVerifier",
 );
@@ -39,7 +39,15 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
       });
     }
 
-    await customTransactionCenter.logicVerify(transaction);
+    const result = await customTransactionCenter.logicVerify(transaction);
+
+    if (!(result && result.ret)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "transaction",
+        target: "transaction",
+        ...Function_Exception_Detail,
+      });
+    }
 
     return true;
   }
