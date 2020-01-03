@@ -19,11 +19,18 @@ export class BlockBaseStatisticsHelper {
     private moduleMap: ModuleStroge,
   ) {}
   private _block_statistics_m = new Map<number, StatisticsInfo>();
+  private tempConfig: ConfigHelper | undefined;
+
+  getConfig() {
+    return this.tempConfig || this.config;
+  }
+
   /**根据区块获取对应的统计信息 */
   forceGetStatisticsInfoByBlock(
     statisticinfoKey: number,
     reason: string,
     source_data?: StatisticInfoModel,
+    config?: ConfigHelper,
   ) {
     let statistics_info = this._block_statistics_m.get(statisticinfoKey);
     if (!statistics_info) {
@@ -37,6 +44,14 @@ export class BlockBaseStatisticsHelper {
       this._block_statistics_m.set(statisticinfoKey, statistics_info);
     }
     statistics_info.ref(reason);
+    // FIXME: /(ㄒoㄒ)/~~ 先酱紫了 @Gaubee
+    if (config) {
+      this.tempConfig = config;
+      statistics_info.on("destroy", () => {
+        this._block_statistics_m.delete(statisticinfoKey);
+        this.tempConfig = undefined;
+      });
+    }
     return statistics_info;
   }
 
@@ -127,7 +142,7 @@ export class BlockBaseStatisticsHelper {
        * 统计流通的链资产总量
        */
       const { assetInfo } = applyInfo;
-      const { config } = this;
+      const config = this.getConfig();
       if (assetInfo.assetType === config.assetType && assetInfo.magic === config.magic) {
         statistics_info.totalChainAsset = statistics_info.totalChainAsset + sourceAmount;
       }

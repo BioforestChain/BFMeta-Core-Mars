@@ -275,7 +275,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
       });
     }
 
-    if (body.numberOfEffectiveBlocks) {
+    if (body.numberOfEffectiveBlocks || body.numberOfEffectiveBlocks === 0) {
       const numberOfEffectiveBlocks = body.numberOfEffectiveBlocks;
       if (!baseHelper.isPositiveInteger(numberOfEffectiveBlocks)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {

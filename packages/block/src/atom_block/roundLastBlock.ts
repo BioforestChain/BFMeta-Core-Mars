@@ -10,15 +10,8 @@ import {
   ChainAssetInfoHelper,
   BlockBaseStatisticsHelper,
 } from "@bfchain/core-helper";
-import {
-  CoreExceptionGenerator,
-  PROP_IS_REQUIRE,
-  PROP_IS_INVALID,
-  NOT_MATCH,
-  SHOULD_BE,
-  SHOULD_NOT_INCLUDE,
-} from "@bfchain/core-util-exception";
-import { Injectable, Inject } from "@bfchain/util";
+import { CoreExceptionGenerator, PROP_IS_INVALID } from "@bfchain/core-util-exception";
+import { Injectable, Inject, ModuleStroge } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "RoundLastBlockFactory");
 
 /**
@@ -38,6 +31,7 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
     public milestonesHelper: MilestonesHelper,
     public asymmetricHelper: AsymmetricHelper,
     public chainAssetInfoHelper: ChainAssetInfoHelper,
+    public moduleMap: ModuleStroge,
     @Inject("cryptoHelper") public cryptoHelper: BFChainCore.CryptoHelperInterface,
   ) {
     super();
@@ -69,8 +63,12 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
    * @param body
    * @param roundLastBlockRemark
    */
-  verifyBlockBody(body: BlockBody, roundLastBlockRemark: BFChainCore.RoundLastBlockRemarkJSON) {
-    super.verifyBlockBody(body, roundLastBlockRemark);
+  verifyBlockBody(
+    body: BlockBody,
+    roundLastBlockRemark: BFChainCore.RoundLastBlockRemarkJSON,
+    config = this.config,
+  ) {
+    super.verifyBlockBody(body, roundLastBlockRemark, config);
 
     const Function_Exception_Detail = { function: "verifyBlockBody" };
     const RoundLastBlockRemark_Exception_Detail = {

@@ -73,7 +73,11 @@ export class BFChainCore {
     public time: ChainTimeHelper, //#endregion
     /**所有模块的集合 */
     public moduleMap: ModuleStroge,
-  ) {}
+  ) {
+    // moduleMap.set("___",(argsA)=>{
+    //   return Resolve(BFChainCore,argsA)
+    // })
+  }
 }
 export function BFChainCoreFactory(
   args: {

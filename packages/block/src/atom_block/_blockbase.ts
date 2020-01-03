@@ -23,7 +23,7 @@ import {
   PROP_SHOULD_LTE_FIELD,
   TOO_LARGE,
 } from "@bfchain/core-util-exception";
-import { Exception, QueneEventEmitter, EasyMap } from "@bfchain/util";
+import { Exception, QueneEventEmitter, EasyMap, Resolve, ModuleStroge } from "@bfchain/util";
 const {
   ArgumentIllegalException,
   OutOfRangeException,
@@ -79,6 +79,7 @@ export abstract class BlockFactory<T extends Block> {
   abstract chainAssetInfoHelper: ChainAssetInfoHelper;
 
   abstract fromJSON(blockBody: BFChainCore.BlockJSON<GetBlockRemarkJSON<T>>): T;
+
   /** transactionInBlockFromJSON*/
   transactionInBlockFromJSON(twi: BFChainCore.TransactionInBlockJSON<any>) {
     const transactionInBlock = TransactionInBlock.fromObject(twi);
@@ -364,7 +365,7 @@ export abstract class BlockFactory<T extends Block> {
    * @param body
    * @param remark
    */
-  verifyBlockBody(body: BlockBody, remark: GetBlockRemarkJSON<T>) {
+  verifyBlockBody(body: BlockBody, remark: GetBlockRemarkJSON<T>, config = this.config) {
     const { baseHelper } = this;
     const Function_Exception_Detail = { function: "verifyBlockBody" };
     if (!body) {
@@ -517,6 +518,8 @@ export abstract class BlockFactory<T extends Block> {
     const statisticsInfo = this.statisticsHelper.forceGetStatisticsInfoByBlock(
       block.height,
       block.id,
+      undefined,
+      config,
     );
     try {
       /**
@@ -779,7 +782,7 @@ export abstract class BlockFactory<T extends Block> {
       });
     }
 
-    this.verifyBlockBody(block, block.remark);
+    this.verifyBlockBody(block, block.remark, config);
     this.verifyBlockTransactions(block, config);
   }
 

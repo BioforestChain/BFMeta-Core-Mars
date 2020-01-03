@@ -38,9 +38,9 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
     public statisticsHelper: BlockBaseStatisticsHelper,
     public milestonesHelper: MilestonesHelper,
     public asymmetricHelper: AsymmetricHelper,
+    public moduleMap: ModuleStroge,
     public chainAssetInfoHelper: ChainAssetInfoHelper,
     private configMap: ConfigHelperMap,
-    private moduleMap: ModuleStroge,
     @Inject("cryptoHelper") public cryptoHelper: BFChainCore.CryptoHelperInterface,
   ) {
     super();
@@ -72,7 +72,11 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
    * @param body
    * @param remark
    */
-  verifyBlockBody(body: BlockBody, remark: BFChainCore.GenesisBlockRemarkJSON) {
+  verifyBlockBody(
+    body: BlockBody,
+    remark: BFChainCore.GenesisBlockRemarkJSON,
+    config = this.config,
+  ) {
     super.verifyBlockBody(body, remark);
 
     const { baseHelper } = this;
@@ -157,7 +161,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       });
     }
 
-    if (!baseHelper.isValidLnsName(remark.genesisNodeAddress)) {
+    if (!baseHelper.isValidLnsName(remark.genesisNodeAddress, config.chainName)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "genesisNodeAddress",
         type: "url",
@@ -545,13 +549,11 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       });
     }
 
-    // FIXME: @wmc
     if (remark.parentGenesisBlock) {
       const parentGenesisBlock = remark.parentGenesisBlock;
       let chainConfig = this.configMap.get(parentGenesisBlock.magic);
       if (!chainConfig) {
-        // FIXME: 没有子链的配置文件就生成一个
-        chainConfig = new ConfigHelper(parentGenesisBlock, this.config.business);
+        chainConfig = new ConfigHelper(parentGenesisBlock, config.business);
       }
 
       const genesisBlock = this._blockCore.recombineBlock<
@@ -566,6 +568,8 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
   }
   @Inject("bfchain-core:BlockCore")
   private _blockCore!: import("../").BlockCore;
+  // @Inject("___")
+  // private resolveBFChainCore!:()=>{}
 
   /**
    * 初始化 genesisBlock

@@ -10,7 +10,7 @@ import {
   BlockBaseStatisticsHelper,
 } from "@bfchain/core-helper";
 import { CoreExceptionGenerator, PROP_IS_INVALID } from "@bfchain/core-util-exception";
-import { Injectable, Inject } from "@bfchain/util";
+import { Injectable, Inject, ModuleStroge } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "CommonBlockFactory");
 
 /**
@@ -29,6 +29,7 @@ export class CommonBlockFactory extends BlockFactory<CommonBlock> {
     public milestonesHelper: MilestonesHelper,
     public asymmetricHelper: AsymmetricHelper,
     public chainAssetInfoHelper: ChainAssetInfoHelper,
+    public moduleMap: ModuleStroge,
     @Inject("cryptoHelper") public cryptoHelper: BFChainCore.CryptoHelperInterface,
   ) {
     super();
@@ -61,8 +62,12 @@ export class CommonBlockFactory extends BlockFactory<CommonBlock> {
    * @param body
    * @param commonBlockRemark
    */
-  verifyBlockBody(body: BlockBody, commonBlockRemark: BFChainCore.CommonBlockRemarkJSON) {
-    super.verifyBlockBody(body, commonBlockRemark);
+  verifyBlockBody(
+    body: BlockBody,
+    commonBlockRemark: BFChainCore.CommonBlockRemarkJSON,
+    config = this.config,
+  ) {
+    super.verifyBlockBody(body, commonBlockRemark, config);
 
     const Function_Exception_Detail = { function: "verifyBlockBody" };
     const CommonBlockRemark_Exception_Detail = {
