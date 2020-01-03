@@ -5,8 +5,10 @@
     "../../config/tsconfig_base/base.tsconfig.@types.json"
   ],
   "compilerOptions": {
-    "declarationDir": "../@types/bfchain__core-model",
-    "declarations": true,
-    "noEmitJs": true
-  }
+    "declarationDir": "../@types/bfchain__core-model-transaction-base",
+    "declaration": true,
+    "outDir": "C:\\Users\\wmc\\AppData\\Local\\Temp\\model_transaction_base",
+    "tsBuildInfoFile": "C:\\Users\\wmc\\AppData\\Local\\Temp\\model_transaction_base\\model_transaction_base.tsbuildinfo"
+  },
+  "references": []
 }

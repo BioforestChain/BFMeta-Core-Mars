@@ -5,8 +5,10 @@
     "../../config/tsconfig_base/base.tsconfig.@types.json"
   ],
   "compilerOptions": {
-    "declarationDir": "../@types/bfchain__core-helper",
-    "declarations": true,
-    "noEmitJs": true
-  }
+    "declarationDir": "../@types/bfchain__core-util-base58",
+    "declaration": true,
+    "outDir": "C:\\Users\\wmc\\AppData\\Local\\Temp\\util_base58",
+    "tsBuildInfoFile": "C:\\Users\\wmc\\AppData\\Local\\Temp\\util_base58\\util_base58.tsbuildinfo"
+  },
+  "references": []
 }

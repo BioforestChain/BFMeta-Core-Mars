@@ -6,7 +6,9 @@
   ],
   "compilerOptions": {
     "declarationDir": "../@types/bfchain__core-helper",
-    "declarations": true,
-    "noEmitJs": true
-  }
+    "declaration": true,
+    "outDir": "C:\\Users\\wmc\\AppData\\Local\\Temp\\helper",
+    "tsBuildInfoFile": "C:\\Users\\wmc\\AppData\\Local\\Temp\\helper\\helper.tsbuildinfo"
+  },
+  "references": []
 }

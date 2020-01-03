@@ -5,8 +5,10 @@
     "../../config/tsconfig_base/base.tsconfig.@types.json"
   ],
   "compilerOptions": {
-    "declarationDir": "../@types/bfchain__core-helper",
-    "declarations": true,
-    "noEmitJs": true
-  }
+    "declarationDir": "../@types/bfchain__core-helper-chain-asset-info",
+    "declaration": true,
+    "outDir": "C:\\Users\\wmc\\AppData\\Local\\Temp\\helper_chain-asset-info",
+    "tsBuildInfoFile": "C:\\Users\\wmc\\AppData\\Local\\Temp\\helper_chain-asset-info\\helper_chain-asset-info.tsbuildinfo"
+  },
+  "references": []
 }

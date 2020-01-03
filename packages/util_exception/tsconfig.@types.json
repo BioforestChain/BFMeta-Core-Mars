@@ -5,8 +5,10 @@
     "../../config/tsconfig_base/base.tsconfig.@types.json"
   ],
   "compilerOptions": {
-    "declarationDir": "../@types/bfchain__util-helper-exception-errorcode",
-    "declarations": true,
-    "noEmitJs": true
-  }
+    "declarationDir": "../@types/bfchain__core-util-exception",
+    "declaration": true,
+    "outDir": "C:\\Users\\wmc\\AppData\\Local\\Temp\\util_exception",
+    "tsBuildInfoFile": "C:\\Users\\wmc\\AppData\\Local\\Temp\\util_exception\\util_exception.tsbuildinfo"
+  },
+  "references": []
 }

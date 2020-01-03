@@ -5,8 +5,10 @@
     "../../config/tsconfig_base/base.tsconfig.@types.json"
   ],
   "compilerOptions": {
-    "declarationDir": "../@types/bfchain__core-model",
-    "declarations": true,
-    "noEmitJs": true
-  }
+    "declarationDir": "../@types/bfchain__core-model-progress",
+    "declaration": true,
+    "outDir": "C:\\Users\\wmc\\AppData\\Local\\Temp\\model_progress",
+    "tsBuildInfoFile": "C:\\Users\\wmc\\AppData\\Local\\Temp\\model_progress\\model_progress.tsbuildinfo"
+  },
+  "references": []
 }

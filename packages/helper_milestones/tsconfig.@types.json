@@ -5,8 +5,10 @@
     "../../config/tsconfig_base/base.tsconfig.@types.json"
   ],
   "compilerOptions": {
-    "declarationDir": "../@types/bfchain__core-helper",
-    "declarations": true,
-    "noEmitJs": true
-  }
+    "declarationDir": "../@types/bfchain__core-helper-milestones",
+    "declaration": true,
+    "outDir": "C:\\Users\\wmc\\AppData\\Local\\Temp\\helper_milestones",
+    "tsBuildInfoFile": "C:\\Users\\wmc\\AppData\\Local\\Temp\\helper_milestones\\helper_milestones.tsbuildinfo"
+  },
+  "references": []
 }

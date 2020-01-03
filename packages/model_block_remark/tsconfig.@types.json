@@ -5,8 +5,10 @@
     "../../config/tsconfig_base/base.tsconfig.@types.json"
   ],
   "compilerOptions": {
-    "declarationDir": "../@types/bfchain__core-model",
-    "declarations": true,
-    "noEmitJs": true
-  }
+    "declarationDir": "../@types/bfchain__core-model-block-remark",
+    "declaration": true,
+    "outDir": "C:\\Users\\wmc\\AppData\\Local\\Temp\\model_block_remark",
+    "tsBuildInfoFile": "C:\\Users\\wmc\\AppData\\Local\\Temp\\model_block_remark\\model_block_remark.tsbuildinfo"
+  },
+  "references": []
 }

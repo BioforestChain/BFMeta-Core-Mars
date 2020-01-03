@@ -6,7 +6,9 @@
   ],
   "compilerOptions": {
     "declarationDir": "../@types/bfchain__core-model-common",
-    "declarations": true,
-    "noEmitJs": true
-  }
+    "declaration": true,
+    "outDir": "C:\\Users\\wmc\\AppData\\Local\\Temp\\model_common",
+    "tsBuildInfoFile": "C:\\Users\\wmc\\AppData\\Local\\Temp\\model_common\\model_common.tsbuildinfo"
+  },
+  "references": []
 }

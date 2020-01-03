@@ -5,8 +5,10 @@
     "../../config/tsconfig_base/base.tsconfig.@types.json"
   ],
   "compilerOptions": {
-    "declarationDir": "../@types/bfchain__core-helper",
-    "declarations": true,
-    "noEmitJs": true
-  }
+    "declarationDir": "../@types/bfchain__core-helper-block-base-statistics",
+    "declaration": true,
+    "outDir": "C:\\Users\\wmc\\AppData\\Local\\Temp\\helper_block-base-statistics",
+    "tsBuildInfoFile": "C:\\Users\\wmc\\AppData\\Local\\Temp\\helper_block-base-statistics\\helper_block-base-statistics.tsbuildinfo"
+  },
+  "references": []
 }

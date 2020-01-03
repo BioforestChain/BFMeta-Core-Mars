@@ -6,6 +6,6 @@
   ],
   "compilerOptions": {
     "outDir": "./build/cjs-es5",
-    "declarationDir": ""
+    "declarationDir": "../../config/tsconfig_base/packages/@types/bfchain__core/core/build/cjs-es5"
   }
 }

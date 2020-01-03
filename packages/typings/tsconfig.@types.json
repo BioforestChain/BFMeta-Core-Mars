@@ -6,7 +6,9 @@
   ],
   "compilerOptions": {
     "declarationDir": "../@types/bfchain__core-typings",
-    "declarations": true,
-    "noEmitJs": true
-  }
+    "declaration": true,
+    "outDir": "C:\\Users\\wmc\\AppData\\Local\\Temp\\typings",
+    "tsBuildInfoFile": "C:\\Users\\wmc\\AppData\\Local\\Temp\\typings\\typings.tsbuildinfo"
+  },
+  "references": []
 }
