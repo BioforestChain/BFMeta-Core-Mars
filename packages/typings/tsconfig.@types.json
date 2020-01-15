@@ -7,8 +7,8 @@
   "compilerOptions": {
     "declarationDir": "../@types/bfchain__core-typings",
     "declaration": true,
-    "outDir": "C:\\Users\\wmc\\AppData\\Local\\Temp\\typings",
-    "tsBuildInfoFile": "C:\\Users\\wmc\\AppData\\Local\\Temp\\typings\\typings.tsbuildinfo"
+    "outDir": "../../.cache/typings",
+    "tsBuildInfoFile": "../../.cache/typings/@types.tsbuildinfo"
   },
   "references": []
 }

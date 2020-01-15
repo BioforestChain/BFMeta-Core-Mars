@@ -7,8 +7,8 @@
   "compilerOptions": {
     "declarationDir": "../@types/bfchain__core-util-base58",
     "declaration": true,
-    "outDir": "C:\\Users\\wmc\\AppData\\Local\\Temp\\util_base58",
-    "tsBuildInfoFile": "C:\\Users\\wmc\\AppData\\Local\\Temp\\util_base58\\util_base58.tsbuildinfo"
+    "outDir": "../../.cache/util_base58",
+    "tsBuildInfoFile": "../../.cache/util_base58/@types.tsbuildinfo"
   },
   "references": []
 }

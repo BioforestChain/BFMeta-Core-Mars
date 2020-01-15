@@ -7,8 +7,8 @@
   "compilerOptions": {
     "declarationDir": "../@types/bfchain__core-helper-chain-time",
     "declaration": true,
-    "outDir": "C:\\Users\\wmc\\AppData\\Local\\Temp\\helper_chain-time",
-    "tsBuildInfoFile": "C:\\Users\\wmc\\AppData\\Local\\Temp\\helper_chain-time\\helper_chain-time.tsbuildinfo"
+    "outDir": "../../.cache/helper_chain-time",
+    "tsBuildInfoFile": "../../.cache/helper_chain-time/@types.tsbuildinfo"
   },
   "references": []
 }

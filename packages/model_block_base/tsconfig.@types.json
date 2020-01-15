@@ -7,8 +7,8 @@
   "compilerOptions": {
     "declarationDir": "../@types/bfchain__core-model-block-base",
     "declaration": true,
-    "outDir": "C:\\Users\\wmc\\AppData\\Local\\Temp\\model_block_base",
-    "tsBuildInfoFile": "C:\\Users\\wmc\\AppData\\Local\\Temp\\model_block_base\\model_block_base.tsbuildinfo"
+    "outDir": "../../.cache/model_block_base",
+    "tsBuildInfoFile": "../../.cache/model_block_base/@types.tsbuildinfo"
   },
   "references": []
 }

@@ -7,8 +7,8 @@
   "compilerOptions": {
     "declarationDir": "../@types/bfchain__core-model",
     "declaration": true,
-    "outDir": "C:\\Users\\wmc\\AppData\\Local\\Temp\\model",
-    "tsBuildInfoFile": "C:\\Users\\wmc\\AppData\\Local\\Temp\\model\\model.tsbuildinfo"
+    "outDir": "../../.cache/model",
+    "tsBuildInfoFile": "../../.cache/model/@types.tsbuildinfo"
   },
   "references": []
 }

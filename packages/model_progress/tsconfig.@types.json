@@ -7,8 +7,8 @@
   "compilerOptions": {
     "declarationDir": "../@types/bfchain__core-model-progress",
     "declaration": true,
-    "outDir": "C:\\Users\\wmc\\AppData\\Local\\Temp\\model_progress",
-    "tsBuildInfoFile": "C:\\Users\\wmc\\AppData\\Local\\Temp\\model_progress\\model_progress.tsbuildinfo"
+    "outDir": "../../.cache/model_progress",
+    "tsBuildInfoFile": "../../.cache/model_progress/@types.tsbuildinfo"
   },
   "references": []
 }

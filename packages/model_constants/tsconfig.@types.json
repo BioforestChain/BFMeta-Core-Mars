@@ -7,8 +7,8 @@
   "compilerOptions": {
     "declarationDir": "../@types/bfchain__core-model-constants",
     "declaration": true,
-    "outDir": "C:\\Users\\wmc\\AppData\\Local\\Temp\\model_constants",
-    "tsBuildInfoFile": "C:\\Users\\wmc\\AppData\\Local\\Temp\\model_constants\\model_constants.tsbuildinfo"
+    "outDir": "../../.cache/model_constants",
+    "tsBuildInfoFile": "../../.cache/model_constants/@types.tsbuildinfo"
   },
   "references": []
 }

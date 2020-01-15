@@ -9,10 +9,10 @@
       "path": "../core/tsconfig.json"
     },
     {
-      "path": "../typings/tsconfig.json"
+      "path": "../crypto/tsconfig.json"
     },
     {
-      "path": "../crypto/tsconfig.json"
+      "path": "../typings/tsconfig.json"
     }
   ],
   "files": [

@@ -16,6 +16,7 @@
   ],
   "dependencies": {
     "@bfchain/core": "^5.0.4-dev.0",
+    "@bfchain/core-crypto": "^5.0.4-dev.0",
     "@bfchain/core-typings": "^5.0.4-dev.0",
     "@types/ed2curve": "^0.2.2",
     "@types/optimist": "^0.0.29",

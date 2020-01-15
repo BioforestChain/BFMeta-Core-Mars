@@ -7,8 +7,8 @@
   "compilerOptions": {
     "declarationDir": "../@types/bfchain__core-helper-config",
     "declaration": true,
-    "outDir": "C:\\Users\\wmc\\AppData\\Local\\Temp\\helper_config",
-    "tsBuildInfoFile": "C:\\Users\\wmc\\AppData\\Local\\Temp\\helper_config\\helper_config.tsbuildinfo"
+    "outDir": "../../.cache/helper_config",
+    "tsBuildInfoFile": "../../.cache/helper_config/@types.tsbuildinfo"
   },
   "references": []
 }

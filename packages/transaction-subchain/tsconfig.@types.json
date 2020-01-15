@@ -7,8 +7,8 @@
   "compilerOptions": {
     "declarationDir": "../@types/bfchain__core-transaction-subchain",
     "declaration": true,
-    "outDir": "C:\\Users\\wmc\\AppData\\Local\\Temp\\transaction-subchain",
-    "tsBuildInfoFile": "C:\\Users\\wmc\\AppData\\Local\\Temp\\transaction-subchain\\transaction-subchain.tsbuildinfo"
+    "outDir": "../../.cache/transaction-subchain",
+    "tsBuildInfoFile": "../../.cache/transaction-subchain/@types.tsbuildinfo"
   },
   "references": []
 }

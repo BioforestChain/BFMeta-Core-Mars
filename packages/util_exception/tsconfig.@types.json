@@ -7,8 +7,8 @@
   "compilerOptions": {
     "declarationDir": "../@types/bfchain__core-util-exception",
     "declaration": true,
-    "outDir": "C:\\Users\\wmc\\AppData\\Local\\Temp\\util_exception",
-    "tsBuildInfoFile": "C:\\Users\\wmc\\AppData\\Local\\Temp\\util_exception\\util_exception.tsbuildinfo"
+    "outDir": "../../.cache/util_exception",
+    "tsBuildInfoFile": "../../.cache/util_exception/@types.tsbuildinfo"
   },
   "references": []
 }

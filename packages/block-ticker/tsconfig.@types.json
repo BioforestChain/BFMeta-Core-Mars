@@ -7,8 +7,8 @@
   "compilerOptions": {
     "declarationDir": "../@types/bfchain__core-block-ticker",
     "declaration": true,
-    "outDir": "C:\\Users\\wmc\\AppData\\Local\\Temp\\block-ticker",
-    "tsBuildInfoFile": "C:\\Users\\wmc\\AppData\\Local\\Temp\\block-ticker\\block-ticker.tsbuildinfo"
+    "outDir": "../../.cache/block-ticker",
+    "tsBuildInfoFile": "../../.cache/block-ticker/@types.tsbuildinfo"
   },
   "references": []
 }

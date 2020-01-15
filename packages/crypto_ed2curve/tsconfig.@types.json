@@ -7,8 +7,8 @@
   "compilerOptions": {
     "declarationDir": "../@types/bfchain__core-crypto-ed2curve",
     "declaration": true,
-    "outDir": "C:\\Users\\bnqkl\\AppData\\Local\\Temp\\crypto_ed2curve",
-    "tsBuildInfoFile": "C:\\Users\\bnqkl\\AppData\\Local\\Temp\\crypto_ed2curve\\crypto_ed2curve.tsbuildinfo"
+    "outDir": "../../.cache/crypto_ed2curve",
+    "tsBuildInfoFile": "../../.cache/crypto_ed2curve/@types.tsbuildinfo"
   },
   "references": []
 }

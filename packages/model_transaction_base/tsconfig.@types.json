@@ -7,8 +7,8 @@
   "compilerOptions": {
     "declarationDir": "../@types/bfchain__core-model-transaction-base",
     "declaration": true,
-    "outDir": "C:\\Users\\wmc\\AppData\\Local\\Temp\\model_transaction_base",
-    "tsBuildInfoFile": "C:\\Users\\wmc\\AppData\\Local\\Temp\\model_transaction_base\\model_transaction_base.tsbuildinfo"
+    "outDir": "../../.cache/model_transaction_base",
+    "tsBuildInfoFile": "../../.cache/model_transaction_base/@types.tsbuildinfo"
   },
   "references": []
 }

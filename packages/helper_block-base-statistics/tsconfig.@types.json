@@ -7,8 +7,8 @@
   "compilerOptions": {
     "declarationDir": "../@types/bfchain__core-helper-block-base-statistics",
     "declaration": true,
-    "outDir": "C:\\Users\\wmc\\AppData\\Local\\Temp\\helper_block-base-statistics",
-    "tsBuildInfoFile": "C:\\Users\\wmc\\AppData\\Local\\Temp\\helper_block-base-statistics\\helper_block-base-statistics.tsbuildinfo"
+    "outDir": "../../.cache/helper_block-base-statistics",
+    "tsBuildInfoFile": "../../.cache/helper_block-base-statistics/@types.tsbuildinfo"
   },
   "references": []
 }

@@ -7,8 +7,8 @@
   "compilerOptions": {
     "declarationDir": "../@types/bfchain__core-crypto",
     "declaration": true,
-    "outDir": "C:\\Users\\bnqkl\\AppData\\Local\\Temp\\crypto",
-    "tsBuildInfoFile": "C:\\Users\\bnqkl\\AppData\\Local\\Temp\\crypto\\crypto.tsbuildinfo"
+    "outDir": "../../.cache/crypto",
+    "tsBuildInfoFile": "../../.cache/crypto/@types.tsbuildinfo"
   },
   "references": []
 }

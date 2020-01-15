@@ -7,8 +7,8 @@
   "compilerOptions": {
     "declarationDir": "../@types/bfchain__core-account",
     "declaration": true,
-    "outDir": "C:\\Users\\wmc\\AppData\\Local\\Temp\\account",
-    "tsBuildInfoFile": "C:\\Users\\wmc\\AppData\\Local\\Temp\\account\\account.tsbuildinfo"
+    "outDir": "../../.cache/account",
+    "tsBuildInfoFile": "../../.cache/account/@types.tsbuildinfo"
   },
   "references": []
 }

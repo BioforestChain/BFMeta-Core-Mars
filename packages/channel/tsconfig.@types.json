@@ -7,8 +7,8 @@
   "compilerOptions": {
     "declarationDir": "../@types/bfchain__core-channel",
     "declaration": true,
-    "outDir": "C:\\Users\\wmc\\AppData\\Local\\Temp\\channel",
-    "tsBuildInfoFile": "C:\\Users\\wmc\\AppData\\Local\\Temp\\channel\\channel.tsbuildinfo"
+    "outDir": "../../.cache/channel",
+    "tsBuildInfoFile": "../../.cache/channel/@types.tsbuildinfo"
   },
   "references": []
 }

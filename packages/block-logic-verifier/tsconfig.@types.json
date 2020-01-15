@@ -7,8 +7,8 @@
   "compilerOptions": {
     "declarationDir": "../@types/bfchain__core-block-logic-verifier",
     "declaration": true,
-    "outDir": "C:\\Users\\wmc\\AppData\\Local\\Temp\\block-logic-verifier",
-    "tsBuildInfoFile": "C:\\Users\\wmc\\AppData\\Local\\Temp\\block-logic-verifier\\block-logic-verifier.tsbuildinfo"
+    "outDir": "../../.cache/block-logic-verifier",
+    "tsBuildInfoFile": "../../.cache/block-logic-verifier/@types.tsbuildinfo"
   },
   "references": []
 }

@@ -1,7 +1,6 @@
 // @ts-check
 const fs = require("fs");
 const path = require("path");
-const temp = require("os").tmpdir();
 const { prettierFormat } = require("@bfchain/devkit");
 /**
  * 
@@ -22,16 +21,15 @@ function generateJsonConfigFile(args) {
     compilerOptions.declarationDir = `../@types/${packageNameToTypesName(packageJson.name)}`;
     compilerOptions.declaration = true;
   }
+  console.log(env);
+  const temp = path.posix.resolve(env.ROOT_PROJECT, "../../.cache");
 
   /// 如果没有默认的outDir路径，或者没有 noEmit 的声明，那么默认不去生成 js文件
-  if (!compilerOptions.outDir) {
-    compilerOptions.outDir = path.resolve(temp, env.PACKAGE_SHORT_NAME);
+  if (true || !compilerOptions.outDir) {
+    compilerOptions.outDir = `../../.cache/${env.PACKAGE_SHORT_NAME}`;
   }
-  if (!compilerOptions.tsBuildInfoFile) {
-    compilerOptions.tsBuildInfoFile = path.resolve(
-      compilerOptions.outDir,
-      env.PACKAGE_SHORT_NAME + ".tsbuildinfo",
-    );
+  if (true || !compilerOptions.tsBuildInfoFile) {
+    compilerOptions.tsBuildInfoFile = `../../.cache/${env.PACKAGE_SHORT_NAME}/@types.tsbuildinfo`;
   }
 
   if (!toJson.references) {

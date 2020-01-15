@@ -7,8 +7,8 @@
   "compilerOptions": {
     "declarationDir": "../@types/bfchain__core-helper-milestones",
     "declaration": true,
-    "outDir": "C:\\Users\\wmc\\AppData\\Local\\Temp\\helper_milestones",
-    "tsBuildInfoFile": "C:\\Users\\wmc\\AppData\\Local\\Temp\\helper_milestones\\helper_milestones.tsbuildinfo"
+    "outDir": "../../.cache/helper_milestones",
+    "tsBuildInfoFile": "../../.cache/helper_milestones/@types.tsbuildinfo"
   },
   "references": []
 }

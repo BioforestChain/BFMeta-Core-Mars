@@ -7,8 +7,8 @@
   "compilerOptions": {
     "declarationDir": "../@types/bfchain__core-crypto-tweetnacl",
     "declaration": true,
-    "outDir": "C:\\Users\\bnqkl\\AppData\\Local\\Temp\\crypto_tweetnacl",
-    "tsBuildInfoFile": "C:\\Users\\bnqkl\\AppData\\Local\\Temp\\crypto_tweetnacl\\crypto_tweetnacl.tsbuildinfo"
+    "outDir": "../../.cache/crypto_tweetnacl",
+    "tsBuildInfoFile": "../../.cache/crypto_tweetnacl/@types.tsbuildinfo"
   },
   "references": []
 }
