@@ -28,7 +28,8 @@ export const CHAIN_CHANNEL_GROUP_ARGS = {
 /**
  * 批量双工通讯管理器
  */
-export class ChainChannelGroup<DH extends ChainChannel = ChainChannel> extends ChainChannelBase implements BFChainCore.ChainChannelGroupInterface<DH>{
+export class ChainChannelGroup<DH extends ChainChannel = ChainChannel> extends ChainChannelBase
+  implements BFChainCore.ChainChannelGroupInterface<DH> {
   @Inject(BaseHelper) protected baseHelper!: BaseHelper;
   @Inject(BaseHelper) protected config!: ConfigHelper;
   @Inject(ChainTimeHelper) private timeHelper!: ChainTimeHelper;

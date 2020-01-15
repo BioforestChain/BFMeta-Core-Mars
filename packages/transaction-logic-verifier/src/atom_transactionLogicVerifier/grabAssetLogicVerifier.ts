@@ -238,9 +238,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
 
     if (BigInt(grabAsset.amount) > BigInt(amount)) {
       throw new ConsensusException(ASSET_NOT_ENOUGH, {
-        reason: `No enough asset to change magic ${sourceChainMagic} assetType ${assetType} remain ${amount} spend ${
-          grabAsset.amount
-        }`,
+        reason: `No enough asset to change magic ${sourceChainMagic} assetType ${assetType} remain ${amount} spend ${grabAsset.amount}`,
         ...Function_Exception_Detail,
       });
     }
@@ -280,9 +278,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
     });
     if (count > 0) {
       throw new ConsensusException(CAN_NOT_SECONDARY_TRANSACTION, {
-        reason: `Can not secondary grab asset, sender ${
-          transaction.senderId
-        } gift transaction signature ${transaction.storageValue}`,
+        reason: `Can not secondary grab asset, sender ${transaction.senderId} gift transaction signature ${transaction.storageValue}`,
         ...Function_Exception_Detail,
       });
     }

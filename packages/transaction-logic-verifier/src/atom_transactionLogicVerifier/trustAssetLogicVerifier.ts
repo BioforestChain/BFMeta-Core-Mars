@@ -1,5 +1,9 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
-import { TrustAssetTransaction, NewTransactionRefuseReason, ACCOUNT_STATUS } from "@bfchain/core-model";
+import {
+  TrustAssetTransaction,
+  NewTransactionRefuseReason,
+  ACCOUNT_STATUS,
+} from "@bfchain/core-model";
 import { Injectable } from "@bfchain/util";
 import { CoreExceptionGenerator, NOT_EXIST, ACCOUNT_FROZEN } from "@bfchain/core-util-exception";
 

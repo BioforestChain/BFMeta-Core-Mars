@@ -1,8 +1,5 @@
 import { Message, Field, Type } from "@bfchain/protobuf";
-import {
-  getHexFromArrayBuffer,
-  parseHexToArrayBuffer,
-} from "@bfchain/util-encoding-hex";
+import { getHexFromArrayBuffer, parseHexToArrayBuffer } from "@bfchain/util-encoding-hex";
 import { ToExchangeSpecialAssetModel } from "./toExchangeSpecialAsset";
 import { RANGE_TYPE } from "@bfchain/core-model-constants";
 import { AccountSignatureModel } from "./accountSignature";

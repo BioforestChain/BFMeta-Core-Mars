@@ -1,8 +1,5 @@
 import { Message, Field, Type } from "@bfchain/protobuf";
-import {
-  getHexFromArrayBuffer,
-  parseHexToArrayBuffer,
-} from "@bfchain/util-encoding-hex";
+import { getHexFromArrayBuffer, parseHexToArrayBuffer } from "@bfchain/util-encoding-hex";
 import { cacheGetter } from "@bfchain/util-decorator";
 import { ToExchangeAssetModel } from "./toExchangeAsset";
 import { RANGE_TYPE } from "@bfchain/core-model-constants";

@@ -45,6 +45,4 @@ declare namespace BFChainCore {
     grabSecret?: string;
   };
   //#endregion
-
-
 }

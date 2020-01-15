@@ -1,8 +1,5 @@
 import { Message, Field, Type } from "@bfchain/protobuf";
-import {
-  parseHexToArrayBuffer,
-  getHexFromArrayBuffer,
-} from "@bfchain/util-encoding-hex";
+import { parseHexToArrayBuffer, getHexFromArrayBuffer } from "@bfchain/util-encoding-hex";
 
 /**
  * Delegate 交易 asset 模型

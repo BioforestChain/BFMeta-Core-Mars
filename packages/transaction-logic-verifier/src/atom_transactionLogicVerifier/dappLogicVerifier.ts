@@ -80,9 +80,7 @@ export class DAppLogicVerifier extends TransactionLogicVerifier {
     if (sourceChainMagic !== this.configHelper.magic && assetType !== this.configHelper.assetType) {
       if (memAsset.remainAssets < BigInt(amount)) {
         throw new ConsensusException(ASSET_NOT_ENOUGH, {
-          reason: `Purchase asset amount greater than remain assets, spend ${amount}, remain ${
-            memAsset.remainAssets
-          }`,
+          reason: `Purchase asset amount greater than remain assets, spend ${amount}, remain ${memAsset.remainAssets}`,
           errorId: NewTransactionRefuseReason.ASSET_NOT_ENOUGH,
           ...Function_Exception_Detail,
         });

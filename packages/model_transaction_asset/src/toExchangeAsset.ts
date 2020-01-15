@@ -1,10 +1,7 @@
 import { Message, Field, Type } from "@bfchain/protobuf";
 import { RateModel } from "@bfchain/core-model-common";
 import { cacheGetter } from "@bfchain/util-decorator";
-import {
-  parseHexToArrayBuffer,
-  getHexFromArrayBuffer,
-} from "@bfchain/util-encoding-hex";
+import { parseHexToArrayBuffer, getHexFromArrayBuffer } from "@bfchain/util-encoding-hex";
 /**缓存cipherTexts解析结果 */
 const BUFFER_LIST_PUBLICKEY_LIST_WM = new WeakMap<Uint8Array[], Readonly<string[]>>();
 

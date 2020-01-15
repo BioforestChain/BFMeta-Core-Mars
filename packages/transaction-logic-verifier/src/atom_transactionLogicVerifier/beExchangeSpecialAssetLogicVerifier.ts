@@ -395,9 +395,7 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
     });
     if (count > 0) {
       throw new ConsensusException(CAN_NOT_SECONDARY_TRANSACTION, {
-        reason: `Can not secondary exchange special asset, sender ${
-          transaction.senderId
-        } exchange transaction signature ${transaction.storageValue}`,
+        reason: `Can not secondary exchange special asset, sender ${transaction.senderId} exchange transaction signature ${transaction.storageValue}`,
         ...Function_Exception_Detail,
       });
     }

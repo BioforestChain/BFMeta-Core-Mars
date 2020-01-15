@@ -288,7 +288,6 @@ export class ServicePeerInfoModel extends Message<ServicePeerInfoModel>
 //   }
 // }
 
-
 /**区块链状态以及当下任务进度模型 */
 @Type.d("BlockchainStatus")
 export class BlockchainStatusModel<S extends BLOCKCHAIN_STATUS = any>

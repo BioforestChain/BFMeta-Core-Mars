@@ -1,4 +1,8 @@
-import { TransferAssetTransaction, TransferAssetTransactionFactory, RANGE_TYPE } from "@bfchain/core";
+import {
+  TransferAssetTransaction,
+  TransferAssetTransactionFactory,
+  RANGE_TYPE,
+} from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,

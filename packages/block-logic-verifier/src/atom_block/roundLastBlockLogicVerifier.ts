@@ -163,9 +163,7 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
       const calcEquity = delegates[i].vote.toString();
       if (nextRoundDelegate.equity !== calcEquity) {
         throw new ConsensusException(NOT_MATCH, {
-          to_compare_prop: `nextRoundDelegates index ${i} address ${
-            nextRoundDelegate.address
-          } equity ${nextRoundDelegate.equity}`,
+          to_compare_prop: `nextRoundDelegates index ${i} address ${nextRoundDelegate.address} equity ${nextRoundDelegate.equity}`,
           be_compare_prop: `nextRoundDelegates index ${i} address ${address} equity ${calcEquity}`,
           to_target: "block remark",
           be_target: "calculate",

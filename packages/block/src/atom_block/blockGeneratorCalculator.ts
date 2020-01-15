@@ -72,10 +72,9 @@ export class BlockGeneratorCalculator {
       roundLastBlockTimestamp = this.config.genesisBlock.timestamp;
     } else {
       const per_round_last_height = this.blockHelper.calcRoundStartHeight(current_round) - 1;
-      roundLastBlockTimestamp = (await this.blockHelper.forceGetBlockByHeight(
-        per_round_last_height,
-        blockGetterHelper,
-      )).timestamp;
+      roundLastBlockTimestamp = (
+        await this.blockHelper.forceGetBlockByHeight(per_round_last_height, blockGetterHelper)
+      ).timestamp;
     }
     /**当前轮次的最大插槽时间信号量 */
     const max_slot_number = this.timeHelper.getSlotNumberByTimestamp(

@@ -1,8 +1,5 @@
 import { Message, Field, Type } from "@bfchain/protobuf";
-import {
-  parseHexToArrayBuffer,
-  getHexFromArrayBuffer,
-} from "@bfchain/util-encoding-hex";
+import { parseHexToArrayBuffer, getHexFromArrayBuffer } from "@bfchain/util-encoding-hex";
 
 @Type.d("AccountSignatureModel")
 export class AccountSignatureModel extends Message<AccountSignatureModel>

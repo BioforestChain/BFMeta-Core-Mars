@@ -433,9 +433,7 @@ async function getGenesisBlockAsync() {
   //#region 模拟账户表的变更
   const subchainAccountAssetMap = new Map<string, bigint>();
   subchainAccountAssetMap.set(
-    `${genesisAccountInfo.address}_${subBfchainCore.config.magic}_${
-      subBfchainCore.config.assetType
-    }`,
+    `${genesisAccountInfo.address}_${subBfchainCore.config.magic}_${subBfchainCore.config.assetType}`,
     BigInt(subBfchainCore.config.genesisBlock.remark.generateTotalAmount),
   );
 

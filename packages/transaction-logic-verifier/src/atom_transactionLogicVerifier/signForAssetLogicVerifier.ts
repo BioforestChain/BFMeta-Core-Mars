@@ -317,9 +317,7 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
     });
     if (count > 0) {
       throw new ConsensusException(CAN_NOT_SECONDARY_TRANSACTION, {
-        reason: `Can not secondary sign for asset, sender ${
-          transaction.senderId
-        } trust transaction signature ${transaction.storageValue}`,
+        reason: `Can not secondary sign for asset, sender ${transaction.senderId} trust transaction signature ${transaction.storageValue}`,
         ...Function_Exception_Detail,
       });
     }

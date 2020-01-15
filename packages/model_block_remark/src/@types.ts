@@ -1,2 +1,1 @@
-declare namespace BFChainCore {
-}
+declare namespace BFChainCore {}

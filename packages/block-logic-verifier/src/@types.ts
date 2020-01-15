@@ -5,5 +5,4 @@ declare namespace BFChainCore {
     ...args: any[]
   ) => BlockLogicVerifier<T>;
   // #endregion
-
 }

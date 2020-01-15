@@ -4,13 +4,9 @@ import { ModuleStroge } from "@bfchain/util";
 import { subchainRemarkData, mainChainRemarkData } from "./utils";
 import * as path from "path";
 const rootPath = path.resolve(__dirname, "../../../../../assets");
-const genesisBlock: BFChainCore.BlockJSON<
-  BFChainCore.GenesisBlockRemarkJSON
-> = require(`${rootPath}/genesisBlock.json`);
+const genesisBlock: BFChainCore.BlockJSON<BFChainCore.GenesisBlockRemarkJSON> = require(`${rootPath}/genesisBlock.json`);
 
-const subGenesisBlock: BFChainCore.BlockJSON<
-  BFChainCore.GenesisBlockRemarkJSON
-> = require(`${rootPath}/subGenesisBlock.json`);
+const subGenesisBlock: BFChainCore.BlockJSON<BFChainCore.GenesisBlockRemarkJSON> = require(`${rootPath}/subGenesisBlock.json`);
 
 export const moduleMap = new ModuleStroge();
 const bfchainCore = BFChainCoreFactory(
