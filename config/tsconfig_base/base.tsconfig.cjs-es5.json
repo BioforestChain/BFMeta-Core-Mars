@@ -1,10 +1,10 @@
 {
   "extends": "./base.tsconfig.cjs",
   "compilerOptions": {
-    "target": "es5",
+    "target": "esnext",
     "declaration": true,
     "declarationMap": false,
     "sourceMap": false,
-    "transformPlugins": ["jsbi", "es2016"]
+    "transformPlugins": ["es5"]
   }
 }
