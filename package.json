@@ -48,6 +48,7 @@
     "up": "yarn upgrade-interactive --latest",
     "mono": "bdk-mono",
     "publ": "lerna publish",
+    "publ:force": "lerna publish --force-publish",
     "lsts": "bdk-lsts -p=./tsconfig.json",
     "build": "bdk-tsc --build ./tsconfig.all.json",
     "dev:all": "bdk-tsc --build ./tsconfig.all.json -w",
