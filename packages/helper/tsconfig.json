@@ -47,6 +47,7 @@
   ],
   "files": [
     "src/@types.ts",
+    "src/default-constants.ts",
     "src/index.ts"
   ]
 }

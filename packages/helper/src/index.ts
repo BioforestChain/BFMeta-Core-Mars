@@ -2,6 +2,8 @@ import "./@types";
 
 typeof import("@bfchain/core-model-transaction");
 
+export * from "./default-constants";
+
 export * from "@bfchain/core-helper-config";
 export * from "@bfchain/core-helper-chain-time";
 export * from "@bfchain/core-helper-bigint";
