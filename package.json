@@ -51,6 +51,7 @@
     "lsts": "bdk-lsts -p=./tsconfig.json",
     "build": "bdk-tsc --build ./tsconfig.all.json",
     "dev:all": "bdk-tsc --build ./tsconfig.all.json -w",
+    "dev:cjs-es5": "bdk-tsc --build ./tsconfig.cjs-es5.json -w",
     "dev:types": "bdk-tsc --build ./tsconfig.@types.json -w",
     "rebuild": "npm run clear & npm run build",
     "dev": "bdk-tsc --build -w"

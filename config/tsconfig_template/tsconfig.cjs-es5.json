@@ -1,6 +1,6 @@
 {
   "extends": "./tsconfig",
-  "minin": ["./tsconfig.json", "../../config/tsconfig_base/base.tsconfig.cjs-es5.json"],
+  "mixin": ["./tsconfig.json", "../../config/tsconfig_base/base.tsconfig.cjs-es5.json"],
   "@assign#compilerOptions": {
     "outDir": "./build/cjs-es5"
   }

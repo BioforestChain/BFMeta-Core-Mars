@@ -46,8 +46,9 @@ function rmBuild(rootPath, filter, maxDeep = Infinity, curDeep = 1) {
 
 rmBuild(
   rootPath,
-  (file, fullpath) => fs.statSync(fullpath).isDirectory() && file.includes("build"),
-  1,
+  (file, fullpath, deep) =>
+    deep === 2 && fs.statSync(fullpath).isDirectory() && file.includes("build"),
+  2,
 );
 rmBuild(path.resolve(__dirname, "../.cache"), _ => true);
 rmBuild(path.resolve(rootPath, "@types"), (file, _, deep) => deep > 1 && file !== "package.json");

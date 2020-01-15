@@ -1,6 +1,6 @@
 {
   "extends": "./tsconfig",
-  "minin": ["./tsconfig.json", "../../config/tsconfig_base/base.tsconfig.esm-es6.json"],
+  "mixin": ["./tsconfig.json", "../../config/tsconfig_base/base.tsconfig.esm-es6.json"],
   "compilerOptions": {
     "outDir": "./build/esm-es6"
   }

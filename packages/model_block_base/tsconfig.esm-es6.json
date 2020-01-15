@@ -1,6 +1,6 @@
 {
   "extends": "./tsconfig",
-  "minin": [
+  "mixin": [
     "./tsconfig.json",
     "../../config/tsconfig_base/base.tsconfig.esm-es6.json"
   ],
