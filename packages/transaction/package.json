@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-transaction",
-  "version": "5.0.2-dev.0",
+  "version": "5.0.3-dev.0",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,13 +14,13 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-helper": "^5.0.2-dev.0",
-    "@bfchain/core-model": "^5.0.2-dev.0",
-    "@bfchain/core-model-cacher": "^5.0.2-dev.0",
-    "@bfchain/core-model-common": "^5.0.2-dev.0",
-    "@bfchain/core-model-constants": "^5.0.2-dev.0",
-    "@bfchain/core-typings": "^5.0.2-dev.0",
-    "@bfchain/core-util-exception": "^5.0.2-dev.0"
+    "@bfchain/core-helper": "^5.0.3-dev.0",
+    "@bfchain/core-model": "^5.0.3-dev.0",
+    "@bfchain/core-model-cacher": "^5.0.3-dev.0",
+    "@bfchain/core-model-common": "^5.0.3-dev.0",
+    "@bfchain/core-model-constants": "^5.0.3-dev.0",
+    "@bfchain/core-typings": "^5.0.3-dev.0",
+    "@bfchain/core-util-exception": "^5.0.3-dev.0"
   },
   "peerDepedences": {
     "@bfchain/protobuf": "^3.1.2"
