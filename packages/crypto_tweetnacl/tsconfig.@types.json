@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig",
+  "minin": [
+    "./tsconfig.json",
+    "../../config/tsconfig_base/base.tsconfig.@types.json"
+  ],
+  "compilerOptions": {
+    "declarationDir": "../@types/bfchain__core-crypto-tweetnacl",
+    "declaration": true,
+    "outDir": "C:\\Users\\bnqkl\\AppData\\Local\\Temp\\crypto_tweetnacl",
+    "tsBuildInfoFile": "C:\\Users\\bnqkl\\AppData\\Local\\Temp\\crypto_tweetnacl\\crypto_tweetnacl.tsbuildinfo"
+  },
+  "references": []
+}

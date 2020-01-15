@@ -18,7 +18,7 @@ function generateJsonConfigFile(args) {
   const compilerOptions = toJson.compilerOptions || (toJson.compilerOptions = {});
 
   /// 初始化配置declarationDir
-  if (compilerOptions.declarationDir) {
+  if (!compilerOptions.declarationDir) {
     compilerOptions.declarationDir = `../@types/${packageNameToTypesName(packageJson.name)}`;
     compilerOptions.declaration = true;
   }
@@ -49,13 +49,21 @@ function generateJsonConfigFile(args) {
     typingPackageJson.name = `@types/${packageNameToTypesName(packageJson.name)}`;
     typingPackageJson.types = "index.d.ts";
     typingPackageJson.version = packageJson.version;
-    typingPackageJson.dependencies = {}
+    typingPackageJson.dependencies = {};
     for (const packageName in packageJson.dependencies) {
       if (packageName.startsWith("@bfchain/core")) {
         typingPackageJson.dependencies[`@types/${packageNameToTypesName(packageName)}`] =
           packageJson.dependencies[packageName];
       }
     }
+
+    const typingPackageFolderPath = path.resolve(typingPackagePath, "..");
+    if (!fs.existsSync(typingPackageFolderPath)) {
+      fs.mkdirSync(typingPackageFolderPath, {
+        recursive: true,
+      });
+    }
+
     fs.writeFileSync(
       typingPackagePath,
       prettierFormat(JSON.stringify(typingPackageJson), { parser: "json-stringify" }),
