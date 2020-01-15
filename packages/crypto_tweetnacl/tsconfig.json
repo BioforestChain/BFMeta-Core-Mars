@@ -8,5 +8,28 @@
     {
       "path": "../typings/tsconfig.json"
     }
+  ],
+  "files": [
+    "src/array.ts",
+    "src/auth.ts",
+    "src/blake2b.ts",
+    "src/blake2s.ts",
+    "src/box.ts",
+    "src/check.ts",
+    "src/convert.ts",
+    "src/core.ts",
+    "src/curve25519.ts",
+    "src/hash.ts",
+    "src/index.ts",
+    "src/nacl.ts",
+    "src/poly1305.ts",
+    "src/random.ts",
+    "src/salsa20.ts",
+    "src/scalarmult.ts",
+    "src/sealedbox.ts",
+    "src/secretbox.ts",
+    "src/sign.ts",
+    "src/validate.ts",
+    "src/verify.ts"
   ]
 }

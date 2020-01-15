@@ -18,6 +18,7 @@
     "newLine": "lf",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "downlevelIteration": true,
     "transformPlugins": ["es2019"]
   }
 }

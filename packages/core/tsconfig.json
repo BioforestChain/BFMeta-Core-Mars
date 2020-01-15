@@ -21,6 +21,9 @@
       "path": "../channel/tsconfig.json"
     },
     {
+      "path": "../crypto/tsconfig.json"
+    },
+    {
       "path": "../helper/tsconfig.json"
     },
     {

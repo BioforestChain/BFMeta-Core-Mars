@@ -11,8 +11,8 @@ function generateJsonConfigFile(args) {
   if (!toJson.extends) {
     toJson.extends = "./tsconfig";
   }
-  if (!toJson.minin) {
-    toJson.minin = ["./tsconfig.json", "../../config/tsconfig_base/base.tsconfig.@types.json"];
+  if (!toJson.mixin) {
+    toJson.mixin = ["./tsconfig.json", "../../config/tsconfig_base/base.tsconfig.@types.json"];
   }
   const compilerOptions = toJson.compilerOptions || (toJson.compilerOptions = {});
 

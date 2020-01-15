@@ -11,5 +11,9 @@
     {
       "path": "../typings/tsconfig.json"
     }
+  ],
+  "files": [
+    "src/ed2curve.ts",
+    "src/index.ts"
   ]
 }

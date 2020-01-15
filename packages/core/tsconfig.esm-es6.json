@@ -115,6 +115,15 @@
     },
     {
       "path": "../util_exception_errorcode/tsconfig.esm-es6.json"
+    },
+    {
+      "path": "../crypto/tsconfig.esm-es6.json"
+    },
+    {
+      "path": "../crypto_ed2curve/tsconfig.esm-es6.json"
+    },
+    {
+      "path": "../crypto_tweetnacl/tsconfig.esm-es6.json"
     }
   ]
 }

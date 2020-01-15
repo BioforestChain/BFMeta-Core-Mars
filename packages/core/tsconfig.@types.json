@@ -1,9 +1,6 @@
 {
   "extends": "./tsconfig",
-  "mixin": [
-    "./tsconfig.json",
-    "../../config/tsconfig_base/base.tsconfig.@types.json"
-  ],
+  "mixin": ["./tsconfig.json", "../../config/tsconfig_base/base.tsconfig.@types.json"],
   "compilerOptions": {
     "declarationDir": "../@types/bfchain__core",
     "declaration": true,
@@ -121,6 +118,15 @@
     },
     {
       "path": "../util_exception_errorcode/tsconfig.@types.json"
+    },
+    {
+      "path": "../crypto/tsconfig.@types.json"
+    },
+    {
+      "path": "../crypto_ed2curve/tsconfig.@types.json"
+    },
+    {
+      "path": "../crypto_tweetnacl/tsconfig.@types.json"
     }
   ]
 }

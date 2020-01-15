@@ -115,6 +115,15 @@
     },
     {
       "path": "../util_exception_errorcode/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../crypto/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../crypto_ed2curve/tsconfig.cjs-es5.json"
+    },
+    {
+      "path": "../crypto_tweetnacl/tsconfig.cjs-es5.json"
     }
   ]
 }

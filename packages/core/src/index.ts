@@ -13,6 +13,8 @@ export * from "@bfchain/core-transaction-subchain";
 
 export * from "@bfchain/core-channel";
 
+export * from "@bfchain/core-crypto";
+
 export * from "./index";
 export * from "./templateRemark";
 

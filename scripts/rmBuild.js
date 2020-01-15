@@ -1,6 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 const rootPath = path.resolve(__dirname, "../packages");
+const cachePath = path.resolve(__dirname, "../.cache");
+const typePath = path.resolve(rootPath, "@types");
 
 const prefix = "";
 
@@ -26,6 +28,9 @@ function removeFiles(targetPath) {
 }
 
 function rmBuild(rootPath, filter, maxDeep = Infinity, curDeep = 1) {
+  if (!fs.existsSync(rootPath)) {
+    return;
+  }
   const files = fs.readdirSync(rootPath);
   for (const file of files) {
     const curPath = rootPath + "/" + file;
@@ -50,5 +55,5 @@ rmBuild(
     deep === 2 && fs.statSync(fullpath).isDirectory() && file.includes("build"),
   2,
 );
-rmBuild(path.resolve(__dirname, "../.cache"), _ => true);
-rmBuild(path.resolve(rootPath, "@types"), (file, _, deep) => deep > 1 && file !== "package.json");
+rmBuild(cachePath, _ => true);
+rmBuild(typePath, (file, _, deep) => deep > 1 && file !== "package.json");
