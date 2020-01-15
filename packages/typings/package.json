@@ -20,5 +20,6 @@
   "peerDependencies": {
     "@bfchain/core-model-transaction": "^5.0.0-dev.0",
     "@bfchain/util": "^4.1.0-alpha.2"
-  }
+  },
+  "dependencies": {}
 }
