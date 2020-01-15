@@ -532,27 +532,6 @@ export class BaseHelper {
   }
 
   /**
-   * 用户名是否合法：
-   * 不能包含 ifmchain/bfchain
-   * 只能由大小写字母、数字、下划线 1-20
-   *
-   * @param username
-   */
-  isValidUsername(username: string) {
-    if (!this.isString(username)) {
-      return false;
-    }
-    // 大小写字母、数字、下划线 1-20
-    const allowSymbols = /^[A-Za-z0-9_]{1,20}$/;
-    if (!allowSymbols.test(username)) {
-      return false;
-    }
-    // 不能包含 ifmchain/bfchain
-    const ipattern = /^((?!ifmchain|bfchain).)*$/;
-    return ipattern.test(username.toLowerCase());
-  }
-
-  /**
    * 是否是合法的创世受托人名
    *
    * @param username
@@ -564,6 +543,23 @@ export class BaseHelper {
     // 大小写字母、数字、下划线 1-20
     const allowSymbols = /^[A-Za-z0-9_]{1,20}$/;
     return allowSymbols.test(username);
+  }
+
+  /**
+   * 用户名是否合法：
+   * 不能包含本链名
+   * 只能由大小写字母、数字、下划线 1-20
+   *
+   * @param username
+   */
+  isValidUsername(username: string) {
+    if (!this.isValidGenesisUsername(username)) {
+      return false;
+    }
+    if (username.toLowerCase().includes(this.configHelper.chainName)) {
+      return false;
+    }
+    return true;
   }
 
   /**

@@ -17,6 +17,7 @@ import {
   NOT_IN_EXPECTED_RANGE,
   SHOULD_NOT_EXIST,
   SHOULD_BE,
+  SHOULD_NOT_INCLUDE,
 } from "@bfchain/core-util-exception";
 import { Injectable, TaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
@@ -146,10 +147,11 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
       });
     }
 
+    const allowSymbols = /^[A-Za-z0-9_]{1,20}$/;
     // 创世受托人的用户名 是 bfchain/ifmchain 加索引
     // 不能包含 bchain
     if (body.applyBlockHeight === 1) {
-      if (!baseHelper.isValidGenesisUsername(alias)) {
+      if (!allowSymbols.test(alias)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "alias",
           type: "genesis username",
@@ -157,10 +159,18 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
         });
       }
     } else {
-      if (!baseHelper.isValidUsername(alias)) {
+      if (!allowSymbols.test(alias)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "alias",
           type: "username",
+          ...UsernameAsset_Exception_Detail,
+        });
+      }
+
+      if (alias.toLowerCase().includes(this.configHelper.chainName)) {
+        throw new ArgumentIllegalException(SHOULD_NOT_INCLUDE, {
+          prop: "alias",
+          value: "chain name",
           ...UsernameAsset_Exception_Detail,
         });
       }

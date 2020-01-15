@@ -14,16 +14,6 @@ const {
   OutOfRangeException,
 } = CoreExceptionGenerator("HELPER", "blockHelper");
 
-console.log([
-  [Injectable, Inject, getHexFromArrayBuffer],
-  [ConfigHelper],
-  [BaseHelper],
-  [PROP_SHOULD_LTE_FIELD, OUT_OF_RANGE],
-  [CoreExceptionGenerator, NOT_EXIST],
-  [BLOCK_TYPES_BASE],
-  [(AccountBaseHelper as any) as RoundLastBlock],
-]);
-
 @Injectable()
 export class BlockHelper {
   constructor(
