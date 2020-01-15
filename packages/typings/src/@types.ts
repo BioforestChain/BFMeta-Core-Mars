@@ -35,7 +35,7 @@ declare namespace BFChainCore {
       publicKey: Uint8Array,
       secretKey: Uint8Array,
       nonce: Uint8Array,
-    ): Uint8Array | null;
+    ): Uint8Array | false;
   }
   type Keypair = {
     publicKey: Buffer;

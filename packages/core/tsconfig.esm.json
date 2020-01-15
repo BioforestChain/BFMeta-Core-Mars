@@ -1,10 +1,120 @@
 {
   "extends": "./tsconfig",
-  "minin": [
-    "./tsconfig.json",
-    "../../config/tsconfig_base/base.tsconfig.esm.json"
-  ],
+  "minin": ["./tsconfig.json", "../../config/tsconfig_base/base.tsconfig.esm.json"],
   "compilerOptions": {
     "outDir": "./build/esm"
-  }
+  },
+  "references": [
+    {
+      "path": "../account/tsconfig.esm.json"
+    },
+    {
+      "path": "../block/tsconfig.esm.json"
+    },
+    {
+      "path": "../block-logic-verifier/tsconfig.esm.json"
+    },
+    {
+      "path": "../block-ticker/tsconfig.esm.json"
+    },
+    {
+      "path": "../channel/tsconfig.esm.json"
+    },
+    {
+      "path": "../helper/tsconfig.esm.json"
+    },
+    {
+      "path": "../helper_account/tsconfig.esm.json"
+    },
+    {
+      "path": "../helper_asymmetric/tsconfig.esm.json"
+    },
+    {
+      "path": "../helper_bigint/tsconfig.esm.json"
+    },
+    {
+      "path": "../helper_block/tsconfig.esm.json"
+    },
+    {
+      "path": "../helper_block-base-statistics/tsconfig.esm.json"
+    },
+    {
+      "path": "../helper_chain-asset-info/tsconfig.esm.json"
+    },
+    {
+      "path": "../helper_chain-time/tsconfig.esm.json"
+    },
+    {
+      "path": "../helper_config/tsconfig.esm.json"
+    },
+    {
+      "path": "../helper_milestones/tsconfig.esm.json"
+    },
+    {
+      "path": "../helper_transaction/tsconfig.esm.json"
+    },
+    {
+      "path": "../helper_type/tsconfig.esm.json"
+    },
+    {
+      "path": "../model/tsconfig.esm.json"
+    },
+    {
+      "path": "../model_block/tsconfig.esm.json"
+    },
+    {
+      "path": "../model_block_base/tsconfig.esm.json"
+    },
+    {
+      "path": "../model_block_remark/tsconfig.esm.json"
+    },
+    {
+      "path": "../model_cacher/tsconfig.esm.json"
+    },
+    {
+      "path": "../model_channel/tsconfig.esm.json"
+    },
+    {
+      "path": "../model_common/tsconfig.esm.json"
+    },
+    {
+      "path": "../model_constants/tsconfig.esm.json"
+    },
+    {
+      "path": "../model_progress/tsconfig.esm.json"
+    },
+    {
+      "path": "../model_subchain/tsconfig.esm.json"
+    },
+    {
+      "path": "../model_transaction/tsconfig.esm.json"
+    },
+    {
+      "path": "../model_transaction_asset/tsconfig.esm.json"
+    },
+    {
+      "path": "../model_transaction_base/tsconfig.esm.json"
+    },
+    {
+      "path": "../transaction/tsconfig.esm.json"
+    },
+    {
+      "path": "../transaction-logic-verifier/tsconfig.esm.json"
+    },
+    {
+      "path": "../transaction-subchain/tsconfig.esm.json"
+    },
+    {
+      "path": "../typings/tsconfig.esm.json"
+    },
+    {
+      "path": "../util_base58/tsconfig.esm.json"
+    },
+    {
+      "path": "../util_exception/tsconfig.esm.json"
+    },
+    {
+      "path": "../util_exception_errorcode/tsconfig.esm.json"
+    }
+  ]
 }

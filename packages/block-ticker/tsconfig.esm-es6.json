@@ -5,6 +5,6 @@
     "../../config/tsconfig_base/base.tsconfig.esm-es6.json"
   ],
   "compilerOptions": {
-    "outDir": "./build/cjs"
+    "outDir": "./build/esm-es6"
   }
 }

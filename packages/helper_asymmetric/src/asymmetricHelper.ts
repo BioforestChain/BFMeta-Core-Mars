@@ -72,7 +72,7 @@ export class AsymmetricHelper {
     encryptPK: Uint8Array,
     decryptSK: Uint8Array,
     nonce = new Uint8Array(24),
-  ): Uint8Array | null {
+  ) {
     const curveEncryptPK = this.ed2curveHelper.convertPublicKey(encryptPK);
     if (!curveEncryptPK) {
       throw new Error("decryptPK convertPublicKey fail");

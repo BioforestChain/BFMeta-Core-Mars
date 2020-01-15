@@ -19,6 +19,7 @@ import {
   PROP_SHOULD_GTE_FIELD,
   PROP_SHOULD_GT_FIELD,
   SHOULD_NOT_DUPLICATE,
+  SHOULD_NOT_INCLUDE,
 } from "@bfchain/core-util-exception";
 import { Injectable, TaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
@@ -78,7 +79,7 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
 
     this.emptyRangeType(body, Function_Exception_Detail);
 
-    const recipientId = body.recipientId;
+    const { senderId, recipientId } = body;
 
     if (!recipientId) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
@@ -88,7 +89,7 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
       });
     }
 
-    if (body.senderId === recipientId) {
+    if (senderId === recipientId) {
       throw new ArgumentIllegalException(SHOULD_NOT_BE, {
         to_compare_prop: "senderId",
         to_target: "body",
@@ -139,8 +140,8 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
 
     const trustees = trustAsset.trustees;
 
-    if (trustees.includes(body.senderId)) {
-      throw new ArgumentIllegalException(SHOULD_NOT_BE, {
+    if (trustees.includes(senderId)) {
+      throw new ArgumentIllegalException(SHOULD_NOT_INCLUDE, {
         to_compare_prop: "trustee",
         to_target: "trustAsset",
         be_compare_prop: "senderId",
@@ -149,10 +150,10 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
     }
 
     if (trustees.includes(recipientId)) {
-      throw new ArgumentIllegalException(SHOULD_NOT_BE, {
+      throw new ArgumentIllegalException(SHOULD_NOT_INCLUDE, {
         to_compare_prop: "trustee",
         to_target: "trustAsset",
-        be_compare_prop: "senderId",
+        be_compare_prop: "recipientId",
         ...Function_Exception_Detail,
       });
     }
