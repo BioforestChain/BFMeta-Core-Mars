@@ -3,6 +3,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
+    "declaration": false,
     "declarationMap": false,
     "sourceMap": false
   }

@@ -21,8 +21,6 @@ function generateJsonConfigFile(args) {
     compilerOptions.declarationDir = `../@types/${packageNameToTypesName(packageJson.name)}`;
     compilerOptions.declaration = true;
   }
-  console.log(env);
-  const temp = path.posix.resolve(env.ROOT_PROJECT, "../../.cache");
 
   /// 如果没有默认的outDir路径，或者没有 noEmit 的声明，那么默认不去生成 js文件
   if (true || !compilerOptions.outDir) {

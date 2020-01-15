@@ -2,5 +2,8 @@
   "name": "@types/bfchain__core-crypto-ed2curve",
   "types": "index.d.ts",
   "version": "5.0.4-dev.0",
-  "dependencies": {}
+  "dependencies": {
+    "@types/bfchain__core-crypto-tweetnacl": "^5.0.4-dev.0",
+    "@types/bfchain__core-typings": "^5.0.4-dev.0"
+  }
 }
