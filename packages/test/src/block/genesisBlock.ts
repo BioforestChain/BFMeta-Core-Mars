@@ -27,7 +27,7 @@ import {
   RECORD_TYPE,
   LOCATION_NAME_OPERATION_TYPE,
   getRandomMagic,
-  Ed2curveHelper,
+  ed2curveHelper,
   mainChainRemarkData,
 } from "../include";
 import { QueneEventEmitter, Resolve } from "@bfchain/util";
@@ -91,7 +91,7 @@ const core = BFChainCoreFactory({
   Buffer: Buffer as any,
   cryptoHelper: NodeJsCryptoHelper,
   keypairHelper: NodeJsKeypairHelper,
-  ed2curveHelper: Ed2curveHelper,
+  ed2curveHelper: ed2curveHelper,
 });
 const statistics = Resolve(BlockBaseStatisticsHelper, core.moduleMap);
 
@@ -266,7 +266,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
   );
   return trs;
 }
-const genesisAccountKeypair = core.keypairHelper.create(config.genesisSecret);
+const genesisAccountKeypair = core.accountBaseHelper.createSecretKeypair(config.genesisSecret);
 const genesisAccountInfo = {
   address: core.accountHelper.getAddressFromPublicKey(genesisAccountKeypair.publicKey),
   publicKey: genesisAccountKeypair.publicKey.toString("hex"),

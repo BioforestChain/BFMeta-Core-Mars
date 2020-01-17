@@ -67,13 +67,13 @@ const trs = bfchainCore.transaction.createTransaction(
     applyBlockHeight: 2,
     timestamp: 500,
     senderId: bfchainCore.accountHelper.getAddressFromPublicKey(
-      bfchainCore.keypairHelper.create("1").publicKey,
+      bfchainCore.accountBaseHelper.createSecretKeypair("1").publicKey,
     ),
-    senderPublicKey: bfchainCore.keypairHelper.create("1").publicKey.toString("hex"),
+    senderPublicKey: bfchainCore.accountBaseHelper.createSecretKeypair("1").publicKey.toString("hex"),
     rangeType: RANGE_TYPE.EMPTY,
     range: [
       bfchainCore.accountHelper.getAddressFromPublicKey(
-        bfchainCore.keypairHelper.create("2").publicKey,
+        bfchainCore.accountBaseHelper.createSecretKeypair("2").publicKey,
       ),
     ],
     fee: "23",
@@ -92,7 +92,7 @@ const trs = bfchainCore.transaction.createTransaction(
       amount: "10",
     },
   },
-  bfchainCore.keypairHelper.create("1"),
+  bfchainCore.accountBaseHelper.createSecretKeypair("1"),
 );
 
 const json = jsonDry.stringify({ qaq, quq, trs, xx: /cs/ });

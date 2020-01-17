@@ -10,7 +10,7 @@ declare namespace BFChainCore {
   //#region KeypairHelper
   interface KeypairHelperInterface {
     /**生成公私钥对 */
-    create(secret: string): Keypair;
+    create(secretHash: Uint8Array): Keypair;
     /**非对称签名 */
     detached_sign(hash: Uint8Array, secretKey: Uint8Array): Buffer;
     /**非对称验签 */

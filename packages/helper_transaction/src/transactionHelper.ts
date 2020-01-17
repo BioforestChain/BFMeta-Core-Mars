@@ -627,7 +627,7 @@ export class TransactionHelper {
     giftTransactionInBlock: BFChainCore.TransactionInBlock<GiftAssetTransaction>,
     opts: BFChainCore.TransactionHelper.GenerateGrabAssetOptions,
   ) {
-    const grabKeypair = this.keypairHelper.create(opts.mainSecret);
+    const grabKeypair = this.accountBaseHelper.createSecretKeypair(opts.mainSecret);
     const giftTransaction = giftTransactionInBlock.transaction;
     const giftAsset = giftTransaction.asset.giftAsset;
     const {
@@ -685,7 +685,7 @@ export class TransactionHelper {
         .update(args.transactionSignatureBuffer)
         .update(args.senderId)
         .digest(),
-      this.keypairHelper.create(args.secret).secretKey,
+      this.accountBaseHelper.createSecretKeypair(args.secret).secretKey,
     );
   }
   /**
@@ -723,7 +723,7 @@ export class TransactionHelper {
     senderId: string;
     genesisSignatureBuffer?: Uint8Array;
   }) {
-    const secretKeyBuffer = this.keypairHelper.create(args.secret).secretKey;
+    const secretKeyBuffer = this.accountBaseHelper.createSecretKeypair(args.secret).secretKey;
     return this.emigrateAssetGenesisSignature({
       secretKeyBuffer,
       chainName: args.chainName,
@@ -792,7 +792,7 @@ export class TransactionHelper {
     transactionSignatureBuffer: Uint8Array;
     genesisSignatureBuffer?: Uint8Array;
   }) {
-    const secretKeyBuffer = this.keypairHelper.create(args.secret).secretKey;
+    const secretKeyBuffer = this.accountBaseHelper.createSecretKeypair(args.secret).secretKey;
     return this.immigrateAssetGenesisSignature({
       secretKeyBuffer,
       transactionSignatureBuffer: args.transactionSignatureBuffer,
@@ -844,7 +844,7 @@ export class TransactionHelper {
     recipientId: string;
     thirdPartySignatureBuffer?: Uint8Array;
   }) {
-    const secretKeyBuffer = this.keypairHelper.create(args.secret).secretKey;
+    const secretKeyBuffer = this.accountBaseHelper.createSecretKeypair(args.secret).secretKey;
     return this.thirdPartySignature({
       secretKeyBuffer,
       transactionSignatureBuffer: args.transactionSignatureBuffer,

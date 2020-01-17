@@ -1,7 +1,6 @@
 /// 浏览器平台
 // import sha256 from "sha.js";
 // import md5 from "md5.js";
-import Helper, { CommonBlockFactory, TransactionInBlock } from "@bfchain/core";
 import { bfchainCore } from "./include/init";
 
 (async function test() {
@@ -31,5 +30,5 @@ import { bfchainCore } from "./include/init";
   //   bfchainCore.keypairHelper.create("1"),
   // );
 
-  console.log(bfchainCore.keypairHelper.create("1"));
+  console.log(bfchainCore.accountBaseHelper.createSecretKeypair("1"));
 })().catch(console.error);

@@ -358,7 +358,7 @@ async function getSetLnsRecordValueTransaction(
   );
 }
 
-const genesisAccountKeypair = subBfchainCore.keypairHelper.create(config.genesisSecret);
+const genesisAccountKeypair = subBfchainCore.accountBaseHelper.createSecretKeypair(config.genesisSecret);
 const genesisAccountInfo = {
   address: subBfchainCore.accountHelper.getAddressFromPublicKey(genesisAccountKeypair.publicKey),
   publicKey: genesisAccountKeypair.publicKey.toString("hex"),

@@ -11,7 +11,7 @@ const FROZEN_PK_ADD_WM = new WeakMap<Uint8Array, BFChainUtil.Buffer>();
 export class AccountBaseHelper {
   constructor(
     @Inject("cryptoHelper") public cryptoHelper: BFChainCore.CryptoHelperInterface,
-    @Inject("keypairHelper") public KeypairHelperInterface: BFChainCore.KeypairHelperInterface,
+    @Inject("keypairHelper") public keypairHelperInterface: BFChainCore.KeypairHelperInterface,
     @Inject("Buffer") public Buffer: BFChainUtil.BufferConstructor,
     public base58Helper: Base58Helper,
     public config: ConfigHelper,
@@ -36,7 +36,12 @@ export class AccountBaseHelper {
    * @param secret 主密码
    */
   createSecretKeypair(secret: string) {
-    return this.KeypairHelperInterface.create(secret);
+    return this.keypairHelperInterface.create(
+      this.cryptoHelper
+        .sha256()
+        .update(secret, "utf8")
+        .digest(),
+    );
   }
   /**根据私钥获取公钥Buffer */
   getPublicKeyFromSecret(secret: string) {

@@ -471,7 +471,7 @@ function getAccountWithSecret(secret: string) {
     publicKey: getPublicKeyFromSecret(secret),
   };
 }
-const genesisAccountKeypair = bfchainCore.keypairHelper.create(genesisSecret);
+const genesisAccountKeypair = bfchainCore.accountBaseHelper.createSecretKeypair(genesisSecret);
 const genesisAccountInfo = {
   address: bfchainCore.accountHelper.getAddressFromPublicKey(genesisAccountKeypair.publicKey),
   publicKey: genesisAccountKeypair.publicKey.toString("hex"),

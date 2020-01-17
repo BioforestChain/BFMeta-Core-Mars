@@ -5,5 +5,4 @@ export * from "./init";
 export * from "./helper";
 export * from "./ips";
 export * from "@bfchain/core";
-export * from "@bfchain/core";
 export * from "./magic";

@@ -6,7 +6,7 @@ import {
   BFChainCoreFactory,
   ConfigHelper,
 } from "@bfchain/core";
-import { NodeJsCryptoHelper, NodeJsKeypairHelper, Ed2curveHelper } from "../../include";
+import { NodeJsCryptoHelper, NodeJsKeypairHelper, ed2curveHelper } from "../../include";
 
 import { SubChainCenter } from "./SubChainCenter";
 import { ModuleStroge } from "@bfchain/util";
@@ -32,7 +32,7 @@ function CreateCoreWithSubCenter(demoname: string) {
       Buffer: Buffer as any,
       cryptoHelper: NodeJsCryptoHelper,
       keypairHelper: NodeJsKeypairHelper,
-      ed2curveHelper: Ed2curveHelper,
+      ed2curveHelper: ed2curveHelper,
     },
     moduleMap,
   );
