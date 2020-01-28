@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig",
+  "mixin": [
+    "./tsconfig.json",
+    "../../config/tsconfig_base/base.tsconfig.@types.json"
+  ],
+  "compilerOptions": {
+    "declarationDir": "../@types/bfchain__core-helper-chain-time",
+    "declaration": true,
+    "outDir": "../../.cache/helper-chain_time",
+    "tsBuildInfoFile": "../../.cache/helper-chain_time/@types.tsbuildinfo"
+  },
+  "references": []
+}

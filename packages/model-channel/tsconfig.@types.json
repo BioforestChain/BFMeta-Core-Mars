@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig",
+  "mixin": [
+    "./tsconfig.json",
+    "../../config/tsconfig_base/base.tsconfig.@types.json"
+  ],
+  "compilerOptions": {
+    "declarationDir": "../@types/bfchain__core-model-channel",
+    "declaration": true,
+    "outDir": "../../.cache/model-channel",
+    "tsBuildInfoFile": "../../.cache/model-channel/@types.tsbuildinfo"
+  },
+  "references": []
+}

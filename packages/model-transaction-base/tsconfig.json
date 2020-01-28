@@ -6,16 +6,21 @@
   },
   "references": [
     {
-      "path": "../crypto-ed2curve/tsconfig.json"
+      "path": "../model-cacher/tsconfig.json"
     },
     {
-      "path": "../crypto-tweetnacl/tsconfig.json"
+      "path": "../model-common/tsconfig.json"
+    },
+    {
+      "path": "../model-constants/tsconfig.json"
     },
     {
       "path": "../typings/tsconfig.json"
     }
   ],
   "files": [
-    "src/index.ts"
+    "src/@types.ts",
+    "src/index.ts",
+    "src/transaction.ts"
   ]
 }

@@ -6,7 +6,7 @@
   },
   "references": [
     {
-      "path": "../helper_account/tsconfig.json"
+      "path": "../helper-account/tsconfig.json"
     },
     {
       "path": "../typings/tsconfig.json"

@@ -9,10 +9,10 @@
       "path": "../account/tsconfig.json"
     },
     {
-      "path": "../block-logic-verifier/tsconfig.json"
+      "path": "../block_logic_verifier/tsconfig.json"
     },
     {
-      "path": "../block-ticker/tsconfig.json"
+      "path": "../block_ticker/tsconfig.json"
     },
     {
       "path": "../block/tsconfig.json"
@@ -30,10 +30,10 @@
       "path": "../model/tsconfig.json"
     },
     {
-      "path": "../transaction-logic-verifier/tsconfig.json"
+      "path": "../transaction_logic_verifier/tsconfig.json"
     },
     {
-      "path": "../transaction-subchain/tsconfig.json"
+      "path": "../transaction_subchain/tsconfig.json"
     },
     {
       "path": "../transaction/tsconfig.json"
@@ -42,10 +42,10 @@
       "path": "../typings/tsconfig.json"
     },
     {
-      "path": "../util_base58/tsconfig.json"
+      "path": "../util-base58/tsconfig.json"
     },
     {
-      "path": "../util_exception/tsconfig.json"
+      "path": "../util-exception/tsconfig.json"
     }
   ],
   "files": [

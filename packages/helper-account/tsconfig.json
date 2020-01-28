@@ -6,16 +6,18 @@
   },
   "references": [
     {
-      "path": "../crypto-ed2curve/tsconfig.json"
-    },
-    {
-      "path": "../crypto-tweetnacl/tsconfig.json"
+      "path": "../helper-config/tsconfig.json"
     },
     {
       "path": "../typings/tsconfig.json"
+    },
+    {
+      "path": "../util-base58/tsconfig.json"
     }
   ],
   "files": [
+    "src/accountHelper.ts",
+    "src/base58Helper.ts",
     "src/index.ts"
   ]
 }

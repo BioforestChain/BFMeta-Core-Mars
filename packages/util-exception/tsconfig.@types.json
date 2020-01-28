@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig",
+  "mixin": [
+    "./tsconfig.json",
+    "../../config/tsconfig_base/base.tsconfig.@types.json"
+  ],
+  "compilerOptions": {
+    "declarationDir": "../@types/bfchain__core-util-exception",
+    "declaration": true,
+    "outDir": "../../.cache/util-exception",
+    "tsBuildInfoFile": "../../.cache/util-exception/@types.tsbuildinfo"
+  },
+  "references": []
+}

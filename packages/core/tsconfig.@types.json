@@ -8,125 +8,45 @@
     "tsBuildInfoFile": "../../.cache/core/@types.tsbuildinfo"
   },
   "references": [
-    {
-      "path": "../account/tsconfig.@types.json"
-    },
-    {
-      "path": "../block/tsconfig.@types.json"
-    },
-    {
-      "path": "../block-logic-verifier/tsconfig.@types.json"
-    },
-    {
-      "path": "../block-ticker/tsconfig.@types.json"
-    },
-    {
-      "path": "../channel/tsconfig.@types.json"
-    },
-    {
-      "path": "../helper/tsconfig.@types.json"
-    },
-    {
-      "path": "../helper_account/tsconfig.@types.json"
-    },
-    {
-      "path": "../helper_asymmetric/tsconfig.@types.json"
-    },
-    {
-      "path": "../helper_bigint/tsconfig.@types.json"
-    },
-    {
-      "path": "../helper_block/tsconfig.@types.json"
-    },
-    {
-      "path": "../helper_block-base-statistics/tsconfig.@types.json"
-    },
-    {
-      "path": "../helper_chain-asset-info/tsconfig.@types.json"
-    },
-    {
-      "path": "../helper_chain-time/tsconfig.@types.json"
-    },
-    {
-      "path": "../helper_config/tsconfig.@types.json"
-    },
-    {
-      "path": "../helper_milestones/tsconfig.@types.json"
-    },
-    {
-      "path": "../helper_transaction/tsconfig.@types.json"
-    },
-    {
-      "path": "../helper_type/tsconfig.@types.json"
-    },
-    {
-      "path": "../model/tsconfig.@types.json"
-    },
-    {
-      "path": "../model_block/tsconfig.@types.json"
-    },
-    {
-      "path": "../model_block_base/tsconfig.@types.json"
-    },
-    {
-      "path": "../model_block_remark/tsconfig.@types.json"
-    },
-    {
-      "path": "../model_cacher/tsconfig.@types.json"
-    },
-    {
-      "path": "../model_channel/tsconfig.@types.json"
-    },
-    {
-      "path": "../model_common/tsconfig.@types.json"
-    },
-    {
-      "path": "../model_constants/tsconfig.@types.json"
-    },
-    {
-      "path": "../model_progress/tsconfig.@types.json"
-    },
-    {
-      "path": "../model_subchain/tsconfig.@types.json"
-    },
-    {
-      "path": "../model_transaction/tsconfig.@types.json"
-    },
-    {
-      "path": "../model_transaction_asset/tsconfig.@types.json"
-    },
-    {
-      "path": "../model_transaction_base/tsconfig.@types.json"
-    },
-    {
-      "path": "../transaction/tsconfig.@types.json"
-    },
-    {
-      "path": "../transaction-logic-verifier/tsconfig.@types.json"
-    },
-    {
-      "path": "../transaction-subchain/tsconfig.@types.json"
-    },
-    {
-      "path": "../typings/tsconfig.@types.json"
-    },
-    {
-      "path": "../util_base58/tsconfig.@types.json"
-    },
-    {
-      "path": "../util_exception/tsconfig.@types.json"
-    },
-    {
-      "path": "../util_exception_errorcode/tsconfig.@types.json"
-    },
-    {
-      "path": "../crypto/tsconfig.@types.json"
-    },
-    {
-      "path": "../crypto_ed2curve/tsconfig.@types.json"
-    },
-    {
-      "path": "../crypto_tweetnacl/tsconfig.@types.json"
-    }
+    { "path": "../account/tsconfig.@types.json" },
+    { "path": "../block/tsconfig.@types.json" },
+    { "path": "../block_logic_verifier/tsconfig.@types.json" },
+    { "path": "../block_ticker/tsconfig.@types.json" },
+    { "path": "../channel/tsconfig.@types.json" },
+    { "path": "../helper/tsconfig.@types.json" },
+    { "path": "../helper-account/tsconfig.@types.json" },
+    { "path": "../helper-asymmetric/tsconfig.@types.json" },
+    { "path": "../helper-bigint/tsconfig.@types.json" },
+    { "path": "../helper-block/tsconfig.@types.json" },
+    { "path": "../helper-block_base_statistics/tsconfig.@types.json" },
+    { "path": "../helper-chain_asset_info/tsconfig.@types.json" },
+    { "path": "../helper-chain_time/tsconfig.@types.json" },
+    { "path": "../helper-config/tsconfig.@types.json" },
+    { "path": "../helper-milestones/tsconfig.@types.json" },
+    { "path": "../helper-transaction/tsconfig.@types.json" },
+    { "path": "../helper-type/tsconfig.@types.json" },
+    { "path": "../model/tsconfig.@types.json" },
+    { "path": "../model-block/tsconfig.@types.json" },
+    { "path": "../model-block-base/tsconfig.@types.json" },
+    { "path": "../model-block-remark/tsconfig.@types.json" },
+    { "path": "../model-cacher/tsconfig.@types.json" },
+    { "path": "../model-channel/tsconfig.@types.json" },
+    { "path": "../model-common/tsconfig.@types.json" },
+    { "path": "../model-constants/tsconfig.@types.json" },
+    { "path": "../model-progress/tsconfig.@types.json" },
+    { "path": "../model-subchain/tsconfig.@types.json" },
+    { "path": "../model-transaction/tsconfig.@types.json" },
+    { "path": "../model-transaction-asset/tsconfig.@types.json" },
+    { "path": "../model-transaction-base/tsconfig.@types.json" },
+    { "path": "../transaction/tsconfig.@types.json" },
+    { "path": "../transaction_logic_verifier/tsconfig.@types.json" },
+    { "path": "../transaction_subchain/tsconfig.@types.json" },
+    { "path": "../typings/tsconfig.@types.json" },
+    { "path": "../util-base58/tsconfig.@types.json" },
+    { "path": "../util-exception/tsconfig.@types.json" },
+    { "path": "../util-exception-errorcode/tsconfig.@types.json" },
+    { "path": "../crypto/tsconfig.@types.json" },
+    { "path": "../crypto-ed2curve/tsconfig.@types.json" },
+    { "path": "../crypto-tweetnacl/tsconfig.@types.json" }
   ]
 }

@@ -6,9 +6,6 @@
   },
   "references": [
     {
-      "path": "../crypto-ed2curve/tsconfig.json"
-    },
-    {
       "path": "../crypto-tweetnacl/tsconfig.json"
     },
     {
@@ -16,6 +13,7 @@
     }
   ],
   "files": [
+    "src/ed2curve.ts",
     "src/index.ts"
   ]
 }

@@ -9,22 +9,10 @@
       "path": "../model-block/tsconfig.json"
     },
     {
-      "path": "../model-cacher/tsconfig.json"
-    },
-    {
-      "path": "../model-channel/tsconfig.json"
-    },
-    {
-      "path": "../model-common/tsconfig.json"
-    },
-    {
       "path": "../model-constants/tsconfig.json"
     },
     {
       "path": "../model-progress/tsconfig.json"
-    },
-    {
-      "path": "../model-subchain/tsconfig.json"
     },
     {
       "path": "../model-transaction/tsconfig.json"
@@ -35,6 +23,11 @@
   ],
   "files": [
     "src/@types.ts",
-    "src/index.ts"
+    "src/block.chainChannel.model.ts",
+    "src/common.chainChannel.model.ts",
+    "src/constants.ts",
+    "src/index.ts",
+    "src/peer.chainChannel.model.ts",
+    "src/transaction.chainChannel.model.ts"
   ]
 }

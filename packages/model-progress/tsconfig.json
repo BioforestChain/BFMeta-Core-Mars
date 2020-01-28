@@ -6,16 +6,18 @@
   },
   "references": [
     {
-      "path": "../crypto-ed2curve/tsconfig.json"
-    },
-    {
-      "path": "../crypto-tweetnacl/tsconfig.json"
+      "path": "../model-common/tsconfig.json"
     },
     {
       "path": "../typings/tsconfig.json"
     }
   ],
   "files": [
-    "src/index.ts"
+    "src/@types.ts",
+    "src/blockchainStatus.model.ts",
+    "src/blocks.model.ts",
+    "src/index.ts",
+    "src/progressEvent.model.ts",
+    "src/transactions.model.ts"
   ]
 }

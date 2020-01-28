@@ -15,39 +15,27 @@
       "path": "../helper-bigint/tsconfig.json"
     },
     {
-      "path": "../helper-block_base_statistics/tsconfig.json"
-    },
-    {
-      "path": "../helper-block/tsconfig.json"
-    },
-    {
-      "path": "../helper-chain_asset_info/tsconfig.json"
-    },
-    {
-      "path": "../helper-chain_time/tsconfig.json"
-    },
-    {
       "path": "../helper-config/tsconfig.json"
-    },
-    {
-      "path": "../helper-milestones/tsconfig.json"
-    },
-    {
-      "path": "../helper-transaction/tsconfig.json"
     },
     {
       "path": "../helper-type/tsconfig.json"
     },
     {
+      "path": "../model-constants/tsconfig.json"
+    },
+    {
+      "path": "../model-transaction/tsconfig.json"
+    },
+    {
       "path": "../typings/tsconfig.json"
     },
     {
-      "path": "../util-exception-errorcode/tsconfig.json"
+      "path": "../util-exception/tsconfig.json"
     }
   ],
   "files": [
     "src/@types.ts",
-    "src/default-constants.ts",
-    "src/index.ts"
+    "src/index.ts",
+    "src/transactionHelper.ts"
   ]
 }

@@ -6,25 +6,10 @@
   },
   "references": [
     {
-      "path": "../model-block/tsconfig.json"
-    },
-    {
       "path": "../model-cacher/tsconfig.json"
     },
     {
-      "path": "../model-channel/tsconfig.json"
-    },
-    {
       "path": "../model-common/tsconfig.json"
-    },
-    {
-      "path": "../model-constants/tsconfig.json"
-    },
-    {
-      "path": "../model-progress/tsconfig.json"
-    },
-    {
-      "path": "../model-subchain/tsconfig.json"
     },
     {
       "path": "../model-transaction/tsconfig.json"
@@ -35,6 +20,11 @@
   ],
   "files": [
     "src/@types.ts",
-    "src/index.ts"
+    "src/block.ts",
+    "src/index.ts",
+    "src/statistic_info/asset.statistic.ts",
+    "src/statistic_info/countAndAmount.statistic.ts",
+    "src/statistic_info/index.ts",
+    "src/statistic_info/statisticInfo.ts"
   ]
 }

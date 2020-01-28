@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig",
+  "mixin": [
+    "./tsconfig.json",
+    "../../config/tsconfig_base/base.tsconfig.@types.json"
+  ],
+  "compilerOptions": {
+    "declarationDir": "../@types/bfchain__core-transaction-subchain",
+    "declaration": true,
+    "outDir": "../../.cache/transaction_subchain",
+    "tsBuildInfoFile": "../../.cache/transaction_subchain/@types.tsbuildinfo"
+  },
+  "references": []
+}

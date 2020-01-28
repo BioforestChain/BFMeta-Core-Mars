@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig",
+  "mixin": [
+    "./tsconfig.json",
+    "../../config/tsconfig_base/base.tsconfig.@types.json"
+  ],
+  "compilerOptions": {
+    "declarationDir": "../@types/bfchain__core-helper-milestones",
+    "declaration": true,
+    "outDir": "../../.cache/helper-milestones",
+    "tsBuildInfoFile": "../../.cache/helper-milestones/@types.tsbuildinfo"
+  },
+  "references": []
+}

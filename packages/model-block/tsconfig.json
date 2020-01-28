@@ -6,25 +6,16 @@
   },
   "references": [
     {
-      "path": "../model-block/tsconfig.json"
+      "path": "../model-block-base/tsconfig.json"
+    },
+    {
+      "path": "../model-block-remark/tsconfig.json"
     },
     {
       "path": "../model-cacher/tsconfig.json"
     },
     {
-      "path": "../model-channel/tsconfig.json"
-    },
-    {
       "path": "../model-common/tsconfig.json"
-    },
-    {
-      "path": "../model-constants/tsconfig.json"
-    },
-    {
-      "path": "../model-progress/tsconfig.json"
-    },
-    {
-      "path": "../model-subchain/tsconfig.json"
     },
     {
       "path": "../model-transaction/tsconfig.json"
@@ -35,6 +26,11 @@
   ],
   "files": [
     "src/@types.ts",
-    "src/index.ts"
+    "src/atom_block/commonBlock.block.ts",
+    "src/atom_block/genesisBlock.block.ts",
+    "src/atom_block/index.ts",
+    "src/atom_block/roundLastBlock.block.ts",
+    "src/index.ts",
+    "src/someBlock.ts"
   ]
 }

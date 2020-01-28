@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig",
+  "mixin": [
+    "./tsconfig.json",
+    "../../config/tsconfig_base/base.tsconfig.@types.json"
+  ],
+  "compilerOptions": {
+    "declarationDir": "../@types/bfchain__core-model-constants",
+    "declaration": true,
+    "outDir": "../../.cache/model-constants",
+    "tsBuildInfoFile": "../../.cache/model-constants/@types.tsbuildinfo"
+  },
+  "references": []
+}

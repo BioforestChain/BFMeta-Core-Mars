@@ -5,125 +5,45 @@
     "outDir": "./build/esm-es6"
   },
   "references": [
-    {
-      "path": "../account/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../block/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../block-logic-verifier/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../block-ticker/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../channel/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../helper/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../helper_account/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../helper_asymmetric/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../helper_bigint/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../helper_block/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../helper_block-base-statistics/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../helper_chain-asset-info/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../helper_chain-time/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../helper_config/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../helper_milestones/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../helper_transaction/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../helper_type/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../model/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../model_block/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../model_block_base/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../model_block_remark/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../model_cacher/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../model_channel/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../model_common/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../model_constants/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../model_progress/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../model_subchain/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../model_transaction/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../model_transaction_asset/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../model_transaction_base/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../transaction/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../transaction-logic-verifier/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../transaction-subchain/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../typings/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../util_base58/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../util_exception/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../util_exception_errorcode/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../crypto/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../crypto_ed2curve/tsconfig.esm-es6.json"
-    },
-    {
-      "path": "../crypto_tweetnacl/tsconfig.esm-es6.json"
-    }
+   { "path": "../account/tsconfig.esm-es6.json" },
+    { "path": "../block/tsconfig.esm-es6.json" },
+    { "path": "../block_logic_verifier/tsconfig.esm-es6.json" },
+    { "path": "../block_ticker/tsconfig.esm-es6.json" },
+    { "path": "../channel/tsconfig.esm-es6.json" },
+    { "path": "../helper/tsconfig.esm-es6.json" },
+    { "path": "../helper-account/tsconfig.esm-es6.json" },
+    { "path": "../helper-asymmetric/tsconfig.esm-es6.json" },
+    { "path": "../helper-bigint/tsconfig.esm-es6.json" },
+    { "path": "../helper-block/tsconfig.esm-es6.json" },
+    { "path": "../helper-block_base_statistics/tsconfig.esm-es6.json" },
+    { "path": "../helper-chain_asset_info/tsconfig.esm-es6.json" },
+    { "path": "../helper-chain_time/tsconfig.esm-es6.json" },
+    { "path": "../helper-config/tsconfig.esm-es6.json" },
+    { "path": "../helper-milestones/tsconfig.esm-es6.json" },
+    { "path": "../helper-transaction/tsconfig.esm-es6.json" },
+    { "path": "../helper-type/tsconfig.esm-es6.json" },
+    { "path": "../model/tsconfig.esm-es6.json" },
+    { "path": "../model-block/tsconfig.esm-es6.json" },
+    { "path": "../model-block-base/tsconfig.esm-es6.json" },
+    { "path": "../model-block-remark/tsconfig.esm-es6.json" },
+    { "path": "../model-cacher/tsconfig.esm-es6.json" },
+    { "path": "../model-channel/tsconfig.esm-es6.json" },
+    { "path": "../model-common/tsconfig.esm-es6.json" },
+    { "path": "../model-constants/tsconfig.esm-es6.json" },
+    { "path": "../model-progress/tsconfig.esm-es6.json" },
+    { "path": "../model-subchain/tsconfig.esm-es6.json" },
+    { "path": "../model-transaction/tsconfig.esm-es6.json" },
+    { "path": "../model-transaction-asset/tsconfig.esm-es6.json" },
+    { "path": "../model-transaction-base/tsconfig.esm-es6.json" },
+    { "path": "../transaction/tsconfig.esm-es6.json" },
+    { "path": "../transaction_logic_verifier/tsconfig.esm-es6.json" },
+    { "path": "../transaction_subchain/tsconfig.esm-es6.json" },
+    { "path": "../typings/tsconfig.esm-es6.json" },
+    { "path": "../util-base58/tsconfig.esm-es6.json" },
+    { "path": "../util-exception/tsconfig.esm-es6.json" },
+    { "path": "../util-exception-errorcode/tsconfig.esm-es6.json" },
+    { "path": "../crypto/tsconfig.esm-es6.json" },
+    { "path": "../crypto-ed2curve/tsconfig.esm-es6.json" },
+    { "path": "../crypto-tweetnacl/tsconfig.esm-es6.json" }
   ]
 }

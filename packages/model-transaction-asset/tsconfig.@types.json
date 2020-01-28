@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig",
+  "mixin": [
+    "./tsconfig.json",
+    "../../config/tsconfig_base/base.tsconfig.@types.json"
+  ],
+  "compilerOptions": {
+    "declarationDir": "../@types/bfchain__core-model-transaction-asset",
+    "declaration": true,
+    "outDir": "../../.cache/model-transaction-asset",
+    "tsBuildInfoFile": "../../.cache/model-transaction-asset/@types.tsbuildinfo"
+  },
+  "references": []
+}

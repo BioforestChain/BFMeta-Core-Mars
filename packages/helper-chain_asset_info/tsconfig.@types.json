@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig",
+  "mixin": [
+    "./tsconfig.json",
+    "../../config/tsconfig_base/base.tsconfig.@types.json"
+  ],
+  "compilerOptions": {
+    "declarationDir": "../@types/bfchain__core-helper-chain-asset-info",
+    "declaration": true,
+    "outDir": "../../.cache/helper-chain_asset_info",
+    "tsBuildInfoFile": "../../.cache/helper-chain_asset_info/@types.tsbuildinfo"
+  },
+  "references": []
+}
