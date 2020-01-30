@@ -20,6 +20,7 @@
   ],
   "files": [
     "src/@types.ts",
+    "src/atom_transaction/_txbase.ts",
     "src/atom_transaction/acceptVote.ts",
     "src/atom_transaction/beExchangeAsset.ts",
     "src/atom_transaction/beExchangeSpecialAsset.ts",
@@ -40,15 +41,14 @@
     "src/atom_transaction/rejectVote.ts",
     "src/atom_transaction/setLnsManager.ts",
     "src/atom_transaction/setLnsRecordValue.ts",
-    "src/atom_transaction/signature.ts",
     "src/atom_transaction/signForAsset.ts",
+    "src/atom_transaction/signature.ts",
     "src/atom_transaction/toExchangeAsset.ts",
     "src/atom_transaction/toExchangeSpecialAsset.ts",
     "src/atom_transaction/transferAsset.ts",
     "src/atom_transaction/trustAsset.ts",
     "src/atom_transaction/username.ts",
     "src/atom_transaction/vote.ts",
-    "src/atom_transaction/_txbase.ts",
     "src/index.ts",
     "src/transaction.ts"
   ]
