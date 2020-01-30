@@ -47,6 +47,7 @@ export const mainChainRemarkData: BFChainCore.GenesisBlockRemarkJSON = {
   blockPerRound: 57,
   powOfWorkExemptionBlocks: 57,
   delegates: 114,
+  whetherToAllowDelegateContinusElections: false,
   forgeInterval: 128,
   rewardPercent: {
     votePercent: {
@@ -162,6 +163,7 @@ export const subchainRemarkData: BFChainCore.GenesisBlockRemarkJSON = {
   powOfWorkExemptionBlocks: 57,
   blockPerRound: 57,
   delegates: 57,
+  whetherToAllowDelegateContinusElections: false,
   forgeInterval: 128,
   rewardPercent: {
     votePercent: {

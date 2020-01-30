@@ -148,16 +148,14 @@ export class BeExchangeAssetLogicVerifier extends TransactionLogicVerifier {
       }
     }
 
-    if (toExchangeAssetJson.numberOfEffectiveBlocks) {
-      if (numberOfEffectiveBlocks !== toExchangeAssetJson.numberOfEffectiveBlocks) {
-        throw new ConsensusException(NOT_MATCH, {
-          to_compare_prop: "numberOfEffectiveBlocks",
-          be_compare_prop: "numberOfEffectiveBlocks",
-          to_target: "BeExchangeAssetTransaction",
-          be_target: "ToExchangeAssetTransaction",
-          ...Function_Exception_Detail,
-        });
-      }
+    if (numberOfEffectiveBlocks !== toExchangeAssetJson.numberOfEffectiveBlocks) {
+      throw new ConsensusException(NOT_MATCH, {
+        to_compare_prop: "numberOfEffectiveBlocks",
+        be_compare_prop: "numberOfEffectiveBlocks",
+        to_target: "BeExchangeAssetTransaction",
+        be_target: "ToExchangeAssetTransaction",
+        ...Function_Exception_Detail,
+      });
     }
   }
 
@@ -258,7 +256,9 @@ export class BeExchangeAssetLogicVerifier extends TransactionLogicVerifier {
     });
     if (count > 0) {
       throw new ConsensusException(CAN_NOT_SECONDARY_TRANSACTION, {
-        reason: `Can not secondary exchange asset, sender ${transaction.senderId} exchange transaction signature ${transaction.storageValue}`,
+        reason: `Can not secondary exchange asset, sender ${
+          transaction.senderId
+        } exchange transaction signature ${transaction.storageValue}`,
         ...Function_Exception_Detail,
       });
     }

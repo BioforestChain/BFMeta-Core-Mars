@@ -46,8 +46,8 @@ export class BeExchangeSpecialAssetModel extends Message<BeExchangeSpecialAssetM
   applyBlockHeight!: number;
   // @Field.d(BeExchangeSpecialAssetModel.INC++, "uint32", "optional")
   // numberOfBeginUnfrozenBlocks?: number;
-  @Field.d(BeExchangeSpecialAssetModel.INC++, "uint32", "optional")
-  numberOfEffectiveBlocks?: number;
+  @Field.d(BeExchangeSpecialAssetModel.INC++, "uint32")
+  numberOfEffectiveBlocks!: number;
 
   /**to 交易的接收者列表 */
   @Field.d(BeExchangeSpecialAssetModel.INC++, RANGE_TYPE)
@@ -63,6 +63,7 @@ export class BeExchangeSpecialAssetModel extends Message<BeExchangeSpecialAssetM
     const res: BFChainCore.BeExchangeSpecialAssetJSON = {
       transactionSignature: this.transactionSignature,
       applyBlockHeight: this.applyBlockHeight,
+      numberOfEffectiveBlocks: this.numberOfEffectiveBlocks,
       transactionRangeType: this.transactionRangeType,
       transactionRange: this.transactionRange,
       exchangeSpecialAsset: this.exchangeSpecialAsset.toJSON(),
@@ -70,7 +71,6 @@ export class BeExchangeSpecialAssetModel extends Message<BeExchangeSpecialAssetM
 
     // this.numberOfBeginUnfrozenBlocks &&
     //   (res.numberOfBeginUnfrozenBlocks = this.numberOfBeginUnfrozenBlocks);
-    this.numberOfEffectiveBlocks && (res.numberOfEffectiveBlocks = this.numberOfEffectiveBlocks);
     this.ciphertextSignatureBuffer && (res.ciphertextSignature = this.ciphertextSignature.toJSON());
 
     return res;

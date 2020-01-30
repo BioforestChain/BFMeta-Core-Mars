@@ -163,6 +163,9 @@ export class GenesisBlockRemarkModel extends RoundDelegateRemarkModel<GenesisBlo
   /**创世受托人数量 */
   @Field.d(GenesisBlockRemarkModel.INC++, "uint32")
   delegates!: number;
+  /**是否允许受托人连续参与打块竞选 */
+  @Field.d(GenesisBlockRemarkModel.INC++, "bool")
+  whetherToAllowDelegateContinusElections!: boolean;
   /**区块时间间隔 */
   @Field.d(GenesisBlockRemarkModel.INC++, "uint32", "required")
   forgeInterval!: number;
@@ -230,6 +233,7 @@ export class GenesisBlockRemarkModel extends RoundDelegateRemarkModel<GenesisBlo
       numberOfTransactionRewardWeight: this.numberOfTransactionRewardWeight,
       maxApplyAndConfirmedBlockHeightDiff: this.maxApplyAndConfirmedBlockHeightDiff,
       blockPerRound: this.blockPerRound,
+      whetherToAllowDelegateContinusElections: this.whetherToAllowDelegateContinusElections,
       delegates: this.delegates,
       forgeInterval: this.forgeInterval,
       rewardPercent: this.rewardPercent.toJSON(),

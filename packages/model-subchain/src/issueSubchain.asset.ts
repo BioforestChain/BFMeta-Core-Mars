@@ -94,6 +94,9 @@ export class IssueSubchainModel extends Message<IssueSubchainModel>
   /**创世受托人数量 */
   @Field.d(subchain_field_index_acc++, "uint32")
   delegates!: number;
+  /**是否允许受托人连续参与打块竞选 */
+  @Field.d(subchain_field_index_acc++, "bool")
+  whetherToAllowDelegateContinusElections!: boolean;
   /**区块时间间隔 */
   @Field.d(subchain_field_index_acc++, "uint32")
   forgeInterval!: number;
@@ -149,6 +152,7 @@ export class IssueSubchainModel extends Message<IssueSubchainModel>
       powOfWorkExemptionBlocks: this.powOfWorkExemptionBlocks,
       blockPerRound: this.blockPerRound,
       delegates: this.delegates,
+      whetherToAllowDelegateContinusElections: this.whetherToAllowDelegateContinusElections,
       forgeInterval: this.forgeInterval,
       rewardPercent: this.rewardPercent.toJSON(),
       ports: this.ports.toJSON(),

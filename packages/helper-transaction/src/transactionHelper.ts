@@ -903,10 +903,7 @@ export class TransactionHelper {
    * @param transaction
    */
   getTransactionMaxEffectiveHeight(transaction: Transaction) {
-    return (
-      transaction.applyBlockHeight +
-      (transaction.numberOfEffectiveBlocks || this.config.maxApplyAndConfirmedBlockHeightDiff)
-    );
+    return transaction.applyBlockHeight + transaction.numberOfEffectiveBlocks;
   }
   /**
    * 获取交易的最小有效区块高度

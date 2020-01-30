@@ -166,7 +166,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
       ...Function_Exception_Detail,
     } as const;
 
-    const { baseHelper, accountHelper, configHelper } = this;
+    const { baseHelper, accountHelper } = this;
 
     if (!baseHelper.isPositiveInteger(body.version)) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
@@ -291,7 +291,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
       });
     }
 
-    const { maxApplyAndConfirmedBlockHeightDiff } = configHelper;
+    const { maxApplyAndConfirmedBlockHeightDiff } = config;
     if (numberOfEffectiveBlocks > maxApplyAndConfirmedBlockHeightDiff) {
       throw new ArgumentIllegalException(PROP_SHOULD_LTE_FIELD, {
         prop: "numberOfEffectiveBlocks",

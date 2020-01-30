@@ -278,27 +278,18 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     const diffHeight = currentBlockHeight - trsApplyHeight;
     const maxApplyAndConfirmedBlockHeightDiff = this.configHelper
       .maxApplyAndConfirmedBlockHeightDiff;
-    if (tr.numberOfEffectiveBlocks) {
-      const numberOfEffectiveBlocks = tr.numberOfEffectiveBlocks;
-      if (numberOfEffectiveBlocks > maxApplyAndConfirmedBlockHeightDiff) {
-        throw new ConsensusException(INVALID_TRANSACTION_APPLY_BLOCK_HEIGHT, {
-          reason: "must less than maxApplyAndConfirmedBlockHeightDiff",
-          ...Function_Exception_Detail,
-        });
-      }
-      if (diffHeight > numberOfEffectiveBlocks) {
-        throw new ConsensusException(INVALID_TRANSACTION_APPLY_BLOCK_HEIGHT, {
-          reason: `Transaction apply block height ${trsApplyHeight}, current block height ${currentBlockHeight}, number of effective blocks ${numberOfEffectiveBlocks}`,
-          ...Function_Exception_Detail,
-        });
-      }
-    } else {
-      if (diffHeight > maxApplyAndConfirmedBlockHeightDiff) {
-        throw new ConsensusException(INVALID_TRANSACTION_APPLY_BLOCK_HEIGHT, {
-          reason: `Transaction apply block height ${trsApplyHeight}, current block height ${currentBlockHeight}, max apply and confirmed block height diff ${maxApplyAndConfirmedBlockHeightDiff}`,
-          ...Function_Exception_Detail,
-        });
-      }
+    const numberOfEffectiveBlocks = tr.numberOfEffectiveBlocks;
+    if (numberOfEffectiveBlocks > maxApplyAndConfirmedBlockHeightDiff) {
+      throw new ConsensusException(INVALID_TRANSACTION_APPLY_BLOCK_HEIGHT, {
+        reason: "must less than maxApplyAndConfirmedBlockHeightDiff",
+        ...Function_Exception_Detail,
+      });
+    }
+    if (diffHeight > numberOfEffectiveBlocks) {
+      throw new ConsensusException(INVALID_TRANSACTION_APPLY_BLOCK_HEIGHT, {
+        reason: `Transaction apply block height ${trsApplyHeight}, current block height ${currentBlockHeight}, number of effective blocks ${numberOfEffectiveBlocks}`,
+        ...Function_Exception_Detail,
+      });
     }
   }
 

@@ -168,15 +168,13 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
       });
     }
 
-    // if (body.numberOfEffectiveBlocks && trustAsset.numberOfBeginUnfrozenBlocks) {
-    //   if (trustAsset.numberOfBeginUnfrozenBlocks >= body.numberOfEffectiveBlocks) {
-    //     throw new ArgumentIllegalException(PROP_SHOULD_LT_FIELD, {
-    //       prop: "numberOfBeginUnfrozenBlocks",
-    //       field: body.numberOfEffectiveBlocks,
-    //       ...Function_Exception_Detail,
-    //       target: "trustAsset",
-    //     });
-    //   }
+    // if (trustAsset.numberOfBeginUnfrozenBlocks >= body.numberOfEffectiveBlocks) {
+    //   throw new ArgumentIllegalException(PROP_SHOULD_LT_FIELD, {
+    //     prop: "numberOfBeginUnfrozenBlocks",
+    //     field: body.numberOfEffectiveBlocks,
+    //     ...Function_Exception_Detail,
+    //     target: "trustAsset",
+    //   });
     // }
   }
 

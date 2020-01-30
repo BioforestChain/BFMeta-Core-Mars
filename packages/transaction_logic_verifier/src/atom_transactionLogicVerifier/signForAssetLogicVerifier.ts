@@ -188,16 +188,14 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
       });
     }
 
-    if (trustAssetJson.numberOfEffectiveBlocks) {
-      if (numberOfEffectiveBlocks !== trustAssetJson.numberOfEffectiveBlocks) {
-        throw new ConsensusException(NOT_MATCH, {
-          to_compare_prop: "numberOfEffectiveBlocks",
-          be_compare_prop: "numberOfEffectiveBlocks",
-          to_target: "SignForAssetTransaction",
-          be_target: "TrustAssetTransaction",
-          ...Function_Exception_Detail,
-        });
-      }
+    if (numberOfEffectiveBlocks !== trustAssetJson.numberOfEffectiveBlocks) {
+      throw new ConsensusException(NOT_MATCH, {
+        to_compare_prop: "numberOfEffectiveBlocks",
+        be_compare_prop: "numberOfEffectiveBlocks",
+        to_target: "SignForAssetTransaction",
+        be_target: "TrustAssetTransaction",
+        ...Function_Exception_Detail,
+      });
     }
 
     // if (trsAsset.numberOfBeginUnfrozenBlocks) {
@@ -317,7 +315,9 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
     });
     if (count > 0) {
       throw new ConsensusException(CAN_NOT_SECONDARY_TRANSACTION, {
-        reason: `Can not secondary sign for asset, sender ${transaction.senderId} trust transaction signature ${transaction.storageValue}`,
+        reason: `Can not secondary sign for asset, sender ${
+          transaction.senderId
+        } trust transaction signature ${transaction.storageValue}`,
         ...Function_Exception_Detail,
       });
     }

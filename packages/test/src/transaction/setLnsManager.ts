@@ -31,6 +31,7 @@ function getSetLnsManagerTransaction(sender: AccountModel) {
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic
     applyBlockHeight: 10086, // 交易发起高度
+    numberOfEffectiveBlocks: 100,
     storage: {
       key: "name",
       value: "bnqkl.bfchain",

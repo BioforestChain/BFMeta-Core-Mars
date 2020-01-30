@@ -255,14 +255,12 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
       }
     }
 
-    if (grabAsset.numberOfEffectiveBlocks) {
-      if (!baseHelper.isPositiveInteger(grabAsset.numberOfEffectiveBlocks)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "numberOfEffectiveBlocks",
-          type: "positive integer",
-          ...GrabAssetAsset_Exception_Detail,
-        });
-      }
+    if (!baseHelper.isPositiveInteger(grabAsset.numberOfEffectiveBlocks)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "numberOfEffectiveBlocks",
+        type: "positive integer",
+        ...GrabAssetAsset_Exception_Detail,
+      });
     }
 
     if (!baseHelper.isValidAssetNumber(grabAsset.amount)) {

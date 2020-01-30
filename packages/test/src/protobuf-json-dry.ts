@@ -65,11 +65,14 @@ const trs = bfchainCore.transaction.createTransaction(
     version: 1,
     type: bfchainCore.transactionHelper.TRANSFER_ASSET,
     applyBlockHeight: 2,
+    numberOfEffectiveBlocks: 100,
     timestamp: 500,
     senderId: bfchainCore.accountHelper.getAddressFromPublicKey(
       bfchainCore.accountBaseHelper.createSecretKeypair("1").publicKey,
     ),
-    senderPublicKey: bfchainCore.accountBaseHelper.createSecretKeypair("1").publicKey.toString("hex"),
+    senderPublicKey: bfchainCore.accountBaseHelper
+      .createSecretKeypair("1")
+      .publicKey.toString("hex"),
     rangeType: RANGE_TYPE.EMPTY,
     range: [
       bfchainCore.accountHelper.getAddressFromPublicKey(

@@ -24,6 +24,7 @@ declare namespace BFChainCore {
     powOfWorkExemptionBlocks: number;
     blockPerRound: number;
     delegates: number;
+    whetherToAllowDelegateContinusElections: boolean;
     forgeInterval: number;
     rewardPercent: RewardPercentJSON;
     ports: PortsJSON;

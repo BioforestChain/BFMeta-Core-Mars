@@ -85,6 +85,7 @@ async function getUsernameTransaction(sender: DelegateInfo) {
         fromMagic: subBfchainCore.config.magic, // 交易来源链的 magic
         toMagic: subBfchainCore.config.magic, // 交易去往链的 magic
         applyBlockHeight: 1, // 交易发起高度
+        numberOfEffectiveBlocks: 1,
         remark: { remark: "交易备注，任意信息，这个是设置用户名交易" }, // 交易备注，任意信息
         storage: {
           key: "alias",
@@ -145,6 +146,7 @@ async function getDelegateTransaction(sender: DelegateInfo) {
         fromMagic: subBfchainCore.config.magic, // 交易来源链的 magic
         toMagic: subBfchainCore.config.magic, // 交易去往链的 magic
         applyBlockHeight: 1, // 交易发起高度
+        numberOfEffectiveBlocks: 1,
         remark: { remark: "交易备注，任意信息，这个是注册受托人交易" }, // 交易备注，任意信息
         storage: {
           key: "username",
@@ -206,6 +208,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
         fromMagic: subBfchainCore.config.magic, // 交易来源链的 magic
         toMagic: subBfchainCore.config.magic, // 交易去往链的 magic
         applyBlockHeight: 1, // 交易发起高度
+        numberOfEffectiveBlocks: 1,
       },
       {},
       keypair,
@@ -253,6 +256,7 @@ async function getLocationNameTransaction() {
         fromMagic: subBfchainCore.config.magic, // 交易来源链的 magic
         toMagic: subBfchainCore.config.magic, // 交易去往链的 magic
         applyBlockHeight: 1, // 交易发起高度
+        numberOfEffectiveBlocks: 1,
         remark: {},
         storage: {
           key: "name",
@@ -320,6 +324,7 @@ async function getSetLnsRecordValueTransaction(
         fromMagic: subBfchainCore.config.magic, // 交易来源链的 magic
         toMagic: subBfchainCore.config.magic, // 交易去往链的 magic
         applyBlockHeight: 1, // 交易发起高度
+        numberOfEffectiveBlocks: 1,
         remark: {},
         storage: {
           key: "name",
@@ -358,7 +363,9 @@ async function getSetLnsRecordValueTransaction(
   );
 }
 
-const genesisAccountKeypair = subBfchainCore.accountBaseHelper.createSecretKeypair(config.genesisSecret);
+const genesisAccountKeypair = subBfchainCore.accountBaseHelper.createSecretKeypair(
+  config.genesisSecret,
+);
 const genesisAccountInfo = {
   address: subBfchainCore.accountHelper.getAddressFromPublicKey(genesisAccountKeypair.publicKey),
   publicKey: genesisAccountKeypair.publicKey.toString("hex"),
@@ -392,6 +399,7 @@ async function getTransferAssetTransaction(
         fromMagic: subBfchainCore.config.magic, // 交易来源链的 magic
         toMagic: subBfchainCore.config.magic, // 交易去往链的 magic
         applyBlockHeight: 1, // 交易发起高度
+        numberOfEffectiveBlocks: 1,
         remark: { remark: "交易备注，任意信息，这个是转账交易" }, // 交易备注，任意信息
         storage: {
           key: "assetType",
@@ -433,7 +441,9 @@ async function getGenesisBlockAsync() {
   //#region 模拟账户表的变更
   const subchainAccountAssetMap = new Map<string, bigint>();
   subchainAccountAssetMap.set(
-    `${genesisAccountInfo.address}_${subBfchainCore.config.magic}_${subBfchainCore.config.assetType}`,
+    `${genesisAccountInfo.address}_${subBfchainCore.config.magic}_${
+      subBfchainCore.config.assetType
+    }`,
     BigInt(subBfchainCore.config.genesisBlock.remark.generateTotalAmount),
   );
 
@@ -594,7 +604,7 @@ async function getGenesisBlockAsync() {
     const { resolve } = require("path");
     const outFilePath =
       out === true
-        ? resolve(__dirname, "../../../assets/subGenesisBlock.json")
+        ? resolve(process.cwd(), "./assets/subGenesisBlock.json")
         : resolve(process.cwd(), out);
     require("fs").writeFileSync(outFilePath, JSON.stringify(genesisBlock.toJSON(), null, 2));
     console.log(`Genesis block save to: ${outFilePath}`);
@@ -622,6 +632,7 @@ async function getIssueSubchainTransaction(sender: AccountModel) {
     fromMagic: fullBfchainCore.config.magic,
     toMagic: fullBfchainCore.config.magic,
     applyBlockHeight: 10086, // 交易发起高度
+    numberOfEffectiveBlocks: 100,
     storage: {
       key: "magic",
       value: subBfchainCore.config.magic,

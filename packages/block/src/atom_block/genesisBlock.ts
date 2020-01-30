@@ -332,6 +332,14 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       });
     }
 
+    if (!baseHelper.isBoolean(remark.whetherToAllowDelegateContinusElections)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "whetherToAllowDelegateContinusElections",
+        type: "boolean",
+        ...GenesisBlockRemark_Exception_Detail,
+      });
+    }
+
     if (!baseHelper.isPositiveInteger(remark.forgeInterval)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "forgeInterval",

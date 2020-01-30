@@ -464,6 +464,14 @@ export class IssueSubchainTransactionFactory extends TransactionFactory<IssueSub
       });
     }
 
+    if (!baseHelper.isBoolean(issueSubchain.whetherToAllowDelegateContinusElections)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "whetherToAllowDelegateContinusElections",
+        type: "positive integer",
+        ...IssueSubchainAsset_Exception_Detail,
+      });
+    }
+
     if (!baseHelper.isPositiveInteger(issueSubchain.forgeInterval)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "forgeInterval",

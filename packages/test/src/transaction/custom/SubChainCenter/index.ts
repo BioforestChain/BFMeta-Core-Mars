@@ -161,7 +161,6 @@ export class SubChainCenter implements BFChainCore.CustomTrCenterInterface {
   verify(
     body: BFChainCore.TxBodyJSON,
     customAsset: BFChainCore.CustomAssetJSON,
-    config: import("@bfchain/core").ConfigHelper,
   ): SubChainCenter.VERIFY_RES {
     const res = this.synchronize(() => {
       const msg = new WorkerMsg.TxVerifyReq();

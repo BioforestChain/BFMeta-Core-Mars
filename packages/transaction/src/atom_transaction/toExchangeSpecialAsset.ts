@@ -122,15 +122,13 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
 
     this.verifyExchangeSpecialAsset(toExchangeSpecialAsset);
 
-    // if (body.numberOfEffectiveBlocks && toExchangeSpecialAsset.numberOfBeginUnfrozenBlocks) {
-    //   if (toExchangeSpecialAsset.numberOfBeginUnfrozenBlocks >= body.numberOfEffectiveBlocks) {
-    //     throw new ArgumentIllegalException(PROP_SHOULD_LT_FIELD, {
-    //       prop: "numberOfBeginUnfrozenBlocks",
-    //       field: body.numberOfEffectiveBlocks,
-    //       ...Function_Exception_Detail,
-    //       target: "toExchangeSpecialAsset",
-    //     });
-    //   }
+    // if (toExchangeSpecialAsset.numberOfBeginUnfrozenBlocks >= body.numberOfEffectiveBlocks) {
+    //   throw new ArgumentIllegalException(PROP_SHOULD_LT_FIELD, {
+    //     prop: "numberOfBeginUnfrozenBlocks",
+    //     field: body.numberOfEffectiveBlocks,
+    //     ...Function_Exception_Detail,
+    //     target: "toExchangeSpecialAsset",
+    //   });
     // }
   }
 

@@ -120,7 +120,7 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
     const giftAsset = giftAssetAsset.giftAsset;
     this.verifyGiftAsset(giftAsset, config);
 
-    if (body.numberOfEffectiveBlocks && giftAsset.numberOfBeginUnfrozenBlocks) {
+    if (giftAsset.numberOfBeginUnfrozenBlocks) {
       if (giftAsset.numberOfBeginUnfrozenBlocks >= body.numberOfEffectiveBlocks) {
         throw new ArgumentIllegalException(PROP_SHOULD_LT_FIELD, {
           prop: "numberOfBeginUnfrozenBlocks",

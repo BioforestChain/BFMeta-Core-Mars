@@ -139,6 +139,7 @@ async function getUsernameTransaction(sender: DelegateInfo) {
         fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
         toMagic: bfchainCore.config.magic, // 交易去往链的 magic
         applyBlockHeight: 1, // 交易发起高度
+        numberOfEffectiveBlocks: 1,
         remark: {},
         storage: {
           key: "alias",
@@ -193,6 +194,7 @@ async function getDelegateTransaction(sender: DelegateInfo) {
         fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
         toMagic: bfchainCore.config.magic, // 交易去往链的 magic
         applyBlockHeight: 1, // 交易发起高度
+        numberOfEffectiveBlocks: 1,
         remark: {},
         storage: {
           key: "username",
@@ -249,6 +251,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
         fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
         toMagic: bfchainCore.config.magic, // 交易去往链的 magic
         applyBlockHeight: 1, // 交易发起高度
+        numberOfEffectiveBlocks: 1,
       },
       {},
       keypair,
@@ -297,6 +300,7 @@ async function getTransferAssetTransaction(recipient: DelegateInfo, amount: stri
         fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
         toMagic: bfchainCore.config.magic, // 交易去往链的 magic
         applyBlockHeight: 1, // 交易发起高度
+        numberOfEffectiveBlocks: 1,
         remark: {},
         storage: {
           key: "assetType",
@@ -356,6 +360,7 @@ async function getLocationNameTransaction() {
         fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
         toMagic: bfchainCore.config.magic, // 交易去往链的 magic
         applyBlockHeight: 1, // 交易发起高度
+        numberOfEffectiveBlocks: 1,
         remark: {},
         storage: {
           key: "name",
@@ -421,6 +426,7 @@ async function getSetLnsRecordValueTransaction(
         fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
         toMagic: bfchainCore.config.magic, // 交易去往链的 magic
         applyBlockHeight: 1, // 交易发起高度
+        numberOfEffectiveBlocks: 1,
         remark: {},
         storage: {
           key: "name",

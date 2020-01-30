@@ -115,15 +115,13 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<
 
     this.verifyToExchangeAsset(toExchangeAsset, config);
 
-    // if (body.numberOfEffectiveBlocks && toExchangeAsset.numberOfBeginUnfrozenBlocks) {
-    //   if (toExchangeAsset.numberOfBeginUnfrozenBlocks >= body.numberOfEffectiveBlocks) {
-    //     throw new ArgumentIllegalException(PROP_SHOULD_LT_FIELD, {
-    //       prop: "numberOfBeginUnfrozenBlocks",
-    //       field: body.numberOfEffectiveBlocks,
-    //       ...Function_Exception_Detail,
-    //       target: "toExchangeAsset",
-    //     });
-    //   }
+    // if (toExchangeAsset.numberOfBeginUnfrozenBlocks >= body.numberOfEffectiveBlocks) {
+    //   throw new ArgumentIllegalException(PROP_SHOULD_LT_FIELD, {
+    //     prop: "numberOfBeginUnfrozenBlocks",
+    //     field: body.numberOfEffectiveBlocks,
+    //     ...Function_Exception_Detail,
+    //     target: "toExchangeAsset",
+    //   });
     // }
   }
 

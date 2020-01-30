@@ -203,14 +203,12 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
     //   }
     // }
 
-    if (beExchangeSpecialAsset.numberOfEffectiveBlocks) {
-      if (!baseHelper.isPositiveInteger(beExchangeSpecialAsset.numberOfEffectiveBlocks)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "numberOfEffectiveBlocks",
-          type: "positive integer",
-          ...BeExchangeSpecialAssetAsset_Exception_Detail,
-        });
-      }
+    if (!baseHelper.isPositiveInteger(beExchangeSpecialAsset.numberOfEffectiveBlocks)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "numberOfEffectiveBlocks",
+        type: "positive integer",
+        ...BeExchangeSpecialAssetAsset_Exception_Detail,
+      });
     }
 
     const { transactionRangeType, transactionRange } = beExchangeSpecialAsset;
