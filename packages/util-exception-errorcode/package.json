@@ -14,10 +14,10 @@
     "build"
   ],
   "devDependencies": {
-    "@bfchain/util": "^4.0.0-dev.0"
+    "@bfchain/util": "^4.1.7"
   },
   "peerDependencies": {
-    "@bfchain/util": "^4.0.0-dev.0"
+    "@bfchain/util": "^4.1.7"
   },
   "dependencies": {
     "@bfchain/core-typings": "^5.0.8-dev.1"
