@@ -14,6 +14,8 @@ export * from "@bfchain/core-transaction-subchain";
 export * from "@bfchain/core-channel";
 
 export * from "@bfchain/core-crypto";
+export * from "@bfchain/core-util-exception";
+export * from "@bfchain/core-util-base58";
 
 export * from "./index";
 export * from "./templateRemark";
