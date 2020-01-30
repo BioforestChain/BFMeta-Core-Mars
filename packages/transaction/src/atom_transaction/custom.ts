@@ -74,7 +74,7 @@ export class CustomTransactionFactory extends TransactionFactory<CustomTransacti
 
     //  获取对应子链交易中心信息，与之通讯获取自定义asset的校验结果...
     if (this.customTransactionCenter) {
-      const res = this.customTransactionCenter.verify(body, customAsset, config);
+      const res = this.customTransactionCenter.verify(body, customAsset);
       if (!res.ret) {
         throw new ArgumentIllegalException(CUSTOM_TRANS_VERIFY_FAIL, {
           message: res.message,
@@ -112,7 +112,7 @@ export class CustomTransactionFactory extends TransactionFactory<CustomTransacti
     tasks.next = super.applyTransaction(transaction, eventEmitter);
     // TODO....账务处理
     if (this.customTransactionCenter) {
-      const applyResults = this.customTransactionCenter.apply(transaction, this.configHelper);
+      const applyResults = this.customTransactionCenter.apply(transaction);
       for (const applyResult of applyResults) {
         this.customTransactionEvent.verifyApplyResult(applyResult, transaction);
         tasks.next = this.customTransactionEvent.combineApplyEvent(

@@ -287,15 +287,8 @@ declare namespace BFChainCore {
     | ApplyResult_PurchaseLocationNameJSON;
 
   interface CustomTrCenterInterface {
-    verify(
-      body: TxBodyJSON,
-      customAsset: CustomAssetJSON,
-      config: import("@bfchain/core-helper-config").ConfigHelper,
-    ): { ret: boolean; message?: string };
-    apply(
-      tx: BFChainCore.Transaction,
-      config: import("@bfchain/core-helper-config").ConfigHelper,
-    ): ApplyResultJSON[];
+    verify(body: TxBodyJSON, customAsset: CustomAssetJSON): { ret: boolean; message?: string };
+    apply(tx: BFChainCore.Transaction): ApplyResultJSON[];
     logicVerify(tx: BFChainCore.Transaction): Promise<{ ret: boolean; message?: string }>;
   }
 
@@ -355,7 +348,7 @@ declare namespace BFChainCore {
       readonly blockApi: BlockApiInterface;
       readonly accountApi: AccountApiInterface;
       readonly transactionApi: TransactionApiInterface;
-      readonly configHelper: import("@bfchain/core-helper").ConfigHelper;
+      readonly genesisBlock: BFChainCore.BlockJSON<BFChainCore.GenesisBlockRemarkJSON>;
     };
   }
   //#endregion

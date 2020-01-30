@@ -321,7 +321,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     const toMagic = tr.toMagic;
     const chainMagic = this.configHelper.magic;
     const parentGenesisBlock = this.configHelper.parentGenesisBlock;
-    const parentMagic = parentGenesisBlock && parentGenesisBlock.remark.magic;
+    const parentMagic = (parentGenesisBlock && parentGenesisBlock.remark.magic) || chainMagic;
     if (fromMagic === chainMagic) {
       // 来自本链的交易
       if (toMagic === chainMagic) {

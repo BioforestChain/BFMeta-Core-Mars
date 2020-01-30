@@ -3,6 +3,8 @@ import { getHexFromArrayBuffer, parseHexToArrayBuffer } from "@bfchain/util-enco
 import { StringKeyMap } from "@bfchain/core-model-common";
 import { cacheBytesGetter } from "@bfchain/core-model-cacher";
 import { RANGE_TYPE } from "@bfchain/core-model-constants";
+import { EasyWeakMap } from "@bfchain/util-extends-map";
+const TrsRemarkMapWM = new EasyWeakMap((trs: Transaction) => new StringKeyMap(trs.remark));
 
 @Type.d("TransactionTemplateRemark")
 export class TemplateRemark extends Message {
@@ -168,12 +170,10 @@ export class Transaction<AJ extends object = object> extends Message<Transaction
   /**交易的备注信息 */
   @MapField.d(Transaction.INC++, "string", "string")
   remark!: { [key: string]: string };
-  private _remarkMap?: StringKeyMap<string>;
   get remarkMap() {
-    if (!this._remarkMap) {
-      this._remarkMap = new StringKeyMap(this.remark);
-    }
-    return this._remarkMap;
+    // 直接 return TrsRemarkMapWM.forceGet(this) 类型识别错误
+    const remarkMap = TrsRemarkMapWM.forceGet(this);
+    return remarkMap;
   }
   @cacheBytesGetter
   getBytes(skipSignature?: boolean, skipSignSignature?: boolean) {

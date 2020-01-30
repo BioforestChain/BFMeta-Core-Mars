@@ -275,25 +275,30 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
       });
     }
 
-    if (body.numberOfEffectiveBlocks || body.numberOfEffectiveBlocks === 0) {
-      const numberOfEffectiveBlocks = body.numberOfEffectiveBlocks;
-      if (!baseHelper.isPositiveInteger(numberOfEffectiveBlocks)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "numberOfEffectiveBlocks",
-          type: "positive integer",
-          ...TransactionBody_Exception_Detail,
-        });
-      }
+    const numberOfEffectiveBlocks = body.numberOfEffectiveBlocks;
+    if (numberOfEffectiveBlocks === undefined) {
+      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        prop: "numberOfEffectiveBlocks",
+        ...TransactionBody_Exception_Detail,
+      });
+    }
 
-      const { maxApplyAndConfirmedBlockHeightDiff } = configHelper;
-      if (numberOfEffectiveBlocks > maxApplyAndConfirmedBlockHeightDiff) {
-        throw new ArgumentIllegalException(PROP_SHOULD_LTE_FIELD, {
-          prop: "numberOfEffectiveBlocks",
-          target: "body",
-          field: maxApplyAndConfirmedBlockHeightDiff,
-          ...TransactionBody_Exception_Detail,
-        });
-      }
+    if (!baseHelper.isPositiveInteger(numberOfEffectiveBlocks)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "numberOfEffectiveBlocks",
+        type: "positive integer",
+        ...TransactionBody_Exception_Detail,
+      });
+    }
+
+    const { maxApplyAndConfirmedBlockHeightDiff } = configHelper;
+    if (numberOfEffectiveBlocks > maxApplyAndConfirmedBlockHeightDiff) {
+      throw new ArgumentIllegalException(PROP_SHOULD_LTE_FIELD, {
+        prop: "numberOfEffectiveBlocks",
+        target: "body",
+        field: maxApplyAndConfirmedBlockHeightDiff,
+        ...TransactionBody_Exception_Detail,
+      });
     }
 
     // 校验花费手续费

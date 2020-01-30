@@ -245,7 +245,7 @@ export class GenesisBlockRemarkModel extends RoundDelegateRemarkModel<GenesisBlo
       transactionPowOfWorkConfig: this.transactionPowOfWorkConfig.toJSON(),
       powOfWorkExemptionBlocks: this.powOfWorkExemptionBlocks,
     }) as any; // FIXME: @Gaubee
-    this.parentGenesisBlock && (res.parentGenesisBlock = this.parentGenesisBlock);
+    this.parentGenesisBlock && (res.parentGenesisBlock = this.parentGenesisBlock.toJSON());
     return res;
   }
   @cacheBytesGetter

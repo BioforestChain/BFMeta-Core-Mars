@@ -173,7 +173,7 @@ export class BlockBaseStatisticsHelper {
         BlockBaseStatisticsHelper.EVENTEMITTER_STATISTICS_BINDED_SET_SYMBOL
       ] = new WeakSet<StatisticsInfo>());
     if (bindedSet.has(statistics_info)) {
-      console.warn("已经绑定过统计用的ApplyTransaction");
+      console.debug("已经绑定过统计用的ApplyTransaction");
       return;
     }
     bindedSet.add(statistics_info);
@@ -194,6 +194,10 @@ export class BlockBaseStatisticsHelper {
       return next();
     });
     eventEmitter.on("frozenAsset", (event, next) => {
+      this._applyAsset(event, statistics_info);
+      return next();
+    });
+    eventEmitter.on("unfrozenAsset", (event, next) => {
       this._applyAsset(event, statistics_info);
       return next();
     });

@@ -148,8 +148,7 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
     }
 
     const allowSymbols = /^[A-Za-z0-9_]{1,20}$/;
-    // 创世受托人的用户名 是 bfchain/ifmchain 加索引
-    // 不能包含 bchain
+    // 创世受托人的用户名 是 链名 + 索引
     if (body.applyBlockHeight === 1) {
       if (!allowSymbols.test(alias)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
