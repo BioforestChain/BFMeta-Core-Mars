@@ -5,9 +5,6 @@ import {
   CoreExceptionGenerator,
   NOT_EXIST,
   NOT_MATCH,
-  NOT_BEGIN_UNFROZEN_YET,
-  FROZEN_ASSET_EXPIRATION,
-  ASSET_NOT_ENOUGH,
   CAN_NOT_SECONDARY_TRANSACTION,
 } from "@bfchain/core-util-exception";
 
@@ -68,7 +65,6 @@ export class BeExchangeAssetLogicVerifier extends TransactionLogicVerifier {
 
     this.isValidRecipientId(transaction, trs);
     this.isDependentTransactionMatch(transaction, trs);
-    await this.isValidToUnfrozenAsset(transaction, trs, currentBlockHeight, accountGetterHelper);
 
     return true;
   }
@@ -148,84 +144,16 @@ export class BeExchangeAssetLogicVerifier extends TransactionLogicVerifier {
       }
     }
 
-    if (numberOfEffectiveBlocks !== toExchangeAssetJson.numberOfEffectiveBlocks) {
-      throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: "numberOfEffectiveBlocks",
-        be_compare_prop: "numberOfEffectiveBlocks",
-        to_target: "BeExchangeAssetTransaction",
-        be_target: "ToExchangeAssetTransaction",
-        ...Function_Exception_Detail,
-      });
-    }
-  }
-
-  /**
-   * 能否正常解冻资产
-   *
-   * @param transaction
-   * @param toExchangeAssetJson
-   * @param currentBlockHeight
-   */
-  async isValidToUnfrozenAsset(
-    transaction: BeExchangeAssetTransaction,
-    toExchangeAssetJson: BFChainCore.TransactionJSON<BFChainCore.ToExchangeAssetAssetJSON>,
-    currentBlockHeight: number,
-    accountGetterHelper = this.accountGetterHelper,
-  ) {
-    const Function_Exception_Detail = {
-      function: "isValidToUnfrozenAsset",
-    } as const;
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
-    // 校验是否还有剩余的可交换资产
-    const frozenAsset = await accountGetterHelper.getFrozenAsset(
-      toExchangeAssetJson.senderId,
-      toExchangeAssetJson.signature,
-    );
-
-    if (!frozenAsset) {
-      throw new ConsensusException(NOT_EXIST, {
-        prop: `Frozen asset with id ${toExchangeAssetJson.signature}`,
-        target: "blockChain",
-        ...Function_Exception_Detail,
-      });
-    }
-
-    const { amount, minEffectiveHeight, maxEffectiveHeight } = frozenAsset;
-    // 是否到达解冻高度
-    if (minEffectiveHeight > transaction.applyBlockHeight) {
-      throw new ConsensusException(NOT_BEGIN_UNFROZEN_YET, {
-        frozenId: toExchangeAssetJson.signature,
-        ...Function_Exception_Detail,
-      });
-    }
-
-    if (currentBlockHeight > maxEffectiveHeight) {
-      throw new ConsensusException(FROZEN_ASSET_EXPIRATION, {
-        frozenId: toExchangeAssetJson.signature,
-        ...Function_Exception_Detail,
-      });
-    }
-
-    if (maxEffectiveHeight < transaction.applyBlockHeight) {
-      throw new ConsensusException(FROZEN_ASSET_EXPIRATION, {
-        frozenId: toExchangeAssetJson.signature,
-        ...Function_Exception_Detail,
-      });
-    }
-
-    const { toExchangeSource, toExchangeAsset } = toExchangeAssetJson.asset.toExchangeAsset;
-    const { toExchangeNumber } = transaction.asset.beExchangeAsset;
-    if (BigInt(toExchangeNumber) > BigInt(amount)) {
-      throw new ConsensusException(ASSET_NOT_ENOUGH, {
-        reason: `No enough asset to change magic ${toExchangeSource} assetType ${toExchangeAsset} remain ${amount} spend ${toExchangeNumber}`,
-        ...Function_Exception_Detail,
-      });
+    if (toExchangeAssetJson.numberOfEffectiveBlocks) {
+      if (numberOfEffectiveBlocks !== toExchangeAssetJson.numberOfEffectiveBlocks) {
+        throw new ConsensusException(NOT_MATCH, {
+          to_compare_prop: "numberOfEffectiveBlocks",
+          be_compare_prop: "numberOfEffectiveBlocks",
+          to_target: "BeExchangeAssetTransaction",
+          be_target: "ToExchangeAssetTransaction",
+          ...Function_Exception_Detail,
+        });
+      }
     }
   }
 

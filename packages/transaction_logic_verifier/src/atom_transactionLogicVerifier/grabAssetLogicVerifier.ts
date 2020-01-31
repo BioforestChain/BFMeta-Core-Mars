@@ -5,10 +5,6 @@ import {
   CoreExceptionGenerator,
   NOT_EXIST,
   NOT_MATCH,
-  NOT_BEGIN_UNFROZEN_YET,
-  FROZEN_ASSET_EXPIRATION,
-  ASSET_NOT_ENOUGH,
-  GRABALE_TIME_USE_UP,
   CAN_NOT_SECONDARY_TRANSACTION,
 } from "@bfchain/core-util-exception";
 
@@ -47,8 +43,6 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
       transactionGetterHelper,
     );
 
-    // await this.checkSecondaryTransaction(transaction, transactionGetterHelper);
-
     const grabAsset = transaction.asset.grabAsset;
 
     const { transactionSignature } = grabAsset;
@@ -59,14 +53,13 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
     if (!trs) {
       throw new NoFoundException(NOT_EXIST, {
         prop: `Transaction with id ${transactionSignature}`,
-        target: "moduleStroge",
+        target: "grabAsset",
         ...Function_Exception_Detail,
       });
     }
 
     this.isValidRecipientId(transaction, trs);
     this.isDependentTransactionMatch(transaction, trs);
-    await this.isValidToUnfrozenAsset(transaction, trs, currentBlockHeight, accountGetterHelper);
 
     return true;
   }
@@ -149,14 +142,16 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
       }
     }
 
-    if (numberOfEffectiveBlocks !== transaction.numberOfEffectiveBlocks) {
-      throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: "numberOfEffectiveBlocks",
-        be_compare_prop: "numberOfEffectiveBlocks",
-        to_target: "GrabAssetTransaction",
-        be_target: "GiftAssetTransaction",
-        ...Function_Exception_Detail,
-      });
+    if (transaction.numberOfEffectiveBlocks) {
+      if (numberOfEffectiveBlocks !== transaction.numberOfEffectiveBlocks) {
+        throw new ConsensusException(NOT_MATCH, {
+          to_compare_prop: "numberOfEffectiveBlocks",
+          be_compare_prop: "numberOfEffectiveBlocks",
+          to_target: "GrabAssetTransaction",
+          be_target: "GiftAssetTransaction",
+          ...Function_Exception_Detail,
+        });
+      }
     }
 
     if (trsAsset.numberOfBeginUnfrozenBlocks) {
@@ -169,85 +164,6 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
           ...Function_Exception_Detail,
         });
       }
-    }
-  }
-
-  /**
-   * 能否正常解冻资产
-   *
-   * @param transaction
-   * @param giftAssetJson
-   * @param currentBlockHeight
-   */
-  async isValidToUnfrozenAsset(
-    transaction: GrabAssetTransaction,
-    giftAssetJson: BFChainCore.TransactionJSON<BFChainCore.GiftAssetAssetJSON>,
-    currentBlockHeight: number,
-    accountGetterHelper = this.accountGetterHelper,
-  ) {
-    const Function_Exception_Detail = {
-      function: "isValidToUnfrozenAsset",
-    } as const;
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
-    const { grabAsset } = transaction.asset;
-    const { sourceChainMagic, assetType } = giftAssetJson.asset.giftAsset;
-    const frozenAsset = await accountGetterHelper.getFrozenAsset(
-      giftAssetJson.senderId,
-      giftAssetJson.signature,
-    );
-
-    if (!frozenAsset) {
-      throw new ConsensusException(NOT_EXIST, {
-        prop: `Frozen asset with id ${giftAssetJson.signature}`,
-        target: "blockChain",
-        ...Function_Exception_Detail,
-      });
-    }
-
-    const { maxEffectiveHeight, minEffectiveHeight, remainUnfrozenTimes, amount } = frozenAsset;
-    // 是否到达解冻高度
-    if (minEffectiveHeight > transaction.applyBlockHeight) {
-      throw new ConsensusException(NOT_BEGIN_UNFROZEN_YET, {
-        frozenId: giftAssetJson.signature,
-        ...Function_Exception_Detail,
-      });
-    }
-
-    // 交易交易是否过期
-    if (currentBlockHeight > maxEffectiveHeight) {
-      throw new ConsensusException(FROZEN_ASSET_EXPIRATION, {
-        frozenId: giftAssetJson.signature,
-        ...Function_Exception_Detail,
-      });
-    }
-
-    if (maxEffectiveHeight < transaction.applyBlockHeight) {
-      throw new ConsensusException(FROZEN_ASSET_EXPIRATION, {
-        frozenId: giftAssetJson.signature,
-        ...Function_Exception_Detail,
-      });
-    }
-
-    if (BigInt(grabAsset.amount) > BigInt(amount)) {
-      throw new ConsensusException(ASSET_NOT_ENOUGH, {
-        reason: `No enough asset to change magic ${sourceChainMagic} assetType ${assetType} remain ${amount} spend ${
-          grabAsset.amount
-        }`,
-        ...Function_Exception_Detail,
-      });
-    }
-
-    if (remainUnfrozenTimes && remainUnfrozenTimes === 0) {
-      throw new ConsensusException(GRABALE_TIME_USE_UP, {
-        frozenId: giftAssetJson.signature,
-        ...Function_Exception_Detail,
-      });
     }
   }
 

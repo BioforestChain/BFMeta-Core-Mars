@@ -208,6 +208,9 @@ export const CAN_NOT_DESTORY_ASSET = (ec.next =
 export const NEED_EMIGRATE_TOTAL_ASSET = (ec.next =
   "Need emigrate total asset, address {address} when {function}");
 /**frozenId function */
+export const UNFROZEN_TIME_USE_UP = (ec.next =
+  "Gift asset unfrozen time use up, frozenId {frozenId} when {function}");
+/**frozenId function */
 export const GRABALE_TIME_USE_UP = (ec.next =
   "Gift asset grabale time use up, frozenId {frozenId} when {function}");
 /**signature function */

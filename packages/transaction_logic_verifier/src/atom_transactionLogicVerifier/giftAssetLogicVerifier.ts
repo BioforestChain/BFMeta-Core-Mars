@@ -1,9 +1,6 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { GiftAssetTransaction } from "@bfchain/core-model";
 import { Injectable } from "@bfchain/util";
-import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
-
-const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "GiftAssetLogicVerifier");
 
 @Injectable()
 export class GiftAssetLogicVerifier extends TransactionLogicVerifier {

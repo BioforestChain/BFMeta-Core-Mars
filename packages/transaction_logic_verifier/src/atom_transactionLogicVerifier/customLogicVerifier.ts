@@ -1,9 +1,9 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { CustomTransaction } from "@bfchain/core-model";
-import { Injectable, Inject } from "@bfchain/util";
+import { Injectable } from "@bfchain/util";
 import { CoreExceptionGenerator, NOT_EXIST, PROP_IS_INVALID } from "@bfchain/core-util-exception";
 
-const { ConsensusException, NoFoundException, ArgumentIllegalException } = CoreExceptionGenerator(
+const { NoFoundException, ArgumentIllegalException } = CoreExceptionGenerator(
   "VERIFIER",
   "CustomLogicVerifier",
 );

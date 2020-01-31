@@ -1,7 +1,6 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { EmigrateAssetTransaction } from "@bfchain/core-model";
 import { Injectable, Inject } from "@bfchain/util";
-import { AccountBaseHelper } from "@bfchain/core-helper-account";
 import {
   CoreExceptionGenerator,
   NOT_EXIST,
@@ -9,6 +8,7 @@ import {
   SHOULD_NOT_HAVE_SENDER_SECOND_PUBLICKEY,
   NEED_EMIGRATE_TOTAL_ASSET,
 } from "@bfchain/core-util-exception";
+import { AccountBaseHelper } from "@bfchain/core-helper";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",

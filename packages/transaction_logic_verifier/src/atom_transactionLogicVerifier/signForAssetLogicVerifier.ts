@@ -1,17 +1,14 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { SignForAssetTransaction, AccountSignatureModel } from "@bfchain/core-model";
 import { Injectable, Inject } from "@bfchain/util";
-import { AccountBaseHelper } from "@bfchain/core-helper-account";
 import {
   CoreExceptionGenerator,
   NOT_EXIST,
   NOT_MATCH,
   CAN_NOT_CARRY_SECOND_PUBLICKEY,
-  NOT_BEGIN_UNFROZEN_YET,
-  FROZEN_ASSET_EXPIRATION,
-  ASSET_NOT_ENOUGH,
   CAN_NOT_SECONDARY_TRANSACTION,
 } from "@bfchain/core-util-exception";
+import { AccountBaseHelper } from "@bfchain/core-helper";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
@@ -66,7 +63,6 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
     this.isValidRecipientId(transaction, trs);
     await this.isValidThirdPartySignatures(thirdPartySignatures, accountGetterHelper);
     this.isDependentTransactionMatch(transaction, trs);
-    await this.isValidToUnfrozenAsset(transaction, trs, currentBlockHeight, accountGetterHelper);
 
     return true;
   }
@@ -188,14 +184,16 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
       });
     }
 
-    if (numberOfEffectiveBlocks !== trustAssetJson.numberOfEffectiveBlocks) {
-      throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: "numberOfEffectiveBlocks",
-        be_compare_prop: "numberOfEffectiveBlocks",
-        to_target: "SignForAssetTransaction",
-        be_target: "TrustAssetTransaction",
-        ...Function_Exception_Detail,
-      });
+    if (trustAssetJson.numberOfEffectiveBlocks) {
+      if (numberOfEffectiveBlocks !== trustAssetJson.numberOfEffectiveBlocks) {
+        throw new ConsensusException(NOT_MATCH, {
+          to_compare_prop: "numberOfEffectiveBlocks",
+          be_compare_prop: "numberOfEffectiveBlocks",
+          to_target: "SignForAssetTransaction",
+          be_target: "TrustAssetTransaction",
+          ...Function_Exception_Detail,
+        });
+      }
     }
 
     // if (trsAsset.numberOfBeginUnfrozenBlocks) {
@@ -217,74 +215,6 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
           ...Function_Exception_Detail,
         });
       }
-    }
-  }
-
-  /**
-   * 能否正常解冻资产
-   *
-   * @param transaction
-   * @param trustAssetJson
-   * @param currentBlockHeight
-   */
-  async isValidToUnfrozenAsset(
-    transaction: SignForAssetTransaction,
-    trustAssetJson: BFChainCore.TransactionJSON<BFChainCore.TrustAssetAssetJSON>,
-    currentBlockHeight: number,
-    accountGetterHelper = this.accountGetterHelper,
-  ) {
-    const Function_Exception_Detail = {
-      function: "isValidToUnfrozenAsset",
-    } as const;
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
-    const frozenAsset = await accountGetterHelper.getFrozenAsset(
-      trustAssetJson.senderId,
-      trustAssetJson.signature,
-    );
-
-    if (!frozenAsset) {
-      throw new ConsensusException(NOT_EXIST, {
-        prop: `Frozen asset with id ${trustAssetJson.signature}`,
-        target: "blockChain",
-        ...Function_Exception_Detail,
-      });
-    }
-
-    const { maxEffectiveHeight, minEffectiveHeight, amount } = frozenAsset;
-    // 是否到达解冻高度
-    if (minEffectiveHeight > transaction.applyBlockHeight) {
-      throw new ConsensusException(NOT_BEGIN_UNFROZEN_YET, {
-        frozenId: trustAssetJson.signature,
-        ...Function_Exception_Detail,
-      });
-    }
-
-    // 交易交易是否过期
-    if (currentBlockHeight > maxEffectiveHeight) {
-      throw new ConsensusException(FROZEN_ASSET_EXPIRATION, {
-        frozenId: trustAssetJson.signature,
-        ...Function_Exception_Detail,
-      });
-    }
-
-    if (maxEffectiveHeight < transaction.applyBlockHeight) {
-      throw new ConsensusException(FROZEN_ASSET_EXPIRATION, {
-        frozenId: trustAssetJson.signature,
-        ...Function_Exception_Detail,
-      });
-    }
-
-    if (amount === BigInt(0)) {
-      throw new ConsensusException(ASSET_NOT_ENOUGH, {
-        reason: `Trust assets already been sign for`,
-        ...Function_Exception_Detail,
-      });
     }
   }
 

@@ -1,12 +1,10 @@
-import { Inject, QueneEventEmitter } from "@bfchain/util";
-import { ConfigHelper, ChainTimeHelper, BlockHelper, JSBIHelper } from "@bfchain/core-helper";
+import { Inject } from "@bfchain/util";
 import {
   CoreExceptionGenerator,
   NOT_EXIST,
   NOT_FOUND,
   PROP_LOSE,
   ACCOUNT_FROZEN,
-  TRANSACTION_SENDER_SECOND_PUBLICKEY_IS_REQUIRED,
   TRANSACTION_SIGN_SIGNATURE_IS_REQUIRED,
   SECOND_PUBLICKEY_ALREADY_CHANGE,
   SHOULD_NOT_HAVE_SENDER_SECOND_PUBLICKEY,
@@ -17,8 +15,6 @@ import {
   DAPPID_IS_NOT_EXIST,
   LOCATION_NAME_IS_NOT_EXIST,
   UNKNOWN_RANGE_TYPE,
-  ASSET_NOT_ENOUGH,
-  EQUITY_NOT_ENOUGH,
   INVALID_TRANSACTION_BYTE_LENGTH,
   NEED_PURCHASE_DAPPID_BEFORE_USE,
   NEED_VOTE_FOR_DAPPID_POSSESSOR_BFCORE_USE,
@@ -33,6 +29,8 @@ import {
   DAPP_TYPE,
   ACCOUNT_STATUS,
 } from "@bfchain/core-model";
+import { EventLogicVerifier } from "./eventLogicVerifier";
+import { ConfigHelper, ChainTimeHelper, BlockHelper, JSBIHelper } from "@bfchain/core-helper";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
@@ -48,6 +46,8 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   protected blockHelper!: BlockHelper;
   @Inject(JSBIHelper)
   protected jsbiHelper!: JSBIHelper;
+  @Inject(EventLogicVerifier)
+  protected eventLogicVerifier!: EventLogicVerifier;
   @Inject("bfchain-core:TransactionCore")
   protected transactionCore!: import("@bfchain/core-transaction").TransactionCore;
   @Inject("transactionGetterHelper", { optional: true, dynamics: true })
@@ -123,8 +123,15 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
         this.checkRecipientAccountStatus(recipient.accountInfo);
       }
     }
-    // 校验账户资产是否充足
-    await this.checkAccountAssetsEnough(transaction, sender, recipient, currentBlockHeight);
+    // 事件逻辑校验
+    await this.eventLogicVerifier.eventLogicVerifier(
+      transaction,
+      sender,
+      recipient,
+      currentBlockHeight,
+      accountGetterHelper,
+      transactionGetterHelper,
+    );
     // 校验交易的最大字节数
     this.checkTrsMaxBytes(transaction.getBytes().length);
     // 校验交易的 dappid
@@ -207,17 +214,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       function: "checkSecondPublicKey",
     } as const;
     if (accountInfo.secondPublicKey) {
-      if (!tr.senderSecondPublicKey) {
-        throw new ConsensusException(TRANSACTION_SENDER_SECOND_PUBLICKEY_IS_REQUIRED, {
-          id: tr.id,
-          senderId: tr.senderId,
-          applyBlockHeight: tr.applyBlockHeight,
-          type: tr.type,
-          ...Function_Exception_Detail,
-        });
-      }
-
-      if (!tr.signSignature) {
+      if (!(tr.senderSecondPublicKey && tr.signSignature)) {
         throw new ConsensusException(TRANSACTION_SIGN_SIGNATURE_IS_REQUIRED, {
           id: tr.id,
           senderId: tr.senderId,
@@ -476,180 +473,6 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
           ...Function_Exception_Detail,
         });
     }
-  }
-
-  private deepClone<T>(obj: T): T {
-    let result = Array.isArray(obj) ? ([] as any) : ({} as T);
-    if (typeof obj === "object") {
-      for (let key in obj) {
-        if (obj[key] && typeof obj[key] === "object") {
-          result[key] = this.deepClone(obj[key]);
-        } else {
-          result[key] = obj[key];
-        }
-      }
-      return result;
-    } else {
-      return obj;
-    }
-  }
-
-  /**
-   * 校验账户资产是否充足
-   *
-   * @param tr
-   * @param sender
-   * @param recipient
-   * @param currentBlockHeight
-   */
-  async checkAccountAssetsEnough(
-    tr: T,
-    sender: BFChainCore.AccountInfoAndAssets,
-    recipient: BFChainCore.AccountInfoAndAssets | undefined,
-    currentBlockHeight: number,
-  ) {
-    const Function_Exception_Detail = {
-      function: "checkAccountAssetsEnough",
-    } as const;
-    const accountAssets = {
-      [tr.senderId]: this.deepClone(sender.accountAssets),
-    };
-    const accountInfo = {
-      [tr.senderId]: this.deepClone(sender.accountInfo),
-    };
-    if (recipient && recipient.accountInfo && recipient.accountAssets) {
-      const address = recipient.accountInfo.address;
-      accountAssets[address] = this.deepClone(recipient.accountAssets);
-      accountInfo[address] = this.deepClone(recipient.accountInfo);
-    }
-
-    const event = new QueneEventEmitter<BFChainCore.ApplyTransactionEventMap>();
-    // 交易的总手续费
-    let trsFee = BigInt(0);
-    // 这里不做设置账户用名、注册受托人，开启/关闭投票，设置二次密码，销毁资产等校验
-    // 因为自定义交易可能对这些数据有不同的处理逻辑，所以只在每种交易自己的 verify 中
-    // 校验。
-
-    //注册事件错误处理器
-    event.onError((err, { eventname, arg }) => {
-      throw err;
-    });
-    // 扣除交易的手续费
-    event.on("fee", ({ applyInfo }, next) => {
-      // 手续费扣除的只能是链资产
-      const { magic, assetType } = this.configHelper;
-      const fee = BigInt(applyInfo.amount);
-      const address = applyInfo.address;
-      accountAssets[address] = accountAssets[address] || {};
-      accountAssets[address][magic] = accountAssets[address][magic] || {};
-      accountAssets[address][magic][assetType] = accountAssets[address][magic][assetType] || {
-        sourceChainMagic: magic,
-        assetType: assetType,
-        assetNumber: BigInt(0),
-        history: {},
-      };
-      const hodingAsset = accountAssets[address][magic][assetType];
-      const remainAsset = hodingAsset.assetNumber;
-      hodingAsset.assetNumber += fee;
-      trsFee += fee;
-      if (hodingAsset.assetNumber < BigInt(0)) {
-        throw new ConsensusException(ASSET_NOT_ENOUGH, {
-          reason: `Transaction id: ${tr.id} address: ${address} magic ${
-            applyInfo.assetInfo.magic
-          } assetType: ${
-            applyInfo.assetInfo.assetType
-          } hodingAsset: ${remainAsset.toString()} spendFee: ${applyInfo.amount}`,
-          errorId: NewTransactionRefuseReason.ASSET_NOT_ENOUGH,
-          ...Function_Exception_Detail,
-        });
-      }
-      next();
-    });
-
-    // 扣除交易的资产数量
-    event.on("asset", ({ applyInfo }, next) => {
-      const { magic, assetType } = applyInfo.assetInfo;
-      const address = applyInfo.address;
-      accountAssets[address] = accountAssets[address] || {};
-      accountAssets[address][magic] = accountAssets[address][magic] || {};
-      accountAssets[address][magic][assetType] = accountAssets[address][magic][assetType] || {
-        sourceChainMagic: magic,
-        assetType: assetType,
-        assetNumber: BigInt(0),
-        history: {},
-      };
-      const hodingAsset = accountAssets[address][magic][assetType];
-      const remainAsset = hodingAsset.assetNumber;
-      hodingAsset.assetNumber += BigInt(applyInfo.amount);
-      if (hodingAsset.assetNumber < BigInt(0)) {
-        throw new ConsensusException(ASSET_NOT_ENOUGH, {
-          reason: `Transaction id: ${tr.id} address: ${address} magic ${
-            applyInfo.assetInfo.magic
-          } assetType: ${
-            applyInfo.assetInfo.assetType
-          } hodingAsset: ${remainAsset.toString()} spendAsset: ${applyInfo.amount}`,
-          errorId: NewTransactionRefuseReason.ASSET_NOT_ENOUGH,
-          ...Function_Exception_Detail,
-        });
-      }
-      next();
-    });
-
-    // 冻结交易的资产数量
-    event.on("frozenAsset", async ({ applyInfo }, next) => {
-      const { magic, assetType } = applyInfo.assetInfo;
-      const address = applyInfo.address;
-      accountAssets[address] = accountAssets[address] || {};
-      accountAssets[address][magic] = accountAssets[address][magic] || {};
-      accountAssets[address][magic][assetType] = accountAssets[address][magic][assetType] || {
-        sourceChainMagic: magic,
-        assetType: assetType,
-        assetNumber: BigInt(0),
-        history: {},
-      };
-      const hodingAsset = accountAssets[address][magic][assetType];
-      const remainAsset = hodingAsset.assetNumber;
-      hodingAsset.assetNumber += BigInt(applyInfo.amount);
-      if (hodingAsset.assetNumber < BigInt(0)) {
-        throw new ConsensusException(ASSET_NOT_ENOUGH, {
-          reason: `Transaction id: ${tr.id} address: ${address} magic ${
-            applyInfo.assetInfo.magic
-          } assetType: ${
-            applyInfo.assetInfo.assetType
-          } hodingAsset: ${remainAsset.toString()} frozenAsset: ${applyInfo.amount}`,
-          errorId: NewTransactionRefuseReason.ASSET_NOT_ENOUGH,
-          ...Function_Exception_Detail,
-        });
-      }
-      next();
-    });
-
-    // 这里不监听 unfrozenAsset 事件，因为每种涉及冻结资产的逻辑校验不一致
-    // 在每种交易各自 verify 的时候做。
-
-    event.on("voteEquity", ({ applyInfo }, next) => {
-      const round = this.blockHelper.calcRoundByHeight(currentBlockHeight) - 1;
-      const address = applyInfo.address;
-      accountInfo[address] = accountInfo[address] || {};
-      const equityInfo = accountInfo[address].equityInfo;
-      const minEquity = BigInt(0);
-      let accountEquity = equityInfo.round === round ? equityInfo.equity : minEquity;
-      const remainEquity = accountEquity;
-      accountEquity += BigInt(applyInfo.equity);
-      if (accountEquity < minEquity) {
-        throw new ConsensusException(EQUITY_NOT_ENOUGH, {
-          reason: `Transaction id: ${
-            tr.id
-          } address: ${address} hodingEquity: ${remainEquity.toString()} spendEquity: ${
-            applyInfo.equity
-          }`,
-          ...Function_Exception_Detail,
-        });
-      }
-      next();
-    });
-    await this.transactionCore.getTransactionFactoryFromType(tr.type).applyTransaction(tr, event);
-    return trsFee;
   }
 
   /**

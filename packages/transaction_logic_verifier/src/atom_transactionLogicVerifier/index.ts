@@ -30,3 +30,5 @@ export * from "./setLnsRecordValueLogicVerifier";
 export * from "./issueSubchainLogicVerifier";
 
 export * from "./customLogicVerifier";
+
+export * from "./eventLogicVerifier";

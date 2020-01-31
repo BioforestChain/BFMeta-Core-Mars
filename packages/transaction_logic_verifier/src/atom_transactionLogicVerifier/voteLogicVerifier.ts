@@ -1,5 +1,5 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
-import { NewTransactionRefuseReason, VoteTransaction } from "@bfchain/core-model";
+import { VoteTransaction, NewTransactionRefuseReason } from "@bfchain/core-model";
 import { Injectable } from "@bfchain/util";
 import {
   CoreExceptionGenerator,

@@ -1,5 +1,5 @@
 import { Message, Field, Type } from "@bfchain/protobuf";
-// import { EmigrateAssetTransaction } from "../../model/src/transactionModel/emigrateAsset.transaction";
+// import { EmigrateAssetTransaction } from "@bfchain/core-model/src/transactionModel/emigrateAsset.transaction";
 import { AccountSignatureModel } from "./accountSignature";
 import { cacheBytesGetter } from "@bfchain/core-model-cacher";
 import { EmigrateAssetModel, EmigrateAssetAssetModel } from "./emigrateAsset";

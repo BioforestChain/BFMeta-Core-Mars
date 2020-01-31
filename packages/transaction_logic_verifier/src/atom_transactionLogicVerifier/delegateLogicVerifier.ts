@@ -1,9 +1,8 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
-import { NewTransactionRefuseReason, DelegateTransaction } from "@bfchain/core-model";
+import { DelegateTransaction } from "@bfchain/core-model";
 import { Injectable } from "@bfchain/util";
 import {
   CoreExceptionGenerator,
-  ACCOUNT_IS_ALREADY_AN_DELEGATE,
   INVALID_ACCOUNT_ALIAS,
   SET_USERANME_AT_FIRST,
 } from "@bfchain/core-util-exception";
@@ -44,14 +43,6 @@ export class DelegateLogicVerifier extends TransactionLogicVerifier {
       throw new ConsensusException(INVALID_ACCOUNT_ALIAS, {
         address: accountInfo.address,
         alias: transaction.asset.delegate.username,
-        ...Function_Exception_Detail,
-      });
-    }
-
-    if (accountInfo.isDelegate) {
-      throw new ConsensusException(ACCOUNT_IS_ALREADY_AN_DELEGATE, {
-        address: accountInfo.address,
-        errorId: NewTransactionRefuseReason.ACCOUNT_ALREADY_DELEGATE,
         ...Function_Exception_Detail,
       });
     }

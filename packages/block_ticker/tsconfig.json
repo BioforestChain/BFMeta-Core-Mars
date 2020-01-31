@@ -26,11 +26,11 @@
   ],
   "files": [
     "src/@types.ts",
-    "src/atom_block/_blockbaseTicker.ts",
     "src/atom_block/commonBlockTicker.ts",
     "src/atom_block/genesisBlockTicker.ts",
     "src/atom_block/index.ts",
     "src/atom_block/roundLastBlockTicker.ts",
+    "src/atom_block/_blockbaseTicker.ts",
     "src/blockTicker.ts",
     "src/index.ts"
   ]

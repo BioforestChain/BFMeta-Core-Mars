@@ -4,7 +4,6 @@ import { Injectable } from "@bfchain/util";
 import {
   CoreExceptionGenerator,
   ACCOUNT_ALREADY_HAVE_USERNAME,
-  USERNAME_ALREADY_EXIST,
   NOT_EXIST,
 } from "@bfchain/core-util-exception";
 
@@ -50,33 +49,6 @@ export class UsernameLogicVerifier extends TransactionLogicVerifier {
       });
     }
 
-    await this.isAliasAlreadyExist(transaction.asset.username.alias, accountGetterHelper);
-
     return true;
-  }
-
-  /**
-   * 委托账户是否处于冻结状态
-   *
-   * @param trustees
-   */
-  async isAliasAlreadyExist(alias: string, accountGetterHelper = this.accountGetterHelper) {
-    const Function_Exception_Detail = {
-      function: "isAliasAlreadyExist",
-    } as const;
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
-    const memUsername = await accountGetterHelper.getAlias(alias);
-    if (memUsername) {
-      throw new ConsensusException(USERNAME_ALREADY_EXIST, {
-        errorId: NewTransactionRefuseReason.USERNAME_ALREADY_EXIST,
-        ...Function_Exception_Detail,
-      });
-    }
   }
 }

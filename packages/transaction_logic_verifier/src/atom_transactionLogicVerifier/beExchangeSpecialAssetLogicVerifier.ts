@@ -1,25 +1,10 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
-import {
-  BeExchangeSpecialAssetTransaction,
-  EXCHANGE_DIRECTION,
-  SPECIAL_ASSET_TYPE,
-  NewTransactionRefuseReason,
-  ASSET_STATUS,
-} from "@bfchain/core-model";
+import { BeExchangeSpecialAssetTransaction } from "@bfchain/core-model";
 import { Injectable } from "@bfchain/util";
 import {
   CoreExceptionGenerator,
   NOT_EXIST,
   NOT_MATCH,
-  NOT_BEGIN_UNFROZEN_YET,
-  FROZEN_ASSET_EXPIRATION,
-  DAPPID_IS_NOT_EXIST,
-  LOCATION_NAME_IS_NOT_EXIST,
-  ACCOUNT_NOT_DAPPID_POSSESSOR,
-  ACCOUNT_NOT_LOCATION_NAME_POSSESSOR,
-  DAPPID_NOT_FROZEN,
-  LOCATION_NAME_NOT_FROZEN,
-  NO_NEED_TO_PURCHASE_SPECIAL_ASSET,
   CAN_NOT_SECONDARY_TRANSACTION,
 } from "@bfchain/core-util-exception";
 
@@ -65,8 +50,6 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
       transactionGetterHelper,
     );
 
-    // await this.checkSecondaryTransaction(transaction, transactionGetterHelper);
-
     const beExchangeSpecialAsset = transaction.asset.beExchangeSpecialAsset;
     const { transactionSignature } = beExchangeSpecialAsset;
     const toExchangeSpecialAssetJson = (await transactionGetterHelper.getTransactionById(
@@ -82,13 +65,6 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
 
     this.isValidRecipientId(transaction, toExchangeSpecialAssetJson);
     this.isDependentTransactionMatch(transaction, toExchangeSpecialAssetJson);
-    await this.isValidToUnfrozenAsset(
-      transaction,
-      toExchangeSpecialAssetJson,
-      currentBlockHeight,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
 
     return true;
   }
@@ -177,191 +153,15 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
       }
     }
 
-    if (numberOfEffectiveBlocks !== toExchangeSpecialAssetJson.numberOfEffectiveBlocks) {
-      throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: "numberOfEffectiveBlocks",
-        be_compare_prop: "numberOfEffectiveBlocks",
-        to_target: "BeExchangeSpecialAssetTransaction",
-        be_target: "ToExchangeSpecialAssetTransaction",
-        ...Function_Exception_Detail,
-      });
-    }
-  }
-
-  /**
-   * 能否正常解冻资产
-   *
-   * @param transaction
-   * @param toExchangeSpecialAssetJson
-   * @param currentBlockHeight
-   */
-  async isValidToUnfrozenAsset(
-    transaction: BeExchangeSpecialAssetTransaction,
-    toExchangeSpecialAssetJson: BFChainCore.TransactionJSON<
-      BFChainCore.ToExchangeSpecialAssetAssetJSON
-    >,
-    currentBlockHeight: number,
-    accountGetterHelper = this.accountGetterHelper,
-    transactionGetterHelper = this.transactionGetterHelper,
-  ) {
-    const Function_Exception_Detail = {
-      function: "isValidToUnfrozenAsset",
-    } as const;
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
-    if (!transactionGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "transactionGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
-    const {
-      exchangeSpecialAsset,
-      applyBlockHeight,
-      // numberOfBeginUnfrozenBlocks,
-      numberOfEffectiveBlocks,
-    } = transaction.asset.beExchangeSpecialAsset;
-
-    const {
-      toExchangeSource,
-      toExchangeAsset,
-      beExchangeSource,
-      beExchangeAsset,
-      exchangeAssetType,
-      exchangeDirection,
-    } = exchangeSpecialAsset;
-    // 交易是否开始解冻
-    if (applyBlockHeight > transaction.applyBlockHeight) {
-      throw new ConsensusException(NOT_BEGIN_UNFROZEN_YET, {
-        frozenId: toExchangeSpecialAssetJson.signature,
-        ...Function_Exception_Detail,
-      });
-    }
-
-    const senderId = transaction.senderId;
-
-    let maxEffectiveHeight =
-      applyBlockHeight + this.configHelper.maxApplyAndConfirmedBlockHeightDiff;
-
-    // 交易交易是否过期
-    if (currentBlockHeight > maxEffectiveHeight) {
-      throw new ConsensusException(FROZEN_ASSET_EXPIRATION, {
-        frozenId: toExchangeSpecialAssetJson.signature,
-        ...Function_Exception_Detail,
-      });
-    }
-
-    if (maxEffectiveHeight < transaction.applyBlockHeight) {
-      throw new ConsensusException(FROZEN_ASSET_EXPIRATION, {
-        frozenId: toExchangeSpecialAssetJson.signature,
-        ...Function_Exception_Detail,
-      });
-    }
-
-    // 校验资产
-    if (exchangeDirection === EXCHANGE_DIRECTION.ASSET_FROM_RECIPIENT) {
-      if (exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID) {
-        const memDapp = (await accountGetterHelper.getDApp(
-          beExchangeSource,
-          beExchangeAsset,
-          currentBlockHeight,
-        )) as BFChainCore.DAppInfo;
-        if (!memDapp) {
-          throw new ConsensusException(DAPPID_IS_NOT_EXIST, {
-            dappid: beExchangeAsset,
-            ...Function_Exception_Detail,
-          });
-        }
-        if (memDapp.possessorAddress !== senderId) {
-          throw new ConsensusException(ACCOUNT_NOT_DAPPID_POSSESSOR, {
-            address: senderId,
-            dappid: beExchangeAsset,
-            errorId: NewTransactionRefuseReason.ACCOUNT_NOT_LNS_POSSESSOR,
-            ...Function_Exception_Detail,
-          });
-        }
-      } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME) {
-        // 域名是否存在
-        const memLocation = (await accountGetterHelper.getLocationName(
-          beExchangeSource,
-          beExchangeAsset,
-          currentBlockHeight,
-        )) as BFChainCore.LocationNameInfo;
-        if (!memLocation) {
-          throw new ConsensusException(LOCATION_NAME_IS_NOT_EXIST, {
-            locationName: beExchangeAsset,
-            errorId: NewTransactionRefuseReason.LOCATION_NAME_NOT_EXIST,
-            ...Function_Exception_Detail,
-          });
-        }
-        if (memLocation.possessorAddress !== senderId) {
-          throw new ConsensusException(ACCOUNT_NOT_LOCATION_NAME_POSSESSOR, {
-            address: senderId,
-            locationName: beExchangeAsset,
-            errorId: NewTransactionRefuseReason.ACCOUNT_NOT_LNS_POSSESSOR,
-            ...Function_Exception_Detail,
-          });
-        }
-      }
-    } else {
-      if (exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID) {
-        const memDapp = (await accountGetterHelper.getDApp(
-          toExchangeSource,
-          toExchangeAsset,
-          currentBlockHeight,
-        )) as BFChainCore.DAppInfo;
-        if (!memDapp) {
-          throw new ConsensusException(DAPPID_IS_NOT_EXIST, {
-            dappid: toExchangeAsset,
-            ...Function_Exception_Detail,
-          });
-        }
-        if (memDapp.status === ASSET_STATUS.NORMAL) {
-          throw new ConsensusException(DAPPID_NOT_FROZEN, {
-            dappid: toExchangeAsset,
-            ...Function_Exception_Detail,
-          });
-        }
-        if (memDapp.possessorAddress === senderId) {
-          throw new ConsensusException(NO_NEED_TO_PURCHASE_SPECIAL_ASSET, {
-            type: "dappid",
-            asset: toExchangeAsset,
-            ...Function_Exception_Detail,
-          });
-        }
-      } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME) {
-        // 域名是否存在
-        const memLocation = (await accountGetterHelper.getLocationName(
-          toExchangeSource,
-          toExchangeAsset,
-          currentBlockHeight,
-        )) as BFChainCore.LocationNameInfo;
-        if (!memLocation) {
-          throw new ConsensusException(LOCATION_NAME_IS_NOT_EXIST, {
-            locationName: toExchangeAsset,
-            errorId: NewTransactionRefuseReason.LOCATION_NAME_NOT_EXIST,
-            ...Function_Exception_Detail,
-          });
-        }
-        if (memLocation.status === ASSET_STATUS.NORMAL) {
-          throw new ConsensusException(LOCATION_NAME_NOT_FROZEN, {
-            locationName: toExchangeAsset,
-            ...Function_Exception_Detail,
-          });
-        }
-        if (memLocation.possessorAddress === senderId) {
-          throw new ConsensusException(NO_NEED_TO_PURCHASE_SPECIAL_ASSET, {
-            type: "locationName",
-            asset: toExchangeAsset,
-            ...Function_Exception_Detail,
-          });
-        }
+    if (toExchangeSpecialAssetJson.numberOfEffectiveBlocks) {
+      if (numberOfEffectiveBlocks !== toExchangeSpecialAssetJson.numberOfEffectiveBlocks) {
+        throw new ConsensusException(NOT_MATCH, {
+          to_compare_prop: "numberOfEffectiveBlocks",
+          be_compare_prop: "numberOfEffectiveBlocks",
+          to_target: "BeExchangeSpecialAssetTransaction",
+          be_target: "ToExchangeSpecialAssetTransaction",
+          ...Function_Exception_Detail,
+        });
       }
     }
   }
