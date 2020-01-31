@@ -38,4 +38,8 @@ declare namespace BFChainCore {
     // /**区块所属的网络标识符 */
     // magic: string;
   };
+
+  type CommonBlock = Block<CommonBlockRemarkJSON>;
+  type GenesisBlock = Block<GenesisBlockRemarkJSON>;
+  type RoundLastBlock = Block<RoundLastBlockRemarkJSON>;
 }

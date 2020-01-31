@@ -7,7 +7,8 @@ import { Type, Field } from "@bfchain/protobuf";
  *
  */
 @Type.d("CommonBlock")
-export class CommonBlock extends Block<BFChainCore.CommonBlockRemarkJSON> {
+export class CommonBlock extends Block<BFChainCore.CommonBlockRemarkJSON>
+  implements BFChainCore.CommonBlock {
   @Field.d(CommonBlock.INC++, CommonBlockRemarkModel)
   remark!: CommonBlockRemarkModel;
 }

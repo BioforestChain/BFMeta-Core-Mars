@@ -7,7 +7,8 @@ import { Type, Field } from "@bfchain/protobuf";
  *
  */
 @Type.d("RoundLastBlock")
-export class RoundLastBlock extends Block<BFChainCore.RoundLastBlockRemarkJSON> {
+export class RoundLastBlock extends Block<BFChainCore.RoundLastBlockRemarkJSON>
+  implements BFChainCore.RoundLastBlock {
   @Field.d(RoundLastBlock.INC++, RoundLastBlockRemarkModel)
   remark!: RoundLastBlockRemarkModel;
 }

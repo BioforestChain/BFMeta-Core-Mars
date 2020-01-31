@@ -119,6 +119,8 @@ declare namespace BFChainCore {
 
   interface ChainChannelGroupInterface<CC extends ChainChannelInterface> {
     addChainChannel(chainChannel: CC): boolean;
+    removeChainChannel(chainChannel: CC): boolean;
+    destroy(): void;
   }
 
   interface ChainChannelInterface {

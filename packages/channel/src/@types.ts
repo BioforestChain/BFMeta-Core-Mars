@@ -1,6 +1,6 @@
 declare namespace BFChainCore {
   //#region ChannelHelper
-  type BroadcastNewTransactionEvents<DH extends import("./atom_channel").ChainChannel> = {
+  type BroadcastNewTransactionEvents<DH extends ChainChannelInterface> = {
     startBroadcasting: BFChainUtil.EventInOut<{ chainChannelList: DH[] }, { break: boolean }>;
     broadcasted: BFChainUtil.EventInOut<
       {
@@ -115,5 +115,75 @@ declare namespace BFChainCore {
     ): Promise<import("@bfchain/core-model").GetPeerInfoReturnModel>;
     /**处理接收到数据时的响应 */
     initOnMessage(): void;
+  }
+
+  interface ChainChannelGroupInterface<CC extends ChainChannelInterface> {
+    groupName: string;
+    size: number;
+    forEach(hanlder: (chainChannel: CC, i: number) => any): void;
+    include(chainChannel: CC): boolean;
+    [Symbol.iterator](): IterableIterator<CC>;
+    /**开始一个节点并发任务 */
+    startParallelTask(
+      task_id: string,
+    ): {
+      getFreeChainChannel: () => CC | Promise<CC>;
+      freeChainChannel: (chainChannel: CC) => void;
+      busyChainChannel: (chainChannel: CC) => void;
+    };
+    /**释放并发任务 */
+    releaseParallelTask(task_id: string): false | undefined;
+    /**
+     * 查询交易
+     */
+    queryTransactions(
+      query: BFChainUtil.FirstArgument<CC["queryTransactions"]>,
+      sort?: BFChainUtil.SecondArgument<CC["queryTransactions"]>,
+      opts?: BFChainUtil.ThirdArgument<CC["queryTransactions"]>,
+      _resultGenerator?: import("@bfchain/util").AsyncIteratorGenerator<TransactionInBlock>,
+    ): import("@bfchain/util").AsyncIteratorGenerator<TransactionInBlock>;
+    /**
+     * 广播交易体
+     */
+    broadcastTransaction(
+      transaction: BFChainCore.NewTransactionArgJSON["transaction"],
+      opts?: BFChainCore.ChannelRequestOptions & {
+        max_parallel_num?: number;
+      },
+      event?: BFChainUtil.QueneEventEmitter<BFChainCore.BroadcastNewTransactionEvents<CC>>,
+    ): Promise<
+      | {
+          chainChannel: CC;
+          result: {
+            error: boolean;
+            result: import("@bfchain/core-model").NewTransactionReturnModel | Error;
+            chainChannel: CC;
+          };
+        }[]
+      | undefined
+    >;
+    /**
+     * 查询区块
+     */
+    queryBlock(
+      ...args: BFChainUtil.AllArgument<ChainChannelInterface["queryBlock"]>
+    ): Promise<import("@bfchain/core-model").QueryBlockReturnModel>;
+    findBlock<B extends Block = CommonBlock>(
+      ...args: BFChainUtil.AllArgument<ChainChannelInterface["queryBlock"]>
+    ): Promise<B | undefined>;
+    /**
+     * 广播区块
+     */
+    broadcastBlock(
+      ...args: BFChainUtil.AllArgument<ChainChannelInterface["broadcastBlock"]>
+    ): Promise<
+      {
+        chainChannel: CC;
+        result: Promise<import("@bfchain/core-model").NewBlockReturn>;
+      }[]
+    >;
+    getPeerInfo(
+      ...args: BFChainUtil.AllArgument<ChainChannelInterface["getPeerInfo"]>
+    ): Promise<import("@bfchain/core-model").PeerInfoModel | undefined>;
   }
 }

@@ -7,7 +7,8 @@ import { Type, Field } from "@bfchain/protobuf";
  *
  */
 @Type.d("GenesisBlock")
-export class GenesisBlock extends Block<BFChainCore.GenesisBlockRemarkJSON> {
+export class GenesisBlock extends Block<BFChainCore.GenesisBlockRemarkJSON>
+  implements BFChainCore.GenesisBlock {
   @Field.d(GenesisBlock.INC++, GenesisBlockRemarkModel)
   remark!: GenesisBlockRemarkModel;
 }
