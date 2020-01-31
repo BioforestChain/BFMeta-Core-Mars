@@ -23,8 +23,8 @@
   ],
   "files": [
     "src/@types.ts",
-    "src/atom_channel/chainChannel.ts",
-    "src/atom_channel/chainChannelGroup.ts",
+    "src/atom_channel/ChainChannel.ts",
+    "src/atom_channel/ChainChannelGroup.ts",
     "src/atom_channel/chainChannelHelper.ts",
     "src/atom_channel/index.ts",
     "src/channel.ts",

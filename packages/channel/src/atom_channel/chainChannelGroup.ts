@@ -5,6 +5,7 @@ import {
   ParallelPool,
   PromiseOut,
   QueneEventEmitter,
+  Resolvable,
 } from "@bfchain/util";
 import { BaseHelper, ChainTimeHelper, ConfigHelper } from "@bfchain/core-helper";
 import {
@@ -28,6 +29,7 @@ export const CHAIN_CHANNEL_GROUP_ARGS = {
 /**
  * 批量双工通讯管理器
  */
+@Resolvable()
 export class ChainChannelGroup<DH extends ChainChannel = ChainChannel> extends ChainChannelBase
   implements BFChainCore.ChainChannelGroupInterface<DH> {
   @Inject(BaseHelper) protected baseHelper!: BaseHelper;

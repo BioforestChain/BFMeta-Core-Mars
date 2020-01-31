@@ -28,7 +28,14 @@ import {
 } from "@bfchain/core-model";
 import { Message } from "@bfchain/protobuf";
 import { ChainChannelHelper } from "./chainChannelHelper";
-import { QueneEventEmitterPro, Inject, PromiseOut, sleep, unsleep } from "@bfchain/util";
+import {
+  QueneEventEmitterPro,
+  Inject,
+  PromiseOut,
+  sleep,
+  unsleep,
+  Resolvable,
+} from "@bfchain/util";
 
 const {
   ArgumentFormatException,
@@ -92,6 +99,7 @@ export abstract class ChainChannelBase extends QueneEventEmitterPro<
 /**
  * 为数据收发处理器包装数据处理
  */
+@Resolvable()
 export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainChannelInterface {
   @Inject("bfchain-core:TransactionCore")
   protected transactionCore!: import("@bfchain/core-transaction").TransactionCore;
