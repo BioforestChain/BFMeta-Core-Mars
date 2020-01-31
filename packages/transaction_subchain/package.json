@@ -1,14 +1,14 @@
 {
   "name": "@bfchain/core-transaction-subchain",
-  "version": "5.0.12",
+  "version": "5.0.13",
   "main": "build/cjs/index.js",
   "type": "build/cjs/index.d.ts",
   "files": [
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-block": "^5.0.12",
-    "@bfchain/core-transaction": "^5.0.11",
+    "@bfchain/core-block": "^5.0.13",
+    "@bfchain/core-transaction": "^5.0.13",
     "@bfchain/core-typings": "^5.0.11"
   },
   "module": "build/cjs/index.d.ts"
