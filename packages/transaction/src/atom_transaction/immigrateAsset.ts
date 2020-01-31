@@ -35,7 +35,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<
   ImmigrateAssetTransaction
 > {
   constructor(
-    public accountHelper: AccountBaseHelper,
+    public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,
     public baseHelper: BaseHelper,
     public configHelper: ConfigHelper,
@@ -76,7 +76,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<
 
     this.emptyRangeType(body, Function_Exception_Detail);
 
-    const { baseHelper, accountHelper, emigrateAssetTransactionFactory } = this;
+    const { baseHelper, accountBaseHelper, emigrateAssetTransactionFactory } = this;
 
     if (body.recipientId) {
       throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
@@ -175,7 +175,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<
     }
 
     const { publicKey, signature, secondPublicKey, signSignature } = genesisDelegateSignature;
-    const address = accountHelper.getAddressFromPublicKeyString(publicKey);
+    const address = accountBaseHelper.getAddressFromPublicKeyString(publicKey);
 
     const genesisDelegates = this.transactionHelper.genesisDelegates(config);
 

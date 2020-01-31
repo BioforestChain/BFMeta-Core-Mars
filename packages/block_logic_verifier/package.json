@@ -17,7 +17,6 @@
     "@bfchain/core-block": "^5.0.10",
     "@bfchain/core-helper": "^5.0.10",
     "@bfchain/core-model": "^5.0.10",
-    "@bfchain/core-transaction": "^5.0.10",
     "@bfchain/core-transaction-logic-verifier": "^5.0.10",
     "@bfchain/core-typings": "^5.0.10",
     "@bfchain/core-util-exception": "^5.0.10"

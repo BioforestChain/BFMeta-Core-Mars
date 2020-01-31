@@ -17,7 +17,7 @@ import {
 } from "../include";
 
 function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate: AccountModel) {
-  const keypair = fullBfchainCore.accountHelper.createSecretKeypair(sender.secret);
+  const keypair = fullBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: fullBfchainCore.transactionHelper.EMIGRATE_ASSET, // 交易类型
@@ -39,11 +39,11 @@ function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate: Acco
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = fullBfchainCore.accountHelper.createSecondSecretKeypair(
+    secondKeypair = fullBfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = fullBfchainCore.accountHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = fullBfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );
@@ -58,7 +58,7 @@ function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate: Acco
     assetType: "BFT",
     amount: "100000",
   };
-  const genesisKeypair = fullBfchainCore.accountHelper.createSecretKeypair(genesisDelegate.secret);
+  const genesisKeypair = fullBfchainCore.accountBaseHelper.createSecretKeypair(genesisDelegate.secret);
   const signature = fullBfchainCore.transactionHelper.emigrateAssetGenesisSignature({
     secretKeyBuffer: genesisKeypair.secretKey,
     chainName: emigrateAsset.sourceChainName,
@@ -71,7 +71,7 @@ function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate: Acco
     signature: signature.toString("hex"),
   };
   if (genesisDelegate.secondSecret) {
-    const genesisSecondKeypair = fullBfchainCore.accountHelper.createSecondSecretKeypair(
+    const genesisSecondKeypair = fullBfchainCore.accountBaseHelper.createSecondSecretKeypair(
       genesisDelegate.secret,
       genesisDelegate.secondSecret,
     );

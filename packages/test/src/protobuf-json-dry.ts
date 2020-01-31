@@ -67,7 +67,7 @@ const trs = bfchainCore.transaction.createTransaction(
     applyBlockHeight: 2,
     numberOfEffectiveBlocks: 100,
     timestamp: 500,
-    senderId: bfchainCore.accountHelper.getAddressFromPublicKey(
+    senderId: bfchainCore.accountBaseHelper.getAddressFromPublicKey(
       bfchainCore.accountBaseHelper.createSecretKeypair("1").publicKey,
     ),
     senderPublicKey: bfchainCore.accountBaseHelper
@@ -75,7 +75,7 @@ const trs = bfchainCore.transaction.createTransaction(
       .publicKey.toString("hex"),
     rangeType: RANGE_TYPE.EMPTY,
     range: [
-      bfchainCore.accountHelper.getAddressFromPublicKey(
+      bfchainCore.accountBaseHelper.getAddressFromPublicKey(
         bfchainCore.accountBaseHelper.createSecretKeypair("2").publicKey,
       ),
     ],

@@ -113,10 +113,10 @@ const getPOWInfo = (address: string) => {
   return res;
 };
 async function getUsernameTransaction(sender: DelegateInfo) {
-  const keypair = core.accountHelper.createSecretKeypair(sender.secret);
+  const keypair = core.accountBaseHelper.createSecretKeypair(sender.secret);
   const secondKeypair =
     (sender.secondSecret &&
-      core.accountHelper.createSecondSecretKeypair(sender.secret, sender.secondSecret)) ||
+      core.accountBaseHelper.createSecondSecretKeypair(sender.secret, sender.secondSecret)) ||
     undefined;
   const pow =
     1 > bfchainCore.config.powOfWorkExemptionBlocks ? getPOWInfo(sender.address) : undefined;
@@ -168,10 +168,10 @@ async function getUsernameTransaction(sender: DelegateInfo) {
 }
 
 async function getDelegateTransaction(sender: DelegateInfo) {
-  const keypair = core.accountHelper.createSecretKeypair(sender.secret);
+  const keypair = core.accountBaseHelper.createSecretKeypair(sender.secret);
   const secondKeypair =
     (sender.secondSecret &&
-      core.accountHelper.createSecondSecretKeypair(sender.secret, sender.secondSecret)) ||
+      core.accountBaseHelper.createSecondSecretKeypair(sender.secret, sender.secondSecret)) ||
     undefined;
   const pow =
     1 > bfchainCore.config.powOfWorkExemptionBlocks ? getPOWInfo(sender.address) : undefined;
@@ -224,10 +224,10 @@ async function getDelegateTransaction(sender: DelegateInfo) {
 }
 
 async function getAcceptVoteTransaction(sender: DelegateInfo) {
-  const keypair = core.accountHelper.createSecretKeypair(sender.secret);
+  const keypair = core.accountBaseHelper.createSecretKeypair(sender.secret);
   const secondKeypair =
     (sender.secondSecret &&
-      core.accountHelper.createSecondSecretKeypair(sender.secret, sender.secondSecret)) ||
+      core.accountBaseHelper.createSecondSecretKeypair(sender.secret, sender.secondSecret)) ||
     undefined;
   const pow =
     1 > bfchainCore.config.powOfWorkExemptionBlocks ? getPOWInfo(sender.address) : undefined;
@@ -271,7 +271,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
 }
 const genesisAccountKeypair = core.accountBaseHelper.createSecretKeypair(config.genesisSecret);
 const genesisAccountInfo = {
-  address: core.accountHelper.getAddressFromPublicKey(genesisAccountKeypair.publicKey),
+  address: core.accountBaseHelper.getAddressFromPublicKey(genesisAccountKeypair.publicKey),
   publicKey: genesisAccountKeypair.publicKey.toString("hex"),
   publicKeyBuffer: genesisAccountKeypair.publicKey,
 };
@@ -400,10 +400,10 @@ async function getSetLnsRecordValueTransaction(
   sender: DelegateInfo,
   record: BFChainCore.LocationNameRecordJSON,
 ) {
-  const keypair = core.accountHelper.createSecretKeypair(sender.secret);
+  const keypair = core.accountBaseHelper.createSecretKeypair(sender.secret);
   const secondKeypair =
     (sender.secondSecret &&
-      core.accountHelper.createSecondSecretKeypair(sender.secret, sender.secondSecret)) ||
+      core.accountBaseHelper.createSecondSecretKeypair(sender.secret, sender.secondSecret)) ||
     undefined;
   const pow =
     0 > bfchainCore.config.powOfWorkExemptionBlocks ? getPOWInfo(sender.address) : undefined;
@@ -506,7 +506,7 @@ async function getGenesisBlockAsync() {
   const delegatesSecret = config.delegatesSecret.slice(0, totalDelegates);
   for (let i = 0; i < delegatesSecret.length; i++) {
     const secret = delegatesSecret[i];
-    const address = core.accountHelper.getAddressFromSecret(secret);
+    const address = core.accountBaseHelper.getAddressFromSecret(secret);
     // console.group(address, index);
     // bfchainCore.config.newDelegates.push(address);
     if (mainChainRemarkData.nextRoundDelegates.length < bfchainCore.config.blockPerRound) {
@@ -515,7 +515,7 @@ async function getGenesisBlockAsync() {
         equity: "0",
       });
     }
-    const publicKey = core.accountHelper.getPublicKeyStringFromSecret(secret);
+    const publicKey = core.accountBaseHelper.getPublicKeyStringFromSecret(secret);
     const delegate: DelegateInfo = {
       secret,
       address,
@@ -606,8 +606,8 @@ async function getGenesisBlockAsync() {
     });
     blockTrsItems.push(trsInBlock);
   }
-  const generatorPublicKey = core.accountHelper.getPublicKeyStringFromSecret(config.genesisSecret);
-  const generatorKeypair = core.accountHelper.createSecretKeypair(config.genesisSecret);
+  const generatorPublicKey = core.accountBaseHelper.getPublicKeyStringFromSecret(config.genesisSecret);
+  const generatorKeypair = core.accountBaseHelper.createSecretKeypair(config.genesisSecret);
   //#region 处理账户余额与交易pow
   // /**执行中的账户余额管理器 */
   // const accountBalanceManager = {

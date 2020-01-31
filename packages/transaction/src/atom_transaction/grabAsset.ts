@@ -36,7 +36,7 @@ const { ArgumentIllegalException } = CoreExceptionGenerator(
 @Injectable()
 export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTransaction> {
   constructor(
-    public accountHelper: AccountBaseHelper,
+    public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,
     public baseHelper: BaseHelper,
     public configHelper: ConfigHelper,

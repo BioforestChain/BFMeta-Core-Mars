@@ -4,7 +4,7 @@ import { BaseHelper } from "@bfchain/core-helper-type";
 import { PROP_SHOULD_LTE_FIELD, OUT_OF_RANGE } from "@bfchain/core-util-exception-errorcode";
 import { CoreExceptionGenerator, NOT_EXIST } from "@bfchain/core-util-exception";
 import { BLOCK_TYPES_BASE } from "@bfchain/core-model-block";
-import { AccountBaseHelper } from "@bfchain/core-helper-account";
+import { AccountBaseHelper } from "@bfchain/core-helper-account-base";
 type RoundLastBlock = import("@bfchain/core-model-block").RoundLastBlock;
 
 const {

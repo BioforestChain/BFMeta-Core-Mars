@@ -14,7 +14,7 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-helper-account": "^5.0.10",
+    "@bfchain/core-helper-account-base": "^5.0.10",
     "@bfchain/core-helper-asymmetric": "^5.0.10",
     "@bfchain/core-helper-bigint": "^5.0.10",
     "@bfchain/core-helper-config": "^5.0.10",
@@ -22,7 +22,6 @@
     "@bfchain/core-model-constants": "^5.0.10",
     "@bfchain/core-model-transaction": "^5.0.10",
     "@bfchain/core-typings": "^5.0.10",
-    "@bfchain/core-util-exception": "^5.0.10",
-    "@bfchain/core-util-exception-errorcode": "^5.0.10"
+    "@bfchain/core-util-exception": "^5.0.10"
   }
 }

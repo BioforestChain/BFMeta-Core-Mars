@@ -15,7 +15,7 @@ import {
 import { parseHexToArrayBuffer } from "@bfchain/util";
 
 function getTrustAssetTransaction(sender: AccountModel, recipientId: string, trustees: string[]) {
-  const keypair = bfchainCore.accountHelper.createSecretKeypair(sender.secret);
+  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.TRUST_ASSET, // 交易类型
@@ -42,11 +42,11 @@ function getTrustAssetTransaction(sender: AccountModel, recipientId: string, tru
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountHelper.createSecondSecretKeypair(
+    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );
@@ -76,7 +76,7 @@ function getSignForAssetTransaction(
   trustAssetTrs: TrustAssetTransaction,
   thirdPartys: AccountModel[],
 ) {
-  const keypair = bfchainCore.accountHelper.createSecretKeypair(sender.secret);
+  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.SIGN_FOR_ASSET, // 交易类型
@@ -103,11 +103,11 @@ function getSignForAssetTransaction(
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountHelper.createSecondSecretKeypair(
+    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );
@@ -133,7 +133,7 @@ function getSignForAssetTransaction(
       continue;
     }
     trusteePublicKeys[trusteePublicKeys.length] = account.publicKey;
-    const accountKeypair = bfchainCore.accountHelper.createSecretKeypair(account.secret);
+    const accountKeypair = bfchainCore.accountBaseHelper.createSecretKeypair(account.secret);
     const signature = bfchainCore.transactionHelper.thirdPartySignature({
       secretKeyBuffer: accountKeypair.secretKey,
       transactionSignatureBuffer: parseHexToArrayBuffer(trustAssetTrs.signature),
@@ -145,7 +145,7 @@ function getSignForAssetTransaction(
       signature: signature.toString("hex"),
     };
     if (account.secondSecret) {
-      const accountSecondKeypair = bfchainCore.accountHelper.createSecondSecretKeypair(
+      const accountSecondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
         account.secret,
         account.secondSecret,
       );

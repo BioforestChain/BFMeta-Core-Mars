@@ -34,7 +34,7 @@ const { ArgumentIllegalException } = CoreExceptionGenerator(
 @Injectable()
 export class IssueSubchainTransactionFactory extends TransactionFactory<IssueSubchainTransaction> {
   constructor(
-    public accountHelper: AccountBaseHelper,
+    public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,
     public baseHelper: BaseHelper,
     public configHelper: ConfigHelper,

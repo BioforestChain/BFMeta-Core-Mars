@@ -17,7 +17,7 @@ import {
 import { JSBIHelper } from "@bfchain/core-helper-bigint";
 import { AsymmetricHelper } from "@bfchain/core-helper-asymmetric";
 import { Injectable, Inject } from "@bfchain/util";
-import { AccountBaseHelper } from "@bfchain/core-helper-account";
+import { AccountBaseHelper } from "@bfchain/core-helper-account-base";
 type Transaction = import("@bfchain/core-model-transaction").Transaction;
 
 const {

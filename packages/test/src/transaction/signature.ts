@@ -7,8 +7,8 @@ import {
 } from "../include";
 
 function getSignatureTransaction(sender: AccountModel) {
-  const keypair = bfchainCore.accountHelper.createSecretKeypair(sender.secret);
-  const publicKey = bfchainCore.accountHelper.getPublicKeyStringFromSecondSecret(sender.secret, "");
+  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
+  const publicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(sender.secret, "");
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.SIGNATURE, // 交易类型
@@ -30,11 +30,11 @@ function getSignatureTransaction(sender: AccountModel) {
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountHelper.createSecondSecretKeypair(
+    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );

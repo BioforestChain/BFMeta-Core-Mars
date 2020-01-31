@@ -14,7 +14,7 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-helper-account": "^5.0.10",
+    "@bfchain/core-helper-account-base": "^5.0.10",
     "@bfchain/core-helper-asymmetric": "^5.0.10",
     "@bfchain/core-helper-bigint": "^5.0.10",
     "@bfchain/core-helper-block": "^5.0.10",

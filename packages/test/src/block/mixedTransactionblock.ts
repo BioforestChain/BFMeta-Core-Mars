@@ -42,7 +42,7 @@ function getTransferAssetTransaction(
   sourceChainName: string,
   assetType: string,
 ) {
-  const keypair = bfchainCore.accountHelper.createSecretKeypair(sender.secret);
+  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.TRANSFER_ASSET, // 交易类型
@@ -69,11 +69,11 @@ function getTransferAssetTransaction(
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountHelper.createSecondSecretKeypair(
+    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );
@@ -119,7 +119,7 @@ function getTransferAssetTransaction(
 }
 
 function getDestoryAssetTransaction(sender: AccountModel) {
-  const keypair = bfchainCore.accountHelper.createSecretKeypair(sender.secret);
+  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.DESTORY_ASSET, // 交易类型
@@ -145,11 +145,11 @@ function getDestoryAssetTransaction(sender: AccountModel) {
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountHelper.createSecondSecretKeypair(
+    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );
@@ -193,7 +193,7 @@ function getToExchangeAssetTransaction(
   recipientId: any,
   toExchangeAsset: any,
 ) {
-  const keypair = bfchainCore.accountHelper.createSecretKeypair(sender.secret);
+  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.TO_EXCHANGE_ASSET, // 交易类型
@@ -215,11 +215,11 @@ function getToExchangeAssetTransaction(
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountHelper.createSecondSecretKeypair(
+    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );
@@ -259,7 +259,7 @@ function getBeExchangeAssetTransaction(
   toExchangeAssetTrs: ToExchangeAssetTransaction,
 ) {
   const toExchangeAsset = toExchangeAssetTrs.asset.toExchangeAsset;
-  const keypair = bfchainCore.accountHelper.createSecretKeypair(sender.secret);
+  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.BE_EXCHANGE_ASSET, // 交易类型
@@ -286,11 +286,11 @@ function getBeExchangeAssetTransaction(
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountHelper.createSecondSecretKeypair(
+    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );
@@ -345,7 +345,7 @@ function getBeExchangeAssetTransaction(
 }
 
 function getToExchangeSpecialAssetTransaction(sender: AccountModel, recipientId: string) {
-  const keypair = bfchainCore.accountHelper.createSecretKeypair(sender.secret);
+  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.TO_EXCHANGE_SPECIAL_ASSET, // 交易类型
@@ -367,11 +367,11 @@ function getToExchangeSpecialAssetTransaction(sender: AccountModel, recipientId:
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountHelper.createSecondSecretKeypair(
+    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );
@@ -407,7 +407,7 @@ function getBeExchangeSpecialAssetTransaction(
     BFChainCore.ToExchangeSpecialAssetAssetJSON
   >,
 ) {
-  const keypair = bfchainCore.accountHelper.createSecretKeypair(sender.secret);
+  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.BE_EXCHANGE_SPECIAL_ASSET, // 交易类型
@@ -434,11 +434,11 @@ function getBeExchangeSpecialAssetTransaction(
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountHelper.createSecondSecretKeypair(
+    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );
@@ -465,11 +465,11 @@ function getBeExchangeSpecialAssetTransaction(
 }
 
 function getAddressFromSecret(secret: string) {
-  return bfchainCore.accountHelper.getAddressFromSecret(secret);
+  return bfchainCore.accountBaseHelper.getAddressFromSecret(secret);
 }
 
 function getPublicKeyFromSecret(secret: string) {
-  return bfchainCore.accountHelper.getPublicKeyStringFromSecret(secret);
+  return bfchainCore.accountBaseHelper.getPublicKeyStringFromSecret(secret);
 }
 
 function getAccountWithSecret(secret: string) {
@@ -481,7 +481,7 @@ function getAccountWithSecret(secret: string) {
 }
 const genesisAccountKeypair = bfchainCore.accountBaseHelper.createSecretKeypair(genesisSecret);
 const genesisAccountInfo = {
-  address: bfchainCore.accountHelper.getAddressFromPublicKey(genesisAccountKeypair.publicKey),
+  address: bfchainCore.accountBaseHelper.getAddressFromPublicKey(genesisAccountKeypair.publicKey),
   publicKey: genesisAccountKeypair.publicKey.toString("hex"),
   publicKeyBuffer: genesisAccountKeypair.publicKey,
 };
@@ -625,8 +625,8 @@ function getTrsInBlock(height: number, statisticsInfo: StatisticsInfo) {
 
 async function getCommonBlockAsync(sender: AccountModel) {
   const height = 2;
-  const generatorPublicKey = bfchainCore.accountHelper.getPublicKeyStringFromSecret(sender.secret);
-  const generatorKeypair = bfchainCore.accountHelper.createSecretKeypair(sender.secret);
+  const generatorPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecret(sender.secret);
+  const generatorKeypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const eventEmitter: BFChainCore.ApplyTransactionEventEmitter<any> = new QueneEventEmitter<any>();
   const statisticsInfo = statistics.forceGetStatisticsInfoByBlock(height, "generateBlock");
   statistics.bindApplyTransactionEventEmiter(eventEmitter, statisticsInfo);

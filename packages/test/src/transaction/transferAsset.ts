@@ -23,7 +23,7 @@ const getPOWInfo = (address: string) => {
 };
 
 async function getTransferAssetTransaction(sender: AccountModel) {
-  const keypair = bfchainCore.accountHelper.createSecretKeypair(sender.secret);
+  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.TRANSFER_ASSET, // 交易类型
@@ -50,11 +50,11 @@ async function getTransferAssetTransaction(sender: AccountModel) {
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountHelper.createSecondSecretKeypair(
+    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );

@@ -17,7 +17,7 @@ const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
 
 @Injectable()
 export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
-  constructor(@Inject(AccountBaseHelper) public accountHelper: AccountBaseHelper) {
+  constructor(@Inject(AccountBaseHelper) public accountBaseHelper: AccountBaseHelper) {
     super();
   }
 
@@ -108,10 +108,10 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
         ...Function_Exception_Detail,
       });
     }
-    const { accountHelper } = this;
+    const { accountBaseHelper } = this;
     for (const thirdPartySignature of thirdPartySignatures) {
       const { publicKey, secondPublicKey } = thirdPartySignature;
-      const address = accountHelper.getAddressFromPublicKeyString(publicKey);
+      const address = accountBaseHelper.getAddressFromPublicKeyString(publicKey);
       const trustee = await accountGetterHelper.getAccountInfo(address);
       if (!trustee) {
         throw new ConsensusException(NOT_EXIST, {

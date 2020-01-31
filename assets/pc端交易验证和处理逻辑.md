@@ -28,7 +28,7 @@
               switch (rangeType) {
                   case RANGE_TYPE.MULTI_ADDRESS:
                       for (const item of range) {
-                          if (!this.accountHelper.isAddress(item)) {
+                          if (!this.accountBaseHelper.isAddress(item)) {
                               return false;
                           }
                       }
@@ -3003,7 +3003,7 @@
                   const transactionSignatureBuffer = parseHexToArrayBuffer(transactionSignature);
                   for (const thirdPartySignature of thirdPartySignatures) {
                       const { publicKey, signature } = thirdPartySignature;
-                      const address = accountHelper.getAddressFromPublicKeyString(publicKey);
+                      const address = accountBaseHelper.getAddressFromPublicKeyString(publicKey);
                       if (!tempTrustees.includes(address)) {
                           throw new Error
                       }
@@ -3098,7 +3098,7 @@
                       throw new Error
                   }
                   const { publicKey, signature } = genesisDelegateSignature;
-                  const address = accountHelper.getAddressFromPublicKeyString(publicKey);
+                  const address = accountBaseHelper.getAddressFromPublicKeyString(publicKey);
                   const genesisDelegates = transactionHelper.genesisDelegates(config);
                   if (!genesisDelegates.includes(address)) {
                       throw new Error
@@ -3187,7 +3187,7 @@
                       throw new Error
                   }
                   const { publicKey, signature } = genesisDelegateSignature;
-                  const address = accountHelper.getAddressFromPublicKeyString(publicKey);
+                  const address = accountBaseHelper.getAddressFromPublicKeyString(publicKey);
                   const genesisDelegates = transactionHelper.genesisDelegates(config);
                   if (!genesisDelegates.includes(address)) {
                       throw new Error

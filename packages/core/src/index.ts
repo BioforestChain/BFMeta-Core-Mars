@@ -52,7 +52,6 @@ export class BFChainCore {
     @Inject("Buffer") public Buffer: BFChainUtil.BufferConstructor,
     public base58Helper: Base58Helper, //(this.cryptoHelper, this.Buffer);
     public asymmetricHelper: AsymmetricHelper,
-    public accountHelper: AccountBaseHelper,
     public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,
     public blockHelper: BlockHelper,

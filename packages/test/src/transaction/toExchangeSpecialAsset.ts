@@ -14,7 +14,7 @@ import {
 } from "../include";
 
 function getToExchangeSpecialAssetTransaction(sender: AccountModel, recipientId: string) {
-  const keypair = bfchainCore.accountHelper.createSecretKeypair(sender.secret);
+  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.TO_EXCHANGE_SPECIAL_ASSET, // 交易类型
@@ -36,11 +36,11 @@ function getToExchangeSpecialAssetTransaction(sender: AccountModel, recipientId:
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountHelper.createSecondSecretKeypair(
+    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );

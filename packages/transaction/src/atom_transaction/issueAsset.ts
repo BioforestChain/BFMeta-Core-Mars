@@ -31,7 +31,7 @@ const { ArgumentIllegalException } = CoreExceptionGenerator(
 @Injectable()
 export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetTransaction> {
   constructor(
-    public accountHelper: AccountBaseHelper,
+    public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,
     public baseHelper: BaseHelper,
     public configHelper: ConfigHelper,
@@ -75,7 +75,7 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
 
     this.emptyRangeType(body, Function_Exception_Detail);
 
-    const { baseHelper, accountHelper } = this;
+    const { baseHelper, accountBaseHelper } = this;
 
     const recipientId = body.recipientId;
 
@@ -234,7 +234,7 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
       });
     }
 
-    if (!accountHelper.isAddress(genesisAddress)) {
+    if (!accountBaseHelper.isAddress(genesisAddress)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "genesisAddress",
         type: "account address",

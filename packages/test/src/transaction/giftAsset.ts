@@ -17,7 +17,7 @@ function getGiftAssetTransaction(
   recipient?: AccountModel[],
   cipher?: boolean,
 ) {
-  const keypair = bfchainCore.accountHelper.createSecretKeypair(sender.secret);
+  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.GIFT_ASSET, // 交易类型
@@ -43,11 +43,11 @@ function getGiftAssetTransaction(
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountHelper.createSecondSecretKeypair(
+    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );

@@ -18,7 +18,7 @@ const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
 @Injectable()
 export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
   constructor(
-    @Inject(AccountBaseHelper) public accountHelper: AccountBaseHelper,
+    @Inject(AccountBaseHelper) public accountBaseHelper: AccountBaseHelper,
     @Inject(TransactionHelper) public transactionHelper: TransactionHelper,
   ) {
     super();
@@ -58,7 +58,7 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
 
     const { publicKey, secondPublicKey } = genesisDelegateSignature;
 
-    const address = this.accountHelper.getAddressFromPublicKeyString(publicKey);
+    const address = this.accountBaseHelper.getAddressFromPublicKeyString(publicKey);
 
     const delegate = await accountGetterHelper.getAccountInfo(address);
 

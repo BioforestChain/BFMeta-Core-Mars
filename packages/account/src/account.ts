@@ -1,7 +1,7 @@
-import { AccountBaseHelper } from "@bfchain/core-helper-account";
+import { AccountBaseHelper } from "@bfchain/core-helper-account-base";
 import { Injectable } from "@bfchain/util";
 
 @Injectable()
 export class AccountCore {
-  constructor(public accountHelper: AccountBaseHelper) {}
+  constructor(public accountBaseHelper: AccountBaseHelper) {}
 }

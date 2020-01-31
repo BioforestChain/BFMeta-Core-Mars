@@ -11,7 +11,7 @@
     { "path": "../block_ticker/tsconfig.cjs-es5.json" },
     { "path": "../channel/tsconfig.cjs-es5.json" },
     { "path": "../helper/tsconfig.cjs-es5.json" },
-    { "path": "../helper-account/tsconfig.cjs-es5.json" },
+    { "path": "../helper-account_base/tsconfig.cjs-es5.json" },
     { "path": "../helper-asymmetric/tsconfig.cjs-es5.json" },
     { "path": "../helper-bigint/tsconfig.cjs-es5.json" },
     { "path": "../helper-block/tsconfig.cjs-es5.json" },

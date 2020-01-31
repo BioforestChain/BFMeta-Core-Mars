@@ -13,7 +13,7 @@ import { getSenderWithoutSecondSecret, bfchainCore, AccountModel } from "../incl
 const delegatesSecret = require("../../../assets/secret.json").delegates as string[];
 
 function getAcceptVoteTransaction(sender: AccountModel) {
-  const keypair = bfchainCore.accountHelper.createSecretKeypair(sender.secret);
+  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.ACCEPT_VOTE, // 交易类型
@@ -35,11 +35,11 @@ function getAcceptVoteTransaction(sender: AccountModel) {
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountHelper.createSecondSecretKeypair(
+    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );
@@ -57,8 +57,8 @@ function getAcceptVoteTransaction(sender: AccountModel) {
 function getTrsInBlock() {
   const txs = [];
   for (const secret of delegatesSecret) {
-    const address = bfchainCore.accountHelper.getAddressFromSecret(secret);
-    const publicKey = bfchainCore.accountHelper.getPublicKeyStringFromSecret(secret);
+    const address = bfchainCore.accountBaseHelper.getAddressFromSecret(secret);
+    const publicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecret(secret);
     const delegate = {
       secret,
       address,
@@ -79,8 +79,8 @@ function getTrsInBlock() {
 
 async function getCommonBlockAsync(sender: AccountModel) {
   const blockTrsItems = getTrsInBlock();
-  const generatorPublicKey = bfchainCore.accountHelper.getPublicKeyStringFromSecret(sender.secret);
-  const generatorKeypair = bfchainCore.accountHelper.createSecretKeypair(sender.secret);
+  const generatorPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecret(sender.secret);
+  const generatorKeypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const commonBlock = await bfchainCore.block.generateBlock<CommonBlock>(
     CommonBlockFactory,
     {

@@ -18,9 +18,6 @@
     "@bfchain/core-helper-config": "^5.0.10",
     "@bfchain/core-helper-transaction": "^5.0.10",
     "@bfchain/core-model": "^5.0.10",
-    "@bfchain/core-model-block": "^5.0.10",
-    "@bfchain/core-model-block-base": "^5.0.10",
-    "@bfchain/core-model-common": "^5.0.10",
     "@bfchain/core-typings": "^5.0.10",
     "@bfchain/core-util-exception-errorcode": "^5.0.10"
   }

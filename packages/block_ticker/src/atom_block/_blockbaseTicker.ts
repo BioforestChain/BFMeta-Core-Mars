@@ -24,7 +24,7 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
   @Inject(ChainTimeHelper)
   protected timeHelper!: ChainTimeHelper;
   @Inject(AccountBaseHelper)
-  protected accountHelper!: AccountBaseHelper;
+  protected accountBaseHelper!: AccountBaseHelper;
   @Inject(JSBIHelper)
   protected jsbiHelper!: JSBIHelper;
   @Inject(BlockGeneratorCalculator)
@@ -232,9 +232,9 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
       totalEquity: BigInt(0),
       voters: [],
     };
-    const { accountHelper, jsbiHelper, configHelper } = this;
+    const { accountBaseHelper, jsbiHelper, configHelper } = this;
     const { height } = block;
-    const generatorAddress = accountHelper.getAddressFromPublicKeyString(block.generatorPublicKey);
+    const generatorAddress = accountBaseHelper.getAddressFromPublicKeyString(block.generatorPublicKey);
     const data = await this.getVoteForDelegate(generatorAddress, height, blockGetterHelper);
     // FIXME: only for genesis block?
     // 使用深拷贝在传值前复制一份？

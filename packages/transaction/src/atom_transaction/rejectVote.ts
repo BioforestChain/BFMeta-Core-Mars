@@ -21,7 +21,7 @@ const { ArgumentIllegalException } = CoreExceptionGenerator(
 @Injectable()
 export class RejectVoteTransactionFactory extends TransactionFactory<RejectVoteTransaction> {
   constructor(
-    public accountHelper: AccountBaseHelper,
+    public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,
     public baseHelper: BaseHelper,
     public configHelper: ConfigHelper,

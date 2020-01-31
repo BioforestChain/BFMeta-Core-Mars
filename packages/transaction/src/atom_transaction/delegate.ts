@@ -29,7 +29,7 @@ const { ArgumentIllegalException } = CoreExceptionGenerator(
 @Injectable()
 export class DelegateTransactionFactory extends TransactionFactory<DelegateTransaction> {
   constructor(
-    public accountHelper: AccountBaseHelper,
+    public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,
     public baseHelper: BaseHelper,
     public configHelper: ConfigHelper,

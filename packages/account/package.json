@@ -14,7 +14,7 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-helper-account": "^5.0.10",
+    "@bfchain/core-helper-account-base": "^5.0.10",
     "@bfchain/core-typings": "^5.0.10"
   }
 }

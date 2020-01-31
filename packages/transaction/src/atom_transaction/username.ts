@@ -32,7 +32,7 @@ const { ArgumentIllegalException } = CoreExceptionGenerator(
 @Injectable()
 export class UsernameTransactionFactory extends TransactionFactory<UsernameTransaction> {
   constructor(
-    public accountHelper: AccountBaseHelper,
+    public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,
     public baseHelper: BaseHelper,
     public configHelper: ConfigHelper,
@@ -71,7 +71,7 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
 
     this.emptyRangeType(body, Function_Exception_Detail);
 
-    const { baseHelper, accountHelper } = this;
+    const { baseHelper, accountBaseHelper } = this;
 
     if (body.recipientId) {
       throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
@@ -185,7 +185,7 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
       });
     }
 
-    if (accountHelper.isAddress(alias)) {
+    if (accountBaseHelper.isAddress(alias)) {
       throw new ArgumentIllegalException(SHOULD_NOT_BE, {
         to_compare_prop: username,
         to_target: "usernameAsset",

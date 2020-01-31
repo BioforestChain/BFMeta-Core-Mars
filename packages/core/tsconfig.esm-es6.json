@@ -11,7 +11,7 @@
     { "path": "../block_ticker/tsconfig.esm-es6.json" },
     { "path": "../channel/tsconfig.esm-es6.json" },
     { "path": "../helper/tsconfig.esm-es6.json" },
-    { "path": "../helper-account/tsconfig.esm-es6.json" },
+    { "path": "../helper-account_base/tsconfig.esm-es6.json" },
     { "path": "../helper-asymmetric/tsconfig.esm-es6.json" },
     { "path": "../helper-bigint/tsconfig.esm-es6.json" },
     { "path": "../helper-block/tsconfig.esm-es6.json" },

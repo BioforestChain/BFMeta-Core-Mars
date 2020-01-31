@@ -1,5 +1,5 @@
 {
-  "name": "@bfchain/core-helper-account",
+  "name": "@bfchain/core-helper-account-base",
   "version": "5.0.10",
   "description": "",
   "main": "build/cjs/index.js",

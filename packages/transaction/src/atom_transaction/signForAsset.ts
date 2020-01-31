@@ -32,7 +32,7 @@ const { ArgumentIllegalException } = CoreExceptionGenerator(
 @Injectable()
 export class SignForAssetTransactionFactory extends TransactionFactory<SignForAssetTransaction> {
   constructor(
-    public accountHelper: AccountBaseHelper,
+    public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,
     public baseHelper: BaseHelper,
     public configHelper: ConfigHelper,
@@ -79,7 +79,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
 
     this.emptyRangeType(body, Function_Exception_Detail);
 
-    const { baseHelper, accountHelper, transactionHelper } = this;
+    const { baseHelper, accountBaseHelper, transactionHelper } = this;
 
     const recipientId = body.recipientId;
 
@@ -227,7 +227,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
       });
     }
 
-    if (!accountHelper.isAddress(trustSenderId)) {
+    if (!accountBaseHelper.isAddress(trustSenderId)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "trustSenderId",
         type: "account address",
@@ -243,7 +243,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
       });
     }
 
-    if (!accountHelper.isAddress(trustRecipientId)) {
+    if (!accountBaseHelper.isAddress(trustRecipientId)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "trustRecipientId",
         type: "account address",
@@ -324,7 +324,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
         });
       }
       trusteePublicKeys[trusteePublicKeys.length] = publicKey;
-      const address = accountHelper.getAddressFromPublicKeyString(publicKey);
+      const address = accountBaseHelper.getAddressFromPublicKeyString(publicKey);
       if (!tempTrustees.includes(address)) {
         throw new ArgumentIllegalException(NOT_MATCH, {
           to_compare_prop: "publicKey address",

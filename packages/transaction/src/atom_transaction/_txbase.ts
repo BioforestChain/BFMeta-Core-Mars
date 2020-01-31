@@ -38,7 +38,7 @@ export enum BNID_TYPE {
 }
 
 export abstract class TransactionFactory<T extends Transaction = Transaction> {
-  abstract accountHelper: AccountBaseHelper;
+  abstract accountBaseHelper: AccountBaseHelper;
   abstract transactionHelper: TransactionHelper;
   abstract baseHelper: BaseHelper;
   abstract configHelper: ConfigHelper;
@@ -166,7 +166,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
       ...Function_Exception_Detail,
     } as const;
 
-    const { baseHelper, accountHelper } = this;
+    const { baseHelper, accountBaseHelper } = this;
 
     if (!baseHelper.isPositiveInteger(body.version)) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
@@ -197,7 +197,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
       });
     }
 
-    if (!accountHelper.isAddress(body.senderId)) {
+    if (!accountBaseHelper.isAddress(body.senderId)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "senderId",
         type: "account address",
@@ -220,7 +220,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
       });
     }
 
-    if (body.senderId !== accountHelper.getAddressFromPublicKeyString(body.senderPublicKey)) {
+    if (body.senderId !== accountBaseHelper.getAddressFromPublicKeyString(body.senderPublicKey)) {
       throw new ArgumentIllegalException(NOT_MATCH, {
         to_compare_prop: "senderId",
         be_compare_prop: "body",
@@ -241,7 +241,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     }
 
     if (body.recipientId) {
-      if (!accountHelper.isAddress(body.recipientId)) {
+      if (!accountBaseHelper.isAddress(body.recipientId)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "recipientId",
           type: "account address",

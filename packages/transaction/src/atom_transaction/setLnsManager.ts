@@ -29,7 +29,7 @@ const { ArgumentIllegalException } = CoreExceptionGenerator(
 @Injectable()
 export class SetLnsManagerTransactionFactory extends TransactionFactory<SetLnsManagerTransaction> {
   constructor(
-    public accountHelper: AccountBaseHelper,
+    public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,
     public baseHelper: BaseHelper,
     public configHelper: ConfigHelper,

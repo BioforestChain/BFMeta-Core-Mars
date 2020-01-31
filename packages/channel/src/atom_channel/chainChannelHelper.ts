@@ -33,7 +33,7 @@ const { ArgumentIllegalException, ArgumentFormatException } = CoreExceptionGener
 export class ChainChannelHelper {
   constructor(
     private baseHelper: BaseHelper,
-    private accountHelper: AccountBaseHelper,
+    private accountBaseHelper: AccountBaseHelper,
     private transctionHelper: TransactionHelper,
     private blockHelper: BlockHelper,
   ) {}
@@ -99,7 +99,7 @@ export class ChainChannelHelper {
     if (senderId) {
       //if (typeof senderId === "string") {
       has_query_params = true;
-      if (!this.accountHelper.isAddress(senderId)) {
+      if (!this.accountBaseHelper.isAddress(senderId)) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.query",
           field: "senderId",
@@ -109,7 +109,7 @@ export class ChainChannelHelper {
     if (recipientId) {
       //if (typeof recipientId === "string") {
       has_query_params = true;
-      if (!this.accountHelper.isAddress(recipientId)) {
+      if (!this.accountBaseHelper.isAddress(recipientId)) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.query",
           field: "recipientId",

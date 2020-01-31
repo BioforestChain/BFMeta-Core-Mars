@@ -59,10 +59,10 @@ const getPOWInfo = (address: string) => {
   return res;
 };
 async function getUsernameTransaction(sender: DelegateInfo) {
-  const keypair = subBfchainCore.accountHelper.createSecretKeypair(sender.secret);
+  const keypair = subBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const secondKeypair =
     (sender.secondSecret &&
-      subBfchainCore.accountHelper.createSecondSecretKeypair(sender.secret, sender.secondSecret)) ||
+      subBfchainCore.accountBaseHelper.createSecondSecretKeypair(sender.secret, sender.secondSecret)) ||
     undefined;
   const pow =
     1 > subBfchainCore.config.powOfWorkExemptionBlocks ? getPOWInfo(sender.address) : undefined;
@@ -120,10 +120,10 @@ async function getUsernameTransaction(sender: DelegateInfo) {
 }
 
 async function getDelegateTransaction(sender: DelegateInfo) {
-  const keypair = subBfchainCore.accountHelper.createSecretKeypair(sender.secret);
+  const keypair = subBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const secondKeypair =
     (sender.secondSecret &&
-      subBfchainCore.accountHelper.createSecondSecretKeypair(sender.secret, sender.secondSecret)) ||
+      subBfchainCore.accountBaseHelper.createSecondSecretKeypair(sender.secret, sender.secondSecret)) ||
     undefined;
   const pow =
     1 > subBfchainCore.config.powOfWorkExemptionBlocks ? getPOWInfo(sender.address) : undefined;
@@ -181,10 +181,10 @@ async function getDelegateTransaction(sender: DelegateInfo) {
 }
 
 async function getAcceptVoteTransaction(sender: DelegateInfo) {
-  const keypair = subBfchainCore.accountHelper.createSecretKeypair(sender.secret);
+  const keypair = subBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const secondKeypair =
     (sender.secondSecret &&
-      subBfchainCore.accountHelper.createSecondSecretKeypair(sender.secret, sender.secondSecret)) ||
+      subBfchainCore.accountBaseHelper.createSecondSecretKeypair(sender.secret, sender.secondSecret)) ||
     undefined;
   const pow =
     1 > subBfchainCore.config.powOfWorkExemptionBlocks ? getPOWInfo(sender.address) : undefined;
@@ -298,10 +298,10 @@ async function getSetLnsRecordValueTransaction(
   sender: DelegateInfo,
   record: BFChainCore.LocationNameRecordJSON,
 ) {
-  const keypair = subBfchainCore.accountHelper.createSecretKeypair(sender.secret);
+  const keypair = subBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const secondKeypair =
     (sender.secondSecret &&
-      subBfchainCore.accountHelper.createSecondSecretKeypair(sender.secret, sender.secondSecret)) ||
+      subBfchainCore.accountBaseHelper.createSecondSecretKeypair(sender.secret, sender.secondSecret)) ||
     undefined;
   const pow =
     1 > subBfchainCore.config.powOfWorkExemptionBlocks ? getPOWInfo(sender.address) : undefined;
@@ -367,7 +367,7 @@ const genesisAccountKeypair = subBfchainCore.accountBaseHelper.createSecretKeypa
   config.genesisSecret,
 );
 const genesisAccountInfo = {
-  address: subBfchainCore.accountHelper.getAddressFromPublicKey(genesisAccountKeypair.publicKey),
+  address: subBfchainCore.accountBaseHelper.getAddressFromPublicKey(genesisAccountKeypair.publicKey),
   publicKey: genesisAccountKeypair.publicKey.toString("hex"),
   publicKeyBuffer: genesisAccountKeypair.publicKey,
 };
@@ -435,7 +435,7 @@ async function getTransferAssetTransaction(
 }
 
 async function getGenesisBlockAsync() {
-  const generatorPublicKey = subBfchainCore.accountHelper.getPublicKeyStringFromSecret(
+  const generatorPublicKey = subBfchainCore.accountBaseHelper.getPublicKeyStringFromSecret(
     config.genesisSecret,
   );
   //#region 模拟账户表的变更
@@ -471,7 +471,7 @@ async function getGenesisBlockAsync() {
   const ips = getIps(delegatesSecret.length, false, defaultIpsPath);
   for (let i = 0; i < delegatesSecret.slice(5).length; i++) {
     const secret = delegatesSecret[i];
-    const address = subBfchainCore.accountHelper.getAddressFromSecret(secret);
+    const address = subBfchainCore.accountBaseHelper.getAddressFromSecret(secret);
     subchainRemarkData.newDelegates.push(address);
     if (subchainRemarkData.nextRoundDelegates.length < subBfchainCore.config.blockPerRound) {
       subchainRemarkData.nextRoundDelegates.push({
@@ -479,7 +479,7 @@ async function getGenesisBlockAsync() {
         equity: "0",
       });
     }
-    const publicKey = subBfchainCore.accountHelper.getPublicKeyStringFromSecret(secret);
+    const publicKey = subBfchainCore.accountBaseHelper.getPublicKeyStringFromSecret(secret);
     const delegate: DelegateInfo = {
       secret,
       address,
@@ -570,7 +570,7 @@ async function getGenesisBlockAsync() {
     });
     blockTrsItems[blockTrsItems.length] = trsInBlock;
   }
-  const generatorKeypair = subBfchainCore.accountHelper.createSecretKeypair(config.genesisSecret);
+  const generatorKeypair = subBfchainCore.accountBaseHelper.createSecretKeypair(config.genesisSecret);
   eventEmitter.on("verifyTransactionProfOfWork", ({ transaction, count }) => {
     return subBfchainCore.transactionHelper.checkTransactionProfOfWork(
       transaction.signatureBuffer,
@@ -614,7 +614,7 @@ async function getGenesisBlockAsync() {
 }
 
 async function getIssueSubchainTransaction(sender: AccountModel) {
-  const keypair = fullBfchainCore.accountHelper.createSecretKeypair(sender.secret);
+  const keypair = fullBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: fullBfchainCore.transactionHelper.ISSUE_SUBCHAIN, // 交易类型
@@ -641,11 +641,11 @@ async function getIssueSubchainTransaction(sender: AccountModel) {
 
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = fullBfchainCore.accountHelper.createSecondSecretKeypair(
+    secondKeypair = fullBfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = fullBfchainCore.accountHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = fullBfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );
@@ -752,10 +752,10 @@ async function getCommonBlockAsync(sender: AccountModel) {
   });
   trsInBlock.transaction = trs;
   blockTrsItems[blockTrsItems.length] = trsInBlock;
-  const generatorPublicKey = fullBfchainCore.accountHelper.getPublicKeyStringFromSecret(
+  const generatorPublicKey = fullBfchainCore.accountBaseHelper.getPublicKeyStringFromSecret(
     sender.secret,
   );
-  const generatorKeypair = fullBfchainCore.accountHelper.createSecretKeypair(sender.secret);
+  const generatorKeypair = fullBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   eventEmitter.on("verifyTransactionProfOfWork", ({ transaction, count }) => {
     return subBfchainCore.transactionHelper.checkTransactionProfOfWork(
       transaction.signatureBuffer,

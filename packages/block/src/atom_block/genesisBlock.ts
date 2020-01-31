@@ -32,7 +32,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
   public transactionCore!: import("@bfchain/core-transaction").TransactionCore;
   constructor(
     public blockHelper: BlockHelper,
-    public accountHelper: AccountBaseHelper,
+    public accountBaseHelper: AccountBaseHelper,
     public baseHelper: BaseHelper,
     public config: ConfigHelper,
     public statisticsHelper: BlockBaseStatisticsHelper,
@@ -430,7 +430,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
     }
 
     nextRoundDelegates.forEach((nextRoundDelegate, i) => {
-      if (!this.accountHelper.isAddress(nextRoundDelegate.address)) {
+      if (!this.accountBaseHelper.isAddress(nextRoundDelegate.address)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: `nextRoundDelegates[${i}].address`,
           type: "account address",

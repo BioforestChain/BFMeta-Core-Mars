@@ -815,7 +815,7 @@ const delegatesMap = new Map<
   { pk: string; address: string; keypair: BFChainCore.Keypair }
 >();
 delegatesArr.forEach(v => {
-  const keypair = bfchainCore.accountHelper.createSecretKeypair(v.secret);
+  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(v.secret);
   delegatesMap.set(v.address, { pk: v.publicKey, address: v.address, keypair });
 });
 /** 随机获取下一轮的打块人*/

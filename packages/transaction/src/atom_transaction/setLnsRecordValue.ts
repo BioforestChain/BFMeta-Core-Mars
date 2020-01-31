@@ -37,7 +37,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<
   SetLnsRecordValueTransaction
 > {
   constructor(
-    public accountHelper: AccountBaseHelper,
+    public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,
     public baseHelper: BaseHelper,
     public configHelper: ConfigHelper,
@@ -240,7 +240,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<
    * @param record
    */
   checkLocationNameRecord(record: BFChainCore.LocationNameRecordJSON) {
-    const { baseHelper, accountHelper } = this;
+    const { baseHelper, accountBaseHelper } = this;
     const Function_Exception_Detail = { function: "verifyTransactionBody" } as const;
 
     if (!record) {
@@ -290,7 +290,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<
         });
       }
     } else if (RECORD_TYPE.ADDRESSV1 === recordType) {
-      if (!accountHelper.isAddress(recordValue)) {
+      if (!accountBaseHelper.isAddress(recordValue)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "recordValue",
           type: "block chain account address",

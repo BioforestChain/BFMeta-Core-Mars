@@ -41,7 +41,7 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
   @Inject(BlockHelper)
   blockHelper!: BlockHelper;
   @Inject(AccountBaseHelper)
-  protected accountHelper!: AccountBaseHelper;
+  protected accountBaseHelper!: AccountBaseHelper;
   @Inject(ConfigHelper)
   protected configHelper!: ConfigHelper;
   @Inject(ChainTimeHelper)
@@ -256,7 +256,7 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
 
     const { timeHelper, blockGeneratorCalculator } = this;
 
-    const generatorAddress = this.accountHelper.getAddressFromPublicKeyString(
+    const generatorAddress = this.accountBaseHelper.getAddressFromPublicKeyString(
       block.generatorPublicKey,
     );
     const currentSlot = timeHelper.getSlotNumberByTimestamp(block.timestamp);

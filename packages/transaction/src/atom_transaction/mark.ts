@@ -29,7 +29,7 @@ const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "MarkT
 @Injectable()
 export class MarkTransactionFactory extends TransactionFactory<MarkTransaction> {
   constructor(
-    public accountHelper: AccountBaseHelper,
+    public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,
     public baseHelper: BaseHelper,
     public configHelper: ConfigHelper,

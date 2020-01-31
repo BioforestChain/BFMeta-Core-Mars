@@ -1,13 +1,13 @@
 /// <reference lib="dom"/>
 import { Injectable, IpHelper } from "@bfchain/util";
-import { AccountBaseHelper } from "@bfchain/core-helper-account";
+import { AccountBaseHelper } from "@bfchain/core-helper-account-base";
 import { ConfigHelper } from "@bfchain/core-helper-config";
 import { RANGE_TYPE } from "@bfchain/core-model-constants";
 
 @Injectable()
 export class BaseHelper {
   constructor(
-    private accountHelper: AccountBaseHelper,
+    private accountBaseHelper: AccountBaseHelper,
     private configHelper: ConfigHelper,
     private ipHelper: IpHelper,
   ) {}
@@ -62,7 +62,7 @@ export class BaseHelper {
       switch (rangeType) {
         case RANGE_TYPE.MULTI_ADDRESS:
           for (const item of range) {
-            if (!this.accountHelper.isAddress(item)) {
+            if (!this.accountBaseHelper.isAddress(item)) {
               return false;
             }
           }

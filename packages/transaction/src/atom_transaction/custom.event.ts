@@ -30,7 +30,7 @@ const { ArgumentIllegalException, ConsensusException } = CoreExceptionGenerator(
 @Injectable()
 export class CustomTransactionEvent {
   constructor(
-    public accountHelper: AccountBaseHelper,
+    public accountBaseHelper: AccountBaseHelper,
     public baseHelper: BaseHelper,
     public configHelper: ConfigHelper,
     public transactionHelper: TransactionHelper,
@@ -43,7 +43,7 @@ export class CustomTransactionEvent {
       target: "applyResult",
       function: "verifyAddress",
     } as const;
-    if (!this.accountHelper.isAddress(address)) {
+    if (!this.accountBaseHelper.isAddress(address)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "address",
         ...Function_Exception_Detail,
@@ -69,7 +69,7 @@ export class CustomTransactionEvent {
       target: "applyResult",
       function: "verifyRecipientId",
     } as const;
-    if (!this.accountHelper.isAddress(recipientId)) {
+    if (!this.accountBaseHelper.isAddress(recipientId)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "recipientId",
         ...Function_Exception_Detail,
@@ -82,7 +82,7 @@ export class CustomTransactionEvent {
       target: "applyResult",
       function: "verifyPossessorAddress",
     } as const;
-    if (!this.accountHelper.isAddress(possessorAddress)) {
+    if (!this.accountBaseHelper.isAddress(possessorAddress)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "possessorAddress",
         ...Function_Exception_Detail,
@@ -200,7 +200,7 @@ export class CustomTransactionEvent {
    * @param record
    */
   verifyLocationNameRecord(record: BFChainCore.LocationNameRecordJSON) {
-    const { baseHelper, accountHelper } = this;
+    const { baseHelper, accountBaseHelper } = this;
     const Function_Exception_Detail = {
       target: "applyResult",
       function: "verifyLocationNameRecord",
@@ -241,7 +241,7 @@ export class CustomTransactionEvent {
         });
       }
     } else if (RECORD_TYPE.ADDRESSV1 === recordType) {
-      if (!accountHelper.isAddress(recordValue)) {
+      if (!accountBaseHelper.isAddress(recordValue)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "recordValue",
           type: "block chain account address",
@@ -257,7 +257,7 @@ export class CustomTransactionEvent {
   }
 
   verifyApplyResult(applyResult: BFChainCore.ApplyResultJSON, transaction: CustomTransaction) {
-    const { baseHelper, accountHelper, transactionHelper } = this;
+    const { baseHelper, accountBaseHelper, transactionHelper } = this;
     const Function_Exception_Detail = {
       target: "applyResult",
       function: "verifyApplyResult",
@@ -431,13 +431,13 @@ export class CustomTransactionEvent {
       this.verifyMagic(sourceChainMagic);
       this.verifyChainName(sourceChainName);
       this.verifyAssetType(assetType);
-      if (!accountHelper.isAddress(applyAddress)) {
+      if (!accountBaseHelper.isAddress(applyAddress)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "applyAddress",
           ...Function_Exception_Detail,
         });
       }
-      if (!accountHelper.isAddress(genesisAddress)) {
+      if (!accountBaseHelper.isAddress(genesisAddress)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "genesisAddress",
           ...Function_Exception_Detail,

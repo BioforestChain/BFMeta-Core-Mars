@@ -34,7 +34,7 @@ const { ArgumentIllegalException } = CoreExceptionGenerator(
 @Injectable()
 export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetTransaction> {
   constructor(
-    public accountHelper: AccountBaseHelper,
+    public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,
     public baseHelper: BaseHelper,
     public configHelper: ConfigHelper,
@@ -179,7 +179,7 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
   }
 
   verifyTrustAsset(trustAsset: BFChainCore.TrustAssetJSON) {
-    const { baseHelper, accountHelper } = this;
+    const { baseHelper, accountBaseHelper } = this;
 
     const Function_Exception_Detail = { function: "verifyTransactionBody" } as const;
 
@@ -220,7 +220,7 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
     }
 
     for (const trustee of trustees) {
-      if (!accountHelper.isAddress(trustee)) {
+      if (!accountBaseHelper.isAddress(trustee)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "trustee",
           type: "account address",

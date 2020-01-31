@@ -14,7 +14,6 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-model-channel": "^5.0.10",
     "@bfchain/core-typings": "^5.0.10",
     "@bfchain/core-util-exception": "^5.0.10",
     "@bfchain/core-util-exception-errorcode": "^5.0.10"

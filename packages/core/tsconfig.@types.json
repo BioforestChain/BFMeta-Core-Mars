@@ -14,7 +14,7 @@
     { "path": "../block_ticker/tsconfig.@types.json" },
     { "path": "../channel/tsconfig.@types.json" },
     { "path": "../helper/tsconfig.@types.json" },
-    { "path": "../helper-account/tsconfig.@types.json" },
+    { "path": "../helper-account_base/tsconfig.@types.json" },
     { "path": "../helper-asymmetric/tsconfig.@types.json" },
     { "path": "../helper-bigint/tsconfig.@types.json" },
     { "path": "../helper-block/tsconfig.@types.json" },

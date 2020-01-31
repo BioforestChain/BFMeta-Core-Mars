@@ -9,7 +9,7 @@ export * from "@bfchain/core-helper-chain-time";
 export * from "@bfchain/core-helper-bigint";
 export * from "@bfchain/core-helper-asymmetric";
 
-export * from "@bfchain/core-helper-account";
+export * from "@bfchain/core-helper-account-base";
 export * from "@bfchain/core-helper-type";
 export * from "@bfchain/core-helper-transaction";
 

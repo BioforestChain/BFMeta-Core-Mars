@@ -19,7 +19,7 @@ const { ArgumentFormatException } = CoreExceptionGenerator(
 export class TransactionLogicVerifierCore {
   constructor(
     public transactionHelper: TransactionHelper,
-    public accountHelper: AccountBaseHelper,
+    public accountBaseHelper: AccountBaseHelper,
     public asymmetricHelper: AsymmetricHelper,
     @Inject("keypairHelper")
     public keypairHelper: BFChainCore.KeypairHelperInterface,

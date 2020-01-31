@@ -41,7 +41,7 @@ function CreateCoreWithSubCenter(demoname: string) {
 export function getCustomTransaction(sender: any, demoname: string, customdata: string) {
   const bfchainCore = CreateCoreWithSubCenter(demoname);
 
-  const keypair = bfchainCore.accountHelper.createSecretKeypair(sender.secret);
+  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data = {
     version: 1,
     type: bfchainCore.transactionHelper.CUSTOM, // 交易类型
@@ -68,11 +68,11 @@ export function getCustomTransaction(sender: any, demoname: string, customdata: 
 
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountHelper.createSecondSecretKeypair(
+    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );

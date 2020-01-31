@@ -22,7 +22,7 @@
     "src/block/mixedTransactionblock.ts",
     "src/block/syncBlock.test.ts",
     "src/demo.ts",
-    "src/helper/accountHelper.test.ts",
+    "src/helper/accountBaseHelper.test.ts",
     "src/include/account.ts",
     "src/include/helper.ts",
     "src/include/index.ts",

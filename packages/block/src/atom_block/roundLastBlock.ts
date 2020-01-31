@@ -24,7 +24,7 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
   public transactionCore!: import("@bfchain/core-transaction").TransactionCore;
   constructor(
     public blockHelper: BlockHelper,
-    public accountHelper: AccountBaseHelper,
+    public accountBaseHelper: AccountBaseHelper,
     public baseHelper: BaseHelper,
     public config: ConfigHelper,
     public statisticsHelper: BlockBaseStatisticsHelper,
@@ -100,7 +100,7 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
     }
 
     for (const delegate of nextRoundDelegates) {
-      if (!this.accountHelper.isAddress(delegate)) {
+      if (!this.accountBaseHelper.isAddress(delegate)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "nextRoundDelegates item",
           value: delegate,
@@ -127,7 +127,7 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
     }
 
     for (const delegate of newDelegates) {
-      if (!this.accountHelper.isAddress(delegate)) {
+      if (!this.accountBaseHelper.isAddress(delegate)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "newDelegates item",
           value: delegate,
@@ -175,7 +175,7 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
 
     for (const equity of equities) {
       const address = equity.address;
-      if (!this.accountHelper.isAddress(address)) {
+      if (!this.accountBaseHelper.isAddress(address)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "equity.address",
           type: "account address",

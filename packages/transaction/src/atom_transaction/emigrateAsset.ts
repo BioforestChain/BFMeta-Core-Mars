@@ -31,7 +31,7 @@ const { ArgumentIllegalException } = CoreExceptionGenerator(
 @Injectable()
 export class EmigrateAssetTransactionFactory extends TransactionFactory<EmigrateAssetTransaction> {
   constructor(
-    public accountHelper: AccountBaseHelper,
+    public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,
     public baseHelper: BaseHelper,
     public configHelper: ConfigHelper,
@@ -96,7 +96,7 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
         ...Function_Exception_Detail,
       });
     }
-    const { baseHelper, accountHelper } = this;
+    const { baseHelper, accountBaseHelper } = this;
 
     const emigrateAsset = emigrateAssetAsset.emigrateAsset;
 
@@ -182,7 +182,7 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
     }
 
     const { publicKey, signature, secondPublicKey, signSignature } = genesisDelegateSignature;
-    const address = accountHelper.getAddressFromPublicKeyString(publicKey);
+    const address = accountBaseHelper.getAddressFromPublicKeyString(publicKey);
 
     const genesisDelegates = this.transactionHelper.genesisDelegates(config);
 

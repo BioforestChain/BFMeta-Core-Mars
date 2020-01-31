@@ -16,7 +16,7 @@
     }
   ],
   "files": [
-    "src/accountHelper.ts",
+    "src/accountBaseHelper.ts",
     "src/base58Helper.ts",
     "src/index.ts"
   ]
