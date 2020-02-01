@@ -49,7 +49,7 @@ export abstract class ChainChannelBase extends QueneEventEmitterPro<
 > {
   protected abstract config: ConfigHelper;
   protected abstract baseHelper: BaseHelper;
-  private _blockGetterHelper?: BFChainCore.BlockGetterHelperInterface & {
+  private _blockGetterHelper?: BFChainCore.BlockGetterHelperSimpleInterface & {
     maxHeight: number;
     lastBlock: Block;
   };
@@ -100,7 +100,7 @@ export abstract class ChainChannelBase extends QueneEventEmitterPro<
  * 为数据收发处理器包装数据处理
  */
 @Resolvable()
-export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainChannelInterface {
+export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainChannel {
   @Inject("bfchain-core:TransactionCore")
   protected transactionCore!: import("@bfchain/core-transaction").TransactionCore;
   @Inject(ChainChannelHelper)

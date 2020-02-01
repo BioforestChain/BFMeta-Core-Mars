@@ -1,5 +1,5 @@
 declare namespace BFChainCore {
-  interface BlockGetterHelperInterface<CC extends ChainChannelInterface = ChainChannelInterface> {
+  interface BlockGetterHelperSimpleInterface {
     /**根据高度获取区块 */
     getBlockByHeight(height: number): Promise<Block | undefined>;
     /**根据区块 id 获取区块 */
@@ -11,8 +11,7 @@ declare namespace BFChainCore {
     getCurrentSyncBlockInfo?(): Promise<
       | {
           block: Block;
-          blockGetterHelper: BlockGetterHelperInterface;
-          chainChannelGroup?: ChainChannelGroupInterface<CC>;
+          blockGetterHelper: BlockGetterHelperSimpleInterface;
         }
       | undefined
     >;
@@ -40,6 +39,17 @@ declare namespace BFChainCore {
     getVoteForDelegate?(generatorAddress: string, height: number): Promise<VoterInfo[]>;
     /**获取投票记录 */
     getVoteRecords?(): Promise<VoteRecord>;
+  }
+  interface BlockGetterHelperInterface<CC extends ChainChannel = ChainChannel>
+    extends BlockGetterHelperSimpleInterface {
+    getCurrentSyncBlockInfo?(): Promise<
+      | {
+          block: Block;
+          blockGetterHelper: BlockGetterHelperInterface<CC>;
+          chainChannelGroup?: ChainChannelGroup<CC>;
+        }
+      | undefined
+    >;
   }
   type BlockPlotChecker = Readonly<{
     height: number;
@@ -117,13 +127,13 @@ declare namespace BFChainCore {
 
   //#region ChainChannel Base Interface
 
-  interface ChainChannelGroupInterface<CC extends ChainChannelInterface> {
+  interface ChainChannelGroup<CC extends ChainChannel> {
     addChainChannel(chainChannel: CC): boolean;
     removeChainChannel(chainChannel: CC): boolean;
     destroy(): void;
   }
 
-  interface ChainChannelInterface {
+  interface ChainChannel {
     endpoint: BFChainCore.ChannelEndpointInterface<Uint8Array>;
     close(reason?: string | undefined): void;
   }

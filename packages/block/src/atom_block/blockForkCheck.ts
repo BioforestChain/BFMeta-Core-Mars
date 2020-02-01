@@ -92,7 +92,7 @@ export class BlockForkChecker {
       /**
        * 正在同步中区块与channel
        */
-      const currentSyncBlockInfo = await this.blockHelper.getCurrentSyncBlockInfo(
+      const currentSyncBlockInfo = await this.blockHelper.getCurrentSyncBlockInfo<CC>(
         blockGetterHelper1,
       );
       const currentSyncChainChannelGroup =
@@ -179,7 +179,7 @@ export class BlockForkChecker {
    * @param blockGetterHelper
    */
   private async getBlockPlotCheckerEnd_(
-    blockGetterHelper: BFChainCore.BlockGetterHelperInterface | undefined,
+    blockGetterHelper: BFChainCore.BlockGetterHelperSimpleInterface | undefined,
     pc: BFChainCore.BlockPlotChecker,
   ) {
     const end = { pc, blockGetterHelper };
@@ -211,9 +211,9 @@ export class BlockForkChecker {
    */
   async checkBlockGetterPlot(
     pc1: BFChainCore.BlockPlotChecker,
-    blockGetterHelper1: BFChainCore.BlockGetterHelperInterface | undefined,
+    blockGetterHelper1: BFChainCore.BlockGetterHelperSimpleInterface | undefined,
     pc2: BFChainCore.BlockPlotChecker,
-    blockGetterHelper2: BFChainCore.BlockGetterHelperInterface | undefined,
+    blockGetterHelper2: BFChainCore.BlockGetterHelperSimpleInterface | undefined,
   ): Promise<MixBlockCheckResult> {
     //#region 优先判定终点
 
@@ -319,7 +319,7 @@ export class BlockForkChecker {
   async checkBlockGetterPlotEnd(
     pc1: BFChainCore.BlockPlotChecker,
     pc2: BFChainCore.BlockPlotChecker,
-    blockGetterHelper2: BFChainCore.BlockGetterHelperInterface | undefined,
+    blockGetterHelper2: BFChainCore.BlockGetterHelperSimpleInterface | undefined,
   ): Promise<MixBlockCheckResult> {
     //#region 返回值
     const $MERGE = {
@@ -396,7 +396,7 @@ export class BlockForkChecker {
      * 收到的新区块
      */
     pc2_or_lastestBlock2: BFChainCore.BlockPlotChecker | BFChainCore.Block,
-    blockGetterHelper2: BFChainCore.BlockGetterHelperInterface,
+    blockGetterHelper2: BFChainCore.BlockGetterHelperSimpleInterface,
     blockGetterHelper1 = this.blockHelper.blockGetterHelper,
   ): Promise<{ plot: BLOCK_CHAIN_PLOT; height: number; block?: Block }> {
     /**
@@ -504,8 +504,8 @@ export class BlockForkChecker {
    */
   async findNearestSameBlock(
     theHeight: number,
-    blockGetterHelper1?: BFChainCore.BlockGetterHelperInterface,
-    blockGetterHelper2?: BFChainCore.BlockGetterHelperInterface,
+    blockGetterHelper1?: BFChainCore.BlockGetterHelperSimpleInterface,
+    blockGetterHelper2?: BFChainCore.BlockGetterHelperSimpleInterface,
   ) {
     // 1 从当前高度逐一验证id到上一轮的最后一个区块
     const lastRound = this.blockHelper.calcRoundByHeight(theHeight) - 1;
@@ -559,8 +559,8 @@ export class BlockForkChecker {
   async findNearestSameBlockInOneRound(
     theHeight: number,
     lastRoundEndHeight: number,
-    blockGetterHelper1?: BFChainCore.BlockGetterHelperInterface,
-    blockGetterHelper2?: BFChainCore.BlockGetterHelperInterface,
+    blockGetterHelper1?: BFChainCore.BlockGetterHelperSimpleInterface,
+    blockGetterHelper2?: BFChainCore.BlockGetterHelperSimpleInterface,
   ) {
     for (let compareHeight = theHeight; compareHeight >= lastRoundEndHeight - 1; compareHeight--) {
       // 获取对方节点的区块

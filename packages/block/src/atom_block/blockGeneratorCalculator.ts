@@ -22,14 +22,14 @@ export class BlockGeneratorCalculator {
     private transactionHelper: TransactionHelper,
   ) {}
   @Inject("blockGetterHelper", { optional: true, dynamics: true })
-  private blockGetterHelper?: BFChainCore.BlockGetterHelperInterface;
+  private blockGetterHelper?: BFChainCore.BlockGetterHelperSimpleInterface;
   /**获取当前时间戳锻造要区块的委托人地址 */
   async calcGenerateBlockDelegate(
     currentBlock: { timestamp: number; height: number },
     opts: {
       usedAddressCache?: Map<number, { id: string; timestamp: number; address: string }>;
       curTime?: number;
-      blockGetterHelper?: BFChainCore.BlockGetterHelperInterface;
+      blockGetterHelper?: BFChainCore.BlockGetterHelperSimpleInterface;
     },
   ): Promise<{
     address: string;
@@ -47,7 +47,7 @@ export class BlockGeneratorCalculator {
       this.timeHelper.getNextSlotNumberByTimestamp(currentBlock.timestamp),
     );
     const blockGetterHelper = (opts.blockGetterHelper ||
-      this.blockGetterHelper) as BFChainCore.BlockGetterHelperInterface;
+      this.blockGetterHelper) as BFChainCore.BlockGetterHelperSimpleInterface;
     /**新块的timestamp */
     const resultTimestamp = this.timeHelper.getTimestampBySlotNumber(new_block_slot_number);
     const result = {
@@ -124,7 +124,7 @@ export class BlockGeneratorCalculator {
       heightAcc: number;
       timeAcc?: number;
       curTime?: number;
-      blockGetterHelper?: BFChainCore.BlockGetterHelperInterface;
+      blockGetterHelper?: BFChainCore.BlockGetterHelperSimpleInterface;
       cache_block?: { [height: number]: Promise<Block | undefined> };
       usedAddressCache?: Map<number, { id: string; timestamp: number; address: string }>;
     },
@@ -203,7 +203,7 @@ export class BlockGeneratorCalculator {
     opts: {
       usedAddressCache: Map<number, { id: string; timestamp: number; address: string }>;
       new_block_slot_number: number;
-      blockGetterHelper: BFChainCore.BlockGetterHelperInterface;
+      blockGetterHelper: BFChainCore.BlockGetterHelperSimpleInterface;
     },
   ) {
     const { usedAddressCache, new_block_slot_number, blockGetterHelper } = opts;
@@ -246,7 +246,7 @@ export class BlockGeneratorCalculator {
       new_block_slot_number: number;
       max_slot_number: number;
       current_round: number;
-      blockGetterHelper: BFChainCore.BlockGetterHelperInterface;
+      blockGetterHelper: BFChainCore.BlockGetterHelperSimpleInterface;
     },
   ) {
     const {
@@ -392,7 +392,7 @@ export class BlockGeneratorCalculator {
   private async _recoverUsedGeneratorAddressMap(
     curHeight: number,
     usedAddressCache: Map<number, { id: string; timestamp: number; address: string }>,
-    blockGetterHelper: BFChainCore.BlockGetterHelperInterface,
+    blockGetterHelper: BFChainCore.BlockGetterHelperSimpleInterface,
   ) {
     /**只针对当前轮次到当前高度为止的数据
      * 这里独立写入一份副本中 */
@@ -412,7 +412,7 @@ export class BlockGeneratorCalculator {
     minHeight: number,
     maxHeight: number,
     usedAddressCache: Map<number, { id: string; timestamp: number; address: string }>,
-    blockGetterHelper: BFChainCore.BlockGetterHelperInterface,
+    blockGetterHelper: BFChainCore.BlockGetterHelperSimpleInterface,
   ) {
     const usedAddressMap = new Map<number, { id: string; timestamp: number; address: string }>();
     const taskList = new TaskList();

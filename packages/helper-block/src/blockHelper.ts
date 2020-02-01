@@ -25,7 +25,7 @@ export class BlockHelper {
     @Inject("Buffer") public Buffer: BFChainUtil.BufferConstructor,
   ) {}
   @Inject("blockGetterHelper", { optional: true })
-  blockGetterHelper?: BFChainCore.BlockGetterHelperInterface;
+  blockGetterHelper?: BFChainCore.BlockGetterHelperSimpleInterface;
 
   /**
    * 获取交易 id
@@ -130,7 +130,7 @@ export class BlockHelper {
   async forceGetBlockByHeight<B extends BFChainCore.Block = BFChainCore.Block>(
     height: number,
     blockGetterHelper:
-      | Pick<BFChainCore.BlockGetterHelperInterface, "getBlockByHeight">
+      | Pick<BFChainCore.BlockGetterHelperSimpleInterface, "getBlockByHeight">
       | undefined = this.blockGetterHelper,
   ) {
     if (!blockGetterHelper) {
@@ -153,7 +153,7 @@ export class BlockHelper {
   async forceGetBlockById<B extends BFChainCore.Block = BFChainCore.Block>(
     id: string,
     blockGetterHelper:
-      | Pick<BFChainCore.BlockGetterHelperInterface, "getBlockById">
+      | Pick<BFChainCore.BlockGetterHelperSimpleInterface, "getBlockById">
       | undefined = this.blockGetterHelper,
   ) {
     if (!blockGetterHelper) {
@@ -177,7 +177,7 @@ export class BlockHelper {
     min: number,
     max: number,
     blockGetterHelper:
-      | Pick<BFChainCore.BlockGetterHelperInterface, "getBlockByHeight">
+      | Pick<BFChainCore.BlockGetterHelperSimpleInterface, "getBlockByHeight">
       | undefined = this.blockGetterHelper,
   ) {
     const result: BFChainCore.Block[] = [];
@@ -197,7 +197,7 @@ export class BlockHelper {
     height: number,
     blockGetterHelper:
       | Pick<
-          BFChainCore.BlockGetterHelperInterface,
+          BFChainCore.BlockGetterHelperSimpleInterface,
           "getBlockGeneratorPublicKeyBufferByHeight" | "getBlockByHeight"
         >
       | undefined = this.blockGetterHelper,
@@ -226,7 +226,7 @@ export class BlockHelper {
     height: number,
     blockGetterHelper:
       | Pick<
-          BFChainCore.BlockGetterHelperInterface,
+          BFChainCore.BlockGetterHelperSimpleInterface,
           "getBlockSignatureByHeight" | "getBlockByHeight"
         >
       | undefined = this.blockGetterHelper,
@@ -255,7 +255,7 @@ export class BlockHelper {
     height: number,
     blockGetterHelper:
       | Pick<
-          BFChainCore.BlockGetterHelperInterface,
+          BFChainCore.BlockGetterHelperSimpleInterface,
           "getBlockSignatureByHeight" | "getBlockByHeight"
         >
       | undefined = this.blockGetterHelper,
@@ -267,7 +267,7 @@ export class BlockHelper {
 
   async getLastBlock(
     blockGetterHelper:
-      | Pick<BFChainCore.BlockGetterHelperInterface, "getLastBlock">
+      | Pick<BFChainCore.BlockGetterHelperSimpleInterface, "getLastBlock">
       | undefined = this.blockGetterHelper,
   ) {
     if (!blockGetterHelper) {
@@ -281,16 +281,16 @@ export class BlockHelper {
   }
   async getCurrentGenerateBlock(
     blockGetterHelper:
-      | Pick<BFChainCore.BlockGetterHelperInterface, "getCurrentGenerateBlock">
+      | Pick<BFChainCore.BlockGetterHelperSimpleInterface, "getCurrentGenerateBlock">
       | undefined = this.blockGetterHelper,
   ) {
     if (blockGetterHelper && blockGetterHelper.getCurrentGenerateBlock) {
       return blockGetterHelper.getCurrentGenerateBlock();
     }
   }
-  async getCurrentSyncBlockInfo(
+  async getCurrentSyncBlockInfo<CC extends BFChainCore.ChainChannel = BFChainCore.ChainChannel>(
     blockGetterHelper:
-      | Pick<BFChainCore.BlockGetterHelperInterface, "getCurrentSyncBlockInfo">
+      | Pick<BFChainCore.BlockGetterHelperInterface<CC>, "getCurrentSyncBlockInfo">
       | undefined = this.blockGetterHelper,
   ) {
     if (blockGetterHelper && blockGetterHelper.getCurrentSyncBlockInfo) {
@@ -307,7 +307,7 @@ export class BlockHelper {
   async getCurrentProcessingBlockPlotChecker(
     blockGetterHelper:
       | Pick<
-          BFChainCore.BlockGetterHelperInterface,
+          BFChainCore.BlockGetterHelperSimpleInterface,
           "getCurrentGenerateBlock" | "getCurrentSyncBlockInfo"
         >
       | undefined = this.blockGetterHelper,
