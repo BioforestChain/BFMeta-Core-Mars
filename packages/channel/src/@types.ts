@@ -205,6 +205,10 @@ declare namespace BFChainCore {
       ...args: BFChainUtil.AllArgument<ChainChannel["getPeerInfo"]>
     ): Promise<import("@bfchain/core-model").PeerInfoModel | undefined>;
   }
+  type ChainChannelGroupEventMap<CC extends ChainChannel = ChainChannel> = {
+    addChainChannel: [CC];
+    removeChainChannel: [CC];
+  };
   interface ChainChannelBase {
     toBlockGetterHelper(opts?: {
       maxHeight?: number;
