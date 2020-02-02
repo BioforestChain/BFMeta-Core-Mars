@@ -206,6 +206,9 @@ declare namespace BFChainCore {
     ): Promise<import("@bfchain/core-model").PeerInfoModel | undefined>;
   }
   interface ChainChannelBase {
-    toBlockGetterHelper(): BlockGetterHelperSimpleInterface;
+    toBlockGetterHelper(opts?: {
+      maxHeight?: number;
+      lastBlock?: Block;
+    }): BlockGetterHelperSimpleInterface;
   }
 }
