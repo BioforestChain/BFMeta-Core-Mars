@@ -92,7 +92,7 @@ export class BlockForkChecker {
       /**
        * 正在同步中区块与channel
        */
-      const currentSyncBlockInfo = await this.blockHelper.getCurrentSyncBlockInfo<CC>(
+      const currentSyncBlockInfo = await this.blockHelper.getCurrentReplayingBlockInfo<CC>(
         blockGetterHelper1,
       );
       const currentSyncChainChannelGroup =
@@ -183,7 +183,7 @@ export class BlockForkChecker {
     pc: BFChainCore.BlockPlotChecker,
   ) {
     const end = { pc, blockGetterHelper };
-    const currentSyncBlockInfo = await this.blockHelper.getCurrentSyncBlockInfo(blockGetterHelper);
+    const currentSyncBlockInfo = await this.blockHelper.getCurrentReplayingBlockInfo(blockGetterHelper);
     if (currentSyncBlockInfo) {
       end.blockGetterHelper = currentSyncBlockInfo.blockGetterHelper;
       end.pc = this.blockHelper.parseBlockToPlotChecker(

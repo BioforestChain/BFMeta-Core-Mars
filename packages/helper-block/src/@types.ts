@@ -7,14 +7,8 @@ declare namespace BFChainCore {
     getBlockGeneratorPublicKeyBufferByHeight?: (height: number) => Promise<Uint8Array | undefined>;
     getBlockSignatureByHeight?: (height: number) => Promise<Uint8Array | undefined>;
     getLastBlock(): Promise<Block>;
-    getCurrentGenerateBlock?(): Promise<CurrentGenerateBlockInfo | undefined>;
-    getCurrentSyncBlockInfo?(): Promise<
-      | {
-          block: Block;
-          blockGetterHelper: BlockGetterHelperSimpleInterface;
-        }
-      | undefined
-    >;
+    getCurrentGenerateBlock?(): Promise<CurrentGeneratingBlockInfo | undefined>;
+    getCurrentReplayingBlockInfo?(): Promise<CurrentReplayingBlockSimpleInfo | undefined>;
     /**记录链区块分叉信息 */
     chainBlockFork?(block: BFChainCore.Block, cause: number): Promise<void>;
     /**获取新一轮的打块受托人 */
@@ -42,14 +36,7 @@ declare namespace BFChainCore {
   }
   interface BlockGetterHelperInterface<CC extends ChainChannel = ChainChannel>
     extends BlockGetterHelperSimpleInterface {
-    getCurrentSyncBlockInfo?(): Promise<
-      | {
-          block: Block;
-          blockGetterHelper: BlockGetterHelperInterface<CC>;
-          chainChannelGroup?: ChainChannelGroup<CC>;
-        }
-      | undefined
-    >;
+    getCurrentReplayingBlockInfo?(): Promise<CurrentReplayingBlockInfo<CC> | undefined>;
   }
   type BlockPlotChecker = Readonly<{
     height: number;
@@ -64,9 +51,18 @@ declare namespace BFChainCore {
     blockId: string;
     previousBlockId: string;
   }>;
-  type CurrentGenerateBlockInfo =
+  type CurrentGeneratingBlockInfo =
     | Omit<NewBlockArgJSON, "blockId">
     | Omit<BlockPlotChecker, "blockId">;
+  type CurrentReplayingBlockSimpleInfo = {
+    currentBlock: Block;
+    replayingBlock?: Block;
+    blockGetterHelper: BlockGetterHelperSimpleInterface;
+  };
+  type CurrentReplayingBlockInfo<CC extends ChainChannel> = CurrentReplayingBlockSimpleInfo & {
+    blockGetterHelper: BlockGetterHelperInterface<CC>;
+    chainChannelGroup?: ChainChannelGroup<CC>;
+  };
 
   type ForSortAccountInfo = {
     productivity: number;

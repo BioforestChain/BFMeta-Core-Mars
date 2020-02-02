@@ -288,13 +288,15 @@ export class BlockHelper {
       return blockGetterHelper.getCurrentGenerateBlock();
     }
   }
-  async getCurrentSyncBlockInfo<CC extends BFChainCore.ChainChannel = BFChainCore.ChainChannel>(
+  async getCurrentReplayingBlockInfo<
+    CC extends BFChainCore.ChainChannel = BFChainCore.ChainChannel
+  >(
     blockGetterHelper:
-      | Pick<BFChainCore.BlockGetterHelperInterface<CC>, "getCurrentSyncBlockInfo">
+      | Pick<BFChainCore.BlockGetterHelperInterface<CC>, "getCurrentReplayingBlockInfo">
       | undefined = this.blockGetterHelper,
   ) {
-    if (blockGetterHelper && blockGetterHelper.getCurrentSyncBlockInfo) {
-      return blockGetterHelper.getCurrentSyncBlockInfo();
+    if (blockGetterHelper && blockGetterHelper.getCurrentReplayingBlockInfo) {
+      return blockGetterHelper.getCurrentReplayingBlockInfo();
     }
   }
 
@@ -308,17 +310,19 @@ export class BlockHelper {
     blockGetterHelper:
       | Pick<
           BFChainCore.BlockGetterHelperSimpleInterface,
-          "getCurrentGenerateBlock" | "getCurrentSyncBlockInfo"
+          "getCurrentGenerateBlock" | "getCurrentReplayingBlockInfo"
         >
       | undefined = this.blockGetterHelper,
   ): Promise<BFChainCore.BlockPlotChecker | undefined> {
-    const generattingBlock = await this.getCurrentGenerateBlock();
-    if (generattingBlock) {
-      return this.parseNewBlockToPlotChecker(generattingBlock);
+    const generatingBlock = await this.getCurrentGenerateBlock();
+    if (generatingBlock) {
+      return this.parseNewBlockToPlotChecker(generatingBlock);
     }
-    const syncingBlock = await this.getCurrentSyncBlockInfo(blockGetterHelper);
-    if (syncingBlock) {
-      return this.parseBlockToPlotChecker(syncingBlock.block);
+    const replayingBlock = await this.getCurrentReplayingBlockInfo(blockGetterHelper);
+    if (replayingBlock) {
+      return this.parseBlockToPlotChecker(
+        replayingBlock.replayingBlock || replayingBlock.currentBlock,
+      );
     }
   }
   private _BTC_BLOCK_WM = new WeakMap<BFChainCore.BlockPlotChecker, BFChainCore.Block>();
@@ -358,7 +362,7 @@ export class BlockHelper {
     return this._BTC_BLOCK_WM.get(blockPlotChecker);
   }
   parseNewBlockToPlotChecker(
-    newBlock: BFChainCore.NewBlockArgJSON | BFChainCore.CurrentGenerateBlockInfo,
+    newBlock: BFChainCore.NewBlockArgJSON | BFChainCore.CurrentGeneratingBlockInfo,
   ) {
     return {
       height: newBlock.height,

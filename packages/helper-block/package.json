@@ -14,6 +14,10 @@
     "build"
   ],
   "dependencies": {
+    "@bfchain/core-helper-account-base": "^5.0.19",
+    "@bfchain/core-helper-config": "^5.0.19",
+    "@bfchain/core-helper-type": "^5.0.19",
+    "@bfchain/core-model": "^5.0.19",
     "@bfchain/core-typings": "^5.0.19",
     "@bfchain/core-util-exception": "^5.0.19",
     "@bfchain/core-util-exception-errorcode": "^5.0.19"

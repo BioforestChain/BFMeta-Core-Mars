@@ -18,7 +18,8 @@
     "@bfchain/util": "^4.1.7"
   },
   "peerDependencies": {
-    "@bfchain/core-model-transaction": "^5.0.10",
+    "@bfchain/core-model-transaction": "^5.0.19",
     "@bfchain/util": "^4.1.7"
-  }
+  },
+  "dependencies": {}
 }
