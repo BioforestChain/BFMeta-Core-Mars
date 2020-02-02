@@ -278,7 +278,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
     );
   }
   async findBlock<B extends Block = Block>(
-    ...args: BFChainUtil.AllArgument<ChainChannel["queryBlock"]>
+    ...args: BFChainUtil.AllArgument<BFChainCore.ChainChannel["queryBlock"]>
   ) {
     const queryResult = await this.queryBlock(...args);
     return queryResult.someBlock && (queryResult.someBlock.block as B);

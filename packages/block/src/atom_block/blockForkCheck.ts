@@ -2,7 +2,7 @@ import { Block, RoundLastBlock } from "@bfchain/core-model-block";
 import { Injectable } from "@bfchain/util";
 import { BlockHelper, ChainTimeHelper, ConfigHelper } from "@bfchain/core-helper";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
-import { ChainChannel, ChainChannelGroup } from "@bfchain/core-channel";
+import { ChainChannelGroup } from "@bfchain/core-channel";
 const { warn, ConsensusException } = CoreExceptionGenerator("Core", "blockForkCheck");
 
 /**
@@ -71,7 +71,7 @@ export class BlockForkChecker {
    * @param chainChannel_or_Group
    * @param blockGetterHelper1
    */
-  async checkNewBlockFromChainChannel<CC extends ChainChannel>(
+  async checkNewBlockFromChainChannel<CC extends BFChainCore.ChainChannel>(
     /**
      * 收到的新区块
      */
