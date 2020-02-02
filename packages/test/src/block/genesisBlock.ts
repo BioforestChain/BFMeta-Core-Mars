@@ -606,7 +606,9 @@ async function getGenesisBlockAsync() {
     });
     blockTrsItems.push(trsInBlock);
   }
-  const generatorPublicKey = core.accountBaseHelper.getPublicKeyStringFromSecret(config.genesisSecret);
+  const generatorPublicKey = core.accountBaseHelper.getPublicKeyStringFromSecret(
+    config.genesisSecret,
+  );
   const generatorKeypair = core.accountBaseHelper.createSecretKeypair(config.genesisSecret);
   //#region 处理账户余额与交易pow
   // /**执行中的账户余额管理器 */

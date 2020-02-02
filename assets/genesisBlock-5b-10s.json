@@ -1,10 +1,10 @@
 {
   "version": 1,
-  "id": "b073248564fe940a9c267a92c3eaa95f0ec6b3e7c70ddfc413baeb7468ac5c40baa60d64f48d8c7e2f865c5c79b92f88eeedb22de4fb6c3f76a5c12abe2b5505",
+  "id": "a436b847b926cb00347103d73e44c40429aae31d20da3e039f21fbf2671c898407a836eee0b14da043ce838d3bf33d20b9876e5a6e27d41a3b50e86a9fa56106",
   "height": 1,
   "blockSize": 16202,
   "timestamp": 0,
-  "blockSignature": "b073248564fe940a9c267a92c3eaa95f0ec6b3e7c70ddfc413baeb7468ac5c40baa60d64f48d8c7e2f865c5c79b92f88eeedb22de4fb6c3f76a5c12abe2b5505",
+  "blockSignature": "a436b847b926cb00347103d73e44c40429aae31d20da3e039f21fbf2671c898407a836eee0b14da043ce838d3bf33d20b9876e5a6e27d41a3b50e86a9fa56106",
   "generatorPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
   "numberOfTransactions": 41,
   "payloadHash": "5f0e21d4846bf5e5e9df5976863b331977e162764237d02dfa31ee4156583453",
@@ -1637,7 +1637,7 @@
     "chainName": "bfchain",
     "magic": "5F720C81E82CFC99",
     "bnid": "c",
-    "beginEpochTime": 1546272000000,
+    "beginEpochTime": 1577808000000,
     "genesisNodeAddress": "bnqkl.bfchain",
     "generateTotalAmount": "244645364561314071",
     "minTransactionFeePerByte": {
@@ -1658,8 +1658,8 @@
     "numberOfTransactionRewardWeight": 1,
     "maxApplyAndConfirmedBlockHeightDiff": 259200,
     "blockPerRound": 5,
-    "whetherToAllowDelegateContinusElections": false,
     "delegates": 10,
+    "whetherToAllowDelegateContinusElections": false,
     "forgeInterval": 10,
     "rewardPercent": {
       "votePercent": {
