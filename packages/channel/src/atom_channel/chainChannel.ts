@@ -67,8 +67,8 @@ export abstract class ChainChannelBase extends QueneEventEmitterPro<
         getBlockByHeight: (height: number) => {
           return this.findBlock({ height });
         },
-        getBlockById: (id: string) => {
-          return this.findBlock({ id });
+        getBlockBySignature: (signature: string) => {
+          return this.findBlock({ signature });
         },
         maxHeight: 1,
         lastBlock: GenesisBlock.fromObject(this.config.genesisBlock),

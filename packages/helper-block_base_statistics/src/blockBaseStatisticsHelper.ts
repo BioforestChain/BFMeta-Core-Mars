@@ -69,7 +69,7 @@ export class BlockBaseStatisticsHelper {
     const assetStatistic = statistics_info.initAssetStatistic(assetInfo);
     assetStatistic.total.changeAmount = assetStatistic.total.changeAmount + sourceAmount;
     assetStatistic.total.changeCount += 1;
-    assetStatistic.total.addTransactionCount(transaction.id);
+    assetStatistic.total.addTransactionCount(transaction.signature);
     /**需要统计的交易类型 */
     const typeStatistic = assetStatistic.initTypeStatistic(baseType);
 
@@ -95,7 +95,7 @@ export class BlockBaseStatisticsHelper {
     typeStatistic.changeAmount = typeStatistic.changeAmount + sourceAmount;
     typeStatistic.changeCount += 1;
     typeStatistic.moveAmount = typeStatistic.moveAmount + sourceAmount;
-    typeStatistic.addTransactionCount(transaction.id);
+    typeStatistic.addTransactionCount(transaction.signature);
   }
   /**asset事件 */
   private _applyAsset(
@@ -118,13 +118,13 @@ export class BlockBaseStatisticsHelper {
      */
     assetStatistic.total.changeAmount = assetStatistic.total.changeAmount + sourceAmount;
     assetStatistic.total.changeCount += 1;
-    assetStatistic.total.addTransactionCount(transaction.id);
+    assetStatistic.total.addTransactionCount(transaction.signature);
     /**
      * 对交易类型进行变动量统计
      */
     typeStatistic.changeAmount = typeStatistic.changeAmount + sourceAmount;
     typeStatistic.changeCount += 1;
-    typeStatistic.addTransactionCount(transaction.id);
+    typeStatistic.addTransactionCount(transaction.signature);
     /**
      * 发起者和接收者不能重复累加
      * 统计资产移动、统计指定交易类型的变动
@@ -249,15 +249,15 @@ export class StatisticsInfo extends EventEmitter<{ destroy: [] }> {
     this._totalChainAsset = value;
   }
   /**累计账户数量 */
-  private _accountIdSet = new Set();
+  private _accountAddressSet = new Set();
   private _souce_data_totalAccount = this.source_data.totalAccount;
   public get totalAccount() {
     return this.source_data.totalAccount;
   }
-  addTotalAccount(id: string) {
-    this._accountIdSet.add(id);
+  addTotalAccount(address: string) {
+    this._accountAddressSet.add(address);
     return (this.source_data.totalAccount =
-      this._souce_data_totalAccount + this._accountIdSet.size);
+      this._souce_data_totalAccount + this._accountAddressSet.size);
   }
   /**资产统计 */
   private _assetStatisticMap = new Map<ChainAssetInfo, AssetStatistic>();
@@ -344,15 +344,15 @@ class CountAndAmountStatistic {
   public set moveAmount(value: bigint) {
     this._moveAmount = value;
   }
-  private _transactionIdSet = new Set();
+  private _transactionSignatureSet = new Set();
   private _souce_data_transactionCount = this.source_data.transactionCount;
   public get transactionCount() {
     return this.source_data.transactionCount;
   }
-  addTransactionCount(id: string) {
-    this._transactionIdSet.add(id);
+  addTransactionCount(signature: string) {
+    this._transactionSignatureSet.add(signature);
     return (this.source_data.transactionCount =
-      this._transactionIdSet.size + this._souce_data_transactionCount);
+      this._transactionSignatureSet.size + this._souce_data_transactionCount);
   }
   toModel() {
     this._changeAmount && (this.source_data.changeAmount = this._changeAmount.toString());

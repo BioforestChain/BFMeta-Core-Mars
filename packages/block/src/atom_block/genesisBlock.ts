@@ -1,4 +1,4 @@
-import { BlockFactory, BlockBody } from "./_blockbase";
+import { BlockFactory } from "./_blockbase";
 import { GenesisBlock } from "@bfchain/core-model-block";
 import {
   BlockHelper,
@@ -73,7 +73,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
    * @param remark
    */
   verifyBlockBody(
-    body: BlockBody,
+    body: BFChainCore.BlockBody,
     remark: BFChainCore.GenesisBlockRemarkJSON,
     config = this.config,
   ) {
@@ -585,7 +585,10 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
    * @param body
    * @param genesisBlockRemark
    */
-  _generateBlock(body: BlockBody, genesisBlockRemark: BFChainCore.GenesisBlockRemarkJSON) {
+  _generateBlock(
+    body: BFChainCore.BlockBody,
+    genesisBlockRemark: BFChainCore.GenesisBlockRemarkJSON,
+  ) {
     const block = GenesisBlock.fromObject({
       ...body,
       remark: genesisBlockRemark,

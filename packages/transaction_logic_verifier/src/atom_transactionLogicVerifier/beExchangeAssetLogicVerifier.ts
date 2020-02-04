@@ -52,12 +52,12 @@ export class BeExchangeAssetLogicVerifier extends TransactionLogicVerifier {
     // await this.checkSecondaryTransaction(transaction, transactionGetterHelper);
     const beExchangeAssetAsset = transaction.asset.beExchangeAsset;
     const { transactionSignature } = beExchangeAssetAsset;
-    const trs = (await transactionGetterHelper.getTransactionById(transactionSignature)) as
+    const trs = (await transactionGetterHelper.getTransactionBySignature(transactionSignature)) as
       | BFChainCore.TransactionJSON<BFChainCore.ToExchangeAssetAssetJSON>
       | undefined;
     if (!trs) {
       throw new NoFoundException(NOT_EXIST, {
-        prop: `Transaction with id ${transactionSignature}`,
+        prop: `Transaction with signature ${transactionSignature}`,
         target: "blockChain",
         ...Function_Exception_Detail,
       });
@@ -184,9 +184,7 @@ export class BeExchangeAssetLogicVerifier extends TransactionLogicVerifier {
     });
     if (count > 0) {
       throw new ConsensusException(CAN_NOT_SECONDARY_TRANSACTION, {
-        reason: `Can not secondary exchange asset, sender ${
-          transaction.senderId
-        } exchange transaction signature ${transaction.storageValue}`,
+        reason: `Can not secondary exchange asset, sender ${transaction.senderId} exchange transaction signature ${transaction.storageValue}`,
         ...Function_Exception_Detail,
       });
     }

@@ -625,7 +625,9 @@ function getTrsInBlock(height: number, statisticsInfo: StatisticsInfo) {
 
 async function getCommonBlockAsync(sender: AccountModel) {
   const height = 2;
-  const generatorPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecret(sender.secret);
+  const generatorPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecret(
+    sender.secret,
+  );
   const generatorKeypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const eventEmitter: BFChainCore.ApplyTransactionEventEmitter<any> = new QueneEventEmitter<any>();
   const statisticsInfo = statistics.forceGetStatisticsInfoByBlock(height, "generateBlock");
@@ -647,7 +649,7 @@ async function getCommonBlockAsync(sender: AccountModel) {
       height,
       timestamp: 0,
       generatorPublicKey,
-      previousBlock: "6ed38b5fd642f79689ade7cff598bdf9548de56182c85f05b244c66b17a89dc1",
+      previousBlockSignature: "6ed38b5fd642f79689ade7cff598bdf9548de56182c85f05b244c66b17a89dc1",
     },
     {
       debug: "debug",

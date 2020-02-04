@@ -46,13 +46,13 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
     const grabAsset = transaction.asset.grabAsset;
 
     const { transactionSignature } = grabAsset;
-    const trs = (await transactionGetterHelper.getTransactionById(transactionSignature)) as
+    const trs = (await transactionGetterHelper.getTransactionBySignature(transactionSignature)) as
       | BFChainCore.TransactionJSON<BFChainCore.GiftAssetAssetJSON>
       | undefined;
 
     if (!trs) {
       throw new NoFoundException(NOT_EXIST, {
-        prop: `Transaction with id ${transactionSignature}`,
+        prop: `Transaction with signature ${transactionSignature}`,
         target: "grabAsset",
         ...Function_Exception_Detail,
       });
@@ -194,9 +194,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
     });
     if (count > 0) {
       throw new ConsensusException(CAN_NOT_SECONDARY_TRANSACTION, {
-        reason: `Can not secondary grab asset, sender ${
-          transaction.senderId
-        } gift transaction signature ${transaction.storageValue}`,
+        reason: `Can not secondary grab asset, sender ${transaction.senderId} gift transaction signature ${transaction.storageValue}`,
         ...Function_Exception_Detail,
       });
     }

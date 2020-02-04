@@ -35,22 +35,15 @@ export class Block<
   @Field.d(2, "uint32")
   height!: number;
   /**
-   * 2. 区块ID
-   * 同理`height`，`id`放在第二位
-   */
-  get id() {
-    return this.blockSignature;
-  }
-  /**
    * 2. 交易的发起者签名
    */
   @Field.d(3, "bytes")
-  blockSignatureBuffer!: Uint8Array;
-  get blockSignature(): string {
-    return getHexFromArrayBuffer(this.blockSignatureBuffer);
+  signatureBuffer!: Uint8Array;
+  get signature(): string {
+    return getHexFromArrayBuffer(this.signatureBuffer);
   }
-  set blockSignature(value: string) {
-    this.blockSignatureBuffer = parseHexToArrayBuffer(value);
+  set signature(value: string) {
+    this.signatureBuffer = parseHexToArrayBuffer(value);
   }
 
   /**
@@ -70,10 +63,10 @@ export class Block<
     this.generatorPublicKeyBuffer = parseHexToArrayBuffer(value);
   }
   /**
-   * 5. 前块 id
+   * 5. 前块 signature
    */
   @Field.d(6, "string")
-  previousBlock!: string;
+  previousBlockSignature!: string;
   /**
    * 6. 区块交易量
    */
@@ -160,16 +153,15 @@ export class Block<
   toJSON() {
     return {
       version: this.version,
-      id: this.id,
       height: this.height,
       blockSize: this.blockSize,
       timestamp: this.timestamp,
-      blockSignature: this.blockSignature,
+      signature: this.signature,
       generatorPublicKey: this.generatorPublicKey,
       numberOfTransactions: this.numberOfTransactions,
       payloadHash: this.payloadHash,
       payloadLength: this.payloadLength,
-      previousBlock: this.previousBlock,
+      previousBlockSignature: this.previousBlockSignature,
       totalAmount: this.totalAmount,
       totalFee: this.totalFee,
       reward: this.reward,
@@ -195,7 +187,7 @@ export class Block<
         }
       }
       res.transactions = trsInBlock;
-      object.blockSignature && (res.blockSignature = object.blockSignature);
+      object.signature && (res.signature = object.signature);
     }
     return (res as unknown) as T;
   }

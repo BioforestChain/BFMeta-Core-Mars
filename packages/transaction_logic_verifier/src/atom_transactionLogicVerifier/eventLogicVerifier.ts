@@ -189,7 +189,7 @@ export class EventLogicVerifier {
       trsFee += fee;
       if (hodingAsset.assetNumber < BigInt(0)) {
         throw new ConsensusException(ASSET_NOT_ENOUGH, {
-          reason: `Transaction id: ${transaction.id} address: ${address} magic ${
+          reason: `Transaction signature: ${transaction.signature} address: ${address} magic ${
             applyInfo.assetInfo.magic
           } assetType: ${
             applyInfo.assetInfo.assetType
@@ -219,7 +219,7 @@ export class EventLogicVerifier {
       hodingAsset.assetNumber += BigInt(applyInfo.amount);
       if (hodingAsset.assetNumber < BigInt(0)) {
         throw new ConsensusException(ASSET_NOT_ENOUGH, {
-          reason: `Transaction id: ${transaction.id} address: ${address} magic ${
+          reason: `Transaction signature: ${transaction.signature} address: ${address} magic ${
             applyInfo.assetInfo.magic
           } assetType: ${
             applyInfo.assetInfo.assetType
@@ -249,7 +249,7 @@ export class EventLogicVerifier {
       hodingAsset.assetNumber += BigInt(applyInfo.amount);
       if (hodingAsset.assetNumber < BigInt(0)) {
         throw new ConsensusException(ASSET_NOT_ENOUGH, {
-          reason: `Transaction id: ${transaction.id} address: ${address} magic ${
+          reason: `Transaction signature: ${transaction.signature} address: ${address} magic ${
             applyInfo.assetInfo.magic
           } assetType: ${
             applyInfo.assetInfo.assetType
@@ -267,11 +267,11 @@ export class EventLogicVerifier {
       const { assetInfo, frozenIdBuffer, amount: spendAsset } = applyInfo;
       const { magic, assetType } = assetInfo;
       const transactionSignature = getHexFromArrayBuffer(frozenIdBuffer);
-      const trs = await transactionGetterHelper.getTransactionById(transactionSignature);
+      const trs = await transactionGetterHelper.getTransactionBySignature(transactionSignature);
 
       if (!trs) {
         throw new NoFoundException(NOT_EXIST, {
-          prop: `Transaction with id ${transactionSignature}`,
+          prop: `Transaction with signature ${transactionSignature}`,
           target: "grabAsset",
           ...Function_Exception_Detail,
         });
@@ -285,7 +285,7 @@ export class EventLogicVerifier {
 
       if (!frozenAsset) {
         throw new ConsensusException(NOT_EXIST, {
-          prop: `Frozen asset with id ${transactionSignature}`,
+          prop: `Frozen asset with signature ${transactionSignature}`,
           target: "blockChain",
           ...Function_Exception_Detail,
         });
@@ -351,8 +351,8 @@ export class EventLogicVerifier {
       accountEquity += BigInt(applyInfo.equity);
       if (accountEquity < minEquity) {
         throw new ConsensusException(EQUITY_NOT_ENOUGH, {
-          reason: `Transaction id: ${
-            transaction.id
+          reason: `Transaction signature: ${
+            transaction.signature
           } address: ${address} hodingEquity: ${remainEquity.toString()} spendEquity: ${
             applyInfo.equity
           }`,
@@ -634,9 +634,7 @@ export class EventLogicVerifier {
         ) {
           if (memAsset.remainAssets < BigInt(amount)) {
             throw new ConsensusException(ASSET_NOT_ENOUGH, {
-              reason: `Purchase asset amount greater than remain assets, spend ${amount}, remain ${
-                memAsset.remainAssets
-              }`,
+              reason: `Purchase asset amount greater than remain assets, spend ${amount}, remain ${memAsset.remainAssets}`,
               errorId: NewTransactionRefuseReason.ASSET_NOT_ENOUGH,
               ...Function_Exception_Detail,
             });

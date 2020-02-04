@@ -849,7 +849,7 @@ moduleMap.set("blockGetterHelper", {
     }
     return block;
   },
-  async getBlockById() {
+  async getBlockBySignature() {
     return {} as any;
   },
   getLastBlock() {
@@ -873,12 +873,12 @@ function getRoundLastBlockRemarkHash(height: number) {
   const payloadHash = bfchainCore.cryptoHelper.sha256();
   const firstRow = blocks[0];
   if (firstRow.height === 1) {
-    payloadHash.update(Buffer.from(firstRow.blockSignature, "hex"));
+    payloadHash.update(Buffer.from(firstRow.signature, "hex"));
   } else {
     payloadHash.update(Buffer.from(firstRow.remark.hash, "hex"));
   }
   for (let i = 1; i < blocks.length; i++) {
-    payloadHash.update(Buffer.from(blocks[i].blockSignature, "hex"));
+    payloadHash.update(Buffer.from(blocks[i].signature, "hex"));
   }
 
   const hashString = payloadHash.digest().toString("hex");
@@ -887,12 +887,12 @@ function getRoundLastBlockRemarkHash(height: number) {
 (async () => {
   /**已绑定的受托人个数 */
   const pickDelegates = bfchainCore.transactionHelper.genesisDelegates().slice(0, 30);
-  const map = new Map<number, { id: string; timestamp: number; address: string }>();
+  const map = new Map<number, { signature: string; timestamp: number; address: string }>();
   let lastBlock = {
-    id: bfchainCore.config.genesisBlock.id,
+    signature: bfchainCore.config.genesisBlock.signature,
     timestamp: bfchainCore.config.genesisBlock.timestamp,
     height: bfchainCore.config.genesisBlock.height,
-    previousBlock: bfchainCore.config.genesisBlock.id,
+    previousBlockSignature: bfchainCore.config.genesisBlock.signature,
   };
   bfchainCore.config.genesisBlock.remark.nextRoundDelegates;
   let count = 0;
@@ -942,7 +942,7 @@ function getRoundLastBlockRemarkHash(height: number) {
           height: lastBlock.height,
           timestamp: result.timestamp,
           generatorPublicKey: delegate.pk,
-          previousBlock: lastBlock.previousBlock,
+          previousBlockSignature: lastBlock.previousBlockSignature,
         };
         if (lastBlock.height % bfchainCore.config.blockPerRound !== 0) {
           const commonBlock = await bfchainCore.block.generateBlock<CommonBlock>(
@@ -956,8 +956,8 @@ function getRoundLastBlockRemarkHash(height: number) {
             asyncIteratorGenerator,
             delegate.keypair,
           );
-          lastBlock.id = commonBlock.id;
-          lastBlock.previousBlock = commonBlock.id;
+          lastBlock.signature = commonBlock.signature;
+          lastBlock.previousBlockSignature = commonBlock.signature;
           blockMap.set(lastBlock.height, commonBlock);
         } else if (lastBlock.height % bfchainCore.config.blockPerRound === 0) {
           // 本轮打块的人
@@ -1007,13 +1007,13 @@ function getRoundLastBlockRemarkHash(height: number) {
             asyncIteratorGenerator,
             delegate.keypair,
           );
-          lastBlock.previousBlock = roundLastBlock.id;
-          lastBlock.id = roundLastBlock.id;
+          lastBlock.previousBlockSignature = roundLastBlock.signature;
+          lastBlock.signature = roundLastBlock.signature;
           blockMap.set(lastBlock.height, roundLastBlock);
         }
       }
       // console.log(
-      //   `生成区块${lastBlock.height}.${result.address} time: ${result.timestamp} ${lastBlock.id} `,
+      //   `生成区块${lastBlock.height}.${result.address} time: ${result.timestamp} ${lastBlock.signature} `,
       // );
     } else {
       // console.log(`没有选到这个人${result.address} ${lastBlock.height}. ${result.timestamp}`);
@@ -1097,10 +1097,10 @@ function getRoundLastBlockRemarkHash(height: number) {
 //       },
 //     );
 //     // console.log("res:", res);
-//     const id = (await bfchainCore.blockHelper.forceGetBlockByHeight(currentHeight)).id;
+//     const signature = (await bfchainCore.blockHelper.forceGetBlockByHeight(currentHeight)).signature;
 //     const index =
-//       _getStringASCIICodeSum(id + curTime) % (blockPerRound - (currentHeight % blockPerRound));
-//     // console.log("id:11111", id, index, addressArr[index].address, usedPublicKeys.length);
+//       _getStringASCIICodeSum(signature + curTime) % (blockPerRound - (currentHeight % blockPerRound));
+//     // console.log("signature:11111", signature, index, addressArr[index].address, usedPublicKeys.length);
 //     t.deepEqual(res, {
 //       address: "rey9zvi66m9yzxhb845ipey98ojw96wokcwdd81duvcgy9amqsf1mubr4j889dl5",
 //       timestamp: 11116690,
@@ -1121,10 +1121,10 @@ function getRoundLastBlockRemarkHash(height: number) {
 //       },
 //     );
 //     // console.log("res2:", res);
-//     const id = (await bfchainCore.blockHelper.forceGetBlockByHeight(currentHeight)).id;
+//     const signature = (await bfchainCore.blockHelper.forceGetBlockByHeight(currentHeight)).signature;
 //     const index =
-//       _getStringASCIICodeSum(id + curTime) % (blockPerRound - (currentHeight % blockPerRound) + 1);
-//     // console.log("id:22222", id, index, addressArr[index].address, usedPublicKeys.length);
+//       _getStringASCIICodeSum(signature + curTime) % (blockPerRound - (currentHeight % blockPerRound) + 1);
+//     // console.log("signature:22222", signature, index, addressArr[index].address, usedPublicKeys.length);
 //     t.deepEqual(res, { address: "cM8wVfYBZq6KtXCKAobMH9g9jLTcSfCiw5", timestamp: 11116690 });
 //   });
 // }

@@ -1,21 +1,21 @@
 // import test from "ava";
 // import { bfchainCore, BlockForkChecker } from "../include";
 // import { QueneEventEmitter, Resolve } from "@bfchain/util";
-// const map1 = new Map<number, { id: string; height: number; remark?: { hash: string } }>();
-// const map2 = new Map<number, { id: string; height: number; remark?: { hash: string } }>();
+// const map1 = new Map<number, { signature: string; height: number; remark?: { hash: string } }>();
+// const map2 = new Map<number, { signature: string; height: number; remark?: { hash: string } }>();
 // function setRight(
-//   map: Map<number, { id: string; height: number; remark?: { hash: string } }>,
+//   map: Map<number, { signature: string; height: number; remark?: { hash: string } }>,
 //   height: number,
-//   value: { id: string; height: number; remark?: { hash: string } },
+//   value: { signature: string; height: number; remark?: { hash: string } },
 // ) {
 //   map.set(height, value);
 // }
 // function setWrong(
-//   map: Map<number, { id: string; height: number; remark?: { hash: string } }>,
+//   map: Map<number, { signature: string; height: number; remark?: { hash: string } }>,
 //   height: number,
-//   value: { id: string; height: number; remark?: { hash: string } },
+//   value: { signature: string; height: number; remark?: { hash: string } },
 // ) {
-//   value.id = value.id + "ddd";
+//   value.signature = value.signature + "ddd";
 //   map.set(height, value);
 // }
 
@@ -23,7 +23,7 @@
 // const FORK_HEIGHT = 57;
 // function getHash(
 //   currentHeight: number,
-//   map: Map<number, { id: string; height: number; remark?: { hash: string } }>,
+//   map: Map<number, { signature: string; height: number; remark?: { hash: string } }>,
 // ) {
 //   let lastRoundLastBlockHeight =
 //     (bfchainCore.blockHelper.calcRoundByHeight(currentHeight) - 1) *
@@ -41,7 +41,7 @@
 //   for (let height = lastRoundLastBlockHeight; height < currentHeight; height++) {
 //     const _block = map.get(height);
 //     if (_block) {
-//       payloadHash.update(_block.id);
+//       payloadHash.update(_block.signature);
 //     } else {
 //       console.error(`no ~~ ${height}`);
 //     }
@@ -57,22 +57,22 @@
 //       const hash1 = getHash(i, map1);
 //       const hash2 = getHash(i, map2);
 //       setRight(map1, i, {
-//         id: random,
+//         signature: random,
 //         remark: { hash: hash1 },
 //         height: i,
 //       });
 //       setWrong(map2, i, {
-//         id: random,
+//         signature: random,
 //         remark: { hash: hash2 },
 //         height: i,
 //       });
 //     } else {
 //       setRight(map1, i, {
-//         id: random,
+//         signature: random,
 //         height: i,
 //       });
 //       setWrong(map2, i, {
-//         id: random,
+//         signature: random,
 //         height: i,
 //       });
 //     }
@@ -81,22 +81,22 @@
 //       const hash1 = getHash(i, map1);
 //       const hash2 = getHash(i, map2);
 //       setRight(map1, i, {
-//         id: random,
+//         signature: random,
 //         remark: { hash: hash1 },
 //         height: i,
 //       });
 //       setRight(map2, i, {
-//         id: random,
+//         signature: random,
 //         remark: { hash: hash2 },
 //         height: i,
 //       });
 //     } else {
 //       setRight(map1, i, {
-//         id: random,
+//         signature: random,
 //         height: i,
 //       });
 //       setRight(map2, i, {
-//         id: random,
+//         signature: random,
 //         height: i,
 //       });
 //     }
@@ -112,7 +112,7 @@
 //       getBlockByHeight(height) {
 //         return Promise.resolve(map1.get(height) as any);
 //       },
-//       getBlockById(id) {
+//       getBlockBySignature(signature) {
 //         return Promise.resolve({} as any);
 //       },
 //       getLastBlock() {
@@ -123,7 +123,7 @@
 //       getBlockByHeight(height) {
 //         return Promise.resolve(map2.get(height) as any);
 //       },
-//       getBlockById(id) {
+//       getBlockBySignature(signature) {
 //         return Promise.resolve({} as any);
 //       },
 //       getLastBlock() {

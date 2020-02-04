@@ -164,7 +164,7 @@ declare namespace BFChainCore {
     /**链域名是否被禁用 */
     isLocationNameForbidden(name: string): Promise<boolean>;
     /**查询冻结的资产 */
-    getFrozenAsset(address: string, id: string): Promise<FrozenAsset | undefined>;
+    getFrozenAsset(address: string, signature: string): Promise<FrozenAsset | undefined>;
     /**查询指定的数字资产 */
     getAsset(magic: string, assetType: string): Promise<IssuedAssetInfo | undefined>;
     /**查询指定的资产名 */
@@ -197,8 +197,8 @@ declare namespace BFChainCore {
 
   // #region TransactionGetterHelperInterface
   interface TransactionGetterHelperInterface {
-    /**根据交易 id 获取交易 */
-    getTransactionById(id: string): Promise<TransactionJSON | undefined>;
+    /**根据交易 signature 获取交易 */
+    getTransactionBySignature(signature: string): Promise<TransactionJSON | undefined>;
     /**查询交易是否存在 */
     getCountTransaction(args: {
       /**交易类型 */
@@ -208,16 +208,16 @@ declare namespace BFChainCore {
       /**交易的接收账户 */
       recipientId?: string;
       /**交易的签名 */
-      id?: string;
+      signature?: string;
       /**索引值 */
       storageValue?: string;
     }): Promise<number>;
     /**某个账户是否购买指定的 dappid */
     getPurchaseDApp(address: string, dappid: string): Promise<boolean>;
     /**查询交易是否已经在未处理交易中 */
-    checkRepeatInUntreatedTransaction(senderId: string, id: string): Promise<boolean>;
+    checkRepeatInUntreatedTransaction(senderId: string, signature: string): Promise<boolean>;
     /**查询交易是否已经在链上 */
-    checkRepeatInBlockChainTransaction(id: string): Promise<boolean>;
+    checkRepeatInBlockChainTransaction(signature: string): Promise<boolean>;
     /**查询新生成的受托人 */
     getNewDelegates(height: number): Promise<string[]>;
   }

@@ -94,33 +94,33 @@ export const ACCOUNT_FROZEN = (ec.next =
 /**address reason errorId function */
 export const ACCOUNT_CAN_NOT_BE_FROZEN = (ec.next =
   "Account with address {address} can not be frozen, reason {reason} errorId {errorId} when {function}");
-/**id senderId applyBlockHeight type function */
+/**signature senderId applyBlockHeight type function */
 export const TRANSACTION_SIGN_SIGNATURE_IS_REQUIRED = (ec.next =
-  "Transaction signSignature is required, id {id} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type} when {function}");
-/**id senderId applyBlockHeight type function */
+  "Transaction signSignature is required, signature {signature} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type} when {function}");
+/**signature senderId applyBlockHeight type function */
 export const TRANSACTION_SENDER_SECOND_PUBLICKEY_IS_REQUIRED = (ec.next =
-  "Transaction senderSecondPublicKey is required, id {id} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type} when {function}");
-/**id senderId applyBlockHeight type function */
+  "Transaction senderSecondPublicKey is required, signature {signature} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type} when {function}");
+/**signature senderId applyBlockHeight type function */
 export const SECOND_PUBLICKEY_ALREADY_CHANGE = (ec.next =
-  "Transaction sender second secret have already change, id {id} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type} when {function}");
-/**id senderId applyBlockHeight type function */
+  "Transaction sender second secret have already change, signature {signature} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type} when {function}");
+/**signature senderId applyBlockHeight type function */
 export const SHOULD_NOT_HAVE_SENDER_SECOND_PUBLICKEY = (ec.next =
-  "Transaction should not have senderSecondPublicKey, id {id} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type} when {function}");
-/**id senderId applyBlockHeight type function */
+  "Transaction should not have senderSecondPublicKey, signature {signature} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type} when {function}");
+/**signature senderId applyBlockHeight type function */
 export const TRANSACTION_SHOULD_NOT_HAVE_SIGN_SIGNATURE = (ec.next =
-  "Transaction should not have signSignature, id {id} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type} when {function}");
+  "Transaction should not have signSignature, signature {signature} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type} when {function}");
 /**reason function */
 export const INVALID_TRANSACTION_APPLY_BLOCK_HEIGHT = (ec.next =
   "Invalid transaction apply block height, reason {reason} when {function}");
-/**reason id senderId applyBlockHeight type function */
+/**reason signature senderId applyBlockHeight type function */
 export const INVALID_TRANSACTION_FROM_MAGIC = (ec.next =
-  "Invalid transaction from magic, reason {reason} id {id} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type} when {function}");
-/**reason id senderId applyBlockHeight type function */
+  "Invalid transaction from magic, reason {reason} signature {signature} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type} when {function}");
+/**reason signature senderId applyBlockHeight type function */
 export const INVALID_TRANSACTION_TO_MAGIC = (ec.next =
-  "Invalid transaction to magic, reason {reason} id {id} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type} when {function}");
-/**reason id senderId applyBlockHeight type function */
+  "Invalid transaction to magic, reason {reason} signature {signature} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type} when {function}");
+/**reason signature senderId applyBlockHeight type function */
 export const INVALID_TRANSACTION_TIMESTAMP = (ec.next =
-  "Invalid transaction timestamp, reason {reason} id {id} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type} when {function}");
+  "Invalid transaction timestamp, reason {reason} signature {signature} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type} when {function}");
 /**dappid function */
 export const DAPPID_IS_NOT_EXIST = (ec.next =
   "DAppid is not exist, dappid {dappid} when {function}");

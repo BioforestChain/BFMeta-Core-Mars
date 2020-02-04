@@ -2,8 +2,8 @@ declare namespace BFChainCore {
   interface BlockGetterHelperSimpleInterface {
     /**根据高度获取区块 */
     getBlockByHeight(height: number): Promise<Block | undefined>;
-    /**根据区块 id 获取区块 */
-    getBlockById(id: string): Promise<Block | undefined>;
+    /**根据区块 signature 获取区块 */
+    getBlockBySignature(signature: string): Promise<Block | undefined>;
     getBlockGeneratorPublicKeyBufferByHeight?: (height: number) => Promise<Uint8Array | undefined>;
     getBlockSignatureByHeight?: (height: number) => Promise<Uint8Array | undefined>;
     getLastBlock(): Promise<Block>;
@@ -23,7 +23,7 @@ declare namespace BFChainCore {
       /**区块的锻造者公钥 */
       generatorPublicKey?: string;
       /**区块的签名 */
-      id?: string;
+      signature?: string;
       /**区块的版本号 */
       version?: number;
     }): Promise<number>;
@@ -47,13 +47,13 @@ declare namespace BFChainCore {
     numberOfTransactions: number;
     /**手续费 */
     totalFee: bigint;
-    /**区块id,如果没有id,就用`ff*128` */
-    blockId: string;
-    previousBlockId: string;
+    /**区块signature,如果没有signature,就用`ff*128` */
+    signature: string;
+    previousBlockSignature: string;
   }>;
   type CurrentGeneratingBlockInfo =
-    | Omit<NewBlockArgJSON, "blockId">
-    | Omit<BlockPlotChecker, "blockId">;
+    | Omit<NewBlockArgJSON, "signature">
+    | Omit<BlockPlotChecker, "signature">;
   type CurrentReplayingBlockSimpleInfo = {
     currentBlock: Block;
     replayingBlock?: Block;
@@ -71,23 +71,25 @@ declare namespace BFChainCore {
     vote: bigint;
   };
 
-  type GeneratorAddressCache = Map<number, { id: string; timestamp: number; address: string }>;
+  type GeneratorAddressCache = Map<
+    number,
+    { signature: string; timestamp: number; address: string }
+  >;
   type AccountChangeResultInfo = {
     [address: string]: {
       [magicAndAssetType: string]: string;
     };
   };
   type LastBlockInfo = {
-    id: string;
     height: number;
     timestamp: number;
     blockSize: number;
-    blockSignature: string;
+    signature: string;
     generatorPublicKey: string;
     numberOfTransactions: number;
     payloadHash: string;
     payloadLength: number;
-    previousBlock: string;
+    previousBlockSignature: string;
     totalAmount: string;
     totalFee: string;
     reward: string;

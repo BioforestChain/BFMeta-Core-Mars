@@ -5,7 +5,7 @@
     "../../config/tsconfig_base/base.tsconfig.@types.json"
   ],
   "compilerOptions": {
-    "declarationDir": "../@types/helper-account_base/tsconfig.json-base",
+    "declarationDir": "../@types/bfchain__core-helper-account-base",
     "declaration": true,
     "outDir": "../../.cache/helper-account_base",
     "tsBuildInfoFile": "../../.cache/helper-account_base/@types.tsbuildinfo"

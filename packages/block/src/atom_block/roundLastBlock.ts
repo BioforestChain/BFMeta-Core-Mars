@@ -1,4 +1,4 @@
-import { BlockFactory, BlockBody } from "./_blockbase";
+import { BlockFactory } from "./_blockbase";
 import { RoundLastBlock } from "@bfchain/core-model-block";
 import {
   BlockHelper,
@@ -64,7 +64,7 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
    * @param roundLastBlockRemark
    */
   verifyBlockBody(
-    body: BlockBody,
+    body: BFChainCore.BlockBody,
     roundLastBlockRemark: BFChainCore.RoundLastBlockRemarkJSON,
     config = this.config,
   ) {
@@ -247,7 +247,10 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
    * @param body
    * @param roundLastBlockRemark
    */
-  _generateBlock(body: BlockBody, roundLastBlockRemark: BFChainCore.RoundLastBlockRemarkJSON) {
+  _generateBlock(
+    body: BFChainCore.BlockBody,
+    roundLastBlockRemark: BFChainCore.RoundLastBlockRemarkJSON,
+  ) {
     const block = RoundLastBlock.fromObject({
       ...body,
       remark: roundLastBlockRemark,

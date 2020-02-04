@@ -16,7 +16,7 @@ declare namespace BFChainCore {
     /**锻造时间戳 */
     timestamp: number;
     // /**区块签名 */
-    // blockSignature?: string;
+    // signature?: string;
     /**打块账户公钥 */
     generatorPublicKey: string;
     // /**处理的交易量 */
@@ -25,8 +25,8 @@ declare namespace BFChainCore {
     // payloadHash: string;
     // /**所有交易的 hash 长度 */
     // payloadLength: number;
-    /**前块 id */
-    previousBlock?: string;
+    /**前块 signature */
+    previousBlockSignature?: string;
     // /**总资产数量 */
     // totalAmount: string;
     // /**总手续费 */

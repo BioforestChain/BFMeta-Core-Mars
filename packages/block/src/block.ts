@@ -8,7 +8,7 @@ import { TransactionInBlock } from "@bfchain/core-model-transaction";
 import { Reader } from "@bfchain/protobuf";
 import { AsymmetricHelper, BlockHelper } from "@bfchain/core-helper";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
-import { BlockFactory, BlockBody, BlockGeneratorCalculator } from "./atom_block";
+import { BlockFactory, BlockGeneratorCalculator } from "./atom_block";
 
 import { Inject, Injectable, ModuleStroge, Resolve } from "@bfchain/util";
 
@@ -59,7 +59,7 @@ export class BlockCore {
   /**生成区块 */
   async generateBlock<T extends Block>(
     BlockFactory: new (...args: any[]) => BlockFactory<T>,
-    body: BlockBody,
+    body: BFChainCore.BlockBody,
     blockRemark: GetBlockRemarkJSON<T>,
     trsGenerator: AsyncIterable<TransactionInBlock>,
     keypair: BFChainCore.Keypair,
@@ -87,7 +87,7 @@ export class BlockCore {
     // 校验 remark 大小
     this.blockHelper.verifyBlockRemarkSize(block);
     // 区块签名
-    block.blockSignatureBuffer = this.asymmetricHelper.detachedSign(
+    block.signatureBuffer = this.asymmetricHelper.detachedSign(
       block.getBytes(true, true),
       keypair.secretKey,
     );

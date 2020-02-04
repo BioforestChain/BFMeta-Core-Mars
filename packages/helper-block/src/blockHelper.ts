@@ -28,20 +28,20 @@ export class BlockHelper {
   blockGetterHelper?: BFChainCore.BlockGetterHelperSimpleInterface;
 
   /**
-   * 获取交易 id
+   * 获取交易 signature
    *
    * @param block
    */
-  generateId(block: BFChainCore.Block) {
+  generateSignature(block: BFChainCore.Block) {
     return this.cryptoHelper
       .sha256()
       .update(block.getBytes(true, true))
       .digest("hex");
   }
 
-  /**是否是合法的区块 ID */
-  isValidId(id: string) {
-    return this.baseHelper.isValidSignature(id);
+  /**是否是合法的区块 signature */
+  isValidSignature(signature: string) {
+    return this.baseHelper.isValidSignature(signature);
   }
 
   /**
@@ -55,7 +55,7 @@ export class BlockHelper {
   ) {
     const taskLabel = (opts && opts.taskLabel) || "Block";
     const { Buffer } = this;
-    const { generatorPublicKeyBuffer, blockSignatureBuffer } = block;
+    const { generatorPublicKeyBuffer, signatureBuffer } = block;
     // 验证 signature 与 publicKey
     const hash = this.cryptoHelper
       .sha256()
@@ -64,7 +64,7 @@ export class BlockHelper {
     if (
       !this.keypairHelper.detached_verify(
         hash,
-        Buffer.from(blockSignatureBuffer),
+        Buffer.from(signatureBuffer),
         Buffer.from(generatorPublicKeyBuffer),
       )
     ) {
@@ -150,25 +150,25 @@ export class BlockHelper {
     }
     return block as B;
   }
-  async forceGetBlockById<B extends BFChainCore.Block = BFChainCore.Block>(
-    id: string,
+  async forceGetBlockBySignature<B extends BFChainCore.Block = BFChainCore.Block>(
+    signature: string,
     blockGetterHelper:
-      | Pick<BFChainCore.BlockGetterHelperSimpleInterface, "getBlockById">
+      | Pick<BFChainCore.BlockGetterHelperSimpleInterface, "getBlockBySignature">
       | undefined = this.blockGetterHelper,
   ) {
     if (!blockGetterHelper) {
       throw new NoFoundException(NOT_EXIST, {
         prop: "blockGetterHelper",
         target: "moduleStroge",
-        function: "BlockGetterHelper.forceGetBlockById",
+        function: "forceGetBlockBySignature",
       });
     }
-    const block = await blockGetterHelper.getBlockById(id);
+    const block = await blockGetterHelper.getBlockBySignature(signature);
     if (!block) {
       throw new ArgumentFormatException(NOT_EXIST, {
-        prop: `id:${id}`,
-        target: "blocks",
-        function: "BlockGetterHelper.forceGetBlockById",
+        prop: `signature: ${signature}`,
+        target: "blockChain",
+        function: "forceGetBlockBySignature",
       });
     }
     return block as B;
@@ -222,7 +222,7 @@ export class BlockHelper {
     }
     return this.accountBaseHelper.getAddressFromPublicKey(publicKeyBuffer);
   }
-  async forceGetBlockSignatureByHeight(
+  async forceGetBlockSignatureBufferByHeight(
     height: number,
     blockGetterHelper:
       | Pick<
@@ -235,23 +235,24 @@ export class BlockHelper {
       throw new NoFoundException(NOT_EXIST, {
         prop: "blockGetterHelper",
         target: "moduleStroge",
-        function: "BlockGetterHelper.forceGetBlockSignatureByHeight",
+        function: "forceGetBlockSignatureByHeight",
       });
     }
     const signatureBuffer =
       typeof blockGetterHelper.getBlockSignatureByHeight === "function"
         ? await blockGetterHelper.getBlockSignatureByHeight(height)
-        : (await this.forceGetBlockByHeight(height, blockGetterHelper)).blockSignatureBuffer;
+        : (await this.forceGetBlockByHeight(height, blockGetterHelper)).signatureBuffer;
     if (!signatureBuffer) {
       throw new ArgumentFormatException(NOT_EXIST, {
         prop: `height:${height}`,
         target: "generatorPublicKey",
-        function: "BlockGetterHelper.forceGetBlockSignatureByHeight",
+        function: "forceGetBlockSignatureByHeight",
       });
     }
     return signatureBuffer;
   }
-  async forceGetBlockIdByHeight(
+
+  async forceGetBlockSignatureByHeight(
     height: number,
     blockGetterHelper:
       | Pick<
@@ -261,7 +262,7 @@ export class BlockHelper {
       | undefined = this.blockGetterHelper,
   ) {
     return getHexFromArrayBuffer(
-      await this.forceGetBlockSignatureByHeight(height, blockGetterHelper),
+      await this.forceGetBlockSignatureBufferByHeight(height, blockGetterHelper),
     );
   }
 
@@ -349,9 +350,9 @@ export class BlockHelper {
           });
           return this.totalFee;
         },
-        /**区块id,如果没有id,就用`ff*128` */
-        blockId: block.id,
-        previousBlockId: block.previousBlock,
+        /**区块signature,如果没有signature,就用`ff*128` */
+        signature: block.signature,
+        previousBlockSignature: block.previousBlockSignature,
       } as BFChainCore.BlockPlotChecker;
       this._BLOCK_BTC_WM.set(block, blockPlotChecker);
       this._BTC_BLOCK_WM.set(blockPlotChecker, block);
@@ -383,9 +384,9 @@ export class BlockHelper {
         });
         return this.totalFee;
       },
-      /**区块id,如果没有id,就用`ff*128` */
-      blockId: "blockId" in newBlock ? newBlock.blockId : "ff".repeat(64),
-      previousBlockId: newBlock.previousBlockId,
+      /**区块signature,如果没有signature,就用`ff*128` */
+      signature: "signature" in newBlock ? newBlock.signature : "ff".repeat(64),
+      previousBlockSignature: newBlock.previousBlockSignature,
     } as BFChainCore.BlockPlotChecker;
   }
   parseBlockPlotCheckerListToPlotChecker(list: BFChainCore.BlockPlotChecker[]) {
@@ -415,14 +416,14 @@ export class BlockHelper {
         });
         return this.totalFee;
       },
-      /**区块id,如果没有id,就用`ff*128` */
-      get blockId() {
-        Object.defineProperty(this, "blockId", {
-          value: list.reduce((p, pc1) => p + pc1.blockId, ""),
+      /**区块signature,如果没有signature,就用`ff*128` */
+      get signature() {
+        Object.defineProperty(this, "signature", {
+          value: list.reduce((p, pc1) => p + pc1.signature, ""),
         });
-        return this.blockId;
+        return this.signature;
       },
-      previousBlockId: first.previousBlockId,
+      previousBlockSignature: first.previousBlockSignature,
     };
     return blockPlotChecker;
   }
@@ -506,7 +507,7 @@ export class BlockHelper {
   async calcRoundLastBlockRemarkHash(
     currentHeight: number,
     blockGetterHelper?: BFChainUtil.SecondArgument<BlockHelper["forceGetBlockByHeight"]> &
-      BFChainUtil.SecondArgument<BlockHelper["forceGetBlockSignatureByHeight"]>,
+      BFChainUtil.SecondArgument<BlockHelper["forceGetBlockSignatureBufferByHeight"]>,
   ) {
     let lastRoundLastBlockHeight =
       (this.calcRoundByHeight(currentHeight) - 1) * this.config.blockPerRound;
@@ -520,7 +521,7 @@ export class BlockHelper {
       payloadHash.update(block.remark.hashBuffer);
     }
     for (let height = lastRoundLastBlockHeight; height < currentHeight; height++) {
-      const blockSignatureBuffer = await this.forceGetBlockSignatureByHeight(
+      const blockSignatureBuffer = await this.forceGetBlockSignatureBufferByHeight(
         height,
         blockGetterHelper,
       );
