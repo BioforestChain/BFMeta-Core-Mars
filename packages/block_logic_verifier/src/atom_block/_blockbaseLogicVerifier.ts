@@ -104,14 +104,14 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
 
     // 除了重建时，应该验证区块是否存在
     if (processBlockType !== PROCESSBLOCK_TYPE.REBUILD) {
-      await this.isBlockAlreadyExist(block.id, block.height, blockGetterHelper);
+      await this.isBlockAlreadyExist(block.signature, block.height, blockGetterHelper);
     }
 
     // 同步时区块和交易是分开获取的，先校验区块本体，在校验区块和交易
     // 校验区块和块内交易基本信息
     // await this.verifyBlockWithTransactions(block, processBlockType);
 
-    // 校验区块前块 id
+    // 校验区块前块 signature
     if (block.height !== 1) {
       await this.checkPreviousBlock(block, blockGetterHelper);
     }
@@ -120,12 +120,12 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
   /**
    * 指定的区块是否已经存在
    *
-   * @param id
+   * @param signature
    * @param height
    * @param blockGetterHelper
    */
   async isBlockAlreadyExist(
-    id: string,
+    signature: string,
     height: number,
     blockGetterHelper = this.blockGetterHelper,
   ) {
@@ -146,12 +146,12 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
         ...Function_Exception_Detail,
       });
     }
-    const count = await blockGetterHelper.getCountBlock({ id });
+    const count = await blockGetterHelper.getCountBlock({ signature });
     if (count > 0) {
       throw new ConsensusException(ALREADY_EXIST, {
-        prop: `Block with id ${id}`,
+        prop: `Block with signature ${signature}`,
         target: "blockChain",
-        errorId: `Block already exists: ${id} height: ${height}`,
+        errorId: `Block already exists: ${signature} height: ${height}`,
         ...Function_Exception_Detail,
       });
     }
@@ -195,7 +195,7 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
         ...Function_Exception_Detail,
       });
     }
-    const { height, previousBlock, timestamp } = block;
+    const { height, previousBlockSignature, timestamp } = block;
     const lastBlock = await blockGetterHelper.getBlockByHeight(height - 1);
     if (!lastBlock) {
       throw new ConsensusException(NOT_EXIST, {
@@ -204,8 +204,8 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
         ...Function_Exception_Detail,
       });
     }
-    const __id = lastBlock.id;
-    if (previousBlock !== __id) {
+    const __signature = lastBlock.signature;
+    if (previousBlockSignature !== __signature) {
       // 记录分叉区块信息
       await blockGetterHelper.chainBlockFork(block, 1);
       throw new ConsensusException(NOT_MATCH, {
@@ -279,7 +279,7 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
           lastBlock.height
         }, block.timestamp: ${block.timestamp} curTime: ${timeHelper.getTimeByTimestamp(
           block.timestamp,
-        )} 该区块的打块人校验不通过，区块ID：${block.id} height: ${
+        )} 该区块的打块人校验不通过，区块signature：${block.signature} height: ${
           block.height
         } ${usedAddressCache}，当前slot为${currentSlot}，当前应该由委托人${expectedAddress}打块，实际是由${generatorAddress}打块，校验无法通过`,
         ...Function_Exception_Detail,

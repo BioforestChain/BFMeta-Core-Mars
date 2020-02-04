@@ -78,7 +78,7 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
     } else {
       if (secondPublicKey) {
         throw new ConsensusException(SHOULD_NOT_HAVE_SENDER_SECOND_PUBLICKEY, {
-          id: transaction.signature,
+          signature: transaction.signature,
           senderId: transaction.senderId,
           applyBlockHeight: transaction.applyBlockHeight,
           type: transaction.type,

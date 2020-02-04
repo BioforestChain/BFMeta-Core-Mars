@@ -52,7 +52,7 @@
 // test("AcceptVoteTransaction", t => {
 //   {
 //     const trs = getAcceptVoteTransaction(getSenderWithSecondSecret());
-//     const { id, signature, signSignature, ...trsbase } = trs.toJSON();
+//     const { signature, signature, signSignature, ...trsbase } = trs.toJSON();
 
 //     t.deepEqual(trsbase, {
 //       version: 1,
@@ -75,18 +75,18 @@
 //       // signSignature:
 //       //   "5d0e4739c66d931922ab7153eb8ff984af458f52af81017652f4983da72e4498bd7e1c3b02b1dcb10d9fea54916092aca511f6fdcc3d41807fd47bf4df8b1e09",
 //       remark: { remark: "body.remark" },
-//       // id: "b9290ba7bbee3d97975408e1411549ea65c27db68b3c2d3b9e2619dab8b23f20",
+//       // signature: "b9290ba7bbee3d97975408e1411549ea65c27db68b3c2d3b9e2619dab8b23f20",
 //       asset: {},
 //       nonce: 0,
 //       recipientId: undefined,
 //     });
 //     t.is(signature.length, 128);
-//     t.is(id, signature);
+//     t.is(signature, signature);
 //     t.is(signSignature && signSignature.length, 128);
 //   }
 //   {
 //     const trs = getAcceptVoteTransaction(getSenderWithoutSecondSecret());
-//     const { id, signature, signSignature, ...trsbase } = trs.toJSON();
+//     const { signature, signature, signSignature, ...trsbase } = trs.toJSON();
 //     t.deepEqual(trsbase, {
 //       version: 1,
 //       type: "BFT-BFCHAIN-BSE-05",
@@ -111,7 +111,7 @@
 //       recipientId: undefined,
 //     });
 //     t.is(signature.length, 128);
-//     t.is(id, signature);
+//     t.is(signature, signature);
 //     t.is(signSignature, undefined);
 //   }
 // });

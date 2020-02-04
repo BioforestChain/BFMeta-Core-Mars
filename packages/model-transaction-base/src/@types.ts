@@ -49,7 +49,6 @@ declare namespace BFChainCore {
     signature: string;
     signSignature?: string;
     remark: { [key: string]: string };
-    id: string;
     asset: AssetJSON;
     storage?: TransactionStorageJSON;
     storageKey?: TransactionStorageJSON["key"];

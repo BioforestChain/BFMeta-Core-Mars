@@ -23,11 +23,17 @@ export class BlockGeneratorCalculator {
   ) {}
   @Inject("blockGetterHelper", { optional: true, dynamics: true })
   private blockGetterHelper?: BFChainCore.BlockGetterHelperSimpleInterface;
-  /**获取当前时间戳锻造要区块的委托人地址 */
+
+  /**
+   * 获取当前时间戳锻造要区块的委托人地址
+   *
+   * @param currentBlock
+   * @param opts
+   */
   async calcGenerateBlockDelegate(
     currentBlock: { timestamp: number; height: number },
     opts: {
-      usedAddressCache?: Map<number, { id: string; timestamp: number; address: string }>;
+      usedAddressCache?: BFChainCore.UsedAddressCacheJSON;
       curTime?: number;
       blockGetterHelper?: BFChainCore.BlockGetterHelperSimpleInterface;
     },
@@ -38,7 +44,7 @@ export class BlockGeneratorCalculator {
     /**缓存着区块高度对应的锻造者地址 */
     const usedAddressCache =
       opts.usedAddressCache ||
-      new Map<number, { id: string; timestamp: number; address: string }>();
+      new Map<number, { signature: string; timestamp: number; address: string }>();
     /**当前区块链时间对应的插槽时间信号量 */
     const cur_time = typeof opts.curTime === "number" ? opts.curTime : this.timeHelper.now();
     /**新块的slot */
@@ -117,6 +123,7 @@ export class BlockGeneratorCalculator {
       return result;
     }
   }
+
   private __idNumberMap = new Map<string, number>();
   async *calcGenerateBlockDelegateGenerator(
     currentBlock: { timestamp: number; height: number },
@@ -126,7 +133,7 @@ export class BlockGeneratorCalculator {
       curTime?: number;
       blockGetterHelper?: BFChainCore.BlockGetterHelperSimpleInterface;
       cache_block?: { [height: number]: Promise<Block | undefined> };
-      usedAddressCache?: Map<number, { id: string; timestamp: number; address: string }>;
+      usedAddressCache?: BFChainCore.UsedAddressCacheJSON;
     },
   ) {
     this.__idNumberMap.clear();
@@ -134,7 +141,7 @@ export class BlockGeneratorCalculator {
     const timeAcc = opts.timeAcc || this.config.forgeInterval;
     const usedAddressCache =
       opts.usedAddressCache ||
-      new Map<number, { id: string; timestamp: number; address: string }>();
+      new Map<number, { signature: string; timestamp: number; address: string }>();
     let timestamp = currentBlock.timestamp;
     let height = currentBlock.height;
     let curTime = opts.curTime || this.timeHelper.now();
@@ -143,7 +150,7 @@ export class BlockGeneratorCalculator {
       throw new NoFoundException(NOT_EXIST, {
         prop: "blockGetterHelper",
         target: "moduleStroge",
-        function: "BlockGetterHelper.forceGetBlockById",
+        function: "*calcGenerateBlockDelegateGenerator",
       });
     }
     /**
@@ -178,6 +185,7 @@ export class BlockGeneratorCalculator {
       blockGetterHelper.getBlockByHeight = _getBlockByHeight;
     }
   }
+
   /**
    * 获取账户地址的`Hash`值
    * 字符串ascii码的和
@@ -196,12 +204,19 @@ export class BlockGeneratorCalculator {
       return num;
     }
   }
-  /**选取受托人函数 */
+
+  /**
+   * 选取受托人函数
+   *
+   * @param new_block_height
+   * @param delegates
+   * @param opts
+   */
   private async _pickDelegateAddressCommon(
     new_block_height: number,
     delegates: string[],
     opts: {
-      usedAddressCache: Map<number, { id: string; timestamp: number; address: string }>;
+      usedAddressCache: BFChainCore.UsedAddressCacheJSON;
       new_block_slot_number: number;
       blockGetterHelper: BFChainCore.BlockGetterHelperSimpleInterface;
     },
@@ -209,8 +224,8 @@ export class BlockGeneratorCalculator {
     const { usedAddressCache, new_block_slot_number, blockGetterHelper } = opts;
     const current_round = this.blockHelper.calcRoundByHeight(new_block_height);
     const per_round_last_height = this.blockHelper.calcRoundStartHeight(current_round) - 1;
-    //判断是否丢失块打包数据，是的话进行恢复，并更新id值
-    const { usedAddressMap, curBlockId } = await this._recoverUsedGeneratorAddressMap(
+    //判断是否丢失块打包数据，是的话进行恢复，并更新signature值
+    const { usedAddressMap, curBlockSignature } = await this._recoverUsedGeneratorAddressMap(
       new_block_height - 1,
       usedAddressCache,
       blockGetterHelper,
@@ -228,13 +243,16 @@ export class BlockGeneratorCalculator {
     const unUsedAddressList = delegates.filter(add => !usedAddressList.includes(add));
     //id转ASCII码 根据ascii码总和取余 算出打块人下标
     unUsedAddressList.sort();
-    const i = (this._getStringHash(curBlockId) + new_block_slot_number) % unUsedAddressList.length;
+    const i =
+      (this._getStringHash(curBlockSignature) + new_block_slot_number) % unUsedAddressList.length;
     const delegateAddress = unUsedAddressList[i];
     return delegateAddress;
   }
+
   /**
    * 挑选应急受托人
    * 没读懂代码千万别乱改。 - by wzx
+   *
    * @param new_block_height
    * @param opts
    */
@@ -242,7 +260,7 @@ export class BlockGeneratorCalculator {
     new_block_height: number,
     opts: {
       currentBlock: { timestamp: number; height: number };
-      usedAddressCache: Map<number, { id: string; timestamp: number; address: string }>;
+      usedAddressCache: BFChainCore.UsedAddressCacheJSON;
       new_block_slot_number: number;
       max_slot_number: number;
       current_round: number;
@@ -288,7 +306,10 @@ export class BlockGeneratorCalculator {
       // delegateAddressList.push(...this.transactionHelper.genesisDelegates());
     }
     delegateAddressList.sort();
-    const { usedAddressMap: thisRoundMap, curBlockId } = await this._recoverUsedGeneratorAddressMap(
+    const {
+      usedAddressMap: thisRoundMap,
+      curBlockSignature,
+    } = await this._recoverUsedGeneratorAddressMap(
       new_block_height - 1,
       usedAddressCache,
       blockGetterHelper,
@@ -328,16 +349,18 @@ export class BlockGeneratorCalculator {
             (this.timeHelper.getSlotNumberByTimestamp(b.timestamp) - max_slot_number) %
             this.config.blockPerRound;
         }
-        /**需要用到前块id去取余数 */
-        const preId = thisRoundMap.get(calcHeight - 1);
+        /**需要用到前块 signature 去取余数 */
+        const preBlockGenerator = thisRoundMap.get(calcHeight - 1);
         // 重现去除的受托人
-        if (preId) {
+        if (preBlockGenerator) {
           const lastMiss =
             tempMissCountArr.length > 0 ? tempMissCountArr.reduce((a, b) => a + b) : 0;
           // console.log(`        2.计算区块${calcHeight}的使用了人数${missCount} 以往掉线 ${lastMiss}`);
           for (let miss = 1; miss <= missCount; miss++) {
             const _slot = (miss + lastMiss) % this.config.blockPerRound;
-            const reminer = (this._getStringHash(preId.id) + _slot) % delegateAddressList.length;
+            const reminer =
+              (this._getStringHash(preBlockGenerator.signature) + _slot) %
+              delegateAddressList.length;
             delegateAddressList.splice(reminer, 1);
           }
         } else {
@@ -354,7 +377,8 @@ export class BlockGeneratorCalculator {
       // console.log(`        1. 首个应急块${_start_emergency_height}~   ${missCount2}`);
       for (let i = 1; i <= missCount2; i++) {
         const slot = i % this.config.blockPerRound;
-        const reminer = (this._getStringHash(curBlockId) + slot) % delegateAddressList.length;
+        const reminer =
+          (this._getStringHash(curBlockSignature) + slot) % delegateAddressList.length;
         delegateAddressList.splice(reminer, 1);
       }
     } else {
@@ -369,29 +393,37 @@ export class BlockGeneratorCalculator {
       //     currentBlock.timestamp,
       //   )}`,
       // );
-      const preId = thisRoundMap.get(new_block_height - 1);
-      if (!preId) throw new Error(` no ${new_block_height - 1}`);
+      const preBlockGenerator = thisRoundMap.get(new_block_height - 1);
+      if (!preBlockGenerator) throw new Error(` no ${new_block_height - 1}`);
       for (let i = missCount; i > 0; i--) {
         const slot = (new_block_slot_number - max_slot_number - i) % this.config.blockPerRound;
-        const reminer = (this._getStringHash(preId.id) + slot) % delegateAddressList.length;
+        const reminer =
+          (this._getStringHash(preBlockGenerator.signature) + slot) % delegateAddressList.length;
         delegateAddressList.splice(reminer, 1);
       }
     }
     const resultSlot = (new_block_slot_number - max_slot_number) % this.config.blockPerRound;
-    const _r = (this._getStringHash(curBlockId) + resultSlot) % delegateAddressList.length;
+    const _r = (this._getStringHash(curBlockSignature) + resultSlot) % delegateAddressList.length;
     const address = delegateAddressList[_r];
 
     // console.log(
-    //   `${this._getStringHash(curBlockId)}  ${
+    //   `${this._getStringHash(curBlockSignature)}  ${
     //     delegateAddressList.length
     //   }   height: ${new_block_height} ${address} # ${miss_round} ###################### new_block_slot_number: ${new_block_slot_number} slot:${resultSlot} `,
     // );
     return address;
   }
-  /**恢复丢失的打块人地址数据 */
+
+  /**
+   * 恢复丢失的打块人地址数据
+   *
+   * @param curHeight
+   * @param usedAddressCache
+   * @param blockGetterHelper
+   */
   private async _recoverUsedGeneratorAddressMap(
     curHeight: number,
-    usedAddressCache: Map<number, { id: string; timestamp: number; address: string }>,
+    usedAddressCache: BFChainCore.UsedAddressCacheJSON,
     blockGetterHelper: BFChainCore.BlockGetterHelperSimpleInterface,
   ) {
     /**只针对当前轮次到当前高度为止的数据
@@ -403,18 +435,32 @@ export class BlockGeneratorCalculator {
       blockGetterHelper,
     );
 
-    const curBlockId = await this.blockHelper.forceGetBlockIdByHeight(curHeight, blockGetterHelper);
+    const curBlockSignature = await this.blockHelper.forceGetBlockSignatureByHeight(
+      curHeight,
+      blockGetterHelper,
+    );
 
-    return { usedAddressMap, curBlockId };
+    return { usedAddressMap, curBlockSignature };
   }
-  /**获取出一份指定高度范围的区块高度与锻造者映射表 */
+
+  /**
+   * 获取出一份指定高度范围的区块高度与锻造者映射表
+   *
+   * @param minHeight
+   * @param maxHeight
+   * @param usedAddressCache
+   * @param blockGetterHelper
+   */
   private async _fillUsedAddressMap(
     minHeight: number,
     maxHeight: number,
-    usedAddressCache: Map<number, { id: string; timestamp: number; address: string }>,
+    usedAddressCache: BFChainCore.UsedAddressCacheJSON,
     blockGetterHelper: BFChainCore.BlockGetterHelperSimpleInterface,
   ) {
-    const usedAddressMap = new Map<number, { id: string; timestamp: number; address: string }>();
+    const usedAddressMap = new Map<
+      number,
+      { signature: string; timestamp: number; address: string }
+    >();
     const taskList = new TaskList();
 
     // 获取丢失的打块人缓存的块数据
@@ -430,14 +476,14 @@ export class BlockGeneratorCalculator {
               address: this.accountBaseHelper.getAddressFromPublicKeyString(
                 _block.generatorPublicKey,
               ),
-              id: _block.id,
+              signature: _block.signature,
               timestamp: _block.timestamp,
             });
             usedAddressCache.set(height, {
               address: this.accountBaseHelper.getAddressFromPublicKeyString(
                 _block.generatorPublicKey,
               ),
-              id: _block.id,
+              signature: _block.signature,
               timestamp: _block.timestamp,
             });
           });

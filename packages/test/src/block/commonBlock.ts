@@ -79,7 +79,9 @@ function getTrsInBlock() {
 
 async function getCommonBlockAsync(sender: AccountModel) {
   const blockTrsItems = getTrsInBlock();
-  const generatorPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecret(sender.secret);
+  const generatorPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecret(
+    sender.secret,
+  );
   const generatorKeypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const commonBlock = await bfchainCore.block.generateBlock<CommonBlock>(
     CommonBlockFactory,
@@ -88,7 +90,7 @@ async function getCommonBlockAsync(sender: AccountModel) {
       height: 1,
       timestamp: 0,
       generatorPublicKey,
-      previousBlock: "",
+      previousBlockSignature: "",
     },
     {
       debug: "debug",

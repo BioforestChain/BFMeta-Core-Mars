@@ -216,7 +216,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     if (accountInfo.secondPublicKey) {
       if (!(tr.senderSecondPublicKey && tr.signSignature)) {
         throw new ConsensusException(TRANSACTION_SIGN_SIGNATURE_IS_REQUIRED, {
-          id: tr.id,
+          signature: tr.signature,
           senderId: tr.senderId,
           applyBlockHeight: tr.applyBlockHeight,
           type: tr.type,
@@ -226,7 +226,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
 
       if (accountInfo.secondPublicKey !== tr.senderSecondPublicKey) {
         throw new ConsensusException(SECOND_PUBLICKEY_ALREADY_CHANGE, {
-          id: tr.id,
+          signature: tr.signature,
           senderId: tr.senderId,
           applyBlockHeight: tr.applyBlockHeight,
           type: tr.type,
@@ -236,7 +236,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     } else {
       if (tr.senderSecondPublicKey) {
         throw new ConsensusException(SHOULD_NOT_HAVE_SENDER_SECOND_PUBLICKEY, {
-          id: tr.id,
+          signature: tr.signature,
           senderId: tr.senderId,
           applyBlockHeight: tr.applyBlockHeight,
           type: tr.type,
@@ -245,7 +245,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       }
       if (tr.signSignature) {
         throw new ConsensusException(TRANSACTION_SHOULD_NOT_HAVE_SIGN_SIGNATURE, {
-          id: tr.id,
+          signature: tr.signature,
           senderId: tr.senderId,
           applyBlockHeight: tr.applyBlockHeight,
           type: tr.type,
@@ -322,7 +322,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
         if (!subchain) {
           throw new ConsensusException(INVALID_TRANSACTION_TO_MAGIC, {
             reason: "Transaction toMagic subchain not exists",
-            id: tr.id,
+            signature: tr.signature,
             senderId: tr.senderId,
             applyBlockHeight: tr.applyBlockHeight,
             type: tr.type,
@@ -334,7 +334,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
         if (toMagic !== parentMagic) {
           throw new ConsensusException(INVALID_TRANSACTION_TO_MAGIC, {
             reason: "Transaction toMagic must be local magic or parent magic",
-            id: tr.id,
+            signature: tr.signature,
             senderId: tr.senderId,
             applyBlockHeight: tr.applyBlockHeight,
             type: tr.type,
@@ -349,7 +349,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
         if (fromMagic !== parentMagic) {
           throw new ConsensusException(INVALID_TRANSACTION_TO_MAGIC, {
             reason: "Transaction fromMagic must be parent",
-            id: tr.id,
+            signature: tr.signature,
             senderId: tr.senderId,
             applyBlockHeight: tr.applyBlockHeight,
             type: tr.type,
@@ -362,7 +362,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
         if (!subchain) {
           throw new ConsensusException(INVALID_TRANSACTION_TO_MAGIC, {
             reason: "Transaction fromMagic subchain not exists",
-            id: tr.id,
+            signature: tr.signature,
             senderId: tr.senderId,
             applyBlockHeight: tr.applyBlockHeight,
             type: tr.type,
@@ -374,7 +374,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       if (toMagic !== chainMagic) {
         throw new ConsensusException(INVALID_TRANSACTION_TO_MAGIC, {
           reason: "Transaction to magic must be local",
-          id: tr.id,
+          signature: tr.signature,
           senderId: tr.senderId,
           applyBlockHeight: tr.applyBlockHeight,
           type: tr.type,
@@ -395,7 +395,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       throw new ConsensusException(INVALID_TRANSACTION_TIMESTAMP, {
         reason:
           "Transaction timestamp in future. Transaction time is ahead of the time on the server",
-        id: tr.id,
+        signature: tr.signature,
         senderId: tr.senderId,
         applyBlockHeight: tr.applyBlockHeight,
         type: tr.type,
@@ -694,11 +694,11 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    * 查询交易是否已经在未处理交易中
    *
    * @param senderId
-   * @param id
+   * @param signature
    */
   async checkRepeatInUntreatedTransaction(
     senderId: string,
-    id: string,
+    signature: string,
     transactionGetterHelper = this.transactionGetterHelper,
   ) {
     const Function_Exception_Detail = {
@@ -711,10 +711,13 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
         ...Function_Exception_Detail,
       });
     }
-    const result = await transactionGetterHelper.checkRepeatInUntreatedTransaction(senderId, id);
+    const result = await transactionGetterHelper.checkRepeatInUntreatedTransaction(
+      senderId,
+      signature,
+    );
     if (result) {
       throw new ConsensusException(ALREADY_EXIST, {
-        prop: `Transaction with id ${id}`,
+        prop: `Transaction with signature ${signature}`,
         target: "untreated transaction",
         ...Function_Exception_Detail,
       });
@@ -724,10 +727,10 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    * 查询交易是否已经在链上
    *
    * @param senderId
-   * @param id
+   * @param signature
    */
   async checkRepeatInBlockChainTransaction(
-    id: string,
+    signature: string,
     transactionGetterHelper = this.transactionGetterHelper,
   ) {
     const Function_Exception_Detail = {
@@ -740,10 +743,10 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
         ...Function_Exception_Detail,
       });
     }
-    const result = await transactionGetterHelper.checkRepeatInBlockChainTransaction(id);
+    const result = await transactionGetterHelper.checkRepeatInBlockChainTransaction(signature);
     if (result) {
       throw new ConsensusException(ALREADY_EXIST, {
-        prop: `Transaction with id ${id}`,
+        prop: `Transaction with signature ${signature}`,
         target: "blockChain",
         ...Function_Exception_Detail,
       });

@@ -9,16 +9,15 @@ declare namespace BFChainCore {
 
   interface BlockWithoutTransactionJSON<RemarkJSON> {
     version: number;
-    id: string;
     height: number;
     blockSize: number;
     timestamp: number;
-    blockSignature: string;
+    signature: string;
     generatorPublicKey: string;
     numberOfTransactions: number;
     payloadHash: string;
     payloadLength: number;
-    previousBlock: string;
+    previousBlockSignature: string;
     totalAmount: string;
     totalFee: string;
     reward: string;

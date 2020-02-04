@@ -139,7 +139,7 @@ export class ChainChannelHelper {
     if (blockId) {
       //if (typeof maxHeight === "number") {
       has_query_params = true;
-      if (!BH.isValidBlockId(blockId)) {
+      if (!BH.isValidBlockSignature(blockId)) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.query",
           field: "blockId",
@@ -320,7 +320,7 @@ export class ChainChannelHelper {
     const BH = this.baseHelper;
     /// 参数校验
     //#region 查询参数校验
-    const { height, id } = arg.query;
+    const { height, signature } = arg.query;
     /**是否有查询条件 */
     let has_query_params = false;
     // if (typeof height === "number") {
@@ -333,13 +333,12 @@ export class ChainChannelHelper {
         });
       }
     }
-    // if (typeof id === "string") {
-    if (id) {
+    if (signature) {
       has_query_params = true;
-      if (!BH.isValidBlockId(id)) {
+      if (!BH.isValidBlockSignature(signature)) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryBlockArg",
-          field: "id",
+          field: "signature",
         });
       }
     }
@@ -414,13 +413,13 @@ export class ChainChannelHelper {
         field: "height",
       });
     }
-    if (!BH.isValidBlockId(newBlockArg.blockId)) {
+    if (!BH.isValidBlockSignature(newBlockArg.signature)) {
       throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
         function: "boxNewBlockArg",
         field: "blockId",
       });
     }
-    if (!BH.isValidBlockId(newBlockArg.previousBlockId)) {
+    if (!BH.isValidBlockSignature(newBlockArg.previousBlockSignature)) {
       throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
         function: "boxNewBlockArg",
         field: "previousBlockId",

@@ -30,8 +30,8 @@ declare namespace BFChainCore {
     recipientId?: string;
     /**查询的区块的最小高度 */
     minHeight?: number;
-    /**查询的区块的ID */
-    blockId?: string;
+    /**查询的区块的signature */
+    blockSignature?: string;
     /**查询的区块的最大高度 */
     maxHeight?: number;
     /**查询自定义存储的KV */
@@ -88,7 +88,7 @@ declare namespace BFChainCore {
   }
   /**查询交易的查询条件 */
   type BlockQueryOptionsJSON = {
-    id?: string;
+    signature?: string;
     height?: number;
   };
   /**查询交易的传入对象 */
@@ -106,10 +106,10 @@ declare namespace BFChainCore {
   type NewBlockArgJSON = {
     /**区块高度 */
     height: number;
-    /**区块 id */
-    blockId: string;
-    /**前块 id */
-    previousBlockId: string;
+    /**区块 signature */
+    signature: string;
+    /**前块 signature */
+    previousBlockSignature: string;
     /**区块事件戳 */
     timestamp: number;
     /**区块总手续费 */

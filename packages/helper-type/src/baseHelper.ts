@@ -431,21 +431,21 @@ export class BaseHelper {
   }
 
   /**
-   * 交易 ID 是否合法
+   * 交易 signature 是否合法
    *
-   * @param id
+   * @param signature
    */
-  isValidTransactionId(id: string) {
-    return this.isValidSignature(id);
+  isValidTransactionSignature(signature: string) {
+    return this.isValidSignature(signature);
   }
 
   /**
-   * 区块 ID 是否合法
+   * 区块 signature 是否合法
    *
-   * @param id
+   * @param signature
    */
-  isValidBlockId(id: string) {
-    return this.isValidSignature(id);
+  isValidBlockSignature(signature: string) {
+    return this.isValidSignature(signature);
   }
 
   /**

@@ -1,4 +1,4 @@
-import { BlockFactory, BlockBody } from "./_blockbase";
+import { BlockFactory } from "./_blockbase";
 import { CommonBlock } from "@bfchain/core-model-block";
 import {
   BlockHelper,
@@ -63,7 +63,7 @@ export class CommonBlockFactory extends BlockFactory<CommonBlock> {
    * @param commonBlockRemark
    */
   verifyBlockBody(
-    body: BlockBody,
+    body: BFChainCore.BlockBody,
     commonBlockRemark: BFChainCore.CommonBlockRemarkJSON,
     config = this.config,
   ) {
@@ -108,7 +108,10 @@ export class CommonBlockFactory extends BlockFactory<CommonBlock> {
    * @param body
    * @param commonBlockRemark
    */
-  _generateBlock(body: BlockBody, commonBlockRemark: BFChainCore.CommonBlockRemarkJSON) {
+  _generateBlock(
+    body: BFChainCore.BlockBody,
+    commonBlockRemark: BFChainCore.CommonBlockRemarkJSON,
+  ) {
     const block = CommonBlock.fromObject({ ...body, remark: commonBlockRemark, statisticInfo: {} });
     // 绑定区块奖励
     block.reward = this.milestonesHelper.calcReward(block.height);

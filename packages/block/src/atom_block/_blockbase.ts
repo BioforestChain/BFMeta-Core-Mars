@@ -32,40 +32,6 @@ const {
   warn,
 } = CoreExceptionGenerator("CONTROLLER", "_blockbase");
 
-/**生成区块体的数据模型 */
-export type BlockBody = {
-  /**区块版本号 */
-  version: number;
-  /**区块高度 */
-  height: number;
-  // /**区块大小 */
-  // blockSize?: number;
-  /**锻造时间戳 */
-  timestamp: number;
-  // /**区块签名 */
-  // blockSignature?: string;
-  /**打块账户公钥 */
-  generatorPublicKey: string;
-  // /**处理的交易量 */
-  // numberOfTransactions: number;
-  // /**所有交易 hash 值 */
-  // payloadHash: string;
-  // /**所有交易的 hash 长度 */
-  // payloadLength: number;
-  /**前块 id */
-  previousBlock?: string;
-  // /**总资产数量 */
-  // totalAmount: string;
-  // /**总手续费 */
-  // totalFee: string;
-  // /**区块奖励 */
-  // reward: string;
-  // /**区块版本号 */
-  // version: number;
-  // /**区块所属的网络标识符 */
-  // magic: string;
-};
-
 export abstract class BlockFactory<T extends Block> {
   // abstract ERR: ReturnType<typeof ExceptionGenerator>;
   abstract transactionCore: import("@bfchain/core-transaction").TransactionCore;
@@ -95,7 +61,7 @@ export abstract class BlockFactory<T extends Block> {
    * @param transactions
    */
   async generateBlock(
-    body: BlockBody,
+    body: BFChainCore.BlockBody,
     remark: GetBlockRemarkJSON<T>,
     transactions: AsyncIterable<TransactionInBlock>,
     keypair: {
@@ -128,8 +94,8 @@ export abstract class BlockFactory<T extends Block> {
     const block = this._generateBlock(body, remark);
     // 绑定magic
     block.magic = config.magic;
-    // // 生产id
-    // block.id = this.blockHelper.generateId(block);
+    // // 生产signature
+    // block.signature = this.blockHelper.generateSignature(block);
     // 绑定交易相关的信息
     await this.insertTransactions(block, transactions, keypair, eventEmitter);
     eventEmitter && (await eventEmitter.emit("generatedBlock", block));
@@ -137,7 +103,7 @@ export abstract class BlockFactory<T extends Block> {
   }
 
   /**生产区块 */
-  abstract _generateBlock(body: BlockBody, remark: GetBlockRemarkJSON<T>): T;
+  abstract _generateBlock(body: BFChainCore.BlockBody, remark: GetBlockRemarkJSON<T>): T;
 
   /**
    * 绑定交易相关的信息
@@ -165,7 +131,7 @@ export abstract class BlockFactory<T extends Block> {
     /**本块交易所涉及的资产信息 */
     const statisticsInfo = this.statisticsHelper.forceGetStatisticsInfoByBlock(
       block.height,
-      block.id,
+      block.signature,
       block.statisticInfo,
     );
     try {
@@ -286,9 +252,7 @@ export abstract class BlockFactory<T extends Block> {
       });
       block.blockSize =
         block.getBytes().length +
-        (block.blockSignatureBuffer.length
-          ? 0
-          : 66) /* signature 的前置为 1位 + 32长度的signature */;
+        (block.signatureBuffer.length ? 0 : 66) /* signature 的前置为 1位 + 32长度的signature */;
 
       /// 临时恢复的操作，但会曝出警告
       if (eventEmitter.has("finishedDealTransactions")) {
@@ -301,7 +265,7 @@ export abstract class BlockFactory<T extends Block> {
     } catch (err) {
       throw err;
     } finally {
-      statisticsInfo.unref(block.id);
+      statisticsInfo.unref(block.signature);
     }
 
     return block;
@@ -365,7 +329,11 @@ export abstract class BlockFactory<T extends Block> {
    * @param body
    * @param remark
    */
-  verifyBlockBody(body: BlockBody, remark: GetBlockRemarkJSON<T>, config = this.config) {
+  verifyBlockBody(
+    body: BFChainCore.BlockBody,
+    remark: GetBlockRemarkJSON<T>,
+    config = this.config,
+  ) {
     const { baseHelper } = this;
     const Function_Exception_Detail = { function: "verifyBlockBody" };
     if (!body) {
@@ -403,9 +371,9 @@ export abstract class BlockFactory<T extends Block> {
       });
     }
 
-    if (body.height > 1 && !body.previousBlock) {
+    if (body.height > 1 && !body.previousBlockSignature) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "previousBlock",
+        prop: "previousBlockSignature",
         ...BlockBody_Exception_Detail,
       });
     }
@@ -517,7 +485,7 @@ export abstract class BlockFactory<T extends Block> {
      */
     const statisticsInfo = this.statisticsHelper.forceGetStatisticsInfoByBlock(
       block.height,
-      block.id,
+      block.signature,
       undefined,
       config,
     );
@@ -543,14 +511,14 @@ export abstract class BlockFactory<T extends Block> {
         this.transactionCore
           .getTransactionFactoryFromType(transaction.type)
           .verify(transaction, config);
-        if (appliedTransactions.has(transaction.id)) {
+        if (appliedTransactions.has(transaction.signature)) {
           throw new ArgumentIllegalException(DUPLICATE, {
-            variable: "transaction id",
+            variable: "transaction signature",
             value: transaction,
             ...Block_Exception_Detail,
           });
         }
-        appliedTransactions.add(transaction.id);
+        appliedTransactions.add(transaction.signature);
 
         if (
           !this.asymmetricHelper.detachedVeriy(
@@ -588,7 +556,7 @@ export abstract class BlockFactory<T extends Block> {
     } catch (err) {
       throw err;
     } finally {
-      statisticsInfo.unref(block.id);
+      statisticsInfo.unref(block.signature);
     }
 
     if (
@@ -663,26 +631,11 @@ export abstract class BlockFactory<T extends Block> {
     const { baseHelper } = this;
     if (
       block.height !== 1 &&
-      !block.previousBlock &&
-      baseHelper.isValidBlockId(block.previousBlock)
+      !block.previousBlockSignature &&
+      baseHelper.isValidBlockSignature(block.previousBlockSignature)
     ) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "previousBlock",
-        ...Block_Exception_Detail,
-      });
-    }
-
-    if (!block.id) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "id",
-        ...Block_Exception_Detail,
-      });
-    }
-
-    if (!baseHelper.isValidBlockId(block.id)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "id",
-        type: "block id",
+        prop: "previousBlockSignature",
         ...Block_Exception_Detail,
       });
     }
@@ -735,16 +688,16 @@ export abstract class BlockFactory<T extends Block> {
       });
     }
 
-    if (!block.blockSignature) {
+    if (!block.signature) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "blockSignature",
+        prop: "signature",
         ...Block_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isValidSignature(block.blockSignature)) {
+    if (!baseHelper.isValidSignature(block.signature)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "blockSignature",
+        prop: "signature",
         type: "signature",
         ...Block_Exception_Detail,
       });
@@ -815,8 +768,8 @@ export abstract class BlockFactory<T extends Block> {
     this.verifySignature(block);
   }
 
-  /**生成区块的ID */
-  generateId(block: Block) {
-    return this.blockHelper.generateId(block);
+  /**生成区块的 signature */
+  generateSignature(block: Block) {
+    return this.blockHelper.generateSignature(block);
   }
 }

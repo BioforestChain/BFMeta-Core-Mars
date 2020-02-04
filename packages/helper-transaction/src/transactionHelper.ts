@@ -76,19 +76,19 @@ export class TransactionHelper {
     return this.baseHelper.isValidTransactionType(type);
   }
   /**
-   * 获取交易 id
+   * 获取交易 signature
    *
    * @param trs
    */
-  generateId(trs: Transaction) {
+  generateSignature(trs: Transaction) {
     return this.cryptoHelper
       .sha256()
       .update(trs.getBytes())
       .digest("hex");
   }
-  /**是否是合法的交易 ID */
-  isValidId(id: string) {
-    return this.baseHelper.isValidTransactionId(id);
+  /**是否是合法的交易 signature */
+  isValidTransactionSignature(signature: string) {
+    return this.baseHelper.isValidTransactionSignature(signature);
   }
   //#region 交易类型
   /** BSE: 基础交易 */

@@ -390,13 +390,6 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
 
     const { baseHelper } = this;
 
-    if (!transaction.id) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "id",
-        ...Trs_Exception_Detail,
-      });
-    }
-
     if (!transaction.signature) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "signature",

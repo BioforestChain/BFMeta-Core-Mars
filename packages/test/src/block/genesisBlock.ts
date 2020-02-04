@@ -647,7 +647,7 @@ async function getGenesisBlockAsync() {
       height,
       timestamp: 0,
       generatorPublicKey,
-      previousBlock: "",
+      previousBlockSignature: "",
     },
     mainChainRemarkData,
     (async function* zz() {

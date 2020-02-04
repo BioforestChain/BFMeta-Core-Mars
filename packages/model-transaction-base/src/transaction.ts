@@ -61,10 +61,6 @@ export class Transaction<AJ extends object = object> extends Message<Transaction
   /*交易类型 */
   @Field.d(Transaction.INC++, "string")
   type!: string;
-  /**交易的 id */
-  get id() {
-    return this.signature;
-  }
   /**交易的发起账户地址 */
   @Field.d(Transaction.INC++, "string")
   senderId!: string;
@@ -204,7 +200,6 @@ export class Transaction<AJ extends object = object> extends Message<Transaction
       numberOfEffectiveBlocks: this.numberOfEffectiveBlocks,
       signature: this.signature,
       remark: this.remark,
-      id: this.id,
       asset: this.asset.toJSON() as AJ,
       nonce: this.nonce,
     };
