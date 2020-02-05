@@ -357,7 +357,7 @@ export class BlockForkChecker {
         pc1.height === pc2.height - 1
           ? /// 如果新区块是我现在所需要的下一个区块
             pc2.previousBlockSignature
-          : /// 使用forceGetBlockIdByHeight判定等高的区块signature是否一致，这样意味着下一个区块的前块signature
+          : /// 使用forceGetBlockSignatureByHeight判定等高的区块signature是否一致，这样意味着下一个区块的前块signature
             await this.blockHelper.forceGetBlockSignatureByHeight(pc1.height, blockGetterHelper2);
 
       if (pc4PreviousBlockSignature === pc1.signature) {

@@ -68,7 +68,7 @@ export class ChainChannelHelper {
       signatureBuffer,
       senderId,
       recipientId,
-      blockId,
+      blockSignature,
       minHeight,
       maxHeight,
       storage,
@@ -136,13 +136,13 @@ export class ChainChannelHelper {
         });
       }
     }
-    if (blockId) {
+    if (blockSignature) {
       //if (typeof maxHeight === "number") {
       has_query_params = true;
-      if (!BH.isValidBlockSignature(blockId)) {
+      if (!BH.isValidBlockSignature(blockSignature)) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.query",
-          field: "blockId",
+          field: "blockSignature",
         });
       }
     }
@@ -416,13 +416,13 @@ export class ChainChannelHelper {
     if (!BH.isValidBlockSignature(newBlockArg.signature)) {
       throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
         function: "boxNewBlockArg",
-        field: "blockId",
+        field: "signature",
       });
     }
     if (!BH.isValidBlockSignature(newBlockArg.previousBlockSignature)) {
       throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
         function: "boxNewBlockArg",
-        field: "previousBlockId",
+        field: "previousBlockSignature",
       });
     }
     if (!BH.isFiniteBigInt(newBlockArg.totalFee)) {

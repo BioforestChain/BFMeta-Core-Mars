@@ -39,7 +39,7 @@ export class TransactionQueryOptions extends Message<TransactionQueryOptions>
   minHeight?: number;
   /**查询的区块的ID */
   @Field.d(TransactionQueryOptions.INC++, "string", "optional")
-  blockId?: string;
+  blockSignature?: string;
   /**查询的区块的最大高度 */
   @Field.d(TransactionQueryOptions.INC++, "uint32", "optional")
   maxHeight?: number;
@@ -81,7 +81,7 @@ export class TransactionQueryOptions extends Message<TransactionQueryOptions>
       senderId: this.senderId,
       recipientId: this.recipientId,
       minHeight: this.minHeight,
-      blockId: this.blockId,
+      blockSignature: this.blockSignature,
       maxHeight: this.maxHeight,
       storage: this.storage,
       trusteeId: this.trusteeId,
