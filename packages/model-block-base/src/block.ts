@@ -141,7 +141,7 @@ export class Block<
   getBytes(skipSignature?: boolean, skipTransactions?: boolean) {
     const props: PropertyDescriptorMap = {};
     if (skipSignature) {
-      props.blockSignatureBuffer = { value: null };
+      props.signatureBuffer = { value: null };
     }
     if (skipTransactions) {
       props.transactionBufferList = { value: [] };

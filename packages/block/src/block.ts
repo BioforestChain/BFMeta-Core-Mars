@@ -92,7 +92,7 @@ export class BlockCore {
       keypair.secretKey,
     );
 
-    // Cannot assign to read only property 'blockSignatureBuffer' of object '#<GenesisBlock>'
+    // Cannot assign to read only property 'signatureBuffer' of object '#<GenesisBlock>'
     // return Object.freeze(block);
     return block;
   }
