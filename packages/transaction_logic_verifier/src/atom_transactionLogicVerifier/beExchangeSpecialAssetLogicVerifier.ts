@@ -153,16 +153,14 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
       }
     }
 
-    if (toExchangeSpecialAssetJson.numberOfEffectiveBlocks) {
-      if (numberOfEffectiveBlocks !== toExchangeSpecialAssetJson.numberOfEffectiveBlocks) {
-        throw new ConsensusException(NOT_MATCH, {
-          to_compare_prop: "numberOfEffectiveBlocks",
-          be_compare_prop: "numberOfEffectiveBlocks",
-          to_target: "BeExchangeSpecialAssetTransaction",
-          be_target: "ToExchangeSpecialAssetTransaction",
-          ...Function_Exception_Detail,
-        });
-      }
+    if (numberOfEffectiveBlocks !== toExchangeSpecialAssetJson.numberOfEffectiveBlocks) {
+      throw new ConsensusException(NOT_MATCH, {
+        to_compare_prop: "numberOfEffectiveBlocks",
+        be_compare_prop: "numberOfEffectiveBlocks",
+        to_target: "BeExchangeSpecialAssetTransaction",
+        be_target: "ToExchangeSpecialAssetTransaction",
+        ...Function_Exception_Detail,
+      });
     }
   }
 

@@ -184,16 +184,14 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
       });
     }
 
-    if (trustAssetJson.numberOfEffectiveBlocks) {
-      if (numberOfEffectiveBlocks !== trustAssetJson.numberOfEffectiveBlocks) {
-        throw new ConsensusException(NOT_MATCH, {
-          to_compare_prop: "numberOfEffectiveBlocks",
-          be_compare_prop: "numberOfEffectiveBlocks",
-          to_target: "SignForAssetTransaction",
-          be_target: "TrustAssetTransaction",
-          ...Function_Exception_Detail,
-        });
-      }
+    if (numberOfEffectiveBlocks !== trustAssetJson.numberOfEffectiveBlocks) {
+      throw new ConsensusException(NOT_MATCH, {
+        to_compare_prop: "numberOfEffectiveBlocks",
+        be_compare_prop: "numberOfEffectiveBlocks",
+        to_target: "SignForAssetTransaction",
+        be_target: "TrustAssetTransaction",
+        ...Function_Exception_Detail,
+      });
     }
 
     // if (trsAsset.numberOfBeginUnfrozenBlocks) {

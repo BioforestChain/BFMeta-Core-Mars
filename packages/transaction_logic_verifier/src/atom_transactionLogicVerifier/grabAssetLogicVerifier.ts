@@ -142,16 +142,14 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
       }
     }
 
-    if (transaction.numberOfEffectiveBlocks) {
-      if (numberOfEffectiveBlocks !== transaction.numberOfEffectiveBlocks) {
-        throw new ConsensusException(NOT_MATCH, {
-          to_compare_prop: "numberOfEffectiveBlocks",
-          be_compare_prop: "numberOfEffectiveBlocks",
-          to_target: "GrabAssetTransaction",
-          be_target: "GiftAssetTransaction",
-          ...Function_Exception_Detail,
-        });
-      }
+    if (numberOfEffectiveBlocks !== giftAssetJson.numberOfEffectiveBlocks) {
+      throw new ConsensusException(NOT_MATCH, {
+        to_compare_prop: "numberOfEffectiveBlocks",
+        be_compare_prop: "numberOfEffectiveBlocks",
+        to_target: "GrabAssetTransaction",
+        be_target: "GiftAssetTransaction",
+        ...Function_Exception_Detail,
+      });
     }
 
     if (trsAsset.numberOfBeginUnfrozenBlocks) {
