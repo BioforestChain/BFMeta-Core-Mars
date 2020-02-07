@@ -1,7 +1,0 @@
-{
-  "files": [],
-  "include": [],
-  "references": [
-    { "path": "./packages/core/tsconfig.cjs-es5.json" },
-  ]
-}

@@ -20,12 +20,6 @@
       {
         "packages": "*,-test",
         "type": "mergejson",
-        "from": "$ROOT_PROJECT/config/tsconfig_template/tsconfig.cjs-es5.json",
-        "to": "$PACKAGE/tsconfig.cjs-es5.json"
-      },
-      {
-        "packages": "*,-test",
-        "type": "mergejson",
         "from": "$ROOT_PROJECT/config/tsconfig_template/tsconfig.esm-es6.json",
         "to": "$PACKAGE/tsconfig.esm-es6.json"
       },
@@ -50,12 +44,11 @@
     "publ": "lerna publish",
     "publ:force": "lerna publish --force-publish",
     "lsts": "bdk-lsts -p=./tsconfig.json",
-    "build": "bdk-tsc --build ./tsconfig.all.json",
+    "dev": "bdk-tsc --build -w",
     "dev:all": "bdk-tsc --build ./tsconfig.all.json -w",
-    "dev:cjs-es5": "bdk-tsc --build ./tsconfig.cjs-es5.json -w",
     "dev:types": "bdk-tsc --build ./tsconfig.@types.json -w",
-    "rebuild": "npm run clear & npm run build",
-    "dev": "bdk-tsc --build -w"
+    "build": "bdk-tsc --build ./tsconfig.all.json",
+    "rebuild": "npm run clear & npm run build"
   },
   "keywords": [],
   "author": "",

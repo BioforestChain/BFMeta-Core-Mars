@@ -1,10 +1,17 @@
 {
   "include": [],
   "references": [
-    { "path": "./tsconfig.json" },
-    { "path": "./tsconfig.@types.json" },
-    { "path": "./tsconfig.esm.json" },
-    { "path": "./tsconfig.esm-es6.json" },
-    { "path": "./tsconfig.cjs-es5.json" }
+    {
+      "path": "./tsconfig.json"
+    },
+    {
+      "path": "./tsconfig.@types.json"
+    },
+    {
+      "path": "./tsconfig.esm.json"
+    },
+    {
+      "path": "./tsconfig.esm-es6.json"
+    }
   ]
 }
