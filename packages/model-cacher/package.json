@@ -17,9 +17,9 @@
     "@bfchain/core-typings": "^5.2.5"
   },
   "devDependencies": {
-    "@bfchain/protobuf": "^4.0.1"
+    "@bfchain/protobuf": "^4.0.3"
   },
   "peerDependencies": {
-    "@bfchain/protobuf": "^4.0.1"
+    "@bfchain/protobuf": "^4.0.3"
   }
 }

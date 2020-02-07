@@ -15,10 +15,10 @@
   ],
   "devDependencies": {
     "@bfchain/core-model-transaction": "^5.2.5",
-    "@bfchain/util": "^4.1.7"
+    "@bfchain/util": "^4.1.17"
   },
   "peerDependencies": {
     "@bfchain/core-model-transaction": "^5.0.19",
-    "@bfchain/util": "^4.1.7"
+    "@bfchain/util": "^4.1.17"
   }
 }

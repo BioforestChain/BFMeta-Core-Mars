@@ -21,11 +21,11 @@
     "@bfchain/core-typings": "^5.2.5"
   },
   "peerDepedences": {
-    "@bfchain/protobuf": "^4.0.0-dev.1",
-    "@bfchain/util": "^4.1.0-alpha.2"
+    "@bfchain/protobuf": "^4.0.3",
+    "@bfchain/util": "^4.1.17"
   },
   "devDepedences": {
-    "@bfchain/protobuf": "^4.0.0-dev.1",
-    "@bfchain/util": "^4.1.0-alpha.2"
+    "@bfchain/protobuf": "^4.0.3",
+    "@bfchain/util": "^4.1.17"
   }
 }

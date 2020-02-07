@@ -54,8 +54,9 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@bfchain/devkit": "^0.7.11",
     "lerna": "^3.20.2"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@bfchain/devkit": "^0.7.13"
+  }
 }
