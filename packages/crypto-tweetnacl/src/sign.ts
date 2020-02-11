@@ -389,7 +389,7 @@ function modL(r: ByteArray, x: NumArray) {
 
   for (j = 0; j < 32; j++) {
     x[j] += carry - (x[31] >> 4) * L[j];
-    carry = x[j] >> 8;
+    carry = Math.floor((x[j] + 128) / 256);
     x[j] &= 255;
   }
 
