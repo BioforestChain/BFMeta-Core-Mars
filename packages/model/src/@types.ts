@@ -491,7 +491,7 @@ declare namespace BFChainCore {
   };
   type ApplyTransactionEventEmitter<ES extends BFChainUtil.EventInOutMap = {}> = {
     assetChangesGetter?: (tib: TransactionInBlock) => TransactionInBlock["transactionAssetChanges"];
-  } & import("@bfchain/util").QueneEventEmitter<ApplyTransactionEventMap<ES>>;
+  } & BFChainUtil.QueneEventEmitter<ApplyTransactionEventMap<ES>>;
 
   //#endregion
 }
