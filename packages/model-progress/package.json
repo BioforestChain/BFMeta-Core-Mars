@@ -16,11 +16,5 @@
   "dependencies": {
     "@bfchain/core-model-common": "^5.2.6",
     "@bfchain/core-typings": "^5.2.6"
-  },
-  "peerDepedences": {
-    "@bfchain/protobuf": "^4.0.3"
-  },
-  "devDepedences": {
-    "@bfchain/protobuf": "^4.0.3"
   }
 }

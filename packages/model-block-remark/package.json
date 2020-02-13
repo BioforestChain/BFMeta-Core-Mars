@@ -18,13 +18,5 @@
     "@bfchain/core-model-cacher": "^5.2.6",
     "@bfchain/core-model-common": "^5.2.6",
     "@bfchain/core-typings": "^5.2.6"
-  },
-  "peerDepedences": {
-    "@bfchain/core-model-block": "^5.0.0-dev.0",
-    "@bfchain/protobuf": "^4.0.3"
-  },
-  "devDepedences": {
-    "@bfchain/core-model-block": "^5.0.0-dev.0",
-    "@bfchain/protobuf": "^4.0.3"
   }
 }

@@ -13,12 +13,6 @@
   "files": [
     "build"
   ],
-  "devDependencies": {
-    "@bfchain/util": "^4.1.17"
-  },
-  "peerDependencies": {
-    "@bfchain/util": "^4.1.17"
-  },
   "dependencies": {
     "@bfchain/core-typings": "^5.2.6",
     "@bfchain/core-util-exception-errorcode": "^5.2.6"

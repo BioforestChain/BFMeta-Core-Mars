@@ -14,11 +14,12 @@
     "build"
   ],
   "devDependencies": {
-    "@bfchain/core-model-transaction": "^5.2.6",
-    "@bfchain/util": "^4.1.17"
+    "@bfchain/protobuf": "^4.0.3",
+    "@bfchain/util": "^4.2.2"
   },
   "peerDependencies": {
-    "@bfchain/core-model-transaction": "^5.0.19",
+    "@bfchain/protobuf": "^4.0.3",
     "@bfchain/util": "^4.1.17"
-  }
+  },
+  "dependencies": {}
 }

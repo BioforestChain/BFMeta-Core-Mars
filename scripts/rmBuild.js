@@ -1,59 +1,17 @@
+// @ts-check
 const fs = require("fs");
 const path = require("path");
 const rootPath = path.resolve(__dirname, "../packages");
 const cachePath = path.resolve(__dirname, "../.cache");
 const typePath = path.resolve(rootPath, "@types");
 
-const prefix = "";
+const { matchRemover } = require("@bfchain/devkit");
 
-function removeFiles(targetPath) {
-  if (!fs.existsSync(targetPath)) {
-    return;
-  }
-  if (fs.statSync(targetPath).isDirectory()) {
-    const files = fs.readdirSync(targetPath);
-    for (const file of files) {
-      const curPath = targetPath + "/" + file;
-      if (fs.statSync(curPath).isDirectory()) {
-        // 递归获取文件夹
-        removeFiles(curPath);
-      } else {
-        fs.unlinkSync(curPath);
-      }
-    }
-    fs.rmdirSync(targetPath);
-  } else {
-    fs.unlinkSync(targetPath);
-  }
-}
-
-function rmBuild(rootPath, filter, maxDeep = Infinity, curDeep = 1) {
-  if (!fs.existsSync(rootPath)) {
-    return;
-  }
-  const files = fs.readdirSync(rootPath);
-  for (const file of files) {
-    const curPath = rootPath + "/" + file;
-
-    if (prefix && !curPath.includes(prefix)) {
-      continue;
-    }
-    if (file.includes("node_modules")) {
-      continue;
-    }
-    if (filter(file, curPath, curDeep)) {
-      removeFiles(curPath);
-    } else if (curDeep < maxDeep && fs.statSync(curPath).isDirectory()) {
-      rmBuild(curPath, filter, maxDeep, curDeep + 1);
-    }
-  }
-}
-
-rmBuild(
+matchRemover(
   rootPath,
   (file, fullpath, deep) =>
     deep === 2 && fs.statSync(fullpath).isDirectory() && file.includes("build"),
   2,
 );
-rmBuild(cachePath, _ => true);
-rmBuild(typePath, (file, _, deep) => deep > 1 && file !== "package.json");
+matchRemover(cachePath, _ => true);
+matchRemover(typePath, (file, _, deep) => deep > 1 && file !== "package.json");
