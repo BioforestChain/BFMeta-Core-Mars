@@ -13,6 +13,9 @@
     { "path": "../block_logic_verifier/tsconfig.@types.json" },
     { "path": "../block_ticker/tsconfig.@types.json" },
     { "path": "../channel/tsconfig.@types.json" },
+    { "path": "../crypto/tsconfig.@types.json" },
+    { "path": "../crypto-ed2curve/tsconfig.@types.json" },
+    { "path": "../crypto-tweetnacl/tsconfig.@types.json" },
     { "path": "../helper/tsconfig.@types.json" },
     { "path": "../helper-account_base/tsconfig.@types.json" },
     { "path": "../helper-asymmetric/tsconfig.@types.json" },
@@ -44,9 +47,6 @@
     { "path": "../typings/tsconfig.@types.json" },
     { "path": "../util-base58/tsconfig.@types.json" },
     { "path": "../util-exception/tsconfig.@types.json" },
-    { "path": "../util-exception-errorcode/tsconfig.@types.json" },
-    { "path": "../crypto/tsconfig.@types.json" },
-    { "path": "../crypto-ed2curve/tsconfig.@types.json" },
-    { "path": "../crypto-tweetnacl/tsconfig.@types.json" }
+    { "path": "../util-exception-errorcode/tsconfig.@types.json" }
   ]
 }

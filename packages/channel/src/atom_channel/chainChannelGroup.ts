@@ -485,7 +485,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
   private _eventFollower(
     data: BFChainUtil.InnerAnyInOutHandlerArg<BFChainCore.ChainChannelHanlderEventMap>[0],
   ) {
-    return this.emit(data.eventname, data.arg);
+    return this.emit(data.eventname, data.args);
   }
   private addChainChannel_(chainChannel: DH, opts = this.options) {
     this.chainChannelSet.add(chainChannel);
