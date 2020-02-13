@@ -1,13 +1,13 @@
 {
   "name": "@bfchain/core-crypto-tweetnacl",
-  "version": "5.2.9",
+  "version": "5.2.10",
   "main": "build/cjs/index.js",
   "type": "build/cjs/index.d.ts",
   "files": [
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-typings": "^5.2.9"
+    "@bfchain/core-typings": "^5.2.10"
   },
   "module": "build/cjs/index.d.ts"
 }
