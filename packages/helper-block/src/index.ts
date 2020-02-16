@@ -1,3 +1,3 @@
 import "./@types";
-typeof import("@bfchain/core-model-channel");
+import type {} from "@bfchain/core-model-channel";
 export * from "./blockHelper";

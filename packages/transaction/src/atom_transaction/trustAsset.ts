@@ -84,7 +84,6 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
     if (!recipientId) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "recipientId",
-        target: "body",
         ...Function_Exception_Detail,
       });
     }
@@ -119,7 +118,6 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
     if (!body.storage) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "storage",
-        target: "body",
         ...Function_Exception_Detail,
       });
     }
@@ -206,9 +204,9 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
     if (!baseHelper.isArray(trustees)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "trustees",
-        target: "trustAsset",
         type: "string array",
         ...TrustAssetAsset_Exception_Detail,
+        target: "trustAsset",
       });
     }
 
@@ -252,9 +250,9 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
     if (numberOfSignFor > maxSifnFor) {
       throw new ArgumentIllegalException(PROP_SHOULD_LTE_FIELD, {
         prop: "numberOfSignFor",
-        target: "trustAsset",
         field: maxSifnFor,
         ...TrustAssetAsset_Exception_Detail,
+        target: "trustAsset",
       });
     }
 
@@ -262,9 +260,9 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
     if (numberOfSignFor < 1) {
       throw new ArgumentIllegalException(PROP_SHOULD_GTE_FIELD, {
         prop: "numberOfSignFor",
-        target: "trustAsset",
         field: 1,
         ...TrustAssetAsset_Exception_Detail,
+        target: "trustAsset",
       });
     }
 

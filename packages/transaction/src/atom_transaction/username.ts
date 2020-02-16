@@ -76,7 +76,6 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
     if (body.recipientId) {
       throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
         prop: "recipientId",
-        target: "body",
         ...Function_Exception_Detail,
       });
     }
@@ -102,7 +101,6 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
     if (!body.storage) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "storage",
-        target: "body",
         ...Function_Exception_Detail,
       });
     }

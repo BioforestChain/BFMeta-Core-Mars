@@ -145,7 +145,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
   ) {
     const Function_Exception_Detail = {
       function: "verifyTransactionBody",
-    };
+    } as const;
 
     if (!body) {
       throw new ArgumentIllegalException(PARAM_LOST, {
@@ -254,8 +254,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "range",
         type: "transaction range",
-        target: "body",
-        ...Function_Exception_Detail,
+        ...TransactionBody_Exception_Detail,
       });
     }
 
@@ -295,7 +294,6 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     if (numberOfEffectiveBlocks > maxApplyAndConfirmedBlockHeightDiff) {
       throw new ArgumentIllegalException(PROP_SHOULD_LTE_FIELD, {
         prop: "numberOfEffectiveBlocks",
-        target: "body",
         field: maxApplyAndConfirmedBlockHeightDiff,
         ...TransactionBody_Exception_Detail,
       });

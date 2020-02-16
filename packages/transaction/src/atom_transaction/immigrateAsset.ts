@@ -81,7 +81,6 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<
     if (body.recipientId) {
       throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
         prop: "recipientId",
-        target: "body",
         ...Function_Exception_Detail,
       });
     }
@@ -107,7 +106,6 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<
     if (!body.storage) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "storage",
-        target: "body",
         ...Function_Exception_Detail,
       });
     }
@@ -153,8 +151,8 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<
     if (!otherChainConfig) {
       throw new ArgumentIllegalException(NOT_EXIST, {
         prop: emigrateAssetTransactionModel.fromMagic,
-        target: "configMap",
         ...Function_Exception_Detail,
+        target: "configMap",
       });
     }
     emigrateAssetTransactionFactory.verify(emigrateAssetTransactionModel, otherChainConfig);
@@ -201,8 +199,8 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "genesisDelegateSignature",
         type: "signature",
-        target: "genesisDelegateSignature",
         ...Function_Exception_Detail,
+        target: "immigrateAsset",
       });
     }
 
@@ -218,8 +216,8 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "genesisDelegateSignSignature",
           type: "signature",
-          target: "genesisDelegateSignSignature",
           ...Function_Exception_Detail,
+          target: "immigrateAsset",
         });
       }
     }

@@ -86,7 +86,6 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
     if (!recipientId) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "recipientId",
-        target: "body",
         ...Function_Exception_Detail,
       });
     }
@@ -123,7 +122,6 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
     if (!body.storage) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "storage",
-        target: "body",
         ...Function_Exception_Detail,
       });
     }
@@ -229,8 +227,8 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "trustSenderId",
         type: "account address",
-        target: "trustAsset",
         ...Function_Exception_Detail,
+        target: "trustAsset",
       });
     }
 
@@ -343,10 +341,10 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
         })
       ) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "thirdPartySignature",
+          prop: "signature",
           type: "signature",
-          target: "thirdPartySignatures",
           ...Function_Exception_Detail,
+          target: `thirdPartySignatures[${thirdPartySignatures.indexOf(thirdPartySignature)}]`,
         });
       }
       if (secondPublicKey && signSignature) {
@@ -361,10 +359,10 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
           })
         ) {
           throw new ArgumentIllegalException(PROP_IS_INVALID, {
-            prop: "thirdPartySignature",
+            prop: "signSignature",
             type: "signature",
-            target: "thirdPartySignatures",
             ...Function_Exception_Detail,
+            target: `thirdPartySignatures[${thirdPartySignatures.indexOf(thirdPartySignature)}]`,
           });
         }
       }

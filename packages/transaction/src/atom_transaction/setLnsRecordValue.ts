@@ -84,7 +84,6 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<
     if (body.recipientId) {
       throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
         prop: "recipientId",
-        target: "body",
         ...Function_Exception_Detail,
       });
     }
@@ -94,7 +93,6 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<
         to_compare_prop: "fromMagic",
         to_target: "body",
         be_compare_prop: "local chain magic",
-        target: "body",
         ...Function_Exception_Detail,
       });
     }
@@ -104,7 +102,6 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<
         to_compare_prop: "toMagic",
         to_target: "body",
         be_compare_prop: "local chain magic",
-        target: "body",
         ...Function_Exception_Detail,
       });
     }
@@ -112,7 +109,6 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<
     if (!body.storage) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "storage",
-        target: "body",
         ...Function_Exception_Detail,
       });
     }

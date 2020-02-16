@@ -1,8 +1,8 @@
 import "./@types";
-typeof import("@bfchain/util");
-typeof import("@bfchain/core-typings");
-typeof import("@bfchain/core-model-cacher");
-typeof import("@bfchain/core-model-common");
-typeof import("@bfchain/core-model-constants");
+import type {} from "@bfchain/util";
+import type {} from "@bfchain/core-typings";
+import type {} from "@bfchain/core-model-cacher";
+import type {} from "@bfchain/core-model-common";
+import type {} from "@bfchain/core-model-constants";
 
 export * from "./transaction";

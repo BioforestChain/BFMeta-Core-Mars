@@ -74,7 +74,6 @@ export class TransferAssetTransactionFactory extends TransactionFactory<Transfer
     if (!recipientId) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "recipientId",
-        target: "body",
         ...Function_Exception_Detail,
       });
     }
@@ -109,7 +108,6 @@ export class TransferAssetTransactionFactory extends TransactionFactory<Transfer
     if (!body.storage) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "storage",
-        target: "body",
         ...Function_Exception_Detail,
       });
     }

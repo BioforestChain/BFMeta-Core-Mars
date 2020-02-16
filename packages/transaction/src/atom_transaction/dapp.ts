@@ -132,7 +132,10 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
   verifyDAppAsset(dapp: BFChainCore.DAppJSON, config = this.configHelper) {
     const { baseHelper } = this;
 
-    const Function_Exception_Detail = { function: "verifyTransactionBody" } as const;
+    const Function_Exception_Detail = {
+      target: "body",
+      function: "verifyTransactionBody",
+    } as const;
 
     if (!dapp) {
       throw new ArgumentIllegalException(PARAM_LOST, {
@@ -142,8 +145,8 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
     }
 
     const DappAsset_Exception_Detail = {
-      target: "dappAsset",
       ...Function_Exception_Detail,
+      target: "dappAsset",
     } as const;
 
     const { dappid, sourceChainMagic, sourceChainName, type, purchaseAsset } = dapp;
@@ -167,10 +170,10 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
     if (len < 17 || len > 32) {
       throw new ArgumentIllegalException(NOT_IN_EXPECTED_RANGE, {
         prop: "dappid",
-        target: "dapp length",
         min: 17,
         max: 32,
         ...DappAsset_Exception_Detail,
+        target: "dapp length",
       });
     }
 
@@ -189,7 +192,6 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
         to_compare_prop: "sourceChainName",
         to_target: "body",
         be_compare_prop: "local chain name",
-        target: "body",
         ...Function_Exception_Detail,
       });
     }
@@ -201,7 +203,7 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
         to_compare_prop: "sourceChainMagic",
         to_target: "body",
         be_compare_prop: "local chain magic",
-        target: "body",
+
         ...Function_Exception_Detail,
       });
     }

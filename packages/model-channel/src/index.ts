@@ -1,7 +1,7 @@
 import "./@types";
 import { Message, Type, Field } from "@bfchain/protobuf";
 import { DUPLEX_API_CMD } from "./constants";
-typeof import("@bfchain/core-model-block");
+import type {} from "@bfchain/core-model-block";
 
 export * from "./constants";
 export * from "./common.chainChannel.model";

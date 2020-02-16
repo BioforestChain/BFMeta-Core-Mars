@@ -96,7 +96,6 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
     if (!recipientId) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "recipientId",
-        target: "body",
         ...Function_Exception_Detail,
       });
     }
@@ -106,7 +105,6 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
         to_compare_prop: "fromMagic",
         to_target: "body",
         be_compare_prop: "local chain magic",
-        target: "body",
         ...Function_Exception_Detail,
       });
     }
@@ -116,7 +114,6 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
         to_compare_prop: "toMagic",
         to_target: "body",
         be_compare_prop: "local chain magic",
-        target: "body",
         ...Function_Exception_Detail,
       });
     }
@@ -124,7 +121,6 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
     if (!body.storage) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "storage",
-        target: "body",
         ...Function_Exception_Detail,
       });
     }
@@ -363,8 +359,8 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
     if (!should_grap_amount_BI) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "calculate amount",
-        target: "giftAsset",
         ...Function_Exception_Detail,
+        target: "giftAsset",
       });
     }
 

@@ -78,7 +78,6 @@ export class MarkTransactionFactory extends TransactionFactory<MarkTransaction> 
     if (!recipientId) {
       throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
         prop: "recipientId",
-        target: "body",
         ...Function_Exception_Detail,
       });
     }
@@ -88,7 +87,6 @@ export class MarkTransactionFactory extends TransactionFactory<MarkTransaction> 
         to_compare_prop: "fromMagic",
         to_target: "body",
         be_compare_prop: "chain magic",
-        target: "body",
         ...Function_Exception_Detail,
       });
     }
@@ -98,7 +96,6 @@ export class MarkTransactionFactory extends TransactionFactory<MarkTransaction> 
         to_compare_prop: "toMagic",
         to_target: "body",
         be_compare_prop: "chain magic",
-        target: "body",
         ...Function_Exception_Detail,
       });
     }
@@ -106,7 +103,6 @@ export class MarkTransactionFactory extends TransactionFactory<MarkTransaction> 
     if (!body.storage) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "storage",
-        target: "body",
         ...Function_Exception_Detail,
       });
     }

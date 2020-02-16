@@ -1,6 +1,6 @@
 import "./@types";
 import "@bfchain/core-typings";
-typeof import("@bfchain/core-model-common");
+import type {} from "@bfchain/core-model-common";
 
 export * from "./blockchainStatus.model";
 export * from "./blocks.model";

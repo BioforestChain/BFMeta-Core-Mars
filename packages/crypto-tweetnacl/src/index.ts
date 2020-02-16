@@ -6,7 +6,7 @@ export * from "./curve25519";
 
 import { sign_detached, sign_detached_verify, sign_keyPair_fromSeed } from "./sign";
 import { BoxLength, box, box_open } from "./box";
-typeof import("@bfchain/core-typings");
+import type {} from "@bfchain/core-typings";
 
 export const keypairHelper: BFChainCore.KeypairHelperInterface = {
   create(secretHash: Uint8Array) {

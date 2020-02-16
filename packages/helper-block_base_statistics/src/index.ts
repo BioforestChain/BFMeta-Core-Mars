@@ -1,5 +1,5 @@
 import "./@types";
 
-typeof import("@bfchain/core-model");
+import type {} from "@bfchain/core-model";
 
 export * from "./blockBaseStatisticsHelper";

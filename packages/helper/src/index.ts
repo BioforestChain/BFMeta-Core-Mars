@@ -1,6 +1,6 @@
 import "./@types";
 
-typeof import("@bfchain/core-model-transaction");
+import type {} from "@bfchain/core-model-transaction";
 
 export * from "./default-constants";
 

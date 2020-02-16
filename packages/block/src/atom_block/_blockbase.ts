@@ -290,7 +290,7 @@ export abstract class BlockFactory<T extends Block> {
 
     const Keypair_Exception_Detail = {
       target: "keypair",
-    };
+    } as const;
     const { baseHelper } = this;
 
     if (!keypair.publicKey) {
@@ -302,7 +302,6 @@ export abstract class BlockFactory<T extends Block> {
     if (!baseHelper.isValidPublicKey(keypair.publicKey)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "publicKey",
-        target: "keypair",
         ...Keypair_Exception_Detail,
       });
     }
@@ -317,7 +316,6 @@ export abstract class BlockFactory<T extends Block> {
     if (!baseHelper.isValidSecretKey(keypair.secretKey)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "secretKey",
-        target: "keypair",
         ...Keypair_Exception_Detail,
       });
     }
@@ -409,7 +407,7 @@ export abstract class BlockFactory<T extends Block> {
     const Block_Exception_Detail = {
       target: "block",
       ...Function_Exception_Detail,
-    };
+    } as const;
 
     const { baseHelper } = this;
 
@@ -435,7 +433,6 @@ export abstract class BlockFactory<T extends Block> {
     if (totalTransaction > config.maxTPSPerBlock) {
       throw new ArgumentFormatException(PROP_SHOULD_LTE_FIELD, {
         prop: "transactions length",
-        target: "block",
         field: `maxTPSPerBlock ${config.maxTPSPerBlock}`,
         ...Block_Exception_Detail,
       });
@@ -594,7 +591,6 @@ export abstract class BlockFactory<T extends Block> {
     if (block.payloadLength !== payloadLength) {
       throw new ArgumentIllegalException(PROP_SHOULD_EQ_FIELD, {
         prop: "payloadLength",
-        target: "block",
         field: payloadLength,
         ...Block_Exception_Detail,
       });

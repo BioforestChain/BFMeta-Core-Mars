@@ -58,7 +58,6 @@ export class RejectVoteTransactionFactory extends TransactionFactory<RejectVoteT
     if (body.recipientId) {
       throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
         prop: "recipientId",
-        target: "body",
         ...Function_Exception_Detail,
       });
     }
@@ -68,7 +67,6 @@ export class RejectVoteTransactionFactory extends TransactionFactory<RejectVoteT
         to_compare_prop: "fromMagic",
         to_target: "body",
         be_compare_prop: "chain magic",
-        target: "body",
         ...Function_Exception_Detail,
       });
     }
@@ -78,7 +76,6 @@ export class RejectVoteTransactionFactory extends TransactionFactory<RejectVoteT
         to_compare_prop: "toMagic",
         to_target: "body",
         be_compare_prop: "chain magic",
-        target: "body",
         ...Function_Exception_Detail,
       });
     }

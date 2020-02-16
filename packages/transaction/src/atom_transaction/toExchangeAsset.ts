@@ -77,7 +77,6 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<
     if (body.recipientId) {
       throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
         prop: "recipientId",
-        target: "body",
         ...Function_Exception_Detail,
       });
     }
@@ -87,7 +86,6 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<
         to_compare_prop: "fromMagic",
         to_target: "body",
         be_compare_prop: "local chain magic",
-        target: "body",
         ...Function_Exception_Detail,
       });
     }
@@ -97,7 +95,6 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<
         to_compare_prop: "toMagic",
         to_target: "body",
         be_compare_prop: "local chain magic",
-        target: "body",
         ...Function_Exception_Detail,
       });
     }
@@ -105,7 +102,6 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<
     if (body.range.includes(body.senderId)) {
       throw new ArgumentIllegalException(SHOULD_NOT_INCLUDE, {
         prop: "range",
-        target: "body",
         value: body.senderId,
         ...Function_Exception_Detail,
       });

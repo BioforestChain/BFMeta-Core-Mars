@@ -1,2 +1,2 @@
-typeof import("@bfchain/util");
+import type {} from "@bfchain/util";
 import "./@types";

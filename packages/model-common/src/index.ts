@@ -1,5 +1,5 @@
 import "./@types";
-typeof import("@bfchain/util");
+import type {} from "@bfchain/util";
 
 export * from "./fraction.model";
 export * from "./range.model";

@@ -15,7 +15,7 @@
   ],
   "devDependencies": {
     "@bfchain/protobuf": "^4.0.3",
-    "@bfchain/util": "^4.2.11"
+    "@bfchain/util": "^4.2.15"
   },
   "peerDependencies": {
     "@bfchain/protobuf": "^4.0.3",

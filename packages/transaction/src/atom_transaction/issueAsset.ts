@@ -140,8 +140,8 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
     }
 
     const IssueAssetAsset_Exception_Detail = {
-      target: "issueAssetAsset",
       ...Function_Exception_Detail,
+      target: "issueAssetAsset",
     } as const;
 
     const {
@@ -159,7 +159,6 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
         to_compare_prop: "sourceChainName",
         to_target: "body",
         be_compare_prop: "local chain name",
-        target: "body",
         ...Function_Exception_Detail,
       });
     }
@@ -171,7 +170,6 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
         to_compare_prop: "sourceChainMagic",
         to_target: "body",
         be_compare_prop: "local chain magic",
-        target: "body",
         ...Function_Exception_Detail,
       });
     }
