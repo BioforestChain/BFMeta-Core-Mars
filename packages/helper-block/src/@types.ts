@@ -139,9 +139,7 @@ declare namespace BFChainCore {
   interface ChannelEndpointInterface<T = Uint8Array> {
     onMessage(handle: (messageData: T) => any): EventListenerRemover;
     postMessage(messageData: T): void;
-    onClose(
-      handle: (error: import("@bfchain/util").InterruptedException) => any,
-    ): EventListenerRemover;
+    onClose(handle: (error: BFChainUtil.InterruptedException) => any): EventListenerRemover;
     close(reason?: string): void;
   }
   //#endregion

@@ -55,7 +55,7 @@ declare namespace BFChainCore {
     mayby_height: number;
     delay: number;
     onClose(
-      handler: (error: import("@bfchain/util").InterruptedException) => any,
+      handler: (error: BFChainUtil.InterruptedException) => any,
       once?: boolean,
     ): EventListenerRemover;
 
