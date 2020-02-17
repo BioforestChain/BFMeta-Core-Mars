@@ -1,2 +1,2 @@
-import "@bfchain/core-typings";
+import type {} from "@bfchain/core-typings";
 export * from "./asymmetricHelper";

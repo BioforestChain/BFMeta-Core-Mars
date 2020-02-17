@@ -1,5 +1,5 @@
-import "@bfchain/core-typings";
-import "@bfchain/core-model-block-base";
+import type {} from "@bfchain/core-typings";
+import type {} from "@bfchain/core-model-block-base";
 import "./@types";
 
 export * from "./commonBlockRemark";

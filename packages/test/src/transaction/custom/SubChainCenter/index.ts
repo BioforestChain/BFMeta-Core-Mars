@@ -3,7 +3,6 @@
  */
 
 import "./types";
-import "@bfchain/core/helper/types";
 import { Reader } from "@bfchain/protobuf";
 import * as WorkerMsg from "./message";
 import { Worker, MessageChannel, MessagePort, isMainThread, parentPort } from "worker_threads";

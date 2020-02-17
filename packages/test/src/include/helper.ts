@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import "@bfchain/core-typings";
 import { keypairHelper } from "@bfchain/core-crypto-tweetnacl";
 import { ed2curveHelper } from "@bfchain/core-crypto-ed2curve";
 

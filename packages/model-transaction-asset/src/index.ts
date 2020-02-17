@@ -1,7 +1,7 @@
 import "./@types";
-import "@bfchain/util";
-import "@bfchain/core-typings";
-import "@bfchain/core-model-transaction-base";
+import type {} from "@bfchain/util";
+import type {} from "@bfchain/core-typings";
+import type {} from "@bfchain/core-model-transaction-base";
 export * from "./username";
 export * from "./signature";
 export * from "./delegate";
