@@ -6,5 +6,16 @@
   ],
   "compilerOptions": {
     "outDir": "./build/esm"
-  }
+  },
+  "references": [
+    {
+      "path": "../helper-config/tsconfig.esm.json"
+    },
+    {
+      "path": "../typings/tsconfig.esm.json"
+    },
+    {
+      "path": "../util-base58/tsconfig.esm.json"
+    }
+  ]
 }

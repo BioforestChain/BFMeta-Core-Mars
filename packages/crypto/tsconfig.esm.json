@@ -6,5 +6,16 @@
   ],
   "compilerOptions": {
     "outDir": "./build/esm"
-  }
+  },
+  "references": [
+    {
+      "path": "../crypto-ed2curve/tsconfig.esm.json"
+    },
+    {
+      "path": "../crypto-tweetnacl/tsconfig.esm.json"
+    },
+    {
+      "path": "../typings/tsconfig.esm.json"
+    }
+  ]
 }

@@ -10,5 +10,21 @@
     "outDir": "../../.cache/transaction_logic_verifier",
     "tsBuildInfoFile": "../../.cache/transaction_logic_verifier/@types.tsbuildinfo"
   },
-  "references": []
+  "references": [
+    {
+      "path": "../helper/tsconfig.@types.json"
+    },
+    {
+      "path": "../model/tsconfig.@types.json"
+    },
+    {
+      "path": "../transaction/tsconfig.@types.json"
+    },
+    {
+      "path": "../typings/tsconfig.@types.json"
+    },
+    {
+      "path": "../util-exception/tsconfig.@types.json"
+    }
+  ]
 }

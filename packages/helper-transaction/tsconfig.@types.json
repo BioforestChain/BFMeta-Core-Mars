@@ -10,5 +10,33 @@
     "outDir": "../../.cache/helper-transaction",
     "tsBuildInfoFile": "../../.cache/helper-transaction/@types.tsbuildinfo"
   },
-  "references": []
+  "references": [
+    {
+      "path": "../helper-account_base/tsconfig.@types.json"
+    },
+    {
+      "path": "../helper-asymmetric/tsconfig.@types.json"
+    },
+    {
+      "path": "../helper-bigint/tsconfig.@types.json"
+    },
+    {
+      "path": "../helper-config/tsconfig.@types.json"
+    },
+    {
+      "path": "../helper-type/tsconfig.@types.json"
+    },
+    {
+      "path": "../model-constants/tsconfig.@types.json"
+    },
+    {
+      "path": "../model-transaction/tsconfig.@types.json"
+    },
+    {
+      "path": "../typings/tsconfig.@types.json"
+    },
+    {
+      "path": "../util-exception/tsconfig.@types.json"
+    }
+  ]
 }

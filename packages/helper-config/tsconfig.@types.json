@@ -10,5 +10,15 @@
     "outDir": "../../.cache/helper-config",
     "tsBuildInfoFile": "../../.cache/helper-config/@types.tsbuildinfo"
   },
-  "references": []
+  "references": [
+    {
+      "path": "../model-block/tsconfig.@types.json"
+    },
+    {
+      "path": "../typings/tsconfig.@types.json"
+    },
+    {
+      "path": "../util-exception-errorcode/tsconfig.@types.json"
+    }
+  ]
 }

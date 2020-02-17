@@ -10,5 +10,18 @@
     "outDir": "../../.cache/transaction",
     "tsBuildInfoFile": "../../.cache/transaction/@types.tsbuildinfo"
   },
-  "references": []
+  "references": [
+    {
+      "path": "../helper/tsconfig.@types.json"
+    },
+    {
+      "path": "../model/tsconfig.@types.json"
+    },
+    {
+      "path": "../typings/tsconfig.@types.json"
+    },
+    {
+      "path": "../util-exception/tsconfig.@types.json"
+    }
+  ]
 }

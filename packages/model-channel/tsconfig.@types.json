@@ -10,5 +10,21 @@
     "outDir": "../../.cache/model-channel",
     "tsBuildInfoFile": "../../.cache/model-channel/@types.tsbuildinfo"
   },
-  "references": []
+  "references": [
+    {
+      "path": "../model-block/tsconfig.@types.json"
+    },
+    {
+      "path": "../model-constants/tsconfig.@types.json"
+    },
+    {
+      "path": "../model-progress/tsconfig.@types.json"
+    },
+    {
+      "path": "../model-transaction/tsconfig.@types.json"
+    },
+    {
+      "path": "../typings/tsconfig.@types.json"
+    }
+  ]
 }

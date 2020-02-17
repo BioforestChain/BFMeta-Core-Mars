@@ -6,5 +6,19 @@
   ],
   "compilerOptions": {
     "outDir": "./build/esm"
-  }
+  },
+  "references": [
+    {
+      "path": "../model-cacher/tsconfig.esm.json"
+    },
+    {
+      "path": "../model-common/tsconfig.esm.json"
+    },
+    {
+      "path": "../model-constants/tsconfig.esm.json"
+    },
+    {
+      "path": "../typings/tsconfig.esm.json"
+    }
+  ]
 }

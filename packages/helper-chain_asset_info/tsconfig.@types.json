@@ -10,5 +10,12 @@
     "outDir": "../../.cache/helper-chain_asset_info",
     "tsBuildInfoFile": "../../.cache/helper-chain_asset_info/@types.tsbuildinfo"
   },
-  "references": []
+  "references": [
+    {
+      "path": "../typings/tsconfig.@types.json"
+    },
+    {
+      "path": "../util-exception-errorcode/tsconfig.@types.json"
+    }
+  ]
 }

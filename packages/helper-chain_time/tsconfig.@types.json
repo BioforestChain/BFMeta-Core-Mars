@@ -10,5 +10,15 @@
     "outDir": "../../.cache/helper-chain_time",
     "tsBuildInfoFile": "../../.cache/helper-chain_time/@types.tsbuildinfo"
   },
-  "references": []
+  "references": [
+    {
+      "path": "../typings/tsconfig.@types.json"
+    },
+    {
+      "path": "../util-exception-errorcode/tsconfig.@types.json"
+    },
+    {
+      "path": "../util-exception/tsconfig.@types.json"
+    }
+  ]
 }

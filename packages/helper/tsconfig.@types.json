@@ -10,5 +10,45 @@
     "outDir": "../../.cache/helper",
     "tsBuildInfoFile": "../../.cache/helper/@types.tsbuildinfo"
   },
-  "references": []
+  "references": [
+    {
+      "path": "../helper-account_base/tsconfig.@types.json"
+    },
+    {
+      "path": "../helper-asymmetric/tsconfig.@types.json"
+    },
+    {
+      "path": "../helper-bigint/tsconfig.@types.json"
+    },
+    {
+      "path": "../helper-block_base_statistics/tsconfig.@types.json"
+    },
+    {
+      "path": "../helper-block/tsconfig.@types.json"
+    },
+    {
+      "path": "../helper-chain_asset_info/tsconfig.@types.json"
+    },
+    {
+      "path": "../helper-chain_time/tsconfig.@types.json"
+    },
+    {
+      "path": "../helper-config/tsconfig.@types.json"
+    },
+    {
+      "path": "../helper-milestones/tsconfig.@types.json"
+    },
+    {
+      "path": "../helper-transaction/tsconfig.@types.json"
+    },
+    {
+      "path": "../helper-type/tsconfig.@types.json"
+    },
+    {
+      "path": "../typings/tsconfig.@types.json"
+    },
+    {
+      "path": "../util-exception-errorcode/tsconfig.@types.json"
+    }
+  ]
 }

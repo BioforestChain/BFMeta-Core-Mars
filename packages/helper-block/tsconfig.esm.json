@@ -6,5 +6,28 @@
   ],
   "compilerOptions": {
     "outDir": "./build/esm"
-  }
+  },
+  "references": [
+    {
+      "path": "../helper-account_base/tsconfig.esm.json"
+    },
+    {
+      "path": "../helper-config/tsconfig.esm.json"
+    },
+    {
+      "path": "../helper-type/tsconfig.esm.json"
+    },
+    {
+      "path": "../model/tsconfig.esm.json"
+    },
+    {
+      "path": "../typings/tsconfig.esm.json"
+    },
+    {
+      "path": "../util-exception-errorcode/tsconfig.esm.json"
+    },
+    {
+      "path": "../util-exception/tsconfig.esm.json"
+    }
+  ]
 }

@@ -10,5 +10,9 @@
     "outDir": "../../.cache/helper-asymmetric",
     "tsBuildInfoFile": "../../.cache/helper-asymmetric/@types.tsbuildinfo"
   },
-  "references": []
+  "references": [
+    {
+      "path": "../typings/tsconfig.@types.json"
+    }
+  ]
 }

@@ -10,5 +10,33 @@
     "outDir": "../../.cache/model",
     "tsBuildInfoFile": "../../.cache/model/@types.tsbuildinfo"
   },
-  "references": []
+  "references": [
+    {
+      "path": "../model-block/tsconfig.@types.json"
+    },
+    {
+      "path": "../model-cacher/tsconfig.@types.json"
+    },
+    {
+      "path": "../model-channel/tsconfig.@types.json"
+    },
+    {
+      "path": "../model-common/tsconfig.@types.json"
+    },
+    {
+      "path": "../model-constants/tsconfig.@types.json"
+    },
+    {
+      "path": "../model-progress/tsconfig.@types.json"
+    },
+    {
+      "path": "../model-subchain/tsconfig.@types.json"
+    },
+    {
+      "path": "../model-transaction/tsconfig.@types.json"
+    },
+    {
+      "path": "../typings/tsconfig.@types.json"
+    }
+  ]
 }

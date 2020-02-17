@@ -10,5 +10,15 @@
     "outDir": "../../.cache/transaction_subchain",
     "tsBuildInfoFile": "../../.cache/transaction_subchain/@types.tsbuildinfo"
   },
-  "references": []
+  "references": [
+    {
+      "path": "../block/tsconfig.@types.json"
+    },
+    {
+      "path": "../transaction/tsconfig.@types.json"
+    },
+    {
+      "path": "../typings/tsconfig.@types.json"
+    }
+  ]
 }

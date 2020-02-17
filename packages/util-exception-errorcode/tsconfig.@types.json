@@ -10,5 +10,9 @@
     "outDir": "../../.cache/util-exception-errorcode",
     "tsBuildInfoFile": "../../.cache/util-exception-errorcode/@types.tsbuildinfo"
   },
-  "references": []
+  "references": [
+    {
+      "path": "../typings/tsconfig.@types.json"
+    }
+  ]
 }

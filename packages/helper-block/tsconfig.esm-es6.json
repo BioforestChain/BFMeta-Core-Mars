@@ -6,5 +6,28 @@
   ],
   "compilerOptions": {
     "outDir": "./build/esm-es6"
-  }
+  },
+  "references": [
+    {
+      "path": "../helper-account_base/tsconfig.esm-es6.json"
+    },
+    {
+      "path": "../helper-config/tsconfig.esm-es6.json"
+    },
+    {
+      "path": "../helper-type/tsconfig.esm-es6.json"
+    },
+    {
+      "path": "../model/tsconfig.esm-es6.json"
+    },
+    {
+      "path": "../typings/tsconfig.esm-es6.json"
+    },
+    {
+      "path": "../util-exception-errorcode/tsconfig.esm-es6.json"
+    },
+    {
+      "path": "../util-exception/tsconfig.esm-es6.json"
+    }
+  ]
 }

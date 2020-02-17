@@ -10,5 +10,12 @@
     "outDir": "../../.cache/helper-milestones",
     "tsBuildInfoFile": "../../.cache/helper-milestones/@types.tsbuildinfo"
   },
-  "references": []
+  "references": [
+    {
+      "path": "../typings/tsconfig.@types.json"
+    },
+    {
+      "path": "../util-exception-errorcode/tsconfig.@types.json"
+    }
+  ]
 }

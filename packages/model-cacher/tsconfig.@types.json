@@ -10,5 +10,9 @@
     "outDir": "../../.cache/model-cacher",
     "tsBuildInfoFile": "../../.cache/model-cacher/@types.tsbuildinfo"
   },
-  "references": []
+  "references": [
+    {
+      "path": "../typings/tsconfig.@types.json"
+    }
+  ]
 }

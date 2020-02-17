@@ -6,5 +6,34 @@
   ],
   "compilerOptions": {
     "outDir": "./build/esm"
-  }
+  },
+  "references": [
+    {
+      "path": "../helper-account_base/tsconfig.esm.json"
+    },
+    {
+      "path": "../helper-asymmetric/tsconfig.esm.json"
+    },
+    {
+      "path": "../helper-bigint/tsconfig.esm.json"
+    },
+    {
+      "path": "../helper-config/tsconfig.esm.json"
+    },
+    {
+      "path": "../helper-type/tsconfig.esm.json"
+    },
+    {
+      "path": "../model-constants/tsconfig.esm.json"
+    },
+    {
+      "path": "../model-transaction/tsconfig.esm.json"
+    },
+    {
+      "path": "../typings/tsconfig.esm.json"
+    },
+    {
+      "path": "../util-exception/tsconfig.esm.json"
+    }
+  ]
 }

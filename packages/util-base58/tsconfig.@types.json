@@ -10,5 +10,12 @@
     "outDir": "../../.cache/util-base58",
     "tsBuildInfoFile": "../../.cache/util-base58/@types.tsbuildinfo"
   },
-  "references": []
+  "references": [
+    {
+      "path": "../typings/tsconfig.@types.json"
+    },
+    {
+      "path": "../util-exception-errorcode/tsconfig.@types.json"
+    }
+  ]
 }

@@ -10,5 +10,21 @@
     "outDir": "../../.cache/model-transaction-asset",
     "tsBuildInfoFile": "../../.cache/model-transaction-asset/@types.tsbuildinfo"
   },
-  "references": []
+  "references": [
+    {
+      "path": "../model-cacher/tsconfig.@types.json"
+    },
+    {
+      "path": "../model-common/tsconfig.@types.json"
+    },
+    {
+      "path": "../model-constants/tsconfig.@types.json"
+    },
+    {
+      "path": "../model-transaction-base/tsconfig.@types.json"
+    },
+    {
+      "path": "../typings/tsconfig.@types.json"
+    }
+  ]
 }

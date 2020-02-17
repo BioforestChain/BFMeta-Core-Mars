@@ -10,5 +10,15 @@
     "outDir": "../../.cache/helper-account_base",
     "tsBuildInfoFile": "../../.cache/helper-account_base/@types.tsbuildinfo"
   },
-  "references": []
+  "references": [
+    {
+      "path": "../helper-config/tsconfig.@types.json"
+    },
+    {
+      "path": "../typings/tsconfig.@types.json"
+    },
+    {
+      "path": "../util-base58/tsconfig.@types.json"
+    }
+  ]
 }

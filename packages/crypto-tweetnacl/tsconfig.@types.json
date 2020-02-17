@@ -10,5 +10,9 @@
     "outDir": "../../.cache/crypto-tweetnacl",
     "tsBuildInfoFile": "../../.cache/crypto-tweetnacl/@types.tsbuildinfo"
   },
-  "references": []
+  "references": [
+    {
+      "path": "../typings/tsconfig.@types.json"
+    }
+  ]
 }

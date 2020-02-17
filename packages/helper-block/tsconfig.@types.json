@@ -10,5 +10,27 @@
     "outDir": "../../.cache/helper-block",
     "tsBuildInfoFile": "../../.cache/helper-block/@types.tsbuildinfo"
   },
-  "references": []
+  "references": [
+    {
+      "path": "../helper-account_base/tsconfig.@types.json"
+    },
+    {
+      "path": "../helper-config/tsconfig.@types.json"
+    },
+    {
+      "path": "../helper-type/tsconfig.@types.json"
+    },
+    {
+      "path": "../model/tsconfig.@types.json"
+    },
+    {
+      "path": "../typings/tsconfig.@types.json"
+    },
+    {
+      "path": "../util-exception-errorcode/tsconfig.@types.json"
+    },
+    {
+      "path": "../util-exception/tsconfig.@types.json"
+    }
+  ]
 }

@@ -10,5 +10,21 @@
     "outDir": "../../.cache/block",
     "tsBuildInfoFile": "../../.cache/block/@types.tsbuildinfo"
   },
-  "references": []
+  "references": [
+    {
+      "path": "../channel/tsconfig.@types.json"
+    },
+    {
+      "path": "../helper/tsconfig.@types.json"
+    },
+    {
+      "path": "../model/tsconfig.@types.json"
+    },
+    {
+      "path": "../transaction_logic_verifier/tsconfig.@types.json"
+    },
+    {
+      "path": "../typings/tsconfig.@types.json"
+    }
+  ]
 }

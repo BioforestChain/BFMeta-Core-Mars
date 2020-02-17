@@ -10,5 +10,15 @@
     "outDir": "../../.cache/crypto",
     "tsBuildInfoFile": "../../.cache/crypto/@types.tsbuildinfo"
   },
-  "references": []
+  "references": [
+    {
+      "path": "../crypto-ed2curve/tsconfig.@types.json"
+    },
+    {
+      "path": "../crypto-tweetnacl/tsconfig.@types.json"
+    },
+    {
+      "path": "../typings/tsconfig.@types.json"
+    }
+  ]
 }
