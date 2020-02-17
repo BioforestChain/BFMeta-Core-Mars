@@ -1,3 +1,4 @@
+import type {} from '@bfchain/core-typings';
 import "./@types";
 
 export * from "./atom_transaction";

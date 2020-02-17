@@ -12,6 +12,9 @@
   },
   "references": [
     {
+      "path": "../helper-config/tsconfig.@types.json"
+    },
+    {
       "path": "../typings/tsconfig.@types.json"
     },
     {

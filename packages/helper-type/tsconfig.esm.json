@@ -9,6 +9,15 @@
   },
   "references": [
     {
+      "path": "../helper-account_base/tsconfig.esm.json"
+    },
+    {
+      "path": "../helper-config/tsconfig.esm.json"
+    },
+    {
+      "path": "../model-common/tsconfig.esm.json"
+    },
+    {
       "path": "../typings/tsconfig.esm.json"
     },
     {

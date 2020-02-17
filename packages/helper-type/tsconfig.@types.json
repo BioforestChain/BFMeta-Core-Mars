@@ -12,6 +12,15 @@
   },
   "references": [
     {
+      "path": "../helper-account_base/tsconfig.@types.json"
+    },
+    {
+      "path": "../helper-config/tsconfig.@types.json"
+    },
+    {
+      "path": "../model-common/tsconfig.@types.json"
+    },
+    {
       "path": "../typings/tsconfig.@types.json"
     },
     {

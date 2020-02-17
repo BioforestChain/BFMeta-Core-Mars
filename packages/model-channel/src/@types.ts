@@ -1,3 +1,4 @@
+/// <reference lib="dom"/>
 declare namespace BFChainCore {
   type RESPONSE_STATUS = import("./").RESPONSE_STATUS;
   type BLOCKCHAIN_STATUS = import("./").BLOCKCHAIN_STATUS;
