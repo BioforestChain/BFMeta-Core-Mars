@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-block",
-  "version": "5.2.13",
+  "version": "5.2.14",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,10 +14,10 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-channel": "^5.2.13",
-    "@bfchain/core-helper": "^5.2.13",
-    "@bfchain/core-model": "^5.2.13",
-    "@bfchain/core-transaction-logic-verifier": "^5.2.13",
-    "@bfchain/core-typings": "^5.2.12"
+    "@bfchain/core-channel": "^5.2.14",
+    "@bfchain/core-helper": "^5.2.14",
+    "@bfchain/core-model": "^5.2.14",
+    "@bfchain/core-transaction-logic-verifier": "^5.2.14",
+    "@bfchain/core-typings": "^5.2.14"
   }
 }
