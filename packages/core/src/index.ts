@@ -1,5 +1,3 @@
-import "@bfchain/core-typings";
-
 export * from "@bfchain/core-model";
 export * from "@bfchain/core-helper";
 
@@ -17,10 +15,8 @@ export * from "@bfchain/core-crypto";
 export * from "@bfchain/core-util-exception";
 export * from "@bfchain/core-util-base58";
 
-export * from "./index";
 export * from "./templateRemark";
 
-import "@bfchain/util";
 import { TransactionCore } from "@bfchain/core-transaction";
 import { TransactionLogicVerifierCore } from "@bfchain/core-transaction-logic-verifier";
 import { ChannelCore } from "@bfchain/core-channel";

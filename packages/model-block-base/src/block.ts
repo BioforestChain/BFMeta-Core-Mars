@@ -1,28 +1,20 @@
 import { Message, Type, Field } from "@bfchain/protobuf";
 import { parseHexToArrayBuffer, getHexFromArrayBuffer } from "@bfchain/util-encoding-hex";
-// type TransactionInBlock = import("./transactionModel").TransactionInBlock;
 import { TransactionInBlock } from "@bfchain/core-model-transaction";
 import { StatisticInfoModel } from "./statistic_info";
 import { cacheBytesGetter } from "@bfchain/core-model-cacher";
 
-// type _GetBlockRemarkModel<T> = T extends Block<infer U> ? U : any;
-// type _GetMessageModel<T> = T extends Message<infer U> ? U : T;
 export type GetBlockRemarkModel<T extends Block> = T["REMARK_MODEL_TYPE"];
 export type GetBlockRemarkJSON<T extends Block> = T["REMARK_JSON_TYPE"];
-// <T, C = _GetMessageModel<_GetBlockRemarkModel<T>>> = {
-//   [K in keyof C]: _GetMessageModel<C[K]>;
-// };
 
 /**缓存trasList解析结果 */
 const BUFFER_LIST_TRANSACTION_LIST_WM = new WeakMap<Uint8Array[], TransactionInBlock[]>();
 const TRANSACTION_BUFFER_WM = new WeakMap<TransactionInBlock, Uint8Array>();
 
 @Type.d("Block")
-// BFChainUtil.JSONAble<BFChainCore.BlockJSON<BFChainUtil.ToJSONType<RemarkModel>>>
-export class Block<
-  RJ extends BFChainCore.CommonBlockRemarkJSON = BFChainCore.CommonBlockRemarkJSON
-  // RemarkJSON extends BFChainCore.CommonBlockRemarkJSON = BFChainUtil.ToJSONType<RemarkModel> //  BFChainCore.CommonBlockRemarkJSON
-> extends Message<Block<RJ>> implements BFChainCore.BlockJSON<RJ> {
+export class Block<RJ extends BFChainCore.CommonBlockRemarkJSON = BFChainCore.CommonBlockRemarkJSON>
+  extends Message<Block<RJ>>
+  implements BFChainCore.BlockJSON<RJ> {
   REMARK_MODEL_TYPE!: BFChainCore.RemarkJSONToModelType<RJ>;
   REMARK_JSON_TYPE!: RJ;
   remark!: BFChainCore.RemarkJSONToModelType<RJ>;

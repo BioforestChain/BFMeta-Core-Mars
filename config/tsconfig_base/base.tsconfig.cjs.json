@@ -9,6 +9,7 @@
     "declarationMap": true,
     "sourceMap": true,
     "noEmitOnError": true,
+    "removeComments": true,
     "strict": true,
     "strictBindCallApply": true,
     "strictNullChecks": true,
