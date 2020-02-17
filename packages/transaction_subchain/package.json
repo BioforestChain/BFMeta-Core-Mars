@@ -3,6 +3,7 @@
   "version": "5.2.15",
   "main": "build/cjs/index.js",
   "type": "build/cjs/index.d.ts",
+  "module": "build/esm/index.js",
   "files": [
     "build"
   ],
@@ -10,6 +11,5 @@
     "@bfchain/core-block": "^5.2.15",
     "@bfchain/core-transaction": "^5.2.15",
     "@bfchain/core-typings": "^5.2.15"
-  },
-  "module": "build/cjs/index.d.ts"
+  }
 }
