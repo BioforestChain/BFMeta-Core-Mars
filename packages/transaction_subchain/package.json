@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-transaction-subchain",
-  "version": "5.2.15",
+  "version": "5.2.16",
   "main": "build/cjs/index.js",
   "type": "build/cjs/index.d.ts",
   "module": "build/esm/index.js",
