@@ -3,7 +3,7 @@
     "packages/*",
     "packages/@types/*"
   ],
-  "version": "5.2.16",
+  "version": "5.2.17-tweetnacl.0",
   "useWorkspaces": true,
   "npmClient": "yarn",
   "publishConifg": {
