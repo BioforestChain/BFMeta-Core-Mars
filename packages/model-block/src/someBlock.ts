@@ -8,10 +8,6 @@ import {
 } from "@bfchain/core-util-exception-errorcode";
 const { ArgumentFormatException } = CoreExceptionGenerator("MODEL", "blockModel");
 
-// export type SomeBlock = GenesisBlock | CommonBlock | RoundLastBlock;
-
-export type SomeBlockConstructor = typeof GenesisBlock | typeof CommonBlock | typeof RoundLastBlock;
-
 /**
  * 区块类型
  *

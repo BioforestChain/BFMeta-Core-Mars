@@ -39,7 +39,12 @@ declare namespace BFChainCore {
     // magic: string;
   };
 
-  type CommonBlock = Block<CommonBlockRemarkJSON>;
-  type GenesisBlock = Block<GenesisBlockRemarkJSON>;
-  type RoundLastBlock = Block<RoundLastBlockRemarkJSON>;
+  type CommonBlock = import("./atom_block").CommonBlock; //  Block<CommonBlockRemarkJSON>;
+  type GenesisBlock = import("./atom_block").GenesisBlock; //Block<GenesisBlockRemarkJSON>;
+  type RoundLastBlock = import("./atom_block").RoundLastBlock; //Block<RoundLastBlockRemarkJSON>;
+  type AnyBlock = CommonBlock | GenesisBlock | RoundLastBlock;
+  type AnyBlockConstructor =
+    | typeof import("./atom_block").CommonBlock
+    | typeof import("./atom_block").GenesisBlock
+    | typeof import("./atom_block").RoundLastBlock;
 }

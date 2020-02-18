@@ -564,9 +564,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
         chainConfig = new ConfigHelper(parentGenesisBlock, config.business);
       }
 
-      const genesisBlock = this._blockCore.recombineBlock<
-        BFChainCore.Block<BFChainCore.GenesisBlockRemarkJSON>
-      >(parentGenesisBlock);
+      const genesisBlock = this._blockCore.recombineBlock(parentGenesisBlock);
       this._blockCore
         .getBlockFactoryFromHeight<BFChainCore.Block<BFChainCore.GenesisBlockRemarkJSON>>(
           parentGenesisBlock.height,

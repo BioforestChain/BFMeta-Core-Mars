@@ -32,7 +32,7 @@ export class BlockCore {
   private _blockFactoryCache = new Map<BlockFactoryCtor<any>, BlockFactory<any>>();
   /**获取区块工厂 */
   getBlockFactory<T extends Block>(BlockFactory: new (...args: any[]) => BlockFactory<T>) {
-    let blockFactory: BlockFactory<T> | undefined = this._blockFactoryCache.get(BlockFactory);
+    let blockFactory = this._blockFactoryCache.get(BlockFactory) as BlockFactory<T> | undefined;
     if (!blockFactory) {
       blockFactory = Resolve(BlockFactory, this.moduleMap);
       this._blockFactoryCache.set(BlockFactory, blockFactory);
@@ -103,8 +103,8 @@ export class BlockCore {
    *
    * @param block
    */
-  recombineBlock<T extends BFChainCore.Block>(blockJSON: BFChainCore.BlockJSON<any>) {
-    return this.getBlockFactoryFromHeight(blockJSON.height).fromJSON(blockJSON) as T;
+  recombineBlock<R extends BFChainCore.CommonBlockRemarkJSON>(blockJSON: BFChainCore.BlockJSON<R>) {
+    return this.getBlockFactoryFromHeight(blockJSON.height).fromJSON(blockJSON) as Block<R>;
   }
   fromJSON = this.recombineBlock;
 
