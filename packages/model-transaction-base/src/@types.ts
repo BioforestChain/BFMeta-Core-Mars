@@ -8,7 +8,7 @@ declare namespace BFChainCore {
   >
     ? U
     : any;
-  type GetTransactionAssetJSON<T extends Transaction> = T["ASSET_JSON_TYPE"];
+  type GetTransactionAssetJSON<T extends TransactionJSON> = T["asset"];
 
   //#region Transaction
 

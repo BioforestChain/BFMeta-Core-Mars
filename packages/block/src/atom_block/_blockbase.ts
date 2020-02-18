@@ -47,8 +47,12 @@ export abstract class BlockFactory<T extends Block> {
   abstract fromJSON(blockBody: BFChainCore.BlockJSON<GetBlockRemarkJSON<T>>): T;
 
   /** transactionInBlockFromJSON*/
-  transactionInBlockFromJSON(twi: BFChainCore.TransactionInBlockJSON<any>) {
-    const transactionInBlock = TransactionInBlock.fromObject(twi);
+  transactionInBlockFromJSON<T extends BFChainCore.TransactionJSON>(
+    twi: BFChainCore.TransactionInBlockJSON<T>,
+  ) {
+    const transactionInBlock = TransactionInBlock.fromObject(twi) as TransactionInBlock<
+      BFChainCore.Transaction<BFChainCore.GetTransactionAssetJSON<T>>
+    >;
     return transactionInBlock;
   }
 
@@ -119,7 +123,7 @@ export abstract class BlockFactory<T extends Block> {
       publicKey: Buffer;
       secretKey?: Buffer;
     },
-    eventEmitter: BFChainCore.ApplyTransactionEventEmitter = new QueneEventEmitter<any>(),
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter = new QueneEventEmitter(),
   ) {
     const Function_Exception_Detail = { function: "insertTransactions" };
     const MAX_TRANSACTION_SIZE = this.config.genesisBlock.remark.maxTransactionSize;
@@ -394,7 +398,7 @@ export abstract class BlockFactory<T extends Block> {
   verifyBlockTransactions(
     block: T,
     config = this.config,
-    eventEmitter: BFChainCore.ApplyTransactionEventEmitter = new QueneEventEmitter<any>(),
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter = new QueneEventEmitter(),
   ) {
     const Function_Exception_Detail = { function: "verifyBlockTransactions" };
     if (!block) {
