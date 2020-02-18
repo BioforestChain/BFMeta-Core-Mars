@@ -263,7 +263,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
     return this._requestWithBinaryData(...this.initBroadcastTransactionArg(transaction, opts));
   }
   /**查询区块 */
-  queryBlock(
+  queryBlock<B extends Block = Block>(
     query: BFChainCore.QueryBlockArgJSON["query"],
     opts?: BFChainCore.ChannelRequestOptions,
   ) {
@@ -275,7 +275,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
       arg,
       this.chainChannelHelper.boxQueryBlockReturn,
       opts,
-    );
+    ) as Promise<QueryBlockReturnModel<B>>;
   }
   async findBlock<B extends Block = Block>(
     ...args: BFChainUtil.AllArgument<BFChainCore.ChainChannel["queryBlock"]>

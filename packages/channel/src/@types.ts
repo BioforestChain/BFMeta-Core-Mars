@@ -86,10 +86,10 @@ declare namespace BFChainCore {
       opts?: ChannelRequestOptions,
     ): Promise<import("@bfchain/core-model").NewTransactionReturnModel>;
     /**查询区块 */
-    queryBlock(
+    queryBlock<B extends Block = Block>(
       query: QueryBlockArgJSON["query"],
       opts?: ChannelRequestOptions,
-    ): Promise<import("@bfchain/core-model").QueryBlockReturnModel>;
+    ): Promise<import("@bfchain/core-model").QueryBlockReturnModel<B>>;
     findBlock<B extends Block = Block>(
       ...args: BFChainUtil.AllArgument<ChainChannel["queryBlock"]>
     ): Promise<B | undefined>;
