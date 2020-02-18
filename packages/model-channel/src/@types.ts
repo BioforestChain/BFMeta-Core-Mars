@@ -97,8 +97,8 @@ declare namespace BFChainCore {
     query: BlockQueryOptionsJSON;
   };
   /**查询交易的返回结果 */
-  interface QueryBlockReturnJSON extends CommonResponseJSON {
-    someBlock?: SomeBlockJSON<BlockJSON>;
+  interface QueryBlockReturnJSON<B extends BlockJSON = BlockJSON> extends CommonResponseJSON {
+    someBlock?: SomeBlockJSON<B>;
   }
   interface QueryBlockReturnParams {
     block?: BlockJSON;

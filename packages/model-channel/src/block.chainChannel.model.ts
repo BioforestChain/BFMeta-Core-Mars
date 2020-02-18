@@ -39,12 +39,13 @@ export class QueryBlockArgModel extends Message<QueryBlockArgModel>
  * 查询区块的返回结果
  */
 @Type.d("QueryBlockReturn")
-export class QueryBlockReturnModel extends CommonResponse
+export class QueryBlockReturnModel<B extends BFChainCore.Block = BFChainCore.Block>
+  extends CommonResponse
   implements BFChainCore.JSONToModelType<BFChainCore.QueryBlockReturnJSON> {
   @Field.d(QueryBlockReturnModel.INC++, SomeBlockModel, "optional")
-  someBlock?: SomeBlockModel<any>;
+  someBlock?: SomeBlockModel<B>;
   toJSON() {
-    const res: BFChainCore.QueryBlockReturnJSON = super.toJSON();
+    const res: BFChainCore.QueryBlockReturnJSON<B> = super.toJSON();
     if (this.someBlock) {
       res.someBlock = this.someBlock.toJSON();
     }
