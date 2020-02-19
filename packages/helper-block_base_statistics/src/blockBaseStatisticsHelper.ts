@@ -7,7 +7,14 @@ import {
 import { TransactionHelper } from "@bfchain/core-helper-transaction";
 import { ChainAssetInfoHelper, ChainAssetInfo } from "@bfchain/core-helper-chain-asset-info";
 import { ConfigHelper } from "@bfchain/core-helper-config";
-import { Injectable, ModuleStroge, Resolve, Inject, EventEmitter } from "@bfchain/util";
+import {
+  Injectable,
+  ModuleStroge,
+  Resolve,
+  Inject,
+  EventEmitter,
+  EasyWeakMap,
+} from "@bfchain/util";
 
 /**区块统计器 */
 @Injectable("bfchain-core:BlockBaseStatistics")
@@ -157,21 +164,15 @@ export class BlockBaseStatisticsHelper {
     statistics_info.addTotalAccount(applyInfo.address);
   }
 
-  static EVENTEMITTER_STATISTICS_BINDED_SET_SYMBOL = Symbol.for(
-    "EVENTEMITTER_STATISTICS_BINDED_SET",
+  static eventEmitterStatisticsWM = new EasyWeakMap(
+    (_: BFChainCore.ApplyTransactionEventEmitter) => new WeakSet<StatisticsInfo>(),
   );
   /**给事件触发器绑定统计功能 */
   bindApplyTransactionEventEmiter(
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     statistics_info: StatisticsInfo,
   ) {
-    const bindedSet =
-      ((eventEmitter as any)[
-        BlockBaseStatisticsHelper.EVENTEMITTER_STATISTICS_BINDED_SET_SYMBOL
-      ] as WeakSet<StatisticsInfo>) ||
-      ((eventEmitter as any)[
-        BlockBaseStatisticsHelper.EVENTEMITTER_STATISTICS_BINDED_SET_SYMBOL
-      ] = new WeakSet<StatisticsInfo>());
+    const bindedSet = BlockBaseStatisticsHelper.eventEmitterStatisticsWM.forceGet(eventEmitter);
     if (bindedSet.has(statistics_info)) {
       console.debug("已经绑定过统计用的ApplyTransaction");
       return;

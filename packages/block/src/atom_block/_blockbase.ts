@@ -57,7 +57,7 @@ export abstract class BlockFactory<T extends Block> {
   }
 
   /**
-   * 初始化并生产完整的区块
+   * 初始化并生产完整的区块；或者用于校验完整的区块
    * @TODO 绑定区块奖励
    *
    * @param body
@@ -72,7 +72,7 @@ export abstract class BlockFactory<T extends Block> {
       publicKey: Buffer;
       secretKey?: Buffer;
     },
-    eventEmitter?: BFChainCore.ApplyTransactionEventEmitter,
+    eventEmitter?: BFChainCore.GenerateBlockEventEmitter,
     config = this.config,
   ) {
     const Function_Exception_Detail = { function: "init" };
@@ -96,12 +96,34 @@ export abstract class BlockFactory<T extends Block> {
     }
     eventEmitter && (await eventEmitter.emit("beforeGenerateBlock", body));
     const block = this._generateBlock(body, remark);
+    // 校验 remark 大小
+    this.verifyRemarkSize(block);
     // 绑定magic
     block.magic = config.magic;
     // // 生产signature
     // block.signature = this.blockHelper.generateSignature(block);
     // 绑定交易相关的信息
     await this.insertTransactions(block, transactions, keypair, eventEmitter);
+
+    eventEmitter && (await eventEmitter.emit("beforeSignatureBlock", block));
+
+    /// 进行区块签名或者验签
+    if (block.signatureBuffer) {
+      this.asymmetricHelper.detachedVeriy(
+        block.getBytes(true, true),
+        block.signatureBuffer,
+        keypair.publicKey,
+      );
+    } else {
+      if (!keypair.secretKey) {
+        throw new ArgumentIllegalException("secretKey is null");
+      }
+      block.signatureBuffer = this.asymmetricHelper.detachedSign(
+        block.getBytes(true, true),
+        keypair.secretKey,
+      );
+    }
+
     eventEmitter && (await eventEmitter.emit("generatedBlock", block));
     return block;
   }
@@ -209,8 +231,23 @@ export abstract class BlockFactory<T extends Block> {
           // 在apply之后，获取变更记录
           eventEmitter.assetChangesGetter &&
             (tranItem.transactionAssetChanges = eventEmitter.assetChangesGetter(tranItem));
-          // 对TIB进行签名
-          if (keypair.secretKey) {
+          // 对TIB进行验签或者签名
+          if (tranItem.signatureBuffer) {
+            /// 如果已经有签名信息，那么进行验证
+            if (
+              !this.asymmetricHelper.detachedVeriy(
+                tranItem.getBytes(true),
+                tranItem.signatureBuffer,
+                keypair.publicKey,
+              )
+            ) {
+              throw new ArgumentFormatException(`Invalid transactionInBlock signature`);
+            }
+          } else {
+            // 否则尝试手动签名
+            if (!keypair.secretKey) {
+              throw new ArgumentIllegalException("secretKey is null");
+            }
             tranItem.signatureBuffer = this.asymmetricHelper.detachedSign(
               tranItem.getBytes(true),
               keypair.secretKey,
@@ -754,7 +791,7 @@ export abstract class BlockFactory<T extends Block> {
    * @param block
    */
   verifyRemarkSize(block: T) {
-    this.blockHelper.verifyBlockRemarkSize(block);
+    this.blockHelper.verifyBlockRemarkSize(block.remark);
   }
 
   /**

@@ -470,14 +470,7 @@ declare namespace BFChainCore {
     }>;
     /**处理完成所有交易 */
     finishedDealTransactions: BFChainUtil.EventInOut<Block>;
-    beforeGenerateBlock: BFChainUtil.EventInOut<BFChainCore.BlockBody>;
-    /**
-     * 处理完成所有交易,完整产出区块，
-     * 这时候账户、交易、区块都已经写定
-     * 可以在这个事件中进行最后的资源释放了
-     * 或者准备广播交易需要的动作
-     */
-    generatedBlock: BFChainUtil.EventInOut<Block>;
+
     error: BFChainUtil.EventInOut<
       {
         type: string;
@@ -493,5 +486,24 @@ declare namespace BFChainCore {
     assetChangesGetter?: (tib: TransactionInBlock) => TransactionInBlock["transactionAssetChanges"];
   } & BFChainUtil.QueneEventEmitter<ApplyTransactionEventMap<ES>>;
 
+  type GenerateBlockEventEmitter<
+    B extends Block = Block,
+    ES extends BFChainUtil.EventInOutMap = {}
+  > = ApplyTransactionEventEmitter<
+    {
+      beforeGenerateBlock: BFChainUtil.EventInOut<BFChainCore.BlockBody>;
+      /**在区块签名前
+       * 这里可以对区块做最后的调整
+       */
+      beforeSignatureBlock: BFChainUtil.EventInOut<B>;
+      /**
+       * 处理完成所有交易,完整产出区块，
+       * 这时候账户、交易、区块都已经写定
+       * 可以在这个事件中进行最后的资源释放了
+       * 或者准备广播交易需要的动作
+       */
+      generatedBlock: BFChainUtil.EventInOut<B>;
+    } & ES
+  >;
   //#endregion
 }

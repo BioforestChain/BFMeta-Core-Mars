@@ -57,15 +57,13 @@ export class BlockCore {
   // #endregion
 
   /**生成区块 */
-  async generateBlock<T extends Block>(
-    BlockFactory: new (...args: any[]) => BlockFactory<T>,
+  async generateBlock<B extends Block>(
+    BlockFactory: new (...args: any[]) => BlockFactory<B>,
     body: BFChainCore.BlockBody,
-    blockRemark: GetBlockRemarkJSON<T>,
+    blockRemark: GetBlockRemarkJSON<B>,
     trsGenerator: AsyncIterable<TransactionInBlock>,
     keypair: BFChainCore.Keypair,
-    eventEmitter?: BFChainCore.ApplyTransactionEventEmitter<{
-      beforeSignatureBlock: BFChainUtil.EventInOut<T, unknown>;
-    }>,
+    eventEmitter?: BFChainCore.GenerateBlockEventEmitter<B>,
   ) {
     const blockFactory = this.getBlockFactory(BlockFactory);
 
@@ -79,17 +77,7 @@ export class BlockCore {
       blockRemark,
       trsGenerator,
       keypair,
-      eventEmitter as any,
-    );
-    if (eventEmitter) {
-      await eventEmitter.emit("beforeSignatureBlock", block);
-    }
-    // 校验 remark 大小
-    this.blockHelper.verifyBlockRemarkSize(block);
-    // 区块签名
-    block.signatureBuffer = this.asymmetricHelper.detachedSign(
-      block.getBytes(true, true),
-      keypair.secretKey,
+      eventEmitter,
     );
 
     // Cannot assign to read only property 'signatureBuffer' of object '#<GenesisBlock>'
