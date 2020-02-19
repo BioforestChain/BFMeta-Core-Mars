@@ -308,17 +308,6 @@ export abstract class BlockFactory<T extends Block> {
         numberOfTransactions,
       });
 
-      const BLOCK_SIZE_FIELD_ID = Block.$type.fields.blockSize.id;
-      const getBlockSizeByteSizeInfo = (blockSize: number) => {
-        return {
-          value: blockSize,
-          size: new Writer()
-            .uint32(BLOCK_SIZE_FIELD_ID)
-            .uint32(blockSize)
-            .finish().length,
-        };
-      };
-
       /// 临时恢复的操作，但会曝出警告
       if (eventEmitter.has("finishedDealTransactions")) {
         warn(
