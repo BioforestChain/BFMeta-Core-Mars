@@ -109,6 +109,9 @@ export abstract class BlockFactory<T extends Block> {
 
     eventEmitter && (await eventEmitter.emit("beforeSignatureBlock", block));
 
+    /// 计算并赋值区块大小
+    block.blockSize = this.calcBlockSize(block);
+
     /// 进行区块签名或者验签
     if (block.signatureBuffer.length > 0) {
       if (
@@ -316,31 +319,6 @@ export abstract class BlockFactory<T extends Block> {
         };
       };
 
-      let oldBlockSizeInfo = getBlockSizeByteSizeInfo(block.blockSize);
-
-      block.blockSize =
-        block.getBytes().length +
-        (block.signatureBuffer.length ? 0 : 66) /* signature 的前置为 1位 + 32长度的signature */;
-      if (oldBlockSizeInfo.value !== block.blockSize) {
-        do {
-          /**
-           * 这里只是算出blockSize这个数字要写入模型中要占用的字节数
-           * 而真实的blockSize又要基于这个字节数，加上真实的模型大小的来。
-           * 所以在block.blockSize加上blockSize存储所需的字节数后，它会变大
-           * blockSize值变大的同时，也就意味着存储这个字所需的字节数也会增加
-           * 因此需要有一个循环来让blockSize稳定在一个区间内。
-           */
-          const newBlockSizeInfo = getBlockSizeByteSizeInfo(block.blockSize);
-
-          if (newBlockSizeInfo.size !== oldBlockSizeInfo.size) {
-            block.blockSize += newBlockSizeInfo.size - oldBlockSizeInfo.size;
-            oldBlockSizeInfo = newBlockSizeInfo;
-          } else {
-            break;
-          }
-        } while (true);
-      }
-
       /// 临时恢复的操作，但会曝出警告
       if (eventEmitter.has("finishedDealTransactions")) {
         warn(
@@ -356,6 +334,48 @@ export abstract class BlockFactory<T extends Block> {
     }
 
     return block;
+  }
+  /**
+   * 计算出区块的blockSize的正确值
+   * @param block
+   */
+  calcBlockSize(block: Block) {
+    const BLOCK_SIZE_FIELD_ID = Block.$type.fields.blockSize.id;
+    const getBlockSizeByteSizeInfo = (blockSize: number) => {
+      return {
+        value: blockSize,
+        size: new Writer()
+          .uint32(BLOCK_SIZE_FIELD_ID)
+          .uint32(blockSize)
+          .finish().length,
+      };
+    };
+    let latestBlockSize = block.blockSize;
+    let oldBlockSizeInfo = getBlockSizeByteSizeInfo(latestBlockSize);
+
+    latestBlockSize =
+      block.getBytes().length +
+      (block.signatureBuffer.length ? 0 : 66) /* signature 的前置为 1位 + 32长度的signature */;
+    if (oldBlockSizeInfo.value !== latestBlockSize) {
+      do {
+        /**
+         * 这里只是算出blockSize这个数字要写入模型中要占用的字节数
+         * 而真实的blockSize又要基于这个字节数，加上真实的模型大小的来。
+         * 所以在block.blockSize加上blockSize存储所需的字节数后，它会变大
+         * blockSize值变大的同时，也就意味着存储这个字所需的字节数也会增加
+         * 因此需要有一个循环来让blockSize稳定在一个区间内。
+         */
+        const newBlockSizeInfo = getBlockSizeByteSizeInfo(latestBlockSize);
+
+        if (newBlockSizeInfo.size !== oldBlockSizeInfo.size) {
+          latestBlockSize += newBlockSizeInfo.size - oldBlockSizeInfo.size;
+          oldBlockSizeInfo = newBlockSizeInfo;
+        } else {
+          break;
+        }
+      } while (true);
+    }
+    return latestBlockSize;
   }
 
   /**
