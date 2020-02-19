@@ -109,7 +109,7 @@ export abstract class BlockFactory<T extends Block> {
     eventEmitter && (await eventEmitter.emit("beforeSignatureBlock", block));
 
     /// 进行区块签名或者验签
-    if (block.signatureBuffer) {
+    if (block.signatureBuffer.length > 0) {
       if (
         !this.asymmetricHelper.detachedVeriy(
           block.getBytes(true, true),
@@ -237,7 +237,7 @@ export abstract class BlockFactory<T extends Block> {
           eventEmitter.assetChangesGetter &&
             (tranItem.transactionAssetChanges = eventEmitter.assetChangesGetter(tranItem));
           // 对TIB进行验签或者签名
-          if (tranItem.signatureBuffer) {
+          if (tranItem.signatureBuffer.length > 0) {
             /// 如果已经有签名信息，那么进行验证
             if (
               !this.asymmetricHelper.detachedVeriy(
