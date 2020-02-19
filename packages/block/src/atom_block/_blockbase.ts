@@ -304,25 +304,41 @@ export abstract class BlockFactory<T extends Block> {
         totalFee: statisticsInfo.totalFee,
         numberOfTransactions,
       });
-      const oldBlockSize = block.blockSize;
+
+      const BLOCK_SIZE_FIELD_ID = Block.$type.fields.blockSize.id;
+      const getBlockSizeByteSizeInfo = (blockSize: number) => {
+        return {
+          value: blockSize,
+          size: new Writer()
+            .uint32(BLOCK_SIZE_FIELD_ID)
+            .uint32(blockSize)
+            .finish().length,
+        };
+      };
+
+      let oldBlockSizeInfo = getBlockSizeByteSizeInfo(block.blockSize);
+
       block.blockSize =
         block.getBytes().length +
         (block.signatureBuffer.length ? 0 : 66) /* signature 的前置为 1位 + 32长度的signature */;
-      if (oldBlockSize !== block.blockSize) {
-        const BLOCK_SIZE_FIELD_ID = Block.$type.fields.blockSize.id;
-        const oldByteSize = oldBlockSize
-          ? new Writer()
-              .uint32(BLOCK_SIZE_FIELD_ID)
-              .uint32(oldBlockSize)
-              .finish().length
-          : 0;
-        const newByteSize = new Writer()
-          .uint32(BLOCK_SIZE_FIELD_ID)
-          .uint32(block.blockSize)
-          .finish().length;
-        if (oldByteSize !== newByteSize) {
-          block.blockSize += newByteSize - oldByteSize;
-        }
+      if (oldBlockSizeInfo.value !== block.blockSize) {
+        do {
+          /**
+           * 这里只是算出blockSize这个数字要写入模型中要占用的字节数
+           * 而真实的blockSize又要基于这个字节数，加上真实的模型大小的来。
+           * 所以在block.blockSize加上blockSize存储所需的字节数后，它会变大
+           * blockSize值变大的同时，也就意味着存储这个字所需的字节数也会增加
+           * 因此需要有一个循环来让blockSize稳定在一个区间内。
+           */
+          const newBlockSizeInfo = getBlockSizeByteSizeInfo(block.blockSize);
+
+          if (newBlockSizeInfo.size !== oldBlockSizeInfo.size) {
+            block.blockSize += newBlockSizeInfo.size - oldBlockSizeInfo.size;
+            oldBlockSizeInfo = newBlockSizeInfo;
+          } else {
+            break;
+          }
+        } while (true);
       }
 
       /// 临时恢复的操作，但会曝出警告
