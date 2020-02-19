@@ -24,6 +24,7 @@ import {
   TOO_LARGE,
 } from "@bfchain/core-util-exception";
 import { Exception, QueneEventEmitter, EasyMap, Resolve, ModuleStroge } from "@bfchain/util";
+import { Writer } from "@bfchain/protobuf";
 const {
   ArgumentIllegalException,
   OutOfRangeException,
@@ -303,9 +304,17 @@ export abstract class BlockFactory<T extends Block> {
         totalFee: statisticsInfo.totalFee,
         numberOfTransactions,
       });
+      const oldBlockSize = block.blockSize;
       block.blockSize =
         block.getBytes().length +
         (block.signatureBuffer.length ? 0 : 66) /* signature 的前置为 1位 + 32长度的signature */;
+      if (oldBlockSize === block.blockSize) {
+        const oldByteSize = oldBlockSize ? new Writer().uint32(oldBlockSize).finish().length : 0;
+        const newByteSize = new Writer().uint32(block.blockSize).finish().length;
+        if (oldByteSize !== newByteSize) {
+          block.blockSize += newByteSize - oldByteSize;
+        }
+      }
 
       /// 临时恢复的操作，但会曝出警告
       if (eventEmitter.has("finishedDealTransactions")) {
