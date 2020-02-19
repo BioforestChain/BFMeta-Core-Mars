@@ -107,6 +107,10 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     const queneChainChannelList: PromiseOut<DH>[] = [];
     /**定时任务集合 */
     const tiTasks = new Set<Promise<void>>();
+    /**是否存在空闲节点 */
+    const hasFreeChainChannel = () => {
+      return freeChainChannelList.length > 0;
+    };
     /**获取空闲的节点 */
     const getFreeChainChannel = () => {
       const chainChannel = freeChainChannelList.shift();
@@ -184,7 +188,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
       busyChainChannels,
       tiTasks,
     });
-    return { getFreeChainChannel, freeChainChannel, busyChainChannel };
+    return { hasFreeChainChannel, getFreeChainChannel, freeChainChannel, busyChainChannel };
   }
   /**释放并发任务 */
   releaseParallelTask(task_id: string) {
