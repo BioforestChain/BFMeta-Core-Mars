@@ -308,9 +308,18 @@ export abstract class BlockFactory<T extends Block> {
       block.blockSize =
         block.getBytes().length +
         (block.signatureBuffer.length ? 0 : 66) /* signature 的前置为 1位 + 32长度的signature */;
-      if (oldBlockSize === block.blockSize) {
-        const oldByteSize = oldBlockSize ? new Writer().uint32(oldBlockSize).finish().length : 0;
-        const newByteSize = new Writer().uint32(block.blockSize).finish().length;
+      if (oldBlockSize !== block.blockSize) {
+        const BLOCK_SIZE_FIELD_ID = Block.$type.fields.blockSize.id;
+        const oldByteSize = oldBlockSize
+          ? new Writer()
+              .uint32(BLOCK_SIZE_FIELD_ID)
+              .uint32(oldBlockSize)
+              .finish().length
+          : 0;
+        const newByteSize = new Writer()
+          .uint32(BLOCK_SIZE_FIELD_ID)
+          .uint32(block.blockSize)
+          .finish().length;
         if (oldByteSize !== newByteSize) {
           block.blockSize += newByteSize - oldByteSize;
         }
