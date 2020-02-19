@@ -30,6 +30,7 @@ const {
   ArgumentFormatException,
   NoFoundException,
   warn,
+  ConsensusException,
 } = CoreExceptionGenerator("CONTROLLER", "_blockbase");
 
 export abstract class BlockFactory<T extends Block> {
@@ -109,14 +110,18 @@ export abstract class BlockFactory<T extends Block> {
 
     /// 进行区块签名或者验签
     if (block.signatureBuffer) {
-      this.asymmetricHelper.detachedVeriy(
-        block.getBytes(true, true),
-        block.signatureBuffer,
-        keypair.publicKey,
-      );
+      if (
+        !this.asymmetricHelper.detachedVeriy(
+          block.getBytes(true, true),
+          block.signatureBuffer,
+          keypair.publicKey,
+        )
+      ) {
+        throw new ArgumentFormatException(`Invalid block signature`);
+      }
     } else {
       if (!keypair.secretKey) {
-        throw new ArgumentIllegalException("secretKey is null");
+        throw new ArgumentIllegalException("secretKey is null when generateBlock");
       }
       block.signatureBuffer = this.asymmetricHelper.detachedSign(
         block.getBytes(true, true),
@@ -246,7 +251,7 @@ export abstract class BlockFactory<T extends Block> {
           } else {
             // 否则尝试手动签名
             if (!keypair.secretKey) {
-              throw new ArgumentIllegalException("secretKey is null");
+              throw new ArgumentIllegalException("secretKey is null when insertTransactions");
             }
             tranItem.signatureBuffer = this.asymmetricHelper.detachedSign(
               tranItem.getBytes(true),
@@ -284,6 +289,13 @@ export abstract class BlockFactory<T extends Block> {
       block.payloadLength = payloadLength;
       block.transactions = transactions;
       const numberOfTransactions = transactions.length;
+      if (block.numberOfTransactions !== 0 && block.numberOfTransactions !== numberOfTransactions) {
+        /// 区块的交易数对不上
+        throw new ConsensusException(`block should have {num1} Transactions, but only get {num2}`, {
+          num1: block.numberOfTransactions,
+          num2: numberOfTransactions,
+        });
+      }
       block.numberOfTransactions = numberOfTransactions;
       block.remark.blockParticipation = this.blockHelper.calcBlockParticipation({
         totalAccount: statisticsInfo.totalAccount,
