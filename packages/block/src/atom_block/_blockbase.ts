@@ -333,19 +333,23 @@ export abstract class BlockFactory<T extends Block> {
     const getBlockSizeByteSizeInfo = (blockSize: number) => {
       return {
         value: blockSize,
-        size: new Writer()
-          .uint32(BLOCK_SIZE_FIELD_ID)
-          .uint32(blockSize)
-          .finish().length,
+        size:
+          blockSize === 0
+            ? 0
+            : new Writer()
+                .uint32(BLOCK_SIZE_FIELD_ID)
+                .uint32(blockSize)
+                .finish().length,
       };
     };
-    let latestBlockSize = block.blockSize;
-    let oldBlockSizeInfo = getBlockSizeByteSizeInfo(latestBlockSize);
+    const oldBlockSize = block.blockSize;
+    let newBlockSize = oldBlockSize;
 
-    latestBlockSize =
+    newBlockSize =
       block.getBytes().length +
       (block.signatureBuffer.length ? 0 : 66) /* signature 的前置为 1位 + 32长度的signature */;
-    if (oldBlockSizeInfo.value !== latestBlockSize) {
+    if (oldBlockSize !== newBlockSize) {
+      let oldBlockSizeInfo = getBlockSizeByteSizeInfo(oldBlockSize);
       do {
         /**
          * 这里只是算出blockSize这个数字要写入模型中要占用的字节数
@@ -354,17 +358,17 @@ export abstract class BlockFactory<T extends Block> {
          * blockSize值变大的同时，也就意味着存储这个字所需的字节数也会增加
          * 因此需要有一个循环来让blockSize稳定在一个区间内。
          */
-        const newBlockSizeInfo = getBlockSizeByteSizeInfo(latestBlockSize);
+        const newBlockSizeInfo = getBlockSizeByteSizeInfo(newBlockSize);
 
         if (newBlockSizeInfo.size !== oldBlockSizeInfo.size) {
-          latestBlockSize += newBlockSizeInfo.size - oldBlockSizeInfo.size;
+          newBlockSize += newBlockSizeInfo.size - oldBlockSizeInfo.size;
           oldBlockSizeInfo = newBlockSizeInfo;
         } else {
           break;
         }
       } while (true);
     }
-    return latestBlockSize;
+    return newBlockSize;
   }
 
   /**
