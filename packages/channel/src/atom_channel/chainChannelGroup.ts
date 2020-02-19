@@ -456,6 +456,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
       return false;
     }
     this.addChainChannel_(chainChannel, opts);
+    this._chainChannelEvents.emit("addChainChannel", chainChannel);
     return true;
   }
   removeChainChannel(chainChannel: DH) {
@@ -465,7 +466,11 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
       this._DAWCLWM.delete(chainChannel);
       listenerRemover();
     }
-    return this.chainChannelSet.delete(chainChannel);
+    if (this.chainChannelSet.delete(chainChannel)) {
+      this._chainChannelEvents.emit("removeChainChannel", chainChannel);
+      return true;
+    }
+    return false;
   }
   @cacheGetter
   private get _chainChannelEvents() {
