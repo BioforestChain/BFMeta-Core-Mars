@@ -51,7 +51,7 @@ export abstract class BlockFactory<T extends Block> {
     twi: BFChainCore.TransactionInBlockJSON<T>,
   ) {
     const transactionInBlock = TransactionInBlock.fromObject(twi) as TransactionInBlock<
-      BFChainCore.Transaction<BFChainCore.GetTransactionAssetJSON<T>>
+      BFChainCore.Transaction<BFChainCore.GetTransactionJSONAssetJSON<T>>
     >;
     return transactionInBlock;
   }
