@@ -1,5 +1,5 @@
 declare namespace BFChainCore {
-  interface ProgressEventJSON<T extends string> {
+  interface ProgressEventJSON<T extends string = string> {
     type: T;
     mode: import("./").PROGRESS_EVENT_MODE;
     loaded: number;

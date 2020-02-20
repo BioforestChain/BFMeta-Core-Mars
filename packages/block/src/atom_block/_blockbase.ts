@@ -158,7 +158,6 @@ export abstract class BlockFactory<T extends Block> {
   ) {
     const Function_Exception_Detail = { function: "insertTransactions" };
     const MAX_TRANSACTION_SIZE = this.config.genesisBlock.remark.maxTransactionSize;
-    const { transactions } = block;
     /**所有交易的sha256hash */
     const payloadHash = this.cryptoHelper.sha256();
     /**所有交易体的总字节长度 */
@@ -169,6 +168,7 @@ export abstract class BlockFactory<T extends Block> {
       block.signature,
       block.statisticInfo,
     );
+    const transactions: TransactionInBlock[] = [];
     try {
       /**绑定统计功能到事件触发器上 */
       this.statisticsHelper.bindApplyTransactionEventEmiter(eventEmitter, statisticsInfo);
@@ -223,7 +223,14 @@ export abstract class BlockFactory<T extends Block> {
           }
           // 保存交易
           tranItem.index = transactions.length;
+          transactions.push(tranItem);
           tranItem.height = block.height;
+          /// 交易生效
+          const txFactory = this.transactionCore.getTransactionFactoryFromType(trs.type);
+          await txFactory.applyTransaction(trs, eventEmitter);
+          // 在apply之后，获取变更记录
+          eventEmitter.assetChangesGetter &&
+            (tranItem.transactionAssetChanges = eventEmitter.assetChangesGetter(tranItem));
           for (const transactionAssetChange of tranItem.transactionAssetChanges) {
             if (BigInt(transactionAssetChange.assetBalance) < BigInt(0)) {
               throw new ArgumentIllegalException(PROP_IS_INVALID, {
@@ -233,13 +240,6 @@ export abstract class BlockFactory<T extends Block> {
               });
             }
           }
-          transactions.push(tranItem);
-          /// 交易生效
-          const txFactory = this.transactionCore.getTransactionFactoryFromType(trs.type);
-          await txFactory.applyTransaction(trs, eventEmitter);
-          // 在apply之后，获取变更记录
-          eventEmitter.assetChangesGetter &&
-            (tranItem.transactionAssetChanges = eventEmitter.assetChangesGetter(tranItem));
           // 对TIB进行验签或者签名
           if (tranItem.signatureBuffer.length > 0) {
             /// 如果已经有签名信息，那么进行验证
