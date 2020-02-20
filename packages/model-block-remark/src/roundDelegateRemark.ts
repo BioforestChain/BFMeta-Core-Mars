@@ -60,13 +60,12 @@ export class RoundDelegateRemarkModel<T extends RoundDelegateRemarkModel<T>> ext
     }
     return this._rate;
   }
-  toJSON() {
+  toJSON(): BFChainCore.RoundDelegateRemarkJSON {
     return {
       newDelegates: this.newDelegates,
       maxBeginBalance: this.maxBeginBalance,
       maxTxCount: this.maxTxCount,
       nextRoundDelegates: this.nextRoundDelegates.map(rd => rd.toJSON()),
-      rate: this.rate,
     };
   }
 }

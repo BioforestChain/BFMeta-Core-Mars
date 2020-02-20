@@ -9,10 +9,13 @@ export class BlockchainRebuidingProgressEventModel extends ProgressEventModel<"b
   /**当前正在处理的区块的进度 */
   @Field.d(BlockchainRebuidingProgressEventModel.INC++, BlocksProgressEventModel)
   currentBlockDetails!: BlocksProgressEventModel;
-  toJSON() {
-    return Object.assign(super.toJSON(), {
-      currentBlockDetails: this.currentBlockDetails.toJSON(),
-    });
+  toJSON(): BFChainCore.BlockchainRebuildingProgressEventJSON {
+    return Object.assign(
+      {
+        currentBlockDetails: this.currentBlockDetails.toJSON(),
+      },
+      super.toJSON(),
+    );
   }
 }
 
@@ -40,7 +43,7 @@ export class BlockchainReplayBlockProgressEventModel
   /**当前下载的区块的进度 */
   @MapField.d(BlockchainRebuidingProgressEventModel.INC++, "uint32", BlocksProgressEventModel)
   syncDetails!: { [height: number]: BlocksProgressEventModel };
-  toJSON() {
+  toJSON(): BFChainCore.BlockchainReplayBlockProgressEventJSON {
     const applyDetails: BFChainCore.BlockchainReplayBlockProgressEventJSON["applyDetails"] = {};
     for (const h in this.applyDetails) {
       applyDetails[h] = this.applyDetails[h].toJSON();
@@ -49,10 +52,13 @@ export class BlockchainReplayBlockProgressEventModel
     for (const h in this.syncDetails) {
       syncDetails[h] = this.syncDetails[h].toJSON();
     }
-    return Object.assign(super.toJSON(), {
-      applyDetails,
-      syncDetails,
-    });
+    return Object.assign(
+      {
+        applyDetails,
+        syncDetails,
+      },
+      super.toJSON(),
+    );
   }
 }
 

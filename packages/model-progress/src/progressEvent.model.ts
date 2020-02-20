@@ -23,7 +23,7 @@ export enum PROGRESS_EVENT_MODE {
 /**通用的进度事件进度模型 */
 @Type.d("ProgressEvent")
 export class ProgressEventModel<EVENT extends string> extends Message<ProgressEventModel<EVENT>>
-  implements BFChainCore.JSONToModelType<BFChainCore.ProgressEventJSON> {
+  implements BFChainCore.JSONToModelType<BFChainCore.ProgressEventJSON<EVENT>> {
   static INC = 1;
   @Field.d(ProgressEventModel.INC++, "string")
   type!: EVENT;
@@ -37,12 +37,14 @@ export class ProgressEventModel<EVENT extends string> extends Message<ProgressEv
   @Field.d(ProgressEventModel.INC++, "uint32")
   total!: number;
   toJSON() {
-    return {
+    const res: BFChainCore.ProgressEventJSON<EVENT> = {
       type: this.type,
       mode: this.mode,
       loaded: this.loaded,
       buffer: this.buffer,
       total: this.total,
     };
+    this.buffer ?? (res.buffer = this.buffer);
+    return res;
   }
 }

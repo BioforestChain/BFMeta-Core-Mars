@@ -146,9 +146,12 @@ export class QueryTransactionReturnModel extends CommonResponse
   @Field.d(QueryTransactionReturnModel.INC++, TransactionInBlock, "repeated")
   transactions!: TransactionInBlock[];
   toJSON() {
-    return Object.assign(super.toJSON(), {
-      transactions: this.transactions.map(tib => tib.toJSON()),
-    });
+    return Object.assign(
+      {
+        transactions: this.transactions.map(tib => tib.toJSON()),
+      },
+      super.toJSON(),
+    );
   }
 }
 
@@ -191,10 +194,15 @@ export class NewTransactionReturnModel extends CommonResponse
   @Field.d(NewTransactionReturnModel.INC++, NewTransactionRefuseReason, "optional")
   refuseReason?: NewTransactionRefuseReason;
   toJSON() {
-    return Object.assign(super.toJSON(), {
-      newTrsStatus: this.newTrsStatus,
-      minFee: this.minFee,
-      refuseReason: this.refuseReason,
-    });
+    const res: BFChainCore.NewTransactionReturnJSON = Object.assign(
+      {
+        newTrsStatus: this.newTrsStatus,
+        minFee: this.minFee,
+        refuseReason: this.refuseReason,
+      },
+      super.toJSON(),
+    );
+    this.refuseReason ?? (res.refuseReason = this.refuseReason);
+    return res;
   }
 }

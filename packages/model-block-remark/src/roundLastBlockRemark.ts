@@ -25,13 +25,16 @@ export class RoundLastBlockRemarkModel extends RoundDelegateRemarkModel<RoundLas
   set hash(value: string) {
     this.hashBuffer = parseHexToArrayBuffer(value);
   }
-  toJSON() {
-    return Object.assign(super.toJSON(), {
-      debug: this.debug,
-      info: this.info,
-      blockParticipation: this.blockParticipation,
-      hash: this.hash,
-    });
+  toJSON(): BFChainCore.RoundLastBlockRemarkJSON {
+    return Object.assign(
+      {
+        debug: this.debug,
+        info: this.info,
+        blockParticipation: this.blockParticipation,
+        hash: this.hash,
+      },
+      super.toJSON(),
+    );
   }
   @cacheBytesGetter
   getBytes() {

@@ -14,15 +14,14 @@ export class BlocksProgressEventModel extends ProgressEventModel<"blocks">
   @MapField.d(BlocksProgressEventModel.INC++, "uint32", TransactionsProgressEventModel)
   // processingDetails!: Map<number, TransactionsProgressEventModel>;
   processingDetails!: { [height: number]: TransactionsProgressEventModel };
-  toJSON() {
+  toJSON(): BFChainCore.BlocksProgressEventJSON {
     // const processingDetails = this.processingDetails
-    return Object.assign(super.toJSON(), {
-      finishedDetails: this.finishedDetails.map(range => range.toJSON()),
-      processingDetails: this.processingDetails,
-      // Object.keys(this.processingDetails).reduce((res,key)=>{
-      //   res[key] = this.processingDetails[key].toJSON()
-      //   return res
-      // },{})
-    });
+    return Object.assign(
+      {
+        finishedDetails: this.finishedDetails.map(range => range.toJSON()),
+        processingDetails: this.processingDetails,
+      },
+      super.toJSON(),
+    );
   }
 }

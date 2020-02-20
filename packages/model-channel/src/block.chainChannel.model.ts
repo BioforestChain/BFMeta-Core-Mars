@@ -14,10 +14,10 @@ export class BlockQueryOptionsModel extends Message<BlockQueryOptionsModel>
   @Field.d(2, "uint32", "optional")
   height?: number;
   toJSON() {
-    return Object.assign(super.toJSON(), {
-      signature: this.signature,
-      height: this.height,
-    });
+    const res: BFChainCore.BlockQueryOptionsJSON = super.toJSON();
+    this.signature && (res.signature = this.signature);
+    this.height && (res.height = this.height);
+    return res;
   }
 }
 

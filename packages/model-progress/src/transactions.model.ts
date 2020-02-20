@@ -9,9 +9,12 @@ export class TransactionsProgressEventModel extends ProgressEventModel<"transact
   /**已经下载的交易的index范围 */
   @Field.d(TransactionsProgressEventModel.INC++, RangeModel, "repeated")
   finishedDetails!: RangeModel[];
-  toJSON() {
-    return Object.assign(super.toJSON(), {
-      finishedDetails: this.finishedDetails.map(range => range.toJSON()),
-    });
+  toJSON(): BFChainCore.TransactionsProgressEventJSON {
+    return Object.assign(
+      {
+        finishedDetails: this.finishedDetails.map(range => range.toJSON()),
+      },
+      super.toJSON(),
+    );
   }
 }
