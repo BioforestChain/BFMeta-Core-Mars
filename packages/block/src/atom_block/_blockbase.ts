@@ -250,7 +250,10 @@ export abstract class BlockFactory<T extends Block> {
                 keypair.publicKey,
               )
             ) {
-              throw new ArgumentFormatException(`Invalid transactionInBlock signature`);
+              throw new ArgumentFormatException(
+                `Invalid transactionInBlock: %O`,
+                tranItem.toJSON(),
+              );
             }
           } else {
             // 否则尝试手动签名
