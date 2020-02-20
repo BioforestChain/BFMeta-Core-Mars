@@ -108,23 +108,7 @@ declare namespace BFChainCore {
       blockInfo: NewBlockArgJSON,
       opts?: ChannelRequestOptions,
     ): Promise<import("@bfchain/core-model").NewBlockReturn>;
-    /**获取节点信息 的传播参数 */
-    initGetPeerInfoArg(
-      uid?: GetPeerInfoArgJSON["uid"],
-      opts?: ChannelRequestOptions,
-    ): readonly [
-      import("@bfchain/core-model").DUPLEX_API_CMD.GET_PEER_INFO,
-      Uint8Array,
-      (params: Uint8Array | ArrayBuffer) => import("@bfchain/core-model").GetPeerInfoReturnModel,
-      ChannelRequestOptions | undefined,
-    ];
-    /**获取节点信息
-     * 顺带统计延迟
-     */
-    getPeerInfo(
-      uid?: GetPeerInfoArgJSON["uid"],
-      opts?: ChannelRequestOptions,
-    ): Promise<import("@bfchain/core-model").GetPeerInfoReturnModel>;
+
     /**处理接收到数据时的响应 */
     initOnMessage(): void;
 
@@ -201,9 +185,6 @@ declare namespace BFChainCore {
         result: Promise<import("@bfchain/core-model").NewBlockReturn>;
       }[]
     >;
-    getPeerInfo(
-      ...args: BFChainUtil.AllArgument<ChainChannel["getPeerInfo"]>
-    ): Promise<import("@bfchain/core-model").PeerInfoModel | undefined>;
   }
   type ChainChannelGroupEventMap<CC extends ChainChannel = ChainChannel> = {
     addChainChannel: [CC];

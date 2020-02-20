@@ -301,34 +301,6 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
   broadcastBlock(blockInfo: BFChainCore.NewBlockArgJSON, opts?: BFChainCore.ChannelRequestOptions) {
     return this._requestWithBinaryData(...this.initBroadcastBlockArg(blockInfo, opts));
   }
-  /**获取节点信息 的传播参数 */
-  initGetPeerInfoArg(
-    uid?: BFChainCore.GetPeerInfoArgJSON["uid"],
-    opts?: BFChainCore.ChannelRequestOptions,
-  ) {
-    const arg = GetPeerInfoArgModel.fromObject({ uid });
-    return [
-      DUPLEX_API_CMD.GET_PEER_INFO,
-      this._requestDataToBinary(arg),
-      this.chainChannelHelper.boxGetPeerInfoReturn,
-      opts,
-    ] as const;
-  }
-  /**获取节点信息
-   * 顺带统计延迟
-   */
-  async getPeerInfo(
-    uid?: BFChainCore.GetPeerInfoArgJSON["uid"],
-    opts?: BFChainCore.ChannelRequestOptions,
-  ) {
-    /**
-     * 这里是要要计算延迟,所以不需要用`this.timeHelper.now()`
-     */
-    const start_time = Date.now();
-    const res = await this._requestWithBinaryData(...this.initGetPeerInfoArg(uid, opts));
-    this.pushDelayHistroy(Date.now() - start_time);
-    return res;
-  }
 
   /**处理接收到数据时的响应 */
   initOnMessage() {

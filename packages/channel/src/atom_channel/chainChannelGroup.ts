@@ -427,30 +427,6 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
       }),
     );
   }
-  async getPeerInfo(...args: BFChainUtil.AllArgument<ChainChannel["getPeerInfo"]>) {
-    let initedArgs: undefined | ReturnType<ChainChannel["initGetPeerInfoArg"]>;
-    const peerInfoResponseList = await Promise.all(
-      [...this.chainChannelSet.values()].map(chainChannel => {
-        initedArgs || (initedArgs = chainChannel.initGetPeerInfoArg(...args));
-        return chainChannel._requestWithBinaryData(...initedArgs);
-      }),
-    );
-    const peerInfoList: PeerInfoModel[] = [];
-    for (const pir of peerInfoResponseList) {
-      if (pir.peerInfo) {
-        peerInfoList.push(pir.peerInfo);
-      }
-    }
-    let maxHeightPeerInfo = peerInfoList.shift();
-    if (maxHeightPeerInfo) {
-      for (const pi of peerInfoList) {
-        if (pi.height > maxHeightPeerInfo.height) {
-          maxHeightPeerInfo = pi;
-        }
-      }
-    }
-    return maxHeightPeerInfo;
-  }
   /**
    * chainChannel autoRemove When Close ListenerRemover WeakMap
    */
