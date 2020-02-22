@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-typings",
-  "version": "5.4.1",
+  "version": "5.4.2",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -20,6 +20,5 @@
   "peerDependencies": {
     "@bfchain/protobuf": "^4.0.3",
     "@bfchain/util": "^4.2.20"
-  },
-  "dependencies": {}
+  }
 }
