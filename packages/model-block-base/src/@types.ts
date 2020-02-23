@@ -75,6 +75,7 @@ declare namespace BFChainCore {
     newDelegates: string[];
     maxBeginBalance: string;
     maxTxCount: number;
+    rate: string;
   }
   interface NextRoundDelegateJSON {
     address: string;

@@ -66,6 +66,7 @@ export class RoundDelegateRemarkModel<T extends RoundDelegateRemarkModel<T>> ext
       maxBeginBalance: this.maxBeginBalance,
       maxTxCount: this.maxTxCount,
       nextRoundDelegates: this.nextRoundDelegates.map(rd => rd.toJSON()),
+      rate: this.rate,
     };
   }
 }
