@@ -1001,6 +1001,7 @@ function getRoundLastBlockRemarkHash(height: number) {
               nextRoundDelegates,
               maxBeginBalance: "0",
               maxTxCount: 0,
+              rate: "0",
               newDelegates: [],
               hash: getRoundLastBlockRemarkHash(lastBlock.height),
             },

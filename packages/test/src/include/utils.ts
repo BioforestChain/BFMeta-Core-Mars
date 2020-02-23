@@ -133,6 +133,7 @@ export const mainChainRemarkData: BFChainCore.GenesisBlockRemarkJSON = {
     growthFactor: { numerator: "2718281828459045", denominator: "1000000000000000" },
     participationRatio: { numerator: 1, denominator: 1 },
   },
+  rate: "0",
 };
 
 export const subchainRemarkData: BFChainCore.GenesisBlockRemarkJSON = {
@@ -249,4 +250,5 @@ export const subchainRemarkData: BFChainCore.GenesisBlockRemarkJSON = {
     growthFactor: { numerator: "2718281828459045", denominator: "1000000000000000" },
     participationRatio: { numerator: 1, denominator: 1 },
   },
+  rate: "0",
 };
