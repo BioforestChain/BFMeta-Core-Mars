@@ -9,5 +9,6 @@
     "declaration": true,
     "outDir": "../../.cache/typings",
     "tsBuildInfoFile": "../../.cache/typings/@types.tsbuildinfo"
-  }
+  },
+  "references": []
 }

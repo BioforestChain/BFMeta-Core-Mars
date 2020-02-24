@@ -40,18 +40,13 @@ function generateJsonConfigFile(args) {
     compilerOptions.declarationDir,
     "package.json",
   );
+
+  let typingPackageJson = {};
   if (!fs.existsSync(typingPackagePath)) {
-    const typingPackageJson = {}; // JSON.parse(JSON.stringify(packageJson));
     typingPackageJson.name = `@types/${packageNameToTypesName(packageJson.name)}`;
     typingPackageJson.types = "index.d.ts";
     typingPackageJson.version = packageJson.version;
     typingPackageJson.dependencies = {};
-    for (const packageName in packageJson.dependencies) {
-      if (packageName.startsWith("@bfchain/core")) {
-        typingPackageJson.dependencies[`@types/${packageNameToTypesName(packageName)}`] =
-          packageJson.dependencies[packageName];
-      }
-    }
 
     const typingPackageFolderPath = path.resolve(typingPackagePath, "..");
     if (!fs.existsSync(typingPackageFolderPath)) {
@@ -59,12 +54,22 @@ function generateJsonConfigFile(args) {
         recursive: true,
       });
     }
-
-    fs.writeFileSync(
-      typingPackagePath,
-      prettierFormat(JSON.stringify(typingPackageJson), { parser: "json-stringify" }),
-    );
+  } else {
+    typingPackageJson = JSON.parse(fs.readFileSync(typingPackagePath).toString());
+    typingPackageJson.version = packageJson.version;
   }
+
+  for (const packageName in packageJson.dependencies) {
+    if (packageName.startsWith("@bfchain/core")) {
+      typingPackageJson.dependencies[`@types/${packageNameToTypesName(packageName)}`] =
+        packageJson.dependencies[packageName];
+    }
+  }
+
+  fs.writeFileSync(
+    typingPackagePath,
+    prettierFormat(JSON.stringify(typingPackageJson), { parser: "json-stringify" }),
+  );
 
   return toJson;
 }
