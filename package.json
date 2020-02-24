@@ -2,7 +2,8 @@
   "name": "@bfchain/core",
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "packages/@types/*"
   ],
   "version": "mono",
   "description": "",
