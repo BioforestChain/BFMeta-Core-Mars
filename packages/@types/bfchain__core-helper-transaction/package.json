@@ -1,17 +1,17 @@
 {
   "name": "@types/bfchain__core-helper-transaction",
   "types": "index.d.ts",
-  "version": "5.4.3",
+  "version": "5.4.5",
   "dependencies": {
-    "@types/bfchain__core-helper-account-base": "^5.4.3",
-    "@types/bfchain__core-helper-asymmetric": "^5.4.3",
-    "@types/bfchain__core-helper-bigint": "^5.4.3",
-    "@types/bfchain__core-helper-config": "^5.4.3",
-    "@types/bfchain__core-helper-type": "^5.4.3",
-    "@types/bfchain__core-model-constants": "^5.4.3",
-    "@types/bfchain__core-model-transaction": "^5.4.3",
-    "@types/bfchain__core-typings": "^5.4.3",
-    "@types/bfchain__core-util-exception": "^5.4.3",
-    "@types/bfchain__core-util-exception-errorcode": "^5.0.4-dev.0"
+    "@types/bfchain__core-helper-account-base": "^5.4.5",
+    "@types/bfchain__core-helper-asymmetric": "^5.4.5",
+    "@types/bfchain__core-helper-bigint": "^5.4.5",
+    "@types/bfchain__core-helper-config": "^5.4.5",
+    "@types/bfchain__core-helper-type": "^5.4.5",
+    "@types/bfchain__core-model-constants": "^5.4.5",
+    "@types/bfchain__core-model-transaction": "^5.4.5",
+    "@types/bfchain__core-typings": "^5.4.5",
+    "@types/bfchain__core-util-exception": "^5.4.5",
+    "@types/bfchain__core-util-exception-errorcode": "^5.4.5"
   }
 }
