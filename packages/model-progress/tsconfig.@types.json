@@ -5,7 +5,7 @@
     "../../config/tsconfig_base/base.tsconfig.@types.json"
   ],
   "compilerOptions": {
-    "declarationDir": "../@types/bfchain__core-model-progress",
+    "declarationDir": "../__types/bfchain__core-model-progress",
     "declaration": true,
     "outDir": "../../.cache/model-progress",
     "tsBuildInfoFile": "../../.cache/model-progress/@types.tsbuildinfo"

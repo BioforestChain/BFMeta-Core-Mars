@@ -1,5 +1,5 @@
 import { BlockLogicVerifier, PROCESSBLOCK_TYPE } from "./_blockbaseLogicVerifier";
-import { RoundLastBlock } from "@bfchain/core-model-block";
+import type { RoundLastBlock } from "@bfchain/core-model-block";
 import {
   CoreExceptionGenerator,
   NOT_MATCH,

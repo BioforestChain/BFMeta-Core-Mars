@@ -1,5 +1,5 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
-import { DelegateTransaction } from "@bfchain/core-model";
+import type { DelegateTransaction } from "@bfchain/core-model";
 import { Injectable } from "@bfchain/util";
 import {
   CoreExceptionGenerator,

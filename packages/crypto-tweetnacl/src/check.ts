@@ -1,4 +1,4 @@
-import { ByteArray } from "./array";
+import type { ByteArray } from "./array";
 import { SecretBoxLength } from "./secretbox";
 import { BoxLength } from "./box";
 

@@ -8,7 +8,7 @@ import {
 import { CoreExceptionGenerator, NOT_EXIST, PROP_IS_INVALID } from "@bfchain/core-util-exception";
 import { Injectable, Inject } from "@bfchain/util";
 import { BlockGeneratorCalculator } from "@bfchain/core-block";
-import { Block } from "@bfchain/core-model-block";
+import type { Block } from "@bfchain/core-model-block";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "TICKER",

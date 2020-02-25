@@ -1,4 +1,4 @@
-import { ByteArray } from "./array";
+import type { ByteArray } from "./array";
 import { checkArrayTypes } from "./check";
 
 function vn(x: ByteArray, xi: number, y: ByteArray, yi: number, n: number): number {

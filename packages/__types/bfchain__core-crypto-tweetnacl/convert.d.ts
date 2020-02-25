@@ -1,0 +1,6 @@
+import { ByteArray } from "./array";
+export declare function encodeUTF8(a: ByteArray): string;
+export declare function decodeUTF8(s: string): ByteArray;
+export declare function encodeBase64(a: ByteArray): string;
+export declare function decodeBase64(s: string): ByteArray;
+export { encodeHex, decodeHex } from "@bfchain/util";

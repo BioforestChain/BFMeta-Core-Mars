@@ -5,7 +5,7 @@
     "../../config/tsconfig_base/base.tsconfig.@types.json"
   ],
   "compilerOptions": {
-    "declarationDir": "../@types/bfchain__core-block-ticker",
+    "declarationDir": "../__types/bfchain__core-block-ticker",
     "declaration": true,
     "outDir": "../../.cache/block_ticker",
     "tsBuildInfoFile": "../../.cache/block_ticker/@types.tsbuildinfo"

@@ -1,5 +1,5 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
-import { SetLnsManagerTransaction } from "@bfchain/core-model";
+import type { SetLnsManagerTransaction } from "@bfchain/core-model";
 import { Injectable } from "@bfchain/util";
 
 @Injectable()

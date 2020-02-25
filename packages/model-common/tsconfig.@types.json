@@ -5,7 +5,7 @@
     "../../config/tsconfig_base/base.tsconfig.@types.json"
   ],
   "compilerOptions": {
-    "declarationDir": "../@types/bfchain__core-model-common",
+    "declarationDir": "../__types/bfchain__core-model-common",
     "declaration": true,
     "outDir": "../../.cache/model-common",
     "tsBuildInfoFile": "../../.cache/model-common/@types.tsbuildinfo"

@@ -1,5 +1,5 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
-import { TransferAssetTransaction } from "@bfchain/core-model";
+import type { TransferAssetTransaction } from "@bfchain/core-model";
 import { Injectable } from "@bfchain/util";
 
 @Injectable()

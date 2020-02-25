@@ -1,5 +1,5 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
-import { ToExchangeAssetTransaction, ToExchangeAssetModel } from "@bfchain/core-model";
+import type { ToExchangeAssetTransaction, ToExchangeAssetModel } from "@bfchain/core-model";
 import { Injectable } from "@bfchain/util";
 import { CoreExceptionGenerator, ASSET_NOT_EXIST, NOT_EXIST } from "@bfchain/core-util-exception";
 

@@ -1,5 +1,5 @@
 import { BlockLogicVerifier, PROCESSBLOCK_TYPE } from "./_blockbaseLogicVerifier";
-import { GenesisBlock } from "@bfchain/core-model-block";
+import type { GenesisBlock } from "@bfchain/core-model-block";
 
 export class GenesisBlockLogicVerifier extends BlockLogicVerifier {
   async verify(

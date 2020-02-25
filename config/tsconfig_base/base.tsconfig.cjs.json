@@ -10,6 +10,7 @@
     "sourceMap": true,
     "noEmitOnError": true,
     "removeComments": true,
+    "importsNotUsedAsValues": "error",
     "strict": true,
     "strictBindCallApply": true,
     "strictNullChecks": true,

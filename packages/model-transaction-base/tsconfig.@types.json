@@ -5,7 +5,7 @@
     "../../config/tsconfig_base/base.tsconfig.@types.json"
   ],
   "compilerOptions": {
-    "declarationDir": "../@types/bfchain__core-model-transaction-base",
+    "declarationDir": "../__types/bfchain__core-model-transaction-base",
     "declaration": true,
     "outDir": "../../.cache/model-transaction-base",
     "tsBuildInfoFile": "../../.cache/model-transaction-base/@types.tsbuildinfo"

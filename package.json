@@ -3,13 +3,10 @@
   "private": true,
   "workspaces": [
     "packages/*",
-    "packages/@types/*"
+    "packages/__types/*"
   ],
   "version": "mono",
   "description": "",
-  "main": "build/cjs/index.js",
-  "module": "build/esm/index.js",
-  "-type": "build/cjs/index.d.ts",
   "bdkMono": {
     "generateConfigFiles": [
       {

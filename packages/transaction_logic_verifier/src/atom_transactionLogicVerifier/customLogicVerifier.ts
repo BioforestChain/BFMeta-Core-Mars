@@ -1,5 +1,5 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
-import { CustomTransaction } from "@bfchain/core-model";
+import type { CustomTransaction } from "@bfchain/core-model";
 import { Injectable } from "@bfchain/util";
 import { CoreExceptionGenerator, NOT_EXIST, PROP_IS_INVALID } from "@bfchain/core-util-exception";
 

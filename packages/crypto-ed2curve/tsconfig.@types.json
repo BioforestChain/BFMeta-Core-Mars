@@ -5,7 +5,7 @@
     "../../config/tsconfig_base/base.tsconfig.@types.json"
   ],
   "compilerOptions": {
-    "declarationDir": "../@types/bfchain__core-crypto-ed2curve",
+    "declarationDir": "../__types/bfchain__core-crypto-ed2curve",
     "declaration": true,
     "outDir": "../../.cache/crypto-ed2curve",
     "tsBuildInfoFile": "../../.cache/crypto-ed2curve/@types.tsbuildinfo"

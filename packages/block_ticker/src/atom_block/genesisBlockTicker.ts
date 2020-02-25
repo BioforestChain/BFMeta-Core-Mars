@@ -1,5 +1,5 @@
 import { BlockTicker } from "./_blockbaseTicker";
-import { GenesisBlock } from "@bfchain/core-model-block";
+import type { GenesisBlock } from "@bfchain/core-model-block";
 import { CoreExceptionGenerator, SHOULD_NOT_TICK } from "@bfchain/core-util-exception";
 import { Injectable } from "@bfchain/util";
 

@@ -1,7 +1,7 @@
 import * as ATOM_TRS from "./atom_transaction";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 import { INVALID_TRANSACTION_BASE_TYPE } from "@bfchain/core-util-exception-errorcode";
-import { Transaction } from "@bfchain/core-model-transaction-base";
+import type { Transaction } from "@bfchain/core-model-transaction-base";
 import { Type, Field, Message } from "@bfchain/protobuf";
 
 const { ArgumentFormatException } = CoreExceptionGenerator("MODEL", "transactionModel");

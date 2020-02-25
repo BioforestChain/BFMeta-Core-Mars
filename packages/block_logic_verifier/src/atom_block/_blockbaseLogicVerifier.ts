@@ -17,7 +17,7 @@ import {
   INVALID_BLOCK_GENERATOR,
   PROP_IS_INVALID,
 } from "@bfchain/core-util-exception";
-import { Block } from "@bfchain/core-model-block";
+import type { Block } from "@bfchain/core-model-block";
 import { TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE } from "@bfchain/core-model-transaction";
 import { Inject } from "@bfchain/util";
 import { BlockGeneratorCalculator } from "@bfchain/core-block";

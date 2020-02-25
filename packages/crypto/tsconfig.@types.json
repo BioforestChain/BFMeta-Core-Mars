@@ -5,7 +5,7 @@
     "../../config/tsconfig_base/base.tsconfig.@types.json"
   ],
   "compilerOptions": {
-    "declarationDir": "../@types/bfchain__core-crypto",
+    "declarationDir": "../__types/bfchain__core-crypto",
     "declaration": true,
     "outDir": "../../.cache/crypto",
     "tsBuildInfoFile": "../../.cache/crypto/@types.tsbuildinfo"

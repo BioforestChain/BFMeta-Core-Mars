@@ -6,7 +6,7 @@ import {
   ChainTimeHelper,
 } from "@bfchain/core-helper";
 import { CoreExceptionGenerator, NOT_EXIST } from "@bfchain/core-util-exception";
-import { Block, RoundLastBlock } from "@bfchain/core-model-block";
+import type { Block, RoundLastBlock } from "@bfchain/core-model-block";
 import { Injectable, Inject, TaskList } from "@bfchain/util";
 const { log, NoFoundException } = CoreExceptionGenerator("Core", "BlockGeneratorCalculator");
 /**

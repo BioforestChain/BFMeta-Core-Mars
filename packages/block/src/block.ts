@@ -4,7 +4,7 @@ import {
   BLOCK_TYPES_BASE,
   BLOCK_TYPES_MAP,
 } from "@bfchain/core-model-block";
-import { TransactionInBlock } from "@bfchain/core-model-transaction";
+import type { TransactionInBlock } from "@bfchain/core-model-transaction";
 import { Reader } from "@bfchain/protobuf";
 import { AsymmetricHelper, BlockHelper } from "@bfchain/core-helper";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";

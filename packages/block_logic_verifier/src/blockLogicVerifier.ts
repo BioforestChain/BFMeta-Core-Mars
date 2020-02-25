@@ -1,7 +1,7 @@
 import * as ATOM_BLOCKLGCVFR from "./atom_block";
 import { BLOCK_TYPES_BASE, Block } from "@bfchain/core-model-block";
 import { Injectable, Resolve, ModuleStroge } from "@bfchain/util";
-import { BlockLogicVerifier } from "./atom_block";
+import type { BlockLogicVerifier } from "./atom_block";
 import { BlockHelper } from "@bfchain/core-helper";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 const { ArgumentFormatException } = CoreExceptionGenerator("Core", "BlockLogicVerifierCore");

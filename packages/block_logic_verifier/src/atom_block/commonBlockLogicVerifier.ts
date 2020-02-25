@@ -1,5 +1,5 @@
 import { BlockLogicVerifier, PROCESSBLOCK_TYPE } from "./_blockbaseLogicVerifier";
-import { CommonBlock } from "@bfchain/core-model-block";
+import type { CommonBlock } from "@bfchain/core-model-block";
 
 export class CommonBlockLogicVerifier extends BlockLogicVerifier {
   async verify(

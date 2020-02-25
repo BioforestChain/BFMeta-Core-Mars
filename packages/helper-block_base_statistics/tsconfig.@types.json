@@ -5,7 +5,7 @@
     "../../config/tsconfig_base/base.tsconfig.@types.json"
   ],
   "compilerOptions": {
-    "declarationDir": "../@types/bfchain__core-helper-block-base-statistics",
+    "declarationDir": "../__types/bfchain__core-helper-block-base-statistics",
     "declaration": true,
     "outDir": "../../.cache/helper-block_base_statistics",
     "tsBuildInfoFile": "../../.cache/helper-block_base_statistics/@types.tsbuildinfo"

@@ -1,5 +1,5 @@
 import { Message, Type, Field } from "@bfchain/protobuf";
-import { Exception } from "@bfchain/util-exception";
+import type { Exception } from "@bfchain/util-exception";
 import { RESPONSE_STATUS } from "./constants";
 
 @Type.d("ExceptionMessage")

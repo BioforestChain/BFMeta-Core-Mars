@@ -1,9 +1,9 @@
-import {
+import type {
   TransactionHelper,
+  ChainAssetInfoHelper,
   AccountBaseHelper,
   BaseHelper,
   ConfigHelper,
-  ChainAssetInfoHelper,
 } from "@bfchain/core-helper";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 import {

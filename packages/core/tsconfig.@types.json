@@ -5,7 +5,7 @@
     "../../config/tsconfig_base/base.tsconfig.@types.json"
   ],
   "compilerOptions": {
-    "declarationDir": "../@types/bfchain__core",
+    "declarationDir": "../__types/bfchain__core",
     "declaration": true,
     "outDir": "../../.cache/core",
     "tsBuildInfoFile": "../../.cache/core/@types.tsbuildinfo"

@@ -1,6 +1,6 @@
 import { Block, GetBlockRemarkJSON } from "@bfchain/core-model-block";
 import { TransactionInBlock } from "@bfchain/core-model-transaction";
-import {
+import type {
   BlockHelper,
   BaseHelper,
   ConfigHelper,

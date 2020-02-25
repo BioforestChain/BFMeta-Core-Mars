@@ -1,4 +1,4 @@
-import { Message } from "@bfchain/protobuf";
+import type { Message } from "@bfchain/protobuf";
 // const MESSAGE_BYTES_WM = new WeakMap<Message, Uint8Array>();
 
 // export function getMessageBytes(message: Message) {

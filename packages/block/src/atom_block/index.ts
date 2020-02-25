@@ -7,9 +7,9 @@ export * from "./blockGeneratorCalculator";
 export * from "./pickNextRoundDelegates";
 export * from "./blockForkCheck";
 
-import { CommonBlockFactory } from "./commonBlock";
-import { GenesisBlockFactory } from "./genesisBlock";
-import { RoundLastBlockFactory } from "./roundLastBlock";
+import type { CommonBlockFactory } from "./commonBlock";
+import type { GenesisBlockFactory } from "./genesisBlock";
+import type { RoundLastBlockFactory } from "./roundLastBlock";
 
 export type SomeBlockFactoryConstructor =
   | typeof CommonBlockFactory

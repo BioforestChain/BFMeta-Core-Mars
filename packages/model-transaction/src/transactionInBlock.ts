@@ -1,7 +1,7 @@
 import { Type, Field, Message } from "@bfchain/protobuf";
 import { getHexFromArrayBuffer, parseHexToArrayBuffer } from "@bfchain/util-encoding-hex";
 import { cacheBytesGetter } from "@bfchain/core-model-cacher";
-import { Transaction } from "@bfchain/core-model-transaction-base";
+import type { Transaction } from "@bfchain/core-model-transaction-base";
 import { SomeTransactionModel } from "./someTransaction";
 
 export enum TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE {

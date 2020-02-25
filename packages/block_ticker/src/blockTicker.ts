@@ -1,7 +1,7 @@
 import * as ATOM_BLOCKTKR from "./atom_block";
 import { BLOCK_TYPES_BASE, Block } from "@bfchain/core-model-block";
 import { Injectable, Resolve, ModuleStroge } from "@bfchain/util";
-import { BlockTicker } from "./atom_block";
+import type { BlockTicker } from "./atom_block";
 import { BlockHelper } from "@bfchain/core-helper";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 const { ArgumentFormatException, log, warn } = CoreExceptionGenerator("Core", "BlockTicker");

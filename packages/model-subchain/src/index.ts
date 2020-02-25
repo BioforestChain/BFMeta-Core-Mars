@@ -6,7 +6,7 @@ export * from "./issueSubchain.transaction";
 /// 注册发行子链交易
 import { TRANSACTION_TYPES_MAP, TRANSACTION_TYPES_BASE } from "@bfchain/core-model-transaction";
 import { IssueSubchainTransaction } from "./issueSubchain.transaction";
-import { Transaction } from "@bfchain/core-model-transaction-base";
+import type { Transaction } from "@bfchain/core-model-transaction-base";
 TRANSACTION_TYPES_MAP.VM.set(
   TRANSACTION_TYPES_BASE.ISSUE_SUBCHAIN,
   IssueSubchainTransaction as typeof Transaction,

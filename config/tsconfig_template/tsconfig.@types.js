@@ -17,10 +17,10 @@ function generateJsonConfigFile(args) {
   const compilerOptions = toJson.compilerOptions || (toJson.compilerOptions = {});
 
   /// 初始化配置declarationDir
-  if (!compilerOptions.declarationDir) {
-    compilerOptions.declarationDir = `../@types/${packageNameToTypesName(packageJson.name)}`;
+  // if (!compilerOptions.declarationDir) {
+    compilerOptions.declarationDir = `../__types/${packageNameToTypesName(packageJson.name)}`;
     compilerOptions.declaration = true;
-  }
+  // }
 
   /// 如果没有默认的outDir路径，或者没有 noEmit 的声明，那么默认不去生成 js文件
   if (true || !compilerOptions.outDir) {

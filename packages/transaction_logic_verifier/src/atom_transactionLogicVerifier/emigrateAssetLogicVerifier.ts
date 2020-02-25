@@ -1,5 +1,5 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
-import { EmigrateAssetTransaction } from "@bfchain/core-model";
+import type { EmigrateAssetTransaction } from "@bfchain/core-model";
 import { Injectable, Inject } from "@bfchain/util";
 import {
   CoreExceptionGenerator,

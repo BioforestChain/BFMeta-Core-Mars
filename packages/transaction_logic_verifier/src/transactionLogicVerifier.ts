@@ -8,7 +8,7 @@ import {
 } from "@bfchain/core-helper";
 import { Injectable, Inject, ModuleStroge, Resolve } from "@bfchain/util";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
-import { TransactionLogicVerifier } from "./atom_transactionLogicVerifier";
+import type { TransactionLogicVerifier } from "./atom_transactionLogicVerifier";
 
 const { ArgumentFormatException } = CoreExceptionGenerator(
   "CONTROLLER",

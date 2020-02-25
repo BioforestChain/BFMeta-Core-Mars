@@ -5,7 +5,7 @@
     "../../config/tsconfig_base/base.tsconfig.@types.json"
   ],
   "compilerOptions": {
-    "declarationDir": "../@types/bfchain__core-crypto-tweetnacl",
+    "declarationDir": "../__types/bfchain__core-crypto-tweetnacl",
     "declaration": true,
     "outDir": "../../.cache/crypto-tweetnacl",
     "tsBuildInfoFile": "../../.cache/crypto-tweetnacl/@types.tsbuildinfo"

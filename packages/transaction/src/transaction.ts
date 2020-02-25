@@ -7,7 +7,7 @@ import {
 } from "@bfchain/core-helper";
 import { Injectable, Inject, ModuleStroge, Resolve } from "@bfchain/util";
 import { Transaction } from "@bfchain/core-model";
-import { TransactionFactory } from "./atom_transaction/_txbase";
+import type { TransactionFactory } from "./atom_transaction/_txbase";
 import {
   TransactionInBlock,
   TRANSACTION_TYPES_BASE,

@@ -1,0 +1,32 @@
+import { Transaction } from "@bfchain/core-model";
+import { EventLogicVerifier } from "./eventLogicVerifier";
+import { ConfigHelper, ChainTimeHelper, BlockHelper, JSBIHelper } from "@bfchain/core-helper";
+export declare abstract class TransactionLogicVerifier<T extends Transaction<any> = Transaction<any>> {
+    protected configHelper: ConfigHelper;
+    protected timeHelper: ChainTimeHelper;
+    protected blockHelper: BlockHelper;
+    protected jsbiHelper: JSBIHelper;
+    protected eventLogicVerifier: EventLogicVerifier;
+    protected transactionCore: import("@bfchain/core-transaction").TransactionCore;
+    protected transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface;
+    protected accountGetterHelper?: BFChainCore.AccountGetterHelperInterface<any>;
+    customTransactionCenter?: BFChainCore.CustomTrCenterInterface;
+    abstract verify(transaction: T, currentBlockHeight: number, accountGetterHelper?: BFChainCore.AccountGetterHelperInterface<any>, transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface, customTransactionCenter?: BFChainCore.CustomTrCenterInterface): Promise<boolean>;
+    logicVerify(transaction: T, currentBlockHeight: number, accountGetterHelper?: BFChainCore.AccountGetterHelperInterface<any> | undefined, transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface | undefined): Promise<BFChainCore.AccountInfoAndAssets>;
+    checkSenderAccountStatus(accountInfo: BFChainCore.AccountInfo | undefined): void;
+    checkRecipientAccountStatus(accountInfo: BFChainCore.AccountInfo | undefined): void;
+    checkSecondPublicKey(accountInfo: BFChainCore.AccountInfo, tr: T): void;
+    checkApplyBlockHeight(tr: T, currentBlockHeight: number): void;
+    checkTransactionMagic(tr: T, accountGetterHelper?: BFChainCore.AccountGetterHelperInterface<any> | undefined): Promise<void>;
+    checkTransactionTimestamp(tr: T): void;
+    checkTransactionRange(tr: T, currentBlockHeight: number, accountGetterHelper?: BFChainCore.AccountGetterHelperInterface<any> | undefined): Promise<void>;
+    checkTrsMaxBytes(byteLength: number): void;
+    checkDAppId(trs: T, currentBlockHeight: number, accountGetterHelper?: BFChainCore.AccountGetterHelperInterface<any> | undefined, transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface | undefined): Promise<void>;
+    checkLocationName(tr: T, currentBlockHeight: number, accountGetterHelper?: BFChainCore.AccountGetterHelperInterface<any> | undefined): Promise<void>;
+    isPossessAssetExceptForChainAsset(assets: BFChainCore.AccountAssets): void;
+    checkTrsFeeAndWebFee(transaction: BFChainCore.Transaction, byteLength: number): string;
+    checkTrsFeeAndMiningMachineFee(transaction: BFChainCore.Transaction, byteLength: number, minFeePerByte: BFChainCore.FractionJSON): string;
+    checkRepeatInUntreatedTransaction(senderId: string, signature: string, transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface | undefined): Promise<void>;
+    checkRepeatInBlockChainTransaction(signature: string, transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface | undefined): Promise<void>;
+    checkSecondaryTransaction(transaction: T, transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface | undefined): Promise<void>;
+}

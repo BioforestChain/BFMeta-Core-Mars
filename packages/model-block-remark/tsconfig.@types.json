@@ -5,7 +5,7 @@
     "../../config/tsconfig_base/base.tsconfig.@types.json"
   ],
   "compilerOptions": {
-    "declarationDir": "../@types/bfchain__core-model-block-remark",
+    "declarationDir": "../__types/bfchain__core-model-block-remark",
     "declaration": true,
     "outDir": "../../.cache/model-block-remark",
     "tsBuildInfoFile": "../../.cache/model-block-remark/@types.tsbuildinfo"

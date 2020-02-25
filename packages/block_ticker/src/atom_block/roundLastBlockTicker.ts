@@ -6,7 +6,7 @@ const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "BlockLogicTicker",
 );
 import { BlockTicker } from "./_blockbaseTicker";
-import { RoundLastBlock } from "@bfchain/core-model-block";
+import type { RoundLastBlock } from "@bfchain/core-model-block";
 
 @Injectable()
 export class RoundLastBlockTicker extends BlockTicker {
