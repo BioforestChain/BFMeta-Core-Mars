@@ -1,4 +1,4 @@
-import type {} from '@bfchain/core-typings';
+import "@bfchain/core-typings";
 export * from "@bfchain/core-model";
 export * from "@bfchain/core-helper";
 

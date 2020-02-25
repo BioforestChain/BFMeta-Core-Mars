@@ -15,5 +15,5 @@ src/**/.*
 .settings
 *.tsbuildinfo
 packages/*/build
-packages/@types/**/*.d.ts
-packages/@types/**/*.d.ts.map
+packages/__types/**/*.d.ts
+packages/__types/**/*.d.ts.map
