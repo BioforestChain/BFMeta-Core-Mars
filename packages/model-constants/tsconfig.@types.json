@@ -5,10 +5,11 @@
     "../../config/tsconfig_base/base.tsconfig.@types.json"
   ],
   "compilerOptions": {
-    "declarationDir": "../__types/bfchain__core-model-constants",
+    "declarationDir": "../@types/bfchain__core-model-constants",
     "declaration": true,
     "outDir": "../../.cache/model-constants",
-    "tsBuildInfoFile": "../../.cache/model-constants/@types.tsbuildinfo"
+    "tsBuildInfoFile": "../../.cache/model-constants/@types.tsbuildinfo",
+    "declarationMap": false
   },
   "references": [
     {

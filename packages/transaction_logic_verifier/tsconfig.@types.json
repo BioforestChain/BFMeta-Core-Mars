@@ -5,10 +5,11 @@
     "../../config/tsconfig_base/base.tsconfig.@types.json"
   ],
   "compilerOptions": {
-    "declarationDir": "../__types/bfchain__core-transaction-logic-verifier",
+    "declarationDir": "../@types/bfchain__core-transaction-logic-verifier",
     "declaration": true,
     "outDir": "../../.cache/transaction_logic_verifier",
-    "tsBuildInfoFile": "../../.cache/transaction_logic_verifier/@types.tsbuildinfo"
+    "tsBuildInfoFile": "../../.cache/transaction_logic_verifier/@types.tsbuildinfo",
+    "declarationMap": false
   },
   "references": [
     {

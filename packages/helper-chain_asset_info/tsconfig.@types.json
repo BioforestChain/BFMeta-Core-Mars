@@ -5,10 +5,11 @@
     "../../config/tsconfig_base/base.tsconfig.@types.json"
   ],
   "compilerOptions": {
-    "declarationDir": "../__types/bfchain__core-helper-chain-asset-info",
+    "declarationDir": "../@types/bfchain__core-helper-chain-asset-info",
     "declaration": true,
     "outDir": "../../.cache/helper-chain_asset_info",
-    "tsBuildInfoFile": "../../.cache/helper-chain_asset_info/@types.tsbuildinfo"
+    "tsBuildInfoFile": "../../.cache/helper-chain_asset_info/@types.tsbuildinfo",
+    "declarationMap": false
   },
   "references": [
     {

@@ -5,10 +5,11 @@
     "../../config/tsconfig_base/base.tsconfig.@types.json"
   ],
   "compilerOptions": {
-    "declarationDir": "../__types/bfchain__core-account",
+    "declarationDir": "../@types/bfchain__core-account",
     "declaration": true,
     "outDir": "../../.cache/account",
-    "tsBuildInfoFile": "../../.cache/account/@types.tsbuildinfo"
+    "tsBuildInfoFile": "../../.cache/account/@types.tsbuildinfo",
+    "declarationMap": false
   },
   "references": [
     {

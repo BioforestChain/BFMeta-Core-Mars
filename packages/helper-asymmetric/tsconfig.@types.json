@@ -5,10 +5,11 @@
     "../../config/tsconfig_base/base.tsconfig.@types.json"
   ],
   "compilerOptions": {
-    "declarationDir": "../__types/bfchain__core-helper-asymmetric",
+    "declarationDir": "../@types/bfchain__core-helper-asymmetric",
     "declaration": true,
     "outDir": "../../.cache/helper-asymmetric",
-    "tsBuildInfoFile": "../../.cache/helper-asymmetric/@types.tsbuildinfo"
+    "tsBuildInfoFile": "../../.cache/helper-asymmetric/@types.tsbuildinfo",
+    "declarationMap": false
   },
   "references": [
     {

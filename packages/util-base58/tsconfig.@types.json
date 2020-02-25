@@ -5,10 +5,11 @@
     "../../config/tsconfig_base/base.tsconfig.@types.json"
   ],
   "compilerOptions": {
-    "declarationDir": "../__types/bfchain__core-util-base58",
+    "declarationDir": "../@types/bfchain__core-util-base58",
     "declaration": true,
     "outDir": "../../.cache/util-base58",
-    "tsBuildInfoFile": "../../.cache/util-base58/@types.tsbuildinfo"
+    "tsBuildInfoFile": "../../.cache/util-base58/@types.tsbuildinfo",
+    "declarationMap": false
   },
   "references": [
     {

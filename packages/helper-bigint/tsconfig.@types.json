@@ -5,10 +5,11 @@
     "../../config/tsconfig_base/base.tsconfig.@types.json"
   ],
   "compilerOptions": {
-    "declarationDir": "../__types/bfchain__core-helper-bigint",
+    "declarationDir": "../@types/bfchain__core-helper-bigint",
     "declaration": true,
     "outDir": "../../.cache/helper-bigint",
-    "tsBuildInfoFile": "../../.cache/helper-bigint/@types.tsbuildinfo"
+    "tsBuildInfoFile": "../../.cache/helper-bigint/@types.tsbuildinfo",
+    "declarationMap": false
   },
   "references": [
     {

@@ -5,10 +5,11 @@
     "../../config/tsconfig_base/base.tsconfig.@types.json"
   ],
   "compilerOptions": {
-    "declarationDir": "../__types/bfchain__core-crypto-tweetnacl",
+    "declarationDir": "../@types/bfchain__core-crypto-tweetnacl",
     "declaration": true,
     "outDir": "../../.cache/crypto-tweetnacl",
-    "tsBuildInfoFile": "../../.cache/crypto-tweetnacl/@types.tsbuildinfo"
+    "tsBuildInfoFile": "../../.cache/crypto-tweetnacl/@types.tsbuildinfo",
+    "declarationMap": false
   },
   "references": [
     {

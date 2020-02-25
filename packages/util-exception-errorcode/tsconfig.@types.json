@@ -5,10 +5,11 @@
     "../../config/tsconfig_base/base.tsconfig.@types.json"
   ],
   "compilerOptions": {
-    "declarationDir": "../__types/bfchain__core-util-exception-errorcode",
+    "declarationDir": "../@types/bfchain__core-util-exception-errorcode",
     "declaration": true,
     "outDir": "../../.cache/util-exception-errorcode",
-    "tsBuildInfoFile": "../../.cache/util-exception-errorcode/@types.tsbuildinfo"
+    "tsBuildInfoFile": "../../.cache/util-exception-errorcode/@types.tsbuildinfo",
+    "declarationMap": false
   },
   "references": [
     {

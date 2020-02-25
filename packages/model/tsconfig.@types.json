@@ -5,10 +5,11 @@
     "../../config/tsconfig_base/base.tsconfig.@types.json"
   ],
   "compilerOptions": {
-    "declarationDir": "../__types/bfchain__core-model",
+    "declarationDir": "../@types/bfchain__core-model",
     "declaration": true,
     "outDir": "../../.cache/model",
-    "tsBuildInfoFile": "../../.cache/model/@types.tsbuildinfo"
+    "tsBuildInfoFile": "../../.cache/model/@types.tsbuildinfo",
+    "declarationMap": false
   },
   "references": [
     {

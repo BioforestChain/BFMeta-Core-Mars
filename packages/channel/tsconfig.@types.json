@@ -5,10 +5,11 @@
     "../../config/tsconfig_base/base.tsconfig.@types.json"
   ],
   "compilerOptions": {
-    "declarationDir": "../__types/bfchain__core-channel",
+    "declarationDir": "../@types/bfchain__core-channel",
     "declaration": true,
     "outDir": "../../.cache/channel",
-    "tsBuildInfoFile": "../../.cache/channel/@types.tsbuildinfo"
+    "tsBuildInfoFile": "../../.cache/channel/@types.tsbuildinfo",
+    "declarationMap": false
   },
   "references": [
     {
