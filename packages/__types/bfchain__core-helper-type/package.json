@@ -1,12 +1,12 @@
 {
   "name": "@types/bfchain__core-helper-type",
   "types": "index.d.ts",
-  "version": "5.4.6",
+  "version": "5.4.7",
   "dependencies": {
-    "@types/bfchain__core-helper-account-base": "^5.4.6",
-    "@types/bfchain__core-helper-config": "^5.4.6",
-    "@types/bfchain__core-model-common": "^5.4.6",
-    "@types/bfchain__core-typings": "^5.4.6",
-    "@types/bfchain__core-util-exception-errorcode": "^5.4.6"
+    "@types/bfchain__core-helper-account-base": "^5.4.7",
+    "@types/bfchain__core-helper-config": "^5.4.7",
+    "@types/bfchain__core-model-common": "^5.4.7",
+    "@types/bfchain__core-typings": "^5.4.7",
+    "@types/bfchain__core-util-exception-errorcode": "^5.4.7"
   }
 }
