@@ -63,8 +63,7 @@ export class BlockchainReplayBlockProgressEventModel
 }
 
 @Type.d("BlockchainRollbackProgressEventModel")
-export class BlockchainRollbackProgressEventModel
-  extends ProgressEventModel<"blockchainRollbackBlock">
+export class BlockchainRollbackProgressEventModel extends ProgressEventModel<"blockchainRollback">
   implements BFChainCore.JSONToModelType<BFChainCore.BlockchainRollbackProgressEventJSON> {}
 
 /**区块链锻造区块的事件进度模型 */
