@@ -259,11 +259,9 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
                   freeChainChannel(chainChannel);
                   if (res.transactions.length === 0) {
                     query_done_offset = task_offset;
-                  } /* else if (query_done_offset === task_offset) {
-               throw new ConsensusException("##节点之间有共识异常的问题！");
-             } */ else {
+                  } else {
                     res.transactions.forEach((trs, i) => {
-                      resultGenerator.push(trs, task_offset + i);
+                      resultGenerator.push(trs, task_offset - offset + i);
                     });
                     // task_result_list[task_offset] = res.transactions[0];
                   }
