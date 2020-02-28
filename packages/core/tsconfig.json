@@ -30,10 +30,10 @@
       "path": "../model/tsconfig.json"
     },
     {
-      "path": "../transaction_logic_verifier/tsconfig.json"
+      "path": "../transaction_complex/tsconfig.json"
     },
     {
-      "path": "../transaction_subchain/tsconfig.json"
+      "path": "../transaction_logic_verifier/tsconfig.json"
     },
     {
       "path": "../transaction/tsconfig.json"

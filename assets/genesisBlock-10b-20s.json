@@ -1,9 +1,9 @@
 {
   "version": 1,
   "height": 1,
-  "blockSize": 31075,
+  "blockSize": 30665,
   "timestamp": 0,
-  "signature": "99405cb767ffafcec5352caf945f6e5fcf4f68d027651ca8f79a021fca7553855ceeaf43726f86b24c7c021d058f6d6008eed41fc9951bfb3f8c916224d50e0b",
+  "signature": "bb152f95c48a86df396a3340404aa4ef5878fc82f8c49c2fe96c2ff3f7bb7e070afa9abdc237a8c4643732f8b67c3ba401e2a4f3d276bf8f21fe10921e178508",
   "generatorPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
   "numberOfTransactions": 81,
   "payloadHash": "35ecaa54bc31f46a102e32eaa834d3ee9e9095a8f1c03d4d45610909bf30448c",
@@ -3035,92 +3035,6 @@
     }
   ],
   "remark": {
-    "newDelegates": [],
-    "maxBeginBalance": "0",
-    "maxTxCount": 0,
-    "nextRoundDelegates": [
-      {
-        "address": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
-        "equity": "0"
-      },
-      {
-        "address": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
-        "equity": "0"
-      },
-      {
-        "address": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
-        "equity": "0"
-      },
-      {
-        "address": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
-        "equity": "0"
-      },
-      {
-        "address": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
-        "equity": "0"
-      },
-      {
-        "address": "cGnmjV6fk5kFbTWztDtZhyr1a4Van4NPvR",
-        "equity": "0"
-      },
-      {
-        "address": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
-        "equity": "0"
-      },
-      {
-        "address": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
-        "equity": "0"
-      },
-      {
-        "address": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
-        "equity": "0"
-      },
-      {
-        "address": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
-        "equity": "0"
-      },
-      {
-        "address": "c8Ke6FeamgemKfaAdppcUVoGfModE4CEyT",
-        "equity": "0"
-      },
-      {
-        "address": "cBpRE96Ff1RR3kVoN9Hky6pnAtTky8cP4s",
-        "equity": "0"
-      },
-      {
-        "address": "cFtYf1e5Ng5QhZzHiPMvDyV3NQHxKBnLmV",
-        "equity": "0"
-      },
-      {
-        "address": "cPDXYf8tLYdv8LG43RxgHbNLi1ouxDcP8p",
-        "equity": "0"
-      },
-      {
-        "address": "c5fjyiG9HYrHrzJnyLsMZSkw6M5JzkZWUY",
-        "equity": "0"
-      },
-      {
-        "address": "c582jFX2DfF45B65YSKN31qk6Ft9ckVAJm",
-        "equity": "0"
-      },
-      {
-        "address": "cBy33bW2b8QX3Th6mjkpHRykPGLN9ahG9p",
-        "equity": "0"
-      },
-      {
-        "address": "c5QActCYGusL7wEwV8sDTZ6QcekFBjBMhv",
-        "equity": "0"
-      },
-      {
-        "address": "cLxoe3BFVFWJitksZZU7r7pyPbGxdV9FEw",
-        "equity": "0"
-      },
-      {
-        "address": "cCTtPZA7Ry9qEnLJm6yyWGFswdFC5hiMhe",
-        "equity": "0"
-      }
-    ],
-    "rate": "0",
     "assetType": "BFT",
     "chainName": "bfchain",
     "magic": "5F720C81E82CFC99",
@@ -3139,9 +3053,8 @@
     "consessusBeforeSyncBlockDiff": 7,
     "maxDelegateTxsPerRound": 10,
     "issueAssetMinChainAsset": "50000000000000",
-    "issueSubchainMinChainAsset": "50000000000000",
+    "registerChainMinChainAsset": "50000000000000",
     "chainAssetAndDigitalAssetExchangeRate": 1000,
-    "chainAssetAndSubchainAssetExchangeRate": 1000,
     "chainAssetRewardWeight": 10000,
     "numberOfTransactionRewardWeight": 1,
     "maxApplyAndConfirmedBlockHeightDiff": 259200,
@@ -3235,7 +3148,53 @@
         "denominator": 1
       }
     },
-    "powOfWorkExemptionBlocks": 10
+    "powOfWorkExemptionBlocks": 10,
+    "newDelegates": [],
+    "maxBeginBalance": "0",
+    "maxTxCount": 0,
+    "nextRoundDelegates": [
+      {
+        "address": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
+        "equity": "0"
+      },
+      {
+        "address": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
+        "equity": "0"
+      },
+      {
+        "address": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
+        "equity": "0"
+      },
+      {
+        "address": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
+        "equity": "0"
+      },
+      {
+        "address": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
+        "equity": "0"
+      },
+      {
+        "address": "cGnmjV6fk5kFbTWztDtZhyr1a4Van4NPvR",
+        "equity": "0"
+      },
+      {
+        "address": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
+        "equity": "0"
+      },
+      {
+        "address": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
+        "equity": "0"
+      },
+      {
+        "address": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
+        "equity": "0"
+      },
+      {
+        "address": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
+        "equity": "0"
+      }
+    ],
+    "rate": "0"
   },
   "statisticInfo": {
     "totalFee": "2138",

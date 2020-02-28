@@ -27,7 +27,7 @@ export * from "./immigrateAssetLogicVerifier";
 export * from "./locationNameLogicVerifier";
 export * from "./setLnsManagerLogicVerifier";
 export * from "./setLnsRecordValueLogicVerifier";
-export * from "./issueSubchainLogicVerifier";
+export * from "./registerChainLogicVerifier";
 
 export * from "./customLogicVerifier";
 

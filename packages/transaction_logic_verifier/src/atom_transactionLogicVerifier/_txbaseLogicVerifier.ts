@@ -308,69 +308,41 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     const fromMagic = tr.fromMagic;
     const toMagic = tr.toMagic;
     const chainMagic = this.configHelper.magic;
-    const parentGenesisBlock = this.configHelper.parentGenesisBlock;
-    const parentMagic = (parentGenesisBlock && parentGenesisBlock.remark.magic) || chainMagic;
     if (fromMagic === chainMagic) {
       // 来自本链的交易
+      // 去往本链的交易
       if (toMagic === chainMagic) {
         return;
       }
-      // 去往他链的交易
-      if (parentMagic === chainMagic) {
-        // 当前链是父链，去往的子链必须存在
-        const subchain = await accountGetterHelper.getSubchain(toMagic);
-        if (!subchain) {
-          throw new ConsensusException(INVALID_TRANSACTION_TO_MAGIC, {
-            reason: "Transaction toMagic subchain not exists",
-            signature: tr.signature,
-            senderId: tr.senderId,
-            applyBlockHeight: tr.applyBlockHeight,
-            type: tr.type,
-            ...Function_Exception_Detail,
-          });
-        }
-      } else {
-        // 当前链是子链，必须是去往父链的交易
-        if (toMagic !== parentMagic) {
-          throw new ConsensusException(INVALID_TRANSACTION_TO_MAGIC, {
-            reason: "Transaction toMagic must be local magic or parent magic",
-            signature: tr.signature,
-            senderId: tr.senderId,
-            applyBlockHeight: tr.applyBlockHeight,
-            type: tr.type,
-            ...Function_Exception_Detail,
-          });
-        }
+
+      // 去往的注册链的交易, 去往的链必须已经在链上注册过
+      const chain = await accountGetterHelper.getChain(toMagic);
+      if (!chain) {
+        throw new ConsensusException(INVALID_TRANSACTION_TO_MAGIC, {
+          reason: "Transaction toMagic chain not exists",
+          signature: tr.signature,
+          senderId: tr.senderId,
+          applyBlockHeight: tr.applyBlockHeight,
+          type: tr.type,
+          ...Function_Exception_Detail,
+        });
       }
     } else {
       // 来自外链的交易
-      if (parentMagic !== chainMagic) {
-        // 当前是子链，必须是来自父链的交易
-        if (fromMagic !== parentMagic) {
-          throw new ConsensusException(INVALID_TRANSACTION_TO_MAGIC, {
-            reason: "Transaction fromMagic must be parent",
-            signature: tr.signature,
-            senderId: tr.senderId,
-            applyBlockHeight: tr.applyBlockHeight,
-            type: tr.type,
-            ...Function_Exception_Detail,
-          });
-        }
-      } else {
-        // 当前链是主链，来自的子链必须存在
-        const subchain = await accountGetterHelper.getSubchain(fromMagic);
-        if (!subchain) {
-          throw new ConsensusException(INVALID_TRANSACTION_TO_MAGIC, {
-            reason: "Transaction fromMagic subchain not exists",
-            signature: tr.signature,
-            senderId: tr.senderId,
-            applyBlockHeight: tr.applyBlockHeight,
-            type: tr.type,
-            ...Function_Exception_Detail,
-          });
-        }
+      // 来自的外链必须已经在链上注册过
+      const chain = await accountGetterHelper.getChain(fromMagic);
+      if (!chain) {
+        throw new ConsensusException(INVALID_TRANSACTION_TO_MAGIC, {
+          reason: "Transaction fromMagic chain not exists",
+          signature: tr.signature,
+          senderId: tr.senderId,
+          applyBlockHeight: tr.applyBlockHeight,
+          type: tr.type,
+          ...Function_Exception_Detail,
+        });
       }
-      // 必须是去往本链的交易
+
+      // 必须是去往本链
       if (toMagic !== chainMagic) {
         throw new ConsensusException(INVALID_TRANSACTION_TO_MAGIC, {
           reason: "Transaction to magic must be local",

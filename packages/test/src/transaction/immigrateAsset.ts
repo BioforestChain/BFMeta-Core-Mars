@@ -9,13 +9,16 @@ import {
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,
-  fullBfchainCore,
-  fullSubBfchainCore,
+  getFullBfchainCore,
+  getFullRegisterBfchainCore,
   AccountModel,
   getDelegateWithoutSecondSecret,
   getDelegateWithSecondSecret,
 } from "../include";
 import { parseHexToArrayBuffer } from "@bfchain/util";
+
+const fullBfchainCore = getFullBfchainCore(57, 128);
+const fullSubBfchainCore = getFullRegisterBfchainCore();
 
 function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate: AccountModel) {
   const keypair = fullBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
@@ -136,7 +139,9 @@ function getImmigrateAssetTransaction(
     },
     emigrateAssetTransaction: emigrateAssetTrs,
   };
-  const genesisKeypair = fullBfchainCore.accountBaseHelper.createSecretKeypair(genesisDelegate.secret);
+  const genesisKeypair = fullBfchainCore.accountBaseHelper.createSecretKeypair(
+    genesisDelegate.secret,
+  );
   const signature = fullBfchainCore.transactionHelper.immigrateAssetGenesisSignature({
     secretKeyBuffer: genesisKeypair.secretKey,
     transactionSignatureBuffer: parseHexToArrayBuffer(emigrateAssetTrs.signature),

@@ -5,10 +5,10 @@
     "../../config/tsconfig_base/base.tsconfig.@types.json"
   ],
   "compilerOptions": {
-    "declarationDir": "../@types/bfchain__core-transaction-subchain",
+    "declarationDir": "../@types/bfchain__core-transaction-complex",
     "declaration": true,
-    "outDir": "../../.cache/transaction_subchain",
-    "tsBuildInfoFile": "../../.cache/transaction_subchain/@types.tsbuildinfo",
+    "outDir": "../../.cache/transaction_complex",
+    "tsBuildInfoFile": "../../.cache/transaction_complex/@types.tsbuildinfo",
     "declarationMap": false
   },
   "references": [

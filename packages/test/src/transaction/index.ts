@@ -7,7 +7,7 @@ import "./rejectVote";
 import "./dapp";
 import "./dappPurchasing";
 import "./mark";
-import "./issueSubchain";
+import "./registerChain";
 import "./issueAsset";
 import "./transferAsset";
 import "./destoryAsset";

@@ -27,7 +27,7 @@
       "path": "../model-progress/tsconfig.esm.json"
     },
     {
-      "path": "../model-subchain/tsconfig.esm.json"
+      "path": "../model-transaction-complex/tsconfig.esm.json"
     },
     {
       "path": "../model-transaction/tsconfig.esm.json"

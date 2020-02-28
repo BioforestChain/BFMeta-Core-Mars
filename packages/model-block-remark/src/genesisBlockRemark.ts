@@ -139,15 +139,12 @@ export class GenesisBlockRemarkModel extends RoundDelegateRemarkModel<GenesisBlo
   /**发行资产最小的持有本链资产数量 */
   @Field.d(GenesisBlockRemarkModel.INC++, "string")
   issueAssetMinChainAsset!: string;
-  /**发行子链最小的持有本链资产数量 */
+  /**注册链最小的持有本链资产数量 */
   @Field.d(GenesisBlockRemarkModel.INC++, "string")
-  issueSubchainMinChainAsset!: string;
+  registerChainMinChainAsset!: string;
   /**链资产和数字资产的兑换比例 */
   @Field.d(GenesisBlockRemarkModel.INC++, "uint32")
   chainAssetAndDigitalAssetExchangeRate!: number;
-  /**链资产和子链资产的兑换比例 */
-  @Field.d(GenesisBlockRemarkModel.INC++, "uint32")
-  chainAssetAndSubchainAssetExchangeRate!: number;
   /**链资产的奖励权重 */
   @Field.d(GenesisBlockRemarkModel.INC++, "uint32")
   chainAssetRewardWeight!: number;
@@ -178,11 +175,6 @@ export class GenesisBlockRemarkModel extends RoundDelegateRemarkModel<GenesisBlo
   /**奖励里程 */
   @Field.d(GenesisBlockRemarkModel.INC++, RewardPerBlock, "required")
   rewardPerBlock!: RewardPerBlock;
-  /**父链创世块 */
-  @Field.d(GenesisBlockRemarkModel.INC++, "GenesisBlock", "optional")
-  parentGenesisBlock?: BFChainCore.JSONToModelType<
-    BFChainCore.BlockJSON<BFChainCore.GenesisBlockRemarkJSON>
-  >;
   /**区块处理信息 */
   @Field.d(GenesisBlockRemarkModel.INC++, "string")
   debug!: string;
@@ -227,9 +219,8 @@ export class GenesisBlockRemarkModel extends RoundDelegateRemarkModel<GenesisBlo
         consessusBeforeSyncBlockDiff: this.consessusBeforeSyncBlockDiff,
         maxDelegateTxsPerRound: this.maxDelegateTxsPerRound,
         issueAssetMinChainAsset: this.issueAssetMinChainAsset,
-        issueSubchainMinChainAsset: this.issueSubchainMinChainAsset,
+        registerChainMinChainAsset: this.registerChainMinChainAsset,
         chainAssetAndDigitalAssetExchangeRate: this.chainAssetAndDigitalAssetExchangeRate,
-        chainAssetAndSubchainAssetExchangeRate: this.chainAssetAndSubchainAssetExchangeRate,
         chainAssetRewardWeight: this.chainAssetRewardWeight,
         numberOfTransactionRewardWeight: this.numberOfTransactionRewardWeight,
         maxApplyAndConfirmedBlockHeightDiff: this.maxApplyAndConfirmedBlockHeightDiff,
@@ -252,7 +243,6 @@ export class GenesisBlockRemarkModel extends RoundDelegateRemarkModel<GenesisBlo
       },
       super.toJSON(),
     );
-    this.parentGenesisBlock && (res.parentGenesisBlock = this.parentGenesisBlock.toJSON());
     return res;
   }
   @cacheBytesGetter

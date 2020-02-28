@@ -26,8 +26,10 @@
   ],
   "files": [
     "src/@types.ts",
+    "src/custom.asset.ts",
+    "src/custom.transaction.ts",
     "src/index.ts",
-    "src/issueSubchain.asset.ts",
-    "src/issueSubchain.transaction.ts"
+    "src/registerChain.asset.ts",
+    "src/registerChain.transaction.ts"
   ]
 }

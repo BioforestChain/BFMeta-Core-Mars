@@ -1678,7 +1678,7 @@
                  checkAmount(amount);
               ```
 
-        - ISSUE_SUBCHAIN -- WOD-01 -- 发行子链交易,
+        - ISSUE_SUBCHAIN -- WOD-01 -- 发行注册交易,
 
           - 交易的手续费必须大于 0
             ```
@@ -2077,24 +2077,18 @@
               ```
             - 必须携带合法的创世块
               ```
-                  subGenesisBlock = issueSubchain.genesisBlock;
-                  if (!subGenesisBlock) {
-                      throw new Error
-                  }
-                  subchainConfig = this.configMap.get(subGenesisBlock.magic);
-                  if (!subchainConfig) {
-                      // FIXME: 没有子链的配置文件就生成一个
-                      subchainConfig = new ConfigHelper(subGenesisBlock, this.configHelper.business);
-                  }
-                  // 生成子链的 core 包
-                  subchainCore = BFChainCoreFactory({
-                      config,
-                      Buffer,
-                      cryptoHelper,
-                      keypairHelper
-                  });
-                  // 校验子链的创世块
-                  subchainCore.block.getBlockFactoryFromHeight(subGenesisBlock.height).verify(subGenesisBlock);
+                let chainConfig = this.configMap.get(genesisBlockJson.magic);
+                    if (!chainConfig) {
+                    // FIXME: 没有子链的配置文件就生成一个
+                    chainConfig = new ConfigHelper(genesisBlockJson, this.configHelper.business);
+                }
+
+                const genesisBlock = this._blockCore.recombineBlock(genesisBlockJson);
+                this._blockCore
+                .getBlockFactoryFromHeight<BFChainCore.Block<BFChainCore.GenesisBlockRemarkJSON>>(
+                    genesisBlockJson.height,
+                )
+                .verify(genesisBlock, chainConfig);
               ```
 
         - MARK -- EXT-00 -- 数据存证交易
@@ -5521,19 +5515,13 @@
 
        - ISSUE_SUBCHAIN -- WOD-01 -- 发行子链交易
 
-         - 将子链名和子链链资产名存入去重表，保存子链信息
+         - 保存注册的链的创世块
            ```
                await setMemData(tr.type, {
                    modMem_legalCurrency: [subChainName, subChainAssetType],
                    modMem_magic: [subChainMagic],
-                   modMem_subchain: {
-                       name: subChainName,
-                       assetType: subChainAssetType,
-                       magic: subChainMagic,
-                       bnid: subChainBnid,
-                       maxTxsPerBlock: subChainMaxTxsPerBlock,
-                       blockPerRound: subChainBlockPerRound,
-                       delegates: subChainDelegates
+                   modMem_registerChain: {
+                       genesisBlock
                    },
                    height: currentBlockHeight
                })

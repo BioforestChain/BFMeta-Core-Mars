@@ -222,9 +222,6 @@ export const TOO_MANY_EXPECTEDISSUEDASSETS = (ec.next =
 /**genesisAddress senderAddress function */
 export const TRANSFER_TO_SENDER_BEFORE = (ec.next =
   "Genesis account {genesisAddress} must transfer to sender {senderAddress} before, when {function}");
-/**magic function */
-export const SUBCHAIN_CAN_NOT_ISSUE_SUBCHAIN = (ec.next =
-  "Subchain with magic {magic} can not issue another subchain when {function}");
 /**prop reason errorId function */
 export const TOO_LARGE = (ec.next =
   "{prop} is too large reason {reason} errorId {errorId} when {function}");

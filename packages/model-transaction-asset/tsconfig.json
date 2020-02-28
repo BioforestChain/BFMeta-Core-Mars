@@ -27,7 +27,6 @@
     "src/accountSignature.ts",
     "src/beExchangeAsset.ts",
     "src/beExchangeSpecialAsset.ts",
-    "src/customAsset.ts",
     "src/dapp.ts",
     "src/dappPurchasing.ts",
     "src/delegate.ts",

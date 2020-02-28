@@ -1,4 +1,4 @@
-import { TransactionFactory } from "./_txbase";
+import { TransactionFactory } from "@bfchain/core-transaction";
 import { CustomTransaction } from "@bfchain/core-model";
 import {
   AccountBaseHelper,
@@ -72,7 +72,7 @@ export class CustomTransactionFactory extends TransactionFactory<CustomTransacti
       });
     }
 
-    //  获取对应子链交易中心信息，与之通讯获取自定义asset的校验结果...
+    //  获取对应自定义交易中心信息，与之通讯获取自定义asset的校验结果...
     if (this.customTransactionCenter) {
       const res = this.customTransactionCenter.verify(body, customAsset);
       if (!res.ret) {

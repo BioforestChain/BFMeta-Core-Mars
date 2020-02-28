@@ -14,10 +14,12 @@ import {
   getRecipientWithSecondSecret,
   getRecipientWithoutSecondSecret,
   bfchainCore,
-  fullBfchainCore,
+  getFullBfchainCore,
   AccountModel,
   getGenesisAccount,
 } from "../include";
+
+const fullBfchainCore = getFullBfchainCore(57, 128);
 
 function getGiftAssetTransaction(
   sender: AccountModel,

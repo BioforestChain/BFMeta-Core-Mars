@@ -38,9 +38,8 @@ export const mainChainRemarkData: BFChainCore.GenesisBlockRemarkJSON = {
   consessusBeforeSyncBlockDiff: 7,
   maxDelegateTxsPerRound: 10,
   issueAssetMinChainAsset: "50000000000000",
-  issueSubchainMinChainAsset: "50000000000000",
+  registerChainMinChainAsset: "50000000000000",
   chainAssetAndDigitalAssetExchangeRate: 1000,
-  chainAssetAndSubchainAssetExchangeRate: 1000,
   chainAssetRewardWeight: 10000,
   numberOfTransactionRewardWeight: 1,
   maxApplyAndConfirmedBlockHeightDiff: 259200,
@@ -136,7 +135,7 @@ export const mainChainRemarkData: BFChainCore.GenesisBlockRemarkJSON = {
   rate: "0",
 };
 
-export const subchainRemarkData: BFChainCore.GenesisBlockRemarkJSON = {
+export const registerchainRemarkData: BFChainCore.GenesisBlockRemarkJSON = {
   chainName: "qawaq",
   assetType: "QAWAQ",
   magic: "QWQQAQQWQQAQQWQ",
@@ -155,9 +154,8 @@ export const subchainRemarkData: BFChainCore.GenesisBlockRemarkJSON = {
   consessusBeforeSyncBlockDiff: 7,
   maxDelegateTxsPerRound: 10,
   issueAssetMinChainAsset: "10000000000000",
-  issueSubchainMinChainAsset: "10000000000000",
+  registerChainMinChainAsset: "10000000000000",
   chainAssetAndDigitalAssetExchangeRate: 5000,
-  chainAssetAndSubchainAssetExchangeRate: 5000,
   chainAssetRewardWeight: 10000,
   numberOfTransactionRewardWeight: 1,
   maxApplyAndConfirmedBlockHeightDiff: 57,

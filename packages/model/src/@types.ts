@@ -170,23 +170,18 @@ declare namespace BFChainCore {
     EVENTNAME,
     T extends Transaction = Transaction
   > = ApplyTransactionEvent<ApplyInfo_IssueAsset, EVENTNAME, T>;
-  type ApplyInfo_IssueSubchain = {
+  type ApplyInfo_RegisterChain = {
     address: string;
     publicKeyBuffer?: Uint8Array;
-    chainName: string;
-    assetType: string;
-    magic: string;
-    bnid: string;
-    maxTPSPerBlock: number;
-    blockPerRound: number;
-    delegates: number;
-    genesisBlock: import("@bfchain/core-model-block").GenesisBlock;
+    genesisBlock:
+      | import("@bfchain/core-model-block").GenesisBlock
+      | BlockJSON<GenesisBlockRemarkJSON>;
   };
-  /**发行子链的相关事件 */
-  type ApplyTransactionIssueSubchainEvent<
+  /**注册链的相关事件 */
+  type ApplyTransactionRegisterChainEvent<
     EVENTNAME,
     T extends Transaction = Transaction
-  > = ApplyTransactionEvent<ApplyInfo_IssueSubchain, EVENTNAME, T>;
+  > = ApplyTransactionEvent<ApplyInfo_RegisterChain, EVENTNAME, T>;
   /**链域名相关事件 */
   type ApplyInfo_LocationNameRegistration = {
     address: string;
@@ -286,7 +281,7 @@ declare namespace BFChainCore {
       ApplyTransactionEquityEvent<
         "voteEquity",
         | import("@bfchain/core-model-transaction").VoteTransaction
-        | import("@bfchain/core-model-transaction").CustomTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
     /**注册为受托人 */
@@ -294,7 +289,7 @@ declare namespace BFChainCore {
       ApplyTransactionAccountEvent<
         "delegate",
         | import("@bfchain/core-model-transaction").DelegateTransaction
-        | import("@bfchain/core-model-transaction").CustomTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
     /**设置用户名 */
@@ -302,7 +297,7 @@ declare namespace BFChainCore {
       ApplyTransactionUsernameEvent<
         "username",
         | import("@bfchain/core-model-transaction").UsernameTransaction
-        | import("@bfchain/core-model-transaction").CustomTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
     /**设置二次密码 */
@@ -310,7 +305,7 @@ declare namespace BFChainCore {
       ApplyTransactionSignatureEvent<
         "secondPublicKey",
         | import("@bfchain/core-model-transaction").SignatureTransaction
-        | import("@bfchain/core-model-transaction").CustomTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
     /**接收投票 */
@@ -318,7 +313,7 @@ declare namespace BFChainCore {
       ApplyTransactionAccountEvent<
         "acceptVote",
         | import("@bfchain/core-model-transaction").AcceptVoteTransaction
-        | import("@bfchain/core-model-transaction").CustomTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
     /**拒绝投票 */
@@ -326,7 +321,7 @@ declare namespace BFChainCore {
       ApplyTransactionAccountEvent<
         "rejectVote",
         | import("@bfchain/core-model-transaction").RejectVoteTransaction
-        | import("@bfchain/core-model-transaction").CustomTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
     /**销毁资产 */
@@ -334,7 +329,7 @@ declare namespace BFChainCore {
       ApplyTransactionAssetEvent<
         "destoryAsset",
         | import("@bfchain/core-model-transaction").DestoryAssetTransaction
-        | import("@bfchain/core-model-transaction").CustomTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
     /**冻结账户 */
@@ -342,9 +337,9 @@ declare namespace BFChainCore {
       ApplyTransactionFrozenAccountEvent<
         "frozenAccount",
         | import("@bfchain/core-model-transaction").IssueAssetTransaction
-        | import("@bfchain/core-model-subchain").IssueSubchainTransaction
+        | import("@bfchain/core-model-transaction-complex").RegisterChainTransaction
         | import("@bfchain/core-model-transaction").EmigrateAssetTransaction
-        | import("@bfchain/core-model-transaction").CustomTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
     /**冻结资产 */
@@ -357,7 +352,7 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction").SignForAssetTransaction
         | import("@bfchain/core-model-transaction").ToExchangeSpecialAssetTransaction
         | import("@bfchain/core-model-transaction").BeExchangeSpecialAssetTransaction
-        | import("@bfchain/core-model-transaction").CustomTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
     /**解冻资产 */
@@ -370,7 +365,7 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction").SignForAssetTransaction
         | import("@bfchain/core-model-transaction").ToExchangeSpecialAssetTransaction
         | import("@bfchain/core-model-transaction").BeExchangeSpecialAssetTransaction
-        | import("@bfchain/core-model-transaction").CustomTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
     /**发行 dappid */
@@ -378,7 +373,7 @@ declare namespace BFChainCore {
       ApplyTransactionIssueDAppidEvent<
         "issueDAppid",
         | import("@bfchain/core-model-transaction").DAppTransaction
-        | import("@bfchain/core-model-transaction").CustomTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
     /**出售 dappid */
@@ -386,7 +381,7 @@ declare namespace BFChainCore {
       ApplyTransactionSaleDAppidEvent<
         "saleDAppid",
         | import("@bfchain/core-model-transaction").ToExchangeSpecialAssetTransaction
-        | import("@bfchain/core-model-transaction").CustomTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
     /**购买 dappid */
@@ -394,7 +389,7 @@ declare namespace BFChainCore {
       ApplyTransactionPurchaseDAppidEvent<
         "purchaseDAppid",
         | import("@bfchain/core-model-transaction").BeExchangeSpecialAssetTransaction
-        | import("@bfchain/core-model-transaction").CustomTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
     /**发行数字资产 */
@@ -402,15 +397,15 @@ declare namespace BFChainCore {
       ApplyTransactionIssueAssetEvent<
         "issueAsset",
         | import("@bfchain/core-model-transaction").IssueAssetTransaction
-        | import("@bfchain/core-model-transaction").CustomTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
-    /**发行子链 */
-    issueSubchain: BFChainUtil.EventInOut<
-      ApplyTransactionIssueSubchainEvent<
-        "issueSubchain",
-        | import("@bfchain/core-model-subchain").IssueSubchainTransaction
-        | import("@bfchain/core-model-transaction").CustomTransaction
+    /**注册链 */
+    registerChain: BFChainUtil.EventInOut<
+      ApplyTransactionRegisterChainEvent<
+        "registerChain",
+        | import("@bfchain/core-model-transaction-complex").RegisterChainTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
     /**注册链域名 */
@@ -418,7 +413,7 @@ declare namespace BFChainCore {
       ApplyTransactionRegisterLocationNameEvent<
         "registerLocationName",
         | import("@bfchain/core-model-transaction").LocationNameTransaction
-        | import("@bfchain/core-model-transaction").CustomTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
     /**注销链域名 */
@@ -426,7 +421,7 @@ declare namespace BFChainCore {
       ApplyTransactionCancelLocationNameEvent<
         "cancelLocationName",
         | import("@bfchain/core-model-transaction").LocationNameTransaction
-        | import("@bfchain/core-model-transaction").CustomTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
     /**设置链域名管理员 */
@@ -434,7 +429,7 @@ declare namespace BFChainCore {
       ApplyTransactionSetLnsManagerEvent<
         "setLnsManager",
         | import("@bfchain/core-model-transaction").SetLnsManagerTransaction
-        | import("@bfchain/core-model-transaction").CustomTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
     /**设置链域名解析值 */
@@ -442,7 +437,7 @@ declare namespace BFChainCore {
       ApplyTransactionSetLnsRecordValueEvent<
         "setLnsRecordValue",
         | import("@bfchain/core-model-transaction").SetLnsRecordValueTransaction
-        | import("@bfchain/core-model-transaction").CustomTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
     /**出售链域名 */
@@ -450,7 +445,7 @@ declare namespace BFChainCore {
       ApplyTransactionSaleLocationNameEvent<
         "saleLocationName",
         | import("@bfchain/core-model-transaction").ToExchangeSpecialAssetTransaction
-        | import("@bfchain/core-model-transaction").CustomTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
     /**购买链域名 */
@@ -458,7 +453,7 @@ declare namespace BFChainCore {
       ApplyTransactionPurchaseLocationNameEvent<
         "purchaseLocationName",
         | import("@bfchain/core-model-transaction").BeExchangeSpecialAssetTransaction
-        | import("@bfchain/core-model-transaction").CustomTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
 

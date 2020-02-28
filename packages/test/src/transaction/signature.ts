@@ -8,7 +8,10 @@ import {
 
 function getSignatureTransaction(sender: AccountModel) {
   const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
-  const publicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(sender.secret, "");
+  const publicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+    sender.secret,
+    "",
+  );
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.SIGNATURE, // 交易类型

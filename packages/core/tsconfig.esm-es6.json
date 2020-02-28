@@ -33,10 +33,10 @@
       "path": "../model/tsconfig.esm-es6.json"
     },
     {
-      "path": "../transaction_logic_verifier/tsconfig.esm-es6.json"
+      "path": "../transaction_complex/tsconfig.esm-es6.json"
     },
     {
-      "path": "../transaction_subchain/tsconfig.esm-es6.json"
+      "path": "../transaction_logic_verifier/tsconfig.esm-es6.json"
     },
     {
       "path": "../transaction/tsconfig.esm-es6.json"

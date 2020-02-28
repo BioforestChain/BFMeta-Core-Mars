@@ -2,9 +2,7 @@ require("source-map-support").install();
 import {
   NodeJsCryptoHelper,
   NodeJsKeypairHelper,
-  getRandomIp,
   getIps,
-  bfchainCore,
   TransactionInBlock,
   UsernameTransaction,
   UsernameTransactionFactory,
@@ -24,11 +22,11 @@ import {
   LocationNameTransactionFactory,
   SetLnsRecordValueTransactionFactory,
   RECORD_OPERATION_TYPE,
-  RECORD_TYPE,
   LOCATION_NAME_OPERATION_TYPE,
   getRandomMagic,
   ed2curveHelper,
   mainChainRemarkData,
+  getFullBfchainCore,
 } from "../include";
 import { QueneEventEmitter, Resolve } from "@bfchain/util";
 import * as optimist from "optimist";
@@ -50,6 +48,7 @@ const argv = optimist
 console.log(argv);
 const blockPerRound = argv.b;
 const forgeInterval = argv.f;
+const bfchainCore = getFullBfchainCore(blockPerRound, forgeInterval);
 const filename =
   blockPerRound === 57 && forgeInterval === 128
     ? "genesisBlock"

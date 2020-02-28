@@ -72,11 +72,11 @@ export enum NewTransactionRefuseReason {
   ACCOUNT_ALREADY_DELEGATE,
   /**DApp拥有者不能发行资产 */
   DAPP_POSSESSOR_CAN_NOT_ISSUE_ASSET,
-  /**DApp拥有者不能发行子链 */
+  /**DApp拥有者不能注册链 */
   DAPP_POSSESSOR_CAN_NOT_ISSUE_SUBCHAIN,
   /**链域名拥有者或管理员不能发行资产 */
   LNS_POSSESSOR_OR_MANAGER_CAN_NOT_ISSUE_ASSET,
-  /**链域名拥有者或管理员不能发行子链 */
+  /**链域名拥有者或管理员不能注册链 */
   LNS_POSSESSOR_OR_MANAGER_CAN_NOT_ISSUE_SUBCHAIN,
   /**缩写名已经存在 */
   ASSETTYPE_ALREADY_EXIST,
@@ -98,8 +98,6 @@ export enum NewTransactionRefuseReason {
   ACCOUNT_ALREADY_HAVE_USERNAME,
   /**用户名已经存在 */
   USERNAME_ALREADY_EXIST,
-  /**子链的每个区块最大交易量太大 */
-  SUBCHAIN_MAXTPSPERBLOCK_TOO_BIG,
   /**账户已经给受托人投票 */
   ACCOUNT_ALREADY_VOTED_FOR_DELEGATE,
 }

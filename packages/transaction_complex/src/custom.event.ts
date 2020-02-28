@@ -2,11 +2,10 @@ import {
   CoreExceptionGenerator,
   PROP_IS_INVALID,
   NOT_EXIST,
-  PERMISSION_DENIED,
   PROP_IS_REQUIRE,
   SHOULD_NOT_EXIST,
 } from "@bfchain/core-util-exception";
-import { parseHexToArrayBuffer, ModuleStroge, Injectable } from "@bfchain/util";
+import { parseHexToArrayBuffer, Injectable, Inject } from "@bfchain/util";
 import {
   ACCOUNT_STATUS,
   CustomTransaction,
@@ -36,7 +35,6 @@ export class CustomTransactionEvent {
     public transactionHelper: TransactionHelper,
     public chainAssetInfoHelper: ChainAssetInfoHelper,
     private configMap: ConfigHelperMap,
-    private moduleMap: ModuleStroge,
   ) {}
   verifyAddress(address: string) {
     const Function_Exception_Detail = {
@@ -457,107 +455,20 @@ export class CustomTransactionEvent {
       }
       return;
     }
-    if (applyResult.type === "issueSubchain") {
-      throw new ConsensusException(PERMISSION_DENIED, {
-        operationName: "issueSubchain",
-        ...Function_Exception_Detail,
-      });
-      // const {
-      //   chainName,
-      //   assetType,
-      //   magic,
-      //   bnid,
-      //   maxTPSPerBlock,
-      //   blockPerRound,
-      //   delegates,
-      //   genesisBlock,
-      // } = applyResult.applyInfo;
-      // let subchainConfig = this.configMap.get(genesisBlock.magic);
-      // if (!subchainConfig) {
-      //   // FIXME: 没有子链的配置文件就生成一个
-      //   subchainConfig = new ConfigHelper(genesisBlock, this.configHelper.business);
-      // }
-      // const BFChainCoreFactory = this.moduleMap.get<
-      //   typeof import("../../index").BFChainCoreFactory
-      // >("BFChainCoreFactory");
-      // if (!BFChainCoreFactory) {
-      //   throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-      //     prop: "BFChainCoreFactory",
-      //     ...Function_Exception_Detail,
-      //   });
-      // }
-      // const subchainCore = BFChainCoreFactory({
-      //   config: subchainConfig,
-      //   Buffer: this.moduleMap.get("Buffer"),
-      //   cryptoHelper: this.moduleMap.get("cryptoHelper"),
-      //   keypairHelper: this.moduleMap.get("keypairHelper"),
-      //   ed2curveHelper: this.moduleMap.get("ed2curveHelper"),
-      // });
-      // subchainCore.block.getBlockFactoryFromHeight(genesisBlock.height).verify(genesisBlock);
-      // const remark = genesisBlock.remark;
-      // if (remark.chainName !== chainName) {
-      //   throw new ArgumentIllegalException(NOT_MATCH, {
-      //     to_compare_prop: "chainName",
-      //     be_compare_prop: "chainName",
-      //     to_target: "genesisBlock.remark",
-      //     be_target: "applyResult",
-      //     ...Function_Exception_Detail,
-      //   });
-      // }
-      // if (remark.assetType !== assetType) {
-      //   throw new ArgumentIllegalException(NOT_MATCH, {
-      //     to_compare_prop: "assetType",
-      //     be_compare_prop: "assetType",
-      //     to_target: "genesisBlock.remark",
-      //     be_target: "applyResult",
-      //     ...Function_Exception_Detail,
-      //   });
-      // }
-      // if (remark.magic !== magic) {
-      //   throw new ArgumentIllegalException(NOT_MATCH, {
-      //     to_compare_prop: "magic",
-      //     be_compare_prop: "magic",
-      //     to_target: "genesisBlock.remark",
-      //     be_target: "applyResult",
-      //     ...Function_Exception_Detail,
-      //   });
-      // }
-      // if (remark.bnid !== bnid) {
-      //   throw new ArgumentIllegalException(NOT_MATCH, {
-      //     to_compare_prop: "bnid",
-      //     be_compare_prop: "bnid",
-      //     to_target: "genesisBlock.remark",
-      //     be_target: "applyResult",
-      //     ...Function_Exception_Detail,
-      //   });
-      // }
-      // if (remark.maxTPSPerBlock !== maxTPSPerBlock) {
-      //   throw new ArgumentIllegalException(NOT_MATCH, {
-      //     to_compare_prop: "maxTPSPerBlock",
-      //     be_compare_prop: "maxTPSPerBlock",
-      //     to_target: "genesisBlock.remark",
-      //     be_target: "applyResult",
-      //     ...Function_Exception_Detail,
-      //   });
-      // }
-      // if (remark.blockPerRound !== blockPerRound) {
-      //   throw new ArgumentIllegalException(NOT_MATCH, {
-      //     to_compare_prop: "blockPerRound",
-      //     be_compare_prop: "blockPerRound",
-      //     to_target: "genesisBlock.remark",
-      //     be_target: "applyResult",
-      //     ...Function_Exception_Detail,
-      //   });
-      // }
-      // if (remark.delegates !== delegates) {
-      //   throw new ArgumentIllegalException(NOT_MATCH, {
-      //     to_compare_prop: "delegates",
-      //     be_compare_prop: "delegates",
-      //     to_target: "genesisBlock.remark",
-      //     be_target: "applyResult",
-      //     ...Function_Exception_Detail,
-      //   });
-      // }
+    if (applyResult.type === "registerChain") {
+      const { genesisBlock: genesisBlockJson } = applyResult.applyInfo;
+      let chainConfig = this.configMap.get(genesisBlockJson.magic);
+      if (!chainConfig) {
+        // FIXME: 没有注册链的配置文件就生成一个
+        chainConfig = new ConfigHelper(genesisBlockJson, this.configHelper.business);
+      }
+
+      const genesisBlock = this._blockCore.recombineBlock(genesisBlockJson);
+      this._blockCore
+        .getBlockFactoryFromHeight<BFChainCore.Block<BFChainCore.GenesisBlockRemarkJSON>>(
+          genesisBlock.height,
+        )
+        .verify(genesisBlock, chainConfig);
     }
     if (applyResult.type === "setLnsRecordValue") {
       const {
@@ -644,6 +555,9 @@ export class CustomTransactionEvent {
       ...Function_Exception_Detail,
     });
   }
+
+  @Inject("bfchain-core:BlockCore")
+  private _blockCore!: import("@bfchain/core-block").BlockCore;
 
   combineApplyEvent(
     transaction: CustomTransaction,
@@ -907,39 +821,18 @@ export class CustomTransactionEvent {
         },
       });
     }
-    if (applyResult.type === "issueSubchain") {
-      throw new ConsensusException(PERMISSION_DENIED, {
-        operationName: "issueSubchain",
-        function: "combineApplyEvent",
+    if (applyResult.type === "registerChain") {
+      const { address, publicKey, genesisBlock } = applyResult.applyInfo;
+
+      return eventEmitter.emit("registerChain", {
+        type: "registerChain",
+        transaction,
+        applyInfo: {
+          address,
+          publicKeyBuffer: parseHexToArrayBuffer(publicKey),
+          genesisBlock: genesisBlock,
+        },
       });
-      // const {
-      //   address,
-      //   publicKey,
-      //   chainName,
-      //   assetType,
-      //   magic,
-      //   bnid,
-      //   maxTPSPerBlock,
-      //   blockPerRound,
-      //   delegates,
-      //   genesisBlock,
-      // } = applyResult.applyInfo;
-      // return eventEmitter.emit("issueSubchain", {
-      //   type: "issueSubchain",
-      //   transaction,
-      //   applyInfo: {
-      //     address,
-      //     publicKeyBuffer: parseHexToArrayBuffer(publicKey),
-      //     chainName,
-      //     assetType,
-      //     magic,
-      //     bnid,
-      //     maxTPSPerBlock,
-      //     blockPerRound,
-      //     delegates,
-      //     genesisBlock,
-      //   },
-      // });
     }
     if (applyResult.type === "registerLocationName") {
       const { address, publicKey, name, sourceChainMagic, sourceChainName } = applyResult.applyInfo;

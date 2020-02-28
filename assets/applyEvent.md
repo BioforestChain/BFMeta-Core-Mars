@@ -459,9 +459,9 @@
     }
   ```
 
-## "issueSubchain"
+## "registerChain"
 
-    发行子链，这个事件大概率不会开放
+    发行注册链
 
 - 参数
 
@@ -470,13 +470,6 @@
   - applyInfo：变更明细，object
     - address：变更账户地址，string
     - publicKey：变更的账户公钥，string
-    - chainName：所属链名，string
-    - assetType：发行的数字资产名称，string
-    - magic：所属链网络标识符，string
-    - bnid：网络类型，'b'/'c'
-    - maxTxsPerBlock：每个块最大交易量，number
-    - blockPerRound：每轮的区块数量，number
-    - delegates：创世受托人数量，number
     - genesisBlock：创世块，Block
 
 - 范例

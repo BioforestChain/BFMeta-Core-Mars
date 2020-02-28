@@ -16,7 +16,9 @@
     }
   ],
   "files": [
+    "src/custom.event.ts",
+    "src/custom.ts",
     "src/index.ts",
-    "src/issueSubchain.ts"
+    "src/registerChain.ts"
   ]
 }

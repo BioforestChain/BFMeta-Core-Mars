@@ -3,7 +3,7 @@
   "height": 1,
   "blockSize": 168918,
   "timestamp": 0,
-  "signature": "e233797c1b68d569558c06a6ebf27a879f1a39d0d4e9257c1400db7edae7a01c07564841fa7e245aebadcdc392b7c5fdc8500f0745ab9c3ede944baf07072c07",
+  "signature": "391325866a8a5e0f1c40d46038754ec10e0ba5f194ce7db39553b71eb4dbcbcb9b4590694cbaaf883474523961e39a1b137a0ec7f9c3785624860384e0f05304",
   "generatorPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
   "numberOfTransactions": 457,
   "payloadHash": "274811bfcb2a2be64e1c2488aa6e39193fcceed720651410d6d77c39e3ee1b23",
@@ -17041,6 +17041,120 @@
     }
   ],
   "remark": {
+    "assetType": "BFT",
+    "chainName": "bfchain",
+    "magic": "5F720C81E82CFC99",
+    "bnid": "c",
+    "beginEpochTime": 1577808000000,
+    "genesisNodeAddress": "bnqkl.bfchain",
+    "generateTotalAmount": "244645364561314071",
+    "minTransactionFeePerByte": {
+      "numerator": 100,
+      "denominator": 1024
+    },
+    "maxPayloadLength": 33554432,
+    "maxTPSPerBlock": 1000,
+    "maxTransactionSize": 204800,
+    "maxBlockRemarkSize": 307200,
+    "consessusBeforeSyncBlockDiff": 7,
+    "maxDelegateTxsPerRound": 10,
+    "issueAssetMinChainAsset": "50000000000000",
+    "registerChainMinChainAsset": "50000000000000",
+    "chainAssetAndDigitalAssetExchangeRate": 1000,
+    "chainAssetRewardWeight": 10000,
+    "numberOfTransactionRewardWeight": 1,
+    "maxApplyAndConfirmedBlockHeightDiff": 259200,
+    "blockPerRound": 57,
+    "delegates": 114,
+    "whetherToAllowDelegateContinusElections": false,
+    "forgeInterval": 128,
+    "rewardPercent": {
+      "votePercent": {
+        "numerator": 7,
+        "denominator": 10
+      },
+      "forgePercent": {
+        "numerator": 3,
+        "denominator": 10
+      }
+    },
+    "ports": {
+      "port": 19000,
+      "scan_peer_port": 19006
+    },
+    "rewardPerBlock": {
+      "heights": [
+        1,
+        100000,
+        18900000,
+        37800000,
+        56700000,
+        75600000,
+        94500000,
+        113400000,
+        132300000,
+        151200000,
+        170100000,
+        189000000,
+        207900000,
+        226800000,
+        245700000,
+        264600000,
+        283500000,
+        302400000,
+        321300000,
+        340200000,
+        359100000,
+        378000000,
+        396900000,
+        403200000
+      ],
+      "rewards": [
+        "0",
+        "3500000000",
+        "9000000000",
+        "4500000000",
+        "2250000000",
+        "1125000000",
+        "562500000",
+        "281250000",
+        "140625000",
+        "70312500",
+        "35156250",
+        "17578125",
+        "8789062",
+        "4394531",
+        "2197265",
+        "1098632",
+        "549316",
+        "274658",
+        "137329",
+        "68664",
+        "34332",
+        "17166",
+        "8583",
+        "4291",
+        "0"
+      ]
+    },
+    "debug": "",
+    "info": "BFChain is the future.",
+    "blockParticipation": "96731",
+    "participationTotalChainAsset": 4,
+    "participationNumberOfTransaction": 3,
+    "participationNumberOfAccount": 2,
+    "participationTotalFee": 1,
+    "transactionPowOfWorkConfig": {
+      "growthFactor": {
+        "numerator": "2718281828459045",
+        "denominator": "1000000000000000"
+      },
+      "participationRatio": {
+        "numerator": 1,
+        "denominator": 1
+      }
+    },
+    "powOfWorkExemptionBlocks": 57,
     "newDelegates": [],
     "maxBeginBalance": "0",
     "maxTxCount": 0,
@@ -17274,122 +17388,7 @@
         "equity": "0"
       }
     ],
-    "rate": "0",
-    "assetType": "BFT",
-    "chainName": "bfchain",
-    "magic": "5F720C81E82CFC99",
-    "bnid": "c",
-    "beginEpochTime": 1577808000000,
-    "genesisNodeAddress": "bnqkl.bfchain",
-    "generateTotalAmount": "244645364561314071",
-    "minTransactionFeePerByte": {
-      "numerator": 100,
-      "denominator": 1024
-    },
-    "maxPayloadLength": 33554432,
-    "maxTPSPerBlock": 1000,
-    "maxTransactionSize": 204800,
-    "maxBlockRemarkSize": 307200,
-    "consessusBeforeSyncBlockDiff": 7,
-    "maxDelegateTxsPerRound": 10,
-    "issueAssetMinChainAsset": "50000000000000",
-    "issueSubchainMinChainAsset": "50000000000000",
-    "chainAssetAndDigitalAssetExchangeRate": 1000,
-    "chainAssetAndSubchainAssetExchangeRate": 1000,
-    "chainAssetRewardWeight": 10000,
-    "numberOfTransactionRewardWeight": 1,
-    "maxApplyAndConfirmedBlockHeightDiff": 259200,
-    "blockPerRound": 57,
-    "delegates": 114,
-    "whetherToAllowDelegateContinusElections": false,
-    "forgeInterval": 128,
-    "rewardPercent": {
-      "votePercent": {
-        "numerator": 7,
-        "denominator": 10
-      },
-      "forgePercent": {
-        "numerator": 3,
-        "denominator": 10
-      }
-    },
-    "ports": {
-      "port": 19000,
-      "scan_peer_port": 19006
-    },
-    "rewardPerBlock": {
-      "heights": [
-        1,
-        100000,
-        18900000,
-        37800000,
-        56700000,
-        75600000,
-        94500000,
-        113400000,
-        132300000,
-        151200000,
-        170100000,
-        189000000,
-        207900000,
-        226800000,
-        245700000,
-        264600000,
-        283500000,
-        302400000,
-        321300000,
-        340200000,
-        359100000,
-        378000000,
-        396900000,
-        403200000
-      ],
-      "rewards": [
-        "0",
-        "3500000000",
-        "9000000000",
-        "4500000000",
-        "2250000000",
-        "1125000000",
-        "562500000",
-        "281250000",
-        "140625000",
-        "70312500",
-        "35156250",
-        "17578125",
-        "8789062",
-        "4394531",
-        "2197265",
-        "1098632",
-        "549316",
-        "274658",
-        "137329",
-        "68664",
-        "34332",
-        "17166",
-        "8583",
-        "4291",
-        "0"
-      ]
-    },
-    "debug": "",
-    "info": "BFChain is the future.",
-    "blockParticipation": "96731",
-    "participationTotalChainAsset": 4,
-    "participationNumberOfTransaction": 3,
-    "participationNumberOfAccount": 2,
-    "participationTotalFee": 1,
-    "transactionPowOfWorkConfig": {
-      "growthFactor": {
-        "numerator": "2718281828459045",
-        "denominator": "1000000000000000"
-      },
-      "participationRatio": {
-        "numerator": 1,
-        "denominator": 1
-      }
-    },
-    "powOfWorkExemptionBlocks": 57
+    "rate": "0"
   },
   "statisticInfo": {
     "totalFee": "12102",

@@ -24,5 +24,3 @@ export * from "./beExchangeSpecialAsset";
 export * from "./locationName";
 export * from "./setLnsManager";
 export * from "./setLnsRecordValue";
-export * from "./custom";
-export * from "./custom.event";

@@ -20,8 +20,8 @@
     "@bfchain/core-model-common": "^5.4.12",
     "@bfchain/core-model-constants": "^5.4.12",
     "@bfchain/core-model-progress": "^5.4.13",
-    "@bfchain/core-model-subchain": "^5.4.12",
     "@bfchain/core-model-transaction": "^5.4.12",
+    "@bfchain/core-model-transaction-complex": "^5.4.12",
     "@bfchain/core-typings": "^5.4.12"
   }
 }

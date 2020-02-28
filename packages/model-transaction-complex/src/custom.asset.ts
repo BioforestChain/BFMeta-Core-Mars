@@ -1,5 +1,4 @@
 import { Message, Field, Type } from "@bfchain/protobuf";
-//import { getHexFromArrayBuffer, parseHexToArrayBuffer } from "@bfchain/core-util-exception/hexBufferHelper";
 
 /**
  * CustomAsset 类型
