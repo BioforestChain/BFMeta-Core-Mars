@@ -137,7 +137,10 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
     return this.endpoint.close(reason);
   }
   /**对方节点可能的高度 */
-  mayby_height = 1;
+  private _maybeHeight = 1;
+  get maybeHeight() {
+    return this._maybeHeight;
+  }
   /**存储延迟的历史记录 */
   protected _delay_histroy_list = new Float32Array(32);
   get delay() {
@@ -416,7 +419,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
               });
               const newBlockArg = this.chainChannelHelper.boxNewBlockArg(binary);
               // 将节点广播过来的区块高度进行缓存
-              this.mayby_height = newBlockArg.height;
+              this._maybeHeight = newBlockArg.height;
               const broadcastResult = this.has("onNewBlock")
                 ? await this.emit("onNewBlock", newBlockArg)
                 : undefined;

@@ -52,7 +52,7 @@ declare namespace BFChainCore {
   interface ChainChannel
     extends ChainChannelBase,
       QueneEventEmitterPro<ChainChannelHanlderEventMap> {
-    mayby_height: number;
+    maybeHeight: number;
     delay: number;
     onClose(
       handler: (error: BFChainUtil.InterruptedException) => any,
@@ -189,6 +189,7 @@ declare namespace BFChainCore {
   type ChainChannelGroupEventMap<CC extends ChainChannel = ChainChannel> = {
     addChainChannel: [CC];
     removeChainChannel: [CC];
+    maybeHeightChanged: [number];
   };
   interface ChainChannelBase {
     toBlockGetterHelper(opts?: {
