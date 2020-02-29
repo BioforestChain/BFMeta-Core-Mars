@@ -7,7 +7,7 @@ import {
 } from "../include";
 
 async function getDelegateTransaction(sender: AccountModel) {
-  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
+  const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.DELEGATE, // 交易类型
@@ -33,16 +33,16 @@ async function getDelegateTransaction(sender: AccountModel) {
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
+    secondKeypair = await bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );
   }
-  const trs = bfchainCore.transaction.createTransaction<DelegateTransaction>(
+  const trs = await bfchainCore.transaction.createTransaction<DelegateTransaction>(
     DelegateTransactionFactory,
     data,
     {

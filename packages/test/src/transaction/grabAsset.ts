@@ -19,14 +19,12 @@ import {
   getGenesisAccount,
 } from "../include";
 
-const fullBfchainCore = getFullBfchainCore(57, 128);
-
-function getGiftAssetTransaction(
+async function getGiftAssetTransaction(
   sender: AccountModel,
   recipient?: AccountModel[],
   cipher?: boolean,
 ) {
-  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
+  const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.GIFT_ASSET, // 交易类型
@@ -52,11 +50,11 @@ function getGiftAssetTransaction(
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
+    secondKeypair = await bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );
@@ -79,7 +77,7 @@ function getGiftAssetTransaction(
       data.range = recipient.map(r => r.address);
     }
   }
-  const trs = bfchainCore.transaction.createTransaction<GiftAssetTransaction>(
+  const trs = await bfchainCore.transaction.createTransaction<GiftAssetTransaction>(
     GiftAssetTransactionFactory,
     data,
     {
@@ -91,12 +89,12 @@ function getGiftAssetTransaction(
   return trs;
 }
 
-function getGrabAssetTransaction(
+async function getGrabAssetTransaction(
   sender: AccountModel,
   giftAssetTrs: GiftAssetTransaction,
   grabAccounts: AccountModel[],
 ) {
-  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
+  const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.GRAB_ASSET, // 交易类型
@@ -123,11 +121,11 @@ function getGrabAssetTransaction(
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
+    secondKeypair = await bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );
@@ -174,7 +172,7 @@ function getGrabAssetTransaction(
 
   grabAsset.amount = amount;
 
-  const trs = bfchainCore.transaction.createTransaction<GrabAssetTransaction>(
+  const trs = await bfchainCore.transaction.createTransaction<GrabAssetTransaction>(
     GrabAssetTransactionFactory,
     data,
     {
@@ -194,12 +192,12 @@ const rrr = getRecipientWithoutSecondSecret();
 
 const gg = getGenesisAccount();
 
-const x = getGiftAssetTransaction(rr, [gg, ss], false);
+const x = await getGiftAssetTransaction(rr, [gg, ss], false);
 getGrabAssetTransaction(ss, x, [gg, ss]);
-const o = getGiftAssetTransaction(rrr, [gg, ss]);
+const o = await getGiftAssetTransaction(rrr, [gg, ss]);
 getGrabAssetTransaction(gg, o, [gg]);
 
-const xx = getGiftAssetTransaction(rr, [gg, ss], true);
+const xx = await getGiftAssetTransaction(rr, [gg, ss], true);
 getGrabAssetTransaction(ss, xx, [gg, ss]);
-const oo = getGiftAssetTransaction(rrr, [gg, ss]);
+const oo = await getGiftAssetTransaction(rrr, [gg, ss]);
 getGrabAssetTransaction(gg, oo, [gg]);

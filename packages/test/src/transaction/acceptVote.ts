@@ -7,8 +7,8 @@ import {
   AccountModel,
 } from "../include";
 
-function getAcceptVoteTransaction(sender: AccountModel) {
-  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
+async function getAcceptVoteTransaction(sender: AccountModel) {
+  const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.ACCEPT_VOTE, // 交易类型
@@ -30,16 +30,16 @@ function getAcceptVoteTransaction(sender: AccountModel) {
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
+    secondKeypair = await bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );
   }
-  const trs = bfchainCore.transaction.createTransaction<AcceptVoteTransaction>(
+  const trs = await bfchainCore.transaction.createTransaction<AcceptVoteTransaction>(
     AcceptVoteTransactionFactory,
     data,
     {},

@@ -12,12 +12,12 @@ import {
   getGenesisAccount,
 } from "../include";
 
-function getGiftAssetTransaction(
+async function getGiftAssetTransaction(
   sender: AccountModel,
   recipient?: AccountModel[],
   cipher?: boolean,
 ) {
-  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
+  const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.GIFT_ASSET, // 交易类型
@@ -43,11 +43,11 @@ function getGiftAssetTransaction(
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
+    secondKeypair = await bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );
@@ -70,7 +70,7 @@ function getGiftAssetTransaction(
       giftAsset.cipherPublicKeys = recipient.map(r => r.publicKey);
     }
   }
-  const trs = bfchainCore.transaction.createTransaction<GiftAssetTransaction>(
+  const trs = await bfchainCore.transaction.createTransaction<GiftAssetTransaction>(
     GiftAssetTransactionFactory,
     data,
     {

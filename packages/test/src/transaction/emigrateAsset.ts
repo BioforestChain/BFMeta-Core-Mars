@@ -16,9 +16,7 @@ import {
   getDelegateWithSecondSecret,
 } from "../include";
 
-const fullBfchainCore = getFullBfchainCore(57, 128);
-
-function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate: AccountModel) {
+async function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate: AccountModel) {
   const keypair = fullBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,

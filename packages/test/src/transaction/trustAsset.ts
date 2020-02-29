@@ -9,8 +9,8 @@ import {
   AccountModel,
 } from "../include";
 
-function getTrustAssetTransaction(sender: AccountModel, recipientId: string, trustees: string[]) {
-  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
+async function getTrustAssetTransaction(sender: AccountModel, recipientId: string, trustees: string[]) {
+  const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.TRUST_ASSET, // 交易类型
@@ -37,16 +37,16 @@ function getTrustAssetTransaction(sender: AccountModel, recipientId: string, tru
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
+    secondKeypair = await bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );
   }
-  const trs = bfchainCore.transaction.createTransaction<TrustAssetTransaction>(
+  const trs = await bfchainCore.transaction.createTransaction<TrustAssetTransaction>(
     TrustAssetTransactionFactory,
     data,
     {

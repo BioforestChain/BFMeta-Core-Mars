@@ -22,13 +22,25 @@ const writeNodejsCryptoHash = async (hash: nodejsCrypto.Hash, data: BFChainCore.
 
 export const NodeJsCryptoHelper = {
   sha256(data) {
-    return writeNodejsCryptoHash(nodejsCrypto.createHash("sha256"), data);
+    const hash = nodejsCrypto.createHash("sha256");
+    if (data) {
+      return hash.update(data).digest();
+    }
+    return hash;
   },
   md5(data) {
-    return writeNodejsCryptoHash(nodejsCrypto.createHash("md5"), data);
+    const hash = nodejsCrypto.createHash("md5");
+    if (data) {
+      return hash.update(data).digest();
+    }
+    return hash;
   },
   ripemd160(data) {
-    return writeNodejsCryptoHash(nodejsCrypto.createHash("ripemd160"), data);
+    const hash = nodejsCrypto.createHash("ripemd160");
+    if (data) {
+      return hash.update(data).digest();
+    }
+    return hash;
   },
 } as BFChainCore.CryptoHelperInterface;
 export const NodeJsKeypairHelper: BFChainCore.KeypairHelperInterface = keypairHelper;

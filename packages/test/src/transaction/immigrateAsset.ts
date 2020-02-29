@@ -17,10 +17,7 @@ import {
 } from "../include";
 import { parseHexToArrayBuffer } from "@bfchain/util";
 
-const fullBfchainCore = getFullBfchainCore(57, 128);
-const fullSubBfchainCore = getFullRegisterBfchainCore();
-
-function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate: AccountModel) {
+async function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate: AccountModel) {
   const keypair = fullBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
@@ -87,7 +84,7 @@ function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate: Acco
   return trs.toJSON();
 }
 
-function getImmigrateAssetTransaction(
+async function getImmigrateAssetTransaction(
   sender: AccountModel,
   genesisDelegate: AccountModel,
   emigrateAssetTrs: BFChainCore.TransactionMixJSON<
@@ -188,11 +185,11 @@ const senderWithSecondSecret = getSenderWithSecondSecret();
 const senderWithoutSecondSecret = getSenderWithoutSecondSecret();
 const genesisDelegateWithSecondSecret = getDelegateWithSecondSecret();
 const genesisDelegateWithoutSecondSecret = getDelegateWithoutSecondSecret();
-const emigrateAssetTrsWithSecondSecret = getEmigrateAssetTransaction(
+const emigrateAssetTrsWithSecondSecret = await getEmigrateAssetTransaction(
   senderWithSecondSecret,
   genesisDelegateWithSecondSecret,
 );
-const emigrateAssetTrsWithoutSecondSecret = getEmigrateAssetTransaction(
+const emigrateAssetTrsWithoutSecondSecret = await getEmigrateAssetTransaction(
   senderWithoutSecondSecret,
   genesisDelegateWithoutSecondSecret,
 );

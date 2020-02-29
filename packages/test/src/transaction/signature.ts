@@ -6,12 +6,9 @@ import {
   AccountModel,
 } from "../include";
 
-function getSignatureTransaction(sender: AccountModel) {
-  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
-  const publicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
-    sender.secret,
-    "",
-  );
+async function getSignatureTransaction(sender: AccountModel) {
+  const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
+  const publicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(sender.secret, "");
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.SIGNATURE, // 交易类型
@@ -33,16 +30,16 @@ function getSignatureTransaction(sender: AccountModel) {
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
+    secondKeypair = await bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );
   }
-  const trs = bfchainCore.transaction.createTransaction<SignatureTransaction>(
+  const trs = await bfchainCore.transaction.createTransaction<SignatureTransaction>(
     SignatureTransactionFactory,
     data,
     {
