@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-helper-block",
-  "version": "5.5.6-dev0.0",
+  "version": "5.6.0",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,12 +14,12 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-helper-account-base": "^5.5.6-dev0.0",
-    "@bfchain/core-helper-config": "^5.5.6-dev0.0",
-    "@bfchain/core-helper-type": "^5.5.6-dev0.0",
-    "@bfchain/core-model": "^5.5.6-dev0.0",
-    "@bfchain/core-typings": "^5.5.6-dev0.0",
-    "@bfchain/core-util-exception": "^5.5.6-dev0.0",
-    "@bfchain/core-util-exception-errorcode": "^5.5.6-dev0.0"
+    "@bfchain/core-helper-account-base": "^5.6.0",
+    "@bfchain/core-helper-config": "^5.6.0",
+    "@bfchain/core-helper-type": "^5.6.0",
+    "@bfchain/core-model": "^5.6.0",
+    "@bfchain/core-typings": "^5.6.0",
+    "@bfchain/core-util-exception": "^5.6.0",
+    "@bfchain/core-util-exception-errorcode": "^5.6.0"
   }
 }
