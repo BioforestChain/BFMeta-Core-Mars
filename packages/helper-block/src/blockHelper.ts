@@ -32,11 +32,10 @@ export class BlockHelper {
    *
    * @param block
    */
-  generateSignature(block: BFChainCore.Block) {
-    return this.cryptoHelper
-      .sha256()
-      .update(block.getBytes(true, true))
-      .digest("hex");
+  async generateSignature(block: BFChainCore.Block) {
+    return this.Buffer.from(await this.cryptoHelper.sha256(block.getBytes(true, true))).toString(
+      "hex",
+    );
   }
 
   /**是否是合法的区块 signature */
@@ -47,7 +46,7 @@ export class BlockHelper {
   /**
    * 校验区块的签名是否合法
    */
-  verifyBlockSignature(
+  async verifyBlockSignature(
     block: BFChainCore.Block,
     opts?: {
       taskLabel?: string;
@@ -57,13 +56,10 @@ export class BlockHelper {
     const { Buffer } = this;
     const { generatorPublicKeyBuffer, signatureBuffer } = block;
     // 验证 signature 与 publicKey
-    const hash = this.cryptoHelper
-      .sha256()
-      .update(block.getBytes(true, true))
-      .digest();
+    const hash = await this.cryptoHelper.sha256(block.getBytes(true, true));
     if (
       !this.keypairHelper.detached_verify(
-        hash,
+        Buffer.from(hash),
         Buffer.from(signatureBuffer),
         Buffer.from(generatorPublicKeyBuffer),
       )
@@ -494,7 +490,7 @@ export class BlockHelper {
           function: "BlockGetterHelper.forceGetBlockGeneratorAddressByHeight",
         });
       }
-      const address = this.accountBaseHelper.getAddressFromPublicKey(publicKeyBuffer);
+      const address = await this.accountBaseHelper.getAddressFromPublicKey(publicKeyBuffer);
       if (!resultArr.includes(address)) {
         resultArr.push(address);
       }
@@ -514,22 +510,28 @@ export class BlockHelper {
     let lastRoundLastBlockHeight =
       (this.calcRoundByHeight(currentHeight) - 1) * this.config.blockPerRound;
     lastRoundLastBlockHeight = lastRoundLastBlockHeight === 0 ? 1 : lastRoundLastBlockHeight;
-    const payloadHash = this.cryptoHelper.sha256();
-    if (lastRoundLastBlockHeight !== 1) {
-      const block = await this.forceGetBlockByHeight<RoundLastBlock>(
-        lastRoundLastBlockHeight,
-        blockGetterHelper,
-      );
-      payloadHash.update(block.remark.hashBuffer);
-    }
-    for (let height = lastRoundLastBlockHeight; height < currentHeight; height++) {
-      const blockSignatureBuffer = await this.forceGetBlockSignatureBufferByHeight(
-        height,
-        blockGetterHelper,
-      );
-      payloadHash.update(blockSignatureBuffer);
-    }
-    const hashString = payloadHash.digest("hex");
+
+    const _this = this;
+    const payloadHash = await this.cryptoHelper.sha256({
+      readable: (async function* readable() {
+        if (lastRoundLastBlockHeight !== 1) {
+          const block = await _this.forceGetBlockByHeight<RoundLastBlock>(
+            lastRoundLastBlockHeight,
+            blockGetterHelper,
+          );
+          yield block.remark.hashBuffer;
+        }
+        for (let height = lastRoundLastBlockHeight; height < currentHeight; height++) {
+          const blockSignatureBuffer = await _this.forceGetBlockSignatureBufferByHeight(
+            height,
+            blockGetterHelper,
+          );
+          yield blockSignatureBuffer;
+        }
+      })(),
+    });
+
+    const hashString = this.Buffer.from(payloadHash).toString("hex");
 
     return hashString;
   }

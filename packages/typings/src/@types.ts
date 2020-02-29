@@ -10,7 +10,7 @@ declare namespace BFChainCore {
   //#region KeypairHelper
   interface KeypairHelperInterface {
     /**生成公私钥对 */
-    create(secretHash: Uint8Array): BFChainUtil.PromiseMaybe<KeypairData>;
+    create(secretHash: Uint8Array): BFChainUtil.PromiseMaybe<Keypair>;
     /**非对称签名 */
     detached_sign(hash: Uint8Array, secretKey: Uint8Array): BFChainUtil.PromiseMaybe<Uint8Array>;
     /**非对称验签 */
@@ -41,10 +41,6 @@ declare namespace BFChainCore {
     publicKey: Buffer;
     secretKey: Buffer;
   };
-  type KeypairData = {
-    publicKey: Uint8Array;
-    secretKey: Uint8Array;
-  };
   //#endregion
 
   //#region Ed2curveHelperInterface
@@ -56,11 +52,44 @@ declare namespace BFChainCore {
   //#endregion
 
   //#region CryptoHelper
+
   interface CryptoHelperInterface {
-    sha256(data: ArrayBufferView | ArrayBuffer): BFChainUtil.PromiseMaybe<Uint8Array>;
-    // sha512(): Hash;
-    md5(data: ArrayBufferView | ArrayBuffer): BFChainUtil.PromiseMaybe<Uint8Array>;
-    ripemd160(data: ArrayBufferView | ArrayBuffer): BFChainUtil.PromiseMaybe<Uint8Array>;
+    sha256(): CryptoAsyncHash;
+    sha256(data: BFChainUtil.BinaryLike): BFChainUtil.PromiseMaybe<Buffer>;
+    md5(): CryptoAsyncHash;
+    md5(data: BFChainUtil.BinaryLike): BFChainUtil.PromiseMaybe<Buffer>;
+    ripemd160(): CryptoAsyncHash;
+    ripemd160(data: BFChainUtil.BinaryLike): BFChainUtil.PromiseMaybe<Buffer>;
   }
+  interface CryptoAsyncHash {
+    update(data: BFChainUtil.BinaryLike): this;
+    update(data: string, input_encoding: BFChainUtil.Utf8AsciiLatin1Encoding): this;
+    digest(): BFChainUtil.PromiseMaybe<Buffer>;
+    digest(encoding: BFChainUtil.HexBase64Latin1Encoding): BFChainUtil.PromiseMaybe<string>;
+  }
+
+  // type HashInputData = HashInputData.Binary | HashInputData.Stream;
+  // namespace HashInputData {
+  //   type Binary =
+  //     | ArrayBuffer
+  //     | SharedArrayBuffer
+  //     | DataView
+  //     | Uint8Array
+  //     | Uint8ClampedArray
+  //     | Uint16Array
+  //     | Uint32Array
+  //     | Int8Array
+  //     | Int16Array
+  //     | Int32Array
+  //     | Float32Array
+  //     | Float64Array;
+
+  //   /**
+  //    * @TODO 完善`ReadableStream | NodeJS.ReadableStream`的支持
+  //    */
+  //   interface Stream {
+  //     readable: AsyncIterable<Binary>;
+  //   }
+  // }
   //#endregion
 }

@@ -42,7 +42,7 @@ export class AccountBaseHelper {
   }
   /**根据私钥获取公钥Buffer */
   async getPublicKeyFromSecret(secret: string) {
-    return this.Buffer.from((await this.createSecretKeypair(secret)).publicKey);
+    return (await this.createSecretKeypair(secret)).publicKey;
   }
   /**根据私钥获取公钥String */
   async getPublicKeyStringFromSecret(
@@ -59,7 +59,7 @@ export class AccountBaseHelper {
     const h1 = await this.cryptoHelper.sha256(publicKey);
     const h2 = await this.cryptoHelper.ripemd160(h1);
 
-    FROZEN_PK_ADD_WM.set(publicKey, this.Buffer.from(h2));
+    FROZEN_PK_ADD_WM.set(publicKey, h2);
     return h2;
   }
   /**根据公钥生成地址(base58) */
@@ -108,17 +108,15 @@ export class AccountBaseHelper {
    * @param secondSecret 二次密码
    */
   async createSecondSecretKeypair(secret: string, secondSecret: string) {
-    const md5Second = `${secret}-${this.Buffer.from(
-      await this.cryptoHelper.md5(this.Buffer.from(secondSecret, "utf8")),
+    const md5Second = `${secret}-${(
+      await this.cryptoHelper.md5(this.Buffer.from(secondSecret, "utf8"))
     ).toString("hex")}`;
-    const secondHash = this.Buffer.from(
-      await this.cryptoHelper.sha256(this.Buffer.from(md5Second, "utf8")),
-    );
+    const secondHash = await this.cryptoHelper.sha256(this.Buffer.from(md5Second, "utf8"));
     return this.createSecretKeypair(secondHash.toString());
   }
   /**根据私钥获取公钥Buffer */
   async getPublicKeyFromSecondSecret(secret: string, secondSecret: string) {
-    return this.Buffer.from((await this.createSecondSecretKeypair(secret, secondSecret)).publicKey);
+    return (await this.createSecondSecretKeypair(secret, secondSecret)).publicKey;
   }
   /**根据私钥获取公钥String */
   async getPublicKeyStringFromSecondSecret(

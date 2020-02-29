@@ -260,7 +260,7 @@ export class TransactionHelper {
   /**
    * 校验交易的签名是否合法
    */
-  verifyTransactionSignature<SOME_TRS extends BFChainCore.Transaction>(
+  async verifyTransactionSignature<SOME_TRS extends BFChainCore.Transaction>(
     transaction: SOME_TRS,
     opts?: {
       taskLabel?: string;
@@ -274,7 +274,7 @@ export class TransactionHelper {
       senderSecondPublicKeyBuffer,
       senderPublicKeyBuffer,
     } = transaction;
-    const hash = this.cryptoHelper
+    const hash = await this.cryptoHelper
       .sha256()
       .update(transaction.getBytes(true, true))
       .digest();
@@ -295,7 +295,7 @@ export class TransactionHelper {
       (signSignatureBuffer && signSignatureBuffer.length > 0)
     ) {
       if (senderSecondPublicKeyBuffer && signSignatureBuffer) {
-        const shash = this.cryptoHelper
+        const shash = await this.cryptoHelper
           .sha256()
           .update(transaction.getBytes(false, true))
           .digest();
@@ -405,7 +405,7 @@ export class TransactionHelper {
    * @param transaction 交易体
    * @param num 在一个区块中用户的第N比交易
    */
-  checkTransactionProfOfWork(
+  async checkTransactionProfOfWork(
     signatureBuffer: Uint8Array,
     num: number,
     participation: string,
@@ -416,7 +416,7 @@ export class TransactionHelper {
       return true;
     }
     /// 根据交易信息校验是否符合难度
-    const shaBuffer = this.cryptoHelper
+    const shaBuffer = await this.cryptoHelper
       .sha256()
       .update(signatureBuffer)
       .digest();
@@ -494,7 +494,7 @@ export class TransactionHelper {
    * @param totalGiftAssetNumber
    * @param totalGrabableTimes
    */
-  calcGrabRandomGiftAssetNumber(
+  async calcGrabRandomGiftAssetNumber(
     grabId: string,
     blockSignatureBuffer: Uint8Array,
     giftTransactionSignatureBuffer: Uint8Array,
@@ -511,7 +511,7 @@ export class TransactionHelper {
       return jsbiTotalAsset;
     }
     const grabAsset = BigInt(
-      `0x${this.cryptoHelper
+      `0x${await this.cryptoHelper
         .md5()
         .update(grabId)
         .update(blockSignatureBuffer)
@@ -539,7 +539,7 @@ export class TransactionHelper {
    * @param totalGiftAssetNumber
    * @param totalGrabableTimes
    */
-  calcGrabRecipientRandomGiftAssetNumber(
+  async calcGrabRecipientRandomGiftAssetNumber(
     grabId: string,
     blockSignatureBuffer: Uint8Array,
     giftTransactionSignatureBuffer: Uint8Array,
@@ -551,14 +551,15 @@ export class TransactionHelper {
     let totalWeight_BI = BigInt(0);
     for (const recipientId of giftTransactionRecipient) {
       const weight_BI = BigInt(
-        `0x${this.cryptoHelper
-          .md5()
-          .update(blockSignatureBuffer)
-          .update(giftTransactionSignatureBuffer)
-          .update(gifterId)
-          .update(recipientId)
-          .digest("hex")
-          .substr(0, 16)}`, // uint64
+        `0x${(
+          await this.cryptoHelper
+            .md5()
+            .update(blockSignatureBuffer)
+            .update(giftTransactionSignatureBuffer)
+            .update(gifterId)
+            .update(recipientId)
+            .digest("hex")
+        ).substr(0, 16)}`, // uint64
       );
       totalWeight_BI = totalWeight_BI + weight_BI;
       weightMap.set(recipientId, weight_BI);
@@ -618,15 +619,15 @@ export class TransactionHelper {
   }
 
   /**基于gift交易以及要生成grab交易的账户信息，生成grabAsset */
-  generateGrabAsset(
+  async generateGrabAsset(
     giftTransactionInBlock: BFChainCore.TransactionInBlock<GiftAssetTransaction>,
     opts: BFChainCore.TransactionHelper.GenerateGrabAssetOptions,
   ) {
-    const grabKeypair = this.accountBaseHelper.createSecretKeypair(opts.mainSecret);
+    const grabKeypair = await this.accountBaseHelper.createSecretKeypair(opts.mainSecret);
     const giftTransaction = giftTransactionInBlock.transaction;
     const giftAsset = giftTransaction.asset.giftAsset;
     const {
-      grabId = this.accountBaseHelper.getAddressFromPublicKey(grabKeypair.publicKey),
+      grabId = await this.accountBaseHelper.getAddressFromPublicKey(grabKeypair.publicKey),
       grabSecret,
     } = opts;
     const blockSignatureBuffer = giftTransactionInBlock.signatureBuffer;
@@ -635,7 +636,7 @@ export class TransactionHelper {
     let ciphertextSignature: AccountSignatureModel | undefined;
     if (grabSecret) {
       ciphertextSignature = AccountSignatureModel.fromObject({
-        signatureBuffer: this.getCiphertextSignature({
+        signatureBuffer: await this.getCiphertextSignature({
           secret: grabSecret,
           transactionSignatureBuffer: giftTransactionSignatureBuffer,
           senderId: grabId,
@@ -669,18 +670,18 @@ export class TransactionHelper {
    *
    * @param args `密文``gift 交易签名``发起账户地址`
    */
-  getCiphertextSignature(args: {
+  async getCiphertextSignature(args: {
     secret: string;
     transactionSignatureBuffer: Uint8Array;
     senderId: string;
   }) {
     return this.asymmetricHelper.detachedSign(
-      this.cryptoHelper
+      await this.cryptoHelper
         .sha256()
         .update(args.transactionSignatureBuffer)
         .update(args.senderId)
         .digest(),
-      this.accountBaseHelper.createSecretKeypair(args.secret).secretKey,
+      (await this.accountBaseHelper.createSecretKeypair(args.secret)).secretKey,
     );
   }
   /**
@@ -688,14 +689,14 @@ export class TransactionHelper {
    *
    * @param args `密文公钥``密文签名``gift 交易签名``发起账户地址`
    */
-  verifyCiphertextSignature(args: {
+  async verifyCiphertextSignature(args: {
     secretPublicKey: Uint8Array;
     ciphertextSignatureBuffer: Uint8Array;
     transactionSignatureBuffer: Uint8Array;
     senderId: string;
   }) {
     return this.asymmetricHelper.detachedVeriy(
-      this.cryptoHelper
+      await this.cryptoHelper
         .sha256()
         .update(args.transactionSignatureBuffer)
         .update(args.senderId)
@@ -710,7 +711,7 @@ export class TransactionHelper {
    *
    * @param args `所属链名称``网络标识符``资产名称``发起账户地址`
    */
-  getEmigrateAssetGenesisSignature(args: {
+  async getEmigrateAssetGenesisSignature(args: {
     secret: string;
     chainName: string;
     magic: string;
@@ -718,7 +719,8 @@ export class TransactionHelper {
     senderId: string;
     genesisSignatureBuffer?: Uint8Array;
   }) {
-    const secretKeyBuffer = this.accountBaseHelper.createSecretKeypair(args.secret).secretKey;
+    const secretKeyBuffer = (await this.accountBaseHelper.createSecretKeypair(args.secret))
+      .secretKey;
     return this.emigrateAssetGenesisSignature({
       secretKeyBuffer,
       chainName: args.chainName,
@@ -728,7 +730,7 @@ export class TransactionHelper {
       genesisSignatureBuffer: args.genesisSignatureBuffer,
     });
   }
-  emigrateAssetGenesisSignature(args: {
+  async emigrateAssetGenesisSignature(args: {
     secretKeyBuffer: Uint8Array;
     chainName: string;
     magic: string;
@@ -745,14 +747,14 @@ export class TransactionHelper {
     if (args.genesisSignatureBuffer) {
       hash.update(args.genesisSignatureBuffer);
     }
-    return this.asymmetricHelper.detachedSign(hash.digest(), args.secretKeyBuffer);
+    return this.asymmetricHelper.detachedSign(await hash.digest(), args.secretKeyBuffer);
   }
   /**
    * 资产迁出交易创世账户签名验证
    *
    * @param args `创世账户公钥``密文签名``所属链名称``网络标识符``资产名称``发起账户地址`
    */
-  verifyEmigrateAssetGenesisSignature(args: {
+  async verifyEmigrateAssetGenesisSignature(args: {
     secretPublicKey: Uint8Array;
     signatureBuffer: Uint8Array;
     chainName: string;
@@ -771,7 +773,7 @@ export class TransactionHelper {
       hash.update(args.genesisSignatureBuffer);
     }
     return this.asymmetricHelper.detachedVeriy(
-      hash.digest(),
+      await hash.digest(),
       args.signatureBuffer,
       args.secretPublicKey,
     );
@@ -782,19 +784,20 @@ export class TransactionHelper {
    *
    * @param args `密文``to 交易签名`
    */
-  getImmigrateAssetGenesisSignature(args: {
+  async getImmigrateAssetGenesisSignature(args: {
     secret: string;
     transactionSignatureBuffer: Uint8Array;
     genesisSignatureBuffer?: Uint8Array;
   }) {
-    const secretKeyBuffer = this.accountBaseHelper.createSecretKeypair(args.secret).secretKey;
+    const secretKeyBuffer = (await this.accountBaseHelper.createSecretKeypair(args.secret))
+      .secretKey;
     return this.immigrateAssetGenesisSignature({
       secretKeyBuffer,
       transactionSignatureBuffer: args.transactionSignatureBuffer,
       genesisSignatureBuffer: args.genesisSignatureBuffer,
     });
   }
-  immigrateAssetGenesisSignature(args: {
+  async immigrateAssetGenesisSignature(args: {
     secretKeyBuffer: Uint8Array;
     transactionSignatureBuffer: Uint8Array;
     genesisSignatureBuffer?: Uint8Array;
@@ -803,14 +806,14 @@ export class TransactionHelper {
     if (args.genesisSignatureBuffer) {
       hash.update(args.genesisSignatureBuffer);
     }
-    return this.asymmetricHelper.detachedSign(hash.digest(), args.secretKeyBuffer);
+    return this.asymmetricHelper.detachedSign(await hash.digest(), args.secretKeyBuffer);
   }
   /**
    * 资产迁入交易创世账户签名验证
    *
    * @param args `密文公钥``密文签名``交易签名``to 交易签名`
    */
-  verifyImmigrateAssetGenesisSignature(args: {
+  async verifyImmigrateAssetGenesisSignature(args: {
     secretPublicKey: Uint8Array;
     signatureBuffer: Uint8Array;
     transactionSignatureBuffer: Uint8Array;
@@ -821,7 +824,7 @@ export class TransactionHelper {
       hash.update(args.genesisSignatureBuffer);
     }
     return this.asymmetricHelper.detachedVeriy(
-      hash.digest(),
+      await hash.digest(),
       args.signatureBuffer,
       args.secretPublicKey,
     );
@@ -832,14 +835,15 @@ export class TransactionHelper {
    *
    * @param args `密文``trust 交易签名``trust 交易 senderId``trust 交易 recipientId`
    */
-  getThirdPartySignature(args: {
+  async getThirdPartySignature(args: {
     secret: string;
     transactionSignatureBuffer: Uint8Array;
     senderId: string;
     recipientId: string;
     thirdPartySignatureBuffer?: Uint8Array;
   }) {
-    const secretKeyBuffer = this.accountBaseHelper.createSecretKeypair(args.secret).secretKey;
+    const secretKeyBuffer = (await this.accountBaseHelper.createSecretKeypair(args.secret))
+      .secretKey;
     return this.thirdPartySignature({
       secretKeyBuffer,
       transactionSignatureBuffer: args.transactionSignatureBuffer,
@@ -848,7 +852,7 @@ export class TransactionHelper {
       thirdPartySignatureBuffer: args.thirdPartySignatureBuffer,
     });
   }
-  thirdPartySignature(args: {
+  async thirdPartySignature(args: {
     secretKeyBuffer: Uint8Array;
     transactionSignatureBuffer: Uint8Array;
     senderId: string;
@@ -863,14 +867,14 @@ export class TransactionHelper {
     if (args.thirdPartySignatureBuffer) {
       hash.update(args.thirdPartySignatureBuffer);
     }
-    return this.asymmetricHelper.detachedSign(hash.digest(), args.secretKeyBuffer);
+    return this.asymmetricHelper.detachedSign(await hash.digest(), args.secretKeyBuffer);
   }
   /**
    * 第三方签名验证
    *
    * @param args `密文公钥``密文签名``trust 交易签名``trust 交易 senderId``trust 交易 recipientId`
    */
-  verifyThirdPartySignature(args: {
+  async verifyThirdPartySignature(args: {
     secretPublicKey: Uint8Array;
     signatureBuffer: Uint8Array;
     transactionSignatureBuffer: Uint8Array;
@@ -887,7 +891,7 @@ export class TransactionHelper {
       hash.update(args.thirdPartySignatureBuffer);
     }
     return this.asymmetricHelper.detachedVeriy(
-      hash.digest(),
+      await hash.digest(),
       args.signatureBuffer,
       args.secretPublicKey,
     );
