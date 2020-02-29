@@ -810,14 +810,6 @@ const delegatesArr = [
     username: "bfchain114",
   },
 ];
-const delegatesMap = new Map<
-  string,
-  { pk: string; address: string; keypair: BFChainCore.Keypair }
->();
-delegatesArr.forEach(v => {
-  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(v.secret);
-  delegatesMap.set(v.address, { pk: v.publicKey, address: v.address, keypair });
-});
 /** 随机获取下一轮的打块人*/
 const randomNextDelegates = (
   delegates: string[] = bfchainCore.transactionHelper.genesisDelegates(),
@@ -885,6 +877,14 @@ function getRoundLastBlockRemarkHash(height: number) {
   return hashString;
 }
 (async () => {
+  const delegatesMap = new Map<
+    string,
+    { pk: string; address: string; keypair: BFChainCore.Keypair }
+  >();
+  for (const v of delegatesArr) {
+    const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(v.secret);
+    delegatesMap.set(v.address, { pk: v.publicKey, address: v.address, keypair });
+  }
   /**已绑定的受托人个数 */
   const pickDelegates = bfchainCore.transactionHelper.genesisDelegates().slice(0, 30);
   const map = new Map<number, { signature: string; timestamp: number; address: string }>();
@@ -973,7 +973,7 @@ function getRoundLastBlockRemarkHash(height: number) {
             const _block = blockMap.get(_h);
             if (_block) {
               thisRoundDelegates.push(
-                bfchainCore.accountBaseHelper.getAddressFromPublicKeyString(
+                await bfchainCore.accountBaseHelper.getAddressFromPublicKeyString(
                   _block.generatorPublicKey,
                 ),
               );
@@ -1028,8 +1028,8 @@ function getRoundLastBlockRemarkHash(height: number) {
     // }
   } while (true);
   const countMap = new Map<string, { length: number; block: number[] }>();
-  blockMap.forEach((v, k) => {
-    const address = bfchainCore.accountBaseHelper.getAddressFromPublicKeyString(
+  for (const [k, v] of blockMap) {
+    const address = await bfchainCore.accountBaseHelper.getAddressFromPublicKeyString(
       v.generatorPublicKey,
     );
     const count = countMap.get(address);
@@ -1039,7 +1039,7 @@ function getRoundLastBlockRemarkHash(height: number) {
     } else {
       countMap.set(address, { block: [k], length: 1 });
     }
-  });
+  }
   // console.log(countMap);
   let total = 0;
   countMap.forEach((v, k) => {
@@ -1069,7 +1069,7 @@ function getRoundLastBlockRemarkHash(height: number) {
       for await (const { address, timestamp } of calcGenerateBlockGenerator) {
         // console.log(timestamp,block.timestamp)
         if (timestamp === block.timestamp) {
-          const _address = bfchainCore.accountBaseHelper.getAddressFromPublicKeyString(
+          const _address = await bfchainCore.accountBaseHelper.getAddressFromPublicKeyString(
             block.generatorPublicKey,
           );
           // console.log(address, _address, timestamp);
