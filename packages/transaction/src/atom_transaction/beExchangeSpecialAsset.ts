@@ -76,12 +76,12 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
    * @param body
    * @param beExchangeSpecialAssetAsset
    */
-  verifyTransactionBody(
+  async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
     beExchangeSpecialAssetAsset: BFChainCore.BeExchangeSpecialAssetAssetJSON,
     config = this.configHelper,
   ) {
-    super.verifyTransactionBody(body, beExchangeSpecialAssetAsset, config);
+    await super.verifyTransactionBody(body, beExchangeSpecialAssetAsset, config);
 
     const Function_Exception_Detail = {
       target: "body",

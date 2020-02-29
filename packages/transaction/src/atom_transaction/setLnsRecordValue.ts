@@ -65,12 +65,12 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<
    * @param body
    * @param setLnsRecordValueAsset
    */
-  verifyTransactionBody(
+  async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
     lnsRecordValueAsset: SetLnsRecordValueAssetModel,
     config = this.configHelper,
   ) {
-    super.verifyTransactionBody(body, lnsRecordValueAsset, config);
+    await super.verifyTransactionBody(body, lnsRecordValueAsset, config);
 
     const Function_Exception_Detail = {
       target: "body",

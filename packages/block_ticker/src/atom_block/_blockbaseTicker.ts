@@ -234,7 +234,7 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
     };
     const { accountBaseHelper, jsbiHelper, configHelper } = this;
     const { height } = block;
-    const generatorAddress = accountBaseHelper.getAddressFromPublicKeyString(block.generatorPublicKey);
+    const generatorAddress = await accountBaseHelper.getAddressFromPublicKeyString(block.generatorPublicKey);
     const data = await this.getVoteForDelegate(generatorAddress, height, blockGetterHelper);
     // FIXME: only for genesis block?
     // 使用深拷贝在传值前复制一份？

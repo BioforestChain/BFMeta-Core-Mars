@@ -75,12 +75,12 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
    * @param body
    * @param grabAssetAsset
    */
-  verifyTransactionBody(
+  async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
     grabAssetAsset: BFChainCore.GrabAssetAssetJSON,
     config = this.configHelper,
   ) {
-    super.verifyTransactionBody(body, grabAssetAsset, config);
+    await super.verifyTransactionBody(body, grabAssetAsset, config);
 
     const Function_Exception_Detail = {
       target: "body",
@@ -335,7 +335,7 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
         );
         break;
       case GIFT_DISTRIBUTION_RULE.RANDOM:
-        should_grap_amount_BI = this.transactionHelper.calcGrabRandomGiftAssetNumber(
+        should_grap_amount_BI = await this.transactionHelper.calcGrabRandomGiftAssetNumber(
           body.senderId,
           blockSignBuffer,
           trsSignBuffer,
@@ -345,7 +345,7 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
         );
         break;
       case GIFT_DISTRIBUTION_RULE.RECIPIENT_RANDOM:
-        should_grap_amount_BI = this.transactionHelper.calcGrabRecipientRandomGiftAssetNumber(
+        should_grap_amount_BI = await this.transactionHelper.calcGrabRecipientRandomGiftAssetNumber(
           body.senderId,
           blockSignBuffer,
           trsSignBuffer,

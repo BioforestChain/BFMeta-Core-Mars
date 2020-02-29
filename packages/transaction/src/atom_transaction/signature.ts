@@ -50,12 +50,12 @@ export class SignatureTransactionFactory extends TransactionFactory<SignatureTra
    * @param body
    * @param signatureAsset
    */
-  verifyTransactionBody(
+  async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
     signatureAsset: BFChainCore.SignatureAssetJSON,
     config = this.configHelper,
   ) {
-    super.verifyTransactionBody(body, signatureAsset, config);
+    await super.verifyTransactionBody(body, signatureAsset, config);
 
     const Function_Exception_Detail = {
       target: "body",

@@ -127,7 +127,7 @@ export abstract class BlockFactory<T extends Block> {
       if (!keypair.secretKey) {
         throw new ArgumentIllegalException("secretKey is null when generateBlock");
       }
-      block.signatureBuffer = this.asymmetricHelper.detachedSign(
+      block.signatureBuffer = await this.asymmetricHelper.detachedSign(
         block.getBytes(true, true),
         keypair.secretKey,
       );
@@ -260,7 +260,7 @@ export abstract class BlockFactory<T extends Block> {
             if (!keypair.secretKey) {
               throw new ArgumentIllegalException("secretKey is null when insertTransactions");
             }
-            tranItem.signatureBuffer = this.asymmetricHelper.detachedSign(
+            tranItem.signatureBuffer = await this.asymmetricHelper.detachedSign(
               tranItem.getBytes(true),
               keypair.secretKey,
             );
@@ -292,7 +292,7 @@ export abstract class BlockFactory<T extends Block> {
       }
 
       block.statisticInfo = statisticsInfo.toModel();
-      block.payloadHashBuffer = payloadHash.digest();
+      block.payloadHashBuffer = await payloadHash.digest();
       block.payloadLength = payloadLength;
       block.transactions = transactions;
       const numberOfTransactions = transactions.length;

@@ -41,12 +41,12 @@ export class RejectVoteTransactionFactory extends TransactionFactory<RejectVoteT
    * @param body
    * @param rejectVoteAsset
    */
-  verifyTransactionBody(
+  async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
     rejectVoteAsset: BFChainCore.RejectVoteAssetJSON,
     config = this.configHelper,
   ) {
-    super.verifyTransactionBody(body, rejectVoteAsset, config);
+    await super.verifyTransactionBody(body, rejectVoteAsset, config);
 
     const Function_Exception_Detail = {
       target: "body",

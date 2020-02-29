@@ -111,7 +111,7 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
     const { accountBaseHelper } = this;
     for (const thirdPartySignature of thirdPartySignatures) {
       const { publicKey, secondPublicKey } = thirdPartySignature;
-      const address = accountBaseHelper.getAddressFromPublicKeyString(publicKey);
+      const address = await accountBaseHelper.getAddressFromPublicKeyString(publicKey);
       const trustee = await accountGetterHelper.getAccountInfo(address);
       if (!trustee) {
         throw new ConsensusException(NOT_EXIST, {

@@ -57,12 +57,12 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
    * @param body
    * @param usernameAsset
    */
-  verifyTransactionBody(
+  async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
     usernameAsset: BFChainCore.UsernameAssetJSON,
     config = this.configHelper,
   ) {
-    super.verifyTransactionBody(body, usernameAsset, config);
+    await super.verifyTransactionBody(body, usernameAsset, config);
 
     const Function_Exception_Detail = {
       target: "body",

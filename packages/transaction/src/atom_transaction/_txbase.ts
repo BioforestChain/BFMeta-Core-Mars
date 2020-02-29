@@ -138,7 +138,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
    * @param body
    * @param asset
    */
-  verifyTransactionBody(
+  async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
     asset: BFChainCore.GetTransactionAssetJSON<T>,
     config = this.configHelper,
@@ -220,7 +220,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
       });
     }
 
-    if (body.senderId !== accountBaseHelper.getAddressFromPublicKeyString(body.senderPublicKey)) {
+    if (body.senderId !== await accountBaseHelper.getAddressFromPublicKeyString(body.senderPublicKey)) {
       throw new ArgumentIllegalException(NOT_MATCH, {
         to_compare_prop: "senderId",
         be_compare_prop: "body",

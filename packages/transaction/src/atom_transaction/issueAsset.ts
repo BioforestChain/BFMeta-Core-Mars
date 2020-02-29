@@ -61,12 +61,12 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
    * @param body
    * @param issueAssetAsset
    */
-  verifyTransactionBody(
+  async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
     issueAssetAsset: BFChainCore.IssueAssetAssetJSON,
     config = this.configHelper,
   ) {
-    super.verifyTransactionBody(body, issueAssetAsset, config);
+    await super.verifyTransactionBody(body, issueAssetAsset, config);
 
     const Function_Exception_Detail = {
       target: "body",

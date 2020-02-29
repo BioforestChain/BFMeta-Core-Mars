@@ -12,7 +12,7 @@ declare namespace BFChainCore {
     /**生成公私钥对 */
     create(secretHash: Uint8Array): BFChainUtil.PromiseMaybe<Keypair>;
     /**非对称签名 */
-    detached_sign(hash: Uint8Array, secretKey: Uint8Array): BFChainUtil.PromiseMaybe<Uint8Array>;
+    detached_sign(hash: Uint8Array, secretKey: Uint8Array): BFChainUtil.PromiseMaybe<Buffer>;
     /**非对称验签 */
     detached_verify(
       hash: Uint8Array,

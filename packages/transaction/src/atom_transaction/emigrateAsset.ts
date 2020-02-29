@@ -57,12 +57,12 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
    * @param body
    * @param emigrateAssetAsset
    */
-  verifyTransactionBody(
+  async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
     emigrateAssetAsset: BFChainCore.EmigrateAssetAssetJSON,
     config = this.configHelper,
   ) {
-    super.verifyTransactionBody(body, emigrateAssetAsset, config);
+    await super.verifyTransactionBody(body, emigrateAssetAsset, config);
 
     const Function_Exception_Detail = {
       target: "body",
@@ -178,7 +178,7 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
     }
 
     const { publicKey, signature, secondPublicKey, signSignature } = genesisDelegateSignature;
-    const address = accountBaseHelper.getAddressFromPublicKeyString(publicKey);
+    const address = await accountBaseHelper.getAddressFromPublicKeyString(publicKey);
 
     const genesisDelegates = this.transactionHelper.genesisDelegates(config);
 

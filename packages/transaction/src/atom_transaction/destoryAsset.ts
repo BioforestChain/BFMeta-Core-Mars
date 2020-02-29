@@ -57,12 +57,12 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
    * @param body
    * @param destoryAssetAsset
    */
-  verifyTransactionBody(
+  async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
     destoryAssetAsset: BFChainCore.DestoryAssetAssetJSON,
     config = this.configHelper,
   ) {
-    super.verifyTransactionBody(body, destoryAssetAsset, config);
+    await super.verifyTransactionBody(body, destoryAssetAsset, config);
 
     const Function_Exception_Detail = {
       target: "body",

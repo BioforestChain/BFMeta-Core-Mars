@@ -256,7 +256,7 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
 
     const { timeHelper, blockGeneratorCalculator } = this;
 
-    const generatorAddress = this.accountBaseHelper.getAddressFromPublicKeyString(
+    const generatorAddress = await this.accountBaseHelper.getAddressFromPublicKeyString(
       block.generatorPublicKey,
     );
     const currentSlot = timeHelper.getSlotNumberByTimestamp(block.timestamp);

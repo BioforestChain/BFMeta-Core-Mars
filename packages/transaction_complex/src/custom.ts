@@ -44,12 +44,12 @@ export class CustomTransactionFactory extends TransactionFactory<CustomTransacti
    * @param body
    * @param customAsset
    */
-  verifyTransactionBody(
+  async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
     customAsset: BFChainCore.CustomAssetJSON,
     config = this.configHelper,
   ) {
-    super.verifyTransactionBody(body, customAsset, config);
+    await super.verifyTransactionBody(body, customAsset, config);
 
     const custom = customAsset.custom;
 

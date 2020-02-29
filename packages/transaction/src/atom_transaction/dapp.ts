@@ -57,12 +57,12 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
    * @param body
    * @param dappAsset
    */
-  verifyTransactionBody(
+  async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
     dappAsset: BFChainCore.DAppAssetJSON,
     config = this.configHelper,
   ) {
-    super.verifyTransactionBody(body, dappAsset, config);
+    await super.verifyTransactionBody(body, dappAsset, config);
 
     const Function_Exception_Detail = {
       target: "body",

@@ -471,16 +471,16 @@ export class BlockGeneratorCalculator {
       } else {
         taskList.next = this.blockHelper
           .forceGetBlockByHeight(height, blockGetterHelper)
-          .then(_block => {
+          .then(async _block => {
             usedAddressMap.set(height, {
-              address: this.accountBaseHelper.getAddressFromPublicKeyString(
+              address: await this.accountBaseHelper.getAddressFromPublicKeyString(
                 _block.generatorPublicKey,
               ),
               signature: _block.signature,
               timestamp: _block.timestamp,
             });
             usedAddressCache.set(height, {
-              address: this.accountBaseHelper.getAddressFromPublicKeyString(
+              address: await this.accountBaseHelper.getAddressFromPublicKeyString(
                 _block.generatorPublicKey,
               ),
               signature: _block.signature,

@@ -55,12 +55,12 @@ export class TransferAssetTransactionFactory extends TransactionFactory<Transfer
    * @param body
    * @param transferAssetAsset
    */
-  verifyTransactionBody(
+  async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
     transferAssetAsset: BFChainCore.TransferAssetAssetJSON,
     config = this.configHelper,
   ) {
-    super.verifyTransactionBody(body, transferAssetAsset, config);
+    await super.verifyTransactionBody(body, transferAssetAsset, config);
 
     const Function_Exception_Detail = {
       target: "body",

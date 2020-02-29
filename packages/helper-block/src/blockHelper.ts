@@ -511,27 +511,23 @@ export class BlockHelper {
       (this.calcRoundByHeight(currentHeight) - 1) * this.config.blockPerRound;
     lastRoundLastBlockHeight = lastRoundLastBlockHeight === 0 ? 1 : lastRoundLastBlockHeight;
 
-    const _this = this;
-    const payloadHash = await this.cryptoHelper.sha256({
-      readable: (async function* readable() {
-        if (lastRoundLastBlockHeight !== 1) {
-          const block = await _this.forceGetBlockByHeight<RoundLastBlock>(
-            lastRoundLastBlockHeight,
-            blockGetterHelper,
-          );
-          yield block.remark.hashBuffer;
-        }
-        for (let height = lastRoundLastBlockHeight; height < currentHeight; height++) {
-          const blockSignatureBuffer = await _this.forceGetBlockSignatureBufferByHeight(
-            height,
-            blockGetterHelper,
-          );
-          yield blockSignatureBuffer;
-        }
-      })(),
-    });
+    const payloadHash = await this.cryptoHelper.sha256();
+    if (lastRoundLastBlockHeight !== 1) {
+      const block = await this.forceGetBlockByHeight<RoundLastBlock>(
+        lastRoundLastBlockHeight,
+        blockGetterHelper,
+      );
+      payloadHash.update(block.remark.hashBuffer);
+    }
+    for (let height = lastRoundLastBlockHeight; height < currentHeight; height++) {
+      const blockSignatureBuffer = await this.forceGetBlockSignatureBufferByHeight(
+        height,
+        blockGetterHelper,
+      );
+      payloadHash.update(blockSignatureBuffer);
+    }
 
-    const hashString = this.Buffer.from(payloadHash).toString("hex");
+    const hashString = (await payloadHash.digest()).toString("hex");
 
     return hashString;
   }
