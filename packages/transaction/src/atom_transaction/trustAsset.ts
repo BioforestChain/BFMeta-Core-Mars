@@ -165,15 +165,6 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
         ...Function_Exception_Detail,
       });
     }
-
-    // if (trustAsset.numberOfBeginUnfrozenBlocks >= body.numberOfEffectiveBlocks) {
-    //   throw new ArgumentIllegalException(PROP_SHOULD_LT_FIELD, {
-    //     prop: "numberOfBeginUnfrozenBlocks",
-    //     field: body.numberOfEffectiveBlocks,
-    //     ...Function_Exception_Detail,
-    //     target: "trustAsset",
-    //   });
-    // }
   }
 
   verifyTrustAsset(trustAsset: BFChainCore.TrustAssetJSON) {
@@ -193,13 +184,7 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
       ...Function_Exception_Detail,
     } as const;
 
-    const {
-      trustees,
-      numberOfSignFor,
-      sourceChainName,
-      sourceChainMagic,
-      // numberOfBeginUnfrozenBlocks,
-    } = trustAsset;
+    const { trustees, numberOfSignFor, sourceChainName, sourceChainMagic } = trustAsset;
 
     if (!baseHelper.isArray(trustees)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
@@ -265,17 +250,6 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
         target: "trustAsset",
       });
     }
-
-    // if (
-    //   numberOfBeginUnfrozenBlocks !== undefined &&
-    //   !baseHelper.isNaturalNumber(numberOfBeginUnfrozenBlocks)
-    // ) {
-    //   throw new ArgumentIllegalException(PROP_IS_INVALID, {
-    //     prop: "numberOfBeginUnfrozenBlocks",
-    //     type: "positive integer or 0",
-    //     ...TrustAssetAsset_Exception_Detail,
-    //   });
-    // }
 
     this.checkChainName(sourceChainName, "sourceChainName", TrustAssetAsset_Exception_Detail);
 

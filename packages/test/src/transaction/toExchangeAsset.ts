@@ -30,7 +30,7 @@ function getToExchangeAssetTransaction(sender: AccountModel, recipientId: any) {
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic
     applyBlockHeight: 10086, // 交易发起高度
-    numberOfEffectiveBlocks: 100,
+    effectiveBlockHeight: 10100,
   };
   let secondKeypair;
   if (sender.secondSecret) {
@@ -58,7 +58,6 @@ function getToExchangeAssetTransaction(sender: AccountModel, recipientId: any) {
         prevWeight: "1",
         nextWeight: "100",
       },
-      // numberOfBeginUnfrozenBlocks: 99
     },
   };
   if (recipientId) {

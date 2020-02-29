@@ -35,7 +35,7 @@ function getGiftAssetTransaction(
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic
     applyBlockHeight: 10086, // 交易发起高度
-    numberOfEffectiveBlocks: 100,
+    effectiveBlockHeight: 10100,
     storage: {
       key: "assetType",
       value: "ZEK",
@@ -60,7 +60,7 @@ function getGiftAssetTransaction(
     amount: "100000", // 交易资产数量
     /* unitReserveFee: "1000", */
     totalGrabableTimes: 10,
-    numberOfBeginUnfrozenBlocks: 99,
+    beginUnfrozenBlockHeight: 99,
     giftDistributionRule: GIFT_DISTRIBUTION_RULE.RANDOM,
   };
   if (recipient && recipient.length > 0) {

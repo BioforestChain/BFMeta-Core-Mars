@@ -112,6 +112,9 @@ export const TRANSACTION_SHOULD_NOT_HAVE_SIGN_SIGNATURE = (ec.next =
 /**reason function */
 export const INVALID_TRANSACTION_APPLY_BLOCK_HEIGHT = (ec.next =
   "Invalid transaction apply block height, reason {reason} when {function}");
+/**reason function */
+export const INVALID_TRANSACTION_EFFECTIVE_BLOCK_HEIGHT = (ec.next =
+  "Invalid transaction effective block height, reason {reason} when {function}");
 /**reason signature senderId applyBlockHeight type function */
 export const INVALID_TRANSACTION_FROM_MAGIC = (ec.next =
   "Invalid transaction from magic, reason {reason} signature {signature} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type} when {function}");
@@ -222,9 +225,6 @@ export const TOO_MANY_EXPECTEDISSUEDASSETS = (ec.next =
 /**genesisAddress senderAddress function */
 export const TRANSFER_TO_SENDER_BEFORE = (ec.next =
   "Genesis account {genesisAddress} must transfer to sender {senderAddress} before, when {function}");
-/**magic function */
-export const SUBCHAIN_CAN_NOT_ISSUE_SUBCHAIN = (ec.next =
-  "Subchain with magic {magic} can not issue another subchain when {function}");
 /**prop reason errorId function */
 export const TOO_LARGE = (ec.next =
   "{prop} is too large reason {reason} errorId {errorId} when {function}");

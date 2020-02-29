@@ -10,11 +10,13 @@ import {
   getGenesisAccount,
   getRecipientWithoutSecondSecret,
   getDelegateWithoutSecondSecret,
-  fullBfchainCore,
-  subBfchainCore,
+  getFullBfchainCore,
+  registerBfchainCore,
   AccountModel,
   getDelegateWithSecondSecret,
 } from "../include";
+
+const fullBfchainCore = getFullBfchainCore(57, 128);
 
 function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate: AccountModel) {
   const keypair = fullBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
@@ -33,9 +35,9 @@ function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate: Acco
     lns: `bnqkl.${fullBfchainCore.config.chainName}`,
     sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: fullBfchainCore.config.magic, // 交易来源链的 magic
-    toMagic: subBfchainCore.config.magic, // 交易去往链的 magic
+    toMagic: registerBfchainCore.config.magic, // 交易去往链的 magic
     applyBlockHeight: 10, // 交易发起高度
-    numberOfEffectiveBlocks: 100,
+    effectiveBlockHeight: 10100,
   };
   let secondKeypair;
   if (sender.secondSecret) {
@@ -58,7 +60,9 @@ function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate: Acco
     assetType: "BFT",
     amount: "100000",
   };
-  const genesisKeypair = fullBfchainCore.accountBaseHelper.createSecretKeypair(genesisDelegate.secret);
+  const genesisKeypair = fullBfchainCore.accountBaseHelper.createSecretKeypair(
+    genesisDelegate.secret,
+  );
   const signature = fullBfchainCore.transactionHelper.emigrateAssetGenesisSignature({
     secretKeyBuffer: genesisKeypair.secretKey,
     chainName: emigrateAsset.sourceChainName,

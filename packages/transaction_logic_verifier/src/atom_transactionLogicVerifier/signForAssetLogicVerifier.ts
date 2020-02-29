@@ -156,8 +156,7 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
     const {
       transactionSignature,
       applyBlockHeight,
-      // numberOfBeginUnfrozenBlocks,
-      numberOfEffectiveBlocks,
+      effectiveBlockHeight,
       trustSenderId,
       trustRecipientId,
       trustNumberOfSignFor,
@@ -184,21 +183,15 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
       });
     }
 
-    if (numberOfEffectiveBlocks !== trustAssetJson.numberOfEffectiveBlocks) {
+    if (effectiveBlockHeight !== trustAssetJson.effectiveBlockHeight) {
       throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: "numberOfEffectiveBlocks",
-        be_compare_prop: "numberOfEffectiveBlocks",
+        to_compare_prop: "effectiveBlockHeight",
+        be_compare_prop: "effectiveBlockHeight",
         to_target: "SignForAssetTransaction",
         be_target: "TrustAssetTransaction",
         ...Function_Exception_Detail,
       });
     }
-
-    // if (trsAsset.numberOfBeginUnfrozenBlocks) {
-    //     if (numberOfBeginUnfrozenBlocks !== trsAsset.numberOfBeginUnfrozenBlocks) {
-    //         throw new ConsensusException(`Trust asset not match`, `transaction signature ${tr.signature} trust asset transaction signature ${transactionSignature}`);
-    //     }
-    // }
 
     const trustTrsRange = [...trustAssetJson.range, ...trsAsset.trustees];
     const trustRange = [...trustAsset.trustees];

@@ -241,19 +241,19 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
       });
     }
 
-    if (grabAsset.numberOfBeginUnfrozenBlocks) {
-      if (!baseHelper.isPositiveInteger(grabAsset.numberOfBeginUnfrozenBlocks)) {
+    if (grabAsset.beginUnfrozenBlockHeight) {
+      if (!baseHelper.isPositiveInteger(grabAsset.beginUnfrozenBlockHeight)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "numberOfBeginUnfrozenBlocks",
+          prop: "beginUnfrozenBlockHeight",
           type: "positive integer",
           ...GrabAssetAsset_Exception_Detail,
         });
       }
     }
 
-    if (!baseHelper.isPositiveInteger(grabAsset.numberOfEffectiveBlocks)) {
+    if (!baseHelper.isPositiveInteger(grabAsset.effectiveBlockHeight)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "numberOfEffectiveBlocks",
+        prop: "effectiveBlockHeight",
         type: "positive integer",
         ...GrabAssetAsset_Exception_Detail,
       });

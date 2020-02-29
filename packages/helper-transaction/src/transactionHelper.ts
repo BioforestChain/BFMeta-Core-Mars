@@ -129,24 +129,19 @@ export class TransactionHelper {
   get DAPP() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.DAPP);
   }
-  /**DAPPPURCHASING 侧链购买应用 */
+  /**DAPPPURCHASING 购买侧链应用 */
   get DAPP_PURCHASING() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.DAPP_PURCHASING);
   }
-  /** ISSUE_SUBCHAIN: 发行子链 */
-  get ISSUE_SUBCHAIN() {
-    return this.getTransactionType(TRANSACTION_TYPES_BASE.ISSUE_SUBCHAIN);
+  /** REGISTER_CHAIN: 注册链 */
+  get REGISTER_CHAIN() {
+    return this.getTransactionType(TRANSACTION_TYPES_BASE.REGISTER_CHAIN);
   }
   /** EXT: 存证交易 */
-  /** MARK: 本能理财收益 */
   get MARK() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.MARK);
   }
   /** SOC */
-  // /** FOLLOW: 添加联系人 */
-  // get FOLLOW() {
-  //   return this.getTransactionType(TRANSACTION_TYPES_BASE.FOLLOW);
-  // }
   /** AST: 数字资产交易 */
   /** ISSUE_ASSET: 发行数字资产 */
   get ISSUE_ASSET() {
@@ -229,7 +224,7 @@ export class TransactionHelper {
     this.CUSTOM,
     this.DAPP,
     this.DAPP_PURCHASING,
-    this.ISSUE_SUBCHAIN,
+    this.REGISTER_CHAIN,
     this.MARK,
     this.ISSUE_ASSET,
     this.DESTORY_ASSET,
@@ -659,8 +654,8 @@ export class TransactionHelper {
       transactionRangeType: giftTransaction.rangeType,
       transactionRange: giftTransaction.range,
       applyBlockHeight: giftTransaction.applyBlockHeight,
-      numberOfBeginUnfrozenBlocks: giftAsset.numberOfBeginUnfrozenBlocks,
-      numberOfEffectiveBlocks: giftTransaction.numberOfEffectiveBlocks,
+      beginUnfrozenBlockHeight: giftAsset.beginUnfrozenBlockHeight,
+      effectiveBlockHeight: giftTransaction.effectiveBlockHeight,
     });
 
     // 根据共识规则计算出能抢到的金额数量
@@ -903,8 +898,9 @@ export class TransactionHelper {
    * @param transaction
    */
   getTransactionMaxEffectiveHeight(transaction: Transaction) {
-    return transaction.applyBlockHeight + transaction.numberOfEffectiveBlocks;
+    return transaction.effectiveBlockHeight;
   }
+
   /**
    * 获取交易的最小有效区块高度
    * @param transaction
@@ -912,18 +908,9 @@ export class TransactionHelper {
   getTransactionMinEffectiveHeight(transaction: Transaction) {
     let minEffectiveHeight = transaction.applyBlockHeight;
     if (transaction instanceof GiftAssetTransaction) {
-      minEffectiveHeight += transaction.asset.giftAsset.numberOfBeginUnfrozenBlocks || 0;
+      const beginUnfrozenBlockHeight = transaction.asset.giftAsset.beginUnfrozenBlockHeight;
+      beginUnfrozenBlockHeight && (minEffectiveHeight = beginUnfrozenBlockHeight);
     }
-    // if (transaction instanceof TrustAssetTransaction) {
-    //   minEffectiveHeight += transaction.asset.trustAsset.numberOfBeginUnfrozenBlocks || 0;
-    // } else if (transaction instanceof GiftAssetTransaction) {
-    //   minEffectiveHeight += transaction.asset.giftAsset.numberOfBeginUnfrozenBlocks || 0;
-    // } else if (transaction instanceof ToExchangeAssetTransaction) {
-    //   minEffectiveHeight += transaction.asset.toExchangeAsset.numberOfBeginUnfrozenBlocks || 0;
-    // } else if (transaction instanceof ToExchangeSpecialAssetTransaction) {
-    //   minEffectiveHeight +=
-    //     transaction.asset.toExchangeSpecialAsset.numberOfBeginUnfrozenBlocks || 0;
-    // }
     return minEffectiveHeight;
   }
 }

@@ -9,13 +9,16 @@ import {
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,
-  fullBfchainCore,
-  fullSubBfchainCore,
+  getFullBfchainCore,
+  getFullRegisterBfchainCore,
   AccountModel,
   getDelegateWithoutSecondSecret,
   getDelegateWithSecondSecret,
 } from "../include";
 import { parseHexToArrayBuffer } from "@bfchain/util";
+
+const fullBfchainCore = getFullBfchainCore(57, 128);
+const fullSubBfchainCore = getFullRegisterBfchainCore();
 
 function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate: AccountModel) {
   const keypair = fullBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
@@ -36,7 +39,7 @@ function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate: Acco
     fromMagic: fullBfchainCore.config.magic, // 交易来源链的 magic
     toMagic: fullSubBfchainCore.config.magic, // 交易去往链的 magic
     applyBlockHeight: 10, // 交易发起高度
-    numberOfEffectiveBlocks: 100,
+    effectiveBlockHeight: 10100,
   };
   let secondKeypair;
   if (sender.secondSecret) {
@@ -112,7 +115,7 @@ function getImmigrateAssetTransaction(
     fromMagic: fullBfchainCore.config.magic, // 交易来源链的 magic
     toMagic: fullSubBfchainCore.config.magic, // 交易去往链的 magic
     applyBlockHeight: 10, // 交易发起高度
-    numberOfEffectiveBlocks: 57,
+    effectiveBlockHeight: 57,
     storage: {
       key: "transactionSignature",
       value: emigrateAssetTrs.signature,
@@ -136,7 +139,9 @@ function getImmigrateAssetTransaction(
     },
     emigrateAssetTransaction: emigrateAssetTrs,
   };
-  const genesisKeypair = fullBfchainCore.accountBaseHelper.createSecretKeypair(genesisDelegate.secret);
+  const genesisKeypair = fullBfchainCore.accountBaseHelper.createSecretKeypair(
+    genesisDelegate.secret,
+  );
   const signature = fullBfchainCore.transactionHelper.immigrateAssetGenesisSignature({
     secretKeyBuffer: genesisKeypair.secretKey,
     transactionSignatureBuffer: parseHexToArrayBuffer(emigrateAssetTrs.signature),

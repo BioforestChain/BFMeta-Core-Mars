@@ -30,4 +30,3 @@ export * from "./beExchangeSpecialAsset";
 export * from "./feeRate";
 export * from "./locationNameRecord";
 export * from "./accountSignature";
-export * from "./customAsset";

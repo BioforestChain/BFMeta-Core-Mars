@@ -5,6 +5,9 @@ declare namespace BFChainCore {
   // #endregion
 
   // #region
-  type UsedAddressCacheJSON = Map<number, { signature: string; timestamp: number; address: string }>
+  type UsedAddressCacheJSON = Map<
+    number,
+    { signature: string; timestamp: number; address: string }
+  >;
   // #endregion
 }

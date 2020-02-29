@@ -178,18 +178,11 @@ declare namespace BFChainCore {
     };
   }
 
-  interface ApplyResult_IssueSubchainJSON {
-    type: "issueSubchain";
+  interface ApplyResult_RegisterChainJSON {
+    type: "registerChain";
     applyInfo: {
       address: string;
       publicKey: string;
-      chainName: string;
-      assetType: string;
-      magic: string;
-      bnid: string;
-      maxTPSPerBlock: number;
-      blockPerRound: number;
-      delegates: number;
       genesisBlock: BlockJSON<GenesisBlockRemarkJSON>;
     };
   }
@@ -278,7 +271,7 @@ declare namespace BFChainCore {
     | ApplyResult_SaleDAppidJSON
     | ApplyResult_PurchaseDAppidJSON
     | ApplyResult_IssueAssetJSON
-    | ApplyResult_IssueSubchainJSON
+    | ApplyResult_RegisterChainJSON
     | ApplyResult_RegisterLocationNameJSON
     | ApplyResult_CancelLocationNameJSON
     | ApplyResult_SetLnsManagerJSON

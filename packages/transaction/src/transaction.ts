@@ -117,7 +117,7 @@ export class TransactionCore {
       fromMagic: body.fromMagic, // 交易来源链的 magic
       toMagic: body.toMagic, // 交易去往链的 magic
       applyBlockHeight: body.applyBlockHeight, // 交易发起高度
-      numberOfEffectiveBlocks: body.numberOfEffectiveBlocks, // 有效区块数量
+      effectiveBlockHeight: body.effectiveBlockHeight, // 有效区块数量
       storage: body.storage, // 查询用的索引存储
       nonce: body.nonce,
     };
@@ -325,7 +325,6 @@ export const TRANSACTION_FACTORY_TYPES_MAP = (() => {
     [TRANSACTION_TYPES_BASE.VOTE, ATOM_TRSFAC.VoteTransactionFactory],
     [TRANSACTION_TYPES_BASE.ACCEPT_VOTE, ATOM_TRSFAC.AcceptVoteTransactionFactory],
     [TRANSACTION_TYPES_BASE.REJECT_VOTE, ATOM_TRSFAC.RejectVoteTransactionFactory],
-    [TRANSACTION_TYPES_BASE.CUSTOM, ATOM_TRSFAC.CustomTransactionFactory],
     [TRANSACTION_TYPES_BASE.DAPP, ATOM_TRSFAC.DAppTransactionFactory],
     [TRANSACTION_TYPES_BASE.DAPP_PURCHASING, ATOM_TRSFAC.DAppPurchasingTransactionFactory],
     [TRANSACTION_TYPES_BASE.MARK, ATOM_TRSFAC.MarkTransactionFactory],

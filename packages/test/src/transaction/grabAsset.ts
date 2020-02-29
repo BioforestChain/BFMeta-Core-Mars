@@ -14,10 +14,12 @@ import {
   getRecipientWithSecondSecret,
   getRecipientWithoutSecondSecret,
   bfchainCore,
-  fullBfchainCore,
+  getFullBfchainCore,
   AccountModel,
   getGenesisAccount,
 } from "../include";
+
+const fullBfchainCore = getFullBfchainCore(57, 128);
 
 function getGiftAssetTransaction(
   sender: AccountModel,
@@ -42,7 +44,7 @@ function getGiftAssetTransaction(
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic
     applyBlockHeight: 10086, // 交易发起高度
-    numberOfEffectiveBlocks: 100,
+    effectiveBlockHeight: 10100,
     storage: {
       key: "assetType",
       value: "ZEK",
@@ -113,7 +115,7 @@ function getGrabAssetTransaction(
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic
     applyBlockHeight: 10086, // 交易发起高度
-    numberOfEffectiveBlocks: 100,
+    effectiveBlockHeight: 10100,
     storage: {
       key: "transactionSignature",
       value: giftAssetTrs.signature,
@@ -139,8 +141,8 @@ function getGrabAssetTransaction(
     transactionRangeType: giftAssetTrs.rangeType,
     transactionRange: giftAssetTrs.range,
     applyBlockHeight: giftAssetTrs.applyBlockHeight,
-    numberOfBeginUnfrozenBlocks: giftAsset.numberOfBeginUnfrozenBlocks,
-    numberOfEffectiveBlocks: 300,
+    beginUnfrozenBlockHeight: giftAsset.beginUnfrozenBlockHeight,
+    effectiveBlockHeight: 300,
     giftAsset,
   };
 

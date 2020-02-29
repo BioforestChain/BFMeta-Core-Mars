@@ -8,7 +8,10 @@ import {
 
 function getSignatureTransaction(sender: AccountModel) {
   const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
-  const publicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(sender.secret, "");
+  const publicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+    sender.secret,
+    "",
+  );
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.SIGNATURE, // 交易类型
@@ -26,7 +29,7 @@ function getSignatureTransaction(sender: AccountModel) {
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic
     applyBlockHeight: 10086, // 交易发起高度
-    numberOfEffectiveBlocks: 100,
+    effectiveBlockHeight: 10100,
   };
   let secondKeypair;
   if (sender.secondSecret) {

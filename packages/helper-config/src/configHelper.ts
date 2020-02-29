@@ -122,10 +122,10 @@ export class ConfigHelper {
   get issueAssetMinChainAsset() {
     return this.genesisBlock.remark.issueAssetMinChainAsset;
   }
-  /**发行子链最小持有的链资产数量 */
+  /**注册链最小持有的链资产数量 */
   @cacheGetter
-  get issueSubchainMinChainAsset() {
-    return this.genesisBlock.remark.issueSubchainMinChainAsset;
+  get registerChainMinChainAsset() {
+    return this.genesisBlock.remark.registerChainMinChainAsset;
   }
   /**链资产和数字资产的兑换比例 */
   @cacheGetter
@@ -156,11 +156,6 @@ export class ConfigHelper {
   @cacheGetter
   get rewardPercent() {
     return this.genesisBlock.remark.rewardPercent;
-  }
-  /**获取父链传世块 */
-  @cacheGetter
-  get parentGenesisBlock() {
-    return this.genesisBlock.remark.parentGenesisBlock;
   }
 }
 @Injectable("configMap")

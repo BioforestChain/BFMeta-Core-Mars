@@ -108,9 +108,8 @@ declare namespace BFChainCore {
     consessusBeforeSyncBlockDiff: number;
     maxDelegateTxsPerRound: number;
     issueAssetMinChainAsset: string;
-    issueSubchainMinChainAsset: string;
+    registerChainMinChainAsset: string;
     chainAssetAndDigitalAssetExchangeRate: number;
-    chainAssetAndSubchainAssetExchangeRate: number;
     chainAssetRewardWeight: number;
     numberOfTransactionRewardWeight: number;
     maxApplyAndConfirmedBlockHeightDiff: number;
@@ -122,7 +121,6 @@ declare namespace BFChainCore {
     rewardPercent: RewardPercentJSON;
     ports: PortsJSON;
     rewardPerBlock: RewardPerBlockJSON;
-    parentGenesisBlock?: BlockJSON<GenesisBlockRemarkJSON>;
     blockParticipation: string;
     participationTotalChainAsset: number;
     participationNumberOfTransaction: number;

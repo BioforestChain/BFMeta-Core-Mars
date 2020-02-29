@@ -1,15 +1,15 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
-import type { IssueSubchainTransaction } from "@bfchain/core-model";
+import type { RegisterChainTransaction } from "@bfchain/core-model";
 import { Injectable } from "@bfchain/util";
 
 @Injectable()
-export class IssueSubchainLogicVerifier extends TransactionLogicVerifier {
+export class RegisterChainLogicVerifier extends TransactionLogicVerifier {
   constructor() {
     super();
   }
 
   async verify(
-    transaction: IssueSubchainTransaction,
+    transaction: RegisterChainTransaction,
     currentBlockHeight: number,
     accountGetterHelper = this.accountGetterHelper,
     transactionGetterHelper = this.transactionGetterHelper,

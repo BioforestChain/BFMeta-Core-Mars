@@ -32,8 +32,8 @@ declare namespace BFChainCore {
     toMagic: string;
     /**交易的发起高度 */
     applyBlockHeight: number;
-    /**有效区块数量 */
-    numberOfEffectiveBlocks: number;
+    /**交易的有效区块高度 */
+    effectiveBlockHeight: number;
     /**交易POW噪点 */
     nonce?: number;
     /**交易的备注信息 */

@@ -266,7 +266,8 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
       });
     }
 
-    if (!baseHelper.isPositiveInteger(body.applyBlockHeight)) {
+    const applyBlockHeight = body.applyBlockHeight;
+    if (!baseHelper.isPositiveInteger(applyBlockHeight)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "applyBlockHeight",
         type: "positive integer",
@@ -274,27 +275,29 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
       });
     }
 
-    const numberOfEffectiveBlocks = body.numberOfEffectiveBlocks;
-    if (numberOfEffectiveBlocks === undefined) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "numberOfEffectiveBlocks",
-        ...TransactionBody_Exception_Detail,
-      });
-    }
-
-    if (!baseHelper.isPositiveInteger(numberOfEffectiveBlocks)) {
+    const effectiveBlockHeight = body.effectiveBlockHeight;
+    if (!baseHelper.isPositiveInteger(effectiveBlockHeight)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "numberOfEffectiveBlocks",
+        prop: "effectiveBlockHeight",
         type: "positive integer",
         ...TransactionBody_Exception_Detail,
       });
     }
 
+    if (effectiveBlockHeight < applyBlockHeight) {
+      throw new ArgumentIllegalException(PROP_SHOULD_GTE_FIELD, {
+        prop: "effectiveBlockHeight",
+        field: applyBlockHeight,
+        ...TransactionBody_Exception_Detail,
+      })
+    }
+
     const { maxApplyAndConfirmedBlockHeightDiff } = config;
-    if (numberOfEffectiveBlocks > maxApplyAndConfirmedBlockHeightDiff) {
+    const maxEffectiveBlockHeight = applyBlockHeight + maxApplyAndConfirmedBlockHeightDiff;
+    if (effectiveBlockHeight > maxEffectiveBlockHeight) {
       throw new ArgumentIllegalException(PROP_SHOULD_LTE_FIELD, {
-        prop: "numberOfEffectiveBlocks",
-        field: maxApplyAndConfirmedBlockHeightDiff,
+        prop: "effectiveBlockHeight",
+        field: maxEffectiveBlockHeight,
         ...TransactionBody_Exception_Detail,
       });
     }

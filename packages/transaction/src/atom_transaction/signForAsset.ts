@@ -198,19 +198,9 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
       });
     }
 
-    // if (signForAsset.numberOfBeginUnfrozenBlocks) {
-    //   if (!baseHelper.isPositiveInteger(signForAsset.numberOfBeginUnfrozenBlocks)) {
-    //     throw new ArgumentIllegalException(PROP_IS_INVALID, {
-    //       prop: "numberOfBeginUnfrozenBlocks",
-    //       type: "positive integer",
-    //       ...SignForAssetAsset_Exception_Detail,
-    //     });
-    //   }
-    // }
-
-    if (!baseHelper.isPositiveInteger(signForAsset.numberOfEffectiveBlocks)) {
+    if (!baseHelper.isPositiveInteger(signForAsset.effectiveBlockHeight)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "numberOfEffectiveBlocks",
+        prop: "effectiveBlockHeight",
         type: "positive integer",
         ...SignForAssetAsset_Exception_Detail,
       });

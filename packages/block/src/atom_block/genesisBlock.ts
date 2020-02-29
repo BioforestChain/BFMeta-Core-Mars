@@ -17,6 +17,7 @@ import {
   PROP_IS_INVALID,
   SHOULD_BE,
   PROP_SHOULD_GT_FIELD,
+  NOT_MATCH,
 } from "@bfchain/core-util-exception";
 import { Injectable, Inject, ModuleStroge } from "@bfchain/util";
 import { BNID_TYPE } from "@bfchain/core-transaction";
@@ -254,15 +255,15 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       });
     }
 
-    if (!remark.issueSubchainMinChainAsset) {
+    if (!remark.registerChainMinChainAsset) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "issueSubchainMinChainAsset",
+        prop: "registerChainMinChainAsset",
         ...GenesisBlockRemark_Exception_Detail,
       });
     }
-    if (!baseHelper.isValidAssetNumber(remark.issueSubchainMinChainAsset)) {
+    if (!baseHelper.isValidAssetNumber(remark.registerChainMinChainAsset)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "issueSubchainMinChainAsset",
+        prop: "registerChainMinChainAsset",
         type: "asset number",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -271,14 +272,6 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
     if (!baseHelper.isPositiveInteger(remark.chainAssetAndDigitalAssetExchangeRate)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "chainAssetAndDigitalAssetExchangeRate",
-        type: "positive integer",
-        ...GenesisBlockRemark_Exception_Detail,
-      });
-    }
-
-    if (!baseHelper.isPositiveInteger(remark.chainAssetAndSubchainAssetExchangeRate)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "chainAssetAndSubchainAssetExchangeRate",
         type: "positive integer",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -390,16 +383,15 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       });
     }
 
-    // FIXME: config 子链时 config 不对
-    // if (nextRoundDelegates.length !== this.config.blockPerRound) {
-    //   throw new ArgumentIllegalException(NOT_MATCH, {
-    //     to_compare_prop: "nextRoundDelegates.length",
-    //     be_compare_prop: "blockPerRound",
-    //     to_target: "genesisBlockRemark",
-    //     be_target: "config",
-    //     ...GenesisBlockRemark_Exception_Detail,
-    //   });
-    // }
+    if (remark.nextRoundDelegates.length !== config.blockPerRound) {
+      throw new ArgumentIllegalException(NOT_MATCH, {
+        to_compare_prop: "nextRoundDelegates.length",
+        be_compare_prop: "blockPerRound",
+        to_target: "genesisBlockRemark",
+        be_target: "config",
+        ...GenesisBlockRemark_Exception_Detail,
+      });
+    }
 
     if (remark.maxBeginBalance !== "0") {
       throw new ArgumentIllegalException(SHOULD_BE, {
@@ -556,26 +548,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
         ...GenesisBlockRemark_Exception_Detail,
       });
     }
-
-    if (remark.parentGenesisBlock) {
-      const parentGenesisBlock = remark.parentGenesisBlock;
-      let chainConfig = this.configMap.get(parentGenesisBlock.magic);
-      if (!chainConfig) {
-        chainConfig = new ConfigHelper(parentGenesisBlock, config.business);
-      }
-
-      const genesisBlock = this._blockCore.recombineBlock(parentGenesisBlock);
-      this._blockCore
-        .getBlockFactoryFromHeight<BFChainCore.Block<BFChainCore.GenesisBlockRemarkJSON>>(
-          parentGenesisBlock.height,
-        )
-        .verify(genesisBlock, chainConfig);
-    }
   }
-  @Inject("bfchain-core:BlockCore")
-  private _blockCore!: import("../").BlockCore;
-  // @Inject("___")
-  // private resolveBFChainCore!:()=>{}
 
   /**
    * 初始化 genesisBlock

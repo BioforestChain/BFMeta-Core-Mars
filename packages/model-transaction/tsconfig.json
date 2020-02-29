@@ -29,7 +29,6 @@
     "src/atom_transaction/acceptVote.transaction.ts",
     "src/atom_transaction/beExchangeAsset.transaction.ts",
     "src/atom_transaction/beExchangeSpecialAsset.transaction.ts",
-    "src/atom_transaction/custom.transaction.ts",
     "src/atom_transaction/dapp.transaction.ts",
     "src/atom_transaction/dappPurchasing.transaction.ts",
     "src/atom_transaction/delegate.transaction.ts",

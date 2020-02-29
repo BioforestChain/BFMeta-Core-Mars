@@ -1,9 +1,9 @@
 {
   "version": 1,
   "height": 1,
-  "blockSize": 16202,
+  "blockSize": 15996,
   "timestamp": 0,
-  "signature": "a436b847b926cb00347103d73e44c40429aae31d20da3e039f21fbf2671c898407a836eee0b14da043ce838d3bf33d20b9876e5a6e27d41a3b50e86a9fa56106",
+  "signature": "c4b2db3591b8bb0e96b3233b47498fac82b7067e3a6ea3e0393622bfb328c992c3b14f731d016b193f04db41dddee259674c33efc1264dcc9e9de49b9b59f00b",
   "generatorPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
   "numberOfTransactions": 41,
   "payloadHash": "5f0e21d4846bf5e5e9df5976863b331977e162764237d02dfa31ee4156583453",
@@ -37,7 +37,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "5f3009820a07b35c919b5e0bf23fad9f83bd8c7d47a27e74b9a41479f62bb0b32e1f9bf5fd1f964505461ceeaa7cc215fda8b41338de514c3b196abb9e7e4c0d",
         "remark": {},
         "asset": {
@@ -81,7 +81,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "e5537001f747175692e8fde8c0c788d9f657a26a183a2f4cb1038675fdc7df753cd3ef4de3b996c5b1d6872eb9278d31cd65ffd51b282751aa7765e009263007",
         "remark": {},
         "asset": {
@@ -121,7 +121,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "489bd00b214d8d607a405c439c07ff33e4b6733521de238154ec9f0ffab4980ed1a7a592a940f7c27c028647da416a7102ed2c99af992346dbd773821e118f06",
         "remark": {},
         "asset": {
@@ -158,7 +158,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "2a78e7a51fc5517202914854424877c954655a0d7260d6a15f052bba251403c515e0f453798298a04f5e0a30ff6e9a042931bcb035bfdb6767bdf34114348a04",
         "remark": {},
         "asset": {
@@ -195,7 +195,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "0784eaf881f50bbb3ec81b8494a0cc83142b75212a19b171099c64cdbc2910d14c427212bf9ea450af29fde20450cc804a689fc7445b2da480721cc29c563407",
         "remark": {},
         "asset": {},
@@ -230,7 +230,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "483c69ad30f35d2f393d9cfcded9a521b71863e8bceef674fbf85550de99a00715d1c0efb400fbc2059cdd5851a2558a651e16801de25558356362d49e3a9604",
         "remark": {},
         "asset": {
@@ -270,7 +270,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "81207b24b165ff81e4f1a536cbf03e55561fad073a3754f8a5045707f3e6c89f6f187bcbc576cbce030cfb37e07a444c3ae342b701bc516be22a234413bf7503",
         "remark": {},
         "asset": {
@@ -307,7 +307,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "269701f3fb92ca02d71290967ce934d527ef21926583b98d5c85cc437289dd7e1beb515be316d8617a9a5ec22605eb925ff9514667f83026f9056fded069cd0a",
         "remark": {},
         "asset": {
@@ -344,7 +344,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "a91ad02644bec548f8bd6354b33b9441611a62df649bdbb06cce62dadc83bc4acfa2c14ed2af69504e918151d48d03221dcf71f9b2584049f78ce69a2f9d1809",
         "remark": {},
         "asset": {},
@@ -379,7 +379,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "4c9653593fe63134368d9583fb5c76816d338b6ef1478f7ca966a906c06607253d5092764468126714adf6be5b9ab1f9000b3a93f9879ef4d7e2a6012b9d8803",
         "remark": {},
         "asset": {
@@ -419,7 +419,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "4fe708055134d000cd234fb26429bb98c279daa946cc52d8c14095e5491bb40c5036183a1cc03f569aeab7e7813df25f9e483838a50f96b3a950253c90aa3603",
         "remark": {},
         "asset": {
@@ -456,7 +456,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "6df19775d42038903530ad6b77c2aea6c807b38b89031b0d70444f53e6ba82f29935dc152a1b24eed02626ecac55b307958c32a439c68be1b90f45909ea89c09",
         "remark": {},
         "asset": {
@@ -493,7 +493,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "48b25b99fcc6dfb8480d4dc69a6d4b6b25a105050a705cb95b3e1ee4c51c6e77627555b37f29f83c466534e54fd8f4fe1bd57302ccd6159317beae3846d2a508",
         "remark": {},
         "asset": {},
@@ -528,7 +528,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "00f2b71c7bfdc9132b192d83ca7f25517e3f622edd2aa2f7a419ffcc3e0b3932ab6d6d539d51e9f24eb747f0118fefb89cce48234d0a1368843ec53794b8db0c",
         "remark": {},
         "asset": {
@@ -568,7 +568,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "919fd8feea831f531a8062947b0ba3d1e53b6a0727be72ce71769149bfc0e5fe8142b763a8686f1637419a7ed6a2435bc2e2da6e51628b16541be149181ba005",
         "remark": {},
         "asset": {
@@ -605,7 +605,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "1e61f202adb20ed738d526cb299bf8294d243921c349c39f0721c96628578e8ce383aecdd061905e2c8c18697f780a8376d0db7a735d8f2d2833d59a1ddb6f0a",
         "remark": {},
         "asset": {
@@ -642,7 +642,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "8f5eb094329aec73c0c596edbc8deb0cd6acb0b982f950423a7dcd76be341144219cb96f6d4563d3c553965fda2603ca26f312e3d228c3e459b6dab0de75bd04",
         "remark": {},
         "asset": {},
@@ -677,7 +677,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "da6bd8219da3be1e081e74bcaf8e4b3d9536fc0b30852a2165d81167f5b66ad8608cf5d8506ce89914d91024fe12dd34efedb8e4a04f78b5e93147f50792c000",
         "remark": {},
         "asset": {
@@ -717,7 +717,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "a6be7bcae7c362350e142247fdfb9d87a203ac4f92be9a8ac12590f01b987cbaac9fbb81ca5e3c54e53226692c62a1b78f74e2ea9c8cc5a3e93f8140da283f03",
         "remark": {},
         "asset": {
@@ -754,7 +754,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "c7008ddd261dc702376098018b72230b3bbae6008a7f6bdcbc11dd323ab72f0a2c72766e8edffca5ea4f1d8f673b44c9663d99f066722624c9fb6d2e0e31bf00",
         "remark": {},
         "asset": {
@@ -791,7 +791,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "394f7ff44cadd3302c83f6fc381d339cf0eafc4cfc5fcb896c8a1b261a3f1419d4b889eeb2b06103e4c037d31456fa2986eafc055c1cc0737ede87b68179e205",
         "remark": {},
         "asset": {},
@@ -826,7 +826,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "c05d09e75644081d42ddb2e6d4edcbb4ac86aa44d8b228778965e86865c5b5aa140eadd39ceda3e74e57790dd657612466dda4f76b866112c8760b8bbc25400a",
         "remark": {},
         "asset": {
@@ -866,7 +866,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "6d2cbbe9b213909b35276f41ede7ef1562ec7dc892e780d054c7995aa8fe2e93c4279c35bc6564677ba59286d6a95872476e72b1a41ef871ba2a76313cd7d20d",
         "remark": {},
         "asset": {
@@ -903,7 +903,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "73ffff80d5b2ad0aebe35f872ea94aaccd236c95cea69e10b67f72201d596d05f816baf0075a941a6034849235b2a62e5792852a377ddf1556249b69c7161101",
         "remark": {},
         "asset": {
@@ -940,7 +940,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "f20df83eae0047cb61a5a59894858a76ee05b2e6a0a308f6c3b9f2764e503e24a6885424e761d32ee3097499eb570eec81366b1dbba0e3ed3f8c09933b2c9009",
         "remark": {},
         "asset": {},
@@ -975,7 +975,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "c39163918cfabaef0b9869fc0974ea46e2a5404faeb9c1ae088a5d164fb6667f63651d3928045ac9288aa28c477305624b6aa1691e6651c3ac5fb43dc6423904",
         "remark": {},
         "asset": {
@@ -1015,7 +1015,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "84e32404192373d60a7867a8a396f15eb656736b58a1e91c689e3d40bca330a7b1e8ccef0ddfc9a105720dbe590b977c540dfd7a6238c190c2f1922f7d28710d",
         "remark": {},
         "asset": {
@@ -1052,7 +1052,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "0bbcec204d9a22360a5726bdc28ff57a58059eb676873c76ed6871f818ae85119a9cfba58241667c6f0b80fcd14dbaca825a2032dbaa7716332c9184280f340c",
         "remark": {},
         "asset": {
@@ -1089,7 +1089,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "6096ddd3f4e331060d90aae8e43e1e42f0674feca0a38de0ee0e598ca27d69ca8711724db3468eddd65ffdbb543a0b8dee2e3c34c9eca9e92f75eebcb9fcf800",
         "remark": {},
         "asset": {},
@@ -1124,7 +1124,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "2547889b9f6ffbdea6d19c0dcbcc13f35435235c8ee6248fffd089a73134e9e1f2eeff10e2d4f35c801117328484bf7ab9d5894438e650e268b66651b741da0d",
         "remark": {},
         "asset": {
@@ -1164,7 +1164,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "3ef5a5e684cd73969869bf997f9202f0b9a0f350a2cd9328474d3c4fee81bf3e4c3d81bb2d51ec7fa42efabe7d5804868a1b5069f604286d1bbf12f60d42d40b",
         "remark": {},
         "asset": {
@@ -1201,7 +1201,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "81bf4d9ba41ecd1623351962ec90d9111735683518f9e7c4ceb3f6ec962340fda43c5d704e51104342551e3171ea6a7b20ec8f12205e7158ec94a4ec67b4230e",
         "remark": {},
         "asset": {
@@ -1238,7 +1238,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "0dba2dc35aebf84a21cc8b0cb3d129694284dd162004044de7c18ae4bda5b63af2f5fab306a1d7dd7d6577e03b6b57f8711275fe47ccef011423485d9f5ee607",
         "remark": {},
         "asset": {},
@@ -1273,7 +1273,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "ca4bcbda9246dbc043878e855819dbabe534d3bfc9774cf00ad46d96908728b8818987671cadfef13e4e3632fc12cf8e9b6428ffbd3d63f974e6ef9a2c15e403",
         "remark": {},
         "asset": {
@@ -1313,7 +1313,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "456c6e74cc5a8cb807792f3cadbee2841ed5f6b95012789b4d5ec32927739ddc9ac00ce8b6674199daad8c967bd187c80b3ce7c5d82b9bc718a70eab1a9bf202",
         "remark": {},
         "asset": {
@@ -1350,7 +1350,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "57f270673b627567d97ce8d8dcdba2da77c9de56aa24012863302f3048b981c3f1818f8a2e06dd004b403f637176cf4dc1b8b3e6d05530ee14b768ea12085900",
         "remark": {},
         "asset": {
@@ -1387,7 +1387,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "b43333bddb1b4af276ac1b1d6bbb5af1156366bfd9320186ba3305a6815faa0365f3a7db9ee351babbc08f2033f7cde431e20e63f6d3103fde575cfe913e7909",
         "remark": {},
         "asset": {},
@@ -1422,7 +1422,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "578607d6a1d20944132342085af72efcbc7b9607f9c142c1f348e5fdb753337bf75443f39fda7d06f05d48decbf4fbd9fcc5a2f21cd4030afd8961b3519a8408",
         "remark": {},
         "asset": {
@@ -1462,7 +1462,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "382527a60ce4f29eddcf263ecf6f56867dc9655e5a277d3b608d8547fd07d71b175153f21f98b7a303b7d22df01b3a8ec50a337d59f3006b6ff938352288260f",
         "remark": {},
         "asset": {
@@ -1499,7 +1499,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "5db74ef08491b0b8f9374c92f36da8eeb82d51889e6b68b087e8fb5ef5ed1da3f3bde4ce60f8b8d86d8344272c954e8912cdb81d6fc15556aa4586092e3cb90c",
         "remark": {},
         "asset": {
@@ -1536,7 +1536,7 @@
         "fromMagic": "5F720C81E82CFC99",
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "215aea11c25015d2c5b5df315dc5032f7668281d3b239a5d68c9b8d4ca9a321d213eb9a691183e0b96e63c82ef70805f4221ae6b0f6bef063e351e0574a0f707",
         "remark": {},
         "asset": {},
@@ -1545,52 +1545,6 @@
     }
   ],
   "remark": {
-    "newDelegates": [],
-    "maxBeginBalance": "0",
-    "maxTxCount": 0,
-    "nextRoundDelegates": [
-      {
-        "address": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
-        "equity": "0"
-      },
-      {
-        "address": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
-        "equity": "0"
-      },
-      {
-        "address": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
-        "equity": "0"
-      },
-      {
-        "address": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
-        "equity": "0"
-      },
-      {
-        "address": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
-        "equity": "0"
-      },
-      {
-        "address": "cGnmjV6fk5kFbTWztDtZhyr1a4Van4NPvR",
-        "equity": "0"
-      },
-      {
-        "address": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
-        "equity": "0"
-      },
-      {
-        "address": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
-        "equity": "0"
-      },
-      {
-        "address": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
-        "equity": "0"
-      },
-      {
-        "address": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
-        "equity": "0"
-      }
-    ],
-    "rate": "0",
     "assetType": "BFT",
     "chainName": "bfchain",
     "magic": "5F720C81E82CFC99",
@@ -1609,9 +1563,8 @@
     "consessusBeforeSyncBlockDiff": 7,
     "maxDelegateTxsPerRound": 10,
     "issueAssetMinChainAsset": "50000000000000",
-    "issueSubchainMinChainAsset": "50000000000000",
+    "registerChainMinChainAsset": "50000000000000",
     "chainAssetAndDigitalAssetExchangeRate": 1000,
-    "chainAssetAndSubchainAssetExchangeRate": 1000,
     "chainAssetRewardWeight": 10000,
     "numberOfTransactionRewardWeight": 1,
     "maxApplyAndConfirmedBlockHeightDiff": 259200,
@@ -1705,7 +1658,33 @@
         "denominator": 1
       }
     },
-    "powOfWorkExemptionBlocks": 5
+    "powOfWorkExemptionBlocks": 5,
+    "newDelegates": [],
+    "maxBeginBalance": "0",
+    "maxTxCount": 0,
+    "nextRoundDelegates": [
+      {
+        "address": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
+        "equity": "0"
+      },
+      {
+        "address": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
+        "equity": "0"
+      },
+      {
+        "address": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
+        "equity": "0"
+      },
+      {
+        "address": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
+        "equity": "0"
+      },
+      {
+        "address": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
+        "equity": "0"
+      }
+    ],
+    "rate": "0"
   },
   "statisticInfo": {
     "totalFee": "1078",

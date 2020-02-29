@@ -29,11 +29,9 @@ import {
   LOCATION_NAME_ALREADY_FROZEN,
   ONLY_TOP_LEVEL_LOCATION_NAME_CAN_EXCHANGE,
   POSSESS_ASSET_EXCEPT_CHAIN_ASSET,
-  TOO_LARGE,
   CAN_NOT_DELETE_LOCATION_NAME,
   SET_LOCATION_NAME_MANAGER_FIELD,
   SET_LOCATION_NAME_RECORD_VALUE_FIELD,
-  SUBCHAIN_CAN_NOT_ISSUE_SUBCHAIN,
   UNFROZEN_TIME_USE_UP,
 } from "@bfchain/core-util-exception";
 import {
@@ -717,31 +715,22 @@ export class EventLogicVerifier {
       next();
     });
 
-    // 发行子链
-    event.on("issueSubchain", async ({ applyInfo }, next) => {
-      const { address, chainName, assetType, magic, maxTPSPerBlock } = applyInfo;
+    // 注册链
+    event.on("registerChain", async ({ applyInfo }, next) => {
+      const { address, genesisBlock } = applyInfo;
 
       // 保证账户上足够的本链资产，避免 py 操作
       const {
         magic: chainMagic,
         assetType: chainAssetType,
-        issueSubchainMinChainAsset,
-        parentGenesisBlock,
+        registerChainMinChainAsset,
       } = this.configHelper;
       const remainBalance =
         accountsAssets[address][chainMagic][chainAssetType].assetNumber - BigInt(transaction.fee);
-      if (BigInt(issueSubchainMinChainAsset) > remainBalance) {
+      if (BigInt(registerChainMinChainAsset) > remainBalance) {
         throw new ConsensusException(ASSET_NOT_ENOUGH, {
-          reason: `No enough asset, Min account asset ${issueSubchainMinChainAsset}, remain Assets: ${remainBalance}`,
+          reason: `No enough asset, Min account asset ${registerChainMinChainAsset}, remain Assets: ${remainBalance}`,
           errorId: NewTransactionRefuseReason.CHAIN_ASSET_NOT_ENOUGH,
-          ...Function_Exception_Detail,
-        });
-      }
-
-      // 子链不能再次发行子链
-      if (parentGenesisBlock) {
-        throw new ConsensusException(SUBCHAIN_CAN_NOT_ISSUE_SUBCHAIN, {
-          magic: parentGenesisBlock.remark.magic,
           ...Function_Exception_Detail,
         });
       }
@@ -756,7 +745,7 @@ export class EventLogicVerifier {
       if (memDApp) {
         throw new ConsensusException(ACCOUNT_CAN_NOT_BE_FROZEN, {
           address,
-          reason: "DApp id possessor can not initiate a subchain transaction",
+          reason: "DApp id possessor can not initiate a register chain transaction",
           errorId: NewTransactionRefuseReason.DAPP_POSSESSOR_CAN_NOT_ISSUE_ASSET,
           ...Function_Exception_Detail,
         });
@@ -774,74 +763,19 @@ export class EventLogicVerifier {
       if (memLocationName) {
         throw new ConsensusException(ACCOUNT_CAN_NOT_BE_FROZEN, {
           address,
-          reason: "Location name possessor or manager can not initiate a subchain transaction",
+          reason:
+            "Location name possessor or manager can not initiate a register chain transaction",
           errorId: NewTransactionRefuseReason.LNS_POSSESSOR_OR_MANAGER_CAN_NOT_ISSUE_ASSET,
           ...Function_Exception_Detail,
         });
       }
 
-      // 验证数字资产的最大发行数量
-      // 子链的每个块最大交易量不能大于已知子链每个块最大交易量的 2 倍
-      let chainMaxTPSPerBlock = await accountGetterHelper.getChainMaxTPSPerBlock();
-      if (chainMaxTPSPerBlock < this.configHelper.maxTPSPerBlock) {
-        chainMaxTPSPerBlock = this.configHelper.maxTPSPerBlock;
-      }
-      if (maxTPSPerBlock > chainMaxTPSPerBlock * 2) {
-        throw new ConsensusException(TOO_LARGE, {
-          prop: "maxTPSPerBlock",
-          reason: "Subchain max transaction per block is too large",
-          errorId: NewTransactionRefuseReason.SUBCHAIN_MAXTPSPERBLOCK_TOO_BIG,
-          ...Function_Exception_Detail,
-        });
-      }
-
-      // 子链名禁止使用
-      const chainNameFobidden = await accountGetterHelper.isCurrencyForbidden(chainName);
-      if (chainNameFobidden) {
-        throw new ConsensusException(FORBIDDEN, {
-          prop: `Subchain name ${chainName}`,
-          target: "blockChain",
-          ...Function_Exception_Detail,
-        });
-      }
-
-      // 子链名已经存在
-      const chainNameExist = await accountGetterHelper.getCurrency(chainName);
-      if (chainNameExist) {
+      // 链上是否已经存在这个链的创世块
+      const magic = genesisBlock.remark.magic;
+      const memchain = await accountGetterHelper.getChain(magic);
+      if (memchain) {
         throw new ConsensusException(ALREADY_EXIST, {
-          prop: `Subchain name ${chainName}`,
-          target: "blockChain",
-          errorId: NewTransactionRefuseReason.CHAINNAME_ALREADY_EXIST,
-          ...Function_Exception_Detail,
-        });
-      }
-
-      // 子链资产名禁止使用
-      const assetTypeForbidden = await accountGetterHelper.isCurrencyForbidden(assetType);
-      if (assetTypeForbidden) {
-        throw new ConsensusException(FORBIDDEN, {
-          prop: `Subchain assetType ${assetType}`,
-          target: "blockChain",
-          ...Function_Exception_Detail,
-        });
-      }
-
-      // 子链资产名是否已经存在
-      const assetTypeExist = await accountGetterHelper.getCurrency(assetType);
-      if (assetTypeExist) {
-        throw new ConsensusException(ALREADY_EXIST, {
-          prop: `Subchain assetType ${assetType}`,
-          target: "blockChain",
-          errorId: NewTransactionRefuseReason.ASSETTYPE_ALREADY_EXIST,
-          ...Function_Exception_Detail,
-        });
-      }
-
-      // 链上是否已经存在这个子链
-      const memSubchain = await accountGetterHelper.getSubchain(magic);
-      if (memSubchain) {
-        throw new ConsensusException(ALREADY_EXIST, {
-          prop: `Subchain with magic ${magic}}`,
+          prop: `Chain with magic ${magic}}`,
           target: "blockChain",
           ...Function_Exception_Detail,
         });

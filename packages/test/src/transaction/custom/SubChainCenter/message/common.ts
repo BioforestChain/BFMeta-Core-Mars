@@ -36,4 +36,4 @@ export enum ERRORCODE {
 
   CODE_WORKER_RUNTIME_ERROR,
 }
-export const CUSTOM_ERRORCODE_OFFSET = 10000; //  子链自定义错误编码偏移
+export const CUSTOM_ERRORCODE_OFFSET = 10000; //  拓展链自定义错误编码偏移

@@ -8,7 +8,7 @@ export * from "@bfchain/core-transaction-logic-verifier";
 export * from "@bfchain/core-block";
 export * from "@bfchain/core-block-logic-verifier";
 export * from "@bfchain/core-block-ticker";
-export * from "@bfchain/core-transaction-subchain";
+export * from "@bfchain/core-transaction-complex";
 
 export * from "@bfchain/core-channel";
 
@@ -115,7 +115,7 @@ export function BFChainCoreFactory(
       Resolve(plugin, moduleMap);
     });
   }
-  /// 这个是因为子链交易那边需要生产子链的 core 包，比尿还骚
+  /// 这个是因为注册链交易那边需要生产注册链的 core 包，比尿还骚
   moduleMap.set("BFChainCoreFactory", BFChainCoreFactory);
   return Resolve(BFChainCore, moduleMap);
 }

@@ -57,9 +57,6 @@ export class ToExchangeSpecialAssetModel extends Message<ToExchangeSpecialAssetM
   /**交换方向 */
   @Field.d(ToExchangeSpecialAssetModel.INC++, EXCHANGE_DIRECTION)
   exchangeDirection!: EXCHANGE_DIRECTION;
-  // /**可以开始进行交换的区块高度 */
-  // @Field.d(ToExchangeSpecialAssetModel.INC++, "uint32", "optional")
-  // numberOfBeginUnfrozenBlocks?: number;
 
   @cacheGetter
   get to() {
@@ -96,7 +93,6 @@ export class ToExchangeSpecialAssetModel extends Message<ToExchangeSpecialAssetM
       exchangeNumber: this.exchangeNumber,
       exchangeAssetType: this.exchangeAssetType,
       exchangeDirection: this.exchangeDirection,
-      // numberOfBeginUnfrozenBlocks: this.numberOfBeginUnfrozenBlocks,
     };
   }
   static fromObject<T extends Message>(

@@ -60,9 +60,9 @@ export class GrabAssetModel extends Message<GrabAssetModel>
   @Field.d(GrabAssetModel.INC++, "uint32")
   applyBlockHeight!: number;
   @Field.d(GrabAssetModel.INC++, "uint32", "optional")
-  numberOfBeginUnfrozenBlocks?: number;
+  beginUnfrozenBlockHeight?: number;
   @Field.d(GrabAssetModel.INC++, "uint32")
-  numberOfEffectiveBlocks!: number;
+  effectiveBlockHeight!: number;
 
   /**红包的配置信息 */
   @Field.d(GrabAssetModel.INC++, GiftAssetModel)
@@ -74,12 +74,12 @@ export class GrabAssetModel extends Message<GrabAssetModel>
       transactionRangeType: this.transactionRangeType,
       transactionRange: this.transactionRange,
       applyBlockHeight: this.applyBlockHeight,
-      numberOfEffectiveBlocks: this.numberOfEffectiveBlocks,
+      effectiveBlockHeight: this.effectiveBlockHeight,
       amount: this.amount,
       giftAsset: this.giftAsset.toJSON(),
     };
-    this.numberOfBeginUnfrozenBlocks &&
-      (res.numberOfBeginUnfrozenBlocks = this.numberOfBeginUnfrozenBlocks);
+    this.beginUnfrozenBlockHeight &&
+      (res.beginUnfrozenBlockHeight = this.beginUnfrozenBlockHeight);
     this.ciphertextSignatureBuffer && (res.ciphertextSignature = this.ciphertextSignature.toJSON());
 
     return res;

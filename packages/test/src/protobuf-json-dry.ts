@@ -65,7 +65,7 @@ const trs = bfchainCore.transaction.createTransaction(
     version: 1,
     type: bfchainCore.transactionHelper.TRANSFER_ASSET,
     applyBlockHeight: 2,
-    numberOfEffectiveBlocks: 100,
+    effectiveBlockHeight: 10100,
     timestamp: 500,
     senderId: bfchainCore.accountBaseHelper.getAddressFromPublicKey(
       bfchainCore.accountBaseHelper.createSecretKeypair("1").publicKey,

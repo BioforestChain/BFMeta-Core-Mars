@@ -46,7 +46,7 @@ declare namespace BFChainCore {
     fromMagic: string;
     toMagic: string;
     applyBlockHeight: number;
-    numberOfEffectiveBlocks: number;
+    effectiveBlockHeight: number;
     signature: string;
     signSignature?: string;
     remark: { [key: string]: string };
@@ -58,153 +58,30 @@ declare namespace BFChainCore {
   }
   //#endregion
 
-  //#region Atom Transaction
-
-  type AcceptVoteTransactionJSON = TransactionMixJSON<
-    AcceptVoteAssetJSON,
-    { hasRecipientId: false }
-  >;
-  type BeExchangeAssetTransactionJSON = TransactionMixJSON<
-    BeExchangeAssetAssetJSON,
-    { hasRecipientId: true }
-  >;
-  type BeExchangeSpecialAssetTransactionJSON = TransactionMixJSON<
-    BeExchangeSpecialAssetAssetJSON,
-    { hasRecipientId: true }
-  >;
-  type CustomTransactionJSON = TransactionJSON<CustomAssetJSON>;
-  type DAppPurchasingTransactionJSON = TransactionMixJSON<
-    DAppPurchasingAssetJSON,
-    { hasRecipientId: true }
-  >;
-  type DAppTransactionJSON = TransactionMixJSON<DAppAssetJSON, { hasRecipientId: false }>;
-  type DelegateTransactionJSON = TransactionMixJSON<DelegateAssetJSON, { hasRecipientId: false }>;
-  type DestoryAssetTransactionJSON = TransactionMixJSON<
-    DestoryAssetAssetJSON,
-    { hasRecipientId: false }
-  >;
-  type EmigrateAssetTransactionJSON = TransactionMixJSON<
-    EmigrateAssetAssetJSON,
-    { hasRecipientId: false }
-  >;
-  type GiftAssetTransactionJSON = TransactionMixJSON<GiftAssetAssetJSON, { hasRecipientId: false }>;
-  type GrabAssetTransactionJSON = TransactionMixJSON<GrabAssetAssetJSON, { hasRecipientId: true }>;
-  type ImmigrateAssetTransactionJSON = TransactionMixJSON<
-    ImmigrateAssetAssetJSON,
-    { hasRecipientId: false }
-  >;
-  type IssueAssetTransactionJSON = TransactionMixJSON<
-    IssueAssetAssetJSON,
-    { hasRecipientId: true }
-  >;
-  type LocationNameTransactionJSON = TransactionMixJSON<
-    LocationNameAssetJSON,
-    { hasRecipientId: false }
-  >;
-  type MarkTransactionJSON = TransactionMixJSON<MarkAssetJSON, { hasRecipientId: true }>;
-  type RejectVoteTransactionJSON = TransactionMixJSON<
-    RejectVoteAssetJSON,
-    { hasRecipientId: false }
-  >;
-  type SetLnsManagerTransactionJSON = TransactionMixJSON<
-    SetLnsManagerAssetJSON,
-    { hasRecipientId: true }
-  >;
-  type SetLnsRecordValueTransactionJSON = TransactionMixJSON<
-    SetLnsRecordValueAssetJSON,
-    { hasRecipientId: false }
-  >;
-  type SignatureTransactionJSON = TransactionMixJSON<SignatureAssetJSON, { hasRecipientId: false }>;
-  type SignForAssetTransactionJSON = TransactionMixJSON<
-    SignForAssetAssetJSON,
-    { hasRecipientId: true }
-  >;
-  type ToExchangeAssetTransactionJSON = TransactionMixJSON<
-    ToExchangeAssetAssetJSON,
-    { hasRecipientId: false }
-  >;
-  type ToExchangeSpecialAssetTransactionJSON = TransactionMixJSON<
-    ToExchangeSpecialAssetAssetJSON,
-    { hasRecipientId: false }
-  >;
-  type TransferAssetTransactionJSON = TransactionMixJSON<
-    TransferAssetAssetJSON,
-    { hasRecipientId: true }
-  >;
-  type TrustAssetTransactionJSON = TransactionMixJSON<
-    TrustAssetAssetJSON,
-    { hasRecipientId: true }
-  >;
-  type UsernameTransactionJSON = TransactionMixJSON<UsernameAssetJSON, { hasRecipientId: false }>;
-  type VoteTransactionJSON = TransactionMixJSON<VoteAssetJSON, { hasRecipientId: true }>;
-  //#endregion
-
   //#region Transaction Asset
-
+  interface UsernameJSON {
+    alias: string;
+    publicKey: string;
+  }
+  interface UsernameAssetJSON {
+    username: UsernameJSON;
+  }
+  interface DelegateJSON {
+    username: string;
+    publicKey: string;
+  }
+  interface DelegateAssetJSON {
+    delegate: DelegateJSON;
+  }
   interface AcceptVoteAssetJSON {}
-
-  interface ToExchangeAssetJSON {
-    cipherPublicKeys: string[];
-    toExchangeSource: string;
-    beExchangeSource: string;
-    toExchangeChainName: string;
-    beExchangeChainName: string;
-    toExchangeAsset: string;
-    beExchangeAsset: string;
-    toExchangeNumber: string;
-    exchangeRate: BFChainCore.RateJSON<string>;
-    // numberOfBeginUnfrozenBlocks?: number;
+  interface RejectVoteAssetJSON {}
+  interface VoteJSON {
+    equity: string;
   }
-  interface ToExchangeAssetAssetJSON {
-    toExchangeAsset: ToExchangeAssetJSON;
+  interface VoteAssetJSON {
+    vote: VoteJSON;
   }
 
-  interface BeExchangeAssetJSON {
-    transactionSignature: string;
-    ciphertextSignature?: AccountSignatureJSON;
-    applyBlockHeight: number;
-    // numberOfBeginUnfrozenBlocks?: number;
-    numberOfEffectiveBlocks: number;
-    transactionRangeType: BFChainCore.RANGE_TYPE;
-    transactionRange: string[];
-    toExchangeNumber: string;
-    beExchangeNumber: string;
-    exchangeAsset: ToExchangeAssetJSON;
-  }
-  interface BeExchangeAssetAssetJSON {
-    beExchangeAsset: BeExchangeAssetJSON;
-  }
-
-  interface ToExchangeSpecialAssetJSON {
-    cipherPublicKeys: string[];
-    toExchangeSource: string;
-    beExchangeSource: string;
-    toExchangeChainName: string;
-    beExchangeChainName: string;
-    toExchangeAsset: string;
-    beExchangeAsset: string;
-    exchangeNumber: string;
-    // numberOfBeginUnfrozenBlocks?: number;
-    exchangeAssetType: BFChainCore.SPECIAL_ASSET_TYPE;
-    exchangeDirection: BFChainCore.EXCHANGE_DIRECTION;
-  }
-  interface ToExchangeSpecialAssetAssetJSON {
-    toExchangeSpecialAsset: ToExchangeSpecialAssetJSON;
-  }
-
-  interface BeExchangeSpecialAssetJSON {
-    transactionSignature: string;
-    ciphertextSignature?: AccountSignatureJSON;
-    applyBlockHeight: number;
-    // numberOfBeginUnfrozenBlocks?: number;
-    numberOfEffectiveBlocks: number;
-    transactionRangeType: BFChainCore.RANGE_TYPE;
-    transactionRange: string[];
-    exchangeSpecialAsset: ToExchangeSpecialAssetJSON;
-  }
-  interface BeExchangeSpecialAssetAssetJSON {
-    beExchangeSpecialAsset: BeExchangeSpecialAssetJSON;
-  }
   interface DAppPurchaseAssetJSON {
     sourceChainName: string;
     sourceChainMagic: string;
@@ -221,7 +98,6 @@ declare namespace BFChainCore {
   interface DAppAssetJSON {
     dapp: DAppJSON;
   }
-
   interface DAppPurchasingJSON {
     dappPossessor: string;
     dappAsset: DAppJSON;
@@ -229,22 +105,22 @@ declare namespace BFChainCore {
   interface DAppPurchasingAssetJSON {
     dappPurchasing: DAppPurchasingJSON;
   }
-  interface DelegateJSON {
-    username: string;
-    publicKey: string;
+
+  interface MarkJSON {
+    markPossessor: string;
+    content: string;
+    action: string;
+    dapp: DAppJSON;
   }
-  interface DelegateAssetJSON {
-    delegate: DelegateJSON;
+  interface MarkAssetJSON {
+    mark: MarkJSON;
   }
 
-  interface DestoryAssetJSON {
-    sourceChainName: string;
-    sourceChainMagic: string;
-    assetType: string;
-    amount: string;
+  interface SignatureJSON {
+    publicKey: string;
   }
-  interface DestoryAssetAssetJSON {
-    destoryAsset: DestoryAssetJSON;
+  interface SignatureAssetJSON {
+    signature: SignatureJSON;
   }
 
   interface IssueAssetJSON {
@@ -257,60 +133,6 @@ declare namespace BFChainCore {
   interface IssueAssetAssetJSON {
     issueAsset: IssueAssetJSON;
   }
-
-  interface LocationNameJSON {
-    name: string;
-    sourceChainName: string;
-    sourceChainMagic: string;
-    operationType: BFChainCore.LOCATION_NAME_OPERATION_TYPE;
-  }
-  interface LocationNameAssetJSON {
-    locationName: LocationNameJSON;
-  }
-
-  interface LocationNameRecordJSON {
-    recordType: BFChainCore.RECORD_TYPE;
-    recordValue: string;
-  }
-  interface MarkJSON {
-    markPossessor: string;
-    content: string;
-    action: string;
-    dapp: DAppJSON;
-  }
-  interface MarkAssetJSON {
-    mark: MarkJSON;
-  }
-  interface RejectVoteAssetJSON {}
-
-  interface SetLnsManagerJSON {
-    name: string;
-    sourceChainName: string;
-    sourceChainMagic: string;
-    manager: string;
-  }
-  interface SetLnsManagerAssetJSON {
-    lnsManager: SetLnsManagerJSON;
-  }
-  interface SetLnsRecordValueJSON {
-    name: string;
-    sourceChainName: string;
-    sourceChainMagic: string;
-    operationType: BFChainCore.RECORD_OPERATION_TYPE;
-    addRecord?: LocationNameRecordJSON;
-    deleteRecord?: LocationNameRecordJSON;
-  }
-  interface SetLnsRecordValueAssetJSON {
-    lnsRecordValue: SetLnsRecordValueJSON;
-  }
-
-  interface SignatureJSON {
-    publicKey: string;
-  }
-  interface SignatureAssetJSON {
-    signature: SignatureJSON;
-  }
-
   interface TransferAssetJSON {
     sourceChainName: string;
     sourceChainMagic: string;
@@ -320,19 +142,32 @@ declare namespace BFChainCore {
   interface TransferAssetAssetJSON {
     transferAsset: TransferAssetJSON;
   }
-  interface UsernameJSON {
-    alias: string;
-    publicKey: string;
+  interface DestoryAssetJSON {
+    sourceChainName: string;
+    sourceChainMagic: string;
+    assetType: string;
+    amount: string;
   }
-  interface UsernameAssetJSON {
-    username: UsernameJSON;
+  interface DestoryAssetAssetJSON {
+    destoryAsset: DestoryAssetJSON;
+  }
+  interface EmigrateAssetJSON {
+    genesisDelegateSignature: AccountSignatureJSON;
+    sourceChainName: string;
+    sourceChainMagic: string;
+    assetType: string;
+    amount: string;
+  }
+  interface EmigrateAssetAssetJSON {
+    emigrateAsset: EmigrateAssetJSON;
   }
 
-  interface VoteJSON {
-    equity: string;
+  interface ImmigrateAssetJSON {
+    genesisDelegateSignature: AccountSignatureJSON;
+    emigrateAssetTransaction: EmigrateAssetTransactionJSON;
   }
-  interface VoteAssetJSON {
-    vote: VoteJSON;
+  interface ImmigrateAssetAssetJSON {
+    immigrateAsset: ImmigrateAssetJSON;
   }
   interface GiftAssetJSON {
     cipherPublicKeys: string[];
@@ -342,7 +177,7 @@ declare namespace BFChainCore {
     amount: string;
     totalGrabableTimes: number;
     // unitReserveFee: string;
-    numberOfBeginUnfrozenBlocks?: number;
+    beginUnfrozenBlockHeight?: number;
     giftDistributionRule: BFChainCore.GIFT_DISTRIBUTION_RULE;
   }
   interface GiftAssetAssetJSON {
@@ -365,8 +200,8 @@ declare namespace BFChainCore {
     transactionRange: string[];
 
     applyBlockHeight: number;
-    numberOfBeginUnfrozenBlocks?: number;
-    numberOfEffectiveBlocks: number;
+    beginUnfrozenBlockHeight?: number;
+    effectiveBlockHeight: number;
 
     /**礼物配置 */
     giftAsset: GiftAssetJSON;
@@ -375,22 +210,9 @@ declare namespace BFChainCore {
   interface GrabAssetAssetJSON {
     grabAsset: GrabAssetJSON;
   }
-  interface FeeRateJSON {
-    senderPaidFeeRate: BFChainCore.FractionJSON;
-    recipientPaidFeeRate: BFChainCore.FractionJSON;
-  }
-  interface CustomJSON {
-    type: string;
-    data: string;
-  }
-  interface CustomAssetJSON {
-    custom: CustomJSON;
-  }
-
   interface TrustAssetJSON {
     trustees: string[];
     numberOfSignFor: number;
-    // numberOfBeginUnfrozenBlocks?: number;
     sourceChainName: string;
     sourceChainMagic: string;
     assetType: string;
@@ -412,31 +234,189 @@ declare namespace BFChainCore {
     trustRecipientId: string;
     trustNumberOfSignFor: number;
     applyBlockHeight: number;
-    // numberOfBeginUnfrozenBlocks?: number;
-    numberOfEffectiveBlocks: number;
+    effectiveBlockHeight: number;
     /**委托信息 */
     trustAsset: TrustAssetJSON;
   }
   interface SignForAssetAssetJSON {
     signForAsset: SignForAssetJSON;
   }
-  interface EmigrateAssetJSON {
-    genesisDelegateSignature: AccountSignatureJSON;
-    sourceChainName: string;
-    sourceChainMagic: string;
-    assetType: string;
-    amount: string;
+  interface FeeRateJSON {
+    senderPaidFeeRate: BFChainCore.FractionJSON;
+    recipientPaidFeeRate: BFChainCore.FractionJSON;
   }
-  interface EmigrateAssetAssetJSON {
-    emigrateAsset: EmigrateAssetJSON;
+  interface ToExchangeAssetJSON {
+    cipherPublicKeys: string[];
+    toExchangeSource: string;
+    beExchangeSource: string;
+    toExchangeChainName: string;
+    beExchangeChainName: string;
+    toExchangeAsset: string;
+    beExchangeAsset: string;
+    toExchangeNumber: string;
+    exchangeRate: BFChainCore.RateJSON<string>;
+  }
+  interface ToExchangeAssetAssetJSON {
+    toExchangeAsset: ToExchangeAssetJSON;
   }
 
-  interface ImmigrateAssetJSON {
-    genesisDelegateSignature: AccountSignatureJSON;
-    emigrateAssetTransaction: EmigrateAssetTransactionJSON;
+  interface BeExchangeAssetJSON {
+    transactionSignature: string;
+    ciphertextSignature?: AccountSignatureJSON;
+    applyBlockHeight: number;
+    effectiveBlockHeight: number;
+    transactionRangeType: BFChainCore.RANGE_TYPE;
+    transactionRange: string[];
+    toExchangeNumber: string;
+    beExchangeNumber: string;
+    exchangeAsset: ToExchangeAssetJSON;
   }
-  interface ImmigrateAssetAssetJSON {
-    immigrateAsset: ImmigrateAssetJSON;
+  interface BeExchangeAssetAssetJSON {
+    beExchangeAsset: BeExchangeAssetJSON;
   }
+
+  interface ToExchangeSpecialAssetJSON {
+    cipherPublicKeys: string[];
+    toExchangeSource: string;
+    beExchangeSource: string;
+    toExchangeChainName: string;
+    beExchangeChainName: string;
+    toExchangeAsset: string;
+    beExchangeAsset: string;
+    exchangeNumber: string;
+    exchangeAssetType: BFChainCore.SPECIAL_ASSET_TYPE;
+    exchangeDirection: BFChainCore.EXCHANGE_DIRECTION;
+  }
+  interface ToExchangeSpecialAssetAssetJSON {
+    toExchangeSpecialAsset: ToExchangeSpecialAssetJSON;
+  }
+  interface BeExchangeSpecialAssetJSON {
+    transactionSignature: string;
+    ciphertextSignature?: AccountSignatureJSON;
+    applyBlockHeight: number;
+    effectiveBlockHeight: number;
+    transactionRangeType: BFChainCore.RANGE_TYPE;
+    transactionRange: string[];
+    exchangeSpecialAsset: ToExchangeSpecialAssetJSON;
+  }
+  interface BeExchangeSpecialAssetAssetJSON {
+    beExchangeSpecialAsset: BeExchangeSpecialAssetJSON;
+  }
+
+  interface LocationNameJSON {
+    name: string;
+    sourceChainName: string;
+    sourceChainMagic: string;
+    operationType: BFChainCore.LOCATION_NAME_OPERATION_TYPE;
+  }
+  interface LocationNameAssetJSON {
+    locationName: LocationNameJSON;
+  }
+  interface LocationNameRecordJSON {
+    recordType: BFChainCore.RECORD_TYPE;
+    recordValue: string;
+  }
+  interface SetLnsManagerJSON {
+    name: string;
+    sourceChainName: string;
+    sourceChainMagic: string;
+    manager: string;
+  }
+  interface SetLnsManagerAssetJSON {
+    lnsManager: SetLnsManagerJSON;
+  }
+  interface SetLnsRecordValueJSON {
+    name: string;
+    sourceChainName: string;
+    sourceChainMagic: string;
+    operationType: BFChainCore.RECORD_OPERATION_TYPE;
+    addRecord?: LocationNameRecordJSON;
+    deleteRecord?: LocationNameRecordJSON;
+  }
+  interface SetLnsRecordValueAssetJSON {
+    lnsRecordValue: SetLnsRecordValueJSON;
+  }
+  //#endregion
+
+  //#region Atom Transaction
+  type UsernameTransactionJSON = TransactionMixJSON<UsernameAssetJSON, { hasRecipientId: false }>;
+  type SignatureTransactionJSON = TransactionMixJSON<SignatureAssetJSON, { hasRecipientId: false }>;
+  type DelegateTransactionJSON = TransactionMixJSON<DelegateAssetJSON, { hasRecipientId: false }>;
+  type AcceptVoteTransactionJSON = TransactionMixJSON<
+    AcceptVoteAssetJSON,
+    { hasRecipientId: false }
+  >;
+  type RejectVoteTransactionJSON = TransactionMixJSON<
+    RejectVoteAssetJSON,
+    { hasRecipientId: false }
+  >;
+  type VoteTransactionJSON = TransactionMixJSON<VoteAssetJSON, { hasRecipientId: true }>;
+
+  type DAppTransactionJSON = TransactionMixJSON<DAppAssetJSON, { hasRecipientId: false }>;
+  type DAppPurchasingTransactionJSON = TransactionMixJSON<
+    DAppPurchasingAssetJSON,
+    { hasRecipientId: true }
+  >;
+  type MarkTransactionJSON = TransactionMixJSON<MarkAssetJSON, { hasRecipientId: true }>;
+
+  type IssueAssetTransactionJSON = TransactionMixJSON<
+    IssueAssetAssetJSON,
+    { hasRecipientId: true }
+  >;
+  type TransferAssetTransactionJSON = TransactionMixJSON<
+    TransferAssetAssetJSON,
+    { hasRecipientId: true }
+  >;
+  type DestoryAssetTransactionJSON = TransactionMixJSON<
+    DestoryAssetAssetJSON,
+    { hasRecipientId: false }
+  >;
+  type EmigrateAssetTransactionJSON = TransactionMixJSON<
+    EmigrateAssetAssetJSON,
+    { hasRecipientId: false }
+  >;
+  type ImmigrateAssetTransactionJSON = TransactionMixJSON<
+    ImmigrateAssetAssetJSON,
+    { hasRecipientId: false }
+  >;
+  type GiftAssetTransactionJSON = TransactionMixJSON<GiftAssetAssetJSON, { hasRecipientId: false }>;
+  type GrabAssetTransactionJSON = TransactionMixJSON<GrabAssetAssetJSON, { hasRecipientId: true }>;
+  type TrustAssetTransactionJSON = TransactionMixJSON<
+    TrustAssetAssetJSON,
+    { hasRecipientId: true }
+  >;
+  type SignForAssetTransactionJSON = TransactionMixJSON<
+    SignForAssetAssetJSON,
+    { hasRecipientId: true }
+  >;
+  type ToExchangeAssetTransactionJSON = TransactionMixJSON<
+    ToExchangeAssetAssetJSON,
+    { hasRecipientId: false }
+  >;
+  type BeExchangeAssetTransactionJSON = TransactionMixJSON<
+    BeExchangeAssetAssetJSON,
+    { hasRecipientId: true }
+  >;
+  type ToExchangeSpecialAssetTransactionJSON = TransactionMixJSON<
+    ToExchangeSpecialAssetAssetJSON,
+    { hasRecipientId: false }
+  >;
+  type BeExchangeSpecialAssetTransactionJSON = TransactionMixJSON<
+    BeExchangeSpecialAssetAssetJSON,
+    { hasRecipientId: true }
+  >;
+
+  type LocationNameTransactionJSON = TransactionMixJSON<
+    LocationNameAssetJSON,
+    { hasRecipientId: false }
+  >;
+  type SetLnsManagerTransactionJSON = TransactionMixJSON<
+    SetLnsManagerAssetJSON,
+    { hasRecipientId: true }
+  >;
+  type SetLnsRecordValueTransactionJSON = TransactionMixJSON<
+    SetLnsRecordValueAssetJSON,
+    { hasRecipientId: false }
+  >;
   //#endregion
 }
