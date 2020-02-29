@@ -58,46 +58,47 @@ qaq.name = "gaubee";
 
 const quq = new QUQ();
 quq.age = 66;
-
-const trs = bfchainCore.transaction.createTransaction(
-  TransferAssetTransactionFactory,
-  {
-    version: 1,
-    type: bfchainCore.transactionHelper.TRANSFER_ASSET,
-    applyBlockHeight: 2,
-    effectiveBlockHeight: 10100,
-    timestamp: 500,
-    senderId: bfchainCore.accountBaseHelper.getAddressFromPublicKey(
-      bfchainCore.accountBaseHelper.createSecretKeypair("1").publicKey,
-    ),
-    senderPublicKey: bfchainCore.accountBaseHelper
-      .createSecretKeypair("1")
-      .publicKey.toString("hex"),
-    rangeType: RANGE_TYPE.EMPTY,
-    range: [
-      bfchainCore.accountBaseHelper.getAddressFromPublicKey(
-        bfchainCore.accountBaseHelper.createSecretKeypair("2").publicKey,
+(async () => {
+  const trs = await bfchainCore.transaction.createTransaction(
+    TransferAssetTransactionFactory,
+    {
+      version: 1,
+      type: bfchainCore.transactionHelper.TRANSFER_ASSET,
+      applyBlockHeight: 2,
+      numberOfEffectiveBlocks: 100,
+      timestamp: 500,
+      senderId: await bfchainCore.accountBaseHelper.getAddressFromPublicKey(
+        (await bfchainCore.accountBaseHelper.createSecretKeypair("1")).publicKey,
       ),
-    ],
-    fee: "23",
-    dappid: "",
-    lns: "",
-    sourceIP: "",
-    fromMagic: bfchainCore.config.magic,
-    toMagic: bfchainCore.config.magic,
-    remark: {},
-  },
-  {
-    transferAsset: {
-      sourceChainName: bfchainCore.config.chainName,
-      sourceChainMagic: bfchainCore.config.magic,
-      assetType: bfchainCore.config.assetType,
-      amount: "10",
+      senderPublicKey: (
+        (await bfchainCore.accountBaseHelper.createSecretKeypair("1")).publicKey
+      ).toString("hex"),
+      rangeType: RANGE_TYPE.EMPTY,
+      range: [
+        await bfchainCore.accountBaseHelper.getAddressFromPublicKey(
+          (await bfchainCore.accountBaseHelper.createSecretKeypair("2")).publicKey,
+        ),
+      ],
+      fee: "23",
+      dappid: "",
+      lns: "",
+      sourceIP: "",
+      fromMagic: bfchainCore.config.magic,
+      toMagic: bfchainCore.config.magic,
+      remark: {},
     },
-  },
-  bfchainCore.accountBaseHelper.createSecretKeypair("1"),
-);
+    {
+      transferAsset: {
+        sourceChainName: bfchainCore.config.chainName,
+        sourceChainMagic: bfchainCore.config.magic,
+        assetType: bfchainCore.config.assetType,
+        amount: "10",
+      },
+    },
+    await bfchainCore.accountBaseHelper.createSecretKeypair("1"),
+  );
 
-const json = jsonDry.stringify({ qaq, quq, trs, xx: /cs/ });
-console.log(json);
-console.log(jsonDry.parse(json));
+  const json = jsonDry.stringify({ qaq, quq, trs, xx: /cs/ });
+  console.log(json);
+  console.log(jsonDry.parse(json));
+})();

@@ -23,5 +23,8 @@
     "json-dry-factory": "^1.1.9",
     "optimist": "^0.6.1",
     "source-map-support": "^0.5.16"
+  },
+  "devDependencies": {
+    "@types/node": "^13.7.7"
   }
 }

@@ -3,46 +3,54 @@ import "@bfchain/core-typings";
 import { keypairHelper } from "@bfchain/core-crypto-tweetnacl";
 import { ed2curveHelper } from "@bfchain/core-crypto-ed2curve";
 
-const parseHashInputBinaryDataToBuffer = (data: BFChainCore.HashInputData.Binary) => {
-  if (data instanceof ArrayBuffer || data instanceof SharedArrayBuffer) {
-    return new Uint8Array(data);
-  }
-  return data;
-};
-const writeNodejsCryptoHash = async (hash: nodejsCrypto.Hash, data: BFChainCore.HashInputData) => {
-  if ("readable" in data) {
-    for await (const chunk of data.readable) {
-      hash.update(parseHashInputBinaryDataToBuffer(chunk));
-    }
-  } else {
-    hash.update(parseHashInputBinaryDataToBuffer(data));
-  }
-  return hash.digest();
-};
+// const parseHashInputBinaryDataToBuffer = (data: BFChainCore.HashInputData.Binary) => {
+//   if (data instanceof ArrayBuffer || data instanceof SharedArrayBuffer) {
+//     return new Uint8Array(data);
+//   }
+//   return data;
+// };
+// const writeNodejsCryptoHash = async (hash: nodejsCrypto.Hash, data: BFChainCore.HashInputData) => {
+//   if ("readable" in data) {
+//     for await (const chunk of data.readable) {
+//       hash.update(parseHashInputBinaryDataToBuffer(chunk));
+//     }
+//   } else {
+//     hash.update(parseHashInputBinaryDataToBuffer(data));
+//   }
+//   return hash.digest();
+// };
 
-export const NodeJsCryptoHelper = {
-  sha256(data) {
+class NodeJsCryptoHelperCtor implements BFChainCore.CryptoHelperInterface {
+  sha256(): BFChainCore.CryptoAsyncHash;
+  sha256(data: BFChainUtil.BinaryLike): BFChainUtil.PromiseMaybe<Buffer>;
+  sha256(data?: any): any {
     const hash = nodejsCrypto.createHash("sha256");
     if (data) {
       return hash.update(data).digest();
     }
     return hash;
-  },
-  md5(data) {
+  }
+  md5(): BFChainCore.CryptoAsyncHash;
+  md5(data: BFChainUtil.BinaryLike): BFChainUtil.PromiseMaybe<Buffer>;
+  md5(data?: any): any {
     const hash = nodejsCrypto.createHash("md5");
     if (data) {
       return hash.update(data).digest();
     }
     return hash;
-  },
-  ripemd160(data) {
+  }
+  ripemd160(): BFChainCore.CryptoAsyncHash;
+  ripemd160(data: BFChainUtil.BinaryLike): BFChainUtil.PromiseMaybe<Buffer>;
+  ripemd160(data?: any): any {
     const hash = nodejsCrypto.createHash("ripemd160");
     if (data) {
       return hash.update(data).digest();
     }
     return hash;
-  },
-} as BFChainCore.CryptoHelperInterface;
+  }
+}
+
+export const NodeJsCryptoHelper = new NodeJsCryptoHelperCtor();
 export const NodeJsKeypairHelper: BFChainCore.KeypairHelperInterface = keypairHelper;
 
 export const Ed2curveHelper: BFChainCore.Ed2curveHelperInterface = ed2curveHelper;
