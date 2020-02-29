@@ -14,9 +14,6 @@ export class TrustAssetModel extends Message<TrustAssetModel>
   /**n 个账户签名，资产才能签收成功 */
   @Field.d(TrustAssetModel.INC++, "uint32")
   numberOfSignFor!: number;
-  // /**资产开始签收的区块间隔 */
-  // @Field.d(TrustAssetModel.INC++, "uint32", "optional")
-  // numberOfBeginUnfrozenBlocks?: number;
   /**要托管的资产所属链名 */
   @Field.d(TrustAssetModel.INC++, "string")
   sourceChainName!: string;
@@ -38,8 +35,6 @@ export class TrustAssetModel extends Message<TrustAssetModel>
       assetType: this.assetType,
       amount: this.amount,
     };
-    // this.numberOfBeginUnfrozenBlocks &&
-    //   (res.numberOfBeginUnfrozenBlocks = this.numberOfBeginUnfrozenBlocks);
     return res;
   }
 }

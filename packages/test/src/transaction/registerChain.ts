@@ -90,7 +90,7 @@ async function getUsernameTransaction(sender: DelegateInfo) {
         fromMagic: registerBfchainCore.config.magic, // 交易来源链的 magic
         toMagic: registerBfchainCore.config.magic, // 交易去往链的 magic
         applyBlockHeight: 1, // 交易发起高度
-        numberOfEffectiveBlocks: 1,
+        effectiveBlockHeight: 1,
         remark: { remark: "交易备注，任意信息，这个是设置用户名交易" }, // 交易备注，任意信息
         storage: {
           key: "alias",
@@ -156,7 +156,7 @@ async function getDelegateTransaction(sender: DelegateInfo) {
         fromMagic: registerBfchainCore.config.magic, // 交易来源链的 magic
         toMagic: registerBfchainCore.config.magic, // 交易去往链的 magic
         applyBlockHeight: 1, // 交易发起高度
-        numberOfEffectiveBlocks: 1,
+        effectiveBlockHeight: 1,
         remark: { remark: "交易备注，任意信息，这个是注册受托人交易" }, // 交易备注，任意信息
         storage: {
           key: "username",
@@ -223,7 +223,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
         fromMagic: registerBfchainCore.config.magic, // 交易来源链的 magic
         toMagic: registerBfchainCore.config.magic, // 交易去往链的 magic
         applyBlockHeight: 1, // 交易发起高度
-        numberOfEffectiveBlocks: 1,
+        effectiveBlockHeight: 1,
       },
       {},
       keypair,
@@ -271,7 +271,7 @@ async function getLocationNameTransaction() {
         fromMagic: registerBfchainCore.config.magic, // 交易来源链的 magic
         toMagic: registerBfchainCore.config.magic, // 交易去往链的 magic
         applyBlockHeight: 1, // 交易发起高度
-        numberOfEffectiveBlocks: 1,
+        effectiveBlockHeight: 1,
         remark: {},
         storage: {
           key: "name",
@@ -344,7 +344,7 @@ async function getSetLnsRecordValueTransaction(
         fromMagic: registerBfchainCore.config.magic, // 交易来源链的 magic
         toMagic: registerBfchainCore.config.magic, // 交易去往链的 magic
         applyBlockHeight: 1, // 交易发起高度
-        numberOfEffectiveBlocks: 1,
+        effectiveBlockHeight: 1,
         remark: {},
         storage: {
           key: "name",
@@ -421,7 +421,7 @@ async function getTransferAssetTransaction(
         fromMagic: registerBfchainCore.config.magic, // 交易来源链的 magic
         toMagic: registerBfchainCore.config.magic, // 交易去往链的 magic
         applyBlockHeight: 1, // 交易发起高度
-        numberOfEffectiveBlocks: 1,
+        effectiveBlockHeight: 1,
         remark: { remark: "交易备注，任意信息，这个是转账交易" }, // 交易备注，任意信息
         storage: {
           key: "assetType",
@@ -658,7 +658,7 @@ async function getRegisterChainTransaction(sender: AccountModel) {
     fromMagic: fullBfchainCore.config.magic,
     toMagic: fullBfchainCore.config.magic,
     applyBlockHeight: 10086, // 交易发起高度
-    numberOfEffectiveBlocks: 100,
+    effectiveBlockHeight: 10100,
     storage: {
       key: "magic",
       value: registerBfchainCore.config.magic,

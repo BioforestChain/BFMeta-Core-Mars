@@ -34,7 +34,7 @@ function getTrustAssetTransaction(sender: AccountModel, recipientId: string, tru
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic
     applyBlockHeight: 10, // 交易发起高度
-    numberOfEffectiveBlocks: 1000,
+    effectiveBlockHeight: 1000,
     storage: {
       key: "assetType",
       value: "BFT",
@@ -62,7 +62,6 @@ function getTrustAssetTransaction(sender: AccountModel, recipientId: string, tru
         sourceChainMagic: "THEM4G1KKEY",
         assetType: "BFT",
         amount: "100000",
-        // numberOfBeginUnfrozenBlocks: 100,
       },
     },
     keypair,
@@ -95,7 +94,7 @@ function getSignForAssetTransaction(
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic
     applyBlockHeight: 20, // 交易发起高度
-    numberOfEffectiveBlocks: 100,
+    effectiveBlockHeight: 10100,
     storage: {
       key: "transactionSignature",
       value: trustAssetTrs.signature,
@@ -122,8 +121,7 @@ function getSignForAssetTransaction(
     trustRecipientId: trustAssetTrs.recipientId,
     trustNumberOfSignFor: trustAsset.numberOfSignFor,
     applyBlockHeight: trustAssetTrs.applyBlockHeight,
-    // numberOfBeginUnfrozenBlocks: trustAsset.numberOfBeginUnfrozenBlocks,
-    numberOfEffectiveBlocks: trustAssetTrs.numberOfEffectiveBlocks,
+    effectiveBlockHeight: trustAssetTrs.effectiveBlockHeight,
     trustAsset,
   };
   const results: BFChainCore.AccountSignatureJSON[] = [];

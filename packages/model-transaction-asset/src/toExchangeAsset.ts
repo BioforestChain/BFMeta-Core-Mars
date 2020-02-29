@@ -61,9 +61,6 @@ export class ToExchangeAssetModel extends Message<ToExchangeAssetModel>
   /**交换的资产比例 */
   @Field.d(ToExchangeAssetModel.INC++, RateModel)
   exchangeRate!: RateModel;
-  // /**可以开始进行交换的区块高度 */
-  // @Field.d(ToExchangeAssetModel.INC++, "uint32", "optional")
-  // numberOfBeginUnfrozenBlocks?: number;
   @cacheGetter
   get to() {
     return {
@@ -92,7 +89,6 @@ export class ToExchangeAssetModel extends Message<ToExchangeAssetModel>
       beExchangeAsset: this.beExchangeAsset,
       toExchangeNumber: this.toExchangeNumber,
       exchangeRate: this.exchangeRate.toJSON(),
-      // numberOfBeginUnfrozenBlocks: this.numberOfBeginUnfrozenBlocks,
     };
   }
   static fromObject<T extends Message>(

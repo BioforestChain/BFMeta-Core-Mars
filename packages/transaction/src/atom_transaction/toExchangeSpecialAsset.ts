@@ -117,15 +117,6 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
     const toExchangeSpecialAsset = toExchangeSpecialAssetAsset.toExchangeSpecialAsset;
 
     this.verifyExchangeSpecialAsset(toExchangeSpecialAsset);
-
-    // if (toExchangeSpecialAsset.numberOfBeginUnfrozenBlocks >= body.numberOfEffectiveBlocks) {
-    //   throw new ArgumentIllegalException(PROP_SHOULD_LT_FIELD, {
-    //     prop: "numberOfBeginUnfrozenBlocks",
-    //     field: body.numberOfEffectiveBlocks,
-    //     ...Function_Exception_Detail,
-    //     target: "toExchangeSpecialAsset",
-    //   });
-    // }
   }
 
   verifyExchangeSpecialAsset(toExchangeSpecialAsset: BFChainCore.ToExchangeSpecialAssetJSON) {
@@ -270,17 +261,6 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
         ...ToExchangeSpecialAssetAsset_Exception_Detail,
       });
     }
-
-    // if (
-    //   toExchangeSpecialAsset.numberOfBeginUnfrozenBlocks !== undefined &&
-    //   !baseHelper.isNaturalNumber(toExchangeSpecialAsset.numberOfBeginUnfrozenBlocks)
-    // ) {
-    //   throw new ArgumentIllegalException(PROP_IS_INVALID, {
-    //     prop: "numberOfBeginUnfrozenBlocks",
-    //     type: "positive integer or 0",
-    //     ...ToExchangeSpecialAssetAsset_Exception_Detail,
-    //   });
-    // }
   }
 
   /**

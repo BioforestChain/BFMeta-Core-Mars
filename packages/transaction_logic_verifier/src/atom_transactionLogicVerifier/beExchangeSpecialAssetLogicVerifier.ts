@@ -112,7 +112,7 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
     const {
       exchangeSpecialAsset,
       applyBlockHeight,
-      numberOfEffectiveBlocks,
+      effectiveBlockHeight,
       transactionRangeType,
       transactionRange,
     } = beExchangeAssetAsset;
@@ -153,10 +153,10 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
       }
     }
 
-    if (numberOfEffectiveBlocks !== toExchangeSpecialAssetJson.numberOfEffectiveBlocks) {
+    if (effectiveBlockHeight !== toExchangeSpecialAssetJson.effectiveBlockHeight) {
       throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: "numberOfEffectiveBlocks",
-        be_compare_prop: "numberOfEffectiveBlocks",
+        to_compare_prop: "effectiveBlockHeight",
+        be_compare_prop: "effectiveBlockHeight",
         to_target: "BeExchangeSpecialAssetTransaction",
         be_target: "ToExchangeSpecialAssetTransaction",
         ...Function_Exception_Detail,

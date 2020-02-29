@@ -37,7 +37,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "9c62f1faeb0da3f53b6ed53f2eea0d84a6ab9b1e137fd918c41a017542ca0df6b85bdc73e1c6ac4f8b8cc19915ca7b834fddfdb42076e557b10252a6709f720b",
         "remark": {},
         "asset": {
@@ -81,7 +81,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "7851b308ecad0513308cda5fdb46fe563c38fbf01d626750b575db61a002ba1d8bca6cdc96b5bc6ac9a07cecc19384b5a70d1321f6750bc40c1ec4d34c15b30e",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -123,7 +123,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "4ae7384bc770f103772600179dafff6d5c3da776c826c46fc924c5f69a7c41823ee57a799a6ca4fee86fe2178c5c895515cf74a14ca8a3e7f5f5b45a1c4d9809",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -162,7 +162,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "9a21dc81e86773acd625246e95788faad32ee4cdedfb9ef94c177bf7e428856b749bf7d10fcf5479ad19abae11d4726297d70e11f054cd1c76a9aaae76554e01",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -201,7 +201,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "f96ce72292c3b1d625357399820804cc85f14509538710b5e6204b1ed0aff22f8031476dd96d525a8fa028aa0d13df3fbc7d97fb5c5c1e07102ad69aeb9b5006",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -238,7 +238,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "b5f617b365688f067ac56d692900336a573f82b85b5d21843f8d7f9a8f1ac53446172584f5f98a5096721d49dc306229c83e074dc72ddac6167f9acdfcc41203",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -280,7 +280,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "f842d2b870c052006908b99e614e4d9f5ffc6cc365bae755784c44137192edadb2af810c4905e5b9d647bc9adeb2061de319b8be8597fd43ec4b92a87ca89c0e",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -319,7 +319,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "3973c7ea5f06fa061f5061dc634dc4e17e35ac73f295273fd9886ca0c480b756a23fc85289f1661866a4245c25244c40503493c26f59144cafd1da5004164808",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -358,7 +358,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "faa5dd894bf5a7214a4cc663f98f95d8639826ed4e970169c5b909f5ed0c8dde3c9d1cfc0bcd6d6e9f1af224628e5c1d040cf0c38f64759db105bbfdded2230b",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -395,7 +395,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "0721b9da8341d7cc5eeda1b6486733f8635f900df946dbc034b362d4441f42002d918042fc171b1421da83d1b8ebc4bde7ccfac9a79ab589167dc0e72df68406",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -437,7 +437,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "33a7baacfc0c0cbab100655ea63bf922a64ef3f5721e41ad4276b963a3fae3c5a2c11104e9070e09ba5c1b3326af8d307f00fad571bba55de994579f4a00d20b",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -476,7 +476,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "c21872ee9cdda6b12bcc30e0bee1b78925274f6da81fe7b5706cd79bf47243b2caf59e643e1e2e3b4af13e7699789f899756efbe3b89b6c44a616f7f36f6770d",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -515,7 +515,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "e143a0b497845b3a58f40a7baa30511506c5f0268d0c4a83e85eb604c7ab4338f64538f211d132867a8847a4f847207c69fc11bddf88549837f68480d9ad290b",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -552,7 +552,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "ae336d0baa57f68935c6d8331c0c92306420ed162c3222e22bf633a557bdb528cfd0f2e0fb279ad6e6d713925b43b6a31bbeec3a9e2559c3896e5a56cde8ee01",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -594,7 +594,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "9ceb414bb1a008b7d4b8f05914b95b8fbcfdb62027b8ffea8bb023c5b67d311e615327a453c39d6c259782070bfef42945c94ec787b6f9d22203eea5ab2f2103",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -633,7 +633,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "c81b046c727e5238440ced61319124574e02601693d35a1a65d6d5ca16458386eadbfefd8812260e910f3ee37909ee95fcff807a7c762392a0bd8ba202004a0b",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -672,7 +672,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "bf6d12becf166b708be1d98c7f32e220615af79ef27f80bd23d128050205fe3cde2389e327533b2df6598950b62180cb0e1c53101a6ffb4dc62bc1cae32eea06",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -709,7 +709,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "c0dd1345933d95f3de58826934639ee0a491647068781c2197b1e9b8248460fdf6f6a4885bf1c6d626c8606b41e90d9ec425ada10867ed69af91ac7497c1700b",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -751,7 +751,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "feee4891fca12af55103b8fee67c8cc85fca6099d8b6d3aa7c1ddf9700f70a57577756e7d5eb7e4a2d8f0c63006b4962dea743f64224d6e96070e716fc5ed708",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -790,7 +790,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "7e8848393d767e83c17622a516f464ace07218925572e3c9d7131d73ffbc5fea72ebc09113ccf508a8d6b18e8bb94489e291dc9bbde9fcbf78565fe1d8978307",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -829,7 +829,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "4577b639f4baf1877fd1f4fb1707abba054268235731258ef5d50970e6e6c06123ae06b4977b2a42f8e9b132fcc5e8a07893eaa1f00472a2a5e534ff1d3f9404",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -866,7 +866,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "981d7ccbd58016f72bde9491aaa69c12ece55b7c82bd7dedcdee081311554cd6de5665c65c9f58e635fe1d3a411f48986996ec81ee67a69ba31506a74ebecf0c",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -908,7 +908,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "ce6ad947dfd67dad85abf1e84ea126e5f2467704cb44e6019df4f6facbbcebae461ab968221d5ac17b8157779f7d049d5e91b1408d2b69bf951183b473deb305",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -947,7 +947,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "f015e7e1884f0708921c5358cd79f0956c25c51e46641e755b439ee8dd61f5560ca63a53f49f19d88c6e61303bac3a943e8bb201594872095c851b64c4284702",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -986,7 +986,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "3c27d904b6f459014b12547d4b797d3a08199259a75cec671c03574538edd843bd3d68fb28225c2a4d78cc88afc4ab55a2399caecdf1d2cdc42a466ea00c6709",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -1023,7 +1023,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "e5fbafadbadb97c11ecd6b02b5f963d183db328a38b2ebe1aae4f6886e257ebb110993224eff0046d95af1daa18ef160de0b1e4039c18c2d2de84bc1c16c5304",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -1065,7 +1065,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "1971f47d04f375457136ed0d42ee53879b26336840fbdcea247ac46615c711d8bbcd156529ea75229b446dbdbeb7a049182b461125a508e25c247354d6ef6e00",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -1104,7 +1104,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "97bdf493e34489f697e92fcf7c494e1810a88e3fcfeb13c693e238f6d78c9b3962be72f3325c1cabb9554eaef6bd7eed331b583dcc0449cc833f582f41427f04",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -1143,7 +1143,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "32390aba0509e5f8133cca12da1ec19d981d3ae26557e2a41ee392b4cf44ce5302610c23fa512b4b4a06fb672947b1a5c89f3fe2726af9149fe635b698b0a10d",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -1180,7 +1180,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "90a2b8018a979ea84974d0d9629362eb661cd0dfa6126b2f6668c78b752c1fe82235ccfcc786d082f09c900a2815438a42504c0d7c294b12b483bb92dfc5610d",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -1222,7 +1222,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "c40ea67c9c88273c3464f7dfd0878f358a94b7fa25199863ee1f09a58b44f795a1433f1d3b804c9198bb3a394b7d929a96bff452c4d898534f4fb207ee215e0c",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -1261,7 +1261,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "e00ac8efd2c380fac151ea5704d6ded2e3b2b7b94d37d1dba5fc276016fd15a41a5b635f9e7fd5fdf564b949f2bd9ecf3eb3d2799736e78e3fd864dc913e6a0b",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -1300,7 +1300,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "fe3851bf43e58eda3a3cea2e641aaac507614015bf22cbfb65d52c87d890a013c7eec5d3fc79efa1f8c91e56950679781b97f456953176df59e9c44093d59f0f",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -1337,7 +1337,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "72764e6cb4e96f0db9b6f6215b5524d08b1f257fe27c8e570d1b4106edce7513b8e275f4e3b55b72d53f5c015229f89638626292c12b3a68e53b79bbf94b5009",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -1379,7 +1379,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "df5c2066d9f0e739bc37420239f85c925773d7e7683c58a7267a41961c1ff37f57676b8b62974c203277636adfa4383d6bd8b5193e8fb5ce0b02e9dae7abe50f",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -1418,7 +1418,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "bc539dc430b5819493fd0520495544fe7e8d06907689762360b92aff62587aca8fcdf2d17487de01a6361038675c16d8f8fd875320e8389da5228eb72aefd705",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -1457,7 +1457,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "190f2797e9fac88692e27b9b922b1775234e4b3e914a90796476d4ffb2497d056e13fb13d637ba5953f8e9c961c7c10dcef7ae4de85056275775f4a91fed9703",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -1494,7 +1494,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "c32ec9cc8b4947d6ba24b911eb4fbc4a6bf6b29390968759002662f376027e3f8b6752f7e9569386920511656adc8e08ebfeac3ba53ca4d61f5b058eec73440c",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -1536,7 +1536,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "8fbfbc7fd44485125086ad49e5f3e49805ebc70fc4908146542a3cfd0c01efff2ce9f5c4abf7ccfd7403c0da0d805324834345a736427c84f98d9223d5ee3c04",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -1575,7 +1575,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "28ef9976e4c31ca3952b32d8b1b6d78b70243841ea8b956137fe3f8de53e42fb74252bb0ac69e58df872e0aeb69c0a6b6982ac4e2b00d583667ae0169665b508",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -1614,7 +1614,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "a78441e1e0f7e9930a0abeda8d9e54023f1fc7567a38b7722724f8023188f3d0b10203ff50147589ba383b51bb7ba32b405cd7fb292a47aab36d27de55890802",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -1651,7 +1651,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "87d069f97145822ae45e7688a7721d7b806ced8d97fc79fc668e9f119e5a9420792ff3d0d6a070c0c5e60626307045c386bf2624e360439afaf87f679004d900",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -1693,7 +1693,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "969a9d3f5d46194b6ec2e248f52b5c7bbdc9708578fc954f48a8d5e02d29353f2cba1bf1a2f0eb62a4013142699818d291fddb751a3d6ab45f64ca35adfb200b",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -1732,7 +1732,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "4fee4216e840261ade95768c277f87bd69c7fc25060f709aff2ec993290a41549d21b636a13197106206823c83e69d8897b7cda3059bc2772a250be9bbf22f01",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -1771,7 +1771,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "7ee214f8640aec04db518ca93a37df4b6be0a5df7f0b8a70dfe8d72966e29080415cba149776086e66298c3bc4a5ce441a20bd313ae2f2f606834d0bf981300f",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -1808,7 +1808,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "e4ab25f03c21cea3424a3bf1a0fae4c75c8d7ac213f2494afe4de6924cc6a7e8495b9febfe4c702c25b967010a471162185fa98b7e23b48d8e0c0de3a887e103",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -1850,7 +1850,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "fe6f3c79d8ab3bdcc78e6eb0994541728e2ef43b4a0f6589b0962e64a1afa0100d6691eab8beb69b28d005b87647ed5e3954da2604a96d3074bc48a9b8f47305",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -1889,7 +1889,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "b3a22ee55c641e3394bfa6ff6477f3345a9a7eefa452507f9355a16876e6b992fbb273ac7ab18f9c955d54643417915ada249108b9221209de7a4b749b24a002",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -1928,7 +1928,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "3e703a94c676bd40bd53685a75e70420eadc7cd3ad8ab4b19420fc63705c89b2ed26c65faaa7f0f582377e099d18c56ff5b12858f81ae4ff5ce37dfa0cbd0803",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -1965,7 +1965,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "5254c810ed92ce05c391ed6cc171f41ca165617158d49af189e85544c8c9afe1a513e068ba944a7693932d4fd409733af989c884d0440c04d58be934bfb14906",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -2007,7 +2007,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "bd924b4c4e1dd4c789fcb255806e928e28c357e7a3d97a00e658209f287a4816cb665f7c84dcce6da4609310af234a7cd76114875f0d9f3d602ff245a7d0fc03",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -2046,7 +2046,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "8ea45315986d258ee2d68a8a3e6b50ee0bd50dfa3cc3da1355b0defcac314c29383517ec96f946fdbfea3ba1d66ca309145f8c40dab83d0fb275f19da617660f",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -2085,7 +2085,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "ebc63d1e1152d97383ad5a10b96d6a0f2b263b0d6ed5b959d88c51f03acb916976b8dff25e31b63a5fd67e405b5946a9c3d222e1e60bfeab2fd350096b2a2e07",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -2122,7 +2122,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "4fed130142dd38de01e8dd9836e1ba7f4794c30a08cc1dfcf7a32a46aec26071372d303653d73d797a8c3d4685628c63a82b1ce8bdd904daf97843b39bced700",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -2164,7 +2164,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "99f638942c0f8a5c36344e2ce8619bacdec45caa1a1e0573de1df416daa05879696279437c5e8a7e89f85d2e5a24a5e11504a69c86b8218c6c46e88157bfcd04",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -2203,7 +2203,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "07102084506dacb913f395a8be773f3b5d52af0cd78b2ffb1acc6bab149baabc39415a4b3fc124e90e338c5613f4375c932370d67128234e9cbe2b0dc595280c",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -2242,7 +2242,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "2c3e95d685cdceb7aa836e10d13ae6a9fae369dc25a6dd2c12ce2c07a2fe5bbbaa6e15ea43dd5d84c6693bbe09af0b38c4f657e13df2673dcbd045fd83f3370f",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -2279,7 +2279,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "bd29a0372ae24e73cb84363e18a8fde75c2b8fd47590da9e600f9222fc659dfd50de7ee78fe2c0c27752a8e15407e7ac916222195a1d8919ae4c566c20e81108",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -2321,7 +2321,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "50034a2451957492c3a8c3bbf3fd9ffd24f77c36b6e4e93e8d2325c5c93b0dde47a4325f9ab75921e4e1e776a74d6d97fd2cca946065447bc9daf3fc4424ef04",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -2360,7 +2360,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "d474d1dcb4c292dea4838153710ca794586a9f8c7ab3e95c0ccf790d5f509d2c3a9661d6cc0aed55601355b8ebada77885d68acea0317e6e5cbfaab8f359e601",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -2399,7 +2399,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "6d0b9c669c695ec1d3f4c7626fb9ba1dc20e41c98330051afbd1b233848f8c2a1daadf298f40f30f6eceab18c49980d7bef7fb575bec912a81ce15f7683f750b",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -2436,7 +2436,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "d564657e1e215b22407b42d49baf7ba6889b8a1fb9cd31b71fad34a47b45d1f9ce9823ca32f26aba19212999c3a5fcbb84994448348ce771b41935e77d5d610e",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -2478,7 +2478,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "9ca68b14e020980b5c060545ffd04ff02a1306ce7588c40b33af070ff22336f4f2092d3232be0a1471bf114d8f772469984d377d25bbf589f3bd29be3ca5c406",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -2517,7 +2517,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "40a8f69706a0e86ff86db4aff0ef80d3cc17e6125e593ad8c6c9841e3f8824aea7dc76335b24969aa518684f57ac002165c217c95bd894399ea5f84dd4262b0a",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -2556,7 +2556,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "a4e2048cd8221f25675869336c6a6da4ee1363800c7929f860aba882b912a5c5e582fbf6f41c359bc8386125a35e9c664b48f69e6e90bd31cd6306975e8c1408",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -2593,7 +2593,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "f24b0aabb090248854187985b715d402d1824106ba1320fa3b73ad40753ce35d790bd37a300cc6cc0dd695d8f3d4e77d0f1c6e210d8640403a6ddc6452172e0e",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -2635,7 +2635,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "3ab1e7903e93ab19552e2439e142a627982efaa56d0c8f8ce6190232b43af56b0f86d697bcbff3a1e9dd804876263103386640b8174a906bf7403ec0aea0280f",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -2674,7 +2674,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "af0cf3f58eeec072ca95ac900dc254706ef494f58773ad1177663b01602b4e89de0b01052f5e0fae754a17c6654889c10ba3c9d8465023f045485f19d8328b01",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -2713,7 +2713,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "b9016b64b54e29dbc69440f065174f7c1d8167c5885e8cb449a8b47a8b11010740d69be8d61043406a24f8d901e85f58aab171032c07c97b4306c3c21a06ce0e",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -2750,7 +2750,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "da930ac0976d51c5a11201b2f2571fea0df6c7ebc85cdf1ab42e10abcb1acd6a0c4aa43072d22fb17e84d64cf199a6a2029a0a08b468d344a54c9d0f8dfa0102",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -2792,7 +2792,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "aacaa52ffcda5dfe52da2755a8c3aa11c6cc6bf2c58a63b9478bff4a7086a8b3aecc1a144f85efddcb472cad2b13bef4c3e3bfd41ca3c4bc58bba8b1e3a4a601",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -2831,7 +2831,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "add5e55b9eef5267f9a20315889357eacb85b2b50f5cabe2443bf0e0e444ff877e2124b7f115bf7846a837bdd5c8e7977071bd3137cd63aa31a23efd072a190d",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -2870,7 +2870,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "e9e78caf195a850fc0a62ff4cb51ffd68b134372ab871339d845977f7807c81850a375f77434eb40177959121e2a07fe28eaa8550564efafaa7f3937ac7b3803",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -2907,7 +2907,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "9542066b318365e568aa62308156377faa335fe55baecf1cd7ad4e7b83757ea60e258521a39ea22b51db3e0637ae865b4cfd9f83acd6d6ca0953baad16fc7f02",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -2949,7 +2949,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "a696e49c44d11b9643504c424ead19fc641e6b2f93f7ee4c5f6feed45a37400664f7824733d93abe77d69123225c3a80084750919793e73c772178095955170f",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -2988,7 +2988,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "1c681de52cf10eec9892e26ed24b7c078d8e0e980739c66364dbff2657c3c01538e94cf9a549d142a04c6a933230f816f7c56a4cd7b00aa8d38e610e42afa601",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -3027,7 +3027,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "d440c6ceb9d7af8cbf0a2e827126f6200fd1a372b416426c1dc3a3bfe8b9315e1f1a7c323cc6cdee3d7c6b94018b9eb0d4f2d78d40730a46cd72f5882308150f",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -3064,7 +3064,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "04f28d1ce696a8cd8bb2bde824beeebfdeef1ba6ac24265313b41da925ef8ac85e0fb891e5e00ae33c855369af44d90ad77d12bd5747c5099dcf26ed9a4a340e",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -3106,7 +3106,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "025d35e1eef7e98acc0aeec6d944a70d925d8fd6f66fd0d9372e7b02d878ed38f35b3c55a6f612e890a234d0c10b2c328d97b86492a78c6ac43c62ac9b066f02",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -3145,7 +3145,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "2e14bc969318fbf9994f43f0530fdbcb38b2be4902c8508380401bb81c24ba75cb51cb3d3c1a3bc0c55a6aacf0e954ed0d805718b6d1fc543aefffa2e635480c",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -3184,7 +3184,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "219af730f140a26652d17fe1361ef7eb63c7797f938fca0667e8078fb1e762a04699ff99d3af9ebc3e691cb85b83984a4ca61791c1fd61641511c27ade02ec0e",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -3221,7 +3221,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "d4a354243335bf2d38054d72141bbdda48dce0b53ec509733dcfe456be06154ceeb3b66b4ed2d84f9da573cdd0094345d4c21330e5896a0913d57ecb9edc5f03",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -3263,7 +3263,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "17d194121fff4275322d451e5e7db2cbff36ad3a4d39a9f0c3bb5bad681c7eded6d8c5c46880a7c73e988d4d89b6d75578401a80df881d518ed00d5e8e599208",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -3302,7 +3302,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "065f33944c0897b3cc6dcedc0ed5b609b9f8ef1dde572f005097625a86c7add862ec54261b3dcea461a08e9a2ba6dc86172609a0498fe3f4c2dab25d7e85dd0f",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -3341,7 +3341,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "b4b692bb892b33682df2e64e2d8b4f09b11ae5e7d3b6c44d460068dd9aacc321359d7762bb7436e2b078daea260a0b376fac6f5b926a3e41c8d80e4d69b01606",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -3378,7 +3378,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "cb97feaaaa69d659cd3605ffa56584fb5062e2c8312c6348070c8f7ce0e5a18a59a5c8635dbd51463d1003db161f148e0863c8f7b16bc396799043352aa86d07",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -3420,7 +3420,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "8f849eccdf1e34f7316996feaa715e030179cd2cffdd4ecaf7287bba2aaead1116b78fd02125f309fc32c11c35f2e4289f88b403c0f256ce43e4054cdab0130b",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -3459,7 +3459,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "7ba98483d719610192f744baf61b09fed392a6b58566c1874f08cd842cf7833bf1e96d49b70dee3db81ca09bc8a21a4e292684a5c4597309534474de07b4100e",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -3498,7 +3498,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "2183ae8ac8face8d55d4b2a23e6aae3e14471001395939f7bea696c835869f08b15fb160a94af575a96274f21d155e15fa859976e793dbde16a277fbcc4f7608",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -3535,7 +3535,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "8f85de69ced6316eb22c632cd382aeba4338102bab25568ce1c6ed09bf23bcc7d58e6800d96849aec9b26bd0301ba503390095a1fad4b08c34e67f79dca3300c",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -3577,7 +3577,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "307ed5e9ea86eebe10ad2aca9f58faaff957f1b1609b2925dd0d6def3cafe4f8b5e7ffb34bc652823cd0c681c9fe22a487004fe0a0fbd41d1dea5ebbffd16e07",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -3616,7 +3616,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "5b53e290344e021e319b84c3f10714ac5882c2561e96fcbd3d6a7396eae3bd1df6b1be9c79b9d4eff4f6ffb0918993f93f26f6420258232af81d2d40beba4d02",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -3655,7 +3655,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "857b3d61d49986e86806dbbfb4a9e73a5b90838c0834fdb0b9f78c93cc1ca7e654a3c28277167a5c2ee4bdbe2043e8bafce0a5cf632c185a58fadf8f5388ea07",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -3692,7 +3692,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "13623e617f66fda2ab461643f367d2191fb2bef6893ff1b9c4456580433a9a52fe3a294e13f9be16cc80a81edf5b3421c3159fee791435ebe9ae587f8df04908",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -3734,7 +3734,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "557e439a8d5f6a1f32703366f327cb20262ba2aa9b9d19c842c371c1c20471c255e186deeaef05a73befd1870b014fee12278fa54ae8df3deb89ff5092d12108",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -3773,7 +3773,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "726d58da0b65064fa7d46834a1df7f7f354a0675372a8baa12d9616dc99ad1b88cf78570952c43f65d464f0c73bb300e32626748279dd746be0a3194f999fd09",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -3812,7 +3812,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "dee29cac917596234da464fb9f8a65d5cd928124afbd578ab4f0988e30cfe82a6b4905dd0ee5bdade022d82496ed8527a798a21657f4d772a2960c1a854f1f00",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -3849,7 +3849,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "3c5f271314948fede7b1b1f82f927c015e0385b3a36a88894ec255af07b6d77e4c8c486d39d62f074bb438f85edaa6e41f67adef95ab16ea53ecb0c411643f07",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -3891,7 +3891,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "06d5ff10200bd0c40e2fba7eaea28be06eaee0dbcc5f8fd40890d5316455a9b3a3e1f3b23416d97412e9403162b632725676580fb19ecedacd542deb9e588a07",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -3930,7 +3930,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "cae57f17d7f6d145d5a4f310472deb973bf22179a728804cfb88c84946b09852a8b4a5bfb6dfd9ec2535405904d8ce380f78031a9ddf34ed8584d759aacceb00",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -3969,7 +3969,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "dcaa22b8593647419630656f552bf07f55c94637ef3fb498451b8d4f2de5e6908bb98738f018bc5d34002481dd6fa05ab31f26c72399b5b47673408c9a558c0f",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -4006,7 +4006,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "a778c900bcf0b2ec34ce71ee72da7ab74c294b43c2bbfcba030ba8c0527e80d77d08eec1edc9675f683994f8f1f47496265ca7e2b3367da014fccb4eda153e0c",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -4048,7 +4048,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "78bc1607eb3e258a38da88c70b34be955c50cb2abd94693c457a9e771218c275d62af7833f3e53abba3e10ba06f6a3d01ad920758b1fc515e2931a6738d9940b",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -4087,7 +4087,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "b4a8292da4beccf366fc6cf1cc7b299f2fd85ded1dbc4b08985e30f2735e39f5c33c9b1a91639f768a2d24e7d0289e68aa17d52ca8d5e3ef5480da33d095c00f",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -4126,7 +4126,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "f0b555c95e0f756d1fba2c21bd66ed6a8b070f4307f5a5579dc1505c41dd3e3060a0492e533dd444e6602ac278c2a24a622d3946ab071acb9ab9a0d597baca08",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -4163,7 +4163,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "3c6afb33152ded8bf4b6aed7ee0a64d56139d946e2d69713f1ac559885571bd17eff5973b0e1c8caa825e1cdf8b64e74972c486b30b61e43c1b6898414391d0c",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -4205,7 +4205,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "9ffc57399949ba7e26bea1bbc41fc93497e5248b28d740df86c2e3362ad52cc2debcbd684d746d613c445f61004f4dfb92adbc01243ae595df6c3831a60b1507",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -4244,7 +4244,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "1adc553f9249e665578c95470641b861b8df922abfa3d2bb14f28a1f54091d908088e504e92eeec206df65bbad270032238384b6e64842e62b56341253d1f506",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -4283,7 +4283,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "34c2ea7c4cbdb0fe4d7168e50e44fd3c49781c1192249bd5d785b47eabe271af5b508066f201ff9442d2835fb06cb65c0a3b85d7cfaf7b5e2945589bd4738a0f",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -4320,7 +4320,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "4316e56199d068a6a8c97e1da614cf07fea63d5bf48b18b24386656cb96dde10366c574b38d37e003e41b0de45f675d34cbc8fbabdf547f3e57124c4bff0eb01",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -4362,7 +4362,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "d4c91e8aaaffcd1045eb515a55d51666a71ea6136b806af9c04e4faf5bd316d5b45bfe546c231154b41ac279423816cf98af9985f4b4c63e5497cfd6f7ab9605",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -4401,7 +4401,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "b5f1eaee682519513fba824c59de9cc933c73f522c28a9e0c70185316c6a2ca96fd15145105368ae4f5fc9e696e5824578fcf6bd81b202d626ecaf53a4dfbd0a",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -4440,7 +4440,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "880d605effbb66b30a838c5d9c3cb920426c679594f48cfb3d48031a719fec97d9ab8fd449dd504e2ce7a8eb9624cc8a12563665397bf4a7f9fb96720286d600",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -4477,7 +4477,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "3261d5dd8f4d7580a8b53f7ba404934844ab5198e5798b706f3e380c37460bb98d175beca525450660668d6bb4fa3ec242274167b63ed847400b1b8c543e2103",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -4519,7 +4519,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "f6db88f297c93cb6eb225dbc807dd314823478d27f5b944479fa881f331543e02c83e7dc3c4967c30dbff058e86aaa7a4f423bbbd2c53e63cf3d06aae91b3003",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -4558,7 +4558,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "1408d0b7b3b7967a5259dc08e0e2cdfd8963bdf07693c2ea3fc2b25364b2ca533fc0f8eb6d5d4840037ae8982740726c56a269546d43b3ddf5ec170f5e9f2908",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -4597,7 +4597,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "fc1154ef7bdc9ec548a75ceac939606b948963ee7821646cdcd96a194a1e310fafb77fff12ffe02cf9b7dda00d3b7b3ef949a1caf3f3d8baab6bfbc2c1bc880a",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -4634,7 +4634,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "7406d61a49f9dd7bb818f68adf98dd0e3c8b461319ba6f6fcb797d74348b3d6f269bf5c392370dcdcbd8dfaa12028d5b6cf6156390b6864b6a9e3f2ad2f84f0d",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -4676,7 +4676,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "47976da7f21be44cb97007c67cff1d9880cec2000627a119f53a4b904ddf3c249a9e9298ec1f8fdaa1b5ca9fc0937ae3e9e16c45f7233971583fcd7ebdda0304",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -4715,7 +4715,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "c7b3315c0aab5c8595c31606113284111eae25814a5d31d5cbe711dc65b3e7bed3508b829157e58b3f8256c6c7862d797e566bd24a36b8ffc9d8c5576617510b",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -4754,7 +4754,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "41d913599388d56560fb0509c2c9e5e9503d5c7a331ab8ef159b1203fcd220c1b2b8ddefa0d0ac454d86320b813f2d40d46d86b0d154786efa16cbc621d65a05",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -4791,7 +4791,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "2025900743dd759bdcf51c4960cc68bf3c74e3230bfc1b1ecdb4456ab516db1a38b797244638685f098084cc16dbf0510b9549aaf425398f81bd67208d32f001",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -4833,7 +4833,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "c92841f3a5819abd2f74f71e6bd1f7e706e512f3efcb571157f758bc9865d9bf0022c970a63d24d7a2adad6194de43fa8446e26e1de3c623f893f8c835c9050f",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -4872,7 +4872,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "eb6023488395f8883c095fbd702a3a5717311dc86dbab61067385e10c39af13fbf4e88faa75723b9333bc91787e3ac88163756ea7760023172db06c86aac420d",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -4911,7 +4911,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "25855e944c5abd6613b4b76fe4935ed211fb199a9a3afebcb59390701278e3a9209c64eac9462af6c82db909a475894078a46dcb060c81f07fb30f9a65f3f50c",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -4948,7 +4948,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "4c0ae8256ee2247106c04316576bdd239e49a0d1bdbfdadb95f5499b9b58d3377b5487423617dd9a5122aa56a186671af093442b4ebcbad4a78718246db47e02",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -4990,7 +4990,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "6acdf2c53261b747e96b8484fb8912474393a54c4347c1570ed424aca7ae966414111bc354da145f1d6e95fd99deaa440248752d50c081b1b6c1c4c521340604",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -5029,7 +5029,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "12af32d2af90e71142e7cafc6c2b0476becd1bea798bd45b29e5eb0451d752cbb41b17f0d6df820601d92bdddd13e1b1b9032b3d1aa1e6aaf2c98cbaec85a40c",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -5068,7 +5068,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "c9130706da3ee49ce9842978642024f712237f30da3b78ed635b334a62e8dd8ef95d7ba4115ce23f99938b0876aa3fee4f14fc879a3e1c197e1804dfc39ab804",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -5105,7 +5105,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "a0c5b78eb354ee731ffcc292dfd2295245756da821925444bf01327bee73af1beb2feafad095d694871733e47ecfadf20cd23535f865699f93f2507f416c0607",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -5147,7 +5147,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "7a0379e5ecef45d48801e960d6e2b47f3af33fc7ecd83648d95c2a8c01555266569c48ca76d895a9866e30d37b7014eb8b8b32b3ead69de5d65dfa3a2e2aed02",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -5186,7 +5186,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "8c3ad9a5883d17b10c6e5466d1b4c0ff4edc569d366424445df569b58fe78dd866c5ae8f6b013f97632b4e5fa85015b689ed2616100c90469278f8e904aa0509",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -5225,7 +5225,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "98ebe6ba354ca98d7c3992167e6f64cb84b5086a835dcb70d49aee0e98c3db5db936881904239cb12eb6917514759d0226ef88973a54cefb3b7e124d4f1d690a",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -5262,7 +5262,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "f8ed5ff81909bbef5c241e0fd82e27f9da8ec2de9e621a99f5c36e47fb3447a53c9f3c81b7834ae7782cbcf83ec1256b1dcc5e4c51d18aa22d0bbd095434d20a",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -5304,7 +5304,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "5f05192f8f6e23b4a0af202948f2a21c8c40ec55da6140bf73ab100597661064c87b11eb725d6e9a0412fe89ea6affe909a6094b99b2b238ededcb9fdb979609",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -5343,7 +5343,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "cf279f088e44fe8c2f203f479be7bd90bc2d824b5e533a136053303971dd00adf943961d9c7cf949856ffb563c6b7662900b38a78235a3cd8b3c81940ba38407",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -5382,7 +5382,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "56d33e942ab1b3000c4dddf3ef7f78d2428fe20519f46757bf171165fc55ef0f8bf2494ef347d344254d4df2f1197319d1f72734c9cc6dc29e8da16f0249080e",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -5419,7 +5419,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "7e4d8baabbca68f30bde4fd441ffa24648260211cfb775a728de49845f4fa0a7b73a896d02e9cd79e8b9317dda1e0bd99a2f25639a41aa1d999e61cfb2e3ad06",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -5461,7 +5461,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "8d29f290918cc215f19fb4528277eb1e904ffc48212450bcb4b322f3f09842df45fe61be41709438c1e86e63a613b280a17ceacb773ccefa68533c52afbf0800",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -5500,7 +5500,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "6481500cdc7a90a16406f828e677da5906de69f74c44746855d29ba97be84613bc716555cb86f3a714052a2198afabddeea50c18ba2fa4b10b147e6502b3c30e",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -5539,7 +5539,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "56ccca4f92a595fdba066855a962421fed77ca68406aceacfdb539ecbf153c35178a9007022b8b6554f33b7bb95c084c0ed0314d52d703be4ce02de1f3a5080d",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -5576,7 +5576,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "df0a68279744594e1e1f0b855cb452bc3f2014446eaacc1c35947c574911fa536593e36a55a5a83cc9c815681c2774e5300b5fdd284fa443410597930d8adf09",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -5618,7 +5618,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "6302afe2a7fbf6aa11f048ac58884d19f3c5f7f85eed635e73e77d272f49ebacebd25ecf95bd44d56fef3896522c9b68bbbdb44a28795365b38e9fdc1f99550d",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -5657,7 +5657,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "6cd2166ed7922d9ce10f3536276475f12a60dd623d28f75ebf2090d211a0d5a6491e09819fa5c01e8826aa820ba07bbe6bfc8e0bd7ae889e3c7b9e0c27a79b0f",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -5696,7 +5696,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "984a3f066911d74e2ee7c145aabbab1fb8cf4353848a4545f9d65c2c78a93784b1018964e8333fb9db303662d637ba6331c10aa3890502d117b8172b9f6cf606",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -5733,7 +5733,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "8c79c666ae216a20f8a8ea3ef062ca8f90499e7687f3edd39e77cdf8008680b49e7b8f56efadc6c32d53bb1cc56247d61667f5dd691247fd19505ff92dfdfe04",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -5775,7 +5775,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "5f096e0fa35c187137ecc15c008ff5556761909f6e1addaee09715f65fd5c1330f42af795bd04ffc9e801455e1f26ca79ab3b4be2b0ab48c158174a65eacca09",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -5814,7 +5814,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "9edf430ee99d22e844bc4d5868abf9b45e283854549c7f6c4882454548cf4bdebfa61174b3a80552603374272794cc623b1883fddac054c2da72c7b0a951a405",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -5853,7 +5853,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "b70b96e02968f1724b5957ce797190352887ae0c48b5b5f3a2ab86ac429d597129f05c404827013ace507b3abbed4e540812dd1ae33d6410ed3d8fb807c67e01",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -5890,7 +5890,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "88bcc779ed031179ff075bd7cc0e9285a19065c34cc8ced158b9e0cd76f96c1a379eab156d54134fd406836f4f76fa9a8388ed3983d47404f9d4f700a7cb5a03",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -5932,7 +5932,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "156d8a3c79e98e5a096294c177592cfe882cbe306d5c44b3fb8a1eba790bc68f9b40de3c814839266ff09d625a4ceb42f423a7e9d1904995e9f632dee7c9c90d",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -5971,7 +5971,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "820dc22120ea241d84b28a168dea9599a0af63129fa03a654b997f14aac7f4e9fa0bdfc887c8da9188089f12114c64ce1c4d7bd10764aa6866fdb83d34d3f105",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -6010,7 +6010,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "b1997213bad6623610d5b97945377a9e5e0b1e29422fcfff2a16644e65714abc4d0f8cdf5d9baa652dc8b7bac32a542c9c92b5aec3c1dd324c3ec19cf16a1506",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -6047,7 +6047,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "f8dad569adc25062711497f10f19aba85f4e9c385025ee34fd71dad846de0286b1fab254558716b878e05173a2bcdc17d72c9268f8f07c807f1308ff4629f404",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -6089,7 +6089,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "6e227a9f02b59530a3f3687ccfae22576f3d76e513a97f1f65d60cb33471b39fb887ca87802ac42887000f5d92e492a44a3b88b63d46f6981f576212b9a3350d",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -6128,7 +6128,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "953d869e180f089ef6519c2d5fa13c6b89044974e513991fa36a9b53a197d1e32a846f80bdadef2c76db9dd7eb4e509a6496cbcc611ff772c7122d0caeaa240e",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -6167,7 +6167,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "a4c871d14f457c89e95b3cfbdf97d63e06622297ce9ad6d56037e5c9f69ca07136a14d9f884eb2f0a5145ada75cfa38cd2b769ffac98cd2c8c1111861069fe02",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -6204,7 +6204,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "689120f9502ba6055b3086821dd31607deec766483d6624180fb0eef05a49e4b1133d8958beacf9e739baccf1f9baa0fc4a2cc8de92743fb541c50f764d75204",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -6246,7 +6246,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "ca3f89f8e4a5dc0594c5882c495627929dbc81873f06c76e4e99c76d7659ce494fc976a648cd2f9166de579ef6445535aa1e50bf868e0e6f7693815b62563a09",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -6285,7 +6285,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "f17d5c76a220e2b37b7b1d837a203e9452cd8c96bce21ebf810abdcb2374131a797b94444cbbdce4e9a9acf70cce274131fa32c3912b189a9ec428ca09e2d707",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -6324,7 +6324,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "b6b628bd4d985526845cba9ed85fcaef605a52d82fcd9a628e53cf7b0ad1449e472fad2f3a6d8e11926a388cd0ea4245695ac967cb472564721afa6880936c02",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -6361,7 +6361,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "60fa16cf3860a5e864d80a8c78177fa0029e6ecf8b524e6dfa7c46a50ba2992bbc3e6425b757f0dac99800e13d58319dfdeda85b804f0c78e423c418f1c1b003",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -6403,7 +6403,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "34aee5d117defb7d5a62369dba33a7b946af6c70fefcc3a7947de84c84b27239c2cd4d90322fc7edda7eb9eeb77130ce5732c8848968a3583905dca83755aa09",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -6442,7 +6442,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "9782c6f9df8a4c64caa3f31fc1fbc039e10fafebcf85f64e58150a81405769924398a98835db68a91c0d67c87de900980df2389dd7a6c569ef412e3e247a710d",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -6481,7 +6481,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "b020cc8be61cf29fbfdc99469a31884f80204b4273ffa9855409d1d156f056fff5af87453d6b9572b55e5d1e6d9182f79574c827ec8d95ce9273d652c98e5f04",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -6518,7 +6518,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "15cfd54267450ec9a518db70183a0dd65200cc06e89c6ac14b1660b3bf8f77327370238771d8eb65dc76eb6105531d345330c71296479349fcff1515a19c7805",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -6560,7 +6560,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "2e4b8c150188766775463e54ee54b57ff9796fe73d92c8ec80cbe615493cdd25c203f810e4f0fba578a36bf1ca6f8b8fa1337f94195fe6a92257fbabb5336b05",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -6599,7 +6599,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "089f9d9be0a7b58365acbffa8dfb984d36ce94b54409a5594cecffd40ddf152a3680debe6122704991fcd83efc5703a4467cb494afa15f570e7d96a0d0e3ac0f",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -6638,7 +6638,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "11a58c8c8a524fbd408ad37da20cf5c235e6283022967e2209ea4188996511aa08611850e72b962de3b3ff9412ad0376a0aa73b62225c69de38eccdf46d9fd03",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -6675,7 +6675,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "7a6579a32687e7aa588e3755db58402b4433cae46829d86fa373e4d8dd397a02f57fda3b8bbd7918f5cf8a42a078fde0c4a14141c5cac37d6b0bf30284049a0f",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -6717,7 +6717,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "1504b6b6106293ccb7ae42396725db8d196499a8263ce5a686e6c3dc89394b9ee55c61160af801881997f53d52ac802294cc98ec9ab716cdaa86bb0e74a33601",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -6756,7 +6756,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "8e7f9086f7bd8fad16aa68ccb7da3fd1d44ea95e3538af9588997bab83377019f5c657245e14ebfb9ce63e86f8524c04eb348770708a2badfc6fc6fb535dbe00",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -6795,7 +6795,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "e7756e22182607da8f864e14f68ef02975953107364a3f915b40c3ebf2b500f83f36f3548fc6057c9a0149ab2f3342026fd5edbc78c56c9085d4a06ee1473a08",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -6832,7 +6832,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "da54d2ad04e83c2ca8622f45418fab1ccfd86e058437cefd08b9d42c9dda26930fd14b126ce8b0a76ee50b2fb7ce069a7d8a027d1a5c90be01afe39f4c986904",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -6874,7 +6874,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "75b876166a51c164699519a821c146bf8dd32199c9ca023a087ea65523ecb20058fdf66d16227d5d93ee577bf00e953a1496e73b4a15e8aa52c8bbc1520d3e04",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -6913,7 +6913,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "b2f16bc04a51fcd700ae08e9f2672b55887fab8f1f5d4ebe6e596353e691f9acdc58846b01550972c85a68a485e46269b5632e5cb75c18ab96945b64e78e1803",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -6952,7 +6952,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "2c8a84ec0c5029a9423438b20cf5d43cdcd5e20bd6b6202d372afea814f3d3eae3f84614d54600942fe10e659703440260681d5ac72de9e2f0010b86ae3c0307",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -6989,7 +6989,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "832f543f60a72d00bb4977ab83a6bb6efea5369623e76c5f63db62357b98919c35e056a7326a02693fbc4fb95d24e09edad902136a684c20c418c92711bcc202",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -7031,7 +7031,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "ffb0d91721065b0a4f00ca2bb5da1ae53fa26f1320b35fc812f95cb46eabd5bb6ab431ad9f65d62872556e5429511baa370a0eac63844b0a820c96263f13f108",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -7070,7 +7070,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "63c2b26d820130ef7a2f0f727baf308d12a6692628b2eaace560e861bcc015a91da360c07382e46f6a7e97803e768ddd9090d6f34121194299568dd2141b0701",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -7109,7 +7109,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "ede81a303aab03e6161c8f13521e26072b8ef60af6f920b693ebf5afcc9c2fdec4999cb92eaf8b4caeefa08a1fd9b759e8e2e612db9f9e63d96bae0a7228d704",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -7146,7 +7146,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "0b12c455b6558d546554297d0addeb0bb3abc7c9d79ccd0356bf460679f1d9e039b7b5a65f11f7afcd12c6cca465870b45360e397aa31b75b48f4b9fcde5e60c",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -7188,7 +7188,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "08bac1e271edc5e08d1ae1bf747ae438e478f3bcd3ceca6ebf01241fb7f1e44e9151bc171dfb802eb21603fd861c6945097242e59d859a8a290dc52496116505",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -7227,7 +7227,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "4574e1b66eeba76699ad7f3c5a252bb4fa5e1fa2f2140face771383333ed6a057eed25241f5ff597db4e758da0c8c7de4699625ac6a0da8d73a70c1f6634040f",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -7266,7 +7266,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "44501f10d8bba90b737c139bf4792dbe9750911f4362e9b395318f09dc7e7755096a31dbe710db0b17d54e69ea7bbcd1cf2453c9c837a0b5e58a8bac4257c503",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -7303,7 +7303,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "9c1dd60e6f333a20b12d8fa98b1d0d92764e383133b9d3e2488901e758dfbed16ea40543fc7a6f3e1ebb8bd1a7a6f028dc4c63cf98ff020e3471f1c75f827402",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -7345,7 +7345,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "b785c767f5ee236c1aa475d8e1267178500378e2b5287b577cb28547d863098be8b3fd3336f8aaa8dbab46715ee066c636d60977f275d9e652dfc5f0fb3f4c0c",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -7384,7 +7384,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "b024ae5dc6c7a9d7b3ed1c4f3e095640ff7ef1af6605bb3e1f56dc01609013bbe3dd2e5739a5cd55367d9784f7c3eb14048f0fea9c8f1530e8c17f36962afd0a",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -7423,7 +7423,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "e72cdc930c9a568db27c9820dc988957afefa58da0ff11356c23684aa07a9bbdc0c616cc3405acba456f7324617bdd2dc9fee1eaf5d695cb9429e6784d6ead07",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -7460,7 +7460,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "e135d9d7d1904c38de0f151d90cbe1c1c6fc1424b3b8d82fc97d0b073790483434f9a827108d266139d027a3ca647eb1154c7405c5b00544fbed407713d16f04",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -7502,7 +7502,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "b6388dd038d2c0acb35f24e89623587aadccb2ff7a9423df4b1922d141dae85055ea20cdd3dfedf93c3e3807356d2bc3663bb20f02a4ac186436a426f7f88a03",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -7541,7 +7541,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "3cdaabb2f560fc839b77f2c2c131f91b471fab24bfa6a22d983d735220f5299feb4fddffcdd9864b88c4405214e181d8f89364606e3039dfac704f6744260f06",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -7580,7 +7580,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "70915cadb72feabb8cbb9448d2c0103bda01b540575802154d72f032d94b5a25bdda72a4b6dfecf5755f424e82d34ec928a0af39ef0702234430d43863721e0d",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -7617,7 +7617,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "26307d35084e4684b84c65bb7424e805215eaf05b0b35d78cba4b5fcbb2eab00261266251601e677d0e99644615b8df51394dc6dc09f8a57ec65a9bd6e43c40b",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -7659,7 +7659,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "bc1933fc1f5f786d17486d83c4902a71d6f87474dcd9821e01c9c8a8820b69cbffcbf8f615101e10e343530e6275d03ab28fe5dadc1b4faf0ce0c889ef4cf10c",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -7698,7 +7698,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "c27df2a24de5a077470963faa141e52e2a2c13260b9512095f8643f18d07795915bd6c0185bcf129b7c9173bde32e7f3808d7699afedcb98d3ad13397372150c",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -7737,7 +7737,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "bedca86b8481a3379280d49062794c270d945f2bf02fda1b4ca4f56911c61c9416e0b775d15683aef129e53f5f1535acd06001517c772c033597e3484c16d30e",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -7774,7 +7774,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "047bb4592e80f56b3fbc1072d081ae34c752b3cd67c1d8f8849cb03cd23675d7ed9bfe89818c208f37f02c7b89543e34d4629225ed313e87e142315a73f0b506",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -7816,7 +7816,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "b6b22ebd6db8d30243d8be955929ec8994ab562b983534f1ac155c2886118ab6bfceb9d1f07a7f29fd55f1f4116516920258ec8eb3c8d393017e3737403b410e",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -7855,7 +7855,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "9a5918d9e32b4d57b9fb464b31675f5e0bb2d05d17effe475926adb658aa6ec5181a6efda6158f6d38b7e4850cf302fe7836dc06670d3a2205d21f1981e66004",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -7894,7 +7894,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "26d131f1e69a7191b4f7bacc34d2649f3620a9eceb4aa1451e0c8252b2df97296d12aa493388c698e147fc2092876c9250aaf5de1d5f99e095eecf2b2eacf70f",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -7931,7 +7931,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "01a73590d78f82b2bca2cf71336b97f85f67e84a947d7dbd0c3e32c562c805fc929b720e5b0ba484be75c5bb05fc65ff8242d337f0d306e66cbbb586407d5703",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -7973,7 +7973,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "c81ed98935f8851b63f4bdf155a54a4dc5f2508f98884507d0d6ea13f1bc9a741c300359949c27f844320ef2f4fbed0ae6cd4abb577fa633e391b9451456ae02",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -8012,7 +8012,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "b5e2fc0dd0fce65acd58170e2c55b861466c8129deadf07fdb842abdf40c7d45c0e7a0676625bfccd85d9c92cd57ec9215c4a72f6592bac0b2a44d6defcbbc01",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -8051,7 +8051,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "0d956057aaaa78b452f1bcf19299d15f6e750912dd8e935adb28ef7873d85d9c142a63828fbfc4e443fa1976b98b249a34d7c4f88152ea67dcc56c5466ac680c",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -8088,7 +8088,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "c7d271cd78a4bf362f7096ad3cee7087ad5198c21026e5f7e7870892a73b246ab06ce229e185a3a25239a09c63a6fd7499f140bf7e3e114749b5c695a85a630b",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -8130,7 +8130,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "2d048f2ad92019b0488f01aa5cf7aefed5050b05436e94f84fce872ed5ed245abc2206f27cb11d89fbc4fee6a7692033b46b85a2e3ca7286a6abeae85338fb02",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -8169,7 +8169,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "e7f6e44cb65a0f56b62729bad21cf0a35e14373d5627902f139529e9a05b53554878a58a75f21fc21bbb6b65278ca5d772a9dfe233aeb24247844d2b1947ff0c",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -8208,7 +8208,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "cbda0967e87182ac6d1f7886d2851aade59c367f4445fb4115038b4b60a578ef8bfe34eb111c9a55fdf4524d608a9676dc07d89c22ff59d165e1ba69802f490a",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -8245,7 +8245,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "baf50a6bcefaa129adc2f60b189f2e3926ffb4d2e8dd1f2749f61164b4b4ca66569d424fb433c6652215522036af1340cefd3adf2ee1be2ea44e1e60b6b2cf06",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -8287,7 +8287,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "627da2fb91b4e489304c61aa1ce54f5ec015ec527037afad47070e27f49d0757514c5fb52163f9f4be31c13d12d9b8baaf4062341df2d22b0f96dbc437ae3809",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -8326,7 +8326,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "a8c52468283af783e756d48ae854677a524aa887aee2d0daf34b245711a486781773ad653b07ddd7160043bcdc93e7abf2755aab8902096cebe44666e8cc5308",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -8365,7 +8365,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "79f36f15ab04cffbf014a51802a97034387b957dbc68b26a002645d4f87cb78ab7ad4215835c1c7f754eeda8fd02367756fab99b0be42f3fc28e33e090fc790b",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -8402,7 +8402,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "e9a3cce6ff5dbac75b87a6ed34c964b03fe0bd65c4a58b65be1c5a5c8fcf0b38cd93db4a20d59293eaf2c1b38f5d09fdc1abec2539da47af96965b41dfbc1d09",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -8444,7 +8444,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "b3077977d0476ae2a612362dc8901587e8b74b1756c4816deb09897fd0fe5fb717e9bd977865be985ce4e073a61509fe2f5556e678033539c9062cf01effd308",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -8483,7 +8483,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "6e9f149a2d5e76fc59b4c3d454928864f43ae548b984a6284d9149270a5935c1a1db0fb412104650fcf755e9823d646e316e6912538b5dfddfebf8dfea68990c",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -8522,7 +8522,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "fa02e29ac94d44ed45151bae86111526efa965a84edfd6a3ddef3d7de8b1d88ee8320bac802a13326be590f9d93395376d146f6110453a3127e5b30173272f02",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -8559,7 +8559,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "a0ec08b022852445a553f26ea20f334b602cfbf70d9dfe7f53da92d77af1edd552a1850a102694e375019ecca06ca516e45bf333876739f21348b9bea826520c",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -8601,7 +8601,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "93bc9db8fabfe64217a305d1f0e72ee8645c8ebd3c511f6bd32f78fd65a1d9aa9b7950821ad04e71b718dd2778639af7f3607606da10cc945680e20c49e4b203",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -8640,7 +8640,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "9394b3e31729539692e80c13f456a0e96d1ff83533699e034ae3f3ff0b3b8fb93076c2d1874a9430ea202710aaf0adc9755fd40ce91593d47c790cf616dc4e00",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -8679,7 +8679,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "bc4f032fefdd0c42e2bf64b0c22be8a3f2600750d96ed05da3607d9592cf86898c574912421648ed6da8c0e205dddc86f623fa97cfa13b4e9b00c808c2926a04",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -8716,7 +8716,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "853253bb5728ecf59992a6d3e46e5bb0ac179a4055b04bba8e119eede23bd64cd40909795c493a35578bff60cb630f68eaba5e5d5d23e7ba451ece093ece6407",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -8758,7 +8758,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "bbec4d16a37148c5a46e9c659c12bb91687ea63c67b3882c69e496ac2134c54d3636226c288c75ef0e8e7969fb2f26669f2e052255d34c4706a33dcec966cb0e",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -8797,7 +8797,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "d5b49d6589e22a95bc356399e6746c8ea10615a16984859a4efddf0fd283fece36112d96500d91fdd1c9df66c959327428a34ba60b2a76d8112f9ebc21c9b70d",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -8836,7 +8836,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "1b75391976c8ee57dd1fe915d81bac997f71b6192c5e4de27448ddb261fc738d90298012c9ad20efb1d96a49aec67f5e971057f4d3a0e03f2021c0349c899106",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -8873,7 +8873,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "4ea9b65988d9063517b31ddd645f2cab908bbcdc22c278c8c298d494fa898d964470125612e047998fa3bad54a8245f34d2b939a3c70509852d79e7039978705",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -8915,7 +8915,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "e9c6ec1ab8dfcb485f613d0b3c24a3fe160f5ee60135288863177dc29f8cd4a01f76bb7acce0da59d29ac58c31ba0f3e094e95df8bd92ec198ebe99767d14604",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -8954,7 +8954,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "11b9d0f7e419f7a9927911dd22ac701dcf02fb9d9e067c99ced407cf1639da1dc6aeef4143b5a2c425008bd97986aa81a2e035edb1ee258b3466f8eb9df54308",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -8993,7 +8993,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "ef58019b03e6d004439360e7bb56002eae4a52b9ee031ff9b0eebee9b06a2637d245d1cc63587823f610a5a9eb6df28732fe05e1155bcf29fa6d4b81036b1f0d",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -9030,7 +9030,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "8c5be1acdf8968be81c2d9b2a999a9deb7aadd01f1fe29bdec33c2e52ba3930a36b3aa662ea08a93340dae39ade00e1446a300856ec8e36898f0db1623060e0c",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -9072,7 +9072,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "0035d1a10d95c7f4ee4755ef5c511f35a958a3d50cff29b1a737d277f1c42b0acf8203bcea5b15a0f2cdd621ab47c750c99b5fa5b937a6533abac0c39a55910d",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -9111,7 +9111,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "d5d61327ec19e10317c99416e5de3797ff62dedead3b80a3c16fa1803391325bbe831fa1d58be6093f2f029099d6e0b7e6cffb537db5cfa40ce49d1c4cc40c07",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -9150,7 +9150,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "43fbe8108a30913ea61ecef37e06d99ffd1580ba7fe8a2ba33dc5533cdd339b0147284ed222e6292db48ec69872b35e14e176d160e54f7fc0c24983388049304",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -9187,7 +9187,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "1a2443cc0dad4113c1586f827cedaf5a7930aea0f8b87b30ddae4a6470abc8451cef508e463f7fb9a54739469632e9c194ec3f1062ea28e06ad4d8d564a21902",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -9229,7 +9229,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "424f67f7c5766fc86c8d11027612b3f3799f5971732cf99aaac423ac77b5cb07940f1aabba055a382a25e70d173e5327527c4ff862a3a0057cbfd25a69d7e10c",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -9268,7 +9268,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "a8151e53ed4a8876e16b2e8c65596971f6c893ce2a4adc820f8a4ec8eeebe748694947ddc83a9a0acf378e565d9f376d6893caf156c35ad269f8597607d55905",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -9307,7 +9307,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "d13df2ce1bdb95bcc68fe5a347e42c9956690c6b21fa18d6f803889623669d620c0dbc5ba539b0460c706fa0f5638c08e79ed1e2466c44a81687c4523cbe560a",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -9344,7 +9344,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "2ddd80be431ba51cd29c5731d3ded811dfc51af9368e4a20442154d6084ef54673babc0c20590e90fbaa8f27c03704851a3c5fd7fffc4499287eb964f5e8180c",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -9386,7 +9386,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "e8052490e033375080035c6c7e308c16973a7e5d497b8ef1060879ee6befa75921a46efce4e44b3c762d0358dc21c04f627a898c63d1a95e76853ed7384b3900",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -9425,7 +9425,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "4d2726ad62fb72403783c434c05ea09eb739c8446fc6d13a4f2426af6d8429c4c22c7529bf7bcff59e3f80ddd49e4ba17ffcf9c4d518ae9ac4939c2f1d525e01",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -9464,7 +9464,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "ca2343674d47ca0fac972ce0c6e3132c476fc9fa8225677cf0986143c81826d440309ed77b19fa262d64899b8c075896a8ef566b6fe2df07f2d2dc1597f7f307",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -9501,7 +9501,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "d8e02da8686f7223e7d1b4b98614f6003eefdb5d04c5683a826c03acfe5314773ad32d1073e592383ab76b5093950c7ed8414684dde4e062c2229b056d96db0c",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -9543,7 +9543,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "b1302d39ba27f7b5ceb38fc6b8bd32cbc50dbc883bf5015dc8dd61437d16713e80723a06973cc768d085dac1873468aeb75ee9c89dcf477f99a6a1e579b99705",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -9582,7 +9582,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "c0ae700adf8a30023e2a223d8c4a80051f08f5d8f03b4b2cb466b0cf311168e8eee0221eb68f74806c421a5473d4fad4662d107737c6535d57d2045d0f53c60e",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -9621,7 +9621,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "1932babbaa819f34fa73203dbc0843023f222072ce03351608f12be542a2a90883b0d1cba7fb04947b5818f2d29cee3bc400c00064e70a15a32757d55e9a9908",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -9658,7 +9658,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "074adf3d49bf06fc2bf2174ad9488ad279da30bbdcbf9669b905bd49b96087dd40e0dc6c1b76770ddd4e9ad53965398a0fa8b914682f6408c4c2f72fd258d402",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -9700,7 +9700,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "43a0af74ec267a64611cb57d4ad241fd4d006b39d3ded625c2ad2e017a84231eefe97664d37ac93957845aa2a93fc71b4fd218914a8912f799b940cff744e104",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -9739,7 +9739,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "89a27f3a076431002ab654834a438802b5caf09a0c5d1a8284da7b2c13bacfc7abd9d4773141100bb7daddb9b4047894aa4e5fc436e5605996d36c1b3112900a",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -9778,7 +9778,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "caf94085620690eff156a20e27e872e2044178f0566f75ae775381419964d0e35787fc0853afa1048585543e045b51042a2fb4ef7adbe59fd7b422030f80eb04",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -9815,7 +9815,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "3631bb6df50912ac415f83a32b9610f8762582415e94d97da8ddd6d252d008a3a625f79f9842fb30f56c343e02776be9661ebe62557b5bb9b69e8ee0621c3f05",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -9857,7 +9857,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "fd75a3b1b5e96205406870ffa8b3b39f9965f060289e13e24a2d540c9247878a40837a752f88ce19e4feceded19d40c7ad86cf5879e577cbef82d8ce00874307",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -9896,7 +9896,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "064dd2c73b6dfb80df9480ef03545e94369e9a437d423dbd658762566536fedc1ad92d738be979845c54c9a574b5e26f23fc466cb651accccf65d7a94c098b06",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -9935,7 +9935,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "c16b67edf2a9602a375a2507334dd2a87a909e57eb073d09bd4adbc73c0fc6178af2e172d28cbb91a1690458e46a0530e89e4ede10db18ab1c8a922901736705",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -9972,7 +9972,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "1343308a54da285f3f6da6ed3d7d1fed985ee5c16357fa106b4062d105e9564b079b8c7a9f6a2e57dd96383656b4374eb4a8afd10dd8e10eb78379f3cac74406",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -10014,7 +10014,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "9b81652ae2742a3f5088da80da9edc6915c4e5d694d6925e4d4dd55e023a7588ec10f742e22767db0af5e273a5deff573b6f1c8cc519639a9eaaacfe20dc6605",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -10053,7 +10053,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "ad84fab1229764b6f8e080f7cc32963f0b312d42267a1f9cbb038f1aea4534cc00632747e54e493ef9519240790f89f3d3a9ca38a8a181e27fd2c08614e05306",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -10092,7 +10092,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "8b28a0981ce9ea730fab3bf8b45d9396aa4f16f71d93333bde9223e123345319c3a626e02fb7434991878f1c5461f8a60d8bd17a973e526ba08f3191fe967301",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -10129,7 +10129,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "c16298da9b25b9e8db48a8ff22d85dc233a169197e5974440664a413794a09316f382b46edbc6ec9046717302307b9771eba026dc31160cb3f37d4abd9e1ab0e",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -10171,7 +10171,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "54a92cf7d27434446e8d879af4f1aa23884c64235884c8cf6aed6d3e5348f6464ffd857b4701ec6ee2af8121a5db3143cf68a8994feae3df0cf4e368721d7d0f",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -10210,7 +10210,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "3ec9bd5139952e1a34609ce984ae592d131e3e12c2fcd961923fb5638b2e5cfe6e6db391710954ce51ecb9069f85bc558747f06f689880d59d6c6e60fb0f7f00",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -10249,7 +10249,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "aeb211bd659bc2b754de8938323104f1336eef0c2827cef7c3a3681ba5bccb8f0edc6a63b08afa8acc4b768b7ffa54c9b54b62702fc1b95502af6ba1fcdbcc04",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -10286,7 +10286,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "20bbba6bdcc67ab7de2cfb6fe5c036c85394f47f650ff225a5ea1f6f4566f3ec3a3276abf1ac75d78710e4d26f1bdfff4f5998b9ff5257632eea195599aee005",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -10328,7 +10328,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "b02b71cfc6715e60a7de8a252261cd5acec5096a73229c64016e5150e97313941ed86ef01373337fb21bd194bb2b82a21ab9e0f2ab3320f2ddc5633dfd15e400",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -10367,7 +10367,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "fb6a1db1f90567d2910040b1b94a91d3b8690f2a0a4cde93acaaa5287e72d99381bf0f36868988378fa35a9ee356884cb086f1f6345d193472c7b007595a6f00",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -10406,7 +10406,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "8539126ddecaf1ee70aa7712ef5de38ab6a03e3b1e6210cc1bf6f0874f1a19a3a232da696a94d668ba45a7159ebefad00d0cfe4401e95ada12034ec2e617b402",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -10443,7 +10443,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "d7b41d3802edf8a2a468bd4d476b28c295f573ac35b87321416013225e44d14c90439b2f6d609f4792da77de16bb382729abb772db4f0608a62533175dce510e",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -10485,7 +10485,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "e80940d12ba3412d33e69f10d89798f82c3545a5836ff341216a5cb00fa4f5a691c85498f691a2c7a3aa4985ab8b6b3549d7e926aea6dd741c2311bf30901201",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -10524,7 +10524,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "0c1f0c5c0f44d63535be6b192784dfc156079066db54bf88e88e91c9dedaa32a6a4034dacf13006c26b6a1b70a5af5935496e8448af90ca2ec29c80d05a4e80b",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -10563,7 +10563,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "dc02e7dde769feca0e560276278fcceec6282fdd719b7aa393a23dcc6c78735f3bebd87c363c1aa98bf1dbe9d2c4e7f4dd99906b067c93ed5d737b96b1242d06",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -10600,7 +10600,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "e84fbe597181b7aef1ad29e0186086222a5eb20a56091f36372b7e3f02583705290795fd45a327e656f3fc1a48955bad80e0b7a9d95435635d3b38210b3ccc07",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -10642,7 +10642,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "ea5a2abe26a109cf5b5876e64aa9a965a8de944246d7a0370328a78f135c431101943c054eee4d6aef3656bca0772f444086e303f18b13c81d5e045fd55e6305",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -10681,7 +10681,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "4627092e3a3f49047146d6da05010df1adece7e68dd6fced4c7b2260dec4a7c0c7bc466eae884de71ec53493a44f24a6f00af875f07d1e072b25c8cc1fd9ea05",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -10720,7 +10720,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "421132164620e48d7ed4da01e4e7d2cd17e1754c3f413df358fe0aeb9ce0ef72620a94c921816f5f3030082be10839c407f663420a90d6b46907514badf17200",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -10757,7 +10757,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "096fab54fe837648b6d0dd0fee100ca8e56978b368b1b514b9ade9c98409e73272f71b65184125ac18210bf942702af65a5252a57d1f82e3affa71ff08915503",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -10799,7 +10799,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "c43cb6fa3f996e096137156e71456e2a8e6d722947180a6d45f851f728a9988d2095b3c3b8b6559f4d0be947385dc274b9228659a96b0c082de936607492860b",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -10838,7 +10838,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "43668fc6e00bbc772ac4936ebde8161d8306e415bac4e6f9b2f0db04e479742a8d082dd8e01f1a99b518b8a7f6d2d5f28d21c89431d9f2262b2dcf0e964a4406",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -10877,7 +10877,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "16ae6a283b3694b4edd6fbb21c102c46e2602bbc39560eb63da015f4bde2320875355d418f81ad35b74447faff583569e28ae7b94050e035d300888668464a0e",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -10914,7 +10914,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "2012957d22f87ba6e2c896b94c4ce6763b8a86dfbf8c736f8ab18f6deddec1eaf5c24aae192d02a5e882a2aae7d603f8dfbda6187dd709dc1aff26a1e7277109",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -10956,7 +10956,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "7f8f5221f57093bdf23b813c999f8d53ea92deecd4d9ede14d9f4162c4eee8e2ceae4b5e6ef86e87b9b3e30a0865288fb71e0b78b93864f6038f4b1883001d0c",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -10995,7 +10995,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "2960c3064aa5cadab735ec806cafc92e250ad22d2a8198133080ffd9719fc26070da004922ec9a761e4ccfc0b862d029637f7cf03eac7ab1283ab0fe3fbd3c00",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -11034,7 +11034,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "8268e23ffc4977f45b0c493771b247220c12f37826321d085fa020a1c5d032b03eb42ce4194764cd5ee6ace3708e25e144dd62ef16bfe8312ba54890cc1bd50d",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -11071,7 +11071,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "01ae7383754169675bdb4a4f2830af43e56aff8f00feb4b6ec7dd0a12e7eb805ad6006c1905430bcdc40e1c12062a6939077113a7e15b0bbc7ac25af10d85608",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -11113,7 +11113,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "34bba8ccf25f4e0f8fe75c7c5ed548bc2b449a1dcdc1264712c088cd04a111047a4751990c410c50a041aab75203bdf3405dff3d7b93153e5f50cbbbde036e0c",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -11152,7 +11152,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "51582ca3feff21821031a5840f370ae35b22fd528e03a92f217f0d0f3bee4b16d4a256aa91aefbc7fbb0b161753e927e7e29effa8d69eae98f8110418f1e3f05",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -11191,7 +11191,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "5a8580821878036a0b6f14d25d707b3c240ad0892828ba04824e65f9a966e73d7eae41ce723eb614b814eeccb290baee07d118b895c51dbdffced162375f980c",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -11228,7 +11228,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "86fec482abc3bbdc208b41cbc90a3751b896699aaa5d3dd42a289483c88372647fc4809980acd79f95b716a56fb47a6dcbbd323fc371ae3c4d888f4c313ccc09",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -11270,7 +11270,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "9d7cd1dce9bd6c4f40a84c4d7070c6f04121ff66e21474df50b96aa42d9a2d847c944a7439dfbab4ea346fece7c90d34c4eef1656c4da38fe1c325a4c50dd907",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -11309,7 +11309,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "30a1c740f01d16f9fe726d86d4bc380b872cdeff5bc87da88e0f7268ed9c3f53675d8fa279efce6354cf6ae64a1832e0a49c43bf3aec9aa0ef907418b700b30a",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -11348,7 +11348,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "22ed57aeb8963cdcd441e41e55114743ba8da26940a9a5d1d2c8334215bda7a786430a5235758cbb36986809cd5ae7170294dffd311396102d5dce876951e804",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -11385,7 +11385,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "fbe40379a8b81abf615462e1fd1378415ca3e729a3d11f491d70f9ed35c96d250af8f7d21fc3fa0b28fac35d6b9d7516b62b9247a8b67ead03cc613f19a7140d",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -11427,7 +11427,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "f0501ea8ccba90a286c3d752e8cfe8a8b2fd97910c1e058a87c17dba9b00b5810186dc25f2a867cb1e59ae2796d94d25711af586a20bb4cf18cbe63cb79e3405",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -11466,7 +11466,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "3c8f8a917d5b9cd821b4239d3081b3317e53e68a04ac3e8c447a87ef82a15739f962c48e5b2b6610b2c034439dc9ed9da9f28a7cb8ba9dfc77f8f361ff608405",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -11505,7 +11505,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "80d41b99912f6748dedbcab19531a9cc7e67daf4c8952fe3f63944d9fdebc67c44b9c3f9a708edf86f574e8215dc0df9c628c902b9ca9d1a56345f0ee7bdf108",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -11542,7 +11542,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "f63a3437a200c29beef936e3a917f6fb72ea89267c7be3535b9e56b8056c5f2ffdf2abd1434fe9f37eb11e1b40f65acd516dbee2f69b4bb0d694326ed85aff01",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -11584,7 +11584,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "cf00f5a4f55dc279e6d25827b1be9eaaf71bcc6edddd03efaba49129e5e0f43802566217f709a79acce1e066664bea95060916220e39f46e96ee5c1ec23e8705",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -11623,7 +11623,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "31f92d36b620e4588aa6e1f292df4a214b9258d2c4d6c1ef05d92501fa6e41fb125dd21e82ba301bb19e8f9b279d2ce973bcf3ea643e3d9dc316fa9b6ab7dc06",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -11662,7 +11662,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "25b54fb94b90c8d7995b08665dc3c8337c6848fd52182d938fff7d2b8de99f7a197fdbf97574319a32f51167839f64ff4a333e5f646bb198cdb90310f4eddc08",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -11699,7 +11699,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "fb54e71f24b819b72c87d520e092400ce1ceeee0286b2ae68d8cf635e0f059cb7b37285197ed60978f1bf146a45a6683d7c6414d46b89d72a49837364cf54d03",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -11741,7 +11741,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "c21559ee074ad0cc6140f471f17efed15810f7bdafb5ee1e24eced5b0e1890c4a9d9398fc078f4e20e92dda320907ff75150daa9badd4c4290cef3a0ac542508",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -11780,7 +11780,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "8bd313bda246e85e7c0e876fb0ee52eac8a3b3bece0704646ccd014b677800f6d5786884a40429db6af5d6c55bec52ad5a70751c390e749d69e7dd647e6bd80d",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -11819,7 +11819,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "06ceed4e8f4195d96ee70fd5909110621f831911e3889d0a449eeea868e85ec5c9c19a338fe1aaf53e40c7f421c637007737e8778d8b9fde4a102f3d67089b0e",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -11856,7 +11856,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "bc91cbfeb1d7f57baf850acc713996bda18c3418c8cac9c851e784de99afa9670d56e9c2b3bd52aba1a72d49fc5e6110edd0a82856ec04a817719ebf76f3090f",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -11898,7 +11898,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "0c21e2b779a0d27e8fe84100b99b78b4b2f1b1a2f0ac0e10b9fcb9f9b833bab697cd8d404687d66b76030ad5310e528585acd03fc341c75b2daa0fbc99721407",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -11937,7 +11937,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "3709456cb36bc797b6478852a279b39902715f829142912cf5587ccbbe0509b73c8f15134f54aa6b1f07dbe8325c849f537d9423d46c31733e293595c150040f",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -11976,7 +11976,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "491493fba8f697ccd9d5263e9160120bc841155438dbb817bf204fb2babff51185d9eb231d5039be5ff5d12900e6a51206a77257a30e5585f78c5228c6df4f0a",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -12013,7 +12013,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "b4c0971d68ccb979f8ff91e13ad774d98a117b935615789cfce526879ca1c01c59ce74920a1e66946810d6f14e47b26ff89e0bfb792f26bcd2a07f2ed4223508",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -12055,7 +12055,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "e2d66dab639814959aef004637911114813fd80967847812c2697b9e5717347c07c6bdf74caa1a46a2927abc44d47d30422aca5efbe60c319e8bee0369dafd08",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -12094,7 +12094,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "5858b072700c360ccbf01c168532b493a3becc125c0cd3ef3679f6885b4b3e89a979addfa1a48771fb76bbeea8e14870f8476791c29801015c02be5d12e5d402",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -12133,7 +12133,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "db2ea5d69b1a92a53ff5d2e53117ccabcb89f525d7ab6f5e1c080df1ad7cd724df8d70d278c1f597fe8a05ab3bf782d9b13271804ad06cc1eb7896dd70180b0c",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -12170,7 +12170,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "4b1a408a56cb6460eccfabc5371e994cddda78ce9eb7ff883b71a662dd19f828d3a1876cf40fa7bb0b285431499159f8419eb5310d5490d564df83b389a2980e",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -12212,7 +12212,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "3495839437bf305b39405166b1a10fd5990300f694048e8002d7e2f7f6e0672186eca75222c0f0c5aeb2073d89c731bee64e765d3209da4ec0349c6245db0b07",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -12251,7 +12251,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "5699c76ad32c16e0d9580376ca8a240ff1609d4def64408430c4eafd92a1fdb54368135675cf852fddc7b3d7a534156498a7b753925f2226b3aa0f046b4f1009",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -12290,7 +12290,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "2f118ce0608f058ec6490124792913fb340de604a7f3b9693dca96af1dbbb761fb65b4c57f9d8f3a704250fddb5f64a9f9d04bd80f5028b1ce853621d2fbdd01",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -12327,7 +12327,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "bd1c815cd8f2e858563accf3f9563bd3c562bc652b129b41cd2bc1bbfd9968343aa7b051f761ab2d4dcda8edfa4d613926689df5debf533530bcce8d95c6ad02",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -12369,7 +12369,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "fc950ab2fc6eb57531de0bd5473c83362b4efefa9c95e298a956f0218f6d9cfecea35b11609c7df41827d218be2bac5a34209f86d739ea922638dc4e8260490a",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -12408,7 +12408,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "158be8e9bc87a536a119dc1855b27ea499caffde5429d021ab0b8aaa83cd906557cd9523ff553f38c7950a83d9b9d3f28ba1d4167f149c8133e77577fae8aa06",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -12447,7 +12447,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "7646b1d7f3f66609892d06a30776e468091d804cad270f762ee7e0c84e19f5ef2cddea065133bf5d7686b1265d1330ff3e7b2bf56d67ae9506e534f73bb5fa00",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -12484,7 +12484,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "f12983f6e612e247bcd9724e822cbfcd1e4e279f3b8a7deab997d0379cc2477bf9729590ce6b1f7e09265eab44455e7ac189711d806d35b0e2cf2a09dae04801",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -12526,7 +12526,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "dfb420e2d6654d59ce7493621e928d78ce133eb09971577a17dbf8627e1ab26425496a2be7d1a9c7130a7aa8a30f2c94c29fd2015e97e40a01e67543d99bb304",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -12565,7 +12565,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "47f3f712c37b115738f71847b1b8cb15f7d6efdba325340b2407a126ec0762fafa0313be05f9012fd50c6adb7ad5ef2560d2437e49ddaf9d3749e442bdc9570a",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -12604,7 +12604,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "f78114f89cddd036bec060d77d1efaa38c0c095c53d6bbe82f109aff8b8b543ff2e2621c624cf8405dc233d41c9e526daa447e4f3ebd439c56cdfc086f47290b",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -12641,7 +12641,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "fc44dc553d3ce4a9e93861ea1482dc8dfa947d0e4ebf4d2aca382e171eb3b82980f2205024265d2c3bf751fc49af745ba8c366a48f5f2864f50032c43f91da00",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -12683,7 +12683,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "365bb9082865291b6d45169ac097859ab340e657773065728215296511d50736ef68295f17c922e41a34715fe286c43c776dac3879e4a3b410f7c53b60c08100",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -12722,7 +12722,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "daae96950838cddf1b8bf7317df9ca17e26c758e6022cb7dfb0b929ee8510d041a9a952c581e63deb947a890ce4d5a86fe1a404e9fa9856474a100345ab29303",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -12761,7 +12761,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "3789d1830f952a127ba1beeca95268cb2ec34cd8644045c1146c5dc3043c757137047e4212685ace4921ef762f34a713c5b0003319204f44a121307686f55007",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -12798,7 +12798,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "08637f9628eefc7699dd981c3d41606ef57b1918d9a0e5819726c34962dbd9fada186b13db6371b4eca64b62d932f72f0667096f39e1ee4d3c37f556c5cdf202",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -12840,7 +12840,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "7440cda0ae4c3223f1393134de88554c26cdd04e327126fee853f245ac0af5179a0e8887b05e1b1757255bdc03f2c8e4780c53af152c79109d3e26919d48fd04",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -12879,7 +12879,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "54cc60e049f239ea317cd0765caa715061ccf1e3dc7e2e185c23ba0074dfd2566252e5032e29b8b567db509d5adc04ba2d0cca05412019116598cb37f3b28c0f",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -12918,7 +12918,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "4bac6a4a2e2b1ee403343843900c6d820a95c9939df7faa5294c284d148ba22c692e7dfa2764515eb956b5aa6a318a2872c5d66588ec86c45a2122ef8688e90d",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -12955,7 +12955,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "7112813a7a70a37c6d58dbfb39b30c8231b08419b6b7ac3399fcce155c70db866b8a8d96c1e2dfe445f2e8c0fb17d4c08df3f9132edbd64b59cbcc8e03297305",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -12997,7 +12997,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "1acda7924db343864a533688a1b345d0f2df98ca56c035b36ca2552b2a4dab1f6661fff077d87a8526412cf5395ea43b7b6ee3533160d4409bbc9a354b57800e",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -13036,7 +13036,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "82ffa0846f619b05bafa0655e90121f20de54d5f37ac47e7f4e35594f08a1708a57b29a17bfa8dd7c38e3a4567afad2b02c73e934e4a2eeaba79c79330ae390b",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -13075,7 +13075,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "f3fc3881c4c045d14f4be81e73c3194254d8eae66865e095566528d6e88a27290e03af924ec2a4ab089ab72608560c92f947a21a60fb104855c1a87a897b3906",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -13112,7 +13112,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "ad295b0950b6ff2e9c0a875f67a28bb16b50f09d6681afef0c77007d2602eee7e72922a36584731424e8e289f0cb6d10fde5736fa1bde6a40b409ce62fb7c009",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -13154,7 +13154,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "e7cb9075a99e8660a695afff5ff77e0de54a54460584ca0c84a2ca7dbe70618f10c0fb2f77b246640e92b1af3d4bb885c322ae77e5890a47d4e538d624fdff03",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -13193,7 +13193,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "7f33119501c968699015625c7c3bede76c104b68def78e0ec2ceef0f797b65454de4ed051693c2bf196db78cdfb67d931845324b2a07acba7c17adc0392bdb09",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -13232,7 +13232,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "41a4b3e899b91faf514051795c72e0bf56ce03503c07e6bfd3221065fb4efde559619a17b0bc9fe002d3f66370544c103eb9992c71fab030c3b7276e6ded540d",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -13269,7 +13269,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "a6110c158960ddfac04664fd7e30d9fc3719a220cd3d66b3e729d0f70586e67a4e031058f58e85879caeab6cffbe628e0104dc2ecde6365a996f6e85d847df0c",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -13311,7 +13311,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "3926ca729949c578376ea8754ea6567d0944acdbfe6b5f5d381aa745d4c9cf004edc036380c0cd03f7adf61967df99b9b656f654c2bef7e3f013f55538dbde09",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -13350,7 +13350,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "283d1f63497c24481a46793a133e35dfeb338fe53307f52e88732aae4e4f49a0e9c81929d46cb41f0fc8c505515fa79a59185aca5b1bf4cafa04a329b7121a07",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -13389,7 +13389,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "3cb8105db7bfc5fd4c2ba3968ad0beaeaec4ae053a601cade86f280623b6569caf4d6ee62c03e94539dc89f635557b7fcb155e0b57cbf14742c455e0a1a85300",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -13426,7 +13426,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "5a47294ef953c9574bfb18c690ffbfa2ed3e7fc16f97f0f83dc6f8d79b3a11bbb4a4b8f98a880cd5493628d0427c8789410cd1427691f8b49955b724ae86ce09",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -13468,7 +13468,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "daeac3be396e3b37d3d1630f55838ae32bf8ed3425f4c8dc85b613e6c7c2c6591609851d6136672e80bc97c52b5af48003daf23c0bdad900ce08dfa0c7c46b01",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -13507,7 +13507,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "552546c6f46c1fd3c5b2dc76b95b3ad2266ee5c6d79000e32b726c86100b2b1aa988b481013a8e7b4d1027a731f046fa2416334281d4350ab19d5c1ecce8a202",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -13546,7 +13546,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "f9f07933312f196c6cb32e824bccd56b2da0710faf1a9333d3a5e2107f9a9bdc12c6fd1068e2ed18a3a429535b399262a37b9ec5cb4fbeb0f2cf302ce315d807",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -13583,7 +13583,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "1f7e5b17bf2c4f50b25fb1c72b3008a5dbfbaac7f2498858221bf24d5754cabd833c9974b16e2962d60db95ee116992c733712265cc994f417a7aa8e2218900e",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -13625,7 +13625,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "b0b68279fc30848495c815c697d6a707d04c2d5b51753aca6e1fd7aa952f77167521fcb6667a6862d540d81fefdd0b9bd326f56cebc56b1eefe3ce139b1b240f",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -13664,7 +13664,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "e100764f6c1dbe730a902ef0e31cd472438c5367c4978f7977d7ce82ba4b8ac0eb6f3a68b4b02c13d1f2b7f61ef8a80fb4ba3ccfe4ee0eb8c4186804797d4603",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -13703,7 +13703,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "9359607f21ddc62b3021cf0eed22124e815a50e18e5f806b4f8710ec68bf065db59393b11e4825830cb20401efef0a9b88616c54c3de7ecf1b87c22054480505",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -13740,7 +13740,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "1aa9adc7a2334ee7606c823b2ba6e396c0e89fec36406902fd746bd2d17d7ce9998bf5d3874deffd658f7f971e4fe68ba34f724b9391ff6ddfd6e77cc8990100",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -13782,7 +13782,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "2af12622e90b73225656847fb6300a51fd062b2f75f6f1a83e6f364a0a22b091ca0c8cb660c9992d448bbc7e7e79575f2a10ccac61f4f6236b82b7b06fea4605",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -13821,7 +13821,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "f79fcc6743dfeb5f71a97f2106d5acd065ab6be308df9aa806d93bc65b621a9f38ffb218495c88022970d8d450e6bc584536dd49bde0a2fdae25a390c8446102",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -13860,7 +13860,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "72e8f1e202270aedd9899c589a1c62975df4d3ca4575346741c896acd37308fd7aedb90cb33234f796364b5394f7ecc45c841d671a9e4f63f97babff424a9308",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -13897,7 +13897,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "c7f419a54f76c31716f071358b4510ab80c4e1a55d329d5a6389a7503f3b378678b8f52a16e7d148057f60d1540bbe2a9a455a6180d52b38d9bd686dc6b6450f",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -13939,7 +13939,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "b72ae30017b95761955cd4080a083022896c4066a875c875fa32b9ab63b7c58935ee71bd5a0696546a408de9d46b5241ad1c7be53d346620e9515ecaeb1ddc01",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -13978,7 +13978,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "6b06d3ca404b27a81c4db4f2e7c1a27e4a2a1afd69e18819888671dd756f024fd3a0bce912cf2d88f1a706d3441af3a19e2ed3a4d9eb8c2b60d944864968e904",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -14017,7 +14017,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "be4ef75d93088e2833fe511dc02296acbe796d9112e20441f89631c22c4848d169563ff47a109ec0db994dbb6aca279ae2295970779e48046cbd6258d4769e0e",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -14054,7 +14054,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "bc84b8e35885d276b76cf08fcdba1cc57860a3df02c8ac3313d2c150a2f1bd76ab3de27ea7318524e6d2a529812cee049e1b71b81462d997386bd85327e0f404",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -14096,7 +14096,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "c8968f601ac6d0849b80712084b82ae21cde485db3ae8476b452f0e598d7a9e27776237548b8abed4dfd025758d88687f35c284364fdc33ffafa8685428da106",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -14135,7 +14135,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "2e1bd222d1d89265fca2c93d72a988f463efb90fd5f1b8ce1358943f3bf242d096c183ec887106efc73d7b2de17d7eb9f2214d795baedae696e1eada18b3070e",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -14174,7 +14174,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "eee8c47f7ad1979b3e1669d66aa237e7156a798db1e619087248ac2682fd1bdf8b7ee4cdd364302a8c06a454e680cb71935681a95236941641e7691d3fc01604",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -14211,7 +14211,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "caf424328b7a63662b3ff55e05f64de73d6eb0e970e5ec6145901b76f02853c083eb332ca7aea3edb14b34a312237155255b246ed103047458e253e92f9ebe07",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -14253,7 +14253,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "e7600a59e942cb75346cd8cb13bdffc72da96d2859afd8184d8d94f7d195dc2e6a4acdbf4050047da0d5fbfe1869ba67cdb6ef450e500df5f88bc486b005b200",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -14292,7 +14292,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "ebafe11e9ee4ab8381c4399281719b3d366f510c177a90223f9b5eadf523d7f171d3174e2ec946fe75a3122e166d0deed66246b522d15101c2e57dd8a8195208",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -14331,7 +14331,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "5b6f80a4a150732880de602dbb941b4ec41cc8928bf8ad22c15a80a5f60ceb204af6f45b16f2e7d1e4b359f4b288aea5ff4b174bb30ee14b4b4d2547b0ffc103",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -14368,7 +14368,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "daef2925a980a2651dfe5366c478ff01a75b257f507006ebd8e32e68600c7139b69a183ebfdefbcd36d5c745d13dfd2ae0d728f2dc1c1c0a9b03dab6e4aca50e",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -14410,7 +14410,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "4c8204f265919b9f0e6bbacc6a13e3536d10f1152db19ae98bb9fc14a5f68722aa94394ba5064e2c14df502f47b06010d27ca947ab837947eca711911aab3f0d",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -14449,7 +14449,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "688093112af32d418d9187a193077f5eb5896d56df92d86c10b9f3f983f2fc74149c42aa5b90f8021b1e86331bd89a89035fff2d93302d90274230def1684008",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -14488,7 +14488,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "d97186b9ed386f2b62688a3852572f74b7b9d84fd2b422f48f66869c9dcf21bb84c405df7f81c9b90cc4e7d1f3c69fddb6f32d8aa06b913043b6840b126d1403",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -14525,7 +14525,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "0001872b2f6162a7b2053f17cf12f756a18735215e4952e91b842fb7734ac94987d75b0e8305ee0ca944cd5a066bba7c75cc7a483640106e83d1331aa4a79900",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -14567,7 +14567,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "c8973821dd1bf55b4a70e584f17824c4d86dbab9432d4d2a360e10989d72cddc4fcf550c0900bd63e3a7600ad73af25574d455ba3e6c3cac529d4736b08a1109",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -14606,7 +14606,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "a961ef5c83076b665fb4fc8bce9990ea8479159caaa3fd120e50f1fae2e4a4798dd56a49a115622eccfd26bb771d7b55fb71377df5a6ad6d3f1fc744e879c109",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -14645,7 +14645,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "555db96343fcaf03d9d5124ed6100d1da0b324bffbdb52d82a28c128840a01424573c9348df9c41f06899f4592f32edde6d1b156f23bbdb50ddd9e541a28cd06",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -14682,7 +14682,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "59f910ceab759aeb90a3cbcf125a87cafb95c77bd3a5f47a35c86a4ea52ec5c455b7a50094aad80fa4783f5bfc118a549093dbcfc45a99787ffaacfb10b28a08",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -14724,7 +14724,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "168e05959c7da4c11db47010d5751c3f1c226f9f03d9cfd8c40011967cf26ebe87583620d6aaa5d7acdf7c46fb4847182df20cb1503ca6665b4940e03ee1b707",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -14763,7 +14763,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "8451b26ad042422c46c725ab5bccd76760d4a75caa583562f34636b8546d7a0759289353356be56d6939252e01490638695d1862a5e3581a1a31adbb9ecf1f03",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -14802,7 +14802,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "5ea1fb7b3523c54f4137ebf0a0818c70827718f7358fab295468886805ebb1d753502b0ac11b6a0c1488ca6093d43ba83594854695cb726acb2f98a9ef20930f",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -14839,7 +14839,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "7b7ad5668530c1b55e2106d04939918128067294cfecf205a964312d5c37016f0fffa32b1a4726bf8643e616af4495bbc8bd8e6af2540f7879846fbb1f1e7008",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -14881,7 +14881,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "235c7764911fab1cb581e1a4fb94ba7e2dfe1ec0ce5811a47d3128b1e82a67a0db30c4053265b59b96f7932f6ceb5709b60ac625db221152833aaca07263520d",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -14920,7 +14920,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "1c72eb8e5f7f8a859b34d5f6cc548dcae818a2e87a2441afc30bb81cd5f9fd3a1672cac66c24cebd67a60db8e629c14fe8302c359712ba46414c76a483b46b0c",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -14959,7 +14959,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "25b01104a9b50b884dcff2a4ecdae9b052e77dabfc41d5ff602bd95955e1992940a11e0e8312338dd9f6a35cb2eda38f6b921959688d638b60613c7e91a6360b",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -14996,7 +14996,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "479d6c25699161eef1a342b8fec4a959b30909bcb26c59de25869640b9aae1703d4d2e6205979b232bffacd9c08d781163858fa31029e6939201a985b67b870c",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -15038,7 +15038,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "644e5db2d9111316db3774772d2ff6b57ab5ff5d4e96b81078e0343ca5f9aaedc033b388899d7f3df04f2f2f12c23361f652160c0cffc04f54c35b44aa842e0a",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -15077,7 +15077,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "f8f2ad5b5d54eed4958f4a49f7a61cbeef60a698ed5fc3eaf8ccb8410bc35072f104771b0cebc88200a1b7105efbe8a33af5deb7c5e47d13f71bf8a345d6a305",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -15116,7 +15116,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "fb501b40ddd30f6f985a9780430922b724634cc1e2dd13e897751408adc7a67e1ea7d9683f775a2db2eb67e9e80dd9ac5f020d715e85fa2e548265548c83be0e",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -15153,7 +15153,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "0afd396023ce3b5ce8fad9b716ad285d6b494004677d601c9d7886363533d57f2280692259a54c2aa5dc545a1a6284d7a23f7bb826a736df401b8e2f55a17607",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -15195,7 +15195,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "8a4aa1a1f465bbdee5aeaa72a0d075da94f2985b1f0d190b49da77a43e48d7b460105dce033adeab0efd6b84a70e35d96f0b707234b5734d9539ce66e8e00300",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -15234,7 +15234,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "f4ad3417a8485925863b217e2b2ddc7650a72d7b884123842189df4692c581ee38e6c978f73d351902d03ccf3c6c98de8e4608ba40f566644fe62782cf711e05",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -15273,7 +15273,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "03c005521e6a3432afc302f662a20611185d3d9e73d8f4daccfafcdf2ea8b736366e9aabed2cc97f7f2df0f99bd17c0267540ba5904f34cff438a3889b8e2104",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -15310,7 +15310,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "91dab60242ca34ba9111929518314bcb0142d4e90cf96b2c7e05fd1df623f93f6e68a1f4132a4739d87c306320a89336f55c7c7209971e5e7d68df33eb363306",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -15352,7 +15352,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "aa89187d34b680a4868a48af0a4049fdcd8f76f9e6cc433749d00ed15b45a6fb7cc051e01dcad38249226c4fba1ebbc33e2b212730ff64e5a1b9317304db3000",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -15391,7 +15391,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "b2fe49bfdaf6edb491f1dc9bd19d24f4dea137e6ef3fa366d65c088295baad411e37bb03b62a7082bc35968769a7efa83f6bfa4fa9a9590d8c730d013ec07a03",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -15430,7 +15430,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "bc52175aed2fda4483527c12350693bbb3735fafd369b05aff5fbe7fc28a9ea41592d967619f941221150cc9f8ee03fbd60a5d9d44ffeb5e7970343b287e7303",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -15467,7 +15467,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "6ade9c1db922ef5873efd2f8e13fd653f9230616fb8b0ffaaeb9b79568223aea2e5c40493dd235fff9189d02183c7e02ab0038efb05e296b077389a0b7be9a03",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -15509,7 +15509,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "c03b5c4e04d5f2189e7bc0cf48e8bee4340dcc868e3e8e3adff21b2575b8b46d25df81186459329e5b90d18ab102d617f638642fd08571d6e79985d430e3880f",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -15548,7 +15548,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "b93b99d3639d520aca59c3d9a253270aceb4aea5840fe447bb065b08bd537ea637a8e87ad6b81bf92d9f7339aa8b33ac7bc97dd30655edd66d65e2cf7a5dc804",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -15587,7 +15587,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "6ff757ac13ad3f7910d2350b261ee7d2b1f8b72981f4d3807088d50828a484747454ba442824ce73e69b1c240b8dd79dac64b15a875efb1581d029db6142150d",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -15624,7 +15624,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "35ddfe1235aa3c684c949fd97288d0b16fdced5676879037db21cad4c7d3b7e50ade48e060ecbc95472ca7bf167041ed98d9d490b3a4fcf01193a5ce7e368c0d",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -15666,7 +15666,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "c74c3ddda4847645e337dc03b808d393c7b03430837217b7b9412d6bf9294061fa531cb458222901b3326adb35d887c11ec4b1195c315279900aeecefff1520c",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -15705,7 +15705,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "4cd582c2735ec45b498ecb915924005d1b76541f564e377217aa992dac9a71c747b34fe74c9a5de49113e2b78ae82681f6607080019fc5973c08679076f7c008",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -15744,7 +15744,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "75e616a815fab5294015ccf11c3a0a0a379014489639f09a4a4aee0d035b849669e01598653c68c93830eba7cef383734da4f50f6f046d4abb8a95f43ed5bd06",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -15781,7 +15781,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "f5d4c29d17a8b3e3bc79fcfc0435cffecd8ce5ecda4343329c114288490b84014daad24f0bfea0c154f2065b370f96949adfc57fe0ec010f6d7af751b965d700",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -15823,7 +15823,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "9aba89aadfa35ec4f523ed67dd72beb8e0ce34695318b7801c3b9285bb728197388768707b282622bc9e18d22c1174a826591a78c8f983fab847fcc5e0059704",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -15862,7 +15862,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "678062fe35b30995ca847f48da52f80f013452ae4552d55bc39d8ed48b0003fd243a68e42a7c4b8510f0641c547d68fe8ef82c9c06ded081eb472a2440e8a20d",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -15901,7 +15901,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "8bcdde445f87a8f37f1e50707b100c3c62de55862e6fced15329e2449cf51f887e494ba581c9a73dfcf999b6b732176136aff0f22059aeecc68bab27ecc18705",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -15938,7 +15938,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "73d2196f9dd19d2ecbbae056bf975037ff4973cea2f04a85048fd971bf8648b1733242fdbea3510e118f4f01ef0847496db232cfbb92d0e9e4c29c63d053a800",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -15980,7 +15980,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "4867221503503121d207d6adc268b7915a77a4d8814362568729e9610c469225e354fcf8b83399c5248ac4b035df7294fb4079f5809547f840d4cee543462d00",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -16019,7 +16019,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "628c7454df1e27f96d91148e06b459153c33ee7aeb6dcf0d85a8e81563bcca29a2816869e8404b75b44d9fa5f44a57770fbf4d15abd12c97d596179e428bbf0c",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -16058,7 +16058,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "cc8a183853c6f9c19f1d6a247f0495de6bbab12ad0136fe0f9934088b6cc90bc3fd4dbe0af43b2485241088247bdb51cd35fd0e0c8a659b19d571b963e063f08",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -16095,7 +16095,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "c617e0499e3b5933ba192ca10b63ceec7ee9a19808ad4c7961e4dcd777a12f02e46a4201576a6ffa8417cc8cd725f003ef8ca73e821415dea33e3b2f17efe40d",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -16137,7 +16137,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "012d23082d4fb4bbeb5d00fd2b838fab388db5f572d4c8606228631b12da22d67b6e94d37a3665e0b945b2477a94bcd878c7585688ca07aa60eb229c581a1300",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -16176,7 +16176,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "2e1291f557bc39a3be6a6fa27caccd225e6ca6eac1890e652cc2e53b0bce00dbff1d19be940f0b5df744d9e22846b7f6811a40489ff6b4a6392cfe98d0084900",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -16215,7 +16215,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "a1ed0b633259379bdbaa756203342c27094bce7ebb086d200c8e4749fb8a877307ed1cb5c455568a2ed250927dc6167e0c87361b4657b475a65ee99a9541e30d",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -16252,7 +16252,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "b1c4d0c43e9d95b044217cb27cdd7c416d9f25fd7ddc58b1661dc80ff9447859d1a6ee11d69980a50a77f0ec1321dc086172e8af9e4d78a9817e7e43a0540c0e",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -16294,7 +16294,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "86255d627927e4eba566ccad0b173876bc3be9742fdee4baea6a4fa49dc903171c1863344dca71da1f581585a671cb251ef93816133d6eb596f5f0b1ec3f4b01",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -16333,7 +16333,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "9fe40e7a07a3abc8c05b20c7efca36642f5db44e3561da017aa1e55e780cffcfa8fc202e0becc8146f313d1287d6f19aab5e4eb7b4834692c066b91656e60c00",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -16372,7 +16372,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "bc401fb78a6aa0157532287083d4f31e94b88e9f2bf4ccc23df64eb91ec8e29a3e45c5ab6cb5418e00f643348a27f83af96b878b388304e12384377b96a35008",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -16409,7 +16409,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "eb6b07fc02c5ca221c77e78228a282042ce6957c2c9eee925879f3c69119607cc1c226e6d6281693ce23b91bbe991ba54db530b12b6c6dedc7cf1bef80b36306",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -16451,7 +16451,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "00862d0a82e6dc3aa974c30a64f658a475378a3c736a039fdfb0078b55ca4c2a4a32d324062f9ba07a39e714246b001545294d6c9775b900ddc41241b7a54c0b",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -16490,7 +16490,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "63c028647d1e90c96161db69896a7369533bb82d5519c29ee46f6bd5f2af6231e876c9599e8c59173f9e8d69731823cb09117e8f997a8e0fb0050b0b68405800",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -16529,7 +16529,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "efc9593d18f13168b72391c9ec962e29be18bb340c55e4bbf3de1118eda2d54f32336cd7805736d0f45fa23e98dff5b888ac2ce3356d17e5ce420fc15423360c",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -16566,7 +16566,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "639fb1fd0babb5f0abb395979d0bc7f2f4ecd19aaf74b64195552c086fa6012dd58211428c6a4d005ac410a4f6e7d603e90106a66532e4a71d38b698fdece309",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -16608,7 +16608,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "8c52978856844d408a1ea353b29713c2afa067f8814584b5e2e060bd19208d3084015ceeeaf2a5172168531f82ef836b44212a9424828ec5ecedf23fc86b6e08",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -16647,7 +16647,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "2e97587a4774fd47ede1a150ec2d8012d08b21a33097db0498a232099f7c647a0378ca069bf4230d5325f1e8352fa37668bd170cf88ecb22eab12921de2b8a0e",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -16686,7 +16686,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "16d4bf8c43474880a6de6a54033dff289ab2602d50330dbec03c5cc88768e22c43a7e8b71183f4522961db7d1b1de53a15c891ca51c4840605246bf6c646b90e",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -16723,7 +16723,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "4e0975dd6f3eafbfd91f013f9d24e4934adee6f32ce12708a4cd1f387ec2dad19e6cabeb13bf585670043b6e0f84f725abc935cb9bdbbe52a166d7cf7320280a",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -16765,7 +16765,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "8a3a7b940de331695c0e6dceafa9adc9b215065104a3f331333b64acf8bb65a7a31bad19ea2f1c88e78b8c8cf3ee0b62ec0e6f663fc96987727302b573d2410e",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -16804,7 +16804,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "d19e579b3ef0889d9819cb5ef98d57e93f721841a9dde5e2b8b9bb9f112c5a12f07a54d9a617b8e37ce89943bcb5768df83aa1566d45c8a23e7c8c91f1919003",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -16843,7 +16843,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "fb2119d55059631b1ce0704df811389c6c12f19883a0a112c9272f7a56f3fb6cec3f4b77c6f5ec9903f64f4ecac9145ef7f196b2a319924dd565b59588431808",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -16880,7 +16880,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "1648bba6d1556de456896e27f122fa3d747e7f0482c272d1e8a36969e6e8ea5024d1f6a261ab7d08a72a24536b0f4522c164c43f95b4eeec0ae906300a888e0e",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -16922,7 +16922,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "c99b795f910f1ff435df17e292ebc238e7ec6249739b83ce8b3cd3bfb11c4322206858a93b96eee8d82fc0bebe920bb53e232af39bfcde282779b7d88f29900d",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -16961,7 +16961,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "5dd5208c4b3fb3931e05631b7ebce901782747c4886d46c7a116561d39ac63c5c6983321c82f60f44308377803ace61957a59cb42cbd8996fe6065285b64820f",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -17000,7 +17000,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "8a4f4b486e4a4145a128c19e5a8b3ac00b04b129536684eff423f95fc227bb9da924c25d882bcca78227311fe60f9da12dd573e3b489e0ad14db97454bb36203",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"
@@ -17037,7 +17037,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "9ab1835ab45f929fba2bc8d4b39e156e6c94d2241e158178cd86bfab15f7308df0a40c8dfec09899b35353582e18dd647b8e0b6e0ac29a9043adb14951b77708",
         "remark": {
           "remark": "交易备注，任意信息，这个是转账交易"
@@ -17079,7 +17079,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "4591cb0b968785cbfbd8cf6181c5e0ff08c950adaf36310353407e21414467eed54b8b236d7b186c3cb85b7b5da71b988e383ecd280bdfafcf79e812bb5eea07",
         "remark": {
           "remark": "交易备注，任意信息，这个是设置用户名交易"
@@ -17118,7 +17118,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "f08d12eb156a159019310a71275740576a3b43d3f6b747a13f4ab9026a931c81aecfd5458fc1e090b86b5dfc9078f6c1fd8dd2b8ed6fd6829bf331714097130b",
         "remark": {
           "remark": "交易备注，任意信息，这个是注册受托人交易"
@@ -17157,7 +17157,7 @@
         "fromMagic": "QWQQAQQWQQAQQWQ",
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
-        "numberOfEffectiveBlocks": 1,
+        "effectiveBlockHeight": 1,
         "signature": "1588a36a375baf9c90ed69d203554f04195621d6e48a0cd3745f65c27351e99a34cdd7b327ee0e3390ae0d25fc13991eb6ff458dded1700ab094ad936aa29605",
         "remark": {
           "remark": "交易备注，任意信息，这个是接收投票交易"

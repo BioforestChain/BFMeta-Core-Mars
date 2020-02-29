@@ -37,7 +37,7 @@ function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate: Acco
     fromMagic: fullBfchainCore.config.magic, // 交易来源链的 magic
     toMagic: registerBfchainCore.config.magic, // 交易去往链的 magic
     applyBlockHeight: 10, // 交易发起高度
-    numberOfEffectiveBlocks: 100,
+    effectiveBlockHeight: 10100,
   };
   let secondKeypair;
   if (sender.secondSecret) {

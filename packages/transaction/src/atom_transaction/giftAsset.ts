@@ -119,11 +119,11 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
     const giftAsset = giftAssetAsset.giftAsset;
     this.verifyGiftAsset(giftAsset, config);
 
-    if (giftAsset.numberOfBeginUnfrozenBlocks) {
-      if (giftAsset.numberOfBeginUnfrozenBlocks >= body.numberOfEffectiveBlocks) {
+    if (giftAsset.beginUnfrozenBlockHeight) {
+      if (giftAsset.beginUnfrozenBlockHeight >= body.effectiveBlockHeight) {
         throw new ArgumentIllegalException(PROP_SHOULD_LT_FIELD, {
-          prop: "numberOfBeginUnfrozenBlocks",
-          field: body.numberOfEffectiveBlocks,
+          prop: "beginUnfrozenBlockHeight",
+          field: body.effectiveBlockHeight,
           ...Function_Exception_Detail,
           target: "giftAsset",
         });
@@ -193,12 +193,12 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
     // }
 
     if (
-      giftAsset.numberOfBeginUnfrozenBlocks !== undefined &&
-      !baseHelper.isNaturalNumber(giftAsset.numberOfBeginUnfrozenBlocks)
+      giftAsset.beginUnfrozenBlockHeight !== undefined &&
+      !baseHelper.isPositiveInteger(giftAsset.beginUnfrozenBlockHeight)
     ) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "numberOfBeginUnfrozenBlocks",
-        type: "positive integer or 0",
+        prop: "beginUnfrozenBlockHeight",
+        type: "positive integer",
         ...GiftAssetAsset_Exception_Detail,
       });
     }

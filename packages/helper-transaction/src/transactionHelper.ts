@@ -654,8 +654,8 @@ export class TransactionHelper {
       transactionRangeType: giftTransaction.rangeType,
       transactionRange: giftTransaction.range,
       applyBlockHeight: giftTransaction.applyBlockHeight,
-      numberOfBeginUnfrozenBlocks: giftAsset.numberOfBeginUnfrozenBlocks,
-      numberOfEffectiveBlocks: giftTransaction.numberOfEffectiveBlocks,
+      beginUnfrozenBlockHeight: giftAsset.beginUnfrozenBlockHeight,
+      effectiveBlockHeight: giftTransaction.effectiveBlockHeight,
     });
 
     // 根据共识规则计算出能抢到的金额数量
@@ -898,8 +898,9 @@ export class TransactionHelper {
    * @param transaction
    */
   getTransactionMaxEffectiveHeight(transaction: Transaction) {
-    return transaction.applyBlockHeight + transaction.numberOfEffectiveBlocks;
+    return transaction.effectiveBlockHeight;
   }
+
   /**
    * 获取交易的最小有效区块高度
    * @param transaction
@@ -907,18 +908,9 @@ export class TransactionHelper {
   getTransactionMinEffectiveHeight(transaction: Transaction) {
     let minEffectiveHeight = transaction.applyBlockHeight;
     if (transaction instanceof GiftAssetTransaction) {
-      minEffectiveHeight += transaction.asset.giftAsset.numberOfBeginUnfrozenBlocks || 0;
+      const beginUnfrozenBlockHeight = transaction.asset.giftAsset.beginUnfrozenBlockHeight;
+      beginUnfrozenBlockHeight && (minEffectiveHeight = beginUnfrozenBlockHeight);
     }
-    // if (transaction instanceof TrustAssetTransaction) {
-    //   minEffectiveHeight += transaction.asset.trustAsset.numberOfBeginUnfrozenBlocks || 0;
-    // } else if (transaction instanceof GiftAssetTransaction) {
-    //   minEffectiveHeight += transaction.asset.giftAsset.numberOfBeginUnfrozenBlocks || 0;
-    // } else if (transaction instanceof ToExchangeAssetTransaction) {
-    //   minEffectiveHeight += transaction.asset.toExchangeAsset.numberOfBeginUnfrozenBlocks || 0;
-    // } else if (transaction instanceof ToExchangeSpecialAssetTransaction) {
-    //   minEffectiveHeight +=
-    //     transaction.asset.toExchangeSpecialAsset.numberOfBeginUnfrozenBlocks || 0;
-    // }
     return minEffectiveHeight;
   }
 }

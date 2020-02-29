@@ -110,15 +110,6 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<
     const toExchangeAsset = toExchangeAssetAsset.toExchangeAsset;
 
     this.verifyToExchangeAsset(toExchangeAsset, config);
-
-    // if (toExchangeAsset.numberOfBeginUnfrozenBlocks >= body.numberOfEffectiveBlocks) {
-    //   throw new ArgumentIllegalException(PROP_SHOULD_LT_FIELD, {
-    //     prop: "numberOfBeginUnfrozenBlocks",
-    //     field: body.numberOfEffectiveBlocks,
-    //     ...Function_Exception_Detail,
-    //     target: "toExchangeAsset",
-    //   });
-    // }
   }
 
   /**
@@ -202,17 +193,6 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<
         ...ToExchangeAssetAsset_Exception_Detail,
       });
     }
-
-    // if (
-    //   toExchangeAsset.numberOfBeginUnfrozenBlocks !== undefined &&
-    //   !baseHelper.isNaturalNumber(toExchangeAsset.numberOfBeginUnfrozenBlocks)
-    // ) {
-    //   throw new ArgumentIllegalException(PROP_IS_INVALID, {
-    //     prop: "numberOfBeginUnfrozenBlocks",
-    //     type: "positive integer or 0",
-    //     ...ToExchangeAssetAsset_Exception_Detail,
-    //   });
-    // }
   }
 
   /**

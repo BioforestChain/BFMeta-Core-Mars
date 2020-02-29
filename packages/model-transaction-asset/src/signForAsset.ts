@@ -65,12 +65,9 @@ export class SignForAssetModel extends Message<SignForAssetModel>
   /**委托交易发起高度 */
   @Field.d(SignForAssetModel.INC++, "uint32")
   applyBlockHeight!: number;
-  // /**委托交易允许被签收的区块高度 */
-  // @Field.d(SignForAssetModel.INC++, "uint32", "optional")
-  // numberOfBeginUnfrozenBlocks?: number;
   /**委托交易的有效区块高度 */
   @Field.d(SignForAssetModel.INC++, "uint32")
-  numberOfEffectiveBlocks!: number;
+  effectiveBlockHeight!: number;
   /**红包的配置信息 */
   @Field.d(SignForAssetModel.INC++, TrustAssetModel)
   trustAsset!: TrustAssetModel;
@@ -92,11 +89,9 @@ export class SignForAssetModel extends Message<SignForAssetModel>
       trustRecipientId: this.trustRecipientId,
       trustNumberOfSignFor: this.trustNumberOfSignFor,
       applyBlockHeight: this.applyBlockHeight,
-      numberOfEffectiveBlocks: this.numberOfEffectiveBlocks,
+      effectiveBlockHeight: this.effectiveBlockHeight,
       trustAsset: this.trustAsset.toJSON(),
     };
-    // this.numberOfBeginUnfrozenBlocks &&
-    //   (res.numberOfBeginUnfrozenBlocks = this.numberOfBeginUnfrozenBlocks);
     return res;
   }
   static fromObject<T extends Message>(

@@ -46,7 +46,7 @@ declare namespace BFChainCore {
     fromMagic: string;
     toMagic: string;
     applyBlockHeight: number;
-    numberOfEffectiveBlocks: number;
+    effectiveBlockHeight: number;
     signature: string;
     signSignature?: string;
     remark: { [key: string]: string };
@@ -177,7 +177,7 @@ declare namespace BFChainCore {
     amount: string;
     totalGrabableTimes: number;
     // unitReserveFee: string;
-    numberOfBeginUnfrozenBlocks?: number;
+    beginUnfrozenBlockHeight?: number;
     giftDistributionRule: BFChainCore.GIFT_DISTRIBUTION_RULE;
   }
   interface GiftAssetAssetJSON {
@@ -200,8 +200,8 @@ declare namespace BFChainCore {
     transactionRange: string[];
 
     applyBlockHeight: number;
-    numberOfBeginUnfrozenBlocks?: number;
-    numberOfEffectiveBlocks: number;
+    beginUnfrozenBlockHeight?: number;
+    effectiveBlockHeight: number;
 
     /**礼物配置 */
     giftAsset: GiftAssetJSON;
@@ -213,7 +213,6 @@ declare namespace BFChainCore {
   interface TrustAssetJSON {
     trustees: string[];
     numberOfSignFor: number;
-    // numberOfBeginUnfrozenBlocks?: number;
     sourceChainName: string;
     sourceChainMagic: string;
     assetType: string;
@@ -235,8 +234,7 @@ declare namespace BFChainCore {
     trustRecipientId: string;
     trustNumberOfSignFor: number;
     applyBlockHeight: number;
-    // numberOfBeginUnfrozenBlocks?: number;
-    numberOfEffectiveBlocks: number;
+    effectiveBlockHeight: number;
     /**委托信息 */
     trustAsset: TrustAssetJSON;
   }
@@ -257,7 +255,6 @@ declare namespace BFChainCore {
     beExchangeAsset: string;
     toExchangeNumber: string;
     exchangeRate: BFChainCore.RateJSON<string>;
-    // numberOfBeginUnfrozenBlocks?: number;
   }
   interface ToExchangeAssetAssetJSON {
     toExchangeAsset: ToExchangeAssetJSON;
@@ -267,8 +264,7 @@ declare namespace BFChainCore {
     transactionSignature: string;
     ciphertextSignature?: AccountSignatureJSON;
     applyBlockHeight: number;
-    // numberOfBeginUnfrozenBlocks?: number;
-    numberOfEffectiveBlocks: number;
+    effectiveBlockHeight: number;
     transactionRangeType: BFChainCore.RANGE_TYPE;
     transactionRange: string[];
     toExchangeNumber: string;
@@ -288,7 +284,6 @@ declare namespace BFChainCore {
     toExchangeAsset: string;
     beExchangeAsset: string;
     exchangeNumber: string;
-    // numberOfBeginUnfrozenBlocks?: number;
     exchangeAssetType: BFChainCore.SPECIAL_ASSET_TYPE;
     exchangeDirection: BFChainCore.EXCHANGE_DIRECTION;
   }
@@ -299,8 +294,7 @@ declare namespace BFChainCore {
     transactionSignature: string;
     ciphertextSignature?: AccountSignatureJSON;
     applyBlockHeight: number;
-    // numberOfBeginUnfrozenBlocks?: number;
-    numberOfEffectiveBlocks: number;
+    effectiveBlockHeight: number;
     transactionRangeType: BFChainCore.RANGE_TYPE;
     transactionRange: string[];
     exchangeSpecialAsset: ToExchangeSpecialAssetJSON;

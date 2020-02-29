@@ -101,8 +101,8 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
     const grabAsset = transaction.asset.grabAsset;
     const {
       applyBlockHeight,
-      numberOfBeginUnfrozenBlocks,
-      numberOfEffectiveBlocks,
+      beginUnfrozenBlockHeight,
+      effectiveBlockHeight,
       transactionRangeType,
       transactionRange,
       giftAsset,
@@ -142,21 +142,21 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
       }
     }
 
-    if (numberOfEffectiveBlocks !== giftAssetJson.numberOfEffectiveBlocks) {
+    if (effectiveBlockHeight !== giftAssetJson.effectiveBlockHeight) {
       throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: "numberOfEffectiveBlocks",
-        be_compare_prop: "numberOfEffectiveBlocks",
+        to_compare_prop: "effectiveBlockHeight",
+        be_compare_prop: "effectiveBlockHeight",
         to_target: "GrabAssetTransaction",
         be_target: "GiftAssetTransaction",
         ...Function_Exception_Detail,
       });
     }
 
-    if (trsAsset.numberOfBeginUnfrozenBlocks) {
-      if (numberOfBeginUnfrozenBlocks !== trsAsset.numberOfBeginUnfrozenBlocks) {
+    if (trsAsset.beginUnfrozenBlockHeight) {
+      if (beginUnfrozenBlockHeight !== trsAsset.beginUnfrozenBlockHeight) {
         throw new ConsensusException(NOT_MATCH, {
-          to_compare_prop: "numberOfBeginUnfrozenBlocks",
-          be_compare_prop: "numberOfBeginUnfrozenBlocks",
+          to_compare_prop: "beginUnfrozenBlockHeight",
+          be_compare_prop: "beginUnfrozenBlockHeight",
           to_target: "GrabAssetTransaction",
           be_target: "GiftAssetTransaction",
           ...Function_Exception_Detail,

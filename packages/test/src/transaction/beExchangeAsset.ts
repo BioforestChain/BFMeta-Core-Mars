@@ -42,7 +42,7 @@ function getToExchangeAssetTransaction(
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic
     applyBlockHeight: 10086, // 交易发起高度
-    numberOfEffectiveBlocks: 30,
+    effectiveBlockHeight: 10100,
   };
   let secondKeypair;
   if (sender.secondSecret) {
@@ -69,7 +69,6 @@ function getToExchangeAssetTransaction(
       prevWeight: "2",
       nextWeight: "3",
     },
-    // numberOfBeginUnfrozenBlocks: 10,
   };
   if (recipient && recipient.length > 0) {
     data.rangeType = RANGE_TYPE.MULTI_ADDRESS;
@@ -113,7 +112,7 @@ function getBeExchangeAssetTransaction(
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic
     applyBlockHeight: 10086, // 交易发起高度
-    numberOfEffectiveBlocks: 100,
+    effectiveBlockHeight: 10100,
     storage: {
       key: "transactionSignature",
       value: toExchangeAssetTrs.signature,
@@ -141,7 +140,7 @@ function getBeExchangeAssetTransaction(
       .toString(),
     beExchangeNumber: "50",
     applyBlockHeight: toExchangeAssetTrs.applyBlockHeight,
-    numberOfEffectiveBlocks: toExchangeAssetTrs.numberOfEffectiveBlocks,
+    effectiveBlockHeight: toExchangeAssetTrs.effectiveBlockHeight,
     transactionRangeType: toExchangeAssetTrs.rangeType,
     transactionRange: toExchangeAssetTrs.range,
     exchangeAsset: toExchangeAsset,

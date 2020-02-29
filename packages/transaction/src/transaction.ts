@@ -117,7 +117,7 @@ export class TransactionCore {
       fromMagic: body.fromMagic, // 交易来源链的 magic
       toMagic: body.toMagic, // 交易去往链的 magic
       applyBlockHeight: body.applyBlockHeight, // 交易发起高度
-      numberOfEffectiveBlocks: body.numberOfEffectiveBlocks, // 有效区块数量
+      effectiveBlockHeight: body.effectiveBlockHeight, // 有效区块数量
       storage: body.storage, // 查询用的索引存储
       nonce: body.nonce,
     };

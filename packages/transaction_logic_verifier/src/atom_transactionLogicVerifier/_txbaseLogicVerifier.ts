@@ -275,16 +275,16 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     const diffHeight = currentBlockHeight - trsApplyHeight;
     const maxApplyAndConfirmedBlockHeightDiff = this.configHelper
       .maxApplyAndConfirmedBlockHeightDiff;
-    const numberOfEffectiveBlocks = tr.numberOfEffectiveBlocks;
-    if (numberOfEffectiveBlocks > maxApplyAndConfirmedBlockHeightDiff) {
+    const effectiveBlockHeight = tr.effectiveBlockHeight;
+    if (effectiveBlockHeight > maxApplyAndConfirmedBlockHeightDiff) {
       throw new ConsensusException(INVALID_TRANSACTION_APPLY_BLOCK_HEIGHT, {
         reason: "must less than maxApplyAndConfirmedBlockHeightDiff",
         ...Function_Exception_Detail,
       });
     }
-    if (diffHeight > numberOfEffectiveBlocks) {
+    if (diffHeight > effectiveBlockHeight) {
       throw new ConsensusException(INVALID_TRANSACTION_APPLY_BLOCK_HEIGHT, {
-        reason: `Transaction apply block height ${trsApplyHeight}, current block height ${currentBlockHeight}, number of effective blocks ${numberOfEffectiveBlocks}`,
+        reason: `Transaction apply block height ${trsApplyHeight}, current block height ${currentBlockHeight}, number of effective blocks ${effectiveBlockHeight}`,
         ...Function_Exception_Detail,
       });
     }

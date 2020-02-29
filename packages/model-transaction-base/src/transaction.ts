@@ -124,9 +124,9 @@ export class Transaction<AJ extends object = object> extends Message<Transaction
   /**交易的发起高度 */
   @Field.d(Transaction.INC++, "uint32")
   applyBlockHeight!: number;
-  /**有效区块数量 */
+  /**交易的有效区块高度 */
   @Field.d(Transaction.INC++, "uint32")
-  numberOfEffectiveBlocks!: number;
+  effectiveBlockHeight!: number;
   /**交易POW的随机数
    * 放在`signature`的前面，方便同时修改二者 */
   @Field.d(Transaction.INC++, "fixed32", "required")
@@ -197,7 +197,7 @@ export class Transaction<AJ extends object = object> extends Message<Transaction
       fromMagic: this.fromMagic,
       toMagic: this.toMagic,
       applyBlockHeight: this.applyBlockHeight,
-      numberOfEffectiveBlocks: this.numberOfEffectiveBlocks,
+      effectiveBlockHeight: this.effectiveBlockHeight,
       signature: this.signature,
       remark: this.remark,
       asset: this.asset.toJSON() as AJ,

@@ -52,10 +52,8 @@ export class BeExchangeAssetModel extends Message<BeExchangeAssetModel>
   /**to 交易有效期 */
   @Field.d(BeExchangeAssetModel.INC++, "uint32")
   applyBlockHeight!: number;
-  // @Field.d(BeExchangeAssetModel.INC++, "uint32", "optional")
-  // numberOfBeginUnfrozenBlocks?: number;
   @Field.d(BeExchangeAssetModel.INC++, "uint32")
-  numberOfEffectiveBlocks!: number;
+  effectiveBlockHeight!: number;
 
   /**to 交易的接收者列表 */
   @Field.d(BeExchangeAssetModel.INC++, RANGE_TYPE)
@@ -90,14 +88,14 @@ export class BeExchangeAssetModel extends Message<BeExchangeAssetModel>
   get toInfo() {
     return {
       applyBlockHeight: this.applyBlockHeight,
-      numberOfEffectiveBlocks: this.numberOfEffectiveBlocks,
+      effectiveBlockHeight: this.effectiveBlockHeight,
     };
   }
   toJSON() {
     const res: BFChainCore.BeExchangeAssetJSON = {
       transactionSignature: this.transactionSignature,
       applyBlockHeight: this.applyBlockHeight,
-      numberOfEffectiveBlocks: this.numberOfEffectiveBlocks,
+      effectiveBlockHeight: this.effectiveBlockHeight,
       transactionRangeType: this.transactionRangeType,
       transactionRange: this.transactionRange,
       toExchangeNumber: this.toExchangeNumber,
@@ -105,8 +103,6 @@ export class BeExchangeAssetModel extends Message<BeExchangeAssetModel>
       exchangeAsset: this.exchangeAsset.toJSON(),
     };
 
-    // this.numberOfBeginUnfrozenBlocks &&
-    //   (res.numberOfBeginUnfrozenBlocks = this.numberOfBeginUnfrozenBlocks);
     this.ciphertextSignatureBuffer && (res.ciphertextSignature = this.ciphertextSignature.toJSON());
 
     return res;

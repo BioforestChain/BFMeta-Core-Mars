@@ -52,7 +52,7 @@ export class GiftAssetModel extends Message<GiftAssetModel>
   // unitReserveFee!: string;
   /**可以开始进行交易的区块高度 */
   @Field.d(GiftAssetModel.INC++, "uint32", "optional")
-  numberOfBeginUnfrozenBlocks?: number;
+  beginUnfrozenBlockHeight?: number;
   /**资产的分配规则 */
   @Field.d(GiftAssetModel.INC++, GIFT_DISTRIBUTION_RULE)
   giftDistributionRule!: GIFT_DISTRIBUTION_RULE;
@@ -68,8 +68,8 @@ export class GiftAssetModel extends Message<GiftAssetModel>
       giftDistributionRule: this.giftDistributionRule,
     };
 
-    this.numberOfBeginUnfrozenBlocks &&
-      (res.numberOfBeginUnfrozenBlocks = this.numberOfBeginUnfrozenBlocks);
+    this.beginUnfrozenBlockHeight &&
+      (res.beginUnfrozenBlockHeight = this.beginUnfrozenBlockHeight);
 
     return res;
   }

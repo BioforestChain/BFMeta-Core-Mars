@@ -49,10 +49,7 @@ console.log(argv);
 const blockPerRound = argv.b;
 const forgeInterval = argv.f;
 const bfchainCore = getFullBfchainCore(blockPerRound, forgeInterval);
-const filename =
-  blockPerRound === 57 && forgeInterval === 128
-    ? "genesisBlock"
-    : `genesisBlock-${blockPerRound}b-${forgeInterval}s`;
+const filename = `genesisBlock-${blockPerRound}b-${forgeInterval}s`;
 const out = argv.o;
 const outPath = argv.p;
 const randomIps = argv.ri;
@@ -138,7 +135,7 @@ async function getUsernameTransaction(sender: DelegateInfo) {
         fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
         toMagic: bfchainCore.config.magic, // 交易去往链的 magic
         applyBlockHeight: 1, // 交易发起高度
-        numberOfEffectiveBlocks: 1,
+        effectiveBlockHeight: 1,
         remark: {},
         storage: {
           key: "alias",
@@ -193,7 +190,7 @@ async function getDelegateTransaction(sender: DelegateInfo) {
         fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
         toMagic: bfchainCore.config.magic, // 交易去往链的 magic
         applyBlockHeight: 1, // 交易发起高度
-        numberOfEffectiveBlocks: 1,
+        effectiveBlockHeight: 1,
         remark: {},
         storage: {
           key: "username",
@@ -250,7 +247,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
         fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
         toMagic: bfchainCore.config.magic, // 交易去往链的 magic
         applyBlockHeight: 1, // 交易发起高度
-        numberOfEffectiveBlocks: 1,
+        effectiveBlockHeight: 1,
       },
       {},
       keypair,
@@ -299,7 +296,7 @@ async function getTransferAssetTransaction(recipient: DelegateInfo, amount: stri
         fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
         toMagic: bfchainCore.config.magic, // 交易去往链的 magic
         applyBlockHeight: 1, // 交易发起高度
-        numberOfEffectiveBlocks: 1,
+        effectiveBlockHeight: 1,
         remark: {},
         storage: {
           key: "assetType",
@@ -359,7 +356,7 @@ async function getLocationNameTransaction() {
         fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
         toMagic: bfchainCore.config.magic, // 交易去往链的 magic
         applyBlockHeight: 1, // 交易发起高度
-        numberOfEffectiveBlocks: 1,
+        effectiveBlockHeight: 1,
         remark: {},
         storage: {
           key: "name",
@@ -425,7 +422,7 @@ async function getSetLnsRecordValueTransaction(
         fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
         toMagic: bfchainCore.config.magic, // 交易去往链的 magic
         applyBlockHeight: 1, // 交易发起高度
-        numberOfEffectiveBlocks: 1,
+        effectiveBlockHeight: 1,
         remark: {},
         storage: {
           key: "name",
