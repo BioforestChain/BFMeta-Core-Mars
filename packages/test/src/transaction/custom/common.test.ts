@@ -38,7 +38,7 @@ function CreateCoreWithSubCenter(demoname: string) {
   );
 }
 
-export function getCustomTransaction(sender: any, demoname: string, customdata: string) {
+export async function getCustomTransaction(sender: any, demoname: string, customdata: string) {
   const bfchainCore = CreateCoreWithSubCenter(demoname);
 
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);

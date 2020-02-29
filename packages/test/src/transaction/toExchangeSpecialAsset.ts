@@ -72,6 +72,10 @@ async function getToExchangeSpecialAssetTransaction(sender: AccountModel, recipi
   );
   console.log(trs.toJSON());
 }
-
-getToExchangeSpecialAssetTransaction(getSenderWithSecondSecret(), "");
-getToExchangeSpecialAssetTransaction(getSenderWithoutSecondSecret(), getGenesisAccount().address);
+(async () => {
+  await getToExchangeSpecialAssetTransaction(getSenderWithSecondSecret(), "");
+  await getToExchangeSpecialAssetTransaction(
+    getSenderWithoutSecondSecret(),
+    getGenesisAccount().address,
+  );
+})();

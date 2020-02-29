@@ -64,6 +64,7 @@ async function getSetLnsManagerTransaction(sender: AccountModel) {
   );
   console.log(trs.toJSON());
 }
-
-getSetLnsManagerTransaction(getSenderWithSecondSecret());
-getSetLnsManagerTransaction(getSenderWithoutSecondSecret());
+(async () => {
+  await getSetLnsManagerTransaction(getSenderWithSecondSecret());
+  await getSetLnsManagerTransaction(getSenderWithoutSecondSecret());
+})();

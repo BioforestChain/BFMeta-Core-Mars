@@ -76,7 +76,7 @@ export class BlockHelper {
   verifyBlockRemarkSize<RJ extends BFChainCore.CommonBlockRemarkJSON>(
     blockRemark: BFChainCore.RemarkJSONToModelType<RJ>,
   ) {
-    const remarkSize = this.Buffer.from(blockRemark.getBytes()).length;
+    const remarkSize = blockRemark.getBytes().byteLength;
     const { maxBlockRemarkSize } = this.config;
     if (remarkSize > maxBlockRemarkSize) {
       throw new ArgumentIllegalException(PROP_SHOULD_LTE_FIELD, {

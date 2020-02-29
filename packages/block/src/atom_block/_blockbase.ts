@@ -494,7 +494,7 @@ export abstract class BlockFactory<T extends Block> {
    * @FIXME 统计金额
    * @param block 区块
    */
-  verifyBlockTransactions(
+  async verifyBlockTransactions(
     block: T,
     config = this.config,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter = new QueneEventEmitter(),
@@ -706,6 +706,15 @@ export abstract class BlockFactory<T extends Block> {
         ...Block_Exception_Detail,
       });
     }
+
+    const payloadHashHex = await payloadHash.digest("hex");
+    if (block.payloadHash !== payloadHashHex) {
+      throw new ArgumentIllegalException(TOO_LARGE, {
+        prop: "payloadHash",
+        reason: `payloadHash: ${block.payloadHash} not equal: ${payloadHashHex}`,
+        ...Block_Exception_Detail,
+      });
+    }
   }
 
   /**
@@ -713,7 +722,7 @@ export abstract class BlockFactory<T extends Block> {
    *
    * @param block
    */
-  verifyBaseInfo(block: T, config = this.config) {
+  async verifyBaseInfo(block: T, config = this.config) {
     const Function_Exception_Detail = { function: "verify" };
     if (!block) {
       throw new ArgumentIllegalException(PARAM_LOST, {
@@ -835,7 +844,7 @@ export abstract class BlockFactory<T extends Block> {
     }
 
     this.verifyBlockBody(block, block.remark, config);
-    this.verifyBlockTransactions(block, config);
+    await this.verifyBlockTransactions(block, config);
   }
 
   /**
@@ -844,7 +853,7 @@ export abstract class BlockFactory<T extends Block> {
    * @param block
    */
   verifySignature(block: T) {
-    this.blockHelper.verifyBlockSignature(block);
+    return this.blockHelper.verifyBlockSignature(block);
   }
 
   /**
@@ -861,10 +870,10 @@ export abstract class BlockFactory<T extends Block> {
    *
    * @param block
    */
-  verify(block: T, config = this.config) {
-    this.verifyBaseInfo(block, config);
+  async verify(block: T, config = this.config) {
+    await this.verifyBaseInfo(block, config);
     this.verifyRemarkSize(block);
-    this.verifySignature(block);
+    await this.verifySignature(block);
   }
 
   /**生成区块的 signature */

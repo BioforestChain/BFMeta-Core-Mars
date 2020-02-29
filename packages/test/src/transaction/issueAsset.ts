@@ -61,6 +61,7 @@ async function getIssueAssetTransaction(sender: AccountModel) {
   );
   console.log(trs.toJSON());
 }
-
-getIssueAssetTransaction(getSenderWithSecondSecret());
-getIssueAssetTransaction(getSenderWithoutSecondSecret());
+(async () => {
+  await getIssueAssetTransaction(getSenderWithSecondSecret());
+  await getIssueAssetTransaction(getSenderWithoutSecondSecret());
+})();

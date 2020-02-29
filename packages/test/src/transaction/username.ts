@@ -57,5 +57,7 @@ async function getUsernameTransaction(sender: AccountModel) {
   console.log(trs.toJSON());
 }
 
-getUsernameTransaction(getSenderWithSecondSecret());
-getUsernameTransaction(getSenderWithoutSecondSecret());
+(async () => {
+  await getUsernameTransaction(getSenderWithSecondSecret());
+  await getUsernameTransaction(getSenderWithoutSecondSecret());
+})();

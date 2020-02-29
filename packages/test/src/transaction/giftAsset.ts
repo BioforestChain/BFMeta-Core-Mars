@@ -83,5 +83,7 @@ async function getGiftAssetTransaction(
   console.log((xx.asset as any).giftAsset);
 }
 
-getGiftAssetTransaction(getSenderWithSecondSecret(), [getGenesisAccount()], true);
-getGiftAssetTransaction(getSenderWithoutSecondSecret(), [getGenesisAccount()]);
+(async () => {
+  await getGiftAssetTransaction(getSenderWithSecondSecret(), [getGenesisAccount()], true);
+  await getGiftAssetTransaction(getSenderWithoutSecondSecret(), [getGenesisAccount()]);
+})();

@@ -109,10 +109,10 @@ const getPOWInfo = (address: string) => {
   return res;
 };
 async function getUsernameTransaction(sender: DelegateInfo) {
-  const keypair = core.accountBaseHelper.createSecretKeypair(sender.secret);
+  const keypair = await core.accountBaseHelper.createSecretKeypair(sender.secret);
   const secondKeypair =
     (sender.secondSecret &&
-      core.accountBaseHelper.createSecondSecretKeypair(sender.secret, sender.secondSecret)) ||
+      await core.accountBaseHelper.createSecondSecretKeypair(sender.secret, sender.secondSecret)) ||
     undefined;
   const pow =
     1 > bfchainCore.config.powOfWorkExemptionBlocks ? getPOWInfo(sender.address) : undefined;
@@ -154,20 +154,20 @@ async function getUsernameTransaction(sender: DelegateInfo) {
       undefined,
     );
   };
-  let trs = createTrs();
+  let trs = await createTrs();
   if (pow) {
     trs = await bfchainCore.transaction.transactionPowCalculator(trs, pow, keypair, secondKeypair);
   }
-  return createTrs(
+  return await createTrs(
     core.transactionHelper.calcTransactionFee(trs, bfchainCore.config.minTransactionFeePerByte),
   );
 }
 
 async function getDelegateTransaction(sender: DelegateInfo) {
-  const keypair = core.accountBaseHelper.createSecretKeypair(sender.secret);
+  const keypair = await core.accountBaseHelper.createSecretKeypair(sender.secret);
   const secondKeypair =
     (sender.secondSecret &&
-      core.accountBaseHelper.createSecondSecretKeypair(sender.secret, sender.secondSecret)) ||
+      await core.accountBaseHelper.createSecondSecretKeypair(sender.secret, sender.secondSecret)) ||
     undefined;
   const pow =
     1 > bfchainCore.config.powOfWorkExemptionBlocks ? getPOWInfo(sender.address) : undefined;
@@ -209,21 +209,21 @@ async function getDelegateTransaction(sender: DelegateInfo) {
       undefined,
     );
   };
-  let trs = createTrs();
+  let trs = await createTrs();
   if (pow) {
     trs = await bfchainCore.transaction.transactionPowCalculator(trs, pow, keypair, secondKeypair);
   }
-  trs = createTrs(
+  trs = await createTrs(
     core.transactionHelper.calcTransactionFee(trs, bfchainCore.config.minTransactionFeePerByte),
   );
   return trs;
 }
 
 async function getAcceptVoteTransaction(sender: DelegateInfo) {
-  const keypair = core.accountBaseHelper.createSecretKeypair(sender.secret);
+  const keypair = await core.accountBaseHelper.createSecretKeypair(sender.secret);
   const secondKeypair =
     (sender.secondSecret &&
-      core.accountBaseHelper.createSecondSecretKeypair(sender.secret, sender.secondSecret)) ||
+      await core.accountBaseHelper.createSecondSecretKeypair(sender.secret, sender.secondSecret)) ||
     undefined;
   const pow =
     1 > bfchainCore.config.powOfWorkExemptionBlocks ? getPOWInfo(sender.address) : undefined;
@@ -256,16 +256,16 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
       undefined,
     );
   };
-  let trs = createTrs();
+  let trs = await createTrs();
   if (pow) {
     trs = await bfchainCore.transaction.transactionPowCalculator(trs, pow, keypair, secondKeypair);
   }
-  trs = createTrs(
+  trs = await createTrs(
     core.transactionHelper.calcTransactionFee(trs, bfchainCore.config.minTransactionFeePerByte),
   );
   return trs;
 }
-const genesisAccountKeypair = core.accountBaseHelper.createSecretKeypair(config.genesisSecret);
+const genesisAccountKeypair = await core.accountBaseHelper.createSecretKeypair(config.genesisSecret);
 const genesisAccountInfo = {
   address: core.accountBaseHelper.getAddressFromPublicKey(genesisAccountKeypair.publicKey),
   publicKey: genesisAccountKeypair.publicKey.toString("hex"),
@@ -317,7 +317,7 @@ async function getTransferAssetTransaction(recipient: DelegateInfo, amount: stri
       undefined,
     );
   };
-  let trs = createTrs();
+  let trs = await createTrs();
   if (pow) {
     trs = await bfchainCore.transaction.transactionPowCalculator(
       trs,
@@ -326,7 +326,7 @@ async function getTransferAssetTransaction(recipient: DelegateInfo, amount: stri
       undefined,
     );
   }
-  trs = createTrs(
+  trs = await createTrs(
     core.transactionHelper.calcTransactionFee(trs, bfchainCore.config.minTransactionFeePerByte),
   );
   return trs;
@@ -377,7 +377,7 @@ async function getLocationNameTransaction() {
       undefined,
     );
   };
-  let trs = createTrs();
+  let trs = await createTrs();
   if (pow) {
     trs = await bfchainCore.transaction.transactionPowCalculator(
       trs,
@@ -386,7 +386,7 @@ async function getLocationNameTransaction() {
       undefined,
     );
   }
-  trs = createTrs(
+  trs = await createTrs(
     core.transactionHelper.calcTransactionFee(trs, bfchainCore.config.minTransactionFeePerByte),
   );
   return trs;
@@ -396,10 +396,10 @@ async function getSetLnsRecordValueTransaction(
   sender: DelegateInfo,
   record: BFChainCore.LocationNameRecordJSON,
 ) {
-  const keypair = core.accountBaseHelper.createSecretKeypair(sender.secret);
+  const keypair = await core.accountBaseHelper.createSecretKeypair(sender.secret);
   const secondKeypair =
     (sender.secondSecret &&
-      core.accountBaseHelper.createSecondSecretKeypair(sender.secret, sender.secondSecret)) ||
+      await core.accountBaseHelper.createSecondSecretKeypair(sender.secret, sender.secondSecret)) ||
     undefined;
   const pow =
     0 > bfchainCore.config.powOfWorkExemptionBlocks ? getPOWInfo(sender.address) : undefined;
@@ -444,11 +444,11 @@ async function getSetLnsRecordValueTransaction(
       undefined,
     );
   };
-  let trs = createTrs();
+  let trs = await createTrs();
   if (pow) {
     await bfchainCore.transaction.transactionPowCalculator(trs, pow, keypair, secondKeypair);
   }
-  trs = createTrs(
+  trs = await createTrs(
     core.transactionHelper.calcTransactionFee(trs, bfchainCore.config.minTransactionFeePerByte),
   );
   return trs;
@@ -605,7 +605,7 @@ async function getGenesisBlockAsync() {
   const generatorPublicKey = core.accountBaseHelper.getPublicKeyStringFromSecret(
     config.genesisSecret,
   );
-  const generatorKeypair = core.accountBaseHelper.createSecretKeypair(config.genesisSecret);
+  const generatorKeypair = await core.accountBaseHelper.createSecretKeypair(config.genesisSecret);
   //#region 处理账户余额与交易pow
   // /**执行中的账户余额管理器 */
   // const accountBalanceManager = {

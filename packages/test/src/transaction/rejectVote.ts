@@ -49,5 +49,7 @@ async function getRejectVoteTransaction(sender: AccountModel) {
   console.log(trs.toJSON());
 }
 
-getRejectVoteTransaction(getSenderWithSecondSecret());
-getRejectVoteTransaction(getSenderWithoutSecondSecret());
+(async () => {
+  await getRejectVoteTransaction(getSenderWithSecondSecret());
+  await getRejectVoteTransaction(getSenderWithoutSecondSecret());
+})();

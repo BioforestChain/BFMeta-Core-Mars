@@ -125,8 +125,10 @@ async function getDappPurchasingTransaction(sender: AccountModel, dappTrs: DAppT
   console.log(trs.toJSON());
 }
 
-const dappWithSecondSecretTrs = await getDappTransaction(getRecipientWithSecondSecret());
-const dappWithoutSecondSecretTrs = await getDappTransaction(getRecipientWithSecondSecret());
+(async () => {
+  const dappWithSecondSecretTrs = await getDappTransaction(getRecipientWithSecondSecret());
+  const dappWithoutSecondSecretTrs = await getDappTransaction(getRecipientWithSecondSecret());
 
-getDappPurchasingTransaction(getSenderWithSecondSecret(), dappWithSecondSecretTrs);
-getDappPurchasingTransaction(getSenderWithoutSecondSecret(), dappWithoutSecondSecretTrs);
+  await getDappPurchasingTransaction(getSenderWithSecondSecret(), dappWithSecondSecretTrs);
+  await getDappPurchasingTransaction(getSenderWithoutSecondSecret(), dappWithoutSecondSecretTrs);
+})();

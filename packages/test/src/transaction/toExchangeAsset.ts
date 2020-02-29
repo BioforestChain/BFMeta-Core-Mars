@@ -74,6 +74,7 @@ async function getToExchangeAssetTransaction(sender: AccountModel, recipientId: 
   );
   console.log(trs.toJSON());
 }
-
-getToExchangeAssetTransaction(getSenderWithSecondSecret(), "");
-getToExchangeAssetTransaction(getSenderWithoutSecondSecret(), getGenesisAccount().address);
+(async () => {
+  await getToExchangeAssetTransaction(getSenderWithSecondSecret(), "");
+  await getToExchangeAssetTransaction(getSenderWithoutSecondSecret(), getGenesisAccount().address);
+})();

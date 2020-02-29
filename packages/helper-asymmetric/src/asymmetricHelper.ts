@@ -34,7 +34,7 @@ export class AsymmetricHelper {
     secretKey: Uint8Array,
     encode: BFChainUtil.HexBase64Latin1Encoding = "hex",
   ) {
-    return BBuffer.from(await this.detachedSign(message, secretKey)).toString(encode);
+    return (await this.detachedSign(message, secretKey)).toString(encode);
   }
 
   /**

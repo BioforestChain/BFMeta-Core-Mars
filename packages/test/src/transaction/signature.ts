@@ -8,7 +8,10 @@ import {
 
 async function getSignatureTransaction(sender: AccountModel) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
-  const publicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(sender.secret, "");
+  const publicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+    sender.secret,
+    "",
+  );
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.SIGNATURE, // 交易类型
@@ -52,6 +55,7 @@ async function getSignatureTransaction(sender: AccountModel) {
   );
   console.log(trs.toJSON());
 }
-
-// getSignatureTransaction(getSenderWithSecondSecret());
-getSignatureTransaction(getSenderWithoutSecondSecret());
+(async () => {
+  // getSignatureTransaction(getSenderWithSecondSecret());
+  await getSignatureTransaction(getSenderWithoutSecondSecret());
+})();

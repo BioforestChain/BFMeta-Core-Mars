@@ -30,5 +30,5 @@ import { bfchainCore } from "./include/init";
   //   bfchainCore.keypairHelper.create("1"),
   // );
 
-  console.log(bfchainCore.accountBaseHelper.createSecretKeypair("1"));
+  console.log(await bfchainCore.accountBaseHelper.createSecretKeypair("1"));
 })().catch(console.error);

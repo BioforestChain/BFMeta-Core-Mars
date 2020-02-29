@@ -157,13 +157,13 @@ async function getGrabAssetTransaction(
 
   if (giftAsset.cipherPublicKeys.length > 0) {
     const index = Math.floor(Math.random() * grabAccounts.length);
-    const signature = bfchainCore.transactionHelper
-      .getCiphertextSignature({
+    const signature = (
+      await bfchainCore.transactionHelper.getCiphertextSignature({
         secret: grabAccounts[index].secret,
         transactionSignatureBuffer: parseHexToArrayBuffer(giftAssetTrs.signature),
         senderId: sender.address,
       })
-      .toString("hex");
+    ).toString("hex");
     grabAsset.ciphertextSignature = {
       publicKey: grabAccounts[index].publicKey,
       signature,
@@ -185,19 +185,21 @@ async function getGrabAssetTransaction(
   console.log(xx.toJSON().asset);
 }
 
-const ss = getSenderWithSecondSecret();
-const sss = getSenderWithoutSecondSecret();
-const rr = getRecipientWithSecondSecret();
-const rrr = getRecipientWithoutSecondSecret();
+(async () => {
+  const ss = getSenderWithSecondSecret();
+  const sss = getSenderWithoutSecondSecret();
+  const rr = getRecipientWithSecondSecret();
+  const rrr = getRecipientWithoutSecondSecret();
 
-const gg = getGenesisAccount();
+  const gg = getGenesisAccount();
 
-const x = await getGiftAssetTransaction(rr, [gg, ss], false);
-getGrabAssetTransaction(ss, x, [gg, ss]);
-const o = await getGiftAssetTransaction(rrr, [gg, ss]);
-getGrabAssetTransaction(gg, o, [gg]);
+  const x = await getGiftAssetTransaction(rr, [gg, ss], false);
+  await getGrabAssetTransaction(ss, x, [gg, ss]);
+  const o = await getGiftAssetTransaction(rrr, [gg, ss]);
+  await getGrabAssetTransaction(gg, o, [gg]);
 
-const xx = await getGiftAssetTransaction(rr, [gg, ss], true);
-getGrabAssetTransaction(ss, xx, [gg, ss]);
-const oo = await getGiftAssetTransaction(rrr, [gg, ss]);
-getGrabAssetTransaction(gg, oo, [gg]);
+  const xx = await getGiftAssetTransaction(rr, [gg, ss], true);
+  await getGrabAssetTransaction(ss, xx, [gg, ss]);
+  const oo = await getGiftAssetTransaction(rrr, [gg, ss]);
+  await getGrabAssetTransaction(gg, oo, [gg]);
+})();

@@ -138,13 +138,13 @@ async function getBeExchangeSpecialAssetTransaction(
 
   if (toExchangeSpecialAsset.cipherPublicKeys.length > 0) {
     const index = Math.floor(Math.random() * recipient.length);
-    const signature = bfchainCore.transactionHelper
-      .getCiphertextSignature({
+    const signature = (
+      await bfchainCore.transactionHelper.getCiphertextSignature({
         secret: recipient[index].secret,
         transactionSignatureBuffer: parseHexToArrayBuffer(toExchangeSpecialAssetTrs.signature),
         senderId: sender.address,
       })
-      .toString("hex");
+    ).toString("hex");
     beExchangeSpecialAsset.ciphertextSignature = {
       publicKey: recipient[index].publicKey,
       signature,
@@ -163,14 +163,15 @@ async function getBeExchangeSpecialAssetTransaction(
   bfchainCore.transactionHelper.verifyTransactionSignature(oo);
   console.log(oo.asset);
 }
+(async () => {
+  const aa = getSenderWithSecondSecret();
+  const aaa = getSenderWithoutSecondSecret();
+  const cc = getGenesisAccount();
+  const dd = getRecipientWithSecondSecret();
+  const ddd = getRecipientWithoutSecondSecret();
 
-const aa = getSenderWithSecondSecret();
-const aaa = getSenderWithoutSecondSecret();
-const cc = getGenesisAccount();
-const dd = getRecipientWithSecondSecret();
-const ddd = getRecipientWithoutSecondSecret();
-
-const xx = await getToExchangeSpecialAssetTransaction(aa, [cc, dd], true);
-getBeExchangeSpecialAssetTransaction(dd, xx, [cc, dd]);
-// const yy = await getToExchangeSpecialAssetTransaction(aaa, [cc, dd], false);
-// getBeExchangeSpecialAssetTransaction(cc, yy, []);
+  const xx = await getToExchangeSpecialAssetTransaction(aa, [cc, dd], true);
+  getBeExchangeSpecialAssetTransaction(dd, xx, [cc, dd]);
+  // const yy = await getToExchangeSpecialAssetTransaction(aaa, [cc, dd], false);
+  // getBeExchangeSpecialAssetTransaction(cc, yy, []);
+})();

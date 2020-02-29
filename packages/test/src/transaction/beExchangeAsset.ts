@@ -147,13 +147,13 @@ async function getBeExchangeAssetTransaction(
   };
   if (toExchangeAsset.cipherPublicKeys.length > 0) {
     const index = Math.floor(Math.random() * recipient.length);
-    const signature = bfchainCore.transactionHelper
-      .getCiphertextSignature({
+    const signature = (
+      await bfchainCore.transactionHelper.getCiphertextSignature({
         secret: recipient[index].secret,
         transactionSignatureBuffer: parseHexToArrayBuffer(toExchangeAssetTrs.signature),
         senderId: sender.address,
       })
-      .toString("hex");
+    ).toString("hex");
     beExchangeAsset.ciphertextSignature = {
       publicKey: recipient[index].publicKey,
       signature,

@@ -127,12 +127,14 @@ async function getMarkTransaction(
   console.log(trs.toJSON());
 }
 
-const ss = getSenderWithSecondSecret();
-const sss = getSenderWithoutSecondSecret();
-const yy = getRecipientWithSecondSecret();
-const yyy = getRecipientWithoutSecondSecret();
+(async () => {
+  const ss = getSenderWithSecondSecret();
+  const sss = getSenderWithoutSecondSecret();
+  const yy = getRecipientWithSecondSecret();
+  const yyy = getRecipientWithoutSecondSecret();
 
-const tx1 = await getDappTransaction(ss);
-getMarkTransaction(ss, tx1, ss);
-const tx2 = await getDappTransaction(sss);
-getMarkTransaction(sss, tx1, yyy);
+  const tx1 = await getDappTransaction(ss);
+  await getMarkTransaction(ss, tx1, ss);
+  const tx2 = await getDappTransaction(sss);
+  await getMarkTransaction(sss, tx1, yyy);
+})();

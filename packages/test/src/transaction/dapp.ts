@@ -53,24 +53,25 @@ async function getDappTransaction(sender: AccountModel, dapp: BFChainCore.DAppJS
   );
   console.log(trs.toJSON());
 }
-
-const xx = getSenderWithSecondSecret();
-getDappTransaction(xx, {
-  dappid: "CAPCOM123456789QWQQAQ",
-  sourceChainName: "bfchain",
-  sourceChainMagic: bfchainCore.config.magic,
-  type: DAPP_TYPE.PAID_APP,
-  purchaseAsset: {
-    sourceChainName: bfchainCore.config.chainName,
+(async () => {
+  const xx = getSenderWithSecondSecret();
+  await getDappTransaction(xx, {
+    dappid: "CAPCOM123456789QWQQAQ",
+    sourceChainName: "bfchain",
     sourceChainMagic: bfchainCore.config.magic,
-    assetType: bfchainCore.config.assetType,
-    amount: "1000",
-  },
-});
-const xxx = getSenderWithoutSecondSecret();
-getDappTransaction(xxx, {
-  dappid: "CAPCOM123456789QWQQAQ",
-  sourceChainName: "bfchain",
-  sourceChainMagic: bfchainCore.config.magic,
-  type: DAPP_TYPE.FREE_APP,
-});
+    type: DAPP_TYPE.PAID_APP,
+    purchaseAsset: {
+      sourceChainName: bfchainCore.config.chainName,
+      sourceChainMagic: bfchainCore.config.magic,
+      assetType: bfchainCore.config.assetType,
+      amount: "1000",
+    },
+  });
+  const xxx = getSenderWithoutSecondSecret();
+  await getDappTransaction(xxx, {
+    dappid: "CAPCOM123456789QWQQAQ",
+    sourceChainName: "bfchain",
+    sourceChainMagic: bfchainCore.config.magic,
+    type: DAPP_TYPE.FREE_APP,
+  });
+})();

@@ -64,6 +64,7 @@ async function getLocationNameTransaction(sender: AccountModel) {
   );
   console.log(trs.toJSON());
 }
-
-getLocationNameTransaction(getSenderWithSecondSecret());
-getLocationNameTransaction(getSenderWithoutSecondSecret());
+(async () => {
+  await getLocationNameTransaction(getSenderWithSecondSecret());
+  await getLocationNameTransaction(getSenderWithoutSecondSecret());
+})();

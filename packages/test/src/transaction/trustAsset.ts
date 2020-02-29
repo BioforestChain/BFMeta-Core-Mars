@@ -9,7 +9,11 @@ import {
   AccountModel,
 } from "../include";
 
-async function getTrustAssetTransaction(sender: AccountModel, recipientId: string, trustees: string[]) {
+async function getTrustAssetTransaction(
+  sender: AccountModel,
+  recipientId: string,
+  trustees: string[],
+) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
@@ -67,12 +71,15 @@ async function getTrustAssetTransaction(sender: AccountModel, recipientId: strin
   bfchainCore.transactionHelper.verifyTransactionSignature(xx);
   console.log(xx);
 }
-
-getTrustAssetTransaction(getSenderWithSecondSecret(), getRecipientWithSecondSecret().address, [
-  getGenesisAccount().address,
-]);
-getTrustAssetTransaction(
-  getSenderWithoutSecondSecret(),
-  getRecipientWithoutSecondSecret().address,
-  [getGenesisAccount().address],
-);
+(async () => {
+  await getTrustAssetTransaction(
+    getSenderWithSecondSecret(),
+    getRecipientWithSecondSecret().address,
+    [getGenesisAccount().address],
+  );
+  await getTrustAssetTransaction(
+    getSenderWithoutSecondSecret(),
+    getRecipientWithoutSecondSecret().address,
+    [getGenesisAccount().address],
+  );
+})();

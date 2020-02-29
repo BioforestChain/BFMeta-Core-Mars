@@ -14,7 +14,11 @@ import {
 } from "../include";
 import { parseHexToArrayBuffer } from "@bfchain/util";
 
-async function getTrustAssetTransaction(sender: AccountModel, recipientId: string, trustees: string[]) {
+async function getTrustAssetTransaction(
+  sender: AccountModel,
+  recipientId: string,
+  trustees: string[],
+) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
@@ -187,8 +191,12 @@ async function getSignForAssetTransaction(
     trustees.map(trustee => trustee.address),
   );
 
-  getSignForAssetTransaction(getRecipientWithSecondSecret(), trusAssetTrsWithSecret, trustees);
-  getSignForAssetTransaction(
+  await getSignForAssetTransaction(
+    getRecipientWithSecondSecret(),
+    trusAssetTrsWithSecret,
+    trustees,
+  );
+  await getSignForAssetTransaction(
     getRecipientWithoutSecondSecret(),
     trusAssetTrsWithoutSecret,
     trustees,
