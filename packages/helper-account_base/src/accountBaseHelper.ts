@@ -35,46 +35,37 @@ export class AccountBaseHelper {
    *
    * @param secret 主密码
    */
-  createSecretKeypair(secret: string) {
+  async createSecretKeypair(secret: string) {
     return this.keypairHelperInterface.create(
-      this.cryptoHelper
-        .sha256()
-        .update(secret, "utf8")
-        .digest(),
+      await this.cryptoHelper.sha256(this.Buffer.from(secret, "utf8")),
     );
   }
   /**根据私钥获取公钥Buffer */
-  getPublicKeyFromSecret(secret: string) {
-    return this.createSecretKeypair(secret).publicKey;
+  async getPublicKeyFromSecret(secret: string) {
+    return this.Buffer.from((await this.createSecretKeypair(secret)).publicKey);
   }
   /**根据私钥获取公钥String */
-  getPublicKeyStringFromSecret(
+  async getPublicKeyStringFromSecret(
     secret: string,
     encode: BFChainUtil.HexBase64Latin1Encoding = "hex",
   ) {
-    return this.Buffer.from(this.getPublicKeyFromSecret(secret)).toString(encode);
+    return (await this.getPublicKeyFromSecret(secret)).toString(encode);
   }
   /**根据公钥生成地址的二进制数据 */
-  getBinaryAddressFromPublicKey(publicKey: Uint8Array) {
+  async getBinaryAddressFromPublicKey(publicKey: Uint8Array) {
     const cachedResult = FROZEN_PK_ADD_WM.get(publicKey);
     if (cachedResult) return cachedResult;
 
-    const h1 = this.cryptoHelper
-      .sha256()
-      .update(publicKey)
-      .digest();
-    const h2 = this.cryptoHelper
-      .ripemd160()
-      .update(h1)
-      .digest();
+    const h1 = await this.cryptoHelper.sha256(publicKey);
+    const h2 = await this.cryptoHelper.ripemd160(h1);
 
-    FROZEN_PK_ADD_WM.set(publicKey, h2);
+    FROZEN_PK_ADD_WM.set(publicKey, this.Buffer.from(h2));
     return h2;
   }
   /**根据公钥生成地址(base58) */
-  getAddressFromPublicKey(publicKey: Uint8Array) {
+  async getAddressFromPublicKey(publicKey: Uint8Array) {
     const address =
-      this._prefix + this.base58Helper.encode(this.getBinaryAddressFromPublicKey(publicKey));
+      this._prefix + this.base58Helper.encode(await this.getBinaryAddressFromPublicKey(publicKey));
     return address;
   }
   /**根据公钥字符串生成地址(base58) */
@@ -85,8 +76,8 @@ export class AccountBaseHelper {
    * 根据主密码生成地址
    * @param secret 主密码
    */
-  getAddressFromSecret(secret: string) {
-    return this.getAddressFromPublicKey(this.getPublicKeyFromSecret(secret));
+  async getAddressFromSecret(secret: string) {
+    return this.getAddressFromPublicKey(await this.getPublicKeyFromSecret(secret));
   }
   /**
    * 判断地址是否符合规范
@@ -111,32 +102,31 @@ export class AccountBaseHelper {
   }
   /**
    * 根据主密码和二次密码生成密钥对
+   * 这里虽然用了md5,当因为sha256后,所以还算安全,不过也许可以换一种更加友好的方式
    *
    * @param secret 主密码
    * @param secondSecret 二次密码
    */
-  createSecondSecretKeypair(secret: string, secondSecret: string) {
-    const md5Second = `${secret}-${this.cryptoHelper
-      .md5()
-      .update(secondSecret)
-      .digest("hex")}`;
-    const secondHash = this.cryptoHelper
-      .sha256()
-      .update(md5Second, "utf8")
-      .digest();
+  async createSecondSecretKeypair(secret: string, secondSecret: string) {
+    const md5Second = `${secret}-${this.Buffer.from(
+      await this.cryptoHelper.md5(this.Buffer.from(secondSecret, "utf8")),
+    ).toString("hex")}`;
+    const secondHash = this.Buffer.from(
+      await this.cryptoHelper.sha256(this.Buffer.from(md5Second, "utf8")),
+    );
     return this.createSecretKeypair(secondHash.toString());
   }
   /**根据私钥获取公钥Buffer */
-  getPublicKeyFromSecondSecret(secret: string, secondSecret: string) {
-    return this.createSecondSecretKeypair(secret, secondSecret).publicKey;
+  async getPublicKeyFromSecondSecret(secret: string, secondSecret: string) {
+    return this.Buffer.from((await this.createSecondSecretKeypair(secret, secondSecret)).publicKey);
   }
   /**根据私钥获取公钥String */
-  getPublicKeyStringFromSecondSecret(
+  async getPublicKeyStringFromSecondSecret(
     secret: string,
     secondSecret: string,
     encode: BFChainUtil.HexBase64Latin1Encoding = "hex",
   ) {
-    return this.getPublicKeyFromSecondSecret(secret, secondSecret).toString(encode);
+    return (await this.getPublicKeyFromSecondSecret(secret, secondSecret)).toString(encode);
   }
   /**
    * 校验二次密码公钥是否正确
@@ -144,7 +134,9 @@ export class AccountBaseHelper {
    * @param secondSecret 二次密码
    * @param secondPublicKey 二次密码公钥
    */
-  checkSecondSecret(secret: string, secondSecret: string, secondPublicKey: string) {
-    return this.getPublicKeyStringFromSecondSecret(secret, secondSecret) === secondPublicKey;
+  async checkSecondSecret(secret: string, secondSecret: string, secondPublicKey: string) {
+    return (
+      (await this.getPublicKeyStringFromSecondSecret(secret, secondSecret)) === secondPublicKey
+    );
   }
 }
