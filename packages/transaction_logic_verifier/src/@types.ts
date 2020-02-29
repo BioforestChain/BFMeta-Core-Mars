@@ -83,6 +83,11 @@ declare namespace BFChainCore {
     height: number;
   };
 
+  type ChainInfo = {
+    genesisBlock: BlockJSON<GenesisBlockRemarkJSON>;
+    height: number;
+  };
+
   interface FrozenAssetBaseInfo extends FrozenAssetInfo {
     transactionSignature: string;
     address: string;
@@ -162,7 +167,7 @@ declare namespace BFChainCore {
     /**资产名是否被禁用 */
     isCurrencyForbidden(assetType: string): Promise<boolean>;
     /**查询指定的链 */
-    getChain(magic: string): Promise<GenesisBlock | BlockJSON<GenesisBlockRemarkJSON> | undefined>;
+    getChain(magic: string): Promise<ChainInfo | undefined>;
     /**查询指定的用户名 */
     getAlias(alias: string): Promise<number | undefined>;
     /**初始化账户公钥 */
