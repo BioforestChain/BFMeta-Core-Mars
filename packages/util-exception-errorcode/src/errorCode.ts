@@ -112,6 +112,9 @@ export const TRANSACTION_SHOULD_NOT_HAVE_SIGN_SIGNATURE = (ec.next =
 /**reason function */
 export const INVALID_TRANSACTION_APPLY_BLOCK_HEIGHT = (ec.next =
   "Invalid transaction apply block height, reason {reason} when {function}");
+/**reason function */
+export const INVALID_TRANSACTION_EFFECTIVE_BLOCK_HEIGHT = (ec.next =
+  "Invalid transaction effective block height, reason {reason} when {function}");
 /**reason signature senderId applyBlockHeight type function */
 export const INVALID_TRANSACTION_FROM_MAGIC = (ec.next =
   "Invalid transaction from magic, reason {reason} signature {signature} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type} when {function}");

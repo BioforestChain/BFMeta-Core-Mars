@@ -21,6 +21,7 @@ import {
   POSSESS_ASSET_EXCEPT_CHAIN_ASSET,
   TRANSACTION_FEE_NOT_ENOUGH,
   ALREADY_EXIST,
+  INVALID_TRANSACTION_EFFECTIVE_BLOCK_HEIGHT,
 } from "@bfchain/core-util-exception";
 import {
   NewTransactionRefuseReason,
@@ -109,6 +110,8 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     this.checkSecondPublicKey(senderAccountInfo, transaction);
     // 校验交易的发起高度
     this.checkApplyBlockHeight(transaction, currentBlockHeight);
+    // 检验交易的有效高度
+    this.checkEffectiveBlockHeight(transaction, currentBlockHeight);
     // 校验交易的 magic
     await this.checkTransactionMagic(transaction, accountGetterHelper);
     // 校验交易的时间戳
@@ -256,7 +259,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   }
 
   /**
-   * 校验交易的发起高度是否已经大于最大区块间隔
+   * 校验交易的发起高度是否小于等于当前区块高度
    *
    * @param tr
    * @param currentBlockHeight
@@ -265,26 +268,29 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     const Function_Exception_Detail = {
       function: "checkApplyBlockHeight",
     } as const;
-    const trsApplyHeight = tr.applyBlockHeight;
-    if (trsApplyHeight > currentBlockHeight) {
+    const applyBlockHeight = tr.applyBlockHeight;
+    if (applyBlockHeight > currentBlockHeight) {
       throw new ConsensusException(INVALID_TRANSACTION_APPLY_BLOCK_HEIGHT, {
         reason: "must less than currnt block height",
         ...Function_Exception_Detail,
       });
     }
-    const diffHeight = currentBlockHeight - trsApplyHeight;
-    const maxApplyAndConfirmedBlockHeightDiff = this.configHelper
-      .maxApplyAndConfirmedBlockHeightDiff;
+  }
+
+  /**
+   * 校验交易的发起高度是否大于等于当前区块高度
+   *
+   * @param tr
+   * @param currentBlockHeight
+   */
+  checkEffectiveBlockHeight(tr: T, currentBlockHeight: number) {
+    const Function_Exception_Detail = {
+      function: "checkEffectiveBlockHeight",
+    } as const;
     const effectiveBlockHeight = tr.effectiveBlockHeight;
-    if (effectiveBlockHeight > maxApplyAndConfirmedBlockHeightDiff) {
-      throw new ConsensusException(INVALID_TRANSACTION_APPLY_BLOCK_HEIGHT, {
-        reason: "must less than maxApplyAndConfirmedBlockHeightDiff",
-        ...Function_Exception_Detail,
-      });
-    }
-    if (diffHeight > effectiveBlockHeight) {
-      throw new ConsensusException(INVALID_TRANSACTION_APPLY_BLOCK_HEIGHT, {
-        reason: `Transaction apply block height ${trsApplyHeight}, current block height ${currentBlockHeight}, number of effective blocks ${effectiveBlockHeight}`,
+    if (effectiveBlockHeight < currentBlockHeight) {
+      throw new ConsensusException(INVALID_TRANSACTION_EFFECTIVE_BLOCK_HEIGHT, {
+        reason: "must greate than or equal to currnt block height",
         ...Function_Exception_Detail,
       });
     }
