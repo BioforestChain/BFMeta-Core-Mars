@@ -534,7 +534,7 @@ async function getGenesisBlockAsync() {
   const eventEmitter: BFChainCore.ApplyTransactionEventEmitter<any> = new QueneEventEmitter<any>();
   const statisticsInfo = subStatistics.forceGetStatisticsInfoByBlock(
     height,
-    "generateSubchainGenesisBlock",
+    "generateRegisterChainGenesisBlock",
   );
   subStatistics.bindApplyTransactionEventEmiter(eventEmitter, statisticsInfo);
   for (let i = 0; i < txs.length; i++) {
@@ -623,7 +623,7 @@ async function getGenesisBlockAsync() {
     generatorKeypair,
     eventEmitter,
   );
-  statisticsInfo.unref("generateSubchainGenesisBlock");
+  statisticsInfo.unref("generateRegisterChainGenesisBlock");
 
   const out = require("optimist").argv.out;
   if (out) {

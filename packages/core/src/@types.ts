@@ -1,6 +1,4 @@
 declare namespace BFChainCore {
-  //#region Subchain
-
   type StatisticWeekMapKey = {
     height: number;
     generatorPublicKey: string;

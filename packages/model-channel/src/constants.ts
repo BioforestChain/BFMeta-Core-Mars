@@ -73,11 +73,11 @@ export enum NewTransactionRefuseReason {
   /**DApp拥有者不能发行资产 */
   DAPP_POSSESSOR_CAN_NOT_ISSUE_ASSET,
   /**DApp拥有者不能注册链 */
-  DAPP_POSSESSOR_CAN_NOT_ISSUE_SUBCHAIN,
+  DAPP_POSSESSOR_CAN_NOT_REGISTER_CHAIN,
   /**链域名拥有者或管理员不能发行资产 */
   LNS_POSSESSOR_OR_MANAGER_CAN_NOT_ISSUE_ASSET,
   /**链域名拥有者或管理员不能注册链 */
-  LNS_POSSESSOR_OR_MANAGER_CAN_NOT_ISSUE_SUBCHAIN,
+  LNS_POSSESSOR_OR_MANAGER_CAN_NOT_REGISTER_CHAIN,
   /**缩写名已经存在 */
   ASSETTYPE_ALREADY_EXIST,
   /**链名已经存在 */

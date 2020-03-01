@@ -470,24 +470,17 @@
   - applyInfo：变更明细，object
     - address：变更账户地址，string
     - publicKey：变更的账户公钥，string
-    - genesisBlock：创世块，Block
+    - genesisBlock：创世块，BlockJSON
 
 - 范例
 
   ```
     {
-        type: "issueSubchain",
+        type: "registerChain",
         transaction: Transaction<customAsset>,
         applyInfo: {
             address: "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
             publicKey: "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
-            chainName: "skyrim",
-            assetType: "sky",
-            magic: "123456789A",
-            bnid: "c",
-            maxTxsPerBlock: 100000,
-            blockPerRound: 114,
-            delegates: 228
             genesisBlock: {
                 ...
             }

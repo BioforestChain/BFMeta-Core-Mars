@@ -1678,7 +1678,7 @@
                  checkAmount(amount);
               ```
 
-        - ISSUE_SUBCHAIN -- WOD-01 -- 发行注册交易,
+        - REGISTER_CHAIN -- WOD-01 -- 发行注册链交易,
 
           - 交易的手续费必须大于 0
             ```
@@ -1713,373 +1713,25 @@
                 if (storate.key !== "magic") {
                     throw new Error
                 }
-                if (storage.value !== asset.issueSubchain.magic) {
+                if (storage.value !== asset.registerChain.genesisBlock.magic) {
                     throw new Error
                 }
             ```
-          - 必须携带生成子链的合法数据
+          - 必须携带生成注册链的合法数据
 
             ```
-                issueSubchain = issueSubchainAsset.issueSubchain;
-                if (!issueSubchain) {
+                registerChain = registerChainAsset.registerChain;
+                if (!registerChain) {
                     throw new Error
                 }
             ```
 
-            - 必须携带合法的子链名
-              - 纯大小写字母
-              - 3-20 个字符
-              ```
-                  name = issueSubchain.name;
-                  if (!name) {
-                      throw new Error
-                  }
-                  if (!isUpperCaseOrLowerCase(name)) {
-                      throw new Error
-                  }
-                  if (name.length < 3 || name.length > 20) {
-                      throw new Error
-                  }
-              ```
-            - 必须携带合法的子链链资产名(缩写)
-              - 纯大写字母
-              - 3-5 个字符
-              ```
-                  assetType = issueSubchain.assetType;
-                  if (!assetType) {
-                      throw new Error
-                  }
-                  if (!isUpperCaseString(assetType)) {
-                      throw new Error
-                  }
-                  if (assetType.length < 3 || assetType.length > 5) {
-                      throw new Error
-                  }
-              ```
-            - 必须携带合法的链网络标识符
-              - 大写字母或数字
-              - 1-16 个字符
-              ```
-                  magic = issueSubchain.magic;
-                  if (!magic) {
-                      throw new Error
-                  }
-                  if (!isUpperCaseString(magic)) {
-                      throw new Error
-                  }
-                  if (magic.length < 1 || magic.length > 16) {
-                      throw new Error
-                  }
-              ```
-            - 必须携带合法的网络标识符类型
-              - TESTNET = c 测试网络
-              - MAINNET = b 正式网络
-              ```
-                  bnid = issueSubchain.bnid;
-                  if (!bnid) {
-                      throw new Error
-                  }
-                  if (bnid !== BNID_TYPE.TESTNET && bnid !== BNID_TYPE.MAINNET) {
-                      throw new Error
-                  }
-              ```
-            - 必须携带合法的创世时间戳
-              - 正整数
-              ```
-                  if (!isPositiveInteger(issueSubchain.beginEpochTime)) {
-                      throw new Error
-                  }
-              ```
-            - 必须携带合法的父链创世节点地址
-              - 字符串
-              ```
-                  parentChainGenesisNodeAddress = issueSubchain.parentChainGenesisNodeAddress;
-                  if (!parentChainGenesisNodeAddress) {
-                      throw new Error
-                  }
-                  if (!isString(parentChainGenesisNodeAddress)) {
-                      throw new Error
-                  }
-              ```
-            - 必须携带合法的创世节点地址
-              - 字符串
-              ```
-                  genesisNodeAddress = issueSubchain.genesisNodeAddress;
-                  if (!genesisNodeAddress) {
-                      throw new Error
-                  }
-                  if (!isString(genesisNodeAddress)) {
-                      throw new Error
-                  }
-              ```
-            - 必须携带合法的创世账户初始余额
-              - 数字组成的字符串
-              ```
-                  generateTotalAmount = issueSubchain.generateTotalAmount;
-                  if (!generateTotalAmount) {
-                      throw new Error
-                  }
-                  if (!isValidAssetNumber(generateTotalAmount)) {
-                      throw new Error
-                  }
-              ```
-            - 必须携带合法的每字节最小手续费
-              - 正浮点数，不包含 0(采用分子分母形式)
-              ```
-                  if (!isPositiveFloatNotContainZero(issueSubchain.minTransactionFeePerByte)) {
-                      throw new Error
-                  }
-              ```
-            - 必须携带合法的每个区块最大的交易量
-              - 正整数
-              ```
-                  if (!isPositiveInteger(issueSubchain.maxTxsPerBlock)) {
-                      throw new Error
-                  }
-              ```
-            - 必须携带合法的每个区块最大交易字节数(区块处理的交易字节数求和)
-              - 正整数
-              ```
-                 if (!isPositiveInteger(issueSubchain.maxPayloadLength)) {
-                     throw new Error
-                 }
-              ```
-            - 必须携带合法的每个区块最大的 TPS
-              - 正整数
-              ```
-                  if (!isPositiveInteger(issueSubchain.maxTPSPerBlock)) {
-                      throw new Error
-                  }
-              ```
-            - 必须携带合法的最大交易字节数
-              - 正整数
-              ```
-                  if (!isPositiveInteger(issueSubchain.maxTransactionSize)) {
-                      throw new Error
-                  }
-              ```
-            - 必须携带合法的每个区块 remark 最大字节数
-              - 正整数
-              ```
-                  if (!isPositiveInteger(issueSubchain.maxBlockRemarkSize)) {
-                      throw new Error
-                  }
-              ```
-            - 必须携带合法的发行数字资最小持有的链资产数量
-              - 由数字组成的字符串
-              ```
-                  issueAssetMinChainAsset = issueSubchain.issueAssetMinChainAsset;
-                  if (!issueAssetMinChainAsset) {
-                      throw new Error
-                  }
-                  if (!baseHelper.isValidAssetNumber(issueAssetMinChainAsset)) {
-                      throw new Error
-                  }
-              ```
-            - 必须携带合法的发行子链最小持有的链资产数量
-              - 由数字组成的字符串
-              ```
-                  issueSubchainMinChainAsset = issueSubchain.issueSubchainMinChainAsset;
-                  if (!issueSubchainMinChainAsset) {
-                      throw new Error
-                  }
-                  if (!isValidAssetNumber(issueSubchainMinChainAsset)) {
-                      throw new Error
-                  }
-              ```
-            - 必须携带合法的链资产和数字资产的兑换比例
-              - 正整数
-              ```
-                  if (!isPositiveInteger(issueSubchain.chainAssetAndDigitalAssetExchangeRate)) {
-                      throw new Error
-                  }
-              ```
-            - 必须携带合法的链资产和子链链资产的兑换比例
-              - 正整数
-              ```
-                 if (isPositiveInteger(issueSubchain.chainAssetAndSubchainAssetExchangeRate)) {
-                     throw new Error
-                 }
-              ```
-            - 必须携带合法的链资产奖励比重
-              - 正整数
-              ```
-                  if (!isPositiveInteger(issueSubchain.chainAssetRewardWeight)) {
-                      throw new Error
-                  }
-              ```
-            - 必须携带合法的交易量奖励比重
-              - 正整数
-              ```
-                  if (!isPositiveInteger(issueSubchain.numberOfTransactionRewardWeight)) {
-                      throw new Error
-                  }
-              ```
-            - 必须携带合法的交易最大有效区块高度间隔
-              - 正整数
-              ```
-                  if (!isPositiveInteger(issueSubchain.maxApplyAndConfirmedBlockHeightDiff)) {
-                      throw new Error
-                  }
-              ```
-            - 必须携带合法的每轮的区块数量
-              - 正整数
-              ```
-                 if (!isPositiveInteger(issueSubchain.blockPerRound))  {
-                     throw new Error
-                 }
-              ```
-            - 必须携带合法的创世受托人数量
-              - 正整数
-              ```
-                  if (!isPositiveInteger(issueSubchain.delegates)) {
-                      throw new Error
-                  }
-              ```
-            - 必须携带合法的区块时间间隔
-              - 正整数
-              ```
-                 if (!isPositiveInteger(issueSubchain.forgeInterval)) {
-                     throw new Error
-                 }
-              ```
-            - 必须携带合法的奖励分配比例
-              - 投票分配比例
-                - 正浮点数(采用分子分母形式)
-              - 打块分配比例
-                - 正浮点数(采用分子分母形式)
-              - 两部分的分母相等，分子之和等于分母
-              ```
-                  rewardPercent = issueSubchain.rewardPercent;
-                  if (!rewardPercent) {
-                      throw new Error
-                  }
-                  { votePercent, forgePercent } = rewardPercent;
-                  if (!isPositiveFloatNotContainZero(forgePercent)) {
-                      throw new Error
-                  }
-                  if (!isPositiveFloatNotContainZero(votePercent)) {
-                      throw new Error
-                  }
-                  if (votePercent.denominator !== forgePercent.denominator) {
-                      throw new Error
-                  }
-                  if (votePercent.numerator + forgePercent.numerator !== forgePercent.denominator) {
-                      throw new Error
-                  }
-              ```
-            - 必须携带合法的端口号信息
-              - 默认端口号
-                - 正整数
-                - 1-65535
-              - 节点扫描端口号
-                - 正整数
-                - 1-65535
-              ```
-                  ports = issueSubchain.ports;
-                  if (!ports) {
-                      throw new Error
-                  }
-                  { port, scan_peer_port } = ports;
-                  if (!isNaturalNumber(port)) {
-                      throw new Error
-                  }
-                  if (port <= 0 && port >= 65536) {
-                      throw new Error
-                  }
-                  if (!isNaturalNumber(scan_peer_port)) {
-                      throw new Error
-                  }
-                  if (scan_peer_port <= 0 && scan_peer_port >= 65536) {
-                      throw new Error
-                  }
-              ```
-            - 必须携带合法的区块奖励里程
-
-              - 高度里程(数组)
-                - 长度小于 1，报错
-                - 长度等于 1，值必须是正整数
-                - 长度大于 1，每个值必须是正整数，后一个值比前一个值大
-              - 奖励里程(数组)
-                - 长度必须大于 0
-                - 每个值必须是由数字组成的字符串
-
-              ```
-                  rewardPerBlock = issueSubchain.rewardPerBlock;
-                  if (!rewardPerBlock) {
-                      throw new Error
-                  }
-                  { heights, rewards } = rewardPerBlock;
-                  if (!isArray(heights)) {
-                      throw new Error
-                  }
-                  hlen = heights.length;
-                  if (hlen === 0) {
-                      throw new Error
-                  }
-
-                  if (hlen === 1) {
-                      if (!isPositiveInteger(heights[0])) {
-                          throw new Error
-                      }
-                  } else {
-                      for (let i = 0; i < hlen - 1; i += 2) {
-                          if (!isPositiveInteger(heights[i])) {
-                              throw new Error
-                          }
-                          const nextIndex = i + 1;
-                          if (!isPositiveInteger(heights[nextIndex])) {
-                              throw new Error
-                          }
-                          if (heights[i] >= heights[nextIndex]) {
-                              throw new Error
-                          }
-                      }
-                  }
-                  if (!baseHelper.isArray(rewards)) {
-                      throw new Error
-                  }
-
-                  if (rewards.length === 0) {
-                      throw new Error
-                  }
-
-                  for (const reward of rewards) {
-                      if (!baseHelper.isValidAssetNumber(reward)) {
-                          throw new Error
-                      }
-                  }
-              ```
-
-            - 必须携带合法的父链信息
-              - 必须携带合法的父链网络标识符
-              - 必须携带合法的父链链名
-              - 必须携带合法的父链链域名
-              - 必须携带合法的父链链资产名
-              ```
-                  parentInfo = issueSubchain.parentInfo;
-                  if (!parentInfo) {
-                      throw new Error
-                  }
-                  { magic, assetType, genesisNodeAddress } = parentInfo;
-                  if (!magic) {
-                      throw new Error
-                  }
-                  if (!isValidChainMagic(magic)) {
-                      throw new Error
-                  }
-                  if (!assetType) {
-                      throw new Error
-                  }
-                  if (!isValidAssetType(assetType)) {
-                      throw new Error
-                  }
-              ```
             - 必须携带合法的创世块
+
               ```
                 let chainConfig = this.configMap.get(genesisBlockJson.magic);
                     if (!chainConfig) {
-                    // FIXME: 没有子链的配置文件就生成一个
+                    // FIXME: 没有注册链的配置文件就生成一个
                     chainConfig = new ConfigHelper(genesisBlockJson, this.configHelper.business);
                 }
 
@@ -4240,38 +3892,26 @@
                 }
            ```
          - 交易去往其他链
-           - 如果当前链是父链，则去往的链必须是存在的子链(跨链交易只能在父子链间进行)
-             ```
-                memSubchain = await getMemSubchain(toMagic);
-                if (!memSubchain) {
+           - 去往的注册链的交易, 去往的链必须已经在链上注册过
+           ```
+                const chain = await accountGetterHelper.getChain(toMagic);
+                if (!chain) {
                     throw new Error
                 }
-             ```
-           - 如果当前链是子链，则去往的链必须是父链
-             ```
-                if (toMagic !== parentMagic) {
-                    throw new Error
-                }
-             ```
+           ```
        - 交易来自外链
-         - 如果当前链是子链，则交易必须来子父链
+         - 来自的外链必须已经在链上注册过
            ```
-                if (fromMagic !== parentMagic) {
-                    throw new Error
-                }
+               const chain = await accountGetterHelper.getChain(fromMagic);
+               if (!chain) {
+                   throw new Error
+               }
            ```
-         - 如果当前链是父链，则交易来自的子链必须存在
+         - 必须是去往本链
            ```
-                memSubchain = await getMemSubchain(fromMagic);
-                if (!memSubchain) {
-                    throw new Error
-                }
-           ```
-         - 必须是去往本链的交易
-           ```
-                if (toMagic !== chainMagic) {
-                    throw new Error
-                }
+               if (toMagic !== chainMagic) {
+                   throw new Error
+               }
            ```
      - 校验交易时间戳
        - 如果交易携带的时间戳大于节点当前的区块链时间则报错
@@ -4569,47 +4209,29 @@
              }
          ```
 
-     - ISSUE_SUBCHAIN -- WOD-01 -- 发行子链交易,
+     - REGISTER_CHAIN -- WOD-01 -- 发行注册链交易,
 
        - 如果账户拥有除链资产外的资产则报错
          ```
              checkAccountAsset(senderAssets);
          ```
-       - 如果当前链时子链则报错，子链不能发行子链
-         ```
-             if (parentMagic !== chainMagic) {
-                 throw new Error
-             }
-         ```
        - 如果发起账户扣除手续费后没有足够的链资产则报错(创世块设定)
          ```
              remainBalance = accountChainAsset - tr.fee;
-             if (issueSubchainMinChainAsset > remainBalance) {
+             if (registerChainMinChainAsset > remainBalance) {
                  throw new Error
              }
          ```
-       - 如果子链名已经被抢注则报错
+       - 注册链的发起账户不能是 dapp 的拥有者账户
          ```
-             memLegalCurrency = await getMemLegalCurrency(subChainName);
-             if (memLegalCurrency) {
-                 throw new Error
-             }
+            const memDApp = await getMemDApp(chainMagic, "", currentBlockHeight, {
+                address,
+            });
+            if (memDApp) {
+                throw new Error
+            }
          ```
-       - 如果子链链资产名已经被抢注则报错
-         ```
-             memLegalCurrency = await getMemLegalCurrency(subChainAssetType);
-             if (memLegalCurrency) {
-                 throw new Error
-             }
-         ```
-       - 父链的创世节点必须是存在的链域名
-         ```
-             memLocation = await getMemLocationName(chainMagic, parentInfo.genesisNodeAddress);
-             if (!memLocation) {
-                 throw new Error
-             }
-         ```
-       - 子链的发起账户不能是链域名的发起账户或管理员账户
+       - 注册链的发起账户不能是链域名的发起账户或管理员账户
          ```
              memLnsNameByPossessor = await getMemLocationName(possessor: tr.senderId);
              if (memLnsNameByPossessor) {
@@ -4619,20 +4241,6 @@
              if (memLnsNameByManager) {
                  throw new Error
              }
-         ```
-       - 子链的每个区块最大交易量不能大于已知链的区块最大交易量的两倍
-         ```
-             memTxsPerBlock = await getChainMaxTxsPerBlock();
-             if (memTxsPerBlock < constants.memTxsPerBlock) {
-                 memTxsPerBlock = constants.memTxsPerBlock;
-             }
-             if (issueSubchain.memTxsPerBlock > memTxsPerBlock * 2) {
-                 throw new Error
-             }
-         ```
-       - 如果子链已经被发行则报错
-         ```
-             memSubchain = await getMemSubchain(issueSubchain.magic);
          ```
 
      - ISSUE_ASSET -- AST-00 -- 发行数字资产交易
@@ -5513,14 +5121,12 @@
                同 SIGNATURE
            ```
 
-       - ISSUE_SUBCHAIN -- WOD-01 -- 发行子链交易
+       - REGISTER_CHAIN -- WOD-01 -- 发行注册链交易
 
          - 保存注册的链的创世块
            ```
                await setMemData(tr.type, {
-                   modMem_legalCurrency: [subChainName, subChainAssetType],
-                   modMem_magic: [subChainMagic],
-                   modMem_registerChain: {
+                   registerChain: {
                        genesisBlock
                    },
                    height: currentBlockHeight

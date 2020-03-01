@@ -746,7 +746,7 @@ export class EventLogicVerifier {
         throw new ConsensusException(ACCOUNT_CAN_NOT_BE_FROZEN, {
           address,
           reason: "DApp id possessor can not initiate a register chain transaction",
-          errorId: NewTransactionRefuseReason.DAPP_POSSESSOR_CAN_NOT_ISSUE_ASSET,
+          errorId: NewTransactionRefuseReason.DAPP_POSSESSOR_CAN_NOT_REGISTER_CHAIN,
           ...Function_Exception_Detail,
         });
       }
@@ -765,7 +765,7 @@ export class EventLogicVerifier {
           address,
           reason:
             "Location name possessor or manager can not initiate a register chain transaction",
-          errorId: NewTransactionRefuseReason.LNS_POSSESSOR_OR_MANAGER_CAN_NOT_ISSUE_ASSET,
+          errorId: NewTransactionRefuseReason.LNS_POSSESSOR_OR_MANAGER_CAN_NOT_REGISTER_CHAIN,
           ...Function_Exception_Detail,
         });
       }
