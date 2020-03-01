@@ -183,7 +183,7 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
       });
     }
 
-    if (accountBaseHelper.isAddress(alias)) {
+    if (await accountBaseHelper.isAddress(alias)) {
       throw new ArgumentIllegalException(SHOULD_NOT_BE, {
         to_compare_prop: username,
         to_target: "usernameAsset",
@@ -249,7 +249,7 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
    * @param transaction
    * @param eventEmitter
    */
-  applyTransaction(
+  async applyTransaction(
     transaction: UsernameTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,

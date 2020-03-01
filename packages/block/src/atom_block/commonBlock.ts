@@ -41,7 +41,7 @@ export class CommonBlockFactory extends BlockFactory<CommonBlock> {
    *
    * @param blockBody
    */
-  fromJSON(
+  async fromJSON(
     blockBody: BFChainCore.BlockJSON<BFChainCore.CommonBlockRemarkJSON>,
     opts?: { verify?: boolean; config?: ConfigHelper },
   ) {
@@ -51,7 +51,7 @@ export class CommonBlockFactory extends BlockFactory<CommonBlock> {
     });
 
     if (opts && opts.verify) {
-      this.verify(block, opts.config);
+      await this.verify(block, opts.config);
     }
     return block;
   }
@@ -62,12 +62,12 @@ export class CommonBlockFactory extends BlockFactory<CommonBlock> {
    * @param body
    * @param commonBlockRemark
    */
-  verifyBlockBody(
+  async verifyBlockBody(
     body: BFChainCore.BlockBody,
     commonBlockRemark: BFChainCore.CommonBlockRemarkJSON,
     config = this.config,
   ) {
-    super.verifyBlockBody(body, commonBlockRemark, config);
+    await super.verifyBlockBody(body, commonBlockRemark, config);
 
     const Function_Exception_Detail = { function: "verifyBlockBody" };
     const CommonBlockRemark_Exception_Detail = {

@@ -62,7 +62,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
       fromMagic: "5F720C81E82CFC99", // 交易来源链的 magic
       toMagic: "5F720C81E82CFC99", // 交易去往链的 magic
       applyBlockHeight: 10086, // 交易发起高度
-      numberOfEffectiveBlocks: 100,
+      effectiveBlockHeight: 10100,
       storage: {
         key: "assetType",
         value: assetType,
@@ -138,7 +138,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
       fromMagic: "5F720C81E82CFC99", // 交易来源链的 magic
       toMagic: "5F720C81E82CFC99", // 交易去往链的 magic
       applyBlockHeight: 10086, // 交易发起高度
-      numberOfEffectiveBlocks: 100,
+      effectiveBlockHeight: 10100,
       storage: {
         key: "assetType",
         value: "ZEK",
@@ -212,7 +212,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
       fromMagic: "5F720C81E82CFC99", // 交易来源链的 magic
       toMagic: "5F720C81E82CFC99", // 交易去往链的 magic
       applyBlockHeight: 10086, // 交易发起高度
-      numberOfEffectiveBlocks: 100,
+      effectiveBlockHeight: 10100,
     };
     let secondKeypair;
     if (sender.secondSecret) {
@@ -279,7 +279,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
       fromMagic: "5F720C81E82CFC99", // 交易来源链的 magic
       toMagic: "5F720C81E82CFC99", // 交易去往链的 magic
       applyBlockHeight: 10086, // 交易发起高度
-      numberOfEffectiveBlocks: 100,
+      effectiveBlockHeight: 10100,
       storage: {
         key: "transactionSignature",
         value: toExchangeAssetTrs.signature,
@@ -311,7 +311,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
             .toString(),
           beExchangeNumber: "50",
           applyBlockHeight: toExchangeAssetTrs.applyBlockHeight,
-          numberOfEffectiveBlocks: toExchangeAssetTrs.numberOfEffectiveBlocks,
+          effectiveBlockHeight: toExchangeAssetTrs.effectiveBlockHeight,
           transactionRangeType: toExchangeAssetTrs.rangeType,
           transactionRange: toExchangeAssetTrs.range,
           exchangeAsset: toExchangeAsset,
@@ -364,7 +364,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
       fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
       toMagic: bfchainCore.config.magic, // 交易去往链的 magic
       applyBlockHeight: 10086, // 交易发起高度
-      numberOfEffectiveBlocks: 100,
+      effectiveBlockHeight: 10100,
     };
     let secondKeypair;
     if (sender.secondSecret) {
@@ -427,7 +427,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
       fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
       toMagic: bfchainCore.config.magic, // 交易去往链的 magic
       applyBlockHeight: 10086, // 交易发起高度
-      numberOfEffectiveBlocks: 100,
+      effectiveBlockHeight: 10100,
       storage: {
         key: "transactionSignature",
         value: toExchangeSpecialAssetTrs.signature,
@@ -448,7 +448,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
       beExchangeSpecialAsset: {
         transactionSignature: toExchangeSpecialAssetTrs.signature,
         applyBlockHeight: toExchangeSpecialAssetTrs.applyBlockHeight,
-        numberOfEffectiveBlocks: toExchangeSpecialAssetTrs.numberOfEffectiveBlocks,
+        effectiveBlockHeight: toExchangeSpecialAssetTrs.effectiveBlockHeight,
         transactionRangeType: toExchangeSpecialAssetTrs.rangeType,
         transactionRange: toExchangeSpecialAssetTrs.range,
         exchangeSpecialAsset: toExchangeSpecialAssetTrs.asset.toExchangeSpecialAsset,

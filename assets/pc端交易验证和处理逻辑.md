@@ -10,7 +10,7 @@
       *
       * @param range
       */
-      isValidRange(rangeType: RANGE_TYPE, range: string[]) {
+      async isValidRange(rangeType: RANGE_TYPE, range: string[]) {
           if (!RANGE_TYPE[rangeType]) {
               return false;
           }
@@ -28,7 +28,7 @@
               switch (rangeType) {
                   case RANGE_TYPE.MULTI_ADDRESS:
                       for (const item of range) {
-                          if (!this.accountBaseHelper.isAddress(item)) {
+                          if (!await this.accountBaseHelper.isAddress(item)) {
                               return false;
                           }
                       }
@@ -1036,7 +1036,7 @@
            - rangeType 是 MULTI_LOCATION_NAME
              - range 的每一项必须是合法的 lns
        ```
-           if (!isValidRange(body.rangeType, body.range)) {
+           if (!await isValidRange(body.rangeType, body.range)) {
                throw new Error
            }
        ```
@@ -2299,7 +2299,7 @@
               - rangeType === MULTI_LOCATION_NAME
                 - 交易的 lns 必须在 range 中
               ```
-                  if (!isValidRange(transactionRangeType, transactionRange)) {
+                  if (!await isValidRange(transactionRangeType, transactionRange)) {
                       throw new Error
                   }
                   if (transactionRangeType & RANGE_TYPE.MULTI_ADDRESS) {
@@ -3080,7 +3080,7 @@
                             - 交易的 lns 必须在 range 中
                         ```
                             const { transactionRangeType, transactionRange } = beExchangeAsset;
-                            if (!isValidRange(transactionRangeType, transactionRange)) {
+                            if (!await isValidRange(transactionRangeType, transactionRange)) {
                                 throw new Error
                             }
                             if (transactionRangeType & RANGE_TYPE.MULTI_ADDRESS) {
@@ -3395,7 +3395,7 @@
                             - 交易的 lns 必须在 range 中
                         ```
                             const { transactionRangeType, transactionRange } = beExchangeSpecialAsset;
-                            if (!isValidRange(transactionRangeType, transactionRange)) {
+                            if (!await isValidRange(transactionRangeType, transactionRange)) {
                                 throw new Error
                             }
                             if (transactionRangeType & RANGE_TYPE.MULTI_ADDRESS) {

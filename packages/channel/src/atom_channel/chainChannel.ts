@@ -223,7 +223,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
   }
 
   /**查询交易 */
-  queryTransactions(
+  async queryTransactions(
     query: BFChainCore.QueryTransactionArgJSON["query"],
     sort?: BFChainCore.QueryTransactionArgJSON["sort"],
     opts?: BFChainCore.ChannelRequestOptions,
@@ -235,11 +235,11 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
     return this._request(
       DUPLEX_API_CMD.QUERY_TRANSACTION,
       arg,
-      this.chainChannelHelper.boxQueryTransactionReturn,
+      await this.chainChannelHelper.boxQueryTransactionReturn,
       opts,
     );
   }
-  initBroadcastTransactionArg(
+  async initBroadcastTransactionArg(
     transaction: BFChainCore.NewTransactionArgJSON["transaction"],
     opts: BFChainCore.ChannelRequestOptions = {},
   ) {
@@ -247,7 +247,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
       transaction:
         transaction instanceof Message
           ? transaction
-          : this.transactionCore.recombineTransaction(transaction),
+          : await this.transactionCore.recombineTransaction(transaction),
       grabSecret: opts.grabSecret,
     });
 
@@ -263,7 +263,9 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
     transaction: BFChainCore.NewTransactionArgJSON["transaction"],
     opts?: BFChainCore.ChannelRequestOptions,
   ) {
-    return this._requestWithBinaryData(...this.initBroadcastTransactionArg(transaction, opts));
+    return this._requestWithBinaryData(
+      ...(await this.initBroadcastTransactionArg(transaction, opts)),
+    );
   }
   /**查询区块 */
   queryBlock<B extends Block = Block>(
@@ -354,7 +356,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
               const queryResult = this.has("onQueryTransaction")
                 ? await this.emit(
                     "onQueryTransaction",
-                    this.chainChannelHelper.boxQueryTransactionArg(binary),
+                    await this.chainChannelHelper.boxQueryTransactionArg(binary),
                   )
                 : undefined;
 
@@ -378,7 +380,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
               const broadcastResult = this.has("onNewTransaction")
                 ? await this.emit(
                     "onNewTransaction",
-                    this.chainChannelHelper.boxNewTransactionArg(binary),
+                    await this.chainChannelHelper.boxNewTransactionArg(binary),
                   )
                 : undefined;
 

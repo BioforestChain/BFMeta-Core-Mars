@@ -144,7 +144,7 @@ export class SignatureTransactionFactory extends TransactionFactory<SignatureTra
    * @param transaction
    * @param eventEmitter
    */
-  applyTransaction(
+  async applyTransaction(
     transaction: SignatureTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,

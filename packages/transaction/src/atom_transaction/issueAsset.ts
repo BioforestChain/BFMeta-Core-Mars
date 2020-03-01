@@ -232,7 +232,7 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
       });
     }
 
-    if (!accountBaseHelper.isAddress(genesisAddress)) {
+    if (!(await accountBaseHelper.isAddress(genesisAddress))) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "genesisAddress",
         type: "account address",
@@ -281,7 +281,7 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
    * @param transaction
    * @param eventEmitter
    */
-  applyTransaction(
+  async applyTransaction(
     transaction: IssueAssetTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,

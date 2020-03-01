@@ -178,7 +178,7 @@ export class TransferAssetTransactionFactory extends TransactionFactory<Transfer
    * @param transaction
    * @param eventEmitter
    */
-  applyTransaction(
+  async applyTransaction(
     transaction: TransferAssetTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,

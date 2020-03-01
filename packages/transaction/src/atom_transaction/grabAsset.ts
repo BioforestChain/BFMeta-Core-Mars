@@ -196,7 +196,7 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
       });
     }
 
-    if (!baseHelper.isValidRange(transactionRangeType, transactionRange)) {
+    if (!(await baseHelper.isValidRange(transactionRangeType, transactionRange))) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "transactionRange",
         type: "transaction recipient",
@@ -395,7 +395,7 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
    * @param transaction
    * @param eventEmitter
    */
-  applyTransaction(
+  async applyTransaction(
     transaction: GrabAssetTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,

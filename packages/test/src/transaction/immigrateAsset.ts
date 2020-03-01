@@ -17,6 +17,9 @@ import {
 } from "../include";
 import { parseHexToArrayBuffer } from "@bfchain/util";
 
+const fullBfchainCore = getFullBfchainCore(57, 128);
+const fullRegisterBfchainCore = getFullRegisterBfchainCore();
+
 async function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate: AccountModel) {
   const keypair = await fullBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
@@ -34,7 +37,7 @@ async function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate
     lns: `bnqkl.${fullBfchainCore.config.chainName}`,
     sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: fullBfchainCore.config.magic, // 交易来源链的 magic
-    toMagic: fullSubBfchainCore.config.magic, // 交易去往链的 magic
+    toMagic: fullRegisterBfchainCore.config.magic, // 交易去往链的 magic
     applyBlockHeight: 10, // 交易发起高度
     effectiveBlockHeight: 10100,
   };
@@ -94,10 +97,12 @@ async function getImmigrateAssetTransaction(
     }
   >,
 ) {
-  const keypair = await fullSubBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
+  const keypair = await fullRegisterBfchainCore.accountBaseHelper.createSecretKeypair(
+    sender.secret,
+  );
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
-    type: fullSubBfchainCore.transactionHelper.IMMIGRATE_ASSET, // 交易类型
+    type: fullRegisterBfchainCore.transactionHelper.IMMIGRATE_ASSET, // 交易类型
     senderId: sender.address, // 发起者地址
     senderPublicKey: sender.publicKey, // 发起者公钥
     senderSecondPublicKey: "", // 发起者二次公钥
@@ -107,10 +112,10 @@ async function getImmigrateAssetTransaction(
     fee: "1000", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
     dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
-    lns: `bnqkl.${fullSubBfchainCore.config.chainName}`,
+    lns: `bnqkl.${fullRegisterBfchainCore.config.chainName}`,
     sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: fullBfchainCore.config.magic, // 交易来源链的 magic
-    toMagic: fullSubBfchainCore.config.magic, // 交易去往链的 magic
+    toMagic: fullRegisterBfchainCore.config.magic, // 交易去往链的 magic
     applyBlockHeight: 10, // 交易发起高度
     effectiveBlockHeight: 57,
     storage: {
@@ -120,11 +125,11 @@ async function getImmigrateAssetTransaction(
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = await fullSubBfchainCore.accountBaseHelper.createSecondSecretKeypair(
+    secondKeypair = await fullRegisterBfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = await fullSubBfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = await fullRegisterBfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );
@@ -161,9 +166,11 @@ async function getImmigrateAssetTransaction(
     genesisDelegateSignature.signSignature = signSignature.toString("hex");
   }
   immigrateAsset.genesisDelegateSignature = genesisDelegateSignature;
-  fullSubBfchainCore.configMap.set(fullBfchainCore.config.magic, fullBfchainCore.config);
+  fullRegisterBfchainCore.configMap.set(fullBfchainCore.config.magic, fullBfchainCore.config);
 
-  const trs = await fullSubBfchainCore.transaction.createTransaction<ImmigrateAssetTransaction>(
+  const trs = await fullRegisterBfchainCore.transaction.createTransaction<
+    ImmigrateAssetTransaction
+  >(
     ImmigrateAssetTransactionFactory,
     data,
     {
@@ -174,7 +181,7 @@ async function getImmigrateAssetTransaction(
   );
 
   const trsJson = trs.toJSON();
-  const xx = fullBfchainCore.transaction.recombineTransaction(trsJson);
+  const xx = await fullBfchainCore.transaction.recombineTransaction(trsJson);
   await fullBfchainCore.transactionHelper.verifyTransactionSignature(xx);
   console.log(xx);
 

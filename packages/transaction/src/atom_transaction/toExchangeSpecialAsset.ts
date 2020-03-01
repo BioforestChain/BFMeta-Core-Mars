@@ -287,7 +287,7 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
    * @param transaction
    * @param eventEmitter
    */
-  applyTransaction(
+  async applyTransaction(
     transaction: ToExchangeSpecialAssetTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,

@@ -279,7 +279,7 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
    * @param transaction
    * @param eventEmitter
    */
-  applyTransaction(
+  async applyTransaction(
     transaction: LocationNameTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,

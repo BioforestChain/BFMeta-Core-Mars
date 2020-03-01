@@ -83,7 +83,7 @@ async function getTransferAssetTransaction(sender: AccountModel) {
     trs = await bfchainCore.transaction.transactionPowCalculator(trs, pow, keypair, secondKeypair);
   }
   const trsJson = trs.toJSON();
-  const xx = bfchainCore.transaction.recombineTransaction(trsJson);
+  const xx = await bfchainCore.transaction.recombineTransaction(trsJson);
   console.log(xx.toJSON());
 }
 

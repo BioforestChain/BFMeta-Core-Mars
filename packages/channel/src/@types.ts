@@ -74,12 +74,16 @@ declare namespace BFChainCore {
     initBroadcastTransactionArg(
       transaction: NewTransactionArgJSON["transaction"],
       opts?: ChannelRequestOptions,
-    ): readonly [
-      import("@bfchain/core-model").DUPLEX_API_CMD.NEW_TRANSACTION,
-      Uint8Array,
-      (params: Uint8Array | ArrayBuffer) => import("@bfchain/core-model").NewTransactionReturnModel,
-      ChannelRequestOptions,
-    ];
+    ): Promise<
+      readonly [
+        import("@bfchain/core-model").DUPLEX_API_CMD.NEW_TRANSACTION,
+        Uint8Array,
+        (
+          params: Uint8Array | ArrayBuffer,
+        ) => import("@bfchain/core-model").NewTransactionReturnModel,
+        ChannelRequestOptions,
+      ]
+    >;
     /**广播交易体 */
     broadcastTransaction(
       transaction: NewTransactionArgJSON["transaction"],

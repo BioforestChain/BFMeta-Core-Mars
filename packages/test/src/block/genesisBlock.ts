@@ -309,7 +309,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
           fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
           toMagic: bfchainCore.config.magic, // 交易去往链的 magic
           applyBlockHeight: 1, // 交易发起高度
-          numberOfEffectiveBlocks: 1,
+          effectiveBlockHeight: 1,
           remark: {},
           storage: {
             key: "assetType",
@@ -369,7 +369,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
           fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
           toMagic: bfchainCore.config.magic, // 交易去往链的 magic
           applyBlockHeight: 1, // 交易发起高度
-          numberOfEffectiveBlocks: 1,
+          effectiveBlockHeight: 1,
           remark: {},
           storage: {
             key: "name",
@@ -438,7 +438,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
           fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
           toMagic: bfchainCore.config.magic, // 交易去往链的 magic
           applyBlockHeight: 1, // 交易发起高度
-          numberOfEffectiveBlocks: 1,
+          effectiveBlockHeight: 1,
           remark: {},
           storage: {
             key: "name",
@@ -674,9 +674,9 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
     );
     statisticsInfo.unref("getGenesisBlock");
     const _genesisBlock = genesisBlock.toJSON();
-    const __genesisBlock = core.block.recombineBlock(_genesisBlock);
-    core.block.getBlockFactoryFromHeight(__genesisBlock.height).verify(__genesisBlock);
-    core.blockHelper.verifyBlockSignature(__genesisBlock, {
+    const __genesisBlock = await core.block.recombineBlock(_genesisBlock);
+    await core.block.getBlockFactoryFromHeight(__genesisBlock.height).verify(__genesisBlock);
+    await core.blockHelper.verifyBlockSignature(__genesisBlock, {
       taskLabel: "self genesis Block",
     });
     if (out) {

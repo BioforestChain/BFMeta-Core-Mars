@@ -210,7 +210,7 @@ export class DelegateTransactionFactory extends TransactionFactory<DelegateTrans
    * @param transaction
    * @param eventEmitter
    */
-  applyTransaction(
+  async applyTransaction(
     transaction: DelegateTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,

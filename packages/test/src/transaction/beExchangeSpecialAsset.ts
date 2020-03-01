@@ -159,8 +159,8 @@ async function getBeExchangeSpecialAssetTransaction(
     secondKeypair,
   );
   const trsJson = trs.toJSON();
-  const oo = bfchainCore.transaction.recombineTransaction(trsJson);
-  bfchainCore.transactionHelper.verifyTransactionSignature(oo);
+  const oo = await bfchainCore.transaction.recombineTransaction(trsJson);
+  await bfchainCore.transactionHelper.verifyTransactionSignature(oo);
   console.log(oo.asset);
 }
 (async () => {

@@ -218,8 +218,8 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<
             ...LnsRecordValueAsset_Exception_Detail,
           });
         }
-        this.checkLocationNameRecord(lnsRecordValue.addRecord);
-        this.checkLocationNameRecord(lnsRecordValue.deleteRecord);
+        await this.checkLocationNameRecord(lnsRecordValue.addRecord);
+        await this.checkLocationNameRecord(lnsRecordValue.deleteRecord);
         break;
       default:
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
@@ -235,7 +235,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<
    *
    * @param record
    */
-  checkLocationNameRecord(record: BFChainCore.LocationNameRecordJSON) {
+  async checkLocationNameRecord(record: BFChainCore.LocationNameRecordJSON) {
     const { baseHelper, accountBaseHelper } = this;
     const Function_Exception_Detail = { function: "verifyTransactionBody" } as const;
 
@@ -286,7 +286,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<
         });
       }
     } else if (RECORD_TYPE.ADDRESSV1 === recordType) {
-      if (!accountBaseHelper.isAddress(recordValue)) {
+      if (!await accountBaseHelper.isAddress(recordValue)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "recordValue",
           type: "block chain account address",
@@ -322,7 +322,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<
    * @param transaction
    * @param eventEmitter
    */
-  applyTransaction(
+  async applyTransaction(
     transaction: SetLnsRecordValueTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,

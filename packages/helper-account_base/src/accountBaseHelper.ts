@@ -36,7 +36,7 @@ export class AccountBaseHelper {
    * @param secret 主密码
    */
   async createSecretKeypair(secret: string) {
-    return this.keypairHelperInterface.create(
+    return await this.keypairHelperInterface.create(
       await this.cryptoHelper.sha256(this.Buffer.from(secret, "utf8")),
     );
   }
@@ -65,7 +65,8 @@ export class AccountBaseHelper {
   /**根据公钥生成地址(base58) */
   async getAddressFromPublicKey(publicKey: Uint8Array) {
     const address =
-      this._prefix + this.base58Helper.encode(await this.getBinaryAddressFromPublicKey(publicKey));
+      this._prefix +
+      (await this.base58Helper.encode(await this.getBinaryAddressFromPublicKey(publicKey)));
     return address;
   }
   /**根据公钥字符串生成地址(base58) */
@@ -83,7 +84,7 @@ export class AccountBaseHelper {
    * 判断地址是否符合规范
    * @param address 地址
    */
-  isAddress(address: any) {
+  async isAddress(address: any) {
     if (typeof address !== "string") {
       return false;
     }
@@ -91,7 +92,7 @@ export class AccountBaseHelper {
       if (address[0] !== this._prefix) {
         return false;
       }
-      if (!this.base58Helper.decodeUnsafe(address.slice(1))) {
+      if (!(await this.base58Helper.decodeUnsafe(address.slice(1)))) {
         return false;
       }
     } else {

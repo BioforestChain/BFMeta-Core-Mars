@@ -255,7 +255,7 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
    * @param transaction
    * @param eventEmitter
    */
-  applyTransaction(
+  async applyTransaction(
     transaction: EmigrateAssetTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,

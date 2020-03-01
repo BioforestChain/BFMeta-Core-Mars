@@ -65,7 +65,7 @@ quq.age = 66;
       version: 1,
       type: bfchainCore.transactionHelper.TRANSFER_ASSET,
       applyBlockHeight: 2,
-      numberOfEffectiveBlocks: 100,
+      effectiveBlockHeight: 100,
       timestamp: 500,
       senderId: await bfchainCore.accountBaseHelper.getAddressFromPublicKey(
         (await bfchainCore.accountBaseHelper.createSecretKeypair("1")).publicKey,

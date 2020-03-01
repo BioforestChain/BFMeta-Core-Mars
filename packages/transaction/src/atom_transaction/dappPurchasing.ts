@@ -203,7 +203,7 @@ export class DAppPurchasingTransactionFactory extends TransactionFactory<
    * @param transaction
    * @param eventEmitter
    */
-  applyTransaction(
+  async applyTransaction(
     transaction: DAppPurchasingTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,

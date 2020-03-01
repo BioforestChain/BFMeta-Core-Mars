@@ -203,7 +203,7 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
 
     const { transactionRangeType, transactionRange } = beExchangeSpecialAsset;
 
-    if (!baseHelper.isValidRange(transactionRangeType, transactionRange)) {
+    if (!(await baseHelper.isValidRange(transactionRangeType, transactionRange))) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "transactionRange",
         type: "transaction recipient",
@@ -317,7 +317,7 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
    * @param transaction
    * @param eventEmitter
    */
-  applyTransaction(
+  async applyTransaction(
     transaction: BeExchangeSpecialAssetTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,

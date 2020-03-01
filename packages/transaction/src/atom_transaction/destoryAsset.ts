@@ -196,7 +196,7 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
    * @param transaction
    * @param eventEmitter
    */
-  applyTransaction(
+  async applyTransaction(
     transaction: DestoryAssetTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,

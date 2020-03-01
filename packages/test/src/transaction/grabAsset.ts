@@ -19,6 +19,8 @@ import {
   getGenesisAccount,
 } from "../include";
 
+const fullBfchainCore = getFullBfchainCore(57, 128);
+
 async function getGiftAssetTransaction(
   sender: AccountModel,
   recipient?: AccountModel[],
@@ -144,8 +146,8 @@ async function getGrabAssetTransaction(
     giftAsset,
   };
 
-  const amount = bfchainCore.transactionHelper
-    .calcGrabRandomGiftAssetNumber(
+  const amount = (
+    await bfchainCore.transactionHelper.calcGrabRandomGiftAssetNumber(
       data.senderId,
       parseHexToArrayBuffer(grabAsset.blockSignature),
       giftAssetTrs.signatureBuffer,
@@ -153,7 +155,7 @@ async function getGrabAssetTransaction(
       giftAsset.amount,
       giftAsset.totalGrabableTimes,
     )
-    .toString();
+  ).toString();
 
   if (giftAsset.cipherPublicKeys.length > 0) {
     const index = Math.floor(Math.random() * grabAccounts.length);
@@ -181,7 +183,7 @@ async function getGrabAssetTransaction(
     keypair,
     secondKeypair,
   );
-  const xx = bfchainCore.transaction.recombineTransaction(trs.toJSON());
+  const xx = await bfchainCore.transaction.recombineTransaction(trs.toJSON());
   console.log(xx.toJSON().asset);
 }
 

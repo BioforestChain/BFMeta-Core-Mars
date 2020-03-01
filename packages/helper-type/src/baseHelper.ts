@@ -44,7 +44,7 @@ export class BaseHelper {
    *
    * @param range
    */
-  isValidRange(rangeType: RANGE_TYPE, range: string[]) {
+  async isValidRange(rangeType: RANGE_TYPE, range: string[]) {
     if (!RANGE_TYPE[rangeType]) {
       return false;
     }
@@ -62,7 +62,7 @@ export class BaseHelper {
       switch (rangeType) {
         case RANGE_TYPE.MULTI_ADDRESS:
           for (const item of range) {
-            if (!this.accountBaseHelper.isAddress(item)) {
+            if (!(await this.accountBaseHelper.isAddress(item))) {
               return false;
             }
           }

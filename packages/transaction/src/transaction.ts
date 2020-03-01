@@ -98,7 +98,7 @@ export class TransactionCore {
       transactionFactory.verifySecondKeypair(secondKeypair);
     }
     /// 校验生成交易的参数
-    transactionFactory.verifyTransactionBody(body, asset, config);
+    await transactionFactory.verifyTransactionBody(body, asset, config);
     const txbody: BFChainCore.TxBodyJSON = {
       version: body.version,
       type: body.type || this.getTransactionTypeFromTransactionFactoryConstructor(TxFactory), // 交易类型
@@ -235,10 +235,10 @@ export class TransactionCore {
    *
    * @param trs
    */
-  recombineTransaction<T extends Transaction>(
+  async recombineTransaction<T extends Transaction>(
     trs: BFChainCore.TransactionJSON<BFChainCore.GetTransactionAssetJSON<T>>,
   ) {
-    return this.getTransactionFactoryFromType(trs.type).fromJSON(trs) as T;
+    return await this.getTransactionFactoryFromType(trs.type).fromJSON(trs) as T;
   }
   fromJSON = this.recombineTransaction;
   recombineTransactionInBlock<T extends BFChainCore.TransactionInBlock>(

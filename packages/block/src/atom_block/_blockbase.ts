@@ -46,7 +46,7 @@ export abstract class BlockFactory<T extends Block> {
   abstract asymmetricHelper: AsymmetricHelper;
   abstract chainAssetInfoHelper: ChainAssetInfoHelper;
 
-  abstract fromJSON(blockBody: BFChainCore.BlockJSON<GetBlockRemarkJSON<T>>): T;
+  abstract fromJSON(blockBody: BFChainCore.BlockJSON<GetBlockRemarkJSON<T>>): Promise<T>;
 
   /** transactionInBlockFromJSON*/
   transactionInBlockFromJSON<T extends BFChainCore.TransactionJSON>(
@@ -430,7 +430,7 @@ export abstract class BlockFactory<T extends Block> {
    * @param body
    * @param remark
    */
-  verifyBlockBody(
+  async verifyBlockBody(
     body: BFChainCore.BlockBody,
     remark: GetBlockRemarkJSON<T>,
     config = this.config,
@@ -608,7 +608,7 @@ export abstract class BlockFactory<T extends Block> {
       for (const tranItem of transactions) {
         const transaction = tranItem.transaction;
         // 验证区块内每笔交易的基本信息
-        this.transactionCore
+        await this.transactionCore
           .getTransactionFactoryFromType(transaction.type)
           .verify(transaction, config);
         if (appliedTransactions.has(transaction.signature)) {
@@ -843,7 +843,7 @@ export abstract class BlockFactory<T extends Block> {
       });
     }
 
-    this.verifyBlockBody(block, block.remark, config);
+    await this.verifyBlockBody(block, block.remark, config);
     await this.verifyBlockTransactions(block, config);
   }
 

@@ -205,7 +205,7 @@ export class SetLnsManagerTransactionFactory extends TransactionFactory<SetLnsMa
    * @param transaction
    * @param eventEmitter
    */
-  applyTransaction(
+  async applyTransaction(
     transaction: SetLnsManagerTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,

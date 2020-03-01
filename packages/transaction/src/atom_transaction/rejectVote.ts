@@ -102,7 +102,7 @@ export class RejectVoteTransactionFactory extends TransactionFactory<RejectVoteT
    * @param transaction
    * @param eventEmitter
    */
-  applyTransaction(
+  async applyTransaction(
     transaction: RejectVoteTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,

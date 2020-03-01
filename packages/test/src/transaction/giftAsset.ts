@@ -79,7 +79,7 @@ async function getGiftAssetTransaction(
     keypair,
     secondKeypair,
   );
-  const xx = bfchainCore.transaction.recombineTransaction(trs.toJSON());
+  const xx = await bfchainCore.transaction.recombineTransaction(trs.toJSON());
   console.log((xx.asset as any).giftAsset);
 }
 

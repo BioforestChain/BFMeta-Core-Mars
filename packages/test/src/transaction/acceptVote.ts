@@ -47,8 +47,8 @@ async function getAcceptVoteTransaction(sender: AccountModel) {
     secondKeypair,
   );
   const trsJson = trs.toJSON();
-  const xx = bfchainCore.transaction.recombineTransaction(trsJson);
-  bfchainCore.transaction.getTransactionFactoryFromType(xx.type).verify(xx);
+  const xx = await bfchainCore.transaction.recombineTransaction(trsJson);
+  await bfchainCore.transaction.getTransactionFactoryFromType(xx.type).verify(xx);
   console.log(xx);
   //   console.log(trs.toJSON());
 }

@@ -1,12 +1,12 @@
 {
   "name": "@types/bfchain__core-channel",
   "types": "index.d.ts",
-  "version": "5.6.0",
+  "version": "5.6.1",
   "dependencies": {
-    "@types/bfchain__core-helper": "^5.6.0",
-    "@types/bfchain__core-model": "^5.6.0",
-    "@types/bfchain__core-transaction": "^5.6.0",
-    "@types/bfchain__core-typings": "^5.6.0",
-    "@types/bfchain__core-util-exception-errorcode": "^5.6.0"
+    "@types/bfchain__core-helper": "^5.6.1",
+    "@types/bfchain__core-model": "^5.6.1",
+    "@types/bfchain__core-transaction": "^5.6.1",
+    "@types/bfchain__core-typings": "^5.6.1",
+    "@types/bfchain__core-util-exception-errorcode": "^5.6.1"
   }
 }

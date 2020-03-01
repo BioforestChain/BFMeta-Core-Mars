@@ -38,7 +38,7 @@ const defaultIpsPath = path.join(process.cwd(), "./assets/defaultIps.json");
 
 const fullBfchainCore = getFullBfchainCore(57, 128);
 
-const subStatistics = Resolve(BlockBaseStatisticsHelper, registerBfchainCore.moduleMap);
+const registerStatistics = Resolve(BlockBaseStatisticsHelper, registerBfchainCore.moduleMap);
 const statistics = Resolve(BlockBaseStatisticsHelper, fullBfchainCore.moduleMap);
 
 type DelegateInfo = {
@@ -60,22 +60,24 @@ const getPOWInfo = (address: string) => {
 };
 (async () => {
   async function getUsernameTransaction(sender: DelegateInfo) {
-    const keypair = await subBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
+    const keypair = await registerBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
     const secondKeypair =
       (sender.secondSecret &&
-        (await subBfchainCore.accountBaseHelper.createSecondSecretKeypair(
+        (await registerBfchainCore.accountBaseHelper.createSecondSecretKeypair(
           sender.secret,
           sender.secondSecret,
         ))) ||
       undefined;
     const pow =
-      1 > subBfchainCore.config.powOfWorkExemptionBlocks ? getPOWInfo(sender.address) : undefined;
+      1 > registerBfchainCore.config.powOfWorkExemptionBlocks
+        ? getPOWInfo(sender.address)
+        : undefined;
     const createTrs = (fee = "1") => {
-      return subBfchainCore.transaction.createTransaction<UsernameTransaction>(
+      return registerBfchainCore.transaction.createTransaction<UsernameTransaction>(
         UsernameTransactionFactory,
         {
           version: 1,
-          type: subBfchainCore.transactionHelper.USERNAME, // 交易类型
+          type: registerBfchainCore.transactionHelper.USERNAME, // 交易类型
           senderId: sender.address, // 发起者地址
           senderPublicKey: sender.publicKey, // 发起者公钥
           senderSecondPublicKey: secondKeypair && secondKeypair.publicKey.toString("hex"), // 发起者二次公钥
@@ -86,10 +88,10 @@ const getPOWInfo = (address: string) => {
           dappid: "", // 交易所属的 dappid
           lns: "",
           sourceIP: "", // 交易来源 ip
-          fromMagic: subBfchainCore.config.magic, // 交易来源链的 magic
-          toMagic: subBfchainCore.config.magic, // 交易去往链的 magic
+          fromMagic: registerBfchainCore.config.magic, // 交易来源链的 magic
+          toMagic: registerBfchainCore.config.magic, // 交易去往链的 magic
           applyBlockHeight: 1, // 交易发起高度
-          numberOfEffectiveBlocks: 1,
+          effectiveBlockHeight: 1,
           remark: { remark: "交易备注，任意信息，这个是设置用户名交易" }, // 交易备注，任意信息
           storage: {
             key: "alias",
@@ -108,7 +110,7 @@ const getPOWInfo = (address: string) => {
     };
     let trs = await createTrs();
     if (pow) {
-      trs = await subBfchainCore.transaction.transactionPowCalculator(
+      trs = await registerBfchainCore.transaction.transactionPowCalculator(
         trs,
         pow,
         keypair,
@@ -116,30 +118,32 @@ const getPOWInfo = (address: string) => {
       );
     }
     return await createTrs(
-      subBfchainCore.transactionHelper.calcTransactionFee(
+      registerBfchainCore.transactionHelper.calcTransactionFee(
         trs,
-        subBfchainCore.config.minTransactionFeePerByte,
+        registerBfchainCore.config.minTransactionFeePerByte,
       ),
     );
   }
 
   async function getDelegateTransaction(sender: DelegateInfo) {
-    const keypair = await subBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
+    const keypair = await registerBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
     const secondKeypair =
       (sender.secondSecret &&
-        (await subBfchainCore.accountBaseHelper.createSecondSecretKeypair(
+        (await registerBfchainCore.accountBaseHelper.createSecondSecretKeypair(
           sender.secret,
           sender.secondSecret,
         ))) ||
       undefined;
     const pow =
-      1 > subBfchainCore.config.powOfWorkExemptionBlocks ? getPOWInfo(sender.address) : undefined;
+      1 > registerBfchainCore.config.powOfWorkExemptionBlocks
+        ? getPOWInfo(sender.address)
+        : undefined;
     const createTrs = (fee = "1") => {
-      return subBfchainCore.transaction.createTransaction(
+      return registerBfchainCore.transaction.createTransaction(
         DelegateTransactionFactory,
         {
           version: 1,
-          type: subBfchainCore.transactionHelper.DELEGATE, // 交易类型
+          type: registerBfchainCore.transactionHelper.DELEGATE, // 交易类型
           senderId: sender.address, // 发起者地址
           senderPublicKey: sender.publicKey, // 发起者公钥
           senderSecondPublicKey: secondKeypair && secondKeypair.publicKey.toString("hex"), // 发起者二次公钥
@@ -150,10 +154,10 @@ const getPOWInfo = (address: string) => {
           dappid: "", // 交易所属的 dappid
           lns: "",
           sourceIP: "", // 交易来源 ip
-          fromMagic: subBfchainCore.config.magic, // 交易来源链的 magic
-          toMagic: subBfchainCore.config.magic, // 交易去往链的 magic
+          fromMagic: registerBfchainCore.config.magic, // 交易来源链的 magic
+          toMagic: registerBfchainCore.config.magic, // 交易去往链的 magic
           applyBlockHeight: 1, // 交易发起高度
-          numberOfEffectiveBlocks: 1,
+          effectiveBlockHeight: 1,
           remark: { remark: "交易备注，任意信息，这个是注册受托人交易" }, // 交易备注，任意信息
           storage: {
             key: "username",
@@ -172,7 +176,7 @@ const getPOWInfo = (address: string) => {
     };
     let trs = await createTrs();
     if (pow) {
-      trs = await subBfchainCore.transaction.transactionPowCalculator(
+      trs = await registerBfchainCore.transaction.transactionPowCalculator(
         trs,
         pow,
         keypair,
@@ -180,30 +184,32 @@ const getPOWInfo = (address: string) => {
       );
     }
     return await createTrs(
-      subBfchainCore.transactionHelper.calcTransactionFee(
+      registerBfchainCore.transactionHelper.calcTransactionFee(
         trs,
-        subBfchainCore.config.minTransactionFeePerByte,
+        registerBfchainCore.config.minTransactionFeePerByte,
       ),
     );
   }
 
   async function getAcceptVoteTransaction(sender: DelegateInfo) {
-    const keypair = await subBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
+    const keypair = await registerBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
     const secondKeypair =
       (sender.secondSecret &&
-        (await subBfchainCore.accountBaseHelper.createSecondSecretKeypair(
+        (await registerBfchainCore.accountBaseHelper.createSecondSecretKeypair(
           sender.secret,
           sender.secondSecret,
         ))) ||
       undefined;
     const pow =
-      1 > subBfchainCore.config.powOfWorkExemptionBlocks ? getPOWInfo(sender.address) : undefined;
+      1 > registerBfchainCore.config.powOfWorkExemptionBlocks
+        ? getPOWInfo(sender.address)
+        : undefined;
     const createTrs = (fee = "1") => {
-      return subBfchainCore.transaction.createTransaction<AcceptVoteTransaction>(
+      return registerBfchainCore.transaction.createTransaction<AcceptVoteTransaction>(
         AcceptVoteTransactionFactory,
         {
           version: 1,
-          type: subBfchainCore.transactionHelper.ACCEPT_VOTE, // 交易类型
+          type: registerBfchainCore.transactionHelper.ACCEPT_VOTE, // 交易类型
           senderId: sender.address, // 发起者地址
           senderPublicKey: sender.publicKey, // 发起者公钥
           senderSecondPublicKey: secondKeypair && secondKeypair.publicKey.toString("hex"), // 发起者二次公钥
@@ -215,10 +221,10 @@ const getPOWInfo = (address: string) => {
           dappid: "", // 交易所属的 dappid
           lns: "",
           sourceIP: "", // 交易来源 ip
-          fromMagic: subBfchainCore.config.magic, // 交易来源链的 magic
-          toMagic: subBfchainCore.config.magic, // 交易去往链的 magic
+          fromMagic: registerBfchainCore.config.magic, // 交易来源链的 magic
+          toMagic: registerBfchainCore.config.magic, // 交易去往链的 magic
           applyBlockHeight: 1, // 交易发起高度
-          numberOfEffectiveBlocks: 1,
+          effectiveBlockHeight: 1,
         },
         {},
         keypair,
@@ -227,7 +233,7 @@ const getPOWInfo = (address: string) => {
     };
     let trs = await createTrs();
     if (pow) {
-      trs = await subBfchainCore.transaction.transactionPowCalculator(
+      trs = await registerBfchainCore.transaction.transactionPowCalculator(
         trs,
         pow,
         keypair,
@@ -235,24 +241,24 @@ const getPOWInfo = (address: string) => {
       );
     }
     return await createTrs(
-      subBfchainCore.transactionHelper.calcTransactionFee(
+      registerBfchainCore.transactionHelper.calcTransactionFee(
         trs,
-        subBfchainCore.config.minTransactionFeePerByte,
+        registerBfchainCore.config.minTransactionFeePerByte,
       ),
     );
   }
 
   async function getLocationNameTransaction() {
     const pow =
-      1 > subBfchainCore.config.powOfWorkExemptionBlocks
+      1 > registerBfchainCore.config.powOfWorkExemptionBlocks
         ? getPOWInfo(genesisAccountInfo.address)
         : undefined;
     const createTrs = (fee = "AUTO") => {
-      return subBfchainCore.transaction.createTransaction(
+      return registerBfchainCore.transaction.createTransaction(
         LocationNameTransactionFactory,
         {
           version: 1,
-          type: subBfchainCore.transactionHelper.LOCATION_NAME, // 交易类型
+          type: registerBfchainCore.transactionHelper.LOCATION_NAME, // 交易类型
           senderId: genesisAccountInfo.address, // 发起者地址
           senderPublicKey: genesisAccountInfo.publicKey, // 发起者公钥
           recipientId: "",
@@ -263,21 +269,21 @@ const getPOWInfo = (address: string) => {
           dappid: "", // 交易所属的 dappid
           lns: "",
           sourceIP: "", // 交易来源 ip
-          fromMagic: subBfchainCore.config.magic, // 交易来源链的 magic
-          toMagic: subBfchainCore.config.magic, // 交易去往链的 magic
+          fromMagic: registerBfchainCore.config.magic, // 交易来源链的 magic
+          toMagic: registerBfchainCore.config.magic, // 交易去往链的 magic
           applyBlockHeight: 1, // 交易发起高度
-          numberOfEffectiveBlocks: 1,
+          effectiveBlockHeight: 1,
           remark: {},
           storage: {
             key: "name",
-            value: `bnqkl.${subBfchainCore.config.chainName}`,
+            value: `bnqkl.${registerBfchainCore.config.chainName}`,
           },
         },
         {
           locationName: {
-            sourceChainName: subBfchainCore.config.chainName,
-            sourceChainMagic: subBfchainCore.config.magic,
-            name: `bnqkl.${subBfchainCore.config.chainName}`,
+            sourceChainName: registerBfchainCore.config.chainName,
+            sourceChainMagic: registerBfchainCore.config.magic,
+            name: `bnqkl.${registerBfchainCore.config.chainName}`,
             operationType: LOCATION_NAME_OPERATION_TYPE.REGISTRATION,
           },
         },
@@ -289,7 +295,7 @@ const getPOWInfo = (address: string) => {
     };
     let trs = await createTrs();
     if (pow) {
-      trs = await subBfchainCore.transaction.transactionPowCalculator(
+      trs = await registerBfchainCore.transaction.transactionPowCalculator(
         trs,
         pow,
         genesisAccountKeypair,
@@ -297,9 +303,9 @@ const getPOWInfo = (address: string) => {
       );
     }
     return await createTrs(
-      subBfchainCore.transactionHelper.calcTransactionFee(
+      registerBfchainCore.transactionHelper.calcTransactionFee(
         trs,
-        subBfchainCore.config.minTransactionFeePerByte,
+        registerBfchainCore.config.minTransactionFeePerByte,
       ),
     );
   }
@@ -308,22 +314,24 @@ const getPOWInfo = (address: string) => {
     sender: DelegateInfo,
     record: BFChainCore.LocationNameRecordJSON,
   ) {
-    const keypair = await subBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
+    const keypair = await registerBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
     const secondKeypair =
       (sender.secondSecret &&
-        (await subBfchainCore.accountBaseHelper.createSecondSecretKeypair(
+        (await registerBfchainCore.accountBaseHelper.createSecondSecretKeypair(
           sender.secret,
           sender.secondSecret,
         ))) ||
       undefined;
     const pow =
-      1 > subBfchainCore.config.powOfWorkExemptionBlocks ? getPOWInfo(sender.address) : undefined;
+      1 > registerBfchainCore.config.powOfWorkExemptionBlocks
+        ? getPOWInfo(sender.address)
+        : undefined;
     const createTrs = (fee = "AUTO") => {
-      return subBfchainCore.transaction.createTransaction(
+      return registerBfchainCore.transaction.createTransaction(
         SetLnsRecordValueTransactionFactory,
         {
           version: 1,
-          type: subBfchainCore.transactionHelper.SET_LNS_RECORD_VALUE, // 交易类型
+          type: registerBfchainCore.transactionHelper.SET_LNS_RECORD_VALUE, // 交易类型
           senderId: sender.address, // 发起者地址
           senderPublicKey: sender.publicKey, // 发起者公钥
           recipientId: "",
@@ -334,21 +342,21 @@ const getPOWInfo = (address: string) => {
           dappid: "", // 交易所属的 dappid
           lns: "",
           sourceIP: "", // 交易来源 ip
-          fromMagic: subBfchainCore.config.magic, // 交易来源链的 magic
-          toMagic: subBfchainCore.config.magic, // 交易去往链的 magic
+          fromMagic: registerBfchainCore.config.magic, // 交易来源链的 magic
+          toMagic: registerBfchainCore.config.magic, // 交易去往链的 magic
           applyBlockHeight: 1, // 交易发起高度
-          numberOfEffectiveBlocks: 1,
+          effectiveBlockHeight: 1,
           remark: {},
           storage: {
             key: "name",
-            value: `bnqkl.${subBfchainCore.config.chainName}`,
+            value: `bnqkl.${registerBfchainCore.config.chainName}`,
           },
         },
         {
           lnsRecordValue: {
-            sourceChainName: subBfchainCore.config.chainName,
-            sourceChainMagic: subBfchainCore.config.magic,
-            name: `bnqkl.${subBfchainCore.config.chainName}`,
+            sourceChainName: registerBfchainCore.config.chainName,
+            sourceChainMagic: registerBfchainCore.config.magic,
+            name: `bnqkl.${registerBfchainCore.config.chainName}`,
             operationType: RECORD_OPERATION_TYPE.ADD,
             addRecord: record,
           },
@@ -361,7 +369,7 @@ const getPOWInfo = (address: string) => {
     };
     let trs = await createTrs();
     if (pow) {
-      trs = await subBfchainCore.transaction.transactionPowCalculator(
+      trs = await registerBfchainCore.transaction.transactionPowCalculator(
         trs,
         pow,
         keypair,
@@ -369,18 +377,18 @@ const getPOWInfo = (address: string) => {
       );
     }
     return await createTrs(
-      subBfchainCore.transactionHelper.calcTransactionFee(
+      registerBfchainCore.transactionHelper.calcTransactionFee(
         trs,
-        subBfchainCore.config.minTransactionFeePerByte,
+        registerBfchainCore.config.minTransactionFeePerByte,
       ),
     );
   }
 
-  const genesisAccountKeypair = await subBfchainCore.accountBaseHelper.createSecretKeypair(
+  const genesisAccountKeypair = await registerBfchainCore.accountBaseHelper.createSecretKeypair(
     config.genesisSecret,
   );
   const genesisAccountInfo = {
-    address: await subBfchainCore.accountBaseHelper.getAddressFromPublicKey(
+    address: await registerBfchainCore.accountBaseHelper.getAddressFromPublicKey(
       genesisAccountKeypair.publicKey,
     ),
     publicKey: genesisAccountKeypair.publicKey.toString("hex"),
@@ -392,7 +400,7 @@ const getPOWInfo = (address: string) => {
     amount: string,
   ) {
     const pow =
-      1 > subBfchainCore.config.powOfWorkExemptionBlocks
+      1 > registerBfchainCore.config.powOfWorkExemptionBlocks
         ? getPOWInfo(genesisAccountInfo.address)
         : undefined;
     const createTrs = (fee = "1") => {
@@ -411,21 +419,21 @@ const getPOWInfo = (address: string) => {
           dappid: "", // 交易所属的 dappid
           lns: "",
           sourceIP: "", // 交易来源 ip
-          fromMagic: subBfchainCore.config.magic, // 交易来源链的 magic
-          toMagic: subBfchainCore.config.magic, // 交易去往链的 magic
+          fromMagic: registerBfchainCore.config.magic, // 交易来源链的 magic
+          toMagic: registerBfchainCore.config.magic, // 交易去往链的 magic
           applyBlockHeight: 1, // 交易发起高度
-          numberOfEffectiveBlocks: 1,
+          effectiveBlockHeight: 1,
           remark: { remark: "交易备注，任意信息，这个是转账交易" }, // 交易备注，任意信息
           storage: {
             key: "assetType",
-            value: subBfchainCore.config.assetType,
+            value: registerBfchainCore.config.assetType,
           },
         },
         {
           transferAsset: {
-            sourceChainName: subBfchainCore.config.chainName,
-            sourceChainMagic: subBfchainCore.config.magic,
-            assetType: subBfchainCore.config.assetType,
+            sourceChainName: registerBfchainCore.config.chainName,
+            sourceChainMagic: registerBfchainCore.config.magic,
+            assetType: registerBfchainCore.config.assetType,
             amount,
           },
         },
@@ -434,7 +442,7 @@ const getPOWInfo = (address: string) => {
     };
     let trs = await createTrs();
     if (pow) {
-      trs = await subBfchainCore.transaction.transactionPowCalculator(
+      trs = await registerBfchainCore.transaction.transactionPowCalculator(
         trs,
         pow,
         genesisAccountKeypair,
@@ -442,39 +450,39 @@ const getPOWInfo = (address: string) => {
       );
     }
     return await createTrs(
-      subBfchainCore.transactionHelper.calcTransactionFee(
+      registerBfchainCore.transactionHelper.calcTransactionFee(
         trs,
-        subBfchainCore.config.minTransactionFeePerByte,
+        registerBfchainCore.config.minTransactionFeePerByte,
       ),
     );
   }
 
   async function getGenesisBlockAsync() {
-    const generatorPublicKey = await subBfchainCore.accountBaseHelper.getPublicKeyStringFromSecret(
+    const generatorPublicKey = await registerBfchainCore.accountBaseHelper.getPublicKeyStringFromSecret(
       config.genesisSecret,
     );
     //#region 模拟账户表的变更
-    const subchainAccountAssetMap = new Map<string, bigint>();
-    subchainAccountAssetMap.set(
-      `${genesisAccountInfo.address}_${subBfchainCore.config.magic}_${subBfchainCore.config.assetType}`,
-      BigInt(subBfchainCore.config.genesisBlock.remark.generateTotalAmount),
+    const registerChainAccountAssetMap = new Map<string, bigint>();
+    registerChainAccountAssetMap.set(
+      `${genesisAccountInfo.address}_${registerBfchainCore.config.magic}_${registerBfchainCore.config.assetType}`,
+      BigInt(registerBfchainCore.config.genesisBlock.remark.generateTotalAmount),
     );
 
-    function getSubchainAccountAssetKey(address: string, magic: string, assetType: string) {
+    function getRegisterChainAccountAssetKey(address: string, magic: string, assetType: string) {
       return `${address}_${magic}_${assetType}`;
     }
 
-    function setSubchainAccountAsset(key: string, assetNumber: bigint) {
-      const remainAsset = subchainAccountAssetMap.get(key);
+    function setRegisterChainAccountAsset(key: string, assetNumber: bigint) {
+      const remainAsset = registerChainAccountAssetMap.get(key);
       if (remainAsset) {
-        subchainAccountAssetMap.set(key, remainAsset + assetNumber);
+        registerChainAccountAssetMap.set(key, remainAsset + assetNumber);
       } else {
-        subchainAccountAssetMap.set(key, assetNumber);
+        registerChainAccountAssetMap.set(key, assetNumber);
       }
     }
 
     function getAccountAsset(key: string) {
-      const assetNumber = subchainAccountAssetMap.get(key);
+      const assetNumber = registerChainAccountAssetMap.get(key);
       return assetNumber ? assetNumber.toString() : "0";
     }
     //#endregion
@@ -484,20 +492,24 @@ const getPOWInfo = (address: string) => {
     const ips = getIps(delegatesSecret.length, false, defaultIpsPath);
     for (let i = 0; i < delegatesSecret.slice(5).length; i++) {
       const secret = delegatesSecret[i];
-      const address = await subBfchainCore.accountBaseHelper.getAddressFromSecret(secret);
-      subchainRemarkData.newDelegates.push(address);
-      if (subchainRemarkData.nextRoundDelegates.length < subBfchainCore.config.blockPerRound) {
-        subchainRemarkData.nextRoundDelegates.push({
+      const address = await registerBfchainCore.accountBaseHelper.getAddressFromSecret(secret);
+      registerchainRemarkData.newDelegates.push(address);
+      if (
+        registerchainRemarkData.nextRoundDelegates.length < registerBfchainCore.config.blockPerRound
+      ) {
+        registerchainRemarkData.nextRoundDelegates.push({
           address,
           equity: "0",
         });
       }
-      const publicKey = await subBfchainCore.accountBaseHelper.getPublicKeyStringFromSecret(secret);
+      const publicKey = await registerBfchainCore.accountBaseHelper.getPublicKeyStringFromSecret(
+        secret,
+      );
       const delegate: DelegateInfo = {
         secret,
         address,
         publicKey,
-        username: `${subBfchainCore.config.chainName}${i + 1}`,
+        username: `${registerBfchainCore.config.chainName}${i + 1}`,
       };
       // 要在创始块中实施的交易
       const trsList = [
@@ -515,7 +527,7 @@ const getPOWInfo = (address: string) => {
         "0",
       );
       if (total_fee !== "0") {
-        txs.push(await getTransferAssetTransaction(subBfchainCore, delegate, total_fee));
+        txs.push(await getTransferAssetTransaction(registerBfchainCore, delegate, total_fee));
       }
       txs.push(...trsList);
     }
@@ -525,19 +537,22 @@ const getPOWInfo = (address: string) => {
     const eventEmitter: BFChainCore.ApplyTransactionEventEmitter<any> = new QueneEventEmitter<
       any
     >();
-    const statisticsInfo = subStatistics.forceGetStatisticsInfoByBlock(
+    const statisticsInfo = registerStatistics.forceGetStatisticsInfoByBlock(
       height,
-      "generateSubchainGenesisBlock",
+      "generateRegisterChainGenesisBlock",
     );
-    subStatistics.bindApplyTransactionEventEmiter(eventEmitter, statisticsInfo);
+    registerStatistics.bindApplyTransactionEventEmiter(eventEmitter, statisticsInfo);
     for (let i = 0; i < txs.length; i++) {
       const { senderId, recipientId, fee, fromMagic, type } = txs[i];
-      let assetType = subBfchainCore.config.assetType;
+      let assetType = registerBfchainCore.config.assetType;
       let amount = "0";
-      if (type === subBfchainCore.transactionHelper.TRANSFER_ASSET) {
+      if (type === registerBfchainCore.transactionHelper.TRANSFER_ASSET) {
         amount = (txs[i] as TransferAssetTransaction).asset.transferAsset.amount;
       }
-      const chainAssetInfo = subBfchainCore.chainAssetInfoHelper.getAssetInfo(fromMagic, assetType);
+      const chainAssetInfo = registerBfchainCore.chainAssetInfoHelper.getAssetInfo(
+        fromMagic,
+        assetType,
+      );
       statisticsInfo.initAssetStatistic(chainAssetInfo, statisticsInfo.assetStatisticCount);
       const assetChanges: {
         accountType: number;
@@ -545,9 +560,9 @@ const getPOWInfo = (address: string) => {
         assetType: string;
         assetNumber: string;
       }[] = [];
-      const key = getSubchainAccountAssetKey(senderId, fromMagic, assetType);
+      const key = getRegisterChainAccountAssetKey(senderId, fromMagic, assetType);
       const totalSpend = BigInt("-" + amount) + BigInt("-" + fee);
-      setSubchainAccountAsset(key, totalSpend);
+      setRegisterChainAccountAsset(key, totalSpend);
       assetChanges[assetChanges.length] = {
         accountType: TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE.SENDER,
         magic: fromMagic,
@@ -555,8 +570,8 @@ const getPOWInfo = (address: string) => {
         assetNumber: getAccountAsset(key),
       };
       if (recipientId) {
-        const rkey = getSubchainAccountAssetKey(recipientId, fromMagic, assetType);
-        setSubchainAccountAsset(rkey, BigInt(amount));
+        const rkey = getRegisterChainAccountAssetKey(recipientId, fromMagic, assetType);
+        setRegisterChainAccountAsset(rkey, BigInt(amount));
         assetChanges[assetChanges.length] = {
           accountType: TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE.RECIPIENT,
           magic: fromMagic,
@@ -585,18 +600,17 @@ const getPOWInfo = (address: string) => {
       });
       blockTrsItems[blockTrsItems.length] = trsInBlock;
     }
-    const generatorKeypair = await subBfchainCore.accountBaseHelper.createSecretKeypair(
+    const generatorKeypair = await registerBfchainCore.accountBaseHelper.createSecretKeypair(
       config.genesisSecret,
     );
     eventEmitter.on("verifyTransactionProfOfWork", ({ transaction, count }) => {
-      return subBfchainCore.transactionHelper.checkTransactionProfOfWork(
+      return registerBfchainCore.transactionHelper.checkTransactionProfOfWork(
         transaction.signatureBuffer,
         count,
         "0",
       );
     });
-    subchainRemarkData.parentGenesisBlock = fullBfchainCore.config.genesisBlock;
-    const genesisBlock = await subBfchainCore.block.generateBlock<GenesisBlock>(
+    const genesisBlock = await registerBfchainCore.block.generateBlock<GenesisBlock>(
       GenesisBlockFactory,
       {
         version: 1,
@@ -605,7 +619,7 @@ const getPOWInfo = (address: string) => {
         generatorPublicKey,
         previousBlockSignature: "",
       },
-      subchainRemarkData,
+      registerchainRemarkData,
       (async function* zz() {
         for (let item of blockTrsItems) {
           yield item;
@@ -614,14 +628,14 @@ const getPOWInfo = (address: string) => {
       generatorKeypair,
       eventEmitter,
     );
-    statisticsInfo.unref("generateSubchainGenesisBlock");
+    statisticsInfo.unref("generateRegisterChainGenesisBlock");
 
     const out = require("optimist").argv.out;
     if (out) {
       const { resolve } = require("path");
       const outFilePath =
         out === true
-          ? resolve(process.cwd(), "./assets/subGenesisBlock.json")
+          ? resolve(process.cwd(), "./assets/registerGenesisBlock.json")
           : resolve(process.cwd(), out);
       require("fs").writeFileSync(outFilePath, JSON.stringify(genesisBlock.toJSON(), null, 2));
       console.log(`Genesis block save to: ${outFilePath}`);
@@ -630,11 +644,11 @@ const getPOWInfo = (address: string) => {
     return genesisBlock;
   }
 
-  async function getIssueSubchainTransaction(sender: AccountModel) {
+  async function getRegisterChainTransaction(sender: AccountModel) {
     const keypair = await fullBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
     const data: BFChainCore.TxBodyJSON = {
       version: 1,
-      type: fullBfchainCore.transactionHelper.ISSUE_SUBCHAIN, // 交易类型
+      type: fullBfchainCore.transactionHelper.REGISTER_CHAIN, // 交易类型
       senderId: sender.address, // 发起者地址
       senderPublicKey: sender.publicKey, // 发起者公钥
       senderSecondPublicKey: "", // 发起者二次公钥
@@ -649,10 +663,10 @@ const getPOWInfo = (address: string) => {
       fromMagic: fullBfchainCore.config.magic,
       toMagic: fullBfchainCore.config.magic,
       applyBlockHeight: 10086, // 交易发起高度
-      numberOfEffectiveBlocks: 100,
+      effectiveBlockHeight: 10100,
       storage: {
         key: "magic",
-        value: subBfchainCore.config.magic,
+        value: registerBfchainCore.config.magic,
       },
     };
 
@@ -669,13 +683,12 @@ const getPOWInfo = (address: string) => {
     }
 
     const genesisBlock = await getGenesisBlockAsync();
-    const trs = await fullBfchainCore.transaction.createTransaction<IssueSubchainTransaction>(
-      IssueSubchainTransactionFactory,
+    const trs = await fullBfchainCore.transaction.createTransaction<RegisterChainTransaction>(
+      RegisterChainTransactionFactory,
       data,
       {
-        issueSubchain: {
-          ...subchainRemarkData,
-          genesisBlock: genesisBlock,
+        registerChain: {
+          genesisBlock,
         },
       },
       keypair,
@@ -683,8 +696,8 @@ const getPOWInfo = (address: string) => {
     );
 
     const trsJson = trs.toJSON();
-    console.log((trsJson as any).asset.issueSubchain.genesisBlock.transactions[0]);
-    const xx = fullBfchainCore.transaction.recombineTransaction(trsJson);
+    console.log(trsJson.asset.registerChain.genesisBlock.transactions[0]);
+    const xx = await fullBfchainCore.transaction.recombineTransaction(trsJson);
     await fullBfchainCore.transactionHelper.verifyTransactionSignature(xx);
 
     return trs;
@@ -712,7 +725,7 @@ const getPOWInfo = (address: string) => {
       return assetNumber ? assetNumber.toString() : "0";
     }
     //#endregion
-    const trs = await getIssueSubchainTransaction(sender);
+    const trs = await getRegisterChainTransaction(sender);
     const height = 7;
     const blockTrsItems: TransactionInBlock[] = [];
     const eventEmitter: BFChainCore.ApplyTransactionEventEmitter<any> = new QueneEventEmitter<
@@ -778,7 +791,7 @@ const getPOWInfo = (address: string) => {
       sender.secret,
     );
     eventEmitter.on("verifyTransactionProfOfWork", ({ transaction, count }) => {
-      return subBfchainCore.transactionHelper.checkTransactionProfOfWork(
+      return registerBfchainCore.transactionHelper.checkTransactionProfOfWork(
         transaction.signatureBuffer,
         count,
         "0",
@@ -808,7 +821,7 @@ const getPOWInfo = (address: string) => {
       eventEmitter,
     );
     statisticsInfo.unref("generateCommonBlock");
-    fullBfchainCore.block.getBlockFactoryFromHeight(commonBlock.height).verify(commonBlock);
+    await fullBfchainCore.block.getBlockFactoryFromHeight(commonBlock.height).verify(commonBlock);
     // console.log(commonBlock);
     return commonBlock;
   }

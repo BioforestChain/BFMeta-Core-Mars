@@ -43,7 +43,7 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
    *
    * @param blockBody
    */
-  fromJSON(
+  async fromJSON(
     blockBody: BFChainCore.BlockJSON<BFChainCore.RoundLastBlockRemarkJSON>,
     opts?: { verify?: boolean; config?: ConfigHelper },
   ) {
@@ -52,7 +52,7 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
       return this.transactionInBlockFromJSON(twi);
     });
     if (opts && opts.verify) {
-      this.verify(block, opts.config);
+      await this.verify(block, opts.config);
     }
     return block;
   }
@@ -63,12 +63,12 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
    * @param body
    * @param roundLastBlockRemark
    */
-  verifyBlockBody(
+  async verifyBlockBody(
     body: BFChainCore.BlockBody,
     roundLastBlockRemark: BFChainCore.RoundLastBlockRemarkJSON,
     config = this.config,
   ) {
-    super.verifyBlockBody(body, roundLastBlockRemark, config);
+    await super.verifyBlockBody(body, roundLastBlockRemark, config);
 
     const Function_Exception_Detail = { function: "verifyBlockBody" };
     const RoundLastBlockRemark_Exception_Detail = {
@@ -100,7 +100,7 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
     }
 
     for (const delegate of nextRoundDelegates) {
-      if (!this.accountBaseHelper.isAddress(delegate)) {
+      if (!await this.accountBaseHelper.isAddress(delegate)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "nextRoundDelegates item",
           value: delegate,
@@ -127,7 +127,7 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
     }
 
     for (const delegate of newDelegates) {
-      if (!this.accountBaseHelper.isAddress(delegate)) {
+      if (!await this.accountBaseHelper.isAddress(delegate)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "newDelegates item",
           value: delegate,
@@ -175,7 +175,7 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
 
     for (const equity of equities) {
       const address = equity.address;
-      if (!this.accountBaseHelper.isAddress(address)) {
+      if (!await this.accountBaseHelper.isAddress(address)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "equity.address",
           type: "account address",

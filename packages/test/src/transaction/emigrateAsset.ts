@@ -16,6 +16,8 @@ import {
   getDelegateWithSecondSecret,
 } from "../include";
 
+const fullBfchainCore = getFullBfchainCore(57, 128);
+
 async function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate: AccountModel) {
   const keypair = await fullBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
@@ -102,7 +104,7 @@ async function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate
   );
 
   const trsJson = trs.toJSON();
-  const xx = fullBfchainCore.transaction.recombineTransaction(trsJson);
+  const xx = await fullBfchainCore.transaction.recombineTransaction(trsJson);
   console.log(xx);
   await fullBfchainCore.transactionHelper.verifyTransactionSignature(xx);
   // console.log(xx.toJSON());

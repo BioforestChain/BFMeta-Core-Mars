@@ -172,8 +172,8 @@ async function getSignForAssetTransaction(
     secondKeypair,
   );
   const trsJson = trs.toJSON();
-  const xx = bfchainCore.transaction.recombineTransaction(trsJson);
-  bfchainCore.transactionHelper.verifyTransactionSignature(xx);
+  const xx = await bfchainCore.transaction.recombineTransaction(trsJson);
+  await bfchainCore.transactionHelper.verifyTransactionSignature(xx);
   console.log(xx);
   return trs;
 }

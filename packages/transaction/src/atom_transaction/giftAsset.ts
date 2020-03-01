@@ -243,7 +243,7 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
    * @param transaction
    * @param eventEmitter
    */
-  applyTransaction(
+  async applyTransaction(
     transaction: GiftAssetTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
