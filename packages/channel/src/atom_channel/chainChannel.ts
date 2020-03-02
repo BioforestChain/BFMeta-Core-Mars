@@ -464,6 +464,11 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
               break;
             }
             /// 响应信息
+            case DUPLEX_API_CMD.QUERY_TRANSACTION_RETURN:
+            case DUPLEX_API_CMD.NEW_TRANSACTION_RETURN:
+            case DUPLEX_API_CMD.QUERY_BLOCK_RETURN:
+            case DUPLEX_API_CMD.NEW_BLOCK_RETURN:
+            case DUPLEX_API_CMD.GET_PEER_INFO_RETURN:
             case DUPLEX_API_CMD.RESPONSE: {
               const task = this.req_response_map.get(req_id);
               if (!task) {
