@@ -213,7 +213,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
       });
     }
 
-    if (!await accountBaseHelper.isAddress(trustSenderId)) {
+    if (!(await accountBaseHelper.isAddress(trustSenderId))) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "trustSenderId",
         type: "account address",
@@ -229,7 +229,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
       });
     }
 
-    if (!await accountBaseHelper.isAddress(trustRecipientId)) {
+    if (!(await accountBaseHelper.isAddress(trustRecipientId))) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "trustRecipientId",
         type: "account address",

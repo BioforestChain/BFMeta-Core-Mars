@@ -68,8 +68,7 @@ export class GiftAssetModel extends Message<GiftAssetModel>
       giftDistributionRule: this.giftDistributionRule,
     };
 
-    this.beginUnfrozenBlockHeight &&
-      (res.beginUnfrozenBlockHeight = this.beginUnfrozenBlockHeight);
+    this.beginUnfrozenBlockHeight && (res.beginUnfrozenBlockHeight = this.beginUnfrozenBlockHeight);
 
     return res;
   }

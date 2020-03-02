@@ -59,8 +59,6 @@ async function getDestoryAssetTransaction(sender: AccountModel) {
   console.log(trs.toJSON());
 }
 (async () => {
-
-await  getDestoryAssetTransaction(getSenderWithSecondSecret());
-await  getDestoryAssetTransaction(getSenderWithoutSecondSecret());
-
+  await getDestoryAssetTransaction(getSenderWithSecondSecret());
+  await getDestoryAssetTransaction(getSenderWithoutSecondSecret());
 })();

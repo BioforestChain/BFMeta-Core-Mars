@@ -78,8 +78,7 @@ export class GrabAssetModel extends Message<GrabAssetModel>
       amount: this.amount,
       giftAsset: this.giftAsset.toJSON(),
     };
-    this.beginUnfrozenBlockHeight &&
-      (res.beginUnfrozenBlockHeight = this.beginUnfrozenBlockHeight);
+    this.beginUnfrozenBlockHeight && (res.beginUnfrozenBlockHeight = this.beginUnfrozenBlockHeight);
     this.ciphertextSignatureBuffer && (res.ciphertextSignature = this.ciphertextSignature.toJSON());
 
     return res;

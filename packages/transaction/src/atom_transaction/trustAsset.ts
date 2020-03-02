@@ -203,7 +203,7 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
     }
 
     for (const trustee of trustees) {
-      if (!await accountBaseHelper.isAddress(trustee)) {
+      if (!(await accountBaseHelper.isAddress(trustee))) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "trustee",
           type: "account address",

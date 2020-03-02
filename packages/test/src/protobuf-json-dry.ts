@@ -71,8 +71,8 @@ quq.age = 66;
         (await bfchainCore.accountBaseHelper.createSecretKeypair("1")).publicKey,
       ),
       senderPublicKey: (
-        (await bfchainCore.accountBaseHelper.createSecretKeypair("1")).publicKey
-      ).toString("hex"),
+        await bfchainCore.accountBaseHelper.createSecretKeypair("1")
+      ).publicKey.toString("hex"),
       rangeType: RANGE_TYPE.EMPTY,
       range: [
         await bfchainCore.accountBaseHelper.getAddressFromPublicKey(

@@ -286,7 +286,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<
         });
       }
     } else if (RECORD_TYPE.ADDRESSV1 === recordType) {
-      if (!await accountBaseHelper.isAddress(recordValue)) {
+      if (!(await accountBaseHelper.isAddress(recordValue))) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "recordValue",
           type: "block chain account address",
