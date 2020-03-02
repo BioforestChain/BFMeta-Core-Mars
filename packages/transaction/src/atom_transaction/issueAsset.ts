@@ -61,12 +61,12 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
    * @param body
    * @param issueAssetAsset
    */
-  verifyTransactionBody(
+  async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
     issueAssetAsset: BFChainCore.IssueAssetAssetJSON,
     config = this.configHelper,
   ) {
-    super.verifyTransactionBody(body, issueAssetAsset, config);
+    await super.verifyTransactionBody(body, issueAssetAsset, config);
 
     const Function_Exception_Detail = {
       target: "body",
@@ -232,7 +232,7 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
       });
     }
 
-    if (!accountBaseHelper.isAddress(genesisAddress)) {
+    if (!(await accountBaseHelper.isAddress(genesisAddress))) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "genesisAddress",
         type: "account address",
@@ -281,7 +281,7 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
    * @param transaction
    * @param eventEmitter
    */
-  applyTransaction(
+  async applyTransaction(
     transaction: IssueAssetTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,

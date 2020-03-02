@@ -36,12 +36,13 @@ export class CustomTransactionEvent {
     public chainAssetInfoHelper: ChainAssetInfoHelper,
     private configMap: ConfigHelperMap,
   ) {}
-  verifyAddress(address: string) {
+
+  async verifyAddress(address: string) {
     const Function_Exception_Detail = {
       target: "applyResult",
       function: "verifyAddress",
     } as const;
-    if (!this.accountBaseHelper.isAddress(address)) {
+    if (!(await this.accountBaseHelper.isAddress(address))) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "address",
         ...Function_Exception_Detail,
@@ -62,12 +63,12 @@ export class CustomTransactionEvent {
     }
   }
 
-  verifyRecipientId(recipientId: string) {
+  async verifyRecipientId(recipientId: string) {
     const Function_Exception_Detail = {
       target: "applyResult",
       function: "verifyRecipientId",
     } as const;
-    if (!this.accountBaseHelper.isAddress(recipientId)) {
+    if (!(await this.accountBaseHelper.isAddress(recipientId))) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "recipientId",
         ...Function_Exception_Detail,
@@ -75,12 +76,12 @@ export class CustomTransactionEvent {
     }
   }
 
-  verifyPossessorAddress(possessorAddress: string) {
+  async verifyPossessorAddress(possessorAddress: string) {
     const Function_Exception_Detail = {
       target: "applyResult",
       function: "verifyPossessorAddress",
     } as const;
-    if (!this.accountBaseHelper.isAddress(possessorAddress)) {
+    if (!(await this.accountBaseHelper.isAddress(possessorAddress))) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "possessorAddress",
         ...Function_Exception_Detail,
@@ -197,7 +198,7 @@ export class CustomTransactionEvent {
    *
    * @param record
    */
-  verifyLocationNameRecord(record: BFChainCore.LocationNameRecordJSON) {
+  async verifyLocationNameRecord(record: BFChainCore.LocationNameRecordJSON) {
     const { baseHelper, accountBaseHelper } = this;
     const Function_Exception_Detail = {
       target: "applyResult",
@@ -239,7 +240,7 @@ export class CustomTransactionEvent {
         });
       }
     } else if (RECORD_TYPE.ADDRESSV1 === recordType) {
-      if (!accountBaseHelper.isAddress(recordValue)) {
+      if (!(await accountBaseHelper.isAddress(recordValue))) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "recordValue",
           type: "block chain account address",
@@ -254,14 +255,17 @@ export class CustomTransactionEvent {
     }
   }
 
-  verifyApplyResult(applyResult: BFChainCore.ApplyResultJSON, transaction: CustomTransaction) {
+  async verifyApplyResult(
+    applyResult: BFChainCore.ApplyResultJSON,
+    transaction: CustomTransaction,
+  ) {
     const { baseHelper, accountBaseHelper, transactionHelper } = this;
     const Function_Exception_Detail = {
       target: "applyResult",
       function: "verifyApplyResult",
     } as const;
     const { address, publicKey } = applyResult.applyInfo;
-    this.verifyAddress(address);
+    await this.verifyAddress(address);
     if (publicKey) {
       this.verifyPublicKey(publicKey);
     }
@@ -302,7 +306,7 @@ export class CustomTransactionEvent {
           ...Function_Exception_Detail,
         });
       }
-      this.verifyRecipientId(recipientId);
+      await this.verifyRecipientId(recipientId);
       return;
     }
     if (applyResult.type === "asset") {
@@ -344,7 +348,7 @@ export class CustomTransactionEvent {
       this.verifyAssetNumber(amount);
       this.verifyMagic(magic);
       this.verifyAssetType(assetType);
-      this.verifyRecipientId(recipientId);
+      await this.verifyRecipientId(recipientId);
       if (
         !(
           transaction.storage &&
@@ -380,7 +384,7 @@ export class CustomTransactionEvent {
       } = applyResult.applyInfo;
       this.verifyMagic(sourceChainMagic);
       this.verifyChainName(sourceChainName);
-      this.verifyPossessorAddress(possessorAddress);
+      await this.verifyPossessorAddress(possessorAddress);
       this.verifyDAppid(dappid);
       if (!DAPP_TYPE[type]) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
@@ -413,7 +417,7 @@ export class CustomTransactionEvent {
       const { dappid, possessorAddress, sourceChainMagic } = applyResult.applyInfo;
       this.verifyDAppid(dappid);
       this.verifyMagic(sourceChainMagic);
-      this.verifyPossessorAddress(possessorAddress);
+      await this.verifyPossessorAddress(possessorAddress);
       return;
     }
     if (applyResult.type === "issueAsset") {
@@ -429,13 +433,13 @@ export class CustomTransactionEvent {
       this.verifyMagic(sourceChainMagic);
       this.verifyChainName(sourceChainName);
       this.verifyAssetType(assetType);
-      if (!accountBaseHelper.isAddress(applyAddress)) {
+      if (!(await accountBaseHelper.isAddress(applyAddress))) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "applyAddress",
           ...Function_Exception_Detail,
         });
       }
-      if (!accountBaseHelper.isAddress(genesisAddress)) {
+      if (!(await accountBaseHelper.isAddress(genesisAddress))) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "genesisAddress",
           ...Function_Exception_Detail,
@@ -463,8 +467,8 @@ export class CustomTransactionEvent {
         chainConfig = new ConfigHelper(genesisBlockJson, this.configHelper.business);
       }
 
-      const genesisBlock = this._blockCore.recombineBlock(genesisBlockJson);
-      this._blockCore
+      const genesisBlock = await this._blockCore.recombineBlock(genesisBlockJson);
+      await this._blockCore
         .getBlockFactoryFromHeight<BFChainCore.Block<BFChainCore.GenesisBlockRemarkJSON>>(
           genesisBlock.height,
         )
@@ -493,7 +497,7 @@ export class CustomTransactionEvent {
             ...Function_Exception_Detail,
           });
         }
-        this.verifyLocationNameRecord(addRecord);
+        await this.verifyLocationNameRecord(addRecord);
       } else if (operationType === RECORD_OPERATION_TYPE.DELETE) {
         if (addRecord) {
           throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
@@ -507,7 +511,7 @@ export class CustomTransactionEvent {
             ...Function_Exception_Detail,
           });
         }
-        this.verifyLocationNameRecord(deleteRecord);
+        await this.verifyLocationNameRecord(deleteRecord);
       } else if (operationType === RECORD_OPERATION_TYPE.UPDATE) {
         if (!addRecord) {
           throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
@@ -521,8 +525,8 @@ export class CustomTransactionEvent {
             ...Function_Exception_Detail,
           });
         }
-        this.verifyLocationNameRecord(addRecord);
-        this.verifyLocationNameRecord(deleteRecord);
+        await this.verifyLocationNameRecord(addRecord);
+        await this.verifyLocationNameRecord(deleteRecord);
       } else {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "operationType",
@@ -545,7 +549,7 @@ export class CustomTransactionEvent {
     }
     if (applyResult.type === "purchaseLocationName") {
       const { possessorAddress, name, sourceChainMagic } = applyResult.applyInfo;
-      this.verifyPossessorAddress(possessorAddress);
+      await this.verifyPossessorAddress(possessorAddress);
       this.verifyLocationName(name);
       this.verifyMagic(sourceChainMagic);
       return;

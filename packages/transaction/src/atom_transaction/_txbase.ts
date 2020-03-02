@@ -49,13 +49,13 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
    * 从 json 转出 protobuf-message
    * JSON格式一般是进程内部通讯在使用,所以JSON格式默认不校验
    */
-  fromJSON(
+  async fromJSON(
     trs: BFChainCore.TransactionJSON<BFChainCore.GetTransactionAssetJSON<T>>,
     opts?: { verify?: boolean; config?: ConfigHelper },
   ) {
     const transaction = this.init(trs, trs.asset);
     if (opts && opts.verify) {
-      this.verify(transaction, opts.config);
+      await this.verify(transaction, opts.config);
     }
     return transaction;
   }
@@ -138,7 +138,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
    * @param body
    * @param asset
    */
-  verifyTransactionBody(
+  async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
     asset: BFChainCore.GetTransactionAssetJSON<T>,
     config = this.configHelper,
@@ -197,7 +197,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
       });
     }
 
-    if (!accountBaseHelper.isAddress(body.senderId)) {
+    if (!await accountBaseHelper.isAddress(body.senderId)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "senderId",
         type: "account address",
@@ -220,7 +220,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
       });
     }
 
-    if (body.senderId !== accountBaseHelper.getAddressFromPublicKeyString(body.senderPublicKey)) {
+    if (body.senderId !== await accountBaseHelper.getAddressFromPublicKeyString(body.senderPublicKey)) {
       throw new ArgumentIllegalException(NOT_MATCH, {
         to_compare_prop: "senderId",
         be_compare_prop: "body",
@@ -241,7 +241,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     }
 
     if (body.recipientId) {
-      if (!accountBaseHelper.isAddress(body.recipientId)) {
+      if (!await accountBaseHelper.isAddress(body.recipientId)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "recipientId",
           type: "account address",
@@ -250,7 +250,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
       }
     }
 
-    if (!this.baseHelper.isValidRange(body.rangeType, body.range)) {
+    if (!await this.baseHelper.isValidRange(body.rangeType, body.range)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "range",
         type: "transaction range",
@@ -371,7 +371,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
    *
    * @param transaction
    */
-  verifyBaseInfo(transaction: T, config = this.configHelper) {
+  async verifyBaseInfo(transaction: T, config = this.configHelper) {
     const Function_Exception_Detail = {
       function: "verify",
     } as const;
@@ -382,7 +382,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
       });
     }
 
-    this.verifyTransactionBody(transaction, transaction.asset, config);
+    await this.verifyTransactionBody(transaction, transaction.asset, config);
 
     const Trs_Exception_Detail = {
       target: "transaction",
@@ -422,8 +422,8 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
    *
    * @param transaction
    */
-  verifySignature(transaction: T) {
-    this.transactionHelper.verifyTransactionSignature(transaction);
+  async verifySignature(transaction: T) {
+    await this.transactionHelper.verifyTransactionSignature(transaction);
   }
 
   /**
@@ -440,10 +440,10 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
    *
    * @param transaction
    */
-  verify(transaction: T, config = this.configHelper) {
-    this.verifyBaseInfo(transaction, config);
+  async verify(transaction: T, config = this.configHelper) {
+    await this.verifyBaseInfo(transaction, config);
     this.verifyRemarkSize(transaction);
-    this.verifySignature(transaction);
+    await this.verifySignature(transaction);
   }
 
   /**
@@ -625,7 +625,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
    * @param trs
    * @param event
    */
-  applyTransaction(
+  async applyTransaction(
     trs: T,
     event: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,

@@ -58,7 +58,7 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
 
     const { publicKey, secondPublicKey } = genesisDelegateSignature;
 
-    const address = this.accountBaseHelper.getAddressFromPublicKeyString(publicKey);
+    const address = await this.accountBaseHelper.getAddressFromPublicKeyString(publicKey);
 
     const delegate = await accountGetterHelper.getAccountInfo(address);
 

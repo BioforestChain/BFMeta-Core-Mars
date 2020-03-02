@@ -13,8 +13,8 @@ import {
   AccountModel,
 } from "../include";
 
-function getToExchangeSpecialAssetTransaction(sender: AccountModel, recipientId: string) {
-  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
+async function getToExchangeSpecialAssetTransaction(sender: AccountModel, recipientId: string) {
+  const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.TO_EXCHANGE_SPECIAL_ASSET, // 交易类型
@@ -36,11 +36,11 @@ function getToExchangeSpecialAssetTransaction(sender: AccountModel, recipientId:
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
+    secondKeypair = await bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );
@@ -63,7 +63,7 @@ function getToExchangeSpecialAssetTransaction(sender: AccountModel, recipientId:
     data.rangeType = RANGE_TYPE.MULTI_ADDRESS;
     data.range = [recipientId];
   }
-  const trs = bfchainCore.transaction.createTransaction<ToExchangeSpecialAssetTransaction>(
+  const trs = await bfchainCore.transaction.createTransaction<ToExchangeSpecialAssetTransaction>(
     ToExchangeSpecialAssetTransactionFactory,
     data,
     info,
@@ -72,6 +72,10 @@ function getToExchangeSpecialAssetTransaction(sender: AccountModel, recipientId:
   );
   console.log(trs.toJSON());
 }
-
-getToExchangeSpecialAssetTransaction(getSenderWithSecondSecret(), "");
-getToExchangeSpecialAssetTransaction(getSenderWithoutSecondSecret(), getGenesisAccount().address);
+(async () => {
+  await getToExchangeSpecialAssetTransaction(getSenderWithSecondSecret(), "");
+  await getToExchangeSpecialAssetTransaction(
+    getSenderWithoutSecondSecret(),
+    getGenesisAccount().address,
+  );
+})();

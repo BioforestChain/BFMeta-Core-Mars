@@ -32,11 +32,10 @@ export class BlockHelper {
    *
    * @param block
    */
-  generateSignature(block: BFChainCore.Block) {
-    return this.cryptoHelper
-      .sha256()
-      .update(block.getBytes(true, true))
-      .digest("hex");
+  async generateSignature(block: BFChainCore.Block) {
+    return this.Buffer.from(await this.cryptoHelper.sha256(block.getBytes(true, true))).toString(
+      "hex",
+    );
   }
 
   /**是否是合法的区块 signature */
@@ -47,7 +46,7 @@ export class BlockHelper {
   /**
    * 校验区块的签名是否合法
    */
-  verifyBlockSignature(
+  async verifyBlockSignature(
     block: BFChainCore.Block,
     opts?: {
       taskLabel?: string;
@@ -57,13 +56,10 @@ export class BlockHelper {
     const { Buffer } = this;
     const { generatorPublicKeyBuffer, signatureBuffer } = block;
     // 验证 signature 与 publicKey
-    const hash = this.cryptoHelper
-      .sha256()
-      .update(block.getBytes(true, true))
-      .digest();
+    const hash = await this.cryptoHelper.sha256(block.getBytes(true, true));
     if (
       !this.keypairHelper.detached_verify(
-        hash,
+        Buffer.from(hash),
         Buffer.from(signatureBuffer),
         Buffer.from(generatorPublicKeyBuffer),
       )
@@ -80,7 +76,7 @@ export class BlockHelper {
   verifyBlockRemarkSize<RJ extends BFChainCore.CommonBlockRemarkJSON>(
     blockRemark: BFChainCore.RemarkJSONToModelType<RJ>,
   ) {
-    const remarkSize = this.Buffer.from(blockRemark.getBytes()).length;
+    const remarkSize = blockRemark.getBytes().byteLength;
     const { maxBlockRemarkSize } = this.config;
     if (remarkSize > maxBlockRemarkSize) {
       throw new ArgumentIllegalException(PROP_SHOULD_LTE_FIELD, {
@@ -494,7 +490,7 @@ export class BlockHelper {
           function: "BlockGetterHelper.forceGetBlockGeneratorAddressByHeight",
         });
       }
-      const address = this.accountBaseHelper.getAddressFromPublicKey(publicKeyBuffer);
+      const address = await this.accountBaseHelper.getAddressFromPublicKey(publicKeyBuffer);
       if (!resultArr.includes(address)) {
         resultArr.push(address);
       }
@@ -514,7 +510,8 @@ export class BlockHelper {
     let lastRoundLastBlockHeight =
       (this.calcRoundByHeight(currentHeight) - 1) * this.config.blockPerRound;
     lastRoundLastBlockHeight = lastRoundLastBlockHeight === 0 ? 1 : lastRoundLastBlockHeight;
-    const payloadHash = this.cryptoHelper.sha256();
+
+    const payloadHash = await this.cryptoHelper.sha256();
     if (lastRoundLastBlockHeight !== 1) {
       const block = await this.forceGetBlockByHeight<RoundLastBlock>(
         lastRoundLastBlockHeight,
@@ -529,7 +526,8 @@ export class BlockHelper {
       );
       payloadHash.update(blockSignatureBuffer);
     }
-    const hashString = payloadHash.digest("hex");
+
+    const hashString = (await payloadHash.digest()).toString("hex");
 
     return hashString;
   }

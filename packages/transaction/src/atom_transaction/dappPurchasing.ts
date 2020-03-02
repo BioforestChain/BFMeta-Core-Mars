@@ -59,12 +59,12 @@ export class DAppPurchasingTransactionFactory extends TransactionFactory<
    * @param body
    * @param dappPurchasingAsset
    */
-  verifyTransactionBody(
+  async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
     dappPurchasingAsset: BFChainCore.DAppPurchasingAssetJSON,
     config = this.configHelper,
   ) {
-    super.verifyTransactionBody(body, dappPurchasingAsset, config);
+    await super.verifyTransactionBody(body, dappPurchasingAsset, config);
 
     const Function_Exception_Detail = {
       target: "body",
@@ -203,7 +203,7 @@ export class DAppPurchasingTransactionFactory extends TransactionFactory<
    * @param transaction
    * @param eventEmitter
    */
-  applyTransaction(
+  async applyTransaction(
     transaction: DAppPurchasingTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,

@@ -6,8 +6,8 @@ import {
   AccountModel,
 } from "../include";
 
-function getDappTransaction(sender: AccountModel, dapp: BFChainCore.DAppJSON) {
-  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
+async function getDappTransaction(sender: AccountModel, dapp: BFChainCore.DAppJSON) {
+  const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.DAPP, // 交易类型
@@ -33,16 +33,16 @@ function getDappTransaction(sender: AccountModel, dapp: BFChainCore.DAppJSON) {
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
+    secondKeypair = await bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );
   }
-  const trs = bfchainCore.transaction.createTransaction<DAppTransaction>(
+  const trs = await bfchainCore.transaction.createTransaction<DAppTransaction>(
     DAppTransactionFactory,
     data,
     {
@@ -53,24 +53,25 @@ function getDappTransaction(sender: AccountModel, dapp: BFChainCore.DAppJSON) {
   );
   console.log(trs.toJSON());
 }
-
-const xx = getSenderWithSecondSecret();
-getDappTransaction(xx, {
-  dappid: "CAPCOM123456789QWQQAQ",
-  sourceChainName: "bfchain",
-  sourceChainMagic: bfchainCore.config.magic,
-  type: DAPP_TYPE.PAID_APP,
-  purchaseAsset: {
-    sourceChainName: bfchainCore.config.chainName,
+(async () => {
+  const xx = getSenderWithSecondSecret();
+  await getDappTransaction(xx, {
+    dappid: "CAPCOM123456789QWQQAQ",
+    sourceChainName: "bfchain",
     sourceChainMagic: bfchainCore.config.magic,
-    assetType: bfchainCore.config.assetType,
-    amount: "1000",
-  },
-});
-const xxx = getSenderWithoutSecondSecret();
-getDappTransaction(xxx, {
-  dappid: "CAPCOM123456789QWQQAQ",
-  sourceChainName: "bfchain",
-  sourceChainMagic: bfchainCore.config.magic,
-  type: DAPP_TYPE.FREE_APP,
-});
+    type: DAPP_TYPE.PAID_APP,
+    purchaseAsset: {
+      sourceChainName: bfchainCore.config.chainName,
+      sourceChainMagic: bfchainCore.config.magic,
+      assetType: bfchainCore.config.assetType,
+      amount: "1000",
+    },
+  });
+  const xxx = getSenderWithoutSecondSecret();
+  await getDappTransaction(xxx, {
+    dappid: "CAPCOM123456789QWQQAQ",
+    sourceChainName: "bfchain",
+    sourceChainMagic: bfchainCore.config.magic,
+    type: DAPP_TYPE.FREE_APP,
+  });
+})();

@@ -15,8 +15,8 @@ import {
   getRecipientWithoutSecondSecret,
 } from "../include";
 
-function getDappTransaction(sender: AccountModel) {
-  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
+async function getDappTransaction(sender: AccountModel) {
+  const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.DAPP, // 交易类型
@@ -42,16 +42,16 @@ function getDappTransaction(sender: AccountModel) {
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
+    secondKeypair = await bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );
   }
-  const trs = bfchainCore.transaction.createTransaction<DAppTransaction>(
+  const trs = await bfchainCore.transaction.createTransaction<DAppTransaction>(
     DAppTransactionFactory,
     data,
     {
@@ -69,12 +69,12 @@ function getDappTransaction(sender: AccountModel) {
   return trs;
 }
 
-function getMarkTransaction(
+async function getMarkTransaction(
   sender: AccountModel,
   dappTrs: DAppTransaction,
   possessor: AccountModel,
 ) {
-  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
+  const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.DAPP, // 交易类型
@@ -101,16 +101,16 @@ function getMarkTransaction(
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
+    secondKeypair = await bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );
   }
-  const trs = bfchainCore.transaction.createTransaction<MarkTransaction>(
+  const trs = await bfchainCore.transaction.createTransaction<MarkTransaction>(
     MarkTransactionFactory,
     data,
     {
@@ -127,12 +127,14 @@ function getMarkTransaction(
   console.log(trs.toJSON());
 }
 
-const ss = getSenderWithSecondSecret();
-const sss = getSenderWithoutSecondSecret();
-const yy = getRecipientWithSecondSecret();
-const yyy = getRecipientWithoutSecondSecret();
+(async () => {
+  const ss = getSenderWithSecondSecret();
+  const sss = getSenderWithoutSecondSecret();
+  const yy = getRecipientWithSecondSecret();
+  const yyy = getRecipientWithoutSecondSecret();
 
-const tx1 = getDappTransaction(ss);
-getMarkTransaction(ss, tx1, ss);
-const tx2 = getDappTransaction(sss);
-getMarkTransaction(sss, tx1, yyy);
+  const tx1 = await getDappTransaction(ss);
+  await getMarkTransaction(ss, tx1, ss);
+  const tx2 = await getDappTransaction(sss);
+  await getMarkTransaction(sss, tx1, yyy);
+})();

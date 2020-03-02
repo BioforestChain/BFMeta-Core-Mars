@@ -62,12 +62,12 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<
    * @param body
    * @param migrateAssetAsset
    */
-  verifyTransactionBody(
+  async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
     immigrateAssetAsset: BFChainCore.ImmigrateAssetAssetJSON,
     config = this.configHelper,
   ) {
-    super.verifyTransactionBody(body, immigrateAssetAsset, config);
+    await super.verifyTransactionBody(body, immigrateAssetAsset, config);
 
     const Function_Exception_Detail = {
       target: "body",
@@ -144,7 +144,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<
     }
 
     // 验证完整交易包含签名
-    const emigrateAssetTransactionModel = emigrateAssetTransactionFactory.fromJSON(
+    const emigrateAssetTransactionModel = await emigrateAssetTransactionFactory.fromJSON(
       emigrateAssetTransaction,
     );
     const otherChainConfig = this.configMap.get(emigrateAssetTransactionModel.fromMagic);
@@ -155,7 +155,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<
         target: "configMap",
       });
     }
-    emigrateAssetTransactionFactory.verify(emigrateAssetTransactionModel, otherChainConfig);
+    await emigrateAssetTransactionFactory.verify(emigrateAssetTransactionModel, otherChainConfig);
 
     if (!genesisDelegateSignature) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
@@ -173,7 +173,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<
     }
 
     const { publicKey, signature, secondPublicKey, signSignature } = genesisDelegateSignature;
-    const address = accountBaseHelper.getAddressFromPublicKeyString(publicKey);
+    const address = await accountBaseHelper.getAddressFromPublicKeyString(publicKey);
 
     const genesisDelegates = this.transactionHelper.genesisDelegates(config);
 
@@ -255,7 +255,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<
    * @param transaction
    * @param eventEmitter
    */
-  applyTransaction(
+  async applyTransaction(
     transaction: ImmigrateAssetTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,

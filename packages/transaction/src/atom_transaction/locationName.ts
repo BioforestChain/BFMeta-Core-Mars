@@ -59,12 +59,12 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
    * @param body
    * @param locationName
    */
-  verifyTransactionBody(
+  async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
     locationNameAsset: BFChainCore.LocationNameAssetJSON,
     config = this.configHelper,
   ) {
-    super.verifyTransactionBody(body, locationNameAsset, config);
+    await super.verifyTransactionBody(body, locationNameAsset, config);
 
     const Function_Exception_Detail = {
       target: "body",
@@ -279,7 +279,7 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
    * @param transaction
    * @param eventEmitter
    */
-  applyTransaction(
+  async applyTransaction(
     transaction: LocationNameTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,

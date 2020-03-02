@@ -62,12 +62,12 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
    * @param body
    * @param giftAssetAsset
    */
-  verifyTransactionBody(
+  async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
     giftAssetAsset: BFChainCore.GiftAssetAssetJSON,
     config = this.configHelper,
   ) {
-    super.verifyTransactionBody(body, giftAssetAsset, config);
+    await super.verifyTransactionBody(body, giftAssetAsset, config);
 
     const Function_Exception_Detail = {
       target: "body",
@@ -243,7 +243,7 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
    * @param transaction
    * @param eventEmitter
    */
-  applyTransaction(
+  async applyTransaction(
     transaction: GiftAssetTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,

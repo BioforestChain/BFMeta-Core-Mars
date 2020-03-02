@@ -46,7 +46,7 @@ export abstract class BlockFactory<T extends Block> {
   abstract asymmetricHelper: AsymmetricHelper;
   abstract chainAssetInfoHelper: ChainAssetInfoHelper;
 
-  abstract fromJSON(blockBody: BFChainCore.BlockJSON<GetBlockRemarkJSON<T>>): T;
+  abstract fromJSON(blockBody: BFChainCore.BlockJSON<GetBlockRemarkJSON<T>>): Promise<T>;
 
   /** transactionInBlockFromJSON*/
   transactionInBlockFromJSON<T extends BFChainCore.TransactionJSON>(
@@ -127,7 +127,7 @@ export abstract class BlockFactory<T extends Block> {
       if (!keypair.secretKey) {
         throw new ArgumentIllegalException("secretKey is null when generateBlock");
       }
-      block.signatureBuffer = this.asymmetricHelper.detachedSign(
+      block.signatureBuffer = await this.asymmetricHelper.detachedSign(
         block.getBytes(true, true),
         keypair.secretKey,
       );
@@ -260,7 +260,7 @@ export abstract class BlockFactory<T extends Block> {
             if (!keypair.secretKey) {
               throw new ArgumentIllegalException("secretKey is null when insertTransactions");
             }
-            tranItem.signatureBuffer = this.asymmetricHelper.detachedSign(
+            tranItem.signatureBuffer = await this.asymmetricHelper.detachedSign(
               tranItem.getBytes(true),
               keypair.secretKey,
             );
@@ -292,7 +292,7 @@ export abstract class BlockFactory<T extends Block> {
       }
 
       block.statisticInfo = statisticsInfo.toModel();
-      block.payloadHashBuffer = payloadHash.digest();
+      block.payloadHashBuffer = await payloadHash.digest();
       block.payloadLength = payloadLength;
       block.transactions = transactions;
       const numberOfTransactions = transactions.length;
@@ -430,7 +430,7 @@ export abstract class BlockFactory<T extends Block> {
    * @param body
    * @param remark
    */
-  verifyBlockBody(
+  async verifyBlockBody(
     body: BFChainCore.BlockBody,
     remark: GetBlockRemarkJSON<T>,
     config = this.config,
@@ -494,7 +494,7 @@ export abstract class BlockFactory<T extends Block> {
    * @FIXME 统计金额
    * @param block 区块
    */
-  verifyBlockTransactions(
+  async verifyBlockTransactions(
     block: T,
     config = this.config,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter = new QueneEventEmitter(),
@@ -608,7 +608,7 @@ export abstract class BlockFactory<T extends Block> {
       for (const tranItem of transactions) {
         const transaction = tranItem.transaction;
         // 验证区块内每笔交易的基本信息
-        this.transactionCore
+        await this.transactionCore
           .getTransactionFactoryFromType(transaction.type)
           .verify(transaction, config);
         if (appliedTransactions.has(transaction.signature)) {
@@ -706,6 +706,15 @@ export abstract class BlockFactory<T extends Block> {
         ...Block_Exception_Detail,
       });
     }
+
+    const payloadHashHex = await payloadHash.digest("hex");
+    if (block.payloadHash !== payloadHashHex) {
+      throw new ArgumentIllegalException(TOO_LARGE, {
+        prop: "payloadHash",
+        reason: `payloadHash: ${block.payloadHash} not equal: ${payloadHashHex}`,
+        ...Block_Exception_Detail,
+      });
+    }
   }
 
   /**
@@ -713,7 +722,7 @@ export abstract class BlockFactory<T extends Block> {
    *
    * @param block
    */
-  verifyBaseInfo(block: T, config = this.config) {
+  async verifyBaseInfo(block: T, config = this.config) {
     const Function_Exception_Detail = { function: "verify" };
     if (!block) {
       throw new ArgumentIllegalException(PARAM_LOST, {
@@ -834,8 +843,8 @@ export abstract class BlockFactory<T extends Block> {
       });
     }
 
-    this.verifyBlockBody(block, block.remark, config);
-    this.verifyBlockTransactions(block, config);
+    await this.verifyBlockBody(block, block.remark, config);
+    await this.verifyBlockTransactions(block, config);
   }
 
   /**
@@ -844,7 +853,7 @@ export abstract class BlockFactory<T extends Block> {
    * @param block
    */
   verifySignature(block: T) {
-    this.blockHelper.verifyBlockSignature(block);
+    return this.blockHelper.verifyBlockSignature(block);
   }
 
   /**
@@ -861,10 +870,10 @@ export abstract class BlockFactory<T extends Block> {
    *
    * @param block
    */
-  verify(block: T, config = this.config) {
-    this.verifyBaseInfo(block, config);
+  async verify(block: T, config = this.config) {
+    await this.verifyBaseInfo(block, config);
     this.verifyRemarkSize(block);
-    this.verifySignature(block);
+    await this.verifySignature(block);
   }
 
   /**生成区块的 signature */

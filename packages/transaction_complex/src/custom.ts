@@ -44,12 +44,12 @@ export class CustomTransactionFactory extends TransactionFactory<CustomTransacti
    * @param body
    * @param customAsset
    */
-  verifyTransactionBody(
+  async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
     customAsset: BFChainCore.CustomAssetJSON,
     config = this.configHelper,
   ) {
-    super.verifyTransactionBody(body, customAsset, config);
+    await super.verifyTransactionBody(body, customAsset, config);
 
     const custom = customAsset.custom;
 
@@ -104,7 +104,7 @@ export class CustomTransactionFactory extends TransactionFactory<CustomTransacti
    * @param transaction
    * @param eventEmitter
    */
-  applyTransaction(
+  async applyTransaction(
     transaction: CustomTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -114,7 +114,7 @@ export class CustomTransactionFactory extends TransactionFactory<CustomTransacti
     if (this.customTransactionCenter) {
       const applyResults = this.customTransactionCenter.apply(transaction);
       for (const applyResult of applyResults) {
-        this.customTransactionEvent.verifyApplyResult(applyResult, transaction);
+        await this.customTransactionEvent.verifyApplyResult(applyResult, transaction);
         tasks.next = this.customTransactionEvent.combineApplyEvent(
           transaction,
           eventEmitter,

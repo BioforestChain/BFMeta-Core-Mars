@@ -53,7 +53,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
    *
    * @param blockBody
    */
-  fromJSON(
+  async fromJSON(
     blockBody: BFChainCore.BlockJSON<BFChainCore.GenesisBlockRemarkJSON>,
     opts?: { verify?: boolean; config?: ConfigHelper },
   ) {
@@ -62,7 +62,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       return this.transactionInBlockFromJSON(twi);
     });
     if (opts && opts.verify) {
-      this.verify(block, opts.config);
+      await this.verify(block, opts.config);
     }
     return block;
   }
@@ -73,12 +73,12 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
    * @param body
    * @param remark
    */
-  verifyBlockBody(
+  async verifyBlockBody(
     body: BFChainCore.BlockBody,
     remark: BFChainCore.GenesisBlockRemarkJSON,
     config = this.config,
   ) {
-    super.verifyBlockBody(body, remark);
+    await super.verifyBlockBody(body, remark);
 
     const { baseHelper } = this;
     const Function_Exception_Detail = { function: "verifyBlockBody" };
@@ -421,8 +421,8 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       });
     }
 
-    nextRoundDelegates.forEach((nextRoundDelegate, i) => {
-      if (!this.accountBaseHelper.isAddress(nextRoundDelegate.address)) {
+    nextRoundDelegates.forEach(async (nextRoundDelegate, i) => {
+      if (!(await this.accountBaseHelper.isAddress(nextRoundDelegate.address))) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: `nextRoundDelegates[${i}].address`,
           type: "account address",

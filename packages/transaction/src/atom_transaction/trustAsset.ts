@@ -65,12 +65,12 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
    * @param body
    * @param trustAssetAsset
    */
-  verifyTransactionBody(
+  async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
     trustAssetAsset: BFChainCore.TrustAssetAssetJSON,
     config = this.configHelper,
   ) {
-    super.verifyTransactionBody(body, trustAssetAsset, config);
+    await super.verifyTransactionBody(body, trustAssetAsset, config);
 
     const Function_Exception_Detail = {
       target: "body",
@@ -134,7 +134,7 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
 
     const trustAsset = trustAssetAsset.trustAsset;
 
-    this.verifyTrustAsset(trustAsset);
+    await this.verifyTrustAsset(trustAsset);
 
     const trustees = trustAsset.trustees;
 
@@ -167,7 +167,7 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
     }
   }
 
-  verifyTrustAsset(trustAsset: BFChainCore.TrustAssetJSON) {
+  async verifyTrustAsset(trustAsset: BFChainCore.TrustAssetJSON) {
     const { baseHelper, accountBaseHelper } = this;
 
     const Function_Exception_Detail = { function: "verifyTransactionBody" } as const;
@@ -203,7 +203,7 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
     }
 
     for (const trustee of trustees) {
-      if (!accountBaseHelper.isAddress(trustee)) {
+      if (!await accountBaseHelper.isAddress(trustee)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "trustee",
           type: "account address",
@@ -289,7 +289,7 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
    * @param transaction
    * @param eventEmitter
    */
-  applyTransaction(
+  async applyTransaction(
     transaction: TrustAssetTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,

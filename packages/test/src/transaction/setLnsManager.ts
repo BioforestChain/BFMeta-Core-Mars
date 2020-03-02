@@ -11,8 +11,8 @@ import {
   AccountModel,
 } from "../include";
 
-function getSetLnsManagerTransaction(sender: AccountModel) {
-  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
+async function getSetLnsManagerTransaction(sender: AccountModel) {
+  const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.SET_LNS_MANAGER, // 交易类型
@@ -39,16 +39,16 @@ function getSetLnsManagerTransaction(sender: AccountModel) {
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
+    secondKeypair = await bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );
   }
-  const trs = bfchainCore.transaction.createTransaction<SetLnsManagerTransaction>(
+  const trs = await bfchainCore.transaction.createTransaction<SetLnsManagerTransaction>(
     SetLnsManagerTransactionFactory,
     data,
     {
@@ -64,6 +64,7 @@ function getSetLnsManagerTransaction(sender: AccountModel) {
   );
   console.log(trs.toJSON());
 }
-
-getSetLnsManagerTransaction(getSenderWithSecondSecret());
-getSetLnsManagerTransaction(getSenderWithoutSecondSecret());
+(async () => {
+  await getSetLnsManagerTransaction(getSenderWithSecondSecret());
+  await getSetLnsManagerTransaction(getSenderWithoutSecondSecret());
+})();

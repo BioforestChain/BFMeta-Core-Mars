@@ -13,11 +13,11 @@ import {
   AccountModel,
 } from "../include";
 
-function getSetLnsRecordValueTransaction(
+async function getSetLnsRecordValueTransaction(
   sender: AccountModel,
   lnsRecordValue: BFChainCore.SetLnsRecordValueJSON,
 ) {
-  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
+  const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.SET_LNS_RECORD_VALUE, // 交易类型
@@ -43,16 +43,16 @@ function getSetLnsRecordValueTransaction(
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
+    secondKeypair = await bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );
   }
-  const trs = bfchainCore.transaction.createTransaction<SetLnsRecordValueTransaction>(
+  const trs = await bfchainCore.transaction.createTransaction<SetLnsRecordValueTransaction>(
     SetLnsRecordValueTransactionFactory,
     data,
     {
@@ -74,26 +74,28 @@ let lnsRecordValue: BFChainCore.SetLnsRecordValueJSON = {
     recordValue: "127.0.0.1",
   },
 };
-getSetLnsRecordValueTransaction(getSenderWithSecondSecret(), lnsRecordValue);
-lnsRecordValue.addRecord = {
-  recordType: RECORD_TYPE.ADDRESSV1,
-  recordValue: getSenderWithSecondSecret().address,
-};
-getSetLnsRecordValueTransaction(getSenderWithSecondSecret(), lnsRecordValue);
-lnsRecordValue.operationType = RECORD_OPERATION_TYPE.DELETE;
-delete lnsRecordValue.addRecord;
-lnsRecordValue.deleteRecord = {
-  recordType: RECORD_TYPE.IPV6,
-  recordValue: "21DA:00D3:0000:2F3B:02AA:00FF:FE28:9C5A",
-};
-getSetLnsRecordValueTransaction(getSenderWithoutSecondSecret(), lnsRecordValue);
-lnsRecordValue.operationType = RECORD_OPERATION_TYPE.UPDATE;
-lnsRecordValue.addRecord = {
-  recordType: RECORD_TYPE.IPV6,
-  recordValue: "21DA:00D3:0000:2F3B:02AA:00FF:FE28:9C5A",
-};
-lnsRecordValue.deleteRecord = {
-  recordType: RECORD_TYPE.IPV4,
-  recordValue: "250.250.250.250",
-};
-getSetLnsRecordValueTransaction(getSenderWithoutSecondSecret(), lnsRecordValue);
+(async () => {
+  await getSetLnsRecordValueTransaction(getSenderWithSecondSecret(), lnsRecordValue);
+  lnsRecordValue.addRecord = {
+    recordType: RECORD_TYPE.ADDRESSV1,
+    recordValue: getSenderWithSecondSecret().address,
+  };
+  await getSetLnsRecordValueTransaction(getSenderWithSecondSecret(), lnsRecordValue);
+  lnsRecordValue.operationType = RECORD_OPERATION_TYPE.DELETE;
+  delete lnsRecordValue.addRecord;
+  lnsRecordValue.deleteRecord = {
+    recordType: RECORD_TYPE.IPV6,
+    recordValue: "21DA:00D3:0000:2F3B:02AA:00FF:FE28:9C5A",
+  };
+  await getSetLnsRecordValueTransaction(getSenderWithoutSecondSecret(), lnsRecordValue);
+  lnsRecordValue.operationType = RECORD_OPERATION_TYPE.UPDATE;
+  lnsRecordValue.addRecord = {
+    recordType: RECORD_TYPE.IPV6,
+    recordValue: "21DA:00D3:0000:2F3B:02AA:00FF:FE28:9C5A",
+  };
+  lnsRecordValue.deleteRecord = {
+    recordType: RECORD_TYPE.IPV4,
+    recordValue: "250.250.250.250",
+  };
+  await getSetLnsRecordValueTransaction(getSenderWithoutSecondSecret(), lnsRecordValue);
+})();

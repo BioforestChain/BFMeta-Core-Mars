@@ -69,12 +69,12 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
    * @param body
    * @param toExchangeSpecialAssetAsset
    */
-  verifyTransactionBody(
+  async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
     toExchangeSpecialAssetAsset: BFChainCore.ToExchangeSpecialAssetAssetJSON,
     config = this.configHelper,
   ) {
-    super.verifyTransactionBody(body, toExchangeSpecialAssetAsset, config);
+    await super.verifyTransactionBody(body, toExchangeSpecialAssetAsset, config);
 
     const Function_Exception_Detail = {
       target: "body",
@@ -287,7 +287,7 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
    * @param transaction
    * @param eventEmitter
    */
-  applyTransaction(
+  async applyTransaction(
     transaction: ToExchangeSpecialAssetTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,

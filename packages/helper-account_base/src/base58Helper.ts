@@ -11,23 +11,17 @@ export class Base58Helper {
   ) {}
   bs58 = base58;
 
-  sha256x2(buffer: Uint8Array) {
-    const tmp = this.cryptoHelper
-      .sha256()
-      .update(buffer)
-      .digest();
-    return this.cryptoHelper
-      .sha256()
-      .update(tmp)
-      .digest();
+  async sha256x2(buffer: Uint8Array) {
+    const tmp = await this.cryptoHelper.sha256(buffer);
+    return this.cryptoHelper.sha256(tmp);
   }
 
-  encode(payload: Uint8Array) {
+  async encode(payload: Uint8Array) {
     const cachedRes = FORZEN_ENCODED_RES_WM.get(payload);
     if (cachedRes) return cachedRes;
 
     const result = this.bs58.encode(
-      this.Buffer.concat([payload, this.sha256x2(payload)], payload.length + 4),
+      this.Buffer.concat([payload, await this.sha256x2(payload)], payload.length + 4),
     );
     if (Object.isFrozen(payload)) {
       FORZEN_ENCODED_RES_WM.set(payload, result);
@@ -35,10 +29,10 @@ export class Base58Helper {
     return result;
   }
 
-  decodeRaw(buffer: Uint8Array) {
+  async decodeRaw(buffer: Uint8Array) {
     var payload = buffer.slice(0, -4);
     var checksum = buffer.slice(-4);
-    var newChecksum = this.sha256x2(payload);
+    var newChecksum = await this.sha256x2(payload);
 
     if (
       (checksum[0] ^ newChecksum[0]) |

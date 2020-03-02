@@ -337,7 +337,9 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     opts?: BFChainCore.ChannelRequestOptions & { max_parallel_num?: number },
     event?: QueneEventEmitter<BFChainCore.BroadcastNewTransactionEvents<DH>>,
   ) {
-    let initedArgs: undefined | ReturnType<ChainChannel["initBroadcastTransactionArg"]>;
+    let initedArgs:
+      | undefined
+      | BFChainUtil.PromiseReturnType<ChainChannel["initBroadcastTransactionArg"]>;
     const startTime = this.timeHelper.now();
     const resultList = [] as {
       chainChannel: DH;
@@ -353,7 +355,8 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
       // 将要广播的节点放置到广播队列中
       for (const chainChannel of chainChannelList) {
         pp.addTaskExecutor(async () => {
-          initedArgs || (initedArgs = chainChannel.initBroadcastTransactionArg(transaction, opts));
+          initedArgs ||
+            (initedArgs = await chainChannel.initBroadcastTransactionArg(transaction, opts));
           let is_error = false;
           let result_or_error;
           try {

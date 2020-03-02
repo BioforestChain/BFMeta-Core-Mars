@@ -167,7 +167,7 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
     /**自己打块不再次验证 */
     if (processBlockType !== PROCESSBLOCK_TYPE.GENERATEBLOCK) {
       // 检验区块基本信息和签名（包括 remark size）
-      this.blockCore.getBlockFactoryFromHeight(block.height).verify(block);
+      await this.blockCore.getBlockFactoryFromHeight(block.height).verify(block);
     }
   }
 
@@ -256,7 +256,7 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
 
     const { timeHelper, blockGeneratorCalculator } = this;
 
-    const generatorAddress = this.accountBaseHelper.getAddressFromPublicKeyString(
+    const generatorAddress = await this.accountBaseHelper.getAddressFromPublicKeyString(
       block.generatorPublicKey,
     );
     const currentSlot = timeHelper.getSlotNumberByTimestamp(block.timestamp);

@@ -10,32 +10,32 @@ declare namespace BFChainCore {
   //#region KeypairHelper
   interface KeypairHelperInterface {
     /**生成公私钥对 */
-    create(secretHash: Uint8Array): Keypair;
+    create(secretHash: Uint8Array): BFChainUtil.PromiseMaybe<Keypair>;
     /**非对称签名 */
-    detached_sign(hash: Uint8Array, secretKey: Uint8Array): Buffer;
+    detached_sign(hash: Uint8Array, secretKey: Uint8Array): BFChainUtil.PromiseMaybe<Buffer>;
     /**非对称验签 */
     detached_verify(
       hash: Uint8Array,
       signatureBuffer: Uint8Array,
       publicKeyBuffer: Uint8Array,
-    ): boolean;
+    ): BFChainUtil.PromiseMaybe<boolean>;
     /**非对称加密 */
     box(
       msg: Uint8Array,
       publicKey: Uint8Array,
       secretKey: Uint8Array,
       nonce?: Uint8Array,
-    ): {
+    ): BFChainUtil.PromiseMaybe<{
       nonce: Uint8Array;
       encryptedMessage: Uint8Array;
-    };
+    }>;
     /**非对称解密 */
     open(
       msg: Uint8Array,
       publicKey: Uint8Array,
       secretKey: Uint8Array,
       nonce: Uint8Array,
-    ): Uint8Array | false;
+    ): BFChainUtil.PromiseMaybe<Uint8Array | false>;
   }
   type Keypair = {
     publicKey: Buffer;
@@ -46,17 +46,50 @@ declare namespace BFChainCore {
   //#region Ed2curveHelperInterface
 
   interface Ed2curveHelperInterface {
-    convertPublicKey(pk: Uint8Array): Uint8Array;
-    convertSecretKey(sk: Uint8Array): Uint8Array;
+    convertPublicKey(pk: Uint8Array): BFChainUtil.PromiseMaybe<Uint8Array>;
+    convertSecretKey(sk: Uint8Array): BFChainUtil.PromiseMaybe<Uint8Array>;
   }
   //#endregion
 
   //#region CryptoHelper
+
   interface CryptoHelperInterface {
-    sha256(): BFChainUtil.Hash;
-    // sha512(): Hash;
-    md5(): BFChainUtil.Hash;
-    ripemd160(): BFChainUtil.Hash;
+    sha256(): CryptoAsyncHash;
+    sha256(data: BFChainUtil.BinaryLike): BFChainUtil.PromiseMaybe<Buffer>;
+    md5(): CryptoAsyncHash;
+    md5(data: BFChainUtil.BinaryLike): BFChainUtil.PromiseMaybe<Buffer>;
+    ripemd160(): CryptoAsyncHash;
+    ripemd160(data: BFChainUtil.BinaryLike): BFChainUtil.PromiseMaybe<Buffer>;
   }
+  interface CryptoAsyncHash {
+    update(data: BFChainUtil.BinaryLike): this;
+    update(data: string, input_encoding: BFChainUtil.Utf8AsciiLatin1Encoding): this;
+    digest(): BFChainUtil.PromiseMaybe<Buffer>;
+    digest(encoding: BFChainUtil.HexBase64Latin1Encoding): BFChainUtil.PromiseMaybe<string>;
+  }
+
+  // type HashInputData = HashInputData.Binary | HashInputData.Stream;
+  // namespace HashInputData {
+  //   type Binary =
+  //     | ArrayBuffer
+  //     | SharedArrayBuffer
+  //     | DataView
+  //     | Uint8Array
+  //     | Uint8ClampedArray
+  //     | Uint16Array
+  //     | Uint32Array
+  //     | Int8Array
+  //     | Int16Array
+  //     | Int32Array
+  //     | Float32Array
+  //     | Float64Array;
+
+  //   /**
+  //    * @TODO 完善`ReadableStream | NodeJS.ReadableStream`的支持
+  //    */
+  //   interface Stream {
+  //     readable: AsyncIterable<Binary>;
+  //   }
+  // }
   //#endregion
 }

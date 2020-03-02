@@ -47,12 +47,12 @@ export class VoteTransactionFactory extends TransactionFactory<VoteTransaction> 
    * @param body
    * @param voteAsset
    */
-  verifyTransactionBody(
+  async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
     voteAsset: BFChainCore.VoteAssetJSON,
     config = this.configHelper,
   ) {
-    super.verifyTransactionBody(body, voteAsset, config);
+    await super.verifyTransactionBody(body, voteAsset, config);
 
     const Function_Exception_Detail = {
       target: "body",
@@ -132,7 +132,7 @@ export class VoteTransactionFactory extends TransactionFactory<VoteTransaction> 
    * @param transaction
    * @param eventEmitter
    */
-  applyTransaction(
+  async applyTransaction(
     transaction: VoteTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,

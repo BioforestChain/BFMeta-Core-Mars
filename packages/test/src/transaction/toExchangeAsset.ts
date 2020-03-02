@@ -11,8 +11,8 @@ import {
   AccountModel,
 } from "../include";
 
-function getToExchangeAssetTransaction(sender: AccountModel, recipientId: any) {
-  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
+async function getToExchangeAssetTransaction(sender: AccountModel, recipientId: any) {
+  const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.TO_EXCHANGE_ASSET, // 交易类型
@@ -34,11 +34,11 @@ function getToExchangeAssetTransaction(sender: AccountModel, recipientId: any) {
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
+    secondKeypair = await bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );
@@ -65,7 +65,7 @@ function getToExchangeAssetTransaction(sender: AccountModel, recipientId: any) {
     data.range = [recipientId];
   }
 
-  const trs = bfchainCore.transaction.createTransaction<ToExchangeAssetTransaction>(
+  const trs = await bfchainCore.transaction.createTransaction<ToExchangeAssetTransaction>(
     ToExchangeAssetTransactionFactory,
     data,
     info,
@@ -74,6 +74,7 @@ function getToExchangeAssetTransaction(sender: AccountModel, recipientId: any) {
   );
   console.log(trs.toJSON());
 }
-
-getToExchangeAssetTransaction(getSenderWithSecondSecret(), "");
-getToExchangeAssetTransaction(getSenderWithoutSecondSecret(), getGenesisAccount().address);
+(async () => {
+  await getToExchangeAssetTransaction(getSenderWithSecondSecret(), "");
+  await getToExchangeAssetTransaction(getSenderWithoutSecondSecret(), getGenesisAccount().address);
+})();

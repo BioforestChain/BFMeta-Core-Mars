@@ -73,12 +73,12 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<
    * @param body
    * @param beExchangeAssetAsset
    */
-  verifyTransactionBody(
+  async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
     beExchangeAssetAsset: BFChainCore.BeExchangeAssetAssetJSON,
     config = this.configHelper,
   ) {
-    super.verifyTransactionBody(body, beExchangeAssetAsset, config);
+    await super.verifyTransactionBody(body, beExchangeAssetAsset, config);
 
     const Function_Exception_Detail = {
       target: "body",
@@ -214,7 +214,7 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<
 
     const { transactionRangeType, transactionRange } = beExchangeAsset;
 
-    if (!baseHelper.isValidRange(transactionRangeType, transactionRange)) {
+    if (!(await baseHelper.isValidRange(transactionRangeType, transactionRange))) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "transactionRange",
         type: "transaction recipient",
@@ -348,7 +348,7 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<
    * @param transaction
    * @param eventEmitter
    */
-  applyTransaction(
+  async applyTransaction(
     transaction: BeExchangeAssetTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,

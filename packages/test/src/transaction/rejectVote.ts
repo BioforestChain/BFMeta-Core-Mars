@@ -7,8 +7,8 @@ import {
   AccountModel,
 } from "../include";
 
-function getRejectVoteTransaction(sender: AccountModel) {
-  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
+async function getRejectVoteTransaction(sender: AccountModel) {
+  const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.REJECT_VOTE, // 交易类型
@@ -30,16 +30,16 @@ function getRejectVoteTransaction(sender: AccountModel) {
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
+    secondKeypair = await bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );
   }
-  const trs = bfchainCore.transaction.createTransaction<RejectVoteTransaction>(
+  const trs = await bfchainCore.transaction.createTransaction<RejectVoteTransaction>(
     RejectVoteTransactionFactory,
     data,
     {},
@@ -49,5 +49,7 @@ function getRejectVoteTransaction(sender: AccountModel) {
   console.log(trs.toJSON());
 }
 
-getRejectVoteTransaction(getSenderWithSecondSecret());
-getRejectVoteTransaction(getSenderWithoutSecondSecret());
+(async () => {
+  await getRejectVoteTransaction(getSenderWithSecondSecret());
+  await getRejectVoteTransaction(getSenderWithoutSecondSecret());
+})();

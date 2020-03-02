@@ -54,12 +54,12 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
    * @param body
    * @param registerChainAsset
    */
-  verifyTransactionBody(
+  async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
     registerChainAsset: BFChainCore.RegisterChainAssetJSON,
     config = this.configHelper,
   ) {
-    super.verifyTransactionBody(body, registerChainAsset, config);
+    await super.verifyTransactionBody(body, registerChainAsset, config);
 
     const Function_Exception_Detail = {
       target: "body",
@@ -140,8 +140,8 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
       chainConfig = new ConfigHelper(genesisBlockJson, this.configHelper.business);
     }
 
-    const genesisBlock = this._blockCore.recombineBlock(genesisBlockJson);
-    this._blockCore
+    const genesisBlock = await this._blockCore.recombineBlock(genesisBlockJson);
+    await this._blockCore
       .getBlockFactoryFromHeight<BFChainCore.Block<BFChainCore.GenesisBlockRemarkJSON>>(
         genesisBlockJson.height,
       )
@@ -171,7 +171,7 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
    * @param transaction
    * @param eventEmitter
    */
-  applyTransaction(
+  async applyTransaction(
     transaction: RegisterChainTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,

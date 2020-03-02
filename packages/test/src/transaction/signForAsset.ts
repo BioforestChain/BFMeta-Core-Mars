@@ -14,8 +14,12 @@ import {
 } from "../include";
 import { parseHexToArrayBuffer } from "@bfchain/util";
 
-function getTrustAssetTransaction(sender: AccountModel, recipientId: string, trustees: string[]) {
-  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
+async function getTrustAssetTransaction(
+  sender: AccountModel,
+  recipientId: string,
+  trustees: string[],
+) {
+  const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.TRUST_ASSET, // 交易类型
@@ -42,16 +46,16 @@ function getTrustAssetTransaction(sender: AccountModel, recipientId: string, tru
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
+    secondKeypair = await bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );
   }
-  const trs = bfchainCore.transaction.createTransaction<TrustAssetTransaction>(
+  const trs = await bfchainCore.transaction.createTransaction<TrustAssetTransaction>(
     TrustAssetTransactionFactory,
     data,
     {
@@ -70,12 +74,12 @@ function getTrustAssetTransaction(sender: AccountModel, recipientId: string, tru
   return trs;
 }
 
-function getSignForAssetTransaction(
+async function getSignForAssetTransaction(
   sender: AccountModel,
   trustAssetTrs: TrustAssetTransaction,
   thirdPartys: AccountModel[],
 ) {
-  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
+  const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.SIGN_FOR_ASSET, // 交易类型
@@ -102,11 +106,11 @@ function getSignForAssetTransaction(
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
+    secondKeypair = await bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );
@@ -131,8 +135,8 @@ function getSignForAssetTransaction(
       continue;
     }
     trusteePublicKeys[trusteePublicKeys.length] = account.publicKey;
-    const accountKeypair = bfchainCore.accountBaseHelper.createSecretKeypair(account.secret);
-    const signature = bfchainCore.transactionHelper.thirdPartySignature({
+    const accountKeypair = await bfchainCore.accountBaseHelper.createSecretKeypair(account.secret);
+    const signature = await bfchainCore.transactionHelper.thirdPartySignature({
       secretKeyBuffer: accountKeypair.secretKey,
       transactionSignatureBuffer: parseHexToArrayBuffer(trustAssetTrs.signature),
       senderId: trustAssetTrs.senderId,
@@ -143,11 +147,11 @@ function getSignForAssetTransaction(
       signature: signature.toString("hex"),
     };
     if (account.secondSecret) {
-      const accountSecondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
+      const accountSecondKeypair = await bfchainCore.accountBaseHelper.createSecondSecretKeypair(
         account.secret,
         account.secondSecret,
       );
-      const signSignature = bfchainCore.transactionHelper.thirdPartySignature({
+      const signSignature = await bfchainCore.transactionHelper.thirdPartySignature({
         secretKeyBuffer: accountSecondKeypair.secretKey,
         transactionSignatureBuffer: parseHexToArrayBuffer(trustAssetTrs.signature),
         senderId: trustAssetTrs.senderId,
@@ -160,7 +164,7 @@ function getSignForAssetTransaction(
     results[results.length] = result;
   }
   signForAsset.thirdPartySignatures = results;
-  const trs = bfchainCore.transaction.createTransaction<SignForAssetTransaction>(
+  const trs = await bfchainCore.transaction.createTransaction<SignForAssetTransaction>(
     SignForAssetTransactionFactory,
     data,
     { signForAsset },
@@ -168,27 +172,31 @@ function getSignForAssetTransaction(
     secondKeypair,
   );
   const trsJson = trs.toJSON();
-  const xx = bfchainCore.transaction.recombineTransaction(trsJson);
-  bfchainCore.transactionHelper.verifyTransactionSignature(xx);
+  const xx = await bfchainCore.transaction.recombineTransaction(trsJson);
+  await bfchainCore.transactionHelper.verifyTransactionSignature(xx);
   console.log(xx);
   return trs;
 }
 
 (async () => {
   const trustees = [getDelegateWithSecondSecret()];
-  const trusAssetTrsWithSecret = getTrustAssetTransaction(
+  const trusAssetTrsWithSecret = await getTrustAssetTransaction(
     getSenderWithSecondSecret(),
     getRecipientWithSecondSecret().address,
     trustees.map(trustee => trustee.address),
   );
-  const trusAssetTrsWithoutSecret = getTrustAssetTransaction(
+  const trusAssetTrsWithoutSecret = await getTrustAssetTransaction(
     getSenderWithoutSecondSecret(),
     getRecipientWithoutSecondSecret().address,
     trustees.map(trustee => trustee.address),
   );
 
-  getSignForAssetTransaction(getRecipientWithSecondSecret(), trusAssetTrsWithSecret, trustees);
-  getSignForAssetTransaction(
+  await getSignForAssetTransaction(
+    getRecipientWithSecondSecret(),
+    trusAssetTrsWithSecret,
+    trustees,
+  );
+  await getSignForAssetTransaction(
     getRecipientWithoutSecondSecret(),
     trusAssetTrsWithoutSecret,
     trustees,

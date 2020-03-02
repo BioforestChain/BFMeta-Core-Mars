@@ -18,12 +18,12 @@ import {
   getRecipientWithoutSecondSecret,
 } from "../include";
 
-function getToExchangeSpecialAssetTransaction(
+async function getToExchangeSpecialAssetTransaction(
   sender: AccountModel,
   recipient?: AccountModel[],
   cipher?: boolean,
 ) {
-  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
+  const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.TO_EXCHANGE_SPECIAL_ASSET, // 交易类型
@@ -45,11 +45,11 @@ function getToExchangeSpecialAssetTransaction(
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
+    secondKeypair = await bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );
@@ -73,7 +73,7 @@ function getToExchangeSpecialAssetTransaction(
       toExchangeSpecialAsset.cipherPublicKeys = recipient.map(r => r.publicKey);
     }
   }
-  const trs = bfchainCore.transaction.createTransaction<ToExchangeSpecialAssetTransaction>(
+  const trs = await bfchainCore.transaction.createTransaction<ToExchangeSpecialAssetTransaction>(
     ToExchangeSpecialAssetTransactionFactory,
     data,
     { toExchangeSpecialAsset },
@@ -83,14 +83,14 @@ function getToExchangeSpecialAssetTransaction(
   return trs;
 }
 
-function getBeExchangeSpecialAssetTransaction(
+async function getBeExchangeSpecialAssetTransaction(
   sender: AccountModel,
   toExchangeSpecialAssetTrs: BFChainCore.TransactionMixJSON<
     BFChainCore.ToExchangeSpecialAssetAssetJSON
   >,
   recipient: AccountModel[],
 ) {
-  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
+  const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.BE_EXCHANGE_SPECIAL_ASSET, // 交易类型
@@ -117,11 +117,11 @@ function getBeExchangeSpecialAssetTransaction(
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
+    secondKeypair = await bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );
@@ -138,20 +138,20 @@ function getBeExchangeSpecialAssetTransaction(
 
   if (toExchangeSpecialAsset.cipherPublicKeys.length > 0) {
     const index = Math.floor(Math.random() * recipient.length);
-    const signature = bfchainCore.transactionHelper
-      .getCiphertextSignature({
+    const signature = (
+      await bfchainCore.transactionHelper.getCiphertextSignature({
         secret: recipient[index].secret,
         transactionSignatureBuffer: parseHexToArrayBuffer(toExchangeSpecialAssetTrs.signature),
         senderId: sender.address,
       })
-      .toString("hex");
+    ).toString("hex");
     beExchangeSpecialAsset.ciphertextSignature = {
       publicKey: recipient[index].publicKey,
       signature,
     };
   }
 
-  const trs = bfchainCore.transaction.createTransaction<BeExchangeSpecialAssetTransaction>(
+  const trs = await bfchainCore.transaction.createTransaction<BeExchangeSpecialAssetTransaction>(
     BeExchangeSpecialAssetTransactionFactory,
     data,
     { beExchangeSpecialAsset },
@@ -159,18 +159,19 @@ function getBeExchangeSpecialAssetTransaction(
     secondKeypair,
   );
   const trsJson = trs.toJSON();
-  const oo = bfchainCore.transaction.recombineTransaction(trsJson);
-  bfchainCore.transactionHelper.verifyTransactionSignature(oo);
+  const oo = await bfchainCore.transaction.recombineTransaction(trsJson);
+  await bfchainCore.transactionHelper.verifyTransactionSignature(oo);
   console.log(oo.asset);
 }
+(async () => {
+  const aa = getSenderWithSecondSecret();
+  const aaa = getSenderWithoutSecondSecret();
+  const cc = getGenesisAccount();
+  const dd = getRecipientWithSecondSecret();
+  const ddd = getRecipientWithoutSecondSecret();
 
-const aa = getSenderWithSecondSecret();
-const aaa = getSenderWithoutSecondSecret();
-const cc = getGenesisAccount();
-const dd = getRecipientWithSecondSecret();
-const ddd = getRecipientWithoutSecondSecret();
-
-const xx = getToExchangeSpecialAssetTransaction(aa, [cc, dd], true);
-getBeExchangeSpecialAssetTransaction(dd, xx, [cc, dd]);
-// const yy = getToExchangeSpecialAssetTransaction(aaa, [cc, dd], false);
-// getBeExchangeSpecialAssetTransaction(cc, yy, []);
+  const xx = await getToExchangeSpecialAssetTransaction(aa, [cc, dd], true);
+  getBeExchangeSpecialAssetTransaction(dd, xx, [cc, dd]);
+  // const yy = await getToExchangeSpecialAssetTransaction(aaa, [cc, dd], false);
+  // getBeExchangeSpecialAssetTransaction(cc, yy, []);
+})();

@@ -41,7 +41,9 @@ export class ChainChannelHelper {
    * 生成并校验交易查询的传入参数
    */
   @bindThis
-  boxQueryTransactionArg(params: ArrayBuffer | Uint8Array): QueryTransactionArgModel {
+  async boxQueryTransactionArg(
+    params: ArrayBuffer | Uint8Array,
+  ): Promise<QueryTransactionArgModel> {
     if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
       throw new ArgumentIllegalException(INVALID_PARAMS, {
         function: "boxQueryTransactionArg",
@@ -99,7 +101,7 @@ export class ChainChannelHelper {
     if (senderId) {
       //if (typeof senderId === "string") {
       has_query_params = true;
-      if (!this.accountBaseHelper.isAddress(senderId)) {
+      if (!(await this.accountBaseHelper.isAddress(senderId))) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.query",
           field: "senderId",
@@ -109,7 +111,7 @@ export class ChainChannelHelper {
     if (recipientId) {
       //if (typeof recipientId === "string") {
       has_query_params = true;
-      if (!this.accountBaseHelper.isAddress(recipientId)) {
+      if (!(await this.accountBaseHelper.isAddress(recipientId))) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.query",
           field: "recipientId",
@@ -194,7 +196,7 @@ export class ChainChannelHelper {
    * 生成并校验交易查询的返回结果
    */
   @bindThis
-  boxQueryTransactionReturn(params: ArrayBuffer | Uint8Array) {
+  async boxQueryTransactionReturn(params: ArrayBuffer | Uint8Array) {
     if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
       throw new ArgumentIllegalException(INVALID_PARAMS, {
         function: "boxQueryTransactionReturn",
@@ -217,8 +219,8 @@ export class ChainChannelHelper {
     //#region 交易签名校验
     if (arg.status === RESPONSE_STATUS.success) {
       const { transactions } = arg;
-      transactions.forEach(item => {
-        this.transctionHelper.verifyTransactionSignature(item.transaction, {
+      transactions.forEach(async item => {
+        await this.transctionHelper.verifyTransactionSignature(item.transaction, {
           taskLabel: "QueryTransactionReturn",
         });
       });
@@ -230,7 +232,7 @@ export class ChainChannelHelper {
    * 生成并校验交易广播的传入参数
    */
   @bindThis
-  boxNewTransactionArg(params: ArrayBuffer | Uint8Array) {
+  async boxNewTransactionArg(params: ArrayBuffer | Uint8Array) {
     if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
       throw new ArgumentIllegalException(INVALID_PARAMS, {
         function: "boxNewTransactionArg",
@@ -255,7 +257,7 @@ export class ChainChannelHelper {
     /// 参数校验
     //#region 交易签名校验
     const { transaction } = arg;
-    this.transctionHelper.verifyTransactionSignature(transaction, {
+    await this.transctionHelper.verifyTransactionSignature(transaction, {
       taskLabel: "NewTransactionArg",
     });
     //#endregion

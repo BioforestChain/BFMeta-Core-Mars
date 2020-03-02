@@ -57,12 +57,12 @@ export class MarkTransactionFactory extends TransactionFactory<MarkTransaction> 
    * @param body
    * @param markAsset
    */
-  verifyTransactionBody(
+  async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
     markAsset: BFChainCore.MarkAssetJSON,
     config = this.configHelper,
   ) {
-    super.verifyTransactionBody(body, markAsset, config);
+    await super.verifyTransactionBody(body, markAsset, config);
 
     const Function_Exception_Detail = {
       target: "body",

@@ -91,8 +91,8 @@ export class BlockCore {
    *
    * @param block
    */
-  recombineBlock<R extends BFChainCore.CommonBlockRemarkJSON>(blockJSON: BFChainCore.BlockJSON<R>) {
-    return this.getBlockFactoryFromHeight(blockJSON.height).fromJSON(blockJSON) as Block<R>;
+  async recombineBlock<R extends BFChainCore.CommonBlockRemarkJSON>(blockJSON: BFChainCore.BlockJSON<R>) {
+    return await this.getBlockFactoryFromHeight(blockJSON.height).fromJSON(blockJSON) as Block<R>;
   }
   fromJSON = this.recombineBlock;
 

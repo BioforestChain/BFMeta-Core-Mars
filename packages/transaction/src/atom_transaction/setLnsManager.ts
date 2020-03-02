@@ -57,12 +57,12 @@ export class SetLnsManagerTransactionFactory extends TransactionFactory<SetLnsMa
    * @param body
    * @param setLnsManagerAsset
    */
-  verifyTransactionBody(
+  async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
     lnsManagerAsset: BFChainCore.SetLnsManagerAssetJSON,
     config = this.configHelper,
   ) {
-    super.verifyTransactionBody(body, lnsManagerAsset, config);
+    await super.verifyTransactionBody(body, lnsManagerAsset, config);
 
     const Function_Exception_Detail = {
       target: "body",
@@ -205,7 +205,7 @@ export class SetLnsManagerTransactionFactory extends TransactionFactory<SetLnsMa
    * @param transaction
    * @param eventEmitter
    */
-  applyTransaction(
+  async applyTransaction(
     transaction: SetLnsManagerTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,

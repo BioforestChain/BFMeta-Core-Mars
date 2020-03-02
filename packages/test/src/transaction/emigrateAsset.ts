@@ -18,8 +18,8 @@ import {
 
 const fullBfchainCore = getFullBfchainCore(57, 128);
 
-function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate: AccountModel) {
-  const keypair = fullBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
+async function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate: AccountModel) {
+  const keypair = await fullBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: fullBfchainCore.transactionHelper.EMIGRATE_ASSET, // 交易类型
@@ -41,11 +41,11 @@ function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate: Acco
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = fullBfchainCore.accountBaseHelper.createSecondSecretKeypair(
+    secondKeypair = await fullBfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = fullBfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = await fullBfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );
@@ -60,10 +60,10 @@ function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate: Acco
     assetType: "BFT",
     amount: "100000",
   };
-  const genesisKeypair = fullBfchainCore.accountBaseHelper.createSecretKeypair(
+  const genesisKeypair = await fullBfchainCore.accountBaseHelper.createSecretKeypair(
     genesisDelegate.secret,
   );
-  const signature = fullBfchainCore.transactionHelper.emigrateAssetGenesisSignature({
+  const signature = await fullBfchainCore.transactionHelper.emigrateAssetGenesisSignature({
     secretKeyBuffer: genesisKeypair.secretKey,
     chainName: emigrateAsset.sourceChainName,
     magic: emigrateAsset.sourceChainMagic,
@@ -75,11 +75,11 @@ function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate: Acco
     signature: signature.toString("hex"),
   };
   if (genesisDelegate.secondSecret) {
-    const genesisSecondKeypair = fullBfchainCore.accountBaseHelper.createSecondSecretKeypair(
+    const genesisSecondKeypair = await fullBfchainCore.accountBaseHelper.createSecondSecretKeypair(
       genesisDelegate.secret,
       genesisDelegate.secondSecret,
     );
-    const signSignature = fullBfchainCore.transactionHelper.emigrateAssetGenesisSignature({
+    const signSignature = await fullBfchainCore.transactionHelper.emigrateAssetGenesisSignature({
       secretKeyBuffer: genesisSecondKeypair.secretKey,
       chainName: emigrateAsset.sourceChainName,
       magic: emigrateAsset.sourceChainMagic,
@@ -93,7 +93,7 @@ function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate: Acco
 
   emigrateAsset.genesisDelegateSignature = genesisDelegateSignature;
 
-  const trs = fullBfchainCore.transaction.createTransaction<EmigrateAssetTransaction>(
+  const trs = await fullBfchainCore.transaction.createTransaction<EmigrateAssetTransaction>(
     EmigrateAssetTransactionFactory,
     data,
     {
@@ -104,11 +104,12 @@ function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate: Acco
   );
 
   const trsJson = trs.toJSON();
-  const xx = fullBfchainCore.transaction.recombineTransaction(trsJson);
+  const xx = await fullBfchainCore.transaction.recombineTransaction(trsJson);
   console.log(xx);
-  fullBfchainCore.transactionHelper.verifyTransactionSignature(xx);
+  await fullBfchainCore.transactionHelper.verifyTransactionSignature(xx);
   // console.log(xx.toJSON());
 }
-
-getEmigrateAssetTransaction(getSenderWithSecondSecret(), getDelegateWithoutSecondSecret());
-getEmigrateAssetTransaction(getSenderWithoutSecondSecret(), getDelegateWithSecondSecret());
+(async () => {
+  await getEmigrateAssetTransaction(getSenderWithSecondSecret(), getDelegateWithoutSecondSecret());
+  await getEmigrateAssetTransaction(getSenderWithoutSecondSecret(), getDelegateWithSecondSecret());
+})();

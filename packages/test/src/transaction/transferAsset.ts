@@ -23,7 +23,7 @@ const getPOWInfo = (address: string) => {
 };
 
 async function getTransferAssetTransaction(sender: AccountModel) {
-  const keypair = bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
+  const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.TRANSFER_ASSET, // 交易类型
@@ -50,11 +50,11 @@ async function getTransferAssetTransaction(sender: AccountModel) {
   };
   let secondKeypair;
   if (sender.secondSecret) {
-    secondKeypair = bfchainCore.accountBaseHelper.createSecondSecretKeypair(
+    secondKeypair = await bfchainCore.accountBaseHelper.createSecondSecretKeypair(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
       sender.secret,
       sender.secondSecret,
     );
@@ -63,7 +63,7 @@ async function getTransferAssetTransaction(sender: AccountModel) {
     data.applyBlockHeight > bfchainCore.config.powOfWorkExemptionBlocks
       ? getPOWInfo(sender.address)
       : undefined;
-  let trs = bfchainCore.transaction.createTransaction<TransferAssetTransaction>(
+  let trs = await bfchainCore.transaction.createTransaction<TransferAssetTransaction>(
     TransferAssetTransactionFactory,
     data,
     {
@@ -83,7 +83,7 @@ async function getTransferAssetTransaction(sender: AccountModel) {
     trs = await bfchainCore.transaction.transactionPowCalculator(trs, pow, keypair, secondKeypair);
   }
   const trsJson = trs.toJSON();
-  const xx = bfchainCore.transaction.recombineTransaction(trsJson);
+  const xx = await bfchainCore.transaction.recombineTransaction(trsJson);
   console.log(xx.toJSON());
 }
 

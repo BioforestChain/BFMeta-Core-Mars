@@ -81,7 +81,7 @@ export class TransactionCore {
    * @param keypair
    * @param secondKeypair
    */
-  createTransaction<T extends Transaction>(
+  async createTransaction<T extends Transaction>(
     TxFactory: BFChainCore.TransactionFactoryConstructor<T>,
     body: BFChainCore.TxBodyJSON,
     asset: BFChainCore.GetTransactionAssetJSON<T>,
@@ -98,7 +98,7 @@ export class TransactionCore {
       transactionFactory.verifySecondKeypair(secondKeypair);
     }
     /// 校验生成交易的参数
-    transactionFactory.verifyTransactionBody(body, asset, config);
+    await transactionFactory.verifyTransactionBody(body, asset, config);
     const txbody: BFChainCore.TxBodyJSON = {
       version: body.version,
       type: body.type || this.getTransactionTypeFromTransactionFactoryConstructor(TxFactory), // 交易类型
@@ -126,7 +126,7 @@ export class TransactionCore {
     // 校验交易的 remark
     this.transactionHelper.verifyTransactionRemarkSize(trs);
     // 生成交易签名
-    trs.signatureBuffer = this.asymmetricHelper.detachedSign(
+    trs.signatureBuffer = await this.asymmetricHelper.detachedSign(
       trs.getBytes(true, true),
       keypair.secretKey,
     );
@@ -146,7 +146,7 @@ export class TransactionCore {
 
     // 生成交易二次签名，支付密码只是为了安全，不应该影响到POW
     if (secondKeypair) {
-      trs.signSignatureBuffer = this.asymmetricHelper.detachedSign(
+      trs.signSignatureBuffer = await this.asymmetricHelper.detachedSign(
         trs.getBytes(false, true),
         secondKeypair.secretKey,
       );
@@ -166,7 +166,7 @@ export class TransactionCore {
       const eventName = break_off ? "error" : "done";
       if (!break_off) {
         if (secondKeypair) {
-          trs.signSignatureBuffer = this.asymmetricHelper.detachedSign(
+          trs.signSignatureBuffer = await this.asymmetricHelper.detachedSign(
             trs.getBytes(false, true),
             secondKeypair.secretKey,
           );
@@ -191,7 +191,10 @@ export class TransactionCore {
         return done(is_break);
       }
       for (const { uint8array: trsBytes, nonce } of this.transactionHelper.nonceWriter(trs)) {
-        const signatureBuffer = this.asymmetricHelper.detachedSign(trsBytes, keypair.secretKey);
+        const signatureBuffer = await this.asymmetricHelper.detachedSign(
+          trsBytes,
+          keypair.secretKey,
+        );
         const checked = this.transactionHelper.checkTransactionProfOfWork(
           signatureBuffer,
           pow.count,
@@ -232,10 +235,10 @@ export class TransactionCore {
    *
    * @param trs
    */
-  recombineTransaction<T extends Transaction>(
+  async recombineTransaction<T extends Transaction>(
     trs: BFChainCore.TransactionJSON<BFChainCore.GetTransactionAssetJSON<T>>,
   ) {
-    return this.getTransactionFactoryFromType(trs.type).fromJSON(trs) as T;
+    return await this.getTransactionFactoryFromType(trs.type).fromJSON(trs) as T;
   }
   fromJSON = this.recombineTransaction;
   recombineTransactionInBlock<T extends BFChainCore.TransactionInBlock>(

@@ -65,12 +65,12 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
    * @param body
    * @param signForAssetAsset
    */
-  verifyTransactionBody(
+  async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
     signForAssetAsset: BFChainCore.SignForAssetAssetJSON,
     config = this.configHelper,
   ) {
-    super.verifyTransactionBody(body, signForAssetAsset, config);
+    await super.verifyTransactionBody(body, signForAssetAsset, config);
 
     const Function_Exception_Detail = {
       target: "body",
@@ -213,7 +213,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
       });
     }
 
-    if (!accountBaseHelper.isAddress(trustSenderId)) {
+    if (!await accountBaseHelper.isAddress(trustSenderId)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "trustSenderId",
         type: "account address",
@@ -229,7 +229,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
       });
     }
 
-    if (!accountBaseHelper.isAddress(trustRecipientId)) {
+    if (!await accountBaseHelper.isAddress(trustRecipientId)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "trustRecipientId",
         type: "account address",
@@ -310,7 +310,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
         });
       }
       trusteePublicKeys[trusteePublicKeys.length] = publicKey;
-      const address = accountBaseHelper.getAddressFromPublicKeyString(publicKey);
+      const address = await accountBaseHelper.getAddressFromPublicKeyString(publicKey);
       if (!tempTrustees.includes(address)) {
         throw new ArgumentIllegalException(NOT_MATCH, {
           to_compare_prop: "publicKey address",
@@ -379,7 +379,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
    * @param transaction
    * @param eventEmitter
    */
-  applyTransaction(
+  async applyTransaction(
     transaction: SignForAssetTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
