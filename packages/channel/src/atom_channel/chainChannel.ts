@@ -333,6 +333,13 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
           response.error = ErrorMessage.fromException(err);
           return response;
         };
+        const responseCmdMap = new Map([
+          [DUPLEX_API_CMD.QUERY_TRANSACTION, DUPLEX_API_CMD.QUERY_TRANSACTION_RETURN],
+          [DUPLEX_API_CMD.NEW_TRANSACTION, DUPLEX_API_CMD.NEW_TRANSACTION_RETURN],
+          [DUPLEX_API_CMD.QUERY_BLOCK, DUPLEX_API_CMD.QUERY_BLOCK_RETURN],
+          [DUPLEX_API_CMD.NEW_BLOCK, DUPLEX_API_CMD.NEW_BLOCK_RETURN],
+          [DUPLEX_API_CMD.GET_PEER_INFO, DUPLEX_API_CMD.GET_PEER_INFO_RETURN]
+        ]);
         try {
           switch (cmd) {
             /// 查询交易
@@ -491,7 +498,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
           );
           this.postResponseMessage(
             req_id,
-            DUPLEX_API_CMD.RESPONSE,
+            responseCmdMap.get(cmd) || DUPLEX_API_CMD.RESPONSE,
             CommonResponse.encode(errorResponse).finish(),
           );
           // 继续向外抛出错误
@@ -500,7 +507,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
         if (taskResult) {
           this.postResponseMessage(
             req_id,
-            DUPLEX_API_CMD.RESPONSE,
+            responseCmdMap.get(cmd) || DUPLEX_API_CMD.RESPONSE,
             // 将对象解析成二进制进行传输
             (taskResult.constructor as typeof CommonResponse).encode(taskResult).finish(),
           );
