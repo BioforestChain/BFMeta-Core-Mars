@@ -410,12 +410,12 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
     // 发起账户将得到的资产解冻并收入账下
     tasks.next = eventEmitter.emit("unfrozenAsset", {
       type: "unfrozenAsset",
-      transaction: transaction,
+      transaction,
       applyInfo: {
         address: transaction.senderId,
         publicKeyBuffer: transaction.senderPublicKeyBuffer,
         assetInfo,
-        amount: amount,
+        amount,
         sourceAmount: amount,
         frozenIdBuffer: giftTransactionSignatureBuffer,
         recipientId, // 资产冻结账户

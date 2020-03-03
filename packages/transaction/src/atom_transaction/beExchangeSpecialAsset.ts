@@ -280,7 +280,7 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
         !this.transactionHelper.verifyCiphertextSignature({
           secretPublicKey: publicKeyBuffer,
           ciphertextSignatureBuffer: signatureBuffer,
-          transactionSignatureBuffer: transactionSignatureBuffer,
+          transactionSignatureBuffer,
           senderId: body.senderId,
         })
       ) {

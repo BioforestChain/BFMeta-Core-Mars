@@ -143,7 +143,7 @@ export class VoteTransactionFactory extends TransactionFactory<VoteTransaction> 
     // 扣除投票权益
     tasks.next = eventEmitter.emit("voteEquity", {
       type: "voteEquity",
-      transaction: transaction,
+      transaction,
       applyInfo: {
         address: transaction.senderId,
         publicKeyBuffer: transaction.senderPublicKeyBuffer,

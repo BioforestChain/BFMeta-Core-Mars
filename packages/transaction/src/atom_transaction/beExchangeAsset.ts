@@ -314,7 +314,7 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<
         !this.transactionHelper.verifyCiphertextSignature({
           secretPublicKey: publicKeyBuffer,
           ciphertextSignatureBuffer: signatureBuffer,
-          transactionSignatureBuffer: transactionSignatureBuffer,
+          transactionSignatureBuffer,
           senderId: body.senderId,
         })
       ) {
@@ -362,7 +362,7 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<
     // 扣除发起账户用于交换资产
     tasks.next = eventEmitter.emit("asset", {
       type: "asset",
-      transaction: transaction,
+      transaction,
       applyInfo: {
         address: transaction.senderId,
         publicKeyBuffer: transaction.senderPublicKeyBuffer,
@@ -376,7 +376,7 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<
     const recipientId = transaction.recipientId;
     tasks.next = eventEmitter.emit("asset", {
       type: "asset",
-      transaction: transaction,
+      transaction,
       applyInfo: {
         address: recipientId,
         assetInfo: beAssetInfo,
@@ -390,7 +390,7 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<
     // 累加发起账户交换得到的资产
     tasks.next = eventEmitter.emit("unfrozenAsset", {
       type: "unfrozenAsset",
-      transaction: transaction,
+      transaction,
       applyInfo: {
         address: transaction.senderId,
         publicKeyBuffer: transaction.senderPublicKeyBuffer,

@@ -247,8 +247,8 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
     }
 
     // 计算给打块账户和投票账户的奖励总额
-    if (height != 1 && len > 0) {
-      //上一轮 给打块账户投票的用户 大于 0
+    if (height !== 1 && len > 0) {
+      // 上一轮 给打块账户投票的用户 大于 0
       const votePercent = configHelper.rewardPercent.votePercent;
       const fee = BigInt(jsbiHelper.multiplyFloorFraction(block.totalFee, votePercent).toString());
       const reward = BigInt(jsbiHelper.multiplyFloorFraction(block.reward, votePercent).toString());
@@ -260,7 +260,7 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
       blockUpdateData.vrewards = BigInt(fee) + reward;
       blockUpdateData.vrewardsRemaining = BigInt(0);
     } else {
-      //上一轮 给打块账户投票的用户 等于 0
+      // 上一轮 给打块账户投票的用户 等于 0
       blockUpdateData.reward = BigInt(block.reward) + BigInt(block.totalFee);
       blockUpdateData.blockFee = BigInt(block.totalFee);
       blockUpdateData.blockReward = BigInt(block.reward);
@@ -289,7 +289,7 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
     }
     const { voters, totalEquity } = blockUpdateData;
     const len = voters.length;
-    if (block.height != 1 && len > 0) {
+    if (block.height !== 1 && len > 0) {
       const voteTotalReward = BigInt(blockUpdateData.vrewards);
       // 用于一次性记录奖励分配 voteRewardList[address] = voteReward
       const voteRewardList: BFChainCore.VoterRewardListInfo = {};
@@ -299,7 +299,7 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
         sumVoteReward += voteReward;
         voteRewardList[voter.address] = voteReward;
       }
-      //分配剩余的奖励给打块账户
+      // 分配剩余的奖励给打块账户
       const vrewardsRemaining = voteTotalReward - sumVoteReward;
       blockUpdateData.reward = blockUpdateData.reward + vrewardsRemaining;
       if (len > 0) {

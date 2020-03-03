@@ -217,14 +217,14 @@ export class BaseHelper {
     // 对Fraction的支持
     if (
       value &&
-      typeof (value as any)["denominator"] === "number" &&
-      typeof (value as any)["numerator"] === "number"
+      typeof (value as any).denominator === "number" &&
+      typeof (value as any).numerator === "number"
     ) {
       // 分母不能为 0
-      if ((value as any)["denominator"] === 0) {
+      if ((value as any).denominator === 0) {
         return false;
       }
-      num_val = (value as any)["numerator"] / (value as any)["denominator"];
+      num_val = (value as any).numerator / (value as any).denominator;
     }
     if (Number.isNaN(num_val)) {
       return false;
@@ -290,7 +290,7 @@ export class BaseHelper {
    */
   isEmptyObject(e: unknown): e is object {
     if (!this.isObject(e)) return false;
-    var t;
+    let t;
     for (t in e) return false;
     return true;
   }
@@ -319,8 +319,8 @@ export class BaseHelper {
     }
     if (this.isString(buffer_or_string)) {
       if (buffer_or_string.length === buffer_length * 2) {
-        for (var i = 0; i < buffer_or_string.length; i += 1) {
-          var c = buffer_or_string[i];
+        for (let i = 0; i < buffer_or_string.length; i += 1) {
+          let c = buffer_or_string[i];
           return c >= "0" && c <= "f";
         }
       }
@@ -364,7 +364,7 @@ export class BaseHelper {
    *
    * @param arr
    */
-  isArray(arr: unknown): arr is Array<any> {
+  isArray(arr: unknown): arr is any[] {
     return this.getVariableType(arr) === "[object Array]";
   }
 

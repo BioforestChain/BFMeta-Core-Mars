@@ -6,8 +6,8 @@ export class Base58 {
   private readonly LEADER = this.ALPHABET.charAt(0);
   constructor(private readonly ALPHABET = DEFAULT_ALPHABET) {
     // pre-compute lookup table
-    for (var z = 0; z < ALPHABET.length; z++) {
-      var x = ALPHABET.charAt(z);
+    for (let z = 0; z < ALPHABET.length; z++) {
+      const x = ALPHABET.charAt(z);
 
       if (this.ALPHABET_MAP[x] !== undefined) throw new TypeError(x + " is ambiguous");
       this.ALPHABET_MAP[x] = z;
@@ -17,9 +17,10 @@ export class Base58 {
   encode(source: Uint8Array) {
     if (source.length === 0) return "";
 
-    var digits = [0];
-    for (var i = 0; i < source.length; ++i) {
-      for (var j = 0, carry = source[i]; j < digits.length; ++j) {
+    const digits = [0];
+    for (let i = 0; i < source.length; ++i) {
+      let carry = source[i];
+      for (let j = 0; j < digits.length; ++j) {
         carry += digits[j] << 8;
         digits[j] = carry % this.BASE;
         carry = (carry / this.BASE) | 0;
@@ -31,12 +32,12 @@ export class Base58 {
       }
     }
 
-    var string = "";
+    let string = "";
 
     // deal with leading zeros
-    for (var k = 0; source[k] === 0 && k < source.length - 1; ++k) string += this.ALPHABET[0];
+    for (let k = 0; source[k] === 0 && k < source.length - 1; ++k) string += this.ALPHABET[0];
     // convert digits to a string
-    for (var q = digits.length - 1; q >= 0; --q) string += this.ALPHABET[digits[q]];
+    for (let q = digits.length - 1; q >= 0; --q) string += this.ALPHABET[digits[q]];
 
     return string;
   }
@@ -44,12 +45,13 @@ export class Base58 {
   decodeUnsafe(string: string) {
     if (string.length === 0) return new Uint8Array();
 
-    var bytes = [0];
-    for (var i = 0; i < string.length; i++) {
-      var value = this.ALPHABET_MAP[string[i]];
+    const bytes = [0];
+    for (let i = 0; i < string.length; i++) {
+      let value = this.ALPHABET_MAP[string[i]];
       if (value === undefined) return;
 
-      for (var j = 0, carry = value; j < bytes.length; ++j) {
+      let carry = value;
+      for (let j = 0; j < bytes.length; ++j) {
         carry += bytes[j] * this.BASE;
         bytes[j] = carry & 0xff;
         carry >>= 8;
@@ -62,7 +64,7 @@ export class Base58 {
     }
 
     // deal with leading zeros
-    for (var k = 0; string[k] === this.LEADER && k < string.length - 1; ++k) {
+    for (let k = 0; string[k] === this.LEADER && k < string.length - 1; ++k) {
       bytes.push(0);
     }
 
@@ -70,7 +72,7 @@ export class Base58 {
   }
 
   decode(string: string) {
-    var buffer = this.decodeUnsafe(string);
+    const buffer = this.decodeUnsafe(string);
     if (buffer) return buffer;
 
     throw new Error("Non-base" + this.BASE + " character");

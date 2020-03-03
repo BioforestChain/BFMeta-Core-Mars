@@ -53,7 +53,7 @@ export class ErrorMessage<D = any> extends Message<ErrorMessage>
     };
   }
 }
-let common_response_field_acc_index = 1;
+const common_response_field_acc_index = 1;
 export function getCommonResponseFieldAccIndex() {
   return common_response_field_acc_index;
 }

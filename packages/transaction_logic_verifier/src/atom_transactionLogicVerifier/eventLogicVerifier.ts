@@ -60,9 +60,9 @@ export class EventLogicVerifier {
   protected transactionCore!: import("@bfchain/core-transaction").TransactionCore;
 
   private deepClone<T>(obj: T): T {
-    let result = Array.isArray(obj) ? ([] as any) : ({} as T);
+    const result = Array.isArray(obj) ? ([] as any) : ({} as T);
     if (typeof obj === "object") {
-      for (let key in obj) {
+      for (const key in obj) {
         if (obj[key] && typeof obj[key] === "object") {
           result[key] = this.deepClone(obj[key]);
         } else {
@@ -177,7 +177,7 @@ export class EventLogicVerifier {
       accountsAssets[address][magic] = accountsAssets[address][magic] || {};
       accountsAssets[address][magic][assetType] = accountsAssets[address][magic][assetType] || {
         sourceChainMagic: magic,
-        assetType: assetType,
+        assetType,
         assetNumber: BigInt(0),
         history: {},
       };
@@ -208,7 +208,7 @@ export class EventLogicVerifier {
       accountsAssets[address][magic] = accountsAssets[address][magic] || {};
       accountsAssets[address][magic][assetType] = accountsAssets[address][magic][assetType] || {
         sourceChainMagic: magic,
-        assetType: assetType,
+        assetType,
         assetNumber: BigInt(0),
         history: {},
       };
@@ -238,7 +238,7 @@ export class EventLogicVerifier {
       accountsAssets[address][magic] = accountsAssets[address][magic] || {};
       accountsAssets[address][magic][assetType] = accountsAssets[address][magic][assetType] || {
         sourceChainMagic: magic,
-        assetType: assetType,
+        assetType,
         assetNumber: BigInt(0),
         history: {},
       };
@@ -372,7 +372,7 @@ export class EventLogicVerifier {
         accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
       ) {
         throw new ConsensusException(ACCOUNT_FROZEN, {
-          address: address,
+          address,
           ...Function_Exception_Detail,
         });
       }
@@ -1139,7 +1139,7 @@ export class EventLogicVerifier {
       next();
     });
 
-    //注册事件错误处理器
+    // 注册事件错误处理器
     event.onError((err, { eventname, arg }) => {
       throw err;
     });

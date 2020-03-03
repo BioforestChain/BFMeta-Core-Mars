@@ -88,9 +88,9 @@ export enum ASSET_STATUS {
  */
 export enum DAPP_TYPE {
   /**付费应用 */
-  PAID_APP = 0, //"PAID_APP",
+  PAID_APP = 0, // "PAID_APP",
   /**免费应用 */
-  FREE_APP = 1, //"FREE_APP",
+  FREE_APP = 1, // "FREE_APP",
 }
 // #endregion
 

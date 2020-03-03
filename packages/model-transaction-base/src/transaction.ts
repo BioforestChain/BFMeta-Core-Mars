@@ -203,7 +203,7 @@ export class Transaction<AJ extends object = object> extends Message<Transaction
       asset: this.asset.toJSON() as AJ,
       nonce: this.nonce,
     };
-    this.recipientId && ((res as any).recipientId = this.recipientId);
+    this.recipientId && (res.recipientId = this.recipientId);
     this.dappid && (res.dappid = this.dappid);
     this.lns && (res.lns = this.lns);
     this.sourceIP && (res.sourceIP = this.sourceIP);

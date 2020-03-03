@@ -271,12 +271,12 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<
     // 累加资产
     tasks.next = eventEmitter.emit("asset", {
       type: "asset",
-      transaction: transaction,
+      transaction,
       applyInfo: {
         address: transaction.senderId,
         publicKeyBuffer: transaction.senderPublicKeyBuffer,
         assetInfo,
-        amount: amount,
+        amount,
         sourceAmount: amount,
       },
     });

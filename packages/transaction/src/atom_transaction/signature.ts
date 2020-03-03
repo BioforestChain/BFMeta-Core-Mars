@@ -154,7 +154,7 @@ export class SignatureTransactionFactory extends TransactionFactory<SignatureTra
     // 设置二次密码
     tasks.next = eventEmitter.emit("setSecondPublicKey", {
       type: "setSecondPublicKey",
-      transaction: transaction,
+      transaction,
       applyInfo: {
         address: transaction.senderId,
         publicKeyBuffer: transaction.senderPublicKeyBuffer,

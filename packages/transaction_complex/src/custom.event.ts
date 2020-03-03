@@ -664,7 +664,7 @@ export class CustomTransactionEvent {
           address,
           publicKeyBuffer: parseHexToArrayBuffer(publicKey),
           assetInfo,
-          amount: amount,
+          amount,
           sourceAmount: amount,
         },
       });
@@ -715,7 +715,7 @@ export class CustomTransactionEvent {
           address,
           publicKeyBuffer: parseHexToArrayBuffer(publicKey),
           assetInfo,
-          amount: amount,
+          amount,
           sourceAmount: amount,
           frozenIdBuffer: parseHexToArrayBuffer(frozenId),
           recipientId,
@@ -834,7 +834,7 @@ export class CustomTransactionEvent {
         applyInfo: {
           address,
           publicKeyBuffer: parseHexToArrayBuffer(publicKey),
-          genesisBlock: genesisBlock,
+          genesisBlock,
         },
       });
     }

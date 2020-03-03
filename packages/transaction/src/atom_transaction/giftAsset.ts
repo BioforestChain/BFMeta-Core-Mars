@@ -265,7 +265,7 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
     // 冻结资产
     tasks.next = eventEmitter.emit("frozenAsset", {
       type: "frozenAsset",
-      transaction: transaction,
+      transaction,
       applyInfo: {
         address: transaction.senderId,
         publicKeyBuffer: transaction.senderPublicKeyBuffer,

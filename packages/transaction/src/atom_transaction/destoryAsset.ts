@@ -209,7 +209,7 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
     // 扣除资产
     tasks.next = eventEmitter.emit("asset", {
       type: "asset",
-      transaction: transaction,
+      transaction,
       applyInfo: {
         address: transaction.senderId,
         publicKeyBuffer: transaction.senderPublicKeyBuffer,
@@ -221,12 +221,12 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
     // 赎回链资产
     tasks.next = eventEmitter.emit("destoryAsset", {
       type: "destoryAsset",
-      transaction: transaction,
+      transaction,
       applyInfo: {
         address: transaction.senderId,
         publicKeyBuffer: transaction.senderPublicKeyBuffer,
         assetInfo,
-        amount: amount,
+        amount,
         sourceAmount: amount,
       },
     });

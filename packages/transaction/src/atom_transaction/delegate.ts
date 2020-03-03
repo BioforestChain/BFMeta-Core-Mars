@@ -220,7 +220,7 @@ export class DelegateTransactionFactory extends TransactionFactory<DelegateTrans
     // 注册受托人
     tasks.next = eventEmitter.emit("registerToDelegate", {
       type: "registerToDelegate",
-      transaction: transaction,
+      transaction,
       applyInfo: {
         address: transaction.senderId,
         publicKeyBuffer: transaction.senderPublicKeyBuffer,

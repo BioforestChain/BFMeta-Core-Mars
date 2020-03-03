@@ -52,7 +52,7 @@ export class TransactionHelper {
       assetType: type.substr(0, assetType_index),
       chainName: type.substring(assetType_index + 1, chain_name_index),
       baseType: type_val as TRANSACTION_TYPES_BASE,
-    }; //TRANSACTION_TYPES_MAP.VAL.get(type_val);
+    }; // TRANSACTION_TYPES_MAP.VAL.get(type_val);
   }
   resolveType(arg: ReturnType<TransactionHelper["parseType"]>) {
     return `${arg.assetType}-${arg.chainName}-${arg.baseType}`;

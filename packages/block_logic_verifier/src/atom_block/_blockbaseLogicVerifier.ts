@@ -268,7 +268,7 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
       },
       {
         curTime: timeHelper.getTimeByTimestamp(block.timestamp),
-        usedAddressCache: usedAddressCache,
+        usedAddressCache,
       },
     );
     const expectedAddress = result.address;

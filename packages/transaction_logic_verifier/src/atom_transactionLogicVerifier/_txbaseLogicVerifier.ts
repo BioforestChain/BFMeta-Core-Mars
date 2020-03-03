@@ -631,7 +631,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     if (result < 0) {
       throw new ConsensusException(TRANSACTION_FEE_NOT_ENOUGH, {
         errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
-        minFee: minFee,
+        minFee,
         function: "checkTrsFeeAndWebFee",
       });
     }
@@ -661,7 +661,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     if (result < 0) {
       throw new ConsensusException(TRANSACTION_FEE_NOT_ENOUGH, {
         errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
-        minFee: minFee,
+        minFee,
         function: "checkTrsFeeAndMiningMachineFee",
       });
     }

@@ -305,7 +305,7 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
       applyInfo: {
         address: transaction.senderId,
         publicKeyBuffer: transaction.senderPublicKeyBuffer,
-        assetInfo: assetInfo,
+        assetInfo,
         amount: `-${amount}`,
         sourceAmount: amount,
         maxEffectiveHeight: this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),

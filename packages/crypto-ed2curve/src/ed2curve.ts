@@ -16,7 +16,7 @@ import {
  * montgomeryX = (edwardsY + 1)*inverse(1 - edwardsY) mod p
  */
 export function convertPublicKey(pk: Uint8Array) {
-  var z = new Uint8Array(32),
+  let z = new Uint8Array(32),
     q = [gf(), gf(), gf(), gf()],
     a = gf(),
     b = gf();
@@ -25,7 +25,7 @@ export function convertPublicKey(pk: Uint8Array) {
     throw new TypeError("invalid public key");
   }
 
-  var y = q[1];
+  let y = q[1];
 
   addition(a, gf1, y);
   subtraction(b, gf1, y);
@@ -41,7 +41,7 @@ export function convertPublicKey(pk: Uint8Array) {
  *
  */
 export function convertSecretKey(sk: Uint8Array) {
-  var d = new Uint8Array(64),
+  let d = new Uint8Array(64),
     o = new Uint8Array(32),
     i;
   _hash(d, sk, 32);

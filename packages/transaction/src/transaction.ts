@@ -136,7 +136,7 @@ export class TransactionCore {
       if (pow.calculator) {
         pow.calculator(trs, pow, keypair, secondKeypair);
       } else {
-        // 放在异步执行
+        // 使用内置的计算器去计算
         this.transactionPowCalculator(trs, pow, keypair, secondKeypair);
       }
     } else {
@@ -211,16 +211,6 @@ export class TransactionCore {
 
         if (checked) {
           trs.nonce = nonce;
-          {
-            const trs_hex = this.Buffer.from(trs.getBytes(true, true)).toString("hex");
-            const bytes_hex = this.Buffer.from(trsBytes).toString("hex");
-            if (trs_hex !== bytes_hex) {
-              debugger;
-              console.error("nonceWriter bytes error, nonce:", nonce);
-              console.error("trs_hex:\t\t", trs_hex);
-              console.error("bytes_hex:\t\t", bytes_hex);
-            }
-          }
           trs.signatureBuffer = signatureBuffer;
           break;
         }
@@ -308,7 +298,7 @@ export class TransactionCore {
 export const TRANSACTION_FACTORY_TYPES_MAP = (() => {
   const V_K = new Map<TRANSACTION_TYPES_BASE, string>();
   const K_V = new Map<string, TRANSACTION_TYPES_BASE>();
-  for (let tran_key in TRANSACTION_TYPES_BASE) {
+  for (const tran_key in TRANSACTION_TYPES_BASE) {
     const val = TRANSACTION_TYPES_BASE[tran_key as keyof typeof TRANSACTION_TYPES_BASE];
     K_V.set(tran_key, val);
     V_K.set(val, tran_key);

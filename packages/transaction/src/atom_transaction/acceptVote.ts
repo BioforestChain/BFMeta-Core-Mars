@@ -112,7 +112,7 @@ export class AcceptVoteTransactionFactory extends TransactionFactory<AcceptVoteT
     // 接收投票
     tasks.next = eventEmitter.emit("acceptVote", {
       type: "acceptVote",
-      transaction: transaction,
+      transaction,
       applyInfo: {
         address: transaction.senderId,
         publicKeyBuffer: transaction.senderPublicKeyBuffer,

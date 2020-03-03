@@ -14,7 +14,7 @@ export class GenesisBlockTicker extends BlockTicker {
 
   genesisBlockShouldNotTick(height: number) {
     throw new ConsensusException(SHOULD_NOT_TICK, {
-      height: height,
+      height,
       target: "blockChain",
       function: "genesisBlockShouldNotTick",
     });

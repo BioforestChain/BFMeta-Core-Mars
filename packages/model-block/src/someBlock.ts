@@ -14,11 +14,11 @@ const { ArgumentFormatException } = CoreExceptionGenerator("MODEL", "blockModel"
  */
 export enum BLOCK_TYPES_BASE {
   /**创世块 */
-  GENESIS = 0, //= "GENESIS",
+  GENESIS = 0, // = "GENESIS",
   /**普通区块 */
-  COMMON = 1, //= "COMMON",
+  COMMON = 1, // = "COMMON",
   /**每轮最后一个块 */
-  ROUNDEND = 2, //= "ROUNDEND",
+  ROUNDEND = 2, // = "ROUNDEND",
 }
 
 /**

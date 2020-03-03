@@ -13,10 +13,10 @@ import type { Message } from "@bfchain/protobuf";
 
 const MESSAGE_IN_ARGS_BYTES_WM = new WeakMap<Message, Map<string, Uint8Array>>();
 
-interface getBytesFunction extends CallableFunction {
+interface GetBytesFunction extends CallableFunction {
   (...args: any[]): Uint8Array;
 }
-export function cacheBytesGetter<T extends getBytesFunction>(
+export function cacheBytesGetter<T extends GetBytesFunction>(
   target: any,
   propertyKey: string,
   descriptor: TypedPropertyDescriptor<T>,

@@ -47,7 +47,7 @@ export function blake2s_init(outlen: number, key?: ByteArray): Blake2S {
     b: new WordArray(64), // input block
     c: 0, // pointer within block
     t: 0, // input count
-    outlen: outlen, // output length in bytes
+    outlen, // output length in bytes
   };
 
   ctx.h[0] ^= 0x01010000 ^ (keylen << 8) ^ outlen;
@@ -89,7 +89,7 @@ export function blake2s_final(ctx: Blake2S): ByteArray {
   // little endian convert and store
   const out = new ByteArray(ctx.outlen);
 
-  for (var i = 0; i < ctx.outlen; i++) {
+  for (let i = 0; i < ctx.outlen; i++) {
     out[i] = (ctx.h[i >> 2] >> (8 * (i & 3))) & 0xff;
   }
 

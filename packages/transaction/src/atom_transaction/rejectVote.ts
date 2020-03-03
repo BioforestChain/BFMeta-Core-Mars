@@ -112,7 +112,7 @@ export class RejectVoteTransactionFactory extends TransactionFactory<RejectVoteT
     // 拒绝投票
     tasks.next = eventEmitter.emit("rejectVote", {
       type: "rejectVote",
-      transaction: transaction,
+      transaction,
       applyInfo: {
         address: transaction.senderId,
         publicKeyBuffer: transaction.senderPublicKeyBuffer,

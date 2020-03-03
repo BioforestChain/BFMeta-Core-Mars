@@ -372,7 +372,7 @@ export class BlockchainStatusModel<S extends BLOCKCHAIN_STATUS = any>
     return this._status;
   }
   public set status(value: S) {
-    if (value == this._status) {
+    if (value === this._status) {
       return;
     }
     this._status = value;

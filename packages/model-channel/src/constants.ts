@@ -103,12 +103,12 @@ export enum NewTransactionRefuseReason {
 }
 
 export enum DUPLEX_API_CMD {
-  RESPONSE = 0b1, //1 << _inc++, //= "RESPONSE",
-  QUERY_TRANSACTION = 0b10, //1 << _inc++, //= "/transaction/query",
-  NEW_TRANSACTION = 0b100, //1 << _inc++, //= "/transaction/broadcast",
-  QUERY_BLOCK = 0b1000, //1 << _inc++, //= "/block/query",
-  NEW_BLOCK = 0b10000, //1 << _inc++, //= "/block/broadcast",
-  GET_PEER_INFO = 0b100000, //1 << _inc++, //= "/peer/info",
+  RESPONSE = 0b1, // 1 << _inc++, //= "RESPONSE",
+  QUERY_TRANSACTION = 0b10, // 1 << _inc++, //= "/transaction/query",
+  NEW_TRANSACTION = 0b100, // 1 << _inc++, //= "/transaction/broadcast",
+  QUERY_BLOCK = 0b1000, // 1 << _inc++, //= "/block/query",
+  NEW_BLOCK = 0b10000, // 1 << _inc++, //= "/block/broadcast",
+  GET_PEER_INFO = 0b100000, // 1 << _inc++, //= "/peer/info",
 
   /**
    * @TODO 使用这些RETURN替代单纯的RESPONSE，

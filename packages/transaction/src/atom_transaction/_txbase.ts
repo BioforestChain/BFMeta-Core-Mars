@@ -694,7 +694,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
           publicKeyBuffer: detail.recipientPublicKeyBuffer,
 
           assetInfo: detail.assetInfo,
-          amount: amount,
+          amount,
           sourceAmount: amount,
         },
       });

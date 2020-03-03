@@ -100,7 +100,7 @@ export class MilestonesHelper {
     const milestone = Math.floor(this.binarySearchMiles(this.heights, height));
     // 流通的总币数
     let supply = BigInt(this.generateTotalAmount);
-    let rewardAlready = new Map<bigint, bigint>();
+    const rewardAlready = new Map<bigint, bigint>();
     let mile;
     let multiplier;
     for (let i = 0; i <= milestone; i++) {

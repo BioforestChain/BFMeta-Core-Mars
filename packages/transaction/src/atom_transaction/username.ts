@@ -259,7 +259,7 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
     // 设置用户名
     tasks.next = eventEmitter.emit("setUsername", {
       type: "setUsername",
-      transaction: transaction,
+      transaction,
       applyInfo: {
         address: transaction.senderId,
         publicKeyBuffer: transaction.senderPublicKeyBuffer,

@@ -22,5 +22,5 @@ export function verify(x: ByteArray, y: ByteArray): boolean {
   checkArrayTypes(x, y);
 
   // Zero length arguments are considered not equal
-  return x.length > 0 && y.length > 0 && x.length == y.length && vn(x, 0, y, 0, x.length) == 0;
+  return x.length > 0 && y.length > 0 && x.length === y.length && vn(x, 0, y, 0, x.length) === 0;
 }

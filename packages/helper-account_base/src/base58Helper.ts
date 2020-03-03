@@ -30,9 +30,9 @@ export class Base58Helper {
   }
 
   async decodeRaw(buffer: Uint8Array) {
-    var payload = buffer.slice(0, -4);
-    var checksum = buffer.slice(-4);
-    var newChecksum = await this.sha256x2(payload);
+    let payload = buffer.slice(0, -4);
+    let checksum = buffer.slice(-4);
+    let newChecksum = await this.sha256x2(payload);
 
     if (
       (checksum[0] ^ newChecksum[0]) |
@@ -46,15 +46,15 @@ export class Base58Helper {
   }
 
   async decodeUnsafe(string: string) {
-    var buffer = await this.bs58.decodeUnsafe(string);
+    let buffer = await this.bs58.decodeUnsafe(string);
     if (!buffer) return;
 
     return this.decodeRaw(buffer);
   }
 
   async decode(string: string) {
-    var buffer = this.bs58.decode(string);
-    var payload = await this.decodeRaw(buffer);
+    let buffer = this.bs58.decode(string);
+    let payload = await this.decodeRaw(buffer);
     if (!payload) throw new Error("Invalid checksum");
     return payload;
   }
