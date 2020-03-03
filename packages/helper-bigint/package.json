@@ -14,7 +14,7 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-typings": "^5.7.2",
-    "@bfchain/core-util-exception-errorcode": "^5.7.2"
+    "@bfchain/core-typings": "5.7.2",
+    "@bfchain/core-util-exception-errorcode": "5.7.2"
   }
 }

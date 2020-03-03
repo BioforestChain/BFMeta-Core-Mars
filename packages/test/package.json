@@ -15,9 +15,9 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core": "^5.7.2",
-    "@bfchain/core-crypto": "^5.7.2",
-    "@bfchain/core-typings": "^5.7.2",
+    "@bfchain/core": "5.7.2",
+    "@bfchain/core-crypto": "5.7.2",
+    "@bfchain/core-typings": "5.7.2",
     "@types/ed2curve": "^0.2.2",
     "@types/optimist": "^0.0.29",
     "json-dry-factory": "^1.1.9",

@@ -14,9 +14,9 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-helper": "^5.7.2",
-    "@bfchain/core-model": "^5.7.2",
-    "@bfchain/core-typings": "^5.7.2",
-    "@bfchain/core-util-exception": "^5.7.2"
+    "@bfchain/core-helper": "5.7.2",
+    "@bfchain/core-model": "5.7.2",
+    "@bfchain/core-typings": "5.7.2",
+    "@bfchain/core-util-exception": "5.7.2"
   }
 }

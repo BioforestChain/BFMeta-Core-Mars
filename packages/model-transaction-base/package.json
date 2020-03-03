@@ -14,9 +14,9 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-model-cacher": "^5.7.2",
-    "@bfchain/core-model-common": "^5.7.2",
-    "@bfchain/core-model-constants": "^5.7.2",
-    "@bfchain/core-typings": "^5.7.2"
+    "@bfchain/core-model-cacher": "5.7.2",
+    "@bfchain/core-model-common": "5.7.2",
+    "@bfchain/core-model-constants": "5.7.2",
+    "@bfchain/core-typings": "5.7.2"
   }
 }

@@ -8,8 +8,8 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-crypto-ed2curve": "^5.7.2",
-    "@bfchain/core-crypto-tweetnacl": "^5.7.2",
-    "@bfchain/core-typings": "^5.7.2"
+    "@bfchain/core-crypto-ed2curve": "5.7.2",
+    "@bfchain/core-crypto-tweetnacl": "5.7.2",
+    "@bfchain/core-typings": "5.7.2"
   }
 }

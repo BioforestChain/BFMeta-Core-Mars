@@ -14,14 +14,14 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-model-block": "^5.7.2",
-    "@bfchain/core-model-cacher": "^5.7.2",
-    "@bfchain/core-model-channel": "^5.7.2",
-    "@bfchain/core-model-common": "^5.7.2",
-    "@bfchain/core-model-constants": "^5.7.2",
-    "@bfchain/core-model-progress": "^5.7.2",
-    "@bfchain/core-model-transaction": "^5.7.2",
-    "@bfchain/core-model-transaction-complex": "^5.7.2",
-    "@bfchain/core-typings": "^5.7.2"
+    "@bfchain/core-model-block": "5.7.2",
+    "@bfchain/core-model-cacher": "5.7.2",
+    "@bfchain/core-model-channel": "5.7.2",
+    "@bfchain/core-model-common": "5.7.2",
+    "@bfchain/core-model-constants": "5.7.2",
+    "@bfchain/core-model-progress": "5.7.2",
+    "@bfchain/core-model-transaction": "5.7.2",
+    "@bfchain/core-model-transaction-complex": "5.7.2",
+    "@bfchain/core-typings": "5.7.2"
   }
 }

@@ -14,12 +14,12 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-helper-account-base": "^5.7.2",
-    "@bfchain/core-helper-config": "^5.7.2",
-    "@bfchain/core-helper-type": "^5.7.2",
-    "@bfchain/core-model": "^5.7.2",
-    "@bfchain/core-typings": "^5.7.2",
-    "@bfchain/core-util-exception": "^5.7.2",
-    "@bfchain/core-util-exception-errorcode": "^5.7.2"
+    "@bfchain/core-helper-account-base": "5.7.2",
+    "@bfchain/core-helper-config": "5.7.2",
+    "@bfchain/core-helper-type": "5.7.2",
+    "@bfchain/core-model": "5.7.2",
+    "@bfchain/core-typings": "5.7.2",
+    "@bfchain/core-util-exception": "5.7.2",
+    "@bfchain/core-util-exception-errorcode": "5.7.2"
   }
 }
