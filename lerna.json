@@ -1,12 +1,10 @@
 {
-  "packages": [
-    "packages/*",
-    "packages/@types/*"
-  ],
+  "packages": ["packages/*", "packages/@types/*"],
   "version": "5.7.4",
   "useWorkspaces": true,
   "npmClient": "yarn",
   "publishConifg": {
+    "exact": true,
     "registry": "http://192.168.110.189:4873/"
   }
 }
