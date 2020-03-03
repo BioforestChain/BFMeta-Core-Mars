@@ -142,7 +142,7 @@ export class BlockGeneratorCalculator {
     const usedAddressCache =
       opts.usedAddressCache ||
       new Map<number, { signature: string; timestamp: number; address: string }>();
-    let timestamp = currentBlock.timestamp;
+    const timestamp = currentBlock.timestamp;
     let height = currentBlock.height;
     let curTime = opts.curTime || this.timeHelper.now();
     const blockGetterHelper = opts.blockGetterHelper || this.blockGetterHelper;
@@ -197,7 +197,7 @@ export class BlockGeneratorCalculator {
       return result;
     } else {
       let num = 0;
-      for (let char of str) num += char.charCodeAt(0);
+      for (const char of str) num += char.charCodeAt(0);
       // const buf = Buffer.from(str);
       // const num = buf.readUInt16LE(0);
       this.__idNumberMap.set(str, num);
@@ -224,7 +224,7 @@ export class BlockGeneratorCalculator {
     const { usedAddressCache, new_block_slot_number, blockGetterHelper } = opts;
     const current_round = this.blockHelper.calcRoundByHeight(new_block_height);
     const per_round_last_height = this.blockHelper.calcRoundStartHeight(current_round) - 1;
-    //判断是否丢失块打包数据，是的话进行恢复，并更新signature值
+    // 判断是否丢失块打包数据，是的话进行恢复，并更新signature值
     const { usedAddressMap, curBlockSignature } = await this._recoverUsedGeneratorAddressMap(
       new_block_height - 1,
       usedAddressCache,
@@ -241,7 +241,7 @@ export class BlockGeneratorCalculator {
     const usedAddressList = Object.freeze(_arr);
     /**计算还未使用过的地址 */
     const unUsedAddressList = delegates.filter(add => !usedAddressList.includes(add));
-    //id转ASCII码 根据ascii码总和取余 算出打块人下标
+    // id转ASCII码 根据ascii码总和取余 算出打块人下标
     unUsedAddressList.sort();
     const i =
       (this._getStringHash(curBlockSignature) + new_block_slot_number) % unUsedAddressList.length;
@@ -279,7 +279,7 @@ export class BlockGeneratorCalculator {
     const miss_round = Math.ceil(
       (new_block_slot_number - max_slot_number) / this.config.blockPerRound,
     );
-    let delegateAddressList: string[] = [];
+    const delegateAddressList: string[] = [];
     /**要使用哪一轮次的受托人进行应急 */
     const target_round =
       current_round > miss_round ? current_round - (miss_round % current_round) : 1;
@@ -335,8 +335,8 @@ export class BlockGeneratorCalculator {
     // fileLog(`miss_round: ....................... ${miss_round}`);
     /**计算这个区块到新块掉线的人 */
     for (let calcHeight = _start_emergency_height; calcHeight < new_block_height; calcHeight++) {
-      let b = thisRoundMap.get(calcHeight);
-      let b2 = thisRoundMap.get(calcHeight - 1);
+      const b = thisRoundMap.get(calcHeight);
+      const b2 = thisRoundMap.get(calcHeight - 1);
       if (b && b2) {
         /**如果是中间的块则只要求出两个区块之间的slot就可以了 */
         let missCount =

@@ -70,7 +70,7 @@ export class BlockCore {
     // 校验keypair
     blockFactory.verifyKeypair(keypair);
     // 校验生成区块的参数
-    blockFactory.verifyBlockBody(body, blockRemark);
+    await blockFactory.verifyBlockBody(body, blockRemark);
     // 生成区块，获取区块并签名
     const block = await blockFactory.generateBlock(
       body,

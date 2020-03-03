@@ -3,7 +3,7 @@ import { Injectable } from "@bfchain/util";
 import { BlockHelper, ChainTimeHelper, ConfigHelper } from "@bfchain/core-helper";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 import { ChainChannelGroup } from "@bfchain/core-channel";
-const { warn, ConsensusException } = CoreExceptionGenerator("Core", "blockForkCheck");
+const { warn, ConsensusException, log } = CoreExceptionGenerator("Core", "blockForkCheck");
 
 /**
  * 两条区块链的对比策略
@@ -544,7 +544,7 @@ export class BlockForkChecker {
       }
     } while (verifyHeight > 1);
     const wrongChainHeight = verifyHeight + this.config.blockPerRound;
-    console.log(
+    log(
       `链上链于 ${wrongChainHeight} 高度的轮次出错，所以从这里开始往回查询58个块能发现分叉 (上一个轮的轮末块也要判断)`,
     );
     const result2 = await this.findNearestSameBlockInOneRound(

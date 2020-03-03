@@ -651,7 +651,7 @@ export abstract class BlockFactory<T extends Block> {
          * eventEmitter 设计是可以绑定同步或者异步的方法,而 bindApplyTransactionEventEmiter 绑定的都是同步的操作,
          * 所以这里没有 await 也可以得到结果
          * */
-        txFactory.applyTransaction(trs, eventEmitter, config);
+        await txFactory.applyTransaction(trs, eventEmitter, config);
       }
     } catch (err) {
       throw err;
