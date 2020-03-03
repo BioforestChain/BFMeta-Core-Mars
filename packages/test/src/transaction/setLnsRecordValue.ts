@@ -64,7 +64,7 @@ async function getSetLnsRecordValueTransaction(
   console.log(trs.toJSON().asset);
 }
 
-let lnsRecordValue: BFChainCore.SetLnsRecordValueJSON = {
+const lnsRecordValue: BFChainCore.SetLnsRecordValueJSON = {
   name: "bnqkl.bfchain",
   sourceChainName: "xxxxxx",
   sourceChainMagic: "THEM4G1KKEY",

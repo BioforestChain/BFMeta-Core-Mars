@@ -98,7 +98,7 @@ async function getCommonBlockAsync(sender: AccountModel) {
       blockParticipation: "0",
     },
     (async function* zz() {
-      for (let item of blockTrsItems) {
+      for (const item of blockTrsItems) {
         yield item;
       }
     })(),

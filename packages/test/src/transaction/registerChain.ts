@@ -544,7 +544,7 @@ const getPOWInfo = (address: string) => {
     registerStatistics.bindApplyTransactionEventEmiter(eventEmitter, statisticsInfo);
     for (let i = 0; i < txs.length; i++) {
       const { senderId, recipientId, fee, fromMagic, type } = txs[i];
-      let assetType = registerBfchainCore.config.assetType;
+      const assetType = registerBfchainCore.config.assetType;
       let amount = "0";
       if (type === registerBfchainCore.transactionHelper.TRANSFER_ASSET) {
         amount = (txs[i] as TransferAssetTransaction).asset.transferAsset.amount;
@@ -621,7 +621,7 @@ const getPOWInfo = (address: string) => {
       },
       registerchainRemarkData,
       (async function* zz() {
-        for (let item of blockTrsItems) {
+        for (const item of blockTrsItems) {
           yield item;
         }
       })(),
@@ -813,7 +813,7 @@ const getPOWInfo = (address: string) => {
         blockParticipation: "0",
       },
       (async function* zz() {
-        for (let item of blockTrsItems) {
+        for (const item of blockTrsItems) {
           yield item;
         }
       })(),

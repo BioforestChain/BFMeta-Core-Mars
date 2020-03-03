@@ -171,7 +171,7 @@ async function getBeExchangeSpecialAssetTransaction(
   const ddd = getRecipientWithoutSecondSecret();
 
   const xx = await getToExchangeSpecialAssetTransaction(aa, [cc, dd], true);
-  getBeExchangeSpecialAssetTransaction(dd, xx, [cc, dd]);
+  await getBeExchangeSpecialAssetTransaction(dd, xx, [cc, dd]);
   // const yy = await getToExchangeSpecialAssetTransaction(aaa, [cc, dd], false);
   // getBeExchangeSpecialAssetTransaction(cc, yy, []);
 })();

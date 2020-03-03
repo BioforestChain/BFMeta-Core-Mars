@@ -830,7 +830,7 @@ const blockMap = new Map<number, BFChainCore.BlockJSON<any>>();
 blockMap.set(1, bfchainCore.config.genesisBlock);
 moduleMap.set("blockGetterHelper", {
   async getBlockByHeight(height: number) {
-    let blockJSON = blockMap.get(height);
+    const blockJSON = blockMap.get(height);
     let block;
     if (blockJSON && height % bfchainCore.config.blockPerRound !== 0) {
       block = Block.fromObject(blockJSON);
@@ -888,7 +888,7 @@ function getRoundLastBlockRemarkHash(height: number) {
   /**已绑定的受托人个数 */
   const pickDelegates = bfchainCore.transactionHelper.genesisDelegates().slice(0, 30);
   const map = new Map<number, { signature: string; timestamp: number; address: string }>();
-  let lastBlock = {
+  const lastBlock = {
     signature: bfchainCore.config.genesisBlock.signature,
     timestamp: bfchainCore.config.genesisBlock.timestamp,
     height: bfchainCore.config.genesisBlock.height,
@@ -961,7 +961,7 @@ function getRoundLastBlockRemarkHash(height: number) {
           blockMap.set(lastBlock.height, commonBlock);
         } else if (lastBlock.height % bfchainCore.config.blockPerRound === 0) {
           // 本轮打块的人
-          let roundStartHeight = bfchainCore.blockHelper.calcRoundStartHeight(
+          const roundStartHeight = bfchainCore.blockHelper.calcRoundStartHeight(
             bfchainCore.blockHelper.calcRoundByHeight(lastBlock.height),
           );
           const thisRoundDelegates: string[] = [];

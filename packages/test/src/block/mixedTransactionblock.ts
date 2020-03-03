@@ -512,10 +512,10 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
       return assetNumber ? assetNumber.toString() : "0";
     }
 
-    let assetInBlock: {
+    const assetInBlock: {
       [magicAndAssetType: string]: number;
     } = {};
-    let assetIndexInBlock = 0;
+    const assetIndexInBlock = 0;
 
     //#endregion
     //#region
@@ -665,7 +665,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
         blockParticipation: "0",
       },
       (async function* zz() {
-        for (let item of blockTrsItems) {
+        for (const item of blockTrsItems) {
           yield item;
         }
       })(),

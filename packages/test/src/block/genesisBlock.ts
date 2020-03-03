@@ -87,7 +87,7 @@ const core = BFChainCoreFactory({
   Buffer: Buffer as any,
   cryptoHelper: NodeJsCryptoHelper,
   keypairHelper: NodeJsKeypairHelper,
-  ed2curveHelper: ed2curveHelper,
+  ed2curveHelper,
 });
 const statistics = Resolve(BlockBaseStatisticsHelper, core.moduleMap);
 
@@ -665,7 +665,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
       },
       mainChainRemarkData,
       (async function* zz() {
-        for (let item of blockTrsItems) {
+        for (const item of blockTrsItems) {
           yield item;
         }
       })(),
