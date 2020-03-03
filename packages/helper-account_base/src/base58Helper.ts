@@ -45,16 +45,16 @@ export class Base58Helper {
     return this.Buffer.from(payload);
   }
 
-  decodeUnsafe(string: string) {
-    var buffer = this.bs58.decodeUnsafe(string);
+  async decodeUnsafe(string: string) {
+    var buffer = await this.bs58.decodeUnsafe(string);
     if (!buffer) return;
 
     return this.decodeRaw(buffer);
   }
 
-  decode(string: string) {
+  async decode(string: string) {
     var buffer = this.bs58.decode(string);
-    var payload = this.decodeRaw(buffer);
+    var payload = await this.decodeRaw(buffer);
     if (!payload) throw new Error("Invalid checksum");
     return payload;
   }
