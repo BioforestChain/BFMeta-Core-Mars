@@ -188,7 +188,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<
             ...LnsRecordValueAsset_Exception_Detail,
           });
         }
-        this.checkLocationNameRecord(lnsRecordValue.addRecord);
+        await this.checkLocationNameRecord(lnsRecordValue.addRecord);
         break;
       case RECORD_OPERATION_TYPE.DELETE:
         if (lnsRecordValue.addRecord) {
@@ -203,7 +203,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<
             ...LnsRecordValueAsset_Exception_Detail,
           });
         }
-        this.checkLocationNameRecord(lnsRecordValue.deleteRecord);
+        await this.checkLocationNameRecord(lnsRecordValue.deleteRecord);
         break;
       case RECORD_OPERATION_TYPE.UPDATE:
         if (!lnsRecordValue.addRecord) {

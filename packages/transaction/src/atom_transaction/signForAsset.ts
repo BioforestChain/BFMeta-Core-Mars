@@ -264,7 +264,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
     /**
      * 校验`trustAsset`的基本格式
      */
-    this.trustAssetTransactionFactory.verifyTrustAsset(trustAsset);
+    await this.trustAssetTransactionFactory.verifyTrustAsset(trustAsset);
 
     const { numberOfSignFor, trustees } = trustAsset;
     const thirdPartySignatureLength = thirdPartySignatures.length;
@@ -396,12 +396,12 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
     // 接收账户(委托交易指定的签收人)将得到的资产解冻并收入账下
     tasks.next = eventEmitter.emit("unfrozenAsset", {
       type: "unfrozenAsset",
-      transaction: transaction,
+      transaction,
       applyInfo: {
         address: transaction.recipientId,
         publicKeyBuffer: transaction.senderPublicKeyBuffer,
         assetInfo,
-        amount: amount,
+        amount,
         sourceAmount: amount,
         frozenIdBuffer: transactionSignatureBuffer,
         recipientId: trustSenderId, // 资产冻结账户
