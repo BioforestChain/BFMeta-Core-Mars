@@ -161,7 +161,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
           tiTasks.delete(ti);
           /// 随机获取繁忙列表中的一个节点
           let i = Math.floor(busyChainChannels.size * Math.random());
-          let iterator = busyChainChannels.values();
+          const iterator = busyChainChannels.values();
           let tryFreeChainChannel: DH | undefined;
           while (i >= 0) {
             tryFreeChainChannel = iterator.next().value;
@@ -233,7 +233,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
       /// 在异步任务中进行任务分发
       (async () => {
         /**发往每一台节点的查询数量 */
-        const unitLength = 1; //totalLength ? Math.ceil(totalLength / chainChannelList.length) : 1;
+        const unitLength = 1; // totalLength ? Math.ceil(totalLength / chainChannelList.length) : 1;
         /**所有查询任务的链 */
         let task_chain = Promise.resolve();
         /**是否已经触碰到完结的边界了 */
@@ -374,7 +374,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
         });
       }
       /// 开始执行并行任务
-      for await (var _ of pp.yieldResults({ ignore_error: true })) {
+      for await (const _ of pp.yieldResults({ ignore_error: true })) {
         if (is_break && is_break.break) {
           break;
         }
@@ -397,7 +397,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
         return b.maybeHeight - a.maybeHeight;
       })
       .slice(0, 2);
-    for (let chainChannel of sortedChainChannelList) {
+    for (const chainChannel of sortedChainChannelList) {
       try {
         const result = await chainChannel.queryBlock(...args);
         if (result.status === RESPONSE_STATUS.busy) {

@@ -47,7 +47,7 @@ export class BFChainCore {
     @Inject("keypairHelper") public keypairHelper: BFChainCore.KeypairHelperInterface,
     @Inject("ed2curveHelper") public ed2curveHelper: BFChainCore.Ed2curveHelperInterface,
     @Inject("Buffer") public Buffer: BFChainUtil.BufferConstructor,
-    public base58Helper: Base58Helper, //(this.cryptoHelper, this.Buffer);
+    public base58Helper: Base58Helper,
     public asymmetricHelper: AsymmetricHelper,
     public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,

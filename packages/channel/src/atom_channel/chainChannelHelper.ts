@@ -79,7 +79,7 @@ export class ChainChannelHelper {
     } = arg.query;
     let has_query_params = false;
     if (type) {
-      //if (typeof type === "string") {
+      // if (typeof type === "string") {
       has_query_params = true;
       if (!BH.isValidTransactionType(type)) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
@@ -89,7 +89,7 @@ export class ChainChannelHelper {
       }
     }
     if (signatureBuffer) {
-      //if (typeof signature === "string") {
+      // if (typeof signature === "string") {
       has_query_params = true;
       if (!BH.isValidSignature(signatureBuffer)) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
@@ -99,7 +99,7 @@ export class ChainChannelHelper {
       }
     }
     if (senderId) {
-      //if (typeof senderId === "string") {
+      // if (typeof senderId === "string") {
       has_query_params = true;
       if (!(await this.accountBaseHelper.isAddress(senderId))) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
@@ -109,7 +109,7 @@ export class ChainChannelHelper {
       }
     }
     if (recipientId) {
-      //if (typeof recipientId === "string") {
+      // if (typeof recipientId === "string") {
       has_query_params = true;
       if (!(await this.accountBaseHelper.isAddress(recipientId))) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
@@ -119,7 +119,7 @@ export class ChainChannelHelper {
       }
     }
     if (minHeight) {
-      //if (typeof minHeight === "number") {
+      // if (typeof minHeight === "number") {
       has_query_params = true;
       if (!BH.isUint32(minHeight)) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
@@ -129,7 +129,7 @@ export class ChainChannelHelper {
       }
     }
     if (maxHeight) {
-      //if (typeof maxHeight === "number") {
+      // if (typeof maxHeight === "number") {
       has_query_params = true;
       if (!BH.isUint32(maxHeight)) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
@@ -139,7 +139,7 @@ export class ChainChannelHelper {
       }
     }
     if (blockSignature) {
-      //if (typeof maxHeight === "number") {
+      // if (typeof maxHeight === "number") {
       has_query_params = true;
       if (!BH.isValidBlockSignature(blockSignature)) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
@@ -169,7 +169,7 @@ export class ChainChannelHelper {
       });
     }
     if (limit) {
-      //if (typeof limit === "number") {
+      // if (typeof limit === "number") {
       if (!BH.isUint32(limit)) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.query",
@@ -181,7 +181,7 @@ export class ChainChannelHelper {
     //#region 排序参数校验
     const { index: timestamp } = arg.sort;
     if (timestamp) {
-      //if (typeof timestamp === "number") {
+      // if (typeof timestamp === "number") {
       if (!BH.isUint32(timestamp)) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.sort",
@@ -354,7 +354,7 @@ export class ChainChannelHelper {
    * 生成并校验区块查询的返回结果
    */
   @bindThis
-  boxQueryBlockReturn(params: ArrayBuffer | Uint8Array) {
+  async boxQueryBlockReturn(params: ArrayBuffer | Uint8Array) {
     if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
       throw new ArgumentIllegalException(INVALID_PARAMS, {
         function: "boxQueryBlockReturn",
@@ -379,7 +379,7 @@ export class ChainChannelHelper {
     //#region 交易签名校验
     const { someBlock } = arg;
     if (arg.status === RESPONSE_STATUS.success && someBlock) {
-      this.blockHelper.verifyBlockSignature(someBlock.block, {
+      await this.blockHelper.verifyBlockSignature(someBlock.block, {
         taskLabel: "QueryBlockReturn",
       });
     }

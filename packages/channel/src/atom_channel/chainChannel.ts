@@ -142,13 +142,13 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
     return this._maybeHeight;
   }
   /**存储延迟的历史记录 */
-  protected _delay_histroy_list = new Float32Array(32);
+  protected _delayHistroyList = new Float32Array(32);
   get delay() {
-    const { _delay_histroy_list } = this;
-    var acc_delay = 0;
-    let len = _delay_histroy_list.length;
-    for (var i = 0; i < _delay_histroy_list.length; i += 1) {
-      var _d = _delay_histroy_list[i];
+    const { _delayHistroyList } = this;
+    let acc_delay = 0;
+    let len = _delayHistroyList.length;
+    for (let i = 0; i < _delayHistroyList.length; i += 1) {
+      const _d = _delayHistroyList[i];
       if (_d) {
         acc_delay += _d;
       } else {
@@ -159,12 +159,12 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
   }
   /**存储延迟记录 */
   protected pushDelayHistroy(delay: number) {
-    const { _delay_histroy_list } = this;
-    const LEN = _delay_histroy_list.length;
+    const { _delayHistroyList } = this;
+    const LEN = _delayHistroyList.length;
     // 列表左移动一位
-    _delay_histroy_list.set(_delay_histroy_list.subarray(1, LEN), 0);
+    _delayHistroyList.set(_delayHistroyList.subarray(1, LEN), 0);
     // 将新的数据放置到最后
-    _delay_histroy_list[LEN - 1] = delay;
+    _delayHistroyList[LEN - 1] = delay;
   }
   /**请求的响应回调缓存 */
   readonly req_response_map = new Map<number | string, PromiseOut>();
@@ -173,7 +173,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
   protected _request<T>(
     cmd: DUPLEX_API_CMD,
     data: Message,
-    ResonseBoxer: (bytes: Uint8Array) => T,
+    ResonseBoxer: (bytes: Uint8Array) => BFChainUtil.PromiseMaybe<T>,
     options?: BFChainCore.ChannelRequestOptions,
   ) {
     return this._requestWithBinaryData(cmd, this._requestDataToBinary(data), ResonseBoxer, options);
@@ -184,7 +184,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
   async _requestWithBinaryData<T>(
     cmd: DUPLEX_API_CMD,
     binary: Uint8Array,
-    ResonseBoxer: (bytes: Uint8Array) => T,
+    ResonseBoxer: (bytes: Uint8Array) => BFChainUtil.PromiseMaybe<T>,
     options?: BFChainCore.ChannelRequestOptions,
   ) {
     const req_id = this._req_id_acc[0]++;
@@ -268,7 +268,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
     );
   }
   /**查询区块 */
-  queryBlock<B extends Block = Block>(
+  async queryBlock<B extends Block = Block>(
     query: BFChainCore.QueryBlockArgJSON["query"],
     opts?: BFChainCore.ChannelRequestOptions,
   ) {

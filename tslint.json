@@ -1,0 +1,9 @@
+{
+  "extends": "tslint:recommended",
+  "rules": {
+    "no-floating-promises": true,
+    "jsdoc-format": false,
+    "no-namespace": false,
+    "variable-name": false
+  }
+}
