@@ -8,8 +8,8 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-block": "5.7.15",
-    "@bfchain/core-transaction": "5.7.15",
-    "@bfchain/core-typings": "5.7.15"
+    "@bfchain/core-block": "^5.7.9",
+    "@bfchain/core-transaction": "^5.7.9",
+    "@bfchain/core-typings": "^5.7.8"
   }
 }

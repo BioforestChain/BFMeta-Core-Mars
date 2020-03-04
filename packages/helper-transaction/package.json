@@ -14,14 +14,14 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-helper-account-base": "5.7.15",
-    "@bfchain/core-helper-asymmetric": "5.7.15",
-    "@bfchain/core-helper-bigint": "5.7.15",
-    "@bfchain/core-helper-config": "5.7.15",
-    "@bfchain/core-helper-type": "5.7.15",
-    "@bfchain/core-model-constants": "5.7.15",
-    "@bfchain/core-model-transaction": "5.7.15",
-    "@bfchain/core-typings": "5.7.15",
-    "@bfchain/core-util-exception": "5.7.15"
+    "@bfchain/core-helper-account-base": "^5.7.9",
+    "@bfchain/core-helper-asymmetric": "^5.7.8",
+    "@bfchain/core-helper-bigint": "^5.7.8",
+    "@bfchain/core-helper-config": "^5.7.9",
+    "@bfchain/core-helper-type": "^5.7.9",
+    "@bfchain/core-model-constants": "^5.7.9",
+    "@bfchain/core-model-transaction": "^5.7.9",
+    "@bfchain/core-typings": "^5.7.8",
+    "@bfchain/core-util-exception": "^5.7.8"
   }
 }

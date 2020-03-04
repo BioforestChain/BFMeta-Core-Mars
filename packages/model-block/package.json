@@ -14,11 +14,11 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-model-block-base": "5.7.15",
-    "@bfchain/core-model-block-remark": "5.7.15",
-    "@bfchain/core-model-cacher": "5.7.15",
-    "@bfchain/core-model-common": "5.7.15",
-    "@bfchain/core-model-transaction": "5.7.15",
-    "@bfchain/core-typings": "5.7.15"
+    "@bfchain/core-model-block-base": "^5.7.9",
+    "@bfchain/core-model-block-remark": "^5.7.9",
+    "@bfchain/core-model-cacher": "^5.7.9",
+    "@bfchain/core-model-common": "^5.7.8",
+    "@bfchain/core-model-transaction": "^5.7.9",
+    "@bfchain/core-typings": "^5.7.8"
   }
 }

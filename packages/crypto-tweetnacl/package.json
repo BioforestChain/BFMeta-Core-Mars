@@ -8,6 +8,6 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-typings": "5.7.15"
+    "@bfchain/core-typings": "^5.7.8"
   }
 }

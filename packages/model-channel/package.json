@@ -14,10 +14,10 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-model-block": "5.7.15",
-    "@bfchain/core-model-constants": "5.7.15",
-    "@bfchain/core-model-progress": "5.7.15",
-    "@bfchain/core-model-transaction": "5.7.15",
-    "@bfchain/core-typings": "5.7.15"
+    "@bfchain/core-model-block": "^5.7.9",
+    "@bfchain/core-model-constants": "^5.7.9",
+    "@bfchain/core-model-progress": "^5.7.8",
+    "@bfchain/core-model-transaction": "^5.7.9",
+    "@bfchain/core-typings": "^5.7.8"
   }
 }

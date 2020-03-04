@@ -98,6 +98,7 @@ type DelegateInfo = {
   publicKey: string;
   secondSecret?: string;
 };
+
 const _powCount: { [add: string]: number } = {};
 const getPOWInfo = (address: string) => {
   const count = _powCount[address] || 0;
@@ -108,6 +109,14 @@ const getPOWInfo = (address: string) => {
   };
   return res;
 };
+
+const _txs: { [address: string]: number } = {};
+const getTxs = (address: string) => {
+  const count = _txs[address] || 0;
+  _txs[address] = count + 1;
+  return _txs[address];
+};
+
 async function getUsernameTransaction(sender: DelegateInfo) {
   const keypair = await core.accountBaseHelper.createSecretKeypair(sender.secret);
   const secondKeypair =
@@ -161,9 +170,13 @@ async function getUsernameTransaction(sender: DelegateInfo) {
   if (pow) {
     trs = await bfchainCore.transaction.transactionPowCalculator(trs, pow, keypair, secondKeypair);
   }
-  return await createTrs(
+  trs = await createTrs(
     core.transactionHelper.calcTransactionFee(trs, bfchainCore.config.minTransactionFeePerByte),
   );
+  return {
+    index: getTxs(trs.senderId),
+    trs,
+  };
 }
 
 async function getDelegateTransaction(sender: DelegateInfo) {
@@ -222,7 +235,10 @@ async function getDelegateTransaction(sender: DelegateInfo) {
   trs = await createTrs(
     core.transactionHelper.calcTransactionFee(trs, bfchainCore.config.minTransactionFeePerByte),
   );
-  return trs;
+  return {
+    index: getTxs(trs.senderId),
+    trs,
+  };
 }
 
 async function getAcceptVoteTransaction(sender: DelegateInfo) {
@@ -272,7 +288,10 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
   trs = await createTrs(
     core.transactionHelper.calcTransactionFee(trs, bfchainCore.config.minTransactionFeePerByte),
   );
-  return trs;
+  return {
+    index: getTxs(trs.senderId),
+    trs,
+  };
 }
 
 (async () => {
@@ -342,7 +361,10 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
     trs = await createTrs(
       core.transactionHelper.calcTransactionFee(trs, bfchainCore.config.minTransactionFeePerByte),
     );
-    return trs;
+    return {
+      index: getTxs(trs.senderId),
+      trs,
+    };
   }
 
   async function getLocationNameTransaction() {
@@ -402,7 +424,10 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
     trs = await createTrs(
       core.transactionHelper.calcTransactionFee(trs, bfchainCore.config.minTransactionFeePerByte),
     );
-    return trs;
+    return {
+      index: getTxs(trs.senderId),
+      trs,
+    };
   }
 
   async function getSetLnsRecordValueTransaction(
@@ -467,7 +492,10 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
     trs = await createTrs(
       core.transactionHelper.calcTransactionFee(trs, bfchainCore.config.minTransactionFeePerByte),
     );
-    return trs;
+    return {
+      index: getTxs(trs.senderId),
+      trs,
+    };
   }
 
   async function getGenesisBlockAsync() {
@@ -497,8 +525,8 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
     }
     //#endregion
 
-    const txs: Transaction[] = [];
-    txs.push(await getLocationNameTransaction());
+    const txWithIndexList: { index: number; trs: Transaction }[] = [];
+    txWithIndexList.push(await getLocationNameTransaction());
     const totalDelegates = core.config.genesisBlock.remark.delegates;
     let ips: string[] = [];
     if (inputIpsPath) {
@@ -535,7 +563,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
         username: `${bfchainCore.config.chainName}${i + 1}`,
       };
       // 要在创始块中实施的交易
-      const trsList = [
+      const tempTrsWithIndexList = [
         await getUsernameTransaction(delegate),
         await getDelegateTransaction(delegate),
         await getAcceptVoteTransaction(delegate),
@@ -546,15 +574,15 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
       ];
       console.log(`第 ${i} 组交易创建完成`);
       // 实施这些交易需要的手续费由创始账户给予
-      const total_fee = trsList.reduce(
-        (acc_fee, trs) => (BigInt(trs.fee) + BigInt(acc_fee)).toString(),
+      const total_fee = tempTrsWithIndexList.reduce(
+        (acc_fee, twi) => (BigInt(twi.trs.fee) + BigInt(acc_fee)).toString(),
         "0",
       );
 
       if (total_fee !== "0") {
-        txs.push(await getTransferAssetTransaction(delegate, total_fee));
+        txWithIndexList.push(await getTransferAssetTransaction(delegate, total_fee));
       }
-      txs.push(...trsList);
+      txWithIndexList.push(...tempTrsWithIndexList);
       console.groupEnd();
     }
 
@@ -565,12 +593,13 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
     >();
     const statisticsInfo = statistics.forceGetStatisticsInfoByBlock(height, "getGenesisBlock");
     statistics.bindApplyTransactionEventEmiter(eventEmitter, statisticsInfo);
-    for (let i = 0; i < txs.length; i++) {
-      const { senderId, recipientId, type, fee, fromMagic } = txs[i];
+    for (let i = 0; i < txWithIndexList.length; i++) {
+      const { index, trs } = txWithIndexList[i];
+      const { senderId, recipientId, type, fee, fromMagic } = trs;
       const assetType = core.config.assetType;
       let amount = "0";
       if (type === core.transactionHelper.TRANSFER_ASSET) {
-        amount = (txs[i] as TransferAssetTransaction).asset.transferAsset.amount;
+        amount = (trs as TransferAssetTransaction).asset.transferAsset.amount;
       }
       const chainAssetInfo = core.chainAssetInfoHelper.getAssetInfo(fromMagic, assetType);
       statisticsInfo.initAssetStatistic(chainAssetInfo, statisticsInfo.assetStatisticCount);
@@ -615,8 +644,9 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
       const trsInBlock = TransactionInBlock.fromObject({
         index: i,
         height,
+        indexOfSenderTransactions: index,
         transactionAssetChanges,
-        transaction: txs[i],
+        transaction: trs,
       });
       blockTrsItems.push(trsInBlock);
     }

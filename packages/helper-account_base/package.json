@@ -14,8 +14,8 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-helper-config": "5.7.15",
-    "@bfchain/core-typings": "5.7.15",
-    "@bfchain/core-util-base58": "5.7.15"
+    "@bfchain/core-helper-config": "^5.7.9",
+    "@bfchain/core-typings": "^5.7.8",
+    "@bfchain/core-util-base58": "^5.7.9"
   }
 }
