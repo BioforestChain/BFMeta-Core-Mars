@@ -101,7 +101,9 @@ export function BFChainCoreFactory(
     "blockGetterHelper",
     "TIME_SPEED",
   ] as (keyof typeof args)[]).forEach(key => {
-    moduleMap.set(key, args[key]);
+    if (!moduleMap.has(key)) {
+      moduleMap.set(key, args[key]);
+    }
   });
   let configMap: ConfigHelperMap = moduleMap.get("configMap");
   if (!configMap) {
