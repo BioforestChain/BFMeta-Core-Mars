@@ -472,6 +472,13 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
   ) => void {
     return this._chainChannelEvents.on.bind(this._chainChannelEvents, "addChainChannel");
   }
+  get offAddChainChannel(): (
+    handler: BFChainUtil.MutArgEventHandler<
+      BFChainCore.ChainChannelGroupEventMap<DH>["addChainChannel"]
+    >,
+  ) => void {
+    return this._chainChannelEvents.off.bind(this._chainChannelEvents, "addChainChannel");
+  }
   @cacheGetter
   get onRemoveChainChannel(): (
     handler: BFChainUtil.MutArgEventHandler<
@@ -480,6 +487,13 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     opts?: BFChainUtil.EventOptions,
   ) => void {
     return this._chainChannelEvents.on.bind(this._chainChannelEvents, "removeChainChannel");
+  }
+  get offRemoveChainChannel(): (
+    handler: BFChainUtil.MutArgEventHandler<
+      BFChainCore.ChainChannelGroupEventMap<DH>["removeChainChannel"]
+    >,
+  ) => void {
+    return this._chainChannelEvents.off.bind(this._chainChannelEvents, "removeChainChannel");
   }
 
   @bindThis
