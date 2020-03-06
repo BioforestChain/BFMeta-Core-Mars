@@ -425,7 +425,7 @@ export class EventLogicVerifier {
       const { blockPerRound, maxDelegateTxsPerRound } = this.configHelper;
       const txCount = await transactionGetterHelper.getCountTransaction({
         type: this.transactionHelper.DELEGATE,
-        startHeight: (curRound - 1) * blockPerRound,
+        startHeight: (curRound - 1) * blockPerRound + 1,
         endHeight: curRound * blockPerRound,
       });
 
