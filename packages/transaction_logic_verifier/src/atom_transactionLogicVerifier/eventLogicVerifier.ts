@@ -429,7 +429,7 @@ export class EventLogicVerifier {
         endHeight: curRound * blockPerRound,
       });
 
-      if (txCount > maxDelegateTxsPerRound) {
+      if (txCount >= maxDelegateTxsPerRound) {
         throw new ConsensusException(REGISTER_DELEGTE_QUOTA_FULL, {
           round: curRound,
           ...Function_Exception_Detail,
