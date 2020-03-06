@@ -266,6 +266,9 @@ export const FORBIDDEN = (ec.next = "{prop} in {target} is forbidden when {funct
 /**operationName function*/
 export const PERMISSION_DENIED = (ec.next =
   "Permission denied at operation {operationName} when {function}");
+/**round function */
+export const REGISTER_DELEGTE_QUOTA_FULL = (ec.next =
+  "The register delegate quota is full in round {round}  when {function}");
 // #endregion
 export const errorCode = new Map(
   ec.errorCode.concat([

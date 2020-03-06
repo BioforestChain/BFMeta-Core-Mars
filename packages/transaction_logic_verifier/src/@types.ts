@@ -204,6 +204,10 @@ declare namespace BFChainCore {
       signature?: string;
       /**索引值 */
       storageValue?: string;
+      /**起始高度 */
+      startHeight?: number;
+      /**结束高度 */
+      endHeight?: number;
     }): Promise<number>;
     /**某个账户是否购买指定的 dappid */
     getPurchaseDApp(address: string, dappid: string): Promise<boolean>;

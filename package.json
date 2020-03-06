@@ -5,7 +5,7 @@
     "packages/*",
     "packages/__types/*"
   ],
-  "version": "mono",
+  "version": "0.0.0",
   "description": "",
   "bdkMono": {
     "generateConfigFiles": [

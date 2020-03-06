@@ -33,6 +33,7 @@ import {
   SET_LOCATION_NAME_MANAGER_FIELD,
   SET_LOCATION_NAME_RECORD_VALUE_FIELD,
   UNFROZEN_TIME_USE_UP,
+  REGISTER_DELEGTE_QUOTA_FULL,
 } from "@bfchain/core-util-exception";
 import {
   NewTransactionRefuseReason,
@@ -162,6 +163,8 @@ export class EventLogicVerifier {
       accountsAssets[address] = this.deepClone(recipient.accountAssets);
       accountsInfo[address] = this.deepClone(recipient.accountInfo);
     }
+
+    const curRound = this.blockHelper.calcRoundByHeight(currentBlockHeight);
 
     const event = new QueneEventEmitter<BFChainCore.ApplyTransactionEventMap>();
     // 交易的总手续费
@@ -339,7 +342,7 @@ export class EventLogicVerifier {
 
     // 扣除权益
     event.on("voteEquity", ({ applyInfo }, next) => {
-      const round = this.blockHelper.calcRoundByHeight(currentBlockHeight) - 1;
+      const round = curRound - 1;
       const address = applyInfo.address;
       accountsInfo[address] = accountsInfo[address] || {};
       const equityInfo = accountsInfo[address].equityInfo;
@@ -408,12 +411,27 @@ export class EventLogicVerifier {
     });
 
     // 注册成为受托人
-    event.on("registerToDelegate", ({ applyInfo }, next) => {
+    event.on("registerToDelegate", async ({ applyInfo }, next) => {
       const { address } = applyInfo;
+
       if (accountsInfo[address].isDelegate) {
         throw new ConsensusException(ACCOUNT_IS_ALREADY_AN_DELEGATE, {
           address,
           errorId: NewTransactionRefuseReason.ACCOUNT_ALREADY_DELEGATE,
+          ...Function_Exception_Detail,
+        });
+      }
+
+      const { blockPerRound, maxDelegateTxsPerRound } = this.configHelper;
+      const txCount = await transactionGetterHelper.getCountTransaction({
+        type: this.transactionHelper.DELEGATE,
+        startHeight: (curRound - 1) * blockPerRound,
+        endHeight: curRound * blockPerRound,
+      });
+
+      if (txCount > maxDelegateTxsPerRound) {
+        throw new ConsensusException(REGISTER_DELEGTE_QUOTA_FULL, {
+          round: curRound,
           ...Function_Exception_Detail,
         });
       }
