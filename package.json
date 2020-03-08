@@ -2,10 +2,9 @@
   "name": "@bfchain/core",
   "private": true,
   "workspaces": [
-    "packages/*",
-    "packages/@types/*"
+    "packages/*"
   ],
-  "version": "0.0.0",
+  "version": "mono",
   "description": "",
   "bdkMono": {
     "generateConfigFiles": [
@@ -41,6 +40,7 @@
     "up": "yarn upgrade-interactive --latest",
     "mono": "bdk-mono",
     "publ": "lerna publish",
+    "publ:type": "node ./scripts/publish-types.js",
     "publ:force": "lerna publish --force-publish",
     "lsts": "bdk-lsts -p=./tsconfig.json",
     "dev": "bdk-tsc --build -w",
@@ -53,6 +53,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "execa": "^4.0.0",
     "lerna": "^3.20.2"
   },
   "dependencies": {

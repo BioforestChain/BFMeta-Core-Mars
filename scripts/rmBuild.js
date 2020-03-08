@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const rootPath = path.resolve(__dirname, "../packages");
 const cachePath = path.resolve(__dirname, "../.cache");
-const typePath = path.resolve(rootPath, "__types");
+const typePath = path.resolve(rootPath, "@types");
 
 const { matchRemover } = require("@bfchain/devkit");
 
