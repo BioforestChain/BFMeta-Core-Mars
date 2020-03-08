@@ -48,6 +48,7 @@ type DelegateInfo = {
   username: string;
   secondSecret?: string;
 };
+
 const _powCount: { [add: string]: number } = {};
 const getPOWInfo = (address: string) => {
   const count = _powCount[address] || 0;
@@ -58,6 +59,14 @@ const getPOWInfo = (address: string) => {
   };
   return res;
 };
+
+const _txs: { [address: string]: number } = {};
+const getTxs = (address: string) => {
+  const count = _txs[address] || 0;
+  _txs[address] = count + 1;
+  return _txs[address];
+};
+
 (async () => {
   async function getUsernameTransaction(sender: DelegateInfo) {
     const keypair = await registerBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
@@ -117,12 +126,16 @@ const getPOWInfo = (address: string) => {
         secondKeypair,
       );
     }
-    return await createTrs(
+    trs = await createTrs(
       registerBfchainCore.transactionHelper.calcTransactionFee(
         trs,
         registerBfchainCore.config.minTransactionFeePerByte,
       ),
     );
+    return {
+      index: getTxs(trs.senderId),
+      trs,
+    };
   }
 
   async function getDelegateTransaction(sender: DelegateInfo) {
@@ -183,12 +196,16 @@ const getPOWInfo = (address: string) => {
         secondKeypair,
       );
     }
-    return await createTrs(
+    trs = await createTrs(
       registerBfchainCore.transactionHelper.calcTransactionFee(
         trs,
         registerBfchainCore.config.minTransactionFeePerByte,
       ),
     );
+    return {
+      index: getTxs(trs.senderId),
+      trs,
+    };
   }
 
   async function getAcceptVoteTransaction(sender: DelegateInfo) {
@@ -240,12 +257,16 @@ const getPOWInfo = (address: string) => {
         secondKeypair,
       );
     }
-    return await createTrs(
+    trs = await createTrs(
       registerBfchainCore.transactionHelper.calcTransactionFee(
         trs,
         registerBfchainCore.config.minTransactionFeePerByte,
       ),
     );
+    return {
+      index: getTxs(trs.senderId),
+      trs,
+    };
   }
 
   async function getLocationNameTransaction() {
@@ -302,12 +323,16 @@ const getPOWInfo = (address: string) => {
         undefined,
       );
     }
-    return await createTrs(
+    trs = await createTrs(
       registerBfchainCore.transactionHelper.calcTransactionFee(
         trs,
         registerBfchainCore.config.minTransactionFeePerByte,
       ),
     );
+    return {
+      index: getTxs(trs.senderId),
+      trs,
+    };
   }
 
   async function getSetLnsRecordValueTransaction(
@@ -376,12 +401,16 @@ const getPOWInfo = (address: string) => {
         secondKeypair,
       );
     }
-    return await createTrs(
+    trs = await createTrs(
       registerBfchainCore.transactionHelper.calcTransactionFee(
         trs,
         registerBfchainCore.config.minTransactionFeePerByte,
       ),
     );
+    return {
+      index: getTxs(trs.senderId),
+      trs,
+    };
   }
 
   const genesisAccountKeypair = await registerBfchainCore.accountBaseHelper.createSecretKeypair(
@@ -449,12 +478,16 @@ const getPOWInfo = (address: string) => {
         undefined,
       );
     }
-    return await createTrs(
+    trs = await createTrs(
       registerBfchainCore.transactionHelper.calcTransactionFee(
         trs,
         registerBfchainCore.config.minTransactionFeePerByte,
       ),
     );
+    return {
+      index: getTxs(trs.senderId),
+      trs,
+    };
   }
 
   async function getGenesisBlockAsync() {
@@ -486,8 +519,8 @@ const getPOWInfo = (address: string) => {
       return assetNumber ? assetNumber.toString() : "0";
     }
     //#endregion
-    const txs: Transaction[] = [];
-    txs.push(await getLocationNameTransaction());
+    const txWithIndexList: { index: number; trs: Transaction }[] = [];
+    txWithIndexList.push(await getLocationNameTransaction());
     const delegatesSecret = config.delegatesSecret;
     const ips = getIps(delegatesSecret.length, false, defaultIpsPath);
     for (let i = 0; i < delegatesSecret.slice(5).length; i++) {
@@ -512,7 +545,7 @@ const getPOWInfo = (address: string) => {
         username: `${registerBfchainCore.config.chainName}${i + 1}`,
       };
       // 要在创始块中实施的交易
-      const trsList = [
+      const tempTrsWithIndexList = [
         await getUsernameTransaction(delegate),
         await getDelegateTransaction(delegate),
         await getAcceptVoteTransaction(delegate),
@@ -522,14 +555,16 @@ const getPOWInfo = (address: string) => {
         // }),
       ];
       // 实施这些交易需要的手续费由创始账户给予
-      const total_fee = trsList.reduce(
-        (acc_fee, trs) => (BigInt(trs.fee) + BigInt(acc_fee)).toString(),
+      const total_fee = tempTrsWithIndexList.reduce(
+        (acc_fee, twi) => (BigInt(twi.trs.fee) + BigInt(acc_fee)).toString(),
         "0",
       );
       if (total_fee !== "0") {
-        txs.push(await getTransferAssetTransaction(registerBfchainCore, delegate, total_fee));
+        txWithIndexList.push(
+          await getTransferAssetTransaction(registerBfchainCore, delegate, total_fee),
+        );
       }
-      txs.push(...trsList);
+      txWithIndexList.push(...tempTrsWithIndexList);
     }
 
     const height = 1;
@@ -542,12 +577,13 @@ const getPOWInfo = (address: string) => {
       "generateRegisterChainGenesisBlock",
     );
     registerStatistics.bindApplyTransactionEventEmiter(eventEmitter, statisticsInfo);
-    for (let i = 0; i < txs.length; i++) {
-      const { senderId, recipientId, fee, fromMagic, type } = txs[i];
+    for (let i = 0; i < txWithIndexList.length; i++) {
+      const { index, trs } = txWithIndexList[i];
+      const { senderId, recipientId, fee, fromMagic, type } = trs;
       const assetType = registerBfchainCore.config.assetType;
       let amount = "0";
       if (type === registerBfchainCore.transactionHelper.TRANSFER_ASSET) {
-        amount = (txs[i] as TransferAssetTransaction).asset.transferAsset.amount;
+        amount = (trs as TransferAssetTransaction).asset.transferAsset.amount;
       }
       const chainAssetInfo = registerBfchainCore.chainAssetInfoHelper.getAssetInfo(
         fromMagic,
@@ -595,8 +631,9 @@ const getPOWInfo = (address: string) => {
       const trsInBlock = TransactionInBlock.fromObject({
         index: i,
         height,
+        indexOfSenderTransactions: index,
         transactionAssetChanges,
-        transaction: txs[i],
+        transaction: trs,
       });
       blockTrsItems[blockTrsItems.length] = trsInBlock;
     }
@@ -700,7 +737,10 @@ const getPOWInfo = (address: string) => {
     const xx = await fullBfchainCore.transaction.recombineTransaction(trsJson);
     await fullBfchainCore.transactionHelper.verifyTransactionSignature(xx);
 
-    return trs;
+    return {
+      index: getTxs(trs.senderId),
+      trs,
+    };
   }
 
   async function getCommonBlockAsync(sender: AccountModel) {
@@ -711,21 +751,21 @@ const getPOWInfo = (address: string) => {
       BigInt("1000000000"),
     );
 
-    function setAccountAsset(key: string, assetNumber: bigint) {
-      const remainAsset = accountAssetMap.get(key);
+    function setAccountAsset(subkey: string, assetNumber: bigint) {
+      const remainAsset = accountAssetMap.get(subkey);
       if (remainAsset) {
-        accountAssetMap.set(key, remainAsset + assetNumber);
+        accountAssetMap.set(subkey, remainAsset + assetNumber);
       } else {
-        accountAssetMap.set(key, assetNumber);
+        accountAssetMap.set(subkey, assetNumber);
       }
     }
 
-    function getAccountAsset(key: string) {
-      const assetNumber = accountAssetMap.get(key);
+    function getAccountAsset(subkey: string) {
+      const assetNumber = accountAssetMap.get(subkey);
       return assetNumber ? assetNumber.toString() : "0";
     }
     //#endregion
-    const trs = await getRegisterChainTransaction(sender);
+    const trsWithIndex = await getRegisterChainTransaction(sender);
     const height = 7;
     const blockTrsItems: TransactionInBlock[] = [];
     const eventEmitter: BFChainCore.ApplyTransactionEventEmitter<any> = new QueneEventEmitter<
@@ -734,7 +774,8 @@ const getPOWInfo = (address: string) => {
     const statisticsInfo = statistics.forceGetStatisticsInfoByBlock(height, "generateCommonBlock");
     statistics.bindApplyTransactionEventEmiter(eventEmitter, statisticsInfo);
 
-    const { senderId, range: recipient, fee, fromMagic } = trs;
+    const { index, trs } = trsWithIndex;
+    const { senderId, fee, fromMagic } = trs;
     const assetType = fullBfchainCore.config.assetType;
     const amount = "0";
     const chainAssetInfo = fullBfchainCore.chainAssetInfoHelper.getAssetInfo(fromMagic, assetType);
@@ -754,16 +795,6 @@ const getPOWInfo = (address: string) => {
       assetType,
       assetNumber: getAccountAsset(key),
     };
-    if (recipient.length > 0) {
-      const rkey = `${recipient[0]}_${fromMagic}_${assetType}`;
-      setAccountAsset(rkey, BigInt(amount));
-      assetChanges[assetChanges.length] = {
-        accountType: TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE.RECIPIENT,
-        magic: fromMagic,
-        assetType,
-        assetNumber: getAccountAsset(rkey),
-      };
-    }
     const transactionAssetChanges: BFChainCore.TransactionAssetChangeJSON[] = [];
     for (const assetChange of assetChanges) {
       const { accountType, assetNumber } = assetChange;
@@ -780,6 +811,7 @@ const getPOWInfo = (address: string) => {
     const trsInBlock = TransactionInBlock.fromObject({
       index: 0,
       height,
+      indexOfSenderTransactions: index,
       transactionAssetChanges,
     });
     trsInBlock.transaction = trs;

@@ -52,6 +52,9 @@ export class TransactionInBlock<T extends Transaction = Transaction> extends Som
   /**交易所属的区块高度 */
   @Field.d(TransactionInBlock.INC++, "uint32")
   height!: number;
+  /**交易发起账户的第 i 笔交易 */
+  @Field.d(TransactionInBlock.INC++, "uint32")
+  indexOfSenderTransactions!: number;
   /**交易验证完成后账户变动 */
   @Field.d(TransactionInBlock.INC++, TransactionAssetChangeModel, "repeated")
   transactionAssetChanges!: TransactionAssetChangeModel[];
@@ -79,6 +82,7 @@ export class TransactionInBlock<T extends Transaction = Transaction> extends Som
       {
         index: this.index,
         height: this.height,
+        indexOfSenderTransactions: this.indexOfSenderTransactions,
         transactionAssetChanges: this.transactionAssetChanges.map(transactionAssetChange =>
           transactionAssetChange.toJSON(),
         ),

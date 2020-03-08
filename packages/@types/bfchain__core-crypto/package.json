@@ -1,10 +1,10 @@
 {
   "name": "@types/bfchain__core-crypto",
   "types": "index.d.ts",
-  "version": "5.7.1-dev.0",
+  "version": "5.7.9",
   "dependencies": {
-    "@types/bfchain__core-crypto-ed2curve": "^5.7.1-dev.0",
-    "@types/bfchain__core-crypto-tweetnacl": "^5.7.1-dev.0",
-    "@types/bfchain__core-typings": "^5.7.1-dev.0"
+    "@types/bfchain__core-crypto-ed2curve": "^5.7.9",
+    "@types/bfchain__core-crypto-tweetnacl": "^5.7.9",
+    "@types/bfchain__core-typings": "^5.7.8"
   }
 }

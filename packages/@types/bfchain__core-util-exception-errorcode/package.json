@@ -1,8 +1,8 @@
 {
   "name": "@types/bfchain__core-util-exception-errorcode",
   "types": "index.d.ts",
-  "version": "5.7.1-dev.0",
+  "version": "5.7.8",
   "dependencies": {
-    "@types/bfchain__core-typings": "^5.7.1-dev.0"
+    "@types/bfchain__core-typings": "^5.7.8"
   }
 }

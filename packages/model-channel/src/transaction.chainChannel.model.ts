@@ -34,30 +34,33 @@ export class TransactionQueryOptions extends Message<TransactionQueryOptions>
   /**交易接收者地址 */
   @Field.d(TransactionQueryOptions.INC++, "string", "optional")
   recipientId?: string;
-  /**查询的区块的最小高度 */
-  @Field.d(TransactionQueryOptions.INC++, "uint32", "optional")
-  minHeight?: number;
-  /**查询的区块的ID */
-  @Field.d(TransactionQueryOptions.INC++, "string", "optional")
-  blockSignature?: string;
-  /**查询的区块的最大高度 */
-  @Field.d(TransactionQueryOptions.INC++, "uint32", "optional")
-  maxHeight?: number;
-  /**自定义索引 */
-  @Field.d(TransactionQueryOptions.INC++, TransactionBaseStorageModel, "optional")
-  storage?: TransactionBaseStorageModel;
-  /**交易见证者地址 */
-  @Field.d(TransactionQueryOptions.INC++, "string", "optional")
-  trusteeId?: string;
-  /**购买的 dappid */
-  @Field.d(TransactionQueryOptions.INC++, "string", "optional")
-  purchaseDAppid?: string;
   /**交易来源的 dappid */
   @Field.d(TransactionQueryOptions.INC++, "string", "optional")
   dappid?: string;
   /**交易来源的 lns */
   @Field.d(TransactionQueryOptions.INC++, "string", "optional")
   lns?: string;
+  /**自定义索引 */
+  @Field.d(TransactionQueryOptions.INC++, TransactionBaseStorageModel, "optional")
+  storage?: TransactionBaseStorageModel;
+  /**查询的区块的ID */
+  @Field.d(TransactionQueryOptions.INC++, "string", "optional")
+  blockSignature?: string;
+  /**查询的区块的最小高度 */
+  @Field.d(TransactionQueryOptions.INC++, "uint32", "optional")
+  minHeight?: number;
+  /**查询的区块的最大高度 */
+  @Field.d(TransactionQueryOptions.INC++, "uint32", "optional")
+  maxHeight?: number;
+  /**交易发起账户的第 i 笔交易 */
+  @Field.d(TransactionQueryOptions.INC++, "uint32", "optional")
+  indexOfSenderTransactions?: number;
+  /**交易见证者地址 */
+  @Field.d(TransactionQueryOptions.INC++, "string", "optional")
+  trusteeId?: string;
+  /**购买的 dappid */
+  @Field.d(TransactionQueryOptions.INC++, "string", "optional")
+  purchaseDAppid?: string;
   /**查询结果分页：起始下标 */
   @Field.d(TransactionQueryOptions.INC++, "uint32")
   offset!: number;
@@ -80,14 +83,15 @@ export class TransactionQueryOptions extends Message<TransactionQueryOptions>
       signature: this.signature,
       senderId: this.senderId,
       recipientId: this.recipientId,
-      minHeight: this.minHeight,
-      blockSignature: this.blockSignature,
-      maxHeight: this.maxHeight,
-      storage: this.storage,
-      trusteeId: this.trusteeId,
-      purchaseDAppid: this.purchaseDAppid,
       dappid: this.dappid,
       lns: this.lns,
+      storage: this.storage,
+      blockSignature: this.blockSignature,
+      minHeight: this.minHeight,
+      maxHeight: this.maxHeight,
+      indexOfSenderTransactions: this.indexOfSenderTransactions,
+      trusteeId: this.trusteeId,
+      purchaseDAppid: this.purchaseDAppid,
       offset: this.offset,
       limit: this.limit,
     };

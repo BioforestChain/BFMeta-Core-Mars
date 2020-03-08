@@ -10,6 +10,7 @@ declare namespace BFChainCore {
     extends SomeTransactionJSON<T> {
     index: number;
     height: number;
+    indexOfSenderTransactions: number;
     transactionAssetChanges: TransactionAssetChangeJSON[];
     signature: string;
   }

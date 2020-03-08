@@ -1,13 +1,13 @@
 {
   "version": 1,
   "height": 1,
-  "blockSize": 30665,
+  "blockSize": 30827,
   "timestamp": 0,
-  "signature": "bb152f95c48a86df396a3340404aa4ef5878fc82f8c49c2fe96c2ff3f7bb7e070afa9abdc237a8c4643732f8b67c3ba401e2a4f3d276bf8f21fe10921e178508",
+  "signature": "64ec83e140a70a1d55005c58bd3a6ea5f84dc4060cf9627b0aae96a7303157bf409610ef69b23922b36ef770364f076562d9969133a643954672cb6a40230a04",
   "generatorPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
   "numberOfTransactions": 81,
-  "payloadHash": "35ecaa54bc31f46a102e32eaa834d3ee9e9095a8f1c03d4d45610909bf30448c",
-  "payloadLength": 29020,
+  "payloadHash": "2ff7a3adc9504c50db42027f0b18a42d69529cb070b608bd9a348c310a20b0a3",
+  "payloadLength": 29182,
   "previousBlockSignature": "",
   "totalAmount": "3649",
   "totalFee": "2138",
@@ -17,6 +17,7 @@
     {
       "index": 0,
       "height": 1,
+      "indexOfSenderTransactions": 1,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -24,7 +25,7 @@
           "assetBalance": "244645364561314044"
         }
       ],
-      "signature": "f6536868236bfc7d1215e49a0253f43bb23b6c1f55661405fe833f4bdebc8cd561e24a9b65d13ff8b110ee3eeaa3f1a779150a8bd8ca86524825873043ad720c",
+      "signature": "9596a86816e0fab19853994e1fba49e8a453071427c370801a8d3689f864b80153527bae4a53fe241326138dcb2c2242ecfa742af2a2fec51dde551ff3764c0e",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-LNS-00",
@@ -56,6 +57,7 @@
     {
       "index": 1,
       "height": 1,
+      "indexOfSenderTransactions": 2,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -68,7 +70,7 @@
           "assetBalance": "75"
         }
       ],
-      "signature": "6836ae6bae09e3e5938f33b07d0d41e400bf952928a07e5b7f156f21c013c8de814bf81d47bfad0631a32f47163ce45d1ab4a1efd94545c7d10ddbbda108450e",
+      "signature": "5893b86c2969926916426b1bbf0dddb95fedaef2b7c87440415d6fce57db27c41129f754de7eeab955daf4697fd13a1962bb365a3718332642806700efba1500",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -101,6 +103,7 @@
     {
       "index": 2,
       "height": 1,
+      "indexOfSenderTransactions": 1,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -108,7 +111,7 @@
           "assetBalance": "48"
         }
       ],
-      "signature": "c6255b21d30db039966d393ac00c12326aa1ee91f3be410154fcb30ae5b63b6ec1aaedbca6afb7f846eefa75ba7a7cbb65d9c33d8c37ef00eabe81a713719405",
+      "signature": "5cf306db20e7355bd8cf24066f9c69247959a5a840f37160de97938112cf92ae3de0e70792f15e9cf0eed801a44800d3afd96b3bb3ce8a1d33942d816b70540b",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -138,6 +141,7 @@
     {
       "index": 3,
       "height": 1,
+      "indexOfSenderTransactions": 2,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -145,7 +149,7 @@
           "assetBalance": "21"
         }
       ],
-      "signature": "ee0b19f1691c2107a073f4b44e91c0ee88aab570d6807ad59d535d16fd0d1c3d0156d2fa15d5090fbdc07c6d36e75517aa5de8ad27af62be1a673e0a5c4f040a",
+      "signature": "9e103cfe5cfb3655fcaf79e542067718e39df7aa3b648b59061fe5b2b193fbf0215ed8c159ea175a82f3a72016165c72d7d986984c1cf54ca3ee5ea82dc82c00",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -175,6 +179,7 @@
     {
       "index": 4,
       "height": 1,
+      "indexOfSenderTransactions": 3,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -182,7 +187,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "66e70f063eda14bb8877ce9fe120ed5c27d552da74a0cd8a941ba23dbee5dfa9923f9ad9f6eeb5e94512f0e752375fc5cf0926b54148e4780a75e71339fac00a",
+      "signature": "a9587e93371beb1e75ee6466b46b45f515a61e013baadcb443cdf0f8349308af1ee50a50af8f5a9b5abd791f1e542647f37f26109c652d83fdcd39d586e12b06",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -205,6 +210,7 @@
     {
       "index": 5,
       "height": 1,
+      "indexOfSenderTransactions": 3,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -217,7 +223,7 @@
           "assetBalance": "75"
         }
       ],
-      "signature": "b274be724b8bdcd57d5d2db349a7342770e75b8ea3a63b94ce6d74afd17df201ecb0a7e556f8c3c4b02e98ad83f30c4db25a2dfa05004956c7b03a9996b4c10b",
+      "signature": "1f6d935c032ad71e1e5630aefb3affd9333f79629bf8d362b9663f1d136d128891cfde655c534e2a2d9102507687e498092365007bb36443d724b5fe500fd00f",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -250,6 +256,7 @@
     {
       "index": 6,
       "height": 1,
+      "indexOfSenderTransactions": 1,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -257,7 +264,7 @@
           "assetBalance": "48"
         }
       ],
-      "signature": "55ce784afc510ff38f0b6094f7571397675ee6abb24a506b625a4aeb90b9d52500eb44fa7b7573a595dc5442acd91453ec35e9d70d4f561be9f60c4c8a119d0f",
+      "signature": "7b99d7c2403e1a6fe5185e1aa0de1e1da9f91ae990ce024cffa08277d7d3e01a3a5c76c2d3eb67e59bac94be80d3adf3543975328a135291f7eb4cdf291eef0b",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -287,6 +294,7 @@
     {
       "index": 7,
       "height": 1,
+      "indexOfSenderTransactions": 2,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -294,7 +302,7 @@
           "assetBalance": "21"
         }
       ],
-      "signature": "9626bc6afbb174e302d3c39e1ca4b5dae89a9c4aae6bb236c6486b0fa252e61b2acd9f547a3758fbd470537864cb311820574a2d0821b06785d2c6674fe44f02",
+      "signature": "7d3c3a3e231ef26ff80588907f016d9e59304fc818d81676019771a95f4bda4308b2472a3b78ea852bbc7f022ad0e467dd71140b15f297bb5d815fadff278103",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -324,6 +332,7 @@
     {
       "index": 8,
       "height": 1,
+      "indexOfSenderTransactions": 3,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -331,7 +340,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "481c0093d0a192abba312111598c3127b74d28d230ccdb7c178171923892fc3e32e3a9739d2a48ec728a8d0dc46caa332d5e8e54f332f3b72f8064d78d118c0c",
+      "signature": "8141b2f7661ed0dc3e5a0916d6686d5c6fb83b9d012a3e4996dc6f2e81525e08be4c42c476577a6141ab6784c2ea088af2a8d5c061f0b764a7b296153ad99f06",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -354,6 +363,7 @@
     {
       "index": 9,
       "height": 1,
+      "indexOfSenderTransactions": 4,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -366,7 +376,7 @@
           "assetBalance": "75"
         }
       ],
-      "signature": "0f1e909cd2b6e5508c6c0eea81175bd76bdc36f50c955acb370909c9ba66bc66d23ee47c2ee1c63f5a676ff6e1841f99ae78588ecd1737c4a71790b09f48a008",
+      "signature": "b587d78f87852120513e49050fbb9b918c467cc48a308c7b724f64b8222f70f05295bc9f878cf1cc061947b672a6e7660e24abee0d1cf7b252674e3c0df4bc06",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -399,6 +409,7 @@
     {
       "index": 10,
       "height": 1,
+      "indexOfSenderTransactions": 1,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -406,7 +417,7 @@
           "assetBalance": "48"
         }
       ],
-      "signature": "f0c8ed11b3d33496da5572ee5305fe0c0317e81fa1ec3a2e501f4b1fd0c65f31f6af20ea0c95339110246edee736599f38ab329334d4cf5816ea301f5d536600",
+      "signature": "6054b515f4c3cbacc6870dfc9a26c96ac106533506af756c21bde2f5c96036ae445a3de7b7734d4c0bb8f5557ee70a7480c18a9a92cc571a48dd1615c1742e06",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -436,6 +447,7 @@
     {
       "index": 11,
       "height": 1,
+      "indexOfSenderTransactions": 2,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -443,7 +455,7 @@
           "assetBalance": "21"
         }
       ],
-      "signature": "ae262e9f5f9ec41440ed0e6ddf635cd9e5170530e76c4ba54cfbcdbe90d3254d4c633a977392f7c8e01d228366207e15a0f873a748273101cc4e08e42e3c7403",
+      "signature": "003c1b2bcfedf28304a7a949179cbb4753595a0cc085b772c046c3a014454000b705b19c17735e7ba86524308d2fcbf4e44c861ae2a12841050f38d1fe1d470c",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -473,6 +485,7 @@
     {
       "index": 12,
       "height": 1,
+      "indexOfSenderTransactions": 3,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -480,7 +493,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "a5d40aec76147c94e715363b6b7cf0e014e6c97d698e5a417d7e22d731a6c25369b1b62741c8020e0d37ca843ecdbf6b09f3fc82139973402f6582edf221a708",
+      "signature": "56db8fce38594c6559920c091729b5688f4970dd1ad4cebe5d40f33ff8937c4f6b13513fac3c8c24db8df98397b377d4d66b3671577c92782330bcafb8837a0a",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -503,6 +516,7 @@
     {
       "index": 13,
       "height": 1,
+      "indexOfSenderTransactions": 5,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -515,7 +529,7 @@
           "assetBalance": "75"
         }
       ],
-      "signature": "3a129735416704217fad8b4f19944f6de2291b309e5083aa8839fe31cd9f9f35a61423ee856bfb419ceb1d639b211c84fbeb5f78231f9032ed56d76cd51f0d0f",
+      "signature": "7d733f9bd2442ea70f340476c1925adf58f0bddbd461ca85e4e19b3f14a709d2d182046bcde33ae18cf3633793c313419b4d285841aa038bed70483f9750000a",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -548,6 +562,7 @@
     {
       "index": 14,
       "height": 1,
+      "indexOfSenderTransactions": 1,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -555,7 +570,7 @@
           "assetBalance": "48"
         }
       ],
-      "signature": "3a053063f684e029da06c3dcf113b6f9d9f01087629e9f83570eb2e2e73accfc3ca0d77ddbbed8e9e12e1df7130af3a9dbc93b698cd5f1082ff8cf4074d2740f",
+      "signature": "81a6e4830b695fe5412d482e7fbf7b10cfcb522bedd73964aa87c4082c40c71d5b5885d6c15967ec557e98daeaf52b89af558b742df571142ed98a3d11518a09",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -585,6 +600,7 @@
     {
       "index": 15,
       "height": 1,
+      "indexOfSenderTransactions": 2,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -592,7 +608,7 @@
           "assetBalance": "21"
         }
       ],
-      "signature": "b4949727e19d36d8b5048970192d047193b335a27190d8c19ca290ccffba65942e9480d23d0f6e53d3e78e3a67e5b8fc661b3df78d9f96c65880fe2f07d5a901",
+      "signature": "3440fdbe2ac68ebace00ef8ce5664d7f6f26ca0753aeae473434d609e2d7c13ce537035a048263ef6e36656ccb5a523629954b5f5cb20c07c86d549eeb5af10b",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -622,6 +638,7 @@
     {
       "index": 16,
       "height": 1,
+      "indexOfSenderTransactions": 3,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -629,7 +646,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "06220cfcd0e6f5d21dc652995cc131217c7e4f4bb33fe8f6dd3f90d0aa45c94cf39a81b62c357ddfabdea99f73682de0ac9da75a66d0599ef15c8f87c840990b",
+      "signature": "626240ebdcb3e17b639c9f74377854b934bde237dd329a0dd40a705a8b8e869e184a26ae3e16e4ab5c157378867af927bed8f62f28665b12b685b5ae1660c30a",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -652,6 +669,7 @@
     {
       "index": 17,
       "height": 1,
+      "indexOfSenderTransactions": 6,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -664,7 +682,7 @@
           "assetBalance": "75"
         }
       ],
-      "signature": "830c2f21392ee3ad6967c3935e1c03550d96a2e727bfcbbff11a2e0003636890f26bd5aa6f08c75a5e873207166b67e6613c92ee2bbfb60c1afbd8ebda93e704",
+      "signature": "f666fb48c56e57d529cbb136c444ad86923ce013bc71b59f0b15aac23c87b780b4c0eade8cb90ee718d51800d2f38e9f7f9e6d5d920ca7ff7cb5881fd0a1150e",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -697,6 +715,7 @@
     {
       "index": 18,
       "height": 1,
+      "indexOfSenderTransactions": 1,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -704,7 +723,7 @@
           "assetBalance": "48"
         }
       ],
-      "signature": "af5dedd4006624d46a4cd5c742c2e9f0ce97b26518a73b51ad11d32f6a138e0242ebfba571eff4afc330e6c00cf0b0b7b8c1f4d5b44e4cd30980d47646243603",
+      "signature": "34953d878efa8a2e727356caa514120b2fa81a9287e51c0fb69c118b208a192a19af05b30ca7089dab6ef0bec4fe9a3aa325476c07af3f884774d6c38ed7990a",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -734,6 +753,7 @@
     {
       "index": 19,
       "height": 1,
+      "indexOfSenderTransactions": 2,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -741,7 +761,7 @@
           "assetBalance": "21"
         }
       ],
-      "signature": "4623d7bba900232e26748e90af110849ae27c20799e58792d4969a63a5d251df8867f7b83aa6e21cc0af8bd5bde9d4d954bc6ea3c830cae616d2aebc1ef8270a",
+      "signature": "2ccb802b6c1a1562f6f5ef70dbb19360a41f9aa0076db0df891d3c6669a92369ff5e41242584f5277fee7c428690567e64633d85f31aa102543d5f4adf10ac0d",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -771,6 +791,7 @@
     {
       "index": 20,
       "height": 1,
+      "indexOfSenderTransactions": 3,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -778,7 +799,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "cf4261cdef7a1ec422856ad0e9701563b7682f226f0bb7a9f6ef310af138368a7847d1e7579d9481c7ae945084102921bcbb91485a66510cfef0df9f4bc59b05",
+      "signature": "aa7fbeeb3b1d45421f72fc181ffdae0c395b0de938c390d2e0600c23b90508598df1b247e09f68ca5fc5834113a3e073505f4319b92bfdde920efdc8f0b33007",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -801,6 +822,7 @@
     {
       "index": 21,
       "height": 1,
+      "indexOfSenderTransactions": 7,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -813,7 +835,7 @@
           "assetBalance": "75"
         }
       ],
-      "signature": "65b1a11e9330f9bd744521bb60882c66c1557c2450756e46138043d6fdc55de5f0582ff08265cc28dd67983feac7c11dbcb1dbcae935afe5b90f0fb25ec7dd0a",
+      "signature": "2f5aa797de6b9dc88acba6090acee7d54077ae4285e199e7c09d3406e0fca898d1ce593d5b2a69b3ba7328e7a91a90c3d0862d0ae439a029c32d326a5f0f2f05",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -846,6 +868,7 @@
     {
       "index": 22,
       "height": 1,
+      "indexOfSenderTransactions": 1,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -853,7 +876,7 @@
           "assetBalance": "48"
         }
       ],
-      "signature": "4acf54a90e1861abc9f1e474356875ce7e4d3b388518126e7071e1eb18bdc87dca66e2552cf233cc09a08e3effe62ac95773084838a8c336b6fc1100507f1308",
+      "signature": "0842e7ce097fb5d251facf05823ba8fc11ee873d78392110b61160e4cff55d46b624309a1d896058fcbc116ef3ed3a30a94b29d348efa8bb4afbe680c9e55e06",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -883,6 +906,7 @@
     {
       "index": 23,
       "height": 1,
+      "indexOfSenderTransactions": 2,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -890,7 +914,7 @@
           "assetBalance": "21"
         }
       ],
-      "signature": "d167ea84c80a6a4b8e33c1190e4e04d29da9995f529cd24f474599bf0447e4aed7f423bcdf6c8ba81b163dfbbb6a466450ccf2071a363b9fc69061b1298ea504",
+      "signature": "1c7d6173e8a8594cbc5126480a8970538d35a8ddee4047f1963c3b434ea9dcc15d7f617d171f5c5a91b5b889f15fab5bb56b6ef368cc1b31afb6f63544cc3602",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -920,6 +944,7 @@
     {
       "index": 24,
       "height": 1,
+      "indexOfSenderTransactions": 3,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -927,7 +952,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "1e7a3769de48eef1983074c0666fbdc671fb9a806e64c378534e38488d280c751f71078e2e728005530904c4cbd6c43f857d55689209fedac0b79a5aa6863f00",
+      "signature": "117bc2cea3aeeda8983cf5192a8baa486847f3a9f00361374f9e3ee7e91ba39ba0aa7d80164e33fef6c262bb021caa9131a356b58e17eac4b6fbdd2060a91b02",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -950,6 +975,7 @@
     {
       "index": 25,
       "height": 1,
+      "indexOfSenderTransactions": 8,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -962,7 +988,7 @@
           "assetBalance": "75"
         }
       ],
-      "signature": "bf8cbaa91968d888b0573f471d8f1342016bf3293a8700461b47a6dc1232a0425c08464437117440978f79845d11e91b38a26cbf012ee5c286f34d11a76fb002",
+      "signature": "1fd21777ff981addaef007f2ffced06ad5df680f53937e98b0853da75dd1839abbc1bf76e805a071c3ba08c6ab906ce0e38348c72d640c75950c45789e32850c",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -995,6 +1021,7 @@
     {
       "index": 26,
       "height": 1,
+      "indexOfSenderTransactions": 1,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -1002,7 +1029,7 @@
           "assetBalance": "48"
         }
       ],
-      "signature": "caa5910355286dbb1753b0a15cc7662606ad1eb5b00a70544fb2ebe279c375abe2852da646e0d953c5258ab31591e13553d59524e80aa0ba8d21f55ad5e85d04",
+      "signature": "d8168aa2099fb9603a1d878edc1abba63fd702e57057c74d8bba94508da8652ea4ff6c4f2abe13cb4e4e63e50f5b527e36cf0b5084f5ab8e572017ccea2cbe06",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -1032,6 +1059,7 @@
     {
       "index": 27,
       "height": 1,
+      "indexOfSenderTransactions": 2,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -1039,7 +1067,7 @@
           "assetBalance": "21"
         }
       ],
-      "signature": "82ecdc1492b630f2c888df272e0cadfbed8e84d63de40de4f62a0c657bb8a52d35ce762b32c68a7e3001a4c24cbcfe707bad9cc737f0f6fa6f63f40b50520201",
+      "signature": "4360f2fa01e7acefe33834e420c23a502c6fd43fa4c6766241eb4b906bfc3431fc8371b34123e46aefa68aa5df469975f944a1c4698917b31fe9823844e5ff08",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -1069,6 +1097,7 @@
     {
       "index": 28,
       "height": 1,
+      "indexOfSenderTransactions": 3,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -1076,7 +1105,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "b08b10a7210dccca81e78b8bb8eef615ba9bb3564c62a056938dc619f5e1545a6255b1ad8e8d14fa46bf24beabf02968c6dfb99709032646fdb62177a79bd50f",
+      "signature": "40ffad8a6aa581a6b3c8e0e66eb63fccffa1256b02d2e0a2d270743122f03578b61a8a64d83919b2cacb35297b262361cd370d3a31aabb1b52ced6ff29549a00",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -1099,6 +1128,7 @@
     {
       "index": 29,
       "height": 1,
+      "indexOfSenderTransactions": 9,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -1111,7 +1141,7 @@
           "assetBalance": "75"
         }
       ],
-      "signature": "b0b1591a0518ceb156fbf30497ff640640e2231b15848c07d815d4ce01ff252359491a26be7e50a677df4bd4aee331981fbc0a0d6c05f4d1b021e2dc609ba50b",
+      "signature": "a3d901e88bf3a9414e5c1f1824d99e8b22dc9519ff4ccdc0abf32e63a43e4e0bf49336971e55030744fb370d9fb41082d10a7f538f5ac41ed2f04c65f0e4ba03",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -1144,6 +1174,7 @@
     {
       "index": 30,
       "height": 1,
+      "indexOfSenderTransactions": 1,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -1151,7 +1182,7 @@
           "assetBalance": "48"
         }
       ],
-      "signature": "479aa1374073d7c0c27759e83fe8ee0ce4b2cfe6d98d20353aca86de1cd0f92122421a89e999e4616b78fbc00b0c8faa44b350d2eadc1877b30b0a540a131f0e",
+      "signature": "c0db8ac772fa25fca9aac5db011cb064cec2fb2f43e94902fa2140272f1125eae3dc8a8ac8f73ea2f5ee19310eac4071dd7f62cb70abe34b75db779074abac0e",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -1181,6 +1212,7 @@
     {
       "index": 31,
       "height": 1,
+      "indexOfSenderTransactions": 2,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -1188,7 +1220,7 @@
           "assetBalance": "21"
         }
       ],
-      "signature": "0c7bd261e520d1c5f4a90875f030b6474664f4d767bb0fb9039cd410f2b7520c5ef8d97f11f5c090717f1ea98c367ad3ce02267658af75ca08b5ddd6b4d85d0c",
+      "signature": "a4ac67cbf06b2df58cfaaa3f988e19b78b1012805279fd743ee643f11b58eaba0927fd273b7a523e858df14846a0f8330f67756722161a87b65ba60c14779a0c",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -1218,6 +1250,7 @@
     {
       "index": 32,
       "height": 1,
+      "indexOfSenderTransactions": 3,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -1225,7 +1258,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "08e04b840e1aa4862d19000076d9e822ceb8da59f29a1c5c971a2f500a9809581875cd76f5b9ab8a09dc458e0fab666b7496ad5d4800f1edfac6fcecb878d30d",
+      "signature": "5044f31c84206852532e514e3e762a38ae4c33db4e87e6bb6a7fe61abdf7e74a7ebe13da1e77fef360aca204ee8897e190b086c39e510fb451b30c132f3fea06",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -1248,6 +1281,7 @@
     {
       "index": 33,
       "height": 1,
+      "indexOfSenderTransactions": 10,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -1260,7 +1294,7 @@
           "assetBalance": "75"
         }
       ],
-      "signature": "109523ba07c89de21c4d6a232d24fb2b418b87af60c0050c4b9ae86eb812eafb6d8eb3fba35fe472a3c75d27caf076c82e7496c85aef1a22119f89c3bf6e9703",
+      "signature": "523d105cb6e6cb2ca41bb7842966738111e55401deeadaa3bd5aa216e62721bbd0026325b95d51addea27458a722f2ccba9fbef75e3d9c1881f28276bbdb9600",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -1293,6 +1327,7 @@
     {
       "index": 34,
       "height": 1,
+      "indexOfSenderTransactions": 1,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -1300,7 +1335,7 @@
           "assetBalance": "48"
         }
       ],
-      "signature": "be1ca9823f98f197dac47d055e2ba70793c5a0c51b2fa78fe0cb127e0850508847df269ab864a816cbd5cd38b184f4fbb07dff60f16e9be2af9408e4c571b901",
+      "signature": "d5cd1e295289e19fc0d1f1f6d7add3c8c27ccf064026ec00491f51c2aebaed585abb49b511229bf08049cdb01afed84051b043a6dd0a7c68daffe3cea105bb02",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -1330,6 +1365,7 @@
     {
       "index": 35,
       "height": 1,
+      "indexOfSenderTransactions": 2,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -1337,7 +1373,7 @@
           "assetBalance": "21"
         }
       ],
-      "signature": "6a02b7f332edd9eb5f794c255b80820ea8538c96f81ec5a8e9c03a27aba59b26d98b79addfbcbf289f2a5ad9b79e9a8af0036b4fa0b11b11e90146f5bf4c7a02",
+      "signature": "cc4003a1dc411926217850d67cc944f8d3d78cb206d9143a3fd587c77f3156a0ecabdb591727ebcb7fe28b7ce97cdeaa6c0835323d278bc07c8a2b7d6c6da50a",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -1367,6 +1403,7 @@
     {
       "index": 36,
       "height": 1,
+      "indexOfSenderTransactions": 3,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -1374,7 +1411,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "f00e7d283eac6fb9036ae2c33e324e32b67fa797bfa3fb0b413610f015cd81ba4afbcb00fae46aa9dd2a7a15123a1a94c2827c10202b91a4555996d11c7f7b07",
+      "signature": "91065bc985b821508861d8c9da7f975a007d80e840ee747c08a207c92a8f39159b94a20823ce4c6c3eb44a17b14288eb8555dbfc28d085c05e200d671ff60f02",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -1397,6 +1434,7 @@
     {
       "index": 37,
       "height": 1,
+      "indexOfSenderTransactions": 11,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -1409,7 +1447,7 @@
           "assetBalance": "76"
         }
       ],
-      "signature": "264cae2bd18e3a2773fc60d21f0ffd917064c1a71176d956571decc708f09519dc00a1e5800974062c231c985678436c0aeb53142fb2812f5f1eb0ba117c4809",
+      "signature": "5b79b107cdf0562c596244c7418ba15a39f0a9a61c2b5a3a9e9768d5d2b3c3498f5857198e46a75e8b87e02cd5433453fa27313d8bf2aa8dd0c5d543ad94d60c",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -1442,6 +1480,7 @@
     {
       "index": 38,
       "height": 1,
+      "indexOfSenderTransactions": 1,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -1449,7 +1488,7 @@
           "assetBalance": "49"
         }
       ],
-      "signature": "b4073d2fed51fae809956b0e8820fd9944c41696e35dc2fa8f897a188fb5eb0c80dc237609dc2399bfd7b52bec60cb93cea6037b2765e7578e4efbc5fa396805",
+      "signature": "33f62d0b9ec50dc76178a58d02782043b7e28fd4682fbd3212694be68ee0bec7ca5b57447e0c8d1b1f28b1e60938c176bac152fc32be0163c8e8cf621707b806",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -1479,6 +1518,7 @@
     {
       "index": 39,
       "height": 1,
+      "indexOfSenderTransactions": 2,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -1486,7 +1526,7 @@
           "assetBalance": "21"
         }
       ],
-      "signature": "d5e0d395b6ea89eecad59832d86eabe00dea5e3b5c2413b33db305a5f948edb792c146d2e38bf1702f8ad04f23af6d901a12e5bb21055ddb40de8022d7a9a00b",
+      "signature": "074392c84c49ac1c1da9d8d9b2251bbcc7331146191b2f2509c29b947a1fd8c957311e1062f3ff9c36ce77f2ba12c225db2356d1913a44f88184e1be26edc50e",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -1516,6 +1556,7 @@
     {
       "index": 40,
       "height": 1,
+      "indexOfSenderTransactions": 3,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -1523,7 +1564,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "54699bc8f00be40eafa1fab8b528dcc3301709b517769383944bf6ca49ce6277585c5ee89d84ed39c92fcdb8ba28eb3fb64bdf3e1b8b9157c20f987d52d48105",
+      "signature": "c636f127dd05ce5d66595849032db8238a398ae77d6777d5d4d56951f889786da04c7c8d2119d923fb3941cc019a4d343139f764eb76aa5e01b041e9dd3f0a07",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -1546,6 +1587,7 @@
     {
       "index": 41,
       "height": 1,
+      "indexOfSenderTransactions": 12,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -1558,7 +1600,7 @@
           "assetBalance": "76"
         }
       ],
-      "signature": "605e896360081d6f6094a1e4334c3d8e80427bed6172c53da9743779fc4d5d7a8ecd4ad16592c15e54216767620fa02f299f225305a62baf7b7d6b573f313406",
+      "signature": "84596fd629cf79483db23234966f8365c4ed014fb73e16f34ae1577045f6df63cdb6061c15bd1458250013afb2ac2dc345bebd7640048594eaa5f639ea7f3105",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -1591,6 +1633,7 @@
     {
       "index": 42,
       "height": 1,
+      "indexOfSenderTransactions": 1,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -1598,7 +1641,7 @@
           "assetBalance": "49"
         }
       ],
-      "signature": "aecd12b613d85626861d97240081eaee84709a177a2ec2a47cf56981cce8ed640dc050b661826093bbd30ca072f1eaa2719d93eb85f3c2cb621518014f0d710e",
+      "signature": "54032caab06716cae02f68bde71b4d24ceb96cf134690d1de39e3e94a530289ecd944d74a220a1571afb85cd9a9119515d532b5a5e14f6d212a779efc5834e0b",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -1628,6 +1671,7 @@
     {
       "index": 43,
       "height": 1,
+      "indexOfSenderTransactions": 2,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -1635,7 +1679,7 @@
           "assetBalance": "21"
         }
       ],
-      "signature": "aec65d044d455c999db425d218964513a35951a507b177a95da7c2efc4987d8e6a7b1144b1e45deeccefd6aa48756e980b9c0b448770adbb301c1852644db409",
+      "signature": "9e16f662af4bcb50b82e279d0110197a0550bac9410084df34849233d3b086222ad12540a40071ce226123ebd055cc5e6ac530814f56d9384b6b715343665f01",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -1665,6 +1709,7 @@
     {
       "index": 44,
       "height": 1,
+      "indexOfSenderTransactions": 3,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -1672,7 +1717,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "284419110c6d2b2ca47b819c54fb9fae0d8383d699413b7a7f33fc7197c8e2bfbc745029f40b380487fc04466f82da75351af24f6549ed4c6ecbc48aff38c607",
+      "signature": "7b63ccd6cc56c0abf226e42ec7bb9172d121ed22c7d36fa6f4f7f35bfc3ca0cb5398891a8ee1e5ff8921737067c4a65324a3dc9d6df05121ff452b6df745530c",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -1695,6 +1740,7 @@
     {
       "index": 45,
       "height": 1,
+      "indexOfSenderTransactions": 13,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -1707,7 +1753,7 @@
           "assetBalance": "76"
         }
       ],
-      "signature": "640a0cc1b3bb9a7d97674adbff0f7366ca6c847e5bd3d3bcd4b848e670e7e8f917f88190e55aa59487a1adcea1dec7ac976ac06663f1df767faaaf0143c07400",
+      "signature": "e24178b9b3d588b08e285cec56e024664c00cfb6d01bd9edba3ccbbc9438e7c3dd744e553acdc235972a88b7f20e96730caa745b59bb832d865d0713aff6190a",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -1740,6 +1786,7 @@
     {
       "index": 46,
       "height": 1,
+      "indexOfSenderTransactions": 1,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -1747,7 +1794,7 @@
           "assetBalance": "49"
         }
       ],
-      "signature": "2d393a63e0c55da57ff8bad0ab1a334f6b4452d7b91ae799150bf69a57a661db0182e1228d61707e1653eb669be4fcc529a64d6d8994ae59d2f1da24b7e9ff0a",
+      "signature": "98762a797dedbe74d44b60466cfbc77975344fa64ce8fe8791466b5ed85fcf4c73534f4fa5791707d8110468979592acd7b4f7874b1e22b3a22cc48101719403",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -1777,6 +1824,7 @@
     {
       "index": 47,
       "height": 1,
+      "indexOfSenderTransactions": 2,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -1784,7 +1832,7 @@
           "assetBalance": "21"
         }
       ],
-      "signature": "6ea6c16c2dd2bd810f278c99da2163e4ba50c5dbe20d1c74986a5928d855cd58a413f78d84daf88f67ceeb64ba6467a4abda7331a302e33d9ea91c33cb5f3a0c",
+      "signature": "e746080d39d8231b325099ac3ae9fe8727396003e86d82a011a8971226c5021fc4667072246b77ff6873250e74f20022aa06ed02d9fb1ed7c2dda71cd0dd6d0a",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -1814,6 +1862,7 @@
     {
       "index": 48,
       "height": 1,
+      "indexOfSenderTransactions": 3,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -1821,7 +1870,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "02d3d522f6995d4cc131f5aa9711a776059014280d6f36c4964e253eba8925ef20d17988b475bb782810b0a0353f5d0881029378c4454fe7a0d913c2edabf108",
+      "signature": "48bf45913464fb29d5e6eaf8128ade3ab4b7f7cac472dd85b18f05108461f4633792605f21e76c60f80c7f088592fdba8e6a72211ac54b0ee0e1cdfbfd49c20e",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -1844,6 +1893,7 @@
     {
       "index": 49,
       "height": 1,
+      "indexOfSenderTransactions": 14,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -1856,7 +1906,7 @@
           "assetBalance": "76"
         }
       ],
-      "signature": "025be3290db8993f054301bc194c221977ec652c1feeec8667e9633e99fbd38593423642989a6390fb8c3346eeaa22cecf86eee7c9a0e9d2d612be37c9e9bf0e",
+      "signature": "f3565cba8cbe03ad1895bf1cf5b0f898e6f045b09634e93aebfe3e2359f58f8f057d857d3ea8120fb73744f9591cffe00c985af3525df1a429f89bbdce80f607",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -1889,6 +1939,7 @@
     {
       "index": 50,
       "height": 1,
+      "indexOfSenderTransactions": 1,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -1896,7 +1947,7 @@
           "assetBalance": "49"
         }
       ],
-      "signature": "c06afd477c00cd75d0dfcc425f616fea9e4ad87f0beb3112eae4995d3ebb6a47f96877cf9455ad52da92dc1d3034ade46b65ea3b93d074dcad6c4b98b5caab0a",
+      "signature": "5a8a13687f6af5201e9bc465b5aca62add6f949cc81f40b12475e66e982c3030c8bb94ab99e5724bcb836d40ab0e20bfc47c2454bc067aa7462a274be993160e",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -1926,6 +1977,7 @@
     {
       "index": 51,
       "height": 1,
+      "indexOfSenderTransactions": 2,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -1933,7 +1985,7 @@
           "assetBalance": "21"
         }
       ],
-      "signature": "c305290f9052ffecbd110ed80417d3a50a78ea60d7c269e068dba46518f60abd989649e491e947cf3d2609d721acf1ed68a26579d062cc2a442c3d566f3f570e",
+      "signature": "be8d5b5feefd52cde8837bf991ae431497834f3f6b334667f90fc145874f2fbc8f9181165e19baa1e2832c5f194ae66d717c98e71b9803b97600e8b0965f4801",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -1963,6 +2015,7 @@
     {
       "index": 52,
       "height": 1,
+      "indexOfSenderTransactions": 3,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -1970,7 +2023,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "aae6cd3048b98f12e3d6f67f0f9a10b0cdf64a7bbc5a3abf3adc8434c002191ae228d637db44232afdc8bdcd2d23b7eb953755f2a46a85572cd02e6f7f292708",
+      "signature": "80924bbbc10c9268121a561f735557d014bde0141193169e4f3e04c1c25b46edb3c3e8ab0870be39934401ff2590430f1caccf278c219773896e354518ca1504",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -1993,6 +2046,7 @@
     {
       "index": 53,
       "height": 1,
+      "indexOfSenderTransactions": 15,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -2005,7 +2059,7 @@
           "assetBalance": "76"
         }
       ],
-      "signature": "2e6c131d0940db1e9812e7d314310a209c2cbab68fa2b4d5aa38adcb2f8abd306f2fec6462fc48fdf5ab3be9217461c3f4a7b5d539a1998404c80203fc7b9f0c",
+      "signature": "eca2f484d7ea25b14b5857c4673ee7736a1dc157029cf60e8fa5e762d77837b8161f4ec027798bbde57b897d71829365c4565cd4f31da417dda081511302990f",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -2038,6 +2092,7 @@
     {
       "index": 54,
       "height": 1,
+      "indexOfSenderTransactions": 1,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -2045,7 +2100,7 @@
           "assetBalance": "49"
         }
       ],
-      "signature": "3f75c5b981ab7994b68c1aa830a3ee9dba6ff7e3295f3ac41454f808986475a977abaceee596db37c210291d26dbd0871735ae97a3ef88f9a2e8ab72b380710f",
+      "signature": "dbc7365632d4beec6047da86d2c0a04a1d05076886ea353fc3f273f36e407099824bbfd38fc7e84f244fbe241431f510e91a4f6f98c3868e03cf9b6837cfc20b",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -2075,6 +2130,7 @@
     {
       "index": 55,
       "height": 1,
+      "indexOfSenderTransactions": 2,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -2082,7 +2138,7 @@
           "assetBalance": "21"
         }
       ],
-      "signature": "6a8e4880703fbb3f169bea6c786839fa9f9ebc29bdf2794934e96c13c9e13f1c07203df046651e6974d97004f34e81e2f9eb482bf79784516aef653c527a620e",
+      "signature": "d16de972c212f35df076c0070cb90c754b200f1b8e4cf7cb6bfaf3dd4f19524befcbad4e9fe7cebbad8a724839549796063dc734fb112f1a0d2670bac52a4407",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -2112,6 +2168,7 @@
     {
       "index": 56,
       "height": 1,
+      "indexOfSenderTransactions": 3,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -2119,7 +2176,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "aa8e308abef90f64c250088a9743a99bc2cc13bf142ee50316c3def51d9220b9ed587c4e60ef672422acf586ff4feca4c64757b9a9db72184c32a84f619f2e0b",
+      "signature": "1973703daba26375b7cf2bf6d0155e742754d167351ad926c464fa9f9a95152d8fddeb05d6533fd0b6e50bfab60445c467bda1b3f7fa24c87d828eaa862af700",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -2142,6 +2199,7 @@
     {
       "index": 57,
       "height": 1,
+      "indexOfSenderTransactions": 16,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -2154,7 +2212,7 @@
           "assetBalance": "76"
         }
       ],
-      "signature": "620cf51fd2af64756cafdabc5a55c50e8eba580f4701616ed592f7795b0fc2f4d453ff6ce36d8d09ccd5505a829c2ae8eda93d5d6388e409f7363553068c6f02",
+      "signature": "34dcc05e7b866dd92afd68084ff56e760c424be2c78325a736c2732468ba8251210456dab02a6727a0e33eb514068e5ef9878d0bc1b2b27562b043bfc7b6d509",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -2187,6 +2245,7 @@
     {
       "index": 58,
       "height": 1,
+      "indexOfSenderTransactions": 1,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -2194,7 +2253,7 @@
           "assetBalance": "49"
         }
       ],
-      "signature": "73ea8a4bf9162e29922df7d9ae8fd4ed9e88dde3368c0e9b2727fc6ae66b6f2a613506f1dc0e2ae3b2c13b4e8daeafc833629f236398f21ada2096b942f9ea00",
+      "signature": "f269691d0597b8d77623c812f882161b31933b73ad9a7fc3a7ad3c8a1851978917657ab630b223b10aba2be1e99930ab898e81af9b3941c322eade0893f9de0e",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -2224,6 +2283,7 @@
     {
       "index": 59,
       "height": 1,
+      "indexOfSenderTransactions": 2,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -2231,7 +2291,7 @@
           "assetBalance": "21"
         }
       ],
-      "signature": "26633e4ed210a0f959d74d3deeaf57f23293dd85d60a56864df39c46807215c4c43132b0eab950bd46c5505a22080fe90c825357cde7838553582686068d4b08",
+      "signature": "a1128b1d842ea46b206496c87b92524944d426be841c1f094db626c39386b6abd8e3bf456143eb5c2729cea472004b92b6c0f9af87464d519d587d1afeb5c90c",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -2261,6 +2321,7 @@
     {
       "index": 60,
       "height": 1,
+      "indexOfSenderTransactions": 3,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -2268,7 +2329,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "aa4d8bc75d1f4aaa33f96e38f5ad807c6da39cdf464a158f873c8f73633126124602622c3dea3da97381936e0de836cfe229bfdee77e171fde846467c4dd9a0f",
+      "signature": "594fc69963259db2a4480df1c45ae3f84a0ed1a2d8596efccca5e50addade12900ea2711ed8ca23253bc0d3e8dc6d74f3e0f4b7935f9d6b2cb7579a97ef0d101",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -2291,6 +2352,7 @@
     {
       "index": 61,
       "height": 1,
+      "indexOfSenderTransactions": 17,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -2303,7 +2365,7 @@
           "assetBalance": "76"
         }
       ],
-      "signature": "10f3516c3c59c396fa62e77dcdb3f71008b21020c98062c2c9e13a29437816287e355d8c9bb44ee2bd2cf2235aea9cade46a9aab5d9c83fe661f7b013c6f6201",
+      "signature": "73d0ce4fed2a98a3f385beed6ea216a666968cb3077b6051def90a82d9d9aa7e8caa8094dd25046e1f3890e523dc3a0f47901269a58e7dd8fb5a0c945c908803",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -2336,6 +2398,7 @@
     {
       "index": 62,
       "height": 1,
+      "indexOfSenderTransactions": 1,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -2343,7 +2406,7 @@
           "assetBalance": "49"
         }
       ],
-      "signature": "07a1bdb1019f7d1e92c13bacff6a369aafa50fcdd623ec14402269118ffcfa8e6c81b757add6c80ef0da4d52912f80a63f5e756a606c309b9f9c8915afddd10d",
+      "signature": "a2716d69d3a9ff5d3e98bdf2cd97421ae0a545d6b6bb6ba1578a29f0ce32307ec3dee257eba9f3caf1b6ecebf87e9bd88044bfd88a9ddc70a7a211e03d28f801",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -2373,6 +2436,7 @@
     {
       "index": 63,
       "height": 1,
+      "indexOfSenderTransactions": 2,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -2380,7 +2444,7 @@
           "assetBalance": "21"
         }
       ],
-      "signature": "9e754a58ab55c79bd60037f7573137e1a6dc5ab87bf9cf4e2bec0a6d2613425dd2c7fc6cbf8799de216ad003173c9ae3a952be0f7b5aa5a3f5c73cc872eedc03",
+      "signature": "5858c3fd126e9383430e25bcee3dc0d640cbc43ee74563c57c98808e2fcf5bc783bc12dc3a35ea3e608d305470edf1ef42c5223a263bee58b5b59e4e3d3ca302",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -2410,6 +2474,7 @@
     {
       "index": 64,
       "height": 1,
+      "indexOfSenderTransactions": 3,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -2417,7 +2482,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "10a97b573f19cc0ef3372bffced067ff2cbfeb0a1064a2ab59f96a89a9b69e7ce0634c14c2595de09eac899f034032a87439843108278a8846b875f25c065307",
+      "signature": "3dc60e52a796d4902b54b64be543e6035d9e85ac81d0e11cb6b07e5b5262d51486c415e27b7955ddf647396a1c78876504bf67f22ab67e603aa9743202c32d09",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -2440,6 +2505,7 @@
     {
       "index": 65,
       "height": 1,
+      "indexOfSenderTransactions": 18,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -2452,7 +2518,7 @@
           "assetBalance": "76"
         }
       ],
-      "signature": "b2b0d0d9476211adb80e74f5a1eff8e99be72c311f05bdac43b12453a2bcdc5ca53a905fc7300ea968875a2aa6336bfc267c3080ec34b679371055e0ffa5ea02",
+      "signature": "74d6a28ad2b115c15022617ce8f10c155c472dba6bfc517254bf35dfecc9eaa4b35c2c45cd418dda66dfcd867e6c69fafc68460647073f3bc97a5214c6421d00",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -2485,6 +2551,7 @@
     {
       "index": 66,
       "height": 1,
+      "indexOfSenderTransactions": 1,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -2492,7 +2559,7 @@
           "assetBalance": "49"
         }
       ],
-      "signature": "1370e4b7866d9961e769c8e87ffb3409cc56e4d7d7212dd92d180776a02198cd6fb38ff5bc46aa25a45fff83d1d7634e3e3cbc770430b104d7646bc53813a60c",
+      "signature": "8851e29a93762d0f6b204a2b7f2091e53828cc119eb9c433f5e81c5282189f0326017132644e6d1d4cd70bb82c238d6134ef6d52065bf8f7480c7d75c6f3f701",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -2522,6 +2589,7 @@
     {
       "index": 67,
       "height": 1,
+      "indexOfSenderTransactions": 2,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -2529,7 +2597,7 @@
           "assetBalance": "21"
         }
       ],
-      "signature": "b63d49b7d953dc6254fb88a60f5f325ffcef104af604c410d2138e59916104d57da8f44ed7c8637951e0842e97b711b90ab2c3721301659950a8efa83c4ac10b",
+      "signature": "bd3e10c4eac071346ccb97ddd2ef5e4b9537c6d40c389b8473f57d28b995983ac666d0f642071f3d57c78507c7d02ee6ec405f4b9e02d8ae1999047d74aebc01",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -2559,6 +2627,7 @@
     {
       "index": 68,
       "height": 1,
+      "indexOfSenderTransactions": 3,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -2566,7 +2635,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "e29ff45fa0027976fe7205c4bb8caff548603dfa0642ca274f63749ff94d9103537ceebd69af8b3ab3d2f83c910f80b2db83871e0eca01a1516334737c477601",
+      "signature": "30a5f86e98378875e61f053699afc2a2a27c5a1ac9e8e5bf8553e215c59607427e22d09c2ab1e925e9f9f0342ad83d3ddabea045ed11ba1bc23180cac4d83509",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -2589,6 +2658,7 @@
     {
       "index": 69,
       "height": 1,
+      "indexOfSenderTransactions": 19,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -2601,7 +2671,7 @@
           "assetBalance": "76"
         }
       ],
-      "signature": "57a06d0cdde696442a018b90388a7ca5aad17429d8b57af8150ece0c59e0edeaad6113e0bd540e2f15a3d545de3c1d0c7ddd1753d759b8f2b47fa0e897e3b609",
+      "signature": "4f676af26a38ab291085795fb6b215243d878cab8b3950032ed8105453ad19e3b106ed6e293039ba72b66d620dfa05a542a6db2c9fa9382e2485cf7690051201",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -2634,6 +2704,7 @@
     {
       "index": 70,
       "height": 1,
+      "indexOfSenderTransactions": 1,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -2641,7 +2712,7 @@
           "assetBalance": "49"
         }
       ],
-      "signature": "f8a639e6ac1f1ca6a2947ff32c7ff19debcdfea3b9b7a67ad634841d3353a4217da053511beb3ca69614b4d7658886fcfe6f0c0858498b56af73160726141e0e",
+      "signature": "8e27c5b3cad611d7c3c17c742a6d5ca4f7e26ed91d33b7bb521eb641b0331bce41a933e4ded47dda3aeb382c5f2e6860d14776d72c4a55ccbd91c1c3667b5002",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -2671,6 +2742,7 @@
     {
       "index": 71,
       "height": 1,
+      "indexOfSenderTransactions": 2,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -2678,7 +2750,7 @@
           "assetBalance": "21"
         }
       ],
-      "signature": "6e9906c3dcafe6d7b4f16ab47baff8e62ed6f24b07d9423fc1fb96e47da96ac7b2788695ea97ee83d9e025341f8b595cc7e61dc9787f5f644fabf29b65f18100",
+      "signature": "0b9fb0e823449e565f88c0f00b184039db860c6c8e05b713df42274fc246b49053df2e2cb3897475985af42e0c1ec5e32a2909319c2e8ef8a6cf5451971f300f",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -2708,6 +2780,7 @@
     {
       "index": 72,
       "height": 1,
+      "indexOfSenderTransactions": 3,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -2715,7 +2788,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "3fec6f3968da3f8e2981b49d734ddd03df8de473f71ba42e1e1900de055d904a2ecd33c0b05d809d194b8ccb37683bc6f7b090ba7bcfe926f198f8903dcf9f0e",
+      "signature": "3c1ae4f15720041f8fa640cf1bb219606cc83a74e71381499a9655b2b978204156f7513167003538b53c57fc2a08a95089293110f3026678d72039e5eb8f1d00",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -2738,6 +2811,7 @@
     {
       "index": 73,
       "height": 1,
+      "indexOfSenderTransactions": 20,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -2750,7 +2824,7 @@
           "assetBalance": "76"
         }
       ],
-      "signature": "a18f5780ee19524b5302358fb5a259ae672459695d203c64165be68e3dd395dcd0cd55156d71a02d194b1d8394b015b4c4d1b18fade8c5c33abbd205ef15c102",
+      "signature": "d99e48268b425dd00e17de2d2895520a082f5caeb1e10ba527514d6b3add265a51fc46f6d7ad3eac8ef39cea6e59808916de5bc777c5b1ef962b8c15424d8a0f",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -2783,6 +2857,7 @@
     {
       "index": 74,
       "height": 1,
+      "indexOfSenderTransactions": 1,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -2790,7 +2865,7 @@
           "assetBalance": "49"
         }
       ],
-      "signature": "4d11810ecf388a3066b63ebc81d8f8d512dac8af0a23dc49f91b56f0161c3576c6acbde5c264b7d7167945749fd3309f1b5ce962bd4f64ad301bda2e79bdbf0d",
+      "signature": "533eec34f90a401d2e1c5c8d0cadd13c5df2e9da3ebd96a4328ecbf4b015988336379e6eabc090aba799afe1d29c4b24cd6e785e95916ff5371462ed814aae01",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -2820,6 +2895,7 @@
     {
       "index": 75,
       "height": 1,
+      "indexOfSenderTransactions": 2,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -2827,7 +2903,7 @@
           "assetBalance": "21"
         }
       ],
-      "signature": "f0ba9fb0f1316acd799a67235ff2546461be28f70f53e9898df2b6ef6fb43a643331b15a64d4e3f32580fb61bc884cceea7b28cad1dd0692213abcaf45aad20c",
+      "signature": "f1828059a158c7c5f4bcb3e828adac4059fa969b7e2b5c201025c2af0a8537701543078bd8834d09fc535bf808ea68310b9f38851b65620f9536d085fb201005",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -2857,6 +2933,7 @@
     {
       "index": 76,
       "height": 1,
+      "indexOfSenderTransactions": 3,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -2864,7 +2941,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "784b3f8e638ebdb6ec77e635a6e3f5c3de4d15e4ebeb7073b8460cb7889b2d397cb0a068b2271e75af01bf844e9716abff36abf83e45ebeb705aa2ee23e12c09",
+      "signature": "d34c88ad8d02ac3deb11adb14343788be6f7c90f7f70753623ec7c807866133ea6f48e989c5f084337904faabd7fce59bfbcbd8ad8ad1169998aed705316550b",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -2887,6 +2964,7 @@
     {
       "index": 77,
       "height": 1,
+      "indexOfSenderTransactions": 21,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -2899,7 +2977,7 @@
           "assetBalance": "76"
         }
       ],
-      "signature": "0dab564ab35a4ffe63cb5467d7ec1a6ee5094270de044c5a2f59656895bb586e4fa0b0523e14a5670e294e08f0d528a6da7f62ce0e5aa3ff658816eb081e0200",
+      "signature": "fd7c0ab62ba629daa460aca5fb147357dddbcd5c428777ff5f551c1f104d562ca1bca41235cf669d7e3da0d42062eb217a42dac94e8f875d2aa9240105a2730e",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -2932,6 +3010,7 @@
     {
       "index": 78,
       "height": 1,
+      "indexOfSenderTransactions": 1,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -2939,7 +3018,7 @@
           "assetBalance": "49"
         }
       ],
-      "signature": "fc3e9d254fc4c9cb0d2e27add53a8dbec747d6605253e5d33fe1450bccd7b61dd1026db8c16bb1e45c6962edb3b3b8e06a2934386d27b188fd469a9ef0e9fa0e",
+      "signature": "589ed1e56d03ee79414b07ce3882b96b6d54356789200263148cd24858577cafa96999388c894a67ab4ef273868fa538af8e13778b9934e4caa22e8758fd7f07",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -2969,6 +3048,7 @@
     {
       "index": 79,
       "height": 1,
+      "indexOfSenderTransactions": 2,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -2976,7 +3056,7 @@
           "assetBalance": "21"
         }
       ],
-      "signature": "e464ec207ee6cc088757d42047f17757be368e298eead225c3667e5fc50e3015b6eb7805ad071db5d73cd15c5af26e2d765bdee90185882d7c18345cf33c9c08",
+      "signature": "5a69b6afc72fc9a5cf35f01368b7fd8372c2e29046cca85ce6d49be1236a135dd66fa4e648bab3376eb9aa98ac987f6223c3e5b5d01b8a0be168463d55053f0e",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -3006,6 +3086,7 @@
     {
       "index": 80,
       "height": 1,
+      "indexOfSenderTransactions": 3,
       "transactionAssetChanges": [
         {
           "accountType": 0,
@@ -3013,7 +3094,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "b2ba78887fec86b5a05e905c07284c5e4034c27b95f6236990b37a715fb4ad98bf2aef121b2fcc67f34900f69c050544eabba455d9f7305d8fedfd24c85b870d",
+      "signature": "ed96ac636a1a6ee43a65430cf92538ff552a43d4436c070d306c29c18a2c3130a69db521a5ff11cacde6cacba8febd38785f62c13acca72ee2762a9e89cd0a05",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
