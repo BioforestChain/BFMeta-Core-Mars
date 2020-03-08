@@ -29,22 +29,24 @@ declare namespace BFChainCore {
     senderId?: string;
     /**交易接收者地址 */
     recipientId?: string;
-    /**查询的区块的最小高度 */
-    minHeight?: number;
-    /**查询的区块的signature */
-    blockSignature?: string;
-    /**查询的区块的最大高度 */
-    maxHeight?: number;
-    /**查询自定义存储的KV */
-    storage?: TransactionStorageJSON;
-    /**交易见证者地址 */
-    trusteeId?: string;
-    /**购买的 dappid */
-    purchaseDAppid?: string;
     /**交易来源 dappid */
     dappid?: string;
     /**交易来源 lns */
     lns?: string;
+    /**查询自定义存储的KV */
+    storage?: TransactionStorageJSON;
+    /**查询的区块的signature */
+    blockSignature?: string;
+    /**查询的区块的最小高度 */
+    minHeight?: number;
+    /**查询的区块的最大高度 */
+    maxHeight?: number;
+    /**交易见证者地址 */
+    trusteeId?: string;
+    /**购买的 dappid */
+    purchaseDAppid?: string;
+    /**交易发起账户的第 i 笔交易 */
+    indexOfSenderTransactions?: number;
     /**查询结果分页：起始下标 */
     offset: number;
     /**查询结果分页：返回数量， */
