@@ -1,7 +1,7 @@
 import { Injectable, Inject } from "@bfchain/util";
 import { base58 } from "@bfchain/core-util-base58";
 
-const FORZEN_ENCODED_RES_WM = new WeakMap<Uint8Array, string>();
+// const FORZEN_ENCODED_RES_WM = new WeakMap<Uint8Array, string>();
 
 @Injectable()
 export class Base58Helper {
@@ -17,15 +17,15 @@ export class Base58Helper {
   }
 
   async encode(payload: Uint8Array) {
-    const cachedRes = FORZEN_ENCODED_RES_WM.get(payload);
-    if (cachedRes) return cachedRes;
+    // const cachedRes = FORZEN_ENCODED_RES_WM.get(payload);
+    // if (cachedRes) return cachedRes;
 
     const result = this.bs58.encode(
       this.Buffer.concat([payload, await this.sha256x2(payload)], payload.length + 4),
     );
-    if (Object.isFrozen(payload)) {
-      FORZEN_ENCODED_RES_WM.set(payload, result);
-    }
+    // if (Object.isFrozen(payload)) {
+    //   FORZEN_ENCODED_RES_WM.set(payload, result);
+    // }
     return result;
   }
 

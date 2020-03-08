@@ -374,7 +374,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
         });
       }
       /// 开始执行并行任务
-      for await (const _ of pp.yieldResults({ ignore_error: true })) {
+      for await (const _ of pp.yieldResults({ ignoreError: true })) {
         if (is_break && is_break.break) {
           break;
         }
