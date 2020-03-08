@@ -1,11 +1,11 @@
 {
   "name": "@types/bfchain__core-transaction",
   "types": "index.d.ts",
-  "version": "5.7.9",
+  "version": "5.8.2",
   "dependencies": {
-    "@types/bfchain__core-helper": "^5.7.9",
-    "@types/bfchain__core-model": "^5.7.9",
-    "@types/bfchain__core-typings": "^5.7.8",
-    "@types/bfchain__core-util-exception": "^5.7.8"
+    "@types/bfchain__core-helper": "5.8.2",
+    "@types/bfchain__core-model": "5.8.2",
+    "@types/bfchain__core-typings": "5.8.2",
+    "@types/bfchain__core-util-exception": "5.8.2"
   }
 }

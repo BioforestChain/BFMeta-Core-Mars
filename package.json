@@ -3,7 +3,7 @@
   "private": true,
   "workspaces": [
     "packages/*",
-    "packages/__types/*"
+    "packages/@types/*"
   ],
   "version": "0.0.0",
   "description": "",
@@ -56,6 +56,6 @@
     "lerna": "^3.20.2"
   },
   "dependencies": {
-    "@bfchain/devkit": "^0.7.20"
+    "@bfchain/devkit": "^0.7.26"
   }
 }

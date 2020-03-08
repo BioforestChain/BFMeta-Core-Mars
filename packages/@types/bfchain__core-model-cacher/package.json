@@ -1,8 +1,8 @@
 {
   "name": "@types/bfchain__core-model-cacher",
   "types": "index.d.ts",
-  "version": "5.7.9",
+  "version": "5.8.2",
   "dependencies": {
-    "@types/bfchain__core-typings": "^5.7.8"
+    "@types/bfchain__core-typings": "5.8.2"
   }
 }
