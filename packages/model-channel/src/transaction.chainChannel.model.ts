@@ -52,15 +52,15 @@ export class TransactionQueryOptions extends Message<TransactionQueryOptions>
   /**查询的区块的最大高度 */
   @Field.d(TransactionQueryOptions.INC++, "uint32", "optional")
   maxHeight?: number;
+  /**交易发起账户的第 i 笔交易 */
+  @Field.d(TransactionQueryOptions.INC++, "uint32", "optional")
+  indexOfSenderTransactions?: number;
   /**交易见证者地址 */
   @Field.d(TransactionQueryOptions.INC++, "string", "optional")
   trusteeId?: string;
   /**购买的 dappid */
   @Field.d(TransactionQueryOptions.INC++, "string", "optional")
   purchaseDAppid?: string;
-  /**交易发起账户的第 i 笔交易 */
-  @Field.d(TransactionQueryOptions.INC++, "uint32", "optional")
-  indexOfSenderTransactions?: number;
   /**查询结果分页：起始下标 */
   @Field.d(TransactionQueryOptions.INC++, "uint32")
   offset!: number;
@@ -89,9 +89,9 @@ export class TransactionQueryOptions extends Message<TransactionQueryOptions>
       blockSignature: this.blockSignature,
       minHeight: this.minHeight,
       maxHeight: this.maxHeight,
+      indexOfSenderTransactions: this.indexOfSenderTransactions,
       trusteeId: this.trusteeId,
       purchaseDAppid: this.purchaseDAppid,
-      indexOfSenderTransactions: this.indexOfSenderTransactions,
       offset: this.offset,
       limit: this.limit,
     };

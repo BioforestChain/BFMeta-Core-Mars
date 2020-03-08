@@ -41,12 +41,12 @@ declare namespace BFChainCore {
     minHeight?: number;
     /**查询的区块的最大高度 */
     maxHeight?: number;
+    /**交易发起账户的第 i 笔交易 */
+    indexOfSenderTransactions?: number;
     /**交易见证者地址 */
     trusteeId?: string;
     /**购买的 dappid */
     purchaseDAppid?: string;
-    /**交易发起账户的第 i 笔交易 */
-    indexOfSenderTransactions?: number;
     /**查询结果分页：起始下标 */
     offset: number;
     /**查询结果分页：返回数量， */

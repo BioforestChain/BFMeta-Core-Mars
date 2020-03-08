@@ -70,16 +70,20 @@ export class ChainChannelHelper {
       signatureBuffer,
       senderId,
       recipientId,
+      dappid,
+      lns,
+      storage,
       blockSignature,
       minHeight,
       maxHeight,
-      storage,
+      indexOfSenderTransactions,
+      trusteeId,
+      purchaseDAppid,
       offset,
       limit,
     } = arg.query;
     let has_query_params = false;
     if (type) {
-      // if (typeof type === "string") {
       has_query_params = true;
       if (!BH.isValidTransactionType(type)) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
@@ -89,7 +93,6 @@ export class ChainChannelHelper {
       }
     }
     if (signatureBuffer) {
-      // if (typeof signature === "string") {
       has_query_params = true;
       if (!BH.isValidSignature(signatureBuffer)) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
@@ -99,7 +102,6 @@ export class ChainChannelHelper {
       }
     }
     if (senderId) {
-      // if (typeof senderId === "string") {
       has_query_params = true;
       if (!(await this.accountBaseHelper.isAddress(senderId))) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
@@ -109,7 +111,6 @@ export class ChainChannelHelper {
       }
     }
     if (recipientId) {
-      // if (typeof recipientId === "string") {
       has_query_params = true;
       if (!(await this.accountBaseHelper.isAddress(recipientId))) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
@@ -118,33 +119,21 @@ export class ChainChannelHelper {
         });
       }
     }
-    if (minHeight) {
-      // if (typeof minHeight === "number") {
+    if (dappid) {
       has_query_params = true;
-      if (!BH.isUint32(minHeight)) {
+      if (!BH.isValidDAppId(dappid)) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.query",
-          field: "minHeight",
+          field: "dappid",
         });
       }
     }
-    if (maxHeight) {
-      // if (typeof maxHeight === "number") {
+    if (lns) {
       has_query_params = true;
-      if (!BH.isUint32(maxHeight)) {
+      if (!BH.isValidLnsName(lns)) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.query",
-          field: "maxHeight",
-        });
-      }
-    }
-    if (blockSignature) {
-      // if (typeof maxHeight === "number") {
-      has_query_params = true;
-      if (!BH.isValidBlockSignature(blockSignature)) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-          function: "boxQueryTransactionArg.query",
-          field: "blockSignature",
+          field: "lns",
         });
       }
     }
@@ -157,6 +146,63 @@ export class ChainChannelHelper {
         });
       }
     }
+
+    if (blockSignature) {
+      has_query_params = true;
+      if (!BH.isValidBlockSignature(blockSignature)) {
+        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+          function: "boxQueryTransactionArg.query",
+          field: "blockSignature",
+        });
+      }
+    }
+    if (minHeight !== undefined) {
+      has_query_params = true;
+      if (!BH.isUint32(minHeight)) {
+        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+          function: "boxQueryTransactionArg.query",
+          field: "minHeight",
+        });
+      }
+    }
+    if (maxHeight !== undefined) {
+      has_query_params = true;
+      if (!BH.isUint32(maxHeight)) {
+        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+          function: "boxQueryTransactionArg.query",
+          field: "maxHeight",
+        });
+      }
+    }
+    if (indexOfSenderTransactions) {
+      has_query_params = true;
+      if (!BH.isNaturalNumber(indexOfSenderTransactions)) {
+        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+          function: "boxQueryTransactionArg.query",
+          field: "indexOfSenderTransactions",
+        });
+      }
+    }
+
+    if (trusteeId) {
+      has_query_params = true;
+      if (!(await this.accountBaseHelper.isAddress(trusteeId))) {
+        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+          function: "boxQueryTransactionArg.query",
+          field: "trusteeId",
+        });
+      }
+    }
+    if (purchaseDAppid) {
+      has_query_params = true;
+      if (!BH.isValidDAppId(purchaseDAppid)) {
+        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+          function: "boxQueryTransactionArg.query",
+          field: "purchaseDAppid",
+        });
+      }
+    }
+
     if (has_query_params === false) {
       throw new ArgumentIllegalException(
         "Invalid QueryTransaction query params, no query conditions",
