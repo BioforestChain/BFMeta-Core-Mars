@@ -936,7 +936,7 @@ function getRoundLastBlockRemarkHash(height: number) {
       const delegate = delegatesMap.get(result.address);
       if (delegate) {
         const asyncIteratorGenerator = new AsyncIteratorGenerator<TransactionInBlock>();
-        asyncIteratorGenerator.done();
+        await asyncIteratorGenerator.done();
         const newBlock = {
           version: 1,
           height: lastBlock.height,

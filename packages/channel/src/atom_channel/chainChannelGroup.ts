@@ -321,7 +321,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
         // 等待所有查询任务完成
         await task_chain;
         // 结束
-        resultGenerator.done();
+        await resultGenerator.done();
       })().catch(resultGenerator.reject);
 
       return resultGenerator;
