@@ -53,10 +53,10 @@
     yaml "^1.7.2"
     yargs "^15.1.0"
 
-"@bfchain/protobuf@^4.0.5":
-  version "4.0.5"
-  resolved "http://192.168.110.189:4873/@bfchain%2fprotobuf/-/protobuf-4.0.5.tgz#1c209b311795947e918b53350aae7a24a43e4550"
-  integrity sha512-cQtVn4YLFtRqLkJ42uqoRU8nptPF4T5n9BZXblXxKHuI98jsQwMDr0uPNA3ePc7Ra2LCH9MP9smf4E9DIvqxTQ==
+"@bfchain/protobuf@4.0.7":
+  version "4.0.7"
+  resolved "http://192.168.110.189:4873/@bfchain%2fprotobuf/-/protobuf-4.0.7.tgz#14a8caddbfea5e79dc3cfd05096d18f583980ccf"
+  integrity sha512-xCVO0cLiEenJZjCw4h8ybQgBrKotoNM5UgAh5hksshfPyq/LYUoo2ziz83Sbf/S9X8KcrgjRmBhsTLaODqXf1Q==
   dependencies:
     "@protobufjs/aspromise" "^1.1.2"
     "@protobufjs/base64" "^1.1.2"

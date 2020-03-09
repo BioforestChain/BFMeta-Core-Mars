@@ -23,7 +23,7 @@ import {
   NewBlockArgModel,
 } from "@bfchain/core-model";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
-import { ChainChannel, ChainChannelBase } from "./ChainChannel";
+import { ChainChannel, ChainChannelBase } from "./chainChannel";
 const { ResponseException, AbortException, NoFoundException, error } = CoreExceptionGenerator(
   "CONTROLLER",
   "ChainChannelGroup",

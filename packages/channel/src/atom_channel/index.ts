@@ -1,3 +1,3 @@
-export * from "./ChainChannel";
-export * from "./ChainChannelGroup";
+export * from "./chainChannel";
+export * from "./chainChannelGroup";
 export * from "./chainChannelHelper";

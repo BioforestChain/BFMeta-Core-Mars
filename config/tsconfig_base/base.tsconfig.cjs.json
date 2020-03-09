@@ -10,6 +10,7 @@
     "sourceMap": true,
     "noEmitOnError": true,
     "removeComments": false,
+    "forceConsistentCasingInFileNames": true,
     "importsNotUsedAsValues": "error",
     "strict": true,
     "strictBindCallApply": true,
