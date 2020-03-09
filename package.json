@@ -35,12 +35,12 @@
     ]
   },
   "scripts": {
-    "prepare": "yarn mono",
+    "-prepare": "yarn mono",
     "clear": "node ./scripts/rmBuild.js",
     "up": "yarn upgrade-interactive --latest",
     "mono": "bdk-mono",
     "publ": "lerna publish",
-    "publ:type": "node ./scripts/publish-types.js",
+    "publ:type": "yarn mono & node ./scripts/publish-types.js",
     "publ:force": "lerna publish --force-publish",
     "lsts": "bdk-lsts -p=./tsconfig.json",
     "dev": "bdk-tsc --build -w",

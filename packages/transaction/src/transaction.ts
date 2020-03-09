@@ -105,15 +105,15 @@ export class TransactionCore {
       senderId: body.senderId, // 发起者地址
       senderPublicKey: body.senderPublicKey, // 发起者公钥
       senderSecondPublicKey: body.senderSecondPublicKey, // 发起者二次公钥
-      recipientId: body.recipientId,
+      recipientId: body.recipientId || undefined,
       rangeType: body.rangeType, // 接收类型
       range: body.range, // 接收人地址,必须赋值
       timestamp: body.timestamp, // 生成交易时间戳
       fee: body.fee, // 交易手续费
       remark: body.remark, // 交易备注，任意信息
-      dappid: body.dappid, // 交易所属的 dappid
-      lns: body.lns, // 交易所属的 域
-      sourceIP: body.sourceIP, // 交易来源 ip
+      dappid: body.dappid || undefined, // 交易所属的 dappid
+      lns: body.lns || undefined, // 交易所属的 域
+      sourceIP: body.sourceIP || undefined, // 交易来源 ip
       fromMagic: body.fromMagic, // 交易来源链的 magic
       toMagic: body.toMagic, // 交易去往链的 magic
       applyBlockHeight: body.applyBlockHeight, // 交易发起高度
@@ -228,7 +228,7 @@ export class TransactionCore {
   async recombineTransaction<T extends Transaction>(
     trs: BFChainCore.TransactionJSON<BFChainCore.GetTransactionAssetJSON<T>>,
   ) {
-    return await this.getTransactionFactoryFromType(trs.type).fromJSON(trs) as T;
+    return (await this.getTransactionFactoryFromType(trs.type).fromJSON(trs)) as T;
   }
   fromJSON = this.recombineTransaction;
   recombineTransactionInBlock<T extends BFChainCore.TransactionInBlock>(
