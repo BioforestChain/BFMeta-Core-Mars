@@ -1,9 +1,9 @@
 {
   "version": 1,
   "height": 1,
-  "blockSize": 169832,
+  "blockSize": 169829,
   "timestamp": 0,
-  "signature": "66c055f713873ac0ebf94239cde7c7a782f150c8eabaebab37635fcf83ffa6412075de65d77bfc180a990451f40f3709df2f1a7f3949c9a860e7611de899a505",
+  "signature": "86e1fff7efe3bba66dafb7a28009425cb58f3cf10bc14ba25a7ee7c6df092b4de422cac69fe9ca1d5349b037c3fdc1825a488340c3bbd5b2db37a492a338e409",
   "generatorPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
   "numberOfTransactions": 457,
   "payloadHash": "e8f691fa0663afda1848d7d167ffad11d57d47559ee7e2d886eefc6991bffc8d",

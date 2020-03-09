@@ -141,9 +141,6 @@ async function getUsernameTransaction(sender: DelegateInfo) {
         range: [],
         timestamp: 0, // 生成交易时间戳
         fee: fee === "AUTO" ? "1" : fee, // 交易手续费
-        dappid: "", // 交易所属的 dappid
-        lns: "",
-        sourceIP: "", // 交易来源 ip
         fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
         toMagic: bfchainCore.config.magic, // 交易去往链的 magic
         applyBlockHeight: 1, // 交易发起高度
@@ -203,9 +200,6 @@ async function getDelegateTransaction(sender: DelegateInfo) {
         range: [],
         timestamp: 0, // 生成交易时间戳
         fee: fee === "AUTO" ? "1" : fee, // 交易手续费
-        dappid: "", // 交易所属的 dappid
-        lns: "",
-        sourceIP: "", // 交易来源 ip
         fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
         toMagic: bfchainCore.config.magic, // 交易去往链的 magic
         applyBlockHeight: 1, // 交易发起高度
@@ -266,9 +260,6 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
         timestamp: 0, // 生成交易时间戳
         fee: fee === "AUTO" ? "1" : fee, // 交易手续费
         remark: {}, // 交易备注，任意信息
-        dappid: "", // 交易所属的 dappid
-        lns: "",
-        sourceIP: "", // 交易来源 ip
         fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
         toMagic: bfchainCore.config.magic, // 交易去往链的 magic
         applyBlockHeight: 1, // 交易发起高度
@@ -322,9 +313,6 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
           range: [], // 接收范围
           timestamp: 0, // 生成交易时间戳
           fee: fee === "AUTO" ? "1" : fee, // 交易手续费
-          dappid: "", // 交易所属的 dappid
-          lns: "",
-          sourceIP: "", // 交易来源 ip
           fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
           toMagic: bfchainCore.config.magic, // 交易去往链的 magic
           applyBlockHeight: 1, // 交易发起高度
@@ -380,14 +368,10 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
           type: core.transactionHelper.LOCATION_NAME, // 交易类型
           senderId: genesisAccountInfo.address, // 发起者地址
           senderPublicKey: genesisAccountInfo.publicKey, // 发起者公钥
-          recipientId: "",
           rangeType: RANGE_TYPE.EMPTY,
           range: [], // 接收范围
           timestamp: 0, // 生成交易时间戳
           fee: fee === "AUTO" ? "1" : fee, // 交易手续费
-          dappid: "", // 交易所属的 dappid
-          lns: "",
-          sourceIP: "", // 交易来源 ip
           fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
           toMagic: bfchainCore.config.magic, // 交易去往链的 magic
           applyBlockHeight: 1, // 交易发起高度
@@ -452,14 +436,10 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
           type: core.transactionHelper.SET_LNS_RECORD_VALUE, // 交易类型
           senderId: sender.address, // 发起者地址
           senderPublicKey: sender.publicKey, // 发起者公钥
-          recipientId: "",
           rangeType: RANGE_TYPE.EMPTY,
           range: [], // 接收范围
           timestamp: 0, // 生成交易时间戳
           fee: fee === "AUTO" ? "1" : fee, // 交易手续费
-          dappid: "", // 交易所属的 dappid
-          lns: "",
-          sourceIP: "", // 交易来源 ip
           fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
           toMagic: bfchainCore.config.magic, // 交易去往链的 magic
           applyBlockHeight: 1, // 交易发起高度
