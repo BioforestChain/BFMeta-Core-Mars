@@ -240,7 +240,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
       }
     }
 
-    if (body.recipientId) {
+    if (body.recipientId !== undefined) {
       if (!await accountBaseHelper.isAddress(body.recipientId)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "recipientId",
@@ -335,7 +335,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
       });
     }
 
-    if (body.sourceIP) {
+    if (body.sourceIP !== undefined) {
       if (!baseHelper.isIp(body.sourceIP)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "sourceIP",
@@ -345,7 +345,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
       }
     }
 
-    if (body.dappid) {
+    if (body.dappid !== undefined) {
       if (!baseHelper.isValidDAppId(body.dappid)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "dappid",
@@ -355,7 +355,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
       }
     }
 
-    if (body.lns) {
+    if (body.lns !== undefined) {
       if (!baseHelper.isValidLnsName(body.lns, config.chainName)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "lns",

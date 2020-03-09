@@ -631,7 +631,7 @@ const getTxs = (address: string) => {
       const trsInBlock = TransactionInBlock.fromObject({
         index: i,
         height,
-        indexOfSenderTransactions: index,
+        numberOfSenderTransactions: index,
         transactionAssetChanges,
         transaction: trs,
       });
@@ -811,7 +811,7 @@ const getTxs = (address: string) => {
     const trsInBlock = TransactionInBlock.fromObject({
       index: 0,
       height,
-      indexOfSenderTransactions: index,
+      numberOfSenderTransactions: index,
       transactionAssetChanges,
     });
     trsInBlock.transaction = trs;

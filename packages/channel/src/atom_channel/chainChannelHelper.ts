@@ -76,7 +76,7 @@ export class ChainChannelHelper {
       blockSignature,
       minHeight,
       maxHeight,
-      indexOfSenderTransactions,
+      numberOfSenderTransactions,
       trusteeId,
       purchaseDAppid,
       offset,
@@ -174,12 +174,12 @@ export class ChainChannelHelper {
         });
       }
     }
-    if (indexOfSenderTransactions) {
+    if (numberOfSenderTransactions) {
       has_query_params = true;
-      if (!BH.isNaturalNumber(indexOfSenderTransactions)) {
+      if (!BH.isNaturalNumber(numberOfSenderTransactions)) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.query",
-          field: "indexOfSenderTransactions",
+          field: "numberOfSenderTransactions",
         });
       }
     }

@@ -54,7 +54,7 @@ export class TransactionQueryOptions extends Message<TransactionQueryOptions>
   maxHeight?: number;
   /**交易发起账户的第 i 笔交易 */
   @Field.d(TransactionQueryOptions.INC++, "uint32", "optional")
-  indexOfSenderTransactions?: number;
+  numberOfSenderTransactions?: number;
   /**交易见证者地址 */
   @Field.d(TransactionQueryOptions.INC++, "string", "optional")
   trusteeId?: string;
@@ -89,7 +89,7 @@ export class TransactionQueryOptions extends Message<TransactionQueryOptions>
       blockSignature: this.blockSignature,
       minHeight: this.minHeight,
       maxHeight: this.maxHeight,
-      indexOfSenderTransactions: this.indexOfSenderTransactions,
+      numberOfSenderTransactions: this.numberOfSenderTransactions,
       trusteeId: this.trusteeId,
       purchaseDAppid: this.purchaseDAppid,
       offset: this.offset,

@@ -644,7 +644,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
       const trsInBlock = TransactionInBlock.fromObject({
         index: i,
         height,
-        indexOfSenderTransactions: index,
+        numberOfSenderTransactions: index,
         transactionAssetChanges,
         transaction: trs,
       });
