@@ -197,7 +197,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
       });
     }
 
-    if (!await accountBaseHelper.isAddress(body.senderId)) {
+    if (!(await accountBaseHelper.isAddress(body.senderId))) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "senderId",
         type: "account address",
@@ -220,7 +220,10 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
       });
     }
 
-    if (body.senderId !== await accountBaseHelper.getAddressFromPublicKeyString(body.senderPublicKey)) {
+    if (
+      body.senderId !==
+      (await accountBaseHelper.getAddressFromPublicKeyString(body.senderPublicKey))
+    ) {
       throw new ArgumentIllegalException(NOT_MATCH, {
         to_compare_prop: "senderId",
         be_compare_prop: "body",
@@ -241,7 +244,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     }
 
     if (body.recipientId !== undefined) {
-      if (!await accountBaseHelper.isAddress(body.recipientId)) {
+      if (!(await accountBaseHelper.isAddress(body.recipientId))) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "recipientId",
           type: "account address",
@@ -250,7 +253,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
       }
     }
 
-    if (!await this.baseHelper.isValidRange(body.rangeType, body.range)) {
+    if (!(await this.baseHelper.isValidRange(body.rangeType, body.range))) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "range",
         type: "transaction range",
@@ -289,7 +292,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
         prop: "effectiveBlockHeight",
         field: applyBlockHeight,
         ...TransactionBody_Exception_Detail,
-      })
+      });
     }
 
     const { maxApplyAndConfirmedBlockHeightDiff } = config;
@@ -360,6 +363,16 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "lns",
           type: "location name",
+          ...TransactionBody_Exception_Detail,
+        });
+      }
+    }
+
+    const remark = body.remark;
+    for (const key in remark) {
+      if (!baseHelper.isString(remark[key])) {
+        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          prop: "remark",
           ...TransactionBody_Exception_Detail,
         });
       }

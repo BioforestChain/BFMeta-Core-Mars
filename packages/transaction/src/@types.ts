@@ -280,8 +280,11 @@ declare namespace BFChainCore {
     | ApplyResult_PurchaseLocationNameJSON;
 
   interface CustomTrCenterInterface {
-    verify(body: TxBodyJSON, customAsset: CustomAssetJSON): { ret: boolean; message?: string };
-    apply(tx: BFChainCore.Transaction): ApplyResultJSON[];
+    verify(
+      body: TxBodyJSON,
+      customAsset: CustomAssetJSON,
+    ): Promise<{ ret: boolean; message?: string }>;
+    apply(tx: BFChainCore.Transaction): Promise<ApplyResultJSON[]>;
     logicVerify(tx: BFChainCore.Transaction): Promise<{ ret: boolean; message?: string }>;
   }
 
