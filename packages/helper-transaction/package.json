@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-helper-transaction",
-  "version": "5.8.3",
+  "version": "5.8.4",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,14 +14,14 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-helper-account-base": "5.8.3",
-    "@bfchain/core-helper-asymmetric": "5.8.3",
-    "@bfchain/core-helper-bigint": "5.8.3",
-    "@bfchain/core-helper-config": "5.8.3",
-    "@bfchain/core-helper-type": "5.8.3",
-    "@bfchain/core-model-constants": "5.8.3",
-    "@bfchain/core-model-transaction": "5.8.3",
-    "@bfchain/core-typings": "5.8.3",
-    "@bfchain/core-util-exception": "5.8.3"
+    "@bfchain/core-helper-account-base": "5.8.4",
+    "@bfchain/core-helper-asymmetric": "5.8.4",
+    "@bfchain/core-helper-bigint": "5.8.4",
+    "@bfchain/core-helper-config": "5.8.4",
+    "@bfchain/core-helper-type": "5.8.4",
+    "@bfchain/core-model-constants": "5.8.4",
+    "@bfchain/core-model-transaction": "5.8.4",
+    "@bfchain/core-typings": "5.8.4",
+    "@bfchain/core-util-exception": "5.8.4"
   }
 }
