@@ -488,6 +488,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
   ) => void {
     return this._chainChannelEvents.on.bind(this._chainChannelEvents, "removeChainChannel");
   }
+  @cacheGetter
   get offRemoveChainChannel(): (
     handler: BFChainUtil.MutArgEventHandler<
       BFChainCore.ChainChannelGroupEventMap<DH>["removeChainChannel"]
@@ -526,6 +527,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
   get maybeHeight() {
     return this._maybeHeight;
   }
+  @cacheGetter
   get onMaybeHeightChanged(): (
     handler: BFChainUtil.MutArgEventHandler<
       BFChainCore.ChainChannelGroupEventMap<DH>["maybeHeightChanged"]
@@ -533,6 +535,14 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     opts?: BFChainUtil.EventOptions,
   ) => void {
     return this._chainChannelEvents.on.bind(this._chainChannelEvents, "maybeHeightChanged");
+  }
+  @cacheGetter
+  get offMaybeHeightChanged(): (
+    handler: BFChainUtil.MutArgEventHandler<
+      BFChainCore.ChainChannelGroupEventMap<DH>["maybeHeightChanged"]
+    >,
+  ) => void {
+    return this._chainChannelEvents.off.bind(this._chainChannelEvents, "maybeHeightChanged");
   }
   private _initMaybeHeightWatcher() {
     const tryChangeMaybeHeight = (newMaybeHeight: number) => {
