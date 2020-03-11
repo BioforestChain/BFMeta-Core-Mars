@@ -360,6 +360,15 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
           let is_error = false;
           let result_or_error;
           try {
+            /// 算出相对事件是否满足条件
+            const needWaitTime =
+              chainChannel.diffTime -
+              this.timeHelper.getTimeByTimestamp(
+                this.timeHelper.getTimestamp() - transaction.timestamp,
+              );
+            if (needWaitTime > 0) {
+              await sleep(needWaitTime);
+            }
             result_or_error = await chainChannel._requestWithBinaryData(...initedArgs);
           } catch (error) {
             result_or_error = error;

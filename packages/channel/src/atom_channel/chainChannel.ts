@@ -118,6 +118,9 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
     super();
     this.initOnMessage();
   }
+  get diffTime() {
+    return this.timeHelper.now();
+  }
   onClose(
     handler: BFChainUtil.FirstArgument<BFChainCore.ChannelEndpointInterface["onClose"]>,
     once?: boolean,
@@ -263,9 +266,16 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
     transaction: BFChainCore.NewTransactionArgJSON["transaction"],
     opts?: BFChainCore.ChannelRequestOptions,
   ) {
-    return this._requestWithBinaryData(
-      ...(await this.initBroadcastTransactionArg(transaction, opts)),
-    );
+    const args = await this.initBroadcastTransactionArg(transaction, opts);
+
+    /// 算出相对事件是否满足条件
+    const needWaitTime =
+      this.diffTime -
+      this.timeHelper.getTimeByTimestamp(this.timeHelper.getTimestamp() - transaction.timestamp);
+    if (needWaitTime > 0) {
+      await sleep(needWaitTime);
+    }
+    return this._requestWithBinaryData(...args);
   }
   /**查询区块 */
   async queryBlock<B extends Block = Block>(

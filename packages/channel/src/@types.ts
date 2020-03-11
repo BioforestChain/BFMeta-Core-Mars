@@ -53,6 +53,11 @@ declare namespace BFChainCore {
     extends ChainChannelBase,
       QueneEventEmitterPro<ChainChannelHanlderEventMap> {
     delay: number;
+    /**
+     * 通道的相对时间差别
+     * 对方的time - 我本地的time
+     */
+    readonly diffTime: number;
     onClose(
       handler: (error: BFChainUtil.InterruptedException) => any,
       once?: boolean,
