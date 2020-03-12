@@ -926,7 +926,7 @@ export class TransactionHelper {
    * 目前仅仅支持全量匹配
    * @TODO 支持通配符匹配
    */
-  @Inject(TRANSACTION_FILTER_SYMBOL, { optional: true, dynamics: true })
+  @Inject(TRANSACTION_FILTER_SYMBOL, { optional: true })
   transactionFilter?: string[];
   /**
    * 检查交易是否可以被创建
