@@ -268,7 +268,10 @@ export const PERMISSION_DENIED = (ec.next =
   "Permission denied at operation {operationName} when {function}");
 /**round function */
 export const REGISTER_DELEGTE_QUOTA_FULL = (ec.next =
-  "The register delegate quota is full in round {round}  when {function}");
+  "The register delegate quota is full in round {round} when {function}");
+/**reason function */
+export const VERIFY_TRANSACTION_POW_OF_WORK_ERROR = (ec.next =
+  "Verify transaction pow of work error, reason {reason} when {function}");
 // #endregion
 export const errorCode = new Map(
   ec.errorCode.concat([

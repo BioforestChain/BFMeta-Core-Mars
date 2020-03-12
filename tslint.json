@@ -9,6 +9,6 @@
     "no-unused-expression": false,
     "no-var-requires": false,
     "no-console": false,
-    "forin": true
+    "forin": false
   }
 }

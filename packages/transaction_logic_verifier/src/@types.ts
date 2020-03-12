@@ -17,6 +17,10 @@ declare namespace BFChainCore {
     accountStatus: number;
     isDelegate: number;
     isAcceptVote: number;
+    fixedEquityInfo: {
+      round: number;
+      equity: bigint;
+    };
     equityInfo: {
       round: number;
       equity: bigint;
@@ -122,6 +126,8 @@ declare namespace BFChainCore {
     getDelegates(currentGeneraterPublicKeyList: (Uint8Array | string)[]): Promise<T[]>;
     /**获取账户信息 */
     getAccountInfo(address: string): Promise<AccountInfo | undefined>;
+    /**获取账户的块内交易 */
+    getAccountTxCountInBlock(address: string): Promise<number|undefined>;
     /**获取账户资产信息 */
     getAccountAssets(address: string): Promise<AccountAssets | undefined>;
     /**获取账户信息和账户资产信息 */

@@ -1,4 +1,4 @@
-import { Inject } from "@bfchain/util";
+import { Inject, parseHexToArrayBuffer } from "@bfchain/util";
 import {
   CoreExceptionGenerator,
   NOT_EXIST,
@@ -22,6 +22,7 @@ import {
   TRANSACTION_FEE_NOT_ENOUGH,
   ALREADY_EXIST,
   INVALID_TRANSACTION_EFFECTIVE_BLOCK_HEIGHT,
+  VERIFY_TRANSACTION_POW_OF_WORK_ERROR,
 } from "@bfchain/core-util-exception";
 import {
   NewTransactionRefuseReason,
@@ -31,7 +32,13 @@ import {
   ACCOUNT_STATUS,
 } from "@bfchain/core-model";
 import { EventLogicVerifier } from "./eventLogicVerifier";
-import { ConfigHelper, ChainTimeHelper, BlockHelper, JSBIHelper } from "@bfchain/core-helper";
+import {
+  ConfigHelper,
+  ChainTimeHelper,
+  BlockHelper,
+  JSBIHelper,
+  TransactionHelper,
+} from "@bfchain/core-helper";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
@@ -45,12 +52,12 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   protected timeHelper!: ChainTimeHelper;
   @Inject(BlockHelper)
   protected blockHelper!: BlockHelper;
+  @Inject(TransactionHelper)
+  protected transactionHelper!: TransactionHelper;
   @Inject(JSBIHelper)
   protected jsbiHelper!: JSBIHelper;
   @Inject(EventLogicVerifier)
   protected eventLogicVerifier!: EventLogicVerifier;
-  @Inject("bfchain-core:TransactionCore")
-  protected transactionCore!: import("@bfchain/core-transaction").TransactionCore;
   @Inject("transactionGetterHelper", { optional: true, dynamics: true })
   protected transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface;
   @Inject("accountGetterHelper", { optional: true, dynamics: true })
@@ -146,6 +153,16 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     );
     // 校验交易的 lns
     await this.checkLocationName(transaction, currentBlockHeight, accountGetterHelper);
+
+    // 校验 pow
+    if (currentBlockHeight > this.configHelper.powOfWorkExemptionBlocks) {
+      await this.checkTransactionPowOfWork(
+        transaction,
+        currentBlockHeight,
+        senderAccountInfo.fixedEquityInfo,
+        accountGetterHelper,
+      );
+    }
 
     return sender;
   }
@@ -522,7 +539,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
         });
       }
     }
-    if (trs.type === this.transactionCore.transactionHelper.VOTE) {
+    if (trs.type === this.transactionHelper.VOTE) {
       return;
     }
     // 获取dapp开发账户
@@ -617,17 +634,18 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    * @param transaction
    */
   checkTrsFeeAndWebFee(transaction: BFChainCore.Transaction, byteLength: number) {
-    const { jsbiHelper, transactionCore, configHelper } = this;
-    if (transaction.type === transactionCore.transactionHelper.GRAB_ASSET) {
+    if (transaction.type === this.transactionHelper.GRAB_ASSET) {
       return transaction.fee;
     }
     const feePerByte = {
       numerator: BigInt(transaction.fee),
       denominator: byteLength,
     };
-    const minTransactionFeePerByte = configHelper.minTransactionFeePerByte;
-    const result = jsbiHelper.compareFraction(feePerByte, minTransactionFeePerByte);
-    const minFee = jsbiHelper.multiplyCeilFraction(byteLength, minTransactionFeePerByte).toString();
+    const minTransactionFeePerByte = this.configHelper.minTransactionFeePerByte;
+    const result = this.jsbiHelper.compareFraction(feePerByte, minTransactionFeePerByte);
+    const minFee = this.jsbiHelper
+      .multiplyCeilFraction(byteLength, minTransactionFeePerByte)
+      .toString();
     if (result < 0) {
       throw new ConsensusException(TRANSACTION_FEE_NOT_ENOUGH, {
         errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
@@ -648,16 +666,15 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     byteLength: number,
     minFeePerByte: BFChainCore.FractionJSON,
   ) {
-    const { jsbiHelper, transactionCore } = this;
-    if (transaction.type === transactionCore.transactionHelper.GRAB_ASSET) {
+    if (transaction.type === this.transactionHelper.GRAB_ASSET) {
       return transaction.fee;
     }
     const feePerByte = {
       numerator: BigInt(transaction.fee),
       denominator: byteLength,
     };
-    const result = jsbiHelper.compareFraction(feePerByte, minFeePerByte);
-    const minFee = jsbiHelper.multiplyCeilFraction(byteLength, minFeePerByte).toString();
+    const result = this.jsbiHelper.compareFraction(feePerByte, minFeePerByte);
+    const minFee = this.jsbiHelper.multiplyCeilFraction(byteLength, minFeePerByte).toString();
     if (result < 0) {
       throw new ConsensusException(TRANSACTION_FEE_NOT_ENOUGH, {
         errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
@@ -728,6 +745,58 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
         target: "blockChain",
         ...Function_Exception_Detail,
       });
+    }
+  }
+
+  /**
+   * 校验交易的 pow
+   *
+   * @param transaction
+   * @param currentBlockHeight
+   * @param fixedEquityInfo
+   * @param accountGetterHelper
+   */
+  async checkTransactionPowOfWork(
+    transaction: T,
+    currentBlockHeight: number,
+    fixedEquityInfo: {
+      round: number;
+      equity: bigint;
+    },
+    accountGetterHelper = this.accountGetterHelper,
+  ) {
+    const Function_Exception_Detail = {
+      function: "checkRepeatInBlockChainTransaction",
+    } as const;
+    if (!accountGetterHelper) {
+      throw new NoFoundException(NOT_EXIST, {
+        prop: "accountGetterHelper",
+        target: "moduleStroge",
+        ...Function_Exception_Detail,
+      });
+    }
+    const curRound = this.blockHelper.calcRoundByHeight(currentBlockHeight);
+    const tranSenderCount = await accountGetterHelper.getAccountTxCountInBlock(
+      transaction.senderId,
+    );
+    if (!tranSenderCount) {
+      throw new ConsensusException(NOT_FOUND, {
+        prop: "account number of transaction in block",
+        ...Function_Exception_Detail,
+      });
+    }
+    const senderEquity =
+      fixedEquityInfo.round === curRound - 1 ? fixedEquityInfo.equity.toString() : "0";
+    const powCheckResult = await this.transactionHelper.checkTransactionProfOfWork(
+      parseHexToArrayBuffer(transaction.signature),
+      tranSenderCount,
+      senderEquity,
+    );
+    if (!powCheckResult) {
+      throw new ConsensusException(
+        VERIFY_TRANSACTION_POW_OF_WORK_ERROR,
+        `Transaction pow check field, block height ${currentBlockHeight} transaction signature ${transaction.signature} sender ${transaction.senderId} senderEquity ${senderEquity} sender transaction count in block ${tranSenderCount}`,
+      );
     }
   }
 
