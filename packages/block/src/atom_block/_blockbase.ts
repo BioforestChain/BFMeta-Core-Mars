@@ -146,7 +146,7 @@ export abstract class BlockFactory<T extends Block> {
    */
   @cacheGetter
   get canInsertTransaction() {
-    return this.transactionCore.canCreateTransaction;
+    return this.transactionCore.canCreateTransaction.bind(this.transactionCore);
   }
 
   /**
