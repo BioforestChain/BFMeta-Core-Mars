@@ -119,7 +119,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
     this.initOnMessage();
   }
   get diffTime() {
-    return this.timeHelper.now();
+    return 0;
   }
   onClose(
     handler: BFChainUtil.FirstArgument<BFChainCore.ChannelEndpointInterface["onClose"]>,
