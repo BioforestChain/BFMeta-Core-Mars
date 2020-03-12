@@ -140,7 +140,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
     return this.endpoint.close(reason);
   }
   /**对方节点可能的高度 */
-  private _maybeHeight = 1;
+  protected _maybeHeight = 1;
   get maybeHeight() {
     return this._maybeHeight;
   }
