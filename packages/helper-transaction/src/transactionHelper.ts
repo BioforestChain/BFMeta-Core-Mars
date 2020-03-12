@@ -18,6 +18,7 @@ import { JSBIHelper } from "@bfchain/core-helper-bigint";
 import { AsymmetricHelper } from "@bfchain/core-helper-asymmetric";
 import { Injectable, Inject } from "@bfchain/util";
 import { AccountBaseHelper } from "@bfchain/core-helper-account-base";
+import { TRANSACTION_FILTER_SYMBOL } from "./const";
 type Transaction = import("@bfchain/core-model-transaction").Transaction;
 
 const {
@@ -916,5 +917,27 @@ export class TransactionHelper {
       beginUnfrozenBlockHeight && (minEffectiveHeight = beginUnfrozenBlockHeight);
     }
     return minEffectiveHeight;
+  }
+
+  /**
+   * 创建交易的类型过滤器
+   * 如果没有这个过滤器，那么默认全部通过
+   * 否则根据匹配规则进行匹配
+   * 目前仅仅支持全量匹配
+   * @TODO 支持通配符匹配
+   */
+  @Inject(TRANSACTION_FILTER_SYMBOL, { optional: true, dynamics: true })
+  transactionFilter?: string[];
+  /**
+   * 检查交易是否可以被创建
+   * @param type
+   */
+  isTransactionInFilter(type: string) {
+    if (this.transactionFilter) {
+      if (!this.transactionFilter.includes(type)) {
+        return false;
+      }
+    }
+    return true;
   }
 }

@@ -4,6 +4,7 @@ import {
   ConfigHelper,
   TransactionHelper,
   AsymmetricHelper,
+  TRANSACTION_FILTER_SYMBOL
 } from "@bfchain/core-helper";
 import { Injectable, Inject, ModuleStroge, Resolve } from "@bfchain/util";
 import { Transaction } from "@bfchain/core-model";
@@ -16,7 +17,10 @@ import {
 import { Reader } from "@bfchain/protobuf";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 
-const { ArgumentFormatException } = CoreExceptionGenerator("CONTROLLER", "transaction");
+const { ArgumentFormatException, OutOfRangeException } = CoreExceptionGenerator(
+  "CONTROLLER",
+  "transaction",
+);
 
 @Injectable("bfchain-core:TransactionCore")
 export class TransactionCore {
@@ -62,6 +66,13 @@ export class TransactionCore {
     return this.getTransactionFactory<T>(TransactionFactory);
   }
   // #endregion
+  /**
+   * 检查交易是否可以被创建
+   * @param type
+   */
+  canCreateTransaction(type: string) {
+    return this.transactionHelper.isTransactionInFilter(type)
+  }
 
   /**
    * 创建交易
@@ -90,6 +101,12 @@ export class TransactionCore {
     config = this.config,
     pow?: BFChainCore.TransactonPoWOptions<T>,
   ) {
+    const trsType =
+      body.type || this.getTransactionTypeFromTransactionFactoryConstructor(TxFactory);
+    if (!this.canCreateTransaction(trsType)) {
+      const trsName = TRANSACTION_TYPES_MAP.VK.get(TRANSACTION_TYPES_MAP.trsTypeToV(trsType));
+      throw new OutOfRangeException("Disabled create {trsName} Transaction", { trsName });
+    }
     const transactionFactory = this.getTransactionFactory(TxFactory);
 
     /// 校验主密码keypari与二次密码的keypair

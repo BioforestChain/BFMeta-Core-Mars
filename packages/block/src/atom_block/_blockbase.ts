@@ -1,5 +1,5 @@
 import { Block, GetBlockRemarkJSON } from "@bfchain/core-model-block";
-import { TransactionInBlock } from "@bfchain/core-model-transaction";
+import { TransactionInBlock, TRANSACTION_TYPES_MAP } from "@bfchain/core-model-transaction";
 import type {
   BlockHelper,
   BaseHelper,
@@ -23,7 +23,7 @@ import {
   PROP_SHOULD_LTE_FIELD,
   TOO_LARGE,
 } from "@bfchain/core-util-exception";
-import { Exception, QueneEventEmitter, EasyMap, Resolve, ModuleStroge } from "@bfchain/util";
+import { Exception, QueneEventEmitter, EasyMap, Resolve, cacheGetter } from "@bfchain/util";
 import { Writer } from "@bfchain/protobuf";
 const {
   ArgumentIllegalException,
@@ -141,6 +141,15 @@ export abstract class BlockFactory<T extends Block> {
   abstract _generateBlock(body: BFChainCore.BlockBody, remark: GetBlockRemarkJSON<T>): T;
 
   /**
+   * 检查交易是否可以被创建
+   * @param type
+   */
+  @cacheGetter
+  get canInsertTransaction() {
+    return this.transactionCore.canCreateTransaction;
+  }
+
+  /**
    * 绑定交易相关的信息
    * 包括交易体、统计金额、校验hash、总长度
    *
@@ -185,6 +194,13 @@ export abstract class BlockFactory<T extends Block> {
             });
           }
           const trs = tranItem.transaction;
+          if (this.canInsertTransaction(trs.type)) {
+            const trsName = TRANSACTION_TYPES_MAP.VK.get(
+              TRANSACTION_TYPES_MAP.trsTypeToV(trs.type),
+            );
+            throw new OutOfRangeException("Disabled insert {trsName} Transaction", { trsName });
+          }
+
           if (block.height > this.config.powOfWorkExemptionBlocks) {
             //#region 校验交易pow
             {

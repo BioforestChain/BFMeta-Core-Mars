@@ -35,6 +35,7 @@
   ],
   "files": [
     "src/@types.ts",
+    "src/const.ts",
     "src/index.ts",
     "src/transactionHelper.ts"
   ]
