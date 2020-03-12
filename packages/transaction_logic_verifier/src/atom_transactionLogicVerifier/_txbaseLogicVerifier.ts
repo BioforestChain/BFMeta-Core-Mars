@@ -779,7 +779,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     const tranSenderCount = await accountGetterHelper.getAccountTxCountInBlock(
       transaction.senderId,
     );
-    if (!tranSenderCount) {
+    if (tranSenderCount === undefined) {
       throw new ConsensusException(NOT_FOUND, {
         prop: "account number of transaction in block",
         ...Function_Exception_Detail,
