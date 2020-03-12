@@ -361,11 +361,10 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
           let result_or_error;
           try {
             /// 算出相对事件是否满足条件
-            const needWaitTime =
-              chainChannel.diffTime -
-              this.timeHelper.getTimeByTimestamp(
-                this.timeHelper.getTimestamp() - transaction.timestamp,
-              );
+            const needWaitTime = -chainChannel.calcDiffTimeToTargetTime(
+              this.timeHelper.getTimeByTimestamp(transaction.timestamp),
+            );
+
             if (needWaitTime > 0) {
               await sleep(needWaitTime);
             }

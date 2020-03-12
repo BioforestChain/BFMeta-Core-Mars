@@ -261,6 +261,14 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
       opts,
     ] as const;
   }
+  /**
+   * 计算要到达某一个时间的差异时间
+   * 如果返回值T<0，说明相对于远程节点来说，它们还差T才能到达对应的targetTime
+   */
+  calcDiffTimeToTargetTime(targetTime: number) {
+    const now = this.timeHelper.now() + this.diffTime;
+    return now - targetTime;
+  }
   /**广播交易体 */
   async broadcastTransaction(
     transaction: BFChainCore.NewTransactionArgJSON["transaction"],
@@ -269,9 +277,10 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
     const args = await this.initBroadcastTransactionArg(transaction, opts);
 
     /// 算出相对事件是否满足条件
-    const needWaitTime =
-      this.diffTime -
-      this.timeHelper.getTimeByTimestamp(this.timeHelper.getTimestamp() - transaction.timestamp);
+    const needWaitTime = -this.calcDiffTimeToTargetTime(
+      this.timeHelper.getTimeByTimestamp(transaction.timestamp),
+    );
+
     if (needWaitTime > 0) {
       await sleep(needWaitTime);
     }

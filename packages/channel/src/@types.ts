@@ -54,10 +54,19 @@ declare namespace BFChainCore {
       QueneEventEmitterPro<ChainChannelHanlderEventMap> {
     delay: number;
     /**
-     * 通道的相对时间差别
-     * 对方的time - 我本地的time
+     * 与远程节点通道的相对时间差别
+     * 对方的time = 我本地的time + diffTime
+     * <0 说明对方的时间比我们慢
+     * >0 说明对方的时间比我们快
      */
     readonly diffTime: number;
+
+    /**
+     * 计算要到达某一个时间的差异时间
+     * 如果返回值T<0，说明相对于远程节点来说，它们还差T才能到达对应的targetTime
+     */
+    calcDiffTimeToTargetTime(targetTime: number): number;
+
     onClose(
       handler: (error: BFChainUtil.InterruptedException) => any,
       once?: boolean,
