@@ -167,7 +167,7 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
     /**自己打块不再次验证 */
     if (processBlockType !== PROCESSBLOCK_TYPE.GENERATEBLOCK) {
       // 检验区块基本信息和签名（包括 remark size）
-      await this.blockCore.getBlockFactoryFromHeight(block.height).verify(block);
+      await this.blockCore.getBlockFactoryFromHeight<T>(block.height).verify(block);
     }
   }
 

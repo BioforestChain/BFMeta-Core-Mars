@@ -194,7 +194,7 @@ export abstract class BlockFactory<T extends Block> {
             });
           }
           const trs = tranItem.transaction;
-          if (this.canInsertTransaction(trs.type)) {
+          if (!this.canInsertTransaction(trs.type)) {
             const trsName = TRANSACTION_TYPES_MAP.VK.get(
               TRANSACTION_TYPES_MAP.trsTypeToV(trs.type),
             );
