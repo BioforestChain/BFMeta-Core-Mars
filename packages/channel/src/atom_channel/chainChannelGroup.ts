@@ -579,9 +579,9 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     });
     /// 如果有节点移除, 那么获取其余最高的节点
     this._chainChannelEvents.on("removeChainChannel", chainChannel => {
+      let newMaybeHeight = 1;
       if (chainChannel.maybeHeight >= this._maybeHeight) {
         /// 最高的值发生了改变,那么就要遍历寻找第二高的值
-        let newMaybeHeight = 1;
         for (const cc of this.chainChannelSet) {
           newMaybeHeight = Math.max(cc.maybeHeight, newMaybeHeight);
           if (newMaybeHeight >= chainChannel.maybeHeight) {
@@ -589,8 +589,8 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
             return;
           }
         }
-        tryChangeMaybeHeight(newMaybeHeight);
       }
+      tryChangeMaybeHeight(newMaybeHeight);
       /// 移除监听
       chainChannel.off("onNewBlock", onChainChannelNewBlock);
     });
