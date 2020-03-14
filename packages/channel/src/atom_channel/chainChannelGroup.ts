@@ -21,6 +21,7 @@ import {
   RESPONSE_STATUS,
   TransactionInBlock,
   NewBlockArgModel,
+  NewTransactionReturnModel,
 } from "@bfchain/core-model";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 import { ChainChannel, ChainChannelBase } from "./chainChannel";
@@ -341,15 +342,12 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
       | undefined
       | BFChainUtil.PromiseReturnType<ChainChannel["initBroadcastTransactionArg"]>;
     const startTime = this.timeHelper.now();
-    const resultList = [] as {
-      chainChannel: DH;
-      result: BFChainCore.BroadcastNewTransactionEvents<DH>["broadcasted"]["in"];
-    }[];
+    const resultList = [] as BFChainCore.BroadcastNewTransactionEvents<DH>["broadcasted"]["in"][];
     try {
       const chainChannelList = [...this.chainChannelSet.values()];
       let is_break = event && (await event.emit("startBroadcasting", { chainChannelList }));
       if (is_break && is_break.break) {
-        return;
+        return [];
       }
       const pp = new ParallelPool<void>(opts && opts.max_parallel_num);
       // 将要广播的节点放置到广播队列中
@@ -357,8 +355,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
         pp.addTaskExecutor(async () => {
           initedArgs ||
             (initedArgs = await chainChannel.initBroadcastTransactionArg(transaction, opts));
-          let is_error = false;
-          let result_or_error;
+          let result: BFChainCore.BroadcastNewTransactionEvents<DH>["broadcasted"]["in"];
           try {
             /// 算出相对事件是否满足条件
             const needWaitTime = -chainChannel.calcDiffTimeToTargetTime(
@@ -368,13 +365,16 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
             if (needWaitTime > 0) {
               await sleep(needWaitTime);
             }
-            result_or_error = await chainChannel._requestWithBinaryData(...initedArgs);
+            resultList.push(
+              (result = {
+                error: false,
+                result: await chainChannel._requestWithBinaryData(...initedArgs),
+                chainChannel,
+              }),
+            );
           } catch (error) {
-            result_or_error = error;
-            is_error = true;
+            resultList.push((result = { error: true, result: error, chainChannel }));
           }
-          const result = { error: is_error, result: result_or_error, chainChannel };
-          resultList.push({ chainChannel, result });
           if (event) {
             /**虽然这里不属于广播的逻辑，但还是await一下 */
             is_break = await event.emit("broadcasted", result);

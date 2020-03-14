@@ -3,11 +3,16 @@ declare namespace BFChainCore {
   type BroadcastNewTransactionEvents<DH extends ChainChannel> = {
     startBroadcasting: BFChainUtil.EventInOut<{ chainChannelList: DH[] }, { break: boolean }>;
     broadcasted: BFChainUtil.EventInOut<
-      {
-        error: boolean;
-        result: import("@bfchain/core-model-channel").NewTransactionReturnModel | Error;
-        chainChannel: DH;
-      },
+      | {
+          error: false;
+          result: import("@bfchain/core-model-channel").NewTransactionReturnModel;
+          chainChannel: DH;
+        }
+      | {
+          error: true;
+          result: unknown;
+          chainChannel: DH;
+        },
       { break: boolean }
     >;
     endBroadcast: BFChainUtil.EventInOut<{ duraction: number }, any>;
@@ -172,15 +177,18 @@ declare namespace BFChainCore {
       },
       event?: BFChainUtil.QueneEventEmitter<BroadcastNewTransactionEvents<CC>>,
     ): Promise<
-      | {
-          chainChannel: CC;
-          result: {
-            error: boolean;
-            result: import("@bfchain/core-model").NewTransactionReturnModel | Error;
+      (
+        | {
+            error: false;
+            result: import("@bfchain/core-model-channel").NewTransactionReturnModel;
             chainChannel: CC;
-          };
-        }[]
-      | undefined
+          }
+        | {
+            error: true;
+            result: unknown;
+            chainChannel: CC;
+          }
+      )[]
     >;
     /**
      * 查询区块
