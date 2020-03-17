@@ -1,8 +1,10 @@
-import { bfchainCore } from "./include";
+import { getBfchainCoreEntry } from "./include";
 import "../src/model";
 import { Type, Field, Message, util } from "@bfchain/protobuf";
 import { JSONDryFactory } from "json-dry-factory";
 import { TransferAssetTransactionFactory, RANGE_TYPE } from "@bfchain/core";
+
+const bfchainCore = getBfchainCoreEntry();
 const jsonDry = new JSONDryFactory("protobuf");
 
 @Type.d("QAQ")

@@ -14,6 +14,7 @@ import {
   PROP_IS_REQUIRE,
   SHOULD_BE,
   SHOULD_NOT_EXIST,
+  NOT_MATCH,
 } from "@bfchain/core-util-exception";
 import { Injectable, Inject, TaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
@@ -67,8 +68,6 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
     } as const;
 
     this.emptyRangeType(body, Function_Exception_Detail);
-
-    const { baseHelper } = this;
 
     if (body.recipientId) {
       throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
@@ -131,6 +130,16 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "genesisBlock",
         ...RegisterChainAsset_Exception_Detail,
+      });
+    }
+
+    if (config.initials !== genesisBlockJson.remark.bnid) {
+      throw new ArgumentIllegalException(NOT_MATCH, {
+        to_compare_prop: "initials",
+        be_compare_prop: "bnid",
+        to_target: "config",
+        be_target: "genesisBlockJson.remark",
+        ...Function_Exception_Detail,
       });
     }
 

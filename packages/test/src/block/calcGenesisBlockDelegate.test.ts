@@ -8,7 +8,9 @@ import {
   RoundLastBlockFactory,
 } from "@bfchain/core";
 import { AsyncIteratorGenerator } from "@bfchain/util";
-import { bfchainCore, moduleMap } from "../include";
+import { moduleMap, getBfchainCoreEntry } from "../include";
+
+const bfchainCore = getBfchainCoreEntry();
 
 const delegatesArr = [
   {

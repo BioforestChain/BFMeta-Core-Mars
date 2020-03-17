@@ -2,9 +2,11 @@ import { DestoryAssetTransaction, DestoryAssetTransactionFactory, RANGE_TYPE } f
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,
-  bfchainCore,
   AccountModel,
+  getBfchainCoreEntry,
 } from "../include";
+
+const bfchainCore = getBfchainCoreEntry();
 
 async function getDestoryAssetTransaction(sender: AccountModel) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);

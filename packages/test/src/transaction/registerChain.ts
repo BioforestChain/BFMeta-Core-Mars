@@ -22,21 +22,25 @@ import {
   LocationNameTransactionFactory,
   SetLnsRecordValueTransactionFactory,
   LOCATION_NAME_OPERATION_TYPE,
+  BNID_TYPE,
 } from "@bfchain/core";
 import { QueneEventEmitter, Resolve } from "@bfchain/util";
 import * as path from "path";
 import {
   getSenderWithoutSecondSecret,
-  getFullBfchainCore,
-  registerBfchainCore,
+  getFullBfchainCoreEntry,
+  getRegisterBfchainCoreEntry,
   AccountModel,
   config,
   registerchainRemarkData,
   getIps,
 } from "../include";
+
 const defaultIpsPath = path.join(process.cwd(), "./assets/defaultIps.json");
 
-const fullBfchainCore = getFullBfchainCore(57, 128);
+const fullBfchainCore = getFullBfchainCoreEntry(57, 128);
+
+const registerBfchainCore = getRegisterBfchainCoreEntry();
 
 const registerStatistics = Resolve(BlockBaseStatisticsHelper, registerBfchainCore.moduleMap);
 const statistics = Resolve(BlockBaseStatisticsHelper, fullBfchainCore.moduleMap);
@@ -94,9 +98,6 @@ const getTxs = (address: string) => {
           range: [],
           timestamp: 0, // 生成交易时间戳
           fee, // 交易手续费
-          dappid: "", // 交易所属的 dappid
-          lns: "",
-          sourceIP: "", // 交易来源 ip
           fromMagic: registerBfchainCore.config.magic, // 交易来源链的 magic
           toMagic: registerBfchainCore.config.magic, // 交易去往链的 magic
           applyBlockHeight: 1, // 交易发起高度
@@ -164,9 +165,6 @@ const getTxs = (address: string) => {
           range: [],
           timestamp: 0, // 生成交易时间戳
           fee, // 交易手续费
-          dappid: "", // 交易所属的 dappid
-          lns: "",
-          sourceIP: "", // 交易来源 ip
           fromMagic: registerBfchainCore.config.magic, // 交易来源链的 magic
           toMagic: registerBfchainCore.config.magic, // 交易去往链的 magic
           applyBlockHeight: 1, // 交易发起高度
@@ -235,9 +233,6 @@ const getTxs = (address: string) => {
           timestamp: 0, // 生成交易时间戳
           fee, // 交易手续费
           remark: { remark: "交易备注，任意信息，这个是接收投票交易" }, // 交易备注，任意信息
-          dappid: "", // 交易所属的 dappid
-          lns: "",
-          sourceIP: "", // 交易来源 ip
           fromMagic: registerBfchainCore.config.magic, // 交易来源链的 magic
           toMagic: registerBfchainCore.config.magic, // 交易去往链的 magic
           applyBlockHeight: 1, // 交易发起高度
@@ -282,14 +277,10 @@ const getTxs = (address: string) => {
           type: registerBfchainCore.transactionHelper.LOCATION_NAME, // 交易类型
           senderId: genesisAccountInfo.address, // 发起者地址
           senderPublicKey: genesisAccountInfo.publicKey, // 发起者公钥
-          recipientId: "",
           rangeType: RANGE_TYPE.EMPTY,
           range: [], // 接收范围
           timestamp: 0, // 生成交易时间戳
           fee: fee === "AUTO" ? "1" : fee, // 交易手续费
-          dappid: "", // 交易所属的 dappid
-          lns: "",
-          sourceIP: "", // 交易来源 ip
           fromMagic: registerBfchainCore.config.magic, // 交易来源链的 magic
           toMagic: registerBfchainCore.config.magic, // 交易去往链的 magic
           applyBlockHeight: 1, // 交易发起高度
@@ -359,14 +350,10 @@ const getTxs = (address: string) => {
           type: registerBfchainCore.transactionHelper.SET_LNS_RECORD_VALUE, // 交易类型
           senderId: sender.address, // 发起者地址
           senderPublicKey: sender.publicKey, // 发起者公钥
-          recipientId: "",
           rangeType: RANGE_TYPE.EMPTY,
           range: [], // 接收范围
           timestamp: 0, // 生成交易时间戳
           fee: fee === "AUTO" ? "1" : fee, // 交易手续费
-          dappid: "", // 交易所属的 dappid
-          lns: "",
-          sourceIP: "", // 交易来源 ip
           fromMagic: registerBfchainCore.config.magic, // 交易来源链的 magic
           toMagic: registerBfchainCore.config.magic, // 交易去往链的 magic
           applyBlockHeight: 1, // 交易发起高度
@@ -445,9 +432,6 @@ const getTxs = (address: string) => {
           range: [], // 接收账户地址
           timestamp: 0, // 生成交易时间戳
           fee, // 交易手续费
-          dappid: "", // 交易所属的 dappid
-          lns: "",
-          sourceIP: "", // 交易来源 ip
           fromMagic: registerBfchainCore.config.magic, // 交易来源链的 magic
           toMagic: registerBfchainCore.config.magic, // 交易去往链的 magic
           applyBlockHeight: 1, // 交易发起高度
@@ -526,6 +510,7 @@ const getTxs = (address: string) => {
     for (let i = 0; i < delegatesSecret.slice(5).length; i++) {
       const secret = delegatesSecret[i];
       const address = await registerBfchainCore.accountBaseHelper.getAddressFromSecret(secret);
+
       registerchainRemarkData.newDelegates.push(address);
       if (
         registerchainRemarkData.nextRoundDelegates.length < registerBfchainCore.config.blockPerRound

@@ -10,9 +10,11 @@ import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,
   getRecipientWithSecondSecret,
-  bfchainCore,
   AccountModel,
+  getBfchainCoreEntry,
 } from "../include";
+
+const bfchainCore = getBfchainCoreEntry();
 
 async function getDappTransaction(sender: AccountModel) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);

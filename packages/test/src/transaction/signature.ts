@@ -2,9 +2,11 @@ import { SignatureTransaction, SignatureTransactionFactory, RANGE_TYPE } from "@
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,
-  bfchainCore,
   AccountModel,
+  getBfchainCoreEntry,
 } from "../include";
+
+const bfchainCore = getBfchainCoreEntry();
 
 async function getSignatureTransaction(sender: AccountModel) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);

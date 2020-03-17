@@ -10,13 +10,15 @@ import {
   getGenesisAccount,
   getRecipientWithoutSecondSecret,
   getDelegateWithoutSecondSecret,
-  getFullBfchainCore,
-  registerBfchainCore,
+  getFullBfchainCoreEntry,
   AccountModel,
   getDelegateWithSecondSecret,
+  getRegisterBfchainCoreEntry,
 } from "../include";
 
-const fullBfchainCore = getFullBfchainCore(57, 128);
+const fullBfchainCore = getFullBfchainCoreEntry(57, 128);
+
+const registerBfchainCore = getRegisterBfchainCoreEntry();
 
 async function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate: AccountModel) {
   const keypair = await fullBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);

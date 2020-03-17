@@ -4,21 +4,20 @@ import {
   ImmigrateAssetTransactionFactory,
   ImmigrateAssetTransaction,
   RANGE_TYPE,
-  BlockCore,
 } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,
-  getFullBfchainCore,
-  getFullRegisterBfchainCore,
+  getFullBfchainCoreEntry,
+  getFullRegisterBfchainCoreEntry,
   AccountModel,
   getDelegateWithoutSecondSecret,
   getDelegateWithSecondSecret,
 } from "../include";
 import { parseHexToArrayBuffer } from "@bfchain/util";
 
-const fullBfchainCore = getFullBfchainCore(57, 128);
-const fullRegisterBfchainCore = getFullRegisterBfchainCore();
+const fullBfchainCore = getFullBfchainCoreEntry(57, 128);
+const fullRegisterBfchainCore = getFullRegisterBfchainCoreEntry();
 
 async function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate: AccountModel) {
   const keypair = await fullBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);

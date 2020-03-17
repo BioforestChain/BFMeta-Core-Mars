@@ -3,9 +3,12 @@ import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,
   getGenesisAccount,
-  bfchainCore,
   AccountModel,
+  getBfchainCoreEntry,
 } from "../include";
+
+const bfchainCore = getBfchainCoreEntry();
+
 const genesisAddress = getGenesisAccount().address;
 async function getIssueAssetTransaction(sender: AccountModel) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);

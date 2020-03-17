@@ -421,11 +421,13 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       });
     }
 
-    nextRoundDelegates.forEach(async (nextRoundDelegate, i) => {
-      if (!(await this.accountBaseHelper.isAddress(nextRoundDelegate.address))) {
+    for (let i = 0; i < nextRoundDelegates.length; i++) {
+      const nextRoundDelegate = nextRoundDelegates[i];
+      if (!(await this.accountBaseHelper.isAddress(nextRoundDelegate.address, config.initials))) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: `nextRoundDelegates[${i}].address`,
           type: "account address",
+          target: "remark.nextRoundDelegates",
           ...Function_Exception_Detail,
         });
       }
@@ -434,10 +436,11 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: `nextRoundDelegates[${i}].equity`,
           type: "account equity",
+          target: "remark.nextRoundDelegates",
           ...Function_Exception_Detail,
         });
       }
-    });
+    }
 
     if (!baseHelper.isString(remark.debug)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {

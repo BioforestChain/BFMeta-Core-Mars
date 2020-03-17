@@ -8,7 +8,9 @@ import {
 } from "@bfchain/core";
 const { dump } = require("dumper.js");
 
-import { getSenderWithoutSecondSecret, bfchainCore, AccountModel } from "../include";
+import { getSenderWithoutSecondSecret, AccountModel, getBfchainCoreEntry } from "../include";
+
+const bfchainCore = getBfchainCoreEntry();
 
 const delegatesSecret = require("../../../assets/secret.json").delegates as string[];
 

@@ -26,7 +26,7 @@ import {
   getRandomMagic,
   ed2curveHelper,
   mainChainRemarkData,
-  getFullBfchainCore,
+  getFullBfchainCoreEntry,
 } from "../include";
 import { QueneEventEmitter, Resolve } from "@bfchain/util";
 import * as optimist from "optimist";
@@ -48,7 +48,7 @@ const argv = optimist
 console.log(argv);
 const blockPerRound = argv.b;
 const forgeInterval = argv.f;
-const bfchainCore = getFullBfchainCore(blockPerRound, forgeInterval);
+const bfchainCore = getFullBfchainCoreEntry(blockPerRound, forgeInterval);
 const filename = `genesisBlock-${blockPerRound}b-${forgeInterval}s`;
 const out = argv.o;
 const outPath = argv.p;

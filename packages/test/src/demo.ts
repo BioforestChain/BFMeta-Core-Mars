@@ -1,7 +1,9 @@
 /// 浏览器平台
 // import sha256 from "sha.js";
 // import md5 from "md5.js";
-import { bfchainCore } from "./include/init";
+import { getBfchainCoreEntry } from "./include/init";
+
+const bfchainCore = getBfchainCoreEntry();
 
 (async function test() {
   // const block = await bfchainCore.block.generateBlock(

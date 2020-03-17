@@ -2,9 +2,11 @@ import { UsernameTransaction, UsernameTransactionFactory, RANGE_TYPE } from "@bf
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,
-  bfchainCore,
   AccountModel,
+  getBfchainCoreEntry,
 } from "../include";
+
+const bfchainCore = getBfchainCoreEntry();
 
 async function getUsernameTransaction(sender: AccountModel) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);

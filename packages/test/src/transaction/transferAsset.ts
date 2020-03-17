@@ -7,9 +7,11 @@ import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,
   getGenesisAccount,
-  bfchainCore,
   AccountModel,
+  getBfchainCoreEntry,
 } from "../include";
+
+const bfchainCore = getBfchainCoreEntry();
 
 const _powCount: { [add: string]: number } = {};
 const getPOWInfo = (address: string) => {

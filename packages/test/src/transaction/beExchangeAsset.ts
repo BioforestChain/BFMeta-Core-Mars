@@ -13,9 +13,11 @@ import {
   getGenesisAccount,
   getRecipientWithSecondSecret,
   getRecipientWithoutSecondSecret,
-  bfchainCore,
   AccountModel,
+  getBfchainCoreEntry,
 } from "../include";
+
+const bfchainCore = getBfchainCoreEntry();
 
 const jsbiHelper = new JSBIHelper();
 

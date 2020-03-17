@@ -12,11 +12,13 @@ import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,
   getGenesisAccount,
-  bfchainCore,
   AccountModel,
   getRecipientWithSecondSecret,
   getRecipientWithoutSecondSecret,
+  getBfchainCoreEntry,
 } from "../include";
+
+const bfchainCore = getBfchainCoreEntry();
 
 async function getToExchangeSpecialAssetTransaction(
   sender: AccountModel,

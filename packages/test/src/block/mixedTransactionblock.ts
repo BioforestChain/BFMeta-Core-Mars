@@ -24,7 +24,9 @@ import {
   RANGE_TYPE,
 } from "@bfchain/core";
 import { QueneEventEmitter, Resolve } from "@bfchain/util";
-import { bfchainCore, AccountModel } from "../include";
+import { AccountModel, getBfchainCoreEntry } from "../include";
+
+const bfchainCore = getBfchainCoreEntry();
 
 const jsbiHelper = new JSBIHelper();
 

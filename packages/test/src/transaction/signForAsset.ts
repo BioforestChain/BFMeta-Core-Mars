@@ -8,11 +8,13 @@ import {
   getSenderWithoutSecondSecret,
   getRecipientWithSecondSecret,
   getRecipientWithoutSecondSecret,
-  bfchainCore,
   AccountModel,
   getDelegateWithSecondSecret,
+  getBfchainCoreEntry,
 } from "../include";
 import { parseHexToArrayBuffer } from "@bfchain/util";
+
+const bfchainCore = getBfchainCoreEntry();
 
 async function getTrustAssetTransaction(
   sender: AccountModel,

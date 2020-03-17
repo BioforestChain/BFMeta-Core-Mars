@@ -7,10 +7,12 @@ import {
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,
-  bfchainCore,
   AccountModel,
   getGenesisAccount,
+  getBfchainCoreEntry,
 } from "../include";
+
+const bfchainCore = getBfchainCoreEntry();
 
 async function getGiftAssetTransaction(
   sender: AccountModel,

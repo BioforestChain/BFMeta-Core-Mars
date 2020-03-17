@@ -5,9 +5,11 @@ import {
   getGenesisAccount,
   getRecipientWithSecondSecret,
   getRecipientWithoutSecondSecret,
-  bfchainCore,
   AccountModel,
+  getBfchainCoreEntry,
 } from "../include";
+
+const bfchainCore = getBfchainCoreEntry();
 
 async function getTrustAssetTransaction(
   sender: AccountModel,
