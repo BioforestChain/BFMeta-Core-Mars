@@ -423,7 +423,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     for (let i = 0; i < nextRoundDelegates.length; i++) {
       const nextRoundDelegate = nextRoundDelegates[i];
-      if (!(await this.accountBaseHelper.isAddress(nextRoundDelegate.address, config.initials))) {
+      if (!(await this.accountBaseHelper.isAddress(nextRoundDelegate.address))) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: `nextRoundDelegates[${i}].address`,
           type: "account address",
