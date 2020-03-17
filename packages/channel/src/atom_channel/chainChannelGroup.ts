@@ -253,6 +253,8 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
         const doTask = async (task_offset: number, times: number) => {
           // 获取可用节点
           const chainChannel = await getFreeChainChannel();
+          // 将这个节点放入繁忙队列，暂时不使用
+          busyChainChannel(chainChannel);
           task_chain = task_chain.then(() =>
             // 开始执行查询
             chainChannel
@@ -279,14 +281,10 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
                   }
                 }
                 if (res.status === RESPONSE_STATUS.busy) {
-                  // 将这个节点放入繁忙队列，暂时不使用
-                  busyChainChannel(chainChannel);
                   // 重试任务，但是这个节点仍旧放在繁忙节点列表，暂时不信任
                   return doTask(task_offset, times + 1);
                 }
                 if (res.status === RESPONSE_STATUS.error) {
-                  // 将这个节点放入繁忙队列，暂时不使用
-                  busyChainChannel(chainChannel);
                   // 任务失败，抛出异常
                   throw res.error;
                 }
