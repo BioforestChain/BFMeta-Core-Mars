@@ -129,31 +129,31 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     };
     /**释放节点到空闲状态 */
     const freeChainChannel = (chainChannel: DH) => {
-      if (!busyChainChannels.has(chainChannel)) {
-        return false;
-      }
       /// 标记工作量减少
       WCWM.set(chainChannel, WCWM.forceGet(chainChannel) - 1);
-
-      const waiter = queneChainChannelList.shift();
-      if (waiter) {
-        // 如果有等待队列，那么将可用的 handler 给等待队列
-        waiter.resolve(chainChannel);
-      } else {
-        // 直接将可用的 handler 放置到空闲队列中
-        freeChainChannelList.push(chainChannel);
+      if (busyChainChannels.delete(chainChannel)) {
+        const waiter = queneChainChannelList.shift();
+        if (waiter) {
+          // 如果有等待队列，那么将可用的 handler 给等待队列
+          waiter.resolve(chainChannel);
+        } else {
+          // 直接将可用的 handler 放置到空闲队列中
+          freeChainChannelList.push(chainChannel);
+        }
+        return true;
       }
-      return true;
+      return false;
     };
 
     /// 将节点放入繁忙队列中
     const busyChainChannel = (chainChannel: DH) => {
+      /// 标记工作量增加
+      WCWM.set(chainChannel, WCWM.forceGet(chainChannel) + 1);
+
       if (busyChainChannels.has(chainChannel)) {
         return false;
       }
       busyChainChannels.add(chainChannel);
-      /// 标记工作量增加
-      WCWM.set(chainChannel, WCWM.forceGet(chainChannel) + 1);
 
       _tryFreeChainChannel();
       return true;
