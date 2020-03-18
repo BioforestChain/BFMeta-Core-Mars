@@ -42,7 +42,7 @@ const {
   NoFoundException,
   error,
   TimeOutException,
-} = CoreExceptionGenerator("CONTROLLER", "ChainChannel");
+} = CoreExceptionGenerator("channel", "chainChannel");
 
 export abstract class ChainChannelBase extends QueneEventEmitterPro<
   BFChainCore.ChainChannelHanlderEventMap

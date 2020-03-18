@@ -25,10 +25,13 @@ import {
 } from "@bfchain/core-model";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 import { ChainChannel, ChainChannelBase } from "./chainChannel";
-const { ResponseException, AbortException, NoFoundException, error } = CoreExceptionGenerator(
-  "CONTROLLER",
-  "ChainChannelGroup",
-);
+const {
+  ResponseException,
+  AbortException,
+  InterruptedException,
+  error,
+  info,
+} = CoreExceptionGenerator("channel", "chainChannelGroup");
 export const CHAIN_CHANNEL_GROUP_ARGS = {
   GROUP_NAME: Symbol("groupName"),
   CHANNEL_LIST: Symbol("channelList"),
@@ -519,7 +522,11 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     this.chainChannelSet.add(chainChannel);
     if (!opts.disableAutoRemove) {
       const listenerRemover = chainChannel.onClose(err => {
-        error("channel auto removed in [%s] by:", this.groupName, err);
+        if (InterruptedException.is(err)) {
+          info("channel auto removed in [%s], reason:", this.groupName, err.message);
+        } else {
+          error("channel auto removed in [%s], reason:", this.groupName, err);
+        }
         this.removeChainChannel(chainChannel);
       });
       this._DAWCLWM.set(chainChannel, listenerRemover);

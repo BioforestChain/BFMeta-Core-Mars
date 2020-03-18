@@ -25,8 +25,8 @@ import {
 } from "@bfchain/core-helper";
 
 const { ArgumentIllegalException, ArgumentFormatException } = CoreExceptionGenerator(
-  "helper",
-  "ChainChannelHelper",
+  "channel",
+  "chainChannelHelper",
 );
 
 @Injectable()
