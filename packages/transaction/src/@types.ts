@@ -324,7 +324,7 @@ declare namespace BFChainCore {
       type?: string,
       limit?: number,
       offset?: number,
-    ): Promise<TransactionJSON[]>;
+    ): Promise<TransactionJSON[] | undefined>;
     getTransactionByQueryOptions(
       queryOptions: TransactionQueryOptionsJSON,
     ): Promise<TransactionInBlockJSON[] | undefined>;
