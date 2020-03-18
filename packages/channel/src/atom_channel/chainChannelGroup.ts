@@ -573,6 +573,13 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
       return next();
     };
 
+    /// 先遍历一下当下的节点
+    let curMaxMaybeHeight = this._maybeHeight;
+    for (const cc of this.chainChannelSet) {
+      curMaxMaybeHeight = Math.max(cc.maybeHeight, curMaxMaybeHeight);
+    }
+    tryChangeMaybeHeight(curMaxMaybeHeight);
+
     /// 如果有新的节点加入,那么检查它的高度是否最高
     this._chainChannelEvents.on("addChainChannel", chainChannel => {
       if (this._maybeHeight < chainChannel.maybeHeight) {
