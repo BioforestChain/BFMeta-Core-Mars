@@ -308,14 +308,16 @@ declare namespace BFChainCore {
 
   interface TransactionApiInterface {
     // FIXME: remove
-    getTransactionByTransactionSignature(transactionSignature: string): Promise<TransactionJSON>;
+    getTransactionByTransactionSignature(
+      transactionSignature: string,
+    ): Promise<TransactionJSON | undefined>;
     // FIXME: remove
     getTransactionBySenderIdAndType(
       senderId: string,
       type?: string,
       limit?: number,
       offset?: number,
-    ): Promise<TransactionJSON[]>;
+    ): Promise<TransactionJSON[] | undefined>;
     // FIXME: remove
     getTransactionByRecipientIdAndType(
       recipientId: string,
@@ -325,18 +327,18 @@ declare namespace BFChainCore {
     ): Promise<TransactionJSON[]>;
     getTransactionByQueryOptions(
       queryOptions: TransactionQueryOptionsJSON,
-    ): Promise<TransactionInBlockJSON[]>;
+    ): Promise<TransactionInBlockJSON[] | undefined>;
   }
 
   interface BlockApiInterface {
     getLastBlockHeight(): Promise<number>;
-    getBlockByBlockHeight(blockHeight: number): Promise<BlockJSON<any>>;
-    getBlockByBlockSignature(blockSignature: string): Promise<BlockJSON<any>>;
+    getBlockByBlockHeight(blockHeight: number): Promise<BlockJSON<any> | undefined>;
+    getBlockByBlockSignature(blockSignature: string): Promise<BlockJSON<any> | undefined>;
     getBlockByBlocksGenerator(
       generatorPublicKey: string,
       limit?: number,
       offset?: number,
-    ): Promise<BlockJSON<any>>;
+    ): Promise<BlockJSON<any> | undefined>;
   }
 
   interface BFChainApiInterface {
