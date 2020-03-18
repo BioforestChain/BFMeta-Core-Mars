@@ -203,7 +203,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
           }),
         );
       });
-      req_task.promise.finally(() => {
+      req_task.promise = req_task.promise.finally(() => {
         unsleep(timeoutTask);
       });
     }
