@@ -29,13 +29,6 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
     accountGetterHelper = this.accountGetterHelper,
     transactionGetterHelper = this.transactionGetterHelper,
   ) {
-    const sender = await this.logicVerify(
-      transaction,
-      currentBlockHeight,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
-
     await this.isTrusteesFrozen(transaction.asset.trustAsset.trustees, accountGetterHelper);
 
     const Function_Exception_Detail = {
@@ -70,6 +63,13 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
         ...Function_Exception_Detail,
       });
     }
+
+    const sender = await this.logicVerify(
+      transaction,
+      currentBlockHeight,
+      accountGetterHelper,
+      transactionGetterHelper,
+    );
 
     return true;
   }

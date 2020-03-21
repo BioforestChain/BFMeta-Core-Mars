@@ -19,13 +19,6 @@ export class TransferAssetLogicVerifier extends TransactionLogicVerifier {
     accountGetterHelper = this.accountGetterHelper,
     transactionGetterHelper = this.transactionGetterHelper,
   ) {
-    const sender = await this.logicVerify(
-      transaction,
-      currentBlockHeight,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
-
     const Function_Exception_Detail = {
       function: "logicVerify",
     } as const;
@@ -49,7 +42,7 @@ export class TransferAssetLogicVerifier extends TransactionLogicVerifier {
       });
     }
 
-    if (memAsset.sourceChainName!== sourceChainName) {
+    if (memAsset.sourceChainName !== sourceChainName) {
       throw new ConsensusException(NOT_MATCH, {
         to_compare_prop: "sourcehChainName",
         be_compare_prop: "chainName",
@@ -58,6 +51,13 @@ export class TransferAssetLogicVerifier extends TransactionLogicVerifier {
         ...Function_Exception_Detail,
       });
     }
+
+    const sender = await this.logicVerify(
+      transaction,
+      currentBlockHeight,
+      accountGetterHelper,
+      transactionGetterHelper,
+    );
 
     return true;
   }

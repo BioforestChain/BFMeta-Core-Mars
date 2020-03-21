@@ -35,12 +35,6 @@ export class ToExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
         ...Function_Exception_Detail,
       });
     }
-    const sender = await this.logicVerify(
-      transaction,
-      currentBlockHeight,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
 
     const toExchangeSpecialAssetAsset = transaction.asset.toExchangeSpecialAsset;
     const {
@@ -71,6 +65,13 @@ export class ToExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
         });
       }
     }
+
+    const sender = await this.logicVerify(
+      transaction,
+      currentBlockHeight,
+      accountGetterHelper,
+      transactionGetterHelper,
+    );
 
     return true;
   }

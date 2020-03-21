@@ -19,13 +19,6 @@ export class DestoryAssetLogicVerifier extends TransactionLogicVerifier {
     accountGetterHelper = this.accountGetterHelper,
     transactionGetterHelper = this.transactionGetterHelper,
   ) {
-    const sender = await this.logicVerify(
-      transaction,
-      currentBlockHeight,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
-
     const Function_Exception_Detail = {
       function: "logicVerify",
     } as const;
@@ -58,6 +51,13 @@ export class DestoryAssetLogicVerifier extends TransactionLogicVerifier {
         ...Function_Exception_Detail,
       });
     }
+
+    const sender = await this.logicVerify(
+      transaction,
+      currentBlockHeight,
+      accountGetterHelper,
+      transactionGetterHelper,
+    );
 
     return true;
   }

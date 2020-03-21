@@ -1,7 +1,12 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import type { ToExchangeAssetTransaction, ToExchangeAssetModel } from "@bfchain/core-model";
 import { Injectable } from "@bfchain/util";
-import { CoreExceptionGenerator, ASSET_NOT_EXIST, NOT_EXIST, NOT_MATCH } from "@bfchain/core-util-exception";
+import {
+  CoreExceptionGenerator,
+  ASSET_NOT_EXIST,
+  NOT_EXIST,
+  NOT_MATCH,
+} from "@bfchain/core-util-exception";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
@@ -20,15 +25,16 @@ export class ToExchangeAssetLogicVerifier extends TransactionLogicVerifier {
     accountGetterHelper = this.accountGetterHelper,
     transactionGetterHelper = this.transactionGetterHelper,
   ) {
+    // FIXME: no need to verify
+    const toExchangeAsset = transaction.asset.toExchangeAsset;
+    await this.isExchangeAssetAlreadyExist(toExchangeAsset, accountGetterHelper);
+
     const sender = await this.logicVerify(
       transaction,
       currentBlockHeight,
       accountGetterHelper,
       transactionGetterHelper,
     );
-    // FIXME: no need to verify
-    const toExchangeAsset = transaction.asset.toExchangeAsset;
-    await this.isExchangeAssetAlreadyExist(toExchangeAsset, accountGetterHelper);
 
     return true;
   }
@@ -69,10 +75,10 @@ export class ToExchangeAssetLogicVerifier extends TransactionLogicVerifier {
         ...Function_Exception_Detail,
       });
     }
-    if (memToAssets.sourceChainName !== beExchangeChainName) {
+    if (memToAssets.sourceChainName !== toExchangeChainName) {
       throw new ConsensusException(NOT_MATCH, {
         to_compare_prop: "sourcehChainName",
-        be_compare_prop: "beExchangeChainName",
+        be_compare_prop: "toExchangeChainName",
         to_target: "memToAssets",
         be_target: "toExchangeAssetAsset",
         ...Function_Exception_Detail,

@@ -19,13 +19,6 @@ export class GiftAssetLogicVerifier extends TransactionLogicVerifier {
     accountGetterHelper = this.accountGetterHelper,
     transactionGetterHelper = this.transactionGetterHelper,
   ) {
-    await this.logicVerify(
-      transaction,
-      currentBlockHeight,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
-
     const Function_Exception_Detail = {
       function: "logicVerify",
     } as const;
@@ -58,6 +51,13 @@ export class GiftAssetLogicVerifier extends TransactionLogicVerifier {
         ...Function_Exception_Detail,
       });
     }
+
+    await this.logicVerify(
+      transaction,
+      currentBlockHeight,
+      accountGetterHelper,
+      transactionGetterHelper,
+    );
 
     return true;
   }
