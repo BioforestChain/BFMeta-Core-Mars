@@ -930,7 +930,12 @@ function getRoundLastBlockRemarkHash(height: number) {
         timestamp: lastBlock.timestamp,
         height: lastBlock.height,
       },
-      { usedAddressCache: map },
+      {
+        // usedAddressCache: map,
+        nowTimestamp: bfchainCore.time.getTimeByTimestamp(
+          fakeTimestamp + bfchainCore.config.forgeInterval * count,
+        ),
+      },
     );
     if (pickDelegates.includes(result.address)) {
       lastBlock.timestamp = result.timestamp;
@@ -1048,39 +1053,52 @@ function getRoundLastBlockRemarkHash(height: number) {
     console.log(`${k}: ${v.length}`);
     total += v.length;
   });
-  console.log(`共循环${count} . 区块: ${total}`);
-  for (let i = 2; i < blockMap.size; i++) {
-    const block = blockMap.get(i);
-    const _lastBlock = blockMap.get(i - 1);
-    console.time(`cost`);
-    if (block && _lastBlock) {
-      console.log(`开始验证${block.height}`);
-      const calcGenerateBlockGenerator = bfchainCore.block.blockGeneratorCalculator.calcGenerateBlockDelegateGenerator(
-        {
-          timestamp: _lastBlock.timestamp,
-          height: _lastBlock.height,
-        },
-        {
-          heightAcc: 0,
-          curTime: bfchainCore.time.getTimeByTimestamp(
-            // block.timestamp// + bfchainCore.config.forgeInterval,
-            _lastBlock.timestamp + bfchainCore.config.forgeInterval,
-          ),
-        },
-      );
-      for await (const { address, timestamp } of calcGenerateBlockGenerator) {
-        // console.log(timestamp,block.timestamp)
-        if (timestamp === block.timestamp) {
-          const _address = await bfchainCore.accountBaseHelper.getAddressFromPublicKeyString(
-            block.generatorPublicKey,
-          );
-          // console.log(address, _address, timestamp);
-          // console.log(`validateBlockSlot  ${address === _address}  ${timestamp}`);
-          if (address !== _address) {
-            throw new Error(`eee ${address} .. ${_address}`);
-          }
-          break;
-        }
+  print(`共循环${count} . 区块: ${total}`);
+  if (isVerify) {
+    for (let i = 2; i < blockMap.size; i++) {
+      const block = blockMap.get(i);
+      const _lastBlock = blockMap.get(i - 1);
+      // console.time(`cost`);
+      if (block && _lastBlock) {
+        // // print(`开始验证${block.height}`);
+        // const calcGenerateBlockGenerator: any = bfchainCore.block.blockGeneratorCalculator.calcGenerateBlockDelegateGenerator(
+        //   {
+        //     timestamp: _lastBlock.timestamp,
+        //     height: _lastBlock.height,
+        //   },
+        //   {
+        //     heightAcc: 0,
+        //     curTime: bfchainCore.time.getTimeByTimestamp(
+        //       // block.timestamp// + bfchainCore.config.forgeInterval,
+        //       _lastBlock.timestamp + bfchainCore.config.forgeInterval,
+        //     ),
+        //   },
+        // );
+        // for await (const { address, timestamp, usedAddressCache } of calcGenerateBlockGenerator) {
+        //   // print(timestamp,block.timestamp)
+        //   if (timestamp === block.timestamp) {
+        //     const _address = await bfchainCore.accountBaseHelper.getAddressFromPublicKeyString(
+        //       block.generatorPublicKey,
+        //     );
+        //     print(`verify ${i} right address: ${address} timestamp: ${timestamp}`);
+        //     // print(`validateBlockSlot  ${address === _address}  ${timestamp}`);
+        //     if (usedAddressCache.get(i - 1).missAddress.length > 0) {
+        //       print(`verify map: ${i - 1}`);
+        //       print(usedAddressCache.get(i - 1).missAddress);
+        //     }
+        //     if (map.get(i - 1).missAddress.length > 0) {
+        //       print(`generate map: ${i - 1}`);
+        //       print(map.get(i - 1).missAddress);
+        //     }
+        //     if (address !== _address) {
+        //       print(usedAddressCache.get(i - 1));
+        //       print(map.get(i - 1));
+        //       debugger;
+        //       throw new Error(`${i} eee ${address} .. ${_address}`);
+        //     }
+        //     break;
+        //   }
+        // }
       }
     }
     console.timeEnd(`cost`);

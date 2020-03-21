@@ -1,4 +1,4 @@
-import { Message, Type, Field } from "@bfchain/protobuf";
+import { Message, Type, MapField, Field } from "@bfchain/protobuf";
 import { parseHexToArrayBuffer, getHexFromArrayBuffer } from "@bfchain/util-encoding-hex";
 import { TransactionInBlock } from "@bfchain/core-model-transaction";
 import { StatisticInfoModel } from "./statistic_info";
@@ -141,8 +141,26 @@ export class Block<RJ extends BFChainCore.CommonBlockRemarkJSON = BFChainCore.Co
     const blockWrapper = Object.create(this, props);
     return this.$type.encode(blockWrapper).finish();
   }
+  @MapField.d(Block.INC++, "uint32", "bytes")
+  roundOfflineGeneratersHashMap!: BFChainCore.RoundOfflineGeneratersHashMap;
+  _roundOfflineGeneratersReadonlyMap?: BFChainCore.RoundOfflineGeneratersReadonlyMap;
+  get roundOfflineGeneratersReadonlyMap(): BFChainCore.RoundOfflineGeneratersReadonlyMap {
+    const map = new Map<number, readonly string[]>();
+    for (const rIndex in this.roundOfflineGeneratersHashMap) {
+      const offlineGeneraters = this.roundOfflineGeneratersHashMap[rIndex];
+      const offlineGeneraterList: string[] = offlineGeneraters.split(",");
+
+      map.set(parseInt(rIndex), offlineGeneraterList);
+    }
+    return map;
+  }
 
   toJSON() {
+    const readonlyMap = this.roundOfflineGeneratersReadonlyMap;
+    const roundOfflineGeneratersMap: BFChainCore.RoundOfflineGeneratersHashMap = {};
+    for (const [roundOffset, offlineGeneraterList] of readonlyMap.entries()) {
+      roundOfflineGeneratersMap[roundOffset] = offlineGeneraterList.join(",");
+    }
     return {
       version: this.version,
       height: this.height,
@@ -161,6 +179,7 @@ export class Block<RJ extends BFChainCore.CommonBlockRemarkJSON = BFChainCore.Co
       transactions: this.transactions.map(transaction => transaction.toJSON()),
       remark: this.remark.toJSON() as RJ,
       statisticInfo: this.statisticInfo.toJSON(),
+      roundOfflineGeneratersMap,
     };
   }
   static fromObject<T extends Message>(
@@ -180,6 +199,17 @@ export class Block<RJ extends BFChainCore.CommonBlockRemarkJSON = BFChainCore.Co
       }
       res.transactions = trsInBlock;
       object.signature && (res.signature = object.signature);
+    }
+    const roundOfflineGeneratersHashMap = object.roundOfflineGeneratersHashMap;
+    if (roundOfflineGeneratersHashMap) {
+      const roundOfflineGeneratersHashMap: BFChainCore.RoundOfflineGeneratersHashMap = {};
+      for (const roundOffset in roundOfflineGeneratersHashMap) {
+        const offlineGeneraters = roundOfflineGeneratersHashMap[roundOffset];
+        if (offlineGeneraters) {
+          roundOfflineGeneratersHashMap[roundOffset] = offlineGeneraters;
+        }
+      }
+      res.roundOfflineGeneratersHashMap = roundOfflineGeneratersHashMap;
     }
     return (res as unknown) as T;
   }
