@@ -13,7 +13,6 @@ export class RejectVoteLogicVerifier extends TransactionLogicVerifier {
     currentBlockHeight: number,
     accountGetterHelper = this.accountGetterHelper,
     transactionGetterHelper = this.transactionGetterHelper,
-    customTransactionCenter = this.customTransactionCenter,
   ) {
     const sender = await this.logicVerify(
       transaction,

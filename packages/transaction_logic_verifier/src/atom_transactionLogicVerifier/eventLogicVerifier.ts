@@ -34,6 +34,7 @@ import {
   SET_LOCATION_NAME_RECORD_VALUE_FIELD,
   UNFROZEN_TIME_USE_UP,
   REGISTER_DELEGTE_QUOTA_FULL,
+  NOT_MATCH,
 } from "@bfchain/core-util-exception";
 import {
   NewTransactionRefuseReason,
@@ -634,20 +635,17 @@ export class EventLogicVerifier {
       const { dappid, sourceChainMagic, purchaseAsset } = applyInfo;
       // 用于购买的资产是否合法
       if (purchaseAsset) {
-        const { sourceChainMagic, assetType, amount } = purchaseAsset;
-        const memAsset = await accountGetterHelper.getAsset(sourceChainMagic, assetType);
+        const { sourceChainMagic: magic, sourceChainName, assetType, amount } = purchaseAsset;
+        const memAsset = await accountGetterHelper.getAsset(magic, assetType);
         if (!memAsset) {
           throw new ConsensusException(ASSET_NOT_EXIST, {
-            magic: sourceChainMagic,
+            magic,
             assetType,
             ...Function_Exception_Detail,
           });
         }
 
-        if (
-          sourceChainMagic !== this.configHelper.magic &&
-          assetType !== this.configHelper.assetType
-        ) {
+        if (magic !== this.configHelper.magic && assetType !== this.configHelper.assetType) {
           if (memAsset.remainAssets < BigInt(amount)) {
             throw new ConsensusException(ASSET_NOT_ENOUGH, {
               reason: `Purchase asset amount greater than remain assets, spend ${amount}, remain ${memAsset.remainAssets}`,
@@ -655,6 +653,16 @@ export class EventLogicVerifier {
               ...Function_Exception_Detail,
             });
           }
+        }
+
+        if (memAsset.sourceChainName !== sourceChainName) {
+          throw new ConsensusException(NOT_MATCH, {
+            to_compare_prop: "sourcehChainName",
+            be_compare_prop: "chainName",
+            to_target: "memAsset",
+            be_target: "issueDAppid.applyInfo",
+            ...Function_Exception_Detail,
+          });
         }
       }
 

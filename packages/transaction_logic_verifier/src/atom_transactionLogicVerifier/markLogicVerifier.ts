@@ -23,7 +23,6 @@ export class MarkLogicVerifier extends TransactionLogicVerifier {
     currentBlockHeight: number,
     accountGetterHelper = this.accountGetterHelper,
     transactionGetterHelper = this.transactionGetterHelper,
-    customTransactionCenter = this.customTransactionCenter,
   ) {
     const Function_Exception_Detail = {
       function: "verify",

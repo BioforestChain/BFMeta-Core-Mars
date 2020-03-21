@@ -1,7 +1,12 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { ToExchangeSpecialAssetTransaction, EXCHANGE_DIRECTION } from "@bfchain/core-model";
 import { Injectable } from "@bfchain/util";
-import { CoreExceptionGenerator, NOT_EXIST, ASSET_NOT_EXIST } from "@bfchain/core-util-exception";
+import {
+  CoreExceptionGenerator,
+  NOT_EXIST,
+  ASSET_NOT_EXIST,
+  NOT_MATCH,
+} from "@bfchain/core-util-exception";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
@@ -19,7 +24,6 @@ export class ToExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
     currentBlockHeight: number,
     accountGetterHelper = this.accountGetterHelper,
     transactionGetterHelper = this.transactionGetterHelper,
-    customTransactionCenter = this.customTransactionCenter,
   ) {
     const Function_Exception_Detail = {
       function: "verify",
@@ -39,7 +43,12 @@ export class ToExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
     );
 
     const toExchangeSpecialAssetAsset = transaction.asset.toExchangeSpecialAsset;
-    const { beExchangeSource, beExchangeAsset, exchangeDirection } = toExchangeSpecialAssetAsset;
+    const {
+      beExchangeSource,
+      beExchangeChainName,
+      beExchangeAsset,
+      exchangeDirection,
+    } = toExchangeSpecialAssetAsset;
     if (exchangeDirection === EXCHANGE_DIRECTION.ASSET_FROM_SENDER) {
       // 特殊资产来自发起账户，则要交换的 数字资产必须存在
       const memBeAssets = await accountGetterHelper.getAsset(beExchangeSource, beExchangeAsset);
@@ -48,6 +57,16 @@ export class ToExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
         throw new ConsensusException(ASSET_NOT_EXIST, {
           magic: beExchangeSource,
           assetType: beExchangeAsset,
+          ...Function_Exception_Detail,
+        });
+      }
+
+      if (memBeAssets.sourceChainName !== beExchangeChainName) {
+        throw new ConsensusException(NOT_MATCH, {
+          to_compare_prop: "sourcehChainName",
+          be_compare_prop: "beExchangeChainName",
+          to_target: "chainAsset",
+          be_target: "toExchangeSpecialAssetAsset",
           ...Function_Exception_Detail,
         });
       }

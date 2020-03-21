@@ -1,7 +1,7 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import type { ToExchangeAssetTransaction, ToExchangeAssetModel } from "@bfchain/core-model";
 import { Injectable } from "@bfchain/util";
-import { CoreExceptionGenerator, ASSET_NOT_EXIST, NOT_EXIST } from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ASSET_NOT_EXIST, NOT_EXIST, NOT_MATCH } from "@bfchain/core-util-exception";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
@@ -19,7 +19,6 @@ export class ToExchangeAssetLogicVerifier extends TransactionLogicVerifier {
     currentBlockHeight: number,
     accountGetterHelper = this.accountGetterHelper,
     transactionGetterHelper = this.transactionGetterHelper,
-    customTransactionCenter = this.customTransactionCenter,
   ) {
     const sender = await this.logicVerify(
       transaction,
@@ -55,8 +54,10 @@ export class ToExchangeAssetLogicVerifier extends TransactionLogicVerifier {
     }
     const {
       toExchangeSource,
+      toExchangeChainName,
       toExchangeAsset,
       beExchangeSource,
+      beExchangeChainName,
       beExchangeAsset,
     } = toExchangeAssetAsset;
     const memToAssets = await accountGetterHelper.getAsset(toExchangeSource, toExchangeAsset);
@@ -68,12 +69,30 @@ export class ToExchangeAssetLogicVerifier extends TransactionLogicVerifier {
         ...Function_Exception_Detail,
       });
     }
+    if (memToAssets.sourceChainName !== beExchangeChainName) {
+      throw new ConsensusException(NOT_MATCH, {
+        to_compare_prop: "sourcehChainName",
+        be_compare_prop: "beExchangeChainName",
+        to_target: "memToAssets",
+        be_target: "toExchangeAssetAsset",
+        ...Function_Exception_Detail,
+      });
+    }
     const memBeAssets = await accountGetterHelper.getAsset(beExchangeSource, beExchangeAsset);
     if (!memBeAssets) {
       // 不存在的资产不能被交换
       throw new ConsensusException(ASSET_NOT_EXIST, {
         magic: beExchangeSource,
         assetType: beExchangeAsset,
+        ...Function_Exception_Detail,
+      });
+    }
+    if (memBeAssets.sourceChainName !== beExchangeChainName) {
+      throw new ConsensusException(NOT_MATCH, {
+        to_compare_prop: "sourcehChainName",
+        be_compare_prop: "beExchangeChainName",
+        to_target: "memBeAssets",
+        be_target: "toExchangeAssetAsset",
         ...Function_Exception_Detail,
       });
     }
