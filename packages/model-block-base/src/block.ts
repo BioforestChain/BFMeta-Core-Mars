@@ -141,7 +141,7 @@ export class Block<RJ extends BFChainCore.CommonBlockRemarkJSON = BFChainCore.Co
     const blockWrapper = Object.create(this, props);
     return this.$type.encode(blockWrapper).finish();
   }
-  @MapField.d(Block.INC++, "uint32", "bytes")
+  @MapField.d(Block.INC++, "uint32", "string")
   roundOfflineGeneratersHashMap!: BFChainCore.RoundOfflineGeneratersHashMap;
   _roundOfflineGeneratersReadonlyMap?: BFChainCore.RoundOfflineGeneratersReadonlyMap;
   get roundOfflineGeneratersReadonlyMap(): BFChainCore.RoundOfflineGeneratersReadonlyMap {
@@ -156,11 +156,6 @@ export class Block<RJ extends BFChainCore.CommonBlockRemarkJSON = BFChainCore.Co
   }
 
   toJSON() {
-    const readonlyMap = this.roundOfflineGeneratersReadonlyMap;
-    const roundOfflineGeneratersMap: BFChainCore.RoundOfflineGeneratersHashMap = {};
-    for (const [roundOffset, offlineGeneraterList] of readonlyMap.entries()) {
-      roundOfflineGeneratersMap[roundOffset] = offlineGeneraterList.join(",");
-    }
     return {
       version: this.version,
       height: this.height,
@@ -179,7 +174,7 @@ export class Block<RJ extends BFChainCore.CommonBlockRemarkJSON = BFChainCore.Co
       transactions: this.transactions.map(transaction => transaction.toJSON()),
       remark: this.remark.toJSON() as RJ,
       statisticInfo: this.statisticInfo.toJSON(),
-      roundOfflineGeneratersMap,
+      roundOfflineGeneratersHashMap: this.roundOfflineGeneratersHashMap,
     };
   }
   static fromObject<T extends Message>(
@@ -199,17 +194,6 @@ export class Block<RJ extends BFChainCore.CommonBlockRemarkJSON = BFChainCore.Co
       }
       res.transactions = trsInBlock;
       object.signature && (res.signature = object.signature);
-    }
-    const roundOfflineGeneratersHashMap = object.roundOfflineGeneratersHashMap;
-    if (roundOfflineGeneratersHashMap) {
-      const roundOfflineGeneratersHashMap: BFChainCore.RoundOfflineGeneratersHashMap = {};
-      for (const roundOffset in roundOfflineGeneratersHashMap) {
-        const offlineGeneraters = roundOfflineGeneratersHashMap[roundOffset];
-        if (offlineGeneraters) {
-          roundOfflineGeneratersHashMap[roundOffset] = offlineGeneraters;
-        }
-      }
-      res.roundOfflineGeneratersHashMap = roundOfflineGeneratersHashMap;
     }
     return (res as unknown) as T;
   }

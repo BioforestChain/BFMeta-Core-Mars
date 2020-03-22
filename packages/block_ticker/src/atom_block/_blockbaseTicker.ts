@@ -100,30 +100,30 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
 
     const { forgeInterval } = configHelper;
 
-    const delegates = blockGeneratorCalculator.calcGenerateBlockDelegateGenerator(
-      {
-        timestamp: lastBlockTimestamp,
-        height: lastBlockHeight,
-      },
-      {
-        heightAcc: 0,
-        timeAcc: forgeInterval,
-        curTime: timeHelper.getTimeByTimestamp(lastBlockTimestamp + forgeInterval),
-      },
-    );
-    const results: BFChainCore.AccountAccumulationInfo = {};
-    for await (const delegate of delegates) {
-      const { address, timestamp } = delegate;
-      if (timestamp === curBlockTimestamp) {
-        break;
-      }
-      if (!results[address]) {
-        results[address] = 0;
-      }
-      results[address]++;
-    }
+    // const delegates = blockGeneratorCalculator.calcGenerateBlockDelegateGenerator(
+    //   {
+    //     timestamp: lastBlockTimestamp,
+    //     height: lastBlockHeight,
+    //   },
+    //   {
+    //     heightAcc: 0,
+    //     timeAcc: forgeInterval,
+    //     curTime: timeHelper.getTimeByTimestamp(lastBlockTimestamp + forgeInterval),
+    //   },
+    // );
+    // const results: BFChainCore.AccountAccumulationInfo = {};
+    // for await (const delegate of delegates) {
+    //   const { address, timestamp } = delegate;
+    //   if (timestamp === curBlockTimestamp) {
+    //     break;
+    //   }
+    //   if (!results[address]) {
+    //     results[address] = 0;
+    //   }
+    //   results[address]++;
+    // }
 
-    await accountGetterHelper.mergeAccountMissedBlock(curBlockHeight, results);
+    // await accountGetterHelper.mergeAccountMissedBlock(curBlockHeight, results);
   }
 
   /**

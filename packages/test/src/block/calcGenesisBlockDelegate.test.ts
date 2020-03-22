@@ -1,6 +1,5 @@
 import {
   Block,
-  GenesisBlock,
   RoundLastBlock,
   CommonBlock,
   CommonBlockFactory,
@@ -8,10 +7,43 @@ import {
   RoundLastBlockFactory,
 } from "@bfchain/core";
 import { AsyncIteratorGenerator } from "@bfchain/util";
-import { moduleMap, getBfchainCoreEntry } from "../include";
+import { getFullBfchainCoreEntry } from "../include";
+import * as fs from "fs";
+import * as util from "util";
+function print(obj: any) {
+  console.log(obj);
+  fs.writeFileSync(process.cwd() + "/test.log", util.format(obj) + "\n", { flag: "as+" });
+}
+const bfchainCore = getFullBfchainCoreEntry(57, 128);
+bfchainCore.moduleMap.set("blockGetterHelper", {
+  async getBlockByHeight(height: number) {
+    const blockJSON = blockMap.get(height);
+    let block;
+    if (blockJSON && height % bfchainCore.config.blockPerRound !== 0) {
+      block = Block.fromObject(blockJSON);
+    } else if (blockJSON) {
+      block = RoundLastBlock.fromObject(blockJSON);
+    } else {
+      throw new Error(`no ${height}`);
+    }
+    return block;
+  },
+  async getBlockBySignature() {
+    return {} as any;
+  },
+  getLastBlock() {
+    return {} as any;
+  },
+} as BFChainCore.BlockGetterHelperInterface);
 
-const bfchainCore = getBfchainCoreEntry();
-
+/**已绑定的受托人个数 */
+const pickDelegates = bfchainCore.transactionHelper.genesisDelegates().slice(0, 112);
+/**生成的区块数 */
+const generateCount = 200;
+/**生成完以后是否验证 */
+const isVerify = true;
+/**第一笔交易开始的时间戳 */
+const fakeTimestamp = bfchainCore.config.forgeInterval * 1;
 const delegatesArr = [
   {
     secret:
@@ -830,26 +862,6 @@ const randomNextDelegates = (
 };
 const blockMap = new Map<number, BFChainCore.BlockJSON<any>>();
 blockMap.set(1, bfchainCore.config.genesisBlock);
-moduleMap.set("blockGetterHelper", {
-  async getBlockByHeight(height: number) {
-    const blockJSON = blockMap.get(height);
-    let block;
-    if (blockJSON && height % bfchainCore.config.blockPerRound !== 0) {
-      block = Block.fromObject(blockJSON);
-    } else if (blockJSON) {
-      block = RoundLastBlock.fromObject(blockJSON);
-    } else {
-      throw new Error(`no ${height}`);
-    }
-    return block;
-  },
-  async getBlockBySignature() {
-    return {} as any;
-  },
-  getLastBlock() {
-    return {} as any;
-  },
-} as BFChainCore.BlockGetterHelperInterface);
 
 function getRoundLastBlockRemarkHash(height: number) {
   let lastRoundLastBlockHeight =
@@ -887,9 +899,8 @@ function getRoundLastBlockRemarkHash(height: number) {
     const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(v.secret);
     delegatesMap.set(v.address, { pk: v.publicKey, address: v.address, keypair });
   }
-  /**已绑定的受托人个数 */
-  const pickDelegates = bfchainCore.transactionHelper.genesisDelegates().slice(0, 30);
-  const map = new Map<number, { signature: string; timestamp: number; address: string }>();
+
+  //const map = new Map();
   const lastBlock = {
     signature: bfchainCore.config.genesisBlock.signature,
     timestamp: bfchainCore.config.genesisBlock.timestamp,
@@ -898,33 +909,10 @@ function getRoundLastBlockRemarkHash(height: number) {
   };
   bfchainCore.config.genesisBlock.remark.nextRoundDelegates;
   let count = 0;
+
   do {
     count++;
 
-    // const calcGenerateBlockGenerator = await bfchainCore.block.blockGeneratorCalculator.calcGenerateBlockDelegateGenerator(
-    //   {
-    //     timestamp: lastBlock.timestamp,
-    //     height: lastBlock.height,
-    //   },
-    //   {
-    //     heightAcc: 0,
-    //     timeAcc: bfchainCore.config.forgeInterval,
-    //     curTime: bfchainCore.time.getTimeByTimestamp(
-    //       lastBlock.timestamp + bfchainCore.config.forgeInterval,
-    //     ),
-    //   },
-    // );
-    // let result: { address: string; timestamp: number } = {} as any;
-    // for await (const { address, timestamp } of calcGenerateBlockGenerator) {
-    //   let currentSlot = bfchainCore.time.getSlotNumberByTimestamp();
-    //   const blockSlot = bfchainCore.time.getSlotNumberByTimestamp(timestamp);
-    //   if (currentSlot === blockSlot) {
-    //     result.address = address;
-    //     result.timestamp = timestamp;
-    //     break;
-    //   }
-    // }
-    // console.log(`           开始-             `);
     const result = await bfchainCore.block.blockGeneratorCalculator.calcGenerateBlockDelegate(
       {
         timestamp: lastBlock.timestamp,
@@ -932,24 +920,28 @@ function getRoundLastBlockRemarkHash(height: number) {
       },
       {
         // usedAddressCache: map,
-        nowTimestamp: bfchainCore.time.getTimeByTimestamp(
-          fakeTimestamp + bfchainCore.config.forgeInterval * count,
-        ),
+        nowTimestamp: fakeTimestamp + bfchainCore.config.forgeInterval * count,
       },
     );
+    // if (lastBlock.height > 1) {
+    //   if (map.get(lastBlock.height - 1).missAddress.length > 0) {
+    //     print(map.get(lastBlock.height - 1).missAddress);
+    //   }
+    // }
     if (pickDelegates.includes(result.address)) {
       lastBlock.timestamp = result.timestamp;
       lastBlock.height += 1;
       const delegate = delegatesMap.get(result.address);
       if (delegate) {
         const asyncIteratorGenerator = new AsyncIteratorGenerator<TransactionInBlock>();
-        await asyncIteratorGenerator.done();
-        const newBlock = {
+        asyncIteratorGenerator.done();
+        const newBlock: BFChainCore.BlockBody = {
           version: 1,
           height: lastBlock.height,
           timestamp: result.timestamp,
           generatorPublicKey: delegate.pk,
           previousBlockSignature: lastBlock.previousBlockSignature,
+          roundOfflineGeneratersHashMap: result.roundOfflineGeneratersHashMap,
         };
         if (lastBlock.height % bfchainCore.config.blockPerRound !== 0) {
           const commonBlock = await bfchainCore.block.generateBlock<CommonBlock>(
@@ -996,8 +988,8 @@ function getRoundLastBlockRemarkHash(height: number) {
           const nextRoundDelegates = randomNextDelegates(_pickDelegates).map(v => {
             return { address: v, equity: "0" };
           });
-          // console.log(`height: ${lastBlock.height} nextRoundDelegates`);
-          // console.log(nextRoundDelegates);
+          // print(`height: ${lastBlock.height} nextRoundDelegates`);
+          // print(nextRoundDelegates);
           const roundLastBlock = await bfchainCore.block.generateBlock<RoundLastBlock>(
             RoundLastBlockFactory,
             newBlock,
@@ -1020,20 +1012,18 @@ function getRoundLastBlockRemarkHash(height: number) {
           blockMap.set(lastBlock.height, roundLastBlock);
         }
       }
-      // console.log(
-      //   `生成区块${lastBlock.height}.${result.address} time: ${result.timestamp} ${lastBlock.signature} `,
-      // );
+      print(`生成区块 ${lastBlock.height}. ${result.address} time: ${result.timestamp} `);
     } else {
-      // console.log(`没有选到这个人${result.address} ${lastBlock.height}. ${result.timestamp}`);
+      print(`这个人掉线了 ${result.address} ${lastBlock.height}. ${result.timestamp} `);
     }
-    bfchainCore.time.time_offset_ms += bfchainCore.config.forgeInterval * 1000;
-    if (lastBlock.height === 5 * 57) {
+
+    // bfchainCore.time.time_offset_ms += bfchainCore.config.forgeInterval * 1000;
+    if (lastBlock.height === generateCount) {
       break;
     }
-    // if(count===3){
-    //   break
-    // }
+    // if(c
   } while (true);
+
   const countMap = new Map<string, { length: number; block: number[] }>();
   for (const [k, v] of blockMap) {
     const address = await bfchainCore.accountBaseHelper.getAddressFromPublicKeyString(
@@ -1047,10 +1037,10 @@ function getRoundLastBlockRemarkHash(height: number) {
       countMap.set(address, { block: [k], length: 1 });
     }
   }
-  // console.log(countMap);
+  // print(countMap);
   let total = 0;
   countMap.forEach((v, k) => {
-    console.log(`${k}: ${v.length}`);
+    // print(`${k}: ${v.length}`);
     total += v.length;
   });
   print(`共循环${count} . 区块: ${total}`);
@@ -1100,10 +1090,12 @@ function getRoundLastBlockRemarkHash(height: number) {
         //   }
         // }
       }
+      // console.timeEnd(`cost`);
     }
-    console.timeEnd(`cost`);
   }
-})();
+})().catch(e => {
+  print(e);
+});
 // {
 //   test("calcGenerateBlockDelegate", async t => {
 //     const currentHeight = 98;
@@ -1117,11 +1109,11 @@ function getRoundLastBlockRemarkHash(height: number) {
 //         curTime,
 //       },
 //     );
-//     // console.log("res:", res);
+//     // print("res:", res);
 //     const signature = (await bfchainCore.blockHelper.forceGetBlockByHeight(currentHeight)).signature;
 //     const index =
 //       _getStringASCIICodeSum(signature + curTime) % (blockPerRound - (currentHeight % blockPerRound));
-//     // console.log("signature:11111", signature, index, addressArr[index].address, usedPublicKeys.length);
+//     // print("signature:11111", signature, index, addressArr[index].address, usedPublicKeys.length);
 //     t.deepEqual(res, {
 //       address: "rey9zvi66m9yzxhb845ipey98ojw96wokcwdd81duvcgy9amqsf1mubr4j889dl5",
 //       timestamp: 11116690,
@@ -1141,11 +1133,11 @@ function getRoundLastBlockRemarkHash(height: number) {
 //         curTime,
 //       },
 //     );
-//     // console.log("res2:", res);
+//     // print("res2:", res);
 //     const signature = (await bfchainCore.blockHelper.forceGetBlockByHeight(currentHeight)).signature;
 //     const index =
 //       _getStringASCIICodeSum(signature + curTime) % (blockPerRound - (currentHeight % blockPerRound) + 1);
-//     // console.log("signature:22222", signature, index, addressArr[index].address, usedPublicKeys.length);
+//     // print("signature:22222", signature, index, addressArr[index].address, usedPublicKeys.length);
 //     t.deepEqual(res, { address: "cM8wVfYBZq6KtXCKAobMH9g9jLTcSfCiw5", timestamp: 11116690 });
 //   });
 // }
