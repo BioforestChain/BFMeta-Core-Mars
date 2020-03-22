@@ -57,6 +57,9 @@ export class BlockGeneratorCalculator {
     );
     const 当前轮次 = this.blockHelper.calcRoundByHeight(上一轮轮末块.height + 1);
 
+    if (currentBlock.height === 112) {
+      debugger;
+    }
     const 在某一轮轮选择受托人 = async () => {
       const 上一个块的信息 = await 获取上一个块的信息();
       const 上一个块掉了多少轮 = 计算轮次间隔(上一个块的信息.timestamp);
@@ -117,7 +120,9 @@ export class BlockGeneratorCalculator {
       //#region 那一轮已经掉线的受托人
       const 那一轮已经掉线的受托人 = [] as string[];
       for (const block of 这一轮已经出来的区块) {
-        const 那一轮这个块掉线的受托人 = block.roundOfflineGeneratersReadonlyMap.get(掉到哪一轮);
+        const 那一轮这个块掉线的受托人 = block.roundOfflineGeneratersReadonlyMap.get(
+          当前轮次 - 掉到哪一轮,
+        );
         if (那一轮这个块掉线的受托人) {
           那一轮已经掉线的受托人.push(...那一轮这个块掉线的受托人);
         }
@@ -147,15 +152,14 @@ export class BlockGeneratorCalculator {
      * @param timestamp
      */
     const 计算轮次间隔 = (timestamp: number) => {
-      const roundOffset = Math.floor(
+      const roundOffset =
         (timestamp - 上一轮轮末块.timestamp) /
-          this.config.forgeInterval /
-          this.config.blockPerRound,
-      );
+        this.config.forgeInterval /
+        this.config.blockPerRound;
       if (roundOffset % 1 === 0 && roundOffset > 0) {
         return roundOffset - 1;
       }
-      return roundOffset;
+      return Math.floor(roundOffset);
     };
     /**
      *
