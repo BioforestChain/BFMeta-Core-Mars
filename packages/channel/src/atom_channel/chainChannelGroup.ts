@@ -48,7 +48,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     this._initMaybeHeightWatcher();
   }
   @Inject(BaseHelper) protected baseHelper!: BaseHelper;
-  @Inject(BaseHelper) protected config!: ConfigHelper;
+  @Inject(ConfigHelper) protected config!: ConfigHelper;
   @Inject(ChainTimeHelper) private timeHelper!: ChainTimeHelper;
 
   protected chainChannelSet = new Set<DH>();
