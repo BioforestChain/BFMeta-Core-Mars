@@ -71,10 +71,6 @@ declare namespace BFChainCore {
     vote: bigint;
   };
 
-  type GeneratorAddressCache = Map<
-    number,
-    { signature: string; timestamp: number; address: string }
-  >;
   type AccountChangeResultInfo = {
     [address: string]: {
       [magicAndAssetType: string]: string;

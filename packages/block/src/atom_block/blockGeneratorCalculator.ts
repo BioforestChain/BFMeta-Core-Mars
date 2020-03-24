@@ -194,20 +194,25 @@ export class BlockGeneratorCalculator {
 
       候选名单.sort((a1, a2) => addressToNum.forceGet(a1) - addressToNum.forceGet(a2));
 
-      let 最后一阶段的掉块数: number;
-      if (上一个块掉了多少轮 === 现在掉了多少轮) {
-        最后一阶段的掉块数 =
-          (this.timeHelper.getSlotNumberByTimestamp(nowTimestamp) -
-            this.timeHelper.getSlotNumberByTimestamp(上一个块的信息.timestamp) -
-            1) %
-          this.config.blockPerRound;
-      } else {
-        最后一阶段的掉块数 =
-          (this.timeHelper.getSlotNumberByTimestamp(nowTimestamp) - 1) % this.config.blockPerRound;
+      let 最后一阶段的时间戳 = 上一个块的信息.timestamp;
+      /**
+       * 掉块轮次并不一致
+       * 但是不一致的轮次已经在签名累计过了
+       * 所以这里只需要把时间补充到现有的轮次
+       */
+      if (上一个块掉了多少轮 !== 现在掉了多少轮) {
+        最后一阶段的时间戳 =
+          现在掉了多少轮 * this.config.forgeInterval * this.config.blockPerRound +
+          上一轮轮末块.timestamp;
       }
+      const 最后一阶段的掉块数 =
+        (this.timeHelper.getSlotNumberByTimestamp(nowTimestamp) -
+          this.timeHelper.getSlotNumberByTimestamp(最后一阶段的时间戳) -
+          1) %
+        this.config.blockPerRound;
+
       if (!候选名单[最后一阶段的掉块数]) {
-        debugger
-        throw new NoFoundException("候选名单不足");
+        throw new NoFoundException(`候选名单不足${nowTimestamp}`);
       }
 
       /// 基于nowTimestamp进行筛选
@@ -230,11 +235,9 @@ export class BlockGeneratorCalculator {
         ),
       };
     };
-if(currentBlock.timestamp===14592 ){
-  debugger
-}
+
     //#region 在某一轮轮选择受托人
-    do {
+    while (nowTimestamp <= toTimestamp) {
       let i = 上一个块掉了多少轮;
       while (i !== 现在掉了多少轮) {
         const 剩余可用的受托人 = await 取得剩余可用受托人(i);
@@ -252,7 +255,7 @@ if(currentBlock.timestamp===14592 ){
 
       nowTimestamp += this.config.forgeInterval;
       现在掉了多少轮 = 计算轮次间隔(nowTimestamp);
-    } while (nowTimestamp <= toTimestamp);
+    }
     //#endregion
   }
 }

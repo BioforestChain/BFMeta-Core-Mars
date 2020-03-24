@@ -5,7 +5,6 @@ export class GenesisBlockLogicVerifier extends BlockLogicVerifier {
   async verify(
     block: GenesisBlock,
     processBlockType: PROCESSBLOCK_TYPE,
-    usedAddressCache?: BFChainCore.GeneratorAddressCache,
     blockGetterHelper = this.blockGetterHelper,
     transactionGetterHelper = this.transactionGetterHelper,
   ) {

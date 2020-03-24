@@ -96,34 +96,31 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
 
     const { height: lastBlockHeight, timestamp: lastBlockTimestamp } = lastBlock;
 
-    const { blockGeneratorCalculator, configHelper, timeHelper } = this;
+    const { blockGeneratorCalculator } = this;
 
-    const { forgeInterval } = configHelper;
+    const delegates = blockGeneratorCalculator.calcGenerateBlockDelegateGenerator(
+      {
+        timestamp: lastBlockTimestamp,
+        height: lastBlockHeight,
+      },
+      {
+        toTimestamp: curBlockTimestamp,
+        blockGetterHelper
+      },
+    );
+    const results: BFChainCore.AccountAccumulationInfo = {};
+    for await (const delegate of delegates) {
+      const { address, timestamp } = delegate;
+      if (timestamp === curBlockTimestamp) {
+        break;
+      }
+      if (!results[address]) {
+        results[address] = 0;
+      }
+      results[address]++;
+    }
 
-    // const delegates = blockGeneratorCalculator.calcGenerateBlockDelegateGenerator(
-    //   {
-    //     timestamp: lastBlockTimestamp,
-    //     height: lastBlockHeight,
-    //   },
-    //   {
-    //     heightAcc: 0,
-    //     timeAcc: forgeInterval,
-    //     curTime: timeHelper.getTimeByTimestamp(lastBlockTimestamp + forgeInterval),
-    //   },
-    // );
-    // const results: BFChainCore.AccountAccumulationInfo = {};
-    // for await (const delegate of delegates) {
-    //   const { address, timestamp } = delegate;
-    //   if (timestamp === curBlockTimestamp) {
-    //     break;
-    //   }
-    //   if (!results[address]) {
-    //     results[address] = 0;
-    //   }
-    //   results[address]++;
-    // }
-
-    // await accountGetterHelper.mergeAccountMissedBlock(curBlockHeight, results);
+    await accountGetterHelper.mergeAccountMissedBlock(curBlockHeight, results);
   }
 
   /**
@@ -234,7 +231,9 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
     };
     const { accountBaseHelper, jsbiHelper, configHelper } = this;
     const { height } = block;
-    const generatorAddress = await accountBaseHelper.getAddressFromPublicKeyString(block.generatorPublicKey);
+    const generatorAddress = await accountBaseHelper.getAddressFromPublicKeyString(
+      block.generatorPublicKey,
+    );
     const data = await this.getVoteForDelegate(generatorAddress, height, blockGetterHelper);
     // FIXME: only for genesis block?
     // 使用深拷贝在传值前复制一份？

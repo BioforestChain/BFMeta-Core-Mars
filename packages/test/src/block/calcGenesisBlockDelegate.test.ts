@@ -38,13 +38,13 @@ bfchainCore.moduleMap.set("blockGetterHelper", {
 } as BFChainCore.BlockGetterHelperInterface);
 
 /**已绑定的受托人个数 */
-const pickDelegates = bfchainCore.transactionHelper.genesisDelegates().slice(0, 60);
+const pickDelegates = bfchainCore.transactionHelper.genesisDelegates().slice(0, 112);
 /**生成的区块数 */
-const generateCount = 500;
+const generateCount = 570;
 /**生成完以后是否验证 */
 const isVerify = true;
 /**第一笔交易开始的时间戳 */
-const fakeTimestamp = 838272///* 838272; // */ bfchainCore.config.forgeInterval * 1;
+const fakeTimestamp = bfchainCore.config.forgeInterval * 1;
 const delegatesArr = [
   {
     secret:
@@ -1028,7 +1028,9 @@ function getRoundLastBlockRemarkHash(height: number) {
 
   const MAX_TO_TIMESTAMP = fakeTimestamp - bfchainCore.config.forgeInterval;
   let missTimestamp = MAX_TO_TIMESTAMP;
-  zz: do {
+
+  zz: while (true) {
+    let hasResult = false;
     for await (const result of bfchainCore.block.blockGeneratorCalculator.calcGenerateBlockDelegateGenerator(
       {
         timestamp: lastBlock.timestamp,
@@ -1036,6 +1038,7 @@ function getRoundLastBlockRemarkHash(height: number) {
       },
       { toTimestamp: MAX_TO_TIMESTAMP },
     )) {
+      hasResult = true;
       console.line(
         `预生成中:${Math.min(100, (result.timestamp / MAX_TO_TIMESTAMP) * 100).toFixed(2)}%`,
       );
@@ -1047,9 +1050,14 @@ function getRoundLastBlockRemarkHash(height: number) {
         break zz;
       }
     }
-  } while (true);
+    if (!hasResult) {
+      break;
+    }
+  }
 
   do {
+    count++;
+
     const result = await bfchainCore.block.blockGeneratorCalculator.calcGenerateBlockDelegate(
       {
         timestamp: lastBlock.timestamp,
@@ -1068,11 +1076,10 @@ function getRoundLastBlockRemarkHash(height: number) {
     await tryGenerateBlock(result);
 
     // bfchainCore.time.time_offset_ms += bfchainCore.config.forgeInterval * 1000;
-    if (lastBlock.height === generateCount) {
+    if (lastBlock.height >= generateCount) {
       break;
     }
     // if(c
-    count++;
   } while (true);
 
   const countMap = new Map<string, { length: number; block: number[] }>();
