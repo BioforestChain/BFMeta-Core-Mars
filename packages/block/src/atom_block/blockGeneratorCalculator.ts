@@ -2,12 +2,11 @@ import {
   BlockHelper,
   ConfigHelper,
   AccountBaseHelper,
-  TransactionHelper,
   ChainTimeHelper,
 } from "@bfchain/core-helper";
-import { CoreExceptionGenerator, NOT_EXIST } from "@bfchain/core-util-exception";
-import { Injectable, Inject, EasyMap } from "@bfchain/util";
-const { log, NoFoundException } = CoreExceptionGenerator("Core", "BlockGeneratorCalculator");
+import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
+import { Injectable, EasyMap } from "@bfchain/util";
+const { NoFoundException } = CoreExceptionGenerator("Core", "BlockGeneratorCalculator");
 
 /**
  * 区块锻造者计算器
@@ -19,7 +18,6 @@ export class BlockGeneratorCalculator {
     private timeHelper: ChainTimeHelper,
     private blockHelper: BlockHelper,
     private accountBaseHelper: AccountBaseHelper,
-    private transactionHelper: TransactionHelper,
   ) {}
   async calcGenerateBlockDelegate(
     currentBlock: { timestamp: number; height: number },
@@ -28,7 +26,11 @@ export class BlockGeneratorCalculator {
       blockGetterHelper?: BFChainCore.BlockGetterHelperSimpleInterface;
     } = {},
   ) {
-    const { nowTimestamp = this.timeHelper.getTimestamp() } = opts;
+    const {
+      nowTimestamp = this.timeHelper.getTimestampBySlotNumber(
+        this.timeHelper.getSlotNumberByTimestamp(this.timeHelper.getTimestamp()) + 1,
+      ),
+    } = opts;
     for await (const result of this.calcGenerateBlockDelegateGenerator(currentBlock, {
       fromTimestamp: nowTimestamp,
       blockGetterHelper: opts.blockGetterHelper,

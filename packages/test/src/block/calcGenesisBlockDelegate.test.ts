@@ -15,7 +15,7 @@ function print(obj: any) {
   console.log(obj);
   fs.writeFileSync(process.cwd() + "/test.log", util.format(obj) + "\n", { flag: "as+" });
 }
-const bfchainCore = getFullBfchainCoreEntry(57, 128);
+const bfchainCore = getFullBfchainCoreEntry(57, 10);
 bfchainCore.moduleMap.set("blockGetterHelper", {
   async getBlockByHeight(height: number) {
     const blockJSON = blockMap.get(height);
@@ -38,13 +38,13 @@ bfchainCore.moduleMap.set("blockGetterHelper", {
 } as BFChainCore.BlockGetterHelperInterface);
 
 /**已绑定的受托人个数 */
-const pickDelegates = bfchainCore.transactionHelper.genesisDelegates().slice(0, 112);
+const pickDelegates = bfchainCore.transactionHelper.genesisDelegates().slice(0, 114);
 /**生成的区块数 */
 const generateCount = 570;
 /**生成完以后是否验证 */
 const isVerify = true;
 /**第一笔交易开始的时间戳 */
-const fakeTimestamp = bfchainCore.config.forgeInterval * 1;
+const fakeTimestamp = 90000//bfchainCore.config.forgeInterval * 1;
 const delegatesArr = [
   {
     secret:
@@ -1029,31 +1029,31 @@ function getRoundLastBlockRemarkHash(height: number) {
   const MAX_TO_TIMESTAMP = fakeTimestamp - bfchainCore.config.forgeInterval;
   let missTimestamp = MAX_TO_TIMESTAMP;
 
-  zz: while (true) {
-    let hasResult = false;
-    for await (const result of bfchainCore.block.blockGeneratorCalculator.calcGenerateBlockDelegateGenerator(
-      {
-        timestamp: lastBlock.timestamp,
-        height: lastBlock.height,
-      },
-      { toTimestamp: MAX_TO_TIMESTAMP },
-    )) {
-      hasResult = true;
-      console.line(
-        `预生成中:${Math.min(100, (result.timestamp / MAX_TO_TIMESTAMP) * 100).toFixed(2)}%`,
-      );
-      if (await tryGenerateBlock(result, `BLOCK[${lastBlock.height + 1}]:`, true)) {
-        break;
-      }
-      if (result.timestamp >= MAX_TO_TIMESTAMP) {
-        missTimestamp = result.timestamp;
-        break zz;
-      }
-    }
-    if (!hasResult) {
-      break;
-    }
-  }
+  // zz: while (true) {
+  //   let hasResult = false;
+  //   for await (const result of bfchainCore.block.blockGeneratorCalculator.calcGenerateBlockDelegateGenerator(
+  //     {
+  //       timestamp: lastBlock.timestamp,
+  //       height: lastBlock.height,
+  //     },
+  //     // { toTimestamp: MAX_TO_TIMESTAMP },
+  //   )) {
+  //     hasResult = true;
+  //     console.line(
+  //       `预生成中:${Math.min(100, (result.timestamp / MAX_TO_TIMESTAMP) * 100).toFixed(2)}%`,
+  //     );
+  //     if (await tryGenerateBlock(result, `BLOCK[${lastBlock.height + 1}]:`, true)) {
+  //       break;
+  //     }
+  //     if (result.timestamp >= MAX_TO_TIMESTAMP) {
+  //       missTimestamp = result.timestamp;
+  //       break zz;
+  //     }
+  //   }
+  //   if (!hasResult) {
+  //     break;
+  //   }
+  // }
 
   do {
     count++;
@@ -1065,7 +1065,7 @@ function getRoundLastBlockRemarkHash(height: number) {
       },
       {
         // usedAddressCache: map,
-        nowTimestamp: missTimestamp + bfchainCore.config.forgeInterval * count,
+        // nowTimestamp: missTimestamp + bfchainCore.config.forgeInterval * count,
       },
     );
     // if (lastBlock.height > 1) {
@@ -1075,7 +1075,7 @@ function getRoundLastBlockRemarkHash(height: number) {
     // }
     await tryGenerateBlock(result);
 
-    // bfchainCore.time.time_offset_ms += bfchainCore.config.forgeInterval * 1000;
+    bfchainCore.time.time_offset_ms += bfchainCore.config.forgeInterval * 1000;
     if (lastBlock.height >= generateCount) {
       break;
     }

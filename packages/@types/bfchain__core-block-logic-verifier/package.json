@@ -1,13 +1,13 @@
 {
   "name": "@types/bfchain__core-block-logic-verifier",
   "types": "index.d.ts",
-  "version": "5.10.23",
+  "version": "5.11.2",
   "dependencies": {
-    "@types/bfchain__core-block": "5.10.23",
-    "@types/bfchain__core-helper": "5.10.23",
-    "@types/bfchain__core-model": "5.10.23",
-    "@types/bfchain__core-transaction-logic-verifier": "5.10.23",
-    "@types/bfchain__core-typings": "5.10.23",
-    "@types/bfchain__core-util-exception": "5.10.23"
+    "@types/bfchain__core-block": "5.11.2",
+    "@types/bfchain__core-helper": "5.11.2",
+    "@types/bfchain__core-model": "5.11.2",
+    "@types/bfchain__core-transaction-logic-verifier": "5.11.2",
+    "@types/bfchain__core-typings": "5.11.2",
+    "@types/bfchain__core-util-exception": "5.11.2"
   }
 }
