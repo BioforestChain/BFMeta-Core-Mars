@@ -6,7 +6,10 @@ import {
 } from "@bfchain/core-helper";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 import { Injectable, EasyMap } from "@bfchain/util";
-const { NoFoundException } = CoreExceptionGenerator("Core", "BlockGeneratorCalculator");
+const { NoFoundException, ArgumentException } = CoreExceptionGenerator(
+  "Core",
+  "BlockGeneratorCalculator",
+);
 
 /**
  * 区块锻造者计算器
@@ -19,6 +22,12 @@ export class BlockGeneratorCalculator {
     private blockHelper: BlockHelper,
     private accountBaseHelper: AccountBaseHelper,
   ) {}
+
+  /**
+   *
+   * @param currentBlock 最新的区块
+   * @param opts nowTimestamp为区块间隔的整数倍，为当前区块时间戳的前置时间，例如当前时间戳为77，传入的时间应为70.因为锻造区块从70开始算，而不是80
+   */
   async calcGenerateBlockDelegate(
     currentBlock: { timestamp: number; height: number },
     opts: {
@@ -28,9 +37,14 @@ export class BlockGeneratorCalculator {
   ) {
     const {
       nowTimestamp = this.timeHelper.getTimestampBySlotNumber(
-        this.timeHelper.getSlotNumberByTimestamp(this.timeHelper.getTimestamp()) + 1,
+        this.timeHelper.getSlotNumberByTimestamp(this.timeHelper.getTimestamp()),
       ),
     } = opts;
+    if (currentBlock.timestamp >= nowTimestamp) {
+      throw new ArgumentException(
+        `lastblock timestamp(${currentBlock.timestamp}) should not be greater than nowTimestamp(${nowTimestamp})`,
+      );
+    }
     for await (const result of this.calcGenerateBlockDelegateGenerator(currentBlock, {
       fromTimestamp: nowTimestamp,
       blockGetterHelper: opts.blockGetterHelper,
@@ -101,7 +115,7 @@ export class BlockGeneratorCalculator {
       currentBlock.height,
       blockGetterHelper,
     );
-    const 上一个块掉了多少轮 = 计算轮次间隔(上一个块的信息.timestamp);
+    let 上一个块掉了多少轮 = 计算轮次间隔(上一个块的信息.timestamp);
     let 现在掉了多少轮 = 计算轮次间隔(nowTimestamp); // <0 的轮次统一使用第一轮的数据
 
     const 取得剩余可用受托人 = async (掉了多少轮: number) => {
@@ -156,9 +170,9 @@ export class BlockGeneratorCalculator {
       //#region 那一轮已经掉线的受托人
       const 那一轮已经掉线的受托人 = new Set<string>();
       for (const block of 这一轮已经出来的区块) {
-        const 那一轮这个块掉线的受托人 = block.roundOfflineGeneratersReadonlyMap.get(掉了多少轮);
+        const 那一轮这个块掉线的受托人 = block.roundOfflineGeneratersHashMap[掉了多少轮];
         if (那一轮这个块掉线的受托人) {
-          for (const address of 那一轮这个块掉线的受托人) {
+          for (const address of 那一轮这个块掉线的受托人.split(",")) {
             那一轮已经掉线的受托人.add(address);
           }
         }
@@ -257,6 +271,7 @@ export class BlockGeneratorCalculator {
 
       nowTimestamp += this.config.forgeInterval;
       现在掉了多少轮 = 计算轮次间隔(nowTimestamp);
+      上一个块掉了多少轮 = 现在掉了多少轮;
     }
     //#endregion
   }
