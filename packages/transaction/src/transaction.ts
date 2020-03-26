@@ -212,7 +212,7 @@ export class TransactionCore {
           trsBytes,
           keypair.secretKey,
         );
-        const checked = this.transactionHelper.checkTransactionProfOfWork(
+        const checked = await this.transactionHelper.checkTransactionProfOfWork(
           signatureBuffer,
           pow.count,
           pow.participation,
