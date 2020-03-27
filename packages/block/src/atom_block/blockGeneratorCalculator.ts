@@ -257,7 +257,9 @@ export class BlockGeneratorCalculator {
       let i = 上一个块掉了多少轮;
       while (i !== 现在掉了多少轮) {
         const 剩余可用的受托人 = await 取得剩余可用受托人(i);
-        结果掉块信息.set(i, 剩余可用的受托人);
+        if (剩余可用的受托人.length > 0) {
+          结果掉块信息.set(i, 剩余可用的受托人);
+        }
         i++;
       }
       const 剩余可用的受托人 = await 取得剩余可用受托人(现在掉了多少轮);
@@ -266,7 +268,9 @@ export class BlockGeneratorCalculator {
         剩余可用的受托人,
         上一个块的信息,
       );
-      结果掉块信息.set(i, 掉线的受托人);
+      if (掉线的受托人.length > 0) {
+        结果掉块信息.set(i, 掉线的受托人);
+      }
       yield getResult(选中的受托人);
 
       nowTimestamp += this.config.forgeInterval;

@@ -44,7 +44,7 @@ const generateCount = 500;
 /**生成完以后是否验证 */
 const isVerify = true;
 /**第一笔交易开始的时间戳 */
-const fakeTimestamp = bfchainCore.config.forgeInterval * 8640;
+const fakeTimestamp = bfchainCore.config.forgeInterval * 200;
 const delegatesArr = [
   {
     secret:
@@ -1029,7 +1029,6 @@ function getRoundLastBlockRemarkHash(height: number) {
   const MAX_TO_TIMESTAMP = fakeTimestamp - bfchainCore.config.forgeInterval;
   let missTimestamp = MAX_TO_TIMESTAMP;
 
-  debugger;
   console.time("zz");
   zz: while (true) {
     let hasResult = false;
