@@ -190,6 +190,18 @@ export class BaseHelper {
     return this.isNaturalNumber(value) && value < this.MAX_UINT_32_INTEGER;
   }
 
+  /**uint32的最大数值 */
+  MAX_INT_32_INTEGER = 2 ** 31 - 1;
+  /**uint32的最大数值 */
+  MIN_INT_32_INTEGER = -(2 ** 31);
+
+  /**判断输入值是否是合法的uint32数值 */
+  isInt32(value: any): value is number {
+    return (
+      Number.isInteger(value) && value < this.MAX_INT_32_INTEGER && value > this.MIN_INT_32_INTEGER
+    );
+  }
+
   /**判读是否是非空的`Uint8Array` */
   isNoEmptyUint8Array(value: any): value is Uint8Array {
     return value instanceof Uint8Array && value.length > 0;
