@@ -44,7 +44,7 @@ const generateCount = 500;
 /**生成完以后是否验证 */
 const isVerify = true;
 /**第一笔交易开始的时间戳 */
-const fakeTimestamp = bfchainCore.config.forgeInterval * 200;
+const fakeTimestamp = bfchainCore.config.forgeInterval * 50000;
 const delegatesArr = [
   {
     secret:
@@ -1041,12 +1041,16 @@ function getRoundLastBlockRemarkHash(height: number) {
       { toTimestamp: MAX_TO_TIMESTAMP },
     )) {
       hasResult = true;
-      console.line(
-        `预生成中:${Math.min(100, (result.timestamp / MAX_TO_TIMESTAMP) * 100).toFixed(2)}%`,
-      );
-      if (await tryGenerateBlock(result, `BLOCK[${lastBlock.height + 1}]:`, true)) {
-        break;
+      if (result.timestamp % (bfchainCore.config.forgeInterval * 1000) === 0) {
+        console.line(
+          `预生成中:${Math.min(100, (result.timestamp / MAX_TO_TIMESTAMP) * 100).toFixed(2)}% ${
+            Object.keys(result.roundOfflineGeneratersHashMap).length
+          }`,
+        );
       }
+      // if (await tryGenerateBlock(result, `BLOCK[${lastBlock.height + 1}]:`, true)) {
+      //   break;
+      // }
       if (result.timestamp >= MAX_TO_TIMESTAMP) {
         missTimestamp = result.timestamp;
         break zz;
@@ -1070,15 +1074,15 @@ function getRoundLastBlockRemarkHash(height: number) {
         // usedAddressCache: map,
         nowTimestamp: missTimestamp + bfchainCore.config.forgeInterval * count,
       },
-      );
-      // if (lastBlock.height > 1) {
-        //   if (map.get(lastBlock.height - 1).missAddress.length > 0) {
-          //     print(map.get(lastBlock.height - 1).missAddress);
-          //   }
-          // }
-          await tryGenerateBlock(result);
-          console.log(lastBlock.timestamp,  missTimestamp + bfchainCore.config.forgeInterval * count);
-          break
+    );
+    // if (lastBlock.height > 1) {
+    //   if (map.get(lastBlock.height - 1).missAddress.length > 0) {
+    //     print(map.get(lastBlock.height - 1).missAddress);
+    //   }
+    // }
+    await tryGenerateBlock(result);
+    console.log(lastBlock.timestamp, missTimestamp + bfchainCore.config.forgeInterval * count);
+    break;
 
     // bfchainCore.time.time_offset_ms += bfchainCore. config.forgeInterval * 1000;
     if (lastBlock.height >= generateCount) {

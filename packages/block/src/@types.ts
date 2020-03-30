@@ -13,12 +13,10 @@ declare namespace BFChainCore {
 
   // #region
   type RecommendedDelegateOptions = {
-    /**选取的数量 */
+    /**选出的推荐人数量 */
     numberOfRecommended: number;
     /**选取的区块范围, 最近的 100 轮 */
     numberOfRounds: number;
-    /**选出的推荐人数量 */
-    count: number;
     /**在线率占比 */
     productivityPercent: BFChainCore.FractionJSON;
     /**打块数量占比 */

@@ -9,9 +9,9 @@ const { NoFoundException } = CoreExceptionGenerator("BLOCK", "RecommendedDelegat
 @Injectable()
 export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountInfo> {
   @Inject("accountGetterHelper", { optional: true })
-  private accountGetterHelper?: Required<BFChainCore.AccountGetterHelperInterface<T>>;
+  private accountGetterHelper?: BFChainCore.AccountGetterHelperInterface<T>;
   @Inject("blockGetterHelper", { optional: true })
-  private blockGetterHelper?: Required<BFChainCore.BlockGetterHelperInterface>;
+  private blockGetterHelper?: BFChainCore.BlockGetterHelperInterface;
 
   constructor(
     private config: ConfigHelper,
@@ -36,8 +36,24 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
   private async calDelegateNumberOfForgingAndPackagedTransactions(
     currentBlockHeight: number,
     numberOfRounds: number,
-    blockGetterHelper: Required<BFChainCore.BlockGetterHelperInterface>,
+    blockGetterHelper = this.blockGetterHelper,
   ) {
+    if (!blockGetterHelper) {
+      throw new NoFoundException(NOT_EXIST, {
+        prop: "getBlockByCondition",
+        target: "blockGetterHelper",
+        function: "calDelegateNumberOfForgingAndPackagedTransactions",
+      });
+    }
+
+    if (!blockGetterHelper.getBlockByCondition) {
+      throw new NoFoundException(NOT_EXIST, {
+        prop: "getBlockByCondition",
+        target: "blockGetterHelper",
+        function: "calDelegateNumberOfForgingAndPackagedTransactions",
+      });
+    }
+
     const blockPerRound = this.config.blockPerRound;
     // 获取起始计算高度
     const lastBlockHeight =
@@ -100,8 +116,19 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     minBeSelectProductivity: BFChainCore.FractionJSON,
     generatorAddressList: string[],
     forgeInfoMap: Map<string, BFChainCore.ForgeInfos>,
-    accountGetterHelper: Required<BFChainCore.AccountGetterHelperInterface<T>>,
+    accountGetterHelper = this.accountGetterHelper,
   ) {
+    const Function_Exception_Detail = {
+      function: "calCanBePickAccounts",
+    } as const;
+    if (!accountGetterHelper) {
+      throw new NoFoundException(NOT_EXIST, {
+        prop: "accountGetterHelper",
+        target: "moduleStroge",
+        ...Function_Exception_Detail,
+      });
+    }
+
     const accounts = await accountGetterHelper.getAccounts(generatorAddressList);
 
     const canBePickAccounts: BFChainCore.CanBePickAccount[] = [];
@@ -222,9 +249,27 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     currentBlockHeight: number,
     options: BFChainCore.RecommendedDelegateOptions,
     activeDelegates: string[],
-    accountGetterHelper: Required<BFChainCore.AccountGetterHelperInterface<T>>,
-    blockGetterHelper: Required<BFChainCore.BlockGetterHelperInterface>,
+    accountGetterHelper = this.accountGetterHelper,
+    blockGetterHelper = this.blockGetterHelper,
   ) {
+    const Function_Exception_Detail = {
+      function: "calRecommendedDelegates",
+    } as const;
+    if (!accountGetterHelper) {
+      throw new NoFoundException(NOT_EXIST, {
+        prop: "accountGetterHelper",
+        target: "moduleStroge",
+        ...Function_Exception_Detail,
+      });
+    }
+    if (!blockGetterHelper) {
+      throw new NoFoundException(NOT_EXIST, {
+        prop: "blockGetterHelper",
+        target: "moduleStroge",
+        ...Function_Exception_Detail,
+      });
+    }
+
     const {
       forgeInfoMap,
       generatorAddressList,
@@ -283,7 +328,7 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
    * @param {*} resultArray
    * @param {*} numberOfRecommended
    */
-  allocationQuota(
+  private allocationQuota(
     sourceArray: string[],
     filterSet: Set<string>,
     resultArray: string[],
@@ -344,7 +389,7 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     const blockPerRound = this.config.blockPerRound;
 
     // 获取账户的已投账户
-    const votedResult = await accountGetterHelper.getAccountVoteInfo(address);
+    const votedResult = await accountGetterHelper.getAccountVoteInfo(currentBlockHeight, address);
     const noLongerVoteSet = new Set<string>(votedResult);
     // 获取当前轮的打块账户
     const curRound = this.blockHelper.calcRoundByHeight(currentBlockHeight);
@@ -373,7 +418,9 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
       }
       // 已经选出足够多的人了
       if (pickDelegates.length === numberOfRecommended) {
-        return pickDelegates;
+        return {
+          delegate: pickDelegates,
+        };
       }
     }
     // 从候选名单中获取推荐的人
