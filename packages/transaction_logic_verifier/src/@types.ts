@@ -187,6 +187,10 @@ declare namespace BFChainCore {
     mergeAccountEquity(height: number, accountEquity: AccountEquityInfo): Promise<void>;
     /**重置受托人获得的权益 */
     resetDelegateVote(height: number): Promise<void>;
+    /**获取某个账户的投票信息 */
+    getAccountVoteInfo(address: string): Promise<string[]>;
+    /**获取矿机中的受托人账户 */
+    getMemoryDelegates(): Promise<string[]>;
   }
   // #endregion
 

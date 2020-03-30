@@ -10,4 +10,38 @@ declare namespace BFChainCore {
     { signature: string; timestamp: number; address: string }
   >;
   // #endregion
+
+  // #region
+  type RecommendedDelegateOptions = {
+    /**选取的数量 */
+    numberOfRecommended: number;
+    /**选取的区块范围, 最近的 100 轮 */
+    numberOfRounds: number;
+    /**选出的推荐人数量 */
+    count: number;
+    /**在线率占比 */
+    productivityPercent: BFChainCore.FractionJSON;
+    /**打块数量占比 */
+    forgedBlocksPercent: BFChainCore.FractionJSON;
+    /**打包交易数量占比 */
+    applyTxPercent: BFChainCore.FractionJSON;
+    /**上一轮的得票率占比 */
+    votePercent: BFChainCore.FractionJSON;
+    /**最小可被推荐得账户在线率 */
+    minBeSelectProductivity: BFChainCore.FractionJSON;
+  };
+
+  type ForgeInfos = {
+    producedblocks: number;
+    applyTxNumber: number;
+  };
+
+  type CanBePickAccount = {
+    address: string;
+    productivity: number;
+    forgedBlocks: number;
+    applyTxNumber: number;
+    vote: bigint;
+  };
+  // #endregion
 }

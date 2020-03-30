@@ -37,6 +37,12 @@ declare namespace BFChainCore {
   interface BlockGetterHelperInterface<CC extends ChainChannel = ChainChannel>
     extends BlockGetterHelperSimpleInterface {
     getCurrentReplayingBlockInfo?(): Promise<CurrentReplayingBlockInfo<CC> | undefined>;
+    getBlockByCondition?(args: {
+      height: {
+        $gt?: number;
+        $lte?: number;
+      };
+    }): Promise<Block[]>;
   }
   type BlockPlotChecker = Readonly<{
     height: number;
