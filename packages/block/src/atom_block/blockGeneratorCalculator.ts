@@ -37,7 +37,7 @@ export class BlockGeneratorCalculator {
   ) {
     const {
       nowTimestamp = this.timeHelper.getTimestampBySlotNumber(
-        this.timeHelper.getSlotNumberByTimestamp(this.timeHelper.getTimestamp()),
+        this.timeHelper.getSlotNumberByTimestamp(this.timeHelper.getTimestamp()) + 1,
       ),
     } = opts;
     if (currentBlock.timestamp >= nowTimestamp) {
@@ -239,12 +239,18 @@ export class BlockGeneratorCalculator {
     };
 
     const getResult = (选中的受托人: string) => {
-      const roundOfflineGeneratersHashMap: BFChainCore.RoundOfflineGeneratersHashMap = {};
-      for (const [roundOffset, OfflineGeneraterList] of 结果掉块信息) {
-        roundOfflineGeneratersHashMap[roundOffset] = OfflineGeneraterList.join(",");
-      }
+      let roundOfflineGeneratersHashMap: BFChainCore.RoundOfflineGeneratersHashMap | undefined;
+
       return {
-        roundOfflineGeneratersHashMap,
+        get roundOfflineGeneratersHashMap() {
+          if (!roundOfflineGeneratersHashMap) {
+            roundOfflineGeneratersHashMap = {};
+            for (const [roundOffset, OfflineGeneraterList] of 结果掉块信息) {
+              roundOfflineGeneratersHashMap[roundOffset] = OfflineGeneraterList.join(",");
+            }
+          }
+          return roundOfflineGeneratersHashMap;
+        },
         address: 选中的受托人,
         timestamp: this.timeHelper.getTimestampBySlotNumber(
           this.timeHelper.getSlotNumberByTimestamp(nowTimestamp),
