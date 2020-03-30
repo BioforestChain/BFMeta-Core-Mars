@@ -47,7 +47,7 @@
     "dev:all": "bdk-tsc --build ./tsconfig.all.json -w",
     "dev:types": "bdk-tsc --build ./tsconfig.@types.json -w",
     "build": "bdk-tsc --build ./tsconfig.all.json",
-    "rebuild": "npm run clear & npm run build"
+    "rebuild": "yarn clear & yarn build"
   },
   "keywords": [],
   "author": "",

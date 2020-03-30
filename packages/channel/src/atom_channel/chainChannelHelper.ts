@@ -228,7 +228,7 @@ export class ChainChannelHelper {
     const { index } = arg.sort;
     if (index) {
       // if (typeof timestamp === "number") {
-      if (index === -1 || index === 1) {
+      if (index !== -1 && index !== 1) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.sort",
           field: "timestamp",
