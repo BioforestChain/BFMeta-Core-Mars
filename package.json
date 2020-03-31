@@ -17,8 +17,8 @@
       {
         "packages": "*,-test",
         "type": "mergejson",
-        "from": "$ROOT_PROJECT/config/tsconfig_template/tsconfig.esm-es6.json",
-        "to": "$PACKAGE/tsconfig.esm-es6.json"
+        "from": "$ROOT_PROJECT/config/tsconfig_template/tsconfig.esm-es5.json",
+        "to": "$PACKAGE/tsconfig.esm-es5.json"
       },
       {
         "packages": "*,-test",

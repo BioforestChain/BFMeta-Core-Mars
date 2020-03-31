@@ -4,6 +4,6 @@
     "declaration": true,
     "declarationMap": false,
     "sourceMap": false,
-    "transformPlugins": ["jsbi", "es2016"]
+    "transformPlugins": ["jsbi", "es6"]
   }
 }

@@ -1,0 +1,39 @@
+{
+  "extends": "./tsconfig",
+  "mixin": [
+    "./tsconfig.json",
+    "../../config/tsconfig_base/base.tsconfig.esm-es5.json"
+  ],
+  "compilerOptions": {
+    "outDir": "./build/esm-es5"
+  },
+  "references": [
+    {
+      "path": "../helper-account_base/tsconfig.esm-es5.json"
+    },
+    {
+      "path": "../helper-asymmetric/tsconfig.esm-es5.json"
+    },
+    {
+      "path": "../helper-bigint/tsconfig.esm-es5.json"
+    },
+    {
+      "path": "../helper-config/tsconfig.esm-es5.json"
+    },
+    {
+      "path": "../helper-type/tsconfig.esm-es5.json"
+    },
+    {
+      "path": "../model-constants/tsconfig.esm-es5.json"
+    },
+    {
+      "path": "../model-transaction/tsconfig.esm-es5.json"
+    },
+    {
+      "path": "../typings/tsconfig.esm-es5.json"
+    },
+    {
+      "path": "../util-exception/tsconfig.esm-es5.json"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "extends": "./tsconfig",
+  "mixin": [
+    "./tsconfig.json",
+    "../../config/tsconfig_base/base.tsconfig.esm-es5.json"
+  ],
+  "compilerOptions": {
+    "outDir": "./build/esm-es5"
+  },
+  "references": [
+    {
+      "path": "../account/tsconfig.esm-es5.json"
+    },
+    {
+      "path": "../block_logic_verifier/tsconfig.esm-es5.json"
+    },
+    {
+      "path": "../block_ticker/tsconfig.esm-es5.json"
+    },
+    {
+      "path": "../block/tsconfig.esm-es5.json"
+    },
+    {
+      "path": "../channel/tsconfig.esm-es5.json"
+    },
+    {
+      "path": "../crypto/tsconfig.esm-es5.json"
+    },
+    {
+      "path": "../helper/tsconfig.esm-es5.json"
+    },
+    {
+      "path": "../model/tsconfig.esm-es5.json"
+    },
+    {
+      "path": "../transaction_complex/tsconfig.esm-es5.json"
+    },
+    {
+      "path": "../transaction_logic_verifier/tsconfig.esm-es5.json"
+    },
+    {
+      "path": "../transaction/tsconfig.esm-es5.json"
+    },
+    {
+      "path": "../typings/tsconfig.esm-es5.json"
+    },
+    {
+      "path": "../util-base58/tsconfig.esm-es5.json"
+    },
+    {
+      "path": "../util-exception/tsconfig.esm-es5.json"
+    }
+  ]
+}

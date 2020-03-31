@@ -1,0 +1,27 @@
+{
+  "extends": "./tsconfig",
+  "mixin": [
+    "./tsconfig.json",
+    "../../config/tsconfig_base/base.tsconfig.esm-es5.json"
+  ],
+  "compilerOptions": {
+    "outDir": "./build/esm-es5"
+  },
+  "references": [
+    {
+      "path": "../model-block/tsconfig.esm-es5.json"
+    },
+    {
+      "path": "../model-constants/tsconfig.esm-es5.json"
+    },
+    {
+      "path": "../model-progress/tsconfig.esm-es5.json"
+    },
+    {
+      "path": "../model-transaction/tsconfig.esm-es5.json"
+    },
+    {
+      "path": "../typings/tsconfig.esm-es5.json"
+    }
+  ]
+}
