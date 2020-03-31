@@ -42,6 +42,7 @@ const {
   NoFoundException,
   error,
   TimeOutException,
+  ConsensusException,
 } = CoreExceptionGenerator("channel", "chainChannel");
 
 export abstract class ChainChannelBase extends QueneEventEmitterPro<
@@ -117,6 +118,16 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
   ) {
     super();
     this.initOnMessage();
+    this.onError((err, args) => {
+      if (args.eventname !== "handleMessageError") {
+        const exception = new ConsensusException("emit {eventname}({arg}) fail:{error}", {
+          eventname: args.eventname,
+          arg: args.arg,
+          error: err.stack,
+        });
+        this.emit("handleMessageError", exception);
+      }
+    });
   }
   get diffTime() {
     return 0;
@@ -126,7 +137,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
     once?: boolean,
   ) {
     if (once) {
-      const remover = this.endpoint.onClose(err => {
+      const remover = this.endpoint.onClose((err) => {
         handler(err);
         remover();
       });
@@ -382,7 +393,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
               /// 查询成功
               if (queryResult) {
                 response.status = RESPONSE_STATUS.success;
-                response.transactions = queryResult.transactions.map(tib =>
+                response.transactions = queryResult.transactions.map((tib) =>
                   TransactionInBlock.fromObject(tib),
                 );
               }
