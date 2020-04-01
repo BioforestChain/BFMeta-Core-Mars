@@ -32,21 +32,21 @@
     typescript "^3.4.0-dev.20190313"
     yargs "^12.0.5"
 
-"@bfchain/devkit-tsc@0.5.5":
-  version "0.5.5"
-  resolved "http://192.168.110.189:4873/@bfchain%2fdevkit-tsc/-/devkit-tsc-0.5.5.tgz#4eb2f7ab42501dd706eb617eb9e663b775a01237"
-  integrity sha512-2OZVhQiIEy8brWXfXUrZ366cQUhPm7tyL+Ta4K74m3PVSlqbaZzOObS7VXQeRgRjpdvA+cZQko9zDVOUeeBZeg==
+"@bfchain/devkit-tsc@0.5.8":
+  version "0.5.8"
+  resolved "http://192.168.110.189:4873/@bfchain%2fdevkit-tsc/-/devkit-tsc-0.5.8.tgz#981f68d6991908839052fabbe7e722b1b88bdbbb"
+  integrity sha512-B4SjM8bc+2U2DOPiiWXINPasV27bhWsoasb+Ig6xxWw7b989HZOv/VSL45mvnpOesR/TtmsqVH66yBKz/N3tIQ==
   dependencies:
     "@types/microsoft__typescript-etw" "^0.1.0"
 
 "@bfchain/devkit@^0.8.3":
-  version "0.8.3"
-  resolved "http://192.168.110.189:4873/@bfchain%2fdevkit/-/devkit-0.8.3.tgz#834bc3e553ed1cce9c50468c65a2f89cd5049345"
-  integrity sha512-4SwnlhhWAQs1YRC7E8Fp48kq0psBA87XzN7E6iEOTXO0VAEOaedtJp5fG1jsNOHVHoJUTSYTBtVAxFmZltBsOQ==
+  version "0.8.5"
+  resolved "http://192.168.110.189:4873/@bfchain%2fdevkit/-/devkit-0.8.5.tgz#fba1955051cf764efb2a6b8863887342787d57a8"
+  integrity sha512-9kVd+uGM1m3x5YEWMzLrr4hq99NkfTXq7nc0mnPhs/I9qzGbP6ZPUOG29zMgwThtOQdvJ2tpwh3Q/twazkrOQw==
   dependencies:
     "7zip-min" "^1.1.1"
     "@bfchain/devkit-ts-creator" "^1.3.2"
-    "@bfchain/devkit-tsc" "0.5.5"
+    "@bfchain/devkit-tsc" "0.5.8"
     "@types/json5" "^0.0.30"
     "@types/prettier" "^1.19.1"
     "@types/semver" "^7.1.0"
