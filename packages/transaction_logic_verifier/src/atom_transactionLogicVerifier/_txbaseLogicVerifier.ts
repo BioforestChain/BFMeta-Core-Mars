@@ -647,10 +647,15 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     };
     const minTransactionFeePerByte = this.configHelper.minTransactionFeePerByte;
     const result = this.jsbiHelper.compareFraction(feePerByte, minTransactionFeePerByte);
-    const minFee = this.jsbiHelper
+    let minFee = this.jsbiHelper
       .multiplyCeilFraction(byteLength, minTransactionFeePerByte)
       .toString();
     if (result < 0) {
+      if (minFee.length !== transaction.fee.length) {
+        minFee = this.jsbiHelper
+          .multiplyCeilFraction(byteLength + minFee.length, minTransactionFeePerByte)
+          .toString();
+      }
       return {
         isFeeEnough: false,
         minFee,
@@ -697,8 +702,13 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       : miningMachineMinFeePerByte;
 
     const result = this.jsbiHelper.compareFraction(feePerByte, standardFee);
-    const minFee = this.jsbiHelper.multiplyCeilFraction(byteLength, standardFee).toString();
+    let minFee = this.jsbiHelper.multiplyCeilFraction(byteLength, standardFee).toString();
     if (result < 0) {
+      if (minFee.length !== transaction.fee.length) {
+        minFee = this.jsbiHelper
+          .multiplyCeilFraction(byteLength + minFee.length, standardFee)
+          .toString();
+      }
       return {
         isFeeEnough: false,
         minFee,
