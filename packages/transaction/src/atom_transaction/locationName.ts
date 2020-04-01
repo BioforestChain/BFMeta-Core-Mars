@@ -185,7 +185,7 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
       }
       if (i === namesLength - 2) {
         // 顶级域名必须是小写字母
-        if (!baseHelper.isLowerCaseLetters(lnsName)) {
+        if (!baseHelper.isLowerCase(lnsName)) {
           throw new ArgumentIllegalException(PROP_IS_INVALID, {
             prop: "name",
             type: "lowercase",
@@ -203,12 +203,22 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
           });
         }
       } else {
-        if (!baseHelper.isLowerCaseOrNumberOrUnderline(lnsName)) {
-          throw new ArgumentIllegalException(PROP_IS_INVALID, {
-            prop: "name",
-            type: "lowercase number or underline",
-            ...LocationName_Exception_Detail,
-          });
+        if (lnsName.length <= 2) {
+          if (!baseHelper.isLowerCaseOrNumber(lnsName)) {
+            throw new ArgumentIllegalException(PROP_IS_INVALID, {
+              prop: "name",
+              type: "lowercase letter or number",
+              ...LocationName_Exception_Detail,
+            });
+          }
+        } else {
+          if (!baseHelper.isLowerCaseOrNumberOrUnderline(lnsName)) {
+            throw new ArgumentIllegalException(PROP_IS_INVALID, {
+              prop: "name",
+              type: "lowercase letter or number or underline",
+              ...LocationName_Exception_Detail,
+            });
+          }
         }
       }
     }
