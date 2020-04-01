@@ -632,10 +632,14 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    * 校验交易的手续费是否大于等于网络手续费
    *
    * @param transaction
+   * @param byteLength
    */
   checkTrsFeeAndWebFee(transaction: BFChainCore.Transaction, byteLength: number) {
     if (transaction.type === this.transactionHelper.GRAB_ASSET) {
-      return transaction.fee;
+      return {
+        isFeeEnough: true,
+        minFee: transaction.fee,
+      };
     }
     const feePerByte = {
       numerator: BigInt(transaction.fee),
@@ -647,42 +651,63 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       .multiplyCeilFraction(byteLength, minTransactionFeePerByte)
       .toString();
     if (result < 0) {
-      throw new ConsensusException(TRANSACTION_FEE_NOT_ENOUGH, {
-        errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
+      return {
+        isFeeEnough: false,
         minFee,
-        function: "checkTrsFeeAndWebFee",
-      });
+      };
     }
-    return minFee;
+    return {
+      isFeeEnough: true,
+      minFee,
+    };
   }
 
   /**
-   * 检验交易的手续费是否大于等于矿机手续费
+   * 检验交易的手续费是否大于等于矿机手续费和网络手续费
    *
    * @param transaction
+   * @param byteLength
+   * @param miningMachineMinFeePerByte
    */
-  checkTrsFeeAndMiningMachineFee(
+  checkTrsFeeAndMiningMachineFeeAndWebFee(
     transaction: BFChainCore.Transaction,
     byteLength: number,
-    minFeePerByte: BFChainCore.FractionJSON,
+    miningMachineMinFeePerByte: BFChainCore.FractionJSON,
   ) {
     if (transaction.type === this.transactionHelper.GRAB_ASSET) {
-      return transaction.fee;
+      return {
+        isFeeEnough: true,
+        minFee: transaction.fee,
+      };
     }
     const feePerByte = {
       numerator: BigInt(transaction.fee),
       denominator: byteLength,
     };
-    const result = this.jsbiHelper.compareFraction(feePerByte, minFeePerByte);
-    const minFee = this.jsbiHelper.multiplyCeilFraction(byteLength, minFeePerByte).toString();
+    // 是否使用矿机手续费
+    const useWebFee =
+      this.jsbiHelper.compareFraction(
+        this.configHelper.minTransactionFeePerByte,
+        miningMachineMinFeePerByte,
+      ) >= 0
+        ? true
+        : false;
+    let standardFee = useWebFee
+      ? this.configHelper.minTransactionFeePerByte
+      : miningMachineMinFeePerByte;
+
+    const result = this.jsbiHelper.compareFraction(feePerByte, standardFee);
+    const minFee = this.jsbiHelper.multiplyCeilFraction(byteLength, standardFee).toString();
     if (result < 0) {
-      throw new ConsensusException(TRANSACTION_FEE_NOT_ENOUGH, {
-        errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
+      return {
+        isFeeEnough: false,
         minFee,
-        function: "checkTrsFeeAndMiningMachineFee",
-      });
+      };
     }
-    return minFee;
+    return {
+      isFeeEnough: true,
+      minFee,
+    };
   }
 
   /**
