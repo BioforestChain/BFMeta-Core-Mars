@@ -529,7 +529,16 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
         ...Function_Exception_Detail,
       });
     }
-    if (dapp.type === DAPP_TYPE.PAID_APP) {
+    // 获取dapp开发账户
+    const accountInfo = await accountGetterHelper.getAccountInfo(dapp.possessorAddress);
+    if (!accountInfo) {
+      throw new ConsensusException(NOT_FOUND, {
+        porp: "Dapp possessor",
+        ...Function_Exception_Detail,
+      });
+    }
+    // dapp 的拥有者不需要购买使用
+    if (dapp.type === DAPP_TYPE.PAID_APP && senderId !== dapp.possessorAddress) {
       // FIXME: 付费一次永久生效
       const isPurchase = await transactionGetterHelper.getPurchaseDApp(senderId, dappid);
       if (!isPurchase) {
@@ -539,18 +548,8 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
         });
       }
     }
-    if (trs.type === this.transactionHelper.VOTE) {
-      return;
-    }
-    // 获取dapp开发账户
-    const accountInfo = await accountGetterHelper.getAccountInfo(dapp.possessorAddress);
-    if (!accountInfo) {
-      throw new ConsensusException(NOT_FOUND, {
-        porp: "Dapp possessor",
-        ...Function_Exception_Detail,
-      });
-    }
-    if (accountInfo.isAcceptVote) {
+    // dapp 的拥有者不需要投票使用
+    if (accountInfo.isAcceptVote && senderId !== dapp.possessorAddress) {
       const curRound = this.blockHelper.calcRoundByHeight(currentBlockHeight);
       // 判断当前账户是否给 dapp 开发者投过票
       const isVote = await accountGetterHelper.getVoteForDelegate(
