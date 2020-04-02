@@ -127,21 +127,19 @@ declare namespace BFChainCore {
     /**获取账户信息 */
     getAccountInfo(address: string): Promise<AccountInfo | undefined>;
     /**获取账户的块内交易 */
-    getAccountTxCountInBlock(address: string): Promise<number|undefined>;
+    getAccountTxCountInBlock(address: string): Promise<number | undefined>;
     /**获取账户资产信息 */
     getAccountAssets(address: string): Promise<AccountAssets | undefined>;
     /**获取账户信息和账户资产信息 */
     getAccountInfoAndAssets(address: string): Promise<AccountInfoAndAssets | undefined>;
-    /**查询指定的 dapp */
+    /**获取指定的 dapp */
     getDApp(
       sourceChainMagic: string,
       dappid: string,
       currentBlockHeight: number,
-      spec?: {
-        /** 某个账户是否持有指定的 dappid*/
-        address: string;
-      },
-    ): Promise<boolean | DAppInfo | undefined>;
+    ): Promise<DAppInfo | undefined>;
+    /**某个账户是否是某个的 dappid 的持有者 */
+    isDAppPossessor(sourceChainMagic: string, address: string): Promise<boolean>;
     /**某个账户是否给指定收托人投票(最近 2 轮) */
     getVoteForDelegate(
       address: string,
@@ -155,13 +153,11 @@ declare namespace BFChainCore {
       sourceChainMagic: string,
       locationName: string,
       currentBlockHeight: number,
-      spec?: {
-        /**指定账户是否持有或关联指定的域名 */
-        address?: string;
-        /**指定域名是否存在子域名 */
-        endsWith?: string;
-      },
-    ): Promise<boolean | LocationNameInfo | undefined>;
+    ): Promise<LocationNameInfo | undefined>;
+    /**指定账户是否持有或关联指定的域名 */
+    isLocationNamePossessor(sourceChainMagic: string, address: string): Promise<boolean>;
+    /**指定域名是否存在子域名 */
+    isSubLocationNameExist(sourceChainMagic: string, endsWith: string): Promise<boolean>;
     /**链域名是否被禁用 */
     isLocationNameForbidden(name: string): Promise<boolean>;
     /**查询冻结的资产 */
@@ -191,6 +187,10 @@ declare namespace BFChainCore {
     mergeAccountEquity(height: number, accountEquity: AccountEquityInfo): Promise<void>;
     /**重置受托人获得的权益 */
     resetDelegateVote(height: number): Promise<void>;
+    /**获取某个账户的投票信息 */
+    getAccountVoteInfo(height: number, address: string): Promise<string[]>;
+    /**获取矿机中的受托人账户 */
+    getMemoryDelegates(): Promise<string[]>;
   }
   // #endregion
 

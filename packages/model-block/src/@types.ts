@@ -37,6 +37,7 @@ declare namespace BFChainCore {
     // version: number;
     // /**区块所属的网络标识符 */
     // magic: string;
+    roundOfflineGeneratersHashMap?: BFChainCore.RoundOfflineGeneratersHashMap;
   };
 
   type CommonBlock = import("./atom_block").CommonBlock; //  Block<CommonBlockRemarkJSON>;

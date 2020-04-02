@@ -650,15 +650,14 @@ export class BaseHelper {
     if (len < 2) {
       return false;
     }
-    const tpattern = /^[a-z]+$/;
-    const pattern = /^[a-z0-9][a-z0-9_]*[a-z0-9]+$/;
+
     for (let i = 0; i < len; i++) {
       const item = names[i];
       if (item.length > 128) {
         return false;
       }
       if (i === len - 2) {
-        if (!tpattern.test(item)) {
+        if (!this.isLowerCase(item)) {
           return false;
         }
       } else if (i === len - 1) {
@@ -667,8 +666,14 @@ export class BaseHelper {
           return false;
         }
       } else {
-        if (!pattern.test(item)) {
-          return false;
+        if (item.length <= 2) {
+          if (!this.isLowerCaseOrNumber(item)) {
+            return false;
+          }
+        } else {
+          if (!this.isLowerCaseOrNumberOrUnderline(item)) {
+            return false;
+          }
         }
       }
     }
@@ -819,7 +824,7 @@ export class BaseHelper {
    *
    * @param value
    */
-  isLowerCaseLetters(value: string) {
+  isLowerCase(value: string) {
     const pattern = /^[a-z]+$/;
     return this.isString(value) && pattern.test(value);
   }
@@ -865,13 +870,23 @@ export class BaseHelper {
   }
 
   /**
-   * 字母开头，内容可包含数字
+   * 字母或数字
+   *
+   * @param value
+   */
+  isLowerCaseOrNumber(value: string) {
+    const patternm = /^[a-z0-9]+$/;
+    return patternm.test(value);
+  }
+
+  /**
+   * 字母或数字开头，内容可包含下划线，字母或数字开头
    *
    * @param value
    */
   isLowerCaseOrNumberOrUnderline(value: string) {
-    const pattern = /^[a-z0-9][a-z0-9_]*[a-z0-9]+$/;
-    return pattern.test(value);
+    const patternn = /^[a-z0-9][a-z0-9_]*[a-z0-9]+$/;
+    return patternn.test(value);
   }
 
   /**

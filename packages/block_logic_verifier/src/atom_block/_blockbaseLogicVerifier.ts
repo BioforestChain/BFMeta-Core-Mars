@@ -62,7 +62,6 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
   abstract verify(
     block: T,
     processBlockType: PROCESSBLOCK_TYPE,
-    usedAddressCache?: BFChainCore.GeneratorAddressCache,
     blockGetterHelper?: BFChainCore.BlockGetterHelperInterface,
     transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ): Promise<boolean>;
@@ -235,12 +234,10 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
    * 校验打块账户
    *
    * @param block
-   * @param usedAddressCache
    * @param blockGetterHelper
    */
   async isValidBlockSlot(
     block: T,
-    usedAddressCache?: BFChainCore.GeneratorAddressCache,
     blockGetterHelper = this.blockGetterHelper,
   ) {
     const Function_Exception_Detail = {
@@ -267,8 +264,7 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
         height: lastBlock.height,
       },
       {
-        curTime: timeHelper.getTimeByTimestamp(block.timestamp),
-        usedAddressCache,
+        nowTimestamp:block.timestamp,
       },
     );
     const expectedAddress = result.address;
@@ -281,7 +277,7 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
           block.timestamp,
         )} 该区块的打块人校验不通过，区块signature：${block.signature} height: ${
           block.height
-        } ${usedAddressCache}，当前slot为${currentSlot}，当前应该由委托人${expectedAddress}打块，实际是由${generatorAddress}打块，校验无法通过`,
+        } 当前slot为${currentSlot}，当前应该由委托人${expectedAddress}打块，实际是由${generatorAddress}打块，校验无法通过`,
         ...Function_Exception_Detail,
       });
     }

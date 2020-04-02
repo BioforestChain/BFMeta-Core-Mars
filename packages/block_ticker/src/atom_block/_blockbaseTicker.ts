@@ -96,9 +96,7 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
 
     const { height: lastBlockHeight, timestamp: lastBlockTimestamp } = lastBlock;
 
-    const { blockGeneratorCalculator, configHelper, timeHelper } = this;
-
-    const { forgeInterval } = configHelper;
+    const { blockGeneratorCalculator } = this;
 
     const delegates = blockGeneratorCalculator.calcGenerateBlockDelegateGenerator(
       {
@@ -106,9 +104,8 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
         height: lastBlockHeight,
       },
       {
-        heightAcc: 0,
-        timeAcc: forgeInterval,
-        curTime: timeHelper.getTimeByTimestamp(lastBlockTimestamp + forgeInterval),
+        toTimestamp: curBlockTimestamp,
+        blockGetterHelper
       },
     );
     const results: BFChainCore.AccountAccumulationInfo = {};
@@ -234,7 +231,9 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
     };
     const { accountBaseHelper, jsbiHelper, configHelper } = this;
     const { height } = block;
-    const generatorAddress = await accountBaseHelper.getAddressFromPublicKeyString(block.generatorPublicKey);
+    const generatorAddress = await accountBaseHelper.getAddressFromPublicKeyString(
+      block.generatorPublicKey,
+    );
     const data = await this.getVoteForDelegate(generatorAddress, height, blockGetterHelper);
     // FIXME: only for genesis block?
     // 使用深拷贝在传值前复制一份？

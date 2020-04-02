@@ -1,4 +1,4 @@
-import { Message, Type, Field } from "@bfchain/protobuf";
+import { Message, Type, MapField, Field } from "@bfchain/protobuf";
 import { parseHexToArrayBuffer, getHexFromArrayBuffer } from "@bfchain/util-encoding-hex";
 import { TransactionInBlock } from "@bfchain/core-model-transaction";
 import { StatisticInfoModel } from "./statistic_info";
@@ -141,6 +141,19 @@ export class Block<RJ extends BFChainCore.CommonBlockRemarkJSON = BFChainCore.Co
     const blockWrapper = Object.create(this, props);
     return this.$type.encode(blockWrapper).finish();
   }
+  @MapField.d(Block.INC++, "uint32", "string")
+  roundOfflineGeneratersHashMap!: BFChainCore.RoundOfflineGeneratersHashMap;
+  _roundOfflineGeneratersReadonlyMap?: BFChainCore.RoundOfflineGeneratersReadonlyMap;
+  get roundOfflineGeneratersReadonlyMap(): BFChainCore.RoundOfflineGeneratersReadonlyMap {
+    const map = new Map<number, readonly string[]>();
+    for (const rIndex in this.roundOfflineGeneratersHashMap) {
+      const offlineGeneraters = this.roundOfflineGeneratersHashMap[rIndex];
+      const offlineGeneraterList: string[] = offlineGeneraters.split(",");
+
+      map.set(parseInt(rIndex), offlineGeneraterList);
+    }
+    return map;
+  }
 
   toJSON() {
     return {
@@ -161,6 +174,7 @@ export class Block<RJ extends BFChainCore.CommonBlockRemarkJSON = BFChainCore.Co
       transactions: this.transactions.map(transaction => transaction.toJSON()),
       remark: this.remark.toJSON() as RJ,
       statisticInfo: this.statisticInfo.toJSON(),
+      roundOfflineGeneratersHashMap: this.roundOfflineGeneratersHashMap,
     };
   }
   static fromObject<T extends Message>(

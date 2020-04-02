@@ -490,15 +490,11 @@ export class EventLogicVerifier {
       this.isPossessAssetExceptForChainAsset(accountsAssets[address]);
 
       // 资产的发行账户不能是dapp的拥有者
-      const memDApp = await accountGetterHelper.getDApp(
+      const isDAppPossessor = await accountGetterHelper.isDAppPossessor(
         transaction.fromMagic,
-        "",
-        currentBlockHeight,
-        {
-          address,
-        },
+        address,
       );
-      if (memDApp) {
+      if (isDAppPossessor) {
         throw new ConsensusException(ACCOUNT_CAN_NOT_BE_FROZEN, {
           address,
           reason: "DApp id possessor can not initiate a asset transaction",
@@ -508,15 +504,11 @@ export class EventLogicVerifier {
       }
 
       // 资产的发行账户不能是链域名的拥有者账户或管理账户
-      const memLocationName = await accountGetterHelper.getLocationName(
+      const isLnsPossessor = await accountGetterHelper.isLocationNamePossessor(
         transaction.fromMagic,
-        "",
-        currentBlockHeight,
-        {
-          address,
-        },
+        address,
       );
-      if (memLocationName) {
+      if (isLnsPossessor) {
         throw new ConsensusException(ACCOUNT_CAN_NOT_BE_FROZEN, {
           address,
           reason: "Location name possessor or manager can not initiate a asset transaction",
@@ -765,10 +757,8 @@ export class EventLogicVerifier {
       this.isPossessAssetExceptForChainAsset(accountsAssets[address]);
 
       // 资产的发行账户不能是dapp的拥有者
-      const memDApp = await accountGetterHelper.getDApp(chainMagic, "", currentBlockHeight, {
-        address,
-      });
-      if (memDApp) {
+      const isDAppPossessor = await accountGetterHelper.isDAppPossessor(chainMagic, address);
+      if (isDAppPossessor) {
         throw new ConsensusException(ACCOUNT_CAN_NOT_BE_FROZEN, {
           address,
           reason: "DApp id possessor can not initiate a register chain transaction",
@@ -778,15 +768,8 @@ export class EventLogicVerifier {
       }
 
       // 资产的发行账户不能是链域名的拥有者账户或管理账户
-      const memLocationName = await accountGetterHelper.getLocationName(
-        chainMagic,
-        "",
-        currentBlockHeight,
-        {
-          address,
-        },
-      );
-      if (memLocationName) {
+      const isLnsPossessor = await accountGetterHelper.isLocationNamePossessor(chainMagic, address);
+      if (isLnsPossessor) {
         throw new ConsensusException(ACCOUNT_CAN_NOT_BE_FROZEN, {
           address,
           reason:
@@ -907,15 +890,11 @@ export class EventLogicVerifier {
       }
 
       // 不能越级删除域名，即有子域名的域名不能删除
-      const exist = await accountGetterHelper.getLocationName(
+      const isSubLnsExist = await accountGetterHelper.isSubLocationNameExist(
         sourceChainMagic,
         name,
-        currentBlockHeight,
-        {
-          endsWith: name,
-        },
       );
-      if (exist) {
+      if (isSubLnsExist) {
         throw new ConsensusException(CAN_NOT_DELETE_LOCATION_NAME, {
           locationName: name,
           reason: "Location name have child location name, please delete it at first",

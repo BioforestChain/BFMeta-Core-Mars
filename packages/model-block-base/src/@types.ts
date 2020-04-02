@@ -24,9 +24,23 @@ declare namespace BFChainCore {
     magic: string;
     remark: RemarkJSON;
     statisticInfo: StatisticInfoJSON;
+    roundOfflineGeneratersHashMap: RoundOfflineGeneratersHashMap;
   }
   interface BlockJSON<RemarkJSON extends {} = {}> extends BlockWithoutTransactionJSON<RemarkJSON> {
     transactions: TransactionInBlockJSON[];
+  }
+  type RoundOfflineGeneratersReadonlyMap = Omit<
+    Map<number, readonly string[]>,
+    "set" | "delete" | "clear"
+  >;
+  // interface RoundOfflineGeneratersMap {
+  //   [roundOffset: string]: Uint8Array[];
+  // }
+  interface RoundOfflineGeneratersHashMap {
+    /**
+     * 使用逗号分隔的地址
+     * address,address */
+    [roundOffset: string]: string;
   }
 
   //#region Statistic Info

@@ -529,7 +529,16 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
         ...Function_Exception_Detail,
       });
     }
-    if (dapp.type === DAPP_TYPE.PAID_APP) {
+    // 获取dapp开发账户
+    const accountInfo = await accountGetterHelper.getAccountInfo(dapp.possessorAddress);
+    if (!accountInfo) {
+      throw new ConsensusException(NOT_FOUND, {
+        porp: "Dapp possessor",
+        ...Function_Exception_Detail,
+      });
+    }
+    // dapp 的拥有者不需要购买使用
+    if (dapp.type === DAPP_TYPE.PAID_APP && senderId !== dapp.possessorAddress) {
       // FIXME: 付费一次永久生效
       const isPurchase = await transactionGetterHelper.getPurchaseDApp(senderId, dappid);
       if (!isPurchase) {
@@ -539,18 +548,8 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
         });
       }
     }
-    if (trs.type === this.transactionHelper.VOTE) {
-      return;
-    }
-    // 获取dapp开发账户
-    const accountInfo = await accountGetterHelper.getAccountInfo(dapp.possessorAddress);
-    if (!accountInfo) {
-      throw new ConsensusException(NOT_FOUND, {
-        porp: "Dapp possessor",
-        ...Function_Exception_Detail,
-      });
-    }
-    if (accountInfo.isAcceptVote) {
+    // dapp 的拥有者不需要投票使用
+    if (accountInfo.isAcceptVote && senderId !== dapp.possessorAddress) {
       const curRound = this.blockHelper.calcRoundByHeight(currentBlockHeight);
       // 判断当前账户是否给 dapp 开发者投过票
       const isVote = await accountGetterHelper.getVoteForDelegate(
@@ -632,10 +631,14 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    * 校验交易的手续费是否大于等于网络手续费
    *
    * @param transaction
+   * @param byteLength
    */
   checkTrsFeeAndWebFee(transaction: BFChainCore.Transaction, byteLength: number) {
     if (transaction.type === this.transactionHelper.GRAB_ASSET) {
-      return transaction.fee;
+      return {
+        isFeeEnough: true,
+        minFee: transaction.fee,
+      };
     }
     const feePerByte = {
       numerator: BigInt(transaction.fee),
@@ -643,46 +646,77 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     };
     const minTransactionFeePerByte = this.configHelper.minTransactionFeePerByte;
     const result = this.jsbiHelper.compareFraction(feePerByte, minTransactionFeePerByte);
-    const minFee = this.jsbiHelper
+    let minFee = this.jsbiHelper
       .multiplyCeilFraction(byteLength, minTransactionFeePerByte)
       .toString();
     if (result < 0) {
-      throw new ConsensusException(TRANSACTION_FEE_NOT_ENOUGH, {
-        errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
+      if (minFee.length !== transaction.fee.length) {
+        minFee = this.jsbiHelper
+          .multiplyCeilFraction(byteLength + minFee.length, minTransactionFeePerByte)
+          .toString();
+      }
+      return {
+        isFeeEnough: false,
         minFee,
-        function: "checkTrsFeeAndWebFee",
-      });
+      };
     }
-    return minFee;
+    return {
+      isFeeEnough: true,
+      minFee,
+    };
   }
 
   /**
-   * 检验交易的手续费是否大于等于矿机手续费
+   * 检验交易的手续费是否大于等于矿机手续费和网络手续费
    *
    * @param transaction
+   * @param byteLength
+   * @param miningMachineMinFeePerByte
    */
-  checkTrsFeeAndMiningMachineFee(
+  checkTrsFeeAndMiningMachineFeeAndWebFee(
     transaction: BFChainCore.Transaction,
     byteLength: number,
-    minFeePerByte: BFChainCore.FractionJSON,
+    miningMachineMinFeePerByte: BFChainCore.FractionJSON,
   ) {
     if (transaction.type === this.transactionHelper.GRAB_ASSET) {
-      return transaction.fee;
+      return {
+        isFeeEnough: true,
+        minFee: transaction.fee,
+      };
     }
     const feePerByte = {
       numerator: BigInt(transaction.fee),
       denominator: byteLength,
     };
-    const result = this.jsbiHelper.compareFraction(feePerByte, minFeePerByte);
-    const minFee = this.jsbiHelper.multiplyCeilFraction(byteLength, minFeePerByte).toString();
+    // 是否使用矿机手续费
+    const useWebFee =
+      this.jsbiHelper.compareFraction(
+        this.configHelper.minTransactionFeePerByte,
+        miningMachineMinFeePerByte,
+      ) >= 0
+        ? true
+        : false;
+    let standardFee = useWebFee
+      ? this.configHelper.minTransactionFeePerByte
+      : miningMachineMinFeePerByte;
+
+    const result = this.jsbiHelper.compareFraction(feePerByte, standardFee);
+    let minFee = this.jsbiHelper.multiplyCeilFraction(byteLength, standardFee).toString();
     if (result < 0) {
-      throw new ConsensusException(TRANSACTION_FEE_NOT_ENOUGH, {
-        errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
+      if (minFee.length !== transaction.fee.length) {
+        minFee = this.jsbiHelper
+          .multiplyCeilFraction(byteLength + minFee.length, standardFee)
+          .toString();
+      }
+      return {
+        isFeeEnough: false,
         minFee,
-        function: "checkTrsFeeAndMiningMachineFee",
-      });
+      };
     }
-    return minFee;
+    return {
+      isFeeEnough: true,
+      minFee,
+    };
   }
 
   /**
