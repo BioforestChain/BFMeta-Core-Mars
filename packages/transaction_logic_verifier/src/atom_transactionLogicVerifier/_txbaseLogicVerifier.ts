@@ -386,10 +386,12 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    */
   checkTransactionTimestamp(tr: T) {
     const { timeHelper } = this;
-    if (timeHelper.getSlotNumberByTimestamp(tr.timestamp) > timeHelper.getSlotNumberByTimestamp()) {
+    const nowTimestamp = timeHelper.getTimestamp();
+    const trsSlot = timeHelper.getSlotNumberByTimestamp(tr.timestamp);
+    const nowSlot = timeHelper.getSlotNumberByTimestamp(nowTimestamp);
+    if (trsSlot > nowSlot) {
       throw new ConsensusException(INVALID_TRANSACTION_TIMESTAMP, {
-        reason:
-          "Transaction timestamp in future. Transaction time is ahead of the time on the server",
+        reason: `Transaction timestamp in future. Transaction time is ahead of the time on the server, transaction timestamp ${tr.timestamp}, transaction timestamp slot ${trsSlot}, blockChain now timestamp ${nowTimestamp}, blockChain now timestamp slot ${nowSlot}`,
         signature: tr.signature,
         senderId: tr.senderId,
         applyBlockHeight: tr.applyBlockHeight,
