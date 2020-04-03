@@ -179,7 +179,7 @@ export class TransactionCore {
     secondKeypair?: BFChainCore.Keypair,
   ) {
     const event = pow.event;
-    const done = async (break_off: boolean) => {
+    const done = async (break_off: boolean, nonce: number) => {
       const eventName = break_off ? "error" : "done";
       if (!break_off) {
         if (secondKeypair) {
@@ -189,11 +189,13 @@ export class TransactionCore {
           );
         }
       }
-      event && (await event.emit(eventName, { transaction: trs }));
+      event && (await event.emit(eventName, { transaction: trs, nonce}));
       return trs;
     };
     let diff_BI: bigint | undefined;
     let is_break = false;
+    /**记录算力 */
+    let recordNonce = 0;
     /// 校验交易POW，如果POW校验不通过，强制开始生成交易
     if (
       (diff_BI = this.transactionHelper.calcDiffOfTransactionProfOfWork(
@@ -205,9 +207,10 @@ export class TransactionCore {
         event && (await event.emit("start", { diff: diff_BI.toString(), transaction: trs }));
       if (res && res.break) {
         is_break = res.break;
-        return done(is_break);
+        return done(is_break, recordNonce);
       }
       for (const { uint8array: trsBytes, nonce } of this.transactionHelper.nonceWriter(trs)) {
+        recordNonce = nonce;
         const signatureBuffer = await this.asymmetricHelper.detachedSign(
           trsBytes,
           keypair.secretKey,
@@ -234,7 +237,7 @@ export class TransactionCore {
       }
     }
 
-    return done(is_break);
+    return done(is_break, recordNonce);
   }
 
   /**
