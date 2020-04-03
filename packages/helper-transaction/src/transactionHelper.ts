@@ -199,9 +199,9 @@ export class TransactionHelper {
   /** LNS: 未知名称系统/Location Name System */
   /**
    * TOP_LEVEL_CHAIN: 一级链名(根：链名称)
-   * bnqkl.bfchain(1 级)
-   * app.bnqkl.bfchain(2 级)
-   * ark.app.bnqkl.bfchain(3 级)
+   * ibt.bfchain(1 级)
+   * app.ibt.bfchain(2 级)
+   * ark.app.ibt.bfchain(3 级)
    */
   get LOCATION_NAME() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.LOCATION_NAME);

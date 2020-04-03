@@ -29,7 +29,7 @@ async function getToExchangeSpecialAssetTransaction(sender: AccountModel, recipi
     fee: "78622", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
     dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
-    lns: `bnqkl.${bfchainCore.config.chainName}`,
+    lns: bfchainCore.config.genesisBlock.remark.genesisNodeAddress,
     sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic
@@ -54,7 +54,7 @@ async function getToExchangeSpecialAssetTransaction(sender: AccountModel, recipi
       beExchangeSource: bfchainCore.config.magic,
       toExchangeChainName: "bfchain",
       beExchangeChainName: "bfchain",
-      toExchangeAsset: "bnqkl.bfchain",
+      toExchangeAsset: bfchainCore.config.genesisBlock.remark.genesisNodeAddress,
       beExchangeAsset: "BFT",
       exchangeNumber: "1000000",
       exchangeAssetType: SPECIAL_ASSET_TYPE.LOCATION_NAME,

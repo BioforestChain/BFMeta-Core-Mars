@@ -27,7 +27,6 @@ async function getLocationNameTransaction(sender: AccountModel) {
     fee: "78622", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
     dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
-    lns: "",
     sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic
@@ -35,7 +34,7 @@ async function getLocationNameTransaction(sender: AccountModel) {
     effectiveBlockHeight: 10100,
     storage: {
       key: "name",
-      value: `q_w_q.bnqkl.${bfchainCore.config.chainName}`,
+      value: `q_w_q.ibt.${bfchainCore.config.chainName}`,
     },
   };
   let secondKeypair;
@@ -54,7 +53,7 @@ async function getLocationNameTransaction(sender: AccountModel) {
     data,
     {
       locationName: {
-        name: `q_w_q.bnqkl.${bfchainCore.config.chainName}`,
+        name: `q_w_q.ibt.${bfchainCore.config.chainName}`,
         sourceChainName: "bfchain",
         sourceChainMagic: bfchainCore.config.magic,
         operationType: LOCATION_NAME_OPERATION_TYPE.REGISTRATION,

@@ -1,13 +1,13 @@
 {
   "version": 1,
   "height": 1,
-  "blockSize": 16075,
+  "blockSize": 16070,
   "timestamp": 0,
-  "signature": "36692fa005f3bf28e66a0387e99e7131864b9f45407e9105afada8238f2225ee8fb5f5aaea689c6f963d960970e069b519a6654c9906640127076254ce15660c",
+  "signature": "1d0178cb296b4ebe74cf3b086078a1fd866ad0ce802962ea520dbe571befb140046c80bb740b9d9745cd597418f68ceb7485dac772e512e400082dd954747e0f",
   "generatorPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
   "numberOfTransactions": 41,
-  "payloadHash": "672664857df5bfe394adc83eba97c95f75a4cbb00cec7bea3b6e391457ef12a1",
-  "payloadLength": 14762,
+  "payloadHash": "ff7a3d76cf5f871cd3e1cf0d28d1d6d362fc10fb7fd4c78c06f89cc22c65316b",
+  "payloadLength": 14758,
   "previousBlockSignature": "",
   "totalAmount": "1829",
   "totalFee": "1078",
@@ -25,7 +25,7 @@
           "assetBalance": "244645364561314044"
         }
       ],
-      "signature": "9596a86816e0fab19853994e1fba49e8a453071427c370801a8d3689f864b80153527bae4a53fe241326138dcb2c2242ecfa742af2a2fec51dde551ff3764c0e",
+      "signature": "6f7426667c4fac505ebeb7ebbe358fd2bff5480829cc44e68c2bb3d95d63053a935d696938a3ba5e9c878cd4a19c26a8a87504cc51e9b2b058a57127365bc80c",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-LNS-00",
@@ -39,11 +39,11 @@
         "toMagic": "5F720C81E82CFC99",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "5f3009820a07b35c919b5e0bf23fad9f83bd8c7d47a27e74b9a41479f62bb0b32e1f9bf5fd1f964505461ceeaa7cc215fda8b41338de514c3b196abb9e7e4c0d",
+        "signature": "741b97bf225a06f6afed15a6283f9606dbc164680cb142004d80e500792c22f8df506930e1ec89c6e29663a3bc0d685cc90572bc8afb852c7e871f4c2ead380a",
         "remark": {},
         "asset": {
           "locationName": {
-            "name": "bnqkl.bfchain",
+            "name": "ibt.bfchain",
             "sourceChainName": "bfchain",
             "sourceChainMagic": "5F720C81E82CFC99",
             "operationType": 0
@@ -51,7 +51,7 @@
         },
         "nonce": 0,
         "storageKey": "name",
-        "storageValue": "bnqkl.bfchain"
+        "storageValue": "ibt.bfchain"
       }
     },
     {
@@ -1591,7 +1591,7 @@
     "magic": "5F720C81E82CFC99",
     "bnid": "c",
     "beginEpochTime": 1577808000000,
-    "genesisNodeAddress": "bnqkl.bfchain",
+    "genesisNodeAddress": "ibt.bfchain",
     "generateTotalAmount": "244645364561314071",
     "minTransactionFeePerByte": {
       "numerator": 100,
@@ -1777,5 +1777,6 @@
         }
       }
     }
-  }
+  },
+  "roundOfflineGeneratersHashMap": {}
 }

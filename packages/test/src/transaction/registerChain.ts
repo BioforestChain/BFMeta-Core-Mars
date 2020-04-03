@@ -288,14 +288,14 @@ const getTxs = (address: string) => {
           remark: {},
           storage: {
             key: "name",
-            value: `bnqkl.${registerBfchainCore.config.chainName}`,
+            value: registerBfchainCore.config.genesisBlock.remark.genesisNodeAddress,
           },
         },
         {
           locationName: {
             sourceChainName: registerBfchainCore.config.chainName,
             sourceChainMagic: registerBfchainCore.config.magic,
-            name: `bnqkl.${registerBfchainCore.config.chainName}`,
+            name: registerBfchainCore.config.genesisBlock.remark.genesisNodeAddress,
             operationType: LOCATION_NAME_OPERATION_TYPE.REGISTRATION,
           },
         },
@@ -361,14 +361,14 @@ const getTxs = (address: string) => {
           remark: {},
           storage: {
             key: "name",
-            value: `bnqkl.${registerBfchainCore.config.chainName}`,
+            value: registerBfchainCore.config.genesisBlock.remark.genesisNodeAddress,
           },
         },
         {
           lnsRecordValue: {
             sourceChainName: registerBfchainCore.config.chainName,
             sourceChainMagic: registerBfchainCore.config.magic,
-            name: `bnqkl.${registerBfchainCore.config.chainName}`,
+            name: registerBfchainCore.config.genesisBlock.remark.genesisNodeAddress,
             operationType: RECORD_OPERATION_TYPE.ADD,
             addRecord: record,
           },
@@ -680,7 +680,7 @@ const getTxs = (address: string) => {
       fee: "78622", // 交易手续费
       remark: { remark: "body.remark" }, // 交易备注，任意信息
       dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
-      lns: `bnqkl.${fullBfchainCore.config.chainName}`,
+      lns: fullBfchainCore.config.genesisBlock.remark.genesisNodeAddress,
       sourceIP: "127.0.0.1", // 交易来源 ip
       fromMagic: fullBfchainCore.config.magic,
       toMagic: fullBfchainCore.config.magic,

@@ -27,9 +27,6 @@ async function getAcceptVoteTransaction(sender: AccountModel) {
     timestamp: 770880, // 生成交易时间戳
     fee: "10", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
-    dappid: "", // 交易所属的 dappid
-    lns: "",
-    sourceIP: "", // 交易来源 ip
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic
     applyBlockHeight: 1, // 交易发起高度

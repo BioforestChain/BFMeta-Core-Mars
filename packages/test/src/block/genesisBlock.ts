@@ -379,14 +379,14 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
           remark: {},
           storage: {
             key: "name",
-            value: `bnqkl.${core.config.chainName}`,
+            value: core.config.genesisBlock.remark.genesisNodeAddress,
           },
         },
         {
           locationName: {
             sourceChainName: core.config.chainName,
             sourceChainMagic: core.config.magic,
-            name: `bnqkl.${core.config.chainName}`,
+            name: core.config.genesisBlock.remark.genesisNodeAddress,
             operationType: LOCATION_NAME_OPERATION_TYPE.REGISTRATION,
           },
         },
@@ -447,14 +447,14 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
           remark: {},
           storage: {
             key: "name",
-            value: `bnqkl.${core.config.chainName}`,
+            value: core.config.genesisBlock.remark.genesisNodeAddress,
           },
         },
         {
           lnsRecordValue: {
             sourceChainName: core.config.chainName,
             sourceChainMagic: core.config.magic,
-            name: `bnqkl.${core.config.chainName}`,
+            name: core.config.genesisBlock.remark.genesisNodeAddress,
             operationType: RECORD_OPERATION_TYPE.ADD,
             addRecord: record,
           },

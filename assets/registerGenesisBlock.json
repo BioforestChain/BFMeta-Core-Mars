@@ -1,12 +1,12 @@
 {
   "version": 1,
   "height": 1,
-  "blockSize": 195771,
+  "blockSize": 195772,
   "timestamp": 0,
-  "signature": "9036773dcad2697375d2cd1f67a4cf8926c49a5937b482a3f0733f574e4726c66de5fe4b258ab93c16cea8892bf8a9db7ea5723597f63738ddc7c1696e71470a",
+  "signature": "8bb10f033b7f7b49ecff9901ffc214d7108adc42593aadfe21354f1946c569b57ccf5c0decfa8debd1b6cb44c844208a1bd2bd723fa1dcfbe54716d6235bc302",
   "generatorPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
   "numberOfTransactions": 437,
-  "payloadHash": "6d3f6d1e51af415a21ecbb925422f425320ad1380d68c6b953815eb2573b8173",
+  "payloadHash": "e4f9c4a8dc2127cf8c5990d23f92d09d97933c165c8d48c008e19967d009b68d",
   "payloadLength": 187178,
   "previousBlockSignature": "",
   "totalAmount": "170952",
@@ -25,7 +25,7 @@
           "assetBalance": "99999999999768"
         }
       ],
-      "signature": "6caed963553b941840636ba5049f4745ee6a6e6ecbbb29f69ad28ac51b39ab595126d030e07ef94cae53ead4e867f4fcca15b88842c354a5e3352a501abcd40f",
+      "signature": "39643063d7bdfde2641c4ffc1d61de0f1fe85a547c7d236cb0af3a4efe8a58342ad38c3169fbc2b1c096e19c1c70483868dfde55b521e1b2bcbd8272327f4b09",
       "transaction": {
         "version": 1,
         "type": "QAWAQ-QAWAQ-LNS-00",
@@ -39,11 +39,11 @@
         "toMagic": "QWQQAQQWQQAQQWQ",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "9c62f1faeb0da3f53b6ed53f2eea0d84a6ab9b1e137fd918c41a017542ca0df6b85bdc73e1c6ac4f8b8cc19915ca7b834fddfdb42076e557b10252a6709f720b",
+        "signature": "8a8a36973ee1f643159c581b8d42587ee5457ea05efd427dfc2913f80e362d5404164e1d9338f9697e82840338f1cac85fed9afa850e2c4624a8077d72473800",
         "remark": {},
         "asset": {
           "locationName": {
-            "name": "bnqkl.qawaq",
+            "name": "qawaq.qawaq",
             "sourceChainName": "qawaq",
             "sourceChainMagic": "QWQQAQQWQQAQQWQ",
             "operationType": 0
@@ -51,7 +51,7 @@
         },
         "nonce": 0,
         "storageKey": "name",
-        "storageValue": "bnqkl.qawaq"
+        "storageValue": "qawaq.qawaq"
       }
     },
     {
@@ -17610,7 +17610,7 @@
     "magic": "QWQQAQQWQQAQQWQ",
     "bnid": "c",
     "beginEpochTime": 1577808000000,
-    "genesisNodeAddress": "bnqkl.qawaq",
+    "genesisNodeAddress": "qawaq.qawaq",
     "generateTotalAmount": "100000000000000",
     "minTransactionFeePerByte": {
       "numerator": 88,
@@ -18114,5 +18114,6 @@
         }
       }
     }
-  }
+  },
+  "roundOfflineGeneratersHashMap": {}
 }

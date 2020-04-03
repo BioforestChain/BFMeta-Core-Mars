@@ -25,7 +25,7 @@ export const mainChainRemarkData: BFChainCore.GenesisBlockRemarkJSON = {
   magic: "5F720C81E82CFC99",
   bnid: "c",
   beginEpochTime: new Date(new Date("2020-01-01").setHours(0, 0, 0, 0)).getTime(),
-  genesisNodeAddress: "bnqkl.bfchain",
+  genesisNodeAddress: "ibt.bfchain",
   generateTotalAmount: "244645364561314071",
   minTransactionFeePerByte: {
     numerator: 100,
@@ -141,7 +141,7 @@ export const registerchainRemarkData: BFChainCore.GenesisBlockRemarkJSON = {
   magic: "QWQQAQQWQQAQQWQ",
   bnid: "c",
   beginEpochTime: new Date(new Date("2020-01-01").setHours(0, 0, 0, 0)).getTime(),
-  genesisNodeAddress: "bnqkl.qawaq",
+  genesisNodeAddress: "qawaq.qawaq",
   generateTotalAmount: "100000000000000",
   minTransactionFeePerByte: {
     numerator: 88,
