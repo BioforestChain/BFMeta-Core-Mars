@@ -391,8 +391,8 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
       }
       if (assetBalance !== calTransactionAssetChanges[key]) {
         throw new ConsensusException(NOT_MATCH, {
-          to_compare_prop: "assetBalance",
-          be_compare_prop: "assetBalance",
+          to_compare_prop: `assetBalance${assetBalance}`,
+          be_compare_prop: `assetBalance${calTransactionAssetChanges[key]}`,
           to_target: "transactionAssetChanges",
           be_target: "calTransactionAssetChanges",
           ...Function_Exception_Detail,
