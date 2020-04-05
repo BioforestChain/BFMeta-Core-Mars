@@ -209,7 +209,7 @@ export class TransactionCore {
         is_break = res.break;
         return done(is_break, recordNonce);
       }
-      for (const { uint8array: trsBytes, nonce } of this.transactionHelper.nonceWriter(trs)) {
+      for (const { uint8array: trsBytes, nonce, offset } of this.transactionHelper.nonceWriter(trs)) {
         recordNonce = nonce;
         const signatureBuffer = await this.asymmetricHelper.detachedSign(
           trsBytes,
@@ -221,7 +221,7 @@ export class TransactionCore {
           pow.participation,
           diff_BI,
         );
-        const res = event && (await event.emit("work", { nonce, transaction: trs }));
+        const res = event && (await event.emit("work", { nonce, transaction: trs, offset }));
         if (res && res.break) {
           trs.nonce = nonce;
           trs.signatureBuffer = signatureBuffer;

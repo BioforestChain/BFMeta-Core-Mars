@@ -17,7 +17,7 @@ declare namespace BFChainCore {
   };
   type TransactonPoWControllerEvents<T extends Transaction = any> = {
     start: BFChainUtil.EventInOut<{ diff: string; transaction: T }, { break: boolean }>;
-    work: BFChainUtil.EventInOut<{ nonce: number; transaction: T }, { break: boolean }>;
+    work: BFChainUtil.EventInOut<{ nonce: number; transaction: T, offset?: number }, { break: boolean }>;
     done: BFChainUtil.EventInOut<{ transaction: T; nonce: number }, any>;
     error: BFChainUtil.EventInOut<{ transaction: T; nonce: number }, any>;
   };

@@ -473,7 +473,7 @@ export class TransactionHelper {
       with_nonce_uint8array.set(buf_2, 0);
       const with_nonce_dataview = new DataView(with_nonce_arraybuffer);
       with_nonce_dataview.setUint32(nonce_offset, nonce, true);
-      yield { uint8array: with_nonce_uint8array, nonce };
+      yield { uint8array: with_nonce_uint8array, nonce, offset: nonce_offset };
     }
   }
   hashCode(str: string) {
