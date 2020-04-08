@@ -36,15 +36,15 @@ export class BlockGeneratorCalculator {
     } = {},
   ) {
     const { nowTimestamp = this.timeHelper.getTimestamp() } = opts;
+    /// 如果是卡在slotnumber一致的时间戳，那么直接跳到下一个slotnumber，确保一定要有事件来处理区块。而不是应急去处理过去的区块
+    const toTimestamp = this.timeHelper.getTimestampBySlotNumber(
+      this.timeHelper.getSlotNumberByTimestamp(nowTimestamp) + 1,
+    );
     if (currentBlock.timestamp >= nowTimestamp) {
       throw new ArgumentException(
         `lastblock timestamp(${currentBlock.timestamp}) should not be greater than nowTimestamp(${nowTimestamp})`,
       );
     }
-    /// 如果是卡在slotnumber一致的时间戳，那么直接跳到下一个slotnumber，确保一定要有事件来处理区块。而不是应急去处理过去的区块
-    const toTimestamp = this.timeHelper.getTimestampBySlotNumber(
-      this.timeHelper.getSlotNumberByTimestamp(nowTimestamp) + 1,
-    );
     /// 这里使用fromTimestamp，直接导致掉线人的顺序都直接跳过了，因为我们的目的只是快速地得出当下时间节点应该由谁来打块而已
     for await (const result of this.calcGenerateBlockDelegateGenerator(currentBlock, {
       toTimestamp,
