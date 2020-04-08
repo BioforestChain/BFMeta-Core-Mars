@@ -45,6 +45,7 @@ export abstract class BlockFactory<T extends Block> {
   abstract milestonesHelper: MilestonesHelper;
   abstract asymmetricHelper: AsymmetricHelper;
   abstract chainAssetInfoHelper: ChainAssetInfoHelper;
+  abstract blockGeneratorCalculator: import("./blockGeneratorCalculator").BlockGeneratorCalculator;
 
   abstract fromJSON(blockBody: BFChainCore.BlockJSON<GetBlockRemarkJSON<T>>): Promise<T>;
 
@@ -97,6 +98,26 @@ export abstract class BlockFactory<T extends Block> {
       });
     }
     eventEmitter && (await eventEmitter.emit("beforeGenerateBlock", body));
+    const lastBlock = await this.blockHelper.forceGetBlockByHeight(body.height - 1);
+    const calcGenerateBlockDelegateGenerator = this.blockGeneratorCalculator.calcGenerateBlockDelegateGenerator(
+      lastBlock,
+    );
+    for await (const {
+      address,
+      timestamp,
+      roundOfflineGeneratersHashMap,
+    } of calcGenerateBlockDelegateGenerator) {
+      body.roundOfflineGeneratersHashMap = roundOfflineGeneratersHashMap;
+      if (timestamp === body.timestamp) {
+        // @kzf 这里看看要不要验address
+        // if (address !== blockGenerator.address) {
+        //   // 对应时间的锻造者不匹配，共识错误
+        //   throw new ConsensusException();
+        // }
+        break;
+      }
+    }
+    // this.blockGeneratorCalculator.calcGenerateBlockDelegateGenerator()
     const block = this._generateBlock(body, remark);
     // 校验 remark 大小
     this.verifyRemarkSize(block);

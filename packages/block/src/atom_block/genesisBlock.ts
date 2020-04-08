@@ -21,6 +21,7 @@ import {
 } from "@bfchain/core-util-exception";
 import { Injectable, Inject, ModuleStroge } from "@bfchain/util";
 import { BNID_TYPE } from "@bfchain/core-transaction";
+import { BlockGeneratorCalculator } from "./blockGeneratorCalculator";
 const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "GenesisBlockFactory");
 
 /**
@@ -43,6 +44,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
     public chainAssetInfoHelper: ChainAssetInfoHelper,
     private configMap: ConfigHelperMap,
     @Inject("cryptoHelper") public cryptoHelper: BFChainCore.CryptoHelperInterface,
+    public blockGeneratorCalculator: BlockGeneratorCalculator,
   ) {
     super();
   }

@@ -11,6 +11,7 @@ import {
 } from "@bfchain/core-helper";
 import { CoreExceptionGenerator, PROP_IS_INVALID } from "@bfchain/core-util-exception";
 import { Injectable, Inject, ModuleStroge } from "@bfchain/util";
+import { BlockGeneratorCalculator } from "./blockGeneratorCalculator";
 const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "CommonBlockFactory");
 
 /**
@@ -31,6 +32,7 @@ export class CommonBlockFactory extends BlockFactory<CommonBlock> {
     public chainAssetInfoHelper: ChainAssetInfoHelper,
     public moduleMap: ModuleStroge,
     @Inject("cryptoHelper") public cryptoHelper: BFChainCore.CryptoHelperInterface,
+    public blockGeneratorCalculator: BlockGeneratorCalculator,
   ) {
     super();
   }

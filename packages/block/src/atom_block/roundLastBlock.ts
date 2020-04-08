@@ -12,6 +12,7 @@ import {
 } from "@bfchain/core-helper";
 import { CoreExceptionGenerator, PROP_IS_INVALID } from "@bfchain/core-util-exception";
 import { Injectable, Inject, ModuleStroge } from "@bfchain/util";
+import { BlockGeneratorCalculator } from "./blockGeneratorCalculator";
 const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "RoundLastBlockFactory");
 
 /**
@@ -33,6 +34,7 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
     public chainAssetInfoHelper: ChainAssetInfoHelper,
     public moduleMap: ModuleStroge,
     @Inject("cryptoHelper") public cryptoHelper: BFChainCore.CryptoHelperInterface,
+    public blockGeneratorCalculator: BlockGeneratorCalculator,
   ) {
     super();
   }
