@@ -57,6 +57,6 @@
     "lerna": "^3.20.2"
   },
   "dependencies": {
-    "@bfchain/devkit": "^0.8.3"
+    "@bfchain/devkit": "^0.8.6"
   }
 }
