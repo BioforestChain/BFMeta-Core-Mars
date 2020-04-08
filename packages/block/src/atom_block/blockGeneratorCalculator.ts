@@ -24,11 +24,11 @@ export class BlockGeneratorCalculator {
   ) {}
 
   /**
-   *
-   * @param currentBlock 最新的区块
-   * @param opts nowTimestamp为区块间隔的整数倍，为当前区块时间戳的前置时间，例如当前时间戳为77，传入的时间应为70.因为锻造区块从70开始算，而不是80
+   * 快速算出指定时间点的锻造者
+   * @param currentBlock
+   * @param opts
    */
-  async calcGenerateBlockDelegate(
+  async fastCalcGenerateBlockDelegate(
     currentBlock: { timestamp: number; height: number },
     opts: {
       nowTimestamp?: number;
@@ -55,6 +55,26 @@ export class BlockGeneratorCalculator {
         address: result.address,
         timestamp: result.timestamp,
       };
+    }
+    throw new Error();
+  }
+  /**
+   *
+   * @param currentBlock 最新的区块
+   * @param opts nowTimestamp为区块间隔的整数倍，为当前区块时间戳的前置时间，例如当前时间戳为77，传入的时间应为70.因为锻造区块从70开始算，而不是80
+   */
+  async calcGenerateBlockDelegate(
+    currentBlock: { timestamp: number; height: number },
+    opts: {
+      toTimestamp: number;
+      blockGetterHelper?: BFChainCore.BlockGetterHelperSimpleInterface;
+    },
+  ) {
+    /// 这里使用fromTimestamp，直接导致掉线人的顺序都直接跳过了，因为我们的目的只是快速地得出当下时间节点应该由谁来打块而已
+    for await (const result of this.calcGenerateBlockDelegateGenerator(currentBlock, opts)) {
+      if (result.timestamp === opts.toTimestamp) {
+        return result;
+      }
     }
     throw new Error();
   }
@@ -217,7 +237,6 @@ export class BlockGeneratorCalculator {
       return 候选名单;
     };
 
-
     const getResult = (选中的受托人: string) => {
       let roundOfflineGeneratersHashMap: BFChainCore.RoundOfflineGeneratersHashMap | undefined;
 
@@ -226,11 +245,10 @@ export class BlockGeneratorCalculator {
           if (!roundOfflineGeneratersHashMap) {
             roundOfflineGeneratersHashMap = {};
             for (const [roundOffset, OfflineGeneraterList] of 结果掉块信息) {
-              if(OfflineGeneraterList.length){
-
-              roundOfflineGeneratersHashMap[roundOffset] = OfflineGeneraterList.join(",");
+              if (OfflineGeneraterList.length) {
+                roundOfflineGeneratersHashMap[roundOffset] = OfflineGeneraterList.join(",");
+              }
             }
-          }
           }
           return roundOfflineGeneratersHashMap;
         },
@@ -248,12 +266,12 @@ export class BlockGeneratorCalculator {
 
       const 排序后的受托人列表 = 对受托人排序(剩余可用的受托人, 上一个块的信息);
 
-      const 当前轮的掉线列表 = 结果掉块信息.forceGet(现在掉了多少轮)
+      const 当前轮的掉线列表 = 结果掉块信息.forceGet(现在掉了多少轮);
 
-      do{
+      do {
         const 选中的受托人 = 排序后的受托人列表.shift();
-        if(!选中的受托人){
-          break
+        if (!选中的受托人) {
+          break;
         }
         // 将受托人返回给外界
         yield getResult(选中的受托人);
@@ -261,8 +279,7 @@ export class BlockGeneratorCalculator {
         // 外界否定这个选中的受托人，那么将之推到掉线的列表中
         当前轮的掉线列表.push(选中的受托人);
         nowTimestamp += this.config.forgeInterval;
-      }while(排序后的受托人列表.length)
-
+      } while (排序后的受托人列表.length);
     }
     //#endregion
   }

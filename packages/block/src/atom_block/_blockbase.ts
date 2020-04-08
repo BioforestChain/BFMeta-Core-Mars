@@ -98,25 +98,15 @@ export abstract class BlockFactory<T extends Block> {
       });
     }
     eventEmitter && (await eventEmitter.emit("beforeGenerateBlock", body));
-    const lastBlock = await this.blockHelper.forceGetBlockByHeight(body.height - 1);
-    const calcGenerateBlockDelegateGenerator = this.blockGeneratorCalculator.calcGenerateBlockDelegateGenerator(
-      lastBlock,
-    );
-    for await (const {
-      address,
-      timestamp,
-      roundOfflineGeneratersHashMap,
-    } of calcGenerateBlockDelegateGenerator) {
-      body.roundOfflineGeneratersHashMap = roundOfflineGeneratersHashMap;
-      if (timestamp === body.timestamp) {
-        // @kzf 这里看看要不要验address
-        // if (address !== blockGenerator.address) {
-        //   // 对应时间的锻造者不匹配，共识错误
-        //   throw new ConsensusException();
-        // }
-        break;
-      }
+    if (body.height > 1) {
+      const lastBlock = await this.blockHelper.forceGetBlockByHeight(body.height - 1);
+      body.roundOfflineGeneratersHashMap = await (
+        await this.blockGeneratorCalculator.calcGenerateBlockDelegate(lastBlock, {
+          toTimestamp: body.timestamp,
+        })
+      ).roundOfflineGeneratersHashMap;
     }
+
     // this.blockGeneratorCalculator.calcGenerateBlockDelegateGenerator()
     const block = this._generateBlock(body, remark);
     // 校验 remark 大小
@@ -203,7 +193,7 @@ export abstract class BlockFactory<T extends Block> {
       /**绑定统计功能到事件触发器上 */
       this.statisticsHelper.bindApplyTransactionEventEmiter(eventEmitter, statisticsInfo);
       /**用于快速地计算发送者的交易量 */
-      const tranSenderCountMap = new EasyMap<string, number>(address => 0);
+      const tranSenderCountMap = new EasyMap<string, number>((address) => 0);
       for await (const tranItem of trsGenerator) {
         try {
           if (tranItem.index >= MAX_TRANSACTION_SIZE) {
@@ -376,10 +366,7 @@ export abstract class BlockFactory<T extends Block> {
         size:
           blockSize === 0
             ? 0
-            : new Writer()
-                .uint32(BLOCK_SIZE_FIELD_ID)
-                .uint32(blockSize)
-                .finish().length,
+            : new Writer().uint32(BLOCK_SIZE_FIELD_ID).uint32(blockSize).finish().length,
       };
     };
     const oldBlockSize = block.blockSize;
