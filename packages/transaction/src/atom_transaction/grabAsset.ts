@@ -407,6 +407,7 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
     const { assetType, sourceChainMagic /* unitReserveFee */ } = grabAsset.giftAsset;
     const recipientId = transaction.recipientId;
     const assetInfo = chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
+    tasks.next = super.applyTransaction(transaction, eventEmitter, config);
     // 发起账户将得到的资产解冻并收入账下
     tasks.next = eventEmitter.emit("unfrozenAsset", {
       type: "unfrozenAsset",
