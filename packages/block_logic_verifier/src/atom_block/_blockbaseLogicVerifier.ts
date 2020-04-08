@@ -264,7 +264,7 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
         height: lastBlock.height,
       },
       {
-        nowTimestamp:block.timestamp,
+        toTimestamp: block.timestamp,
       },
     );
     const expectedAddress = result.address;

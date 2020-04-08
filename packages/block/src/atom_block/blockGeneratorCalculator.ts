@@ -40,9 +40,9 @@ export class BlockGeneratorCalculator {
     const toTimestamp = this.timeHelper.getTimestampBySlotNumber(
       this.timeHelper.getSlotNumberByTimestamp(nowTimestamp) + 1,
     );
-    if (currentBlock.timestamp >= nowTimestamp) {
+    if (currentBlock.timestamp >= toTimestamp) {
       throw new ArgumentException(
-        `lastblock timestamp(${currentBlock.timestamp}) should not be greater than nowTimestamp(${nowTimestamp})`,
+        `lastblock timestamp(${currentBlock.timestamp}) should not be greater than toTimestamp(${toTimestamp})`,
       );
     }
     /// 这里使用fromTimestamp，直接导致掉线人的顺序都直接跳过了，因为我们的目的只是快速地得出当下时间节点应该由谁来打块而已
