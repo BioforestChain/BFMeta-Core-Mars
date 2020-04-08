@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-util-base58",
-  "version": "5.11.30",
+  "version": "5.11.31",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,7 +14,7 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-typings": "5.11.30",
-    "@bfchain/core-util-exception-errorcode": "5.11.30"
+    "@bfchain/core-typings": "5.11.31",
+    "@bfchain/core-util-exception-errorcode": "5.11.31"
   }
 }
