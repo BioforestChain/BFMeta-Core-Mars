@@ -281,41 +281,41 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
         ...Function_Exception_Detail,
       });
     }
-
-    const calcRoundOfflineGeneratersHashMap = result.roundOfflineGeneratersHashMap;
-    const blockRoundOfflineGeneratersHashMap = block.roundOfflineGeneratersHashMap;
-    for (const roundOffset in calcRoundOfflineGeneratersHashMap) {
-      if (!blockRoundOfflineGeneratersHashMap[roundOffset]) {
-        throw new ConsensusException(NOT_MATCH, {
-          to_compare_prop: "roundOfflineGeneratersHashMap",
-          be_compare_prop: "roundOfflineGeneratersHashMap",
-          to_target: "calcGenerateBlockDelegate",
-          be_target: `block with height ${block.height}, signature ${block.signature}`,
-          ...Function_Exception_Detail
-        })
-      }
-      const calcRoundOfflineGeneraters = calcRoundOfflineGeneratersHashMap[roundOffset].split(",");
-      const blockRoundOfflineGeneraters = blockRoundOfflineGeneratersHashMap[roundOffset].split(",");
-      if (calcRoundOfflineGeneraters.length !== blockRoundOfflineGeneraters.length) {
-        throw new ConsensusException(NOT_MATCH, {
-          to_compare_prop: "roundOfflineGeneratersHashMap",
-          be_compare_prop: "roundOfflineGeneratersHashMap",
-          to_target: "calcGenerateBlockDelegate",
-          be_target: `block with height ${block.height}, signature ${block.signature}`,
-          ...Function_Exception_Detail
-        })
-      }
-      for (const generator of calcRoundOfflineGeneraters) {
-        // 正常来说如果掉线顺序不一致也是错误的
-        if (!blockRoundOfflineGeneraters.includes(generator)) {
-          throw new ConsensusException(NOT_EXIST, {
-            prop: `offlineGenerater ${generator}`,
-            target:`block.roundOfflineGeneratersHashMap with height ${block.height}, signature ${block.signature}`,
-            ...Function_Exception_Detail
-          })
-        }
-      }
-    }
+/// @TODO 这里用迭代器实现
+    // const calcRoundOfflineGeneratersHashMap = result.roundOfflineGeneratersHashMap;
+    // const blockRoundOfflineGeneratersHashMap = block.roundOfflineGeneratersHashMap;
+    // for (const roundOffset in calcRoundOfflineGeneratersHashMap) {
+    //   if (!blockRoundOfflineGeneratersHashMap[roundOffset]) {
+    //     throw new ConsensusException(NOT_MATCH, {
+    //       to_compare_prop: "roundOfflineGeneratersHashMap",
+    //       be_compare_prop: "roundOfflineGeneratersHashMap",
+    //       to_target: "calcGenerateBlockDelegate",
+    //       be_target: `block with height ${block.height}, signature ${block.signature}`,
+    //       ...Function_Exception_Detail
+    //     })
+    //   }
+    //   const calcRoundOfflineGeneraters = calcRoundOfflineGeneratersHashMap[roundOffset].split(",");
+    //   const blockRoundOfflineGeneraters = blockRoundOfflineGeneratersHashMap[roundOffset].split(",");
+    //   if (calcRoundOfflineGeneraters.length !== blockRoundOfflineGeneraters.length) {
+    //     throw new ConsensusException(NOT_MATCH, {
+    //       to_compare_prop: "roundOfflineGeneratersHashMap",
+    //       be_compare_prop: "roundOfflineGeneratersHashMap",
+    //       to_target: "calcGenerateBlockDelegate",
+    //       be_target: `block with height ${block.height}, signature ${block.signature}`,
+    //       ...Function_Exception_Detail
+    //     })
+    //   }
+    //   for (const generator of calcRoundOfflineGeneraters) {
+    //     // 正常来说如果掉线顺序不一致也是错误的
+    //     if (!blockRoundOfflineGeneraters.includes(generator)) {
+    //       throw new ConsensusException(NOT_EXIST, {
+    //         prop: `offlineGenerater ${generator}`,
+    //         target:`block.roundOfflineGeneratersHashMap with height ${block.height}, signature ${block.signature}`,
+    //         ...Function_Exception_Detail
+    //       })
+    //     }
+    //   }
+    // }
   }
 
   /**

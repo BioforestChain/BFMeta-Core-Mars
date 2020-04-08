@@ -35,42 +35,54 @@ export class BlockGeneratorCalculator {
       blockGetterHelper?: BFChainCore.BlockGetterHelperSimpleInterface;
     } = {},
   ) {
-    const {
-      nowTimestamp = this.timeHelper.getTimestampBySlotNumber(
-        this.timeHelper.getSlotNumberByTimestamp(this.timeHelper.getTimestamp()) + 1,
-      ),
-    } = opts;
+    const { nowTimestamp = this.timeHelper.getTimestamp() } = opts;
     if (currentBlock.timestamp >= nowTimestamp) {
       throw new ArgumentException(
         `lastblock timestamp(${currentBlock.timestamp}) should not be greater than nowTimestamp(${nowTimestamp})`,
       );
     }
+    /// 如果是卡在slotnumber一致的时间戳，那么直接跳到下一个slotnumber，确保一定要有事件来处理区块。而不是应急去处理过去的区块
+    const toTimestamp = this.timeHelper.getTimestampBySlotNumber(
+      this.timeHelper.getSlotNumberByTimestamp(nowTimestamp) + 1,
+    );
+    /// 这里使用fromTimestamp，直接导致掉线人的顺序都直接跳过了，因为我们的目的只是快速地得出当下时间节点应该由谁来打块而已
     for await (const result of this.calcGenerateBlockDelegateGenerator(currentBlock, {
-      fromTimestamp: nowTimestamp,
+      toTimestamp,
       blockGetterHelper: opts.blockGetterHelper,
+      ignoreOfflineGeneraters: true,
     })) {
-      return result;
+      return {
+        address: result.address,
+        timestamp: result.timestamp,
+      };
     }
     throw new Error();
   }
   async *calcGenerateBlockDelegateGenerator(
     currentBlock: { timestamp: number; height: number },
     opts: {
-      fromTimestamp?: number;
+      // fromTimestamp?: number;
       toTimestamp?: number;
       blockGetterHelper?: BFChainCore.BlockGetterHelperSimpleInterface;
+      ignoreOfflineGeneraters?: boolean;
     } = {},
   ) {
     const {
-      fromTimestamp = currentBlock.timestamp + this.config.forgeInterval,
       toTimestamp = Infinity,
       blockGetterHelper = this.blockHelper.blockGetterHelper,
+      ignoreOfflineGeneraters,
     } = opts;
+    const fromTimestamp = currentBlock.timestamp + this.config.forgeInterval;
 
     let nowTimestamp = fromTimestamp;
+    if (ignoreOfflineGeneraters) {
+      if (!Number.isSafeInteger(toTimestamp)) {
+        throw new RangeError("toTimestamp must be an integer, when you ignore Offline Generaters.");
+      }
+    }
 
     /// RESULT
-    const 结果掉块信息 = new Map<number, readonly string[]>();
+    const 结果掉块信息 = new EasyMap<number, string[]>(() => []);
 
     /// 1
     const 这一轮已经出来的区块 = [] as BFChainCore.Block[];
@@ -115,8 +127,6 @@ export class BlockGeneratorCalculator {
       currentBlock.height,
       blockGetterHelper,
     );
-    let 上一个块掉了多少轮 = 计算轮次间隔(上一个块的信息.timestamp);
-    let 现在掉了多少轮 = 计算轮次间隔(nowTimestamp); // <0 的轮次统一使用第一轮的数据
 
     const 取得剩余可用受托人 = async (掉了多少轮: number) => {
       //#region 那一轮可使用的受托人
@@ -191,12 +201,7 @@ export class BlockGeneratorCalculator {
       return 剩余可用的受托人;
     };
 
-    const 从一群受托人中选出一个受托人 = (
-      候选名单: string[],
-      上一个块的信息: BFChainCore.Block,
-    ) => {
-      // id转ASCII码 根据ascii码总和取余 算出打块人下标
-
+    const 对受托人排序 = (候选名单: string[], 上一个块的信息: BFChainCore.Block) => {
       const seed =
         上一个块的信息.generatorPublicKeyBuffer.reduce((r, v) => r + v, 0) +
         this.timeHelper.getSlotNumberByTimestamp(nowTimestamp);
@@ -209,34 +214,9 @@ export class BlockGeneratorCalculator {
       });
 
       候选名单.sort((a1, a2) => addressToNum.forceGet(a1) - addressToNum.forceGet(a2));
-
-      let 最后一阶段的时间戳 = 上一个块的信息.timestamp;
-      /**
-       * 掉块轮次并不一致
-       * 但是不一致的轮次已经在签名累计过了
-       * 所以这里只需要把时间补充到现有的轮次
-       */
-      if (上一个块掉了多少轮 !== 现在掉了多少轮) {
-        最后一阶段的时间戳 =
-          现在掉了多少轮 * this.config.forgeInterval * this.config.blockPerRound +
-          上一轮轮末块.timestamp;
-      }
-      const 最后一阶段的掉块数 =
-        (this.timeHelper.getSlotNumberByTimestamp(nowTimestamp) -
-          this.timeHelper.getSlotNumberByTimestamp(最后一阶段的时间戳) -
-          1) %
-        this.config.blockPerRound;
-
-      if (!候选名单[最后一阶段的掉块数]) {
-        throw new NoFoundException(`候选名单不足${nowTimestamp}`);
-      }
-
-      /// 基于nowTimestamp进行筛选
-      return {
-        掉线的受托人: 候选名单.slice(0, 最后一阶段的掉块数),
-        选中的受托人: 候选名单[最后一阶段的掉块数],
-      };
+      return 候选名单;
     };
+
 
     const getResult = (选中的受托人: string) => {
       let roundOfflineGeneratersHashMap: BFChainCore.RoundOfflineGeneratersHashMap | undefined;
@@ -246,8 +226,11 @@ export class BlockGeneratorCalculator {
           if (!roundOfflineGeneratersHashMap) {
             roundOfflineGeneratersHashMap = {};
             for (const [roundOffset, OfflineGeneraterList] of 结果掉块信息) {
+              if(OfflineGeneraterList.length){
+
               roundOfflineGeneratersHashMap[roundOffset] = OfflineGeneraterList.join(",");
             }
+          }
           }
           return roundOfflineGeneratersHashMap;
         },
@@ -260,28 +243,26 @@ export class BlockGeneratorCalculator {
 
     //#region 在某一轮轮选择受托人
     while (nowTimestamp <= toTimestamp) {
-      let i = 上一个块掉了多少轮;
-      while (i !== 现在掉了多少轮) {
-        const 剩余可用的受托人 = await 取得剩余可用受托人(i);
-        if (剩余可用的受托人.length > 0) {
-          结果掉块信息.set(i, 剩余可用的受托人);
-        }
-        i++;
-      }
+      const 现在掉了多少轮 = 计算轮次间隔(nowTimestamp); // <0 的轮次统一使用第一轮的数据
       const 剩余可用的受托人 = await 取得剩余可用受托人(现在掉了多少轮);
 
-      const { 掉线的受托人, 选中的受托人 } = 从一群受托人中选出一个受托人(
-        剩余可用的受托人,
-        上一个块的信息,
-      );
-      if (掉线的受托人.length > 0) {
-        结果掉块信息.set(i, 掉线的受托人);
-      }
-      yield getResult(选中的受托人);
+      const 排序后的受托人列表 = 对受托人排序(剩余可用的受托人, 上一个块的信息);
 
-      nowTimestamp += this.config.forgeInterval;
-      现在掉了多少轮 = 计算轮次间隔(nowTimestamp);
-      上一个块掉了多少轮 = 现在掉了多少轮;
+      const 当前轮的掉线列表 = 结果掉块信息.forceGet(现在掉了多少轮)
+
+      do{
+        const 选中的受托人 = 排序后的受托人列表.shift();
+        if(!选中的受托人){
+          break
+        }
+        // 将受托人返回给外界
+        yield getResult(选中的受托人);
+
+        // 外界否定这个选中的受托人，那么将之推到掉线的列表中
+        当前轮的掉线列表.push(选中的受托人);
+        nowTimestamp += this.config.forgeInterval;
+      }while(排序后的受托人列表.length)
+
     }
     //#endregion
   }

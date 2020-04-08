@@ -38,7 +38,7 @@ bfchainCore.moduleMap.set("blockGetterHelper", {
 } as BFChainCore.BlockGetterHelperInterface);
 
 /**已绑定的受托人个数 */
-const pickDelegates = bfchainCore.transactionHelper.genesisDelegates().slice(0, 114);
+const pickDelegates = bfchainCore.transactionHelper.genesisDelegates().slice(50, 80);
 /**生成的区块数 */
 const generateCount = 500;
 /**生成完以后是否验证 */
@@ -912,12 +912,15 @@ function getRoundLastBlockRemarkHash(height: number) {
   let count = 0;
 
   const tryGenerateBlock = async (
-    result: BFChainUtil.PromiseReturnType<
-      typeof bfchainCore.block.blockGeneratorCalculator.calcGenerateBlockDelegate
-    >,
+    result: {
+      address: string;
+      timestamp: number;
+      roundOfflineGeneratersHashMap: BFChainCore.RoundOfflineGeneratersHashMap;
+    },
     label = "",
     disableLog?: boolean,
   ) => {
+    type x = AsyncGenerator;
     if (pickDelegates.includes(result.address)) {
       lastBlock.timestamp = result.timestamp;
       lastBlock.height += 1;
@@ -1063,33 +1066,33 @@ function getRoundLastBlockRemarkHash(height: number) {
   }
   console.timeEnd("zz");
 
-  do {
-    count++;
-    const result = await bfchainCore.block.blockGeneratorCalculator.calcGenerateBlockDelegate(
-      {
-        timestamp: lastBlock.timestamp,
-        height: lastBlock.height,
-      },
-      {
-        // usedAddressCache: map,
-        nowTimestamp: missTimestamp + bfchainCore.config.forgeInterval * count,
-      },
-    );
-    // if (lastBlock.height > 1) {
-    //   if (map.get(lastBlock.height - 1).missAddress.length > 0) {
-    //     print(map.get(lastBlock.height - 1).missAddress);
-    //   }
-    // }
-    await tryGenerateBlock(result);
-    console.log(lastBlock.timestamp, missTimestamp + bfchainCore.config.forgeInterval * count);
-    break;
+  // do {
+  //   count++;
+  //   const result = await bfchainCore.block.blockGeneratorCalculator.calcGenerateBlockDelegate(
+  //     {
+  //       timestamp: lastBlock.timestamp,
+  //       height: lastBlock.height,
+  //     },
+  //     {
+  //       // usedAddressCache: map,
+  //       nowTimestamp: missTimestamp + bfchainCore.config.forgeInterval * count,
+  //     },
+  //   );
+  //   // if (lastBlock.height > 1) {
+  //   //   if (map.get(lastBlock.height - 1).missAddress.length > 0) {
+  //   //     print(map.get(lastBlock.height - 1).missAddress);
+  //   //   }
+  //   // }
+  //   await tryGenerateBlock(result);
+  //   console.log(lastBlock.timestamp, missTimestamp + bfchainCore.config.forgeInterval * count);
+  //   break;
 
-    // bfchainCore.time.time_offset_ms += bfchainCore. config.forgeInterval * 1000;
-    if (lastBlock.height >= generateCount) {
-      break;
-    }
-    // if(c
-  } while (true);
+  //   // bfchainCore.time.time_offset_ms += bfchainCore. config.forgeInterval * 1000;
+  //   if (lastBlock.height >= generateCount) {
+  //     break;
+  //   }
+  //   // if(c
+  // } while (true);
 
   const countMap = new Map<string, { length: number; block: number[] }>();
   for (const [k, v] of blockMap) {
