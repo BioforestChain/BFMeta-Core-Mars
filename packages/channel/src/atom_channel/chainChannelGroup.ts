@@ -85,7 +85,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     /**
      * 添加节点并跟随事件
      */
-    chainChannelList.forEach(dh => {
+    chainChannelList.forEach((dh) => {
       this.addChainChannel_(dh, this.options);
     });
   }
@@ -98,7 +98,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     }
   >();
   /**节点的工作量 */
-  private _workCountWM = new EasyWeakMap<DH, number>(_ => 0);
+  private _workCountWM = new EasyWeakMap<DH, number>((_) => 0);
   /**开始一个节点并发任务 */
   startParallelTask(task_id: string) {
     const WCWM = this._workCountWM;
@@ -130,22 +130,26 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
       queneChainChannelList.push(waiter);
       return waiter.promise;
     };
-    /**释放节点到空闲状态 */
+    /**释放节点的繁忙状态 */
     const freeChainChannel = (chainChannel: DH) => {
       /// 标记工作量减少
       WCWM.set(chainChannel, WCWM.forceGet(chainChannel) - 1);
       if (busyChainChannels.delete(chainChannel)) {
-        const waiter = queneChainChannelList.shift();
-        if (waiter) {
-          // 如果有等待队列，那么将可用的 handler 给等待队列
-          waiter.resolve(chainChannel);
-        } else {
-          // 直接将可用的 handler 放置到空闲队列中
-          freeChainChannelList.push(chainChannel);
-        }
+        tryAddChainChannelToFree(chainChannel);
         return true;
       }
       return false;
+    };
+    /**节点可用，尝试分配任务 */
+    const tryAddChainChannelToFree = (chainChannel: DH) => {
+      const waiter = queneChainChannelList.shift();
+      if (waiter) {
+        // 如果有等待队列，那么将可用的 handler 给等待队列
+        waiter.resolve(chainChannel);
+      } else {
+        // 直接将可用的 handler 放置到空闲队列中
+        freeChainChannelList.push(chainChannel);
+      }
     };
 
     /// 将节点放入繁忙队列中
@@ -188,9 +192,9 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
 
     //#region 监听节点列表的变更
     /// 如果有新的节点，那么添加进来
-    this.onAddChainChannel(freeChainChannel);
+    this.onAddChainChannel(tryAddChainChannelToFree);
     /// 如果有节点被移除了，那么从列表中移除
-    this.onRemoveChainChannel(chainChannel => {
+    this.onRemoveChainChannel((chainChannel) => {
       if (!busyChainChannels.delete(chainChannel)) {
         const index = freeChainChannelList.indexOf(chainChannel);
         index >= 0 && freeChainChannelList.splice(index, 1);
@@ -270,7 +274,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
                 sort,
                 opts,
               )
-              .then(res => {
+              .then((res) => {
                 if (res.status === RESPONSE_STATUS.success) {
                   // 确认节点的工作，让其继续下一个工作
                   freeChainChannel(chainChannel);
@@ -292,7 +296,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
                   throw res.error;
                 }
               })
-              .catch(err => {
+              .catch((err) => {
                 if (AbortException.is(err)) {
                   // 如果被中断了任务，那么直接再次执行任务
                   return doTask(task_offset, times);
@@ -439,7 +443,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
   async broadcastBlock(...args: BFChainUtil.AllArgument<ChainChannel["broadcastBlock"]>) {
     let initedArgs: undefined | ReturnType<ChainChannel["initBroadcastBlockArg"]>;
     return Promise.all(
-      [...this.chainChannelSet.values()].map(chainChannel => {
+      [...this.chainChannelSet.values()].map((chainChannel) => {
         initedArgs || (initedArgs = chainChannel.initBroadcastBlockArg(...args));
         return {
           chainChannel,
@@ -521,7 +525,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
   private addChainChannel_(chainChannel: DH, opts = this.options) {
     this.chainChannelSet.add(chainChannel);
     if (!opts.disableAutoRemove) {
-      const listenerRemover = chainChannel.onClose(err => {
+      const listenerRemover = chainChannel.onClose((err) => {
         if (InterruptedException.is(err)) {
           info("channel auto removed in [%s], reason:", this.groupName, err.message);
         } else {
@@ -588,7 +592,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     tryChangeMaybeHeight(curMaxMaybeHeight);
 
     /// 如果有新的节点加入,那么检查它的高度是否最高
-    this._chainChannelEvents.on("addChainChannel", chainChannel => {
+    this._chainChannelEvents.on("addChainChannel", (chainChannel) => {
       if (this._maybeHeight < chainChannel.maybeHeight) {
         tryChangeMaybeHeight(chainChannel.maybeHeight);
       }
@@ -596,7 +600,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
       chainChannel.on("onNewBlock", onChainChannelNewBlock);
     });
     /// 如果有节点移除, 那么获取其余最高的节点
-    this._chainChannelEvents.on("removeChainChannel", chainChannel => {
+    this._chainChannelEvents.on("removeChainChannel", (chainChannel) => {
       let newMaybeHeight = 1;
       if (chainChannel.maybeHeight >= this._maybeHeight) {
         /// 最高的值发生了改变,那么就要遍历寻找第二高的值
