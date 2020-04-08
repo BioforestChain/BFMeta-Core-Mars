@@ -49,7 +49,6 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
     blockGetterHelper = this.blockGetterHelper,
     blockTickGetterHelper = this.blockTickGetterHelper,
   ) {
-    await this.calcMissedBlocks(block, accountGetterHelper, blockGetterHelper);
 
     await this.isBlockAlreadyTick(block.height, blockGetterHelper);
 
@@ -57,70 +56,6 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
 
     // 更新打块账户和投票账户（分配奖励）
     await this.updateForgingAndVotingAccount(block, blockUpdateData, blockTickGetterHelper);
-  }
-
-  /**
-   * 计算掉块账户
-   *
-   * @param block
-   */
-  async calcMissedBlocks(
-    block: T,
-    accountGetterHelper = this.accountGetterHelper,
-    blockGetterHelper = this.blockGetterHelper,
-  ) {
-    const Function_Exception_Detail = {
-      function: "calcMissedBlocks",
-    } as const;
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
-    if (!blockGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "blockGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
-    const { height: curBlockHeight, timestamp: curBlockTimestamp } = block;
-    const lastBlock = await blockGetterHelper.getBlockByHeight(curBlockHeight - 1);
-    if (!lastBlock) {
-      throw new ConsensusException(NOT_EXIST, {
-        prop: `Block with height ${curBlockHeight - 1}`,
-      });
-    }
-
-    const { height: lastBlockHeight, timestamp: lastBlockTimestamp } = lastBlock;
-
-    const { blockGeneratorCalculator } = this;
-
-    const delegates = blockGeneratorCalculator.calcGenerateBlockDelegateGenerator(
-      {
-        timestamp: lastBlockTimestamp,
-        height: lastBlockHeight,
-      },
-      {
-        toTimestamp: curBlockTimestamp,
-        blockGetterHelper
-      },
-    );
-    const results: BFChainCore.AccountAccumulationInfo = {};
-    for await (const delegate of delegates) {
-      const { address, timestamp } = delegate;
-      if (timestamp === curBlockTimestamp) {
-        break;
-      }
-      if (!results[address]) {
-        results[address] = 0;
-      }
-      results[address]++;
-    }
-
-    await accountGetterHelper.mergeAccountMissedBlock(curBlockHeight, results);
   }
 
   /**
