@@ -32,7 +32,8 @@ declare namespace BFChainCore {
   type RoundOfflineGeneratersReadonlyMap = Omit<
     Map<number, readonly string[]>,
     "set" | "delete" | "clear"
-  >;
+  > &
+    ReadonlyMap<number, readonly string[]>;
   // interface RoundOfflineGeneratersMap {
   //   [roundOffset: string]: Uint8Array[];
   // }

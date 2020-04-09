@@ -256,6 +256,7 @@ export class BlockGeneratorCalculator {
       let roundOfflineGeneratersHashMap: BFChainCore.RoundOfflineGeneratersHashMap | undefined;
 
       return {
+        roundOfflineGeneratersReadonlyMap: 结果掉块信息 as BFChainCore.RoundOfflineGeneratersReadonlyMap,
         get roundOfflineGeneratersHashMap() {
           if (!roundOfflineGeneratersHashMap) {
             roundOfflineGeneratersHashMap = {};
