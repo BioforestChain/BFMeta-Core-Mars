@@ -262,17 +262,15 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
       },
     );
     let _roundOfflineGeneratersHashMap!: BFChainCore.RoundOfflineGeneratersHashMap;
-    for await (const {
-      address,
-      timestamp,
-      roundOfflineGeneratersHashMap,
-    } of calcGenerateBlockDelegateGenerator) {
-      _roundOfflineGeneratersHashMap = roundOfflineGeneratersHashMap;
+    for await (const result of calcGenerateBlockDelegateGenerator) {
+      // 这里不要去解构 roundOfflineGeneratersHashMap 会消耗非常多的性能
+      const { address, timestamp } = result;
       if (timestamp > block.timestamp) {
         // 时间戳在推进的过程中不该出现大于新区块的时间戳，必须是forgeInterval的倍数
         throw new ConsensusException();
       }
       if (timestamp === block.timestamp) {
+        _roundOfflineGeneratersHashMap = result.roundOfflineGeneratersHashMap;
         if (address !== generatorAddress) {
           throw new ConsensusException(INVALID_BLOCK_GENERATOR, {
             reason: `lastBlock.timestamp: ${lastBlock.timestamp} lastBlock.height: ${
