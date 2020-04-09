@@ -131,13 +131,14 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
     const trsSlot = timeHelper.getSlotNumberByTimestamp(block.timestamp);
     const nowSlot = timeHelper.getSlotNumberByTimestamp(nowTimestamp);
     if (trsSlot > nowSlot) {
-      throw new ConsensusException(INVALID_BLOCK_TIMESTAMP, {
-        reason: `Block timestamp in future. Block time is ahead of the time on the server, block timestamp ${block.timestamp}, block timestamp slot ${trsSlot}, blockChain now timestamp ${nowTimestamp}, blockChain now timestamp slot ${nowSlot}`,
-        signature: block.signature,
-        height: block.height,
-        generatorPublicKey: block.generatorPublicKey,
-        function: "checkBlockTimestamp",
-      });
+      console.debug(`Block timestamp in future. Block time is ahead of the time on the server, block timestamp ${block.timestamp}, block timestamp slot ${trsSlot}, blockChain now timestamp ${nowTimestamp}, blockChain now timestamp slot ${nowSlot}`);
+      // throw new ConsensusException(INVALID_BLOCK_TIMESTAMP, {
+      //   reason: `Block timestamp in future. Block time is ahead of the time on the server, block timestamp ${block.timestamp}, block timestamp slot ${trsSlot}, blockChain now timestamp ${nowTimestamp}, blockChain now timestamp slot ${nowSlot}`,
+      //   signature: block.signature,
+      //   height: block.height,
+      //   generatorPublicKey: block.generatorPublicKey,
+      //   function: "checkBlockTimestamp",
+      // });
     }
   }
 
