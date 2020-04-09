@@ -44,7 +44,7 @@ const generateCount = 500;
 /**生成完以后是否验证 */
 const isVerify = true;
 /**第一笔交易开始的时间戳 */
-const fakeTimestamp = bfchainCore.config.forgeInterval * 50000;
+const fakeTimestamp = bfchainCore.config.forgeInterval * 300;
 const delegatesArr = [
   {
     secret:
@@ -920,7 +920,6 @@ function getRoundLastBlockRemarkHash(height: number) {
     label = "",
     disableLog?: boolean,
   ) => {
-    type x = AsyncGenerator;
     if (pickDelegates.includes(result.address)) {
       lastBlock.timestamp = result.timestamp;
       lastBlock.height += 1;
@@ -1051,114 +1050,97 @@ function getRoundLastBlockRemarkHash(height: number) {
           }`,
         );
       }
-      // if (await tryGenerateBlock(result, `BLOCK[${lastBlock.height + 1}]:`, true)) {
-      //   break;
+      if (await tryGenerateBlock(result, `BLOCK[${lastBlock.height + 1}]:`, true)) {
+        console.log(`~`)
+        break;
+      }
+     
+      // if (result.timestamp >= MAX_TO_TIMESTAMP) {
+      //   missTimestamp = result.timestamp;
+      //   break zz;
       // }
-      if (result.timestamp >= MAX_TO_TIMESTAMP) {
-        missTimestamp = result.timestamp;
+    }
+ if (lastBlock.height >= generateCount) {
+        console.log(lastBlock.height, generateCount);
+        console.log(lastBlock.height, generateCount);
+        console.log(lastBlock.height, generateCount);
+        console.log(lastBlock.height, generateCount);
         break zz;
       }
-    }
-
-    if (!hasResult) {
-      break;
-    }
+    // if (!hasResult) {
+    //   break;
+    // }
   }
   console.timeEnd("zz");
 
   // do {
   //   count++;
-  //   const result = await bfchainCore.block.blockGeneratorCalculator.calcGenerateBlockDelegate(
-  //     {
-  //       timestamp: lastBlock.timestamp,
-  //       height: lastBlock.height,
-  //     },
-  //     {
-  //       // usedAddressCache: map,
-  //       nowTimestamp: missTimestamp + bfchainCore.config.forgeInterval * count,
-  //     },
-  //   );
+  //   const result = await bfchainCore.block.blockGeneratorCalculator.calcGenerateBlockDelegate({
+  //     timestamp: lastBlock.timestamp,
+  //     height: lastBlock.height,
+  //   });
   //   // if (lastBlock.height > 1) {
   //   //   if (map.get(lastBlock.height - 1).missAddress.length > 0) {
   //   //     print(map.get(lastBlock.height - 1).missAddress);
   //   //   }
   //   // }
   //   await tryGenerateBlock(result);
-  //   console.log(lastBlock.timestamp, missTimestamp + bfchainCore.config.forgeInterval * count);
-  //   break;
 
-  //   // bfchainCore.time.time_offset_ms += bfchainCore. config.forgeInterval * 1000;
+  //   bfchainCore.time.time_offset_ms += bfchainCore.config.forgeInterval * 1000;
   //   if (lastBlock.height >= generateCount) {
   //     break;
   //   }
   //   // if(c
   // } while (true);
 
-  const countMap = new Map<string, { length: number; block: number[] }>();
-  for (const [k, v] of blockMap) {
-    const address = await bfchainCore.accountBaseHelper.getAddressFromPublicKeyString(
-      v.generatorPublicKey,
-    );
-    const count = countMap.get(address);
-    if (count) {
-      count.block.push(k);
-      count.length = count.block.length;
-    } else {
-      countMap.set(address, { block: [k], length: 1 });
-    }
-  }
-  // print(countMap);
-  let total = 0;
-  countMap.forEach((v, k) => {
-    // print(`${k}: ${v.length}`);
-    total += v.length;
-  });
-  print(`共循环${count} . 区块: ${total}`);
+  // const countMap = new Map<string, { length: number; block: number[] }>();
+  // for (const [k, v] of blockMap) {
+  //   const address = await bfchainCore.accountBaseHelper.getAddressFromPublicKeyString(
+  //     v.generatorPublicKey,
+  //   );
+  //   const count = countMap.get(address);
+  //   if (count) {
+  //     count.block.push(k);
+  //     count.length = count.block.length;
+  //   } else {
+  //     countMap.set(address, { block: [k], length: 1 });
+  //   }
+  // }
+  // // print(countMap);
+  // let total = 0;
+  // countMap.forEach((v, k) => {
+  //   // print(`${k}: ${v.length}`);
+  //   total += v.length;
+  // });
+  // print(`共循环${count} . 区块: ${total}`);
+  // console.log(blockMap)
+  console.log(isVerify);
   if (isVerify) {
     for (let i = 2; i < blockMap.size; i++) {
       const block = blockMap.get(i);
       const _lastBlock = blockMap.get(i - 1);
       // console.time(`cost`);
       if (block && _lastBlock) {
-        // // print(`开始验证${block.height}`);
-        // const calcGenerateBlockGenerator: any = bfchainCore.block.blockGeneratorCalculator.calcGenerateBlockDelegateGenerator(
-        //   {
-        //     timestamp: _lastBlock.timestamp,
-        //     height: _lastBlock.height,
-        //   },
-        //   {
-        //     heightAcc: 0,
-        //     curTime: bfchainCore.time.getTimeByTimestamp(
-        //       // block.timestamp// + bfchainCore.config.forgeInterval,
-        //       _lastBlock.timestamp + bfchainCore.config.forgeInterval,
-        //     ),
-        //   },
-        // );
-        // for await (const { address, timestamp, usedAddressCache } of calcGenerateBlockGenerator) {
-        //   // print(timestamp,block.timestamp)
-        //   if (timestamp === block.timestamp) {
-        //     const _address = await bfchainCore.accountBaseHelper.getAddressFromPublicKeyString(
-        //       block.generatorPublicKey,
-        //     );
-        //     print(`verify ${i} right address: ${address} timestamp: ${timestamp}`);
-        //     // print(`validateBlockSlot  ${address === _address}  ${timestamp}`);
-        //     if (usedAddressCache.get(i - 1).missAddress.length > 0) {
-        //       print(`verify map: ${i - 1}`);
-        //       print(usedAddressCache.get(i - 1).missAddress);
-        //     }
-        //     if (map.get(i - 1).missAddress.length > 0) {
-        //       print(`generate map: ${i - 1}`);
-        //       print(map.get(i - 1).missAddress);
-        //     }
-        //     if (address !== _address) {
-        //       print(usedAddressCache.get(i - 1));
-        //       print(map.get(i - 1));
-        //       debugger;
-        //       throw new Error(`${i} eee ${address} .. ${_address}`);
-        //     }
-        //     break;
-        //   }
-        // }
+        // print(`开始验证${block.height}`);
+        const calcGenerateBlockGenerator = bfchainCore.block.blockGeneratorCalculator.calcGenerateBlockDelegateGenerator(
+          {
+            timestamp: _lastBlock.timestamp,
+            height: _lastBlock.height,
+          },
+        );
+        for await (const { address, timestamp } of calcGenerateBlockGenerator) {
+          // print(timestamp,block.timestamp)
+          if (timestamp === block.timestamp) {
+            const _address = await bfchainCore.accountBaseHelper.getAddressFromPublicKeyString(
+              block.generatorPublicKey,
+            );
+            print(`verify ${i} right address: ${address} timestamp: ${timestamp}`);
+            if (address !== _address) {
+              throw new Error(`${i} eee ${address} .. ${_address}`);
+            }
+            break;
+          }
+        }
       }
       // console.timeEnd(`cost`);
     }

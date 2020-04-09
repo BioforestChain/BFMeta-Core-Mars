@@ -98,14 +98,6 @@ export abstract class BlockFactory<T extends Block> {
       });
     }
     eventEmitter && (await eventEmitter.emit("beforeGenerateBlock", body));
-    if (body.height > 1) {
-      const lastBlock = await this.blockHelper.forceGetBlockByHeight(body.height - 1);
-      body.roundOfflineGeneratersHashMap = await (
-        await this.blockGeneratorCalculator.calcGenerateBlockDelegate(lastBlock, {
-          toTimestamp: body.timestamp,
-        })
-      ).roundOfflineGeneratersHashMap;
-    }
 
     // this.blockGeneratorCalculator.calcGenerateBlockDelegateGenerator()
     const block = this._generateBlock(body, remark);

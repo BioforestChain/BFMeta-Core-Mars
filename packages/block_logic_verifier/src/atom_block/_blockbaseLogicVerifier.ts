@@ -236,10 +236,7 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
    * @param block
    * @param blockGetterHelper
    */
-  async isValidBlockSlot(
-    block: T,
-    blockGetterHelper = this.blockGetterHelper,
-  ) {
+  async isValidBlockSlot(block: T, blockGetterHelper = this.blockGetterHelper) {
     const Function_Exception_Detail = {
       function: "isValidBlockSlot",
     } as const;
@@ -258,64 +255,75 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
     );
     const currentSlot = timeHelper.getSlotNumberByTimestamp(block.timestamp);
     const lastBlock = await blockGetterHelper.getLastBlock();
-    const result = await blockGeneratorCalculator.calcGenerateBlockDelegate(
+    const calcGenerateBlockDelegateGenerator = blockGeneratorCalculator.calcGenerateBlockDelegateGenerator(
       {
         timestamp: lastBlock.timestamp,
         height: lastBlock.height,
       },
-      {
-        toTimestamp: block.timestamp,
-      },
     );
-    const expectedAddress = result.address;
-
-    if (result.address !== generatorAddress) {
-      throw new ConsensusException(INVALID_BLOCK_GENERATOR, {
-        reason: `lastBlock.timestamp: ${lastBlock.timestamp} lastBlock.height: ${
-          lastBlock.height
-        }, block.timestamp: ${block.timestamp} curTime: ${timeHelper.getTimeByTimestamp(
-          block.timestamp,
-        )} 该区块的打块人校验不通过，区块signature：${block.signature} height: ${
-          block.height
-        } 当前slot为${currentSlot}，当前应该由委托人${expectedAddress}打块，实际是由${generatorAddress}打块，校验无法通过`,
-        ...Function_Exception_Detail,
-      });
+    let _roundOfflineGeneratersHashMap!: BFChainCore.RoundOfflineGeneratersHashMap;
+    for await (const {
+      address,
+      timestamp,
+      roundOfflineGeneratersHashMap,
+    } of calcGenerateBlockDelegateGenerator) {
+      _roundOfflineGeneratersHashMap = roundOfflineGeneratersHashMap;
+      if (timestamp > block.timestamp) {
+        // 时间戳在推进的过程中不该出现大于新区块的时间戳，必须是forgeInterval的倍数
+        throw new ConsensusException();
+      }
+      if (timestamp === block.timestamp) {
+        if (address !== generatorAddress) {
+          throw new ConsensusException(INVALID_BLOCK_GENERATOR, {
+            reason: `lastBlock.timestamp: ${lastBlock.timestamp} lastBlock.height: ${
+              lastBlock.height
+            }, block.timestamp: ${block.timestamp} curTime: ${timeHelper.getTimeByTimestamp(
+              block.timestamp,
+            )} 该区块的打块人校验不通过，区块signature：${block.signature} height: ${
+              block.height
+            } 当前slot为${currentSlot}，当前应该由委托人${address}打块，实际是由${generatorAddress}打块，校验无法通过`,
+            ...Function_Exception_Detail,
+          });
+        }
+        break;
+      }
     }
-/// @TODO 这里用迭代器实现
-    // const calcRoundOfflineGeneratersHashMap = result.roundOfflineGeneratersHashMap;
-    // const blockRoundOfflineGeneratersHashMap = block.roundOfflineGeneratersHashMap;
-    // for (const roundOffset in calcRoundOfflineGeneratersHashMap) {
-    //   if (!blockRoundOfflineGeneratersHashMap[roundOffset]) {
-    //     throw new ConsensusException(NOT_MATCH, {
-    //       to_compare_prop: "roundOfflineGeneratersHashMap",
-    //       be_compare_prop: "roundOfflineGeneratersHashMap",
-    //       to_target: "calcGenerateBlockDelegate",
-    //       be_target: `block with height ${block.height}, signature ${block.signature}`,
-    //       ...Function_Exception_Detail
-    //     })
-    //   }
-    //   const calcRoundOfflineGeneraters = calcRoundOfflineGeneratersHashMap[roundOffset].split(",");
-    //   const blockRoundOfflineGeneraters = blockRoundOfflineGeneratersHashMap[roundOffset].split(",");
-    //   if (calcRoundOfflineGeneraters.length !== blockRoundOfflineGeneraters.length) {
-    //     throw new ConsensusException(NOT_MATCH, {
-    //       to_compare_prop: "roundOfflineGeneratersHashMap",
-    //       be_compare_prop: "roundOfflineGeneratersHashMap",
-    //       to_target: "calcGenerateBlockDelegate",
-    //       be_target: `block with height ${block.height}, signature ${block.signature}`,
-    //       ...Function_Exception_Detail
-    //     })
-    //   }
-    //   for (const generator of calcRoundOfflineGeneraters) {
-    //     // 正常来说如果掉线顺序不一致也是错误的
-    //     if (!blockRoundOfflineGeneraters.includes(generator)) {
-    //       throw new ConsensusException(NOT_EXIST, {
-    //         prop: `offlineGenerater ${generator}`,
-    //         target:`block.roundOfflineGeneratersHashMap with height ${block.height}, signature ${block.signature}`,
-    //         ...Function_Exception_Detail
-    //       })
-    //     }
-    //   }
-    // }
+
+    const blockRoundOfflineGeneratersHashMap = block.roundOfflineGeneratersHashMap;
+    for (const roundOffset in _roundOfflineGeneratersHashMap) {
+      if (!blockRoundOfflineGeneratersHashMap[roundOffset]) {
+        throw new ConsensusException(NOT_MATCH, {
+          to_compare_prop: "roundOfflineGeneratersHashMap",
+          be_compare_prop: "roundOfflineGeneratersHashMap",
+          to_target: "calcGenerateBlockDelegate",
+          be_target: `block with height ${block.height}, signature ${block.signature}`,
+          ...Function_Exception_Detail,
+        });
+      }
+      const calcRoundOfflineGeneraters = _roundOfflineGeneratersHashMap[roundOffset].split(",");
+      const blockRoundOfflineGeneraters = blockRoundOfflineGeneratersHashMap[roundOffset].split(
+        ",",
+      );
+      if (calcRoundOfflineGeneraters.length !== blockRoundOfflineGeneraters.length) {
+        throw new ConsensusException(NOT_MATCH, {
+          to_compare_prop: "roundOfflineGeneratersHashMap",
+          be_compare_prop: "roundOfflineGeneratersHashMap",
+          to_target: "calcGenerateBlockDelegate",
+          be_target: `block with height ${block.height}, signature ${block.signature}`,
+          ...Function_Exception_Detail,
+        });
+      }
+      for (const generator of calcRoundOfflineGeneraters) {
+        // 正常来说如果掉线顺序不一致也是错误的
+        if (!blockRoundOfflineGeneraters.includes(generator)) {
+          throw new ConsensusException(NOT_EXIST, {
+            prop: `offlineGenerater ${generator}`,
+            target: `block.roundOfflineGeneratersHashMap with height ${block.height}, signature ${block.signature}`,
+            ...Function_Exception_Detail,
+          });
+        }
+      }
+    }
   }
 
   /**
