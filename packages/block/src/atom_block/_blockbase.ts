@@ -99,6 +99,20 @@ export abstract class BlockFactory<T extends Block> {
     }
     eventEmitter && (await eventEmitter.emit("beforeGenerateBlock", body));
 
+    if (body.height > 1) {
+      /// 如果没有自定义的掉块信息，或者没有提供私钥（区块验证模式），那么就主动生成掉块信息
+      if (!body.roundOfflineGeneratersHashMap || !keypair.secretKey) {
+        const lastBlock = await this.blockHelper.forceGetBlockByHeight(body.height - 1);
+        body.roundOfflineGeneratersHashMap = await (
+          await this.blockGeneratorCalculator.calcGenerateBlockDelegate(lastBlock, {
+            toTimestamp: body.timestamp,
+          })
+        ).roundOfflineGeneratersHashMap;
+      } else {
+        body.roundOfflineGeneratersHashMap = body.roundOfflineGeneratersHashMap;
+      }
+    }
+
     // this.blockGeneratorCalculator.calcGenerateBlockDelegateGenerator()
     const block = this._generateBlock(body, remark);
     // 校验 remark 大小
