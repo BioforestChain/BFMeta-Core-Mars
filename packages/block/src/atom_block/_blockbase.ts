@@ -101,7 +101,13 @@ export abstract class BlockFactory<T extends Block> {
 
     if (body.height > 1) {
       /// 如果没有自定义的掉块信息，或者没有提供私钥（区块验证模式），那么就主动生成掉块信息
-      if (!body.roundOfflineGeneratersHashMap || !keypair.secretKey) {
+      if (
+        /// 如果没有 roundOfflineGeneratersHashMap
+        !body.roundOfflineGeneratersHashMap ||
+        /// 或者说，有roundOfflineGeneratersHashMap，但是处于不可信的区块验证模式下
+        (!keypair.secretKey && !body.isTrustRoundOfflineGeneraters)
+      ) {
+        /// 主动生成掉块信息
         const lastBlock = await this.blockHelper.forceGetBlockByHeight(body.height - 1);
         body.roundOfflineGeneratersHashMap = await (
           await this.blockGeneratorCalculator.calcGenerateBlockDelegate(lastBlock, {

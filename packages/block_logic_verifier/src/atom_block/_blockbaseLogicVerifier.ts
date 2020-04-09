@@ -287,7 +287,7 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
       },
       { toTimestamp: block.timestamp, blockGetterHelper },
     );
-    if (calcResult.address === generatorAddress) {
+    if (calcResult.address !== generatorAddress) {
       throw new ConsensusException(INVALID_BLOCK_GENERATOR, {
         reason: `lastBlock.timestamp: ${lastBlock.timestamp} lastBlock.height: ${
           lastBlock.height
