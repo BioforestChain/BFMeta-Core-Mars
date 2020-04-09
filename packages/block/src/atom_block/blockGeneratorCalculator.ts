@@ -30,16 +30,21 @@ export class BlockGeneratorCalculator {
    */
   async fastCalcGenerateBlockDelegate(
     currentBlock: { timestamp: number; height: number },
-    opts: {
-      nowTimestamp?: number;
+    opts: ({ nowTimestamp?: number } | { toTimestamp: number }) & {
       blockGetterHelper?: BFChainCore.BlockGetterHelperSimpleInterface;
     } = {},
   ) {
-    const { nowTimestamp = this.timeHelper.getTimestamp() } = opts;
-    /// 如果是卡在slotnumber一致的时间戳，那么直接跳到下一个slotnumber，确保一定要有事件来处理区块。而不是应急去处理过去的区块
-    const toTimestamp = this.timeHelper.getTimestampBySlotNumber(
-      this.timeHelper.getSlotNumberByTimestamp(nowTimestamp) + 1,
-    );
+    let toTimestamp: number;
+    if ("toTimestamp" in opts) {
+      toTimestamp = opts.toTimestamp;
+    } else {
+      const { nowTimestamp = this.timeHelper.getTimestamp() } = opts;
+      /// 如果是卡在slotnumber一致的时间戳，那么直接跳到下一个slotnumber，确保一定要有事件来处理区块。而不是应急去处理过去的区块
+      toTimestamp = this.timeHelper.getTimestampBySlotNumber(
+        this.timeHelper.getSlotNumberByTimestamp(nowTimestamp) + 1,
+      );
+    }
+
     if (currentBlock.timestamp >= toTimestamp) {
       throw new ArgumentException(
         `lastblock timestamp(${currentBlock.timestamp}) should not be greater than toTimestamp(${toTimestamp})`,
@@ -51,10 +56,12 @@ export class BlockGeneratorCalculator {
       blockGetterHelper: opts.blockGetterHelper,
       ignoreOfflineGeneraters: true,
     })) {
-      return {
-        address: result.address,
-        timestamp: result.timestamp,
-      };
+      if (result.timestamp === toTimestamp) {
+        return {
+          address: result.address,
+          timestamp: result.timestamp,
+        };
+      }
     }
     throw new Error();
   }
@@ -95,11 +102,6 @@ export class BlockGeneratorCalculator {
     const fromTimestamp = currentBlock.timestamp + this.config.forgeInterval;
 
     let nowTimestamp = fromTimestamp;
-    if (ignoreOfflineGeneraters) {
-      if (!Number.isSafeInteger(toTimestamp)) {
-        throw new RangeError("toTimestamp must be an integer, when you ignore Offline Generaters.");
-      }
-    }
 
     /// RESULT
     const 结果掉块信息 = new EasyMap<number, string[]>(() => []);
@@ -147,6 +149,19 @@ export class BlockGeneratorCalculator {
       currentBlock.height,
       blockGetterHelper,
     );
+    if (ignoreOfflineGeneraters) {
+      if (!Number.isSafeInteger(toTimestamp)) {
+        throw new RangeError("toTimestamp must be an integer, when you ignore Offline Generaters.");
+      }
+      /// 快速的跳转到最后一轮，中间掉的轮次都可以忽略
+      const fromTimestamp轮次间隔 = 计算轮次间隔(fromTimestamp);
+      const toTimestamp轮次间隔 = 计算轮次间隔(toTimestamp);
+      if (toTimestamp轮次间隔 > fromTimestamp轮次间隔) {
+        nowTimestamp =
+          (toTimestamp轮次间隔 * this.config.blockPerRound + 1) * this.config.forgeInterval +
+          上一轮轮末块.timestamp;
+      }
+    }
 
     const 取得剩余可用受托人 = async (掉了多少轮: number) => {
       //#region 那一轮可使用的受托人

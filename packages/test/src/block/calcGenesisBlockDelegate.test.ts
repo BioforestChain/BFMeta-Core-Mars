@@ -859,7 +859,7 @@ const randomNextDelegates = (
       break;
     }
   }
-  return randoms.map(v => delegates[v]);
+  return randoms.map((v) => delegates[v]);
 };
 const blockMap = new Map<number, BFChainCore.BlockJSON<any>>();
 blockMap.set(1, bfchainCore.config.genesisBlock);
@@ -973,7 +973,7 @@ function getRoundLastBlockRemarkHash(height: number) {
 
           thisRoundDelegates.push(delegate.address);
           const _pickDelegates: string[] = [];
-          delegatesArr.forEach(v => {
+          delegatesArr.forEach((v) => {
             if (!thisRoundDelegates.includes(v.address)) {
               _pickDelegates.push(v.address);
             }
@@ -985,7 +985,7 @@ function getRoundLastBlockRemarkHash(height: number) {
           } else {
             chosenAddress = bfchainCore.transactionHelper.genesisDelegates().slice(57, 114);
           }
-          const nextRoundDelegates = chosenAddress.map(v => {
+          const nextRoundDelegates = chosenAddress.map((v) => {
             return { address: v, equity: "0" };
           });
           // const nextRoundDelegates = randomNextDelegates(_pickDelegates,).map(v => {
@@ -1035,6 +1035,9 @@ function getRoundLastBlockRemarkHash(height: number) {
   zz: while (true) {
     let hasResult = false;
 
+    if (lastBlock.height === 9) {
+      debugger;
+    }
     for await (const result of bfchainCore.block.blockGeneratorCalculator.calcGenerateBlockDelegateGenerator(
       {
         timestamp: lastBlock.timestamp,
@@ -1050,26 +1053,40 @@ function getRoundLastBlockRemarkHash(height: number) {
           }`,
         );
       }
+      const fastResult = await bfchainCore.block.blockGeneratorCalculator.fastCalcGenerateBlockDelegate(
+        {
+          timestamp: lastBlock.timestamp,
+          height: lastBlock.height,
+        },
+        { toTimestamp: result.timestamp },
+      );
+      console.assert(
+        fastResult.timestamp === result.timestamp && fastResult.address === result.address,
+       `${[fastResult.timestamp, result.timestamp]},
+        ${[fastResult.address, result.address]}`,
+      );
+
       if (await tryGenerateBlock(result, `BLOCK[${lastBlock.height + 1}]:`, true)) {
-        console.log(`~`)
+        // console.log(`~`);
         break;
       }
-     
-      // if (result.timestamp >= MAX_TO_TIMESTAMP) {
-      //   missTimestamp = result.timestamp;
-      //   break zz;
-      // }
-    }
- if (lastBlock.height >= generateCount) {
-        console.log(lastBlock.height, generateCount);
-        console.log(lastBlock.height, generateCount);
-        console.log(lastBlock.height, generateCount);
-        console.log(lastBlock.height, generateCount);
+
+      if (result.timestamp >= MAX_TO_TIMESTAMP) {
+        missTimestamp = result.timestamp;
         break zz;
       }
-    // if (!hasResult) {
-    //   break;
+    }
+
+    // if (lastBlock.height >= generateCount) {
+    //   console.log(lastBlock.height, generateCount);
+    //   console.log(lastBlock.height, generateCount);
+    //   console.log(lastBlock.height, generateCount);
+    //   console.log(lastBlock.height, generateCount);
+    //   break zz;
     // }
+    if (!hasResult) {
+      break;
+    }
   }
   console.timeEnd("zz");
 
@@ -1145,7 +1162,7 @@ function getRoundLastBlockRemarkHash(height: number) {
       // console.timeEnd(`cost`);
     }
   }
-})().catch(e => {
+})().catch((e) => {
   print(e);
 });
 // {
