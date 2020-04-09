@@ -16,6 +16,7 @@ import {
   PROP_SHOULD_LTE_FIELD,
   INVALID_BLOCK_GENERATOR,
   PROP_IS_INVALID,
+  INVALID_BLOCK_TIMESTAMP,
 } from "@bfchain/core-util-exception";
 import type { Block } from "@bfchain/core-model-block";
 import { TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE } from "@bfchain/core-model-transaction";
@@ -106,6 +107,9 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
       await this.isBlockAlreadyExist(block.signature, block.height, blockGetterHelper);
     }
 
+    // 验证区块时间戳
+    this.checkBlockTimestamp(block);
+
     // 同步时区块和交易是分开获取的，先校验区块本体，在校验区块和交易
     // 校验区块和块内交易基本信息
     // await this.verifyBlockWithTransactions(block, processBlockType);
@@ -113,6 +117,27 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
     // 校验区块前块 signature
     if (block.height !== 1) {
       await this.checkPreviousBlock(block, blockGetterHelper);
+    }
+  }
+
+    /**
+   * 校验区块的时间戳
+   *
+   * @param block
+   */
+  checkBlockTimestamp(block: T) {
+    const { timeHelper } = this;
+    const nowTimestamp = timeHelper.getTimestamp();
+    const trsSlot = timeHelper.getSlotNumberByTimestamp(block.timestamp);
+    const nowSlot = timeHelper.getSlotNumberByTimestamp(nowTimestamp);
+    if (trsSlot > nowSlot) {
+      throw new ConsensusException(INVALID_BLOCK_TIMESTAMP, {
+        reason: `Block timestamp in future. Block time is ahead of the time on the server, block timestamp ${block.timestamp}, block timestamp slot ${trsSlot}, blockChain now timestamp ${nowTimestamp}, blockChain now timestamp slot ${nowSlot}`,
+        signature: block.signature,
+        height: block.height,
+        generatorPublicKey: block.generatorPublicKey,
+        function: "checkBlockTimestamp",
+      });
     }
   }
 

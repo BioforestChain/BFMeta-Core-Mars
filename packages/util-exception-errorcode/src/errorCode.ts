@@ -124,6 +124,9 @@ export const INVALID_TRANSACTION_TO_MAGIC = (ec.next =
 /**reason signature senderId applyBlockHeight type function */
 export const INVALID_TRANSACTION_TIMESTAMP = (ec.next =
   "Invalid transaction timestamp, reason {reason} signature {signature} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type} when {function}");
+/**reason signature height generatorPublicKey function */
+export const INVALID_BLOCK_TIMESTAMP = (ec.next =
+  "Invalid block timestamp, reason {reason} signature {signature} height {height} generatorPublicKey {generatorPublicKey} when {function}");
 /**dappid function */
 export const DAPPID_IS_NOT_EXIST = (ec.next =
   "DAppid is not exist, dappid {dappid} when {function}");
