@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-model-transaction-complex",
-  "version": "5.11.41",
+  "version": "5.11.43",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,11 +14,11 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-model-block": "5.11.41",
-    "@bfchain/core-model-cacher": "5.11.39",
-    "@bfchain/core-model-common": "5.11.39",
-    "@bfchain/core-model-constants": "5.11.39",
-    "@bfchain/core-model-transaction": "5.11.39",
-    "@bfchain/core-typings": "5.11.39"
+    "@bfchain/core-model-block": "5.11.43",
+    "@bfchain/core-model-cacher": "5.11.43",
+    "@bfchain/core-model-common": "5.11.43",
+    "@bfchain/core-model-constants": "5.11.43",
+    "@bfchain/core-model-transaction": "5.11.43",
+    "@bfchain/core-typings": "5.11.43"
   }
 }
