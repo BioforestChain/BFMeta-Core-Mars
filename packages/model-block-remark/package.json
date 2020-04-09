@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-model-block-remark",
-  "version": "5.11.37",
+  "version": "5.11.39",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,9 +14,9 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-model-block-base": "5.11.37",
-    "@bfchain/core-model-cacher": "5.11.37",
-    "@bfchain/core-model-common": "5.11.37",
-    "@bfchain/core-typings": "5.11.37"
+    "@bfchain/core-model-block-base": "5.11.39",
+    "@bfchain/core-model-cacher": "5.11.39",
+    "@bfchain/core-model-common": "5.11.39",
+    "@bfchain/core-typings": "5.11.39"
   }
 }
