@@ -261,9 +261,7 @@ export class BlockGeneratorCalculator {
           if (!roundOfflineGeneratersHashMap) {
             roundOfflineGeneratersHashMap = {};
             for (const [roundOffset, OfflineGeneraterList] of 结果掉块信息) {
-              if (OfflineGeneraterList.length) {
-                roundOfflineGeneratersHashMap[roundOffset] = OfflineGeneraterList.join(",");
-              }
+              roundOfflineGeneratersHashMap[roundOffset] = OfflineGeneraterList.join(",");
             }
           }
           return roundOfflineGeneratersHashMap;
@@ -282,7 +280,7 @@ export class BlockGeneratorCalculator {
 
       const 排序后的受托人列表 = 对受托人排序(剩余可用的受托人, 上一个块的信息);
 
-      const 当前轮的掉线列表 = 结果掉块信息.forceGet(现在掉了多少轮);
+      let 当前轮的掉线列表: string[] | undefined;
 
       do {
         const 选中的受托人 = 排序后的受托人列表.shift();
@@ -293,7 +291,9 @@ export class BlockGeneratorCalculator {
         yield getResult(选中的受托人);
 
         // 外界否定这个选中的受托人，那么将之推到掉线的列表中
-        当前轮的掉线列表.push(选中的受托人);
+        (当前轮的掉线列表 || (当前轮的掉线列表 = 结果掉块信息.forceGet(现在掉了多少轮))).push(
+          选中的受托人,
+        );
         nowTimestamp += this.config.forgeInterval;
       } while (排序后的受托人列表.length);
     }
