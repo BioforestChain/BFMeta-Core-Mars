@@ -95,6 +95,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
       freeChainChannelList: DH[];
       busyChainChannels: Set<DH>;
       tiTasks: Set<Promise<void>>;
+      onDestroy: () => unknown;
     }
   >();
   /**节点的工作量 */
@@ -140,18 +141,6 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
       }
       return false;
     };
-    /**节点可用，尝试分配任务 */
-    const tryAddChainChannelToFree = (chainChannel: DH) => {
-      const waiter = queneChainChannelList.shift();
-      if (waiter) {
-        // 如果有等待队列，那么将可用的 handler 给等待队列
-        waiter.resolve(chainChannel);
-      } else {
-        // 直接将可用的 handler 放置到空闲队列中
-        freeChainChannelList.push(chainChannel);
-      }
-    };
-
     /// 将节点放入繁忙队列中
     const busyChainChannel = (chainChannel: DH) => {
       /// 标记工作量增加
@@ -191,21 +180,46 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     //#endregion
 
     //#region 监听节点列表的变更
+
+    /**节点可用，尝试分配任务 */
+    const tryAddChainChannelToFree = (chainChannel: DH) => {
+      const waiter = queneChainChannelList.shift();
+      if (waiter) {
+        // 如果有等待队列，那么将可用的 handler 给等待队列
+        waiter.resolve(chainChannel);
+      } else {
+        // 直接将可用的 handler 放置到空闲队列中
+        freeChainChannelList.push(chainChannel);
+      }
+    };
     /// 如果有新的节点，那么添加进来
     this.onAddChainChannel(tryAddChainChannelToFree);
+
+    const tryRemoveChainChannelFromList = (chainChannel: DH) => {
+      busyChainChannels.delete(chainChannel);
+      const index = freeChainChannelList.indexOf(chainChannel);
+      index >= 0 && freeChainChannelList.splice(index, 1);
+      WCWM.delete(chainChannel);
+      _tryFreeChainChannel();
+    };
     /// 如果有节点被移除了，那么从列表中移除
-    this.onRemoveChainChannel((chainChannel) => {
-      if (!busyChainChannels.delete(chainChannel)) {
-        const index = freeChainChannelList.indexOf(chainChannel);
-        index >= 0 && freeChainChannelList.splice(index, 1);
-        _tryFreeChainChannel();
-      }
-    });
+    this.onRemoveChainChannel(tryRemoveChainChannelFromList);
     //#endregion
     this._parallelTasksMap.set(task_id, {
       freeChainChannelList,
       busyChainChannels,
       tiTasks,
+      onDestroy: () => {
+        freeChainChannelList.length = 0;
+        busyChainChannels.clear();
+        for (const ti of tiTasks) {
+          unsleep(ti);
+        }
+        tiTasks.clear();
+
+        this.offAddChainChannel(tryAddChainChannelToFree);
+        this.offRemoveChainChannel(tryRemoveChainChannelFromList);
+      },
     });
     return { hasFreeChainChannel, getFreeChainChannel, freeChainChannel, busyChainChannel };
   }
@@ -216,12 +230,8 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
       return false;
     }
     this._parallelTasksMap.delete(task_id);
-    task.freeChainChannelList.length = 0;
-    task.busyChainChannels.clear();
-    for (const ti of task.tiTasks) {
-      unsleep(ti);
-    }
-    task.tiTasks.clear();
+
+    task.onDestroy();
   }
   /**
    * 查询交易
