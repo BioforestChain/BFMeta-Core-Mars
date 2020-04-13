@@ -91,18 +91,39 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       }
     }
 
-    // 查询资产是否已经迁入
-    const count = await transactionGetterHelper.getCountTransaction({
-      type: this.transactionHelper.IMMIGRATE_ASSET,
-      storageValue: emigrateAssetTransaction.signature,
-    });
+    return true;
+  }
 
-    if (count > 0) {
-      throw new ConsensusException(ASSET_IS_ALREADY_MIGRATION, {
-        signature: emigrateAssetTransaction.signature,
+  /**
+   * 不能二次操作同一笔交易(资产迁入)
+   *
+   * @param tr
+   */
+  async checkSecondaryTransaction(
+    transaction: ImmigrateAssetTransaction,
+    transactionGetterHelper = this.transactionGetterHelper,
+  ) {
+    const Function_Exception_Detail = {
+      function: "checkSecondaryTransaction",
+    } as const;
+
+    if (!transactionGetterHelper) {
+      throw new NoFoundException(NOT_EXIST, {
+        prop: "transactionGetterHelper",
+        target: "moduleStroge",
         ...Function_Exception_Detail,
       });
     }
-    return true;
+
+    const isSecondary = await transactionGetterHelper.checkSecondaryTransaction({
+      senderId: transaction.senderId,
+      storageValue: transaction.storageValue as string,
+    });
+    if (isSecondary) {
+      throw new ConsensusException(ASSET_IS_ALREADY_MIGRATION, {
+        signature: transaction.storageValue,
+        ...Function_Exception_Detail,
+      });
+    }
   }
 }

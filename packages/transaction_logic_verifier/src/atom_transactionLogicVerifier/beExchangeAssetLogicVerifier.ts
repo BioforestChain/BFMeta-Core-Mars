@@ -48,7 +48,7 @@ export class BeExchangeAssetLogicVerifier extends TransactionLogicVerifier {
       accountGetterHelper,
       transactionGetterHelper,
     );
-    // await this.checkSecondaryTransaction(transaction, transactionGetterHelper);
+    
     const beExchangeAssetAsset = transaction.asset.beExchangeAsset;
     const { transactionSignature } = beExchangeAssetAsset;
     const trs = (await transactionGetterHelper.getTransactionBySignature(transactionSignature)) as
@@ -155,7 +155,7 @@ export class BeExchangeAssetLogicVerifier extends TransactionLogicVerifier {
   }
 
   /**
-   * 不能二次操作同一笔交易(红包/资产交换/委托资产)
+   * 不能二次操作同一笔交易(特殊资产交换)
    *
    * @param tr
    */
@@ -175,11 +175,11 @@ export class BeExchangeAssetLogicVerifier extends TransactionLogicVerifier {
       });
     }
 
-    const count = await transactionGetterHelper.getCountTransaction({
+    const isSecondary = await transactionGetterHelper.checkSecondaryTransaction({
       senderId: transaction.senderId,
-      storageValue: transaction.storageValue,
+      storageValue: transaction.storageValue as string,
     });
-    if (count > 0) {
+    if (isSecondary) {
       throw new ConsensusException(CAN_NOT_SECONDARY_TRANSACTION, {
         reason: `Can not secondary exchange asset, sender ${transaction.senderId} exchange transaction signature ${transaction.storageValue}`,
         ...Function_Exception_Detail,

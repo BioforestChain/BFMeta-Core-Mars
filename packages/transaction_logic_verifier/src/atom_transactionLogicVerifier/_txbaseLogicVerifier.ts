@@ -837,7 +837,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   }
 
   /**
-   * 不能二次操作同一笔交易(红包/资产交换/委托资产)
+   * 不能二次操作同一笔交易(资产赠送/资产交换/特殊资产交换/委托资产/资产迁入)
    *
    * @param tr
    */

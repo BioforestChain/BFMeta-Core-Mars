@@ -165,7 +165,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
   }
 
   /**
-   * 不能二次操作同一笔交易(红包/资产交换/委托资产)
+   * 不能二次操作同一笔交易(资产赠送)
    *
    * @param tr
    */
@@ -185,11 +185,11 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
       });
     }
 
-    const count = await transactionGetterHelper.getCountTransaction({
+    const isSecondary = await transactionGetterHelper.checkSecondaryTransaction({
       senderId: transaction.senderId,
-      storageValue: transaction.storageValue,
+      storageValue: transaction.storageValue as string,
     });
-    if (count > 0) {
+    if (isSecondary) {
       throw new ConsensusException(CAN_NOT_SECONDARY_TRANSACTION, {
         reason: `Can not secondary grab asset, sender ${transaction.senderId} gift transaction signature ${transaction.storageValue}`,
         ...Function_Exception_Detail,

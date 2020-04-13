@@ -18,3 +18,4 @@ packages/*/build
 packages/@types/**/*.d.ts
 packages/@types/**/*.d.ts.map
 *.bak
+.flow

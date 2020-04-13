@@ -44,8 +44,6 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
       transactionGetterHelper,
     );
 
-    // await this.checkSecondaryTransaction(transaction, transactionGetterHelper);
-
     const { transactionSignature, thirdPartySignatures } = transaction.asset.signForAsset;
 
     const trs = (await transactionGetterHelper.getTransactionBySignature(
@@ -209,7 +207,7 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
   }
 
   /**
-   * 不能二次操作同一笔交易(红包/资产交换/委托资产)
+   * 不能二次操作同一笔交易(委托资产)
    *
    * @param tr
    */
@@ -229,11 +227,11 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
       });
     }
 
-    const count = await transactionGetterHelper.getCountTransaction({
+    const isSecondary = await transactionGetterHelper.checkSecondaryTransaction({
       senderId: transaction.senderId,
-      storageValue: transaction.storageValue,
+      storageValue: transaction.storageValue as string,
     });
-    if (count > 0) {
+    if (isSecondary) {
       throw new ConsensusException(CAN_NOT_SECONDARY_TRANSACTION, {
         reason: `Can not secondary sign for asset, sender ${transaction.senderId} trust transaction signature ${transaction.storageValue}`,
         ...Function_Exception_Detail,

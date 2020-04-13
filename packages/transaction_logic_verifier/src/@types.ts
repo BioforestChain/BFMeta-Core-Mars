@@ -221,6 +221,12 @@ declare namespace BFChainCore {
     checkRepeatInUntreatedTransaction(senderId: string, signature: string): Promise<boolean>;
     /**查询交易是否已经在链上 */
     checkRepeatInBlockChainTransaction(signature: string): Promise<boolean>;
+    /**查询是否二次操作某笔交易 */
+    checkSecondaryTransaction(args: {
+      type?: string;
+      senderId?: string;
+      storageValue: string;
+    }): Promise<boolean>;
     /**查询新生成的受托人 */
     getNewDelegates(height: number): Promise<string[]>;
   }
