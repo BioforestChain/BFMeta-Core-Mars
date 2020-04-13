@@ -1317,10 +1317,10 @@
   resolved "http://192.168.110.189:4873/@types%2fnode/-/node-13.9.0.tgz#5b6ee7a77faacddd7de719017d0bc12f52f81589"
   integrity sha1-W27np3+qzd195xkBfQvBL1L4FYk=
 
-"@types/node@^13.9.8":
-  version "13.9.8"
-  resolved "http://192.168.110.189:4873/@types%2fnode/-/node-13.9.8.tgz#09976420fc80a7a00bf40680c63815ed8c7616f4"
-  integrity sha1-CZdkIPyAp6AL9AaAxjgV7Yx2FvQ=
+"@types/node@^13.11.1":
+  version "13.11.1"
+  resolved "http://192.168.110.189:4873/@types%2fnode/-/node-13.11.1.tgz#49a2a83df9d26daacead30d0ccc8762b128d53c7"
+  integrity sha1-SaKoPfnSbarOrTDQzMh2KxKNU8c=
 
 "@types/optimist@^0.0.29":
   version "0.0.29"

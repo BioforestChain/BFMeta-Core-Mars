@@ -661,7 +661,7 @@ export class TransactionHelper {
     });
 
     // 根据共识规则计算出能抢到的金额数量
-    result.amount = this.calcGrabGiftAssetNumber(grabId, giftTransactionInBlock).toString();
+    result.amount = (await this.calcGrabGiftAssetNumber(grabId, giftTransactionInBlock)).toString();
 
     return result;
   }
