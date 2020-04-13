@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core",
-  "version": "5.11.45",
+  "version": "5.11.46",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,19 +14,19 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-account": "5.11.44",
-    "@bfchain/core-block": "5.11.45",
-    "@bfchain/core-block-logic-verifier": "5.11.45",
-    "@bfchain/core-block-ticker": "5.11.45",
-    "@bfchain/core-channel": "5.11.45",
-    "@bfchain/core-crypto": "5.11.44",
-    "@bfchain/core-helper": "5.11.44",
-    "@bfchain/core-model": "5.11.44",
-    "@bfchain/core-transaction": "5.11.44",
-    "@bfchain/core-transaction-complex": "5.11.45",
-    "@bfchain/core-transaction-logic-verifier": "5.11.44",
-    "@bfchain/core-typings": "5.11.44",
-    "@bfchain/core-util-base58": "5.11.44",
-    "@bfchain/core-util-exception": "5.11.44"
+    "@bfchain/core-account": "5.11.46",
+    "@bfchain/core-block": "5.11.46",
+    "@bfchain/core-block-logic-verifier": "5.11.46",
+    "@bfchain/core-block-ticker": "5.11.46",
+    "@bfchain/core-channel": "5.11.46",
+    "@bfchain/core-crypto": "5.11.46",
+    "@bfchain/core-helper": "5.11.46",
+    "@bfchain/core-model": "5.11.46",
+    "@bfchain/core-transaction": "5.11.46",
+    "@bfchain/core-transaction-complex": "5.11.46",
+    "@bfchain/core-transaction-logic-verifier": "5.11.46",
+    "@bfchain/core-typings": "5.11.46",
+    "@bfchain/core-util-base58": "5.11.46",
+    "@bfchain/core-util-exception": "5.11.46"
   }
 }
