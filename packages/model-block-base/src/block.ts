@@ -109,7 +109,7 @@ export class Block<RJ extends BFChainCore.CommonBlockRemarkJSON = BFChainCore.Co
     const { transactionBufferList } = this;
     let trsList = BUFFER_LIST_TRANSACTION_LIST_WM.get(transactionBufferList);
     if (!trsList) {
-      trsList = this.transactionBufferList.map(buf => {
+      trsList = this.transactionBufferList.map((buf) => {
         const trs = TransactionInBlock.decode(buf);
         TRANSACTION_BUFFER_WM.set(trs, buf);
         return trs;
@@ -118,7 +118,7 @@ export class Block<RJ extends BFChainCore.CommonBlockRemarkJSON = BFChainCore.Co
     return trsList;
   }
   set transactions(trsList: TransactionInBlock[]) {
-    const bufList = trsList.map(trs => {
+    const bufList = trsList.map((trs) => {
       let buf = TRANSACTION_BUFFER_WM.get(trs);
       if (!buf) {
         buf = TransactionInBlock.encode(trs).finish();
@@ -154,6 +154,12 @@ export class Block<RJ extends BFChainCore.CommonBlockRemarkJSON = BFChainCore.Co
     }
     return map;
   }
+  get delay() {
+    for (let k in this.roundOfflineGeneratersHashMap) {
+      return true;
+    }
+    return false;
+  }
 
   toJSON() {
     return {
@@ -171,7 +177,7 @@ export class Block<RJ extends BFChainCore.CommonBlockRemarkJSON = BFChainCore.Co
       totalFee: this.totalFee,
       reward: this.reward,
       magic: this.magic,
-      transactions: this.transactions.map(transaction => transaction.toJSON()),
+      transactions: this.transactions.map((transaction) => transaction.toJSON()),
       remark: this.remark.toJSON() as RJ,
       statisticInfo: this.statisticInfo.toJSON(),
       roundOfflineGeneratersHashMap: this.roundOfflineGeneratersHashMap,
