@@ -74,22 +74,20 @@ export class DAppPurchasingTransactionFactory extends TransactionFactory<
     this.emptyRangeType(body, Function_Exception_Detail);
 
     const recipientId = body.recipientId;
-
     if (!recipientId) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "recipientId",
         ...Function_Exception_Detail,
       });
     }
-
-    if (body.senderId === recipientId) {
-      throw new ArgumentIllegalException(SHOULD_NOT_BE, {
-        to_compare_prop: "senderId",
-        to_target: "body",
-        be_compare_prop: "recipientId",
-        ...Function_Exception_Detail,
-      });
-    }
+    // if (body.senderId === recipientId) {
+    //   throw new ArgumentIllegalException(SHOULD_NOT_BE, {
+    //     to_compare_prop: "senderId",
+    //     to_target: "body",
+    //     be_compare_prop: "recipientId",
+    //     ...Function_Exception_Detail,
+    //   });
+    // }
 
     if (body.fromMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
@@ -140,27 +138,9 @@ export class DAppPurchasingTransactionFactory extends TransactionFactory<
       target: "dappPurchasingAsset",
     } as const;
 
-    const { dappPossessor, dappAsset } = dappPurchasing;
+    const { dappAsset } = dappPurchasing;
 
     this.dappTransactionFactory.verifyDAppAsset(dappAsset);
-
-    if (dappPossessor !== recipientId) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: `dappPossessor ${dappPossessor}`,
-        to_target: "dappAsset",
-        be_compare_prop: `recipientId ${recipientId}`,
-        ...DappPurchasingAsset_Exception_Detail,
-      });
-    }
-
-    if (dappPossessor === body.senderId) {
-      throw new ArgumentIllegalException(SHOULD_NOT_BE, {
-        to_compare_prop: `senderId ${body.senderId}`,
-        to_target: "body",
-        be_compare_prop: `dapp developer ${dappPossessor}`,
-        ...DappPurchasingAsset_Exception_Detail,
-      });
-    }
 
     if (storage.value !== dappAsset.dappid) {
       throw new ArgumentIllegalException(NOT_MATCH, {

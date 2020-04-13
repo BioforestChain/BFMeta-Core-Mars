@@ -1,19 +1,26 @@
 declare namespace BFChainCore {
-  type Block<RJ extends CommonBlockRemarkJSON = CommonBlockRemarkJSON> = import("./block").Block<
-    RJ
-  >;
-
+  type Block<AJ extends object = object> = import("./block").Block<AJ>;
   type BlockModelConstructor = typeof import("./").Block;
 
-  type GetRemarkModel<T> = T extends BlockJSON<infer U> ? U : any;
+  type GetBlockMessageAssetModel<T> = T extends BlockJSON<infer U> ? U : any;
+  type GetBlockAssetModel<T> = GetBlockMessageAssetModel<
+    T
+  > extends import("@bfchain/protobuf").Message<infer U>
+    ? U
+    : any;
 
-  interface BlockWithoutTransactionJSON<RemarkJSON> {
+  type GetBlockAssetJSON<T extends Block> = T["ASSET_JSON_TYPE"];
+
+  interface BlockWithoutTransactionJSON<AssetJSON extends object = object> {
     version: number;
     height: number;
     blockSize: number;
     timestamp: number;
     signature: string;
+    signSignature?: string;
     generatorPublicKey: string;
+    generatorSecondPublicKey?: string;
+    generatorEquity: string;
     numberOfTransactions: number;
     payloadHash: string;
     payloadLength: number;
@@ -22,11 +29,14 @@ declare namespace BFChainCore {
     totalFee: string;
     reward: string;
     magic: string;
-    remark: RemarkJSON;
+    blockParticipation: string;
+    remark: { [key: string]: string };
+    asset: AssetJSON;
     statisticInfo: StatisticInfoJSON;
     roundOfflineGeneratersHashMap: RoundOfflineGeneratersHashMap;
   }
-  interface BlockJSON<RemarkJSON extends {} = {}> extends BlockWithoutTransactionJSON<RemarkJSON> {
+  interface BlockJSON<AssetJSON extends object = object>
+    extends BlockWithoutTransactionJSON<AssetJSON> {
     transactions: TransactionInBlockJSON[];
   }
   type RoundOfflineGeneratersReadonlyMap = Omit<
@@ -71,44 +81,58 @@ declare namespace BFChainCore {
   }
   //#endregion
 
-  //#region Block Remark
-
-  type RemarkJSONToModelType<
-    J extends CommonBlockRemarkJSON = CommonBlockRemarkJSON
-  > = JSONToModelType<J> & { getBytes(): Uint8Array };
   //#region CommonBlock
-
-  interface CommonBlockRemarkJSON {
-    debug: string;
-    info: string;
-    blockParticipation: string;
-    generatorEquity: string;
-  }
+  interface CommonBlockAssetJSON {}
+  type CommonBlockBlockJSON = BlockJSON<CommonBlockAssetJSON>;
   //#endregion
 
-  interface RoundDelegateRemarkJSON {
+  //#region RoundLastBlock
+  interface NextRoundDelegateJSON {
+    address: string;
+    equity: string;
+  }
+  interface RoundDelegateJSON {
     nextRoundDelegates: NextRoundDelegateJSON[];
     newDelegates: string[];
     maxBeginBalance: string;
     maxTxCount: number;
     rate: string;
   }
-  interface NextRoundDelegateJSON {
-    address: string;
-    equity: string;
-  }
-
-  //#region RoundLastBlock
-
-  interface RoundLastBlockRemarkJSON extends RoundDelegateRemarkJSON, CommonBlockRemarkJSON {
+  interface RoundLastBlockJSON extends RoundDelegateJSON {
     hash: string;
   }
-
+  interface RoundLastBlockAssetJSON {
+    roundLastBlock: RoundLastBlockJSON;
+  }
+  type RoundLastBlockBlockJSON = BlockJSON<RoundLastBlockAssetJSON>;
   //#endregion
 
   //#region GenesisBlock
+  interface RewardPercentJSON {
+    votePercent: FractionJSON;
+    forgePercent: FractionJSON;
+  }
+  interface PortsJSON {
+    port: number;
+    scan_peer_port: number;
+  }
+  interface RewardPerBlockJSON {
+    readonly heights: number[];
+    readonly rewards: string[];
+  }
 
-  interface GenesisBlockRemarkJSON extends RoundDelegateRemarkJSON, CommonBlockRemarkJSON {
+  interface ParentInfoJSON {
+    magic: string;
+    chainName: string;
+    assetType: string;
+    genesisNodeAddress: string;
+  }
+  interface TransactionPowOfWorkConfigJSON {
+    growthFactor: FractionJSON<string>;
+    participationRatio: FractionJSON;
+    averageComputingPower: number;
+  }
+  interface GenesisBlockJSON extends RoundDelegateJSON {
     assetType: string;
     chainName: string;
     magic: string;
@@ -138,38 +162,15 @@ declare namespace BFChainCore {
     rewardPercent: RewardPercentJSON;
     ports: PortsJSON;
     rewardPerBlock: RewardPerBlockJSON;
-    blockParticipation: string;
-    generatorEquity: string;
     participationTotalChainAsset: number;
     participationNumberOfTransaction: number;
     participationNumberOfAccount: number;
     participationTotalFee: number;
     transactionPowOfWorkConfig: TransactionPowOfWorkConfigJSON;
   }
-  interface RewardPercentJSON {
-    votePercent: FractionJSON;
-    forgePercent: FractionJSON;
+  interface GenesisBlockAssetJSON {
+    genesisBlock: GenesisBlockJSON;
   }
-  interface PortsJSON {
-    port: number;
-    scan_peer_port: number;
-  }
-  interface RewardPerBlockJSON {
-    readonly heights: number[];
-    readonly rewards: string[];
-  }
-
-  interface ParentInfoJSON {
-    magic: string;
-    chainName: string;
-    assetType: string;
-    genesisNodeAddress: string;
-  }
-  interface TransactionPowOfWorkConfigJSON {
-    growthFactor: FractionJSON<string>;
-    participationRatio: FractionJSON;
-    averageComputingPower: number;
-  }
-  //#endregion
+  type GenesisBlockBlockJSON = BlockJSON<GenesisBlockAssetJSON>;
   //#endregion
 }

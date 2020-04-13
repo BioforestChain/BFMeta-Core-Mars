@@ -68,29 +68,46 @@ export class TransactionInBlock<T extends Transaction = Transaction> extends Som
   set signature(value: string) {
     this.signatureBuffer = parseHexToArrayBuffer(value);
   }
+  /**区块锻造者的安全签名 */
+  @Field.d(TransactionInBlock.INC++, "bytes", "optional")
+  signSignatureBuffer?: Uint8Array;
+  get signSignature() {
+    return (
+      (this.signSignatureBuffer && getHexFromArrayBuffer(this.signSignatureBuffer)) || undefined
+    );
+  }
+  set signSignature(value: string | undefined) {
+    /// 空字符串也当成undefined处理
+    this.signSignatureBuffer = parseHexToArrayBuffer(value);
+  }
   @cacheBytesGetter
-  getBytes(skipSignature?: boolean) {
+  getBytes(skipSignature?: boolean, skipSignSignature?: boolean) {
     const props: PropertyDescriptorMap = {};
     if (skipSignature) {
       props.signatureBuffer = { value: null };
+    }
+    if (skipSignSignature) {
+      props.signSignatureBuffer = { value: null };
     }
     const trsWrapper = Object.create(this, props);
     const bytes = this.$type.encode(trsWrapper).finish();
     return bytes;
   }
   toJSON() {
-    return Object.assign(
-      {
-        index: this.index,
-        height: this.height,
-        numberOfSenderTransactions: this.numberOfSenderTransactions,
-        transactionAssetChanges: this.transactionAssetChanges.map((transactionAssetChange) =>
-          transactionAssetChange.toJSON(),
-        ),
-        signature: this.signature,
-      },
-      super.toJSON(),
-    );
+    const res: BFChainCore.TransactionInBlockJSON<BFChainUtil.ToJSONType<T>> = {
+      index: this.index,
+      height: this.height,
+      numberOfSenderTransactions: this.numberOfSenderTransactions,
+      transactionAssetChanges: this.transactionAssetChanges.map((transactionAssetChange) =>
+        transactionAssetChange.toJSON(),
+      ),
+      signature: this.signature,
+      transaction: this.transaction.toJSON() as BFChainUtil.ToJSONType<T>,
+    };
+
+    this.signSignature && (res.signSignature = this.signSignature);
+
+    return res;
   }
   static fromObject<T extends Message>(
     this: BFChainProtobuf.Constructor<T>,
@@ -99,6 +116,7 @@ export class TransactionInBlock<T extends Transaction = Transaction> extends Som
     const res = super.fromObject(object) as TransactionInBlock;
     if (object !== res) {
       object.signature && (res.signature = object.signature);
+      object.signSignature && (res.signSignature = object.signSignature);
     }
     return (res as unknown) as T;
   }

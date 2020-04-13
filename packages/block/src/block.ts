@@ -1,6 +1,5 @@
 import {
   Block,
-  GetBlockRemarkJSON,
   BLOCK_TYPES_BASE,
   BLOCK_TYPES_MAP,
 } from "@bfchain/core-model-block";
@@ -60,23 +59,29 @@ export class BlockCore {
   async generateBlock<B extends Block>(
     BlockFactory: new (...args: any[]) => BlockFactory<B>,
     body: BFChainCore.BlockBody,
-    blockRemark: GetBlockRemarkJSON<B>,
+    blockAsset: BFChainCore.GetBlockAssetJSON<B>,
     trsGenerator: AsyncIterable<TransactionInBlock>,
     keypair: BFChainCore.Keypair,
+    secondKeypair?: BFChainCore.Keypair,
     eventEmitter?: BFChainCore.GenerateBlockEventEmitter<B>,
   ) {
     const blockFactory = this.getBlockFactory(BlockFactory);
 
     // 校验keypair
     blockFactory.verifyKeypair(keypair);
+    if (secondKeypair) {
+      blockFactory.verifyKeypair(secondKeypair);
+    }
+    body.remark = body.remark || {};
     // 校验生成区块的参数
-    await blockFactory.verifyBlockBody(body, blockRemark);
+    await blockFactory.verifyBlockBody(body, blockAsset);
     // 生成区块，获取区块并签名
     const block = await blockFactory.generateBlock(
       body,
-      blockRemark,
+      blockAsset,
       trsGenerator,
       keypair,
+      secondKeypair,
       eventEmitter,
     );
 
@@ -91,10 +96,10 @@ export class BlockCore {
    *
    * @param block
    */
-  async recombineBlock<R extends BFChainCore.CommonBlockRemarkJSON>(
-    blockJSON: BFChainCore.BlockJSON<R>,
+  async recombineBlock<T extends Block>(
+    blockJSON: BFChainCore.BlockJSON<BFChainCore.GetBlockAssetJSON<T>>,
   ) {
-    return (await this.getBlockFactoryFromHeight(blockJSON.height).fromJSON(blockJSON)) as Block<R>;
+    return (await this.getBlockFactoryFromHeight(blockJSON.height).fromJSON(blockJSON)) as T;
   }
   fromJSON = this.recombineBlock;
 

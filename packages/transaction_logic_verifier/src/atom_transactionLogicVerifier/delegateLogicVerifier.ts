@@ -25,10 +25,6 @@ export class DelegateLogicVerifier extends TransactionLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const Function_Exception_Detail = {
-      function: "verify",
-    } as const;
-
     const { sender, curRound } = await this.logicVerify(
       transaction,
       currentBlockHeight,
@@ -57,22 +53,6 @@ export class DelegateLogicVerifier extends TransactionLogicVerifier {
     );
 
     await this.eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
-
-    const accountInfo = sender.accountInfo;
-    if (!accountInfo.username) {
-      throw new ConsensusException(SET_USERANME_AT_FIRST, {
-        address: accountInfo.address,
-        ...Function_Exception_Detail,
-      });
-    }
-
-    if (transaction.asset.delegate.username !== accountInfo.username) {
-      throw new ConsensusException(INVALID_ACCOUNT_ALIAS, {
-        address: accountInfo.address,
-        alias: transaction.asset.delegate.username,
-        ...Function_Exception_Detail,
-      });
-    }
 
     return true;
   }

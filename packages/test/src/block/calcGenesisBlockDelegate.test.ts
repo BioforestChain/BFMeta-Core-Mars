@@ -855,7 +855,7 @@ const randomNextDelegates = (
     if (!randoms.includes(random)) {
       randoms.push(random);
     }
-    if (randoms.length === bfchainCore.config.genesisBlock.remark.blockPerRound) {
+    if (randoms.length === bfchainCore.config.blockPerRound) {
       break;
     }
   }
@@ -908,7 +908,7 @@ function getRoundLastBlockRemarkHash(height: number) {
     height: bfchainCore.config.genesisBlock.height,
     previousBlockSignature: bfchainCore.config.genesisBlock.signature,
   };
-  bfchainCore.config.genesisBlock.remark.nextRoundDelegates;
+  bfchainCore.config.genesisBlock.asset.genesisBlock.nextRoundDelegates;
   let count = 0;
 
   const tryGenerateBlock = async (
@@ -932,6 +932,7 @@ function getRoundLastBlockRemarkHash(height: number) {
           height: lastBlock.height,
           timestamp: result.timestamp,
           generatorPublicKey: delegate.pk,
+          generatorEquity: "0",
           previousBlockSignature: lastBlock.previousBlockSignature,
           roundOfflineGeneratersHashMap: result.roundOfflineGeneratersHashMap,
         };
@@ -998,16 +999,14 @@ function getRoundLastBlockRemarkHash(height: number) {
             RoundLastBlockFactory,
             newBlock,
             {
-              debug: "debug",
-              info: "info",
-              blockParticipation: "0",
-              generatorEquity: "0",
-              nextRoundDelegates,
-              maxBeginBalance: "0",
-              maxTxCount: 0,
-              rate: "0",
-              newDelegates: [],
-              hash: getRoundLastBlockRemarkHash(lastBlock.height),
+              roundLastBlock: {
+                nextRoundDelegates,
+                maxBeginBalance: "0",
+                maxTxCount: 0,
+                rate: "0",
+                newDelegates: [],
+                hash: getRoundLastBlockRemarkHash(lastBlock.height),
+              },
             },
             asyncIteratorGenerator,
             delegate.keypair,

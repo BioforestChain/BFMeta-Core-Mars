@@ -129,7 +129,9 @@ declare namespace BFChainCore {
       magic: string;
       assetType: string;
       amount: string;
+      /**冻结的事件 id */
       frozenId: string;
+      /**冻结事件的发起账户地址 */
       recipientId: string;
     };
   }
@@ -151,6 +153,7 @@ declare namespace BFChainCore {
       sourceChainName: string;
       sourceChainMagic: string;
       dappid: string;
+      /**dappid 的拥有者地址 */
       possessorAddress: string;
       type: DAPP_TYPE;
       purchaseAsset?: DAppPurchaseAssetJSON;
@@ -175,6 +178,7 @@ declare namespace BFChainCore {
       address: string;
       publicKey: string;
       dappid: string;
+      /**dappid 的拥有者地址 */
       possessorAddress: string;
       sourceChainMagic: string;
     };
@@ -189,6 +193,7 @@ declare namespace BFChainCore {
       sourceChainName: string;
       sourceChainMagic: string;
       assetType: string;
+      /**创世账户地址 */
       genesisAddress: string;
       expectedIssuedAssets: string;
       remainAssets: string;
@@ -200,18 +205,20 @@ declare namespace BFChainCore {
     applyInfo: {
       address: string;
       publicKey: string;
-      genesisBlock: BlockJSON<GenesisBlockRemarkJSON>;
+      genesisBlock: BlockJSON<GenesisBlockAssetJSON>;
     };
   }
 
   interface ApplyResult_RegisterLocationNameJSON {
     type: "registerLocationName";
     applyInfo: {
+      /**事件的发起地址 */
       address: string;
       publicKey: string;
       name: string;
       sourceChainName: string;
       sourceChainMagic: string;
+      /**lns 的拥有者地址 */
       possessorAddress: string;
     };
   }
@@ -219,10 +226,12 @@ declare namespace BFChainCore {
   interface ApplyResult_CancelLocationNameJSON {
     type: "cancelLocationName";
     applyInfo: {
+      /**事件的发起账户地址 */
       address: string;
       publicKey: string;
       name: string;
       sourceChainMagic: string;
+      /**lns 的拥有者地址 */
       possessorAddress: string;
     };
   }
@@ -268,6 +277,7 @@ declare namespace BFChainCore {
     applyInfo: {
       address: string;
       publicKey: string;
+      /**lns 的拥有者地址 */
       possessorAddress: string;
       name: string;
       sourceChainMagic: string;
@@ -377,7 +387,7 @@ declare namespace BFChainCore {
       readonly blockApi: BlockApiInterface;
       readonly accountApi: AccountApiInterface;
       readonly transactionApi: TransactionApiInterface;
-      readonly genesisBlock: BFChainCore.BlockJSON<BFChainCore.GenesisBlockRemarkJSON>;
+      readonly genesisBlock: BFChainCore.BlockJSON<BFChainCore.GenesisBlockAssetJSON>;
     };
   }
   //#endregion

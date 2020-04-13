@@ -6,7 +6,6 @@ import {
   NOT_EXIST,
   PROP_IS_INVALID,
 } from "@bfchain/core-util-exception";
-
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
   "BlockLogicVerifier",
@@ -16,11 +15,18 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
   async verify(
     block: RoundLastBlock,
     processBlockType: PROCESSBLOCK_TYPE,
+    generatorInfo: BFChainCore.AccountInfo,
+    transactionGetterHelper = this.transactionGetterHelper,
     blockGetterHelper = this.blockGetterHelper,
-    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     // body check
-    await this.verifyBlockBase(block, processBlockType, blockGetterHelper, transactionGetterHelper);
+    await this.verifyBlockBase(
+      block,
+      processBlockType,
+      generatorInfo,
+      transactionGetterHelper,
+      blockGetterHelper,
+    );
     await this.checkPreviousBlock(block, blockGetterHelper);
     await this.isValidBlockSlot(block, blockGetterHelper);
     // 由于 remark 部分数据涉及交易流程，所以在外部手动调用校验
@@ -32,12 +38,12 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
 
   async verifyBlockRemark(
     block: RoundLastBlock,
+    transactionGetterHelper = this.transactionGetterHelper,
     blockGetterHelper = this.blockGetterHelper,
-    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     // 校验链上链 hash
-    const { height, remark } = block;
-    const { newDelegates, hash } = remark;
+    const { height, asset } = block;
+    const { newDelegates, hash } = asset.roundLastBlock;
     await this.checkRemarkHash(height, hash, blockGetterHelper);
     await this.isValidNewDelegates(height, newDelegates, transactionGetterHelper);
     await this.checkNewForgingDelegates(block, blockGetterHelper);
@@ -52,7 +58,7 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
   async isValidNewDelegates(
     height: number,
     newDelegates: string[],
-    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
+    transactionGetterHelper = this.transactionGetterHelper,
   ) {
     const Function_Exception_Detail = {
       function: "isValidNewDelegates",
@@ -136,7 +142,7 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
       await blockGetterHelper.getLastBlock(),
       block.generatorPublicKey,
     );
-    const nextRoundDelegates = block.remark.nextRoundDelegates;
+    const nextRoundDelegates = block.asset.roundLastBlock.nextRoundDelegates;
     if (delegates.length !== nextRoundDelegates.length) {
       throw new ConsensusException(NOT_MATCH, {
         to_compare_prop: `delegates length ${delegates.length}`,
@@ -182,19 +188,19 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
     const Function_Exception_Detail = {
       function: "checkMaxBeginBalanceAndMaxTxCount",
     } as const;
-    const blockRemark = block.remark;
-    if (blockRemark.maxBeginBalance !== tickResult.maxBeginBalance) {
+    const roundLastBlock = block.asset.roundLastBlock;
+    if (roundLastBlock.maxBeginBalance !== tickResult.maxBeginBalance) {
       throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: `maxBeginBalance ${blockRemark.maxBeginBalance}`,
+        to_compare_prop: `maxBeginBalance ${roundLastBlock.maxBeginBalance}`,
         be_compare_prop: `maxBeginBalance ${tickResult.maxBeginBalance}`,
         to_target: "block remark",
         be_target: "calculate",
         ...Function_Exception_Detail,
       });
     }
-    if (blockRemark.maxTxCount !== tickResult.maxTxCount) {
+    if (roundLastBlock.maxTxCount !== tickResult.maxTxCount) {
       throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: `maxTxCount ${blockRemark.maxTxCount}`,
+        to_compare_prop: `maxTxCount ${roundLastBlock.maxTxCount}`,
         be_compare_prop: `maxTxCount ${tickResult.maxTxCount}`,
         to_target: "block remark",
         be_target: "calculate",

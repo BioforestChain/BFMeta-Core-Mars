@@ -133,12 +133,12 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
       });
     }
 
-    if (config.initials !== genesisBlockJson.remark.bnid) {
+    if (config.initials !== genesisBlockJson.asset.genesisBlock.bnid) {
       throw new ArgumentIllegalException(NOT_MATCH, {
         to_compare_prop: `initials ${config.initials}`,
         be_compare_prop: `bnid ${genesisBlockJson.remark.bnid}`,
         to_target: "config",
-        be_target: "genesisBlockJson.remark",
+        be_target: "genesisBlockJson.asset.genesisBlock",
         ...Function_Exception_Detail,
       });
     }
@@ -149,9 +149,11 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
       chainConfig = new ConfigHelper(genesisBlockJson, this.configHelper.business);
     }
 
-    const genesisBlock = await this._blockCore.recombineBlock(genesisBlockJson);
+    const genesisBlock = await this._blockCore.recombineBlock<
+      BFChainCore.Block<BFChainCore.GenesisBlockAssetJSON>
+    >(genesisBlockJson);
     await this._blockCore
-      .getBlockFactoryFromHeight<BFChainCore.Block<BFChainCore.GenesisBlockRemarkJSON>>(
+      .getBlockFactoryFromHeight<BFChainCore.Block<BFChainCore.GenesisBlockAssetJSON>>(
         genesisBlockJson.height,
       )
       .verify(genesisBlock, chainConfig);

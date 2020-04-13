@@ -1,0 +1,11 @@
+{
+  "name": "@types/bfchain__core-model-block-asset",
+  "types": "index.d.ts",
+  "version": "5.13.3-dev.0",
+  "dependencies": {
+    "@types/bfchain__core-model-block-base": "5.13.3-dev.0",
+    "@types/bfchain__core-model-cacher": "5.13.3-dev.0",
+    "@types/bfchain__core-model-common": "5.13.3-dev.0",
+    "@types/bfchain__core-typings": "5.13.3-dev.0"
+  }
+}

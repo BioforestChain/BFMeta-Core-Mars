@@ -14,6 +14,7 @@ import {
   SHOULD_BE,
   SHOULD_NOT_EXIST,
   SHOULD_NOT_INCLUDE,
+  PROP_IS_REQUIRE,
 } from "@bfchain/core-util-exception";
 import { Injectable, TaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
@@ -110,6 +111,13 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<
     const toExchangeAsset = toExchangeAssetAsset.toExchangeAsset;
 
     this.verifyToExchangeAsset(toExchangeAsset, config);
+
+    if (body.storage) {
+      throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+        prop: "storage",
+        ...Function_Exception_Detail,
+      });
+    }
   }
 
   /**
@@ -180,11 +188,19 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<
       ToExchangeAssetAsset_Exception_Detail,
     );
 
-    this.checkAssetAmount(
-      toExchangeAsset.toExchangeNumber,
-      "toExchangeNumber",
-      ToExchangeAssetAsset_Exception_Detail,
-    );
+    if (!toExchangeAsset.toExchangeNumber) {
+      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        prop: "toExchangeNumber",
+        ...ToExchangeAssetAsset_Exception_Detail,
+      });
+    }
+    if (!baseHelper.isValidAssetNumber(toExchangeAsset.toExchangeNumber)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "toExchangeNumber",
+        type: "asset number",
+        ...ToExchangeAssetAsset_Exception_Detail,
+      });
+    }
 
     if (!baseHelper.isValidRate(toExchangeAsset.exchangeRate)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {

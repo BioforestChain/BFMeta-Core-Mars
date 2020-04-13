@@ -465,9 +465,11 @@ export class CustomTransactionEvent {
         chainConfig = new ConfigHelper(genesisBlockJson, this.configHelper.business);
       }
 
-      const genesisBlock = await this._blockCore.recombineBlock(genesisBlockJson);
+      const genesisBlock = await this._blockCore.recombineBlock<
+        BFChainCore.Block<BFChainCore.GenesisBlockAssetJSON>
+      >(genesisBlockJson);
       await this._blockCore
-        .getBlockFactoryFromHeight<BFChainCore.Block<BFChainCore.GenesisBlockRemarkJSON>>(
+        .getBlockFactoryFromHeight<BFChainCore.Block<BFChainCore.GenesisBlockAssetJSON>>(
           genesisBlock.height,
         )
         .verify(genesisBlock, chainConfig);

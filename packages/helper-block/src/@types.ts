@@ -92,9 +92,8 @@ declare namespace BFChainCore {
     totalFee: string;
     reward: string;
     magic: string;
-    remark: {
-      blockParticipation: string;
-    };
+    blockParticipation: string;
+    remark: { [key: string]: string };
   };
   type TickResultInfo = {
     maxBeginBalance?: string;

@@ -13,10 +13,10 @@ import {
   PROP_IS_REQUIRE,
   PROP_IS_INVALID,
   NOT_IN_EXPECTED_RANGE,
-  SHOULD_BE_DIFFERENT,
   SHOULD_BE,
   SHOULD_NOT_BE,
   NOT_MATCH,
+  PROP_SHOULD_GT_FIELD,
 } from "@bfchain/core-util-exception";
 import { Injectable, TaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
@@ -75,7 +75,7 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
 
     this.emptyRangeType(body, Function_Exception_Detail);
 
-    const { baseHelper, accountBaseHelper } = this;
+    const { baseHelper } = this;
 
     const recipientId = body.recipientId;
 
@@ -215,6 +215,14 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: `expectedIssuedAssets ${expectedIssuedAssets}`,
         type: "asset number",
+        ...IssueAssetAsset_Exception_Detail,
+      });
+    }
+
+    if (BigInt(expectedIssuedAssets) <= BigInt(0)) {
+      throw new ArgumentIllegalException(PROP_SHOULD_GT_FIELD, {
+        prop: "expectedIssuedAssets",
+        field: "0",
         ...IssueAssetAsset_Exception_Detail,
       });
     }

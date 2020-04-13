@@ -16,22 +16,21 @@ export class NextRoundDelegateModel
   }
 }
 
-@Type.d("RoundDelegateRemarkModel")
-export class RoundDelegateRemarkModel<T extends RoundDelegateRemarkModel<T>>
-  extends Message<T>
-  implements BFChainCore.JSONToModelType<BFChainCore.RoundDelegateRemarkJSON> {
+@Type.d("RoundDelegateModel")
+export class RoundDelegateModel<T extends RoundDelegateModel<T>> extends Message<T>
+  implements BFChainCore.JSONToModelType<BFChainCore.RoundDelegateJSON> {
   static INC = 1;
   /**本轮新增的受托人 */
-  @Field.d(RoundDelegateRemarkModel.INC++, "string", "repeated")
+  @Field.d(RoundDelegateModel.INC++, "string", "repeated")
   newDelegates!: string[];
   /**上一轮的最大余额 */
-  @Field.d(RoundDelegateRemarkModel.INC++, "string")
+  @Field.d(RoundDelegateModel.INC++, "string")
   maxBeginBalance!: string;
   /**上一轮的最大交易量 */
-  @Field.d(RoundDelegateRemarkModel.INC++, "uint32")
+  @Field.d(RoundDelegateModel.INC++, "uint32")
   maxTxCount!: number;
   /**下一轮的打块账户以及其相关信息 */
-  @Field.d(RoundDelegateRemarkModel.INC++, NextRoundDelegateModel, "repeated")
+  @Field.d(RoundDelegateModel.INC++, NextRoundDelegateModel, "repeated")
   nextRoundDelegates!: NextRoundDelegateModel[];
   private _next_round_delegate_address_list?: string[];
   get nextRoundDelegateAddressList() {
@@ -54,7 +53,7 @@ export class RoundDelegateRemarkModel<T extends RoundDelegateRemarkModel<T>>
     return this._equitie_map;
   }
   /**最大余额和最大交易量的比值 */
-  // @Field.d(RoundDelegateRemarkModel.INC++, "string")
+  // @Field.d(RoundDelegateModel.INC++, "string")
   private _rate?: string;
   get rate() {
     if (!this._rate) {
@@ -62,7 +61,7 @@ export class RoundDelegateRemarkModel<T extends RoundDelegateRemarkModel<T>>
     }
     return this._rate;
   }
-  toJSON(): BFChainCore.RoundDelegateRemarkJSON {
+  toJSON(): BFChainCore.RoundDelegateJSON {
     return {
       newDelegates: this.newDelegates,
       maxBeginBalance: this.maxBeginBalance,

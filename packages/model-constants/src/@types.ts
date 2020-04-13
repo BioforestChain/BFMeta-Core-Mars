@@ -7,4 +7,5 @@ declare namespace BFChainCore {
   type RECORD_OPERATION_TYPE = import("./").RECORD_OPERATION_TYPE;
   type GIFT_DISTRIBUTION_RULE = import("./").GIFT_DISTRIBUTION_RULE;
   type RANGE_TYPE = import("./").RANGE_TYPE;
+  type PARITY_BIT_MAPPING = keyof typeof import("./").PARITY_BIT_MAPPING;
 }

@@ -200,32 +200,6 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
         ...UsernameAsset_Exception_Detail,
       });
     }
-
-    const publicKey = username.publicKey;
-    if (!publicKey) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "publicKey",
-        ...UsernameAsset_Exception_Detail,
-      });
-    }
-
-    if (!baseHelper.isValidPublicKey(publicKey)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `publicKey ${publicKey}`,
-        type: "account publicKey",
-        ...UsernameAsset_Exception_Detail,
-      });
-    }
-
-    if (publicKey !== body.senderPublicKey) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: `publicKey ${publicKey}`,
-        be_compare_prop: `senderPublicKey ${body.senderPublicKey}`,
-        to_target: "username",
-        be_target: "body",
-        ...UsernameAsset_Exception_Detail,
-      });
-    }
   }
 
   /**

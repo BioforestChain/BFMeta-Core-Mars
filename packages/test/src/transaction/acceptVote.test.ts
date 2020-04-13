@@ -21,7 +21,7 @@
 //     timestamp: 770880, // 生成交易时间戳
 //     fee: "78622", // 交易手续费
 //     remark: { remark: "body.remark" }, // 交易备注，任意信息
-//     dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
+//     dappid: getRandomDAppid(), // 交易所属的 dappid
 //     lns: `ibt.${bfchainCore.config.chainName}`,
 //     sourceIP: "127.0.0.1", // 交易来源 ip
 //     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
@@ -64,7 +64,7 @@
 //       range: [],
 //       fee: "78622",
 //       timestamp: 770880,
-//       dappid: "CAPCOM123456789QWQQAQ",
+//       dappid: getRandomDAppid(),
 //       lns: `ibt.${bfchainCore.config.chainName}`,
 //       sourceIP: "127.0.0.1",
 //       fromMagic: bfchainCore.config.magic,
@@ -96,7 +96,7 @@
 //       range: [],
 //       fee: "78622",
 //       timestamp: 770880,
-//       dappid: "CAPCOM123456789QWQQAQ",
+//       dappid: getRandomDAppid(),
 //       lns: "ibt.bfchain",
 //       sourceIP: "127.0.0.1",
 //       fromMagic: bfchainCore.config.magic,

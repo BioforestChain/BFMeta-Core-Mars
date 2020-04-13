@@ -170,18 +170,23 @@ export class BlockGeneratorCalculator {
       }
     }
 
+    const nextRoundDelegates =
+      上一轮轮末块.height === 1
+        ? (上一轮轮末块 as BFChainCore.GenesisBlock).asset.genesisBlock.nextRoundDelegates
+        : (上一轮轮末块 as BFChainCore.RoundLastBlock).asset.roundLastBlock.nextRoundDelegates;
+
     const 取得剩余可用受托人 = async (掉了多少轮: number) => {
       //#region 那一轮可使用的受托人
       const 那一轮可使用的受托人 = new Set<string>();
       if (掉了多少轮 === 0) {
-        for (const d of 上一轮轮末块.remark.nextRoundDelegates) {
+        for (const d of nextRoundDelegates) {
           那一轮可使用的受托人.add(d.address);
         }
       } else {
         const 掉到哪一轮 = 当前轮次 - 掉了多少轮;
         if (掉到哪一轮 <= 1) {
           /// 创世块那一轮,直接使用传世受托人,不用管第一轮到底是谁在打块
-          for (const d of this.config.genesisBlock.remark.nextRoundDelegates) {
+          for (const d of this.config.genesisBlock.asset.genesisBlock.nextRoundDelegates) {
             那一轮可使用的受托人.add(d.address);
           }
         } else {
@@ -200,7 +205,7 @@ export class BlockGeneratorCalculator {
           }
           /// 如果选出来的人不够, 那么使用选举出来的受托人进行候补
           if (那一轮可使用的受托人.size < this.config.blockPerRound) {
-            for (const d of 上一轮轮末块.remark.nextRoundDelegates) {
+            for (const d of nextRoundDelegates) {
               那一轮可使用的受托人.add(d.address);
             }
           }

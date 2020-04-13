@@ -12,8 +12,8 @@ import {
   GiftAssetTransaction,
   GrabAssetModel,
   AccountSignatureModel,
-  TemplateRemark,
 } from "@bfchain/core-model-transaction";
+import { TemplateRemark } from "@bfchain/core-model-common";
 import { JSBIHelper } from "@bfchain/core-helper-bigint";
 import { AsymmetricHelper } from "@bfchain/core-helper-asymmetric";
 import { Injectable, Inject } from "@bfchain/util-dep-inject";
@@ -342,7 +342,7 @@ export class TransactionHelper {
   /**计算交易手续费 */
   calcTransactionFee(
     trs: Transaction,
-    minTransactionFeePerByte = this.config.genesisBlock.remark.minTransactionFeePerByte,
+    minTransactionFeePerByte = this.config.minTransactionFeePerByte,
   ) {
     let byte_num = trs.getBytes().length;
     let cur_fee = trs.fee;

@@ -1,4 +1,4 @@
-import type { Block, GetBlockRemarkJSON } from "@bfchain/core-model-block";
+import type { Block } from "@bfchain/core-model-block";
 import { TransactionInBlock } from "@bfchain/core-model-transaction";
 import type {
   BlockHelper,
@@ -36,10 +36,10 @@ export abstract class BlockFactory<T extends Block> {
   abstract generateBlockCore: GenerateBlockCore<T>;
   abstract replayBlockCore: ReplayBlockCore<T>;
 
-  abstract fromJSON(blockBody: BFChainCore.BlockJSON<GetBlockRemarkJSON<T>>): Promise<T>;
+  abstract fromJSON(blockBody: BFChainCore.BlockJSON<BFChainCore.GetBlockAssetJSON<T>>): Promise<T>;
 
   /**生产区块 */
-  abstract _generateBlock(body: BFChainCore.BlockBody, remark: GetBlockRemarkJSON<T>): T;
+  abstract _generateBlock(body: BFChainCore.BlockBody, asset: BFChainCore.GetBlockAssetJSON<T>): T;
 
   /** transactionInBlockFromJSON*/
   transactionInBlockFromJSON<T extends BFChainCore.TransactionJSON>(
@@ -55,32 +55,38 @@ export abstract class BlockFactory<T extends Block> {
    * 锻造区块
    *
    * @param body
-   * @param remark
+   * @param asset
    * @param transactions
    * @param keypair
+   * @param secondKeypair
    * @param eventEmitter
    * @param config
    */
   async generateBlock(
     body: BFChainCore.BlockBody,
-    remark: GetBlockRemarkJSON<T>,
+    asset: BFChainCore.GetBlockAssetJSON<T>,
     transactions: AsyncIterable<TransactionInBlock>,
     keypair: {
       publicKey: Buffer;
-      secretKey?: Buffer;
+      secretKey: Buffer;
+    },
+    secondKeypair?: {
+      publicKey: Buffer;
+      secretKey: Buffer;
     },
     eventEmitter?: BFChainCore.GenerateBlockEventEmitter,
     config = this.config,
   ) {
     isDevGenerateBlock && info("begin generateBlock");
-    await this.generateBlockCore.generateBlockBefore(body, remark, transactions, eventEmitter);
+    await this.generateBlockCore.generateBlockBefore(body, asset, transactions, eventEmitter);
 
-    const block = this._generateBlock(body, remark);
+    const block = this._generateBlock(body, asset);
 
     await this.generateBlockCore.generateBlockAfter(
       block,
       transactions,
       keypair,
+      secondKeypair,
       eventEmitter,
       config,
     );
@@ -93,10 +99,9 @@ export abstract class BlockFactory<T extends Block> {
    * 重放区块
    *
    * @param block
-   * @param remark
    * @param transactions
-   * @param publicKey
    * @param eventEmitter
+   * @param options
    * @param config
    */
   async replayBlock(
@@ -174,10 +179,10 @@ export abstract class BlockFactory<T extends Block> {
    */
   async verifyBlockBody(
     body: BFChainCore.BlockBody,
-    remark: GetBlockRemarkJSON<T>,
+    blockAsset: BFChainCore.GetBlockAssetJSON<T>,
     config = this.config,
   ) {
-    this.commonBlockVerify.verifyBlockBody(body, remark);
+    this.commonBlockVerify.verifyBlockBody(body, blockAsset);
   }
 
   /**

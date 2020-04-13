@@ -476,12 +476,12 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "registerToDelegate",
       async ({ applyInfo }, next) => {
-        if (this.configHelper.maxDelegateTxsPerRound === 0) {
-          throw new ConsensusException(REJECT_REGISTER_DELEGATE, {
-            reason: `every round can only deal ${this.configHelper.maxDelegateTxsPerRound} delegate transaction, reject receive delegate transaction`,
-            ...Function_Exception_Detail,
-          });
-        }
+        // if (this.configHelper.maxDelegateTxsPerRound === 0) {
+        //   throw new ConsensusException(REJECT_REGISTER_DELEGATE, {
+        //     reason: `every round can only deal ${this.configHelper.maxDelegateTxsPerRound} delegate transaction, reject receive delegate transaction`,
+        //     ...Function_Exception_Detail,
+        //   });
+        // }
 
         const { address } = applyInfo;
         accountsInfo[address] = accountsInfo[address] || {};
@@ -1051,15 +1051,15 @@ export class EventLogicVerifier {
       async ({ applyInfo }, next) => {
         const { sourceChainMagic, name } = applyInfo;
 
-        const names = name.split(".");
-        // 顶级域名不能删除
-        if (names.length === 2) {
-          throw new ConsensusException(CAN_NOT_DELETE_LOCATION_NAME, {
-            locationName: name,
-            reason: "Top level location name can not be delete",
-            ...Function_Exception_Detail,
-          });
-        }
+        // const names = name.split(".");
+        // // 顶级域名不能删除
+        // if (names.length === 2) {
+        //   throw new ConsensusException(CAN_NOT_DELETE_LOCATION_NAME, {
+        //     locationName: name,
+        //     reason: "Top level location name can not be delete",
+        //     ...Function_Exception_Detail,
+        //   });
+        // }
 
         // 不存在的域名不能删除
         const memLocation = (await accountGetterHelper.getLocationName(
@@ -1080,6 +1080,16 @@ export class EventLogicVerifier {
           throw new ConsensusException(CAN_NOT_DELETE_LOCATION_NAME, {
             locationName: name,
             reason: "Frozen location name can not be delete",
+            ...Function_Exception_Detail,
+          });
+        }
+
+        // 发起账户地址和接收账户地址必须是同一个
+        if (transaction.senderId !== transaction.recipientId) {
+          throw new ConsensusException(SHOULD_BE, {
+            to_compare_prop: `recipientId`,
+            to_target: "transaction",
+            be_compare_prop: transaction.senderId,
             ...Function_Exception_Detail,
           });
         }

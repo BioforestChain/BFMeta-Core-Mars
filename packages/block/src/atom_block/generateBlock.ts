@@ -1,4 +1,4 @@
-import type { Block, GetBlockRemarkJSON } from "@bfchain/core-model-block";
+import type { Block } from "@bfchain/core-model-block";
 import { CommonBlockVerify } from "./commonBlockVerify";
 import { BlockGeneratorCalculator } from "./blockGeneratorCalculator";
 import {
@@ -51,13 +51,13 @@ export class GenerateBlockCore<T extends Block> {
    * 锻造区块前半部分
    *
    * @param body
-   * @param remark
+   * @param asset
    * @param transactions
    * @param eventEmitter
    */
   async generateBlockBefore(
     body: BFChainCore.BlockBody,
-    remark: GetBlockRemarkJSON<T>,
+    asset: BFChainCore.GetBlockAssetJSON<T>,
     transactions: AsyncIterable<TransactionInBlock>,
     eventEmitter?: BFChainCore.GenerateBlockEventEmitter,
   ) {
@@ -68,9 +68,9 @@ export class GenerateBlockCore<T extends Block> {
         ...Function_Exception_Detail,
       });
     }
-    if (!remark) {
+    if (!asset) {
       throw new ArgumentIllegalException(PARAM_LOST, {
-        param: "remark",
+        param: "asset",
         ...Function_Exception_Detail,
       });
     }
@@ -143,7 +143,11 @@ export class GenerateBlockCore<T extends Block> {
     transactions: AsyncIterable<TransactionInBlock>,
     keypair: {
       publicKey: Buffer;
-      secretKey?: Buffer;
+      secretKey: Buffer;
+    },
+    secondKeypair?: {
+      publicKey: Buffer;
+      secretKey: Buffer;
     },
     eventEmitter?: BFChainCore.GenerateBlockEventEmitter,
     config = this.config,
@@ -153,7 +157,7 @@ export class GenerateBlockCore<T extends Block> {
     // 绑定magic
     block.magic = config.magic;
     // 绑定交易相关的信息
-    await this.insertTransactions(block, transactions, keypair, eventEmitter);
+    await this.insertTransactions(block, transactions, keypair, secondKeypair, eventEmitter);
 
     isDevGenerateBlock && log("before signatureBlock");
     eventEmitter &&
@@ -168,13 +172,18 @@ export class GenerateBlockCore<T extends Block> {
     block.blockSize = this.commonBlockVerify.calcBlockSize(block);
 
     // 进行区块签名
-    if (!keypair.secretKey) {
-      throw new ArgumentIllegalException("secretKey is null when generateBlock");
-    }
     block.signatureBuffer = await this.asymmetricHelper.detachedSign(
-      block.getBytes(true, true),
+      block.getBytes(true, true, true),
       keypair.secretKey,
     );
+
+    // 进行区块二次签名
+    if (secondKeypair) {
+      block.signSignatureBuffer = await this.asymmetricHelper.detachedSign(
+        block.getBytes(false, true, true),
+        secondKeypair.secretKey,
+      );
+    }
 
     isDevGenerateBlock && log("before generatedBlock");
     eventEmitter &&
@@ -199,13 +208,17 @@ export class GenerateBlockCore<T extends Block> {
     trsGenerator: AsyncIterable<TransactionInBlock>,
     keypair: {
       publicKey: Buffer;
-      secretKey?: Buffer;
+      secretKey: Buffer;
+    },
+    secondKeypair?: {
+      publicKey: Buffer;
+      secretKey: Buffer;
     },
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter = new QueneEventEmitter(),
   ) {
     const abortForbiddenTransaction = this.transactionCore.abortForbiddenTransaction;
     const Function_Exception_Detail = { function: "insertTransactions" };
-    const MAX_TRANSACTION_SIZE = this.config.genesisBlock.remark.maxTransactionSize;
+    const MAX_TRANSACTION_SIZE = this.config.genesisBlock.asset.genesisBlock.maxTransactionSize;
     const { height, generatorPublicKey, statisticInfo: blockStatisticsInfo } = block;
     const { powOfWorkExemptionBlocks, maxPayloadLength } = this.config;
     /**所有交易的sha256hash */
@@ -314,29 +327,16 @@ export class GenerateBlockCore<T extends Block> {
               });
             }
           }
-          // 对TIB进行验签或者签名
-          if (tranItem.signatureBuffer.length > 0) {
-            /// 如果已经有签名信息，那么进行验证
-            if (
-              !(await this.asymmetricHelper.detachedVeriy(
-                tranItem.getBytes(true),
-                tranItem.signatureBuffer,
-                keypair.publicKey,
-              ))
-            ) {
-              throw new ArgumentFormatException(
-                `Invalid transactionInBlock: %O`,
-                tranItem.toJSON(),
-              );
-            }
-          } else {
-            // 否则尝试手动签名
-            if (!keypair.secretKey) {
-              throw new ArgumentIllegalException("secretKey is null when insertTransactions");
-            }
-            tranItem.signatureBuffer = await this.asymmetricHelper.detachedSign(
-              tranItem.getBytes(true),
-              keypair.secretKey,
+          // 对 TIB 进行签名
+          tranItem.signatureBuffer = await this.asymmetricHelper.detachedSign(
+            tranItem.getBytes(true, true),
+            keypair.secretKey,
+          );
+          // 对 TIB 进行安全签名
+          if (secondKeypair) {
+            tranItem.signSignatureBuffer = await this.asymmetricHelper.detachedSign(
+              tranItem.getBytes(false, true),
+              secondKeypair.secretKey,
             );
           }
           Object.freeze(tranItem);
@@ -377,7 +377,7 @@ export class GenerateBlockCore<T extends Block> {
         });
       }
       block.numberOfTransactions = numberOfTransactions;
-      block.remark.blockParticipation = this.blockHelper.calcBlockParticipation({
+      block.blockParticipation = this.blockHelper.calcBlockParticipation({
         totalAccount: statisticsInfo.totalAccount,
         totalChainAsset: statisticsInfo.totalChainAsset,
         totalFee: statisticsInfo.totalFee,
@@ -385,7 +385,7 @@ export class GenerateBlockCore<T extends Block> {
       });
       // 获取打块账户获得的权益
       eventEmitter.blockGeneratorEquityGetter &&
-        (block.remark.generatorEquity = await eventEmitter.blockGeneratorEquityGetter(
+        (block.generatorEquity = await eventEmitter.blockGeneratorEquityGetter(
           block.generatorPublicKey,
         ));
 

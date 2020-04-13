@@ -79,6 +79,13 @@ export class RejectVoteTransactionFactory extends TransactionFactory<RejectVoteT
         ...Function_Exception_Detail,
       });
     }
+
+    if (body.storage) {
+      throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+        prop: "storage",
+        ...Function_Exception_Detail,
+      });
+    }
   }
 
   /**

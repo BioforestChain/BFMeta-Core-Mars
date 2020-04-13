@@ -20,10 +20,10 @@
   ],
   "files": [
     "src/@types.ts",
-    "src/commonBlockRemark.ts",
-    "src/genesisBlockRemark.ts",
+    "src/commonBlock.ts",
+    "src/genesisBlock.ts",
     "src/index.ts",
-    "src/roundDelegateRemark.ts",
-    "src/roundLastBlockRemark.ts"
+    "src/roundDelegate.ts",
+    "src/roundLastBlock.ts"
   ]
 }

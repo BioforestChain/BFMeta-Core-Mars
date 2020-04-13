@@ -5,6 +5,7 @@ import {
   AccountModel,
   getBfchainCoreEntry,
   getGenesisAccount,
+  getRandomDAppid,
 } from "../include";
 
 const bfchainCore = getBfchainCoreEntry();
@@ -16,6 +17,7 @@ async function getDappTransaction(sender: AccountModel, dapp: BFChainCore.DAppJS
     version: 1,
     type: bfchainCore.transactionHelper.DAPP, // 交易类型
     senderId: sender.address, // 发起者地址
+    recipientId: "cP2kxhREzSCNE36mqUrQCMyesw4LKEJ67M",
     senderPublicKey: sender.publicKey, // 发起者公钥
     senderSecondPublicKey: "", // 发起者二次公钥
     recipientId: genesisAddress,
@@ -24,7 +26,7 @@ async function getDappTransaction(sender: AccountModel, dapp: BFChainCore.DAppJS
     timestamp: 770880, // 生成交易时间戳
     fee: "78622", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
-    lns: bfchainCore.config.genesisBlock.remark.genesisNodeAddress,
+    lns: bfchainCore.config.genesisBlock.asset.genesisBlock.genesisNodeAddress,
     sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic
@@ -32,7 +34,7 @@ async function getDappTransaction(sender: AccountModel, dapp: BFChainCore.DAppJS
     effectiveBlockHeight: 10100,
     storage: {
       key: "dappid",
-      value: "CAPCOM123456789QWQQAQ",
+      value: dapp.dappid,
     },
   };
   let secondKeypair;
@@ -60,7 +62,7 @@ async function getDappTransaction(sender: AccountModel, dapp: BFChainCore.DAppJS
 (async () => {
   const xx = getSenderWithSecondSecret();
   await getDappTransaction(xx, {
-    dappid: "CAPCOM123456789QWQQAQ",
+    dappid: getRandomDAppid(),
     sourceChainName: "bfchain",
     sourceChainMagic: bfchainCore.config.magic,
     type: DAPP_TYPE.PAID_APP,
@@ -73,7 +75,7 @@ async function getDappTransaction(sender: AccountModel, dapp: BFChainCore.DAppJS
   });
   const xxx = getSenderWithoutSecondSecret();
   await getDappTransaction(xxx, {
-    dappid: "CAPCOM123456789QWQQAQ",
+    dappid: getRandomDAppid(),
     sourceChainName: "bfchain",
     sourceChainMagic: bfchainCore.config.magic,
     type: DAPP_TYPE.FREE_APP,

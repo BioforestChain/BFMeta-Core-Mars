@@ -10,6 +10,7 @@ import {
   getGenesisAccount,
   AccountModel,
   getBfchainCoreEntry,
+  getRandomDAppid,
 } from "../include";
 
 const bfchainCore = getBfchainCoreEntry();
@@ -39,8 +40,8 @@ async function getTransferAssetTransaction(sender: AccountModel) {
     timestamp: 770880, // 生成交易时间戳
     fee: "90", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
-    dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
-    lns: bfchainCore.config.genesisBlock.remark.genesisNodeAddress,
+    dappid: getRandomDAppid(), // 交易所属的 dappid
+    lns: bfchainCore.config.genesisBlock.asset.genesisBlock.genesisNodeAddress,
     sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic
@@ -71,9 +72,9 @@ async function getTransferAssetTransaction(sender: AccountModel) {
     data,
     {
       transferAsset: {
-        sourceChainName: "srcchn",
-        sourceChainMagic: "THEM4G1KKEY",
-        assetType: "BFT",
+        sourceChainName: bfchainCore.config.chainName,
+        sourceChainMagic: bfchainCore.config.magic,
+        assetType: bfchainCore.config.assetType,
         amount: "1000",
       },
     },

@@ -16,7 +16,6 @@ import {
   SHOULD_NOT_START_WITH_OR_END_WITH,
   SHOULD_BE,
   NOT_MATCH,
-  SHOULD_NOT_EXIST,
 } from "@bfchain/core-util-exception";
 import { Injectable, TaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(

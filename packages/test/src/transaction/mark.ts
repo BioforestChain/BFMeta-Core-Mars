@@ -13,16 +13,19 @@ import {
   getRecipientWithSecondSecret,
   getRecipientWithoutSecondSecret,
   getBfchainCoreEntry,
+  getRandomDAppid,
 } from "../include";
 
 const bfchainCore = getBfchainCoreEntry();
 
 async function getDappTransaction(sender: AccountModel) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
+  const dappid = getRandomDAppid();
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.DAPP, // 交易类型
     senderId: sender.address, // 发起者地址
+    recipientId: sender.address,
     senderPublicKey: sender.publicKey, // 发起者公钥
     senderSecondPublicKey: "", // 发起者二次公钥
     rangeType: RANGE_TYPE.EMPTY,
@@ -30,8 +33,8 @@ async function getDappTransaction(sender: AccountModel) {
     timestamp: 770880, // 生成交易时间戳
     fee: "78622", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
-    dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
-    lns: bfchainCore.config.genesisBlock.remark.genesisNodeAddress,
+    dappid, // 交易所属的 dappid
+    lns: bfchainCore.config.genesisBlock.asset.genesisBlock.genesisNodeAddress,
     sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic
@@ -39,7 +42,7 @@ async function getDappTransaction(sender: AccountModel) {
     effectiveBlockHeight: 10100,
     storage: {
       key: "dappid",
-      value: "CAPCOM123456789QWQQAQ",
+      value: dappid,
     },
   };
   let secondKeypair;
@@ -58,7 +61,7 @@ async function getDappTransaction(sender: AccountModel) {
     data,
     {
       dapp: {
-        dappid: "CAPCOM123456789QWQQAQ",
+        dappid,
         sourceChainName: "bfchain",
         sourceChainMagic: bfchainCore.config.magic,
         type: DAPP_TYPE.FREE_APP,
@@ -77,6 +80,7 @@ async function getMarkTransaction(
   possessor: AccountModel,
 ) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
+  const dapp = dappTrs.asset.dapp;
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
     type: bfchainCore.transactionHelper.DAPP, // 交易类型
@@ -89,8 +93,8 @@ async function getMarkTransaction(
     timestamp: 770880, // 生成交易时间戳
     fee: "78622", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
-    dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
-    lns: bfchainCore.config.genesisBlock.remark.genesisNodeAddress,
+    dappid: dapp.dappid, // 交易所属的 dappid
+    lns: bfchainCore.config.genesisBlock.asset.genesisBlock.genesisNodeAddress,
     sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic
@@ -98,7 +102,7 @@ async function getMarkTransaction(
     effectiveBlockHeight: 10100,
     storage: {
       key: "dappid",
-      value: "CAPCOM123456789QWQQAQ",
+      value: dapp.dappid,
     },
   };
   let secondKeypair;
@@ -117,10 +121,9 @@ async function getMarkTransaction(
     data,
     {
       mark: {
-        markPossessor: possessor.address,
         content: "xxxxxxxxxxxxyyyyyyyyyyyyyyyyy",
         action: "put",
-        dapp: dappTrs.asset.dapp,
+        dapp,
       },
     },
     keypair,

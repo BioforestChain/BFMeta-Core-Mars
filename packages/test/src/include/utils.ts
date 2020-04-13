@@ -19,10 +19,10 @@ export const config = {
     .delegates as string[],
 };
 
-export const mainChainRemarkData: BFChainCore.GenesisBlockRemarkJSON = {
+export const mainChainAssetData: BFChainCore.GenesisBlockJSON = {
   chainName: "bfchain",
   assetType: "BFT",
-  magic: "5F720C81E82CFC99",
+  magic: "E00EI",
   bnid: BNID_TYPE.TESTNET,
   beginEpochTime: new Date(new Date("2020-01-01").setHours(0, 0, 0, 0)).getTime(),
   genesisNodeAddress: "ibt.bfchain",
@@ -122,10 +122,6 @@ export const mainChainRemarkData: BFChainCore.GenesisBlockRemarkJSON = {
   maxTxCount: 0,
   nextRoundDelegates: [] as BFChainCore.NextRoundDelegateJSON[],
   newDelegates: [] as string[],
-  debug: "",
-  info: "BFChain is the future.",
-  blockParticipation: "0",
-  generatorEquity: "0",
   participationTotalChainAsset: 4,
   participationNumberOfTransaction: 3,
   participationNumberOfAccount: 2,
@@ -138,10 +134,10 @@ export const mainChainRemarkData: BFChainCore.GenesisBlockRemarkJSON = {
   rate: "0",
 };
 
-export const registerchainRemarkData: BFChainCore.GenesisBlockRemarkJSON = {
+export const registerchainAssetData: BFChainCore.GenesisBlockJSON = {
   chainName: "qawaq",
   assetType: "QAWAQ",
-  magic: "QWQQAQQWQQAQQWQ",
+  magic: "NMQX0",
   bnid: BNID_TYPE.TESTNET,
   beginEpochTime: new Date(new Date("2020-01-01").setHours(0, 0, 0, 0)).getTime(),
   genesisNodeAddress: "qawaq.qawaq",
@@ -241,10 +237,6 @@ export const registerchainRemarkData: BFChainCore.GenesisBlockRemarkJSON = {
   maxTxCount: 0,
   nextRoundDelegates: [] as BFChainCore.NextRoundDelegateJSON[],
   newDelegates: [] as string[],
-  debug: "",
-  info: "冲鸭_祖贤说这个是remark",
-  blockParticipation: "0",
-  generatorEquity: "0",
   participationTotalChainAsset: 4,
   participationNumberOfTransaction: 3,
   participationNumberOfAccount: 2,

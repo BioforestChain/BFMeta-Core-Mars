@@ -21,7 +21,6 @@ import {
 } from "@bfchain/core-util-exception";
 import { ToExchangeAssetTransactionFactory } from "./toExchangeAsset";
 import { Injectable, TaskList } from "@bfchain/util";
-import { RANGE_TYPE } from "@bfchain/core-model-constants";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
   "BeExchangeAssetTransactionFactory",
@@ -185,17 +184,33 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<
 
     const { toExchangeNumber, beExchangeNumber } = beExchangeAsset;
 
-    this.checkAssetAmount(
-      toExchangeNumber,
-      "toExchangeNumber",
-      BeExchangeAssetAsset_Exception_Detail,
-    );
+    if (!toExchangeNumber) {
+      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        prop: "toExchangeNumber",
+        ...BeExchangeAssetAsset_Exception_Detail,
+      });
+    }
+    if (!baseHelper.isValidAssetNumber(toExchangeNumber)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "toExchangeNumber",
+        type: "asset number",
+        ...BeExchangeAssetAsset_Exception_Detail,
+      });
+    }
 
-    this.checkAssetAmount(
-      beExchangeNumber,
-      "beExchangeNumber",
-      BeExchangeAssetAsset_Exception_Detail,
-    );
+    if (!beExchangeNumber) {
+      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        prop: "beExchangeNumber",
+        ...BeExchangeAssetAsset_Exception_Detail,
+      });
+    }
+    if (!baseHelper.isValidAssetNumber(beExchangeNumber)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "beExchangeNumber",
+        type: "asset number",
+        ...BeExchangeAssetAsset_Exception_Detail,
+      });
+    }
 
     const { exchangeAsset } = beExchangeAsset;
 

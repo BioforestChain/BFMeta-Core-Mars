@@ -13,6 +13,7 @@ declare namespace BFChainCore {
     numberOfSenderTransactions: number;
     transactionAssetChanges: TransactionAssetChangeJSON[];
     signature: string;
+    signSignature?: string;
   }
   interface TransactionAssetChangeJSON {
     accountType: number;

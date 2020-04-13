@@ -1,9 +1,9 @@
 {
   "name": "@types/bfchain__core-account",
   "types": "index.d.ts",
-  "version": "5.17.54",
+  "version": "5.13.3-dev.0",
   "dependencies": {
-    "@types/bfchain__core-helper-account-base": "5.17.54",
-    "@types/bfchain__core-typings": "5.17.54"
+    "@types/bfchain__core-helper-account-base": "5.13.3-dev.0",
+    "@types/bfchain__core-typings": "5.13.3-dev.0"
   }
 }

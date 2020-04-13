@@ -45,11 +45,6 @@ export class DelegateTransactionFactory extends TransactionFactory<DelegateTrans
    * 交易的 rangeType 必须是 empty
    * 不能携带交易的接收者账户
    * 交易的来源链和去往链的网络标识符必须是本链的网络标识符
-   * 必须携带查询用的索引存储
-   * key 值必须是 "username" value 值必须是设定的值
-   * asset 是完整的 delegate 信息
-   * 需要携带合法的账户名
-   * 需要携带合法的账户公钥，且与发起账户公钥相等
    *
    * @param body
    * @param delegateAsset
@@ -67,8 +62,6 @@ export class DelegateTransactionFactory extends TransactionFactory<DelegateTrans
     } as const;
 
     this.emptyRangeType(body, Function_Exception_Detail);
-
-    const { baseHelper } = this;
 
     if (body.recipientId) {
       throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
@@ -95,96 +88,10 @@ export class DelegateTransactionFactory extends TransactionFactory<DelegateTrans
       });
     }
 
-    if (!body.storage) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+    if (body.storage) {
+      throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
         prop: "storage",
         ...Function_Exception_Detail,
-      });
-    }
-
-    const storage = body.storage;
-    if (storage.key !== "username") {
-      throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: `storage.key ${storage.key}`,
-        to_target: "storage",
-        be_compare_prop: "username",
-        ...Function_Exception_Detail,
-      });
-    }
-
-    const delegate = delegateAsset.delegate;
-
-    if (!delegate) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
-        param: "delegate",
-        function: "verifyTransactionBody",
-      });
-    }
-
-    const DelegateAsset_Exception_Detail = {
-      ...Function_Exception_Detail,
-      target: "delegateAsset",
-    } as const;
-
-    const username = delegate.username;
-    if (!username) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "username",
-        ...DelegateAsset_Exception_Detail,
-      });
-    }
-
-    if (body.applyBlockHeight === 1) {
-      if (!baseHelper.isValidGenesisUsername(username)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: `username ${username}`,
-          type: "genesis username",
-          ...DelegateAsset_Exception_Detail,
-        });
-      }
-    } else {
-      if (!baseHelper.isValidUsername(username)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: `username ${username}`,
-          type: "username",
-          ...DelegateAsset_Exception_Detail,
-        });
-      }
-    }
-
-    if (storage.value !== username) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: `storage.value ${storage.value}`,
-        be_compare_prop: `username ${username}`,
-        to_target: "storage",
-        be_target: "delegate",
-        ...Function_Exception_Detail,
-      });
-    }
-
-    const publicKey = delegate.publicKey;
-    if (!publicKey) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "publicKey",
-        ...DelegateAsset_Exception_Detail,
-      });
-    }
-
-    if (!baseHelper.isValidPublicKey(publicKey)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `publicKey ${publicKey}`,
-        type: "account publicKey",
-        ...DelegateAsset_Exception_Detail,
-      });
-    }
-
-    if (publicKey !== body.senderPublicKey) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: `publicKey ${publicKey}`,
-        be_compare_prop: `senderPublicKey ${body.senderPublicKey}`,
-        to_target: "delegate",
-        be_target: "body",
-        ...DelegateAsset_Exception_Detail,
       });
     }
   }

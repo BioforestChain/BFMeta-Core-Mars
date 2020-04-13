@@ -25,8 +25,7 @@ import {
   LOCATION_NAME_OPERATION_TYPE,
   getRandomMagic,
   ed2curveHelper,
-  mainChainRemarkData,
-  getFullBfchainCoreEntry,
+  mainChainAssetData,
   DelegateTransaction,
   LocationNameTransaction,
 } from "../include";
@@ -50,7 +49,6 @@ const argv = optimist
 console.log(argv);
 const blockPerRound = argv.b;
 const forgeInterval = argv.f;
-const bfchainCore = getFullBfchainCoreEntry(blockPerRound, forgeInterval);
 const filename = `genesisBlock-${blockPerRound}b-${forgeInterval}s`;
 const out = argv.o;
 const outPath = argv.p;
@@ -70,20 +68,21 @@ const defaultGenesisBlockPath =
 const config = {
   url: "http://localhost:19002",
   genesisSecret: require(defaultSecretPath).genesis as string,
+  genesisSecondSecret: "genesisSecondSecret",
   delegatesSecret: require(defaultSecretPath).delegates as string[],
 };
-mainChainRemarkData.blockPerRound = blockPerRound;
-mainChainRemarkData.powOfWorkExemptionBlocks = blockPerRound;
-mainChainRemarkData.delegates = blockPerRound * 2;
-mainChainRemarkData.forgeInterval = forgeInterval;
+mainChainAssetData.blockPerRound = blockPerRound;
+mainChainAssetData.powOfWorkExemptionBlocks = blockPerRound;
+mainChainAssetData.delegates = blockPerRound * 2;
+mainChainAssetData.forgeInterval = forgeInterval;
 
 if (randomMagic) {
-  mainChainRemarkData.magic = getRandomMagic();
+  mainChainAssetData.magic = getRandomMagic();
 }
 
 const core = BFChainCoreFactory({
   config: new ConfigHelper(
-    GenesisBlock.fromObject({ remark: mainChainRemarkData }),
+    GenesisBlock.fromObject({ asset: { genesisBlock: mainChainAssetData } }),
     "genesisBlock",
   ),
   Buffer: Buffer as any,
@@ -129,7 +128,7 @@ async function getUsernameTransaction(sender: DelegateInfo) {
       ))) ||
     undefined;
   const pow =
-    1 > bfchainCore.config.powOfWorkExemptionBlocks
+    1 > core.config.powOfWorkExemptionBlocks
       ? getPOWInfo<UsernameTransaction>(sender.address)
       : undefined;
   const createTrs = (fee = "AUTO") => {
@@ -145,8 +144,8 @@ async function getUsernameTransaction(sender: DelegateInfo) {
         range: [],
         timestamp: 0, // 生成交易时间戳
         fee: fee === "AUTO" ? "1" : fee, // 交易手续费
-        fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
-        toMagic: bfchainCore.config.magic, // 交易去往链的 magic
+        fromMagic: core.config.magic, // 交易来源链的 magic
+        toMagic: core.config.magic, // 交易去往链的 magic
         applyBlockHeight: 1, // 交易发起高度
         effectiveBlockHeight: 1,
         remark: {},
@@ -158,7 +157,6 @@ async function getUsernameTransaction(sender: DelegateInfo) {
       {
         username: {
           alias: sender.username,
-          publicKey: sender.publicKey,
         },
       },
       keypair,
@@ -169,7 +167,7 @@ async function getUsernameTransaction(sender: DelegateInfo) {
   };
   let trs = await createTrs();
   if (pow) {
-    trs = await bfchainCore.transaction.transactionPowCalculator<UsernameTransaction>(
+    trs = await core.transaction.transactionPowCalculator<UsernameTransaction>(
       trs,
       pow,
       keypair,
@@ -177,7 +175,7 @@ async function getUsernameTransaction(sender: DelegateInfo) {
     );
   }
   trs = await createTrs(
-    core.transactionHelper.calcTransactionFee(trs, bfchainCore.config.minTransactionFeePerByte),
+    core.transactionHelper.calcTransactionFee(trs, core.config.minTransactionFeePerByte),
   );
   return {
     index: getTxs(trs.senderId),
@@ -195,7 +193,7 @@ async function getDelegateTransaction(sender: DelegateInfo) {
       ))) ||
     undefined;
   const pow =
-    1 > bfchainCore.config.powOfWorkExemptionBlocks
+    1 > core.config.powOfWorkExemptionBlocks
       ? getPOWInfo<DelegateTransaction>(sender.address)
       : undefined;
   const createTrs = (fee = "AUTO") => {
@@ -211,22 +209,13 @@ async function getDelegateTransaction(sender: DelegateInfo) {
         range: [],
         timestamp: 0, // 生成交易时间戳
         fee: fee === "AUTO" ? "1" : fee, // 交易手续费
-        fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
-        toMagic: bfchainCore.config.magic, // 交易去往链的 magic
+        fromMagic: core.config.magic, // 交易来源链的 magic
+        toMagic: core.config.magic, // 交易去往链的 magic
         applyBlockHeight: 1, // 交易发起高度
         effectiveBlockHeight: 1,
         remark: {},
-        storage: {
-          key: "username",
-          value: sender.username,
-        },
       },
-      {
-        delegate: {
-          username: sender.username,
-          publicKey: sender.publicKey,
-        },
-      },
+      {},
       keypair,
       secondKeypair,
       undefined,
@@ -235,10 +224,10 @@ async function getDelegateTransaction(sender: DelegateInfo) {
   };
   let trs = await createTrs();
   if (pow) {
-    trs = await bfchainCore.transaction.transactionPowCalculator(trs, pow, keypair, secondKeypair);
+    trs = await core.transaction.transactionPowCalculator(trs, pow, keypair, secondKeypair);
   }
   trs = await createTrs(
-    core.transactionHelper.calcTransactionFee(trs, bfchainCore.config.minTransactionFeePerByte),
+    core.transactionHelper.calcTransactionFee(trs, core.config.minTransactionFeePerByte),
   );
   return {
     index: getTxs(trs.senderId),
@@ -256,7 +245,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
       ))) ||
     undefined;
   const pow =
-    1 > bfchainCore.config.powOfWorkExemptionBlocks
+    1 > core.config.powOfWorkExemptionBlocks
       ? getPOWInfo<AcceptVoteTransaction>(sender.address)
       : undefined;
   const createTrs = (fee = "AUTO") => {
@@ -273,8 +262,8 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
         timestamp: 0, // 生成交易时间戳
         fee: fee === "AUTO" ? "1" : fee, // 交易手续费
         remark: {}, // 交易备注，任意信息
-        fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
-        toMagic: bfchainCore.config.magic, // 交易去往链的 magic
+        fromMagic: core.config.magic, // 交易来源链的 magic
+        toMagic: core.config.magic, // 交易去往链的 magic
         applyBlockHeight: 1, // 交易发起高度
         effectiveBlockHeight: 1,
       },
@@ -287,10 +276,10 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
   };
   let trs = await createTrs();
   if (pow) {
-    trs = await bfchainCore.transaction.transactionPowCalculator(trs, pow, keypair, secondKeypair);
+    trs = await core.transaction.transactionPowCalculator(trs, pow, keypair, secondKeypair);
   }
   trs = await createTrs(
-    core.transactionHelper.calcTransactionFee(trs, bfchainCore.config.minTransactionFeePerByte),
+    core.transactionHelper.calcTransactionFee(trs, core.config.minTransactionFeePerByte),
   );
   return {
     index: getTxs(trs.senderId),
@@ -302,15 +291,22 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
   const genesisAccountKeypair = await core.accountBaseHelper.createSecretKeypair(
     config.genesisSecret,
   );
+  const genesisAccountSecondKeypair = await core.accountBaseHelper.createSecondSecretKeypair(
+    config.genesisSecret,
+    config.genesisSecondSecret,
+  );
   const genesisAccountInfo = {
     address: await core.accountBaseHelper.getAddressFromPublicKey(genesisAccountKeypair.publicKey),
     publicKey: genesisAccountKeypair.publicKey.toString("hex"),
     publicKeyBuffer: genesisAccountKeypair.publicKey,
+
+    secondPublicKey: genesisAccountSecondKeypair.publicKey.toString("hex"),
+    secondPublicKeyBuffer: genesisAccountSecondKeypair.publicKey,
   };
 
   async function getTransferAssetTransaction(recipient: DelegateInfo, amount: string) {
     const pow =
-      1 > bfchainCore.config.powOfWorkExemptionBlocks
+      1 > core.config.powOfWorkExemptionBlocks
         ? getPOWInfo<TransferAssetTransaction>(genesisAccountInfo.address)
         : undefined;
     const createTrs = (fee = "AUTO") => {
@@ -326,8 +322,8 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
           range: [], // 接收范围
           timestamp: 0, // 生成交易时间戳
           fee: fee === "AUTO" ? "1" : fee, // 交易手续费
-          fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
-          toMagic: bfchainCore.config.magic, // 交易去往链的 magic
+          fromMagic: core.config.magic, // 交易来源链的 magic
+          toMagic: core.config.magic, // 交易去往链的 magic
           applyBlockHeight: 1, // 交易发起高度
           effectiveBlockHeight: 1,
           remark: {},
@@ -352,7 +348,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
     };
     let trs = await createTrs();
     if (pow) {
-      trs = await bfchainCore.transaction.transactionPowCalculator(
+      trs = await core.transaction.transactionPowCalculator(
         trs,
         pow,
         genesisAccountKeypair,
@@ -360,7 +356,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
       );
     }
     trs = await createTrs(
-      core.transactionHelper.calcTransactionFee(trs, bfchainCore.config.minTransactionFeePerByte),
+      core.transactionHelper.calcTransactionFee(trs, core.config.minTransactionFeePerByte),
     );
     return {
       index: getTxs(trs.senderId),
@@ -370,7 +366,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
 
   async function getLocationNameTransaction() {
     const pow =
-      1 > bfchainCore.config.powOfWorkExemptionBlocks
+      1 > core.config.powOfWorkExemptionBlocks
         ? getPOWInfo<LocationNameTransaction>(genesisAccountInfo.address)
         : undefined;
     const createTrs = (fee = "AUTO") => {
@@ -386,21 +382,21 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
           range: [], // 接收范围
           timestamp: 0, // 生成交易时间戳
           fee: fee === "AUTO" ? "1" : fee, // 交易手续费
-          fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
-          toMagic: bfchainCore.config.magic, // 交易去往链的 magic
+          fromMagic: core.config.magic, // 交易来源链的 magic
+          toMagic: core.config.magic, // 交易去往链的 magic
           applyBlockHeight: 1, // 交易发起高度
           effectiveBlockHeight: 1,
           remark: {},
           storage: {
             key: "name",
-            value: core.config.genesisBlock.remark.genesisNodeAddress,
+            value: core.config.genesisNodeAddress,
           },
         },
         {
           locationName: {
             sourceChainName: core.config.chainName,
             sourceChainMagic: core.config.magic,
-            name: core.config.genesisBlock.remark.genesisNodeAddress,
+            name: core.config.genesisNodeAddress,
             operationType: LOCATION_NAME_OPERATION_TYPE.REGISTRATION,
           },
         },
@@ -412,7 +408,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
     };
     let trs = await createTrs();
     if (pow) {
-      trs = await bfchainCore.transaction.transactionPowCalculator(
+      trs = await core.transaction.transactionPowCalculator(
         trs,
         pow,
         genesisAccountKeypair,
@@ -420,7 +416,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
       );
     }
     trs = await createTrs(
-      core.transactionHelper.calcTransactionFee(trs, bfchainCore.config.minTransactionFeePerByte),
+      core.transactionHelper.calcTransactionFee(trs, core.config.minTransactionFeePerByte),
     );
     return {
       index: getTxs(trs.senderId),
@@ -440,8 +436,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
           sender.secondSecret,
         ))) ||
       undefined;
-    const pow =
-      0 > bfchainCore.config.powOfWorkExemptionBlocks ? getPOWInfo(sender.address) : undefined;
+    const pow = 0 > core.config.powOfWorkExemptionBlocks ? getPOWInfo(sender.address) : undefined;
     const createTrs = (fee = "AUTO") => {
       return core.transaction.createTransaction(
         SetLnsRecordValueTransactionFactory,
@@ -454,21 +449,21 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
           range: [], // 接收范围
           timestamp: 0, // 生成交易时间戳
           fee: fee === "AUTO" ? "1" : fee, // 交易手续费
-          fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
-          toMagic: bfchainCore.config.magic, // 交易去往链的 magic
+          fromMagic: core.config.magic, // 交易来源链的 magic
+          toMagic: core.config.magic, // 交易去往链的 magic
           applyBlockHeight: 1, // 交易发起高度
           effectiveBlockHeight: 1,
           remark: {},
           storage: {
             key: "name",
-            value: core.config.genesisBlock.remark.genesisNodeAddress,
+            value: core.config.genesisNodeAddress,
           },
         },
         {
           lnsRecordValue: {
             sourceChainName: core.config.chainName,
             sourceChainMagic: core.config.magic,
-            name: core.config.genesisBlock.remark.genesisNodeAddress,
+            name: core.config.genesisNodeAddress,
             operationType: RECORD_OPERATION_TYPE.ADD,
             addRecord: record,
           },
@@ -481,10 +476,10 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
     };
     let trs = await createTrs();
     if (pow) {
-      await bfchainCore.transaction.transactionPowCalculator(trs, pow, keypair, secondKeypair);
+      await core.transaction.transactionPowCalculator(trs, pow, keypair, secondKeypair);
     }
     trs = await createTrs(
-      core.transactionHelper.calcTransactionFee(trs, bfchainCore.config.minTransactionFeePerByte),
+      core.transactionHelper.calcTransactionFee(trs, core.config.minTransactionFeePerByte),
     );
     return {
       index: getTxs(trs.senderId),
@@ -497,7 +492,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
     const accountAssetMap = new Map<string, bigint>();
     accountAssetMap.set(
       `${genesisAccountInfo.address}_${core.config.magic}_${core.config.assetType}`,
-      BigInt(core.config.genesisBlock.remark.generateTotalAmount),
+      BigInt(core.config.genesisBlock.asset.genesisBlock.generateTotalAmount),
     );
 
     function getAccountAssetKey(address: string, magic: string, assetType: string) {
@@ -521,7 +516,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
 
     const txWithIndexList: { index: number; trs: Transaction }[] = [];
     txWithIndexList.push(await getLocationNameTransaction());
-    const totalDelegates = core.config.genesisBlock.remark.delegates;
+    const totalDelegates = core.config.genesisBlock.asset.genesisBlock.delegates;
     let ips: string[] = [];
     if (inputIpsPath) {
       ips = require(path.join(process.cwd(), inputIpsPath));
@@ -531,7 +526,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
     if (!ips) {
       throw new Error("Failed to get ips");
     }
-    if (!bfchainCore.baseHelper.isArray(ips)) {
+    if (!core.baseHelper.isArray(ips)) {
       throw new Error("Require ips should be array");
     }
     if (ips.length < totalDelegates) {
@@ -543,8 +538,8 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
       const address = await core.accountBaseHelper.getAddressFromSecret(secret);
       // console.group(address, index);
       // bfchainCore.config.newDelegates.push(address);
-      if (mainChainRemarkData.nextRoundDelegates.length < bfchainCore.config.blockPerRound) {
-        mainChainRemarkData.nextRoundDelegates.push({
+      if (mainChainAssetData.nextRoundDelegates.length < core.config.blockPerRound) {
+        mainChainAssetData.nextRoundDelegates.push({
           address,
           equity: "0",
         });
@@ -554,7 +549,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
         secret,
         address,
         publicKey,
-        username: `${bfchainCore.config.chainName}${i + 1}`,
+        username: `${core.config.chainName}${i + 1}`,
       };
       // 要在创始块中实施的交易
       const tempTrsWithIndexList = [
@@ -648,7 +643,15 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
     const generatorPublicKey = await core.accountBaseHelper.getPublicKeyStringFromSecret(
       config.genesisSecret,
     );
+    const generatorSecondPublicKey = await core.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+      config.genesisSecret,
+      config.genesisSecondSecret,
+    );
     const generatorKeypair = await core.accountBaseHelper.createSecretKeypair(config.genesisSecret);
+    const generatorSecondKeypair = await core.accountBaseHelper.createSecondSecretKeypair(
+      config.genesisSecret,
+      config.genesisSecondSecret,
+    );
     //#region 处理账户余额与交易pow
     // /**执行中的账户余额管理器 */
     // const accountBalanceManager = {
@@ -686,15 +689,21 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
         height,
         timestamp: 0,
         generatorPublicKey,
+        // generatorSecondPublicKey,
+        generatorEquity: "0",
         previousBlockSignature: "",
       },
-      mainChainRemarkData,
+      {
+        genesisBlock: mainChainAssetData,
+      },
       (async function* zz() {
         for (const item of blockTrsItems) {
           yield item;
         }
       })(),
       generatorKeypair,
+      // generatorSecondKeypair,
+      undefined,
       eventEmitter,
     );
     statisticsInfo.unref("getGenesisBlock");
@@ -704,11 +713,10 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
     await core.blockHelper.verifyBlockSignature(__genesisBlock, {
       taskLabel: "self genesis Block",
     });
+    const blockJson = genesisBlock.toJSON();
+    await core.block.recombineBlock(blockJson);
     if (out) {
-      require("fs").writeFileSync(
-        defaultGenesisBlockPath,
-        JSON.stringify(genesisBlock.toJSON(), null, 2),
-      );
+      require("fs").writeFileSync(defaultGenesisBlockPath, JSON.stringify(blockJson, null, 2));
       console.log(`Genesis block save to: ${defaultGenesisBlockPath}`);
     } else {
       // dump(genesisBlock.toJSON());

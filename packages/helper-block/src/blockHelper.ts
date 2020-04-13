@@ -6,6 +6,7 @@ import { PROP_SHOULD_LTE_FIELD, OUT_OF_RANGE } from "@bfchain/core-util-exceptio
 import { CoreExceptionGenerator, NOT_EXIST } from "@bfchain/core-util-exception";
 import { BLOCK_TYPES_BASE, Block } from "@bfchain/core-model-block";
 import { AccountBaseHelper } from "@bfchain/core-helper-account-base";
+import { TemplateRemark } from "@bfchain/core-model-common";
 type RoundLastBlock = import("@bfchain/core-model-block").RoundLastBlock;
 
 const {
@@ -55,13 +56,44 @@ export class BlockHelper {
   ) {
     const taskLabel = (opts && opts.taskLabel) || "Block";
     const { Buffer } = this;
-    const { generatorPublicKeyBuffer, signatureBuffer } = block;
+    const {
+      generatorPublicKeyBuffer,
+      signatureBuffer,
+      generatorSecondPublicKeyBuffer,
+      signSignatureBuffer,
+    } = block;
     // 验证 signature 与 publicKey
-    const hash = await this.cryptoHelper.sha256(block.getBytes(true, true));
+    const hash = await this.cryptoHelper.sha256(block.getBytes(true, true, true));
     if (
       !(await this.keypairHelper.detached_verify(hash, signatureBuffer, generatorPublicKeyBuffer))
     ) {
       throw new ArgumentFormatException(`Invalid ${taskLabel} signature`);
+    }
+
+    // 验证 signSignature 与 secondPublicKey
+    if (
+      (generatorSecondPublicKeyBuffer && generatorSecondPublicKeyBuffer.length > 0) ||
+      (signSignatureBuffer && signSignatureBuffer.length > 0)
+    ) {
+      if (generatorSecondPublicKeyBuffer && signSignatureBuffer) {
+        const shash = await this.cryptoHelper
+          .sha256()
+          .update(block.getBytes(false, true, true))
+          .digest();
+        if (
+          !this.keypairHelper.detached_verify(
+            shash,
+            Buffer.from(signSignatureBuffer),
+            Buffer.from(generatorSecondPublicKeyBuffer),
+          )
+        ) {
+          throw new ArgumentFormatException(`Invalid ${taskLabel} signSignature`);
+        }
+      } else {
+        throw new ArgumentFormatException(
+          `Invalid ${taskLabel} miss signSignature or senderSecondPublicKey`,
+        );
+      }
     }
   }
 
@@ -70,11 +102,10 @@ export class BlockHelper {
    *
    * @param block
    */
-  verifyBlockRemarkSize<RJ extends BFChainCore.CommonBlockRemarkJSON>(
-    blockRemark: BFChainCore.RemarkJSONToModelType<RJ>,
-  ) {
-    const remarkSize = blockRemark.getBytes().byteLength;
+  verifyBlockRemarkSize<SOME_BLOCK extends BFChainCore.Block>(block: SOME_BLOCK) {
+    const templateRemark = TemplateRemark.fromObject({ remark: block.remark });
     const { maxBlockRemarkSize } = this.config;
+    const remarkSize = this.Buffer.from(templateRemark.getBytes()).length;
     if (remarkSize > maxBlockRemarkSize) {
       throw new ArgumentIllegalException(PROP_SHOULD_LTE_FIELD, {
         prop: `remarkSize ${remarkSize}`,

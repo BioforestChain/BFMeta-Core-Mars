@@ -35,6 +35,90 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
+"@bfchain/core-model-block-base@5.17.19":
+  version "5.17.19"
+  resolved "http://192.168.250.245:4873/@bfchain%2fcore-model-block-base/-/core-model-block-base-5.17.19.tgz#f76ba846cef4a9129d4ca7fa0e8ab5a6bc1d6cf0"
+  integrity sha512-CgD8H1iyVHvzE8Adn/L6ChrnVLo/uMDYD1tl8PlRGERrc2agvAV194h9JelqllacyWCrP50yf5FE8ZxOgUvPYw==
+  dependencies:
+    "@bfchain/core-model-cacher" "5.17.19"
+    "@bfchain/core-model-common" "5.17.19"
+    "@bfchain/core-model-transaction" "5.17.19"
+    "@bfchain/core-typings" "5.17.19"
+
+"@bfchain/core-model-cacher@5.17.19":
+  version "5.17.19"
+  resolved "http://192.168.250.245:4873/@bfchain%2fcore-model-cacher/-/core-model-cacher-5.17.19.tgz#5b015edeb81b785a057794edc4b7adf22280231a"
+  integrity sha512-QEKdORt6yC8A+ocZlZSEzU6WNTkWGTi2GNgGgLsSGYgNET3ESRbs+bgLQ9/aOENg04vjChDdGGCa/mUnZuhAeQ==
+  dependencies:
+    "@bfchain/core-typings" "5.17.19"
+
+"@bfchain/core-model-common@5.17.19":
+  version "5.17.19"
+  resolved "http://192.168.250.245:4873/@bfchain%2fcore-model-common/-/core-model-common-5.17.19.tgz#14d18b628679dc0464feec740f74da10ea93585f"
+  integrity sha512-or2G9kFlIl+cQGD2rAb3BT+9TqEnvB9SeIxDr1tfOF5R8mCbIRT08ed9yS0xZhowZ8P7g1KxPIYYpfJjVKkPGQ==
+  dependencies:
+    "@bfchain/core-typings" "5.17.19"
+
+"@bfchain/core-model-constants@5.17.19":
+  version "5.17.19"
+  resolved "http://192.168.250.245:4873/@bfchain%2fcore-model-constants/-/core-model-constants-5.17.19.tgz#7ce725f00fde2478e88f4e8da3193710ce59de78"
+  integrity sha512-v9hkv6SG2XsILMS4gUp2+MI1AoizaYcie+KTNdG9v+A6jfhfa8Jr9ioG0UFSnDEgiRJU/5QZn6HaQZuRtIUqwA==
+  dependencies:
+    "@bfchain/core-typings" "5.17.19"
+
+"@bfchain/core-model-transaction-asset@5.17.19":
+  version "5.17.19"
+  resolved "http://192.168.250.245:4873/@bfchain%2fcore-model-transaction-asset/-/core-model-transaction-asset-5.17.19.tgz#def785144829c95c65135b4a32b9c324bec01a6c"
+  integrity sha512-HPIeNy/fNnP2TLCOtcwLgSlSYrn2YQQ88vMX/ViVekZ8MzBht8xizngpULw0etpy1jlkAKn0kPBeVv4GHUrDsA==
+  dependencies:
+    "@bfchain/core-model-cacher" "5.17.19"
+    "@bfchain/core-model-common" "5.17.19"
+    "@bfchain/core-model-constants" "5.17.19"
+    "@bfchain/core-model-transaction-base" "5.17.19"
+    "@bfchain/core-typings" "5.17.19"
+
+"@bfchain/core-model-transaction-base@5.17.19":
+  version "5.17.19"
+  resolved "http://192.168.250.245:4873/@bfchain%2fcore-model-transaction-base/-/core-model-transaction-base-5.17.19.tgz#59922ed1f575fbe1c76841c69708d5f5498075d1"
+  integrity sha512-BRb9vwZcybMy3jUxJxhBLbScJTveU+tGwtQYa4/ARbG1/FNQOLh307tPLOdl61dY1/Eu0bShzz9mKHvEZqcYaQ==
+  dependencies:
+    "@bfchain/core-model-cacher" "5.17.19"
+    "@bfchain/core-model-common" "5.17.19"
+    "@bfchain/core-model-constants" "5.17.19"
+    "@bfchain/core-typings" "5.17.19"
+
+"@bfchain/core-model-transaction@5.17.19":
+  version "5.17.19"
+  resolved "http://192.168.250.245:4873/@bfchain%2fcore-model-transaction/-/core-model-transaction-5.17.19.tgz#0dca2cc2d32a915d1b9e6f263ed46dcb6975eac9"
+  integrity sha512-FWQZch6zhZPmKo1LrTnAgTkYn5UCtknGKWMvYPHRBQzfhoiASeEGVbI57ok4siVpfKQQ0Gf0WD/MJpvVxEiy0g==
+  dependencies:
+    "@bfchain/core-model-cacher" "5.17.19"
+    "@bfchain/core-model-common" "5.17.19"
+    "@bfchain/core-model-transaction-asset" "5.17.19"
+    "@bfchain/core-model-transaction-base" "5.17.19"
+    "@bfchain/core-typings" "5.17.19"
+    "@bfchain/core-util-exception" "5.17.19"
+
+"@bfchain/core-typings@5.17.19":
+  version "5.17.19"
+  resolved "http://192.168.250.245:4873/@bfchain%2fcore-typings/-/core-typings-5.17.19.tgz#2a898cc0f9295da9af6fea0010b05c5f86ed8a3f"
+  integrity sha512-bXXXKs7ujOztob7JoE1e2EAN2cWey7yOX0yfOaX9X0PvpqlG26K480RnzPbrdhCAQvO+q944uABb6+ToTEh9aA==
+
+"@bfchain/core-util-exception-errorcode@5.17.19":
+  version "5.17.19"
+  resolved "http://192.168.250.245:4873/@bfchain%2fcore-util-exception-errorcode/-/core-util-exception-errorcode-5.17.19.tgz#f81a661ae172ca5e5fd84b4e8cb0b195713b30b4"
+  integrity sha512-XHB/+jT60h4PlYfemI9Hrn8zVAaYSVwHRgrxhtXnKFIRZxpluyJz/ZMaPSqb1KI9PcbgvB+Y0sGDZK0lgznQ2Q==
+  dependencies:
+    "@bfchain/core-typings" "5.17.19"
+
+"@bfchain/core-util-exception@5.17.19":
+  version "5.17.19"
+  resolved "http://192.168.250.245:4873/@bfchain%2fcore-util-exception/-/core-util-exception-5.17.19.tgz#c50efc073f823e9e4584dac2bb6d22fe67aa65b1"
+  integrity sha512-cr7xqws3nwg+rUNKC0umY8ZEI8YdsyCyth2MX98psIg+uj8RelLg6VobZ04aaD48/8vJtz38HHdNWk96becBmQ==
+  dependencies:
+    "@bfchain/core-typings" "5.17.19"
+    "@bfchain/core-util-exception-errorcode" "5.17.19"
+
 "@bfchain/devkit-ts-creator@^1.3.4":
   version "1.3.4"
   resolved "http://192.168.250.245:4873/@bfchain%2fdevkit-ts-creator/-/devkit-ts-creator-1.3.4.tgz#1d49b54dc30d8aad6e16bd6ca1051aec471d778a"
@@ -1270,9 +1354,9 @@
     "@types/node" ">= 8"
 
 "@octokit/types@^5.0.0", "@octokit/types@^5.0.1":
-  version "5.5.0"
-  resolved "http://192.168.250.245:4873/@octokit%2ftypes/-/types-5.5.0.tgz#e5f06e8db21246ca102aa28444cdb13ae17a139b"
-  integrity sha1-5fBujbISRsoQKqKERM2xOuF6E5s=
+  version "5.0.1"
+  resolved "http://192.168.250.245:4873/@octokit%2ftypes/-/types-5.0.1.tgz#5459e9a5e9df8565dcc62c17a34491904d71971e"
+  integrity sha1-VFnppenfhWXcxiwXo0SRkE1xlx4=
   dependencies:
     "@types/node" ">= 8"
 
@@ -1367,9 +1451,9 @@
   integrity sha1-aaI6OtKcrwCX8G7aWbNh7i8GOfY=
 
 "@types/node@*", "@types/node@>= 8":
-  version "14.11.2"
-  resolved "http://192.168.250.245:4873/@types%2fnode/-/node-14.11.2.tgz#2de1ed6670439387da1c9f549a2ade2b0a799256"
-  integrity sha1-LeHtZnBDk4faHJ9UmireKwp5klY=
+  version "14.0.14"
+  resolved "http://192.168.250.245:4873/@types%2fnode/-/node-14.0.14.tgz#24a0b5959f16ac141aeb0c5b3cd7a15b7c64cbce"
+  integrity sha1-JKC1lZ8WrBQa6wxbPNehW3xky84=
 
 "@types/node@^12.0.0":
   version "12.12.62"
@@ -2006,10 +2090,10 @@ combined-stream@^1.0.6, combined-stream@~1.0.6:
   dependencies:
     delayed-stream "~1.0.0"
 
-compare-func@^2.0.0:
-  version "2.0.0"
-  resolved "http://192.168.250.245:4873/compare-func/-/compare-func-2.0.0.tgz#fb65e75edbddfd2e568554e8b5b05fff7a51fcb3"
-  integrity sha1-+2XnXtvd/S5WhVTotbBf/3pR/LM=
+compare-func@^1.3.1:
+  version "1.3.4"
+  resolved "http://192.168.250.245:4873/compare-func/-/compare-func-1.3.4.tgz#6b07c4c5e8341119baf44578085bda0f4a823516"
+  integrity sha1-awfExeg0ERm69EV4CFvaD0qCNRY=
   dependencies:
     array-ify "^1.0.0"
     dot-prop "^5.1.0"
@@ -3509,15 +3593,15 @@ is-plain-object@^2.0.3, is-plain-object@^2.0.4:
   dependencies:
     isobject "^3.0.1"
 
-is-plain-object@^5.0.0:
-  version "5.0.0"
-  resolved "http://192.168.250.245:4873/is-plain-object/-/is-plain-object-5.0.0.tgz#4427f50ab3429e9025ea7d52e9043a9ef4159344"
-  integrity sha1-RCf1CrNCnpAl6n1S6QQ6nvQVk0Q=
+is-plain-object@^3.0.0:
+  version "3.0.1"
+  resolved "http://192.168.250.245:4873/is-plain-object/-/is-plain-object-3.0.1.tgz#662d92d24c0aa4302407b0d45d21f2251c85f85b"
+  integrity sha1-Zi2S0kwKpDAkB7DUXSHyJRyF+Fs=
 
-is-regex@^1.1.0, is-regex@^1.1.1:
-  version "1.1.1"
-  resolved "http://192.168.250.245:4873/is-regex/-/is-regex-1.1.1.tgz#c6f98aacc546f6cec5468a07b7b153ab564a57b9"
-  integrity sha1-xvmKrMVG9s7FRooHt7FTq1ZKV7k=
+is-regex@^1.1.0:
+  version "1.1.0"
+  resolved "http://192.168.250.245:4873/is-regex/-/is-regex-1.1.0.tgz#ece38e389e490df0dc21caea2bd596f987f767ff"
+  integrity sha1-7OOOOJ5JDfDcIcrqK9WW+Yf3Z/8=
   dependencies:
     has-symbols "^1.0.1"
 
@@ -3857,9 +3941,9 @@ lru-cache@^5.1.1:
     yallist "^3.0.2"
 
 macos-release@^2.2.0:
-  version "2.4.1"
-  resolved "http://192.168.250.245:4873/macos-release/-/macos-release-2.4.1.tgz#64033d0ec6a5e6375155a74b1a1eba8e509820ac"
-  integrity sha1-ZAM9Dsal5jdRVadLGh66jlCYIKw=
+  version "2.4.0"
+  resolved "http://192.168.250.245:4873/macos-release/-/macos-release-2.4.0.tgz#837b39fc01785c3584f103c5599e0f0c8068b49e"
+  integrity sha1-g3s5/AF4XDWE8QPFWZ4PDIBotJ4=
 
 make-dir@^1.0.0:
   version "1.3.0"
@@ -5826,9 +5910,9 @@ typescript@^3.9.6:
   integrity sha1-mNYApevcOPQMsndSLxLcgA6eJfo=
 
 uglify-js@^3.1.4:
-  version "3.10.4"
-  resolved "http://192.168.250.245:4873/uglify-js/-/uglify-js-3.10.4.tgz#dd680f5687bc0d7a93b14a3482d16db6eba2bfbb"
-  integrity sha1-3WgPVoe8DXqTsUo0gtFttuuiv7s=
+  version "3.10.0"
+  resolved "http://192.168.250.245:4873/uglify-js/-/uglify-js-3.10.0.tgz#397a7e6e31ce820bfd1cb55b804ee140c587a9e7"
+  integrity sha1-OXp+bjHOggv9HLVbgE7hQMWHqec=
 
 uid-number@0.0.6:
   version "0.0.6"

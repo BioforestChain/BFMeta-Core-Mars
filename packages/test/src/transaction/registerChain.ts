@@ -25,24 +25,44 @@ import {
   DelegateTransaction,
   LocationNameTransaction,
   SetLnsRecordValueTransaction,
+  BFChainCoreFactory,
+  ConfigHelper,
 } from "@bfchain/core";
 import { QueneEventEmitter, Resolve } from "@bfchain/util";
 import * as path from "path";
 import {
   getSenderWithoutSecondSecret,
   getFullBfchainCoreEntry,
-  getRegisterBfchainCoreEntry,
   AccountModel,
   config,
-  registerchainRemarkData,
+  registerchainAssetData,
   getIps,
+  NodeJsCryptoHelper,
+  NodeJsKeypairHelper,
+  ed2curveHelper,
+  getRandomMagic,
+  getRandomDAppid,
 } from "../include";
 
 const defaultIpsPath = path.join(process.cwd(), "./assets/defaultIps.json");
 
 const fullBfchainCore = getFullBfchainCoreEntry(57, 128);
+const randomMagic = false;
 
-const registerBfchainCore = getRegisterBfchainCoreEntry();
+if (randomMagic) {
+  registerchainAssetData.magic = getRandomMagic();
+}
+
+const registerBfchainCore = BFChainCoreFactory({
+  config: new ConfigHelper(
+    GenesisBlock.fromObject({ asset: { genesisBlock: registerchainAssetData } }),
+    "genesisBlock",
+  ),
+  Buffer: Buffer as any,
+  cryptoHelper: NodeJsCryptoHelper,
+  keypairHelper: NodeJsKeypairHelper,
+  ed2curveHelper,
+});
 
 const registerStatistics = Resolve(BlockBaseStatisticsHelper, registerBfchainCore.moduleMap);
 const statistics = Resolve(BlockBaseStatisticsHelper, fullBfchainCore.moduleMap);
@@ -113,7 +133,6 @@ const getTxs = (address: string) => {
         {
           username: {
             alias: sender.username,
-            publicKey: sender.publicKey,
           },
         },
         keypair,
@@ -172,17 +191,8 @@ const getTxs = (address: string) => {
           applyBlockHeight: 1, // 交易发起高度
           effectiveBlockHeight: 1,
           remark: { remark: "交易备注，任意信息，这个是注册受托人交易" }, // 交易备注，任意信息
-          storage: {
-            key: "username",
-            value: sender.username,
-          },
         },
-        {
-          delegate: {
-            username: sender.username,
-            publicKey: sender.publicKey,
-          },
-        },
+        {},
         keypair,
         secondKeypair,
       );
@@ -291,14 +301,14 @@ const getTxs = (address: string) => {
           remark: {},
           storage: {
             key: "name",
-            value: registerBfchainCore.config.genesisBlock.remark.genesisNodeAddress,
+            value: registerBfchainCore.config.genesisNodeAddress,
           },
         },
         {
           locationName: {
             sourceChainName: registerBfchainCore.config.chainName,
             sourceChainMagic: registerBfchainCore.config.magic,
-            name: registerBfchainCore.config.genesisBlock.remark.genesisNodeAddress,
+            name: registerBfchainCore.config.genesisNodeAddress,
             operationType: LOCATION_NAME_OPERATION_TYPE.REGISTRATION,
           },
         },
@@ -364,14 +374,14 @@ const getTxs = (address: string) => {
           remark: {},
           storage: {
             key: "name",
-            value: registerBfchainCore.config.genesisBlock.remark.genesisNodeAddress,
+            value: registerBfchainCore.config.genesisNodeAddress,
           },
         },
         {
           lnsRecordValue: {
             sourceChainName: registerBfchainCore.config.chainName,
             sourceChainMagic: registerBfchainCore.config.magic,
-            name: registerBfchainCore.config.genesisBlock.remark.genesisNodeAddress,
+            name: registerBfchainCore.config.genesisNodeAddress,
             operationType: RECORD_OPERATION_TYPE.ADD,
             addRecord: record,
           },
@@ -485,7 +495,7 @@ const getTxs = (address: string) => {
     const registerChainAccountAssetMap = new Map<string, bigint>();
     registerChainAccountAssetMap.set(
       `${genesisAccountInfo.address}_${registerBfchainCore.config.magic}_${registerBfchainCore.config.assetType}`,
-      BigInt(registerBfchainCore.config.genesisBlock.remark.generateTotalAmount),
+      BigInt(registerBfchainCore.config.generateTotalAmount),
     );
 
     function getRegisterChainAccountAssetKey(address: string, magic: string, assetType: string) {
@@ -514,11 +524,11 @@ const getTxs = (address: string) => {
       const secret = delegatesSecret[i];
       const address = await registerBfchainCore.accountBaseHelper.getAddressFromSecret(secret);
 
-      registerchainRemarkData.newDelegates.push(address);
+      registerchainAssetData.newDelegates.push(address);
       if (
-        registerchainRemarkData.nextRoundDelegates.length < registerBfchainCore.config.blockPerRound
+        registerchainAssetData.nextRoundDelegates.length < registerBfchainCore.config.blockPerRound
       ) {
-        registerchainRemarkData.nextRoundDelegates.push({
+        registerchainAssetData.nextRoundDelegates.push({
           address,
           equity: "0",
         });
@@ -643,15 +653,22 @@ const getTxs = (address: string) => {
         height: 1,
         timestamp: 0,
         generatorPublicKey,
+        generatorEquity: "0",
         previousBlockSignature: "",
+        remark: {
+          QWQ: "人定胜天",
+        },
       },
-      registerchainRemarkData,
+      {
+        genesisBlock: registerchainAssetData,
+      },
       (async function* zz() {
         for (const item of blockTrsItems) {
           yield item;
         }
       })(),
       generatorKeypair,
+      undefined,
       eventEmitter,
     );
     statisticsInfo.unref("generateRegisterChainGenesisBlock");
@@ -683,8 +700,8 @@ const getTxs = (address: string) => {
       timestamp: 770880, // 生成交易时间戳
       fee: "78622", // 交易手续费
       remark: { remark: "body.remark" }, // 交易备注，任意信息
-      dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
-      lns: fullBfchainCore.config.genesisBlock.remark.genesisNodeAddress,
+      dappid: getRandomDAppid(), // 交易所属的 dappid
+      lns: fullBfchainCore.config.genesisNodeAddress,
       sourceIP: "127.0.0.1", // 交易来源 ip
       fromMagic: fullBfchainCore.config.magic,
       toMagic: fullBfchainCore.config.magic,
@@ -828,14 +845,13 @@ const getTxs = (address: string) => {
         height,
         timestamp: 0,
         generatorPublicKey,
+        generatorEquity: "0",
         previousBlockSignature:
           "a8b6f856eae3d0cf57ace98d6d5890db6713a2356f06159a5e34e8924431895a2c0b19f1444120a632bf48442a2b033003a262fb78691bdcc4513ca255c57a11",
       },
       {
         debug: "debug",
         info: "info",
-        blockParticipation: "0",
-        generatorEquity: "0",
       },
       (async function* zz() {
         for (const item of blockTrsItems) {
@@ -843,6 +859,7 @@ const getTxs = (address: string) => {
         }
       })(),
       generatorKeypair,
+      undefined,
       eventEmitter,
     );
     statisticsInfo.unref("generateCommonBlock");

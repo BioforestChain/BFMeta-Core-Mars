@@ -145,16 +145,6 @@ export class MarkTransactionFactory extends TransactionFactory<MarkTransaction> 
       });
     }
 
-    if (mark.markPossessor !== recipientId) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: `markPossessor, ${mark.markPossessor}`,
-        be_compare_prop: `recipientId ${recipientId}`,
-        to_target: "body",
-        be_target: "mark",
-        ...MarkAsset_Exception_Detail,
-      });
-    }
-
     const content = mark.content;
     if (!content) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {

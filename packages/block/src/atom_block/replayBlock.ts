@@ -22,6 +22,7 @@ import {
   PROP_SHOULD_GT_FIELD,
   INVALID_BLOCK_GENERATOR,
   SHOULD_NOT_INCLUDE,
+  PROP_IS_REQUIRE,
 } from "@bfchain/core-util-exception";
 import {
   QueneEventEmitter,
@@ -282,7 +283,7 @@ export class ReplayBlockCore<T extends Block> {
     const needTPow = height > powOfWorkExemptionBlocks;
     const abortForbiddenTransaction = this.transactionCore.abortForbiddenTransaction;
     const Function_Exception_Detail = { function: "insertTransactionsForReplay" };
-    const MAX_TRANSACTION_SIZE = this.config.genesisBlock.remark.maxTransactionSize;
+    const MAX_TRANSACTION_SIZE = this.config.genesisBlock.asset.genesisBlock.maxTransactionSize;
     /**所有交易的sha256hash */
     const payloadHash = this.cryptoHelper.sha256();
     /**所有交易体的总字节长度 */
@@ -321,9 +322,9 @@ export class ReplayBlockCore<T extends Block> {
 
     // 获取打块账户获得的权益
     const generatorEquity = await eventEmitter.blockGeneratorEquityGetter(block.generatorPublicKey);
-    if (block.remark.generatorEquity !== generatorEquity) {
+    if (block.generatorEquity !== generatorEquity) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: `generatorEquity ${block.remark.generatorEquity}`,
+        to_compare_prop: `generatorEquity ${block.generatorEquity}`,
         be_compare_prop: `generatorEquity ${generatorEquity}`,
         to_target: "block",
         be_target: "calculate",
@@ -511,16 +512,41 @@ export class ReplayBlockCore<T extends Block> {
               }
             }
           }
-          // 校验TIB签名
-          if (
-            verifySignature &&
-            !(await asymmetricHelper.detachedVeriy(
-              tranItem.getBytes(true),
-              tranItem.signatureBuffer,
-              generatorPublicKeyBuffer,
-            ))
-          ) {
-            throw new ArgumentFormatException(`Invalid transactionInBlock: %O`, tranItem.toJSON());
+          // 校验 TIB 签名 和 安全签名
+          if (verifySignature) {
+            if (
+              !(await asymmetricHelper.detachedVeriy(
+                tranItem.getBytes(true, true),
+                tranItem.signatureBuffer,
+                generatorPublicKeyBuffer,
+              ))
+            ) {
+              throw new ArgumentFormatException(
+                `Invalid transactionInBlock signature: %O`,
+                tranItem.toJSON(),
+              );
+            }
+            if (block.generatorSecondPublicKeyBuffer) {
+              if (!tranItem.signSignatureBuffer) {
+                throw new ArgumentFormatException(PROP_IS_REQUIRE, {
+                  prop: "signSignature",
+                  target: "transactionInBlock",
+                  ...Function_Exception_Detail,
+                });
+              }
+              if (
+                !(await asymmetricHelper.detachedVeriy(
+                  tranItem.getBytes(false, true),
+                  tranItem.signSignatureBuffer,
+                  block.generatorSecondPublicKeyBuffer,
+                ))
+              ) {
+                throw new ArgumentFormatException(
+                  `Invalid transactionInBlock signSignature: %O`,
+                  tranItem.toJSON(),
+                );
+              }
+            }
           }
           Object.freeze(tranItem);
           // 生产交易二进制数据

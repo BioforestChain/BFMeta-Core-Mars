@@ -1,5 +1,5 @@
 import { Block } from "@bfchain/core-model-block-base";
-import { GenesisBlockRemarkModel } from "@bfchain/core-model-block-remark";
+import { GenesisBlockAssetModel } from "@bfchain/core-model-block-asset";
 import { Type, Field } from "@bfchain/protobuf";
 
 /**
@@ -7,9 +7,9 @@ import { Type, Field } from "@bfchain/protobuf";
  *
  */
 @Type.d("GenesisBlock")
-export class GenesisBlock
-  extends Block<BFChainCore.GenesisBlockRemarkJSON>
-  implements BFChainCore.GenesisBlock {
-  @Field.d(GenesisBlock.INC++, GenesisBlockRemarkModel)
-  remark!: GenesisBlockRemarkModel;
+export class GenesisBlock extends Block<BFChainCore.GenesisBlockAssetJSON>
+  implements BFChainCore.GenesisBlockBlockJSON {
+  toJSON!: () => BFChainCore.GenesisBlockBlockJSON;
+  @Field.d(GenesisBlock.INC++, GenesisBlockAssetModel)
+  asset!: GenesisBlockAssetModel;
 }

@@ -13,6 +13,9 @@
   },
   "references": [
     {
+      "path": "../model-cacher/tsconfig.@types.json"
+    },
+    {
       "path": "../typings/tsconfig.@types.json"
     }
   ]

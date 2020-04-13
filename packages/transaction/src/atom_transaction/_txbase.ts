@@ -354,6 +354,18 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     }
 
     const remark = body.remark;
+    if (!remark) {
+      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        prop: "remark",
+        ...TransactionBody_Exception_Detail,
+      });
+    }
+    if (baseHelper.getVariableType(remark) !== "[object Object]") {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "remark",
+        ...TransactionBody_Exception_Detail,
+      });
+    }
     for (const key in remark) {
       if (!baseHelper.isString(remark[key])) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
