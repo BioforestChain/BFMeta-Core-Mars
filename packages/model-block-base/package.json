@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-model-block-base",
-  "version": "5.11.46",
+  "version": "5.11.48",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
