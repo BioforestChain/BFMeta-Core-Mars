@@ -116,7 +116,9 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     minBeSelectProductivity: BFChainCore.FractionJSON,
     generatorAddressList: string[],
     forgeInfoMap: Map<string, BFChainCore.ForgeInfos>,
-    accountGetterHelper = this.accountGetterHelper,
+    accountGetterHelper:
+      | Pick<BFChainCore.AccountGetterHelperInterface, "getAccounts">
+      | undefined = this.accountGetterHelper,
   ) {
     const Function_Exception_Detail = {
       function: "calCanBePickAccounts",
@@ -249,7 +251,9 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     currentBlockHeight: number,
     options: BFChainCore.RecommendedDelegateOptions,
     activeDelegates: string[],
-    accountGetterHelper = this.accountGetterHelper,
+    accountGetterHelper:
+      | Pick<BFChainCore.AccountGetterHelperInterface, "getAccounts">
+      | undefined = this.accountGetterHelper,
     blockGetterHelper = this.blockGetterHelper,
   ) {
     const Function_Exception_Detail = {
@@ -299,13 +303,13 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     const votNum = totalQuota - pdtNum - fbsNum - atnNum;
     // 获取在线率前 n 个账户
     const sortByProductivity = this.sortDelegatesByFields(canBePickAccounts, "productivity");
-    const pdtArray = sortByProductivity.splice(0, pdtNum).map(account => account.address);
+    const pdtArray = sortByProductivity.splice(0, pdtNum).map((account) => account.address);
     // 获取打块数量前 n 个账户
     const sortByForgedBlocks = this.sortDelegatesByFields(sortByProductivity, "forgedBlocks");
-    const fbsArray = sortByForgedBlocks.splice(0, fbsNum).map(account => account.address);
+    const fbsArray = sortByForgedBlocks.splice(0, fbsNum).map((account) => account.address);
     // 获取处理交易数量前 n 个账户
     const sortByApplyTxNumber = this.sortDelegatesByFields(sortByForgedBlocks, "applyTxNumber");
-    const atnArray = sortByApplyTxNumber.splice(0, atnNum).map(account => account.address);
+    const atnArray = sortByApplyTxNumber.splice(0, atnNum).map((account) => account.address);
     // 获取得票率前 n 的账户
     const voteArray: BFChainCore.CanBePickAccount[] = [];
     for (const canBePickAccount of sortByApplyTxNumber) {
@@ -315,7 +319,7 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
       }
     }
     const sortByVote = this.sortDelegatesByFields(voteArray, "vote");
-    const votArray = sortByVote.splice(0, votNum).map(account => account.address);
+    const votArray = sortByVote.splice(0, votNum).map((account) => account.address);
     // 乱序
     this.forgingDelegates.delegates = this.hybridArray(pdtArray, fbsArray, atnArray, votArray);
   }
@@ -362,7 +366,12 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     address: string,
     currentBlockHeight: number,
     options: BFChainCore.RecommendedDelegateOptions,
-    accountGetterHelper = this.accountGetterHelper,
+    accountGetterHelper:
+      | Pick<
+          BFChainCore.AccountGetterHelperInterface,
+          "getAccountVoteInfo" | "getMemoryDelegates" | "getAccounts"
+        >
+      | undefined = this.accountGetterHelper,
     blockGetterHelper = this.blockGetterHelper,
   ) {
     const Function_Exception_Detail = {

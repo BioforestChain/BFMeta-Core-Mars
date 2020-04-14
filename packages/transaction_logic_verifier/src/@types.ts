@@ -117,7 +117,7 @@ declare namespace BFChainCore {
     vote: bigint;
   };
 
-  interface AccountGetterHelperInterface<T extends AccountBaseInfo> {
+  interface AccountGetterHelperInterface<T extends AccountBaseInfo = AccountBaseInfo> {
     /**根据地址数组获取账户 */
     getAccounts(addressArr: string[]): Promise<T[]>;
     /** 获取准备下一轮上榜的受托人 */
