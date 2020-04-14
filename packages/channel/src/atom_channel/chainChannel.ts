@@ -170,7 +170,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
         len -= 1;
       }
     }
-    return acc_delay / len;
+    return acc_delay / len || 0;
   }
   /**存储延迟记录 */
   protected pushDelayHistroy(delay: number) {
