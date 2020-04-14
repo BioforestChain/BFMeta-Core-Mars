@@ -217,6 +217,7 @@ declare namespace BFChainCore {
     maybeHeightChanged: [number];
   };
   interface ChainChannelBase {
+    defaultReqOptions?: ChannelRequestOptions;
     maybeHeight: number;
     toBlockGetterHelper(opts?: {
       maxHeight?: number;

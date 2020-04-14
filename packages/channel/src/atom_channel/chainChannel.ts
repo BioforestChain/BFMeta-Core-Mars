@@ -95,6 +95,7 @@ export abstract class ChainChannelBase extends QueneEventEmitterPro<
     }
     return this._blockGetterHelper;
   }
+  defaultReqOptions?: BFChainCore.ChannelRequestOptions;
 }
 
 /**
@@ -199,7 +200,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
     cmd: DUPLEX_API_CMD,
     binary: Uint8Array,
     ResonseBoxer: (bytes: Uint8Array) => BFChainUtil.PromiseMaybe<T>,
-    options?: BFChainCore.ChannelRequestOptions,
+    options = this.defaultReqOptions,
   ) {
     const req_id = this._req_id_acc[0]++;
     this.postResponseMessage(req_id, cmd, binary);
