@@ -414,7 +414,7 @@ export class EventLogicVerifier {
     // 注册成为受托人
     event.on("registerToDelegate", async ({ applyInfo }, next) => {
       const { address } = applyInfo;
-
+      accountsInfo[address] = accountsInfo[address] || {};
       if (accountsInfo[address].isDelegate) {
         throw new ConsensusException(ACCOUNT_IS_ALREADY_AN_DELEGATE, {
           address,
