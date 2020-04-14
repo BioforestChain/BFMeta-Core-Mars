@@ -1,7 +1,7 @@
 {
   "name": "@bfchain/core-test",
   "private": true,
-  "version": "5.11.50",
+  "version": "5.11.51",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -15,7 +15,7 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core": "5.11.50",
+    "@bfchain/core": "5.11.51",
     "@bfchain/core-crypto": "5.11.49",
     "@bfchain/core-typings": "5.11.49",
     "@types/ed2curve": "^0.2.2",
