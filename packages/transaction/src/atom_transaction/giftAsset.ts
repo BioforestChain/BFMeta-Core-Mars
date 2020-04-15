@@ -1,5 +1,5 @@
 import { TransactionFactory } from "./_txbase";
-import { GiftAssetTransaction, GIFT_DISTRIBUTION_RULE } from "@bfchain/core-model";
+import { GiftAssetTransaction, GIFT_DISTRIBUTION_RULE, RANGE_TYPE } from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
@@ -119,6 +119,17 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
     const giftAsset = giftAssetAsset.giftAsset;
     this.verifyGiftAsset(giftAsset, config);
 
+    if (giftAsset.giftDistributionRule === GIFT_DISTRIBUTION_RULE.RECIPIENT_RANDOM) {
+      if (body.rangeType !== RANGE_TYPE.MULTI_ADDRESS) {
+        throw new ArgumentIllegalException(SHOULD_BE, {
+          to_compare_prop: "rangeType",
+          to_target: "body",
+          be_compare_prop: RANGE_TYPE.MULTI_ADDRESS,
+          ...Function_Exception_Detail,
+        });
+      }
+    }
+
     if (giftAsset.beginUnfrozenBlockHeight) {
       if (giftAsset.beginUnfrozenBlockHeight >= body.effectiveBlockHeight) {
         throw new ArgumentIllegalException(PROP_SHOULD_LT_FIELD, {
@@ -203,7 +214,8 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
       });
     }
 
-    if (!(giftAsset.giftDistributionRule in GIFT_DISTRIBUTION_RULE)) {
+    const { giftDistributionRule } = giftAsset;
+    if (!(giftDistributionRule in GIFT_DISTRIBUTION_RULE)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "giftDistributionRule",
         type: "enum of GIFT_DISTRIBUTION_RULE",
