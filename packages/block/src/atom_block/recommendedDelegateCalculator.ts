@@ -303,13 +303,13 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     const votNum = totalQuota - pdtNum - fbsNum - atnNum;
     // 获取在线率前 n 个账户
     const sortByProductivity = this.sortDelegatesByFields(canBePickAccounts, "productivity");
-    const pdtArray = sortByProductivity.splice(0, pdtNum).map((account) => account.address);
+    const pdtArray = sortByProductivity.splice(0, pdtNum).map(account => account.address);
     // 获取打块数量前 n 个账户
     const sortByForgedBlocks = this.sortDelegatesByFields(sortByProductivity, "forgedBlocks");
-    const fbsArray = sortByForgedBlocks.splice(0, fbsNum).map((account) => account.address);
+    const fbsArray = sortByForgedBlocks.splice(0, fbsNum).map(account => account.address);
     // 获取处理交易数量前 n 个账户
     const sortByApplyTxNumber = this.sortDelegatesByFields(sortByForgedBlocks, "applyTxNumber");
-    const atnArray = sortByApplyTxNumber.splice(0, atnNum).map((account) => account.address);
+    const atnArray = sortByApplyTxNumber.splice(0, atnNum).map(account => account.address);
     // 获取得票率前 n 的账户
     const voteArray: BFChainCore.CanBePickAccount[] = [];
     for (const canBePickAccount of sortByApplyTxNumber) {
@@ -319,7 +319,7 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
       }
     }
     const sortByVote = this.sortDelegatesByFields(voteArray, "vote");
-    const votArray = sortByVote.splice(0, votNum).map((account) => account.address);
+    const votArray = sortByVote.splice(0, votNum).map(account => account.address);
     // 乱序
     this.forgingDelegates.delegates = this.hybridArray(pdtArray, fbsArray, atnArray, votArray);
   }
@@ -414,10 +414,10 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
       });
     }
     const activeDelegates = (block as BFChainCore.Block<BFChainCore.RoundLastBlockRemarkJSON>)
-      .remark.newDelegates;
+      .remark.nextRoundDelegates;
     // 不推荐本轮打块账户
-    for (const address of activeDelegates) {
-      noLongerVoteSet.add(address);
+    for (const delegate of activeDelegates) {
+      noLongerVoteSet.add(delegate.address);
     }
     // 获取矿机注入的受托人
     const memoryDelegates = await accountGetterHelper.getMemoryDelegates();
