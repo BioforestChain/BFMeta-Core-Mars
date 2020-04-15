@@ -413,11 +413,12 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
         function: "pickTopNVoted",
       });
     }
-    const activeDelegates = (block as BFChainCore.Block<BFChainCore.RoundLastBlockRemarkJSON>)
+    const nextRoundDelegates = (block as BFChainCore.Block<BFChainCore.RoundLastBlockRemarkJSON>)
       .remark.nextRoundDelegates;
+    const activeDelegates = nextRoundDelegates.map(delegate => delegate.address);
     // 不推荐本轮打块账户
-    for (const delegate of activeDelegates) {
-      noLongerVoteSet.add(delegate.address);
+    for (const address of activeDelegates) {
+      noLongerVoteSet.add(address);
     }
     // 获取矿机注入的受托人
     const memoryDelegates = await accountGetterHelper.getMemoryDelegates();
