@@ -63,7 +63,7 @@ async function getGiftAssetTransaction(
     /* unitReserveFee: "1000", */
     totalGrabableTimes: 10,
     beginUnfrozenBlockHeight: 99,
-    giftDistributionRule: GIFT_DISTRIBUTION_RULE.RANDOM,
+    giftDistributionRule: GIFT_DISTRIBUTION_RULE.RECIPIENT_RANDOM,
   };
   if (recipient && recipient.length > 0) {
     data.rangeType = RANGE_TYPE.MULTI_ADDRESS;
