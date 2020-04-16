@@ -288,13 +288,18 @@ export class BlockGeneratorCalculator {
 
       do {
         const 选中的受托人 = 排序后的受托人列表.shift();
+
+        /**
+         * @FIXME 这里基于“选中的受托人”来中断循环是不正确的，因为可能时间上就已经掉出这一轮了
+         * 但不困如何，排序后的受托人列表中的名单是肯定足够
+         */
         if (!选中的受托人) {
           break;
         }
 
         /// 将受托人返回给外界
         if (yieldSkip > 1) {
-          if (++yieldCount % yieldSkip === 0 || nowTimestamp === toTimestamp) {
+          if (++yieldCount === yieldSkip || nowTimestamp === toTimestamp) {
             yieldCount = 0;
             yield getResult(选中的受托人);
           }
