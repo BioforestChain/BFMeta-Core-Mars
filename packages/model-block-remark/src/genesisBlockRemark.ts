@@ -136,6 +136,9 @@ export class GenesisBlockRemarkModel extends RoundDelegateRemarkModel<GenesisBlo
   /**每轮可处理的受托人交易数量 */
   @Field.d(GenesisBlockRemarkModel.INC++, "uint32")
   maxDelegateTxsPerRound!: number;
+  /**资产赠送最大可获取次数 */
+  @Field.d(GenesisBlockRemarkModel.INC++, "uint32")
+  maxGrabTimesOfGiftAsset!: number;
   /**发行资产最小的持有本链资产数量 */
   @Field.d(GenesisBlockRemarkModel.INC++, "string")
   issueAssetMinChainAsset!: string;
@@ -218,6 +221,7 @@ export class GenesisBlockRemarkModel extends RoundDelegateRemarkModel<GenesisBlo
         maxBlockRemarkSize: this.maxBlockRemarkSize,
         consessusBeforeSyncBlockDiff: this.consessusBeforeSyncBlockDiff,
         maxDelegateTxsPerRound: this.maxDelegateTxsPerRound,
+        maxGrabTimesOfGiftAsset: this.maxGrabTimesOfGiftAsset,
         issueAssetMinChainAsset: this.issueAssetMinChainAsset,
         registerChainMinChainAsset: this.registerChainMinChainAsset,
         chainAssetAndDigitalAssetExchangeRate: this.chainAssetAndDigitalAssetExchangeRate,

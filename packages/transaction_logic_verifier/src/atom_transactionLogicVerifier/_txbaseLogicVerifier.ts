@@ -642,19 +642,27 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
         minFee: transaction.fee,
       };
     }
+    let realByteLength = byteLength;
     const feePerByte = {
       numerator: BigInt(transaction.fee),
-      denominator: byteLength,
+      denominator: realByteLength,
     };
+    // 红包交易需要付出 可抢次数+1 的最大交易体手续费
+    if (transaction.type === this.transactionHelper.GIFT_ASSET) {
+      const totalGrabTime = (transaction as BFChainCore.Transaction<BFChainCore.GiftAssetAssetJSON>)
+        .asset.giftAsset.totalGrabableTimes;
+      realByteLength = this.configHelper.maxTransactionSize * (totalGrabTime + 1);
+      feePerByte.denominator = realByteLength;
+    }
     const minTransactionFeePerByte = this.configHelper.minTransactionFeePerByte;
     const result = this.jsbiHelper.compareFraction(feePerByte, minTransactionFeePerByte);
     let minFee = this.jsbiHelper
-      .multiplyCeilFraction(byteLength, minTransactionFeePerByte)
+      .multiplyCeilFraction(realByteLength, minTransactionFeePerByte)
       .toString();
     if (result < 0) {
       if (minFee.length !== transaction.fee.length) {
         minFee = this.jsbiHelper
-          .multiplyCeilFraction(byteLength + minFee.length, minTransactionFeePerByte)
+          .multiplyCeilFraction(realByteLength + minFee.length, minTransactionFeePerByte)
           .toString();
       }
       return {
@@ -686,10 +694,18 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
         minFee: transaction.fee,
       };
     }
+    let realByteLength = byteLength;
     const feePerByte = {
       numerator: BigInt(transaction.fee),
-      denominator: byteLength,
+      denominator: realByteLength,
     };
+    // 红包交易需要付出 可抢次数+1 的最大交易体手续费
+    if (transaction.type === this.transactionHelper.GIFT_ASSET) {
+      const totalGrabTime = (transaction as BFChainCore.Transaction<BFChainCore.GiftAssetAssetJSON>)
+        .asset.giftAsset.totalGrabableTimes;
+      realByteLength = this.configHelper.maxTransactionSize * (totalGrabTime + 1);
+      feePerByte.denominator = realByteLength;
+    }
     // 是否使用矿机手续费
     const useWebFee =
       this.jsbiHelper.compareFraction(
@@ -703,11 +719,11 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       : miningMachineMinFeePerByte;
 
     const result = this.jsbiHelper.compareFraction(feePerByte, standardFee);
-    let minFee = this.jsbiHelper.multiplyCeilFraction(byteLength, standardFee).toString();
+    let minFee = this.jsbiHelper.multiplyCeilFraction(realByteLength, standardFee).toString();
     if (result < 0) {
       if (minFee.length !== transaction.fee.length) {
         minFee = this.jsbiHelper
-          .multiplyCeilFraction(byteLength + minFee.length, standardFee)
+          .multiplyCeilFraction(realByteLength + minFee.length, standardFee)
           .toString();
       }
       return {

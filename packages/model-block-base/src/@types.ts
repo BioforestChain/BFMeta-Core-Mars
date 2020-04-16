@@ -122,6 +122,7 @@ declare namespace BFChainCore {
     maxBlockRemarkSize: number;
     consessusBeforeSyncBlockDiff: number;
     maxDelegateTxsPerRound: number;
+    maxGrabTimesOfGiftAsset: number;
     issueAssetMinChainAsset: string;
     registerChainMinChainAsset: string;
     chainAssetAndDigitalAssetExchangeRate: number;

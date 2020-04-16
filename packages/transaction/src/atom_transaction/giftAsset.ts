@@ -1,11 +1,17 @@
 import { TransactionFactory } from "./_txbase";
-import { GiftAssetTransaction, GIFT_DISTRIBUTION_RULE, RANGE_TYPE } from "@bfchain/core-model";
+import {
+  GiftAssetTransaction,
+  GIFT_DISTRIBUTION_RULE,
+  RANGE_TYPE,
+  NewTransactionRefuseReason,
+} from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
   BaseHelper,
   ConfigHelper,
   ChainAssetInfoHelper,
+  JSBIHelper,
 } from "@bfchain/core-helper";
 import {
   CoreExceptionGenerator,
@@ -17,6 +23,8 @@ import {
   SHOULD_NOT_EXIST,
   PROP_SHOULD_LT_FIELD,
   PROP_SHOULD_GT_FIELD,
+  TRANSACTION_FEE_NOT_ENOUGH,
+  PROP_SHOULD_LTE_FIELD,
 } from "@bfchain/core-util-exception";
 import { Injectable, TaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
@@ -36,6 +44,7 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
     public baseHelper: BaseHelper,
     public configHelper: ConfigHelper,
     public chainAssetInfoHelper: ChainAssetInfoHelper,
+    public jsbiHelper: JSBIHelper,
   ) {
     super();
   }
@@ -150,6 +159,29 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
         ...Function_Exception_Detail,
       });
     }
+
+    const { maxTransactionSize, minTransactionFeePerByte } = config;
+    const byteLength = maxTransactionSize * (giftAsset.totalGrabableTimes + 1);
+    const feePerByte = {
+      numerator: BigInt(body.fee),
+      denominator: byteLength,
+    };
+    const result = this.jsbiHelper.compareFraction(feePerByte, minTransactionFeePerByte);
+    let minFee = this.jsbiHelper
+      .multiplyCeilFraction(feePerByte.denominator, minTransactionFeePerByte)
+      .toString();
+    if (result < 0) {
+      if (minFee.length !== body.fee.length) {
+        minFee = this.jsbiHelper
+          .multiplyCeilFraction(byteLength + minFee.length, minTransactionFeePerByte)
+          .toString();
+      }
+      throw new ArgumentIllegalException(TRANSACTION_FEE_NOT_ENOUGH, {
+        errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
+        minFee: minFee.toString(),
+        ...Function_Exception_Detail,
+      });
+    }
   }
   /**
    * 校验`GiftAsset`内容
@@ -191,6 +223,14 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "totalGrabableTimes",
         type: "positive integer",
+        ...GiftAssetAsset_Exception_Detail,
+      });
+    }
+
+    if (giftAsset.totalGrabableTimes > config.maxGrabTimesOfGiftAsset) {
+      throw new ArgumentIllegalException(PROP_SHOULD_LTE_FIELD, {
+        prop: "totalGrabableTimes",
+        field: config.maxGrabTimesOfGiftAsset,
         ...GiftAssetAsset_Exception_Detail,
       });
     }

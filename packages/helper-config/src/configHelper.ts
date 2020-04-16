@@ -117,6 +117,11 @@ export class ConfigHelper {
   get maxTransactionSize() {
     return this.genesisBlock.remark.maxTransactionSize;
   }
+  /**资产赠送最大可获取次数 */
+  @cacheGetter
+  get maxGrabTimesOfGiftAsset() {
+    return this.genesisBlock.remark.maxGrabTimesOfGiftAsset;
+  }
   /**发行数字资产最小持有的链资产数量 */
   @cacheGetter
   get issueAssetMinChainAsset() {

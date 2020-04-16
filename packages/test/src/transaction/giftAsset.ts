@@ -29,7 +29,7 @@ async function getGiftAssetTransaction(
     rangeType: RANGE_TYPE.EMPTY,
     range: [],
     timestamp: 770880, // 生成交易时间戳
-    fee: "78622", // 交易手续费
+    fee: "80000080000", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
     dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
     lns: bfchainCore.config.genesisBlock.remark.genesisNodeAddress,
@@ -61,7 +61,7 @@ async function getGiftAssetTransaction(
     assetType: "ZEK", // 交易的资产类型
     amount: "100000", // 交易资产数量
     /* unitReserveFee: "1000", */
-    totalGrabableTimes: 10,
+    totalGrabableTimes: 1000000,
     beginUnfrozenBlockHeight: 99,
     giftDistributionRule: GIFT_DISTRIBUTION_RULE.RECIPIENT_RANDOM,
   };
@@ -82,7 +82,27 @@ async function getGiftAssetTransaction(
     secondKeypair,
   );
   const xx = await bfchainCore.transaction.recombineTransaction(trs.toJSON());
-  console.log((xx.asset as any).giftAsset);
+
+  const yy = bfchainCore.transactionLogicVerifier.getTransactionLogicVerifierFromType<
+    GiftAssetTransaction
+  >(trs.type);
+
+  const result = yy.checkTrsFeeAndWebFee(trs, trs.getBytes().length);
+
+  const result2 = yy.checkTrsFeeAndMiningMachineFeeAndWebFee(trs, trs.getBytes().length, {
+    numerator: 200,
+    denominator: 1024,
+  });
+
+  if (result.isFeeEnough) {
+    if (result2.isFeeEnough) {
+      console.log((xx.asset as any).giftAsset);
+    } else {
+      throw new Error(JSON.stringify(result2));
+    }
+  } else {
+    throw new Error(JSON.stringify(result));
+  }
 }
 
 (async () => {

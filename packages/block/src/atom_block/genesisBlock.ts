@@ -243,6 +243,14 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       });
     }
 
+    if (!baseHelper.isPositiveInteger(remark.maxGrabTimesOfGiftAsset)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "maxGrabTimesOfGiftAsset",
+        type: "positive integer",
+        ...GenesisBlockRemark_Exception_Detail,
+      });
+    }
+
     if (!remark.issueAssetMinChainAsset) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "issueAssetMinChainAsset",
