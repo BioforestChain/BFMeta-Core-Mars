@@ -136,13 +136,14 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     const canBePickAccounts: BFChainCore.CanBePickAccount[] = [];
 
     const jsbiHelper = this.jsbiHelper;
-    // 过滤掉在线率不符合的账户
+    // 过滤掉在线率不符合，已经关闭投票的账户
     for (const account of accounts) {
       if (
         jsbiHelper.compareFraction(
           jsbiHelper.numberToFraction(account.productivity),
           minBeSelectProductivity,
-        ) >= 0
+        ) >= 0 &&
+        account.isAcceptVote
       ) {
         const forgeInfo = forgeInfoMap.get(account.address) as BFChainCore.ForgeInfos;
         const info: BFChainCore.CanBePickAccount = {
@@ -422,6 +423,13 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     }
     // 获取矿机注入的受托人
     const memoryDelegates = await accountGetterHelper.getMemoryDelegates();
+    // 去除关闭接收投票的账户
+    const delegates = await accountGetterHelper.getAccounts(memoryDelegates);
+    for (const delegate of delegates) {
+      if (!delegate.isAcceptVote) {
+        noLongerVoteSet.add(delegate.address);
+      }
+    }
     for (const address of memoryDelegates) {
       if (!noLongerVoteSet.has(address)) {
         pickDelegates[pickDelegates.length] = address;

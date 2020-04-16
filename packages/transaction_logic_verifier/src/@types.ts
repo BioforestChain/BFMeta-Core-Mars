@@ -115,6 +115,7 @@ declare namespace BFChainCore {
     address: string;
     publicKey: string;
     vote: bigint;
+    isAcceptVote: number;
   };
 
   interface AccountGetterHelperInterface<T extends AccountBaseInfo = AccountBaseInfo> {

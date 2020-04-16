@@ -75,6 +75,7 @@ declare namespace BFChainCore {
     address: string;
     publicKey: string;
     vote: bigint;
+    isAcceptVote: number;
   };
 
   type AccountChangeResultInfo = {
