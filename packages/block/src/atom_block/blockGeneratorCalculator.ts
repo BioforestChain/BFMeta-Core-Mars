@@ -92,12 +92,14 @@ export class BlockGeneratorCalculator {
       toTimestamp?: number;
       blockGetterHelper?: BFChainCore.BlockGetterHelperSimpleInterface;
       ignoreOfflineGeneraters?: boolean;
+      yieldSkip?: number;
     } = {},
   ) {
     const {
       toTimestamp = Infinity,
       blockGetterHelper = this.blockHelper.blockGetterHelper,
       ignoreOfflineGeneraters,
+      yieldSkip = 1,
     } = opts;
     const fromTimestamp = currentBlock.timestamp + this.config.forgeInterval;
 
@@ -273,6 +275,8 @@ export class BlockGeneratorCalculator {
       };
     };
 
+    let yieldCount = 0;
+
     //#region 在某一轮轮选择受托人
     while (nowTimestamp <= toTimestamp) {
       const 现在掉了多少轮 = 计算轮次间隔(nowTimestamp); // <0 的轮次统一使用第一轮的数据
@@ -287,8 +291,16 @@ export class BlockGeneratorCalculator {
         if (!选中的受托人) {
           break;
         }
-        // 将受托人返回给外界
-        yield getResult(选中的受托人);
+
+        /// 将受托人返回给外界
+        if (yieldSkip > 1) {
+          if (++yieldCount % yieldSkip === 0 || nowTimestamp === toTimestamp) {
+            yieldCount = 0;
+            yield getResult(选中的受托人);
+          }
+        } else {
+          yield getResult(选中的受托人);
+        }
 
         // 外界否定这个选中的受托人，那么将之推到掉线的列表中
         (当前轮的掉线列表 || (当前轮的掉线列表 = 结果掉块信息.forceGet(现在掉了多少轮))).push(
