@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-helper",
-  "version": "5.11.55",
+  "version": "5.11.57",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -17,7 +17,7 @@
     "@bfchain/core-helper-account-base": "5.11.55",
     "@bfchain/core-helper-asymmetric": "5.11.55",
     "@bfchain/core-helper-bigint": "5.11.55",
-    "@bfchain/core-helper-block": "5.11.55",
+    "@bfchain/core-helper-block": "5.11.57",
     "@bfchain/core-helper-block-base-statistics": "5.11.55",
     "@bfchain/core-helper-chain-asset-info": "5.11.55",
     "@bfchain/core-helper-chain-time": "5.11.55",
