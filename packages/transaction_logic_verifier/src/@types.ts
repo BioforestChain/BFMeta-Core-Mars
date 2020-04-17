@@ -15,8 +15,8 @@ declare namespace BFChainCore {
     username?: string;
     secondPublicKey?: string;
     accountStatus: number;
-    isDelegate: number;
-    isAcceptVote: number;
+    isDelegate: boolean;
+    isAcceptVote: boolean;
     fixedEquityInfo: {
       round: number;
       equity: bigint;
@@ -115,7 +115,7 @@ declare namespace BFChainCore {
     address: string;
     publicKey: string;
     vote: bigint;
-    isAcceptVote: number;
+    isAcceptVote: boolean;
   };
 
   interface AccountGetterHelperInterface<T extends AccountBaseInfo = AccountBaseInfo> {
