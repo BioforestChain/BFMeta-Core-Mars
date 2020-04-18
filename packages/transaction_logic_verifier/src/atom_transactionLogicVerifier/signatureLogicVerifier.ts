@@ -11,8 +11,8 @@ export class SignatureLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: SignatureTransaction,
     currentBlockHeight: number,
-    accountGetterHelper = this.accountGetterHelper,
-    transactionGetterHelper = this.transactionGetterHelper,
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const sender = await this.logicVerify(
       transaction,

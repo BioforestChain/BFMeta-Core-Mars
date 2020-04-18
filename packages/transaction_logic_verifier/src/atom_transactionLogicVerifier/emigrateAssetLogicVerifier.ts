@@ -24,8 +24,8 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: EmigrateAssetTransaction,
     currentBlockHeight: number,
-    accountGetterHelper = this.accountGetterHelper,
-    transactionGetterHelper = this.transactionGetterHelper,
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "verify",

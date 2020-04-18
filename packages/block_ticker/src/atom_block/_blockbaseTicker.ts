@@ -30,7 +30,7 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
   @Inject(BlockGeneratorCalculator)
   protected blockGeneratorCalculator!: BlockGeneratorCalculator;
   @Inject("accountGetterHelper", { optional: true, dynamics: true })
-  protected accountGetterHelper?: BFChainCore.AccountGetterHelperInterface<any>;
+  protected accountGetterHelper?: BFChainCore.AccountGetterHelperInterface;
   @Inject("blockGetterHelper", { optional: true, dynamics: true })
   protected blockGetterHelper?: BFChainCore.BlockGetterHelperInterface;
   @Inject("blockTickGetterHelper", { optional: true, dynamics: true })
@@ -38,18 +38,17 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
 
   abstract tick(
     block: T,
-    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface<any>,
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
     blockGetterHelper?: BFChainCore.BlockGetterHelperInterface,
     blockTickGetterHelper?: BFChainCore.BlockTickGetterHelperInterface,
   ): Promise<BFChainCore.TickResultInfo>;
 
   async tickBlockBase(
     block: T,
-    accountGetterHelper = this.accountGetterHelper,
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
     blockGetterHelper = this.blockGetterHelper,
     blockTickGetterHelper = this.blockTickGetterHelper,
   ) {
-
     await this.isBlockAlreadyTick(block.height, blockGetterHelper);
 
     const blockUpdateData = await this.calcForgingAndVotingReward(block, blockGetterHelper);

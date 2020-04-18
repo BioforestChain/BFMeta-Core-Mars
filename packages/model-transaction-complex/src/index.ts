@@ -1,5 +1,5 @@
-import type {}  from '@bfchain/util';
-import type {} from '@bfchain/core-typings';
+import type {} from "@bfchain/util";
+import "@bfchain/core-typings";
 import "./@types";
 export * from "./custom.asset";
 export * from "./custom.transaction";

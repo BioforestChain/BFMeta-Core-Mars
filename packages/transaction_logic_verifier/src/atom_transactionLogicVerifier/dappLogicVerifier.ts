@@ -16,8 +16,8 @@ export class DAppLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: DAppTransaction,
     currentBlockHeight: number,
-    accountGetterHelper = this.accountGetterHelper,
-    transactionGetterHelper = this.transactionGetterHelper,
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "verify",

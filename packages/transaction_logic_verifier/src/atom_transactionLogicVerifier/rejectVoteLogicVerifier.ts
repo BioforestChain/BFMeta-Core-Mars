@@ -11,8 +11,8 @@ export class RejectVoteLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: RejectVoteTransaction,
     currentBlockHeight: number,
-    accountGetterHelper = this.accountGetterHelper,
-    transactionGetterHelper = this.transactionGetterHelper,
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const sender = await this.logicVerify(
       transaction,

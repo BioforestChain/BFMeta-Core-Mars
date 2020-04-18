@@ -82,7 +82,7 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
     block: T,
     processBlockType: PROCESSBLOCK_TYPE,
     blockGetterHelper = this.blockGetterHelper,
-    transactionGetterHelper = this.transactionGetterHelper,
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "logicVerify",
@@ -131,7 +131,9 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
     const trsSlot = timeHelper.getSlotNumberByTimestamp(block.timestamp);
     const nowSlot = timeHelper.getSlotNumberByTimestamp(nowTimestamp);
     if (trsSlot > nowSlot) {
-      console.debug(`Block timestamp in future. Block time is ahead of the time on the server, block timestamp ${block.timestamp}, block timestamp slot ${trsSlot}, blockChain now timestamp ${nowTimestamp}, blockChain now timestamp slot ${nowSlot}`);
+      console.debug(
+        `Block timestamp in future. Block time is ahead of the time on the server, block timestamp ${block.timestamp}, block timestamp slot ${trsSlot}, blockChain now timestamp ${nowTimestamp}, blockChain now timestamp slot ${nowSlot}`,
+      );
       // throw new ConsensusException(INVALID_BLOCK_TIMESTAMP, {
       //   reason: `Block timestamp in future. Block time is ahead of the time on the server, block timestamp ${block.timestamp}, block timestamp slot ${trsSlot}, blockChain now timestamp ${nowTimestamp}, blockChain now timestamp slot ${nowSlot}`,
       //   signature: block.signature,
@@ -352,7 +354,10 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
    * @param height
    * @param transactionGetterHelper
    */
-  async checkNewDelegates(height: number, transactionGetterHelper = this.transactionGetterHelper) {
+  async checkNewDelegates(
+    height: number,
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
+  ) {
     const Function_Exception_Detail = {
       function: "checkNewDelegates",
     } as const;

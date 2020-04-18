@@ -58,16 +58,12 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   protected jsbiHelper!: JSBIHelper;
   @Inject(EventLogicVerifier)
   protected eventLogicVerifier!: EventLogicVerifier;
-  @Inject("transactionGetterHelper", { optional: true, dynamics: true })
-  protected transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface;
-  @Inject("accountGetterHelper", { optional: true, dynamics: true })
-  protected accountGetterHelper?: BFChainCore.AccountGetterHelperInterface<any>;
   @Inject("customTransactionCenter", { optional: true, dynamics: true })
   customTransactionCenter?: BFChainCore.CustomTrCenterInterface;
   abstract verify(
     transaction: T,
     currentBlockHeight: number,
-    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface<any>,
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
     customTransactionCenter?: BFChainCore.CustomTrCenterInterface,
   ): Promise<boolean>;
@@ -75,8 +71,8 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   async logicVerify(
     transaction: T,
     currentBlockHeight: number,
-    accountGetterHelper = this.accountGetterHelper,
-    transactionGetterHelper = this.transactionGetterHelper,
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "logicVerify",
@@ -318,7 +314,10 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    *
    * @param tr
    */
-  async checkTransactionMagic(tr: T, accountGetterHelper = this.accountGetterHelper) {
+  async checkTransactionMagic(
+    tr: T,
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
+  ) {
     const Function_Exception_Detail = {
       function: "checkTransactionMagic",
     } as const;
@@ -411,7 +410,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   async checkTransactionRange(
     tr: T,
     currentBlockHeight: number,
-    accountGetterHelper = this.accountGetterHelper,
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "checkTransactionRange",
@@ -496,8 +495,8 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   async checkDAppId(
     trs: T,
     currentBlockHeight: number,
-    accountGetterHelper = this.accountGetterHelper,
-    transactionGetterHelper = this.transactionGetterHelper,
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "checkDAppId",
@@ -579,7 +578,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   async checkLocationName(
     tr: T,
     currentBlockHeight: number,
-    accountGetterHelper = this.accountGetterHelper,
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "checkLocationName",
@@ -746,7 +745,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   async checkRepeatInUntreatedTransaction(
     senderId: string,
     signature: string,
-    transactionGetterHelper = this.transactionGetterHelper,
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "checkRepeatInUntreatedTransaction",
@@ -778,7 +777,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    */
   async checkRepeatInBlockChainTransaction(
     signature: string,
-    transactionGetterHelper = this.transactionGetterHelper,
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "checkRepeatInBlockChainTransaction",
@@ -815,7 +814,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       round: number;
       equity: bigint;
     },
-    accountGetterHelper = this.accountGetterHelper,
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "checkRepeatInBlockChainTransaction",
@@ -859,7 +858,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    */
   async checkSecondaryTransaction(
     transaction: T,
-    transactionGetterHelper = this.transactionGetterHelper,
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     return;
   }

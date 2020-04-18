@@ -21,8 +21,8 @@ export class MarkLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: MarkTransaction,
     currentBlockHeight: number,
-    accountGetterHelper = this.accountGetterHelper,
-    transactionGetterHelper = this.transactionGetterHelper,
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "verify",
@@ -63,7 +63,7 @@ export class MarkLogicVerifier extends TransactionLogicVerifier {
     magic: string,
     dappid: string,
     currentBlockHeight: number,
-    accountGetterHelper = this.accountGetterHelper,
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "isDAppidAlreadyExist",

@@ -26,8 +26,8 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: TrustAssetTransaction,
     currentBlockHeight: number,
-    accountGetterHelper = this.accountGetterHelper,
-    transactionGetterHelper = this.transactionGetterHelper,
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     await this.isTrusteesFrozen(transaction.asset.trustAsset.trustees, accountGetterHelper);
 
@@ -79,7 +79,10 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
    *
    * @param trustees
    */
-  async isTrusteesFrozen(trustees: string[], accountGetterHelper = this.accountGetterHelper) {
+  async isTrusteesFrozen(
+    trustees: string[],
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
+  ) {
     const Function_Exception_Detail = {
       function: "isTrusteesFrozen",
     } as const;

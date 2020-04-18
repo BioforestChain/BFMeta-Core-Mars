@@ -1,0 +1,25 @@
+{
+  "extends": "./tsconfig",
+  "mixin": [
+    "./tsconfig.json",
+    "../../config/tsconfig_base/base.tsconfig.@types.json"
+  ],
+  "compilerOptions": {
+    "declarationDir": "../@types/bfchain__core-helper-account",
+    "declaration": true,
+    "declarationMap": false,
+    "outDir": "../../.cache/helper-account",
+    "tsBuildInfoFile": "../../.cache/helper-account/@types.tsbuildinfo"
+  },
+  "references": [
+    {
+      "path": "../model/tsconfig.@types.json"
+    },
+    {
+      "path": "../typings/tsconfig.@types.json"
+    },
+    {
+      "path": "../util-exception/tsconfig.@types.json"
+    }
+  ]
+}

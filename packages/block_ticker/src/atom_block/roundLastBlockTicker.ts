@@ -12,7 +12,7 @@ import type { RoundLastBlock } from "@bfchain/core-model-block";
 export class RoundLastBlockTicker extends BlockTicker {
   async tick(
     block: RoundLastBlock,
-    accountGetterHelper = this.accountGetterHelper,
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
     blockGetterHelper = this.blockGetterHelper,
     blockTickGetterHelper = this.blockTickGetterHelper,
   ) {
@@ -37,7 +37,7 @@ export class RoundLastBlockTicker extends BlockTicker {
   async roundEnd(
     block: BFChainCore.Block,
     round: number,
-    accountGetterHelper = this.accountGetterHelper,
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
     blockGetterHelper = this.blockGetterHelper,
     blockTickGetterHelper = this.blockTickGetterHelper,
   ) {
@@ -67,7 +67,7 @@ export class RoundLastBlockTicker extends BlockTicker {
   async saveDelegatesVoteAndTotalVote(
     height: number,
     blockGetterHelper = this.blockGetterHelper,
-    accountGetterHelper = this.accountGetterHelper,
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "saveDelegatesVoteAndTotalVote",

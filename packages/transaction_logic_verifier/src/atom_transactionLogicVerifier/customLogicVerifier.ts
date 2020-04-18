@@ -17,8 +17,9 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: CustomTransaction,
     currentBlockHeight: number,
-    accountGetterHelper = this.accountGetterHelper,
-    transactionGetterHelper = this.transactionGetterHelper,
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
+
     customTransactionCenter = this.customTransactionCenter,
   ): Promise<boolean> {
     const Function_Exception_Detail = {

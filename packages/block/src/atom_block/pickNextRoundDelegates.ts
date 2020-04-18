@@ -6,6 +6,7 @@ import {
 } from "@bfchain/core-helper";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 import { Injectable, Inject } from "@bfchain/util";
+import { AccountHelper } from "@bfchain/core-helper-account";
 const { NoFoundException } = CoreExceptionGenerator("Core", "PickNextRoundDelegates");
 
 /**
@@ -16,11 +17,10 @@ export class PickNextRoundDelegates<T extends BFChainCore.ForSortAccountInfo> {
   constructor(
     private config: ConfigHelper,
     private blockHelper: BlockHelper,
+    private accountHelper: AccountHelper,
     private accountBaseHelper: AccountBaseHelper,
     private transactionHelper: TransactionHelper,
   ) {}
-  @Inject("accountGetterHelper", { optional: true })
-  private accountGetterHelper?: BFChainCore.AccountGetterHelperInterface<T>;
 
   /**
    * 获取受托人列表
@@ -28,9 +28,10 @@ export class PickNextRoundDelegates<T extends BFChainCore.ForSortAccountInfo> {
    */
   async getNextRoundDelegates(
     currentHeight: number,
-    accountGetterHelper:
-      | Pick<BFChainCore.AccountGetterHelperInterface<T>, "getNextRoundDelegates" | "getAccounts">
-      | undefined = this.accountGetterHelper,
+    accountGetterHelper?: Pick<
+      BFChainCore.AccountGetterHelperInterface,
+      "getNextRoundDelegates" | "getAccounts"
+    >,
   ) {
     const currentRound = this.blockHelper.calcRoundByHeight(currentHeight);
 
@@ -39,14 +40,12 @@ export class PickNextRoundDelegates<T extends BFChainCore.ForSortAccountInfo> {
 
   async calcForgingDelegates(
     round: number,
-    accountGetterHelper:
-      | Pick<BFChainCore.AccountGetterHelperInterface<T>, "getNextRoundDelegates" | "getAccounts">
-      | undefined = this.accountGetterHelper,
+    accountGetterHelper?: Pick<
+      BFChainCore.AccountGetterHelperInterface,
+      "getNextRoundDelegates" | "getAccounts"
+    >,
   ) {
-    if (!accountGetterHelper) {
-      throw new NoFoundException();
-    }
-    let results = await accountGetterHelper.getNextRoundDelegates();
+    let results = await this.accountHelper.getNextRoundDelegates<T>(accountGetterHelper);
     const reSorted = results.length < this.config.blockPerRound ? true : false;
     let pickAddressArr = results.map((result: T) => result.address);
     let tempRound = round - 1;
@@ -80,13 +79,8 @@ export class PickNextRoundDelegates<T extends BFChainCore.ForSortAccountInfo> {
     round: number,
     results: T[],
     pickAddressArr: string[],
-    accountGetterHelper:
-      | Pick<BFChainCore.AccountGetterHelperInterface<T>, "getAccounts">
-      | undefined = this.accountGetterHelper,
+    accountGetterHelper?: Pick<BFChainCore.AccountGetterHelperInterface, "getAccounts">,
   ) {
-    if (!accountGetterHelper) {
-      throw new NoFoundException();
-    }
     if (round === 1) {
       return await this.getGenesisDelegates(results, pickAddressArr, accountGetterHelper);
     }
@@ -101,7 +95,10 @@ export class PickNextRoundDelegates<T extends BFChainCore.ForSortAccountInfo> {
         newGeneratorAddressArr[newGeneratorAddressArr.length] = address;
       }
     }
-    let delegates = await accountGetterHelper.getAccounts(newGeneratorAddressArr);
+    let delegates = await this.accountHelper.getAccounts<T>(
+      newGeneratorAddressArr,
+      accountGetterHelper,
+    );
     delegates = this.__sortByProductivity(delegates);
     results.push.apply(results, delegates.slice(0, this.config.blockPerRound - results.length));
     return {
@@ -116,13 +113,8 @@ export class PickNextRoundDelegates<T extends BFChainCore.ForSortAccountInfo> {
   async getGenesisDelegates(
     results: T[],
     pickAddressArr: string[],
-    accountGetterHelper:
-      | Pick<BFChainCore.AccountGetterHelperInterface<T>, "getAccounts">
-      | undefined = this.accountGetterHelper,
+    accountGetterHelper?: Pick<BFChainCore.AccountGetterHelperInterface, "getAccounts">,
   ) {
-    if (!accountGetterHelper) {
-      throw new NoFoundException();
-    }
     // 创世账户不能再出块
     const genesisDelegates = this.transactionHelper.genesisDelegates(this.config);
     const addressArray: string[] = [];
@@ -132,7 +124,7 @@ export class PickNextRoundDelegates<T extends BFChainCore.ForSortAccountInfo> {
         pickAddressArr[pickAddressArr.length] = address;
       }
     }
-    let delegates = await accountGetterHelper.getAccounts(addressArray);
+    let delegates = await this.accountHelper.getAccounts<T>(addressArray, accountGetterHelper);
     delegates = this.__sortByProductivity(delegates);
     results.push.apply(results, delegates.slice(0, this.config.blockPerRound - results.length));
     return {

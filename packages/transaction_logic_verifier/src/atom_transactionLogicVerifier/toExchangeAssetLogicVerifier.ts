@@ -22,8 +22,8 @@ export class ToExchangeAssetLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: ToExchangeAssetTransaction,
     currentBlockHeight: number,
-    accountGetterHelper = this.accountGetterHelper,
-    transactionGetterHelper = this.transactionGetterHelper,
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     // FIXME: no need to verify
     const toExchangeAsset = transaction.asset.toExchangeAsset;
@@ -46,7 +46,7 @@ export class ToExchangeAssetLogicVerifier extends TransactionLogicVerifier {
    */
   async isExchangeAssetAlreadyExist(
     toExchangeAssetAsset: ToExchangeAssetModel,
-    accountGetterHelper = this.accountGetterHelper,
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "isExchangeAssetAlreadyExist",

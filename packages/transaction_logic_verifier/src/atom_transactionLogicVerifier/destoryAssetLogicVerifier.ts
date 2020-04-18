@@ -16,8 +16,8 @@ export class DestoryAssetLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: DestoryAssetTransaction,
     currentBlockHeight: number,
-    accountGetterHelper = this.accountGetterHelper,
-    transactionGetterHelper = this.transactionGetterHelper,
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "logicVerify",

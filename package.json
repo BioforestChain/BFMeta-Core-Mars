@@ -36,6 +36,8 @@
   },
   "scripts": {
     "-prepare": "yarn mono",
+    "format": "bdk-format",
+    "format:all": "bdk-format --mode all",
     "clear": "node ./scripts/rmBuild.js",
     "up": "yarn upgrade-interactive --latest",
     "mono": "bdk-mono",

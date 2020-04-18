@@ -1,4 +1,4 @@
-import type {} from '@bfchain/core-typings';
+import "@bfchain/core-typings";
 export * from "./_blockbase";
 export * from "./commonBlock";
 export * from "./genesisBlock";

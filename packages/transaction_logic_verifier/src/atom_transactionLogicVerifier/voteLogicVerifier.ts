@@ -22,8 +22,8 @@ export class VoteLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: VoteTransaction,
     currentBlockHeight: number,
-    accountGetterHelper = this.accountGetterHelper,
-    transactionGetterHelper = this.transactionGetterHelper,
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const sender = await this.logicVerify(
       transaction,
@@ -45,7 +45,7 @@ export class VoteLogicVerifier extends TransactionLogicVerifier {
    */
   async isVoteForAcceptVoteDelegate(
     address: string,
-    accountGetterHelper = this.accountGetterHelper,
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "isVoteForAcceptVoteDelegate",

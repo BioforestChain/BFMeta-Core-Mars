@@ -3,7 +3,7 @@ import { ConfigHelper } from "@bfchain/core-helper-config";
 import { BaseHelper } from "@bfchain/core-helper-type";
 import { PROP_SHOULD_LTE_FIELD, OUT_OF_RANGE } from "@bfchain/core-util-exception-errorcode";
 import { CoreExceptionGenerator, NOT_EXIST } from "@bfchain/core-util-exception";
-import { BLOCK_TYPES_BASE } from "@bfchain/core-model-block";
+import { BLOCK_TYPES_BASE, Block } from "@bfchain/core-model-block";
 import { AccountBaseHelper } from "@bfchain/core-helper-account-base";
 type RoundLastBlock = import("@bfchain/core-model-block").RoundLastBlock;
 
@@ -12,6 +12,7 @@ const {
   NoFoundException,
   ArgumentIllegalException,
   OutOfRangeException,
+  IllegalStateException,
 } = CoreExceptionGenerator("HELPER", "blockHelper");
 
 @Injectable()
@@ -278,6 +279,43 @@ export class BlockHelper {
     }
     return blockGetterHelper.getLastBlock();
   }
+
+  async getBlocksByRange(
+    minHeight: number,
+    maxHeight: number,
+    blockGetterHelper:
+      | Required<Pick<BFChainCore.BlockGetterHelperSimpleInterface, "getBlocksByRange">>
+      | Pick<BFChainCore.BlockGetterHelperSimpleInterface, "getBlockByHeight" | "getBlocksByRange">
+      | undefined = this.blockGetterHelper,
+  ) {
+    if (!blockGetterHelper) {
+      throw new NoFoundException(NOT_EXIST, {
+        prop: "blockGetterHelper",
+        target: "moduleStroge",
+        function: "BlockGetterHelper.getBlocksByRange",
+      });
+    }
+    if (!("getBlockByHeight" in blockGetterHelper) /* && blockGetterHelper.getBlocksByRange */) {
+      return blockGetterHelper.getBlocksByRange(minHeight, maxHeight);
+    }
+
+    if ("getBlockByHeight" in blockGetterHelper) {
+      const res: Block[] = [];
+      for (let h = minHeight; h < maxHeight; h++) {
+        const b = await blockGetterHelper.getBlockByHeight(h);
+        if (!b) {
+          break;
+        }
+        res.push(b);
+      }
+      return res;
+    }
+    throw new IllegalStateException("Could not getBlocksByRange({minHeight}~{maxHeight})", {
+      minHeight,
+      maxHeight,
+    });
+  }
+
   async getCurrentGenerateBlock(
     blockGetterHelper:
       | Pick<BFChainCore.BlockGetterHelperSimpleInterface, "getCurrentGenerateBlock">

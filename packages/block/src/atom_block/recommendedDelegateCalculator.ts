@@ -8,11 +8,6 @@ const { NoFoundException } = CoreExceptionGenerator("BLOCK", "RecommendedDelegat
  */
 @Injectable()
 export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountInfo> {
-  @Inject("accountGetterHelper", { optional: true })
-  private accountGetterHelper?: BFChainCore.AccountGetterHelperInterface<T>;
-  @Inject("blockGetterHelper", { optional: true })
-  private blockGetterHelper?: BFChainCore.BlockGetterHelperInterface;
-
   constructor(
     private config: ConfigHelper,
     private blockHelper: BlockHelper,
@@ -36,52 +31,25 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
   private async calDelegateNumberOfForgingAndPackagedTransactions(
     currentBlockHeight: number,
     numberOfRounds: number,
-    blockGetterHelper = this.blockGetterHelper,
+    blockGetterHelper?: BFChainCore.BlockGetterHelperInterface,
   ) {
-    if (!blockGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "getBlockByCondition",
-        target: "blockGetterHelper",
-        function: "calDelegateNumberOfForgingAndPackagedTransactions",
-      });
-    }
-
-    if (!blockGetterHelper.getBlockByCondition) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "getBlockByCondition",
-        target: "blockGetterHelper",
-        function: "calDelegateNumberOfForgingAndPackagedTransactions",
-      });
-    }
-
     const blockPerRound = this.config.blockPerRound;
     // 获取起始计算高度
-    const lastBlockHeight =
+    const maxHeight =
       currentBlockHeight <= blockPerRound
         ? currentBlockHeight
         : currentBlockHeight - (currentBlockHeight % blockPerRound);
-    // 生成查询条件
-    const conPars: {
-      height: {
-        $gt?: number;
-        $lte?: number;
-      };
-    } = {
-      height: {},
-    };
-    conPars.height = {
-      $lte: lastBlockHeight,
-    };
-    const numberOfBlocks = numberOfRounds * blockPerRound;
-    if (lastBlockHeight > numberOfBlocks) {
-      conPars.height.$gt = lastBlockHeight - numberOfBlocks;
-    } else {
+
+    let minHeight = 1;
+    {
+      const numberOfBlocks = numberOfRounds * blockPerRound;
+      if (maxHeight > numberOfBlocks) {
+        minHeight = maxHeight - numberOfBlocks;
+      }
       // 创世账户不纳入推荐列表
-      conPars.height.$gt = 1;
     }
 
-    const blocks = await blockGetterHelper.getBlockByCondition(conPars);
-
+    const blocks = await this.blockHelper.getBlocksByRange(minHeight, maxHeight, blockGetterHelper);
     const generatorAddressList: string[] = [];
     const forgeInfoMap = new Map<string, BFChainCore.ForgeInfos>();
     for (const block of blocks) {
@@ -116,9 +84,7 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     minBeSelectProductivity: BFChainCore.FractionJSON,
     generatorAddressList: string[],
     forgeInfoMap: Map<string, BFChainCore.ForgeInfos>,
-    accountGetterHelper:
-      | Pick<BFChainCore.AccountGetterHelperInterface, "getAccounts">
-      | undefined = this.accountGetterHelper,
+    accountGetterHelper?: Pick<BFChainCore.AccountGetterHelperInterface, "getAccounts">,
   ) {
     const Function_Exception_Detail = {
       function: "calCanBePickAccounts",
@@ -252,10 +218,8 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     currentBlockHeight: number,
     options: BFChainCore.RecommendedDelegateOptions,
     activeDelegates: string[],
-    accountGetterHelper:
-      | Pick<BFChainCore.AccountGetterHelperInterface, "getAccounts">
-      | undefined = this.accountGetterHelper,
-    blockGetterHelper = this.blockGetterHelper,
+    accountGetterHelper?: Pick<BFChainCore.AccountGetterHelperInterface, "getAccounts">,
+    blockGetterHelper?: BFChainCore.BlockGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "calRecommendedDelegates",
@@ -367,13 +331,11 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     address: string,
     currentBlockHeight: number,
     options: BFChainCore.RecommendedDelegateOptions,
-    accountGetterHelper:
-      | Pick<
-          BFChainCore.AccountGetterHelperInterface,
-          "getAccountVoteInfo" | "getMemoryDelegates" | "getAccounts"
-        >
-      | undefined = this.accountGetterHelper,
-    blockGetterHelper = this.blockGetterHelper,
+    accountGetterHelper?: Pick<
+      BFChainCore.AccountGetterHelperInterface,
+      "getAccountVoteInfo" | "getMemoryDelegates" | "getAccounts"
+    >,
+    blockGetterHelper?: BFChainCore.BlockGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "calRecommendedDelegate",
@@ -385,13 +347,7 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
         ...Function_Exception_Detail,
       });
     }
-    if (!blockGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "blockGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
+
     /**最终选出的受托人 */
     const pickDelegates: string[] = [];
     /**本次推选的受托人数量 */
@@ -406,14 +362,7 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     let blockHeight = (curRound - 1) * blockPerRound;
     // 第一轮拿的是创世块选出的受托人
     blockHeight = blockHeight || 1;
-    const block = await blockGetterHelper.getBlockByHeight(blockHeight);
-    if (!block) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: `block with height ${blockHeight}`,
-        target: "blockchain",
-        function: "pickTopNVoted",
-      });
-    }
+    const block = await this.blockHelper.forceGetBlockByHeight(blockHeight, blockGetterHelper);
     const nextRoundDelegates = (block as BFChainCore.Block<BFChainCore.RoundLastBlockRemarkJSON>)
       .remark.nextRoundDelegates;
     const activeDelegates = nextRoundDelegates.map((delegate) => delegate.address);

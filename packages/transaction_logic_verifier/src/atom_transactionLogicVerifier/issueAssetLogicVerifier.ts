@@ -15,8 +15,8 @@ export class IssueAssetLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: IssueAssetTransaction,
     currentBlockHeight: number,
-    accountGetterHelper = this.accountGetterHelper,
-    transactionGetterHelper = this.transactionGetterHelper,
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const sender = await this.logicVerify(
       transaction,

@@ -17,12 +17,12 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
     block: RoundLastBlock,
     processBlockType: PROCESSBLOCK_TYPE,
     blockGetterHelper = this.blockGetterHelper,
-    transactionGetterHelper = this.transactionGetterHelper,
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     // body check
     await this.verifyBlockBase(block, processBlockType, blockGetterHelper, transactionGetterHelper);
     await this.checkPreviousBlock(block, blockGetterHelper);
-    await this.isValidBlockSlot(block,  blockGetterHelper);
+    await this.isValidBlockSlot(block, blockGetterHelper);
     // 由于 remark 部分数据涉及交易流程，所以在外部手动调用校验
     // remark check
     // await this.verifyBlockRemark(block, blockGetterHelper, transactionGetterHelper);
@@ -33,7 +33,7 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
   async verifyBlockRemark(
     block: RoundLastBlock,
     blockGetterHelper = this.blockGetterHelper,
-    transactionGetterHelper = this.transactionGetterHelper,
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     // 校验链上链 hash
     const { height, remark } = block;
@@ -52,7 +52,7 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
   async isValidNewDelegates(
     height: number,
     newDelegates: string[],
-    transactionGetterHelper = this.transactionGetterHelper,
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "isValidNewDelegates",

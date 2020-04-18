@@ -24,8 +24,8 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: SignForAssetTransaction,
     currentBlockHeight: number,
-    accountGetterHelper = this.accountGetterHelper,
-    transactionGetterHelper = this.transactionGetterHelper,
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "verify",
@@ -93,7 +93,7 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
    */
   async isValidThirdPartySignatures(
     thirdPartySignatures: AccountSignatureModel[],
-    accountGetterHelper = this.accountGetterHelper,
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "isValidThirdPartySignatures",
@@ -213,7 +213,7 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
    */
   async checkSecondaryTransaction(
     transaction: SignForAssetTransaction,
-    transactionGetterHelper = this.transactionGetterHelper,
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "checkSecondaryTransaction",

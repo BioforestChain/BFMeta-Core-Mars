@@ -1,4 +1,4 @@
-import type {} from "@bfchain/core-typings";
+import "@bfchain/core-typings";
 export * from "./ed2curve";
 import { convertPublicKey, convertSecretKey } from "./ed2curve";
 

@@ -1,5 +1,5 @@
 import "./@types";
-import type {} from "@bfchain/core-typings";
+import "@bfchain/core-typings";
 import type {} from "@bfchain/core-model-common";
 
 export * from "./blockchainStatus.model";

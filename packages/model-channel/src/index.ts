@@ -1,4 +1,4 @@
-import type {} from '@bfchain/core-typings';
+import "@bfchain/core-typings";
 import "./@types";
 import { Message, Type, Field } from "@bfchain/protobuf";
 import { DUPLEX_API_CMD } from "./constants";

@@ -33,16 +33,11 @@ declare namespace BFChainCore {
     getVoteForDelegate?(generatorAddress: string, height: number): Promise<VoterInfo[]>;
     /**获取投票记录 */
     getVoteRecords?(): Promise<VoteRecord>;
+    getBlocksByRange?(minHeight: number, maxHeight: number): Promise<Block[]>;
   }
   interface BlockGetterHelperInterface<CC extends ChainChannel = ChainChannel>
     extends BlockGetterHelperSimpleInterface {
     getCurrentReplayingBlockInfo?(): Promise<CurrentReplayingBlockInfo<CC> | undefined>;
-    getBlockByCondition?(args: {
-      height: {
-        $gt?: number;
-        $lte?: number;
-      };
-    }): Promise<Block[]>;
   }
   type BlockPlotChecker = Readonly<{
     height: number;

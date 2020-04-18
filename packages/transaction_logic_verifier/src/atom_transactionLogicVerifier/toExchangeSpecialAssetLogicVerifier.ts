@@ -22,8 +22,8 @@ export class ToExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
   async verify(
     transaction: ToExchangeSpecialAssetTransaction,
     currentBlockHeight: number,
-    accountGetterHelper = this.accountGetterHelper,
-    transactionGetterHelper = this.transactionGetterHelper,
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "verify",

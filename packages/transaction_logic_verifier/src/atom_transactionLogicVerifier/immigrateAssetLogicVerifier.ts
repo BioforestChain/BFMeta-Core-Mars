@@ -27,8 +27,8 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: ImmigrateAssetTransaction,
     currentBlockHeight: number,
-    accountGetterHelper = this.accountGetterHelper,
-    transactionGetterHelper = this.transactionGetterHelper,
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "verify",
@@ -101,7 +101,7 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
    */
   async checkSecondaryTransaction(
     transaction: ImmigrateAssetTransaction,
-    transactionGetterHelper = this.transactionGetterHelper,
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "checkSecondaryTransaction",

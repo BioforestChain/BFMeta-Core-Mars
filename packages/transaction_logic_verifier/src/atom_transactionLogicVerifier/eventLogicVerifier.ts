@@ -133,7 +133,7 @@ export class EventLogicVerifier {
     sender: BFChainCore.AccountInfoAndAssets,
     recipient: BFChainCore.AccountInfoAndAssets | undefined,
     currentBlockHeight: number,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface<any>,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {

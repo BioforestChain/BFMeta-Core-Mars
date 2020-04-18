@@ -22,8 +22,8 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: GrabAssetTransaction,
     currentBlockHeight: number,
-    accountGetterHelper = this.accountGetterHelper,
-    transactionGetterHelper = this.transactionGetterHelper,
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "verify",
@@ -171,7 +171,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
    */
   async checkSecondaryTransaction(
     transaction: GrabAssetTransaction,
-    transactionGetterHelper = this.transactionGetterHelper,
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "checkSecondaryTransaction",

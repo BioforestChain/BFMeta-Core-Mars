@@ -6,7 +6,7 @@ export class GenesisBlockLogicVerifier extends BlockLogicVerifier {
     block: GenesisBlock,
     processBlockType: PROCESSBLOCK_TYPE,
     blockGetterHelper = this.blockGetterHelper,
-    transactionGetterHelper = this.transactionGetterHelper,
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     // body check
     await this.verifyBlockBase(block, processBlockType, blockGetterHelper, transactionGetterHelper);
@@ -20,7 +20,7 @@ export class GenesisBlockLogicVerifier extends BlockLogicVerifier {
   async verifyBlockRemark(
     block: GenesisBlock,
     blockGetterHelper = this.blockGetterHelper,
-    transactionGetterHelper = this.transactionGetterHelper,
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     // 校验新注册的受托人
     await this.checkNewDelegates(block.height, transactionGetterHelper);
