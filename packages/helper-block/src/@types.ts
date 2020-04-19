@@ -124,7 +124,11 @@ declare namespace BFChainCore {
   //#region ChainChannel Base Interface
 
   interface ChainChannelGroup<CC extends ChainChannel> {
+    include(chainChannel: CC): boolean;
+    size: number;
+    [Symbol.iterator](): IterableIterator<CC>;
     addChainChannel(chainChannel: CC): boolean;
+    addChainChannels(chainChannels: CC | ChainChannelGroup<CC>): { ADD: number; FAIL: number };
     removeChainChannel(chainChannel: CC): boolean;
     destroy(): void;
   }

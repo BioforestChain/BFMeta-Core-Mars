@@ -2,7 +2,6 @@ import { Block, RoundLastBlock } from "@bfchain/core-model-block";
 import { Injectable } from "@bfchain/util";
 import { BlockHelper, ChainTimeHelper, ConfigHelper } from "@bfchain/core-helper";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
-import { ChainChannelGroup } from "@bfchain/core-channel";
 const { warn, ConsensusException, log } = CoreExceptionGenerator("Core", "blockForkCheck");
 
 /**
@@ -76,7 +75,7 @@ export class BlockForkChecker {
      * 收到的新区块
      */
     pc2_or_lastestBlock2: BFChainCore.BlockPlotChecker | BFChainCore.Block,
-    chainChannel_or_Group: ChainChannelGroup<CC> | CC,
+    chainChannel_or_Group: BFChainCore.ChainChannelGroup<CC> | CC,
     blockGetterHelper1 = this.blockHelper
       .blockGetterHelper as BFChainCore.BlockGetterHelperInterface<CC>,
   ) {
@@ -99,13 +98,7 @@ export class BlockForkChecker {
         currentSyncBlockInfo && currentSyncBlockInfo.chainChannelGroup;
       if (currentSyncChainChannelGroup) {
         /// 可以直接合并两条链
-        if (chainChannel_or_Group instanceof ChainChannelGroup) {
-          chainChannel_or_Group.forEach(chainChannel => {
-            currentSyncChainChannelGroup.addChainChannel(chainChannel);
-          });
-        } else {
-          currentSyncChainChannelGroup.addChainChannel(chainChannel_or_Group);
-        }
+        currentSyncChainChannelGroup.addChainChannels(chainChannel_or_Group);
       }
     }
     return res;
@@ -456,14 +449,14 @@ export class BlockForkChecker {
           pc1.height,
           blockGetterHelper1,
         )
-      ).map(b => this.blockHelper.parseBlockToPlotChecker(b));
+      ).map((b) => this.blockHelper.parseBlockToPlotChecker(b));
       const pcList2 = (
         await this.blockHelper.forceGetBlockListByHeightRange(
           sameBlock.height + 1,
           pc2.height,
           blockGetterHelper2,
         )
-      ).map(b => this.blockHelper.parseBlockToPlotChecker(b));
+      ).map((b) => this.blockHelper.parseBlockToPlotChecker(b));
       const checkedPlot = this.checkSameHeightBlockListPlot_(pcList1, pcList2);
 
       if (checkedPlot === BLOCK_CHAIN_PLOT.FORK) {

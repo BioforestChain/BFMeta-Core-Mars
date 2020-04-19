@@ -144,11 +144,8 @@ declare namespace BFChainCore {
 
   interface ChainChannelGroup<CC extends ChainChannel> extends ChainChannelBase {
     groupName: string;
-    size: number;
     forEach(hanlder: (chainChannel: CC, i: number) => any): void;
-    include(chainChannel: CC): boolean;
-    [Symbol.iterator](): IterableIterator<CC>;
-    addChainChannels(chainChannels: CC | ChainChannelGroup<CC>): { ADD: number; FAIL: number };
+   
     /**开始一个节点并发任务 */
     startParallelTask(
       task_id: string,
