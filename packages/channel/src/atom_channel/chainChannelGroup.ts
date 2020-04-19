@@ -71,7 +71,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
   public options: { disableAutoRemove?: boolean } = {};
 
   constructor(
-    @Inject(CHAIN_CHANNEL_GROUP_ARGS.CHANNEL_LIST) chainChannelList: DH[],
+    @Inject(CHAIN_CHANNEL_GROUP_ARGS.CHANNEL_LIST) chainChannelList: Iterable<DH>,
     @Inject(CHAIN_CHANNEL_GROUP_ARGS.GROUP_NAME, { optional: true })
     public groupName = "",
     @Inject(CHAIN_CHANNEL_GROUP_ARGS.OPTIONS, { optional: true })
@@ -85,9 +85,9 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     /**
      * 添加节点并跟随事件
      */
-    chainChannelList.forEach((dh) => {
+    for (const dh of chainChannelList) {
       this.addChainChannel_(dh, this.options);
-    });
+    }
   }
   private _parallelTasksMap = new Map<
     string,
