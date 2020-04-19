@@ -474,6 +474,19 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     this._chainChannelEvents.emit("addChainChannel", chainChannel);
     return true;
   }
+  addChainChannels(chainChannels: DH | BFChainCore.ChainChannelGroup<DH>) {
+    let ADD = 0;
+    let FAIL = 0;
+    const ccs = "size" in chainChannels ? chainChannels : [chainChannels];
+    for (const cc of ccs) {
+      if (this.addChainChannel(cc)) {
+        ADD += 1;
+      } else {
+        FAIL += 1;
+      }
+    }
+    return { ADD, FAIL };
+  }
   removeChainChannel(chainChannel: DH) {
     chainChannel.offEmit(this._eventFollower);
     const listenerRemover = this._DAWCLWM.get(chainChannel);
