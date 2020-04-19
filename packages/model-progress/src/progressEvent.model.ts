@@ -31,9 +31,23 @@ export class ProgressEventModel<EVENT extends string> extends Message<ProgressEv
   @Field.d(ProgressEventModel.INC++, PROGRESS_EVENT_MODE)
   mode!: PROGRESS_EVENT_MODE;
   @Field.d(ProgressEventModel.INC++, "uint32")
-  loaded!: number;
+  _loaded!: number;
+  get loaded() {
+    /// Math.min
+    return this._loaded > this.total ? this.total : this._loaded;
+  }
+  set loaded(v) {
+    this._loaded = v;
+  }
   @Field.d(ProgressEventModel.INC++, "uint32", "optional")
-  buffer?: number;
+  _buffer?: number;
+  get buffer() {
+    /// Math.min
+    return this._buffer && this._buffer > this.total ? this.total : this._buffer;
+  }
+  set buffer(v) {
+    this._buffer = v;
+  }
   @Field.d(ProgressEventModel.INC++, "uint32")
   total!: number;
   toJSON() {
