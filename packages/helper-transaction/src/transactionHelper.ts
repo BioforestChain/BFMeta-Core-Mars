@@ -82,10 +82,7 @@ export class TransactionHelper {
    * @param trs
    */
   generateSignature(trs: Transaction) {
-    return this.cryptoHelper
-      .sha256()
-      .update(trs.getBytes())
-      .digest("hex");
+    return this.cryptoHelper.sha256().update(trs.getBytes()).digest("hex");
   }
   /**是否是合法的交易 signature */
   isValidTransactionSignature(signature: string) {
@@ -275,10 +272,7 @@ export class TransactionHelper {
       senderSecondPublicKeyBuffer,
       senderPublicKeyBuffer,
     } = transaction;
-    const hash = await this.cryptoHelper
-      .sha256()
-      .update(transaction.getBytes(true, true))
-      .digest();
+    const hash = await this.cryptoHelper.sha256().update(transaction.getBytes(true, true)).digest();
     // 验证 signature 与 publicKey
     if (
       !this.keypairHelper.detached_verify(
@@ -417,10 +411,7 @@ export class TransactionHelper {
       return true;
     }
     /// 根据交易信息校验是否符合难度
-    const shaBuffer = await this.cryptoHelper
-      .sha256()
-      .update(signatureBuffer)
-      .digest();
+    const shaBuffer = await this.cryptoHelper.sha256().update(signatureBuffer).digest();
 
     /**得分应该读取多少位数，至少8位 */
     const X = Math.max(
@@ -591,9 +582,9 @@ export class TransactionHelper {
    */
   calcGrabGiftAssetNumber(
     grabId: string,
-    giftTransactionInBlock: BFChainCore.TransactionInBlock<GiftAssetTransaction>,
+    giftTransaction: GiftAssetTransaction,
+    blockSignatureBuffer: Uint8Array,
   ) {
-    const giftTransaction = giftTransactionInBlock.transaction;
     const giftAsset = giftTransaction.asset.giftAsset;
     switch (giftAsset.giftDistributionRule) {
       case GIFT_DISTRIBUTION_RULE.AVERAGE:
@@ -601,7 +592,7 @@ export class TransactionHelper {
       case GIFT_DISTRIBUTION_RULE.RANDOM:
         return this.calcGrabRandomGiftAssetNumber(
           grabId,
-          giftTransactionInBlock.signatureBuffer,
+          blockSignatureBuffer,
           giftTransaction.signatureBuffer,
           giftTransaction.senderId,
           giftAsset.amount,
@@ -610,7 +601,7 @@ export class TransactionHelper {
       case GIFT_DISTRIBUTION_RULE.RECIPIENT_RANDOM:
         return this.calcGrabRecipientRandomGiftAssetNumber(
           grabId,
-          giftTransactionInBlock.signatureBuffer,
+          blockSignatureBuffer,
           giftTransaction.signatureBuffer,
           giftTransaction.senderId,
           giftTransaction.range,
@@ -621,17 +612,16 @@ export class TransactionHelper {
 
   /**基于gift交易以及要生成grab交易的账户信息，生成grabAsset */
   async generateGrabAsset(
-    giftTransactionInBlock: BFChainCore.TransactionInBlock<GiftAssetTransaction>,
+    giftTransaction: GiftAssetTransaction,
+    blockSignatureBuffer: Uint8Array,
     opts: BFChainCore.TransactionHelper.GenerateGrabAssetOptions,
   ) {
     const grabKeypair = await this.accountBaseHelper.createSecretKeypair(opts.mainSecret);
-    const giftTransaction = giftTransactionInBlock.transaction;
     const giftAsset = giftTransaction.asset.giftAsset;
     const {
       grabId = await this.accountBaseHelper.getAddressFromPublicKey(grabKeypair.publicKey),
       grabSecret,
     } = opts;
-    const blockSignatureBuffer = giftTransactionInBlock.signatureBuffer;
     const giftTransactionSignatureBuffer = giftTransaction.signatureBuffer;
 
     let ciphertextSignature: AccountSignatureModel | undefined;
@@ -661,7 +651,9 @@ export class TransactionHelper {
     });
 
     // 根据共识规则计算出能抢到的金额数量
-    result.amount = (await this.calcGrabGiftAssetNumber(grabId, giftTransactionInBlock)).toString();
+    result.amount = (
+      await this.calcGrabGiftAssetNumber(grabId, giftTransaction, blockSignatureBuffer)
+    ).toString();
 
     return result;
   }
