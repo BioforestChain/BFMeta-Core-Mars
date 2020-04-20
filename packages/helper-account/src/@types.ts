@@ -109,33 +109,36 @@ declare namespace BFChainCore {
     isAcceptVote: boolean;
   };
 
-  interface AccountGetterHelperInterface {
+  interface AccountGetterHelperInterface<
+    ABI extends AccountBaseInfo = AccountBaseInfo,
+    AI extends AccountInfo = AccountInfo,
+    AA extends AccountAssets = AccountAssets,
+    AIAA extends AccountInfoAndAssets = AccountInfoAndAssets,
+    DI extends DAppInfo = DAppInfo,
+    LNI extends LocationNameInfo = LocationNameInfo,
+    FA extends FrozenAsset = FrozenAsset,
+    IAI extends IssuedAssetInfo = IssuedAssetInfo
+  > {
     /**根据地址数组获取账户 */
-    getAccounts<T extends AccountBaseInfo = AccountBaseInfo>(addressArr: string[]): Promise<T[]>;
+    getAccounts(addressArr: string[]): Promise<ABI[]>;
     /** 获取准备下一轮上榜的受托人 */
-    getNextRoundDelegates<T extends AccountBaseInfo = AccountBaseInfo>(): Promise<T[]>;
+    getNextRoundDelegates(): Promise<ABI[]>;
     /** 获取准备计算的受托人 */
-    getDelegates<T extends AccountBaseInfo = AccountBaseInfo>(
-      currentGeneraterPublicKeyList: (Uint8Array | string)[],
-    ): Promise<T[]>;
+    getDelegates(currentGeneraterPublicKeyList: (Uint8Array | string)[]): Promise<ABI[]>;
     /**获取账户信息 */
-    getAccountInfo<T extends AccountInfo = AccountInfo>(address: string): Promise<T | undefined>;
+    getAccountInfo(address: string): Promise<AI | undefined>;
     /**获取账户的块内交易 */
     getAccountTxCountInBlock(address: string): Promise<number | undefined>;
     /**获取账户资产信息 */
-    getAccountAssets<T extends AccountAssets = AccountAssets>(
-      address: string,
-    ): Promise<T | undefined>;
+    getAccountAssets(address: string): Promise<AA | undefined>;
     /**获取账户信息和账户资产信息 */
-    getAccountInfoAndAssets<T extends AccountInfoAndAssets = AccountInfoAndAssets>(
-      address: string,
-    ): Promise<T | undefined>;
+    getAccountInfoAndAssets(address: string): Promise<AIAA | undefined>;
     /**获取指定的 dapp */
-    getDApp<T extends DAppInfo = DAppInfo>(
+    getDApp(
       sourceChainMagic: string,
       dappid: string,
       currentBlockHeight: number,
-    ): Promise<T | undefined>;
+    ): Promise<DI | undefined>;
     /**某个账户是否是某个的 dappid 的持有者 */
     isDAppPossessor(sourceChainMagic: string, address: string): Promise<boolean>;
     /**某个账户是否给指定收托人投票(最近 2 轮) */
@@ -147,11 +150,11 @@ declare namespace BFChainCore {
       round: number,
     ): Promise<boolean>;
     /**查询指定的 LocationName */
-    getLocationName<T extends LocationNameInfo = LocationNameInfo>(
+    getLocationName(
       sourceChainMagic: string,
       locationName: string,
       currentBlockHeight: number,
-    ): Promise<T | undefined>;
+    ): Promise<LNI | undefined>;
     /**指定账户是否持有或关联指定的域名 */
     isLocationNamePossessor(sourceChainMagic: string, address: string): Promise<boolean>;
     /**指定域名是否存在子域名 */
@@ -159,15 +162,9 @@ declare namespace BFChainCore {
     /**链域名是否被禁用 */
     isLocationNameForbidden(name: string): Promise<boolean>;
     /**查询冻结的资产 */
-    getFrozenAsset<T extends FrozenAsset = FrozenAsset>(
-      address: string,
-      signature: string,
-    ): Promise<T | undefined>;
+    getFrozenAsset(address: string, signature: string): Promise<FA | undefined>;
     /**查询指定的数字资产 */
-    getAsset<T extends IssuedAssetInfo = IssuedAssetInfo>(
-      magic: string,
-      assetType: string,
-    ): Promise<T | undefined>;
+    getAsset(magic: string, assetType: string): Promise<IAI | undefined>;
     /**查询指定的资产名 */
     getCurrency(assetType: string): Promise<number | undefined>;
     /**资产名是否被禁用 */

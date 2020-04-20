@@ -7,13 +7,13 @@ export class AccountHelper {
   @Inject("accountGetterHelper", { optional: true })
   private accountGetterHelper?: BFChainCore.AccountGetterHelperInterface;
 
-  getAccounts<T extends BFChainCore.AccountBaseInfo>(
+  getAccounts(
     addressArr: string[],
     accountGetterHelper = this.accountGetterHelper as Pick<
       BFChainCore.AccountGetterHelperInterface,
       "getAccounts"
     >,
-  ): Promise<T[]> {
+  ) {
     if (!accountGetterHelper) {
       throw new NoFoundException(NOT_EXIST, {
         prop: "accountGetterHelper",
@@ -21,15 +21,15 @@ export class AccountHelper {
         function: "AccountHelper.getAccounts",
       });
     }
-    return accountGetterHelper.getAccounts<T>(addressArr);
+    return accountGetterHelper.getAccounts(addressArr);
   }
 
-  getNextRoundDelegates<T extends BFChainCore.AccountBaseInfo>(
+  getNextRoundDelegates(
     accountGetterHelper = this.accountGetterHelper as Pick<
       BFChainCore.AccountGetterHelperInterface,
       "getNextRoundDelegates"
     >,
-  ): Promise<T[]> {
+  ) {
     if (!accountGetterHelper) {
       if (!accountGetterHelper) {
         throw new NoFoundException(NOT_EXIST, {
@@ -39,15 +39,15 @@ export class AccountHelper {
         });
       }
     }
-    return accountGetterHelper.getNextRoundDelegates<T>();
+    return accountGetterHelper.getNextRoundDelegates();
   }
-  getDelegates<T extends BFChainCore.AccountBaseInfo>(
+  getDelegates(
     currentGeneraterPublicKeyList: (string | Uint8Array)[],
     accountGetterHelper = this.accountGetterHelper as Pick<
       BFChainCore.AccountGetterHelperInterface,
       "getDelegates"
     >,
-  ): Promise<T[]> {
+  ) {
     if (!accountGetterHelper) {
       throw new NoFoundException(NOT_EXIST, {
         prop: "accountGetterHelper",
@@ -55,9 +55,9 @@ export class AccountHelper {
         function: "AccountHelper.getAccounts",
       });
     }
-    return accountGetterHelper.getDelegates<T>(currentGeneraterPublicKeyList);
+    return accountGetterHelper.getDelegates(currentGeneraterPublicKeyList);
   }
-  getAccountInfo<T extends BFChainCore.AccountInfo>(
+  getAccountInfo(
     address: string,
     accountGetterHelper = this.accountGetterHelper as Pick<
       BFChainCore.AccountGetterHelperInterface,
@@ -71,7 +71,7 @@ export class AccountHelper {
         function: "AccountHelper.getAccounts",
       });
     }
-    return accountGetterHelper.getAccountInfo<T>(address);
+    return accountGetterHelper.getAccountInfo(address);
   }
   getAccountTxCountInBlock(
     address: string,
@@ -89,7 +89,7 @@ export class AccountHelper {
     }
     return accountGetterHelper.getAccountTxCountInBlock(address);
   }
-  getAccountAssets<T extends BFChainCore.AccountAssets>(
+  getAccountAssets(
     address: string,
     accountGetterHelper = this.accountGetterHelper as Pick<
       BFChainCore.AccountGetterHelperInterface,
@@ -103,9 +103,9 @@ export class AccountHelper {
         function: "AccountHelper.getAccounts",
       });
     }
-    return accountGetterHelper.getAccountAssets<T>(address);
+    return accountGetterHelper.getAccountAssets(address);
   }
-  getAccountInfoAndAssets<T extends BFChainCore.AccountInfoAndAssets>(
+  getAccountInfoAndAssets(
     address: string,
     accountGetterHelper = this.accountGetterHelper as Pick<
       BFChainCore.AccountGetterHelperInterface,
@@ -119,9 +119,9 @@ export class AccountHelper {
         function: "AccountHelper.getAccounts",
       });
     }
-    return accountGetterHelper.getAccountInfoAndAssets<T>(address);
+    return accountGetterHelper.getAccountInfoAndAssets(address);
   }
-  getDApp<T extends BFChainCore.DAppInfo>(
+  getDApp(
     sourceChainMagic: string,
     dappid: string,
     currentBlockHeight: number,
@@ -137,7 +137,7 @@ export class AccountHelper {
         function: "AccountHelper.getAccounts",
       });
     }
-    return accountGetterHelper.getDApp<T>(sourceChainMagic, dappid, currentBlockHeight);
+    return accountGetterHelper.getDApp(sourceChainMagic, dappid, currentBlockHeight);
   }
   isDAppPossessor(
     sourceChainMagic: string,
