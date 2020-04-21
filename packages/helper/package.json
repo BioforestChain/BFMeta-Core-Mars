@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-helper",
-  "version": "5.12.9",
+  "version": "5.12.10",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,19 +14,19 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-helper-account": "5.12.8",
-    "@bfchain/core-helper-account-base": "5.12.8",
-    "@bfchain/core-helper-asymmetric": "5.12.8",
-    "@bfchain/core-helper-bigint": "5.12.8",
-    "@bfchain/core-helper-block": "5.12.8",
-    "@bfchain/core-helper-block-base-statistics": "5.12.9",
-    "@bfchain/core-helper-chain-asset-info": "5.12.8",
-    "@bfchain/core-helper-chain-time": "5.12.8",
-    "@bfchain/core-helper-config": "5.12.8",
-    "@bfchain/core-helper-milestones": "5.12.8",
-    "@bfchain/core-helper-transaction": "5.12.9",
-    "@bfchain/core-helper-type": "5.12.8",
-    "@bfchain/core-typings": "5.12.8",
-    "@bfchain/core-util-exception-errorcode": "5.12.8"
+    "@bfchain/core-helper-account": "5.12.10",
+    "@bfchain/core-helper-account-base": "5.12.10",
+    "@bfchain/core-helper-asymmetric": "5.12.10",
+    "@bfchain/core-helper-bigint": "5.12.10",
+    "@bfchain/core-helper-block": "5.12.10",
+    "@bfchain/core-helper-block-base-statistics": "5.12.10",
+    "@bfchain/core-helper-chain-asset-info": "5.12.10",
+    "@bfchain/core-helper-chain-time": "5.12.10",
+    "@bfchain/core-helper-config": "5.12.10",
+    "@bfchain/core-helper-milestones": "5.12.10",
+    "@bfchain/core-helper-transaction": "5.12.10",
+    "@bfchain/core-helper-type": "5.12.10",
+    "@bfchain/core-typings": "5.12.10",
+    "@bfchain/core-util-exception-errorcode": "5.12.10"
   }
 }
