@@ -34,16 +34,6 @@ export class PickNextRoundDelegates {
     >,
   ) {
     const currentRound = this.blockHelper.calcRoundByHeight(currentHeight);
-    class Z{
-      async getNextRoundDelegates(){
-        return {} as  (BFChainCore.ForSortAccountInfo&{a:1})[]
-      }
-      getAccounts(){
-        return {} as any
-      }
-    }
-   const a =await this.calcForgingDelegates(1, new Z)
-
     return await this.calcForgingDelegates(currentRound, accountGetterHelper);
   }
 
