@@ -45,11 +45,9 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
     const grabAsset = transaction.asset.grabAsset;
 
     const { transactionSignature } = grabAsset;
-    const trs = (await transactionGetterHelper.getTransactionBySignature(transactionSignature)) as
-      | BFChainCore.TransactionJSON<BFChainCore.GiftAssetAssetJSON>
-      | undefined;
+    const trsWithBlockSign = (await transactionGetterHelper.getTransactionAndBlockSignatureBySignature(transactionSignature))
 
-    if (!trs) {
+    if (!trsWithBlockSign) {
       throw new NoFoundException(NOT_EXIST, {
         prop: `Transaction with signature ${transactionSignature}`,
         target: "grabAsset",
@@ -57,7 +55,10 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
       });
     }
 
+    const trs = trsWithBlockSign.transaction as BFChainCore.TransactionJSON<BFChainCore.GiftAssetAssetJSON>;
+
     this.isValidRecipientId(transaction, trs);
+    this.isBlockSignatureMatch(transaction, trsWithBlockSign.blockSignature);
     this.isDependentTransactionMatch(transaction, trs);
 
     return true;
@@ -79,6 +80,24 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
         be_compare_prop: "senderId",
         to_target: "GrabAssetTransaction",
         be_target: "GiftAssetTransaction",
+        function: "isValidRecipientId",
+      });
+    }
+  }
+
+  /**
+   * 交易所在的区块签名是否匹配
+   * 
+   * @param transaction 
+   * @param blockSignature 
+   */
+  isBlockSignatureMatch(transaction: GrabAssetTransaction, blockSignature: string) {
+    if (blockSignature !== transaction.asset.grabAsset.blockSignature) {
+      throw new ConsensusException(NOT_MATCH, {
+        to_compare_prop: "blockSignature",
+        be_compare_prop: "applyInfo",
+        to_target: "blockSignature",
+        be_target: "frozenAsset",
         function: "isValidRecipientId",
       });
     }

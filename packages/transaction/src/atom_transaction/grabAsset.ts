@@ -397,7 +397,7 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
     const tasks = new TaskList();
     const { chainAssetInfoHelper } = this;
     const { grabAsset } = transaction.asset;
-    const { amount, giftTransactionSignatureBuffer, blockSignatureBuffer } = grabAsset;
+    const { amount, giftTransactionSignatureBuffer } = grabAsset;
     const { assetType, sourceChainMagic /* unitReserveFee */ } = grabAsset.giftAsset;
     const recipientId = transaction.recipientId;
     const assetInfo = chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
@@ -413,7 +413,6 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
         amount,
         sourceAmount: amount,
         frozenIdBuffer: giftTransactionSignatureBuffer,
-        blockSignatureBuffer,
         recipientId, // 资产冻结账户
       },
     });

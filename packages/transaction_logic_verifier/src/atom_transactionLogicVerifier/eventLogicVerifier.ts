@@ -269,7 +269,7 @@ export class EventLogicVerifier {
 
     // 解冻资产
     event.on("unfrozenAsset", async ({ applyInfo }, next) => {
-      const { assetInfo, frozenIdBuffer, amount: spendAsset, blockSignatureBuffer } = applyInfo;
+      const { assetInfo, frozenIdBuffer, amount: spendAsset } = applyInfo;
       const { magic, assetType } = assetInfo;
       const transactionSignature = getHexFromArrayBuffer(frozenIdBuffer);
       const trs = await transactionGetterHelper.getTransactionBySignature(transactionSignature);
@@ -340,26 +340,6 @@ export class EventLogicVerifier {
           frozenId: transactionSignature,
           ...Function_Exception_Detail,
         });
-      }
-
-      if (blockSignatureBuffer) {
-        if (!blockSignature) {
-          throw new ConsensusException(PROP_IS_REQUIRE, {
-            prop: blockSignature,
-            target: "frozenAsset",
-            ...Function_Exception_Detail,
-          });
-        }
-        const calcBlockSignature = getHexFromArrayBuffer(blockSignatureBuffer);
-        if (blockSignature !== calcBlockSignature) {
-          throw new ConsensusException(NOT_MATCH, {
-            to_compare_prop: "blockSignature",
-            be_compare_prop: "applyInfo",
-            to_target: "blockSignature",
-            be_target: "frozenAsset",
-            ...Function_Exception_Detail,
-          });
-        }
       }
 
       next();

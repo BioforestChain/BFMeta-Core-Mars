@@ -10,6 +10,16 @@ declare namespace BFChainCore {
 
   // #region TransactionGetterHelperInterface
   interface TransactionGetterHelperInterface {
+    /**根据交易 signature 获取交易和交易所在的区块签名 */
+    getTransactionAndBlockSignatureBySignature(
+      signature: string,
+    ): Promise<
+      | {
+          transaction: TransactionJSON;
+          blockSignature: string;
+        }
+      | undefined
+    >;
     /**根据交易 signature 获取交易 */
     getTransactionBySignature(signature: string): Promise<TransactionJSON | undefined>;
     /**查询交易是否存在 */
