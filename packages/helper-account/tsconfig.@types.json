@@ -13,7 +13,10 @@
   },
   "references": [
     {
-      "path": "../model/tsconfig.@types.json"
+      "path": "../model-block-base/tsconfig.@types.json"
+    },
+    {
+      "path": "../model-transaction-base/tsconfig.@types.json"
     },
     {
       "path": "../typings/tsconfig.@types.json"

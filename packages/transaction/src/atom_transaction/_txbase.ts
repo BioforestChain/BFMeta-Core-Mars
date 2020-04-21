@@ -472,8 +472,8 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     Function_Exception_Detail: FunctionExceptionDetail,
   ) {
     if (!amount) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
-        param: propName,
+      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        prop: propName,
         ...Function_Exception_Detail,
       });
     }

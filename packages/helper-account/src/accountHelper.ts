@@ -3,9 +3,29 @@ import { CoreExceptionGenerator, NOT_EXIST } from "@bfchain/core-util-exception"
 const { NoFoundException } = CoreExceptionGenerator("helper-account", "accountHelper");
 
 @Injectable()
-export class AccountHelper {
+export class AccountHelper<
+  ABI extends BFChainCore.AccountBaseInfo = BFChainCore.AccountBaseInfo,
+  FSAI extends BFChainCore.ForSortAccountInfo = BFChainCore.ForSortAccountInfo,
+  AI extends BFChainCore.AccountInfo = BFChainCore.AccountInfo,
+  AA extends BFChainCore.AccountAssets = BFChainCore.AccountAssets,
+  AIAA extends BFChainCore.AccountInfoAndAssets = BFChainCore.AccountInfoAndAssets,
+  DI extends BFChainCore.DAppInfo = BFChainCore.DAppInfo,
+  LNI extends BFChainCore.LocationNameInfo = BFChainCore.LocationNameInfo,
+  FA extends BFChainCore.FrozenAsset = BFChainCore.FrozenAsset,
+  IAI extends BFChainCore.IssuedAssetInfo = BFChainCore.IssuedAssetInfo
+> {
   @Inject("accountGetterHelper", { optional: true })
-  private accountGetterHelper?: BFChainCore.AccountGetterHelperInterface;
+  private accountGetterHelper?: BFChainCore.AccountGetterHelperInterface<
+    ABI,
+    FSAI,
+    AI,
+    AA,
+    AIAA,
+    DI,
+    LNI,
+    FA,
+    IAI
+  >;
 
   getAccounts(
     addressArr: string[],
@@ -24,7 +44,7 @@ export class AccountHelper {
     return accountGetterHelper.getAccounts(addressArr);
   }
 
-  getNextRoundDelegates(
+  getNextRoundDelegates<T extends BFChainCore.ForSortAccountInfo = BFChainCore.ForSortAccountInfo>(
     accountGetterHelper = this.accountGetterHelper as Pick<
       BFChainCore.AccountGetterHelperInterface,
       "getNextRoundDelegates"
@@ -39,7 +59,7 @@ export class AccountHelper {
         });
       }
     }
-    return accountGetterHelper.getNextRoundDelegates();
+    return accountGetterHelper.getNextRoundDelegates() as Promise<T[]>;
   }
   getDelegates(
     currentGeneraterPublicKeyList: (string | Uint8Array)[],

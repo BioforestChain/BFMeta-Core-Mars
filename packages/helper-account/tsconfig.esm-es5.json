@@ -9,7 +9,10 @@
   },
   "references": [
     {
-      "path": "../model/tsconfig.esm-es5.json"
+      "path": "../model-block-base/tsconfig.esm-es5.json"
+    },
+    {
+      "path": "../model-transaction-base/tsconfig.esm-es5.json"
     },
     {
       "path": "../typings/tsconfig.esm-es5.json"

@@ -264,14 +264,6 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
     }
 
     this.checkAssetAmount(giftAsset.amount, "amount", GiftAssetAsset_Exception_Detail);
-
-    if (giftAsset.amount === "0") {
-      throw new ArgumentIllegalException(PROP_SHOULD_GT_FIELD, {
-        prop: "amount",
-        fueld: "0",
-        ...GiftAssetAsset_Exception_Detail,
-      });
-    }
   }
 
   /**

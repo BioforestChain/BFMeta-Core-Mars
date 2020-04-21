@@ -273,6 +273,9 @@ export const PERMISSION_DENIED = (ec.next =
 export const REGISTER_DELEGTE_QUOTA_FULL = (ec.next =
   "The register delegate quota is full in round {round} when {function}");
 /**reason function */
+export const REJECT_REGISTER_DELEGATE = (ec.next =
+  "Reject register delegate with reason {reason} when {function}");
+/**reason function */
 export const VERIFY_TRANSACTION_POW_OF_WORK_ERROR = (ec.next =
   "Verify transaction pow of work error, reason {reason} when {function}");
 // #endregion

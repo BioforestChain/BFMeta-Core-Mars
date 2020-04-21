@@ -185,7 +185,7 @@ async function getGrabAssetTransaction(
     secondKeypair,
   );
   const xx = await bfchainCore.transaction.recombineTransaction(trs.toJSON());
-  console.log(xx.toJSON().asset);
+  // console.log(xx.toJSON().asset);
 }
 
 (async () => {

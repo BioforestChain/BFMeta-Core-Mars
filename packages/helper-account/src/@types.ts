@@ -88,6 +88,7 @@ declare namespace BFChainCore {
     address: string;
     minEffectiveHeight: number;
     maxEffectiveHeight: number;
+    blockSignature?: string;
     remainUnfrozenTimes?: number;
   }
 
@@ -111,6 +112,7 @@ declare namespace BFChainCore {
 
   interface AccountGetterHelperInterface<
     ABI extends AccountBaseInfo = AccountBaseInfo,
+    FSAI extends BFChainCore.ForSortAccountInfo = BFChainCore.ForSortAccountInfo,
     AI extends AccountInfo = AccountInfo,
     AA extends AccountAssets = AccountAssets,
     AIAA extends AccountInfoAndAssets = AccountInfoAndAssets,
@@ -120,9 +122,9 @@ declare namespace BFChainCore {
     IAI extends IssuedAssetInfo = IssuedAssetInfo
   > {
     /**根据地址数组获取账户 */
-    getAccounts(addressArr: string[]): Promise<ABI[]>;
+    getAccounts(addressArr: string[]): Promise<FSAI[]>;
     /** 获取准备下一轮上榜的受托人 */
-    getNextRoundDelegates(): Promise<ABI[]>;
+    getNextRoundDelegates(): Promise<FSAI[]>;
     /** 获取准备计算的受托人 */
     getDelegates(currentGeneraterPublicKeyList: (Uint8Array | string)[]): Promise<ABI[]>;
     /**获取账户信息 */

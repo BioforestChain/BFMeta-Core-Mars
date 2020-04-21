@@ -7,7 +7,8 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-model": "5.12.1",
+    "@bfchain/core-model-block-base": "5.12.0",
+    "@bfchain/core-model-transaction-base": "5.12.0",
     "@bfchain/core-typings": "5.12.0",
     "@bfchain/core-util-exception": "5.12.0"
   },

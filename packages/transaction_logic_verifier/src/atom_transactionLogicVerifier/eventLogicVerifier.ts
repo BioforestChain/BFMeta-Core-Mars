@@ -35,6 +35,8 @@ import {
   UNFROZEN_TIME_USE_UP,
   REGISTER_DELEGTE_QUOTA_FULL,
   NOT_MATCH,
+  PROP_IS_REQUIRE,
+  REJECT_REGISTER_DELEGATE,
 } from "@bfchain/core-util-exception";
 import {
   NewTransactionRefuseReason,
@@ -42,6 +44,7 @@ import {
   ASSET_STATUS,
   LOCATION_NAME_LEVEL,
   RECORD_OPERATION_TYPE,
+  TRANSACTION_TYPES_BASE,
 } from "@bfchain/core-model";
 import { ConfigHelper, BlockHelper, TransactionHelper } from "@bfchain/core-helper";
 
@@ -266,7 +269,7 @@ export class EventLogicVerifier {
 
     // 解冻资产
     event.on("unfrozenAsset", async ({ applyInfo }, next) => {
-      const { assetInfo, frozenIdBuffer, amount: spendAsset } = applyInfo;
+      const { assetInfo, frozenIdBuffer, amount: spendAsset, blockSignatureBuffer } = applyInfo;
       const { magic, assetType } = assetInfo;
       const transactionSignature = getHexFromArrayBuffer(frozenIdBuffer);
       const trs = await transactionGetterHelper.getTransactionBySignature(transactionSignature);
@@ -298,6 +301,7 @@ export class EventLogicVerifier {
         minEffectiveHeight,
         remainUnfrozenTimes,
         amount: remainAsset,
+        blockSignature,
       } = frozenAsset;
       // 是否到达解冻高度
       if (minEffectiveHeight > transaction.applyBlockHeight) {
@@ -336,6 +340,26 @@ export class EventLogicVerifier {
           frozenId: transactionSignature,
           ...Function_Exception_Detail,
         });
+      }
+
+      if (blockSignatureBuffer) {
+        if (!blockSignature) {
+          throw new ConsensusException(PROP_IS_REQUIRE, {
+            prop: blockSignature,
+            target: "frozenAsset",
+            ...Function_Exception_Detail,
+          });
+        }
+        const calcBlockSignature = getHexFromArrayBuffer(blockSignatureBuffer);
+        if (blockSignature !== calcBlockSignature) {
+          throw new ConsensusException(NOT_MATCH, {
+            to_compare_prop: "blockSignature",
+            be_compare_prop: "applyInfo",
+            to_target: "blockSignature",
+            be_target: "frozenAsset",
+            ...Function_Exception_Detail,
+          });
+        }
       }
 
       next();
@@ -413,6 +437,17 @@ export class EventLogicVerifier {
 
     // 注册成为受托人
     event.on("registerToDelegate", async ({ applyInfo }, next) => {
+      const { baseType } = this.transactionHelper.parseType(transaction.type);
+      if (
+        this.configHelper.maxDelegateTxsPerRound === 0 &&
+        baseType === TRANSACTION_TYPES_BASE.DELEGATE
+      ) {
+        throw new ConsensusException(REJECT_REGISTER_DELEGATE, {
+          reason: `every round can only deal ${this.configHelper.maxDelegateTxsPerRound} delegate transaction, reject receive delegate transaction`,
+          ...Function_Exception_Detail,
+        });
+      }
+
       const { address } = applyInfo;
       accountsInfo[address] = accountsInfo[address] || {};
       if (accountsInfo[address].isDelegate) {

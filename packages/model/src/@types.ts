@@ -49,6 +49,8 @@ declare namespace BFChainCore {
   interface ApplyInfo_UnfrozenAsset extends ApplyInfo_Asset {
     /**冻结的索引 */
     frozenIdBuffer: Uint8Array;
+    /**冻结事件被确认的区块签名 */
+    blockSignatureBuffer?: Uint8Array;
     /**解冻者的账户地址
      * 这里的解冻者本质是资金的接收者
      * 如果要将解冻资产是否要回到冻结者账户上,那就填自己就完事了
