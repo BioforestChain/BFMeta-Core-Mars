@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-helper-block-base-statistics",
-  "version": "5.12.8",
+  "version": "5.12.9",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -16,7 +16,7 @@
   "dependencies": {
     "@bfchain/core-helper-chain-asset-info": "5.12.8",
     "@bfchain/core-helper-config": "5.12.8",
-    "@bfchain/core-helper-transaction": "5.12.8",
+    "@bfchain/core-helper-transaction": "5.12.9",
     "@bfchain/core-model": "5.12.8",
     "@bfchain/core-typings": "5.12.8",
     "@bfchain/core-util-exception-errorcode": "5.12.8"
