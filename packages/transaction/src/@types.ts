@@ -290,8 +290,8 @@ declare namespace BFChainCore {
 
   interface AccountApiInterface {
     getAccountUsername(address: string): Promise<string | undefined>;
-    getAccountIsDelegate(address: string): Promise<number>;
-    getAccountIsAcceptVote(address: string): Promise<number>;
+    getAccountIsDelegate(address: string): Promise<boolean>;
+    getAccountIsAcceptVote(address: string): Promise<boolean>;
     getAccountSecondPublicKey(address: string): Promise<string | undefined>;
     getAccountMissedBlocks(address: string): Promise<number>;
     getAccountProducedBlocks(address: string): Promise<number>;
