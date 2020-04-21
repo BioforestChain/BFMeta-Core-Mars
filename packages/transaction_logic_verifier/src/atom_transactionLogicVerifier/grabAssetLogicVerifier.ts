@@ -95,10 +95,10 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
     if (blockSignature !== transaction.asset.grabAsset.blockSignature) {
       throw new ConsensusException(NOT_MATCH, {
         to_compare_prop: "blockSignature",
-        be_compare_prop: "applyInfo",
-        to_target: "blockSignature",
-        be_target: "frozenAsset",
-        function: "isValidRecipientId",
+        be_compare_prop: "blockSignature",
+        to_target: "grabAsset",
+        be_target: "blockChain",
+        function: "isBlockSignatureMatch",
       });
     }
   }
