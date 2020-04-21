@@ -511,31 +511,31 @@ export class TransactionHelper {
         .update(gifterId)
         .digest("hex")}`,
     );
-    // const maxAssets = averageAsset * BigInt(2);
-    // const minAssets = BigInt(this.config.miniUnit);
-    // let amount = jsbiHelper.multiplyFloorFractionString(totalGiftAssetNumber, {
-    //   numerator: grabAsset,
-    //   denominator: BigInt(2) ** BigInt(128),
-    // });
-    // if (amount > maxAssets) {
-    //   let newAmount = amount % maxAssets;
-    //   if (amount > (maxAssets * BigInt(2))) {
-    //     if (newAmount <= averageAsset) {
-    //       newAmount += averageAsset;
-    //     }
-    //   }
-    //   amount = newAmount;
-    // }
-    // if (amount < minAssets) {
-    //   amount = minAssets;
-    // }
+    const maxAssets = averageAsset * BigInt(2);
+    const minAssets = BigInt(this.config.miniUnit);
     let amount = jsbiHelper.multiplyFloorFractionString(totalGiftAssetNumber, {
       numerator: grabAsset,
       denominator: BigInt(2) ** BigInt(128),
     });
-    if (amount <= miniUnit) {
-      amount = BigInt(this.config.miniUnit);
+    if (amount > maxAssets) {
+      let newAmount = amount % maxAssets;
+      if (amount > (maxAssets * BigInt(2))) {
+        if (newAmount <= averageAsset) {
+          newAmount += averageAsset;
+        }
+      }
+      amount = newAmount;
     }
+    if (amount < minAssets) {
+      amount = minAssets;
+    }
+    // let amount = jsbiHelper.multiplyFloorFractionString(totalGiftAssetNumber, {
+    //   numerator: grabAsset,
+    //   denominator: BigInt(2) ** BigInt(128),
+    // });
+    // if (amount <= miniUnit) {
+    //   amount = BigInt(this.config.miniUnit);
+    // }
     return amount;
   }
 
