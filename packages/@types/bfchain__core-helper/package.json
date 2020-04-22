@@ -1,21 +1,21 @@
 {
   "name": "@types/bfchain__core-helper",
   "types": "index.d.ts",
-  "version": "5.12.5",
+  "version": "5.12.11",
   "dependencies": {
-    "@types/bfchain__core-helper-account-base": "5.12.0",
-    "@types/bfchain__core-helper-asymmetric": "5.12.0",
-    "@types/bfchain__core-helper-bigint": "5.12.0",
-    "@types/bfchain__core-helper-block": "5.12.3",
-    "@types/bfchain__core-helper-block-base-statistics": "5.12.4",
-    "@types/bfchain__core-helper-chain-asset-info": "5.12.0",
-    "@types/bfchain__core-helper-chain-time": "5.12.0",
-    "@types/bfchain__core-helper-config": "5.12.0",
-    "@types/bfchain__core-helper-milestones": "5.12.0",
-    "@types/bfchain__core-helper-transaction": "5.12.4",
-    "@types/bfchain__core-helper-type": "5.12.0",
-    "@types/bfchain__core-typings": "5.12.0",
-    "@types/bfchain__core-util-exception-errorcode": "5.12.0",
-    "@types/bfchain__core-helper-account": "5.12.5"
+    "@types/bfchain__core-helper-account-base": "5.12.11",
+    "@types/bfchain__core-helper-asymmetric": "5.12.11",
+    "@types/bfchain__core-helper-bigint": "5.12.11",
+    "@types/bfchain__core-helper-block": "5.12.11",
+    "@types/bfchain__core-helper-block-base-statistics": "5.12.11",
+    "@types/bfchain__core-helper-chain-asset-info": "5.12.11",
+    "@types/bfchain__core-helper-chain-time": "5.12.11",
+    "@types/bfchain__core-helper-config": "5.12.11",
+    "@types/bfchain__core-helper-milestones": "5.12.11",
+    "@types/bfchain__core-helper-transaction": "5.12.11",
+    "@types/bfchain__core-helper-type": "5.12.11",
+    "@types/bfchain__core-typings": "5.12.11",
+    "@types/bfchain__core-util-exception-errorcode": "5.12.11",
+    "@types/bfchain__core-helper-account": "5.12.11"
   }
 }

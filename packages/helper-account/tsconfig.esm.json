@@ -9,6 +9,9 @@
   },
   "references": [
     {
+      "path": "../helper-block/tsconfig.esm.json"
+    },
+    {
       "path": "../model-block-base/tsconfig.esm.json"
     },
     {

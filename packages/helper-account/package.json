@@ -7,6 +7,7 @@
     "build"
   ],
   "dependencies": {
+    "@bfchain/core-helper-block": "5.12.11",
     "@bfchain/core-model-block-base": "5.12.11",
     "@bfchain/core-model-transaction-base": "5.12.11",
     "@bfchain/core-typings": "5.12.11",

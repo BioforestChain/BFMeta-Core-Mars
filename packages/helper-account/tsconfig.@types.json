@@ -13,6 +13,9 @@
   },
   "references": [
     {
+      "path": "../helper-block/tsconfig.@types.json"
+    },
+    {
       "path": "../model-block-base/tsconfig.@types.json"
     },
     {

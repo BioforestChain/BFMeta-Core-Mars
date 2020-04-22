@@ -1,10 +1,12 @@
 {
   "name": "@types/bfchain__core-helper-account",
   "types": "index.d.ts",
-  "version": "5.12.5",
+  "version": "5.12.11",
   "dependencies": {
-    "@types/bfchain__core-typings": "5.12.0",
+    "@types/bfchain__core-typings": "5.12.11",
     "@types/bfchain__core-model": "5.12.1",
-    "@types/bfchain__core-util-exception": "5.12.0"
+    "@types/bfchain__core-util-exception": "5.12.11",
+    "@types/bfchain__core-model-block-base": "5.12.11",
+    "@types/bfchain__core-model-transaction-base": "5.12.11"
   }
 }
