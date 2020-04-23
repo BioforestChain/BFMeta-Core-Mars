@@ -116,7 +116,7 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
     }
 
     const isSecondary = await transactionGetterHelper.checkSecondaryTransaction({
-      senderId: transaction.senderId,
+      type: this.transactionHelper.IMMIGRATE_ASSET,
       storageValue: transaction.storageValue as string,
     });
     if (isSecondary) {

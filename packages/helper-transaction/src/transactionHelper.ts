@@ -181,7 +181,7 @@ export class TransactionHelper {
   get EMIGRATE_ASSET() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.EMIGRATE_ASSET);
   }
-  /**IMMIGRATE_ASSET: 资产迁出 */
+  /**IMMIGRATE_ASSET: 资产迁入 */
   get IMMIGRATE_ASSET() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.IMMIGRATE_ASSET);
   }
@@ -494,6 +494,10 @@ export class TransactionHelper {
     totalGiftAssetNumber: string,
     totalGrabableTimes: number,
   ) {
+    // 下次上大版本的时候再使用
+    // if (totalGrabableTimes === 0) {
+    //   return totalGiftAssetNumber;
+    // }
     const { jsbiHelper } = this;
     const miniUnit = BigInt(0);
     const jsbiTotalAsset = BigInt(totalGiftAssetNumber);
