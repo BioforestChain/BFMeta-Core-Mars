@@ -569,7 +569,7 @@ export abstract class BlockFactory<T extends Block> {
       });
     }
 
-    if (totalTransaction > config.maxTPSPerBlock) {
+    if (totalTransaction > config.maxTPSPerBlock * config.forgeInterval) {
       throw new ArgumentFormatException(PROP_SHOULD_LTE_FIELD, {
         prop: "transactions length",
         field: `maxTPSPerBlock ${config.maxTPSPerBlock}`,
