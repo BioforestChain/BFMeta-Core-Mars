@@ -494,13 +494,12 @@ export class TransactionHelper {
     totalGiftAssetNumber: string,
     totalGrabableTimes: number,
   ) {
-    // 下次上大版本的时候再使用
-    // if (totalGrabableTimes === 0) {
-    //   return totalGiftAssetNumber;
-    // }
+    const jsbiTotalAsset = BigInt(totalGiftAssetNumber);
+    if (totalGrabableTimes === 1) {
+      return jsbiTotalAsset;
+    }
     const { jsbiHelper } = this;
     const miniUnit = BigInt(0);
-    const jsbiTotalAsset = BigInt(totalGiftAssetNumber);
     // FIXME: 随机方式待优化
     const averageAsset = jsbiTotalAsset / BigInt(totalGrabableTimes);
     if (averageAsset === miniUnit) {
