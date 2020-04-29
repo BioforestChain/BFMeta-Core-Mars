@@ -27,8 +27,6 @@ declare namespace BFChainCore {
       /**区块的版本号 */
       version?: number;
     }): Promise<number>;
-    /**统计区块 tick */
-    countBlockTick?(height: number): Promise<number>;
     /**获取给某个账户投票的账户 */
     getVoteForDelegate?(generatorAddress: string, height: number): Promise<VoterInfo[]>;
     /**获取投票记录 */

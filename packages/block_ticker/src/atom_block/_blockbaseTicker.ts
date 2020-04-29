@@ -49,46 +49,10 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
     blockGetterHelper = this.blockGetterHelper,
     blockTickGetterHelper = this.blockTickGetterHelper,
   ) {
-    await this.isBlockAlreadyTick(block.height, blockGetterHelper);
-
     const blockUpdateData = await this.calcForgingAndVotingReward(block, blockGetterHelper);
 
     // 更新打块账户和投票账户（分配奖励）
     await this.updateForgingAndVotingAccount(block, blockUpdateData, blockTickGetterHelper);
-  }
-
-  /**
-   * 区块是否已经 tick
-   *
-   * @param height
-   * @param blockGetterHelper
-   */
-  async isBlockAlreadyTick(height: number, blockGetterHelper = this.blockGetterHelper) {
-    const Function_Exception_Detail = {
-      function: "isBlockAlreadyTick",
-    } as const;
-    if (!blockGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "blockGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
-    if (typeof blockGetterHelper.countBlockTick !== "function") {
-      throw new ConsensusException(PROP_IS_INVALID, {
-        prop: "countBlockTick",
-        target: "blockGetterHelper",
-        ...Function_Exception_Detail,
-      });
-    }
-    const count = await blockGetterHelper.countBlockTick(height);
-    if (count > 0) {
-      throw new ConsensusException(NOT_EXIST, {
-        prop: `Block tick with height ${height}`,
-        target: "blockChain",
-        ...Function_Exception_Detail,
-      });
-    }
   }
 
   /**
