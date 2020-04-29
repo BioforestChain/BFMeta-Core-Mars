@@ -82,7 +82,10 @@ export class TransactionHelper {
    * @param trs
    */
   generateSignature(trs: Transaction) {
-    return this.cryptoHelper.sha256().update(trs.getBytes()).digest("hex");
+    return this.cryptoHelper
+      .sha256()
+      .update(trs.getBytes())
+      .digest("hex");
   }
   /**是否是合法的交易 signature */
   isValidTransactionSignature(signature: string) {
@@ -272,7 +275,10 @@ export class TransactionHelper {
       senderSecondPublicKeyBuffer,
       senderPublicKeyBuffer,
     } = transaction;
-    const hash = await this.cryptoHelper.sha256().update(transaction.getBytes(true, true)).digest();
+    const hash = await this.cryptoHelper
+      .sha256()
+      .update(transaction.getBytes(true, true))
+      .digest();
     // 验证 signature 与 publicKey
     if (
       !this.keypairHelper.detached_verify(
@@ -321,9 +327,25 @@ export class TransactionHelper {
     const remarkSize = this.Buffer.from(templateRemark.getBytes()).length;
     if (remarkSize > maxBlockRemarkSize) {
       throw new ArgumentIllegalException(PROP_SHOULD_LTE_FIELD, {
-        prop: "remark",
-        target: "block",
+        prop: `remarkSize ${remarkSize}`,
+        target: "transaction",
         field: maxBlockRemarkSize,
+      });
+    }
+  }
+  /**
+   * 校验交易的 remark 大小
+   *
+   * @param transaction
+   */
+  verifyTransactionSize<SOME_TRS extends BFChainCore.Transaction>(transaction: SOME_TRS) {
+    const { maxTransactionSize } = this.config;
+    const trsSize = this.Buffer.from(transaction.getBytes()).length;
+    if (trsSize > maxTransactionSize) {
+      throw new ArgumentIllegalException(PROP_SHOULD_LTE_FIELD, {
+        prop: `transactionSize ${trsSize}`,
+        target: "transaction",
+        field: maxTransactionSize,
       });
     }
   }
@@ -411,7 +433,10 @@ export class TransactionHelper {
       return true;
     }
     /// 根据交易信息校验是否符合难度
-    const shaBuffer = await this.cryptoHelper.sha256().update(signatureBuffer).digest();
+    const shaBuffer = await this.cryptoHelper
+      .sha256()
+      .update(signatureBuffer)
+      .digest();
 
     /**得分应该读取多少位数，至少8位 */
     const X = Math.max(
@@ -522,7 +547,7 @@ export class TransactionHelper {
     });
     if (amount > maxAssets) {
       let newAmount = amount % maxAssets;
-      if (amount > (maxAssets * BigInt(2))) {
+      if (amount > maxAssets * BigInt(2)) {
         if (newAmount <= averageAsset) {
           newAmount += averageAsset;
         }
