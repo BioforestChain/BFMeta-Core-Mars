@@ -81,7 +81,7 @@ export class BlockHelper {
     const { maxBlockRemarkSize } = this.config;
     if (remarkSize > maxBlockRemarkSize) {
       throw new ArgumentIllegalException(PROP_SHOULD_LTE_FIELD, {
-        prop: "remark",
+        prop: `remarkSize ${remarkSize}`,
         target: "block",
         field: maxBlockRemarkSize,
       });

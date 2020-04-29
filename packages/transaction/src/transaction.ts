@@ -4,7 +4,7 @@ import {
   ConfigHelper,
   TransactionHelper,
   AsymmetricHelper,
-  TRANSACTION_FILTER_SYMBOL
+  TRANSACTION_FILTER_SYMBOL,
 } from "@bfchain/core-helper";
 import { Injectable, Inject, ModuleStroge, Resolve } from "@bfchain/util";
 import { Transaction } from "@bfchain/core-model";
@@ -71,7 +71,7 @@ export class TransactionCore {
    * @param type
    */
   canCreateTransaction(type: string) {
-    return this.transactionHelper.isTransactionInFilter(type)
+    return this.transactionHelper.isTransactionInFilter(type);
   }
 
   /**
@@ -169,6 +169,9 @@ export class TransactionCore {
       );
     }
 
+    // 校验交易的大小
+    this.transactionHelper.verifyTransactionSize(trs);
+
     return trs;
   }
   /**通用的交易POW计算器 */
@@ -189,7 +192,7 @@ export class TransactionCore {
           );
         }
       }
-      event && (await event.emit(eventName, { transaction: trs, nonce}));
+      event && (await event.emit(eventName, { transaction: trs, nonce }));
       return trs;
     };
     let diff_BI: bigint | undefined;
@@ -209,7 +212,9 @@ export class TransactionCore {
         is_break = res.break;
         return done(is_break, recordNonce);
       }
-      for (const { uint8array: trsBytes, nonce, offset } of this.transactionHelper.nonceWriter(trs)) {
+      for (const { uint8array: trsBytes, nonce, offset } of this.transactionHelper.nonceWriter(
+        trs,
+      )) {
         recordNonce = nonce;
         const signatureBuffer = await this.asymmetricHelper.detachedSign(
           trsBytes,

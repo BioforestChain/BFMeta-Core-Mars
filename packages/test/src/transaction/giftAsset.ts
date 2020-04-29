@@ -87,6 +87,9 @@ async function getGiftAssetTransaction(
     GiftAssetTransaction
   >(trs.type);
 
+  console.log(trs.getBytes().length);
+  console.log(bfchainCore.config.maxTransactionSize);
+
   const result = yy.checkTrsFeeAndWebFee(trs, trs.getBytes().length);
 
   const result2 = yy.checkTrsFeeAndMiningMachineFeeAndWebFee(trs, trs.getBytes().length, {
@@ -106,6 +109,15 @@ async function getGiftAssetTransaction(
 }
 
 (async () => {
+  // const recipient: AccountModel[] = [];
+  // for (let i = 0; i < 6000; i++) {
+  //   const secret = `secret ${i}`;
+  //   recipient[recipient.length] = {
+  //     secret,
+  //     address: await bfchainCore.accountBaseHelper.getAddressFromSecret(secret),
+  //     publicKey: await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecret(secret),
+  //   };
+  // }
   await getGiftAssetTransaction(getSenderWithSecondSecret(), [getGenesisAccount()], true);
   await getGiftAssetTransaction(getSenderWithoutSecondSecret(), [getGenesisAccount()]);
 })();

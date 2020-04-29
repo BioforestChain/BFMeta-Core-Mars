@@ -21,7 +21,7 @@ async function getAcceptVoteTransaction(sender: AccountModel) {
     range: [],
     timestamp: 770880, // 生成交易时间戳
     fee: "78622", // 交易手续费
-    remark: { remark: "body.remark" }, // 交易备注，任意信息
+    remark: { remark: "body.remark".repeat(1000) }, // 交易备注，任意信息
     dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
     lns: bfchainCore.config.genesisBlock.remark.genesisNodeAddress,
     sourceIP: "127.0.0.1", // 交易来源 ip
