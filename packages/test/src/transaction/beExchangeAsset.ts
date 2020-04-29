@@ -141,10 +141,6 @@ async function getBeExchangeAssetTransaction(
       })
       .toString(),
     beExchangeNumber: "50",
-    applyBlockHeight: toExchangeAssetTrs.applyBlockHeight,
-    effectiveBlockHeight: toExchangeAssetTrs.effectiveBlockHeight,
-    transactionRangeType: toExchangeAssetTrs.rangeType,
-    transactionRange: toExchangeAssetTrs.range,
     exchangeAsset: toExchangeAsset,
   };
   if (toExchangeAsset.cipherPublicKeys.length > 0) {

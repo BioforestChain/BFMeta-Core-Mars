@@ -59,15 +59,6 @@ export class SignForAssetModel extends Message<SignForAssetModel>
   /**委托交易的接收账户地址 */
   @Field.d(SignForAssetModel.INC++, "string")
   trustRecipientId!: string;
-  /**交易有效签名数 */
-  @Field.d(SignForAssetModel.INC++, "uint32")
-  trustNumberOfSignFor!: number;
-  /**委托交易发起高度 */
-  @Field.d(SignForAssetModel.INC++, "uint32")
-  applyBlockHeight!: number;
-  /**委托交易的有效区块高度 */
-  @Field.d(SignForAssetModel.INC++, "uint32")
-  effectiveBlockHeight!: number;
   /**红包的配置信息 */
   @Field.d(SignForAssetModel.INC++, TrustAssetModel)
   trustAsset!: TrustAssetModel;
@@ -82,14 +73,11 @@ export class SignForAssetModel extends Message<SignForAssetModel>
   toJSON() {
     const res: BFChainCore.SignForAssetJSON = {
       transactionSignature: this.transactionSignature,
+      trustSenderId: this.trustSenderId,
+      trustRecipientId: this.trustRecipientId,
       thirdPartySignatures: this.thirdPartySignatures.map(thirdPartySignature =>
         thirdPartySignature.toJSON(),
       ),
-      trustSenderId: this.trustSenderId,
-      trustRecipientId: this.trustRecipientId,
-      trustNumberOfSignFor: this.trustNumberOfSignFor,
-      applyBlockHeight: this.applyBlockHeight,
-      effectiveBlockHeight: this.effectiveBlockHeight,
       trustAsset: this.trustAsset.toJSON(),
     };
     return res;

@@ -131,10 +131,6 @@ async function getBeExchangeSpecialAssetTransaction(
   const toExchangeSpecialAsset = toExchangeSpecialAssetTrs.asset.toExchangeSpecialAsset;
   const beExchangeSpecialAsset: BFChainCore.BeExchangeSpecialAssetJSON = {
     transactionSignature: toExchangeSpecialAssetTrs.signature,
-    applyBlockHeight: toExchangeSpecialAssetTrs.applyBlockHeight,
-    effectiveBlockHeight: toExchangeSpecialAssetTrs.effectiveBlockHeight,
-    transactionRangeType: toExchangeSpecialAssetTrs.rangeType,
-    transactionRange: toExchangeSpecialAssetTrs.range,
     exchangeSpecialAsset: toExchangeSpecialAsset,
   };
 

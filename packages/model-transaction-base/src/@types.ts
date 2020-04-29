@@ -195,13 +195,6 @@ declare namespace BFChainCore {
     /**以下是冗余的字段
      * 都是能从`transactionSignature`中查询出来的，但这个仍然做了存储，是为了确保能够在独立的情况下仍然能够将之渲染出来
      */
-    /**礼物交易的接收者列表、dappid、解码密文用的公钥 */
-    transactionRangeType: BFChainCore.RANGE_TYPE;
-    transactionRange: string[];
-
-    applyBlockHeight: number;
-    beginUnfrozenBlockHeight?: number;
-    effectiveBlockHeight: number;
 
     /**礼物配置 */
     giftAsset: GiftAssetJSON;
@@ -232,9 +225,6 @@ declare namespace BFChainCore {
     thirdPartySignatures: AccountSignatureJSON[];
     trustSenderId: string;
     trustRecipientId: string;
-    trustNumberOfSignFor: number;
-    applyBlockHeight: number;
-    effectiveBlockHeight: number;
     /**委托信息 */
     trustAsset: TrustAssetJSON;
   }
@@ -263,10 +253,6 @@ declare namespace BFChainCore {
   interface BeExchangeAssetJSON {
     transactionSignature: string;
     ciphertextSignature?: AccountSignatureJSON;
-    applyBlockHeight: number;
-    effectiveBlockHeight: number;
-    transactionRangeType: BFChainCore.RANGE_TYPE;
-    transactionRange: string[];
     toExchangeNumber: string;
     beExchangeNumber: string;
     exchangeAsset: ToExchangeAssetJSON;
@@ -293,10 +279,6 @@ declare namespace BFChainCore {
   interface BeExchangeSpecialAssetJSON {
     transactionSignature: string;
     ciphertextSignature?: AccountSignatureJSON;
-    applyBlockHeight: number;
-    effectiveBlockHeight: number;
-    transactionRangeType: BFChainCore.RANGE_TYPE;
-    transactionRange: string[];
     exchangeSpecialAsset: ToExchangeSpecialAssetJSON;
   }
   interface BeExchangeSpecialAssetAssetJSON {

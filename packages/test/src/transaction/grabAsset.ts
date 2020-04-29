@@ -34,7 +34,7 @@ async function getGiftAssetTransaction(
     senderId: sender.address, // 发起者地址
     senderPublicKey: sender.publicKey, // 发起者公钥
     senderSecondPublicKey: "", // 发起者二次公钥
-    rangeType: RANGE_TYPE.EMPTY,
+    rangeType: RANGE_TYPE.MULTI_ADDRESS,
     range: [],
     timestamp: 770880, // 生成交易时间戳
     fee: "440001", // 交易手续费
@@ -70,11 +70,13 @@ async function getGiftAssetTransaction(
     amount: "1000", // 交易资产数量
     /* unitReserveFee: "1000", */
     totalGrabableTimes: 10,
-    giftDistributionRule: GIFT_DISTRIBUTION_RULE.RANDOM,
+    giftDistributionRule: GIFT_DISTRIBUTION_RULE.RECIPIENT_RANDOM,
   };
   if (recipient && recipient.length > 0) {
     if (cipher) {
       giftAsset.cipherPublicKeys = recipient.map(r => r.publicKey);
+      data.rangeType = RANGE_TYPE.MULTI_ADDRESS;
+      data.range = recipient.map(r => r.address);
     } else {
       data.rangeType = RANGE_TYPE.MULTI_ADDRESS;
       data.range = recipient.map(r => r.address);
@@ -139,11 +141,6 @@ async function getGrabAssetTransaction(
     blockSignature: fullBfchainCore.config.genesisBlock.signature,
     transactionSignature: giftAssetTrs.signature,
     amount: "0", // 交易资产数量
-    transactionRangeType: giftAssetTrs.rangeType,
-    transactionRange: giftAssetTrs.range,
-    applyBlockHeight: giftAssetTrs.applyBlockHeight,
-    beginUnfrozenBlockHeight: giftAsset.beginUnfrozenBlockHeight,
-    effectiveBlockHeight: 300,
     giftAsset,
   };
 
@@ -185,7 +182,7 @@ async function getGrabAssetTransaction(
     secondKeypair,
   );
   const xx = await bfchainCore.transaction.recombineTransaction(trs.toJSON());
-  // console.log(xx.toJSON().asset);
+  console.log(xx.toJSON().asset);
 }
 
 (async () => {

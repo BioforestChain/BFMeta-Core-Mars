@@ -49,18 +49,6 @@ export class BeExchangeAssetModel extends Message<BeExchangeAssetModel>
   @Field.d(BeExchangeAssetModel.INC++, "string")
   beExchangeNumber!: string;
 
-  /**to 交易有效期 */
-  @Field.d(BeExchangeAssetModel.INC++, "uint32")
-  applyBlockHeight!: number;
-  @Field.d(BeExchangeAssetModel.INC++, "uint32")
-  effectiveBlockHeight!: number;
-
-  /**to 交易的接收者列表 */
-  @Field.d(BeExchangeAssetModel.INC++, RANGE_TYPE)
-  transactionRangeType!: RANGE_TYPE;
-  @Field.d(BeExchangeAssetModel.INC++, "string", "repeated")
-  transactionRange!: string[];
-
   /**交换的配置信息 */
   @Field.d(BeExchangeAssetModel.INC++, ToExchangeAssetModel)
   exchangeAsset!: ToExchangeAssetModel;
@@ -85,19 +73,9 @@ export class BeExchangeAssetModel extends Message<BeExchangeAssetModel>
   get exchangeRate() {
     return this.exchangeAsset.exchangeRate;
   }
-  get toInfo() {
-    return {
-      applyBlockHeight: this.applyBlockHeight,
-      effectiveBlockHeight: this.effectiveBlockHeight,
-    };
-  }
   toJSON() {
     const res: BFChainCore.BeExchangeAssetJSON = {
       transactionSignature: this.transactionSignature,
-      applyBlockHeight: this.applyBlockHeight,
-      effectiveBlockHeight: this.effectiveBlockHeight,
-      transactionRangeType: this.transactionRangeType,
-      transactionRange: this.transactionRange,
       toExchangeNumber: this.toExchangeNumber,
       beExchangeNumber: this.beExchangeNumber,
       exchangeAsset: this.exchangeAsset.toJSON(),

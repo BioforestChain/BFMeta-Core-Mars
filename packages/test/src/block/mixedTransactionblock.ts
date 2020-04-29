@@ -312,10 +312,6 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
             })
             .toString(),
           beExchangeNumber: "50",
-          applyBlockHeight: toExchangeAssetTrs.applyBlockHeight,
-          effectiveBlockHeight: toExchangeAssetTrs.effectiveBlockHeight,
-          transactionRangeType: toExchangeAssetTrs.rangeType,
-          transactionRange: toExchangeAssetTrs.range,
           exchangeAsset: toExchangeAsset,
         },
       },
@@ -449,10 +445,6 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
     const info: BFChainCore.BeExchangeSpecialAssetAssetJSON = {
       beExchangeSpecialAsset: {
         transactionSignature: toExchangeSpecialAssetTrs.signature,
-        applyBlockHeight: toExchangeSpecialAssetTrs.applyBlockHeight,
-        effectiveBlockHeight: toExchangeSpecialAssetTrs.effectiveBlockHeight,
-        transactionRangeType: toExchangeSpecialAssetTrs.rangeType,
-        transactionRange: toExchangeSpecialAssetTrs.range,
         exchangeSpecialAsset: toExchangeSpecialAssetTrs.asset.toExchangeSpecialAsset,
       },
     };

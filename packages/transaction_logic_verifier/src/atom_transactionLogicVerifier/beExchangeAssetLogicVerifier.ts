@@ -1,11 +1,12 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
-import type { BeExchangeAssetTransaction } from "@bfchain/core-model";
+import { BeExchangeAssetTransaction, RANGE_TYPE } from "@bfchain/core-model";
 import { Injectable } from "@bfchain/util";
 import {
   CoreExceptionGenerator,
   NOT_EXIST,
   NOT_MATCH,
   CAN_NOT_SECONDARY_TRANSACTION,
+  SHOULD_BE,
 } from "@bfchain/core-util-exception";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
@@ -104,23 +105,14 @@ export class BeExchangeAssetLogicVerifier extends TransactionLogicVerifier {
       function: "isDependentTransactionMatch",
     } as const;
     const beExchangeAssetAsset = transaction.asset.beExchangeAsset;
-    const {
-      exchangeAsset,
-      applyBlockHeight,
-      effectiveBlockHeight,
-      transactionRangeType,
-      transactionRange,
-    } = beExchangeAssetAsset;
+    const { exchangeAsset } = beExchangeAssetAsset;
     const { toExchangeSource, toExchangeAsset, beExchangeSource, beExchangeAsset } = exchangeAsset;
     const trsAsset = toExchangeAssetJson.asset.toExchangeAsset;
     if (
       trsAsset.toExchangeSource !== toExchangeSource ||
       trsAsset.beExchangeSource !== beExchangeSource ||
       trsAsset.toExchangeAsset !== toExchangeAsset ||
-      trsAsset.beExchangeAsset !== beExchangeAsset ||
-      toExchangeAssetJson.applyBlockHeight !== applyBlockHeight ||
-      toExchangeAssetJson.rangeType !== transactionRangeType ||
-      toExchangeAssetJson.range.length !== transactionRange.length
+      trsAsset.beExchangeAsset !== beExchangeAsset
     ) {
       throw new ConsensusException(NOT_MATCH, {
         to_compare_prop: "exchangeAssetInfo",
@@ -130,27 +122,35 @@ export class BeExchangeAssetLogicVerifier extends TransactionLogicVerifier {
         ...Function_Exception_Detail,
       });
     }
-    const range = toExchangeAssetJson.range;
-    for (const item of range) {
-      if (!transactionRange.includes(item)) {
-        throw new ConsensusException(NOT_MATCH, {
-          to_compare_prop: "exchangeAssetRange",
-          be_compare_prop: "exchangeAssetRange",
-          to_target: "BeExchangeAssetTransaction",
-          be_target: "ToExchangeAssetTransaction",
+    const { rangeType, range } = toExchangeAssetJson;
+
+    if (rangeType & RANGE_TYPE.MULTI_ADDRESS) {
+      if (!range.includes(transaction.senderId)) {
+        throw new ConsensusException(SHOULD_BE, {
+          to_compare_prop: "senderId",
+          to_target: "beExchangeAssetTransaction",
+          be_compare_prop: "toExchangeAssetTransaction.range",
           ...Function_Exception_Detail,
         });
       }
-    }
-
-    if (effectiveBlockHeight !== toExchangeAssetJson.effectiveBlockHeight) {
-      throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: "effectiveBlockHeight",
-        be_compare_prop: "effectiveBlockHeight",
-        to_target: "BeExchangeAssetTransaction",
-        be_target: "ToExchangeAssetTransaction",
-        ...Function_Exception_Detail,
-      });
+    } else if (rangeType & RANGE_TYPE.MULTI_DAPPID) {
+      if (!transaction.dappid || !range.includes(transaction.dappid)) {
+        throw new ConsensusException(SHOULD_BE, {
+          to_compare_prop: "dappid",
+          to_target: "beExchangeAssetTransaction",
+          be_compare_prop: "toExchangeAssetTransaction.range",
+          ...Function_Exception_Detail,
+        });
+      }
+    } else if (rangeType & RANGE_TYPE.MULTI_LOCATION_NAME) {
+      if (!transaction.lns || !range.includes(transaction.lns)) {
+        throw new ConsensusException(SHOULD_BE, {
+          to_compare_prop: "lns",
+          to_target: "beExchangeAssetTransaction",
+          be_compare_prop: "toExchangeAssetTransaction.range",
+          ...Function_Exception_Detail,
+        });
+      }
     }
   }
 

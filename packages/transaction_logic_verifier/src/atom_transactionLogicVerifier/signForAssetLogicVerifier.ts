@@ -1,12 +1,16 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import type { SignForAssetTransaction, AccountSignatureModel } from "@bfchain/core-model";
-import { Injectable, Inject } from "@bfchain/util";
+import { Injectable, Inject, parseHexToArrayBuffer } from "@bfchain/util";
 import {
   CoreExceptionGenerator,
   NOT_EXIST,
   NOT_MATCH,
   CAN_NOT_CARRY_SECOND_PUBLICKEY,
   CAN_NOT_SECONDARY_TRANSACTION,
+  SHOULD_BE,
+  PROP_LENGTH_SHOULD_LTE_FIELD,
+  SHOULD_NOT_DUPLICATE,
+  PROP_IS_INVALID,
 } from "@bfchain/core-util-exception";
 import { AccountBaseHelper } from "@bfchain/core-helper";
 
@@ -59,7 +63,7 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
     }
     this.isValidRecipientId(transaction, trs);
     await this.isValidThirdPartySignatures(thirdPartySignatures, accountGetterHelper);
-    this.isDependentTransactionMatch(transaction, trs);
+    await this.isDependentTransactionMatch(transaction, trs);
 
     return true;
   }
@@ -143,7 +147,7 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    * @param trustAssetJson
    */
-  isDependentTransactionMatch(
+  async isDependentTransactionMatch(
     transaction: SignForAssetTransaction,
     trustAssetJson: BFChainCore.TransactionJSON<BFChainCore.TrustAssetAssetJSON>,
   ) {
@@ -151,12 +155,6 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
       function: "isDependentTransactionMatch",
     } as const;
     const {
-      transactionSignature,
-      applyBlockHeight,
-      effectiveBlockHeight,
-      trustSenderId,
-      trustRecipientId,
-      trustNumberOfSignFor,
       trustAsset,
     } = transaction.asset.signForAsset;
     const trsAsset = trustAssetJson.asset.trustAsset;
@@ -165,11 +163,7 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
       trsAsset.sourceChainMagic !== trustAsset.sourceChainMagic ||
       trsAsset.assetType !== trustAsset.assetType ||
       trsAsset.amount !== trustAsset.amount ||
-      trsAsset.trustees.length !== trustAsset.trustees.length ||
-      trsAsset.numberOfSignFor !== trustNumberOfSignFor ||
-      trustAssetJson.applyBlockHeight !== applyBlockHeight ||
-      trustAssetJson.senderId !== trustSenderId ||
-      trustAssetJson.recipientId !== trustRecipientId
+      trsAsset.trustees.length !== trustAsset.trustees.length
     ) {
       throw new ConsensusException(NOT_MATCH, {
         to_compare_prop: "trustAssetInfo",
@@ -180,24 +174,14 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
       });
     }
 
-    if (effectiveBlockHeight !== trustAssetJson.effectiveBlockHeight) {
-      throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: "effectiveBlockHeight",
-        be_compare_prop: "effectiveBlockHeight",
-        to_target: "SignForAssetTransaction",
-        be_target: "TrustAssetTransaction",
-        ...Function_Exception_Detail,
-      });
-    }
-
-    const trustTrsRange = [...trustAssetJson.range, ...trsAsset.trustees];
+    const trustTrsRange = [...trsAsset.trustees];
     const trustRange = [...trustAsset.trustees];
 
     for (const address of trustTrsRange) {
       if (!trustRange.includes(address)) {
         throw new ConsensusException(NOT_MATCH, {
-          to_compare_prop: "trustAssetRange",
-          be_compare_prop: "trustAssetRange",
+          to_compare_prop: "trustees",
+          be_compare_prop: "trustees",
           to_target: "SignForAssetTransaction",
           be_target: "TrustAssetTransaction",
           ...Function_Exception_Detail,

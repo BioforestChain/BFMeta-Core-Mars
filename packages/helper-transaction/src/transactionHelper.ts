@@ -645,13 +645,13 @@ export class TransactionHelper {
           giftAsset.totalGrabableTimes,
         );
       case GIFT_DISTRIBUTION_RULE.RECIPIENT_RANDOM:
-        return this.calcGrabRecipientRandomGiftAssetNumber(
+        return this.calcGrabRandomGiftAssetNumber(
           grabId,
           blockSignatureBuffer,
           giftTransaction.signatureBuffer,
           giftTransaction.senderId,
-          giftTransaction.range,
           giftAsset.amount,
+          giftAsset.totalGrabableTimes,
         );
     }
   }
@@ -688,12 +688,6 @@ export class TransactionHelper {
 
       giftAsset,
       ciphertextSignature,
-
-      transactionRangeType: giftTransaction.rangeType,
-      transactionRange: giftTransaction.range,
-      applyBlockHeight: giftTransaction.applyBlockHeight,
-      beginUnfrozenBlockHeight: giftAsset.beginUnfrozenBlockHeight,
-      effectiveBlockHeight: giftTransaction.effectiveBlockHeight,
     });
 
     // 根据共识规则计算出能抢到的金额数量

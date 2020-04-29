@@ -185,61 +185,6 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
       });
     }
 
-    if (!baseHelper.isPositiveInteger(beExchangeSpecialAsset.applyBlockHeight)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "applyBlockHeight",
-        type: "positive integer",
-        ...BeExchangeSpecialAssetAsset_Exception_Detail,
-      });
-    }
-
-    if (!baseHelper.isPositiveInteger(beExchangeSpecialAsset.effectiveBlockHeight)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "effectiveBlockHeight",
-        type: "positive integer",
-        ...BeExchangeSpecialAssetAsset_Exception_Detail,
-      });
-    }
-
-    const { transactionRangeType, transactionRange } = beExchangeSpecialAsset;
-
-    if (!(await baseHelper.isValidRange(transactionRangeType, transactionRange))) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "transactionRange",
-        type: "transaction recipient",
-        ...BeExchangeSpecialAssetAsset_Exception_Detail,
-      });
-    }
-
-    if (transactionRangeType & RANGE_TYPE.MULTI_ADDRESS) {
-      if (!transactionRange.includes(body.senderId)) {
-        throw new ArgumentIllegalException(SHOULD_BE, {
-          to_compare_prop: "senderId",
-          to_target: "body",
-          be_compare_prop: "transactionRange",
-          ...BeExchangeSpecialAssetAsset_Exception_Detail,
-        });
-      }
-    } else if (transactionRangeType & RANGE_TYPE.MULTI_DAPPID) {
-      if (!body.dappid || !transactionRange.includes(body.dappid)) {
-        throw new ArgumentIllegalException(SHOULD_BE, {
-          to_compare_prop: "dappid",
-          to_target: "body",
-          be_compare_prop: "transactionRange",
-          ...BeExchangeSpecialAssetAsset_Exception_Detail,
-        });
-      }
-    } else if (transactionRangeType & RANGE_TYPE.MULTI_LOCATION_NAME) {
-      if (!body.lns || !transactionRange.includes(body.lns)) {
-        throw new ArgumentIllegalException(SHOULD_BE, {
-          to_compare_prop: "lns",
-          to_target: "body",
-          be_compare_prop: "transactionRange",
-          ...BeExchangeSpecialAssetAsset_Exception_Detail,
-        });
-      }
-    }
-
     const { exchangeSpecialAsset } = beExchangeSpecialAsset;
 
     /**校验`exchangeSpecialAsset`的基本格式 */

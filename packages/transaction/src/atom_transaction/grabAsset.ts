@@ -1,10 +1,5 @@
 import { TransactionFactory } from "./_txbase";
-import {
-  GrabAssetTransaction,
-  GIFT_DISTRIBUTION_RULE,
-  GrabAssetModel,
-  RANGE_TYPE,
-} from "@bfchain/core-model";
+import { GrabAssetTransaction, GIFT_DISTRIBUTION_RULE } from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
@@ -149,12 +144,7 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
       target: "grabAssetAsset",
     } as const;
 
-    const {
-      blockSignature,
-      transactionSignature,
-      transactionRangeType,
-      transactionRange,
-    } = grabAsset;
+    const { blockSignature, transactionSignature } = grabAsset;
 
     if (!blockSignature) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
@@ -193,69 +183,6 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
         to_target: "storage",
         be_target: "grabAsset",
         ...Function_Exception_Detail,
-      });
-    }
-
-    if (!(await baseHelper.isValidRange(transactionRangeType, transactionRange))) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "transactionRange",
-        type: "transaction recipient",
-        ...GrabAssetAsset_Exception_Detail,
-      });
-    }
-
-    if (transactionRangeType & RANGE_TYPE.MULTI_ADDRESS) {
-      if (!transactionRange.includes(body.senderId)) {
-        throw new ArgumentIllegalException(SHOULD_BE, {
-          to_compare_prop: "senderId",
-          to_target: "body",
-          be_compare_prop: "transactionRange",
-          ...GrabAssetAsset_Exception_Detail,
-        });
-      }
-    } else if (transactionRangeType & RANGE_TYPE.MULTI_DAPPID) {
-      if (!body.dappid || !transactionRange.includes(body.dappid)) {
-        throw new ArgumentIllegalException(SHOULD_BE, {
-          to_compare_prop: "dappid",
-          to_target: "body",
-          be_compare_prop: "transactionRange",
-          ...GrabAssetAsset_Exception_Detail,
-        });
-      }
-    } else if (transactionRangeType & RANGE_TYPE.MULTI_LOCATION_NAME) {
-      if (!body.lns || !transactionRange.includes(body.lns)) {
-        throw new ArgumentIllegalException(SHOULD_BE, {
-          to_compare_prop: "lns",
-          to_target: "body",
-          be_compare_prop: "transactionRange",
-          ...GrabAssetAsset_Exception_Detail,
-        });
-      }
-    }
-
-    if (!baseHelper.isPositiveInteger(grabAsset.applyBlockHeight)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "applyBlockHeight",
-        type: "positive integer",
-        ...GrabAssetAsset_Exception_Detail,
-      });
-    }
-
-    if (grabAsset.beginUnfrozenBlockHeight) {
-      if (!baseHelper.isPositiveInteger(grabAsset.beginUnfrozenBlockHeight)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "beginUnfrozenBlockHeight",
-          type: "positive integer",
-          ...GrabAssetAsset_Exception_Detail,
-        });
-      }
-    }
-
-    if (!baseHelper.isPositiveInteger(grabAsset.effectiveBlockHeight)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "effectiveBlockHeight",
-        type: "positive integer",
-        ...GrabAssetAsset_Exception_Detail,
       });
     }
 
@@ -339,13 +266,13 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
         );
         break;
       case GIFT_DISTRIBUTION_RULE.RECIPIENT_RANDOM:
-        should_grap_amount_BI = await this.transactionHelper.calcGrabRecipientRandomGiftAssetNumber(
+        should_grap_amount_BI = await this.transactionHelper.calcGrabRandomGiftAssetNumber(
           body.senderId,
           blockSignBuffer,
           trsSignBuffer,
           recipientId,
-          grabAsset.transactionRange,
           giftAsset.amount,
+          giftAsset.totalGrabableTimes,
         );
         break;
     }

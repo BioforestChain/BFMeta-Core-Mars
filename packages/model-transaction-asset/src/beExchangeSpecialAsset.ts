@@ -41,18 +41,6 @@ export class BeExchangeSpecialAssetModel extends Message<BeExchangeSpecialAssetM
     this.ciphertextSignatureBuffer = buf;
   }
 
-  /**to 交易有效期 */
-  @Field.d(BeExchangeSpecialAssetModel.INC++, "uint32")
-  applyBlockHeight!: number;
-  @Field.d(BeExchangeSpecialAssetModel.INC++, "uint32")
-  effectiveBlockHeight!: number;
-
-  /**to 交易的接收者列表 */
-  @Field.d(BeExchangeSpecialAssetModel.INC++, RANGE_TYPE)
-  transactionRangeType!: RANGE_TYPE;
-  @Field.d(BeExchangeSpecialAssetModel.INC++, "string", "repeated")
-  transactionRange!: string[];
-
   /**交换的配置信息 */
   @Field.d(BeExchangeSpecialAssetModel.INC++, ToExchangeSpecialAssetModel)
   exchangeSpecialAsset!: ToExchangeSpecialAssetModel;
@@ -60,10 +48,6 @@ export class BeExchangeSpecialAssetModel extends Message<BeExchangeSpecialAssetM
   toJSON() {
     const res: BFChainCore.BeExchangeSpecialAssetJSON = {
       transactionSignature: this.transactionSignature,
-      applyBlockHeight: this.applyBlockHeight,
-      effectiveBlockHeight: this.effectiveBlockHeight,
-      transactionRangeType: this.transactionRangeType,
-      transactionRange: this.transactionRange,
       exchangeSpecialAsset: this.exchangeSpecialAsset.toJSON(),
     };
 

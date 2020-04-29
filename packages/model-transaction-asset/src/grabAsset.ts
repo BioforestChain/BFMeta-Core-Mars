@@ -51,18 +51,6 @@ export class GrabAssetModel extends Message<GrabAssetModel>
     }
     this.ciphertextSignatureBuffer = buf;
   }
-  /**要抢红包交易的接收者列表 */
-  @Field.d(GrabAssetModel.INC++, RANGE_TYPE)
-  transactionRangeType!: RANGE_TYPE;
-  @Field.d(GrabAssetModel.INC++, "string", "repeated")
-  transactionRange!: string[];
-
-  @Field.d(GrabAssetModel.INC++, "uint32")
-  applyBlockHeight!: number;
-  @Field.d(GrabAssetModel.INC++, "uint32", "optional")
-  beginUnfrozenBlockHeight?: number;
-  @Field.d(GrabAssetModel.INC++, "uint32")
-  effectiveBlockHeight!: number;
 
   /**红包的配置信息 */
   @Field.d(GrabAssetModel.INC++, GiftAssetModel)
@@ -71,14 +59,9 @@ export class GrabAssetModel extends Message<GrabAssetModel>
     const res: BFChainCore.GrabAssetJSON = {
       blockSignature: this.blockSignature,
       transactionSignature: this.transactionSignature,
-      transactionRangeType: this.transactionRangeType,
-      transactionRange: this.transactionRange,
-      applyBlockHeight: this.applyBlockHeight,
-      effectiveBlockHeight: this.effectiveBlockHeight,
       amount: this.amount,
       giftAsset: this.giftAsset.toJSON(),
     };
-    this.beginUnfrozenBlockHeight && (res.beginUnfrozenBlockHeight = this.beginUnfrozenBlockHeight);
     this.ciphertextSignatureBuffer && (res.ciphertextSignature = this.ciphertextSignature.toJSON());
 
     return res;
