@@ -9,15 +9,23 @@ declare namespace BFChainCore {
   // #endregion
 
   // #region TransactonPoW
-  type TransactonPoWOptions<T extends Transaction = any> = {
+  type TransactonPoWOptions<T extends Transaction = Transaction> = {
     count: number;
     participation: string;
     event?: BFChainUtil.QueneEventEmitter<TransactonPoWControllerEvents<T>>;
-    calculator?: import("./transaction").TransactionCore["transactionPowCalculator"];
+    calculator?: (
+      trs: T,
+      pow: BFChainCore.TransactonPoWOptions<T>, // this
+      keypair: BFChainCore.Keypair,
+      secondKeypair?: BFChainCore.Keypair,
+    ) => BFChainUtil.PromiseMaybe<T>;
   };
   type TransactonPoWControllerEvents<T extends Transaction = any> = {
     start: BFChainUtil.EventInOut<{ diff: string; transaction: T }, { break: boolean }>;
-    work: BFChainUtil.EventInOut<{ nonce: number; transaction: T, offset?: number }, { break: boolean }>;
+    work: BFChainUtil.EventInOut<
+      { nonce: number; transaction: T; offset?: number },
+      { break: boolean }
+    >;
     done: BFChainUtil.EventInOut<{ transaction: T; nonce: number }, any>;
     error: BFChainUtil.EventInOut<{ transaction: T; nonce: number }, any>;
   };

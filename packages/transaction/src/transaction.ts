@@ -177,7 +177,7 @@ export class TransactionCore {
   /**通用的交易POW计算器 */
   async transactionPowCalculator<T extends Transaction>(
     trs: T,
-    pow: BFChainCore.TransactonPoWOptions,
+    pow: BFChainCore.TransactonPoWOptions<T>,
     keypair: BFChainCore.Keypair,
     secondKeypair?: BFChainCore.Keypair,
   ) {
