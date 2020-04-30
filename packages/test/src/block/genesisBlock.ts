@@ -27,6 +27,8 @@ import {
   ed2curveHelper,
   mainChainRemarkData,
   getFullBfchainCoreEntry,
+  DelegateTransaction,
+  LocationNameTransaction,
 } from "../include";
 import { QueneEventEmitter, Resolve } from "@bfchain/util";
 import * as optimist from "optimist";
@@ -100,15 +102,15 @@ type DelegateInfo = {
 };
 
 const _powCount: { [add: string]: number } = {};
-const getPOWInfo = (address: string) => {
+function getPOWInfo<T extends Transaction>(address: string) {
   const count = _powCount[address] || 0;
   _powCount[address] = count + 1;
-  const res: BFChainCore.TransactonPoWOptions = {
+  const res: BFChainCore.TransactonPoWOptions<T> = {
     count,
     participation: "0",
   };
   return res;
-};
+}
 
 const _txs: { [address: string]: number } = {};
 const getTxs = (address: string) => {
@@ -127,7 +129,9 @@ async function getUsernameTransaction(sender: DelegateInfo) {
       ))) ||
     undefined;
   const pow =
-    1 > bfchainCore.config.powOfWorkExemptionBlocks ? getPOWInfo(sender.address) : undefined;
+    1 > bfchainCore.config.powOfWorkExemptionBlocks
+      ? getPOWInfo<UsernameTransaction>(sender.address)
+      : undefined;
   const createTrs = (fee = "AUTO") => {
     return core.transaction.createTransaction<UsernameTransaction>(
       UsernameTransactionFactory,
@@ -165,7 +169,12 @@ async function getUsernameTransaction(sender: DelegateInfo) {
   };
   let trs = await createTrs();
   if (pow) {
-    trs = await bfchainCore.transaction.transactionPowCalculator(trs, pow, keypair, secondKeypair);
+    trs = await bfchainCore.transaction.transactionPowCalculator<UsernameTransaction>(
+      trs,
+      pow,
+      keypair,
+      secondKeypair,
+    );
   }
   trs = await createTrs(
     core.transactionHelper.calcTransactionFee(trs, bfchainCore.config.minTransactionFeePerByte),
@@ -186,7 +195,9 @@ async function getDelegateTransaction(sender: DelegateInfo) {
       ))) ||
     undefined;
   const pow =
-    1 > bfchainCore.config.powOfWorkExemptionBlocks ? getPOWInfo(sender.address) : undefined;
+    1 > bfchainCore.config.powOfWorkExemptionBlocks
+      ? getPOWInfo<DelegateTransaction>(sender.address)
+      : undefined;
   const createTrs = (fee = "AUTO") => {
     return core.transaction.createTransaction(
       DelegateTransactionFactory,
@@ -245,7 +256,9 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
       ))) ||
     undefined;
   const pow =
-    1 > bfchainCore.config.powOfWorkExemptionBlocks ? getPOWInfo(sender.address) : undefined;
+    1 > bfchainCore.config.powOfWorkExemptionBlocks
+      ? getPOWInfo<AcceptVoteTransaction>(sender.address)
+      : undefined;
   const createTrs = (fee = "AUTO") => {
     return core.transaction.createTransaction<AcceptVoteTransaction>(
       AcceptVoteTransactionFactory,
@@ -298,7 +311,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
   async function getTransferAssetTransaction(recipient: DelegateInfo, amount: string) {
     const pow =
       1 > bfchainCore.config.powOfWorkExemptionBlocks
-        ? getPOWInfo(genesisAccountInfo.address)
+        ? getPOWInfo<TransferAssetTransaction>(genesisAccountInfo.address)
         : undefined;
     const createTrs = (fee = "AUTO") => {
       return core.transaction.createTransaction(
@@ -358,7 +371,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
   async function getLocationNameTransaction() {
     const pow =
       1 > bfchainCore.config.powOfWorkExemptionBlocks
-        ? getPOWInfo(genesisAccountInfo.address)
+        ? getPOWInfo<LocationNameTransaction>(genesisAccountInfo.address)
         : undefined;
     const createTrs = (fee = "AUTO") => {
       return core.transaction.createTransaction(

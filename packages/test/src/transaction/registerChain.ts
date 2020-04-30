@@ -23,6 +23,9 @@ import {
   SetLnsRecordValueTransactionFactory,
   LOCATION_NAME_OPERATION_TYPE,
   BNID_TYPE,
+  DelegateTransaction,
+  LocationNameTransaction,
+  SetLnsRecordValueTransaction,
 } from "@bfchain/core";
 import { QueneEventEmitter, Resolve } from "@bfchain/util";
 import * as path from "path";
@@ -54,15 +57,15 @@ type DelegateInfo = {
 };
 
 const _powCount: { [add: string]: number } = {};
-const getPOWInfo = (address: string) => {
+function getPOWInfo<T extends Transaction>(address: string) {
   const count = _powCount[address] || 0;
   _powCount[address] = count + 1;
-  const res: BFChainCore.TransactonPoWOptions = {
+  const res: BFChainCore.TransactonPoWOptions<T> = {
     count,
     participation: "0",
   };
   return res;
-};
+}
 
 const _txs: { [address: string]: number } = {};
 const getTxs = (address: string) => {
@@ -83,7 +86,7 @@ const getTxs = (address: string) => {
       undefined;
     const pow =
       1 > registerBfchainCore.config.powOfWorkExemptionBlocks
-        ? getPOWInfo(sender.address)
+        ? getPOWInfo<UsernameTransaction>(sender.address)
         : undefined;
     const createTrs = (fee = "1") => {
       return registerBfchainCore.transaction.createTransaction<UsernameTransaction>(
@@ -150,7 +153,7 @@ const getTxs = (address: string) => {
       undefined;
     const pow =
       1 > registerBfchainCore.config.powOfWorkExemptionBlocks
-        ? getPOWInfo(sender.address)
+        ? getPOWInfo<DelegateTransaction>(sender.address)
         : undefined;
     const createTrs = (fee = "1") => {
       return registerBfchainCore.transaction.createTransaction(
@@ -217,7 +220,7 @@ const getTxs = (address: string) => {
       undefined;
     const pow =
       1 > registerBfchainCore.config.powOfWorkExemptionBlocks
-        ? getPOWInfo(sender.address)
+        ? getPOWInfo<AcceptVoteTransaction>(sender.address)
         : undefined;
     const createTrs = (fee = "1") => {
       return registerBfchainCore.transaction.createTransaction<AcceptVoteTransaction>(
@@ -267,7 +270,7 @@ const getTxs = (address: string) => {
   async function getLocationNameTransaction() {
     const pow =
       1 > registerBfchainCore.config.powOfWorkExemptionBlocks
-        ? getPOWInfo(genesisAccountInfo.address)
+        ? getPOWInfo<LocationNameTransaction>(genesisAccountInfo.address)
         : undefined;
     const createTrs = (fee = "AUTO") => {
       return registerBfchainCore.transaction.createTransaction(
@@ -340,7 +343,7 @@ const getTxs = (address: string) => {
       undefined;
     const pow =
       1 > registerBfchainCore.config.powOfWorkExemptionBlocks
-        ? getPOWInfo(sender.address)
+        ? getPOWInfo<SetLnsRecordValueTransaction>(sender.address)
         : undefined;
     const createTrs = (fee = "AUTO") => {
       return registerBfchainCore.transaction.createTransaction(
@@ -417,7 +420,7 @@ const getTxs = (address: string) => {
   ) {
     const pow =
       1 > registerBfchainCore.config.powOfWorkExemptionBlocks
-        ? getPOWInfo(genesisAccountInfo.address)
+        ? getPOWInfo<TransferAssetTransaction>(genesisAccountInfo.address)
         : undefined;
     const createTrs = (fee = "1") => {
       return bfchainCore.transaction.createTransaction(

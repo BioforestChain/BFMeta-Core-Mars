@@ -2,6 +2,7 @@ import {
   TransferAssetTransaction,
   TransferAssetTransactionFactory,
   RANGE_TYPE,
+  Transaction,
 } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
@@ -14,15 +15,15 @@ import {
 const bfchainCore = getBfchainCoreEntry();
 
 const _powCount: { [add: string]: number } = {};
-const getPOWInfo = (address: string) => {
+function getPOWInfo<T extends Transaction>(address: string) {
   const count = _powCount[address] || 8;
   _powCount[address] = count + 1;
-  const res: BFChainCore.TransactonPoWOptions = {
+  const res: BFChainCore.TransactonPoWOptions<T> = {
     count,
     participation: "1000",
   };
   return res;
-};
+}
 
 async function getTransferAssetTransaction(sender: AccountModel) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
@@ -63,7 +64,7 @@ async function getTransferAssetTransaction(sender: AccountModel) {
   }
   const pow =
     data.applyBlockHeight > bfchainCore.config.powOfWorkExemptionBlocks
-      ? getPOWInfo(sender.address)
+      ? getPOWInfo<TransferAssetTransaction>(sender.address)
       : undefined;
   let trs = await bfchainCore.transaction.createTransaction<TransferAssetTransaction>(
     TransferAssetTransactionFactory,
