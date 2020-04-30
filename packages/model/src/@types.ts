@@ -189,6 +189,7 @@ declare namespace BFChainCore {
     name: string;
     sourceChainName: string;
     sourceChainMagic: string;
+    possessorAddress: string;
   };
   /**注册链域名 */
   type ApplyTransactionRegisterLocationNameEvent<
@@ -200,6 +201,7 @@ declare namespace BFChainCore {
     publicKeyBuffer?: Uint8Array;
     name: string;
     sourceChainMagic: string;
+    possessorAddress: string;
   };
   /**注销链域名 */
   type ApplyTransactionCancelLocationNameEvent<

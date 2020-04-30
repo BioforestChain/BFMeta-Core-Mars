@@ -4,6 +4,7 @@ import {
   NOT_EXIST,
   PROP_IS_REQUIRE,
   SHOULD_NOT_EXIST,
+  SHOULD_BE,
 } from "@bfchain/core-util-exception";
 import { parseHexToArrayBuffer, Injectable, Inject } from "@bfchain/util";
 import {
@@ -21,10 +22,7 @@ import {
   ChainAssetInfoHelper,
   ConfigHelperMap,
 } from "@bfchain/core-helper";
-const { ArgumentIllegalException, ConsensusException } = CoreExceptionGenerator(
-  "CONTROLLER",
-  "CustomTransactionEvent",
-);
+const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "CustomTransactionEvent");
 
 @Injectable()
 export class CustomTransactionEvent {
@@ -474,6 +472,29 @@ export class CustomTransactionEvent {
         )
         .verify(genesisBlock, chainConfig);
     }
+    if (applyResult.type === "registerLocationName") {
+      const { sourceChainName, sourceChainMagic, name, possessorAddress } = applyResult.applyInfo;
+      this.verifyMagic(sourceChainMagic);
+      this.verifyChainName(sourceChainName);
+      await this.verifyPossessorAddress(possessorAddress);
+      this.verifyLocationName(name);
+      return;
+    }
+    if (applyResult.type === "cancelLocationName") {
+      const { address, sourceChainMagic, name, possessorAddress } = applyResult.applyInfo;
+      this.verifyMagic(sourceChainMagic);
+      await this.verifyPossessorAddress(possessorAddress);
+      this.verifyLocationName(name);
+      if (address !== possessorAddress) {
+        throw new ArgumentIllegalException(SHOULD_BE, {
+          to_compare_prop: "possessorAddress",
+          to_target: address,
+          be_compare_prop: "applyInfo",
+          ...Function_Exception_Detail,
+        });
+      }
+      return;
+    }
     if (applyResult.type === "setLnsRecordValue") {
       const {
         name,
@@ -743,6 +764,7 @@ export class CustomTransactionEvent {
         dappid,
         type,
         purchaseAsset,
+        possessorAddress,
       } = applyResult.applyInfo;
       return eventEmitter.emit("issueDAppid", {
         type: "issueDAppid",
@@ -753,7 +775,7 @@ export class CustomTransactionEvent {
           sourceChainName,
           sourceChainMagic,
           dappid,
-          possessorAddress: address,
+          possessorAddress,
           type,
           purchaseAsset,
         },
@@ -839,7 +861,14 @@ export class CustomTransactionEvent {
       });
     }
     if (applyResult.type === "registerLocationName") {
-      const { address, publicKey, name, sourceChainMagic, sourceChainName } = applyResult.applyInfo;
+      const {
+        address,
+        publicKey,
+        name,
+        sourceChainMagic,
+        sourceChainName,
+        possessorAddress,
+      } = applyResult.applyInfo;
       return eventEmitter.emit("registerLocationName", {
         type: "registerLocationName",
         transaction,
@@ -849,11 +878,18 @@ export class CustomTransactionEvent {
           name,
           sourceChainMagic,
           sourceChainName,
+          possessorAddress,
         },
       });
     }
     if (applyResult.type === "cancelLocationName") {
-      const { address, publicKey, name, sourceChainMagic } = applyResult.applyInfo;
+      const {
+        address,
+        publicKey,
+        name,
+        sourceChainMagic,
+        possessorAddress,
+      } = applyResult.applyInfo;
       return eventEmitter.emit("cancelLocationName", {
         type: "cancelLocationName",
         transaction,
@@ -862,6 +898,7 @@ export class CustomTransactionEvent {
           publicKeyBuffer: parseHexToArrayBuffer(publicKey),
           name,
           sourceChainMagic,
+          possessorAddress,
         },
       });
     }

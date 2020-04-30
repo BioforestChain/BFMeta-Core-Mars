@@ -75,8 +75,8 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
 
     const { baseHelper } = this;
 
-    if (body.recipientId) {
-      throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+    if (!body.recipientId) {
+      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "recipientId",
         ...Function_Exception_Detail,
       });
@@ -296,7 +296,7 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
   ) {
     const tasks = new TaskList();
     tasks.next = super.applyTransaction(transaction, eventEmitter, config);
-    const { senderId } = transaction;
+    const { senderId, recipientId } = transaction;
     const {
       name,
       sourceChainMagic,
@@ -313,6 +313,7 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
           name,
           sourceChainMagic,
           sourceChainName,
+          possessorAddress: recipientId,
         },
       });
     } else {
@@ -323,6 +324,7 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
           address: senderId,
           name,
           sourceChainMagic,
+          possessorAddress: recipientId,
         },
       });
     }
