@@ -10,7 +10,7 @@ import { Type, Field } from "@bfchain/protobuf";
 export class LocationNameTransaction extends Transaction<BFChainCore.LocationNameAssetJSON>
   implements BFChainCore.LocationNameTransactionJSON {
   toJSON!: () => BFChainCore.LocationNameTransactionJSON;
-  recipientId!: undefined;
+  recipientId!: string;
   @Field.d(LocationNameTransaction.INC++, LocationNameAssetModel)
   asset!: LocationNameAssetModel;
 }

@@ -334,7 +334,7 @@ declare namespace BFChainCore {
   >;
   type VoteTransactionJSON = TransactionMixJSON<VoteAssetJSON, { hasRecipientId: true }>;
 
-  type DAppTransactionJSON = TransactionMixJSON<DAppAssetJSON, { hasRecipientId: false }>;
+  type DAppTransactionJSON = TransactionMixJSON<DAppAssetJSON, { hasRecipientId: true }>;
   type DAppPurchasingTransactionJSON = TransactionMixJSON<
     DAppPurchasingAssetJSON,
     { hasRecipientId: true }
@@ -390,7 +390,7 @@ declare namespace BFChainCore {
 
   type LocationNameTransactionJSON = TransactionMixJSON<
     LocationNameAssetJSON,
-    { hasRecipientId: false }
+    { hasRecipientId: true }
   >;
   type SetLnsManagerTransactionJSON = TransactionMixJSON<
     SetLnsManagerAssetJSON,

@@ -203,6 +203,7 @@ declare namespace BFChainCore {
       name: string;
       sourceChainName: string;
       sourceChainMagic: string;
+      possessorAddress: string;
     };
   }
 
@@ -213,6 +214,7 @@ declare namespace BFChainCore {
       publicKey: string;
       name: string;
       sourceChainMagic: string;
+      possessorAddress: string;
     };
   }
 

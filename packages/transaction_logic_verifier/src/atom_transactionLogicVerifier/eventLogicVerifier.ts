@@ -35,8 +35,8 @@ import {
   UNFROZEN_TIME_USE_UP,
   REGISTER_DELEGTE_QUOTA_FULL,
   NOT_MATCH,
-  PROP_IS_REQUIRE,
   REJECT_REGISTER_DELEGATE,
+  SHOULD_BE,
 } from "@bfchain/core-util-exception";
 import {
   NewTransactionRefuseReason,
@@ -639,7 +639,24 @@ export class EventLogicVerifier {
 
     // 发行 dapid
     event.on("issueDAppid", async ({ applyInfo }, next) => {
-      const { dappid, sourceChainMagic, purchaseAsset } = applyInfo;
+      const { dappid, sourceChainMagic, purchaseAsset, possessorAddress } = applyInfo;
+
+      // 不能将冻结账户设置为 dapp 的拥有者
+      const possessor = await accountGetterHelper.getAccountInfo(possessorAddress);
+      if (possessor) {
+        const accountStatus = possessor.accountStatus;
+        if (
+          accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
+          accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
+          accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
+        ) {
+          throw new ConsensusException(ACCOUNT_FROZEN, {
+            address: possessorAddress,
+            ...Function_Exception_Detail,
+          });
+        }
+      }
+
       // 用于购买的资产是否合法
       if (purchaseAsset) {
         const { sourceChainMagic: magic, sourceChainName, assetType, amount } = purchaseAsset;
@@ -810,7 +827,23 @@ export class EventLogicVerifier {
 
     // 注册链域名
     event.on("registerLocationName", async ({ applyInfo }, next) => {
-      const { sourceChainMagic, name } = applyInfo;
+      const { sourceChainMagic, name, possessorAddress } = applyInfo;
+
+      // 不能将冻结账户设置为 lns 的拥有者
+      const possessor = await accountGetterHelper.getAccountInfo(possessorAddress);
+      if (possessor) {
+        const accountStatus = possessor.accountStatus;
+        if (
+          accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
+          accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
+          accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
+        ) {
+          throw new ConsensusException(ACCOUNT_FROZEN, {
+            address: possessorAddress,
+            ...Function_Exception_Detail,
+          });
+        }
+      }
 
       // 已存在的域名不能重复添加
       const memLocation = (await accountGetterHelper.getLocationName(
@@ -891,6 +924,16 @@ export class EventLogicVerifier {
         throw new ConsensusException(CAN_NOT_DELETE_LOCATION_NAME, {
           locationName: name,
           reason: "Frozen location name can not be delete",
+          ...Function_Exception_Detail,
+        });
+      }
+
+      // 发起账户地址和接收账户地址必须是同一个
+      if (transaction.senderId !== transaction.recipientId) {
+        throw new ConsensusException(SHOULD_BE, {
+          to_compare_prop: `recipientId`,
+          to_target: "transaction",
+          be_compare_prop: transaction.senderId,
           ...Function_Exception_Detail,
         });
       }
