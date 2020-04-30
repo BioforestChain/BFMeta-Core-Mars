@@ -108,6 +108,7 @@ export class BlockBaseStatisticsHelper {
   private _applyAsset(
     event: BFChainCore.ApplyTransactionAssetEvent<"asset">,
     statistics_info: StatisticsInfo,
+    forceStatistic = false,
   ) {
     const { applyInfo, transaction } = event;
     const { type } = transaction;
@@ -135,8 +136,9 @@ export class BlockBaseStatisticsHelper {
     /**
      * 发起者和接收者不能重复累加
      * 统计资产移动、统计指定交易类型的变动
+     * 有些特殊的事件的资产变动就是正数(权益赠送，资产交换，权益交换)
      */
-    if (applyInfo.amount.startsWith("-")) {
+    if (applyInfo.amount.startsWith("-") || forceStatistic) {
       /**
        * 资产移动统计
        */
@@ -199,7 +201,7 @@ export class BlockBaseStatisticsHelper {
       return next();
     });
     eventEmitter.on("unfrozenAsset", (event, next) => {
-      this._applyAsset(event, statistics_info);
+      this._applyAsset(event, statistics_info, true);
       return next();
     });
     return true;
