@@ -12,6 +12,13 @@ type BI = bigint | number | string;
  */
 function formatParam(param: BI) {
   try {
+    if (typeof param === "string") {
+      param = parseInt(param);
+    } else if (typeof param === "number") {
+      param = Math.floor(param);
+    } else {
+      return param;
+    }
     return BigInt(param);
   } catch (err) {
     throw new ArgumentIllegalException(PROP_IS_INVALID, {
