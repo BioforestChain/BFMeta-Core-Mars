@@ -642,20 +642,20 @@ export class EventLogicVerifier {
       const { dappid, sourceChainMagic, purchaseAsset, possessorAddress } = applyInfo;
 
       // 不能将冻结账户设置为 dapp 的拥有者
-      const possessor = await accountGetterHelper.getAccountInfo(possessorAddress);
-      if (possessor) {
-        const accountStatus = possessor.accountStatus;
-        if (
-          accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
-          accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
-          accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
-        ) {
-          throw new ConsensusException(ACCOUNT_FROZEN, {
-            address: possessorAddress,
-            ...Function_Exception_Detail,
-          });
-        }
-      }
+      // const possessor = await accountGetterHelper.getAccountInfo(possessorAddress);
+      // if (possessor) {
+      //   const accountStatus = possessor.accountStatus;
+      //   if (
+      //     accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
+      //     accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
+      //     accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
+      //   ) {
+      //     throw new ConsensusException(ACCOUNT_FROZEN, {
+      //       address: possessorAddress,
+      //       ...Function_Exception_Detail,
+      //     });
+      //   }
+      // }
 
       // 用于购买的资产是否合法
       if (purchaseAsset) {
@@ -830,20 +830,20 @@ export class EventLogicVerifier {
       const { sourceChainMagic, name, possessorAddress } = applyInfo;
 
       // 不能将冻结账户设置为 lns 的拥有者
-      const possessor = await accountGetterHelper.getAccountInfo(possessorAddress);
-      if (possessor) {
-        const accountStatus = possessor.accountStatus;
-        if (
-          accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
-          accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
-          accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
-        ) {
-          throw new ConsensusException(ACCOUNT_FROZEN, {
-            address: possessorAddress,
-            ...Function_Exception_Detail,
-          });
-        }
-      }
+      // const possessor = await accountGetterHelper.getAccountInfo(possessorAddress);
+      // if (possessor) {
+      //   const accountStatus = possessor.accountStatus;
+      //   if (
+      //     accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
+      //     accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
+      //     accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
+      //   ) {
+      //     throw new ConsensusException(ACCOUNT_FROZEN, {
+      //       address: possessorAddress,
+      //       ...Function_Exception_Detail,
+      //     });
+      //   }
+      // }
 
       // 已存在的域名不能重复添加
       const memLocation = (await accountGetterHelper.getLocationName(
@@ -929,14 +929,14 @@ export class EventLogicVerifier {
       }
 
       // 发起账户地址和接收账户地址必须是同一个
-      if (transaction.senderId !== transaction.recipientId) {
-        throw new ConsensusException(SHOULD_BE, {
-          to_compare_prop: `recipientId`,
-          to_target: "transaction",
-          be_compare_prop: transaction.senderId,
-          ...Function_Exception_Detail,
-        });
-      }
+      // if (transaction.senderId !== transaction.recipientId) {
+      //   throw new ConsensusException(SHOULD_BE, {
+      //     to_compare_prop: `recipientId`,
+      //     to_target: "transaction",
+      //     be_compare_prop: transaction.senderId,
+      //     ...Function_Exception_Detail,
+      //   });
+      // }
 
       // 只有域名的拥有者才能删除域名
       if (memLocation.possessorAddress !== transaction.senderId) {
