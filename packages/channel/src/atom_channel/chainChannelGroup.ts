@@ -99,7 +99,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     }
   >();
   /**节点的工作量 */
-  private _workCountWM = new EasyWeakMap<DH, number>((_) => 0);
+  private _workCountWM = new EasyWeakMap<DH, number>(_ => 0);
   /**开始一个节点并发任务 */
   startParallelTask(task_id: string) {
     const WCWM = this._workCountWM;
@@ -251,105 +251,109 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     const { getFreeChainChannel, freeChainChannel, busyChainChannel } = this.startParallelTask(
       parallelTaskId,
     );
-    try {
-      const resultGenerator = _resultGenerator || new AsyncIteratorGenerator<TransactionInBlock>();
 
-      /// 在异步任务中进行任务分发
-      (async () => {
-        /**发往每一台节点的查询数量 */
-        const unitLength = 1; // totalLength ? Math.ceil(totalLength / chainChannelList.length) : 1;
-        /**所有查询任务的链 */
-        let task_chain = Promise.resolve();
-        /**是否已经触碰到完结的边界了 */
-        let query_done_offset = limit + offset;
-        /**
-         * 执行任务
-         * @param task_offset
-         * @param times
-         */
-        const doTask = async (task_offset: number, times: number) => {
+    const resultGenerator = _resultGenerator || new AsyncIteratorGenerator<TransactionInBlock>();
+
+    /// 在异步任务中进行任务分发
+    (async () => {
+      /**发往每一台节点的查询数量 */
+      const unitLength = 1; // totalLength ? Math.ceil(totalLength / chainChannelList.length) : 1;
+      /**所有查询任务的链 */
+      let task_chain = Promise.resolve();
+      /**是否已经触碰到完结的边界了 */
+      let query_done_offset = limit + offset;
+      /**
+       * 执行任务
+       * @param task_offset
+       * @param times
+       */
+      const doTask = (task_offset: number, times: number) => {
+        const waitUseableChainChannel = new PromiseOut<void>();
+        task_chain = task_chain.then(async () => {
           // 获取可用节点
           const chainChannel = await getFreeChainChannel();
+          waitUseableChainChannel.resolve();
           // 将这个节点放入繁忙队列，暂时不使用
           busyChainChannel(chainChannel);
-          task_chain = task_chain.then(() =>
-            // 开始执行查询
-            chainChannel
-              .queryTransactions(
-                {
-                  ...baseQueryCondition,
-                  offset: task_offset,
-                  limit: unitLength,
-                },
-                sort,
-                opts,
-              )
-              .then((res) => {
-                if (res.status === RESPONSE_STATUS.success) {
-                  // 确认节点的工作，让其继续下一个工作
-                  freeChainChannel(chainChannel);
-                  if (res.transactions.length === 0) {
-                    query_done_offset = task_offset;
-                  } else {
-                    res.transactions.forEach((trs, i) => {
-                      resultGenerator.push(trs, task_offset - offset + i);
-                    });
-                    // task_result_list[task_offset] = res.transactions[0];
-                  }
+          // 开始执行查询
+          return chainChannel
+            .queryTransactions(
+              {
+                ...baseQueryCondition,
+                offset: task_offset,
+                limit: unitLength,
+              },
+              sort,
+              opts,
+            )
+            .then(res => {
+              if (res.status === RESPONSE_STATUS.success) {
+                // 确认节点的工作，让其继续下一个工作
+                freeChainChannel(chainChannel);
+                if (res.transactions.length === 0) {
+                  query_done_offset = task_offset;
+                } else {
+                  res.transactions.forEach((trs, i) => {
+                    resultGenerator.push(trs, task_offset - offset + i);
+                  });
+                  // task_result_list[task_offset] = res.transactions[0];
                 }
-                if (res.status === RESPONSE_STATUS.busy) {
-                  // 重试任务，但是这个节点仍旧放在繁忙节点列表，暂时不信任
-                  return doTask(task_offset, times + 1);
-                }
-                if (res.status === RESPONSE_STATUS.error) {
-                  // 任务失败，抛出异常
-                  throw res.error;
-                }
-              })
-              .catch((err) => {
-                if (AbortException.is(err)) {
-                  // 如果被中断了任务，那么直接再次执行任务
-                  return doTask(task_offset, times);
-                }
-                error(
-                  err,
-                  "[GROUP]:",
-                  this.groupName,
-                  "[QUERY]:",
-                  query,
-                  "[OFFSET]:",
-                  task_offset,
-                  "[TIMES]:",
-                  times,
-                );
-                if (times > RETRY_TIMES) {
-                  // 存在异常，重试任务
-                  return doTask(task_offset, times + 1);
-                }
+              }
+              if (res.status === RESPONSE_STATUS.busy) {
+                // 重试任务，但是这个节点仍旧放在繁忙节点列表，暂时不信任
+                return doTask(task_offset, times + 1);
+              }
+              if (res.status === RESPONSE_STATUS.error) {
+                // 任务失败，抛出异常
+                throw res.error;
+              }
+            })
+            .catch(err => {
+              if (AbortException.is(err)) {
+                // 如果被中断了任务，那么直接再次执行任务
+                return doTask(task_offset, times);
+              }
+              error(
+                err,
+                "[GROUP]:",
+                this.groupName,
+                "[QUERY]:",
+                query,
+                "[OFFSET]:",
+                task_offset,
+                "[TIMES]:",
+                times,
+              );
+              if (times > RETRY_TIMES) {
+                // 存在异常，重试任务
+                return doTask(task_offset, times + 1);
+              }
 
-                throw err;
-              }),
-          );
-        };
+              throw err;
+            });
+        });
+        return waitUseableChainChannel.promise;
+      };
 
-        /// 分发任务
-        for (let i = 0; i < limit; i += unitLength) {
-          const task_offset = i + offset;
-          if (task_offset >= query_done_offset) {
-            break;
-          }
-          await doTask(task_offset, 0);
+      /// 分发任务
+      for (let i = 0; i < limit; i += unitLength) {
+        const task_offset = i + offset;
+        if (task_offset >= query_done_offset) {
+          break;
         }
-        // 等待所有查询任务完成
-        await task_chain;
-        // 结束
-        await resultGenerator.done();
-      })().catch(resultGenerator.reject);
+        await doTask(task_offset, 0);
+      }
+      // 等待所有查询任务完成
+      await task_chain;
+      // 结束
+      await resultGenerator.done();
+    })()
+      .catch(resultGenerator.reject)
+      .finally(() => {
+        this.releaseParallelTask(parallelTaskId);
+      });
 
-      return resultGenerator;
-    } finally {
-      this.releaseParallelTask(parallelTaskId);
-    }
+    return resultGenerator;
   }
   /**
    * 广播交易体
@@ -453,7 +457,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
   async broadcastBlock(...args: BFChainUtil.AllArgument<ChainChannel["broadcastBlock"]>) {
     let initedArgs: undefined | ReturnType<ChainChannel["initBroadcastBlockArg"]>;
     return Promise.all(
-      [...this.chainChannelSet.values()].map((chainChannel) => {
+      [...this.chainChannelSet.values()].map(chainChannel => {
         initedArgs || (initedArgs = chainChannel.initBroadcastBlockArg(...args));
         return {
           chainChannel,
@@ -548,7 +552,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
   private addChainChannel_(chainChannel: DH, opts = this.options) {
     this.chainChannelSet.add(chainChannel);
     if (!opts.disableAutoRemove) {
-      const listenerRemover = chainChannel.onClose((err) => {
+      const listenerRemover = chainChannel.onClose(err => {
         if (InterruptedException.is(err)) {
           info("channel auto removed in [%s], reason:", this.groupName, err.message);
         } else {
@@ -615,7 +619,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     tryChangeMaybeHeight(curMaxMaybeHeight);
 
     /// 如果有新的节点加入,那么检查它的高度是否最高
-    this._chainChannelEvents.on("addChainChannel", (chainChannel) => {
+    this._chainChannelEvents.on("addChainChannel", chainChannel => {
       if (this._maybeHeight < chainChannel.maybeHeight) {
         tryChangeMaybeHeight(chainChannel.maybeHeight);
       }
@@ -623,7 +627,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
       chainChannel.on("onNewBlock", onChainChannelNewBlock);
     });
     /// 如果有节点移除, 那么获取其余最高的节点
-    this._chainChannelEvents.on("removeChainChannel", (chainChannel) => {
+    this._chainChannelEvents.on("removeChainChannel", chainChannel => {
       let newMaybeHeight = 1;
       if (chainChannel.maybeHeight >= this._maybeHeight) {
         /// 最高的值发生了改变,那么就要遍历寻找第二高的值
