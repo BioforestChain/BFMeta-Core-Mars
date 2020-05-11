@@ -5,3 +5,4 @@
  * 过滤区块中允许出现的交易
  */
 export const TRANSACTION_FILTER_SYMBOL = Symbol("bfchain-core:TransactionFilter");
+export const ABORT_FORBIDDEN_TRANSACTION_SYMBOL = Symbol("bfchain-core:AbortForbiddenTransaction");

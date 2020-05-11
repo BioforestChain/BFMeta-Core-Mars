@@ -4,7 +4,6 @@ import {
   ConfigHelper,
   TransactionHelper,
   AsymmetricHelper,
-  TRANSACTION_FILTER_SYMBOL,
 } from "@bfchain/core-helper";
 import { Injectable, Inject, ModuleStroge, Resolve } from "@bfchain/util";
 import { Transaction } from "@bfchain/core-model";
@@ -78,9 +77,10 @@ export class TransactionCore {
 
   /**
    * 在遇到被禁止的交易是，是否要中断
-   * 默认是严格模式
    */
-  abortForbiddenTransaction = true;
+  get abortForbiddenTransaction() {
+    return this.transactionHelper.abortForbiddenTransaction;
+  }
 
   /**
    * 创建交易

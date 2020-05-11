@@ -18,7 +18,7 @@ import { JSBIHelper } from "@bfchain/core-helper-bigint";
 import { AsymmetricHelper } from "@bfchain/core-helper-asymmetric";
 import { Injectable, Inject } from "@bfchain/util";
 import { AccountBaseHelper } from "@bfchain/core-helper-account-base";
-import { TRANSACTION_FILTER_SYMBOL } from "./const";
+import { TRANSACTION_FILTER_SYMBOL, ABORT_FORBIDDEN_TRANSACTION_SYMBOL } from "./const";
 type Transaction = import("@bfchain/core-model-transaction").Transaction;
 
 const {
@@ -82,10 +82,7 @@ export class TransactionHelper {
    * @param trs
    */
   generateSignature(trs: Transaction) {
-    return this.cryptoHelper
-      .sha256()
-      .update(trs.getBytes())
-      .digest("hex");
+    return this.cryptoHelper.sha256().update(trs.getBytes()).digest("hex");
   }
   /**是否是合法的交易 signature */
   isValidTransactionSignature(signature: string) {
@@ -275,10 +272,7 @@ export class TransactionHelper {
       senderSecondPublicKeyBuffer,
       senderPublicKeyBuffer,
     } = transaction;
-    const hash = await this.cryptoHelper
-      .sha256()
-      .update(transaction.getBytes(true, true))
-      .digest();
+    const hash = await this.cryptoHelper.sha256().update(transaction.getBytes(true, true)).digest();
     // 验证 signature 与 publicKey
     if (
       !this.keypairHelper.detached_verify(
@@ -433,10 +427,7 @@ export class TransactionHelper {
       return true;
     }
     /// 根据交易信息校验是否符合难度
-    const shaBuffer = await this.cryptoHelper
-      .sha256()
-      .update(signatureBuffer)
-      .digest();
+    const shaBuffer = await this.cryptoHelper.sha256().update(signatureBuffer).digest();
 
     /**得分应该读取多少位数，至少8位 */
     const X = Math.max(
@@ -972,4 +963,11 @@ export class TransactionHelper {
     }
     return true;
   }
+
+  /**
+   * 在遇到被禁止的交易是，是否要中断
+   * 默认是严格模式
+   */
+  @Inject(ABORT_FORBIDDEN_TRANSACTION_SYMBOL, { optional: true })
+  abortForbiddenTransaction = true;
 }
