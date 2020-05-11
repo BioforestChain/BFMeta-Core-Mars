@@ -17,10 +17,12 @@ import {
 import { Reader } from "@bfchain/protobuf";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 
-const { ArgumentFormatException, OutOfRangeException } = CoreExceptionGenerator(
-  "CONTROLLER",
-  "transaction",
-);
+const {
+  ArgumentFormatException,
+  OutOfRangeException,
+  ConsensusException,
+  warn,
+} = CoreExceptionGenerator("CONTROLLER", "transaction");
 
 @Injectable("bfchain-core:TransactionCore")
 export class TransactionCore {
@@ -75,6 +77,12 @@ export class TransactionCore {
   }
 
   /**
+   * 在遇到被禁止的交易是，是否要中断
+   * 默认是严格模式
+   */
+  abortForbiddenTransaction = true;
+
+  /**
    * 创建交易
    *
    * 校验主密码生成的密钥对是否完整
@@ -105,7 +113,11 @@ export class TransactionCore {
       body.type || this.getTransactionTypeFromTransactionFactoryConstructor(TxFactory);
     if (!this.canCreateTransaction(trsType)) {
       const trsName = TRANSACTION_TYPES_MAP.VK.get(TRANSACTION_TYPES_MAP.trsTypeToV(trsType));
-      throw new OutOfRangeException("Disabled create {trsName} Transaction", { trsName });
+      const exp = new ConsensusException("Disabled create {trsName} Transaction", { trsName });
+      if (this.abortForbiddenTransaction) {
+        throw exp;
+      }
+      warn(exp);
     }
     const transactionFactory = this.getTransactionFactory(TxFactory);
 
