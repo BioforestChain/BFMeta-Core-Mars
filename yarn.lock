@@ -83,12 +83,13 @@
     "@protobufjs/utf8" "^1.1.0"
     "@types/long" "^4.0.1"
 
-"@bfchain/util-aborter@4.6.4":
-  version "4.6.4"
-  resolved "http://192.168.110.189:4873/@bfchain%2futil-aborter/-/util-aborter-4.6.4.tgz#070faa60f5ea0b13ccbb1847d0c9db34b5ae9cfc"
-  integrity sha512-oUKOT2B9DJmuZtJ6ax5AD4ySxkj8zvxuh5H3Z+d2QOzsp3KqkyqcNoGufUru5UZAg+o6FSzzGP9yFDSvxwa9xg==
+"@bfchain/util-aborter@4.6.10":
+  version "4.6.10"
+  resolved "http://192.168.110.189:4873/@bfchain%2futil-aborter/-/util-aborter-4.6.10.tgz#244f56fa0d0d97b0479bb9037849d88f6003b697"
+  integrity sha512-nBDF7J59lWlMR+GJrK9AxFR81cQN+VUAUB5qXE6I8xaf1J8C816RdZvoWR3fqHG3URCq9NfJhUXN5fgoq6GVqw==
   dependencies:
     "@bfchain/util-extends-promise-out" "4.6.4"
+    "@bfchain/util-extends-promise-safe" "4.6.5"
     "@bfchain/util-typings" "4.6.4"
 
 "@bfchain/util-buffer@4.6.4":
@@ -113,10 +114,10 @@
     "@bfchain/util-type-detect" "4.6.4"
     "@bfchain/util-typings" "4.6.4"
 
-"@bfchain/util-dep-inject@4.6.4":
-  version "4.6.4"
-  resolved "http://192.168.110.189:4873/@bfchain%2futil-dep-inject/-/util-dep-inject-4.6.4.tgz#ec01e7f3c955b8883900b43fa13cfe183cf69d19"
-  integrity sha512-35XXECltx38Wm83EhrohQGLiZkoI5L5j7g1DiwN5v0elBG7BmCEaoW7n4OmgWV4JDaTafPrdP2DzrIBOmEAqdQ==
+"@bfchain/util-dep-inject@4.6.11":
+  version "4.6.11"
+  resolved "http://192.168.110.189:4873/@bfchain%2futil-dep-inject/-/util-dep-inject-4.6.11.tgz#516ee93144583844b36ee52dfb72d9a16382fa73"
+  integrity sha512-BFE7ciO3ZmqbeChZ4W6ROGVUJqsPvJ4PHWJfA+nt8pfGoCUed6uu1WfKWHhsnnJyn0KyzUf2DrB61ZPBgfjBrQ==
   dependencies:
     "@bfchain/util-extends-map" "4.6.4"
     "@bfchain/util-typings" "4.6.4"
@@ -151,64 +152,64 @@
     "@bfchain/util-platform" "4.6.4"
     "@bfchain/util-typings" "4.6.4"
 
-"@bfchain/util-event-base@4.6.4":
-  version "4.6.4"
-  resolved "http://192.168.110.189:4873/@bfchain%2futil-event-base/-/util-event-base-4.6.4.tgz#6b90bb2d8d4ff9eac25a29f17ab3201c3516b6a0"
-  integrity sha512-aCAgOhdJT3L/8GIOGUsVFqmkjZLn7S0bWWQFm0ZDHtsHISOg24cr3o2tWhCGfY6RTqISJxomJhdcWLMlKVPQiA==
+"@bfchain/util-event-base@4.6.7":
+  version "4.6.7"
+  resolved "http://192.168.110.189:4873/@bfchain%2futil-event-base/-/util-event-base-4.6.7.tgz#8b82a20d51fd926a1405ee9f6cded683ab01c343"
+  integrity sha512-3JFsdM2w8MECvFhnjIuijOgVfel4Iim/MRUAABatcLfAaRZnTngRdp9y90lGKHW/jFG6eFiZsVsEugDuwwYPOA==
   dependencies:
     "@bfchain/util-decorator" "4.6.4"
     "@bfchain/util-env" "4.6.4"
-    "@bfchain/util-extends-error" "4.6.4"
+    "@bfchain/util-extends-error" "4.6.7"
     "@bfchain/util-extends-function" "4.6.4"
     "@bfchain/util-typings" "4.6.4"
 
-"@bfchain/util-event-map-emitter@4.6.4":
-  version "4.6.4"
-  resolved "http://192.168.110.189:4873/@bfchain%2futil-event-map-emitter/-/util-event-map-emitter-4.6.4.tgz#1b52d1aa007b69f0ebc85664b151c196ff9bef64"
-  integrity sha512-y9NcYkPPwF+vPtw6grPiH1jyeEQqRT+aV2/ky+IuFhk+ndniXWJ8HshaoaKV3eLkZlb4cmmlDlTwUh4rZs8j7g==
+"@bfchain/util-event-map-emitter@4.6.7":
+  version "4.6.7"
+  resolved "http://192.168.110.189:4873/@bfchain%2futil-event-map-emitter/-/util-event-map-emitter-4.6.7.tgz#f75eb7d295233baffe16b976f7eabff3211fe007"
+  integrity sha512-lDmkQuBQxsFymeP3rT5HgX4Iq9tI2pqWQJmQdGIQkAFbjbyg3z6dy1dbA8USfTM15B06BqIRdWk3nhydbAZGPA==
   dependencies:
-    "@bfchain/util-event-base" "4.6.4"
+    "@bfchain/util-event-base" "4.6.7"
     "@bfchain/util-typings" "4.6.4"
 
-"@bfchain/util-event-quene-emitter@4.6.4":
-  version "4.6.4"
-  resolved "http://192.168.110.189:4873/@bfchain%2futil-event-quene-emitter/-/util-event-quene-emitter-4.6.4.tgz#53facfcf9a698862fbb7047c0fd9ed9d032c569e"
-  integrity sha512-Wc4n32Q8eaye/2nx49RhgPeKiaKe9rvT0XLS6fXeVRnYWjI6WPc6R8ogJVerWG8JGzWUXtzyhxTRHwWfHxL78g==
+"@bfchain/util-event-quene-emitter@4.6.8":
+  version "4.6.8"
+  resolved "http://192.168.110.189:4873/@bfchain%2futil-event-quene-emitter/-/util-event-quene-emitter-4.6.8.tgz#8510dbc487adf2cd52c6955ce74f3bb12a5cf242"
+  integrity sha512-jbXPeLaIuJkrOmr3Q2KZExxOoq4JilqShP0SibXGnzfHVt2rap3iGkgNikZn8y2fu1q0mXiOObuZVU+fKxp7Xg==
   dependencies:
     "@bfchain/util-decorator" "4.6.4"
     "@bfchain/util-env" "4.6.4"
-    "@bfchain/util-event-base" "4.6.4"
-    "@bfchain/util-extends-error" "4.6.4"
+    "@bfchain/util-event-base" "4.6.7"
+    "@bfchain/util-extends-error" "4.6.7"
     "@bfchain/util-extends-function" "4.6.4"
     "@bfchain/util-extends-promise-out" "4.6.4"
     "@bfchain/util-typings" "4.6.4"
 
-"@bfchain/util-event@4.6.4":
-  version "4.6.4"
-  resolved "http://192.168.110.189:4873/@bfchain%2futil-event/-/util-event-4.6.4.tgz#28fd426e36c75444492955701de51d6bc4572c7e"
-  integrity sha512-j53vlMNyYE+9ZCb9d4ia+GSfqeIr4myekFjQNmEtQC1y5lAZERdG3ZXZN0Q3GiHX7BjFio14jgz5d9MP73WYsQ==
+"@bfchain/util-event@4.6.8":
+  version "4.6.8"
+  resolved "http://192.168.110.189:4873/@bfchain%2futil-event/-/util-event-4.6.8.tgz#00a0b2a0c8f09a814369a7153a663ec214868381"
+  integrity sha512-K8gTJHbv1oIhNNpjDMqBXCcPaZEFYXKHx3k4IPGFcRcowsJcCikBTg9dVrni/OhngD3S7zX8CW2UX7N9KXrHag==
   dependencies:
-    "@bfchain/util-event-base" "4.6.4"
-    "@bfchain/util-event-map-emitter" "4.6.4"
-    "@bfchain/util-event-quene-emitter" "4.6.4"
+    "@bfchain/util-event-base" "4.6.7"
+    "@bfchain/util-event-map-emitter" "4.6.7"
+    "@bfchain/util-event-quene-emitter" "4.6.8"
     "@bfchain/util-extends-promise-out" "4.6.4"
     "@bfchain/util-typings" "4.6.4"
 
-"@bfchain/util-exception@4.6.4":
-  version "4.6.4"
-  resolved "http://192.168.110.189:4873/@bfchain%2futil-exception/-/util-exception-4.6.4.tgz#d72aae4bfd03a9b6c23a4df583e6cea08c6b818a"
-  integrity sha512-AJrWHyCTv7PDVE2ATfurllkPd+J3tgAthsCwhH1fbVjSzLAQdzTaIEl7Px9H5ncztaFBk20QAeRNwfWVLNgJGg==
+"@bfchain/util-exception@4.6.11":
+  version "4.6.11"
+  resolved "http://192.168.110.189:4873/@bfchain%2futil-exception/-/util-exception-4.6.11.tgz#d4ee397135a801e3355b67084276f9f82142c564"
+  integrity sha512-UCBRUKqfEIGTRLAX3AwJ7SxsZ2ZDg7GT5ogj5HfJ8nQAwlpFjoTU8JqTDmD/tprep18hKLoGdTP5ETrurHbrJg==
   dependencies:
-    "@bfchain/util-dep-inject" "4.6.4"
-    "@bfchain/util-extends-error" "4.6.4"
+    "@bfchain/util-dep-inject" "4.6.11"
+    "@bfchain/util-extends-error" "4.6.7"
     "@bfchain/util-logger" "4.6.4"
     "@bfchain/util-platform" "4.6.4"
     "@bfchain/util-typings" "4.6.4"
 
-"@bfchain/util-extends-error@4.6.4":
-  version "4.6.4"
-  resolved "http://192.168.110.189:4873/@bfchain%2futil-extends-error/-/util-extends-error-4.6.4.tgz#cd01025eb950503156eba8ad066a5a31700fa193"
-  integrity sha512-jJg/kRRDB8/6tEEO5JK9hlLTQUhsbmLSfEeXrXb349qvVbyWpQoQ7VLdUV0+MwWXAaArJ3uvwXJQXVT8yVjo1g==
+"@bfchain/util-extends-error@4.6.7":
+  version "4.6.7"
+  resolved "http://192.168.110.189:4873/@bfchain%2futil-extends-error/-/util-extends-error-4.6.7.tgz#d3df98c732bf300e9aefe2c5141adbb005808cb8"
+  integrity sha512-3xNuN0lw92k5jAr7NKLqb9RHBbyixAc/EI3lmnSv4x1rdsVKDMtJ3qT8/nbuw+MaArx78UD46wkD0QnM9NqZug==
   dependencies:
     "@bfchain/util-typings" "4.6.4"
 
@@ -241,23 +242,23 @@
   dependencies:
     "@bfchain/util-typings" "4.6.4"
 
-"@bfchain/util-extends-promise-safe@4.6.4":
-  version "4.6.4"
-  resolved "http://192.168.110.189:4873/@bfchain%2futil-extends-promise-safe/-/util-extends-promise-safe-4.6.4.tgz#9f41b363461012577043f297d20ea3f152ece3cd"
-  integrity sha512-E/iSbruSH57unqAGAuMudZ9/9wJ2LnQiQvO/JTKnb9mRDWBEKt4oZifHYnfcj6BSGebvIr4IdtdVAS0dAg04tg==
+"@bfchain/util-extends-promise-safe@4.6.5":
+  version "4.6.5"
+  resolved "http://192.168.110.189:4873/@bfchain%2futil-extends-promise-safe/-/util-extends-promise-safe-4.6.5.tgz#ad8bd5214b81716f4bda6488add75bea55c8725d"
+  integrity sha512-e+8g9Y4jDupmm1O7EVAe7Lu9VxlgFAttPWHxLuCGC9Ude9a2jA8S4OkLWTGySoGUdD0+62mPlEyZ1jrg/4jDKA==
   dependencies:
     "@bfchain/util-extends-promise-out" "4.6.4"
     "@bfchain/util-typings" "4.6.4"
 
-"@bfchain/util-extends-promise@4.6.4":
-  version "4.6.4"
-  resolved "http://192.168.110.189:4873/@bfchain%2futil-extends-promise/-/util-extends-promise-4.6.4.tgz#d453defc5b722ee3d55e0fbfdd05a798fd7921e5"
-  integrity sha512-2K7nWBnQpbz7rgOTFhZCH8Vz8DK71a4nYGWYb4avsgUajuMT2uCnzD+rasW+H6D3FXrgo+3FydJwLXbkkcBhTQ==
+"@bfchain/util-extends-promise@4.6.8":
+  version "4.6.8"
+  resolved "http://192.168.110.189:4873/@bfchain%2futil-extends-promise/-/util-extends-promise-4.6.8.tgz#828195a8bd02f01b839ad83ebb44f6cda41ef164"
+  integrity sha512-Dtr+gTk3H0uo2C1oivbY/ZNtgF6gL2SEo12p1P+RW8Eiw9n/9RnU2JOtA0FqH7tZ0bSv2T/Q46FdAlHbQRvfGw==
   dependencies:
-    "@bfchain/util-event" "4.6.4"
-    "@bfchain/util-extends-error" "4.6.4"
+    "@bfchain/util-event" "4.6.8"
+    "@bfchain/util-extends-error" "4.6.7"
     "@bfchain/util-extends-promise-out" "4.6.4"
-    "@bfchain/util-extends-promise-safe" "4.6.4"
+    "@bfchain/util-extends-promise-safe" "4.6.5"
     "@bfchain/util-typings" "4.6.4"
 
 "@bfchain/util-extends-set@4.6.4":
@@ -314,27 +315,27 @@
   resolved "http://192.168.110.189:4873/@bfchain%2futil-typings/-/util-typings-4.6.4.tgz#626047c17ec1e0757b39cec509e9b3bd7f2cde0a"
   integrity sha512-zqPBRaUQO9LUuu1eBLn2AKsooVGUP+TYi/HuSuiKyZniby0cJ2rAqb6lQ4n7KGE8EnQCyCTYPPRtf8AJh53uag==
 
-"@bfchain/util@^4.5.19":
-  version "4.6.4"
-  resolved "http://192.168.110.189:4873/@bfchain%2futil/-/util-4.6.4.tgz#f02eb19c1648afb861f023bd6e2ca7a3e92eab6f"
-  integrity sha512-iBI2/ad9rKcYwqvoll8YtRiyF7/wRY7uHY++hJ1Yc3/xUI6FOVUcPnBmYVQRWBtZMxuafUnw5eU8PRIBLhowmg==
+"@bfchain/util@^4.6.11":
+  version "4.6.11"
+  resolved "http://192.168.110.189:4873/@bfchain%2futil/-/util-4.6.11.tgz#905444750c3f4efec62e11b2e3eb67ceb38c2917"
+  integrity sha512-41iqffK2Cw/uTtx8eo2vD8e/nhLer3UMqHRu+Gx+907Pz7bL3io1LDyfYPbok2Ah4njp1pfIApZhC4o6rt2W/A==
   dependencies:
-    "@bfchain/util-aborter" "4.6.4"
+    "@bfchain/util-aborter" "4.6.10"
     "@bfchain/util-buffer" "4.6.4"
     "@bfchain/util-decorator" "4.6.4"
     "@bfchain/util-deepcopy" "4.6.4"
-    "@bfchain/util-dep-inject" "4.6.4"
+    "@bfchain/util-dep-inject" "4.6.11"
     "@bfchain/util-encoding-binary" "4.6.4"
     "@bfchain/util-encoding-hex" "4.6.4"
     "@bfchain/util-encoding-utf8" "4.6.4"
     "@bfchain/util-env" "4.6.4"
-    "@bfchain/util-event" "4.6.4"
-    "@bfchain/util-exception" "4.6.4"
-    "@bfchain/util-extends-error" "4.6.4"
+    "@bfchain/util-event" "4.6.8"
+    "@bfchain/util-exception" "4.6.11"
+    "@bfchain/util-extends-error" "4.6.7"
     "@bfchain/util-extends-function" "4.6.4"
     "@bfchain/util-extends-iterator" "4.6.4"
     "@bfchain/util-extends-map" "4.6.4"
-    "@bfchain/util-extends-promise" "4.6.4"
+    "@bfchain/util-extends-promise" "4.6.8"
     "@bfchain/util-extends-promise-out" "4.6.4"
     "@bfchain/util-extends-set" "4.6.4"
     "@bfchain/util-fast-deep-equal" "4.6.4"

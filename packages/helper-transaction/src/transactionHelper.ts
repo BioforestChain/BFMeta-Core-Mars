@@ -968,6 +968,6 @@ export class TransactionHelper {
    * 在遇到被禁止的交易是，是否要中断
    * 默认是严格模式
    */
-  @Inject(ABORT_FORBIDDEN_TRANSACTION_SYMBOL, { optional: true })
+  @Inject(ABORT_FORBIDDEN_TRANSACTION_SYMBOL, { dynamics: true })
   abortForbiddenTransaction = true;
 }
