@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-helper-account-base",
-  "version": "5.12.25",
+  "version": "5.12.27",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -16,6 +16,6 @@
   "dependencies": {
     "@bfchain/core-helper-config": "5.12.25",
     "@bfchain/core-typings": "5.12.25",
-    "@bfchain/core-util-base58": "5.12.25"
+    "@bfchain/core-util-base58": "5.12.27"
   }
 }

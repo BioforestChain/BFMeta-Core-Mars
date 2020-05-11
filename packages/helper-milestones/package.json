@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-helper-milestones",
-  "version": "5.12.25",
+  "version": "5.12.27",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -15,7 +15,7 @@
   ],
   "dependencies": {
     "@bfchain/core-helper-config": "5.12.25",
-    "@bfchain/core-helper-type": "5.12.25",
+    "@bfchain/core-helper-type": "5.12.27",
     "@bfchain/core-typings": "5.12.25",
     "@bfchain/core-util-exception-errorcode": "5.12.25"
   }
