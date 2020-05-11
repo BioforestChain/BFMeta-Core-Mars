@@ -188,6 +188,7 @@ export abstract class BlockFactory<T extends Block> {
     },
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter = new QueneEventEmitter(),
   ) {
+    const abortForbiddenTransaction = this.transactionCore.abortForbiddenTransaction;
     const Function_Exception_Detail = { function: "insertTransactions" };
     const MAX_TRANSACTION_SIZE = this.config.genesisBlock.remark.maxTransactionSize;
     /**所有交易的sha256hash */
@@ -221,7 +222,13 @@ export abstract class BlockFactory<T extends Block> {
             const trsName = TRANSACTION_TYPES_MAP.VK.get(
               TRANSACTION_TYPES_MAP.trsTypeToV(trs.type),
             );
-            throw new OutOfRangeException("Disabled insert {trsName} Transaction", { trsName });
+            const exp = new ConsensusException("Disabled insert {trsName} Transaction", {
+              trsName,
+            });
+            if (abortForbiddenTransaction) {
+              throw exp;
+            }
+            warn(exp);
           }
 
           if (block.height > this.config.powOfWorkExemptionBlocks) {

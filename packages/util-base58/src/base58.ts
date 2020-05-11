@@ -42,6 +42,22 @@ export class Base58 {
     return string;
   }
 
+  // /**
+  //  * 使用BigInt，能带来100%+的性能提升
+  //  * @param source 
+  //  */
+  // bigintEncode(source: Uint8Array) {
+  //   let bi = BigInt(`0x${decodeBinaryToHex(source)}`);
+  //   const digits: number[] = [];
+  //   while (bi > 0) {
+  //     digits[digits.length] = Number(bi % 58n);
+  //     bi /= 58n;
+  //   }
+  //   let string = "";
+  //   for (let q = digits.length - 1; q >= 0; --q) string += this.ALPHABET[digits[q]];
+  //   return string;
+  // }
+
   decodeUnsafe(string: string) {
     if (string.length === 0) return new Uint8Array();
 
