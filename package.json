@@ -55,10 +55,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "execa": "^4.0.0",
+    "execa": "^4.0.1",
     "lerna": "^3.20.2"
   },
   "dependencies": {
-    "@bfchain/devkit": "^0.8.9"
+    "@bfchain/devkit": "^0.8.11"
   }
 }
