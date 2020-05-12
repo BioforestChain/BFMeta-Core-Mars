@@ -13,5 +13,6 @@
     "@bfchain/core-typings": "5.12.29",
     "@bfchain/core-util-exception": "5.12.29"
   },
-  "module": "build/esm/index.js"
+  "module": "build/esm/index.js",
+  "gitHead": "91deb2bda3071d2d3bef6e92a8090356f4d89c7d"
 }

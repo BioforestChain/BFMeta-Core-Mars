@@ -15,10 +15,11 @@
   ],
   "devDependencies": {
     "@bfchain/protobuf": "^4.0.12",
-    "@bfchain/util": "^4.6.11"
+    "@bfchain/util": "^4.6.13"
   },
   "peerDependencies": {
     "@bfchain/protobuf": "^4.0.12",
     "@bfchain/util": "^4.5.19"
-  }
+  },
+  "gitHead": "91deb2bda3071d2d3bef6e92a8090356f4d89c7d"
 }

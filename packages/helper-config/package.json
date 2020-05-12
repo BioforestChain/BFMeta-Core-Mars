@@ -17,5 +17,6 @@
     "@bfchain/core-model-block": "5.12.29",
     "@bfchain/core-typings": "5.12.29",
     "@bfchain/core-util-exception-errorcode": "5.12.29"
-  }
+  },
+  "gitHead": "91deb2bda3071d2d3bef6e92a8090356f4d89c7d"
 }
