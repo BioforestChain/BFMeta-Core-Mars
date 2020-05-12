@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-block-ticker",
-  "version": "5.12.30",
+  "version": "5.12.31",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,12 +14,12 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-block": "5.12.30",
-    "@bfchain/core-helper": "5.12.30",
-    "@bfchain/core-model-block": "5.12.30",
-    "@bfchain/core-transaction-logic-verifier": "5.12.30",
-    "@bfchain/core-typings": "5.12.30",
-    "@bfchain/core-util-exception": "5.12.30"
+    "@bfchain/core-block": "5.12.31",
+    "@bfchain/core-helper": "5.12.31",
+    "@bfchain/core-model-block": "5.12.31",
+    "@bfchain/core-transaction-logic-verifier": "5.12.31",
+    "@bfchain/core-typings": "5.12.31",
+    "@bfchain/core-util-exception": "5.12.31"
   },
   "gitHead": "91deb2bda3071d2d3bef6e92a8090356f4d89c7d"
 }
