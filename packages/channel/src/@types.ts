@@ -19,7 +19,7 @@ declare namespace BFChainCore {
   };
   type ChainChannelHanlderEventMap = {
     handleMessageError: {
-      in: Error;
+      in: { handleName: string; error: Error };
       out: undefined;
     };
     onQueryTransaction: {
@@ -145,7 +145,7 @@ declare namespace BFChainCore {
   interface ChainChannelGroup<CC extends ChainChannel> extends ChainChannelBase {
     groupName: string;
     forEach(hanlder: (chainChannel: CC, i: number) => any): void;
-   
+
     /**开始一个节点并发任务 */
     startParallelTask(
       task_id: string,

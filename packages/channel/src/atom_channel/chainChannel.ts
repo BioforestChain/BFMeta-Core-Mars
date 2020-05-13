@@ -98,6 +98,8 @@ export abstract class ChainChannelBase extends QueneEventEmitterPro<
   defaultReqOptions?: BFChainCore.ChannelRequestOptions;
 }
 
+const CATCHD_EXCEPTION_WS = new WeakSet<Error>();
+
 /**
  * 为数据收发处理器包装数据处理
  */
@@ -121,12 +123,8 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
     this.initOnMessage();
     this.onError((err, args) => {
       if (args.eventname !== "handleMessageError") {
-        const exception = new ConsensusException("emit {eventname}({arg}) fail:{error}", {
-          eventname: args.eventname,
-          arg: args.arg,
-          error: err.stack,
-        });
-        this.emit("handleMessageError", exception);
+        CATCHD_EXCEPTION_WS.add(err);
+        this.emit("handleMessageError", { handleName: args.eventname, error: err });
       }
     });
   }
@@ -551,7 +549,9 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
           );
         }
       } catch (err) {
-        this.emit("handleMessageError", err);
+        if (!CATCHD_EXCEPTION_WS.has(err)) {
+          this.emit("handleMessageError", { handleName: "onMessage", error: err });
+        }
       }
     });
   }
