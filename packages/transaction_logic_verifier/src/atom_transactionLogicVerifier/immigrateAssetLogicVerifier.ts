@@ -5,8 +5,10 @@ import {
   CoreExceptionGenerator,
   NOT_EXIST,
   NOT_MATCH,
-  SHOULD_NOT_HAVE_SENDER_SECOND_PUBLICKEY,
   ASSET_IS_ALREADY_MIGRATION,
+  CAN_NOT_CARRY_SECOND_PUBLICKEY,
+  CAN_NOT_CARRY_SECOND_SIGNATURE,
+  PROP_IS_REQUIRE,
 } from "@bfchain/core-util-exception";
 import { AccountBaseHelper, TransactionHelper } from "@bfchain/core-helper";
 
@@ -55,7 +57,7 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
     );
     const { emigrateAssetTransaction, genesisDelegateSignature } = transaction.asset.immigrateAsset;
 
-    const { publicKey, secondPublicKey } = genesisDelegateSignature;
+    const { publicKey, secondPublicKey, signSignature } = genesisDelegateSignature;
 
     const address = await this.accountBaseHelper.getAddressFromPublicKeyString(publicKey);
 
@@ -70,6 +72,20 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
     }
 
     if (delegate.secondPublicKey) {
+      if (!secondPublicKey) {
+        throw new ConsensusException(PROP_IS_REQUIRE, {
+          prop: `secondPublicKey`,
+          target: "genesisDelegateSignature",
+          ...Function_Exception_Detail,
+        });
+      }
+      if (!signSignature) {
+        throw new ConsensusException(PROP_IS_REQUIRE, {
+          prop: `signSignature`,
+          target: "genesisDelegateSignature",
+          ...Function_Exception_Detail,
+        });
+      }
       if (delegate.secondPublicKey !== secondPublicKey) {
         throw new ConsensusException(NOT_MATCH, {
           to_compare_prop: "secondPublicKey",
@@ -81,14 +97,51 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       }
     } else {
       if (secondPublicKey) {
-        throw new ConsensusException(SHOULD_NOT_HAVE_SENDER_SECOND_PUBLICKEY, {
-          signature: transaction.signature,
-          senderId: transaction.senderId,
-          applyBlockHeight: transaction.applyBlockHeight,
-          type: transaction.type,
+        throw new ConsensusException(CAN_NOT_CARRY_SECOND_PUBLICKEY, {
           ...Function_Exception_Detail,
         });
       }
+      if (signSignature) {
+        throw new ConsensusException(CAN_NOT_CARRY_SECOND_SIGNATURE, {
+          ...Function_Exception_Detail,
+        });
+      }
+    }
+
+    const {
+      sourceChainMagic,
+      assetType,
+      sourceChainName,
+    } = emigrateAssetTransaction.asset.emigrateAsset;
+
+    const memchain = await accountGetterHelper.getChain(sourceChainMagic);
+    if (!memchain) {
+      throw new ConsensusException(NOT_EXIST, {
+        prop: `Chain with magic ${sourceChainMagic}}`,
+        target: "blockChain",
+        ...Function_Exception_Detail,
+      });
+    }
+
+    const remark = memchain.genesisBlock.remark;
+    if (assetType !== remark.assetType) {
+      throw new ConsensusException(NOT_MATCH, {
+        to_compare_prop: "assetType",
+        be_compare_prop: "assetType",
+        to_target: "immigrateAsset.emigrateAssetTransaction.asset.emigrateAsset",
+        be_target: `registerChain in blockChain with magic ${sourceChainMagic}`,
+        ...Function_Exception_Detail,
+      });
+    }
+
+    if (sourceChainName !== remark.chainName) {
+      throw new ConsensusException(NOT_MATCH, {
+        to_compare_prop: "sourceChainName",
+        be_compare_prop: "chainName",
+        to_target: "immigrateAsset.emigrateAssetTransaction.asset.emigrateAsset",
+        be_target: `registerChain in blockChain with magic ${sourceChainMagic}`,
+        ...Function_Exception_Detail,
+      });
     }
 
     return true;

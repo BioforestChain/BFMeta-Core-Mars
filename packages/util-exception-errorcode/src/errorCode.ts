@@ -244,6 +244,9 @@ export const SET_LOCATION_NAME_RECORD_VALUE_FIELD = (ec.next =
 export const CAN_NOT_CARRY_SECOND_PUBLICKEY = (ec.next =
   "Can not carry second publicKey when {function}");
 /**function */
+export const CAN_NOT_CARRY_SECOND_SIGNATURE = (ec.next =
+  "Can not carry second signature when {function}");
+/**function */
 export const ONLY_TOP_LEVEL_LOCATION_NAME_CAN_EXCHANGE = (ec.next =
   "Only top level location name can exchange when {function}");
 /**errorId function */

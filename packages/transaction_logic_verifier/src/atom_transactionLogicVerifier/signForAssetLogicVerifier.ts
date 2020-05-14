@@ -11,6 +11,8 @@ import {
   PROP_LENGTH_SHOULD_LTE_FIELD,
   SHOULD_NOT_DUPLICATE,
   PROP_IS_INVALID,
+  PROP_IS_REQUIRE,
+  CAN_NOT_CARRY_SECOND_SIGNATURE,
 } from "@bfchain/core-util-exception";
 import { AccountBaseHelper } from "@bfchain/core-helper";
 
@@ -111,7 +113,7 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
     }
     const { accountBaseHelper } = this;
     for (const thirdPartySignature of thirdPartySignatures) {
-      const { publicKey, secondPublicKey } = thirdPartySignature;
+      const { publicKey, secondPublicKey, signSignature } = thirdPartySignature;
       const address = await accountBaseHelper.getAddressFromPublicKeyString(publicKey);
       const trustee = await accountGetterHelper.getAccountInfo(address);
       if (!trustee) {
@@ -122,6 +124,20 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
         });
       }
       if (trustee.secondPublicKey) {
+        if (!secondPublicKey) {
+          throw new ConsensusException(PROP_IS_REQUIRE, {
+            prop: "secondPublicKey",
+            target: "thirdPartySignature",
+            ...Function_Exception_Detail,
+          });
+        }
+        if (!signSignature) {
+          throw new ConsensusException(PROP_IS_REQUIRE, {
+            prop: "signSignature",
+            target: "thirdPartySignature",
+            ...Function_Exception_Detail,
+          });
+        }
         if (trustee.secondPublicKey !== secondPublicKey) {
           throw new ConsensusException(NOT_MATCH, {
             to_compare_prop: "secondPublicKey",
@@ -134,6 +150,11 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
       } else {
         if (secondPublicKey) {
           throw new ConsensusException(CAN_NOT_CARRY_SECOND_PUBLICKEY, {
+            ...Function_Exception_Detail,
+          });
+        }
+        if (signSignature) {
+          throw new ConsensusException(CAN_NOT_CARRY_SECOND_SIGNATURE, {
             ...Function_Exception_Detail,
           });
         }
@@ -154,9 +175,7 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
     const Function_Exception_Detail = {
       function: "isDependentTransactionMatch",
     } as const;
-    const {
-      trustAsset,
-    } = transaction.asset.signForAsset;
+    const { trustAsset } = transaction.asset.signForAsset;
     const trsAsset = trustAssetJson.asset.trustAsset;
 
     if (

@@ -1,3 +1,5 @@
+export * from "./helperLogicVerifier";
+
 export * from "./_txbaseLogicVerifier";
 export * from "./usernameLogicVerifier";
 export * from "./signatureLogicVerifier";

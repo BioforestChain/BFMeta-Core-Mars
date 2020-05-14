@@ -177,6 +177,12 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<
 
     const genesisDelegates = this.transactionHelper.genesisDelegates(config);
 
+    const genesisAddress = await this.accountBaseHelper.getAddressFromPublicKeyString(
+      this.configHelper.genesisBlock.generatorPublicKey,
+    );
+
+    genesisDelegates.push(genesisAddress);
+
     if (!genesisDelegates.includes(address)) {
       throw new ArgumentIllegalException(NOT_MATCH, {
         to_compare_prop: "signature address",

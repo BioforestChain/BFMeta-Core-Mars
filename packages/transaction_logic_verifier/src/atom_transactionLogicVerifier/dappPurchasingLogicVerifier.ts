@@ -42,35 +42,6 @@ export class DAppPurchasingLogicVerifier extends TransactionLogicVerifier {
       accountGetterHelper,
       transactionGetterHelper,
     );
-    const dappAsset = transaction.asset.dappPurchasing.dappAsset;
-    const memDapp = (await accountGetterHelper.getDApp(
-      dappAsset.sourceChainMagic,
-      dappAsset.dappid,
-      currentBlockHeight,
-    )) as BFChainCore.DAppInfo;
-    if (!memDapp) {
-      throw new ConsensusException(DAPPID_IS_NOT_EXIST, {
-        dappid: dappAsset.dappid,
-        ...Function_Exception_Detail,
-      });
-    }
-
-    if (transaction.senderId === memDapp.possessorAddress) {
-      throw new ConsensusException(NO_NEED_TO_PURCHASE_SPECIAL_ASSET, {
-        type: "dappid",
-        asset: dappAsset.dappid,
-        ...Function_Exception_Detail,
-      });
-    }
-
-    if (transaction.recipientId !== memDapp.possessorAddress) {
-      throw new ConsensusException(SHOULD_BE, {
-        to_compare_prop: "recipientId",
-        to_target: "transaction",
-        be_compare_prop: "dapp possessor",
-        ...Function_Exception_Detail,
-      });
-    }
 
     return true;
   }

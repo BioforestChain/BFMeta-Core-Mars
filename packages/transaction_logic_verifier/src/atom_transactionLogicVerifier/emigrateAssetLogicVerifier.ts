@@ -5,8 +5,10 @@ import {
   CoreExceptionGenerator,
   NOT_EXIST,
   NOT_MATCH,
-  SHOULD_NOT_HAVE_SENDER_SECOND_PUBLICKEY,
   NEED_EMIGRATE_TOTAL_ASSET,
+  PROP_IS_REQUIRE,
+  CAN_NOT_CARRY_SECOND_PUBLICKEY,
+  CAN_NOT_CARRY_SECOND_SIGNATURE,
 } from "@bfchain/core-util-exception";
 import { AccountBaseHelper } from "@bfchain/core-helper";
 
@@ -50,7 +52,7 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       genesisDelegateSignature,
     } = transaction.asset.emigrateAsset;
 
-    const { publicKey, secondPublicKey } = genesisDelegateSignature;
+    const { publicKey, secondPublicKey, signSignature } = genesisDelegateSignature;
 
     const address = await this.accountBaseHelper.getAddressFromPublicKeyString(publicKey);
 
@@ -65,6 +67,20 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
     }
 
     if (delegate.secondPublicKey) {
+      if (!secondPublicKey) {
+        throw new ConsensusException(PROP_IS_REQUIRE, {
+          prop: `secondPublicKey`,
+          target: "genesisDelegateSignature",
+          ...Function_Exception_Detail,
+        });
+      }
+      if (!signSignature) {
+        throw new ConsensusException(PROP_IS_REQUIRE, {
+          prop: `signSignature`,
+          target: "genesisDelegateSignature",
+          ...Function_Exception_Detail,
+        });
+      }
       if (delegate.secondPublicKey !== secondPublicKey) {
         throw new ConsensusException(NOT_MATCH, {
           to_compare_prop: "secondPublicKey",
@@ -76,11 +92,12 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       }
     } else {
       if (secondPublicKey) {
-        throw new ConsensusException(SHOULD_NOT_HAVE_SENDER_SECOND_PUBLICKEY, {
-          signature: transaction.signature,
-          senderId: transaction.senderId,
-          applyBlockHeight: transaction.applyBlockHeight,
-          type: transaction.type,
+        throw new ConsensusException(CAN_NOT_CARRY_SECOND_PUBLICKEY, {
+          ...Function_Exception_Detail,
+        });
+      }
+      if (signSignature) {
+        throw new ConsensusException(CAN_NOT_CARRY_SECOND_SIGNATURE, {
           ...Function_Exception_Detail,
         });
       }
@@ -88,7 +105,11 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
 
     const assets = sender.accountAssets;
 
-    this.isPossessAssetExceptForChainAsset(assets);
+    this.helperLogicVerifier.isPossessAssetExceptForChainAsset(assets);
+
+    await this.helperLogicVerifier.isDAppPossessor(transaction.senderId, this.configHelper, accountGetterHelper);
+
+    await this.helperLogicVerifier.isLnsPossessorOrManager(transaction.senderId, this.configHelper, accountGetterHelper);
 
     const totalSpend = BigInt(transaction.fee) + BigInt(amount);
 

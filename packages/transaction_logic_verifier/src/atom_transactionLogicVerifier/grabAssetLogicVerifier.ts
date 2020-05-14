@@ -1,5 +1,5 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
-import { GrabAssetTransaction, RANGE_TYPE } from "@bfchain/core-model";
+import { GrabAssetTransaction, RANGE_TYPE, GIFT_DISTRIBUTION_RULE } from "@bfchain/core-model";
 import { Injectable } from "@bfchain/util";
 import {
   CoreExceptionGenerator,
@@ -7,6 +7,7 @@ import {
   NOT_MATCH,
   CAN_NOT_SECONDARY_TRANSACTION,
   SHOULD_BE,
+  PROP_IS_INVALID,
 } from "@bfchain/core-util-exception";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
@@ -65,8 +66,67 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
     this.isValidRecipientId(transaction, trs);
     this.isBlockSignatureMatch(transaction, trsWithBlockSign.blockSignature);
     this.isDependentTransactionMatch(transaction, trs);
+    await this.isValidAmount(transaction);
 
     return true;
+  }
+
+  async isValidAmount(transaction: GrabAssetTransaction) {
+    const { senderId, recipientId, asset } = transaction;
+    const grabAsset = asset.grabAsset;
+    const { giftAsset, blockSignatureBuffer, giftTransactionSignatureBuffer } = grabAsset;
+
+    const Function_Exception_Detail = {
+      function: "isValidAmount",
+    } as const;
+
+    /**校验金额 */
+    let should_grap_amount_BI: bigint | undefined;
+    switch (giftAsset.giftDistributionRule) {
+      case GIFT_DISTRIBUTION_RULE.AVERAGE:
+        should_grap_amount_BI = this.transactionHelper.calcGrabAverageGiftAssetNumber(
+          giftAsset.amount,
+          giftAsset.totalGrabableTimes,
+        );
+        break;
+      case GIFT_DISTRIBUTION_RULE.RANDOM:
+        should_grap_amount_BI = await this.transactionHelper.calcGrabRandomGiftAssetNumber(
+          senderId,
+          blockSignatureBuffer,
+          giftTransactionSignatureBuffer,
+          recipientId,
+          giftAsset.amount,
+          giftAsset.totalGrabableTimes,
+        );
+        break;
+      case GIFT_DISTRIBUTION_RULE.RECIPIENT_RANDOM:
+        should_grap_amount_BI = await this.transactionHelper.calcGrabRandomGiftAssetNumber(
+          senderId,
+          blockSignatureBuffer,
+          giftTransactionSignatureBuffer,
+          recipientId,
+          giftAsset.amount,
+          giftAsset.totalGrabableTimes,
+        );
+        break;
+    }
+
+    if (!should_grap_amount_BI) {
+      throw new ConsensusException(PROP_IS_INVALID, {
+        prop: "calculate amount",
+        ...Function_Exception_Detail,
+        target: "giftAsset",
+      });
+    }
+
+    if (should_grap_amount_BI.toString() !== grabAsset.amount) {
+      throw new ConsensusException(SHOULD_BE, {
+        to_compare_prop: "amount",
+        to_target: "grabAsset",
+        be_compare_prop: should_grap_amount_BI.toString(),
+        ...Function_Exception_Detail,
+      });
+    }
   }
 
   /**

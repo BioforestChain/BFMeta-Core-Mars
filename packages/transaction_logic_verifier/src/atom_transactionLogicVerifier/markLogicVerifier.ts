@@ -5,6 +5,7 @@ import {
   CoreExceptionGenerator,
   NOT_EXIST,
   DAPPID_IS_NOT_EXIST,
+  NOT_MATCH,
 } from "@bfchain/core-util-exception";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
@@ -41,9 +42,10 @@ export class MarkLogicVerifier extends TransactionLogicVerifier {
       transactionGetterHelper,
     );
     const mark = transaction.asset.mark;
-    const { sourceChainMagic, dappid } = mark.dapp;
-    await this.isDAppidAlreadyExist(
+    const { sourceChainMagic, dappid, sourceChainName } = mark.dapp;
+    await this.isDAppidValid(
       sourceChainMagic,
+      sourceChainName,
       dappid,
       currentBlockHeight,
       accountGetterHelper,
@@ -54,13 +56,16 @@ export class MarkLogicVerifier extends TransactionLogicVerifier {
 
   /**
    * dappid 是否已经存在
-   *
-   * @param magic
-   * @param dappid
-   * @param currentBlockHeight
+   * 
+   * @param magic 
+   * @param chainName 
+   * @param dappid 
+   * @param currentBlockHeight 
+   * @param accountGetterHelper 
    */
-  async isDAppidAlreadyExist(
+  async isDAppidValid(
     magic: string,
+    chainName: string,
     dappid: string,
     currentBlockHeight: number,
     accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
@@ -81,6 +86,16 @@ export class MarkLogicVerifier extends TransactionLogicVerifier {
         dappid,
         ...Function_Exception_Detail,
       });
+    }
+
+    if (chainName !== memDapp.sourceChainName) {
+      throw new ConsensusException(NOT_MATCH, {
+        to_compare_prop: "sourceChainName",
+        be_compare_prop: "sourceChainName",
+        to_target: "mark",
+        be_target: "blockChain dapp",
+        ...Function_Exception_Detail
+      })
     }
   }
 }

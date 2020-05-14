@@ -1,5 +1,5 @@
 import { TransactionFactory } from "./_txbase";
-import { GrabAssetTransaction, GIFT_DISTRIBUTION_RULE } from "@bfchain/core-model";
+import { GrabAssetTransaction } from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
@@ -196,7 +196,6 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
 
     const { cipherPublicKeys } = giftAsset;
     const trsSignBuffer = parseHexToArrayBuffer(transactionSignature);
-    const blockSignBuffer = parseHexToArrayBuffer(blockSignature);
 
     /**如果是公钥模式，那么必须存在密文 */
     if (cipherPublicKeys.length > 0) {
@@ -244,54 +243,6 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
           ...GrabAssetAsset_Exception_Detail,
         });
       }
-    }
-
-    /**校验金额 */
-    let should_grap_amount_BI: bigint | undefined;
-    switch (giftAsset.giftDistributionRule) {
-      case GIFT_DISTRIBUTION_RULE.AVERAGE:
-        should_grap_amount_BI = this.transactionHelper.calcGrabAverageGiftAssetNumber(
-          giftAsset.amount,
-          giftAsset.totalGrabableTimes,
-        );
-        break;
-      case GIFT_DISTRIBUTION_RULE.RANDOM:
-        should_grap_amount_BI = await this.transactionHelper.calcGrabRandomGiftAssetNumber(
-          body.senderId,
-          blockSignBuffer,
-          trsSignBuffer,
-          recipientId,
-          giftAsset.amount,
-          giftAsset.totalGrabableTimes,
-        );
-        break;
-      case GIFT_DISTRIBUTION_RULE.RECIPIENT_RANDOM:
-        should_grap_amount_BI = await this.transactionHelper.calcGrabRandomGiftAssetNumber(
-          body.senderId,
-          blockSignBuffer,
-          trsSignBuffer,
-          recipientId,
-          giftAsset.amount,
-          giftAsset.totalGrabableTimes,
-        );
-        break;
-    }
-
-    if (!should_grap_amount_BI) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "calculate amount",
-        ...Function_Exception_Detail,
-        target: "giftAsset",
-      });
-    }
-
-    if (should_grap_amount_BI.toString() !== grabAsset.amount) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "amount",
-        to_target: "grabAsset",
-        be_compare_prop: should_grap_amount_BI.toString(),
-        ...Function_Exception_Detail,
-      });
     }
   }
 

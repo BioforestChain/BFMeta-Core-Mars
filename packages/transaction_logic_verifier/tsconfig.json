@@ -35,6 +35,7 @@
     "src/atom_transactionLogicVerifier/eventLogicVerifier.ts",
     "src/atom_transactionLogicVerifier/giftAssetLogicVerifier.ts",
     "src/atom_transactionLogicVerifier/grabAssetLogicVerifier.ts",
+    "src/atom_transactionLogicVerifier/helperLogicVerifier.ts",
     "src/atom_transactionLogicVerifier/immigrateAssetLogicVerifier.ts",
     "src/atom_transactionLogicVerifier/index.ts",
     "src/atom_transactionLogicVerifier/issueAssetLogicVerifier.ts",

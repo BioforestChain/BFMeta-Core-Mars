@@ -12,7 +12,6 @@ import {
   DELEGATE_IS_ALREADY_ACCEPT_VOTE,
   ACCOUNT_IS_ALREADY_AN_DELEGATE,
   DELEGATE_IS_ALREADY_REJECT_VOTE,
-  ACCOUNT_CAN_NOT_BE_FROZEN,
   TOO_MANY_EXPECTEDISSUEDASSETS,
   FORBIDDEN,
   ALREADY_EXIST,
@@ -44,9 +43,9 @@ import {
   ASSET_STATUS,
   LOCATION_NAME_LEVEL,
   RECORD_OPERATION_TYPE,
-  TRANSACTION_TYPES_BASE,
 } from "@bfchain/core-model";
 import { ConfigHelper, BlockHelper, TransactionHelper } from "@bfchain/core-helper";
+import { HelperLogicVerifier } from "./helperLogicVerifier";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
@@ -61,6 +60,8 @@ export class EventLogicVerifier {
   protected blockHelper!: BlockHelper;
   @Inject(TransactionHelper)
   protected transactionHelper!: TransactionHelper;
+  @Inject(HelperLogicVerifier)
+  protected helperLogicVerifier!: HelperLogicVerifier;
   @Inject("bfchain-core:TransactionCore")
   protected transactionCore!: import("@bfchain/core-transaction").TransactionCore;
 
@@ -178,6 +179,22 @@ export class EventLogicVerifier {
     event.on("fee", ({ applyInfo }, next) => {
       // 手续费扣除的只能是链资产
       const { magic, assetType } = this.configHelper;
+      if (magic !== this.configHelper.magic) {
+        throw new ConsensusException(SHOULD_BE, {
+          to_compare_prop: "magic",
+          to_target: "applyInfo",
+          be_compare_prop: this.configHelper.magic,
+          ...Function_Exception_Detail,
+        });
+      }
+      if (assetType !== this.configHelper.assetType) {
+        throw new ConsensusException(SHOULD_BE, {
+          to_compare_prop: "assetType",
+          to_target: "applyInfo",
+          be_compare_prop: this.configHelper.assetType,
+          ...Function_Exception_Detail,
+        });
+      }
       const fee = BigInt(applyInfo.amount);
       const address = applyInfo.address;
       accountsAssets[address] = accountsAssets[address] || {};
@@ -417,11 +434,7 @@ export class EventLogicVerifier {
 
     // 注册成为受托人
     event.on("registerToDelegate", async ({ applyInfo }, next) => {
-      const { baseType } = this.transactionHelper.parseType(transaction.type);
-      if (
-        this.configHelper.maxDelegateTxsPerRound === 0 &&
-        baseType === TRANSACTION_TYPES_BASE.DELEGATE
-      ) {
+      if (this.configHelper.maxDelegateTxsPerRound === 0) {
         throw new ConsensusException(REJECT_REGISTER_DELEGATE, {
           reason: `every round can only deal ${this.configHelper.maxDelegateTxsPerRound} delegate transaction, reject receive delegate transaction`,
           ...Function_Exception_Detail,
@@ -505,32 +518,18 @@ export class EventLogicVerifier {
       this.isPossessAssetExceptForChainAsset(accountsAssets[address]);
 
       // 资产的发行账户不能是dapp的拥有者
-      const isDAppPossessor = await accountGetterHelper.isDAppPossessor(
-        transaction.fromMagic,
+      await this.helperLogicVerifier.isDAppPossessor(
         address,
+        this.configHelper,
+        accountGetterHelper,
       );
-      if (isDAppPossessor) {
-        throw new ConsensusException(ACCOUNT_CAN_NOT_BE_FROZEN, {
-          address,
-          reason: "DApp id possessor can not initiate a asset transaction",
-          errorId: NewTransactionRefuseReason.DAPP_POSSESSOR_CAN_NOT_ISSUE_ASSET,
-          ...Function_Exception_Detail,
-        });
-      }
 
       // 资产的发行账户不能是链域名的拥有者账户或管理账户
-      const isLnsPossessor = await accountGetterHelper.isLocationNamePossessor(
-        transaction.fromMagic,
+      await this.helperLogicVerifier.isLnsPossessorOrManager(
         address,
+        this.configHelper,
+        accountGetterHelper,
       );
-      if (isLnsPossessor) {
-        throw new ConsensusException(ACCOUNT_CAN_NOT_BE_FROZEN, {
-          address,
-          reason: "Location name possessor or manager can not initiate a asset transaction",
-          errorId: NewTransactionRefuseReason.LNS_POSSESSOR_OR_MANAGER_CAN_NOT_ISSUE_ASSET,
-          ...Function_Exception_Detail,
-        });
-      }
 
       // 保证账户上足够的本链资产，避免 py 操作
       const {
@@ -761,6 +760,14 @@ export class EventLogicVerifier {
           ...Function_Exception_Detail,
         });
       }
+      if (transaction.recipientId !== memDapp.possessorAddress) {
+        throw new ConsensusException(SHOULD_BE, {
+          to_compare_prop: "recipientId",
+          to_target: "transaction",
+          be_compare_prop: "dapp possessor",
+          ...Function_Exception_Detail,
+        });
+      }
 
       next();
     });
@@ -768,6 +775,9 @@ export class EventLogicVerifier {
     // 注册链
     event.on("registerChain", async ({ applyInfo }, next) => {
       const { address, genesisBlock } = applyInfo;
+
+      // 是否持有除链资产外的其他资产
+      this.isPossessAssetExceptForChainAsset(accountsAssets[address]);
 
       // 保证账户上足够的本链资产，避免 py 操作
       const {
@@ -785,31 +795,19 @@ export class EventLogicVerifier {
         });
       }
 
-      // 是否持有除链资产外的其他资产
-      this.isPossessAssetExceptForChainAsset(accountsAssets[address]);
-
       // 资产的发行账户不能是dapp的拥有者
-      const isDAppPossessor = await accountGetterHelper.isDAppPossessor(chainMagic, address);
-      if (isDAppPossessor) {
-        throw new ConsensusException(ACCOUNT_CAN_NOT_BE_FROZEN, {
-          address,
-          reason: "DApp id possessor can not initiate a register chain transaction",
-          errorId: NewTransactionRefuseReason.DAPP_POSSESSOR_CAN_NOT_REGISTER_CHAIN,
-          ...Function_Exception_Detail,
-        });
-      }
+      await this.helperLogicVerifier.isDAppPossessor(
+        address,
+        this.configHelper,
+        accountGetterHelper,
+      );
 
       // 资产的发行账户不能是链域名的拥有者账户或管理账户
-      const isLnsPossessor = await accountGetterHelper.isLocationNamePossessor(chainMagic, address);
-      if (isLnsPossessor) {
-        throw new ConsensusException(ACCOUNT_CAN_NOT_BE_FROZEN, {
-          address,
-          reason:
-            "Location name possessor or manager can not initiate a register chain transaction",
-          errorId: NewTransactionRefuseReason.LNS_POSSESSOR_OR_MANAGER_CAN_NOT_REGISTER_CHAIN,
-          ...Function_Exception_Detail,
-        });
-      }
+      await this.helperLogicVerifier.isLnsPossessorOrManager(
+        address,
+        this.configHelper,
+        accountGetterHelper,
+      );
 
       // 链上是否已经存在这个链的创世块
       const magic = genesisBlock.remark.magic;

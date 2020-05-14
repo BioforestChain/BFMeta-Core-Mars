@@ -18,8 +18,6 @@ import {
   INVALID_TRANSACTION_BYTE_LENGTH,
   NEED_PURCHASE_DAPPID_BEFORE_USE,
   NEED_VOTE_FOR_DAPPID_POSSESSOR_BFCORE_USE,
-  POSSESS_ASSET_EXCEPT_CHAIN_ASSET,
-  TRANSACTION_FEE_NOT_ENOUGH,
   ALREADY_EXIST,
   INVALID_TRANSACTION_EFFECTIVE_BLOCK_HEIGHT,
   VERIFY_TRANSACTION_POW_OF_WORK_ERROR,
@@ -39,6 +37,7 @@ import {
   JSBIHelper,
   TransactionHelper,
 } from "@bfchain/core-helper";
+import { HelperLogicVerifier } from "./helperLogicVerifier";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
@@ -58,6 +57,8 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   protected jsbiHelper!: JSBIHelper;
   @Inject(EventLogicVerifier)
   protected eventLogicVerifier!: EventLogicVerifier;
+  @Inject(HelperLogicVerifier)
+  protected helperLogicVerifier!: HelperLogicVerifier;
   @Inject("customTransactionCenter", { optional: true, dynamics: true })
   customTransactionCenter?: BFChainCore.CustomTrCenterInterface;
   abstract verify(
@@ -605,26 +606,6 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
         errorId: NewTransactionRefuseReason.LOCATION_NAME_NOT_EXIST,
         ...Function_Exception_Detail,
       });
-    }
-  }
-
-  /**
-   * 账户是否持有除链资产外其他资产
-   *
-   * @param assets
-   */
-  isPossessAssetExceptForChainAsset(assets: BFChainCore.AccountAssets) {
-    for (const magic in assets) {
-      const magicAssets = assets[magic];
-      for (const assetType in magicAssets) {
-        if (assetType !== this.configHelper.assetType) {
-          if (magicAssets[assetType].assetNumber > BigInt(0)) {
-            throw new ConsensusException(POSSESS_ASSET_EXCEPT_CHAIN_ASSET, {
-              function: "isPossessAssetExceptForChainAsset",
-            });
-          }
-        }
-      }
     }
   }
 
