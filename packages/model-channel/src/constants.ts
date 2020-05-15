@@ -92,6 +92,8 @@ export enum NewTransactionRefuseReason {
   USERNAME_ALREADY_EXIST,
   /**账户已经给受托人投票 */
   ACCOUNT_ALREADY_VOTED_FOR_DELEGATE,
+  /**交易来自未来 */
+  TRS_IN_FEATURE,
 }
 
 export enum DUPLEX_API_CMD {

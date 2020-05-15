@@ -99,18 +99,18 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     }
   >();
   /**节点的工作量 */
-  private _workCountWM = new EasyWeakMap<DH, number>(_ => 0);
+  private _workCountWM = new EasyWeakMap<DH, number>((_) => 0);
   /**开始一个节点并发任务 */
-  startParallelTask(task_id: string) {
+  startParallelTask(task_id: string, channelFilter?: BFChainCore.ChannelFilter) {
     const WCWM = this._workCountWM;
 
     //#region 可用节点的队列管理
     /**空闲节点列表
      * 基于工作量与延迟来进行排序
      */
-    const freeChainChannelList = [...this.chainChannelSet.values()].sort(
-      (a, b) => a.delay * WCWM.forceGet(a) - b.delay * WCWM.forceGet(b),
-    );
+    const freeChainChannelList = [...this.chainChannelSet.values()]
+      .filter(channelFilter ? channelFilter : Boolean)
+      .sort((a, b) => a.delay * WCWM.forceGet(a) - b.delay * WCWM.forceGet(b));
     /**繁忙节点列表 */
     const busyChainChannels = new Set<DH>();
     /**请求排队列表 */
@@ -248,11 +248,19 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     const limit = totalLength || Infinity;
 
     const parallelTaskId = new Date().toString() + ":" + Math.random().toString();
-    const { getFreeChainChannel, freeChainChannel, busyChainChannel } = this.startParallelTask(
-      parallelTaskId,
-    );
+    const {
+      getFreeChainChannel,
+      freeChainChannel,
+      busyChainChannel,
+      hasFreeChainChannel,
+    } = this.startParallelTask(parallelTaskId, opts?.channelFilter);
 
     const resultGenerator = _resultGenerator || new AsyncIteratorGenerator<TransactionInBlock>();
+    if (!hasFreeChainChannel()) {
+      /// 这里就不去等待了，虽然可以去等节点加入，当没必要
+      resultGenerator.done();
+      return resultGenerator;
+    }
 
     /// 在异步任务中进行任务分发
     (async () => {
@@ -287,7 +295,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
                 sort,
                 opts,
               )
-              .then(res => {
+              .then((res) => {
                 if (res.status === RESPONSE_STATUS.success) {
                   // 确认节点的工作，让其继续下一个工作
                   freeChainChannel(chainChannel);
@@ -310,7 +318,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
                   throw res.error;
                 }
               })
-              .catch(err => {
+              .catch((err) => {
                 if (AbortException.is(err)) {
                   // 如果被中断了任务，那么直接再次执行任务
                   doTask(task_offset, times);
@@ -335,7 +343,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
                 throw err;
               });
           },
-          err => waitUseableChainChannel.reject(err),
+          (err) => waitUseableChainChannel.reject(err),
         );
         return waitUseableChainChannel.promise;
       };
@@ -464,7 +472,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
   async broadcastBlock(...args: BFChainUtil.AllArgument<ChainChannel["broadcastBlock"]>) {
     let initedArgs: undefined | ReturnType<ChainChannel["initBroadcastBlockArg"]>;
     return Promise.all(
-      [...this.chainChannelSet.values()].map(chainChannel => {
+      [...this.chainChannelSet.values()].map((chainChannel) => {
         initedArgs || (initedArgs = chainChannel.initBroadcastBlockArg(...args));
         return {
           chainChannel,
@@ -559,7 +567,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
   private addChainChannel_(chainChannel: DH, opts = this.options) {
     this.chainChannelSet.add(chainChannel);
     if (!opts.disableAutoRemove) {
-      const listenerRemover = chainChannel.onClose(err => {
+      const listenerRemover = chainChannel.onClose((err) => {
         if (InterruptedException.is(err)) {
           info("channel auto removed in [%s], reason:", this.groupName, err.message);
         } else {
@@ -626,7 +634,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     tryChangeMaybeHeight(curMaxMaybeHeight);
 
     /// 如果有新的节点加入,那么检查它的高度是否最高
-    this._chainChannelEvents.on("addChainChannel", chainChannel => {
+    this._chainChannelEvents.on("addChainChannel", (chainChannel) => {
       if (this._maybeHeight < chainChannel.maybeHeight) {
         tryChangeMaybeHeight(chainChannel.maybeHeight);
       }
@@ -634,7 +642,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
       chainChannel.on("onNewBlock", onChainChannelNewBlock);
     });
     /// 如果有节点移除, 那么获取其余最高的节点
-    this._chainChannelEvents.on("removeChainChannel", chainChannel => {
+    this._chainChannelEvents.on("removeChainChannel", (chainChannel) => {
       let newMaybeHeight = 1;
       if (chainChannel.maybeHeight >= this._maybeHeight) {
         /// 最高的值发生了改变,那么就要遍历寻找第二高的值

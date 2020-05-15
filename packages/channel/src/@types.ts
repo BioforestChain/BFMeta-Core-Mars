@@ -48,7 +48,10 @@ declare namespace BFChainCore {
     timeout?: number;
     /**红包的密码 */
     grabSecret?: string;
+    /**节点过滤器 */
+    channelFilter?: ChannelFilter;
   };
+  type ChannelFilter = (channel: BFChainCore.ChainChannel) => boolean;
   //#endregion
 
   type QueneEventEmitterPro<
