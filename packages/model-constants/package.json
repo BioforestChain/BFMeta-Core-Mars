@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-model-constants",
-  "version": "5.12.34",
+  "version": "5.12.35",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,7 +14,7 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-typings": "5.12.34"
+    "@bfchain/core-typings": "5.12.35"
   },
   "gitHead": "91deb2bda3071d2d3bef6e92a8090356f4d89c7d"
 }
