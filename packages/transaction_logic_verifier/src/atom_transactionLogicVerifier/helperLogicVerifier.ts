@@ -1,4 +1,4 @@
-import { Inject } from "@bfchain/util";
+import { Injectable, Inject } from "@bfchain/util";
 import { ConfigHelper } from "@bfchain/core-helper";
 import {
   CoreExceptionGenerator,
@@ -11,6 +11,7 @@ const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "HelperLogicVerifier",
 );
 
+@Injectable()
 export class HelperLogicVerifier {
   @Inject(ConfigHelper)
   protected configHelper!: ConfigHelper;
