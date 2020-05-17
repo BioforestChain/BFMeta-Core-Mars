@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-channel",
-  "version": "5.12.34",
+  "version": "5.12.35",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,11 +14,11 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-helper": "5.12.34",
-    "@bfchain/core-model": "5.12.34",
-    "@bfchain/core-transaction": "5.12.34",
-    "@bfchain/core-typings": "5.12.34",
-    "@bfchain/core-util-exception-errorcode": "5.12.34"
+    "@bfchain/core-helper": "5.12.35",
+    "@bfchain/core-model": "5.12.35",
+    "@bfchain/core-transaction": "5.12.35",
+    "@bfchain/core-typings": "5.12.35",
+    "@bfchain/core-util-exception-errorcode": "5.12.35"
   },
   "gitHead": "91deb2bda3071d2d3bef6e92a8090356f4d89c7d"
 }

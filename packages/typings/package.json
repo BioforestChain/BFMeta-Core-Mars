@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-typings",
-  "version": "5.12.34",
+  "version": "5.12.35",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
