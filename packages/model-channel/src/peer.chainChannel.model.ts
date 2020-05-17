@@ -1,7 +1,7 @@
 import { Message, Type, Field, MapField, Long } from "@bfchain/protobuf";
 import { CommonResponse, ErrorMessage } from "./common.chainChannel.model";
 import {
-  BlockchainRebuidingProgressEventModel as BlockchainRebuildingProgressEventModel,
+  BlockchainRebuildingProgressEventModel,
   BlockchainPeerScanningProgressEventModel,
   BlockchainReplayBlockProgressEventModel,
   BlockchainGeneratingProgressEventModel,
@@ -349,21 +349,24 @@ export class BlockchainStatusModel<S extends BLOCKCHAIN_STATUS = any>
     return this._progressEvent;
   }
   public set progressEvent(event) {
+    if (!event) {
+      return;
+    }
     if (event instanceof BlockchainRebuildingProgressEventModel) {
       /// 重建
-      this.rebuildingProgressEvent = event;
+      this.rebuildingProgressEvent = event as any;
     } else if (event instanceof BlockchainPeerScanningProgressEventModel) {
       /// 节点扫描
-      this.peerScanningProgressEvent = event;
+      this.peerScanningProgressEvent = event as any;
     } else if (event instanceof BlockchainReplayBlockProgressEventModel) {
       /// 同步
-      this.replayBlockProgressEvent = event;
+      this.replayBlockProgressEvent = event as any;
     } else if (event instanceof BlockchainGeneratingProgressEventModel) {
       /// 出块
-      this.generatingProgressEvent = event;
+      this.generatingProgressEvent = event as any;
     } else if (event instanceof BlockchainRollbackProgressEventModel) {
       /// 回滚
-      this.rollbackProgressEvent = event;
+      this.rollbackProgressEvent = event as any;
     }
   }
   @Field.d(BlockchainStatusModel.INC++, BLOCKCHAIN_STATUS)
@@ -480,7 +483,7 @@ export class PeerInfoModel extends Message<PeerInfoModel>
     const { servicePeerInfoBufferList } = this;
     let servicePeerInfoList = BUFFER_LIST_SERVICEPEERINFO_LIST_WM.get(servicePeerInfoBufferList);
     if (!servicePeerInfoList) {
-      servicePeerInfoList = this.servicePeerInfoBufferList.map(buf => {
+      servicePeerInfoList = this.servicePeerInfoBufferList.map((buf) => {
         const signature = ServicePeerInfoModel.decode(buf);
         SERVICEPEERINFO_BUFFER_WM.set(signature, buf);
         return signature;
@@ -489,7 +492,7 @@ export class PeerInfoModel extends Message<PeerInfoModel>
     return servicePeerInfoList;
   }
   public set servicePeerInfo(servicePeerInfoList: ServicePeerInfoModel[]) {
-    const bufList = servicePeerInfoList.map(signature => {
+    const bufList = servicePeerInfoList.map((signature) => {
       let buf = SERVICEPEERINFO_BUFFER_WM.get(signature);
       if (!buf) {
         buf = ServicePeerInfoModel.encode(signature).finish();
@@ -515,7 +518,7 @@ export class PeerInfoModel extends Message<PeerInfoModel>
       blockchainStatus: this.blockchainStatus.toJSON(),
       serviceInfo: this.serviceInfo,
       // servicePeerInfo: this.servicePeerInfo.toJSON(),
-      servicePeerInfo: this.servicePeerInfo.map(servicePeerInfomation =>
+      servicePeerInfo: this.servicePeerInfo.map((servicePeerInfomation) =>
         servicePeerInfomation.toJSON(),
       ),
       peerConsensus: this.peerConsensus.toJSON(),

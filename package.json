@@ -56,9 +56,9 @@
   "license": "ISC",
   "devDependencies": {
     "execa": "^4.0.1",
-    "lerna": "^3.20.2"
+    "lerna": "^3.21.0"
   },
   "dependencies": {
-    "@bfchain/devkit": "^0.8.11"
+    "@bfchain/devkit": "^0.8.16"
   }
 }

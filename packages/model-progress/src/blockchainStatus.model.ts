@@ -4,10 +4,10 @@ import { ProgressEventModel } from "./progressEvent.model";
 
 /**区块链重建中的事件进度模型 */
 @Type.d("BlockchainRebuidingProgressEvent")
-export class BlockchainRebuidingProgressEventModel extends ProgressEventModel<"blockchainRebuiding">
+export class BlockchainRebuildingProgressEventModel extends ProgressEventModel<"blockchainRebuiding">
   implements BFChainCore.JSONToModelType<BFChainCore.BlockchainRebuildingProgressEventJSON> {
   /**当前正在处理的区块的进度 */
-  @Field.d(BlockchainRebuidingProgressEventModel.INC++, BlocksProgressEventModel)
+  @Field.d(BlockchainRebuildingProgressEventModel.INC++, BlocksProgressEventModel)
   currentBlockDetails!: BlocksProgressEventModel;
   toJSON(): BFChainCore.BlockchainRebuildingProgressEventJSON {
     return Object.assign(
@@ -38,10 +38,10 @@ export class BlockchainReplayBlockProgressEventModel
   extends ProgressEventModel<"blockchainReplayBlock">
   implements BFChainCore.JSONToModelType<BFChainCore.BlockchainReplayBlockProgressEventJSON> {
   /**当前同步的区块的生效进度 */
-  @MapField.d(BlockchainRebuidingProgressEventModel.INC++, "uint32", BlocksProgressEventModel)
+  @MapField.d(BlockchainRebuildingProgressEventModel.INC++, "uint32", BlocksProgressEventModel)
   applyDetails!: { [height: number]: BlocksProgressEventModel };
   /**当前下载的区块的进度 */
-  @MapField.d(BlockchainRebuidingProgressEventModel.INC++, "uint32", BlocksProgressEventModel)
+  @MapField.d(BlockchainRebuildingProgressEventModel.INC++, "uint32", BlocksProgressEventModel)
   syncDetails!: { [height: number]: BlocksProgressEventModel };
   toJSON(): BFChainCore.BlockchainReplayBlockProgressEventJSON {
     const applyDetails: BFChainCore.BlockchainReplayBlockProgressEventJSON["applyDetails"] = {};
@@ -73,7 +73,7 @@ export class BlockchainGeneratingProgressEventModel
   implements BFChainCore.JSONToModelType<BFChainCore.BlockchainGeneratingProgressEventJSON> {}
 
 export type SomeBlockchainStatusProgressEvent =
-  | BlockchainRebuidingProgressEventModel
+  | BlockchainRebuildingProgressEventModel
   | BlockchainPeerScanningProgressEventModel
   | BlockchainReplayBlockProgressEventModel
   | BlockchainGeneratingProgressEventModel
