@@ -43,6 +43,9 @@ const {
   error,
   TimeOutException,
   ConsensusException,
+  log,
+  info,
+  success,
 } = CoreExceptionGenerator("channel", "chainChannel");
 
 export abstract class ChainChannelBase extends QueneEventEmitterPro<
@@ -294,7 +297,13 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
     if (needWaitTime > 0) {
       await sleep(needWaitTime);
     }
-    return this._requestWithBinaryData(...args);
+    const res = await this._requestWithBinaryData(...args);
+    success(
+      "broadcasted Transaction(%s)",
+      this.transactionCore.transactionHelper.getTypeName(transaction.type),
+      transaction.asset,
+    );
+    return res;
   }
   /**查询区块 */
   async queryBlock<B extends Block = Block>(
@@ -332,8 +341,13 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
     ] as const;
   }
   /**广播区块 */
-  broadcastBlock(blockInfo: BFChainCore.NewBlockArgJSON, opts?: BFChainCore.ChannelRequestOptions) {
-    return this._requestWithBinaryData(...this.initBroadcastBlockArg(blockInfo, opts));
+  async broadcastBlock(
+    blockInfo: BFChainCore.NewBlockArgJSON,
+    opts?: BFChainCore.ChannelRequestOptions,
+  ) {
+    const res = await this._requestWithBinaryData(...this.initBroadcastBlockArg(blockInfo, opts));
+    success("broadcasted block:", blockInfo.height);
+    return res;
   }
 
   /**处理接收到数据时的响应 */

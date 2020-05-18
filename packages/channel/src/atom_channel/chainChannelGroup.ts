@@ -13,7 +13,7 @@ import {
   EventEmitter,
   AfterInit,
 } from "@bfchain/util";
-import { BaseHelper, ChainTimeHelper, ConfigHelper } from "@bfchain/core-helper";
+import { BaseHelper, ChainTimeHelper, ConfigHelper, TransactionHelper } from "@bfchain/core-helper";
 import {
   Block,
   CommonBlock,
@@ -30,6 +30,9 @@ const {
   AbortException,
   InterruptedException,
   error,
+  success,
+  warn,
+  log,
   info,
 } = CoreExceptionGenerator("channel", "chainChannelGroup");
 export const CHAIN_CHANNEL_GROUP_ARGS = {
@@ -50,6 +53,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
   @Inject(BaseHelper) protected baseHelper!: BaseHelper;
   @Inject(ConfigHelper) protected config!: ConfigHelper;
   @Inject(ChainTimeHelper) private timeHelper!: ChainTimeHelper;
+  @Inject(TransactionHelper) private transactionHelper!: TransactionHelper;
 
   protected chainChannelSet = new Set<DH>();
   get size() {
@@ -431,6 +435,22 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
       const endTime = this.timeHelper.now();
       event && event.emit("endBroadcast", { duraction: endTime - startTime });
     }
+    let successCount = 0;
+    let errorCount = 0;
+    resultList.forEach((result) => {
+      if (result.error) {
+        successCount += 1;
+        errorCount += 1;
+      }
+    });
+    (successCount > 0 ? success : error)(
+      "chainChannelGroup(%s) broadcasted Transaction(%s), successed: %d, fail: %d",
+      this.groupName,
+      this.transactionHelper.getTypeName(transaction.type),
+      successCount,
+      errorCount,
+      transaction.asset,
+    );
     return resultList;
   }
   /**
@@ -471,7 +491,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
    */
   async broadcastBlock(...args: BFChainUtil.AllArgument<ChainChannel["broadcastBlock"]>) {
     let initedArgs: undefined | ReturnType<ChainChannel["initBroadcastBlockArg"]>;
-    return Promise.all(
+    const resultList = await Promise.all(
       [...this.chainChannelSet.values()].map((chainChannel) => {
         initedArgs || (initedArgs = chainChannel.initBroadcastBlockArg(...args));
         return {
@@ -480,6 +500,31 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
         };
       }),
     );
+    let successCount = 0;
+    let errorCount = 0;
+    await Promise.all(
+      resultList.map(async (result) => {
+        try {
+          const res = await result.result;
+          if (res.error) {
+            errorCount += 1;
+          } else {
+            successCount += 1;
+          }
+        } catch (err) {
+          errorCount += 1;
+        }
+      }),
+    );
+
+    (successCount > 0 ? success : error)(
+      "chainChannelGroup(%s) broadcasted Block(%d), successed: %d, fail: %d",
+      this.groupName,
+      args[0].height,
+      successCount,
+      errorCount,
+    );
+    return resultList;
   }
   /**
    * chainChannel autoRemove When Close ListenerRemover WeakMap
