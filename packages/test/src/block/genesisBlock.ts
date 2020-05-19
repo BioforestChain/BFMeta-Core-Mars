@@ -31,7 +31,7 @@ import {
   LocationNameTransaction,
 } from "../include";
 import { QueneEventEmitter, Resolve } from "@bfchain/util";
-import * as optimist from "optimist";
+import optimist from "optimist";
 import * as path from "path";
 // const { dump } = require("dumper.js");
 const argv = optimist
