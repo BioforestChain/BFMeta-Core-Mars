@@ -68,7 +68,8 @@ declare namespace BFChainCore {
      * >0 说明对方的时间比我们快
      */
     readonly diffTime: number;
-
+    /**节点的地址身份 */
+    address: string;
     /**
      * 计算要到达某一个时间的差异时间
      * 如果返回值T<0，说明相对于远程节点来说，它们还差T才能到达对应的targetTime

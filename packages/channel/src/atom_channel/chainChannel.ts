@@ -157,6 +157,14 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
   get maybeHeight() {
     return this._maybeHeight;
   }
+  /**节点的地址身份 */
+  protected _address = "";
+  get address() {
+    return this._address;
+  }
+  set address(v: string) {
+    this._address = v;
+  }
   /**存储延迟的历史记录 */
   protected _delayHistroyList = new Float32Array(32);
   get delay() {
