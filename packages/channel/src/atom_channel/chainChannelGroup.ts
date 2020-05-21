@@ -388,7 +388,17 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     const startTime = this.timeHelper.now();
     const resultList = [] as BFChainCore.BroadcastNewTransactionEvents<DH>["broadcasted"]["in"][];
     try {
-      const chainChannelList = [...this.chainChannelSet.values()];
+      let chainChannelList: DH[] = [];
+      if (opts && opts.directAddress && opts.directAddress.size > 0) {
+        const directAddress = opts.directAddress;
+        for (const DH of this.chainChannelSet.values()) {
+          if (directAddress.has(DH.address)) {
+            chainChannelList.push(DH);
+          }
+        }
+      } else {
+        chainChannelList = [...this.chainChannelSet.values()];
+      }
       let is_break = event && (await event.emit("startBroadcasting", { chainChannelList }));
       if (is_break && is_break.break) {
         return [];
@@ -491,8 +501,20 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
    */
   async broadcastBlock(...args: BFChainUtil.AllArgument<ChainChannel["broadcastBlock"]>) {
     let initedArgs: undefined | ReturnType<ChainChannel["initBroadcastBlockArg"]>;
+    const opts = args[1];
+    let chainChannelList: DH[] = [];
+    if (opts && opts.directAddress && opts.directAddress.size > 0) {
+      const directAddress = opts.directAddress;
+      for (const DH of this.chainChannelSet.values()) {
+        if (directAddress.has(DH.address)) {
+          chainChannelList.push(DH);
+        }
+      }
+    } else {
+      chainChannelList = [...this.chainChannelSet.values()];
+    }
     const resultList = await Promise.all(
-      [...this.chainChannelSet.values()].map((chainChannel) => {
+      chainChannelList.map(chainChannel => {
         initedArgs || (initedArgs = chainChannel.initBroadcastBlockArg(...args));
         return {
           chainChannel,

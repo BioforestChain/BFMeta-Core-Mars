@@ -50,6 +50,7 @@ declare namespace BFChainCore {
     grabSecret?: string;
     /**节点过滤器 */
     channelFilter?: ChannelFilter;
+    directAddress?: Set<string>;
   };
   type ChannelFilter = (channel: BFChainCore.ChainChannel) => boolean;
   //#endregion
