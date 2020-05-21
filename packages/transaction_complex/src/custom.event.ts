@@ -363,7 +363,7 @@ export class CustomTransactionEvent {
     }
     if (applyResult.type === "frozenAccount") {
       const { accountStatus } = applyResult.applyInfo;
-      if (ACCOUNT_STATUS[accountStatus]) {
+      if (!ACCOUNT_STATUS[accountStatus]) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "accountStatus",
           ...Function_Exception_Detail,
