@@ -63,22 +63,22 @@ export class AccountBaseHelper {
     return h2;
   }
   /**根据公钥生成地址(base58) */
-  async getAddressFromPublicKey(publicKey: Uint8Array) {
+  async getAddressFromPublicKey(publicKey: Uint8Array, prefix = this._prefix) {
     const address =
-      this._prefix +
+      prefix +
       (await this.base58Helper.encode(await this.getBinaryAddressFromPublicKey(publicKey)));
     return address;
   }
   /**根据公钥字符串生成地址(base58) */
-  getAddressFromPublicKeyString(publicKey: string) {
-    return this.getAddressFromPublicKey(this.Buffer.from(publicKey, "hex"));
+  getAddressFromPublicKeyString(publicKey: string, prefix?: string) {
+    return this.getAddressFromPublicKey(this.Buffer.from(publicKey, "hex"), prefix);
   }
   /**
    * 根据主密码生成地址
    * @param secret 主密码
    */
-  async getAddressFromSecret(secret: string) {
-    return this.getAddressFromPublicKey(await this.getPublicKeyFromSecret(secret));
+  async getAddressFromSecret(secret: string, prefix?: string) {
+    return this.getAddressFromPublicKey(await this.getPublicKeyFromSecret(secret), prefix);
   }
   /**
    * 判断地址是否符合规范
