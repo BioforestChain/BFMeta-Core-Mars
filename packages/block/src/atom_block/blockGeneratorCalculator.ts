@@ -146,6 +146,13 @@ export class BlockGeneratorCalculator {
       return Math.floor(roundOffset);
     };
 
+    const 计算某一轮次间隔开始的时间戳 = (轮次间隔: number) => {
+      return (
+        (轮次间隔 * this.config.blockPerRound + 1) * this.config.forgeInterval +
+        上一轮轮末块.timestamp
+      );
+    };
+
     /// 3
     const 上一个块的信息 = await this.blockHelper.forceGetBlockByHeight(
       currentBlock.height,
@@ -159,9 +166,7 @@ export class BlockGeneratorCalculator {
       const fromTimestamp轮次间隔 = 计算轮次间隔(fromTimestamp);
       const toTimestamp轮次间隔 = 计算轮次间隔(toTimestamp);
       if (toTimestamp轮次间隔 > fromTimestamp轮次间隔) {
-        nowTimestamp =
-          (toTimestamp轮次间隔 * this.config.blockPerRound + 1) * this.config.forgeInterval +
-          上一轮轮末块.timestamp;
+        nowTimestamp = 计算某一轮次间隔开始的时间戳(toTimestamp轮次间隔);
       }
     }
 
@@ -281,6 +286,12 @@ export class BlockGeneratorCalculator {
     while (nowTimestamp <= toTimestamp) {
       const 现在掉了多少轮 = 计算轮次间隔(nowTimestamp); // <0 的轮次统一使用第一轮的数据
       const 剩余可用的受托人 = await 取得剩余可用受托人(现在掉了多少轮);
+      const 可用受托人列表元素个数 =
+        (计算某一轮次间隔开始的时间戳(现在掉了多少轮 + 1) - nowTimestamp) /
+        this.config.forgeInterval;
+      if (剩余可用的受托人.length > 可用受托人列表元素个数) {
+        剩余可用的受托人.length = 可用受托人列表元素个数;
+      }
 
       const 排序后的受托人列表 = 对受托人排序(剩余可用的受托人, 上一个块的信息);
 
@@ -289,10 +300,6 @@ export class BlockGeneratorCalculator {
       do {
         const 选中的受托人 = 排序后的受托人列表.shift();
 
-        /**
-         * @FIXME 这里基于“选中的受托人”来中断循环是不正确的，因为可能时间上就已经掉出这一轮了
-         * 但不困如何，排序后的受托人列表中的名单是肯定足够
-         */
         if (!选中的受托人) {
           break;
         }
