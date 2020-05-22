@@ -277,6 +277,9 @@ export abstract class BlockFactory<T extends Block> {
           // 在apply之后，获取变更记录
           eventEmitter.assetChangesGetter &&
             (tranItem.transactionAssetChanges = eventEmitter.assetChangesGetter(tranItem));
+          // 获取是发送者的第几比交易
+          eventEmitter.numberOfSenderTranGetter &&
+            (tranItem.numberOfSenderTransactions = eventEmitter.numberOfSenderTranGetter(tranItem));
           for (const transactionAssetChange of tranItem.transactionAssetChanges) {
             if (BigInt(transactionAssetChange.assetBalance) < BigInt(0)) {
               throw new ArgumentIllegalException(PROP_IS_INVALID, {
