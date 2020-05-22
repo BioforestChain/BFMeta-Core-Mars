@@ -124,6 +124,20 @@ export class BlockHelper {
   calcRoundEndHeight(round_num: number) {
     return round_num * this.config.blockPerRound;
   }
+  /**计算高度对应的一轮的结束高度 */
+  calcRoundStartHeightByHeight(height: number) {
+    const round_num = this.calcRoundByHeight(height);
+    return this.calcRoundStartHeight(round_num);
+  }
+  /**计算高度对应的一轮的结束高度 */
+  calcRoundEndHeightByHeight(height: number) {
+    const round_num = this.calcRoundByHeight(height);
+    return this.calcRoundEndHeight(round_num);
+  }
+  /**计算当前区块链所在的轮次 */
+  calcBlockChainRoundByHeight(height: number) {
+    return this.calcRoundByHeight(height + 1);
+  }
   //#region block getter
 
   async forceGetBlockByHeight<B extends BFChainCore.Block = BFChainCore.Block>(
