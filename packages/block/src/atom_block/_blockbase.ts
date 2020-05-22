@@ -138,11 +138,11 @@ export abstract class BlockFactory<T extends Block> {
     /// 进行区块签名或者验签
     if (block.signatureBuffer.length > 0) {
       if (
-        !this.asymmetricHelper.detachedVeriy(
+        !(await this.asymmetricHelper.detachedVeriy(
           block.getBytes(true, true),
           block.signatureBuffer,
           keypair.publicKey,
-        )
+        ))
       ) {
         throw new ArgumentFormatException(`Invalid block signature`);
       }
@@ -276,10 +276,12 @@ export abstract class BlockFactory<T extends Block> {
           await txFactory.applyTransaction(trs, eventEmitter);
           // 在apply之后，获取变更记录
           eventEmitter.assetChangesGetter &&
-            (tranItem.transactionAssetChanges = eventEmitter.assetChangesGetter(tranItem));
+            (tranItem.transactionAssetChanges = await eventEmitter.assetChangesGetter(tranItem));
           // 获取是发送者的第几比交易
           eventEmitter.numberOfSenderTranGetter &&
-            (tranItem.numberOfSenderTransactions = eventEmitter.numberOfSenderTranGetter(tranItem));
+            (tranItem.numberOfSenderTransactions = await eventEmitter.numberOfSenderTranGetter(
+              tranItem,
+            ));
           for (const transactionAssetChange of tranItem.transactionAssetChanges) {
             if (BigInt(transactionAssetChange.assetBalance) < BigInt(0)) {
               throw new ArgumentIllegalException(PROP_IS_INVALID, {
@@ -293,11 +295,11 @@ export abstract class BlockFactory<T extends Block> {
           if (tranItem.signatureBuffer.length > 0) {
             /// 如果已经有签名信息，那么进行验证
             if (
-              !this.asymmetricHelper.detachedVeriy(
+              !(await this.asymmetricHelper.detachedVeriy(
                 tranItem.getBytes(true),
                 tranItem.signatureBuffer,
                 keypair.publicKey,
-              )
+              ))
             ) {
               throw new ArgumentFormatException(
                 `Invalid transactionInBlock: %O`,
@@ -667,11 +669,11 @@ export abstract class BlockFactory<T extends Block> {
         appliedTransactions.add(transaction.signature);
 
         if (
-          !this.asymmetricHelper.detachedVeriy(
+          !(await this.asymmetricHelper.detachedVeriy(
             tranItem.getBytes(true),
             tranItem.signatureBuffer,
             block.generatorPublicKeyBuffer,
-          )
+          ))
         ) {
           throw new ArgumentFormatException(`Invalid transactionInBlock signature`);
         }

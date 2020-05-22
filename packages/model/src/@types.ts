@@ -485,7 +485,7 @@ declare namespace BFChainCore {
     ) => BFChainUtil.PromiseMaybe<TransactionInBlock["transactionAssetChanges"]>;
     numberOfSenderTranGetter?: (
       tib: TransactionInBlock,
-    ) =>BFChainUtil.PromiseMaybe< TransactionInBlock["numberOfSenderTransactions"]>;
+    ) => BFChainUtil.PromiseMaybe<TransactionInBlock["numberOfSenderTransactions"]>;
   } & BFChainUtil.QueneEventEmitter<ApplyTransactionEventMap<ES>>;
 
   type GenerateBlockEventEmitter<

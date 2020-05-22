@@ -201,14 +201,14 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
     const signatureBuffer = parseHexToArrayBuffer(signature);
 
     if (
-      !this.transactionHelper.verifyEmigrateAssetGenesisSignature({
+      !(await this.transactionHelper.verifyEmigrateAssetGenesisSignature({
         secretPublicKey: parseHexToArrayBuffer(publicKey),
         signatureBuffer,
         chainName: sourceChainName,
         magic: sourceChainMagic,
         assetType,
         senderId: body.senderId,
-      })
+      }))
     ) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "genesisDelegateSignature",
@@ -220,7 +220,7 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
 
     if (secondPublicKey && signSignature) {
       if (
-        !this.transactionHelper.verifyEmigrateAssetGenesisSignature({
+        !(await this.transactionHelper.verifyEmigrateAssetGenesisSignature({
           secretPublicKey: parseHexToArrayBuffer(secondPublicKey),
           signatureBuffer: parseHexToArrayBuffer(signSignature),
           chainName: sourceChainName,
@@ -228,7 +228,7 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
           assetType,
           senderId: body.senderId,
           genesisSignatureBuffer: signatureBuffer,
-        })
+        }))
       ) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "signSignature",

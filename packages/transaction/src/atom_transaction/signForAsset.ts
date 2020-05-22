@@ -298,13 +298,13 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
       }
       const signatureBuffer = parseHexToArrayBuffer(signature);
       if (
-        !transactionHelper.verifyThirdPartySignature({
+        !(await transactionHelper.verifyThirdPartySignature({
           secretPublicKey: parseHexToArrayBuffer(publicKey),
           signatureBuffer,
           transactionSignatureBuffer,
           senderId: trustSenderId,
           recipientId: trustRecipientId,
-        })
+        }))
       ) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "signature",
@@ -315,14 +315,14 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
       }
       if (secondPublicKey && signSignature) {
         if (
-          !transactionHelper.verifyThirdPartySignature({
+          !(await transactionHelper.verifyThirdPartySignature({
             secretPublicKey: parseHexToArrayBuffer(secondPublicKey),
             signatureBuffer: parseHexToArrayBuffer(signSignature),
             transactionSignatureBuffer,
             senderId: trustSenderId,
             recipientId: trustRecipientId,
             thirdPartySignatureBuffer: signatureBuffer,
-          })
+          }))
         ) {
           throw new ArgumentIllegalException(PROP_IS_INVALID, {
             prop: "signSignature",

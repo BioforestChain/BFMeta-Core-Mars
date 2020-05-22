@@ -196,11 +196,11 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<
     const signatureBuffer = parseHexToArrayBuffer(signature);
 
     if (
-      !this.transactionHelper.verifyImmigrateAssetGenesisSignature({
+      !(await this.transactionHelper.verifyImmigrateAssetGenesisSignature({
         secretPublicKey: parseHexToArrayBuffer(publicKey),
         signatureBuffer,
         transactionSignatureBuffer: emigrateAssetTransactionModel.signatureBuffer,
-      })
+      }))
     ) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "genesisDelegateSignature",
@@ -212,12 +212,12 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<
 
     if (secondPublicKey && signSignature) {
       if (
-        !this.transactionHelper.verifyImmigrateAssetGenesisSignature({
+        !(await this.transactionHelper.verifyImmigrateAssetGenesisSignature({
           secretPublicKey: parseHexToArrayBuffer(secondPublicKey),
           signatureBuffer: parseHexToArrayBuffer(signSignature),
           transactionSignatureBuffer: emigrateAssetTransactionModel.signatureBuffer,
           genesisSignatureBuffer: signatureBuffer,
-        })
+        }))
       ) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "genesisDelegateSignSignature",

@@ -230,12 +230,12 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
 
       /// 对密文进行解码校验
       if (
-        !this.transactionHelper.verifyCiphertextSignature({
+        !(await this.transactionHelper.verifyCiphertextSignature({
           secretPublicKey: parseHexToArrayBuffer(publicKey),
           ciphertextSignatureBuffer: parseHexToArrayBuffer(signature),
           transactionSignatureBuffer: trsSignBuffer,
           senderId: body.senderId,
-        })
+        }))
       ) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "ciphertextSignature",

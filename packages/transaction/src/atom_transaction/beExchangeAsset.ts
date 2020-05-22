@@ -256,12 +256,12 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<
 
       /// 对密文进行解码校验
       if (
-        !this.transactionHelper.verifyCiphertextSignature({
+        !(await this.transactionHelper.verifyCiphertextSignature({
           secretPublicKey: publicKeyBuffer,
           ciphertextSignatureBuffer: signatureBuffer,
           transactionSignatureBuffer,
           senderId: body.senderId,
-        })
+        }))
       ) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "ciphertextSignature",

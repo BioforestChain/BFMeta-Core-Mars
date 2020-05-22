@@ -59,11 +59,11 @@ export class BlockHelper {
     // 验证 signature 与 publicKey
     const hash = await this.cryptoHelper.sha256(block.getBytes(true, true));
     if (
-      !this.keypairHelper.detached_verify(
+      !(await this.keypairHelper.detached_verify(
         Buffer.from(hash),
         Buffer.from(signatureBuffer),
         Buffer.from(generatorPublicKeyBuffer),
-      )
+      ))
     ) {
       throw new ArgumentFormatException(`Invalid ${taskLabel} signature`);
     }

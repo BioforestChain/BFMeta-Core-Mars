@@ -275,11 +275,11 @@ export class TransactionHelper {
     const hash = await this.cryptoHelper.sha256().update(transaction.getBytes(true, true)).digest();
     // 验证 signature 与 publicKey
     if (
-      !this.keypairHelper.detached_verify(
+      !(await this.keypairHelper.detached_verify(
         hash,
         Buffer.from(signatureBuffer),
         Buffer.from(senderPublicKeyBuffer),
-      )
+      ))
     ) {
       throw new ArgumentFormatException(`Invalid ${taskLabel} signature`);
     }
@@ -295,11 +295,11 @@ export class TransactionHelper {
           .update(transaction.getBytes(false, true))
           .digest();
         if (
-          !this.keypairHelper.detached_verify(
+          !(await this.keypairHelper.detached_verify(
             shash,
             Buffer.from(signSignatureBuffer),
             Buffer.from(senderSecondPublicKeyBuffer),
-          )
+          ))
         ) {
           throw new ArgumentFormatException(`Invalid ${taskLabel} signSignature`);
         }
