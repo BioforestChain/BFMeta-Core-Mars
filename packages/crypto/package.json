@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-crypto",
-  "version": "5.13.11",
+  "version": "5.13.12",
   "main": "build/cjs/index.js",
   "type": "build/cjs/index.d.ts",
   "module": "build/esm/index.js",
@@ -8,9 +8,9 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-crypto-ed2curve": "5.13.11",
-    "@bfchain/core-crypto-tweetnacl": "5.13.11",
-    "@bfchain/core-typings": "5.13.11"
+    "@bfchain/core-crypto-ed2curve": "5.13.12",
+    "@bfchain/core-crypto-tweetnacl": "5.13.12",
+    "@bfchain/core-typings": "5.13.12"
   },
-  "gitHead": "91deb2bda3071d2d3bef6e92a8090356f4d89c7d"
+  "gitHead": "f8647a0812fc794090af08d4e3bf47e0ec30c14f"
 }
