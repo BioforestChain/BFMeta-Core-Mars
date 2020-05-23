@@ -11,7 +11,7 @@ export class ConfigHelper {
     public readonly genesisBlock:
       | GenesisBlock
       | BFChainCore.BlockJSON<BFChainCore.GenesisBlockRemarkJSON>,
-    public business: string,
+    public business?: string,
   ) {}
   /**获取交易最大有效期 */
   get maxApplyAndConfirmedBlockHeightDiff() {
