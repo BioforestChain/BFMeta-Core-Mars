@@ -242,20 +242,25 @@ export class BlockGeneratorCalculator {
 
       return 剩余可用的受托人;
     };
-
-    const 对受托人排序 = (候选名单: string[], 上一个块的信息: BFChainCore.Block) => {
-      const seed =
-        上一个块的信息.generatorPublicKeyBuffer.reduce((r, v) => r + v, 0) +
-        this.timeHelper.getSlotNumberByTimestamp(nowTimestamp);
-      const addressToNum = new EasyMap((address: string) => {
-        let num = 0;
-        for (let i = 1; i < address.length; i++) {
-          num += address.charCodeAt(i) * seed;
+    const 基于前块的排序种子 =
+      上一个块的信息.generatorPublicKeyBuffer.reduce((r, v) => r + v, 0) +
+      this.timeHelper.getSlotNumberByTimestamp(nowTimestamp);
+    const 种子与地址结果值缓存 = new EasyMap((address: string) => {
+      let num = 0;
+      for (let i = 1; i < address.length; i++) {
+        num += address.charCodeAt(i) * 基于前块的排序种子;
+      }
+      return num;
+    });
+    const 对受托人排序 = (候选名单: string[]) => {
+      候选名单.sort((a1, a2) => {
+        const sortRes = 种子与地址结果值缓存.forceGet(a1) - 种子与地址结果值缓存.forceGet(a2);
+        if (sortRes === 0) {
+          // 确保排序稳定
+          return 候选名单.indexOf(a1) - 候选名单.indexOf(a2);
         }
-        return num;
+        return sortRes;
       });
-
-      候选名单.sort((a1, a2) => addressToNum.forceGet(a1) - addressToNum.forceGet(a2));
       return 候选名单;
     };
 
@@ -293,7 +298,7 @@ export class BlockGeneratorCalculator {
         剩余可用的受托人.length = 可用受托人列表元素个数;
       }
 
-      const 排序后的受托人列表 = 对受托人排序(剩余可用的受托人, 上一个块的信息);
+      const 排序后的受托人列表 = 对受托人排序(剩余可用的受托人);
 
       let 当前轮的掉线列表: string[] | undefined;
 
