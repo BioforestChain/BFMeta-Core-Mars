@@ -34,7 +34,7 @@ export class UsernameLogicVerifier extends TransactionLogicVerifier {
         ...Function_Exception_Detail,
       });
     }
-    const sender = await this.logicVerify(
+    const { sender } = await this.logicVerify(
       transaction,
       currentBlockHeight,
       accountGetterHelper,

@@ -39,7 +39,7 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
         ...Function_Exception_Detail,
       });
     }
-    const sender = await this.logicVerify(
+    const { sender } = await this.logicVerify(
       transaction,
       currentBlockHeight,
       accountGetterHelper,
@@ -107,9 +107,17 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
 
     this.helperLogicVerifier.isPossessAssetExceptForChainAsset(assets);
 
-    await this.helperLogicVerifier.isDAppPossessor(transaction.senderId, this.configHelper, accountGetterHelper);
+    await this.helperLogicVerifier.isDAppPossessor(
+      transaction.senderId,
+      this.configHelper,
+      accountGetterHelper,
+    );
 
-    await this.helperLogicVerifier.isLnsPossessorOrManager(transaction.senderId, this.configHelper, accountGetterHelper);
+    await this.helperLogicVerifier.isLnsPossessorOrManager(
+      transaction.senderId,
+      this.configHelper,
+      accountGetterHelper,
+    );
 
     const totalSpend = BigInt(transaction.fee) + BigInt(amount);
 

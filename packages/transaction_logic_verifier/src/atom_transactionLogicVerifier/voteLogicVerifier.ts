@@ -6,6 +6,7 @@ import {
   NOT_EXIST,
   ACCOUNT_IS_NOT_AN_DELEGATE,
   DELEGATE_IS_ALREADY_REJECT_VOTE,
+  NOT_FOUND,
 } from "@bfchain/core-util-exception";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
@@ -25,14 +26,22 @@ export class VoteLogicVerifier extends TransactionLogicVerifier {
     accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const sender = await this.logicVerify(
+    const Function_Exception_Detail = {
+      function: "verify",
+    } as const;
+    const { recipient } = await this.logicVerify(
       transaction,
       currentBlockHeight,
       accountGetterHelper,
       transactionGetterHelper,
     );
-
-    await this.isVoteForAcceptVoteDelegate(transaction.recipientId, accountGetterHelper);
+    if (!recipient) {
+      throw new NoFoundException(NOT_FOUND, {
+        prop: `recipient ${transaction.recipientId}`,
+        ...Function_Exception_Detail,
+      });
+    }
+    await this.isVoteForAcceptVoteDelegate(recipient, accountGetterHelper);
 
     return true;
   }
@@ -40,11 +49,11 @@ export class VoteLogicVerifier extends TransactionLogicVerifier {
   /**
    * 是否投给了接收投票的受托人
    *
-   * @param address
+   * @param recipient
    * @param accountGetterHelper
    */
   async isVoteForAcceptVoteDelegate(
-    address: string,
+    recipient: BFChainCore.AccountInfoAndAssets,
     accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
@@ -57,25 +66,18 @@ export class VoteLogicVerifier extends TransactionLogicVerifier {
         ...Function_Exception_Detail,
       });
     }
-    const delegate = await accountGetterHelper.getAccountInfo(address);
-    if (!delegate) {
-      throw new ConsensusException(NOT_EXIST, {
-        prop: `Account with address ${address}`,
-        target: "blockChain",
-        ...Function_Exception_Detail,
-      });
-    }
+    const accountInfo = recipient.accountInfo;
 
-    if (!delegate.isDelegate) {
+    if (!accountInfo.isDelegate) {
       throw new ConsensusException(ACCOUNT_IS_NOT_AN_DELEGATE, {
-        address,
+        address: recipient,
         ...Function_Exception_Detail,
       });
     }
 
-    if (!delegate.isAcceptVote) {
+    if (!accountInfo.isAcceptVote) {
       throw new ConsensusException(DELEGATE_IS_ALREADY_REJECT_VOTE, {
-        address,
+        address: recipient,
         ...Function_Exception_Detail,
       });
     }

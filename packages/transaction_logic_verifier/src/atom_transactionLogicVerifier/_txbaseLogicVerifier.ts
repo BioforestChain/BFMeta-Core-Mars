@@ -161,7 +161,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       );
     }
 
-    return sender;
+    return { sender, recipient };
   }
 
   /**

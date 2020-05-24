@@ -24,7 +24,7 @@ export class DelegateLogicVerifier extends TransactionLogicVerifier {
     const Function_Exception_Detail = {
       function: "verify",
     } as const;
-    const sender = await this.logicVerify(
+    const { sender } = await this.logicVerify(
       transaction,
       currentBlockHeight,
       accountGetterHelper,
