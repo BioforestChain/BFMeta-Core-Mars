@@ -242,15 +242,13 @@ export class BlockGeneratorCalculator {
 
       return 剩余可用的受托人;
     };
-    const 基于前块的排序种子 =
-      上一个块的信息.generatorPublicKeyBuffer.reduce((r, v) => r + v, 0) +
-      this.timeHelper.getSlotNumberByTimestamp(nowTimestamp);
+    const 基于前块的排序种子 = 上一个块的信息.generatorPublicKeyBuffer.reduce((r, v) => r + v, 0);
     const 种子与地址结果值缓存 = new EasyMap((address: string) => {
       let num = 0;
       for (let i = 1; i < address.length; i++) {
-        num += address.charCodeAt(i) * 基于前块的排序种子;
+        num += address.charCodeAt(i);
       }
-      return num;
+      return num * 基于前块的排序种子;
     });
     const 对受托人排序 = (候选名单: string[]) => {
       return 候选名单.slice().sort((a1, a2) => {
