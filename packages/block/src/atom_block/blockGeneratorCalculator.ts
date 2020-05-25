@@ -253,7 +253,7 @@ export class BlockGeneratorCalculator {
       return num;
     });
     const 对受托人排序 = (候选名单: string[]) => {
-      候选名单.sort((a1, a2) => {
+      候选名单.slice().sort((a1, a2) => {
         const sortRes = 种子与地址结果值缓存.forceGet(a1) - 种子与地址结果值缓存.forceGet(a2);
         if (sortRes === 0) {
           // 确保排序稳定
