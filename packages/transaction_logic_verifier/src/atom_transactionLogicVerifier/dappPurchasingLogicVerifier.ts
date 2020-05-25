@@ -1,14 +1,7 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import type { DAppPurchasingTransaction } from "@bfchain/core-model";
 import { Injectable } from "@bfchain/util";
-import {
-  CoreExceptionGenerator,
-  NOT_EXIST,
-  DAPPID_IS_NOT_EXIST,
-  NO_NEED_TO_PURCHASE_SPECIAL_ASSET,
-  SHOULD_BE,
-} from "@bfchain/core-util-exception";
-
+import { CoreExceptionGenerator, NOT_EXIST } from "@bfchain/core-util-exception";
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
   "DAppPurchasingLogicVerifier",
@@ -23,6 +16,10 @@ export class DAppPurchasingLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: DAppPurchasingTransaction,
     currentBlockHeight: number,
+    accountsInfo: {
+      sender: BFChainCore.AccountInfoAndAssets;
+      recipient?: BFChainCore.AccountInfoAndAssets;
+    },
     accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
@@ -36,9 +33,10 @@ export class DAppPurchasingLogicVerifier extends TransactionLogicVerifier {
         ...Function_Exception_Detail,
       });
     }
-    const sender = await this.logicVerify(
+    await this.logicVerify(
       transaction,
       currentBlockHeight,
+      accountsInfo,
       accountGetterHelper,
       transactionGetterHelper,
     );

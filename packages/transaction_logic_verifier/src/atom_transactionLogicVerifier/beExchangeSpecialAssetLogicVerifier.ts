@@ -23,6 +23,10 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
   async verify(
     transaction: BeExchangeSpecialAssetTransaction,
     currentBlockHeight: number,
+    accountsInfo: {
+      sender: BFChainCore.AccountInfoAndAssets;
+      recipient?: BFChainCore.AccountInfoAndAssets;
+    },
     accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
@@ -43,9 +47,10 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
         ...Function_Exception_Detail,
       });
     }
-    const sender = await this.logicVerify(
+    await this.logicVerify(
       transaction,
       currentBlockHeight,
+      accountsInfo,
       accountGetterHelper,
       transactionGetterHelper,
     );

@@ -2,6 +2,7 @@ import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import type { DestoryAssetTransaction } from "@bfchain/core-model";
 import { Injectable } from "@bfchain/util";
 import { CoreExceptionGenerator, NOT_EXIST, NOT_MATCH } from "@bfchain/core-util-exception";
+
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
   "TransactionLogicVerifier",
@@ -16,6 +17,10 @@ export class DestoryAssetLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: DestoryAssetTransaction,
     currentBlockHeight: number,
+    accountsInfo: {
+      sender: BFChainCore.AccountInfoAndAssets;
+      recipient?: BFChainCore.AccountInfoAndAssets;
+    },
     accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
@@ -52,9 +57,10 @@ export class DestoryAssetLogicVerifier extends TransactionLogicVerifier {
       });
     }
 
-    const sender = await this.logicVerify(
+    await this.logicVerify(
       transaction,
       currentBlockHeight,
+      accountsInfo,
       accountGetterHelper,
       transactionGetterHelper,
     );

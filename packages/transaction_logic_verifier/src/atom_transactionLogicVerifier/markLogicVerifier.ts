@@ -22,6 +22,10 @@ export class MarkLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: MarkTransaction,
     currentBlockHeight: number,
+    accountsInfo: {
+      sender: BFChainCore.AccountInfoAndAssets;
+      recipient?: BFChainCore.AccountInfoAndAssets;
+    },
     accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
@@ -35,9 +39,10 @@ export class MarkLogicVerifier extends TransactionLogicVerifier {
         ...Function_Exception_Detail,
       });
     }
-    const sender = this.logicVerify(
+    await this.logicVerify(
       transaction,
       currentBlockHeight,
+      accountsInfo,
       accountGetterHelper,
       transactionGetterHelper,
     );

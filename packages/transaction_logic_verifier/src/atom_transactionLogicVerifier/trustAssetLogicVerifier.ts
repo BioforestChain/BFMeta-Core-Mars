@@ -26,6 +26,10 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: TrustAssetTransaction,
     currentBlockHeight: number,
+    accountsInfo: {
+      sender: BFChainCore.AccountInfoAndAssets;
+      recipient?: BFChainCore.AccountInfoAndAssets;
+    },
     accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
@@ -64,9 +68,10 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
       });
     }
 
-    const sender = await this.logicVerify(
+    await this.logicVerify(
       transaction,
       currentBlockHeight,
+      accountsInfo,
       accountGetterHelper,
       transactionGetterHelper,
     );

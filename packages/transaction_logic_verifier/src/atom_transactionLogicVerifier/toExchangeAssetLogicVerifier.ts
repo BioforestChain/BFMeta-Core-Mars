@@ -22,6 +22,10 @@ export class ToExchangeAssetLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: ToExchangeAssetTransaction,
     currentBlockHeight: number,
+    accountsInfo: {
+      sender: BFChainCore.AccountInfoAndAssets;
+      recipient?: BFChainCore.AccountInfoAndAssets;
+    },
     accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
@@ -29,9 +33,10 @@ export class ToExchangeAssetLogicVerifier extends TransactionLogicVerifier {
     const toExchangeAsset = transaction.asset.toExchangeAsset;
     await this.isExchangeAssetAlreadyExist(toExchangeAsset, accountGetterHelper);
 
-    const sender = await this.logicVerify(
+    await this.logicVerify(
       transaction,
       currentBlockHeight,
+      accountsInfo,
       accountGetterHelper,
       transactionGetterHelper,
     );

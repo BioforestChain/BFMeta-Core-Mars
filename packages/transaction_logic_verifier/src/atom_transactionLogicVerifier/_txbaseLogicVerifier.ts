@@ -64,6 +64,10 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   abstract verify(
     transaction: T,
     currentBlockHeight: number,
+    accountsInfo: {
+      sender: BFChainCore.AccountInfoAndAssets;
+      recipient?: BFChainCore.AccountInfoAndAssets;
+    },
     accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
     customTransactionCenter?: BFChainCore.CustomTrCenterInterface,
@@ -72,6 +76,10 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   async logicVerify(
     transaction: T,
     currentBlockHeight: number,
+    accountsInfo: {
+      sender: BFChainCore.AccountInfoAndAssets;
+      recipient?: BFChainCore.AccountInfoAndAssets;
+    },
     accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
@@ -92,9 +100,9 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
         ...Function_Exception_Detail,
       });
     }
-    const { senderId, recipientId, senderPublicKey } = transaction;
+    const { recipientId, senderPublicKey } = transaction;
     // 获取账户信息和资产信息
-    const sender = await accountGetterHelper.getAccountInfoAndAssets(senderId);
+    const sender = accountsInfo.sender;
     if (!(sender && sender.accountInfo && sender.accountAssets)) {
       throw new NoFoundException(NOT_FOUND, {
         prop: "sender",
@@ -125,7 +133,10 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     // 校验交易的接收账户状态
     let recipient: BFChainCore.AccountInfoAndAssets | undefined;
     if (recipientId) {
-      recipient = await accountGetterHelper.getAccountInfoAndAssets(recipientId);
+      recipient = accountsInfo.recipient;
+      if (!recipient) {
+        recipient = await accountGetterHelper.getAccountInfoAndAssets(recipientId);
+      }
       if (recipient && recipient.accountInfo && recipient.accountAssets) {
         this.checkRecipientAccountStatus(recipient.accountInfo);
       }

@@ -17,17 +17,21 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: CustomTransaction,
     currentBlockHeight: number,
+    accountsInfo: {
+      sender: BFChainCore.AccountInfoAndAssets;
+      recipient?: BFChainCore.AccountInfoAndAssets;
+    },
     accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
-
     customTransactionCenter = this.customTransactionCenter,
   ): Promise<boolean> {
     const Function_Exception_Detail = {
       function: "verify",
     } as const;
-    const sender = await this.logicVerify(
+    await this.logicVerify(
       transaction,
       currentBlockHeight,
+      accountsInfo,
       accountGetterHelper,
       transactionGetterHelper,
     );
