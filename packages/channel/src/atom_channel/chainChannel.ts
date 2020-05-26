@@ -35,6 +35,7 @@ import {
   sleep,
   unsleep,
   Resolvable,
+  Aborter,
 } from "@bfchain/util";
 
 const {
@@ -205,6 +206,31 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
   private _requestDataToBinary(data: Message) {
     return new Uint8Array((data.constructor as typeof Message).encode(data).finish());
   }
+  private _aborterParser(
+    options: BFChainCore.ChannelRequestAborterOptions,
+    resp: Promise<Uint8Array>,
+    cmd: DUPLEX_API_CMD,
+  ) {
+    let aborter = options.aborter;
+    if (this.baseHelper.isPositiveFloatNotContainZero(options.timeout)) {
+      const ab = aborter || (aborter = new Aborter());
+      const timeoutTask = sleep(options.timeout, () => {
+        ab.abort(
+          new TimeOutException(`ChainChannel Timeout: cmd:{cmd}`, {
+            endpoint: this.endpoint,
+            cmd: DUPLEX_API_CMD[cmd],
+          }),
+        );
+      });
+      resp = resp.finally(() => {
+        unsleep(timeoutTask);
+      });
+    }
+    if (aborter) {
+      resp = aborter.wrapAsync(resp);
+    }
+    return resp;
+  }
   async _requestWithBinaryData<T>(
     cmd: DUPLEX_API_CMD,
     binary: Uint8Array,
@@ -214,23 +240,14 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
     const req_id = this._req_id_acc[0]++;
     this.postResponseMessage(req_id, cmd, binary);
     const req_task = new PromiseOut<Uint8Array>();
-    if (options && this.baseHelper.isPositiveFloatNotContainZero(options.timeout)) {
-      const timeoutTask = sleep(options.timeout, () => {
-        req_task.reject(
-          new TimeOutException(`Chain Channel Timeout, cmd:{cmd}, binary:{binary}`, {
-            endpoint: this.endpoint,
-            cmd: DUPLEX_API_CMD[cmd],
-            binary,
-          }),
-        );
-      });
-      req_task.promise = req_task.promise.finally(() => {
-        unsleep(timeoutTask);
-      });
-    }
     this.req_response_map.set(req_id, req_task);
-    const res = await req_task.promise;
-    return ResonseBoxer(res);
+
+    let resp = req_task.promise;
+
+    if (options) {
+      resp = this._aborterParser(options, resp, cmd);
+    }
+    return ResonseBoxer(await resp);
   }
   /**发送响应数据 */
   postResponseMessage(req_id: number, cmd: DUPLEX_API_CMD, binary: Uint8Array) {
