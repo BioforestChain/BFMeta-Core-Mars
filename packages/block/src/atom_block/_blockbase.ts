@@ -30,6 +30,8 @@ const {
   OutOfRangeException,
   ArgumentFormatException,
   NoFoundException,
+  log,
+  info,
   warn,
   ConsensusException,
 } = CoreExceptionGenerator("CONTROLLER", "_blockbase");
@@ -78,6 +80,7 @@ export abstract class BlockFactory<T extends Block> {
     eventEmitter?: BFChainCore.GenerateBlockEventEmitter,
     config = this.config,
   ) {
+    info("begin generateBlock");
     const Function_Exception_Detail = { function: "init" };
     if (!body) {
       throw new ArgumentIllegalException(PARAM_LOST, {
@@ -97,6 +100,8 @@ export abstract class BlockFactory<T extends Block> {
         ...Function_Exception_Detail,
       });
     }
+
+    log("before generateBlock");
     eventEmitter && (await eventEmitter.emit("beforeGenerateBlock", body));
 
     if (body.height > 1) {
@@ -130,6 +135,7 @@ export abstract class BlockFactory<T extends Block> {
     // 绑定交易相关的信息
     await this.insertTransactions(block, transactions, keypair, eventEmitter);
 
+    log("before signatureBlock");
     eventEmitter && (await eventEmitter.emit("beforeSignatureBlock", block));
 
     /// 计算并赋值区块大小
@@ -156,7 +162,9 @@ export abstract class BlockFactory<T extends Block> {
       );
     }
 
+    log("before generatedBlock");
     eventEmitter && (await eventEmitter.emit("generatedBlock", block));
+    info("finish generateBlock");
     return block;
   }
 
@@ -207,7 +215,9 @@ export abstract class BlockFactory<T extends Block> {
       this.statisticsHelper.bindApplyTransactionEventEmiter(eventEmitter, statisticsInfo);
       /**用于快速地计算发送者的交易量 */
       const tranSenderCountMap = new EasyMap<string, number>((address) => 0);
+      info("begin insertTransactions");
       for await (const tranItem of trsGenerator) {
+        log("insert transaction: %d / %d", tranItem.index + 1, block.numberOfTransactions);
         try {
           if (tranItem.index >= MAX_TRANSACTION_SIZE) {
             throw new OutOfRangeException(OUT_OF_RANGE, {
@@ -341,6 +351,7 @@ export abstract class BlockFactory<T extends Block> {
           throw err;
         }
       }
+      info("finish insertTransactions");
 
       block.statisticInfo = statisticsInfo.toModel();
       block.payloadHashBuffer = await payloadHash.digest();
