@@ -12,19 +12,15 @@ import {
   unsleep,
   EventEmitter,
   AfterInit,
-  Aborter,
   EasyMap,
-  safePromiseRace,
 } from "@bfchain/util";
 import { BaseHelper, ChainTimeHelper, ConfigHelper, TransactionHelper } from "@bfchain/core-helper";
 import {
   Block,
   CommonBlock,
-  PeerInfoModel,
   RESPONSE_STATUS,
   TransactionInBlock,
   NewBlockArgModel,
-  NewTransactionReturnModel,
 } from "@bfchain/core-model";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 import { ChainChannel, ChainChannelBase } from "./chainChannel";
@@ -34,11 +30,15 @@ const {
   InterruptedException,
   error,
   success,
-  warn,
-  log,
   info,
   TimeOutException,
 } = CoreExceptionGenerator("channel", "chainChannelGroup");
+
+import {
+  ChainChannelQueryTransactionsBuilder,
+  ChainChannelQueryBlockBuilder,
+} from "./GroupRequesterBuilder";
+
 export const CHAIN_CHANNEL_GROUP_ARGS = {
   GROUP_NAME: Symbol("groupName"),
   CHANNEL_LIST: Symbol("channelList"),
@@ -255,7 +255,9 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     const { offset, limit: totalLength, ...baseQueryCondition } = query;
     const limit = totalLength || Infinity;
 
-    const parallelTaskId = new Date().toString() + ":" + Math.random().toString();
+    const parallelTaskId = `Group(${this.groupName}) queryTransactions-${
+      Date.now() + Math.random()
+    }`;
     const {
       getFreeChainChannel,
       freeChainChannel,
@@ -272,7 +274,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
 
     const queryerMap = EasyMap.from<
       { offset: number; limit: number },
-      ChainChannelQueryTransactionsBuilder,
+      ChainChannelQueryTransactionsBuilder<DH>,
       string
     >({
       transformKey: (query) => `${query.offset}-${query.limit}`,
@@ -308,7 +310,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
                 offset: task_offset,
                 limit: unitLength,
               });
-              const res = await queryer.addChainChannel(chainChannel, opts?.timeout || 3000);
+              const res = await queryer.addChainChannel(chainChannel);
 
               if (res.status === RESPONSE_STATUS.success) {
                 // 任务完成
@@ -484,32 +486,41 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
   /**
    * 查询区块
    */
-  async queryBlock(...args: BFChainUtil.AllArgument<ChainChannel["queryBlock"]>) {
-    const sortedChainChannelList = [...this.chainChannelSet.values()]
-      .sort((a, b) => {
-        if (b.maybeHeight === a.maybeHeight) {
-          return a.delay - b.delay;
-        }
-        return b.maybeHeight - a.maybeHeight;
-      })
-      .slice(0, 2);
-    for (const chainChannel of sortedChainChannelList) {
+  async queryBlock(
+    query: BFChainUtil.FirstArgument<DH["queryBlock"]>,
+    opts?: BFChainUtil.SecondArgument<DH["queryBlock"]>,
+  ) {
+    const parallelTaskId = `Group(${this.groupName}) queryBlock-${Date.now() + Math.random()}`;
+    const { getFreeChainChannel } = this.startParallelTask(parallelTaskId, opts?.channelFilter);
+
+    const RETRY_TIMES = 5;
+
+    const queryer = new ChainChannelQueryBlockBuilder<DH>(query, opts);
+
+    let retryTimes = 0;
+    do {
       try {
-        const result = await chainChannel.queryBlock(...args);
+        const chainChannel = await getFreeChainChannel();
+        const result = await queryer.addChainChannel(chainChannel);
         if (result.status === RESPONSE_STATUS.busy) {
+          queryer.removeChainChannelByResult(result);
           continue;
         }
+        /// 完成任务
+        queryer.finish();
+        /// 释放并发
+        this.releaseParallelTask(parallelTaskId);
         return result;
       } catch (err) {
-        // TODO: 可能要拉黑这台连接,如果它处理不了合法的请求.看情况,可能这台出现了异常,发生了分叉
-        error(err);
-        continue;
+        retryTimes += 1;
+        if (retryTimes >= RETRY_TIMES) {
+          throw err;
+        }
       }
-    }
-    throw new ResponseException("queryBlock no peer response");
+    } while (true);
   }
   async findBlock<B extends Block = CommonBlock>(
-    ...args: BFChainUtil.AllArgument<ChainChannel["queryBlock"]>
+    ...args: BFChainUtil.AllArgument<ChainChannelGroup<DH>["queryBlock"]>
   ) {
     const queryResult = await this.queryBlock(...args);
     return queryResult.someBlock && (queryResult.someBlock.block as B);
@@ -746,67 +757,3 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
   }
   //#endregion
 }
-
-/**
- * 数据请求器，确保重复的请求不会重复发起
- * @TODO 使用 ccbase 将请求参数一次性序列化好
- */
-export class ChainChannelQueryTransactionsBuilder {
-  constructor(
-    private query: BFChainCore.TransactionQueryOptionsJSON,
-    private sort?: BFChainCore.TransactionSortOptionsJSON,
-    private opts?: Omit<BFChainCore.ChannelRequestOptions, "aborter" | "timeout">,
-  ) {}
-  private aborter = new Aborter();
-  private inQueneTasks = new EasyMap<
-    BFChainCore.ChainChannel,
-    Promise<BFChainCore.QueryTransactionReturnJSON>
-  >((cc) => {
-    return cc
-      .queryTransactions(
-        this.query,
-        this.sort,
-        Object.assign({}, this.opts, {
-          aborter: this.aborter,
-          timeout: undefined,
-        }),
-      )
-      .then((ret) => {
-        if (this.inQueneTasks.has(cc)) {
-          /// 可能被移除了
-          this._retCCMap.set(ret, cc);
-        }
-        return ret;
-      });
-  });
-  private _retCCMap = new Map<BFChainCore.QueryTransactionReturnJSON, BFChainCore.ChainChannel>();
-
-  addChainChannel(
-    chainChannel: BFChainCore.ChainChannel,
-    timeout: number,
-  ): Promise<BFChainCore.QueryTransactionReturnJSON> {
-    this.inQueneTasks.forceGet(chainChannel);
-    return safePromiseRace([
-      sleep(timeout, () => {
-        throw new TimeOutException("queryTransactions({query} / {sort}) timeout.", {
-          query: this.query,
-          sort: this.sort,
-        });
-      }),
-      ...this.inQueneTasks.values(),
-    ]);
-  }
-  removeChainChannel(chainChannel: BFChainCore.ChainChannel) {
-    return this.inQueneTasks.delete(chainChannel);
-  }
-  removeChainChannelByResult(ret: BFChainCore.QueryTransactionReturnJSON) {
-    const cc = this._retCCMap.get(ret);
-    return cc ? this.removeChainChannel(cc) : false;
-  }
-  finish() {
-    return this.aborter.abort(
-      new AbortException("finish queryTransactions from other chainChannel"),
-    );
-  }
-}
-
