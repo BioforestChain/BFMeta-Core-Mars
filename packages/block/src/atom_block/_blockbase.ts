@@ -23,7 +23,7 @@ import {
   PROP_SHOULD_LTE_FIELD,
   TOO_LARGE,
 } from "@bfchain/core-util-exception";
-import { Exception, QueneEventEmitter, EasyMap, Resolve, cacheGetter } from "@bfchain/util";
+import { Exception, QueneEventEmitter, EasyMap, cacheGetter, isFlagInDev } from "@bfchain/util";
 import { Writer } from "@bfchain/protobuf";
 const {
   ArgumentIllegalException,
@@ -35,6 +35,7 @@ const {
   warn,
   ConsensusException,
 } = CoreExceptionGenerator("CONTROLLER", "_blockbase");
+const isDevGenerateBlock = isFlagInDev("generateBlock");
 
 export abstract class BlockFactory<T extends Block> {
   // abstract ERR: ReturnType<typeof ExceptionGenerator>;
@@ -80,7 +81,7 @@ export abstract class BlockFactory<T extends Block> {
     eventEmitter?: BFChainCore.GenerateBlockEventEmitter,
     config = this.config,
   ) {
-    info("begin generateBlock");
+    isDevGenerateBlock && info("begin generateBlock");
     const Function_Exception_Detail = { function: "init" };
     if (!body) {
       throw new ArgumentIllegalException(PARAM_LOST, {
@@ -101,7 +102,7 @@ export abstract class BlockFactory<T extends Block> {
       });
     }
 
-    log("before generateBlock");
+    isDevGenerateBlock && log("before generateBlock");
     eventEmitter && (await eventEmitter.emit("beforeGenerateBlock", body));
 
     if (body.height > 1) {
@@ -135,7 +136,7 @@ export abstract class BlockFactory<T extends Block> {
     // 绑定交易相关的信息
     await this.insertTransactions(block, transactions, keypair, eventEmitter);
 
-    log("before signatureBlock");
+    isDevGenerateBlock && log("before signatureBlock");
     eventEmitter && (await eventEmitter.emit("beforeSignatureBlock", block));
 
     /// 计算并赋值区块大小
@@ -162,9 +163,9 @@ export abstract class BlockFactory<T extends Block> {
       );
     }
 
-    log("before generatedBlock");
+    isDevGenerateBlock && log("before generatedBlock");
     eventEmitter && (await eventEmitter.emit("generatedBlock", block));
-    info("finish generateBlock");
+    isDevGenerateBlock && info("finish generateBlock");
     return block;
   }
 
@@ -215,9 +216,10 @@ export abstract class BlockFactory<T extends Block> {
       this.statisticsHelper.bindApplyTransactionEventEmiter(eventEmitter, statisticsInfo);
       /**用于快速地计算发送者的交易量 */
       const tranSenderCountMap = new EasyMap<string, number>((address) => 0);
-      info("begin insertTransactions");
+      isDevGenerateBlock && info("begin insertTransactions");
       for await (const tranItem of trsGenerator) {
-        log("insert transaction: %d / %d", tranItem.index + 1, block.numberOfTransactions);
+        isDevGenerateBlock &&
+          log("insert transaction: %d / %d", tranItem.index + 1, block.numberOfTransactions);
         try {
           if (tranItem.index >= MAX_TRANSACTION_SIZE) {
             throw new OutOfRangeException(OUT_OF_RANGE, {
@@ -351,7 +353,7 @@ export abstract class BlockFactory<T extends Block> {
           throw err;
         }
       }
-      info("finish insertTransactions");
+      isDevGenerateBlock && info("finish insertTransactions");
 
       block.statisticInfo = statisticsInfo.toModel();
       block.payloadHashBuffer = await payloadHash.digest();
