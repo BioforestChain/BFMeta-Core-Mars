@@ -1,5 +1,10 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
-import { BeExchangeSpecialAssetTransaction, RANGE_TYPE } from "@bfchain/core-model";
+import {
+  BeExchangeSpecialAssetTransaction,
+  RANGE_TYPE,
+  EXCHANGE_DIRECTION,
+  SPECIAL_ASSET_TYPE,
+} from "@bfchain/core-model";
 import { Injectable } from "@bfchain/util";
 import {
   CoreExceptionGenerator,
@@ -47,13 +52,67 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
         ...Function_Exception_Detail,
       });
     }
-    await this.logicVerify(
+
+    const { sender, recipient } = await this.logicVerify(
       transaction,
       currentBlockHeight,
       accountsInfo,
       accountGetterHelper,
       transactionGetterHelper,
     );
+
+    const cloneAccountsAssets = {
+      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
+    };
+    const cloneAccountsInfo = {
+      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountInfo),
+    };
+    if (recipient && recipient.accountInfo && recipient.accountAssets) {
+      const address = recipient.accountInfo.address;
+      cloneAccountsAssets[address] = this.helperLogicVerifier.deepClone(recipient.accountAssets);
+      cloneAccountsInfo[address] = this.helperLogicVerifier.deepClone(recipient.accountInfo);
+    }
+
+    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction);
+
+    this.eventLogicVerifier.listenEventAsset(cloneAccountsAssets, transaction);
+
+    this.eventLogicVerifier.listenEventUnfrozenAsset(
+      transaction,
+      currentBlockHeight,
+      accountGetterHelper,
+      transactionGetterHelper,
+    );
+
+    const {
+      exchangeDirection,
+      exchangeAssetType,
+    } = transaction.asset.beExchangeSpecialAsset.exchangeSpecialAsset;
+    if (exchangeDirection === EXCHANGE_DIRECTION.ASSET_FROM_RECIPIENT) {
+      this.eventLogicVerifier.listenEventUnfrozenAsset(
+        transaction,
+        currentBlockHeight,
+        accountGetterHelper,
+        transactionGetterHelper,
+      );
+    } else {
+      this.eventLogicVerifier.listenEventAsset(cloneAccountsAssets, transaction);
+    }
+
+    if (exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID) {
+      this.eventLogicVerifier.listenEventPurchaseDAppid(
+        transaction,
+        currentBlockHeight,
+        accountGetterHelper,
+      );
+    } else {
+      this.eventLogicVerifier.listenEventPurchaseLocationName(
+        currentBlockHeight,
+        accountGetterHelper,
+      );
+    }
+
+    await this.eventLogicVerifier.awaitEventResult(transaction);
 
     const beExchangeSpecialAsset = transaction.asset.beExchangeSpecialAsset;
     const { transactionSignature } = beExchangeSpecialAsset;

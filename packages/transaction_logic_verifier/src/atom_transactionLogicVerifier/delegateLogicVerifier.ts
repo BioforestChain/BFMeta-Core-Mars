@@ -5,9 +5,10 @@ import {
   CoreExceptionGenerator,
   INVALID_ACCOUNT_ALIAS,
   SET_USERANME_AT_FIRST,
+  NOT_EXIST,
 } from "@bfchain/core-util-exception";
 
-const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "DelegateLogicVerifier");
+const { ConsensusException,NoFoundException } = CoreExceptionGenerator("VERIFIER", "DelegateLogicVerifier");
 
 @Injectable()
 export class DelegateLogicVerifier extends TransactionLogicVerifier {
@@ -28,13 +29,36 @@ export class DelegateLogicVerifier extends TransactionLogicVerifier {
     const Function_Exception_Detail = {
       function: "verify",
     } as const;
-    const { sender } = await this.logicVerify(
+
+    if (!transactionGetterHelper) {
+      throw new NoFoundException(NOT_EXIST, {
+        prop: "transactionGetterHelper",
+        target: "moduleStroge",
+        ...Function_Exception_Detail,
+      });
+    }
+   
+    const { sender, curRound } = await this.logicVerify(
       transaction,
       currentBlockHeight,
       accountsInfo,
       accountGetterHelper,
       transactionGetterHelper,
     );
+
+    const cloneAccountsAssets = {
+      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
+    };
+    const cloneAccountsInfo = {
+      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountInfo),
+    };
+
+    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction);
+
+    this.eventLogicVerifier.listenEventRegisterToDelegate(cloneAccountsInfo, curRound, transactionGetterHelper);
+
+    await this.eventLogicVerifier.awaitEventResult(transaction);
+    
     const accountInfo = sender.accountInfo;
     if (!accountInfo.username) {
       throw new ConsensusException(SET_USERANME_AT_FIRST, {

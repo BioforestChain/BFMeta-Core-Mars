@@ -68,13 +68,31 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
       });
     }
 
-    await this.logicVerify(
+    const { sender, recipient } = await this.logicVerify(
       transaction,
       currentBlockHeight,
       accountsInfo,
       accountGetterHelper,
       transactionGetterHelper,
     );
+
+    const cloneAccountsAssets = {
+      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
+    };
+    const cloneAccountsInfo = {
+      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountInfo),
+    };
+    if (recipient && recipient.accountInfo && recipient.accountAssets) {
+      const address = recipient.accountInfo.address;
+      cloneAccountsAssets[address] = this.helperLogicVerifier.deepClone(recipient.accountAssets);
+      cloneAccountsInfo[address] = this.helperLogicVerifier.deepClone(recipient.accountInfo);
+    }
+
+    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction);
+
+    this.eventLogicVerifier.listenEventFrozenAsset(cloneAccountsAssets, transaction);
+
+    await this.eventLogicVerifier.awaitEventResult(transaction);
 
     return true;
   }

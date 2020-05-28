@@ -39,13 +39,7 @@ export class MarkLogicVerifier extends TransactionLogicVerifier {
         ...Function_Exception_Detail,
       });
     }
-    await this.logicVerify(
-      transaction,
-      currentBlockHeight,
-      accountsInfo,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
+
     const mark = transaction.asset.mark;
     const { sourceChainMagic, dappid, sourceChainName } = mark.dapp;
     await this.isDAppidValid(
@@ -56,17 +50,41 @@ export class MarkLogicVerifier extends TransactionLogicVerifier {
       accountGetterHelper,
     );
 
+    const { sender, recipient } = await this.logicVerify(
+      transaction,
+      currentBlockHeight,
+      accountsInfo,
+      accountGetterHelper,
+      transactionGetterHelper,
+    );
+
+    const cloneAccountsAssets = {
+      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
+    };
+    const cloneAccountsInfo = {
+      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountInfo),
+    };
+    if (recipient && recipient.accountInfo && recipient.accountAssets) {
+      const address = recipient.accountInfo.address;
+      cloneAccountsAssets[address] = this.helperLogicVerifier.deepClone(recipient.accountAssets);
+      cloneAccountsInfo[address] = this.helperLogicVerifier.deepClone(recipient.accountInfo);
+    }
+
+    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction);
+
+    await this.eventLogicVerifier.awaitEventResult(transaction);
+
     return true;
   }
 
   /**
    * dappid 是否已经存在
-   * 
-   * @param magic 
-   * @param chainName 
-   * @param dappid 
-   * @param currentBlockHeight 
-   * @param accountGetterHelper 
+   *
+   * @param magic
+   * @param chainName
+   * @param dappid
+   * @param currentBlockHeight
+   * @param accountGetterHelper
    */
   async isDAppidValid(
     magic: string,
@@ -99,8 +117,8 @@ export class MarkLogicVerifier extends TransactionLogicVerifier {
         be_compare_prop: "sourceChainName",
         to_target: "mark",
         be_target: "blockChain dapp",
-        ...Function_Exception_Detail
-      })
+        ...Function_Exception_Detail,
+      });
     }
   }
 }

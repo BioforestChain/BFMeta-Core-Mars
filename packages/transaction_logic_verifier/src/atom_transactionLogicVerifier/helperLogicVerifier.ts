@@ -18,6 +18,22 @@ export class HelperLogicVerifier {
   @Inject("accountGetterHelper", { optional: true, dynamics: true })
   protected accountGetterHelper?: BFChainCore.AccountGetterHelperInterface;
 
+  deepClone<T>(obj: T): T {
+    const result = Array.isArray(obj) ? ([] as any) : ({} as T);
+    if (typeof obj === "object") {
+      for (const key in obj) {
+        if (obj[key] && typeof obj[key] === "object") {
+          result[key] = this.deepClone(obj[key]);
+        } else {
+          result[key] = obj[key];
+        }
+      }
+      return result;
+    } else {
+      return obj;
+    }
+  }
+
   /**
    * 账户是否持有除链资产外其他资产
    *

@@ -18,13 +18,26 @@ export class RejectVoteLogicVerifier extends TransactionLogicVerifier {
     accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    await this.logicVerify(
+    const { sender } = await this.logicVerify(
       transaction,
       currentBlockHeight,
       accountsInfo,
       accountGetterHelper,
       transactionGetterHelper,
     );
+
+    const cloneAccountsAssets = {
+      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
+    };
+    const cloneAccountsInfo = {
+      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountInfo),
+    };
+
+    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction);
+
+    this.eventLogicVerifier.listenEventRejectVote(cloneAccountsInfo);
+
+    await this.eventLogicVerifier.awaitEventResult(transaction);
 
     return true;
   }

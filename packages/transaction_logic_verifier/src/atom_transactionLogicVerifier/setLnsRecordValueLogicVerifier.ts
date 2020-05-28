@@ -1,6 +1,12 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import type { SetLnsRecordValueTransaction } from "@bfchain/core-model";
 import { Injectable } from "@bfchain/util";
+import { CoreExceptionGenerator, NOT_EXIST } from "@bfchain/core-util-exception";
+const { NoFoundException } = CoreExceptionGenerator(
+  "VERIFIER",
+  "MarkLogicVerifier",
+);
+
 
 @Injectable()
 export class SetLnsRecordValueLogicVerifier extends TransactionLogicVerifier {
@@ -18,13 +24,34 @@ export class SetLnsRecordValueLogicVerifier extends TransactionLogicVerifier {
     accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    await this.logicVerify(
+    const Function_Exception_Detail = {
+      function: "verify",
+    } as const;
+    if (!accountGetterHelper) {
+      throw new NoFoundException(NOT_EXIST, {
+        prop: "accountGetterHelper",
+        target: "moduleStroge",
+        ...Function_Exception_Detail,
+      });
+    }
+    
+    const { sender } = await this.logicVerify(
       transaction,
       currentBlockHeight,
       accountsInfo,
       accountGetterHelper,
       transactionGetterHelper,
     );
+
+    const cloneAccountsAssets = {
+      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
+    };
+
+    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction);
+
+    this.eventLogicVerifier.listenEventSetLnsRecordValue(currentBlockHeight, accountGetterHelper);
+
+    await this.eventLogicVerifier.awaitEventResult(transaction);
 
     return true;
   }

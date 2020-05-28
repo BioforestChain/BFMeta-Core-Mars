@@ -1,11 +1,6 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import type { DAppPurchasingTransaction } from "@bfchain/core-model";
 import { Injectable } from "@bfchain/util";
-import { CoreExceptionGenerator, NOT_EXIST } from "@bfchain/core-util-exception";
-const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
-  "VERIFIER",
-  "DAppPurchasingLogicVerifier",
-);
 
 @Injectable()
 export class DAppPurchasingLogicVerifier extends TransactionLogicVerifier {
@@ -23,23 +18,23 @@ export class DAppPurchasingLogicVerifier extends TransactionLogicVerifier {
     accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const Function_Exception_Detail = {
-      function: "verify",
-    } as const;
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
-    await this.logicVerify(
+    const { sender } = await this.logicVerify(
       transaction,
       currentBlockHeight,
       accountsInfo,
       accountGetterHelper,
       transactionGetterHelper,
     );
+
+    const cloneAccountsAssets = {
+      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
+    };
+
+    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction);
+
+    this.eventLogicVerifier.listenEventAsset(cloneAccountsAssets, transaction);
+
+    await this.eventLogicVerifier.awaitEventResult(transaction);
 
     return true;
   }

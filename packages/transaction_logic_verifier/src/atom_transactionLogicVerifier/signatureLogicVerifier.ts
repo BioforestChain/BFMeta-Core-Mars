@@ -18,7 +18,7 @@ export class SignatureLogicVerifier extends TransactionLogicVerifier {
     accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    await this.logicVerify(
+    const { sender } = await this.logicVerify(
       transaction,
       currentBlockHeight,
       accountsInfo,
@@ -26,6 +26,15 @@ export class SignatureLogicVerifier extends TransactionLogicVerifier {
       transactionGetterHelper,
     );
 
+    const cloneAccountsAssets = {
+      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
+    };
+
+    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction);
+
+    this.eventLogicVerifier.listenEventSetSecondPublicKey();
+
+    await this.eventLogicVerifier.awaitEventResult(transaction);
     return true;
   }
 }

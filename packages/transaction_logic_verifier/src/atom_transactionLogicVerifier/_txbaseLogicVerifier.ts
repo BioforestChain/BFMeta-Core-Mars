@@ -141,15 +141,6 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
         this.checkRecipientAccountStatus(recipient.accountInfo);
       }
     }
-    // 事件逻辑校验
-    await this.eventLogicVerifier.eventLogicVerifier(
-      transaction,
-      sender,
-      recipient,
-      currentBlockHeight,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
     // 校验交易的最大字节数
     this.checkTrsMaxBytes(transaction.getBytes().length);
     // 校验交易的 dappid
@@ -161,7 +152,6 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     );
     // 校验交易的 lns
     await this.checkLocationName(transaction, currentBlockHeight, accountGetterHelper);
-
     // 校验 pow
     if (currentBlockHeight > this.configHelper.powOfWorkExemptionBlocks) {
       await this.checkTransactionPowOfWork(
@@ -172,7 +162,9 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       );
     }
 
-    return { sender, recipient };
+    const curRound = this.blockHelper.calcRoundByHeight(currentBlockHeight);
+
+    return { sender, recipient, curRound };
   }
 
   /**

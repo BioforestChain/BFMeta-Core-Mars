@@ -29,17 +29,37 @@ export class ToExchangeAssetLogicVerifier extends TransactionLogicVerifier {
     accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    // FIXME: no need to verify
+    const Function_Exception_Detail = {
+      function: "verify",
+    } as const;
+    if (!accountGetterHelper) {
+      throw new NoFoundException(NOT_EXIST, {
+        prop: "accountGetterHelper",
+        target: "moduleStroge",
+        ...Function_Exception_Detail,
+      });
+    }
+
     const toExchangeAsset = transaction.asset.toExchangeAsset;
     await this.isExchangeAssetAlreadyExist(toExchangeAsset, accountGetterHelper);
 
-    await this.logicVerify(
+    const { sender } = await this.logicVerify(
       transaction,
       currentBlockHeight,
       accountsInfo,
       accountGetterHelper,
       transactionGetterHelper,
     );
+
+    const cloneAccountsAssets = {
+      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
+    };
+
+    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction);
+
+    this.eventLogicVerifier.listenEventFrozenAsset(cloneAccountsAssets, transaction);
+
+    await this.eventLogicVerifier.awaitEventResult(transaction);
 
     return true;
   }
@@ -51,18 +71,12 @@ export class ToExchangeAssetLogicVerifier extends TransactionLogicVerifier {
    */
   async isExchangeAssetAlreadyExist(
     toExchangeAssetAsset: ToExchangeAssetModel,
-    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "isExchangeAssetAlreadyExist",
     } as const;
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
+
     const {
       toExchangeSource,
       toExchangeChainName,

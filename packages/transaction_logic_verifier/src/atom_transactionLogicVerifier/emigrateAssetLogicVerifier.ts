@@ -43,13 +43,7 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
         ...Function_Exception_Detail,
       });
     }
-    const { sender } = await this.logicVerify(
-      transaction,
-      currentBlockHeight,
-      accountsInfo,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
+
     const {
       sourceChainMagic,
       assetType,
@@ -107,6 +101,32 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
         });
       }
     }
+
+    const { sender, recipient } = await this.logicVerify(
+      transaction,
+      currentBlockHeight,
+      accountsInfo,
+      accountGetterHelper,
+      transactionGetterHelper,
+    );
+
+    const cloneAccountsAssets = {
+      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
+    };
+    const cloneAccountsInfo = {
+      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountInfo),
+    };
+    if (recipient && recipient.accountInfo && recipient.accountAssets) {
+      const address = recipient.accountInfo.address;
+      cloneAccountsAssets[address] = this.helperLogicVerifier.deepClone(recipient.accountAssets);
+      cloneAccountsInfo[address] = this.helperLogicVerifier.deepClone(recipient.accountInfo);
+    }
+
+    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction);
+
+    this.eventLogicVerifier.listenEventFrozenAccount(cloneAccountsInfo);
+
+    await this.eventLogicVerifier.awaitEventResult(transaction);
 
     const assets = sender.accountAssets;
 

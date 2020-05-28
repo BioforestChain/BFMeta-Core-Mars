@@ -1,16 +1,12 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import type { SignForAssetTransaction, AccountSignatureModel } from "@bfchain/core-model";
-import { Injectable, Inject, parseHexToArrayBuffer } from "@bfchain/util";
+import { Injectable, Inject } from "@bfchain/util";
 import {
   CoreExceptionGenerator,
   NOT_EXIST,
   NOT_MATCH,
   CAN_NOT_CARRY_SECOND_PUBLICKEY,
   CAN_NOT_SECONDARY_TRANSACTION,
-  SHOULD_BE,
-  PROP_LENGTH_SHOULD_LTE_FIELD,
-  SHOULD_NOT_DUPLICATE,
-  PROP_IS_INVALID,
   PROP_IS_REQUIRE,
   CAN_NOT_CARRY_SECOND_SIGNATURE,
 } from "@bfchain/core-util-exception";
@@ -40,6 +36,13 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
     const Function_Exception_Detail = {
       function: "verify",
     } as const;
+    if (!accountGetterHelper) {
+      throw new NoFoundException(NOT_EXIST, {
+        prop: "accountGetterHelper",
+        target: "moduleStroge",
+        ...Function_Exception_Detail,
+      });
+    }
     if (!transactionGetterHelper) {
       throw new NoFoundException(NOT_EXIST, {
         prop: "transactionGetterHelper",
@@ -47,13 +50,6 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
         ...Function_Exception_Detail,
       });
     }
-    await this.logicVerify(
-      transaction,
-      currentBlockHeight,
-      accountsInfo,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
 
     const { transactionSignature, thirdPartySignatures } = transaction.asset.signForAsset;
 
@@ -71,6 +67,37 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
     this.isValidRecipientId(transaction, trs);
     await this.isValidThirdPartySignatures(thirdPartySignatures, accountGetterHelper);
     await this.isDependentTransactionMatch(transaction, trs);
+
+    const { sender, recipient } = await this.logicVerify(
+      transaction,
+      currentBlockHeight,
+      accountsInfo,
+      accountGetterHelper,
+      transactionGetterHelper,
+    );
+
+    const cloneAccountsAssets = {
+      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
+    };
+    const cloneAccountsInfo = {
+      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountInfo),
+    };
+    if (recipient && recipient.accountInfo && recipient.accountAssets) {
+      const address = recipient.accountInfo.address;
+      cloneAccountsAssets[address] = this.helperLogicVerifier.deepClone(recipient.accountAssets);
+      cloneAccountsInfo[address] = this.helperLogicVerifier.deepClone(recipient.accountInfo);
+    }
+
+    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction);
+
+    this.eventLogicVerifier.listenEventUnfrozenAsset(
+      transaction,
+      currentBlockHeight,
+      accountGetterHelper,
+      transactionGetterHelper,
+    );
+
+    await this.eventLogicVerifier.awaitEventResult(transaction);
 
     return true;
   }

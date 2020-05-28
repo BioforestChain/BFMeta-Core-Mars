@@ -3,7 +3,6 @@ import type { VoteTransaction } from "@bfchain/core-model";
 import { Injectable } from "@bfchain/util";
 import {
   CoreExceptionGenerator,
-  NOT_EXIST,
   ACCOUNT_IS_NOT_AN_DELEGATE,
   DELEGATE_IS_ALREADY_REJECT_VOTE,
   NOT_FOUND,
@@ -33,20 +32,40 @@ export class VoteLogicVerifier extends TransactionLogicVerifier {
     const Function_Exception_Detail = {
       function: "verify",
     } as const;
-    const { recipient } = await this.logicVerify(
+
+    const { sender, recipient, curRound } = await this.logicVerify(
       transaction,
       currentBlockHeight,
       accountsInfo,
       accountGetterHelper,
       transactionGetterHelper,
     );
+
+    const cloneAccountsAssets = {
+      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
+    };
+    const cloneAccountsInfo = {
+      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountInfo),
+    };
+    if (recipient && recipient.accountInfo && recipient.accountAssets) {
+      const address = recipient.accountInfo.address;
+      cloneAccountsAssets[address] = this.helperLogicVerifier.deepClone(recipient.accountAssets);
+      cloneAccountsInfo[address] = this.helperLogicVerifier.deepClone(recipient.accountInfo);
+    }
+
+    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction);
+
+    this.eventLogicVerifier.listenEventVoteEquity(cloneAccountsInfo, transaction, curRound);
+
+    await this.eventLogicVerifier.awaitEventResult(transaction);
+
     if (!recipient) {
       throw new NoFoundException(NOT_FOUND, {
         prop: `recipient ${transaction.recipientId}`,
         ...Function_Exception_Detail,
       });
     }
-    await this.isVoteForAcceptVoteDelegate(recipient, accountGetterHelper);
+    await this.isVoteForAcceptVoteDelegate(recipient);
 
     return true;
   }
@@ -55,22 +74,12 @@ export class VoteLogicVerifier extends TransactionLogicVerifier {
    * 是否投给了接收投票的受托人
    *
    * @param recipient
-   * @param accountGetterHelper
    */
-  async isVoteForAcceptVoteDelegate(
-    recipient: BFChainCore.AccountInfoAndAssets,
-    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
-  ) {
+  async isVoteForAcceptVoteDelegate(recipient: BFChainCore.AccountInfoAndAssets) {
     const Function_Exception_Detail = {
       function: "isVoteForAcceptVoteDelegate",
     } as const;
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
+
     const accountInfo = recipient.accountInfo;
 
     if (!accountInfo.isDelegate) {
