@@ -38,6 +38,7 @@ export class UsernameLogicVerifier extends TransactionLogicVerifier {
         ...Function_Exception_Detail,
       });
     }
+
     const { sender } = await this.logicVerify(
       transaction,
       currentBlockHeight,
@@ -45,6 +46,16 @@ export class UsernameLogicVerifier extends TransactionLogicVerifier {
       accountGetterHelper,
       transactionGetterHelper,
     );
+
+    const cloneAccountsAssets = {
+      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
+    };
+
+    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction);
+
+    this.eventLogicVerifier.listenEventSetUsername(accountGetterHelper);
+
+    await this.eventLogicVerifier.awaitEventResult(transaction);
 
     if (sender.accountInfo.username) {
       throw new ConsensusException(ACCOUNT_ALREADY_HAVE_USERNAME, {

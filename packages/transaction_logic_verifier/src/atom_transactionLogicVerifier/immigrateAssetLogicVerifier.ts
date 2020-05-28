@@ -53,14 +53,7 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
         ...Function_Exception_Detail,
       });
     }
-    
-    await this.logicVerify(
-      transaction,
-      currentBlockHeight,
-      accountsInfo,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
+
     const { emigrateAssetTransaction, genesisDelegateSignature } = transaction.asset.immigrateAsset;
 
     const { publicKey, secondPublicKey, signSignature } = genesisDelegateSignature;
@@ -149,6 +142,24 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
         ...Function_Exception_Detail,
       });
     }
+
+    const { sender } = await this.logicVerify(
+      transaction,
+      currentBlockHeight,
+      accountsInfo,
+      accountGetterHelper,
+      transactionGetterHelper,
+    );
+
+    const cloneAccountsAssets = {
+      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
+    };
+    
+    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction);
+
+    this.eventLogicVerifier.listenEventAsset(cloneAccountsAssets, transaction);
+
+    await this.eventLogicVerifier.awaitEventResult(transaction);
 
     return true;
   }

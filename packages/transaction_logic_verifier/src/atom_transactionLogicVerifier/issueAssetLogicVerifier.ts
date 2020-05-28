@@ -2,6 +2,8 @@ import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import type { IssueAssetTransaction } from "@bfchain/core-model";
 import { Injectable, Inject } from "@bfchain/util";
 import { AccountBaseHelper, TransactionHelper } from "@bfchain/core-helper";
+import { CoreExceptionGenerator, NOT_EXIST } from "@bfchain/core-util-exception";
+const { NoFoundException } = CoreExceptionGenerator("VERIFIER", "ImmigrateAssetLogicVerifier");
 
 @Injectable()
 export class IssueAssetLogicVerifier extends TransactionLogicVerifier {
@@ -22,13 +24,56 @@ export class IssueAssetLogicVerifier extends TransactionLogicVerifier {
     accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    await this.logicVerify(
+    const Function_Exception_Detail = {
+      function: "verify",
+    } as const;
+    if (!accountGetterHelper) {
+      throw new NoFoundException(NOT_EXIST, {
+        prop: "accountGetterHelper",
+        target: "moduleStroge",
+        ...Function_Exception_Detail,
+      });
+    }
+    if (!transactionGetterHelper) {
+      throw new NoFoundException(NOT_EXIST, {
+        prop: "transactionGetterHelper",
+        target: "moduleStroge",
+        ...Function_Exception_Detail,
+      });
+    }
+
+    const { sender, recipient } = await this.logicVerify(
       transaction,
       currentBlockHeight,
       accountsInfo,
       accountGetterHelper,
       transactionGetterHelper,
     );
+
+    const cloneAccountsAssets = {
+      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
+    };
+    const cloneAccountsInfo = {
+      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountInfo),
+    };
+    if (recipient && recipient.accountInfo && recipient.accountAssets) {
+      const address = recipient.accountInfo.address;
+      cloneAccountsAssets[address] = this.helperLogicVerifier.deepClone(recipient.accountAssets);
+      cloneAccountsInfo[address] = this.helperLogicVerifier.deepClone(recipient.accountInfo);
+    }
+
+    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction);
+
+    this.eventLogicVerifier.listenEventFrozenAccount(cloneAccountsInfo);
+
+    this.eventLogicVerifier.listenEventIssueAsset(
+      cloneAccountsAssets,
+      transaction,
+      accountGetterHelper,
+      transactionGetterHelper,
+    );
+
+    await this.eventLogicVerifier.awaitEventResult(transaction);
 
     return true;
   }

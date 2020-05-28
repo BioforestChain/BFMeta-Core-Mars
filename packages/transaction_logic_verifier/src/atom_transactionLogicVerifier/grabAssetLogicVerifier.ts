@@ -34,6 +34,13 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
     const Function_Exception_Detail = {
       function: "verify",
     } as const;
+    if (!accountGetterHelper) {
+      throw new NoFoundException(NOT_EXIST, {
+        prop: "accountGetterHelper",
+        target: "moduleStroge",
+        ...Function_Exception_Detail,
+      });
+    }
     if (!transactionGetterHelper) {
       throw new NoFoundException(NOT_EXIST, {
         prop: "transactionGetterHelper",
@@ -41,14 +48,6 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
         ...Function_Exception_Detail,
       });
     }
-
-    await this.logicVerify(
-      transaction,
-      currentBlockHeight,
-      accountsInfo,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
 
     const grabAsset = transaction.asset.grabAsset;
 
@@ -73,6 +72,37 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
     this.isBlockSignatureMatch(transaction, trsWithBlockSign.blockSignature);
     this.isDependentTransactionMatch(transaction, trs);
     await this.isValidAmount(transaction);
+
+    const { sender, recipient } = await this.logicVerify(
+      transaction,
+      currentBlockHeight,
+      accountsInfo,
+      accountGetterHelper,
+      transactionGetterHelper,
+    );
+
+    const cloneAccountsAssets = {
+      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
+    };
+    const cloneAccountsInfo = {
+      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountInfo),
+    };
+    if (recipient && recipient.accountInfo && recipient.accountAssets) {
+      const address = recipient.accountInfo.address;
+      cloneAccountsAssets[address] = this.helperLogicVerifier.deepClone(recipient.accountAssets);
+      cloneAccountsInfo[address] = this.helperLogicVerifier.deepClone(recipient.accountInfo);
+    }
+
+    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction);
+
+    this.eventLogicVerifier.listenEventUnfrozenAsset(
+      transaction,
+      currentBlockHeight,
+      accountGetterHelper,
+      transactionGetterHelper,
+    );
+
+    await this.eventLogicVerifier.awaitEventResult(transaction);
 
     return true;
   }
@@ -247,19 +277,11 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
    */
   async checkSecondaryTransaction(
     transaction: GrabAssetTransaction,
-    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
+    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "checkSecondaryTransaction",
     } as const;
-
-    if (!transactionGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "transactionGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
 
     const isSecondary = await transactionGetterHelper.checkSecondaryTransaction({
       senderId: transaction.senderId,

@@ -1,5 +1,9 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
-import { ToExchangeSpecialAssetTransaction, EXCHANGE_DIRECTION } from "@bfchain/core-model";
+import {
+  ToExchangeSpecialAssetTransaction,
+  EXCHANGE_DIRECTION,
+  SPECIAL_ASSET_TYPE,
+} from "@bfchain/core-model";
 import { Injectable } from "@bfchain/util";
 import {
   CoreExceptionGenerator,
@@ -50,6 +54,7 @@ export class ToExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
       beExchangeChainName,
       beExchangeAsset,
       exchangeDirection,
+      exchangeAssetType,
     } = toExchangeSpecialAssetAsset;
     if (exchangeDirection === EXCHANGE_DIRECTION.ASSET_FROM_SENDER) {
       // 特殊资产来自发起账户，则要交换的 数字资产必须存在
@@ -101,13 +106,33 @@ export class ToExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
       });
     }
 
-    await this.logicVerify(
+    const { sender } = await this.logicVerify(
       transaction,
       currentBlockHeight,
       accountsInfo,
       accountGetterHelper,
       transactionGetterHelper,
     );
+
+    const cloneAccountsAssets = {
+      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
+    };
+
+    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction);
+    if (exchangeDirection === EXCHANGE_DIRECTION.ASSET_FROM_RECIPIENT) {
+      this.eventLogicVerifier.listenEventFrozenAsset(cloneAccountsAssets, transaction);
+    } else {
+      if (exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID) {
+        this.eventLogicVerifier.listenEventSaleDAppid(currentBlockHeight, accountGetterHelper);
+      } else {
+        this.eventLogicVerifier.listenEventSaleLocationName(
+          currentBlockHeight,
+          accountGetterHelper,
+        );
+      }
+    }
+
+    await this.eventLogicVerifier.awaitEventResult(transaction);
 
     return true;
   }

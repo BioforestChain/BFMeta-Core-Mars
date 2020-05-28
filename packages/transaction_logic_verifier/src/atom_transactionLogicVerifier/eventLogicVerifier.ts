@@ -27,7 +27,6 @@ import {
   ACCOUNT_NOT_LOCATION_NAME_POSSESSOR,
   LOCATION_NAME_ALREADY_FROZEN,
   ONLY_TOP_LEVEL_LOCATION_NAME_CAN_EXCHANGE,
-  POSSESS_ASSET_EXCEPT_CHAIN_ASSET,
   CAN_NOT_DELETE_LOCATION_NAME,
   SET_LOCATION_NAME_MANAGER_FIELD,
   SET_LOCATION_NAME_RECORD_VALUE_FIELD,
@@ -65,40 +64,17 @@ export class EventLogicVerifier {
   @Inject("bfchain-core:TransactionCore")
   protected transactionCore!: import("@bfchain/core-transaction").TransactionCore;
 
-  private deepClone<T>(obj: T): T {
-    const result = Array.isArray(obj) ? ([] as any) : ({} as T);
-    if (typeof obj === "object") {
-      for (const key in obj) {
-        if (obj[key] && typeof obj[key] === "object") {
-          result[key] = this.deepClone(obj[key]);
-        } else {
-          result[key] = obj[key];
-        }
-      }
-      return result;
-    } else {
-      return obj;
+  private __event: BFChainCore.ApplyTransactionEventEmitter | undefined;
+
+  get event() {
+    if (!this.__event) {
+      this.__event = new QueneEventEmitter();
     }
+    return this.__event;
   }
 
-  /**
-   * 账户是否持有除链资产外其他资产
-   *
-   * @param assets
-   */
-  private isPossessAssetExceptForChainAsset(assets: BFChainCore.AccountAssets) {
-    for (const magic in assets) {
-      const magicAssets = assets[magic];
-      for (const assetType in magicAssets) {
-        if (assetType !== this.configHelper.assetType) {
-          if (magicAssets[assetType].assetNumber > BigInt(0)) {
-            throw new ConsensusException(POSSESS_ASSET_EXCEPT_CHAIN_ASSET, {
-              function: "isPossessAssetExceptForChainAsset",
-            });
-          }
-        }
-      }
-    }
+  private destoryEvent() {
+    this.__event = undefined;
   }
 
   private addRecord(
@@ -131,52 +107,16 @@ export class EventLogicVerifier {
     }
   }
 
-  // 事件逻辑校验
-  async eventLogicVerifier(
+  listenEventFee(
+    accountsAssets: { [asddress: string]: BFChainCore.AccountAssets },
     transaction: BFChainCore.Transaction,
-    sender: BFChainCore.AccountInfoAndAssets,
-    recipient: BFChainCore.AccountInfoAndAssets | undefined,
-    currentBlockHeight: number,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
-      function: "eventLogicVerifier",
+      function: "listenEventFee",
     } as const;
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
-    if (!transactionGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "transactionGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
-    const accountsAssets = {
-      [transaction.senderId]: this.deepClone(sender.accountAssets),
-    };
-    const accountsInfo = {
-      [transaction.senderId]: this.deepClone(sender.accountInfo),
-    };
-    if (recipient && recipient.accountInfo && recipient.accountAssets) {
-      const address = recipient.accountInfo.address;
-      accountsAssets[address] = this.deepClone(recipient.accountAssets);
-      accountsInfo[address] = this.deepClone(recipient.accountInfo);
-    }
-
-    const curRound = this.blockHelper.calcRoundByHeight(currentBlockHeight);
-
-    const event = new QueneEventEmitter<BFChainCore.ApplyTransactionEventMap>();
-    // 交易的总手续费
-    let trsFee = BigInt(0);
 
     // 扣除手续费
-    event.on(
+    this.event.on(
       "fee",
       ({ applyInfo }, next) => {
         // 手续费扣除的只能是链资产
@@ -210,7 +150,6 @@ export class EventLogicVerifier {
         const hodingAsset = accountsAssets[address][magic][assetType];
         const remainAsset = hodingAsset.assetNumber;
         hodingAsset.assetNumber += fee;
-        trsFee += fee;
         if (hodingAsset.assetNumber < BigInt(0)) {
           throw new ConsensusException(ASSET_NOT_ENOUGH, {
             reason: `Transaction signature: ${transaction.signature} address: ${address} magic ${
@@ -227,9 +166,18 @@ export class EventLogicVerifier {
       },
       { taskname: `fee` },
     );
+  }
+
+  listenEventAsset(
+    accountsAssets: { [asddress: string]: BFChainCore.AccountAssets },
+    transaction: BFChainCore.Transaction,
+  ) {
+    const Function_Exception_Detail = {
+      function: "eventLogicVerifier",
+    } as const;
 
     // 扣除资产
-    event.on(
+    this.event.on(
       "asset",
       ({ applyInfo }, next) => {
         const { magic, assetType } = applyInfo.assetInfo;
@@ -261,9 +209,18 @@ export class EventLogicVerifier {
       },
       { taskname: `asset` },
     );
+  }
+
+  listenEventFrozenAsset(
+    accountsAssets: { [asddress: string]: BFChainCore.AccountAssets },
+    transaction: BFChainCore.Transaction,
+  ) {
+    const Function_Exception_Detail = {
+      function: "eventLogicVerifier",
+    } as const;
 
     // 冻结资产
-    event.on(
+    this.event.on(
       "frozenAsset",
       async ({ applyInfo }, next) => {
         const { magic, assetType } = applyInfo.assetInfo;
@@ -295,9 +252,20 @@ export class EventLogicVerifier {
       },
       { taskname: `frozenAsset` },
     );
+  }
+
+  listenEventUnfrozenAsset(
+    transaction: BFChainCore.Transaction,
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
+  ) {
+    const Function_Exception_Detail = {
+      function: "eventLogicVerifier",
+    } as const;
 
     // 解冻资产
-    event.on(
+    this.event.on(
       "unfrozenAsset",
       async ({ applyInfo }, next) => {
         const { assetInfo, frozenIdBuffer, amount: spendAsset } = applyInfo;
@@ -377,9 +345,19 @@ export class EventLogicVerifier {
       },
       { taskname: `unfrozenAsset` },
     );
+  }
+
+  listenEventVoteEquity(
+    accountsInfo: { [address: string]: BFChainCore.AccountInfo },
+    transaction: BFChainCore.Transaction,
+    curRound: number,
+  ) {
+    const Function_Exception_Detail = {
+      function: "eventLogicVerifier",
+    } as const;
 
     // 扣除权益
-    event.on(
+    this.event.on(
       "voteEquity",
       ({ applyInfo }, next) => {
         const round = curRound - 1;
@@ -405,9 +383,15 @@ export class EventLogicVerifier {
       },
       { taskname: `voteEquity` },
     );
+  }
+
+  listenEventFrozenAccount(accountsInfo: { [address: string]: BFChainCore.AccountInfo }) {
+    const Function_Exception_Detail = {
+      function: "eventLogicVerifier",
+    } as const;
 
     // 冻结账户
-    event.on(
+    this.event.on(
       "frozenAccount",
       ({ applyInfo }, next) => {
         const { address } = applyInfo;
@@ -428,9 +412,15 @@ export class EventLogicVerifier {
       },
       { taskname: `frozenAccount` },
     );
+  }
+
+  listenEventSetUsername(accountGetterHelper: BFChainCore.AccountGetterHelperInterface) {
+    const Function_Exception_Detail = {
+      function: "eventLogicVerifier",
+    } as const;
 
     // 设置用户名
-    event.on(
+    this.event.on(
       "setUsername",
       async ({ applyInfo }, next) => {
         const { address, alias } = applyInfo;
@@ -454,18 +444,38 @@ export class EventLogicVerifier {
       },
       { taskname: `setUsername` },
     );
+  }
 
+  listenEventSetSecondPublicKey() {
     // 设置二次密码
-    event.on(
+    this.event.on(
       "setSecondPublicKey",
       ({ applyInfo }, next) => {
         next();
       },
       { taskname: `setSecondPublicKey` },
     );
+  }
+
+  listenEventRegisterToDelegate(
+    accountsInfo: { [address: string]: BFChainCore.AccountInfo },
+    curRound: number,
+    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
+  ) {
+    const Function_Exception_Detail = {
+      function: "eventLogicVerifier",
+    } as const;
+
+    if (!transactionGetterHelper) {
+      throw new NoFoundException(NOT_EXIST, {
+        prop: "transactionGetterHelper",
+        target: "moduleStroge",
+        ...Function_Exception_Detail,
+      });
+    }
 
     // 注册成为受托人
-    event.on(
+    this.event.on(
       "registerToDelegate",
       async ({ applyInfo }, next) => {
         if (this.configHelper.maxDelegateTxsPerRound === 0) {
@@ -503,9 +513,15 @@ export class EventLogicVerifier {
       },
       { taskname: `registerToDelegate` },
     );
+  }
+
+  listenEventAcceptVote(accountsInfo: { [address: string]: BFChainCore.AccountInfo }) {
+    const Function_Exception_Detail = {
+      function: "eventLogicVerifier",
+    } as const;
 
     // 开启接收投票
-    event.on(
+    this.event.on(
       "acceptVote",
       ({ applyInfo }, next) => {
         const { address } = applyInfo;
@@ -528,9 +544,15 @@ export class EventLogicVerifier {
       },
       { taskname: `acceptVote` },
     );
+  }
+
+  listenEventRejectVote(accountsInfo: { [address: string]: BFChainCore.AccountInfo }) {
+    const Function_Exception_Detail = {
+      function: "eventLogicVerifier",
+    } as const;
 
     // 关闭接收投票
-    event.on(
+    this.event.on(
       "rejectVote",
       ({ applyInfo }, next) => {
         const { address } = applyInfo;
@@ -553,15 +575,26 @@ export class EventLogicVerifier {
       },
       { taskname: `rejectVote` },
     );
+  }
+
+  listenEventIssueAsset(
+    accountsAssets: { [asddress: string]: BFChainCore.AccountAssets },
+    transaction: BFChainCore.Transaction,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
+  ) {
+    const Function_Exception_Detail = {
+      function: "eventLogicVerifier",
+    } as const;
 
     // 发行数字资产
-    event.on(
+    this.event.on(
       "issueAsset",
       async ({ applyInfo }, next) => {
         const { address, assetType, genesisAddress, expectedIssuedAssets } = applyInfo;
 
         // 是否持有除链资产外的其他资产
-        this.isPossessAssetExceptForChainAsset(accountsAssets[address]);
+        this.helperLogicVerifier.isPossessAssetExceptForChainAsset(accountsAssets[address]);
 
         // 资产的发行账户不能是dapp的拥有者
         await this.helperLogicVerifier.isDAppPossessor(
@@ -654,9 +687,18 @@ export class EventLogicVerifier {
       },
       { taskname: `issueAsset` },
     );
+  }
+
+  listenEventDestoryAsset(
+    transaction: BFChainCore.Transaction,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+  ) {
+    const Function_Exception_Detail = {
+      function: "eventLogicVerifier",
+    } as const;
 
     // 资产销毁
-    event.on(
+    this.event.on(
       "destoryAsset",
       async ({ applyInfo }, next) => {
         const { assetInfo, amount, address } = applyInfo;
@@ -688,9 +730,18 @@ export class EventLogicVerifier {
       },
       { taskname: `destoryAsset` },
     );
+  }
+
+  listenEventIssueDAppid(
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+  ) {
+    const Function_Exception_Detail = {
+      function: "eventLogicVerifier",
+    } as const;
 
     // 发行 dapid
-    event.on(
+    this.event.on(
       "issueDAppid",
       async ({ applyInfo }, next) => {
         const { dappid, sourceChainMagic, purchaseAsset, possessorAddress } = applyInfo;
@@ -762,9 +813,18 @@ export class EventLogicVerifier {
       },
       { taskname: `issueDAppid` },
     );
+  }
+
+  listenEventSaleDAppid(
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+  ) {
+    const Function_Exception_Detail = {
+      function: "eventLogicVerifier",
+    } as const;
 
     // 出售 dappid
-    event.on(
+    this.event.on(
       "saleDAppid",
       async ({ applyInfo }, next) => {
         const { address, sourceChainMagic, dappid } = applyInfo;
@@ -798,9 +858,19 @@ export class EventLogicVerifier {
       },
       { taskname: `saleDAppid` },
     );
+  }
+
+  listenEventPurchaseDAppid(
+    transaction: BFChainCore.Transaction,
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+  ) {
+    const Function_Exception_Detail = {
+      function: "eventLogicVerifier",
+    } as const;
 
     // 购买 dappid
-    event.on(
+    this.event.on(
       "purchaseDAppid",
       async ({ applyInfo }, next) => {
         const { address, sourceChainMagic, dappid } = applyInfo;
@@ -836,15 +906,25 @@ export class EventLogicVerifier {
       },
       { taskname: `purchaseDAppid` },
     );
+  }
+
+  listenEventRegisterChain(
+    accountsAssets: { [asddress: string]: BFChainCore.AccountAssets },
+    transaction: BFChainCore.Transaction,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+  ) {
+    const Function_Exception_Detail = {
+      function: "eventLogicVerifier",
+    } as const;
 
     // 注册链
-    event.on(
+    this.event.on(
       "registerChain",
       async ({ applyInfo }, next) => {
         const { address, genesisBlock } = applyInfo;
 
         // 是否持有除链资产外的其他资产
-        this.isPossessAssetExceptForChainAsset(accountsAssets[address]);
+        this.helperLogicVerifier.isPossessAssetExceptForChainAsset(accountsAssets[address]);
 
         // 保证账户上足够的本链资产，避免 py 操作
         const {
@@ -891,9 +971,18 @@ export class EventLogicVerifier {
       },
       { taskname: `registerChain` },
     );
+  }
+
+  listenEventRegisterLocationName(
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+  ) {
+    const Function_Exception_Detail = {
+      function: "eventLogicVerifier",
+    } as const;
 
     // 注册链域名
-    event.on(
+    this.event.on(
       "registerLocationName",
       async ({ applyInfo }, next) => {
         const { sourceChainMagic, name, possessorAddress } = applyInfo;
@@ -961,9 +1050,19 @@ export class EventLogicVerifier {
       },
       { taskname: `registerLocationName` },
     );
+  }
+
+  listenEventCancelLocationName(
+    transaction: BFChainCore.Transaction,
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+  ) {
+    const Function_Exception_Detail = {
+      function: "eventLogicVerifier",
+    } as const;
 
     // 注销链域名
-    event.on(
+    this.event.on(
       "cancelLocationName",
       async ({ applyInfo }, next) => {
         const { sourceChainMagic, name } = applyInfo;
@@ -1037,9 +1136,18 @@ export class EventLogicVerifier {
       },
       { taskname: `cancelLocationName` },
     );
+  }
+
+  listenEventSetLnsManager(
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+  ) {
+    const Function_Exception_Detail = {
+      function: "eventLogicVerifier",
+    } as const;
 
     // 设置链域名管理员
-    event.on(
+    this.event.on(
       "setLnsManager",
       async ({ applyInfo }, next) => {
         const { address, sourceChainMagic, name, manager } = applyInfo;
@@ -1135,9 +1243,18 @@ export class EventLogicVerifier {
       },
       { taskname: `setLnsManager` },
     );
+  }
+
+  listenEventSetLnsRecordValue(
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+  ) {
+    const Function_Exception_Detail = {
+      function: "eventLogicVerifier",
+    } as const;
 
     // 设置链域名解析值
-    event.on(
+    this.event.on(
       "setLnsRecordValue",
       async ({ applyInfo }, next) => {
         const {
@@ -1216,9 +1333,18 @@ export class EventLogicVerifier {
       },
       { taskname: `setLnsRecordValue` },
     );
+  }
+
+  listenEventSaleLocationName(
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+  ) {
+    const Function_Exception_Detail = {
+      function: "eventLogicVerifier",
+    } as const;
 
     // 出售链域名
-    event.on(
+    this.event.on(
       "saleLocationName",
       async ({ applyInfo }, next) => {
         const { address, sourceChainMagic, name } = applyInfo;
@@ -1261,9 +1387,18 @@ export class EventLogicVerifier {
       },
       { taskname: `saleLocationName` },
     );
+  }
+
+  listenEventPurchaseLocationName(
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+  ) {
+    const Function_Exception_Detail = {
+      function: "eventLogicVerifier",
+    } as const;
 
     // 购买链域名，链域名解冻，更换拥有者
-    event.on(
+    this.event.on(
       "purchaseLocationName",
       async ({ applyInfo }, next) => {
         const { address, sourceChainMagic, name } = applyInfo;
@@ -1299,16 +1434,28 @@ export class EventLogicVerifier {
       },
       { taskname: `purchaseLocationName` },
     );
+  }
 
-    // 注册事件错误处理器
-    event.onError((err, { eventname, arg }) => {
-      throw err;
-    });
+  /**
+   * 捕捉事件异常
+   *
+   */
+  // private __catchEventError() {
+  //     (this.event as QueneEventEmitter<BFChainUtil.EmitterEvents<typeof event>>).onError((err, { eventname, arg }) => {
+  //         throw err;
+  //     });
+  // }
 
+  /**
+   * 等待事件处理结果
+   *
+   * @param transaction
+   */
+  async awaitEventResult(transaction: BFChainCore.Transaction) {
+    // this.__catchEventError();
     await this.transactionCore
       .getTransactionFactoryFromType(transaction.type)
-      .applyTransaction(transaction, event);
-
-    return trsFee;
+      .applyTransaction(transaction, this.event);
+    this.destoryEvent();
   }
 }
