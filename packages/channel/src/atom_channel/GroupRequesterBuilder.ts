@@ -1,6 +1,5 @@
 import { Aborter, EasyMap, safePromiseRace, sleep } from "@bfchain/util";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
-import type { QueryTransactionReturnModel } from "@bfchain/core-model";
 
 const { AbortException, TimeOutException } = CoreExceptionGenerator("channel", "chainChannelGroup");
 
@@ -62,7 +61,7 @@ abstract class GroupRequesterBuilder<CC extends BFChainCore.ChainChannel, R> {
  * 数据请求器，确保重复的请求不会重复发起
  * @TODO 使用 ccbase 将请求参数一次性序列化好
  */
-export class ChainChannelQueryTransactionsBuilder<
+export class GroupQueryTransactionsBuilder<
   CC extends BFChainCore.ChainChannel,
   R = BFChainUtil.PromiseReturnType<CC["queryTransactions"]>
 > extends GroupRequesterBuilder<CC, R> {
@@ -94,7 +93,7 @@ export class ChainChannelQueryTransactionsBuilder<
  * 数据请求器，确保重复的请求不会重复发起
  * @TODO 使用 ccbase 将请求参数一次性序列化好
  */
-export class ChainChannelQueryBlockBuilder<
+export class GroupQueryBlockBuilder<
   CC extends BFChainCore.ChainChannel,
   R = BFChainUtil.PromiseReturnType<CC["queryBlock"]>
 > extends GroupRequesterBuilder<CC, R> {

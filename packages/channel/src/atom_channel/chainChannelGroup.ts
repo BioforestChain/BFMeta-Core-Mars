@@ -35,8 +35,8 @@ const {
 } = CoreExceptionGenerator("channel", "chainChannelGroup");
 
 import {
-  ChainChannelQueryTransactionsBuilder,
-  ChainChannelQueryBlockBuilder,
+  GroupQueryTransactionsBuilder,
+  GroupQueryBlockBuilder,
 } from "./GroupRequesterBuilder";
 
 export const CHAIN_CHANNEL_GROUP_ARGS = {
@@ -274,12 +274,12 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
 
     const queryerMap = EasyMap.from<
       { offset: number; limit: number },
-      ChainChannelQueryTransactionsBuilder<DH>,
+      GroupQueryTransactionsBuilder<DH>,
       string
     >({
       transformKey: (query) => `${query.offset}-${query.limit}`,
       creater: (query) =>
-        new ChainChannelQueryTransactionsBuilder({ ...baseQueryCondition, ...query }, sort, opts),
+        new GroupQueryTransactionsBuilder({ ...baseQueryCondition, ...query }, sort, opts),
     });
 
     /// 在异步任务中进行任务分发
@@ -495,7 +495,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
 
     const RETRY_TIMES = 5;
 
-    const queryer = new ChainChannelQueryBlockBuilder<DH>(query, opts);
+    const queryer = new GroupQueryBlockBuilder<DH>(query, opts);
 
     let retryTimes = 0;
     do {
