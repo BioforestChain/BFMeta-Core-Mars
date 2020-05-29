@@ -1440,11 +1440,13 @@ export class EventLogicVerifier {
    * 捕捉事件异常
    *
    */
-  // private __catchEventError() {
-  //     (this.event as QueneEventEmitter<BFChainUtil.EmitterEvents<typeof event>>).onError((err, { eventname, arg }) => {
-  //         throw err;
-  //     });
-  // }
+  private __catchEventError() {
+    (this.event as QueneEventEmitter<BFChainUtil.EmitterEvents<typeof event>>).onError(
+      (err, { eventname, arg }) => {
+        throw err;
+      },
+    );
+  }
 
   /**
    * 等待事件处理结果
@@ -1452,7 +1454,7 @@ export class EventLogicVerifier {
    * @param transaction
    */
   async awaitEventResult(transaction: BFChainCore.Transaction) {
-    // this.__catchEventError();
+    this.__catchEventError();
     await this.transactionCore
       .getTransactionFactoryFromType(transaction.type)
       .applyTransaction(transaction, this.event);
