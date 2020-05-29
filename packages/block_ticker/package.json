@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-block-ticker",
-  "version": "5.13.28",
+  "version": "5.13.29",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,7 +14,7 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-block": "5.13.28",
+    "@bfchain/core-block": "5.13.29",
     "@bfchain/core-helper": "5.13.25",
     "@bfchain/core-model-block": "5.13.25",
     "@bfchain/core-transaction-logic-verifier": "5.13.25",
