@@ -13,6 +13,7 @@ import {
   EventEmitter,
   AfterInit,
   EasyMap,
+  cacheObjectGetter,
 } from "@bfchain/util";
 import { BaseHelper, ChainTimeHelper, ConfigHelper, TransactionHelper } from "@bfchain/core-helper";
 import {
@@ -272,17 +273,24 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     /**私有内部类 */
     class AddChainChannelOptions {
       constructor(private queryer: GroupQueryTransactionsBuilder<DH>) {}
-      private _ex?: Error;
+      @cacheGetter
+      private get _exm() {
+        return new EasyMap<DH, Error>(
+          (cc) =>
+            new TimeOutException(
+              `peer({peerId}) queryTransactions(<offset:{offset},limit:{limit}>{query} - {sort}) timeout.`,
+              {
+                peerId: cc.address,
+                offset: this.queryer.query.offset,
+                limit: this.queryer.query.limit,
+                query,
+                sort,
+              },
+            ),
+        );
+      }
       timeoutException(cc: DH) {
-        if (!this._ex) {
-          const excInfo = this.queryer.getTimeoutExceptionInfo();
-          const curQuery = excInfo[1].query;
-          this._ex = new TimeOutException(
-            `peer({peerId}) queryTransactions(<offset:{offset},limit:{limit}>{query} - {sort}) timeout.`,
-            { peerId: cc.address, offset: curQuery.offset, limit: curQuery.limit, query, sort },
-          );
-        }
-        return this._ex;
+        return this._exm.forceGet(cc);
       }
     }
 
@@ -522,16 +530,21 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     const RETRY_TIMES = 5;
 
     const queryer = new GroupQueryBlockBuilder<DH>(query, opts);
+    const exCache = cacheObjectGetter({
+      get em() {
+        return new EasyMap<DH, Error>(
+          (cc) =>
+            new TimeOutException("peer({peerId}) queryBlock({query}) timeout.", {
+              query: queryer.query,
+              peerId: cc.address,
+            }),
+        );
+      },
+    });
     const options = {
-      _ex: undefined as Error | undefined,
+      _exm: undefined as Error | undefined,
       timeoutException(cc: DH) {
-        if (!this._ex) {
-          this._ex = new TimeOutException("peer({peerId}) queryBlock({query}) timeout.", {
-            query,
-            peerId: cc.address,
-          });
-        }
-        return this._ex;
+        return exCache.em.forceGet(cc);
       },
     };
     let retryTimes = 0;

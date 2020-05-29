@@ -79,8 +79,8 @@ export class GroupQueryTransactionsBuilder<
   R = BFChainUtil.PromiseReturnType<CC["queryTransactions"]>
 > extends GroupRequesterBuilder<CC, R> {
   constructor(
-    private query: BFChainCore.TransactionQueryOptionsJSON,
-    private sort?: BFChainCore.TransactionSortOptionsJSON,
+    public readonly query: BFChainCore.TransactionQueryOptionsJSON,
+    public readonly sort?: BFChainCore.TransactionSortOptionsJSON,
     opts?: BFChainCore.ChannelRequestBaseOptions,
   ) {
     super(opts);
@@ -112,7 +112,7 @@ export class GroupQueryBlockBuilder<
   R = BFChainUtil.PromiseReturnType<CC["queryBlock"]>
 > extends GroupRequesterBuilder<CC, R> {
   constructor(
-    private query: BFChainCore.BlockQueryOptionsJSON,
+    public readonly query: BFChainCore.BlockQueryOptionsJSON,
     opts?: BFChainCore.ChannelRequestBaseOptions,
   ) {
     super(opts);
