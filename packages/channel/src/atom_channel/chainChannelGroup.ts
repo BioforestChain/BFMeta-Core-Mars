@@ -34,10 +34,7 @@ const {
   TimeOutException,
 } = CoreExceptionGenerator("channel", "chainChannelGroup");
 
-import {
-  GroupQueryTransactionsBuilder,
-  GroupQueryBlockBuilder,
-} from "./GroupRequesterBuilder";
+import { GroupQueryTransactionsBuilder, GroupQueryBlockBuilder } from "./GroupRequesterBuilder";
 
 export const CHAIN_CHANNEL_GROUP_ARGS = {
   GROUP_NAME: Symbol("groupName"),
@@ -310,7 +307,9 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
                 offset: task_offset,
                 limit: unitLength,
               });
-              const res = await queryer.addChainChannel(chainChannel);
+              const res = await queryer.addChainChannel(chainChannel, {
+                timeoutException: new TimeOutException(...queryer.getTimeoutExceptionInfo()),
+              });
 
               if (res.status === RESPONSE_STATUS.success) {
                 // 任务完成
@@ -501,7 +500,9 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     do {
       try {
         const chainChannel = await getFreeChainChannel();
-        const result = await queryer.addChainChannel(chainChannel);
+        const result = await queryer.addChainChannel(chainChannel, {
+          timeoutException: new TimeOutException(...queryer.getTimeoutExceptionInfo()),
+        });
         if (result.status === RESPONSE_STATUS.busy) {
           queryer.removeChainChannelByResult(result);
           continue;

@@ -7,7 +7,7 @@ abstract class GroupRequesterBuilder<CC extends BFChainCore.ChainChannel, R> {
   protected abstract _doRequest(cc: CC, opts: BFChainCore.ChannelRequestOptions): PromiseLike<R>;
   private _aborter = new Aborter();
   private _mixedOpts: BFChainCore.ChannelRequestOptions;
-  constructor(private opts?: Omit<BFChainCore.ChannelRequestOptions, "aborter" | "timeout">) {
+  constructor(private opts?: BFChainCore.ChannelRequestBaseOptions) {
     this._mixedOpts = Object.assign({}, this.opts, {
       aborter: this._aborter,
     });
@@ -25,21 +25,31 @@ abstract class GroupRequesterBuilder<CC extends BFChainCore.ChainChannel, R> {
 
   addChainChannel(
     chainChannel: CC,
-    timeout: number = (chainChannel.delay || 0) + 3000,
+    opts: {
+      timeout?: number;
+      timeoutException?: unknown;
+    } = {},
   ): Promise<R> {
     this._inQueneTasks.forceGet(chainChannel);
+    let { timeout = (chainChannel.delay || 0) + 3000, timeoutException } = opts;
+
     return safePromiseRace<PromiseLike<R>>([
       sleep(timeout, () => {
-        const timeoutErr = this._getTimeoutExceptionInfo();
-        throw new TimeOutException(timeoutErr.message, timeoutErr.detail);
+        if (!timeoutException) {
+          timeoutException = new TimeOutException(...this.getTimeoutExceptionInfo());
+        }
+        throw timeoutException;
       }),
       ...this._inQueneTasks.values(),
     ]);
   }
-  protected abstract _getTimeoutExceptionInfo(): {
-    message?: string | undefined;
-    detail?: any;
-  };
+  abstract getTimeoutExceptionInfo(): readonly [
+    /**message */
+
+    string | undefined,
+    /**detail */
+    unknown,
+  ];
   protected abstract _getFinishInfo(): {
     message?: string | undefined;
     detail?: any;
@@ -68,21 +78,22 @@ export class GroupQueryTransactionsBuilder<
   constructor(
     private query: BFChainCore.TransactionQueryOptionsJSON,
     private sort?: BFChainCore.TransactionSortOptionsJSON,
-    opts?: Omit<BFChainCore.ChannelRequestOptions, "aborter" | "timeout">,
+    opts?: BFChainCore.ChannelRequestBaseOptions,
   ) {
     super(opts);
   }
   protected _doRequest(cc: CC, opts: BFChainCore.ChannelRequestOptions) {
     return (cc.queryTransactions(this.query, this.sort, opts) as unknown) as PromiseLike<R>;
   }
-  protected _getTimeoutExceptionInfo(): { message?: string | undefined; detail?: any } {
-    return {
-      message: "queryTransactions({query} / {sort}) timeout.",
-      detail: {
+  getTimeoutExceptionInfo() {
+    return [
+      /**message */ "queryTransactions({query} / {sort}) timeout.",
+      /**detail */
+      {
         query: this.query,
         sort: this.sort,
       },
-    };
+    ] as const;
   }
   protected _getFinishInfo(): { message?: string | undefined; detail?: any } {
     return { message: "finish queryTransactions from other chainChannel" };
@@ -99,18 +110,15 @@ export class GroupQueryBlockBuilder<
 > extends GroupRequesterBuilder<CC, R> {
   constructor(
     private query: BFChainCore.BlockQueryOptionsJSON,
-    opts?: Omit<BFChainCore.ChannelRequestOptions, "aborter" | "timeout">,
+    opts?: BFChainCore.ChannelRequestBaseOptions,
   ) {
     super(opts);
   }
   protected _doRequest(cc: CC, opts: BFChainCore.ChannelRequestOptions) {
     return (cc.queryBlock(this.query, opts) as unknown) as PromiseLike<R>;
   }
-  protected _getTimeoutExceptionInfo(): { message?: string | undefined; detail?: any } {
-    return {
-      message: "[TIMEOUT]: queryBlock({query}).",
-      detail: { query: this.query },
-    };
+  getTimeoutExceptionInfo() {
+    return ["[TIMEOUT]: queryBlock({query}).", { query: this.query }] as const;
   }
   protected _getFinishInfo() {
     return { message: "finish queryBlock from other chainChannel" };

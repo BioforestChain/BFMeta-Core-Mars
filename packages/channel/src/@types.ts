@@ -43,20 +43,24 @@ declare namespace BFChainCore {
       out: GetPeerInfoReturnParams | undefined;
     };
   };
-  type ChannelRequestOptions = ChannelRequestAborterOptions & {
+  interface ChannelRequestOptions extends ChannelRequestAborterOptions, ChannelRequestBaseOptions {}
+  /**请求中断器 */
+  interface ChannelRequestAborterOptions {
+    /**超时 */
+    timeout?: number;
+    /**自定义超时的异常 */
+    timeoutException?: unknown;
+    /**主动中断信号 */
+    aborter?: BFChainUtil.Aborter;
+  }
+  /**请求的基本可选项 */
+  interface ChannelRequestBaseOptions {
     /**红包的密码 */
     grabSecret?: string;
     /**节点过滤器 */
     channelFilter?: ChannelFilter;
     directAddress?: Set<string>;
-  };
-  /**请求中断器 */
-  type ChannelRequestAborterOptions = {
-    /**超时 */
-    timeout?: number;
-    /**主动中断信号 */
-    aborter?: BFChainUtil.Aborter;
-  };
+  }
   type ChannelFilter = (channel: BFChainCore.ChainChannel) => boolean;
   //#endregion
 

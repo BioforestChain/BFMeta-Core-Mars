@@ -216,10 +216,11 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
       const ab = aborter || (aborter = new Aborter());
       const timeoutTask = sleep(options.timeout, () => {
         ab.abort(
-          new TimeOutException(`ChainChannel Timeout: cmd:{cmd}`, {
-            endpoint: this.endpoint,
-            cmd: DUPLEX_API_CMD[cmd],
-          }),
+          options.timeoutException ||
+            new TimeOutException(`ChainChannel Timeout: cmd:{cmd}`, {
+              endpoint: this.endpoint,
+              cmd: DUPLEX_API_CMD[cmd],
+            }),
         );
       });
       resp = resp.finally(() => {
