@@ -27,25 +27,28 @@ abstract class GroupRequesterBuilder<CC extends BFChainCore.ChainChannel, R> {
     chainChannel: CC,
     opts: {
       timeout?: number;
-      timeoutException?: unknown;
+      timeoutException?: Error | ((cc: CC) => Error);
     } = {},
   ): Promise<R> {
     this._inQueneTasks.forceGet(chainChannel);
     let { timeout = (chainChannel.delay || 0) + 3000, timeoutException } = opts;
-
+    // chainChannel.address
     return safePromiseRace<PromiseLike<R>>([
       sleep(timeout, () => {
         if (!timeoutException) {
-          timeoutException = new TimeOutException(...this.getTimeoutExceptionInfo());
+          timeoutException = new TimeOutException(...this.getTimeoutExceptionInfo(chainChannel));
+        } else if (typeof timeoutException === "function") {
+          timeoutException = timeoutException(chainChannel);
         }
         throw timeoutException;
       }),
       ...this._inQueneTasks.values(),
     ]);
   }
-  abstract getTimeoutExceptionInfo(): readonly [
+  abstract getTimeoutExceptionInfo(
+    cc: CC,
+  ): readonly [
     /**message */
-
     string | undefined,
     /**detail */
     unknown,

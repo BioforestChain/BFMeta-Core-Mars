@@ -269,14 +269,43 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
       return resultGenerator;
     }
 
+    /**私有内部类 */
+    class AddChainChannelOptions {
+      constructor(private queryer: GroupQueryTransactionsBuilder<DH>) {}
+      private _ex?: Error;
+      timeoutException(cc: DH) {
+        if (!this._ex) {
+          const excInfo = this.queryer.getTimeoutExceptionInfo();
+          const curQuery = excInfo[1].query;
+          this._ex = new TimeOutException(
+            `peer({peerId}) queryTransactions(<offset:{offset},limit:{limit}>{query} - {sort}) timeout.`,
+            { peerId: cc.address, offset: curQuery.offset, limit: curQuery.limit, query, sort },
+          );
+        }
+        return this._ex;
+      }
+    }
+
     const queryerMap = EasyMap.from<
       { offset: number; limit: number },
-      GroupQueryTransactionsBuilder<DH>,
+      {
+        queryer: GroupQueryTransactionsBuilder<DH>;
+        options: AddChainChannelOptions;
+      },
       string
     >({
       transformKey: (query) => `${query.offset}-${query.limit}`,
-      creater: (query) =>
-        new GroupQueryTransactionsBuilder({ ...baseQueryCondition, ...query }, sort, opts),
+      creater: (query) => {
+        const queryer = new GroupQueryTransactionsBuilder<DH>(
+          { ...baseQueryCondition, ...query },
+          sort,
+          opts,
+        );
+        return {
+          queryer,
+          options: new AddChainChannelOptions(queryer),
+        };
+      },
     });
 
     /// 在异步任务中进行任务分发
@@ -293,6 +322,10 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
        * @param times
        */
       const doTask = (task_offset: number, times: number) => {
+        const { queryer, options } = queryerMap.forceGet({
+          offset: task_offset,
+          limit: unitLength,
+        });
         // const waitUseableChainChannel = new PromiseOut<void>();
         task_chain = task_chain.then(
           async () => {
@@ -303,15 +336,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
             busyChainChannel(chainChannel);
             // 开始执行查询
             try {
-              const queryer = queryerMap.forceGet({
-                offset: task_offset,
-                limit: unitLength,
-              });
-              const res = await queryer.addChainChannel(chainChannel, {
-                get timeoutException() {
-                  return new TimeOutException(...queryer.getTimeoutExceptionInfo());
-                },
-              });
+              const res = await queryer.addChainChannel(chainChannel, options);
 
               if (res.status === RESPONSE_STATUS.success) {
                 // 任务完成
@@ -497,16 +522,24 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     const RETRY_TIMES = 5;
 
     const queryer = new GroupQueryBlockBuilder<DH>(query, opts);
-
+    const options = {
+      _ex: undefined as Error | undefined,
+      timeoutException(cc: DH) {
+        if (!this._ex) {
+          this._ex = new TimeOutException("peer({peerId}) queryBlock({query}) timeout.", {
+            query,
+            peerId: cc.address,
+          });
+        }
+        return this._ex;
+      },
+    };
     let retryTimes = 0;
     do {
       try {
         const chainChannel = await getFreeChainChannel();
-        const result = await queryer.addChainChannel(chainChannel, {
-          get timeoutException() {
-            return new TimeOutException(...queryer.getTimeoutExceptionInfo());
-          },
-        });
+
+        const result = await queryer.addChainChannel(chainChannel, options);
         if (result.status === RESPONSE_STATUS.busy) {
           queryer.removeChainChannelByResult(result);
           continue;
