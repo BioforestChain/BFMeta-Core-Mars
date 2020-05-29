@@ -308,7 +308,9 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
                 limit: unitLength,
               });
               const res = await queryer.addChainChannel(chainChannel, {
-                timeoutException: new TimeOutException(...queryer.getTimeoutExceptionInfo()),
+                get timeoutException() {
+                  return new TimeOutException(...queryer.getTimeoutExceptionInfo());
+                },
               });
 
               if (res.status === RESPONSE_STATUS.success) {
@@ -501,7 +503,9 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
       try {
         const chainChannel = await getFreeChainChannel();
         const result = await queryer.addChainChannel(chainChannel, {
-          timeoutException: new TimeOutException(...queryer.getTimeoutExceptionInfo()),
+          get timeoutException() {
+            return new TimeOutException(...queryer.getTimeoutExceptionInfo());
+          },
         });
         if (result.status === RESPONSE_STATUS.busy) {
           queryer.removeChainChannelByResult(result);
