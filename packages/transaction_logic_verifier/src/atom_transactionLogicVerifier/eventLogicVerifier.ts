@@ -1443,6 +1443,7 @@ export class EventLogicVerifier {
   private __catchEventError() {
     (this.event as QueneEventEmitter<BFChainUtil.EmitterEvents<typeof event>>).onError(
       (err, { eventname, arg }) => {
+        this.destoryEvent();
         throw err;
       },
     );
