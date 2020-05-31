@@ -289,6 +289,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
             ),
         );
       }
+      @bindThis
       timeoutException(cc: DH) {
         return this._exm.forceGet(cc);
       }
