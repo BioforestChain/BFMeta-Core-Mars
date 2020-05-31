@@ -164,7 +164,7 @@ export class EventLogicVerifier {
 
         next();
       },
-      { taskname: `fee` },
+      { taskname: `applyTransaction/logicVerifier/fee` },
     );
   }
 
@@ -207,7 +207,7 @@ export class EventLogicVerifier {
 
         next();
       },
-      { taskname: `asset` },
+      { taskname: `applyTransaction/logicVerifier/asset` },
     );
   }
 
@@ -250,7 +250,7 @@ export class EventLogicVerifier {
 
         next();
       },
-      { taskname: `frozenAsset` },
+      { taskname: `applyTransaction/logicVerifier/frozenAsset` },
     );
   }
 
@@ -343,7 +343,7 @@ export class EventLogicVerifier {
 
         next();
       },
-      { taskname: `unfrozenAsset` },
+      { taskname: `applyTransaction/logicVerifier/unfrozenAsset` },
     );
   }
 
@@ -381,7 +381,7 @@ export class EventLogicVerifier {
 
         next();
       },
-      { taskname: `voteEquity` },
+      { taskname: `applyTransaction/logicVerifier/voteEquity` },
     );
   }
 
@@ -410,7 +410,7 @@ export class EventLogicVerifier {
 
         next();
       },
-      { taskname: `frozenAccount` },
+      { taskname: `applyTransaction/logicVerifier/frozenAccount` },
     );
   }
 
@@ -442,7 +442,7 @@ export class EventLogicVerifier {
 
         next();
       },
-      { taskname: `setUsername` },
+      { taskname: `applyTransaction/logicVerifier/setUsername` },
     );
   }
 
@@ -453,7 +453,7 @@ export class EventLogicVerifier {
       ({ applyInfo }, next) => {
         next();
       },
-      { taskname: `setSecondPublicKey` },
+      { taskname: `applyTransaction/logicVerifier/setSecondPublicKey` },
     );
   }
 
@@ -511,7 +511,7 @@ export class EventLogicVerifier {
 
         next();
       },
-      { taskname: `registerToDelegate` },
+      { taskname: `applyTransaction/logicVerifier/registerToDelegate` },
     );
   }
 
@@ -542,7 +542,7 @@ export class EventLogicVerifier {
 
         next();
       },
-      { taskname: `acceptVote` },
+      { taskname: `applyTransaction/logicVerifier/acceptVote` },
     );
   }
 
@@ -573,7 +573,7 @@ export class EventLogicVerifier {
 
         next();
       },
-      { taskname: `rejectVote` },
+      { taskname: `applyTransaction/logicVerifier/rejectVote` },
     );
   }
 
@@ -685,7 +685,7 @@ export class EventLogicVerifier {
 
         next();
       },
-      { taskname: `issueAsset` },
+      { taskname: `applyTransaction/logicVerifier/issueAsset` },
     );
   }
 
@@ -728,7 +728,7 @@ export class EventLogicVerifier {
 
         next();
       },
-      { taskname: `destoryAsset` },
+      { taskname: `applyTransaction/logicVerifier/destoryAsset` },
     );
   }
 
@@ -811,7 +811,7 @@ export class EventLogicVerifier {
 
         next();
       },
-      { taskname: `issueDAppid` },
+      { taskname: `applyTransaction/logicVerifier/issueDAppid` },
     );
   }
 
@@ -856,7 +856,7 @@ export class EventLogicVerifier {
 
         next();
       },
-      { taskname: `saleDAppid` },
+      { taskname: `applyTransaction/logicVerifier/saleDAppid` },
     );
   }
 
@@ -904,7 +904,7 @@ export class EventLogicVerifier {
 
         next();
       },
-      { taskname: `purchaseDAppid` },
+      { taskname: `applyTransaction/logicVerifier/purchaseDAppid` },
     );
   }
 
@@ -969,7 +969,7 @@ export class EventLogicVerifier {
 
         next();
       },
-      { taskname: `registerChain` },
+      { taskname: `applyTransaction/logicVerifier/registerChain` },
     );
   }
 
@@ -1048,7 +1048,7 @@ export class EventLogicVerifier {
 
         next();
       },
-      { taskname: `registerLocationName` },
+      { taskname: `applyTransaction/logicVerifier/registerLocationName` },
     );
   }
 
@@ -1134,7 +1134,7 @@ export class EventLogicVerifier {
 
         next();
       },
-      { taskname: `cancelLocationName` },
+      { taskname: `applyTransaction/logicVerifier/cancelLocationName` },
     );
   }
 
@@ -1241,7 +1241,7 @@ export class EventLogicVerifier {
 
         next();
       },
-      { taskname: `setLnsManager` },
+      { taskname: `applyTransaction/logicVerifier/setLnsManager` },
     );
   }
 
@@ -1331,7 +1331,7 @@ export class EventLogicVerifier {
 
         next();
       },
-      { taskname: `setLnsRecordValue` },
+      { taskname: `applyTransaction/logicVerifier/setLnsRecordValue` },
     );
   }
 
@@ -1385,7 +1385,7 @@ export class EventLogicVerifier {
 
         next();
       },
-      { taskname: `saleLocationName` },
+      { taskname: `applyTransaction/logicVerifier/saleLocationName` },
     );
   }
 
@@ -1432,7 +1432,7 @@ export class EventLogicVerifier {
 
         next();
       },
-      { taskname: `purchaseLocationName` },
+      { taskname: `applyTransaction/logicVerifier/purchaseLocationName` },
     );
   }
 

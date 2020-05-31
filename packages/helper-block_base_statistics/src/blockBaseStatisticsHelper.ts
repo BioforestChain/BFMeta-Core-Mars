@@ -184,26 +184,46 @@ export class BlockBaseStatisticsHelper {
      * 因为`bindApplyTransactionEventEmiter`本身就是在`eventEmitter`传入函数后才开始绑定事件的，
      * 所以这些绑定本身就是在最末尾，不需要`next`
      */
-    eventEmitter.on("fee", (event, next) => {
-      this._applyFee(event, statistics_info);
-      return next();
-    });
-    eventEmitter.on("feeFromUnfrozen", (event, next) => {
-      this._applyFee(event, statistics_info);
-      return next();
-    });
-    eventEmitter.on("asset", (event, next) => {
-      this._applyAsset(event, statistics_info);
-      return next();
-    });
-    eventEmitter.on("frozenAsset", (event, next) => {
-      this._applyAsset(event, statistics_info);
-      return next();
-    });
-    eventEmitter.on("unfrozenAsset", (event, next) => {
-      this._applyAsset(event, statistics_info, true);
-      return next();
-    });
+    eventEmitter.on(
+      "fee",
+      (event, next) => {
+        this._applyFee(event, statistics_info);
+        return next();
+      },
+      { taskname: "applyTransaction/blockStatistic/fee" },
+    );
+    eventEmitter.on(
+      "feeFromUnfrozen",
+      (event, next) => {
+        this._applyFee(event, statistics_info);
+        return next();
+      },
+      { taskname: "applyTransaction/blockStatistic/feeFromUnfrozen" },
+    );
+    eventEmitter.on(
+      "asset",
+      (event, next) => {
+        this._applyAsset(event, statistics_info);
+        return next();
+      },
+      { taskname: "applyTransaction/blockStatistic/asset" },
+    );
+    eventEmitter.on(
+      "frozenAsset",
+      (event, next) => {
+        this._applyAsset(event, statistics_info);
+        return next();
+      },
+      { taskname: "applyTransaction/blockStatistic/frozenAsset" },
+    );
+    eventEmitter.on(
+      "unfrozenAsset",
+      (event, next) => {
+        this._applyAsset(event, statistics_info, true);
+        return next();
+      },
+      { taskname: "applyTransaction/blockStatistic/unfrozenAsset" },
+    );
     return true;
   }
 }
@@ -312,7 +332,7 @@ export class StatisticsInfo extends EventEmitter<{ destroy: [] }> {
     if (this._assetStatisticMap) {
       const { _assetStatisticMap } = this;
       const assetStatisticHashMap: { [index: number]: AssetStatisticModel } = {};
-      _assetStatisticMap.forEach(assetStatistic => {
+      _assetStatisticMap.forEach((assetStatistic) => {
         assetStatisticHashMap[assetStatistic.index] = assetStatistic.toModel();
       });
       this.source_data.assetStatisticHashMap = assetStatisticHashMap;
