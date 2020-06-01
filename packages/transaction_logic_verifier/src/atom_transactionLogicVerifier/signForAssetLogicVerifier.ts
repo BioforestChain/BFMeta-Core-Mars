@@ -30,26 +30,12 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
       sender: BFChainCore.AccountInfoAndAssets;
       recipient?: BFChainCore.AccountInfoAndAssets;
     },
-    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "verify",
     } as const;
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
-    if (!transactionGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "transactionGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
 
     const { transactionSignature, thirdPartySignatures } = transaction.asset.signForAsset;
 
@@ -108,7 +94,7 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    * @param trustAssetJson
    */
-  isValidRecipientId(
+  private isValidRecipientId(
     transaction: SignForAssetTransaction,
     trustAssetJson: BFChainCore.TransactionJSON<BFChainCore.TrustAssetAssetJSON>,
   ) {
@@ -129,20 +115,13 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
    *
    * @param thirdPartySignatures
    */
-  async isValidThirdPartySignatures(
+  private async isValidThirdPartySignatures(
     thirdPartySignatures: AccountSignatureModel[],
-    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "isValidThirdPartySignatures",
     } as const;
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
     const { accountBaseHelper } = this;
     for (const thirdPartySignature of thirdPartySignatures) {
       const { publicKey, secondPublicKey, signSignature } = thirdPartySignature;
@@ -200,7 +179,7 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    * @param trustAssetJson
    */
-  async isDependentTransactionMatch(
+  private async isDependentTransactionMatch(
     transaction: SignForAssetTransaction,
     trustAssetJson: BFChainCore.TransactionJSON<BFChainCore.TrustAssetAssetJSON>,
   ) {

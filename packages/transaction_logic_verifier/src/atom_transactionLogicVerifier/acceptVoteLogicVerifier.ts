@@ -15,8 +15,8 @@ export class AcceptVoteLogicVerifier extends TransactionLogicVerifier {
       sender: BFChainCore.AccountInfoAndAssets;
       recipient?: BFChainCore.AccountInfoAndAssets;
     },
-    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const { sender } = await this.logicVerify(
       transaction,

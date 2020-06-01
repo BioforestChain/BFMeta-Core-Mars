@@ -3,7 +3,7 @@ import type { DestoryAssetTransaction } from "@bfchain/core-model";
 import { Injectable } from "@bfchain/util";
 import { CoreExceptionGenerator, NOT_EXIST, NOT_MATCH } from "@bfchain/core-util-exception";
 
-const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
+const { ConsensusException } = CoreExceptionGenerator(
   "VERIFIER",
   "TransactionLogicVerifier",
 );
@@ -21,19 +21,12 @@ export class DestoryAssetLogicVerifier extends TransactionLogicVerifier {
       sender: BFChainCore.AccountInfoAndAssets;
       recipient?: BFChainCore.AccountInfoAndAssets;
     },
-    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "logicVerify",
     } as const;
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
 
     const { sourceChainMagic, assetType, sourceChainName } = transaction.asset.destoryAsset;
 

@@ -1,12 +1,6 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import type { SetLnsRecordValueTransaction } from "@bfchain/core-model";
 import { Injectable } from "@bfchain/util";
-import { CoreExceptionGenerator, NOT_EXIST } from "@bfchain/core-util-exception";
-const { NoFoundException } = CoreExceptionGenerator(
-  "VERIFIER",
-  "MarkLogicVerifier",
-);
-
 
 @Injectable()
 export class SetLnsRecordValueLogicVerifier extends TransactionLogicVerifier {
@@ -21,20 +15,9 @@ export class SetLnsRecordValueLogicVerifier extends TransactionLogicVerifier {
       sender: BFChainCore.AccountInfoAndAssets;
       recipient?: BFChainCore.AccountInfoAndAssets;
     },
-    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const Function_Exception_Detail = {
-      function: "verify",
-    } as const;
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
-    
     const { sender } = await this.logicVerify(
       transaction,
       currentBlockHeight,

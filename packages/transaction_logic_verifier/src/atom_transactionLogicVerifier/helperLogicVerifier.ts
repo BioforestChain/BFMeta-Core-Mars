@@ -6,17 +6,12 @@ import {
   ACCOUNT_CAN_NOT_BE_FROZEN,
   NOT_EXIST,
 } from "@bfchain/core-util-exception";
-const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
-  "VERIFIER",
-  "HelperLogicVerifier",
-);
+const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "HelperLogicVerifier");
 
 @Injectable()
 export class HelperLogicVerifier {
   @Inject(ConfigHelper)
   protected configHelper!: ConfigHelper;
-  @Inject("accountGetterHelper", { optional: true, dynamics: true })
-  protected accountGetterHelper?: BFChainCore.AccountGetterHelperInterface;
 
   deepClone<T>(obj: T): T {
     const result = Array.isArray(obj) ? ([] as any) : ({} as T);
@@ -60,26 +55,15 @@ export class HelperLogicVerifier {
   async isDAppPossessor(
     address: string,
     configHelper = this.configHelper,
-    accountGetterHelper = this.accountGetterHelper,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
   ) {
-    const Function_Exception_Detail = {
-      function: "isDAppPossessor",
-    } as const;
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
-
     // 资产的发行账户不能是dapp的拥有者
     const isDAppPossessor = await accountGetterHelper.isDAppPossessor(configHelper.magic, address);
     if (isDAppPossessor) {
       throw new ConsensusException(ACCOUNT_CAN_NOT_BE_FROZEN, {
         address,
         reason: "DApp id possessor can not initiate a frozen account transaction",
-        ...Function_Exception_Detail,
+        function: "isDAppPossessor",
       });
     }
   }
@@ -87,19 +71,8 @@ export class HelperLogicVerifier {
   async isLnsPossessorOrManager(
     address: string,
     configHelper = this.configHelper,
-    accountGetterHelper = this.accountGetterHelper,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
   ) {
-    const Function_Exception_Detail = {
-      function: "isLnsPossessorOrManager",
-    } as const;
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
-
     // 资产的发行账户不能是链域名的拥有者账户或管理账户
     const isLnsPossessor = await accountGetterHelper.isLocationNamePossessor(
       configHelper.magic,
@@ -109,7 +82,7 @@ export class HelperLogicVerifier {
       throw new ConsensusException(ACCOUNT_CAN_NOT_BE_FROZEN, {
         address,
         reason: "Location name possessor or manager can not initiate a frozen account transaction",
-        ...Function_Exception_Detail,
+        function: "isLnsPossessorOrManager",
       });
     }
   }

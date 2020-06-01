@@ -26,20 +26,9 @@ export class MarkLogicVerifier extends TransactionLogicVerifier {
       sender: BFChainCore.AccountInfoAndAssets;
       recipient?: BFChainCore.AccountInfoAndAssets;
     },
-    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const Function_Exception_Detail = {
-      function: "verify",
-    } as const;
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
-
     const mark = transaction.asset.mark;
     const { sourceChainMagic, dappid, sourceChainName } = mark.dapp;
     await this.isDAppidValid(
@@ -86,23 +75,16 @@ export class MarkLogicVerifier extends TransactionLogicVerifier {
    * @param currentBlockHeight
    * @param accountGetterHelper
    */
-  async isDAppidValid(
+  private async isDAppidValid(
     magic: string,
     chainName: string,
     dappid: string,
     currentBlockHeight: number,
-    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "isDAppidAlreadyExist",
     } as const;
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
     const memDapp = await accountGetterHelper.getDApp(magic, dappid, currentBlockHeight);
     if (!memDapp) {
       throw new ConsensusException(DAPPID_IS_NOT_EXIST, {

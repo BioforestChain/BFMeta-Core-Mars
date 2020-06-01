@@ -28,26 +28,12 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
       sender: BFChainCore.AccountInfoAndAssets;
       recipient?: BFChainCore.AccountInfoAndAssets;
     },
-    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "verify",
     } as const;
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
-    if (!transactionGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "transactionGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
 
     const grabAsset = transaction.asset.grabAsset;
 
@@ -107,7 +93,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
     return true;
   }
 
-  async isValidAmount(transaction: GrabAssetTransaction) {
+  private async isValidAmount(transaction: GrabAssetTransaction) {
     const { senderId, recipientId, asset } = transaction;
     const grabAsset = asset.grabAsset;
     const { giftAsset, blockSignatureBuffer, giftTransactionSignatureBuffer } = grabAsset;
@@ -171,7 +157,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    * @param giftAssetJson
    */
-  isValidRecipientId(
+  private isValidRecipientId(
     transaction: GrabAssetTransaction,
     giftAssetJson: BFChainCore.TransactionJSON<BFChainCore.GiftAssetAssetJSON>,
   ) {
@@ -192,7 +178,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    * @param blockSignature
    */
-  isBlockSignatureMatch(transaction: GrabAssetTransaction, blockSignature: string) {
+  private isBlockSignatureMatch(transaction: GrabAssetTransaction, blockSignature: string) {
     if (blockSignature !== transaction.asset.grabAsset.blockSignature) {
       throw new ConsensusException(NOT_MATCH, {
         to_compare_prop: "blockSignature",
@@ -210,7 +196,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    * @param giftAssetJson
    */
-  isDependentTransactionMatch(
+  private isDependentTransactionMatch(
     transaction: GrabAssetTransaction,
     giftAssetJson: BFChainCore.TransactionJSON<BFChainCore.GiftAssetAssetJSON>,
   ) {

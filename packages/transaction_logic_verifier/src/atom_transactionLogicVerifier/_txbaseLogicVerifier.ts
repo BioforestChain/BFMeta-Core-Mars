@@ -21,6 +21,7 @@ import {
   ALREADY_EXIST,
   INVALID_TRANSACTION_EFFECTIVE_BLOCK_HEIGHT,
   VERIFY_TRANSACTION_POW_OF_WORK_ERROR,
+  INVALID_TRANSACTION_FROM_MAGIC,
 } from "@bfchain/core-util-exception";
 import {
   NewTransactionRefuseReason,
@@ -68,8 +69,8 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       sender: BFChainCore.AccountInfoAndAssets;
       recipient?: BFChainCore.AccountInfoAndAssets;
     },
-    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
     customTransactionCenter?: BFChainCore.CustomTrCenterInterface,
   ): Promise<boolean>;
 
@@ -80,26 +81,13 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       sender: BFChainCore.AccountInfoAndAssets;
       recipient?: BFChainCore.AccountInfoAndAssets;
     },
-    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "logicVerify",
     } as const;
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
-    if (!transactionGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "transactionGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
+
     const { recipientId, senderPublicKey } = transaction;
     // 获取账户信息和资产信息
     const sender = accountsInfo.sender;
@@ -172,7 +160,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    *
    * @param accountInfo
    */
-  checkSenderAccountStatus(accountInfo: BFChainCore.AccountInfo | undefined) {
+  private checkSenderAccountStatus(accountInfo: BFChainCore.AccountInfo | undefined) {
     const Function_Exception_Detail = {
       function: "checkSenderAccountStatus",
     } as const;
@@ -200,7 +188,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    *
    * @param accountInfo
    */
-  checkRecipientAccountStatus(accountInfo: BFChainCore.AccountInfo | undefined) {
+  private checkRecipientAccountStatus(accountInfo: BFChainCore.AccountInfo | undefined) {
     const Function_Exception_Detail = {
       function: "checkRecipientAccountStatus",
     } as const;
@@ -229,12 +217,14 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    * @param accountInfo
    * @param tr
    */
-  checkSecondPublicKey(accountInfo: BFChainCore.AccountInfo, tr: T) {
+  private checkSecondPublicKey(accountInfo: BFChainCore.AccountInfo, tr: T) {
     const Function_Exception_Detail = {
       function: "checkSecondPublicKey",
     } as const;
-    if (accountInfo.secondPublicKey) {
-      if (!(tr.senderSecondPublicKey && tr.signSignature)) {
+    const secondPublicKey = accountInfo.secondPublicKey;
+    const { senderSecondPublicKey, signSignature } = tr;
+    if (secondPublicKey) {
+      if (!(senderSecondPublicKey && signSignature)) {
         throw new ConsensusException(TRANSACTION_SIGN_SIGNATURE_IS_REQUIRED, {
           signature: tr.signature,
           senderId: tr.senderId,
@@ -244,7 +234,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
         });
       }
 
-      if (accountInfo.secondPublicKey !== tr.senderSecondPublicKey) {
+      if (secondPublicKey !== senderSecondPublicKey) {
         throw new ConsensusException(SECOND_PUBLICKEY_ALREADY_CHANGE, {
           signature: tr.signature,
           senderId: tr.senderId,
@@ -254,7 +244,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
         });
       }
     } else {
-      if (tr.senderSecondPublicKey) {
+      if (senderSecondPublicKey) {
         throw new ConsensusException(SHOULD_NOT_HAVE_SENDER_SECOND_PUBLICKEY, {
           signature: tr.signature,
           senderId: tr.senderId,
@@ -263,7 +253,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
           ...Function_Exception_Detail,
         });
       }
-      if (tr.signSignature) {
+      if (signSignature) {
         throw new ConsensusException(TRANSACTION_SHOULD_NOT_HAVE_SIGN_SIGNATURE, {
           signature: tr.signature,
           senderId: tr.senderId,
@@ -281,7 +271,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    * @param tr
    * @param currentBlockHeight
    */
-  checkApplyBlockHeight(tr: T, currentBlockHeight: number) {
+  private checkApplyBlockHeight(tr: T, currentBlockHeight: number) {
     const Function_Exception_Detail = {
       function: "checkApplyBlockHeight",
     } as const;
@@ -300,14 +290,14 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    * @param tr
    * @param currentBlockHeight
    */
-  checkEffectiveBlockHeight(tr: T, currentBlockHeight: number) {
+  private checkEffectiveBlockHeight(tr: T, currentBlockHeight: number) {
     const Function_Exception_Detail = {
       function: "checkEffectiveBlockHeight",
     } as const;
     const effectiveBlockHeight = tr.effectiveBlockHeight;
     if (effectiveBlockHeight < currentBlockHeight) {
       throw new ConsensusException(INVALID_TRANSACTION_EFFECTIVE_BLOCK_HEIGHT, {
-        reason: `effectiveBlockHeight ${tr.effectiveBlockHeight} must greate than or equal to currntBlockHeight ${currentBlockHeight}`,
+        reason: `effectiveBlockHeight ${effectiveBlockHeight} must greate than or equal to currntBlockHeight ${currentBlockHeight}`,
         ...Function_Exception_Detail,
       });
     }
@@ -318,19 +308,13 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    *
    * @param tr
    */
-  async checkTransactionMagic(
+  private async checkTransactionMagic(
     tr: T,
-    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "checkTransactionMagic",
     } as const;
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_FOUND, {
-        prop: "accountGetterHelper",
-        ...Function_Exception_Detail,
-      });
-    }
     const fromMagic = tr.fromMagic;
     const toMagic = tr.toMagic;
     const chainMagic = this.configHelper.magic;
@@ -358,7 +342,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       // 来自的外链必须已经在链上注册过
       const chain = await accountGetterHelper.getChain(fromMagic);
       if (!chain) {
-        throw new ConsensusException(INVALID_TRANSACTION_TO_MAGIC, {
+        throw new ConsensusException(INVALID_TRANSACTION_FROM_MAGIC, {
           reason: "Transaction fromMagic chain not exists",
           signature: tr.signature,
           senderId: tr.senderId,
@@ -387,7 +371,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    *
    * @param tr
    */
-  checkTransactionTimestamp(tr: T) {
+  private checkTransactionTimestamp(tr: T) {
     const { timeHelper } = this;
     const nowTimestamp = timeHelper.getTimestamp();
     const trsSlot = timeHelper.getSlotNumberByTimestamp(tr.timestamp);
@@ -411,10 +395,10 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    * @param currentBlockHeight
    * @param accountGetterHelper
    */
-  async checkTransactionRange(
+  private async checkTransactionRange(
     tr: T,
     currentBlockHeight: number,
-    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "checkTransactionRange",
@@ -481,7 +465,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    * @param trs
    * @param byteLength
    */
-  checkTrsMaxBytes(byteLength: number) {
+  private checkTrsMaxBytes(byteLength: number) {
     if (BigInt(byteLength) > BigInt(this.configHelper.maxTransactionSize)) {
       throw new ConsensusException(INVALID_TRANSACTION_BYTE_LENGTH, {
         reason: "The size of the transaction exceeds the limit",
@@ -496,29 +480,15 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    * @param trs
    * @param currentBlockHeight
    */
-  async checkDAppId(
+  private async checkDAppId(
     trs: T,
     currentBlockHeight: number,
-    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "checkDAppId",
     } as const;
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
-    if (!transactionGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "transactionGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
     const { dappid, senderId } = trs;
     if (!dappid) {
       return;
@@ -579,21 +549,14 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    * @param tr
    * @param currentBlockHeight
    */
-  async checkLocationName(
+  private async checkLocationName(
     tr: T,
     currentBlockHeight: number,
-    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "checkLocationName",
     } as const;
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
     const lns = tr.lns;
     if (!lns) {
       return;
@@ -791,25 +754,18 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    * @param fixedEquityInfo
    * @param accountGetterHelper
    */
-  async checkTransactionPowOfWork(
+  private async checkTransactionPowOfWork(
     transaction: T,
     currentBlockHeight: number,
     fixedEquityInfo: {
       round: number;
       equity: bigint;
     },
-    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "checkRepeatInBlockChainTransaction",
     } as const;
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
     const curRound = this.blockHelper.calcRoundByHeight(currentBlockHeight);
     const tranSenderCount = await accountGetterHelper.getAccountTxCountInBlock(
       transaction.senderId,

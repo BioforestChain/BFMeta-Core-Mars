@@ -32,26 +32,12 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
       sender: BFChainCore.AccountInfoAndAssets;
       recipient?: BFChainCore.AccountInfoAndAssets;
     },
-    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "verify",
     } as const;
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
-    if (!transactionGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "transactionGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
 
     const { sender, recipient } = await this.logicVerify(
       transaction,
@@ -139,7 +125,7 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
    * @param transaction
    * @param toExchangeSpecialAssetJson
    */
-  isValidRecipientId(
+  private isValidRecipientId(
     transaction: BeExchangeSpecialAssetTransaction,
     toExchangeSpecialAssetJson: BFChainCore.TransactionJSON<
       BFChainCore.ToExchangeSpecialAssetAssetJSON
@@ -163,7 +149,7 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
    * @param transaction
    * @param toExchangeSpecialAssetJson
    */
-  isDependentTransactionMatch(
+  private isDependentTransactionMatch(
     transaction: BeExchangeSpecialAssetTransaction,
     toExchangeSpecialAssetJson: BFChainCore.TransactionJSON<
       BFChainCore.ToExchangeSpecialAssetAssetJSON

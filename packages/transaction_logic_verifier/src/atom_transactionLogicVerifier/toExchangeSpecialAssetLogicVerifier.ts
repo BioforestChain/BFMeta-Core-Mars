@@ -7,13 +7,12 @@ import {
 import { Injectable } from "@bfchain/util";
 import {
   CoreExceptionGenerator,
-  NOT_EXIST,
   ASSET_NOT_EXIST,
   NOT_MATCH,
   PROP_IS_INVALID,
 } from "@bfchain/core-util-exception";
 
-const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
+const { ConsensusException } = CoreExceptionGenerator(
   "VERIFIER",
   "ToExchangeSpecialAssetLogicVerifier",
 );
@@ -31,19 +30,12 @@ export class ToExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
       sender: BFChainCore.AccountInfoAndAssets;
       recipient?: BFChainCore.AccountInfoAndAssets;
     },
-    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "verify",
     } as const;
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
 
     const toExchangeSpecialAssetAsset = transaction.asset.toExchangeSpecialAsset;
     const {

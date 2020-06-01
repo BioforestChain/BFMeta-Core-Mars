@@ -26,8 +26,8 @@ export class VoteLogicVerifier extends TransactionLogicVerifier {
       sender: BFChainCore.AccountInfoAndAssets;
       recipient?: BFChainCore.AccountInfoAndAssets;
     },
-    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "verify",
@@ -75,7 +75,7 @@ export class VoteLogicVerifier extends TransactionLogicVerifier {
    *
    * @param recipient
    */
-  async isVoteForAcceptVoteDelegate(recipient: BFChainCore.AccountInfoAndAssets) {
+  private async isVoteForAcceptVoteDelegate(recipient: BFChainCore.AccountInfoAndAssets) {
     const Function_Exception_Detail = {
       function: "isVoteForAcceptVoteDelegate",
     } as const;

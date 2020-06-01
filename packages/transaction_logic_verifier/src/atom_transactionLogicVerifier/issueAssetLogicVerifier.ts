@@ -2,8 +2,6 @@ import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import type { IssueAssetTransaction } from "@bfchain/core-model";
 import { Injectable, Inject } from "@bfchain/util";
 import { AccountBaseHelper, TransactionHelper } from "@bfchain/core-helper";
-import { CoreExceptionGenerator, NOT_EXIST } from "@bfchain/core-util-exception";
-const { NoFoundException } = CoreExceptionGenerator("VERIFIER", "ImmigrateAssetLogicVerifier");
 
 @Injectable()
 export class IssueAssetLogicVerifier extends TransactionLogicVerifier {
@@ -21,27 +19,9 @@ export class IssueAssetLogicVerifier extends TransactionLogicVerifier {
       sender: BFChainCore.AccountInfoAndAssets;
       recipient?: BFChainCore.AccountInfoAndAssets;
     },
-    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const Function_Exception_Detail = {
-      function: "verify",
-    } as const;
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
-    if (!transactionGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "transactionGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
-
     const { sender, recipient } = await this.logicVerify(
       transaction,
       currentBlockHeight,

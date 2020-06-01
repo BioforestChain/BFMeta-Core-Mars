@@ -1,17 +1,9 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import type { ToExchangeAssetTransaction, ToExchangeAssetModel } from "@bfchain/core-model";
 import { Injectable } from "@bfchain/util";
-import {
-  CoreExceptionGenerator,
-  ASSET_NOT_EXIST,
-  NOT_EXIST,
-  NOT_MATCH,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ASSET_NOT_EXIST, NOT_MATCH } from "@bfchain/core-util-exception";
 
-const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
-  "VERIFIER",
-  "ToExchangeAssetLogicVerifier",
-);
+const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "ToExchangeAssetLogicVerifier");
 
 @Injectable()
 export class ToExchangeAssetLogicVerifier extends TransactionLogicVerifier {
@@ -26,20 +18,9 @@ export class ToExchangeAssetLogicVerifier extends TransactionLogicVerifier {
       sender: BFChainCore.AccountInfoAndAssets;
       recipient?: BFChainCore.AccountInfoAndAssets;
     },
-    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const Function_Exception_Detail = {
-      function: "verify",
-    } as const;
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
-
     const toExchangeAsset = transaction.asset.toExchangeAsset;
     await this.isExchangeAssetAlreadyExist(toExchangeAsset, accountGetterHelper);
 
@@ -69,7 +50,7 @@ export class ToExchangeAssetLogicVerifier extends TransactionLogicVerifier {
    *
    * @param toExchangeAssetAsset
    */
-  async isExchangeAssetAlreadyExist(
+  private async isExchangeAssetAlreadyExist(
     toExchangeAssetAsset: ToExchangeAssetModel,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
   ) {

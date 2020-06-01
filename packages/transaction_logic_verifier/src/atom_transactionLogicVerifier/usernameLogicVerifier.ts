@@ -4,13 +4,9 @@ import { Injectable } from "@bfchain/util";
 import {
   CoreExceptionGenerator,
   ACCOUNT_ALREADY_HAVE_USERNAME,
-  NOT_EXIST,
 } from "@bfchain/core-util-exception";
 
-const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
-  "VERIFIER",
-  "UsernameLogicVerifier",
-);
+const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "UsernameLogicVerifier");
 
 @Injectable()
 export class UsernameLogicVerifier extends TransactionLogicVerifier {
@@ -25,20 +21,9 @@ export class UsernameLogicVerifier extends TransactionLogicVerifier {
       sender: BFChainCore.AccountInfoAndAssets;
       recipient?: BFChainCore.AccountInfoAndAssets;
     },
-    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const Function_Exception_Detail = {
-      function: "verify",
-    } as const;
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
-
     const { sender } = await this.logicVerify(
       transaction,
       currentBlockHeight,

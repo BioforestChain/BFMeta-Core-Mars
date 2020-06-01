@@ -12,10 +12,7 @@ import {
   NOT_MATCH,
 } from "@bfchain/core-util-exception";
 
-const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
-  "VERIFIER",
-  "TrustAssetLogicVerifier",
-);
+const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "TrustAssetLogicVerifier");
 
 @Injectable()
 export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
@@ -30,21 +27,14 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
       sender: BFChainCore.AccountInfoAndAssets;
       recipient?: BFChainCore.AccountInfoAndAssets;
     },
-    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
     await this.isTrusteesFrozen(transaction.asset.trustAsset.trustees, accountGetterHelper);
 
     const Function_Exception_Detail = {
       function: "logicVerify",
     } as const;
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
 
     const { sourceChainMagic, assetType, sourceChainName } = transaction.asset.trustAsset;
 
@@ -102,20 +92,10 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
    *
    * @param trustees
    */
-  async isTrusteesFrozen(
+  private async isTrusteesFrozen(
     trustees: string[],
-    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
   ) {
-    const Function_Exception_Detail = {
-      function: "isTrusteesFrozen",
-    } as const;
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
     // 委托资产的委托账户不能是冻结账户
     for (const trustee of trustees) {
       const trusteeAccountInfo = await accountGetterHelper.getAccountInfo(trustee);
@@ -124,7 +104,7 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
           throw new ConsensusException(ACCOUNT_FROZEN, {
             address: trusteeAccountInfo.address,
             errorId: NewTransactionRefuseReason.TRANSACTION_SENDER_ASSET_FROZEN,
-            ...Function_Exception_Detail,
+            function: "isTrusteesFrozen",
           });
         }
       }
