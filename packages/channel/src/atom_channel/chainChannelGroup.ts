@@ -107,7 +107,14 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
   /**节点的工作量 */
   private _workCountWM = new EasyWeakMap<DH, number>((_) => 0);
   /**开始一个节点并发任务 */
-  startParallelTask(task_id: string, channelFilter?: BFChainCore.ChannelFilter) {
+  startParallelTask(
+    task_id: string,
+    opts: {
+      channelFilter?: BFChainCore.ChannelFilter;
+      abortWhenNoChainChannel?: boolean;
+    } = {},
+  ) {
+    const { channelFilter, abortWhenNoChainChannel } = opts;
     const WCWM = this._workCountWM;
 
     //#region 可用节点的队列管理
@@ -129,6 +136,9 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     };
     /**获取空闲的节点 */
     const getFreeChainChannel = () => {
+      if (abortWhenNoChainChannel && this.size === 0) {
+        throw new AbortException(`${task_id} abort because the size is zero`);
+      }
       const chainChannel = freeChainChannelList.shift();
       if (chainChannel) {
         return chainChannel;
@@ -261,7 +271,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
       freeChainChannel,
       busyChainChannel,
       hasFreeChainChannel,
-    } = this.startParallelTask(parallelTaskId, opts?.channelFilter);
+    } = this.startParallelTask(parallelTaskId, { channelFilter: opts?.channelFilter });
 
     const resultGenerator = _resultGenerator || new AsyncIteratorGenerator<TransactionInBlock>();
     if (!hasFreeChainChannel()) {
@@ -526,7 +536,9 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     opts?: BFChainUtil.SecondArgument<DH["queryBlock"]>,
   ) {
     const parallelTaskId = `Group(${this.groupName}) queryBlock-${Date.now() + Math.random()}`;
-    const { getFreeChainChannel } = this.startParallelTask(parallelTaskId, opts?.channelFilter);
+    const { getFreeChainChannel } = this.startParallelTask(parallelTaskId, {
+      channelFilter: opts?.channelFilter,
+    });
 
     const RETRY_TIMES = 5;
 

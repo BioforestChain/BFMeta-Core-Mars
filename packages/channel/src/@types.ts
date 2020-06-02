@@ -164,10 +164,15 @@ declare namespace BFChainCore {
     /**开始一个节点并发任务 */
     startParallelTask(
       task_id: string,
+      opts?: {
+        channelFilter?: BFChainCore.ChannelFilter;
+        abortWhenNoChainChannel?: boolean;
+      },
     ): {
       getFreeChainChannel: () => CC | Promise<CC>;
       freeChainChannel: (chainChannel: CC) => void;
       busyChainChannel: (chainChannel: CC) => void;
+      hasFreeChainChannel: () => boolean;
     };
     /**释放并发任务 */
     releaseParallelTask(task_id: string): false | undefined;
