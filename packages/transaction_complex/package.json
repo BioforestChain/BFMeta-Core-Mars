@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-transaction-complex",
-  "version": "5.13.38",
+  "version": "5.13.39",
   "main": "build/cjs/index.js",
   "type": "build/cjs/index.d.ts",
   "module": "build/esm/index.js",
@@ -8,7 +8,7 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-block": "5.13.38",
+    "@bfchain/core-block": "5.13.39",
     "@bfchain/core-transaction": "5.13.37",
     "@bfchain/core-typings": "5.13.37"
   },
