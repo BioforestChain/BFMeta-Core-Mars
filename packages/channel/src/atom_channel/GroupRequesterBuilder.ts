@@ -69,7 +69,9 @@ abstract class GroupRequesterBuilder<CC extends BFChainCore.ChainChannel, R> {
   }
   finish() {
     const finishInfo = this._getFinishInfo();
-    return this._aborter.abort(new AbortException(finishInfo.message, finishInfo.detail));
+    this._aborter.abort(new AbortException(finishInfo.message, finishInfo.detail));
+    this._inQueneTasks.clear();
+    this._retCCMap.clear();
   }
 }
 
