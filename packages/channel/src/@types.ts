@@ -18,7 +18,7 @@ declare namespace BFChainCore {
     endBroadcast: BFChainUtil.EventInOut<{ duraction: number }, any>;
   };
   type ChainChannelHanlderEventMap = {
-    afterRequestWithBinaryData: BFChainUtil.EventInOut<{ cmd: import('@bfchain/core-model').DUPLEX_API_CMD, res: any }, void>,
+    afterRequestWithBinaryData: BFChainUtil.EventInOut<{ cmd: import('@bfchain/core-model').DUPLEX_API_CMD, query: Uint8Array, res: any }, void>,
     handleMessageError: {
       in: { handleName: string; error: Error };
       out: undefined;
