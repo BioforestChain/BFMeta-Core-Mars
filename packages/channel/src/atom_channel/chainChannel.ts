@@ -250,7 +250,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
     }
     const res = await ResonseBoxer(await resp);
     //未统计信息创建的钩子 
-    await this.emit("afterRequestWithBinaryData", [cmd, res]);
+    await this.emit("afterRequestWithBinaryData", {cmd, res});
     return res
   }
   /**发送响应数据 */
