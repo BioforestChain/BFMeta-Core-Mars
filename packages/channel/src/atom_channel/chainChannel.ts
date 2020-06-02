@@ -238,6 +238,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
     ResonseBoxer: (bytes: Uint8Array) => BFChainUtil.PromiseMaybe<T>,
     options = this.defaultReqOptions,
   ) {
+    await this.emit("beforeRequestWithBinaryData", [cmd, binary]);
     const req_id = this._req_id_acc[0]++;
     this.postResponseMessage(req_id, cmd, binary);
     const req_task = new PromiseOut<Uint8Array>();
