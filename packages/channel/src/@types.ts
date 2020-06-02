@@ -4,21 +4,21 @@ declare namespace BFChainCore {
     startBroadcasting: BFChainUtil.EventInOut<{ chainChannelList: DH[] }, { break: boolean }>;
     broadcasted: BFChainUtil.EventInOut<
       | {
-          error: false;
-          result: import("@bfchain/core-model-channel").NewTransactionReturnModel;
-          chainChannel: DH;
-        }
+        error: false;
+        result: import("@bfchain/core-model-channel").NewTransactionReturnModel;
+        chainChannel: DH;
+      }
       | {
-          error: true;
-          result: unknown;
-          chainChannel: DH;
-        },
+        error: true;
+        result: unknown;
+        chainChannel: DH;
+      },
       { break: boolean }
     >;
     endBroadcast: BFChainUtil.EventInOut<{ duraction: number }, any>;
   };
   type ChainChannelHanlderEventMap = {
-    afterRequestWithBinaryData: BFChainUtil.EventInOut<[import('@bfchain/core-model').DUPLEX_API_CMD, any], void>,
+    afterRequestWithBinaryData: BFChainUtil.EventInOut<{ cmd: import('@bfchain/core-model').DUPLEX_API_CMD, res: any }, void>,
     handleMessageError: {
       in: { handleName: string; error: Error };
       out: undefined;
@@ -44,7 +44,7 @@ declare namespace BFChainCore {
       out: GetPeerInfoReturnParams | undefined;
     };
   };
-  interface ChannelRequestOptions extends ChannelRequestAborterOptions, ChannelRequestBaseOptions {}
+  interface ChannelRequestOptions extends ChannelRequestAborterOptions, ChannelRequestBaseOptions { }
   /**请求中断器 */
   interface ChannelRequestAborterOptions {
     /**超时 */
@@ -67,10 +67,10 @@ declare namespace BFChainCore {
 
   type QueneEventEmitterPro<
     EM extends BFChainUtil.EventInOutMap
-  > = import("@bfchain/util").QueneEventEmitterPro<EM>;
+    > = import("@bfchain/util").QueneEventEmitterPro<EM>;
   interface ChainChannel
     extends ChainChannelBase,
-      QueneEventEmitterPro<ChainChannelHanlderEventMap> {
+    QueneEventEmitterPro<ChainChannelHanlderEventMap> {
     delay: number;
     /**
      * 与远程节点通道的相对时间差别
@@ -197,15 +197,15 @@ declare namespace BFChainCore {
     ): Promise<
       (
         | {
-            error: false;
-            result: import("@bfchain/core-model-channel").NewTransactionReturnModel;
-            chainChannel: CC;
-          }
+          error: false;
+          result: import("@bfchain/core-model-channel").NewTransactionReturnModel;
+          chainChannel: CC;
+        }
         | {
-            error: true;
-            result: unknown;
-            chainChannel: CC;
-          }
+          error: true;
+          result: unknown;
+          chainChannel: CC;
+        }
       )[]
     >;
     /**
