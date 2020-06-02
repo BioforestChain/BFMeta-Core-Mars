@@ -64,6 +64,9 @@ abstract class GroupRequesterBuilder<CC extends BFChainCore.ChainChannel, R> {
     const cc = this._retCCMap.get(ret);
     return cc ? this.removeChainChannel(cc) : false;
   }
+  getChainChannelByResult(ret: R) {
+    return this._retCCMap.get(ret);
+  }
   finish() {
     const finishInfo = this._getFinishInfo();
     return this._aborter.abort(new AbortException(finishInfo.message, finishInfo.detail));
