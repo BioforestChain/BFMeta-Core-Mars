@@ -255,7 +255,13 @@ export abstract class BlockFactory<T extends Block> {
     await this.verifyBlockBody(block, block.remark, config);
 
     // 绑定交易相关的信息
-    await this.insertTransactionsForReplay(block, transactions, eventEmitter, options, config);
+    const transactionBufferList = await this.insertTransactionsForReplay(
+      block,
+      transactions,
+      eventEmitter,
+      options,
+      config,
+    );
 
     // 校验区块奖励数
     this.verifyBlockReward(block);
@@ -264,7 +270,9 @@ export abstract class BlockFactory<T extends Block> {
     eventEmitter && (await eventEmitter.emit("beforeSignatureBlock", block));
 
     // 验证区块大小
-    this.verifyBlockSize(block);
+    this.verifyBlockSize(
+      Object.create(block, { transactionBufferList: { value: transactionBufferList } }),
+    );
 
     // 校验 remark 大小
     this.verifyBlockRemarkSize(block);
@@ -526,12 +534,8 @@ export abstract class BlockFactory<T extends Block> {
     /**所有交易体的总字节长度 */
     let payloadLength = 0;
     /**本块交易所涉及的资产信息 */
-    const statisticsInfo = this.statisticsHelper.forceGetStatisticsInfoByBlock(
-      height,
-      signature,
-      blockStatisticsInfo,
-    );
-    const transactions: TransactionInBlock[] = [];
+    const statisticsInfo = this.statisticsHelper.forceGetStatisticsInfoByBlock(height, signature);
+    const transactionBufferList: Uint8Array[] = [];
     const { transactionCore, asymmetricHelper } = this;
 
     try {
@@ -603,7 +607,7 @@ export abstract class BlockFactory<T extends Block> {
             //#endregion
           }
           // 保存交易
-          if (transactions.length !== tranItem.index) {
+          if (transactionBufferList.length !== tranItem.index) {
             throw new ArgumentIllegalException(NOT_MATCH, {
               to_compare_prop: "index",
               be_compare_prop: "index",
@@ -612,6 +616,7 @@ export abstract class BlockFactory<T extends Block> {
               ...Function_Exception_Detail,
             });
           }
+          transactionBufferList.push(tranItem.getBytes());
 
           /// 交易生效
           const txFactory = transactionCore.getTransactionFactoryFromType(trs.type);
@@ -730,7 +735,7 @@ export abstract class BlockFactory<T extends Block> {
         });
       }
 
-      const numberOfTransactions = transactions.length;
+      const numberOfTransactions = transactionBufferList.length;
       if (block.numberOfTransactions !== numberOfTransactions) {
         /// 区块的交易数对不上
         throw new ArgumentIllegalException(NOT_MATCH, {
@@ -770,7 +775,7 @@ export abstract class BlockFactory<T extends Block> {
       statisticsInfo.unref(block.signature);
     }
 
-    return block;
+    return transactionBufferList;
   }
 
   /**
