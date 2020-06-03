@@ -1,6 +1,6 @@
 import { ConfigHelper } from "@bfchain/core-helper-config";
 import { Base58Helper } from "./base58Helper";
-import { Injectable, Inject } from "@bfchain/util";
+import { Injectable, Inject, encodeUTF8ToBinary, encodeHexToBinary } from "@bfchain/util";
 
 const FROZEN_PK_ADD_WM = new WeakMap<Uint8Array, BFChainUtil.Buffer>();
 /**账户辅助模块
@@ -37,7 +37,7 @@ export class AccountBaseHelper {
    */
   async createSecretKeypair(secret: string) {
     return await this.keypairHelperInterface.create(
-      await this.cryptoHelper.sha256(this.Buffer.from(secret, "utf8")),
+      await this.cryptoHelper.sha256(encodeUTF8ToBinary(secret)),
     );
   }
   /**根据私钥获取公钥Buffer */
@@ -71,7 +71,7 @@ export class AccountBaseHelper {
   }
   /**根据公钥字符串生成地址(base58) */
   getAddressFromPublicKeyString(publicKey: string, prefix?: string) {
-    return this.getAddressFromPublicKey(this.Buffer.from(publicKey, "hex"), prefix);
+    return this.getAddressFromPublicKey(encodeHexToBinary(publicKey), prefix);
   }
   /**
    * 根据主密码生成地址
@@ -110,9 +110,9 @@ export class AccountBaseHelper {
    */
   async createSecondSecretKeypair(secret: string, secondSecret: string) {
     const md5Second = `${secret}-${(
-      await this.cryptoHelper.md5(this.Buffer.from(secondSecret, "utf8"))
+      await this.cryptoHelper.md5(encodeUTF8ToBinary(secondSecret))
     ).toString("hex")}`;
-    const secondHash = await this.cryptoHelper.sha256(this.Buffer.from(md5Second, "utf8"));
+    const secondHash = await this.cryptoHelper.sha256(encodeUTF8ToBinary(md5Second));
     return this.createSecretKeypair(secondHash.toString());
   }
   /**根据私钥获取公钥Buffer */

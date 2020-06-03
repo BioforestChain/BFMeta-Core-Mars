@@ -1,4 +1,4 @@
-import { Injectable, Inject, getHexFromArrayBuffer } from "@bfchain/util";
+import { Injectable, Inject, getHexFromArrayBuffer, decodeBinaryToHex } from "@bfchain/util";
 import { ConfigHelper } from "@bfchain/core-helper-config";
 import { BaseHelper } from "@bfchain/core-helper-type";
 import { PROP_SHOULD_LTE_FIELD, OUT_OF_RANGE } from "@bfchain/core-util-exception-errorcode";
@@ -34,9 +34,7 @@ export class BlockHelper {
    * @param block
    */
   async generateSignature(block: BFChainCore.Block) {
-    return this.Buffer.from(await this.cryptoHelper.sha256(block.getBytes(true, true))).toString(
-      "hex",
-    );
+    return decodeBinaryToHex(await this.cryptoHelper.sha256(block.getBytes(true, true)));
   }
 
   /**是否是合法的区块 signature */
@@ -59,11 +57,7 @@ export class BlockHelper {
     // 验证 signature 与 publicKey
     const hash = await this.cryptoHelper.sha256(block.getBytes(true, true));
     if (
-      !(await this.keypairHelper.detached_verify(
-        Buffer.from(hash),
-        Buffer.from(signatureBuffer),
-        Buffer.from(generatorPublicKeyBuffer),
-      ))
+      !(await this.keypairHelper.detached_verify(hash, signatureBuffer, generatorPublicKeyBuffer))
     ) {
       throw new ArgumentFormatException(`Invalid ${taskLabel} signature`);
     }

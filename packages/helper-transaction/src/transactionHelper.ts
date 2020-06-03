@@ -274,13 +274,7 @@ export class TransactionHelper {
     } = transaction;
     const hash = await this.cryptoHelper.sha256().update(transaction.getBytes(true, true)).digest();
     // 验证 signature 与 publicKey
-    if (
-      !(await this.keypairHelper.detached_verify(
-        hash,
-        Buffer.from(signatureBuffer),
-        Buffer.from(senderPublicKeyBuffer),
-      ))
-    ) {
+    if (!(await this.keypairHelper.detached_verify(hash, signatureBuffer, senderPublicKeyBuffer))) {
       throw new ArgumentFormatException(`Invalid ${taskLabel} signature`);
     }
 
@@ -297,8 +291,8 @@ export class TransactionHelper {
         if (
           !(await this.keypairHelper.detached_verify(
             shash,
-            Buffer.from(signSignatureBuffer),
-            Buffer.from(senderSecondPublicKeyBuffer),
+            signSignatureBuffer,
+            senderSecondPublicKeyBuffer,
           ))
         ) {
           throw new ArgumentFormatException(`Invalid ${taskLabel} signSignature`);
@@ -318,7 +312,7 @@ export class TransactionHelper {
   verifyTransactionRemarkSize<SOME_TRS extends BFChainCore.Transaction>(transaction: SOME_TRS) {
     const templateRemark = TemplateRemark.fromObject({ remark: transaction.remark });
     const { maxBlockRemarkSize } = this.config;
-    const remarkSize = this.Buffer.from(templateRemark.getBytes()).length;
+    const remarkSize = templateRemark.getBytes().length;
     if (remarkSize > maxBlockRemarkSize) {
       throw new ArgumentIllegalException(PROP_SHOULD_LTE_FIELD, {
         prop: `remarkSize ${remarkSize}`,
@@ -334,7 +328,7 @@ export class TransactionHelper {
    */
   verifyTransactionSize<SOME_TRS extends BFChainCore.Transaction>(transaction: SOME_TRS) {
     const { maxTransactionSize } = this.config;
-    const trsSize = this.Buffer.from(transaction.getBytes()).length;
+    const trsSize = transaction.getBytes().length;
     if (trsSize > maxTransactionSize) {
       throw new ArgumentIllegalException(PROP_SHOULD_LTE_FIELD, {
         prop: `transactionSize ${trsSize}`,
