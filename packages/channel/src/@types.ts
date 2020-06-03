@@ -4,21 +4,24 @@ declare namespace BFChainCore {
     startBroadcasting: BFChainUtil.EventInOut<{ chainChannelList: DH[] }, { break: boolean }>;
     broadcasted: BFChainUtil.EventInOut<
       | {
-        error: false;
-        result: import("@bfchain/core-model-channel").NewTransactionReturnModel;
-        chainChannel: DH;
-      }
+          error: false;
+          result: import("@bfchain/core-model-channel").NewTransactionReturnModel;
+          chainChannel: DH;
+        }
       | {
-        error: true;
-        result: unknown;
-        chainChannel: DH;
-      },
+          error: true;
+          result: unknown;
+          chainChannel: DH;
+        },
       { break: boolean }
     >;
     endBroadcast: BFChainUtil.EventInOut<{ duraction: number }, any>;
   };
   type ChainChannelHanlderEventMap = {
-    afterRequestWithBinaryData: BFChainUtil.EventInOut<{ cmd: import('@bfchain/core-model').DUPLEX_API_CMD, query: Uint8Array, res: any }, void>,
+    afterRequestWithBinaryData: BFChainUtil.EventInOut<
+      { cmd: import("@bfchain/core-model").DUPLEX_API_CMD; query: Uint8Array; res: any },
+      void
+    >;
     handleMessageError: {
       in: { handleName: string; error: Error };
       out: undefined;
@@ -44,7 +47,12 @@ declare namespace BFChainCore {
       out: GetPeerInfoReturnParams | undefined;
     };
   };
-  interface ChannelRequestOptions extends ChannelRequestAborterOptions, ChannelRequestBaseOptions { }
+  interface ChannelGroupRequestOptions
+    extends ChannelRequestAborterOptions,
+      ChannelRequestBaseOptions {
+    abortWhenNoChainChannel?: boolean;
+  }
+  interface ChannelRequestOptions extends ChannelRequestAborterOptions, ChannelRequestBaseOptions {}
   /**请求中断器 */
   interface ChannelRequestAborterOptions {
     /**超时 */
@@ -67,10 +75,10 @@ declare namespace BFChainCore {
 
   type QueneEventEmitterPro<
     EM extends BFChainUtil.EventInOutMap
-    > = import("@bfchain/util").QueneEventEmitterPro<EM>;
+  > = import("@bfchain/util").QueneEventEmitterPro<EM>;
   interface ChainChannel
     extends ChainChannelBase,
-    QueneEventEmitterPro<ChainChannelHanlderEventMap> {
+      QueneEventEmitterPro<ChainChannelHanlderEventMap> {
     delay: number;
     /**
      * 与远程节点通道的相对时间差别
@@ -173,6 +181,10 @@ declare namespace BFChainCore {
       freeChainChannel: (chainChannel: CC) => void;
       busyChainChannel: (chainChannel: CC) => void;
       hasFreeChainChannel: () => boolean;
+      requestChainChannel: <R>(
+        cb: (event: RequestChainChannelEvent<CC>) => Promise<R>,
+        autoFreeChainChannel?: boolean,
+      ) => Promise<R>;
     };
     /**释放并发任务 */
     releaseParallelTask(task_id: string): false | undefined;
@@ -197,15 +209,15 @@ declare namespace BFChainCore {
     ): Promise<
       (
         | {
-          error: false;
-          result: import("@bfchain/core-model-channel").NewTransactionReturnModel;
-          chainChannel: CC;
-        }
+            error: false;
+            result: import("@bfchain/core-model-channel").NewTransactionReturnModel;
+            chainChannel: CC;
+          }
         | {
-          error: true;
-          result: unknown;
-          chainChannel: CC;
-        }
+            error: true;
+            result: unknown;
+            chainChannel: CC;
+          }
       )[]
     >;
     /**
@@ -229,6 +241,10 @@ declare namespace BFChainCore {
       }[]
     >;
   }
+  type RequestChainChannelEvent<CC extends ChainChannel = ChainChannel> = {
+    chainChannel: CC;
+    autoFreeChainChannel: boolean;
+  };
   type ChainChannelGroupEventMap<CC extends ChainChannel = ChainChannel> = {
     addChainChannel: [CC];
     removeChainChannel: [CC];

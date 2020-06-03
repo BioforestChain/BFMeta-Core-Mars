@@ -100,6 +100,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     {
       freeChainChannelList: DH[];
       busyChainChannels: Set<DH>;
+      queneChainChannelList: PromiseOut<DH>[];
       tiTasks: Set<Promise<void>>;
       onDestroy: () => unknown;
     }
@@ -170,6 +171,24 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
       _tryFreeChainChannel();
       return true;
     };
+    const requestChainChannel = async <R>(
+      cb: (event: BFChainCore.RequestChainChannelEvent<DH>) => Promise<R>,
+      autoFreeChainChannel = true,
+    ) => {
+      const chainChannel = await getFreeChainChannel();
+      busyChainChannel(chainChannel);
+      const event: BFChainCore.RequestChainChannelEvent<DH> = {
+        chainChannel,
+        autoFreeChainChannel,
+      };
+      try {
+        return await cb(event);
+      } finally {
+        if (event.autoFreeChainChannel) {
+          freeChainChannel(chainChannel);
+        }
+      }
+    };
     /**
      * 但繁忙节点增加或者可用节点减少的时候，自动进行释放工作
      */
@@ -224,6 +243,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     this._parallelTasksMap.set(task_id, {
       freeChainChannelList,
       busyChainChannels,
+      queneChainChannelList,
       tiTasks,
       onDestroy: () => {
         freeChainChannelList.length = 0;
@@ -237,7 +257,13 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
         this.offRemoveChainChannel(tryRemoveChainChannelFromList);
       },
     });
-    return { hasFreeChainChannel, getFreeChainChannel, freeChainChannel, busyChainChannel };
+    return {
+      hasFreeChainChannel,
+      getFreeChainChannel,
+      freeChainChannel,
+      busyChainChannel,
+      requestChainChannel,
+    };
   }
   /**释放并发任务 */
   releaseParallelTask(task_id: string) {
@@ -255,7 +281,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
   queryTransactions(
     query: BFChainUtil.FirstArgument<DH["queryTransactions"]>,
     sort?: BFChainUtil.SecondArgument<DH["queryTransactions"]>,
-    opts?: BFChainUtil.ThirdArgument<DH["queryTransactions"]>,
+    opts?: BFChainCore.ChannelGroupRequestOptions,
     _resultGenerator?: AsyncIteratorGenerator<TransactionInBlock>,
   ) {
     /**异常时重试次数 */
@@ -266,19 +292,12 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     const parallelTaskId = `Group(${this.groupName}) queryTransactions-${
       Date.now() + Math.random()
     }`;
-    const {
-      getFreeChainChannel,
-      freeChainChannel,
-      busyChainChannel,
-      hasFreeChainChannel,
-    } = this.startParallelTask(parallelTaskId, { channelFilter: opts?.channelFilter });
+    const { requestChainChannel } = this.startParallelTask(parallelTaskId, {
+      channelFilter: opts?.channelFilter,
+      abortWhenNoChainChannel: opts?.abortWhenNoChainChannel,
+    });
 
     const resultGenerator = _resultGenerator || new AsyncIteratorGenerator<TransactionInBlock>();
-    if (!hasFreeChainChannel()) {
-      /// 这里就不去等待了，虽然可以去等节点加入，当没必要
-      resultGenerator.done();
-      return resultGenerator;
-    }
 
     /**私有内部类 */
     class AddChainChannelOptions {
@@ -347,71 +366,67 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
         });
         // const waitUseableChainChannel = new PromiseOut<void>();
         task_chain = task_chain.then(
-          async () => {
-            // 获取可用节点
-            const chainChannel = await getFreeChainChannel();
-            waitUseableChainChannel.resolve();
-            // 将这个节点放入繁忙队列，暂时不使用
-            busyChainChannel(chainChannel);
-            // 开始执行查询
-            try {
-              const res = await queryer.addChainChannel(chainChannel, options);
+          () =>
+            requestChainChannel(async (event) => {
+              waitUseableChainChannel.resolve();
+              // 开始执行查询
+              try {
+                const res = await queryer.addChainChannel(event.chainChannel, options);
 
-              if (res.status === RESPONSE_STATUS.success) {
-                // 任务完成
-                queryer.finish();
-                // 确认节点的工作，让其继续下一个工作
-                freeChainChannel(chainChannel);
-                if (res.transactions.length === 0) {
-                  query_done_offset = task_offset;
-                } else {
-                  res.transactions.forEach((trs, i) => {
-                    resultGenerator.push(
-                      TransactionInBlock.fromObject(trs),
-                      task_offset - offset + i,
-                    );
-                  });
-                  // task_result_list[task_offset] = res.transactions[0];
+                if (res.status === RESPONSE_STATUS.success && res.transactions.length > 0) {
+                  // 任务完成
+                  queryer.finish();
+                  // 确认节点的工作，让其继续下一个工作
+                  event.autoFreeChainChannel = true;
+                  if (res.transactions.length === 0) {
+                    query_done_offset = task_offset;
+                  } else {
+                    res.transactions.forEach((trs, i) => {
+                      resultGenerator.push(
+                        TransactionInBlock.fromObject(trs),
+                        task_offset - offset + i,
+                      );
+                    });
+                    // task_result_list[task_offset] = res.transactions[0];
+                  }
+                } else if (res.status === RESPONSE_STATUS.busy || res.transactions.length === 0) {
+                  // 移除无效的结果
+                  queryer.removeChainChannelByResult(res);
+                  // 重试任务，但是这个节点仍旧放在繁忙节点列表，暂时不信任
+                  doTask(task_offset, times + 1);
+                } else if (res.status === RESPONSE_STATUS.error) {
+                  // 移除无效的结果
+                  queryer.removeChainChannelByResult(res);
+                  // 任务失败，抛出异常
+                  throw res.error;
                 }
-              } else if (res.status === RESPONSE_STATUS.busy) {
-                // 移除无效的结果
-                queryer.removeChainChannelByResult(res);
-                // 重试任务，但是这个节点仍旧放在繁忙节点列表，暂时不信任
-                doTask(task_offset, times + 1);
-              } else if (res.status === RESPONSE_STATUS.error) {
-                // 移除无效的结果
-                queryer.removeChainChannelByResult(res);
-                // 任务失败，抛出异常
-                throw res.error;
+              } catch (err) {
+                if (AbortException.is(err)) {
+                  // 如果被中断了任务，那么直接结束任务
+                  throw err;
+                }
+                if (!TimeOutException.is(err)) {
+                  /// 如果时超时，默认不打印，因为超时时本地没收到数据的问题
+                  error(
+                    err,
+                    "[GROUP]:",
+                    this.groupName,
+                    "[QUERY]:",
+                    query,
+                    "[OFFSET]:",
+                    task_offset,
+                    "[TIMES]:",
+                    times,
+                  );
+                }
+                if (times < RETRY_TIMES) {
+                  // 存在异常，重试任务
+                  doTask(task_offset, times + 1);
+                  return;
+                }
+                throw err;
               }
-            } catch (err) {
-              if (AbortException.is(err)) {
-                // 如果被中断了任务，那么直接再次执行任务
-                doTask(task_offset, times);
-                return;
-              }
-              if (!TimeOutException.is(err)) {
-                /// 如果时超时，默认不打印，因为超时时本地没收到数据的问题
-                error(
-                  err,
-                  "[GROUP]:",
-                  this.groupName,
-                  "[QUERY]:",
-                  query,
-                  "[OFFSET]:",
-                  task_offset,
-                  "[TIMES]:",
-                  times,
-                );
-              }
-              if (times < RETRY_TIMES) {
-                // 存在异常，重试任务
-                doTask(task_offset, times + 1);
-                return;
-              }
-              throw err;
-            }
-          },
+            }, /**默认不释放节点 */ false),
           (err) => waitUseableChainChannel.reject(err),
         );
         return waitUseableChainChannel.promise;
@@ -533,11 +548,12 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
    */
   async queryBlock(
     query: BFChainUtil.FirstArgument<DH["queryBlock"]>,
-    opts?: BFChainUtil.SecondArgument<DH["queryBlock"]>,
+    opts?: BFChainCore.ChannelGroupRequestOptions,
   ) {
     const parallelTaskId = `Group(${this.groupName}) queryBlock-${Date.now() + Math.random()}`;
-    const { getFreeChainChannel } = this.startParallelTask(parallelTaskId, {
+    const { requestChainChannel } = this.startParallelTask(parallelTaskId, {
       channelFilter: opts?.channelFilter,
+      abortWhenNoChainChannel: opts?.abortWhenNoChainChannel,
     });
 
     const RETRY_TIMES = 5;
@@ -561,27 +577,28 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
       },
     };
     let retryTimes = 0;
+    let result: BFChainUtil.PromiseType<ReturnType<DH["queryBlock"]>> | undefined;
     do {
-      try {
-        const chainChannel = await getFreeChainChannel();
-
-        const result = await queryer.addChainChannel(chainChannel, options);
-        if (result.status === RESPONSE_STATUS.busy) {
-          queryer.removeChainChannelByResult(result);
-          continue;
+      await requestChainChannel(async (event) => {
+        try {
+          result = await queryer.addChainChannel(event.chainChannel, options);
+          if (result.status === RESPONSE_STATUS.busy || !result.someBlock) {
+            queryer.removeChainChannelByResult(result);
+            return;
+          }
+          /// 完成任务
+          queryer.finish();
+          /// 释放并发
+          this.releaseParallelTask(parallelTaskId);
+        } catch (err) {
+          retryTimes += 1;
+          if (retryTimes >= RETRY_TIMES) {
+            throw err;
+          }
         }
-        /// 完成任务
-        queryer.finish();
-        /// 释放并发
-        this.releaseParallelTask(parallelTaskId);
-        return result;
-      } catch (err) {
-        retryTimes += 1;
-        if (retryTimes >= RETRY_TIMES) {
-          throw err;
-        }
-      }
-    } while (true);
+      }, /**默认不自动释放节点 */ false);
+    } while (!result);
+    return result;
   }
   async findBlock<B extends Block = CommonBlock>(
     ...args: BFChainUtil.AllArgument<ChainChannelGroup<DH>["queryBlock"]>
