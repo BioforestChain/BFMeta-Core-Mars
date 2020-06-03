@@ -29,6 +29,10 @@ declare namespace BFChainCore {
     minBeSelectProductivity: BFChainCore.FractionJSON;
   };
 
+  type ReplayBlockOptions = {
+    verifySignature?: boolean;
+  };
+
   type ForgeInfos = {
     producedblocks: number;
     applyTxNumber: number;
