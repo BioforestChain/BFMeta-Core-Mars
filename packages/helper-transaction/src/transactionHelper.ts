@@ -16,7 +16,7 @@ import {
 } from "@bfchain/core-model-transaction";
 import { JSBIHelper } from "@bfchain/core-helper-bigint";
 import { AsymmetricHelper } from "@bfchain/core-helper-asymmetric";
-import { Injectable, Inject } from "@bfchain/util";
+import { Injectable, Inject, decodeBinaryToHex } from "@bfchain/util";
 import { AccountBaseHelper } from "@bfchain/core-helper-account-base";
 import { TRANSACTION_FILTER_SYMBOL, ABORT_FORBIDDEN_TRANSACTION_SYMBOL } from "./const";
 type Transaction = import("@bfchain/core-model-transaction").Transaction;
@@ -81,8 +81,8 @@ export class TransactionHelper {
    *
    * @param trs
    */
-  generateSignature(trs: Transaction) {
-    return this.cryptoHelper.sha256().update(trs.getBytes()).digest("hex");
+  async generateSignature(trs: Transaction) {
+    return decodeBinaryToHex(await this.cryptoHelper.sha256(trs.getBytes(true, true)));
   }
   /**是否是合法的交易 signature */
   isValidTransactionSignature(signature: string) {

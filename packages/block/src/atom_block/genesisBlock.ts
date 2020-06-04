@@ -9,7 +9,7 @@ import {
   AsymmetricHelper,
   ChainAssetInfoHelper,
   BlockBaseStatisticsHelper,
-  ConfigHelperMap,
+  ChainTimeHelper,
 } from "@bfchain/core-helper";
 import {
   CoreExceptionGenerator,
@@ -22,6 +22,9 @@ import {
 import { Injectable, Inject, ModuleStroge } from "@bfchain/util";
 import { BNID_TYPE } from "@bfchain/core-transaction";
 import { BlockGeneratorCalculator } from "./blockGeneratorCalculator";
+import type { CommonBlockVerify } from "./commonBlockVerify";
+import type { VerifyBlockCore } from "./verifyBlock";
+import type { ReplayBlockCore } from "./replayBlock";
 const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "GenesisBlockFactory");
 
 /**
@@ -40,11 +43,12 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
     public statisticsHelper: BlockBaseStatisticsHelper,
     public milestonesHelper: MilestonesHelper,
     public asymmetricHelper: AsymmetricHelper,
-    public moduleMap: ModuleStroge,
-    public chainAssetInfoHelper: ChainAssetInfoHelper,
-    private configMap: ConfigHelperMap,
     @Inject("cryptoHelper") public cryptoHelper: BFChainCore.CryptoHelperInterface,
     public blockGeneratorCalculator: BlockGeneratorCalculator,
+
+    public commonBlockVerify: CommonBlockVerify<GenesisBlock>,
+    public verifyBlockCore: VerifyBlockCore<GenesisBlock>,
+    public replayBlockCore: ReplayBlockCore<GenesisBlock>,
   ) {
     super();
   }
@@ -60,7 +64,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
     opts?: { verify?: boolean; config?: ConfigHelper },
   ) {
     const block = GenesisBlock.fromObject(blockBody);
-    block.transactions = blockBody.transactions.map(twi => {
+    block.transactions = blockBody.transactions.map((twi) => {
       return this.transactionInBlockFromJSON(twi);
     });
     if (opts && opts.verify) {
