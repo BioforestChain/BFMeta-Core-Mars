@@ -326,8 +326,8 @@ export class ReplayBlockCore<T extends Block> {
           // 保存交易
           if (transactionBufferList.length !== tranItem.index) {
             throw new ArgumentIllegalException(NOT_MATCH, {
-              to_compare_prop: "index",
-              be_compare_prop: "index",
+              to_compare_prop: `index ${transactionBufferList.length}`,
+              be_compare_prop: `index ${tranItem.index}`,
               to_target: "transactions",
               be_target: "calculate",
               ...Function_Exception_Detail,
@@ -350,7 +350,7 @@ export class ReplayBlockCore<T extends Block> {
           for (const transactionAssetChange of transactionAssetChanges) {
             if (BigInt(transactionAssetChange.assetBalance) < BigInt(0)) {
               throw new ArgumentIllegalException(PROP_IS_INVALID, {
-                prop: "assetBalance",
+                prop: `assetBalance ${transactionAssetChange.assetBalance}`,
                 target: "transactionAssetChanges",
                 function: "insertTransactionsForReplay",
               });
@@ -413,8 +413,8 @@ export class ReplayBlockCore<T extends Block> {
       const stotalFee = statisticsInfo.totalFee;
       if (BigInt(block.totalAmount) !== stotalAmount) {
         throw new ArgumentIllegalException(NOT_MATCH, {
-          to_compare_prop: "totalAmount",
-          be_compare_prop: "totalAmount",
+          to_compare_prop: `totalAmount ${block.totalAmount}`,
+          be_compare_prop: `totalAmount ${stotalAmount}`,
           to_target: "block",
           be_target: "calculate",
           ...Function_Exception_Detail,
@@ -423,8 +423,8 @@ export class ReplayBlockCore<T extends Block> {
 
       if (BigInt(block.totalFee) !== stotalFee) {
         throw new ArgumentIllegalException(NOT_MATCH, {
-          to_compare_prop: "totalFee",
-          be_compare_prop: "totalFee",
+          to_compare_prop: `totalFee ${block.totalFee}`,
+          be_compare_prop: `totalFee ${stotalFee}`,
           to_target: "block",
           be_target: "calculate",
           ...Function_Exception_Detail,
@@ -433,8 +433,8 @@ export class ReplayBlockCore<T extends Block> {
 
       if (block.payloadLength !== payloadLength) {
         throw new ArgumentIllegalException(NOT_MATCH, {
-          to_compare_prop: "payloadLength",
-          be_compare_prop: "payloadLength",
+          to_compare_prop: `payloadLength ${block.payloadLength}`,
+          be_compare_prop: `payloadLength ${payloadLength}`,
           to_target: "block",
           be_target: "calculate",
           ...Function_Exception_Detail,
@@ -444,8 +444,8 @@ export class ReplayBlockCore<T extends Block> {
       const payloadHashHex = await payloadHash.digest("hex");
       if (block.payloadHash !== payloadHashHex) {
         throw new ArgumentIllegalException(NOT_MATCH, {
-          to_compare_prop: "payloadHashHex",
-          be_compare_prop: "payloadHashHex",
+          to_compare_prop: `payloadHashHex ${block.payloadHash}`,
+          be_compare_prop: `payloadHashHex ${payloadHashHex}`,
           to_target: "block",
           be_target: "calculate",
           ...Function_Exception_Detail,
@@ -456,8 +456,8 @@ export class ReplayBlockCore<T extends Block> {
       if (block.numberOfTransactions !== numberOfTransactions) {
         /// 区块的交易数对不上
         throw new ArgumentIllegalException(NOT_MATCH, {
-          to_compare_prop: "numberOfTransactions",
-          be_compare_prop: "numberOfTransactions",
+          to_compare_prop: `numberOfTransactions ${block.numberOfTransactions}`,
+          be_compare_prop: `numberOfTransactions ${numberOfTransactions}`,
           to_target: "block",
           be_target: "calculate",
           ...Function_Exception_Detail,
@@ -472,8 +472,8 @@ export class ReplayBlockCore<T extends Block> {
       });
       if (block.remark.blockParticipation !== blockParticipation) {
         throw new ArgumentIllegalException(NOT_MATCH, {
-          to_compare_prop: "blockParticipation",
-          be_compare_prop: "blockParticipation",
+          to_compare_prop: `blockParticipation ${block.remark.blockParticipation}`,
+          be_compare_prop: `blockParticipation ${blockParticipation}`,
           to_target: "block",
           be_target: "calculate",
           ...Function_Exception_Detail,

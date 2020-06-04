@@ -104,8 +104,8 @@ export class CommonBlockVerify<T extends Block> {
     const expectedReward = this.milestonesHelper.calcReward(block.height).toString();
     if (expectedReward !== block.reward) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "blockReward",
-        be_compare_prop: "expectedReward",
+        to_compare_prop: `blockReward ${block.reward}`,
+        be_compare_prop: `expectedReward ${expectedReward}`,
         to_target: "block",
         be_target: "calculate",
         function: "verifyBlockReward",
