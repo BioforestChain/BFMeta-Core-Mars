@@ -130,13 +130,13 @@ export class Block<RJ extends BFChainCore.CommonBlockRemarkJSON = BFChainCore.Co
     this.transactionBufferList = bufList;
   }
   @cacheBytesGetter
-  getBytes(skipSignature?: boolean, skipTransactions?: boolean) {
+  getBytes(skipSignature?: boolean, skipOrCustomTransactions?: boolean | Uint8Array[]) {
     const props: PropertyDescriptorMap = {};
     if (skipSignature) {
       props.signatureBuffer = { value: null };
     }
-    if (skipTransactions) {
-      props.transactionBufferList = { value: [] };
+    if (skipOrCustomTransactions) {
+      props.transactionBufferList = { value: skipOrCustomTransactions === true ? [] : skipOrCustomTransactions };
     }
     const blockWrapper = Object.create(this, props);
     return this.$type.encode(blockWrapper).finish();

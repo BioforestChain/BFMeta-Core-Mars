@@ -270,9 +270,7 @@ export abstract class BlockFactory<T extends Block> {
     eventEmitter && (await eventEmitter.emit("beforeSignatureBlock", block));
 
     // 验证区块大小
-    this.verifyBlockSize(
-      Object.create(block, { transactionBufferList: { value: transactionBufferList } }),
-    );
+    this.verifyBlockSize(block, transactionBufferList);
 
     // 校验 remark 大小
     this.verifyBlockRemarkSize(block);
@@ -782,7 +780,7 @@ export abstract class BlockFactory<T extends Block> {
    * 计算出区块的blockSize的正确值
    * @param block
    */
-  calcBlockSize(block: Block) {
+  calcBlockSize(block: Block, transactionBufferList?: Uint8Array[]) {
     const BLOCK_SIZE_FIELD_ID = Block.$type.fields.blockSize.id;
     const getBlockSizeByteSizeInfo = (blockSize: number) => {
       return {
@@ -797,7 +795,7 @@ export abstract class BlockFactory<T extends Block> {
     let newBlockSize = oldBlockSize;
 
     newBlockSize =
-      block.getBytes().length +
+      block.getBytes(false, transactionBufferList).length +
       (block.signatureBuffer.length ? 0 : 66) /* signature 的前置为 1位 + 32长度的signature */;
     if (oldBlockSize !== newBlockSize) {
       let oldBlockSizeInfo = getBlockSizeByteSizeInfo(oldBlockSize);
@@ -1319,8 +1317,8 @@ export abstract class BlockFactory<T extends Block> {
    * 校验区块大小
    *
    */
-  verifyBlockSize(block: T) {
-    const blockSize = this.calcBlockSize(block);
+  verifyBlockSize(block: T, transactionBufferList?: Uint8Array[]) {
+    const blockSize = this.calcBlockSize(block, transactionBufferList);
     if (block.blockSize !== blockSize) {
       throw new ArgumentIllegalException(NOT_MATCH, {
         to_compare_prop: `blockSize ${block.blockSize}`,
