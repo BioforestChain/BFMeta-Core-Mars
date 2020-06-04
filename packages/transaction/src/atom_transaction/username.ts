@@ -175,8 +175,8 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
 
     if (storage.value !== alias) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "value",
-        be_compare_prop: "alias",
+        to_compare_prop: storage.value,
+        be_compare_prop: alias,
         to_target: "storage",
         be_target: "username",
         ...Function_Exception_Detail,
@@ -219,8 +219,8 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
 
     if (publicKey !== body.senderPublicKey) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "publicKey",
-        be_compare_prop: "senderPublicKey",
+        to_compare_prop: publicKey,
+        be_compare_prop: body.senderPublicKey,
         to_target: "username",
         be_target: "body",
         ...UsernameAsset_Exception_Detail,

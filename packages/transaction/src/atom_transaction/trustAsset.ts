@@ -158,8 +158,8 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
 
     if (storage.value !== trustAsset.assetType) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "value",
-        be_compare_prop: "assetType",
+        to_compare_prop: storage.value,
+        be_compare_prop: trustAsset.assetType,
         to_target: "storage",
         be_target: "trustAsset",
         ...Function_Exception_Detail,

@@ -174,8 +174,8 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
       trsAsset.beExchangeAsset !== beExchangeAsset
     ) {
       throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: "exchangeSpecialAssetInfo",
-        be_compare_prop: "exchangeSpecialAssetInfo",
+        to_compare_prop: trsAsset,
+        be_compare_prop: exchangeSpecialAsset,
         to_target: "BeExchangeSpecialAssetTransaction",
         be_target: "ToExchangeSpecialAssetTransaction",
         ...Function_Exception_Detail,

@@ -101,8 +101,8 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
     // 签收交易的接收账户必须是委托交易的接收账户
     if (transaction.recipientId !== trustAssetJson.recipientId) {
       throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: "recipientId",
-        be_compare_prop: "senderId",
+        to_compare_prop: transaction.recipientId,
+        be_compare_prop: trustAssetJson.recipientId,
         to_target: "SignForAssetTransaction",
         be_target: "TrustAssetTransaction",
         function: "isValidRecipientId",
@@ -151,8 +151,8 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
         }
         if (trustee.secondPublicKey !== secondPublicKey) {
           throw new ConsensusException(NOT_MATCH, {
-            to_compare_prop: "secondPublicKey",
-            be_compare_prop: "secondPublicKey",
+            to_compare_prop: trustee.secondPublicKey,
+            be_compare_prop: secondPublicKey,
             to_target: "trustee",
             be_target: "thirdPartySignature",
             ...Function_Exception_Detail,
@@ -196,8 +196,8 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
       trsAsset.trustees.length !== trustAsset.trustees.length
     ) {
       throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: "trustAssetInfo",
-        be_compare_prop: "trustAssetInfo",
+        to_compare_prop: trsAsset,
+        be_compare_prop: trustAsset,
         to_target: "SignForAssetTransaction",
         be_target: "TrustAssetTransaction",
         ...Function_Exception_Detail,
@@ -210,8 +210,8 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
     for (const address of trustTrsRange) {
       if (!trustRange.includes(address)) {
         throw new ConsensusException(NOT_MATCH, {
-          to_compare_prop: "trustees",
-          be_compare_prop: "trustees",
+          to_compare_prop: trustRange,
+          be_compare_prop: address,
           to_target: "SignForAssetTransaction",
           be_target: "TrustAssetTransaction",
           ...Function_Exception_Detail,

@@ -225,8 +225,8 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
       (await accountBaseHelper.getAddressFromPublicKeyString(body.senderPublicKey))
     ) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "senderId",
-        be_compare_prop: "body",
+        to_compare_prop: body.senderId,
+        be_compare_prop: (await accountBaseHelper.getAddressFromPublicKeyString(body.senderPublicKey)),
         to_target: "senderPublicKey",
         be_target: "body",
         ...TransactionBody_Exception_Detail,

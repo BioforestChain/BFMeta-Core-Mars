@@ -75,8 +75,8 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       }
       if (delegate.secondPublicKey !== secondPublicKey) {
         throw new ConsensusException(NOT_MATCH, {
-          to_compare_prop: "secondPublicKey",
-          be_compare_prop: "secondPublicKey",
+          to_compare_prop: delegate.secondPublicKey,
+          be_compare_prop: secondPublicKey,
           to_target: "transaction",
           be_target: "delegate",
           ...Function_Exception_Detail,

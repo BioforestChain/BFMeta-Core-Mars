@@ -236,8 +236,8 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
       // 记录分叉区块信息
       await blockGetterHelper.chainBlockFork(block, 1);
       throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: "previousBlock",
-        be_compare_prop: "chainpreviousBlock",
+        to_compare_prop: previousBlockSignature,
+        be_compare_prop: __signature,
         to_target: "block",
         be_target: "lastBlock",
         ...Function_Exception_Detail,
@@ -327,8 +327,8 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
         );
         if (calcRoundOfflineGeneraters.length !== blockRoundOfflineGeneraters.length) {
           throw new ConsensusException(NOT_MATCH, {
-            to_compare_prop: "roundOfflineGeneratersHashMap",
-            be_compare_prop: "roundOfflineGeneratersHashMap",
+            to_compare_prop: calcRoundOfflineGeneraters.length,
+            be_compare_prop: blockRoundOfflineGeneraters.length,
             to_target: "calcGenerateBlockDelegate",
             be_target: `block with height ${block.height}, signature ${block.signature}`,
             ...Function_Exception_Detail,
@@ -459,8 +459,8 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
       }
       if (assetBalance !== calTransactionAssetChanges[key]) {
         throw new ConsensusException(NOT_MATCH, {
-          to_compare_prop: `assetBalance${assetBalance}`,
-          be_compare_prop: `assetBalance${calTransactionAssetChanges[key]}`,
+          to_compare_prop: assetBalance,
+          be_compare_prop: calTransactionAssetChanges[key],
           to_target: "transactionAssetChanges",
           be_target: "calTransactionAssetChanges",
           ...Function_Exception_Detail,

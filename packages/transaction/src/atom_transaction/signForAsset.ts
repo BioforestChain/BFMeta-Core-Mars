@@ -174,8 +174,8 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
 
     if (storage.value !== transactionSignature) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "value",
-        be_compare_prop: "transactionSignature",
+        to_compare_prop: storage.value,
+        be_compare_prop: transactionSignature,
         to_target: "storage",
         be_target: "signForAsset",
         ...Function_Exception_Detail,
@@ -267,8 +267,8 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
 
     if (!tempTrustees.includes(senderId)) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "senderId",
-        be_compare_prop: "trustees",
+        to_compare_prop: tempTrustees,
+        be_compare_prop: senderId,
         to_target: "body",
         be_target: "trustAsset and trust sender and trust recipient",
         ...SignForAssetAsset_Exception_Detail,
@@ -289,8 +289,8 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
       const address = await accountBaseHelper.getAddressFromPublicKeyString(publicKey);
       if (!tempTrustees.includes(address)) {
         throw new ArgumentIllegalException(NOT_MATCH, {
-          to_compare_prop: "publicKey address",
-          be_compare_prop: "address",
+          to_compare_prop: tempTrustees,
+          be_compare_prop: address,
           to_target: "thirdPartySignature",
           be_target: "trustees",
           ...SignForAssetAsset_Exception_Detail,

@@ -146,8 +146,8 @@ export class TransferAssetTransactionFactory extends TransactionFactory<Transfer
 
     if (storage.value !== assetType) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "value",
-        be_compare_prop: "assetType",
+        to_compare_prop: storage.value,
+        be_compare_prop: assetType,
         to_target: "storage",
         be_target: "transferAsset",
         ...Function_Exception_Detail,

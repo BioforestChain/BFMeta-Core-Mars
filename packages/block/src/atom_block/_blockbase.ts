@@ -209,8 +209,8 @@ export abstract class BlockFactory<T extends Block> {
 
       if (block.previousBlockSignature !== lastBlock.signature) {
         throw new ArgumentIllegalException(NOT_MATCH, {
-          to_compare_prop: `previousBlockSignature ${block.previousBlockSignature}`,
-          be_compare_prop: `blockSignature ${block.signature}`,
+          to_compare_prop: block.previousBlockSignature,
+          be_compare_prop: lastBlock.signature,
           to_target: "block",
           be_target: "blockChain lastBlock",
           ...Function_Exception_Detail,
@@ -231,8 +231,8 @@ export abstract class BlockFactory<T extends Block> {
           delegateList.join(",") !== realRoundOfflineGeneratersHashMap[offsetRound]
         ) {
           throw new ArgumentIllegalException(NOT_MATCH, {
-            to_compare_prop: "roundOfflineGeneratersHashMap",
-            be_compare_prop: "roundOfflineGeneratersHashMap",
+            to_compare_prop: delegateList,
+            be_compare_prop: realRoundOfflineGeneratersHashMap[offsetRound],
             to_target: "block",
             be_target: "calculate",
             ...Function_Exception_Detail,
@@ -242,8 +242,8 @@ export abstract class BlockFactory<T extends Block> {
       }
       if (mapSize !== calcRoundOfflineGeneratersReadonlyMap.size) {
         throw new ArgumentIllegalException(NOT_MATCH, {
-          to_compare_prop: "roundOfflineGeneratersHashMap",
-          be_compare_prop: "roundOfflineGeneratersHashMap",
+          to_compare_prop: mapSize,
+          be_compare_prop:calcRoundOfflineGeneratersReadonlyMap.size,
           to_target: "block",
           be_target: "calculate",
           ...Function_Exception_Detail,
@@ -607,8 +607,8 @@ export abstract class BlockFactory<T extends Block> {
           // 保存交易
           if (transactionBufferList.length !== tranItem.index) {
             throw new ArgumentIllegalException(NOT_MATCH, {
-              to_compare_prop: "index",
-              be_compare_prop: "index",
+              to_compare_prop: transactionBufferList.length,
+              be_compare_prop: tranItem.index,
               to_target: "transactions",
               be_target: "calculate",
               ...Function_Exception_Detail,
@@ -682,8 +682,8 @@ export abstract class BlockFactory<T extends Block> {
         )
       ) {
         throw new ArgumentIllegalException(NOT_MATCH, {
-          to_compare_prop: "statisticsInfo",
-          be_compare_prop: "statisticsInfo",
+          to_compare_prop: blockStatisticsInfo,
+          be_compare_prop: statisticsInfo,
           to_target: "block",
           be_target: "calculate",
           ...Function_Exception_Detail,
@@ -694,8 +694,8 @@ export abstract class BlockFactory<T extends Block> {
       const stotalFee = statisticsInfo.totalFee;
       if (BigInt(block.totalAmount) !== stotalAmount) {
         throw new ArgumentIllegalException(NOT_MATCH, {
-          to_compare_prop: "totalAmount",
-          be_compare_prop: "totalAmount",
+          to_compare_prop: block.totalAmount,
+          be_compare_prop: stotalAmount,
           to_target: "block",
           be_target: "calculate",
           ...Function_Exception_Detail,
@@ -704,8 +704,8 @@ export abstract class BlockFactory<T extends Block> {
 
       if (BigInt(block.totalFee) !== stotalFee) {
         throw new ArgumentIllegalException(NOT_MATCH, {
-          to_compare_prop: "totalFee",
-          be_compare_prop: "totalFee",
+          to_compare_prop: block.totalFee,
+          be_compare_prop: stotalFee,
           to_target: "block",
           be_target: "calculate",
           ...Function_Exception_Detail,
@@ -714,8 +714,8 @@ export abstract class BlockFactory<T extends Block> {
 
       if (block.payloadLength !== payloadLength) {
         throw new ArgumentIllegalException(NOT_MATCH, {
-          to_compare_prop: "payloadLength",
-          be_compare_prop: "payloadLength",
+          to_compare_prop: block.payloadLength,
+          be_compare_prop: payloadLength,
           to_target: "block",
           be_target: "calculate",
           ...Function_Exception_Detail,
@@ -725,8 +725,8 @@ export abstract class BlockFactory<T extends Block> {
       const payloadHashHex = await payloadHash.digest("hex");
       if (block.payloadHash !== payloadHashHex) {
         throw new ArgumentIllegalException(NOT_MATCH, {
-          to_compare_prop: "payloadHashHex",
-          be_compare_prop: "payloadHashHex",
+          to_compare_prop: block.payloadHash,
+          be_compare_prop: payloadHashHex,
           to_target: "block",
           be_target: "calculate",
           ...Function_Exception_Detail,
@@ -737,8 +737,8 @@ export abstract class BlockFactory<T extends Block> {
       if (block.numberOfTransactions !== numberOfTransactions) {
         /// 区块的交易数对不上
         throw new ArgumentIllegalException(NOT_MATCH, {
-          to_compare_prop: "numberOfTransactions",
-          be_compare_prop: "numberOfTransactions",
+          to_compare_prop: block.numberOfTransactions,
+          be_compare_prop: numberOfTransactions,
           to_target: "block",
           be_target: "calculate",
           ...Function_Exception_Detail,
@@ -753,8 +753,8 @@ export abstract class BlockFactory<T extends Block> {
       });
       if (block.remark.blockParticipation !== blockParticipation) {
         throw new ArgumentIllegalException(NOT_MATCH, {
-          to_compare_prop: "blockParticipation",
-          be_compare_prop: "blockParticipation",
+          to_compare_prop: block.remark.blockParticipation,
+          be_compare_prop: blockParticipation,
           to_target: "block",
           be_target: "calculate",
           ...Function_Exception_Detail,
@@ -971,8 +971,8 @@ export abstract class BlockFactory<T extends Block> {
 
     if (totalTransaction !== block.numberOfTransactions) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "numberOfTransactions",
-        be_compare_prop: "transactions length",
+        to_compare_prop: totalTransaction,
+        be_compare_prop: block.numberOfTransactions,
         to_target: "block",
         be_target: "block",
         ...Block_Exception_Detail,
@@ -1166,8 +1166,8 @@ export abstract class BlockFactory<T extends Block> {
     if (block.numberOfTransactions !== numberOfTransactions) {
       /// 区块的交易数对不上
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "numberOfTransactions",
-        be_compare_prop: "numberOfTransactions",
+        to_compare_prop: block.numberOfTransactions,
+        be_compare_prop: numberOfTransactions,
         to_target: "block",
         be_target: "calculate",
         ...Function_Exception_Detail,
@@ -1182,8 +1182,8 @@ export abstract class BlockFactory<T extends Block> {
     });
     if (block.remark.blockParticipation !== blockParticipation) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "blockParticipation",
-        be_compare_prop: "blockParticipation",
+        to_compare_prop: block.remark.blockParticipation,
+        be_compare_prop: blockParticipation,
         to_target: "block",
         be_target: "calculate",
         ...Function_Exception_Detail,
@@ -1241,8 +1241,8 @@ export abstract class BlockFactory<T extends Block> {
 
     if (block.magic !== config.magic) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "block.magic",
-        be_compare_prop: "genesisBlock.magic",
+        to_compare_prop: block.magic,
+        be_compare_prop: config.magic,
         to_target: "block_body",
         be_target: "genesis_block",
         ...Block_Exception_Detail,
@@ -1295,8 +1295,8 @@ export abstract class BlockFactory<T extends Block> {
     const expectedReward = this.milestonesHelper.calcReward(block.height).toString();
     if (expectedReward !== block.reward) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "blockReward",
-        be_compare_prop: "expectedReward",
+        to_compare_prop: expectedReward,
+        be_compare_prop: block.reward,
         to_target: "block",
         be_target: "calculate",
         function: "verifyBlockReward",
@@ -1321,8 +1321,8 @@ export abstract class BlockFactory<T extends Block> {
     const blockSize = this.calcBlockSize(block, transactionBufferList);
     if (block.blockSize !== blockSize) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: `blockSize ${block.blockSize}`,
-        be_compare_prop: `blockSize ${blockSize}`,
+        to_compare_prop: block.blockSize,
+        be_compare_prop: blockSize,
         to_target: "body",
         be_target: "calculate",
         function: "verifyBlockSize",

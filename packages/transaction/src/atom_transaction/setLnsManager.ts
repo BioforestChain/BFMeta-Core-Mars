@@ -159,8 +159,8 @@ export class SetLnsManagerTransactionFactory extends TransactionFactory<SetLnsMa
 
     if (storage.value !== name) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "value",
-        be_compare_prop: "name",
+        to_compare_prop: storage.value,
+        be_compare_prop: name,
         to_target: "storage",
         be_target: "lnsManager",
         ...Function_Exception_Detail,
@@ -175,8 +175,8 @@ export class SetLnsManagerTransactionFactory extends TransactionFactory<SetLnsMa
 
     if (lnsManager.manager !== recipientId) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "manager",
-        be_compare_prop: "recipientId",
+        to_compare_prop: lnsManager.manager,
+        be_compare_prop: recipientId,
         to_target: "lnsManager",
         be_target: "body",
         ...LnsManagerAsset_Exception_Detail,

@@ -135,8 +135,8 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
 
     if (config.initials !== genesisBlockJson.remark.bnid) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "initials",
-        be_compare_prop: "bnid",
+        to_compare_prop: config.initials,
+        be_compare_prop: genesisBlockJson.remark.bnid,
         to_target: "config",
         be_target: "genesisBlockJson.remark",
         ...Function_Exception_Detail,

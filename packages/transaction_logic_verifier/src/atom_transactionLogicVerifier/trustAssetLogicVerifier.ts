@@ -50,8 +50,8 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
 
     if (memAsset.sourceChainName !== sourceChainName) {
       throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: "sourcehChainName",
-        be_compare_prop: "chainName",
+        to_compare_prop: memAsset.sourceChainName,
+        be_compare_prop: sourceChainName,
         to_target: "chain asset",
         be_target: "trustAsset",
         ...Function_Exception_Detail,

@@ -11,7 +11,6 @@ import {
   PARAM_LOST,
   PROP_IS_REQUIRE,
   PROP_IS_INVALID,
-  NOT_MATCH,
   SHOULD_BE,
   SHOULD_NOT_EXIST,
   SHOULD_NOT_INCLUDE,
@@ -180,11 +179,8 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
     const exchangeAssetType = toExchangeSpecialAsset.exchangeAssetType;
 
     if (!SPECIAL_ASSET_TYPE[exchangeAssetType]) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "exchangeAssetType",
-        be_compare_prop: "exchangeAssetType",
-        to_target: "toExchangeSpecialAsset",
-        be_target: "SPECIAL_ASSET_TYPE",
+      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        prop: exchangeAssetType,
         ...ToExchangeSpecialAssetAsset_Exception_Detail,
       });
     }
@@ -192,11 +188,8 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
     const exchangeDirection = toExchangeSpecialAsset.exchangeDirection;
 
     if (!EXCHANGE_DIRECTION[exchangeDirection]) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "exchangeDirection",
-        be_compare_prop: "exchangeDirection",
-        to_target: "toExchangeSpecialAsset",
-        be_target: "EXCHANGE_DIRECTION",
+      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        prop: exchangeDirection,
         ...ToExchangeSpecialAssetAsset_Exception_Detail,
       });
     }

@@ -62,8 +62,8 @@ export class ToExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
 
       if (memBeAssets.sourceChainName !== beExchangeChainName) {
         throw new ConsensusException(NOT_MATCH, {
-          to_compare_prop: "sourcehChainName",
-          be_compare_prop: "beExchangeChainName",
+          to_compare_prop: memBeAssets.sourceChainName,
+          be_compare_prop: beExchangeChainName,
           to_target: "chainAsset",
           be_target: "toExchangeSpecialAssetAsset",
           ...Function_Exception_Detail,
@@ -83,8 +83,8 @@ export class ToExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
 
       if (memToAssets.sourceChainName !== toExchangeChainName) {
         throw new ConsensusException(NOT_MATCH, {
-          to_compare_prop: "sourcehChainName",
-          be_compare_prop: "beExchangeChainName",
+          to_compare_prop: memToAssets.sourceChainName,
+          be_compare_prop: toExchangeChainName,
           to_target: "chainAsset",
           be_target: "toExchangeSpecialAssetAsset",
           ...Function_Exception_Detail,

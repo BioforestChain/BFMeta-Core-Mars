@@ -61,8 +61,8 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
     const realNewDelegates = await this.checkNewDelegates(height, transactionGetterHelper);
     if (newDelegates.length !== realNewDelegates.length) {
       throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: "number of new delegates",
-        be_compare_prop: "number of new delegates",
+        to_compare_prop: newDelegates.length,
+        be_compare_prop: realNewDelegates.length,
         to_target: "block",
         be_target: "blockChain",
         ...Function_Exception_Detail,
@@ -72,8 +72,8 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
     for (const address of newDelegates) {
       if (!realNewDelegates.includes(address)) {
         throw new ConsensusException(NOT_MATCH, {
-          to_compare_prop: "new delegates",
-          be_compare_prop: "new delegates",
+          to_compare_prop: realNewDelegates,
+          be_compare_prop: address,
           to_target: "block",
           be_target: "blockChain",
           ...Function_Exception_Detail,
@@ -96,8 +96,8 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
     );
     if (hashString !== hash) {
       throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: "remark hash",
-        be_compare_prop: "remark hash",
+        to_compare_prop: hashString,
+        be_compare_prop: hash,
         to_target: "block",
         be_target: "calculate",
         function: "checkRemarkHash",
@@ -139,8 +139,8 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
     const nextRoundDelegates = block.remark.nextRoundDelegates;
     if (delegates.length !== nextRoundDelegates.length) {
       throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: "nextRoundDelegates length",
-        be_compare_prop: "nextRoundDelegates length",
+        to_compare_prop: delegates.length,
+        be_compare_prop: nextRoundDelegates.length,
         to_target: "block remark",
         be_target: "calculate",
         ...Function_Exception_Detail,
@@ -185,8 +185,8 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
     const blockRemark = block.remark;
     if (blockRemark.maxBeginBalance !== tickResult.maxBeginBalance) {
       throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: "maxBeginBalance",
-        be_compare_prop: "maxBeginBalance",
+        to_compare_prop: blockRemark.maxBeginBalance,
+        be_compare_prop: tickResult.maxBeginBalance,
         to_target: "block remark",
         be_target: "calculate",
         ...Function_Exception_Detail,
@@ -194,8 +194,8 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
     }
     if (blockRemark.maxTxCount !== tickResult.maxTxCount) {
       throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: "maxTxCount",
-        be_compare_prop: "maxTxCount",
+        to_compare_prop: blockRemark.maxTxCount,
+        be_compare_prop: tickResult.maxTxCount,
         to_target: "block remark",
         be_target: "calculate",
         ...Function_Exception_Detail,

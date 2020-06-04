@@ -147,8 +147,8 @@ export class MarkTransactionFactory extends TransactionFactory<MarkTransaction> 
 
     if (mark.markPossessor !== recipientId) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "recipientId",
-        be_compare_prop: "markPossessor",
+        to_compare_prop: mark.markPossessor,
+        be_compare_prop: recipientId,
         to_target: "body",
         be_target: "mark",
         ...MarkAsset_Exception_Detail,

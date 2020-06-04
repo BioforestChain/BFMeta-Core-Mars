@@ -174,8 +174,8 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<
 
     if (storage.value !== transactionSignature) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "value",
-        be_compare_prop: "transactionSignature",
+        to_compare_prop: storage.value,
+        be_compare_prop: transactionSignature,
         to_target: "storage",
         be_target: "beExchangeAsset",
         ...Function_Exception_Detail,
