@@ -1,19 +1,31 @@
 import { BlockFactory } from "./_blockbase";
 import { RoundLastBlock } from "@bfchain/core-model-block";
+import type { TransactionInBlock } from "@bfchain/core-model-transaction";
 import {
   BlockHelper,
-  AccountBaseHelper,
   BaseHelper,
   ConfigHelper,
   MilestonesHelper,
   AsymmetricHelper,
-  ChainAssetInfoHelper,
   BlockBaseStatisticsHelper,
 } from "@bfchain/core-helper";
-import { CoreExceptionGenerator, PROP_IS_INVALID } from "@bfchain/core-util-exception";
+import {
+  CoreExceptionGenerator,
+  PROP_IS_INVALID,
+  NOT_MATCH,
+  PROP_SHOULD_LTE_FIELD,
+  PROP_SHOULD_EQ_FIELD,
+  NOT_EXIST,
+} from "@bfchain/core-util-exception";
 import { Injectable, Inject, ModuleStroge } from "@bfchain/util";
 import { BlockGeneratorCalculator } from "./blockGeneratorCalculator";
-const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "RoundLastBlockFactory");
+import type { CommonBlockVerify } from "./commonBlockVerify";
+import type { VerifyBlockCore } from "./verifyBlock";
+import type { ReplayBlockCore } from "./replayBlock";
+const { ArgumentIllegalException, ConsensusException, NoFoundException } = CoreExceptionGenerator(
+  "CONTROLLER",
+  "RoundLastBlockFactory",
+);
 
 /**
  * roundLastBlock 工厂
@@ -25,16 +37,19 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
   public transactionCore!: import("@bfchain/core-transaction").TransactionCore;
   constructor(
     public blockHelper: BlockHelper,
-    public accountBaseHelper: AccountBaseHelper,
     public baseHelper: BaseHelper,
     public config: ConfigHelper,
     public statisticsHelper: BlockBaseStatisticsHelper,
     public milestonesHelper: MilestonesHelper,
     public asymmetricHelper: AsymmetricHelper,
-    public chainAssetInfoHelper: ChainAssetInfoHelper,
-    public moduleMap: ModuleStroge,
     @Inject("cryptoHelper") public cryptoHelper: BFChainCore.CryptoHelperInterface,
     public blockGeneratorCalculator: BlockGeneratorCalculator,
+
+    public commonBlockVerify: CommonBlockVerify<RoundLastBlock>,
+    public verifyBlockCore: VerifyBlockCore<RoundLastBlock>,
+    public replayBlockCore: ReplayBlockCore<RoundLastBlock>,
+
+    public moduleMap: ModuleStroge,
   ) {
     super();
   }
@@ -50,7 +65,7 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
     opts?: { verify?: boolean; config?: ConfigHelper },
   ) {
     const block = RoundLastBlock.fromObject(blockBody);
-    block.transactions = blockBody.transactions.map(twi => {
+    block.transactions = blockBody.transactions.map((twi) => {
       return this.transactionInBlockFromJSON(twi);
     });
     if (opts && opts.verify) {
@@ -88,128 +103,6 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
     }
 
     const { baseHelper } = this;
-    // FIXME: 这里注释的代码别删除 @Gaubee
-    // TODO: 这里 nextRoundDelegates应该是CORE内部自己生成，无需校验
-    /*
-    if (nextRoundDelegates.length !== this.config.blockPerRound) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "nextRoundDelegates.length",
-        be_compare_prop: "blockPerRound",
-        to_target: "roundLastBlockRemark",
-        be_target: "config",
-        ...RoundLastBlockRemark_Exception_Detail,
-      });
-    }
-
-    for (const delegate of nextRoundDelegates) {
-      if (!await this.accountBaseHelper.isAddress(delegate)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "nextRoundDelegates item",
-          value: delegate,
-          type: "account address",
-          ...RoundLastBlockRemark_Exception_Detail,
-        });
-      }
-    }
-
-    if (!roundLastBlockRemark.newDelegates) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "newDelegates",
-        ...RoundLastBlockRemark_Exception_Detail,
-      });
-    }
-
-    const newDelegates = roundLastBlockRemark.newDelegates;
-    if (this.baseHelper.getVariableType(newDelegates) !== "[object Array]") {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "newDelegates",
-        type: "array",
-        ...RoundLastBlockRemark_Exception_Detail,
-      });
-    }
-
-    for (const delegate of newDelegates) {
-      if (!await this.accountBaseHelper.isAddress(delegate)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "newDelegates item",
-          value: delegate,
-          type: "account address",
-          ...RoundLastBlockRemark_Exception_Detail,
-        });
-      }
-    }
-
-    if (!baseHelper.isValidAssetNumber(roundLastBlockRemark.maxBeginBalance)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "maxBeginBalance",
-        type: "asset number",
-        ...RoundLastBlockRemark_Exception_Detail,
-      });
-    }
-
-    if (!baseHelper.isValidAssetNumber(roundLastBlockRemark.maxTxCount)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "maxTxCount",
-        type: "asset number",
-        ...RoundLastBlockRemark_Exception_Detail,
-      });
-    }
-
-    const equities = roundLastBlockRemark.equities;
-    if (baseHelper.getVariableType(equities) !== "[object Array]") {
-      throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "equities",
-        to_target: "GenesisBlockRemark",
-        be_compare_prop: "array",
-        ...RoundLastBlockRemark_Exception_Detail,
-      });
-    }
-
-    if (nextRoundDelegates.length !== equities.length) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "nextRoundDelegates.length",
-        be_compare_prop: "equities.length",
-        to_target: "GenesisBlockRemark",
-        be_target: "GenesisBlockRemark",
-        ...RoundLastBlockRemark_Exception_Detail,
-      });
-    }
-
-    for (const equity of equities) {
-      const address = equity.address;
-      if (!await this.accountBaseHelper.isAddress(address)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "equity.address",
-          type: "account address",
-          ...Function_Exception_Detail,
-        });
-      }
-      if (!nextRoundDelegates.includes(address)) {
-        throw new ArgumentIllegalException(SHOULD_NOT_INCLUDE, {
-          prop: "equity.address",
-          target: "equities",
-          value: address,
-          ...Function_Exception_Detail,
-        });
-      }
-      if (!this.baseHelper.isValidAccountEquity(equity.equity)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "equity.equity",
-          type: "account equity",
-          ...Function_Exception_Detail,
-        });
-      }
-    }
-
-    if (!baseHelper.isValidEquityRate(roundLastBlockRemark.rate)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "rate",
-        type: "equity rate",
-        ...RoundLastBlockRemark_Exception_Detail,
-      });
-    }
-    */
-
     if (!baseHelper.isString(roundLastBlockRemark.debug)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "debug",
@@ -262,5 +155,238 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
     block.reward = this.milestonesHelper.calcReward(block.height);
 
     return block;
+  }
+
+  async replayBlock(
+    block: BFChainCore.RoundLastBlock,
+    transactions: AsyncIterable<TransactionInBlock>,
+    eventEmitter?: BFChainCore.GenerateBlockEventEmitter,
+    options: BFChainCore.ReplayBlockOptions = {},
+    config = this.config,
+  ) {
+    await super.replayBlock(block, transactions, eventEmitter, options, config);
+
+    if (options.verifyAsset) {
+      const { height, remark } = block;
+
+      let transactionGetterHelper = options.transactionGetterHelper;
+      if (!transactionGetterHelper) {
+        transactionGetterHelper = this.moduleMap.get("transactionGetterHelper");
+        if (!transactionGetterHelper) {
+          throw new NoFoundException(NOT_EXIST, {
+            prop: "blockGetterHelper",
+            target: "moduleStroge",
+            function: "replayBlock",
+          });
+        }
+      }
+
+      await this.checkBlockNewDelegates(block.height, remark.newDelegates, transactionGetterHelper);
+
+      let blockGetterHelper = options.blockGetterHelper;
+      if (!blockGetterHelper) {
+        blockGetterHelper = this.moduleMap.get("blockGetterHelper");
+        if (!blockGetterHelper) {
+          throw new NoFoundException(NOT_EXIST, {
+            prop: "blockGetterHelper",
+            target: "moduleStroge",
+            function: "replayBlock",
+          });
+        }
+      }
+
+      await this.checkBlockChainOnChainHash(height, remark.hash, blockGetterHelper);
+
+      await this.checkBlockNewForgingDelegates(block, blockGetterHelper);
+    }
+
+    return block;
+  }
+
+  /**
+   * 校验新生成的受托人
+   *
+   * @param height
+   * @param transactionGetterHelper
+   */
+  async checkNewDelegates(
+    height: number,
+    transactionGetterHelper: Pick<BFChainCore.TransactionGetterHelperInterface, "getNewDelegates">,
+  ) {
+    const newDelegates = await transactionGetterHelper.getNewDelegates(height);
+    const { maxDelegateTxsPerRound, delegates, blockPerRound } = this.config;
+    const delegateCount = newDelegates.length;
+    // 大于第一轮
+    if (height > blockPerRound) {
+      if (delegateCount > maxDelegateTxsPerRound) {
+        throw new ConsensusException(PROP_SHOULD_LTE_FIELD, {
+          prop: `delegateCount ${delegateCount}`,
+          target: "block",
+          field: `maxDelegateTxsPerRound ${maxDelegateTxsPerRound}`,
+          function: "checkNewDelegates",
+        });
+      }
+    } else {
+      if (delegates !== delegateCount) {
+        throw new ConsensusException(PROP_SHOULD_EQ_FIELD, {
+          prop: `number of newDelegates ${delegateCount}`,
+          target: "newDelegates",
+          field: delegates,
+          function: "checkNewDelegates",
+        });
+      }
+    }
+    return newDelegates;
+  }
+
+  /**
+   * 新注册的受托人是否合法
+   *
+   * @param height
+   * @param newDelegates
+   */
+  private async checkBlockNewDelegates(
+    height: number,
+    newDelegates: string[],
+    transactionGetterHelper: Pick<BFChainCore.TransactionGetterHelperInterface, "getNewDelegates">,
+  ) {
+    const Function_Exception_Detail = {
+      function: "isValidNewDelegates",
+    } as const;
+    // 校验新注册的受托人
+    const calcNewDelegates = await this.checkNewDelegates(height, transactionGetterHelper);
+    const newDelegatesLength = newDelegates.length;
+    if (newDelegatesLength !== calcNewDelegates.length) {
+      throw new ConsensusException(NOT_MATCH, {
+        to_compare_prop: `number of new delegates ${newDelegatesLength}`,
+        be_compare_prop: `number of new delegates ${calcNewDelegates.length}`,
+        to_target: "block",
+        be_target: "calculate",
+        ...Function_Exception_Detail,
+      });
+    }
+    // 校验新注册的受托人是否与区块携带的一致
+    for (let i = 0; i < newDelegatesLength; i++) {
+      if (newDelegates[i] !== calcNewDelegates[i]) {
+        throw new ConsensusException(NOT_MATCH, {
+          to_compare_prop: `new delegates ${newDelegates[i]}`,
+          be_compare_prop: `new delegates ${calcNewDelegates[i]}`,
+          to_target: "block",
+          be_target: "calculate",
+          ...Function_Exception_Detail,
+        });
+      }
+    }
+  }
+
+  /**
+   * 校验链上链 hash
+   *
+   * @param height
+   * @param hash
+   * @param blockGetterHelper
+   */
+  private async checkBlockChainOnChainHash(
+    height: number,
+    hash: string,
+    blockGetterHelper: BFChainUtil.SecondArgument<BlockHelper["calcRoundLastBlockRemarkHash"]>,
+  ) {
+    const calcHash = await this.blockHelper.calcRoundLastBlockRemarkHash(height, blockGetterHelper);
+    if (calcHash !== hash) {
+      throw new ConsensusException(NOT_MATCH, {
+        to_compare_prop: `remark hash ${hash}`,
+        be_compare_prop: `remark hash ${calcHash}`,
+        to_target: "block",
+        be_target: "calculate",
+        function: "checkRemarkHash",
+      });
+    }
+  }
+
+  /**
+   * 校验新一轮的打块账户是否合法
+   *
+   * @param block
+   * @param blockGetterHelper
+   */
+  private async checkBlockNewForgingDelegates(
+    block: RoundLastBlock,
+    blockGetterHelper: Required<
+      Pick<BFChainCore.BlockGetterHelperInterface, "getNewForgingDelegates" | "getLastBlock">
+    >,
+  ) {
+    const Function_Exception_Detail = {
+      function: "checkNewForgingDelegates",
+    } as const;
+    const calcNextRoundDelegates = await blockGetterHelper.getNewForgingDelegates(
+      await blockGetterHelper.getLastBlock(),
+      block.generatorPublicKey,
+    );
+    const nextRoundDelegates = block.remark.nextRoundDelegates;
+    const delegateLength = calcNextRoundDelegates.length;
+    if (delegateLength !== nextRoundDelegates.length) {
+      throw new ConsensusException(NOT_MATCH, {
+        to_compare_prop: `nextRoundDelegates length ${nextRoundDelegates.length}`,
+        be_compare_prop: `nextRoundDelegates length ${calcNextRoundDelegates.length}`,
+        to_target: "block remark",
+        be_target: "calculate",
+        ...Function_Exception_Detail,
+      });
+    }
+
+    for (let i = 0; i < delegateLength; i++) {
+      const { address, vote } = calcNextRoundDelegates[i];
+      const nextRoundDelegate = nextRoundDelegates[i];
+      if (nextRoundDelegate.address !== address) {
+        throw new ConsensusException(NOT_MATCH, {
+          to_compare_prop: `nextRoundDelegates index ${i} address ${nextRoundDelegate.address}`,
+          be_compare_prop: `nextRoundDelegates index ${i} address ${address}`,
+          to_target: "block remark",
+          be_target: "calculate",
+          ...Function_Exception_Detail,
+        });
+      }
+      const calcEquity = vote.toString();
+      if (nextRoundDelegate.equity !== calcEquity) {
+        throw new ConsensusException(NOT_MATCH, {
+          to_compare_prop: `nextRoundDelegates index ${i} address ${nextRoundDelegate.address} equity ${nextRoundDelegate.equity}`,
+          be_compare_prop: `nextRoundDelegates index ${i} address ${address} equity ${calcEquity}`,
+          to_target: "block remark",
+          be_target: "calculate",
+          ...Function_Exception_Detail,
+        });
+      }
+    }
+  }
+
+  /**
+   * 校验链上上一轮末投票账户中最大初始余额和交易量
+   *
+   * @param block
+   * @param tickResult
+   */
+  checkMaxBeginBalanceAndMaxTxCount(block: RoundLastBlock, tickResult: BFChainCore.TickResultInfo) {
+    const Function_Exception_Detail = {
+      function: "checkMaxBeginBalanceAndMaxTxCount",
+    } as const;
+    const blockRemark = block.remark;
+    if (blockRemark.maxBeginBalance !== tickResult.maxBeginBalance) {
+      throw new ConsensusException(NOT_MATCH, {
+        to_compare_prop: `maxBeginBalance ${blockRemark.maxBeginBalance}`,
+        be_compare_prop: `maxBeginBalance ${tickResult.maxBeginBalance}`,
+        to_target: "block remark",
+        be_target: "calculate",
+        ...Function_Exception_Detail,
+      });
+    }
+    if (blockRemark.maxTxCount !== tickResult.maxTxCount) {
+      throw new ConsensusException(NOT_MATCH, {
+        to_compare_prop: `maxTxCount ${blockRemark.maxTxCount}`,
+        be_compare_prop: `maxTxCount ${tickResult.maxTxCount}`,
+        to_target: "block remark",
+        be_target: "calculate",
+        ...Function_Exception_Detail,
+      });
+    }
   }
 }

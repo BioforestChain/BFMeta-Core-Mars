@@ -31,6 +31,15 @@ declare namespace BFChainCore {
 
   type ReplayBlockOptions = {
     verifySignature?: boolean;
+    verifyAsset?: boolean;
+    recordForkBlock?: boolean;
+    transactionGetterHelper?: Pick<BFChainCore.TransactionGetterHelperInterface, "getNewDelegates">;
+    blockGetterHelper?: Required<
+      Pick<
+        BFChainCore.BlockGetterHelperInterface,
+        "chainBlockFork" | "getNewForgingDelegates" | "getLastBlock"|"getBlockByHeight"
+      >
+    >;
   };
 
   type ForgeInfos = {
