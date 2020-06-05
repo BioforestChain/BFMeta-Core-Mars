@@ -236,7 +236,7 @@ export class ReplayBlockCore<T extends Block> {
     options: BFChainCore.ReplayBlockOptions,
     config = this.config,
   ) {
-    const { verifySignature } = options;
+    const { verifySignature, skipVerifyStatisticInfo } = options;
     const {
       height,
       signature,
@@ -402,49 +402,51 @@ export class ReplayBlockCore<T extends Block> {
           const txFactory = transactionCore.getTransactionFactoryFromType(trs.type);
           await txFactory.beginDealTransaction(trs, eventEmitter);
           await txFactory.applyTransaction(trs, eventEmitter);
-          // 在apply之后，获取变更记录
-          const calcTransactionAssetChanges = await eventEmitter.assetChangesGetter(tranItem);
-          // 获取是发送者的第几比交易
-          const calcNumberOfSenderTransactions = await eventEmitter.numberOfSenderTranGetter(
-            tranItem,
-          );
-          // 校验 numberOfSenderTransactions
-          if (calcNumberOfSenderTransactions !== tranItem.numberOfSenderTransactions) {
-            throw new ArgumentIllegalException(NOT_MATCH, {
-              to_compare_prop: `numberOfSenderTransactions ${tranItem.numberOfSenderTransactions}`,
-              be_compare_prop: `numberOfSenderTransactions ${calcNumberOfSenderTransactions}`,
-              to_target: "block",
-              be_target: "calculate",
-              ...Function_Exception_Detail,
-            });
-          }
-          // 校验 transactionAssetChanges
-          const transactionAssetChanges = tranItem.transactionAssetChanges;
-          const calcLength = calcTransactionAssetChanges.length;
-          const realLength = transactionAssetChanges.length;
-          if (calcLength !== realLength) {
-            throw new ArgumentIllegalException(NOT_MATCH, {
-              to_compare_prop: `transactionAssetChanges lenght ${realLength}`,
-              be_compare_prop: `transactionAssetChanges lenght ${calcLength}`,
-              to_target: "block",
-              be_target: "calculate",
-              ...Function_Exception_Detail,
-            });
-          }
-          for (let i = 0; i < calcLength; i++) {
-            if (
-              !baseHelper.isArrayEqual(
-                calcTransactionAssetChanges[i].getBytes(),
-                transactionAssetChanges[i].getBytes(),
-              )
-            ) {
+          if (!skipVerifyStatisticInfo) {
+            // 在apply之后，获取变更记录
+            const calcTransactionAssetChanges = await eventEmitter.assetChangesGetter(tranItem);
+            // 获取是发送者的第几比交易
+            const calcNumberOfSenderTransactions = await eventEmitter.numberOfSenderTranGetter(
+              tranItem,
+            );
+            // 校验 numberOfSenderTransactions
+            if (calcNumberOfSenderTransactions !== tranItem.numberOfSenderTransactions) {
               throw new ArgumentIllegalException(NOT_MATCH, {
-                to_compare_prop: `transactionAssetChanges with index ${i}`,
-                be_compare_prop: `transactionAssetChanges with index ${i}`,
+                to_compare_prop: `numberOfSenderTransactions ${tranItem.numberOfSenderTransactions}`,
+                be_compare_prop: `numberOfSenderTransactions ${calcNumberOfSenderTransactions}`,
                 to_target: "block",
                 be_target: "calculate",
                 ...Function_Exception_Detail,
               });
+            }
+            // 校验 transactionAssetChanges
+            const transactionAssetChanges = tranItem.transactionAssetChanges;
+            const calcLength = calcTransactionAssetChanges.length;
+            const realLength = transactionAssetChanges.length;
+            if (calcLength !== realLength) {
+              throw new ArgumentIllegalException(NOT_MATCH, {
+                to_compare_prop: `transactionAssetChanges lenght ${realLength}`,
+                be_compare_prop: `transactionAssetChanges lenght ${calcLength}`,
+                to_target: "block",
+                be_target: "calculate",
+                ...Function_Exception_Detail,
+              });
+            }
+            for (let i = 0; i < calcLength; i++) {
+              if (
+                !baseHelper.isArrayEqual(
+                  calcTransactionAssetChanges[i].getBytes(),
+                  transactionAssetChanges[i].getBytes(),
+                )
+              ) {
+                throw new ArgumentIllegalException(NOT_MATCH, {
+                  to_compare_prop: `transactionAssetChanges with index ${i}`,
+                  be_compare_prop: `transactionAssetChanges with index ${i}`,
+                  to_target: "block",
+                  be_target: "calculate",
+                  ...Function_Exception_Detail,
+                });
+              }
             }
           }
           // 校验TIB签名
@@ -479,42 +481,43 @@ export class ReplayBlockCore<T extends Block> {
         }
       }
       isDevGenerateBlock && info("finish insertTransactionsForReplay");
+      if (!skipVerifyStatisticInfo) {
+        if (
+          !this.baseHelper.isArrayEqual(
+            blockStatisticsInfo.getBytes(),
+            statisticsInfo.toModel().getBytes(),
+          )
+        ) {
+          throw new ArgumentIllegalException(NOT_MATCH, {
+            to_compare_prop: "statisticsInfo",
+            be_compare_prop: "statisticsInfo",
+            to_target: "block",
+            be_target: "calculate",
+            ...Function_Exception_Detail,
+          });
+        }
 
-      if (
-        !this.baseHelper.isArrayEqual(
-          blockStatisticsInfo.getBytes(),
-          statisticsInfo.toModel().getBytes(),
-        )
-      ) {
-        throw new ArgumentIllegalException(NOT_MATCH, {
-          to_compare_prop: "statisticsInfo",
-          be_compare_prop: "statisticsInfo",
-          to_target: "block",
-          be_target: "calculate",
-          ...Function_Exception_Detail,
-        });
-      }
+        const stotalAmount = statisticsInfo.totalAsset;
+        const stotalFee = statisticsInfo.totalFee;
+        if (BigInt(block.totalAmount) !== stotalAmount) {
+          throw new ArgumentIllegalException(NOT_MATCH, {
+            to_compare_prop: `totalAmount ${block.totalAmount}`,
+            be_compare_prop: `totalAmount ${stotalAmount}`,
+            to_target: "block",
+            be_target: "calculate",
+            ...Function_Exception_Detail,
+          });
+        }
 
-      const stotalAmount = statisticsInfo.totalAsset;
-      const stotalFee = statisticsInfo.totalFee;
-      if (BigInt(block.totalAmount) !== stotalAmount) {
-        throw new ArgumentIllegalException(NOT_MATCH, {
-          to_compare_prop: `totalAmount ${block.totalAmount}`,
-          be_compare_prop: `totalAmount ${stotalAmount}`,
-          to_target: "block",
-          be_target: "calculate",
-          ...Function_Exception_Detail,
-        });
-      }
-
-      if (BigInt(block.totalFee) !== stotalFee) {
-        throw new ArgumentIllegalException(NOT_MATCH, {
-          to_compare_prop: `totalFee ${block.totalFee}`,
-          be_compare_prop: `totalFee ${stotalFee}`,
-          to_target: "block",
-          be_target: "calculate",
-          ...Function_Exception_Detail,
-        });
+        if (BigInt(block.totalFee) !== stotalFee) {
+          throw new ArgumentIllegalException(NOT_MATCH, {
+            to_compare_prop: `totalFee ${block.totalFee}`,
+            be_compare_prop: `totalFee ${stotalFee}`,
+            to_target: "block",
+            be_target: "calculate",
+            ...Function_Exception_Detail,
+          });
+        }
       }
 
       if (block.payloadLength !== payloadLength) {
@@ -550,20 +553,22 @@ export class ReplayBlockCore<T extends Block> {
         });
       }
 
-      const blockParticipation = this.blockHelper.calcBlockParticipation({
-        totalAccount: statisticsInfo.totalAccount,
-        totalChainAsset: statisticsInfo.totalChainAsset,
-        totalFee: statisticsInfo.totalFee,
-        numberOfTransactions,
-      });
-      if (block.remark.blockParticipation !== blockParticipation) {
-        throw new ArgumentIllegalException(NOT_MATCH, {
-          to_compare_prop: `blockParticipation ${block.remark.blockParticipation}`,
-          be_compare_prop: `blockParticipation ${blockParticipation}`,
-          to_target: "block",
-          be_target: "calculate",
-          ...Function_Exception_Detail,
+      if (!skipVerifyStatisticInfo) {
+        const blockParticipation = this.blockHelper.calcBlockParticipation({
+          totalAccount: statisticsInfo.totalAccount,
+          totalChainAsset: statisticsInfo.totalChainAsset,
+          totalFee: statisticsInfo.totalFee,
+          numberOfTransactions,
         });
+        if (block.remark.blockParticipation !== blockParticipation) {
+          throw new ArgumentIllegalException(NOT_MATCH, {
+            to_compare_prop: `blockParticipation ${block.remark.blockParticipation}`,
+            be_compare_prop: `blockParticipation ${blockParticipation}`,
+            to_target: "block",
+            be_target: "calculate",
+            ...Function_Exception_Detail,
+          });
+        }
       }
 
       /// 临时恢复的操作，但会曝出警告

@@ -32,6 +32,7 @@ declare namespace BFChainCore {
   type ReplayBlockOptions = {
     verifySignature?: boolean;
     verifyAsset?: boolean;
+    skipVerifyStatisticInfo?: boolean;
     recordForkBlock?: boolean;
     transactionGetterHelper?: Required<
       Pick<BFChainCore.TransactionGetterHelperInterface, "getNewDelegates">
