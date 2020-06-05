@@ -19,9 +19,9 @@ import {
 } from "@bfchain/core-util-exception";
 import { Injectable, Inject, ModuleStroge } from "@bfchain/util";
 import { BlockGeneratorCalculator } from "./blockGeneratorCalculator";
-import type { CommonBlockVerify } from "./commonBlockVerify";
-import type { VerifyBlockCore } from "./verifyBlock";
-import type { ReplayBlockCore } from "./replayBlock";
+import { CommonBlockVerify } from "./commonBlockVerify";
+import { VerifyBlockCore } from "./verifyBlock";
+import { ReplayBlockCore } from "./replayBlock";
 const { ArgumentIllegalException, ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "CONTROLLER",
   "RoundLastBlockFactory",

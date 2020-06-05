@@ -7,9 +7,7 @@ import {
   ConfigHelper,
   MilestonesHelper,
   AsymmetricHelper,
-  ChainAssetInfoHelper,
   BlockBaseStatisticsHelper,
-  ChainTimeHelper,
 } from "@bfchain/core-helper";
 import {
   CoreExceptionGenerator,
@@ -19,12 +17,12 @@ import {
   PROP_SHOULD_GT_FIELD,
   NOT_MATCH,
 } from "@bfchain/core-util-exception";
-import { Injectable, Inject, ModuleStroge } from "@bfchain/util";
+import { Injectable, Inject } from "@bfchain/util";
 import { BNID_TYPE } from "@bfchain/core-transaction";
 import { BlockGeneratorCalculator } from "./blockGeneratorCalculator";
-import type { CommonBlockVerify } from "./commonBlockVerify";
-import type { VerifyBlockCore } from "./verifyBlock";
-import type { ReplayBlockCore } from "./replayBlock";
+import { CommonBlockVerify } from "./commonBlockVerify";
+import { VerifyBlockCore } from "./verifyBlock";
+import { ReplayBlockCore } from "./replayBlock";
 const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "GenesisBlockFactory");
 
 /**

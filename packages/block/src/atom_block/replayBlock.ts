@@ -1,6 +1,6 @@
 import type { Block } from "@bfchain/core-model-block";
 import { TransactionInBlock, TRANSACTION_TYPES_MAP } from "@bfchain/core-model-transaction";
-import type {
+import {
   BlockHelper,
   BaseHelper,
   ConfigHelper,
@@ -32,8 +32,8 @@ import {
   Injectable,
   Inject,
 } from "@bfchain/util";
-import type { BlockGeneratorCalculator } from "./blockGeneratorCalculator";
-import type { CommonBlockVerify } from "./commonBlockVerify";
+import { BlockGeneratorCalculator } from "./blockGeneratorCalculator";
+import { CommonBlockVerify } from "./commonBlockVerify";
 const {
   ArgumentIllegalException,
   OutOfRangeException,

@@ -1,5 +1,5 @@
 import { Block, GetBlockRemarkJSON } from "@bfchain/core-model-block";
-import type {
+import {
   BlockHelper,
   BaseHelper,
   MilestonesHelper,

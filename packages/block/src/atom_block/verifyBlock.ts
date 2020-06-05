@@ -1,6 +1,6 @@
 import type { Block } from "@bfchain/core-model-block";
 import { TransactionInBlock } from "@bfchain/core-model-transaction";
-import type {
+import {
   BlockHelper,
   BaseHelper,
   ConfigHelper,
@@ -20,7 +20,7 @@ import {
   TOO_LARGE,
 } from "@bfchain/core-util-exception";
 import { QueneEventEmitter, Injectable, Inject } from "@bfchain/util";
-import type { CommonBlockVerify } from "./commonBlockVerify";
+import { CommonBlockVerify } from "./commonBlockVerify";
 const { ArgumentIllegalException, ArgumentFormatException } = CoreExceptionGenerator(
   "CONTROLLER",
   "_blockbase",
