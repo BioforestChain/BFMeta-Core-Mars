@@ -2,7 +2,7 @@ import { ByteArray, NumArray } from "./array";
 
 export function gf(init?: number[]): NumArray {
   const r = new NumArray(16);
-  if (init) for (let i = 0; i < init.length; i++) r[i] = init[i];
+  init && r.set(init);
   return r;
 }
 

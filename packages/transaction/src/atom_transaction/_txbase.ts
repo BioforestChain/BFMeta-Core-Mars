@@ -15,7 +15,7 @@ import {
   PROP_SHOULD_LTE_FIELD,
   SHOULD_BE,
 } from "@bfchain/core-util-exception-errorcode";
-import { Transaction, RANGE_TYPE } from "@bfchain/core-model";
+import { Transaction, RANGE_TYPE, TransactionInBlock } from "@bfchain/core-model";
 import { TaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "_txbase");
 
@@ -226,7 +226,9 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     ) {
       throw new ArgumentIllegalException(NOT_MATCH, {
         to_compare_prop: body.senderId,
-        be_compare_prop: (await accountBaseHelper.getAddressFromPublicKeyString(body.senderPublicKey)),
+        be_compare_prop: await accountBaseHelper.getAddressFromPublicKeyString(
+          body.senderPublicKey,
+        ),
         to_target: "senderPublicKey",
         be_target: "body",
         ...TransactionBody_Exception_Detail,
@@ -647,11 +649,9 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     trs: T,
     event: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
-  ) {
-    const tasks = new TaskList();
-    tasks.next = this._beginDealTransaction(trs, event);
+  ): Promise<unknown> {
     const assetInfo = this.chainAssetInfoHelper.getAssetInfo(config.magic, config.assetType);
-    tasks.next = event.emit("fee", {
+    await event.emit("fee", {
       type: "fee",
       transaction: trs,
       applyInfo: {
@@ -662,21 +662,32 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
         sourceAmount: trs.fee,
       },
     });
-    return tasks.tryToPromise();
+    return;
   }
 
   /**
-   * 统计交易信息
+   * 开始处理事件的钩子
    *
    * @param trs
    * @param event
    */
-  protected _beginDealTransaction(trs: T, event: BFChainCore.ApplyTransactionEventEmitter) {
+  beginDealTransaction(trs: T, event: BFChainCore.ApplyTransactionEventEmitter) {
     return event.emit("beginDealTransaction", {
       type: "beginDealTransaction",
       transaction: trs,
       applyInfo: undefined,
     });
+  }
+  /**
+   * 结束处理事件的钩子
+   * @param transactionInBlock
+   * @param event
+   */
+  endDealTransaction(
+    transactionInBlock: TransactionInBlock<T>,
+    event: BFChainCore.ApplyTransactionEventEmitter,
+  ) {
+    return event.emit("endDealTransaction", { transactionInBlock });
   }
 
   protected _applyTransactionEmitAsset(

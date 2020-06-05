@@ -304,6 +304,7 @@ export abstract class BlockFactory<T extends Block> {
           tranItem.height = block.height;
           /// 交易生效
           const txFactory = this.transactionCore.getTransactionFactoryFromType(trs.type);
+          await txFactory.beginDealTransaction(trs, eventEmitter);
           await txFactory.applyTransaction(trs, eventEmitter);
           // 在apply之后，获取变更记录
           eventEmitter.assetChangesGetter &&
@@ -358,7 +359,7 @@ export abstract class BlockFactory<T extends Block> {
           if (payloadLength > maxPayloadLength * 0.95) {
             await eventEmitter.emit("nearMaxPayloadLength", { payloadLength });
           }
-          eventEmitter.emit("endDealTransaction", { transactionInBlock: tranItem });
+          await txFactory.endDealTransaction(tranItem, eventEmitter);
         } catch (err) {
           if (err instanceof Error || err instanceof Exception) {
             const res = await eventEmitter.emit("error", {

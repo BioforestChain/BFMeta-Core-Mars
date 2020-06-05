@@ -400,6 +400,7 @@ export class ReplayBlockCore<T extends Block> {
           }
           /// 交易生效
           const txFactory = transactionCore.getTransactionFactoryFromType(trs.type);
+          await txFactory.beginDealTransaction(trs, eventEmitter);
           await txFactory.applyTransaction(trs, eventEmitter);
           // 在apply之后，获取变更记录
           const calcTransactionAssetChanges = await eventEmitter.assetChangesGetter(tranItem);
@@ -464,7 +465,7 @@ export class ReplayBlockCore<T extends Block> {
           payloadHash.update(tranItemBinary);
           // 更新总字节长度
           payloadLength += tranItemBinary.length;
-          eventEmitter.emit("endDealTransaction", { transactionInBlock: tranItem });
+          await txFactory.endDealTransaction(tranItem, eventEmitter);
         } catch (err) {
           if (err instanceof Error || err instanceof Exception) {
             const res = await eventEmitter.emit("error", {
