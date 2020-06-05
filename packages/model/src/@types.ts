@@ -471,7 +471,7 @@ declare namespace BFChainCore {
     error: BFChainUtil.EventInOut<
       {
         type: string;
-        err: Error | import("@bfchain/util").Exception;
+        error: unknown;
         transactionInBlock: TransactionInBlock;
       },
       {

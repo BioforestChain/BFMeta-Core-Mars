@@ -466,18 +466,15 @@ export class ReplayBlockCore<T extends Block> {
           // 更新总字节长度
           payloadLength += tranItemBinary.length;
           await txFactory.endDealTransaction(tranItem, eventEmitter);
-        } catch (err) {
-          if (err instanceof Error || err instanceof Exception) {
-            const res = await eventEmitter.emit("error", {
-              err,
-              type: "",
-              transactionInBlock: tranItem,
-            });
-            if (res && res.continue) {
-              continue;
-            }
+        } catch (error) {
+          const res = await eventEmitter.emit("error", {
+            error,
+            type: "replayBlock",
+            transactionInBlock: tranItem,
+          });
+          if (res && res.continue) {
+            continue;
           }
-          throw err;
         }
       }
       isDevGenerateBlock && info("finish insertTransactionsForReplay");

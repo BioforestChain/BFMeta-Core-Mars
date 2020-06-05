@@ -360,18 +360,15 @@ export abstract class BlockFactory<T extends Block> {
             await eventEmitter.emit("nearMaxPayloadLength", { payloadLength });
           }
           await txFactory.endDealTransaction(tranItem, eventEmitter);
-        } catch (err) {
-          if (err instanceof Error || err instanceof Exception) {
-            const res = await eventEmitter.emit("error", {
-              err,
-              type: "",
-              transactionInBlock: tranItem,
-            });
-            if (res && res.continue) {
-              continue;
-            }
+        } catch (error) {
+          const res = await eventEmitter.emit("error", {
+            error,
+            type: "genesisBlock",
+            transactionInBlock: tranItem,
+          });
+          if (res && res.continue) {
+            continue;
           }
-          throw err;
         }
       }
       isDevGenerateBlock && info("finish insertTransactions");
