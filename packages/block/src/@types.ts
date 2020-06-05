@@ -33,11 +33,13 @@ declare namespace BFChainCore {
     verifySignature?: boolean;
     verifyAsset?: boolean;
     recordForkBlock?: boolean;
-    transactionGetterHelper?: Pick<BFChainCore.TransactionGetterHelperInterface, "getNewDelegates">;
+    transactionGetterHelper?: Required<
+      Pick<BFChainCore.TransactionGetterHelperInterface, "getNewDelegates">
+    >;
     blockGetterHelper?: Required<
       Pick<
         BFChainCore.BlockGetterHelperInterface,
-        "chainBlockFork" | "getNewForgingDelegates" | "getLastBlock"|"getBlockByHeight"
+        "chainBlockFork" | "getNewForgingDelegates" | "getLastBlock" | "getBlockByHeight"
       >
     >;
   };

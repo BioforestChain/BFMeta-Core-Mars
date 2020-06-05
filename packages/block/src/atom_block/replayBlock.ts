@@ -10,17 +10,18 @@ import type {
   BlockBaseStatisticsHelper,
   ChainTimeHelper,
   AccountBaseHelper,
+  TransactionHelper,
 } from "@bfchain/core-helper";
 import {
   CoreExceptionGenerator,
   PARAM_LOST,
   OUT_OF_RANGE,
-  PROP_IS_INVALID,
   NOT_MATCH,
   NOT_EXIST,
   TRAN_POW_VERIFY_FAIL,
   PROP_SHOULD_GT_FIELD,
   INVALID_BLOCK_GENERATOR,
+  SHOULD_NOT_INCLUDE,
 } from "@bfchain/core-util-exception";
 import {
   Exception,
@@ -53,6 +54,7 @@ export class ReplayBlockCore<T extends Block> {
   constructor(
     public blockHelper: BlockHelper,
     public accountBaseHelper: AccountBaseHelper,
+    public transactionHelper: TransactionHelper,
     public baseHelper: BaseHelper,
     public config: ConfigHelper,
     public statisticsHelper: BlockBaseStatisticsHelper,
@@ -253,8 +255,25 @@ export class ReplayBlockCore<T extends Block> {
     /**本块交易所涉及的资产信息 */
     const statisticsInfo = this.statisticsHelper.forceGetStatisticsInfoByBlock(height, signature);
     const transactionBufferList: Uint8Array[] = [];
-    const { transactionCore, asymmetricHelper } = this;
+    const { transactionCore, asymmetricHelper, transactionHelper, baseHelper } = this;
 
+    if (!eventEmitter.assetChangesGetter) {
+      throw new NoFoundException(NOT_EXIST, {
+        prop: "assetChangesGetter",
+        target: "eventEmitter",
+        ...Function_Exception_Detail,
+      });
+    }
+
+    if (!eventEmitter.numberOfSenderTranGetter) {
+      throw new NoFoundException(NOT_EXIST, {
+        prop: "numberOfSenderTranGetter",
+        target: "eventEmitter",
+        ...Function_Exception_Detail,
+      });
+    }
+
+    const trSignWithIndex = new Map<string, BFChainCore.Transaction[]>();
     try {
       /**绑定统计功能到事件触发器上 */
       this.statisticsHelper.bindApplyTransactionEventEmiter(eventEmitter, statisticsInfo);
@@ -334,25 +353,96 @@ export class ReplayBlockCore<T extends Block> {
             });
           }
           transactionBufferList.push(tranItem.getBytes());
+          // 验证块内是否存在不合法交易
+          const { storageValue, type, senderId } = trs;
+          if (
+            storageValue &&
+            (type === transactionHelper.GRAB_ASSET ||
+              type === transactionHelper.BE_EXCHANGE_ASSET ||
+              type === transactionHelper.BE_EXCHANGE_SPECIAL_ASSET ||
+              type === transactionHelper.SIGN_FOR_ASSET ||
+              type === transactionHelper.IMMIGRATE_ASSET)
+          ) {
+            const trsArray = trSignWithIndex.get(storageValue);
+            if (trsArray) {
+              const opt: {
+                type?: string;
+                senderId?: string;
+              } = {};
+              if (type === transactionHelper.IMMIGRATE_ASSET) {
+                opt.type = type;
+              } else {
+                opt.senderId = senderId;
+              }
 
+              for (const tr of trsArray) {
+                if (opt.type && tr.type === opt.type) {
+                  throw new ConsensusException(SHOULD_NOT_INCLUDE, {
+                    prop: `Transactions`,
+                    target: `block with height ${height}'`,
+                    value: `transaction with storageValue ${storageValue}`,
+                    ...Function_Exception_Detail,
+                  });
+                }
+                if (opt.senderId && tr.senderId === opt.senderId) {
+                  throw new ConsensusException(SHOULD_NOT_INCLUDE, {
+                    prop: `Transactions`,
+                    target: `block with height ${height}'`,
+                    value: `transaction with storageValue ${storageValue}`,
+                    ...Function_Exception_Detail,
+                  });
+                }
+              }
+              trsArray.push(trs);
+            } else {
+              trSignWithIndex.set(storageValue, [trs]);
+            }
+          }
           /// 交易生效
           const txFactory = transactionCore.getTransactionFactoryFromType(trs.type);
           await txFactory.applyTransaction(trs, eventEmitter);
           // 在apply之后，获取变更记录
-          eventEmitter.assetChangesGetter &&
-            (tranItem.transactionAssetChanges = await eventEmitter.assetChangesGetter(tranItem));
+          const calcTransactionAssetChanges = await eventEmitter.assetChangesGetter(tranItem);
           // 获取是发送者的第几比交易
-          eventEmitter.numberOfSenderTranGetter &&
-            (tranItem.numberOfSenderTransactions = await eventEmitter.numberOfSenderTranGetter(
-              tranItem,
-            ));
+          const calcNumberOfSenderTransactions = await eventEmitter.numberOfSenderTranGetter(
+            tranItem,
+          );
+          // 校验 numberOfSenderTransactions
+          if (calcNumberOfSenderTransactions !== tranItem.numberOfSenderTransactions) {
+            throw new ArgumentIllegalException(NOT_MATCH, {
+              to_compare_prop: `numberOfSenderTransactions ${tranItem.numberOfSenderTransactions}`,
+              be_compare_prop: `numberOfSenderTransactions ${calcNumberOfSenderTransactions}`,
+              to_target: "block",
+              be_target: "calculate",
+              ...Function_Exception_Detail,
+            });
+          }
+          // 校验 transactionAssetChanges
           const transactionAssetChanges = tranItem.transactionAssetChanges;
-          for (const transactionAssetChange of transactionAssetChanges) {
-            if (BigInt(transactionAssetChange.assetBalance) < BigInt(0)) {
-              throw new ArgumentIllegalException(PROP_IS_INVALID, {
-                prop: `assetBalance ${transactionAssetChange.assetBalance}`,
-                target: "transactionAssetChanges",
-                function: "insertTransactionsForReplay",
+          const calcLength = calcTransactionAssetChanges.length;
+          const realLength = transactionAssetChanges.length;
+          if (calcLength !== realLength) {
+            throw new ArgumentIllegalException(NOT_MATCH, {
+              to_compare_prop: `transactionAssetChanges lenght ${realLength}`,
+              be_compare_prop: `transactionAssetChanges lenght ${calcLength}`,
+              to_target: "block",
+              be_target: "calculate",
+              ...Function_Exception_Detail,
+            });
+          }
+          for (let i = 0; i < calcLength; i++) {
+            if (
+              !baseHelper.isArrayEqual(
+                calcTransactionAssetChanges[i].getBytes(),
+                transactionAssetChanges[i].getBytes(),
+              )
+            ) {
+              throw new ArgumentIllegalException(NOT_MATCH, {
+                to_compare_prop: `transactionAssetChanges with index ${i}`,
+                be_compare_prop: `transactionAssetChanges with index ${i}`,
+                to_target: "block",
+                be_target: "calculate",
+                ...Function_Exception_Detail,
               });
             }
           }
@@ -374,9 +464,6 @@ export class ReplayBlockCore<T extends Block> {
           payloadHash.update(tranItemBinary);
           // 更新总字节长度
           payloadLength += tranItemBinary.length;
-          // if (payloadLength > this.config.maxPayloadLength * 0.95) {
-          //   await eventEmitter.emit("nearMaxPayloadLength", { payloadLength });
-          // }
           eventEmitter.emit("endDealTransaction", { transactionInBlock: tranItem });
         } catch (err) {
           if (err instanceof Error || err instanceof Exception) {

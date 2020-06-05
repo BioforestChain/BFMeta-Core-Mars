@@ -229,6 +229,7 @@ export abstract class BlockFactory<T extends Block> {
       blockStatisticsInfo,
     );
     const transactions: TransactionInBlock[] = [];
+    const needTPow = height > powOfWorkExemptionBlocks;
     try {
       /**绑定统计功能到事件触发器上 */
       this.statisticsHelper.bindApplyTransactionEventEmiter(eventEmitter, statisticsInfo);
@@ -261,7 +262,7 @@ export abstract class BlockFactory<T extends Block> {
             warn(exp);
           }
 
-          if (height > powOfWorkExemptionBlocks) {
+          if (needTPow) {
             //#region 校验交易pow
             {
               const count = tranSenderCountMap.forceGet(trs.senderId);

@@ -174,7 +174,7 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
         transactionGetterHelper = this.moduleMap.get("transactionGetterHelper");
         if (!transactionGetterHelper) {
           throw new NoFoundException(NOT_EXIST, {
-            prop: "blockGetterHelper",
+            prop: "transactionGetterHelper",
             target: "moduleStroge",
             function: "replayBlock",
           });
