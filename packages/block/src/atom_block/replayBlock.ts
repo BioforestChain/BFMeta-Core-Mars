@@ -475,6 +475,7 @@ export class ReplayBlockCore<T extends Block> {
           if (res && res.continue) {
             continue;
           }
+          throw error;
         }
       }
       isDevGenerateBlock && info("finish insertTransactionsForReplay");

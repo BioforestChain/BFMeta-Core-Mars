@@ -369,6 +369,7 @@ export abstract class BlockFactory<T extends Block> {
           if (res && res.continue) {
             continue;
           }
+          throw error;
         }
       }
       isDevGenerateBlock && info("finish insertTransactions");
