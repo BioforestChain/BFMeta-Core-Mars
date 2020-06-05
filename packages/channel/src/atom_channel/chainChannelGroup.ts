@@ -373,7 +373,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
               try {
                 const res = await queryer.addChainChannel(event.chainChannel, options);
 
-                if (res.status === RESPONSE_STATUS.success && res.transactions.length > 0) {
+                if (res.status === RESPONSE_STATUS.success) {
                   // 任务完成
                   queryer.finish();
                   // 确认节点的工作，让其继续下一个工作
@@ -389,7 +389,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
                     });
                     // task_result_list[task_offset] = res.transactions[0];
                   }
-                } else if (res.status === RESPONSE_STATUS.busy || res.transactions.length === 0) {
+                } else if (res.status === RESPONSE_STATUS.busy) {
                   // 移除无效的结果
                   queryer.removeChainChannelByResult(res);
                   // 重试任务，但是这个节点仍旧放在繁忙节点列表，暂时不信任
