@@ -93,9 +93,8 @@ export function sign_detached_verify(
   const sm = new ByteArray(SignLength.Signature + msg.length);
   const m = new ByteArray(SignLength.Signature + msg.length);
 
-  let i;
-  for (i = 0; i < SignLength.Signature; i++) sm[i] = sig[i];
-  for (i = 0; i < msg.length; i++) sm[i + SignLength.Signature] = msg[i];
+  sm.set(sig);
+  sm.set(msg, SignLength.Signature);
 
   return _sign_open(m, sm, sm.length, publicKey) >= 0;
 }
