@@ -32,6 +32,11 @@ abstract class GroupRequesterBuilder<CC extends BFChainCore.ChainChannel, R> {
   ): Promise<R> {
     this._inQueneTasks.forceGet(chainChannel);
     let { timeout = (chainChannel.delay || 0) + 3000, timeoutException } = opts;
+    if (!Number.isSafeInteger(timeout)) {
+      timeout = 3000;
+    } else if (timeout > 3e4) {
+      timeout = 3e4;
+    }
     // chainChannel.address
     return safePromiseRace<PromiseLike<R>>([
       sleep(timeout, () => {
@@ -98,8 +103,8 @@ export class GroupQueryTransactionsBuilder<
       /**message */ "queryTransactions({query} / {sort}) timeout.",
       /**detail */
       {
-        query: this.query,
-        sort: this.sort,
+        query: JSON.stringify(this.query),
+        sort: JSON.stringify(this.sort),
       },
     ] as const;
   }

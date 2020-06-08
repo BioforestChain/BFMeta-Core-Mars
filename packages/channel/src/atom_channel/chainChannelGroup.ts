@@ -312,8 +312,8 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
                 peerId: cc.address,
                 offset: this.queryer.query.offset,
                 limit: this.queryer.query.limit,
-                query,
-                sort,
+                query: JSON.stringify(query),
+                sort: JSON.stringify(sort),
               },
             ),
         );
@@ -564,7 +564,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
         return new EasyMap<DH, Error>(
           (cc) =>
             new TimeOutException("peer({peerId}) queryBlock({query}) timeout.", {
-              query: queryer.query,
+              query: JSON.stringify(queryer.query),
               peerId: cc.address,
             }),
         );
