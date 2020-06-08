@@ -52,9 +52,13 @@ export class CommonBlockFactory extends BlockFactory<CommonBlock> {
     opts?: { verify?: boolean; config?: ConfigHelper },
   ) {
     const block = CommonBlock.fromObject(blockBody);
-    block.transactions = blockBody.transactions.map((twi) => {
-      return this.transactionInBlockFromJSON(twi);
-    });
+    if (blockBody.transactions && blockBody.transactions.length > 0) {
+      block.transactions = blockBody.transactions.map(twi => {
+        return this.transactionInBlockFromJSON(twi);
+      });
+    } else {
+      block.transactions = [];
+    }
 
     if (opts && opts.verify) {
       await this.verify(block, opts.config);

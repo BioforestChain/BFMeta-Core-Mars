@@ -62,9 +62,13 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
     opts?: { verify?: boolean; config?: ConfigHelper },
   ) {
     const block = GenesisBlock.fromObject(blockBody);
-    block.transactions = blockBody.transactions.map((twi) => {
-      return this.transactionInBlockFromJSON(twi);
-    });
+    if (blockBody.transactions && blockBody.transactions.length > 0) {
+      block.transactions = blockBody.transactions.map(twi => {
+        return this.transactionInBlockFromJSON(twi);
+      });
+    } else {
+      block.transactions = [];
+    }
     if (opts && opts.verify) {
       await this.verify(block, opts.config);
     }
