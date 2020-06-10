@@ -20,7 +20,7 @@ class QUQ extends Message<QAQ> {
 
 if (util.decorateRoot.nested) {
   const backupToJSON = Symbol("toJSON");
-  Object.keys(util.decorateRoot.nested).forEach(name => {
+  Object.keys(util.decorateRoot.nested).forEach((name) => {
     const ref = util.decorateRoot.get(name) as Type | null;
     if (!ref) {
       return;
@@ -33,7 +33,7 @@ if (util.decorateRoot.nested) {
       const sourceToJSON = ctor.prototype.toJSON;
       if (sourceToJSON) {
         ctor.prototype[backupToJSON] = sourceToJSON;
-        ctor.prototype.toJSON = function(...args: any[]) {
+        ctor.prototype.toJSON = function (...args: any[]) {
           if (jsonDry.is_in_stringify) {
             return this;
           }

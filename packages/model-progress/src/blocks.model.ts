@@ -18,7 +18,7 @@ export class BlocksProgressEventModel extends ProgressEventModel<"blocks">
     // const processingDetails = this.processingDetails
     return Object.assign(
       {
-        finishedDetails: this.finishedDetails.map(range => range.toJSON()),
+        finishedDetails: this.finishedDetails.map((range) => range.toJSON()),
         processingDetails: this.processingDetails,
       },
       super.toJSON(),

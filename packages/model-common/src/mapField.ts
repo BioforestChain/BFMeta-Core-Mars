@@ -88,12 +88,14 @@ class TypedMap<T extends string | number, V> {
 }
 export class NumberKeyMap<V> extends TypedMap<number, V> {
   constructor(map: { [key: string]: V }) {
-    super(map, map => Object.keys(map).map(num => [Number.parseInt(num), map[num]] as [number, V]));
+    super(map, (map) =>
+      Object.keys(map).map((num) => [Number.parseInt(num), map[num]] as [number, V]),
+    );
   }
 }
 export class StringKeyMap<V> extends TypedMap<string, V> {
   constructor(map: { [key: string]: V }) {
-    super(map, map => Object.entries(map));
+    super(map, (map) => Object.entries(map));
   }
 }
 

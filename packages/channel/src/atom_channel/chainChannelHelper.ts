@@ -265,7 +265,7 @@ export class ChainChannelHelper {
     //#region 交易签名校验
     if (arg.status === RESPONSE_STATUS.success) {
       const { transactions } = arg;
-      transactions.forEach(async item => {
+      transactions.forEach(async (item) => {
         await this.transctionHelper.verifyTransactionSignature(item.transaction, {
           taskLabel: "QueryTransactionReturn",
         });

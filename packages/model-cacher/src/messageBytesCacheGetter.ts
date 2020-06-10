@@ -27,7 +27,7 @@ export function cacheBytesGetter<T extends GetBytesFunction>(
     );
   }
   const source_fun = descriptor.value;
-  const new_souce_fun = function(this: Message, ...args) {
+  const new_souce_fun = function (this: Message, ...args) {
     if (Object.isFrozen(this)) {
       const cache_key = JSON.stringify(args);
       let cacheMap = MESSAGE_IN_ARGS_BYTES_WM.get(this);

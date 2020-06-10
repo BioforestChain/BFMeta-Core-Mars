@@ -32,7 +32,7 @@ export class SignForAssetModel extends Message<SignForAssetModel>
     const { signatureBufferList } = this;
     let signatureList = BUFFER_LIST_SIGNATURE_LIST_WM.get(signatureBufferList);
     if (!signatureList) {
-      signatureList = this.signatureBufferList.map(buf => {
+      signatureList = this.signatureBufferList.map((buf) => {
         const signature = AccountSignatureModel.decode(buf);
         SIGNATURE_BUFFER_WM.set(signature, buf);
         return signature;
@@ -41,7 +41,7 @@ export class SignForAssetModel extends Message<SignForAssetModel>
     return signatureList;
   }
   public set thirdPartySignatures(signatureList: AccountSignatureModel[]) {
-    const bufList = signatureList.map(signature => {
+    const bufList = signatureList.map((signature) => {
       let buf = SIGNATURE_BUFFER_WM.get(signature);
       if (!buf) {
         buf = AccountSignatureModel.encode(signature).finish();
@@ -75,7 +75,7 @@ export class SignForAssetModel extends Message<SignForAssetModel>
       transactionSignature: this.transactionSignature,
       trustSenderId: this.trustSenderId,
       trustRecipientId: this.trustRecipientId,
-      thirdPartySignatures: this.thirdPartySignatures.map(thirdPartySignature =>
+      thirdPartySignatures: this.thirdPartySignatures.map((thirdPartySignature) =>
         thirdPartySignature.toJSON(),
       ),
       trustAsset: this.trustAsset.toJSON(),

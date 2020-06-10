@@ -21,7 +21,7 @@ export class ToExchangeAssetModel extends Message<ToExchangeAssetModel>
     let cipherTexts = BUFFER_LIST_PUBLICKEY_LIST_WM.get(cipherPublicKeysBuffer);
     if (!cipherTexts) {
       cipherTexts = Object.freeze(
-        cipherPublicKeysBuffer.map(chiperTextBuffer => getHexFromArrayBuffer(chiperTextBuffer)),
+        cipherPublicKeysBuffer.map((chiperTextBuffer) => getHexFromArrayBuffer(chiperTextBuffer)),
       );
       BUFFER_LIST_PUBLICKEY_LIST_WM.set(cipherPublicKeysBuffer, cipherTexts);
     }

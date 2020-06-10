@@ -3,10 +3,7 @@ import type { DestoryAssetTransaction } from "@bfchain/core-model";
 import { Injectable } from "@bfchain/util";
 import { CoreExceptionGenerator, NOT_EXIST, NOT_MATCH } from "@bfchain/core-util-exception";
 
-const { ConsensusException } = CoreExceptionGenerator(
-  "VERIFIER",
-  "TransactionLogicVerifier",
-);
+const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "TransactionLogicVerifier");
 
 @Injectable()
 export class DestoryAssetLogicVerifier extends TransactionLogicVerifier {
@@ -69,7 +66,7 @@ export class DestoryAssetLogicVerifier extends TransactionLogicVerifier {
 
     this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction);
 
-    this.eventLogicVerifier.listenEventAsset(cloneAccountsAssets, transaction)
+    this.eventLogicVerifier.listenEventAsset(cloneAccountsAssets, transaction);
 
     this.eventLogicVerifier.listenEventDestoryAsset(transaction, accountGetterHelper);
 

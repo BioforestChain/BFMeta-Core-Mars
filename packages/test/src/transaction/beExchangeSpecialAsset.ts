@@ -70,9 +70,9 @@ async function getToExchangeSpecialAssetTransaction(
   };
   if (recipient && recipient.length > 0) {
     data.rangeType = RANGE_TYPE.MULTI_ADDRESS;
-    data.range = recipient.map(r => r.address);
+    data.range = recipient.map((r) => r.address);
     if (cipher) {
-      toExchangeSpecialAsset.cipherPublicKeys = recipient.map(r => r.publicKey);
+      toExchangeSpecialAsset.cipherPublicKeys = recipient.map((r) => r.publicKey);
     }
   }
   const trs = await bfchainCore.transaction.createTransaction<ToExchangeSpecialAssetTransaction>(

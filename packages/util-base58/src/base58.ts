@@ -44,7 +44,7 @@ export class Base58 {
 
   // /**
   //  * 使用BigInt，能带来100%+的性能提升
-  //  * @param source 
+  //  * @param source
   //  */
   // bigintEncode(source: Uint8Array) {
   //   let bi = BigInt(`0x${decodeBinaryToHex(source)}`);

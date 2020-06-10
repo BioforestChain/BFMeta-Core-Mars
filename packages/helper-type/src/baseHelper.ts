@@ -250,7 +250,7 @@ export class BaseHelper {
    * @param value
    */
   isPositiveFloatContainZero(value: unknown): value is number {
-    return this.isPositiveFloatMatchCondition(value, v => v >= 0);
+    return this.isPositiveFloatMatchCondition(value, (v) => v >= 0);
   }
 
   /**
@@ -259,7 +259,7 @@ export class BaseHelper {
    * @param value
    */
   isPositiveFloatNotContainZero(value: unknown): value is number {
-    return this.isPositiveFloatMatchCondition(value, v => v > 0);
+    return this.isPositiveFloatMatchCondition(value, (v) => v > 0);
   }
 
   /**

@@ -136,7 +136,9 @@ export class Block<RJ extends BFChainCore.CommonBlockRemarkJSON = BFChainCore.Co
       props.signatureBuffer = { value: null };
     }
     if (skipOrCustomTransactions) {
-      props.transactionBufferList = { value: skipOrCustomTransactions === true ? [] : skipOrCustomTransactions };
+      props.transactionBufferList = {
+        value: skipOrCustomTransactions === true ? [] : skipOrCustomTransactions,
+      };
     }
     const blockWrapper = Object.create(this, props);
     return this.$type.encode(blockWrapper).finish();

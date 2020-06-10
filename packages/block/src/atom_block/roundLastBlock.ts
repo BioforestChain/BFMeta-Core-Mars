@@ -66,7 +66,7 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
   ) {
     const block = RoundLastBlock.fromObject(blockBody);
     if (blockBody.transactions && blockBody.transactions.length > 0) {
-      block.transactions = blockBody.transactions.map(twi => {
+      block.transactions = blockBody.transactions.map((twi) => {
         return this.transactionInBlockFromJSON(twi);
       });
     } else {

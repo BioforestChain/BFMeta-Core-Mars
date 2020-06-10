@@ -584,11 +584,8 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
     const eventEmitter: BFChainCore.ApplyTransactionEventEmitter<any> = new QueneEventEmitter<
       any
     >();
-   const taskname = eventEmitter.taskname = `test-getGenesisBlock-${height}`;
-    const statisticsInfo = statistics.forceGetStatisticsInfoByBlock(
-      taskname,
-      "getGenesisBlock",
-    );
+    const taskname = (eventEmitter.taskname = `test-getGenesisBlock-${height}`);
+    const statisticsInfo = statistics.forceGetStatisticsInfoByBlock(taskname, "getGenesisBlock");
     statistics.bindApplyTransactionEventEmiter(eventEmitter, statisticsInfo);
     for (let i = 0; i < txWithIndexList.length; i++) {
       const { index, trs } = txWithIndexList[i];

@@ -237,7 +237,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
     binary: Uint8Array,
     ResonseBoxer: (bytes: Uint8Array) => BFChainUtil.PromiseMaybe<T>,
     options = this.defaultReqOptions,
-  ) { 
+  ) {
     const req_id = this._req_id_acc[0]++;
     this.postResponseMessage(req_id, cmd, binary);
     const req_task = new PromiseOut<Uint8Array>();
@@ -249,9 +249,9 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
       resp = this._aborterParser(options, resp, cmd);
     }
     const res = await ResonseBoxer(await resp);
-    //未统计信息创建的钩子 
-    await this.emit("afterRequestWithBinaryData", {cmd, query:binary, res});
-    return res
+    //未统计信息创建的钩子
+    await this.emit("afterRequestWithBinaryData", { cmd, query: binary, res });
+    return res;
   }
   /**发送响应数据 */
   postResponseMessage(req_id: number, cmd: DUPLEX_API_CMD, binary: Uint8Array) {

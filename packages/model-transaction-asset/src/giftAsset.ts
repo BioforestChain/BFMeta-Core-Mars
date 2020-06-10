@@ -19,14 +19,14 @@ export class GiftAssetModel extends Message<GiftAssetModel>
     const { cipherPublicKeysBuffer } = this;
     let cipherTexts = BUFFER_LIST_PUBLICKEY_LIST_WM.get(cipherPublicKeysBuffer);
     if (!cipherTexts) {
-      cipherTexts = this.cipherPublicKeysBuffer.map(chiperPublicKeyBuffer =>
+      cipherTexts = this.cipherPublicKeysBuffer.map((chiperPublicKeyBuffer) =>
         getHexFromArrayBuffer(chiperPublicKeyBuffer),
       );
     }
     return cipherTexts;
   }
   set cipherPublicKeys(cipherPublicKeyList: string[]) {
-    const bufList = cipherPublicKeyList.map(cipherText => parseHexToArrayBuffer(cipherText));
+    const bufList = cipherPublicKeyList.map((cipherText) => parseHexToArrayBuffer(cipherText));
     BUFFER_LIST_PUBLICKEY_LIST_WM.set(bufList, cipherPublicKeyList);
     this.cipherPublicKeysBuffer = bufList;
   }

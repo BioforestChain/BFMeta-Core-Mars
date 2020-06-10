@@ -144,7 +144,7 @@ const SIGMA8 = [
 // These are offsets into a uint64 buffer.
 // Multiply them all by 2 to make them offsets into a uint32 buffer,
 // because this is Javascript and we don't have uint64s
-const SIGMA82 = new ByteArray(SIGMA8.map(x => x * 2));
+const SIGMA82 = new ByteArray(SIGMA8.map((x) => x * 2));
 
 // Compression function. 'last' flag indicates last block.
 // Note we're representing 16 uint64s as 32 uint32s

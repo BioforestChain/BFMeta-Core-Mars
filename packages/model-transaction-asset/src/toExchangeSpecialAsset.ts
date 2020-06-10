@@ -20,14 +20,14 @@ export class ToExchangeSpecialAssetModel extends Message<ToExchangeSpecialAssetM
     const { cipherPublicKeysBuffer: cipherTextsBuffer } = this;
     let cipherTexts = BUFFER_LIST_PUBLICKEY_LIST_WM.get(cipherTextsBuffer);
     if (!cipherTexts) {
-      cipherTexts = this.cipherPublicKeysBuffer.map(chiperPublicKeyBuffer =>
+      cipherTexts = this.cipherPublicKeysBuffer.map((chiperPublicKeyBuffer) =>
         getHexFromArrayBuffer(chiperPublicKeyBuffer),
       );
     }
     return cipherTexts;
   }
   set cipherPublicKeys(cipherTextList: string[]) {
-    const bufList = cipherTextList.map(cipherText => parseHexToArrayBuffer(cipherText));
+    const bufList = cipherTextList.map((cipherText) => parseHexToArrayBuffer(cipherText));
     BUFFER_LIST_PUBLICKEY_LIST_WM.set(bufList, cipherTextList);
     this.cipherPublicKeysBuffer = bufList;
   }

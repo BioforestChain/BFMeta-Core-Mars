@@ -152,7 +152,7 @@ export class QueryTransactionReturnModel extends CommonResponse
   toJSON() {
     return Object.assign(
       {
-        transactions: this.transactions.map(tib => tib.toJSON()),
+        transactions: this.transactions.map((tib) => tib.toJSON()),
       },
       super.toJSON(),
     );

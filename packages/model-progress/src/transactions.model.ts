@@ -12,7 +12,7 @@ export class TransactionsProgressEventModel extends ProgressEventModel<"transact
   toJSON(): BFChainCore.TransactionsProgressEventJSON {
     return Object.assign(
       {
-        finishedDetails: this.finishedDetails.map(range => range.toJSON()),
+        finishedDetails: this.finishedDetails.map((range) => range.toJSON()),
       },
       super.toJSON(),
     );

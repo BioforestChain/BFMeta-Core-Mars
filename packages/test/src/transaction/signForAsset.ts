@@ -185,12 +185,12 @@ async function getSignForAssetTransaction(
   const trusAssetTrsWithSecret = await getTrustAssetTransaction(
     getSenderWithSecondSecret(),
     getRecipientWithSecondSecret().address,
-    trustees.map(trustee => trustee.address),
+    trustees.map((trustee) => trustee.address),
   );
   const trusAssetTrsWithoutSecret = await getTrustAssetTransaction(
     getSenderWithoutSecondSecret(),
     getRecipientWithoutSecondSecret().address,
-    trustees.map(trustee => trustee.address),
+    trustees.map((trustee) => trustee.address),
   );
 
   await getSignForAssetTransaction(

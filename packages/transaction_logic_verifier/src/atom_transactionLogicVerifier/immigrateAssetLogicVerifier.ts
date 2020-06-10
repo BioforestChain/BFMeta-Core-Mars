@@ -140,7 +140,7 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
     const cloneAccountsAssets = {
       [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
     };
-    
+
     this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction);
 
     this.eventLogicVerifier.listenEventAsset(cloneAccountsAssets, transaction);

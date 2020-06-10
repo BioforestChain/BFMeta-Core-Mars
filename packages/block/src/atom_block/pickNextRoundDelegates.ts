@@ -37,10 +37,12 @@ export class PickNextRoundDelegates {
     return await this.calcForgingDelegates(currentRound, accountGetterHelper);
   }
 
-  async calcForgingDelegates<T extends BFChainCore.ForSortAccountInfo  = BFChainCore.ForSortAccountInfo>(
+  async calcForgingDelegates<
+    T extends BFChainCore.ForSortAccountInfo = BFChainCore.ForSortAccountInfo
+  >(
     round: number,
     accountGetterHelper?: Pick<
-      BFChainCore.AccountGetterHelperInterface<any,T>,
+      BFChainCore.AccountGetterHelperInterface<any, T>,
       "getNextRoundDelegates" | "getAccounts"
     >,
   ) {

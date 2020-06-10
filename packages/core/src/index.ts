@@ -100,7 +100,7 @@ export function BFChainCoreFactory(
     "ed2curveHelper",
     "blockGetterHelper",
     "TIME_SPEED",
-  ] as (keyof typeof args)[]).forEach(key => {
+  ] as (keyof typeof args)[]).forEach((key) => {
     if (!moduleMap.has(key)) {
       moduleMap.set(key, args[key]);
     }
@@ -113,7 +113,7 @@ export function BFChainCoreFactory(
   configMap.set(args.config.magic, args.config);
   /// 安装插件
   if (extendsions) {
-    extendsions.forEach(plugin => {
+    extendsions.forEach((plugin) => {
       Resolve(plugin, moduleMap);
     });
   }

@@ -74,12 +74,12 @@ async function getGiftAssetTransaction(
   };
   if (recipient && recipient.length > 0) {
     if (cipher) {
-      giftAsset.cipherPublicKeys = recipient.map(r => r.publicKey);
+      giftAsset.cipherPublicKeys = recipient.map((r) => r.publicKey);
       data.rangeType = RANGE_TYPE.MULTI_ADDRESS;
-      data.range = recipient.map(r => r.address);
+      data.range = recipient.map((r) => r.address);
     } else {
       data.rangeType = RANGE_TYPE.MULTI_ADDRESS;
-      data.range = recipient.map(r => r.address);
+      data.range = recipient.map((r) => r.address);
     }
   }
   const trs = await bfchainCore.transaction.createTransaction<GiftAssetTransaction>(

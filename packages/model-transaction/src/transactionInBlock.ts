@@ -83,7 +83,7 @@ export class TransactionInBlock<T extends Transaction = Transaction> extends Som
         index: this.index,
         height: this.height,
         numberOfSenderTransactions: this.numberOfSenderTransactions,
-        transactionAssetChanges: this.transactionAssetChanges.map(transactionAssetChange =>
+        transactionAssetChanges: this.transactionAssetChanges.map((transactionAssetChange) =>
           transactionAssetChange.toJSON(),
         ),
         signature: this.signature,

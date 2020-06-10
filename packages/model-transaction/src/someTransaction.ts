@@ -4,7 +4,10 @@ import { INVALID_TRANSACTION_BASE_TYPE } from "@bfchain/core-util-exception-erro
 import type { Transaction } from "@bfchain/core-model-transaction-base";
 import { Type, Field, Message } from "@bfchain/protobuf";
 
-const { ArgumentFormatException,error,IllegalStateException } = CoreExceptionGenerator("MODEL", "transactionModel");
+const { ArgumentFormatException, error, IllegalStateException } = CoreExceptionGenerator(
+  "MODEL",
+  "transactionModel",
+);
 
 export enum TRANSACTION_TYPES_BASE {
   SIGNATURE = "BSE-01",
@@ -133,7 +136,7 @@ export class SomeTransactionModel<T extends BFChainCore.Transaction = BFChainCor
       throw new ArgumentFormatException(INVALID_TRANSACTION_BASE_TYPE, { base_type });
     }
     if (Object.isFrozen(this)) {
-      throw new IllegalStateException("Transaction is in unchangable states.")
+      throw new IllegalStateException("Transaction is in unchangable states.");
     }
     this._trs_base_type = base_type;
     this._trs_bytes = new Uint8Array((trs.constructor as typeof Message).encode(trs).finish());

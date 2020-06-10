@@ -1062,7 +1062,7 @@ function getRoundLastBlockRemarkHash(height: number) {
       );
       console.assert(
         fastResult.timestamp === result.timestamp && fastResult.address === result.address,
-       `${[fastResult.timestamp, result.timestamp]},
+        `${[fastResult.timestamp, result.timestamp]},
         ${[fastResult.address, result.address]}`,
       );
 

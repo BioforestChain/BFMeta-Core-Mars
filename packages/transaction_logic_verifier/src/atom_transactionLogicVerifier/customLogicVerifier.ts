@@ -50,13 +50,17 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
     }
 
     this.eventLogicVerifier.listenEventFrozenAccount(cloneAccountsInfo);
-    
+
     this.eventLogicVerifier.listenEventSetSecondPublicKey();
 
     this.eventLogicVerifier.listenEventSetUsername(accountGetterHelper);
 
-    this.eventLogicVerifier.listenEventRegisterToDelegate(cloneAccountsInfo, curRound, transactionGetterHelper);
-    
+    this.eventLogicVerifier.listenEventRegisterToDelegate(
+      cloneAccountsInfo,
+      curRound,
+      transactionGetterHelper,
+    );
+
     this.eventLogicVerifier.listenEventAcceptVote(cloneAccountsInfo);
 
     this.eventLogicVerifier.listenEventRejectVote(cloneAccountsInfo);
@@ -106,10 +110,7 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
       accountGetterHelper,
     );
 
-    this.eventLogicVerifier.listenEventSaleLocationName(
-      currentBlockHeight,
-      accountGetterHelper,
-    );
+    this.eventLogicVerifier.listenEventSaleLocationName(currentBlockHeight, accountGetterHelper);
 
     this.eventLogicVerifier.listenEventPurchaseLocationName(
       currentBlockHeight,
