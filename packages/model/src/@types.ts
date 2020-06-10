@@ -480,6 +480,7 @@ declare namespace BFChainCore {
     >;
   };
   type ApplyTransactionEventEmitter<ES extends BFChainUtil.EventInOutMap = {}> = {
+    taskname?: string;
     assetChangesGetter?: (
       tib: TransactionInBlock,
     ) => BFChainUtil.PromiseMaybe<TransactionInBlock["transactionAssetChanges"]>;

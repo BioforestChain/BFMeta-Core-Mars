@@ -560,8 +560,9 @@ const getTxs = (address: string) => {
     const eventEmitter: BFChainCore.ApplyTransactionEventEmitter<any> = new QueneEventEmitter<
       any
     >();
+    const taskname = (eventEmitter.taskname = `test-registerChainGenesisBlock-${height}`);
     const statisticsInfo = registerStatistics.forceGetStatisticsInfoByBlock(
-      `core-genesisblock-${height}`,
+      taskname,
       "generateRegisterChainGenesisBlock",
     );
     registerStatistics.bindApplyTransactionEventEmiter(eventEmitter, statisticsInfo);
@@ -759,7 +760,10 @@ const getTxs = (address: string) => {
     const eventEmitter: BFChainCore.ApplyTransactionEventEmitter<any> = new QueneEventEmitter<
       any
     >();
-    const statisticsInfo = statistics.forceGetStatisticsInfoByBlock(`core-genesisblock-${height}`, "generateCommonBlock");
+    const statisticsInfo = statistics.forceGetStatisticsInfoByBlock(
+      `core-genesisblock-${height}`,
+      "generateCommonBlock",
+    );
     statistics.bindApplyTransactionEventEmiter(eventEmitter, statisticsInfo);
 
     const { index, trs } = trsWithIndex;
@@ -850,7 +854,7 @@ const getTxs = (address: string) => {
     // await getRegisterChainTransaction(getSenderWithSecondSecret());
     // await getRegisterChainTransaction(getSenderWithoutSecondSecret());
     const xx = await getCommonBlockAsync(getSenderWithoutSecondSecret());
-    console.log(xx.transactions[0].transactionAssetChanges.map(item => item.getBytes()));
+    console.log(xx.transactions[0].transactionAssetChanges.map((item) => item.getBytes()));
   } catch (e) {
     console.log(e);
   }

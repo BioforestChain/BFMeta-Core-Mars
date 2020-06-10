@@ -216,7 +216,7 @@ export abstract class BlockFactory<T extends Block> {
     const abortForbiddenTransaction = this.transactionCore.abortForbiddenTransaction;
     const Function_Exception_Detail = { function: "insertTransactions" };
     const MAX_TRANSACTION_SIZE = this.config.genesisBlock.remark.maxTransactionSize;
-    const { height, signature, statisticInfo: blockStatisticsInfo } = block;
+    const { height, generatorPublicKey, statisticInfo: blockStatisticsInfo } = block;
     const { powOfWorkExemptionBlocks, maxPayloadLength } = this.config;
     /**所有交易的sha256hash */
     const payloadHash = this.cryptoHelper.sha256();
@@ -224,8 +224,8 @@ export abstract class BlockFactory<T extends Block> {
     let payloadLength = 0;
     /**本块交易所涉及的资产信息 */
     const statisticsInfo = this.statisticsHelper.forceGetStatisticsInfoByBlock(
-      `core-genesisblock-${height}`,
-      signature,
+      eventEmitter.taskname || `core-generate-${height}`,
+      generatorPublicKey,
       blockStatisticsInfo,
     );
     const transactions: TransactionInBlock[] = [];
@@ -403,7 +403,7 @@ export abstract class BlockFactory<T extends Block> {
         await eventEmitter.emit("finishedDealTransactions", block);
       }
     } finally {
-      statisticsInfo.unref(block.signature);
+      statisticsInfo.unref(generatorPublicKey);
     }
 
     return block;

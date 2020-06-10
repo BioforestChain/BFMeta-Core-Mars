@@ -632,7 +632,8 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
     const eventEmitter: BFChainCore.ApplyTransactionEventEmitter<any> = new QueneEventEmitter<
       any
     >();
-    const statisticsInfo = statistics.forceGetStatisticsInfoByBlock(`core-genesisblock-${height}`, "generateBlock");
+    const taskname = (eventEmitter.taskname = `test-generateBlock-${height}`);
+    const statisticsInfo = statistics.forceGetStatisticsInfoByBlock(taskname, "generateBlock");
     statistics.bindApplyTransactionEventEmiter(eventEmitter, statisticsInfo);
 
     const blockTrsItems = await getTrsInBlock(height, statisticsInfo);
@@ -675,7 +676,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
   const sender = await getAccountWithSecret(delegatesSecret[9]);
   const commonBlockJSON = (await getCommonBlockAsync(sender)).toJSON();
   const xx = bfchainCore.block.recombineBlock(commonBlockJSON);
-  commonBlockJSON.transactions.map(transaction => {
+  commonBlockJSON.transactions.map((transaction) => {
     // console.log(transaction.signature);
     // console.log(transaction.transactionAssetChanges);
   });

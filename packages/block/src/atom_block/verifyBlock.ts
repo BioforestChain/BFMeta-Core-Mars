@@ -145,7 +145,7 @@ export class VerifyBlockCore<T extends Block> {
      * 初始化统计器
      */
     const statisticsInfo = this.statisticsHelper.forceGetStatisticsInfoByBlock(
-      `core-verify-${block.height}`,
+      eventEmitter.taskname || `core-verify-${block.height}`,
       block.signature,
       undefined,
       config,
