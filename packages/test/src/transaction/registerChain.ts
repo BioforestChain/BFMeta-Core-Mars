@@ -561,7 +561,7 @@ const getTxs = (address: string) => {
       any
     >();
     const statisticsInfo = registerStatistics.forceGetStatisticsInfoByBlock(
-      height,
+      `core-genesisblock-${height}`,
       "generateRegisterChainGenesisBlock",
     );
     registerStatistics.bindApplyTransactionEventEmiter(eventEmitter, statisticsInfo);
@@ -759,7 +759,7 @@ const getTxs = (address: string) => {
     const eventEmitter: BFChainCore.ApplyTransactionEventEmitter<any> = new QueneEventEmitter<
       any
     >();
-    const statisticsInfo = statistics.forceGetStatisticsInfoByBlock(height, "generateCommonBlock");
+    const statisticsInfo = statistics.forceGetStatisticsInfoByBlock(`core-genesisblock-${height}`, "generateCommonBlock");
     statistics.bindApplyTransactionEventEmiter(eventEmitter, statisticsInfo);
 
     const { index, trs } = trsWithIndex;

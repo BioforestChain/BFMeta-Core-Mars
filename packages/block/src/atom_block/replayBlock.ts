@@ -253,7 +253,7 @@ export class ReplayBlockCore<T extends Block> {
     /**所有交易体的总字节长度 */
     let payloadLength = 0;
     /**本块交易所涉及的资产信息 */
-    const statisticsInfo = this.statisticsHelper.forceGetStatisticsInfoByBlock(height, signature);
+    const statisticsInfo = this.statisticsHelper.forceGetStatisticsInfoByBlock(`core-replay-${height}`, signature);
     const transactionBufferList: Uint8Array[] = [];
     const { transactionCore, asymmetricHelper, transactionHelper, baseHelper } = this;
 

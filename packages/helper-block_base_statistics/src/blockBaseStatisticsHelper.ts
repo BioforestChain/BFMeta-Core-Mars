@@ -25,7 +25,7 @@ export class BlockBaseStatisticsHelper {
     public config: ConfigHelper,
     private moduleMap: ModuleStroge,
   ) {}
-  private _block_statistics_m = new Map<number, StatisticsInfo>();
+  private _block_statistics_m = new Map<string, StatisticsInfo>();
   private tempConfig: ConfigHelper | undefined;
 
   getConfig() {
@@ -34,7 +34,7 @@ export class BlockBaseStatisticsHelper {
 
   /**根据区块获取对应的统计信息 */
   forceGetStatisticsInfoByBlock(
-    statisticinfoKey: number,
+    statisticinfoKey: string,
     reason: string,
     source_data?: StatisticInfoModel,
     config?: ConfigHelper,
@@ -62,7 +62,7 @@ export class BlockBaseStatisticsHelper {
     return statistics_info;
   }
 
-  getStatisticsInfoByBlock(statisticinfoKey: number) {
+  getStatisticsInfoByBlock(statisticinfoKey: string) {
     return this._block_statistics_m.get(statisticinfoKey);
   }
 

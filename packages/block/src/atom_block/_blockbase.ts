@@ -224,7 +224,7 @@ export abstract class BlockFactory<T extends Block> {
     let payloadLength = 0;
     /**本块交易所涉及的资产信息 */
     const statisticsInfo = this.statisticsHelper.forceGetStatisticsInfoByBlock(
-      height,
+      `core-genesisblock-${height}`,
       signature,
       blockStatisticsInfo,
     );

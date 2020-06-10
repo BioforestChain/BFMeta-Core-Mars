@@ -632,7 +632,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
     const eventEmitter: BFChainCore.ApplyTransactionEventEmitter<any> = new QueneEventEmitter<
       any
     >();
-    const statisticsInfo = statistics.forceGetStatisticsInfoByBlock(height, "generateBlock");
+    const statisticsInfo = statistics.forceGetStatisticsInfoByBlock(`core-genesisblock-${height}`, "generateBlock");
     statistics.bindApplyTransactionEventEmiter(eventEmitter, statisticsInfo);
 
     const blockTrsItems = await getTrsInBlock(height, statisticsInfo);
