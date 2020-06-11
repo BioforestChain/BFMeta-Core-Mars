@@ -502,7 +502,11 @@ export class EventLogicVerifier {
           endHeight: curRound * blockPerRound,
         });
 
-        if (txCount >= maxDelegateTxsPerRound) {
+        let realMaxDelegateTxsPerRound = maxDelegateTxsPerRound;
+        if (curRound === 1) {
+          realMaxDelegateTxsPerRound = realMaxDelegateTxsPerRound + this.configHelper.delegates;
+        }
+        if (txCount >= realMaxDelegateTxsPerRound) {
           throw new ConsensusException(REGISTER_DELEGTE_QUOTA_FULL, {
             round: curRound,
             ...Function_Exception_Detail,
