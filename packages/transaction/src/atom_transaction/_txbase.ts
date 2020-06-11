@@ -24,19 +24,6 @@ type FunctionExceptionDetail = {
   function: string;
 };
 
-// FIXME: 暂时放在这里 @wmc
-
-/**
- * 网络标识符类型
- *
- */
-export enum BNID_TYPE {
-  /**测试网络 */
-  TESTNET = "c",
-  /**正式网络 */
-  MAINNET = "b",
-}
-
 export abstract class TransactionFactory<T extends Transaction = Transaction> {
   abstract accountBaseHelper: AccountBaseHelper;
   abstract transactionHelper: TransactionHelper;

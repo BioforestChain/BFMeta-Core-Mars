@@ -121,14 +121,3 @@ export function BFChainCoreFactory(
   moduleMap.set("BFChainCoreFactory", BFChainCoreFactory);
   return Resolve(BFChainCore, moduleMap);
 }
-
-/**
- * 网络标识符类型
- *
- */
-export enum BNID_TYPE {
-  /**测试网络 */
-  TESTNET = "c",
-  /**正式网络 */
-  MAINNET = "b",
-}

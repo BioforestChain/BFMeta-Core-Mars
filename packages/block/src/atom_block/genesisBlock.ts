@@ -1,5 +1,5 @@
 import { BlockFactory } from "./_blockbase";
-import { GenesisBlock } from "@bfchain/core-model-block";
+import { GenesisBlock, BNID_TYPE } from "@bfchain/core-model-block";
 import {
   BlockHelper,
   BaseHelper,
@@ -18,7 +18,6 @@ import {
   NOT_MATCH,
 } from "@bfchain/core-util-exception";
 import { Injectable, Inject } from "@bfchain/util";
-import { BNID_TYPE } from "@bfchain/core-transaction";
 import { BlockGeneratorCalculator } from "./blockGeneratorCalculator";
 import { CommonBlockVerify } from "./commonBlockVerify";
 import { VerifyBlockCore } from "./verifyBlock";

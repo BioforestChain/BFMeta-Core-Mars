@@ -1,5 +1,5 @@
 import { NodeJsCryptoHelper, NodeJsKeypairHelper, Ed2curveHelper } from "./helper";
-import { BFChainCoreFactory, ConfigHelper, GenesisBlock } from "@bfchain/core";
+import { BFChainCoreFactory, ConfigHelper, GenesisBlock, BNID_TYPE } from "@bfchain/core";
 
 export function getBfchainCore(genesisBlock: GenesisBlock) {
   return BFChainCoreFactory({
@@ -23,7 +23,7 @@ export const mainChainRemarkData: BFChainCore.GenesisBlockRemarkJSON = {
   chainName: "bfchain",
   assetType: "BFT",
   magic: "5F720C81E82CFC99",
-  bnid: "c",
+  bnid: BNID_TYPE.TESTNET,
   beginEpochTime: new Date(new Date("2020-01-01").setHours(0, 0, 0, 0)).getTime(),
   genesisNodeAddress: "ibt.bfchain",
   generateTotalAmount: "244645364561314071",
@@ -140,7 +140,7 @@ export const registerchainRemarkData: BFChainCore.GenesisBlockRemarkJSON = {
   chainName: "qawaq",
   assetType: "QAWAQ",
   magic: "QWQQAQQWQQAQQWQ",
-  bnid: "c",
+  bnid: BNID_TYPE.TESTNET,
   beginEpochTime: new Date(new Date("2020-01-01").setHours(0, 0, 0, 0)).getTime(),
   genesisNodeAddress: "qawaq.qawaq",
   generateTotalAmount: "100000000000000",

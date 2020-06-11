@@ -111,7 +111,7 @@ declare namespace BFChainCore {
     assetType: string;
     chainName: string;
     magic: string;
-    bnid: string;
+    bnid: import("./constanst").BNID_TYPE;
     beginEpochTime: number;
     genesisNodeAddress: string;
     generateTotalAmount: string;

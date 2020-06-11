@@ -12,6 +12,9 @@
       "path": "../typings/tsconfig.json"
     },
     {
+      "path": "../model-block-base/tsconfig.json"
+    },
+    {
       "path": "../util-base58/tsconfig.json"
     }
   ],

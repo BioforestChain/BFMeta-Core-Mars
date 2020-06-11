@@ -2,6 +2,7 @@ import { Message, Field, Type, Long } from "@bfchain/protobuf";
 import { Fraction, FractionBigIntModel } from "@bfchain/core-model-common";
 import { cacheBytesGetter } from "@bfchain/core-model-cacher";
 import { RoundDelegateRemarkModel } from "./roundDelegateRemark";
+import { BNID_TYPE } from "@bfchain/core-model-block-base";
 
 /**
  * RewardPercent 模型
@@ -99,7 +100,7 @@ export class GenesisBlockRemarkModel extends RoundDelegateRemarkModel<GenesisBlo
   magic!: string;
   /**区块链网络识别码 */
   @Field.d(GenesisBlockRemarkModel.INC++, "string")
-  bnid!: string;
+  bnid!: BNID_TYPE;
   /**链的创世时间 */
   @Field.d(GenesisBlockRemarkModel.INC++, "uint64")
   beginEpochTimeLong!: Long;

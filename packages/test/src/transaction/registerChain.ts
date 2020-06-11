@@ -22,7 +22,6 @@ import {
   LocationNameTransactionFactory,
   SetLnsRecordValueTransactionFactory,
   LOCATION_NAME_OPERATION_TYPE,
-  BNID_TYPE,
   DelegateTransaction,
   LocationNameTransaction,
   SetLnsRecordValueTransaction,
