@@ -589,8 +589,9 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       };
     }
     let realByteLength = byteLength;
+    const txFee = transaction.fee;
     const feePerByte = {
-      numerator: BigInt(transaction.fee),
+      numerator: BigInt(txFee),
       denominator: realByteLength,
     };
     // 红包交易需要付出 可抢次数+1 的最大交易体手续费
@@ -606,9 +607,10 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       .multiplyCeilFraction(realByteLength, minTransactionFeePerByte)
       .toString();
     if (result < 0) {
-      if (minFee.length !== transaction.fee.length) {
+      const diffLength = minFee.length - txFee.length;
+      if (diffLength > 0) {
         minFee = this.jsbiHelper
-          .multiplyCeilFraction(realByteLength + minFee.length, minTransactionFeePerByte)
+          .multiplyCeilFraction(realByteLength + diffLength, minTransactionFeePerByte)
           .toString();
       }
       return {
@@ -641,8 +643,9 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       };
     }
     let realByteLength = byteLength;
+    const txFee = transaction.fee;
     const feePerByte = {
-      numerator: BigInt(transaction.fee),
+      numerator: BigInt(txFee),
       denominator: realByteLength,
     };
     // 红包交易需要付出 可抢次数+1 的最大交易体手续费
@@ -667,9 +670,10 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     const result = this.jsbiHelper.compareFraction(feePerByte, standardFee);
     let minFee = this.jsbiHelper.multiplyCeilFraction(realByteLength, standardFee).toString();
     if (result < 0) {
-      if (minFee.length !== transaction.fee.length) {
+      const diffLength = minFee.length - txFee.length;
+      if (diffLength > 0) {
         minFee = this.jsbiHelper
-          .multiplyCeilFraction(realByteLength + minFee.length, standardFee)
+          .multiplyCeilFraction(realByteLength + diffLength, standardFee)
           .toString();
       }
       return {

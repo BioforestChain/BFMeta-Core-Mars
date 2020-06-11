@@ -38,14 +38,13 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
 
   abstract tick(
     block: T,
-    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
     blockGetterHelper?: BFChainCore.BlockGetterHelperInterface,
     blockTickGetterHelper?: BFChainCore.BlockTickGetterHelperInterface,
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
   ): Promise<BFChainCore.TickResultInfo>;
 
   async tickBlockBase(
     block: T,
-    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
     blockGetterHelper = this.blockGetterHelper,
     blockTickGetterHelper = this.blockTickGetterHelper,
   ) {

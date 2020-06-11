@@ -351,7 +351,7 @@ export class TransactionHelper {
       if (min_fee.length === cur_fee.length) {
         return min_fee;
       }
-      byte_num += cur_fee.length - min_fee.length;
+      byte_num += min_fee.length - cur_fee.length;
       cur_fee = min_fee;
     } while (true);
   }
