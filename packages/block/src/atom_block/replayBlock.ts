@@ -443,8 +443,12 @@ export class ReplayBlockCore<T extends Block> {
                 )
               ) {
                 throw new ArgumentIllegalException(NOT_MATCH, {
-                  to_compare_prop: `transactionAssetChanges with index ${i}`,
-                  be_compare_prop: `transactionAssetChanges with index ${i}`,
+                  to_compare_prop: `transactionAssetChanges with index ${i} ${JSON.stringify(
+                    calcTransactionAssetChanges[i],
+                  )}`,
+                  be_compare_prop: `transactionAssetChanges with index ${i} ${JSON.stringify(
+                    transactionAssetChanges[i],
+                  )}`,
                   to_target: "block",
                   be_target: "calculate",
                   ...Function_Exception_Detail,
