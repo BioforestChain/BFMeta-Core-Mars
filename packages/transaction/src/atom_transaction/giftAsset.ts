@@ -167,15 +167,11 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
       denominator: byteLength,
     };
     const result = this.jsbiHelper.compareFraction(feePerByte, minTransactionFeePerByte);
-    let minFee = this.jsbiHelper
-      .multiplyCeilFraction(feePerByte.denominator, minTransactionFeePerByte)
-      .toString();
     if (result < 0) {
-      if (minFee.length !== body.fee.length) {
-        minFee = this.jsbiHelper
-          .multiplyCeilFraction(byteLength + minFee.length, minTransactionFeePerByte)
-          .toString();
-      }
+      // 红包交易默认按照最大交易体付手续费
+      const minFee = this.jsbiHelper
+        .multiplyCeilFraction(feePerByte.denominator, minTransactionFeePerByte)
+        .toString();
       throw new ArgumentIllegalException(TRANSACTION_FEE_NOT_ENOUGH, {
         errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
         minFee: minFee.toString(),

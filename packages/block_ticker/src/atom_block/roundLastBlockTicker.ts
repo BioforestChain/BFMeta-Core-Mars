@@ -12,11 +12,11 @@ import type { RoundLastBlock } from "@bfchain/core-model-block";
 export class RoundLastBlockTicker extends BlockTicker {
   async tick(
     block: RoundLastBlock,
-    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
     blockGetterHelper = this.blockGetterHelper,
     blockTickGetterHelper = this.blockTickGetterHelper,
+    accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
   ) {
-    await this.tickBlockBase(block, accountGetterHelper, blockGetterHelper, blockTickGetterHelper);
+    await this.tickBlockBase(block, blockGetterHelper, blockTickGetterHelper);
 
     const round = this.blockHelper.calcRoundByHeight(block.height);
 

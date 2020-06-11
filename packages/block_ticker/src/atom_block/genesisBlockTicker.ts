@@ -7,16 +7,13 @@ const { ConsensusException } = CoreExceptionGenerator("CONTROLLER", "BlockLogicV
 
 @Injectable()
 export class GenesisBlockTicker extends BlockTicker {
-  async tick(block: GenesisBlock) {
-    this.genesisBlockShouldNotTick(block.height);
-    return {};
-  }
+  async tick(
+    block: GenesisBlock,
+    blockGetterHelper = this.blockGetterHelper,
+    blockTickGetterHelper = this.blockTickGetterHelper,
+  ) {
+    await this.tickBlockBase(block, blockGetterHelper, blockTickGetterHelper);
 
-  genesisBlockShouldNotTick(height: number) {
-    throw new ConsensusException(SHOULD_NOT_TICK, {
-      height,
-      target: "blockChain",
-      function: "genesisBlockShouldNotTick",
-    });
+    return {};
   }
 }
