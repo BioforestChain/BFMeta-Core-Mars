@@ -487,9 +487,7 @@ declare namespace BFChainCore {
     numberOfSenderTranGetter?: (
       tib: TransactionInBlock,
     ) => BFChainUtil.PromiseMaybe<TransactionInBlock["numberOfSenderTransactions"]>;
-    blockGeneratorEquityGetter?: (
-      generatoryPublicKey: string,
-    ) => BFChainUtil.PromiseMaybe<"string">;
+    blockGeneratorEquityGetter?: (generatoryPublicKey: string) => BFChainUtil.PromiseMaybe<string>;
   } & BFChainUtil.QueneEventEmitter<ApplyTransactionEventMap<ES>>;
 
   type GenerateBlockEventEmitter<
