@@ -276,6 +276,26 @@ export class ReplayBlockCore<T extends Block> {
       });
     }
 
+    if (!eventEmitter.blockGeneratorEquityGetter) {
+      throw new NoFoundException(NOT_EXIST, {
+        prop: "blockGeneratorEquityGetter",
+        target: "eventEmitter",
+        ...Function_Exception_Detail,
+      });
+    }
+
+    // 获取打块账户获得的权益
+    const generatorEquity = await eventEmitter.blockGeneratorEquityGetter(block.generatorPublicKey);
+    if (block.remark.generatorEquity !== generatorEquity) {
+      throw new ArgumentIllegalException(NOT_MATCH, {
+        to_compare_prop: `generatorEquity ${block.remark.generatorEquity}`,
+        be_compare_prop: `generatorEquity ${generatorEquity}`,
+        to_target: "block",
+        be_target: "calculate",
+        ...Function_Exception_Detail,
+      });
+    }
+
     const trSignWithIndex = new Map<string, BFChainCore.Transaction[]>();
     try {
       /**绑定统计功能到事件触发器上 */
@@ -417,7 +437,7 @@ export class ReplayBlockCore<T extends Block> {
               throw new ArgumentIllegalException(NOT_MATCH, {
                 to_compare_prop: `numberOfSenderTransactions ${tranItem.numberOfSenderTransactions}`,
                 be_compare_prop: `numberOfSenderTransactions ${calcNumberOfSenderTransactions}`,
-                to_target: "block",
+                to_target: `transactionInBlock ${trs.senderId} ${trs.signature}`,
                 be_target: "calculate",
                 ...Function_Exception_Detail,
               });
@@ -430,7 +450,7 @@ export class ReplayBlockCore<T extends Block> {
               throw new ArgumentIllegalException(NOT_MATCH, {
                 to_compare_prop: `transactionAssetChanges lenght ${realLength}`,
                 be_compare_prop: `transactionAssetChanges lenght ${calcLength}`,
-                to_target: "block",
+                to_target: `transactionInBlock ${trs.senderId} ${trs.signature}`,
                 be_target: "calculate",
                 ...Function_Exception_Detail,
               });
@@ -444,12 +464,12 @@ export class ReplayBlockCore<T extends Block> {
               ) {
                 throw new ArgumentIllegalException(NOT_MATCH, {
                   to_compare_prop: `transactionAssetChanges with index ${i} ${JSON.stringify(
-                    calcTransactionAssetChanges[i],
-                  )}`,
-                  be_compare_prop: `transactionAssetChanges with index ${i} ${JSON.stringify(
                     transactionAssetChanges[i],
                   )}`,
-                  to_target: "block",
+                  be_compare_prop: `transactionAssetChanges with index ${i} ${JSON.stringify(
+                    calcTransactionAssetChanges[i],
+                  )}`,
+                  to_target: `transactionInBlock ${trs.senderId} ${trs.signature}`,
                   be_target: "calculate",
                   ...Function_Exception_Detail,
                 });

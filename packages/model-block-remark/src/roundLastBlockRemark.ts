@@ -15,6 +15,9 @@ export class RoundLastBlockRemarkModel extends RoundDelegateRemarkModel<RoundLas
   /**区块参与度 */
   @Field.d(RoundLastBlockRemarkModel.INC++, "string")
   blockParticipation!: string;
+  /**打块账户权益 */
+  @Field.d(RoundLastBlockRemarkModel.INC++, "string")
+  generatorEquity!: string;
 
   /**链上链区块HASH, 包含当轮除最后一个区块外的区块signature以及上一轮 hash 合并后生成的hash*/
   @Field.d(RoundLastBlockRemarkModel.INC++, "bytes")
@@ -31,6 +34,7 @@ export class RoundLastBlockRemarkModel extends RoundDelegateRemarkModel<RoundLas
         debug: this.debug,
         info: this.info,
         blockParticipation: this.blockParticipation,
+        generatorEquity: this.generatorEquity,
         hash: this.hash,
       },
       super.toJSON(),

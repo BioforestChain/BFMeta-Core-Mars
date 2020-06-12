@@ -658,6 +658,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
         debug: "debug",
         info: "info",
         blockParticipation: "0",
+        generatorEquity: "0",
       },
       (async function* zz() {
         for (const item of blockTrsItems) {

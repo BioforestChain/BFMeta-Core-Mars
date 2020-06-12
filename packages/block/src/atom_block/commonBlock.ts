@@ -110,6 +110,14 @@ export class CommonBlockFactory extends BlockFactory<CommonBlock> {
         ...CommonBlockRemark_Exception_Detail,
       });
     }
+
+    if (!baseHelper.isValidAccountEquity(commonBlockRemark.generatorEquity)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "generatorEquity",
+        type: "account equity",
+        ...CommonBlockRemark_Exception_Detail,
+      });
+    }
   }
 
   /**

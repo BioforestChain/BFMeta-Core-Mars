@@ -481,6 +481,14 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       });
     }
 
+    if (!baseHelper.isValidAccountEquity(remark.generatorEquity)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "generatorEquity",
+        type: "account equity",
+        ...GenesisBlockRemark_Exception_Detail,
+      });
+    }
+
     const {
       participationTotalChainAsset,
       participationTotalFee,

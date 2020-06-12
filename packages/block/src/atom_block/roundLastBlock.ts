@@ -131,6 +131,14 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
       });
     }
 
+    if (!baseHelper.isValidAccountEquity(roundLastBlockRemark.generatorEquity)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "generatorEquity",
+        type: "account equity",
+        ...RoundLastBlockRemark_Exception_Detail,
+      });
+    }
+
     if (!baseHelper.isValidRemarkHash(roundLastBlockRemark.hash)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "hash",

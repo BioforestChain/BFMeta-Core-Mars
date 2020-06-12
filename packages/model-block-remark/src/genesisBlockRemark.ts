@@ -188,6 +188,9 @@ export class GenesisBlockRemarkModel extends RoundDelegateRemarkModel<GenesisBlo
   /**区块参与度 */
   @Field.d(GenesisBlockRemarkModel.INC++, "string")
   blockParticipation!: string;
+  /**打块账户权益 */
+  @Field.d(GenesisBlockRemarkModel.INC++, "string")
+  generatorEquity!: string;
   /**参与度 流通的链资产总量 的 计算比重 */
   @Field.d(GenesisBlockRemarkModel.INC++, "uint32")
   participationTotalChainAsset!: number;
@@ -239,6 +242,7 @@ export class GenesisBlockRemarkModel extends RoundDelegateRemarkModel<GenesisBlo
         debug: this.debug,
         info: this.info,
         blockParticipation: this.blockParticipation,
+        generatorEquity: this.generatorEquity,
         participationTotalChainAsset: this.participationTotalChainAsset,
         participationNumberOfTransaction: this.participationNumberOfTransaction,
         participationNumberOfAccount: this.participationNumberOfAccount,

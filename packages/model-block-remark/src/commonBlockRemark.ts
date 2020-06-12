@@ -13,11 +13,15 @@ export class CommonBlockRemarkModel extends Message<CommonBlockRemarkModel>
   /**区块参与度 */
   @Field.d(CommonBlockRemarkModel.INC++, "string")
   blockParticipation!: string;
+  /**打块账户权益 */
+  @Field.d(CommonBlockRemarkModel.INC++, "string")
+  generatorEquity!: string;
   toJSON() {
     return {
       debug: this.debug,
       info: this.info,
       blockParticipation: this.blockParticipation,
+      generatorEquity: this.generatorEquity,
     };
   }
 }

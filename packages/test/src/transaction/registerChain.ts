@@ -834,6 +834,7 @@ const getTxs = (address: string) => {
         debug: "debug",
         info: "info",
         blockParticipation: "0",
+        generatorEquity: "0",
       },
       (async function* zz() {
         for (const item of blockTrsItems) {

@@ -82,6 +82,7 @@ declare namespace BFChainCore {
     debug: string;
     info: string;
     blockParticipation: string;
+    generatorEquity: string;
   }
   //#endregion
 
@@ -138,6 +139,7 @@ declare namespace BFChainCore {
     ports: PortsJSON;
     rewardPerBlock: RewardPerBlockJSON;
     blockParticipation: string;
+    generatorEquity: string;
     participationTotalChainAsset: number;
     participationNumberOfTransaction: number;
     participationNumberOfAccount: number;

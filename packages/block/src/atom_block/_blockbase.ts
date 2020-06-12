@@ -393,6 +393,11 @@ export abstract class BlockFactory<T extends Block> {
         totalFee: statisticsInfo.totalFee,
         numberOfTransactions,
       });
+      // 获取打块账户获得的权益
+      eventEmitter.blockGeneratorEquityGetter &&
+        (block.remark.generatorEquity = await eventEmitter.blockGeneratorEquityGetter(
+          block.generatorPublicKey,
+        ));
 
       /// 临时恢复的操作，但会曝出警告
       if (eventEmitter.has("finishedDealTransactions")) {
