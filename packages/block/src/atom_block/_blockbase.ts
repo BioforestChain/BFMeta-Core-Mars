@@ -6,7 +6,6 @@ import type {
   ConfigHelper,
   AsymmetricHelper,
   BlockBaseStatisticsHelper,
-  StatisticsInfo,
 } from "@bfchain/core-helper";
 import {
   CoreExceptionGenerator,
@@ -17,7 +16,7 @@ import {
   NOT_EXIST,
   TRAN_POW_VERIFY_FAIL,
 } from "@bfchain/core-util-exception";
-import { Exception, QueneEventEmitter, EasyMap, isFlagInDev } from "@bfchain/util";
+import { QueneEventEmitter, EasyMap, isFlagInDev } from "@bfchain/util";
 import type { CommonBlockVerify } from "./commonBlockVerify";
 import type { VerifyBlockCore } from "./verifyBlock";
 import type { ReplayBlockCore } from "./replayBlock";
@@ -48,6 +47,9 @@ export abstract class BlockFactory<T extends Block> {
   abstract replayBlockCore: ReplayBlockCore<T>;
 
   abstract fromJSON(blockBody: BFChainCore.BlockJSON<GetBlockRemarkJSON<T>>): Promise<T>;
+
+  /**生产区块 */
+  abstract _generateBlock(body: BFChainCore.BlockBody, remark: GetBlockRemarkJSON<T>): T;
 
   /** transactionInBlockFromJSON*/
   transactionInBlockFromJSON<T extends BFChainCore.TransactionJSON>(
@@ -193,9 +195,6 @@ export abstract class BlockFactory<T extends Block> {
       config,
     );
   }
-
-  /**生产区块 */
-  abstract _generateBlock(body: BFChainCore.BlockBody, remark: GetBlockRemarkJSON<T>): T;
 
   /**
    * 绑定交易相关的信息
@@ -505,20 +504,5 @@ export abstract class BlockFactory<T extends Block> {
     blockGetterHelper: Pick<BFChainCore.BlockGetterHelperInterface, "getCountBlock">,
   ) {
     await this.commonBlockVerify.isBlockAlreadyExist(signature, height, blockGetterHelper);
-  }
-
-  /**
-   * 校验交易涉及的账户变动
-   *
-   * @param trsInBlock
-   * @param applyResult
-   * @param statisticsInfo
-   */
-  verifyTransactionAssetChange(
-    trsInBlock: BFChainCore.TransactionInBlock,
-    applyResult: BFChainCore.AccountChangeResultInfo,
-    statisticsInfo: StatisticsInfo,
-  ) {
-    this.commonBlockVerify.verifyTransactionAssetChange(trsInBlock, applyResult, statisticsInfo);
   }
 }
