@@ -96,10 +96,10 @@
     "@protobufjs/utf8" "^1.1.0"
     "@types/long" "^4.0.1"
 
-"@bfchain/util-aborter@4.8.7":
-  version "4.8.7"
-  resolved "http://192.168.250.245:4873/@bfchain%2futil-aborter/-/util-aborter-4.8.7.tgz#6d7d7b7c75314a67499f6634fcee4dab949baea9"
-  integrity sha512-4/xXZ4+hbmsGYupc3lSn4qWaIqMZg3cgcj7TkDh+F2kI6eL0GVRnO0OxZf33IO2THjVEHczdU8oeJEn8Xcsicg==
+"@bfchain/util-aborter@4.8.12":
+  version "4.8.12"
+  resolved "http://192.168.250.245:4873/@bfchain%2futil-aborter/-/util-aborter-4.8.12.tgz#6e1f5a1396794ecbd5fb32a04104028401423db7"
+  integrity sha512-fSz7mn9wclxbHq0Rcf9KIS8OBNWIJ7VFm5YJw269rks/6IosMfu5+HiLJ8xF1BXux7eiNaSKaQwVhu/DiSLKhQ==
   dependencies:
     "@bfchain/util-extends-promise-out" "4.8.7"
     "@bfchain/util-extends-promise-safe" "4.8.7"
@@ -329,12 +329,12 @@
   resolved "http://192.168.250.245:4873/@bfchain%2futil-typings/-/util-typings-4.8.7.tgz#e6732740766840d85720f88e308b7b86c40fd9d1"
   integrity sha512-n/hiVcHKmHWVhcw6bUr8REo7bRRJPPRHfcxBVGrUS1EPRj5fE5uc8Pnj2Co+PepK4Gr6Ui4bD2LJbvKqy9dqBg==
 
-"@bfchain/util@^4.8.7":
-  version "4.8.11"
-  resolved "http://192.168.250.245:4873/@bfchain%2futil/-/util-4.8.11.tgz#ce844e92aadf15919b9d1d6725092aacc2c1b976"
-  integrity sha512-k5z4zJ574KLwQeSASYayvi/4wQjv6TIb6r/TGR1dFYDyBfrApZslr5U3wt2kDO5LuJvkUTxq+mQ/xNDgTZCAjA==
+"@bfchain/util@^4.8.12":
+  version "4.8.12"
+  resolved "http://192.168.250.245:4873/@bfchain%2futil/-/util-4.8.12.tgz#7417158ea04d1b56c415556bbaed6b8e69ed734a"
+  integrity sha512-DIg3q26O7mRnR4GjTYq1uSPanFmo4qQ3IFwiYFr7AhfMyiaGg/DfJNuaZmWaruxFkJ7lhSRhhwhmoYNcrEhuVA==
   dependencies:
-    "@bfchain/util-aborter" "4.8.7"
+    "@bfchain/util-aborter" "4.8.12"
     "@bfchain/util-buffer" "4.8.7"
     "@bfchain/util-decorator" "4.8.7"
     "@bfchain/util-deepcopy" "4.8.7"
