@@ -68,6 +68,25 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
         });
       }
     }
+    /**如果拿不到generatorAddressList，就默认拿当前轮次的轮末块计算出来的受托人
+     * 为了在第一轮就可以选出受托人进行投票，只为了能够连续投票
+     * @TUDO 翁茂春  这样是否可行
+     */
+    if (!forgeInfoMap.size && !generatorAddressList.length && currentBlockHeight <= blockPerRound) {
+      const _block = (await this.blockHelper.forceGetBlockByHeight(
+        currentBlockHeight < blockPerRound
+          ? this.blockHelper.calcRoundStartHeight(currentBlockHeight)
+          : this.blockHelper.calcRoundEndHeight(currentBlockHeight),
+        blockGetterHelper,
+      )) as BFChainCore.Block<BFChainCore.RoundLastBlockRemarkJSON>;
+      _block.remark.nextRoundDelegates.forEach(delegate => {
+        generatorAddressList[generatorAddressList.length] = delegate.address;
+        forgeInfoMap.set(delegate.address, {
+          producedblocks: 0,
+          applyTxNumber: 0,
+        });
+      });
+    }
 
     return { forgeInfoMap, generatorAddressList };
   }
@@ -268,13 +287,13 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     const votNum = totalQuota - pdtNum - fbsNum - atnNum;
     // 获取在线率前 n 个账户
     const sortByProductivity = this.sortDelegatesByFields(canBePickAccounts, "productivity");
-    const pdtArray = sortByProductivity.splice(0, pdtNum).map((account) => account.address);
+    const pdtArray = sortByProductivity.splice(0, pdtNum).map(account => account.address);
     // 获取打块数量前 n 个账户
     const sortByForgedBlocks = this.sortDelegatesByFields(sortByProductivity, "forgedBlocks");
-    const fbsArray = sortByForgedBlocks.splice(0, fbsNum).map((account) => account.address);
+    const fbsArray = sortByForgedBlocks.splice(0, fbsNum).map(account => account.address);
     // 获取处理交易数量前 n 个账户
     const sortByApplyTxNumber = this.sortDelegatesByFields(sortByForgedBlocks, "applyTxNumber");
-    const atnArray = sortByApplyTxNumber.splice(0, atnNum).map((account) => account.address);
+    const atnArray = sortByApplyTxNumber.splice(0, atnNum).map(account => account.address);
     // 获取得票率前 n 的账户
     const voteArray: BFChainCore.CanBePickAccount[] = [];
     for (const canBePickAccount of sortByApplyTxNumber) {
@@ -284,7 +303,7 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
       }
     }
     const sortByVote = this.sortDelegatesByFields(voteArray, "vote");
-    const votArray = sortByVote.splice(0, votNum).map((account) => account.address);
+    const votArray = sortByVote.splice(0, votNum).map(account => account.address);
     // 乱序
     this.forgingDelegates.delegates = this.hybridArray(pdtArray, fbsArray, atnArray, votArray);
   }
@@ -365,10 +384,12 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     const block = await this.blockHelper.forceGetBlockByHeight(blockHeight, blockGetterHelper);
     const nextRoundDelegates = (block as BFChainCore.Block<BFChainCore.RoundLastBlockRemarkJSON>)
       .remark.nextRoundDelegates;
-    const activeDelegates = nextRoundDelegates.map((delegate) => delegate.address);
-    // 不推荐本轮打块账户
-    for (const address of activeDelegates) {
-      noLongerVoteSet.add(address);
+    const activeDelegates = nextRoundDelegates.map(delegate => delegate.address);
+    // 不推荐本轮打块账户,剔除第一轮
+    if (blockHeight > blockPerRound) {
+      for (const address of activeDelegates) {
+        noLongerVoteSet.add(address);
+      }
     }
     // 获取矿机注入的受托人
     const memoryDelegates = await accountGetterHelper.getMemoryDelegates();

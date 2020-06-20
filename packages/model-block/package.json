@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-model-block",
-  "version": "5.15.3",
+  "version": "5.15.4",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,12 +14,12 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-model-block-base": "5.15.3",
-    "@bfchain/core-model-block-remark": "5.15.3",
-    "@bfchain/core-model-cacher": "5.15.3",
-    "@bfchain/core-model-common": "5.15.3",
-    "@bfchain/core-model-transaction": "5.15.3",
-    "@bfchain/core-typings": "5.15.3"
+    "@bfchain/core-model-block-base": "5.15.4",
+    "@bfchain/core-model-block-remark": "5.15.4",
+    "@bfchain/core-model-cacher": "5.15.4",
+    "@bfchain/core-model-common": "5.15.4",
+    "@bfchain/core-model-transaction": "5.15.4",
+    "@bfchain/core-typings": "5.15.4"
   },
   "gitHead": "f8647a0812fc794090af08d4e3bf47e0ec30c14f"
 }
