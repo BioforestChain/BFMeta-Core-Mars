@@ -1,6 +1,6 @@
-import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import type { CustomTransaction } from "@bfchain/core-model";
-import { Injectable } from "@bfchain/util";
+import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
+import { Injectable, QueneEventEmitter } from "@bfchain/util";
 import { CoreExceptionGenerator, NOT_EXIST, PROP_IS_INVALID } from "@bfchain/core-util-exception";
 
 const { NoFoundException, ArgumentIllegalException } = CoreExceptionGenerator(
@@ -49,85 +49,120 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
       cloneAccountsInfo[address] = this.helperLogicVerifier.deepClone(recipient.accountInfo);
     }
 
-    this.eventLogicVerifier.listenEventFrozenAccount(cloneAccountsInfo);
+    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
-    this.eventLogicVerifier.listenEventSetSecondPublicKey();
+    this.eventLogicVerifier.listenEventFrozenAccount(cloneAccountsInfo, eventEmitter);
 
-    this.eventLogicVerifier.listenEventSetUsername(accountGetterHelper);
+    this.eventLogicVerifier.listenEventSetSecondPublicKey(eventEmitter);
+
+    this.eventLogicVerifier.listenEventSetUsername(accountGetterHelper, eventEmitter);
 
     this.eventLogicVerifier.listenEventRegisterToDelegate(
       cloneAccountsInfo,
       curRound,
       transactionGetterHelper,
+      eventEmitter,
     );
 
-    this.eventLogicVerifier.listenEventAcceptVote(cloneAccountsInfo);
+    this.eventLogicVerifier.listenEventAcceptVote(cloneAccountsInfo, eventEmitter);
 
-    this.eventLogicVerifier.listenEventRejectVote(cloneAccountsInfo);
+    this.eventLogicVerifier.listenEventRejectVote(cloneAccountsInfo, eventEmitter);
 
-    this.eventLogicVerifier.listenEventVoteEquity(cloneAccountsInfo, transaction, curRound);
+    this.eventLogicVerifier.listenEventVoteEquity(
+      cloneAccountsInfo,
+      transaction,
+      curRound,
+      eventEmitter,
+    );
 
     this.eventLogicVerifier.listenEventIssueAsset(
       cloneAccountsAssets,
       transaction,
       accountGetterHelper,
       transactionGetterHelper,
+      eventEmitter,
     );
 
-    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction);
+    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
 
-    this.eventLogicVerifier.listenEventAsset(cloneAccountsAssets, transaction);
+    this.eventLogicVerifier.listenEventAsset(cloneAccountsAssets, transaction, eventEmitter);
 
-    this.eventLogicVerifier.listenEventFrozenAsset(cloneAccountsAssets, transaction);
+    this.eventLogicVerifier.listenEventFrozenAsset(cloneAccountsAssets, transaction, eventEmitter);
 
     this.eventLogicVerifier.listenEventUnfrozenAsset(
       transaction,
       currentBlockHeight,
       accountGetterHelper,
       transactionGetterHelper,
+      eventEmitter,
     );
 
-    this.eventLogicVerifier.listenEventDestoryAsset(transaction, accountGetterHelper);
+    this.eventLogicVerifier.listenEventDestoryAsset(transaction, accountGetterHelper, eventEmitter);
 
-    this.eventLogicVerifier.listenEventIssueDAppid(currentBlockHeight, accountGetterHelper);
+    this.eventLogicVerifier.listenEventIssueDAppid(
+      currentBlockHeight,
+      accountGetterHelper,
+      eventEmitter,
+    );
 
-    this.eventLogicVerifier.listenEventSaleDAppid(currentBlockHeight, accountGetterHelper);
+    this.eventLogicVerifier.listenEventSaleDAppid(
+      currentBlockHeight,
+      accountGetterHelper,
+      eventEmitter,
+    );
 
     this.eventLogicVerifier.listenEventPurchaseDAppid(
       transaction,
       currentBlockHeight,
       accountGetterHelper,
+      eventEmitter,
     );
 
     this.eventLogicVerifier.listenEventRegisterLocationName(
       currentBlockHeight,
       accountGetterHelper,
+      eventEmitter,
     );
 
     this.eventLogicVerifier.listenEventCancelLocationName(
       transaction,
       currentBlockHeight,
       accountGetterHelper,
+      eventEmitter,
     );
 
-    this.eventLogicVerifier.listenEventSaleLocationName(currentBlockHeight, accountGetterHelper);
+    this.eventLogicVerifier.listenEventSaleLocationName(
+      currentBlockHeight,
+      accountGetterHelper,
+      eventEmitter,
+    );
 
     this.eventLogicVerifier.listenEventPurchaseLocationName(
       currentBlockHeight,
       accountGetterHelper,
+      eventEmitter,
     );
 
-    this.eventLogicVerifier.listenEventSetLnsManager(currentBlockHeight, accountGetterHelper);
+    this.eventLogicVerifier.listenEventSetLnsManager(
+      currentBlockHeight,
+      accountGetterHelper,
+      eventEmitter,
+    );
 
-    this.eventLogicVerifier.listenEventSetLnsRecordValue(currentBlockHeight, accountGetterHelper);
+    this.eventLogicVerifier.listenEventSetLnsRecordValue(
+      currentBlockHeight,
+      accountGetterHelper,
+      eventEmitter,
+    );
 
     this.eventLogicVerifier.listenEventRegisterChain(
       cloneAccountsAssets,
       transaction,
       accountGetterHelper,
+      eventEmitter,
     );
 
-    await this.eventLogicVerifier.awaitEventResult(transaction);
+    await this.eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     if (!customTransactionCenter) {
       throw new NoFoundException(NOT_EXIST, {

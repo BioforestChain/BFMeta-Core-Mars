@@ -1,6 +1,7 @@
 import { Injectable, Inject, getHexFromArrayBuffer, decodeBinaryToHex } from "@bfchain/util";
 import { ConfigHelper } from "@bfchain/core-helper-config";
 import { BaseHelper } from "@bfchain/core-helper-type";
+import { JSBIHelper } from "@bfchain/core-helper-bigint";
 import { PROP_SHOULD_LTE_FIELD, OUT_OF_RANGE } from "@bfchain/core-util-exception-errorcode";
 import { CoreExceptionGenerator, NOT_EXIST } from "@bfchain/core-util-exception";
 import { BLOCK_TYPES_BASE, Block } from "@bfchain/core-model-block";
@@ -21,6 +22,7 @@ export class BlockHelper {
     public config: ConfigHelper,
     public baseHelper: BaseHelper,
     private accountBaseHelper: AccountBaseHelper,
+    private jsbiHelper: JSBIHelper,
     @Inject("cryptoHelper") public cryptoHelper: BFChainCore.CryptoHelperInterface,
     @Inject("keypairHelper") public keypairHelper: BFChainCore.KeypairHelperInterface,
     @Inject("Buffer") public Buffer: BFChainUtil.BufferConstructor,
@@ -403,9 +405,11 @@ export class BlockHelper {
     }
     return blockPlotChecker;
   }
+
   getBlockFromPlotChecker(blockPlotChecker: BFChainCore.BlockPlotChecker) {
     return this._BTC_BLOCK_WM.get(blockPlotChecker);
   }
+
   parseNewBlockToPlotChecker(
     newBlock: BFChainCore.NewBlockArgJSON | BFChainCore.CurrentGeneratingBlockInfo,
   ) {
@@ -433,6 +437,7 @@ export class BlockHelper {
       previousBlockSignature: newBlock.previousBlockSignature,
     } as BFChainCore.BlockPlotChecker;
   }
+
   parseBlockPlotCheckerListToPlotChecker(list: BFChainCore.BlockPlotChecker[]) {
     const first = list[0];
     const last = list[list.length - 1];
@@ -471,6 +476,7 @@ export class BlockHelper {
     };
     return blockPlotChecker;
   }
+
   /**计算账户一轮下来对应的权益 */
   calcAccountRoundEquity(accTxCount: number, accBalance: string, roundLastBlock: RoundLastBlock) {
     const {
@@ -485,6 +491,7 @@ export class BlockHelper {
 
     return equity.toString() as string;
   }
+
   /**计算区块的参与度 */
   calcBlockParticipation(args: {
     totalAccount: number;
@@ -543,6 +550,7 @@ export class BlockHelper {
     }
     return resultArr;
   }
+
   /**
    * 计算链上链的hash
    * @param currentHeight
@@ -614,4 +622,92 @@ export class BlockHelper {
   sortInRankAccountInfoList<T extends BFChainCore.ForSortAccountInfo>(accountInfoList: T[]) {
     return accountInfoList.sort(this.nextRoundDelegatesCompareFn);
   }
+
+  // #region 区块奖励分配相关
+  /**
+   * 计算打块账户和投票账户可分配的奖励总额
+   *
+   * @param block
+   * @param voters 给打块账户投票的账户
+   * @param generatorVote 打块账户上一轮获得的权益
+   */
+  calcForgingAndVotingReward<T extends Block>(
+    block: T,
+    voters: BFChainCore.VoterInfo[],
+    generatorVote: bigint,
+  ) {
+    const blockUpdateData: BFChainCore.BlockUpdateDataInfo = {
+      reward: BigInt(0),
+      vrewards: BigInt(0),
+      vrewardsRemaining: BigInt(0),
+      blockFee: BigInt(0),
+      blockReward: BigInt(0),
+      voters,
+      totalEquity: generatorVote,
+    };
+    const { jsbiHelper, config } = this;
+    const { height } = block;
+    // 计算给打块账户和投票账户的奖励总额
+    // 打块账户上一轮获得的权益大于 0 才需要把奖励分配给投票账户
+    if (height !== 1 && generatorVote > BigInt(0)) {
+      // 上一轮 给打块账户投票的用户 大于 0
+      const votePercent = config.rewardPercent.votePercent;
+      const fee = BigInt(jsbiHelper.multiplyFloorFraction(block.totalFee, votePercent).toString());
+      const reward = BigInt(jsbiHelper.multiplyFloorFraction(block.reward, votePercent).toString());
+
+      blockUpdateData.blockFee = BigInt(block.totalFee) - fee;
+      blockUpdateData.blockReward = BigInt(block.reward) - reward;
+      blockUpdateData.reward = BigInt(blockUpdateData.blockFee) + blockUpdateData.blockReward;
+
+      blockUpdateData.vrewards = BigInt(fee) + reward;
+      blockUpdateData.vrewardsRemaining = BigInt(0);
+    } else {
+      // 上一轮 给打块账户投票的用户 等于 0
+      blockUpdateData.reward = BigInt(block.reward) + BigInt(block.totalFee);
+      blockUpdateData.blockFee = BigInt(block.totalFee);
+      blockUpdateData.blockReward = BigInt(block.reward);
+    }
+    return blockUpdateData;
+  }
+
+  /**
+   * 计算投票账户获得的奖励
+   *
+   * @param voteEquity 账户投出的权益
+   * @param generatorVote 打块账户上一轮获得的权益
+   * @param voteTotalReward 可分配的投票总奖励
+   */
+  calcVotingRewards(voteEquity: bigint, generatorVote: bigint, voteTotalReward: bigint) {
+    return (voteTotalReward * voteEquity) / generatorVote;
+  }
+
+  /**
+   * 计算某个区块的所有投票账户获得的奖励
+   *
+   * @param voters 投票账户
+   * @param generatorVote 打块账户上一轮获得的权益
+   * @param voteTotalReward 可分配的投票总奖励
+   *
+   */
+  calcBlockVotesRewards(
+    voters: BFChainCore.VoterInfo[],
+    generatorVote: bigint,
+    voteTotalReward: bigint,
+  ) {
+    // 每个投票账户得到的奖励 voteRewardList[address] = voteReward
+    const voteRewardList: BFChainCore.VoterRewardListInfo = {};
+    let sumVoteReward = BigInt(0);
+    for (const voter of voters) {
+      const voteReward = this.calcVotingRewards(voter.equity, generatorVote, voteTotalReward);
+      sumVoteReward += voteReward;
+      voteRewardList[voter.address] = voteReward;
+    }
+    // 分配剩余的奖励
+    const vrewardsRemaining = voteTotalReward - sumVoteReward;
+    return {
+      voteRewardList,
+      vrewardsRemaining,
+    };
+  }
+  // #endregion
 }

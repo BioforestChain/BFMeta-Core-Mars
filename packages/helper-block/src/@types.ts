@@ -118,6 +118,9 @@ declare namespace BFChainCore {
   type VoteRecord = {
     [address: string]: VoteRecordInfo;
   };
+  type VoterRewardListInfo = {
+    [address: string]: bigint;
+  };
 
   //#region ChainChannel Base Interface
 

@@ -24,7 +24,6 @@ import {
   SHOULD_NOT_INCLUDE,
 } from "@bfchain/core-util-exception";
 import {
-  Exception,
   QueneEventEmitter,
   EasyMap,
   isFlagInDev,
@@ -229,7 +228,7 @@ export class ReplayBlockCore<T extends Block> {
     return block;
   }
 
-  async insertTransactionsForReplay(
+  private async insertTransactionsForReplay(
     block: T,
     trsGenerator: AsyncIterable<TransactionInBlock>,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter = new QueneEventEmitter(),

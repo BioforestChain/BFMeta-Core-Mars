@@ -1,6 +1,6 @@
-import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import type { DestoryAssetTransaction } from "@bfchain/core-model";
-import { Injectable } from "@bfchain/util";
+import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
+import { Injectable, QueneEventEmitter } from "@bfchain/util";
 import { CoreExceptionGenerator, NOT_EXIST, NOT_MATCH } from "@bfchain/core-util-exception";
 
 const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "TransactionLogicVerifier");
@@ -64,13 +64,15 @@ export class DestoryAssetLogicVerifier extends TransactionLogicVerifier {
       cloneAccountsAssets[address] = this.helperLogicVerifier.deepClone(recipient.accountAssets);
     }
 
-    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction);
+    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
-    this.eventLogicVerifier.listenEventAsset(cloneAccountsAssets, transaction);
+    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
 
-    this.eventLogicVerifier.listenEventDestoryAsset(transaction, accountGetterHelper);
+    this.eventLogicVerifier.listenEventAsset(cloneAccountsAssets, transaction, eventEmitter);
 
-    await this.eventLogicVerifier.awaitEventResult(transaction);
+    this.eventLogicVerifier.listenEventDestoryAsset(transaction, accountGetterHelper, eventEmitter);
+
+    await this.eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     return true;
   }

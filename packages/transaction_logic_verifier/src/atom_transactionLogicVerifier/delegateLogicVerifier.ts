@@ -1,6 +1,6 @@
-import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import type { DelegateTransaction } from "@bfchain/core-model";
-import { Injectable } from "@bfchain/util";
+import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
+import { Injectable, QueneEventEmitter } from "@bfchain/util";
 import {
   CoreExceptionGenerator,
   INVALID_ACCOUNT_ALIAS,
@@ -44,15 +44,18 @@ export class DelegateLogicVerifier extends TransactionLogicVerifier {
       [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountInfo),
     };
 
-    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction);
+    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
+
+    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
 
     this.eventLogicVerifier.listenEventRegisterToDelegate(
       cloneAccountsInfo,
       curRound,
       transactionGetterHelper,
+      eventEmitter,
     );
 
-    await this.eventLogicVerifier.awaitEventResult(transaction);
+    await this.eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     const accountInfo = sender.accountInfo;
     if (!accountInfo.username) {

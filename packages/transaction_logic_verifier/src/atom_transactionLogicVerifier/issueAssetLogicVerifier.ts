@@ -1,6 +1,6 @@
-import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import type { IssueAssetTransaction } from "@bfchain/core-model";
-import { Injectable, Inject } from "@bfchain/util";
+import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
+import { Injectable, Inject, QueneEventEmitter } from "@bfchain/util";
 import { AccountBaseHelper, TransactionHelper } from "@bfchain/core-helper";
 
 @Injectable()
@@ -42,18 +42,21 @@ export class IssueAssetLogicVerifier extends TransactionLogicVerifier {
       cloneAccountsInfo[address] = this.helperLogicVerifier.deepClone(recipient.accountInfo);
     }
 
-    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction);
+    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
-    this.eventLogicVerifier.listenEventFrozenAccount(cloneAccountsInfo);
+    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+
+    this.eventLogicVerifier.listenEventFrozenAccount(cloneAccountsInfo, eventEmitter);
 
     this.eventLogicVerifier.listenEventIssueAsset(
       cloneAccountsAssets,
       transaction,
       accountGetterHelper,
       transactionGetterHelper,
+      eventEmitter,
     );
 
-    await this.eventLogicVerifier.awaitEventResult(transaction);
+    await this.eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     return true;
   }

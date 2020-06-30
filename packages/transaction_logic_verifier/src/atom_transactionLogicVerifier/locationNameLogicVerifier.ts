@@ -1,6 +1,6 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { LocationNameTransaction, LOCATION_NAME_OPERATION_TYPE } from "@bfchain/core-model";
-import { Injectable } from "@bfchain/util";
+import { Injectable, QueneEventEmitter } from "@bfchain/util";
 
 @Injectable()
 export class LocationNameLogicVerifier extends TransactionLogicVerifier {
@@ -38,23 +38,27 @@ export class LocationNameLogicVerifier extends TransactionLogicVerifier {
       cloneAccountsInfo[address] = this.helperLogicVerifier.deepClone(recipient.accountInfo);
     }
 
-    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction);
+    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
+
+    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
 
     const operationType = transaction.asset.locationName.operationType;
     if (operationType === LOCATION_NAME_OPERATION_TYPE.REGISTRATION) {
       this.eventLogicVerifier.listenEventRegisterLocationName(
         currentBlockHeight,
         accountGetterHelper,
+        eventEmitter,
       );
     } else {
       this.eventLogicVerifier.listenEventCancelLocationName(
         transaction,
         currentBlockHeight,
         accountGetterHelper,
+        eventEmitter,
       );
     }
 
-    await this.eventLogicVerifier.awaitEventResult(transaction);
+    await this.eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     return true;
   }

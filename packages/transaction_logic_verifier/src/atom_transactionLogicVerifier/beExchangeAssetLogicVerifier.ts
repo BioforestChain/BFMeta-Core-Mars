@@ -1,6 +1,6 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { BeExchangeAssetTransaction, RANGE_TYPE } from "@bfchain/core-model";
-import { Injectable } from "@bfchain/util";
+import { Injectable, QueneEventEmitter } from "@bfchain/util";
 import {
   CoreExceptionGenerator,
   NOT_EXIST,
@@ -70,18 +70,21 @@ export class BeExchangeAssetLogicVerifier extends TransactionLogicVerifier {
       cloneAccountsInfo[address] = this.helperLogicVerifier.deepClone(recipient.accountInfo);
     }
 
-    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction);
+    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
-    this.eventLogicVerifier.listenEventAsset(cloneAccountsAssets, transaction);
+    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+
+    this.eventLogicVerifier.listenEventAsset(cloneAccountsAssets, transaction, eventEmitter);
 
     this.eventLogicVerifier.listenEventUnfrozenAsset(
       transaction,
       currentBlockHeight,
       accountGetterHelper,
       transactionGetterHelper,
+      eventEmitter,
     );
 
-    await this.eventLogicVerifier.awaitEventResult(transaction);
+    await this.eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     return true;
   }

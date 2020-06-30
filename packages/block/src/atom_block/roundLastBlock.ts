@@ -21,6 +21,7 @@ import { Injectable, Inject, ModuleStroge } from "@bfchain/util";
 import { BlockGeneratorCalculator } from "./blockGeneratorCalculator";
 import { CommonBlockVerify } from "./commonBlockVerify";
 import { VerifyBlockCore } from "./verifyBlock";
+import { GenerateBlockCore } from "./generateBlock";
 import { ReplayBlockCore } from "./replayBlock";
 const { ArgumentIllegalException, ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "CONTROLLER",
@@ -47,6 +48,7 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
 
     public commonBlockVerify: CommonBlockVerify<RoundLastBlock>,
     public verifyBlockCore: VerifyBlockCore<RoundLastBlock>,
+    public generateBlockCore: GenerateBlockCore<RoundLastBlock>,
     public replayBlockCore: ReplayBlockCore<RoundLastBlock>,
 
     public moduleMap: ModuleStroge,

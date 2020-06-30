@@ -3,9 +3,6 @@ declare namespace BFChainCore {
   type BlockTicker<T extends Block> = import("./atom_block").BlockTicker<T>;
   type BlockTickerConstructor<T extends Block = any> = new (...args: any[]) => BlockTicker<T>;
   //#endregion
-  type VoterRewardListInfo = {
-    [address: string]: bigint;
-  };
   interface BlockTickGetterHelperInterface {
     /**保存参与投票账户的权益 */
     saveVotingAccountEquity(height: number): Promise<void>;

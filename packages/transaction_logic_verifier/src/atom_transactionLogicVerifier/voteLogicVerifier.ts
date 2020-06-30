@@ -1,6 +1,6 @@
-import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import type { VoteTransaction } from "@bfchain/core-model";
-import { Injectable } from "@bfchain/util";
+import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
+import { Injectable, QueneEventEmitter } from "@bfchain/util";
 import {
   CoreExceptionGenerator,
   ACCOUNT_IS_NOT_AN_DELEGATE,
@@ -53,11 +53,18 @@ export class VoteLogicVerifier extends TransactionLogicVerifier {
       cloneAccountsInfo[address] = this.helperLogicVerifier.deepClone(recipient.accountInfo);
     }
 
-    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction);
+    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
-    this.eventLogicVerifier.listenEventVoteEquity(cloneAccountsInfo, transaction, curRound);
+    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
 
-    await this.eventLogicVerifier.awaitEventResult(transaction);
+    this.eventLogicVerifier.listenEventVoteEquity(
+      cloneAccountsInfo,
+      transaction,
+      curRound,
+      eventEmitter,
+    );
+
+    await this.eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     if (!recipient) {
       throw new NoFoundException(NOT_FOUND, {

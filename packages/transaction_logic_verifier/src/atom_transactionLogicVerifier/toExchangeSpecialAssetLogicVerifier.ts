@@ -4,7 +4,7 @@ import {
   EXCHANGE_DIRECTION,
   SPECIAL_ASSET_TYPE,
 } from "@bfchain/core-model";
-import { Injectable } from "@bfchain/util";
+import { Injectable, QueneEventEmitter } from "@bfchain/util";
 import {
   CoreExceptionGenerator,
   ASSET_NOT_EXIST,
@@ -110,21 +110,32 @@ export class ToExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
       [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
     };
 
-    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction);
+    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
+
+    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
     if (exchangeDirection === EXCHANGE_DIRECTION.ASSET_FROM_RECIPIENT) {
-      this.eventLogicVerifier.listenEventFrozenAsset(cloneAccountsAssets, transaction);
+      this.eventLogicVerifier.listenEventFrozenAsset(
+        cloneAccountsAssets,
+        transaction,
+        eventEmitter,
+      );
     } else {
       if (exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID) {
-        this.eventLogicVerifier.listenEventSaleDAppid(currentBlockHeight, accountGetterHelper);
+        this.eventLogicVerifier.listenEventSaleDAppid(
+          currentBlockHeight,
+          accountGetterHelper,
+          eventEmitter,
+        );
       } else {
         this.eventLogicVerifier.listenEventSaleLocationName(
           currentBlockHeight,
           accountGetterHelper,
+          eventEmitter,
         );
       }
     }
 
-    await this.eventLogicVerifier.awaitEventResult(transaction);
+    await this.eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     return true;
   }

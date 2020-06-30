@@ -5,7 +5,7 @@ import {
   EXCHANGE_DIRECTION,
   SPECIAL_ASSET_TYPE,
 } from "@bfchain/core-model";
-import { Injectable } from "@bfchain/util";
+import { Injectable, QueneEventEmitter } from "@bfchain/util";
 import {
   CoreExceptionGenerator,
   NOT_EXIST,
@@ -59,15 +59,18 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
       cloneAccountsInfo[address] = this.helperLogicVerifier.deepClone(recipient.accountInfo);
     }
 
-    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction);
+    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
-    this.eventLogicVerifier.listenEventAsset(cloneAccountsAssets, transaction);
+    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+
+    this.eventLogicVerifier.listenEventAsset(cloneAccountsAssets, transaction, eventEmitter);
 
     this.eventLogicVerifier.listenEventUnfrozenAsset(
       transaction,
       currentBlockHeight,
       accountGetterHelper,
       transactionGetterHelper,
+      eventEmitter,
     );
 
     const {
@@ -80,9 +83,10 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
         currentBlockHeight,
         accountGetterHelper,
         transactionGetterHelper,
+        eventEmitter,
       );
     } else {
-      this.eventLogicVerifier.listenEventAsset(cloneAccountsAssets, transaction);
+      this.eventLogicVerifier.listenEventAsset(cloneAccountsAssets, transaction, eventEmitter);
     }
 
     if (exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID) {
@@ -90,15 +94,17 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
         transaction,
         currentBlockHeight,
         accountGetterHelper,
+        eventEmitter,
       );
     } else {
       this.eventLogicVerifier.listenEventPurchaseLocationName(
         currentBlockHeight,
         accountGetterHelper,
+        eventEmitter,
       );
     }
 
-    await this.eventLogicVerifier.awaitEventResult(transaction);
+    await this.eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     const beExchangeSpecialAsset = transaction.asset.beExchangeSpecialAsset;
     const { transactionSignature } = beExchangeSpecialAsset;

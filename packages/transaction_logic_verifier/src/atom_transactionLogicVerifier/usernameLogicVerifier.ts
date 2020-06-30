@@ -1,6 +1,6 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { NewTransactionRefuseReason, UsernameTransaction } from "@bfchain/core-model";
-import { Injectable } from "@bfchain/util";
+import { Injectable, QueneEventEmitter } from "@bfchain/util";
 import {
   CoreExceptionGenerator,
   ACCOUNT_ALREADY_HAVE_USERNAME,
@@ -36,11 +36,13 @@ export class UsernameLogicVerifier extends TransactionLogicVerifier {
       [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
     };
 
-    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction);
+    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
-    this.eventLogicVerifier.listenEventSetUsername(accountGetterHelper);
+    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
 
-    await this.eventLogicVerifier.awaitEventResult(transaction);
+    this.eventLogicVerifier.listenEventSetUsername(accountGetterHelper, eventEmitter);
+
+    await this.eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     if (sender.accountInfo.username) {
       throw new ConsensusException(ACCOUNT_ALREADY_HAVE_USERNAME, {

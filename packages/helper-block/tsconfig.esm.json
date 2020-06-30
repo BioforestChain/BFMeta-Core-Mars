@@ -12,6 +12,9 @@
       "path": "../helper-account_base/tsconfig.esm.json"
     },
     {
+      "path": "../helper-bigint/tsconfig.esm.json"
+    },
+    {
       "path": "../helper-config/tsconfig.esm.json"
     },
     {

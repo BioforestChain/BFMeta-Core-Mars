@@ -117,50 +117,24 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
         ...Function_Exception_Detail,
       });
     }
-    const blockUpdateData: BFChainCore.BlockUpdateDataInfo = {
-      reward: BigInt(0),
-      vrewards: BigInt(0),
-      vrewardsRemaining: BigInt(0),
-      blockFee: BigInt(0),
-      blockReward: BigInt(0),
-      totalEquity: BigInt(0),
-      voters: [],
-    };
-    const { accountBaseHelper, jsbiHelper, configHelper } = this;
+
+    const { accountBaseHelper } = this;
     const { height } = block;
     const generatorAddress = await accountBaseHelper.getAddressFromPublicKeyString(
       block.generatorPublicKey,
     );
-    const data = await this.getVoteForDelegate(generatorAddress, height, blockGetterHelper);
-    // FIXME: only for genesis block?
-    // 使用深拷贝在传值前复制一份？
-    const { voters, totalEquity } = data;
-    const len = voters.length;
-    // 投票账户数大于 0，并且投出的权益数大于 0
-    if (len > 0 && totalEquity > BigInt(0)) {
-      blockUpdateData.voters = voters;
-      blockUpdateData.totalEquity = totalEquity;
-    }
+    const { totalEquity, voters } = await this.getVoteForDelegate(
+      generatorAddress,
+      height,
+      blockGetterHelper,
+    );
 
-    // 计算给打块账户和投票账户的奖励总额
-    if (height !== 1 && len > 0) {
-      // 上一轮 给打块账户投票的用户 大于 0
-      const votePercent = configHelper.rewardPercent.votePercent;
-      const fee = BigInt(jsbiHelper.multiplyFloorFraction(block.totalFee, votePercent).toString());
-      const reward = BigInt(jsbiHelper.multiplyFloorFraction(block.reward, votePercent).toString());
+    const blockUpdateData = await this.blockHelper.calcForgingAndVotingReward(
+      block,
+      voters,
+      totalEquity,
+    );
 
-      blockUpdateData.blockFee = BigInt(block.totalFee) - fee;
-      blockUpdateData.blockReward = BigInt(block.reward) - reward;
-      blockUpdateData.reward = BigInt(blockUpdateData.blockFee) + blockUpdateData.blockReward;
-
-      blockUpdateData.vrewards = BigInt(fee) + reward;
-      blockUpdateData.vrewardsRemaining = BigInt(0);
-    } else {
-      // 上一轮 给打块账户投票的用户 等于 0
-      blockUpdateData.reward = BigInt(block.reward) + BigInt(block.totalFee);
-      blockUpdateData.blockFee = BigInt(block.totalFee);
-      blockUpdateData.blockReward = BigInt(block.reward);
-    }
     return blockUpdateData;
   }
 
@@ -184,23 +158,16 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
       });
     }
     const { voters, totalEquity } = blockUpdateData;
-    const len = voters.length;
-    if (block.height !== 1 && len > 0) {
+    if (block.height !== 1 && totalEquity > BigInt(0)) {
       const voteTotalReward = BigInt(blockUpdateData.vrewards);
-      // 用于一次性记录奖励分配 voteRewardList[address] = voteReward
-      const voteRewardList: BFChainCore.VoterRewardListInfo = {};
-      let sumVoteReward = BigInt(0);
-      for (const voter of voters) {
-        const voteReward = (voteTotalReward * voter.equity) / totalEquity;
-        sumVoteReward += voteReward;
-        voteRewardList[voter.address] = voteReward;
-      }
+      const { voteRewardList, vrewardsRemaining } = this.blockHelper.calcBlockVotesRewards(
+        voters,
+        totalEquity,
+        voteTotalReward,
+      );
       // 分配剩余的奖励给打块账户
-      const vrewardsRemaining = voteTotalReward - sumVoteReward;
       blockUpdateData.reward = blockUpdateData.reward + vrewardsRemaining;
-      if (len > 0) {
-        await blockTickGetterHelper.updateVotingAccount(block, voteRewardList);
-      }
+      await blockTickGetterHelper.updateVotingAccount(block, voteRewardList);
     }
     await blockTickGetterHelper.updateForgingAccount(block, blockUpdateData.reward);
   }

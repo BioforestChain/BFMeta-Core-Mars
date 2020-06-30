@@ -1,17 +1,13 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import type { MarkTransaction } from "@bfchain/core-model";
-import { Injectable } from "@bfchain/util";
+import { Injectable, QueneEventEmitter } from "@bfchain/util";
 import {
   CoreExceptionGenerator,
-  NOT_EXIST,
   DAPPID_IS_NOT_EXIST,
   NOT_MATCH,
 } from "@bfchain/core-util-exception";
 
-const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
-  "VERIFIER",
-  "MarkLogicVerifier",
-);
+const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "MarkLogicVerifier");
 
 @Injectable()
 export class MarkLogicVerifier extends TransactionLogicVerifier {
@@ -59,9 +55,11 @@ export class MarkLogicVerifier extends TransactionLogicVerifier {
       cloneAccountsInfo[address] = this.helperLogicVerifier.deepClone(recipient.accountInfo);
     }
 
-    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction);
+    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
-    await this.eventLogicVerifier.awaitEventResult(transaction);
+    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+
+    await this.eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     return true;
   }

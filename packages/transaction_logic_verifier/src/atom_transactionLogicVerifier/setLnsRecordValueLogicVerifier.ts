@@ -1,6 +1,6 @@
-import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import type { SetLnsRecordValueTransaction } from "@bfchain/core-model";
-import { Injectable } from "@bfchain/util";
+import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
+import { Injectable, QueneEventEmitter } from "@bfchain/util";
 
 @Injectable()
 export class SetLnsRecordValueLogicVerifier extends TransactionLogicVerifier {
@@ -30,11 +30,17 @@ export class SetLnsRecordValueLogicVerifier extends TransactionLogicVerifier {
       [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
     };
 
-    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction);
+    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
-    this.eventLogicVerifier.listenEventSetLnsRecordValue(currentBlockHeight, accountGetterHelper);
+    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
 
-    await this.eventLogicVerifier.awaitEventResult(transaction);
+    this.eventLogicVerifier.listenEventSetLnsRecordValue(
+      currentBlockHeight,
+      accountGetterHelper,
+      eventEmitter,
+    );
+
+    await this.eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     return true;
   }

@@ -15,6 +15,7 @@
   ],
   "dependencies": {
     "@bfchain/core-helper-config": "5.15.4",
+    "@bfchain/core-model-block-base": "5.15.4",
     "@bfchain/core-typings": "5.15.4",
     "@bfchain/core-util-base58": "5.15.4"
   },

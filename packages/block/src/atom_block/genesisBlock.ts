@@ -20,8 +20,9 @@ import {
 import { Injectable, Inject } from "@bfchain/util";
 import { BlockGeneratorCalculator } from "./blockGeneratorCalculator";
 import { CommonBlockVerify } from "./commonBlockVerify";
-import { VerifyBlockCore } from "./verifyBlock";
+import { GenerateBlockCore } from "./generateBlock";
 import { ReplayBlockCore } from "./replayBlock";
+import { VerifyBlockCore } from "./verifyBlock";
 const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "GenesisBlockFactory");
 
 /**
@@ -45,6 +46,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     public commonBlockVerify: CommonBlockVerify<GenesisBlock>,
     public verifyBlockCore: VerifyBlockCore<GenesisBlock>,
+    public generateBlockCore: GenerateBlockCore<GenesisBlock>,
     public replayBlockCore: ReplayBlockCore<GenesisBlock>,
   ) {
     super();

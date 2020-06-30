@@ -12,6 +12,9 @@
       "path": "../helper-config/tsconfig.esm-es5.json"
     },
     {
+      "path": "../model-block-base/tsconfig.esm-es5.json"
+    },
+    {
       "path": "../typings/tsconfig.esm-es5.json"
     },
     {
