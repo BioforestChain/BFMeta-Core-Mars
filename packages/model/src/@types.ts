@@ -507,6 +507,17 @@ declare namespace BFChainCore {
        * 或者准备广播交易需要的动作
        */
       generatedBlock: BFChainUtil.EventInOut<B>;
+      /**
+       * 扩展异常信息
+       */
+      blockError: BFChainUtil.EventInOut<
+        {
+          type: string;
+          error: unknown;
+          blockBody: BlockBody | B;
+        },
+        void
+      >;
     } & ES
   >;
   //#endregion

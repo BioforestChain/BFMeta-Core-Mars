@@ -82,7 +82,13 @@ export class GenerateBlockCore<T extends Block> {
     }
 
     isDevGenerateBlock && log("before generateBlock");
-    eventEmitter && (await eventEmitter.emit("beforeGenerateBlock", body));
+    eventEmitter &&
+      (await this._wrapBlockError(
+        eventEmitter.emit("beforeGenerateBlock", body),
+        eventEmitter,
+        "beforeGenerateBlock",
+        body,
+      ));
 
     if (body.height > 1) {
       /// 如果没有自定义的掉块信息，或者没有提供私钥（区块验证模式），那么就主动生成掉块信息
@@ -105,6 +111,24 @@ export class GenerateBlockCore<T extends Block> {
     }
   }
 
+  private async _wrapBlockError<R>(
+    task: Promise<R> | undefined | void,
+    eventEmitter: BFChainCore.GenerateBlockEventEmitter,
+    type: string,
+    blockBody: BFChainCore.Block | BFChainCore.BlockBody,
+  ) {
+    if (task) {
+      try {
+        return await task;
+      } catch (error) {
+        eventEmitter.emit("blockError", {
+          type: `generateBlock/${type}`,
+          error,
+          blockBody,
+        });
+      }
+    }
+  }
   /**
    * 锻造区块后半部分
    *
@@ -132,7 +156,13 @@ export class GenerateBlockCore<T extends Block> {
     await this.insertTransactions(block, transactions, keypair, eventEmitter);
 
     isDevGenerateBlock && log("before signatureBlock");
-    eventEmitter && (await eventEmitter.emit("beforeSignatureBlock", block));
+    eventEmitter &&
+      (await this._wrapBlockError(
+        eventEmitter.emit("beforeSignatureBlock", block),
+        eventEmitter,
+        "beforeSignatureBlock",
+        block,
+      ));
 
     // 计算并赋值区块大小
     block.blockSize = this.commonBlockVerify.calcBlockSize(block);
@@ -147,7 +177,13 @@ export class GenerateBlockCore<T extends Block> {
     );
 
     isDevGenerateBlock && log("before generatedBlock");
-    eventEmitter && (await eventEmitter.emit("generatedBlock", block));
+    eventEmitter &&
+      (await this._wrapBlockError(
+        eventEmitter.emit("generatedBlock", block),
+        eventEmitter,
+        "generatedBlock",
+        block,
+      ));
     return block;
   }
 

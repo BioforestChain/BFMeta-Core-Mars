@@ -68,6 +68,24 @@ export class ReplayBlockCore<T extends Block> {
     public cryptoHelper: BFChainCore.CryptoHelperInterface,
   ) {}
 
+  private async _wrapBlockError<R>(
+    task: Promise<R> | undefined | void,
+    eventEmitter: BFChainCore.GenerateBlockEventEmitter,
+    type: string,
+    blockBody: BFChainCore.Block | BFChainCore.BlockBody,
+  ) {
+    if (task) {
+      try {
+        return await task;
+      } catch (error) {
+        eventEmitter.emit("blockError", {
+          type: `replayBlock/${type}`,
+          error,
+          blockBody,
+        });
+      }
+    }
+  }
   /**
    * 重放区块
    *
@@ -97,7 +115,12 @@ export class ReplayBlockCore<T extends Block> {
     }
 
     isDevGenerateBlock && log("before replayBlock");
-    eventEmitter && (await eventEmitter.emit("beforeGenerateBlock", block));
+    eventEmitter &&  (await this._wrapBlockError(
+      eventEmitter.emit("beforeGenerateBlock", block),
+      eventEmitter,
+      "beforeGenerateBlock",
+      block,
+    ));
 
     if (block.height > 1) {
       const realRoundOfflineGeneratersHashMap = block.roundOfflineGeneratersHashMap;
@@ -211,7 +234,13 @@ export class ReplayBlockCore<T extends Block> {
     this.commonBlockVerify.verifyBlockReward(block);
 
     isDevGenerateBlock && log("before signatureBlock");
-    eventEmitter && (await eventEmitter.emit("beforeSignatureBlock", block));
+    eventEmitter &&
+      (await this._wrapBlockError(
+        eventEmitter.emit("beforeSignatureBlock", block),
+        eventEmitter,
+        "beforeSignatureBlock",
+        block,
+      ));
 
     // 验证区块大小
     this.commonBlockVerify.verifyBlockSize(block, transactionBufferList);
@@ -223,7 +252,13 @@ export class ReplayBlockCore<T extends Block> {
     verifySignature && (await this.commonBlockVerify.verifySignature(block));
 
     isDevGenerateBlock && log("before generatedBlock");
-    eventEmitter && (await eventEmitter.emit("generatedBlock", block));
+    eventEmitter &&
+      (await this._wrapBlockError(
+        eventEmitter.emit("generatedBlock", block),
+        eventEmitter,
+        "generatedBlock",
+        block,
+      ));
     isDevGenerateBlock && info("finish replayBlock");
     return block;
   }
