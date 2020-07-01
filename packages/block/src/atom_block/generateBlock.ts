@@ -121,7 +121,7 @@ export class GenerateBlockCore<T extends Block> {
       try {
         return await task;
       } catch (error) {
-        eventEmitter.emit("blockError", {
+        await eventEmitter.emit("blockError", {
           type: `generateBlock/${type}`,
           error,
           blockBody,

@@ -1,4 +1,4 @@
-import { Aborter, EasyMap, safePromiseRace, sleep } from "@bfchain/util";
+import { Aborter, EasyMap, safePromiseRace, sleep, unsleep } from "@bfchain/util";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 
 const { AbortException, TimeOutException } = CoreExceptionGenerator("channel", "chainChannelGroup");
@@ -37,18 +37,19 @@ abstract class GroupRequesterBuilder<CC extends BFChainCore.ChainChannel, R> {
     } else if (timeout > 3e4) {
       timeout = 3e4;
     }
+    const timeoutTi = sleep(timeout, () => {
+      if (!timeoutException) {
+        timeoutException = new TimeOutException(...this.getTimeoutExceptionInfo(chainChannel));
+      } else if (typeof timeoutException === "function") {
+        timeoutException = timeoutException(chainChannel);
+      }
+      throw timeoutException;
+    });
     // chainChannel.address
     return safePromiseRace<PromiseLike<R>>([
-      sleep(timeout, () => {
-        if (!timeoutException) {
-          timeoutException = new TimeOutException(...this.getTimeoutExceptionInfo(chainChannel));
-        } else if (typeof timeoutException === "function") {
-          timeoutException = timeoutException(chainChannel);
-        }
-        throw timeoutException;
-      }),
+      timeoutTi,
       ...this._inQueneTasks.values(),
-    ]);
+    ]).finally(() => unsleep(timeoutTi));
   }
   abstract getTimeoutExceptionInfo(
     cc: CC,
