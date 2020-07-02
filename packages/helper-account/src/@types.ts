@@ -128,7 +128,7 @@ declare namespace BFChainCore {
     /**获取准备计算的受托人 */
     getDelegates(currentGeneraterPublicKeyList: (Uint8Array | string)[]): Promise<ABI[]>;
     /**获取全新的受托人账户(在线率 100%)  */
-    getNewDelegates(limit: number): Promise<FSAI[]>;
+    getNewDelegates(limit: number, height: number): Promise<FSAI[]>;
     /**获取账户信息 */
     getAccountInfo(address: string): Promise<AI | undefined>;
     /**获取账户的块内交易 */
