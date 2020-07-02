@@ -393,7 +393,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
                   // 移除无效的结果
                   queryer.removeChainChannelByResult(res);
                   // 重试任务，但是这个节点仍旧放在繁忙节点列表，暂时不信任
-                  doTask(task_offset, times + 1);
+                  await doTask(task_offset, times + 1);
                 } else if (res.status === RESPONSE_STATUS.error) {
                   // 移除无效的结果
                   queryer.removeChainChannelByResult(res);
@@ -421,7 +421,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
                 }
                 if (times < RETRY_TIMES) {
                   // 存在异常，重试任务
-                  doTask(task_offset, times + 1);
+                  await doTask(task_offset, times + 1);
                   return;
                 }
                 throw err;
