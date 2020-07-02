@@ -1458,18 +1458,6 @@ export class EventLogicVerifier {
   }
 
   /**
-   * 捕捉事件异常
-   *
-   */
-  private __catchEventError(eventEmitter: BFChainCore.ApplyTransactionEventEmitter) {
-    (eventEmitter as QueneEventEmitter<BFChainUtil.EmitterEvents<typeof event>>).onError(
-      (err, { eventname, arg }) => {
-        throw err;
-      },
-    );
-  }
-
-  /**
    * 等待事件处理结果
    *
    * @param transaction
@@ -1478,7 +1466,6 @@ export class EventLogicVerifier {
     transaction: BFChainCore.Transaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    this.__catchEventError(eventEmitter);
     await this.transactionCore
       .getTransactionFactoryFromType(transaction.type)
       .applyTransaction(transaction, eventEmitter);
