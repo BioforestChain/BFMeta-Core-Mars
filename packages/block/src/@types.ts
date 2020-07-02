@@ -25,6 +25,8 @@ declare namespace BFChainCore {
     applyTxPercent: BFChainCore.FractionJSON;
     /**上一轮的得票率占比 */
     votePercent: BFChainCore.FractionJSON;
+    /**新受托人(在线率 100%)占比 */
+    newDelegatePercent: BFChainCore.FractionJSON;
     /**最小可被推荐得账户在线率 */
     minBeSelectProductivity: BFChainCore.FractionJSON;
   };

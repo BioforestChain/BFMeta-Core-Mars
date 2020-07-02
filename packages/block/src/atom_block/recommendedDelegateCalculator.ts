@@ -68,26 +68,6 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
         });
       }
     }
-    /**如果拿不到generatorAddressList，就默认拿当前轮次的轮末块计算出来的受托人
-     * 为了在第一轮就可以选出受托人进行投票，只为了能够连续投票
-     * @TUDO 翁茂春  这样是否可行
-     */
-    // 这个不能这么搞肯定是其他地方出问题导致计算不出结果
-    // if (!forgeInfoMap.size && !generatorAddressList.length && currentBlockHeight <= blockPerRound) {
-    //   const _block = (await this.blockHelper.forceGetBlockByHeight(
-    //     currentBlockHeight < blockPerRound
-    //       ? this.blockHelper.calcRoundStartHeight(currentBlockHeight)
-    //       : this.blockHelper.calcRoundEndHeight(currentBlockHeight),
-    //     blockGetterHelper,
-    //   )) as BFChainCore.Block<BFChainCore.RoundLastBlockRemarkJSON>;
-    //   _block.remark.nextRoundDelegates.forEach(delegate => {
-    //     generatorAddressList[generatorAddressList.length] = delegate.address;
-    //     forgeInfoMap.set(delegate.address, {
-    //       producedblocks: 0,
-    //       applyTxNumber: 0,
-    //     });
-    //   });
-    // }
 
     return { forgeInfoMap, generatorAddressList };
   }
@@ -182,42 +162,49 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
   }
 
   /**
-   * 数组混合: 3 + 3 + 3 + 1 模式
+   * 数组混合: 8 + 6 + 3 + 2 + 1 模式
    *
    * @param {*} pdtArray
    * @param {*} fbsArray
    * @param {*} atnArray
    * @param {*} votArray
+   * @param {*} newArray
    */
   private hybridArray(
     pdtArray: string[],
     fbsArray: string[],
     atnArray: string[],
     votArray: string[],
+    newArray: string[],
   ) {
     const results: string[] = [];
     const temp_pdtArray = [...pdtArray];
     const temp_fbsArray = [...fbsArray];
     const temp_atnArray = [...atnArray];
     const temp_votArray = [...votArray];
+    const temp_newArray = [...newArray];
     while (true) {
       if (temp_pdtArray.length > 0) {
-        results.push.apply(results, temp_pdtArray.splice(0, 3));
+        results.push.apply(results, temp_pdtArray.splice(0, 8));
       }
       if (temp_fbsArray.length > 0) {
-        results.push.apply(results, temp_fbsArray.splice(0, 3));
+        results.push.apply(results, temp_fbsArray.splice(0, 6));
       }
       if (temp_atnArray.length > 0) {
         results.push.apply(results, temp_atnArray.splice(0, 3));
       }
       if (temp_votArray.length > 0) {
-        results.push.apply(results, temp_votArray.splice(0, 1));
+        results.push.apply(results, temp_votArray.splice(0, 2));
+      }
+      if (temp_newArray.length > 0) {
+        results.push.apply(results, temp_newArray.splice(0, 1));
       }
       const isFinish =
         temp_pdtArray.length === 0 &&
         temp_fbsArray.length === 0 &&
         temp_atnArray.length === 0 &&
-        temp_votArray.length === 0;
+        temp_votArray.length === 0 &&
+        temp_newArray.length === 0;
       if (isFinish) {
         break;
       }
@@ -238,7 +225,10 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     currentBlockHeight: number,
     options: BFChainCore.RecommendedDelegateOptions,
     activeDelegates: string[],
-    accountGetterHelper?: Pick<BFChainCore.AccountGetterHelperInterface, "getAccounts">,
+    accountGetterHelper?: Pick<
+      BFChainCore.AccountGetterHelperInterface,
+      "getAccounts" | "getNewDelegates"
+    >,
     blockGetterHelper?: BFChainCore.BlockGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
@@ -285,7 +275,8 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
       jsbiHelper.multiplyFloorFraction(totalQuota, options.forgedBlocksPercent),
     );
     const atnNum = Number(jsbiHelper.multiplyFloorFraction(totalQuota, options.applyTxPercent));
-    const votNum = totalQuota - pdtNum - fbsNum - atnNum;
+    const votNum = Number(jsbiHelper.multiplyFloorFraction(totalQuota, options.newDelegatePercent));
+    const newNum = totalQuota - pdtNum - fbsNum - atnNum - votNum;
     // 获取在线率前 n 个账户
     const sortByProductivity = this.sortDelegatesByFields(canBePickAccounts, "productivity");
     const pdtArray = sortByProductivity.splice(0, pdtNum).map((account) => account.address);
@@ -305,8 +296,17 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     }
     const sortByVote = this.sortDelegatesByFields(voteArray, "vote");
     const votArray = sortByVote.splice(0, votNum).map((account) => account.address);
+    // 获取 n 个 新受托人账户
+    const newDelegates = await accountGetterHelper.getNewDelegates(newNum);
+    const newArray = newDelegates.map((delegate) => delegate.address);
     // 乱序
-    this.forgingDelegates.delegates = this.hybridArray(pdtArray, fbsArray, atnArray, votArray);
+    this.forgingDelegates.delegates = this.hybridArray(
+      pdtArray,
+      fbsArray,
+      atnArray,
+      votArray,
+      newArray,
+    );
   }
 
   /**
@@ -353,7 +353,7 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     options: BFChainCore.RecommendedDelegateOptions,
     accountGetterHelper?: Pick<
       BFChainCore.AccountGetterHelperInterface,
-      "getAccountVoteInfo" | "getMemoryDelegates" | "getAccounts"
+      "getAccountVoteInfo" | "getMemoryDelegates" | "getAccounts" | "getNewDelegates"
     >,
     blockGetterHelper?: BFChainCore.BlockGetterHelperInterface,
   ) {
