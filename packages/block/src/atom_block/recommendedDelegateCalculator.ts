@@ -162,7 +162,7 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
   }
 
   /**
-   * 数组混合: 8 + 6 + 3 + 2 + 1 模式
+   * 数组混合
    *
    * @param {*} pdtArray
    * @param {*} fbsArray
@@ -177,37 +177,27 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     votArray: string[],
     newArray: string[],
   ) {
-    const results: string[] = [];
-    const temp_pdtArray = [...pdtArray];
-    const temp_fbsArray = [...fbsArray];
-    const temp_atnArray = [...atnArray];
-    const temp_votArray = [...votArray];
-    const temp_newArray = [...newArray];
-    while (true) {
-      if (temp_pdtArray.length > 0) {
-        results.push.apply(results, temp_pdtArray.splice(0, 8));
-      }
-      if (temp_fbsArray.length > 0) {
-        results.push.apply(results, temp_fbsArray.splice(0, 6));
-      }
-      if (temp_atnArray.length > 0) {
-        results.push.apply(results, temp_atnArray.splice(0, 3));
-      }
-      if (temp_votArray.length > 0) {
-        results.push.apply(results, temp_votArray.splice(0, 2));
-      }
-      if (temp_newArray.length > 0) {
-        results.push.apply(results, temp_newArray.splice(0, 1));
-      }
-      const isFinish =
-        temp_pdtArray.length === 0 &&
-        temp_fbsArray.length === 0 &&
-        temp_atnArray.length === 0 &&
-        temp_votArray.length === 0 &&
-        temp_newArray.length === 0;
-      if (isFinish) {
-        break;
-      }
+    let results: string[] = [...pdtArray];
+    const fbsLen = fbsArray.length;
+    for (let i = 0; i < fbsLen; i++) {
+      results[results.length] = fbsArray[i];
+    }
+    const atnLen = atnArray.length;
+    for (let i = 0; i < atnLen; i++) {
+      results[results.length] = atnArray[i];
+    }
+    const votLen = votArray.length;
+    for (let i = 0; i < votLen; i++) {
+      results[results.length] = votArray[i];
+    }
+    const newLen = newArray.length;
+    for (let i = 0; i < newLen; i++) {
+      results[results.length] = newArray[i];
+    }
+    let i = results.length;
+    while (i) {
+      const j = Math.floor(Math.random() * i--);
+      [results[j], results[i]] = [results[i], results[j]];
     }
     return results;
   }
