@@ -98,6 +98,7 @@ export class PickNextRoundDelegates {
     }
     let delegates = await this.accountHelper.getAccounts(
       newGeneratorAddressArr,
+      round,
       accountGetterHelper,
     );
     delegates = this.__sortByProductivity(delegates);
@@ -125,7 +126,7 @@ export class PickNextRoundDelegates {
         pickAddressArr[pickAddressArr.length] = address;
       }
     }
-    let delegates = await this.accountHelper.getAccounts(addressArray, accountGetterHelper);
+    let delegates = await this.accountHelper.getAccounts(addressArray, 1, accountGetterHelper);
     delegates = this.__sortByProductivity(delegates);
     results.push.apply(results, delegates.slice(0, this.config.blockPerRound - results.length));
     return {

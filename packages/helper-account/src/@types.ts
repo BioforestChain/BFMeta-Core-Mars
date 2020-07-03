@@ -122,7 +122,7 @@ declare namespace BFChainCore {
     IAI extends IssuedAssetInfo = IssuedAssetInfo
   > {
     /**根据地址数组获取账户 */
-    getAccounts(addressArr: string[]): Promise<FSAI[]>;
+    getAccounts(addressArr: string[], curRound: number): Promise<FSAI[]>;
     /**获取准备下一轮上榜的受托人 */
     getNextRoundDelegates(): Promise<FSAI[]>;
     /**获取准备计算的受托人 */

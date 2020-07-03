@@ -29,6 +29,7 @@ export class AccountHelper<
 
   getAccounts(
     addressArr: string[],
+    currentBlockHeight: number,
     accountGetterHelper = this.accountGetterHelper as Pick<
       BFChainCore.AccountGetterHelperInterface,
       "getAccounts"
@@ -41,7 +42,7 @@ export class AccountHelper<
         function: "AccountHelper.getAccounts",
       });
     }
-    return accountGetterHelper.getAccounts(addressArr);
+    return accountGetterHelper.getAccounts(addressArr, currentBlockHeight);
   }
 
   getNextRoundDelegates<T extends BFChainCore.ForSortAccountInfo = BFChainCore.ForSortAccountInfo>(
@@ -72,7 +73,7 @@ export class AccountHelper<
       throw new NoFoundException(NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getAccounts",
+        function: "AccountHelper.getDelegates",
       });
     }
     return accountGetterHelper.getDelegates(currentGeneraterPublicKeyList);
@@ -88,7 +89,7 @@ export class AccountHelper<
       throw new NoFoundException(NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getAccounts",
+        function: "AccountHelper.getAccountInfo",
       });
     }
     return accountGetterHelper.getAccountInfo(address);
@@ -104,7 +105,7 @@ export class AccountHelper<
       throw new NoFoundException(NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getAccounts",
+        function: "AccountHelper.getAccountTxCountInBlock",
       });
     }
     return accountGetterHelper.getAccountTxCountInBlock(address);
@@ -120,7 +121,7 @@ export class AccountHelper<
       throw new NoFoundException(NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getAccounts",
+        function: "AccountHelper.getAccountAssets",
       });
     }
     return accountGetterHelper.getAccountAssets(address);
@@ -136,7 +137,7 @@ export class AccountHelper<
       throw new NoFoundException(NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getAccounts",
+        function: "AccountHelper.getAccountInfoAndAssets",
       });
     }
     return accountGetterHelper.getAccountInfoAndAssets(address);
@@ -154,7 +155,7 @@ export class AccountHelper<
       throw new NoFoundException(NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getAccounts",
+        function: "AccountHelper.getDApp",
       });
     }
     return accountGetterHelper.getDApp(sourceChainMagic, dappid, currentBlockHeight);
@@ -171,7 +172,7 @@ export class AccountHelper<
       throw new NoFoundException(NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getAccounts",
+        function: "AccountHelper.isDAppPossessor",
       });
     }
     return accountGetterHelper.isDAppPossessor(sourceChainMagic, address);
@@ -190,7 +191,7 @@ export class AccountHelper<
       throw new NoFoundException(NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getAccounts",
+        function: "AccountHelper.getVoteForDelegate",
       });
     }
     return accountGetterHelper.getVoteForDelegate(address, delegate, dappid, round);
@@ -208,7 +209,7 @@ export class AccountHelper<
       throw new NoFoundException(NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getAccounts",
+        function: "AccountHelper.getLocationName",
       });
     }
     return accountGetterHelper.getLocationName(sourceChainMagic, locationName, currentBlockHeight);
@@ -225,7 +226,7 @@ export class AccountHelper<
       throw new NoFoundException(NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getAccounts",
+        function: "AccountHelper.isLocationNamePossessor",
       });
     }
     return accountGetterHelper.isLocationNamePossessor(sourceChainMagic, address);
@@ -242,7 +243,7 @@ export class AccountHelper<
       throw new NoFoundException(NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getAccounts",
+        function: "AccountHelper.isSubLocationNameExist",
       });
     }
     return accountGetterHelper.isSubLocationNameExist(sourceChainMagic, endsWith);
@@ -258,7 +259,7 @@ export class AccountHelper<
       throw new NoFoundException(NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getAccounts",
+        function: "AccountHelper.isLocationNameForbidden",
       });
     }
     return accountGetterHelper.isLocationNameForbidden(name);
@@ -275,7 +276,7 @@ export class AccountHelper<
       throw new NoFoundException(NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getAccounts",
+        function: "AccountHelper.getFrozenAsset",
       });
     }
     return accountGetterHelper.getFrozenAsset(address, signature);
@@ -292,7 +293,7 @@ export class AccountHelper<
       throw new NoFoundException(NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getAccounts",
+        function: "AccountHelper.getAsset",
       });
     }
     return accountGetterHelper.getAsset(magic, assetType);
@@ -308,7 +309,7 @@ export class AccountHelper<
       throw new NoFoundException(NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getAccounts",
+        function: "AccountHelper.getCurrency",
       });
     }
     return accountGetterHelper.getCurrency(assetType);
@@ -324,7 +325,7 @@ export class AccountHelper<
       throw new NoFoundException(NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getAccounts",
+        function: "AccountHelper.isCurrencyForbidden",
       });
     }
     return accountGetterHelper.isCurrencyForbidden(assetType);
@@ -340,7 +341,7 @@ export class AccountHelper<
       throw new NoFoundException(NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getAccounts",
+        function: "AccountHelper.getChain",
       });
     }
     return accountGetterHelper.getChain(magic);
@@ -356,7 +357,7 @@ export class AccountHelper<
       throw new NoFoundException(NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getAccounts",
+        function: "AccountHelper.getAlias",
       });
     }
     return accountGetterHelper.getAlias(alias);
@@ -374,7 +375,7 @@ export class AccountHelper<
       throw new NoFoundException(NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getAccounts",
+        function: "AccountHelper.initAccountPublicKey",
       });
     }
     return accountGetterHelper.initAccountPublicKey(address, publicKey, currentBlockHeight);
@@ -391,7 +392,7 @@ export class AccountHelper<
       throw new NoFoundException(NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getAccounts",
+        function: "AccountHelper.mergeAccountMissedBlock",
       });
     }
     return accountGetterHelper.mergeAccountMissedBlock(height, accountAccumulation);
@@ -408,7 +409,7 @@ export class AccountHelper<
       throw new NoFoundException(NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getAccounts",
+        function: "AccountHelper.mergeAccountEquity",
       });
     }
     return accountGetterHelper.mergeAccountEquity(height, accountEquity);
@@ -424,7 +425,7 @@ export class AccountHelper<
       throw new NoFoundException(NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getAccounts",
+        function: "AccountHelper.resetDelegateVote",
       });
     }
     return accountGetterHelper.resetDelegateVote(height);
@@ -441,7 +442,7 @@ export class AccountHelper<
       throw new NoFoundException(NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getAccounts",
+        function: "AccountHelper.getAccountVoteInfo",
       });
     }
     return accountGetterHelper.getAccountVoteInfo(height, address);
@@ -456,7 +457,7 @@ export class AccountHelper<
       throw new NoFoundException(NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getAccounts",
+        function: "AccountHelper.getMemoryDelegates",
       });
     }
     return accountGetterHelper.getMemoryDelegates();

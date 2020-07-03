@@ -84,6 +84,7 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     minBeSelectProductivity: BFChainCore.FractionJSON,
     generatorAddressList: string[],
     forgeInfoMap: Map<string, BFChainCore.ForgeInfos>,
+    curRound: number,
     accountGetterHelper?: Pick<BFChainCore.AccountGetterHelperInterface, "getAccounts">,
   ) {
     const Function_Exception_Detail = {
@@ -97,7 +98,7 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
       });
     }
 
-    const accounts = await accountGetterHelper.getAccounts(generatorAddressList);
+    const accounts = await accountGetterHelper.getAccounts(generatorAddressList, curRound);
 
     const canBePickAccounts: BFChainCore.CanBePickAccount[] = [];
 
@@ -248,10 +249,12 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
       blockGetterHelper,
     );
 
+    const curRound = this.blockHelper.calcRoundByHeight(currentBlockHeight);
     const canBePickAccounts = await this.calCanBePickAccounts(
       options.minBeSelectProductivity,
       generatorAddressList,
       forgeInfoMap,
+      curRound,
       accountGetterHelper,
     );
 
@@ -385,7 +388,7 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     // 获取矿机注入的受托人
     const memoryDelegates = await accountGetterHelper.getMemoryDelegates();
     // 去除关闭接收投票的账户
-    const delegates = await accountGetterHelper.getAccounts(memoryDelegates);
+    const delegates = await accountGetterHelper.getAccounts(memoryDelegates, curRound);
     for (const delegate of delegates) {
       if (!delegate.isAcceptVote) {
         noLongerVoteSet.add(delegate.address);
