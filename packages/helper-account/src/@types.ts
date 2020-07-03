@@ -2,19 +2,19 @@ declare namespace BFChainCore {
   type AccountInfo = {
     address: string;
     publicKey?: string;
-    vote: bigint;
     username?: string;
     secondPublicKey?: string;
     accountStatus: number;
     isDelegate: boolean;
     isAcceptVote: boolean;
-    fixedEquityInfo: {
+    voteInfo: {
       round: number;
-      equity: bigint;
+      vote: bigint;
     };
     equityInfo: {
       round: number;
       equity: bigint;
+      fixedEquity: bigint;
     };
   };
   type AssetInfo = {

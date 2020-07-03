@@ -299,16 +299,23 @@ declare namespace BFChainCore {
   }
 
   interface AccountApiInterface {
-    getAccountUsername(address: string): Promise<string | undefined>;
-    getAccountIsDelegate(address: string): Promise<boolean>;
-    getAccountIsAcceptVote(address: string): Promise<boolean>;
-    getAccountSecondPublicKey(address: string): Promise<string | undefined>;
-    getAccountMissedBlocks(address: string): Promise<number>;
-    getAccountProducedBlocks(address: string): Promise<number>;
-    getAccountStatus(address: string): Promise<number>;
-    getAccountVote(address: string): Promise<string>;
+    getAccountUsername(address: string, height: number): Promise<string | undefined>;
+    getAccountIsDelegate(address: string, height: number): Promise<boolean>;
+    getAccountIsAcceptVote(address: string, height: number): Promise<boolean>;
+    getAccountSecondPublicKey(address: string, height: number): Promise<string | undefined>;
+    getAccountMissedBlocks(address: string, height: number): Promise<number>;
+    getAccountProducedBlocks(address: string, height: number): Promise<number>;
+    getAccountStatus(address: string, height: number): Promise<number>;
+    getAccountVote(
+      address: string,
+      height: number,
+    ): Promise<{
+      round: number;
+      vote: string;
+    }>;
     getAccountEquityInfo(
       address: string,
+      height: number,
     ): Promise<{
       round: number;
       equity: string;

@@ -142,10 +142,14 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     await this.checkLocationName(transaction, currentBlockHeight, accountGetterHelper);
     // 校验 pow
     if (currentBlockHeight > this.configHelper.powOfWorkExemptionBlocks) {
+      const equityInfo = sender.accountInfo.equityInfo;
       await this.checkTransactionPowOfWork(
         transaction,
         currentBlockHeight,
-        senderAccountInfo.fixedEquityInfo,
+        {
+          round: equityInfo.round,
+          equity: equityInfo.fixedEquity,
+        },
         accountGetterHelper,
       );
     }
