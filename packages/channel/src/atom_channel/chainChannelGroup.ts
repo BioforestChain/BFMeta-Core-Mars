@@ -374,20 +374,28 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
                 const res = await queryer.addChainChannel(event.chainChannel, options);
 
                 if (res.status === RESPONSE_STATUS.success) {
-                  // 任务完成
-                  queryer.finish();
-                  // 确认节点的工作，让其继续下一个工作
-                  event.autoFreeChainChannel = true;
                   if (res.transactions.length === 0) {
-                    query_done_offset = task_offset;
+                    // 如果是高度最高的那个节点返回空列表，那么基本就是空列表没跑了
+                    if (event.chainChannel.maybeHeight >= this.maybeHeight) {
+                      query_done_offset = task_offset;
+                    } else {
+                      // 移除无效的结果
+                      queryer.removeChainChannelByResult(res);
+                      // 重试任务，但是这个节点因为高度过低，暂时不用它来查询
+                      await doTask(task_offset, times + 1);
+                    }
                   } else {
+                    // 任务完成
+                    queryer.finish();
+                    // 确认节点的工作，让其继续下一个工作
+                    event.autoFreeChainChannel = true;
+                    // 保存查询结果
                     res.transactions.forEach((trs, i) => {
                       resultGenerator.push(
                         TransactionInBlock.fromObject(trs),
                         task_offset - offset + i,
                       );
                     });
-                    // task_result_list[task_offset] = res.transactions[0];
                   }
                 } else if (res.status === RESPONSE_STATUS.busy) {
                   // 移除无效的结果
