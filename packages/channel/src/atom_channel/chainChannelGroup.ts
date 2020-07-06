@@ -41,6 +41,7 @@ const {
 } = CoreExceptionGenerator("channel", "chainChannelGroup");
 
 import { GroupQueryTransactionsBuilder, GroupQueryBlockBuilder } from "./GroupRequesterBuilder";
+import { ChainChannelHelper } from "./chainChannelHelper";
 
 export const CHAIN_CHANNEL_GROUP_ARGS = {
   GROUP_NAME: Symbol("groupName"),
@@ -62,6 +63,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
   @Inject(ConfigHelper) protected config!: ConfigHelper;
   @Inject(ChainTimeHelper) private timeHelper!: ChainTimeHelper;
   @Inject(TransactionHelper) private transactionHelper!: TransactionHelper;
+  @Inject(ChainChannelHelper) private helper!: ChainChannelHelper;
 
   protected chainChannelSet = new Set<DH>();
   get size() {
@@ -290,8 +292,8 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     opts?: BFChainCore.ChannelGroupRequestOptions<DH>,
     _resultGenerator?: AsyncIteratorGenerator<TransactionInBlock>,
   ) {
-    /**异常时重试次数 */
-    const RETRY_TIMES = 3;
+    // /**异常时重试次数 */
+    // const RETRY_TIMES = 3;
     const { offset, limit: totalLength, ...baseQueryCondition } = query;
     const limit = totalLength || Infinity;
 
@@ -303,10 +305,13 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
       abortWhenNoChainChannel: opts?.abortWhenNoChainChannel,
     });
 
+    const resultPo = opts && this.helper.parserAborterOptions(opts, { channelGroup: this });
+
     const resultGenerator = _resultGenerator || new AsyncIteratorGenerator<TransactionInBlock>();
 
+    const getChainChannelTimeout = this._getChainChannelTimeout;
     /**私有内部类 */
-    class AddChainChannelOptions {
+    class AddChainChannelOptions implements BFChainCore.ChannelRequestOptions<DH> {
       constructor(private queryer: GroupQueryTransactionsBuilder<DH>) {}
       @cacheGetter
       private get _exm() {
@@ -325,8 +330,14 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
         );
       }
       @bindThis
-      timeoutException(env: BFChainCore.ChannelGroupRequestEnv<DH>) {
+      timeoutException(env: BFChainCore.ChannelRequestEnv<DH>) {
         return this._exm.forceGet(env.chainChannel);
+      }
+      timeout(env: BFChainCore.ChannelRequestEnv<DH>) {
+        return getChainChannelTimeout(env.chainChannel);
+      }
+      get rejected() {
+        return resultPo?.promise;
       }
     }
 
@@ -434,12 +445,12 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
                     times,
                   );
                 }
-                if (times < RETRY_TIMES) {
-                  // 存在异常，重试任务
-                  await doTask(task_offset, times + 1);
-                  return;
-                }
-                throw err;
+                // if (times < RETRY_TIMES) {
+                // 存在异常，重试任务
+                await doTask(task_offset, times + 1);
+                //   return;
+                // }
+                // throw err;
               }
             }, /**默认不释放节点 */ false),
           (err) => waitUseableChainChannel.reject(err),
@@ -474,7 +485,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
    */
   async broadcastTransaction(
     transaction: BFChainCore.NewTransactionArgJSON["transaction"],
-    opts?: BFChainCore.ChannelRequestOptions<DH> & { max_parallel_num?: number },
+    opts?: BFChainCore.ChannelGroupRequestOptions<DH> & { max_parallel_num?: number },
     event?: QueneEventEmitter<BFChainCore.BroadcastNewTransactionEvents<DH>>,
   ) {
     let initedArgs:
@@ -504,11 +515,16 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
         return [];
       }
       const pp = new ParallelPool<void>(opts && opts.max_parallel_num);
+
+      const resultPo = opts && this.helper.parserAborterOptions(opts, { channelGroup: this });
       // 将要广播的节点放置到广播队列中
       for (const chainChannel of chainChannelList) {
         pp.addTaskExecutor(async () => {
           initedArgs ||
-            (initedArgs = await chainChannel.initBroadcastTransactionArg(transaction, opts));
+            (initedArgs = await chainChannel.initBroadcastTransactionArg(transaction, {
+              timeout: (env) => this._getChainChannelTimeout(env.chainChannel),
+              rejected: resultPo?.promise,
+            }));
           let result: BFChainCore.BroadcastNewTransactionEvents<DH>["broadcasted"]["in"];
           try {
             /// 算出相对事件是否满足条件
@@ -563,6 +579,12 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     );
     return resultList;
   }
+  @bindThis
+  private _getChainChannelTimeout(chainChannel: DH, baseTime = 3000) {
+    return (
+      Math.max(Number.isFinite(chainChannel.delay) ? chainChannel.delay : 1000, 2000) + baseTime
+    );
+  }
   /**
    * 查询区块
    */
@@ -582,8 +604,11 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
       this.moduleMap,
       query,
     );
+    const resultPo = opts && this.helper.parserAborterOptions(opts, { channelGroup: this });
 
-    const options: BFChainCore.ChannelGroupRequestOptions<DH> = opts || {};
+    const options = (opts || {
+      rejected: resultPo?.promise,
+    }) as BFChainCore.ChannelRequestOptions<DH>;
     if (options.timeout !== undefined && options.timeoutException === undefined) {
       const exCache = new EasyMap<DH, Error>(
         (cc) =>
@@ -594,6 +619,9 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
       );
       options.timeoutException = (env) => {
         return exCache.forceGet(env.chainChannel);
+      };
+      options.timeout = (env) => {
+        return this._getChainChannelTimeout(env.chainChannel);
       };
     }
     let retryTimes = 0;
@@ -632,7 +660,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
    */
   async broadcastBlock(
     blockInfo: BFChainCore.NewBlockArgJSON,
-    opts?: BFChainCore.ChannelRequestOptions<DH>,
+    opts?: BFChainCore.ChannelGroupRequestOptions<DH>,
   ) {
     let initedArgs:
       | readonly [
@@ -653,9 +681,17 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     } else {
       chainChannelList = [...this.chainChannelSet.values()];
     }
+
+    const resultPo = opts && this.helper.parserAborterOptions(opts, { channelGroup: this });
+
     const resultList = await Promise.all(
       chainChannelList.map((chainChannel) => {
-        initedArgs || (initedArgs = chainChannel.initBroadcastBlockArg(blockInfo, opts));
+        initedArgs ||
+          (initedArgs = chainChannel.initBroadcastBlockArg(blockInfo, {
+            timeout: (env) => this._getChainChannelTimeout(env.chainChannel),
+            rejected: resultPo?.promise,
+          }));
+
         return {
           chainChannel,
           result: chainChannel._requestWithBinaryData(...initedArgs),
