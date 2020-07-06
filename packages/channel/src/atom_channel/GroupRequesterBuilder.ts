@@ -21,7 +21,7 @@ type InQueneResult<R> = PromiseLike<R> & {
   resolved?: boolean;
   rejected?: boolean;
 };
-abstract class GroupRequesterBuilder<CC extends BFChainCore.ChainChannel, R> {
+abstract class GroupRequesterBuilder<CC extends BFChainCore.SimpleChainChannel, R> {
   protected abstract _doRequest(
     cc: CC,
     opts: BFChainCore.ChannelRequestOptions<CC>,
@@ -29,7 +29,7 @@ abstract class GroupRequesterBuilder<CC extends BFChainCore.ChainChannel, R> {
   protected abstract helper: ChainChannelHelper;
   private _aborter = new Aborter();
   private _mixedOpts: BFChainCore.ChannelRequestOptions<CC>;
-  constructor(protected opts?: BFChainCore.ChannelRequestBaseOptions) {
+  constructor(protected opts?: BFChainCore.ChannelRequestBaseOptions<CC>) {
     this._mixedOpts = opts
       ? Object.create(opts, {
           aborter: {
@@ -109,7 +109,7 @@ export const GROUP_QUERY_TRANSACTIONS_BUILDER_ARGS = {
  */
 @Resolvable()
 export class GroupQueryTransactionsBuilder<
-  CC extends BFChainCore.ChainChannel,
+  CC extends BFChainCore.SimpleChainChannel,
   R = BFChainUtil.PromiseReturnType<CC["queryTransactions"]>
 > extends GroupRequesterBuilder<CC, R> {
   @Inject(ChainChannelHelper) protected readonly helper!: ChainChannelHelper;
@@ -119,7 +119,7 @@ export class GroupQueryTransactionsBuilder<
     @Inject(GROUP_QUERY_TRANSACTIONS_BUILDER_ARGS.SORT, { optional: true })
     public readonly sort?: BFChainCore.TransactionSortOptionsJSON,
     @Inject(GROUP_QUERY_TRANSACTIONS_BUILDER_ARGS.OPTIONS, { optional: true })
-    opts?: BFChainCore.ChannelRequestBaseOptions,
+    opts?: BFChainCore.ChannelRequestBaseOptions<CC>,
   ) {
     super(opts);
   }
@@ -140,13 +140,13 @@ export class GroupQueryTransactionsBuilder<
     return { message: "finish queryTransactions from other chainChannel" };
   }
   static create<
-    CC extends BFChainCore.ChainChannel,
+    CC extends BFChainCore.SimpleChainChannel,
     R = BFChainUtil.PromiseReturnType<CC["queryTransactions"]>
   >(
     rootModuleMap: ModuleStroge,
     query: BFChainCore.TransactionQueryOptionsJSON,
     sort?: BFChainCore.TransactionSortOptionsJSON,
-    opts?: BFChainCore.ChannelRequestBaseOptions,
+    opts?: BFChainCore.ChannelRequestBaseOptions<CC>,
   ) {
     return Resolve<GroupQueryTransactionsBuilder<CC, R>>(
       GroupQueryTransactionsBuilder,
@@ -172,7 +172,7 @@ export const GROUP_QUERY_BLOCK_BUILDER_ARGS = {
  */
 @Resolvable()
 export class GroupQueryBlockBuilder<
-  CC extends BFChainCore.ChainChannel,
+  CC extends BFChainCore.SimpleChainChannel,
   R = BFChainUtil.PromiseReturnType<CC["queryBlock"]>
 > extends GroupRequesterBuilder<CC, R> {
   @Inject(ChainChannelHelper) protected readonly helper!: ChainChannelHelper;
@@ -180,7 +180,7 @@ export class GroupQueryBlockBuilder<
     @Inject(GROUP_QUERY_BLOCK_BUILDER_ARGS.QUERY)
     public readonly query: BFChainCore.BlockQueryOptionsJSON,
     @Inject(GROUP_QUERY_BLOCK_BUILDER_ARGS.OPTIONS, { optional: true })
-    opts?: BFChainCore.ChannelRequestBaseOptions,
+    opts?: BFChainCore.ChannelRequestBaseOptions<CC>,
   ) {
     super(opts);
   }
@@ -194,12 +194,12 @@ export class GroupQueryBlockBuilder<
     return { message: "finish queryBlock from other chainChannel" };
   }
   static create<
-    CC extends BFChainCore.ChainChannel,
+    CC extends BFChainCore.SimpleChainChannel,
     R = BFChainUtil.PromiseReturnType<CC["queryBlock"]>
   >(
     rootModuleMap: ModuleStroge,
     query: BFChainCore.BlockQueryOptionsJSON,
-    opts?: BFChainCore.ChannelRequestBaseOptions,
+    opts?: BFChainCore.ChannelRequestBaseOptions<CC>,
   ) {
     return Resolve<GroupQueryTransactionsBuilder<CC, R>>(
       GroupQueryTransactionsBuilder,

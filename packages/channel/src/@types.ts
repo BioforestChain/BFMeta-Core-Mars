@@ -67,27 +67,29 @@ declare namespace BFChainCore {
     // chainChannel: CC;
     channelGroup: ChainChannelGroup<CC>;
   };
-  type ChannelRequestEnv<CC> = {
+  type ChannelRequestEnv<CC extends SimpleChainChannel> = {
     chainChannel: CC;
   };
   type ChannelGroupRequestOptions<CC extends SimpleChainChannel> = AborterOptions<
     ChannelGroupRequestEnv<CC>
   > &
-    ChannelRequestBaseOptions & {
+    ChannelRequestBaseOptions<CC> & {
       abortWhenNoChainChannel?: boolean;
     };
-  type ChannelRequestOptions<CC> = AborterOptions<ChannelRequestEnv<CC>> &
-    ChannelRequestBaseOptions;
+  type ChannelRequestOptions<CC extends SimpleChainChannel> = AborterOptions<
+    ChannelRequestEnv<CC>
+  > &
+    ChannelRequestBaseOptions<CC>;
 
   /**请求的基本可选项 */
-  interface ChannelRequestBaseOptions {
+  interface ChannelRequestBaseOptions<CC extends SimpleChainChannel> {
     /**红包的密码 */
     grabSecret?: string;
     /**节点过滤器 */
-    channelFilter?: ChannelFilter;
+    channelFilter?: ChannelFilter<CC>;
     directAddress?: Set<string>;
   }
-  type ChannelFilter = (channel: BFChainCore.ChainChannel) => boolean;
+  type ChannelFilter<CC extends BFChainCore.SimpleChainChannel> = (channel: CC) => boolean;
   //#endregion
 
   type QueneEventEmitterPro<
@@ -128,9 +130,11 @@ declare namespace BFChainCore {
     queryTransactions(
       query: QueryTransactionArgJSON["query"],
       sort?: QueryTransactionArgJSON["sort"],
+      opts?: ChannelRequestOptions<any>,
     ): Promise<import("@bfchain/core-model").QueryTransactionReturnModel>;
     initBroadcastTransactionArg(
       transaction: NewTransactionArgJSON["transaction"],
+      opts?: ChannelRequestOptions<any>,
     ): Promise<
       readonly [
         import("@bfchain/core-model").DUPLEX_API_CMD.NEW_TRANSACTION,
@@ -138,30 +142,37 @@ declare namespace BFChainCore {
         (
           params: Uint8Array | ArrayBuffer,
         ) => import("@bfchain/core-model").NewTransactionReturnModel,
-        unknown,
+        ChannelRequestOptions<any> | undefined,
       ]
     >;
     /**广播交易体 */
     broadcastTransaction(
       transaction: NewTransactionArgJSON["transaction"],
+      opts?: ChannelRequestOptions<any>,
     ): Promise<import("@bfchain/core-model").NewTransactionReturnModel>;
     /**查询区块 */
     queryBlock<B extends Block = Block>(
       query: QueryBlockArgJSON["query"],
+      opts?: ChannelRequestOptions<any>,
     ): Promise<import("@bfchain/core-model").QueryBlockReturnModel<B>>;
-    findBlock<B extends Block = Block>(query: QueryBlockArgJSON["query"]): Promise<B | undefined>;
+    findBlock<B extends Block = Block>(
+      query: QueryBlockArgJSON["query"],
+      opts?: ChannelRequestOptions<any>,
+    ): Promise<B | undefined>;
     /**广播区块 的传播参数 */
     initBroadcastBlockArg(
       blockInfo: NewBlockArgJSON,
+      opts?: ChannelRequestOptions<any>,
     ): readonly [
       import("@bfchain/core-model").DUPLEX_API_CMD.NEW_BLOCK,
       Uint8Array,
       (params: Uint8Array | ArrayBuffer) => import("@bfchain/core-model").NewBlockReturn,
-      unknown,
+      ChannelRequestOptions<any> | undefined,
     ];
     /**广播区块 */
     broadcastBlock(
       blockInfo: NewBlockArgJSON,
+      opts?: ChannelRequestOptions<any>,
     ): Promise<import("@bfchain/core-model").NewBlockReturn>;
 
     /**处理接收到数据时的响应 */
@@ -171,11 +182,13 @@ declare namespace BFChainCore {
       cmd: import("@bfchain/core-model").DUPLEX_API_CMD,
       binary: Uint8Array,
       ResonseBoxer: (bytes: Uint8Array) => T,
+      opts?: ChannelRequestOptions<any>,
     ): Promise<T>;
   }
 
-  interface ChainChannel extends SimpleChainChannel {
-    defaultReqOptions?: ChannelRequestOptions<this>;
+  interface ChainChannel<THIS extends SimpleChainChannel = SimpleChainChannel>
+    extends SimpleChainChannel {
+    defaultReqOptions?: ChannelRequestOptions<THIS>;
     delay: number;
     /**
      * 与远程节点通道的相对时间差别
@@ -207,11 +220,11 @@ declare namespace BFChainCore {
     queryTransactions(
       query: QueryTransactionArgJSON["query"],
       sort?: QueryTransactionArgJSON["sort"],
-      opts?: ChannelRequestOptions<this>,
+      opts?: ChannelRequestOptions<THIS>,
     ): Promise<import("@bfchain/core-model").QueryTransactionReturnModel>;
     initBroadcastTransactionArg(
       transaction: NewTransactionArgJSON["transaction"],
-      opts?: ChannelRequestOptions<this>,
+      opts?: ChannelRequestOptions<THIS>,
     ): Promise<
       readonly [
         import("@bfchain/core-model").DUPLEX_API_CMD.NEW_TRANSACTION,
@@ -219,37 +232,37 @@ declare namespace BFChainCore {
         (
           params: Uint8Array | ArrayBuffer,
         ) => import("@bfchain/core-model").NewTransactionReturnModel,
-        ChannelRequestOptions<this>,
+        ChannelRequestOptions<THIS> | undefined,
       ]
     >;
     /**广播交易体 */
     broadcastTransaction(
       transaction: NewTransactionArgJSON["transaction"],
-      opts?: ChannelRequestOptions<this>,
+      opts?: ChannelRequestOptions<THIS>,
     ): Promise<import("@bfchain/core-model").NewTransactionReturnModel>;
     /**查询区块 */
     queryBlock<B extends Block = Block>(
       query: QueryBlockArgJSON["query"],
-      opts?: ChannelRequestOptions<this>,
+      opts?: ChannelRequestOptions<THIS>,
     ): Promise<import("@bfchain/core-model").QueryBlockReturnModel<B>>;
     findBlock<B extends Block = Block>(
       query: QueryBlockArgJSON["query"],
-      opts?: ChannelRequestOptions<this>,
+      opts?: ChannelRequestOptions<THIS>,
     ): Promise<B | undefined>;
     /**广播区块 的传播参数 */
     initBroadcastBlockArg(
       blockInfo: NewBlockArgJSON,
-      opts?: ChannelRequestOptions<this>,
+      opts?: ChannelRequestOptions<THIS>,
     ): readonly [
       import("@bfchain/core-model").DUPLEX_API_CMD.NEW_BLOCK,
       Uint8Array,
       (params: Uint8Array | ArrayBuffer) => import("@bfchain/core-model").NewBlockReturn,
-      ChannelRequestOptions<this> | undefined,
+      ChannelRequestOptions<THIS> | undefined,
     ];
     /**广播区块 */
     broadcastBlock(
       blockInfo: NewBlockArgJSON,
-      opts?: ChannelRequestOptions<this>,
+      opts?: ChannelRequestOptions<THIS>,
     ): Promise<import("@bfchain/core-model").NewBlockReturn>;
 
     /**处理接收到数据时的响应 */
@@ -259,7 +272,7 @@ declare namespace BFChainCore {
       cmd: import("@bfchain/core-model").DUPLEX_API_CMD,
       binary: Uint8Array,
       ResonseBoxer: (bytes: Uint8Array) => T,
-      options?: ChannelRequestOptions<this> | undefined,
+      options?: ChannelRequestOptions<THIS> | undefined,
     ): Promise<T>;
   }
 
@@ -272,7 +285,7 @@ declare namespace BFChainCore {
     startParallelTask(
       task_id: string,
       opts?: {
-        channelFilter?: BFChainCore.ChannelFilter;
+        channelFilter?: BFChainCore.ChannelFilter<CC>;
         abortWhenNoChainChannel?: boolean;
       },
     ): {
@@ -343,6 +356,7 @@ declare namespace BFChainCore {
       }[]
     >;
   }
+
   type RequestChainChannelEvent<CC extends SimpleChainChannel = ChainChannel> = {
     chainChannel: CC;
     autoFreeChainChannel: boolean;

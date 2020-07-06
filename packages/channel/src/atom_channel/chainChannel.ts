@@ -103,8 +103,10 @@ const CATCHD_EXCEPTION_WS = new WeakSet<Error>();
  * 为数据收发处理器包装数据处理
  */
 @Resolvable()
-export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainChannel {
-  defaultReqOptions?: BFChainCore.ChannelRequestOptions<this>;
+export class ChainChannel<
+  THIS extends BFChainCore.SimpleChainChannel = BFChainCore.SimpleChainChannel
+> extends ChainChannelBase implements BFChainCore.ChainChannel<THIS> {
+  defaultReqOptions?: BFChainCore.ChannelRequestOptions<THIS>;
   @Inject("bfchain-core:TransactionCore")
   protected transactionCore!: import("@bfchain/core-transaction").TransactionCore;
   @Inject(ChainChannelHelper)
@@ -195,7 +197,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
     cmd: DUPLEX_API_CMD,
     data: Message,
     ResonseBoxer: (bytes: Uint8Array) => BFChainUtil.PromiseMaybe<T>,
-    options?: BFChainCore.ChannelRequestOptions<this>,
+    options?: BFChainCore.ChannelRequestOptions<THIS>,
   ) {
     return this._requestWithBinaryData(cmd, this._requestDataToBinary(data), ResonseBoxer, options);
   }
@@ -226,9 +228,11 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
               });
             },
           },
-        }) as BFChainCore.ChannelRequestOptions<this>;
+        }) as BFChainCore.ChannelRequestOptions<THIS>;
       }
-      resp = this.chainChannelHelper.wrapAborterOptions(resp, options, { chainChannel: this });
+      resp = this.chainChannelHelper.wrapAborterOptions(resp, options, {
+        chainChannel: (this as unknown) as THIS,
+      });
     }
     const res = await ResonseBoxer(await resp);
     //未统计信息创建的钩子
@@ -253,7 +257,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
   async queryTransactions(
     query: BFChainCore.QueryTransactionArgJSON["query"],
     sort?: BFChainCore.QueryTransactionArgJSON["sort"],
-    opts?: BFChainCore.ChannelRequestOptions<this>,
+    opts?: BFChainCore.ChannelRequestOptions<THIS>,
   ) {
     const arg = QueryTransactionArgModel.fromObject({
       query: TransactionQueryOptions.fromObject(query),
@@ -268,7 +272,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
   }
   async initBroadcastTransactionArg(
     transaction: BFChainCore.NewTransactionArgJSON["transaction"],
-    opts: BFChainCore.ChannelRequestOptions<this> = {},
+    opts: BFChainCore.ChannelRequestOptions<THIS> = {},
   ) {
     const arg = NewTransactionArgModel.fromObject({
       transaction:
@@ -296,7 +300,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
   /**广播交易体 */
   async broadcastTransaction(
     transaction: BFChainCore.NewTransactionArgJSON["transaction"],
-    opts?: BFChainCore.ChannelRequestOptions<this>,
+    opts?: BFChainCore.ChannelRequestOptions<THIS>,
   ) {
     const args = await this.initBroadcastTransactionArg(transaction, opts);
 
@@ -319,7 +323,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
   /**查询区块 */
   async queryBlock<B extends Block = Block>(
     query: BFChainCore.QueryBlockArgJSON["query"],
-    opts?: BFChainCore.ChannelRequestOptions<this>,
+    opts?: BFChainCore.ChannelRequestOptions<THIS>,
   ) {
     const arg = QueryBlockArgModel.fromObject({
       query: BlockQueryOptionsModel.fromObject<BlockQueryOptionsModel>(query),
@@ -333,7 +337,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
   }
   async findBlock<B extends Block = Block>(
     query: BFChainCore.QueryBlockArgJSON["query"],
-    opts?: BFChainCore.ChannelRequestOptions<this>,
+    opts?: BFChainCore.ChannelRequestOptions<THIS>,
   ) {
     const queryResult = await this.queryBlock(query, opts);
     return queryResult.someBlock && (queryResult.someBlock.block as B);
@@ -341,7 +345,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
   /**广播区块 的传播参数 */
   initBroadcastBlockArg(
     blockInfo: BFChainCore.NewBlockArgJSON,
-    opts?: BFChainCore.ChannelRequestOptions<this>,
+    opts?: BFChainCore.ChannelRequestOptions<THIS>,
   ) {
     const arg = NewBlockArgModel.fromObject(blockInfo);
     arg.generatorPublicKey = blockInfo.generatorPublicKey;
@@ -355,7 +359,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
   /**广播区块 */
   async broadcastBlock(
     blockInfo: BFChainCore.NewBlockArgJSON,
-    opts?: BFChainCore.ChannelRequestOptions<this>,
+    opts?: BFChainCore.ChannelRequestOptions<THIS>,
   ) {
     const res = await this._requestWithBinaryData(...this.initBroadcastBlockArg(blockInfo, opts));
     success("broadcasted block:", blockInfo.height);

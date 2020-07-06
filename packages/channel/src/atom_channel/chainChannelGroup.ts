@@ -52,7 +52,7 @@ export const CHAIN_CHANNEL_GROUP_ARGS = {
  * 批量双工通讯管理器
  */
 @Resolvable()
-export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChannel>
+export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = ChainChannel>
   extends ChainChannelBase
   implements BFChainCore.ChainChannelGroup<DH>, AfterInit {
   bfAfterInit() {
@@ -119,7 +119,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
   startParallelTask(
     task_id: string,
     opts: {
-      channelFilter?: BFChainCore.ChannelFilter;
+      channelFilter?: BFChainCore.ChannelFilter<DH>;
       abortWhenNoChainChannel?: boolean;
     } = {},
   ) {
@@ -305,7 +305,11 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
       abortWhenNoChainChannel: opts?.abortWhenNoChainChannel,
     });
 
-    const resultPo = opts && this.helper.parserAborterOptions(opts, { channelGroup: this });
+    const resultPo =
+      opts &&
+      this.helper.parserAborterOptions(opts, {
+        channelGroup: this as BFChainCore.ChainChannelGroup<DH>,
+      });
 
     const resultGenerator = _resultGenerator || new AsyncIteratorGenerator<TransactionInBlock>();
 
@@ -493,7 +497,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
           DUPLEX_API_CMD,
           Uint8Array,
           (params: Uint8Array | ArrayBuffer) => NewTransactionReturnModel,
-          BFChainCore.ChannelRequestOptions<DH>,
+          BFChainCore.ChannelRequestOptions<DH> | undefined,
         ]
       | undefined;
     const startTime = this.timeHelper.now();
