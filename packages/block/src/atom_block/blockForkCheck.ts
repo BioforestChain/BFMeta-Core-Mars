@@ -70,7 +70,7 @@ export class BlockForkChecker {
    * @param chainChannel_or_Group
    * @param blockGetterHelper1
    */
-  async checkNewBlockFromChainChannel<CC extends BFChainCore.ChainChannel>(
+  async checkNewBlockFromChainChannel<CC extends BFChainCore.SimpleChainChannel>(
     /**
      * 收到的新区块
      */

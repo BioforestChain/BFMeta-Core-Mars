@@ -20,7 +20,7 @@ export class ChannelCore {
   }
   private _groupNameAcc = 1;
   /**传入一组双工通讯的链接，返回一个批量双工通讯管理器 */
-  groupChannel<DH extends BFChainCore.ChainChannel = ChainChannel>(
+  groupChannel<DH extends BFChainCore.SimpleChainChannel = ChainChannel>(
     chainChannelList: Iterable<DH>,
     groupName = `G${this._groupNameAcc++}`,
   ) {
