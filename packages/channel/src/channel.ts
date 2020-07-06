@@ -7,9 +7,9 @@ import { CHANNEL_ARGS } from "@bfchain/core-model-constants";
 export class ChannelCore {
   constructor(public moduleMap: ModuleStroge) {}
   /**传入事件监听器，返回封装过的双工通讯 */
-  registryChannel<T extends ChainChannel>(
+  registryChannel<T extends BFChainCore.SimpleChainChannel>(
     channelEndpoint: BFChainCore.ChannelEndpointInterface,
-    CustomChainChannel = ChainChannel as BFChainUtil.Constructor<T>,
+    CustomChainChannel = (ChainChannel as unknown) as BFChainUtil.Constructor<T>,
     moduleMap = this.moduleMap,
   ) {
     const chainChannel = Resolve(
