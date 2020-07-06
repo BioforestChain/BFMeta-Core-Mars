@@ -45,9 +45,10 @@ const {
   success,
 } = CoreExceptionGenerator("channel", "chainChannel");
 
-export abstract class ChainChannelBase extends QueneEventEmitterPro<
-  BFChainCore.ChainChannelHanlderEventMap
-> {
+export abstract class ChainChannelBase
+  extends QueneEventEmitterPro<BFChainCore.ChainChannelHanlderEventMap>
+  implements BFChainCore.ChainChannelBase {
+  public abstract maybeHeight: number;
   protected abstract config: ConfigHelper;
   protected abstract baseHelper: BaseHelper;
   private _blockGetterHelper?: BFChainCore.BlockGetterHelperSimpleInterface & {
@@ -56,7 +57,6 @@ export abstract class ChainChannelBase extends QueneEventEmitterPro<
   };
   abstract findBlock<B extends Block = Block>(
     query: BFChainCore.BlockQueryOptionsJSON,
-    opts?: BFChainCore.ChannelRequestOptions | undefined,
   ): Promise<B | undefined>;
 
   /**
@@ -95,7 +95,6 @@ export abstract class ChainChannelBase extends QueneEventEmitterPro<
     }
     return this._blockGetterHelper;
   }
-  defaultReqOptions?: BFChainCore.ChannelRequestOptions;
 }
 
 const CATCHD_EXCEPTION_WS = new WeakSet<Error>();
@@ -105,6 +104,7 @@ const CATCHD_EXCEPTION_WS = new WeakSet<Error>();
  */
 @Resolvable()
 export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainChannel {
+  defaultReqOptions?: BFChainCore.ChannelRequestOptions<this>;
   @Inject("bfchain-core:TransactionCore")
   protected transactionCore!: import("@bfchain/core-transaction").TransactionCore;
   @Inject(ChainChannelHelper)
@@ -195,38 +195,12 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
     cmd: DUPLEX_API_CMD,
     data: Message,
     ResonseBoxer: (bytes: Uint8Array) => BFChainUtil.PromiseMaybe<T>,
-    options?: BFChainCore.ChannelRequestOptions,
+    options?: BFChainCore.ChannelRequestOptions<this>,
   ) {
     return this._requestWithBinaryData(cmd, this._requestDataToBinary(data), ResonseBoxer, options);
   }
   private _requestDataToBinary(data: Message) {
     return new Uint8Array((data.constructor as typeof Message).encode(data).finish());
-  }
-  private _aborterParser(
-    options: BFChainCore.ChannelRequestAborterOptions,
-    resp: Promise<Uint8Array>,
-    cmd: DUPLEX_API_CMD,
-  ) {
-    let aborter = options.aborter;
-    if (this.baseHelper.isPositiveFloatNotContainZero(options.timeout)) {
-      const ab = aborter || (aborter = new Aborter());
-      const timeoutTask = sleep(options.timeout, () => {
-        ab.abort(
-          options.timeoutException ||
-            new TimeOutException(`ChainChannel Timeout: cmd:{cmd}`, {
-              endpoint: this.endpoint,
-              cmd: DUPLEX_API_CMD[cmd],
-            }),
-        );
-      });
-      resp = resp.finally(() => {
-        unsleep(timeoutTask);
-      });
-    }
-    if (aborter) {
-      resp = aborter.wrapAsync(resp);
-    }
-    return resp;
   }
   async _requestWithBinaryData<T>(
     cmd: DUPLEX_API_CMD,
@@ -242,7 +216,19 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
     let resp = req_task.promise;
 
     if (options) {
-      resp = this._aborterParser(options, resp, cmd);
+      if (options.timeoutException === undefined) {
+        options = Object.create(options, {
+          timeoutException: {
+            get() {
+              return new TimeOutException(`ChainChannel Timeout: cmd:{cmd}`, {
+                endpoint: this.endpoint,
+                cmd: DUPLEX_API_CMD[cmd],
+              });
+            },
+          },
+        }) as BFChainCore.ChannelRequestOptions<this>;
+      }
+      resp = this.chainChannelHelper.wrapAborterOptions(resp, options, { chainChannel: this });
     }
     const res = await ResonseBoxer(await resp);
     //未统计信息创建的钩子
@@ -267,7 +253,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
   async queryTransactions(
     query: BFChainCore.QueryTransactionArgJSON["query"],
     sort?: BFChainCore.QueryTransactionArgJSON["sort"],
-    opts?: BFChainCore.ChannelRequestOptions,
+    opts?: BFChainCore.ChannelRequestOptions<this>,
   ) {
     const arg = QueryTransactionArgModel.fromObject({
       query: TransactionQueryOptions.fromObject(query),
@@ -282,7 +268,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
   }
   async initBroadcastTransactionArg(
     transaction: BFChainCore.NewTransactionArgJSON["transaction"],
-    opts: BFChainCore.ChannelRequestOptions = {},
+    opts: BFChainCore.ChannelRequestOptions<this> = {},
   ) {
     const arg = NewTransactionArgModel.fromObject({
       transaction:
@@ -310,7 +296,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
   /**广播交易体 */
   async broadcastTransaction(
     transaction: BFChainCore.NewTransactionArgJSON["transaction"],
-    opts?: BFChainCore.ChannelRequestOptions,
+    opts?: BFChainCore.ChannelRequestOptions<this>,
   ) {
     const args = await this.initBroadcastTransactionArg(transaction, opts);
 
@@ -333,7 +319,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
   /**查询区块 */
   async queryBlock<B extends Block = Block>(
     query: BFChainCore.QueryBlockArgJSON["query"],
-    opts?: BFChainCore.ChannelRequestOptions,
+    opts?: BFChainCore.ChannelRequestOptions<this>,
   ) {
     const arg = QueryBlockArgModel.fromObject({
       query: BlockQueryOptionsModel.fromObject<BlockQueryOptionsModel>(query),
@@ -346,15 +332,16 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
     ) as Promise<QueryBlockReturnModel<B>>;
   }
   async findBlock<B extends Block = Block>(
-    ...args: BFChainUtil.AllArgument<BFChainCore.ChainChannel["queryBlock"]>
+    query: BFChainCore.QueryBlockArgJSON["query"],
+    opts?: BFChainCore.ChannelRequestOptions<this>,
   ) {
-    const queryResult = await this.queryBlock(...args);
+    const queryResult = await this.queryBlock(query, opts);
     return queryResult.someBlock && (queryResult.someBlock.block as B);
   }
   /**广播区块 的传播参数 */
   initBroadcastBlockArg(
     blockInfo: BFChainCore.NewBlockArgJSON,
-    opts?: BFChainCore.ChannelRequestOptions,
+    opts?: BFChainCore.ChannelRequestOptions<this>,
   ) {
     const arg = NewBlockArgModel.fromObject(blockInfo);
     arg.generatorPublicKey = blockInfo.generatorPublicKey;
@@ -368,7 +355,7 @@ export class ChainChannel extends ChainChannelBase implements BFChainCore.ChainC
   /**广播区块 */
   async broadcastBlock(
     blockInfo: BFChainCore.NewBlockArgJSON,
-    opts?: BFChainCore.ChannelRequestOptions,
+    opts?: BFChainCore.ChannelRequestOptions<this>,
   ) {
     const res = await this._requestWithBinaryData(...this.initBroadcastBlockArg(blockInfo, opts));
     success("broadcasted block:", blockInfo.height);

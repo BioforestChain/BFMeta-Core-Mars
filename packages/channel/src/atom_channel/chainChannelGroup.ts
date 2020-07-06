@@ -14,6 +14,7 @@ import {
   AfterInit,
   EasyMap,
   cacheObjectGetter,
+  ModuleStroge,
 } from "@bfchain/util";
 import { BaseHelper, ChainTimeHelper, ConfigHelper, TransactionHelper } from "@bfchain/core-helper";
 import {
@@ -22,6 +23,10 @@ import {
   RESPONSE_STATUS,
   TransactionInBlock,
   NewBlockArgModel,
+  DUPLEX_API_CMD,
+  NewBlockReturn,
+  NewTransactionReturnModel,
+  QueryBlockReturnModel,
 } from "@bfchain/core-model";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 import { ChainChannel, ChainChannelBase } from "./chainChannel";
@@ -52,6 +57,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
   bfAfterInit() {
     this._initMaybeHeightWatcher();
   }
+  @Inject(ModuleStroge) private moduleMap!: ModuleStroge;
   @Inject(BaseHelper) protected baseHelper!: BaseHelper;
   @Inject(ConfigHelper) protected config!: ConfigHelper;
   @Inject(ChainTimeHelper) private timeHelper!: ChainTimeHelper;
@@ -281,7 +287,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
   queryTransactions(
     query: BFChainUtil.FirstArgument<DH["queryTransactions"]>,
     sort?: BFChainUtil.SecondArgument<DH["queryTransactions"]>,
-    opts?: BFChainCore.ChannelGroupRequestOptions,
+    opts?: BFChainCore.ChannelGroupRequestOptions<DH>,
     _resultGenerator?: AsyncIteratorGenerator<TransactionInBlock>,
   ) {
     /**异常时重试次数 */
@@ -319,8 +325,8 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
         );
       }
       @bindThis
-      timeoutException(cc: DH) {
-        return this._exm.forceGet(cc);
+      timeoutException(env: BFChainCore.ChannelGroupRequestEnv<DH>) {
+        return this._exm.forceGet(env.chainChannel);
       }
     }
 
@@ -334,7 +340,8 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     >({
       transformKey: (query) => `${query.offset}-${query.limit}`,
       creater: (query) => {
-        const queryer = new GroupQueryTransactionsBuilder<DH>(
+        const queryer = GroupQueryTransactionsBuilder.create<DH>(
+          this.moduleMap,
           { ...baseQueryCondition, ...query },
           sort,
           opts,
@@ -467,12 +474,17 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
    */
   async broadcastTransaction(
     transaction: BFChainCore.NewTransactionArgJSON["transaction"],
-    opts?: BFChainCore.ChannelRequestOptions & { max_parallel_num?: number },
+    opts?: BFChainCore.ChannelRequestOptions<DH> & { max_parallel_num?: number },
     event?: QueneEventEmitter<BFChainCore.BroadcastNewTransactionEvents<DH>>,
   ) {
     let initedArgs:
-      | undefined
-      | BFChainUtil.PromiseReturnType<ChainChannel["initBroadcastTransactionArg"]>;
+      | readonly [
+          DUPLEX_API_CMD,
+          Uint8Array,
+          (params: Uint8Array | ArrayBuffer) => NewTransactionReturnModel,
+          BFChainCore.ChannelRequestOptions<DH>,
+        ]
+      | undefined;
     const startTime = this.timeHelper.now();
     const resultList = [] as BFChainCore.BroadcastNewTransactionEvents<DH>["broadcasted"]["in"][];
     try {
@@ -554,9 +566,9 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
   /**
    * 查询区块
    */
-  async queryBlock(
-    query: BFChainUtil.FirstArgument<DH["queryBlock"]>,
-    opts?: BFChainCore.ChannelGroupRequestOptions,
+  async queryBlock<B extends Block = CommonBlock>(
+    query: BFChainCore.QueryBlockArgJSON["query"],
+    opts?: BFChainCore.ChannelGroupRequestOptions<DH>,
   ) {
     const parallelTaskId = `Group(${this.groupName}) queryBlock-${Date.now() + Math.random()}`;
     const { requestChainChannel } = this.startParallelTask(parallelTaskId, {
@@ -566,26 +578,26 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
 
     const RETRY_TIMES = 5;
 
-    const queryer = new GroupQueryBlockBuilder<DH>(query, opts);
-    const exCache = cacheObjectGetter({
-      get em() {
-        return new EasyMap<DH, Error>(
-          (cc) =>
-            new TimeOutException("peer({peerId}) queryBlock({query}) timeout.", {
-              query: JSON.stringify(queryer.query),
-              peerId: cc.address,
-            }),
-        );
-      },
-    });
-    const options = {
-      _exm: undefined as Error | undefined,
-      timeoutException(cc: DH) {
-        return exCache.em.forceGet(cc);
-      },
-    };
+    const queryer = GroupQueryBlockBuilder.create<DH, QueryBlockReturnModel<B>>(
+      this.moduleMap,
+      query,
+    );
+
+    const options: BFChainCore.ChannelGroupRequestOptions<DH> = opts || {};
+    if (options.timeout !== undefined && options.timeoutException === undefined) {
+      const exCache = new EasyMap<DH, Error>(
+        (cc) =>
+          new TimeOutException("peer({peerId}) queryBlock({query}) timeout.", {
+            query: JSON.stringify(queryer.query),
+            peerId: cc.address,
+          }),
+      );
+      options.timeoutException = (env) => {
+        return exCache.forceGet(env.chainChannel);
+      };
+    }
     let retryTimes = 0;
-    let result: BFChainUtil.PromiseType<ReturnType<DH["queryBlock"]>> | undefined;
+    let result: QueryBlockReturnModel<B> | undefined;
     do {
       await requestChainChannel(async (event) => {
         try {
@@ -609,17 +621,27 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     return result;
   }
   async findBlock<B extends Block = CommonBlock>(
-    ...args: BFChainUtil.AllArgument<ChainChannelGroup<DH>["queryBlock"]>
+    query: BFChainCore.QueryBlockArgJSON["query"],
+    opts?: BFChainCore.ChannelGroupRequestOptions<DH>,
   ) {
-    const queryResult = await this.queryBlock(...args);
-    return queryResult.someBlock && (queryResult.someBlock.block as B);
+    const queryResult = await this.queryBlock<B>(query, opts);
+    return queryResult.someBlock && queryResult.someBlock.block;
   }
   /**
    * 广播区块
    */
-  async broadcastBlock(...args: BFChainUtil.AllArgument<ChainChannel["broadcastBlock"]>) {
-    let initedArgs: undefined | ReturnType<ChainChannel["initBroadcastBlockArg"]>;
-    const opts = args[1];
+  async broadcastBlock(
+    blockInfo: BFChainCore.NewBlockArgJSON,
+    opts?: BFChainCore.ChannelRequestOptions<DH>,
+  ) {
+    let initedArgs:
+      | readonly [
+          DUPLEX_API_CMD,
+          Uint8Array,
+          (params: Uint8Array | ArrayBuffer) => NewBlockReturn,
+          BFChainCore.ChannelRequestOptions<DH> | undefined,
+        ]
+      | undefined;
     let chainChannelList: DH[] = [];
     if (opts && opts.directAddress && opts.directAddress.size > 0) {
       const directAddress = opts.directAddress;
@@ -633,7 +655,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     }
     const resultList = await Promise.all(
       chainChannelList.map((chainChannel) => {
-        initedArgs || (initedArgs = chainChannel.initBroadcastBlockArg(...args));
+        initedArgs || (initedArgs = chainChannel.initBroadcastBlockArg(blockInfo, opts));
         return {
           chainChannel,
           result: chainChannel._requestWithBinaryData(...initedArgs),
@@ -660,7 +682,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     (successCount > 0 ? success : error)(
       "chainChannelGroup(%s) broadcasted Block(%d), successed: %d, fail: %d",
       this.groupName,
-      args[0].height,
+      blockInfo.height,
       successCount,
       errorCount,
     );
