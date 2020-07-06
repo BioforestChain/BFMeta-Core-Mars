@@ -47,7 +47,7 @@ abstract class GroupRequesterBuilder<CC extends BFChainCore.ChainChannel, R> {
 
   addChainChannel(
     chainChannel: CC,
-    options?: BFChainCore.AborterOptions<BFChainCore.ChannelGroupRequestEnv<CC>>,
+    options?: BFChainCore.AborterOptions<BFChainCore.ChannelRequestEnv<CC>>,
   ): Promise<R> {
     this._inQueneTasks.forceGet(chainChannel);
     return this.helper.wrapAborterOptions(

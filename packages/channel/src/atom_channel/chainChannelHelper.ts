@@ -30,6 +30,7 @@ import {
   AccountBaseHelper,
   TransactionHelper,
   BlockHelper,
+  ChainTimeHelper,
 } from "@bfchain/core-helper";
 
 const {
@@ -45,6 +46,7 @@ export class ChainChannelHelper {
     private accountBaseHelper: AccountBaseHelper,
     private transctionHelper: TransactionHelper,
     private blockHelper: BlockHelper,
+    private timeHelper: ChainTimeHelper,
   ) {}
   /**
    * 生成并校验交易查询的传入参数
@@ -594,9 +596,30 @@ export class ChainChannelHelper {
       po || (po = new PromiseOut<R>());
       options.aborter.abortedPromise.catch(po.reject);
     }
-    if (this.baseHelper.isPositiveFloatNotContainZero(options.timeout)) {
+
+    //#region 处理超时问题
+
+    let sleepTime: number | undefined;
+    /// 超时
+    if (options.timeout !== undefined) {
+      sleepTime = typeof options.timeout === "function" ? options.timeout(env) : options.timeout;
+    }
+    /// 截止
+    if (options.deadlineTime !== undefined) {
+      const now = this.timeHelper.now();
+      const diffTime = options.deadlineTime - now;
+      if (sleepTime) {
+        if (diffTime < sleepTime) {
+          sleepTime = diffTime;
+        }
+      } else {
+        sleepTime = diffTime;
+      }
+    }
+    /// 进行setTimeout等待
+    if (sleepTime !== undefined) {
       const { reject } = po || (po = new PromiseOut<R>());
-      const timeoutTask = sleep(options.timeout, () =>
+      const timeoutTask = sleep(sleepTime, () =>
         reject(
           typeof options.timeoutException === "function"
             ? options.timeoutException(env)
@@ -606,6 +629,8 @@ export class ChainChannelHelper {
       /// 这里使用finally，意味着就即便异常不是来自于timeout，也能正确销毁timeout
       po.promise.finally(() => unsleep(timeoutTask));
     }
+    //#endregion
+
     if (options.rejected) {
       po || (po = new PromiseOut<R>());
       options.rejected.catch(po.reject);

@@ -51,24 +51,32 @@ declare namespace BFChainCore {
   type AborterOptions<ENV = undefined> = {
     /**禁用下面的所有关于aborter的项 */
     disabledAborterOptions?: boolean;
+    /**最终时间 */
+    deadlineTime?: number;
     /**超时 */
-    timeout?: number;
+    timeout?: number | ((env: ENV) => number);
     /**自定义超时的异常 */
     timeoutException?: Error | string | ((env: ENV) => Error);
     /**主动中断信号 */
     aborter?: BFChainUtil.Aborter;
     /**主动中断的promise */
-    rejected?: Promise<never>;
+    rejected?: Promise<unknown>;
   };
 
-  type ChannelGroupRequestEnv<CC> = {
+  type ChannelGroupRequestEnv<CC extends ChainChannel> = {
+    // chainChannel: CC;
+    channelGroup: ChainChannelGroup<CC>;
+  };
+  type ChannelRequestEnv<CC> = {
     chainChannel: CC;
   };
-  type ChannelGroupRequestOptions<CC> = AborterOptions<ChannelGroupRequestEnv<CC>> &
+  type ChannelGroupRequestOptions<CC extends ChainChannel> = AborterOptions<
+    ChannelGroupRequestEnv<CC>
+  > &
     ChannelRequestBaseOptions & {
       abortWhenNoChainChannel?: boolean;
     };
-  type ChannelRequestOptions<CC> = AborterOptions<ChannelGroupRequestEnv<CC>> &
+  type ChannelRequestOptions<CC> = AborterOptions<ChannelRequestEnv<CC>> &
     ChannelRequestBaseOptions;
 
   /**请求的基本可选项 */
@@ -206,7 +214,7 @@ declare namespace BFChainCore {
     queryTransactions(
       query: QueryTransactionArgJSON["query"],
       sort?: QueryTransactionArgJSON["sort"],
-      opts?: ChannelRequestOptions<CC>,
+      opts?: ChannelGroupRequestOptions<CC>,
       _resultGenerator?: import("@bfchain/util").AsyncIteratorGenerator<TransactionInBlock>,
     ): import("@bfchain/util").AsyncIteratorGenerator<TransactionInBlock>;
     /**
@@ -214,7 +222,7 @@ declare namespace BFChainCore {
      */
     broadcastTransaction(
       transaction: NewTransactionArgJSON["transaction"],
-      opts?: ChannelRequestOptions<CC> & {
+      opts?: ChannelGroupRequestOptions<CC> & {
         max_parallel_num?: number;
       },
       event?: BFChainUtil.QueneEventEmitter<BroadcastNewTransactionEvents<CC>>,
@@ -237,18 +245,18 @@ declare namespace BFChainCore {
      */
     queryBlock<B extends Block = Block>(
       query: QueryBlockArgJSON["query"],
-      opts?: ChannelRequestOptions<CC>,
+      opts?: ChannelGroupRequestOptions<CC>,
     ): Promise<import("@bfchain/core-model").QueryBlockReturnModel<B>>;
     findBlock<B extends Block = Block>(
       query: QueryBlockArgJSON["query"],
-      opts?: ChannelRequestOptions<CC>,
+      opts?: ChannelGroupRequestOptions<CC>,
     ): Promise<B | undefined>;
     /**
      * 广播区块
      */
     broadcastBlock(
       blockInfo: NewBlockArgJSON,
-      opts?: ChannelRequestOptions<CC>,
+      opts?: ChannelGroupRequestOptions<CC>,
     ): Promise<
       {
         chainChannel: CC;
