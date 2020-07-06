@@ -16,7 +16,11 @@ const { AbortException, TimeOutException } = CoreExceptionGenerator("channel", "
 export const GROUP_REQUESTER_BUILDER_ARGS = {
   OPTIONS: Symbol("options"),
 };
-
+type InQueneResult<R> = PromiseLike<R> & {
+  finished?: boolean;
+  resolved?: boolean;
+  rejected?: boolean;
+};
 abstract class GroupRequesterBuilder<CC extends BFChainCore.ChainChannel, R> {
   protected abstract _doRequest(
     cc: CC,
@@ -35,13 +39,21 @@ abstract class GroupRequesterBuilder<CC extends BFChainCore.ChainChannel, R> {
       : { aborter: this._aborter };
   }
   private _inQueneTasks = new EasyMap<CC, PromiseLike<R>>((cc) => {
-    return this._doRequest(cc, this._mixedOpts).then((ret) => {
-      if (this._inQueneTasks.has(cc)) {
-        /// 可能被移除了
-        this._retCCMap.set(ret, cc);
-      }
-      return ret;
-    });
+    const result: InQueneResult<R> = this._doRequest(cc, this._mixedOpts).then(
+      (ret) => {
+        result.resolved = result.finished = true;
+        if (this._inQueneTasks.has(cc)) {
+          /// 可能被移除了
+          this._retCCMap.set(ret, cc);
+        }
+        return ret;
+      },
+      (reason) => {
+        result.rejected = result.finished = true;
+        throw reason;
+      },
+    );
+    return result;
   });
   private _retCCMap = new Map<R, CC>();
 
