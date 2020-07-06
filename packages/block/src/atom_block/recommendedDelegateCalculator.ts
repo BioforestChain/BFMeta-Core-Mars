@@ -291,7 +291,12 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     const votArray = sortByVote.splice(0, votNum).map((account) => account.address);
     // 获取 n 个 新受托人账户
     const newDelegates = await accountGetterHelper.getNewDelegates(newNum, currentBlockHeight);
-    const newArray = newDelegates.map((delegate) => delegate.address);
+    const newArray: string[] = [];
+    for (const delegate of newDelegates) {
+      if (delegate.isAcceptVote) {
+        newArray[newArray.length] = delegate.address;
+      }
+    }
     // 乱序
     this.forgingDelegates.delegates = this.hybridArray(
       pdtArray,
