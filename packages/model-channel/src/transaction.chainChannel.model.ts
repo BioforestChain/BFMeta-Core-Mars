@@ -61,6 +61,9 @@ export class TransactionQueryOptions extends Message<TransactionQueryOptions>
   /**购买的 dappid */
   @Field.d(TransactionQueryOptions.INC++, "string", "optional")
   purchaseDAppid?: string;
+  /**购买的 dappid */
+  @Field.d(TransactionQueryOptions.INC++, "string", "optional")
+  range?: string;
   /**查询结果分页：起始下标 */
   @Field.d(TransactionQueryOptions.INC++, "uint32")
   offset!: number;
@@ -78,23 +81,24 @@ export class TransactionQueryOptions extends Message<TransactionQueryOptions>
     return (res as unknown) as T;
   }
   toJSON() {
-    return {
-      type: this.type,
-      signature: this.signature,
-      senderId: this.senderId,
-      recipientId: this.recipientId,
-      dappid: this.dappid,
-      lns: this.lns,
-      storage: this.storage,
-      blockSignature: this.blockSignature,
-      minHeight: this.minHeight,
-      maxHeight: this.maxHeight,
-      numberOfSenderTransactions: this.numberOfSenderTransactions,
-      trusteeId: this.trusteeId,
-      purchaseDAppid: this.purchaseDAppid,
-      offset: this.offset,
-      limit: this.limit,
-    };
+    const res: BFChainCore.TransactionQueryOptionsJSON = { offset: this.offset };
+    this.type && (res.type = this.type);
+    this.signature && (res.signature = this.signature);
+    this.senderId && (res.senderId = this.senderId);
+    this.recipientId && (res.recipientId = this.recipientId);
+    this.dappid && (res.dappid = this.dappid);
+    this.lns && (res.lns = this.lns);
+    this.storage && (res.storage = this.storage);
+    this.blockSignature && (res.blockSignature = this.blockSignature);
+    this.minHeight && (res.minHeight = this.minHeight);
+    this.maxHeight && (res.maxHeight = this.maxHeight);
+    this.numberOfSenderTransactions &&
+      (res.numberOfSenderTransactions = this.numberOfSenderTransactions);
+    this.trusteeId && (res.trusteeId = this.trusteeId);
+    this.purchaseDAppid && (res.purchaseDAppid = this.purchaseDAppid);
+    this.range && (res.range = this.range);
+    this.offset && (res.offset = this.offset);
+    return res;
   }
 }
 

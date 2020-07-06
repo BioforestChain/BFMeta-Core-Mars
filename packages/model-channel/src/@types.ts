@@ -47,6 +47,8 @@ declare namespace BFChainCore {
     trusteeId?: string;
     /**购买的 dappid */
     purchaseDAppid?: string;
+    /**交易的范围 */
+    range?: string;
     /**查询结果分页：起始下标 */
     offset: number;
     /**查询结果分页：返回数量， */

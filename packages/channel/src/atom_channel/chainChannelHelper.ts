@@ -79,6 +79,7 @@ export class ChainChannelHelper {
       numberOfSenderTransactions,
       trusteeId,
       purchaseDAppid,
+      range,
       offset,
       limit,
     } = arg.query;
@@ -146,7 +147,6 @@ export class ChainChannelHelper {
         });
       }
     }
-
     if (blockSignature) {
       has_query_params = true;
       if (!BH.isValidBlockSignature(blockSignature)) {
@@ -183,7 +183,6 @@ export class ChainChannelHelper {
         });
       }
     }
-
     if (trusteeId) {
       has_query_params = true;
       if (!(await this.accountBaseHelper.isAddress(trusteeId))) {
@@ -199,6 +198,15 @@ export class ChainChannelHelper {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.query",
           field: "purchaseDAppid",
+        });
+      }
+    }
+    if (range) {
+      has_query_params = true;
+      if (!BH.isString(range)) {
+        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+          function: "boxQueryTransactionArg.query",
+          field: "range",
         });
       }
     }

@@ -11,7 +11,6 @@ import {
   QueryTransactionArgModel,
   TransactionSortOptions,
   NewTransactionArgModel,
-  GetPeerInfoArgModel,
   GetPeerInfoReturnModel,
   QueryTransactionReturnModel,
   ErrorMessage,
@@ -43,9 +42,6 @@ const {
   NoFoundException,
   error,
   TimeOutException,
-  ConsensusException,
-  log,
-  info,
   success,
 } = CoreExceptionGenerator("channel", "chainChannel");
 
