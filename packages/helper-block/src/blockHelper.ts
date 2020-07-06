@@ -336,7 +336,7 @@ export class BlockHelper {
     }
   }
   async getCurrentReplayingBlockInfo<
-    CC extends BFChainCore.ChainChannel = BFChainCore.ChainChannel
+    CC extends BFChainCore.SimpleChainChannel = BFChainCore.SimpleChainChannel
   >(
     blockGetterHelper:
       | Pick<BFChainCore.BlockGetterHelperInterface<CC>, "getCurrentReplayingBlockInfo">

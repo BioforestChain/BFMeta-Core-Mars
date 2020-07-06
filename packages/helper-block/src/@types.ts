@@ -33,7 +33,7 @@ declare namespace BFChainCore {
     getVoteRecords?(): Promise<VoteRecord>;
     getBlocksByRange?(minHeight: number, maxHeight: number): Promise<Block[]>;
   }
-  interface BlockGetterHelperInterface<CC extends ChainChannel = ChainChannel>
+  interface BlockGetterHelperInterface<CC extends SimpleChainChannel = SimpleChainChannel>
     extends BlockGetterHelperSimpleInterface {
     getCurrentReplayingBlockInfo?(): Promise<CurrentReplayingBlockInfo<CC> | undefined>;
   }
@@ -58,7 +58,7 @@ declare namespace BFChainCore {
     replayingBlock?: Block;
     blockGetterHelper: BlockGetterHelperSimpleInterface;
   };
-  type CurrentReplayingBlockInfo<CC extends ChainChannel> = CurrentReplayingBlockSimpleInfo & {
+  type CurrentReplayingBlockInfo<CC extends SimpleChainChannel> = CurrentReplayingBlockSimpleInfo & {
     blockGetterHelper: BlockGetterHelperInterface<CC>;
     chainChannelGroup?: ChainChannelGroup<CC>;
   };
@@ -124,7 +124,7 @@ declare namespace BFChainCore {
 
   //#region ChainChannel Base Interface
 
-  interface ChainChannelGroup<CC extends ChainChannel> {
+  interface ChainChannelGroup<CC extends SimpleChainChannel> {
     include(chainChannel: CC): boolean;
     size: number;
     [Symbol.iterator](): IterableIterator<CC>;
@@ -134,7 +134,7 @@ declare namespace BFChainCore {
     destroy(): void;
   }
 
-  interface ChainChannel {
+  interface SimpleChainChannel {
     endpoint: BFChainCore.ChannelEndpointInterface<Uint8Array>;
     close(reason?: string | undefined): void;
   }
