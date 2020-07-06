@@ -115,12 +115,13 @@ export class ReplayBlockCore<T extends Block> {
     }
 
     isDevGenerateBlock && log("before replayBlock");
-    eventEmitter &&  (await this._wrapBlockError(
-      eventEmitter.emit("beforeGenerateBlock", block),
-      eventEmitter,
-      "beforeGenerateBlock",
-      block,
-    ));
+    eventEmitter &&
+      (await this._wrapBlockError(
+        eventEmitter.emit("beforeGenerateBlock", block),
+        eventEmitter,
+        "beforeGenerateBlock",
+        block,
+      ));
 
     if (block.height > 1) {
       const realRoundOfflineGeneratersHashMap = block.roundOfflineGeneratersHashMap;
@@ -167,7 +168,7 @@ export class ReplayBlockCore<T extends Block> {
       const {
         address: calcGeneratorAddress,
         roundOfflineGeneratersReadonlyMap: calcRoundOfflineGeneratersReadonlyMap,
-      } = await await this.blockGeneratorCalculator.calcGenerateBlockDelegate(lastBlock, {
+      } = await this.blockGeneratorCalculator.calcGenerateBlockDelegate(lastBlock, {
         toTimestamp: block.timestamp,
       });
 

@@ -47,21 +47,30 @@ declare namespace BFChainCore {
       out: GetPeerInfoReturnParams | undefined;
     };
   };
-  interface ChannelGroupRequestOptions
-    extends ChannelRequestAborterOptions,
-      ChannelRequestBaseOptions {
-    abortWhenNoChainChannel?: boolean;
-  }
-  interface ChannelRequestOptions extends ChannelRequestAborterOptions, ChannelRequestBaseOptions {}
   /**请求中断器 */
-  interface ChannelRequestAborterOptions {
+  type AborterOptions<ENV = undefined> = {
+    /**禁用下面的所有关于aborter的项 */
+    disabledAborterOptions?: boolean;
     /**超时 */
     timeout?: number;
     /**自定义超时的异常 */
-    timeoutException?: unknown;
+    timeoutException?: Error | string | ((env: ENV) => Error);
     /**主动中断信号 */
     aborter?: BFChainUtil.Aborter;
-  }
+    /**主动中断的promise */
+    rejected?: Promise<never>;
+  };
+
+  type ChannelGroupRequestEnv<CC> = {
+    chainChannel: CC;
+  };
+  type ChannelGroupRequestOptions<CC> = AborterOptions<ChannelGroupRequestEnv<CC>> &
+    ChannelRequestBaseOptions & {
+      abortWhenNoChainChannel?: boolean;
+    };
+  type ChannelRequestOptions<CC> = AborterOptions<ChannelGroupRequestEnv<CC>> &
+    ChannelRequestBaseOptions;
+
   /**请求的基本可选项 */
   interface ChannelRequestBaseOptions {
     /**红包的密码 */
@@ -79,6 +88,7 @@ declare namespace BFChainCore {
   interface ChainChannel
     extends ChainChannelBase,
       QueneEventEmitterPro<ChainChannelHanlderEventMap> {
+    defaultReqOptions?: ChannelRequestOptions<this>;
     delay: number;
     /**
      * 与远程节点通道的相对时间差别
@@ -110,11 +120,11 @@ declare namespace BFChainCore {
     queryTransactions(
       query: QueryTransactionArgJSON["query"],
       sort?: QueryTransactionArgJSON["sort"],
-      opts?: ChannelRequestOptions,
+      opts?: ChannelRequestOptions<this>,
     ): Promise<import("@bfchain/core-model").QueryTransactionReturnModel>;
     initBroadcastTransactionArg(
       transaction: NewTransactionArgJSON["transaction"],
-      opts?: ChannelRequestOptions,
+      opts?: ChannelRequestOptions<this>,
     ): Promise<
       readonly [
         import("@bfchain/core-model").DUPLEX_API_CMD.NEW_TRANSACTION,
@@ -122,36 +132,37 @@ declare namespace BFChainCore {
         (
           params: Uint8Array | ArrayBuffer,
         ) => import("@bfchain/core-model").NewTransactionReturnModel,
-        ChannelRequestOptions,
+        ChannelRequestOptions<this>,
       ]
     >;
     /**广播交易体 */
     broadcastTransaction(
       transaction: NewTransactionArgJSON["transaction"],
-      opts?: ChannelRequestOptions,
+      opts?: ChannelRequestOptions<this>,
     ): Promise<import("@bfchain/core-model").NewTransactionReturnModel>;
     /**查询区块 */
     queryBlock<B extends Block = Block>(
       query: QueryBlockArgJSON["query"],
-      opts?: ChannelRequestOptions,
+      opts?: ChannelRequestOptions<this>,
     ): Promise<import("@bfchain/core-model").QueryBlockReturnModel<B>>;
     findBlock<B extends Block = Block>(
-      ...args: BFChainUtil.AllArgument<ChainChannel["queryBlock"]>
+      query: QueryBlockArgJSON["query"],
+      opts?: ChannelRequestOptions<this>,
     ): Promise<B | undefined>;
     /**广播区块 的传播参数 */
     initBroadcastBlockArg(
       blockInfo: NewBlockArgJSON,
-      opts?: ChannelRequestOptions,
+      opts?: ChannelRequestOptions<this>,
     ): readonly [
       import("@bfchain/core-model").DUPLEX_API_CMD.NEW_BLOCK,
       Uint8Array,
       (params: Uint8Array | ArrayBuffer) => import("@bfchain/core-model").NewBlockReturn,
-      ChannelRequestOptions | undefined,
+      ChannelRequestOptions<this> | undefined,
     ];
     /**广播区块 */
     broadcastBlock(
       blockInfo: NewBlockArgJSON,
-      opts?: ChannelRequestOptions,
+      opts?: ChannelRequestOptions<this>,
     ): Promise<import("@bfchain/core-model").NewBlockReturn>;
 
     /**处理接收到数据时的响应 */
@@ -161,11 +172,12 @@ declare namespace BFChainCore {
       cmd: import("@bfchain/core-model").DUPLEX_API_CMD,
       binary: Uint8Array,
       ResonseBoxer: (bytes: Uint8Array) => T,
-      options?: ChannelRequestOptions | undefined,
+      options?: ChannelRequestOptions<this> | undefined,
     ): Promise<T>;
   }
 
   interface ChainChannelGroup<CC extends ChainChannel> extends ChainChannelBase {
+    defaultReqOptions?: ChannelRequestOptions<CC>;
     groupName: string;
     forEach(hanlder: (chainChannel: CC, i: number) => any): void;
 
@@ -192,9 +204,9 @@ declare namespace BFChainCore {
      * 查询交易
      */
     queryTransactions(
-      query: BFChainUtil.FirstArgument<CC["queryTransactions"]>,
-      sort?: BFChainUtil.SecondArgument<CC["queryTransactions"]>,
-      opts?: BFChainUtil.ThirdArgument<CC["queryTransactions"]>,
+      query: QueryTransactionArgJSON["query"],
+      sort?: QueryTransactionArgJSON["sort"],
+      opts?: ChannelRequestOptions<CC>,
       _resultGenerator?: import("@bfchain/util").AsyncIteratorGenerator<TransactionInBlock>,
     ): import("@bfchain/util").AsyncIteratorGenerator<TransactionInBlock>;
     /**
@@ -202,7 +214,7 @@ declare namespace BFChainCore {
      */
     broadcastTransaction(
       transaction: NewTransactionArgJSON["transaction"],
-      opts?: ChannelRequestOptions & {
+      opts?: ChannelRequestOptions<CC> & {
         max_parallel_num?: number;
       },
       event?: BFChainUtil.QueneEventEmitter<BroadcastNewTransactionEvents<CC>>,
@@ -223,17 +235,20 @@ declare namespace BFChainCore {
     /**
      * 查询区块
      */
-    queryBlock(
-      ...args: BFChainUtil.AllArgument<ChainChannel["queryBlock"]>
-    ): Promise<import("@bfchain/core-model").QueryBlockReturnModel>;
-    findBlock<B extends Block = CommonBlock>(
-      ...args: BFChainUtil.AllArgument<ChainChannel["queryBlock"]>
+    queryBlock<B extends Block = Block>(
+      query: QueryBlockArgJSON["query"],
+      opts?: ChannelRequestOptions<CC>,
+    ): Promise<import("@bfchain/core-model").QueryBlockReturnModel<B>>;
+    findBlock<B extends Block = Block>(
+      query: QueryBlockArgJSON["query"],
+      opts?: ChannelRequestOptions<CC>,
     ): Promise<B | undefined>;
     /**
      * 广播区块
      */
     broadcastBlock(
-      ...args: BFChainUtil.AllArgument<ChainChannel["broadcastBlock"]>
+      blockInfo: NewBlockArgJSON,
+      opts?: ChannelRequestOptions<CC>,
     ): Promise<
       {
         chainChannel: CC;
@@ -251,7 +266,6 @@ declare namespace BFChainCore {
     maybeHeightChanged: [number];
   };
   interface ChainChannelBase {
-    defaultReqOptions?: ChannelRequestOptions;
     maybeHeight: number;
     toBlockGetterHelper(opts?: {
       maxHeight?: number;

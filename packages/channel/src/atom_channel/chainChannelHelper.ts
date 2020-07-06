@@ -1,4 +1,12 @@
-import { Injectable, Exception, bindThis } from "@bfchain/util";
+import {
+  Injectable,
+  Exception,
+  bindThis,
+  sleep,
+  Aborter,
+  unsleep,
+  PromiseOut,
+} from "@bfchain/util";
 import {
   CoreExceptionGenerator,
   INVALID_PARAMS,
@@ -24,10 +32,11 @@ import {
   BlockHelper,
 } from "@bfchain/core-helper";
 
-const { ArgumentIllegalException, ArgumentFormatException } = CoreExceptionGenerator(
-  "channel",
-  "chainChannelHelper",
-);
+const {
+  ArgumentIllegalException,
+  ArgumentFormatException,
+  TimeOutException,
+} = CoreExceptionGenerator("channel", "chainChannelHelper");
 
 @Injectable()
 export class ChainChannelHelper {
@@ -573,5 +582,65 @@ export class ChainChannelHelper {
         params,
       });
     }
+  }
+
+  @bindThis
+  parserAborterOptions<R, ENV = unknown>(options: BFChainCore.AborterOptions<ENV>, env: ENV) {
+    if (options.disabledAborterOptions) {
+      return;
+    }
+    let po: PromiseOut<R> | undefined; // = new PromiseOut<R>();
+    if (options.aborter) {
+      po || (po = new PromiseOut<R>());
+      options.aborter.abortedPromise.catch(po.reject);
+    }
+    if (this.baseHelper.isPositiveFloatNotContainZero(options.timeout)) {
+      const { reject } = po || (po = new PromiseOut<R>());
+      const timeoutTask = sleep(options.timeout, () =>
+        reject(
+          typeof options.timeoutException === "function"
+            ? options.timeoutException(env)
+            : options.timeoutException || new TimeOutException(),
+        ),
+      );
+      /// 这里使用finally，意味着就即便异常不是来自于timeout，也能正确销毁timeout
+      po.promise.finally(() => unsleep(timeoutTask));
+    }
+    if (options.rejected) {
+      po || (po = new PromiseOut<R>());
+      options.rejected.catch(po.reject);
+    }
+
+    return po;
+  }
+
+  wrapAborterOptions<R, ENV = unknown>(resp: Promise<R>, options: undefined, env?: ENV): Promise<R>;
+  wrapAborterOptions<R, ENV extends undefined>(
+    resp: Promise<R>,
+    options: BFChainCore.AborterOptions<ENV>,
+    env?: ENV,
+  ): Promise<R>;
+  wrapAborterOptions<R, ENV = unknown>(
+    resp: Promise<R>,
+    options: BFChainCore.AborterOptions<ENV> | undefined,
+    env: ENV,
+  ): Promise<R>;
+  wrapAborterOptions<R, ENV = unknown>(
+    resp: Promise<R>,
+    options: BFChainCore.AborterOptions<ENV>,
+    env: ENV,
+  ): Promise<R>;
+  @bindThis
+  wrapAborterOptions<R, ENV = unknown>(
+    resp: Promise<R>,
+    options?: BFChainCore.AborterOptions<ENV>,
+    env?: ENV,
+  ) {
+    const po = options && this.parserAborterOptions<R, ENV>(options, env as ENV);
+    if (po) {
+      resp.then(po.resolve, po.reject);
+      resp = po.promise;
+    }
+    return resp;
   }
 }
