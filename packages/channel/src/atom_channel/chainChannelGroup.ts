@@ -309,7 +309,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
 
     const resultGenerator = _resultGenerator || new AsyncIteratorGenerator<TransactionInBlock>();
 
-    const getChainChannelTimeout = this._getChainChannelTimeout;
+    const getChainChannelTimeout = this.helper.getChainChannelTimeout;
     /**私有内部类 */
     class AddChainChannelOptions implements BFChainCore.ChannelRequestOptions<DH> {
       constructor(private queryer: GroupQueryTransactionsBuilder<DH>) {}
@@ -522,7 +522,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
         pp.addTaskExecutor(async () => {
           initedArgs ||
             (initedArgs = await chainChannel.initBroadcastTransactionArg(transaction, {
-              timeout: (env) => this._getChainChannelTimeout(env.chainChannel),
+              timeout: (env) => this.helper.getChainChannelTimeout(env.chainChannel),
               rejected: resultPo?.promise,
             }));
           let result: BFChainCore.BroadcastNewTransactionEvents<DH>["broadcasted"]["in"];
@@ -579,12 +579,6 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
     );
     return resultList;
   }
-  @bindThis
-  private _getChainChannelTimeout(chainChannel: DH, baseTime = 3000) {
-    return (
-      Math.max(Number.isFinite(chainChannel.delay) ? chainChannel.delay : 1000, 2000) + baseTime
-    );
-  }
   /**
    * 查询区块
    */
@@ -621,7 +615,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
         return exCache.forceGet(env.chainChannel);
       };
       options.timeout = (env) => {
-        return this._getChainChannelTimeout(env.chainChannel);
+        return this.helper.getChainChannelTimeout(env.chainChannel);
       };
     }
     let retryTimes = 0;
@@ -688,7 +682,7 @@ export class ChainChannelGroup<DH extends BFChainCore.ChainChannel = ChainChanne
       chainChannelList.map((chainChannel) => {
         initedArgs ||
           (initedArgs = chainChannel.initBroadcastBlockArg(blockInfo, {
-            timeout: (env) => this._getChainChannelTimeout(env.chainChannel),
+            timeout: (env) => this.helper.getChainChannelTimeout(env.chainChannel),
             rejected: resultPo?.promise,
           }));
 
