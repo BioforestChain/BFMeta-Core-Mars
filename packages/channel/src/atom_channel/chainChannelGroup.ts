@@ -314,6 +314,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       });
 
     const resultGenerator = _resultGenerator || new AsyncIteratorGenerator<TransactionInBlock<T>>();
+    resultPo && resultPo.promise.catch(resultGenerator.reject);
 
     const getChainChannelTimeout = this.helper.getChainChannelTimeout;
     /**私有内部类 */
