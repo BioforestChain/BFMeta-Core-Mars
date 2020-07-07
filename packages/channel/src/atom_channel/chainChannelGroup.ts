@@ -27,6 +27,8 @@ import {
   NewBlockReturn,
   NewTransactionReturnModel,
   QueryBlockReturnModel,
+  QueryTransactionReturnModel,
+  UsernameTransaction,
 } from "@bfchain/core-model";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 import { ChainChannel, ChainChannelBase } from "./chainChannel";
@@ -286,11 +288,11 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
   /**
    * 查询交易
    */
-  queryTransactions(
-    query: BFChainUtil.FirstArgument<DH["queryTransactions"]>,
-    sort?: BFChainUtil.SecondArgument<DH["queryTransactions"]>,
+  queryTransactions<T extends BFChainCore.Transaction = BFChainCore.Transaction>(
+    query: BFChainCore.QueryTransactionArgJSON["query"],
+    sort?: BFChainCore.QueryTransactionArgJSON["sort"],
     opts?: BFChainCore.ChannelGroupRequestOptions<DH>,
-    _resultGenerator?: AsyncIteratorGenerator<TransactionInBlock>,
+    _resultGenerator?: AsyncIteratorGenerator<TransactionInBlock<T>>,
   ) {
     // /**异常时重试次数 */
     // const RETRY_TIMES = 3;
@@ -311,12 +313,14 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
         channelGroup: this as BFChainCore.ChainChannelGroup<DH>,
       });
 
-    const resultGenerator = _resultGenerator || new AsyncIteratorGenerator<TransactionInBlock>();
+    const resultGenerator = _resultGenerator || new AsyncIteratorGenerator<TransactionInBlock<T>>();
 
     const getChainChannelTimeout = this.helper.getChainChannelTimeout;
     /**私有内部类 */
     class AddChainChannelOptions implements BFChainCore.ChannelRequestOptions<DH> {
-      constructor(private queryer: GroupQueryTransactionsBuilder<DH>) {}
+      constructor(
+        private queryer: GroupQueryTransactionsBuilder<DH, QueryTransactionReturnModel<T>>,
+      ) {}
       @cacheGetter
       private get _exm() {
         return new EasyMap<DH, Error>(
@@ -348,14 +352,14 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     const queryerMap = EasyMap.from<
       { offset: number; limit: number },
       {
-        queryer: GroupQueryTransactionsBuilder<DH>;
+        queryer: GroupQueryTransactionsBuilder<DH, QueryTransactionReturnModel<T>>;
         options: AddChainChannelOptions;
       },
       string
     >({
       transformKey: (query) => `${query.offset}-${query.limit}`,
       creater: (query) => {
-        const queryer = GroupQueryTransactionsBuilder.create<DH>(
+        const queryer = GroupQueryTransactionsBuilder.create<DH, QueryTransactionReturnModel<T>>(
           this.moduleMap,
           { ...baseQueryCondition, ...query },
           sort,
@@ -413,10 +417,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                     event.autoFreeChainChannel = true;
                     // 保存查询结果
                     res.transactions.forEach((trs, i) => {
-                      resultGenerator.push(
-                        TransactionInBlock.fromObject(trs),
-                        task_offset - offset + i,
-                      );
+                      resultGenerator.push(trs, task_offset - offset + i);
                     });
                   }
                 } else if (res.status === RESPONSE_STATUS.busy) {

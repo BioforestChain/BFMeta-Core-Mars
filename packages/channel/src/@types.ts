@@ -127,11 +127,11 @@ declare namespace BFChainCore {
       binary: Uint8Array,
     ): void;
     /**查询交易 */
-    queryTransactions(
+    queryTransactions<T extends Transaction = Transaction>(
       query: QueryTransactionArgJSON["query"],
       sort?: QueryTransactionArgJSON["sort"],
       opts?: ChannelRequestOptions<any>,
-    ): Promise<import("@bfchain/core-model").QueryTransactionReturnModel>;
+    ): Promise<import("@bfchain/core-model").QueryTransactionReturnModel<T>>;
     initBroadcastTransactionArg(
       transaction: NewTransactionArgJSON["transaction"],
       opts?: ChannelRequestOptions<any>,
@@ -217,11 +217,11 @@ declare namespace BFChainCore {
       binary: Uint8Array,
     ): void;
     /**查询交易 */
-    queryTransactions(
+    queryTransactions<T extends Transaction = Transaction>(
       query: QueryTransactionArgJSON["query"],
       sort?: QueryTransactionArgJSON["sort"],
       opts?: ChannelRequestOptions<THIS>,
-    ): Promise<import("@bfchain/core-model").QueryTransactionReturnModel>;
+    ): Promise<import("@bfchain/core-model").QueryTransactionReturnModel<T>>;
     initBroadcastTransactionArg(
       transaction: NewTransactionArgJSON["transaction"],
       opts?: ChannelRequestOptions<THIS>,
@@ -303,12 +303,12 @@ declare namespace BFChainCore {
     /**
      * 查询交易
      */
-    queryTransactions(
+    queryTransactions<T extends Transaction = Transaction>(
       query: QueryTransactionArgJSON["query"],
       sort?: QueryTransactionArgJSON["sort"],
       opts?: ChannelGroupRequestOptions<CC>,
-      _resultGenerator?: import("@bfchain/util").AsyncIteratorGenerator<TransactionInBlock>,
-    ): import("@bfchain/util").AsyncIteratorGenerator<TransactionInBlock>;
+      _resultGenerator?: import("@bfchain/util").AsyncIteratorGenerator<TransactionInBlock<T>>,
+    ): import("@bfchain/util").AsyncIteratorGenerator<TransactionInBlock<T>>;
     /**
      * 广播交易体
      */

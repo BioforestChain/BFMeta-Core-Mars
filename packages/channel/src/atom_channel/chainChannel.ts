@@ -254,7 +254,7 @@ export class ChainChannel<
   }
 
   /**查询交易 */
-  async queryTransactions(
+  async queryTransactions<T extends BFChainCore.Transaction = BFChainCore.Transaction>(
     query: BFChainCore.QueryTransactionArgJSON["query"],
     sort?: BFChainCore.QueryTransactionArgJSON["sort"],
     opts?: BFChainCore.ChannelRequestOptions<THIS>,
@@ -266,7 +266,9 @@ export class ChainChannel<
     return this._request(
       DUPLEX_API_CMD.QUERY_TRANSACTION,
       arg,
-      await this.chainChannelHelper.boxQueryTransactionReturn,
+      (await this.chainChannelHelper.boxQueryTransactionReturn) as (
+        params: ArrayBuffer | Uint8Array,
+      ) => Promise<QueryTransactionReturnModel<T>>,
       opts,
     );
   }

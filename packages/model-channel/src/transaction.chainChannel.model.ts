@@ -148,11 +148,13 @@ export class QueryTransactionArgModel extends Message<QueryTransactionArgModel>
  * 可能的错误：查询参数有误
  */
 @Type.d("QueryTransactionReturn")
-export class QueryTransactionReturnModel extends CommonResponse
+export class QueryTransactionReturnModel<
+  T extends BFChainCore.Transaction = BFChainCore.Transaction
+> extends CommonResponse
   implements BFChainCore.JSONToModelType<BFChainCore.QueryTransactionReturnJSON> {
   /**查询到的交易 */
   @Field.d(QueryTransactionReturnModel.INC++, TransactionInBlock, "repeated")
-  transactions!: TransactionInBlock[];
+  transactions!: TransactionInBlock<T>[];
   toJSON() {
     return Object.assign(
       {
