@@ -605,10 +605,10 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     );
     const resultPo = opts && this.helper.parserAborterOptions(opts, { channelGroup: this });
 
-    const options = (opts || {
+    const options: BFChainCore.ChannelRequestOptions<DH> = {
       rejected: resultPo?.promise,
-    }) as BFChainCore.ChannelRequestOptions<DH>;
-    if (options.timeout !== undefined && options.timeoutException === undefined) {
+    };
+    if (options.timeoutException === undefined) {
       const exCache = new EasyMap<DH, Error>(
         (cc) =>
           new TimeOutException("peer({peerId}) queryBlock({query}) timeout.", {
@@ -619,10 +619,13 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       options.timeoutException = (env) => {
         return exCache.forceGet(env.chainChannel);
       };
+    }
+    if (options.timeout !== undefined) {
       options.timeout = (env) => {
         return this.helper.getChainChannelTimeout(env.chainChannel);
       };
     }
+
     let retryTimes = 0;
     let result: QueryBlockReturnModel<B> | undefined;
     do {
