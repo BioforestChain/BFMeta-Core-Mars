@@ -201,8 +201,8 @@ export class GroupQueryBlockBuilder<
     query: BFChainCore.BlockQueryOptionsJSON,
     opts?: BFChainCore.ChannelRequestBaseOptions<CC>,
   ) {
-    return Resolve<GroupQueryTransactionsBuilder<CC, R>>(
-      GroupQueryTransactionsBuilder,
+    return Resolve<GroupQueryBlockBuilder<CC, R>>(
+      GroupQueryBlockBuilder,
       new ModuleStroge(
         [
           [GROUP_QUERY_BLOCK_BUILDER_ARGS.QUERY, query],

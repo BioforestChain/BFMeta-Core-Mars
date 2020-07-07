@@ -266,7 +266,7 @@ export class ChainChannel<
     return this._request(
       DUPLEX_API_CMD.QUERY_TRANSACTION,
       arg,
-      (await this.chainChannelHelper.boxQueryTransactionReturn) as (
+      this.chainChannelHelper.boxQueryTransactionReturn as (
         params: ArrayBuffer | Uint8Array,
       ) => Promise<QueryTransactionReturnModel<T>>,
       opts,
