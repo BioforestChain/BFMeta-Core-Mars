@@ -190,7 +190,7 @@ export class ChainChannel<
     _delayHistroyList[LEN - 1] = delay;
   }
   /**请求的响应回调缓存 */
-  readonly req_response_map = new Map<number | string, PromiseOut>();
+  readonly req_response_map = new Map<number | string, PromiseOut<Uint8Array>>();
   /**请求ID累加器 */
   protected _req_id_acc = new Uint32Array(1); // 使用Uint32类型，在超过过2**32后自动归零
   protected _request<T>(
