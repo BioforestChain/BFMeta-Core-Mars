@@ -61,15 +61,15 @@ export class TransactionQueryOptions extends Message<TransactionQueryOptions>
   /**购买的 dappid */
   @Field.d(TransactionQueryOptions.INC++, "string", "optional")
   purchaseDAppid?: string;
-  /**在range中的元素 */
-  @Field.d(TransactionQueryOptions.INC++, "string", "optional")
-  range?: string;
   /**查询结果分页：起始下标 */
   @Field.d(TransactionQueryOptions.INC++, "uint32")
   offset!: number;
   /**查询结果分页：返回数量， */
   @Field.d(TransactionQueryOptions.INC++, "uint32", "optional")
   limit?: number;
+  /**在range中的元素 */
+  @Field.d(TransactionQueryOptions.INC++, "string", "optional")
+  range?: string;
   static fromObject<T extends Message>(
     this: BFChainProtobuf.Constructor<T>,
     object: BFChainProtobuf.ObjectFromType<TransactionQueryOptions>,
