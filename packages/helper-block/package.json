@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-helper-block",
-  "version": "5.16.9",
+  "version": "5.16.10",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -18,7 +18,7 @@
     "@bfchain/core-helper-bigint": "5.16.9",
     "@bfchain/core-helper-config": "5.16.9",
     "@bfchain/core-helper-type": "5.16.9",
-    "@bfchain/core-model": "5.16.9",
+    "@bfchain/core-model": "5.16.10",
     "@bfchain/core-typings": "5.16.9",
     "@bfchain/core-util-exception": "5.16.9",
     "@bfchain/core-util-exception-errorcode": "5.16.9"
