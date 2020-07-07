@@ -91,14 +91,14 @@ export class VoteLogicVerifier extends TransactionLogicVerifier {
 
     if (!accountInfo.isDelegate) {
       throw new ConsensusException(ACCOUNT_IS_NOT_AN_DELEGATE, {
-        address: recipient,
+        address: accountInfo.address,
         ...Function_Exception_Detail,
       });
     }
 
     if (!accountInfo.isAcceptVote) {
       throw new ConsensusException(DELEGATE_IS_ALREADY_REJECT_VOTE, {
-        address: recipient,
+        address: accountInfo.address,
         ...Function_Exception_Detail,
       });
     }
