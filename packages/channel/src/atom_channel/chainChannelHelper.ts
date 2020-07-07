@@ -627,7 +627,7 @@ export class ChainChannelHelper {
         ),
       );
       /// 这里使用finally，意味着就即便异常不是来自于timeout，也能正确销毁timeout
-      po.onFinishd(() => unsleep(timeoutTask));
+      po.onFinished(() => unsleep(timeoutTask));
     }
     //#endregion
 
