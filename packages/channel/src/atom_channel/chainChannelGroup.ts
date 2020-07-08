@@ -386,79 +386,93 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
        * @param task_offset
        * @param times
        */
-      const doTask = (task_offset: number, times: number) => {
+      const doTask = (task_offset: number) => {
         const { queryer, options } = queryerMap.forceGet({
           offset: task_offset,
           limit: unitLength,
         });
+        /**
+         * 失败次数
+         */
+        let times = 0;
         // const waitUseableChainChannel = new PromiseOut<void>();
         task_chain = task_chain.then(
-          () =>
-            requestChainChannel(async (event) => {
-              waitUseableChainChannel.resolve();
-              // 开始执行查询
-              try {
-                const res = await queryer.addChainChannel(event.chainChannel, options);
+          async () => {
+            do {
+              const finished = await requestChainChannel(async (event) => {
+                waitUseableChainChannel.resolve();
+                // 开始执行查询
+                try {
+                  const res = await queryer.addChainChannel(event.chainChannel, options);
 
-                if (res.status === RESPONSE_STATUS.success) {
-                  if (res.transactions.length === 0) {
-                    // 如果是高度最高的那个节点返回空列表，那么基本就是空列表没跑了
-                    if (event.chainChannel.maybeHeight >= this.maybeHeight) {
-                      query_done_offset = task_offset;
+                  if (res.status === RESPONSE_STATUS.success) {
+                    if (res.transactions.length === 0) {
+                      // 如果是高度最高的那个节点返回空列表，那么基本就是空列表没跑了
+                      if (event.chainChannel.maybeHeight >= this.maybeHeight) {
+                        query_done_offset = task_offset;
+                        // 确认节点的工作，让其继续下一个工作
+                        event.autoFreeChainChannel = true;
+                        /// 中断这次查询
+                        return true;
+                      } else {
+                        // 移除无效的结果
+                        queryer.removeChainChannelByResult(res);
+                        // 重试任务，但是这个节点因为高度过低，暂时不用它来查询
+                        times++;
+                        return false;
+                      }
                     } else {
-                      // 移除无效的结果
-                      queryer.removeChainChannelByResult(res);
-                      // 重试任务，但是这个节点因为高度过低，暂时不用它来查询
-                      await doTask(task_offset, times + 1);
+                      // 任务完成
+                      queryer.finish();
+                      // 确认节点的工作，让其继续下一个工作
+                      event.autoFreeChainChannel = true;
+                      // 保存查询结果
+                      res.transactions.forEach((trs, i) => {
+                        resultGenerator.push(trs, task_offset - offset + i);
+                      });
+                      return true;
                     }
-                  } else {
-                    // 任务完成
-                    queryer.finish();
-                    // 确认节点的工作，让其继续下一个工作
-                    event.autoFreeChainChannel = true;
-                    // 保存查询结果
-                    res.transactions.forEach((trs, i) => {
-                      resultGenerator.push(trs, task_offset - offset + i);
-                    });
+                  } else if (res.status === RESPONSE_STATUS.busy) {
+                    // 移除无效的结果
+                    queryer.removeChainChannelByResult(res);
+                    // 重试任务，但是这个节点仍旧放在繁忙节点列表，暂时不信任
+                    times++;
+                    return false;
+                  } else if (res.status === RESPONSE_STATUS.error) {
+                    // 移除无效的结果
+                    queryer.removeChainChannelByResult(res);
+                    // 任务失败，抛出异常
+                    throw res.error;
                   }
-                } else if (res.status === RESPONSE_STATUS.busy) {
-                  // 移除无效的结果
-                  queryer.removeChainChannelByResult(res);
-                  // 重试任务，但是这个节点仍旧放在繁忙节点列表，暂时不信任
-                  await doTask(task_offset, times + 1);
-                } else if (res.status === RESPONSE_STATUS.error) {
-                  // 移除无效的结果
-                  queryer.removeChainChannelByResult(res);
-                  // 任务失败，抛出异常
-                  throw res.error;
+                } catch (err) {
+                  if (AbortException.is(err)) {
+                    // 如果被中断了任务，那么直接结束任务
+                    throw err;
+                  }
+                  if (!TimeOutException.is(err)) {
+                    /// 如果时超时，默认不打印，因为超时时本地没收到数据的问题
+                    error(
+                      err,
+                      "[GROUP]:",
+                      this.groupName,
+                      "[QUERY]:",
+                      query,
+                      "[OFFSET]:",
+                      task_offset,
+                      "[TIMES]:",
+                      times,
+                    );
+                  }
+
+                  times++;
+                  return false;
                 }
-              } catch (err) {
-                if (AbortException.is(err)) {
-                  // 如果被中断了任务，那么直接结束任务
-                  throw err;
-                }
-                if (!TimeOutException.is(err)) {
-                  /// 如果时超时，默认不打印，因为超时时本地没收到数据的问题
-                  error(
-                    err,
-                    "[GROUP]:",
-                    this.groupName,
-                    "[QUERY]:",
-                    query,
-                    "[OFFSET]:",
-                    task_offset,
-                    "[TIMES]:",
-                    times,
-                  );
-                }
-                // if (times < RETRY_TIMES) {
-                // 存在异常，重试任务
-                await doTask(task_offset, times + 1);
-                //   return;
-                // }
-                // throw err;
+              }, /**默认不释放节点 */ false);
+              if (finished) {
+                break;
               }
-            }, /**默认不释放节点 */ false),
+            } while (true);
+          },
           (err) => waitUseableChainChannel.reject(err),
         );
         return waitUseableChainChannel.promise;
@@ -472,7 +486,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
           break;
         }
         waitUseableChainChannel = new PromiseOut();
-        await doTask(task_offset, 0);
+        await doTask(task_offset);
       }
       // 等待所有查询任务完成
       await task_chain;
