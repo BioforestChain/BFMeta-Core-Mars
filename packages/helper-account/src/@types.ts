@@ -134,9 +134,9 @@ declare namespace BFChainCore {
     /**获取账户的块内交易 */
     getAccountTxCountInBlock(address: string): Promise<number | undefined>;
     /**获取账户资产信息 */
-    getAccountAssets(address: string): Promise<AA | undefined>;
+    getAccountAssets(address: string, currentBlockHeight: number): Promise<AA | undefined>;
     /**获取账户信息和账户资产信息 */
-    getAccountInfoAndAssets(address: string): Promise<AIAA | undefined>;
+    getAccountInfoAndAssets(address: string, currentBlockHeight: number): Promise<AIAA | undefined>;
     /**获取指定的 dapp */
     getDApp(
       sourceChainMagic: string,

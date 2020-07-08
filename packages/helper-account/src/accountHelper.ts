@@ -112,6 +112,7 @@ export class AccountHelper<
   }
   getAccountAssets(
     address: string,
+    currentBlockHeight: number,
     accountGetterHelper = this.accountGetterHelper as Pick<
       BFChainCore.AccountGetterHelperInterface,
       "getAccountAssets"
@@ -124,10 +125,11 @@ export class AccountHelper<
         function: "AccountHelper.getAccountAssets",
       });
     }
-    return accountGetterHelper.getAccountAssets(address);
+    return accountGetterHelper.getAccountAssets(address, currentBlockHeight);
   }
   getAccountInfoAndAssets(
     address: string,
+    currentBlockHeight: number,
     accountGetterHelper = this.accountGetterHelper as Pick<
       BFChainCore.AccountGetterHelperInterface,
       "getAccountInfoAndAssets"
@@ -140,7 +142,7 @@ export class AccountHelper<
         function: "AccountHelper.getAccountInfoAndAssets",
       });
     }
-    return accountGetterHelper.getAccountInfoAndAssets(address);
+    return accountGetterHelper.getAccountInfoAndAssets(address, currentBlockHeight);
   }
   getDApp(
     sourceChainMagic: string,

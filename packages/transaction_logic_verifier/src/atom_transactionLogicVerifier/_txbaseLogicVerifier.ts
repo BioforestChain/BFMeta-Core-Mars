@@ -123,7 +123,10 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     if (recipientId) {
       recipient = accountsInfo.recipient;
       if (!recipient) {
-        recipient = await accountGetterHelper.getAccountInfoAndAssets(recipientId);
+        recipient = await accountGetterHelper.getAccountInfoAndAssets(
+          recipientId,
+          currentBlockHeight,
+        );
       }
       if (recipient && recipient.accountInfo && recipient.accountAssets) {
         this.checkRecipientAccountStatus(recipient.accountInfo);
