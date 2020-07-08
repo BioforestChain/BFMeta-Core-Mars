@@ -416,22 +416,6 @@ export class AccountHelper<
     }
     return accountGetterHelper.mergeAccountEquity(height, accountEquity);
   }
-  resetDelegateVote(
-    height: number,
-    accountGetterHelper = this.accountGetterHelper as Pick<
-      BFChainCore.AccountGetterHelperInterface,
-      "resetDelegateVote"
-    >,
-  ): Promise<void> {
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        function: "AccountHelper.resetDelegateVote",
-      });
-    }
-    return accountGetterHelper.resetDelegateVote(height);
-  }
   getAccountVoteInfo(
     height: number,
     address: string,

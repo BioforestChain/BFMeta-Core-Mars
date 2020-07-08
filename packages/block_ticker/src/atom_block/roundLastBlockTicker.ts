@@ -106,8 +106,6 @@ export class RoundLastBlockTicker extends BlockTicker {
         totalEquity += delegatesEquity[delegateAddress];
       }
     }
-    // 先重置受托人账户获得的权益
-    await accountGetterHelper.resetDelegateVote(height);
     // 设置受托人账户获得的权益
     await accountGetterHelper.mergeAccountEquity(height, delegatesEquity);
     return totalEquity;
