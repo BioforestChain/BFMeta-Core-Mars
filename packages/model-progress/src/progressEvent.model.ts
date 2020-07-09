@@ -61,4 +61,17 @@ export class ProgressEventModel<EVENT extends string> extends Message<ProgressEv
     this.buffer ?? (res.buffer = this.buffer);
     return res;
   }
+  static fromObject<T extends Message>(
+    this: BFChainProtobuf.Constructor<T>,
+    object: BFChainProtobuf.ObjectFromType<ProgressEventModel<string>>,
+  ) {
+    const res = super.fromObject(object) as ProgressEventModel<string>;
+    if (object.loaded) {
+      res.loaded = object.loaded;
+    }
+    if (object.buffer) {
+      res.buffer = object.buffer;
+    }
+    return (res as unknown) as T;
+  }
 }
