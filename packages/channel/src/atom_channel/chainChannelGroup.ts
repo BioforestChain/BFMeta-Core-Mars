@@ -536,7 +536,11 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       }
       const pp = new ParallelPool<void>(opts && opts.max_parallel_num);
 
-      const resultPo = opts && this.helper.parserAborterOptions(opts, { channelGroup: this });
+      const resultPo =
+        opts &&
+        this.helper.parserAborterOptions(opts, {
+          channelGroup: this as BFChainCore.ChainChannelGroup<DH>,
+        });
       // 将要广播的节点放置到广播队列中
       for (const chainChannel of chainChannelList) {
         pp.addTaskExecutor(async () => {
@@ -605,72 +609,80 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
   async queryBlock<B extends Block = CommonBlock>(
     query: BFChainCore.QueryBlockArgJSON["query"],
     opts?: BFChainCore.ChannelGroupRequestOptions<DH>,
-  ) {
+  ): Promise<B | undefined> {
     const parallelTaskId = `Group(${this.groupName}) queryBlock-${Date.now() + Math.random()}`;
     const { requestChainChannel } = this.startParallelTask(parallelTaskId, {
       channelFilter: opts?.channelFilter,
       abortWhenNoChainChannel: opts?.abortWhenNoChainChannel,
     });
+    try {
+      const RETRY_TIMES = 5;
 
-    const RETRY_TIMES = 5;
-
-    const queryer = GroupQueryBlockBuilder.create<DH, QueryBlockReturnModel<B>>(
-      this.moduleMap,
-      query,
-    );
-    const resultPo = opts && this.helper.parserAborterOptions(opts, { channelGroup: this });
-
-    const options: BFChainCore.ChannelRequestOptions<DH> = {
-      rejected: resultPo?.promise,
-    };
-    if (options.timeoutException === undefined) {
-      const exCache = new EasyMap<DH, Error>(
-        (cc) =>
-          new TimeOutException("peer({peerId}) queryBlock({query}) timeout.", {
-            query: JSON.stringify(queryer.query),
-            peerId: cc.address,
-          }),
+      const queryer = GroupQueryBlockBuilder.create<DH, QueryBlockReturnModel<B>>(
+        this.moduleMap,
+        query,
       );
-      options.timeoutException = (env) => {
-        return exCache.forceGet(env.chainChannel);
-      };
-    }
-    if (options.timeout !== undefined) {
-      options.timeout = (env) => {
-        return this.helper.getChainChannelTimeout(env.chainChannel);
-      };
-    }
+      const resultPo =
+        opts &&
+        this.helper.parserAborterOptions(opts, {
+          channelGroup: this as BFChainCore.ChainChannelGroup<DH>,
+        });
 
-    let retryTimes = 0;
-    let result: QueryBlockReturnModel<B> | undefined;
-    do {
-      await requestChainChannel(async (event) => {
-        try {
-          result = await queryer.addChainChannel(event.chainChannel, options);
-          if (result.status === RESPONSE_STATUS.busy || !result.someBlock) {
-            queryer.removeChainChannelByResult(result);
-            return;
+      const options: BFChainCore.ChannelRequestOptions<DH> = {
+        rejected: resultPo?.promise,
+      };
+      if (options.timeoutException === undefined) {
+        const exCache = new EasyMap<DH, Error>(
+          (cc) =>
+            new TimeOutException("peer({peerId}) queryBlock({query}) timeout.", {
+              query: JSON.stringify(queryer.query),
+              peerId: cc.address,
+            }),
+        );
+        options.timeoutException = (env) => {
+          return exCache.forceGet(env.chainChannel);
+        };
+      }
+      if (options.timeout !== undefined) {
+        options.timeout = (env) => {
+          return this.helper.getChainChannelTimeout(env.chainChannel);
+        };
+      }
+
+      let retryTimes = 0;
+      let block: B | undefined;
+      do {
+        await requestChainChannel(async (event) => {
+          try {
+            const result = await queryer.addChainChannel(event.chainChannel, options);
+            block = result.someBlock?.block;
+            if (/* result.status === RESPONSE_STATUS.busy ||  */ !block) {
+              /// 失败，移除失败的节点，继续请求新节点进行查询
+              queryer.removeChainChannelByResult(result);
+              return;
+            }
+            /// 完成任务
+            queryer.finish();
+          } catch (err) {
+            retryTimes += 1;
+            if (retryTimes >= RETRY_TIMES) {
+              throw err;
+            }
           }
-          /// 完成任务
-          queryer.finish();
-          /// 释放并发
-          this.releaseParallelTask(parallelTaskId);
-        } catch (err) {
-          retryTimes += 1;
-          if (retryTimes >= RETRY_TIMES) {
-            throw err;
-          }
-        }
-      }, /**默认不自动释放节点 */ false);
-    } while (!result);
-    return result;
+        }, /**默认不自动释放节点 */ false);
+      } while (!block);
+      return block;
+    } finally {
+      /// 释放并发
+      this.releaseParallelTask(parallelTaskId);
+    }
   }
-  async findBlock<B extends Block = CommonBlock>(
+
+  findBlock<B extends Block = CommonBlock>(
     query: BFChainCore.QueryBlockArgJSON["query"],
     opts?: BFChainCore.ChannelGroupRequestOptions<DH>,
   ) {
-    const queryResult = await this.queryBlock<B>(query, opts);
-    return queryResult.someBlock && queryResult.someBlock.block;
+    return this.queryBlock<B>(query, opts);
   }
   /**
    * 广播区块
@@ -699,7 +711,11 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       chainChannelList = [...this.chainChannelSet.values()];
     }
 
-    const resultPo = opts && this.helper.parserAborterOptions(opts, { channelGroup: this });
+    const resultPo =
+      opts &&
+      this.helper.parserAborterOptions(opts, {
+        channelGroup: this as BFChainCore.ChainChannelGroup<DH>,
+      });
 
     const resultList = await Promise.all(
       chainChannelList.map((chainChannel) => {

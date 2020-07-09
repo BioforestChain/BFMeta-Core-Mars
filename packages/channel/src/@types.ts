@@ -338,10 +338,6 @@ declare namespace BFChainCore {
     queryBlock<B extends Block = Block>(
       query: QueryBlockArgJSON["query"],
       opts?: ChannelGroupRequestOptions<CC>,
-    ): Promise<import("@bfchain/core-model").QueryBlockReturnModel<B>>;
-    findBlock<B extends Block = Block>(
-      query: QueryBlockArgJSON["query"],
-      opts?: ChannelGroupRequestOptions<CC>,
     ): Promise<B | undefined>;
     /**
      * 广播区块
