@@ -268,7 +268,7 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
       jsbiHelper.multiplyFloorFraction(totalQuota, options.forgedBlocksPercent),
     );
     const atnNum = Number(jsbiHelper.multiplyFloorFraction(totalQuota, options.applyTxPercent));
-    const votNum = Number(jsbiHelper.multiplyFloorFraction(totalQuota, options.newDelegatePercent));
+    const votNum = Number(jsbiHelper.multiplyFloorFraction(totalQuota, options.votePercent));
     const newNum = totalQuota - pdtNum - fbsNum - atnNum - votNum;
     // 获取在线率前 n 个账户
     const sortByProductivity = this.sortDelegatesByFields(canBePickAccounts, "productivity");
