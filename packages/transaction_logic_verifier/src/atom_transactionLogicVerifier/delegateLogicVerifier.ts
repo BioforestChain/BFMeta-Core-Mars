@@ -51,6 +51,7 @@ export class DelegateLogicVerifier extends TransactionLogicVerifier {
     this.eventLogicVerifier.listenEventRegisterToDelegate(
       cloneAccountsInfo,
       curRound,
+      currentBlockHeight,
       transactionGetterHelper,
       eventEmitter,
     );

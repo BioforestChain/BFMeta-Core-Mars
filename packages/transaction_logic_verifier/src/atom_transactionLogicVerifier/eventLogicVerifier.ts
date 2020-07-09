@@ -458,6 +458,7 @@ export class EventLogicVerifier {
   listenEventRegisterToDelegate(
     accountsInfo: { [address: string]: BFChainCore.AccountInfo },
     curRound: number,
+    currentBlockHeight: number,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -494,11 +495,11 @@ export class EventLogicVerifier {
           });
         }
 
-        const { blockPerRound, maxDelegateTxsPerRound } = this.configHelper;
+        const { maxDelegateTxsPerRound } = this.configHelper;
         const txCount = await transactionGetterHelper.getCountTransaction({
           type: this.transactionHelper.DELEGATE,
-          startHeight: (curRound - 1) * blockPerRound + 1,
-          endHeight: curRound * blockPerRound,
+          startHeight: this.blockHelper.calcRoundStartHeight(curRound),
+          endHeight: currentBlockHeight === 1 ? currentBlockHeight : currentBlockHeight - 1,
         });
 
         let realMaxDelegateTxsPerRound = maxDelegateTxsPerRound;
