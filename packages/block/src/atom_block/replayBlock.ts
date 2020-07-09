@@ -551,8 +551,8 @@ export class ReplayBlockCore<T extends Block> {
           )
         ) {
           throw new ArgumentIllegalException(NOT_MATCH, {
-            to_compare_prop: "statisticsInfo",
-            be_compare_prop: "statisticsInfo",
+            to_compare_prop: `statisticsInfo ${JSON.stringify(blockStatisticsInfo.toJSON())}`,
+            be_compare_prop: `statisticsInfo ${JSON.stringify(statisticsInfo.toModel().toJSON())}`,
             to_target: "block",
             be_target: "calculate",
             ...Function_Exception_Detail,
