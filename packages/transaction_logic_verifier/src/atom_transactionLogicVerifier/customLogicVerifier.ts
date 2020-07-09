@@ -60,6 +60,7 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
     this.eventLogicVerifier.listenEventRegisterToDelegate(
       cloneAccountsInfo,
       curRound,
+      currentBlockHeight,
       transactionGetterHelper,
       eventEmitter,
     );
