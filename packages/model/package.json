@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-model",
-  "version": "5.16.20",
+  "version": "5.17.0",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -16,7 +16,7 @@
   "dependencies": {
     "@bfchain/core-model-block": "5.16.20",
     "@bfchain/core-model-cacher": "5.16.20",
-    "@bfchain/core-model-channel": "5.16.20",
+    "@bfchain/core-model-channel": "5.17.0",
     "@bfchain/core-model-common": "5.16.20",
     "@bfchain/core-model-constants": "5.16.20",
     "@bfchain/core-model-progress": "5.16.20",
