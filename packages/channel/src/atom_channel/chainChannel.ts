@@ -460,14 +460,16 @@ export class ChainChannel<
                 : undefined;
 
               /// 查询成功
-              if (queryResult && queryResult.block) {
+              if (queryResult && queryResult.block !== undefined) {
                 response.status = RESPONSE_STATUS.success;
                 const block = queryResult.block;
-                // 强制不传输交易
-                block.transactions = [];
-                response.someBlock = SomeBlockModel.fromObject({
-                  block: Block.fromObject(block),
-                });
+                if (block) {
+                  // 强制不传输交易
+                  block.transactions = [];
+                  response.someBlock = SomeBlockModel.fromObject({
+                    block: Block.fromObject(block),
+                  });
+                }
               }
 
               taskResult = response;

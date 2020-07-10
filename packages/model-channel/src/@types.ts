@@ -105,7 +105,7 @@ declare namespace BFChainCore {
     someBlock?: SomeBlockJSON<B>;
   }
   interface QueryBlockReturnParams {
-    block?: BlockJSON;
+    block?: BlockJSON | null;
   }
   /**接收交易的传入对象 */
   type NewBlockArgJSON = {
