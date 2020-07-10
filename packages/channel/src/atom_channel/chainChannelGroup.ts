@@ -39,6 +39,7 @@ const {
   error,
   success,
   info,
+  warn,
   TimeOutException,
 } = CoreExceptionGenerator("channel", "chainChannelGroup");
 
@@ -407,8 +408,13 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
 
                   if (res.status === RESPONSE_STATUS.success) {
                     if (res.transactions.length === 0) {
-                      // 如果是高度最高的那个节点返回空列表，那么基本就是空列表没跑了
-                      if (event.chainChannel.maybeHeight >= this.maybeHeight) {
+                      /// 如果是高度最高的那个节点返回空列表，那么基本就是空列表没跑了
+                      const resultChannelMaybeHeight = queryer.getChainChannelByResult(res)
+                        ?.maybeHeight;
+                      if (
+                        resultChannelMaybeHeight &&
+                        resultChannelMaybeHeight >= this.maybeHeight
+                      ) {
                         query_done_offset = task_offset;
                         // 确认节点的工作，让其继续下一个工作
                         event.autoFreeChainChannel = true;
@@ -616,7 +622,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       abortWhenNoChainChannel: opts?.abortWhenNoChainChannel,
     });
     try {
-      const RETRY_TIMES = 5;
+      const RETRY_TIMES = Math.min(Math.max(this.size, 2), 5);
 
       const queryer = GroupQueryBlockBuilder.create<DH, QueryBlockReturnModel<B>>(
         this.moduleMap,
@@ -628,8 +634,18 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
           channelGroup: this as BFChainCore.ChainChannelGroup<DH>,
         });
 
+      let is_rejected = false;
+      const resultPromise = resultPo?.promise;
+      if (resultPromise) {
+        /// 有一个默认的错误捕捉
+        resultPromise.catch((err) => {
+          warn(err);
+          is_rejected = true;
+        });
+      }
+
       const options: BFChainCore.ChannelRequestOptions<DH> = {
-        rejected: resultPo?.promise,
+        rejected: resultPromise,
       };
       if (options.timeoutException === undefined) {
         const exCache = new EasyMap<DH, Error>(
@@ -652,21 +668,44 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       let retryTimes = 0;
       let block: B | undefined;
       do {
+        if (is_rejected) {
+          return;
+        }
         await requestChainChannel(async (event) => {
           try {
             const result = await queryer.addChainChannel(event.chainChannel, options);
-            block = result.someBlock?.block;
-            if (/* result.status === RESPONSE_STATUS.busy ||  */ !block) {
+            if (result.status === RESPONSE_STATUS.error) {
+              queryer.removeChainChannelByResult(result);
+              throw result.error;
+            }
+            if (result.status === RESPONSE_STATUS.busy) {
               /// 失败，移除失败的节点，继续请求新节点进行查询
               queryer.removeChainChannelByResult(result);
-              return;
+              /// 抛出到异常处理函数去处理
+              throw undefined;
+            }
+            block = result.someBlock?.block;
+            if (!block) {
+              /**
+               * result.status === RESPONSE_STATUS.success
+               * 查询返回成功，却被告之没有区块，说明对方没有所需的区块
+               * 如果这是最高节点的返回，那么说明这个查询条件就是查询不到了，可以直接返回
+               * @TODO 这是不靠谱的，可能会遇到恶意返回，应该从底层协议去解决这个问题
+               */
+              const resultChannelMaybeHeight = queryer.getChainChannelByResult(result)?.maybeHeight;
+              if (resultChannelMaybeHeight && resultChannelMaybeHeight > this.maybeHeight) {
+                is_rejected = false;
+                return;
+              }
             }
             /// 完成任务
             queryer.finish();
           } catch (err) {
+            err && warn(err);
             retryTimes += 1;
             if (retryTimes >= RETRY_TIMES) {
-              throw err;
+              is_rejected = true;
+              return;
             }
           }
         }, /**默认不自动释放节点 */ false);
