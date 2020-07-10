@@ -1,7 +1,7 @@
 import { Block, RoundLastBlock } from "@bfchain/core-model-block";
 import { Injectable } from "@bfchain/util";
 import { BlockHelper, ChainTimeHelper, ConfigHelper } from "@bfchain/core-helper";
-import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, GENESIS_BLOCK_NO_EQUAL } from "@bfchain/core-util-exception";
 const { warn, ConsensusException, log } = CoreExceptionGenerator("Core", "blockForkCheck");
 
 /**
@@ -505,6 +505,9 @@ export class BlockForkChecker {
     blockGetterHelper1?: BFChainCore.BlockGetterHelperSimpleInterface,
     blockGetterHelper2?: BFChainCore.BlockGetterHelperSimpleInterface,
   ) {
+    if (theHeight < 1) {
+      throw new ConsensusException(GENESIS_BLOCK_NO_EQUAL);
+    }
     // 1 从当前高度逐一验证id到上一轮的最后一个区块
     const lastRound = this.blockHelper.calcRoundByHeight(theHeight) - 1;
     const lastRoundEndHeight = this.blockHelper.calcRoundEndHeight(lastRound);

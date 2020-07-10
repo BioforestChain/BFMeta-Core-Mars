@@ -6,6 +6,8 @@ const ec = {
   },
 };
 /**prop target function */
+export const GENESIS_BLOCK_NO_EQUAL = (ec.next = "GenesisBlock maybe no equal");
+/**prop target function */
 export const PROP_IS_REQUIRE = (ec.next = "{prop} in {target} is required when {function}");
 /**prop target function */
 export const PROP_IS_INVALID = (ec.next = "{prop} in {target} is invalid when {function}");
