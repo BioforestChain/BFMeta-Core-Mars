@@ -97,8 +97,6 @@ export abstract class ChainChannelBase
   }
 }
 
-const CATCHD_EXCEPTION_WS = new WeakSet<Error>();
-
 /**
  * 为数据收发处理器包装数据处理
  */
@@ -123,12 +121,6 @@ export class ChainChannel<
   ) {
     super();
     this.initOnMessage();
-    this.onError((err, args) => {
-      if (args.eventname !== "handleMessageError") {
-        CATCHD_EXCEPTION_WS.add(err);
-        this.emit("handleMessageError", { handleName: args.eventname, error: err });
-      }
-    });
   }
   get diffTime() {
     return 0;
@@ -138,7 +130,7 @@ export class ChainChannel<
     once?: boolean,
   ) {
     if (once) {
-      const remover = this.endpoint.onClose((err) => {
+      const remover = this.endpoint.onClose(err => {
         handler(err);
         remover();
       });
@@ -424,7 +416,7 @@ export class ChainChannel<
               /// 查询成功
               if (queryResult) {
                 response.status = RESPONSE_STATUS.success;
-                response.transactions = queryResult.transactions.map((tib) =>
+                response.transactions = queryResult.transactions.map(tib =>
                   TransactionInBlock.fromObject(tib),
                 );
               }
@@ -581,9 +573,7 @@ export class ChainChannel<
           );
         }
       } catch (err) {
-        if (!CATCHD_EXCEPTION_WS.has(err)) {
-          this.emit("handleMessageError", { handleName: "onMessage", error: err });
-        }
+        this.emit("handleMessageError", { handleName: "onMessage", error: err });
       }
     });
   }
