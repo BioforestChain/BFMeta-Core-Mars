@@ -205,12 +205,21 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
      */
     const _tryFreeChainChannel = () => {
       if (busyChainChannels.size > freeChainChannelList.length) {
+        /**
+         * @FIXME 因为 tiTasks.size 目前只用在这里，所以可以简单地这样去判断
+         */
+        if (busyChainChannels.size >= tiTasks.size) {
+          return;
+        }
         /// 如果繁忙的节点已经超过原有可用节点的一半以上了，那么尝试慢慢恢复节点的可用性，这里的策略是随机恢复
         const ti = sleep(1000, () => {
           tiTasks.delete(ti);
+          if (busyChainChannels.size === 0) {
+            return;
+          }
           /// 随机获取繁忙列表中的一个节点
-          let i = Math.floor(busyChainChannels.size * Math.random());
           const iterator = busyChainChannels.values();
+          let i = Math.floor(busyChainChannels.size * Math.random());
           let tryFreeChainChannel: DH | undefined;
           while (i >= 0) {
             tryFreeChainChannel = iterator.next().value;
