@@ -655,8 +655,11 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
 
       const options: BFChainCore.ChannelRequestOptions<DH> = {
         rejected: resultPromise,
+        timeout: (env) => {
+          return this.helper.getChainChannelTimeout(env.chainChannel);
+        },
       };
-      if (options.timeoutException === undefined) {
+      {
         const exCache = new EasyMap<DH, Error>(
           (cc) =>
             new TimeOutException("peer({peerId}) queryBlock({query}) timeout.", {
@@ -666,11 +669,6 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
         );
         options.timeoutException = (env) => {
           return exCache.forceGet(env.chainChannel);
-        };
-      }
-      if (options.timeout !== undefined) {
-        options.timeout = (env) => {
-          return this.helper.getChainChannelTimeout(env.chainChannel);
         };
       }
 
@@ -702,8 +700,8 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                * @TODO 这是不靠谱的，可能会遇到恶意返回，应该从底层协议去解决这个问题
                */
               const resultChannelMaybeHeight = queryer.getChainChannelByResult(result)?.maybeHeight;
-              if (resultChannelMaybeHeight && resultChannelMaybeHeight > this.maybeHeight) {
-                is_rejected = false;
+              if (resultChannelMaybeHeight && resultChannelMaybeHeight >= this.maybeHeight) {
+                is_rejected = true;
                 return;
               }
             }
