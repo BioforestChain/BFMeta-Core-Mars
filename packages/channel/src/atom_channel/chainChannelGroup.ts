@@ -460,6 +460,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                     throw res.error;
                   }
                 } catch (err) {
+                  queryer.removeChainChannelByResult(err);
                   if (AbortException.is(err)) {
                     // 如果被中断了任务，那么直接结束任务
                     throw err;
@@ -710,6 +711,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
             /// 完成任务
             queryer.finish();
           } catch (err) {
+            queryer.removeChainChannelByResult(err);
             err && warn(err);
             retryTimes += 1;
             if (retryTimes >= RETRY_TIMES) {

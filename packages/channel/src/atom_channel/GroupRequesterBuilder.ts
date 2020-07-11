@@ -50,12 +50,16 @@ abstract class GroupRequesterBuilder<CC extends BFChainCore.SimpleChainChannel, 
       },
       (reason) => {
         result.rejected = result.finished = true;
+        if (this._inQueneTasks.has(cc)) {
+          /// 可能被移除了
+          this._retCCMap.set(reason, cc);
+        }
         throw reason;
       },
     );
     return result;
   });
-  private _retCCMap = new Map<R, CC>();
+  private _retCCMap = new Map</* result */ R | unknown /* error */, CC>();
 
   addChainChannel(
     chainChannel: CC,
@@ -83,11 +87,11 @@ abstract class GroupRequesterBuilder<CC extends BFChainCore.SimpleChainChannel, 
   removeChainChannel(chainChannel: CC) {
     return this._inQueneTasks.delete(chainChannel);
   }
-  removeChainChannelByResult(ret: R) {
+  removeChainChannelByResult(ret: /* result */ R | unknown /* error */) {
     const cc = this._retCCMap.get(ret);
     return cc ? this.removeChainChannel(cc) : false;
   }
-  getChainChannelByResult(ret: R) {
+  getChainChannelByResult(ret: /* result */ R | unknown /* error */) {
     return this._retCCMap.get(ret);
   }
   finish() {
