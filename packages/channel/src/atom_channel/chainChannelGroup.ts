@@ -374,7 +374,6 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
           this.moduleMap,
           { ...baseQueryCondition, ...query },
           sort,
-          opts,
         );
         return {
           queryer,
@@ -711,6 +710,9 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
             /// 完成任务
             queryer.finish();
           } catch (err) {
+            if (is_rejected) {
+              return;
+            }
             queryer.removeChainChannelByResult(err);
             err && warn(err);
             retryTimes += 1;
