@@ -55,7 +55,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "execa": "^4.0.2",
+    "execa": "^4.0.3",
     "lerna": "^3.22.0"
   },
   "dependencies": {

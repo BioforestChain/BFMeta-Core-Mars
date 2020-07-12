@@ -6,6 +6,8 @@ import {
   Aborter,
   unsleep,
   PromiseOut,
+  safePromiseThen,
+  safePromiseOffThen,
 } from "@bfchain/util";
 import {
   CoreExceptionGenerator,
@@ -594,7 +596,7 @@ export class ChainChannelHelper {
     let po: PromiseOut<R> | undefined; // = new PromiseOut<R>();
     if (options.aborter) {
       po || (po = new PromiseOut<R>());
-      options.aborter.abortedPromise.catch(po.reject);
+      this._bindRejectedToPromiseOut(options.aborter.abortedPromise, po);
     }
 
     //#region 处理超时问题
@@ -633,10 +635,14 @@ export class ChainChannelHelper {
 
     if (options.rejected) {
       po || (po = new PromiseOut<R>());
-      options.rejected.catch(po.reject);
+      this._bindRejectedToPromiseOut(options.rejected, po);
     }
 
     return po;
+  }
+  private _bindRejectedToPromiseOut(promise: PromiseLike<unknown>, po: PromiseOut<any>) {
+    safePromiseThen(promise, undefined, po.reject);
+    po.onFinished(() => safePromiseOffThen(promise, undefined, po.reject));
   }
 
   wrapAborterOptions<R, ENV = unknown>(resp: Promise<R>, options: undefined, env?: ENV): Promise<R>;

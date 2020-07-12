@@ -15,6 +15,8 @@ import {
   EasyMap,
   cacheObjectGetter,
   ModuleStroge,
+  safePromiseThen,
+  safePromiseOffThen,
 } from "@bfchain/util";
 import { BaseHelper, ChainTimeHelper, ConfigHelper, TransactionHelper } from "@bfchain/core-helper";
 import {
@@ -324,7 +326,16 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       });
 
     const resultGenerator = _resultGenerator || new AsyncIteratorGenerator<TransactionInBlock<T>>();
-    resultPo && resultPo.promise.catch(resultGenerator.reject);
+
+    const resultPromise = resultPo && resultPo.promise;
+    if (resultPromise) {
+      safePromiseThen(resultPromise, undefined, resultGenerator.reject);
+      const offCatch = () => {
+        safePromiseOffThen(resultPromise, undefined, resultGenerator.reject);
+      };
+      resultGenerator.on("done", offCatch);
+      resultGenerator.on("error", offCatch);
+    }
 
     const getChainChannelTimeout = this.helper.getChainChannelTimeout;
     /**私有内部类 */
@@ -630,6 +641,31 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       channelFilter: opts?.channelFilter,
       abortWhenNoChainChannel: opts?.abortWhenNoChainChannel,
     });
+
+    //#region 外部控制器
+
+    const resultPo =
+      opts &&
+      this.helper.parserAborterOptions(opts, {
+        channelGroup: this as BFChainCore.ChainChannelGroup<DH>,
+      });
+
+    let is_rejected = false;
+    const resultPromise = resultPo?.promise;
+    let offCatchResultPo: undefined | (() => void);
+    if (resultPromise) {
+      /// 有一个默认的错误捕捉
+      const catchResultPo = (err: unknown) => {
+        warn(err);
+        is_rejected = true;
+      };
+      safePromiseThen(resultPromise, undefined, catchResultPo);
+      offCatchResultPo = () => {
+        safePromiseOffThen(resultPromise, undefined, catchResultPo);
+      };
+    }
+    //#endregion
+
     try {
       const RETRY_TIMES = Math.min(Math.max(this.size, 2), 5);
 
@@ -637,21 +673,6 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
         this.moduleMap,
         query,
       );
-      const resultPo =
-        opts &&
-        this.helper.parserAborterOptions(opts, {
-          channelGroup: this as BFChainCore.ChainChannelGroup<DH>,
-        });
-
-      let is_rejected = false;
-      const resultPromise = resultPo?.promise;
-      if (resultPromise) {
-        /// 有一个默认的错误捕捉
-        resultPromise.catch((err) => {
-          warn(err);
-          is_rejected = true;
-        });
-      }
 
       const options: BFChainCore.ChannelRequestOptions<DH> = {
         rejected: resultPromise,
@@ -725,6 +746,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     } finally {
       /// 释放并发
       this.releaseParallelTask(parallelTaskId);
+      offCatchResultPo && offCatchResultPo();
     }
   }
 
