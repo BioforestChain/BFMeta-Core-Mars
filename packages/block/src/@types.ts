@@ -14,7 +14,7 @@ declare namespace BFChainCore {
   // #region
   type RecommendedDelegateOptions = {
     /**选出的推荐人数量 */
-    numberOfRecommended: number;
+    maxNumberOfRecommended: number;
     /**选取的区块范围, 最近的 100 轮 */
     numberOfRounds: number;
     /**在线率占比 */

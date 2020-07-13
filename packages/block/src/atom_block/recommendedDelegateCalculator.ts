@@ -313,13 +313,13 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
    * @param {*} sourceArray
    * @param {*} filterSet
    * @param {*} resultArray
-   * @param {*} numberOfRecommended
+   * @param {*} maxNumberOfRecommended
    */
   private allocationQuota(
     sourceArray: string[],
     filterSet: Set<string>,
     resultArray: string[],
-    numberOfRecommended: number,
+    maxNumberOfRecommended: number,
   ) {
     if (sourceArray.length === 0) {
       return;
@@ -330,7 +330,7 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
           resultArray[resultArray.length] = sourceArray[i];
         }
       }
-      if (resultArray.length === numberOfRecommended) {
+      if (resultArray.length === maxNumberOfRecommended) {
         break;
       }
     }
@@ -369,7 +369,7 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     /**最终选出的受托人 */
     const pickDelegates: string[] = [];
     /**本次推选的受托人数量 */
-    const numberOfRecommended = options.numberOfRecommended;
+    const maxNumberOfRecommended = options.maxNumberOfRecommended;
     const blockPerRound = this.config.blockPerRound;
 
     // 获取账户的已投账户
@@ -404,7 +404,7 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
         pickDelegates[pickDelegates.length] = address;
       }
       // 已经选出足够多的人了
-      if (pickDelegates.length === numberOfRecommended) {
+      if (pickDelegates.length === maxNumberOfRecommended) {
         return {
           delegate: pickDelegates,
         };
@@ -430,7 +430,7 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
       this.forgingDelegates.delegates,
       noLongerVoteSet,
       pickDelegates,
-      numberOfRecommended,
+      maxNumberOfRecommended,
     );
     return {
       delegate: pickDelegates,
