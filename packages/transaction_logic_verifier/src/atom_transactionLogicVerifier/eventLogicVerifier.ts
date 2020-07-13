@@ -291,7 +291,6 @@ export class EventLogicVerifier {
           minEffectiveHeight,
           remainUnfrozenTimes,
           amount: remainAsset,
-          blockSignature,
         } = frozenAsset;
         // 是否到达解冻高度
         if (minEffectiveHeight > transaction.applyBlockHeight) {
@@ -325,11 +324,13 @@ export class EventLogicVerifier {
         }
 
         // 剩余解冻次数是否足够
-        if (remainUnfrozenTimes && remainUnfrozenTimes === 0) {
-          throw new ConsensusException(UNFROZEN_TIME_USE_UP, {
-            frozenId: transactionSignature,
-            ...Function_Exception_Detail,
-          });
+        if (remainUnfrozenTimes !== undefined) {
+          if (remainUnfrozenTimes === 0) {
+            throw new ConsensusException(UNFROZEN_TIME_USE_UP, {
+              frozenId: transactionSignature,
+              ...Function_Exception_Detail,
+            });
+          }
         }
 
         next();
