@@ -510,10 +510,10 @@ export class TransactionHelper {
     }
     const { jsbiHelper } = this;
     const miniUnit = BigInt(0);
-    // FIXME: 随机方式待优化
+    const minAssets = BigInt(this.config.miniUnit);
     const averageAsset = jsbiTotalAsset / BigInt(totalGrabableTimes);
     if (averageAsset === miniUnit) {
-      return jsbiTotalAsset;
+      return minAssets;
     }
     const grabAsset = BigInt(
       `0x${await this.cryptoHelper
@@ -525,7 +525,6 @@ export class TransactionHelper {
         .digest("hex")}`,
     );
     const maxAssets = averageAsset * BigInt(2);
-    const minAssets = BigInt(this.config.miniUnit);
     let amount = jsbiHelper.multiplyFloorFractionString(totalGiftAssetNumber, {
       numerator: grabAsset,
       denominator: BigInt(2) ** BigInt(128),
@@ -542,13 +541,7 @@ export class TransactionHelper {
     if (amount < minAssets) {
       amount = minAssets;
     }
-    // let amount = jsbiHelper.multiplyFloorFractionString(totalGiftAssetNumber, {
-    //   numerator: grabAsset,
-    //   denominator: BigInt(2) ** BigInt(128),
-    // });
-    // if (amount <= miniUnit) {
-    //   amount = BigInt(this.config.miniUnit);
-    // }
+
     return amount;
   }
 
@@ -604,7 +597,18 @@ export class TransactionHelper {
    * @param totalGrabableTimes
    */
   calcGrabAverageGiftAssetNumber(totalGiftAssetNumber: string, totalGrabableTimes: number) {
-    return BigInt(totalGiftAssetNumber) / BigInt(totalGrabableTimes);
+    const jsbiTotalAsset = BigInt(totalGiftAssetNumber);
+    const minAssets = BigInt(this.config.miniUnit);
+    if (totalGrabableTimes === 1) {
+      return jsbiTotalAsset;
+    }
+    const miniUnit = BigInt(0);
+    const averageAsset = jsbiTotalAsset / BigInt(totalGrabableTimes);
+    if (averageAsset === miniUnit) {
+      return minAssets;
+    }
+
+    return averageAsset;
   }
   /**
    * 通用的红包交易金额计算器
