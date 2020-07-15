@@ -471,7 +471,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                   }
                 } catch (err) {
                   queryer.removeChainChannelByResult(err);
-                  if (AbortException.is(err)) {
+                  if (AbortException.is(err) || resultGenerator.is_done) {
                     // 如果被中断了任务，那么直接结束任务
                     throw err;
                   }
