@@ -795,10 +795,10 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       senderEquity,
     );
     if (!powCheckResult) {
-      throw new ConsensusException(
-        VERIFY_TRANSACTION_POW_OF_WORK_ERROR,
-        `Transaction pow check field, block height ${currentBlockHeight} transaction signature ${transaction.signature} sender ${transaction.senderId} senderEquity ${senderEquity} sender transaction count in block ${tranSenderCount}`,
-      );
+      throw new ConsensusException(VERIFY_TRANSACTION_POW_OF_WORK_ERROR, {
+        reason: `Transaction pow check field, block height ${currentBlockHeight} transaction signature ${transaction.signature} sender ${transaction.senderId} senderEquity ${senderEquity} sender transaction count in block ${tranSenderCount}`,
+        ...Function_Exception_Detail,
+      });
     }
   }
 
