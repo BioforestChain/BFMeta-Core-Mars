@@ -90,106 +90,102 @@ export class TransactionHelper {
   }
   //#region 交易类型
   /** BSE: 基础交易 */
-  /** SIGNATURE: “签名”交易 */
+  /** SIGNATURE: 二次密码 */
   get SIGNATURE() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.SIGNATURE);
   }
-  /** DELEGATE: 注册为受托人 */
+  /** DELEGATE: 注册锻造者 */
   get DELEGATE() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.DELEGATE);
   }
-  /** VOTE: 投票 */
+  /** VOTE: 治理投票 */
   get VOTE() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.VOTE);
   }
-  /** USERNAME: 注册用户别名地址 */
+  /** USERNAME: 设置用户名 */
   get USERNAME() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.USERNAME);
   }
-  /** ACCEPT_VOTE: 接收投票 */
+  /** ACCEPT_VOTE: 开始收票 */
   get ACCEPT_VOTE() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.ACCEPT_VOTE);
   }
-  /** REJECT_VOTE: 拒绝投票 */
+  /** REJECT_VOTE: 停止收票 */
   get REJECT_VOTE() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.REJECT_VOTE);
   }
-  // /** MULTI:注册多重签名帐号 */
-  // get MULTI() {
-  //   return this.getTransactionType(TRANSACTION_TYPES_BASE.MULTI);
-  // }
   /** WOD: 拓展交易 */
-  /** CUSTOM: 自定义交易 */
+  /** CUSTOM: 个性事件 */
   get CUSTOM() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.CUSTOM);
   }
-  /** DAPP: 侧链应用 */
+  /** DAPP: 创建DAPPID */
   get DAPP() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.DAPP);
   }
-  /**DAPPPURCHASING 购买侧链应用 */
+  /**DAPPPURCHASING *DAPPID付费 */
   get DAPP_PURCHASING() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.DAPP_PURCHASING);
   }
-  /** REGISTER_CHAIN: 注册链 */
+  /** REGISTER_CHAIN: 注册新世界 */
   get REGISTER_CHAIN() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.REGISTER_CHAIN);
   }
-  /** EXT: 存证交易 */
+  /** EXT: 数据存证 */
   get MARK() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.MARK);
   }
   /** SOC */
-  /** AST: 数字资产交易 */
-  /** ISSUE_ASSET: 发行数字资产 */
+  /** AST: 权益 */
+  /** ISSUE_ASSET: 创建权益 */
   get ISSUE_ASSET() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.ISSUE_ASSET);
   }
-  /** DESTORY_ASSET: 销毁数字资产 */
+  /** DESTORY_ASSET: 销毁权益 */
   get DESTORY_ASSET() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.DESTORY_ASSET);
   }
-  /** TRANSFER_ASSET: 数字资产转账 */
+  /** TRANSFER_ASSET: 权益转移 */
   get TRANSFER_ASSET() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.TRANSFER_ASSET);
   }
-  /** TO_EXCHANGE_ASSET: 发起数字资产转换 */
-  get TO_EXCHANGE_ASSET() {
-    return this.getTransactionType(TRANSACTION_TYPES_BASE.TO_EXCHANGE_ASSET);
-  }
-  /** BE_EXCHANGE_ASSET: 接收数字资产转换 */
-  get BE_EXCHANGE_ASSET() {
-    return this.getTransactionType(TRANSACTION_TYPES_BASE.BE_EXCHANGE_ASSET);
-  }
-  /**GIFT_ASSET: 资产赠送 */
+  /**GIFT_ASSET: 发起权益赠送 */
   get GIFT_ASSET() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.GIFT_ASSET);
   }
-  /**GRAB_ASSET: 抢资产(红包) */
+  /**GRAB_ASSET: 接受权益赠送 */
   get GRAB_ASSET() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.GRAB_ASSET);
   }
-  /**TRUST_ASSET: 委托资产 */
+  /**TRUST_ASSET: 发起权益委托 */
   get TRUST_ASSET() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.TRUST_ASSET);
   }
-  /**SIGN_FOR_ASSET: 签收资产 */
+  /**SIGN_FOR_ASSET: 签收资产委托 */
   get SIGN_FOR_ASSET() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.SIGN_FOR_ASSET);
   }
-  /**EMIGRATE_ASSET: 资产迁出 */
+  /**EMIGRATE_ASSET: 权益迁出 */
   get EMIGRATE_ASSET() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.EMIGRATE_ASSET);
   }
-  /**IMMIGRATE_ASSET: 资产迁入 */
+  /**IMMIGRATE_ASSET: 权益迁入 */
   get IMMIGRATE_ASSET() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.IMMIGRATE_ASSET);
   }
-  /**TO_EXCHANGE_SPECIAL_ASSET: 特殊资产交换 */
+  /** TO_EXCHANGE_ASSET: 发起权益交换 */
+  get TO_EXCHANGE_ASSET() {
+    return this.getTransactionType(TRANSACTION_TYPES_BASE.TO_EXCHANGE_ASSET);
+  }
+  /** BE_EXCHANGE_ASSET: 接受权益交换 */
+  get BE_EXCHANGE_ASSET() {
+    return this.getTransactionType(TRANSACTION_TYPES_BASE.BE_EXCHANGE_ASSET);
+  }
+  /**TO_EXCHANGE_SPECIAL_ASSET: 发起资产交换 */
   get TO_EXCHANGE_SPECIAL_ASSET() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.TO_EXCHANGE_SPECIAL_ASSET);
   }
-  /**BE_EXCHANGE_SPECIAL_ASSET: 特殊资产交换 */
+  /**BE_EXCHANGE_SPECIAL_ASSET: 接受资产交换 */
   get BE_EXCHANGE_SPECIAL_ASSET() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.BE_EXCHANGE_SPECIAL_ASSET);
   }
@@ -200,14 +196,15 @@ export class TransactionHelper {
    * app.ibt.bfchain(2 级)
    * ark.app.ibt.bfchain(3 级)
    */
+  /**LOCATION_NAME：注册/注销链域名 */
   get LOCATION_NAME() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.LOCATION_NAME);
   }
-  /** SET_RECORD_VALUE_LNS: 设置解析 */
+  /** SET_LNS_RECORD_VALUE: 设置链域名解析值 */
   get SET_LNS_RECORD_VALUE() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.SET_LNS_RECORD_VALUE);
   }
-  /** SET_MANAGER_LNS: 设置管理员 */
+  /** SET_LNS_MANAGER: 设置链域名管理员 */
   get SET_LNS_MANAGER() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.SET_LNS_MANAGER);
   }
