@@ -309,7 +309,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     // /**异常时重试次数 */
     // const RETRY_TIMES = 3;
     const { offset, limit: totalLength, ...baseQueryCondition } = query;
-    const limit = totalLength || Infinity;
+    const limit = baseQueryCondition.signature ? 1 : totalLength || Infinity;
 
     const parallelTaskId = `Group(${this.groupName}) queryTransactions-${
       Date.now() + Math.random()
@@ -490,8 +490,8 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                     );
                   }
 
-                  times++;
-                  return false;
+                  /// 如果异常次数过多，那么有必要终结这个查询
+                  return times++ > 100;
                 }
               }, /**默认不释放节点 */ false);
               if (finished) {
