@@ -130,7 +130,7 @@ export class ChainChannel<
     once?: boolean,
   ) {
     if (once) {
-      const remover = this.endpoint.onClose(err => {
+      const remover = this.endpoint.onClose((err) => {
         handler(err);
         remover();
       });
@@ -205,6 +205,9 @@ export class ChainChannel<
     const req_id = this._req_id_acc[0]++;
     this.postResponseMessage(req_id, cmd, binary);
     const req_task = new PromiseOut<Uint8Array>();
+    req_task.onFinished(() => {
+      this.req_response_map.delete(req_id);
+    });
     this.req_response_map.set(req_id, req_task);
 
     let resp = req_task.promise;
@@ -416,7 +419,7 @@ export class ChainChannel<
               /// 查询成功
               if (queryResult) {
                 response.status = RESPONSE_STATUS.success;
-                response.transactions = queryResult.transactions.map(tib =>
+                response.transactions = queryResult.transactions.map((tib) =>
                   TransactionInBlock.fromObject(tib),
                 );
               }
@@ -534,7 +537,6 @@ export class ChainChannel<
                 );
                 return;
               }
-              this.req_response_map.delete(req_id);
               task.resolve(binary);
               // let exception: Exception | undefined;
               // if (data) {
