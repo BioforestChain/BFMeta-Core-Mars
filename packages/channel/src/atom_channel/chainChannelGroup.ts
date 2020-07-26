@@ -396,7 +396,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     /// 在异步任务中进行任务分发
     (async () => {
       /**发往每一台节点的查询数量 */
-      const unitLength = 1; // totalLength ? Math.ceil(totalLength / chainChannelList.length) : 1;
+      const unitLength = 5; // totalLength ? Math.ceil(totalLength / chainChannelList.length) : 1;
       /**所有查询任务的链 */
       let taskChain = Promise.resolve();
       /**是否已经触碰到完结的边界了 */
@@ -442,10 +442,10 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
        * @param task_offset
        * @param times
        */
-      const doTask = (task_offset: number) => {
+      const doTask = (task_offset: number, task_limit: number) => {
         const { queryer, options } = queryerMap.forceGet({
           offset: task_offset,
-          limit: unitLength,
+          limit: task_limit,
         });
         /**
          * 失败次数
@@ -466,7 +466,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                     res.transactions.forEach((trs, i) => {
                       resultGenerator.push(trs, task_offset - offset + i);
                     });
-                    if (res.transactions.length < unitLength) {
+                    if (res.transactions.length < task_limit) {
                       /// 如果是高度最高的那个节点返回空列表，那么基本就是空列表没跑了
                       const resultChannelMaybeHeight = queryer.getChainChannelByResult(res)
                         ?.maybeHeight;
@@ -547,7 +547,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       let waitUseableChainChannel: PromiseOut<void>;
 
       /// 分发任务
-      for (let i = 0; i < limit; i += unitLength) {
+      for (let i = 0, limit = unitLength; i < limit; i += limit) {
         const task_offset = i + offset;
         while (task_offset > maxOffset) {
           /// 因为query_done_offset影响着整个循环的生命周期,所以这里允许使用 query_done_offset 来控制进度锁
@@ -563,7 +563,14 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
           break;
         }
         waitUseableChainChannel = new PromiseOut();
-        await doTask(task_offset);
+        await doTask(task_offset, limit);
+
+        if (i + unitLength > limit) {
+          limit = i + unitLength - limit;
+          if (limit <= 0) {
+            break;
+          }
+        }
       }
       // 等待所有查询任务完成
       await taskChain;
