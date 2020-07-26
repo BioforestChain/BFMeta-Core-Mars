@@ -398,9 +398,47 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       /**发往每一台节点的查询数量 */
       const unitLength = 1; // totalLength ? Math.ceil(totalLength / chainChannelList.length) : 1;
       /**所有查询任务的链 */
-      let task_chain = Promise.resolve();
+      let taskChain = Promise.resolve();
       /**是否已经触碰到完结的边界了 */
-      let query_done_offset = limit + offset;
+      let queryDoneOffset = limit + offset;
+      /**更新边界,同时会释放迭代锁 */
+      const setQueryDoneOffset = (newOffset: number) => {
+        queryDoneOffset = newOffset;
+        freeIteratorLock();
+      };
+
+      /**迭代锁 */
+      let iteratorLock: PromiseOut<void> | undefined; //= new PromiseOut<void>();
+      /**释放迭代锁 */
+      const freeIteratorLock = () => {
+        if (iteratorLock) {
+          iteratorLock.resolve();
+          iteratorLock = undefined;
+        }
+      };
+      /**触发迭代锁的条件 */
+      let maxOffset = -1;
+
+      //#region 请求模式
+
+      /// 是要全部请求
+      resultGenerator.on("requestAll", (_, next) => {
+        if (!maxOffset) {
+          freeIteratorLock();
+          maxOffset = Infinity;
+        }
+        next();
+      });
+      /// 还是一个个请求
+      resultGenerator.on("requestItem", (index, next) => {
+        if (index > maxOffset) {
+          maxOffset = index;
+          freeIteratorLock();
+        }
+        next();
+      });
+      //#endregion
+
       /**
        * 执行任务
        * @param task_offset
@@ -416,7 +454,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
          */
         let times = 0;
         // const waitUseableChainChannel = new PromiseOut<void>();
-        task_chain = task_chain.then(
+        taskChain = taskChain.then(
           async () => {
             do {
               const finished = await requestChainChannel(async (event) => {
@@ -439,7 +477,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                         resultChannelMaybeHeight >= this.maybeHeight
                       ) {
                         /// 得到了查询终点
-                        query_done_offset = task_offset;
+                        setQueryDoneOffset(task_offset);
                         // 确认节点的工作，让其继续下一个工作
                         event.autoFreeChainChannel = true;
                         /// 中断这次查询
@@ -505,37 +543,32 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
         return waitUseableChainChannel.promise;
       };
 
+      /**节点锁
+       * 同一时间内节点只会由一个请求在执行
+       */
       let waitUseableChainChannel: PromiseOut<void>;
 
-      /// 请求模式,是要全部请求,还是一个个请求
-      let iteratorLock = new PromiseOut<void>();
-      let isRequestAll = false;
-      resultGenerator.on("requestAll", () => {
-        if (!isRequestAll) {
-          iteratorLock.resolve();
-          isRequestAll = true;
-        }
-      });
-      resultGenerator.on("requestItem", () => {
-        if (!isRequestAll) {
-          iteratorLock.resolve();
-          iteratorLock = new PromiseOut<void>();
-        }
-      });
       /// 分发任务
       for (let i = 0; i < limit; i += unitLength) {
         const task_offset = i + offset;
-        if (task_offset >= query_done_offset) {
-          break;
+        while (task_offset > maxOffset) {
+          /// 因为query_done_offset影响着整个循环的生命周期,所以这里允许使用 query_done_offset 来控制进度锁
+          if (task_offset >= queryDoneOffset) {
+            break;
+          }
+          if (!iteratorLock) {
+            iteratorLock = new PromiseOut();
+            await iteratorLock.promise;
+          }
         }
-        if (!isRequestAll) {
-          await iteratorLock.promise;
+        if (task_offset >= queryDoneOffset) {
+          break;
         }
         waitUseableChainChannel = new PromiseOut();
         await doTask(task_offset);
       }
       // 等待所有查询任务完成
-      await task_chain;
+      await taskChain;
       // 结束
       await resultGenerator.done();
     })()
