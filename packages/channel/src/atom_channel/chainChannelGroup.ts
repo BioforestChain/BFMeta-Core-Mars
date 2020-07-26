@@ -423,10 +423,8 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
 
       /// 是要全部请求
       resultGenerator.on("requestAll", (_, next) => {
-        if (!maxOffset) {
-          freeIteratorLock();
-          maxOffset = Infinity;
-        }
+        freeIteratorLock();
+        maxOffset = Infinity;
         next();
       });
       /// 还是一个个请求
