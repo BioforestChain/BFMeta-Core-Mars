@@ -547,7 +547,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       let waitUseableChainChannel: PromiseOut<void>;
 
       /// 分发任务
-      for (let i = 0, limit = unitLength; i < limit; i += limit) {
+      for (let i = 0, task_limit = unitLength; i < limit; i += task_limit) {
         const task_offset = i + offset;
         while (task_offset > maxOffset) {
           /// 因为query_done_offset影响着整个循环的生命周期,所以这里允许使用 query_done_offset 来控制进度锁
@@ -563,11 +563,11 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
           break;
         }
         waitUseableChainChannel = new PromiseOut();
-        await doTask(task_offset, limit);
+        await doTask(task_offset, task_limit);
 
-        if (i + unitLength > limit) {
-          limit = i + unitLength - limit;
-          if (limit <= 0) {
+        if (i + task_limit > limit) {
+          task_limit = i + task_limit - limit;
+          if (task_limit <= 0) {
             break;
           }
         }
