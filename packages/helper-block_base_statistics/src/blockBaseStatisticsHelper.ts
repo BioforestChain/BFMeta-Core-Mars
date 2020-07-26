@@ -176,7 +176,7 @@ export class BlockBaseStatisticsHelper {
   ) {
     const bindedSet = BlockBaseStatisticsHelper.eventEmitterStatisticsWM.forceGet(eventEmitter);
     if (bindedSet.has(statistics_info)) {
-      console.debug("已经绑定过统计用的ApplyTransaction");
+      // console.debug("已经绑定过统计用的ApplyTransaction");
       return;
     }
     bindedSet.add(statistics_info);
