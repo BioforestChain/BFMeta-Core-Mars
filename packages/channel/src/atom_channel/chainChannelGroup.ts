@@ -426,7 +426,11 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                   const res = await queryer.addChainChannel(event.chainChannel, options);
 
                   if (res.status === RESPONSE_STATUS.success) {
-                    if (res.transactions.length === 0) {
+                    // 保存查询结果
+                    res.transactions.forEach((trs, i) => {
+                      resultGenerator.push(trs, task_offset - offset + i);
+                    });
+                    if (res.transactions.length < unitLength) {
                       /// 如果是高度最高的那个节点返回空列表，那么基本就是空列表没跑了
                       const resultChannelMaybeHeight = queryer.getChainChannelByResult(res)
                         ?.maybeHeight;
@@ -434,6 +438,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                         resultChannelMaybeHeight &&
                         resultChannelMaybeHeight >= this.maybeHeight
                       ) {
+                        /// 得到了查询终点
                         query_done_offset = task_offset;
                         // 确认节点的工作，让其继续下一个工作
                         event.autoFreeChainChannel = true;
@@ -451,10 +456,6 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                       queryer.finish();
                       // 确认节点的工作，让其继续下一个工作
                       event.autoFreeChainChannel = true;
-                      // 保存查询结果
-                      res.transactions.forEach((trs, i) => {
-                        resultGenerator.push(trs, task_offset - offset + i);
-                      });
                       return true;
                     }
                   } else if (res.status === RESPONSE_STATUS.busy) {
@@ -505,11 +506,30 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       };
 
       let waitUseableChainChannel: PromiseOut<void>;
+
+      /// 请求模式,是要全部请求,还是一个个请求
+      let iteratorLock = new PromiseOut<void>();
+      let isRequestAll = false;
+      resultGenerator.on("requestAll", () => {
+        if (!isRequestAll) {
+          iteratorLock.resolve();
+          isRequestAll = true;
+        }
+      });
+      resultGenerator.on("requestItem", () => {
+        if (!isRequestAll) {
+          iteratorLock.resolve();
+          iteratorLock = new PromiseOut<void>();
+        }
+      });
       /// 分发任务
       for (let i = 0; i < limit; i += unitLength) {
         const task_offset = i + offset;
         if (task_offset >= query_done_offset) {
           break;
+        }
+        if (!isRequestAll) {
+          await iteratorLock.promise;
         }
         waitUseableChainChannel = new PromiseOut();
         await doTask(task_offset);
