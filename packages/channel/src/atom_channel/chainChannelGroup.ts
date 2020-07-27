@@ -464,7 +464,10 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                   if (res.status === RESPONSE_STATUS.success) {
                     // 保存查询结果
                     res.transactions.forEach((trs, i) => {
-                      resultGenerator.push(trs, task_offset - offset + i);
+                      const index = task_offset - offset + i;
+                      if (resultGenerator.canPush(index)) {
+                        resultGenerator.push(trs);
+                      }
                     });
                     if (res.transactions.length < task_limit) {
                       /// 如果是高度最高的那个节点返回空列表，那么基本就是空列表没跑了

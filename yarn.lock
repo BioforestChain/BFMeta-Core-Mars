@@ -343,10 +343,10 @@
   resolved "http://192.168.250.245:4873/@bfchain%2futil-typings/-/util-typings-4.8.23.tgz#6af59cf47c6e9a360dab0dbe1d9e46b8c9177b08"
   integrity sha512-HAKFrSJWEIsJadE3jv4e66SqLgcf2rPJNRzqWybMsoo8IIx8puptsuSBquYzkYjS5Mg5OcJGDBXGRKBfasPqdA==
 
-"@bfchain/util@^4.10.1":
-  version "4.10.1"
-  resolved "http://192.168.250.245:4873/@bfchain%2futil/-/util-4.10.1.tgz#ec0c394dc578e90756e49c99d0463374ed7b77aa"
-  integrity sha512-Nm0CXnTXZ5JVGvQLSr+rL8MTacQgqR7lwtzmIgtjuJo8nrJ1TH9FktxXZXiuTNUyuTkbuzo4y0TuCWG9oLqUEQ==
+"@bfchain/util@^4.10.3":
+  version "4.10.3"
+  resolved "http://192.168.250.245:4873/@bfchain%2futil/-/util-4.10.3.tgz#3718fff445f8f75bc19565e68138dfe210c5b0ff"
+  integrity sha512-E0VQYO0vnoZp9Nr/9STz0ccPv80eiyoTUky7c3gy+lUZ9RPdmWdeFzp1X76ovWgG9qmaQgOf1p4BN4Uy/c4qcA==
   dependencies:
     "@bfchain/util-aborter" "4.9.13"
     "@bfchain/util-buffer" "4.8.23"
