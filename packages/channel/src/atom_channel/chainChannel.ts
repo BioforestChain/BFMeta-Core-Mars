@@ -97,6 +97,20 @@ export abstract class ChainChannelBase
   }
 }
 
+/**请求的响应回调缓存 */
+const req_response_map = new Map<number | string, PromiseOut<Uint8Array>>();
+/**请求ID累加器 */
+const _req_id_acc = new Uint32Array(1); // 使用Uint32类型，在超过过2**32后自动归零
+const getReqId = () => {
+  const req_id = _req_id_acc[0]++;
+  const reqTask = req_response_map.get(req_id);
+  if (reqTask) {
+    reqTask.reject(new TimeOutException("reqId reuse"));
+    req_response_map.delete(req_id);
+  }
+  return req_id;
+};
+
 /**
  * 为数据收发处理器包装数据处理
  */
@@ -121,6 +135,16 @@ export class ChainChannel<
   ) {
     super();
     this.initOnMessage();
+    endpoint.onClose(() => {
+      for (const reqId of this._reqIdSet) {
+        const reqTask = req_response_map.get(reqId);
+        if (reqTask) {
+          reqTask.reject(new TimeOutException("chainChannel closed"));
+          req_response_map.delete(reqId);
+        }
+      }
+      this._reqIdSet.clear();
+    });
   }
   get diffTime() {
     return 0;
@@ -181,10 +205,6 @@ export class ChainChannel<
     // 将新的数据放置到最后
     _delayHistroyList[LEN - 1] = delay;
   }
-  /**请求的响应回调缓存 */
-  readonly req_response_map = new Map<number | string, PromiseOut<Uint8Array>>();
-  /**请求ID累加器 */
-  protected _req_id_acc = new Uint32Array(1); // 使用Uint32类型，在超过过2**32后自动归零
   protected _request<T>(
     cmd: DUPLEX_API_CMD,
     data: Message,
@@ -196,23 +216,29 @@ export class ChainChannel<
   private _requestDataToBinary(data: Message) {
     return new Uint8Array((data.constructor as typeof Message).encode(data).finish());
   }
+  private _reqIdSet = new Set<number>();
   async _requestWithBinaryData<T>(
     cmd: DUPLEX_API_CMD,
     binary: Uint8Array,
     ResonseBoxer: (bytes: Uint8Array) => BFChainUtil.PromiseMaybe<T>,
     options = this.defaultReqOptions,
   ) {
-    const req_id = this._req_id_acc[0]++;
+    const req_id = getReqId();
+    this._reqIdSet.add(req_id);
     this.postResponseMessage(req_id, cmd, binary);
     const req_task = new PromiseOut<Uint8Array>();
     req_task.onFinished(() => {
-      this.req_response_map.delete(req_id);
+      req_response_map.delete(req_id);
+      this._reqIdSet.delete(req_id);
     });
-    this.req_response_map.set(req_id, req_task);
+    req_response_map.set(req_id, req_task);
 
     let resp = req_task.promise;
 
     if (options) {
+      if (!options.timeout) {
+        options.timeout = 1000;
+      }
       if (options.timeoutException === undefined) {
         options = Object.create(options, {
           timeoutException: {
@@ -528,7 +554,7 @@ export class ChainChannel<
             case DUPLEX_API_CMD.NEW_BLOCK_RETURN:
             case DUPLEX_API_CMD.GET_PEER_INFO_RETURN:
             case DUPLEX_API_CMD.RESPONSE: {
-              const task = this.req_response_map.get(req_id);
+              const task = req_response_map.get(req_id);
               if (!task) {
                 error(
                   new NoFoundException("onMessage get invalid req_id", {
