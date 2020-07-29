@@ -102,7 +102,7 @@ const req_response_map = new Map<number | string, PromiseOut<Uint8Array>>();
 /**请求ID累加器 */
 const _req_id_acc = new Uint32Array(1); // 使用Uint32类型，在超过过2**32后自动归零
 const getReqId = () => {
-  const req_id = _req_id_acc[0]++;
+  const req_id = _req_id_acc[0]++ || _req_id_acc[0]++;
   const reqTask = req_response_map.get(req_id);
   if (reqTask) {
     reqTask.reject(new TimeOutException("reqId reuse"));
@@ -218,8 +218,7 @@ export class ChainChannel<
   }
   private _reqIdSet = new Set<number>();
   _sendWithBinaryData(cmd: DUPLEX_API_CMD, binary: Uint8Array) {
-    const req_id = getReqId();
-    this.postResponseMessage(req_id, cmd, binary);
+    this.postResponseMessage(0, cmd, binary);
   }
   async _requestWithBinaryData<T>(
     cmd: DUPLEX_API_CMD,
@@ -567,11 +566,13 @@ export class ChainChannel<
             case DUPLEX_API_CMD.RESPONSE: {
               const task = req_response_map.get(req_id);
               if (!task) {
-                error(
-                  new NoFoundException("onMessage get invalid req_id", {
-                    req_id,
-                  }),
-                );
+                if (req_id !== 0) {
+                  error(
+                    new NoFoundException("onMessage get invalid req_id", {
+                      req_id,
+                    }),
+                  );
+                }
                 return;
               }
               task.resolve(binary);
