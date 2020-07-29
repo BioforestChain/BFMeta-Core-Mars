@@ -150,6 +150,7 @@ declare namespace BFChainCore {
       transaction: NewTransactionArgJSON["transaction"],
       opts?: ChannelRequestOptions<any>,
     ): Promise<import("@bfchain/core-model").NewTransactionReturnModel>;
+    fastBroadcastTransaction(transaction: NewTransactionArgJSON["transaction"]): Promise<void>;
     /**查询区块 */
     queryBlock<B extends Block = Block>(
       query: QueryBlockArgJSON["query"],
@@ -184,6 +185,10 @@ declare namespace BFChainCore {
       ResonseBoxer: (bytes: Uint8Array) => T,
       opts?: ChannelRequestOptions<any>,
     ): Promise<T>;
+    _sendWithBinaryData(
+      cmd: import("@bfchain/core-model").DUPLEX_API_CMD,
+      binary: Uint8Array,
+    ): void;
   }
 
   interface ChainChannel<THIS extends SimpleChainChannel = SimpleChainChannel>
@@ -240,6 +245,7 @@ declare namespace BFChainCore {
       transaction: NewTransactionArgJSON["transaction"],
       opts?: ChannelRequestOptions<THIS>,
     ): Promise<import("@bfchain/core-model").NewTransactionReturnModel>;
+    fastBroadcastTransaction(transaction: NewTransactionArgJSON["transaction"]): Promise<void>;
     /**查询区块 */
     queryBlock<B extends Block = Block>(
       query: QueryBlockArgJSON["query"],
@@ -332,6 +338,13 @@ declare namespace BFChainCore {
           }
       )[]
     >;
+    fastBroadcastTransaction(
+      transaction: NewTransactionArgJSON["transaction"],
+      opts?: ChannelGroupRequestOptions<CC> & {
+        max_parallel_num?: number;
+      },
+      event?: BFChainUtil.QueneEventEmitter<BroadcastNewTransactionEvents<CC>>,
+    ): Promise<void>;
     /**
      * 查询区块
      */

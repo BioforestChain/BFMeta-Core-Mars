@@ -217,6 +217,10 @@ export class ChainChannel<
     return new Uint8Array((data.constructor as typeof Message).encode(data).finish());
   }
   private _reqIdSet = new Set<number>();
+  _sendWithBinaryData(cmd: DUPLEX_API_CMD, binary: Uint8Array) {
+    const req_id = getReqId();
+    this.postResponseMessage(req_id, cmd, binary);
+  }
   async _requestWithBinaryData<T>(
     cmd: DUPLEX_API_CMD,
     binary: Uint8Array,
@@ -342,6 +346,13 @@ export class ChainChannel<
       transaction.asset,
     );
     return res;
+  }
+  /**
+   * 快速广播,无回调
+   */
+  async fastBroadcastTransaction(transaction: BFChainCore.NewTransactionArgJSON["transaction"]) {
+    const args = await this.initBroadcastTransactionArg(transaction);
+    this._sendWithBinaryData(args[0], args[1]);
   }
   /**查询区块 */
   async queryBlock<B extends Block = Block>(

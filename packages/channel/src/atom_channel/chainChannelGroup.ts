@@ -691,12 +691,53 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     );
     return resultList;
   }
+  async fastBroadcastTransaction(
+    transaction: BFChainCore.NewTransactionArgJSON["transaction"],
+    opts?: BFChainCore.ChannelGroupRequestOptions<DH> & { max_parallel_num?: number },
+    event?: QueneEventEmitter<BFChainCore.BroadcastNewTransactionEvents<DH>>,
+  ) {
+    let initedArgs:
+      | readonly [
+          DUPLEX_API_CMD,
+          Uint8Array,
+          (params: Uint8Array | ArrayBuffer) => NewTransactionReturnModel,
+          BFChainCore.ChannelRequestOptions<DH> | undefined,
+        ]
+      | undefined;
+
+    let chainChannelList: DH[] = [];
+    if (opts && opts.directAddress && opts.directAddress.size > 0) {
+      const directAddress = opts.directAddress;
+      for (const DH of this.chainChannelSet.values()) {
+        if (directAddress.has(DH.address)) {
+          chainChannelList.push(DH);
+        }
+      }
+    } else {
+      chainChannelList = [...this.chainChannelSet.values()];
+    }
+    let is_break = event && (await event.emit("startBroadcasting", { chainChannelList }));
+    if (is_break && is_break.break) {
+      return;
+    }
+    const startTime = this.timeHelper.now();
+    /// 开始广播
+    for (const chainChannel of chainChannelList) {
+      initedArgs || (initedArgs = await chainChannel.initBroadcastTransactionArg(transaction));
+      try {
+        chainChannel._sendWithBinaryData(initedArgs[0], initedArgs[1]);
+      } catch (err) {}
+    }
+    const endTime = this.timeHelper.now();
+    event && event.emit("endBroadcast", { duraction: endTime - startTime });
+  }
   /**
    * 查询区块
    */
   async queryBlock<B extends Block = CommonBlock>(
     query: BFChainCore.QueryBlockArgJSON["query"],
     opts?: BFChainCore.ChannelGroupRequestOptions<DH>,
+    event?: QueneEventEmitter<BFChainCore.BroadcastNewTransactionEvents<DH>>,
   ): Promise<B | undefined> {
     const parallelTaskId = `Group(${this.groupName}) queryBlock-${Date.now() + Math.random()}`;
     const { requestChainChannel } = this.startParallelTask(parallelTaskId, {
