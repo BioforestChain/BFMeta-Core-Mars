@@ -149,15 +149,6 @@ export class CommonBlockVerify<T extends Block> {
   }
 
   /**
-   * 校验区块 remark 大小
-   *
-   * @param block
-   */
-  verifyBlockRemarkSize(block: T) {
-    this.blockHelper.verifyBlockRemarkSize(block);
-  }
-
-  /**
    * 校验区块大小
    *
    */
@@ -228,13 +219,11 @@ export class CommonBlockVerify<T extends Block> {
          * 因此需要有一个循环来让blockSize稳定在一个区间内。
          */
         const newBlockSizeInfo = getBlockSizeByteSizeInfo(newBlockSize);
-
-        if (newBlockSizeInfo.size !== oldBlockSizeInfo.size) {
-          newBlockSize += newBlockSizeInfo.size - oldBlockSizeInfo.size;
-          oldBlockSizeInfo = newBlockSizeInfo;
-        } else {
+        if (newBlockSizeInfo.size === oldBlockSizeInfo.size) {
           break;
         }
+        newBlockSize += newBlockSizeInfo.size - oldBlockSizeInfo.size;
+        oldBlockSizeInfo = newBlockSizeInfo;
       } while (true);
     }
     return newBlockSize;

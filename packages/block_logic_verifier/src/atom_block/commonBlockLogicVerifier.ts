@@ -26,7 +26,7 @@ export class CommonBlockLogicVerifier extends BlockLogicVerifier {
     return true;
   }
 
-  async verifyBlockRemark(
+  async verifyBlockAsset(
     block: CommonBlock,
     transactionGetterHelper = this.transactionGetterHelper,
     blockGetterHelper = this.blockGetterHelper,

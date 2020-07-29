@@ -32,7 +32,7 @@ async function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate
     fee: "1000", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
     dappid: getRandomDAppid(), // 交易所属的 dappid
-    lns: fullBfchainCore.config.genesisBlock.asset.genesisBlock.genesisNodeAddress,
+    lns: fullBfchainCore.config.genesisBlock.asset.genesisAsset.genesisLocationName,
     sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: fullBfchainCore.config.magic, // 交易来源链的 magic
     toMagic: registerBfchainCore.config.magic, // 交易去往链的 magic

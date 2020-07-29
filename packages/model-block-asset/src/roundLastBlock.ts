@@ -6,11 +6,11 @@ import { cacheBytesGetter } from "@bfchain/core-model-cacher";
 /**
  * RoundLastBlock 区块 asset 外层模型
  */
-@Type.d("RoundLastBlockModel")
-export class RoundLastBlockModel extends RoundDelegateModel<RoundLastBlockModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.RoundLastBlockJSON> {
+@Type.d("RoundLastAssetModel")
+export class RoundLastAssetModel extends RoundDelegateModel<RoundLastAssetModel>
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.RoundLastAssetJSON> {
   /**链上链区块HASH, 包含当轮除最后一个区块外的区块signature以及上一轮 hash 合并后生成的hash*/
-  @Field.d(RoundLastBlockModel.INC++, "bytes")
+  @Field.d(RoundLastAssetModel.INC++, "bytes")
   hashBuffer!: Uint8Array;
   get hash(): string {
     return getHexFromArrayBuffer(this.hashBuffer);
@@ -18,7 +18,7 @@ export class RoundLastBlockModel extends RoundDelegateModel<RoundLastBlockModel>
   set hash(value: string) {
     this.hashBuffer = parseHexToArrayBuffer(value);
   }
-  toJSON(): BFChainCore.RoundLastBlockJSON {
+  toJSON(): BFChainCore.RoundLastAssetJSON {
     return Object.assign(
       {
         hash: this.hash,
@@ -32,9 +32,9 @@ export class RoundLastBlockModel extends RoundDelegateModel<RoundLastBlockModel>
   }
   static fromObject<T extends Message>(
     this: BFChainProtobuf.Constructor<T>,
-    object: BFChainProtobuf.ObjectFromType<RoundLastBlockModel>,
+    object: BFChainProtobuf.ObjectFromType<RoundLastAssetModel>,
   ) {
-    const res = super.fromObject(object) as RoundLastBlockModel;
+    const res = super.fromObject(object) as RoundLastAssetModel;
     if (res !== object) {
       object.hash && (res.hash = object.hash);
     }
@@ -48,11 +48,11 @@ export class RoundLastBlockModel extends RoundDelegateModel<RoundLastBlockModel>
 @Type.d("RoundLastBlockAssetModel")
 export class RoundLastBlockAssetModel extends Message<RoundLastBlockAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.RoundLastBlockAssetJSON> {
-  @Field.d(1, RoundLastBlockModel)
-  roundLastBlock!: RoundLastBlockModel;
+  @Field.d(1, RoundLastAssetModel)
+  roundLastAsset!: RoundLastAssetModel;
   toJSON() {
     return {
-      roundLastBlock: this.roundLastBlock.toJSON(),
+      roundLastAsset: this.roundLastAsset.toJSON(),
     };
   }
 }

@@ -937,7 +937,7 @@ export class EventLogicVerifier {
         );
 
         // 链上是否已经存在这个链的创世块
-        const magic = genesisBlock.remark.magic;
+        const magic = genesisBlock.asset.genesisAsset.magic;
         const memchain = await accountGetterHelper.getChain(magic);
         if (memchain) {
           throw new ConsensusException(ALREADY_EXIST, {

@@ -20,3 +20,4 @@ packages/@types/**/*.d.ts.map
 *.bak
 .flow
 core.code-workspace
+test.log

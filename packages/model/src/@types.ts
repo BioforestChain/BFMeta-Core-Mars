@@ -212,8 +212,6 @@ declare namespace BFChainCore {
     publicKeyBuffer?: Uint8Array;
     name: string;
     sourceChainMagic: string;
-    /**链域名的拥有者地址 */
-    possessorAddress: string;
   };
   /**注销链域名 */
   type ApplyTransactionCancelLocationNameEvent<

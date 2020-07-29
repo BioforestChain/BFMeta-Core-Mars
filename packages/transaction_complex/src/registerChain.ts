@@ -133,7 +133,7 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
       });
     }
 
-    if (config.initials !== genesisBlockJson.asset.genesisBlock.bnid) {
+    if (config.initials !== genesisBlockJson.asset.genesisAsset.bnid) {
       throw new ArgumentIllegalException(NOT_MATCH, {
         to_compare_prop: `initials ${config.initials}`,
         be_compare_prop: `bnid ${genesisBlockJson.remark.bnid}`,

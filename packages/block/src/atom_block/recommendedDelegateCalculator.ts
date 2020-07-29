@@ -391,8 +391,14 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     // 第一轮拿的是创世块选出的受托人
     blockHeight = blockHeight || 1;
     const block = await this.blockHelper.forceGetBlockByHeight(blockHeight, blockGetterHelper);
-    const nextRoundDelegates = (block as BFChainCore.Block<BFChainCore.RoundLastBlockAssetJSON>)
-      .asset.roundLastBlock.nextRoundDelegates;
+    let nextRoundDelegates: BFChainCore.NextRoundDelegateJSON[] = [];
+    if (blockHeight === 1) {
+      nextRoundDelegates = (block as BFChainCore.Block<BFChainCore.GenesisBlockAssetJSON>).asset
+        .genesisAsset.nextRoundDelegates;
+    } else {
+      nextRoundDelegates = (block as BFChainCore.Block<BFChainCore.RoundLastBlockAssetJSON>).asset
+        .roundLastAsset.nextRoundDelegates;
+    }
     const activeDelegates = nextRoundDelegates.map((delegate) => delegate.address);
     // 不推荐本轮打块账户,剔除第一轮
     if (blockHeight > blockPerRound) {

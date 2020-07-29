@@ -108,21 +108,21 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       });
     }
 
-    const remark = memchain.genesisBlock.remark;
-    if (assetType !== remark.assetType) {
+    const genesisAsset = memchain.genesisBlock.asset.genesisAsset;
+    if (assetType !== genesisAsset.assetType) {
       throw new ConsensusException(NOT_MATCH, {
         to_compare_prop: `assetType ${assetType}`,
-        be_compare_prop: `assetType ${remark.assetType}`,
+        be_compare_prop: `assetType ${genesisAsset.assetType}`,
         to_target: "immigrateAsset.emigrateAssetTransaction.asset.emigrateAsset",
         be_target: `registerChain in blockChain with magic ${sourceChainMagic}`,
         ...Function_Exception_Detail,
       });
     }
 
-    if (sourceChainName !== remark.chainName) {
+    if (sourceChainName !== genesisAsset.chainName) {
       throw new ConsensusException(NOT_MATCH, {
         to_compare_prop: `sourceChainName ${sourceChainName}`,
-        be_compare_prop: `sourceChainName ${remark.chainName}`,
+        be_compare_prop: `sourceChainName ${genesisAsset.chainName}`,
         to_target: "immigrateAsset.emigrateAssetTransaction.asset.emigrateAsset",
         be_target: `registerChain in blockChain with magic ${sourceChainMagic}`,
         ...Function_Exception_Detail,

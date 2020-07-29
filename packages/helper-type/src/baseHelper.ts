@@ -984,4 +984,13 @@ export class BaseHelper {
       return false;
     }
   }
+
+  /**
+   * tpow 计算公式是否合法
+   *
+   * @param tpowDiffFormula
+   */
+  isValidTpowDiffFormula(tpowDiffFormula: string) {
+    return true;
+  }
 }

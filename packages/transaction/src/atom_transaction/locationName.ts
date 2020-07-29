@@ -334,8 +334,7 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
         applyInfo: {
           address: senderId,
           name,
-          sourceChainMagic,
-          possessorAddress: recipientId,
+          sourceChainMagic
         },
       });
     }

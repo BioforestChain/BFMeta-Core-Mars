@@ -6,7 +6,6 @@ import { PROP_SHOULD_LTE_FIELD, OUT_OF_RANGE } from "@bfchain/core-util-exceptio
 import { CoreExceptionGenerator, NOT_EXIST } from "@bfchain/core-util-exception";
 import { BLOCK_TYPES_BASE, Block } from "@bfchain/core-model-block";
 import { AccountBaseHelper } from "@bfchain/core-helper-account-base";
-import { TemplateRemark } from "@bfchain/core-model-common";
 type RoundLastBlock = import("@bfchain/core-model-block").RoundLastBlock;
 
 const {
@@ -43,6 +42,23 @@ export class BlockHelper {
   /**是否是合法的区块 signature */
   isValidSignature(signature: string) {
     return this.baseHelper.isValidSignature(signature);
+  }
+
+  /**
+   * 校验区块的大小
+   *
+   * @param block
+   */
+  verifyBlockSize<SOME_BLOCK extends BFChainCore.Block>(block: SOME_BLOCK) {
+    const { maxBlockSize } = this.config;
+    const blockSize = block.getBytes().length;
+    if (blockSize > maxBlockSize) {
+      throw new ArgumentIllegalException(PROP_SHOULD_LTE_FIELD, {
+        prop: `block size ${blockSize}`,
+        target: "block",
+        field: maxBlockSize,
+      });
+    }
   }
 
   /**
@@ -94,24 +110,6 @@ export class BlockHelper {
           `Invalid ${taskLabel} miss signSignature or senderSecondPublicKey`,
         );
       }
-    }
-  }
-
-  /**
-   * 校验区块的 remark 大小
-   *
-   * @param block
-   */
-  verifyBlockRemarkSize<SOME_BLOCK extends BFChainCore.Block>(block: SOME_BLOCK) {
-    const templateRemark = TemplateRemark.fromObject({ remark: block.remark });
-    const { maxBlockRemarkSize } = this.config;
-    const remarkSize = this.Buffer.from(templateRemark.getBytes()).length;
-    if (remarkSize > maxBlockRemarkSize) {
-      throw new ArgumentIllegalException(PROP_SHOULD_LTE_FIELD, {
-        prop: `remarkSize ${remarkSize}`,
-        target: "block",
-        field: maxBlockRemarkSize,
-      });
     }
   }
 
@@ -414,7 +412,7 @@ export class BlockHelper {
         /**参与度 */
         get blockParticipation() {
           Object.defineProperty(this, "blockParticipation", {
-            value: BigInt(block.remark.blockParticipation),
+            value: BigInt(block.blockParticipation),
           });
           return this.blockParticipation;
         },
@@ -515,41 +513,19 @@ export class BlockHelper {
 
   /**计算账户一轮下来对应的票数 */
   calcAccountRoundEquity(accTxCount: number, accBalance: string, roundLastBlock: RoundLastBlock) {
-    const {
-      numberOfTransactionRewardWeight,
-      chainAssetRewardWeight,
-    } = this.config.genesisBlock.remark;
+    const { prevWeight, nextWeight } = this.config.accountParticipationWeightRatio;
     const tradingEquity =
-      BigInt(accTxCount) *
-      BigInt(numberOfTransactionRewardWeight) *
-      BigInt(roundLastBlock.remark.rate);
-    const equity = BigInt(accBalance) * BigInt(chainAssetRewardWeight) + tradingEquity;
-
+      BigInt(accTxCount) * BigInt(nextWeight) * BigInt(roundLastBlock.asset.roundLastAsset.rate);
+    const equity = BigInt(accBalance) * BigInt(prevWeight) + tradingEquity;
     return equity.toString() as string;
   }
 
   /**计算区块的参与度 */
-  calcBlockParticipation(args: {
-    totalAccount: number;
-    totalFee: bigint;
-    totalChainAsset: bigint;
-    numberOfTransactions: number;
-  }) {
-    const { totalAccount, totalFee, totalChainAsset, numberOfTransactions } = args;
-    const {
-      participationTotalChainAsset,
-      participationNumberOfTransaction,
-      participationNumberOfAccount,
-      participationTotalFee,
-    } = this.config.blockParticipationWeight;
-    const jsbiX =
-      BigInt(totalChainAsset) * BigInt(participationTotalChainAsset) +
-      BigInt(totalAccount) * BigInt(participationNumberOfAccount);
-
-    const jsbiY =
-      BigInt(totalFee) * BigInt(participationTotalFee) +
-      BigInt(numberOfTransactions) * BigInt(participationNumberOfTransaction);
-
+  calcBlockParticipation(args: { totalChainAsset: bigint; numberOfTransactions: number }) {
+    const { totalChainAsset, numberOfTransactions } = args;
+    const { prevWeight, nextWeight } = this.config.blockParticipationWeightRatio;
+    const jsbiX = BigInt(totalChainAsset) * BigInt(prevWeight);
+    const jsbiY = BigInt(numberOfTransactions) * BigInt(nextWeight);
     return (jsbiX + jsbiY).toString();
   }
 
@@ -592,7 +568,7 @@ export class BlockHelper {
    * @param currentHeight
    * @param blockGetterHelper
    */
-  async calcRoundLastBlockRemarkHash(
+  async calcChainOnChainHash(
     currentHeight: number,
     blockGetterHelper?: BFChainUtil.SecondArgument<BlockHelper["forceGetBlockByHeight"]> &
       BFChainUtil.SecondArgument<BlockHelper["forceGetBlockSignatureBufferByHeight"]>,
@@ -607,7 +583,7 @@ export class BlockHelper {
         lastRoundLastBlockHeight,
         blockGetterHelper,
       );
-      payloadHash.update(block.remark.hashBuffer);
+      payloadHash.update(block.asset.roundLastAsset.hashBuffer);
     }
     for (let height = lastRoundLastBlockHeight; height < currentHeight; height++) {
       const blockSignatureBuffer = await this.forceGetBlockSignatureBufferByHeight(

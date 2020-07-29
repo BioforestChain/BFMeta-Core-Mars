@@ -483,18 +483,9 @@ export class CustomTransactionEvent {
       return;
     }
     if (applyResult.type === "cancelLocationName") {
-      const { address, sourceChainMagic, name, possessorAddress } = applyResult.applyInfo;
+      const { address, sourceChainMagic, name } = applyResult.applyInfo;
       this.verifyMagic(sourceChainMagic);
-      await this.verifyPossessorAddress(possessorAddress);
       this.verifyLocationName(name);
-      if (address !== possessorAddress) {
-        throw new ArgumentIllegalException(SHOULD_BE, {
-          to_compare_prop: "possessorAddress",
-          to_target: address,
-          be_compare_prop: "applyInfo",
-          ...Function_Exception_Detail,
-        });
-      }
       return;
     }
     if (applyResult.type === "setLnsRecordValue") {
@@ -892,13 +883,7 @@ export class CustomTransactionEvent {
       });
     }
     if (applyResult.type === "cancelLocationName") {
-      const {
-        address,
-        publicKey,
-        name,
-        sourceChainMagic,
-        possessorAddress,
-      } = applyResult.applyInfo;
+      const { address, publicKey, name, sourceChainMagic } = applyResult.applyInfo;
       return eventEmitter.emit("cancelLocationName", {
         type: "cancelLocationName",
         transaction,
@@ -907,7 +892,6 @@ export class CustomTransactionEvent {
           publicKeyBuffer: parseHexToArrayBuffer(publicKey),
           name,
           sourceChainMagic,
-          possessorAddress,
         },
       });
     }

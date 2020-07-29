@@ -8,10 +8,13 @@ declare namespace BFChainCore {
   ) => TransactionFactory<T>;
   // #endregion
 
-  // #region TransactionPoW
+  // #region TransactonPoW
   type TransactionPoWOptions<T extends TransactionJSON = TransactionJSON> = {
-    count: number;
-    participation: string;
+    accountParticipation?: string;
+    accountPossessMainAssets?: string;
+    accountNumberOfTransactionInBlock?: number;
+    blockHeight?: number;
+
     event?: BFChainUtil.QueneEventEmitter<TransactionPoWControllerEvents<T>>;
     calculator?: (
       trs: T,
@@ -231,8 +234,6 @@ declare namespace BFChainCore {
       publicKey: string;
       name: string;
       sourceChainMagic: string;
-      /**lns 的拥有者地址 */
-      possessorAddress: string;
     };
   }
 

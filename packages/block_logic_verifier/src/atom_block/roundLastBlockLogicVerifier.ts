@@ -36,14 +36,14 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
     return true;
   }
 
-  async verifyBlockRemark(
+  async verifyBlockAsset(
     block: RoundLastBlock,
     transactionGetterHelper = this.transactionGetterHelper,
     blockGetterHelper = this.blockGetterHelper,
   ) {
     // 校验链上链 hash
     const { height, asset } = block;
-    const { newDelegates, hash } = asset.roundLastBlock;
+    const { newDelegates, hash } = asset.roundLastAsset;
     await this.checkRemarkHash(height, hash, blockGetterHelper);
     await this.isValidNewDelegates(height, newDelegates, transactionGetterHelper);
     await this.checkNewForgingDelegates(block, blockGetterHelper);
@@ -96,7 +96,7 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
    * @param blockGetterHelper
    */
   async checkRemarkHash(height: number, hash: string, blockGetterHelper = this.blockGetterHelper) {
-    const hashString = await this.blockHelper.calcRoundLastBlockRemarkHash(
+    const hashString = await this.blockHelper.calcChainOnChainHash(
       height,
       blockGetterHelper,
     );
@@ -142,7 +142,7 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
       await blockGetterHelper.getLastBlock(),
       block.generatorPublicKey,
     );
-    const nextRoundDelegates = block.asset.roundLastBlock.nextRoundDelegates;
+    const nextRoundDelegates = block.asset.roundLastAsset.nextRoundDelegates;
     if (delegates.length !== nextRoundDelegates.length) {
       throw new ConsensusException(NOT_MATCH, {
         to_compare_prop: `delegates length ${delegates.length}`,
@@ -188,19 +188,19 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
     const Function_Exception_Detail = {
       function: "checkMaxBeginBalanceAndMaxTxCount",
     } as const;
-    const roundLastBlock = block.asset.roundLastBlock;
-    if (roundLastBlock.maxBeginBalance !== tickResult.maxBeginBalance) {
+    const roundLastAsset = block.asset.roundLastAsset;
+    if (roundLastAsset.maxBeginBalance !== tickResult.maxBeginBalance) {
       throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: `maxBeginBalance ${roundLastBlock.maxBeginBalance}`,
+        to_compare_prop: `maxBeginBalance ${roundLastAsset.maxBeginBalance}`,
         be_compare_prop: `maxBeginBalance ${tickResult.maxBeginBalance}`,
         to_target: "block remark",
         be_target: "calculate",
         ...Function_Exception_Detail,
       });
     }
-    if (roundLastBlock.maxTxCount !== tickResult.maxTxCount) {
+    if (roundLastAsset.maxTxCount !== tickResult.maxTxCount) {
       throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: `maxTxCount ${roundLastBlock.maxTxCount}`,
+        to_compare_prop: `maxTxCount ${roundLastAsset.maxTxCount}`,
         be_compare_prop: `maxTxCount ${tickResult.maxTxCount}`,
         to_target: "block remark",
         be_target: "calculate",

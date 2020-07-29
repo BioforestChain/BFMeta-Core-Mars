@@ -282,10 +282,10 @@ export class VerifyBlockCore<T extends Block> {
       });
     }
 
-    if (payloadLength > config.maxPayloadLength) {
+    if (payloadLength > config.maxBlockSize) {
       throw new ArgumentIllegalException(TOO_LARGE, {
         prop: "payloadLength",
-        reason: `payloadLength: ${payloadLength} max: ${config.maxPayloadLength}`,
+        reason: `payloadLength: ${payloadLength} max: ${config.maxBlockSize}`,
         ...Block_Exception_Detail,
       });
     }
@@ -314,9 +314,7 @@ export class VerifyBlockCore<T extends Block> {
     }
 
     const blockParticipation = this.blockHelper.calcBlockParticipation({
-      totalAccount: statisticsInfo.totalAccount,
       totalChainAsset: statisticsInfo.totalChainAsset,
-      totalFee: statisticsInfo.totalFee,
       numberOfTransactions,
     });
     if (block.blockParticipation !== blockParticipation) {
@@ -421,7 +419,5 @@ export class VerifyBlockCore<T extends Block> {
     this.commonBlockVerify.verifyBlockReward(block);
 
     this.commonBlockVerify.verifyBlockSize(block);
-
-    this.commonBlockVerify.verifyBlockRemarkSize(block);
   }
 }

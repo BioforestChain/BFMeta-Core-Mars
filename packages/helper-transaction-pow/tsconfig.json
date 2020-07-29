@@ -16,7 +16,10 @@
     }
   ],
   "files": [
+    "src/@types.ts",
     "src/index.ts",
-    "src/tpowHelper.ts"
+    "src/tpowDiffHelper.ts",
+    "src/tpowHelper.ts",
+    "src/tpowStackHelper.ts"
   ]
 }

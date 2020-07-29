@@ -147,7 +147,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     await this.checkLocationName(transaction, currentBlockHeight, accountGetterHelper);
     // 接收交易的时候不验证 pow
     // 校验 pow
-    // if (currentBlockHeight > this.configHelper.powOfWorkExemptionBlocks) {
+    // if (currentBlockHeight > this.configHelper.tpowOfWorkExemptionBlocks) {
     //   const curRound = this.blockHelper.calcRoundByHeight(currentBlockHeight);
     //   const lastRoundInfo = sender.accountInfo.lastRoundInfo;
     //   const { round, txCount, assetNumber } = lastRoundInfo;
@@ -808,8 +808,10 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     }
     const powCheckResult = await this.transactionHelper.checkTransactionProfOfWork(
       parseHexToArrayBuffer(transaction.signature),
-      tranSenderCount,
-      participation,
+      {
+        accountParticipation: participation,
+        accountNumberOfTransactionInBlock: tranSenderCount,
+      },
     );
     if (!powCheckResult) {
       throw new ConsensusException(VERIFY_TRANSACTION_POW_OF_WORK_ERROR, {

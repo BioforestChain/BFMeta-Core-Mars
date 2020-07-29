@@ -12,8 +12,8 @@ declare namespace BFChainCore {
     /**记录链区块分叉信息 */
     chainBlockFork?(block: BFChainCore.Block, cause: number): Promise<void>;
     /**获取新一轮的打块受托人 */
-    getNewForgingDelegates?(
-      lastBlock: LastBlockInfo,
+    getNewForgingDelegates?<T extends Block>(
+      lastBlock: LastBlockInfo<T>,
       currentGeneraterPublicKey: string,
     ): Promise<BFChainCore.ForSortAccountInfo[]>;
     /**查询交易是否存在 */
@@ -78,12 +78,13 @@ declare namespace BFChainCore {
       [magicAndAssetType: string]: string;
     };
   };
-  type LastBlockInfo = {
+  type LastBlockInfo<T extends Block> = {
     height: number;
     timestamp: number;
     blockSize: number;
     signature: string;
     generatorPublicKey: string;
+    generatorEquity: string;
     numberOfTransactions: number;
     payloadHash: string;
     payloadLength: number;
@@ -94,6 +95,7 @@ declare namespace BFChainCore {
     magic: string;
     blockParticipation: string;
     remark: { [key: string]: string };
+    asset: GetBlockAssetJSON<T>;
   };
   type TickResultInfo = {
     maxBeginBalance?: string;

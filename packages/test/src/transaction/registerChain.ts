@@ -55,7 +55,7 @@ if (randomMagic) {
 
 const registerBfchainCore = BFChainCoreFactory({
   config: new ConfigHelper(
-    GenesisBlock.fromObject({ asset: { genesisBlock: registerchainAssetData } }),
+    GenesisBlock.fromObject({ asset: { genesisAsset: registerchainAssetData } }),
     "genesisBlock",
   ),
   Buffer: Buffer as any,
@@ -80,8 +80,8 @@ function getPOWInfo<T extends Transaction>(address: string) {
   const count = _powCount[address] || 0;
   _powCount[address] = count + 1;
   const res: BFChainCore.TransactionPoWOptions<T> = {
-    count,
-    participation: "0",
+    accountNumberOfTransactionInBlock: count,
+    accountParticipation: "0",
   };
   return res;
 }
@@ -104,7 +104,7 @@ const getTxs = (address: string) => {
         ))) ||
       undefined;
     const pow =
-      1 > registerBfchainCore.config.powOfWorkExemptionBlocks
+      1 > registerBfchainCore.config.tpowOfWorkExemptionBlocks
         ? getPOWInfo<UsernameTransaction>(sender.address)
         : undefined;
     const createTrs = (fee = "1") => {
@@ -170,7 +170,7 @@ const getTxs = (address: string) => {
         ))) ||
       undefined;
     const pow =
-      1 > registerBfchainCore.config.powOfWorkExemptionBlocks
+      1 > registerBfchainCore.config.tpowOfWorkExemptionBlocks
         ? getPOWInfo<DelegateTransaction>(sender.address)
         : undefined;
     const createTrs = (fee = "1") => {
@@ -228,7 +228,7 @@ const getTxs = (address: string) => {
         ))) ||
       undefined;
     const pow =
-      1 > registerBfchainCore.config.powOfWorkExemptionBlocks
+      1 > registerBfchainCore.config.tpowOfWorkExemptionBlocks
         ? getPOWInfo<AcceptVoteTransaction>(sender.address)
         : undefined;
     const createTrs = (fee = "1") => {
@@ -278,7 +278,7 @@ const getTxs = (address: string) => {
 
   async function getLocationNameTransaction() {
     const pow =
-      1 > registerBfchainCore.config.powOfWorkExemptionBlocks
+      1 > registerBfchainCore.config.tpowOfWorkExemptionBlocks
         ? getPOWInfo<LocationNameTransaction>(genesisAccountInfo.address)
         : undefined;
     const createTrs = (fee = "AUTO") => {
@@ -301,14 +301,14 @@ const getTxs = (address: string) => {
           remark: {},
           storage: {
             key: "name",
-            value: registerBfchainCore.config.genesisNodeAddress,
+            value: registerBfchainCore.config.genesisLocationName,
           },
         },
         {
           locationName: {
             sourceChainName: registerBfchainCore.config.chainName,
             sourceChainMagic: registerBfchainCore.config.magic,
-            name: registerBfchainCore.config.genesisNodeAddress,
+            name: registerBfchainCore.config.genesisLocationName,
             operationType: LOCATION_NAME_OPERATION_TYPE.REGISTRATION,
           },
         },
@@ -352,7 +352,7 @@ const getTxs = (address: string) => {
         ))) ||
       undefined;
     const pow =
-      1 > registerBfchainCore.config.powOfWorkExemptionBlocks
+      1 > registerBfchainCore.config.tpowOfWorkExemptionBlocks
         ? getPOWInfo<SetLnsRecordValueTransaction>(sender.address)
         : undefined;
     const createTrs = (fee = "AUTO") => {
@@ -374,14 +374,14 @@ const getTxs = (address: string) => {
           remark: {},
           storage: {
             key: "name",
-            value: registerBfchainCore.config.genesisNodeAddress,
+            value: registerBfchainCore.config.genesisLocationName,
           },
         },
         {
           lnsRecordValue: {
             sourceChainName: registerBfchainCore.config.chainName,
             sourceChainMagic: registerBfchainCore.config.magic,
-            name: registerBfchainCore.config.genesisNodeAddress,
+            name: registerBfchainCore.config.genesisLocationName,
             operationType: RECORD_OPERATION_TYPE.ADD,
             addRecord: record,
           },
@@ -429,7 +429,7 @@ const getTxs = (address: string) => {
     amount: string,
   ) {
     const pow =
-      1 > registerBfchainCore.config.powOfWorkExemptionBlocks
+      1 > registerBfchainCore.config.tpowOfWorkExemptionBlocks
         ? getPOWInfo<TransferAssetTransaction>(genesisAccountInfo.address)
         : undefined;
     const createTrs = (fee = "1") => {
@@ -642,8 +642,10 @@ const getTxs = (address: string) => {
     eventEmitter.on("verifyTransactionProfOfWork", ({ transaction, count }) => {
       return registerBfchainCore.transactionHelper.checkTransactionProfOfWork(
         transaction.signatureBuffer,
-        count,
-        "0",
+        {
+          accountParticipation: "0",
+          accountNumberOfTransactionInBlock: count,
+        },
       );
     });
     const genesisBlock = await registerBfchainCore.block.generateBlock<GenesisBlock>(
@@ -660,7 +662,7 @@ const getTxs = (address: string) => {
         },
       },
       {
-        genesisBlock: registerchainAssetData,
+        genesisAsset: registerchainAssetData,
       },
       (async function* zz() {
         for (const item of blockTrsItems) {
@@ -701,7 +703,7 @@ const getTxs = (address: string) => {
       fee: "78622", // 交易手续费
       remark: { remark: "body.remark" }, // 交易备注，任意信息
       dappid: getRandomDAppid(), // 交易所属的 dappid
-      lns: fullBfchainCore.config.genesisNodeAddress,
+      lns: fullBfchainCore.config.genesisLocationName,
       sourceIP: "127.0.0.1", // 交易来源 ip
       fromMagic: fullBfchainCore.config.magic,
       toMagic: fullBfchainCore.config.magic,
@@ -834,8 +836,10 @@ const getTxs = (address: string) => {
     eventEmitter.on("verifyTransactionProfOfWork", ({ transaction, count }) => {
       return registerBfchainCore.transactionHelper.checkTransactionProfOfWork(
         transaction.signatureBuffer,
-        count,
-        "0",
+        {
+          accountParticipation: "0",
+          accountNumberOfTransactionInBlock: count,
+        },
       );
     });
     const commonBlock = await fullBfchainCore.block.generateBlock<CommonBlock>(

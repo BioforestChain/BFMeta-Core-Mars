@@ -152,8 +152,6 @@ export class GenerateBlockCore<T extends Block> {
     eventEmitter?: BFChainCore.GenerateBlockEventEmitter,
     config = this.config,
   ) {
-    // 校验 remark 大小
-    this.commonBlockVerify.verifyBlockRemarkSize(block);
     // 绑定magic
     block.magic = config.magic;
     // 绑定交易相关的信息
@@ -193,6 +191,7 @@ export class GenerateBlockCore<T extends Block> {
         "generatedBlock",
         block,
       ));
+
     return block;
   }
 
@@ -218,21 +217,21 @@ export class GenerateBlockCore<T extends Block> {
   ) {
     const abortForbiddenTransaction = this.transactionCore.abortForbiddenTransaction;
     const Function_Exception_Detail = { function: "insertTransactions" };
-    const MAX_TRANSACTION_SIZE = this.config.genesisBlock.asset.genesisBlock.maxTransactionSize;
+    const MAX_TRANSACTION_SIZE = this.config.genesisBlock.asset.genesisAsset.maxTransactionSize;
     const { height, generatorPublicKey, statisticInfo: blockStatisticsInfo } = block;
-    const { powOfWorkExemptionBlocks, maxPayloadLength } = this.config;
-    /**所有交易的sha256hash */
+    const { tpowOfWorkExemptionBlocks, maxBlockSize } = this.config;
+    /**所有事件的sha256hash */
     const payloadHash = this.cryptoHelper.sha256();
-    /**所有交易体的总字节长度 */
+    /**区块打包的事件的总字节长度 */
     let payloadLength = 0;
-    /**本块交易所涉及的资产信息 */
+    /**本块事件所涉及的资产信息 */
     const statisticsInfo = this.statisticsHelper.forceGetStatisticsInfoByBlock(
       eventEmitter.taskname || `core-generate-${height}`,
       generatorPublicKey,
       blockStatisticsInfo,
     );
     const transactions: TransactionInBlock[] = [];
-    const needTPow = height > powOfWorkExemptionBlocks;
+    const needTPow = height > tpowOfWorkExemptionBlocks;
     try {
       /**绑定统计功能到事件触发器上 */
       this.statisticsHelper.bindApplyTransactionEventEmiter(eventEmitter, statisticsInfo);
@@ -346,7 +345,7 @@ export class GenerateBlockCore<T extends Block> {
           payloadHash.update(tranItemBinary);
           // 更新总字节长度
           payloadLength += tranItemBinary.length;
-          if (payloadLength > maxPayloadLength * 0.95) {
+          if (payloadLength > maxBlockSize * 0.95) {
             await eventEmitter.emit("nearMaxPayloadLength", { payloadLength });
           }
           await txFactory.endDealTransaction(tranItem, eventEmitter);
@@ -378,9 +377,7 @@ export class GenerateBlockCore<T extends Block> {
       }
       block.numberOfTransactions = numberOfTransactions;
       block.blockParticipation = this.blockHelper.calcBlockParticipation({
-        totalAccount: statisticsInfo.totalAccount,
         totalChainAsset: statisticsInfo.totalChainAsset,
-        totalFee: statisticsInfo.totalFee,
         numberOfTransactions,
       });
       // 获取打块账户获得的权益

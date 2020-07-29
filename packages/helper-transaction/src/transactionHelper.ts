@@ -13,14 +13,13 @@ import {
   GrabAssetModel,
   AccountSignatureModel,
 } from "@bfchain/core-model-transaction";
-import { TemplateRemark } from "@bfchain/core-model-common";
+import { TPOWHelper } from "@bfchain/core-helper-transaction-pow";
 import { JSBIHelper } from "@bfchain/core-helper-bigint";
 import { AsymmetricHelper } from "@bfchain/core-helper-asymmetric";
 import { Injectable, Inject } from "@bfchain/util-dep-inject";
 import { decodeBinaryToHex } from "@bfchain/util-encoding-hex";
 import { cacheGetter } from "@bfchain/util-decorator";
 import { AccountBaseHelper } from "@bfchain/core-helper-account-base";
-import { TpowHelper } from "@bfchain/core-helper-transaction-tpow";
 
 import { TRANSACTION_FILTER_SYMBOL, ABORT_FORBIDDEN_TRANSACTION_SYMBOL } from "./const";
 type Transaction = import("@bfchain/core-model-transaction").Transaction;
@@ -42,7 +41,7 @@ export class TransactionHelper {
     @Inject("Buffer") public Buffer: BFChainUtil.BufferConstructor,
     private asymmetricHelper: AsymmetricHelper,
     private accountBaseHelper: AccountBaseHelper,
-    private tpowHelper: TpowHelper,
+    private tpowHelper: TPOWHelper,
   ) {}
   get _ASSETTYPE() {
     return this.config.assetType;
@@ -307,24 +306,7 @@ export class TransactionHelper {
     }
   }
   /**
-   * 校验交易的 remark 大小
-   *
-   * @param transaction
-   */
-  verifyTransactionRemarkSize<SOME_TRS extends BFChainCore.Transaction>(transaction: SOME_TRS) {
-    const templateRemark = TemplateRemark.fromObject({ remark: transaction.remark });
-    const { maxBlockRemarkSize } = this.config;
-    const remarkSize = templateRemark.getBytes().length;
-    if (remarkSize > maxBlockRemarkSize) {
-      throw new ArgumentIllegalException(PROP_SHOULD_LTE_FIELD, {
-        prop: `remarkSize ${remarkSize}`,
-        target: "transaction",
-        field: maxBlockRemarkSize,
-      });
-    }
-  }
-  /**
-   * 校验交易的 remark 大小
+   * 校验交易的大小
    *
    * @param transaction
    */
@@ -333,7 +315,7 @@ export class TransactionHelper {
     const trsSize = transaction.getBytes().length;
     if (trsSize > maxTransactionSize) {
       throw new ArgumentIllegalException(PROP_SHOULD_LTE_FIELD, {
-        prop: `transactionSize ${trsSize}`,
+        prop: `transaction size ${trsSize}`,
         target: "transaction",
         field: maxTransactionSize,
       });
@@ -357,18 +339,7 @@ export class TransactionHelper {
       cur_fee = min_fee;
     } while (true);
   }
-  @cacheGetter
-  get calcTpowParticipationBI() {
-    return this.tpowHelper.calcTpowParticipationBI.bind(this.tpowHelper);
-  }
 
-  /**
-   * 计算交易POW的难度
-   */
-  @cacheGetter
-  get calcDiffOfTransactionProfOfWork() {
-    return this.tpowHelper.calcDiffOfTransactionProfOfWork.bind(this.tpowHelper);
-  }
   /**
    * 根据参与度计算一轮需要在线的时间
    * 0.2* Round ~ 1.3* Round
@@ -377,6 +348,20 @@ export class TransactionHelper {
   get calcNeedOnlineTime() {
     return this.tpowHelper.calcNeedOnlineTime.bind(this.tpowHelper);
   }
+
+  @cacheGetter
+  get calcTpowParticipationBI() {
+    return this.tpowHelper.calcTpowParticipationBI.bind(this.tpowHelper);
+  }
+
+  /**
+   * 计算交易POW的难度
+   */
+  // @cacheGetter
+  get calcDiffOfTransactionProfOfWork() {
+    return this.tpowHelper.calcDiffOfTransactionProfOfWork.bind(this.tpowHelper);
+  }
+
   /**
    * 校验交易POW
    * DIFF = (E ^ N) * N / (1 + B + P * R)
@@ -387,10 +372,12 @@ export class TransactionHelper {
   get checkTransactionProfOfWork() {
     return this.tpowHelper.checkTransactionProfOfWork.bind(this.tpowHelper);
   }
+
   /**交易的噪点生成器 */
   nonceWriter<T extends Transaction>(trs: T) {
     return this.tpowHelper.nonceWriter<T>(trs);
   }
+
   hashCode(str: string) {
     let hash = 0;
     let i = 0;

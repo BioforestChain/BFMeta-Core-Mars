@@ -10,6 +10,7 @@ import {
   AccountModel,
   getBfchainCoreEntry,
   getRandomDAppid,
+  getGenesisAccount,
 } from "../include";
 const bfchainCore = getBfchainCoreEntry();
 

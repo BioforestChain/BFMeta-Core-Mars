@@ -535,7 +535,6 @@
     - publicKey：变更的账户公钥，string
     - sourceChainMagic：所属链网络标识符，string
     - name：申请的链域名，string
-    - possessorAddress: 链域名的拥有者，string
 
 - 范例
 
@@ -547,8 +546,7 @@
             address: "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
             publicKey: "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
             sourceChainMagic: "123456789A",
-            name: "qwq.skyrim",
-            possessorAddress: "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma"
+            name: "qwq.skyrim"
         }
     }
   ```

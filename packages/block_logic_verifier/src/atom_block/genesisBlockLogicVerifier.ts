@@ -24,7 +24,7 @@ export class GenesisBlockLogicVerifier extends BlockLogicVerifier {
     return true;
   }
 
-  async verifyBlockRemark(
+  async verifyBlockAsset(
     block: GenesisBlock,
     transactionGetterHelper = this.transactionGetterHelper,
     blockGetterHelper = this.blockGetterHelper,

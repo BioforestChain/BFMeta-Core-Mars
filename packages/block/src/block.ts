@@ -1,15 +1,10 @@
-import {
-  Block,
-  BLOCK_TYPES_BASE,
-  BLOCK_TYPES_MAP,
-} from "@bfchain/core-model-block";
 import type { TransactionInBlock } from "@bfchain/core-model-transaction";
+import { Block, BLOCK_TYPES_BASE, BLOCK_TYPES_MAP } from "@bfchain/core-model-block";
 import { Reader } from "@bfchain/protobuf";
 import { AsymmetricHelper, BlockHelper } from "@bfchain/core-helper";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 import { BlockFactory, BlockGeneratorCalculator } from "./atom_block";
-
-import { Inject, Injectable, ModuleStroge, Resolve } from "@bfchain/util";
+import { Inject, Injectable, ModuleStroge, Resolve, getHexFromArrayBuffer } from "@bfchain/util";
 
 const { ArgumentFormatException, log, warn } = CoreExceptionGenerator("Core", "Block");
 
@@ -71,6 +66,7 @@ export class BlockCore {
     blockFactory.verifyKeypair(keypair);
     if (secondKeypair) {
       blockFactory.verifyKeypair(secondKeypair);
+      body.generatorSecondPublicKey = getHexFromArrayBuffer(secondKeypair.publicKey);
     }
     body.remark = body.remark || {};
     // 校验生成区块的参数
@@ -137,10 +133,10 @@ export class BlockCore {
   }
 
   getRoundLastBlockRemarkHash(
-    ...args: BFChainUtil.AllArgument<BlockHelper["calcRoundLastBlockRemarkHash"]>
+    ...args: BFChainUtil.AllArgument<BlockHelper["calcChainOnChainHash"]>
   ) {
     warn("@deprecated", "请直接使用blockHelper.getRoundLastBlockRemarkHash");
-    return this.blockHelper.calcRoundLastBlockRemarkHash(...args);
+    return this.blockHelper.calcChainOnChainHash(...args);
   }
   // #endregion
 }

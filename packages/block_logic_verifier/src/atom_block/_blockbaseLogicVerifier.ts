@@ -71,7 +71,7 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
     blockGetterHelper?: BFChainCore.BlockGetterHelperInterface,
   ): Promise<boolean>;
 
-  abstract verifyBlockRemark(
+  abstract verifyBlockAsset(
     block: T,
     transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
     blockGetterHelper?: BFChainCore.BlockGetterHelperInterface,

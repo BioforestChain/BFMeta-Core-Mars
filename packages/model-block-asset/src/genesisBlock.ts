@@ -1,5 +1,5 @@
 import { Message, Field, Type, Long } from "@bfchain/protobuf";
-import { Fraction, FractionBigIntModel } from "@bfchain/core-model-common";
+import { Fraction, FractionBigIntModel, RateModel } from "@bfchain/core-model-common";
 import { cacheBytesGetter } from "@bfchain/core-model-cacher";
 import { RoundDelegateModel } from "./roundDelegate";
 import { BNID_TYPE } from "@bfchain/core-model-block-base";
@@ -93,23 +93,23 @@ export class TransactionPowOfWorkConfigModel
  * GenesisBlock 区块 asset 模型
  *
  */
-@Type.d("GenesisBlockModel")
-export class GenesisBlockModel extends RoundDelegateModel<GenesisBlockModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.GenesisBlockJSON> {
-  /**链资产名 */
-  @Field.d(GenesisBlockModel.INC++, "string")
-  assetType!: string;
+@Type.d("GenesisAssetModel")
+export class GenesisAssetModel extends RoundDelegateModel<GenesisAssetModel>
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.GenesisAssetJSON> {
   /**链名 */
-  @Field.d(GenesisBlockModel.INC++, "string")
+  @Field.d(GenesisAssetModel.INC++, "string")
   chainName!: string;
+  /**链资产名 */
+  @Field.d(GenesisAssetModel.INC++, "string")
+  assetType!: string;
   /**网络标识符 */
-  @Field.d(GenesisBlockModel.INC++, "string")
+  @Field.d(GenesisAssetModel.INC++, "string")
   magic!: string;
   /**区块链网络识别码 */
-  @Field.d(GenesisBlockModel.INC++, "string")
+  @Field.d(GenesisAssetModel.INC++, "string")
   bnid!: BNID_TYPE;
   /**链的创世时间 */
-  @Field.d(GenesisBlockModel.INC++, "uint64")
+  @Field.d(GenesisAssetModel.INC++, "uint64")
   beginEpochTimeLong!: Long;
   get beginEpochTime() {
     return this.beginEpochTimeLong.toNumber();
@@ -117,115 +117,97 @@ export class GenesisBlockModel extends RoundDelegateModel<GenesisBlockModel>
   set beginEpochTime(v) {
     this.beginEpochTimeLong = Long.fromNumber(v);
   }
-  /**创世节点地址 */
-  @Field.d(GenesisBlockModel.INC++, "string")
-  genesisNodeAddress!: string;
+  /**创世链域名 */
+  @Field.d(GenesisAssetModel.INC++, "string")
+  genesisLocationName!: string;
   /**创始账户初始余额 */
-  @Field.d(GenesisBlockModel.INC++, "string")
+  @Field.d(GenesisAssetModel.INC++, "string")
   generateTotalAmount!: string;
   /**交易每个字节最小手续费 */
-  @Field.d(GenesisBlockModel.INC++, Fraction)
+  @Field.d(GenesisAssetModel.INC++, Fraction)
   minTransactionFeePerByte!: Fraction;
-  /**区块最大长度 */
-  @Field.d(GenesisBlockModel.INC++, "uint32")
-  maxPayloadLength!: number;
-  /**区块最大 tps */
-  @Field.d(GenesisBlockModel.INC++, "uint32")
-  maxTPSPerBlock!: number;
   /**最大交易长度 */
-  @Field.d(GenesisBlockModel.INC++, "uint32")
+  @Field.d(GenesisAssetModel.INC++, "uint32")
   maxTransactionSize!: number;
-  /**最大区块 remark 长度 */
-  @Field.d(GenesisBlockModel.INC++, "uint32")
-  maxBlockRemarkSize!: number;
+  /**最大区块长度，包含区块头和 asset */
+  @Field.d(GenesisAssetModel.INC++, "uint32")
+  maxBlockSize!: number;
+  /**区块最大 tps */
+  @Field.d(GenesisAssetModel.INC++, "uint32")
+  maxTPSPerBlock!: number;
   /**区块不同数量大于某个值时同步前需要先共识的 */
-  @Field.d(GenesisBlockModel.INC++, "uint32")
+  @Field.d(GenesisAssetModel.INC++, "uint32")
   consessusBeforeSyncBlockDiff!: number;
   /**每轮可处理的受托人交易数量 */
-  @Field.d(GenesisBlockModel.INC++, "uint32")
+  @Field.d(GenesisAssetModel.INC++, "uint32")
   maxDelegateTxsPerRound!: number;
   /**资产赠送最大可获取次数 */
-  @Field.d(GenesisBlockModel.INC++, "uint32")
+  @Field.d(GenesisAssetModel.INC++, "uint32")
   maxGrabTimesOfGiftAsset!: number;
   /**发行资产最小的持有本链资产数量 */
-  @Field.d(GenesisBlockModel.INC++, "string")
+  @Field.d(GenesisAssetModel.INC++, "string")
   issueAssetMinChainAsset!: string;
   /**注册链最小的持有本链资产数量 */
-  @Field.d(GenesisBlockModel.INC++, "string")
+  @Field.d(GenesisAssetModel.INC++, "string")
   registerChainMinChainAsset!: string;
-  /**链资产和数字资产的兑换比例 */
-  @Field.d(GenesisBlockModel.INC++, "uint32")
-  chainAssetAndDigitalAssetExchangeRate!: number;
-  /**链资产的奖励权重 */
-  @Field.d(GenesisBlockModel.INC++, "uint32")
-  chainAssetRewardWeight!: number;
-  /**交易量的奖励权重 */
-  @Field.d(GenesisBlockModel.INC++, "uint32")
-  numberOfTransactionRewardWeight!: number;
   /**交易的发起高度和确认高度最大的区块高度间隔 */
-  @Field.d(GenesisBlockModel.INC++, "uint32")
+  @Field.d(GenesisAssetModel.INC++, "uint32")
   maxApplyAndConfirmedBlockHeightDiff!: number;
   /**每轮的区块数量 */
-  @Field.d(GenesisBlockModel.INC++, "uint32")
+  @Field.d(GenesisAssetModel.INC++, "uint32")
   blockPerRound!: number;
   /**创世受托人数量 */
-  @Field.d(GenesisBlockModel.INC++, "uint32")
+  @Field.d(GenesisAssetModel.INC++, "uint32")
   delegates!: number;
   /**是否允许受托人连续参与打块竞选 */
-  @Field.d(GenesisBlockModel.INC++, "bool")
+  @Field.d(GenesisAssetModel.INC++, "bool")
   whetherToAllowDelegateContinusElections!: boolean;
   /**区块时间间隔 */
-  @Field.d(GenesisBlockModel.INC++, "uint32", "required")
+  @Field.d(GenesisAssetModel.INC++, "uint32", "required")
   forgeInterval!: number;
   /**奖励比例 */
-  @Field.d(GenesisBlockModel.INC++, RewardPercentModel, "required")
+  @Field.d(GenesisAssetModel.INC++, RewardPercentModel, "required")
   rewardPercent!: RewardPercentModel;
   /**端口号 */
-  @Field.d(GenesisBlockModel.INC++, PortsModel, "required")
+  @Field.d(GenesisAssetModel.INC++, PortsModel, "required")
   ports!: PortsModel;
   /**奖励里程 */
-  @Field.d(GenesisBlockModel.INC++, RewardPerBlock, "required")
+  @Field.d(GenesisAssetModel.INC++, RewardPerBlock, "required")
   rewardPerBlock!: RewardPerBlock;
-  /**参与度 流通的链资产总量 的 计算比重 */
-  @Field.d(GenesisBlockModel.INC++, "uint32")
-  participationTotalChainAsset!: number;
-  /**参与度 总交易量 的 计算比重 */
-  @Field.d(GenesisBlockModel.INC++, "uint32")
-  participationNumberOfTransaction!: number;
-  /**参与度 参与的账户总数 的 计算比重 */
-  @Field.d(GenesisBlockModel.INC++, "uint32")
-  participationNumberOfAccount!: number;
-  /**参与度 总手续费 的 计算比重 */
-  @Field.d(GenesisBlockModel.INC++, "uint32")
-  participationTotalFee!: number;
-  @Field.d(GenesisBlockModel.INC++, TransactionPowOfWorkConfigModel)
-  transactionPowOfWorkConfig!: TransactionPowOfWorkConfigModel;
+  /**账户参与度权重比 */
+  @Field.d(GenesisAssetModel.INC++, RateModel, "required")
+  accountParticipationWeightRatio!: RateModel;
+  /**区块参与度权重比 */
+  @Field.d(GenesisAssetModel.INC++, RateModel, "required")
+  blockParticipationWeightRatio!: RateModel;
+  /**tpow 计算公式 */
+  @Field.d(GenesisAssetModel.INC++, "string", "required")
+  tpowDiffFormula!: string;
+  /**全网平均算了 */
+  @Field.d(GenesisAssetModel.INC++, "uint32", "required")
+  averageComputingPower!: number;
   /**前 n 个块 交易的 pow豁免 */
-  @Field.d(GenesisBlockModel.INC++, "uint32")
-  powOfWorkExemptionBlocks!: number;
-  toJSON(): BFChainCore.GenesisBlockJSON {
-    const res: BFChainCore.GenesisBlockJSON = Object.assign(
+  @Field.d(GenesisAssetModel.INC++, "uint32", "required")
+  tpowOfWorkExemptionBlocks!: number;
+  toJSON(): BFChainCore.GenesisAssetJSON {
+    const res: BFChainCore.GenesisAssetJSON = Object.assign(
       {
-        assetType: this.assetType,
         chainName: this.chainName,
+        assetType: this.assetType,
         magic: this.magic,
         bnid: this.bnid,
         beginEpochTime: this.beginEpochTime,
-        genesisNodeAddress: this.genesisNodeAddress,
+        genesisLocationName: this.genesisLocationName,
         generateTotalAmount: this.generateTotalAmount,
-        minTransactionFeePerByte: this.minTransactionFeePerByte,
-        maxPayloadLength: this.maxPayloadLength,
-        maxTPSPerBlock: this.maxTPSPerBlock,
+        minTransactionFeePerByte: this.minTransactionFeePerByte.toJSON(),
         maxTransactionSize: this.maxTransactionSize,
-        maxBlockRemarkSize: this.maxBlockRemarkSize,
+        maxBlockSize: this.maxBlockSize,
+        maxTPSPerBlock: this.maxTPSPerBlock,
         consessusBeforeSyncBlockDiff: this.consessusBeforeSyncBlockDiff,
         maxDelegateTxsPerRound: this.maxDelegateTxsPerRound,
         maxGrabTimesOfGiftAsset: this.maxGrabTimesOfGiftAsset,
         issueAssetMinChainAsset: this.issueAssetMinChainAsset,
         registerChainMinChainAsset: this.registerChainMinChainAsset,
-        chainAssetAndDigitalAssetExchangeRate: this.chainAssetAndDigitalAssetExchangeRate,
-        chainAssetRewardWeight: this.chainAssetRewardWeight,
-        numberOfTransactionRewardWeight: this.numberOfTransactionRewardWeight,
         maxApplyAndConfirmedBlockHeightDiff: this.maxApplyAndConfirmedBlockHeightDiff,
         blockPerRound: this.blockPerRound,
         delegates: this.delegates,
@@ -234,12 +216,11 @@ export class GenesisBlockModel extends RoundDelegateModel<GenesisBlockModel>
         rewardPercent: this.rewardPercent.toJSON(),
         ports: this.ports.toJSON(),
         rewardPerBlock: this.rewardPerBlock.toJSON(),
-        participationTotalChainAsset: this.participationTotalChainAsset,
-        participationNumberOfTransaction: this.participationNumberOfTransaction,
-        participationNumberOfAccount: this.participationNumberOfAccount,
-        participationTotalFee: this.participationTotalFee,
-        transactionPowOfWorkConfig: this.transactionPowOfWorkConfig.toJSON(),
-        powOfWorkExemptionBlocks: this.powOfWorkExemptionBlocks,
+        accountParticipationWeightRatio: this.accountParticipationWeightRatio.toJSON(),
+        blockParticipationWeightRatio: this.blockParticipationWeightRatio.toJSON(),
+        tpowDiffFormula: this.tpowDiffFormula,
+        averageComputingPower: this.averageComputingPower,
+        tpowOfWorkExemptionBlocks: this.tpowOfWorkExemptionBlocks,
       },
       super.toJSON(),
     );
@@ -251,9 +232,9 @@ export class GenesisBlockModel extends RoundDelegateModel<GenesisBlockModel>
   }
   static fromObject<T extends Message>(
     this: BFChainProtobuf.Constructor<T>,
-    object: BFChainProtobuf.ObjectFromType<GenesisBlockModel>,
+    object: BFChainProtobuf.ObjectFromType<GenesisAssetModel>,
   ) {
-    const res = super.fromObject(object) as GenesisBlockModel;
+    const res = super.fromObject(object) as GenesisAssetModel;
     if (res !== object) {
       object.beginEpochTime && (res.beginEpochTime = object.beginEpochTime);
     }
@@ -267,11 +248,11 @@ export class GenesisBlockModel extends RoundDelegateModel<GenesisBlockModel>
 @Type.d("GenesisBlockAssetModel")
 export class GenesisBlockAssetModel extends Message<GenesisBlockAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.GenesisBlockAssetJSON> {
-  @Field.d(1, GenesisBlockModel)
-  genesisBlock!: GenesisBlockModel;
+  @Field.d(1, GenesisAssetModel)
+  genesisAsset!: GenesisAssetModel;
   toJSON() {
     return {
-      genesisBlock: this.genesisBlock.toJSON(),
+      genesisAsset: this.genesisAsset.toJSON(),
     };
   }
 }

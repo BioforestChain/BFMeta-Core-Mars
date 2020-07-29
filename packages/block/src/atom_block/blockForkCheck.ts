@@ -533,7 +533,7 @@ export class BlockForkChecker {
         verifyHeight,
         blockGetterHelper2,
       );
-      if (block2.remark.hash === block1.remark.hash) {
+      if (block2.asset.roundLastAsset.hash === block1.asset.roundLastAsset.hash) {
         break;
       } else {
         verifyHeight -= this.config.blockPerRound;

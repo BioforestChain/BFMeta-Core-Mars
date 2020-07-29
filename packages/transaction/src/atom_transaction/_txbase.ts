@@ -436,15 +436,6 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     await this.transactionHelper.verifyTransactionSignature(transaction);
   }
 
-  /**
-   * 校验交易 remark 大小
-   *
-   * @param transaction
-   */
-  verifyRemarkSize(transaction: T) {
-    this.transactionHelper.verifyTransactionRemarkSize(transaction);
-  }
-
   verifyTransactionSize(transaction: T) {
     this.transactionHelper.verifyTransactionSize(transaction);
   }
@@ -456,7 +447,6 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
    */
   async verify(transaction: T, config = this.configHelper) {
     await this.verifyBaseInfo(transaction, config);
-    this.verifyRemarkSize(transaction);
     this.verifyTransactionSize(transaction);
     await this.verifySignature(transaction);
   }

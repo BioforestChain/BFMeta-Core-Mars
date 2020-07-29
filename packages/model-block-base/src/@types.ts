@@ -83,7 +83,7 @@ declare namespace BFChainCore {
 
   //#region CommonBlock
   interface CommonBlockAssetJSON {}
-  type CommonBlockBlockJSON = BlockJSON<CommonBlockAssetJSON>;
+  type CommonBlockJSON = BlockJSON<CommonBlockAssetJSON>;
   //#endregion
 
   //#region RoundLastBlock
@@ -98,13 +98,13 @@ declare namespace BFChainCore {
     maxTxCount: number;
     rate: string;
   }
-  interface RoundLastBlockJSON extends RoundDelegateJSON {
+  interface RoundLastAssetJSON extends RoundDelegateJSON {
     hash: string;
   }
   interface RoundLastBlockAssetJSON {
-    roundLastBlock: RoundLastBlockJSON;
+    roundLastAsset: RoundLastAssetJSON;
   }
-  type RoundLastBlockBlockJSON = BlockJSON<RoundLastBlockAssetJSON>;
+  type RoundLastBlockJSON = BlockJSON<RoundLastBlockAssetJSON>;
   //#endregion
 
   //#region GenesisBlock
@@ -120,41 +120,29 @@ declare namespace BFChainCore {
     readonly heights: number[];
     readonly rewards: string[];
   }
-
-  interface ParentInfoJSON {
-    magic: string;
-    chainName: string;
-    assetType: string;
-    genesisNodeAddress: string;
-  }
   interface TransactionPowOfWorkConfigJSON {
     growthFactor: FractionJSON<string>;
     participationRatio: FractionJSON;
     averageComputingPower: number;
   }
-  interface GenesisBlockJSON extends RoundDelegateJSON {
-    assetType: string;
+  interface GenesisAssetJSON extends RoundDelegateJSON {
     chainName: string;
+    assetType: string;
     magic: string;
     bnid: import("./constanst").BNID_TYPE;
     beginEpochTime: number;
-    genesisNodeAddress: string;
+    genesisLocationName: string;
     generateTotalAmount: string;
     minTransactionFeePerByte: FractionJSON;
-    maxPayloadLength: number;
-    maxTPSPerBlock: number;
     maxTransactionSize: number;
-    maxBlockRemarkSize: number;
+    maxBlockSize: number;
+    maxTPSPerBlock: number;
     consessusBeforeSyncBlockDiff: number;
     maxDelegateTxsPerRound: number;
     maxGrabTimesOfGiftAsset: number;
     issueAssetMinChainAsset: string;
     registerChainMinChainAsset: string;
-    chainAssetAndDigitalAssetExchangeRate: number;
-    chainAssetRewardWeight: number;
-    numberOfTransactionRewardWeight: number;
     maxApplyAndConfirmedBlockHeightDiff: number;
-    powOfWorkExemptionBlocks: number;
     blockPerRound: number;
     delegates: number;
     whetherToAllowDelegateContinusElections: boolean;
@@ -162,15 +150,15 @@ declare namespace BFChainCore {
     rewardPercent: RewardPercentJSON;
     ports: PortsJSON;
     rewardPerBlock: RewardPerBlockJSON;
-    participationTotalChainAsset: number;
-    participationNumberOfTransaction: number;
-    participationNumberOfAccount: number;
-    participationTotalFee: number;
-    transactionPowOfWorkConfig: TransactionPowOfWorkConfigJSON;
+    accountParticipationWeightRatio: RateJSON<string>;
+    blockParticipationWeightRatio: RateJSON<string>;
+    tpowDiffFormula: string;
+    averageComputingPower: number;
+    tpowOfWorkExemptionBlocks: number;
   }
   interface GenesisBlockAssetJSON {
-    genesisBlock: GenesisBlockJSON;
+    genesisAsset: GenesisAssetJSON;
   }
-  type GenesisBlockBlockJSON = BlockJSON<GenesisBlockAssetJSON>;
+  type GenesisBlockJSON = BlockJSON<GenesisBlockAssetJSON>;
   //#endregion
 }
