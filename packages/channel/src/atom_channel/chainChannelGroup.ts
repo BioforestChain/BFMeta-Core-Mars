@@ -330,8 +330,9 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     const resultPromise = resultPo && resultPo.promise;
     if (resultPromise) {
       safePromiseThen(resultPromise, undefined, resultGenerator.reject);
-      const offCatch = () => {
+      const offCatch = (_: unknown, next: () => void) => {
         safePromiseOffThen(resultPromise, undefined, resultGenerator.reject);
+        next();
       };
       resultGenerator.on("done", offCatch);
       resultGenerator.on("error", offCatch);
