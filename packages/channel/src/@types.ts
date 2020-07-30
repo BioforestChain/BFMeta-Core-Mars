@@ -150,6 +150,7 @@ declare namespace BFChainCore {
       transaction: NewTransactionArgJSON["transaction"],
       opts?: ChannelRequestOptions<any>,
     ): Promise<import("@bfchain/core-model").NewTransactionReturnModel>;
+    readonly isRefusePushNewTransaction: boolean;
     fastBroadcastTransaction(transaction: NewTransactionArgJSON["transaction"]): Promise<void>;
     /**查询区块 */
     queryBlock<B extends Block = Block>(

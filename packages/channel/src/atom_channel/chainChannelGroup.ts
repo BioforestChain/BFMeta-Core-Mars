@@ -723,6 +723,9 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     const startTime = this.timeHelper.now();
     /// 开始广播
     for (const chainChannel of chainChannelList) {
+      if (chainChannel.isRefusePushNewTransaction) {
+        continue;
+      }
       initedArgs || (initedArgs = await chainChannel.initBroadcastTransactionArg(transaction));
       try {
         chainChannel._sendWithBinaryData(initedArgs[0], initedArgs[1]);
