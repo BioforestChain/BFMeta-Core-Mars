@@ -271,14 +271,12 @@ export class ChainChannel<
       return;
     }
     return this.endpoint.postMessage(
-      ResponseModel.encode(
-        ResponseModel.fromObject({
-          version: this.config.version,
-          req_id,
-          cmd,
-          binary,
-        }),
-      ).finish(),
+      ResponseModel.fromObject({
+        version: this.config.version,
+        req_id,
+        cmd,
+        binary,
+      }).getBytes(),
     );
   }
 
