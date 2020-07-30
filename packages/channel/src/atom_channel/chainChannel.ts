@@ -154,7 +154,7 @@ export class ChainChannel<
     once?: boolean,
   ) {
     if (once) {
-      const remover = this.endpoint.onClose((err) => {
+      const remover = this.endpoint.onClose(err => {
         handler(err);
         remover();
       });
@@ -466,7 +466,7 @@ export class ChainChannel<
               /// 查询成功
               if (queryResult) {
                 response.status = RESPONSE_STATUS.success;
-                response.transactions = queryResult.transactions.map((tib) =>
+                response.transactions = queryResult.transactions.map(tib =>
                   TransactionInBlock.fromObject(tib),
                 );
               }
@@ -589,7 +589,10 @@ export class ChainChannel<
                    * 因为是单向请求(推送), 如果对方主动回馈是"繁忙", 那么就短时间内暂停推送
                    */
                   if (cmd === DUPLEX_API_CMD.NEW_TRANSACTION_RETURN) {
-                    this._busyNewTransaction = this.timeHelper.now();
+                    const { status } = this.chainChannelHelper.boxNewTransactionReturn(binary);
+                    if (status === RESPONSE_STATUS.busy) {
+                      this._busyNewTransaction = this.timeHelper.now();
+                    }
                   }
                 }
                 return;
