@@ -347,9 +347,20 @@ export class ChainChannel<
     return res;
   }
   /**
+   * 最后一次拒绝的时间, 对方是否拒绝单向推送新交易
+   * 1s 后会恢复推送
+   */
+  private _busyNewTransaction = 0;
+  get isRefusePushNewTransaction() {
+    return this._busyNewTransaction > this.timeHelper.now() - 1000;
+  }
+  /**
    * 快速广播,无回调
    */
   async fastBroadcastTransaction(transaction: BFChainCore.NewTransactionArgJSON["transaction"]) {
+    if (this.isRefusePushNewTransaction) {
+      return;
+    }
     const args = await this.initBroadcastTransactionArg(transaction);
     this._sendWithBinaryData(args[0], args[1]);
   }
@@ -572,6 +583,14 @@ export class ChainChannel<
                       req_id,
                     }),
                   );
+                } else {
+                  /**
+                   * 对req_id==0的进行优化处理
+                   * 因为是单向请求(推送), 如果对方主动回馈是"繁忙", 那么就短时间内暂停推送
+                   */
+                  if (cmd === DUPLEX_API_CMD.NEW_TRANSACTION_RETURN) {
+                    this._busyNewTransaction = this.timeHelper.now();
+                  }
                 }
                 return;
               }
