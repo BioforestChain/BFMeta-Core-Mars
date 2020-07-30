@@ -677,7 +677,7 @@ export class ChainChannelHelper {
 
   /**通用的，计算一般timeout的函数 */
   @bindThis
-  getChainChannelTimeout(chainChannel: BFChainCore.SimpleChainChannel, baseTime = 3000) {
+  getChainChannelTimeout(chainChannel: BFChainCore.SimpleChainChannel, baseTime = 3e4) {
     return (
       Math.max(Number.isFinite(chainChannel.delay) ? chainChannel.delay : 1000, 2000) + baseTime
     );
