@@ -136,6 +136,7 @@ export class ChainChannel<
     super();
     this.initOnMessage();
     endpoint.onClose(() => {
+      this._closed = true;
       for (const reqId of this._reqIdSet) {
         const reqTask = req_response_map.get(reqId);
         if (reqTask) {
@@ -154,7 +155,7 @@ export class ChainChannel<
     once?: boolean,
   ) {
     if (once) {
-      const remover = this.endpoint.onClose(err => {
+      const remover = this.endpoint.onClose((err) => {
         handler(err);
         remover();
       });
@@ -163,6 +164,7 @@ export class ChainChannel<
       return this.endpoint.onClose(handler);
     }
   }
+  private _closed = false;
   /**关闭双工连接 */
   close(reason?: string) {
     return this.endpoint.close(reason);
@@ -265,6 +267,9 @@ export class ChainChannel<
   }
   /**发送响应数据 */
   postResponseMessage(req_id: number, cmd: DUPLEX_API_CMD, binary: Uint8Array) {
+    if (this._closed) {
+      return;
+    }
     return this.endpoint.postMessage(
       ResponseModel.encode(
         ResponseModel.fromObject({
@@ -466,7 +471,7 @@ export class ChainChannel<
               /// 查询成功
               if (queryResult) {
                 response.status = RESPONSE_STATUS.success;
-                response.transactions = queryResult.transactions.map(tib =>
+                response.transactions = queryResult.transactions.map((tib) =>
                   TransactionInBlock.fromObject(tib),
                 );
               }
