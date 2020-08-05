@@ -831,19 +831,18 @@ export class CustomTransactionEvent {
         genesisAddress,
         expectedIssuedAssets,
       } = applyResult.applyInfo;
+      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
       return eventEmitter.emit("issueAsset", {
         type: "issueAsset",
         transaction,
         applyInfo: {
           address,
           publicKeyBuffer: parseHexToArrayBuffer(publicKey),
-          applyAddress: address,
           sourceChainName,
-          sourceChainMagic,
-          assetType,
           genesisAddress,
-          expectedIssuedAssets,
-          remainAssets: expectedIssuedAssets,
+          assetInfo,
+          amount: expectedIssuedAssets,
+          sourceAmount: expectedIssuedAssets,
         },
       });
     }

@@ -224,6 +224,14 @@ export class BlockBaseStatisticsHelper {
       },
       { taskname: "applyTransaction/blockStatistic/unfrozenAsset" },
     );
+    eventEmitter.on(
+      "issueAsset",
+      (event, next) => {
+        this._applyAsset(event, statistics_info, true);
+        return next();
+      },
+      { taskname: "applyTransaction/blockStatistic/issueAsset" },
+    );
     return true;
   }
 }
