@@ -603,7 +603,8 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "issueAsset",
       async ({ applyInfo }, next) => {
-        const { address, assetType, genesisAddress, expectedIssuedAssets } = applyInfo;
+        const { address, assetInfo, genesisAddress, sourceAmount } = applyInfo;
+        const { assetType } = assetInfo;
 
         // 是否持有除链资产外的其他资产
         this.helperLogicVerifier.isPossessAssetExceptForChainAsset(accountsAssets[address]);
@@ -642,9 +643,9 @@ export class EventLogicVerifier {
         const maxIssueAssets =
           BigInt(remainChainAsset) *
           BigInt(this.configHelper.chainAssetAndDigitalAssetExchangeRate);
-        if (BigInt(expectedIssuedAssets) > maxIssueAssets) {
+        if (BigInt(sourceAmount) > maxIssueAssets) {
           throw new ConsensusException(TOO_MANY_EXPECTEDISSUEDASSETS, {
-            reason: `Remain chain asset: ${remainChainAsset.toString()}, max isseuedAssets: ${maxIssueAssets.toString()}, received expectedIssuedAssets: ${expectedIssuedAssets.toString()}`,
+            reason: `Remain chain asset: ${remainChainAsset.toString()}, max isseuedAssets: ${maxIssueAssets.toString()}, received expectedIssuedAssets: ${sourceAmount.toString()}`,
             ...Function_Exception_Detail,
           });
         }

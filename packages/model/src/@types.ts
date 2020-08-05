@@ -154,17 +154,12 @@ declare namespace BFChainCore {
     EVENTNAME,
     T extends Transaction = Transaction
   > = ApplyTransactionEvent<ApplyInfo_PurchaseDAppid, EVENTNAME, T>;
-  type ApplyInfo_IssueAsset = {
+  interface ApplyInfo_IssueAsset extends ApplyInfo_Asset {
     address: string;
     publicKeyBuffer?: Uint8Array;
-    applyAddress: string;
     sourceChainName: string;
-    sourceChainMagic: string;
-    assetType: string;
     genesisAddress: string;
-    expectedIssuedAssets: string;
-    remainAssets: string;
-  };
+  }
   /**发行数字资产的相关事件 */
   type ApplyTransactionIssueAssetEvent<
     EVENTNAME,

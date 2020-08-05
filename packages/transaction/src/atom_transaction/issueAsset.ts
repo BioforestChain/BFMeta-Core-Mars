@@ -306,20 +306,19 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
         accountStatus: ACCOUNT_STATUS.FROZEN_OUT,
       },
     });
+    const assetInfo = this.chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
     // 发行数字资产
     tasks.next = eventEmitter.emit("issueAsset", {
       type: "issueAsset",
       transaction,
       applyInfo: {
         address: senderId,
-        publicKeyBuffer: senderPublicKeyBuffer,
-        applyAddress: senderId,
-        sourceChainName,
-        sourceChainMagic,
-        assetType,
         genesisAddress,
-        expectedIssuedAssets,
-        remainAssets: expectedIssuedAssets,
+        publicKeyBuffer: senderPublicKeyBuffer,
+        sourceChainName,
+        assetInfo,
+        amount: expectedIssuedAssets,
+        sourceAmount: expectedIssuedAssets,
       },
     });
     return tasks.tryToPromise();
