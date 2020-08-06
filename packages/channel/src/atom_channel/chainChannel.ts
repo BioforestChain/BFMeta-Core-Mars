@@ -110,7 +110,9 @@ const getReqId = () => {
   }
   return req_id;
 };
-
+export const ChainChannel_ARGS = {
+  REFUSETIME: Symbol("refuseTime"),
+};
 /**
  * 为数据收发处理器包装数据处理
  */
@@ -132,6 +134,8 @@ export class ChainChannel<
   constructor(
     @Inject(CHANNEL_ARGS.ENDPOINT)
     public endpoint: BFChainCore.ChannelEndpointInterface,
+    @Inject(ChainChannel_ARGS.REFUSETIME, { optional: true })
+    public readonly refuseTime = 1000,
   ) {
     super();
     this.initOnMessage();
@@ -155,7 +159,7 @@ export class ChainChannel<
     once?: boolean,
   ) {
     if (once) {
-      const remover = this.endpoint.onClose((err) => {
+      const remover = this.endpoint.onClose(err => {
         handler(err);
         remover();
       });
@@ -355,7 +359,7 @@ export class ChainChannel<
    */
   private _busyNewTransaction = 0;
   get isRefusePushNewTransaction() {
-    return this._busyNewTransaction > this.timeHelper.now() - 1000;
+    return this._busyNewTransaction > this.timeHelper.now() - this.refuseTime;
   }
   /**
    * 快速广播,无回调
@@ -469,7 +473,7 @@ export class ChainChannel<
               /// 查询成功
               if (queryResult) {
                 response.status = RESPONSE_STATUS.success;
-                response.transactions = queryResult.transactions.map((tib) =>
+                response.transactions = queryResult.transactions.map(tib =>
                   TransactionInBlock.fromObject(tib),
                 );
               }
