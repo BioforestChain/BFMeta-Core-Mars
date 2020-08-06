@@ -289,24 +289,20 @@ declare namespace BFChainCore {
     forEach(hanlder: (chainChannel: CC, i: number) => any): void;
 
     /**开始一个节点并发任务 */
-    startParallelTask(
+    $startParallelTask(
       task_id: string,
-      opts?: {
-        channelFilter?: BFChainCore.ChannelFilter<CC>;
-        abortWhenNoChainChannel?: boolean;
-      },
-    ): {
-      getFreeChainChannel: () => CC | Promise<CC>;
-      freeChainChannel: (chainChannel: CC) => void;
-      busyChainChannel: (chainChannel: CC) => void;
-      hasFreeChainChannel: () => boolean;
-      requestChainChannel: <R>(
-        cb: (event: RequestChainChannelEvent<CC>) => Promise<R>,
-        autoFreeChainChannel?: boolean,
-      ) => Promise<R>;
-    };
+      opts?: ChainChannelGroup.ParallelTaskOptions<CC>,
+    ): ChainChannelGroup.ParallelTaskHelpers<CC>;
     /**释放并发任务 */
-    releaseParallelTask(task_id: string): false | undefined;
+    $releaseParallelTask(task_id: string): false | undefined;
+
+    wrapParallelTask<R>(
+      callback: (
+        helpers: BFChainCore.ChainChannelGroup.ParallelTaskHelpers<CC>,
+      ) => BFChainUtil.PromiseOne<R>,
+      task_id?: string,
+      opts?: BFChainCore.ChainChannelGroup.ParallelTaskOptions<CC>,
+    ): Promise<BFChainUtil.PromiseType<R>>;
     /**
      * 查询交易
      */
@@ -365,6 +361,31 @@ declare namespace BFChainCore {
         result: Promise<import("@bfchain/core-model").NewBlockReturn>;
       }[]
     >;
+  }
+  namespace ChainChannelGroup {
+    type ParallelTaskOptions<CC extends SimpleChainChannel> = {
+      channelFilter?: BFChainCore.ChannelFilter<CC>;
+      abortWhenNoChainChannel?: boolean;
+    };
+    type ParallelTaskCache<CC extends SimpleChainChannel> = {
+      freeChainChannelList: CC[];
+      busyChainChannels: Set<CC>;
+      queneChainChannelList: import("@bfchain/util").PromiseOut<CC>[];
+      tiTasks: Set<Promise<void>>;
+      onDestroy: () => unknown;
+      helpers: ParallelTaskHelpers<CC>;
+      refs: Set<unknown>;
+    };
+    type ParallelTaskHelpers<CC extends SimpleChainChannel> = {
+      getFreeChainChannel: () => CC | Promise<CC>;
+      freeChainChannel: (chainChannel: CC) => void;
+      busyChainChannel: (chainChannel: CC) => void;
+      hasFreeChainChannel: () => boolean;
+      requestChainChannel: <R>(
+        cb: (event: RequestChainChannelEvent<CC>) => Promise<R>,
+        autoFreeChainChannel?: boolean,
+      ) => Promise<R>;
+    };
   }
 
   type RequestChainChannelEvent<CC extends SimpleChainChannel = ChainChannel> = {

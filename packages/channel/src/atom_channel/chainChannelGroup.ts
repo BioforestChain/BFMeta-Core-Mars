@@ -110,24 +110,20 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
   }
   private _parallelTasksMap = new Map<
     string,
-    {
-      freeChainChannelList: DH[];
-      busyChainChannels: Set<DH>;
-      queneChainChannelList: PromiseOut<DH>[];
-      tiTasks: Set<Promise<void>>;
-      onDestroy: () => unknown;
-    }
+    BFChainCore.ChainChannelGroup.ParallelTaskCache<DH>
   >();
   /**节点的工作量 */
   private _workCountWM = new EasyWeakMap<DH, number>((_) => 0);
   /**开始一个节点并发任务 */
-  startParallelTask(
+  $requestParallelTask(
     task_id: string,
-    opts: {
-      channelFilter?: BFChainCore.ChannelFilter<DH>;
-      abortWhenNoChainChannel?: boolean;
-    } = {},
-  ) {
+    opts: BFChainCore.ChainChannelGroup.ParallelTaskOptions<DH> = {},
+  ): BFChainCore.ChainChannelGroup.ParallelTaskCache<DH> {
+    let cache = this._parallelTasksMap.get(task_id);
+    if (cache) {
+      return cache;
+    }
+
     const { channelFilter, abortWhenNoChainChannel } = opts;
     const WCWM = this._workCountWM;
 
@@ -262,7 +258,14 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     /// 如果有节点被移除了，那么从列表中移除
     this.onRemoveChainChannel(tryRemoveChainChannelFromList);
     //#endregion
-    this._parallelTasksMap.set(task_id, {
+    const helpers: BFChainCore.ChainChannelGroup.ParallelTaskHelpers<DH> = {
+      hasFreeChainChannel,
+      getFreeChainChannel,
+      freeChainChannel,
+      busyChainChannel,
+      requestChainChannel,
+    };
+    cache = {
       freeChainChannelList,
       busyChainChannels,
       queneChainChannelList,
@@ -278,17 +281,21 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
         this.offAddChainChannel(tryAddChainChannelToFree);
         this.offRemoveChainChannel(tryRemoveChainChannelFromList);
       },
-    });
-    return {
-      hasFreeChainChannel,
-      getFreeChainChannel,
-      freeChainChannel,
-      busyChainChannel,
-      requestChainChannel,
+      helpers,
+      refs: new Set(),
     };
+    this._parallelTasksMap.set(task_id, cache);
+    return cache;
+  }
+  /**开始一个节点并发任务 */
+  $startParallelTask(
+    task_id: string,
+    opts: BFChainCore.ChainChannelGroup.ParallelTaskOptions<DH> = {},
+  ) {
+    return this.$requestParallelTask(task_id, opts).helpers;
   }
   /**释放并发任务 */
-  releaseParallelTask(task_id: string) {
+  $releaseParallelTask(task_id: string) {
     const task = this._parallelTasksMap.get(task_id);
     if (!task) {
       return false;
@@ -296,6 +303,24 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     this._parallelTasksMap.delete(task_id);
 
     task.onDestroy();
+  }
+  async wrapParallelTask<R>(
+    callback: (
+      helpers: BFChainCore.ChainChannelGroup.ParallelTaskHelpers<DH>,
+    ) => BFChainUtil.PromiseOne<R>,
+    task_id = "unknowParallelTask",
+    opts: BFChainCore.ChainChannelGroup.ParallelTaskOptions<DH> = {},
+  ) {
+    const task = this.$requestParallelTask(task_id, opts);
+    task.refs.add(callback);
+    try {
+      return await callback(task.helpers);
+    } finally {
+      task.refs.delete(callback);
+      if (task.refs.size === 0) {
+        this.$releaseParallelTask(task_id);
+      }
+    }
   }
   /**
    * 查询交易
@@ -314,7 +339,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     const parallelTaskId = `Group(${this.groupName}) queryTransactions-${
       Date.now() + Math.random()
     }`;
-    const { requestChainChannel } = this.startParallelTask(parallelTaskId, {
+    const { requestChainChannel } = this.$startParallelTask(parallelTaskId, {
       channelFilter: opts?.channelFilter,
       abortWhenNoChainChannel: opts?.abortWhenNoChainChannel,
     });
@@ -583,7 +608,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     })()
       .catch(resultGenerator.reject)
       .finally(() => {
-        this.releaseParallelTask(parallelTaskId);
+        this.$releaseParallelTask(parallelTaskId);
       });
 
     return resultGenerator;
@@ -743,7 +768,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     event?: QueneEventEmitter<BFChainCore.BroadcastNewTransactionEvents<DH>>,
   ): Promise<B | undefined> {
     const parallelTaskId = `Group(${this.groupName}) queryBlock-${Date.now() + Math.random()}`;
-    const { requestChainChannel } = this.startParallelTask(parallelTaskId, {
+    const { requestChainChannel } = this.$startParallelTask(parallelTaskId, {
       channelFilter: opts?.channelFilter,
       abortWhenNoChainChannel: opts?.abortWhenNoChainChannel,
     });
@@ -851,7 +876,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       return block;
     } finally {
       /// 释放并发
-      this.releaseParallelTask(parallelTaskId);
+      this.$releaseParallelTask(parallelTaskId);
       offCatchResultPo && offCatchResultPo();
     }
   }
