@@ -297,11 +297,15 @@ declare namespace BFChainCore {
     $releaseParallelTask(task_id: string): false | undefined;
 
     wrapParallelTask<R>(
-      callback: (helpers: ChainChannelGroup.ParallelTaskHelpers<CC>) => BFChainUtil.PromiseOne<R>,
+      runner: (helpers: ChainChannelGroup.ParallelTaskHelpers<CC>) => BFChainUtil.PromiseOne<R>,
       task_id?: string,
       opts?: ChainChannelGroup.ParallelTaskOptions<CC>,
     ): Promise<BFChainUtil.PromiseType<R>>;
-
+    wrapCbParallelTask(
+      callback: (helpers: ChainChannelGroup.ParallelTaskHelpers<CC>, cb: () => void) => unknown,
+      task_id?: string,
+      opts?: ChainChannelGroup.ParallelTaskOptions<CC>,
+    ): unknown;
     wrapAgParallelTask<T = unknown, TReturn = any, TNext = unknown>(
       agRunner: (
         helpers: ChainChannelGroup.ParallelTaskHelpers<CC>,

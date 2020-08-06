@@ -305,22 +305,39 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     task.onDestroy();
   }
   async wrapParallelTask<R>(
-    callback: (
+    runner: (
       helpers: BFChainCore.ChainChannelGroup.ParallelTaskHelpers<DH>,
     ) => BFChainUtil.PromiseOne<R>,
     task_id = "unknowParallelTask",
     opts: BFChainCore.ChainChannelGroup.ParallelTaskOptions<DH> = {},
   ) {
     const task = this.$requestParallelTask(task_id, opts);
-    task.refs.add(callback);
+    task.refs.add(runner);
     try {
-      return await callback(task.helpers);
+      return await runner(task.helpers);
     } finally {
-      task.refs.delete(callback);
+      task.refs.delete(runner);
       if (task.refs.size === 0) {
         this.$releaseParallelTask(task_id);
       }
     }
+  }
+  wrapCbParallelTask(
+    callback: (
+      helpers: BFChainCore.ChainChannelGroup.ParallelTaskHelpers<DH>,
+      cb: () => void,
+    ) => unknown,
+    task_id = "unknowParallelTask",
+    opts: BFChainCore.ChainChannelGroup.ParallelTaskOptions<DH> = {},
+  ) {
+    const task = this.$requestParallelTask(task_id, opts);
+    task.refs.add(callback);
+    return callback(task.helpers, () => {
+      task.refs.delete(callback);
+      if (task.refs.size === 0) {
+        this.$releaseParallelTask(task_id);
+      }
+    });
   }
   async *wrapAgParallelTask<T = unknown, TReturn = any, TNext = unknown>(
     agRunner: (
