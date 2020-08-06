@@ -6,4 +6,5 @@ export enum CHANNEL_TYPE {
 
 export const CHANNEL_ARGS = {
   ENDPOINT: Symbol("endpoint"),
+  REFUSETIME: Symbol("refuseTime"),
 };

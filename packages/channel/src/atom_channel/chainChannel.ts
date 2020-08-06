@@ -110,9 +110,6 @@ const getReqId = () => {
   }
   return req_id;
 };
-export const ChainChannel_ARGS = {
-  REFUSETIME: Symbol("refuseTime"),
-};
 /**
  * 为数据收发处理器包装数据处理
  */
@@ -134,7 +131,7 @@ export class ChainChannel<
   constructor(
     @Inject(CHANNEL_ARGS.ENDPOINT)
     public endpoint: BFChainCore.ChannelEndpointInterface,
-    @Inject(ChainChannel_ARGS.REFUSETIME, { optional: true })
+    @Inject(CHANNEL_ARGS.REFUSETIME, { optional: true })
     public readonly refuseTime = 1000,
   ) {
     super();

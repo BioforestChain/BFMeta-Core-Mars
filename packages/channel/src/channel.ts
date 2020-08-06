@@ -11,10 +11,17 @@ export class ChannelCore {
     channelEndpoint: BFChainCore.ChannelEndpointInterface,
     CustomChainChannel = (ChainChannel as unknown) as BFChainUtil.Constructor<T>,
     moduleMap = this.moduleMap,
+    refuseTime = 1000,
   ) {
     const chainChannel = Resolve(
       CustomChainChannel,
-      new ModuleStroge([[CHANNEL_ARGS.ENDPOINT, channelEndpoint]], moduleMap),
+      new ModuleStroge(
+        [
+          [CHANNEL_ARGS.ENDPOINT, channelEndpoint],
+          [CHANNEL_ARGS.REFUSETIME, refuseTime],
+        ],
+        moduleMap,
+      ),
     );
     return chainChannel;
   }
