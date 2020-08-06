@@ -322,6 +322,24 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       }
     }
   }
+  async *wrapAgParallelTask<T = unknown, TReturn = any, TNext = unknown>(
+    agRunner: (
+      helpers: BFChainCore.ChainChannelGroup.ParallelTaskHelpers<DH>,
+    ) => AsyncGenerator<T, TReturn, TNext>,
+    task_id = "unknowParallelTask",
+    opts: BFChainCore.ChainChannelGroup.ParallelTaskOptions<DH> = {},
+  ): AsyncGenerator<T, TReturn, TNext> {
+    const task = this.$requestParallelTask(task_id, opts);
+    task.refs.add(agRunner);
+    try {
+      return yield* agRunner(task.helpers);
+    } finally {
+      task.refs.delete(agRunner);
+      if (task.refs.size === 0) {
+        this.$releaseParallelTask(task_id);
+      }
+    }
+  }
   /**
    * 查询交易
    */
