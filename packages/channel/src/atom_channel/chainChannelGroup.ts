@@ -322,11 +322,8 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       }
     }
   }
-  wrapCbParallelTask(
-    callback: (
-      helpers: BFChainCore.ChainChannelGroup.ParallelTaskHelpers<DH>,
-      cb: () => void,
-    ) => unknown,
+  wrapCbParallelTask<R>(
+    callback: (helpers: BFChainCore.ChainChannelGroup.ParallelTaskHelpers<DH>, cb: () => void) => R,
     task_id = "unknowParallelTask",
     opts: BFChainCore.ChainChannelGroup.ParallelTaskOptions<DH> = {},
   ) {

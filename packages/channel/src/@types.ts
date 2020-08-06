@@ -301,8 +301,8 @@ declare namespace BFChainCore {
       task_id?: string,
       opts?: ChainChannelGroup.ParallelTaskOptions<CC>,
     ): Promise<BFChainUtil.PromiseType<R>>;
-    wrapCbParallelTask(
-      callback: (helpers: ChainChannelGroup.ParallelTaskHelpers<CC>, cb: () => void) => unknown,
+    wrapCbParallelTask<R>(
+      callback: (helpers: ChainChannelGroup.ParallelTaskHelpers<CC>, cb: () => void) => R,
       task_id?: string,
       opts?: ChainChannelGroup.ParallelTaskOptions<CC>,
     ): unknown;
