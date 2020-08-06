@@ -774,8 +774,9 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       chainChannelList = [...this.chainChannelSet.values()];
     }
     let is_break = event && (await event.emit("startBroadcasting", { chainChannelList }));
+    let broadCount = 0;
     if (is_break && is_break.break) {
-      return;
+      return broadCount;
     }
     const startTime = this.timeHelper.now();
     /// 开始广播
@@ -785,11 +786,13 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       }
       initedArgs || (initedArgs = await chainChannel.initBroadcastTransactionArg(transaction));
       try {
+        broadCount++;
         chainChannel._sendWithBinaryData(initedArgs[0], initedArgs[1]);
       } catch (err) {}
     }
     const endTime = this.timeHelper.now();
     event && event.emit("endBroadcast", { duraction: endTime - startTime });
+    return broadCount;
   }
   /**
    * 查询区块

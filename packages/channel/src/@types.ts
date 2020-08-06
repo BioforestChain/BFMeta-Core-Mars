@@ -151,7 +151,7 @@ declare namespace BFChainCore {
       opts?: ChannelRequestOptions<any>,
     ): Promise<import("@bfchain/core-model").NewTransactionReturnModel>;
     readonly isRefusePushNewTransaction: boolean;
-    fastBroadcastTransaction(transaction: NewTransactionArgJSON["transaction"]): Promise<void>;
+    fastBroadcastTransaction(transaction: NewTransactionArgJSON["transaction"]): Promise<number>;
     /**查询区块 */
     queryBlock<B extends Block = Block>(
       query: QueryBlockArgJSON["query"],
@@ -246,7 +246,7 @@ declare namespace BFChainCore {
       transaction: NewTransactionArgJSON["transaction"],
       opts?: ChannelRequestOptions<THIS>,
     ): Promise<import("@bfchain/core-model").NewTransactionReturnModel>;
-    fastBroadcastTransaction(transaction: NewTransactionArgJSON["transaction"]): Promise<void>;
+    fastBroadcastTransaction(transaction: NewTransactionArgJSON["transaction"]): Promise<number>;
     /**查询区块 */
     queryBlock<B extends Block = Block>(
       query: QueryBlockArgJSON["query"],
@@ -351,7 +351,7 @@ declare namespace BFChainCore {
         max_parallel_num?: number;
       },
       event?: BFChainUtil.QueneEventEmitter<BroadcastNewTransactionEvents<CC>>,
-    ): Promise<void>;
+    ): Promise<number>;
     /**
      * 查询区块
      */

@@ -363,10 +363,11 @@ export class ChainChannel<
    */
   async fastBroadcastTransaction(transaction: BFChainCore.NewTransactionArgJSON["transaction"]) {
     if (this.isRefusePushNewTransaction) {
-      return;
+      return 0;
     }
     const args = await this.initBroadcastTransactionArg(transaction);
     this._sendWithBinaryData(args[0], args[1]);
+    return 1;
   }
   /**查询区块 */
   async queryBlock<B extends Block = Block>(
