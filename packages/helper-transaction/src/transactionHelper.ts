@@ -16,7 +16,7 @@ import {
 } from "@bfchain/core-model-transaction";
 import { JSBIHelper } from "@bfchain/core-helper-bigint";
 import { AsymmetricHelper } from "@bfchain/core-helper-asymmetric";
-import { Injectable, Inject, decodeBinaryToHex } from "@bfchain/util";
+import { Injectable, Inject, decodeBinaryToHex, cacheGetter } from "@bfchain/util";
 import { AccountBaseHelper } from "@bfchain/core-helper-account-base";
 import { TRANSACTION_FILTER_SYMBOL, ABORT_FORBIDDEN_TRANSACTION_SYMBOL } from "./const";
 type Transaction = import("@bfchain/core-model-transaction").Transaction;
@@ -358,6 +358,52 @@ export class TransactionHelper {
     participation: "",
     diff_BI: BigInt(0),
   };
+
+  @cacheGetter
+  private get growthFactorBI(): BFChainCore.FractionJSON<bigint> {
+    const { growthFactor } = this.config.genesisBlock.remark.transactionPowOfWorkConfig;
+    return {
+      numerator: BigInt(growthFactor.numerator),
+      denominator: BigInt(growthFactor.denominator),
+    };
+  }
+  @cacheGetter
+  private get participationRatioBI(): BFChainCore.FractionJSON<bigint> {
+    const { participationRatio } = this.config.genesisBlock.remark.transactionPowOfWorkConfig;
+    return {
+      numerator: BigInt(participationRatio.numerator),
+      denominator: BigInt(participationRatio.denominator),
+    };
+  }
+  @cacheGetter
+  private get generateTotalAmountBI() {
+    const { generateTotalAmount } = this.config.genesisBlock.remark;
+    return BigInt(generateTotalAmount);
+  }
+  @cacheGetter
+  private get MAX_SAFE_INTEGER_BI() {
+    return BigInt(Number.MAX_SAFE_INTEGER);
+  }
+  @cacheGetter
+  private get logGenerateTotalAmount() {
+    return this.logBI(this.generateTotalAmountBI + BigInt(1));
+  }
+  logBI(num: bigint) {
+    const { MAX_SAFE_INTEGER_BI } = this;
+    const { MAX_SAFE_INTEGER } = Number;
+    if (num <= MAX_SAFE_INTEGER_BI) {
+      return Math.log(Number(num));
+    }
+    const rate = num / MAX_SAFE_INTEGER_BI;
+    if (rate >= MAX_SAFE_INTEGER_BI) {
+      throw new RangeError("log bigint out range.");
+    }
+    /**
+     * @FIXME 这里一旦rate过大，就会带来log的精度问题。但过大的rate，会在其它地方带来更多问题，而不单单是这里
+     */
+    const rest = Number(num - rate * MAX_SAFE_INTEGER_BI) / MAX_SAFE_INTEGER;
+    return Math.log(Number(rate) + rest) + Math.log(MAX_SAFE_INTEGER);
+  }
   /**
    * 计算交易POW的难度
    */
@@ -367,34 +413,39 @@ export class TransactionHelper {
     if (_cache_of_diff_BI.num === num && _cache_of_diff_BI.participation === participation) {
       diff_BI = _cache_of_diff_BI.diff_BI;
     } else {
-      const {
-        growthFactor,
-        participationRatio,
-      } = this.config.genesisBlock.remark.transactionPowOfWorkConfig;
-      /**难度系数的分子，这个只与num有关系，所以可以进行缓存 */
+      const { growthFactorBI, participationRatioBI, jsbiHelper, logGenerateTotalAmount } = this;
+      /**难度基数的分子，这个只与num有关系，所以可以进行缓存 */
       let diff_numerator_BI = this._cache_of_diff_numerator_BI.get(num);
       if (!diff_numerator_BI) {
         const num_BI = BigInt(num);
-        const growthFactor_numerator_BI = BigInt(growthFactor.numerator);
-        const growthFactor_denominator_BI = BigInt(growthFactor.denominator);
+        const growthFactor_numerator_BI = growthFactorBI.numerator;
+        const growthFactor_denominator_BI = growthFactorBI.denominator;
         /**(E ^ N) */
         const BI_1 = growthFactor_numerator_BI ** num_BI / growthFactor_denominator_BI ** num_BI;
         diff_numerator_BI = BI_1 * num_BI;
         this._cache_of_diff_numerator_BI.set(num, diff_numerator_BI);
       }
-
-      const diff_denominator_numerator_BI =
-        BigInt(participationRatio.numerator) * BigInt(participation);
-      const diff_denominator_denominator_BI = BigInt(participationRatio.denominator);
-      /**难度系数的分母，这与账户的上一轮参与度有关系 */
-      const diff_denominator_BI =
-        diff_denominator_numerator_BI / diff_denominator_denominator_BI + BigInt(1);
-      /**计算出难度系数 */
-      diff_BI = diff_numerator_BI / diff_denominator_BI;
-      /// 如果难度系数是0，直接跳过后面的校验计算
-      if (diff_BI === BigInt(0)) {
-        return diff_BI;
+      /// 如果难度基数是0，直接跳过后面的校验计算
+      if (diff_numerator_BI === BigInt(0)) {
+        return diff_numerator_BI;
       }
+
+      /** 用参与度换算难度比例： (log(创世账户余额+1) +1)  /   (log(参与度+1) +1) */
+      const diffRatio = jsbiHelper.numberToFraction(
+        (logGenerateTotalAmount + 1) / (this.logBI(BigInt(participation) + BigInt(1)) + 1),
+      );
+      /// 难度比例与参与度占比进行合并
+      const diffRatio2_numerator = BigInt(diffRatio.numerator) * participationRatioBI.numerator;
+      const diffRatio2_denominator =
+        BigInt(diffRatio.denominator) * participationRatioBI.denominator;
+
+      /// 计算出难度系数： (难度比例 +1) * 难度基数
+      diff_BI =
+        jsbiHelper.multiplyFloorFraction(diff_numerator_BI, {
+          numerator: diffRatio2_numerator,
+          denominator: diffRatio2_denominator,
+        }) + diff_numerator_BI;
+
       _cache_of_diff_BI.num = num;
       _cache_of_diff_BI.participation = participation;
       _cache_of_diff_BI.diff_BI = diff_BI;
