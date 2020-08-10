@@ -108,6 +108,8 @@ export class TransactionCore {
     secondKeypair?: BFChainCore.Keypair,
     config = this.config,
     pow?: BFChainCore.TransactonPoWOptions<T>,
+    /**跳过pow: 目前用在browser中的_createSomeTransaction */
+    skipPow?: boolean,
   ) {
     const trsType =
       body.type || this.getTransactionTypeFromTransactionFactoryConstructor(TxFactory);
@@ -161,7 +163,7 @@ export class TransactionCore {
     );
 
     // 在异步中执行交易POW
-    if (pow) {
+    if (pow && !skipPow) {
       if (pow.calculator) {
         pow.calculator(trs, pow, keypair, secondKeypair);
       } else {
