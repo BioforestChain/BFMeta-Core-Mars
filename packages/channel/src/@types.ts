@@ -194,6 +194,10 @@ declare namespace BFChainCore {
 
   interface ChainChannel<THIS extends SimpleChainChannel = SimpleChainChannel>
     extends SimpleChainChannel {
+    isOnNewTransaction?: boolean;
+    isOnNewBlock?: boolean;
+    isOnQueryTransaction?: boolean;
+    isOnQueryBlock?: boolean;
     defaultReqOptions?: ChannelRequestOptions<THIS>;
     delay: number;
     /**
