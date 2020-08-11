@@ -90,12 +90,18 @@ export class JSBIHelper {
   /**number转分数 */
   numberToFraction(y: number) {
     const y_str = y.toString();
+    // bug  Math.pow(10, 21) => 1e+21 4.019276798087129 => 4019276798087129.5
     // 找到小数点的位置
-    const y_dot_index = y_str.indexOf(".");
-    const y_float_str_length = y_dot_index === -1 ? 0 : y_str.length - y_dot_index - 1;
-    const denominator = Math.pow(10, y_float_str_length);
-    const numerator = y * denominator;
-    return { numerator, denominator } as BFChainCore.FractionJSON<number>;
+    // const y_dot_index = y_str.indexOf(".");
+    // const y_float_str_length = y_dot_index === -1 ? 0 : y_str.length - y_dot_index - 1;
+    // const denominator = Math.pow(10, y_float_str_length);
+    // const numerator = y * denominator;
+    // return { numerator, denominator } as BFChainCore.FractionJSON<number>;
+    const y_str_list = y_str.split(".");
+    const y_float_str_length = y_str_list.length > 1 ? y_str_list[1].length : 0;
+    const denominator = 1 + "0".repeat(y_float_str_length);
+    const numerator = y_str_list.join("");
+    return { numerator, denominator } as BFChainCore.FractionJSON<string>;
   }
   /**
    * 向上取整
@@ -110,7 +116,7 @@ export class JSBIHelper {
    *
    * @param z
    */
-  multiplyCeilFraction(x: BI, y: BFChainCore.FractionJSON) {
+  multiplyCeilFraction(x: BI, y: BFChainCore.FractionJSON<BI>) {
     const formatX = formatParam(x);
     const numerator = BigInt(y.numerator);
     const denominator = BigInt(y.denominator);
