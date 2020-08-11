@@ -381,6 +381,9 @@ export class ChainChannel<
     if (this.isRefusePushNewTransaction) {
       return 0;
     }
+    if (!this.isOnNewTransaction) {
+      return 0;
+    }
     const args = await this.initBroadcastTransactionArg(transaction);
     this._sendWithBinaryData(args[0], args[1]);
     return 1;

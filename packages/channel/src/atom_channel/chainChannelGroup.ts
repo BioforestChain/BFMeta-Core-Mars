@@ -771,7 +771,12 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
         }
       }
     } else {
-      chainChannelList = [...this.chainChannelSet.values()];
+      for (const DH of this.chainChannelSet.values()) {
+        if (DH.isOnNewTransaction) {
+          chainChannelList.push(DH);
+        }
+      }
+      // chainChannelList = [...this.chainChannelSet.values()];
     }
     let is_break = event && (await event.emit("startBroadcasting", { chainChannelList }));
     let broadCount = 0;

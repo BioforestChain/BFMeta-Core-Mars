@@ -151,6 +151,10 @@ declare namespace BFChainCore {
       opts?: ChannelRequestOptions<any>,
     ): Promise<import("@bfchain/core-model").NewTransactionReturnModel>;
     readonly isRefusePushNewTransaction: boolean;
+    isOnNewTransaction?: boolean;
+    isOnNewBlock?: boolean;
+    isOnQueryTransaction?: boolean;
+    isOnQueryBlock?: boolean;
     fastBroadcastTransaction(transaction: NewTransactionArgJSON["transaction"]): Promise<number>;
     /**查询区块 */
     queryBlock<B extends Block = Block>(
@@ -194,10 +198,6 @@ declare namespace BFChainCore {
 
   interface ChainChannel<THIS extends SimpleChainChannel = SimpleChainChannel>
     extends SimpleChainChannel {
-    isOnNewTransaction?: boolean;
-    isOnNewBlock?: boolean;
-    isOnQueryTransaction?: boolean;
-    isOnQueryBlock?: boolean;
     defaultReqOptions?: ChannelRequestOptions<THIS>;
     delay: number;
     /**
