@@ -117,10 +117,22 @@ const getReqId = () => {
 export class ChainChannel<
   THIS extends BFChainCore.SimpleChainChannel = BFChainCore.SimpleChainChannel
 > extends ChainChannelBase implements BFChainCore.ChainChannel<THIS> {
-  public isOnNewTransaction = false;
-  public isOnNewBlock = false;
-  public isOnQueryTransaction = false;
-  public isOnQueryBlock = false;
+  public _isOnNewTransaction = false;
+  get isOnNewTransaction() {
+    return this._isOnNewTransaction;
+  }
+  public _isOnNewBlock = false;
+  get isOnNewBlock() {
+    return this._isOnNewBlock;
+  }
+  public _isOnQueryTransaction = false;
+  get isOnQueryTransaction() {
+    return this._isOnQueryTransaction;
+  }
+  public _isOnQueryBlock = false;
+  get isOnQueryBlock() {
+    return this._isOnQueryBlock;
+  }
   defaultReqOptions?: BFChainCore.ChannelRequestOptions<THIS>;
   @Inject("bfchain-core:TransactionCore")
   protected transactionCore!: import("@bfchain/core-transaction").TransactionCore;
