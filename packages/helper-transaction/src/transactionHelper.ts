@@ -411,7 +411,7 @@ export class TransactionHelper {
   @cacheGetter
   private get hardDiffThreshold() {
     return (
-      5 * this.config.forgeInterval * this.config.blockPerRound * (this.config.blockPerRound - 1)
+      (10 * this.config.forgeInterval * this.config.blockPerRound) / (this.config.blockPerRound - 1)
     );
   }
   /**计算难度基数 */
@@ -465,14 +465,14 @@ export class TransactionHelper {
        * Need Online Time
        * 计算出一轮需要在线时间
        */
-      const y = 0.238536212611 / (1 - 0.7936005508148 * (Math.E ^ (-0.0847138128036 * x)));
+      const y = 0.238536212611 / (1 - 0.7936005508148 * Math.E ** (-0.0847138128036 * x));
       /**
        * 得出简单与困难 交易数 的分水岭
        */
       const easyTrsPreBlock = 1 / y;
       const hardTrsPreBlock = easyTrsPreBlock + 1;
 
-      const needWorkTimes = hardDiffThreshold / hardTrsPreBlock;
+      const needWorkTimes = hardDiffThreshold / this.calcDiffBase(hardTrsPreBlock);
 
       diff_BI = jsbiHelper.multiplyCeilFraction(
         diff_numerator_BI,
