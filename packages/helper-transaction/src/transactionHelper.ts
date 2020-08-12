@@ -444,7 +444,7 @@ export class TransactionHelper {
   /**计算难度累积值 */
   private accDiffBaseBI(num: number) {
     const rest = num % 1;
-    let accDiffBI = 0n;
+    let accDiffBI = BigInt(0);
     for (let i = 0; i <= num; i++) {
       accDiffBI += this.calcDiffBaseBI(i);
     }
