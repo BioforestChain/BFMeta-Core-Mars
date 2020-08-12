@@ -404,11 +404,29 @@ export class TransactionHelper {
     const rest = Number(num - rate * MAX_SAFE_INTEGER_BI) / MAX_SAFE_INTEGER;
     return Math.log(Number(rate) + rest) + Math.log(MAX_SAFE_INTEGER);
   }
+
+  /**
+   * 困难难度分水岭
+   */
+  @cacheGetter
+  private get hardDiffThreshold() {
+    return (
+      5 * this.config.forgeInterval * this.config.blockPerRound * (this.config.blockPerRound - 1)
+    );
+  }
+  /**计算难度基数 */
+  calcDiffBase(num: number) {
+    const { growthFactor } = this.config.genesisBlock.remark.transactionPowOfWorkConfig;
+
+    /**(E ^ N) * N */
+    return (Number(growthFactor.numerator) / Number(growthFactor.denominator)) ** num * num;
+  }
+
   /**
    * 计算交易POW的难度
    */
   calcDiffOfTransactionProfOfWork(num: number, participation: string) {
-    const { _cache_of_diff_BI } = this;
+    const { _cache_of_diff_BI, hardDiffThreshold } = this;
     let diff_BI: bigint;
     if (_cache_of_diff_BI.num === num && _cache_of_diff_BI.participation === participation) {
       diff_BI = _cache_of_diff_BI.diff_BI;
@@ -430,21 +448,36 @@ export class TransactionHelper {
         return diff_numerator_BI;
       }
 
-      /** 用参与度换算难度比例： (log(创世账户余额+1) +1)  /   (log(参与度+1) +1) */
-      const diffRatio = jsbiHelper.numberToFraction(
-        (logGenerateTotalAmount + 1) / (this.logBI(BigInt(participation) + BigInt(1)) + 1),
-      );
-      /// 难度比例与参与度占比进行合并
-      const diffRatio2_numerator = BigInt(diffRatio.numerator) * participationRatioBI.numerator;
-      const diffRatio2_denominator =
-        BigInt(diffRatio.denominator) * participationRatioBI.denominator;
+      //#region 基于拟合曲线算出来的难度倍数
 
-      /// 计算出难度系数： (难度比例 +1) * 难度基数
-      diff_BI =
-        jsbiHelper.multiplyFloorFraction(diff_numerator_BI, {
-          numerator: diffRatio2_numerator,
-          denominator: diffRatio2_denominator,
-        }) + diff_numerator_BI;
+      /**
+       * Tpow participation
+       * 将参与度乘上参与度比重,并除以 1000 * 1e8 (x千个BFT)
+       * 而后转为普通js数值
+       */
+      const x = Number(
+        jsbiHelper.multiplyCeilFraction(
+          jsbiHelper.multiplyCeilFraction(participation, participationRatioBI),
+          { numerator: 1, denominator: 1e11 },
+        ),
+      );
+      /**
+       * Need Online Time
+       * 计算出一轮需要在线时间
+       */
+      const y = 0.238536212611 / (1 - 0.7936005508148 * (Math.E ^ (-0.0847138128036 * x)));
+      /**
+       * 得出简单与困难 交易数 的分水岭
+       */
+      const easyTrsPreBlock = 1 / y;
+      const hardTrsPreBlock = easyTrsPreBlock + 1;
+
+      const needWorkTimes = hardDiffThreshold / hardTrsPreBlock;
+
+      diff_BI = jsbiHelper.multiplyCeilFraction(
+        diff_numerator_BI,
+        jsbiHelper.numberToFraction(needWorkTimes),
+      );
 
       _cache_of_diff_BI.num = num;
       _cache_of_diff_BI.participation = participation;

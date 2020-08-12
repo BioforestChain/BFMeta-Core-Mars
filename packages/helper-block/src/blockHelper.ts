@@ -477,7 +477,12 @@ export class BlockHelper {
     return blockPlotChecker;
   }
 
-  /**计算账户一轮下来对应的权益 */
+  /**计算 TPOW参与度 */
+  calcTpowParticipation(accTxCount: number, accBalance: string) {
+    return BigInt(accTxCount + 1) * BigInt(accBalance);
+  }
+
+  /**计算账户一轮下来对应的票数 */
   calcAccountRoundEquity(accTxCount: number, accBalance: string, roundLastBlock: RoundLastBlock) {
     const {
       numberOfTransactionRewardWeight,

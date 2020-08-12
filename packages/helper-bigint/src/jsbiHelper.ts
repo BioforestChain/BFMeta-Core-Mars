@@ -44,7 +44,7 @@ export class JSBIHelper {
    *
    * @param z
    */
-  multiplyFloorFraction(x: BI, y: BFChainCore.FractionJSON<string | number | bigint>) {
+  multiplyFloorFraction(x: BI, y: BFChainCore.FractionJSON<BI>) {
     const formatX = formatParam(x);
     const numerator = BigInt(y.numerator);
     const denominator = BigInt(y.denominator);
@@ -75,7 +75,7 @@ export class JSBIHelper {
    *
    * @param z
    */
-  multiplyRoundFraction(x: BI, y: BFChainCore.FractionJSON<string | number | bigint>) {
+  multiplyRoundFraction(x: BI, y: BFChainCore.FractionJSON<BI>) {
     const z = this.multiplyFloorFraction(x, {
       numerator: BigInt(y.numerator) * BigInt(10),
       denominator: BigInt(y.denominator),

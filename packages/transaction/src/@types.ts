@@ -320,7 +320,12 @@ declare namespace BFChainCore {
       round: number;
       equity: string;
     }>;
-    getAccountAsset(address: string, magic: string, assetType: string, height: number): Promise<string>;
+    getAccountAsset(
+      address: string,
+      magic: string,
+      assetType: string,
+      height: number,
+    ): Promise<string>;
   }
 
   interface TransactionApiInterface {
