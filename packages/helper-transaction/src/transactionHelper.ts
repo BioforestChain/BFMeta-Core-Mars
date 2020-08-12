@@ -407,11 +407,12 @@ export class TransactionHelper {
 
   /**
    * 困难难度分水岭
+   * 这里默认难度为15b/s,于是*2=30
    */
   @cacheGetter
   private get hardDiffThreshold() {
     return (
-      (10 * this.config.forgeInterval * this.config.blockPerRound) / (this.config.blockPerRound - 1)
+      (30 * this.config.forgeInterval * this.config.blockPerRound) / (this.config.blockPerRound - 1)
     );
   }
   /**计算难度基数 */
