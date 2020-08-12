@@ -133,6 +133,7 @@ export const mainChainRemarkData: BFChainCore.GenesisBlockRemarkJSON = {
   transactionPowOfWorkConfig: {
     growthFactor: { numerator: "2718281828459045", denominator: "1000000000000000" },
     participationRatio: { numerator: 1, denominator: 1 },
+    averageComputingPower: 125,
   },
   rate: "0",
 };
@@ -251,6 +252,7 @@ export const registerchainRemarkData: BFChainCore.GenesisBlockRemarkJSON = {
   transactionPowOfWorkConfig: {
     growthFactor: { numerator: "2718281828459045", denominator: "1000000000000000" },
     participationRatio: { numerator: 1, denominator: 1 },
+    averageComputingPower: 125,
   },
   rate: "0",
 };

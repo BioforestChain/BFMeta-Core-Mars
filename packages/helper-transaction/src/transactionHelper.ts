@@ -413,8 +413,10 @@ export class TransactionHelper {
   private get hardDiffThresholdBI() {
     const blockPerRoundBI = BigInt(this.config.blockPerRound);
     const forgeIntervalBI = BigInt(this.config.forgeInterval);
-
-    return (150n * forgeIntervalBI * blockPerRoundBI) / (blockPerRoundBI - 1n);
+    return (
+      (BigInt(this.config.averageComputingPower) * forgeIntervalBI * blockPerRoundBI) /
+      (blockPerRoundBI - BigInt(1))
+    );
   }
   // /**计算难度基数 */
   // private calcDiffBaseFloat(num: number) {

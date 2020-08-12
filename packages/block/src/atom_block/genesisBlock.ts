@@ -545,12 +545,17 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       });
     }
 
+    const {
+      growthFactor,
+      participationRatio,
+      averageComputingPower,
+    } = remark.transactionPowOfWorkConfig;
     // 校验交易POW的难度增长系数
     {
       const {
         denominator: growthFactorDenominator,
         numerator: growthFactorNumerator,
-      } = remark.transactionPowOfWorkConfig.growthFactor;
+      } = growthFactor;
       const growthFactorNumerator_BI = BigInt(growthFactorNumerator);
       const growthFactorDenominator_BI = BigInt(growthFactorDenominator);
       if (
@@ -567,12 +572,18 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       }
     }
     // 校验交易POW的参与度占比
-    if (
-      !baseHelper.isPositiveFloatContainZero(remark.transactionPowOfWorkConfig.participationRatio)
-    ) {
+    if (!baseHelper.isPositiveFloatContainZero(participationRatio)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "transactionPowOfWorkConfig.participationRatio",
         type: "positive float",
+        ...GenesisBlockRemark_Exception_Detail,
+      });
+    }
+
+    if (!baseHelper.isNaturalNumber(averageComputingPower)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "averageComputingPower",
+        type: "natural number",
         ...GenesisBlockRemark_Exception_Detail,
       });
     }

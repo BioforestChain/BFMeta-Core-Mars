@@ -1,9 +1,9 @@
 {
   "version": 1,
   "height": 1,
-  "blockSize": 169833,
+  "blockSize": 169835,
   "timestamp": 0,
-  "signature": "1cfe81175aaf1516178545f02b3826f9c6070dcf1fef46e54ef1ebbd34ea6e463dee5496b2e56b8a3f14724b2ad5aaf242fd1e65faa9eb00b3038fab45a87e0b",
+  "signature": "34a81aa5946b9cb7bace378f4d67c35fdf0c253fb7a0865b56e0f459d0df9085a37771617b94b84ce0cf56b29e5003b90de87083dd367ae56c51554c23060000",
   "generatorPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
   "numberOfTransactions": 457,
   "payloadHash": "37beb38e34b6dc959b9076cfbc3382aa1a46081c7257aabbcb5059495a4fd504",
@@ -17611,7 +17611,8 @@
       "participationRatio": {
         "numerator": 1,
         "denominator": 1
-      }
+      },
+      "averageComputingPower": 125
     },
     "powOfWorkExemptionBlocks": 57,
     "newDelegates": [],

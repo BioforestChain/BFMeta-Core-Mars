@@ -168,6 +168,7 @@ declare namespace BFChainCore {
   interface TransactionPowOfWorkConfigJSON {
     growthFactor: FractionJSON<string>;
     participationRatio: FractionJSON;
+    averageComputingPower: number;
   }
   //#endregion
   //#endregion

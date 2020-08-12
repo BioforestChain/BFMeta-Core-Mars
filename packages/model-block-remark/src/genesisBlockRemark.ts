@@ -74,10 +74,13 @@ export class TransactionPowOfWorkConfigModel extends Message<TransactionPowOfWor
   growthFactor!: FractionBigIntModel;
   @Field.d(2, Fraction)
   participationRatio!: Fraction;
+  @Field.d(3, "uint32")
+  averageComputingPower!: number;
   toJSON() {
     return {
       growthFactor: this.growthFactor.toJSON(),
       participationRatio: this.participationRatio.toJSON(),
+      averageComputingPower: this.averageComputingPower,
     };
   }
 }

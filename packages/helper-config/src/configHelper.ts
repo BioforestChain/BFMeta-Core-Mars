@@ -162,6 +162,10 @@ export class ConfigHelper {
   get rewardPercent() {
     return this.genesisBlock.remark.rewardPercent;
   }
+  /**全网平均算力 */
+  get averageComputingPower() {
+    return this.genesisBlock.remark.transactionPowOfWorkConfig.averageComputingPower;
+  }
 }
 @Injectable("configMap")
 export class ConfigHelperMap {
