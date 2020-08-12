@@ -407,27 +407,59 @@ export class TransactionHelper {
 
   /**
    * 困难难度分水岭
-   * 这里默认难度为15b/s,于是*2=30
+   * 这里默认难度为150b/s
    */
   @cacheGetter
-  private get hardDiffThreshold() {
-    return (
-      (30 * this.config.forgeInterval * this.config.blockPerRound) / (this.config.blockPerRound - 1)
-    );
-  }
-  /**计算难度基数 */
-  calcDiffBase(num: number) {
-    const { growthFactor } = this.config.genesisBlock.remark.transactionPowOfWorkConfig;
+  private get hardDiffThresholdBI() {
+    const blockPerRoundBI = BigInt(this.config.blockPerRound);
+    const forgeIntervalBI = BigInt(this.config.forgeInterval);
 
-    /**(E ^ N) * N */
-    return (Number(growthFactor.numerator) / Number(growthFactor.denominator)) ** num * num;
+    return (150n * forgeIntervalBI * blockPerRoundBI) / (blockPerRoundBI - 1n);
+  }
+  // /**计算难度基数 */
+  // private calcDiffBaseFloat(num: number) {
+  //   const { growthFactor } = this.config.genesisBlock.remark.transactionPowOfWorkConfig;
+
+  //   /**(E ^ N) * N */
+  //   return (Number(growthFactor.numerator) / Number(growthFactor.denominator)) ** num * num;
+  // }
+  /**计算难度基数 */
+  private calcDiffBaseBI(num: number) {
+    const { growthFactorBI } = this;
+    /**难度基数的分子，这个只与num有关系，所以可以进行缓存 */
+    let diff_numerator_BI = this._cache_of_diff_numerator_BI.get(num);
+    if (!diff_numerator_BI) {
+      const num_BI = BigInt(num);
+      const growthFactor_numerator_BI = growthFactorBI.numerator;
+      const growthFactor_denominator_BI = growthFactorBI.denominator;
+      /**(E ^ N) */
+      const BI_1 = growthFactor_numerator_BI ** num_BI / growthFactor_denominator_BI ** num_BI;
+      diff_numerator_BI = BI_1 * num_BI;
+      this._cache_of_diff_numerator_BI.set(num, diff_numerator_BI);
+    }
+    return diff_numerator_BI;
+  }
+  /**计算难度累积值 */
+  private accDiffBaseBI(num: number) {
+    const rest = num % 1;
+    let accDiffBI = 0n;
+    for (let i = 0; i <= num; i++) {
+      accDiffBI += this.calcDiffBaseBI(i);
+    }
+    if (rest !== 0) {
+      accDiffBI += this.jsbiHelper.multiplyCeilFraction(
+        this.calcDiffBaseBI(num - rest + 1),
+        this.jsbiHelper.numberToFraction(rest),
+      );
+    }
+    return accDiffBI;
   }
 
   /**
    * 计算交易POW的难度
    */
   calcDiffOfTransactionProfOfWork(num: number, participation: string) {
-    const { _cache_of_diff_BI, hardDiffThreshold } = this;
+    const { _cache_of_diff_BI, hardDiffThresholdBI } = this;
     let diff_BI: bigint;
     if (_cache_of_diff_BI.num === num && _cache_of_diff_BI.participation === participation) {
       diff_BI = _cache_of_diff_BI.diff_BI;
@@ -473,12 +505,12 @@ export class TransactionHelper {
       const easyTrsPreBlock = 1 / y;
       const hardTrsPreBlock = easyTrsPreBlock + 1;
 
-      const needWorkTimes = hardDiffThreshold / this.calcDiffBase(hardTrsPreBlock);
+      const needWorkTimes: BFChainCore.FractionJSON<bigint> = {
+        numerator: hardDiffThresholdBI,
+        denominator: this.accDiffBaseBI(hardTrsPreBlock),
+      };
 
-      diff_BI = jsbiHelper.multiplyCeilFraction(
-        diff_numerator_BI,
-        jsbiHelper.numberToFraction(needWorkTimes),
-      );
+      diff_BI = jsbiHelper.multiplyCeilFraction(diff_numerator_BI, needWorkTimes);
 
       _cache_of_diff_BI.num = num;
       _cache_of_diff_BI.participation = participation;
