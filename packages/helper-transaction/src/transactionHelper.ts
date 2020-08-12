@@ -455,6 +455,10 @@ export class TransactionHelper {
     return accDiffBI;
   }
 
+  calcTpowParticipationBI(txCount: number, txBalance: string) {
+    return BigInt(txCount + 1) * BigInt(txBalance);
+  }
+
   /**
    * 计算交易POW的难度
    */
