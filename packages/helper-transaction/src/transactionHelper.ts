@@ -470,7 +470,7 @@ export class TransactionHelper {
     if (_cache_of_diff_BI.num === num && _cache_of_diff_BI.participation === participation) {
       diff_BI = _cache_of_diff_BI.diff_BI;
     } else {
-      const { growthFactorBI, participationRatioBI, jsbiHelper, logGenerateTotalAmount } = this;
+      const { growthFactorBI, jsbiHelper } = this;
       /**难度基数的分子，这个只与num有关系，所以可以进行缓存 */
       let diff_numerator_BI = this._cache_of_diff_numerator_BI.get(num);
       if (!diff_numerator_BI) {
@@ -488,27 +488,10 @@ export class TransactionHelper {
       }
 
       //#region 基于拟合曲线算出来的难度倍数
-
-      /**
-       * Tpow participation
-       * 将参与度乘上参与度比重,并除以 1000 * 1e8 (x千个BFT)
-       * 而后转为普通js数值
-       */
-      const x = Number(
-        jsbiHelper.multiplyCeilFraction(
-          jsbiHelper.multiplyCeilFraction(participation, participationRatioBI),
-          { numerator: 1, denominator: 1e11 },
-        ),
-      );
-      /**
-       * Need Online Time
-       * 计算出一轮需要在线时间
-       */
-      const y = 0.238536212611 / (1 - 0.7936005508148 * Math.E ** (-0.0847138128036 * x));
       /**
        * 得出简单与困难 交易数 的分水岭
        */
-      const easyTrsPreBlock = 1 / y;
+      const easyTrsPreBlock = 1 / this.calcNeedOnlineTime(participation);
       const hardTrsPreBlock = easyTrsPreBlock + 1;
 
       const needWorkTimes: BFChainCore.FractionJSON<bigint> = {
@@ -523,6 +506,26 @@ export class TransactionHelper {
       _cache_of_diff_BI.diff_BI = diff_BI;
     }
     return diff_BI;
+  }
+  /**
+   * 根据参与度计算一轮需要在线的时间
+   * 0.2* Round ~ 1.3* Round
+   */
+  calcNeedOnlineTime(participation: string | number | bigint) {
+    const { participationRatioBI } = this;
+    /**
+     * Tpow participation
+     * 将参与度乘上参与度比重,并除以 1000 * 1e8 (x千个BFT)
+     * 而后转为普通js数值,因为极值是>280,所以不用担心精度丢失的问题
+     */
+    const x =
+      Number(this.jsbiHelper.multiplyCeilFraction(participation, participationRatioBI)) / 1e11;
+    /**
+     * Need Online Time
+     * 计算出一轮需要在线时间
+     */
+    const y = 0.238536212611 / (1 - 0.7936005508148 * Math.E ** (-0.0847138128036 * x));
+    return y;
   }
   /**
    * 校验交易POW
