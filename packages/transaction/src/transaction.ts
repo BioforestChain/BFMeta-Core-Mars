@@ -3,6 +3,7 @@ import {
   AccountBaseHelper,
   ConfigHelper,
   TransactionHelper,
+  TpowHelper,
   AsymmetricHelper,
 } from "@bfchain/core-helper";
 import { Injectable, Inject, ModuleStroge, Resolve } from "@bfchain/util";
@@ -27,6 +28,7 @@ const {
 export class TransactionCore {
   constructor(
     public transactionHelper: TransactionHelper,
+    private tpowHelper: TpowHelper,
     public accountBaseHelper: AccountBaseHelper,
     public asymmetricHelper: AsymmetricHelper,
     @Inject("keypairHelper")
@@ -214,27 +216,20 @@ export class TransactionCore {
     /**记录算力 */
     let recordNonce = 0;
     /// 校验交易POW，如果POW校验不通过，强制开始生成交易
-    if (
-      (diff_BI = this.transactionHelper.calcDiffOfTransactionProfOfWork(
-        pow.count,
-        pow.participation,
-      ))
-    ) {
+    if ((diff_BI = this.tpowHelper.calcDiffOfTransactionProfOfWork(pow.count, pow.participation))) {
       const res =
         event && (await event.emit("start", { diff: diff_BI.toString(), transaction: trs }));
       if (res && res.break) {
         is_break = res.break;
         return done(is_break, recordNonce);
       }
-      for (const { uint8array: trsBytes, nonce, offset } of this.transactionHelper.nonceWriter(
-        trs,
-      )) {
+      for (const { uint8array: trsBytes, nonce, offset } of this.tpowHelper.nonceWriter(trs)) {
         recordNonce = nonce;
         const signatureBuffer = await this.asymmetricHelper.detachedSign(
           trsBytes,
           keypair.secretKey,
         );
-        const checked = await this.transactionHelper.checkTransactionProfOfWork(
+        const checked = await this.tpowHelper.checkTransactionProfOfWork(
           signatureBuffer,
           pow.count,
           pow.participation,
