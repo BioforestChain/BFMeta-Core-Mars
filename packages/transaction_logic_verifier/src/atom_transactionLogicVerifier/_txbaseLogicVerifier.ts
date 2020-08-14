@@ -22,6 +22,7 @@ import {
   INVALID_TRANSACTION_EFFECTIVE_BLOCK_HEIGHT,
   VERIFY_TRANSACTION_POW_OF_WORK_ERROR,
   INVALID_TRANSACTION_FROM_MAGIC,
+  NOT_MATCH,
 } from "@bfchain/core-util-exception";
 import {
   NewTransactionRefuseReason,
@@ -88,7 +89,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       function: "logicVerify",
     } as const;
 
-    const { recipientId, senderPublicKey } = transaction;
+    const { recipientId } = transaction;
     // 获取账户信息和资产信息
     const sender = accountsInfo.sender;
     if (!(sender && sender.accountInfo && sender.accountAssets)) {
@@ -145,14 +146,26 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     await this.checkLocationName(transaction, currentBlockHeight, accountGetterHelper);
     // 校验 pow
     if (currentBlockHeight > this.configHelper.powOfWorkExemptionBlocks) {
-      const equityInfo = sender.accountInfo.equityInfo;
+      const curRound = this.blockHelper.calcRoundByHeight(currentBlockHeight);
+      const lastRoundInfo = sender.accountInfo.lastRoundInfo;
+      const { round, txCount, assetNumber } = lastRoundInfo;
+      if (round !== curRound - 1) {
+        throw new ConsensusException(NOT_MATCH, {
+          to_compare_prop: `round ${round}`,
+          be_compare_prop: `current round ${curRound}`,
+          to_target: "lastRoundInfo",
+          be_target: "blockChain",
+          ...Function_Exception_Detail,
+        });
+      }
+      const participation = this.transactionHelper.calcTpowParticipationBI(
+        txCount,
+        assetNumber.toString(),
+      );
       await this.checkTransactionPowOfWork(
         transaction,
         currentBlockHeight,
-        {
-          round: equityInfo.round,
-          equity: equityInfo.fixedEquity,
-        },
+        participation.toString(),
         accountGetterHelper,
       );
     }
@@ -762,22 +775,18 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    *
    * @param transaction
    * @param currentBlockHeight
-   * @param fixedEquityInfo
+   * @param participation
    * @param accountGetterHelper
    */
   private async checkTransactionPowOfWork(
     transaction: T,
     currentBlockHeight: number,
-    fixedEquityInfo: {
-      round: number;
-      equity: bigint;
-    },
+    participation: string,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
-      function: "checkRepeatInBlockChainTransaction",
+      function: "checkTransactionPowOfWork",
     } as const;
-    const curRound = this.blockHelper.calcRoundByHeight(currentBlockHeight);
     const tranSenderCount = await accountGetterHelper.getAccountTxCountInBlock(
       transaction.senderId,
     );
@@ -787,16 +796,14 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
         ...Function_Exception_Detail,
       });
     }
-    const senderEquity =
-      fixedEquityInfo.round === curRound - 1 ? fixedEquityInfo.equity.toString() : "0";
     const powCheckResult = await this.transactionHelper.checkTransactionProfOfWork(
       parseHexToArrayBuffer(transaction.signature),
       tranSenderCount,
-      senderEquity,
+      participation,
     );
     if (!powCheckResult) {
       throw new ConsensusException(VERIFY_TRANSACTION_POW_OF_WORK_ERROR, {
-        reason: `Transaction pow check field, block height ${currentBlockHeight} transaction signature ${transaction.signature} sender ${transaction.senderId} senderEquity ${senderEquity} sender transaction count in block ${tranSenderCount}`,
+        reason: `Transaction pow check field, block height ${currentBlockHeight} transaction signature ${transaction.signature} sender ${transaction.senderId} participation ${participation} sender transaction count in block ${tranSenderCount}`,
         ...Function_Exception_Detail,
       });
     }

@@ -16,6 +16,11 @@ declare namespace BFChainCore {
       equity: bigint;
       fixedEquity: bigint;
     };
+    lastRoundInfo: {
+      round: number;
+      assetNumber: bigint;
+      txCount: number;
+    };
   };
   type AssetInfo = {
     sourceChainMagic: string;
