@@ -4,7 +4,7 @@ import { Injectable, Inject, BBuffer } from "@bfchain/util";
  * 签名
  * 加密解密
  */
-@Injectable()
+@Injectable("asymmetricHelper")
 export class AsymmetricHelper {
   constructor(
     @Inject("cryptoHelper") public cryptoHelper: BFChainCore.CryptoHelperInterface,
