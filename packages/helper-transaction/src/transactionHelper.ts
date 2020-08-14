@@ -16,7 +16,9 @@ import {
 } from "@bfchain/core-model-transaction";
 import { JSBIHelper } from "@bfchain/core-helper-bigint";
 import { AsymmetricHelper } from "@bfchain/core-helper-asymmetric";
-import { Injectable, Inject, decodeBinaryToHex, cacheGetter } from "@bfchain/util";
+import { Injectable, Inject } from "@bfchain/util-dep-inject";
+import { decodeBinaryToHex } from "@bfchain/util-encoding-hex";
+import { cacheGetter } from "@bfchain/util-decorator";
 import { AccountBaseHelper } from "@bfchain/core-helper-account-base";
 import { TRANSACTION_FILTER_SYMBOL, ABORT_FORBIDDEN_TRANSACTION_SYMBOL } from "./const";
 type Transaction = import("@bfchain/core-model-transaction").Transaction;
