@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-helper-config",
-  "version": "5.17.50",
+  "version": "5.17.53",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",

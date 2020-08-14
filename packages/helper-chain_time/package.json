@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-helper-chain-time",
-  "version": "5.17.50",
+  "version": "5.17.53",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,7 +14,7 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-helper-config": "5.17.50",
+    "@bfchain/core-helper-config": "5.17.53",
     "@bfchain/core-typings": "5.17.50",
     "@bfchain/core-util-exception": "5.17.50",
     "@bfchain/core-util-exception-errorcode": "5.17.50"
