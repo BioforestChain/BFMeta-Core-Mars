@@ -1,8 +1,8 @@
+import type {} from "@bfchain/util-buffer"
 import { Injectable, Inject } from "@bfchain/util-dep-inject";
 import { cacheGetter } from "@bfchain/util-decorator";
 import { ConfigHelper } from "@bfchain/core-helper-config";
 import { JSBIHelper } from "@bfchain/core-helper-bigint";
-import type { Transaction } from "@bfchain/core-model-transaction-base";
 @Injectable()
 export class TpowHelper {
   constructor(
@@ -216,7 +216,7 @@ export class TpowHelper {
     return score_BI < max_score_BI;
   }
   /**交易的噪点生成器 */
-  *nonceWriter<T extends Transaction>(trs: T) {
+  *nonceWriter<T extends BFChainCore.Transaction>(trs: T) {
     /// 拷贝一份没有signature的trs
     trs = trs.$type.decode(trs.getBytes(true, true)) as T;
 

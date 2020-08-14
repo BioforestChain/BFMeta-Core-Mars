@@ -18,6 +18,7 @@
     "@bfchain/core-helper-asymmetric": "5.17.54",
     "@bfchain/core-helper-bigint": "5.17.54",
     "@bfchain/core-helper-config": "5.17.54",
+    "@bfchain/core-helper-transaction-tpow": "5.17.54",
     "@bfchain/core-helper-type": "5.17.54",
     "@bfchain/core-model-constants": "5.17.54",
     "@bfchain/core-model-transaction": "5.17.54",

@@ -1,13 +1,13 @@
 {
   "name": "@types/bfchain__core-helper-account",
   "types": "index.d.ts",
-  "version": "5.15.4",
+  "version": "5.17.54",
   "dependencies": {
-    "@types/bfchain__core-typings": "5.15.4",
+    "@types/bfchain__core-typings": "5.17.54",
     "@types/bfchain__core-model": "5.12.1",
-    "@types/bfchain__core-util-exception": "5.15.4",
-    "@types/bfchain__core-model-block-base": "5.15.4",
-    "@types/bfchain__core-model-transaction-base": "5.15.4",
-    "@types/bfchain__core-helper-block": "5.15.4"
+    "@types/bfchain__core-util-exception": "5.17.54",
+    "@types/bfchain__core-model-block-base": "5.17.54",
+    "@types/bfchain__core-model-transaction-base": "5.17.54",
+    "@types/bfchain__core-helper-block": "5.17.54"
   }
 }

@@ -20,8 +20,9 @@ import { Injectable, Inject } from "@bfchain/util-dep-inject";
 import { decodeBinaryToHex } from "@bfchain/util-encoding-hex";
 import { cacheGetter } from "@bfchain/util-decorator";
 import { AccountBaseHelper } from "@bfchain/core-helper-account-base";
+import { TpowHelper } from "@bfchain/core-helper-transaction-tpow";
+
 import { TRANSACTION_FILTER_SYMBOL, ABORT_FORBIDDEN_TRANSACTION_SYMBOL } from "./const";
-import type { TpowHelper } from "./tpowHelper";
 type Transaction = import("@bfchain/core-model-transaction").Transaction;
 
 const {

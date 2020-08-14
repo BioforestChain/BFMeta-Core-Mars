@@ -1,0 +1,25 @@
+{
+  "extends": "./tsconfig",
+  "mixin": [
+    "./tsconfig.json",
+    "../../config/tsconfig_base/base.tsconfig.@types.json"
+  ],
+  "compilerOptions": {
+    "declarationDir": "../@types/bfchain__core-helper-transaction-tpow",
+    "declaration": true,
+    "declarationMap": false,
+    "outDir": "../../.cache/helper-transaction-tpow",
+    "tsBuildInfoFile": "../../.cache/helper-transaction-tpow/@types.tsbuildinfo"
+  },
+  "references": [
+    {
+      "path": "../helper-bigint/tsconfig.@types.json"
+    },
+    {
+      "path": "../helper-config/tsconfig.@types.json"
+    },
+    {
+      "path": "../typings/tsconfig.@types.json"
+    }
+  ]
+}

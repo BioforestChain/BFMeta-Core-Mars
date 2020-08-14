@@ -1,10 +1,10 @@
 {
   "name": "@types/bfchain__core-helper-config",
   "types": "index.d.ts",
-  "version": "5.15.4",
+  "version": "5.17.54",
   "dependencies": {
-    "@types/bfchain__core-model-block": "5.15.4",
-    "@types/bfchain__core-typings": "5.15.4",
-    "@types/bfchain__core-util-exception-errorcode": "5.15.4"
+    "@types/bfchain__core-model-block": "5.17.54",
+    "@types/bfchain__core-typings": "5.17.54",
+    "@types/bfchain__core-util-exception-errorcode": "5.17.54"
   }
 }
