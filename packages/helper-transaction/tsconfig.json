@@ -37,6 +37,7 @@
     "src/@types.ts",
     "src/const.ts",
     "src/index.ts",
+    "src/tpowHelper.ts",
     "src/transactionHelper.ts"
   ]
 }

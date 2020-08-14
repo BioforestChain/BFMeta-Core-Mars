@@ -1,5 +1,6 @@
 /// <reference lib="dom"/>
-import { Injectable, IpHelper } from "@bfchain/util";
+import { Injectable } from "@bfchain/util-dep-inject";
+import { IpHelper } from "@bfchain/util";
 import { AccountBaseHelper } from "@bfchain/core-helper-account-base";
 import { ConfigHelper } from "@bfchain/core-helper-config";
 import { RANGE_TYPE } from "@bfchain/core-model-constants";
@@ -917,41 +918,6 @@ export class BaseHelper {
       return false;
     }
     return true;
-  }
-
-  private BI_2_32 = BigInt(32);
-  private BI_2_16 = BigInt(16);
-  private BI_2_8 = BigInt(8);
-
-  /**读取一个二进制的n位数据作为BigInt数字 */
-  getUintN(dv: BFChainUtil.Buffer, N: number) {
-    let BI_res = BigInt(0);
-    let offset = 0;
-    while (N > 0) {
-      if (N >= 32) {
-        const BI_val = BigInt(dv.readUInt32BE(offset));
-        BI_res = (BI_res << this.BI_2_32) + BI_val;
-        offset += 4;
-        N -= 32;
-      } else if (N >= 16) {
-        const BI_val = BigInt(dv.readUInt16BE(offset));
-        BI_res = (BI_res << this.BI_2_16) + BI_val;
-        offset += 2;
-        N -= 16;
-      } else if (N >= 8) {
-        const BI_val = BigInt(dv.readUInt8(offset));
-        BI_res = (BI_res << this.BI_2_8) + BI_val;
-        offset += 1;
-        N -= 8;
-      } else {
-        const binary_num = dv.readUInt8(offset) >> (8 - N);
-        const BI_val = BigInt(binary_num);
-        BI_res = (BI_res << BigInt(N)) + BI_val;
-        // offset += X;
-        N -= N;
-      }
-    }
-    return BI_res;
   }
 
   /**

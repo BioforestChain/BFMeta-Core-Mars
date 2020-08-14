@@ -1,4 +1,4 @@
-import { Injectable } from "@bfchain/util";
+import { Injectable } from "@bfchain/util-dep-inject";
 import { PROP_IS_INVALID } from "@bfchain/core-util-exception-errorcode";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 

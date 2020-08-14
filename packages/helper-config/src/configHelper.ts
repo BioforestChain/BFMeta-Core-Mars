@@ -1,4 +1,5 @@
-import { Injectable, cacheGetter } from "@bfchain/util";
+import { Injectable } from "@bfchain/util-dep-inject";
+import { cacheGetter } from "@bfchain/util-decorator";
 type GenesisBlock = import("@bfchain/core-model-block").GenesisBlock;
 
 export enum NetType {
