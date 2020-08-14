@@ -543,20 +543,20 @@ export class TransactionHelper {
     if (!diff_BI) {
       return true;
     }
-    /// 根据交易信息校验是否符合难度
-    const shaBuffer = await this.cryptoHelper.sha256().update(signatureBuffer).digest();
-
     /**得分应该读取多少位数，至少8位 */
     const X = Math.max(
-      Math.min(Math.ceil(Math.log2(Number(diff_BI * (BigInt(1) + diff_BI)))), shaBuffer.length),
+      Math.min(
+        Math.ceil(Math.log2(Number(diff_BI * (BigInt(1) + diff_BI)))),
+        signatureBuffer.length,
+      ),
       8,
     );
     /**总共的分数 */
-    const hit_numerator_BI = BigInt(2) << BigInt(X);
+    const hit_numerator_BI = BigInt(2) << BigInt(X - 1);
     /**将分数基于diff来细分成diff份，得分必须小于最小的一份 */
     const max_score_BI = hit_numerator_BI / diff_BI;
     /**读取出交易的得分 */
-    const score_BI = this.baseHelper.getUintX(shaBuffer, X);
+    const score_BI = this.baseHelper.getUintN(this.Buffer.from(signatureBuffer), X);
     return score_BI < max_score_BI;
   }
   /**交易的噪点生成器 */

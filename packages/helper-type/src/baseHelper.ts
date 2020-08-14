@@ -924,31 +924,31 @@ export class BaseHelper {
   private BI_2_8 = BigInt(8);
 
   /**读取一个二进制的n位数据作为BigInt数字 */
-  getUintX(dv: BFChainUtil.Buffer, X: number) {
+  getUintN(dv: BFChainUtil.Buffer, N: number) {
     let BI_res = BigInt(0);
     let offset = 0;
-    while (X > 0) {
-      if (X >= 32) {
+    while (N > 0) {
+      if (N >= 32) {
         const BI_val = BigInt(dv.readUInt32BE(offset));
         BI_res = (BI_res << this.BI_2_32) + BI_val;
-        offset += 32;
-        X -= 32;
-      } else if (X >= 16) {
+        offset += 4;
+        N -= 32;
+      } else if (N >= 16) {
         const BI_val = BigInt(dv.readUInt16BE(offset));
         BI_res = (BI_res << this.BI_2_16) + BI_val;
-        offset += 16;
-        X -= 16;
-      } else if (X >= 8) {
+        offset += 2;
+        N -= 16;
+      } else if (N >= 8) {
         const BI_val = BigInt(dv.readUInt8(offset));
         BI_res = (BI_res << this.BI_2_8) + BI_val;
-        offset += 8;
-        X -= 8;
+        offset += 1;
+        N -= 8;
       } else {
-        const binary_num = dv.readUInt8(offset) >> X;
+        const binary_num = dv.readUInt8(offset) >> (8 - N);
         const BI_val = BigInt(binary_num);
-        BI_res = (BI_res << BigInt(X)) + BI_val;
-        offset += X;
-        X -= X;
+        BI_res = (BI_res << BigInt(N)) + BI_val;
+        // offset += X;
+        N -= N;
       }
     }
     return BI_res;
