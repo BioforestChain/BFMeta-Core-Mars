@@ -1,4 +1,4 @@
-import type {} from "@bfchain/util-buffer"
+import type {} from "@bfchain/util-buffer";
 import { Injectable, Inject } from "@bfchain/util-dep-inject";
 import { cacheGetter } from "@bfchain/util-decorator";
 import { ConfigHelper } from "@bfchain/core-helper-config";
@@ -8,8 +8,8 @@ export class TpowHelper {
   constructor(
     private config: ConfigHelper,
     private jsbiHelper: JSBIHelper,
-    @Inject("Buffer")
-    private Buffer: BFChainUtil.BufferConstructor,
+    // @Inject("cryptoHelper") public cryptoHelper: BFChainCore.CryptoHelperInterface,
+    @Inject("Buffer") private Buffer: BFChainUtil.BufferConstructor,
   ) {}
 
   private _cache_of_diff_numerator_BI = new Map<number, bigint>();
@@ -148,7 +148,7 @@ export class TpowHelper {
        * 得出简单与困难 交易数 的分水岭
        */
       const easyTrsPreBlock = 1 / this.calcNeedOnlineTime(participation);
-      const hardTrsPreBlock = easyTrsPreBlock + 1;
+      const hardTrsPreBlock = easyTrsPreBlock; /* 这里可以用于添加额外豁免,但这里默认不给予+ 1 */
 
       const needWorkTimes: BFChainCore.FractionJSON<bigint> = {
         numerator: hardDiffThresholdBI,
