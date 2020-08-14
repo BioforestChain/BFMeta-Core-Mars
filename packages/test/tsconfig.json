@@ -21,6 +21,7 @@
     "src/block/genesisBlock.ts",
     "src/block/mixedTransactionblock.ts",
     "src/block/syncBlock.test.ts",
+    "src/checkTpow.ts",
     "src/demo.ts",
     "src/helper/accountBaseHelper.test.ts",
     "src/include/account.ts",

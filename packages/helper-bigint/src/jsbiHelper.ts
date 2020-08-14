@@ -89,7 +89,7 @@ export class JSBIHelper {
 
   /**number转分数 */
   numberToFraction(y: number) {
-    const y_str = y.toString();
+    const y_str = y.toFixed(45);
     // bug  Math.pow(10, 21) => 1e+21 4.019276798087129 => 4019276798087129.5
     // 找到小数点的位置
     // const y_dot_index = y_str.indexOf(".");

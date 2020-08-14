@@ -14,5 +14,9 @@
     {
       "path": "../typings/tsconfig.json"
     }
+  ],
+  "files": [
+    "src/index.ts",
+    "src/tpowHelper.ts"
   ]
 }

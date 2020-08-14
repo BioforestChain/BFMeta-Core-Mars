@@ -150,10 +150,12 @@ export class TpowHelper {
       const easyTrsPreBlock = 1 / this.calcNeedOnlineTime(participation);
       const hardTrsPreBlock = easyTrsPreBlock; /* 这里可以用于添加额外豁免,但这里默认不给予+ 1 */
 
+      const needWorkTimes_denominator = this.accDiffBaseBI(hardTrsPreBlock);
       const needWorkTimes: BFChainCore.FractionJSON<bigint> = {
         numerator: hardDiffThresholdBI,
-        denominator: this.accDiffBaseBI(hardTrsPreBlock),
+        denominator: needWorkTimes_denominator,
       };
+      //#endregion
 
       diff_BI = jsbiHelper.multiplyCeilFraction(diff_numerator_BI, needWorkTimes);
 
@@ -180,8 +182,43 @@ export class TpowHelper {
      * Need Online Time
      * 计算出一轮需要在线时间
      */
-    const y = 0.238536212611 / (1 - 0.7936005508148 * Math.E ** (-0.0847138128036 * x));
-    return y;
+    const y1 = 0.238536212611 / (1 - 0.7936005508148 * Math.E ** (-0.0847138128036 * x));
+
+    //#region
+    /*
+     * 反向推理出到达 24亿
+     * 100_0000/z**4 1
+     * 100_0000/z**3 2
+     * 100_0000/z**2 3
+     * 100_0000/z 4
+     * 100_0000 5
+     * 100_0000*z**1 6
+     * 100_0000*z**2 7
+     * 1000_0000 8
+     * 1000_0000*z**1 9
+     * 1000_0000*z**2 10
+     * 1_0000_0000 11
+     * 10_0000_0000 14 60
+     * 10_0000_0000*z 15
+     */
+    const participationNum = Number(participation) / 1e8;
+    if (participationNum > 100_0000) {
+      const E = Math.cbrt(10);
+      const BE = 100_0000 / E ** 4;
+      const M0 = (P: number) => Math.log(P / BE) / Math.log(E);
+      /// 4~57
+      const n = 176 / 53;
+      const m = 4 / (4 - n);
+      const BR = (M0(participationNum) - n) * m;
+
+      const y2 = 1 / BR;
+      /// 返回在线时间最少的
+      if (y2 < y1) {
+        return y2;
+      }
+    }
+    //#endregion
+    return y1;
   }
   /**
    * 校验交易POW
