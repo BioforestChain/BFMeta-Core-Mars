@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-channel",
-  "version": "5.17.58",
+  "version": "5.17.59",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -16,7 +16,7 @@
   "dependencies": {
     "@bfchain/core-helper": "5.17.58",
     "@bfchain/core-model": "5.17.55",
-    "@bfchain/core-transaction": "5.17.58",
+    "@bfchain/core-transaction": "5.17.59",
     "@bfchain/core-typings": "5.17.55",
     "@bfchain/core-util-exception-errorcode": "5.17.55"
   },
