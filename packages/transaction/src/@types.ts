@@ -8,19 +8,19 @@ declare namespace BFChainCore {
   ) => TransactionFactory<T>;
   // #endregion
 
-  // #region TransactonPoW
-  type TransactonPoWOptions<T extends TransactionJSON = TransactionJSON> = {
+  // #region TransactionPoW
+  type TransactionPoWOptions<T extends TransactionJSON = TransactionJSON> = {
     count: number;
     participation: string;
-    event?: BFChainUtil.QueneEventEmitter<TransactonPoWControllerEvents<T>>;
+    event?: BFChainUtil.QueneEventEmitter<TransactionPoWControllerEvents<T>>;
     calculator?: (
       trs: T,
-      pow: BFChainCore.TransactonPoWOptions<T>, // this
+      pow: BFChainCore.TransactionPoWOptions<T>, // this
       keypair: BFChainCore.Keypair,
       secondKeypair?: BFChainCore.Keypair,
     ) => BFChainUtil.PromiseMaybe<T>;
   };
-  type TransactonPoWControllerEvents<T extends TransactionJSON = TransactionJSON> = {
+  type TransactionPoWControllerEvents<T extends TransactionJSON = TransactionJSON> = {
     start: BFChainUtil.EventInOut<{ diff: string; transaction: T }, { break: boolean }>;
     work: BFChainUtil.EventInOut<
       { nonce: number; transaction: T; offset?: number },

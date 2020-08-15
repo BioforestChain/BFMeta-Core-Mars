@@ -109,7 +109,7 @@ export class TransactionCore {
     keypair: BFChainCore.Keypair,
     secondKeypair?: BFChainCore.Keypair,
     config = this.config,
-    pow?: BFChainCore.TransactonPoWOptions<T>,
+    pow?: BFChainCore.TransactionPoWOptions<T>,
     /**跳过pow: 目前用在browser中的_createSomeTransaction */
     skipPow?: boolean,
   ) {
@@ -193,7 +193,7 @@ export class TransactionCore {
   /**通用的交易POW计算器 */
   async transactionPowCalculator<T extends Transaction>(
     trs: T,
-    pow: BFChainCore.TransactonPoWOptions<T>,
+    pow: BFChainCore.TransactionPoWOptions<T>,
     keypair: BFChainCore.Keypair,
     secondKeypair?: BFChainCore.Keypair,
   ) {

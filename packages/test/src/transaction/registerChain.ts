@@ -59,7 +59,7 @@ const _powCount: { [add: string]: number } = {};
 function getPOWInfo<T extends Transaction>(address: string) {
   const count = _powCount[address] || 0;
   _powCount[address] = count + 1;
-  const res: BFChainCore.TransactonPoWOptions<T> = {
+  const res: BFChainCore.TransactionPoWOptions<T> = {
     count,
     participation: "0",
   };
