@@ -21,11 +21,19 @@ declare namespace BFChainCore {
     ) => BFChainUtil.PromiseMaybe<T>;
   };
   type TransactionPoWControllerEvents<T extends TransactionJSON = TransactionJSON> = {
-    start: BFChainUtil.EventInOut<{ diff: string; transaction: T }, { break: boolean }>;
-    work: BFChainUtil.EventInOut<
-      { nonce: number; transaction: T; offset?: number },
+    start: BFChainUtil.EventInOut<
+      { diff: string; count: number; participation: string; transaction: T },
       { break: boolean }
     >;
+    work: BFChainUtil.EventInOut<
+      {
+        nonce: number;
+        transaction: T;
+        offset?: number;
+      },
+      { break: boolean }
+    >;
+    milestone: BFChainUtil.EventInOut<{ progress: number; nonce: number; transaction: T }, unknown>;
     done: BFChainUtil.EventInOut<{ transaction: T; nonce: number }, unknown>;
     error: BFChainUtil.EventInOut<{ transaction: T; nonce: number }, unknown>;
   };

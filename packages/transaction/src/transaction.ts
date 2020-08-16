@@ -211,14 +211,22 @@ export class TransactionCore {
       event && (await event.emit(eventName, { transaction: trs, nonce }));
       return trs;
     };
-    let diff_BI: bigint | undefined;
+    /**难度值 */
+    const diff_BI = this.tpowHelper.calcDiffOfTransactionProfOfWork(pow.count, pow.participation);
+    /**是否中断 */
     let is_break = false;
     /**记录算力 */
     let recordNonce = 0;
     /// 校验交易POW，如果POW校验不通过，强制开始生成交易
-    if ((diff_BI = this.tpowHelper.calcDiffOfTransactionProfOfWork(pow.count, pow.participation))) {
+    if (diff_BI > BigInt(1)) {
       const res =
-        event && (await event.emit("start", { diff: diff_BI.toString(), transaction: trs }));
+        event &&
+        (await event.emit("start", {
+          diff: diff_BI.toString(),
+          count: pow.count,
+          participation: pow.participation,
+          transaction: trs,
+        }));
       if (res && res.break) {
         is_break = res.break;
         return done(is_break, recordNonce);
