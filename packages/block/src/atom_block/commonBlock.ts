@@ -91,7 +91,7 @@ export class CommonBlockFactory extends BlockFactory<CommonBlock> {
 
     if (!baseHelper.isString(commonBlockRemark.debug)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "debug",
+        prop: `debug ${commonBlockRemark.debug}`,
         type: "string",
         ...CommonBlockRemark_Exception_Detail,
       });
@@ -99,7 +99,7 @@ export class CommonBlockFactory extends BlockFactory<CommonBlock> {
 
     if (!baseHelper.isString(commonBlockRemark.info)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "info",
+        prop: `info ${commonBlockRemark.info}`,
         type: "string",
         ...CommonBlockRemark_Exception_Detail,
       });
@@ -107,7 +107,7 @@ export class CommonBlockFactory extends BlockFactory<CommonBlock> {
 
     if (!baseHelper.isValidBlockParticipation(commonBlockRemark.blockParticipation)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "blockParticipation",
+        prop: `blockParticipation ${commonBlockRemark.blockParticipation}`,
         type: "block participation",
         ...CommonBlockRemark_Exception_Detail,
       });
@@ -115,7 +115,7 @@ export class CommonBlockFactory extends BlockFactory<CommonBlock> {
 
     if (!baseHelper.isValidAccountEquity(commonBlockRemark.generatorEquity)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "generatorEquity",
+        prop: `generatorEquity ${commonBlockRemark.generatorEquity}`,
         type: "account equity",
         ...CommonBlockRemark_Exception_Detail,
       });

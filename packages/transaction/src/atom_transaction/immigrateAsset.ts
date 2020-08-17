@@ -87,7 +87,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<
 
     if (body.fromMagic === config.magic) {
       throw new ArgumentIllegalException(SHOULD_NOT_BE, {
-        to_compare_prop: "fromMagic",
+        to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
@@ -96,7 +96,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<
 
     if (body.toMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "toMagic",
+        to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
@@ -113,7 +113,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<
     const storage = body.storage;
     if (storage.key !== "transactionSignature") {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "key",
+        to_compare_prop: `key ${storage.key}`,
         to_target: "storage",
         be_compare_prop: "transactionSignature",
         ...Function_Exception_Detail,
@@ -166,7 +166,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<
 
     if (!baseHelper.isValidAccountSignature(genesisDelegateSignature)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "genesisDelegateSignature",
+        prop: `genesisDelegateSignature ${genesisDelegateSignature}`,
         type: "account signature",
         ...ImmigrateAssetAsset_Exception_Detail,
       });
@@ -185,7 +185,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<
 
     if (!genesisDelegates.includes(address)) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "signature address",
+        to_compare_prop: `signature address ${address}`,
         be_compare_prop: "genesis delegate address",
         to_target: "immigrateAsset",
         be_target: "config",
@@ -203,7 +203,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<
       }))
     ) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "genesisDelegateSignature",
+        prop: `genesisDelegateSignature ${signature}`,
         type: "signature",
         ...Function_Exception_Detail,
         target: "immigrateAsset",
@@ -220,7 +220,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<
         }))
       ) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "genesisDelegateSignSignature",
+          prop: `genesisDelegateSignSignature ${signSignature}`,
           type: "signature",
           ...Function_Exception_Detail,
           target: "immigrateAsset",
@@ -230,7 +230,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<
 
     if (storage.value !== emigrateAssetTransaction.signature) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "value",
+        to_compare_prop: `value ${storage.value}`,
         be_compare_prop: "signature",
         to_target: "storage",
         be_target: "emigrateAssetTransaction",

@@ -79,18 +79,18 @@ export class DelegateTransactionFactory extends TransactionFactory<DelegateTrans
 
     if (body.fromMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "fromMagic",
+        to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
-        be_compare_prop: "chain magic",
+        be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
       });
     }
 
     if (body.toMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "toMagic",
+        to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
-        be_compare_prop: "chain magic",
+        be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
       });
     }
@@ -105,7 +105,7 @@ export class DelegateTransactionFactory extends TransactionFactory<DelegateTrans
     const storage = body.storage;
     if (storage.key !== "username") {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "key",
+        to_compare_prop: `storage.key ${storage.key}`,
         to_target: "storage",
         be_compare_prop: "username",
         ...Function_Exception_Detail,
@@ -137,7 +137,7 @@ export class DelegateTransactionFactory extends TransactionFactory<DelegateTrans
     if (body.applyBlockHeight === 1) {
       if (!baseHelper.isValidGenesisUsername(username)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "username",
+          prop: `username ${username}`,
           type: "genesis username",
           ...DelegateAsset_Exception_Detail,
         });
@@ -145,7 +145,7 @@ export class DelegateTransactionFactory extends TransactionFactory<DelegateTrans
     } else {
       if (!baseHelper.isValidUsername(username)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "username",
+          prop: `username ${username}`,
           type: "username",
           ...DelegateAsset_Exception_Detail,
         });
@@ -154,8 +154,8 @@ export class DelegateTransactionFactory extends TransactionFactory<DelegateTrans
 
     if (storage.value !== username) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "value",
-        be_compare_prop: "username",
+        to_compare_prop: `storage.value ${storage.value}`,
+        be_compare_prop: `username ${username}`,
         to_target: "storage",
         be_target: "delegate",
         ...Function_Exception_Detail,
@@ -172,7 +172,7 @@ export class DelegateTransactionFactory extends TransactionFactory<DelegateTrans
 
     if (!baseHelper.isValidPublicKey(publicKey)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "publicKey",
+        prop: `publicKey ${publicKey}`,
         type: "account publicKey",
         ...DelegateAsset_Exception_Detail,
       });
@@ -180,8 +180,8 @@ export class DelegateTransactionFactory extends TransactionFactory<DelegateTrans
 
     if (publicKey !== body.senderPublicKey) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "publicKey",
-        be_compare_prop: "senderPublicKey",
+        to_compare_prop: `publicKey ${publicKey}`,
+        be_compare_prop: `senderPublicKey ${body.senderPublicKey}`,
         to_target: "delegate",
         be_target: "body",
         ...DelegateAsset_Exception_Detail,

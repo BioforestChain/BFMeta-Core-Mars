@@ -73,8 +73,8 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       }
       if (delegate.secondPublicKey !== secondPublicKey) {
         throw new ConsensusException(NOT_MATCH, {
-          to_compare_prop: delegate.secondPublicKey,
-          be_compare_prop: secondPublicKey,
+          to_compare_prop: `secondPublicKey ${delegate.secondPublicKey}`,
+          be_compare_prop: `secondPublicKey ${secondPublicKey}`,
           to_target: "transaction",
           be_target: "delegate",
           ...Function_Exception_Detail,
@@ -111,8 +111,8 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
     const remark = memchain.genesisBlock.remark;
     if (assetType !== remark.assetType) {
       throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: assetType,
-        be_compare_prop: remark.assetType,
+        to_compare_prop: `assetType ${assetType}`,
+        be_compare_prop: `assetType ${remark.assetType}`,
         to_target: "immigrateAsset.emigrateAssetTransaction.asset.emigrateAsset",
         be_target: `registerChain in blockChain with magic ${sourceChainMagic}`,
         ...Function_Exception_Detail,
@@ -121,8 +121,8 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
 
     if (sourceChainName !== remark.chainName) {
       throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: sourceChainName,
-        be_compare_prop: remark.chainName,
+        to_compare_prop: `sourceChainName ${sourceChainName}`,
+        be_compare_prop: `sourceChainName ${remark.chainName}`,
         to_target: "immigrateAsset.emigrateAssetTransaction.asset.emigrateAsset",
         be_target: `registerChain in blockChain with magic ${sourceChainMagic}`,
         ...Function_Exception_Detail,

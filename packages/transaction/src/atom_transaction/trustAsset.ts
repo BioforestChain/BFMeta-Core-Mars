@@ -90,16 +90,16 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
 
     if (senderId === recipientId) {
       throw new ArgumentIllegalException(SHOULD_NOT_BE, {
-        to_compare_prop: "senderId",
+        to_compare_prop: `senderId ${senderId}`,
         to_target: "body",
-        be_compare_prop: "recipientId",
+        be_compare_prop: `recipientId ${recipientId}`,
         ...Function_Exception_Detail,
       });
     }
 
     if (body.fromMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "fromMagic",
+        to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
@@ -108,7 +108,7 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
 
     if (body.toMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "toMagic",
+        to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
@@ -125,7 +125,7 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
     const storage = body.storage;
     if (storage.key !== "assetType") {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "key",
+        to_compare_prop: `storage.key ${storage.key}`,
         to_target: "storage",
         be_compare_prop: "assetType",
         ...Function_Exception_Detail,
@@ -142,7 +142,7 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
       throw new ArgumentIllegalException(SHOULD_NOT_INCLUDE, {
         to_compare_prop: "trustee",
         to_target: "trustAsset",
-        be_compare_prop: "senderId",
+        be_compare_prop: `senderId ${senderId}`,
         ...Function_Exception_Detail,
       });
     }
@@ -151,15 +151,15 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
       throw new ArgumentIllegalException(SHOULD_NOT_INCLUDE, {
         to_compare_prop: "trustee",
         to_target: "trustAsset",
-        be_compare_prop: "recipientId",
+        be_compare_prop: `recipientId ${recipientId}`,
         ...Function_Exception_Detail,
       });
     }
 
     if (storage.value !== trustAsset.assetType) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: storage.value,
-        be_compare_prop: trustAsset.assetType,
+        to_compare_prop: `storage.value ${storage.value}`,
+        be_compare_prop: `assetType ${trustAsset.assetType}`,
         to_target: "storage",
         be_target: "trustAsset",
         ...Function_Exception_Detail,
@@ -197,7 +197,7 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
 
     if (trustees.length <= 0) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "trustee",
+        prop: `trustees length ${trustees.length}`,
         ...TrustAssetAsset_Exception_Detail,
       });
     }
@@ -205,7 +205,7 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
     for (const trustee of trustees) {
       if (!(await accountBaseHelper.isAddress(trustee))) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "trustee",
+          prop: `trustee ${trustee}`,
           type: "account address",
           target: "trustees",
           ...Function_Exception_Detail,
@@ -224,7 +224,7 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
 
     if (!baseHelper.isPositiveInteger(numberOfSignFor)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "numberOfSignFor",
+        prop: `numberOfSignFor ${numberOfSignFor}`,
         type: "positive integer",
         ...TrustAssetAsset_Exception_Detail,
       });
@@ -234,7 +234,7 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
     const maxSifnFor = trustees.length + 2;
     if (numberOfSignFor > maxSifnFor) {
       throw new ArgumentIllegalException(PROP_SHOULD_LTE_FIELD, {
-        prop: "numberOfSignFor",
+        prop: `numberOfSignFor ${numberOfSignFor}`,
         field: maxSifnFor,
         ...TrustAssetAsset_Exception_Detail,
         target: "trustAsset",
@@ -244,7 +244,7 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
     // min = 1
     if (numberOfSignFor < 1) {
       throw new ArgumentIllegalException(PROP_SHOULD_GTE_FIELD, {
-        prop: "numberOfSignFor",
+        prop: `numberOfSignFor ${numberOfSignFor}`,
         field: 1,
         ...TrustAssetAsset_Exception_Detail,
         target: "trustAsset",
@@ -261,7 +261,7 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
 
     if (trustAsset.amount === "0") {
       throw new ArgumentIllegalException(PROP_SHOULD_GT_FIELD, {
-        prop: "amount",
+        prop: `amount ${trustAsset.amount}`,
         fueld: "0",
         ...TrustAssetAsset_Exception_Detail,
       });

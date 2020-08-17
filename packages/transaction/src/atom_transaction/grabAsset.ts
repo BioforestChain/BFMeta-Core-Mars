@@ -97,7 +97,7 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
 
     if (body.fromMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "fromMagic",
+        to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
@@ -106,7 +106,7 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
 
     if (body.toMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "toMagic",
+        to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
@@ -123,7 +123,7 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
     const storage = body.storage;
     if (storage.key !== "transactionSignature") {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "key",
+        to_compare_prop: `storage.key ${storage.key}`,
         to_target: "storage",
         be_compare_prop: "transactionSignature",
         ...Function_Exception_Detail,
@@ -155,7 +155,7 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
 
     if (!baseHelper.isValidSignature(blockSignature)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "blockSignature",
+        prop: `blockSignature ${blockSignature}`,
         type: "block signature",
         ...GrabAssetAsset_Exception_Detail,
       });
@@ -170,7 +170,7 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
 
     if (!baseHelper.isValidSignature(transactionSignature)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "transactionSignature",
+        prop: `transactionSignature ${transactionSignature}`,
         type: "transaction signature",
         ...GrabAssetAsset_Exception_Detail,
       });
@@ -178,8 +178,8 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
 
     if (storage.value !== transactionSignature) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "value",
-        be_compare_prop: "transactionSignature",
+        to_compare_prop: `storage.value ${storage.value}`,
+        be_compare_prop: `transactionSignature ${transactionSignature}`,
         to_target: "storage",
         be_target: "grabAsset",
         ...Function_Exception_Detail,
@@ -202,7 +202,7 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
       const { ciphertextSignature } = grabAsset;
       if (!ciphertextSignature) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "ciphertextSignature",
+          prop: `ciphertextSignature ${ciphertextSignature}`,
           type: "grabAsset",
           ...GrabAssetAsset_Exception_Detail,
         });
@@ -210,7 +210,7 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
 
       if (!baseHelper.isValidAccountSignature(ciphertextSignature)) {
         throw new ArgumentIllegalException(NOT_EXIST, {
-          prop: "ciphertextSignature",
+          prop: `ciphertextSignature ${ciphertextSignature}`,
           type: "signature",
           ...GrabAssetAsset_Exception_Detail,
         });
@@ -220,7 +220,7 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
 
       if (!cipherPublicKeys.includes(publicKey)) {
         throw new ArgumentIllegalException(NOT_MATCH, {
-          to_compare_prop: "publicKey",
+          to_compare_prop: `publicKey ${publicKey}`,
           be_compare_prop: "cipherPublicKeys",
           to_target: "ciphertextSignature",
           be_target: "cipherPublicKeys",
@@ -238,7 +238,7 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
         }))
       ) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "ciphertextSignature",
+          prop: `ciphertextSignature ${signature}`,
           type: "signature",
           ...GrabAssetAsset_Exception_Detail,
         });

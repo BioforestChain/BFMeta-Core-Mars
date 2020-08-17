@@ -65,21 +65,22 @@ export class CommonBlockVerify<T extends Block> {
 
     if (!baseHelper.isPositiveInteger(body.version)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "version",
+        prop: `version ${body.version}`,
         type: "positive integer",
         ...BlockBody_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isPositiveInteger(body.height)) {
+    const height = body.height;
+    if (!baseHelper.isPositiveInteger(height)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "height",
+        prop: `height ${height}`,
         type: "positive integer",
         ...BlockBody_Exception_Detail,
       });
     }
 
-    if (body.height > 1 && !body.previousBlockSignature) {
+    if (height > 1 && !body.previousBlockSignature) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "previousBlockSignature",
         ...BlockBody_Exception_Detail,
@@ -88,7 +89,7 @@ export class CommonBlockVerify<T extends Block> {
 
     if (!baseHelper.isNaturalNumber(body.timestamp)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "timestamp",
+        prop: `timestamp ${body.timestamp}`,
         type: "positive integer or 0",
         ...BlockBody_Exception_Detail,
       });

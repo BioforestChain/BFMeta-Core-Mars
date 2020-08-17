@@ -104,8 +104,8 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
     // 签收交易的接收账户必须是委托交易的接收账户
     if (transaction.recipientId !== trustAssetJson.recipientId) {
       throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: transaction.recipientId,
-        be_compare_prop: trustAssetJson.recipientId,
+        to_compare_prop: `SignForAssetTransaction.recipientId ${transaction.recipientId}`,
+        be_compare_prop: `TrustAssetTransaction.recipientId ${trustAssetJson.recipientId}`,
         to_target: "SignForAssetTransaction",
         be_target: "TrustAssetTransaction",
         function: "isValidRecipientId",
@@ -154,8 +154,8 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
         }
         if (trustee.secondPublicKey !== secondPublicKey) {
           throw new ConsensusException(NOT_MATCH, {
-            to_compare_prop: trustee.secondPublicKey,
-            be_compare_prop: secondPublicKey,
+            to_compare_prop: `secondPublicKey ${trustee.secondPublicKey}`,
+            be_compare_prop: `secondPublicKey ${secondPublicKey}`,
             to_target: "trustee",
             be_target: "thirdPartySignature",
             ...Function_Exception_Detail,

@@ -13,7 +13,6 @@ import {
 } from "@bfchain/core-util-exception";
 import {
   BeExchangeSpecialAssetTransaction,
-  RANGE_TYPE,
   BeExchangeSpecialAssetModel,
   EXCHANGE_DIRECTION,
   SPECIAL_ASSET_TYPE,
@@ -103,16 +102,16 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
 
     if (body.senderId === recipientId) {
       throw new ArgumentIllegalException(SHOULD_NOT_BE, {
-        to_compare_prop: "senderId",
+        to_compare_prop: `senderId ${body.senderId}`,
         to_target: "body",
-        be_compare_prop: "recipientId",
+        be_compare_prop: `recipientId ${recipientId}`,
         ...Function_Exception_Detail,
       });
     }
 
     if (body.fromMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "fromMagic",
+        to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
@@ -121,7 +120,7 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
 
     if (body.toMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "toMagic",
+        to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
@@ -138,7 +137,7 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
     const storage = body.storage;
     if (storage.key !== "transactionSignature") {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "key",
+        to_compare_prop: `storage.key ${storage.key}`,
         to_target: "storage",
         be_compare_prop: "transactionSignature",
         ...Function_Exception_Detail,
@@ -169,7 +168,7 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
 
     if (!baseHelper.isValidSignature(transactionSignature)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "transactionSignature",
+        prop: `transactionSignature ${transactionSignature}`,
         type: "transaction signature",
         ...BeExchangeSpecialAssetAsset_Exception_Detail,
       });
@@ -177,8 +176,8 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
 
     if (storage.value !== transactionSignature) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "value",
-        be_compare_prop: "transactionSignature",
+        to_compare_prop: `storage.value ${storage.value}`,
+        be_compare_prop: `transactionSignature ${transactionSignature}`,
         to_target: "storage",
         be_target: "beExchangeSpecialAsset",
         ...Function_Exception_Detail,
@@ -196,7 +195,7 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
     if (cipherPublicKeys.length > 0) {
       if (!baseHelper.isValidAccountSignature(beExchangeSpecialAsset.ciphertextSignature)) {
         throw new ArgumentIllegalException(NOT_EXIST, {
-          prop: "ciphertextSignature",
+          prop: `ciphertextSignature ${beExchangeSpecialAsset.ciphertextSignature}`,
           type: "signature",
           ...BeExchangeSpecialAssetAsset_Exception_Detail,
         });
@@ -208,11 +207,11 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
 
       const { transactionSignatureBuffer, ciphertextSignature } = beExchangeSpecialAssetModel;
 
-      const { publicKeyBuffer, signatureBuffer, publicKey } = ciphertextSignature;
+      const { publicKeyBuffer, signatureBuffer, signature, publicKey } = ciphertextSignature;
 
       if (!cipherPublicKeys.includes(publicKey)) {
         throw new ArgumentIllegalException(NOT_MATCH, {
-          to_compare_prop: "publicKey",
+          to_compare_prop: `publicKey ${publicKey}`,
           be_compare_prop: "cipherPublicKeys",
           to_target: "ciphertextSignature",
           be_target: "cipherPublicKeys",
@@ -230,7 +229,7 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
         }))
       ) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "ciphertextSignature",
+          prop: `ciphertextSignature ${signature}`,
           type: "signature",
           ...BeExchangeSpecialAssetAsset_Exception_Detail,
         });

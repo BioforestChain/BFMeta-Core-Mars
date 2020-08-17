@@ -87,7 +87,7 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
 
     if (body.fromMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "fromMagic",
+        to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
@@ -96,7 +96,7 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
 
     if (body.toMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "toMagic",
+        to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
@@ -114,7 +114,7 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
 
     if (storage.key !== "dappid") {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "key",
+        to_compare_prop: `storage.key ${storage.key}`,
         to_target: "storage",
         be_compare_prop: "dappid",
         ...Function_Exception_Detail,
@@ -127,8 +127,8 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
 
     if (storage.value !== dapp.dappid) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "value",
-        be_compare_prop: "dappid",
+        to_compare_prop: `storage.value ${storage.value}`,
+        be_compare_prop: `dappid ${dapp.dappid}`,
         to_target: "storage",
         be_target: "dapp",
         ...Function_Exception_Detail,
@@ -167,7 +167,7 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
 
     if (!baseHelper.isString(dappid)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "dappid",
+        prop: `dappid ${dappid}`,
         type: "string",
         ...DappAsset_Exception_Detail,
       });
@@ -176,7 +176,7 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
     const len = dappid.length;
     if (len < 17 || len > 32) {
       throw new ArgumentIllegalException(NOT_IN_EXPECTED_RANGE, {
-        prop: "dappid",
+        prop: `dappid ${dappid}`,
         min: 17,
         max: 32,
         ...DappAsset_Exception_Detail,
@@ -186,7 +186,7 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
 
     if (!baseHelper.isUpperCaseOrNumber(dappid)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "dappid",
+        prop: `dappid ${dappid}`,
         type: "uppercase or number",
         ...DappAsset_Exception_Detail,
       });
@@ -196,7 +196,7 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
 
     if (sourceChainName !== config.chainName) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "sourceChainName",
+        to_compare_prop: `sourceChainName ${sourceChainName}`,
         to_target: "body",
         be_compare_prop: "local chain name",
         ...Function_Exception_Detail,
@@ -207,7 +207,7 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
 
     if (sourceChainMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "sourceChainMagic",
+        to_compare_prop: `sourceChainMagic ${sourceChainMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
 
@@ -217,7 +217,7 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
 
     if (!DAPP_TYPE[type]) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "type",
+        to_compare_prop: `type ${type}`,
         be_compare_prop: "dappType",
         to_target: "dapp",
         be_target: "DAPP_TYPE",
@@ -228,7 +228,7 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
     if (type === DAPP_TYPE.PAID_APP) {
       if (!purchaseAsset) {
         throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-          prop: "sourceChainMagic",
+          prop: "purchaseAsset",
           ...DappAsset_Exception_Detail,
         });
       }

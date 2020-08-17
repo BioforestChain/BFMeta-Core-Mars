@@ -80,7 +80,7 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
 
     if (body.fromMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "fromMagic",
+        to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
@@ -89,7 +89,7 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
 
     if (body.toMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "toMagic",
+        to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
@@ -106,7 +106,7 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
     const storage = body.storage;
     if (storage.key !== "assetType") {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "key",
+        to_compare_prop: `storage.key ${storage.key}`,
         to_target: "storage",
         be_compare_prop: "assetType",
         ...Function_Exception_Detail,
@@ -164,8 +164,8 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
 
     if (storage.value !== assetType) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "value",
-        be_compare_prop: "assetType",
+        to_compare_prop: `storage.value ${storage.value}`,
+        be_compare_prop: `assetType ${assetType}`,
         to_target: "storage",
         be_target: "destoryAsset",
         ...Function_Exception_Detail,

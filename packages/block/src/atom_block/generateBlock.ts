@@ -274,7 +274,7 @@ export class GenerateBlockCore<T extends Block> {
               });
               if (checkResult === undefined) {
                 throw new NoFoundException(NOT_EXIST, {
-                  prop: "verifyTransactionProfOfWork",
+                  prop: `verifyTransactionProfOfWork count ${count} signature ${trs.signature} senderId ${trs.senderId} nonce ${trs.nonce}`,
                   target: "ApplyTransactionEventEmitter",
                   function: "insertTransactions",
                 });
@@ -308,7 +308,7 @@ export class GenerateBlockCore<T extends Block> {
           for (const transactionAssetChange of transactionAssetChanges) {
             if (BigInt(transactionAssetChange.assetBalance) < BigInt(0)) {
               throw new ArgumentIllegalException(PROP_IS_INVALID, {
-                prop: "assetBalance",
+                prop: `assetBalance ${transactionAssetChange.assetBalance} ${transactionAssetChange.assetTypes}`,
                 target: "transactionAssetChanges",
                 function: "insertTransactions",
               });

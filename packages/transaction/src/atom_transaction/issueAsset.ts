@@ -88,27 +88,27 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
 
     if (body.senderId === recipientId) {
       throw new ArgumentIllegalException(SHOULD_NOT_BE, {
-        to_compare_prop: "senderId",
+        to_compare_prop: `senderId ${body.senderId}`,
         to_target: "body",
-        be_compare_prop: "recipientId",
+        be_compare_prop: `recipientId ${recipientId}`,
         ...Function_Exception_Detail,
       });
     }
 
     if (body.fromMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "fromMagic",
+        to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
-        be_compare_prop: "chain magic",
+        be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
       });
     }
 
     if (body.toMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "toMagic",
+        to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
-        be_compare_prop: "chain magic",
+        be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
       });
     }
@@ -123,7 +123,7 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
     const storage = body.storage;
     if (storage.key !== "assetType") {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "key",
+        to_compare_prop: `storage.key ${storage.key}`,
         to_target: "storage",
         be_compare_prop: "assetType",
         ...Function_Exception_Detail,
@@ -156,7 +156,7 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
 
     if (sourceChainName !== config.chainName) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "sourceChainName",
+        to_compare_prop: `sourceChainName ${sourceChainName}`,
         to_target: "body",
         be_compare_prop: "local chain name",
         ...Function_Exception_Detail,
@@ -167,7 +167,7 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
 
     if (sourceChainMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "sourceChainMagic",
+        to_compare_prop: `sourceChainMagic ${sourceChainName}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
@@ -183,7 +183,7 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
 
     if (!baseHelper.isUpperCaseString(assetType)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "assetType",
+        prop: `assetType ${assetType}`,
         type: "uppercase",
         ...IssueAssetAsset_Exception_Detail,
       });
@@ -192,7 +192,7 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
     const len = assetType.length;
     if (len < 3 || len > 5) {
       throw new ArgumentIllegalException(NOT_IN_EXPECTED_RANGE, {
-        prop: "assetType",
+        prop: `assetType ${assetType}`,
         type: "string length",
         min: 3,
         max: 5,
@@ -202,8 +202,8 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
 
     if (storage.value !== assetType) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "value",
-        be_compare_prop: "assetType",
+        to_compare_prop: `storage.value ${storage.value}`,
+        be_compare_prop: `assetType ${assetType}`,
         to_target: "storage",
         be_target: "issueAsset",
         ...Function_Exception_Detail,
@@ -219,7 +219,7 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
 
     if (!baseHelper.isValidAssetNumber(expectedIssuedAssets)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "expectedIssuedAssets",
+        prop: `expectedIssuedAssets ${expectedIssuedAssets}`,
         type: "asset number",
         ...IssueAssetAsset_Exception_Detail,
       });
@@ -234,7 +234,7 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
 
     if (!(await accountBaseHelper.isAddress(genesisAddress))) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "genesisAddress",
+        prop: `genesisAddress ${genesisAddress}`,
         type: "account address",
         ...IssueAssetAsset_Exception_Detail,
       });
@@ -242,8 +242,8 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
 
     if (body.senderId === genesisAddress) {
       throw new ArgumentIllegalException(SHOULD_BE_DIFFERENT, {
-        to_compare_prop: "senderId",
-        be_compare_prop: "genesisAddress",
+        to_compare_prop: `senderId ${body.senderId}`,
+        be_compare_prop: `genesisAddress ${genesisAddress}`,
         to_target: "body",
         be_target: "issueAsset",
         ...IssueAssetAsset_Exception_Detail,
@@ -252,9 +252,9 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
 
     if (recipientId !== genesisAddress) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "genesisAddress",
+        to_compare_prop: `genesisAddress ${genesisAddress}`,
         to_target: "issueAsset",
-        be_compare_prop: "recipientId",
+        be_compare_prop: `recipientId ${recipientId}`,
         ...IssueAssetAsset_Exception_Detail,
       });
     }

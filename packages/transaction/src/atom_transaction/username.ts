@@ -82,7 +82,7 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
 
     if (body.fromMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "fromMagic",
+        to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
@@ -91,7 +91,7 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
 
     if (body.toMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "toMagic",
+        to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
@@ -108,7 +108,7 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
     const storage = body.storage;
     if (storage.key !== "alias") {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "key",
+        to_compare_prop: `storage.key ${storage.key}`,
         to_target: "storage",
         be_compare_prop: "alias",
         ...Function_Exception_Detail,
@@ -139,7 +139,7 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
 
     if (!baseHelper.isString(alias)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "username",
+        prop: `username ${alias}`,
         type: "string",
         ...UsernameAsset_Exception_Detail,
       });
@@ -150,7 +150,7 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
     if (body.applyBlockHeight === 1) {
       if (!allowSymbols.test(alias)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "alias",
+          prop: `alias ${alias}`,
           type: "genesis username",
           ...UsernameAsset_Exception_Detail,
         });
@@ -158,7 +158,7 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
     } else {
       if (!allowSymbols.test(alias)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "alias",
+          prop: `alias ${alias}`,
           type: "username",
           ...UsernameAsset_Exception_Detail,
         });
@@ -166,7 +166,7 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
 
       if (alias.toLowerCase().includes(this.configHelper.chainName)) {
         throw new ArgumentIllegalException(SHOULD_NOT_INCLUDE, {
-          prop: "alias",
+          prop: `alias ${alias}`,
           value: "chain name",
           ...UsernameAsset_Exception_Detail,
         });
@@ -175,8 +175,8 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
 
     if (storage.value !== alias) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: storage.value,
-        be_compare_prop: alias,
+        to_compare_prop: `storage.value ${storage.value}`,
+        be_compare_prop: `alias ${alias}`,
         to_target: "storage",
         be_target: "username",
         ...Function_Exception_Detail,
@@ -185,7 +185,7 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
 
     if (await accountBaseHelper.isAddress(alias)) {
       throw new ArgumentIllegalException(SHOULD_NOT_BE, {
-        to_compare_prop: username,
+        to_compare_prop: `username ${alias}`,
         to_target: "usernameAsset",
         be_compare_prop: "address",
         ...UsernameAsset_Exception_Detail,
@@ -194,7 +194,7 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
 
     if (alias.length === 0 || alias.length > 20) {
       throw new ArgumentIllegalException(NOT_IN_EXPECTED_RANGE, {
-        prop: "alias",
+        prop: `alias ${alias}`,
         min: 1,
         max: 20,
         ...UsernameAsset_Exception_Detail,
@@ -211,7 +211,7 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
 
     if (!baseHelper.isValidPublicKey(publicKey)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "publicKey",
+        prop: `publicKey ${publicKey}`,
         type: "account publicKey",
         ...UsernameAsset_Exception_Detail,
       });
@@ -219,8 +219,8 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
 
     if (publicKey !== body.senderPublicKey) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: publicKey,
-        be_compare_prop: body.senderPublicKey,
+        to_compare_prop: `publicKey ${publicKey}`,
+        be_compare_prop: `senderPublicKey ${body.senderPublicKey}`,
         to_target: "username",
         be_target: "body",
         ...UsernameAsset_Exception_Detail,

@@ -238,8 +238,8 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
       throw new ConsensusException(NOT_MATCH, {
         to_compare_prop: previousBlockSignature,
         be_compare_prop: __signature,
-        to_target: "block",
-        be_target: "lastBlock",
+        to_target: `block ${previousBlockSignature}`,
+        be_target: `lastBlock ${__signature}`,
         ...Function_Exception_Detail,
       });
     }

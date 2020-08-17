@@ -93,8 +93,8 @@ export class MarkLogicVerifier extends TransactionLogicVerifier {
 
     if (chainName !== memDapp.sourceChainName) {
       throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: chainName,
-        be_compare_prop: memDapp.sourceChainName,
+        to_compare_prop: `sourceChainName ${chainName}`,
+        be_compare_prop: `sourceChainName ${memDapp.sourceChainName}`,
         to_target: "mark",
         be_target: "blockChain dapp",
         ...Function_Exception_Detail,

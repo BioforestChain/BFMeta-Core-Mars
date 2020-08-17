@@ -39,8 +39,8 @@ export class DestoryAssetLogicVerifier extends TransactionLogicVerifier {
 
     if (memAsset.sourceChainName !== sourceChainName) {
       throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: memAsset.sourceChainName,
-        be_compare_prop: sourceChainName,
+        to_compare_prop: `sourceChainName ${memAsset.sourceChainName}`,
+        be_compare_prop: `sourceChainName ${sourceChainName}`,
         to_target: "chain asset",
         be_target: "destoryAsset",
         ...Function_Exception_Detail,

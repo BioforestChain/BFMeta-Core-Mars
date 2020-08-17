@@ -83,7 +83,7 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<
 
     if (body.fromMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "fromMagic",
+        to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
@@ -92,7 +92,7 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<
 
     if (body.toMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "toMagic",
+        to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
@@ -188,7 +188,7 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<
 
     if (!baseHelper.isValidRate(toExchangeAsset.exchangeRate)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "exchangeRate",
+        prop: `exchangeRate ${toExchangeAsset.exchangeRate}`,
         type: "rate",
         ...ToExchangeAssetAsset_Exception_Detail,
       });

@@ -210,8 +210,8 @@ export class ReplayBlockCore<T extends Block> {
       }
       if (mapSize !== calcRoundOfflineGeneratersReadonlyMap.size) {
         throw new ArgumentIllegalException(NOT_MATCH, {
-          to_compare_prop: "roundOfflineGeneratersHashMap",
-          be_compare_prop: "roundOfflineGeneratersHashMap",
+          to_compare_prop: `roundOfflineGeneratersHashMap size ${mapSize}`,
+          be_compare_prop: `roundOfflineGeneratersHashMap size ${calcRoundOfflineGeneratersReadonlyMap.size}`,
           to_target: "block",
           be_target: "calculate",
           ...Function_Exception_Detail,
@@ -445,7 +445,7 @@ export class ReplayBlockCore<T extends Block> {
                 if (opt.senderId && tr.senderId === opt.senderId) {
                   throw new ConsensusException(SHOULD_NOT_INCLUDE, {
                     prop: `Transactions`,
-                    target: `block with height ${height}'`,
+                    target: `block with height ${height}`,
                     value: `transaction with storageValue ${storageValue}`,
                     ...Function_Exception_Detail,
                   });

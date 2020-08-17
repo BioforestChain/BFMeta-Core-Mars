@@ -137,29 +137,30 @@ export abstract class BlockFactory<T extends Block> {
     } as const;
     const { baseHelper } = this;
 
-    if (!keypair.publicKey) {
+    const { publicKey, secretKey } = keypair;
+    if (!publicKey) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "publicKey",
         ...Keypair_Exception_Detail,
       });
     }
-    if (!baseHelper.isValidPublicKey(keypair.publicKey)) {
+    if (!baseHelper.isValidPublicKey(publicKey)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "publicKey",
+        prop: `publicKey ${publicKey}`,
         ...Keypair_Exception_Detail,
       });
     }
 
-    if (!keypair.secretKey) {
+    if (!secretKey) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         param: "secretKey",
         ...Keypair_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isValidSecretKey(keypair.secretKey)) {
+    if (!baseHelper.isValidSecretKey(secretKey)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "secretKey",
+        prop: `secretKey ${secretKey}`,
         ...Keypair_Exception_Detail,
       });
     }

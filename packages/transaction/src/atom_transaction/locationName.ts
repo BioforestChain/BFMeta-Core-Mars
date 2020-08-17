@@ -91,7 +91,7 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
 
     if (body.fromMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "fromMagic",
+        to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
@@ -100,7 +100,7 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
 
     if (body.toMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "toMagic",
+        to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
@@ -117,7 +117,7 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
     const storage = body.storage;
     if (storage.key !== "name") {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "key",
+        to_compare_prop: `storage.key ${storage.key}`,
         to_target: "storage",
         be_compare_prop: "name",
         ...Function_Exception_Detail,
@@ -148,7 +148,7 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
 
     if (!baseHelper.isString(operateLnsName)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "name",
+        prop: `name ${operateLnsName}`,
         type: "string",
         ...LocationName_Exception_Detail,
       });
@@ -157,7 +157,7 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
     const lenNameLength = operateLnsName.length;
     if (lenNameLength > 1024) {
       throw new ArgumentIllegalException(OVER_LENGTH, {
-        prop: "name",
+        prop: `name ${operateLnsName}`,
         limit: 1024,
         ...LocationName_Exception_Detail,
       });
@@ -166,7 +166,7 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
     // 不能以 . 开头或结尾
     if (baseHelper.isStartWithOrEndWithPoint(operateLnsName)) {
       throw new ArgumentIllegalException(SHOULD_NOT_START_WITH_OR_END_WITH, {
-        prop: "name",
+        prop: `name ${operateLnsName}`,
         field: ".",
         ...LocationName_Exception_Detail,
       });
@@ -176,7 +176,7 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
     const namesLength = names.length;
     if (namesLength < 2) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "name",
+        prop: `name ${operateLnsName}`,
         ...LocationName_Exception_Detail,
       });
     }
@@ -185,7 +185,7 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
       const lnsName = names[i];
       if (lnsName.length > 128) {
         throw new ArgumentIllegalException(OVER_LENGTH, {
-          prop: "name",
+          prop: `name ${lnsName}`,
           limit: 128,
           ...LocationName_Exception_Detail,
         });
@@ -194,7 +194,7 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
         // 顶级域名必须是小写字母
         if (!baseHelper.isLowerCase(lnsName)) {
           throw new ArgumentIllegalException(PROP_IS_INVALID, {
-            prop: "name",
+            prop: `name ${lnsName}`,
             type: "lowercase",
             ...LocationName_Exception_Detail,
           });
@@ -204,7 +204,7 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
         if (lnsName !== config.chainName) {
           throw new ArgumentIllegalException(SHOULD_BE, {
             to_compare_prop: "root location name",
-            to_target: "name",
+            to_target: `name ${lnsName}`,
             be_compare_prop: config.chainName,
             ...LocationName_Exception_Detail,
           });
@@ -213,7 +213,7 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
         if (lnsName.length <= 2) {
           if (!baseHelper.isLowerCaseOrNumber(lnsName)) {
             throw new ArgumentIllegalException(PROP_IS_INVALID, {
-              prop: "name",
+              prop: `name ${lnsName}`,
               type: "lowercase letter or number",
               ...LocationName_Exception_Detail,
             });
@@ -221,7 +221,7 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
         } else {
           if (!baseHelper.isLowerCaseOrNumberOrUnderline(lnsName)) {
             throw new ArgumentIllegalException(PROP_IS_INVALID, {
-              prop: "name",
+              prop: `name ${lnsName}`,
               type: "lowercase letter or number or underline",
               ...LocationName_Exception_Detail,
             });
@@ -232,8 +232,8 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
 
     if (storage.value !== operateLnsName) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "value",
-        be_compare_prop: "name",
+        to_compare_prop: `storage.value ${storage.value}`,
+        be_compare_prop: `name ${operateLnsName}`,
         to_target: "storage",
         be_target: "locationName",
         ...Function_Exception_Detail,
@@ -246,7 +246,7 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
 
     if (sourceChainName !== config.chainName) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "sourceChainName",
+        to_compare_prop: `sourceChainName ${sourceChainName}`,
         to_target: "body",
         be_compare_prop: "local chain name",
         ...Function_Exception_Detail,
@@ -257,7 +257,7 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
 
     if (sourceChainMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "sourceChainMagic",
+        to_compare_prop: `sourceChainMagic ${sourceChainMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
@@ -266,7 +266,7 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
 
     if (!LOCATION_NAME_OPERATION_TYPE[operationType]) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "operationType",
+        to_compare_prop: `operationType ${operationType}`,
         be_compare_prop: "locationNameType",
         to_target: "locationName",
         be_target: "LOCATION_NAME_OPERATION_TYPE",
