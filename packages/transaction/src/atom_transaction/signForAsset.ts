@@ -103,7 +103,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
 
     if (body.fromMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "fromMagic",
+        to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
@@ -112,7 +112,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
 
     if (body.toMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "toMagic",
+        to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
@@ -129,7 +129,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
     const storage = body.storage;
     if (storage.key !== "transactionSignature") {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "key",
+        to_compare_prop: `storage.key ${storage.key}`,
         to_target: "storage",
         be_compare_prop: "transactionSignature",
         ...Function_Exception_Detail,
@@ -166,7 +166,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
 
     if (!baseHelper.isValidSignature(transactionSignature)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "transactionSignature",
+        prop: `transactionSignature ${transactionSignature}`,
         type: "transaction signature",
         ...SignForAssetAsset_Exception_Detail,
       });
@@ -174,8 +174,8 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
 
     if (storage.value !== transactionSignature) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: storage.value,
-        be_compare_prop: transactionSignature,
+        to_compare_prop: `storage.value ${storage.value}`,
+        be_compare_prop: `transactionSignature ${transactionSignature}`,
         to_target: "storage",
         be_target: "signForAsset",
         ...Function_Exception_Detail,
@@ -191,7 +191,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
 
     if (!(await accountBaseHelper.isAddress(trustSenderId))) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "trustSenderId",
+        prop: `trustSenderId ${trustSenderId}`,
         type: "account address",
         ...Function_Exception_Detail,
         target: "trustAsset",
@@ -207,7 +207,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
 
     if (!(await accountBaseHelper.isAddress(trustRecipientId))) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "trustRecipientId",
+        prop: `trustRecipientId ${trustRecipientId}`,
         type: "account address",
         ...SignForAssetAsset_Exception_Detail,
       });
@@ -215,9 +215,9 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
 
     if (recipientId !== trustRecipientId) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "recipientId",
+        to_compare_prop: `recipientId ${recipientId}`,
         to_target: "body",
-        be_compare_prop: "trustRecipientId",
+        be_compare_prop: `trustRecipientId ${trustRecipientId}`,
         ...SignForAssetAsset_Exception_Detail,
       });
     }
@@ -247,7 +247,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
 
     if (numberOfSignFor > thirdPartySignatureLength) {
       throw new ArgumentIllegalException(PROP_LENGTH_SHOULD_GTE_FIELD, {
-        prop: "thirdPartySignatures",
+        prop: `thirdPartySignatures length ${thirdPartySignatureLength}`,
         field: numberOfSignFor,
         ...SignForAssetAsset_Exception_Detail,
       });
@@ -259,7 +259,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
 
     if (thirdPartySignatureLength > tempTrustees.length) {
       throw new ArgumentIllegalException(PROP_LENGTH_SHOULD_LTE_FIELD, {
-        prop: "thirdPartySignatures",
+        prop: `thirdPartySignatures length ${thirdPartySignatureLength}`,
         field: tempTrustees.length,
         ...SignForAssetAsset_Exception_Detail,
       });
@@ -267,8 +267,8 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
 
     if (!tempTrustees.includes(senderId)) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: tempTrustees,
-        be_compare_prop: senderId,
+        to_compare_prop: "tempTrustees",
+        be_compare_prop: `senderId ${senderId}`,
         to_target: "body",
         be_target: "trustAsset and trust sender and trust recipient",
         ...SignForAssetAsset_Exception_Detail,
@@ -281,7 +281,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
       const { publicKey, signature, secondPublicKey, signSignature } = thirdPartySignature;
       if (trusteePublicKeys.includes(publicKey)) {
         throw new ArgumentIllegalException(SHOULD_NOT_DUPLICATE, {
-          prop: "thirdPartySignatures",
+          prop: `thirdPartySignatures ${publicKey}`,
           ...SignForAssetAsset_Exception_Detail,
         });
       }
@@ -289,8 +289,8 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
       const address = await accountBaseHelper.getAddressFromPublicKeyString(publicKey);
       if (!tempTrustees.includes(address)) {
         throw new ArgumentIllegalException(NOT_MATCH, {
-          to_compare_prop: tempTrustees,
-          be_compare_prop: address,
+          to_compare_prop: "tempTrustees",
+          be_compare_prop: `address ${address}`,
           to_target: "thirdPartySignature",
           be_target: "trustees",
           ...SignForAssetAsset_Exception_Detail,
@@ -307,7 +307,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
         }))
       ) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "signature",
+          prop: `signature ${signature}`,
           type: "signature",
           ...Function_Exception_Detail,
           target: `thirdPartySignatures[${thirdPartySignatures.indexOf(thirdPartySignature)}]`,
@@ -325,7 +325,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
           }))
         ) {
           throw new ArgumentIllegalException(PROP_IS_INVALID, {
-            prop: "signSignature",
+            prop: `signSignature ${signSignature}`,
             type: "signature",
             ...Function_Exception_Detail,
             target: `thirdPartySignatures[${thirdPartySignatures.indexOf(thirdPartySignature)}]`,

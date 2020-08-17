@@ -111,7 +111,7 @@ export class EventLogicVerifier {
         const { magic, assetType } = this.configHelper;
         if (magic !== this.configHelper.magic) {
           throw new ConsensusException(SHOULD_BE, {
-            to_compare_prop: "magic",
+            to_compare_prop: `magic ${magic}`,
             to_target: "applyInfo",
             be_compare_prop: this.configHelper.magic,
             ...Function_Exception_Detail,
@@ -119,7 +119,7 @@ export class EventLogicVerifier {
         }
         if (assetType !== this.configHelper.assetType) {
           throw new ConsensusException(SHOULD_BE, {
-            to_compare_prop: "assetType",
+            to_compare_prop: `assetType ${assetType}`,
             to_target: "applyInfo",
             be_compare_prop: this.configHelper.assetType,
             ...Function_Exception_Detail,

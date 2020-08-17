@@ -127,7 +127,7 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
 
     if (!baseHelper.isValidBlockParticipation(roundLastBlockRemark.blockParticipation)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "blockParticipation",
+        prop: `blockParticipation ${roundLastBlockRemark.blockParticipation}`,
         type: "block participation",
         ...RoundLastBlockRemark_Exception_Detail,
       });
@@ -135,7 +135,7 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
 
     if (!baseHelper.isValidAccountEquity(roundLastBlockRemark.generatorEquity)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "generatorEquity",
+        prop: `generatorEquity ${roundLastBlockRemark.generatorEquity}`,
         type: "account equity",
         ...RoundLastBlockRemark_Exception_Detail,
       });
@@ -143,7 +143,7 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
 
     if (!baseHelper.isValidRemarkHash(roundLastBlockRemark.hash)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "hash",
+        prop: `hash ${roundLastBlockRemark.hash}`,
         type: "remarkHash",
         ...RoundLastBlockRemark_Exception_Detail,
       });

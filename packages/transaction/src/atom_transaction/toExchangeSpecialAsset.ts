@@ -89,7 +89,7 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
 
     if (body.fromMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "fromMagic",
+        to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
@@ -98,7 +98,7 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
 
     if (body.toMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "toMagic",
+        to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
@@ -198,21 +198,21 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
       if (exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID) {
         if (!baseHelper.isValidDAppId(beExchangeAsset)) {
           throw new ArgumentIllegalException(PROP_IS_INVALID, {
-            prop: "beExchangeAsset",
+            prop: `beExchangeAsset ${beExchangeAsset}`,
             ...ToExchangeSpecialAssetAsset_Exception_Detail,
           });
         }
       } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME) {
         if (!baseHelper.isValidLnsName(beExchangeAsset)) {
           throw new ArgumentIllegalException(PROP_IS_INVALID, {
-            prop: "beExchangeAsset",
+            prop: `beExchangeAsset ${beExchangeAsset}`,
             ...ToExchangeSpecialAssetAsset_Exception_Detail,
           });
         }
       }
       if (!baseHelper.isValidAssetType(toExchangeAsset)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "toExchangeAsset",
+          prop: `toExchangeAsset ${toExchangeAsset}`,
           ...ToExchangeSpecialAssetAsset_Exception_Detail,
         });
       }
@@ -220,21 +220,21 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
       if (exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID) {
         if (!baseHelper.isValidDAppId(toExchangeAsset)) {
           throw new ArgumentIllegalException(PROP_IS_INVALID, {
-            prop: "toExchangeAsset",
+            prop: `toExchangeAsset ${toExchangeAsset}`,
             ...ToExchangeSpecialAssetAsset_Exception_Detail,
           });
         }
       } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME) {
         if (!baseHelper.isValidLnsName(toExchangeAsset)) {
           throw new ArgumentIllegalException(PROP_IS_INVALID, {
-            prop: "toExchangeAsset",
+            prop: `toExchangeAsset ${toExchangeAsset}`,
             ...ToExchangeSpecialAssetAsset_Exception_Detail,
           });
         }
       }
       if (!baseHelper.isValidAssetType(beExchangeAsset)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "beExchangeAsset",
+          prop: `beExchangeAsset ${beExchangeAsset}`,
           ...ToExchangeSpecialAssetAsset_Exception_Detail,
         });
       }
@@ -249,7 +249,7 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
 
     if (!baseHelper.isValidAssetNumber(toExchangeSpecialAsset.exchangeNumber)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "beExchangeNumber",
+        prop: `beExchangeNumber ${toExchangeSpecialAsset.exchangeNumber}`,
         type: "asset number",
         ...ToExchangeSpecialAssetAsset_Exception_Detail,
       });

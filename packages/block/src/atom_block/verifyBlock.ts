@@ -86,8 +86,8 @@ export class VerifyBlockCore<T extends Block> {
 
     if (totalTransaction !== block.numberOfTransactions) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "numberOfTransactions",
-        be_compare_prop: "transactions length",
+        to_compare_prop: `numberOfTransactions ${block.numberOfTransactions}`,
+        be_compare_prop: `transactions length ${totalTransaction}`,
         to_target: "block",
         be_target: "block",
         ...Block_Exception_Detail,
@@ -96,8 +96,8 @@ export class VerifyBlockCore<T extends Block> {
 
     if (totalTransaction > config.maxTPSPerBlock * config.forgeInterval) {
       throw new ArgumentFormatException(PROP_SHOULD_LTE_FIELD, {
-        prop: "transactions length",
-        field: `maxTPSPerBlock ${config.maxTPSPerBlock}`,
+        prop: `transactions length ${totalTransaction}`,
+        field: `maxTrsPerBlock ${config.maxTPSPerBlock * config.forgeInterval}`,
         ...Block_Exception_Detail,
       });
     }
@@ -112,7 +112,7 @@ export class VerifyBlockCore<T extends Block> {
 
     if (!baseHelper.isValidAssetNumber(totalAmount)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "totalAmount",
+        prop: `totalAmount ${totalAmount}`,
         type: "asset number",
         ...Block_Exception_Detail,
       });
@@ -127,7 +127,7 @@ export class VerifyBlockCore<T extends Block> {
 
     if (!baseHelper.isValidAssetNumber(totalFee)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "totalFee",
+        prop: `totalFee ${totalFee}`,
         type: "asset number",
         ...Block_Exception_Detail,
       });
@@ -174,7 +174,7 @@ export class VerifyBlockCore<T extends Block> {
           .verify(transaction, config);
         if (appliedTransactions.has(transaction.signature)) {
           throw new ArgumentIllegalException(DUPLICATE, {
-            variable: "transaction signature",
+            variable: `transaction signature ${transaction.signature}`,
             value: transaction,
             ...Block_Exception_Detail,
           });
@@ -193,7 +193,7 @@ export class VerifyBlockCore<T extends Block> {
         for (const transactionAssetChange of tranItem.transactionAssetChanges) {
           if (BigInt(transactionAssetChange.assetBalance) < BigInt(0)) {
             throw new ArgumentIllegalException(PROP_IS_INVALID, {
-              prop: "assetBalance",
+              prop: `assetBalance ${transactionAssetChange.assetBalance}`,
               type: "transactionAssetChanges",
               ...Block_Exception_Detail,
             });
@@ -238,7 +238,7 @@ export class VerifyBlockCore<T extends Block> {
 
     if (stotalAmount !== BigInt(totalAmount)) {
       throw new ArgumentIllegalException(PROP_SHOULD_EQ_FIELD, {
-        prop: "totalAmount",
+        prop: `totalAmount ${totalAmount}`,
         field: stotalAmount.toString(),
         ...Block_Exception_Detail,
       });
@@ -246,7 +246,7 @@ export class VerifyBlockCore<T extends Block> {
 
     if (stotalFee !== BigInt(totalFee)) {
       throw new ArgumentIllegalException(PROP_SHOULD_EQ_FIELD, {
-        prop: "totalFee",
+        prop: `totalFee ${totalFee}`,
         field: stotalFee,
         ...Block_Exception_Detail,
       });
@@ -254,7 +254,7 @@ export class VerifyBlockCore<T extends Block> {
 
     if (block.payloadLength !== payloadLength) {
       throw new ArgumentIllegalException(PROP_SHOULD_EQ_FIELD, {
-        prop: "payloadLength",
+        prop: `payloadLength ${block.payloadLength}`,
         field: payloadLength,
         ...Block_Exception_Detail,
       });
@@ -270,9 +270,11 @@ export class VerifyBlockCore<T extends Block> {
 
     const payloadHashHex = await payloadHash.digest("hex");
     if (block.payloadHash !== payloadHashHex) {
-      throw new ArgumentIllegalException(TOO_LARGE, {
-        prop: "payloadHash",
-        reason: `payloadHash: ${block.payloadHash} not equal: ${payloadHashHex}`,
+      throw new ArgumentIllegalException(NOT_MATCH, {
+        to_compare_prop: `payloadHash ${payloadHashHex}`,
+        be_compare_prop: `payloadHash ${block.payloadHash}`,
+        to_target: `calculate`,
+        be_target: `block`,
         ...Block_Exception_Detail,
       });
     }
@@ -281,8 +283,8 @@ export class VerifyBlockCore<T extends Block> {
     if (block.numberOfTransactions !== numberOfTransactions) {
       /// 区块的交易数对不上
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "numberOfTransactions",
-        be_compare_prop: "numberOfTransactions",
+        to_compare_prop: `numberOfTransactions ${block.numberOfTransactions}`,
+        be_compare_prop: `numberOfTransactions ${numberOfTransactions}`,
         to_target: "block",
         be_target: "calculate",
         ...Function_Exception_Detail,
@@ -297,8 +299,8 @@ export class VerifyBlockCore<T extends Block> {
     });
     if (block.remark.blockParticipation !== blockParticipation) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "blockParticipation",
-        be_compare_prop: "blockParticipation",
+        to_compare_prop: `blockParticipation ${block.remark.blockParticipation}`,
+        be_compare_prop: `blockParticipation ${blockParticipation}`,
         to_target: "block",
         be_target: "calculate",
         ...Function_Exception_Detail,
@@ -326,14 +328,14 @@ export class VerifyBlockCore<T extends Block> {
       baseHelper.isValidBlockSignature(block.previousBlockSignature)
     ) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "previousBlockSignature",
+        prop: `previousBlockSignature ${block.previousBlockSignature}`,
         ...Block_Exception_Detail,
       });
     }
 
     if (!baseHelper.isNaturalNumber(block.numberOfTransactions)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "numberOfTransactions",
+        prop: `numberOfTransactions ${block.numberOfTransactions}`,
         type: "natural number",
         ...Block_Exception_Detail,
       });
@@ -341,14 +343,14 @@ export class VerifyBlockCore<T extends Block> {
 
     if (!block.payloadHash) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "payloadHash",
+        prop: `payloadHash ${block.payloadHash}`,
         ...Block_Exception_Detail,
       });
     }
 
     if (!baseHelper.isNaturalNumber(block.payloadLength)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "payloadLength",
+        prop: `payloadLength ${block.payloadLength}`,
         type: "natural number",
         ...Block_Exception_Detail,
       });
@@ -356,8 +358,8 @@ export class VerifyBlockCore<T extends Block> {
 
     if (block.magic !== config.magic) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "block.magic",
-        be_compare_prop: "genesisBlock.magic",
+        to_compare_prop: `block.magic ${block.magic}`,
+        be_compare_prop: `genesisBlock.magic ${config.magic}`,
         to_target: "block_body",
         be_target: "genesis_block",
         ...Block_Exception_Detail,
@@ -373,7 +375,7 @@ export class VerifyBlockCore<T extends Block> {
 
     if (!baseHelper.isValidPublicKey(block.generatorPublicKey)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "generatorPublicKey",
+        prop: `generatorPublicKey ${block.generatorPublicKey}`,
         type: "account publicKey",
         ...Block_Exception_Detail,
       });
@@ -388,7 +390,7 @@ export class VerifyBlockCore<T extends Block> {
 
     if (!baseHelper.isValidSignature(block.signature)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "signature",
+        prop: `signature ${block.signature}`,
         type: "signature",
         ...Block_Exception_Detail,
       });

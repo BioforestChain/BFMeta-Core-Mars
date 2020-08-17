@@ -186,7 +186,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
 
     if (!(await accountBaseHelper.isAddress(body.senderId))) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "senderId",
+        prop: `senderId ${body.senderId}`,
         type: "account address",
         ...TransactionBody_Exception_Detail,
       });
@@ -201,21 +201,17 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
 
     if (!baseHelper.isValidPublicKey(body.senderPublicKey)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "senderPublicKey",
+        prop: `senderPublicKey ${body.senderPublicKey}`,
         type: "account publicKey",
         ...TransactionBody_Exception_Detail,
       });
     }
 
-    if (
-      body.senderId !==
-      (await accountBaseHelper.getAddressFromPublicKeyString(body.senderPublicKey))
-    ) {
+    const address = await accountBaseHelper.getAddressFromPublicKeyString(body.senderPublicKey);
+    if (body.senderId !== address) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: body.senderId,
-        be_compare_prop: await accountBaseHelper.getAddressFromPublicKeyString(
-          body.senderPublicKey,
-        ),
+        to_compare_prop: `senderId ${body.senderId}`,
+        be_compare_prop: `publicKey => address ${address}`,
         to_target: "senderPublicKey",
         be_target: "body",
         ...TransactionBody_Exception_Detail,
@@ -225,7 +221,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     if (body.senderSecondPublicKey) {
       if (!baseHelper.isValidPublicKey(body.senderSecondPublicKey)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "senderSecondPublicKey",
+          prop: `senderSecondPublicKey ${body.senderSecondPublicKey}`,
           type: "account publicKey",
           ...TransactionBody_Exception_Detail,
         });
@@ -235,7 +231,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     if (body.recipientId !== undefined) {
       if (!(await accountBaseHelper.isAddress(body.recipientId))) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "recipientId",
+          prop: `recipientId ${body.recipientId}`,
           type: "account address",
           ...TransactionBody_Exception_Detail,
         });
@@ -244,7 +240,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
 
     if (!(await this.baseHelper.isValidRange(body.rangeType, body.range))) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "range",
+        prop: `range ${body.rangeType}`,
         type: "transaction range",
         ...TransactionBody_Exception_Detail,
       });
@@ -252,7 +248,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
 
     if (!baseHelper.isNaturalNumber(body.timestamp)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "timestamp",
+        prop: `timestamp ${body.timestamp}`,
         type: "natural number",
         ...TransactionBody_Exception_Detail,
       });
@@ -261,7 +257,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     const applyBlockHeight = body.applyBlockHeight;
     if (!baseHelper.isPositiveInteger(applyBlockHeight)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "applyBlockHeight",
+        prop: `applyBlockHeight ${applyBlockHeight}`,
         type: "positive integer",
         ...TransactionBody_Exception_Detail,
       });
@@ -270,7 +266,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     const effectiveBlockHeight = body.effectiveBlockHeight;
     if (!baseHelper.isPositiveInteger(effectiveBlockHeight)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "effectiveBlockHeight",
+        prop: `effectiveBlockHeight ${effectiveBlockHeight}`,
         type: "positive integer",
         ...TransactionBody_Exception_Detail,
       });
@@ -278,7 +274,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
 
     if (effectiveBlockHeight < applyBlockHeight) {
       throw new ArgumentIllegalException(PROP_SHOULD_GTE_FIELD, {
-        prop: "effectiveBlockHeight",
+        prop: `effectiveBlockHeight ${effectiveBlockHeight}`,
         field: applyBlockHeight,
         ...TransactionBody_Exception_Detail,
       });
@@ -288,7 +284,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     const maxEffectiveBlockHeight = applyBlockHeight + maxApplyAndConfirmedBlockHeightDiff;
     if (effectiveBlockHeight > maxEffectiveBlockHeight) {
       throw new ArgumentIllegalException(PROP_SHOULD_LTE_FIELD, {
-        prop: "effectiveBlockHeight",
+        prop: `effectiveBlockHeight ${effectiveBlockHeight}`,
         field: maxEffectiveBlockHeight,
         ...TransactionBody_Exception_Detail,
       });
@@ -306,7 +302,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
 
     if (!baseHelper.isValidChainMagic(body.fromMagic)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "fromMagic",
+        prop: `fromMagic ${body.fromMagic}`,
         type: "chain magic",
         ...TransactionBody_Exception_Detail,
       });
@@ -321,7 +317,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
 
     if (!baseHelper.isValidChainMagic(body.toMagic)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "toMagic",
+        prop: `toMagic ${body.toMagic}`,
         type: "chain magic",
         ...TransactionBody_Exception_Detail,
       });
@@ -330,7 +326,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     if (body.sourceIP !== undefined) {
       if (!baseHelper.isIp(body.sourceIP)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "sourceIP",
+          prop: `sourceIP ${body.sourceIP}`,
           type: "ip",
           ...TransactionBody_Exception_Detail,
         });
@@ -340,7 +336,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     if (body.dappid !== undefined) {
       if (!baseHelper.isValidDAppId(body.dappid)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "dappid",
+          prop: `dappid ${body.dappid}`,
           type: "dappid",
           ...TransactionBody_Exception_Detail,
         });
@@ -350,7 +346,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     if (body.lns !== undefined) {
       if (!baseHelper.isValidLnsName(body.lns, config.chainName)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "lns",
+          prop: `lns ${body.lns}`,
           type: "location name",
           ...TransactionBody_Exception_Detail,
         });
@@ -402,7 +398,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
 
     if (!baseHelper.isValidSignature(transaction.signature)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "signature",
+        prop: `signature ${transaction.signature}`,
         type: "signature",
         ...Trs_Exception_Detail,
       });
@@ -411,7 +407,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     if (transaction.signSignature) {
       if (!baseHelper.isValidSignature(transaction.signSignature)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "signSignature",
+          prop: `signSignature ${transaction.signSignature}`,
           type: "signature",
           ...Trs_Exception_Detail,
         });
@@ -476,7 +472,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
 
     if (!baseHelper.isValidAssetNumber(amount)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: propName,
+        prop: `${propName} ${amount}`,
         type: "asset number",
         ...Function_Exception_Detail,
       });
@@ -486,7 +482,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     const inputAmount = BigInt(amount);
     if (minAmount >= inputAmount) {
       throw new ArgumentIllegalException(PROP_SHOULD_GTE_FIELD, {
-        prop: propName,
+        prop: `${propName} ${amount}`,
         field: "0",
         ...Function_Exception_Detail,
       });
@@ -511,7 +507,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
 
     if (!baseHelper.isValidAssetNumber(fee)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "fee",
+        prop: `fee ${fee}`,
         type: "asset number",
         ...Function_Exception_Detail,
       });
@@ -521,7 +517,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     const miniUnit = BigInt("0");
     if (miniUnit > inputFee) {
       throw new ArgumentIllegalException(PROP_SHOULD_GTE_FIELD, {
-        prop: "fee",
+        prop: `fee ${fee}`,
         field: "0",
         ...Function_Exception_Detail,
       });
@@ -537,7 +533,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
   emptyRangeType(body: BFChainCore.TxBodyJSON, Function_Exception_Detail: FunctionExceptionDetail) {
     if (body.rangeType !== RANGE_TYPE.EMPTY) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "rangeType",
+        to_compare_prop: `rangeType ${body.rangeType}`,
         to_target: "body",
         be_compare_prop: "RANGE_TYPE.EMPTY",
         ...Function_Exception_Detail,
@@ -565,7 +561,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     }
     if (!this.baseHelper.isValidChainName(chainName)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: propName,
+        prop: `${propName} ${chainName}`,
         type: "chain name",
         ...Function_Exception_Detail,
       });
@@ -592,7 +588,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     }
     if (!this.baseHelper.isValidChainMagic(chainMagic)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: propName,
+        prop: `${propName} ${chainMagic}`,
         type: "chain magic",
         ...Function_Exception_Detail,
       });
@@ -619,7 +615,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     }
     if (!this.baseHelper.isValidAssetType(assetType)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: propName,
+        prop: `${propName} ${assetType}`,
         type: "asset type",
         ...Function_Exception_Detail,
       });

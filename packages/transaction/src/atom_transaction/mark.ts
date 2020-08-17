@@ -84,18 +84,18 @@ export class MarkTransactionFactory extends TransactionFactory<MarkTransaction> 
 
     if (body.fromMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "fromMagic",
+        to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
-        be_compare_prop: "chain magic",
+        be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
       });
     }
 
     if (body.toMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "toMagic",
+        to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
-        be_compare_prop: "chain magic",
+        be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
       });
     }
@@ -110,7 +110,7 @@ export class MarkTransactionFactory extends TransactionFactory<MarkTransaction> 
     const storage = body.storage;
     if (storage.key !== "dappid") {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "key",
+        to_compare_prop: `storage.key ${storage.key}`,
         to_target: "storage",
         be_compare_prop: "dappid",
         ...Function_Exception_Detail,
@@ -137,8 +137,8 @@ export class MarkTransactionFactory extends TransactionFactory<MarkTransaction> 
 
     if (storage.value !== dapp.dappid) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "value",
-        be_compare_prop: "dappid",
+        to_compare_prop: `storage.value ${storage.value}`,
+        be_compare_prop: `dappid ${dapp.dappid}`,
         to_target: "storage",
         be_target: "mark",
         ...Function_Exception_Detail,
@@ -147,8 +147,8 @@ export class MarkTransactionFactory extends TransactionFactory<MarkTransaction> 
 
     if (mark.markPossessor !== recipientId) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: mark.markPossessor,
-        be_compare_prop: recipientId,
+        to_compare_prop: `markPossessor, ${mark.markPossessor}`,
+        be_compare_prop: `recipientId ${recipientId}`,
         to_target: "body",
         be_target: "mark",
         ...MarkAsset_Exception_Detail,
@@ -165,7 +165,7 @@ export class MarkTransactionFactory extends TransactionFactory<MarkTransaction> 
 
     if (!baseHelper.isString(content)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "content",
+        prop: `content ${content}`,
         type: "string",
         ...MarkAsset_Exception_Detail,
       });
@@ -173,7 +173,7 @@ export class MarkTransactionFactory extends TransactionFactory<MarkTransaction> 
 
     if (content.length > 1024) {
       throw new ArgumentIllegalException(OVER_LENGTH, {
-        prop: "content",
+        prop: `content ${content}`,
         limit: 1024,
         ...MarkAsset_Exception_Detail,
       });
@@ -189,7 +189,7 @@ export class MarkTransactionFactory extends TransactionFactory<MarkTransaction> 
 
     if (!baseHelper.isString(action)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "action",
+        prop: `action ${action}`,
         type: "string",
         ...MarkAsset_Exception_Detail,
       });
@@ -198,7 +198,7 @@ export class MarkTransactionFactory extends TransactionFactory<MarkTransaction> 
     const len = action.length;
     if (len < 1 || len > 10) {
       throw new ArgumentIllegalException(NOT_IN_EXPECTED_RANGE, {
-        prop: "action",
+        prop: `action ${action}`,
         min: 1,
         max: 10,
         ...MarkAsset_Exception_Detail,

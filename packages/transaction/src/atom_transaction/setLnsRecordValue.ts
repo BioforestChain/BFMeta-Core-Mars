@@ -90,7 +90,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<
 
     if (body.fromMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "fromMagic",
+        to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
@@ -99,7 +99,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<
 
     if (body.toMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "toMagic",
+        to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
@@ -116,7 +116,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<
     const storage = body.storage;
     if (storage.key !== "name") {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "key",
+        to_compare_prop: `storage.key ${storage.key}`,
         to_target: "storage",
         be_compare_prop: "name",
         ...Function_Exception_Detail,
@@ -148,7 +148,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<
 
     if (!baseHelper.isValidLnsName(name)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "name",
+        prop: `name ${name}`,
         type: "location name",
         ...LnsRecordValueAsset_Exception_Detail,
       });
@@ -156,8 +156,8 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<
 
     if (storage.value !== name) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: storage.value,
-        be_compare_prop: name,
+        to_compare_prop: `storage.value ${storage.value}`,
+        be_compare_prop: `name ${name}`,
         to_target: "storage",
         be_target: "lnsRecordValue",
         ...Function_Exception_Detail,
@@ -253,7 +253,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<
 
     if (!baseHelper.isValidLocationNameRecord(record)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "record",
+        prop: `record ${record}`,
         type: "location name record",
         ...LnsRecordValueAsset_Exception_Detail,
       });
@@ -264,7 +264,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<
     if (RECORD_TYPE.IPV4 === recordType) {
       if (!baseHelper.isIpV4(recordValue)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "recordValue",
+          prop: `recordValue ${recordValue}`,
           type: "ipv4",
           ...LnsRecordValueAsset_Exception_Detail,
         });
@@ -272,7 +272,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<
     } else if (RECORD_TYPE.IPV6 === recordType) {
       if (!baseHelper.isIpV6(recordValue)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "recordValue",
+          prop: `recordValue ${recordValue}`,
           type: "ipv6",
           ...LnsRecordValueAsset_Exception_Detail,
         });
@@ -280,7 +280,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<
     } else if (RECORD_TYPE.LNG_LAT === recordType) {
       if (!baseHelper.isString(recordValue)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "recordValue",
+          prop: `recordValue ${recordValue}`,
           type: "string",
           ...LnsRecordValueAsset_Exception_Detail,
         });
@@ -288,7 +288,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<
     } else if (RECORD_TYPE.ADDRESSV1 === recordType) {
       if (!(await accountBaseHelper.isAddress(recordValue))) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "recordValue",
+          prop: `recordValue ${recordValue}`,
           type: "block chain account address",
           ...LnsRecordValueAsset_Exception_Detail,
         });

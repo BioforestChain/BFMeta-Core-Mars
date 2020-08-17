@@ -488,7 +488,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   private checkTrsMaxBytes(byteLength: number) {
     if (BigInt(byteLength) > BigInt(this.configHelper.maxTransactionSize)) {
       throw new ConsensusException(INVALID_TRANSACTION_BYTE_LENGTH, {
-        reason: "The size of the transaction exceeds the limit",
+        reason: `The size of the transaction ${byteLength} exceeds the limit`,
         function: "checkTrsMaxBytes",
       });
     }

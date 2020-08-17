@@ -140,8 +140,8 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
     // be交易的接收账户必须是to交易的发起账户
     if (transaction.recipientId !== toExchangeSpecialAssetJson.senderId) {
       throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: "recipientId",
-        be_compare_prop: "senderId",
+        to_compare_prop: `BeExchangeSpecialAssetTransaction.recipientId ${transaction.recipientId}`,
+        be_compare_prop: `ToExchangeSpecialAssetTransaction.senderId ${toExchangeSpecialAssetJson.senderId}`,
         to_target: "BeExchangeSpecialAssetTransaction",
         be_target: "ToExchangeSpecialAssetTransaction",
         function: "isValidRecipientId",
@@ -193,7 +193,7 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
     if (rangeType & RANGE_TYPE.MULTI_ADDRESS) {
       if (!range.includes(transaction.senderId)) {
         throw new ConsensusException(SHOULD_BE, {
-          to_compare_prop: "senderId",
+          to_compare_prop: `senderId ${transaction.senderId}`,
           to_target: "beExchangeSpecialAssetTransaction",
           be_compare_prop: "teExchangeSpecialAssetTransaction.range",
           ...Function_Exception_Detail,
@@ -202,7 +202,7 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
     } else if (rangeType & RANGE_TYPE.MULTI_DAPPID) {
       if (!transaction.dappid || !range.includes(transaction.dappid)) {
         throw new ConsensusException(SHOULD_BE, {
-          to_compare_prop: "dappid",
+          to_compare_prop: `dappid ${transaction.senderId}`,
           to_target: "beExchangeSpecialAssetTransaction",
           be_compare_prop: "teExchangeSpecialAssetTransaction.range",
           ...Function_Exception_Detail,
@@ -211,7 +211,7 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
     } else if (rangeType & RANGE_TYPE.MULTI_LOCATION_NAME) {
       if (!transaction.lns || !range.includes(transaction.lns)) {
         throw new ConsensusException(SHOULD_BE, {
-          to_compare_prop: "lns",
+          to_compare_prop: `lns ${transaction.lns}`,
           to_target: "beExchangeSpecialAssetTransaction",
           be_compare_prop: "teExchangeSpecialAssetTransaction.range",
           ...Function_Exception_Detail,

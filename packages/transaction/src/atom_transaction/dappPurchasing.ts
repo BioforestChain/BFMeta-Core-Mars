@@ -93,7 +93,7 @@ export class DAppPurchasingTransactionFactory extends TransactionFactory<
 
     if (body.fromMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "fromMagic",
+        to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
@@ -102,7 +102,7 @@ export class DAppPurchasingTransactionFactory extends TransactionFactory<
 
     if (body.toMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "toMagic",
+        to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
@@ -119,7 +119,7 @@ export class DAppPurchasingTransactionFactory extends TransactionFactory<
     const storage = body.storage;
     if (storage.key !== "dappid") {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "key",
+        to_compare_prop: `storage.key ${storage.key}`,
         to_target: "storage",
         be_compare_prop: "dappid",
         ...Function_Exception_Detail,
@@ -146,26 +146,26 @@ export class DAppPurchasingTransactionFactory extends TransactionFactory<
 
     if (dappPossessor !== recipientId) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "dappPossessor",
+        to_compare_prop: `dappPossessor ${dappPossessor}`,
         to_target: "dappAsset",
-        be_compare_prop: "recipientId",
+        be_compare_prop: `recipientId ${recipientId}`,
         ...DappPurchasingAsset_Exception_Detail,
       });
     }
 
     if (dappPossessor === body.senderId) {
       throw new ArgumentIllegalException(SHOULD_NOT_BE, {
-        to_compare_prop: "senderId",
+        to_compare_prop: `senderId ${body.senderId}`,
         to_target: "body",
-        be_compare_prop: "dapp developer",
+        be_compare_prop: `dapp developer ${dappPossessor}`,
         ...DappPurchasingAsset_Exception_Detail,
       });
     }
 
     if (storage.value !== dappAsset.dappid) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "value",
-        be_compare_prop: "dappid",
+        to_compare_prop: `storage.value ${storage.value}`,
+        be_compare_prop: `dappid ${dappAsset.dappid}`,
         to_target: "storage",
         be_target: "dapp",
         ...DappPurchasingAsset_Exception_Detail,
@@ -174,7 +174,7 @@ export class DAppPurchasingTransactionFactory extends TransactionFactory<
 
     if (dappAsset.type !== DAPP_TYPE.PAID_APP) {
       throw new ArgumentIllegalException(SHOULD_NOT_BE, {
-        to_compare_prop: "type",
+        to_compare_prop: `type ${dappAsset.type}`,
         to_target: "dappAsset",
         be_compare_prop: DAPP_TYPE.PAID_APP,
         ...DappPurchasingAsset_Exception_Detail,

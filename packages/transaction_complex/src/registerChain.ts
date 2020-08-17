@@ -78,7 +78,7 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
 
     if (body.fromMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "fromMagic",
+        to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "chain magic",
         ...Function_Exception_Detail,
@@ -87,7 +87,7 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
 
     if (body.toMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "toMagic",
+        to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "chain magic",
         ...Function_Exception_Detail,
@@ -104,7 +104,7 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
     const storage = body.storage;
     if (storage.key !== "magic") {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "key",
+        to_compare_prop: `key ${storage.key}`,
         to_target: "storage",
         be_compare_prop: "magic",
         ...Function_Exception_Detail,
@@ -135,8 +135,8 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
 
     if (config.initials !== genesisBlockJson.remark.bnid) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: config.initials,
-        be_compare_prop: genesisBlockJson.remark.bnid,
+        to_compare_prop: `initials ${config.initials}`,
+        be_compare_prop: `bnid ${genesisBlockJson.remark.bnid}`,
         to_target: "config",
         be_target: "genesisBlockJson.remark",
         ...Function_Exception_Detail,

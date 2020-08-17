@@ -105,7 +105,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (!baseHelper.isValidAssetType(remark.assetType)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "assetType",
+        prop: `assetType ${remark.assetType}`,
         ...GenesisBlockRemark_Exception_Detail,
       });
     }
@@ -119,7 +119,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (!baseHelper.isValidChainName(remark.chainName)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "chainName",
+        prop: `chainName ${remark.chainName}`,
         ...GenesisBlockRemark_Exception_Detail,
       });
     }
@@ -133,7 +133,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (!baseHelper.isValidChainMagic(remark.magic)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "magic",
+        prop: `magic ${remark.magic}`,
         type: "chain magic",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -149,7 +149,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (bnid !== BNID_TYPE.TESTNET && bnid !== BNID_TYPE.MAINNET) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "bnid",
+        to_compare_prop: `bnid ${bnid}`,
         to_target: "remark",
         be_compare_prop: "BNID_TYPE",
         ...GenesisBlockRemark_Exception_Detail,
@@ -158,7 +158,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (!baseHelper.isPositiveInteger(remark.beginEpochTime)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "beginEpochTime",
+        prop: `beginEpochTime ${remark.beginEpochTime}`,
         type: "positive integer",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -173,7 +173,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (!baseHelper.isValidLnsName(remark.genesisNodeAddress, config.chainName)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "genesisNodeAddress",
+        prop: `genesisNodeAddress ${remark.genesisNodeAddress}`,
         type: "url",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -188,7 +188,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (!baseHelper.isValidAssetNumber(remark.generateTotalAmount)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "generateTotalAmount",
+        prop: `generateTotalAmount ${remark.generateTotalAmount}`,
         type: "asset number",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -196,7 +196,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (!baseHelper.isPositiveFloatContainZero(remark.minTransactionFeePerByte)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "minTransactionFeePerByte",
+        prop: `minTransactionFeePerByte ${remark.minTransactionFeePerByte}`,
         type: "float contain zero",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -204,7 +204,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (!baseHelper.isPositiveInteger(remark.maxPayloadLength)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "maxPayloadLength",
+        prop: `maxPayloadLength ${remark.maxPayloadLength}`,
         type: "positive integer",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -212,7 +212,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (!baseHelper.isPositiveInteger(remark.maxTPSPerBlock)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "maxTPSPerBlock",
+        prop: `maxTPSPerBlock ${remark.maxTPSPerBlock}`,
         type: "positive integer",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -220,7 +220,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (!baseHelper.isPositiveInteger(remark.maxTransactionSize)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "maxTransactionSize",
+        prop: `maxTransactionSize ${remark.maxTransactionSize}`,
         type: "positive integer",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -228,7 +228,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (!baseHelper.isPositiveInteger(remark.maxBlockRemarkSize)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "maxBlockRemarkSize",
+        prop: `maxBlockRemarkSize ${remark.maxBlockRemarkSize}`,
         type: "positive integer",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -236,7 +236,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (!baseHelper.isNaturalNumber(remark.consessusBeforeSyncBlockDiff)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "consessusBeforeSyncBlockDiff",
+        prop: `consessusBeforeSyncBlockDiff ${remark.consessusBeforeSyncBlockDiff}`,
         type: "natural number",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -244,7 +244,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (!baseHelper.isNaturalNumber(remark.maxDelegateTxsPerRound)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "maxDelegateTxsPerRound",
+        prop: `maxDelegateTxsPerRound ${remark.maxDelegateTxsPerRound}`,
         type: "natural number",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -252,7 +252,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (!baseHelper.isPositiveInteger(remark.maxGrabTimesOfGiftAsset)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "maxGrabTimesOfGiftAsset",
+        prop: `maxGrabTimesOfGiftAsset ${remark.maxGrabTimesOfGiftAsset}`,
         type: "positive integer",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -266,7 +266,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
     }
     if (!baseHelper.isValidAssetNumber(remark.issueAssetMinChainAsset)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "issueAssetMinChainAsset",
+        prop: `issueAssetMinChainAsset ${remark.issueAssetMinChainAsset}`,
         type: "asset number",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -274,13 +274,13 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (!remark.registerChainMinChainAsset) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "registerChainMinChainAsset",
+        prop: `registerChainMinChainAsset ${remark.registerChainMinChainAsset}`,
         ...GenesisBlockRemark_Exception_Detail,
       });
     }
     if (!baseHelper.isValidAssetNumber(remark.registerChainMinChainAsset)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "registerChainMinChainAsset",
+        prop: `registerChainMinChainAsset ${remark.registerChainMinChainAsset}`,
         type: "asset number",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -288,7 +288,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (!baseHelper.isPositiveInteger(remark.chainAssetAndDigitalAssetExchangeRate)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "chainAssetAndDigitalAssetExchangeRate",
+        prop: `chainAssetAndDigitalAssetExchangeRate ${remark.chainAssetAndDigitalAssetExchangeRate}`,
         type: "positive integer",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -296,7 +296,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (!baseHelper.isNaturalNumber(remark.chainAssetRewardWeight)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "chainAssetRewardWeight",
+        prop: `chainAssetRewardWeight ${remark.chainAssetRewardWeight}`,
         type: "natural number",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -304,7 +304,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (!baseHelper.isNaturalNumber(remark.numberOfTransactionRewardWeight)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "numberOfTransactionRewardWeight",
+        prop: `numberOfTransactionRewardWeight ${remark.numberOfTransactionRewardWeight}`,
         type: "natural number",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -312,7 +312,9 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (remark.chainAssetRewardWeight + remark.numberOfTransactionRewardWeight === 0) {
       throw new ArgumentIllegalException(PROP_SHOULD_GT_FIELD, {
-        prop: "remark.chainAssetRewardWeight + remark.numberOfTransactionRewardWeight",
+        prop: `remark.chainAssetRewardWeight + remark.numberOfTransactionRewardWeight ${
+          remark.chainAssetRewardWeight + remark.numberOfTransactionRewardWeight
+        }`,
         field: 0,
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -320,7 +322,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (!baseHelper.isPositiveInteger(remark.maxApplyAndConfirmedBlockHeightDiff)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "maxApplyAndConfirmedBlockHeightDiff",
+        prop: `maxApplyAndConfirmedBlockHeightDiff ${remark.maxApplyAndConfirmedBlockHeightDiff}`,
         type: "positive integer",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -328,7 +330,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (!baseHelper.isPositiveInteger(remark.blockPerRound)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "blockPerRound",
+        prop: `blockPerRound ${remark.blockPerRound}`,
         type: "positive integer",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -336,7 +338,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (!baseHelper.isPositiveInteger(remark.delegates)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "delegates",
+        prop: `delegates ${remark.delegates}`,
         type: "positive integer",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -344,7 +346,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (!baseHelper.isBoolean(remark.whetherToAllowDelegateContinusElections)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "whetherToAllowDelegateContinusElections",
+        prop: `whetherToAllowDelegateContinusElections ${remark.whetherToAllowDelegateContinusElections}`,
         type: "boolean",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -352,7 +354,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (!baseHelper.isPositiveInteger(remark.forgeInterval)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "forgeInterval",
+        prop: `forgeInterval ${remark.forgeInterval}`,
         type: "positive integer",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -360,13 +362,13 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (!remark.rewardPercent) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "rewardPercent",
+        prop: `rewardPercent`,
         ...GenesisBlockRemark_Exception_Detail,
       });
     }
     if (!baseHelper.isValidChainRewardPercent(remark.rewardPercent)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "rewardPercent",
+        prop: `rewardPercent ${remark.rewardPercent}`,
         type: "chain reward percent",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -380,7 +382,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
     }
     if (!baseHelper.isValidChainPorts(remark.ports)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "ports",
+        prop: `ports ${remark.ports}`,
         type: "chain ports",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -394,7 +396,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
     }
     if (!baseHelper.isValidChainRewardMilestones(remark.rewardPerBlock)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "rewardPerBlock",
+        prop: `rewardPerBlock ${remark.rewardPerBlock}`,
         type: "chain rewards milestones",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -402,7 +404,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (remark.nextRoundDelegates.length !== config.blockPerRound) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: remark.nextRoundDelegates.length,
+        to_compare_prop: `nextRoundDelegates length ${remark.nextRoundDelegates.length}`,
         be_compare_prop: config.blockPerRound,
         to_target: "genesisBlockRemark",
         be_target: "config",
@@ -412,7 +414,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (remark.maxBeginBalance !== "0") {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "maxBeginBalance",
+        to_compare_prop: `maxBeginBalance ${remark.maxBeginBalance}`,
         to_target: "GenesisBlockRemark",
         be_compare_prop: "'0'",
         ...GenesisBlockRemark_Exception_Detail,
@@ -421,7 +423,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (remark.maxTxCount !== 0) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "maxTxCount",
+        to_compare_prop: `maxTxCount ${remark.maxTxCount}`,
         to_target: "GenesisBlockRemark",
         be_compare_prop: "0",
         ...GenesisBlockRemark_Exception_Detail,
@@ -442,7 +444,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       const nextRoundDelegate = nextRoundDelegates[i];
       if (!(await this.accountBaseHelper.isAddress(nextRoundDelegate.address))) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: `nextRoundDelegates[${i}].address`,
+          prop: `nextRoundDelegates[${i}].address ${nextRoundDelegates[i].address}`,
           type: "account address",
           target: "remark.nextRoundDelegates",
           ...Function_Exception_Detail,
@@ -451,7 +453,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
       if (!this.baseHelper.isValidAccountEquity(nextRoundDelegate.equity)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: `nextRoundDelegates[${i}].equity`,
+          prop: `nextRoundDelegates[${i}].equity ${nextRoundDelegates[i].equity}`,
           type: "account equity",
           target: "remark.nextRoundDelegates",
           ...Function_Exception_Detail,
@@ -477,7 +479,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (!baseHelper.isValidBlockParticipation(remark.blockParticipation)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "blockParticipation",
+        prop: `blockParticipation ${remark.blockParticipation}`,
         type: "block participation",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -485,7 +487,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (!baseHelper.isValidAccountEquity(remark.generatorEquity)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "generatorEquity",
+        prop: `generatorEquity ${remark.generatorEquity}`,
         type: "account equity",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -500,7 +502,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (!baseHelper.isNaturalNumber(participationTotalChainAsset)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "participationTotalChainAsset",
+        prop: `participationTotalChainAsset ${participationTotalChainAsset}`,
         type: "natural number",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -508,7 +510,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (!baseHelper.isNaturalNumber(participationTotalFee)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "participationTotalFee",
+        prop: `participationTotalFee ${participationTotalFee}`,
         type: "natural number",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -516,7 +518,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (!baseHelper.isNaturalNumber(participationNumberOfAccount)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "participationNumberOfAccount",
+        prop: `participationNumberOfAccount ${participationNumberOfAccount}`,
         type: "natural number",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -524,7 +526,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (!baseHelper.isNaturalNumber(participationNumberOfTransaction)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "participationNumberOfTransaction",
+        prop: `participationNumberOfTransaction ${participationNumberOfTransaction}`,
         type: "natural number",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -538,8 +540,12 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       0
     ) {
       throw new ArgumentIllegalException(PROP_SHOULD_GT_FIELD, {
-        prop:
-          "participationTotalChainAsset + participationTotalFee + participationNumberOfAccount + participationNumberOfTransaction",
+        prop: `participationTotalChainAsset + participationTotalFee + participationNumberOfAccount + participationNumberOfTransaction ${
+          participationTotalChainAsset +
+          participationTotalFee +
+          participationNumberOfAccount +
+          participationNumberOfTransaction
+        }`,
         field: 0,
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -565,7 +571,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
         )
       ) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "transactionPowOfWorkConfig.growthFactor",
+          prop: `transactionPowOfWorkConfig.growthFactor ${growthFactorDenominator}`,
           type: "positive float",
           ...GenesisBlockRemark_Exception_Detail,
         });
@@ -574,7 +580,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
     // 校验交易POW的参与度占比
     if (!baseHelper.isPositiveFloatContainZero(participationRatio)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "transactionPowOfWorkConfig.participationRatio",
+        prop: `transactionPowOfWorkConfig.participationRatio ${participationRatio}`,
         type: "positive float",
         ...GenesisBlockRemark_Exception_Detail,
       });
@@ -582,7 +588,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
 
     if (!baseHelper.isNaturalNumber(averageComputingPower)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "averageComputingPower",
+        prop: `averageComputingPower ${averageComputingPower}`,
         type: "natural number",
         ...GenesisBlockRemark_Exception_Detail,
       });

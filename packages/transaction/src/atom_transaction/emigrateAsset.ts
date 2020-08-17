@@ -80,7 +80,7 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
 
     if (body.fromMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "fromMagic",
+        to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
@@ -89,7 +89,7 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
 
     if (body.toMagic === config.magic) {
       throw new ArgumentIllegalException(SHOULD_NOT_BE, {
-        to_compare_prop: "toMagic",
+        to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
@@ -123,7 +123,7 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
 
     if (sourceChainName !== config.chainName) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "sourceChainName",
+        to_compare_prop: `sourceChainName ${sourceChainName}`,
         to_target: "body",
         be_compare_prop: "local chain name",
         ...EmigrateAssetAsset_Exception_Detail,
@@ -134,7 +134,7 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
 
     if (sourceChainMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "sourceChainMagic",
+        to_compare_prop: `sourceChainMagic ${sourceChainMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
         ...EmigrateAssetAsset_Exception_Detail,
@@ -145,7 +145,7 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
 
     if (assetType !== config.assetType) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: "assetType",
+        to_compare_prop: `assetType ${assetType}`,
         to_target: "body",
         be_compare_prop: "local chain assetType",
         ...EmigrateAssetAsset_Exception_Detail,
@@ -171,7 +171,7 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
 
     if (!baseHelper.isValidAccountSignature(genesisDelegateSignature)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "genesisDelegateSignature",
+        prop: `genesisDelegateSignature ${genesisDelegateSignature}`,
         type: "account signature",
         ...EmigrateAssetAsset_Exception_Detail,
       });
@@ -190,7 +190,7 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
 
     if (!genesisDelegates.includes(address)) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "signature address",
+        to_compare_prop: `signature address ${address}`,
         be_compare_prop: "genesis delegate address",
         to_target: "emigrateAsset",
         be_target: "config",
@@ -211,7 +211,7 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
       }))
     ) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "genesisDelegateSignature",
+        prop: `genesisDelegateSignature ${signature}`,
         type: "signature",
         ...Function_Exception_Detail,
         target: "emigrateAsset",
@@ -231,7 +231,7 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
         }))
       ) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "signSignature",
+          prop: `genesisDelegateSignSignature ${signSignature}`,
           type: "signature",
           ...Function_Exception_Detail,
           target: "emigrateAsset",

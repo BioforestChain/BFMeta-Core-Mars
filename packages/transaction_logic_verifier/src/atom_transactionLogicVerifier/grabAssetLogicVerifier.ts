@@ -138,7 +138,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
 
     if (!should_grap_amount_BI) {
       throw new ConsensusException(PROP_IS_INVALID, {
-        prop: "calculate amount",
+        prop: `calculate amount ${should_grap_amount_BI.toString()}`,
         ...Function_Exception_Detail,
         target: "giftAsset",
       });
@@ -146,8 +146,8 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
 
     if (should_grap_amount_BI.toString() !== grabAsset.amount) {
       throw new ConsensusException(SHOULD_BE, {
-        to_compare_prop: "amount",
-        to_target: "grabAsset",
+        to_compare_prop: `amount ${should_grap_amount_BI.toString()}`,
+        to_target: `grabAsset ${grabAsset.amount}`,
         be_compare_prop: should_grap_amount_BI.toString(),
         ...Function_Exception_Detail,
       });
@@ -166,8 +166,8 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
   ) {
     if (transaction.recipientId !== giftAssetJson.senderId) {
       throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: transaction.recipientId,
-        be_compare_prop: giftAssetJson.senderId,
+        to_compare_prop: `GrabAssetTransaction.recipientId ${transaction.recipientId}`,
+        be_compare_prop: `GiftAssetTransaction.senderId ${giftAssetJson.senderId}`,
         to_target: "GrabAssetTransaction",
         be_target: "GiftAssetTransaction",
         function: "isValidRecipientId",
@@ -184,8 +184,8 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
   private isBlockSignatureMatch(transaction: GrabAssetTransaction, blockSignature: string) {
     if (blockSignature !== transaction.asset.grabAsset.blockSignature) {
       throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: blockSignature,
-        be_compare_prop: transaction.asset.grabAsset.blockSignature,
+        to_compare_prop: `blockSignature ${blockSignature}`,
+        be_compare_prop: `blockSignature ${transaction.asset.grabAsset.blockSignature}`,
         to_target: "grabAsset",
         be_target: "blockChain",
         function: "isBlockSignatureMatch",
@@ -232,7 +232,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
     if (rangeType & RANGE_TYPE.MULTI_ADDRESS) {
       if (!range.includes(transaction.senderId)) {
         throw new ConsensusException(SHOULD_BE, {
-          to_compare_prop: "senderId",
+          to_compare_prop: `senderId ${transaction.senderId}`,
           to_target: "grabAssetTransaction",
           be_compare_prop: "giftAssetTransaction.range",
           ...Function_Exception_Detail,
@@ -241,7 +241,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
     } else if (rangeType & RANGE_TYPE.MULTI_DAPPID) {
       if (!transaction.dappid || !range.includes(transaction.dappid)) {
         throw new ConsensusException(SHOULD_BE, {
-          to_compare_prop: "dappid",
+          to_compare_prop: `dappid ${transaction.dappid}`,
           to_target: "grabAssetTransaction",
           be_compare_prop: "giftAssetTransaction.range",
           ...Function_Exception_Detail,
@@ -250,7 +250,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
     } else if (rangeType & RANGE_TYPE.MULTI_LOCATION_NAME) {
       if (!transaction.lns || !range.includes(transaction.lns)) {
         throw new ConsensusException(SHOULD_BE, {
-          to_compare_prop: "lns",
+          to_compare_prop: `lns ${transaction.lns}`,
           to_target: "grabAssetTransaction",
           be_compare_prop: "giftAssetTransaction.range",
           ...Function_Exception_Detail,
