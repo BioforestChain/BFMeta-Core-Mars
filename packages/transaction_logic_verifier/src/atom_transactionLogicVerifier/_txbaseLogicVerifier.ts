@@ -144,31 +144,32 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     );
     // 校验交易的 lns
     await this.checkLocationName(transaction, currentBlockHeight, accountGetterHelper);
+    // 接收交易的时候不验证 pow
     // 校验 pow
-    if (currentBlockHeight > this.configHelper.powOfWorkExemptionBlocks) {
-      const curRound = this.blockHelper.calcRoundByHeight(currentBlockHeight);
-      const lastRoundInfo = sender.accountInfo.lastRoundInfo;
-      const { round, txCount, assetNumber } = lastRoundInfo;
-      if (round !== curRound - 1) {
-        throw new ConsensusException(NOT_MATCH, {
-          to_compare_prop: `round ${round}`,
-          be_compare_prop: `current round ${curRound}`,
-          to_target: "lastRoundInfo",
-          be_target: "blockChain",
-          ...Function_Exception_Detail,
-        });
-      }
-      const participation = this.transactionHelper.calcTpowParticipationBI(
-        txCount,
-        assetNumber.toString(),
-      );
-      await this.checkTransactionPowOfWork(
-        transaction,
-        currentBlockHeight,
-        participation.toString(),
-        accountGetterHelper,
-      );
-    }
+    // if (currentBlockHeight > this.configHelper.powOfWorkExemptionBlocks) {
+    //   const curRound = this.blockHelper.calcRoundByHeight(currentBlockHeight);
+    //   const lastRoundInfo = sender.accountInfo.lastRoundInfo;
+    //   const { round, txCount, assetNumber } = lastRoundInfo;
+    //   if (round !== curRound - 1) {
+    //     throw new ConsensusException(NOT_MATCH, {
+    //       to_compare_prop: `round ${round}`,
+    //       be_compare_prop: `current round ${curRound}`,
+    //       to_target: "lastRoundInfo",
+    //       be_target: "blockChain",
+    //       ...Function_Exception_Detail,
+    //     });
+    //   }
+    //   const participation = this.transactionHelper.calcTpowParticipationBI(
+    //     txCount,
+    //     assetNumber.toString(),
+    //   );
+    //   await this.checkTransactionPowOfWork(
+    //     transaction,
+    //     currentBlockHeight,
+    //     participation.toString(),
+    //     accountGetterHelper,
+    //   );
+    // }
 
     const curRound = this.blockHelper.calcRoundByHeight(currentBlockHeight);
 
@@ -778,7 +779,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    * @param participation
    * @param accountGetterHelper
    */
-  private async checkTransactionPowOfWork(
+  async checkTransactionPowOfWork(
     transaction: T,
     currentBlockHeight: number,
     participation: string,
