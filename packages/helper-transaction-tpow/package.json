@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-helper-transaction-tpow",
-  "version": "5.17.63",
+  "version": "5.17.64",
   "main": "build/cjs/index.js",
   "type": "build/cjs/index.d.ts",
   "files": [
