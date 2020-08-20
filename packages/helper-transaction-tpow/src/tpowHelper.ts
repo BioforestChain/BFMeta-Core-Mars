@@ -281,12 +281,16 @@ export class TpowHelper {
     if (!scoreInfo || scoreInfo.done) {
       return 1;
     }
-    /// 用剩余得分计算进度，可能会有精度问题，但也比 * 1en 再去除也来得精准
+    /// 用剩余得分计算进度，这里只保留小数4位
     return (
-      (scoreInfo.score - scoreInfo.conditionScore) /
-      (scoreInfo.totalScore - scoreInfo.conditionScore)
+      Number(
+        (scoreInfo.score - scoreInfo.conditionScore) ** this._PROGRESS_FIX_BI /
+          (scoreInfo.totalScore - scoreInfo.conditionScore),
+      ) / this._PROGRESS_FIX
     );
   }
+  private readonly _PROGRESS_FIX = 1e6;
+  private readonly _PROGRESS_FIX_BI = BigInt(this._PROGRESS_FIX);
   /**
    * 校验交易POW
    * DIFF = (E ^ N) * N / (1 + B + P * R)
