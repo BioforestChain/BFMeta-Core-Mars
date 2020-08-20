@@ -221,20 +221,22 @@ export class TpowHelper {
     return y1;
   }
   /**
-   * 校验交易POW
-   * DIFF = (E ^ N) * N / (1 + B + P * R)
-   * @param transaction 交易体
-   * @param num 在一个区块中用户的第N比交易
+   * 计算TPOW得分，如果没有分数
+   * @param signatureBuffer
+   * @param num
+   * @param participation
+   * @param diff_BI
    */
-  async checkTransactionProfOfWork(
+  private _calcTransactionProfOfWorkScore(
     signatureBuffer: Uint8Array,
     num: number,
     participation: string,
     diff_BI?: bigint,
   ) {
     diff_BI || (diff_BI = this.calcDiffOfTransactionProfOfWork(num, participation));
-    if (!diff_BI) {
-      return true;
+    /// diff是作为分母，要足够大才有意义
+    if (diff_BI > 1n) {
+      return false;
     }
     /**得分应该读取多少位数，至少8位 */
     const X = Math.max(
@@ -250,7 +252,64 @@ export class TpowHelper {
     const max_score_BI = hit_numerator_BI / diff_BI;
     /**读取出交易的得分 */
     const score_BI = this.getUintN(this.Buffer.from(signatureBuffer), X);
-    return score_BI < max_score_BI;
+
+    return {
+      diff: diff_BI,
+      done: score_BI <= max_score_BI,
+      conditionScore: max_score_BI,
+      totalScore: hit_numerator_BI,
+      score: score_BI,
+    };
+  }
+  /**
+   * 计算TPOW进度
+   * @returns (0~1]
+   */
+  async calcTransactionProfOfWorkProgress(
+    signatureBuffer: Uint8Array,
+    num: number,
+    participation: string,
+    diff_BI?: bigint,
+  ) {
+    const scoreInfo = this._calcTransactionProfOfWorkScore(
+      signatureBuffer,
+      num,
+      participation,
+      diff_BI,
+    );
+
+    if (!scoreInfo || scoreInfo.done) {
+      return 1;
+    }
+    /// 用剩余得分计算进度，可能会有精度问题，但也比 * 1en 再去除也来得精准
+    return (
+      (scoreInfo.score - scoreInfo.conditionScore) /
+      (scoreInfo.totalScore - scoreInfo.conditionScore)
+    );
+  }
+  /**
+   * 校验交易POW
+   * DIFF = (E ^ N) * N / (1 + B + P * R)
+   * @param transaction 交易体
+   * @param num 在一个区块中用户的第N比交易
+   */
+  async checkTransactionProfOfWork(
+    signatureBuffer: Uint8Array,
+    num: number,
+    participation: string,
+    diff_BI?: bigint,
+  ) {
+    const scoreInfo = this._calcTransactionProfOfWorkScore(
+      signatureBuffer,
+      num,
+      participation,
+      diff_BI,
+    );
+
+    if (!scoreInfo || scoreInfo.done) {
+      return true;
+    }
+    return false;
   }
   /**交易的噪点生成器 */
   *nonceWriter<T extends BFChainCore.Transaction>(trs: T) {
