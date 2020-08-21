@@ -235,7 +235,7 @@ export class TpowHelper {
   ) {
     diff_BI || (diff_BI = this.calcDiffOfTransactionProfOfWork(num, participation));
     /// diff是作为分母，要足够大才有意义
-    if (diff_BI > 1n) {
+    if (diff_BI > BigInt(1)) {
       return false;
     }
     /**得分应该读取多少位数，至少8位 */
