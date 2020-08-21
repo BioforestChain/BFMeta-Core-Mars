@@ -284,7 +284,7 @@ export class TpowHelper {
     /// 用剩余得分计算进度，这里只保留小数4位
     return (
       Number(
-        (scoreInfo.score - scoreInfo.conditionScore) ** this._PROGRESS_FIX_BI /
+        (scoreInfo.score - scoreInfo.conditionScore) * this._PROGRESS_FIX_BI /
           (scoreInfo.totalScore - scoreInfo.conditionScore),
       ) / this._PROGRESS_FIX
     );
