@@ -734,11 +734,12 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     let errorCount = 0;
     resultList.forEach((result) => {
       if (result.error) {
-        successCount += 1;
         errorCount += 1;
+      } else {
+        successCount += 1;
       }
     });
-    (successCount > 0 ? success : error)(
+    (successCount === 0 && errorCount > 0 ? error : success)(
       "chainChannelGroup(%s) broadcasted Transaction(%s), successed: %d, fail: %d",
       this.groupName,
       this.transactionHelper.getTypeName(transaction.type),
@@ -991,7 +992,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       }),
     );
 
-    (successCount > 0 ? success : error)(
+    (successCount === 0 && errorCount > 0 ? error : success)(
       "chainChannelGroup(%s) broadcasted Block(%d), successed: %d, fail: %d",
       this.groupName,
       blockInfo.height,
