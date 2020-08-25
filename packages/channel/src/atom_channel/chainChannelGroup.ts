@@ -663,6 +663,8 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       | undefined;
     const startTime = this.timeHelper.now();
     const resultList = [] as BFChainCore.BroadcastNewTransactionEvents<DH>["broadcasted"]["in"][];
+
+    let resultPo: PromiseOut<void> | undefined;
     try {
       let chainChannelList: DH[] = [];
       if (opts && opts.directAddress && opts.directAddress.size > 0) {
@@ -681,7 +683,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       }
       const pp = new ParallelPool<void>(opts && opts.max_parallel_num);
 
-      const resultPo =
+      resultPo =
         opts &&
         this.helper.parserAborterOptions(opts, {
           channelGroup: this as BFChainCore.ChainChannelGroup<DH>,
@@ -726,6 +728,9 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
           break;
         }
       }
+      resultPo?.resolve(undefined);
+    } catch (err) {
+      resultPo?.reject(err);
     } finally {
       const endTime = this.timeHelper.now();
       event && event.emit("endBroadcast", { duraction: endTime - startTime });
