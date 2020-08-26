@@ -6,7 +6,8 @@ import { DAppModel } from "./dapp";
  *
  */
 @Type.d("DAppPurchasingModel")
-export class DAppPurchasingModel extends Message<DAppPurchasingModel>
+export class DAppPurchasingModel
+  extends Message<DAppPurchasingModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.DAppPurchasingJSON> {
   static INC = 1;
   /**dapp 的拥有者地址 */
@@ -28,7 +29,8 @@ export class DAppPurchasingModel extends Message<DAppPurchasingModel>
  *
  */
 @Type.d("DAppPurchasingAssetModel")
-export class DAppPurchasingAssetModel extends Message<DAppPurchasingAssetModel>
+export class DAppPurchasingAssetModel
+  extends Message<DAppPurchasingAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.DAppPurchasingAssetJSON> {
   @Field.d(1, DAppPurchasingModel)
   dappPurchasing!: DAppPurchasingModel;

@@ -5,7 +5,8 @@ import { Message, Field, Type } from "@bfchain/protobuf";
  *
  */
 @Type.d("TransferAssetModel")
-export class TransferAssetModel extends Message<TransferAssetModel>
+export class TransferAssetModel
+  extends Message<TransferAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.TransferAssetJSON> {
   /**欲转账的数字资产所属链名 */
   @Field.d(1, "string")
@@ -32,7 +33,8 @@ export class TransferAssetModel extends Message<TransferAssetModel>
  *
  */
 @Type.d("TransferAssetAssetModel")
-export class TransferAssetAssetModel extends Message<TransferAssetAssetModel>
+export class TransferAssetAssetModel
+  extends Message<TransferAssetAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.TransferAssetAssetJSON> {
   @Field.d(1, TransferAssetModel)
   transferAsset!: TransferAssetModel;

@@ -5,7 +5,8 @@ import { Message, Field, Type } from "@bfchain/protobuf";
  *
  */
 @Type.d("IssueAssetModel")
-export class IssueAssetModel extends Message<IssueAssetModel>
+export class IssueAssetModel
+  extends Message<IssueAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.IssueAssetJSON> {
   /**发行的资产所属的链名 */
   @Field.d(1, "string")
@@ -38,7 +39,8 @@ export class IssueAssetModel extends Message<IssueAssetModel>
  *
  */
 @Type.d("IssueAssetAssetModel")
-export class IssueAssetAssetModel extends Message<IssueAssetAssetModel>
+export class IssueAssetAssetModel
+  extends Message<IssueAssetAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.IssueAssetAssetJSON> {
   @Field.d(1, IssueAssetModel)
   issueAsset!: IssueAssetModel;

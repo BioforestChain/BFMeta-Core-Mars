@@ -58,7 +58,9 @@ declare namespace BFChainCore {
     replayingBlock?: Block;
     blockGetterHelper: BlockGetterHelperSimpleInterface;
   };
-  type CurrentReplayingBlockInfo<CC extends SimpleChainChannel> = CurrentReplayingBlockSimpleInfo & {
+  type CurrentReplayingBlockInfo<
+    CC extends SimpleChainChannel
+  > = CurrentReplayingBlockSimpleInfo & {
     blockGetterHelper: BlockGetterHelperInterface<CC>;
     chainChannelGroup?: ChainChannelGroup<CC>;
   };

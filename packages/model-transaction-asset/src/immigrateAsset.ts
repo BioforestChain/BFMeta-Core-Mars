@@ -10,7 +10,8 @@ const SIGNATURE_BUFFER_WM = new WeakMap<AccountSignatureModel, Uint8Array>();
  *
  */
 @Type.d("ImmigrateAssetModel")
-export class ImmigrateAssetModel extends Message<ImmigrateAssetModel>
+export class ImmigrateAssetModel
+  extends Message<ImmigrateAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.ImmigrateAssetJSON> {
   static INC = 1;
   @Field.d(ImmigrateAssetModel.INC++, "bytes")
@@ -66,7 +67,8 @@ export class ImmigrateAssetModel extends Message<ImmigrateAssetModel>
  *
  */
 @Type.d("ImmigrateAssetAssetModel")
-export class ImmigrateAssetAssetModel extends Message<ImmigrateAssetAssetModel>
+export class ImmigrateAssetAssetModel
+  extends Message<ImmigrateAssetAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.ImmigrateAssetAssetJSON> {
   @Field.d(1, ImmigrateAssetModel)
   immigrateAsset!: ImmigrateAssetModel;

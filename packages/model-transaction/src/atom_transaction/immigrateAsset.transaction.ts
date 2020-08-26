@@ -7,7 +7,8 @@ import { Type, Field } from "@bfchain/protobuf";
  *
  */
 @Type.d("ImmigrateAssetTransaction")
-export class ImmigrateAssetTransaction extends Transaction<BFChainCore.ImmigrateAssetAssetJSON>
+export class ImmigrateAssetTransaction
+  extends Transaction<BFChainCore.ImmigrateAssetAssetJSON>
   implements BFChainCore.ImmigrateAssetTransactionJSON {
   toJSON!: () => BFChainCore.ImmigrateAssetTransactionJSON;
   recipientId!: undefined;

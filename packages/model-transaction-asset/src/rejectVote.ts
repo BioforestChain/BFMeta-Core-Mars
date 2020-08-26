@@ -5,7 +5,8 @@ import { Message, Field, Type } from "@bfchain/protobuf";
  *
  */
 @Type.d("RejectVoteAssetModel")
-export class RejectVoteAssetModel extends Message<RejectVoteAssetModel>
+export class RejectVoteAssetModel
+  extends Message<RejectVoteAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.RejectVoteAssetJSON> {
   toJSON() {
     return {};

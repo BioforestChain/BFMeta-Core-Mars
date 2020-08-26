@@ -31,7 +31,8 @@ export class TemplateRemark extends Message {
 
 // 不放在前面模型找不到
 @Type.d("TransactionBaseStorageModel")
-export class TransactionBaseStorageModel extends Message<TransactionBaseStorageModel>
+export class TransactionBaseStorageModel
+  extends Message<TransactionBaseStorageModel>
   implements
     BFChainCore.TransactionStorageJSON,
     BFChainUtil.JSONAble<BFChainCore.TransactionStorageJSON> {
@@ -49,7 +50,8 @@ export class TransactionBaseStorageModel extends Message<TransactionBaseStorageM
   }
 }
 @Type.d("Transaction")
-export class Transaction<AJ extends object = object> extends Message<Transaction<AJ>>
+export class Transaction<AJ extends object = object>
+  extends Message<Transaction<AJ>>
   implements BFChainCore.TransactionJSON<AJ> {
   static INC = 1;
   ASSET_MODEL_TYPE!: BFChainCore.AssetJSONToModelType<AJ>;

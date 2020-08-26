@@ -6,7 +6,8 @@ import { getHexFromArrayBuffer, parseHexToArrayBuffer } from "@bfchain/util-enco
  *
  */
 @Type.d("SignatureModel")
-export class SignatureModel extends Message<SignatureModel>
+export class SignatureModel
+  extends Message<SignatureModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.SignatureJSON> {
   /**二次密码生成的公钥 */
   @Field.d(1, "bytes")
@@ -39,7 +40,8 @@ export class SignatureModel extends Message<SignatureModel>
  *
  */
 @Type.d("SignatureAssetModel")
-export class SignatureAssetModel extends Message<SignatureAssetModel>
+export class SignatureAssetModel
+  extends Message<SignatureAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.SignatureAssetJSON> {
   @Field.d(1, SignatureModel)
   signature!: SignatureModel;

@@ -7,7 +7,8 @@ import { Type, Field } from "@bfchain/protobuf";
  *
  */
 @Type.d("LocationNameTransaction")
-export class LocationNameTransaction extends Transaction<BFChainCore.LocationNameAssetJSON>
+export class LocationNameTransaction
+  extends Transaction<BFChainCore.LocationNameAssetJSON>
   implements BFChainCore.LocationNameTransactionJSON {
   toJSON!: () => BFChainCore.LocationNameTransactionJSON;
   recipientId!: string;

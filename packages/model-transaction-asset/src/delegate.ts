@@ -6,7 +6,8 @@ import { parseHexToArrayBuffer, getHexFromArrayBuffer } from "@bfchain/util-enco
  *
  */
 @Type.d("DelegateModel")
-export class DelegateModel extends Message<DelegateModel>
+export class DelegateModel
+  extends Message<DelegateModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.DelegateJSON> {
   /**欲注册为受托人的账户的用户名 */
   @Field.d(1, "string")
@@ -43,7 +44,8 @@ export class DelegateModel extends Message<DelegateModel>
  * Delegate 交易 asset 外层模型
  */
 @Type.d("DelegateAssetModel")
-export class DelegateAssetModel extends Message<DelegateAssetModel>
+export class DelegateAssetModel
+  extends Message<DelegateAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.DelegateAssetJSON> {
   @Field.d(1, DelegateModel)
   delegate!: DelegateModel;

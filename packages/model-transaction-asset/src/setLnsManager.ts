@@ -5,7 +5,8 @@ import { Message, Field, Type } from "@bfchain/protobuf";
  *
  */
 @Type.d("SetLnsManagerModel")
-export class SetLnsManagerModel extends Message<SetLnsManagerModel>
+export class SetLnsManagerModel
+  extends Message<SetLnsManagerModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.SetLnsManagerJSON> {
   /**欲设置管理员的链域名 */
   @Field.d(1, "string")
@@ -34,7 +35,8 @@ export class SetLnsManagerModel extends Message<SetLnsManagerModel>
  *
  */
 @Type.d("SetLnsManagerAssetModel")
-export class SetLnsManagerAssetModel extends Message<SetLnsManagerAssetModel>
+export class SetLnsManagerAssetModel
+  extends Message<SetLnsManagerAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.SetLnsManagerAssetJSON> {
   @Field.d(1, SetLnsManagerModel)
   lnsManager!: SetLnsManagerModel;

@@ -10,7 +10,8 @@ const BUFFER_LIST_PUBLICKEY_LIST_WM = new WeakMap<Uint8Array[], string[]>();
  *
  */
 @Type.d("ToExchangeSpecialAssetModel")
-export class ToExchangeSpecialAssetModel extends Message<ToExchangeSpecialAssetModel>
+export class ToExchangeSpecialAssetModel
+  extends Message<ToExchangeSpecialAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.ToExchangeSpecialAssetJSON> {
   static INC = 1;
   /**密钥交换 */
@@ -112,7 +113,8 @@ export class ToExchangeSpecialAssetModel extends Message<ToExchangeSpecialAssetM
  *
  */
 @Type.d("ToExchangeSpecialAssetAssetModel")
-export class ToExchangeSpecialAssetAssetModel extends Message<ToExchangeSpecialAssetAssetModel>
+export class ToExchangeSpecialAssetAssetModel
+  extends Message<ToExchangeSpecialAssetAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.ToExchangeSpecialAssetAssetJSON> {
   @Field.d(1, ToExchangeSpecialAssetModel)
   toExchangeSpecialAsset!: ToExchangeSpecialAssetModel;

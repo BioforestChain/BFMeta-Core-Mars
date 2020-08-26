@@ -6,7 +6,8 @@ import { LOCATION_NAME_OPERATION_TYPE } from "@bfchain/core-model-constants";
  *
  */
 @Type.d("LocationNameInfo")
-export class LocationNameInfo extends Message<LocationNameInfo>
+export class LocationNameInfo
+  extends Message<LocationNameInfo>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.LocationNameJSON> {
   /**链域名 */
   @Field.d(1, "string")
@@ -34,7 +35,8 @@ export class LocationNameInfo extends Message<LocationNameInfo>
  *
  */
 @Type.d("LocationNameAssetModel")
-export class LocationNameAssetModel extends Message<LocationNameAssetModel>
+export class LocationNameAssetModel
+  extends Message<LocationNameAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.LocationNameAssetJSON> {
   @Field.d(1, LocationNameInfo)
   locationName!: LocationNameInfo;

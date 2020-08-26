@@ -22,7 +22,8 @@ export enum PROGRESS_EVENT_MODE {
 
 /**通用的进度事件进度模型 */
 @Type.d("ProgressEvent")
-export class ProgressEventModel<EVENT extends string> extends Message<ProgressEventModel<EVENT>>
+export class ProgressEventModel<EVENT extends string>
+  extends Message<ProgressEventModel<EVENT>>
   implements BFChainCore.JSONToModelType<BFChainCore.ProgressEventJSON<EVENT>> {
   static INC = 1;
   @Field.d(ProgressEventModel.INC++, "string")

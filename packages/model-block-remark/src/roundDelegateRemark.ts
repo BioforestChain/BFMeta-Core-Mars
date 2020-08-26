@@ -1,6 +1,7 @@
 import { Message, Type, Field } from "@bfchain/protobuf";
 @Type.d("NextRoundDelegateModel")
-export class NextRoundDelegateModel extends Message<NextRoundDelegateModel>
+export class NextRoundDelegateModel
+  extends Message<NextRoundDelegateModel>
   implements BFChainCore.JSONToModelType<BFChainCore.NextRoundDelegateJSON> {
   static INC = 1;
   @Field.d(NextRoundDelegateModel.INC++, "string")
@@ -16,7 +17,8 @@ export class NextRoundDelegateModel extends Message<NextRoundDelegateModel>
 }
 
 @Type.d("RoundDelegateRemarkModel")
-export class RoundDelegateRemarkModel<T extends RoundDelegateRemarkModel<T>> extends Message<T>
+export class RoundDelegateRemarkModel<T extends RoundDelegateRemarkModel<T>>
+  extends Message<T>
   implements BFChainCore.JSONToModelType<BFChainCore.RoundDelegateRemarkJSON> {
   static INC = 1;
   /**本轮新增的受托人 */

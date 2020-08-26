@@ -4,7 +4,8 @@ import { getHexFromArrayBuffer, parseHexToArrayBuffer } from "@bfchain/util-enco
 import { cacheBytesGetter } from "@bfchain/core-model-cacher";
 
 @Type.d("RoundLastBlockRemarkModel")
-export class RoundLastBlockRemarkModel extends RoundDelegateRemarkModel<RoundLastBlockRemarkModel>
+export class RoundLastBlockRemarkModel
+  extends RoundDelegateRemarkModel<RoundLastBlockRemarkModel>
   implements BFChainCore.RemarkJSONToModelType<BFChainCore.RoundLastBlockRemarkJSON> {
   /**区块处理信息 */
   @Field.d(RoundLastBlockRemarkModel.INC++, "string")

@@ -3,7 +3,8 @@ import type { Exception } from "@bfchain/util-exception";
 import { RESPONSE_STATUS } from "./constants";
 
 @Type.d("ExceptionMessage")
-export class ErrorMessage<D = any> extends Message<ErrorMessage>
+export class ErrorMessage<D = any>
+  extends Message<ErrorMessage>
   implements BFChainCore.JSONToModelType<BFChainCore.ErrorMessageJSON> {
   @Field.d(1, "string")
   message!: string;
@@ -62,7 +63,8 @@ export function getCommonResponseFieldAccIndex() {
  * 通用的响应的返回值
  */
 @Type.d("CommonResponse")
-export class CommonResponse extends Message<CommonResponse>
+export class CommonResponse
+  extends Message<CommonResponse>
   implements BFChainCore.JSONToModelType<BFChainCore.CommonResponseJSON> {
   static INC = 1;
   /**响应状态 */

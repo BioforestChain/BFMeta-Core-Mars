@@ -5,7 +5,8 @@ import { Message, Field, Type } from "@bfchain/protobuf";
  *
  */
 @Type.d("VoteModel")
-export class VoteModel extends Message<VoteModel>
+export class VoteModel
+  extends Message<VoteModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.VoteJSON> {
   /**欲转账的数字资产所属链名 */
   @Field.d(1, "string")
@@ -22,7 +23,8 @@ export class VoteModel extends Message<VoteModel>
  *
  */
 @Type.d("VoteAssetModel")
-export class VoteAssetModel extends Message<VoteAssetModel>
+export class VoteAssetModel
+  extends Message<VoteAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.VoteAssetJSON> {
   @Field.d(1, VoteModel)
   vote!: VoteModel;

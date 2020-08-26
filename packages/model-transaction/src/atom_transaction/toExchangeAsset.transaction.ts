@@ -8,7 +8,8 @@ import { cacheGetter } from "@bfchain/util-decorator";
  *
  */
 @Type.d("ToExchangeAssetTransaction")
-export class ToExchangeAssetTransaction extends Transaction<BFChainCore.ToExchangeAssetAssetJSON>
+export class ToExchangeAssetTransaction
+  extends Transaction<BFChainCore.ToExchangeAssetAssetJSON>
   implements BFChainCore.ToExchangeAssetTransactionJSON {
   toJSON!: () => BFChainCore.ToExchangeAssetTransactionJSON;
   recipientId!: undefined;

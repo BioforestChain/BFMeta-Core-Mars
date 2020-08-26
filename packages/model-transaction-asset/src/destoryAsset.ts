@@ -5,7 +5,8 @@ import { Message, Field, Type } from "@bfchain/protobuf";
  *
  */
 @Type.d("DestoryAssetModel")
-export class DestoryAssetModel extends Message<DestoryAssetModel>
+export class DestoryAssetModel
+  extends Message<DestoryAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.DestoryAssetJSON> {
   /**欲销毁的数字资产来源链名 */
   @Field.d(1, "string")
@@ -34,7 +35,8 @@ export class DestoryAssetModel extends Message<DestoryAssetModel>
  *
  */
 @Type.d("DestoryAssetAssetModel")
-export class DestoryAssetAssetModel extends Message<DestoryAssetAssetModel>
+export class DestoryAssetAssetModel
+  extends Message<DestoryAssetAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.DestoryAssetAssetJSON> {
   @Field.d(1, DestoryAssetModel)
   destoryAsset!: DestoryAssetModel;

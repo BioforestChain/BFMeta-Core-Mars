@@ -7,7 +7,8 @@ import { Type, Field } from "@bfchain/protobuf";
  *
  */
 @Type.d("SetLnsManagerTransaction")
-export class SetLnsManagerTransaction extends Transaction<BFChainCore.SetLnsManagerAssetJSON>
+export class SetLnsManagerTransaction
+  extends Transaction<BFChainCore.SetLnsManagerAssetJSON>
   implements BFChainCore.SetLnsManagerTransactionJSON {
   toJSON!: () => BFChainCore.SetLnsManagerTransactionJSON;
   recipientId!: string;

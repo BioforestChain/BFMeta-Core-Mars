@@ -1,7 +1,8 @@
 import { Message, Type, Field } from "@bfchain/protobuf";
 
 @Type.d("Fraction")
-export class Fraction extends Message<Fraction>
+export class Fraction
+  extends Message<Fraction>
   implements BFChainUtil.JSONAble<BFChainCore.FractionJSON> {
   /**分子 */
   @Field.d(1, "int32")
@@ -16,7 +17,8 @@ export class Fraction extends Message<Fraction>
   }
 }
 @Type.d("FractionBigIntModel")
-export class FractionBigIntModel extends Message<FractionBigIntModel>
+export class FractionBigIntModel
+  extends Message<FractionBigIntModel>
   implements BFChainUtil.JSONAble<BFChainCore.FractionJSON<string>> {
   /**分子 */
   @Field.d(1, "string")

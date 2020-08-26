@@ -8,7 +8,8 @@ import { AssetStatisticModel } from "./asset.statistic";
  *
  */
 @Type.d("StatisticInfoModel")
-export class StatisticInfoModel extends Message<StatisticInfoModel>
+export class StatisticInfoModel
+  extends Message<StatisticInfoModel>
   implements BFChainCore.JSONToModelType<BFChainCore.StatisticInfoJSON> {
   static INC = 1;
   /**总手续费 */

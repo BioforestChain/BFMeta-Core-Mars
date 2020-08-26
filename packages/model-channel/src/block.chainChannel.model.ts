@@ -7,7 +7,8 @@ import { SomeBlockModel } from "@bfchain/core-model-block";
  * 查询区块的查询条件
  */
 @Type.d("BlockQueryOptions")
-export class BlockQueryOptionsModel extends Message<BlockQueryOptionsModel>
+export class BlockQueryOptionsModel
+  extends Message<BlockQueryOptionsModel>
   implements BFChainCore.JSONToModelType<BFChainCore.BlockQueryOptionsJSON> {
   @Field.d(1, "string", "optional")
   signature?: string;
@@ -25,7 +26,8 @@ export class BlockQueryOptionsModel extends Message<BlockQueryOptionsModel>
  * 查询区块的传入参数
  */
 @Type.d("QueryBlockArg")
-export class QueryBlockArgModel extends Message<QueryBlockArgModel>
+export class QueryBlockArgModel
+  extends Message<QueryBlockArgModel>
   implements BFChainCore.JSONToModelType<BFChainCore.QueryBlockArgJSON> {
   /**查询参数 */
   @Field.d(1, BlockQueryOptionsModel)
@@ -57,7 +59,8 @@ export class QueryBlockReturnModel<B extends BFChainCore.Block = BFChainCore.Blo
  * 广播区块的传入参数
  */
 @Type.d("NewBlockArg")
-export class NewBlockArgModel extends Message<NewBlockArgModel>
+export class NewBlockArgModel
+  extends Message<NewBlockArgModel>
   implements BFChainCore.JSONToModelType<BFChainCore.NewBlockArgJSON> {
   static INC = 1;
   @Field.d(NewBlockArgModel.INC++, "uint32")
@@ -110,5 +113,6 @@ export class NewBlockArgModel extends Message<NewBlockArgModel>
  * 广播区块的返回结果
  */
 @Type.d("NewBlockReturn")
-export class NewBlockReturn extends CommonResponse
+export class NewBlockReturn
+  extends CommonResponse
   implements BFChainCore.JSONToModelType<BFChainCore.NewBlockReturnJSON> {}

@@ -1,7 +1,8 @@
 import { Message, Type, Field } from "@bfchain/protobuf";
 
 @Type.d("CommonBlockRemarkModel")
-export class CommonBlockRemarkModel extends Message<CommonBlockRemarkModel>
+export class CommonBlockRemarkModel
+  extends Message<CommonBlockRemarkModel>
   implements BFChainCore.RemarkJSONToModelType<BFChainCore.CommonBlockRemarkJSON> {
   static INC = 1;
   /**区块处理信息 */

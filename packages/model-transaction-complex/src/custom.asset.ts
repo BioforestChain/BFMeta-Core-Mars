@@ -6,7 +6,8 @@ import { Message, Field, Type } from "@bfchain/protobuf";
  */
 
 @Type.d("CustomModel")
-export class CustomModel extends Message<CustomModel>
+export class CustomModel
+  extends Message<CustomModel>
   implements BFChainUtil.JSONAble<BFChainCore.CustomJSON> {
   @Field.d(2, "string")
   type!: string;
@@ -26,7 +27,8 @@ export class CustomModel extends Message<CustomModel>
  *
  */
 @Type.d("CustomAssetModel")
-export class CustomAssetModel extends Message<CustomAssetModel>
+export class CustomAssetModel
+  extends Message<CustomAssetModel>
   implements BFChainUtil.JSONAble<BFChainCore.CustomAssetJSON> {
   @Field.d(1, CustomModel)
   custom!: CustomModel;

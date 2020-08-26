@@ -2,7 +2,8 @@ import { Message, Field, Type } from "@bfchain/protobuf";
 import { DAPP_TYPE } from "@bfchain/core-model-constants";
 
 @Type.d("DAppPurchaseAssetModel")
-export class DAppPurchaseAssetModel extends Message<DAppPurchaseAssetModel>
+export class DAppPurchaseAssetModel
+  extends Message<DAppPurchaseAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.DAppPurchaseAssetJSON> {
   /**购买用的资产所属链名 */
   @Field.d(1, "string")
@@ -31,7 +32,8 @@ export class DAppPurchaseAssetModel extends Message<DAppPurchaseAssetModel>
  *
  */
 @Type.d("DAppModel")
-export class DAppModel extends Message<DAppModel>
+export class DAppModel
+  extends Message<DAppModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.DAppJSON> {
   static INC = 1;
   /**dapp 的所属链名 */
@@ -67,7 +69,8 @@ export class DAppModel extends Message<DAppModel>
  *
  */
 @Type.d("DAppAssetModel")
-export class DAppAssetModel extends Message<DAppAssetModel>
+export class DAppAssetModel
+  extends Message<DAppAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.DAppAssetJSON> {
   @Field.d(1, DAppModel)
   dapp!: DAppModel;

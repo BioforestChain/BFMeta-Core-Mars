@@ -13,7 +13,8 @@ export enum TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE {
 }
 
 @Type.d("TransactionAssetChangeModel")
-export class TransactionAssetChangeModel extends Message
+export class TransactionAssetChangeModel
+  extends Message
   implements BFChainUtil.JSONAble<BFChainCore.TransactionAssetChangeJSON> {
   static INC = 1;
   /**账户类型 */

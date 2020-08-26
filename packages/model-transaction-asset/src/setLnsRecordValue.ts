@@ -7,7 +7,8 @@ import { RECORD_OPERATION_TYPE } from "@bfchain/core-model-constants";
  *
  */
 @Type.d("SetLnsRecordValueModel")
-export class SetLnsRecordValueModel extends Message<SetLnsRecordValueModel>
+export class SetLnsRecordValueModel
+  extends Message<SetLnsRecordValueModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.SetLnsRecordValueJSON> {
   static INC = 1;
   /**欲设置记录值的链域名 */
@@ -47,7 +48,8 @@ export class SetLnsRecordValueModel extends Message<SetLnsRecordValueModel>
  *
  */
 @Type.d("SetLnsRecordValueAssetModel")
-export class SetLnsRecordValueAssetModel extends Message<SetLnsRecordValueAssetModel>
+export class SetLnsRecordValueAssetModel
+  extends Message<SetLnsRecordValueAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.SetLnsRecordValueAssetJSON> {
   @Field.d(1, SetLnsRecordValueModel)
   lnsRecordValue!: SetLnsRecordValueModel;

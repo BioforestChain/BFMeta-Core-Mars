@@ -6,7 +6,8 @@ import { RECORD_TYPE } from "@bfchain/core-model-constants";
  *
  */
 @Type.d("LocationNameRecordInfo")
-export class LocationNameRecordInfo extends Message<LocationNameRecordInfo>
+export class LocationNameRecordInfo
+  extends Message<LocationNameRecordInfo>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.LocationNameRecordJSON> {
   /**记录类型 */
   @Field.d(1, "string")

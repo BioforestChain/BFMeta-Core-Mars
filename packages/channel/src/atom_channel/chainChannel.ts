@@ -115,8 +115,10 @@ const getReqId = () => {
  */
 @Resolvable()
 export class ChainChannel<
-  THIS extends BFChainCore.SimpleChainChannel = BFChainCore.SimpleChainChannel
-> extends ChainChannelBase implements BFChainCore.ChainChannel<THIS> {
+    THIS extends BFChainCore.SimpleChainChannel = BFChainCore.SimpleChainChannel
+  >
+  extends ChainChannelBase
+  implements BFChainCore.ChainChannel<THIS> {
   public _isOnNewTransaction = false;
   get isOnNewTransaction() {
     return this._isOnNewTransaction;
@@ -172,7 +174,7 @@ export class ChainChannel<
     once?: boolean,
   ) {
     if (once) {
-      const remover = this.endpoint.onClose(err => {
+      const remover = this.endpoint.onClose((err) => {
         handler(err);
         remover();
       });
@@ -490,7 +492,7 @@ export class ChainChannel<
               /// 查询成功
               if (queryResult) {
                 response.status = RESPONSE_STATUS.success;
-                response.transactions = queryResult.transactions.map(tib =>
+                response.transactions = queryResult.transactions.map((tib) =>
                   TransactionInBlock.fromObject(tib),
                 );
               }

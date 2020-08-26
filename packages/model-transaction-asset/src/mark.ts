@@ -6,7 +6,8 @@ import { DAppModel } from "./dapp";
  *
  */
 @Type.d("MarkModel")
-export class MarkModel extends Message<MarkModel>
+export class MarkModel
+  extends Message<MarkModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.MarkJSON> {
   static INC = 1;
   /**存证的拥有者地址 */
@@ -36,7 +37,8 @@ export class MarkModel extends Message<MarkModel>
  *
  */
 @Type.d("MarkAssetModel")
-export class MarkAssetModel extends Message<MarkAssetModel>
+export class MarkAssetModel
+  extends Message<MarkAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.MarkAssetJSON> {
   @Field.d(1, MarkModel)
   mark!: MarkModel;

@@ -50,7 +50,8 @@ export const BLOCK_TYPES_MAP = (() => {
 
 const BLOCK_BYTE_WM = new WeakMap<Uint8Array, BFChainCore.Block>();
 @Type.d("SomeBlockModel")
-export class SomeBlockModel<T extends BFChainCore.Block = BFChainCore.Block> extends Message<T>
+export class SomeBlockModel<T extends BFChainCore.Block = BFChainCore.Block>
+  extends Message<T>
   implements BFChainCore.JSONToModelType<BFChainCore.SomeBlockJSON<T>> {
   static INC = 1;
   @Field.d(SomeBlockModel.INC++, BLOCK_TYPES_BASE)

@@ -2,7 +2,8 @@ import { Message, Type, Field } from "@bfchain/protobuf";
 
 /**范围模型 */
 @Type.d("Range")
-export class RangeModel extends Message<RangeModel>
+export class RangeModel
+  extends Message<RangeModel>
   implements BFChainUtil.JSONAble<BFChainCore.RangeJSON> {
   @Field.d(1, "uint32")
   start!: number;

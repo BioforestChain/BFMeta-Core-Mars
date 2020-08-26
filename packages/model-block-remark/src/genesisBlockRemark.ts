@@ -9,7 +9,8 @@ import { BNID_TYPE } from "@bfchain/core-model-block-base";
  *
  */
 @Type.d("RewardPercentModel")
-export class RewardPercentModel extends Message<RewardPercentModel>
+export class RewardPercentModel
+  extends Message<RewardPercentModel>
   implements BFChainCore.JSONToModelType<BFChainCore.RewardPercentJSON> {
   /**分配给投票账户的奖励占区块总奖励的比例 */
   @Field.d(1, Fraction)
@@ -30,7 +31,8 @@ export class RewardPercentModel extends Message<RewardPercentModel>
  *
  */
 @Type.d("RewardPerBlock")
-export class RewardPerBlock extends Message<RewardPerBlock>
+export class RewardPerBlock
+  extends Message<RewardPerBlock>
   implements BFChainCore.JSONToModelType<BFChainCore.RewardPerBlockJSON> {
   /**奖励变更区块高度 */
   @Field.d(1, "uint32", "repeated")
@@ -51,7 +53,8 @@ export class RewardPerBlock extends Message<RewardPerBlock>
  *
  */
 @Type.d("PortsModel")
-export class PortsModel extends Message<PortsModel>
+export class PortsModel
+  extends Message<PortsModel>
   implements BFChainCore.JSONToModelType<BFChainCore.PortsJSON> {
   /**默认端口号/区块链端口号 */
   @Field.d(1, "uint32")
@@ -68,7 +71,8 @@ export class PortsModel extends Message<PortsModel>
 }
 
 @Type.d("TransactionPowOfWorkConfigModel")
-export class TransactionPowOfWorkConfigModel extends Message<TransactionPowOfWorkConfigModel>
+export class TransactionPowOfWorkConfigModel
+  extends Message<TransactionPowOfWorkConfigModel>
   implements BFChainCore.JSONToModelType<BFChainCore.TransactionPowOfWorkConfigJSON> {
   @Field.d(1, FractionBigIntModel)
   growthFactor!: FractionBigIntModel;
@@ -90,7 +94,8 @@ export class TransactionPowOfWorkConfigModel extends Message<TransactionPowOfWor
  *
  */
 @Type.d("GenesisBlockRemarkModel")
-export class GenesisBlockRemarkModel extends RoundDelegateRemarkModel<GenesisBlockRemarkModel>
+export class GenesisBlockRemarkModel
+  extends RoundDelegateRemarkModel<GenesisBlockRemarkModel>
   implements BFChainCore.RemarkJSONToModelType<BFChainCore.GenesisBlockRemarkJSON> {
   /**链资产名 */
   @Field.d(GenesisBlockRemarkModel.INC++, "string")

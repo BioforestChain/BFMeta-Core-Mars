@@ -6,7 +6,8 @@ import { parseHexToArrayBuffer, getHexFromArrayBuffer } from "@bfchain/util-enco
  *
  */
 @Type.d("UsernameModel")
-export class UsernameModel extends Message<UsernameModel>
+export class UsernameModel
+  extends Message<UsernameModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.UsernameJSON> {
   /**新的用户名 */
   @Field.d(1, "string")
@@ -43,7 +44,8 @@ export class UsernameModel extends Message<UsernameModel>
  *
  */
 @Type.d("UsernameAssetModel")
-export class UsernameAssetModel extends Message<UsernameAssetModel>
+export class UsernameAssetModel
+  extends Message<UsernameAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.UsernameAssetJSON> {
   @Field.d(1, UsernameModel)
   username!: UsernameModel;

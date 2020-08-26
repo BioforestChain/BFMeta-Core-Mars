@@ -3,7 +3,8 @@ import { StringKeyMap } from "@bfchain/core-model-common";
 import { CountAndAmountStatisticModel } from "./countAndAmount.statistic";
 
 @Type.d("AssetStatisticModel")
-export class AssetStatisticModel extends Message<AssetStatisticModel>
+export class AssetStatisticModel
+  extends Message<AssetStatisticModel>
   implements BFChainCore.JSONToModelType<BFChainCore.AssetStatisticJSON> {
   static INC = 1;
   @Field.d(AssetStatisticModel.INC++, "string")
