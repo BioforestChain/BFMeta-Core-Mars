@@ -163,6 +163,13 @@ export class TransactionCore {
       trs.getBytes(true, true),
       keypair.secretKey,
     );
+    // 需要再tpow之前进行签名，因为pow可能是0难度，就直接拿传入的那比交易进行处理了
+    if (secondKeypair) {
+      trs.signSignatureBuffer = await this.asymmetricHelper.detachedSign(
+        trs.getBytes(false, true),
+        secondKeypair.secretKey,
+      );
+    }
 
     // 在异步中执行交易POW
     if (pow && !skipPow) {
@@ -175,14 +182,6 @@ export class TransactionCore {
     } else {
       // 交易的 nonce 必须携带，默认为 0，并且加入签名
       trs.nonce = 0;
-    }
-
-    // 生成交易二次签名，支付密码只是为了安全，不应该影响到POW
-    if (secondKeypair) {
-      trs.signSignatureBuffer = await this.asymmetricHelper.detachedSign(
-        trs.getBytes(false, true),
-        secondKeypair.secretKey,
-      );
     }
 
     // 校验交易的大小
