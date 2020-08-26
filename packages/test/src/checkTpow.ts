@@ -22,6 +22,18 @@ async function checkTpow() {
   console.log(bfchainCore.transactionHelper.calcTpowParticipationBI(1, "17668421494133"));
 }
 
+function formatAssetNumber(assetNumber: string) {
+  let formatAssetNumber = "0";
+  const assetLength = assetNumber.length;
+  if (assetLength <= 8) {
+    formatAssetNumber = "0" + "." + "0".repeat(8 - assetLength) + assetNumber;
+  } else {
+    formatAssetNumber =
+      assetNumber.slice(0, assetLength - 8) + "." + assetNumber.slice(assetLength - 8);
+  }
+  return formatAssetNumber;
+}
+
 async function calcMilestone() {
   const senderEquityList = [
     "0",
@@ -46,13 +58,22 @@ async function calcMilestone() {
   for (const senderEquity of senderEquityList) {
     // const senderEquity = "1024188093598";
     const transactionHelper = bfchainCore.transactionHelper;
+    let isSeperate = false;
     for (let i = 0; i < 60; i++) {
       // 验证交易的 pow
       // const { height, transaction } = trsDocs[i];
       // debugger;
       const diff = await transactionHelper.calcDiffOfTransactionProfOfWork(i, senderEquity);
+      if (diff > BigInt(10000) && !isSeperate) {
+        results.push({
+          senderEquity: "=".repeat(senderEquity.length + 1),
+          txCount: "=".repeat(i.toString().length),
+          diff: "=".repeat(diff.toString().length),
+        });
+        isSeperate = true;
+      }
       results.push({
-        senderEquity,
+        senderEquity: formatAssetNumber(senderEquity),
         txCount: i,
         diff,
       });
