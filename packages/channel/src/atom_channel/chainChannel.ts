@@ -43,6 +43,7 @@ const {
   error,
   TimeOutException,
   success,
+  log,
 } = CoreExceptionGenerator("channel", "chainChannel");
 
 export abstract class ChainChannelBase
@@ -358,6 +359,11 @@ export class ChainChannel<
     );
 
     if (needWaitTime > 0) {
+      log(
+        "chainChannel(%s) seems in feature. need wait %dms then broadcast.",
+        this.address,
+        needWaitTime,
+      );
       await sleep(needWaitTime);
     }
     const res = await this._requestWithBinaryData(...args);

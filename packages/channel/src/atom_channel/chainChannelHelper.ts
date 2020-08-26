@@ -34,6 +34,7 @@ import {
   BlockHelper,
   ChainTimeHelper,
 } from "@bfchain/core-helper";
+import { PromiseTimeout } from "./PromiseTimeout";
 
 const {
   ArgumentIllegalException,
@@ -593,9 +594,9 @@ export class ChainChannelHelper {
     if (options.disabledAborterOptions) {
       return;
     }
-    let po: PromiseOut<R> | undefined; // = new PromiseOut<R>();
+    let po: PromiseTimeout<R> | undefined; // = new PromiseTimeout<R>();
     if (options.aborter) {
-      po || (po = new PromiseOut<R>());
+      po || (po = new PromiseTimeout<R>());
       this._bindRejectedToPromiseOut(options.aborter.abortedPromise, po);
     }
 
@@ -620,21 +621,19 @@ export class ChainChannelHelper {
     }
     /// 进行setTimeout等待
     if (sleepTime !== undefined) {
-      const { reject } = po || (po = new PromiseOut<R>());
-      const timeoutTask = sleep(sleepTime, () =>
+      const { reject } = po || (po = new PromiseTimeout<R>());
+      po.setTimeout(sleepTime, () =>
         reject(
           typeof options.timeoutException === "function"
             ? options.timeoutException(env)
             : options.timeoutException || new TimeOutException(),
         ),
       );
-      /// 这里使用finally，意味着就即便异常不是来自于timeout，也能正确销毁timeout
-      po.onFinished(() => unsleep(timeoutTask));
     }
     //#endregion
 
     if (options.rejected) {
-      po || (po = new PromiseOut<R>());
+      po || (po = new PromiseTimeout<R>());
       this._bindRejectedToPromiseOut(options.rejected, po);
     }
 

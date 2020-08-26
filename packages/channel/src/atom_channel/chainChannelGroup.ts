@@ -42,11 +42,13 @@ const {
   success,
   info,
   warn,
+  log,
   TimeOutException,
 } = CoreExceptionGenerator("channel", "chainChannelGroup");
 
 import { GroupQueryTransactionsBuilder, GroupQueryBlockBuilder } from "./GroupRequesterBuilder";
 import { ChainChannelHelper } from "./chainChannelHelper";
+import type { PromiseTimeout } from "./PromiseTimeout";
 
 export const CHAIN_CHANNEL_GROUP_ARGS = {
   GROUP_NAME: Symbol("groupName"),
@@ -664,7 +666,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     const startTime = this.timeHelper.now();
     const resultList = [] as BFChainCore.BroadcastNewTransactionEvents<DH>["broadcasted"]["in"][];
 
-    let resultPo: PromiseOut<void> | undefined;
+    let resultPo: PromiseTimeout<void> | undefined;
     try {
       let chainChannelList: DH[] = [];
       if (opts && opts.directAddress && opts.directAddress.size > 0) {
@@ -691,7 +693,8 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       // 将要广播的节点放置到广播队列中
       for (const chainChannel of chainChannelList) {
         pp.addTaskExecutor(async () => {
-          initedArgs ||
+          const requestArgs =
+            initedArgs ||
             (initedArgs = await chainChannel.initBroadcastTransactionArg(transaction, {
               timeout: (env) => this.helper.getChainChannelTimeout(env.chainChannel),
               rejected: resultPo?.promise,
@@ -704,12 +707,45 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
             );
 
             if (needWaitTime > 0) {
+              log(
+                "chainChannel(%s) seems in feature. need wait %dms then broadcast.",
+                chainChannel.address,
+                needWaitTime,
+              );
+              /// 如果需要等待的事件已经超过了最大等待时间，那么这里是一定会超时的，所以这里考虑不将这个chainChannel纳入返回结果的处理中
+              if (
+                resultPo &&
+                resultPo.sleepTime > 0 &&
+                needWaitTime +
+                  chainChannel.delay / 2 /* 这里只考虑发送的时长，所以只需要一般的延迟 */ >
+                  resultPo.sleepTime
+              ) {
+                log("chainChannel(%s) need wait too much time, so skip in resultList.");
+                /// 这里直接独立去作业
+                sleep(needWaitTime, async () => {
+                  try {
+                    result = {
+                      error: false,
+                      result: await chainChannel._requestWithBinaryData(...requestArgs),
+                      chainChannel,
+                    };
+                  } catch (error) {
+                    result = { error: true, result: error, chainChannel };
+                  }
+                  if (event) {
+                    /**虽然这里不属于广播的逻辑，但还是await一下 */
+                    await event.emit("broadcasted", result);
+                  }
+                });
+                return;
+              }
+
               await sleep(needWaitTime);
             }
             resultList.push(
               (result = {
                 error: false,
-                result: await chainChannel._requestWithBinaryData(...initedArgs),
+                result: await chainChannel._requestWithBinaryData(...requestArgs),
                 chainChannel,
               }),
             );
