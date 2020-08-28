@@ -804,6 +804,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     );
     if (!powCheckResult) {
       throw new ConsensusException(VERIFY_TRANSACTION_POW_OF_WORK_ERROR, {
+        errorId: NewTransactionRefuseReason.TRANSACTION_POW_CHECK_FIELD,
         reason: `Transaction pow check field, block height ${currentBlockHeight} transaction signature ${transaction.signature} sender ${transaction.senderId} participation ${participation} sender transaction count in block ${tranSenderCount}`,
         ...Function_Exception_Detail,
       });

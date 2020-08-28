@@ -94,6 +94,8 @@ export enum NewTransactionRefuseReason {
   ACCOUNT_ALREADY_VOTED_FOR_DELEGATE,
   /**交易来自未来 */
   TRS_IN_FEATURE,
+  /**事件的 tpow 校验失败 */
+  TRANSACTION_POW_CHECK_FIELD,
 }
 
 export enum DUPLEX_API_CMD {

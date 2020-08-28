@@ -280,9 +280,9 @@ export const REGISTER_DELEGTE_QUOTA_FULL = (ec.next =
 /**reason function */
 export const REJECT_REGISTER_DELEGATE = (ec.next =
   "Reject register delegate with reason {reason} when {function}");
-/**reason function */
+/**errorId reason function */
 export const VERIFY_TRANSACTION_POW_OF_WORK_ERROR = (ec.next =
-  "Verify transaction pow of work error, reason {reason} when {function}");
+  "Verify transaction pow of work error, errorId {errorId} reason {reason} when {function}");
 // #endregion
 export const errorCode = new Map(
   ec.errorCode.concat([
