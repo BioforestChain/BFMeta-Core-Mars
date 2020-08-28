@@ -1042,6 +1042,49 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     );
     return resultList;
   }
+  async fastBroadcastBlock(
+    blockInfo: BFChainCore.NewBlockArgJSON,
+    opts?: BFChainCore.ChannelGroupRequestOptions<DH>,
+  ) {
+    let initedArgs:
+      | readonly [
+          DUPLEX_API_CMD,
+          Uint8Array,
+          (params: Uint8Array | ArrayBuffer) => NewBlockReturn,
+          BFChainCore.ChannelRequestOptions<DH> | undefined,
+        ]
+      | undefined;
+
+    let chainChannelList: DH[] = [];
+    if (opts && opts.directAddress && opts.directAddress.size > 0) {
+      const directAddress = opts.directAddress;
+      for (const DH of this.chainChannelSet.values()) {
+        if (directAddress.has(DH.address)) {
+          chainChannelList.push(DH);
+        }
+      }
+    } else {
+      for (const DH of this.chainChannelSet.values()) {
+        if (DH.isOnNewTransaction) {
+          chainChannelList.push(DH);
+        }
+      }
+      // chainChannelList = [...this.chainChannelSet.values()];
+    }
+    let broadCount = 0;
+    /// 开始广播
+    for (const chainChannel of chainChannelList) {
+      if (chainChannel.isRefusePushNewTransaction) {
+        continue;
+      }
+      initedArgs || (initedArgs = await chainChannel.initBroadcastBlockArg(blockInfo));
+      try {
+        broadCount++;
+        chainChannel._sendWithBinaryData(initedArgs[0], initedArgs[1]);
+      } catch (err) {}
+    }
+    return broadCount;
+  }
   /**
    * chainChannel autoRemove When Close ListenerRemover WeakMap
    */
