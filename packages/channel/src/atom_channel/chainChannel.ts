@@ -24,6 +24,7 @@ import {
   BlockQueryOptionsModel,
   SomeBlockModel,
   GenesisBlock,
+  NewTransactionRefuseReason,
 } from "@bfchain/core-model";
 import { Message } from "@bfchain/protobuf";
 import { ChainChannelHelper } from "./chainChannelHelper";
@@ -38,6 +39,7 @@ import {
 } from "@bfchain/util";
 
 const {
+  RefuseException,
   ArgumentFormatException,
   NoFoundException,
   error,
@@ -50,6 +52,10 @@ export abstract class ChainChannelBase
   extends QueneEventEmitterPro<BFChainCore.ChainChannelHanlderEventMap>
   implements BFChainCore.ChainChannelBase {
   public abstract maybeHeight: number;
+  public abstract canQueryTransaction: boolean;
+  public abstract canQueryBlock: boolean;
+  public abstract canBroadcastTransaction: boolean;
+  public abstract canBroadcastBlock: boolean;
   protected abstract config: ConfigHelper;
   protected abstract baseHelper: BaseHelper;
   private _blockGetterHelper?: BFChainCore.BlockGetterHelperSimpleInterface & {
@@ -120,21 +126,21 @@ export class ChainChannel<
   >
   extends ChainChannelBase
   implements BFChainCore.ChainChannel<THIS> {
-  public _isOnNewTransaction = false;
-  get isOnNewTransaction() {
-    return this._isOnNewTransaction;
+  protected _canQueryTransaction = false;
+  get canQueryTransaction() {
+    return this._canQueryTransaction;
   }
-  public _isOnNewBlock = false;
-  get isOnNewBlock() {
-    return this._isOnNewBlock;
+  protected _canQueryBlock = false;
+  get canQueryBlock() {
+    return this._canQueryBlock;
   }
-  public _isOnQueryTransaction = false;
-  get isOnQueryTransaction() {
-    return this._isOnQueryTransaction;
+  protected _canBroadcastTransaction = false;
+  get canBroadcastTransaction() {
+    return this._canBroadcastTransaction;
   }
-  public _isOnQueryBlock = false;
-  get isOnQueryBlock() {
-    return this._isOnQueryBlock;
+  protected _canBroadcastBlock = false;
+  get canBroadcastBlock() {
+    return this._canBroadcastBlock;
   }
   defaultReqOptions?: BFChainCore.ChannelRequestOptions<THIS>;
   @Inject("bfchain-core:TransactionCore")
@@ -306,6 +312,12 @@ export class ChainChannel<
     sort?: BFChainCore.QueryTransactionArgJSON["sort"],
     opts?: BFChainCore.ChannelRequestOptions<THIS>,
   ) {
+    if (!this.canQueryTransaction) {
+      return QueryTransactionReturnModel.fromObject({
+        status: RESPONSE_STATUS.error,
+        error: ErrorMessage.fromObject(new RefuseException("Refuse response query transaction")),
+      });
+    }
     const arg = QueryTransactionArgModel.fromObject({
       query: TransactionQueryOptions.fromObject(query),
       sort: TransactionSortOptions.fromObject<TransactionSortOptions>(sort || {}),
@@ -351,6 +363,14 @@ export class ChainChannel<
     transaction: BFChainCore.NewTransactionArgJSON["transaction"],
     opts?: BFChainCore.ChannelRequestOptions<THIS>,
   ) {
+    if (!this.canBroadcastTransaction) {
+      return NewTransactionReturnModel.fromObject({
+        status: RESPONSE_STATUS.error,
+        error: ErrorMessage.fromObject(
+          new RefuseException("Refuse response broadcast transaction"),
+        ),
+      });
+    }
     const args = await this.initBroadcastTransactionArg(transaction, opts);
 
     /// 算出相对事件是否满足条件
@@ -380,6 +400,9 @@ export class ChainChannel<
    */
   private _busyNewTransaction = 0;
   get isRefusePushNewTransaction() {
+    if (!this.canBroadcastTransaction) {
+      return true;
+    }
     return this._busyNewTransaction > this.timeHelper.now() - this.refuseTime;
   }
   /**
@@ -387,9 +410,6 @@ export class ChainChannel<
    */
   async fastBroadcastTransaction(transaction: BFChainCore.NewTransactionArgJSON["transaction"]) {
     if (this.isRefusePushNewTransaction) {
-      return 0;
-    }
-    if (!this.isOnNewTransaction) {
       return 0;
     }
     const args = await this.initBroadcastTransactionArg(transaction);
@@ -401,6 +421,12 @@ export class ChainChannel<
     query: BFChainCore.QueryBlockArgJSON["query"],
     opts?: BFChainCore.ChannelRequestOptions<THIS>,
   ) {
+    if (!this.canQueryBlock) {
+      return QueryBlockReturnModel.fromObject({
+        status: RESPONSE_STATUS.error,
+        error: ErrorMessage.fromObject(new RefuseException("Refuse response query block")),
+      });
+    }
     const arg = QueryBlockArgModel.fromObject({
       query: BlockQueryOptionsModel.fromObject<BlockQueryOptionsModel>(query),
     });
@@ -437,6 +463,12 @@ export class ChainChannel<
     blockInfo: BFChainCore.NewBlockArgJSON,
     opts?: BFChainCore.ChannelRequestOptions<THIS>,
   ) {
+    if (!this.canQueryBlock) {
+      return NewBlockReturn.fromObject({
+        status: RESPONSE_STATUS.error,
+        error: ErrorMessage.fromObject(new RefuseException("Refuse response broadcast block")),
+      });
+    }
     const res = await this._requestWithBinaryData(...this.initBroadcastBlockArg(blockInfo, opts));
     success("broadcasted block:", blockInfo.height);
     return res;
@@ -450,7 +482,7 @@ export class ChainChannel<
       [DUPLEX_API_CMD.QUERY_BLOCK, DUPLEX_API_CMD.QUERY_BLOCK_RETURN],
       [DUPLEX_API_CMD.NEW_BLOCK, DUPLEX_API_CMD.NEW_BLOCK_RETURN],
       [DUPLEX_API_CMD.GET_PEER_INFO, DUPLEX_API_CMD.GET_PEER_INFO_RETURN],
-    ])
+    ]);
     this.endpoint.onMessage(async (message: Uint8Array) => {
       /* 测试了socket-io：
        * 使用client发送ArrayBuffer后，nodejs中server接收到的是Buffer。

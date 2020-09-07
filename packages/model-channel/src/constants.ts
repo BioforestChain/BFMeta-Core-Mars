@@ -36,6 +36,8 @@ export enum NewTransactionStatus {
 
 /**接收到新交易时拒绝的理由 */
 export enum NewTransactionRefuseReason {
+  // /**缺省：未确定的异常 */
+  // UNKNOWN,
   /**手续费低于网络手续费 */
   FEE_LESS_THAN_WEB_FEE,
   /**交易过期 */

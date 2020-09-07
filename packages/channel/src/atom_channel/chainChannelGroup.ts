@@ -62,6 +62,38 @@ export const CHAIN_CHANNEL_GROUP_ARGS = {
 export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = ChainChannel>
   extends ChainChannelBase
   implements BFChainCore.ChainChannelGroup<DH>, AfterInit {
+  get canQueryTransaction() {
+    for (const cc of this.chainChannelSet) {
+      if (cc.canQueryTransaction) {
+        return true;
+      }
+    }
+    return false;
+  }
+  get canQueryBlock() {
+    for (const cc of this.chainChannelSet) {
+      if (cc.canQueryBlock) {
+        return true;
+      }
+    }
+    return false;
+  }
+  get canBroadcastTransaction() {
+    for (const cc of this.chainChannelSet) {
+      if (cc.canBroadcastTransaction) {
+        return true;
+      }
+    }
+    return false;
+  }
+  get canBroadcastBlock() {
+    for (const cc of this.chainChannelSet) {
+      if (cc.canBroadcastBlock) {
+        return true;
+      }
+    }
+    return false;
+  }
   bfAfterInit() {
     this._initMaybeHeightWatcher();
   }
@@ -814,7 +846,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       }
     } else {
       for (const DH of this.chainChannelSet.values()) {
-        if (DH.isOnNewTransaction) {
+        if (DH.canBroadcastTransaction) {
           chainChannelList.push(DH);
         }
       }
@@ -1065,7 +1097,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       }
     } else {
       for (const DH of this.chainChannelSet.values()) {
-        if (DH.isOnNewTransaction) {
+        if (DH.canBroadcastTransaction) {
           chainChannelList.push(DH);
         }
       }
