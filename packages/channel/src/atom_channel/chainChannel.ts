@@ -126,11 +126,12 @@ export class ChainChannel<
   >
   extends ChainChannelBase
   implements BFChainCore.ChainChannel<THIS> {
-  protected _canQueryTransaction = false;
+  /**查询默认为true 广播默认为false */
+  protected _canQueryTransaction = true;
   get canQueryTransaction() {
     return this._canQueryTransaction;
   }
-  protected _canQueryBlock = false;
+  protected _canQueryBlock = true;
   get canQueryBlock() {
     return this._canQueryBlock;
   }
