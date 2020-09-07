@@ -463,7 +463,7 @@ export class ChainChannel<
     blockInfo: BFChainCore.NewBlockArgJSON,
     opts?: BFChainCore.ChannelRequestOptions<THIS>,
   ) {
-    if (!this.canQueryBlock) {
+    if (!this.canBroadcastBlock) {
       return NewBlockReturn.fromObject({
         status: RESPONSE_STATUS.error,
         error: ErrorMessage.fromObject(new RefuseException("Refuse response broadcast block")),
