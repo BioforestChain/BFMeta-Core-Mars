@@ -1074,10 +1074,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     let broadCount = 0;
     /// 开始广播
     for (const chainChannel of chainChannelList) {
-      if (chainChannel.isRefusePushNewTransaction) {
-        continue;
-      }
-      initedArgs || (initedArgs = await chainChannel.initBroadcastBlockArg(blockInfo));
+      initedArgs || (initedArgs = chainChannel.initBroadcastBlockArg(blockInfo));
       try {
         broadCount++;
         chainChannel._sendWithBinaryData(initedArgs[0], initedArgs[1]);
