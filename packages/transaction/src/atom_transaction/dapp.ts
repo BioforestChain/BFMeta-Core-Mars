@@ -71,19 +71,12 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
 
     this.emptyRangeType(body, Function_Exception_Detail);
 
-    if (body.recipientId) {
-      throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+    if (!body.recipientId) {
+      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "recipientId",
         ...Function_Exception_Detail,
       });
     }
-
-    // if (!body.recipientId) {
-    //   throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-    //     prop: "recipientId",
-    //     ...Function_Exception_Detail,
-    //   });
-    // }
 
     if (body.fromMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {

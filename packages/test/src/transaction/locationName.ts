@@ -13,6 +13,7 @@ import {
 } from "../include";
 const bfchainCore = getBfchainCoreEntry();
 
+const genesisAddress = getGenesisAccount().address;
 async function getLocationNameTransaction(sender: AccountModel) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
@@ -21,6 +22,7 @@ async function getLocationNameTransaction(sender: AccountModel) {
     senderId: sender.address, // 发起者地址
     senderPublicKey: sender.publicKey, // 发起者公钥
     senderSecondPublicKey: "", // 发起者二次公钥
+    recipientId: genesisAddress,
     rangeType: RANGE_TYPE.EMPTY,
     range: [], // 接收资产账户地址
     timestamp: 770880, // 生成交易时间戳

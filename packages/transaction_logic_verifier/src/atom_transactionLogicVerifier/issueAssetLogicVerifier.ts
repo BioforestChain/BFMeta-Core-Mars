@@ -52,7 +52,6 @@ export class IssueAssetLogicVerifier extends TransactionLogicVerifier {
       cloneAccountsAssets,
       transaction,
       accountGetterHelper,
-      transactionGetterHelper,
       eventEmitter,
     );
 

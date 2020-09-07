@@ -1,4 +1,4 @@
-import { QueneEventEmitter, Injectable, Inject, getHexFromArrayBuffer } from "@bfchain/util";
+import { Injectable, Inject, getHexFromArrayBuffer } from "@bfchain/util";
 import {
   CoreExceptionGenerator,
   ASSET_NOT_ENOUGH,
@@ -12,11 +12,9 @@ import {
   DELEGATE_IS_ALREADY_ACCEPT_VOTE,
   ACCOUNT_IS_ALREADY_AN_DELEGATE,
   DELEGATE_IS_ALREADY_REJECT_VOTE,
-  TOO_MANY_EXPECTEDISSUEDASSETS,
   FORBIDDEN,
   ALREADY_EXIST,
   ASSET_NOT_EXIST,
-  TRANSFER_TO_SENDER_BEFORE,
   CAN_NOT_DESTORY_ASSET,
   DAPPID_IS_ALREADY_EXIST,
   DAPPID_IS_NOT_EXIST,
@@ -592,7 +590,6 @@ export class EventLogicVerifier {
     accountsAssets: { [asddress: string]: BFChainCore.AccountAssets },
     transaction: BFChainCore.Transaction,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     const Function_Exception_Detail = {
@@ -605,6 +602,24 @@ export class EventLogicVerifier {
       async ({ applyInfo }, next) => {
         const { address, assetInfo, genesisAddress, sourceAmount } = applyInfo;
         const { assetType } = assetInfo;
+
+        if (address !== genesisAddress) {
+          // 不能将冻结账户设置为数字资产的创世账户
+          const possessor = await accountGetterHelper.getAccountInfo(genesisAddress);
+          if (possessor) {
+            const accountStatus = possessor.accountStatus;
+            if (
+              accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
+              accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
+              accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
+            ) {
+              throw new ConsensusException(ACCOUNT_FROZEN, {
+                address: genesisAddress,
+                ...Function_Exception_Detail,
+              });
+            }
+          }
+        }
 
         // 是否持有除链资产外的其他资产
         this.helperLogicVerifier.isPossessAssetExceptForChainAsset(accountsAssets[address]);
@@ -639,17 +654,6 @@ export class EventLogicVerifier {
           });
         }
 
-        // 验证数字资产的最大发行数量
-        const maxIssueAssets =
-          BigInt(remainChainAsset) *
-          BigInt(this.configHelper.chainAssetAndDigitalAssetExchangeRate);
-        if (BigInt(sourceAmount) > maxIssueAssets) {
-          throw new ConsensusException(TOO_MANY_EXPECTEDISSUEDASSETS, {
-            reason: `Remain chain asset: ${remainChainAsset.toString()}, max isseuedAssets: ${maxIssueAssets.toString()}, received expectedIssuedAssets: ${sourceAmount.toString()}`,
-            ...Function_Exception_Detail,
-          });
-        }
-
         // 验证资产名是否被禁用
         const result = await accountGetterHelper.isCurrencyForbidden(assetType);
         if (result) {
@@ -678,20 +682,6 @@ export class EventLogicVerifier {
             magic: chainMagic,
             assetType,
             errorId: NewTransactionRefuseReason.ASSET_ALREADY_EXIST,
-            ...Function_Exception_Detail,
-          });
-        }
-
-        // 查询指定的创世账户是否已经给发起账户转过账
-        const countTrs = await transactionGetterHelper.getCountTransaction({
-          senderId: genesisAddress,
-          recipientId: transaction.senderId,
-          type: this.transactionHelper.TRANSFER_ASSET,
-        });
-        if (countTrs < 1) {
-          throw new ConsensusException(TRANSFER_TO_SENDER_BEFORE, {
-            genesisAddress,
-            senderAddress: transaction.senderId,
             ...Function_Exception_Detail,
           });
         }
@@ -759,23 +749,25 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "issueDAppid",
       async ({ applyInfo }, next) => {
-        const { dappid, sourceChainMagic, purchaseAsset, possessorAddress } = applyInfo;
+        const { address, dappid, sourceChainMagic, purchaseAsset, possessorAddress } = applyInfo;
 
-        // 不能将冻结账户设置为 dapp 的拥有者
-        // const possessor = await accountGetterHelper.getAccountInfo(possessorAddress);
-        // if (possessor) {
-        //   const accountStatus = possessor.accountStatus;
-        //   if (
-        //     accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
-        //     accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
-        //     accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
-        //   ) {
-        //     throw new ConsensusException(ACCOUNT_FROZEN, {
-        //       address: possessorAddress,
-        //       ...Function_Exception_Detail,
-        //     });
-        //   }
-        // }
+        if (address !== possessorAddress) {
+          // 不能将冻结账户设置为 dapp 的拥有者
+          const possessor = await accountGetterHelper.getAccountInfo(possessorAddress);
+          if (possessor) {
+            const accountStatus = possessor.accountStatus;
+            if (
+              accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
+              accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
+              accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
+            ) {
+              throw new ConsensusException(ACCOUNT_FROZEN, {
+                address: possessorAddress,
+                ...Function_Exception_Detail,
+              });
+            }
+          }
+        }
 
         // 用于购买的资产是否合法
         if (purchaseAsset) {
@@ -1004,23 +996,25 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "registerLocationName",
       async ({ applyInfo }, next) => {
-        const { sourceChainMagic, name, possessorAddress } = applyInfo;
+        const { address, sourceChainMagic, name, possessorAddress } = applyInfo;
 
-        // 不能将冻结账户设置为 lns 的拥有者
-        // const possessor = await accountGetterHelper.getAccountInfo(possessorAddress);
-        // if (possessor) {
-        //   const accountStatus = possessor.accountStatus;
-        //   if (
-        //     accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
-        //     accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
-        //     accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
-        //   ) {
-        //     throw new ConsensusException(ACCOUNT_FROZEN, {
-        //       address: possessorAddress,
-        //       ...Function_Exception_Detail,
-        //     });
-        //   }
-        // }
+        if (address !== possessorAddress) {
+          // 不能将冻结账户设置为 lns 的拥有者
+          const possessor = await accountGetterHelper.getAccountInfo(possessorAddress);
+          if (possessor) {
+            const accountStatus = possessor.accountStatus;
+            if (
+              accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
+              accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
+              accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
+            ) {
+              throw new ConsensusException(ACCOUNT_FROZEN, {
+                address: possessorAddress,
+                ...Function_Exception_Detail,
+              });
+            }
+          }
+        }
 
         // 已存在的域名不能重复添加
         const memLocation = (await accountGetterHelper.getLocationName(
@@ -1119,16 +1113,6 @@ export class EventLogicVerifier {
             ...Function_Exception_Detail,
           });
         }
-
-        // 发起账户地址和接收账户地址必须是同一个
-        // if (transaction.senderId !== transaction.recipientId) {
-        //   throw new ConsensusException(SHOULD_BE, {
-        //     to_compare_prop: `recipientId`,
-        //     to_target: "transaction",
-        //     be_compare_prop: transaction.senderId,
-        //     ...Function_Exception_Detail,
-        //   });
-        // }
 
         // 只有域名的拥有者才能删除域名
         if (memLocation.possessorAddress !== transaction.senderId) {

@@ -80,7 +80,6 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
       cloneAccountsAssets,
       transaction,
       accountGetterHelper,
-      transactionGetterHelper,
       eventEmitter,
     );
 

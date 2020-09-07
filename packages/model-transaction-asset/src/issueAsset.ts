@@ -5,8 +5,7 @@ import { Message, Field, Type } from "@bfchain/protobuf";
  *
  */
 @Type.d("IssueAssetModel")
-export class IssueAssetModel
-  extends Message<IssueAssetModel>
+export class IssueAssetModel extends Message<IssueAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.IssueAssetJSON> {
   /**发行的资产所属的链名 */
   @Field.d(1, "string")
@@ -20,16 +19,12 @@ export class IssueAssetModel
   /**计划发行的数字资产数量 */
   @Field.d(4, "string")
   expectedIssuedAssets!: string;
-  /**发行的数字资产的创世账户地址 */
-  @Field.d(5, "string")
-  genesisAddress!: string;
   toJSON() {
     return {
       sourceChainName: this.sourceChainName,
       sourceChainMagic: this.sourceChainMagic,
       assetType: this.assetType,
       expectedIssuedAssets: this.expectedIssuedAssets,
-      genesisAddress: this.genesisAddress,
     };
   }
 }
@@ -39,8 +34,7 @@ export class IssueAssetModel
  *
  */
 @Type.d("IssueAssetAssetModel")
-export class IssueAssetAssetModel
-  extends Message<IssueAssetAssetModel>
+export class IssueAssetAssetModel extends Message<IssueAssetAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.IssueAssetAssetJSON> {
   @Field.d(1, IssueAssetModel)
   issueAsset!: IssueAssetModel;
