@@ -444,6 +444,13 @@ export class ChainChannel<
 
   /**处理接收到数据时的响应 */
   initOnMessage() {
+    const responseCmdMap = new Map([
+      [DUPLEX_API_CMD.QUERY_TRANSACTION, DUPLEX_API_CMD.QUERY_TRANSACTION_RETURN],
+      [DUPLEX_API_CMD.NEW_TRANSACTION, DUPLEX_API_CMD.NEW_TRANSACTION_RETURN],
+      [DUPLEX_API_CMD.QUERY_BLOCK, DUPLEX_API_CMD.QUERY_BLOCK_RETURN],
+      [DUPLEX_API_CMD.NEW_BLOCK, DUPLEX_API_CMD.NEW_BLOCK_RETURN],
+      [DUPLEX_API_CMD.GET_PEER_INFO, DUPLEX_API_CMD.GET_PEER_INFO_RETURN],
+    ])
     this.endpoint.onMessage(async (message: Uint8Array) => {
       /* 测试了socket-io：
        * 使用client发送ArrayBuffer后，nodejs中server接收到的是Buffer。
@@ -470,13 +477,6 @@ export class ChainChannel<
           response.error = ErrorMessage.fromException(err);
           return response;
         };
-        const responseCmdMap = new Map([
-          [DUPLEX_API_CMD.QUERY_TRANSACTION, DUPLEX_API_CMD.QUERY_TRANSACTION_RETURN],
-          [DUPLEX_API_CMD.NEW_TRANSACTION, DUPLEX_API_CMD.NEW_TRANSACTION_RETURN],
-          [DUPLEX_API_CMD.QUERY_BLOCK, DUPLEX_API_CMD.QUERY_BLOCK_RETURN],
-          [DUPLEX_API_CMD.NEW_BLOCK, DUPLEX_API_CMD.NEW_BLOCK_RETURN],
-          [DUPLEX_API_CMD.GET_PEER_INFO, DUPLEX_API_CMD.GET_PEER_INFO_RETURN],
-        ]);
         try {
           switch (cmd) {
             /// 查询交易
