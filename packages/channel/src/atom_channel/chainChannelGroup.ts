@@ -1097,7 +1097,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       }
     } else {
       for (const DH of this.chainChannelSet.values()) {
-        if (DH.canBroadcastTransaction) {
+        if (DH.canBroadcastBlock) {
           chainChannelList.push(DH);
         }
       }
