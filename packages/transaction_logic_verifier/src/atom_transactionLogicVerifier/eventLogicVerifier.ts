@@ -587,7 +587,7 @@ export class EventLogicVerifier {
   }
 
   listenEventIssueAsset(
-    accountsAssets: { [asddress: string]: BFChainCore.AccountAssets },
+    accountAssets: BFChainCore.AccountAssets,
     transaction: BFChainCore.Transaction,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -622,7 +622,7 @@ export class EventLogicVerifier {
         }
 
         // 是否持有除链资产外的其他资产
-        this.helperLogicVerifier.isPossessAssetExceptForChainAsset(accountsAssets[address]);
+        this.helperLogicVerifier.isPossessAssetExceptForChainAsset(accountAssets);
 
         // 资产的发行账户不能是dapp的拥有者
         await this.helperLogicVerifier.isDAppPossessor(
@@ -645,7 +645,7 @@ export class EventLogicVerifier {
           issueAssetMinChainAsset,
         } = this.configHelper;
         const remainChainAsset =
-          accountsAssets[address][chainMagic][chainAssetType].assetNumber - BigInt(transaction.fee);
+          accountAssets[chainMagic][chainAssetType].assetNumber - BigInt(transaction.fee);
         if (BigInt(issueAssetMinChainAsset) > remainChainAsset) {
           throw new ConsensusException(ASSET_NOT_ENOUGH, {
             reason: `No enough asset, Min account asset ${issueAssetMinChainAsset}, remain Assets: ${remainChainAsset}`,
