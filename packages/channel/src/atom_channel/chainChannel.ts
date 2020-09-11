@@ -122,10 +122,8 @@ const getReqId = () => {
  */
 @Resolvable()
 export class ChainChannel<
-    THIS extends BFChainCore.SimpleChainChannel = BFChainCore.SimpleChainChannel
-  >
-  extends ChainChannelBase
-  implements BFChainCore.ChainChannel<THIS> {
+  THIS extends BFChainCore.SimpleChainChannel = BFChainCore.SimpleChainChannel
+> extends ChainChannelBase implements BFChainCore.ChainChannel<THIS> {
   /**查询默认为true 广播默认为false */
   protected _canQueryTransaction = true;
   get canQueryTransaction() {
@@ -182,7 +180,7 @@ export class ChainChannel<
     once?: boolean,
   ) {
     if (once) {
-      const remover = this.endpoint.onClose((err) => {
+      const remover = this.endpoint.onClose(err => {
         handler(err);
         remover();
       });
@@ -334,14 +332,14 @@ export class ChainChannel<
   }
   async initBroadcastTransactionArg(
     transaction: BFChainCore.NewTransactionArgJSON["transaction"],
-    opts: BFChainCore.ChannelRequestOptions<THIS> = {},
+    opts?: BFChainCore.ChannelRequestOptions<THIS>,
   ) {
     const arg = NewTransactionArgModel.fromObject({
       transaction:
         transaction instanceof Message
           ? transaction
           : await this.transactionCore.recombineTransaction(transaction),
-      grabSecret: opts.grabSecret,
+      grabSecret: opts?.grabSecret,
     });
 
     return [
@@ -531,7 +529,7 @@ export class ChainChannel<
               /// 查询成功
               if (queryResult) {
                 response.status = RESPONSE_STATUS.success;
-                response.transactions = queryResult.transactions.map((tib) =>
+                response.transactions = queryResult.transactions.map(tib =>
                   TransactionInBlock.fromObject(tib),
                 );
               }
