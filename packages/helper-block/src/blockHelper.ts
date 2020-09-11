@@ -120,7 +120,7 @@ export class BlockHelper {
   calcRoundEndHeight(round_num: number) {
     return round_num * this.config.blockPerRound;
   }
-  /**计算高度对应的一轮的结束高度 */
+  /**计算高度对应的一轮的起始高度 */
   calcRoundStartHeightByHeight(height: number) {
     const round_num = this.calcRoundByHeight(height);
     return this.calcRoundStartHeight(round_num);

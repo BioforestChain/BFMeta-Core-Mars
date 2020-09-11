@@ -247,16 +247,26 @@ export class ChainChannelHelper {
     }
     //#endregion
     //#region 排序参数校验
-    const { index } = arg.sort;
-    if (index) {
+    const { tIndex } = arg.sort;
+    if (tIndex !== undefined) {
       // if (typeof timestamp === "number") {
-      if (index !== -1 && index !== 1) {
+      if (tIndex !== -1 && tIndex !== 1) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.sort",
-          field: "timestamp",
+          field: "tIndex",
         });
       }
     }
+    // const { index } = arg.sort;
+    // if (index) {
+    //   // if (typeof timestamp === "number") {
+    //   if (index !== -1 && index !== 1) {
+    //     throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+    //       function: "boxQueryTransactionArg.sort",
+    //       field: "timestamp",
+    //     });
+    //   }
+    // }
     //#endregion
     return arg;
   }

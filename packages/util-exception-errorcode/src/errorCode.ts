@@ -90,7 +90,7 @@ export const CUSTOM_TRANS_VERIFY_FAIL = (ec.next = "custom transaction verify fa
 export const NOT_FOUND = (ec.next = "{prop} not found when {function}");
 /**prop target function */
 export const PROP_LOSE = (ec.next = "{prop} in {target} lose when {function}");
-/**address function errorId */
+/**address errorId function */
 export const ACCOUNT_FROZEN = (ec.next =
   "Account with address {address} was frozen errorId {errorId} when {function}");
 /**address reason errorId function */

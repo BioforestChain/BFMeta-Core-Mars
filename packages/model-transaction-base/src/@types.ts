@@ -128,7 +128,6 @@ declare namespace BFChainCore {
     sourceChainMagic: string;
     assetType: string;
     expectedIssuedAssets: string;
-    genesisAddress: string;
   }
   interface IssueAssetAssetJSON {
     issueAsset: IssueAssetJSON;

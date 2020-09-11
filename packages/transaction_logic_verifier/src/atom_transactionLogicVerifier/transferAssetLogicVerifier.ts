@@ -30,7 +30,7 @@ export class TransferAssetLogicVerifier extends TransactionLogicVerifier {
 
     if (!memAsset) {
       throw new ConsensusException(NOT_EXIST, {
-        prop: `chain with magic ${sourceChainMagic}`,
+        prop: `asset with magic ${sourceChainMagic} assetType ${assetType}`,
         target: "blockChain",
         ...Function_Exception_Detail,
       });

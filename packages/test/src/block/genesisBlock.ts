@@ -381,6 +381,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
           type: core.transactionHelper.LOCATION_NAME, // 交易类型
           senderId: genesisAccountInfo.address, // 发起者地址
           senderPublicKey: genesisAccountInfo.publicKey, // 发起者公钥
+          recipientId: genesisAccountInfo.address,
           rangeType: RANGE_TYPE.EMPTY,
           range: [], // 接收范围
           timestamp: 0, // 生成交易时间戳

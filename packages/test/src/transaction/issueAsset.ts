@@ -56,7 +56,6 @@ async function getIssueAssetTransaction(sender: AccountModel) {
         sourceChainMagic: bfchainCore.config.magic,
         assetType: "ZEK",
         expectedIssuedAssets: "100000000000000",
-        genesisAddress,
       },
     },
     keypair,

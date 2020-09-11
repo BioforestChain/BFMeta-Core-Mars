@@ -144,13 +144,7 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
       target: "issueAssetAsset",
     } as const;
 
-    const {
-      sourceChainName,
-      sourceChainMagic,
-      assetType,
-      genesisAddress,
-      expectedIssuedAssets,
-    } = issueAsset;
+    const { sourceChainName, sourceChainMagic, assetType, expectedIssuedAssets } = issueAsset;
 
     this.checkChainName(sourceChainName, "sourceChainName", IssueAssetAsset_Exception_Detail);
 
@@ -224,40 +218,6 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
         ...IssueAssetAsset_Exception_Detail,
       });
     }
-
-    if (!genesisAddress) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "genesisAddress",
-        ...IssueAssetAsset_Exception_Detail,
-      });
-    }
-
-    if (!(await accountBaseHelper.isAddress(genesisAddress))) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `genesisAddress ${genesisAddress}`,
-        type: "account address",
-        ...IssueAssetAsset_Exception_Detail,
-      });
-    }
-
-    if (body.senderId === genesisAddress) {
-      throw new ArgumentIllegalException(SHOULD_BE_DIFFERENT, {
-        to_compare_prop: `senderId ${body.senderId}`,
-        be_compare_prop: `genesisAddress ${genesisAddress}`,
-        to_target: "body",
-        be_target: "issueAsset",
-        ...IssueAssetAsset_Exception_Detail,
-      });
-    }
-
-    if (recipientId !== genesisAddress) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: `genesisAddress ${genesisAddress}`,
-        to_target: "issueAsset",
-        be_compare_prop: `recipientId ${recipientId}`,
-        ...IssueAssetAsset_Exception_Detail,
-      });
-    }
   }
 
   /**
@@ -288,12 +248,11 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
   ) {
     const tasks = new TaskList();
     tasks.next = super.applyTransaction(transaction, eventEmitter, config);
-    const { senderId, senderPublicKeyBuffer } = transaction;
+    const { senderId, recipientId, senderPublicKeyBuffer } = transaction;
     const {
       sourceChainName,
       sourceChainMagic,
       assetType,
-      genesisAddress,
       expectedIssuedAssets,
     } = transaction.asset.issueAsset;
     // 冻结发起账户
@@ -313,7 +272,7 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
       transaction,
       applyInfo: {
         address: senderId,
-        genesisAddress,
+        genesisAddress: recipientId,
         publicKeyBuffer: senderPublicKeyBuffer,
         sourceChainName,
         assetInfo,
