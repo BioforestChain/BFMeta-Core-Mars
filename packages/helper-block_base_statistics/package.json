@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-helper-block-base-statistics",
-  "version": "5.18.7",
+  "version": "5.18.8",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
