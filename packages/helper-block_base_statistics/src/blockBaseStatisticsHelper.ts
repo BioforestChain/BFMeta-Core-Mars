@@ -255,7 +255,7 @@ export class StatisticsInfo extends EventEmitter<{ destroy: [] }> {
         assetStatic.magic,
         assetStatic.assetType,
       );
-      this._chainAssetStatisticMap.set(assetInfo, new AssetStatistic(assetStatic));
+      this._storeChainAssetStatistic(assetInfo, new AssetStatistic(assetStatic));
     }
   }
   /**累计手续费 */
@@ -303,12 +303,15 @@ export class StatisticsInfo extends EventEmitter<{ destroy: [] }> {
       ? chainAsset
       : this.chainAssetInfoHelper.getAssetInfo(chainAsset.magic, chainAsset.assetType);
   }
+  private _storeChainAssetStatistic(chainAssetInfo: ChainAssetInfo, assetStatic: AssetStatistic) {
+    this._chainAssetStatisticMap.set(chainAssetInfo, assetStatic);
+    this._assetStatisticHashMap[assetStatic.index] = assetStatic.toModel();
+  }
   getAssetStatistic(chainAsset: BFChainCore.AssetInfoJSON) {
     return this._chainAssetStatisticMap.get(this._formatChainAssetInfo(chainAsset));
   }
   setAssetStatistic(chainAsset: BFChainCore.AssetInfoJSON, assetStatic: AssetStatistic) {
-    this._chainAssetStatisticMap.set(this._formatChainAssetInfo(chainAsset), assetStatic);
-    this._assetStatisticHashMap[assetStatic.index] = assetStatic.toModel();
+    this._storeChainAssetStatistic(this._formatChainAssetInfo(chainAsset), assetStatic);
     this.source_data.assetStatisticMap.set(assetStatic.index, assetStatic.toModel());
     return this;
   }
