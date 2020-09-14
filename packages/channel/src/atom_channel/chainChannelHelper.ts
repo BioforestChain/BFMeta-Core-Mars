@@ -81,6 +81,7 @@ export class ChainChannelHelper {
     //#region 查询参数校验
     const {
       type,
+      signature,
       signatureBuffer,
       senderId,
       recipientId,
@@ -103,7 +104,7 @@ export class ChainChannelHelper {
       if (!BH.isValidTransactionType(type)) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg",
-          field: "type",
+          field: `type ${type}`,
         });
       }
     }
@@ -112,7 +113,7 @@ export class ChainChannelHelper {
       if (!BH.isValidSignature(signatureBuffer)) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.query",
-          field: "signatureBuffer",
+          field: `signatureBuffer ${signature}`,
         });
       }
     }
@@ -121,7 +122,7 @@ export class ChainChannelHelper {
       if (!(await this.accountBaseHelper.isAddress(senderId))) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.query",
-          field: "senderId",
+          field: `senderId ${senderId}`,
         });
       }
     }
@@ -130,7 +131,7 @@ export class ChainChannelHelper {
       if (!(await this.accountBaseHelper.isAddress(recipientId))) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.query",
-          field: "recipientId",
+          field: `recipientId ${recipientId}`,
         });
       }
     }
@@ -139,7 +140,7 @@ export class ChainChannelHelper {
       if (!BH.isValidDAppId(dappid)) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.query",
-          field: "dappid",
+          field: `dappid ${dappid}`,
         });
       }
     }
@@ -148,7 +149,7 @@ export class ChainChannelHelper {
       if (!BH.isValidLnsName(lns)) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.query",
-          field: "lns",
+          field: `lns ${lns}`,
         });
       }
     }
@@ -157,7 +158,13 @@ export class ChainChannelHelper {
       if (!(storage.key && storage.key.length)) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.query",
-          field: "storage",
+          field: `storage.key ${storage.key}`,
+        });
+      }
+      if (!(storage.value && storage.value.length)) {
+        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+          function: "boxQueryTransactionArg.query",
+          field: `storage.value ${storage.value}`,
         });
       }
     }
@@ -166,7 +173,7 @@ export class ChainChannelHelper {
       if (!BH.isValidBlockSignature(blockSignature)) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.query",
-          field: "blockSignature",
+          field: `blockSignature ${blockSignature}`,
         });
       }
     }
@@ -175,7 +182,7 @@ export class ChainChannelHelper {
       if (!BH.isUint32(minHeight)) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.query",
-          field: "minHeight",
+          field: `minHeight ${minHeight}`,
         });
       }
     }
@@ -184,7 +191,7 @@ export class ChainChannelHelper {
       if (!BH.isUint32(maxHeight)) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.query",
-          field: "maxHeight",
+          field: `maxHeight ${maxHeight}`,
         });
       }
     }
@@ -193,7 +200,7 @@ export class ChainChannelHelper {
       if (!BH.isNaturalNumber(numberOfSenderTransactions)) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.query",
-          field: "numberOfSenderTransactions",
+          field: `numberOfSenderTransactions ${numberOfSenderTransactions}`,
         });
       }
     }
@@ -202,7 +209,7 @@ export class ChainChannelHelper {
       if (!(await this.accountBaseHelper.isAddress(trusteeId))) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.query",
-          field: "trusteeId",
+          field: `trusteeId ${trusteeId}`,
         });
       }
     }
@@ -211,7 +218,7 @@ export class ChainChannelHelper {
       if (!BH.isValidDAppId(purchaseDAppid)) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.query",
-          field: "purchaseDAppid",
+          field: `purchaseDAppid ${purchaseDAppid}`,
         });
       }
     }
@@ -220,7 +227,7 @@ export class ChainChannelHelper {
       if (!BH.isString(range)) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.query",
-          field: "range",
+          field: `range ${range}`,
         });
       }
     }
@@ -233,7 +240,7 @@ export class ChainChannelHelper {
     if (!BH.isUint32(offset)) {
       throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
         function: "boxQueryTransactionArg.query",
-        field: "offset",
+        field: `offset ${offset}`,
       });
     }
     if (limit) {
@@ -241,7 +248,7 @@ export class ChainChannelHelper {
       if (!BH.isUint32(limit)) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.query",
-          field: "limit",
+          field: `limit ${limit}`,
         });
       }
     }
@@ -253,7 +260,7 @@ export class ChainChannelHelper {
       if (tIndex !== -1 && tIndex !== 1) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.sort",
-          field: "tIndex",
+          field: `tIndex ${tIndex}`,
         });
       }
     }
@@ -490,43 +497,43 @@ export class ChainChannelHelper {
     if (!BH.isUint32(newBlockArg.height)) {
       throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
         function: "boxNewBlockArg",
-        field: "height",
+        field: `height ${newBlockArg.height}`,
       });
     }
     if (!BH.isValidBlockSignature(newBlockArg.signature)) {
       throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
         function: "boxNewBlockArg",
-        field: "signature",
+        field: `signature ${newBlockArg.signature}`,
       });
     }
     if (!BH.isValidBlockSignature(newBlockArg.previousBlockSignature)) {
       throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
         function: "boxNewBlockArg",
-        field: "previousBlockSignature",
+        field: `previousBlockSignature ${newBlockArg.previousBlockSignature}`,
       });
     }
     if (!BH.isFiniteBigInt(newBlockArg.totalFee)) {
       throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
         function: "boxNewBlockArg",
-        field: "totalFee",
+        field: `totalFee ${newBlockArg.totalFee}`,
       });
     }
     if (!BH.isUint32(newBlockArg.numberOfTransactions)) {
       throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
         function: "boxNewBlockArg",
-        field: "numberOfTransactions",
+        field: `numberOfTransactions ${newBlockArg.numberOfTransactions}`,
       });
     }
     if (!BH.isUint32(newBlockArg.timestamp)) {
       throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
         function: "boxNewBlockArg",
-        field: "timestamp",
+        field: `timestamp ${newBlockArg.timestamp}`,
       });
     }
     if (!BH.isValidPublicKey(newBlockArg.generatorPublicKeyBuffer)) {
       throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
         function: "boxNewBlockArg",
-        field: "generatorPublicKey",
+        field: `generatorPublicKey ${newBlockArg.generatorPublicKey}`,
       });
     }
     //#endregion
