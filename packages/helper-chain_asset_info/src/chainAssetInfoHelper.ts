@@ -1,5 +1,7 @@
 import { Injectable } from "@bfchain/util";
-/**链资产类型 */
+/**链资产类型
+ * @TODO rename to KeyAssetInfo
+ */
 export class ChainAssetInfo implements BFChainCore.AssetInfoJSON {
   constructor(public magic: string, public assetType: string) {}
 }

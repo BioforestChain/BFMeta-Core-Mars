@@ -250,12 +250,12 @@ export class StatisticsInfo extends EventEmitter<{ destroy: [] }> {
     public chainAssetInfoHelper: ChainAssetInfoHelper,
   ) {
     super();
-    for (const assetStatic of source_data.assetStatisticMap.values()) {
+    for (const assetStatistic of source_data.assetStatisticMap.values()) {
       const assetInfo = this.chainAssetInfoHelper.getAssetInfo(
-        assetStatic.magic,
-        assetStatic.assetType,
+        assetStatistic.magic,
+        assetStatistic.assetType,
       );
-      this._storeChainAssetStatistic(assetInfo, new AssetStatistic(assetStatic));
+      this._storeChainAssetStatistic(assetInfo, new AssetStatistic(assetStatistic));
     }
   }
   /**累计手续费 */
@@ -303,16 +303,20 @@ export class StatisticsInfo extends EventEmitter<{ destroy: [] }> {
       ? chainAsset
       : this.chainAssetInfoHelper.getAssetInfo(chainAsset.magic, chainAsset.assetType);
   }
-  private _storeChainAssetStatistic(chainAssetInfo: ChainAssetInfo, assetStatic: AssetStatistic) {
-    this._chainAssetStatisticMap.set(chainAssetInfo, assetStatic);
-    this._assetStatisticHashMap[assetStatic.index] = assetStatic.toModel();
+  private _storeChainAssetStatistic(
+    chainAssetInfo: ChainAssetInfo,
+    assetStatistic: AssetStatistic,
+  ) {
+    this._chainAssetStatisticMap.set(chainAssetInfo, assetStatistic);
+    /// 这里使用toModel，拿到了是 assetStatistic 的 source_data
+    this._assetStatisticHashMap[assetStatistic.index] = assetStatistic.toModel();
   }
   getAssetStatistic(chainAsset: BFChainCore.AssetInfoJSON) {
     return this._chainAssetStatisticMap.get(this._formatChainAssetInfo(chainAsset));
   }
-  setAssetStatistic(chainAsset: BFChainCore.AssetInfoJSON, assetStatic: AssetStatistic) {
-    this._storeChainAssetStatistic(this._formatChainAssetInfo(chainAsset), assetStatic);
-    this.source_data.assetStatisticMap.set(assetStatic.index, assetStatic.toModel());
+  setAssetStatistic(chainAsset: BFChainCore.AssetInfoJSON, assetStatistic: AssetStatistic) {
+    this._storeChainAssetStatistic(this._formatChainAssetInfo(chainAsset), assetStatistic);
+    this.source_data.assetStatisticMap.set(assetStatistic.index, assetStatistic.toModel());
     return this;
   }
   initAssetStatistic(chainAsset: BFChainCore.AssetInfoJSON, index = this.assetStatisticCount) {
@@ -355,6 +359,9 @@ export class StatisticsInfo extends EventEmitter<{ destroy: [] }> {
     this._totalFee && (this.source_data.totalFee = this._totalFee.toString());
     this._totalAsset && (this.source_data.totalAsset = this._totalAsset.toString());
     this._totalChainAsset && (this.source_data.totalChainAsset = this._totalChainAsset.toString());
+
+    // 强制将内存更新
+    this._chainAssetStatisticMap.forEach((assetStatistic) => assetStatistic.toModel());
     this.source_data.assetStatisticHashMap = this._assetStatisticHashMap;
 
     return this.source_data;
@@ -457,9 +464,9 @@ class AssetStatistic {
   getTypeStatistic(baseType: string) {
     return this._typeStatisticMap.get(baseType);
   }
-  setTypeStatistic(baseType: string, assetStatic: CountAndAmountStatistic) {
-    this._typeStatisticMap.set(baseType, assetStatic);
-    this.source_data.typeStatisticMap.set(baseType, assetStatic.toModel());
+  setTypeStatistic(baseType: string, assetStatistic: CountAndAmountStatistic) {
+    this._typeStatisticMap.set(baseType, assetStatistic);
+    this.source_data.typeStatisticMap.set(baseType, assetStatistic.toModel());
     return this;
   }
   initTypeStatistic(baseType: string) {
