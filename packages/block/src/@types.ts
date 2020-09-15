@@ -35,6 +35,7 @@ declare namespace BFChainCore {
     verifySignature?: boolean;
     verifyAsset?: boolean;
     skipVerifyStatisticInfo?: boolean;
+    skipVerifyParticipation?: boolean;
     recordForkBlock?: boolean;
     transactionGetterHelper?: Required<
       Pick<BFChainCore.TransactionGetterHelperInterface, "getNewDelegates">

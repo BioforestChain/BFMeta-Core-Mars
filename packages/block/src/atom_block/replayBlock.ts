@@ -271,7 +271,7 @@ export class ReplayBlockCore<T extends Block> {
     options: BFChainCore.ReplayBlockOptions,
     config = this.config,
   ) {
-    const { verifySignature, skipVerifyStatisticInfo } = options;
+    const { verifySignature, skipVerifyStatisticInfo, skipVerifyParticipation } = options;
     const {
       height,
       signature,
@@ -543,6 +543,58 @@ export class ReplayBlockCore<T extends Block> {
         }
       }
       isDevGenerateBlock && info("finish insertTransactionsForReplay");
+
+      const numberOfTransactions = transactionBufferList.length;
+      if (block.numberOfTransactions !== numberOfTransactions) {
+        /// 区块的交易数对不上
+        throw new ArgumentIllegalException(NOT_MATCH, {
+          to_compare_prop: `numberOfTransactions ${block.numberOfTransactions}`,
+          be_compare_prop: `numberOfTransactions ${numberOfTransactions}`,
+          to_target: "block",
+          be_target: "calculate",
+          ...Function_Exception_Detail,
+        });
+      }
+
+      if (block.payloadLength !== payloadLength) {
+        throw new ArgumentIllegalException(NOT_MATCH, {
+          to_compare_prop: `payloadLength ${block.payloadLength}`,
+          be_compare_prop: `payloadLength ${payloadLength}`,
+          to_target: "block",
+          be_target: "calculate",
+          ...Function_Exception_Detail,
+        });
+      }
+
+      const payloadHashHex = await payloadHash.digest("hex");
+      if (block.payloadHash !== payloadHashHex) {
+        throw new ArgumentIllegalException(NOT_MATCH, {
+          to_compare_prop: `payloadHashHex ${block.payloadHash}`,
+          be_compare_prop: `payloadHashHex ${payloadHashHex}`,
+          to_target: "block",
+          be_target: "calculate",
+          ...Function_Exception_Detail,
+        });
+      }
+
+      if (!skipVerifyParticipation) {
+        const blockParticipation = this.blockHelper.calcBlockParticipation({
+          totalAccount: statisticsInfo.totalAccount,
+          totalChainAsset: statisticsInfo.totalChainAsset,
+          totalFee: statisticsInfo.totalFee,
+          numberOfTransactions,
+        });
+        if (block.remark.blockParticipation !== blockParticipation) {
+          throw new ArgumentIllegalException(NOT_MATCH, {
+            to_compare_prop: `blockParticipation ${block.remark.blockParticipation}`,
+            be_compare_prop: `blockParticipation ${blockParticipation}`,
+            to_target: "block",
+            be_target: "calculate",
+            ...Function_Exception_Detail,
+          });
+        }
+      }
+
       if (!skipVerifyStatisticInfo) {
         if (
           !this.baseHelper.isArrayEqual(
@@ -575,57 +627,6 @@ export class ReplayBlockCore<T extends Block> {
           throw new ArgumentIllegalException(NOT_MATCH, {
             to_compare_prop: `totalFee ${block.totalFee}`,
             be_compare_prop: `totalFee ${stotalFee}`,
-            to_target: "block",
-            be_target: "calculate",
-            ...Function_Exception_Detail,
-          });
-        }
-      }
-
-      if (block.payloadLength !== payloadLength) {
-        throw new ArgumentIllegalException(NOT_MATCH, {
-          to_compare_prop: `payloadLength ${block.payloadLength}`,
-          be_compare_prop: `payloadLength ${payloadLength}`,
-          to_target: "block",
-          be_target: "calculate",
-          ...Function_Exception_Detail,
-        });
-      }
-
-      const payloadHashHex = await payloadHash.digest("hex");
-      if (block.payloadHash !== payloadHashHex) {
-        throw new ArgumentIllegalException(NOT_MATCH, {
-          to_compare_prop: `payloadHashHex ${block.payloadHash}`,
-          be_compare_prop: `payloadHashHex ${payloadHashHex}`,
-          to_target: "block",
-          be_target: "calculate",
-          ...Function_Exception_Detail,
-        });
-      }
-
-      const numberOfTransactions = transactionBufferList.length;
-      if (block.numberOfTransactions !== numberOfTransactions) {
-        /// 区块的交易数对不上
-        throw new ArgumentIllegalException(NOT_MATCH, {
-          to_compare_prop: `numberOfTransactions ${block.numberOfTransactions}`,
-          be_compare_prop: `numberOfTransactions ${numberOfTransactions}`,
-          to_target: "block",
-          be_target: "calculate",
-          ...Function_Exception_Detail,
-        });
-      }
-
-      if (!skipVerifyStatisticInfo) {
-        const blockParticipation = this.blockHelper.calcBlockParticipation({
-          totalAccount: statisticsInfo.totalAccount,
-          totalChainAsset: statisticsInfo.totalChainAsset,
-          totalFee: statisticsInfo.totalFee,
-          numberOfTransactions,
-        });
-        if (block.remark.blockParticipation !== blockParticipation) {
-          throw new ArgumentIllegalException(NOT_MATCH, {
-            to_compare_prop: `blockParticipation ${block.remark.blockParticipation}`,
-            be_compare_prop: `blockParticipation ${blockParticipation}`,
             to_target: "block",
             be_target: "calculate",
             ...Function_Exception_Detail,
