@@ -15,7 +15,6 @@ import {
   FORBIDDEN,
   ALREADY_EXIST,
   ASSET_NOT_EXIST,
-  CAN_NOT_DESTORY_ASSET,
   DAPPID_IS_ALREADY_EXIST,
   DAPPID_IS_NOT_EXIST,
   NO_NEED_TO_PURCHASE_SPECIAL_ASSET,
@@ -697,39 +696,10 @@ export class EventLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const Function_Exception_Detail = {
-      function: "eventLogicVerifier",
-    } as const;
-
     // 资产销毁
     eventEmitter.on(
       "destoryAsset",
       async ({ applyInfo }, next) => {
-        const { assetInfo, amount, address } = applyInfo;
-        const { magic, assetType } = assetInfo;
-
-        // 查询本地是否已经存在这个数字资产(注意忽略大小写)
-        const memAssets = await accountGetterHelper.getAsset(magic, assetType);
-        if (!memAssets) {
-          // 不存在的资产不能被销毁
-          throw new ConsensusException(ASSET_NOT_EXIST, {
-            magic,
-            assetType,
-            ...Function_Exception_Detail,
-          });
-        }
-
-        // 资产的创世账户不能销毁资产
-        if (memAssets.genesisAddress === transaction.senderId) {
-          throw new ConsensusException(CAN_NOT_DESTORY_ASSET, {
-            address: transaction.senderId,
-            magic,
-            assetType,
-            reason: "assets genesis account can't destory assets",
-            ...Function_Exception_Detail,
-          });
-        }
-
         next();
       },
       { taskname: `applyTransaction/logicVerifier/destoryAsset` },

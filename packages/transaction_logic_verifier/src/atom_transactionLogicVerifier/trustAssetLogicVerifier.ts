@@ -31,32 +31,14 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
     await this.isTrusteesFrozen(transaction.asset.trustAsset.trustees, accountGetterHelper);
-
-    const Function_Exception_Detail = {
-      function: "logicVerify",
-    } as const;
-
     const { sourceChainMagic, assetType, sourceChainName } = transaction.asset.trustAsset;
 
-    const memAsset = await accountGetterHelper.getAsset(sourceChainMagic, assetType);
-
-    if (!memAsset) {
-      throw new ConsensusException(NOT_EXIST, {
-        prop: `asset with magic ${sourceChainMagic} assetType ${assetType}`,
-        target: "blockChain",
-        ...Function_Exception_Detail,
-      });
-    }
-
-    if (memAsset.sourceChainName !== sourceChainName) {
-      throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: memAsset.sourceChainName,
-        be_compare_prop: sourceChainName,
-        to_target: "chain asset",
-        be_target: "trustAsset",
-        ...Function_Exception_Detail,
-      });
-    }
+    await this.helperLogicVerifier.isAssetExist(
+      sourceChainName,
+      sourceChainMagic,
+      assetType,
+      accountGetterHelper,
+    );
 
     const { sender, recipient } = await this.logicVerify(
       transaction,

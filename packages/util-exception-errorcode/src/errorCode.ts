@@ -209,9 +209,6 @@ export const INVALID_ACCOUNT_ALIAS = (ec.next =
 /**address function */
 export const SET_USERANME_AT_FIRST = (ec.next =
   "Please set username at first, address {address} when {function}");
-/**address magic assetType reason function */
-export const CAN_NOT_DESTORY_ASSET = (ec.next =
-  "Account with address {address} can not destory asset, magic {magic} assetType {assetType} reason {reason} when {function}");
 /**address, function */
 export const NEED_EMIGRATE_TOTAL_ASSET = (ec.next =
   "Need emigrate total asset, address {address} when {function}");

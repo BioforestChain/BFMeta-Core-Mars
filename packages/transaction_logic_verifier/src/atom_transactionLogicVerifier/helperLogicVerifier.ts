@@ -5,6 +5,7 @@ import {
   POSSESS_ASSET_EXCEPT_CHAIN_ASSET,
   ACCOUNT_CAN_NOT_BE_FROZEN,
   NOT_EXIST,
+  NOT_MATCH,
 } from "@bfchain/core-util-exception";
 const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "HelperLogicVerifier");
 
@@ -83,6 +84,37 @@ export class HelperLogicVerifier {
         address,
         reason: "Location name possessor or manager can not initiate a frozen account transaction",
         function: "isLnsPossessorOrManager",
+      });
+    }
+  }
+
+  async isAssetExist(
+    sourceChainName: string,
+    sourceChainMagic: string,
+    assetType: string,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+  ) {
+    const Function_Exception_Detail = {
+      function: "isAssetExist",
+    } as const;
+
+    const memAsset = await accountGetterHelper.getAsset(sourceChainMagic, assetType);
+
+    if (!memAsset) {
+      throw new ConsensusException(NOT_EXIST, {
+        prop: `asset with magic ${sourceChainMagic} assetType ${assetType}`,
+        target: "blockChain",
+        ...Function_Exception_Detail,
+      });
+    }
+
+    if (memAsset.sourceChainName !== sourceChainName) {
+      throw new ConsensusException(NOT_MATCH, {
+        to_compare_prop: `sourceChainName ${memAsset.sourceChainName}`,
+        be_compare_prop: `sourceChainName ${sourceChainName}`,
+        to_target: `blockChain magic ${sourceChainMagic} assetType ${assetType}`,
+        be_target: `transaction magic ${sourceChainMagic} assetType ${assetType}`,
+        ...Function_Exception_Detail,
       });
     }
   }

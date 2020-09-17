@@ -56,10 +56,6 @@ export class ToExchangeAssetLogicVerifier extends TransactionLogicVerifier {
     toExchangeAssetAsset: ToExchangeAssetModel,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
   ) {
-    const Function_Exception_Detail = {
-      function: "isExchangeAssetAlreadyExist",
-    } as const;
-
     const {
       toExchangeSource,
       toExchangeChainName,
@@ -68,41 +64,19 @@ export class ToExchangeAssetLogicVerifier extends TransactionLogicVerifier {
       beExchangeChainName,
       beExchangeAsset,
     } = toExchangeAssetAsset;
-    const memToAssets = await accountGetterHelper.getAsset(toExchangeSource, toExchangeAsset);
-    if (!memToAssets) {
-      // 不存在的资产不能被交换
-      throw new ConsensusException(ASSET_NOT_EXIST, {
-        magic: toExchangeSource,
-        assetType: toExchangeAsset,
-        ...Function_Exception_Detail,
-      });
-    }
-    if (memToAssets.sourceChainName !== toExchangeChainName) {
-      throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: `sourceChainName ${memToAssets.sourceChainName}`,
-        be_compare_prop: `toExchangeChainName ${toExchangeChainName}`,
-        to_target: "memToAssets",
-        be_target: "toExchangeAssetAsset",
-        ...Function_Exception_Detail,
-      });
-    }
-    const memBeAssets = await accountGetterHelper.getAsset(beExchangeSource, beExchangeAsset);
-    if (!memBeAssets) {
-      // 不存在的资产不能被交换
-      throw new ConsensusException(ASSET_NOT_EXIST, {
-        magic: beExchangeSource,
-        assetType: beExchangeAsset,
-        ...Function_Exception_Detail,
-      });
-    }
-    if (memBeAssets.sourceChainName !== beExchangeChainName) {
-      throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: `sourceChainName ${memBeAssets.sourceChainName}`,
-        be_compare_prop: `beExchangeChainName ${beExchangeChainName}`,
-        to_target: "memBeAssets",
-        be_target: "toExchangeAssetAsset",
-        ...Function_Exception_Detail,
-      });
-    }
+
+    await this.helperLogicVerifier.isAssetExist(
+      toExchangeChainName,
+      toExchangeSource,
+      toExchangeAsset,
+      accountGetterHelper,
+    );
+
+    await this.helperLogicVerifier.isAssetExist(
+      beExchangeChainName,
+      beExchangeSource,
+      beExchangeAsset,
+      accountGetterHelper,
+    );
   }
 }

@@ -20,31 +20,14 @@ export class TransferAssetLogicVerifier extends TransactionLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const Function_Exception_Detail = {
-      function: "logicVerify",
-    } as const;
-
     const { sourceChainMagic, assetType, sourceChainName } = transaction.asset.transferAsset;
 
-    const memAsset = await accountGetterHelper.getAsset(sourceChainMagic, assetType);
-
-    if (!memAsset) {
-      throw new ConsensusException(NOT_EXIST, {
-        prop: `asset with magic ${sourceChainMagic} assetType ${assetType}`,
-        target: "blockChain",
-        ...Function_Exception_Detail,
-      });
-    }
-
-    if (memAsset.sourceChainName !== sourceChainName) {
-      throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: `sourceChainName ${memAsset.sourceChainName}`,
-        be_compare_prop: `sourceChainName ${sourceChainName}`,
-        to_target: "chain asset",
-        be_target: "transferAsset",
-        ...Function_Exception_Detail,
-      });
-    }
+    await this.helperLogicVerifier.isAssetExist(
+      sourceChainName,
+      sourceChainMagic,
+      assetType,
+      accountGetterHelper,
+    );
 
     const { sender, recipient } = await this.logicVerify(
       transaction,
