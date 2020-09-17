@@ -112,8 +112,8 @@ export class TransactionSortOptions extends Message<TransactionSortOptions>
   implements BFChainCore.JSONToModelType<BFChainCore.TransactionSortOptionsJSON> {
   static INC = 1;
   /**根据链上事件索引排序 */
-  @Field.d(TransactionSortOptions.INC++, "int32", "optional")
-  tIndex?: -1 | 1;
+  @Field.d(TransactionSortOptions.INC++, "int32", "required", 1)
+  tIndex!: -1 | 1;
   toJSON() {
     return {
       tIndex: this.tIndex,
@@ -168,7 +168,7 @@ export class QueryTransactionReturnModel<
   toJSON() {
     return Object.assign(
       {
-        transactions: this.transactions.map((tib) => tib.toJSON()),
+        transactions: this.transactions.map(tib => tib.toJSON()),
       },
       super.toJSON(),
     );
