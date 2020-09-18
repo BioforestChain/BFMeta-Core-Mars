@@ -4,10 +4,12 @@ import {
   getSenderWithoutSecondSecret,
   AccountModel,
   getBfchainCoreEntry,
+  getGenesisAccount,
 } from "../include";
 
 const bfchainCore = getBfchainCoreEntry();
 
+const genesisAddress = getGenesisAccount().address;
 async function getDestoryAssetTransaction(sender: AccountModel) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
@@ -16,6 +18,7 @@ async function getDestoryAssetTransaction(sender: AccountModel) {
     senderId: sender.address, // 发起者地址
     senderPublicKey: sender.publicKey, // 发起者公钥
     senderSecondPublicKey: "", // 发起者二次公钥
+    recipientId: genesisAddress,
     rangeType: RANGE_TYPE.EMPTY,
     range: [],
     timestamp: 770880, // 生成交易时间戳

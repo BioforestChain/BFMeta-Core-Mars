@@ -165,6 +165,16 @@ declare namespace BFChainCore {
     EVENTNAME,
     T extends Transaction = Transaction
   > = ApplyTransactionEvent<ApplyInfo_IssueAsset, EVENTNAME, T>;
+  interface ApplyInfo_DestoryAsset extends ApplyInfo_Asset {
+    address: string;
+    publicKeyBuffer?: Uint8Array;
+    assetsApplyAddress: string;
+  }
+  /**销毁数字资产的相关事件 */
+  type ApplyTransactionDestoryAssetEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction
+  > = ApplyTransactionEvent<ApplyInfo_DestoryAsset, EVENTNAME, T>;
   type ApplyInfo_RegisterChain = {
     address: string;
     publicKeyBuffer?: Uint8Array;
@@ -323,7 +333,7 @@ declare namespace BFChainCore {
     >;
     /**销毁资产 */
     destoryAsset: BFChainUtil.EventInOut<
-      ApplyTransactionAssetEvent<
+      ApplyTransactionDestoryAssetEvent<
         "destoryAsset",
         | import("@bfchain/core-model-transaction").DestoryAssetTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction

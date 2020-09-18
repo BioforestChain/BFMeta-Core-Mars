@@ -1,8 +1,6 @@
 import type { TransferAssetTransaction } from "@bfchain/core-model";
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
-import { CoreExceptionGenerator, NOT_EXIST, NOT_MATCH } from "@bfchain/core-util-exception";
-const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "TransactionLogicVerifier");
 
 @Injectable()
 export class TransferAssetLogicVerifier extends TransactionLogicVerifier {

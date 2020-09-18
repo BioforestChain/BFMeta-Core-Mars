@@ -117,5 +117,7 @@ export class HelperLogicVerifier {
         ...Function_Exception_Detail,
       });
     }
+
+    return memAsset;
   }
 }

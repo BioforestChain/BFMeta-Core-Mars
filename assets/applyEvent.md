@@ -201,6 +201,7 @@
   - applyInfo：变更明细，object
     - address：变更账户地址，string
     - publicKey：变更的账户公钥，string
+    - assetsApplyAddress：资产发行账户地址，string
     - magic: 变更的资产所属链网络标识符，string
     - assetType：变更的资产名，string
     - amount：变更的资产数量，string

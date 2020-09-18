@@ -1,7 +1,7 @@
 import type { DestoryAssetTransaction } from "@bfchain/core-model";
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
-import { CoreExceptionGenerator, NOT_EXIST, NOT_MATCH } from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, SHOULD_BE } from "@bfchain/core-util-exception";
 
 const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "TransactionLogicVerifier");
 
@@ -23,12 +23,25 @@ export class DestoryAssetLogicVerifier extends TransactionLogicVerifier {
   ) {
     const { sourceChainMagic, assetType, sourceChainName } = transaction.asset.destoryAsset;
 
-    await this.helperLogicVerifier.isAssetExist(
+    const memAssets = await this.helperLogicVerifier.isAssetExist(
       sourceChainName,
       sourceChainMagic,
       assetType,
       accountGetterHelper,
     );
+
+    const Function_Exception_Detail = {
+      function: "verify",
+    } as const;
+
+    if (memAssets.applyAddress !== transaction.recipientId) {
+      throw new ConsensusException(SHOULD_BE, {
+        to_compare_prop: `recipientId ${transaction.recipientId}`,
+        to_target: "transaction",
+        be_compare_prop: `asset apply account address ${memAssets.applyAddress}`,
+        ...Function_Exception_Detail,
+      });
+    }
 
     const { sender, recipient } = await this.logicVerify(
       transaction,

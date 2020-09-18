@@ -5,12 +5,7 @@ import {
   ACCOUNT_STATUS,
 } from "@bfchain/core-model";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
-import {
-  CoreExceptionGenerator,
-  NOT_EXIST,
-  ACCOUNT_FROZEN,
-  NOT_MATCH,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ACCOUNT_FROZEN } from "@bfchain/core-util-exception";
 
 const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "TrustAssetLogicVerifier");
 

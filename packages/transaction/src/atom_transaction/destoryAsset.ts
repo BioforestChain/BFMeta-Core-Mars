@@ -14,7 +14,6 @@ import {
   SHOULD_NOT_BE,
   SHOULD_BE,
   NOT_MATCH,
-  SHOULD_NOT_EXIST,
 } from "@bfchain/core-util-exception";
 import { Injectable, TaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
@@ -71,9 +70,20 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
 
     this.emptyRangeType(body, Function_Exception_Detail);
 
-    if (body.recipientId) {
-      throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+    const recipientId = body.recipientId;
+
+    if (!recipientId) {
+      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "recipientId",
+        ...Function_Exception_Detail,
+      });
+    }
+
+    if (body.senderId === recipientId) {
+      throw new ArgumentIllegalException(SHOULD_NOT_BE, {
+        to_compare_prop: `senderId ${body.senderPublicKey}`,
+        to_target: "body",
+        be_compare_prop: `recipientId ${recipientId}`,
         ...Function_Exception_Detail,
       });
     }
@@ -225,6 +235,7 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
       applyInfo: {
         address: transaction.senderId,
         publicKeyBuffer: transaction.senderPublicKeyBuffer,
+        assetsApplyAddress: transaction.recipientId,
         assetInfo,
         amount,
         sourceAmount: amount,

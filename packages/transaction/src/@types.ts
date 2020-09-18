@@ -102,6 +102,7 @@ declare namespace BFChainCore {
     applyInfo: {
       address: string;
       publicKey: string;
+      assetsApplyAddress: string;
       magic: string;
       assetType: string;
       amount: string;

@@ -5,12 +5,7 @@ import {
   SPECIAL_ASSET_TYPE,
 } from "@bfchain/core-model";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
-import {
-  CoreExceptionGenerator,
-  ASSET_NOT_EXIST,
-  NOT_MATCH,
-  PROP_IS_INVALID,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, PROP_IS_INVALID } from "@bfchain/core-util-exception";
 
 const { ConsensusException } = CoreExceptionGenerator(
   "VERIFIER",

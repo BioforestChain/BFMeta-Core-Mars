@@ -676,7 +676,14 @@ export class CustomTransactionEvent {
       });
     }
     if (applyResult.type === "destoryAsset") {
-      const { address, publicKey, magic, assetType, amount } = applyResult.applyInfo;
+      const {
+        address,
+        publicKey,
+        magic,
+        assetType,
+        amount,
+        assetsApplyAddress,
+      } = applyResult.applyInfo;
       const assetInfo = this.chainAssetInfoHelper.getAssetInfo(magic, assetType);
       return eventEmitter.emit("destoryAsset", {
         type: "destoryAsset",
@@ -684,6 +691,7 @@ export class CustomTransactionEvent {
         applyInfo: {
           address,
           publicKeyBuffer: parseHexToArrayBuffer(publicKey),
+          assetsApplyAddress,
           assetInfo,
           amount,
           sourceAmount: amount,

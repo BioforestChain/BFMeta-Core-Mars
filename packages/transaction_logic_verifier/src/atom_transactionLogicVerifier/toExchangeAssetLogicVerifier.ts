@@ -1,9 +1,6 @@
 import type { ToExchangeAssetTransaction, ToExchangeAssetModel } from "@bfchain/core-model";
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
-import { CoreExceptionGenerator, ASSET_NOT_EXIST, NOT_MATCH } from "@bfchain/core-util-exception";
-
-const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "ToExchangeAssetLogicVerifier");
 
 @Injectable()
 export class ToExchangeAssetLogicVerifier extends TransactionLogicVerifier {

@@ -350,7 +350,7 @@ declare namespace BFChainCore {
   >;
   type DestoryAssetTransactionJSON = TransactionMixJSON<
     DestoryAssetAssetJSON,
-    { hasRecipientId: false }
+    { hasRecipientId: true }
   >;
   type EmigrateAssetTransactionJSON = TransactionMixJSON<
     EmigrateAssetAssetJSON,
