@@ -58,7 +58,7 @@ declare namespace BFChainCore {
   /**查询交易的排序选项 */
   type TransactionSortOptionsJSON = {
     /**根据链上事件索引 */
-    tIndex?: -1 | 1;
+    tIndex: -1 | 1;
     /**根据交易时间戳排序 */
     // index?: -1 | 1;
     // height?: -1 | 1;
