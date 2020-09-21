@@ -81,7 +81,7 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
 
     if (body.senderId === recipientId) {
       throw new ArgumentIllegalException(SHOULD_NOT_BE, {
-        to_compare_prop: `senderId ${body.senderPublicKey}`,
+        to_compare_prop: `senderId ${body.senderId}`,
         to_target: "body",
         be_compare_prop: `recipientId ${recipientId}`,
         ...Function_Exception_Detail,
