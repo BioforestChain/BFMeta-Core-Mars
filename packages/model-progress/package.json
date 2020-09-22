@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-model-progress",
-  "version": "5.18.15",
+  "version": "5.18.17",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,8 +14,8 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-model-common": "5.18.15",
-    "@bfchain/core-typings": "5.18.15"
+    "@bfchain/core-model-common": "5.18.17",
+    "@bfchain/core-typings": "5.18.17"
   },
   "gitHead": "f8647a0812fc794090af08d4e3bf47e0ec30c14f"
 }

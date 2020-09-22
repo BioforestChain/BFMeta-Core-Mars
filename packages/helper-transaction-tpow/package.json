@@ -1,15 +1,15 @@
 {
   "name": "@bfchain/core-helper-transaction-tpow",
-  "version": "5.18.15",
+  "version": "5.18.17",
   "main": "build/cjs/index.js",
   "type": "build/cjs/index.d.ts",
   "files": [
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-helper-bigint": "5.18.15",
-    "@bfchain/core-helper-config": "5.18.15",
-    "@bfchain/core-typings": "5.18.15"
+    "@bfchain/core-helper-bigint": "5.18.17",
+    "@bfchain/core-helper-config": "5.18.17",
+    "@bfchain/core-typings": "5.18.17"
   },
   "module": "build/esm/index.js"
 }
