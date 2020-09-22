@@ -36,6 +36,7 @@ import {
   unsleep,
   Resolvable,
   Aborter,
+  safePromiseOffThen,
 } from "@bfchain/util";
 
 const {
@@ -122,8 +123,10 @@ const getReqId = () => {
  */
 @Resolvable()
 export class ChainChannel<
-  THIS extends BFChainCore.SimpleChainChannel = BFChainCore.SimpleChainChannel
-> extends ChainChannelBase implements BFChainCore.ChainChannel<THIS> {
+    THIS extends BFChainCore.SimpleChainChannel = BFChainCore.SimpleChainChannel
+  >
+  extends ChainChannelBase
+  implements BFChainCore.ChainChannel<THIS> {
   /**查询默认为true 广播默认为false */
   protected _canQueryTransaction = true;
   get canQueryTransaction() {
@@ -180,7 +183,7 @@ export class ChainChannel<
     once?: boolean,
   ) {
     if (once) {
-      const remover = this.endpoint.onClose(err => {
+      const remover = this.endpoint.onClose((err) => {
         handler(err);
         remover();
       });
@@ -256,14 +259,12 @@ export class ChainChannel<
     const req_id = getReqId();
     this._reqIdSet.add(req_id);
     this.postResponseMessage(req_id, cmd, binary);
-    const req_task = new PromiseOut<Uint8Array>();
+    let req_task = new PromiseOut<Uint8Array>();
     req_task.onFinished(() => {
       req_response_map.delete(req_id);
       this._reqIdSet.delete(req_id);
     });
     req_response_map.set(req_id, req_task);
-
-    let resp = req_task.promise;
 
     if (options) {
       if (!options.timeout) {
@@ -281,11 +282,11 @@ export class ChainChannel<
           },
         }) as BFChainCore.ChannelRequestOptions<THIS>;
       }
-      resp = this.chainChannelHelper.wrapAborterOptions(resp, options, {
+      req_task = this.chainChannelHelper.wrapOutAborterOptions(req_task, options, {
         chainChannel: (this as unknown) as THIS,
       });
     }
-    const res = await ResonseBoxer(await resp);
+    const res = await ResonseBoxer(await req_task.promise);
     //未统计信息创建的钩子
     await this.emit("afterRequestWithBinaryData", { cmd, query: binary, res });
     return res;
@@ -529,7 +530,7 @@ export class ChainChannel<
               /// 查询成功
               if (queryResult) {
                 response.status = RESPONSE_STATUS.success;
-                response.transactions = queryResult.transactions.map(tib =>
+                response.transactions = queryResult.transactions.map((tib) =>
                   TransactionInBlock.fromObject(tib),
                 );
               }

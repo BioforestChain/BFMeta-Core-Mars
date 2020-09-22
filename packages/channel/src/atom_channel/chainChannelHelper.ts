@@ -691,6 +691,42 @@ export class ChainChannelHelper {
     return resp;
   }
 
+  wrapOutAborterOptions<R, ENV = unknown>(
+    respo: PromiseOut<R>,
+    options: undefined,
+    env?: ENV,
+  ): PromiseOut<R>;
+  wrapOutAborterOptions<R, ENV extends undefined>(
+    respo: PromiseOut<R>,
+    options: BFChainCore.AborterOptions<ENV>,
+    env?: ENV,
+  ): PromiseOut<R>;
+  wrapOutAborterOptions<R, ENV = unknown>(
+    respo: PromiseOut<R>,
+    options: BFChainCore.AborterOptions<ENV> | undefined,
+    env: ENV,
+  ): PromiseOut<R>;
+  wrapOutAborterOptions<R, ENV = unknown>(
+    respo: PromiseOut<R>,
+    options: BFChainCore.AborterOptions<ENV>,
+    env: ENV,
+  ): PromiseOut<R>;
+  @bindThis
+  wrapOutAborterOptions<R, ENV = unknown>(
+    respo: PromiseOut<R>,
+    options?: BFChainCore.AborterOptions<ENV>,
+    env?: ENV,
+  ) {
+    const po = options && this.parserAborterOptions<R, ENV>(options, env as ENV);
+    if (po) {
+      /// 双向绑定
+      safePromiseOffThen(respo.promise, po.resolve, po.reject);
+      safePromiseOffThen(po.promise, respo.resolve, respo.reject);
+      respo = po;
+    }
+    return respo;
+  }
+
   /**通用的，计算一般timeout的函数 */
   @bindThis
   getChainChannelTimeout(chainChannel: BFChainCore.SimpleChainChannel, baseTime = 3e4) {

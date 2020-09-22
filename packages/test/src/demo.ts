@@ -66,8 +66,13 @@ async function _requestWithBinaryData<T>(
     //   }) as BFChainCore.ChannelRequestOptions<THIS>;
     // }
     resp = wrapAborterOptions(resp, options);
+    if (resp !== req_task.promise) {
+      resp.then(req_task.resolve, req_task.reject);
+    }
   }
+
   const res = await resp;
+
   // const res = await ResonseBoxer(await resp);
   //未统计信息创建的钩子
   return res;
@@ -140,7 +145,8 @@ function parserAborterOptions<R, ENV = unknown>(
 }
 (async () => {
   try {
-    _requestWithBinaryData("");
+    console.log("zzzz");
+    await _requestWithBinaryData("");
   } catch (err) {
     console.log(err);
   }
