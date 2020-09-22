@@ -34,7 +34,7 @@
 //   console.log(await bfchainCore.accountBaseHelper.createSecretKeypair("1"));
 // })().catch(console.error);
 
-import { PromiseOut } from "@bfchain/util";
+import { PromiseOut, safePromiseThen } from "@bfchain/util";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 const { TimeOutException } = CoreExceptionGenerator("channel", "chainChannelHelper");
 import { PromiseTimeout } from "@bfchain/core-channel/build/cjs/atom_channel/PromiseTimeout";
@@ -43,52 +43,46 @@ async function _requestWithBinaryData<T>(
   binary: string,
   options = { timeout: 2000, timeoutException: "aaaa" },
 ) {
-  const req_task = new PromiseOut<Uint8Array>();
+  let req_task = new PromiseOut<Uint8Array>();
   req_task.onFinished(() => {
     console.log(`req_task finish `);
   });
-
-  let resp = req_task.promise;
 
   if (options) {
     if (!options.timeout) {
       options.timeout = 1000;
     }
-    // if (options.timeoutException === undefined) {
-    //   options = Object.create(options, {
-    //     timeoutException: {
-    //       get() {
-    //         return new TimeOutException(`ChainChannel Timeout: cmd:{cmd}`, {
-    //           endpoint: this.endpoint,
-    //         });
-    //       },
-    //     },
-    //   }) as BFChainCore.ChannelRequestOptions<THIS>;
-    // }
-    resp = wrapAborterOptions(resp, options);
-    if (resp !== req_task.promise) {
-      resp.then(req_task.resolve, req_task.reject);
+    if (options.timeoutException === undefined) {
+      options = Object.create(options, {
+        timeoutException: {
+          get() {
+            return new TimeOutException(`ChainChannel Timeout: cmd:{cmd}`, {
+              endpoint: this.endpoint,
+            });
+          },
+        },
+      });
     }
+    req_task = wrapOutAborterOptions(req_task, options);
   }
-
-  const res = await resp;
-
-  // const res = await ResonseBoxer(await resp);
+  const res = await req_task.promise;
   //未统计信息创建的钩子
   return res;
 }
 
-function wrapAborterOptions<R, ENV = unknown>(
-  resp: Promise<R>,
+function wrapOutAborterOptions<R, ENV = unknown>(
+  respo: PromiseOut<R>,
   options?: BFChainCore.AborterOptions<ENV>,
   env?: ENV,
 ) {
   const po = options && parserAborterOptions<R, ENV>(options, env as ENV);
   if (po) {
-    resp.then(po.resolve, po.reject);
-    resp = po.promise;
+    /// 双向绑定
+    safePromiseThen(respo.promise, po.resolve, po.reject);
+    safePromiseThen(po.promise, respo.resolve, respo.reject);
+    respo = po;
   }
-  return resp;
+  return respo;
 }
 
 function parserAborterOptions<R, ENV = unknown>(

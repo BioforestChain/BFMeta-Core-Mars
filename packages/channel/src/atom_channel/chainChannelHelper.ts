@@ -720,8 +720,8 @@ export class ChainChannelHelper {
     const po = options && this.parserAborterOptions<R, ENV>(options, env as ENV);
     if (po) {
       /// 双向绑定
-      safePromiseOffThen(respo.promise, po.resolve, po.reject);
-      safePromiseOffThen(po.promise, respo.resolve, respo.reject);
+      safePromiseThen(respo.promise, po.resolve, po.reject);
+      safePromiseThen(po.promise, respo.resolve, respo.reject);
       respo = po;
     }
     return respo;
