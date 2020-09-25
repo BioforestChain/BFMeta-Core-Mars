@@ -213,18 +213,31 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
   ) {
     const tasks = new TaskList();
     tasks.next = super.applyTransaction(transaction, eventEmitter, config);
+    const { senderId, senderPublicKeyBuffer, recipientId } = transaction;
     const { amount, assetType, sourceChainMagic } = transaction.asset.destoryAsset;
     const assetInfo = this.chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
 
-    // 扣除资产
+    // 发起账户扣除资产
     tasks.next = eventEmitter.emit("asset", {
       type: "asset",
       transaction,
       applyInfo: {
-        address: transaction.senderId,
-        publicKeyBuffer: transaction.senderPublicKeyBuffer,
+        address: senderId,
+        publicKeyBuffer: senderPublicKeyBuffer,
         assetInfo,
         amount: `-${amount}`,
+        sourceAmount: amount,
+      },
+    });
+    // 接收账户累加资产
+    tasks.next = eventEmitter.emit("asset", {
+      type: "asset",
+      transaction,
+      applyInfo: {
+        address: recipientId,
+        publicKeyBuffer: senderPublicKeyBuffer,
+        assetInfo,
+        amount,
         sourceAmount: amount,
       },
     });
@@ -233,9 +246,9 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
       type: "destoryAsset",
       transaction,
       applyInfo: {
-        address: transaction.senderId,
+        address: senderId,
         publicKeyBuffer: transaction.senderPublicKeyBuffer,
-        assetsApplyAddress: transaction.recipientId,
+        assetsApplyAddress: recipientId,
         assetInfo,
         amount,
         sourceAmount: amount,
