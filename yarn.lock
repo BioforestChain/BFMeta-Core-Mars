@@ -1352,9 +1352,9 @@
   integrity sha1-RZxl+hhn2v5qjzIsTFFpVmPMVek=
 
 "@types/microsoft__typescript-etw@^0.1.0":
-  version "0.1.0"
-  resolved "http://192.168.250.245:4873/@types%2fmicrosoft__typescript-etw/-/microsoft__typescript-etw-0.1.0.tgz#0806c7c278ccafb943d2165e6c4465cc876c5187"
-  integrity sha1-CAbHwnjMr7lD0hZebERlzIdsUYc=
+  version "0.1.1"
+  resolved "http://192.168.250.245:4873/@types%2fmicrosoft__typescript-etw/-/microsoft__typescript-etw-0.1.1.tgz#f2c9d835858827422f3b5885f9afb0cbdad95381"
+  integrity sha1-8snYNYWIJ0IvO1iF+a+wy9rZU4E=
 
 "@types/minimatch@*":
   version "3.0.3"
