@@ -297,6 +297,16 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
         newArray[newArray.length] = delegate.address;
       }
     }
+    // 新人太少，从打块列表中补足
+    if (newArray.length < newNum) {
+      const alternateArray = this.sortDelegatesByFields(voteArray, "productivity");
+      for (const item of alternateArray) {
+        newArray[newArray.length] = item.address;
+        if (newArray.length === newNum) {
+          break;
+        }
+      }
+    }
     // 乱序
     this.forgingDelegates.delegates = this.hybridArray(
       pdtArray,
