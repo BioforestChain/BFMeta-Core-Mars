@@ -1,9 +1,8 @@
-import { Block, GetBlockRemarkJSON } from "@bfchain/core-model-block";
+import { Block } from "@bfchain/core-model-block";
 import {
   BlockHelper,
   BaseHelper,
   MilestonesHelper,
-  StatisticsInfo,
   ChainAssetInfoHelper,
 } from "@bfchain/core-helper";
 import {
@@ -13,11 +12,9 @@ import {
   PROP_IS_REQUIRE,
   NOT_MATCH,
   ALREADY_EXIST,
-  NOT_EXIST,
 } from "@bfchain/core-util-exception";
 import { cacheGetter, Injectable, Inject } from "@bfchain/util";
 import { Writer } from "@bfchain/protobuf";
-import { TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE } from "@bfchain/core-model-transaction";
 const { ArgumentIllegalException, ConsensusException } = CoreExceptionGenerator(
   "CONTROLLER",
   "_blockbase",
@@ -39,9 +36,9 @@ export class CommonBlockVerify<T extends Block> {
    * 校验区块基础信息
    *
    * @param body
-   * @param remark
+   * @param asset
    */
-  verifyBlockBody(body: BFChainCore.BlockBody, remark: GetBlockRemarkJSON<T>) {
+  verifyBlockBody(body: BFChainCore.BlockBody, asset: BFChainCore.GetBlockAssetJSON<T>) {
     const { baseHelper } = this;
     const Function_Exception_Detail = { function: "verifyBlockBody" };
     if (!body) {
@@ -51,9 +48,9 @@ export class CommonBlockVerify<T extends Block> {
       });
     }
 
-    if (!remark && baseHelper.getVariableType(remark) !== "[object Object]") {
+    if (!asset) {
       throw new ArgumentIllegalException(PARAM_LOST, {
-        param: "remark",
+        param: "asset",
         ...Function_Exception_Detail,
       });
     }
@@ -94,6 +91,43 @@ export class CommonBlockVerify<T extends Block> {
         ...BlockBody_Exception_Detail,
       });
     }
+
+    if (!baseHelper.isValidAccountEquity(body.generatorEquity)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "generatorEquity",
+        type: "account equity",
+        ...BlockBody_Exception_Detail,
+      });
+    }
+
+    const remark = body.remark;
+    if (!remark) {
+      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        prop: "remark",
+        ...BlockBody_Exception_Detail,
+      });
+    }
+    if (baseHelper.getVariableType(remark) !== "[object Object]") {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "remark",
+        ...BlockBody_Exception_Detail,
+      });
+    }
+    for (const key in remark) {
+      if (!baseHelper.isString(remark[key])) {
+        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          prop: "remark",
+          ...BlockBody_Exception_Detail,
+        });
+      }
+    }
+
+    if (!remark && baseHelper.getVariableType(remark) !== "[object Object]") {
+      throw new ArgumentIllegalException(PARAM_LOST, {
+        param: "remark",
+        ...BlockBody_Exception_Detail,
+      });
+    }
   }
 
   /**
@@ -112,15 +146,6 @@ export class CommonBlockVerify<T extends Block> {
         function: "verifyBlockReward",
       });
     }
-  }
-
-  /**
-   * 校验区块 remark 大小
-   *
-   * @param block
-   */
-  verifyBlockRemarkSize(block: T) {
-    this.blockHelper.verifyBlockRemarkSize(block.remark);
   }
 
   /**
@@ -175,10 +200,14 @@ export class CommonBlockVerify<T extends Block> {
     };
     const oldBlockSize = block.blockSize;
     let newBlockSize = oldBlockSize;
-
     newBlockSize =
-      block.getBytes(false, transactionBufferList).length +
+      block.getBytes(false, false, transactionBufferList).length +
       (block.signatureBuffer.length ? 0 : 66) /* signature 的前置为 1位 + 32长度的signature */;
+    if (block.generatorPublicKeyBuffer) {
+      const signSignatureSize =
+        (block.signSignatureBuffer && block.signSignatureBuffer.length) || 0;
+      newBlockSize += signSignatureSize ? 0 : 66;
+    }
     if (oldBlockSize !== newBlockSize) {
       let oldBlockSizeInfo = getBlockSizeByteSizeInfo(oldBlockSize);
       do {
@@ -190,13 +219,11 @@ export class CommonBlockVerify<T extends Block> {
          * 因此需要有一个循环来让blockSize稳定在一个区间内。
          */
         const newBlockSizeInfo = getBlockSizeByteSizeInfo(newBlockSize);
-
-        if (newBlockSizeInfo.size !== oldBlockSizeInfo.size) {
-          newBlockSize += newBlockSizeInfo.size - oldBlockSizeInfo.size;
-          oldBlockSizeInfo = newBlockSizeInfo;
-        } else {
+        if (newBlockSizeInfo.size === oldBlockSizeInfo.size) {
           break;
         }
+        newBlockSize += newBlockSizeInfo.size - oldBlockSizeInfo.size;
+        oldBlockSizeInfo = newBlockSizeInfo;
       } while (true);
     }
     return newBlockSize;

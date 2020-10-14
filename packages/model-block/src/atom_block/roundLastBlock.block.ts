@@ -1,15 +1,16 @@
 import { Block } from "@bfchain/core-model-block-base";
-import { RoundLastBlockRemarkModel } from "@bfchain/core-model-block-remark";
+import { RoundLastBlockAssetModel } from "@bfchain/core-model-block-asset";
 import { Type, Field } from "@bfchain/protobuf";
+import { CommonBlock } from "./commonBlock.block";
 
 /**
- * genesisBlock 区块模型
+ * roundLastBlock 区块模型
  *
  */
 @Type.d("RoundLastBlock")
-export class RoundLastBlock
-  extends Block<BFChainCore.RoundLastBlockRemarkJSON>
-  implements BFChainCore.RoundLastBlock {
-  @Field.d(RoundLastBlock.INC++, RoundLastBlockRemarkModel)
-  remark!: RoundLastBlockRemarkModel;
+export class RoundLastBlock extends Block<BFChainCore.RoundLastBlockAssetJSON>
+  implements BFChainCore.RoundLastBlockJSON {
+  toJSON!: () => BFChainCore.RoundLastBlockJSON;
+  @Field.d(CommonBlock.INC++, RoundLastBlockAssetModel)
+  asset!: RoundLastBlockAssetModel;
 }

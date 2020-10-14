@@ -39,6 +39,9 @@
       "path": "../helper-milestones/tsconfig.esm-es5.json"
     },
     {
+      "path": "../helper-transaction-pow/tsconfig.esm-es5.json"
+    },
+    {
       "path": "../helper-transaction/tsconfig.esm-es5.json"
     },
     {

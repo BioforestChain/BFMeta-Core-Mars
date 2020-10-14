@@ -19,6 +19,9 @@ declare namespace BFChainCore {
     // signature?: string;
     /**打块账户公钥 */
     generatorPublicKey: string;
+    generatorSecondPublicKey?: string;
+    /**打块账户权益 */
+    generatorEquity: string;
     // /**处理的交易量 */
     // numberOfTransactions: number;
     // /**所有交易 hash 值 */
@@ -41,11 +44,13 @@ declare namespace BFChainCore {
     roundOfflineGeneratersHashMap?: BFChainCore.RoundOfflineGeneratersHashMap;
     /**掉块信息是否可信 */
     isTrustRoundOfflineGeneraters?: boolean;
+    /**交易的备注信息 */
+    remark?: { [key: string]: string };
   };
 
   type CommonBlock = import("./atom_block").CommonBlock; //  Block<CommonBlockRemarkJSON>;
-  type GenesisBlock = import("./atom_block").GenesisBlock; // Block<GenesisBlockRemarkJSON>;
-  type RoundLastBlock = import("./atom_block").RoundLastBlock; // Block<RoundLastBlockRemarkJSON>;
+  type GenesisBlock = import("./atom_block").GenesisBlock; // Block<GenesisBlockAssetJSON>;
+  type RoundLastBlock = import("./atom_block").RoundLastBlock; // Block<RoundLastBlockAssetJSON>;
   type AnyBlock = CommonBlock | GenesisBlock | RoundLastBlock;
   type AnyBlockConstructor =
     | typeof import("./atom_block").CommonBlock

@@ -1,19 +1,26 @@
 declare namespace BFChainCore {
-  type Block<RJ extends CommonBlockRemarkJSON = CommonBlockRemarkJSON> = import("./block").Block<
-    RJ
-  >;
-
+  type Block<AJ extends object = object> = import("./block").Block<AJ>;
   type BlockModelConstructor = typeof import("./").Block;
 
-  type GetRemarkModel<T> = T extends BlockJSON<infer U> ? U : any;
+  type GetBlockMessageAssetModel<T> = T extends BlockJSON<infer U> ? U : any;
+  type GetBlockAssetModel<T> = GetBlockMessageAssetModel<
+    T
+  > extends import("@bfchain/protobuf").Message<infer U>
+    ? U
+    : any;
 
-  interface BlockWithoutTransactionJSON<RemarkJSON> {
+  type GetBlockAssetJSON<T extends Block> = T["ASSET_JSON_TYPE"];
+
+  interface BlockWithoutTransactionJSON<AssetJSON extends object = object> {
     version: number;
     height: number;
     blockSize: number;
     timestamp: number;
     signature: string;
+    signSignature?: string;
     generatorPublicKey: string;
+    generatorSecondPublicKey?: string;
+    generatorEquity: string;
     numberOfTransactions: number;
     payloadHash: string;
     payloadLength: number;
@@ -22,11 +29,14 @@ declare namespace BFChainCore {
     totalFee: string;
     reward: string;
     magic: string;
-    remark: RemarkJSON;
+    blockParticipation: string;
+    remark: { [key: string]: string };
+    asset: AssetJSON;
     statisticInfo: StatisticInfoJSON;
     roundOfflineGeneratersHashMap: RoundOfflineGeneratersHashMap;
   }
-  interface BlockJSON<RemarkJSON extends {} = {}> extends BlockWithoutTransactionJSON<RemarkJSON> {
+  interface BlockJSON<AssetJSON extends object = object>
+    extends BlockWithoutTransactionJSON<AssetJSON> {
     transactions: TransactionInBlockJSON[];
   }
   type RoundOfflineGeneratersReadonlyMap = Omit<
@@ -71,81 +81,33 @@ declare namespace BFChainCore {
   }
   //#endregion
 
-  //#region Block Remark
-
-  type RemarkJSONToModelType<
-    J extends CommonBlockRemarkJSON = CommonBlockRemarkJSON
-  > = JSONToModelType<J> & { getBytes(): Uint8Array };
   //#region CommonBlock
-
-  interface CommonBlockRemarkJSON {
-    debug: string;
-    info: string;
-    blockParticipation: string;
-    generatorEquity: string;
-  }
+  interface CommonBlockAssetJSON {}
+  type CommonBlockJSON = BlockJSON<CommonBlockAssetJSON>;
   //#endregion
 
-  interface RoundDelegateRemarkJSON {
+  //#region RoundLastBlock
+  interface NextRoundDelegateJSON {
+    address: string;
+    equity: string;
+  }
+  interface RoundDelegateJSON {
     nextRoundDelegates: NextRoundDelegateJSON[];
     newDelegates: string[];
     maxBeginBalance: string;
     maxTxCount: number;
     rate: string;
   }
-  interface NextRoundDelegateJSON {
-    address: string;
-    equity: string;
-  }
-
-  //#region RoundLastBlock
-
-  interface RoundLastBlockRemarkJSON extends RoundDelegateRemarkJSON, CommonBlockRemarkJSON {
+  interface RoundLastAssetJSON extends RoundDelegateJSON {
     hash: string;
   }
-
+  interface RoundLastBlockAssetJSON {
+    roundLastAsset: RoundLastAssetJSON;
+  }
+  type RoundLastBlockJSON = BlockJSON<RoundLastBlockAssetJSON>;
   //#endregion
 
   //#region GenesisBlock
-
-  interface GenesisBlockRemarkJSON extends RoundDelegateRemarkJSON, CommonBlockRemarkJSON {
-    assetType: string;
-    chainName: string;
-    magic: string;
-    bnid: import("./constanst").BNID_TYPE;
-    beginEpochTime: number;
-    genesisNodeAddress: string;
-    generateTotalAmount: string;
-    minTransactionFeePerByte: FractionJSON;
-    maxPayloadLength: number;
-    maxTPSPerBlock: number;
-    maxTransactionSize: number;
-    maxBlockRemarkSize: number;
-    consessusBeforeSyncBlockDiff: number;
-    maxDelegateTxsPerRound: number;
-    maxGrabTimesOfGiftAsset: number;
-    issueAssetMinChainAsset: string;
-    registerChainMinChainAsset: string;
-    chainAssetAndDigitalAssetExchangeRate: number;
-    chainAssetRewardWeight: number;
-    numberOfTransactionRewardWeight: number;
-    maxApplyAndConfirmedBlockHeightDiff: number;
-    powOfWorkExemptionBlocks: number;
-    blockPerRound: number;
-    delegates: number;
-    whetherToAllowDelegateContinusElections: boolean;
-    forgeInterval: number;
-    rewardPercent: RewardPercentJSON;
-    ports: PortsJSON;
-    rewardPerBlock: RewardPerBlockJSON;
-    blockParticipation: string;
-    generatorEquity: string;
-    participationTotalChainAsset: number;
-    participationNumberOfTransaction: number;
-    participationNumberOfAccount: number;
-    participationTotalFee: number;
-    transactionPowOfWorkConfig: TransactionPowOfWorkConfigJSON;
-  }
   interface RewardPercentJSON {
     votePercent: FractionJSON;
     forgePercent: FractionJSON;
@@ -158,18 +120,45 @@ declare namespace BFChainCore {
     readonly heights: number[];
     readonly rewards: string[];
   }
-
-  interface ParentInfoJSON {
-    magic: string;
-    chainName: string;
-    assetType: string;
-    genesisNodeAddress: string;
-  }
   interface TransactionPowOfWorkConfigJSON {
     growthFactor: FractionJSON<string>;
     participationRatio: FractionJSON;
     averageComputingPower: number;
   }
-  //#endregion
+  interface GenesisAssetJSON extends RoundDelegateJSON {
+    chainName: string;
+    assetType: string;
+    magic: string;
+    bnid: import("./constanst").BNID_TYPE;
+    beginEpochTime: number;
+    genesisLocationName: string;
+    generateTotalAmount: string;
+    minTransactionFeePerByte: FractionJSON;
+    maxTransactionSize: number;
+    maxBlockSize: number;
+    maxTPSPerBlock: number;
+    consessusBeforeSyncBlockDiff: number;
+    maxDelegateTxsPerRound: number;
+    maxGrabTimesOfGiftAsset: number;
+    issueAssetMinChainAsset: string;
+    registerChainMinChainAsset: string;
+    maxApplyAndConfirmedBlockHeightDiff: number;
+    blockPerRound: number;
+    delegates: number;
+    whetherToAllowDelegateContinusElections: boolean;
+    forgeInterval: number;
+    rewardPercent: RewardPercentJSON;
+    ports: PortsJSON;
+    rewardPerBlock: RewardPerBlockJSON;
+    accountParticipationWeightRatio: RateJSON<string>;
+    blockParticipationWeightRatio: RateJSON<string>;
+    tpowDiffFormula: string;
+    averageComputingPower: number;
+    tpowOfWorkExemptionBlocks: number;
+  }
+  interface GenesisBlockAssetJSON {
+    genesisAsset: GenesisAssetJSON;
+  }
+  type GenesisBlockJSON = BlockJSON<GenesisBlockAssetJSON>;
   //#endregion
 }

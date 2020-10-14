@@ -14,8 +14,8 @@ import {
   PROP_IS_REQUIRE,
   PROP_IS_INVALID,
   SHOULD_BE,
-  PROP_SHOULD_GT_FIELD,
   NOT_MATCH,
+  PARAM_LOST,
 } from "@bfchain/core-util-exception";
 import { Injectable, Inject } from "@bfchain/util";
 import { BlockGeneratorCalculator } from "./blockGeneratorCalculator";
@@ -23,6 +23,7 @@ import { CommonBlockVerify } from "./commonBlockVerify";
 import { GenerateBlockCore } from "./generateBlock";
 import { ReplayBlockCore } from "./replayBlock";
 import { VerifyBlockCore } from "./verifyBlock";
+import { TPOWDiffHelper } from "@bfchain/core-helper-transaction-pow";
 const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "GenesisBlockFactory");
 
 /**
@@ -41,6 +42,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
     public statisticsHelper: BlockBaseStatisticsHelper,
     public milestonesHelper: MilestonesHelper,
     public asymmetricHelper: AsymmetricHelper,
+    public tpowDiffHelper: TPOWDiffHelper,
     @Inject("cryptoHelper") public cryptoHelper: BFChainCore.CryptoHelperInterface,
     public blockGeneratorCalculator: BlockGeneratorCalculator,
 
@@ -59,7 +61,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
    * @param blockBody
    */
   async fromJSON(
-    blockBody: BFChainCore.BlockJSON<BFChainCore.GenesisBlockRemarkJSON>,
+    blockBody: BFChainCore.BlockJSON<BFChainCore.GenesisBlockAssetJSON>,
     opts?: { verify?: boolean; config?: ConfigHelper },
   ) {
     const block = GenesisBlock.fromObject(blockBody);
@@ -80,70 +82,83 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
    * 校验输入信息
    *
    * @param body
-   * @param remark
+   * @param genesisBlockAsset
    */
   async verifyBlockBody(
     body: BFChainCore.BlockBody,
-    remark: BFChainCore.GenesisBlockRemarkJSON,
+    genesisBlockAsset: BFChainCore.GenesisBlockAssetJSON,
     config = this.config,
   ) {
-    await super.verifyBlockBody(body, remark);
+    await super.verifyBlockBody(body, genesisBlockAsset);
 
     const { baseHelper } = this;
     const Function_Exception_Detail = { function: "verifyBlockBody" };
-    const GenesisBlockRemark_Exception_Detail = {
-      target: "GenesisBlock.remark",
+
+    const genesisAsset = genesisBlockAsset.genesisAsset;
+
+    if (!genesisAsset) {
+      throw new ArgumentIllegalException(PARAM_LOST, {
+        param: "genesisBlock",
+        function: "verifyTransactionBody",
+      });
+    }
+
+    const GenesisBlockAsset_Exception_Detail = {
+      target: "genesisBlock",
       ...Function_Exception_Detail,
     };
 
-    if (!remark.assetType) {
+    const assetType = genesisAsset.assetType;
+    if (!assetType) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "assetType",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isValidAssetType(remark.assetType)) {
+    if (!baseHelper.isValidAssetType(assetType)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `assetType ${remark.assetType}`,
-        ...GenesisBlockRemark_Exception_Detail,
+        prop: `assetType ${genesisAsset.assetType}`,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!remark.chainName) {
+    const chainName = genesisAsset.chainName;
+    if (!chainName) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "chainName",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isValidChainName(remark.chainName)) {
+    if (!baseHelper.isValidChainName(chainName)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `chainName ${remark.chainName}`,
-        ...GenesisBlockRemark_Exception_Detail,
+        prop: `chainName ${genesisAsset.chainName}`,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!remark.magic) {
+    const magic = genesisAsset.magic;
+    if (!magic) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "magic",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isValidChainMagic(remark.magic)) {
+    if (!baseHelper.isValidChainMagic(magic)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `magic ${remark.magic}`,
+        prop: `magic ${genesisAsset.magic}`,
         type: "chain magic",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    const bnid = remark.bnid;
+    const bnid = genesisAsset.bnid;
     if (!bnid) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "bnid",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
@@ -152,291 +167,266 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
         to_compare_prop: `bnid ${bnid}`,
         to_target: "remark",
         be_compare_prop: "BNID_TYPE",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isPositiveInteger(remark.beginEpochTime)) {
+    if (!baseHelper.isPositiveInteger(genesisAsset.beginEpochTime)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `beginEpochTime ${remark.beginEpochTime}`,
+        prop: `beginEpochTime ${genesisAsset.beginEpochTime}`,
         type: "positive integer",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!remark.genesisNodeAddress) {
+    const genesisLocationName = genesisAsset.genesisLocationName;
+    if (!genesisLocationName) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "genesisNodeAddress",
-        ...GenesisBlockRemark_Exception_Detail,
+        prop: "genesisLocationName",
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isValidLnsName(remark.genesisNodeAddress, config.chainName)) {
+    if (!baseHelper.isValidLnsName(genesisLocationName, config.chainName)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `genesisNodeAddress ${remark.genesisNodeAddress}`,
+        prop: `genesisLocationName ${genesisAsset.genesisLocationName}`,
         type: "url",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!remark.generateTotalAmount) {
+    if (!genesisAsset.generateTotalAmount) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "generateTotalAmount",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isValidAssetNumber(remark.generateTotalAmount)) {
+    if (!baseHelper.isValidAssetNumber(genesisAsset.generateTotalAmount)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `generateTotalAmount ${remark.generateTotalAmount}`,
+        prop: `generateTotalAmount ${genesisAsset.generateTotalAmount}`,
         type: "asset number",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isPositiveFloatContainZero(remark.minTransactionFeePerByte)) {
+    if (!baseHelper.isPositiveFloatContainZero(genesisAsset.minTransactionFeePerByte)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `minTransactionFeePerByte ${remark.minTransactionFeePerByte}`,
+        prop: `minTransactionFeePerByte ${genesisAsset.minTransactionFeePerByte}`,
         type: "float contain zero",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isPositiveInteger(remark.maxPayloadLength)) {
+    if (!baseHelper.isPositiveInteger(genesisAsset.maxTPSPerBlock)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `maxPayloadLength ${remark.maxPayloadLength}`,
+        prop: `maxTPSPerBlock ${genesisAsset.maxTPSPerBlock}`,
         type: "positive integer",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isPositiveInteger(remark.maxTPSPerBlock)) {
+    if (!baseHelper.isPositiveInteger(genesisAsset.maxTransactionSize)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `maxTPSPerBlock ${remark.maxTPSPerBlock}`,
+        prop: `maxTransactionSize ${genesisAsset.maxTransactionSize}`,
         type: "positive integer",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isPositiveInteger(remark.maxTransactionSize)) {
+    if (!baseHelper.isPositiveInteger(genesisAsset.maxBlockSize)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `maxTransactionSize ${remark.maxTransactionSize}`,
+        prop: `maxBlockSize ${genesisAsset.maxBlockSize}`,
         type: "positive integer",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isPositiveInteger(remark.maxBlockRemarkSize)) {
+    if (!baseHelper.isNaturalNumber(genesisAsset.consessusBeforeSyncBlockDiff)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `maxBlockRemarkSize ${remark.maxBlockRemarkSize}`,
-        type: "positive integer",
-        ...GenesisBlockRemark_Exception_Detail,
-      });
-    }
-
-    if (!baseHelper.isNaturalNumber(remark.consessusBeforeSyncBlockDiff)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `consessusBeforeSyncBlockDiff ${remark.consessusBeforeSyncBlockDiff}`,
+        prop: `consessusBeforeSyncBlockDiff ${genesisAsset.consessusBeforeSyncBlockDiff}`,
         type: "natural number",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isNaturalNumber(remark.maxDelegateTxsPerRound)) {
+    if (!baseHelper.isNaturalNumber(genesisAsset.maxDelegateTxsPerRound)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `maxDelegateTxsPerRound ${remark.maxDelegateTxsPerRound}`,
+        prop: `maxDelegateTxsPerRound ${genesisAsset.maxDelegateTxsPerRound}`,
         type: "natural number",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isPositiveInteger(remark.maxGrabTimesOfGiftAsset)) {
+    if (!baseHelper.isPositiveInteger(genesisAsset.maxGrabTimesOfGiftAsset)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `maxGrabTimesOfGiftAsset ${remark.maxGrabTimesOfGiftAsset}`,
+        prop: `maxGrabTimesOfGiftAsset ${genesisAsset.maxGrabTimesOfGiftAsset}`,
         type: "positive integer",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!remark.issueAssetMinChainAsset) {
+    if (!genesisAsset.issueAssetMinChainAsset) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "issueAssetMinChainAsset",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
-    if (!baseHelper.isValidAssetNumber(remark.issueAssetMinChainAsset)) {
+    if (!baseHelper.isValidAssetNumber(genesisAsset.issueAssetMinChainAsset)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `issueAssetMinChainAsset ${remark.issueAssetMinChainAsset}`,
+        prop: `issueAssetMinChainAsset ${genesisAsset.issueAssetMinChainAsset}`,
         type: "asset number",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!remark.registerChainMinChainAsset) {
+    if (!genesisAsset.registerChainMinChainAsset) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: `registerChainMinChainAsset ${remark.registerChainMinChainAsset}`,
-        ...GenesisBlockRemark_Exception_Detail,
+        prop: `registerChainMinChainAsset ${genesisAsset.registerChainMinChainAsset}`,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
-    if (!baseHelper.isValidAssetNumber(remark.registerChainMinChainAsset)) {
+    if (!baseHelper.isValidAssetNumber(genesisAsset.registerChainMinChainAsset)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `registerChainMinChainAsset ${remark.registerChainMinChainAsset}`,
+        prop: `registerChainMinChainAsset ${genesisAsset.registerChainMinChainAsset}`,
         type: "asset number",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isPositiveInteger(remark.chainAssetAndDigitalAssetExchangeRate)) {
+    if (!baseHelper.isValidRate(genesisAsset.accountParticipationWeightRatio)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `chainAssetAndDigitalAssetExchangeRate ${remark.chainAssetAndDigitalAssetExchangeRate}`,
+        prop: `accountParticipationWeightRatio ${genesisAsset.accountParticipationWeightRatio}`,
+        type: "rate",
+        ...GenesisBlockAsset_Exception_Detail,
+      });
+    }
+
+    if (!baseHelper.isValidRate(genesisAsset.blockParticipationWeightRatio)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: `blockParticipationWeightRatio ${genesisAsset.blockParticipationWeightRatio}`,
+        type: "rate",
+        ...GenesisBlockAsset_Exception_Detail,
+      });
+    }
+
+    if (!baseHelper.isPositiveInteger(genesisAsset.maxApplyAndConfirmedBlockHeightDiff)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: `maxApplyAndConfirmedBlockHeightDiff ${genesisAsset.maxApplyAndConfirmedBlockHeightDiff}`,
         type: "positive integer",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isNaturalNumber(remark.chainAssetRewardWeight)) {
+    if (!baseHelper.isPositiveInteger(genesisAsset.blockPerRound)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `chainAssetRewardWeight ${remark.chainAssetRewardWeight}`,
-        type: "natural number",
-        ...GenesisBlockRemark_Exception_Detail,
-      });
-    }
-
-    if (!baseHelper.isNaturalNumber(remark.numberOfTransactionRewardWeight)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `numberOfTransactionRewardWeight ${remark.numberOfTransactionRewardWeight}`,
-        type: "natural number",
-        ...GenesisBlockRemark_Exception_Detail,
-      });
-    }
-
-    if (remark.chainAssetRewardWeight + remark.numberOfTransactionRewardWeight === 0) {
-      throw new ArgumentIllegalException(PROP_SHOULD_GT_FIELD, {
-        prop: `remark.chainAssetRewardWeight + remark.numberOfTransactionRewardWeight ${
-          remark.chainAssetRewardWeight + remark.numberOfTransactionRewardWeight
-        }`,
-        field: 0,
-        ...GenesisBlockRemark_Exception_Detail,
-      });
-    }
-
-    if (!baseHelper.isPositiveInteger(remark.maxApplyAndConfirmedBlockHeightDiff)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `maxApplyAndConfirmedBlockHeightDiff ${remark.maxApplyAndConfirmedBlockHeightDiff}`,
+        prop: `blockPerRound ${genesisAsset.blockPerRound}`,
         type: "positive integer",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isPositiveInteger(remark.blockPerRound)) {
+    if (!baseHelper.isPositiveInteger(genesisAsset.delegates)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `blockPerRound ${remark.blockPerRound}`,
+        prop: `delegates ${genesisAsset.delegates}`,
         type: "positive integer",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isPositiveInteger(remark.delegates)) {
+    if (!baseHelper.isBoolean(genesisAsset.whetherToAllowDelegateContinusElections)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `delegates ${remark.delegates}`,
-        type: "positive integer",
-        ...GenesisBlockRemark_Exception_Detail,
-      });
-    }
-
-    if (!baseHelper.isBoolean(remark.whetherToAllowDelegateContinusElections)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `whetherToAllowDelegateContinusElections ${remark.whetherToAllowDelegateContinusElections}`,
+        prop: `whetherToAllowDelegateContinusElections ${genesisAsset.whetherToAllowDelegateContinusElections}`,
         type: "boolean",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isPositiveInteger(remark.forgeInterval)) {
+    if (!baseHelper.isPositiveInteger(genesisAsset.forgeInterval)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `forgeInterval ${remark.forgeInterval}`,
+        prop: `forgeInterval ${genesisAsset.forgeInterval}`,
         type: "positive integer",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!remark.rewardPercent) {
+    if (!genesisAsset.rewardPercent) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: `rewardPercent`,
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
-    if (!baseHelper.isValidChainRewardPercent(remark.rewardPercent)) {
+    if (!baseHelper.isValidChainRewardPercent(genesisAsset.rewardPercent)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `rewardPercent ${remark.rewardPercent}`,
+        prop: `rewardPercent ${genesisAsset.rewardPercent}`,
         type: "chain reward percent",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!remark.ports) {
+    if (!genesisAsset.ports) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "ports",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
-    if (!baseHelper.isValidChainPorts(remark.ports)) {
+    if (!baseHelper.isValidChainPorts(genesisAsset.ports)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `ports ${remark.ports}`,
+        prop: `ports ${genesisAsset.ports}`,
         type: "chain ports",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!remark.rewardPerBlock) {
+    if (!genesisAsset.rewardPerBlock) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "rewardPerBlock",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
-    if (!baseHelper.isValidChainRewardMilestones(remark.rewardPerBlock)) {
+    if (!baseHelper.isValidChainRewardMilestones(genesisAsset.rewardPerBlock)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `rewardPerBlock ${remark.rewardPerBlock}`,
+        prop: `rewardPerBlock ${genesisAsset.rewardPerBlock}`,
         type: "chain rewards milestones",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (remark.nextRoundDelegates.length !== config.blockPerRound) {
+    if (genesisAsset.nextRoundDelegates.length !== config.blockPerRound) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: `nextRoundDelegates length ${remark.nextRoundDelegates.length}`,
+        to_compare_prop: `nextRoundDelegates length ${genesisAsset.nextRoundDelegates.length}`,
         be_compare_prop: config.blockPerRound,
         to_target: "genesisBlockRemark",
         be_target: "config",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (remark.maxBeginBalance !== "0") {
+    if (genesisAsset.maxBeginBalance !== "0") {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: `maxBeginBalance ${remark.maxBeginBalance}`,
+        to_compare_prop: `maxBeginBalance ${genesisAsset.maxBeginBalance}`,
         to_target: "GenesisBlockRemark",
         be_compare_prop: "'0'",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (remark.maxTxCount !== 0) {
+    if (genesisAsset.maxTxCount !== 0) {
       throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: `maxTxCount ${remark.maxTxCount}`,
+        to_compare_prop: `maxTxCount ${genesisAsset.maxTxCount}`,
         to_target: "GenesisBlockRemark",
         be_compare_prop: "0",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    const nextRoundDelegates = remark.nextRoundDelegates;
+    const nextRoundDelegates = genesisAsset.nextRoundDelegates;
     if (baseHelper.getVariableType(nextRoundDelegates) !== "[object Array]") {
       throw new ArgumentIllegalException(SHOULD_BE, {
         to_compare_prop: "nextRoundDelegates",
-        to_target: "GenesisBlockRemark",
+        to_target: "genesisBlock",
         be_compare_prop: "array",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
@@ -446,7 +436,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: `nextRoundDelegates[${i}].address ${nextRoundDelegates[i].address}`,
           type: "account address",
-          target: "remark.nextRoundDelegates",
+          target: "genesisBlock.nextRoundDelegates",
           ...Function_Exception_Detail,
         });
       }
@@ -455,142 +445,35 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: `nextRoundDelegates[${i}].equity ${nextRoundDelegates[i].equity}`,
           type: "account equity",
-          target: "remark.nextRoundDelegates",
+          target: "genesisBlock.nextRoundDelegates",
           ...Function_Exception_Detail,
         });
       }
     }
 
-    if (!baseHelper.isString(remark.debug)) {
+    // 校验 TPOW 难度计算公式是否合法
+    if (!this.tpowDiffHelper.isValidTpowDiffFormula(genesisAsset.tpowDiffFormula)) {
+      console.log(genesisAsset.tpowDiffFormula);
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "debug",
-        type: "string",
-        ...GenesisBlockRemark_Exception_Detail,
+        prop: "tpowDiffFormula",
+        type: "tpow diff formula",
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isString(remark.info)) {
+    if (!baseHelper.isNaturalNumber(genesisAsset.averageComputingPower)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "info",
-        type: "string",
-        ...GenesisBlockRemark_Exception_Detail,
-      });
-    }
-
-    if (!baseHelper.isValidBlockParticipation(remark.blockParticipation)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `blockParticipation ${remark.blockParticipation}`,
-        type: "block participation",
-        ...GenesisBlockRemark_Exception_Detail,
-      });
-    }
-
-    if (!baseHelper.isValidAccountEquity(remark.generatorEquity)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `generatorEquity ${remark.generatorEquity}`,
-        type: "account equity",
-        ...GenesisBlockRemark_Exception_Detail,
-      });
-    }
-
-    const {
-      participationTotalChainAsset,
-      participationTotalFee,
-      participationNumberOfAccount,
-      participationNumberOfTransaction,
-    } = remark;
-
-    if (!baseHelper.isNaturalNumber(participationTotalChainAsset)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `participationTotalChainAsset ${participationTotalChainAsset}`,
+        prop: `averageComputingPower ${genesisAsset.averageComputingPower}`,
         type: "natural number",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isNaturalNumber(participationTotalFee)) {
+    if (!baseHelper.isNaturalNumber(genesisAsset.tpowOfWorkExemptionBlocks)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `participationTotalFee ${participationTotalFee}`,
+        prop: `tpowOfWorkExemptionBlocks ${genesisAsset.tpowOfWorkExemptionBlocks}`,
         type: "natural number",
-        ...GenesisBlockRemark_Exception_Detail,
-      });
-    }
-
-    if (!baseHelper.isNaturalNumber(participationNumberOfAccount)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `participationNumberOfAccount ${participationNumberOfAccount}`,
-        type: "natural number",
-        ...GenesisBlockRemark_Exception_Detail,
-      });
-    }
-
-    if (!baseHelper.isNaturalNumber(participationNumberOfTransaction)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `participationNumberOfTransaction ${participationNumberOfTransaction}`,
-        type: "natural number",
-        ...GenesisBlockRemark_Exception_Detail,
-      });
-    }
-
-    if (
-      participationTotalChainAsset +
-        participationTotalFee +
-        participationNumberOfAccount +
-        participationNumberOfTransaction ===
-      0
-    ) {
-      throw new ArgumentIllegalException(PROP_SHOULD_GT_FIELD, {
-        prop: `participationTotalChainAsset + participationTotalFee + participationNumberOfAccount + participationNumberOfTransaction ${
-          participationTotalChainAsset +
-          participationTotalFee +
-          participationNumberOfAccount +
-          participationNumberOfTransaction
-        }`,
-        field: 0,
-        ...GenesisBlockRemark_Exception_Detail,
-      });
-    }
-
-    const {
-      growthFactor,
-      participationRatio,
-      averageComputingPower,
-    } = remark.transactionPowOfWorkConfig;
-    // 校验交易POW的难度增长系数
-    {
-      const {
-        denominator: growthFactorDenominator,
-        numerator: growthFactorNumerator,
-      } = growthFactor;
-      const growthFactorNumerator_BI = BigInt(growthFactorNumerator);
-      const growthFactorDenominator_BI = BigInt(growthFactorDenominator);
-      if (
-        !(
-          growthFactorNumerator_BI >= growthFactorDenominator_BI &&
-          growthFactorDenominator_BI >= BigInt(1)
-        )
-      ) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: `transactionPowOfWorkConfig.growthFactor ${growthFactorDenominator}`,
-          type: "positive float",
-          ...GenesisBlockRemark_Exception_Detail,
-        });
-      }
-    }
-    // 校验交易POW的参与度占比
-    if (!baseHelper.isPositiveFloatContainZero(participationRatio)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `transactionPowOfWorkConfig.participationRatio ${participationRatio}`,
-        type: "positive float",
-        ...GenesisBlockRemark_Exception_Detail,
-      });
-    }
-
-    if (!baseHelper.isNaturalNumber(averageComputingPower)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `averageComputingPower ${averageComputingPower}`,
-        type: "natural number",
-        ...GenesisBlockRemark_Exception_Detail,
+        ...GenesisBlockAsset_Exception_Detail,
       });
     }
   }
@@ -599,15 +482,15 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
    * 初始化 genesisBlock
    *
    * @param body
-   * @param genesisBlockRemark
+   * @param genesisBlockAsset
    */
   _generateBlock(
     body: BFChainCore.BlockBody,
-    genesisBlockRemark: BFChainCore.GenesisBlockRemarkJSON,
+    genesisBlockAsset: BFChainCore.GenesisBlockAssetJSON,
   ) {
     const block = GenesisBlock.fromObject({
       ...body,
-      remark: genesisBlockRemark,
+      asset: genesisBlockAsset,
       statisticInfo: {},
     });
     block.generatorPublicKey = body.generatorPublicKey;

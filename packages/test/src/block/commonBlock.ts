@@ -89,6 +89,7 @@ async function getCommonBlockAsync(sender: AccountModel) {
       height: 1,
       timestamp: 0,
       generatorPublicKey,
+      generatorEquity: "0",
       previousBlockSignature: "",
     },
     {

@@ -1,19 +1,17 @@
 import {
   EmigrateAssetTransaction,
   EmigrateAssetTransactionFactory,
-  EmigrateAssetModel,
   RANGE_TYPE,
 } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,
-  getGenesisAccount,
-  getRecipientWithoutSecondSecret,
   getDelegateWithoutSecondSecret,
   getFullBfchainCoreEntry,
   AccountModel,
   getDelegateWithSecondSecret,
   getRegisterBfchainCoreEntry,
+  getRandomDAppid,
 } from "../include";
 
 const fullBfchainCore = getFullBfchainCoreEntry(57, 128);
@@ -33,8 +31,8 @@ async function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate
     timestamp: 10000, // 生成交易时间戳
     fee: "1000", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
-    dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
-    lns: fullBfchainCore.config.genesisBlock.remark.genesisNodeAddress,
+    dappid: getRandomDAppid(), // 交易所属的 dappid
+    lns: fullBfchainCore.config.genesisBlock.asset.genesisAsset.genesisLocationName,
     sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: fullBfchainCore.config.magic, // 交易来源链的 magic
     toMagic: registerBfchainCore.config.magic, // 交易去往链的 magic

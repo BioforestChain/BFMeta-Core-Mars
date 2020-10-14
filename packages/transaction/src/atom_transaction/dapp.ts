@@ -15,7 +15,7 @@ import {
   PROP_IS_INVALID,
   SHOULD_BE,
   SHOULD_NOT_EXIST,
-  NOT_IN_EXPECTED_RANGE,
+  PROP_LENGTH_SHOULD_EQ_FIELD,
 } from "@bfchain/core-util-exception";
 import { Injectable, TaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "DAppTransactionFactory");
@@ -167,13 +167,11 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
     }
 
     const len = dappid.length;
-    if (len < 17 || len > 32) {
-      throw new ArgumentIllegalException(NOT_IN_EXPECTED_RANGE, {
+    if (len !== 8) {
+      throw new ArgumentIllegalException(PROP_LENGTH_SHOULD_EQ_FIELD, {
         prop: `dappid ${dappid}`,
-        min: 17,
-        max: 32,
+        fileds: 8,
         ...DappAsset_Exception_Detail,
-        target: "dapp length",
       });
     }
 

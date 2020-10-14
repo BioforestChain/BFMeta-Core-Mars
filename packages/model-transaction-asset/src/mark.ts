@@ -10,9 +10,6 @@ export class MarkModel
   extends Message<MarkModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.MarkJSON> {
   static INC = 1;
-  /**存证的拥有者地址 */
-  @Field.d(MarkModel.INC++, "string")
-  markPossessor!: string;
   /**存证数据 */
   @Field.d(MarkModel.INC++, "string")
   content!: string;
@@ -24,7 +21,6 @@ export class MarkModel
   dapp!: DAppModel;
   toJSON() {
     return {
-      markPossessor: this.markPossessor,
       content: this.content,
       action: this.action,
       dapp: this.dapp.toJSON(),

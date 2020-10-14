@@ -91,6 +91,13 @@ export class SignatureTransactionFactory extends TransactionFactory<SignatureTra
       });
     }
 
+    if (body.storage) {
+      throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+        prop: "storage",
+        ...Function_Exception_Detail,
+      });
+    }
+
     const signature = signatureAsset.signature;
 
     if (!signature) {

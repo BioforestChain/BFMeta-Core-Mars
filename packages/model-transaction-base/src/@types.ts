@@ -61,18 +61,11 @@ declare namespace BFChainCore {
   //#region Transaction Asset
   interface UsernameJSON {
     alias: string;
-    publicKey: string;
   }
   interface UsernameAssetJSON {
     username: UsernameJSON;
   }
-  interface DelegateJSON {
-    username: string;
-    publicKey: string;
-  }
-  interface DelegateAssetJSON {
-    delegate: DelegateJSON;
-  }
+  interface DelegateAssetJSON {}
   interface AcceptVoteAssetJSON {}
   interface RejectVoteAssetJSON {}
   interface VoteJSON {
@@ -99,7 +92,6 @@ declare namespace BFChainCore {
     dapp: DAppJSON;
   }
   interface DAppPurchasingJSON {
-    dappPossessor: string;
     dappAsset: DAppJSON;
   }
   interface DAppPurchasingAssetJSON {
@@ -107,7 +99,6 @@ declare namespace BFChainCore {
   }
 
   interface MarkJSON {
-    markPossessor: string;
     content: string;
     action: string;
     dapp: DAppJSON;

@@ -25,7 +25,7 @@
       "path": "../helper-config/tsconfig.@types.json"
     },
     {
-      "path": "../helper-transaction-tpow/tsconfig.@types.json"
+      "path": "../helper-transaction-pow/tsconfig.@types.json"
     },
     {
       "path": "../helper-type/tsconfig.@types.json"

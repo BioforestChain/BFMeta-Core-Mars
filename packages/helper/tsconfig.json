@@ -36,6 +36,9 @@
       "path": "../helper-milestones/tsconfig.json"
     },
     {
+      "path": "../helper-transaction-pow/tsconfig.json"
+    },
+    {
       "path": "../helper-transaction/tsconfig.json"
     },
     {

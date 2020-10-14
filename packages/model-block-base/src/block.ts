@@ -3,21 +3,20 @@ import { parseHexToArrayBuffer, getHexFromArrayBuffer } from "@bfchain/util-enco
 import { TransactionInBlock } from "@bfchain/core-model-transaction";
 import { StatisticInfoModel } from "./statistic_info";
 import { cacheBytesGetter } from "@bfchain/core-model-cacher";
-
-export type GetBlockRemarkModel<T extends Block> = T["REMARK_MODEL_TYPE"];
-export type GetBlockRemarkJSON<T extends Block> = T["REMARK_JSON_TYPE"];
+import { EasyWeakMap } from "@bfchain/util-extends-map";
+import { StringKeyMap } from "@bfchain/core-model-common";
+const TrsRemarkMapWM = new EasyWeakMap((block: Block) => new StringKeyMap(block.remark));
 
 /**缓存trasList解析结果 */
 const BUFFER_LIST_TRANSACTION_LIST_WM = new WeakMap<Uint8Array[], TransactionInBlock[]>();
 const TRANSACTION_BUFFER_WM = new WeakMap<TransactionInBlock, Uint8Array>();
 
 @Type.d("Block")
-export class Block<RJ extends BFChainCore.CommonBlockRemarkJSON = BFChainCore.CommonBlockRemarkJSON>
-  extends Message<Block<RJ>>
-  implements BFChainCore.BlockJSON<RJ> {
-  REMARK_MODEL_TYPE!: BFChainCore.RemarkJSONToModelType<RJ>;
-  REMARK_JSON_TYPE!: RJ;
-  remark!: BFChainCore.RemarkJSONToModelType<RJ>;
+export class Block<AJ extends object = object> extends Message<Block<AJ>>
+  implements BFChainCore.BlockJSON<AJ> {
+  ASSET_MODEL_TYPE!: BFChainCore.AssetJSONToModelType<AJ>;
+  ASSET_JSON_TYPE!: AJ;
+  asset!: BFChainCore.AssetJSONToModelType<AJ>;
   @Field.d(1, "uint32")
   version!: number;
   /**
@@ -69,9 +68,40 @@ export class Block<RJ extends BFChainCore.CommonBlockRemarkJSON = BFChainCore.Co
    */
   @Field.d(8, "string")
   magic!: string;
+  /**
+   * 8. 锻造二次公钥
+   */
+  @Field.d(9, "bytes", "optional")
+  /**交易的发起账户公钥 */
+  generatorSecondPublicKeyBuffer?: Uint8Array;
+  public get generatorSecondPublicKey() {
+    return (
+      (this.generatorSecondPublicKeyBuffer &&
+        getHexFromArrayBuffer(this.generatorSecondPublicKeyBuffer)) ||
+      undefined
+    );
+  }
+  public set generatorSecondPublicKey(value: string | undefined) {
+    /// 空字符串也当成undefined处理
+    this.generatorSecondPublicKeyBuffer = parseHexToArrayBuffer(value);
+  }
+  /**
+   * 9. 交易的发起者二次签名
+   */
+  @Field.d(10, "bytes", "optional")
+  signSignatureBuffer?: Uint8Array;
+  get signSignature() {
+    return (
+      (this.signSignatureBuffer && getHexFromArrayBuffer(this.signSignatureBuffer)) || undefined
+    );
+  }
+  set signSignature(value: string | undefined) {
+    /// 空字符串也当成undefined处理
+    this.signSignatureBuffer = parseHexToArrayBuffer(value);
+  }
 
   /// 往后开始自由组合
-  static INC = 9;
+  static INC = 11;
 
   /**区块大小 */
   @Field.d(Block.INC++, "uint32")
@@ -88,6 +118,20 @@ export class Block<RJ extends BFChainCore.CommonBlockRemarkJSON = BFChainCore.Co
   /**交易 hash 长度 */
   @Field.d(Block.INC++, "uint32")
   payloadLength!: number; // 交易还在传输，这个length代表所有的交易
+  /**区块参与度 */
+  @Field.d(Block.INC++, "string")
+  blockParticipation!: string;
+  /**打块账户权益 */
+  @Field.d(Block.INC++, "string")
+  generatorEquity!: string;
+  /**交易的备注信息 */
+  @MapField.d(Block.INC++, "string", "string")
+  remark!: { [key: string]: string };
+  get remarkMap() {
+    // 直接 return TrsRemarkMapWM.forceGet(this) 类型识别错误
+    const remarkMap = TrsRemarkMapWM.forceGet(this);
+    return remarkMap;
+  }
   /**区块统计信息 */
   @Field.d(Block.INC++, StatisticInfoModel)
   statisticInfo!: StatisticInfoModel;
@@ -130,10 +174,17 @@ export class Block<RJ extends BFChainCore.CommonBlockRemarkJSON = BFChainCore.Co
     this.transactionBufferList = bufList;
   }
   @cacheBytesGetter
-  getBytes(skipSignature?: boolean, skipOrCustomTransactions?: boolean | Uint8Array[]) {
+  getBytes(
+    skipSignature?: boolean,
+    skipSignSignature?: boolean,
+    skipOrCustomTransactions?: boolean | Uint8Array[],
+  ) {
     const props: PropertyDescriptorMap = {};
     if (skipSignature) {
       props.signatureBuffer = { value: null };
+    }
+    if (skipSignSignature) {
+      props.signSignatureBuffer = { value: null };
     }
     if (skipOrCustomTransactions) {
       props.transactionBufferList = {
@@ -164,13 +215,14 @@ export class Block<RJ extends BFChainCore.CommonBlockRemarkJSON = BFChainCore.Co
   }
 
   toJSON() {
-    return {
+    const res: BFChainCore.BlockJSON<AJ> = {
       version: this.version,
       height: this.height,
       blockSize: this.blockSize,
       timestamp: this.timestamp,
       signature: this.signature,
       generatorPublicKey: this.generatorPublicKey,
+      generatorEquity: this.generatorEquity,
       numberOfTransactions: this.numberOfTransactions,
       payloadHash: this.payloadHash,
       payloadLength: this.payloadLength,
@@ -179,18 +231,30 @@ export class Block<RJ extends BFChainCore.CommonBlockRemarkJSON = BFChainCore.Co
       totalFee: this.totalFee,
       reward: this.reward,
       magic: this.magic,
+      blockParticipation: this.blockParticipation,
       transactions: this.transactions.map((transaction) => transaction.toJSON()),
-      remark: this.remark.toJSON() as RJ,
+      remark: this.remark,
+      asset: this.asset.toJSON() as AJ,
       statisticInfo: this.statisticInfo.toJSON(),
       roundOfflineGeneratersHashMap: this.roundOfflineGeneratersHashMap,
     };
+
+    this.generatorSecondPublicKey && (res.generatorSecondPublicKey = this.generatorSecondPublicKey);
+    this.signSignature && (res.signSignature = this.signSignature);
+
+    return res;
   }
   static fromObject<T extends Message>(
     this: BFChainProtobuf.Constructor<T>,
-    object: BFChainProtobuf.ObjectFromType<BFChainCore.BlockJSON<BFChainCore.GetRemarkModel<T>>>,
+    object: BFChainProtobuf.ObjectFromType<
+      BFChainCore.BlockJSON<BFChainCore.GetBlockMessageAssetModel<T>>
+    >,
   ) {
     const res = super.fromObject(object as any) as Block;
     object.generatorPublicKey && (res.generatorPublicKey = object.generatorPublicKey);
+    object.generatorSecondPublicKey &&
+      (res.generatorSecondPublicKey = object.generatorSecondPublicKey);
+    object.signSignature && (res.signSignature = object.signSignature);
     if (res !== (object as unknown)) {
       object.payloadHash && (res.payloadHash = object.payloadHash);
       const trsInBlock: TransactionInBlock[] = [];

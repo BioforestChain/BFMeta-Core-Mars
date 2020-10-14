@@ -1,16 +1,10 @@
-import {
-  Block,
-  GetBlockRemarkJSON,
-  BLOCK_TYPES_BASE,
-  BLOCK_TYPES_MAP,
-} from "@bfchain/core-model-block";
 import type { TransactionInBlock } from "@bfchain/core-model-transaction";
+import { Block, BLOCK_TYPES_BASE, BLOCK_TYPES_MAP } from "@bfchain/core-model-block";
 import { Reader } from "@bfchain/protobuf";
 import { AsymmetricHelper, BlockHelper } from "@bfchain/core-helper";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 import { BlockFactory, BlockGeneratorCalculator } from "./atom_block";
-
-import { Inject, Injectable, ModuleStroge, Resolve } from "@bfchain/util";
+import { Inject, Injectable, ModuleStroge, Resolve, getHexFromArrayBuffer } from "@bfchain/util";
 
 const { ArgumentFormatException, log, warn } = CoreExceptionGenerator("Core", "Block");
 
@@ -60,23 +54,30 @@ export class BlockCore {
   async generateBlock<B extends Block>(
     BlockFactory: new (...args: any[]) => BlockFactory<B>,
     body: BFChainCore.BlockBody,
-    blockRemark: GetBlockRemarkJSON<B>,
+    blockAsset: BFChainCore.GetBlockAssetJSON<B>,
     trsGenerator: AsyncIterable<TransactionInBlock>,
     keypair: BFChainCore.Keypair,
+    secondKeypair?: BFChainCore.Keypair,
     eventEmitter?: BFChainCore.GenerateBlockEventEmitter<B>,
   ) {
     const blockFactory = this.getBlockFactory(BlockFactory);
 
     // 校验keypair
     blockFactory.verifyKeypair(keypair);
+    if (secondKeypair) {
+      blockFactory.verifyKeypair(secondKeypair);
+      body.generatorSecondPublicKey = getHexFromArrayBuffer(secondKeypair.publicKey);
+    }
+    body.remark = body.remark || {};
     // 校验生成区块的参数
-    await blockFactory.verifyBlockBody(body, blockRemark);
+    await blockFactory.verifyBlockBody(body, blockAsset);
     // 生成区块，获取区块并签名
     const block = await blockFactory.generateBlock(
       body,
-      blockRemark,
+      blockAsset,
       trsGenerator,
       keypair,
+      secondKeypair,
       eventEmitter,
     );
 
@@ -91,10 +92,10 @@ export class BlockCore {
    *
    * @param block
    */
-  async recombineBlock<R extends BFChainCore.CommonBlockRemarkJSON>(
-    blockJSON: BFChainCore.BlockJSON<R>,
+  async recombineBlock<T extends Block>(
+    blockJSON: BFChainCore.BlockJSON<BFChainCore.GetBlockAssetJSON<T>>,
   ) {
-    return (await this.getBlockFactoryFromHeight(blockJSON.height).fromJSON(blockJSON)) as Block<R>;
+    return (await this.getBlockFactoryFromHeight(blockJSON.height).fromJSON(blockJSON)) as T;
   }
   fromJSON = this.recombineBlock;
 
@@ -132,10 +133,10 @@ export class BlockCore {
   }
 
   getRoundLastBlockRemarkHash(
-    ...args: BFChainUtil.AllArgument<BlockHelper["calcRoundLastBlockRemarkHash"]>
+    ...args: BFChainUtil.AllArgument<BlockHelper["calcChainOnChainHash"]>
   ) {
     warn("@deprecated", "请直接使用blockHelper.getRoundLastBlockRemarkHash");
-    return this.blockHelper.calcRoundLastBlockRemarkHash(...args);
+    return this.blockHelper.calcChainOnChainHash(...args);
   }
   // #endregion
 }

@@ -1737,7 +1737,7 @@
 
                 const genesisBlock = this._blockCore.recombineBlock(genesisBlockJson);
                 this._blockCore
-                .getBlockFactoryFromHeight<BFChainCore.Block<BFChainCore.GenesisBlockRemarkJSON>>(
+                .getBlockFactoryFromHeight<BFChainCore.Block<BFChainCore.GenesisBlockAssetJSON>>(
                     genesisBlockJson.height,
                 )
                 .verify(genesisBlock, chainConfig);

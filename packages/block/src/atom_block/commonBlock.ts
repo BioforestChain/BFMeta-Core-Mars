@@ -50,7 +50,7 @@ export class CommonBlockFactory extends BlockFactory<CommonBlock> {
    * @param blockBody
    */
   async fromJSON(
-    blockBody: BFChainCore.BlockJSON<BFChainCore.CommonBlockRemarkJSON>,
+    blockBody: BFChainCore.BlockJSON<BFChainCore.CommonBlockAssetJSON>,
     opts?: { verify?: boolean; config?: ConfigHelper },
   ) {
     const block = CommonBlock.fromObject(blockBody);
@@ -72,67 +72,24 @@ export class CommonBlockFactory extends BlockFactory<CommonBlock> {
    * 校验输入信息
    *
    * @param body
-   * @param commonBlockRemark
+   * @param commonBlockAsset
    */
   async verifyBlockBody(
     body: BFChainCore.BlockBody,
-    commonBlockRemark: BFChainCore.CommonBlockRemarkJSON,
+    commonBlockAsset: BFChainCore.CommonBlockAssetJSON,
     config = this.config,
   ) {
-    await super.verifyBlockBody(body, commonBlockRemark, config);
-
-    const Function_Exception_Detail = { function: "verifyBlockBody" };
-    const CommonBlockRemark_Exception_Detail = {
-      target: "CommonBlock.remark",
-      ...Function_Exception_Detail,
-    };
-
-    const { baseHelper } = this;
-
-    if (!baseHelper.isString(commonBlockRemark.debug)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `debug ${commonBlockRemark.debug}`,
-        type: "string",
-        ...CommonBlockRemark_Exception_Detail,
-      });
-    }
-
-    if (!baseHelper.isString(commonBlockRemark.info)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `info ${commonBlockRemark.info}`,
-        type: "string",
-        ...CommonBlockRemark_Exception_Detail,
-      });
-    }
-
-    if (!baseHelper.isValidBlockParticipation(commonBlockRemark.blockParticipation)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `blockParticipation ${commonBlockRemark.blockParticipation}`,
-        type: "block participation",
-        ...CommonBlockRemark_Exception_Detail,
-      });
-    }
-
-    if (!baseHelper.isValidAccountEquity(commonBlockRemark.generatorEquity)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `generatorEquity ${commonBlockRemark.generatorEquity}`,
-        type: "account equity",
-        ...CommonBlockRemark_Exception_Detail,
-      });
-    }
+    await super.verifyBlockBody(body, commonBlockAsset, config);
   }
 
   /**
    * 初始化 commonBlock
    *
    * @param body
-   * @param commonBlockRemark
+   * @param commonBlockAset
    */
-  _generateBlock(
-    body: BFChainCore.BlockBody,
-    commonBlockRemark: BFChainCore.CommonBlockRemarkJSON,
-  ) {
-    const block = CommonBlock.fromObject({ ...body, remark: commonBlockRemark, statisticInfo: {} });
+  _generateBlock(body: BFChainCore.BlockBody, commonBlockAset: BFChainCore.CommonBlockAssetJSON) {
+    const block = CommonBlock.fromObject({ ...body, asset: commonBlockAset, statisticInfo: {} });
     // 绑定区块奖励
     block.reward = this.milestonesHelper.calcReward(block.height);
 

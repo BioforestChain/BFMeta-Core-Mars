@@ -95,6 +95,14 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
         ...Function_Exception_Detail,
       });
     }
+
+    if (body.storage) {
+      throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+        prop: "storage",
+        ...Function_Exception_Detail,
+      });
+    }
+
     const { baseHelper, accountBaseHelper } = this;
 
     const emigrateAsset = emigrateAssetAsset.emigrateAsset;

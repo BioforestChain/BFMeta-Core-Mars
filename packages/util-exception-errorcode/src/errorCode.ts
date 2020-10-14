@@ -18,30 +18,33 @@ export const OUT_OF_RANGE = (ec.next = "{variable} out of range in {function}");
 /** to_compare_prop be_compare_prop to_target be_target */
 export const NOT_MATCH = (ec.next =
   "{to_compare_prop} in {to_target} and {be_compare_prop} in {be_target} not match");
-/**prop target field */
-export const PROP_SHOULD_GT_FIELD = (ec.next = "{prop} in {target} should greater than {field}");
-/**prop target field */
+/**prop target field function*/
+export const PROP_SHOULD_GT_FIELD = (ec.next =
+  "{prop} in {target} should greater than {field} when {function}");
+/**prop target field function*/
 export const PROP_SHOULD_GTE_FIELD = (ec.next =
-  "{prop} in {target} should greater than or equals to {field}");
-/**prop target field */
-export const PROP_SHOULD_LT_FIELD = (ec.next = "{prop} in {target} should less than {field}");
-/**prop target field */
+  "{prop} in {target} should greater than or equals to {field} when {function}");
+/**prop target field function*/
+export const PROP_SHOULD_LT_FIELD = (ec.next =
+  "{prop} in {target} should less than {field} when {function}");
+/**prop target field function*/
 export const PROP_SHOULD_LTE_FIELD = (ec.next =
-  "{prop} in {target} should less than or equals to {field}");
-/**prop target field */
-export const PROP_SHOULD_EQ_FIELD = (ec.next = "{prop} in {target} should equals to {field}");
-/**prop target field */
+  "{prop} in {target} should less than or equals to {field} when {function}");
+/**prop target field function*/
+export const PROP_SHOULD_EQ_FIELD = (ec.next =
+  "{prop} in {target} should equals to {field} when {function}");
+/**prop target field function*/
 export const PROP_LENGTH_SHOULD_LTE_FIELD = (ec.next =
-  "{prop} length in {target} should less than or equals to {field}");
-/**prop target field */
+  "{prop} length in {target} should less than or equals to {field} when {function}");
+/**prop target field function*/
 export const PROP_LENGTH_SHOULD_GTE_FIELD = (ec.next =
-  "{prop} length in {target} should greater than or equals to {field}");
-/**prop target field */
+  "{prop} length in {target} should greater than or equals to {field} when {function}");
+/**prop target field function*/
 export const PROP_LENGTH_SHOULD_EQ_FIELD = (ec.next =
-  "{prop} length in {target} should equals to {field}");
-/**prop target field */
+  "{prop} length in {target} should equals to {field} when {function}");
+/**prop target field function*/
 export const PROP_LENGTH_SHOULD_NOT_EQ_FIELD = (ec.next =
-  "{prop} length in {target} should not equals to {field}");
+  "{prop} length in {target} should not equals to {field} when {function}");
 /**variable function */
 export const DUPLICATE = (ec.next = "{variable} duplicate in {function}");
 /**prop target limit function */
@@ -99,18 +102,33 @@ export const ACCOUNT_CAN_NOT_BE_FROZEN = (ec.next =
 /**signature senderId applyBlockHeight type function */
 export const TRANSACTION_SIGN_SIGNATURE_IS_REQUIRED = (ec.next =
   "Transaction signSignature is required, signature {signature} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type} when {function}");
+/**signature generatorAddress height function */
+export const BLOCK_SIGN_SIGNATURE_IS_REQUIRED = (ec.next =
+  "Block signSignature is required, signature {signature} generatorAddress {generatorAddress} height {height} when {function}");
 /**signature senderId applyBlockHeight type function */
 export const TRANSACTION_SENDER_SECOND_PUBLICKEY_IS_REQUIRED = (ec.next =
   "Transaction senderSecondPublicKey is required, signature {signature} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type} when {function}");
+/**signature generatorAddress height function */
+export const BLOCK_GENERATOR_SECOND_PUBLICKEY_IS_REQUIRED = (ec.next =
+  "Block generatorSecondPublicKey is required, signature {signature} generatorAddress {generatorAddress} height {height} when {function}");
 /**signature senderId applyBlockHeight type function */
-export const SECOND_PUBLICKEY_ALREADY_CHANGE = (ec.next =
+export const TRANSACTION_SENDER_SECOND_PUBLICKEY_ALREADY_CHANGE = (ec.next =
   "Transaction sender second secret have already change, signature {signature} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type} when {function}");
+/**signature generatorAddress height function */
+export const BLOCK_GENERATOR_SECOND_PUBLICKEY_ALREADY_CHANGE = (ec.next =
+  "Block generator second secret have already change, signature {signature} generatorAddress {generatorAddress} height {height} when {function}");
 /**signature senderId applyBlockHeight type function */
-export const SHOULD_NOT_HAVE_SENDER_SECOND_PUBLICKEY = (ec.next =
+export const TRANSACTION_SHOULD_NOT_HAVE_SENDER_SECOND_PUBLICKEY = (ec.next =
   "Transaction should not have senderSecondPublicKey, signature {signature} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type} when {function}");
+/**signature generatorAddress height function */
+export const BLOCK_SHOULD_NOT_HAVE_GENERATOR_SECOND_PUBLICKEY = (ec.next =
+  "Block should not have generatorSecondPublicKey, signature {signature} generatorAddress {generatorAddress} height {height} when {function}");
 /**signature senderId applyBlockHeight type function */
 export const TRANSACTION_SHOULD_NOT_HAVE_SIGN_SIGNATURE = (ec.next =
   "Transaction should not have signSignature, signature {signature} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type} when {function}");
+/**signature generatorAddress height function */
+export const BLOCK_SHOULD_NOT_HAVE_SIGN_SIGNATURE = (ec.next =
+  "Block should not have signSignature, signature {signature} generatorAddress {generatorAddress} height {height} when {function}");
 /**reason function */
 export const INVALID_TRANSACTION_APPLY_BLOCK_HEIGHT = (ec.next =
   "Invalid transaction apply block height, reason {reason} when {function}");

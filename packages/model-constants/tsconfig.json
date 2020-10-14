@@ -12,6 +12,7 @@
   "files": [
     "src/@types.ts",
     "src/channel.constants.ts",
+    "src/helper.constants.ts",
     "src/index.ts",
     "src/transaction.constants.ts"
   ]

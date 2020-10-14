@@ -73,8 +73,10 @@ declare namespace BFChainCore {
   type ApplyInfo_Equity = {
     address: string;
     publicKeyBuffer: Uint8Array;
+    /**投出的权益数 */
     equity: string;
     sourceEquity: string;
+    /**被投的受托人 */
     recipientId: string;
   };
   /**投票权益的相关事件 */
@@ -85,6 +87,7 @@ declare namespace BFChainCore {
   type ApplyInfo_Username = {
     address: string;
     publicKeyBuffer: Uint8Array;
+    /**新的用户名 */
     alias: string;
   };
   /**设置用户名的相关事件 */
@@ -120,6 +123,7 @@ declare namespace BFChainCore {
     sourceChainName: string;
     sourceChainMagic: string;
     dappid: string;
+    /**dappid 的拥有者地址 */
     possessorAddress: string;
     type: DAPP_TYPE;
     purchaseAsset?: DAppPurchaseAssetJSON;
@@ -145,6 +149,7 @@ declare namespace BFChainCore {
   type ApplyInfo_PurchaseDAppid = {
     address: string;
     publicKeyBuffer?: Uint8Array;
+    /**新的 dappid 的拥有者地址 */
     possessorAddress: string;
     dappid: string;
     sourceChainMagic: string;
@@ -180,7 +185,7 @@ declare namespace BFChainCore {
     publicKeyBuffer?: Uint8Array;
     genesisBlock:
       | import("@bfchain/core-model-block").GenesisBlock
-      | BlockJSON<GenesisBlockRemarkJSON>;
+      | BlockJSON<GenesisBlockAssetJSON>;
   };
   /**注册链的相关事件 */
   type ApplyTransactionRegisterChainEvent<
@@ -194,6 +199,7 @@ declare namespace BFChainCore {
     name: string;
     sourceChainName: string;
     sourceChainMagic: string;
+    /**链域名的拥有者地址 */
     possessorAddress: string;
   };
   /**注册链域名 */
@@ -206,7 +212,6 @@ declare namespace BFChainCore {
     publicKeyBuffer?: Uint8Array;
     name: string;
     sourceChainMagic: string;
-    possessorAddress: string;
   };
   /**注销链域名 */
   type ApplyTransactionCancelLocationNameEvent<
@@ -255,6 +260,7 @@ declare namespace BFChainCore {
   type ApplyInfo_PurchaseLocationName = {
     address: string;
     publicKeyBuffer?: Uint8Array;
+    /**链域名的拥有者地址 */
     possessorAddress: string;
     name: string;
     sourceChainMagic: string;

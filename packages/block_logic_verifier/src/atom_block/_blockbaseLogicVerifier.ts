@@ -16,7 +16,10 @@ import {
   PROP_SHOULD_LTE_FIELD,
   INVALID_BLOCK_GENERATOR,
   PROP_IS_INVALID,
-  INVALID_BLOCK_TIMESTAMP,
+  BLOCK_SIGN_SIGNATURE_IS_REQUIRED,
+  BLOCK_GENERATOR_SECOND_PUBLICKEY_ALREADY_CHANGE,
+  BLOCK_SHOULD_NOT_HAVE_GENERATOR_SECOND_PUBLICKEY,
+  BLOCK_SHOULD_NOT_HAVE_SIGN_SIGNATURE,
 } from "@bfchain/core-util-exception";
 import type { Block } from "@bfchain/core-model-block";
 import { TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE } from "@bfchain/core-model-transaction";
@@ -55,22 +58,23 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
   protected blockCore!: import("@bfchain/core-block").BlockCore;
   @Inject(BlockGeneratorCalculator)
   protected blockGeneratorCalculator!: BlockGeneratorCalculator;
-  @Inject("blockGetterHelper", { optional: true, dynamics: true })
-  protected blockGetterHelper?: BFChainCore.BlockGetterHelperInterface;
   @Inject("transactionGetterHelper", { optional: true, dynamics: true })
   protected transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface;
+  @Inject("blockGetterHelper", { optional: true, dynamics: true })
+  protected blockGetterHelper?: BFChainCore.BlockGetterHelperInterface;
 
   abstract verify(
     block: T,
     processBlockType: PROCESSBLOCK_TYPE,
-    blockGetterHelper?: BFChainCore.BlockGetterHelperInterface,
+    generatorInfo: BFChainCore.AccountInfo,
     transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
+    blockGetterHelper?: BFChainCore.BlockGetterHelperInterface,
   ): Promise<boolean>;
 
-  abstract verifyBlockRemark(
+  abstract verifyBlockAsset(
     block: T,
-    blockGetterHelper?: BFChainCore.BlockGetterHelperInterface,
     transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
+    blockGetterHelper?: BFChainCore.BlockGetterHelperInterface,
   ): Promise<void>;
 
   abstract checkMaxBeginBalanceAndMaxTxCount(
@@ -81,22 +85,23 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
   async verifyBlockBase(
     block: T,
     processBlockType: PROCESSBLOCK_TYPE,
+    generatorInfo: BFChainCore.AccountInfo,
+    transactionGetterHelper = this.transactionGetterHelper,
     blockGetterHelper = this.blockGetterHelper,
-    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
       function: "logicVerify",
     } as const;
-    if (!blockGetterHelper) {
+    if (!transactionGetterHelper) {
       throw new NoFoundException(NOT_EXIST, {
-        prop: "blockGetterHelper",
+        prop: "transactionGetterHelper",
         target: "moduleStroge",
         ...Function_Exception_Detail,
       });
     }
-    if (!transactionGetterHelper) {
+    if (!blockGetterHelper) {
       throw new NoFoundException(NOT_EXIST, {
-        prop: "transactionGetterHelper",
+        prop: "blockGetterHelper",
         target: "moduleStroge",
         ...Function_Exception_Detail,
       });
@@ -117,6 +122,77 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
     // 校验区块前块 signature
     if (block.height !== 1) {
       await this.checkPreviousBlock(block, blockGetterHelper);
+    }
+
+    // 校验区块的二次签名
+    await this.checkSecondPublicKey(block, generatorInfo);
+  }
+
+  /**
+   * 校验区块的二次签名
+   *
+   * @param block
+   * @param generatorInfo
+   */
+  async checkSecondPublicKey(block: T, generatorInfo: BFChainCore.AccountInfo) {
+    const Function_Exception_Detail = {
+      function: "checkSecondPublicKey",
+    } as const;
+
+    const {
+      height,
+      generatorPublicKey,
+      generatorSecondPublicKey,
+      signature,
+      signSignature,
+    } = block;
+
+    const generatorAddress = await this.accountBaseHelper.getAddressFromPublicKeyString(
+      generatorPublicKey,
+    );
+    if (!generatorInfo) {
+      throw new NoFoundException(NOT_EXIST, {
+        prop: `delegate with address ${generatorAddress}`,
+        target: "blockChain",
+        ...Function_Exception_Detail,
+      });
+    }
+
+    if (generatorInfo.secondPublicKey) {
+      if (!(generatorSecondPublicKey && signSignature)) {
+        throw new ConsensusException(BLOCK_SIGN_SIGNATURE_IS_REQUIRED, {
+          signature,
+          generatorAddress,
+          height,
+          ...Function_Exception_Detail,
+        });
+      }
+
+      if (generatorInfo.secondPublicKey !== generatorSecondPublicKey) {
+        throw new ConsensusException(BLOCK_GENERATOR_SECOND_PUBLICKEY_ALREADY_CHANGE, {
+          signature,
+          generatorAddress,
+          height,
+          ...Function_Exception_Detail,
+        });
+      }
+    } else {
+      if (generatorSecondPublicKey) {
+        throw new ConsensusException(BLOCK_SHOULD_NOT_HAVE_GENERATOR_SECOND_PUBLICKEY, {
+          signature,
+          generatorAddress,
+          height,
+          ...Function_Exception_Detail,
+        });
+      }
+      if (signSignature) {
+        throw new ConsensusException(BLOCK_SHOULD_NOT_HAVE_SIGN_SIGNATURE, {
+          signature,
+          generatorAddress,
+          height,
+          ...Function_Exception_Detail,
+        });
+      }
     }
   }
 

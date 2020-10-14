@@ -9,7 +9,7 @@ declare namespace BFChainCore {
   type CustomTransactionJSON = TransactionJSON<CustomAssetJSON>;
 
   interface RegisterChainJSON {
-    genesisBlock: BlockJSON<GenesisBlockRemarkJSON>;
+    genesisBlock: BlockJSON<GenesisBlockAssetJSON>;
   }
   interface RegisterChainAssetJSON {
     registerChain: RegisterChainJSON;

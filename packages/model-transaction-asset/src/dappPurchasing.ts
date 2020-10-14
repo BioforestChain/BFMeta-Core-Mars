@@ -10,15 +10,11 @@ export class DAppPurchasingModel
   extends Message<DAppPurchasingModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.DAppPurchasingJSON> {
   static INC = 1;
-  /**dapp 的拥有者地址 */
-  @Field.d(DAppPurchasingModel.INC++, "string")
-  dappPossessor!: string;
   /**要购买的 dapp 数据 */
   @Field.d(DAppPurchasingModel.INC++, DAppModel)
   dappAsset!: DAppModel;
   toJSON() {
     return {
-      dappPossessor: this.dappPossessor,
       dappAsset: this.dappAsset.toJSON(),
     };
   }

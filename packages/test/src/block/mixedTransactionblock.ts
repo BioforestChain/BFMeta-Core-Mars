@@ -59,7 +59,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
       fee: "100", // 交易手续费
       remark: {}, // 交易备注，任意信息
       dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
-      lns: bfchainCore.config.genesisBlock.remark.genesisNodeAddress,
+      lns: bfchainCore.config.genesisBlock.asset.genesisAsset.genesisLocationName,
       sourceIP: "127.0.0.1", // 交易来源 ip
       fromMagic: "5F720C81E82CFC99", // 交易来源链的 magic
       toMagic: "5F720C81E82CFC99", // 交易去往链的 magic
@@ -135,7 +135,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
       fee: "100", // 交易手续费
       remark: { remark: "body.remark" }, // 交易备注，任意信息
       dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
-      lns: bfchainCore.config.genesisBlock.remark.genesisNodeAddress,
+      lns: bfchainCore.config.genesisBlock.asset.genesisAsset.genesisLocationName,
       sourceIP: "127.0.0.1", // 交易来源 ip
       fromMagic: "5F720C81E82CFC99", // 交易来源链的 magic
       toMagic: "5F720C81E82CFC99", // 交易去往链的 magic
@@ -209,7 +209,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
       fee: "100", // 交易手续费
       remark: { remark: "body.remark" }, // 交易备注，任意信息
       dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
-      lns: bfchainCore.config.genesisBlock.remark.genesisNodeAddress,
+      lns: bfchainCore.config.genesisBlock.asset.genesisAsset.genesisLocationName,
       sourceIP: "127.0.0.1", // 交易来源 ip
       fromMagic: "5F720C81E82CFC99", // 交易来源链的 magic
       toMagic: "5F720C81E82CFC99", // 交易去往链的 magic
@@ -276,7 +276,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
       fee: "100", // 交易手续费
       remark: { remark: "body.remark" }, // 交易备注，任意信息
       dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
-      lns: bfchainCore.config.genesisBlock.remark.genesisNodeAddress,
+      lns: bfchainCore.config.genesisBlock.asset.genesisAsset.genesisLocationName,
       sourceIP: "127.0.0.1", // 交易来源 ip
       fromMagic: "5F720C81E82CFC99", // 交易来源链的 magic
       toMagic: "5F720C81E82CFC99", // 交易去往链的 magic
@@ -357,7 +357,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
       fee: "78622", // 交易手续费
       remark: { remark: "body.remark" }, // 交易备注，任意信息
       dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
-      lns: bfchainCore.config.genesisBlock.remark.genesisNodeAddress,
+      lns: bfchainCore.config.genesisBlock.asset.genesisAsset.genesisLocationName,
       sourceIP: "127.0.0.1", // 交易来源 ip
       fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
       toMagic: bfchainCore.config.magic, // 交易去往链的 magic
@@ -420,7 +420,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
       fee: "78622", // 交易手续费
       remark: { remark: "body.remark" }, // 交易备注，任意信息
       dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
-      lns: bfchainCore.config.genesisBlock.remark.genesisNodeAddress,
+      lns: bfchainCore.config.genesisBlock.asset.genesisAsset.genesisLocationName,
       sourceIP: "127.0.0.1", // 交易来源 ip
       fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
       toMagic: bfchainCore.config.magic, // 交易去往链的 magic
@@ -489,7 +489,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
       `${bfchainCore.accountBaseHelper.getAddressFromPublicKeyString(
         bfchainCore.config.genesisBlock.generatorPublicKey,
       )}_${bfchainCore.config.magic}_${bfchainCore.config.assetType}`,
-      BigInt(bfchainCore.config.genesisBlock.remark.generateTotalAmount),
+      BigInt(bfchainCore.config.genesisBlock.asset.genesisAsset.generateTotalAmount),
     );
 
     function setAccountAsset(key: string, assetNumber: bigint) {
@@ -639,11 +639,10 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
     const blockTrsItems = await getTrsInBlock(height, statisticsInfo);
 
     eventEmitter.on("verifyTransactionProfOfWork", ({ transaction, count }) => {
-      return bfchainCore.transactionHelper.checkTransactionProfOfWork(
-        transaction.signatureBuffer,
-        count,
-        "0",
-      );
+      return bfchainCore.transactionHelper.checkTransactionProfOfWork(transaction.signatureBuffer, {
+        accountNumberOfTransactionInBlock: count,
+        accountParticipation: "0",
+      });
     });
     const commonBlock: BFChainCore.Block = await bfchainCore.block.generateBlock<CommonBlock>(
       CommonBlockFactory,
@@ -652,6 +651,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
         height,
         timestamp: 0,
         generatorPublicKey,
+        generatorEquity: "0",
         previousBlockSignature: "6ed38b5fd642f79689ade7cff598bdf9548de56182c85f05b244c66b17a89dc1",
       },
       {
@@ -666,6 +666,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
         }
       })(),
       generatorKeypair,
+      undefined,
       eventEmitter,
     );
     statisticsInfo.unref("generateBlock");

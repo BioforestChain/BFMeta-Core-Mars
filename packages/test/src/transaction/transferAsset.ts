@@ -10,6 +10,7 @@ import {
   getGenesisAccount,
   AccountModel,
   getBfchainCoreEntry,
+  getRandomDAppid,
 } from "../include";
 
 const bfchainCore = getBfchainCoreEntry();
@@ -19,8 +20,8 @@ function getPOWInfo<T extends Transaction>(address: string) {
   const count = _powCount[address] || 0;
   _powCount[address] = count + 1;
   const res: BFChainCore.TransactionPoWOptions<T> = {
-    count,
-    participation: "8888888" + "0".repeat(8),
+    accountNumberOfTransactionInBlock: count,
+    accountParticipation: "8888888" + "0".repeat(8),
   };
   return res;
 }
@@ -39,8 +40,8 @@ async function getTransferAssetTransaction(sender: AccountModel) {
     timestamp: 770880, // 生成交易时间戳
     fee: "90", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
-    dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
-    lns: bfchainCore.config.genesisBlock.remark.genesisNodeAddress,
+    dappid: getRandomDAppid(), // 交易所属的 dappid
+    lns: bfchainCore.config.genesisBlock.asset.genesisAsset.genesisLocationName,
     sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic
@@ -63,7 +64,7 @@ async function getTransferAssetTransaction(sender: AccountModel) {
     );
   }
   const pow =
-    data.applyBlockHeight > bfchainCore.config.powOfWorkExemptionBlocks
+    data.applyBlockHeight > bfchainCore.config.tpowOfWorkExemptionBlocks
       ? getPOWInfo<TransferAssetTransaction>(sender.address)
       : undefined;
   let trs = await bfchainCore.transaction.createTransaction<TransferAssetTransaction>(
@@ -71,9 +72,9 @@ async function getTransferAssetTransaction(sender: AccountModel) {
     data,
     {
       transferAsset: {
-        sourceChainName: "srcchn",
-        sourceChainMagic: "THEM4G1KKEY",
-        assetType: "BFT",
+        sourceChainName: bfchainCore.config.chainName,
+        sourceChainMagic: bfchainCore.config.magic,
+        assetType: bfchainCore.config.assetType,
         amount: "1000",
       },
     },

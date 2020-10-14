@@ -1,18 +1,20 @@
 {
   "version": 1,
   "height": 1,
-  "blockSize": 30889,
+  "blockSize": 27076,
   "timestamp": 0,
-  "signature": "254aa076bbcc89ee9a1c85490dba443d5dfa0d91f068892bd8f1c23dbbfbb583fface15b190313c49cfe54f21ee0a2d2b0bcf965892ba104a5a416c4380ac600",
+  "signature": "d2ea7eee69ec6ea94328e87441ee9c85bac884a62207007d2d6d05094a8ae604ae53dfc8451cee0d9d1c7628382371ef5326cb19857d0c288d401143372d4f02",
   "generatorPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
+  "generatorEquity": "0",
   "numberOfTransactions": 81,
-  "payloadHash": "b5366634de26db7c5d70538a3c1e3a73598ebc62d6eb6c74fb896afe95d2cc5b",
-  "payloadLength": 29237,
+  "payloadHash": "be06d22fd76e5b83021387fea9ed703408e8629ac46b7523b780bd0151120cdb",
+  "payloadLength": 25304,
   "previousBlockSignature": "",
-  "totalAmount": "3670",
-  "totalFee": "2150",
+  "totalAmount": "2967",
+  "totalFee": "1767",
   "reward": "0",
-  "magic": "5F720C81E82CFC99",
+  "magic": "E00EI",
+  "blockParticipation": "29670081",
   "transactions": [
     {
       "index": 0,
@@ -22,15 +24,15 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "244645364561314041"
+          "assetBalance": "244645364561314044"
         },
         {
           "accountType": 1,
           "assetTypes": 0,
-          "assetBalance": "244645364561314041"
+          "assetBalance": "244645364561314044"
         }
       ],
-      "signature": "ee227beab31d105845a968fb1cec07785fe1fc2d85106c2c539264c61b92def20b0ea743f4ecd2e81b095ae23e4f9f840023a6767f6ee1a7c9c83f925011d80e",
+      "signature": "e32a2ddaf34613c8ccea5697f5d31a4ab23e3fff742b14a7a87ee304bcfac99631ff8754de808f6381b2a88ab4864d566d011e9f6f3a043a06bb2f8117d29009",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-LNS-00",
@@ -38,19 +40,19 @@
         "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
         "rangeType": 0,
         "range": [],
-        "fee": "30",
+        "fee": "27",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "50b100751f4c40abaaa35c0ecb4ba547e9e7c0ed0c822c06f9e42834a6a13f34574f5948b90447c2abdd8886aedc1785c332212699ac796b844bacf54a18af0a",
+        "signature": "8a643dd81b66410f5ead75532e8445b7c4cb3f3eae459a0d4227ece6813c918f445ad6d159bfecb999eda598f00593a8b14606d894990409c98e3a69fcaca500",
         "remark": {},
         "asset": {
           "locationName": {
             "name": "ibt.bfchain",
             "sourceChainName": "bfchain",
-            "sourceChainMagic": "5F720C81E82CFC99",
+            "sourceChainMagic": "E00EI",
             "operationType": 0
           }
         },
@@ -68,15 +70,15 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "244645364561313935"
+          "assetBalance": "244645364561313957"
         },
         {
           "accountType": 1,
           "assetTypes": 0,
-          "assetBalance": "76"
+          "assetBalance": "60"
         }
       ],
-      "signature": "5fbe171974c085759ed4ac111c8baa2b2eca7626d69816e0102efa6d3c44a533c8d7a50600d54f034c74fa20bb3894454f4406667fe78e76c7b51d9ed9676807",
+      "signature": "42b84b177393bd3af23835fdd1a5338956f5d73fce52126095c939fcf13b186aa62472dc7c7c10e4cdb94ce1c282f68d932db8f8d61c25161998333fe4002d0b",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -84,20 +86,20 @@
         "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
         "rangeType": 0,
         "range": [],
-        "fee": "30",
+        "fee": "27",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "da38d0c5848d446f37efe3762cfa3742780010c7fae5093648bad89ea9249532d95735907d3ce538d7c0d14f23e627910c32762dfb0cc52585f578904bd2bd04",
+        "signature": "ae312973c4ec237596864474c9c1a80e5354ca4d7b46c5d84868c576fd064b580ee06ae22e28e2d6f8e811f4ce4d483dea3037afa91e3971996438ae499b2f0b",
         "remark": {},
         "asset": {
           "transferAsset": {
             "sourceChainName": "bfchain",
-            "sourceChainMagic": "5F720C81E82CFC99",
+            "sourceChainMagic": "E00EI",
             "assetType": "BFT",
-            "amount": "76"
+            "amount": "60"
           }
         },
         "nonce": 0,
@@ -114,10 +116,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "49"
+          "assetBalance": "38"
         }
       ],
-      "signature": "aef52064af4952ba410f9c177a957d66b5f0a89f048f5d2972e28facb26b4e80685e41e539c6cc08c07d6031153e391d840c3fd340d992ce361226b581a14809",
+      "signature": "d271837800bfe5417e2bff566349182933445c1a1c0221c72a8a2311eb6730a0213b8d4cd29f9fe68d225c5d623345571d7f926d1882498155734af1d8047706",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -125,18 +127,17 @@
         "senderPublicKey": "6e8330144a8c123c017a8f5c363531868d3ce21c45b4a668cc1767c2b4695c84",
         "rangeType": 0,
         "range": [],
-        "fee": "27",
+        "fee": "22",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "489bd00b214d8d607a405c439c07ff33e4b6733521de238154ec9f0ffab4980ed1a7a592a940f7c27c028647da416a7102ed2c99af992346dbd773821e118f06",
+        "signature": "fa7dfbfec7ec684a19cc012a9f745416c959d4daf29c40a63e26167f08041744b5e85464545769d026328cc423b6660592918be6b3deaff2b26b5d7830395300",
         "remark": {},
         "asset": {
           "username": {
-            "alias": "bfchain1",
-            "publicKey": "6e8330144a8c123c017a8f5c363531868d3ce21c45b4a668cc1767c2b4695c84"
+            "alias": "bfchain1"
           }
         },
         "nonce": 0,
@@ -152,10 +153,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "21"
+          "assetBalance": "19"
         }
       ],
-      "signature": "b8fed64e23c11309d9eaddab32ff8667a27f34fbe1a7d03db3978ca1c36a09ebca0ee2fa85addab2623d37dbd0c5a2e8e115547e22a7808b78311582429c9403",
+      "signature": "11f02ee54ef873dfbfa5c8da2c1afd550dcd9721818ccc669441dc49a27d47ab83659109094c5a1b8be8d2d729664cdff0ab85b0aaa0cec0264d75942e56c603",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -163,23 +164,16 @@
         "senderPublicKey": "6e8330144a8c123c017a8f5c363531868d3ce21c45b4a668cc1767c2b4695c84",
         "rangeType": 0,
         "range": [],
-        "fee": "28",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "b128299e2d78b0d0166005b6a138ac96827122564cdd50aaaa2d28e4b5432f0867d74a1ea92688eca12663a2a43d038622b9bae83e39fd796e089048006a490d",
+        "signature": "89c321769480542563e48eea8e0549e567dd9600759c4798db1c8d9b932321e3f52d005d7ad830541eebb9b3263b95d674963b97b1df6794f27583ce0c01f201",
         "remark": {},
-        "asset": {
-          "delegate": {
-            "username": "bfchain1",
-            "publicKey": "6e8330144a8c123c017a8f5c363531868d3ce21c45b4a668cc1767c2b4695c84"
-          }
-        },
-        "nonce": 0,
-        "storageKey": "username",
-        "storageValue": "bfchain1"
+        "asset": {},
+        "nonce": 0
       }
     },
     {
@@ -193,7 +187,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "a9587e93371beb1e75ee6466b46b45f515a61e013baadcb443cdf0f8349308af1ee50a50af8f5a9b5abd791f1e542647f37f26109c652d83fdcd39d586e12b06",
+      "signature": "f8723b75617ddb1f14127d9ea9361a084eff45949f0718e7ba5cf5e7fb445fee9534bf0bce703d25c300a63a64b14e90d1f3bb7e784f67a873ca0f8c1195d502",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -201,13 +195,13 @@
         "senderPublicKey": "6e8330144a8c123c017a8f5c363531868d3ce21c45b4a668cc1767c2b4695c84",
         "rangeType": 0,
         "range": [],
-        "fee": "21",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "0784eaf881f50bbb3ec81b8494a0cc83142b75212a19b171099c64cdbc2910d14c427212bf9ea450af29fde20450cc804a689fc7445b2da480721cc29c563407",
+        "signature": "58a9dd2434392d79040c04bca569cb8f3fe835ebf4afc77416c3275168abe16ca38840151d50c4dd0ed123e8c5865732eaccdc8cbf678a2c8bb07975d9bfa706",
         "remark": {},
         "asset": {},
         "nonce": 0
@@ -221,15 +215,15 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "244645364561313829"
+          "assetBalance": "244645364561313870"
         },
         {
           "accountType": 1,
           "assetTypes": 0,
-          "assetBalance": "76"
+          "assetBalance": "60"
         }
       ],
-      "signature": "19f3bdb89749af145857efa18291f1714d8b245921e81ef3d0bd3ced8e4eba9b72433972b9199ead12275f0d081b238bb3f9074c3097a5b6bfed997a7f784609",
+      "signature": "5ece92cbd0fd71f8b068858f4533faac5d6779de7397cd25ccdbec08f4309de9aa40ee7f6bc6bb69cfe2685e9fca947c2be1698eb5ddab12e33764fb44f7270a",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -237,20 +231,20 @@
         "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
         "rangeType": 0,
         "range": [],
-        "fee": "30",
+        "fee": "27",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "27bdd433bec123233012e8996a5119b56e2f3df29a23f2b04b7502720ede88e0a313f50ce570fb396b7a747f753eb33024934e574a343fd5740131a664220b0c",
+        "signature": "64e0de0b2a52bb213e4a9eb9526d65e18267e82571118f241cacc608f1309e31db4ab06a20498b4c46c3d630ca1afe9ac911184eb32e4034e15d20bfb6411606",
         "remark": {},
         "asset": {
           "transferAsset": {
             "sourceChainName": "bfchain",
-            "sourceChainMagic": "5F720C81E82CFC99",
+            "sourceChainMagic": "E00EI",
             "assetType": "BFT",
-            "amount": "76"
+            "amount": "60"
           }
         },
         "nonce": 0,
@@ -267,10 +261,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "49"
+          "assetBalance": "38"
         }
       ],
-      "signature": "d0670b6fc272547a13aa0b0302dcf30314b6f8d7b6e5f7c91738dc91c7e179c37325593e102e4da9f297dbb5416a257e2e193e82db9579732e5f5799343e4b02",
+      "signature": "7db0b2e25762ddf9899796d12aa87da35d9c994af2a44500e6c3cf34f1d18e662f3884e68cd93ede49ee9df90697e2b784f9e4f055217ca53cccf14bea376b0e",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -278,18 +272,17 @@
         "senderPublicKey": "0f88fe3a155927907b507c10ccd0318a7f3b2f55aeb6c90913756ef43db4e836",
         "rangeType": 0,
         "range": [],
-        "fee": "27",
+        "fee": "22",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "81207b24b165ff81e4f1a536cbf03e55561fad073a3754f8a5045707f3e6c89f6f187bcbc576cbce030cfb37e07a444c3ae342b701bc516be22a234413bf7503",
+        "signature": "5399773c67d788a171c2d014b77a07b47aacd60d943f051f81a03c315b798ed736f1e7fe88cfd595368f1664935d26d3ee67a8061cd20587b63700367d702603",
         "remark": {},
         "asset": {
           "username": {
-            "alias": "bfchain2",
-            "publicKey": "0f88fe3a155927907b507c10ccd0318a7f3b2f55aeb6c90913756ef43db4e836"
+            "alias": "bfchain2"
           }
         },
         "nonce": 0,
@@ -305,10 +298,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "21"
+          "assetBalance": "19"
         }
       ],
-      "signature": "25d431b2c73408ddad3b0fc21c06fe750be74d861469e6f835264324637d02a2aa0df1a31e08e233bf22b91801f24853cdb414fcfcd8e9a024984828dd8a8d04",
+      "signature": "8ca357d97e5ac285c448b256832bddc2af39544e3339ea3aebb46bb3d08e3309b8487b829187cb594beb1bec6ff1f358a3cdb2624994dc8becd36f4c13b73304",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -316,23 +309,16 @@
         "senderPublicKey": "0f88fe3a155927907b507c10ccd0318a7f3b2f55aeb6c90913756ef43db4e836",
         "rangeType": 0,
         "range": [],
-        "fee": "28",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "2c97ac68146826c30c26f2a38aaf10e984f0193a8e5b30043b85db449dcabc194d423eb638cf1e1a5a50a283598413a01fdbc48b1fdcb2d3aa09d9d2a310a302",
+        "signature": "076405507f48df63d7d4caf18b4e90b5ac37e00d015225eb1f00d53339dc5fbc07bc8993dfa94700f8e0e3f58428ff7278bfd22336fe672b57dbfe999eb1ab07",
         "remark": {},
-        "asset": {
-          "delegate": {
-            "username": "bfchain2",
-            "publicKey": "0f88fe3a155927907b507c10ccd0318a7f3b2f55aeb6c90913756ef43db4e836"
-          }
-        },
-        "nonce": 0,
-        "storageKey": "username",
-        "storageValue": "bfchain2"
+        "asset": {},
+        "nonce": 0
       }
     },
     {
@@ -346,7 +332,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "8141b2f7661ed0dc3e5a0916d6686d5c6fb83b9d012a3e4996dc6f2e81525e08be4c42c476577a6141ab6784c2ea088af2a8d5c061f0b764a7b296153ad99f06",
+      "signature": "0c584970d981185a5722f08ce593ef414b60ed6b6a56a00582153b0230f41eeccd50f51bac390149f4a43ec27abe54765842d96c7f319da03c8969ce0e0fc603",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -354,13 +340,13 @@
         "senderPublicKey": "0f88fe3a155927907b507c10ccd0318a7f3b2f55aeb6c90913756ef43db4e836",
         "rangeType": 0,
         "range": [],
-        "fee": "21",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "a91ad02644bec548f8bd6354b33b9441611a62df649bdbb06cce62dadc83bc4acfa2c14ed2af69504e918151d48d03221dcf71f9b2584049f78ce69a2f9d1809",
+        "signature": "1b65a317556bff5bcf521ad953668ad9a4f970a51afde86b59348860a746838241715cb7891ae99cdde3a79bf232624c0a790a5919c0d09b38af78f1541b120c",
         "remark": {},
         "asset": {},
         "nonce": 0
@@ -374,15 +360,15 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "244645364561313723"
+          "assetBalance": "244645364561313783"
         },
         {
           "accountType": 1,
           "assetTypes": 0,
-          "assetBalance": "76"
+          "assetBalance": "60"
         }
       ],
-      "signature": "64f020cbac1e5b50b6623543940961521effe223dd2f20675d9514a8f5e818d8312fbf49d1446668d63974649212f24d735f41ea3bb3467b7a8ddd18fa07360b",
+      "signature": "b30ef2980b0aa57205242be0a12d351b930be04f0fe3462c268d397782c3d3b8fc664c5246d21df22b58cd2923031f1892d8588211850905cabce83b1cdb4104",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -390,23 +376,23 @@
         "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
         "rangeType": 0,
         "range": [],
-        "fee": "30",
+        "fee": "27",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "4a8684e778281d1d658c46cc79205ea28164ca363f078bde2f488eb53cff2b713cb6cb75a40920928bd09ee363813d3b09dbd9e7ec779689a9ba6e16bad74f05",
+        "signature": "47501ded678022b5908c6c9107a145deaf8d44c7dc0e22796c88920a66effb13e642924ca4aac684cf4210c74672bb55b7ebe3d7c4d31279b0e06d7a8949be05",
         "remark": {},
         "asset": {
           "transferAsset": {
             "sourceChainName": "bfchain",
-            "sourceChainMagic": "5F720C81E82CFC99",
+            "sourceChainMagic": "E00EI",
             "assetType": "BFT",
-            "amount": "76"
+            "amount": "60"
           }
         },
-        "nonce": 0,
+        "nonce": 2,
         "recipientId": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
         "storageKey": "assetType",
         "storageValue": "BFT"
@@ -420,10 +406,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "49"
+          "assetBalance": "38"
         }
       ],
-      "signature": "4584c3c36eb05cddd9eb80e3802b37cfaab467cd94d9e831e5cb2480cebf9724696db4993141249af660e5189b6aff74c7a52627d3640d20a92f1837ffbb150a",
+      "signature": "eabd5be16f80a2103a71f34e36fa10676f38d0747028765700cac574e86c6182f5c1c4cef0a6a19a8aab1f0ffec9493239e62cd6488bf5b6135ab3be15c83a09",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -431,18 +417,17 @@
         "senderPublicKey": "526b2c534f8e0b2c75394e8c2968196510f912ebee80c17193baea45c73c07fa",
         "rangeType": 0,
         "range": [],
-        "fee": "27",
+        "fee": "22",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "4fe708055134d000cd234fb26429bb98c279daa946cc52d8c14095e5491bb40c5036183a1cc03f569aeab7e7813df25f9e483838a50f96b3a950253c90aa3603",
+        "signature": "7a8e463539167bceea052e2ddbe80e8298541dd2ceb3b34207c5678cfc23e05967ae1f00cbdf1c9be425f6918b58718640ffee4b545d7b3d6f6c6a008defc506",
         "remark": {},
         "asset": {
           "username": {
-            "alias": "bfchain3",
-            "publicKey": "526b2c534f8e0b2c75394e8c2968196510f912ebee80c17193baea45c73c07fa"
+            "alias": "bfchain3"
           }
         },
         "nonce": 0,
@@ -458,10 +443,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "21"
+          "assetBalance": "19"
         }
       ],
-      "signature": "e060ebd67af07e3ea803f8ed7019c8850dc3572d353cabbd03fb312bb6a752973113f61bc20b793d87fbd2a8ef1ba701fbe9d8a9dd144880afc3639f303afe0f",
+      "signature": "aeb06fdfd44c1192b1d52bd7e223a2ed8167d86ba34ce81e22e62942e4d6be148fade773a3359a4f0976e367a75901d5249d9add4f65a0efa92fd5de01fc0908",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -469,23 +454,16 @@
         "senderPublicKey": "526b2c534f8e0b2c75394e8c2968196510f912ebee80c17193baea45c73c07fa",
         "rangeType": 0,
         "range": [],
-        "fee": "28",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "5e5f1bff151b6d2afe8678a325290aa9241ea6aacde9a827523efe432873a5ebf3b9099eb6ff233f0e7fbe1517cd6fa25b155429376c8fb8fb8c651295819307",
+        "signature": "f2ff20edaf6322be44c28d0f4fec9300bb4f27ee1314c2d503f28f1d291e26717c52d55c486d7f9acefa80bd6f221f4fbfd8c5e15cf800c1ee9148c52ef0ee05",
         "remark": {},
-        "asset": {
-          "delegate": {
-            "username": "bfchain3",
-            "publicKey": "526b2c534f8e0b2c75394e8c2968196510f912ebee80c17193baea45c73c07fa"
-          }
-        },
-        "nonce": 0,
-        "storageKey": "username",
-        "storageValue": "bfchain3"
+        "asset": {},
+        "nonce": 0
       }
     },
     {
@@ -499,7 +477,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "56db8fce38594c6559920c091729b5688f4970dd1ad4cebe5d40f33ff8937c4f6b13513fac3c8c24db8df98397b377d4d66b3671577c92782330bcafb8837a0a",
+      "signature": "7d227020c35eb247ad67cb9ffafeb8078717ca0b5f96f0851b235ad39b3dba50e1d3229ba6da008c69794cfbc182aa195a8b6c35310643ade79b66cc084e1c01",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -507,13 +485,13 @@
         "senderPublicKey": "526b2c534f8e0b2c75394e8c2968196510f912ebee80c17193baea45c73c07fa",
         "rangeType": 0,
         "range": [],
-        "fee": "21",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "48b25b99fcc6dfb8480d4dc69a6d4b6b25a105050a705cb95b3e1ee4c51c6e77627555b37f29f83c466534e54fd8f4fe1bd57302ccd6159317beae3846d2a508",
+        "signature": "3890b51e81ea28474a977c64cf433d443075806277fa7e18917df85e87cd89bc89152e98f507eefece092bedeb041e7af10b2eeaca887aca9076f26d42ea660f",
         "remark": {},
         "asset": {},
         "nonce": 0
@@ -527,15 +505,15 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "244645364561313617"
+          "assetBalance": "244645364561313696"
         },
         {
           "accountType": 1,
           "assetTypes": 0,
-          "assetBalance": "76"
+          "assetBalance": "60"
         }
       ],
-      "signature": "787db881ac891a1b38f0db280b1311e91f1d38b8342d8b3495cad99e666cea0b0618d41c2014508b8bab80c7053a89f257eb516678a60b163d09c76237e63308",
+      "signature": "b12f6ec4228842e5add2c93dc836f219ea6c3a5909c0682f5020a23df7389d971768a4ba11d954ee52db712161ffc71d4a927cda91c2eb7ddc39860c706dd807",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -543,23 +521,23 @@
         "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
         "rangeType": 0,
         "range": [],
-        "fee": "30",
+        "fee": "27",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "ea2fb647d7fc4e653844579347884c48aa52ef947fd208c5428ec973d2fba26b063d15f25efae4eb64714d8e24a9fe5030ae7bde3d3e767708203e54cf13ea0c",
+        "signature": "08604a44ec33bbed016c21826f971212f86d6930588c4db00ffc299f4da33b2ef5ff8f9a45db2626e8a9aa325113c20ae4527e44100442fb2fff2fe39964e60e",
         "remark": {},
         "asset": {
           "transferAsset": {
             "sourceChainName": "bfchain",
-            "sourceChainMagic": "5F720C81E82CFC99",
+            "sourceChainMagic": "E00EI",
             "assetType": "BFT",
-            "amount": "76"
+            "amount": "60"
           }
         },
-        "nonce": 0,
+        "nonce": 5,
         "recipientId": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
         "storageKey": "assetType",
         "storageValue": "BFT"
@@ -573,10 +551,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "49"
+          "assetBalance": "38"
         }
       ],
-      "signature": "fd18a6aaa1835176ab7b6534c8cf2abeeb5791903177e37adbdc86415dc7a65a93763a0ac5d7780645102281486d955a2de9987212de8a289f93ddde6aafa800",
+      "signature": "00869dd40a6fe5d7af252d3c0cada7e48599909d5248fff5fe88c8d7fa4c5d3f32549c7aa997abbaa08f3d65d4b8345ebbf3c185dae095310b9cda945c05450c",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -584,18 +562,17 @@
         "senderPublicKey": "72eb8d56261b211e0f77029cd8010b6378fa23342cb21c1169e4ac2c00debaa0",
         "rangeType": 0,
         "range": [],
-        "fee": "27",
+        "fee": "22",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "919fd8feea831f531a8062947b0ba3d1e53b6a0727be72ce71769149bfc0e5fe8142b763a8686f1637419a7ed6a2435bc2e2da6e51628b16541be149181ba005",
+        "signature": "221b1dcd127abcd19f05697c9f258134da47d8cd7b973a070f8661d2c84e341a494b468a0bd0c582152cd180ebb1665ff491d27205347821bcdabdce46ee0209",
         "remark": {},
         "asset": {
           "username": {
-            "alias": "bfchain4",
-            "publicKey": "72eb8d56261b211e0f77029cd8010b6378fa23342cb21c1169e4ac2c00debaa0"
+            "alias": "bfchain4"
           }
         },
         "nonce": 0,
@@ -611,10 +588,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "21"
+          "assetBalance": "19"
         }
       ],
-      "signature": "f74cb63dbb0ea91aec4e332f3e684d58c00cdce265886d9c6e0a5b0ac640566db75109b746985b2bfe1dd7643a20e351dd5d2681a100c739ea751be3d923fd07",
+      "signature": "bfcdae0b997b04c76f2838996b7b2f2a388982b63a90f9f4b2fd4fe0322cf8c79fc4936f85985ef4113006cf7fbbf62c3af342b8c205a077b66f2a754fbfed08",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -622,23 +599,16 @@
         "senderPublicKey": "72eb8d56261b211e0f77029cd8010b6378fa23342cb21c1169e4ac2c00debaa0",
         "rangeType": 0,
         "range": [],
-        "fee": "28",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "bb2d82233b7a8165a40bad3d765aab98db6674213e31171191ec49c9e42d3caa7c0568fab6ca20f8f057fc34160f0ad6b74c7243b7c8078b820201384b69ae00",
+        "signature": "47565a469f04b894a92a93a00b31c7beb8201cb3cc271a3d6f6b25a0158fae11b27b2fd45108c44d43b24be09e0073df55f5592aae418cd9d6ccc9d2fc8fb506",
         "remark": {},
-        "asset": {
-          "delegate": {
-            "username": "bfchain4",
-            "publicKey": "72eb8d56261b211e0f77029cd8010b6378fa23342cb21c1169e4ac2c00debaa0"
-          }
-        },
-        "nonce": 0,
-        "storageKey": "username",
-        "storageValue": "bfchain4"
+        "asset": {},
+        "nonce": 0
       }
     },
     {
@@ -652,7 +622,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "626240ebdcb3e17b639c9f74377854b934bde237dd329a0dd40a705a8b8e869e184a26ae3e16e4ab5c157378867af927bed8f62f28665b12b685b5ae1660c30a",
+      "signature": "2ff332478ba5923b870f09b795fdd651b97c6f63239e83908b1de3ffadb11112b48b1a33a2986a52fa60201960e01d30a5b798bad85a7a451dea1a9676a98500",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -660,16 +630,16 @@
         "senderPublicKey": "72eb8d56261b211e0f77029cd8010b6378fa23342cb21c1169e4ac2c00debaa0",
         "rangeType": 0,
         "range": [],
-        "fee": "21",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "8f5eb094329aec73c0c596edbc8deb0cd6acb0b982f950423a7dcd76be341144219cb96f6d4563d3c553965fda2603ca26f312e3d228c3e459b6dab0de75bd04",
+        "signature": "0501b3fb263b312406ed05fc257aaa9894587f585536f3f3a08b666265e1488d664859921c904123f83ecffd0f41fc3f447d1bd6aa1ebc9d4b371fc5da236103",
         "remark": {},
         "asset": {},
-        "nonce": 0
+        "nonce": 3
       }
     },
     {
@@ -680,15 +650,15 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "244645364561313511"
+          "assetBalance": "244645364561313609"
         },
         {
           "accountType": 1,
           "assetTypes": 0,
-          "assetBalance": "76"
+          "assetBalance": "60"
         }
       ],
-      "signature": "ee6f58769eddac1bf79cc9bded774dd9135e9177a59d209985e7200c8036798dc30804223adcaaa542253b3b3591cd7d43523b162f84f75620de060b2145bd09",
+      "signature": "993995b7c4106dc95d5a32633f948c0aa1b3f299c7beb6c06d7c7adae721b4017c5bc0c47b2935169ae11ce6f235fbed4d6a9308f5e71abbcdf0a6db1fcc9d0a",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -696,23 +666,23 @@
         "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
         "rangeType": 0,
         "range": [],
-        "fee": "30",
+        "fee": "27",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "3646cb2b7feca55bceecbb89e9a893d5c5150ae57c3dfcff90cd4034b0a4011387091c93b54220fd370311f7e8ab7cb1daacc594404c04f2fb5415e930052d0d",
+        "signature": "25003a7f13134522f0ed8a98d6d9affdf12b24233b02bce761ba765bc07d0be24401009887891e2d04e1fdcc7910e2b7d0fe50be112acb041a9ef9ab8436a709",
         "remark": {},
         "asset": {
           "transferAsset": {
             "sourceChainName": "bfchain",
-            "sourceChainMagic": "5F720C81E82CFC99",
+            "sourceChainMagic": "E00EI",
             "assetType": "BFT",
-            "amount": "76"
+            "amount": "60"
           }
         },
-        "nonce": 0,
+        "nonce": 1,
         "recipientId": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
         "storageKey": "assetType",
         "storageValue": "BFT"
@@ -726,10 +696,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "49"
+          "assetBalance": "38"
         }
       ],
-      "signature": "d0871f1a55c10844bb2af651c496fca04dbe40caf2272eee3a24f69940c4f8ec74bb20cd22f92f5e5d8b1779649235dcb3eec433c784eb56d508f1ca86f5de0c",
+      "signature": "3d7c06945b92dc7298fea4629a537161280b8c1a8193a195f7156138fef35f10a854256c6867e5b6d1a76177d7fa6f0506000f856aa49fda0c8b0a59d359b106",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -737,18 +707,17 @@
         "senderPublicKey": "58f751e6ffd7e67d1ddf3d687f02e828a4f855a6ba78fd06bdbeb934ba56ec77",
         "rangeType": 0,
         "range": [],
-        "fee": "27",
+        "fee": "22",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "a6be7bcae7c362350e142247fdfb9d87a203ac4f92be9a8ac12590f01b987cbaac9fbb81ca5e3c54e53226692c62a1b78f74e2ea9c8cc5a3e93f8140da283f03",
+        "signature": "96efcdeebba467c5272da2f3a7ffb0c2ca9ea8fc2b1b0eea43a4c4834c691fe321f2ef597a8b5e3d4b53f3dec6327c104791c861dbb010ff7b6fa8a7f7c26302",
         "remark": {},
         "asset": {
           "username": {
-            "alias": "bfchain5",
-            "publicKey": "58f751e6ffd7e67d1ddf3d687f02e828a4f855a6ba78fd06bdbeb934ba56ec77"
+            "alias": "bfchain5"
           }
         },
         "nonce": 0,
@@ -764,10 +733,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "21"
+          "assetBalance": "19"
         }
       ],
-      "signature": "b0a3d2214b9104a0ef13ed464a707fb424cd18fe852436515fe13cc3b66fcf21d7cec3008900e38bf1c5d99e7ce177deebb6c6641284b0dada195cdc82020d0d",
+      "signature": "4d76e7611ceb4240acc136c2535fcf130fdf1636fd31b90e7199485cee3242f8391472e816df4b90cb685ded3ade35a8347cdef28dd0efe655b958dcd9d2fd0f",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -775,23 +744,16 @@
         "senderPublicKey": "58f751e6ffd7e67d1ddf3d687f02e828a4f855a6ba78fd06bdbeb934ba56ec77",
         "rangeType": 0,
         "range": [],
-        "fee": "28",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "f8a0bb424aeb39a69cd2f50f5ca09d0bbb658adf11ed77d24a1ab83f7e6dae84896b40df4147672fcb0a1e9371ca83544607af9c7b43d00bd651ab18bc74d109",
+        "signature": "72f5148a53b6a7ec82eb31f9e6fd5411a06192bf3102cd1d4a8d236b81169c7bc2278a1fd592a229b394dc1abfa988903eec8b2823481b73400c9d842eaabb09",
         "remark": {},
-        "asset": {
-          "delegate": {
-            "username": "bfchain5",
-            "publicKey": "58f751e6ffd7e67d1ddf3d687f02e828a4f855a6ba78fd06bdbeb934ba56ec77"
-          }
-        },
-        "nonce": 0,
-        "storageKey": "username",
-        "storageValue": "bfchain5"
+        "asset": {},
+        "nonce": 0
       }
     },
     {
@@ -805,7 +767,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "aa7fbeeb3b1d45421f72fc181ffdae0c395b0de938c390d2e0600c23b90508598df1b247e09f68ca5fc5834113a3e073505f4319b92bfdde920efdc8f0b33007",
+      "signature": "f3642d6c98ef2b3555797029f87a1f373c3a62a611fe8c0d12d3551b859bda62e997dbc024354bf5611fb0ac0e677bffcf590ae138b63d164bbaec226e5f2f05",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -813,13 +775,13 @@
         "senderPublicKey": "58f751e6ffd7e67d1ddf3d687f02e828a4f855a6ba78fd06bdbeb934ba56ec77",
         "rangeType": 0,
         "range": [],
-        "fee": "21",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "394f7ff44cadd3302c83f6fc381d339cf0eafc4cfc5fcb896c8a1b261a3f1419d4b889eeb2b06103e4c037d31456fa2986eafc055c1cc0737ede87b68179e205",
+        "signature": "1db02b25849a0e76a85ef6db1f7482e563d267e46e2ceff7c20478440e8e434aacf9238a15e8449407f21a149090d77773a1f5fdea8b9594cb185eafac82e203",
         "remark": {},
         "asset": {},
         "nonce": 0
@@ -833,15 +795,15 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "244645364561313405"
+          "assetBalance": "244645364561313522"
         },
         {
           "accountType": 1,
           "assetTypes": 0,
-          "assetBalance": "76"
+          "assetBalance": "60"
         }
       ],
-      "signature": "056142ef4cde1dc79a011dc97485b0cccce163d411d1f59487ea8da105b14a2f088df379ca564807ca1e3377525154d36bd53de90f740a92fc9c0a854cf83209",
+      "signature": "9ed2e60f592e1acac4e7dc5c35c3390c487d1d4b1476f81cacded95adb9e5253cf1cc5a6b55c1c377dc494b6ee36a2683535840e92c9ec06b6758204abdbd602",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -849,20 +811,20 @@
         "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
         "rangeType": 0,
         "range": [],
-        "fee": "30",
+        "fee": "27",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "b26bddac5d88c3652a73405310ea3847e7fb12dde548e0add4437ab7ccbc28943a1155bfff6facdb2fda6848ae83400f1db8b243628cc5956b6b8ba79f62040b",
+        "signature": "1753b57df3059fa0c3810c7ac77b08bd0c1acd22685bffad7aa3e1ee418c3a602298d2897f6f4f2ef1c339268ab68c955ec4f3b89101fc332df1de36bfcde10a",
         "remark": {},
         "asset": {
           "transferAsset": {
             "sourceChainName": "bfchain",
-            "sourceChainMagic": "5F720C81E82CFC99",
+            "sourceChainMagic": "E00EI",
             "assetType": "BFT",
-            "amount": "76"
+            "amount": "60"
           }
         },
         "nonce": 0,
@@ -879,10 +841,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "49"
+          "assetBalance": "38"
         }
       ],
-      "signature": "a1c68f901c79fb3fb1ab34c0df69fb356a83caf04b0b75339d05308e5986b3d490fcf873678228a942e8c23b50ae685d572d08beb39390d8f38248d2f659bb0d",
+      "signature": "2f11a6578119cab0d80d9068f7060584c4b3cac9ad9262de0ae621316b704ef3d707c8c1b38b9fb40696096917168fb7d1690009189df183a80cb6c750576102",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -890,18 +852,17 @@
         "senderPublicKey": "a210c3565083922100ce8ba1c2f99da5769fbc78e90594b052ccb0388d3155c2",
         "rangeType": 0,
         "range": [],
-        "fee": "27",
+        "fee": "22",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "6d2cbbe9b213909b35276f41ede7ef1562ec7dc892e780d054c7995aa8fe2e93c4279c35bc6564677ba59286d6a95872476e72b1a41ef871ba2a76313cd7d20d",
+        "signature": "f526337972d44b8a23652bd01f7b98994ded035e2b13b6ad3800e1439a0e674c49a71fa238cad32192c7d8b194d7e21e9ceed2d06e8ede626d3d15d609ed2a03",
         "remark": {},
         "asset": {
           "username": {
-            "alias": "bfchain6",
-            "publicKey": "a210c3565083922100ce8ba1c2f99da5769fbc78e90594b052ccb0388d3155c2"
+            "alias": "bfchain6"
           }
         },
         "nonce": 0,
@@ -917,10 +878,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "21"
+          "assetBalance": "19"
         }
       ],
-      "signature": "d62756320f44a630eb251b5768f7b163183d65b6b500742a9d02cde6b3ee5bb176ffddd2f33f9125f721b37a90aada88b2f7fd8650f5d5ecf351ec0a28f2620f",
+      "signature": "08ebe4708321bc698c002caba0d722913acf877930af82374b8bd7e711ba250205bae743098a6d6aa1dda02c040426404854f3f973e80abe9a1368f513bc0c0b",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -928,23 +889,16 @@
         "senderPublicKey": "a210c3565083922100ce8ba1c2f99da5769fbc78e90594b052ccb0388d3155c2",
         "rangeType": 0,
         "range": [],
-        "fee": "28",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "9a81cf6c8624047c19bbef658c1824cd7d40cf4e26a08c8a9162485840f5b8d000169ae4c2eedf242a3297d2dc8aaaf79589c18de854da61f719a7f73fad3307",
+        "signature": "6765e35f1d9ea5d39340aeadf813aa96ebe8ac3124f81a626c68b09722498a28e7ee44eadad7b4f6bb2e0005c9ffed6cdfa60cacb4899318dc12c7fa9e02520b",
         "remark": {},
-        "asset": {
-          "delegate": {
-            "username": "bfchain6",
-            "publicKey": "a210c3565083922100ce8ba1c2f99da5769fbc78e90594b052ccb0388d3155c2"
-          }
-        },
-        "nonce": 0,
-        "storageKey": "username",
-        "storageValue": "bfchain6"
+        "asset": {},
+        "nonce": 0
       }
     },
     {
@@ -958,7 +912,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "117bc2cea3aeeda8983cf5192a8baa486847f3a9f00361374f9e3ee7e91ba39ba0aa7d80164e33fef6c262bb021caa9131a356b58e17eac4b6fbdd2060a91b02",
+      "signature": "b6dc96dedfb1c5544b23f3ab08fca1ddd48700e788763bbf77ba9519dd569017c7b053696387bf58b94f19276c4fe04f96276bc08a731735d249088cef2f9502",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -966,16 +920,16 @@
         "senderPublicKey": "a210c3565083922100ce8ba1c2f99da5769fbc78e90594b052ccb0388d3155c2",
         "rangeType": 0,
         "range": [],
-        "fee": "21",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "f20df83eae0047cb61a5a59894858a76ee05b2e6a0a308f6c3b9f2764e503e24a6885424e761d32ee3097499eb570eec81366b1dbba0e3ed3f8c09933b2c9009",
+        "signature": "635e0bd6487991ce9880bf906c87104eece4af2fcf92e4067888c6d6e74e2af92089aca161cb2eaf141d43944c7a926c9d763f7b6efc1e24e9ccb35ede633a05",
         "remark": {},
         "asset": {},
-        "nonce": 0
+        "nonce": 5
       }
     },
     {
@@ -986,15 +940,15 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "244645364561313299"
+          "assetBalance": "244645364561313435"
         },
         {
           "accountType": 1,
           "assetTypes": 0,
-          "assetBalance": "76"
+          "assetBalance": "60"
         }
       ],
-      "signature": "edbdf385cc63fea7d9ab77cc2a19e5be71bea9d3c0a7628054730b4508b3e8d7b17a45d3ecfea31106c63dab71c95218b0b31baa980d5d777da59a766439d408",
+      "signature": "a4bfd3e88c3701ffa2a32d70347e0316857dd36a779b307599971382ccf7b8dd6669ceecd51178a3e453bbeadc872f1f07f1eefeac6c6ea15f9e67a8f34afb0b",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -1002,23 +956,23 @@
         "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
         "rangeType": 0,
         "range": [],
-        "fee": "30",
+        "fee": "27",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "55ff2300723e6aedfd9ad4559af12a75a385e8ea17d4a05213d57040b441974e8c46ea313f0113e1630578f1efc5fb84545cab3dd075bd0086423f93d413520b",
+        "signature": "04f023b26aa5d44f0746bf8495ccce5a7489a9b1ac08ee25675503d9f6ce87d6bbc9fad012c82f2589d6d965de88be5acd9e4e023153de604169477752b8f30a",
         "remark": {},
         "asset": {
           "transferAsset": {
             "sourceChainName": "bfchain",
-            "sourceChainMagic": "5F720C81E82CFC99",
+            "sourceChainMagic": "E00EI",
             "assetType": "BFT",
-            "amount": "76"
+            "amount": "60"
           }
         },
-        "nonce": 0,
+        "nonce": 5,
         "recipientId": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
         "storageKey": "assetType",
         "storageValue": "BFT"
@@ -1032,10 +986,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "49"
+          "assetBalance": "38"
         }
       ],
-      "signature": "5e0f978076de03a527ff773d4cbf25248e31748facb30b24631e8e9e4a5cfae9e5c35e4c4c71d3598218fd35edfdef2d3dc538e6caa74c449234c99bae8e710f",
+      "signature": "18f58f7626e18a690d909adfee282bbf6cccbe5d6bb1e4712729e8bdb86b4ad0cec724c31cd88508925f910b267623cb43d7c12eb3137c3ff146e5fb072e0607",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -1043,18 +997,17 @@
         "senderPublicKey": "ca78e16aad7980933da93844a1b91a719bf7793a05c566de8c9806efd90761e2",
         "rangeType": 0,
         "range": [],
-        "fee": "27",
+        "fee": "22",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "84e32404192373d60a7867a8a396f15eb656736b58a1e91c689e3d40bca330a7b1e8ccef0ddfc9a105720dbe590b977c540dfd7a6238c190c2f1922f7d28710d",
+        "signature": "58c286f5c87962d00718bc274978725a636b6130bfca4d37cef9ae6d4430434a3a66a0a9f40b923f383b435f5374818d610234938f4a54d03d7551a49387f30a",
         "remark": {},
         "asset": {
           "username": {
-            "alias": "bfchain7",
-            "publicKey": "ca78e16aad7980933da93844a1b91a719bf7793a05c566de8c9806efd90761e2"
+            "alias": "bfchain7"
           }
         },
         "nonce": 0,
@@ -1070,10 +1023,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "21"
+          "assetBalance": "19"
         }
       ],
-      "signature": "044a763164496a00c54454cd521024ff1c9274468489943b1bef434bda07c711773c11d60f16bdc846caf8fb218b4fdf815a9306e5b6bad9077f97d79283310e",
+      "signature": "4f43af3c7e3c1368dde713c27dacc4b096f855610686a59ad57f043efb4f86385a7e2997148645a07845ca6143c53f9a4a06ed1a2288ce357f57041b15780608",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -1081,23 +1034,16 @@
         "senderPublicKey": "ca78e16aad7980933da93844a1b91a719bf7793a05c566de8c9806efd90761e2",
         "rangeType": 0,
         "range": [],
-        "fee": "28",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "8bf4539dcddaacb8cf72c07108f7aa3935b9ce9585ee853d5d44b74844f215dd33520102216e1cac413277cea8544cd75654d38d73ef1e48530076cb492aab0f",
+        "signature": "d474e975ccd8f439c5a37d1d25b2a42abfa0438a64997f01a561337f172566b009569e38031adf49b4d0b5d97197f0676f3cd9ae648d92bfdb40dc83d00c9602",
         "remark": {},
-        "asset": {
-          "delegate": {
-            "username": "bfchain7",
-            "publicKey": "ca78e16aad7980933da93844a1b91a719bf7793a05c566de8c9806efd90761e2"
-          }
-        },
-        "nonce": 0,
-        "storageKey": "username",
-        "storageValue": "bfchain7"
+        "asset": {},
+        "nonce": 0
       }
     },
     {
@@ -1111,7 +1057,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "40ffad8a6aa581a6b3c8e0e66eb63fccffa1256b02d2e0a2d270743122f03578b61a8a64d83919b2cacb35297b262361cd370d3a31aabb1b52ced6ff29549a00",
+      "signature": "c58f70d766ee80a2706520076bdc5fd8bfa1fb29d07470df020735468fe1fd594099c2a870373c629852ade0235c8819a6d434cf7c12f341839b832ca63e1e05",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -1119,13 +1065,13 @@
         "senderPublicKey": "ca78e16aad7980933da93844a1b91a719bf7793a05c566de8c9806efd90761e2",
         "rangeType": 0,
         "range": [],
-        "fee": "21",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "6096ddd3f4e331060d90aae8e43e1e42f0674feca0a38de0ee0e598ca27d69ca8711724db3468eddd65ffdbb543a0b8dee2e3c34c9eca9e92f75eebcb9fcf800",
+        "signature": "4a2ea029b8f5dcc4aa1eb52e5af763064a2dd1703186fdb6c5a9819a9ff6b6764121896a6979cd5ad355a9f015ab545f117d00114fa603ec4117f7dbad1da60f",
         "remark": {},
         "asset": {},
         "nonce": 0
@@ -1139,15 +1085,15 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "244645364561313193"
+          "assetBalance": "244645364561313348"
         },
         {
           "accountType": 1,
           "assetTypes": 0,
-          "assetBalance": "76"
+          "assetBalance": "60"
         }
       ],
-      "signature": "ce5d6fb660b7fc4afa18001d651caf59bc314e168f833918f486ad9f9626e7f5a7a5303d4090d3654ba2b211f5124f650bf1458952c4a1974a605986e15f6d05",
+      "signature": "31d10ec773a9c4860f7f2cd29261bcd0f822f722d2714da3500e8b6ec3a5defb7c141f8999d920d1e17dd051e977f366d063e215b7425148375228d74fa3a309",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -1155,23 +1101,23 @@
         "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
         "rangeType": 0,
         "range": [],
-        "fee": "30",
+        "fee": "27",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "fcf3eb5e042490d91bd1bb4b92506c357973d688f64c17a75c9fb30f5ae38bed8fec9ac10d4e8fe98b64b61c70d6057bb753223b070e364780606a46c0cad104",
+        "signature": "043b4e5c38611f367ad09a97138ad6a0ef04cac2342fd00d6ad9647eeb138622e0aa9df48b3ad572c4d48b6b73c1aff2115011c2a2fb736741155b50d7a69c04",
         "remark": {},
         "asset": {
           "transferAsset": {
             "sourceChainName": "bfchain",
-            "sourceChainMagic": "5F720C81E82CFC99",
+            "sourceChainMagic": "E00EI",
             "assetType": "BFT",
-            "amount": "76"
+            "amount": "60"
           }
         },
-        "nonce": 0,
+        "nonce": 16,
         "recipientId": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
         "storageKey": "assetType",
         "storageValue": "BFT"
@@ -1185,10 +1131,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "49"
+          "assetBalance": "38"
         }
       ],
-      "signature": "9bb78219dc007631d631453ef83ff92c8b649212af3a53892eb7f42f26b04c7049d4af6f5a8033777db8f0c563d80cddd0c05b64494e1808037b89e133b6ed04",
+      "signature": "4beac20b20e6049abd3db567e6b1e6b2d4fbd7d99d58c3107a71628819a9f41acc607ef8fe7f9882d39a293ac5b70fa9ef82722a8e9a30202b55de4bb842d804",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -1196,18 +1142,17 @@
         "senderPublicKey": "85ea51eefe25fecfa3e7fcb7b47c28dc8e1e47b7152c6a94791b5f2d50ae165a",
         "rangeType": 0,
         "range": [],
-        "fee": "27",
+        "fee": "22",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "3ef5a5e684cd73969869bf997f9202f0b9a0f350a2cd9328474d3c4fee81bf3e4c3d81bb2d51ec7fa42efabe7d5804868a1b5069f604286d1bbf12f60d42d40b",
+        "signature": "390157f0609c56cfe20a2ac33c0c11edbc7681a952403697a6e4dc829ddbdc06a5b58adf472e48b82785d928887a2a2a28435fab463bcd82dfa8c0f7f041d700",
         "remark": {},
         "asset": {
           "username": {
-            "alias": "bfchain8",
-            "publicKey": "85ea51eefe25fecfa3e7fcb7b47c28dc8e1e47b7152c6a94791b5f2d50ae165a"
+            "alias": "bfchain8"
           }
         },
         "nonce": 0,
@@ -1223,10 +1168,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "21"
+          "assetBalance": "19"
         }
       ],
-      "signature": "01627f8ebdd1039b33e081927f51776520e6492f3af12f5dc40fe9b0af06e701070ce8ce26bc549069969156dac0560b241217500d4eecc10adbe115ad9dea07",
+      "signature": "df0d48753019c6d1c452de71dc41bb21db5c1f8fcd2389c76700aa2ca1c160af1f4a4e32aa244fb223d8e6d12a342c6c218d0d627dde3efbe20af874c8101000",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -1234,23 +1179,16 @@
         "senderPublicKey": "85ea51eefe25fecfa3e7fcb7b47c28dc8e1e47b7152c6a94791b5f2d50ae165a",
         "rangeType": 0,
         "range": [],
-        "fee": "28",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "6ac90440c7260fd14b289a8598154a2458142567dd88a94f9e4fefb181f5c7cd0f4ff9b8c022206b930af4aa78ab4f22f198d9dceb9abaf70c69130428540309",
+        "signature": "15cca50e5f8ae33d0663cf510a115cf3a22492a190a82a2370b32479669981d390e2772b82afdd4c750ce48860a8e69347f7b638b1c815f824be60ffec8bf707",
         "remark": {},
-        "asset": {
-          "delegate": {
-            "username": "bfchain8",
-            "publicKey": "85ea51eefe25fecfa3e7fcb7b47c28dc8e1e47b7152c6a94791b5f2d50ae165a"
-          }
-        },
-        "nonce": 0,
-        "storageKey": "username",
-        "storageValue": "bfchain8"
+        "asset": {},
+        "nonce": 0
       }
     },
     {
@@ -1264,7 +1202,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "5044f31c84206852532e514e3e762a38ae4c33db4e87e6bb6a7fe61abdf7e74a7ebe13da1e77fef360aca204ee8897e190b086c39e510fb451b30c132f3fea06",
+      "signature": "cc73b400bf8dbe555ded19cdad72b18ccb079d4983dc1a4e1de7eae355dd671f1574f3b1de3bf1e6ee327ad8040256bcba5e5a59d502bcd4762dd97f8da6e20c",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -1272,16 +1210,16 @@
         "senderPublicKey": "85ea51eefe25fecfa3e7fcb7b47c28dc8e1e47b7152c6a94791b5f2d50ae165a",
         "rangeType": 0,
         "range": [],
-        "fee": "21",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "0dba2dc35aebf84a21cc8b0cb3d129694284dd162004044de7c18ae4bda5b63af2f5fab306a1d7dd7d6577e03b6b57f8711275fe47ccef011423485d9f5ee607",
+        "signature": "0cd948d86c307acb552ccc03d5dcb92dfb6e8c96134b5186906d51e47bb5062e287ba7966b18cbd6fe846c41fa22d25f54da42a03222a24a39c37e61784f4a02",
         "remark": {},
         "asset": {},
-        "nonce": 0
+        "nonce": 3
       }
     },
     {
@@ -1292,15 +1230,15 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "244645364561313087"
+          "assetBalance": "244645364561313261"
         },
         {
           "accountType": 1,
           "assetTypes": 0,
-          "assetBalance": "76"
+          "assetBalance": "60"
         }
       ],
-      "signature": "ee88b1a4a8d8c5ba9bd3c4b03dc51c6833021f5d695ec26428317fd24fe80bdc83972f9cd5d2a16f85fd9af64dd806f04834c85a76a3e9d74b8e8eab34bc7409",
+      "signature": "757b6d8ec17e14f25f053ad679f551006d547e46cfa4d4df0307fb1c7fd4ecb03ff1891ce06491e976a9d14ac1171f6b1b642310ba9ff82714229ae2473a9506",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -1308,23 +1246,23 @@
         "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
         "rangeType": 0,
         "range": [],
-        "fee": "30",
+        "fee": "27",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "6eac5ed7fdd7aae00c74e1ef6ead8be753cd65268811df6289c08e2c9838b0c41f9b5acd9ab755fb8b87335fe6dbbe59d3ea84f868ea72a7fc94c0f13736a10f",
+        "signature": "13ba2cdf32288cf336587d93cccdf431577ea99c849c8fdfead20b870dad2cb57bc2f3de938a5a19426f5dcf3a5f2229f4cb718e15241c195b498ccbe9254906",
         "remark": {},
         "asset": {
           "transferAsset": {
             "sourceChainName": "bfchain",
-            "sourceChainMagic": "5F720C81E82CFC99",
+            "sourceChainMagic": "E00EI",
             "assetType": "BFT",
-            "amount": "76"
+            "amount": "60"
           }
         },
-        "nonce": 0,
+        "nonce": 2,
         "recipientId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
         "storageKey": "assetType",
         "storageValue": "BFT"
@@ -1338,10 +1276,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "49"
+          "assetBalance": "38"
         }
       ],
-      "signature": "f0fd2a4246c10a858286f24350485c698f2ba39e98d9322db29f9e2d281843b7906b406e404c6745d804085fba149a58d8b712d0e598f58072defcc6d72a7500",
+      "signature": "6b2876feaddb23987bf9cbc7060dba768440a9ad0876996f85e07eeb5aa63ef98ff57c4cbefe9afb80158d8339ac2ec3a5f9c79cdf9f852dfe77b8e5a8f29905",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -1349,18 +1287,17 @@
         "senderPublicKey": "846f681c2d957b372f9b606737dbf8bcc99a8cb8de989c02d8ca162a10132903",
         "rangeType": 0,
         "range": [],
-        "fee": "27",
+        "fee": "22",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "456c6e74cc5a8cb807792f3cadbee2841ed5f6b95012789b4d5ec32927739ddc9ac00ce8b6674199daad8c967bd187c80b3ce7c5d82b9bc718a70eab1a9bf202",
+        "signature": "eacc42f70c982430923b7b60fa8f31007684376e9d68948672ccd3f1dfc80d7361e120660ae42a28fcf9c965e09265aa704c8aecd9acce1949c4c76bb21d3e0e",
         "remark": {},
         "asset": {
           "username": {
-            "alias": "bfchain9",
-            "publicKey": "846f681c2d957b372f9b606737dbf8bcc99a8cb8de989c02d8ca162a10132903"
+            "alias": "bfchain9"
           }
         },
         "nonce": 0,
@@ -1376,10 +1313,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "21"
+          "assetBalance": "19"
         }
       ],
-      "signature": "884c3f499d13c5acd52a0bb62517d0813e9c377884868b8ace2033e0800a3392f96b6542043b39de97980b6563d3e7bb9da9aa86c3e818bba5dce52c0bdfb00b",
+      "signature": "e32474ad454009f9bc87f5e9893056fe3dc2dba9397625980d0630f787b235d7b9233858e309b72815fd32ef2627542ba05dcf14482cdd5798c7759b1ea03809",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -1387,23 +1324,16 @@
         "senderPublicKey": "846f681c2d957b372f9b606737dbf8bcc99a8cb8de989c02d8ca162a10132903",
         "rangeType": 0,
         "range": [],
-        "fee": "28",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "22a1be0d97b11107f4852ccedf2e1620bedfb71c90e490c3130217ce60bcdea85a9fd9758a096a5549ac13e05e6f107a4a0537e318006883582eae53001bbf0a",
+        "signature": "bd8becd7d91115f62470cc6bf1da46c5e6c4a4162f84acdfc03aa8e0da1ccad20be56b34b7a890b68ffa0a58c245e9fa874dfbe209f77e59e3fcb577d2a9af00",
         "remark": {},
-        "asset": {
-          "delegate": {
-            "username": "bfchain9",
-            "publicKey": "846f681c2d957b372f9b606737dbf8bcc99a8cb8de989c02d8ca162a10132903"
-          }
-        },
-        "nonce": 0,
-        "storageKey": "username",
-        "storageValue": "bfchain9"
+        "asset": {},
+        "nonce": 0
       }
     },
     {
@@ -1417,7 +1347,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "91065bc985b821508861d8c9da7f975a007d80e840ee747c08a207c92a8f39159b94a20823ce4c6c3eb44a17b14288eb8555dbfc28d085c05e200d671ff60f02",
+      "signature": "c282f998f23af2767912c821f0aaae6bd2d95cf29e0114ec79763625887dd62f13a245a6f8245b39a6c3ce9888ea3f2a0f8e79a25c13e423bc63b184d9838209",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -1425,16 +1355,16 @@
         "senderPublicKey": "846f681c2d957b372f9b606737dbf8bcc99a8cb8de989c02d8ca162a10132903",
         "rangeType": 0,
         "range": [],
-        "fee": "21",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "b43333bddb1b4af276ac1b1d6bbb5af1156366bfd9320186ba3305a6815faa0365f3a7db9ee351babbc08f2033f7cde431e20e63f6d3103fde575cfe913e7909",
+        "signature": "252d56607eac53637ed3a0908ad0dacf22ec93ee455045c970bc6b0d4247d0f67206dca8bee73d6abbb4904b3071a5accaaf236004e5735030e9ddb5a08f1805",
         "remark": {},
         "asset": {},
-        "nonce": 0
+        "nonce": 2
       }
     },
     {
@@ -1445,15 +1375,15 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "244645364561312981"
+          "assetBalance": "244645364561313174"
         },
         {
           "accountType": 1,
           "assetTypes": 0,
-          "assetBalance": "76"
+          "assetBalance": "60"
         }
       ],
-      "signature": "b8c256dbf7b2129ca2d32a9ae7fb9ffe900dcafdc119ebc30b557ddc11d178a07fd0544dfbd867e320e5752a90c5d7d621dec239ffb90a5e7db61d0191f6670e",
+      "signature": "f7c0700da27aef482eba5d0176a09963c7aa5bd77a5009c9079896c1f355f9d0067452beeae603680070ddd003d65d1b6a3519e7b088e42624f4b589d6290305",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -1461,23 +1391,23 @@
         "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
         "rangeType": 0,
         "range": [],
-        "fee": "30",
+        "fee": "27",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "578607d6a1d20944132342085af72efcbc7b9607f9c142c1f348e5fdb753337bf75443f39fda7d06f05d48decbf4fbd9fcc5a2f21cd4030afd8961b3519a8408",
+        "signature": "0a3189ae23f9e9c17dd060253901a5ed320346bbf30e85b437958e7be94d4c3cfeda62e3baeedfadef5a6d6671eb9d9c0998fb5a4f69d7954937ef44bb5b5609",
         "remark": {},
         "asset": {
           "transferAsset": {
             "sourceChainName": "bfchain",
-            "sourceChainMagic": "5F720C81E82CFC99",
+            "sourceChainMagic": "E00EI",
             "assetType": "BFT",
-            "amount": "76"
+            "amount": "60"
           }
         },
-        "nonce": 0,
+        "nonce": 7,
         "recipientId": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
         "storageKey": "assetType",
         "storageValue": "BFT"
@@ -1491,10 +1421,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "49"
+          "assetBalance": "38"
         }
       ],
-      "signature": "33f62d0b9ec50dc76178a58d02782043b7e28fd4682fbd3212694be68ee0bec7ca5b57447e0c8d1b1f28b1e60938c176bac152fc32be0163c8e8cf621707b806",
+      "signature": "9a0224451994083d59c05ddd77e6d3655aaeb259ac8c543be4b9acd16200935d485b116de6a2c86703ab33ecd8b72a5570d9cb08ddd17dbe5241d0587ab5a60a",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -1502,18 +1432,17 @@
         "senderPublicKey": "5ff43d2626b6a60602645333df040189db9339ca424ac2dc4fa7f32cd4da1923",
         "rangeType": 0,
         "range": [],
-        "fee": "27",
+        "fee": "22",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "382527a60ce4f29eddcf263ecf6f56867dc9655e5a277d3b608d8547fd07d71b175153f21f98b7a303b7d22df01b3a8ec50a337d59f3006b6ff938352288260f",
+        "signature": "977535d63fee6c22ebe7358f2eff6bcb4a8541441111a934c88e5cf9d326c27219496a7aed5f19d46cb1ee128cbe41c51b86a14449444915d096c1575e78d80d",
         "remark": {},
         "asset": {
           "username": {
-            "alias": "bfchain10",
-            "publicKey": "5ff43d2626b6a60602645333df040189db9339ca424ac2dc4fa7f32cd4da1923"
+            "alias": "bfchain10"
           }
         },
         "nonce": 0,
@@ -1529,10 +1458,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "21"
+          "assetBalance": "19"
         }
       ],
-      "signature": "074392c84c49ac1c1da9d8d9b2251bbcc7331146191b2f2509c29b947a1fd8c957311e1062f3ff9c36ce77f2ba12c225db2356d1913a44f88184e1be26edc50e",
+      "signature": "5410b96fd97cca05ac049f711f93fcef3dadfee31d41e7e43ad05a52d79da328535449104ac1949cd2801edec57e08c4cc5c2fe428a63c64c76e027c179ae202",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -1540,23 +1469,16 @@
         "senderPublicKey": "5ff43d2626b6a60602645333df040189db9339ca424ac2dc4fa7f32cd4da1923",
         "rangeType": 0,
         "range": [],
-        "fee": "28",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "5db74ef08491b0b8f9374c92f36da8eeb82d51889e6b68b087e8fb5ef5ed1da3f3bde4ce60f8b8d86d8344272c954e8912cdb81d6fc15556aa4586092e3cb90c",
+        "signature": "b503801395fd52385511488711e2dd43edc0e766acc0e64c04440cfb2426cd7eeb62a64a9cd21d78d0abd43f8efdf8ed745c6ba6c0055262e47eb18bfe836407",
         "remark": {},
-        "asset": {
-          "delegate": {
-            "username": "bfchain10",
-            "publicKey": "5ff43d2626b6a60602645333df040189db9339ca424ac2dc4fa7f32cd4da1923"
-          }
-        },
-        "nonce": 0,
-        "storageKey": "username",
-        "storageValue": "bfchain10"
+        "asset": {},
+        "nonce": 0
       }
     },
     {
@@ -1570,7 +1492,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "c636f127dd05ce5d66595849032db8238a398ae77d6777d5d4d56951f889786da04c7c8d2119d923fb3941cc019a4d343139f764eb76aa5e01b041e9dd3f0a07",
+      "signature": "ebc0ca5b48325fcd655857d819db59e745fbeeb36e95a70a671050f57cb6e2ddbca2fdcb1a335984a68b23c54277dfcd2ea85ab0364032b3cb59820eadf6e509",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -1578,13 +1500,13 @@
         "senderPublicKey": "5ff43d2626b6a60602645333df040189db9339ca424ac2dc4fa7f32cd4da1923",
         "rangeType": 0,
         "range": [],
-        "fee": "21",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "215aea11c25015d2c5b5df315dc5032f7668281d3b239a5d68c9b8d4ca9a321d213eb9a691183e0b96e63c82ef70805f4221ae6b0f6bef063e351e0574a0f707",
+        "signature": "489b64ddb78dcdfb1967f5cd2e4c036b0b9ffeae8a49ec6652ccbba5943139f879d9766519834e4ab12dd0b6172935b53143fbcd7451701530c96af5f00f120b",
         "remark": {},
         "asset": {},
         "nonce": 0
@@ -1598,15 +1520,15 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "244645364561312875"
+          "assetBalance": "244645364561313087"
         },
         {
           "accountType": 1,
           "assetTypes": 0,
-          "assetBalance": "76"
+          "assetBalance": "60"
         }
       ],
-      "signature": "a1f6a9ece0dd92797b1535043f21b9af452b7b0544e34ee8c719a061942efd07acb2a7d85d52fd51d02ab96569b5e1be536ffb417eda876177d4cb7c1358a002",
+      "signature": "efaa9af17923b2b05ecc560fb1f562cecfc43fc384a57a6edf9d55cc9f0653099e3cc5300d18be66235671daa6e21310f0e4be418b44ac16a534af1e87e44903",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -1614,23 +1536,23 @@
         "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
         "rangeType": 0,
         "range": [],
-        "fee": "30",
+        "fee": "27",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "a13a85f697d9fa314eeca7ffdaf5e6f4efdc57276015afa239339c74c0c5cedf40ac42fcad466eeacf639f351d45c2660b9ec4ed8ec4ad24daa6cbab8548290b",
+        "signature": "0c34a1f70ac331ab9a32b57d8e3ef433b85affcb4e15e804ee646fc7a3ac4f55e5fde6f74f1eccbd35119c275d3a90824e7e052177dd0330bd8d7caccaaafc0d",
         "remark": {},
         "asset": {
           "transferAsset": {
             "sourceChainName": "bfchain",
-            "sourceChainMagic": "5F720C81E82CFC99",
+            "sourceChainMagic": "E00EI",
             "assetType": "BFT",
-            "amount": "76"
+            "amount": "60"
           }
         },
-        "nonce": 0,
+        "nonce": 16,
         "recipientId": "c8Ke6FeamgemKfaAdppcUVoGfModE4CEyT",
         "storageKey": "assetType",
         "storageValue": "BFT"
@@ -1644,10 +1566,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "49"
+          "assetBalance": "38"
         }
       ],
-      "signature": "54032caab06716cae02f68bde71b4d24ceb96cf134690d1de39e3e94a530289ecd944d74a220a1571afb85cd9a9119515d532b5a5e14f6d212a779efc5834e0b",
+      "signature": "b250f1c43921495fc589897469da35f588d5b1600a33243d60ee4c6fcc6b526d8ae211e962e824366222bd986a4d3f3ab2f5ddec107fa4fe4dd59dbd2198370a",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -1655,18 +1577,17 @@
         "senderPublicKey": "3b219fc3f94643fdafff9db830746f30d4f91624ca667522ff8f66e1e2093fd7",
         "rangeType": 0,
         "range": [],
-        "fee": "27",
+        "fee": "22",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "fe78fc2705545d8f553c77b5c8b900739e834c3fd6901fd4994be421faa9766f021a9aadec2a37ee6a36750b49ec9ae151d074d5aad0eacb867af101f2d6b003",
+        "signature": "276c7830bd14c8dd437161ba9896c299ec952217e147666aa10ad9f1354bd64e4b96af2da63e0d82c5a9c10daa200720d68c924ecd7f1b400a1ca4e27702a002",
         "remark": {},
         "asset": {
           "username": {
-            "alias": "bfchain11",
-            "publicKey": "3b219fc3f94643fdafff9db830746f30d4f91624ca667522ff8f66e1e2093fd7"
+            "alias": "bfchain11"
           }
         },
         "nonce": 0,
@@ -1682,10 +1603,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "21"
+          "assetBalance": "19"
         }
       ],
-      "signature": "9e16f662af4bcb50b82e279d0110197a0550bac9410084df34849233d3b086222ad12540a40071ce226123ebd055cc5e6ac530814f56d9384b6b715343665f01",
+      "signature": "49b865ee2aede7cfc9f3493f3416339a22f54544b2cd3cfb05915b8dc1d059cacce68274929c95b7e73a3e203397546d9d130f1e94149e87acae2189fae1780e",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -1693,23 +1614,16 @@
         "senderPublicKey": "3b219fc3f94643fdafff9db830746f30d4f91624ca667522ff8f66e1e2093fd7",
         "rangeType": 0,
         "range": [],
-        "fee": "28",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "5326b109160baabfd7c798e0a87f5d242085d5f4d76648b799a3199d26b487c10e632102a11292c243aa93462e3e9efbae3420f60476dafc921c000985e0ec07",
+        "signature": "a50c4362c0e77d503ad0745fb59573d40cdcb8bf6cabfcef1b8de262da1cb0837534d1cae6e59dd2af34b9791eb3a772d02eb46c55ba8f5b9abb4631718e730a",
         "remark": {},
-        "asset": {
-          "delegate": {
-            "username": "bfchain11",
-            "publicKey": "3b219fc3f94643fdafff9db830746f30d4f91624ca667522ff8f66e1e2093fd7"
-          }
-        },
-        "nonce": 0,
-        "storageKey": "username",
-        "storageValue": "bfchain11"
+        "asset": {},
+        "nonce": 0
       }
     },
     {
@@ -1723,7 +1637,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "7b63ccd6cc56c0abf226e42ec7bb9172d121ed22c7d36fa6f4f7f35bfc3ca0cb5398891a8ee1e5ff8921737067c4a65324a3dc9d6df05121ff452b6df745530c",
+      "signature": "3a2f123bfeebab89e66bd9fda4a348ba4e166848c38d3d3f9eed4302f3283b2c7846ad9959fe938e04063b608a96ace907210f74fd1f6bd4f0ef7a9aaafee905",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -1731,16 +1645,16 @@
         "senderPublicKey": "3b219fc3f94643fdafff9db830746f30d4f91624ca667522ff8f66e1e2093fd7",
         "rangeType": 0,
         "range": [],
-        "fee": "21",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "c800428b7e685cfc87bfee581df225e99606fd4bf540828fd9756a1f2ef6a998043126353d63dbc981de504708420862c315d1fca90ef2afd7793eee48dd8500",
+        "signature": "5fe79c8507c3e2fc8241c31ad4e4bb96defbbab25e59f5fd1117d0beded8320d3b0e709291fc36e78c886f7541e3b7f7100d9bae89bda2adfdb2fc4883a02d0b",
         "remark": {},
         "asset": {},
-        "nonce": 0
+        "nonce": 2
       }
     },
     {
@@ -1751,15 +1665,15 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "244645364561312769"
+          "assetBalance": "244645364561313000"
         },
         {
           "accountType": 1,
           "assetTypes": 0,
-          "assetBalance": "76"
+          "assetBalance": "60"
         }
       ],
-      "signature": "e239705cb8c2199de9fd00ee7e33e2d91be35c2488f367a510b794294893b4210d6242a79f428d4acaae923a190c400456f92a4c3e626738e87de99476f13d0c",
+      "signature": "49118f3f973405ccbdb403d0b748f0a77d471c74813c8959cbbc63835940504f75267f86d5ebeba208997d36b237ce66f2878d2dd498cd8e3a42c98a5818630f",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -1767,23 +1681,23 @@
         "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
         "rangeType": 0,
         "range": [],
-        "fee": "30",
+        "fee": "27",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "509ee9dd6c6e82f636786e5c127da9f4cfd3af6a992b78d15dca2c9d11ec2f41fc9a77445a115dfa2621083bebf2ecc3a8173bd825d270d9cbb257aa6d202f04",
+        "signature": "0dbb1dcadee07b7cb9c29ba9bd7f44565e9cb5433cc97ee915dfa872ec2064a2089b17a06b42332d9d4a078ea10a921c679106ff472954441743f9a346a86705",
         "remark": {},
         "asset": {
           "transferAsset": {
             "sourceChainName": "bfchain",
-            "sourceChainMagic": "5F720C81E82CFC99",
+            "sourceChainMagic": "E00EI",
             "assetType": "BFT",
-            "amount": "76"
+            "amount": "60"
           }
         },
-        "nonce": 0,
+        "nonce": 2,
         "recipientId": "cBpRE96Ff1RR3kVoN9Hky6pnAtTky8cP4s",
         "storageKey": "assetType",
         "storageValue": "BFT"
@@ -1797,10 +1711,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "49"
+          "assetBalance": "38"
         }
       ],
-      "signature": "98762a797dedbe74d44b60466cfbc77975344fa64ce8fe8791466b5ed85fcf4c73534f4fa5791707d8110468979592acd7b4f7874b1e22b3a22cc48101719403",
+      "signature": "905d927e49e9868bbd565f68d1e688ec5d5eddcd76ce22070524f9d9e5daf02d2bf7df26c60d4d93ed9ebd2e6a92041a3c3bdecf4c0be56cf5ca43096933b90b",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -1808,18 +1722,17 @@
         "senderPublicKey": "e28b18bdb7dba853841fdebfc0619298d3c45e1983c99dd0ced0f4ff8196f7c9",
         "rangeType": 0,
         "range": [],
-        "fee": "27",
+        "fee": "22",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "943b0b0b84725e23128b13f16662191a0dcc842d03d24d3888873f9e4f1df1af3498cec5e8883de36dcf238de17038d77a503bbc93c03d0cac0be58a2e985f0e",
+        "signature": "dc1aeb0da03e9ca252396f0eaf8ae9607f48f16cd2df48369cd56ab2b0d7460b118a962220f61a2e7b89e347857d2b37ed6cdd968dd32dbbcf9931801f41f60d",
         "remark": {},
         "asset": {
           "username": {
-            "alias": "bfchain12",
-            "publicKey": "e28b18bdb7dba853841fdebfc0619298d3c45e1983c99dd0ced0f4ff8196f7c9"
+            "alias": "bfchain12"
           }
         },
         "nonce": 0,
@@ -1835,10 +1748,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "21"
+          "assetBalance": "19"
         }
       ],
-      "signature": "e746080d39d8231b325099ac3ae9fe8727396003e86d82a011a8971226c5021fc4667072246b77ff6873250e74f20022aa06ed02d9fb1ed7c2dda71cd0dd6d0a",
+      "signature": "60498f37c0a0de645b8524f54a2e340a1b707d140b5954e30602ef399ac439a6999614619e6153303ae495c00257c3e43aa201234010f923afd502b2d572820e",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -1846,23 +1759,16 @@
         "senderPublicKey": "e28b18bdb7dba853841fdebfc0619298d3c45e1983c99dd0ced0f4ff8196f7c9",
         "rangeType": 0,
         "range": [],
-        "fee": "28",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "325dbd29f6994eab4fea25557ef18cfa163d5b25091853fe236ee7372ac7ee828995cdb77d0c534b42623484c3df3335390e88bdf3b626f2523098c1a3da6301",
+        "signature": "06ac57b6adcfcf2e770b12a6c031c8bf2ef46f2736cd932dbf8a2b0f3b42457cffd3447c64867bdaa8d73f988a62b8516d95ccab97223057959040ff95ef8402",
         "remark": {},
-        "asset": {
-          "delegate": {
-            "username": "bfchain12",
-            "publicKey": "e28b18bdb7dba853841fdebfc0619298d3c45e1983c99dd0ced0f4ff8196f7c9"
-          }
-        },
-        "nonce": 0,
-        "storageKey": "username",
-        "storageValue": "bfchain12"
+        "asset": {},
+        "nonce": 0
       }
     },
     {
@@ -1876,7 +1782,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "48bf45913464fb29d5e6eaf8128ade3ab4b7f7cac472dd85b18f05108461f4633792605f21e76c60f80c7f088592fdba8e6a72211ac54b0ee0e1cdfbfd49c20e",
+      "signature": "e1c562b5aaa10d48829e48c60ac1d24fa8988f752baecc79a20643d7dffa9d1f4b7397681d7b4a230313f34a3e12ddfe51d9af9ac82a6be13034d707d9e0330c",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -1884,16 +1790,16 @@
         "senderPublicKey": "e28b18bdb7dba853841fdebfc0619298d3c45e1983c99dd0ced0f4ff8196f7c9",
         "rangeType": 0,
         "range": [],
-        "fee": "21",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "856d70d399aa5cf7f438d396dc7b712f3f3945981c7c41e5115f160cd70456e750412e5415514c2202350033d18e6611241f40da81b21926fb535744bd74bb0c",
+        "signature": "7a1d0444b45a7d445b77158b351c876832fed2f70027f8846e6192b1a160474f602db90be4dc41540927d55316f59d89fe41f3d207d5b1e653b48b2e923d4307",
         "remark": {},
         "asset": {},
-        "nonce": 0
+        "nonce": 3
       }
     },
     {
@@ -1904,15 +1810,15 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "244645364561312663"
+          "assetBalance": "244645364561312913"
         },
         {
           "accountType": 1,
           "assetTypes": 0,
-          "assetBalance": "76"
+          "assetBalance": "60"
         }
       ],
-      "signature": "cc0eb7253e31c346c608061b447af62cb8841f45c6b39b65e12350f5947d662b3edc862e810144805072a369e5e3c27acc1e97e9cde71c26f16df959d4ddb203",
+      "signature": "9920203914177f94fc07704c360bc8ccccd94fbbce34bfcce212c8dd18ee622273c2dca196acff50e8588df5e32af7e97d080e482199a6cf27aabd116ea6640f",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -1920,23 +1826,23 @@
         "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
         "rangeType": 0,
         "range": [],
-        "fee": "30",
+        "fee": "27",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "eeb8664d4be58517253ff0e21ac1ab11bae014fae1dc6456ec798c91ca5845bd112283c3cedb9c68b9c8d01b2233ab8b8511b63ef320a3dd8072c97626cbc80d",
+        "signature": "01018be24a2e59925ab0d53354f705067b580eb102a86b59ddd35b0cb2cce5370ad8a74d79a4f2a7e59f8860ce0da656bc44a47cd13485ae190b6b0517b01e06",
         "remark": {},
         "asset": {
           "transferAsset": {
             "sourceChainName": "bfchain",
-            "sourceChainMagic": "5F720C81E82CFC99",
+            "sourceChainMagic": "E00EI",
             "assetType": "BFT",
-            "amount": "76"
+            "amount": "60"
           }
         },
-        "nonce": 0,
+        "nonce": 21,
         "recipientId": "cFtYf1e5Ng5QhZzHiPMvDyV3NQHxKBnLmV",
         "storageKey": "assetType",
         "storageValue": "BFT"
@@ -1950,10 +1856,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "49"
+          "assetBalance": "38"
         }
       ],
-      "signature": "5a8a13687f6af5201e9bc465b5aca62add6f949cc81f40b12475e66e982c3030c8bb94ab99e5724bcb836d40ab0e20bfc47c2454bc067aa7462a274be993160e",
+      "signature": "1f10cfeb02096a39d419b8cd97bc3fb680ecbc7c2dbd56f8d5a46cb1c9637c1e1f0501cbd91f1f87524423af2ff56a1ee0ce565d34e62b7c6f7ac3ac3606b40f",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -1961,18 +1867,17 @@
         "senderPublicKey": "66147aafdeeb0f6f1fa6019fc8e9218b834a658712fbee756db9330b7ddc0d40",
         "rangeType": 0,
         "range": [],
-        "fee": "27",
+        "fee": "22",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "9e583714022195f0a530fcefb4390034eb7bd967937892b0a673145f4106395446b6fab64c1c3a63b31b4ff627106c7850b4356d6bdcb54b14c6ffdf73b2820f",
+        "signature": "d96cf56c506821c267dfae8486ebd5d94b0c332956f7536d908451196782ca641110f85e803966d43b3b6c28df9fc783059948a5e522bad18ae3d1bd64827207",
         "remark": {},
         "asset": {
           "username": {
-            "alias": "bfchain13",
-            "publicKey": "66147aafdeeb0f6f1fa6019fc8e9218b834a658712fbee756db9330b7ddc0d40"
+            "alias": "bfchain13"
           }
         },
         "nonce": 0,
@@ -1988,10 +1893,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "21"
+          "assetBalance": "19"
         }
       ],
-      "signature": "be8d5b5feefd52cde8837bf991ae431497834f3f6b334667f90fc145874f2fbc8f9181165e19baa1e2832c5f194ae66d717c98e71b9803b97600e8b0965f4801",
+      "signature": "35fcde2ae1e163ee389067e003d57ed602e69a21f0fcd9e9c85fee4de09de3fed95a23fa0350eca5a120ba26f6bc7bd42b54c84c1c3d70742a56efc21a1ad101",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -1999,23 +1904,16 @@
         "senderPublicKey": "66147aafdeeb0f6f1fa6019fc8e9218b834a658712fbee756db9330b7ddc0d40",
         "rangeType": 0,
         "range": [],
-        "fee": "28",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "2402e5ab216c4e97380d4a705a8f3bb3088dcc741dde741005e4863b86b99d79d0c1256c8fad3ceeb3817649bbc1eddb282dac81674f2282615abbf78112dc02",
+        "signature": "8711fa9a0e6621b8e191e38835817132d047f9f1e783257e9c982ea7b45eee88f947d3bee919e27a609acba8b6e247385a7270f67f8f1b7f89054d8c90876500",
         "remark": {},
-        "asset": {
-          "delegate": {
-            "username": "bfchain13",
-            "publicKey": "66147aafdeeb0f6f1fa6019fc8e9218b834a658712fbee756db9330b7ddc0d40"
-          }
-        },
-        "nonce": 0,
-        "storageKey": "username",
-        "storageValue": "bfchain13"
+        "asset": {},
+        "nonce": 0
       }
     },
     {
@@ -2029,7 +1927,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "80924bbbc10c9268121a561f735557d014bde0141193169e4f3e04c1c25b46edb3c3e8ab0870be39934401ff2590430f1caccf278c219773896e354518ca1504",
+      "signature": "b5974f85a4b0769fe055cfcb03f3472054da7c156e35d0f96caf36c9bd1c640522ac99e6cb5d9f59bdf270f56ffb4431638803dd943fd13a459c68f2b9c4cb00",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -2037,13 +1935,13 @@
         "senderPublicKey": "66147aafdeeb0f6f1fa6019fc8e9218b834a658712fbee756db9330b7ddc0d40",
         "rangeType": 0,
         "range": [],
-        "fee": "21",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "f58da4222f08bc1fdc9d7a2a6b41bbe4217fb7506d39df5ab9e0b61301cb07e24db2754fc09586b8cbb45f1b626104f81a5d49be490c91d251f2cacb7c9be80e",
+        "signature": "4e09aba26c4087fa7dfc2ac94d3958461c1376adcea5fda40d56dc58a59b6ce64e908859831cb75fcfeb1f676a21f0e4e23a0a480095cca305b739a5ef2bca07",
         "remark": {},
         "asset": {},
         "nonce": 0
@@ -2057,15 +1955,15 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "244645364561312557"
+          "assetBalance": "244645364561312826"
         },
         {
           "accountType": 1,
           "assetTypes": 0,
-          "assetBalance": "76"
+          "assetBalance": "60"
         }
       ],
-      "signature": "4c832e520a444d2867baffa4f447097ba4167230a62b90773682322d48d0749a687a0f6e805eb85acbce85037732532c0da86fbc01e2ff95a3b9a3ef18ae030a",
+      "signature": "5dd79c09d0f6a2edc77921ff3389ad7d88d9b87d1ecfebd33e5cc11837441d785b626d1dd1a02c98b69337ca847430edc8b8286a7b24e70fff0b402fe9da550b",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -2073,23 +1971,23 @@
         "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
         "rangeType": 0,
         "range": [],
-        "fee": "30",
+        "fee": "27",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "0c9b49ac490ec1c44075613af1a4a5b423073673a4211e098a0b7897781240ea61e9cdf8ac8263a0554048b8cbeee921f6e0a4326bb584cd1353d622b82c230e",
+        "signature": "0d03805e8b982bc50b7d06f5cd7b3689cc42c1fe0b9a916ff0e97671f961f72387fcbc31ca064bc1c6ad58b4eb18e5e9c579937f472f3e076cd112f53feac507",
         "remark": {},
         "asset": {
           "transferAsset": {
             "sourceChainName": "bfchain",
-            "sourceChainMagic": "5F720C81E82CFC99",
+            "sourceChainMagic": "E00EI",
             "assetType": "BFT",
-            "amount": "76"
+            "amount": "60"
           }
         },
-        "nonce": 0,
+        "nonce": 1,
         "recipientId": "cPDXYf8tLYdv8LG43RxgHbNLi1ouxDcP8p",
         "storageKey": "assetType",
         "storageValue": "BFT"
@@ -2103,10 +2001,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "49"
+          "assetBalance": "38"
         }
       ],
-      "signature": "dbc7365632d4beec6047da86d2c0a04a1d05076886ea353fc3f273f36e407099824bbfd38fc7e84f244fbe241431f510e91a4f6f98c3868e03cf9b6837cfc20b",
+      "signature": "1b2468e34fbec7144f4d232cf90cbec256fb6aac7488461062a6c931aa6ea67d9b58b51172f54af0677e8900928dbcb53e4aeeddd2f46b0674bb9f9d3d918a0f",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -2114,18 +2012,17 @@
         "senderPublicKey": "0d3e2e300683c37256270851b11889e882f871d2bb3d58e7f18a55ea2cc4d722",
         "rangeType": 0,
         "range": [],
-        "fee": "27",
+        "fee": "22",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "4bfd4af13a6a0d695f4014121414e1e8e10f63bb45c173d650bd6b7db8df95d9a7eabe9d7bddebc7b9a49935a38c52aa892baab883f71cb4bd82ec1394658d02",
+        "signature": "8f74cd557cb1f12236ca2c731f793f94e5c6d6d908c1c28de2d024859fc68f788f7a210f8d1fcb20b8ec95214c0ecdb45e66001152ca9f93664695beab8f230a",
         "remark": {},
         "asset": {
           "username": {
-            "alias": "bfchain14",
-            "publicKey": "0d3e2e300683c37256270851b11889e882f871d2bb3d58e7f18a55ea2cc4d722"
+            "alias": "bfchain14"
           }
         },
         "nonce": 0,
@@ -2141,10 +2038,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "21"
+          "assetBalance": "19"
         }
       ],
-      "signature": "d16de972c212f35df076c0070cb90c754b200f1b8e4cf7cb6bfaf3dd4f19524befcbad4e9fe7cebbad8a724839549796063dc734fb112f1a0d2670bac52a4407",
+      "signature": "0df752d298ba80a1bc233ff244f5f81c7b20abb519aa4f607c3bc8bc43ebc977b48f6eb303d3139b81396db3c99c349f2daf26178a241f24c3dcc797e446c201",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -2152,23 +2049,16 @@
         "senderPublicKey": "0d3e2e300683c37256270851b11889e882f871d2bb3d58e7f18a55ea2cc4d722",
         "rangeType": 0,
         "range": [],
-        "fee": "28",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "c931e2db88adcad3989d0b23717b7269b13abcea76219f5e6b1734fbabbe74686b060d88933e4cff3eaff0096fc56f6d32bb9e47930ef7bbf50732d966084c05",
+        "signature": "799dc59f0adc3b8a795f9df376b5beb7c8012a3d57d6993f68b9b6694fbedc201732bf8cf39f3c444500dc15ec81c1186c65cedaf9dfcc790023a195c911d707",
         "remark": {},
-        "asset": {
-          "delegate": {
-            "username": "bfchain14",
-            "publicKey": "0d3e2e300683c37256270851b11889e882f871d2bb3d58e7f18a55ea2cc4d722"
-          }
-        },
-        "nonce": 0,
-        "storageKey": "username",
-        "storageValue": "bfchain14"
+        "asset": {},
+        "nonce": 0
       }
     },
     {
@@ -2182,7 +2072,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "1973703daba26375b7cf2bf6d0155e742754d167351ad926c464fa9f9a95152d8fddeb05d6533fd0b6e50bfab60445c467bda1b3f7fa24c87d828eaa862af700",
+      "signature": "41310a413c34d4da6da448cb331488eeef34d349ccf156c6a9da512077a51f4546a3a28a6438cd3ac975bb4343fc6ecc0a5c70757053394b497cc2233c394004",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -2190,16 +2080,16 @@
         "senderPublicKey": "0d3e2e300683c37256270851b11889e882f871d2bb3d58e7f18a55ea2cc4d722",
         "rangeType": 0,
         "range": [],
-        "fee": "21",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "12382dc0414e58751598778986d9de819eb1d14fc2e35a1878c63230906983bde58c3d93200fffa84ec59e8d3badf057febc443e2beb9938a6d15b0cc55ba10e",
+        "signature": "593838c207bac15f8cecf12d821b0eed103f9dfc480cbe7ce405b0791e8789b758b630bb97cac449f3ef4021af5cf018702d42f77b999f1a42961bc2ee289f03",
         "remark": {},
         "asset": {},
-        "nonce": 0
+        "nonce": 1
       }
     },
     {
@@ -2210,15 +2100,15 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "244645364561312451"
+          "assetBalance": "244645364561312739"
         },
         {
           "accountType": 1,
           "assetTypes": 0,
-          "assetBalance": "76"
+          "assetBalance": "60"
         }
       ],
-      "signature": "2918edbd4f88451ed72519bb890c65f5a4659b9c46d38a70849a09ed30ff1e1559daace8a7fdedd85cbca082cbb4304c3507735e7461c61feeb7098aa11d3900",
+      "signature": "6f355de1b9a0b7098854452bb05dab38ad514dea689cabbdcec7c3991fd47703c1f7ce532731ffec102a1ae3f8b1bbcec25056eee3cfe0a07663f0faa0dcad01",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -2226,23 +2116,23 @@
         "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
         "rangeType": 0,
         "range": [],
-        "fee": "30",
+        "fee": "27",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "106afcf5afb62ab9837ef0bdeabcbb5276b9e6e176ba0b7059209f7ae64bf103c2c736d362012b45634c12bb5f44b87bbda20329621a5171d40fd8e6923f5302",
+        "signature": "0845f5f8cab43ac05ea6e436d4c2cf0b185d52c926a52a89e8a3f63c7564e843572727503155e09a37126a9faf9c7b3b7229c6d33a3935df241901e594ed2e00",
         "remark": {},
         "asset": {
           "transferAsset": {
             "sourceChainName": "bfchain",
-            "sourceChainMagic": "5F720C81E82CFC99",
+            "sourceChainMagic": "E00EI",
             "assetType": "BFT",
-            "amount": "76"
+            "amount": "60"
           }
         },
-        "nonce": 0,
+        "nonce": 21,
         "recipientId": "c5fjyiG9HYrHrzJnyLsMZSkw6M5JzkZWUY",
         "storageKey": "assetType",
         "storageValue": "BFT"
@@ -2256,10 +2146,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "49"
+          "assetBalance": "38"
         }
       ],
-      "signature": "f269691d0597b8d77623c812f882161b31933b73ad9a7fc3a7ad3c8a1851978917657ab630b223b10aba2be1e99930ab898e81af9b3941c322eade0893f9de0e",
+      "signature": "3fe12390c4c47aa36d91fc060b0b6cdeb6410a8a6cee64b63007beec190cbcf0de9032e405d67e6d38600cb5559d8865932d7f57efcc63da42ee1412f8685204",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -2267,18 +2157,17 @@
         "senderPublicKey": "f35137a5cdcff0da62d5bf6c9d5840c2ce8e68539653353e2fd1cb85fd15d240",
         "rangeType": 0,
         "range": [],
-        "fee": "27",
+        "fee": "22",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "0f06e4880cc9534954977fd221bec9073e007700fd493e8609bbcad7f9f87acd27a0a81935192b6295263bf12978e65ad036c00bf244d613cf75dc1bcc93af06",
+        "signature": "edca416b630f21cfcc2fb06612c520882779a024fe41263ad4e8c06754e78d0fbcaf121a9b853c23476cf5c7af2564fbf08f5a927b4e25ddfa5902e28ae97009",
         "remark": {},
         "asset": {
           "username": {
-            "alias": "bfchain15",
-            "publicKey": "f35137a5cdcff0da62d5bf6c9d5840c2ce8e68539653353e2fd1cb85fd15d240"
+            "alias": "bfchain15"
           }
         },
         "nonce": 0,
@@ -2294,10 +2183,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "21"
+          "assetBalance": "19"
         }
       ],
-      "signature": "a1128b1d842ea46b206496c87b92524944d426be841c1f094db626c39386b6abd8e3bf456143eb5c2729cea472004b92b6c0f9af87464d519d587d1afeb5c90c",
+      "signature": "e493502e352d18ec025669f920261034f39c8ceeb703497511b5a492455dac88d90e809748d03677576333c9bae0bb8c8561b1e0b8eafa4d2e830a966c86c10f",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -2305,23 +2194,16 @@
         "senderPublicKey": "f35137a5cdcff0da62d5bf6c9d5840c2ce8e68539653353e2fd1cb85fd15d240",
         "rangeType": 0,
         "range": [],
-        "fee": "28",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "1e457dbfac25678b5bcee0a0ec9a5714242717a28dccbdc8981bf8deff0f0762f7e963a8eae602629104538353c9447ac7b5e9d40642fd30f88323f72180a807",
+        "signature": "448618ef1735d8b0f99a5681573a3209295886483e76cb02044e98cc48d2d40f0e47ef038250ab19a3413381b0e1149862663191ae07f39c56ce6a05b151910b",
         "remark": {},
-        "asset": {
-          "delegate": {
-            "username": "bfchain15",
-            "publicKey": "f35137a5cdcff0da62d5bf6c9d5840c2ce8e68539653353e2fd1cb85fd15d240"
-          }
-        },
-        "nonce": 0,
-        "storageKey": "username",
-        "storageValue": "bfchain15"
+        "asset": {},
+        "nonce": 0
       }
     },
     {
@@ -2335,7 +2217,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "594fc69963259db2a4480df1c45ae3f84a0ed1a2d8596efccca5e50addade12900ea2711ed8ca23253bc0d3e8dc6d74f3e0f4b7935f9d6b2cb7579a97ef0d101",
+      "signature": "41a278b2a887387a09736320e405168920c2d9d1cf02230bb606df6303eb717ddb8f023c4059b0db63e763b8e1f5494e0b3b97010d99efb2e4701bfb3a0c2600",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -2343,13 +2225,13 @@
         "senderPublicKey": "f35137a5cdcff0da62d5bf6c9d5840c2ce8e68539653353e2fd1cb85fd15d240",
         "rangeType": 0,
         "range": [],
-        "fee": "21",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "edd97a5e8ceed0e30f5d36e3daddb005a8faaa166e900e88103bd66e2cd5843f0de5546f8ed4399d96ed3fca14f297badbff4514efe95b3243114d7eb843a40a",
+        "signature": "088a1d1380ea6520a4994e27bc94be213824f0eecf0d58099ec21c62114d58eb12ff58797674fd65bbff6346c3f7c08d0efca947ac9660e3f9722bad1063920e",
         "remark": {},
         "asset": {},
         "nonce": 0
@@ -2363,15 +2245,15 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "244645364561312345"
+          "assetBalance": "244645364561312652"
         },
         {
           "accountType": 1,
           "assetTypes": 0,
-          "assetBalance": "76"
+          "assetBalance": "60"
         }
       ],
-      "signature": "ba86b46d1c2c72755d84d1ecc5dda6117aadcb453e01fc7baab0882347ad3273cfdecbb507722a2d39723af584011acc72245ddd1abaa8f272762f3238e36303",
+      "signature": "d0c38ce17aec840b526b668c25c71386a062d92a6362017977b777efb4469cb3d651356038921905d04a23244f7127378c1ace4f7b27aa0097904706750fd309",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -2379,23 +2261,23 @@
         "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
         "rangeType": 0,
         "range": [],
-        "fee": "30",
+        "fee": "27",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "ae573ec48e8721c196263c3ae2b45117d38e17f2510e02226ed7cc09f7fb1efc2526f7cebf9d6fc8bab1589a115951ed5394767def1dbf85325644ab789eda09",
+        "signature": "07b366418c901e072d472ebb1e81f1da062dc9551957a34ad393ae071de95d92ed88dc2a6ccd4259dfc407c4d2d5ae5a9ba2ee685915ac6615bcaba282387e07",
         "remark": {},
         "asset": {
           "transferAsset": {
             "sourceChainName": "bfchain",
-            "sourceChainMagic": "5F720C81E82CFC99",
+            "sourceChainMagic": "E00EI",
             "assetType": "BFT",
-            "amount": "76"
+            "amount": "60"
           }
         },
-        "nonce": 0,
+        "nonce": 13,
         "recipientId": "c582jFX2DfF45B65YSKN31qk6Ft9ckVAJm",
         "storageKey": "assetType",
         "storageValue": "BFT"
@@ -2409,10 +2291,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "49"
+          "assetBalance": "38"
         }
       ],
-      "signature": "a2716d69d3a9ff5d3e98bdf2cd97421ae0a545d6b6bb6ba1578a29f0ce32307ec3dee257eba9f3caf1b6ecebf87e9bd88044bfd88a9ddc70a7a211e03d28f801",
+      "signature": "577c018c10862659fabbe3e753662d0f494dac41ba2229f6a29518753531800539f5807bebf3b42d915ecc94eb7f15006508c15cd0cd8d0cd26c49bab6f28801",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -2420,18 +2302,17 @@
         "senderPublicKey": "3fd31fd9aadff0ababfa361fdcbf6f8838537e4d55b80cc5f6811d29aeb519a4",
         "rangeType": 0,
         "range": [],
-        "fee": "27",
+        "fee": "22",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "091960a6e4abd07b2e3188f16602162ffd16b87d60fc2db4dad1d47874f94a8410f628e372457ad03c8d17d429809843a3a422d9703cac67ec98193219385705",
+        "signature": "f7b69e5180971f5ae20a5a8a60aab945fe1fca71075d3ce0cac0d1d584840cf6cb64e6ed9a849185bd5229b38d3ea17cd8335f3ffc997487d27d7792097e030d",
         "remark": {},
         "asset": {
           "username": {
-            "alias": "bfchain16",
-            "publicKey": "3fd31fd9aadff0ababfa361fdcbf6f8838537e4d55b80cc5f6811d29aeb519a4"
+            "alias": "bfchain16"
           }
         },
         "nonce": 0,
@@ -2447,10 +2328,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "21"
+          "assetBalance": "19"
         }
       ],
-      "signature": "5858c3fd126e9383430e25bcee3dc0d640cbc43ee74563c57c98808e2fcf5bc783bc12dc3a35ea3e608d305470edf1ef42c5223a263bee58b5b59e4e3d3ca302",
+      "signature": "0e2cbd0293fb8a3d8a82f5ff46f2f6a337e944c3e5fc7940b554d60994c7b9c1e4878c1a68c87f2dae59223e2e4e72c7d37d433115df312e90bf6a4af77ad30e",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -2458,23 +2339,16 @@
         "senderPublicKey": "3fd31fd9aadff0ababfa361fdcbf6f8838537e4d55b80cc5f6811d29aeb519a4",
         "rangeType": 0,
         "range": [],
-        "fee": "28",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "724e5e02e11fb9fd7058127c052211c1de6e9adc180bd4f4397ece25e7ff8ff3bec7028eb952e1e37aa84491f78ecc1971511d64401b0fb49604f07bf1414d0a",
+        "signature": "105197787de9ff93a4d875077b6b9520b22dbe6843b1ef902c21322f91ec3b26282a159cd03abe0aa6339c0de7df9cf0c491205bcb66dc75820fd4453ef9540b",
         "remark": {},
-        "asset": {
-          "delegate": {
-            "username": "bfchain16",
-            "publicKey": "3fd31fd9aadff0ababfa361fdcbf6f8838537e4d55b80cc5f6811d29aeb519a4"
-          }
-        },
-        "nonce": 0,
-        "storageKey": "username",
-        "storageValue": "bfchain16"
+        "asset": {},
+        "nonce": 0
       }
     },
     {
@@ -2488,7 +2362,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "3dc60e52a796d4902b54b64be543e6035d9e85ac81d0e11cb6b07e5b5262d51486c415e27b7955ddf647396a1c78876504bf67f22ab67e603aa9743202c32d09",
+      "signature": "27bff86282dad5dfc53d87701f0cf7b966476c17b9eac358a4a3687184d3431ec5a469625f1f104c5deb3f3ac39de033ec6a7f822691273e0df169ddb4273903",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -2496,16 +2370,16 @@
         "senderPublicKey": "3fd31fd9aadff0ababfa361fdcbf6f8838537e4d55b80cc5f6811d29aeb519a4",
         "rangeType": 0,
         "range": [],
-        "fee": "21",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "786818168615e946f3deee85b734d36009925c6ef0a4718aec4d09b81e06eae3bccc53e7e21e7ace6831a4ddfb20173de99e5d4d41a072e4fa29eba57c7ccb03",
+        "signature": "11f07834fb4b02b3491972f4bf1cafafd569358ea420cb957082ac6cb9a3f788bde2d71fed04cebb828a94112b4aa7230c00662f59cf3f190d74187f9b4e2703",
         "remark": {},
         "asset": {},
-        "nonce": 0
+        "nonce": 4
       }
     },
     {
@@ -2516,15 +2390,15 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "244645364561312239"
+          "assetBalance": "244645364561312565"
         },
         {
           "accountType": 1,
           "assetTypes": 0,
-          "assetBalance": "76"
+          "assetBalance": "60"
         }
       ],
-      "signature": "51a281947174c9373bb1108932f51be7c5aab8d436233d79ade36b49f69871da793ddc8503ed47ef79f7ce01b291e318bb303ee5fbaaf936cb4c8d725af51a0e",
+      "signature": "232e38d3e9832ea514a3d38e1258f737a736c04e79326b85a3f3945e15ed024d17ca91c4ca6090ed90ef96a8ca8ee69df2d2c2aa26c3cc210f814f33873f7607",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -2532,23 +2406,23 @@
         "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
         "rangeType": 0,
         "range": [],
-        "fee": "30",
+        "fee": "27",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "201f9b8e061f9ec4a9ae20083f0a6760b2d03a94cb74d4a5a8314520aeff312090d8e17b6077fe27ed5381175497ffcc41938d1233a258d3fb915807245f7806",
+        "signature": "095a2f086f2481bb2821d92b88c11603bdfaee53de7cea5ea88b8454f46e20495093b553947f87f679043e6db86d79e3636a11e5c3e1e8d7071b8c06ef42c50a",
         "remark": {},
         "asset": {
           "transferAsset": {
             "sourceChainName": "bfchain",
-            "sourceChainMagic": "5F720C81E82CFC99",
+            "sourceChainMagic": "E00EI",
             "assetType": "BFT",
-            "amount": "76"
+            "amount": "60"
           }
         },
-        "nonce": 0,
+        "nonce": 7,
         "recipientId": "cBy33bW2b8QX3Th6mjkpHRykPGLN9ahG9p",
         "storageKey": "assetType",
         "storageValue": "BFT"
@@ -2562,10 +2436,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "49"
+          "assetBalance": "38"
         }
       ],
-      "signature": "8851e29a93762d0f6b204a2b7f2091e53828cc119eb9c433f5e81c5282189f0326017132644e6d1d4cd70bb82c238d6134ef6d52065bf8f7480c7d75c6f3f701",
+      "signature": "7c644fb0ab64df8bd5eb8992764c0c20d632a266fb645cff2ae84b4823d5f8acee93a704fd41ac69ab45a22e24247cc500a58fca4f2e44c7e4bb0e9ad8d34107",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -2573,18 +2447,17 @@
         "senderPublicKey": "8faa36a204246e3f4f0a63c6596d5ec2eed55e8c7df556511d44e51f16e3444f",
         "rangeType": 0,
         "range": [],
-        "fee": "27",
+        "fee": "22",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "36de763268626811cb7a88869771391293b036dcb2247b2a9de3ccfd79cdb96f02952cf149f124e19dbed57b010878e9ac0ba88b1168b08a189145045527e90f",
+        "signature": "6aed7e5bef0435b99109dcea06567e0e41e7139bf121dbe17fff67dac8355cd7f747ed0b2ac9be93e0d6f21935e0d13b0eea676437a28551901a0b7b2db4220d",
         "remark": {},
         "asset": {
           "username": {
-            "alias": "bfchain17",
-            "publicKey": "8faa36a204246e3f4f0a63c6596d5ec2eed55e8c7df556511d44e51f16e3444f"
+            "alias": "bfchain17"
           }
         },
         "nonce": 0,
@@ -2600,10 +2473,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "21"
+          "assetBalance": "19"
         }
       ],
-      "signature": "bd3e10c4eac071346ccb97ddd2ef5e4b9537c6d40c389b8473f57d28b995983ac666d0f642071f3d57c78507c7d02ee6ec405f4b9e02d8ae1999047d74aebc01",
+      "signature": "421a42da9821550953a205f06fab472739db6b34f134424b075ca93629aa0be72a7e19b80e07a7361bac8f0b091d7838f697d87b50da63e64eee1a147263560a",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -2611,23 +2484,16 @@
         "senderPublicKey": "8faa36a204246e3f4f0a63c6596d5ec2eed55e8c7df556511d44e51f16e3444f",
         "rangeType": 0,
         "range": [],
-        "fee": "28",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "f5c1e15b68081f03f5b7624dca153ee862742a674b43d0acbfac52093939fc9cdd6dcf4acc2515bc2ab502f10fb019484e66770741472379b10fd6527b78ff04",
+        "signature": "5cd111386a25d7db592b587ad8db74f90d60ddc9c8494b18d52b996af9726f6000640612fc38822ed46731f3d22078c86171b2b8b18d176ba994b95e1aaa740e",
         "remark": {},
-        "asset": {
-          "delegate": {
-            "username": "bfchain17",
-            "publicKey": "8faa36a204246e3f4f0a63c6596d5ec2eed55e8c7df556511d44e51f16e3444f"
-          }
-        },
-        "nonce": 0,
-        "storageKey": "username",
-        "storageValue": "bfchain17"
+        "asset": {},
+        "nonce": 0
       }
     },
     {
@@ -2641,7 +2507,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "30a5f86e98378875e61f053699afc2a2a27c5a1ac9e8e5bf8553e215c59607427e22d09c2ab1e925e9f9f0342ad83d3ddabea045ed11ba1bc23180cac4d83509",
+      "signature": "69f76a5a395ae461ec1180a3030b83040c13c027d0f86a8eea88f8c4bcd4e1efb4ea65bf839e91148c6f4bc9d4109437662dbe43e41887a1a576629140ad8101",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -2649,16 +2515,16 @@
         "senderPublicKey": "8faa36a204246e3f4f0a63c6596d5ec2eed55e8c7df556511d44e51f16e3444f",
         "rangeType": 0,
         "range": [],
-        "fee": "21",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "1d27939efdf3fbb18764f9ed43ad6bbded5a31ceb333528d34b1b610d92fdf1c369a72a9a0fb3aeb5e722b9b6489456ba99072dbd1f5659acb894df5f126430e",
+        "signature": "1a36afe9764f1cacbfbd52bb9b8cabffebeb190eb3c3fdfad413752d529000a1b5bbef5286d0553a01a7cf52c044f85b9928cc44315716021742709f7b69260a",
         "remark": {},
         "asset": {},
-        "nonce": 0
+        "nonce": 2
       }
     },
     {
@@ -2669,15 +2535,15 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "244645364561312133"
+          "assetBalance": "244645364561312478"
         },
         {
           "accountType": 1,
           "assetTypes": 0,
-          "assetBalance": "76"
+          "assetBalance": "60"
         }
       ],
-      "signature": "0ab093c007cea51dca75f5c27aaa77bddb0609720c1f6c7c9012d4ae207999020eb3c0fb75cc23eb290684cffc74e71ed8bd3ee9229082dca02c0472df5c8a01",
+      "signature": "05bad707194c06c80f354a1b0bc128dd3bd481d12d76fe4861b65b8693e149c8b8222ee0fb31b41e0763ebeea49477a1ff132878126b8c13108088897a17ea00",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -2685,20 +2551,20 @@
         "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
         "rangeType": 0,
         "range": [],
-        "fee": "30",
+        "fee": "27",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "ba047b5f808c39c032ac07b48f78754a8b6d4a9c323b27248507bbadec98e51bc022ca9501868f09231cd7bb5b72c38d5320434069bcddbb6bffab27c944500d",
+        "signature": "088ee28f2e0e182667f6bcb0dad0259325bc755bccdcc8c9870c553437bbd01e4f5392c1312c537104d963276e036b74a4d30ed0338d03ba6bacb8b864191e0c",
         "remark": {},
         "asset": {
           "transferAsset": {
             "sourceChainName": "bfchain",
-            "sourceChainMagic": "5F720C81E82CFC99",
+            "sourceChainMagic": "E00EI",
             "assetType": "BFT",
-            "amount": "76"
+            "amount": "60"
           }
         },
         "nonce": 0,
@@ -2715,10 +2581,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "49"
+          "assetBalance": "38"
         }
       ],
-      "signature": "8e27c5b3cad611d7c3c17c742a6d5ca4f7e26ed91d33b7bb521eb641b0331bce41a933e4ded47dda3aeb382c5f2e6860d14776d72c4a55ccbd91c1c3667b5002",
+      "signature": "404e31c66b08a27213654ca1aee1d65a62627413de9d8430e1b7405bebef8839eb813ef67742c685edae9b34624ce89c5770b76144c8df6af42a96317d29db02",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -2726,18 +2592,17 @@
         "senderPublicKey": "3e4923ab278ff075b4b9b0e791925efe7959d33222d944bbc2173b09db25c2ec",
         "rangeType": 0,
         "range": [],
-        "fee": "27",
+        "fee": "22",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "382d7727d2c4feab782fd1e2f5ece75a1dd031a04ae1da8d75fbfe0868e1c0fd115543da31a2bc5e12662eec761166711c89ab7e5d59ccba31ca116865c11100",
+        "signature": "9f4b2a82d0885c2c4fd69492635bdab7168f3c1893e7e4ae1757de3c992d8baf8f24f09987a2436c9cda3f7cbd2494fda1f2352894f076eae8010d8d0f5cc60b",
         "remark": {},
         "asset": {
           "username": {
-            "alias": "bfchain18",
-            "publicKey": "3e4923ab278ff075b4b9b0e791925efe7959d33222d944bbc2173b09db25c2ec"
+            "alias": "bfchain18"
           }
         },
         "nonce": 0,
@@ -2753,10 +2618,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "21"
+          "assetBalance": "19"
         }
       ],
-      "signature": "0b9fb0e823449e565f88c0f00b184039db860c6c8e05b713df42274fc246b49053df2e2cb3897475985af42e0c1ec5e32a2909319c2e8ef8a6cf5451971f300f",
+      "signature": "94a019546931c14282e250f23f0a6c90b62dcd559ca0c0f8a50a611b22a5037ccaae1b22469b0aea7ee17ddaa7b94ec2bb338aa1bd773a340d83a54ff5c11707",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -2764,23 +2629,16 @@
         "senderPublicKey": "3e4923ab278ff075b4b9b0e791925efe7959d33222d944bbc2173b09db25c2ec",
         "rangeType": 0,
         "range": [],
-        "fee": "28",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "e7b29904b41102c9c78135aa39da5b1282c23003abf8f8dd43cba4499d60ff498ec164e3b027a88d1e38b36983570439c76122ce66a848fd11c1ceaa21763407",
+        "signature": "e49fa457b0d546bd47771a401a15debee5edcaad1cea83ac10974728521e0ddae3d1313e3d8dc06f4d51b36281199687e956b2906fbe9c3ba5971c54a8dbfd00",
         "remark": {},
-        "asset": {
-          "delegate": {
-            "username": "bfchain18",
-            "publicKey": "3e4923ab278ff075b4b9b0e791925efe7959d33222d944bbc2173b09db25c2ec"
-          }
-        },
-        "nonce": 0,
-        "storageKey": "username",
-        "storageValue": "bfchain18"
+        "asset": {},
+        "nonce": 0
       }
     },
     {
@@ -2794,7 +2652,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "3c1ae4f15720041f8fa640cf1bb219606cc83a74e71381499a9655b2b978204156f7513167003538b53c57fc2a08a95089293110f3026678d72039e5eb8f1d00",
+      "signature": "dc90b4619cffdace7d3259dfb42726269cc724f8541d62b002c5c9b22ec6186dd6f135ab29efe48f8bbf383c6805ac8de5d5e77b66c2e60bdcc62e52502f0302",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -2802,13 +2660,13 @@
         "senderPublicKey": "3e4923ab278ff075b4b9b0e791925efe7959d33222d944bbc2173b09db25c2ec",
         "rangeType": 0,
         "range": [],
-        "fee": "21",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "7637ebf2ae2a826fee9c4bbbc310d31ca9d8b7db6e5dfc597c268e6ce98a0ee70995b4e988981203a2d9cab6c6fc98619eccccd8e7d8d087cac3583166040e06",
+        "signature": "4fc79836247808ef9e2f286870c6750decd506965bbb72a7ad9128bb9c17604b57cb27eb5ae0400519eed5af943ff345a2a3374dcd285b0b4f0ccbb80ff0de05",
         "remark": {},
         "asset": {},
         "nonce": 0
@@ -2822,15 +2680,15 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "244645364561312027"
+          "assetBalance": "244645364561312391"
         },
         {
           "accountType": 1,
           "assetTypes": 0,
-          "assetBalance": "76"
+          "assetBalance": "60"
         }
       ],
-      "signature": "b90472e54861596cc4bd38de454c93a0a3a9403b324ef891c61e7e19d1e28746645058faca00e6c8aea6e16d97d7c5420344f4539e1df0ec64776e6f9253cf01",
+      "signature": "598084c89ab4f53ef21f1fab45f972046882ef5209eabcc4706fdc8f0857bce3362b55d474000e6aa0f3dc34ca6344dbcef60b4ac7e74d134d53378363d3fc0f",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -2838,23 +2696,23 @@
         "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
         "rangeType": 0,
         "range": [],
-        "fee": "30",
+        "fee": "27",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "c33835d62cc55c88ce14e4eff258c958679d8f3c1784d952c6936f34083294a20a11967a4bf994e3f265e564ec551ae7b16b792534517c8d73bbf71eeca7f40f",
+        "signature": "010a3d25e7d12c761936ef18679e43c35a97e1e97b779bcabc5a6aa8b44b474921212e8dcb1d29768b3ecc1fbfe22450015ba411b7adba064341ae2af8d7400b",
         "remark": {},
         "asset": {
           "transferAsset": {
             "sourceChainName": "bfchain",
-            "sourceChainMagic": "5F720C81E82CFC99",
+            "sourceChainMagic": "E00EI",
             "assetType": "BFT",
-            "amount": "76"
+            "amount": "60"
           }
         },
-        "nonce": 0,
+        "nonce": 8,
         "recipientId": "cLxoe3BFVFWJitksZZU7r7pyPbGxdV9FEw",
         "storageKey": "assetType",
         "storageValue": "BFT"
@@ -2868,10 +2726,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "49"
+          "assetBalance": "38"
         }
       ],
-      "signature": "533eec34f90a401d2e1c5c8d0cadd13c5df2e9da3ebd96a4328ecbf4b015988336379e6eabc090aba799afe1d29c4b24cd6e785e95916ff5371462ed814aae01",
+      "signature": "70f2ed9e631fd7fd06fe32d94ff0ab42eed12c0dde395dc2e1945ce8bb5d8a945c4b0bc0a474d64a2e9075713335ec237de5959747b496adb774070ff2fa3400",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -2879,18 +2737,17 @@
         "senderPublicKey": "7e740a16c8d812e472ccc010e05c3feb24642ce6c1068e155edff525fcd04f81",
         "rangeType": 0,
         "range": [],
-        "fee": "27",
+        "fee": "22",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "0957e430e625fea35a2e65e222160ca4484b29bdc74cc256e14e324e56832452002f63815d238bbaf1fe5784f290ecfc3a5fceeb36a66c243991c23fb60e0a02",
+        "signature": "fbf44d2ec8e188889066964a5879c6e9f53fb048ff7ca97704ffcabbfad86cb5801eef2a1669c633ace7bf9f3a6c082fcc872b034525f3b652e8533babe92f09",
         "remark": {},
         "asset": {
           "username": {
-            "alias": "bfchain19",
-            "publicKey": "7e740a16c8d812e472ccc010e05c3feb24642ce6c1068e155edff525fcd04f81"
+            "alias": "bfchain19"
           }
         },
         "nonce": 0,
@@ -2906,10 +2763,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "21"
+          "assetBalance": "19"
         }
       ],
-      "signature": "f1828059a158c7c5f4bcb3e828adac4059fa969b7e2b5c201025c2af0a8537701543078bd8834d09fc535bf808ea68310b9f38851b65620f9536d085fb201005",
+      "signature": "8770c68007b886b6d917877f01f0423e756e2510fa24cd12aef7791e5e363cdbe3f396ae6c9764d36f1dd0f1169ad631b483ad7f20bd18418abdb72338413600",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -2917,23 +2774,16 @@
         "senderPublicKey": "7e740a16c8d812e472ccc010e05c3feb24642ce6c1068e155edff525fcd04f81",
         "rangeType": 0,
         "range": [],
-        "fee": "28",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "68a4d39085005e6cedc53aadfd6afd804530c5e241e8050a7e635029e0b23c46303a2c611a6f59f7bb418cc2c9460877f9e77f1238daf8cd5776f9b7454cea0e",
+        "signature": "b684ec64759ce9fabc4f48f026ad0ddfa2c597b040d51563c64e3b828d87708048e25a97b0f2d64df136050216261ca3581afbfbab192f0ad83791565f134009",
         "remark": {},
-        "asset": {
-          "delegate": {
-            "username": "bfchain19",
-            "publicKey": "7e740a16c8d812e472ccc010e05c3feb24642ce6c1068e155edff525fcd04f81"
-          }
-        },
-        "nonce": 0,
-        "storageKey": "username",
-        "storageValue": "bfchain19"
+        "asset": {},
+        "nonce": 0
       }
     },
     {
@@ -2947,7 +2797,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "d34c88ad8d02ac3deb11adb14343788be6f7c90f7f70753623ec7c807866133ea6f48e989c5f084337904faabd7fce59bfbcbd8ad8ad1169998aed705316550b",
+      "signature": "6e5719b18b3f22f3babcb7ef7efb2c238c0d1714051dcade5fb2e7387dc7126f8eaeff410a03309c7926c12dff64aad8064bddb60d531fd72f70be651c5df20b",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -2955,16 +2805,16 @@
         "senderPublicKey": "7e740a16c8d812e472ccc010e05c3feb24642ce6c1068e155edff525fcd04f81",
         "rangeType": 0,
         "range": [],
-        "fee": "21",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "536c2e428ce801f8ddfe26184429c0de2e23055a9658fea4b68b72eb8642dd2d1ab5fca0d44185bbcb12868a4b4ddd26825b8800f10ea2cd27c3019d6f7ed101",
+        "signature": "1ba6c269b24e9559a3f610c7fdd028afac1ddf7ac8f01541847e4b5b69075fb960c7fa564d9ee3f58bcf1828438d3dab60d105558d9fe97847c2ea46acea550b",
         "remark": {},
         "asset": {},
-        "nonce": 0
+        "nonce": 1
       }
     },
     {
@@ -2975,15 +2825,15 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "244645364561311921"
+          "assetBalance": "244645364561312304"
         },
         {
           "accountType": 1,
           "assetTypes": 0,
-          "assetBalance": "76"
+          "assetBalance": "60"
         }
       ],
-      "signature": "626b85ed9157794e68e1ccda765d5dbcbfcbd306135f35601f72f21b26a93c6bdbec8904823e3407216b4015c2f95ac1341ac591e4302b3408e30f126c57d409",
+      "signature": "5e03c50b78e6aeeeef29ddaafa3340b1393155f3e0214496cd23b713e46041ca6255fb144c1281ec430cbb82e3ab5f5173ce387d6de62865fa75f8f3c31ef901",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-AST-01",
@@ -2991,23 +2841,23 @@
         "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
         "rangeType": 0,
         "range": [],
-        "fee": "30",
+        "fee": "27",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "4a0fb384a4c128477dbc91b412cca84ad7a684fde5291d2bd0883cdedaef8cee5621c8c39ec97c807753ee5a4aaad840d8711099081de1c3c7822ac745c33b06",
+        "signature": "062b33b510978ca0146ad03fba67c375f6408702b8357e2a6db0bbdb4f830a09b4b371add2327945472d4f5151d264ccd4181b1b7741738c7af133648157f505",
         "remark": {},
         "asset": {
           "transferAsset": {
             "sourceChainName": "bfchain",
-            "sourceChainMagic": "5F720C81E82CFC99",
+            "sourceChainMagic": "E00EI",
             "assetType": "BFT",
-            "amount": "76"
+            "amount": "60"
           }
         },
-        "nonce": 0,
+        "nonce": 2,
         "recipientId": "cCTtPZA7Ry9qEnLJm6yyWGFswdFC5hiMhe",
         "storageKey": "assetType",
         "storageValue": "BFT"
@@ -3021,10 +2871,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "49"
+          "assetBalance": "38"
         }
       ],
-      "signature": "589ed1e56d03ee79414b07ce3882b96b6d54356789200263148cd24858577cafa96999388c894a67ab4ef273868fa538af8e13778b9934e4caa22e8758fd7f07",
+      "signature": "a05cb944e051162222f414a59205bc6973bfdec543cc7e37e3d7f5075e86991c0d09b0f2896f2b96188285f4f3d93d443e2260cd36f8dcebc049413287f1950f",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-04",
@@ -3032,18 +2882,17 @@
         "senderPublicKey": "2bf616d6a1e047121e55221d2aaae311385df6a47d7d7bed3858b9db6f33db72",
         "rangeType": 0,
         "range": [],
-        "fee": "27",
+        "fee": "22",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "0b2f74af07666a08512811feee4462a062a8a915504438a6f9358824f04c2f5151af06b0fd6a7bd31f64d6791a53c655a7731959b4481d17b22877f3df63ae02",
+        "signature": "075abd8389e3ac4181007b7bea860a1dee8e9d24d315adfa370cfb7e6a8c4ba60bc4bb8f6b791a2fdd71dbebc7a37810ca537782cda063bba1b4710550e89d03",
         "remark": {},
         "asset": {
           "username": {
-            "alias": "bfchain20",
-            "publicKey": "2bf616d6a1e047121e55221d2aaae311385df6a47d7d7bed3858b9db6f33db72"
+            "alias": "bfchain20"
           }
         },
         "nonce": 0,
@@ -3059,10 +2908,10 @@
         {
           "accountType": 0,
           "assetTypes": 0,
-          "assetBalance": "21"
+          "assetBalance": "19"
         }
       ],
-      "signature": "5a69b6afc72fc9a5cf35f01368b7fd8372c2e29046cca85ce6d49be1236a135dd66fa4e648bab3376eb9aa98ac987f6223c3e5b5d01b8a0be168463d55053f0e",
+      "signature": "8dba7a958bf0999e7069331cb3127134876748a7a0a945ddbaeb488d35a14e27b8160a9218c34d9f93ffae53cfbc296169a76c211e29dcfbee4a40d3214e7903",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-02",
@@ -3070,23 +2919,16 @@
         "senderPublicKey": "2bf616d6a1e047121e55221d2aaae311385df6a47d7d7bed3858b9db6f33db72",
         "rangeType": 0,
         "range": [],
-        "fee": "28",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "0bbf3a37d69b6400e0a4d40ad1d472cf8bf7044038c4f19635ac642a3400612b95e100b83b16b8d35ec30947d4760494bfc267f5e3af34abc657d5b947ca6f01",
+        "signature": "b8cc648ada4219138e21ac7398b2d900e826f9798b61d1ed2a044aa91e21e251180c847d63aeff70be58f473405e835b3a5f9544e9c07c370c26f927632be208",
         "remark": {},
-        "asset": {
-          "delegate": {
-            "username": "bfchain20",
-            "publicKey": "2bf616d6a1e047121e55221d2aaae311385df6a47d7d7bed3858b9db6f33db72"
-          }
-        },
-        "nonce": 0,
-        "storageKey": "username",
-        "storageValue": "bfchain20"
+        "asset": {},
+        "nonce": 0
       }
     },
     {
@@ -3100,7 +2942,7 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "ed96ac636a1a6ee43a65430cf92538ff552a43d4436c070d306c29c18a2c3130a69db521a5ff11cacde6cacba8febd38785f62c13acca72ee2762a9e89cd0a05",
+      "signature": "cbcaec070e426662511994579306f199208e6d0aa32de9703bc129ab9142539af5b9062fb01828ed750b3a7fce3c18e601a000128969b6a9c4e06c95d1a99e05",
       "transaction": {
         "version": 1,
         "type": "BFT-BFCHAIN-BSE-05",
@@ -3108,230 +2950,220 @@
         "senderPublicKey": "2bf616d6a1e047121e55221d2aaae311385df6a47d7d7bed3858b9db6f33db72",
         "rangeType": 0,
         "range": [],
-        "fee": "21",
+        "fee": "19",
         "timestamp": 0,
-        "fromMagic": "5F720C81E82CFC99",
-        "toMagic": "5F720C81E82CFC99",
+        "fromMagic": "E00EI",
+        "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "ac2feea776e1da35bd820b27cfc22674f44a38d9f01b1f8541d97b753996aa737f5afe63ac1a28e3d9ab2ab3cc329ec098628dff2a5b899049b2325b1e26050a",
+        "signature": "73079977190dc29ebc0e740f5203deb70e77164a055069abb15c1fe96d125060acf86020c5bb5e785fcd5f1718c04b1f19ad77dcf97d41f3979080deb624500f",
         "remark": {},
         "asset": {},
-        "nonce": 0
+        "nonce": 1
       }
     }
   ],
-  "remark": {
-    "assetType": "BFT",
-    "chainName": "bfchain",
-    "magic": "5F720C81E82CFC99",
-    "bnid": "c",
-    "beginEpochTime": 1577808000000,
-    "genesisNodeAddress": "ibt.bfchain",
-    "generateTotalAmount": "244645364561314071",
-    "minTransactionFeePerByte": {
-      "numerator": 100,
-      "denominator": 1024
-    },
-    "maxPayloadLength": 33554432,
-    "maxTPSPerBlock": 1000,
-    "maxTransactionSize": 409600,
-    "maxBlockRemarkSize": 307200,
-    "consessusBeforeSyncBlockDiff": 7,
-    "maxDelegateTxsPerRound": 10,
-    "maxGrabTimesOfGiftAsset": 1000000,
-    "issueAssetMinChainAsset": "50000000000000",
-    "registerChainMinChainAsset": "50000000000000",
-    "chainAssetAndDigitalAssetExchangeRate": 1000,
-    "chainAssetRewardWeight": 10000,
-    "numberOfTransactionRewardWeight": 1,
-    "maxApplyAndConfirmedBlockHeightDiff": 259200,
-    "blockPerRound": 10,
-    "delegates": 20,
-    "whetherToAllowDelegateContinusElections": false,
-    "forgeInterval": 20,
-    "rewardPercent": {
-      "votePercent": {
-        "numerator": 7,
-        "denominator": 10
+  "remark": {},
+  "asset": {
+    "genesisAsset": {
+      "chainName": "bfchain",
+      "assetType": "BFT",
+      "magic": "E00EI",
+      "bnid": "c",
+      "beginEpochTime": 1577808000000,
+      "genesisLocationName": "ibt.bfchain",
+      "generateTotalAmount": "244645364561314071",
+      "minTransactionFeePerByte": {
+        "numerator": 100,
+        "denominator": 1024
       },
-      "forgePercent": {
-        "numerator": 3,
-        "denominator": 10
-      }
-    },
-    "ports": {
-      "port": 19000,
-      "scan_peer_port": 19006
-    },
-    "rewardPerBlock": {
-      "heights": [
-        1,
-        100000,
-        18900000,
-        37800000,
-        56700000,
-        75600000,
-        94500000,
-        113400000,
-        132300000,
-        151200000,
-        170100000,
-        189000000,
-        207900000,
-        226800000,
-        245700000,
-        264600000,
-        283500000,
-        302400000,
-        321300000,
-        340200000,
-        359100000,
-        378000000,
-        396900000,
-        403200000
+      "maxTransactionSize": 409600,
+      "maxBlockSize": 33554432,
+      "maxTPSPerBlock": 1000,
+      "consessusBeforeSyncBlockDiff": 7,
+      "maxDelegateTxsPerRound": 10,
+      "maxGrabTimesOfGiftAsset": 1000000,
+      "issueAssetMinChainAsset": "50000000000000",
+      "registerChainMinChainAsset": "50000000000000",
+      "maxApplyAndConfirmedBlockHeightDiff": 259200,
+      "blockPerRound": 10,
+      "delegates": 20,
+      "whetherToAllowDelegateContinusElections": false,
+      "forgeInterval": 20,
+      "rewardPercent": {
+        "votePercent": {
+          "numerator": 7,
+          "denominator": 10
+        },
+        "forgePercent": {
+          "numerator": 3,
+          "denominator": 10
+        }
+      },
+      "ports": {
+        "port": 19000,
+        "scan_peer_port": 19006
+      },
+      "rewardPerBlock": {
+        "heights": [
+          1,
+          100000,
+          18900000,
+          37800000,
+          56700000,
+          75600000,
+          94500000,
+          113400000,
+          132300000,
+          151200000,
+          170100000,
+          189000000,
+          207900000,
+          226800000,
+          245700000,
+          264600000,
+          283500000,
+          302400000,
+          321300000,
+          340200000,
+          359100000,
+          378000000,
+          396900000,
+          403200000
+        ],
+        "rewards": [
+          "0",
+          "3500000000",
+          "9000000000",
+          "4500000000",
+          "2250000000",
+          "1125000000",
+          "562500000",
+          "281250000",
+          "140625000",
+          "70312500",
+          "35156250",
+          "17578125",
+          "8789062",
+          "4394531",
+          "2197265",
+          "1098632",
+          "549316",
+          "274658",
+          "137329",
+          "68664",
+          "34332",
+          "17166",
+          "8583",
+          "4291",
+          "0"
+        ]
+      },
+      "accountParticipationWeightRatio": {
+        "prevWeight": "10000",
+        "nextWeight": "1"
+      },
+      "blockParticipationWeightRatio": {
+        "prevWeight": "10000",
+        "nextWeight": "1"
+      },
+      "tpowDiffFormula": "( accountParticipation + 10 * accountNumberOfTransactionInBlock ) / 2 ** 3",
+      "averageComputingPower": 125,
+      "tpowOfWorkExemptionBlocks": 0,
+      "newDelegates": [],
+      "maxBeginBalance": "0",
+      "maxTxCount": 0,
+      "nextRoundDelegates": [
+        {
+          "address": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
+          "equity": "0"
+        },
+        {
+          "address": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
+          "equity": "0"
+        },
+        {
+          "address": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
+          "equity": "0"
+        },
+        {
+          "address": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
+          "equity": "0"
+        },
+        {
+          "address": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
+          "equity": "0"
+        },
+        {
+          "address": "cGnmjV6fk5kFbTWztDtZhyr1a4Van4NPvR",
+          "equity": "0"
+        },
+        {
+          "address": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
+          "equity": "0"
+        },
+        {
+          "address": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
+          "equity": "0"
+        },
+        {
+          "address": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
+          "equity": "0"
+        },
+        {
+          "address": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
+          "equity": "0"
+        }
       ],
-      "rewards": [
-        "0",
-        "3500000000",
-        "9000000000",
-        "4500000000",
-        "2250000000",
-        "1125000000",
-        "562500000",
-        "281250000",
-        "140625000",
-        "70312500",
-        "35156250",
-        "17578125",
-        "8789062",
-        "4394531",
-        "2197265",
-        "1098632",
-        "549316",
-        "274658",
-        "137329",
-        "68664",
-        "34332",
-        "17166",
-        "8583",
-        "4291",
-        "0"
-      ]
-    },
-    "debug": "",
-    "info": "BFChain is the future.",
-    "blockParticipation": "17115",
-    "generatorEquity": "0",
-    "participationTotalChainAsset": 4,
-    "participationNumberOfTransaction": 3,
-    "participationNumberOfAccount": 2,
-    "participationTotalFee": 1,
-    "transactionPowOfWorkConfig": {
-      "growthFactor": {
-        "numerator": "2718281828459045",
-        "denominator": "1000000000000000"
-      },
-      "participationRatio": {
-        "numerator": 1,
-        "denominator": 1
-      },
-      "averageComputingPower": 125
-    },
-    "powOfWorkExemptionBlocks": 10,
-    "newDelegates": [],
-    "maxBeginBalance": "0",
-    "maxTxCount": 0,
-    "nextRoundDelegates": [
-      {
-        "address": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
-        "equity": "0"
-      },
-      {
-        "address": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
-        "equity": "0"
-      },
-      {
-        "address": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
-        "equity": "0"
-      },
-      {
-        "address": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
-        "equity": "0"
-      },
-      {
-        "address": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
-        "equity": "0"
-      },
-      {
-        "address": "cGnmjV6fk5kFbTWztDtZhyr1a4Van4NPvR",
-        "equity": "0"
-      },
-      {
-        "address": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
-        "equity": "0"
-      },
-      {
-        "address": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
-        "equity": "0"
-      },
-      {
-        "address": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
-        "equity": "0"
-      },
-      {
-        "address": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
-        "equity": "0"
-      }
-    ],
-    "rate": "0"
+      "rate": "0"
+    }
   },
   "statisticInfo": {
-    "totalFee": "2150",
-    "totalAsset": "3670",
-    "totalChainAsset": "3670",
+    "totalFee": "1767",
+    "totalAsset": "2967",
+    "totalChainAsset": "2967",
     "totalAccount": 21,
     "assetStatisticHashMap": {
       "0": {
-        "magic": "5F720C81E82CFC99",
+        "magic": "E00EI",
         "assetType": "BFT",
         "index": 0,
         "typeStatisticHashMap": {
           "LNS-00": {
-            "changeAmount": "30",
+            "changeAmount": "27",
             "changeCount": 1,
-            "moveAmount": "30",
+            "moveAmount": "27",
             "transactionCount": 1
           },
           "AST-01": {
-            "changeAmount": "3640",
+            "changeAmount": "2940",
             "changeCount": 60,
-            "moveAmount": "2120",
+            "moveAmount": "1740",
             "transactionCount": 20
           },
           "BSE-04": {
-            "changeAmount": "540",
+            "changeAmount": "440",
             "changeCount": 20,
-            "moveAmount": "540",
+            "moveAmount": "440",
             "transactionCount": 20
           },
           "BSE-02": {
-            "changeAmount": "560",
+            "changeAmount": "380",
             "changeCount": 20,
-            "moveAmount": "560",
+            "moveAmount": "380",
             "transactionCount": 20
           },
           "BSE-05": {
-            "changeAmount": "420",
+            "changeAmount": "380",
             "changeCount": 20,
-            "moveAmount": "420",
+            "moveAmount": "380",
             "transactionCount": 20
           }
         },
         "total": {
-          "changeAmount": "5190",
+          "changeAmount": "4167",
           "changeCount": 121,
-          "moveAmount": "1520",
+          "moveAmount": "1200",
           "transactionCount": 81
         }
       }

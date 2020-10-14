@@ -181,15 +181,36 @@ export class VerifyBlockCore<T extends Block> {
         }
         appliedTransactions.add(transaction.signature);
 
+        // 校验 TIB 签名
         if (
           !(await this.asymmetricHelper.detachedVeriy(
-            tranItem.getBytes(true),
+            tranItem.getBytes(true, true),
             tranItem.signatureBuffer,
             block.generatorPublicKeyBuffer,
           ))
         ) {
           throw new ArgumentFormatException(`Invalid transactionInBlock signature`);
         }
+        // 校验 TIB 安全签名
+        if (block.generatorSecondPublicKeyBuffer) {
+          if (!tranItem.signSignatureBuffer) {
+            throw new ArgumentFormatException(PROP_IS_REQUIRE, {
+              prop: "signSignature",
+              target: "transactionInBlock",
+              ...Function_Exception_Detail,
+            });
+          }
+          if (
+            !(await this.asymmetricHelper.detachedVeriy(
+              tranItem.getBytes(false, true),
+              tranItem.signSignatureBuffer,
+              block.generatorSecondPublicKeyBuffer,
+            ))
+          ) {
+            throw new ArgumentFormatException(`Invalid transactionInBlock signSignature`);
+          }
+        }
+        // 检验交易涉及的账户余额
         for (const transactionAssetChange of tranItem.transactionAssetChanges) {
           if (BigInt(transactionAssetChange.assetBalance) < BigInt(0)) {
             throw new ArgumentIllegalException(PROP_IS_INVALID, {
@@ -199,6 +220,7 @@ export class VerifyBlockCore<T extends Block> {
             });
           }
         }
+
         // 生产交易二进制数据
         const tranItemBinary = TransactionInBlock.encode(tranItem).finish();
         // 更新hash
@@ -260,10 +282,10 @@ export class VerifyBlockCore<T extends Block> {
       });
     }
 
-    if (payloadLength > config.maxPayloadLength) {
+    if (payloadLength > config.maxBlockSize) {
       throw new ArgumentIllegalException(TOO_LARGE, {
         prop: "payloadLength",
-        reason: `payloadLength: ${payloadLength} max: ${config.maxPayloadLength}`,
+        reason: `payloadLength: ${payloadLength} max: ${config.maxBlockSize}`,
         ...Block_Exception_Detail,
       });
     }
@@ -292,12 +314,10 @@ export class VerifyBlockCore<T extends Block> {
     }
 
     const blockParticipation = this.blockHelper.calcBlockParticipation({
-      totalAccount: statisticsInfo.totalAccount,
       totalChainAsset: statisticsInfo.totalChainAsset,
-      totalFee: statisticsInfo.totalFee,
       numberOfTransactions,
     });
-    if (block.remark.blockParticipation !== blockParticipation) {
+    if (block.blockParticipation !== blockParticipation) {
       throw new ArgumentIllegalException(NOT_MATCH, {
         to_compare_prop: `blockParticipation ${block.remark.blockParticipation}`,
         be_compare_prop: `blockParticipation ${blockParticipation}`,
@@ -399,7 +419,5 @@ export class VerifyBlockCore<T extends Block> {
     this.commonBlockVerify.verifyBlockReward(block);
 
     this.commonBlockVerify.verifyBlockSize(block);
-
-    this.commonBlockVerify.verifyBlockRemarkSize(block);
   }
 }

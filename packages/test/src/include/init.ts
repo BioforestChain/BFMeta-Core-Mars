@@ -1,18 +1,18 @@
 import { BFChainCoreFactory, ConfigHelper, GenesisBlock, BNID_TYPE } from "@bfchain/core";
 import { NodeJsCryptoHelper, NodeJsKeypairHelper, Ed2curveHelper } from "./helper";
 import { ModuleStroge } from "@bfchain/util";
-import { registerchainRemarkData, mainChainRemarkData } from "./utils";
+import { registerchainAssetData, mainChainAssetData } from "./utils";
 import * as path from "path";
 const rootPath = path.resolve(__dirname, "../../../../../assets");
 
 export const moduleMap = new ModuleStroge();
 
 function getBfchainCoreEntry(bnid = BNID_TYPE.TESTNET) {
-  mainChainRemarkData.bnid = bnid;
+  mainChainAssetData.bnid = bnid;
   return BFChainCoreFactory(
     {
       config: new ConfigHelper(
-        GenesisBlock.fromObject({ remark: mainChainRemarkData }),
+        GenesisBlock.fromObject({ asset: { genesisAsset: mainChainAssetData } }),
         "genesisBlock",
       ),
       Buffer: Buffer as any,
@@ -36,10 +36,10 @@ function getFullBfchainCoreEntry(blockPerRound: number, forgeInterval: number) {
 }
 
 function getRegisterBfchainCoreEntry(bnid = BNID_TYPE.TESTNET) {
-  registerchainRemarkData.bnid = bnid;
+  registerchainAssetData.bnid = bnid;
   return BFChainCoreFactory({
     config: new ConfigHelper(
-      GenesisBlock.fromObject({ remark: registerchainRemarkData }),
+      GenesisBlock.fromObject({ asset: { genesisAsset: registerchainAssetData } }),
       "genesisBlock",
     ),
     Buffer: Buffer as any,
@@ -50,7 +50,7 @@ function getRegisterBfchainCoreEntry(bnid = BNID_TYPE.TESTNET) {
 }
 
 function getFullRegisterBfchainCoreEntry() {
-  const registerGenesisBlock: BFChainCore.BlockJSON<BFChainCore.GenesisBlockRemarkJSON> = require(`${rootPath}/registerGenesisBlock.json`);
+  const registerGenesisBlock: BFChainCore.BlockJSON<BFChainCore.GenesisBlockAssetJSON> = require(`${rootPath}/registerGenesisBlock.json`);
   return BFChainCoreFactory({
     config: new ConfigHelper(GenesisBlock.fromObject(registerGenesisBlock), "genesisBlock"),
     Buffer: Buffer as any,

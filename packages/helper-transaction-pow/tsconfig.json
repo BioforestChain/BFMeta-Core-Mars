@@ -6,13 +6,10 @@
   },
   "references": [
     {
-      "path": "../model-block-base/tsconfig.json"
+      "path": "../helper-bigint/tsconfig.json"
     },
     {
-      "path": "../model-cacher/tsconfig.json"
-    },
-    {
-      "path": "../model-common/tsconfig.json"
+      "path": "../helper-config/tsconfig.json"
     },
     {
       "path": "../typings/tsconfig.json"
@@ -20,10 +17,9 @@
   ],
   "files": [
     "src/@types.ts",
-    "src/commonBlockRemark.ts",
-    "src/genesisBlockRemark.ts",
     "src/index.ts",
-    "src/roundDelegateRemark.ts",
-    "src/roundLastBlockRemark.ts"
+    "src/tpowDiffHelper.ts",
+    "src/tpowHelper.ts",
+    "src/tpowStackHelper.ts"
   ]
 }

@@ -9,10 +9,10 @@
   },
   "references": [
     {
-      "path": "../model-block-base/tsconfig.esm-es5.json"
+      "path": "../model-block-asset/tsconfig.esm-es5.json"
     },
     {
-      "path": "../model-block-remark/tsconfig.esm-es5.json"
+      "path": "../model-block-base/tsconfig.esm-es5.json"
     },
     {
       "path": "../model-cacher/tsconfig.esm-es5.json"

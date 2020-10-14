@@ -31,6 +31,7 @@
     "src/include/ips.ts",
     "src/include/magic.ts",
     "src/include/utils.ts",
+    "src/magicAndAssetType.ts",
     "src/pow-trs.demo.ts",
     "src/protobuf-fromObject.ts",
     "src/protobuf-json-dry.ts",

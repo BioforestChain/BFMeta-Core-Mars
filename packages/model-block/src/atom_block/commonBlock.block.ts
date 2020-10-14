@@ -1,5 +1,5 @@
 import { Block } from "@bfchain/core-model-block-base";
-import { CommonBlockRemarkModel } from "@bfchain/core-model-block-remark";
+import { CommonBlockAssetModel } from "@bfchain/core-model-block-asset";
 import { Type, Field } from "@bfchain/protobuf";
 
 /**
@@ -7,9 +7,9 @@ import { Type, Field } from "@bfchain/protobuf";
  *
  */
 @Type.d("CommonBlock")
-export class CommonBlock
-  extends Block<BFChainCore.CommonBlockRemarkJSON>
-  implements BFChainCore.CommonBlock {
-  @Field.d(CommonBlock.INC++, CommonBlockRemarkModel)
-  remark!: CommonBlockRemarkModel;
+export class CommonBlock extends Block<BFChainCore.CommonBlockAssetJSON>
+  implements BFChainCore.CommonBlockJSON {
+  toJSON!: () => BFChainCore.CommonBlockJSON;
+  @Field.d(CommonBlock.INC++, CommonBlockAssetModel)
+  asset!: CommonBlockAssetModel;
 }

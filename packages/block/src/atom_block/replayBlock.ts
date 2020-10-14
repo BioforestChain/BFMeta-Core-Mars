@@ -22,6 +22,7 @@ import {
   PROP_SHOULD_GT_FIELD,
   INVALID_BLOCK_GENERATOR,
   SHOULD_NOT_INCLUDE,
+  PROP_IS_REQUIRE,
 } from "@bfchain/core-util-exception";
 import {
   QueneEventEmitter,
@@ -246,9 +247,6 @@ export class ReplayBlockCore<T extends Block> {
     // 验证区块大小
     this.commonBlockVerify.verifyBlockSize(block, transactionBufferList);
 
-    // 校验 remark 大小
-    this.commonBlockVerify.verifyBlockRemarkSize(block);
-
     // 校验区块签名
     verifySignature && (await this.commonBlockVerify.verifySignature(block));
 
@@ -261,6 +259,7 @@ export class ReplayBlockCore<T extends Block> {
         block,
       ));
     isDevGenerateBlock && info("finish replayBlock");
+
     return block;
   }
 
@@ -278,11 +277,11 @@ export class ReplayBlockCore<T extends Block> {
       generatorPublicKeyBuffer,
       statisticInfo: blockStatisticsInfo,
     } = block;
-    const { powOfWorkExemptionBlocks } = config;
-    const needTPow = height > powOfWorkExemptionBlocks;
+    const { tpowOfWorkExemptionBlocks } = config;
+    const needTPow = height > tpowOfWorkExemptionBlocks;
     const abortForbiddenTransaction = this.transactionCore.abortForbiddenTransaction;
     const Function_Exception_Detail = { function: "insertTransactionsForReplay" };
-    const MAX_TRANSACTION_SIZE = this.config.genesisBlock.remark.maxTransactionSize;
+    const MAX_TRANSACTION_SIZE = this.config.genesisBlock.asset.genesisAsset.maxTransactionSize;
     /**所有交易的sha256hash */
     const payloadHash = this.cryptoHelper.sha256();
     /**所有交易体的总字节长度 */
@@ -321,9 +320,9 @@ export class ReplayBlockCore<T extends Block> {
 
     // 获取打块账户获得的权益
     const generatorEquity = await eventEmitter.blockGeneratorEquityGetter(block.generatorPublicKey);
-    if (block.remark.generatorEquity !== generatorEquity) {
+    if (block.generatorEquity !== generatorEquity) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: `generatorEquity ${block.remark.generatorEquity}`,
+        to_compare_prop: `generatorEquity ${block.generatorEquity}`,
         be_compare_prop: `generatorEquity ${generatorEquity}`,
         to_target: "block",
         be_target: "calculate",
@@ -511,16 +510,41 @@ export class ReplayBlockCore<T extends Block> {
               }
             }
           }
-          // 校验TIB签名
-          if (
-            verifySignature &&
-            !(await asymmetricHelper.detachedVeriy(
-              tranItem.getBytes(true),
-              tranItem.signatureBuffer,
-              generatorPublicKeyBuffer,
-            ))
-          ) {
-            throw new ArgumentFormatException(`Invalid transactionInBlock: %O`, tranItem.toJSON());
+          // 校验 TIB 签名 和 安全签名
+          if (verifySignature) {
+            if (
+              !(await asymmetricHelper.detachedVeriy(
+                tranItem.getBytes(true, true),
+                tranItem.signatureBuffer,
+                generatorPublicKeyBuffer,
+              ))
+            ) {
+              throw new ArgumentFormatException(
+                `Invalid transactionInBlock signature: %O`,
+                tranItem.toJSON(),
+              );
+            }
+            if (block.generatorSecondPublicKeyBuffer) {
+              if (!tranItem.signSignatureBuffer) {
+                throw new ArgumentFormatException(PROP_IS_REQUIRE, {
+                  prop: "signSignature",
+                  target: "transactionInBlock",
+                  ...Function_Exception_Detail,
+                });
+              }
+              if (
+                !(await asymmetricHelper.detachedVeriy(
+                  tranItem.getBytes(false, true),
+                  tranItem.signSignatureBuffer,
+                  block.generatorSecondPublicKeyBuffer,
+                ))
+              ) {
+                throw new ArgumentFormatException(
+                  `Invalid transactionInBlock signSignature: %O`,
+                  tranItem.toJSON(),
+                );
+              }
+            }
           }
           Object.freeze(tranItem);
           // 生产交易二进制数据
@@ -579,14 +603,12 @@ export class ReplayBlockCore<T extends Block> {
 
       if (!skipVerifyParticipation) {
         const blockParticipation = this.blockHelper.calcBlockParticipation({
-          totalAccount: statisticsInfo.totalAccount,
           totalChainAsset: statisticsInfo.totalChainAsset,
-          totalFee: statisticsInfo.totalFee,
           numberOfTransactions,
         });
-        if (block.remark.blockParticipation !== blockParticipation) {
+        if (block.blockParticipation !== blockParticipation) {
           throw new ArgumentIllegalException(NOT_MATCH, {
-            to_compare_prop: `blockParticipation ${block.remark.blockParticipation}`,
+            to_compare_prop: `blockParticipation ${block.blockParticipation}`,
             be_compare_prop: `blockParticipation ${blockParticipation}`,
             to_target: "block",
             be_target: "calculate",

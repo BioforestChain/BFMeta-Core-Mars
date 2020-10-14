@@ -9,6 +9,9 @@
   },
   "references": [
     {
+      "path": "../model-cacher/tsconfig.esm-es5.json"
+    },
+    {
       "path": "../typings/tsconfig.esm-es5.json"
     }
   ]

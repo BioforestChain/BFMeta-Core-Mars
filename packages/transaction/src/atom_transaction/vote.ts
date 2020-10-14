@@ -13,6 +13,7 @@ import {
   SHOULD_BE,
   PARAM_LOST,
   PROP_IS_REQUIRE,
+  SHOULD_NOT_EXIST,
 } from "@bfchain/core-util-exception";
 import { Injectable, TaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "VoteTransactionFactory");
@@ -84,6 +85,13 @@ export class VoteTransactionFactory extends TransactionFactory<VoteTransaction> 
         to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
+        ...Function_Exception_Detail,
+      });
+    }
+
+    if (body.storage) {
+      throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+        prop: "storage",
         ...Function_Exception_Detail,
       });
     }

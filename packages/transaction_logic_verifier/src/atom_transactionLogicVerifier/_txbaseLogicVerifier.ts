@@ -6,8 +6,7 @@ import {
   PROP_LOSE,
   ACCOUNT_FROZEN,
   TRANSACTION_SIGN_SIGNATURE_IS_REQUIRED,
-  SECOND_PUBLICKEY_ALREADY_CHANGE,
-  SHOULD_NOT_HAVE_SENDER_SECOND_PUBLICKEY,
+  TRANSACTION_SHOULD_NOT_HAVE_SENDER_SECOND_PUBLICKEY,
   TRANSACTION_SHOULD_NOT_HAVE_SIGN_SIGNATURE,
   INVALID_TRANSACTION_APPLY_BLOCK_HEIGHT,
   INVALID_TRANSACTION_TO_MAGIC,
@@ -18,11 +17,13 @@ import {
   INVALID_TRANSACTION_BYTE_LENGTH,
   NEED_PURCHASE_DAPPID_BEFORE_USE,
   NEED_VOTE_FOR_DAPPID_POSSESSOR_BFCORE_USE,
+  POSSESS_ASSET_EXCEPT_CHAIN_ASSET,
   ALREADY_EXIST,
   INVALID_TRANSACTION_EFFECTIVE_BLOCK_HEIGHT,
   VERIFY_TRANSACTION_POW_OF_WORK_ERROR,
   INVALID_TRANSACTION_FROM_MAGIC,
   NOT_MATCH,
+  TRANSACTION_SENDER_SECOND_PUBLICKEY_ALREADY_CHANGE,
 } from "@bfchain/core-util-exception";
 import {
   NewTransactionRefuseReason,
@@ -146,7 +147,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     await this.checkLocationName(transaction, currentBlockHeight, accountGetterHelper);
     // 接收交易的时候不验证 pow
     // 校验 pow
-    // if (currentBlockHeight > this.configHelper.powOfWorkExemptionBlocks) {
+    // if (currentBlockHeight > this.configHelper.tpowOfWorkExemptionBlocks) {
     //   const curRound = this.blockHelper.calcRoundByHeight(currentBlockHeight);
     //   const lastRoundInfo = sender.accountInfo.lastRoundInfo;
     //   const { round, txCount, assetNumber } = lastRoundInfo;
@@ -242,44 +243,53 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     const Function_Exception_Detail = {
       function: "checkSecondPublicKey",
     } as const;
+
+    const {
+      type,
+      senderId,
+      senderSecondPublicKey,
+      applyBlockHeight,
+      signature,
+      signSignature,
+    } = tr;
     const secondPublicKey = accountInfo.secondPublicKey;
-    const { senderSecondPublicKey, signSignature } = tr;
+
     if (secondPublicKey) {
       if (!(senderSecondPublicKey && signSignature)) {
         throw new ConsensusException(TRANSACTION_SIGN_SIGNATURE_IS_REQUIRED, {
-          signature: tr.signature,
-          senderId: tr.senderId,
-          applyBlockHeight: tr.applyBlockHeight,
-          type: tr.type,
+          signature,
+          senderId,
+          applyBlockHeight,
+          type,
           ...Function_Exception_Detail,
         });
       }
 
       if (secondPublicKey !== senderSecondPublicKey) {
-        throw new ConsensusException(SECOND_PUBLICKEY_ALREADY_CHANGE, {
-          signature: tr.signature,
-          senderId: tr.senderId,
-          applyBlockHeight: tr.applyBlockHeight,
-          type: tr.type,
+        throw new ConsensusException(TRANSACTION_SENDER_SECOND_PUBLICKEY_ALREADY_CHANGE, {
+          signature,
+          senderId,
+          applyBlockHeight,
+          type,
           ...Function_Exception_Detail,
         });
       }
     } else {
       if (senderSecondPublicKey) {
-        throw new ConsensusException(SHOULD_NOT_HAVE_SENDER_SECOND_PUBLICKEY, {
-          signature: tr.signature,
-          senderId: tr.senderId,
-          applyBlockHeight: tr.applyBlockHeight,
-          type: tr.type,
+        throw new ConsensusException(TRANSACTION_SHOULD_NOT_HAVE_SENDER_SECOND_PUBLICKEY, {
+          signature,
+          senderId,
+          applyBlockHeight,
+          type,
           ...Function_Exception_Detail,
         });
       }
       if (signSignature) {
         throw new ConsensusException(TRANSACTION_SHOULD_NOT_HAVE_SIGN_SIGNATURE, {
-          signature: tr.signature,
-          senderId: tr.senderId,
-          applyBlockHeight: tr.applyBlockHeight,
-          type: tr.type,
+          signature,
+          senderId,
+          applyBlockHeight,
+          type,
           ...Function_Exception_Detail,
         });
       }
@@ -432,18 +442,17 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       });
     }
     const { rangeType, range } = tr;
-    if (rangeType === RANGE_TYPE.EMPTY) {
-      return;
-    }
     const { magic } = this.configHelper;
     switch (rangeType) {
+      case RANGE_TYPE.EMPTY:
+        break;
       case RANGE_TYPE.MULTI_ADDRESS:
-        for (const address of range) {
-          const accountInfo = await accountGetterHelper.getAccountInfo(address);
-          if (accountInfo) {
-            this.checkRecipientAccountStatus(accountInfo);
-          }
-        }
+        // for (const address of range) {
+        //   const accountInfo = await accountGetterHelper.getAccountInfo(address);
+        //   if (accountInfo) {
+        //     this.checkRecipientAccountStatus(accountInfo);
+        //   }
+        // }
         break;
       case RANGE_TYPE.MULTI_DAPPID:
         for (const dappid of range) {
@@ -534,7 +543,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       });
     }
     // dapp 的拥有者不需要购买使用
-    if (dapp.type === DAPP_TYPE.PAID_APP && senderId !== dapp.possessorAddress) {
+    if (dapp.type === DAPP_TYPE.PAID_APP /* && senderId !== dapp.possessorAddress */) {
       // FIXME: 付费一次永久生效
       const isPurchase = await transactionGetterHelper.getPurchaseDApp(senderId, dappid);
       if (!isPurchase) {
@@ -545,7 +554,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       }
     }
     // dapp 的拥有者不需要投票使用
-    if (accountInfo.isAcceptVote && senderId !== dapp.possessorAddress) {
+    if (accountInfo.isAcceptVote /* && senderId !== dapp.possessorAddress */) {
       const curRound = this.blockHelper.calcRoundByHeight(currentBlockHeight);
       // 判断当前账户是否给 dapp 开发者投过票
       const isVote = await accountGetterHelper.getVoteForDelegate(
@@ -799,8 +808,10 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     }
     const powCheckResult = await this.transactionHelper.checkTransactionProfOfWork(
       parseHexToArrayBuffer(transaction.signature),
-      tranSenderCount,
-      participation,
+      {
+        accountParticipation: participation,
+        accountNumberOfTransactionInBlock: tranSenderCount,
+      },
     );
     if (!powCheckResult) {
       throw new ConsensusException(VERIFY_TRANSACTION_POW_OF_WORK_ERROR, {

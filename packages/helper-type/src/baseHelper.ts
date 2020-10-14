@@ -3,7 +3,7 @@ import { Injectable } from "@bfchain/util-dep-inject";
 import { IpHelper } from "@bfchain/util";
 import { AccountBaseHelper } from "@bfchain/core-helper-account-base";
 import { ConfigHelper } from "@bfchain/core-helper-config";
-import { RANGE_TYPE } from "@bfchain/core-model-constants";
+import { RANGE_TYPE, PARITY_BIT_MAPPING } from "@bfchain/core-model-constants";
 
 @Injectable()
 export class BaseHelper {
@@ -471,11 +471,11 @@ export class BaseHelper {
   }
 
   /**
-   * remark.hash 是否合法
+   * 链上链 hash 是否合法
    *
    * @param hash
    */
-  isValidRemarkHash(hash: any) {
+  isValidChainOnChainHash(hash: any) {
     return this.isValidBufferSize(hash, 32);
   }
 
@@ -519,29 +519,74 @@ export class BaseHelper {
   }
 
   /**
-   * 链网络标识符是否合法：大写字母、数字 9-16
+   * 计算校验位
+   *
+   * 每个字符的 ascii 值相加 * 每轮的区块数 * 打块间隔 % （大写字母个数 26 + 数字个数 10）
+   * @param baseString
+   */
+  calcParityBit(baseString: string) {
+    let sum = 0;
+    for (let i = 0; i < baseString.length; i++) {
+      sum += baseString.charCodeAt(i);
+    }
+    return sum % 36;
+  }
+
+  /**
+   * 链网络标识符是否合法：大写字母、数字 6 位，最后一位是校验位
    *
    * @param magic
    */
   isValidChainMagic(magic: string) {
+    // if (!this.isString(magic)) {
+    //   return false;
+    // }
+    // const pattern = new RegExp("^[A-Z0-9]{9,16}$");
+    // return pattern.test(magic);
+
     if (!this.isString(magic)) {
       return false;
     }
-    const pattern = new RegExp("^[A-Z0-9]{9,16}$");
-    return pattern.test(magic);
+    const pattern = new RegExp("^[A-Z0-9]{5}$");
+    if (!pattern.test(magic)) {
+      return false;
+    }
+    const realMagic = magic.slice(0, 4);
+    const parityBit = magic.slice(4);
+    const parityBitCode = this.calcParityBit(realMagic);
+    const mapKey = `P_${parityBitCode}` as BFChainCore.PARITY_BIT_MAPPING;
+    if (PARITY_BIT_MAPPING[mapKey] === undefined) {
+      return false;
+    }
+    return PARITY_BIT_MAPPING[mapKey].toString() === parityBit;
   }
 
   /**
-   * dappid 是否合法：大写字母、数字 17-32
+   * dappid 是否合法：大写字母、数字 8 位，最后一位是校验位
    *
    * @param dappid
    */
   isValidDAppId(dappid: string) {
+    // if (!this.isString(dappid)) {
+    //   return false;
+    // }
+    // const pattern = new RegExp("^[A-Z0-9]{17,32}$");
+    // return pattern.test(dappid);
     if (!this.isString(dappid)) {
       return false;
     }
-    const pattern = new RegExp("^[A-Z0-9]{17,32}$");
-    return pattern.test(dappid);
+    const pattern = new RegExp("^[A-Z0-9]{8}$");
+    if (!pattern.test(dappid)) {
+      return false;
+    }
+    const realDAppid = dappid.slice(0, 7);
+    const parityBit = dappid.slice(7);
+    const parityBitCode = this.calcParityBit(realDAppid);
+    const mapKey = `P_${parityBitCode}` as BFChainCore.PARITY_BIT_MAPPING;
+    if (PARITY_BIT_MAPPING[mapKey] === undefined) {
+      return false;
+    }
+    return PARITY_BIT_MAPPING[mapKey].toString() === parityBit;
   }
 
   /**
@@ -565,11 +610,11 @@ export class BaseHelper {
    *
    * @param username
    */
-  isValidUsername(username: string) {
+  isValidUsername(username: string, chainName = this.configHelper.chainName) {
     if (!this.isValidGenesisUsername(username)) {
       return false;
     }
-    if (username.toLowerCase().includes(this.configHelper.chainName)) {
+    if (username.toLowerCase().includes(chainName)) {
       return false;
     }
     return true;
@@ -634,7 +679,7 @@ export class BaseHelper {
    *
    * @param name
    */
-  isValidLnsName(name: string, chainName?: string) {
+  isValidLnsName(name: string, chainName = this.configHelper.chainName) {
     if (!this.isString(name)) {
       return false;
     }
@@ -663,7 +708,7 @@ export class BaseHelper {
         }
       } else if (i === len - 1) {
         // 根域名必须是本链链名
-        if (item !== (chainName || this.configHelper.chainName)) {
+        if (item !== chainName) {
           return false;
         }
       } else {
@@ -938,5 +983,14 @@ export class BaseHelper {
     } catch (err) {
       return false;
     }
+  }
+
+  /**
+   * tpow 计算公式是否合法
+   *
+   * @param tpowDiffFormula
+   */
+  isValidTpowDiffFormula(tpowDiffFormula: string) {
+    return true;
   }
 }

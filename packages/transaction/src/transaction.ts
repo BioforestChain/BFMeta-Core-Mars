@@ -3,7 +3,7 @@ import {
   AccountBaseHelper,
   ConfigHelper,
   TransactionHelper,
-  TpowHelper,
+  TPOWHelper,
   AsymmetricHelper,
 } from "@bfchain/core-helper";
 import { Injectable, Inject, ModuleStroge, Resolve } from "@bfchain/util";
@@ -28,7 +28,7 @@ const {
 export class TransactionCore {
   constructor(
     public transactionHelper: TransactionHelper,
-    private tpowHelper: TpowHelper,
+    public tpowHelper: TPOWHelper,
     public accountBaseHelper: AccountBaseHelper,
     public asymmetricHelper: AsymmetricHelper,
     @Inject("keypairHelper")
@@ -156,8 +156,6 @@ export class TransactionCore {
     };
     // 生成交易体
     const trs: T = transactionFactory.init(txbody, asset);
-    // 校验交易的 remark
-    this.transactionHelper.verifyTransactionRemarkSize(trs);
     // 生成交易签名
     trs.signatureBuffer = await this.asymmetricHelper.detachedSign(
       trs.getBytes(true, true),
@@ -174,10 +172,10 @@ export class TransactionCore {
     // 在异步中执行交易POW
     if (pow && !skipPow) {
       if (pow.calculator) {
-        pow.calculator(trs, pow, keypair, secondKeypair);
+        await pow.calculator(trs, pow, keypair, secondKeypair);
       } else {
         // 使用内置的计算器去计算
-        this.transactionPowCalculator(trs, pow, keypair, secondKeypair);
+        await this.transactionPowCalculator(trs, pow, keypair, secondKeypair);
       }
     } else {
       // 交易的 nonce 必须携带，默认为 0，并且加入签名
@@ -197,6 +195,15 @@ export class TransactionCore {
     secondKeypair?: BFChainCore.Keypair,
   ) {
     const event = pow.event;
+    const tpowOptions: BFChainCore.TPOWDiffCalculateOptions = {};
+    pow.accountParticipation !== undefined &&
+      (tpowOptions.accountParticipation = pow.accountParticipation);
+    pow.accountPossessMainAssets !== undefined &&
+      (tpowOptions.accountPossessMainAssets = pow.accountPossessMainAssets);
+    pow.accountNumberOfTransactionInBlock !== undefined &&
+      (tpowOptions.accountNumberOfTransactionInBlock = pow.accountNumberOfTransactionInBlock);
+    pow.blockHeight !== undefined && (tpowOptions.blockHeight = pow.blockHeight);
+
     const done = async (break_off: boolean, nonce: number) => {
       const eventName = break_off ? "error" : "done";
       if (!break_off) {
@@ -211,7 +218,7 @@ export class TransactionCore {
       return trs;
     };
     /**难度值 */
-    const diff_BI = this.tpowHelper.calcDiffOfTransactionProfOfWork(pow.count, pow.participation);
+    const diff_BI = this.tpowHelper.calcDiffOfTransactionProfOfWork(tpowOptions);
     /**是否中断 */
     let is_break = false;
     /**记录算力 */
@@ -222,8 +229,8 @@ export class TransactionCore {
         event &&
         (await event.emit("start", {
           diff: diff_BI.toString(),
-          count: pow.count,
-          participation: pow.participation,
+          count: pow.accountNumberOfTransactionInBlock as number,
+          participation: pow.accountParticipation as string,
           transaction: trs,
         }));
       if (res && res.break) {
@@ -238,8 +245,7 @@ export class TransactionCore {
         );
         const checked = await this.tpowHelper.checkTransactionProfOfWork(
           signatureBuffer,
-          pow.count,
-          pow.participation,
+          tpowOptions,
           diff_BI,
         );
         const res = event && (await event.emit("work", { nonce, transaction: trs, offset }));

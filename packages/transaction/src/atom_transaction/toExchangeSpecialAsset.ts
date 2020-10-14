@@ -116,6 +116,13 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
     const toExchangeSpecialAsset = toExchangeSpecialAssetAsset.toExchangeSpecialAsset;
 
     this.verifyExchangeSpecialAsset(toExchangeSpecialAsset);
+
+    if (body.storage) {
+      throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+        prop: "storage",
+        ...Function_Exception_Detail,
+      });
+    }
   }
 
   verifyExchangeSpecialAsset(toExchangeSpecialAsset: BFChainCore.ToExchangeSpecialAssetJSON) {

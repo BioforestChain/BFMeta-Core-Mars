@@ -5,11 +5,11 @@
     "../../config/tsconfig_base/base.tsconfig.@types.json"
   ],
   "compilerOptions": {
-    "declarationDir": "../@types/bfchain__core-helper-transaction-tpow",
+    "declarationDir": "../@types/bfchain__core-helper-transaction-pow",
     "declaration": true,
     "declarationMap": false,
-    "outDir": "../../.cache/helper-transaction-tpow",
-    "tsBuildInfoFile": "../../.cache/helper-transaction-tpow/@types.tsbuildinfo"
+    "outDir": "../../.cache/helper-transaction-pow",
+    "tsBuildInfoFile": "../../.cache/helper-transaction-pow/@types.tsbuildinfo"
   },
   "references": [
     {

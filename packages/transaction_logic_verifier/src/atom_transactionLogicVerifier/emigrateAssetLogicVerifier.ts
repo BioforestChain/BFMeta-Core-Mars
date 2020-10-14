@@ -87,6 +87,10 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       }
       if (signSignature) {
         throw new ConsensusException(CAN_NOT_CARRY_SECOND_SIGNATURE, {
+          signature: transaction.signature,
+          senderId: transaction.senderId,
+          applyBlockHeight: transaction.applyBlockHeight,
+          type: transaction.type,
           ...Function_Exception_Detail,
         });
       }

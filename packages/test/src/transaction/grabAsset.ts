@@ -5,7 +5,6 @@ import {
   GrabAssetTransactionFactory,
   GIFT_DISTRIBUTION_RULE,
   RANGE_TYPE,
-  BFChainCore,
 } from "@bfchain/core";
 import { parseHexToArrayBuffer } from "@bfchain/util";
 import {
@@ -13,14 +12,13 @@ import {
   getSenderWithoutSecondSecret,
   getRecipientWithSecondSecret,
   getRecipientWithoutSecondSecret,
-  getBfchainCoreEntry,
-  getFullBfchainCoreEntry,
   AccountModel,
   getGenesisAccount,
+  getRandomDAppid,
+  getFullBfchainCoreEntry,
 } from "../include";
 
-const bfchainCore = getBfchainCoreEntry();
-const fullBfchainCore = getFullBfchainCoreEntry(57, 128);
+const bfchainCore = getFullBfchainCoreEntry(5, 10);
 
 async function getGiftAssetTransaction(
   sender: AccountModel,
@@ -39,8 +37,8 @@ async function getGiftAssetTransaction(
     timestamp: 770880, // 生成交易时间戳
     fee: "440001", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
-    dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
-    lns: bfchainCore.config.genesisBlock.remark.genesisNodeAddress,
+    dappid: getRandomDAppid(), // 交易所属的 dappid
+    lns: bfchainCore.config.genesisBlock.asset.genesisAsset.genesisLocationName,
     sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic
@@ -112,8 +110,8 @@ async function getGrabAssetTransaction(
     timestamp: 770880, // 生成交易时间戳
     fee: "0", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
-    dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
-    lns: bfchainCore.config.genesisBlock.remark.genesisNodeAddress,
+    dappid: getRandomDAppid(), // 交易所属的 dappid
+    lns: bfchainCore.config.genesisBlock.asset.genesisAsset.genesisLocationName,
     sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic
@@ -138,7 +136,7 @@ async function getGrabAssetTransaction(
   const giftAsset = giftAssetTrs.asset.giftAsset;
 
   const grabAsset: BFChainCore.GrabAssetJSON = {
-    blockSignature: fullBfchainCore.config.genesisBlock.signature,
+    blockSignature: bfchainCore.config.genesisBlock.signature,
     transactionSignature: giftAssetTrs.signature,
     amount: "0", // 交易资产数量
     giftAsset,

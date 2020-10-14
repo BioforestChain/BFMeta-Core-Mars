@@ -10,6 +10,7 @@ import {
   getSenderWithoutSecondSecret,
   getGenesisAccount,
   AccountModel,
+  getRandomDAppid,
   getBfchainCoreEntry,
 } from "../include";
 
@@ -28,8 +29,8 @@ async function getToExchangeSpecialAssetTransaction(sender: AccountModel, recipi
     timestamp: 770880, // 生成交易时间戳
     fee: "78622", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
-    dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
-    lns: bfchainCore.config.genesisBlock.remark.genesisNodeAddress,
+    dappid: getRandomDAppid(), // 交易所属的 dappid
+    lns: bfchainCore.config.genesisBlock.asset.genesisAsset.genesisLocationName,
     sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic
@@ -54,7 +55,7 @@ async function getToExchangeSpecialAssetTransaction(sender: AccountModel, recipi
       beExchangeSource: bfchainCore.config.magic,
       toExchangeChainName: "bfchain",
       beExchangeChainName: "bfchain",
-      toExchangeAsset: bfchainCore.config.genesisBlock.remark.genesisNodeAddress,
+      toExchangeAsset: bfchainCore.config.genesisBlock.asset.genesisAsset.genesisLocationName,
       beExchangeAsset: "BFT",
       exchangeNumber: "1000000",
       exchangeAssetType: SPECIAL_ASSET_TYPE.LOCATION_NAME,
