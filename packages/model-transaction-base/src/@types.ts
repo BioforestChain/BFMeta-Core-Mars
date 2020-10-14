@@ -212,7 +212,7 @@ declare namespace BFChainCore {
   }
   interface SignForAssetJSON {
     transactionSignature: string;
-    thirdPartySignatures: AccountSignatureJSON[];
+    thirdPartySignature: AccountSignatureJSON;
     trustSenderId: string;
     trustRecipientId: string;
     /**委托信息 */

@@ -154,7 +154,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
       trustAsset,
       trustSenderId,
       trustRecipientId,
-      thirdPartySignatures,
+      thirdPartySignature,
       transactionSignature,
     } = signForAsset;
     if (!transactionSignature) {
@@ -222,17 +222,17 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
       });
     }
 
-    if (!thirdPartySignatures) {
+    if (!thirdPartySignature) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "thirdPartySignatures",
         ...SignForAssetAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isValidThirdPartySignatures(thirdPartySignatures)) {
+    if (!baseHelper.isValidThirdPartySignature(thirdPartySignature)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "thirdPartySignatures",
-        type: "third party signatures",
+        prop: "thirdPartySignature",
+        type: "third party signature",
         ...SignForAssetAsset_Exception_Detail,
       });
     }
@@ -242,28 +242,11 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
      */
     await this.trustAssetTransactionFactory.verifyTrustAsset(trustAsset);
 
-    const { numberOfSignFor, trustees } = trustAsset;
-    const thirdPartySignatureLength = thirdPartySignatures.length;
-
-    if (numberOfSignFor > thirdPartySignatureLength) {
-      throw new ArgumentIllegalException(PROP_LENGTH_SHOULD_GTE_FIELD, {
-        prop: `thirdPartySignatures length ${thirdPartySignatureLength}`,
-        field: numberOfSignFor,
-        ...SignForAssetAsset_Exception_Detail,
-      });
-    }
+    const { trustees } = trustAsset;
 
     const tempTrustees = [...trustees];
     tempTrustees[tempTrustees.length] = trustSenderId;
     tempTrustees[tempTrustees.length] = trustRecipientId;
-
-    if (thirdPartySignatureLength > tempTrustees.length) {
-      throw new ArgumentIllegalException(PROP_LENGTH_SHOULD_LTE_FIELD, {
-        prop: `thirdPartySignatures length ${thirdPartySignatureLength}`,
-        field: tempTrustees.length,
-        ...SignForAssetAsset_Exception_Detail,
-      });
-    }
 
     if (!tempTrustees.includes(senderId)) {
       throw new ArgumentIllegalException(NOT_MATCH, {
@@ -277,60 +260,59 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
 
     const transactionSignatureBuffer = parseHexToArrayBuffer(transactionSignature);
     const trusteePublicKeys: string[] = [];
-    for (const thirdPartySignature of thirdPartySignatures) {
-      const { publicKey, signature, secondPublicKey, signSignature } = thirdPartySignature;
-      if (trusteePublicKeys.includes(publicKey)) {
-        throw new ArgumentIllegalException(SHOULD_NOT_DUPLICATE, {
-          prop: `thirdPartySignatures ${publicKey}`,
-          ...SignForAssetAsset_Exception_Detail,
-        });
-      }
-      trusteePublicKeys[trusteePublicKeys.length] = publicKey;
-      const address = await accountBaseHelper.getAddressFromPublicKeyString(publicKey);
-      if (!tempTrustees.includes(address)) {
-        throw new ArgumentIllegalException(NOT_MATCH, {
-          to_compare_prop: "tempTrustees",
-          be_compare_prop: `address ${address}`,
-          to_target: "thirdPartySignature",
-          be_target: "trustees",
-          ...SignForAssetAsset_Exception_Detail,
-        });
-      }
-      const signatureBuffer = parseHexToArrayBuffer(signature);
+
+    const { publicKey, signature, secondPublicKey, signSignature } = thirdPartySignature;
+    if (trusteePublicKeys.includes(publicKey)) {
+      throw new ArgumentIllegalException(SHOULD_NOT_DUPLICATE, {
+        prop: `thirdPartySignature ${publicKey}`,
+        ...SignForAssetAsset_Exception_Detail,
+      });
+    }
+    trusteePublicKeys[trusteePublicKeys.length] = publicKey;
+    const address = await accountBaseHelper.getAddressFromPublicKeyString(publicKey);
+    if (!tempTrustees.includes(address)) {
+      throw new ArgumentIllegalException(NOT_MATCH, {
+        to_compare_prop: "tempTrustees",
+        be_compare_prop: `address ${address}`,
+        to_target: "thirdPartySignature",
+        be_target: "trustees",
+        ...SignForAssetAsset_Exception_Detail,
+      });
+    }
+    const signatureBuffer = parseHexToArrayBuffer(signature);
+    if (
+      !(await transactionHelper.verifyThirdPartySignature({
+        secretPublicKey: parseHexToArrayBuffer(publicKey),
+        signatureBuffer,
+        transactionSignatureBuffer,
+        senderId: trustSenderId,
+        recipientId: trustRecipientId,
+      }))
+    ) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: `signature ${signature}`,
+        type: "signature",
+        ...Function_Exception_Detail,
+        target: `thirdPartySignature`,
+      });
+    }
+    if (secondPublicKey && signSignature) {
       if (
         !(await transactionHelper.verifyThirdPartySignature({
-          secretPublicKey: parseHexToArrayBuffer(publicKey),
-          signatureBuffer,
+          secretPublicKey: parseHexToArrayBuffer(secondPublicKey),
+          signatureBuffer: parseHexToArrayBuffer(signSignature),
           transactionSignatureBuffer,
           senderId: trustSenderId,
           recipientId: trustRecipientId,
+          thirdPartySignatureBuffer: signatureBuffer,
         }))
       ) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: `signature ${signature}`,
+          prop: `signSignature ${signSignature}`,
           type: "signature",
           ...Function_Exception_Detail,
-          target: `thirdPartySignatures[${thirdPartySignatures.indexOf(thirdPartySignature)}]`,
+          target: `thirdPartySignature`,
         });
-      }
-      if (secondPublicKey && signSignature) {
-        if (
-          !(await transactionHelper.verifyThirdPartySignature({
-            secretPublicKey: parseHexToArrayBuffer(secondPublicKey),
-            signatureBuffer: parseHexToArrayBuffer(signSignature),
-            transactionSignatureBuffer,
-            senderId: trustSenderId,
-            recipientId: trustRecipientId,
-            thirdPartySignatureBuffer: signatureBuffer,
-          }))
-        ) {
-          throw new ArgumentIllegalException(PROP_IS_INVALID, {
-            prop: `signSignature ${signSignature}`,
-            type: "signature",
-            ...Function_Exception_Detail,
-            target: `thirdPartySignatures[${thirdPartySignatures.indexOf(thirdPartySignature)}]`,
-          });
-        }
       }
     }
   }

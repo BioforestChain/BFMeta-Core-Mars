@@ -142,18 +142,10 @@ export class BaseHelper {
   /**
    * 第三方签名是否合法
    *
-   * @param thirdPartySignatures
+   * @param thirdPartySignature
    */
-  isValidThirdPartySignatures(thirdPartySignatures: any) {
-    if (!this.isArray(thirdPartySignatures)) {
-      return false;
-    }
-    for (const thirdPartySignature of thirdPartySignatures) {
-      if (!this.isValidAccountSignature(thirdPartySignature)) {
-        return false;
-      }
-    }
-    return true;
+  isValidThirdPartySignature(thirdPartySignature: any) {
+    return this.isValidAccountSignature(thirdPartySignature);
   }
 
   /**
