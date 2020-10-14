@@ -195,7 +195,7 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
       });
     }
 
-    if (trustees.length <= 0) {
+    if (trustees.length < 0) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: `trustees length ${trustees.length}`,
         ...TrustAssetAsset_Exception_Detail,

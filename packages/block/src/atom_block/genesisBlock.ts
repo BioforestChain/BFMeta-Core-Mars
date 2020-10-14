@@ -294,18 +294,24 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       });
     }
 
-    if (!baseHelper.isValidRate(genesisAsset.accountParticipationWeightRatio)) {
+    if (
+      !baseHelper.isValidAccountParticipationWeightRatio(
+        genesisAsset.accountParticipationWeightRatio,
+      )
+    ) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: `accountParticipationWeightRatio ${genesisAsset.accountParticipationWeightRatio}`,
-        type: "rate",
+        type: "accountParticipationWeightRatio",
         ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isValidRate(genesisAsset.blockParticipationWeightRatio)) {
+    if (
+      !baseHelper.isValidBlockParticipationWeightRatio(genesisAsset.blockParticipationWeightRatio)
+    ) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: `blockParticipationWeightRatio ${genesisAsset.blockParticipationWeightRatio}`,
-        type: "rate",
+        type: "blockParticipationWeightRatio",
         ...GenesisBlockAsset_Exception_Detail,
       });
     }
@@ -477,10 +483,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       });
     }
 
-    const {
-      growthFactor,
-      participationRatio,
-    } = genesisAsset.transactionPowOfWorkConfig;
+    const { growthFactor, participationRatio } = genesisAsset.transactionPowOfWorkConfig;
     // 校验交易POW的难度增长系数
     {
       const {

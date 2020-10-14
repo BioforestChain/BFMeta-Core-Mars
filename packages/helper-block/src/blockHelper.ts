@@ -513,19 +513,24 @@ export class BlockHelper {
 
   /**计算账户一轮下来对应的票数 */
   calcAccountRoundEquity(accTxCount: number, accBalance: string, roundLastBlock: RoundLastBlock) {
-    const { prevWeight, nextWeight } = this.config.accountParticipationWeightRatio;
+    const {
+      balanceWeight,
+      numberOfTransactionsWeight,
+    } = this.config.accountParticipationWeightRatio;
     const tradingEquity =
-      BigInt(accTxCount) * BigInt(nextWeight) * BigInt(roundLastBlock.asset.roundLastAsset.rate);
-    const equity = BigInt(accBalance) * BigInt(prevWeight) + tradingEquity;
+      BigInt(accTxCount) *
+      BigInt(numberOfTransactionsWeight) *
+      BigInt(roundLastBlock.asset.roundLastAsset.rate);
+    const equity = BigInt(accBalance) * BigInt(balanceWeight) + tradingEquity;
     return equity.toString() as string;
   }
 
   /**计算区块的参与度 */
   calcBlockParticipation(args: { totalChainAsset: bigint; numberOfTransactions: number }) {
     const { totalChainAsset, numberOfTransactions } = args;
-    const { prevWeight, nextWeight } = this.config.blockParticipationWeightRatio;
-    const jsbiX = BigInt(totalChainAsset) * BigInt(prevWeight);
-    const jsbiY = BigInt(numberOfTransactions) * BigInt(nextWeight);
+    const { balanceWeight, numberOfTransactionsWeight } = this.config.blockParticipationWeightRatio;
+    const jsbiX = BigInt(totalChainAsset) * BigInt(balanceWeight);
+    const jsbiY = BigInt(numberOfTransactions) * BigInt(numberOfTransactionsWeight);
     return (jsbiX + jsbiY).toString();
   }
 

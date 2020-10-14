@@ -77,7 +77,48 @@ export class TransactionPowOfWorkConfigModel extends Message<TransactionPowOfWor
   toJSON() {
     return {
       growthFactor: this.growthFactor.toJSON(),
-      participationRatio: this.participationRatio.toJSON()
+      participationRatio: this.participationRatio.toJSON(),
+    };
+  }
+}
+
+/**
+ * 比例模型
+ */
+@Type.d("AccountParticipationWeightRatioModel")
+export class AccountParticipationWeightRatioModel
+  extends Message<AccountParticipationWeightRatioModel>
+  implements BFChainUtil.JSONAble<BFChainCore.AccountParticipationWeightRatioJSON> {
+  /**账户持有权益量权重 */
+  @Field.d(1, "uint32")
+  balanceWeight!: number;
+  /**账户事件量权重 */
+  @Field.d(2, "uint32")
+  numberOfTransactionsWeight!: number;
+  toJSON() {
+    return {
+      balanceWeight: this.balanceWeight,
+      numberOfTransactionsWeight: this.numberOfTransactionsWeight,
+    };
+  }
+}
+
+/**
+ * 比例模型
+ */
+@Type.d("BlockParticipationWeightRatioModel")
+export class BlockParticipationWeightRatioModel extends Message<BlockParticipationWeightRatioModel>
+  implements BFChainUtil.JSONAble<BFChainCore.BlockParticipationWeightRatioJSON> {
+  /**块内涉及的权益总量权重 */
+  @Field.d(1, "uint32")
+  balanceWeight!: number;
+  /**块内事件量权重 */
+  @Field.d(2, "uint32")
+  numberOfTransactionsWeight!: number;
+  toJSON() {
+    return {
+      balanceWeight: this.balanceWeight,
+      numberOfTransactionsWeight: this.numberOfTransactionsWeight,
     };
   }
 }
@@ -168,11 +209,11 @@ export class GenesisAssetModel extends RoundDelegateModel<GenesisAssetModel>
   @Field.d(GenesisAssetModel.INC++, RewardPerBlock, "required")
   rewardPerBlock!: RewardPerBlock;
   /**账户参与度权重比 */
-  @Field.d(GenesisAssetModel.INC++, RateModel, "required")
-  accountParticipationWeightRatio!: RateModel;
+  @Field.d(GenesisAssetModel.INC++, AccountParticipationWeightRatioModel, "required")
+  accountParticipationWeightRatio!: AccountParticipationWeightRatioModel;
   /**区块参与度权重比 */
-  @Field.d(GenesisAssetModel.INC++, RateModel, "required")
-  blockParticipationWeightRatio!: RateModel;
+  @Field.d(GenesisAssetModel.INC++, BlockParticipationWeightRatioModel, "required")
+  blockParticipationWeightRatio!: BlockParticipationWeightRatioModel;
   // /**tpow 计算公式 */
   // @Field.d(GenesisAssetModel.INC++, "string", "required")
   // tpowDiffFormula!: string;

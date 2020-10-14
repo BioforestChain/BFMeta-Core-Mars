@@ -965,6 +965,26 @@ export class BaseHelper {
     return true;
   }
 
+  isValidAccountParticipationWeightRatio(
+    accountParticipationWeightRatio: BFChainCore.AccountParticipationWeightRatioJSON,
+  ) {
+    if (!accountParticipationWeightRatio) {
+      return false;
+    }
+    const { balanceWeight, numberOfTransactionsWeight } = accountParticipationWeightRatio;
+    return this.isNaturalNumber(balanceWeight) && this.isNaturalNumber(numberOfTransactionsWeight);
+  }
+
+  isValidBlockParticipationWeightRatio(
+    blockParticipationWeightRatio: BFChainCore.BlockParticipationWeightRatioJSON,
+  ) {
+    if (!blockParticipationWeightRatio) {
+      return false;
+    }
+    const { balanceWeight, numberOfTransactionsWeight } = blockParticipationWeightRatio;
+    return this.isNaturalNumber(balanceWeight) && this.isNaturalNumber(numberOfTransactionsWeight);
+  }
+
   /**
    * 兑换比例是否合法
    *

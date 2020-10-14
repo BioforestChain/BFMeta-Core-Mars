@@ -124,6 +124,17 @@ declare namespace BFChainCore {
     growthFactor: FractionJSON<string>;
     participationRatio: FractionJSON;
   }
+
+  interface AccountParticipationWeightRatioJSON {
+    balanceWeight: number;
+    numberOfTransactionsWeight: number;
+  }
+
+  interface BlockParticipationWeightRatioJSON {
+    balanceWeight: number;
+    numberOfTransactionsWeight: number;
+  }
+
   interface GenesisAssetJSON extends RoundDelegateJSON {
     chainName: string;
     assetType: string;
@@ -149,8 +160,8 @@ declare namespace BFChainCore {
     rewardPercent: RewardPercentJSON;
     ports: PortsJSON;
     rewardPerBlock: RewardPerBlockJSON;
-    accountParticipationWeightRatio: RateJSON<string>;
-    blockParticipationWeightRatio: RateJSON<string>;
+    accountParticipationWeightRatio: AccountParticipationWeightRatioJSON;
+    blockParticipationWeightRatio: BlockParticipationWeightRatioJSON;
     // tpowDiffFormula: string;
     averageComputingPower: number;
     tpowOfWorkExemptionBlocks: number;

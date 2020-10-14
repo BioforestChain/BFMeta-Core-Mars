@@ -125,12 +125,12 @@ export const mainChainAssetData: BFChainCore.GenesisAssetJSON = {
     ],
   },
   accountParticipationWeightRatio: {
-    prevWeight: "10000",
-    nextWeight: "1",
+    balanceWeight: 5000,
+    numberOfTransactionsWeight: 1,
   },
   blockParticipationWeightRatio: {
-    prevWeight: "10000",
-    nextWeight: "1",
+    balanceWeight: 5000,
+    numberOfTransactionsWeight: 1,
   },
   // tpowDiffFormula: `( accountParticipation + 10 * accountNumberOfTransactionInBlock ) / 2 ** 3`,
   averageComputingPower: 125,
@@ -241,12 +241,12 @@ export const registerchainAssetData: BFChainCore.GenesisAssetJSON = {
     ],
   },
   accountParticipationWeightRatio: {
-    prevWeight: "10000",
-    nextWeight: "1",
+    balanceWeight: 5000,
+    numberOfTransactionsWeight: 1,
   },
   blockParticipationWeightRatio: {
-    prevWeight: "10000",
-    nextWeight: "1",
+    balanceWeight: 5000,
+    numberOfTransactionsWeight: 1,
   },
   // tpowDiffFormula: `${TPOW_AUXILIARY_SYMBOL.LEFT_BRACKET} ${TPOW_PARAMETER.ACCOUNT_PARTICIPATION} ${TPOW_OPERATOR.MULTIPLY} ${TPOW_PARAMETER.ACCOUNT_NUMBER_OF_TRANSACTION_IN_BLOCK} ${TPOW_AUXILIARY_SYMBOL.RIGHT_BRACKET}`,
   averageComputingPower: 125,

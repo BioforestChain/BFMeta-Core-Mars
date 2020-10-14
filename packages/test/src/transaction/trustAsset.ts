@@ -75,14 +75,15 @@ async function getTrustAssetTransaction(
   console.log(xx);
 }
 (async () => {
+  const trustees = [getGenesisAccount().address];
   await getTrustAssetTransaction(
     getSenderWithSecondSecret(),
     getRecipientWithSecondSecret().address,
-    [getGenesisAccount().address],
+    trustees,
   );
   await getTrustAssetTransaction(
     getSenderWithoutSecondSecret(),
     getRecipientWithoutSecondSecret().address,
-    [getGenesisAccount().address],
+    trustees,
   );
 })();
