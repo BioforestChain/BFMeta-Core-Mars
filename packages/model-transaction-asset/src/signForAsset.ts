@@ -5,7 +5,6 @@ import { AccountSignatureModel } from "./accountSignature";
 import { cacheBytesGetter } from "@bfchain/core-model-cacher";
 
 /**缓存thirdSignatureList解析结果 */
-const BUFFER_LIST_SIGNATURE_LIST_WM = new WeakMap<Uint8Array[], AccountSignatureModel[]>();
 const SIGNATURE_BUFFER_WM = new WeakMap<AccountSignatureModel, Uint8Array>();
 
 /**
@@ -13,8 +12,7 @@ const SIGNATURE_BUFFER_WM = new WeakMap<AccountSignatureModel, Uint8Array>();
  *
  */
 @Type.d("SignForAssetModel")
-export class SignForAssetModel
-  extends Message<SignForAssetModel>
+export class SignForAssetModel extends Message<SignForAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.SignForAssetJSON> {
   static INC = 1;
   /**要签收的委托交易的签名 */
@@ -27,31 +25,21 @@ export class SignForAssetModel
     this.transactionSignatureBuffer = parseHexToArrayBuffer(value);
   }
   /**第三方账户签名 */
-  @Field.d(SignForAssetModel.INC++, "bytes", "repeated")
-  signatureBufferList!: Uint8Array[];
-  public get thirdPartySignatures() {
-    const { signatureBufferList } = this;
-    let signatureList = BUFFER_LIST_SIGNATURE_LIST_WM.get(signatureBufferList);
-    if (!signatureList) {
-      signatureList = this.signatureBufferList.map((buf) => {
-        const signature = AccountSignatureModel.decode(buf);
-        SIGNATURE_BUFFER_WM.set(signature, buf);
-        return signature;
-      });
-    }
-    return signatureList;
+  @Field.d(SignForAssetModel.INC++, "bytes")
+  thirdPartySignatureBuffer!: Uint8Array;
+  public get thirdPartySignature() {
+    const { thirdPartySignatureBuffer } = this;
+    const signature = AccountSignatureModel.decode(thirdPartySignatureBuffer);
+    SIGNATURE_BUFFER_WM.set(signature, thirdPartySignatureBuffer);
+    return signature;
   }
-  public set thirdPartySignatures(signatureList: AccountSignatureModel[]) {
-    const bufList = signatureList.map((signature) => {
-      let buf = SIGNATURE_BUFFER_WM.get(signature);
-      if (!buf) {
-        buf = AccountSignatureModel.encode(signature).finish();
-        SIGNATURE_BUFFER_WM.set(signature, buf);
-      }
-      return buf;
-    });
-    BUFFER_LIST_SIGNATURE_LIST_WM.set(bufList, signatureList);
-    this.signatureBufferList = bufList;
+  public set thirdPartySignature(signature: AccountSignatureModel) {
+    let buf = SIGNATURE_BUFFER_WM.get(signature);
+    if (!buf) {
+      buf = AccountSignatureModel.encode(signature).finish();
+      SIGNATURE_BUFFER_WM.set(signature, buf);
+    }
+    this.thirdPartySignatureBuffer = buf;
   }
 
   /**委托交易的发起账户地址 */
@@ -76,9 +64,7 @@ export class SignForAssetModel
       transactionSignature: this.transactionSignature,
       trustSenderId: this.trustSenderId,
       trustRecipientId: this.trustRecipientId,
-      thirdPartySignatures: this.thirdPartySignatures.map((thirdPartySignature) =>
-        thirdPartySignature.toJSON(),
-      ),
+      thirdPartySignature: this.thirdPartySignature.toJSON(),
       trustAsset: this.trustAsset.toJSON(),
     };
     return res;
@@ -90,14 +76,8 @@ export class SignForAssetModel
     const res = super.fromObject(object) as SignForAssetModel;
     if (res !== object) {
       object.transactionSignature && (res.transactionSignature = object.transactionSignature);
-      const results: AccountSignatureModel[] = [];
-      if (object.thirdPartySignatures) {
-        const thirdPartySignatures = object.thirdPartySignatures;
-        for (const thirdPartySignature of thirdPartySignatures) {
-          results[results.length] = AccountSignatureModel.fromObject(thirdPartySignature);
-        }
-      }
-      res.thirdPartySignatures = results;
+      object.thirdPartySignature &&
+        (res.thirdPartySignature = AccountSignatureModel.fromObject(object.thirdPartySignature));
     }
     return (res as unknown) as T;
   }
@@ -108,8 +88,7 @@ export class SignForAssetModel
  *
  */
 @Type.d("SignForAssetAssetModel")
-export class SignForAssetAssetModel
-  extends Message<SignForAssetAssetModel>
+export class SignForAssetAssetModel extends Message<SignForAssetAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.SignForAssetAssetJSON> {
   @Field.d(1, SignForAssetModel)
   signForAsset!: SignForAssetModel;
