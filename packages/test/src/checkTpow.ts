@@ -4,17 +4,30 @@ import { getBfchainCoreEntry } from "./include";
 const bfchainCore = getBfchainCoreEntry();
 
 async function checkTpow() {
+  // const powCheckResult = await bfchainCore.transactionHelper.checkTransactionProfOfWork(
+  //   parseHexToArrayBuffer(
+  //     "79754f436f291868c85772b6450ef3481907181c77704c55cd7e263dd3cedc160d93a573839eac3702a496df6a57c06735e89f5b5fc221a6fb13f1f725f1d807",
+  //   ),
+  //   { accountNumberOfTransactionInBlock: 1, accountParticipation: "17662716016028" },
+  // );
+
+  // const diff = await bfchainCore.transactionHelper.calcDiffOfTransactionProfOfWork({
+  //   accountNumberOfTransactionInBlock: 1,
+  //   accountParticipation: "17662716016028",
+  // });
+
   const powCheckResult = await bfchainCore.transactionHelper.checkTransactionProfOfWork(
     parseHexToArrayBuffer(
       "79754f436f291868c85772b6450ef3481907181c77704c55cd7e263dd3cedc160d93a573839eac3702a496df6a57c06735e89f5b5fc221a6fb13f1f725f1d807",
     ),
-    { accountNumberOfTransactionInBlock: 1, accountParticipation: "17662716016028" },
+    1,
+    "17662716016028",
   );
 
-  const diff = await bfchainCore.transactionHelper.calcDiffOfTransactionProfOfWork({
-    accountNumberOfTransactionInBlock: 1,
-    accountParticipation: "17662716016028",
-  });
+  const diff = await bfchainCore.transactionHelper.calcDiffOfTransactionProfOfWork(
+    1,
+    "17662716016028",
+  );
 
   console.log(powCheckResult, diff);
 
@@ -62,10 +75,11 @@ async function calcMilestone() {
       // 验证交易的 pow
       // const { height, transaction } = trsDocs[i];
       // debugger;
-      const diff = await transactionHelper.calcDiffOfTransactionProfOfWork({
-        accountNumberOfTransactionInBlock: i,
-        accountParticipation: senderEquity,
-      });
+      // const diff = await transactionHelper.calcDiffOfTransactionProfOfWork({
+      //   accountNumberOfTransactionInBlock: i,
+      //   accountParticipation: senderEquity,
+      // });
+      const diff = await transactionHelper.calcDiffOfTransactionProfOfWork(i, senderEquity);
       if (diff > BigInt(10000) && !isSeperate) {
         results.push({
           senderEquity: "=".repeat(senderEquity.length + 1),

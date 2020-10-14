@@ -639,10 +639,15 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
     const blockTrsItems = await getTrsInBlock(height, statisticsInfo);
 
     eventEmitter.on("verifyTransactionProfOfWork", ({ transaction, count }) => {
-      return bfchainCore.transactionHelper.checkTransactionProfOfWork(transaction.signatureBuffer, {
-        accountNumberOfTransactionInBlock: count,
-        accountParticipation: "0",
-      });
+      // return bfchainCore.transactionHelper.checkTransactionProfOfWork(transaction.signatureBuffer, {
+      //   accountNumberOfTransactionInBlock: count,
+      //   accountParticipation: "0",
+      // });
+      return bfchainCore.transactionHelper.checkTransactionProfOfWork(
+        transaction.signatureBuffer,
+        count,
+        "0",
+      );
     });
     const commonBlock: BFChainCore.Block = await bfchainCore.block.generateBlock<CommonBlock>(
       CommonBlockFactory,

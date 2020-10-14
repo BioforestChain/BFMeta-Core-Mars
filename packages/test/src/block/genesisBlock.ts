@@ -43,7 +43,7 @@ const argv = optimist
   .alias("o", "out")
   .alias("p", "genesisblock out path")
   .default("b", 57)
-  .default("f", 10)
+  .default("f", 128)
   .default("ri", false)
   .default("rm", false).argv;
 console.log(argv);
@@ -75,10 +75,10 @@ mainChainAssetData.blockPerRound = blockPerRound;
 mainChainAssetData.tpowOfWorkExemptionBlocks = blockPerRound;
 mainChainAssetData.delegates = blockPerRound * 2;
 mainChainAssetData.forgeInterval = forgeInterval;
-mainChainAssetData.tpowOfWorkExemptionBlocks = 0;
-mainChainAssetData.tpowDiffFormula = mainChainAssetData.tpowDiffFormula
-  .trim()
-  .replace(/\s+/gi, " ");
+// mainChainAssetData.tpowOfWorkExemptionBlocks = 0;
+// mainChainAssetData.tpowDiffFormula = mainChainAssetData.tpowDiffFormula
+//   .trim()
+//   .replace(/\s+/gi, " ");
 
 if (randomMagic) {
   mainChainAssetData.magic = getRandomMagic();
@@ -95,9 +95,9 @@ const core = BFChainCoreFactory({
   ed2curveHelper,
 });
 
-if (!core.transaction.tpowHelper.isValidTpowDiffFormula(mainChainAssetData.tpowDiffFormula)) {
-  throw new Error(`tpowDiffFormula 不合法`);
-}
+// if (!core.transaction.tpowHelper.isValidTpowDiffFormula(mainChainAssetData.tpowDiffFormula)) {
+//   throw new Error(`tpowDiffFormula 不合法`);
+// }
 
 const statistics = Resolve(BlockBaseStatisticsHelper, core.moduleMap);
 
@@ -113,9 +113,13 @@ const _powCount: { [add: string]: number } = {};
 function getPOWInfo<T extends Transaction>(address: string) {
   const count = _powCount[address] || 0;
   _powCount[address] = count + 1;
+  // const res: BFChainCore.TransactionPoWOptions<T> = {
+  //   accountNumberOfTransactionInBlock: count,
+  //   accountParticipation: "0",
+  // };
   const res: BFChainCore.TransactionPoWOptions<T> = {
-    accountNumberOfTransactionInBlock: count,
-    accountParticipation: "0",
+    count,
+    participation: "0",
   };
   return res;
 }
@@ -716,15 +720,22 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
     // eventEmitter.on("fee", v => {
     //   accountBalanceManager.modify(v.applyInfo.address, v.applyInfo.amount);
     // });
-    eventEmitter.on("verifyTransactionProfOfWork", async ({ transaction, count }) => {
-      const result = await core.transactionHelper.checkTransactionProfOfWork(
+    // eventEmitter.on("verifyTransactionProfOfWork", async ({ transaction, count }) => {
+    //   const result = await core.transactionHelper.checkTransactionProfOfWork(
+    //     transaction.signatureBuffer,
+    //     {
+    //       accountNumberOfTransactionInBlock: count,
+    //       accountParticipation: "0",
+    //     },
+    //   );
+    //   return result;
+    // });
+    eventEmitter.on("verifyTransactionProfOfWork", ({ transaction, count }) => {
+      return core.transactionHelper.checkTransactionProfOfWork(
         transaction.signatureBuffer,
-        {
-          accountNumberOfTransactionInBlock: count,
-          accountParticipation: "0",
-        },
+        count,
+        "0",
       );
-      return result;
     });
     //#endregion
     const genesisBlock = await core.block.generateBlock(

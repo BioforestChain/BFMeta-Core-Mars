@@ -191,7 +191,8 @@ export class TPOWDiffHelper {
    * @param params
    */
   private checkAndGetCalcTpowDiffParam(params: BFChainCore.TPOWDiffCalculateOptions) {
-    const paramList = this.getFormulaList(this.config.tpowDiffFormula);
+    // FIXME: @wmc
+    const paramList = this.getFormulaList((this.config as any).tpowDiffFormula);
     const formulas: string[] = [];
     for (const param of paramList) {
       // 运算符

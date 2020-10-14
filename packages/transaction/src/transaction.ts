@@ -195,14 +195,14 @@ export class TransactionCore {
     secondKeypair?: BFChainCore.Keypair,
   ) {
     const event = pow.event;
-    const tpowOptions: BFChainCore.TPOWDiffCalculateOptions = {};
-    pow.accountParticipation !== undefined &&
-      (tpowOptions.accountParticipation = pow.accountParticipation);
-    pow.accountPossessMainAssets !== undefined &&
-      (tpowOptions.accountPossessMainAssets = pow.accountPossessMainAssets);
-    pow.accountNumberOfTransactionInBlock !== undefined &&
-      (tpowOptions.accountNumberOfTransactionInBlock = pow.accountNumberOfTransactionInBlock);
-    pow.blockHeight !== undefined && (tpowOptions.blockHeight = pow.blockHeight);
+    // const tpowOptions: BFChainCore.TPOWDiffCalculateOptions = {};
+    // pow.accountParticipation !== undefined &&
+    //   (tpowOptions.accountParticipation = pow.accountParticipation);
+    // pow.accountPossessMainAssets !== undefined &&
+    //   (tpowOptions.accountPossessMainAssets = pow.accountPossessMainAssets);
+    // pow.accountNumberOfTransactionInBlock !== undefined &&
+    //   (tpowOptions.accountNumberOfTransactionInBlock = pow.accountNumberOfTransactionInBlock);
+    // pow.blockHeight !== undefined && (tpowOptions.blockHeight = pow.blockHeight);
 
     const done = async (break_off: boolean, nonce: number) => {
       const eventName = break_off ? "error" : "done";
@@ -218,7 +218,8 @@ export class TransactionCore {
       return trs;
     };
     /**难度值 */
-    const diff_BI = this.tpowHelper.calcDiffOfTransactionProfOfWork(tpowOptions);
+    // const diff_BI = this.tpowHelper.calcDiffOfTransactionProfOfWork(tpowOptions);
+    const diff_BI = this.tpowHelper.calcDiffOfTransactionProfOfWork(pow.count, pow.participation);
     /**是否中断 */
     let is_break = false;
     /**记录算力 */
@@ -229,8 +230,10 @@ export class TransactionCore {
         event &&
         (await event.emit("start", {
           diff: diff_BI.toString(),
-          count: pow.accountNumberOfTransactionInBlock as number,
-          participation: pow.accountParticipation as string,
+          count: pow.count,
+          participation: pow.participation,
+          // count: pow.accountNumberOfTransactionInBlock as number,
+          // participation: pow.accountParticipation as string,
           transaction: trs,
         }));
       if (res && res.break) {
@@ -245,7 +248,9 @@ export class TransactionCore {
         );
         const checked = await this.tpowHelper.checkTransactionProfOfWork(
           signatureBuffer,
-          tpowOptions,
+          pow.count,
+          pow.participation,
+          // tpowOptions,
           diff_BI,
         );
         const res = event && (await event.emit("work", { nonce, transaction: trs, offset }));

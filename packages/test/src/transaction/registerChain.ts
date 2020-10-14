@@ -80,8 +80,10 @@ function getPOWInfo<T extends Transaction>(address: string) {
   const count = _powCount[address] || 0;
   _powCount[address] = count + 1;
   const res: BFChainCore.TransactionPoWOptions<T> = {
-    accountNumberOfTransactionInBlock: count,
-    accountParticipation: "0",
+    // accountNumberOfTransactionInBlock: count,
+    // accountParticipation: "0",
+    count,
+    participation: "0",
   };
   return res;
 }
@@ -641,11 +643,14 @@ const getTxs = (address: string) => {
     );
     eventEmitter.on("verifyTransactionProfOfWork", ({ transaction, count }) => {
       return registerBfchainCore.transactionHelper.checkTransactionProfOfWork(
+        // transaction.signatureBuffer,
+        // {
+        //   accountParticipation: "0",
+        //   accountNumberOfTransactionInBlock: count,
+        // },
         transaction.signatureBuffer,
-        {
-          accountParticipation: "0",
-          accountNumberOfTransactionInBlock: count,
-        },
+        count,
+        "0",
       );
     });
     const genesisBlock = await registerBfchainCore.block.generateBlock<GenesisBlock>(
@@ -835,11 +840,14 @@ const getTxs = (address: string) => {
     );
     eventEmitter.on("verifyTransactionProfOfWork", ({ transaction, count }) => {
       return registerBfchainCore.transactionHelper.checkTransactionProfOfWork(
+        // transaction.signatureBuffer,
+        // {
+        //   accountParticipation: "0",
+        //   accountNumberOfTransactionInBlock: count,
+        // },
         transaction.signatureBuffer,
-        {
-          accountParticipation: "0",
-          accountNumberOfTransactionInBlock: count,
-        },
+        count,
+        "0",
       );
     });
     const commonBlock = await fullBfchainCore.block.generateBlock<CommonBlock>(

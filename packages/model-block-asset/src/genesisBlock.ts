@@ -9,8 +9,7 @@ import { BNID_TYPE } from "@bfchain/core-model-block-base";
  *
  */
 @Type.d("RewardPercentModel")
-export class RewardPercentModel
-  extends Message<RewardPercentModel>
+export class RewardPercentModel extends Message<RewardPercentModel>
   implements BFChainCore.JSONToModelType<BFChainCore.RewardPercentJSON> {
   /**分配给投票账户的奖励占区块总奖励的比例 */
   @Field.d(1, Fraction)
@@ -31,8 +30,7 @@ export class RewardPercentModel
  *
  */
 @Type.d("RewardPerBlock")
-export class RewardPerBlock
-  extends Message<RewardPerBlock>
+export class RewardPerBlock extends Message<RewardPerBlock>
   implements BFChainCore.JSONToModelType<BFChainCore.RewardPerBlockJSON> {
   /**奖励变更区块高度 */
   @Field.d(1, "uint32", "repeated")
@@ -53,8 +51,7 @@ export class RewardPerBlock
  *
  */
 @Type.d("PortsModel")
-export class PortsModel
-  extends Message<PortsModel>
+export class PortsModel extends Message<PortsModel>
   implements BFChainCore.JSONToModelType<BFChainCore.PortsJSON> {
   /**默认端口号/区块链端口号 */
   @Field.d(1, "uint32")
@@ -71,20 +68,16 @@ export class PortsModel
 }
 
 @Type.d("TransactionPowOfWorkConfigModel")
-export class TransactionPowOfWorkConfigModel
-  extends Message<TransactionPowOfWorkConfigModel>
+export class TransactionPowOfWorkConfigModel extends Message<TransactionPowOfWorkConfigModel>
   implements BFChainCore.JSONToModelType<BFChainCore.TransactionPowOfWorkConfigJSON> {
   @Field.d(1, FractionBigIntModel)
   growthFactor!: FractionBigIntModel;
   @Field.d(2, Fraction)
   participationRatio!: Fraction;
-  @Field.d(3, "uint32")
-  averageComputingPower!: number;
   toJSON() {
     return {
       growthFactor: this.growthFactor.toJSON(),
-      participationRatio: this.participationRatio.toJSON(),
-      averageComputingPower: this.averageComputingPower,
+      participationRatio: this.participationRatio.toJSON()
     };
   }
 }
@@ -180,15 +173,17 @@ export class GenesisAssetModel extends RoundDelegateModel<GenesisAssetModel>
   /**区块参与度权重比 */
   @Field.d(GenesisAssetModel.INC++, RateModel, "required")
   blockParticipationWeightRatio!: RateModel;
-  /**tpow 计算公式 */
-  @Field.d(GenesisAssetModel.INC++, "string", "required")
-  tpowDiffFormula!: string;
+  // /**tpow 计算公式 */
+  // @Field.d(GenesisAssetModel.INC++, "string", "required")
+  // tpowDiffFormula!: string;
   /**全网平均算了 */
   @Field.d(GenesisAssetModel.INC++, "uint32", "required")
   averageComputingPower!: number;
   /**前 n 个块 交易的 pow豁免 */
   @Field.d(GenesisAssetModel.INC++, "uint32", "required")
   tpowOfWorkExemptionBlocks!: number;
+  @Field.d(GenesisAssetModel.INC++, TransactionPowOfWorkConfigModel)
+  transactionPowOfWorkConfig!: TransactionPowOfWorkConfigModel;
   toJSON(): BFChainCore.GenesisAssetJSON {
     const res: BFChainCore.GenesisAssetJSON = Object.assign(
       {
@@ -218,9 +213,10 @@ export class GenesisAssetModel extends RoundDelegateModel<GenesisAssetModel>
         rewardPerBlock: this.rewardPerBlock.toJSON(),
         accountParticipationWeightRatio: this.accountParticipationWeightRatio.toJSON(),
         blockParticipationWeightRatio: this.blockParticipationWeightRatio.toJSON(),
-        tpowDiffFormula: this.tpowDiffFormula,
+        // tpowDiffFormula: this.tpowDiffFormula,
         averageComputingPower: this.averageComputingPower,
         tpowOfWorkExemptionBlocks: this.tpowOfWorkExemptionBlocks,
+        transactionPowOfWorkConfig: this.transactionPowOfWorkConfig.toJSON(),
       },
       super.toJSON(),
     );

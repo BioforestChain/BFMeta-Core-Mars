@@ -90,9 +90,9 @@ export class ConfigHelper {
     return this.genesisBlock.asset.genesisAsset.blockParticipationWeightRatio;
   }
   /**交易 pow 参数*/
-  get tpowDiffFormula() {
-    return this.genesisBlock.asset.genesisAsset.tpowDiffFormula;
-  }
+  // get tpowDiffFormula() {
+  //   return this.genesisBlock.asset.genesisAsset.tpowDiffFormula;
+  // }
   /**创世时间 */
   @cacheGetter
   get beginEpochTime() {
@@ -162,6 +162,9 @@ export class ConfigHelper {
   /**全网平均算力 */
   get averageComputingPower() {
     return this.genesisBlock.asset.genesisAsset.averageComputingPower;
+  }
+  get transactionPowOfWorkConfig() {
+    return this.genesisBlock.asset.genesisAsset.transactionPowOfWorkConfig;
   }
 }
 @Injectable("configMap")

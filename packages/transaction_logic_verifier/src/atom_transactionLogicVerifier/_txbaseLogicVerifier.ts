@@ -808,10 +808,12 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     }
     const powCheckResult = await this.transactionHelper.checkTransactionProfOfWork(
       parseHexToArrayBuffer(transaction.signature),
-      {
-        accountParticipation: participation,
-        accountNumberOfTransactionInBlock: tranSenderCount,
-      },
+      tranSenderCount,
+      participation,
+      // {
+      //   accountParticipation: participation,
+      //   accountNumberOfTransactionInBlock: tranSenderCount,
+      // },
     );
     if (!powCheckResult) {
       throw new ConsensusException(VERIFY_TRANSACTION_POW_OF_WORK_ERROR, {

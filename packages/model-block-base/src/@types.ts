@@ -123,7 +123,6 @@ declare namespace BFChainCore {
   interface TransactionPowOfWorkConfigJSON {
     growthFactor: FractionJSON<string>;
     participationRatio: FractionJSON;
-    averageComputingPower: number;
   }
   interface GenesisAssetJSON extends RoundDelegateJSON {
     chainName: string;
@@ -152,9 +151,10 @@ declare namespace BFChainCore {
     rewardPerBlock: RewardPerBlockJSON;
     accountParticipationWeightRatio: RateJSON<string>;
     blockParticipationWeightRatio: RateJSON<string>;
-    tpowDiffFormula: string;
+    // tpowDiffFormula: string;
     averageComputingPower: number;
     tpowOfWorkExemptionBlocks: number;
+    transactionPowOfWorkConfig: TransactionPowOfWorkConfigJSON;
   }
   interface GenesisBlockAssetJSON {
     genesisAsset: GenesisAssetJSON;

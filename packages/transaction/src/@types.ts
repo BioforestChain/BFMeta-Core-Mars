@@ -10,11 +10,8 @@ declare namespace BFChainCore {
 
   // #region TransactonPoW
   type TransactionPoWOptions<T extends TransactionJSON = TransactionJSON> = {
-    accountParticipation?: string;
-    accountPossessMainAssets?: string;
-    accountNumberOfTransactionInBlock?: number;
-    blockHeight?: number;
-
+    count: number;
+    participation: string;
     event?: BFChainUtil.QueneEventEmitter<TransactionPoWControllerEvents<T>>;
     calculator?: (
       trs: T,
@@ -23,6 +20,20 @@ declare namespace BFChainCore {
       secondKeypair?: BFChainCore.Keypair,
     ) => BFChainUtil.PromiseMaybe<T>;
   };
+  // type TransactionPoWOptions<T extends TransactionJSON = TransactionJSON> = {
+  //   accountParticipation?: string;
+  //   accountPossessMainAssets?: string;
+  //   accountNumberOfTransactionInBlock?: number;
+  //   blockHeight?: number;
+
+  //   event?: BFChainUtil.QueneEventEmitter<TransactionPoWControllerEvents<T>>;
+  //   calculator?: (
+  //     trs: T,
+  //     pow: BFChainCore.TransactionPoWOptions<T>, // this
+  //     keypair: BFChainCore.Keypair,
+  //     secondKeypair?: BFChainCore.Keypair,
+  //   ) => BFChainUtil.PromiseMaybe<T>;
+  // };
   type TransactionPoWControllerEvents<T extends TransactionJSON = TransactionJSON> = {
     start: BFChainUtil.EventInOut<
       { diff: string; count: number; participation: string; transaction: T },

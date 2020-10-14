@@ -452,14 +452,14 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
     }
 
     // 校验 TPOW 难度计算公式是否合法
-    if (!this.tpowDiffHelper.isValidTpowDiffFormula(genesisAsset.tpowDiffFormula)) {
-      console.log(genesisAsset.tpowDiffFormula);
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "tpowDiffFormula",
-        type: "tpow diff formula",
-        ...GenesisBlockAsset_Exception_Detail,
-      });
-    }
+    // if (!this.tpowDiffHelper.isValidTpowDiffFormula(genesisAsset.tpowDiffFormula)) {
+    //   console.log(genesisAsset.tpowDiffFormula);
+    //   throw new ArgumentIllegalException(PROP_IS_INVALID, {
+    //     prop: "tpowDiffFormula",
+    //     type: "tpow diff formula",
+    //     ...GenesisBlockAsset_Exception_Detail,
+    //   });
+    // }
 
     if (!baseHelper.isNaturalNumber(genesisAsset.averageComputingPower)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
@@ -473,6 +473,40 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: `tpowOfWorkExemptionBlocks ${genesisAsset.tpowOfWorkExemptionBlocks}`,
         type: "natural number",
+        ...GenesisBlockAsset_Exception_Detail,
+      });
+    }
+
+    const {
+      growthFactor,
+      participationRatio,
+    } = genesisAsset.transactionPowOfWorkConfig;
+    // 校验交易POW的难度增长系数
+    {
+      const {
+        denominator: growthFactorDenominator,
+        numerator: growthFactorNumerator,
+      } = growthFactor;
+      const growthFactorNumerator_BI = BigInt(growthFactorNumerator);
+      const growthFactorDenominator_BI = BigInt(growthFactorDenominator);
+      if (
+        !(
+          growthFactorNumerator_BI >= growthFactorDenominator_BI &&
+          growthFactorDenominator_BI >= BigInt(1)
+        )
+      ) {
+        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          prop: `transactionPowOfWorkConfig.growthFactor ${growthFactorDenominator}`,
+          type: "positive float",
+          ...GenesisBlockAsset_Exception_Detail,
+        });
+      }
+    }
+    // 校验交易POW的参与度占比
+    if (!baseHelper.isPositiveFloatContainZero(participationRatio)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: `transactionPowOfWorkConfig.participationRatio ${participationRatio}`,
+        type: "positive float",
         ...GenesisBlockAsset_Exception_Detail,
       });
     }
