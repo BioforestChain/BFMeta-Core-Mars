@@ -18,8 +18,8 @@
     "@bfchain/util": "^4.10.12"
   },
   "peerDependencies": {
-    "@bfchain/protobuf": "^4.1.1",
-    "@bfchain/util": "^4.10.3"
+    "@bfchain/protobuf": "^4.1.6",
+    "@bfchain/util": "^4.10.12"
   },
   "gitHead": "f8647a0812fc794090af08d4e3bf47e0ec30c14f"
 }

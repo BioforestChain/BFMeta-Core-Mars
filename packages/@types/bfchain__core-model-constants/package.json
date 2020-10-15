@@ -1,8 +1,8 @@
 {
   "name": "@types/bfchain__core-model-constants",
   "types": "index.d.ts",
-  "version": "5.17.8-dev.0",
+  "version": "5.19.3",
   "dependencies": {
-    "@types/bfchain__core-typings": "5.17.8-dev.0"
+    "@types/bfchain__core-typings": "5.19.3"
   }
 }

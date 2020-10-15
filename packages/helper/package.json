@@ -24,6 +24,7 @@
     "@bfchain/core-helper-chain-time": "5.19.3",
     "@bfchain/core-helper-config": "5.19.3",
     "@bfchain/core-helper-milestones": "5.19.3",
+    "@bfchain/core-helper-parity-bit": "5.19.3",
     "@bfchain/core-helper-transaction": "5.19.3",
     "@bfchain/core-helper-transaction-pow": "5.19.3",
     "@bfchain/core-helper-type": "5.19.3",

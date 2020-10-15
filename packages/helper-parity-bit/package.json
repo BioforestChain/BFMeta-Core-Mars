@@ -1,0 +1,19 @@
+{
+  "name": "@bfchain/core-helper-parity-bit",
+  "version": "5.19.3",
+  "description": "",
+  "main": "build/cjs/index.js",
+  "module": "build/esm/index.js",
+  "type": "build/cjs/index.d.ts",
+  "keywords": [
+    "core"
+  ],
+  "author": "BFChain Team",
+  "license": "MIT",
+  "files": [
+    "build"
+  ],
+  "dependencies": {
+    "@bfchain/core-typings": "5.19.3"
+  }
+}

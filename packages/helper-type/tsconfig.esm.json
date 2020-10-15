@@ -15,6 +15,9 @@
       "path": "../helper-config/tsconfig.esm.json"
     },
     {
+      "path": "../helper-parity-bit/tsconfig.esm.json"
+    },
+    {
       "path": "../model-common/tsconfig.esm.json"
     },
     {

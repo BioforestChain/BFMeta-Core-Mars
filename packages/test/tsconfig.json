@@ -29,7 +29,7 @@
     "src/include/index.ts",
     "src/include/init.ts",
     "src/include/ips.ts",
-    "src/include/magic.ts",
+    "src/include/parityBitHelper.ts",
     "src/include/utils.ts",
     "src/magicAndAssetType.ts",
     "src/pow-trs.demo.ts",

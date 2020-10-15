@@ -16,6 +16,7 @@
   "dependencies": {
     "@bfchain/core-helper-account-base": "5.19.3",
     "@bfchain/core-helper-config": "5.19.3",
+    "@bfchain/core-helper-parity-bit": "5.19.3",
     "@bfchain/core-model-common": "5.19.3",
     "@bfchain/core-typings": "5.19.3",
     "@bfchain/core-util-exception-errorcode": "5.19.3"

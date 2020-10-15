@@ -43,6 +43,9 @@
       "path": "../helper-milestones/tsconfig.@types.json"
     },
     {
+      "path": "../helper-parity-bit/tsconfig.@types.json"
+    },
+    {
       "path": "../helper-transaction-pow/tsconfig.@types.json"
     },
     {

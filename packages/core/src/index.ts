@@ -36,6 +36,7 @@ import {
   ConfigHelperMap,
   ChainAssetInfoHelper,
   ChainTimeHelper,
+  ParityBitHelper,
 } from "@bfchain/core-helper";
 import { Injectable, Inject, ModuleStroge, Resolve } from "@bfchain/util";
 // export default Helper;
@@ -53,6 +54,7 @@ export class BFChainCore {
     public transactionHelper: TransactionHelper,
     public blockHelper: BlockHelper,
     public milestonesHelper: MilestonesHelper,
+    public parityBitHelper: ParityBitHelper,
     public baseHelper: BaseHelper,
     public chainAssetInfoHelper: ChainAssetInfoHelper,
     public configMap: ConfigHelperMap,

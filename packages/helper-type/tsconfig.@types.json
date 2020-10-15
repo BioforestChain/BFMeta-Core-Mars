@@ -19,6 +19,9 @@
       "path": "../helper-config/tsconfig.@types.json"
     },
     {
+      "path": "../helper-parity-bit/tsconfig.@types.json"
+    },
+    {
       "path": "../model-common/tsconfig.@types.json"
     },
     {

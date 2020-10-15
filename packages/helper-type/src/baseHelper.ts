@@ -3,6 +3,7 @@ import { Injectable } from "@bfchain/util-dep-inject";
 import { IpHelper } from "@bfchain/util";
 import { AccountBaseHelper } from "@bfchain/core-helper-account-base";
 import { ConfigHelper } from "@bfchain/core-helper-config";
+import { ParityBitHelper } from "@bfchain/core-helper-parity-bit";
 import { RANGE_TYPE, PARITY_BIT_MAPPING } from "@bfchain/core-model-constants";
 
 @Injectable()
@@ -11,6 +12,7 @@ export class BaseHelper {
     private accountBaseHelper: AccountBaseHelper,
     private configHelper: ConfigHelper,
     private ipHelper: IpHelper,
+    private parityBitHelper: ParityBitHelper,
   ) {}
 
   isIp(ip: string) {
@@ -502,20 +504,6 @@ export class BaseHelper {
   }
 
   /**
-   * 计算校验位
-   *
-   * 每个字符的 ascii 值相加 * 每轮的区块数 * 打块间隔 % （大写字母个数 26 + 数字个数 10）
-   * @param baseString
-   */
-  calcParityBit(baseString: string) {
-    let sum = 0;
-    for (let i = 0; i < baseString.length; i++) {
-      sum += baseString.charCodeAt(i);
-    }
-    return sum % 36;
-  }
-
-  /**
    * 链网络标识符是否合法：大写字母、数字 6 位，最后一位是校验位
    *
    * @param magic
@@ -536,7 +524,7 @@ export class BaseHelper {
     }
     const realMagic = magic.slice(0, 4);
     const parityBit = magic.slice(4);
-    const parityBitCode = this.calcParityBit(realMagic);
+    const parityBitCode = this.parityBitHelper.calcParityBit(realMagic);
     const mapKey = `P_${parityBitCode}` as BFChainCore.PARITY_BIT_MAPPING;
     if (PARITY_BIT_MAPPING[mapKey] === undefined) {
       return false;
@@ -564,7 +552,7 @@ export class BaseHelper {
     }
     const realDAppid = dappid.slice(0, 7);
     const parityBit = dappid.slice(7);
-    const parityBitCode = this.calcParityBit(realDAppid);
+    const parityBitCode = this.parityBitHelper.calcParityBit(realDAppid);
     const mapKey = `P_${parityBitCode}` as BFChainCore.PARITY_BIT_MAPPING;
     if (PARITY_BIT_MAPPING[mapKey] === undefined) {
       return false;

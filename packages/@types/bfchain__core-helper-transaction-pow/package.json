@@ -1,10 +1,10 @@
 {
   "name": "@types/bfchain__core-helper-transaction-pow",
   "types": "index.d.ts",
-  "version": "5.17.58",
+  "version": "5.19.3",
   "dependencies": {
-    "@types/bfchain__core-helper-bigint": "5.17.8-dev.0",
-    "@types/bfchain__core-helper-config": "5.17.8-dev.0",
-    "@types/bfchain__core-typings": "5.17.8-dev.0"
+    "@types/bfchain__core-helper-bigint": "5.19.3",
+    "@types/bfchain__core-helper-config": "5.19.3",
+    "@types/bfchain__core-typings": "5.19.3"
   }
 }

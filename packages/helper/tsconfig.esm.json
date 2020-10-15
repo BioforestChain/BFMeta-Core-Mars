@@ -39,6 +39,9 @@
       "path": "../helper-milestones/tsconfig.esm.json"
     },
     {
+      "path": "../helper-parity-bit/tsconfig.esm.json"
+    },
+    {
       "path": "../helper-transaction-pow/tsconfig.esm.json"
     },
     {
