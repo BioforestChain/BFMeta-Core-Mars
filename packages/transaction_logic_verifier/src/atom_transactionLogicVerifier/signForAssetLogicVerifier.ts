@@ -74,7 +74,7 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
 
     this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
 
-    this.eventLogicVerifier.listenEventUnfrozenAsset(
+    this.eventLogicVerifier.listenEventSignForAsset(
       transaction,
       currentBlockHeight,
       accountGetterHelper,
