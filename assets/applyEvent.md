@@ -294,6 +294,37 @@
     }
   ```
 
+## "signForAsset"
+
+    签收数字资产
+
+- 参数
+
+  - type：事件名，string
+  - transaction：交易本体，Transaction\<customAsset>
+  - applyInfo：变更明细，object
+    - address：变更账户地址，string
+    - publicKey：变更的账户公钥，string
+    - frozenId：冻结交易的 id，string
+    - frozenAddress: 冻结交易的发起账户地址，string
+    - recipientId：冻结交易的接收账户地址，string
+
+- 范例
+
+  ```
+    {
+        type: "unfrozenAsset",
+        transaction: Transaction<customAsset>,
+        applyInfo: {
+            address: "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+            publicKey: "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
+            frozenId:"82d14d7e24add13773c0f9cb7de6e8dde69a3f07661f1ad471b5071f416e32f379b432ad6e7312827bf512b69f8c52f271de9e39af24b84b84a8523350ffec0d",
+            frozenAddress: "cLwXBhfqd6PR2R6JdjkGc3LSwMPjsK1gKK",
+            recipientId: "cLwXBhfqd6PR2R6JdjkGc3LSwMPjsK1gKF"
+        }
+    }
+  ```
+
 ## "frozenAccount"
 
     冻结账户

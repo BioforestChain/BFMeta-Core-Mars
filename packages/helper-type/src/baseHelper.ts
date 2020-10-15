@@ -140,15 +140,6 @@ export class BaseHelper {
   }
 
   /**
-   * 第三方签名是否合法
-   *
-   * @param thirdPartySignature
-   */
-  isValidThirdPartySignature(thirdPartySignature: any) {
-    return this.isValidAccountSignature(thirdPartySignature);
-  }
-
-  /**
    * 获取输入值的类型
    *
    * @param variable

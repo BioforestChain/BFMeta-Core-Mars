@@ -46,6 +46,7 @@ declare namespace BFChainCore {
     EVENTNAME,
     T extends Transaction = Transaction
   > = ApplyTransactionEvent<ApplyInfo_FrozenAsset, EVENTNAME, T>;
+
   interface ApplyInfo_UnfrozenAsset extends ApplyInfo_Asset {
     /**冻结的索引 */
     frozenIdBuffer: Uint8Array;
@@ -59,6 +60,24 @@ declare namespace BFChainCore {
     EVENTNAME,
     T extends Transaction = Transaction
   > = ApplyTransactionEvent<ApplyInfo_UnfrozenAsset, EVENTNAME, T>;
+
+  interface ApplyInfo_SignForAsset {
+    address: string;
+    publicKeyBuffer: Uint8Array;
+    /**冻结的索引 */
+    frozenIdBuffer: Uint8Array;
+    frozenAddress: string;
+    /**解冻者的账户地址
+     * 这里的解冻者本质是资金的接收者
+     * 如果要将解冻资产是否要回到冻结者账户上,那就填自己就完事了
+     */
+    recipientId: string;
+  }
+  type ApplyTransactionSignForAssetEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction
+  > = ApplyTransactionEvent<ApplyInfo_SignForAsset, EVENTNAME, T>;
+
   type ApplyInfo_Account = {
     address: string;
     publicKeyBuffer: Uint8Array;
@@ -70,6 +89,7 @@ declare namespace BFChainCore {
     // AssetModel extends object = object,
     // AssetJSON extends object = object
   > = ApplyTransactionEvent<ApplyInfo_Account, EVENTNAME, T>;
+
   type ApplyInfo_Equity = {
     address: string;
     publicKeyBuffer: Uint8Array;
@@ -84,6 +104,7 @@ declare namespace BFChainCore {
     EVENTNAME,
     T extends Transaction = Transaction
   > = ApplyTransactionEvent<ApplyInfo_Equity, EVENTNAME, T>;
+
   type ApplyInfo_Username = {
     address: string;
     publicKeyBuffer: Uint8Array;
@@ -95,6 +116,7 @@ declare namespace BFChainCore {
     EVENTNAME,
     T extends Transaction = Transaction
   > = ApplyTransactionEvent<ApplyInfo_Username, EVENTNAME, T>;
+
   type ApplyInfo_Signature = {
     address: string;
     publicKeyBuffer: Uint8Array;
@@ -105,6 +127,7 @@ declare namespace BFChainCore {
     EVENTNAME,
     T extends Transaction = Transaction
   > = ApplyTransactionEvent<ApplyInfo_Signature, EVENTNAME, T>;
+
   type ACCOUNT_STATUS = import("@bfchain/core-model-constants").ACCOUNT_STATUS;
   type ApplyInfo_FrozenAccount = {
     address: string;
@@ -116,6 +139,7 @@ declare namespace BFChainCore {
     EVENTNAME,
     T extends Transaction = Transaction
   > = ApplyTransactionEvent<ApplyInfo_FrozenAccount, EVENTNAME, T>;
+
   /**dapp 相关事件 */
   type ApplyInfo_IssueDAppid = {
     address: string;
@@ -133,6 +157,7 @@ declare namespace BFChainCore {
     EVENTNAME,
     T extends Transaction = Transaction
   > = ApplyTransactionEvent<ApplyInfo_IssueDAppid, EVENTNAME, T>;
+
   type ApplyInfo_SaleDAppid = {
     address: string;
     publicKeyBuffer?: Uint8Array;
@@ -146,6 +171,7 @@ declare namespace BFChainCore {
     EVENTNAME,
     T extends Transaction = Transaction
   > = ApplyTransactionEvent<ApplyInfo_SaleDAppid, EVENTNAME, T>;
+
   type ApplyInfo_PurchaseDAppid = {
     address: string;
     publicKeyBuffer?: Uint8Array;
@@ -159,6 +185,7 @@ declare namespace BFChainCore {
     EVENTNAME,
     T extends Transaction = Transaction
   > = ApplyTransactionEvent<ApplyInfo_PurchaseDAppid, EVENTNAME, T>;
+
   interface ApplyInfo_IssueAsset extends ApplyInfo_Asset {
     address: string;
     publicKeyBuffer?: Uint8Array;
@@ -170,6 +197,7 @@ declare namespace BFChainCore {
     EVENTNAME,
     T extends Transaction = Transaction
   > = ApplyTransactionEvent<ApplyInfo_IssueAsset, EVENTNAME, T>;
+
   interface ApplyInfo_DestoryAsset extends ApplyInfo_Asset {
     address: string;
     publicKeyBuffer?: Uint8Array;
@@ -180,6 +208,7 @@ declare namespace BFChainCore {
     EVENTNAME,
     T extends Transaction = Transaction
   > = ApplyTransactionEvent<ApplyInfo_DestoryAsset, EVENTNAME, T>;
+
   type ApplyInfo_RegisterChain = {
     address: string;
     publicKeyBuffer?: Uint8Array;
@@ -192,6 +221,7 @@ declare namespace BFChainCore {
     EVENTNAME,
     T extends Transaction = Transaction
   > = ApplyTransactionEvent<ApplyInfo_RegisterChain, EVENTNAME, T>;
+
   /**链域名相关事件 */
   type ApplyInfo_LocationNameRegistration = {
     address: string;
@@ -207,6 +237,7 @@ declare namespace BFChainCore {
     EVENTNAME,
     T extends Transaction = Transaction
   > = ApplyTransactionEvent<ApplyInfo_LocationNameRegistration, EVENTNAME, T>;
+
   type ApplyInfo_LocationNameCancellation = {
     address: string;
     publicKeyBuffer?: Uint8Array;
@@ -218,6 +249,7 @@ declare namespace BFChainCore {
     EVENTNAME,
     T extends Transaction = Transaction
   > = ApplyTransactionEvent<ApplyInfo_LocationNameCancellation, EVENTNAME, T>;
+
   type ApplyInfo_SetLnsManager = {
     address: string;
     publicKeyBuffer?: Uint8Array;
@@ -230,6 +262,7 @@ declare namespace BFChainCore {
     EVENTNAME,
     T extends Transaction = Transaction
   > = ApplyTransactionEvent<ApplyInfo_SetLnsManager, EVENTNAME, T>;
+
   type ApplyInfo_SetLnsRecordValue = {
     address: string;
     publicKeyBuffer?: Uint8Array;
@@ -244,6 +277,7 @@ declare namespace BFChainCore {
     EVENTNAME,
     T extends Transaction = Transaction
   > = ApplyTransactionEvent<ApplyInfo_SetLnsRecordValue, EVENTNAME, T>;
+
   type ApplyInfo_SaleLocationName = {
     address: string;
     publicKeyBuffer?: Uint8Array;
@@ -257,6 +291,7 @@ declare namespace BFChainCore {
     EVENTNAME,
     T extends Transaction = Transaction
   > = ApplyTransactionEvent<ApplyInfo_SaleLocationName, EVENTNAME, T>;
+
   type ApplyInfo_PurchaseLocationName = {
     address: string;
     publicKeyBuffer?: Uint8Array;
@@ -270,6 +305,7 @@ declare namespace BFChainCore {
     EVENTNAME,
     T extends Transaction = Transaction
   > = ApplyTransactionEvent<ApplyInfo_PurchaseLocationName, EVENTNAME, T>;
+
   type ApplyTransactionEventMap<EM extends BFChainUtil.EventInOutMap = {}> = EM & {
     /**交易交易的POW */
     verifyTransactionProfOfWork: BFChainUtil.EventInOut<
@@ -375,9 +411,16 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction").BeExchangeAssetTransaction
         | import("@bfchain/core-model-transaction").GrabAssetTransaction
         | import("@bfchain/core-model-transaction").TrustAssetTransaction
-        | import("@bfchain/core-model-transaction").SignForAssetTransaction
         | import("@bfchain/core-model-transaction").ToExchangeSpecialAssetTransaction
         | import("@bfchain/core-model-transaction").BeExchangeSpecialAssetTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
+      >
+    >;
+    /**签收资产 */
+    signForAsset: BFChainUtil.EventInOut<
+      ApplyTransactionSignForAssetEvent<
+        "signForAsset",
+        | import("@bfchain/core-model-transaction").SignForAssetTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;

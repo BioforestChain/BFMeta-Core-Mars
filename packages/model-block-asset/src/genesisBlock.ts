@@ -156,7 +156,7 @@ export class GenesisAssetModel extends RoundDelegateModel<GenesisAssetModel>
   genesisLocationName!: string;
   /**创始账户初始余额 */
   @Field.d(GenesisAssetModel.INC++, "string")
-  generateTotalAmount!: string;
+  genesisAmount!: string;
   /**交易每个字节最小手续费 */
   @Field.d(GenesisAssetModel.INC++, Fraction)
   minTransactionFeePerByte!: Fraction;
@@ -234,7 +234,7 @@ export class GenesisAssetModel extends RoundDelegateModel<GenesisAssetModel>
         bnid: this.bnid,
         beginEpochTime: this.beginEpochTime,
         genesisLocationName: this.genesisLocationName,
-        generateTotalAmount: this.generateTotalAmount,
+        genesisAmount: this.genesisAmount,
         minTransactionFeePerByte: this.minTransactionFeePerByte.toJSON(),
         maxTransactionSize: this.maxTransactionSize,
         maxBlockSize: this.maxBlockSize,

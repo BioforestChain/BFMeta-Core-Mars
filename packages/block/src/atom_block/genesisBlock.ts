@@ -195,16 +195,16 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       });
     }
 
-    if (!genesisAsset.generateTotalAmount) {
+    if (!genesisAsset.genesisAmount) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "generateTotalAmount",
+        prop: "genesisAmount",
         ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isValidAssetNumber(genesisAsset.generateTotalAmount)) {
+    if (!baseHelper.isValidAssetNumber(genesisAsset.genesisAmount)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `generateTotalAmount ${genesisAsset.generateTotalAmount}`,
+        prop: `genesisAmount ${genesisAsset.genesisAmount}`,
         type: "asset number",
         ...GenesisBlockAsset_Exception_Detail,
       });

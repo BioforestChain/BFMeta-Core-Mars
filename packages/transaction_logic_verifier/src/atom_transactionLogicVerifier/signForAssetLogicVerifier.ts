@@ -5,10 +5,7 @@ import {
   CoreExceptionGenerator,
   NOT_EXIST,
   NOT_MATCH,
-  CAN_NOT_CARRY_SECOND_PUBLICKEY,
   CAN_NOT_SECONDARY_TRANSACTION,
-  PROP_IS_REQUIRE,
-  CAN_NOT_CARRY_SECOND_SIGNATURE,
 } from "@bfchain/core-util-exception";
 import { AccountBaseHelper } from "@bfchain/core-helper";
 
@@ -37,7 +34,7 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
       function: "verify",
     } as const;
 
-    const { transactionSignature, thirdPartySignature } = transaction.asset.signForAsset;
+    const { transactionSignature } = transaction.asset.signForAsset;
 
     const trs = (await transactionGetterHelper.getTransactionBySignature(
       transactionSignature,
@@ -51,7 +48,6 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
       });
     }
     this.isValidRecipientId(transaction, trs);
-    await this.isValidThirdPartySignature(thirdPartySignature, accountGetterHelper);
     await this.isDependentTransactionMatch(transaction, trs);
 
     const { sender, recipient } = await this.logicVerify(
@@ -110,68 +106,6 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
         be_target: "TrustAssetTransaction",
         function: "isValidRecipientId",
       });
-    }
-  }
-
-  /**
-   * 第三方签名是否合法
-   *
-   * @param thirdPartySignature
-   */
-  private async isValidThirdPartySignature(
-    thirdPartySignature: AccountSignatureModel,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-  ) {
-    const Function_Exception_Detail = {
-      function: "isValidThirdPartySignature",
-    } as const;
-    const { accountBaseHelper } = this;
-
-    const { publicKey, secondPublicKey, signSignature } = thirdPartySignature;
-    const address = await accountBaseHelper.getAddressFromPublicKeyString(publicKey);
-    const trustee = await accountGetterHelper.getAccountInfo(address);
-    if (!trustee) {
-      throw new ConsensusException(NOT_EXIST, {
-        prop: `Account with address ${address}`,
-        target: "blockChain",
-        ...Function_Exception_Detail,
-      });
-    }
-    if (trustee.secondPublicKey) {
-      if (!secondPublicKey) {
-        throw new ConsensusException(PROP_IS_REQUIRE, {
-          prop: "secondPublicKey",
-          target: "thirdPartySignature",
-          ...Function_Exception_Detail,
-        });
-      }
-      if (!signSignature) {
-        throw new ConsensusException(PROP_IS_REQUIRE, {
-          prop: "signSignature",
-          target: "thirdPartySignature",
-          ...Function_Exception_Detail,
-        });
-      }
-      if (trustee.secondPublicKey !== secondPublicKey) {
-        throw new ConsensusException(NOT_MATCH, {
-          to_compare_prop: `secondPublicKey ${trustee.secondPublicKey}`,
-          be_compare_prop: `secondPublicKey ${secondPublicKey}`,
-          to_target: "trustee",
-          be_target: "thirdPartySignature",
-          ...Function_Exception_Detail,
-        });
-      }
-    } else {
-      if (secondPublicKey) {
-        throw new ConsensusException(CAN_NOT_CARRY_SECOND_PUBLICKEY, {
-          ...Function_Exception_Detail,
-        });
-      }
-      if (signSignature) {
-        throw new ConsensusException(CAN_NOT_CARRY_SECOND_SIGNATURE, {
-          ...Function_Exception_Detail,
-        });
-      }
     }
   }
 

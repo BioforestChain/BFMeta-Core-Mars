@@ -296,7 +296,7 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
   ) {
     const tasks = new TaskList();
     tasks.next = super.applyTransaction(transaction, eventEmitter, config);
-    const { amount, assetType, sourceChainMagic } = transaction.asset.trustAsset;
+    const { amount, assetType, sourceChainMagic, numberOfSignFor } = transaction.asset.trustAsset;
     const assetInfo = this.chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
     // 冻结发起账户用于交换的资产
     tasks.next = eventEmitter.emit("frozenAsset", {
@@ -311,6 +311,7 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
         maxEffectiveHeight: this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
         minEffectiveHeight: this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
         frozenIdBuffer: transaction.signatureBuffer,
+        totalUnfrozenTimes: numberOfSignFor,
       },
     });
     return tasks.tryToPromise();

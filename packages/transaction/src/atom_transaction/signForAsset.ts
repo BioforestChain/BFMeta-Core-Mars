@@ -14,12 +14,10 @@ import {
   PROP_IS_INVALID,
   SHOULD_BE,
   NOT_MATCH,
-  SHOULD_NOT_DUPLICATE,
-  PROP_LENGTH_SHOULD_LTE_FIELD,
-  PROP_LENGTH_SHOULD_GTE_FIELD,
+  PERMISSION_DENIED,
 } from "@bfchain/core-util-exception";
 import { TrustAssetTransactionFactory } from "./trustAsset";
-import { Injectable, parseHexToArrayBuffer, TaskList } from "@bfchain/util";
+import { Injectable, TaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
   "signForAssetTransactionFactory",
@@ -150,13 +148,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
       });
     }
 
-    const {
-      trustAsset,
-      trustSenderId,
-      trustRecipientId,
-      thirdPartySignature,
-      transactionSignature,
-    } = signForAsset;
+    const { trustAsset, trustSenderId, trustRecipientId, transactionSignature } = signForAsset;
     if (!transactionSignature) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "transactionSignature",
@@ -222,21 +214,6 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
       });
     }
 
-    if (!thirdPartySignature) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "thirdPartySignatures",
-        ...SignForAssetAsset_Exception_Detail,
-      });
-    }
-
-    if (!baseHelper.isValidThirdPartySignature(thirdPartySignature)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "thirdPartySignature",
-        type: "third party signature",
-        ...SignForAssetAsset_Exception_Detail,
-      });
-    }
-
     /**
      * 校验`trustAsset`的基本格式
      */
@@ -249,71 +226,10 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
     tempTrustees[tempTrustees.length] = trustRecipientId;
 
     if (!tempTrustees.includes(senderId)) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "tempTrustees",
-        be_compare_prop: `senderId ${senderId}`,
-        to_target: "body",
-        be_target: "trustAsset and trust sender and trust recipient",
+      throw new ArgumentIllegalException(PERMISSION_DENIED, {
+        operationName: `sign for asset ${transactionSignature}`,
         ...SignForAssetAsset_Exception_Detail,
       });
-    }
-
-    const transactionSignatureBuffer = parseHexToArrayBuffer(transactionSignature);
-    const trusteePublicKeys: string[] = [];
-
-    const { publicKey, signature, secondPublicKey, signSignature } = thirdPartySignature;
-    if (trusteePublicKeys.includes(publicKey)) {
-      throw new ArgumentIllegalException(SHOULD_NOT_DUPLICATE, {
-        prop: `thirdPartySignature ${publicKey}`,
-        ...SignForAssetAsset_Exception_Detail,
-      });
-    }
-    trusteePublicKeys[trusteePublicKeys.length] = publicKey;
-    const address = await accountBaseHelper.getAddressFromPublicKeyString(publicKey);
-    if (!tempTrustees.includes(address)) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: "tempTrustees",
-        be_compare_prop: `address ${address}`,
-        to_target: "thirdPartySignature",
-        be_target: "trustees",
-        ...SignForAssetAsset_Exception_Detail,
-      });
-    }
-    const signatureBuffer = parseHexToArrayBuffer(signature);
-    if (
-      !(await transactionHelper.verifyThirdPartySignature({
-        secretPublicKey: parseHexToArrayBuffer(publicKey),
-        signatureBuffer,
-        transactionSignatureBuffer,
-        senderId: trustSenderId,
-        recipientId: trustRecipientId,
-      }))
-    ) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `signature ${signature}`,
-        type: "signature",
-        ...Function_Exception_Detail,
-        target: `thirdPartySignature`,
-      });
-    }
-    if (secondPublicKey && signSignature) {
-      if (
-        !(await transactionHelper.verifyThirdPartySignature({
-          secretPublicKey: parseHexToArrayBuffer(secondPublicKey),
-          signatureBuffer: parseHexToArrayBuffer(signSignature),
-          transactionSignatureBuffer,
-          senderId: trustSenderId,
-          recipientId: trustRecipientId,
-          thirdPartySignatureBuffer: signatureBuffer,
-        }))
-      ) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: `signSignature ${signSignature}`,
-          type: "signature",
-          ...Function_Exception_Detail,
-          target: `thirdPartySignature`,
-        });
-      }
     }
   }
 
@@ -346,23 +262,19 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
     tasks.next = super.applyTransaction(transaction, eventEmitter, config);
     const {
       transactionSignatureBuffer,
-      trustAsset,
       trustSenderId,
+      trustRecipientId,
     } = transaction.asset.signForAsset;
-    const { amount, assetType, sourceChainMagic } = trustAsset;
-    const assetInfo = this.chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
     // 接收账户(委托交易指定的签收人)将得到的资产解冻并收入账下
-    tasks.next = eventEmitter.emit("unfrozenAsset", {
-      type: "unfrozenAsset",
+    tasks.next = eventEmitter.emit("signForAsset", {
+      type: "signForAsset",
       transaction,
       applyInfo: {
-        address: transaction.recipientId,
+        address: transaction.senderId,
         publicKeyBuffer: transaction.senderPublicKeyBuffer,
-        assetInfo,
-        amount,
-        sourceAmount: amount,
         frozenIdBuffer: transactionSignatureBuffer,
-        recipientId: trustSenderId, // 资产冻结账户
+        frozenAddress: trustSenderId,
+        recipientId: trustRecipientId, // 接收资产的账户
       },
     });
     return tasks.tryToPromise();

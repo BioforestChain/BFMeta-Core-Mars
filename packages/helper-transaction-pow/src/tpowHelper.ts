@@ -239,9 +239,8 @@ export class TPOWHelper {
     };
   }
   @cacheGetter
-  private get generateTotalAmountBI() {
-    const { generateTotalAmount } = this.config.genesisBlock.remark;
-    return BigInt(generateTotalAmount);
+  private get genesisAmountBI() {
+    return BigInt(this.config.genesisAmount);
   }
   @cacheGetter
   private get MAX_SAFE_INTEGER_BI() {

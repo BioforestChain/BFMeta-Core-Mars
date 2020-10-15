@@ -537,7 +537,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
     const accountAssetMap = new Map<string, bigint>();
     accountAssetMap.set(
       `${genesisAccountInfo.address}_${core.config.magic}_${core.config.assetType}`,
-      BigInt(core.config.genesisBlock.asset.genesisAsset.generateTotalAmount),
+      BigInt(core.config.genesisBlock.asset.genesisAsset.genesisAmount),
     );
 
     function getAccountAssetKey(address: string, magic: string, assetType: string) {

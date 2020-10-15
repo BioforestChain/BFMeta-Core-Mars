@@ -9,12 +9,12 @@ const { ArgumentFormatException } = CoreExceptionGenerator("HELPER", "milestones
 export class MilestonesHelper {
   heights: number[];
   rewards: string[];
-  generateTotalAmount: string;
+  genesisAmount: string;
   constructor(public config: ConfigHelper, public baseHelper: BaseHelper) {
     this.isVaildMilestones();
     this.heights = this.config.milestones.heights;
     this.rewards = this.config.milestones.rewards;
-    this.generateTotalAmount = this.config.generateTotalAmount;
+    this.genesisAmount = this.config.genesisAmount;
   }
 
   /**
@@ -99,7 +99,7 @@ export class MilestonesHelper {
     // 根据高度计算当前处于第几奖励周期
     const milestone = Math.floor(this.binarySearchMiles(this.heights, height));
     // 流通的总币数
-    let supply = BigInt(this.generateTotalAmount);
+    let supply = BigInt(this.genesisAmount);
     const rewardAlready = new Map<bigint, bigint>();
     let mile;
     let multiplier;

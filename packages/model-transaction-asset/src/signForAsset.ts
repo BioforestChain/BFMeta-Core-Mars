@@ -1,11 +1,7 @@
 import { Message, Field, Type } from "@bfchain/protobuf";
 import { parseHexToArrayBuffer, getHexFromArrayBuffer } from "@bfchain/util-encoding-hex";
 import { TrustAssetModel } from "./trustAsset";
-import { AccountSignatureModel } from "./accountSignature";
 import { cacheBytesGetter } from "@bfchain/core-model-cacher";
-
-/**缓存thirdSignatureList解析结果 */
-const SIGNATURE_BUFFER_WM = new WeakMap<AccountSignatureModel, Uint8Array>();
 
 /**
  * signForAsset 交易 asset 模型
@@ -24,24 +20,6 @@ export class SignForAssetModel extends Message<SignForAssetModel>
   public set transactionSignature(value: string) {
     this.transactionSignatureBuffer = parseHexToArrayBuffer(value);
   }
-  /**第三方账户签名 */
-  @Field.d(SignForAssetModel.INC++, "bytes")
-  thirdPartySignatureBuffer!: Uint8Array;
-  public get thirdPartySignature() {
-    const { thirdPartySignatureBuffer } = this;
-    const signature = AccountSignatureModel.decode(thirdPartySignatureBuffer);
-    SIGNATURE_BUFFER_WM.set(signature, thirdPartySignatureBuffer);
-    return signature;
-  }
-  public set thirdPartySignature(signature: AccountSignatureModel) {
-    let buf = SIGNATURE_BUFFER_WM.get(signature);
-    if (!buf) {
-      buf = AccountSignatureModel.encode(signature).finish();
-      SIGNATURE_BUFFER_WM.set(signature, buf);
-    }
-    this.thirdPartySignatureBuffer = buf;
-  }
-
   /**委托交易的发起账户地址 */
   @Field.d(SignForAssetModel.INC++, "string")
   trustSenderId!: string;
@@ -64,7 +42,6 @@ export class SignForAssetModel extends Message<SignForAssetModel>
       transactionSignature: this.transactionSignature,
       trustSenderId: this.trustSenderId,
       trustRecipientId: this.trustRecipientId,
-      thirdPartySignature: this.thirdPartySignature.toJSON(),
       trustAsset: this.trustAsset.toJSON(),
     };
     return res;
@@ -76,8 +53,6 @@ export class SignForAssetModel extends Message<SignForAssetModel>
     const res = super.fromObject(object) as SignForAssetModel;
     if (res !== object) {
       object.transactionSignature && (res.transactionSignature = object.transactionSignature);
-      object.thirdPartySignature &&
-        (res.thirdPartySignature = AccountSignatureModel.fromObject(object.thirdPartySignature));
     }
     return (res as unknown) as T;
   }

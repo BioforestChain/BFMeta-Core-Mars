@@ -36,7 +36,7 @@ export const mainChainAssetData: BFChainCore.GenesisAssetJSON = {
   bnid: BNID_TYPE.TESTNET,
   beginEpochTime: new Date(new Date("2020-01-01").setHours(0, 0, 0, 0)).getTime(),
   genesisLocationName: "ibt.bfchain",
-  generateTotalAmount: "244645364561314071",
+  genesisAmount: "244645364561314071",
   minTransactionFeePerByte: {
     numerator: 100,
     denominator: 1024,
@@ -152,7 +152,7 @@ export const registerchainAssetData: BFChainCore.GenesisAssetJSON = {
   bnid: BNID_TYPE.TESTNET,
   beginEpochTime: new Date(new Date("2020-01-01").setHours(0, 0, 0, 0)).getTime(),
   genesisLocationName: "qawaq.qawaq",
-  generateTotalAmount: "100000000000000",
+  genesisAmount: "100000000000000",
   minTransactionFeePerByte: {
     numerator: 88,
     denominator: 100,

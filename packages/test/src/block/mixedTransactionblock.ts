@@ -489,7 +489,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
       `${bfchainCore.accountBaseHelper.getAddressFromPublicKeyString(
         bfchainCore.config.genesisBlock.generatorPublicKey,
       )}_${bfchainCore.config.magic}_${bfchainCore.config.assetType}`,
-      BigInt(bfchainCore.config.genesisBlock.asset.genesisAsset.generateTotalAmount),
+      BigInt(bfchainCore.config.genesisBlock.asset.genesisAsset.genesisAmount),
     );
 
     function setAccountAsset(key: string, assetNumber: bigint) {

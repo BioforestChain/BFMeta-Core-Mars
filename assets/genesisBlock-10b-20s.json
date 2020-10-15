@@ -1,9 +1,9 @@
 {
   "version": 1,
   "height": 1,
-  "blockSize": 26887,
+  "blockSize": 26877,
   "timestamp": 0,
-  "signature": "77e1c19f297eacbf604aef937b7f37254040e480c49192f19f22ab232ce06c65198c82c3d30de5cf430e2ea9c399b5728a01ba93108214752e1641ea7e3ea505",
+  "signature": "5816c46e6847df967649282b30a22d47a9aba86416deaf73d0b30696e5e3aa14716706c33852b9aa6193acb7b7c66d4463f14cd2d826f31fe35ac35a73f0a20d",
   "generatorPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
   "generatorEquity": "0",
   "numberOfTransactions": 81,
@@ -14,7 +14,7 @@
   "totalFee": "1767",
   "reward": "0",
   "magic": "E00EI",
-  "blockParticipation": "29670081",
+  "blockParticipation": "14835081",
   "transactions": [
     {
       "index": 0,
@@ -2972,7 +2972,7 @@
       "bnid": "c",
       "beginEpochTime": 1577808000000,
       "genesisLocationName": "ibt.bfchain",
-      "generateTotalAmount": "244645364561314071",
+      "genesisAmount": "244645364561314071",
       "minTransactionFeePerByte": {
         "numerator": 100,
         "denominator": 1024
@@ -3060,12 +3060,12 @@
         ]
       },
       "accountParticipationWeightRatio": {
-        "prevWeight": "10000",
-        "nextWeight": "1"
+        "balanceWeight": 5000,
+        "numberOfTransactionsWeight": 1
       },
       "blockParticipationWeightRatio": {
-        "prevWeight": "10000",
-        "nextWeight": "1"
+        "balanceWeight": 5000,
+        "numberOfTransactionsWeight": 1
       },
       "averageComputingPower": 125,
       "tpowOfWorkExemptionBlocks": 10,

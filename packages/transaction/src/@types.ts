@@ -150,6 +150,20 @@ declare namespace BFChainCore {
     };
   }
 
+  interface ApplyResult_SignForAssetJSON {
+    type: "signForAsset";
+    applyInfo: {
+      address: string;
+      publicKey: string;
+      /**冻结的事件 id */
+      frozenId: string;
+      /**冻结事件的发起账户地址 */
+      frozenAddress: string;
+      /**冻结事件的接收账户地址 */
+      recipientId: string;
+    };
+  }
+
   interface ApplyResult_FrozenAccountJSON {
     type: "frozenAccount";
     applyInfo: {
@@ -307,6 +321,7 @@ declare namespace BFChainCore {
     | ApplyResult_DestoryAssetJSON
     | ApplyResult_FrozenAssetJSON
     | ApplyResult_UnfrozenAssetJSON
+    | ApplyResult_SignForAssetJSON
     | ApplyResult_FrozenAccountJSON
     | ApplyResult_IssueDAppidJSON
     | ApplyResult_SaleDAppidJSON

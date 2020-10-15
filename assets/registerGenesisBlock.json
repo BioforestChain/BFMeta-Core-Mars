@@ -1,9 +1,9 @@
 {
   "version": 1,
   "height": 1,
-  "blockSize": 175455,
+  "blockSize": 175444,
   "timestamp": 0,
-  "signature": "0a1229dfad8941a624d8272189e813952ab41f986036ba1b5e47dc3b0dff4fe7f4cbdd8e05b7075eb89ad600e0ca508306983c926d4cea9d7d20b22136f67c09",
+  "signature": "7636d83a649b867079395dd480160c4054ce073f74db26cedc3e2852227736e886e1ddbe4a4330c3d445e5f5dd2f31a0f2438bf41d24c20e0179c6e359ea3a0c",
   "generatorPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
   "generatorEquity": "0",
   "numberOfTransactions": 437,
@@ -14,7 +14,7 @@
   "totalFee": "109995",
   "reward": "0",
   "magic": "NMQX0",
-  "blockParticipation": "1875950437",
+  "blockParticipation": "937975437",
   "transactions": [
     {
       "index": 0,
@@ -16751,7 +16751,7 @@
       "bnid": "c",
       "beginEpochTime": 1577808000000,
       "genesisLocationName": "qawaq.qawaq",
-      "generateTotalAmount": "100000000000000",
+      "genesisAmount": "100000000000000",
       "minTransactionFeePerByte": {
         "numerator": 88,
         "denominator": 100
@@ -16839,12 +16839,12 @@
         ]
       },
       "accountParticipationWeightRatio": {
-        "prevWeight": "10000",
-        "nextWeight": "1"
+        "balanceWeight": 5000,
+        "numberOfTransactionsWeight": 1
       },
       "blockParticipationWeightRatio": {
-        "prevWeight": "10000",
-        "nextWeight": "1"
+        "balanceWeight": 5000,
+        "numberOfTransactionsWeight": 1
       },
       "averageComputingPower": 125,
       "tpowOfWorkExemptionBlocks": 57,

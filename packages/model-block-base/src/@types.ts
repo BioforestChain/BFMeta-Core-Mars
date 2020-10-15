@@ -142,7 +142,7 @@ declare namespace BFChainCore {
     bnid: import("./constanst").BNID_TYPE;
     beginEpochTime: number;
     genesisLocationName: string;
-    generateTotalAmount: string;
+    genesisAmount: string;
     minTransactionFeePerByte: FractionJSON;
     maxTransactionSize: number;
     maxBlockSize: number;

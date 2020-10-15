@@ -4,7 +4,6 @@ import {
   NOT_EXIST,
   PROP_IS_REQUIRE,
   SHOULD_NOT_EXIST,
-  SHOULD_BE,
 } from "@bfchain/core-util-exception";
 import { parseHexToArrayBuffer, Injectable, Inject } from "@bfchain/util";
 import {
@@ -56,6 +55,19 @@ export class CustomTransactionEvent {
     if (!this.baseHelper.isValidPublicKey(publicKey)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "publicKey",
+        ...Function_Exception_Detail,
+      });
+    }
+  }
+
+  async verifyFrozenAddress(frozenAddress: string) {
+    const Function_Exception_Detail = {
+      target: "applyResult",
+      function: "verifyFrozenAddress",
+    } as const;
+    if (!(await this.accountBaseHelper.isAddress(frozenAddress))) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "frozenAddress",
         ...Function_Exception_Detail,
       });
     }
@@ -346,6 +358,24 @@ export class CustomTransactionEvent {
       this.verifyAssetNumber(amount);
       this.verifyMagic(magic);
       this.verifyAssetType(assetType);
+      await this.verifyRecipientId(recipientId);
+      if (
+        !(
+          transaction.storage &&
+          transaction.storage.key === "transactionSignature" &&
+          transaction.storage.value === frozenId
+        )
+      ) {
+        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          prop: "frozenId",
+          ...Function_Exception_Detail,
+        });
+      }
+      return;
+    }
+    if (applyResult.type === "signForAsset") {
+      const { frozenId, frozenAddress, recipientId } = applyResult.applyInfo;
+      await this.verifyFrozenAddress(frozenAddress);
       await this.verifyRecipientId(recipientId);
       if (
         !(
@@ -740,6 +770,20 @@ export class CustomTransactionEvent {
           amount,
           sourceAmount: amount,
           frozenIdBuffer: parseHexToArrayBuffer(frozenId),
+          recipientId,
+        },
+      });
+    }
+    if (applyResult.type === "signForAsset") {
+      const { address, publicKey, frozenId, frozenAddress, recipientId } = applyResult.applyInfo;
+      return eventEmitter.emit("signForAsset", {
+        type: "signForAsset",
+        transaction,
+        applyInfo: {
+          address,
+          publicKeyBuffer: parseHexToArrayBuffer(publicKey),
+          frozenIdBuffer: parseHexToArrayBuffer(frozenId),
+          frozenAddress,
           recipientId,
         },
       });

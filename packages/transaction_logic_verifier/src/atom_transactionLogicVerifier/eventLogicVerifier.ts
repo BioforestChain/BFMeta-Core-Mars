@@ -336,6 +336,97 @@ export class EventLogicVerifier {
     );
   }
 
+  listenEventSignForAsset(
+    transaction: BFChainCore.Transaction,
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
+  ) {
+    const Function_Exception_Detail = {
+      function: "eventLogicVerifier",
+    } as const;
+
+    // 解冻资产
+    eventEmitter.on(
+      "signForAsset",
+      async ({ applyInfo }, next) => {
+        const { address, frozenIdBuffer, frozenAddress, recipientId } = applyInfo;
+        const transactionSignature = getHexFromArrayBuffer(frozenIdBuffer);
+        const trs = (await transactionGetterHelper.getTransactionBySignature(
+          transactionSignature,
+        )) as BFChainCore.TrustAssetTransactionJSON;
+
+        if (!trs) {
+          throw new NoFoundException(NOT_EXIST, {
+            prop: `Transaction with signature ${transactionSignature}`,
+            target: "grabAsset",
+            ...Function_Exception_Detail,
+          });
+        }
+
+        // 获取冻结信息
+        const frozenAsset = await accountGetterHelper.getFrozenAsset(
+          frozenAddress,
+          transactionSignature,
+        );
+
+        if (!frozenAsset) {
+          throw new ConsensusException(NOT_EXIST, {
+            prop: `Frozen asset with signature ${transactionSignature}`,
+            target: "blockChain",
+            ...Function_Exception_Detail,
+          });
+        }
+
+        const { maxEffectiveHeight, minEffectiveHeight, remainUnfrozenTimes, amount } = frozenAsset;
+        // 是否到达解冻高度
+        if (minEffectiveHeight > transaction.applyBlockHeight) {
+          throw new ConsensusException(NOT_BEGIN_UNFROZEN_YET, {
+            frozenId: transactionSignature,
+            ...Function_Exception_Detail,
+          });
+        }
+
+        // 交易交易是否过期
+        if (currentBlockHeight > maxEffectiveHeight) {
+          throw new ConsensusException(FROZEN_ASSET_EXPIRATION, {
+            frozenId: transactionSignature,
+            ...Function_Exception_Detail,
+          });
+        }
+
+        if (maxEffectiveHeight < transaction.applyBlockHeight) {
+          throw new ConsensusException(FROZEN_ASSET_EXPIRATION, {
+            frozenId: transactionSignature,
+            ...Function_Exception_Detail,
+          });
+        }
+
+        // 剩余资产是否足够
+        if (BigInt(amount) === BigInt(0)) {
+          throw new ConsensusException(ASSET_NOT_ENOUGH, {
+            reason: `No enough asset to sign for magic ${frozenAsset.sourceChainMagic} assetType ${frozenAsset.assetType} remain ${amount}`,
+            ...Function_Exception_Detail,
+          });
+        }
+
+        // 剩余解冻次数是否足够
+        if (remainUnfrozenTimes !== undefined) {
+          if (remainUnfrozenTimes === 0) {
+            throw new ConsensusException(UNFROZEN_TIME_USE_UP, {
+              frozenId: transactionSignature,
+              ...Function_Exception_Detail,
+            });
+          }
+        }
+
+        next();
+      },
+      { taskname: `applyTransaction/logicVerifier/signForAsset` },
+    );
+  }
+
   listenEventVoteEquity(
     accountsInfo: { [address: string]: BFChainCore.AccountInfo },
     transaction: BFChainCore.Transaction,

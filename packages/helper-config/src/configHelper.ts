@@ -51,8 +51,8 @@ export class ConfigHelper {
   }
   /**链创世账户初始账户余额 */
   @cacheGetter
-  get generateTotalAmount() {
-    return this.genesisBlock.asset.genesisAsset.generateTotalAmount;
+  get genesisAmount() {
+    return this.genesisBlock.asset.genesisAsset.genesisAmount;
   }
   /**链创世链域名 */
   @cacheGetter

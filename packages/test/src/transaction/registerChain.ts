@@ -497,7 +497,7 @@ const getTxs = (address: string) => {
     const registerChainAccountAssetMap = new Map<string, bigint>();
     registerChainAccountAssetMap.set(
       `${genesisAccountInfo.address}_${registerBfchainCore.config.magic}_${registerBfchainCore.config.assetType}`,
-      BigInt(registerBfchainCore.config.generateTotalAmount),
+      BigInt(registerBfchainCore.config.genesisAmount),
     );
 
     function getRegisterChainAccountAssetKey(address: string, magic: string, assetType: string) {
