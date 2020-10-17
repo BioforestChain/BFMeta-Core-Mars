@@ -59,7 +59,6 @@ async function getSetLnsManagerTransaction(sender: AccountModel) {
         name: bfchainCore.config.genesisBlock.asset.genesisAsset.genesisLocationName,
         sourceChainName: bfchainCore.config.chainName,
         sourceChainMagic: bfchainCore.config.magic,
-        manager: getGenesisAccount().address,
       },
     },
     keypair,

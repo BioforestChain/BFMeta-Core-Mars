@@ -17,15 +17,11 @@ export class SetLnsManagerModel
   /**欲设置管理员的链域名所属的链网络标识符 */
   @Field.d(3, "string")
   sourceChainMagic!: string;
-  /**新的链域名管理者地址 */
-  @Field.d(4, "string")
-  manager!: string;
   toJSON() {
     return {
       name: this.name,
       sourceChainName: this.sourceChainName,
       sourceChainMagic: this.sourceChainMagic,
-      manager: this.manager,
     };
   }
 }

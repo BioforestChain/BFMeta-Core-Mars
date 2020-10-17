@@ -291,7 +291,6 @@ declare namespace BFChainCore {
     name: string;
     sourceChainName: string;
     sourceChainMagic: string;
-    manager: string;
   }
   interface SetLnsManagerAssetJSON {
     lnsManager: SetLnsManagerJSON;
