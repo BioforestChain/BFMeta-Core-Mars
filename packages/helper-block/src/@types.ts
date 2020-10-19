@@ -94,6 +94,7 @@ declare namespace BFChainCore {
     reward: string;
     magic: string;
     blockParticipation: string;
+    signSignature?: string;
     remark: { [key: string]: string };
     asset: GetBlockAssetJSON<T>;
   };
