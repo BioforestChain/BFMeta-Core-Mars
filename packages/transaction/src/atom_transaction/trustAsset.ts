@@ -140,19 +140,19 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
 
     if (trustees.includes(senderId)) {
       throw new ArgumentIllegalException(SHOULD_NOT_INCLUDE, {
-        to_compare_prop: "trustee",
-        to_target: "trustAsset",
-        be_compare_prop: `senderId ${senderId}`,
+        prop: "trustees",
+        value: `senderId ${senderId}`,
         ...Function_Exception_Detail,
+        target: "trustAsset",
       });
     }
 
     if (trustees.includes(recipientId)) {
       throw new ArgumentIllegalException(SHOULD_NOT_INCLUDE, {
-        to_compare_prop: "trustee",
-        to_target: "trustAsset",
-        be_compare_prop: `recipientId ${recipientId}`,
+        prop: "trustee",
+        value: `recipientId ${recipientId}`,
         ...Function_Exception_Detail,
+        target: "trustAsset",
       });
     }
 
