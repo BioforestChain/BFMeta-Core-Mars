@@ -82,8 +82,8 @@ declare namespace BFChainCore {
     height: number;
     timestamp: number;
     blockSize: number;
-    signature: string;
     generatorPublicKey: string;
+    generatorSecondPublicKey?: string;
     generatorEquity: string;
     numberOfTransactions: number;
     payloadHash: string;
@@ -94,6 +94,7 @@ declare namespace BFChainCore {
     reward: string;
     magic: string;
     blockParticipation: string;
+    signature: string;
     signSignature?: string;
     remark: { [key: string]: string };
     asset: GetBlockAssetJSON<T>;
