@@ -17,12 +17,10 @@ import {
   INVALID_TRANSACTION_BYTE_LENGTH,
   NEED_PURCHASE_DAPPID_BEFORE_USE,
   NEED_VOTE_FOR_DAPPID_POSSESSOR_BFCORE_USE,
-  POSSESS_ASSET_EXCEPT_CHAIN_ASSET,
   ALREADY_EXIST,
   INVALID_TRANSACTION_EFFECTIVE_BLOCK_HEIGHT,
   VERIFY_TRANSACTION_POW_OF_WORK_ERROR,
   INVALID_TRANSACTION_FROM_MAGIC,
-  NOT_MATCH,
   TRANSACTION_SENDER_SECOND_PUBLICKEY_ALREADY_CHANGE,
 } from "@bfchain/core-util-exception";
 import {
@@ -129,6 +127,13 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
           recipientId,
           currentBlockHeight,
         );
+        if (!recipient) {
+          throw new ConsensusException(NOT_EXIST, {
+            prop: `Account with address ${recipientId}`,
+            target: "blockChain",
+            ...Function_Exception_Detail,
+          });
+        }
       }
       if (recipient && recipient.accountInfo && recipient.accountAssets) {
         this.checkRecipientAccountStatus(recipient.accountInfo);
@@ -210,11 +215,11 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    *
    * @param accountInfo
    */
-  private checkRecipientAccountStatus(accountInfo: BFChainCore.AccountInfo | undefined) {
+  private checkRecipientAccountStatus(accountInfo: BFChainCore.AccountInfo) {
     const Function_Exception_Detail = {
       function: "checkRecipientAccountStatus",
     } as const;
-    if (!(accountInfo && accountInfo.hasOwnProperty("accountStatus"))) {
+    if (!accountInfo.hasOwnProperty("accountStatus")) {
       throw new ConsensusException(PROP_LOSE, {
         prop: "accountStatus",
         target: "accountInfo",

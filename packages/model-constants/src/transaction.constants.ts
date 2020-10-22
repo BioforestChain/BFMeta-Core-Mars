@@ -53,15 +53,15 @@ export enum ACCOUNT_STATUS {
    */
   NORMAL = 0x00,
   /**
-   * FROZEN: 冻结转入
+   * FROZEN: 冻结作为事件接收账户的权力
    */
   FROZEN_IN = 0x01,
   /**
-   * FROZEN: 冻结转出
+   * FROZEN: 冻结发起事件的权力
    */
   FROZEN_OUT = 0x10,
   /**
-   * FROZEN: 冻结转入和转出
+   * FROZEN: 冻结作为事件接收账户和发起事件的权力
    */
   FROZEN_IN_AND_OUT = 0x11,
 }
