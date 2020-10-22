@@ -1,11 +1,7 @@
 import { TransferAssetTransaction, ACCOUNT_STATUS } from "@bfchain/core-model";
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
-import {
-  CoreExceptionGenerator,
-  PROP_LOSE,
-  PERMISSION_DENIED,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, PROP_LOSE, PERMISSION_DENIED } from "@bfchain/core-util-exception";
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
   "TransactionLogicVerifier",
@@ -71,22 +67,21 @@ export class TransferAssetLogicVerifier extends TransactionLogicVerifier {
     const Function_Exception_Detail = {
       function: "checkRecipientStatus",
     } as const;
-    
-      if (!accountInfo.hasOwnProperty("accountStatus")) {
-        throw new ConsensusException(PROP_LOSE, {
-          prop: "accountStatus",
-          target: "accountInfo",
+
+    if (!accountInfo.hasOwnProperty("accountStatus")) {
+      throw new ConsensusException(PROP_LOSE, {
+        prop: "accountStatus",
+        target: "accountInfo",
+        ...Function_Exception_Detail,
+      });
+    }
+    if (accountInfo.accountStatus === ACCOUNT_STATUS.FROZEN_OUT) {
+      if (assetType !== this.configHelper.assetType) {
+        throw new ConsensusException(PERMISSION_DENIED, {
+          operationName: `Transfer asset ${assetType} to ${accountInfo.address}, because ${accountInfo.address} was frozen`,
           ...Function_Exception_Detail,
         });
       }
-      if (
-        accountInfo.accountStatus === ACCOUNT_STATUS.FROZEN_OUT
-      ) {
-        if (assetType !== this.configHelper.assetType) {
-          throw new ConsensusException(PERMISSION_DENIED, {
-            operationName: `Transfer asset ${assetType} to ${accountInfo.address}, because ${accountInfo.address} was frozen`,
-            ...Function_Exception_Detail,
-          });
-        }
-      }
+    }
+  }
 }
