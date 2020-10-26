@@ -47,6 +47,7 @@ export class TransferAssetLogicVerifier extends TransactionLogicVerifier {
       [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountInfo),
     };
     if (recipient && recipient.accountInfo && recipient.accountAssets) {
+      this.checkRecipientStatus(assetType, recipient.accountInfo);
       const address = recipient.accountInfo.address;
       cloneAccountsAssets[address] = this.helperLogicVerifier.deepClone(recipient.accountAssets);
       cloneAccountsInfo[address] = this.helperLogicVerifier.deepClone(recipient.accountInfo);
