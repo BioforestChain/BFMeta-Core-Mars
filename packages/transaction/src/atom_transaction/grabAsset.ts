@@ -16,6 +16,7 @@ import {
   SHOULD_BE,
   NOT_MATCH,
   NOT_EXIST,
+  SHOULD_NOT_EXIST,
 } from "@bfchain/core-util-exception";
 import { GiftAssetTransactionFactory } from "./giftAsset";
 import { Injectable, Inject, parseHexToArrayBuffer, TaskList } from "@bfchain/util";
@@ -188,22 +189,18 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
 
     this.checkAssetAmount(grabAsset.amount, "amount", GrabAssetAsset_Exception_Detail);
 
-    const { giftAsset } = grabAsset;
+    const { giftAsset, ciphertextSignature } = grabAsset;
     /**
      * 校验`giftAsset`的基本格式
      */
     this.giftAssetTransactionFactory.verifyGiftAsset(giftAsset);
 
     const { cipherPublicKeys } = giftAsset;
-    const trsSignBuffer = parseHexToArrayBuffer(transactionSignature);
-
     /**如果是公钥模式，那么必须存在密文 */
     if (cipherPublicKeys.length > 0) {
-      const { ciphertextSignature } = grabAsset;
       if (!ciphertextSignature) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(NOT_EXIST, {
           prop: `ciphertextSignature ${ciphertextSignature}`,
-          type: "grabAsset",
           ...GrabAssetAsset_Exception_Detail,
         });
       }
@@ -211,7 +208,6 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
       if (!baseHelper.isValidAccountSignature(ciphertextSignature)) {
         throw new ArgumentIllegalException(NOT_EXIST, {
           prop: `ciphertextSignature ${ciphertextSignature}`,
-          type: "signature",
           ...GrabAssetAsset_Exception_Detail,
         });
       }
@@ -233,13 +229,21 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
         !(await this.transactionHelper.verifyCiphertextSignature({
           secretPublicKey: parseHexToArrayBuffer(publicKey),
           ciphertextSignatureBuffer: parseHexToArrayBuffer(signature),
-          transactionSignatureBuffer: trsSignBuffer,
+          transactionSignatureBuffer: parseHexToArrayBuffer(transactionSignature),
           senderId: body.senderId,
         }))
       ) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: `ciphertextSignature ${signature}`,
           type: "signature",
+          ...GrabAssetAsset_Exception_Detail,
+        });
+      }
+    } else {
+      if (ciphertextSignature) {
+        throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+          prop: `ciphertextSignature ${ciphertextSignature}`,
+          type: "grabAsset",
           ...GrabAssetAsset_Exception_Detail,
         });
       }
