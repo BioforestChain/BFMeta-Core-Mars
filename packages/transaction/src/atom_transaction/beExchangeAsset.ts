@@ -1,5 +1,5 @@
 import { TransactionFactory } from "./_txbase";
-import { BeExchangeAssetTransaction, BeExchangeAssetModel } from "@bfchain/core-model";
+import { BeExchangeAssetTransaction } from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
@@ -18,9 +18,10 @@ import {
   NOT_MATCH,
   NOT_EXIST,
   PROP_SHOULD_GTE_FIELD,
+  SHOULD_NOT_EXIST,
 } from "@bfchain/core-util-exception";
 import { ToExchangeAssetTransactionFactory } from "./toExchangeAsset";
-import { Injectable, TaskList } from "@bfchain/util";
+import { Injectable, TaskList, parseHexToArrayBuffer } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
   "BeExchangeAssetTransactionFactory",
@@ -212,7 +213,7 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<
       });
     }
 
-    const { exchangeAsset } = beExchangeAsset;
+    const { exchangeAsset, ciphertextSignature } = beExchangeAsset;
 
     /**校验`exchangeAsset`的基本格式 */
     this.toExchangeAssetTransactionFactory.verifyToExchangeAsset(exchangeAsset);
@@ -241,22 +242,23 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<
     }
 
     const { cipherPublicKeys } = exchangeAsset;
-
     /**如果是公钥模式，那么必须存在密文 */
     if (cipherPublicKeys.length > 0) {
-      if (!baseHelper.isValidAccountSignature(beExchangeAsset.ciphertextSignature)) {
+      if (!ciphertextSignature) {
         throw new ArgumentIllegalException(NOT_EXIST, {
-          prop: `ciphertextSignature ${beExchangeAsset.ciphertextSignature}`,
-          type: "signature",
+          prop: `ciphertextSignature ${ciphertextSignature}`,
           ...BeExchangeAssetAsset_Exception_Detail,
         });
       }
 
-      const beExchangeAssetModel = BeExchangeAssetModel.fromObject(beExchangeAsset);
+      if (!baseHelper.isValidAccountSignature(ciphertextSignature)) {
+        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          prop: `ciphertextSignature ${ciphertextSignature}`,
+          ...BeExchangeAssetAsset_Exception_Detail,
+        });
+      }
 
-      const { transactionSignatureBuffer, ciphertextSignature } = beExchangeAssetModel;
-
-      const { publicKeyBuffer, signatureBuffer, signature, publicKey } = ciphertextSignature;
+      const { signature, publicKey } = ciphertextSignature;
 
       if (!cipherPublicKeys.includes(publicKey)) {
         throw new ArgumentIllegalException(NOT_MATCH, {
@@ -271,15 +273,22 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<
       /// 对密文进行解码校验
       if (
         !(await this.transactionHelper.verifyCiphertextSignature({
-          secretPublicKey: publicKeyBuffer,
-          ciphertextSignatureBuffer: signatureBuffer,
-          transactionSignatureBuffer,
+          secretPublicKey: parseHexToArrayBuffer(publicKey),
+          ciphertextSignatureBuffer: parseHexToArrayBuffer(signature),
+          transactionSignatureBuffer: parseHexToArrayBuffer(transactionSignature),
           senderId: body.senderId,
         }))
       ) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: `ciphertextSignature ${signature}`,
           type: "signature",
+          ...BeExchangeAssetAsset_Exception_Detail,
+        });
+      }
+    } else {
+      if (ciphertextSignature) {
+        throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+          prop: `ciphertextSignature ${ciphertextSignature}`,
           ...BeExchangeAssetAsset_Exception_Detail,
         });
       }
