@@ -19,6 +19,8 @@ import {
   NOT_EXIST,
   PROP_SHOULD_GTE_FIELD,
   SHOULD_NOT_EXIST,
+  PROP_SHOULD_GT_FIELD,
+  PROP_SHOULD_LTE_FIELD,
 } from "@bfchain/core-util-exception";
 import { ToExchangeAssetTransactionFactory } from "./toExchangeAsset";
 import { Injectable, TaskList, parseHexToArrayBuffer } from "@bfchain/util";
@@ -212,11 +214,26 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<
         ...BeExchangeAssetAsset_Exception_Detail,
       });
     }
+    if (beExchangeNumber === "0") {
+      throw new ArgumentIllegalException(PROP_SHOULD_GT_FIELD, {
+        prop: "beExchangeNumber",
+        field: "0",
+        ...BeExchangeAssetAsset_Exception_Detail,
+      });
+    }
 
     const { exchangeAsset, ciphertextSignature } = beExchangeAsset;
 
     /**校验`exchangeAsset`的基本格式 */
     this.toExchangeAssetTransactionFactory.verifyToExchangeAsset(exchangeAsset);
+    // 这里的 to 就是 to 交易发起人给出权益，be 是 be 交易发起人给出的权益
+    if (BigInt(toExchangeNumber) > BigInt(exchangeAsset.toExchangeNumber)) {
+      throw new ArgumentIllegalException(PROP_SHOULD_LTE_FIELD, {
+        prop: `toExchangeNumber ${toExchangeNumber}`,
+        field: exchangeAsset.toExchangeNumber,
+        ...BeExchangeAssetAsset_Exception_Detail,
+      });
+    }
 
     if (!baseHelper.isValidRate(exchangeAsset.exchangeRate)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
@@ -226,17 +243,17 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<
       });
     }
 
-    const minToExchangeNumber_BI = jsbiHelper.multiplyRoundFraction(
-      beExchangeAsset.beExchangeNumber,
+    const minBeExchangeNumber_BI = jsbiHelper.multiplyRoundFraction(
+      exchangeAsset.toExchangeNumber,
       {
         numerator: exchangeAsset.exchangeRate.prevWeight,
         denominator: exchangeAsset.exchangeRate.nextWeight,
       },
     );
-    if (minToExchangeNumber_BI > BigInt(beExchangeAsset.toExchangeNumber)) {
+    if (minBeExchangeNumber_BI > BigInt(beExchangeAsset.beExchangeNumber)) {
       throw new ArgumentIllegalException(PROP_SHOULD_GTE_FIELD, {
-        prop: `toExchangeNumber ${toExchangeNumber}`,
-        field: minToExchangeNumber_BI.toString(),
+        prop: `beExchangeNumber ${beExchangeNumber}`,
+        field: minBeExchangeNumber_BI.toString(),
         ...BeExchangeAssetAsset_Exception_Detail,
       });
     }

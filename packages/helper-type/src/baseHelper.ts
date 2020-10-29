@@ -422,7 +422,14 @@ export class BaseHelper {
       return false;
     }
     const serialNumber = strArray[3];
-    if (!(this.isValidStringNumber(serialNumber) && serialNumber.length === 2)) {
+
+    if (
+      !(
+        this.isString(serialNumber) &&
+        this.isMakeUpWithNumber(serialNumber) &&
+        serialNumber.length === 2
+      )
+    ) {
       return false;
     }
     return true;
@@ -591,6 +598,11 @@ export class BaseHelper {
     return true;
   }
 
+  isMakeUpWithNumber(stringNumber: string) {
+    const allowSymbols = /^[0-9]+$/;
+    return allowSymbols.test(stringNumber);
+  }
+
   /**
    * 是否时是数字组成的字符串
    *
@@ -600,8 +612,12 @@ export class BaseHelper {
     if (!this.isString(stringNumber)) {
       return false;
     }
-    const allowSymbols = /^[0-9]+$/;
-    return allowSymbols.test(stringNumber);
+    if (stringNumber.length > 1) {
+      if (stringNumber.startsWith("0")) {
+        return false;
+      }
+    }
+    return this.isMakeUpWithNumber(stringNumber);
   }
 
   /**
@@ -697,13 +713,23 @@ export class BaseHelper {
     return true;
   }
 
+  isValidNumber(data: number) {
+    const dataString = data.toString();
+    if (dataString.length > 1) {
+      if (dataString.startsWith("0")) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   /**
    * 端口号是否合法
    *
    * @param port
    */
   isValidPort(port: any): port is number {
-    return !Number.isNaN(port) && port > 0 && port < 65536;
+    return !Number.isNaN(port) && this.isValidNumber(port) && port > 0 && port < 65536;
   }
 
   /**
@@ -787,13 +813,15 @@ export class BaseHelper {
     if (hlen === 0) {
       return false;
     }
-    if (hlen === 1) {
-      if (Number.isNaN(heights[0])) {
-        return false;
-      }
-    } else {
+    if (Number.isNaN(heights[0]) || !this.isValidNumber(heights[0])) {
+      return false;
+    }
+    if (hlen > 1) {
       for (let i = 0; i < hlen - 1; i++) {
-        if (Number.isNaN(heights[i]) || heights[i] >= heights[i + 1]) {
+        if (Number.isNaN(heights[i + 1]) || !this.isValidNumber(heights[i + 1])) {
+          return false;
+        }
+        if (heights[i] >= heights[i + 1]) {
           return false;
         }
       }

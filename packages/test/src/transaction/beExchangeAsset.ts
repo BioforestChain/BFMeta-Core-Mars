@@ -67,7 +67,7 @@ async function getToExchangeAssetTransaction(
     beExchangeChainName: "bfchain",
     toExchangeAsset: "ZEK",
     beExchangeAsset: "WZX",
-    toExchangeNumber: "1000",
+    toExchangeNumber: "0",
     exchangeRate: {
       prevWeight: "2",
       nextWeight: "3",
@@ -133,15 +133,14 @@ async function getBeExchangeAssetTransaction(
     );
   }
   const exchangeRate = toExchangeAsset.exchangeRate;
+  const beExchangeNumber = jsbiHelper.multiplyRoundFraction(toExchangeAsset.toExchangeNumber, {
+    numerator: exchangeRate.nextWeight,
+    denominator: exchangeRate.prevWeight,
+  });
   const beExchangeAsset: BFChainCore.BeExchangeAssetJSON = {
     transactionSignature: toExchangeAssetTrs.signature,
-    toExchangeNumber: jsbiHelper
-      .multiplyRoundFraction("50", {
-        numerator: exchangeRate.nextWeight,
-        denominator: exchangeRate.prevWeight,
-      })
-      .toString(),
-    beExchangeNumber: "50",
+    toExchangeNumber: toExchangeAsset.toExchangeNumber,
+    beExchangeNumber: beExchangeNumber === 0n ? "1" : beExchangeNumber.toString(),
     exchangeAsset: toExchangeAsset,
   };
   if (toExchangeAsset.cipherPublicKeys.length > 0) {
