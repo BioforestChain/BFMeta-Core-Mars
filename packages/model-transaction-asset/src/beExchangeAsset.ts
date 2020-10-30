@@ -11,8 +11,7 @@ const SIGNATURE_BUFFER_WM = new WeakMap<AccountSignatureModel, Uint8Array>();
  *
  */
 @Type.d("BeExchangeAssetModel")
-export class BeExchangeAssetModel
-  extends Message<BeExchangeAssetModel>
+export class BeExchangeAssetModel extends Message<BeExchangeAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.BeExchangeAssetJSON> {
   static INC = 1;
   /**要兑换的交易签名 */
@@ -27,20 +26,27 @@ export class BeExchangeAssetModel
 
   /**用于校验身份的密文签名，如果需要的话 */
   @Field.d(BeExchangeAssetModel.INC++, "bytes", "optional")
-  ciphertextSignatureBuffer!: Uint8Array;
+  ciphertextSignatureBuffer?: Uint8Array;
   get ciphertextSignature() {
     const { ciphertextSignatureBuffer } = this;
+    if (!ciphertextSignatureBuffer) {
+      return undefined;
+    }
     const signature = AccountSignatureModel.decode(ciphertextSignatureBuffer);
     SIGNATURE_BUFFER_WM.set(signature, ciphertextSignatureBuffer);
     return signature;
   }
-  set ciphertextSignature(signature: AccountSignatureModel) {
-    let buf = SIGNATURE_BUFFER_WM.get(signature);
-    if (!buf) {
-      buf = AccountSignatureModel.encode(signature).finish();
-      SIGNATURE_BUFFER_WM.set(signature, buf);
+  set ciphertextSignature(signature: AccountSignatureModel | undefined) {
+    if (signature) {
+      let buf = SIGNATURE_BUFFER_WM.get(signature);
+      if (!buf) {
+        buf = AccountSignatureModel.encode(signature).finish();
+        SIGNATURE_BUFFER_WM.set(signature, buf);
+      }
+      this.ciphertextSignatureBuffer = buf;
+    } else {
+      this.ciphertextSignatureBuffer = undefined;
     }
-    this.ciphertextSignatureBuffer = buf;
   }
 
   /**希望交换得到的资产数量 */
@@ -82,7 +88,7 @@ export class BeExchangeAssetModel
       exchangeAsset: this.exchangeAsset.toJSON(),
     };
 
-    this.ciphertextSignatureBuffer && (res.ciphertextSignature = this.ciphertextSignature.toJSON());
+    this.ciphertextSignature && (res.ciphertextSignature = this.ciphertextSignature.toJSON());
 
     return res;
   }
@@ -106,8 +112,7 @@ export class BeExchangeAssetModel
  *
  */
 @Type.d("BeExchangeAssetAssetModel")
-export class BeExchangeAssetAssetModel
-  extends Message<BeExchangeAssetAssetModel>
+export class BeExchangeAssetAssetModel extends Message<BeExchangeAssetAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.BeExchangeAssetAssetJSON> {
   @Field.d(1, BeExchangeAssetModel)
   beExchangeAsset!: BeExchangeAssetModel;
