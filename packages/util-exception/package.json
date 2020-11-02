@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-util-exception",
-  "version": "5.19.14",
+  "version": "5.19.15",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,7 +14,7 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-typings": "5.19.14",
-    "@bfchain/core-util-exception-errorcode": "5.19.14"
+    "@bfchain/core-typings": "5.19.15",
+    "@bfchain/core-util-exception-errorcode": "5.19.15"
   }
 }
