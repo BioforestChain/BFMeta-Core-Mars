@@ -127,7 +127,7 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
 
     const assets = sender.accountAssets;
 
-    this.helperLogicVerifier.isPossessAssetExceptChainAsset(
+    await this.helperLogicVerifier.isPossessAssetExceptChainAsset(
       senderId,
       assets,
       accountGetterHelper,

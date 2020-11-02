@@ -712,7 +712,7 @@ export class EventLogicVerifier {
         }
 
         // 是否持有除链资产外的其他资产
-        this.helperLogicVerifier.isPossessAssetExceptChainAsset(
+        await this.helperLogicVerifier.isPossessAssetExceptChainAsset(
           address,
           accountAssets,
           accountGetterHelper,
@@ -999,7 +999,7 @@ export class EventLogicVerifier {
         const { address, genesisBlock } = applyInfo;
 
         // 是否持有除链资产外的其他资产
-        this.helperLogicVerifier.isPossessAssetExceptChainAsset(
+        await this.helperLogicVerifier.isPossessAssetExceptChainAsset(
           address,
           accountsAssets[address],
           accountGetterHelper,
