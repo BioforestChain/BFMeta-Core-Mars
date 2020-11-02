@@ -172,10 +172,10 @@ export class TransactionCore {
     // 在异步中执行交易POW
     if (pow && !skipPow) {
       if (pow.calculator) {
-        await pow.calculator(trs, pow, keypair, secondKeypair);
+        pow.calculator(trs, pow, keypair, secondKeypair);
       } else {
         // 使用内置的计算器去计算
-        await this.transactionPowCalculator(trs, pow, keypair, secondKeypair);
+        this.transactionPowCalculator(trs, pow, keypair, secondKeypair);
       }
     } else {
       // 交易的 nonce 必须携带，默认为 0，并且加入签名
