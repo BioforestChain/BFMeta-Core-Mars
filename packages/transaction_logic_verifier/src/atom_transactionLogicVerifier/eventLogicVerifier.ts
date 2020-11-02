@@ -712,7 +712,11 @@ export class EventLogicVerifier {
         }
 
         // 是否持有除链资产外的其他资产
-        this.helperLogicVerifier.isPossessAssetExceptForChainAsset(accountAssets);
+        this.helperLogicVerifier.isPossessAssetExceptChainAsset(
+          address,
+          accountAssets,
+          accountGetterHelper,
+        );
 
         // 资产的发行账户不能是dapp的拥有者
         await this.helperLogicVerifier.isDAppPossessor(
@@ -995,7 +999,11 @@ export class EventLogicVerifier {
         const { address, genesisBlock } = applyInfo;
 
         // 是否持有除链资产外的其他资产
-        this.helperLogicVerifier.isPossessAssetExceptForChainAsset(accountsAssets[address]);
+        this.helperLogicVerifier.isPossessAssetExceptChainAsset(
+          address,
+          accountsAssets[address],
+          accountGetterHelper,
+        );
 
         // 保证账户上足够的本链资产，避免 py 操作
         const {

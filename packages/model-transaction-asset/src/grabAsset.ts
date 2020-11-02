@@ -10,8 +10,7 @@ const SIGNATURE_BUFFER_WM = new WeakMap<AccountSignatureModel, Uint8Array>();
  *
  */
 @Type.d("GrabAssetModel")
-export class GrabAssetModel
-  extends Message<GrabAssetModel>
+export class GrabAssetModel extends Message<GrabAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.GrabAssetJSON> {
   static INC = 1;
   /**赠送交易所在的区块签名 */
@@ -37,20 +36,27 @@ export class GrabAssetModel
   amount!: string;
   /**用于校验身份的密文签名，如果需要的话 */
   @Field.d(GrabAssetModel.INC++, "bytes", "optional")
-  ciphertextSignatureBuffer!: Uint8Array;
+  ciphertextSignatureBuffer?: Uint8Array;
   get ciphertextSignature() {
     const { ciphertextSignatureBuffer } = this;
+    if (!ciphertextSignatureBuffer) {
+      return undefined;
+    }
     const signature = AccountSignatureModel.decode(ciphertextSignatureBuffer);
     SIGNATURE_BUFFER_WM.set(signature, ciphertextSignatureBuffer);
     return signature;
   }
-  set ciphertextSignature(signature: AccountSignatureModel) {
-    let buf = SIGNATURE_BUFFER_WM.get(signature);
-    if (!buf) {
-      buf = AccountSignatureModel.encode(signature).finish();
-      SIGNATURE_BUFFER_WM.set(signature, buf);
+  set ciphertextSignature(signature: AccountSignatureModel | undefined) {
+    if (signature) {
+      let buf = SIGNATURE_BUFFER_WM.get(signature);
+      if (!buf) {
+        buf = AccountSignatureModel.encode(signature).finish();
+        SIGNATURE_BUFFER_WM.set(signature, buf);
+      }
+      this.ciphertextSignatureBuffer = buf;
+    } else {
+      this.ciphertextSignatureBuffer = undefined;
     }
-    this.ciphertextSignatureBuffer = buf;
   }
 
   /**红包的配置信息 */
@@ -63,7 +69,7 @@ export class GrabAssetModel
       amount: this.amount,
       giftAsset: this.giftAsset.toJSON(),
     };
-    this.ciphertextSignatureBuffer && (res.ciphertextSignature = this.ciphertextSignature.toJSON());
+    this.ciphertextSignature && (res.ciphertextSignature = this.ciphertextSignature.toJSON());
 
     return res;
   }
@@ -87,8 +93,7 @@ export class GrabAssetModel
  *
  */
 @Type.d("GrabAssetAssetModel")
-export class GrabAssetAssetModel
-  extends Message<GrabAssetAssetModel>
+export class GrabAssetAssetModel extends Message<GrabAssetAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.GrabAssetAssetJSON> {
   @Field.d(1, GrabAssetModel)
   grabAsset!: GrabAssetModel;

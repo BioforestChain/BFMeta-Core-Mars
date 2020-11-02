@@ -104,11 +104,12 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       transactionGetterHelper,
     );
 
+    const senderId = transaction.senderId;
     const cloneAccountsAssets = {
-      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
+      [senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
     };
     const cloneAccountsInfo = {
-      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountInfo),
+      [senderId]: this.helperLogicVerifier.deepClone(sender.accountInfo),
     };
     if (recipient && recipient.accountInfo && recipient.accountAssets) {
       const address = recipient.accountInfo.address;
@@ -126,16 +127,20 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
 
     const assets = sender.accountAssets;
 
-    this.helperLogicVerifier.isPossessAssetExceptForChainAsset(assets);
+    this.helperLogicVerifier.isPossessAssetExceptChainAsset(
+      senderId,
+      assets,
+      accountGetterHelper,
+    );
 
     await this.helperLogicVerifier.isDAppPossessor(
-      transaction.senderId,
+      senderId,
       this.configHelper,
       accountGetterHelper,
     );
 
     await this.helperLogicVerifier.isLnsPossessorOrManager(
-      transaction.senderId,
+      senderId,
       this.configHelper,
       accountGetterHelper,
     );
@@ -144,7 +149,7 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
 
     if (assets[sourceChainMagic][assetType].assetNumber !== totalSpend) {
       throw new ConsensusException(NEED_EMIGRATE_TOTAL_ASSET, {
-        address: transaction.senderId,
+        address: senderId,
         ...Function_Exception_Detail,
       });
     }

@@ -6,6 +6,7 @@ import {
   ACCOUNT_CAN_NOT_BE_FROZEN,
   NOT_EXIST,
   NOT_MATCH,
+  POSSESS_FROZEN_ASSET_EXCEPT_CHAIN_ASSET,
 } from "@bfchain/core-util-exception";
 const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "HelperLogicVerifier");
 
@@ -33,10 +34,15 @@ export class HelperLogicVerifier {
   /**
    * 账户是否持有除链资产外其他资产
    *
+   * @param address
    * @param assets
+   * @param accountGetterHelper
+   * @param configHelper
    */
-  isPossessAssetExceptForChainAsset(
+  async isPossessAssetExceptChainAsset(
+    address: string,
     assets: BFChainCore.AccountAssets,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     configHelper = this.configHelper,
   ) {
     for (const magic in assets) {
@@ -45,11 +51,17 @@ export class HelperLogicVerifier {
         if (assetType !== configHelper.assetType) {
           if (magicAssets[assetType].assetNumber > BigInt(0)) {
             throw new ConsensusException(POSSESS_ASSET_EXCEPT_CHAIN_ASSET, {
-              function: "isPossessAssetExceptForChainAsset",
+              function: "isPossessAssetExceptChainAsset",
             });
           }
         }
       }
+    }
+    const count = await accountGetterHelper.isPossessFrozenAssetExceptMain(address);
+    if (count > 0) {
+      throw new ConsensusException(POSSESS_FROZEN_ASSET_EXCEPT_CHAIN_ASSET, {
+        function: "isPossessAssetExceptChainAsset",
+      });
     }
   }
 

@@ -172,6 +172,8 @@ declare namespace BFChainCore {
     isLocationNameForbidden(name: string): Promise<boolean>;
     /**查询冻结的资产 */
     getFrozenAsset(address: string, signature: string): Promise<FA | undefined>;
+    /**账户是否持有冻结的非主权益 */
+    isPossessFrozenAssetExceptMain(address: string): Promise<number>;
     /**查询指定的数字资产 */
     getAsset(magic: string, assetType: string): Promise<IAI | undefined>;
     /**查询指定的资产名 */

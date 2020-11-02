@@ -179,7 +179,10 @@ export const NEED_VOTE_FOR_DAPPID_POSSESSOR_BFCORE_USE = (ec.next =
   "Need vote for dappid possessor before use, dappid {dappid} errorId {errorId} when {function}");
 /**function */
 export const POSSESS_ASSET_EXCEPT_CHAIN_ASSET = (ec.next =
-  "Account possess other asset expect chain asset when {function}");
+  "Account possess asset expect chain asset when {function}");
+/**function */
+export const POSSESS_FROZEN_ASSET_EXCEPT_CHAIN_ASSET = (ec.next =
+  "Account possess frozen asset expect chain asset when {function}");
 /**address function */
 export const ACCOUNT_IS_NOT_AN_DELEGATE = (ec.next =
   "Account with address {address} is not an delegate when {function}");

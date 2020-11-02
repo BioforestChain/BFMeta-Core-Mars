@@ -10,8 +10,7 @@ const SIGNATURE_BUFFER_WM = new WeakMap<AccountSignatureModel, Uint8Array>();
  *
  */
 @Type.d("BeExchangeSpecialAssetModel")
-export class BeExchangeSpecialAssetModel
-  extends Message<BeExchangeSpecialAssetModel>
+export class BeExchangeSpecialAssetModel extends Message<BeExchangeSpecialAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.BeExchangeSpecialAssetJSON> {
   static INC = 1;
   /**要兑换的交易签名 */
@@ -26,20 +25,27 @@ export class BeExchangeSpecialAssetModel
 
   /**用于校验身份的密文签名，如果需要的话 */
   @Field.d(BeExchangeSpecialAssetModel.INC++, "bytes", "optional")
-  ciphertextSignatureBuffer!: Uint8Array;
+  ciphertextSignatureBuffer?: Uint8Array;
   get ciphertextSignature() {
     const { ciphertextSignatureBuffer } = this;
+    if (!ciphertextSignatureBuffer) {
+      return undefined;
+    }
     const signature = AccountSignatureModel.decode(ciphertextSignatureBuffer);
     SIGNATURE_BUFFER_WM.set(signature, ciphertextSignatureBuffer);
     return signature;
   }
-  set ciphertextSignature(signature: AccountSignatureModel) {
-    let buf = SIGNATURE_BUFFER_WM.get(signature);
-    if (!buf) {
-      buf = AccountSignatureModel.encode(signature).finish();
-      SIGNATURE_BUFFER_WM.set(signature, buf);
+  set ciphertextSignature(signature: AccountSignatureModel | undefined) {
+    if (signature) {
+      let buf = SIGNATURE_BUFFER_WM.get(signature);
+      if (!buf) {
+        buf = AccountSignatureModel.encode(signature).finish();
+        SIGNATURE_BUFFER_WM.set(signature, buf);
+      }
+      this.ciphertextSignatureBuffer = buf;
+    } else {
+      this.ciphertextSignatureBuffer = undefined;
     }
-    this.ciphertextSignatureBuffer = buf;
   }
 
   /**交换的配置信息 */
@@ -52,7 +58,7 @@ export class BeExchangeSpecialAssetModel
       exchangeSpecialAsset: this.exchangeSpecialAsset.toJSON(),
     };
 
-    this.ciphertextSignatureBuffer && (res.ciphertextSignature = this.ciphertextSignature.toJSON());
+    this.ciphertextSignature && (res.ciphertextSignature = this.ciphertextSignature.toJSON());
 
     return res;
   }
@@ -76,8 +82,7 @@ export class BeExchangeSpecialAssetModel
  *
  */
 @Type.d("BeExchangeSpecialAssetAssetModel")
-export class BeExchangeSpecialAssetAssetModel
-  extends Message<BeExchangeSpecialAssetAssetModel>
+export class BeExchangeSpecialAssetAssetModel extends Message<BeExchangeSpecialAssetAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.BeExchangeSpecialAssetAssetJSON> {
   @Field.d(1, BeExchangeSpecialAssetModel)
   beExchangeSpecialAsset!: BeExchangeSpecialAssetModel;

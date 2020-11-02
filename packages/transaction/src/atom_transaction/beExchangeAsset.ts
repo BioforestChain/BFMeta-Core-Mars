@@ -244,7 +244,7 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<
     }
 
     const minBeExchangeNumber_BI = jsbiHelper.multiplyRoundFraction(
-      exchangeAsset.toExchangeNumber,
+      beExchangeAsset.toExchangeNumber,
       {
         numerator: exchangeAsset.exchangeRate.prevWeight,
         denominator: exchangeAsset.exchangeRate.nextWeight,
