@@ -618,6 +618,14 @@ export class ReplayBlockCore<T extends Block> {
       }
 
       if (!skipVerifyStatisticInfo) {
+        if (!eventEmitter.assetPrealnumsGetter) {
+          throw new NoFoundException(NOT_EXIST, {
+            prop: "assetPrealnumsGetter",
+            target: "eventEmitter",
+            ...Function_Exception_Detail,
+          });
+        }
+        statisticsInfo.assetPrealnums = await eventEmitter.assetPrealnumsGetter();
         if (
           !this.baseHelper.isArrayEqual(
             blockStatisticsInfo.getBytes(),

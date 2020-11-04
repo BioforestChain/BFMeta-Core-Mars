@@ -72,13 +72,22 @@ declare namespace BFChainCore {
     total: CountAndAmountStatisticJSON;
   }
 
+  type AssetPrealnumJSON = {
+    magic: string;
+    assetType: string;
+    remainAssetPrealnum: string;
+    frozenMainAssetPrealnum: string;
+  };
+
   interface StatisticInfoJSON {
     totalFee: string;
     totalAsset: string;
     totalChainAsset: string;
     totalAccount: number;
     assetStatisticHashMap: { [index: number]: AssetStatisticJSON };
+    assetPrealnums: AssetPrealnumJSON[];
   }
+
   //#endregion
 
   //#region CommonBlock

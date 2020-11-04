@@ -362,7 +362,9 @@ export class GenerateBlockCore<T extends Block> {
         }
       }
       isDevGenerateBlock && info("finish insertTransactions");
-
+      if (eventEmitter.assetPrealnumsGetter) {
+        statisticsInfo.assetPrealnums = await eventEmitter.assetPrealnumsGetter();
+      }
       block.statisticInfo = statisticsInfo.toModel();
       block.payloadHashBuffer = await payloadHash.digest();
       block.payloadLength = payloadLength;

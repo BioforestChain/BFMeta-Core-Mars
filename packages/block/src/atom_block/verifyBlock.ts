@@ -1,5 +1,11 @@
 import type { Block } from "@bfchain/core-model-block";
-import { TransactionInBlock } from "@bfchain/core-model-transaction";
+import {
+  TransactionInBlock,
+  TRANSACTION_TYPES_BASE,
+  TransferAssetTransaction,
+  TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE,
+  TransactionAssetChangeModel,
+} from "@bfchain/core-model-transaction";
 import {
   BlockHelper,
   BaseHelper,
@@ -7,6 +13,7 @@ import {
   AsymmetricHelper,
   ChainAssetInfoHelper,
   BlockBaseStatisticsHelper,
+  AccountBaseHelper,
 } from "@bfchain/core-helper";
 import {
   CoreExceptionGenerator,
@@ -38,6 +45,7 @@ export class VerifyBlockCore<T extends Block> {
     public asymmetricHelper: AsymmetricHelper,
     public chainAssetInfoHelper: ChainAssetInfoHelper,
     public commonBlockVerify: CommonBlockVerify<T>,
+    public accountBaseHelper: AccountBaseHelper,
     @Inject("cryptoHelper")
     public cryptoHelper: BFChainCore.CryptoHelperInterface,
   ) {}
@@ -45,21 +53,20 @@ export class VerifyBlockCore<T extends Block> {
   async verify(block: T, config = this.config) {
     await this.commonBlockVerify.verifyBlockBody(block, block.remark);
     await this.verifyBlockDerivativeInfo(block, config);
-    await this.verifyBlockTransactions(block, config);
+    // 只有创世块才能验证块内事件，其他区块只能通过 replayBlock 验证
+    if (block.height === 1) {
+      await this.verifyBlockTransactions(block, config);
+    }
     await this.commonBlockVerify.verifySignature(block);
   }
 
   /**
-   * 验证区块交易
+   * 验证区块内交易
    *
-   * @FIXME 统计金额
-   * @param block 区块
+   * @param block
+   * @param config
    */
-  async verifyBlockTransactions(
-    block: T,
-    config = this.config,
-    eventEmitter: BFChainCore.ApplyTransactionEventEmitter = new QueneEventEmitter(),
-  ) {
+  async verifyBlockTransactions(block: T, config = this.config) {
     const Function_Exception_Detail = { function: "verifyBlockTransactions" };
     if (!block) {
       throw new ArgumentIllegalException(PARAM_LOST, {
@@ -133,6 +140,35 @@ export class VerifyBlockCore<T extends Block> {
       });
     }
 
+    //#region 模拟账户表的变更
+    const accountAssetMap = new Map<string, bigint>();
+    const genesisAddress = await this.accountBaseHelper.getAddressFromPublicKey(
+      block.generatorPublicKeyBuffer,
+    );
+    accountAssetMap.set(
+      `${genesisAddress}_${config.magic}_${config.assetType}`,
+      BigInt(config.genesisBlock.asset.genesisAsset.genesisAmount),
+    );
+
+    function getAccountAssetKey(address: string, magic: string, assetType: string) {
+      return `${address}_${magic}_${assetType}`;
+    }
+
+    function setAccountAsset(key: string, assetNumber: bigint) {
+      const remainAsset = accountAssetMap.get(key);
+      if (remainAsset) {
+        accountAssetMap.set(key, remainAsset + assetNumber);
+      } else {
+        accountAssetMap.set(key, assetNumber);
+      }
+    }
+
+    function getAccountAsset(key: string): string {
+      const assetNumber = accountAssetMap.get(key);
+      return assetNumber ? assetNumber.toString() : "0";
+    }
+    //#endregion
+
     const transactions = block.transactions;
     /**重复交易 */
     const appliedTransactions = new Set<string>();
@@ -141,6 +177,7 @@ export class VerifyBlockCore<T extends Block> {
     /**所有交易体的总字节长度 */
     let payloadLength = 0;
     const sourceStatisticsInfoModel = block.statisticInfo;
+    const eventEmitter: BFChainCore.ApplyTransactionEventEmitter = new QueneEventEmitter();
     /**
      * 初始化统计器
      */
@@ -165,7 +202,14 @@ export class VerifyBlockCore<T extends Block> {
       }
       /**绑定统计功能到事件触发器上 */
       this.statisticsHelper.bindApplyTransactionEventEmiter(eventEmitter, statisticsInfo);
-
+      // FIXME: 这里只验证创世块，一般不会涉及到主权益外的权益，所以就暂时这么做，有需要再改
+      const { magic: chainMaigc, assetType: chainAssetType } = config;
+      const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(chainMaigc, chainAssetType);
+      const asset = statisticsInfo.getAssetStatistic(chainAssetInfo);
+      if (!asset) {
+        throw new Error("Statistic asset lose");
+      }
+      const assetIndex = asset.index;
       for (const tranItem of transactions) {
         const transaction = tranItem.transaction;
         // 验证区块内每笔交易的基本信息
@@ -210,24 +254,76 @@ export class VerifyBlockCore<T extends Block> {
             throw new ArgumentFormatException(`Invalid transactionInBlock signSignature`);
           }
         }
-        // 检验交易涉及的账户余额
-        for (const transactionAssetChange of tranItem.transactionAssetChanges) {
-          if (BigInt(transactionAssetChange.assetBalance) < BigInt(0)) {
-            throw new ArgumentIllegalException(PROP_IS_INVALID, {
-              prop: `assetBalance ${transactionAssetChange.assetBalance}`,
-              type: "transactionAssetChanges",
-              ...Block_Exception_Detail,
+        // 计算权益变动
+        const trs = tranItem.transaction;
+        const { type, senderId, recipientId, fromMagic, fee } = trs;
+        let calcTransactionAssetChanges: TransactionAssetChangeModel[] = [];
+        const key = getAccountAssetKey(senderId, fromMagic, chainAssetType);
+        let amount = "0";
+        if (type.includes(TRANSACTION_TYPES_BASE.TRANSFER_ASSET)) {
+          amount = (trs as TransferAssetTransaction).asset.transferAsset.amount;
+        }
+        const totalSpend = BigInt("-" + amount) + BigInt("-" + fee);
+        setAccountAsset(key, totalSpend);
+        calcTransactionAssetChanges[
+          calcTransactionAssetChanges.length
+        ] = TransactionAssetChangeModel.fromObject<TransactionAssetChangeModel>({
+          accountType: TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE.SENDER,
+          assetTypes: assetIndex,
+          assetBalance: getAccountAsset(key),
+        });
+        if (recipientId) {
+          const rkey = getAccountAssetKey(recipientId, fromMagic, chainAssetType);
+          setAccountAsset(rkey, BigInt(amount));
+          calcTransactionAssetChanges[
+            calcTransactionAssetChanges.length
+          ] = TransactionAssetChangeModel.fromObject<TransactionAssetChangeModel>({
+            accountType: TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE.RECIPIENT,
+            assetTypes: assetIndex,
+            assetBalance: getAccountAsset(rkey),
+          });
+        }
+        calcTransactionAssetChanges = this.transactionCore.transactionHelper.sortTransactionAssetChanges(
+          calcTransactionAssetChanges,
+        );
+        const transactionAssetChanges = tranItem.transactionAssetChanges;
+        const calcLength = calcTransactionAssetChanges.length;
+        const realLength = transactionAssetChanges.length;
+        if (calcLength !== realLength) {
+          throw new ArgumentIllegalException(NOT_MATCH, {
+            to_compare_prop: `transactionAssetChanges lenght ${realLength}`,
+            be_compare_prop: `transactionAssetChanges lenght ${calcLength}`,
+            to_target: `transactionInBlock ${trs.senderId} ${trs.signature}`,
+            be_target: "calculate",
+            ...Function_Exception_Detail,
+          });
+        }
+        for (let i = 0; i < calcLength; i++) {
+          if (
+            !baseHelper.isArrayEqual(
+              calcTransactionAssetChanges[i].getBytes(),
+              transactionAssetChanges[i].getBytes(),
+            )
+          ) {
+            throw new ArgumentIllegalException(NOT_MATCH, {
+              to_compare_prop: `transactionAssetChanges with index ${i} ${JSON.stringify(
+                transactionAssetChanges[i],
+              )}`,
+              be_compare_prop: `transactionAssetChanges with index ${i} ${JSON.stringify(
+                calcTransactionAssetChanges[i],
+              )}`,
+              to_target: `transactionInBlock ${trs.senderId} ${trs.signature}`,
+              be_target: "calculate",
+              ...Function_Exception_Detail,
             });
           }
         }
-
         // 生产交易二进制数据
         const tranItemBinary = TransactionInBlock.encode(tranItem).finish();
         // 更新hash
         payloadHash.update(tranItemBinary);
         // 更新总字节长度
         payloadLength += tranItemBinary.length;
-        const trs = tranItem.transaction;
         /// 交易生效
         const txFactory = this.transactionCore.getTransactionFactoryFromType(trs.type);
         /**
