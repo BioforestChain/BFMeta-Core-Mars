@@ -1,15 +1,15 @@
 {
   "name": "@bfchain/core-helper-transaction-pow",
-  "version": "5.19.17-dev.888",
+  "version": "5.19.17-dev.890",
   "main": "build/cjs/index.js",
   "type": "build/cjs/index.d.ts",
   "files": [
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-helper-bigint": "5.19.17-dev.888",
-    "@bfchain/core-helper-config": "5.19.17-dev.888",
-    "@bfchain/core-typings": "5.19.17-dev.888"
+    "@bfchain/core-helper-bigint": "5.19.17-dev.890",
+    "@bfchain/core-helper-config": "5.19.17-dev.890",
+    "@bfchain/core-typings": "5.19.17-dev.890"
   },
   "module": "build/esm/index.js"
 }

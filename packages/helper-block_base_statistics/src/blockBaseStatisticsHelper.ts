@@ -1,5 +1,4 @@
 import {
-  AssetPrealnumModel,
   AssetStatisticModel,
   CountAndAmountStatisticModel,
   StatisticInfoModel,
@@ -344,20 +343,6 @@ export class StatisticsInfo extends EventEmitter<{ destroy: [] }> {
     return this._chainAssetStatisticMap.size;
   }
 
-  //
-  private _assetPrealnums: AssetPrealnumModel[] = [];
-  get assetPrealnums() {
-    return this._assetPrealnums;
-  }
-  set assetPrealnums(assetPrealnums: BFChainCore.AssetPrealnumJSON[]) {
-    for (const assetPrealnum of assetPrealnums) {
-      this._assetPrealnums.push(AssetPrealnumModel.fromObject<AssetPrealnumModel>(assetPrealnum));
-    }
-  }
-  addAssetPrealnum(assetPrealnum: AssetPrealnumModel) {
-    this._assetPrealnums.push(assetPrealnum);
-  }
-
   // /**交易类型统计 */
   // type = new Map<TRANSACTION_TYPES_BASE, number>();
 
@@ -379,8 +364,6 @@ export class StatisticsInfo extends EventEmitter<{ destroy: [] }> {
     // 强制将内存更新
     this._chainAssetStatisticMap.forEach((assetStatistic) => assetStatistic.toModel());
     this.source_data.assetStatisticHashMap = this._assetStatisticHashMap;
-
-    this._assetPrealnums && (this.source_data.assetPrealnums = this._assetPrealnums);
 
     return this.source_data;
   }

@@ -538,11 +538,15 @@ declare namespace BFChainCore {
     assetChangesGetter?: (
       tib: TransactionInBlock,
     ) => BFChainUtil.PromiseMaybe<TransactionInBlock["transactionAssetChanges"]>;
+    assetPrealnumGetter?: (
+      tib: TransactionInBlock,
+    ) => BFChainUtil.PromiseMaybe<
+      import("@bfchain/core-model-transaction").AssetPrealnumModel | undefined
+    >;
     numberOfSenderTranGetter?: (
       tib: TransactionInBlock,
     ) => BFChainUtil.PromiseMaybe<TransactionInBlock["numberOfSenderTransactions"]>;
     blockGeneratorEquityGetter?: (generatoryPublicKey: string) => BFChainUtil.PromiseMaybe<string>;
-    assetPrealnumsGetter?: () => BFChainUtil.PromiseMaybe<BFChainCore.AssetPrealnumJSON[]>;
   } & BFChainUtil.QueneEventEmitter<ApplyTransactionEventMap<ES>>;
 
   type GenerateBlockEventEmitter<

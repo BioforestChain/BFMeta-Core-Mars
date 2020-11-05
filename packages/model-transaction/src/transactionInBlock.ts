@@ -13,8 +13,7 @@ export enum TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE {
 }
 
 @Type.d("TransactionAssetChangeModel")
-export class TransactionAssetChangeModel
-  extends Message
+export class TransactionAssetChangeModel extends Message
   implements BFChainUtil.JSONAble<BFChainCore.TransactionAssetChangeJSON> {
   static INC = 1;
   /**账户类型 */
@@ -42,6 +41,23 @@ export class TransactionAssetChangeModel
   }
 }
 
+@Type.d("AssetPrealnumModel")
+export class AssetPrealnumModel extends Message<AssetPrealnumModel>
+  implements BFChainCore.JSONToModelType<BFChainCore.AssetPrealnumJSON> {
+  static INC = 1;
+  @Field.d(AssetPrealnumModel.INC++, "string")
+  remainAssetPrealnum!: string;
+  @Field.d(AssetPrealnumModel.INC++, "string")
+  frozenMainAssetPrealnum!: string;
+
+  toJSON() {
+    return {
+      remainAssetPrealnum: this.remainAssetPrealnum,
+      frozenMainAssetPrealnum: this.frozenMainAssetPrealnum,
+    };
+  }
+}
+
 /**交易与其在区块中的下标 */
 @Type.d("TransactionInBlock")
 export class TransactionInBlock<T extends Transaction = Transaction> extends SomeTransactionModel<
@@ -59,6 +75,9 @@ export class TransactionInBlock<T extends Transaction = Transaction> extends Som
   /**交易验证完成后账户变动 */
   @Field.d(TransactionInBlock.INC++, TransactionAssetChangeModel, "repeated")
   transactionAssetChanges!: TransactionAssetChangeModel[];
+  /**资产权益信息 */
+  @Field.d(TransactionInBlock.INC++, AssetPrealnumModel, "optional")
+  assetPrealnum?: AssetPrealnumModel;
   /**区块锻造者的签名 */
   @Field.d(TransactionInBlock.INC++, "bytes")
   signatureBuffer!: Uint8Array;
@@ -105,6 +124,7 @@ export class TransactionInBlock<T extends Transaction = Transaction> extends Som
       transaction: this.transaction.toJSON() as BFChainUtil.ToJSONType<T>,
     };
 
+    this.assetPrealnum && (res.assetPrealnum = this.assetPrealnum.toJSON());
     this.signSignature && (res.signSignature = this.signSignature);
 
     return res;

@@ -24,7 +24,6 @@
     "src/constanst.ts",
     "src/index.ts",
     "src/statistic_info/asset.statistic.ts",
-    "src/statistic_info/assetPrealnum.statistic.ts",
     "src/statistic_info/countAndAmount.statistic.ts",
     "src/statistic_info/index.ts",
     "src/statistic_info/statisticInfo.ts"

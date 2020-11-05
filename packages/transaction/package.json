@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-transaction",
-  "version": "5.19.17-dev.888",
+  "version": "5.19.17-dev.890",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,9 +14,9 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-helper": "5.19.17-dev.888",
-    "@bfchain/core-model": "5.19.17-dev.888",
-    "@bfchain/core-typings": "5.19.17-dev.888",
-    "@bfchain/core-util-exception": "5.19.17-dev.888"
+    "@bfchain/core-helper": "5.19.17-dev.890",
+    "@bfchain/core-model": "5.19.17-dev.890",
+    "@bfchain/core-typings": "5.19.17-dev.890",
+    "@bfchain/core-util-exception": "5.19.17-dev.890"
   }
 }
