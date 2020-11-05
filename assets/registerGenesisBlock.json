@@ -1,13 +1,13 @@
 {
   "version": 1,
   "height": 1,
-  "blockSize": 175444,
+  "blockSize": 175445,
   "timestamp": 0,
-  "signature": "7636d83a649b867079395dd480160c4054ce073f74db26cedc3e2852227736e886e1ddbe4a4330c3d445e5f5dd2f31a0f2438bf41d24c20e0179c6e359ea3a0c",
+  "signature": "829bfdc2b436e9d04e89e2482e7b15e5949a261eeb6ea4416023790ad4165890e0183d6a68a7bf62b73d7bdc748e15460297f94c25ff1d070ec8104bb26a600b",
   "generatorPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
   "generatorEquity": "0",
   "numberOfTransactions": 437,
-  "payloadHash": "17233ad406fdf280a88c609ac2778787e5ae2198b532a39f0304cab1653db029",
+  "payloadHash": "5d9a6b991fda8d546e6219646fd6c9da9927c46759eab825262a1079ae8d78ca",
   "payloadLength": 166382,
   "previousBlockSignature": "",
   "totalAmount": "187595",
@@ -17249,7 +17249,7 @@
         "total": {
           "changeAmount": "265195",
           "changeCount": 655,
-          "moveAmount": "77600",
+          "moveAmount": "187595",
           "transactionCount": 437
         }
       }

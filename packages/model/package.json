@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-model",
-  "version": "5.19.17-dev.890",
+  "version": "5.19.17-dev.891",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,14 +14,14 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-model-block": "5.19.17-dev.890",
-    "@bfchain/core-model-cacher": "5.19.17-dev.890",
-    "@bfchain/core-model-channel": "5.19.17-dev.890",
-    "@bfchain/core-model-common": "5.19.17-dev.890",
-    "@bfchain/core-model-constants": "5.19.17-dev.890",
-    "@bfchain/core-model-progress": "5.19.17-dev.890",
-    "@bfchain/core-model-transaction": "5.19.17-dev.890",
-    "@bfchain/core-model-transaction-complex": "5.19.17-dev.890",
-    "@bfchain/core-typings": "5.19.17-dev.890"
+    "@bfchain/core-model-block": "5.19.17-dev.891",
+    "@bfchain/core-model-cacher": "5.19.17-dev.891",
+    "@bfchain/core-model-channel": "5.19.17-dev.891",
+    "@bfchain/core-model-common": "5.19.17-dev.891",
+    "@bfchain/core-model-constants": "5.19.17-dev.891",
+    "@bfchain/core-model-progress": "5.19.17-dev.891",
+    "@bfchain/core-model-transaction": "5.19.17-dev.891",
+    "@bfchain/core-model-transaction-complex": "5.19.17-dev.891",
+    "@bfchain/core-typings": "5.19.17-dev.891"
   }
 }

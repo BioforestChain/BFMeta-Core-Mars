@@ -80,6 +80,7 @@ export class BlockBaseStatisticsHelper {
     // 统计资产信息
     const assetStatistic = statistics_info.initAssetStatistic(assetInfo);
     assetStatistic.total.changeAmount = assetStatistic.total.changeAmount + sourceAmount;
+    assetStatistic.total.moveAmount = assetStatistic.total.moveAmount + sourceAmount;
     assetStatistic.total.changeCount += 1;
     assetStatistic.total.addTransactionCount(transaction.signature);
     /**需要统计的交易类型 */
