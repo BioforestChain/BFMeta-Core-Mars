@@ -23,6 +23,7 @@ import {
   INVALID_BLOCK_GENERATOR,
   SHOULD_NOT_INCLUDE,
   PROP_IS_REQUIRE,
+  NOT_FOUND,
 } from "@bfchain/core-util-exception";
 import {
   QueneEventEmitter,
@@ -302,6 +303,14 @@ export class ReplayBlockCore<T extends Block> {
       });
     }
 
+    if (!eventEmitter.assetPrealnumGetter) {
+      throw new NoFoundException(NOT_EXIST, {
+        prop: "assetPrealnumGetter",
+        target: "eventEmitter",
+        ...Function_Exception_Detail,
+      });
+    }
+
     if (!eventEmitter.numberOfSenderTranGetter) {
       throw new NoFoundException(NOT_EXIST, {
         prop: "numberOfSenderTranGetter",
@@ -460,22 +469,8 @@ export class ReplayBlockCore<T extends Block> {
           await txFactory.beginDealTransaction(trs, eventEmitter);
           await txFactory.applyTransaction(trs, eventEmitter);
           if (!skipVerifyStatisticInfo) {
-            // 在apply之后，获取变更记录
+            // 在 apply 之后，获取变更记录
             const calcTransactionAssetChanges = await eventEmitter.assetChangesGetter(tranItem);
-            // 获取是发送者的第几比交易
-            const calcNumberOfSenderTransactions = await eventEmitter.numberOfSenderTranGetter(
-              tranItem,
-            );
-            // 校验 numberOfSenderTransactions
-            if (calcNumberOfSenderTransactions !== tranItem.numberOfSenderTransactions) {
-              throw new ArgumentIllegalException(NOT_MATCH, {
-                to_compare_prop: `numberOfSenderTransactions ${tranItem.numberOfSenderTransactions}`,
-                be_compare_prop: `numberOfSenderTransactions ${calcNumberOfSenderTransactions}`,
-                to_target: `transactionInBlock ${trs.senderId} ${trs.signature}`,
-                be_target: "calculate",
-                ...Function_Exception_Detail,
-              });
-            }
             // 校验 transactionAssetChanges
             const transactionAssetChanges = tranItem.transactionAssetChanges;
             const calcLength = calcTransactionAssetChanges.length;
@@ -508,6 +503,60 @@ export class ReplayBlockCore<T extends Block> {
                   ...Function_Exception_Detail,
                 });
               }
+            }
+            // 在 apply 之后，获取权益资产信息
+            const assetPrealnum = tranItem.assetPrealnum;
+            if (assetPrealnum) {
+              const clalAssetPrealnum = await eventEmitter.assetPrealnumGetter(tranItem);
+              if (!clalAssetPrealnum) {
+                throw new ArgumentIllegalException(NOT_FOUND, {
+                  prop: `transaction assetPrealnum ${trs.signature}`,
+                  ...Function_Exception_Detail,
+                  target: "blockChain",
+                });
+              }
+              if (clalAssetPrealnum.remainAssetPrealnum !== assetPrealnum.remainAssetPrealnum) {
+                throw new ArgumentIllegalException(NOT_MATCH, {
+                  to_compare_prop: `assetPrealnum.remainAssetPrealnum ${JSON.stringify(
+                    assetPrealnum.remainAssetPrealnum,
+                  )}`,
+                  be_compare_prop: `assetPrealnum.remainAssetPrealnum ${JSON.stringify(
+                    clalAssetPrealnum.remainAssetPrealnum,
+                  )}`,
+                  to_target: `transactionInBlock ${trs.senderId} ${trs.signature}`,
+                  be_target: "calculate",
+                  ...Function_Exception_Detail,
+                });
+              }
+              if (
+                clalAssetPrealnum.frozenMainAssetPrealnum !== assetPrealnum.frozenMainAssetPrealnum
+              ) {
+                throw new ArgumentIllegalException(NOT_MATCH, {
+                  to_compare_prop: `assetPrealnum.frozenMainAssetPrealnum ${JSON.stringify(
+                    assetPrealnum.frozenMainAssetPrealnum,
+                  )}`,
+                  be_compare_prop: `assetPrealnum.frozenMainAssetPrealnum ${JSON.stringify(
+                    clalAssetPrealnum.frozenMainAssetPrealnum,
+                  )}`,
+                  to_target: `transactionInBlock ${trs.senderId} ${trs.signature}`,
+                  be_target: "calculate",
+                  ...Function_Exception_Detail,
+                });
+              }
+            }
+            // 获取是发送者的第几比交易
+            const calcNumberOfSenderTransactions = await eventEmitter.numberOfSenderTranGetter(
+              tranItem,
+            );
+            // 校验 numberOfSenderTransactions
+            if (calcNumberOfSenderTransactions !== tranItem.numberOfSenderTransactions) {
+              throw new ArgumentIllegalException(NOT_MATCH, {
+                to_compare_prop: `numberOfSenderTransactions ${tranItem.numberOfSenderTransactions}`,
+                be_compare_prop: `numberOfSenderTransactions ${calcNumberOfSenderTransactions}`,
+                to_target: `transactionInBlock ${trs.senderId} ${trs.signature}`,
+                be_target: "calculate",
+                ...Function_Exception_Detail,
+              });
             }
           }
           // 校验 TIB 签名 和 安全签名

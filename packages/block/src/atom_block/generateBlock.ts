@@ -308,14 +308,9 @@ export class GenerateBlockCore<T extends Block> {
           const txFactory = this.transactionCore.getTransactionFactoryFromType(trs.type);
           await txFactory.beginDealTransaction(trs, eventEmitter);
           await txFactory.applyTransaction(trs, eventEmitter);
-          // 在apply之后，获取变更记录
+          // 在 apply 之后，获取变更记录
           eventEmitter.assetChangesGetter &&
             (tranItem.transactionAssetChanges = await eventEmitter.assetChangesGetter(tranItem));
-          // 获取是发送者的第几比交易
-          eventEmitter.numberOfSenderTranGetter &&
-            (tranItem.numberOfSenderTransactions = await eventEmitter.numberOfSenderTranGetter(
-              tranItem,
-            ));
           const transactionAssetChanges = tranItem.transactionAssetChanges;
           for (const transactionAssetChange of transactionAssetChanges) {
             if (BigInt(transactionAssetChange.assetBalance) < BigInt(0)) {
@@ -326,6 +321,33 @@ export class GenerateBlockCore<T extends Block> {
               });
             }
           }
+          // 在 apply 之后，获取权益资产信息
+          eventEmitter.assetPrealnumGetter &&
+            (tranItem.assetPrealnum = await eventEmitter.assetPrealnumGetter(tranItem));
+          const assetPrealnum = tranItem.assetPrealnum;
+          if (assetPrealnum) {
+            const { remainAssetPrealnum, frozenMainAssetPrealnum } = assetPrealnum;
+            if (BigInt(remainAssetPrealnum) < BigInt(0)) {
+              throw new ArgumentIllegalException(PROP_IS_INVALID, {
+                prop: `remainAssetPrealnum ${remainAssetPrealnum}`,
+                target: "assetPrealnum",
+                function: "insertTransactions",
+              });
+            }
+            if (BigInt(frozenMainAssetPrealnum) < BigInt(0)) {
+              throw new ArgumentIllegalException(PROP_IS_INVALID, {
+                prop: `frozenMainAssetPrealnum ${frozenMainAssetPrealnum}`,
+                target: "assetPrealnum",
+                function: "insertTransactions",
+              });
+            }
+          }
+          // 获取是发送者的第几比交易
+          eventEmitter.numberOfSenderTranGetter &&
+            (tranItem.numberOfSenderTransactions = await eventEmitter.numberOfSenderTranGetter(
+              tranItem,
+            ));
+
           // 对 TIB 进行签名
           tranItem.signatureBuffer = await this.asymmetricHelper.detachedSign(
             tranItem.getBytes(true, true),
@@ -362,7 +384,6 @@ export class GenerateBlockCore<T extends Block> {
         }
       }
       isDevGenerateBlock && info("finish insertTransactions");
-
       block.statisticInfo = statisticsInfo.toModel();
       block.payloadHashBuffer = await payloadHash.digest();
       block.payloadLength = payloadLength;

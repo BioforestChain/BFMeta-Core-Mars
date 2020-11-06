@@ -12,6 +12,7 @@ import {
   GiftAssetTransaction,
   GrabAssetModel,
   AccountSignatureModel,
+  TransactionAssetChangeModel,
 } from "@bfchain/core-model-transaction";
 import { TPOWHelper } from "@bfchain/core-helper-transaction-pow";
 import { JSBIHelper } from "@bfchain/core-helper-bigint";
@@ -802,4 +803,23 @@ export class TransactionHelper {
    */
   @Inject(ABORT_FORBIDDEN_TRANSACTION_SYMBOL, { dynamics: true })
   abortForbiddenTransaction = true;
+
+  /**
+   * 对 transactionAssetChanges 进行排序
+   *
+   * @param transactionAssetChanges
+   */
+  sortTransactionAssetChanges<
+    T extends TransactionAssetChangeModel | BFChainCore.TransactionAssetChangeJSON
+  >(transactionAssetChanges: T[]) {
+    return transactionAssetChanges.sort((a, b) => {
+      return a.accountType === b.accountType
+        ? a.assetTypes > b.assetTypes
+          ? 1
+          : -1
+        : a.accountType > b.accountType
+        ? 1
+        : -1;
+    });
+  }
 }

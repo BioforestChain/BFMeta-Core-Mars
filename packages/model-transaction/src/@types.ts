@@ -6,12 +6,18 @@ declare namespace BFChainCore {
     T extends Transaction = Transaction
   > = import("./").SomeTransactionModel<T>;
 
+  type AssetPrealnumJSON = {
+    remainAssetPrealnum: string;
+    frozenMainAssetPrealnum: string;
+  };
+
   interface TransactionInBlockJSON<T extends TransactionJSON = TransactionJSON>
     extends SomeTransactionJSON<T> {
     index: number;
     height: number;
     numberOfSenderTransactions: number;
     transactionAssetChanges: TransactionAssetChangeJSON[];
+    assetPrealnum?: AssetPrealnumJSON;
     signature: string;
     signSignature?: string;
   }

@@ -79,6 +79,7 @@ declare namespace BFChainCore {
     totalAccount: number;
     assetStatisticHashMap: { [index: number]: AssetStatisticJSON };
   }
+
   //#endregion
 
   //#region CommonBlock
