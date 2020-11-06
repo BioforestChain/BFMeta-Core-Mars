@@ -243,11 +243,12 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<
       });
     }
 
+    // 这里是用 to 算 be，所以是 to / 兑换比例，即 to * 兑换比例的倒数
     const minBeExchangeNumber_BI = jsbiHelper.multiplyRoundFraction(
       beExchangeAsset.toExchangeNumber,
       {
-        numerator: exchangeAsset.exchangeRate.prevWeight,
-        denominator: exchangeAsset.exchangeRate.nextWeight,
+        numerator: exchangeAsset.exchangeRate.nextWeight,
+        denominator: exchangeAsset.exchangeRate.prevWeight,
       },
     );
     if (minBeExchangeNumber_BI > BigInt(beExchangeAsset.beExchangeNumber)) {
