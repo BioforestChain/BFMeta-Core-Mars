@@ -77,9 +77,10 @@ declare namespace BFChainCore {
     sourceChainName: string;
     sourceChainMagic: string;
     assetType: string;
-    expectedIssuedAssets: bigint;
-    originalFrozenAssets: bigint;
-    remainAssets: bigint;
+    issuedAssetPrealnum: bigint;
+    originalFrozenMainAssetPrealnum: bigint;
+    remainAssetPrealnum: bigint;
+    frozenMainAssetPrealnum: bigint;
     height: number;
   };
 
