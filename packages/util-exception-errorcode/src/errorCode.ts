@@ -70,7 +70,7 @@ export const SHOULD_NOT_START_WITH_OR_END_WITH = (ec.next =
 export const NOT_EXIST = (ec.next = "{prop} in {target} not exist when {function}");
 /**prop target errorId function */
 export const ALREADY_EXIST = (ec.next =
-  "{prop} in {target} already exist errorId {errorId} when {function}}");
+  "{prop} in {target} already exist errorId {errorId} when {function}");
 /**prop target function */
 export const SHOULD_NOT_EXIST = (ec.next = "{prop} in {target} should not exist when {function}");
 /**prop target value function */
