@@ -17,6 +17,7 @@ import {
   ModuleStroge,
   safePromiseThen,
   safePromiseOffThen,
+  OnInit,
 } from "@bfchain/util";
 import { BaseHelper, ChainTimeHelper, ConfigHelper, TransactionHelper } from "@bfchain/core-helper";
 import {
@@ -61,7 +62,7 @@ export const CHAIN_CHANNEL_GROUP_ARGS = {
 @Resolvable()
 export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = ChainChannel>
   extends ChainChannelBase
-  implements BFChainCore.ChainChannelGroup<DH>, AfterInit {
+  implements BFChainCore.ChainChannelGroup<DH>, AfterInit, OnInit {
   get canQueryTransaction() {
     for (const cc of this.chainChannelSet) {
       if (cc.canQueryTransaction) {
@@ -93,6 +94,14 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       }
     }
     return false;
+  }
+  bfOnInit(){
+    /// 先遍历一下当下的节点
+    let curMaxMaybeHeight = this._maybeHeight;
+    for (const cc of this.chainChannelSet) {
+      curMaxMaybeHeight = Math.max(cc.maybeHeight, curMaxMaybeHeight);
+    }
+    this._tryChangeMaybeHeight(curMaxMaybeHeight);
   }
   bfAfterInit() {
     this._initMaybeHeightWatcher();
@@ -1242,34 +1251,34 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
   ) => void {
     return this._chainChannelEvents.off.bind(this._chainChannelEvents, "maybeHeightChanged");
   }
+
+  private _tryChangeMaybeHeight  (newMaybeHeight: number) {
+    if (this._maybeHeight !== newMaybeHeight) {
+      this._maybeHeight = newMaybeHeight;
+      this._chainChannelEvents.emit("maybeHeightChanged", newMaybeHeight);
+    }
+  };
   private _initMaybeHeightWatcher() {
-    const tryChangeMaybeHeight = (newMaybeHeight: number) => {
-      if (this._maybeHeight !== newMaybeHeight) {
-        this._maybeHeight = newMaybeHeight;
-        this._chainChannelEvents.emit("maybeHeightChanged", newMaybeHeight);
-      }
-    };
     const onChainChannelNewBlock: BFChainUtil.EventHandler<
       NewBlockArgModel,
       BFChainCore.NewBlockReturnParams | undefined
     > = (newBlockArg, next) => {
       if (newBlockArg.height > this._maybeHeight) {
-        tryChangeMaybeHeight(newBlockArg.height);
+        this._tryChangeMaybeHeight(newBlockArg.height);
       }
       return next();
     };
-
     /// 先遍历一下当下的节点
     let curMaxMaybeHeight = this._maybeHeight;
     for (const cc of this.chainChannelSet) {
       curMaxMaybeHeight = Math.max(cc.maybeHeight, curMaxMaybeHeight);
     }
-    tryChangeMaybeHeight(curMaxMaybeHeight);
+    this._tryChangeMaybeHeight(curMaxMaybeHeight);
 
     /// 如果有新的节点加入,那么检查它的高度是否最高
     this._chainChannelEvents.on("addChainChannel", (chainChannel) => {
       if (this._maybeHeight < chainChannel.maybeHeight) {
-        tryChangeMaybeHeight(chainChannel.maybeHeight);
+        this._tryChangeMaybeHeight(chainChannel.maybeHeight);
       }
       /// 监听其高度的变化来跟随其maybeHeight
       chainChannel.on("onNewBlock", onChainChannelNewBlock);
@@ -1287,7 +1296,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
           }
         }
       }
-      tryChangeMaybeHeight(newMaybeHeight);
+      this._tryChangeMaybeHeight(newMaybeHeight);
       /// 移除监听
       chainChannel.off("onNewBlock", onChainChannelNewBlock);
     });
