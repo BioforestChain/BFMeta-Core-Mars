@@ -19,7 +19,7 @@ import {
   PROP_SHOULD_GTE_FIELD,
   PROP_SHOULD_GT_FIELD,
   SHOULD_NOT_DUPLICATE,
-  SHOULD_NOT_INCLUDE,
+  SHOULD_INCLUDE,
 } from "@bfchain/core-util-exception";
 import { Injectable, TaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
@@ -138,8 +138,8 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
 
     const trustees = trustAsset.trustees;
 
-    if (trustees.includes(senderId)) {
-      throw new ArgumentIllegalException(SHOULD_NOT_INCLUDE, {
+    if (!trustees.includes(senderId)) {
+      throw new ArgumentIllegalException(SHOULD_INCLUDE, {
         prop: "trustees",
         value: `senderId ${senderId}`,
         ...Function_Exception_Detail,
@@ -147,8 +147,8 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
       });
     }
 
-    if (trustees.includes(recipientId)) {
-      throw new ArgumentIllegalException(SHOULD_NOT_INCLUDE, {
+    if (!trustees.includes(recipientId)) {
+      throw new ArgumentIllegalException(SHOULD_INCLUDE, {
         prop: "trustee",
         value: `recipientId ${recipientId}`,
         ...Function_Exception_Detail,

@@ -424,8 +424,8 @@ export class ReplayBlockCore<T extends Block> {
           if (
             storageValue &&
             (type === transactionHelper.GRAB_ASSET ||
-              type === transactionHelper.BE_EXCHANGE_ASSET ||
-              type === transactionHelper.BE_EXCHANGE_SPECIAL_ASSET ||
+              // type === transactionHelper.BE_EXCHANGE_ASSET ||
+              // type === transactionHelper.BE_EXCHANGE_SPECIAL_ASSET ||
               type === transactionHelper.SIGN_FOR_ASSET ||
               type === transactionHelper.IMMIGRATE_ASSET)
           ) {

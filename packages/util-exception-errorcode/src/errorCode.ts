@@ -301,6 +301,11 @@ export const REJECT_REGISTER_DELEGATE = (ec.next =
 /**errorId reason function */
 export const VERIFY_TRANSACTION_POW_OF_WORK_ERROR = (ec.next =
   "Verify transaction pow of work error, errorId {errorId} reason {reason} when {function}");
+/**prop target value function */
+export const SHOULD_INCLUDE = (ec.next =
+  "{prop} in {target} should inclue {value} when {function}");
+export const TRUST_BFT_ASSET_ONLY = (ec.next =
+  "You can only trust BFT , when {function}, {assetType} is not BFT");
 // #endregion
 export const errorCode = new Map(
   ec.errorCode.concat([

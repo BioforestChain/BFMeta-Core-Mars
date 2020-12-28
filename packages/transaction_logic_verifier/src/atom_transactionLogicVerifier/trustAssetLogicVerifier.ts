@@ -5,7 +5,11 @@ import {
   ACCOUNT_STATUS,
 } from "@bfchain/core-model";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
-import { CoreExceptionGenerator, ACCOUNT_FROZEN } from "@bfchain/core-util-exception";
+import {
+  CoreExceptionGenerator,
+  ACCOUNT_FROZEN,
+  TRUST_BFT_ASSET_ONLY,
+} from "@bfchain/core-util-exception";
 
 const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "TrustAssetLogicVerifier");
 
@@ -27,7 +31,15 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
   ) {
     await this.isTrusteesFrozen(transaction.asset.trustAsset.trustees, accountGetterHelper);
     const { sourceChainMagic, assetType, sourceChainName } = transaction.asset.trustAsset;
-
+    if (
+      !(sourceChainMagic === this.configHelper.magic && assetType === this.configHelper.assetType)
+    ) {
+      throw new ConsensusException(TRUST_BFT_ASSET_ONLY, {
+        assetType,
+        errorId: NewTransactionRefuseReason.TRUST_BFT_ONLY,
+        function: "verify",
+      });
+    }
     await this.helperLogicVerifier.isAssetExist(
       sourceChainName,
       sourceChainMagic,

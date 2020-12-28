@@ -1,15 +1,16 @@
 {
   "name": "@bfchain/core-helper-transaction-pow",
-  "version": "5.19.25",
+  "version": "5.19.33",
   "main": "build/cjs/index.js",
   "type": "build/cjs/index.d.ts",
   "files": [
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-helper-bigint": "5.19.25",
-    "@bfchain/core-helper-config": "5.19.25",
-    "@bfchain/core-typings": "5.19.25"
+    "@bfchain/core-helper-bigint": "5.19.33",
+    "@bfchain/core-helper-config": "5.19.33",
+    "@bfchain/core-typings": "5.19.33"
   },
-  "module": "build/esm/index.js"
+  "module": "build/esm/index.js",
+  "gitHead": "ef41eb359371b11aafbec0516df1eba01f16ebfd"
 }

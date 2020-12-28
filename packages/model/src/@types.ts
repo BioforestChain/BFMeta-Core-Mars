@@ -410,7 +410,7 @@ declare namespace BFChainCore {
         "unfrozenAsset",
         | import("@bfchain/core-model-transaction").BeExchangeAssetTransaction
         | import("@bfchain/core-model-transaction").GrabAssetTransaction
-        | import("@bfchain/core-model-transaction").TrustAssetTransaction
+        | import("@bfchain/core-model-transaction").SignForAssetTransaction
         | import("@bfchain/core-model-transaction").ToExchangeSpecialAssetTransaction
         | import("@bfchain/core-model-transaction").BeExchangeSpecialAssetTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction

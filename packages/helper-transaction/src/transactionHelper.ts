@@ -439,8 +439,7 @@ export class TransactionHelper {
         }
       }
       amount = newAmount;
-    }
-    if (amount < minAssets) {
+    } else if (amount < minAssets) {
       amount = minAssets;
     }
 

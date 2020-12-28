@@ -16,7 +16,6 @@ import {
   NOT_IN_EXPECTED_RANGE,
   NOT_MATCH,
   SHOULD_BE,
-  SHOULD_NOT_EXIST,
 } from "@bfchain/core-util-exception";
 import { DAppTransactionFactory } from "./dapp";
 import { Injectable } from "@bfchain/util";
@@ -76,7 +75,7 @@ export class MarkTransactionFactory extends TransactionFactory<MarkTransaction> 
     const recipientId = body.recipientId;
 
     if (!recipientId) {
-      throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "recipientId",
         ...Function_Exception_Detail,
       });

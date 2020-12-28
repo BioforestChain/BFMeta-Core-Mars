@@ -13,7 +13,6 @@ import {
   getBfchainCoreEntry,
   getRandomDAppid,
 } from "../include";
-import { parseHexToArrayBuffer } from "@bfchain/util";
 
 const bfchainCore = getBfchainCoreEntry();
 
@@ -58,6 +57,8 @@ async function getTrustAssetTransaction(
       sender.secondSecret,
     );
   }
+  trustees.push(sender.address);
+  trustees.push(recipientId);
   const trs = await bfchainCore.transaction.createTransaction<TrustAssetTransaction>(
     TrustAssetTransactionFactory,
     data,

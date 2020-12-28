@@ -12,7 +12,8 @@ import { NewTransactionRefuseReason, NewTransactionStatus } from "./constants";
  * 查询交易的查询条件
  */
 @Type.d("TransactionQueryOptions")
-export class TransactionQueryOptions extends Message<TransactionQueryOptions>
+export class TransactionQueryOptions
+  extends Message<TransactionQueryOptions>
   implements BFChainCore.JSONToModelType<BFChainCore.TransactionQueryOptionsJSON> {
   static INC = 1;
   /**交易类型 */
@@ -64,7 +65,7 @@ export class TransactionQueryOptions extends Message<TransactionQueryOptions>
   /**查询结果分页：起始下标 */
   @Field.d(TransactionQueryOptions.INC++, "uint32")
   offset!: number;
-  /**查询结果分页：返回数量， */
+  /**查询结果分页：返回数量*/
   @Field.d(TransactionQueryOptions.INC++, "uint32", "optional")
   limit?: number;
   /**在range中的元素 */
@@ -108,7 +109,8 @@ export class TransactionQueryOptions extends Message<TransactionQueryOptions>
  * 查询交易的排序条件
  */
 @Type.d("TransactionSortOptions")
-export class TransactionSortOptions extends Message<TransactionSortOptions>
+export class TransactionSortOptions
+  extends Message<TransactionSortOptions>
   implements BFChainCore.JSONToModelType<BFChainCore.TransactionSortOptionsJSON> {
   static INC = 1;
   /**根据链上事件索引排序 */
@@ -137,7 +139,8 @@ export class TransactionSortOptions extends Message<TransactionSortOptions>
  * 查询交易的传入参数
  */
 @Type.d("QueryTransactionArg")
-export class QueryTransactionArgModel extends Message<QueryTransactionArgModel>
+export class QueryTransactionArgModel
+  extends Message<QueryTransactionArgModel>
   implements BFChainCore.JSONToModelType<BFChainCore.QueryTransactionArgJSON> {
   /**查询参数 */
   @Field.d(1, TransactionQueryOptions)
@@ -159,8 +162,9 @@ export class QueryTransactionArgModel extends Message<QueryTransactionArgModel>
  */
 @Type.d("QueryTransactionReturn")
 export class QueryTransactionReturnModel<
-  T extends BFChainCore.Transaction = BFChainCore.Transaction
-> extends CommonResponse
+    T extends BFChainCore.Transaction = BFChainCore.Transaction
+  >
+  extends CommonResponse
   implements BFChainCore.JSONToModelType<BFChainCore.QueryTransactionReturnJSON> {
   /**查询到的交易 */
   @Field.d(QueryTransactionReturnModel.INC++, TransactionInBlock, "repeated")
@@ -168,7 +172,7 @@ export class QueryTransactionReturnModel<
   toJSON() {
     return Object.assign(
       {
-        transactions: this.transactions.map(tib => tib.toJSON()),
+        transactions: this.transactions.map((tib) => tib.toJSON()),
       },
       super.toJSON(),
     );
@@ -179,7 +183,8 @@ export class QueryTransactionReturnModel<
  * 广播交易的传入参数
  */
 @Type.d("NewTransactionArg")
-export class NewTransactionArgModel extends SomeTransactionModel
+export class NewTransactionArgModel
+  extends SomeTransactionModel
   implements BFChainCore.JSONToModelType<BFChainCore.NewTransactionArgJSON> {
   /**红包的密码 */
   @Field.d(NewTransactionArgModel.INC++, "string", "optional")
@@ -197,7 +202,8 @@ export class NewTransactionArgModel extends SomeTransactionModel
  * 可能的错误：交易验证不通过，或者手续费不足，或者已经超出可处理的时间段
  */
 @Type.d("NewTransactionReturn")
-export class NewTransactionReturnModel extends CommonResponse
+export class NewTransactionReturnModel
+  extends CommonResponse
   implements BFChainCore.JSONToModelType<BFChainCore.NewTransactionReturnJSON> {
   /**交易的接收状态 */
   @Field.d(

@@ -53,6 +53,8 @@ async function getTrustAssetTransaction(
       sender.secondSecret,
     );
   }
+  trustees.push(sender.address);
+  trustees.push(recipientId);
   const trs = await bfchainCore.transaction.createTransaction<TrustAssetTransaction>(
     TrustAssetTransactionFactory,
     data,
@@ -79,11 +81,11 @@ async function getTrustAssetTransaction(
   await getTrustAssetTransaction(
     getSenderWithSecondSecret(),
     getRecipientWithSecondSecret().address,
-    trustees,
+    [...trustees],
   );
   await getTrustAssetTransaction(
     getSenderWithoutSecondSecret(),
     getRecipientWithoutSecondSecret().address,
-    trustees,
+    [...trustees],
   );
 })();

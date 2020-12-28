@@ -51,7 +51,7 @@ declare namespace BFChainCore {
     range?: string;
     /**查询结果分页：起始下标 */
     offset: number;
-    /**查询结果分页：返回数量， */
+    /**查询结果分页：返回数量*/
     limit?: number;
   };
 
