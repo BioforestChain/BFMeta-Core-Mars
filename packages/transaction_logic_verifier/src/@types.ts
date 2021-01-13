@@ -53,6 +53,8 @@ declare namespace BFChainCore {
     }): Promise<boolean>;
     /**查询新生成的受托人 */
     getNewDelegates(height: number): Promise<string[]>;
+    /**查询新注册的受托人数量 */
+    getNumberOfNewDelegate(): Promise<number>;
   }
   // #endregion
 }

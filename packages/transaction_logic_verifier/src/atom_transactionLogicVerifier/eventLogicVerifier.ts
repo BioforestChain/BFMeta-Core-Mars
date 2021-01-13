@@ -585,11 +585,7 @@ export class EventLogicVerifier {
         }
 
         const { maxDelegateTxsPerRound } = this.configHelper;
-        const txCount = await transactionGetterHelper.getCountTransaction({
-          type: this.transactionHelper.DELEGATE,
-          startHeight: this.blockHelper.calcRoundStartHeight(curRound),
-          endHeight: currentBlockHeight === 1 ? currentBlockHeight : currentBlockHeight - 1,
-        });
+        const txCount = await transactionGetterHelper.getNumberOfNewDelegate();
 
         let realMaxDelegateTxsPerRound = maxDelegateTxsPerRound;
         if (curRound === 1) {
