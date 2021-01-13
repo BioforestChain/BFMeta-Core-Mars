@@ -840,4 +840,11 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   ) {
     return;
   }
+
+  async checkRegisterDelegateQuota(
+    currentBlockHeight: number,
+    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
+  ) {
+    return;
+  }
 }

@@ -5,6 +5,7 @@ import {
   CoreExceptionGenerator,
   INVALID_ACCOUNT_ALIAS,
   SET_USERANME_AT_FIRST,
+  REGISTER_DELEGTE_QUOTA_FULL,
 } from "@bfchain/core-util-exception";
 
 const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "DelegateLogicVerifier");
@@ -46,8 +47,6 @@ export class DelegateLogicVerifier extends TransactionLogicVerifier {
 
     this.eventLogicVerifier.listenEventRegisterToDelegate(
       cloneAccountsInfo,
-      curRound,
-      currentBlockHeight,
       transactionGetterHelper,
       eventEmitter,
     );
@@ -55,5 +54,25 @@ export class DelegateLogicVerifier extends TransactionLogicVerifier {
     await this.eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     return true;
+  }
+
+  async checkRegisterDelegateQuota(
+    currentBlockHeight: number,
+    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
+  ) {
+    const { maxDelegateTxsPerRound } = this.configHelper;
+    const txCount = await transactionGetterHelper.getNumberOfNewDelegate();
+    let realMaxDelegateTxsPerRound = maxDelegateTxsPerRound;
+
+    const curRound = this.blockHelper.calcRoundByHeight(currentBlockHeight);
+    if (currentBlockHeight < this.configHelper.blockPerRound) {
+      realMaxDelegateTxsPerRound = realMaxDelegateTxsPerRound + this.configHelper.delegates;
+    }
+    if (txCount >= realMaxDelegateTxsPerRound) {
+      throw new ConsensusException(REGISTER_DELEGTE_QUOTA_FULL, {
+        round: curRound,
+        function: "eventLogicVerifier",
+      });
+    }
   }
 }

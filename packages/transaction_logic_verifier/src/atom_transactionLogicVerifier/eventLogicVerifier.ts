@@ -546,8 +546,6 @@ export class EventLogicVerifier {
 
   listenEventRegisterToDelegate(
     accountsInfo: { [address: string]: BFChainCore.AccountInfo },
-    curRound: number,
-    currentBlockHeight: number,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -583,20 +581,6 @@ export class EventLogicVerifier {
             ...Function_Exception_Detail,
           });
         }
-
-        // const { maxDelegateTxsPerRound } = this.configHelper;
-        // const txCount = await transactionGetterHelper.getNumberOfNewDelegate();
-
-        // let realMaxDelegateTxsPerRound = maxDelegateTxsPerRound;
-        // if (curRound === 1) {
-        //   realMaxDelegateTxsPerRound = realMaxDelegateTxsPerRound + this.configHelper.delegates;
-        // }
-        // if (txCount >= realMaxDelegateTxsPerRound) {
-        //   throw new ConsensusException(REGISTER_DELEGTE_QUOTA_FULL, {
-        //     round: curRound,
-        //     ...Function_Exception_Detail,
-        //   });
-        // }
 
         next();
       },
