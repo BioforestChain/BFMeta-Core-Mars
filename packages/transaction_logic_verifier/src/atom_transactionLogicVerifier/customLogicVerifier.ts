@@ -1,9 +1,14 @@
 import type { CustomTransaction } from "@bfchain/core-model";
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
-import { CoreExceptionGenerator, NOT_EXIST, PROP_IS_INVALID } from "@bfchain/core-util-exception";
+import {
+  CoreExceptionGenerator,
+  NOT_EXIST,
+  PROP_IS_INVALID,
+  REGISTER_DELEGTE_QUOTA_FULL,
+} from "@bfchain/core-util-exception";
 
-const { NoFoundException, ArgumentIllegalException } = CoreExceptionGenerator(
+const { NoFoundException, ArgumentIllegalException, ConsensusException } = CoreExceptionGenerator(
   "VERIFIER",
   "CustomLogicVerifier",
 );
@@ -59,8 +64,6 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
 
     this.eventLogicVerifier.listenEventRegisterToDelegate(
       cloneAccountsInfo,
-      curRound,
-      currentBlockHeight,
       transactionGetterHelper,
       eventEmitter,
     );
@@ -184,5 +187,25 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
     }
 
     return true;
+  }
+
+  async checkRegisterDelegateQuota(
+    currentBlockHeight: number,
+    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
+  ) {
+    const { maxDelegateTxsPerRound } = this.configHelper;
+    const txCount = await transactionGetterHelper.getNumberOfNewDelegate();
+    let realMaxDelegateTxsPerRound = maxDelegateTxsPerRound;
+
+    const curRound = this.blockHelper.calcRoundByHeight(currentBlockHeight);
+    if (currentBlockHeight < this.configHelper.blockPerRound) {
+      realMaxDelegateTxsPerRound = realMaxDelegateTxsPerRound + this.configHelper.delegates;
+    }
+    if (txCount >= realMaxDelegateTxsPerRound) {
+      throw new ConsensusException(REGISTER_DELEGTE_QUOTA_FULL, {
+        round: curRound,
+        function: "eventLogicVerifier",
+      });
+    }
   }
 }

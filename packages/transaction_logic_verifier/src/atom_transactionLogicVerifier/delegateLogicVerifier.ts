@@ -1,12 +1,7 @@
 import type { DelegateTransaction } from "@bfchain/core-model";
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
-import {
-  CoreExceptionGenerator,
-  INVALID_ACCOUNT_ALIAS,
-  SET_USERANME_AT_FIRST,
-  REGISTER_DELEGTE_QUOTA_FULL,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, REGISTER_DELEGTE_QUOTA_FULL } from "@bfchain/core-util-exception";
 
 const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "DelegateLogicVerifier");
 
