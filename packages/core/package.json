@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core",
-  "version": "5.19.37",
+  "version": "5.19.38",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,20 +14,20 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-account": "5.19.37",
-    "@bfchain/core-block": "5.19.37",
-    "@bfchain/core-block-logic-verifier": "5.19.37",
-    "@bfchain/core-block-ticker": "5.19.37",
-    "@bfchain/core-channel": "5.19.37",
-    "@bfchain/core-crypto": "5.19.37",
-    "@bfchain/core-helper": "5.19.37",
-    "@bfchain/core-model": "5.19.37",
-    "@bfchain/core-transaction": "5.19.37",
-    "@bfchain/core-transaction-complex": "5.19.37",
-    "@bfchain/core-transaction-logic-verifier": "5.19.37",
-    "@bfchain/core-typings": "5.19.37",
-    "@bfchain/core-util-base58": "5.19.37",
-    "@bfchain/core-util-exception": "5.19.37"
+    "@bfchain/core-account": "5.19.38",
+    "@bfchain/core-block": "5.19.38",
+    "@bfchain/core-block-logic-verifier": "5.19.38",
+    "@bfchain/core-block-ticker": "5.19.38",
+    "@bfchain/core-channel": "5.19.38",
+    "@bfchain/core-crypto": "5.19.38",
+    "@bfchain/core-helper": "5.19.38",
+    "@bfchain/core-model": "5.19.38",
+    "@bfchain/core-transaction": "5.19.38",
+    "@bfchain/core-transaction-complex": "5.19.38",
+    "@bfchain/core-transaction-logic-verifier": "5.19.38",
+    "@bfchain/core-typings": "5.19.38",
+    "@bfchain/core-util-base58": "5.19.38",
+    "@bfchain/core-util-exception": "5.19.38"
   },
   "gitHead": "ef41eb359371b11aafbec0516df1eba01f16ebfd"
 }
