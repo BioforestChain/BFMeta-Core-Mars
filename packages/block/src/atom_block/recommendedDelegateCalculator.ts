@@ -4,7 +4,7 @@ import { ConfigHelper, AccountBaseHelper, JSBIHelper, BlockHelper } from "@bfcha
 const { NoFoundException } = CoreExceptionGenerator("BLOCK", "RecommendedDelegateCalculator");
 
 /**
- * 区块锻造者计算器
+ * 自动投票推荐列表计算器
  */
 @Injectable()
 export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountInfo> {
@@ -27,11 +27,13 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
    * @param currentBlockHeight
    * @param numberOfRounds
    * @param blockGetterHelper
+   * @param aborter
    */
   private async calDelegateNumberOfForgingAndPackagedTransactions(
     currentBlockHeight: number,
     numberOfRounds: number,
-    blockGetterHelper?: BFChainCore.BlockGetterHelperInterface,
+    blockGetterHelper: BFChainCore.BlockGetterHelperInterface,
+    aborter?: BFChainUtil.Aborter,
   ) {
     const blockPerRound = this.config.blockPerRound;
     // 获取起始计算高度
@@ -49,7 +51,11 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
       // 创世账户不纳入推荐列表
     }
 
-    const blocks = await this.blockHelper.getBlocksByRange(minHeight, maxHeight, blockGetterHelper);
+    const blocks = aborter
+      ? await aborter.wrapAsync(
+          this.blockHelper.getBlocksByRange(minHeight, maxHeight, blockGetterHelper),
+        )
+      : await this.blockHelper.getBlocksByRange(minHeight, maxHeight, blockGetterHelper);
     const generatorAddressList: string[] = [];
     const forgeInfoMap = new Map<string, BFChainCore.ForgeInfos>();
     for (const block of blocks) {
@@ -79,26 +85,19 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
    * @param generatorAddressList
    * @param forgeInfoMap
    * @param accountGetterHelper
+   * @param aborter
    */
   private async calCanBePickAccounts(
     minBeSelectProductivity: BFChainCore.FractionJSON,
     generatorAddressList: string[],
     forgeInfoMap: Map<string, BFChainCore.ForgeInfos>,
     curRound: number,
-    accountGetterHelper?: Pick<BFChainCore.AccountGetterHelperInterface, "getAccounts">,
+    accountGetterHelper: Pick<BFChainCore.AccountGetterHelperInterface, "getAccounts">,
+    aborter?: BFChainUtil.Aborter,
   ) {
-    const Function_Exception_Detail = {
-      function: "calCanBePickAccounts",
-    } as const;
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
-
-    const accounts = await accountGetterHelper.getAccounts(generatorAddressList, curRound);
+    const accounts = aborter
+      ? await aborter.wrapAsync(accountGetterHelper.getAccounts(generatorAddressList, curRound))
+      : await accountGetterHelper.getAccounts(generatorAddressList, curRound);
 
     const canBePickAccounts: BFChainCore.CanBePickAccount[] = [];
 
@@ -207,68 +206,58 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
    * 计算推荐的投票账户候选名单
    *
    * @param currentBlockHeight
-   * @param options
+   * @param recommendedDelegateOptions
    * @param activeDelegates
    * @param accountGetterHelper
    * @param blockGetterHelper
+   * @param aborter
    */
   private async calRecommendedDelegates(
     currentBlockHeight: number,
-    options: BFChainCore.RecommendedDelegateOptions,
+    recommendedDelegateOptions: BFChainCore.RecommendedDelegateOptions,
     activeDelegates: string[],
-    accountGetterHelper?: Pick<
+    accountGetterHelper: Pick<
       BFChainCore.AccountGetterHelperInterface,
       "getAccounts" | "getNewDelegates"
     >,
-    blockGetterHelper?: BFChainCore.BlockGetterHelperInterface,
+    blockGetterHelper: BFChainCore.BlockGetterHelperInterface,
+    aborter?: BFChainUtil.Aborter,
   ) {
-    const Function_Exception_Detail = {
-      function: "calRecommendedDelegates",
-    } as const;
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
-    if (!blockGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "blockGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
-
     const {
       forgeInfoMap,
       generatorAddressList,
     } = await this.calDelegateNumberOfForgingAndPackagedTransactions(
       currentBlockHeight,
-      options.numberOfRounds,
+      recommendedDelegateOptions.numberOfRounds,
       blockGetterHelper,
+      aborter,
     );
 
     const curRound = this.blockHelper.calcRoundByHeight(currentBlockHeight);
     const canBePickAccounts = await this.calCanBePickAccounts(
-      options.minBeSelectProductivity,
+      recommendedDelegateOptions.minBeSelectProductivity,
       generatorAddressList,
       forgeInfoMap,
       curRound,
       accountGetterHelper,
+      aborter,
     );
 
     // 按照不同条件进行排序
     const jsbiHelper = this.jsbiHelper;
     const totalQuota = canBePickAccounts.length;
     const pdtNum = Number(
-      jsbiHelper.multiplyFloorFraction(totalQuota, options.productivityPercent),
+      jsbiHelper.multiplyFloorFraction(totalQuota, recommendedDelegateOptions.productivityPercent),
     );
     const fbsNum = Number(
-      jsbiHelper.multiplyFloorFraction(totalQuota, options.forgedBlocksPercent),
+      jsbiHelper.multiplyFloorFraction(totalQuota, recommendedDelegateOptions.forgedBlocksPercent),
     );
-    const atnNum = Number(jsbiHelper.multiplyFloorFraction(totalQuota, options.applyTxPercent));
-    const votNum = Number(jsbiHelper.multiplyFloorFraction(totalQuota, options.votePercent));
+    const atnNum = Number(
+      jsbiHelper.multiplyFloorFraction(totalQuota, recommendedDelegateOptions.applyTxPercent),
+    );
+    const votNum = Number(
+      jsbiHelper.multiplyFloorFraction(totalQuota, recommendedDelegateOptions.votePercent),
+    );
     const newNum = totalQuota - pdtNum - fbsNum - atnNum - votNum;
     // 获取在线率前 n 个账户
     const sortByProductivity = this.sortDelegatesByFields(canBePickAccounts, "productivity");
@@ -290,7 +279,9 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     const sortByVote = this.sortDelegatesByFields(voteArray, "vote");
     const votArray = sortByVote.splice(0, votNum).map((account) => account.address);
     // 获取 n 个 新受托人账户
-    const newDelegates = await accountGetterHelper.getNewDelegates(newNum, currentBlockHeight);
+    const newDelegates = aborter
+      ? await aborter.wrapAsync(accountGetterHelper.getNewDelegates(newNum, currentBlockHeight))
+      : await accountGetterHelper.getNewDelegates(newNum, currentBlockHeight);
     const newArray: string[] = [];
     for (const delegate of newDelegates) {
       if (delegate.isAcceptVote) {
@@ -349,21 +340,25 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
   /**
    * 推荐的受托人列表
    *
-   * @param address
-   * @param currentBlockHeight
-   * @param options
-   * @param accountGetterHelper
-   * @param blockGetterHelper
+   * @param address 需要获取推荐列表的账户地址
+   * @param currentBlockHeight 当前区块高度
+   * @param recommendedDelegateOptions 生成推荐列表的参数
+   * @param accountGetterHelper 账户相关辅助类
+   * @param blockGetterHelper 区块相关辅助类
+   * @param options 辅助插件
    */
   async randomAccessDelegates(
     address: string,
     currentBlockHeight: number,
-    options: BFChainCore.RecommendedDelegateOptions,
-    accountGetterHelper?: Pick<
+    recommendedDelegateOptions: BFChainCore.RecommendedDelegateOptions,
+    accountGetterHelper: Pick<
       BFChainCore.AccountGetterHelperInterface,
       "getAccountVoteInfo" | "getMemoryDelegates" | "getAccounts" | "getNewDelegates"
     >,
-    blockGetterHelper?: BFChainCore.BlockGetterHelperInterface,
+    blockGetterHelper: BFChainCore.BlockGetterHelperInterface,
+    options?: {
+      aborter?: BFChainUtil.Aborter;
+    },
   ) {
     const Function_Exception_Detail = {
       function: "calRecommendedDelegate",
@@ -376,21 +371,28 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
       });
     }
 
+    const aborter = options && options.aborter;
     /**最终选出的受托人 */
     const pickDelegates: string[] = [];
     /**本次推选的受托人数量 */
-    const maxNumberOfRecommended = options.maxNumberOfRecommended;
+    const maxNumberOfRecommended = recommendedDelegateOptions.maxNumberOfRecommended;
     const blockPerRound = this.config.blockPerRound;
 
     // 获取账户的已投账户
-    const votedResult = await accountGetterHelper.getAccountVoteInfo(currentBlockHeight, address);
+    const votedResult = aborter
+      ? await aborter.wrapAsync(accountGetterHelper.getAccountVoteInfo(currentBlockHeight, address))
+      : await accountGetterHelper.getAccountVoteInfo(currentBlockHeight, address);
     const noLongerVoteSet = new Set<string>(votedResult);
     // 获取当前轮的打块账户
     const curRound = this.blockHelper.calcRoundByHeight(currentBlockHeight);
     let blockHeight = (curRound - 1) * blockPerRound;
     // 第一轮拿的是创世块选出的受托人
     blockHeight = blockHeight || 1;
-    const block = await this.blockHelper.forceGetBlockByHeight(blockHeight, blockGetterHelper);
+    const block = aborter
+      ? await aborter.wrapAsync(
+          this.blockHelper.forceGetBlockByHeight(blockHeight, blockGetterHelper),
+        )
+      : await this.blockHelper.forceGetBlockByHeight(blockHeight, blockGetterHelper);
     let nextRoundDelegates: BFChainCore.NextRoundDelegateJSON[] = [];
     if (blockHeight === 1) {
       nextRoundDelegates = (block as BFChainCore.Block<BFChainCore.GenesisBlockAssetJSON>).asset
@@ -407,9 +409,13 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
       }
     }
     // 获取矿机注入的受托人
-    const memoryDelegates = await accountGetterHelper.getMemoryDelegates();
+    const memoryDelegates = aborter
+      ? await aborter.wrapAsync(accountGetterHelper.getMemoryDelegates())
+      : await accountGetterHelper.getMemoryDelegates();
     // 去除关闭接收投票的账户
-    const delegates = await accountGetterHelper.getAccounts(memoryDelegates, curRound);
+    const delegates = aborter
+      ? await aborter.wrapAsync(accountGetterHelper.getAccounts(memoryDelegates, curRound))
+      : await accountGetterHelper.getAccounts(memoryDelegates, curRound);
     for (const delegate of delegates) {
       if (!delegate.isAcceptVote) {
         noLongerVoteSet.add(delegate.address);
@@ -434,10 +440,11 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
       this.forgingDelegates.curRound = curRound;
       await this.calRecommendedDelegates(
         currentBlockHeight,
-        options,
+        recommendedDelegateOptions,
         activeDelegates,
         accountGetterHelper,
         blockGetterHelper,
+        aborter,
       );
     }
 
