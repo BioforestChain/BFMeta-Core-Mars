@@ -304,8 +304,12 @@ export const VERIFY_TRANSACTION_POW_OF_WORK_ERROR = (ec.next =
 /**prop target value function */
 export const SHOULD_INCLUDE = (ec.next =
   "{prop} in {target} should inclue {value} when {function}");
-export const TRUST_BFT_ASSET_ONLY = (ec.next =
-  "You can only trust BFT , when {function}, {assetType} is not BFT");
+/**assetType mainAsset function */
+export const TRUST_MAIN_ASSET_ONLY = (ec.next =
+  "You can only trust main asset, {assetType} is not main asset {mainAsset}, when {function}");
+/**assetType mainAsset function */
+export const USE_MAIN_ASSET_PURCHASE_ONLY = (ec.next =
+  "You can only use main asset to purchase, {assetType} is not main asset {mainAsset}, when {function}");
 // #endregion
 export const errorCode = new Map(
   ec.errorCode.concat([

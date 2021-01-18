@@ -39,7 +39,7 @@ async function getTrustAssetTransaction(
     effectiveBlockHeight: 10100,
     storage: {
       key: "assetType",
-      value: "BFT",
+      value: "QQQ",
     },
   };
   let secondKeypair;
@@ -64,7 +64,7 @@ async function getTrustAssetTransaction(
         numberOfSignFor: 2,
         sourceChainName: "xxxxxxx",
         sourceChainMagic: bfchainCore.config.magic,
-        assetType: "BFT",
+        assetType: "QQQ",
         amount: "1000",
       },
     },
@@ -74,6 +74,13 @@ async function getTrustAssetTransaction(
   const trsJson = trs.toJSON();
   const xx = await bfchainCore.transaction.recombineTransaction(trsJson);
   await bfchainCore.transactionHelper.verifyTransactionSignature(xx);
+
+  const yy = bfchainCore.transactionLogicVerifier.getTransactionLogicVerifierFromType<
+    TrustAssetTransaction
+  >(trs.type);
+
+  await yy.verify(trs, 10, {} as any, {} as any, {} as any);
+
   console.log(xx);
 }
 (async () => {

@@ -1,6 +1,9 @@
-import type { DAppTransaction } from "@bfchain/core-model";
+import { DAppTransaction, NewTransactionRefuseReason } from "@bfchain/core-model";
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
+import { CoreExceptionGenerator, USE_MAIN_ASSET_PURCHASE_ONLY } from "@bfchain/core-util-exception";
+
+const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "TrustAssetLogicVerifier");
 
 @Injectable()
 export class DAppLogicVerifier extends TransactionLogicVerifier {
@@ -18,6 +21,21 @@ export class DAppLogicVerifier extends TransactionLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
+    const purchaseAsset = transaction.asset.dapp.purchaseAsset;
+    if (purchaseAsset) {
+      const { sourceChainMagic, assetType } = purchaseAsset;
+      if (
+        !(sourceChainMagic === this.configHelper.magic && assetType === this.configHelper.assetType)
+      ) {
+        throw new ConsensusException(USE_MAIN_ASSET_PURCHASE_ONLY, {
+          assetType,
+          mainAsset: this.configHelper.assetType,
+          errorId: NewTransactionRefuseReason.USE_MAIN_ASSET_PURCHASE_ONLY,
+          function: "verify",
+        });
+      }
+    }
+
     const { sender } = await this.logicVerify(
       transaction,
       currentBlockHeight,

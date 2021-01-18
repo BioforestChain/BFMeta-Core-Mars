@@ -56,6 +56,13 @@ async function getDappTransaction(sender: AccountModel, dapp: BFChainCore.DAppJS
     keypair,
     secondKeypair,
   );
+
+  // const yy = bfchainCore.transactionLogicVerifier.getTransactionLogicVerifierFromType<
+  //   DAppTransaction
+  // >(trs.type);
+
+  // await yy.verify(trs, 10, {} as any, {} as any, {} as any);
+
   console.log(trs.toJSON());
 }
 (async () => {
@@ -68,7 +75,7 @@ async function getDappTransaction(sender: AccountModel, dapp: BFChainCore.DAppJS
     purchaseAsset: {
       sourceChainName: bfchainCore.config.chainName,
       sourceChainMagic: bfchainCore.config.magic,
-      assetType: bfchainCore.config.assetType,
+      assetType: "QQQ",
       amount: "1000",
     },
   });

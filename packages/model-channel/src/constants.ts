@@ -98,8 +98,10 @@ export enum NewTransactionRefuseReason {
   TRS_IN_FEATURE,
   /**事件的 tpow 校验失败 */
   TRANSACTION_POW_CHECK_FIELD,
-  /**只能见证主权益交易 */
-  TRUST_BFT_ONLY,
+  /**只能见证主权益 */
+  TRUST_MAIN_ASSET_ONLY,
+  /**只能使用主权益购买 */
+  USE_MAIN_ASSET_PURCHASE_ONLY,
 }
 
 export enum DUPLEX_API_CMD {
