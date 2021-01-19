@@ -358,6 +358,8 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     blockGetterHelper: BFChainCore.BlockGetterHelperInterface,
     options?: {
       aborter?: BFChainUtil.Aborter;
+      memoryDelegates?: string[];
+      delegates?: BFChainCore.ForSortAccountInfo[];
     },
   ) {
     const Function_Exception_Detail = {
@@ -408,14 +410,24 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
         noLongerVoteSet.add(address);
       }
     }
+    let memoryDelegates: string[];
+    let delegates: BFChainCore.ForSortAccountInfo[];
     // 获取矿机注入的受托人
-    const memoryDelegates = aborter
-      ? await aborter.wrapAsync(accountGetterHelper.getMemoryDelegates())
-      : await accountGetterHelper.getMemoryDelegates();
+    if (options && options.memoryDelegates) {
+      memoryDelegates = options.memoryDelegates;
+    } else {
+      memoryDelegates = aborter
+        ? await aborter.wrapAsync(accountGetterHelper.getMemoryDelegates())
+        : await accountGetterHelper.getMemoryDelegates();
+    }
     // 去除关闭接收投票的账户
-    const delegates = aborter
-      ? await aborter.wrapAsync(accountGetterHelper.getAccounts(memoryDelegates, curRound))
-      : await accountGetterHelper.getAccounts(memoryDelegates, curRound);
+    if (options && options.delegates) {
+      delegates = options.delegates;
+    } else {
+      delegates = aborter
+        ? await aborter.wrapAsync(accountGetterHelper.getAccounts(memoryDelegates, curRound))
+        : await accountGetterHelper.getAccounts(memoryDelegates, curRound);
+    }
     for (const delegate of delegates) {
       if (!delegate.isAcceptVote) {
         noLongerVoteSet.add(delegate.address);
