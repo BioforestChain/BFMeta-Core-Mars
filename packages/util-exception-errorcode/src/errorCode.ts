@@ -166,8 +166,8 @@ export const UNKNOWN_RANGE_TYPE = (ec.next =
 export const ASSET_NOT_ENOUGH = (ec.next =
   "Asset not enough, reason {reason} errorId {errorId} when {function}");
 /**reason errorId function */
-export const EQUITY_NOT_ENOUGH = (ec.next =
-  "Equity not enough, reason {reason} errorId {errorId} when {function}");
+export const ACCOUNT_REMAIN_EQUITY_NOT_ENOUGH = (ec.next =
+  "Account remain equity not enough, reason {reason} errorId {errorId} when {function}");
 /**reason function */
 export const INVALID_TRANSACTION_BYTE_LENGTH = (ec.next =
   "Invalid transaction byte length, reason {reason} when {function}");
@@ -185,7 +185,7 @@ export const POSSESS_FROZEN_ASSET_EXCEPT_CHAIN_ASSET = (ec.next =
   "Account possess frozen asset expect chain asset when {function}");
 /**address function */
 export const ACCOUNT_IS_NOT_AN_DELEGATE = (ec.next =
-  "Account with address {address} is not an delegate when {function}");
+  "Account with address {address} is not an delegate errorId {errorId} when {function}");
 /**address errorId function */
 export const ACCOUNT_IS_ALREADY_AN_DELEGATE = (ec.next =
   "Account with address {address} is already an delegate errorId {errorId} when {function}");
@@ -194,7 +194,7 @@ export const DELEGATE_IS_ALREADY_ACCEPT_VOTE = (ec.next =
   "Delegate with address {address} is already accept vote when {function}");
 /**address function */
 export const DELEGATE_IS_ALREADY_REJECT_VOTE = (ec.next =
-  "Delegate with address {address} is already reject vote when {function}");
+  "Delegate with address {address} is already reject vote errorId {errorId} when {function}");
 /**frozenId function */
 export const NOT_BEGIN_UNFROZEN_YET = (ec.next =
   "Frozen asset is not begin to unfrozen yet, frozenId {frozenId} when {function}");

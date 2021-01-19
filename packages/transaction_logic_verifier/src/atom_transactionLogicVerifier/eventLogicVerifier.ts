@@ -5,7 +5,7 @@ import {
   NOT_EXIST,
   NOT_BEGIN_UNFROZEN_YET,
   FROZEN_ASSET_EXPIRATION,
-  EQUITY_NOT_ENOUGH,
+  ACCOUNT_REMAIN_EQUITY_NOT_ENOUGH,
   ACCOUNT_FROZEN,
   USERNAME_ALREADY_EXIST,
   ACCOUNT_IS_NOT_AN_DELEGATE,
@@ -28,9 +28,7 @@ import {
   SET_LOCATION_NAME_MANAGER_FIELD,
   SET_LOCATION_NAME_RECORD_VALUE_FIELD,
   UNFROZEN_TIME_USE_UP,
-  REGISTER_DELEGTE_QUOTA_FULL,
   NOT_MATCH,
-  REJECT_REGISTER_DELEGATE,
   SHOULD_BE,
 } from "@bfchain/core-util-exception";
 import {
@@ -450,7 +448,8 @@ export class EventLogicVerifier {
         const remainEquity = accountEquity;
         accountEquity += BigInt(applyInfo.equity);
         if (accountEquity < minEquity) {
-          throw new ConsensusException(EQUITY_NOT_ENOUGH, {
+          throw new ConsensusException(ACCOUNT_REMAIN_EQUITY_NOT_ENOUGH, {
+            errorId: NewTransactionRefuseReason.ACCOUNT_REMAIN_EQUITY_NOT_ENOUGH,
             reason: `Transaction signature: ${
               transaction.signature
             } address: ${address} hodingEquity: ${remainEquity.toString()} spendEquity: ${

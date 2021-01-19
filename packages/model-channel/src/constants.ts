@@ -102,6 +102,12 @@ export enum NewTransactionRefuseReason {
   TRUST_MAIN_ASSET_ONLY,
   /**只能使用主权益购买 */
   USE_MAIN_ASSET_PURCHASE_ONLY,
+  /**账户剩余权益不足 */
+  ACCOUNT_REMAIN_EQUITY_NOT_ENOUGH,
+  /**账户不是受托人 */
+  ACCOUNT_IS_NOT_AN_DELEGATE,
+  /**受托人拒绝收票 */
+  DELEGATE_IS_ALREADY_REJECT_VOTE,
 }
 
 export enum DUPLEX_API_CMD {

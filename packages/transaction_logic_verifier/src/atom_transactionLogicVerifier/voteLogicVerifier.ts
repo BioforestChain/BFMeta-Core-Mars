@@ -1,4 +1,4 @@
-import type { VoteTransaction } from "@bfchain/core-model";
+import { VoteTransaction, NewTransactionRefuseReason } from "@bfchain/core-model";
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
 import {
@@ -92,6 +92,7 @@ export class VoteLogicVerifier extends TransactionLogicVerifier {
     if (!accountInfo.isDelegate) {
       throw new ConsensusException(ACCOUNT_IS_NOT_AN_DELEGATE, {
         address: accountInfo.address,
+        errorId: NewTransactionRefuseReason.ACCOUNT_IS_NOT_AN_DELEGATE,
         ...Function_Exception_Detail,
       });
     }
@@ -99,6 +100,7 @@ export class VoteLogicVerifier extends TransactionLogicVerifier {
     if (!accountInfo.isAcceptVote) {
       throw new ConsensusException(DELEGATE_IS_ALREADY_REJECT_VOTE, {
         address: accountInfo.address,
+        errorId: NewTransactionRefuseReason.DELEGATE_IS_ALREADY_REJECT_VOTE,
         ...Function_Exception_Detail,
       });
     }
