@@ -312,10 +312,10 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
       // 记录分叉区块信息
       await blockGetterHelper.chainBlockFork(block, 1);
       throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: previousBlockSignature,
+        to_compare_prop: `previousBlockSignature: ${previousBlockSignature}`,
         be_compare_prop: __signature,
-        to_target: `block ${previousBlockSignature}`,
-        be_target: `lastBlock ${__signature}`,
+        to_target: `block ${height}`,
+        be_target: `lastBlock ${lastBlock.height}`,
         ...Function_Exception_Detail,
       });
     }
