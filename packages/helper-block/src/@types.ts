@@ -10,7 +10,7 @@ declare namespace BFChainCore {
     getCurrentGenerateBlock?(): Promise<CurrentGeneratingBlockInfo | undefined>;
     getCurrentReplayingBlockInfo?(): Promise<CurrentReplayingBlockSimpleInfo | undefined>;
     /**记录链区块分叉信息 */
-    chainBlockFork?(block: BFChainCore.Block, cause: number): Promise<void>;
+    chainBlockFork?(block: BFChainCore.Block, cause: string): Promise<void>;
     /**获取新一轮的打块受托人 */
     getNewForgingDelegates?<T extends Block>(
       lastBlock: LastBlockInfo<T>,

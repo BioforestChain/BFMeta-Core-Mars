@@ -143,7 +143,10 @@ export class ReplayBlockCore<T extends Block> {
               });
             }
           }
-          await blockGetterHelper.chainBlockFork(block, 1);
+          await blockGetterHelper.chainBlockFork(
+            block,
+            BFChainCore.FORK_CAUSE.DIFFERENT_PRE_BLOCK_SIGNATURE,
+          );
         }
         throw new ArgumentIllegalException(NOT_MATCH, {
           to_compare_prop: `previousBlockSignature ${block.previousBlockSignature}`,

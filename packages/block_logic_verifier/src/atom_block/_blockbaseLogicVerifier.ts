@@ -310,7 +310,10 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
     const __signature = lastBlock.signature;
     if (previousBlockSignature !== __signature) {
       // 记录分叉区块信息
-      await blockGetterHelper.chainBlockFork(block, 1);
+      await blockGetterHelper.chainBlockFork(
+        block,
+        BFChainCore.FORK_CAUSE.DIFFERENT_PRE_BLOCK_SIGNATURE,
+      );
       throw new ConsensusException(NOT_MATCH, {
         to_compare_prop: `previousBlockSignature: ${previousBlockSignature}`,
         be_compare_prop: `__signature: ${__signature}`,
