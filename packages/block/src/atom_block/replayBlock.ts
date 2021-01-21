@@ -33,6 +33,7 @@ import {
   Injectable,
   Inject,
 } from "@bfchain/util";
+import { BLOCK_FORK_CAUSE } from "@bfchain/core-model";
 import { BlockGeneratorCalculator } from "./blockGeneratorCalculator";
 import { CommonBlockVerify } from "./commonBlockVerify";
 const {
@@ -145,7 +146,7 @@ export class ReplayBlockCore<T extends Block> {
           }
           await blockGetterHelper.chainBlockFork(
             block,
-            BFChainCore.FORK_CAUSE.DIFFERENT_PRE_BLOCK_SIGNATURE,
+            BLOCK_FORK_CAUSE.DIFFERENT_PRE_BLOCK_SIGNATURE,
           );
         }
         throw new ArgumentIllegalException(NOT_MATCH, {
