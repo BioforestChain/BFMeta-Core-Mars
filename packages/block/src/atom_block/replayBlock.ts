@@ -687,7 +687,7 @@ export class ReplayBlockCore<T extends Block> {
         if (BigInt(block.totalAmount) !== stotalAmount) {
           throw new ArgumentIllegalException(NOT_MATCH, {
             to_compare_prop: `totalAmount ${block.totalAmount}`,
-            be_compare_prop: `totalAmount ${stotalAmount}`,
+            be_compare_prop: `totalAmount ${stotalAmount.toString()}`,
             to_target: "block",
             be_target: "calculate",
             ...Function_Exception_Detail,
@@ -697,7 +697,7 @@ export class ReplayBlockCore<T extends Block> {
         if (BigInt(block.totalFee) !== stotalFee) {
           throw new ArgumentIllegalException(NOT_MATCH, {
             to_compare_prop: `totalFee ${block.totalFee}`,
-            be_compare_prop: `totalFee ${stotalFee}`,
+            be_compare_prop: `totalFee ${stotalFee.toString()}`,
             to_target: "block",
             be_target: "calculate",
             ...Function_Exception_Detail,
