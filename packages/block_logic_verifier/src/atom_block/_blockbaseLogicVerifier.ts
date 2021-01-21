@@ -313,7 +313,7 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
       await blockGetterHelper.chainBlockFork(block, 1);
       throw new ConsensusException(NOT_MATCH, {
         to_compare_prop: `previousBlockSignature: ${previousBlockSignature}`,
-        be_compare_prop: __signature,
+        be_compare_prop: `__signature: ${__signature}`,
         to_target: `block ${height}`,
         be_target: `lastBlock ${lastBlock.height}`,
         ...Function_Exception_Detail,
@@ -403,8 +403,8 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
         );
         if (calcRoundOfflineGeneraters.length !== blockRoundOfflineGeneraters.length) {
           throw new ConsensusException(NOT_MATCH, {
-            to_compare_prop: calcRoundOfflineGeneraters.length,
-            be_compare_prop: blockRoundOfflineGeneraters.length,
+            to_compare_prop: `calcRoundOfflineGeneraters.length: ${calcRoundOfflineGeneraters.length}`,
+            be_compare_prop: `blockRoundOfflineGeneraters.length: ${blockRoundOfflineGeneraters.length}`,
             to_target: "calcGenerateBlockDelegate",
             be_target: `block with height ${block.height}, signature ${block.signature}`,
             ...Function_Exception_Detail,

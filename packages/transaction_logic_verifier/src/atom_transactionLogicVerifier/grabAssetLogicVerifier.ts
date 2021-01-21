@@ -219,8 +219,8 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
       trsAsset.giftDistributionRule !== giftDistributionRule
     ) {
       throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: trsAsset,
-        be_compare_prop: giftAsset,
+        to_compare_prop: `trsAsset: ${trsAsset}`,
+        be_compare_prop: `giftAsset: ${giftAsset}`,
         to_target: "GrabAssetTransaction",
         be_target: "GiftAssetTransaction",
         ...Function_Exception_Detail,
