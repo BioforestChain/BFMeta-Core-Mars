@@ -25,6 +25,7 @@ import type { Block } from "@bfchain/core-model-block";
 import { TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE } from "@bfchain/core-model-transaction";
 import { Inject } from "@bfchain/util";
 import { BlockGeneratorCalculator } from "@bfchain/core-block";
+import { BLOCK_FORK_CAUSE } from "@bfchain/core-model";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
@@ -310,10 +311,7 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
     const __signature = lastBlock.signature;
     if (previousBlockSignature !== __signature) {
       // 记录分叉区块信息
-      await blockGetterHelper.chainBlockFork(
-        block,
-        BFChainCore.FORK_CAUSE.DIFFERENT_PRE_BLOCK_SIGNATURE,
-      );
+      await blockGetterHelper.chainBlockFork(block, BLOCK_FORK_CAUSE.DIFFERENT_PRE_BLOCK_SIGNATURE);
       throw new ConsensusException(NOT_MATCH, {
         to_compare_prop: `previousBlockSignature: ${previousBlockSignature}`,
         be_compare_prop: `__signature: ${__signature}`,

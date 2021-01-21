@@ -11,4 +11,5 @@ declare namespace BFChainCore {
   type TPOW_PARAMETER = import("./").TPOW_PARAMETER;
   type TPOW_OPERATOR = import("./").TPOW_OPERATOR;
   type TPOW_AUXILIARY_SYMBOL = import("./").TPOW_AUXILIARY_SYMBOL;
+  type FORK_CAUSE = import("./").BLOCK_FORK_CAUSE;
 }

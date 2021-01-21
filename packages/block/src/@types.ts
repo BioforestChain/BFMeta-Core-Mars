@@ -12,17 +12,6 @@ declare namespace BFChainCore {
   // #endregion
 
   // #region
-  enum FORK_CAUSE {
-    /**前块签名不一致 */
-    DIFFERENT_PRE_BLOCK_SIGNATURE = "the previous block signature is inconsistent",
-    /**锻造区块失败 */
-    GENERATE_BLOCK_FAIL = "generate block fail",
-    /**重放区块失败 */
-    REPLY_BLOCK_FAIL = "reply block fail",
-  }
-  // #endregion
-
-  // #region
   type RecommendedDelegateOptions = {
     /**选出的推荐人数量 */
     maxNumberOfRecommended: number;
