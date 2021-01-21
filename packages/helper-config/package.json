@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-helper-config",
-  "version": "5.19.42",
+  "version": "5.19.43",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,9 +14,9 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-model-block": "5.19.42",
-    "@bfchain/core-typings": "5.19.42",
-    "@bfchain/core-util-exception-errorcode": "5.19.42"
+    "@bfchain/core-model-block": "5.19.43",
+    "@bfchain/core-typings": "5.19.43",
+    "@bfchain/core-util-exception-errorcode": "5.19.43"
   },
   "gitHead": "ef41eb359371b11aafbec0516df1eba01f16ebfd"
 }
