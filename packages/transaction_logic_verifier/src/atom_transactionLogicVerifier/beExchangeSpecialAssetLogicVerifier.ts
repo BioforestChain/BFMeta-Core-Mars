@@ -180,8 +180,8 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
       trsAsset.beExchangeAsset !== beExchangeAsset
     ) {
       throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: `trsAsset: ${trsAsset}`,
-        be_compare_prop: `exchangeSpecialAsset: ${exchangeSpecialAsset}`,
+        to_compare_prop: `trsAsset: ${JSON.stringify(trsAsset)}`,
+        be_compare_prop: `exchangeSpecialAsset: ${JSON.stringify(exchangeSpecialAsset.toJSON())}`,
         to_target: "BeExchangeSpecialAssetTransaction",
         be_target: "ToExchangeSpecialAssetTransaction",
         ...Function_Exception_Detail,

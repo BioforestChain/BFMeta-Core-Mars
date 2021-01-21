@@ -78,7 +78,7 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
     for (const address of newDelegates) {
       if (!realNewDelegates.includes(address)) {
         throw new ConsensusException(NOT_MATCH, {
-          to_compare_prop: `newDelegates ${realNewDelegates}`,
+          to_compare_prop: `newDelegates ${JSON.stringify(realNewDelegates)}`,
           be_compare_prop: `newDelegates ${address}`,
           to_target: "block",
           be_target: "blockChain",

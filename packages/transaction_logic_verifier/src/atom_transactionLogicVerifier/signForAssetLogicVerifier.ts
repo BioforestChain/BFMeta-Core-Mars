@@ -132,8 +132,8 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
       trsAsset.trustees.length !== trustAsset.trustees.length
     ) {
       throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: `trsAsset: ${trsAsset}`,
-        be_compare_prop: `trustAsset: ${trustAsset}`,
+        to_compare_prop: `trsAsset: ${JSON.stringify(trsAsset)}`,
+        be_compare_prop: `trustAsset: ${JSON.stringify(trustAsset.toJSON())}`,
         to_target: "SignForAssetTransaction",
         be_target: "TrustAssetTransaction",
         ...Function_Exception_Detail,
@@ -146,7 +146,7 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
     for (const address of trustTrsRange) {
       if (!trustRange.includes(address)) {
         throw new ConsensusException(NOT_MATCH, {
-          to_compare_prop: `trustRange: ${trustRange}`,
+          to_compare_prop: `trustRange: ${JSON.stringify(trustRange)}`,
           be_compare_prop: `address: ${address}`,
           to_target: "SignForAssetTransaction",
           be_target: "TrustAssetTransaction",

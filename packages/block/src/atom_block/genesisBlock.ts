@@ -401,7 +401,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
     if (genesisAsset.nextRoundDelegates.length !== config.blockPerRound) {
       throw new ArgumentIllegalException(NOT_MATCH, {
         to_compare_prop: `nextRoundDelegates length ${genesisAsset.nextRoundDelegates.length}`,
-        be_compare_prop: config.blockPerRound,
+        be_compare_prop: `config.blockPerRound: ${config.blockPerRound}`,
         to_target: "genesisBlockRemark",
         be_target: "config",
         ...GenesisBlockAsset_Exception_Detail,
