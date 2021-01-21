@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-transaction-logic-verifier",
-  "version": "5.19.43",
+  "version": "5.19.44",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
