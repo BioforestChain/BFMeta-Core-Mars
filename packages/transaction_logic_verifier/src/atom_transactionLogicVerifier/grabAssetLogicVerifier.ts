@@ -264,12 +264,12 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
    * 不能二次操作同一笔交易(权益赠送)
    *
    * @param transaction
-   * @param heightRange
+   * @param currentBlockHeight
    * @param transactionGetterHelper
    */
   async checkSecondaryTransaction(
     transaction: GrabAssetTransaction,
-    heightRange: { startHeight: number; endHeight: number },
+    currentBlockHeight: number,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
@@ -279,7 +279,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
     const isSecondary = await transactionGetterHelper.checkSecondaryTransaction({
       senderId: transaction.senderId,
       storageValue: transaction.storageValue as string,
-      heightRange,
+      heightRange: this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
     });
     if (isSecondary) {
       throw new ConsensusException(CAN_NOT_SECONDARY_TRANSACTION, {

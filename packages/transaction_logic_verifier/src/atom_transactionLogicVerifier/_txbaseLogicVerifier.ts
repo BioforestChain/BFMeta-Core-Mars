@@ -841,7 +841,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    */
   checkSecondaryTransaction?(
     transaction: T,
-    heightRange: { startHeight: number; endHeight: number },
+    currentBlockHeight: number,
     transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ): Promise<void>;
 
