@@ -40,6 +40,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
     const { transactionSignature } = grabAsset;
     const trsWithBlockSign = await transactionGetterHelper.getTransactionAndBlockSignatureBySignature(
       transactionSignature,
+      this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
     );
 
     if (!trsWithBlockSign) {
@@ -260,12 +261,15 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
   }
 
   /**
-   * 不能二次操作同一笔交易(资产赠送)
+   * 不能二次操作同一笔交易(权益赠送)
    *
-   * @param tr
+   * @param transaction
+   * @param heightRange
+   * @param transactionGetterHelper
    */
   async checkSecondaryTransaction(
     transaction: GrabAssetTransaction,
+    heightRange: { startHeight: number; endHeight: number },
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
@@ -275,6 +279,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
     const isSecondary = await transactionGetterHelper.checkSecondaryTransaction({
       senderId: transaction.senderId,
       storageValue: transaction.storageValue as string,
+      heightRange,
     });
     if (isSecondary) {
       throw new ConsensusException(CAN_NOT_SECONDARY_TRANSACTION, {

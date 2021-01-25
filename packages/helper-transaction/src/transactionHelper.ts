@@ -821,4 +821,18 @@ export class TransactionHelper {
         : -1;
     });
   }
+
+  /**
+   * 计算事件的查询范围
+   *
+   * @param currentBlockHeight 当前区块高度
+   * @param config 配置文件
+   */
+  calcTransactionQueryRange(currentBlockHeight: number, config = this.config) {
+    const startHeight = currentBlockHeight - config.maxApplyAndConfirmedBlockHeightDiff;
+    return {
+      startHeight: startHeight <= 0 ? 1 : startHeight,
+      endHeight: currentBlockHeight - 1,
+    };
+  }
 }

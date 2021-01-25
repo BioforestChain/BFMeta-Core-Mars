@@ -110,6 +110,7 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
     const { transactionSignature } = beExchangeSpecialAsset;
     const toExchangeSpecialAssetJson = (await transactionGetterHelper.getTransactionBySignature(
       transactionSignature,
+      this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
     )) as BFChainCore.TransactionJSON<BFChainCore.ToExchangeSpecialAssetAssetJSON> | undefined;
     if (!toExchangeSpecialAssetJson) {
       throw new NoFoundException(NOT_EXIST, {
@@ -223,10 +224,13 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
   /**
    * 不能二次操作同一笔交易(资产交换)
    *
-   * @param tr
+   * @param transaction
+   * @param heightRange
+   * @param transactionGetterHelper
    */
   async checkSecondaryTransaction(
     transaction: BeExchangeSpecialAssetTransaction,
+    heightRange: { startHeight: number; endHeight: number },
     transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
@@ -244,6 +248,7 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
     const isSecondary = await transactionGetterHelper.checkSecondaryTransaction({
       senderId: transaction.senderId,
       storageValue: transaction.storageValue as string,
+      heightRange,
     });
     if (isSecondary) {
       throw new ConsensusException(CAN_NOT_SECONDARY_TRANSACTION, {

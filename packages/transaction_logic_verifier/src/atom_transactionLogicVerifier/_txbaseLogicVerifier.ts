@@ -758,11 +758,13 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   /**
    * 查询交易是否已经在链上
    *
-   * @param senderId
    * @param signature
+   * @param currentBlockHeight
+   * @param transactionGetterHelper
    */
   async checkRepeatInBlockChainTransaction(
     signature: string,
+    currentBlockHeight: number,
     transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
@@ -775,7 +777,10 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
         ...Function_Exception_Detail,
       });
     }
-    const result = await transactionGetterHelper.checkRepeatInBlockChainTransaction(signature);
+    const result = await transactionGetterHelper.checkRepeatInBlockChainTransaction(
+      signature,
+      this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
+    );
     if (result) {
       throw new ConsensusException(ALREADY_EXIST, {
         prop: `Transaction with signature ${signature}`,
@@ -830,21 +835,24 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   }
 
   /**
-   * 不能二次操作同一笔交易(资产赠送/资产交换/特殊资产交换/委托资产/资产迁入)
+   * 不能二次操作同一笔交易(权益赠送/权益委托/权益迁入)
    *
-   * @param tr
+   * @param transaction
    */
-  async checkSecondaryTransaction(
+  checkSecondaryTransaction?(
     transaction: T,
+    heightRange: { startHeight: number; endHeight: number },
     transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
-  ) {
-    return;
-  }
+  ): Promise<void>;
 
-  async checkRegisterDelegateQuota(
+  /**
+   * 校验注册受托人名额是否充足
+   *
+   * @param currentBlockHeight
+   * @param transactionGetterHelper
+   */
+  checkRegisterDelegateQuota?(
     currentBlockHeight: number,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
-  ) {
-    return;
-  }
+  ): Promise<void>;
 }

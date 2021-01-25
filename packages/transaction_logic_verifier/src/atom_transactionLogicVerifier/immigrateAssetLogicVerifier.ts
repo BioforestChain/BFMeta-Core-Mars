@@ -153,12 +153,15 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
   }
 
   /**
-   * 不能二次操作同一笔交易(资产迁入)
+   * 不能二次操作同一笔交易(权益迁入)
    *
-   * @param tr
+   * @param transaction
+   * @param heightRange
+   * @param transactionGetterHelper
    */
   async checkSecondaryTransaction(
     transaction: ImmigrateAssetTransaction,
+    heightRange: { startHeight: number; endHeight: number },
     transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
@@ -176,6 +179,7 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
     const isSecondary = await transactionGetterHelper.checkSecondaryTransaction({
       type: this.transactionHelper.IMMIGRATE_ASSET,
       storageValue: transaction.storageValue as string,
+      heightRange,
     });
     if (isSecondary) {
       throw new ConsensusException(ASSET_IS_ALREADY_MIGRATION, {

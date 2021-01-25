@@ -36,9 +36,10 @@ export class BeExchangeAssetLogicVerifier extends TransactionLogicVerifier {
 
     const beExchangeAssetAsset = transaction.asset.beExchangeAsset;
     const { transactionSignature } = beExchangeAssetAsset;
-    const trs = (await transactionGetterHelper.getTransactionBySignature(transactionSignature)) as
-      | BFChainCore.TransactionJSON<BFChainCore.ToExchangeAssetAssetJSON>
-      | undefined;
+    const trs = (await transactionGetterHelper.getTransactionBySignature(
+      transactionSignature,
+      this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
+    )) as BFChainCore.TransactionJSON<BFChainCore.ToExchangeAssetAssetJSON> | undefined;
     if (!trs) {
       throw new NoFoundException(NOT_EXIST, {
         prop: `Transaction with signature ${transactionSignature}`,
@@ -173,37 +174,4 @@ export class BeExchangeAssetLogicVerifier extends TransactionLogicVerifier {
       }
     }
   }
-
-  // /**
-  //  * 不能二次操作同一笔交易(特殊资产交换)
-  //  *
-  //  * @param tr
-  //  */
-  // async checkSecondaryTransaction(
-  //   transaction: BeExchangeAssetTransaction,
-  //   transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
-  // ) {
-  //   const Function_Exception_Detail = {
-  //     function: "checkSecondaryTransaction",
-  //   } as const;
-
-  //   if (!transactionGetterHelper) {
-  //     throw new NoFoundException(NOT_EXIST, {
-  //       prop: "transactionGetterHelper",
-  //       target: "moduleStroge",
-  //       ...Function_Exception_Detail,
-  //     });
-  //   }
-
-  //   const isSecondary = await transactionGetterHelper.checkSecondaryTransaction({
-  //     senderId: transaction.senderId,
-  //     storageValue: transaction.storageValue as string,
-  //   });
-  //   if (isSecondary) {
-  //     throw new ConsensusException(CAN_NOT_SECONDARY_TRANSACTION, {
-  //       reason: `Can not secondary exchange asset, sender ${transaction.senderId} exchange transaction signature ${transaction.storageValue}`,
-  //       ...Function_Exception_Detail,
-  //     });
-  //   }
-  // }
 }

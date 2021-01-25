@@ -38,6 +38,7 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
 
     const trs = (await transactionGetterHelper.getTransactionBySignature(
       transactionSignature,
+      this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
     )) as BFChainCore.TransactionJSON<BFChainCore.TrustAssetAssetJSON>;
 
     if (!trs) {
@@ -157,12 +158,15 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
   }
 
   /**
-   * 不能二次操作同一笔交易(委托资产)
+   * 不能二次操作同一笔交易(权益委托)
    *
-   * @param tr
+   * @param transaction
+   * @param heightRange
+   * @param transactionGetterHelper
    */
   async checkSecondaryTransaction(
     transaction: SignForAssetTransaction,
+    heightRange: { startHeight: number; endHeight: number },
     transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const Function_Exception_Detail = {
@@ -180,6 +184,7 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
     const isSecondary = await transactionGetterHelper.checkSecondaryTransaction({
       senderId: transaction.senderId,
       storageValue: transaction.storageValue as string,
+      heightRange,
     });
     if (isSecondary) {
       throw new ConsensusException(CAN_NOT_SECONDARY_TRANSACTION, {

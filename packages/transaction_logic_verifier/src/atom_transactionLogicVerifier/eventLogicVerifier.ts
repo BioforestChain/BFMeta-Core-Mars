@@ -257,7 +257,10 @@ export class EventLogicVerifier {
         const { assetInfo, frozenIdBuffer, amount: spendAsset } = applyInfo;
         const { magic, assetType } = assetInfo;
         const transactionSignature = getHexFromArrayBuffer(frozenIdBuffer);
-        const trs = await transactionGetterHelper.getTransactionBySignature(transactionSignature);
+        const trs = await await transactionGetterHelper.getTransactionBySignature(
+          transactionSignature,
+          this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
+        );
 
         if (!trs) {
           throw new NoFoundException(NOT_EXIST, {
@@ -353,6 +356,7 @@ export class EventLogicVerifier {
         const transactionSignature = getHexFromArrayBuffer(frozenIdBuffer);
         const trs = (await transactionGetterHelper.getTransactionBySignature(
           transactionSignature,
+          this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
         )) as BFChainCore.TrustAssetTransactionJSON;
 
         if (!trs) {

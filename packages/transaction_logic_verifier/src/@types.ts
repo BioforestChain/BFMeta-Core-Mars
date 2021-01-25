@@ -10,9 +10,16 @@ declare namespace BFChainCore {
 
   // #region TransactionGetterHelperInterface
   interface TransactionGetterHelperInterface {
-    /**根据交易 signature 获取交易和交易所在的区块签名 */
+    /**
+     * 根据交易 signature 获取交易和交易所在的区块签名
+     *
+     * @param signature 事件签名
+     * @param heightRange 查询范围
+     *
+     */
     getTransactionAndBlockSignatureBySignature(
       signature: string,
+      heightRange: { startHeight: number; endHeight: number },
     ): Promise<
       | {
           transaction: TransactionJSON;
@@ -20,36 +27,44 @@ declare namespace BFChainCore {
         }
       | undefined
     >;
-    /**根据交易 signature 获取交易 */
-    getTransactionBySignature(signature: string): Promise<TransactionJSON | undefined>;
-    /**查询交易是否存在 */
-    getCountTransaction(args: {
-      /**交易类型 */
-      type?: string;
-      /**交易的发起账户 */
-      senderId?: string;
-      /**交易的接收账户 */
-      recipientId?: string;
-      /**交易的签名 */
-      signature?: string;
-      /**索引值 */
-      storageValue?: string;
-      /**起始高度 */
-      startHeight?: number;
-      /**结束高度 */
-      endHeight?: number;
-    }): Promise<number>;
+    /**
+     * 根据交易 signature 获取交易
+     *
+     * @param signature 事件签名
+     * @param heightRange 查询范围
+     */
+    getTransactionBySignature(
+      signature: string,
+      heightRange: { startHeight: number; endHeight: number },
+    ): Promise<TransactionJSON | undefined>;
     /**某个账户是否购买指定的 dappid */
     getPurchaseDApp(address: string, dappid: string): Promise<boolean>;
     /**查询交易是否已经在未处理交易中 */
     checkRepeatInUntreatedTransaction(senderId: string, signature: string): Promise<boolean>;
-    /**查询交易是否已经在链上 */
-    checkRepeatInBlockChainTransaction(signature: string): Promise<boolean>;
-    /**查询是否二次操作某笔交易 */
+    /**
+     * 查询交易是否已经在链上
+     *
+     * @param signature 事件签名
+     * @param heightRange 查询范围
+     */
+    checkRepeatInBlockChainTransaction(
+      signature: string,
+      heightRange: { startHeight: number; endHeight: number },
+    ): Promise<boolean>;
+    /**
+     * 查询是否二次操作某笔交易
+     *
+     * @param args 查新条件
+     */
     checkSecondaryTransaction(args: {
+      /**事件类型 */
       type?: string;
+      /**事件发起账户地址 */
       senderId?: string;
+      /**事件关联索引 */
       storageValue: string;
+      /**事件查询范围 */
+      heightRange: { startHeight: number; endHeight: number };
     }): Promise<boolean>;
     /**查询新生成的受托人 */
     getNewDelegates(height: number): Promise<string[]>;
