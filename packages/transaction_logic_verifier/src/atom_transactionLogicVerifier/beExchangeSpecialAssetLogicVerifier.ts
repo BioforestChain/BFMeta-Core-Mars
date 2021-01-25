@@ -12,6 +12,7 @@ import {
   NOT_MATCH,
   CAN_NOT_SECONDARY_TRANSACTION,
   SHOULD_BE,
+  NOT_EXIST_OR_EXPIRED,
 } from "@bfchain/core-util-exception";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
@@ -38,6 +39,23 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
     const Function_Exception_Detail = {
       function: "verify",
     } as const;
+
+    const beExchangeSpecialAsset = transaction.asset.beExchangeSpecialAsset;
+    const { transactionSignature } = beExchangeSpecialAsset;
+    const toExchangeSpecialAssetJson = (await transactionGetterHelper.getTransactionBySignature(
+      transactionSignature,
+      this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
+    )) as BFChainCore.TransactionJSON<BFChainCore.ToExchangeSpecialAssetAssetJSON> | undefined;
+    if (!toExchangeSpecialAssetJson) {
+      throw new NoFoundException(NOT_EXIST_OR_EXPIRED, {
+        prop: `Transaction with signature ${transactionSignature}`,
+        target: "blockChain",
+        ...Function_Exception_Detail,
+      });
+    }
+
+    this.isValidRecipientId(transaction, toExchangeSpecialAssetJson);
+    this.isDependentTransactionMatch(transaction, toExchangeSpecialAssetJson);
 
     const { sender, recipient } = await this.logicVerify(
       transaction,
@@ -105,23 +123,6 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
     }
 
     await this.eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
-
-    const beExchangeSpecialAsset = transaction.asset.beExchangeSpecialAsset;
-    const { transactionSignature } = beExchangeSpecialAsset;
-    const toExchangeSpecialAssetJson = (await transactionGetterHelper.getTransactionBySignature(
-      transactionSignature,
-      this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
-    )) as BFChainCore.TransactionJSON<BFChainCore.ToExchangeSpecialAssetAssetJSON> | undefined;
-    if (!toExchangeSpecialAssetJson) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: `Transaction with signature ${transactionSignature}`,
-        target: "blockChain",
-        ...Function_Exception_Detail,
-      });
-    }
-
-    this.isValidRecipientId(transaction, toExchangeSpecialAssetJson);
-    this.isDependentTransactionMatch(transaction, toExchangeSpecialAssetJson);
 
     return true;
   }
@@ -231,20 +232,8 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
   async checkSecondaryTransaction(
     transaction: BeExchangeSpecialAssetTransaction,
     currentBlockHeight: number,
-    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
+    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const Function_Exception_Detail = {
-      function: "checkSecondaryTransaction",
-    } as const;
-
-    if (!transactionGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "transactionGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
-
     const isSecondary = await transactionGetterHelper.checkSecondaryTransaction({
       senderId: transaction.senderId,
       storageValue: transaction.storageValue as string,
@@ -253,7 +242,7 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
     if (isSecondary) {
       throw new ConsensusException(CAN_NOT_SECONDARY_TRANSACTION, {
         reason: `Can not secondary exchange special asset, sender ${transaction.senderId} exchange transaction signature ${transaction.storageValue}`,
-        ...Function_Exception_Detail,
+        function: "checkSecondaryTransaction",
       });
     }
   }

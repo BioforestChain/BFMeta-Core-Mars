@@ -3,10 +3,9 @@ import { BeExchangeAssetTransaction, RANGE_TYPE } from "@bfchain/core-model";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
 import {
   CoreExceptionGenerator,
-  NOT_EXIST,
   NOT_MATCH,
-  CAN_NOT_SECONDARY_TRANSACTION,
   SHOULD_BE,
+  NOT_EXIST_OR_EXPIRED,
 } from "@bfchain/core-util-exception";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
@@ -41,7 +40,7 @@ export class BeExchangeAssetLogicVerifier extends TransactionLogicVerifier {
       this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
     )) as BFChainCore.TransactionJSON<BFChainCore.ToExchangeAssetAssetJSON> | undefined;
     if (!trs) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(NOT_EXIST_OR_EXPIRED, {
         prop: `Transaction with signature ${transactionSignature}`,
         target: "blockChain",
         ...Function_Exception_Detail,

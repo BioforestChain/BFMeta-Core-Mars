@@ -6,6 +6,7 @@ import {
   NOT_EXIST,
   NOT_MATCH,
   CAN_NOT_SECONDARY_TRANSACTION,
+  NOT_EXIST_OR_EXPIRED,
 } from "@bfchain/core-util-exception";
 import { AccountBaseHelper } from "@bfchain/core-helper";
 
@@ -42,7 +43,7 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
     )) as BFChainCore.TransactionJSON<BFChainCore.TrustAssetAssetJSON>;
 
     if (!trs) {
-      throw new ConsensusException(NOT_EXIST, {
+      throw new ConsensusException(NOT_EXIST_OR_EXPIRED, {
         prop: `Transaction with signature ${transactionSignature}`,
         target: "blockChain",
         ...Function_Exception_Detail,
@@ -167,20 +168,8 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
   async checkSecondaryTransaction(
     transaction: SignForAssetTransaction,
     currentBlockHeight: number,
-    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
+    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const Function_Exception_Detail = {
-      function: "checkSecondaryTransaction",
-    } as const;
-
-    if (!transactionGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "transactionGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
-
     const isSecondary = await transactionGetterHelper.checkSecondaryTransaction({
       senderId: transaction.senderId,
       storageValue: transaction.storageValue as string,
@@ -189,7 +178,7 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
     if (isSecondary) {
       throw new ConsensusException(CAN_NOT_SECONDARY_TRANSACTION, {
         reason: `Can not secondary sign for asset, sender ${transaction.senderId} trust transaction signature ${transaction.storageValue}`,
-        ...Function_Exception_Detail,
+        function: "checkSecondaryTransaction",
       });
     }
   }

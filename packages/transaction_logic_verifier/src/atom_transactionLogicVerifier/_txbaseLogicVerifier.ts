@@ -765,18 +765,8 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   async checkRepeatInBlockChainTransaction(
     signature: string,
     currentBlockHeight: number,
-    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
+    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const Function_Exception_Detail = {
-      function: "checkRepeatInBlockChainTransaction",
-    } as const;
-    if (!transactionGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "transactionGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
     const result = await transactionGetterHelper.checkRepeatInBlockChainTransaction(
       signature,
       this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
@@ -785,7 +775,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       throw new ConsensusException(ALREADY_EXIST, {
         prop: `Transaction with signature ${signature}`,
         target: "blockChain",
-        ...Function_Exception_Detail,
+        function: "checkRepeatInBlockChainTransaction",
       });
     }
   }

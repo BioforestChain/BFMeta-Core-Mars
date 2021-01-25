@@ -310,6 +310,9 @@ export const TRUST_MAIN_ASSET_ONLY = (ec.next =
 /**assetType mainAsset function */
 export const USE_MAIN_ASSET_PURCHASE_ONLY = (ec.next =
   "You can only use main asset to purchase, {assetType} is not main asset {mainAsset}, when {function}");
+/**prop target function */
+export const NOT_EXIST_OR_EXPIRED = (ec.next =
+  "{prop} in {target} not exist or expired when {function}");
 // #endregion
 export const errorCode = new Map(
   ec.errorCode.concat([

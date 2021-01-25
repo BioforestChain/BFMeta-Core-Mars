@@ -3,11 +3,11 @@ import { GrabAssetTransaction, RANGE_TYPE, GIFT_DISTRIBUTION_RULE } from "@bfcha
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
 import {
   CoreExceptionGenerator,
-  NOT_EXIST,
   NOT_MATCH,
   CAN_NOT_SECONDARY_TRANSACTION,
   SHOULD_BE,
   PROP_IS_INVALID,
+  NOT_EXIST_OR_EXPIRED,
 } from "@bfchain/core-util-exception";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
@@ -44,7 +44,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
     );
 
     if (!trsWithBlockSign) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(NOT_EXIST_OR_EXPIRED, {
         prop: `Transaction with signature ${transactionSignature}`,
         target: "grabAsset",
         ...Function_Exception_Detail,
@@ -272,10 +272,6 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
     currentBlockHeight: number,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const Function_Exception_Detail = {
-      function: "checkSecondaryTransaction",
-    } as const;
-
     const isSecondary = await transactionGetterHelper.checkSecondaryTransaction({
       senderId: transaction.senderId,
       storageValue: transaction.storageValue as string,
@@ -284,7 +280,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
     if (isSecondary) {
       throw new ConsensusException(CAN_NOT_SECONDARY_TRANSACTION, {
         reason: `Can not secondary grab asset, sender ${transaction.senderId} gift transaction signature ${transaction.storageValue}`,
-        ...Function_Exception_Detail,
+        function: "checkSecondaryTransaction",
       });
     }
   }

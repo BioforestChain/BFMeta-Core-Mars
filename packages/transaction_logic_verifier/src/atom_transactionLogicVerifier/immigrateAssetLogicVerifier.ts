@@ -162,20 +162,8 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
   async checkSecondaryTransaction(
     transaction: ImmigrateAssetTransaction,
     currentBlockHeight: number,
-    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
+    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const Function_Exception_Detail = {
-      function: "checkSecondaryTransaction",
-    } as const;
-
-    if (!transactionGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "transactionGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
-
     const isSecondary = await transactionGetterHelper.checkSecondaryTransaction({
       type: this.transactionHelper.IMMIGRATE_ASSET,
       storageValue: transaction.storageValue as string,
@@ -184,7 +172,7 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
     if (isSecondary) {
       throw new ConsensusException(ASSET_IS_ALREADY_MIGRATION, {
         signature: transaction.storageValue,
-        ...Function_Exception_Detail,
+        function: "checkSecondaryTransaction",
       });
     }
   }
