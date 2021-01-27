@@ -39,18 +39,24 @@ declare namespace BFChainCore {
     ): Promise<TransactionJSON | undefined>;
     /**某个账户是否购买指定的 dappid */
     getPurchaseDApp(address: string, dappid: string): Promise<boolean>;
-    /**查询交易是否已经在未处理交易中 */
-    checkRepeatInUntreatedTransaction(senderId: string, signature: string): Promise<boolean>;
     /**
-     * 查询交易是否已经在链上
+     * 查询事件在未处理事件中的数量
      *
-     * @param signature 事件签名
-     * @param heightRange 查询范围
+     * @param signature
+     * @param heightRange
      */
-    checkRepeatInBlockChainTransaction(
+    countTransactionInUntreatedBySignature(senderId: string, signature: string): Promise<number>;
+    /**
+     * 查询事件在链上的数量
+     *
+     * @param signature
+     * @param heightRange
+     */
+    countTransactionInBlockChainBySignature(
       signature: string,
       heightRange: { startHeight: number; endHeight: number },
-    ): Promise<boolean>;
+    ): Promise<number>;
+
     /**
      * 查询是否二次操作某笔交易
      *

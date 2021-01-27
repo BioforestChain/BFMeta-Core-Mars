@@ -743,11 +743,11 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
         ...Function_Exception_Detail,
       });
     }
-    const result = await transactionGetterHelper.checkRepeatInUntreatedTransaction(
+    const txCount = await transactionGetterHelper.countTransactionInUntreatedBySignature(
       senderId,
       signature,
     );
-    if (result) {
+    if (txCount > 0) {
       throw new ConsensusException(ALREADY_EXIST, {
         prop: `Transaction with signature ${signature}`,
         target: "untreated transaction",
@@ -760,18 +760,20 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    *
    * @param signature
    * @param currentBlockHeight
+   * @param numberOfTransaction
    * @param transactionGetterHelper
    */
   async checkRepeatInBlockChainTransaction(
     signature: string,
     currentBlockHeight: number,
+    numberOfTransaction = 0,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const result = await transactionGetterHelper.checkRepeatInBlockChainTransaction(
+    const txCount = await transactionGetterHelper.countTransactionInBlockChainBySignature(
       signature,
       this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
     );
-    if (result) {
+    if (txCount > numberOfTransaction) {
       throw new ConsensusException(ALREADY_EXIST, {
         prop: `Transaction with signature ${signature}`,
         target: "blockChain",
