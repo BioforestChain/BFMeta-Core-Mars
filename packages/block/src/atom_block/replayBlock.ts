@@ -24,6 +24,7 @@ import {
   SHOULD_NOT_INCLUDE,
   PROP_IS_REQUIRE,
   NOT_FOUND,
+  SHOULD_NOT_DUPLICATE,
 } from "@bfchain/core-util-exception";
 import {
   QueneEventEmitter,
@@ -298,6 +299,7 @@ export class ReplayBlockCore<T extends Block> {
     );
     const transactionBufferList: Uint8Array[] = [];
     const { transactionCore, asymmetricHelper, transactionHelper, baseHelper } = this;
+    const trsSet = new Set();
 
     if (!eventEmitter.assetChangesGetter) {
       throw new NoFoundException(NOT_EXIST, {
@@ -363,6 +365,14 @@ export class ReplayBlockCore<T extends Block> {
             });
           }
           const trs = tranItem.transaction;
+          if (trsSet.has(trs.signature)) {
+            throw new ConsensusException(SHOULD_NOT_DUPLICATE, {
+              prop: `transaction with signature ${trs.signature}`,
+              target: `block with height ${block.height}`,
+              ...Function_Exception_Detail,
+            });
+          }
+          trsSet.add(trs.signature);
           if (!this.commonBlockVerify.canInsertTransaction(trs.type)) {
             const trsName = TRANSACTION_TYPES_MAP.VK.get(
               TRANSACTION_TYPES_MAP.trsTypeToV(trs.type),
@@ -428,8 +438,6 @@ export class ReplayBlockCore<T extends Block> {
           if (
             storageValue &&
             (type === transactionHelper.GRAB_ASSET ||
-              // type === transactionHelper.BE_EXCHANGE_ASSET ||
-              // type === transactionHelper.BE_EXCHANGE_SPECIAL_ASSET ||
               type === transactionHelper.SIGN_FOR_ASSET ||
               type === transactionHelper.IMMIGRATE_ASSET)
           ) {

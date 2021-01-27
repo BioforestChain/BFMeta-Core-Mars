@@ -16,6 +16,7 @@ import {
   PROP_IS_INVALID,
   NOT_EXIST,
   TRAN_POW_VERIFY_FAIL,
+  SHOULD_NOT_DUPLICATE,
 } from "@bfchain/core-util-exception";
 import { QueneEventEmitter, EasyMap, isFlagInDev, Injectable, Inject } from "@bfchain/util";
 const {
@@ -232,6 +233,7 @@ export class GenerateBlockCore<T extends Block> {
     );
     const transactions: TransactionInBlock[] = [];
     const needTPow = height > tpowOfWorkExemptionBlocks;
+    const trsSet = new Set<string>();
     try {
       /**绑定统计功能到事件触发器上 */
       this.statisticsHelper.bindApplyTransactionEventEmiter(eventEmitter, statisticsInfo);
@@ -251,6 +253,14 @@ export class GenerateBlockCore<T extends Block> {
             });
           }
           const trs = tranItem.transaction;
+          if (trsSet.has(trs.signature)) {
+            throw new ConsensusException(SHOULD_NOT_DUPLICATE, {
+              prop: `transaction with signature ${trs.signature}`,
+              target: `block with height ${block.height}`,
+              ...Function_Exception_Detail,
+            });
+          }
+          trsSet.add(trs.signature);
           if (!this.commonBlockVerify.canInsertTransaction(trs.type)) {
             const trsName = TRANSACTION_TYPES_MAP.VK.get(
               TRANSACTION_TYPES_MAP.trsTypeToV(trs.type),

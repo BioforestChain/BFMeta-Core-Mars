@@ -21,17 +21,18 @@ import {
   PROP_IS_INVALID,
   PROP_IS_REQUIRE,
   NOT_MATCH,
-  DUPLICATE,
   PROP_SHOULD_EQ_FIELD,
   PROP_SHOULD_LTE_FIELD,
   TOO_LARGE,
+  SHOULD_NOT_DUPLICATE,
 } from "@bfchain/core-util-exception";
 import { QueneEventEmitter, Injectable, Inject } from "@bfchain/util";
 import { CommonBlockVerify } from "./commonBlockVerify";
-const { ArgumentIllegalException, ArgumentFormatException } = CoreExceptionGenerator(
-  "CONTROLLER",
-  "_blockbase",
-);
+const {
+  ArgumentIllegalException,
+  ArgumentFormatException,
+  ConsensusException,
+} = CoreExceptionGenerator("CONTROLLER", "_blockbase");
 
 @Injectable()
 export class VerifyBlockCore<T extends Block> {
@@ -171,7 +172,7 @@ export class VerifyBlockCore<T extends Block> {
 
     const transactions = block.transactions;
     /**重复交易 */
-    const appliedTransactions = new Set<string>();
+    const trsSet = new Set<string>();
     /**所有交易的sha256hash */
     const payloadHash = this.cryptoHelper.sha256();
     /**所有交易体的总字节长度 */
@@ -216,14 +217,14 @@ export class VerifyBlockCore<T extends Block> {
         await this.transactionCore
           .getTransactionFactoryFromType(transaction.type)
           .verify(transaction, config);
-        if (appliedTransactions.has(transaction.signature)) {
-          throw new ArgumentIllegalException(DUPLICATE, {
-            variable: `transaction signature ${transaction.signature}`,
-            value: transaction,
-            ...Block_Exception_Detail,
+        if (trsSet.has(transaction.signature)) {
+          throw new ConsensusException(SHOULD_NOT_DUPLICATE, {
+            prop: `transaction with signature ${transaction.signature}`,
+            target: `block with height ${block.height}`,
+            ...Function_Exception_Detail,
           });
         }
-        appliedTransactions.add(transaction.signature);
+        trsSet.add(transaction.signature);
 
         // 校验 TIB 签名
         if (
