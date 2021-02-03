@@ -1,5 +1,5 @@
 import { Injectable, Inject, getInjectionToken, deepMix } from "@bfchain/util";
-import { PatchBase, PATCH_INJECT_TOKEN } from "@bfchain/core-patch-base";
+import { PatchBase } from "@bfchain/core-patch-base";
 
 @Injectable()
 export class Patch_1 extends PatchBase {
