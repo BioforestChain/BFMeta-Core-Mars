@@ -7,15 +7,18 @@ export const PATCH_ARGS = {
 };
 @Injectable({ group: true })
 export abstract class PatchBase {
-  private emitter = new EventEmitter<{ height: [number]; heightChanged: [number, number] }>();
+  private emitter = new EventEmitter<{
+    height: [number];
+    heightChanged: [{ newHeight: number; oldHeight: number }];
+  }>();
   constructor(
     @Inject(PATCH_ARGS.CURRENT_HEIGHT, { optional: true })
     public currentHeight: number = 0,
   ) {
-    this.emitter.on("height", (height) => {
+    this.emitter.on("height", (newHeight) => {
       const oldHeight = this.currentHeight;
-      this.currentHeight = height;
-      this.emitter.emit("heightChanged", oldHeight, height);
+      this.currentHeight = newHeight;
+      this.emitter.emit("heightChanged", { oldHeight, newHeight });
     });
   }
   changeHeight(height: number) {
@@ -25,17 +28,23 @@ export abstract class PatchBase {
     this.emitter.on("heightChanged", handler);
   }
   planHeight(height: number, handler: () => unknown, unhandler: () => unknown) {
-    this.emitter.on("heightChanged", (newHeight, oldHeight) => {
+    let curStatus = _PLAN_STATUS.NULL;
+    this.emitter.on("heightChanged", ({ newHeight, oldHeight }) => {
       if (newHeight > oldHeight) {
         if (newHeight === height) {
-          handler();
+          if (curStatus !== _PLAN_STATUS.EMIT) {
+            handler();
+          }
         }
       } else if (newHeight < height) {
-        unhandler();
+        if (curStatus !== _PLAN_STATUS.NULL) {
+          unhandler();
+        }
       }
     });
     if (this.currentHeight >= height) {
       handler();
+      curStatus = _PLAN_STATUS.EMIT;
     }
   }
 
@@ -51,4 +60,9 @@ export abstract class PatchBase {
     return this._version;
   }
   abstract upgradeHandler(oldVersion: number, newVersion: number): BFChainUtil.PromiseMaybe<void>;
+}
+
+const enum _PLAN_STATUS {
+  NULL,
+  EMIT,
 }
