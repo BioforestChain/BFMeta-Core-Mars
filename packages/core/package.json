@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core",
-  "version": "5.19.52-feature-patch.0",
+  "version": "5.19.52-feature-patch.1",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -22,8 +22,8 @@
     "@bfchain/core-crypto": "5.19.52-feature-patch.0",
     "@bfchain/core-helper": "5.19.52-feature-patch.0",
     "@bfchain/core-model": "5.19.52-feature-patch.0",
-    "@bfchain/core-patch": "5.19.52-feature-patch.0",
-    "@bfchain/core-patch-1": "5.19.52-feature-patch.0",
+    "@bfchain/core-patch": "5.19.52-feature-patch.1",
+    "@bfchain/core-patch-1": "5.19.52-feature-patch.1",
     "@bfchain/core-transaction": "5.19.52-feature-patch.0",
     "@bfchain/core-transaction-complex": "5.19.52-feature-patch.0",
     "@bfchain/core-transaction-logic-verifier": "5.19.52-feature-patch.0",

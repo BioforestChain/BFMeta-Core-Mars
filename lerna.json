@@ -3,7 +3,7 @@
     "packages/*",
     "packages/@types/*"
   ],
-  "version": "5.19.52-feature-patch.0",
+  "version": "5.19.52-feature-patch.1",
   "useWorkspaces": true,
   "npmClient": "yarn",
   "publishConifg": {
