@@ -11,6 +11,7 @@ import {
 } from "@bfchain/util";
 import { PatchBase } from "@bfchain/core-patch-base";
 import { Patch_1, Patch_1_2 } from "@bfchain/core-patch-1";
+import { ConfigHelper } from "@bfchain/core-helper";
 
 type Progress = EventEmitter<{ progress: [PatchBase]; done: []; error: [unknown] }>;
 
@@ -18,30 +19,32 @@ type Progress = EventEmitter<{ progress: [PatchBase]; done: []; error: [unknown]
 export class PatchInstaller
   extends EventEmitterPro<{ ready: []; install: [Progress]; error: [unknown] }>
   implements AfterInit {
-  constructor(private moduleMap: ModuleStroge) {
+  constructor(private moduleMap: ModuleStroge, private config: ConfigHelper) {
     super();
   }
   bfAfterInit() {
     /// 静态载入
     this.installPatch(Patch_1);
     this.installPatch(Patch_1_2);
-
-    this._installPatchs();
   }
 
+  private _run_install_lock = false;
   /// 动态载入
   installPatch(PatchCtor: BFChainUtil.Constructor<PatchBase>) {
     Resolve(PatchCtor, this.moduleMap);
+    if (this._run_install_lock === false) {
+      this._run_install_lock = true;
+      queueMicrotask(() => {
+        this._run_install_lock = false;
+        this._installPatchs();
+      });
+    }
   }
 
   /**通知补丁高度变更 */
   changeHeight(height: number) {
-    const groups = getInjectionGroups(PatchBase);
-    const patchList: PatchBase[] = [];
-    for (const id of groups) {
-      patchList.push(this.moduleMap.get(id));
-    }
-    for (const patch of patchList) {
+    const patchs = this.moduleMap.groupGet(PatchBase as BFChainUtil.Constructor<PatchBase>);
+    for (const patch of patchs) {
       patch.changeHeight(height);
     }
   }
@@ -51,29 +54,40 @@ export class PatchInstaller
   );
 
   private async _installPatchs() {
-    const groups = getInjectionGroups(PatchBase);
-    const patchList: PatchBase[] = [];
-    for (const id of groups) {
-      patchList.push(this.moduleMap.get(id));
-    }
+    const patchList: PatchBase[] = [
+      ...this.moduleMap.groupGet(PatchBase as BFChainUtil.Constructor<PatchBase>),
+    ];
     patchList.sort((a, b) => a.version - b.version);
+
     const maxVersionMap = new EasyMap<string, number>(
       (name) =>
         patchList.filter((p) => p.name === name).sort((a, b) => b.version - a.version)[0].version,
     );
     const progress: Progress = new EventEmitter();
 
+    const oldVersion = this.config.version;
+
     try {
       for (const patch of patchList) {
         progress.emit("progress", patch);
         const oldVersion = this._patchVersionMap.forceGet(patch.name);
-        const newVersion = maxVersionMap.forceGet(patch.name);
-        await patch.upgradeHandler(oldVersion, newVersion);
+        if (oldVersion < patch.version) {
+          const newVersion = maxVersionMap.forceGet(patch.name);
+          await patch.upgradeHandler(oldVersion, newVersion);
+          this._patchVersionMap.set(patch.name, patch.version);
+        }
       }
       progress.emit("done");
     } catch (reason) {
       this.emit("error", reason);
       progress.emit("error", reason);
+    }
+
+    /// 共识发生改变
+    const newVersion = this.config.version;
+    if (newVersion !== oldVersion) {
+      /// @TODO
+      // this.config.emit("version",{newVersion,oldVersion});
     }
   }
 }

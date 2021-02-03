@@ -5,6 +5,7 @@ import { BlockCore } from "@bfchain/core-block";
 export const PATCH_ARGS = {
   CURRENT_HEIGHT: Symbol("currentHeight"),
 };
+
 @Injectable({ group: true })
 export abstract class PatchBase {
   private emitter = new EventEmitter<{

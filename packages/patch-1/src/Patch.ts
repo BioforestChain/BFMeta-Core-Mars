@@ -1,7 +1,7 @@
-import { Injectable, Inject, deepMix } from "@bfchain/util";
-import { PatchBase } from "@bfchain/core-patch-base";
+import { Injectable, Inject, getInjectionToken, deepMix } from "@bfchain/util";
+import { PatchBase, PATCH_INJECT_TOKEN } from "@bfchain/core-patch-base";
 
-// @Injectable()
+@Injectable()
 export class Patch_1 extends PatchBase {
   readonly name = "test-patch";
   protected _version = 1;
@@ -103,7 +103,7 @@ export class Patch_1 extends PatchBase {
     }
   }
 }
-// @Injectable()
+@Injectable()
 export class Patch_1_2 extends Patch_1 {
   protected _version = 2;
   async upgradeHandler(oldVersion: number, newVersion: number) {
