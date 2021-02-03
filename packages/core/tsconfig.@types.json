@@ -37,6 +37,12 @@
       "path": "../model/tsconfig.@types.json"
     },
     {
+      "path": "../patch-1/tsconfig.@types.json"
+    },
+    {
+      "path": "../patch/tsconfig.@types.json"
+    },
+    {
       "path": "../transaction_complex/tsconfig.@types.json"
     },
     {

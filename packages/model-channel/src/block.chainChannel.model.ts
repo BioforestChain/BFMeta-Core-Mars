@@ -85,6 +85,8 @@ export class NewBlockArgModel
   }
   @Field.d(NewBlockArgModel.INC++, "string")
   blockParticipation!: string;
+  @Field.d(NewBlockArgModel.INC++, "uint32")
+  version!: number;
   toJSON() {
     return {
       height: this.height,

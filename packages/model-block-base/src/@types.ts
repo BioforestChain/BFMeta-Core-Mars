@@ -241,7 +241,6 @@ declare namespace BFChainCore {
     accountParticipationWeightRatio: AccountParticipationWeightRatioJSON;
     /**区块参与度权重比，JSON 对象 */
     blockParticipationWeightRatio: BlockParticipationWeightRatioJSON;
-    // tpowDiffFormula: string;
     /**构建tpow的难度系数 */
     averageComputingPower: number;
     /**tpow豁免的区块高度 */

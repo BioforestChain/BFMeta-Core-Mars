@@ -30,6 +30,9 @@
       "path": "../model/tsconfig.json"
     },
     {
+      "path": "../patch/tsconfig.json"
+    },
+    {
       "path": "../transaction_complex/tsconfig.json"
     },
     {

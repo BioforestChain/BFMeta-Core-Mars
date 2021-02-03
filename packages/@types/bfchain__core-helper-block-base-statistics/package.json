@@ -1,13 +1,13 @@
 {
   "name": "@types/bfchain__core-helper-block-base-statistics",
   "types": "index.d.ts",
-  "version": "5.19.3",
+  "version": "5.19.51",
   "dependencies": {
-    "@types/bfchain__core-helper-chain-asset-info": "5.19.3",
-    "@types/bfchain__core-helper-config": "5.19.3",
-    "@types/bfchain__core-helper-transaction": "5.19.3",
-    "@types/bfchain__core-model": "5.19.3",
-    "@types/bfchain__core-typings": "5.19.3",
-    "@types/bfchain__core-util-exception-errorcode": "5.19.3"
+    "@types/bfchain__core-helper-chain-asset-info": "5.19.51",
+    "@types/bfchain__core-helper-config": "5.19.51",
+    "@types/bfchain__core-helper-transaction": "5.19.51",
+    "@types/bfchain__core-model": "5.19.51",
+    "@types/bfchain__core-typings": "5.19.51",
+    "@types/bfchain__core-util-exception-errorcode": "5.19.51"
   }
 }

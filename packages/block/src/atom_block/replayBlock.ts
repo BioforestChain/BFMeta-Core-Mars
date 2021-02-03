@@ -287,7 +287,7 @@ export class ReplayBlockCore<T extends Block> {
     const needTPow = height > tpowOfWorkExemptionBlocks;
     const abortForbiddenTransaction = this.transactionCore.abortForbiddenTransaction;
     const Function_Exception_Detail = { function: "insertTransactionsForReplay" };
-    const MAX_TRANSACTION_SIZE = this.config.genesisBlock.asset.genesisAsset.maxTransactionSize;
+    const MAX_TRANSACTION_SIZE = this.config.maxTransactionSize;
     /**所有交易的sha256hash */
     const payloadHash = this.cryptoHelper.sha256();
     /**所有交易体的总字节长度 */

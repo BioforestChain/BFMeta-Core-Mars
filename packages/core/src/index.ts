@@ -39,6 +39,9 @@ import {
   ParityBitHelper,
 } from "@bfchain/core-helper";
 import { Injectable, Inject, ModuleStroge, Resolve } from "@bfchain/util";
+
+import { PatchInstaller } from "@bfchain/core-patch";
+
 // export default Helper;
 @Injectable()
 export class BFChainCore {
@@ -75,6 +78,8 @@ export class BFChainCore {
     public time: ChainTimeHelper, //#endregion
     /**所有模块的集合 */
     public moduleMap: ModuleStroge,
+    /**补丁安装器 */
+    public readonly patchInstaller: PatchInstaller,
   ) {
     // moduleMap.set("___",(argsA)=>{
     //   return Resolve(BFChainCore,argsA)

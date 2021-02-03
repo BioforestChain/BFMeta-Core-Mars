@@ -148,7 +148,7 @@ export class VerifyBlockCore<T extends Block> {
     );
     accountAssetMap.set(
       `${genesisAddress}_${config.magic}_${config.assetType}`,
-      BigInt(config.genesisBlock.asset.genesisAsset.genesisAmount),
+      BigInt(config.genesisAmount),
     );
 
     function getAccountAssetKey(address: string, magic: string, assetType: string) {

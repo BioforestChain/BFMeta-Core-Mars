@@ -1252,10 +1252,10 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     return this._chainChannelEvents.off.bind(this._chainChannelEvents, "maybeHeightChanged");
   }
 
-  private _tryChangeMaybeHeight  (newMaybeHeight: number) {
+  private _tryChangeMaybeHeight  (newMaybeHeight: number, version?: number) {
     if (this._maybeHeight !== newMaybeHeight) {
       this._maybeHeight = newMaybeHeight;
-      this._chainChannelEvents.emit("maybeHeightChanged", newMaybeHeight);
+      this._chainChannelEvents.emit("maybeHeightChanged", newMaybeHeight, version);
     }
   };
   private _initMaybeHeightWatcher() {
@@ -1264,7 +1264,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       BFChainCore.NewBlockReturnParams | undefined
     > = (newBlockArg, next) => {
       if (newBlockArg.height > this._maybeHeight) {
-        this._tryChangeMaybeHeight(newBlockArg.height);
+        this._tryChangeMaybeHeight(newBlockArg.height, newBlockArg.version);
       }
       return next();
     };

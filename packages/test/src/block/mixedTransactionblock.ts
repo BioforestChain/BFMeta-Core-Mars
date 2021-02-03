@@ -59,7 +59,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
       fee: "100", // 交易手续费
       remark: {}, // 交易备注，任意信息
       dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
-      lns: bfchainCore.config.genesisBlock.asset.genesisAsset.genesisLocationName,
+      lns: bfchainCore.config.genesisLocationName,
       sourceIP: "127.0.0.1", // 交易来源 ip
       fromMagic: "5F720C81E82CFC99", // 交易来源链的 magic
       toMagic: "5F720C81E82CFC99", // 交易去往链的 magic
@@ -135,7 +135,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
       fee: "100", // 交易手续费
       remark: { remark: "body.remark" }, // 交易备注，任意信息
       dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
-      lns: bfchainCore.config.genesisBlock.asset.genesisAsset.genesisLocationName,
+      lns: bfchainCore.config.genesisLocationName,
       sourceIP: "127.0.0.1", // 交易来源 ip
       fromMagic: "5F720C81E82CFC99", // 交易来源链的 magic
       toMagic: "5F720C81E82CFC99", // 交易去往链的 magic
@@ -209,7 +209,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
       fee: "100", // 交易手续费
       remark: { remark: "body.remark" }, // 交易备注，任意信息
       dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
-      lns: bfchainCore.config.genesisBlock.asset.genesisAsset.genesisLocationName,
+      lns: bfchainCore.config.genesisLocationName,
       sourceIP: "127.0.0.1", // 交易来源 ip
       fromMagic: "5F720C81E82CFC99", // 交易来源链的 magic
       toMagic: "5F720C81E82CFC99", // 交易去往链的 magic
@@ -276,7 +276,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
       fee: "100", // 交易手续费
       remark: { remark: "body.remark" }, // 交易备注，任意信息
       dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
-      lns: bfchainCore.config.genesisBlock.asset.genesisAsset.genesisLocationName,
+      lns: bfchainCore.config.genesisLocationName,
       sourceIP: "127.0.0.1", // 交易来源 ip
       fromMagic: "5F720C81E82CFC99", // 交易来源链的 magic
       toMagic: "5F720C81E82CFC99", // 交易去往链的 magic
@@ -357,7 +357,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
       fee: "78622", // 交易手续费
       remark: { remark: "body.remark" }, // 交易备注，任意信息
       dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
-      lns: bfchainCore.config.genesisBlock.asset.genesisAsset.genesisLocationName,
+      lns: bfchainCore.config.genesisLocationName,
       sourceIP: "127.0.0.1", // 交易来源 ip
       fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
       toMagic: bfchainCore.config.magic, // 交易去往链的 magic
@@ -420,7 +420,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
       fee: "78622", // 交易手续费
       remark: { remark: "body.remark" }, // 交易备注，任意信息
       dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
-      lns: bfchainCore.config.genesisBlock.asset.genesisAsset.genesisLocationName,
+      lns: bfchainCore.config.genesisLocationName,
       sourceIP: "127.0.0.1", // 交易来源 ip
       fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
       toMagic: bfchainCore.config.magic, // 交易去往链的 magic
@@ -487,9 +487,9 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
     const accountAssetMap = new Map<string, bigint>();
     accountAssetMap.set(
       `${bfchainCore.accountBaseHelper.getAddressFromPublicKeyString(
-        bfchainCore.config.genesisBlock.generatorPublicKey,
+        bfchainCore.config.generatorPublicKey,
       )}_${bfchainCore.config.magic}_${bfchainCore.config.assetType}`,
-      BigInt(bfchainCore.config.genesisBlock.asset.genesisAsset.genesisAmount),
+      BigInt(bfchainCore.config.genesisAmount),
     );
 
     function setAccountAsset(key: string, assetNumber: bigint) {

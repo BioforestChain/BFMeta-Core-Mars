@@ -25,7 +25,7 @@ async function getDappTransaction(sender: AccountModel, dapp: BFChainCore.DAppJS
     timestamp: 770880, // 生成交易时间戳
     fee: "78622", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
-    lns: bfchainCore.config.genesisBlock.asset.genesisAsset.genesisLocationName,
+    lns: bfchainCore.config.genesisLocationName,
     sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic

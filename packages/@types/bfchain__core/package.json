@@ -1,21 +1,22 @@
 {
   "name": "@types/bfchain__core",
   "types": "index.d.ts",
-  "version": "5.19.3",
+  "version": "5.19.51",
   "dependencies": {
-    "@types/bfchain__core-account": "5.19.3",
-    "@types/bfchain__core-block": "5.19.3",
-    "@types/bfchain__core-block-logic-verifier": "5.19.3",
-    "@types/bfchain__core-block-ticker": "5.19.3",
-    "@types/bfchain__core-channel": "5.19.3",
-    "@types/bfchain__core-crypto": "5.19.3",
-    "@types/bfchain__core-helper": "5.19.3",
-    "@types/bfchain__core-model": "5.19.3",
-    "@types/bfchain__core-transaction": "5.19.3",
-    "@types/bfchain__core-transaction-logic-verifier": "5.19.3",
-    "@types/bfchain__core-transaction-complex": "5.19.3",
-    "@types/bfchain__core-typings": "5.19.3",
-    "@types/bfchain__core-util-base58": "5.19.3",
-    "@types/bfchain__core-util-exception": "5.19.3"
+    "@types/bfchain__core-account": "5.19.51",
+    "@types/bfchain__core-block": "5.19.51",
+    "@types/bfchain__core-block-logic-verifier": "5.19.51",
+    "@types/bfchain__core-block-ticker": "5.19.51",
+    "@types/bfchain__core-channel": "5.19.51",
+    "@types/bfchain__core-crypto": "5.19.51",
+    "@types/bfchain__core-helper": "5.19.51",
+    "@types/bfchain__core-model": "5.19.51",
+    "@types/bfchain__core-transaction": "5.19.51",
+    "@types/bfchain__core-transaction-logic-verifier": "5.19.51",
+    "@types/bfchain__core-transaction-complex": "5.19.51",
+    "@types/bfchain__core-typings": "5.19.51",
+    "@types/bfchain__core-util-base58": "5.19.51",
+    "@types/bfchain__core-util-exception": "5.19.51",
+    "@types/bfchain__core-patch-1": "5.19.51"
   }
 }
