@@ -908,7 +908,7 @@ function getChainOnChainHash(height: number) {
     height: bfchainCore.config.genesisBlock.height,
     previousBlockSignature: bfchainCore.config.genesisBlock.signature,
   };
-  bfchainCore.config.genesisBlock.asset.genesisAsset.nextRoundDelegates;
+  bfchainCore.config.nextRoundDelegates;
   let count = 0;
 
   const tryGenerateBlock = async (

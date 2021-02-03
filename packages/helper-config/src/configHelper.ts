@@ -37,50 +37,11 @@ export class ConfigHelper {
   getHookGenesisBlock(version: number) {
     return this._hookBlockMap.get(version);
   }
-  /**获取交易最大有效期 */
-  @cacheGetter
-  get maxApplyAndConfirmedBlockHeightDiff() {
-    return this.hookedGenesisBlock.asset.genesisAsset.maxApplyAndConfirmedBlockHeightDiff;
-  }
+
   /**获取区块版本号 */
   @cacheGetter
   get version() {
     return this.hookedGenesisBlock.version;
-  }
-  /**每轮锻造的区块数量 */
-  @cacheGetter
-  get blockPerRound() {
-    return this.hookedGenesisBlock.asset.genesisAsset.blockPerRound;
-  }
-  /**链资产名 */
-  @cacheGetter
-  get assetType() {
-    return this.hookedGenesisBlock.asset.genesisAsset.assetType;
-  }
-  /**链名 */
-  @cacheGetter
-  get chainName() {
-    return this.hookedGenesisBlock.asset.genesisAsset.chainName;
-  }
-  /**链网络标识符 */
-  @cacheGetter
-  get magic() {
-    return this.hookedGenesisBlock.asset.genesisAsset.magic;
-  }
-  /**链奖励里程 */
-  @cacheGetter
-  get milestones() {
-    return this.hookedGenesisBlock.asset.genesisAsset.rewardPerBlock;
-  }
-  /**链创世账户初始账户余额 */
-  @cacheGetter
-  get genesisAmount() {
-    return this.hookedGenesisBlock.asset.genesisAsset.genesisAmount;
-  }
-  /**链创世链域名 */
-  @cacheGetter
-  get genesisLocationName() {
-    return this.hookedGenesisBlock.asset.genesisAsset.genesisLocationName;
   }
   /**获取资产的最小单位 */
   @cacheGetter
@@ -92,103 +53,163 @@ export class ConfigHelper {
   get netType() {
     return this.initials === "b" ? NetType.MAINNET : NetType.TESTNET;
   }
-  /**地址前缀 */
-  @cacheGetter
   get initials() {
-    return this.hookedGenesisBlock.asset.genesisAsset.bnid;
+    return this.bnid;
   }
-  /**打块的时间间隔 */
-  @cacheGetter
-  get forgeInterval() {
-    return this.hookedGenesisBlock.asset.genesisAsset.forgeInterval;
-  }
-  /**账户参与度权重比 */
-  @cacheGetter
-  get accountParticipationWeightRatio() {
-    return this.hookedGenesisBlock.asset.genesisAsset.accountParticipationWeightRatio;
-  }
-  /**区块参与度权重比 */
-  @cacheGetter
-  get blockParticipationWeightRatio() {
-    return this.hookedGenesisBlock.asset.genesisAsset.blockParticipationWeightRatio;
-  }
-  /**交易 pow 参数*/
-  // get tpowDiffFormula() {
-  //   return this.hookedGenesisBlock.asset.genesisAsset.tpowDiffFormula;
-  // }
-  /**创世时间 */
-  @cacheGetter
-  get beginEpochTime() {
-    return this.hookedGenesisBlock.asset.genesisAsset.beginEpochTime;
-  }
-  /**获取交易的最大字节数 */
-  @cacheGetter
-  get maxTransactionSize() {
-    return this.hookedGenesisBlock.asset.genesisAsset.maxTransactionSize;
-  }
-  /**最大区块大小 */
-  @cacheGetter
-  get maxBlockSize() {
-    return this.hookedGenesisBlock.asset.genesisAsset.maxBlockSize;
-  }
-  /**tpow 豁免高度 */
-  @cacheGetter
-  get tpowOfWorkExemptionBlocks() {
-    return this.hookedGenesisBlock.asset.genesisAsset.tpowOfWorkExemptionBlocks;
-  }
+
   /**创世账户公钥 */
   @cacheGetter
   get genesisAccountPublicKey() {
     return this.hookedGenesisBlock.generatorPublicKey;
   }
 
-  /**资产赠送最大可获取次数 */
+  //#region 来自创世块的共识配置
+  /**链名 */
   @cacheGetter
-  get maxGrabTimesOfGiftAsset() {
-    return this.hookedGenesisBlock.asset.genesisAsset.maxGrabTimesOfGiftAsset;
+  get chainName() {
+    return this.hookedGenesisBlock.asset.genesisAsset.chainName;
   }
-  /**发行数字资产最小持有的链资产数量 */
+  /**链主权益名 */
   @cacheGetter
-  get issueAssetMinChainAsset() {
-    return this.hookedGenesisBlock.asset.genesisAsset.issueAssetMinChainAsset;
+  get assetType() {
+    return this.hookedGenesisBlock.asset.genesisAsset.assetType;
   }
-  /**注册链最小持有的链资产数量 */
+  /**链网络标识符 */
   @cacheGetter
-  get registerChainMinChainAsset() {
-    return this.hookedGenesisBlock.asset.genesisAsset.registerChainMinChainAsset;
+  get magic() {
+    return this.hookedGenesisBlock.asset.genesisAsset.magic;
   }
-  /**交易每个字节最小手续费 */
+  /**链网络类型，只能是 'b' 或 'c'，b 为正式网络，c 为测试网络 */
+  @cacheGetter
+  get bnid() {
+    return this.hookedGenesisBlock.asset.genesisAsset.bnid;
+  }
+  /**链创世时间 */
+  @cacheGetter
+  get beginEpochTime() {
+    return this.hookedGenesisBlock.asset.genesisAsset.beginEpochTime;
+  }
+  /**链创世位名 */
+  @cacheGetter
+  get genesisLocationName() {
+    return this.hookedGenesisBlock.asset.genesisAsset.genesisLocationName;
+  }
+  /**链创世账户初始持有的主权益量 */
+  @cacheGetter
+  get genesisAmount() {
+    return this.hookedGenesisBlock.asset.genesisAsset.genesisAmount;
+  }
+  /**链事件每字节需要支付的最小手续费 */
   @cacheGetter
   get minTransactionFeePerByte() {
     return this.hookedGenesisBlock.asset.genesisAsset.minTransactionFeePerByte;
   }
-  /**每个区块可处理的最大交易数量 */
+  /**链上事件体最大字节数 */
+  @cacheGetter
+  get maxTransactionSize() {
+    return this.hookedGenesisBlock.asset.genesisAsset.maxTransactionSize;
+  }
+  /**链上区块体最大字节数 */
+  @cacheGetter
+  get maxBlockSize() {
+    return this.hookedGenesisBlock.asset.genesisAsset.maxBlockSize;
+  }
+  /**链上区块体最大处理的事件 tps */
   @cacheGetter
   get maxTPSPerBlock() {
     return this.hookedGenesisBlock.asset.genesisAsset.maxTPSPerBlock;
   }
-  /**每轮可处理的受托人交易数量 */
+  /**删除分叉时至少需要落后的高度 */
+  @cacheGetter
+  get consessusBeforeSyncBlockDiff() {
+    return this.hookedGenesisBlock.asset.genesisAsset.consessusBeforeSyncBlockDiff;
+  }
+  /**每轮能处理的注册受托人数量 */
   @cacheGetter
   get maxDelegateTxsPerRound() {
     return this.hookedGenesisBlock.asset.genesisAsset.maxDelegateTxsPerRound;
+  }
+  /**权益赠送事件最大可抢次数 */
+  @cacheGetter
+  get maxGrabTimesOfGiftAsset() {
+    return this.hookedGenesisBlock.asset.genesisAsset.maxGrabTimesOfGiftAsset;
+  }
+  /**发行权益的账户最小持有的链主权益数量 */
+  @cacheGetter
+  get issueAssetMinChainAsset() {
+    return this.hookedGenesisBlock.asset.genesisAsset.issueAssetMinChainAsset;
+  }
+  /**注册创世块的账户最小持有的主权益数量 */
+  @cacheGetter
+  get registerChainMinChainAsset() {
+    return this.hookedGenesisBlock.asset.genesisAsset.registerChainMinChainAsset;
+  }
+  /**最大的过期区块间隔数量 */
+  @cacheGetter
+  get maxApplyAndConfirmedBlockHeightDiff() {
+    return this.hookedGenesisBlock.asset.genesisAsset.maxApplyAndConfirmedBlockHeightDiff;
+  }
+  /**每轮的区块数量 */
+  @cacheGetter
+  get blockPerRound() {
+    return this.hookedGenesisBlock.asset.genesisAsset.blockPerRound;
   }
   /**创世受托人数量 */
   @cacheGetter
   get delegates() {
     return this.hookedGenesisBlock.asset.genesisAsset.delegates;
   }
-  /**获取奖励分配比例 */
+  /**是否允许受托人连续参与竞选 */
+  @cacheGetter
+  get whetherToAllowDelegateContinusElections() {
+    return this.hookedGenesisBlock.asset.genesisAsset.whetherToAllowDelegateContinusElections;
+  }
+  /**区块间隔 */
+  @cacheGetter
+  get forgeInterval() {
+    return this.hookedGenesisBlock.asset.genesisAsset.forgeInterval;
+  }
+  /**奖励分配比例，JSON 对象 */
   @cacheGetter
   get rewardPercent() {
     return this.hookedGenesisBlock.asset.genesisAsset.rewardPercent;
   }
-  /**全网平均算力 */
+  /**区块链端口号，JSON 对象 */
+  @cacheGetter
+  get ports() {
+    return this.hookedGenesisBlock.asset.genesisAsset.ports;
+  }
+  /**区块奖励，JSON 对象 */
+  @cacheGetter
+  get rewardPerBlock() {
+    return this.hookedGenesisBlock.asset.genesisAsset.rewardPerBlock;
+  }
+  /**账户参与度权重比，JSON 对象 */
+  @cacheGetter
+  get accountParticipationWeightRatio() {
+    return this.hookedGenesisBlock.asset.genesisAsset.accountParticipationWeightRatio;
+  }
+  /**区块参与度权重比，JSON 对象 */
+  @cacheGetter
+  get blockParticipationWeightRatio() {
+    return this.hookedGenesisBlock.asset.genesisAsset.blockParticipationWeightRatio;
+  }
+  /**构建tpow的难度系数 */
+  @cacheGetter
   get averageComputingPower() {
     return this.hookedGenesisBlock.asset.genesisAsset.averageComputingPower;
   }
+  /**tpow豁免的区块高度 */
+  @cacheGetter
+  get tpowOfWorkExemptionBlocks() {
+    return this.hookedGenesisBlock.asset.genesisAsset.tpowOfWorkExemptionBlocks;
+  }
+  /**tpow配置，JSON对象 */
+  @cacheGetter
   get transactionPowOfWorkConfig() {
     return this.hookedGenesisBlock.asset.genesisAsset.transactionPowOfWorkConfig;
   }
+  //#endregion
 }
 @Injectable("configMap")
 export class ConfigHelperMap {

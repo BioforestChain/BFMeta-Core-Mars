@@ -537,7 +537,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
     const accountAssetMap = new Map<string, bigint>();
     accountAssetMap.set(
       `${genesisAccountInfo.address}_${core.config.magic}_${core.config.assetType}`,
-      BigInt(core.config.genesisBlock.asset.genesisAsset.genesisAmount),
+      BigInt(core.config.genesisAmount),
     );
 
     function getAccountAssetKey(address: string, magic: string, assetType: string) {
@@ -561,7 +561,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
 
     const txWithIndexList: { index: number; trs: Transaction }[] = [];
     txWithIndexList.push(await getLocationNameTransaction());
-    const totalDelegates = core.config.genesisBlock.asset.genesisAsset.delegates;
+    const totalDelegates = core.config.delegates;
     let ips: string[] = [];
     if (inputIpsPath) {
       ips = require(path.join(process.cwd(), inputIpsPath));

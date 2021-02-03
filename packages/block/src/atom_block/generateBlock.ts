@@ -218,7 +218,7 @@ export class GenerateBlockCore<T extends Block> {
   ) {
     const abortForbiddenTransaction = this.transactionCore.abortForbiddenTransaction;
     const Function_Exception_Detail = { function: "insertTransactions" };
-    const MAX_TRANSACTION_SIZE = this.config.genesisBlock.asset.genesisAsset.maxTransactionSize;
+    const MAX_TRANSACTION_SIZE = this.config.maxTransactionSize;
     const { height, generatorPublicKey, statisticInfo: blockStatisticsInfo } = block;
     const { tpowOfWorkExemptionBlocks, maxBlockSize } = this.config;
     /**所有事件的sha256hash */
