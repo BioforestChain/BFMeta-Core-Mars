@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-patch-1",
-  "version": "5.19.52",
+  "version": "5.19.53",
   "main": "build/cjs/index.js",
   "type": "build/cjs/index.d.ts",
   "module": "build/esm/index.js",
