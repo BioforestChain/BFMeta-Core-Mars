@@ -79,6 +79,8 @@ declare namespace BFChainCore {
     };
   };
   type LastBlockInfo<T extends Block> = {
+    /**区块版本号 */
+    version: number;
     /**区块高度 */
     height: number;
     /**区块时间戳 */
