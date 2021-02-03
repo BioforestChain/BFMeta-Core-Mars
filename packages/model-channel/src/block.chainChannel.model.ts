@@ -97,6 +97,7 @@ export class NewBlockArgModel
       numberOfTransactions: this.numberOfTransactions,
       generatorPublicKey: this.generatorPublicKey,
       blockParticipation: this.blockParticipation,
+      version: this.version,
     };
   }
   static fromObject<T extends Message>(
