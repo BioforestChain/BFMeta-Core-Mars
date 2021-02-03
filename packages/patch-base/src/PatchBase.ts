@@ -27,7 +27,11 @@ export abstract class PatchBase {
   onHeightChanged(handler: BFChainUtil.MutArgEventHandler<[number, number]>) {
     this.emitter.on("heightChanged", handler);
   }
-  planHeight(height: number, handler: () => unknown, unhandler: () => unknown) {
+  /**
+   * 在指定高度后开始生效
+   * 比如：需要在第1000个区块生效，那么height就要是999
+   */
+  planAfterHeight(height: number, handler: () => unknown, unhandler: () => unknown) {
     let curStatus = _PLAN_STATUS.NULL;
     this.emitter.on("heightChanged", ({ newHeight, oldHeight }) => {
       if (newHeight > oldHeight) {

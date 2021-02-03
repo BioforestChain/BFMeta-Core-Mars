@@ -15,7 +15,7 @@ export class Patch_1 extends PatchBase {
          * 如果需要，执行数据库升级。。。。
          */
         let oldAsset: BFChainCore.DeepPartial<BFChainCore.GenesisBlockAssetJSON> | undefined;
-        this.planHeight(
+        this.planAfterHeight(
           100,
           () => {
             const oldBlock = this.config.getHookGenesisBlock(conVersion) || {};
@@ -54,7 +54,7 @@ export class Patch_1_2 extends Patch_1 {
          * 如果需要，执行数据库升级。。。。
          */
         let oldAsset: BFChainCore.DeepPartial<BFChainCore.GenesisBlockAssetJSON> | undefined;
-        this.planHeight(
+        this.planAfterHeight(
           200,
           () => {
             const oldBlock = this.config.getHookGenesisBlock(conVersion) || {};
