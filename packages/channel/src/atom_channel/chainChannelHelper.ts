@@ -536,6 +536,12 @@ export class ChainChannelHelper {
         field: `generatorPublicKey ${newBlockArg.generatorPublicKey}`,
       });
     }
+    if (!BH.isUint32(newBlockArg.version)) {
+      throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+        function: "boxNewBlockArg",
+        field: `version ${newBlockArg.version}`,
+      });
+    }
     //#endregion
     return newBlockArg;
   }

@@ -410,7 +410,7 @@ declare namespace BFChainCore {
   type ChainChannelGroupEventMap<CC extends SimpleChainChannel = ChainChannel> = {
     addChainChannel: [CC];
     removeChainChannel: [CC];
-    maybeHeightChanged: [number];
+    maybeHeightChanged: [number, number | undefined];
   };
   interface ChainChannelBase {
     maybeHeight: number;
