@@ -22,6 +22,8 @@
     "@bfchain/core-crypto": "5.19.51",
     "@bfchain/core-helper": "5.19.51",
     "@bfchain/core-model": "5.19.51",
+    "@bfchain/core-patch": "5.19.51",
+    "@bfchain/core-patch-1": "5.19.51",
     "@bfchain/core-transaction": "5.19.51",
     "@bfchain/core-transaction-complex": "5.19.51",
     "@bfchain/core-transaction-logic-verifier": "5.19.51",

@@ -1,0 +1,22 @@
+{
+  "extends": "../../config/tsconfig_base/base.tsconfig.cjs",
+  "compilerOptions": {
+    "outDir": "./build/cjs",
+    "rootDir": "./src"
+  },
+  "references": [
+    {
+      "path": "../patch-1/tsconfig.json"
+    },
+    {
+      "path": "../patch-base/tsconfig.json"
+    },
+    {
+      "path": "../typings/tsconfig.json"
+    }
+  ],
+  "files": [
+    "src/index.ts",
+    "src/PatchInstaller.ts"
+  ]
+}

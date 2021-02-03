@@ -1,5 +1,6 @@
 import { Injectable } from "@bfchain/util-dep-inject";
-import { cacheGetter } from "@bfchain/util-decorator";
+import { cacheGetter, cleanAllGetterCache } from "@bfchain/util-decorator";
+import { deepMix } from "@bfchain/util-deepmix";
 type GenesisBlock = import("@bfchain/core-model-block").GenesisBlock;
 
 export enum NetType {
@@ -15,49 +16,71 @@ export class ConfigHelper {
       | BFChainCore.BlockJSON<BFChainCore.GenesisBlockAssetJSON>,
     public business: string,
   ) {}
+  private hookedGenesisBlock: BFChainCore.BlockJSON<BFChainCore.GenesisBlockAssetJSON> = this
+    .genesisBlock; //deepMix(this.genesisBlock,get)
+  private _hookBlockMap = new Map<
+    number,
+    BFChainCore.DeepPartial<BFChainCore.BlockJSON<BFChainCore.GenesisBlockAssetJSON>>
+  >();
+  setHookGenesisBlock(
+    version: number,
+    hookBlock: BFChainCore.DeepPartial<BFChainCore.BlockJSON<BFChainCore.GenesisBlockAssetJSON>>,
+  ) {
+    this._hookBlockMap.set(version, hookBlock);
+    const vbList = [...this._hookBlockMap].sort((vb1, vb2) => vb1[0] - vb2[0]);
+    this.hookedGenesisBlock = deepMix(
+      this.genesisBlock,
+      ...vbList.map((vb) => ({ ...vb[1], version: vb[0] })),
+    );
+    cleanAllGetterCache(this);
+  }
+  getHookGenesisBlock(version: number) {
+    return this._hookBlockMap.get(version);
+  }
   /**获取交易最大有效期 */
+  @cacheGetter
   get maxApplyAndConfirmedBlockHeightDiff() {
-    return this.genesisBlock.asset.genesisAsset.maxApplyAndConfirmedBlockHeightDiff;
+    return this.hookedGenesisBlock.asset.genesisAsset.maxApplyAndConfirmedBlockHeightDiff;
   }
   /**获取区块版本号 */
   @cacheGetter
   get version() {
-    return this.genesisBlock.version;
+    return this.hookedGenesisBlock.version;
   }
   /**每轮锻造的区块数量 */
   @cacheGetter
   get blockPerRound() {
-    return this.genesisBlock.asset.genesisAsset.blockPerRound;
+    return this.hookedGenesisBlock.asset.genesisAsset.blockPerRound;
   }
   /**链资产名 */
   @cacheGetter
   get assetType() {
-    return this.genesisBlock.asset.genesisAsset.assetType;
+    return this.hookedGenesisBlock.asset.genesisAsset.assetType;
   }
   /**链名 */
   @cacheGetter
   get chainName() {
-    return this.genesisBlock.asset.genesisAsset.chainName;
+    return this.hookedGenesisBlock.asset.genesisAsset.chainName;
   }
   /**链网络标识符 */
   @cacheGetter
   get magic() {
-    return this.genesisBlock.asset.genesisAsset.magic;
+    return this.hookedGenesisBlock.asset.genesisAsset.magic;
   }
   /**链奖励里程 */
   @cacheGetter
   get milestones() {
-    return this.genesisBlock.asset.genesisAsset.rewardPerBlock;
+    return this.hookedGenesisBlock.asset.genesisAsset.rewardPerBlock;
   }
   /**链创世账户初始账户余额 */
   @cacheGetter
   get genesisAmount() {
-    return this.genesisBlock.asset.genesisAsset.genesisAmount;
+    return this.hookedGenesisBlock.asset.genesisAsset.genesisAmount;
   }
   /**链创世链域名 */
   @cacheGetter
   get genesisLocationName() {
-    return this.genesisBlock.asset.genesisAsset.genesisLocationName;
+    return this.hookedGenesisBlock.asset.genesisAsset.genesisLocationName;
   }
   /**获取资产的最小单位 */
   @cacheGetter
@@ -72,99 +95,99 @@ export class ConfigHelper {
   /**地址前缀 */
   @cacheGetter
   get initials() {
-    return this.genesisBlock.asset.genesisAsset.bnid;
+    return this.hookedGenesisBlock.asset.genesisAsset.bnid;
   }
   /**打块的时间间隔 */
   @cacheGetter
   get forgeInterval() {
-    return this.genesisBlock.asset.genesisAsset.forgeInterval;
+    return this.hookedGenesisBlock.asset.genesisAsset.forgeInterval;
   }
   /**账户参与度权重比 */
   @cacheGetter
   get accountParticipationWeightRatio() {
-    return this.genesisBlock.asset.genesisAsset.accountParticipationWeightRatio;
+    return this.hookedGenesisBlock.asset.genesisAsset.accountParticipationWeightRatio;
   }
   /**区块参与度权重比 */
   @cacheGetter
   get blockParticipationWeightRatio() {
-    return this.genesisBlock.asset.genesisAsset.blockParticipationWeightRatio;
+    return this.hookedGenesisBlock.asset.genesisAsset.blockParticipationWeightRatio;
   }
   /**交易 pow 参数*/
   // get tpowDiffFormula() {
-  //   return this.genesisBlock.asset.genesisAsset.tpowDiffFormula;
+  //   return this.hookedGenesisBlock.asset.genesisAsset.tpowDiffFormula;
   // }
   /**创世时间 */
   @cacheGetter
   get beginEpochTime() {
-    return this.genesisBlock.asset.genesisAsset.beginEpochTime;
+    return this.hookedGenesisBlock.asset.genesisAsset.beginEpochTime;
   }
   /**获取交易的最大字节数 */
   @cacheGetter
   get maxTransactionSize() {
-    return this.genesisBlock.asset.genesisAsset.maxTransactionSize;
+    return this.hookedGenesisBlock.asset.genesisAsset.maxTransactionSize;
   }
   /**最大区块大小 */
   @cacheGetter
   get maxBlockSize() {
-    return this.genesisBlock.asset.genesisAsset.maxBlockSize;
+    return this.hookedGenesisBlock.asset.genesisAsset.maxBlockSize;
   }
   /**tpow 豁免高度 */
   @cacheGetter
   get tpowOfWorkExemptionBlocks() {
-    return this.genesisBlock.asset.genesisAsset.tpowOfWorkExemptionBlocks;
+    return this.hookedGenesisBlock.asset.genesisAsset.tpowOfWorkExemptionBlocks;
   }
   /**创世账户公钥 */
   @cacheGetter
   get genesisAccountPublicKey() {
-    return this.genesisBlock.generatorPublicKey;
+    return this.hookedGenesisBlock.generatorPublicKey;
   }
 
   /**资产赠送最大可获取次数 */
   @cacheGetter
   get maxGrabTimesOfGiftAsset() {
-    return this.genesisBlock.asset.genesisAsset.maxGrabTimesOfGiftAsset;
+    return this.hookedGenesisBlock.asset.genesisAsset.maxGrabTimesOfGiftAsset;
   }
   /**发行数字资产最小持有的链资产数量 */
   @cacheGetter
   get issueAssetMinChainAsset() {
-    return this.genesisBlock.asset.genesisAsset.issueAssetMinChainAsset;
+    return this.hookedGenesisBlock.asset.genesisAsset.issueAssetMinChainAsset;
   }
   /**注册链最小持有的链资产数量 */
   @cacheGetter
   get registerChainMinChainAsset() {
-    return this.genesisBlock.asset.genesisAsset.registerChainMinChainAsset;
+    return this.hookedGenesisBlock.asset.genesisAsset.registerChainMinChainAsset;
   }
   /**交易每个字节最小手续费 */
   @cacheGetter
   get minTransactionFeePerByte() {
-    return this.genesisBlock.asset.genesisAsset.minTransactionFeePerByte;
+    return this.hookedGenesisBlock.asset.genesisAsset.minTransactionFeePerByte;
   }
   /**每个区块可处理的最大交易数量 */
   @cacheGetter
   get maxTPSPerBlock() {
-    return this.genesisBlock.asset.genesisAsset.maxTPSPerBlock;
+    return this.hookedGenesisBlock.asset.genesisAsset.maxTPSPerBlock;
   }
   /**每轮可处理的受托人交易数量 */
   @cacheGetter
   get maxDelegateTxsPerRound() {
-    return this.genesisBlock.asset.genesisAsset.maxDelegateTxsPerRound;
+    return this.hookedGenesisBlock.asset.genesisAsset.maxDelegateTxsPerRound;
   }
   /**创世受托人数量 */
   @cacheGetter
   get delegates() {
-    return this.genesisBlock.asset.genesisAsset.delegates;
+    return this.hookedGenesisBlock.asset.genesisAsset.delegates;
   }
   /**获取奖励分配比例 */
   @cacheGetter
   get rewardPercent() {
-    return this.genesisBlock.asset.genesisAsset.rewardPercent;
+    return this.hookedGenesisBlock.asset.genesisAsset.rewardPercent;
   }
   /**全网平均算力 */
   get averageComputingPower() {
-    return this.genesisBlock.asset.genesisAsset.averageComputingPower;
+    return this.hookedGenesisBlock.asset.genesisAsset.averageComputingPower;
   }
   get transactionPowOfWorkConfig() {
-    return this.genesisBlock.asset.genesisAsset.transactionPowOfWorkConfig;
+    return this.hookedGenesisBlock.asset.genesisAsset.transactionPowOfWorkConfig;
   }
 }
 @Injectable("configMap")

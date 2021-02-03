@@ -33,6 +33,12 @@
       "path": "../model/tsconfig.esm.json"
     },
     {
+      "path": "../patch-1/tsconfig.esm.json"
+    },
+    {
+      "path": "../patch/tsconfig.esm.json"
+    },
+    {
       "path": "../transaction_complex/tsconfig.esm.json"
     },
     {

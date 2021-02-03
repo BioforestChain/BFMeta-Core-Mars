@@ -1,0 +1,22 @@
+{
+  "extends": "./tsconfig",
+  "mixin": [
+    "./tsconfig.json",
+    "../../config/tsconfig_base/base.tsconfig.@types.json"
+  ],
+  "compilerOptions": {
+    "declarationDir": "../@types/bfchain__core-patch",
+    "declaration": true,
+    "declarationMap": false,
+    "outDir": "../../.cache/patch",
+    "tsBuildInfoFile": "../../.cache/patch/@types.tsbuildinfo"
+  },
+  "references": [
+    {
+      "path": "../patch-base/tsconfig.@types.json"
+    },
+    {
+      "path": "../typings/tsconfig.@types.json"
+    }
+  ]
+}

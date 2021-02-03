@@ -14,12 +14,12 @@
     "build"
   ],
   "devDependencies": {
-    "@bfchain/protobuf": "^4.1.6",
-    "@bfchain/util": "^4.10.12"
+    "@bfchain/protobuf": "^4.1.8",
+    "@bfchain/util": "^4.10.28"
   },
   "peerDependencies": {
-    "@bfchain/protobuf": "^4.1.6",
-    "@bfchain/util": "^4.10.12"
+    "@bfchain/protobuf": "^4.1.8",
+    "@bfchain/util": "^4.10.28"
   },
   "gitHead": "ef41eb359371b11aafbec0516df1eba01f16ebfd"
 }
