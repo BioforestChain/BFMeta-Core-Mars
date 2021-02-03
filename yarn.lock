@@ -135,10 +135,10 @@
     "@bfchain/util-type-detect" "4.10.16"
     "@bfchain/util-typings" "4.10.16"
 
-"@bfchain/util-deepmix@4.10.28":
-  version "4.10.28"
-  resolved "http://192.168.250.245:4873/@bfchain%2futil-deepmix/-/util-deepmix-4.10.28.tgz#32167053b6122674f697adda0e92dcfb3a9f67df"
-  integrity sha512-XlT2EOGFFfbamExZJJxY2t+Ya/cFG/tBM65qO5h4kNsn0x/IcY1wm2KW1e8gLgOzaH+vfz062SSGSieW/5+rjg==
+"@bfchain/util-deepmix@4.10.29":
+  version "4.10.29"
+  resolved "http://192.168.250.245:4873/@bfchain%2futil-deepmix/-/util-deepmix-4.10.29.tgz#7dbf0b70939d248f595c472fae71161ec49b6d64"
+  integrity sha512-/cNf4ZPk+/EFvMpByEoSgOGrFsmsSwfT6lqg1iRWzpTULJ2PF9TbtrtedQPZ0XviLyzKFpenhwVFPcZyHVBE/Q==
   dependencies:
     "@bfchain/util-typings" "4.10.16"
 
@@ -350,16 +350,16 @@
   resolved "http://192.168.250.245:4873/@bfchain%2futil-typings/-/util-typings-4.10.16.tgz#034a3fd88d776a3d72a5d87df7466990351aa5c9"
   integrity sha512-Kb8Vlm5aFUOphBJY3B9xLEwOOPrvx2wDUB7twFh1HbZ3tn5rG8sDoK7d3TQYlnKZgUbcGa5xrNj1dE+kJjok5Q==
 
-"@bfchain/util@^4.10.28":
-  version "4.10.28"
-  resolved "http://192.168.250.245:4873/@bfchain%2futil/-/util-4.10.28.tgz#72c8c16add80da825831a9420d2d9b886f4a70e0"
-  integrity sha512-uSFpEd4xY1K7aakkn0LHIM4ASjcOQUf9V2Qs/qv7nUOaqSPLcH3ymt+chsreZ0yjpj3+F9XYrNxD22WDktRytg==
+"@bfchain/util@^4.10.29":
+  version "4.10.29"
+  resolved "http://192.168.250.245:4873/@bfchain%2futil/-/util-4.10.29.tgz#a6f5ecd399656f8b492682d8635afdf09fb01f84"
+  integrity sha512-YdhMVImLC7nzdNQUgbux4VZoSNxhmyGGwCV72dJn0b4/74xWsPp9ViX1cKVXmtjd4R3D+Xj3odRXaaUyBCNlNw==
   dependencies:
     "@bfchain/util-aborter" "4.10.21"
     "@bfchain/util-buffer" "4.10.16"
     "@bfchain/util-decorator" "4.10.28"
     "@bfchain/util-deepcopy" "4.10.16"
-    "@bfchain/util-deepmix" "4.10.28"
+    "@bfchain/util-deepmix" "4.10.29"
     "@bfchain/util-dep-inject" "4.10.28"
     "@bfchain/util-encoding-binary" "4.10.16"
     "@bfchain/util-encoding-hex" "4.10.16"

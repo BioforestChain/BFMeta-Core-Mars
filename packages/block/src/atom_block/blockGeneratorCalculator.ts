@@ -186,7 +186,7 @@ export class BlockGeneratorCalculator {
         const 掉到哪一轮 = 当前轮次 - 掉了多少轮;
         if (掉到哪一轮 <= 1) {
           /// 创世块那一轮,直接使用传世受托人,不用管第一轮到底是谁在打块
-          for (const d of this.config.nextRoundDelegates) {
+          for (const d of this.config.genesisBlock.asset.genesisAsset.nextRoundDelegates) {
             那一轮可使用的受托人.add(d.address);
           }
         } else {

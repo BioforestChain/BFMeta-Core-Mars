@@ -136,7 +136,7 @@ async function getGrabAssetTransaction(
   const giftAsset = giftAssetTrs.asset.giftAsset;
 
   const grabAsset: BFChainCore.GrabAssetJSON = {
-    blockSignature: bfchainCore.config.genesisBlock.signature,
+    blockSignature: bfchainCore.config.signature,
     transactionSignature: giftAssetTrs.signature,
     amount: "0", // 交易资产数量
     giftAsset,

@@ -56,6 +56,9 @@ export class ConfigHelper {
   get initials() {
     return this.bnid;
   }
+  get milestones() {
+    return this.rewardPerBlock;
+  }
 
   /**创世账户公钥 */
   @cacheGetter
@@ -208,6 +211,43 @@ export class ConfigHelper {
   @cacheGetter
   get transactionPowOfWorkConfig() {
     return this.hookedGenesisBlock.asset.genesisAsset.transactionPowOfWorkConfig;
+  }
+
+  //#endregion
+
+  //#region 一些特殊的字段，也是来自传世快，但理论上不应该允许改动的
+  @cacheGetter
+  get generatorPublicKey() {
+    return this.hookedGenesisBlock.generatorPublicKey;
+  }
+  @cacheGetter
+  get signature() {
+    return this.hookedGenesisBlock.signature;
+  }
+  /**下一轮的打块账户列表 */
+  @cacheGetter
+  get nextRoundDelegates() {
+    return this.hookedGenesisBlock.asset.genesisAsset.nextRoundDelegates;
+  }
+  /**新注册的受托人 */
+  @cacheGetter
+  get newDelegates() {
+    return this.hookedGenesisBlock.asset.genesisAsset.newDelegates;
+  }
+  /**上一轮投票账户中的最大轮末主权益量 */
+  @cacheGetter
+  get maxBeginBalance() {
+    return this.hookedGenesisBlock.asset.genesisAsset.maxBeginBalance;
+  }
+  /**上一轮投票账户中最大的事件量 */
+  @cacheGetter
+  get maxTxCount() {
+    return this.hookedGenesisBlock.asset.genesisAsset.maxTxCount;
+  }
+  /**上一轮投票账户的最大轮末主权益量和上一轮投票账户的最大事件的比 */
+  @cacheGetter
+  get rate() {
+    return this.hookedGenesisBlock.asset.genesisAsset.rate;
   }
   //#endregion
 }

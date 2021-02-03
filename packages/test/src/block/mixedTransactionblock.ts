@@ -487,7 +487,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
     const accountAssetMap = new Map<string, bigint>();
     accountAssetMap.set(
       `${bfchainCore.accountBaseHelper.getAddressFromPublicKeyString(
-        bfchainCore.config.genesisBlock.generatorPublicKey,
+        bfchainCore.config.generatorPublicKey,
       )}_${bfchainCore.config.magic}_${bfchainCore.config.assetType}`,
       BigInt(bfchainCore.config.genesisAmount),
     );
