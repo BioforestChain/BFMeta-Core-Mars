@@ -36,14 +36,16 @@ export abstract class PatchBase {
     let curStatus = _PLAN_STATUS.NULL;
     this.emitter.on("heightChanged", ({ newHeight, oldHeight }) => {
       if (newHeight > oldHeight) {
-        if (newHeight === height) {
+        if (newHeight >= height) {
           if (curStatus !== _PLAN_STATUS.EMIT) {
             handler();
+            curStatus = _PLAN_STATUS.EMIT;
           }
         }
       } else if (newHeight < height) {
         if (curStatus !== _PLAN_STATUS.NULL) {
           unhandler();
+          curStatus = _PLAN_STATUS.NULL;
         }
       }
     });
