@@ -250,11 +250,10 @@ export class ConfigHelper {
     return this.hookedGenesisBlock.asset.genesisAsset.rate;
   }
 
-  toJSON() {
+  toJSON(): BFChainCore.ConfigHelper {
     return {
       version: this.version,
       miniUnit: this.miniUnit,
-      netType: this.netType,
       chainName: this.chainName,
       assetType: this.assetType,
       magic: this.magic,

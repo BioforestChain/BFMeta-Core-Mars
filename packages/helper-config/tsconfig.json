@@ -16,6 +16,7 @@
     }
   ],
   "files": [
+    "src/@types.ts",
     "src/configHelper.ts",
     "src/index.ts"
   ]
