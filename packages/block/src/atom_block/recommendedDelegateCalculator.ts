@@ -177,23 +177,7 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     votArray: string[],
     newArray: string[],
   ) {
-    let results: string[] = [...pdtArray];
-    const fbsLen = fbsArray.length;
-    for (let i = 0; i < fbsLen; i++) {
-      results[results.length] = fbsArray[i];
-    }
-    const atnLen = atnArray.length;
-    for (let i = 0; i < atnLen; i++) {
-      results[results.length] = atnArray[i];
-    }
-    const votLen = votArray.length;
-    for (let i = 0; i < votLen; i++) {
-      results[results.length] = votArray[i];
-    }
-    const newLen = newArray.length;
-    for (let i = 0; i < newLen; i++) {
-      results[results.length] = newArray[i];
-    }
+    const results: string[] = [...pdtArray, ...fbsArray, ...atnArray, ...votArray, ...newArray];
     let i = results.length;
     while (i) {
       const j = Math.floor(Math.random() * i--);
