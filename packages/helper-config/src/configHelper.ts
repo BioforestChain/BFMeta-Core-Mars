@@ -249,6 +249,43 @@ export class ConfigHelper {
   get rate() {
     return this.hookedGenesisBlock.asset.genesisAsset.rate;
   }
+
+  toJSON() {
+    return {
+      version: this.version,
+      miniUnit: this.miniUnit,
+      netType: this.netType,
+      chainName: this.chainName,
+      assetType: this.assetType,
+      magic: this.magic,
+      bnid: this.miniUnit,
+      beginEpochTime: this.beginEpochTime,
+      genesisLocationName: this.genesisLocationName,
+      genesisAmount: this.genesisAmount,
+      minTransactionFeePerByte: this.minTransactionFeePerByte,
+      maxTransactionSize: this.maxTransactionSize,
+      maxBlockSize: this.maxBlockSize,
+      maxTPSPerBlock: this.maxTPSPerBlock,
+      consessusBeforeSyncBlockDiff: this.consessusBeforeSyncBlockDiff,
+      maxDelegateTxsPerRound: this.maxDelegateTxsPerRound,
+      maxGrabTimesOfGiftAsset: this.maxGrabTimesOfGiftAsset,
+      issueAssetMinChainAsset: this.issueAssetMinChainAsset,
+      registerChainMinChainAsset: this.registerChainMinChainAsset,
+      maxApplyAndConfirmedBlockHeightDiff: this.maxApplyAndConfirmedBlockHeightDiff,
+      blockPerRound: this.blockPerRound,
+      delegates: this.delegates,
+      whetherToAllowDelegateContinusElections: this.whetherToAllowDelegateContinusElections,
+      forgeInterval: this.forgeInterval,
+      rewardPercent: this.rewardPercent,
+      ports: this.ports,
+      rewardPerBlock: this.rewardPerBlock,
+      accountParticipationWeightRatio: this.accountParticipationWeightRatio,
+      blockParticipationWeightRatio: this.blockParticipationWeightRatio,
+      averageComputingPower: this.averageComputingPower,
+      tpowOfWorkExemptionBlocks: this.tpowOfWorkExemptionBlocks,
+      transactionPowOfWorkConfig: this.transactionPowOfWorkConfig,
+    };
+  }
   //#endregion
 }
 @Injectable("configMap")
