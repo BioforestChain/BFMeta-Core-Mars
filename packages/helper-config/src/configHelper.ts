@@ -257,7 +257,7 @@ export class ConfigHelper {
       chainName: this.chainName,
       assetType: this.assetType,
       magic: this.magic,
-      bnid: this.miniUnit,
+      bnid: this.bnid,
       beginEpochTime: this.beginEpochTime,
       genesisLocationName: this.genesisLocationName,
       genesisAmount: this.genesisAmount,
