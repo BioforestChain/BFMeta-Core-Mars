@@ -144,7 +144,9 @@ export class ChainChannel<
   get canBroadcastBlock() {
     return this._canBroadcastBlock;
   }
-  defaultReqOptions?: BFChainCore.ChannelRequestOptions<THIS>;
+  get defaultReqOptions(): BFChainCore.ChannelRequestOptions<THIS> | undefined {
+    return;
+  }
   @Inject("bfchain-core:TransactionCore")
   protected transactionCore!: import("@bfchain/core-transaction").TransactionCore;
   @Inject(ChainChannelHelper)
