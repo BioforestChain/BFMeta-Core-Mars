@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-channel",
-  "version": "5.19.59",
+  "version": "5.19.60",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
