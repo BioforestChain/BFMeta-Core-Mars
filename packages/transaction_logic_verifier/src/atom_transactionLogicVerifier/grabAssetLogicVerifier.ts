@@ -261,6 +261,37 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
   }
 
   /**
+   * 校验交易的手续费是否大于等于网络手续费
+   *
+   * @param transaction
+   * @param byteLength
+   */
+  checkTrsFeeAndWebFee(transaction: GrabAssetTransaction, byteLength: number) {
+    return {
+      isFeeEnough: true,
+      minFee: "0",
+    };
+  }
+
+  /**
+   * 检验交易的手续费是否大于等于矿机手续费和网络手续费
+   *
+   * @param transaction
+   * @param byteLength
+   * @param miningMachineMinFeePerByte
+   */
+  checkTrsFeeAndMiningMachineFeeAndWebFee(
+    transaction: GrabAssetTransaction,
+    byteLength: number,
+    miningMachineMinFeePerByte: BFChainCore.FractionJSON,
+  ) {
+    return {
+      isFeeEnough: true,
+      minFee: "0",
+    };
+  }
+
+  /**
    * 不能二次操作同一笔交易(权益赠送)
    *
    * @param transaction

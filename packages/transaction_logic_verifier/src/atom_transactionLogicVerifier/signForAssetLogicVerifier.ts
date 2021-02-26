@@ -1,19 +1,15 @@
-import type { SignForAssetTransaction, AccountSignatureModel } from "@bfchain/core-model";
+import type { SignForAssetTransaction } from "@bfchain/core-model";
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { Injectable, Inject, QueneEventEmitter } from "@bfchain/util";
 import {
   CoreExceptionGenerator,
-  NOT_EXIST,
   NOT_MATCH,
   CAN_NOT_SECONDARY_TRANSACTION,
   NOT_EXIST_OR_EXPIRED,
 } from "@bfchain/core-util-exception";
 import { AccountBaseHelper } from "@bfchain/core-helper";
 
-const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
-  "VERIFIER",
-  "SignForAssetLogicVerifier",
-);
+const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "SignForAssetLogicVerifier");
 
 @Injectable()
 export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
@@ -156,6 +152,37 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
         });
       }
     }
+  }
+
+  /**
+   * 校验交易的手续费是否大于等于网络手续费
+   *
+   * @param transaction
+   * @param byteLength
+   */
+  checkTrsFeeAndWebFee(transaction: SignForAssetTransaction, byteLength: number) {
+    return {
+      isFeeEnough: true,
+      minFee: "0",
+    };
+  }
+
+  /**
+   * 检验交易的手续费是否大于等于矿机手续费和网络手续费
+   *
+   * @param transaction
+   * @param byteLength
+   * @param miningMachineMinFeePerByte
+   */
+  checkTrsFeeAndMiningMachineFeeAndWebFee(
+    transaction: SignForAssetTransaction,
+    byteLength: number,
+    miningMachineMinFeePerByte: BFChainCore.FractionJSON,
+  ) {
+    return {
+      isFeeEnough: true,
+      minFee: "0",
+    };
   }
 
   /**

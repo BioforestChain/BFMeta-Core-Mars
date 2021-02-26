@@ -611,43 +611,13 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   }
 
   /**
-   * 校验交易的手续费是否大于等于网络手续费
+   * 手续费是否充足
    *
-   * @param transaction
-   * @param byteLength
+   * @param fee
+   * @param minFee
    */
-  checkTrsFeeAndWebFee(transaction: BFChainCore.Transaction, byteLength: number) {
-    if (transaction.type === this.transactionHelper.GRAB_ASSET) {
-      return {
-        isFeeEnough: true,
-        minFee: transaction.fee,
-      };
-    }
-    let realByteLength = byteLength;
-    const txFee = transaction.fee;
-    const feePerByte = {
-      numerator: BigInt(txFee),
-      denominator: realByteLength,
-    };
-    // 红包交易需要付出 可抢次数+1 的最大交易体手续费
-    if (transaction.type === this.transactionHelper.GIFT_ASSET) {
-      const totalGrabTime = (transaction as BFChainCore.Transaction<BFChainCore.GiftAssetAssetJSON>)
-        .asset.giftAsset.totalGrabableTimes;
-      realByteLength = this.configHelper.maxTransactionSize * (totalGrabTime + 1);
-      feePerByte.denominator = realByteLength;
-    }
-    const minTransactionFeePerByte = this.configHelper.minTransactionFeePerByte;
-    const result = this.jsbiHelper.compareFraction(feePerByte, minTransactionFeePerByte);
-    let minFee = this.jsbiHelper
-      .multiplyCeilFraction(realByteLength, minTransactionFeePerByte)
-      .toString();
-    if (result < 0) {
-      const diffLength = minFee.length - txFee.length;
-      if (diffLength > 0) {
-        minFee = this.jsbiHelper
-          .multiplyCeilFraction(realByteLength + diffLength, minTransactionFeePerByte)
-          .toString();
-      }
+  isFeeEnough(fee: string, minFee: string) {
+    if (BigInt(fee) < BigInt(minFee)) {
       return {
         isFeeEnough: false,
         minFee,
@@ -657,6 +627,19 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       isFeeEnough: true,
       minFee,
     };
+  }
+
+  /**
+   * 校验交易的手续费是否大于等于网络手续费
+   *
+   * @param transaction
+   * @param byteLength
+   */
+  checkTrsFeeAndWebFee(transaction: BFChainCore.Transaction, byteLength: number) {
+    return this.isFeeEnough(
+      transaction.fee,
+      this.transactionHelper.calcTransactionMinFeeByBytes(transaction, byteLength),
+    );
   }
 
   /**
@@ -671,55 +654,14 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     byteLength: number,
     miningMachineMinFeePerByte: BFChainCore.FractionJSON,
   ) {
-    if (transaction.type === this.transactionHelper.GRAB_ASSET) {
-      return {
-        isFeeEnough: true,
-        minFee: transaction.fee,
-      };
-    }
-    let realByteLength = byteLength;
-    const txFee = transaction.fee;
-    const feePerByte = {
-      numerator: BigInt(txFee),
-      denominator: realByteLength,
-    };
-    // 红包交易需要付出 可抢次数+1 的最大交易体手续费
-    if (transaction.type === this.transactionHelper.GIFT_ASSET) {
-      const totalGrabTime = (transaction as BFChainCore.Transaction<BFChainCore.GiftAssetAssetJSON>)
-        .asset.giftAsset.totalGrabableTimes;
-      realByteLength = this.configHelper.maxTransactionSize * (totalGrabTime + 1);
-      feePerByte.denominator = realByteLength;
-    }
-    // 是否使用矿机手续费
-    const useWebFee =
-      this.jsbiHelper.compareFraction(
-        this.configHelper.minTransactionFeePerByte,
+    return this.isFeeEnough(
+      transaction.fee,
+      this.transactionHelper.calcTransactionMinFeeByBytes(
+        transaction,
+        byteLength,
         miningMachineMinFeePerByte,
-      ) >= 0
-        ? true
-        : false;
-    let standardFee = useWebFee
-      ? this.configHelper.minTransactionFeePerByte
-      : miningMachineMinFeePerByte;
-
-    const result = this.jsbiHelper.compareFraction(feePerByte, standardFee);
-    let minFee = this.jsbiHelper.multiplyCeilFraction(realByteLength, standardFee).toString();
-    if (result < 0) {
-      const diffLength = minFee.length - txFee.length;
-      if (diffLength > 0) {
-        minFee = this.jsbiHelper
-          .multiplyCeilFraction(realByteLength + diffLength, standardFee)
-          .toString();
-      }
-      return {
-        isFeeEnough: false,
-        minFee,
-      };
-    }
-    return {
-      isFeeEnough: true,
-      minFee,
-    };
+      ),
+    );
   }
 
   /**
@@ -755,6 +697,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       });
     }
   }
+
   /**
    * 查询交易是否已经在链上
    *
