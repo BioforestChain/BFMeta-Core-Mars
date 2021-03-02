@@ -597,9 +597,16 @@ export class ChainChannel<
                 const block = queryResult.block;
                 if (block) {
                   // 强制不传输交易
-                  block.transactions = [];
+                  const proxyBlock = new Proxy<Block>(Block.fromObject(block), {
+                    get(t, p, r) {
+                      if (p === "transactions") {
+                        return [];
+                      }
+                      return Reflect.get(t, p, r);
+                    },
+                  });
                   response.someBlock = SomeBlockModel.fromObject({
-                    block: Block.fromObject(block),
+                    block: proxyBlock,
                   });
                 }
               }
