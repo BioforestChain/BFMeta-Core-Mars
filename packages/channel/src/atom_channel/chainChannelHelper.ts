@@ -2,9 +2,6 @@ import {
   Injectable,
   Exception,
   bindThis,
-  sleep,
-  Aborter,
-  unsleep,
   PromiseOut,
   safePromiseThen,
   safePromiseOffThen,
@@ -27,13 +24,7 @@ import {
   GetPeerInfoArgModel,
   GetPeerInfoReturnModel,
 } from "@bfchain/core-model";
-import {
-  BaseHelper,
-  AccountBaseHelper,
-  TransactionHelper,
-  BlockHelper,
-  ChainTimeHelper,
-} from "@bfchain/core-helper";
+import { BaseHelper, TransactionHelper, BlockHelper, ChainTimeHelper } from "@bfchain/core-helper";
 import { PromiseTimeout } from "./PromiseTimeout";
 
 const {
@@ -46,11 +37,15 @@ const {
 export class ChainChannelHelper {
   constructor(
     private baseHelper: BaseHelper,
-    private accountBaseHelper: AccountBaseHelper,
     private transctionHelper: TransactionHelper,
     private blockHelper: BlockHelper,
     private timeHelper: ChainTimeHelper,
   ) {}
+
+  // FIXME: 这里没确定 base58 编码的最大长度，临时使用 40
+  private static MAX_ADDRESS_LENGTH = 40;
+  private static MAX_SIGNATURE_LENGTH = 128;
+
   /**
    * 生成并校验交易查询的传入参数
    */
@@ -82,7 +77,6 @@ export class ChainChannelHelper {
     const {
       type,
       signature,
-      signatureBuffer,
       senderId,
       recipientId,
       dappid,
@@ -108,38 +102,34 @@ export class ChainChannelHelper {
         });
       }
     }
-    if (signatureBuffer) {
+    if (signature) {
       has_query_params = true;
-      /**
-       * @FIXME 签名这里应该也不需要验是否是签名？
-       */
-      if (!BH.isValidSignature(signatureBuffer)) {
+      // 只验证签名长度
+      if (signature.length !== ChainChannelHelper.MAX_SIGNATURE_LENGTH) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.query",
-          field: `signatureBuffer ${signature}`,
+          field: `signature ${signature}`,
         });
       }
     }
     if (senderId) {
       has_query_params = true;
-      /**
-       * @TODO 不再验证字符串是否isAddress，只验证字符串的长度符合地址的最大长度即可，以下相同
-       */
-      // if (!(await this.accountBaseHelper.isAddress(senderId))) {
-      //   throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-      //     function: "boxQueryTransactionArg.query",
-      //     field: `senderId ${senderId}`,
-      //   });
-      // }
+      // 不再验证字符串是否isAddress，只验证字符串的长度符合地址的最大长度即可
+      if (senderId.length > ChainChannelHelper.MAX_ADDRESS_LENGTH) {
+        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+          function: "boxQueryTransactionArg.query",
+          field: `senderId ${senderId}`,
+        });
+      }
     }
     if (recipientId) {
       has_query_params = true;
-      // if (!(await this.accountBaseHelper.isAddress(recipientId))) {
-      //   throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-      //     function: "boxQueryTransactionArg.query",
-      //     field: `recipientId ${recipientId}`,
-      //   });
-      // }
+      if (recipientId.length > ChainChannelHelper.MAX_ADDRESS_LENGTH) {
+        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+          function: "boxQueryTransactionArg.query",
+          field: `recipientId ${recipientId}`,
+        });
+      }
     }
     if (dappid) {
       has_query_params = true;
@@ -176,7 +166,8 @@ export class ChainChannelHelper {
     }
     if (blockSignature) {
       has_query_params = true;
-      if (!BH.isValidBlockSignature(blockSignature)) {
+      // 只验证签名长度
+      if (blockSignature.length !== ChainChannelHelper.MAX_SIGNATURE_LENGTH) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.query",
           field: `blockSignature ${blockSignature}`,
@@ -212,12 +203,12 @@ export class ChainChannelHelper {
     }
     if (trusteeId) {
       has_query_params = true;
-      // if (!(await this.accountBaseHelper.isAddress(trusteeId))) {
-      //   throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-      //     function: "boxQueryTransactionArg.query",
-      //     field: `trusteeId ${trusteeId}`,
-      //   });
-      // }
+      if (trusteeId.length > ChainChannelHelper.MAX_ADDRESS_LENGTH) {
+        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+          function: "boxQueryTransactionArg.query",
+          field: `trusteeId ${trusteeId}`,
+        });
+      }
     }
     if (purchaseDAppid) {
       has_query_params = true;
@@ -250,7 +241,6 @@ export class ChainChannelHelper {
       });
     }
     if (limit) {
-      // if (typeof limit === "number") {
       if (!BH.isUint32(limit)) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.query",
@@ -262,7 +252,6 @@ export class ChainChannelHelper {
     //#region 排序参数校验
     const { tIndex } = arg.sort;
     if (tIndex !== undefined) {
-      // if (typeof timestamp === "number") {
       if (tIndex !== -1 && tIndex !== 1) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.sort",

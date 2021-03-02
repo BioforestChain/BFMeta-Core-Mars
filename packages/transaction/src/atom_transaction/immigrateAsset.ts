@@ -246,7 +246,6 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<
    * @param immigrateAssetAsset
    */
   init(body: BFChainCore.TxBodyJSON, immigrateAssetAsset: BFChainCore.ImmigrateAssetAssetJSON) {
-    // FIXME: @wmc
     const transaction = ImmigrateAssetTransaction.fromObject<ImmigrateAssetTransaction>({
       ...body,
       asset: immigrateAssetAsset as any,
