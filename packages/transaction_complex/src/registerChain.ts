@@ -145,7 +145,7 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
 
     let chainConfig = this.configMap.get(genesisBlockJson.magic);
     if (!chainConfig) {
-      // FIXME: 没有注册链的配置文件就生成一个
+      // 没有注册链的配置文件就生成一个
       chainConfig = new ConfigHelper(genesisBlockJson, this.configHelper.business);
     }
 
