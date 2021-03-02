@@ -110,6 +110,9 @@ export class ChainChannelHelper {
     }
     if (signatureBuffer) {
       has_query_params = true;
+      /**
+       * @FIXME 签名这里应该也不需要验是否是签名？
+       */
       if (!BH.isValidSignature(signatureBuffer)) {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.query",
@@ -119,21 +122,24 @@ export class ChainChannelHelper {
     }
     if (senderId) {
       has_query_params = true;
-      if (!(await this.accountBaseHelper.isAddress(senderId))) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-          function: "boxQueryTransactionArg.query",
-          field: `senderId ${senderId}`,
-        });
-      }
+      /**
+       * @TODO 不再验证字符串是否isAddress，只验证字符串的长度符合地址的最大长度即可，以下相同
+       */
+      // if (!(await this.accountBaseHelper.isAddress(senderId))) {
+      //   throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+      //     function: "boxQueryTransactionArg.query",
+      //     field: `senderId ${senderId}`,
+      //   });
+      // }
     }
     if (recipientId) {
       has_query_params = true;
-      if (!(await this.accountBaseHelper.isAddress(recipientId))) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-          function: "boxQueryTransactionArg.query",
-          field: `recipientId ${recipientId}`,
-        });
-      }
+      // if (!(await this.accountBaseHelper.isAddress(recipientId))) {
+      //   throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+      //     function: "boxQueryTransactionArg.query",
+      //     field: `recipientId ${recipientId}`,
+      //   });
+      // }
     }
     if (dappid) {
       has_query_params = true;
@@ -206,12 +212,12 @@ export class ChainChannelHelper {
     }
     if (trusteeId) {
       has_query_params = true;
-      if (!(await this.accountBaseHelper.isAddress(trusteeId))) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-          function: "boxQueryTransactionArg.query",
-          field: `trusteeId ${trusteeId}`,
-        });
-      }
+      // if (!(await this.accountBaseHelper.isAddress(trusteeId))) {
+      //   throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+      //     function: "boxQueryTransactionArg.query",
+      //     field: `trusteeId ${trusteeId}`,
+      //   });
+      // }
     }
     if (purchaseDAppid) {
       has_query_params = true;
@@ -264,16 +270,6 @@ export class ChainChannelHelper {
         });
       }
     }
-    // const { index } = arg.sort;
-    // if (index) {
-    //   // if (typeof timestamp === "number") {
-    //   if (index !== -1 && index !== 1) {
-    //     throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-    //       function: "boxQueryTransactionArg.sort",
-    //       field: "timestamp",
-    //     });
-    //   }
-    // }
     //#endregion
     return arg;
   }
