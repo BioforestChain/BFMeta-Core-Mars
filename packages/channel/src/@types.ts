@@ -30,6 +30,10 @@ declare namespace BFChainCore {
       in: import("@bfchain/core-model").QueryTransactionArgModel;
       out: QueryTransactionReturnParams | undefined;
     };
+    onQueryTransactionBinary: {
+      in: import("@bfchain/core-model").QueryTransactionArgModel;
+      out: Uint8Array | undefined;
+    };
     onNewTransaction: {
       in: import("@bfchain/core-model").NewTransactionArgModel;
       out: NewTransactionReturnParams | undefined;
@@ -37,6 +41,10 @@ declare namespace BFChainCore {
     onQueryBlock: {
       in: import("@bfchain/core-model").QueryBlockArgModel;
       out: QueryBlockReturnParams | undefined;
+    };
+    onQueryBlockBinary: {
+      in: import("@bfchain/core-model").QueryBlockArgModel;
+      out: Uint8Array | undefined;
     };
     onNewBlock: {
       in: import("@bfchain/core-model").NewBlockArgModel;

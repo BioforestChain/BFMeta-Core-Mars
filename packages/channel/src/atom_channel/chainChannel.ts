@@ -506,6 +506,7 @@ export class ChainChannel<
 
         /**通用的响应对象 */
         let taskResult: CommonResponse | undefined;
+        let taskResultBinary: Uint8Array | undefined;
         const commonHandle = (response: CommonResponse, err: any) => {
           response.status = RESPONSE_STATUS.error;
           response.error = ErrorMessage.fromException(err);
@@ -515,13 +516,20 @@ export class ChainChannel<
           switch (cmd) {
             /// 查询交易
             case DUPLEX_API_CMD.QUERY_TRANSACTION: {
+              // 发送查询任务
+              if (this.has("onQueryTransactionBinary")) {
+                taskResultBinary = await this.emit(
+                  "onQueryTransactionBinary",
+                  await this.chainChannelHelper.boxQueryTransactionArg(binary),
+                );
+                break;
+              }
+
               /**查询交易的响应，默认为繁忙 */
               const response = QueryTransactionReturnModel.fromObject<QueryTransactionReturnModel>({
                 status: RESPONSE_STATUS.busy,
                 // transactions:[]
               });
-              // 发送查询任务
-
               const queryResult = this.has("onQueryTransaction")
                 ? await this.emit(
                     "onQueryTransaction",
@@ -567,6 +575,14 @@ export class ChainChannel<
             }
             /// 查询区块
             case DUPLEX_API_CMD.QUERY_BLOCK: {
+              if (this.has("onQueryBlockBinary")) {
+                taskResultBinary = await this.emit(
+                  "onQueryBlockBinary",
+                  this.chainChannelHelper.boxQueryBlockArg(binary),
+                );
+                break;
+              }
+
               /**广播交易的响应，默认为繁忙 */
               const response = QueryBlockReturnModel.fromObject<QueryBlockReturnModel>({
                 status: RESPONSE_STATUS.busy,
@@ -693,6 +709,14 @@ export class ChainChannel<
           );
           // 继续向外抛出错误
           throw error;
+        }
+        if (taskResultBinary) {
+          this.postResponseMessage(
+            req_id,
+            responseCmdMap.get(cmd) || DUPLEX_API_CMD.RESPONSE,
+            taskResultBinary,
+          );
+          return;
         }
         if (taskResult) {
           this.postResponseMessage(
