@@ -150,8 +150,8 @@ export class QueryTransactionArgModel
   sort!: TransactionSortOptions;
   toJSON() {
     return {
-      query: this.query,
-      sort: this.sort,
+      query: this.query.toJSON(),
+      sort: this.sort.toJSON(),
     };
   }
 }
