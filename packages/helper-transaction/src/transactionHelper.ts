@@ -322,6 +322,112 @@ export class TransactionHelper {
       });
     }
   }
+  private __calcStandardMinFee(customMinFeePerByte?: BFChainCore.FractionJSON) {
+    const minTransactionFeePerByte = this.config.minTransactionFeePerByte;
+    // 获取最小手续费
+    return customMinFeePerByte
+      ? this.jsbiHelper.compareFraction(minTransactionFeePerByte, customMinFeePerByte) >= 0
+        ? minTransactionFeePerByte
+        : customMinFeePerByte
+      : minTransactionFeePerByte;
+  }
+  private __calcMinFee(
+    feePerByte: {
+      numerator: bigint;
+      denominator: number;
+    },
+    standardMinFee: BFChainCore.FractionJSON<number>,
+    bytesLength: number,
+    fee: string,
+  ) {
+    // 比较手续费是否充足
+    const result = this.jsbiHelper.compareFraction(feePerByte, standardMinFee);
+
+    if (result < 0) {
+      return this.jsbiHelper.multiplyCeilFraction(bytesLength, standardMinFee).toString();
+    }
+    return fee;
+  }
+  /**
+   * 根据事件字节数计算事件最小手续费
+   *
+   * @param transaction 事件体
+   * @param bytesLength 事件体字节数
+   * @param customMinFeePerByte 自定义的最低手续费，如果比网络手续费小则自动采用网络手续费
+   */
+  calcTransactionMinFeeByBytes(
+    transaction: Transaction,
+    bytesLength?: number,
+    customMinFeePerByte?: BFChainCore.FractionJSON,
+  ) {
+    const txFee = transaction.fee;
+    const realByteLength = bytesLength || transaction.getBytes().length;
+    return this.__calcMinFee(
+      {
+        numerator: BigInt(txFee),
+        denominator: realByteLength,
+      },
+      this.__calcStandardMinFee(customMinFeePerByte),
+      realByteLength,
+      txFee,
+    );
+  }
+  /**
+   * 根据共识最大事件字节数计算事件最小手续费
+   *
+   * @param transaction 事件体
+   * @param times 计费次数
+   * @param customMinFeePerByte 自定义的最低手续费，如果比网络手续费小则自动采用网络手续费
+   */
+  calcTransactionMinFeeByMaxBytes(
+    transaction: Transaction,
+    times: number,
+    customMinFeePerByte?: BFChainCore.FractionJSON,
+  ) {
+    const txFee = transaction.fee;
+    const bytesLength = this.config.maxTransactionSize * times;
+    return this.__calcMinFee(
+      {
+        numerator: BigInt(txFee),
+        denominator: bytesLength,
+      },
+      this.__calcStandardMinFee(customMinFeePerByte),
+      bytesLength,
+      txFee,
+    );
+  }
+  /**
+   * 计算事件最小手续费
+   *
+   * @param transaction 事件体
+   * @param bytesLength 事件体字节数
+   * @param customMinFeePerByte 自定义的最低手续费，如果比网络手续费小则自动采用网络手续费
+   */
+  calcTransactionMinFee(
+    transaction: Transaction,
+    bytesLength?: number,
+    customMinFeePerByte?: BFChainCore.FractionJSON,
+  ) {
+    // 红包事件按最大事件字节付费，并且给抢红包事件付费
+    if (transaction.type === this.GIFT_ASSET) {
+      return this.calcTransactionMinFeeByMaxBytes(
+        transaction,
+        (transaction as BFChainCore.Transaction<BFChainCore.GiftAssetAssetJSON>).asset.giftAsset
+          .totalGrabableTimes + 1,
+        customMinFeePerByte,
+      );
+    }
+    // 见证事件按最大事件字节付费，并且给签收见证事件付费
+    if (transaction.type === this.TRUST_ASSET) {
+      return this.calcTransactionMinFeeByMaxBytes(
+        transaction,
+        (transaction as BFChainCore.Transaction<BFChainCore.TrustAssetAssetJSON>).asset.trustAsset
+          .numberOfSignFor + 1,
+        customMinFeePerByte,
+      );
+    }
+    return this.calcTransactionMinFeeByBytes(transaction, bytesLength, customMinFeePerByte);
+  }
   /**计算交易手续费 */
   calcTransactionFee(
     trs: Transaction,
@@ -413,8 +519,8 @@ export class TransactionHelper {
     const { jsbiHelper } = this;
     const miniUnit = BigInt(0);
     const minAssets = BigInt(this.config.miniUnit);
-    const averageAsset = jsbiTotalAsset / BigInt(totalGrabableTimes);
-    if (averageAsset === miniUnit) {
+    const averageAssets = jsbiTotalAsset / BigInt(totalGrabableTimes);
+    if (averageAssets === miniUnit) {
       return minAssets;
     }
     const grabAsset = BigInt(
@@ -426,24 +532,26 @@ export class TransactionHelper {
         .update(gifterId)
         .digest("hex")}`,
     );
-    const maxAssets = averageAsset * BigInt(2);
-    let amount = jsbiHelper.multiplyFloorFractionString(totalGiftAssetNumber, {
+    const amount = jsbiHelper.multiplyFloorFractionString(totalGiftAssetNumber, {
       numerator: grabAsset,
       denominator: BigInt(2) ** BigInt(128),
     });
-    if (amount > maxAssets) {
-      let newAmount = amount % maxAssets;
-      if (amount > maxAssets * BigInt(2)) {
-        if (newAmount <= averageAsset) {
-          newAmount += averageAsset;
-        }
-      }
-      amount = newAmount;
-    } else if (amount < minAssets) {
-      amount = minAssets;
+    // amount 小于最小流通单位，则直接返回最小流通单位
+    if (amount < minAssets) {
+      return minAssets;
     }
-
-    return amount;
+    const maxAssets = averageAssets * BigInt(2);
+    // minAssets <= amount <= maxAssets，直接返回 amount
+    if (amount <= maxAssets) {
+      return amount;
+    }
+    // 计算 amount 取模 maxAssets
+    let newAmount = amount % maxAssets;
+    // amount > 2 倍 maxAssets 并且 取模结果 <= averageAssets，newAmount 修改为 newAmount + averageAssets
+    if (amount > maxAssets * BigInt(2) && newAmount <= averageAssets) {
+      newAmount += averageAssets;
+    }
+    return newAmount;
   }
 
   /**
