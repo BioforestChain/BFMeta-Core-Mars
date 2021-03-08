@@ -57,9 +57,11 @@ export class MarkLogicVerifier extends TransactionLogicVerifier {
 
     const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
-    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+    const { eventLogicVerifier } = this;
 
-    await this.eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
+    eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+
+    await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     return true;
   }

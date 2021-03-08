@@ -1,8 +1,8 @@
 {
   "name": "@types/bfchain__core-patch-base",
   "types": "index.d.ts",
-  "version": "5.19.51",
+  "version": "5.19.65",
   "dependencies": {
-    "@types/bfchain__core-typings": "5.19.51"
+    "@types/bfchain__core-typings": "5.19.65"
   }
 }

@@ -30,6 +30,7 @@ import {
   UNFROZEN_TIME_USE_UP,
   NOT_MATCH,
   SHOULD_BE,
+  PROP_SHOULD_LTE_FIELD,
 } from "@bfchain/core-util-exception";
 import {
   NewTransactionRefuseReason,
@@ -38,7 +39,7 @@ import {
   LOCATION_NAME_LEVEL,
   RECORD_OPERATION_TYPE,
 } from "@bfchain/core-model";
-import { ConfigHelper, BlockHelper, TransactionHelper } from "@bfchain/core-helper";
+import { ConfigHelper, BlockHelper, TransactionHelper, JSBIHelper } from "@bfchain/core-helper";
 import { HelperLogicVerifier } from "./helperLogicVerifier";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
@@ -48,6 +49,8 @@ const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
 
 @Injectable()
 export class EventLogicVerifier {
+  @Inject(JSBIHelper)
+  protected jsbiHelper!: JSBIHelper;
   @Inject(ConfigHelper)
   protected configHelper!: ConfigHelper;
   @Inject(BlockHelper)
@@ -727,6 +730,20 @@ export class EventLogicVerifier {
           throw new ConsensusException(ASSET_NOT_ENOUGH, {
             reason: `No enough asset, Min account asset ${issueAssetMinChainAsset}, remain Assets: ${remainChainAsset}`,
             errorId: NewTransactionRefuseReason.CHAIN_ASSET_NOT_ENOUGH,
+            function: "verify",
+          });
+        }
+
+        // 验证最大发行数量
+        const calcMaxAssets = this.jsbiHelper.multiplyFloorFraction(
+          remainChainAsset,
+          this.configHelper.maxMultipleOfAssetAndMainAsset,
+        );
+        if (BigInt(sourceAmount) > calcMaxAssets) {
+          throw new ConsensusException(PROP_SHOULD_LTE_FIELD, {
+            prop: `expectedIssuedAssets ${sourceAmount}`,
+            target: `issueAsset`,
+            field: `calc max assets ${calcMaxAssets}`,
             function: "verify",
           });
         }

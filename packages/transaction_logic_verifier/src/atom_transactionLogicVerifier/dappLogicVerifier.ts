@@ -50,15 +50,17 @@ export class DAppLogicVerifier extends TransactionLogicVerifier {
 
     const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
-    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+    const { eventLogicVerifier } = this;
 
-    this.eventLogicVerifier.listenEventIssueDAppid(
+    eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+
+    eventLogicVerifier.listenEventIssueDAppid(
       currentBlockHeight,
       accountGetterHelper,
       eventEmitter,
     );
 
-    await this.eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
+    await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     return true;
   }

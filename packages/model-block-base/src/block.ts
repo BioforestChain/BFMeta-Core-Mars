@@ -12,7 +12,8 @@ const BUFFER_LIST_TRANSACTION_LIST_WM = new WeakMap<Uint8Array[], TransactionInB
 const TRANSACTION_BUFFER_WM = new WeakMap<TransactionInBlock, Uint8Array>();
 
 @Type.d("Block")
-export class Block<AJ extends object = object> extends Message<Block<AJ>>
+export class Block<AJ extends object = object>
+  extends Message<Block<AJ>>
   implements BFChainCore.BlockJSON<AJ> {
   ASSET_MODEL_TYPE!: BFChainCore.AssetJSONToModelType<AJ>;
   ASSET_JSON_TYPE!: AJ;

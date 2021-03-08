@@ -13,7 +13,13 @@
   },
   "references": [
     {
+      "path": "../patch-1/tsconfig.@types.json"
+    },
+    {
       "path": "../patch-base/tsconfig.@types.json"
+    },
+    {
+      "path": "../patch-v2/tsconfig.@types.json"
     },
     {
       "path": "../typings/tsconfig.@types.json"

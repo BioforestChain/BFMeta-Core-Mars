@@ -16,6 +16,9 @@
       "path": "../helper-account_base/tsconfig.@types.json"
     },
     {
+      "path": "../helper-bigint/tsconfig.@types.json"
+    },
+    {
       "path": "../helper-config/tsconfig.@types.json"
     },
     {

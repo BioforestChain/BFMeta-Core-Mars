@@ -1,5 +1,5 @@
 import { Message, Field, Type, Long } from "@bfchain/protobuf";
-import { Fraction, FractionBigIntModel, RateModel } from "@bfchain/core-model-common";
+import { Fraction, FractionBigIntModel } from "@bfchain/core-model-common";
 import { cacheBytesGetter } from "@bfchain/core-model-cacher";
 import { RoundDelegateModel } from "./roundDelegate";
 import { BNID_TYPE } from "@bfchain/core-model-block-base";
@@ -9,7 +9,8 @@ import { BNID_TYPE } from "@bfchain/core-model-block-base";
  *
  */
 @Type.d("RewardPercentModel")
-export class RewardPercentModel extends Message<RewardPercentModel>
+export class RewardPercentModel
+  extends Message<RewardPercentModel>
   implements BFChainCore.JSONToModelType<BFChainCore.RewardPercentJSON> {
   /**分配给投票账户的奖励占区块总奖励的比例 */
   @Field.d(1, Fraction)
@@ -30,7 +31,8 @@ export class RewardPercentModel extends Message<RewardPercentModel>
  *
  */
 @Type.d("RewardPerBlock")
-export class RewardPerBlock extends Message<RewardPerBlock>
+export class RewardPerBlock
+  extends Message<RewardPerBlock>
   implements BFChainCore.JSONToModelType<BFChainCore.RewardPerBlockJSON> {
   /**奖励变更区块高度 */
   @Field.d(1, "uint32", "repeated")
@@ -51,7 +53,8 @@ export class RewardPerBlock extends Message<RewardPerBlock>
  *
  */
 @Type.d("PortsModel")
-export class PortsModel extends Message<PortsModel>
+export class PortsModel
+  extends Message<PortsModel>
   implements BFChainCore.JSONToModelType<BFChainCore.PortsJSON> {
   /**默认端口号/区块链端口号 */
   @Field.d(1, "uint32")
@@ -68,7 +71,8 @@ export class PortsModel extends Message<PortsModel>
 }
 
 @Type.d("TransactionPowOfWorkConfigModel")
-export class TransactionPowOfWorkConfigModel extends Message<TransactionPowOfWorkConfigModel>
+export class TransactionPowOfWorkConfigModel
+  extends Message<TransactionPowOfWorkConfigModel>
   implements BFChainCore.JSONToModelType<BFChainCore.TransactionPowOfWorkConfigJSON> {
   @Field.d(1, FractionBigIntModel)
   growthFactor!: FractionBigIntModel;
@@ -107,7 +111,8 @@ export class AccountParticipationWeightRatioModel
  * 比例模型
  */
 @Type.d("BlockParticipationWeightRatioModel")
-export class BlockParticipationWeightRatioModel extends Message<BlockParticipationWeightRatioModel>
+export class BlockParticipationWeightRatioModel
+  extends Message<BlockParticipationWeightRatioModel>
   implements BFChainUtil.JSONAble<BFChainCore.BlockParticipationWeightRatioJSON> {
   /**块内涉及的权益总量权重 */
   @Field.d(1, "uint32")
@@ -128,7 +133,8 @@ export class BlockParticipationWeightRatioModel extends Message<BlockParticipati
  *
  */
 @Type.d("GenesisAssetModel")
-export class GenesisAssetModel extends RoundDelegateModel<GenesisAssetModel>
+export class GenesisAssetModel
+  extends RoundDelegateModel<GenesisAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.GenesisAssetJSON> {
   /**链名 */
   @Field.d(GenesisAssetModel.INC++, "string")
@@ -225,6 +231,9 @@ export class GenesisAssetModel extends RoundDelegateModel<GenesisAssetModel>
   tpowOfWorkExemptionBlocks!: number;
   @Field.d(GenesisAssetModel.INC++, TransactionPowOfWorkConfigModel)
   transactionPowOfWorkConfig!: TransactionPowOfWorkConfigModel;
+  /**冻结的主权益数允许发行的最大权益数量 */
+  @Field.d(GenesisAssetModel.INC++, FractionBigIntModel)
+  maxMultipleOfAssetAndMainAsset!: FractionBigIntModel;
   toJSON(): BFChainCore.GenesisAssetJSON {
     const res: BFChainCore.GenesisAssetJSON = Object.assign(
       {
@@ -260,7 +269,11 @@ export class GenesisAssetModel extends RoundDelegateModel<GenesisAssetModel>
         transactionPowOfWorkConfig: this.transactionPowOfWorkConfig.toJSON(),
       },
       super.toJSON(),
-    );
+    ) as any;
+
+    this.maxMultipleOfAssetAndMainAsset &&
+      (res.maxMultipleOfAssetAndMainAsset = this.maxMultipleOfAssetAndMainAsset.toJSON());
+
     return res;
   }
   @cacheBytesGetter
@@ -274,6 +287,10 @@ export class GenesisAssetModel extends RoundDelegateModel<GenesisAssetModel>
     const res = super.fromObject(object) as GenesisAssetModel;
     if (res !== object) {
       object.beginEpochTime && (res.beginEpochTime = object.beginEpochTime);
+      object.maxMultipleOfAssetAndMainAsset &&
+        (res.maxMultipleOfAssetAndMainAsset = FractionBigIntModel.fromObject<FractionBigIntModel>(
+          object.maxMultipleOfAssetAndMainAsset,
+        ));
     }
     return (res as unknown) as T;
   }
@@ -283,7 +300,8 @@ export class GenesisAssetModel extends RoundDelegateModel<GenesisAssetModel>
  * GenesisBlock 区块 asset 外层模型
  */
 @Type.d("GenesisBlockAssetModel")
-export class GenesisBlockAssetModel extends Message<GenesisBlockAssetModel>
+export class GenesisBlockAssetModel
+  extends Message<GenesisBlockAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.GenesisBlockAssetJSON> {
   @Field.d(1, GenesisAssetModel)
   genesisAsset!: GenesisAssetModel;

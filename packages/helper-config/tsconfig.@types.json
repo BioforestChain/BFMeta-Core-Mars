@@ -16,6 +16,9 @@
       "path": "../model-block/tsconfig.@types.json"
     },
     {
+      "path": "../model-common/tsconfig.@types.json"
+    },
+    {
       "path": "../typings/tsconfig.@types.json"
     },
     {

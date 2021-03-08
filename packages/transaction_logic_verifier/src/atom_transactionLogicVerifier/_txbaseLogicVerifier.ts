@@ -56,7 +56,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   protected transactionHelper!: TransactionHelper;
   @Inject(JSBIHelper)
   protected jsbiHelper!: JSBIHelper;
-  @Inject(EventLogicVerifier)
+  @Inject(EventLogicVerifier, { dynamics: true })
   protected eventLogicVerifier!: EventLogicVerifier;
   @Inject(HelperLogicVerifier)
   protected helperLogicVerifier!: HelperLogicVerifier;

@@ -1,15 +1,15 @@
 {
   "name": "@types/bfchain__core-helper-block",
   "types": "index.d.ts",
-  "version": "5.19.51",
+  "version": "5.19.65",
   "dependencies": {
-    "@types/bfchain__core-helper-account-base": "5.19.51",
-    "@types/bfchain__core-helper-config": "5.19.51",
-    "@types/bfchain__core-helper-type": "5.19.51",
-    "@types/bfchain__core-model": "5.19.51",
-    "@types/bfchain__core-typings": "5.19.51",
-    "@types/bfchain__core-util-exception": "5.19.51",
-    "@types/bfchain__core-util-exception-errorcode": "5.19.51",
-    "@types/bfchain__core-helper-bigint": "5.19.51"
+    "@types/bfchain__core-helper-account-base": "5.19.65",
+    "@types/bfchain__core-helper-config": "5.19.65",
+    "@types/bfchain__core-helper-type": "5.19.65",
+    "@types/bfchain__core-model": "5.19.65",
+    "@types/bfchain__core-typings": "5.19.65",
+    "@types/bfchain__core-util-exception": "5.19.65",
+    "@types/bfchain__core-util-exception-errorcode": "5.19.65",
+    "@types/bfchain__core-helper-bigint": "5.19.65"
   }
 }

@@ -40,17 +40,19 @@ export class LocationNameLogicVerifier extends TransactionLogicVerifier {
 
     const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
-    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+    const { eventLogicVerifier } = this;
+
+    eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
 
     const operationType = transaction.asset.locationName.operationType;
     if (operationType === LOCATION_NAME_OPERATION_TYPE.REGISTRATION) {
-      this.eventLogicVerifier.listenEventRegisterLocationName(
+      eventLogicVerifier.listenEventRegisterLocationName(
         currentBlockHeight,
         accountGetterHelper,
         eventEmitter,
       );
     } else {
-      this.eventLogicVerifier.listenEventCancelLocationName(
+      eventLogicVerifier.listenEventCancelLocationName(
         transaction,
         currentBlockHeight,
         accountGetterHelper,
@@ -58,7 +60,7 @@ export class LocationNameLogicVerifier extends TransactionLogicVerifier {
       );
     }
 
-    await this.eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
+    await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     return true;
   }

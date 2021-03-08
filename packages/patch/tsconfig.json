@@ -12,6 +12,9 @@
       "path": "../patch-base/tsconfig.json"
     },
     {
+      "path": "../patch-v2/tsconfig.json"
+    },
+    {
       "path": "../typings/tsconfig.json"
     }
   ],

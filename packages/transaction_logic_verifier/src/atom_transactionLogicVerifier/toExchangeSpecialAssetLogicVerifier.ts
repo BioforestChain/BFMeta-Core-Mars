@@ -81,22 +81,20 @@ export class ToExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
 
     const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
-    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+    const { eventLogicVerifier } = this;
+
+    eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
     if (exchangeDirection === EXCHANGE_DIRECTION.ASSET_FROM_RECIPIENT) {
-      this.eventLogicVerifier.listenEventFrozenAsset(
-        cloneAccountsAssets,
-        transaction,
-        eventEmitter,
-      );
+      eventLogicVerifier.listenEventFrozenAsset(cloneAccountsAssets, transaction, eventEmitter);
     } else {
       if (exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID) {
-        this.eventLogicVerifier.listenEventSaleDAppid(
+        eventLogicVerifier.listenEventSaleDAppid(
           currentBlockHeight,
           accountGetterHelper,
           eventEmitter,
         );
       } else {
-        this.eventLogicVerifier.listenEventSaleLocationName(
+        eventLogicVerifier.listenEventSaleLocationName(
           currentBlockHeight,
           accountGetterHelper,
           eventEmitter,
@@ -104,7 +102,7 @@ export class ToExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
       }
     }
 
-    await this.eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
+    await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     return true;
   }

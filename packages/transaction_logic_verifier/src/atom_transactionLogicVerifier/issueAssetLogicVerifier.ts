@@ -44,19 +44,21 @@ export class IssueAssetLogicVerifier extends TransactionLogicVerifier {
 
     const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
-    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+    const { eventLogicVerifier } = this;
 
-    this.eventLogicVerifier.listenEventFrozenAccount(cloneAccountsInfo, eventEmitter);
+    eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+
+    eventLogicVerifier.listenEventFrozenAccount(cloneAccountsInfo, eventEmitter);
 
     const accountAssets = this.helperLogicVerifier.deepClone(sender.accountAssets);
-    this.eventLogicVerifier.listenEventIssueAsset(
+    eventLogicVerifier.listenEventIssueAsset(
       accountAssets,
       transaction,
       accountGetterHelper,
       eventEmitter,
     );
 
-    await this.eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
+    await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     return true;
   }
