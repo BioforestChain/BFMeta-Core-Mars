@@ -530,8 +530,9 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       });
       /// 还是一个个请求
       resultGenerator.on("requestItem", (index, next) => {
-        if (index > maxOffset) {
-          maxOffset = index;
+        const queryOffset = index + offset;
+        if (queryOffset > maxOffset) {
+          maxOffset = queryOffset;
           freeIteratorLock();
         }
         next();
