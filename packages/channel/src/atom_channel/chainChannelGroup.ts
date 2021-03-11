@@ -497,9 +497,9 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     /// 在异步任务中进行任务分发
     (async () => {
       /**发往每一台节点的查询数量 */
+      const chainChannelListLen = this.chainChannelList ? [...this.chainChannelList].length : 0;
       const unitLength = Math.ceil(
-        (totalLength || opts?.queryUnitLength || 20) /
-          (this.chainChannelList ? [...this.chainChannelList].length : 1),
+        (totalLength || opts?.queryUnitLength || 20) / (chainChannelListLen || 1),
       );
       /**所有查询任务的链 */
       let taskChain = Promise.resolve();
