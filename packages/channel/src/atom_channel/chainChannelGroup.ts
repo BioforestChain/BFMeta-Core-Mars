@@ -95,7 +95,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     }
     return false;
   }
-  bfOnInit(){
+  bfOnInit() {
     /// 先遍历一下当下的节点
     let curMaxMaybeHeight = this._maybeHeight;
     for (const cc of this.chainChannelSet) {
@@ -133,7 +133,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
   public options: { disableAutoRemove?: boolean } = {};
 
   constructor(
-    @Inject(CHAIN_CHANNEL_GROUP_ARGS.CHANNEL_LIST) chainChannelList: Iterable<DH>,
+    @Inject(CHAIN_CHANNEL_GROUP_ARGS.CHANNEL_LIST) private chainChannelList: Iterable<DH>,
     @Inject(CHAIN_CHANNEL_GROUP_ARGS.GROUP_NAME, { optional: true })
     public groupName = "",
     @Inject(CHAIN_CHANNEL_GROUP_ARGS.OPTIONS, { optional: true })
@@ -497,7 +497,10 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     /// 在异步任务中进行任务分发
     (async () => {
       /**发往每一台节点的查询数量 */
-      const unitLength = 5; // totalLength ? Math.ceil(totalLength / chainChannelList.length) : 1;
+      const unitLength = Math.ceil(
+        (totalLength || opts?.queryUnitLength || 20) /
+          (this.chainChannelList ? [...this.chainChannelList].length : 1),
+      );
       /**所有查询任务的链 */
       let taskChain = Promise.resolve();
       /**是否已经触碰到完结的边界了 */
@@ -1253,12 +1256,12 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     return this._chainChannelEvents.off.bind(this._chainChannelEvents, "maybeHeightChanged");
   }
 
-  private _tryChangeMaybeHeight  (newMaybeHeight: number, version?: number) {
+  private _tryChangeMaybeHeight(newMaybeHeight: number, version?: number) {
     if (this._maybeHeight !== newMaybeHeight) {
       this._maybeHeight = newMaybeHeight;
       this._chainChannelEvents.emit("maybeHeightChanged", newMaybeHeight, version);
     }
-  };
+  }
   private _initMaybeHeightWatcher() {
     const onChainChannelNewBlock: BFChainUtil.EventHandler<
       NewBlockArgModel,
