@@ -83,7 +83,7 @@ declare namespace BFChainCore {
   > &
     ChannelRequestBaseOptions<CC> & {
       abortWhenNoChainChannel?: boolean;
-      queryUnitLength: number;
+      queryUnitLength?: number;
     };
   type ChannelRequestOptions<CC extends SimpleChainChannel> = AborterOptions<
     ChannelRequestEnv<CC>
