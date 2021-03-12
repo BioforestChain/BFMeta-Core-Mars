@@ -64,7 +64,7 @@ quq.age = 66;
   const trs = await bfchainCore.transaction.createTransaction(
     TransferAssetTransactionFactory,
     {
-      version: 1,
+      version: bfchainCore.config.version,
       type: bfchainCore.transactionHelper.TRANSFER_ASSET,
       applyBlockHeight: 2,
       effectiveBlockHeight: 100,

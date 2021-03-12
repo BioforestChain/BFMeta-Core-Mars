@@ -61,11 +61,15 @@ export abstract class PatchBase {
   protected blockGetterHelper?: BFChainCore.BlockGetterHelperInterface;
   /**补丁包的名词，不同补丁包之间不共享version，也就是说补丁包自身支持version变更，从而实现动态打补丁 */
   abstract readonly name: string;
+  /**补丁生效高度，正常来说一个补丁包的代码必须是在同一个高度生效，否则就是多个补丁包 */
+  abstract readonly patchEffectiveAfterHeight: number;
   /**注意，这里只是补丁包的版本号，不是共识的版本号 */
   protected abstract _version: number;
   get version() {
     return this._version;
   }
+  /**补丁生效后的共识版本号 */
+  abstract readonly consensusVersion: number;
   abstract upgradeHandler(oldVersion: number, newVersion: number): BFChainUtil.PromiseMaybe<void>;
 }
 

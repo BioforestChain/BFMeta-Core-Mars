@@ -21,7 +21,7 @@ async function getDappTransaction(sender: AccountModel) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const dappid = getRandomDAppid();
   const data: BFChainCore.TxBodyJSON = {
-    version: 1,
+    version: bfchainCore.config.version,
     type: bfchainCore.transactionHelper.DAPP, // 交易类型
     senderId: sender.address, // 发起者地址
     recipientId: "cP2kxhREzSCNE36mqUrQCMyesw4LKEJ67M",
@@ -82,7 +82,7 @@ async function getDappPurchasingTransaction(sender: AccountModel, dappTrs: DAppT
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const dapp = dappTrs.asset.dapp;
   const data: BFChainCore.TxBodyJSON = {
-    version: 1,
+    version: bfchainCore.config.version,
     type: bfchainCore.transactionHelper.DAPP_PURCHASING, // 交易类型
     senderId: sender.address, // 发起者地址
     senderPublicKey: sender.publicKey, // 发起者公钥

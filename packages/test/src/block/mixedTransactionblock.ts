@@ -47,7 +47,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
   ) {
     const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
     const data: BFChainCore.TxBodyJSON = {
-      version: 1,
+      version: bfchainCore.config.version,
       type: bfchainCore.transactionHelper.TRANSFER_ASSET, // 交易类型
       senderId: sender.address, // 发起者地址
       senderPublicKey: sender.publicKey, // 发起者公钥
@@ -124,7 +124,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
   async function getDestoryAssetTransaction(sender: AccountModel) {
     const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
     const data: BFChainCore.TxBodyJSON = {
-      version: 1,
+      version: bfchainCore.config.version,
       type: bfchainCore.transactionHelper.DESTORY_ASSET, // 交易类型
       senderId: sender.address, // 发起者地址
       senderPublicKey: sender.publicKey, // 发起者公钥
@@ -198,7 +198,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
   ) {
     const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
     const data: BFChainCore.TxBodyJSON = {
-      version: 1,
+      version: bfchainCore.config.version,
       type: bfchainCore.transactionHelper.TO_EXCHANGE_ASSET, // 交易类型
       senderId: sender.address, // 发起者地址
       senderPublicKey: sender.publicKey, // 发起者公钥
@@ -264,7 +264,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
     const toExchangeAsset = toExchangeAssetTrs.asset.toExchangeAsset;
     const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
     const data: BFChainCore.TxBodyJSON = {
-      version: 1,
+      version: bfchainCore.config.version,
       type: bfchainCore.transactionHelper.BE_EXCHANGE_ASSET, // 交易类型
       senderId: sender.address, // 发起者地址
       senderPublicKey: sender.publicKey, // 发起者公钥
@@ -346,7 +346,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
   async function getToExchangeSpecialAssetTransaction(sender: AccountModel, recipientId: string) {
     const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
     const data: BFChainCore.TxBodyJSON = {
-      version: 1,
+      version: bfchainCore.config.version,
       type: bfchainCore.transactionHelper.TO_EXCHANGE_SPECIAL_ASSET, // 交易类型
       senderId: sender.address, // 发起者地址
       senderPublicKey: sender.publicKey, // 发起者公钥
@@ -408,7 +408,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
   ) {
     const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
     const data: BFChainCore.TxBodyJSON = {
-      version: 1,
+      version: bfchainCore.config.version,
       type: bfchainCore.transactionHelper.BE_EXCHANGE_SPECIAL_ASSET, // 交易类型
       senderId: sender.address, // 发起者地址
       senderPublicKey: sender.publicKey, // 发起者公钥
@@ -652,7 +652,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
     const commonBlock: BFChainCore.Block = await bfchainCore.block.generateBlock<CommonBlock>(
       CommonBlockFactory,
       {
-        version: 1,
+        version: bfchainCore.config.version,
         height,
         timestamp: 0,
         generatorPublicKey,

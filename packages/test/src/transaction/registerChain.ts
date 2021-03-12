@@ -55,7 +55,7 @@ if (randomMagic) {
 
 const registerBfchainCore = BFChainCoreFactory({
   config: new ConfigHelper(
-    GenesisBlock.fromObject({ asset: { genesisAsset: registerchainAssetData } }),
+    GenesisBlock.fromObject({ version: 1, asset: { genesisAsset: registerchainAssetData } }),
     "genesisBlock",
   ),
   Buffer: Buffer as any,
@@ -113,7 +113,7 @@ const getTxs = (address: string) => {
       return registerBfchainCore.transaction.createTransaction<UsernameTransaction>(
         UsernameTransactionFactory,
         {
-          version: 1,
+          version: registerBfchainCore.config.version,
           type: registerBfchainCore.transactionHelper.USERNAME, // 交易类型
           senderId: sender.address, // 发起者地址
           senderPublicKey: sender.publicKey, // 发起者公钥
@@ -179,7 +179,7 @@ const getTxs = (address: string) => {
       return registerBfchainCore.transaction.createTransaction(
         DelegateTransactionFactory,
         {
-          version: 1,
+          version: registerBfchainCore.config.version,
           type: registerBfchainCore.transactionHelper.DELEGATE, // 交易类型
           senderId: sender.address, // 发起者地址
           senderPublicKey: sender.publicKey, // 发起者公钥
@@ -237,7 +237,7 @@ const getTxs = (address: string) => {
       return registerBfchainCore.transaction.createTransaction<AcceptVoteTransaction>(
         AcceptVoteTransactionFactory,
         {
-          version: 1,
+          version: registerBfchainCore.config.version,
           type: registerBfchainCore.transactionHelper.ACCEPT_VOTE, // 交易类型
           senderId: sender.address, // 发起者地址
           senderPublicKey: sender.publicKey, // 发起者公钥
@@ -287,7 +287,7 @@ const getTxs = (address: string) => {
       return registerBfchainCore.transaction.createTransaction(
         LocationNameTransactionFactory,
         {
-          version: 1,
+          version: registerBfchainCore.config.version,
           type: registerBfchainCore.transactionHelper.LOCATION_NAME, // 交易类型
           senderId: genesisAccountInfo.address, // 发起者地址
           senderPublicKey: genesisAccountInfo.publicKey, // 发起者公钥
@@ -361,7 +361,7 @@ const getTxs = (address: string) => {
       return registerBfchainCore.transaction.createTransaction(
         SetLnsRecordValueTransactionFactory,
         {
-          version: 1,
+          version: registerBfchainCore.config.version,
           type: registerBfchainCore.transactionHelper.SET_LNS_RECORD_VALUE, // 交易类型
           senderId: sender.address, // 发起者地址
           senderPublicKey: sender.publicKey, // 发起者公钥
@@ -438,7 +438,7 @@ const getTxs = (address: string) => {
       return bfchainCore.transaction.createTransaction(
         TransferAssetTransactionFactory,
         {
-          version: 1,
+          version: bfchainCore.config.version,
           type: bfchainCore.transactionHelper.TRANSFER_ASSET, // 交易类型
           senderId: genesisAccountInfo.address, // 发起者地址
           senderPublicKey: genesisAccountInfo.publicKey, // 发起者公钥
@@ -656,7 +656,7 @@ const getTxs = (address: string) => {
     const genesisBlock = await registerBfchainCore.block.generateBlock<GenesisBlock>(
       GenesisBlockFactory,
       {
-        version: 1,
+        version: registerBfchainCore.config.version,
         height: 1,
         timestamp: 0,
         generatorPublicKey,
@@ -697,7 +697,7 @@ const getTxs = (address: string) => {
   async function getRegisterChainTransaction(sender: AccountModel) {
     const keypair = await fullBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
     const data: BFChainCore.TxBodyJSON = {
-      version: 1,
+      version: fullBfchainCore.config.version,
       type: fullBfchainCore.transactionHelper.REGISTER_CHAIN, // 交易类型
       senderId: sender.address, // 发起者地址
       senderPublicKey: sender.publicKey, // 发起者公钥
@@ -853,7 +853,7 @@ const getTxs = (address: string) => {
     const commonBlock = await fullBfchainCore.block.generateBlock<CommonBlock>(
       CommonBlockFactory,
       {
-        version: 1,
+        version: fullBfchainCore.config.version,
         height,
         timestamp: 0,
         generatorPublicKey,

@@ -22,6 +22,7 @@ import {
   VERIFY_TRANSACTION_POW_OF_WORK_ERROR,
   INVALID_TRANSACTION_FROM_MAGIC,
   TRANSACTION_SENDER_SECOND_PUBLICKEY_ALREADY_CHANGE,
+  NOT_MATCH,
 } from "@bfchain/core-util-exception";
 import {
   NewTransactionRefuseReason,
@@ -88,6 +89,17 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       function: "logicVerify",
     } as const;
 
+    // 校验交易版本号
+    if (transaction.version !== this.configHelper.version) {
+      throw new ConsensusException(NOT_MATCH, {
+        to_compare_prop: `transaction version ${transaction.version}`,
+        be_compare_prop: `blockChain version ${this.configHelper.version}`,
+        to_target: "body",
+        be_target: "config",
+        ...Function_Exception_Detail,
+      });
+    }
+
     const { recipientId } = transaction;
     // 获取账户信息和资产信息
     const sender = accountsInfo.sender;
@@ -150,32 +162,6 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     );
     // 校验交易的 lns
     await this.checkLocationName(transaction, currentBlockHeight, accountGetterHelper);
-    // 接收交易的时候不验证 pow
-    // 校验 pow
-    // if (currentBlockHeight > this.configHelper.tpowOfWorkExemptionBlocks) {
-    //   const curRound = this.blockHelper.calcRoundByHeight(currentBlockHeight);
-    //   const lastRoundInfo = sender.accountInfo.lastRoundInfo;
-    //   const { round, txCount, assetNumber } = lastRoundInfo;
-    //   if (round !== curRound - 1) {
-    //     throw new ConsensusException(NOT_MATCH, {
-    //       to_compare_prop: `round ${round}`,
-    //       be_compare_prop: `current round ${curRound}`,
-    //       to_target: "lastRoundInfo",
-    //       be_target: "blockChain",
-    //       ...Function_Exception_Detail,
-    //     });
-    //   }
-    //   const participation = this.transactionHelper.calcTpowParticipationBI(
-    //     txCount,
-    //     assetNumber.toString(),
-    //   );
-    //   await this.checkTransactionPowOfWork(
-    //     transaction,
-    //     currentBlockHeight,
-    //     participation.toString(),
-    //     accountGetterHelper,
-    //   );
-    // }
 
     const curRound = this.blockHelper.calcRoundByHeight(currentBlockHeight);
 

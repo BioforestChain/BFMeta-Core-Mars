@@ -33,7 +33,7 @@ function getPOWInfo<T extends Transaction>(address: string) {
 async function getTransferAssetTransaction(sender: AccountModel) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
-    version: 1,
+    version: bfchainCore.config.version,
     type: bfchainCore.transactionHelper.TRANSFER_ASSET, // 交易类型
     senderId: sender.address, // 发起者地址
     senderPublicKey: sender.publicKey, // 发起者公钥

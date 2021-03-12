@@ -28,7 +28,7 @@ async function getToExchangeSpecialAssetTransaction(
 ) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
-    version: 1,
+    version: bfchainCore.config.version,
     type: bfchainCore.transactionHelper.TO_EXCHANGE_SPECIAL_ASSET, // 交易类型
     senderId: sender.address, // 发起者地址
     senderPublicKey: sender.publicKey, // 发起者公钥
@@ -95,7 +95,7 @@ async function getBeExchangeSpecialAssetTransaction(
 ) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
-    version: 1,
+    version: bfchainCore.config.version,
     type: bfchainCore.transactionHelper.BE_EXCHANGE_SPECIAL_ASSET, // 交易类型
     senderId: sender.address, // 发起者地址
     senderPublicKey: sender.publicKey, // 发起者公钥

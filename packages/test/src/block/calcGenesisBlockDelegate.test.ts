@@ -927,7 +927,7 @@ function getChainOnChainHash(height: number) {
         const asyncIteratorGenerator = new AsyncIteratorGenerator<TransactionInBlock>();
         asyncIteratorGenerator.done();
         const newBlock: BFChainCore.BlockBody = {
-          version: 1,
+          version: bfchainCore.config.version,
           height: lastBlock.height,
           timestamp: result.timestamp,
           generatorPublicKey: delegate.pk,

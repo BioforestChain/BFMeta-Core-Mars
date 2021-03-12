@@ -284,21 +284,21 @@ export class V2_Patch extends PatchBase {
   eventLogicVerifier!: EventLogicVerifier;
 
   readonly name = "patch-v2";
+  readonly patchEffectiveAfterHeight = 88888888;
   protected _version = 1;
+  readonly consensusVersion = 2;
   async upgradeHandler(oldVersion: number, newVersion: number) {
     switch (oldVersion) {
       case 0: {
         {
-          /**更改共识版本号 */
-          const conVersion = 2;
           let oldAsset: BFChainCore.DeepPartial<BFChainCore.GenesisBlockAssetJSON> | undefined;
           /**在合适的条件下，更新共识
            * 如果需要，执行数据库升级。。。。
            */
           this.planAfterHeight(
-            114,
+            this.patchEffectiveAfterHeight,
             () => {
-              const oldBlock = this.config.getHookGenesisBlock(conVersion) || {};
+              const oldBlock = this.config.getHookGenesisBlock(this.consensusVersion) || {};
               oldBlock.asset = deepMix((oldAsset = oldBlock.asset), {
                 genesisAsset: {
                   maxMultipleOfAssetAndMainAsset: Fraction.fromObject({
@@ -307,14 +307,14 @@ export class V2_Patch extends PatchBase {
                   }),
                 },
               });
-              this.config.setHookGenesisBlock(conVersion, oldBlock);
+              this.config.setHookGenesisBlock(this.consensusVersion, oldBlock);
               BLOCK_FACTORY_TYPES_MAP.KF.set(BLOCK_TYPES_BASE.GENESIS, V2_GenesisBlockFactory);
               BLOCK_FACTORY_TYPES_MAP.FK.set(V2_GenesisBlockFactory, BLOCK_TYPES_BASE.GENESIS);
             },
             () => {
-              const oldBlock = this.config.getHookGenesisBlock(conVersion) || {};
+              const oldBlock = this.config.getHookGenesisBlock(this.consensusVersion) || {};
               oldBlock.asset = oldAsset;
-              this.config.setHookGenesisBlock(conVersion, oldBlock);
+              this.config.setHookGenesisBlock(this.consensusVersion, oldBlock);
               BLOCK_FACTORY_TYPES_MAP.KF.set(BLOCK_TYPES_BASE.GENESIS, GenesisBlockFactory);
               BLOCK_FACTORY_TYPES_MAP.FK.set(GenesisBlockFactory, BLOCK_TYPES_BASE.GENESIS);
             },

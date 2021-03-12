@@ -27,6 +27,10 @@ export class PatchInstaller
   }
 
   private _run_install_lock = false;
+  private _lastConsensusVersion = 1;
+  get lastConsensusVersion() {
+    return this._lastConsensusVersion;
+  }
   /// 动态载入
   installPatch(PatchCtor: BFChainUtil.Constructor<PatchBase>) {
     Resolve(PatchCtor, this.moduleMap);
@@ -73,6 +77,9 @@ export class PatchInstaller
           const newVersion = maxVersionMap.forceGet(patch.name);
           await patch.upgradeHandler(oldVersion, newVersion);
           this._patchVersionMap.set(patch.name, patch.version);
+          if (this._lastConsensusVersion < patch.consensusVersion) {
+            this._lastConsensusVersion = patch.consensusVersion;
+          }
         }
       }
       progress.emit("done");
