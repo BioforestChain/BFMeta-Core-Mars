@@ -86,7 +86,7 @@ if (randomMagic) {
 
 const core = BFChainCoreFactory({
   config: new ConfigHelper(
-    GenesisBlock.fromObject({ asset: { genesisAsset: mainChainAssetData } }),
+    GenesisBlock.fromObject({ version: 1, asset: { genesisAsset: mainChainAssetData } }),
     "genesisBlock",
   ),
   Buffer: Buffer as any,
@@ -148,7 +148,7 @@ async function getUsernameTransaction(sender: DelegateInfo) {
     return core.transaction.createTransaction<UsernameTransaction>(
       UsernameTransactionFactory,
       {
-        version: 1,
+        version: core.config.version,
         type: core.transactionHelper.USERNAME, // 交易类型
         senderId: sender.address, // 发起者地址
         senderPublicKey: sender.publicKey, // 发起者公钥
@@ -221,7 +221,7 @@ async function getDelegateTransaction(sender: DelegateInfo) {
     return core.transaction.createTransaction(
       DelegateTransactionFactory,
       {
-        version: 1,
+        version: core.config.version,
         type: core.transactionHelper.DELEGATE, // 交易类型
         senderId: sender.address, // 发起者地址
         senderPublicKey: sender.publicKey, // 发起者公钥
@@ -276,7 +276,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
     return core.transaction.createTransaction<AcceptVoteTransaction>(
       AcceptVoteTransactionFactory,
       {
-        version: 1,
+        version: core.config.version,
         type: core.transactionHelper.ACCEPT_VOTE, // 交易类型
         senderId: sender.address, // 发起者地址
         senderPublicKey: sender.publicKey, // 发起者公钥
@@ -340,7 +340,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
       return core.transaction.createTransaction(
         TransferAssetTransactionFactory,
         {
-          version: 1,
+          version: core.config.version,
           type: core.transactionHelper.TRANSFER_ASSET, // 交易类型
           senderId: genesisAccountInfo.address, // 发起者地址
           senderPublicKey: genesisAccountInfo.publicKey, // 发起者公钥
@@ -410,7 +410,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
       return core.transaction.createTransaction(
         LocationNameTransactionFactory,
         {
-          version: 1,
+          version: core.config.version,
           type: core.transactionHelper.LOCATION_NAME, // 交易类型
           senderId: genesisAccountInfo.address, // 发起者地址
           senderPublicKey: genesisAccountInfo.publicKey, // 发起者公钥
@@ -486,7 +486,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
       return core.transaction.createTransaction(
         SetLnsRecordValueTransactionFactory,
         {
-          version: 1,
+          version: core.config.version,
           type: core.transactionHelper.SET_LNS_RECORD_VALUE, // 交易类型
           senderId: sender.address, // 发起者地址
           senderPublicKey: sender.publicKey, // 发起者公钥
@@ -741,7 +741,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
     const genesisBlock = await core.block.generateBlock(
       GenesisBlockFactory,
       {
-        version: 1,
+        version: core.config.version,
         height,
         timestamp: 0,
         generatorPublicKey,

@@ -4,7 +4,9 @@ import { PatchBase } from "@bfchain/core-patch-base";
 @Injectable()
 export class Patch_1 extends PatchBase {
   readonly name = "test-patch";
+  readonly patchEffectiveAfterHeight = 100;
   protected _version = 1;
+  readonly consensusVersion = 2;
   async upgradeHandler(oldVersion: number, newVersion: number) {
     switch (oldVersion) {
       case 0: {

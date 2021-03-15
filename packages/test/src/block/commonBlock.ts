@@ -17,7 +17,7 @@ const delegatesSecret = require("../../../assets/secret.json").delegates as stri
 async function getAcceptVoteTransaction(sender: AccountModel) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
-    version: 1,
+    version: bfchainCore.config.version,
     type: bfchainCore.transactionHelper.ACCEPT_VOTE, // 交易类型
     senderId: sender.address, // 发起者地址
     senderPublicKey: sender.publicKey, // 发起者公钥
@@ -85,7 +85,7 @@ async function getCommonBlockAsync(sender: AccountModel) {
   const commonBlock = await bfchainCore.block.generateBlock<CommonBlock>(
     CommonBlockFactory,
     {
-      version: 1,
+      version: bfchainCore.config.version,
       height: 1,
       timestamp: 0,
       generatorPublicKey,

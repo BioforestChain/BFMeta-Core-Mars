@@ -35,11 +35,13 @@ export class RejectVoteLogicVerifier extends TransactionLogicVerifier {
 
     const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
-    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+    const { eventLogicVerifier } = this;
 
-    this.eventLogicVerifier.listenEventRejectVote(cloneAccountsInfo, eventEmitter);
+    eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
 
-    await this.eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
+    eventLogicVerifier.listenEventRejectVote(cloneAccountsInfo, eventEmitter);
+
+    await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     return true;
   }

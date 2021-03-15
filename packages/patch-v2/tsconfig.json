@@ -1,0 +1,30 @@
+{
+  "extends": "../../config/tsconfig_base/base.tsconfig.cjs",
+  "compilerOptions": {
+    "outDir": "./build/cjs",
+    "rootDir": "./src"
+  },
+  "references": [
+    {
+      "path": "../block/tsconfig.json"
+    },
+    {
+      "path": "../helper/tsconfig.json"
+    },
+    {
+      "path": "../patch-base/tsconfig.json"
+    },
+    {
+      "path": "../transaction_logic_verifier/tsconfig.json"
+    },
+    {
+      "path": "../typings/tsconfig.json"
+    }
+  ],
+  "files": [
+    "src/atom-patch/index.ts",
+    "src/atom-patch/v2.genesisBlock.ts",
+    "src/index.ts",
+    "src/v2.patch.ts"
+  ]
+}

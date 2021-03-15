@@ -35,18 +35,20 @@ export class RegisterChainLogicVerifier extends TransactionLogicVerifier {
 
     const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
-    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+    const { eventLogicVerifier } = this;
 
-    this.eventLogicVerifier.listenEventFrozenAccount(cloneAccountsInfo, eventEmitter);
+    eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
 
-    this.eventLogicVerifier.listenEventRegisterChain(
+    eventLogicVerifier.listenEventFrozenAccount(cloneAccountsInfo, eventEmitter);
+
+    eventLogicVerifier.listenEventRegisterChain(
       cloneAccountsAssets,
       transaction,
       accountGetterHelper,
       eventEmitter,
     );
 
-    await this.eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
+    await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     return true;
   }

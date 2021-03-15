@@ -38,15 +38,17 @@ export class DelegateLogicVerifier extends TransactionLogicVerifier {
 
     const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
-    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+    const { eventLogicVerifier } = this;
 
-    this.eventLogicVerifier.listenEventRegisterToDelegate(
+    eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+
+    eventLogicVerifier.listenEventRegisterToDelegate(
       cloneAccountsInfo,
       transactionGetterHelper,
       eventEmitter,
     );
 
-    await this.eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
+    await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     return true;
   }

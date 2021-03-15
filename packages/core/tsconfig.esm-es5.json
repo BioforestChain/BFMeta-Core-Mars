@@ -33,9 +33,6 @@
       "path": "../model/tsconfig.esm-es5.json"
     },
     {
-      "path": "../patch-1/tsconfig.esm-es5.json"
-    },
-    {
       "path": "../patch/tsconfig.esm-es5.json"
     },
     {

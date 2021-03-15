@@ -79,11 +79,13 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
 
     const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
-    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+    const { eventLogicVerifier } = this;
 
-    this.eventLogicVerifier.listenEventAsset(cloneAccountsAssets, transaction, eventEmitter);
+    eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
 
-    this.eventLogicVerifier.listenEventUnfrozenAsset(
+    eventLogicVerifier.listenEventAsset(cloneAccountsAssets, transaction, eventEmitter);
+
+    eventLogicVerifier.listenEventUnfrozenAsset(
       transaction,
       currentBlockHeight,
       accountGetterHelper,
@@ -96,7 +98,7 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
       exchangeAssetType,
     } = transaction.asset.beExchangeSpecialAsset.exchangeSpecialAsset;
     if (exchangeDirection === EXCHANGE_DIRECTION.ASSET_FROM_RECIPIENT) {
-      this.eventLogicVerifier.listenEventUnfrozenAsset(
+      eventLogicVerifier.listenEventUnfrozenAsset(
         transaction,
         currentBlockHeight,
         accountGetterHelper,
@@ -104,25 +106,25 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
         eventEmitter,
       );
     } else {
-      this.eventLogicVerifier.listenEventAsset(cloneAccountsAssets, transaction, eventEmitter);
+      eventLogicVerifier.listenEventAsset(cloneAccountsAssets, transaction, eventEmitter);
     }
 
     if (exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID) {
-      this.eventLogicVerifier.listenEventPurchaseDAppid(
+      eventLogicVerifier.listenEventPurchaseDAppid(
         transaction,
         currentBlockHeight,
         accountGetterHelper,
         eventEmitter,
       );
     } else {
-      this.eventLogicVerifier.listenEventPurchaseLocationName(
+      eventLogicVerifier.listenEventPurchaseLocationName(
         currentBlockHeight,
         accountGetterHelper,
         eventEmitter,
       );
     }
 
-    await this.eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
+    await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     return true;
   }

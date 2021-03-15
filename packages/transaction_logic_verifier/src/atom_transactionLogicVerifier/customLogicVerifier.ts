@@ -56,23 +56,25 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
 
     const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
-    this.eventLogicVerifier.listenEventFrozenAccount(cloneAccountsInfo, eventEmitter);
+    const { eventLogicVerifier } = this;
 
-    this.eventLogicVerifier.listenEventSetSecondPublicKey(eventEmitter);
+    eventLogicVerifier.listenEventFrozenAccount(cloneAccountsInfo, eventEmitter);
 
-    this.eventLogicVerifier.listenEventSetUsername(accountGetterHelper, eventEmitter);
+    eventLogicVerifier.listenEventSetSecondPublicKey(eventEmitter);
 
-    this.eventLogicVerifier.listenEventRegisterToDelegate(
+    eventLogicVerifier.listenEventSetUsername(accountGetterHelper, eventEmitter);
+
+    eventLogicVerifier.listenEventRegisterToDelegate(
       cloneAccountsInfo,
       transactionGetterHelper,
       eventEmitter,
     );
 
-    this.eventLogicVerifier.listenEventAcceptVote(cloneAccountsInfo, eventEmitter);
+    eventLogicVerifier.listenEventAcceptVote(cloneAccountsInfo, eventEmitter);
 
-    this.eventLogicVerifier.listenEventRejectVote(cloneAccountsInfo, eventEmitter);
+    eventLogicVerifier.listenEventRejectVote(cloneAccountsInfo, eventEmitter);
 
-    this.eventLogicVerifier.listenEventVoteEquity(
+    eventLogicVerifier.listenEventVoteEquity(
       cloneAccountsInfo,
       transaction,
       curRound,
@@ -80,20 +82,20 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
     );
 
     const accountAssets = this.helperLogicVerifier.deepClone(sender.accountAssets);
-    this.eventLogicVerifier.listenEventIssueAsset(
+    eventLogicVerifier.listenEventIssueAsset(
       accountAssets,
       transaction,
       accountGetterHelper,
       eventEmitter,
     );
 
-    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+    eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
 
-    this.eventLogicVerifier.listenEventAsset(cloneAccountsAssets, transaction, eventEmitter);
+    eventLogicVerifier.listenEventAsset(cloneAccountsAssets, transaction, eventEmitter);
 
-    this.eventLogicVerifier.listenEventFrozenAsset(cloneAccountsAssets, transaction, eventEmitter);
+    eventLogicVerifier.listenEventFrozenAsset(cloneAccountsAssets, transaction, eventEmitter);
 
-    this.eventLogicVerifier.listenEventUnfrozenAsset(
+    eventLogicVerifier.listenEventUnfrozenAsset(
       transaction,
       currentBlockHeight,
       accountGetterHelper,
@@ -101,72 +103,68 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
       eventEmitter,
     );
 
-    this.eventLogicVerifier.listenEventDestoryAsset(transaction, accountGetterHelper, eventEmitter);
+    eventLogicVerifier.listenEventDestoryAsset(transaction, accountGetterHelper, eventEmitter);
 
-    this.eventLogicVerifier.listenEventIssueDAppid(
+    eventLogicVerifier.listenEventIssueDAppid(
       currentBlockHeight,
       accountGetterHelper,
       eventEmitter,
     );
 
-    this.eventLogicVerifier.listenEventSaleDAppid(
-      currentBlockHeight,
-      accountGetterHelper,
-      eventEmitter,
-    );
+    eventLogicVerifier.listenEventSaleDAppid(currentBlockHeight, accountGetterHelper, eventEmitter);
 
-    this.eventLogicVerifier.listenEventPurchaseDAppid(
+    eventLogicVerifier.listenEventPurchaseDAppid(
       transaction,
       currentBlockHeight,
       accountGetterHelper,
       eventEmitter,
     );
 
-    this.eventLogicVerifier.listenEventRegisterLocationName(
+    eventLogicVerifier.listenEventRegisterLocationName(
       currentBlockHeight,
       accountGetterHelper,
       eventEmitter,
     );
 
-    this.eventLogicVerifier.listenEventCancelLocationName(
+    eventLogicVerifier.listenEventCancelLocationName(
       transaction,
       currentBlockHeight,
       accountGetterHelper,
       eventEmitter,
     );
 
-    this.eventLogicVerifier.listenEventSaleLocationName(
+    eventLogicVerifier.listenEventSaleLocationName(
       currentBlockHeight,
       accountGetterHelper,
       eventEmitter,
     );
 
-    this.eventLogicVerifier.listenEventPurchaseLocationName(
+    eventLogicVerifier.listenEventPurchaseLocationName(
       currentBlockHeight,
       accountGetterHelper,
       eventEmitter,
     );
 
-    this.eventLogicVerifier.listenEventSetLnsManager(
+    eventLogicVerifier.listenEventSetLnsManager(
       currentBlockHeight,
       accountGetterHelper,
       eventEmitter,
     );
 
-    this.eventLogicVerifier.listenEventSetLnsRecordValue(
+    eventLogicVerifier.listenEventSetLnsRecordValue(
       currentBlockHeight,
       accountGetterHelper,
       eventEmitter,
     );
 
-    this.eventLogicVerifier.listenEventRegisterChain(
+    eventLogicVerifier.listenEventRegisterChain(
       cloneAccountsAssets,
       transaction,
       accountGetterHelper,
       eventEmitter,
     );
 
-    await this.eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
+    await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     if (!customTransactionCenter) {
       throw new NoFoundException(NOT_EXIST, {

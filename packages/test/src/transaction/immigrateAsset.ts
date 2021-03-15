@@ -23,7 +23,7 @@ const fullRegisterBfchainCore = getFullRegisterBfchainCoreEntry();
 async function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate: AccountModel) {
   const keypair = await fullBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
-    version: 1,
+    version: fullBfchainCore.config.version,
     type: fullBfchainCore.transactionHelper.EMIGRATE_ASSET, // 交易类型
     senderId: sender.address, // 发起者地址
     senderPublicKey: sender.publicKey, // 发起者公钥
@@ -101,7 +101,7 @@ async function getImmigrateAssetTransaction(
     sender.secret,
   );
   const data: BFChainCore.TxBodyJSON = {
-    version: 1,
+    version: fullRegisterBfchainCore.config.version,
     type: fullRegisterBfchainCore.transactionHelper.IMMIGRATE_ASSET, // 交易类型
     senderId: sender.address, // 发起者地址
     senderPublicKey: sender.publicKey, // 发起者公钥

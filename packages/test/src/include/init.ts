@@ -12,7 +12,7 @@ function getBfchainCoreEntry(bnid = BNID_TYPE.TESTNET) {
   return BFChainCoreFactory(
     {
       config: new ConfigHelper(
-        GenesisBlock.fromObject({ asset: { genesisAsset: mainChainAssetData } }),
+        GenesisBlock.fromObject({ version: 1, asset: { genesisAsset: mainChainAssetData } }),
         "genesisBlock",
       ),
       Buffer: Buffer as any,
@@ -39,7 +39,7 @@ function getRegisterBfchainCoreEntry(bnid = BNID_TYPE.TESTNET) {
   registerchainAssetData.bnid = bnid;
   return BFChainCoreFactory({
     config: new ConfigHelper(
-      GenesisBlock.fromObject({ asset: { genesisAsset: registerchainAssetData } }),
+      GenesisBlock.fromObject({ version: 1, asset: { genesisAsset: registerchainAssetData } }),
       "genesisBlock",
     ),
     Buffer: Buffer as any,

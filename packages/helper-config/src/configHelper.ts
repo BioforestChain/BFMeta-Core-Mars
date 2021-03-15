@@ -1,6 +1,7 @@
-import { Injectable } from "@bfchain/util-dep-inject";
-import { cacheGetter, cleanAllGetterCache } from "@bfchain/util-decorator";
 import { deepMix } from "@bfchain/util-deepmix";
+import { Injectable } from "@bfchain/util-dep-inject";
+import { FractionBigIntModel } from "@bfchain/core-model-common";
+import { cacheGetter, cleanAllGetterCache } from "@bfchain/util-decorator";
 type GenesisBlock = import("@bfchain/core-model-block").GenesisBlock;
 
 export enum NetType {
@@ -141,6 +142,22 @@ export class ConfigHelper {
   @cacheGetter
   get issueAssetMinChainAsset() {
     return this.hookedGenesisBlock.asset.genesisAsset.issueAssetMinChainAsset;
+  }
+  /**冻结的主权益数允许发行的最大权益数量 */
+  @cacheGetter
+  get maxMultipleOfAssetAndMainAsset() {
+    const maxMultipleOfAssetAndMainAsset = this.hookedGenesisBlock.asset.genesisAsset
+      .maxMultipleOfAssetAndMainAsset;
+
+    return maxMultipleOfAssetAndMainAsset &&
+      maxMultipleOfAssetAndMainAsset.numerator &&
+      maxMultipleOfAssetAndMainAsset.denominator
+      ? maxMultipleOfAssetAndMainAsset
+      : // FIXME: 暂时使用外网最大倍数
+        FractionBigIntModel.fromObject({
+          numerator: "19999600008175832963412690",
+          denominator: "1",
+        });
   }
   /**注册创世块的账户最小持有的主权益数量 */
   @cacheGetter

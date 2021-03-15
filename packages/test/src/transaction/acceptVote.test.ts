@@ -11,7 +11,7 @@
 // function getAcceptVoteTransaction(sender: AccountModel) {
 //   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
 //   const data: BFChainCore.TxBodyJSON = {
-//     version: 1,
+//     version: bfchainCore.config.version,
 //     type: bfchainCore.transactionHelper.ACCEPT_VOTE, // 交易类型
 //     senderId: sender.address, // 发起者地址
 //     senderPublicKey: sender.publicKey, // 发起者公钥
@@ -55,7 +55,7 @@
 //     const { signature, signature, signSignature, ...trsbase } = trs.toJSON();
 
 //     t.deepEqual(trsbase, {
-//       version: 1,
+//       version: bfchainCore.config.version,
 //       type: "BFT-BFCHAIN-BSE-05",
 //       senderId: "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
 //       senderPublicKey: "6e8330144a8c123c017a8f5c363531868d3ce21c45b4a668cc1767c2b4695c84",
@@ -88,7 +88,7 @@
 //     const trs = await getAcceptVoteTransaction(getSenderWithoutSecondSecret());
 //     const { signature, signature, signSignature, ...trsbase } = trs.toJSON();
 //     t.deepEqual(trsbase, {
-//       version: 1,
+//       version: bfchainCore.config.version,
 //       type: "BFT-BFCHAIN-BSE-05",
 //       senderId: "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
 //       senderPublicKey: "6e8330144a8c123c017a8f5c363531868d3ce21c45b4a668cc1767c2b4695c84",

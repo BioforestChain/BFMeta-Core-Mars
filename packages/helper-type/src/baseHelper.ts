@@ -1,9 +1,10 @@
 /// <reference lib="dom"/>
-import { Injectable } from "@bfchain/util-dep-inject";
 import { IpHelper } from "@bfchain/util";
-import { AccountBaseHelper } from "@bfchain/core-helper-account-base";
+import { Injectable } from "@bfchain/util-dep-inject";
+import { JSBIHelper } from "@bfchain/core-helper-bigint";
 import { ConfigHelper } from "@bfchain/core-helper-config";
 import { ParityBitHelper } from "@bfchain/core-helper-parity-bit";
+import { AccountBaseHelper } from "@bfchain/core-helper-account-base";
 import { RANGE_TYPE, PARITY_BIT_MAPPING } from "@bfchain/core-model-constants";
 
 @Injectable()
@@ -13,6 +14,7 @@ export class BaseHelper {
     private configHelper: ConfigHelper,
     private ipHelper: IpHelper,
     private parityBitHelper: ParityBitHelper,
+    private jsbiHelper: JSBIHelper,
   ) {}
 
   isIp(ip: string) {
@@ -246,6 +248,82 @@ export class BaseHelper {
    */
   isPositiveFloatNotContainZero(value: unknown): value is number {
     return this.isPositiveFloatMatchCondition(value, (v) => v > 0);
+  }
+
+  /**
+   * 判断输入值是否是满足条件
+   *
+   * @param value
+   */
+  isPositiveBigFloatMatchCondition<R extends boolean>(
+    value: any,
+    condition: (value: {
+      /**分子 */
+      numerator: string;
+      /**分母 */
+      denominator: string;
+    }) => R,
+  ): value is {
+    /**分子 */
+    numerator: string;
+    /**分母 */
+    denominator: string;
+  } {
+    // 对Fraction的支持
+    if (!(value && typeof value.denominator === "string" && typeof value.numerator === "string")) {
+      return false;
+    }
+    // 分母不能为 0
+    if (value.denominator === "0") {
+      return false;
+    }
+    return condition(value);
+  }
+
+  /**
+   * 判断输入值是否是非负浮点数，包含 0
+   *
+   * @param value
+   */
+  isPositiveBigFloatContainZero(
+    value: unknown,
+  ): value is {
+    /**分子 */
+    numerator: string;
+    /**分母 */
+    denominator: string;
+  } {
+    return this.isPositiveBigFloatMatchCondition(
+      value,
+      (v) =>
+        this.jsbiHelper.compareFraction(v, {
+          numerator: 0,
+          denominator: 888,
+        }) >= 0,
+    );
+  }
+
+  /**
+   * 判断输入值是否是正浮点数，不包含 0
+   *
+   * @param value
+   */
+  isPositiveBigFloatNotContainZero(
+    value: unknown,
+  ): value is {
+    /**分子 */
+    numerator: string;
+    /**分母 */
+    denominator: string;
+  } {
+    return this.isPositiveBigFloatMatchCondition(
+      value,
+      (v) =>
+        this.jsbiHelper.compareFraction(v, {
+          numerator: 0,
+          denominator: 888,
+        }) > 0,
+    );
   }
 
   /**

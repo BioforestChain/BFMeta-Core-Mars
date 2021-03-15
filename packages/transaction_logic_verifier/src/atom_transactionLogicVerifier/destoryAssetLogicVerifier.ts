@@ -62,13 +62,15 @@ export class DestoryAssetLogicVerifier extends TransactionLogicVerifier {
 
     const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
-    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+    const { eventLogicVerifier } = this;
 
-    this.eventLogicVerifier.listenEventAsset(cloneAccountsAssets, transaction, eventEmitter);
+    eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
 
-    this.eventLogicVerifier.listenEventDestoryAsset(transaction, accountGetterHelper, eventEmitter);
+    eventLogicVerifier.listenEventAsset(cloneAccountsAssets, transaction, eventEmitter);
 
-    await this.eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
+    eventLogicVerifier.listenEventDestoryAsset(transaction, accountGetterHelper, eventEmitter);
+
+    await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     return true;
   }

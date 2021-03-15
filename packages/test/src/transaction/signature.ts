@@ -15,7 +15,7 @@ async function getSignatureTransaction(sender: AccountModel) {
     "",
   );
   const data: BFChainCore.TxBodyJSON = {
-    version: 1,
+    version: bfchainCore.config.version,
     type: bfchainCore.transactionHelper.SIGNATURE, // 交易类型
     senderId: sender.address, // 发起者地址
     senderPublicKey: sender.publicKey, // 发起者公钥

@@ -9,6 +9,9 @@
       "path": "../model-block/tsconfig.json"
     },
     {
+      "path": "../model-common/tsconfig.json"
+    },
+    {
       "path": "../typings/tsconfig.json"
     },
     {

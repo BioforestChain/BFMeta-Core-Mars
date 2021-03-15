@@ -32,15 +32,17 @@ export class SetLnsRecordValueLogicVerifier extends TransactionLogicVerifier {
 
     const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
-    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+    const { eventLogicVerifier } = this;
 
-    this.eventLogicVerifier.listenEventSetLnsRecordValue(
+    eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+
+    eventLogicVerifier.listenEventSetLnsRecordValue(
       currentBlockHeight,
       accountGetterHelper,
       eventEmitter,
     );
 
-    await this.eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
+    await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     return true;
   }

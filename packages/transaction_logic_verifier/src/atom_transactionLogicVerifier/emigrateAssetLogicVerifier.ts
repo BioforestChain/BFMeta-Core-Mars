@@ -119,11 +119,13 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
 
     const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
-    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+    const { eventLogicVerifier } = this;
 
-    this.eventLogicVerifier.listenEventFrozenAccount(cloneAccountsInfo, eventEmitter);
+    eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
 
-    await this.eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
+    eventLogicVerifier.listenEventFrozenAccount(cloneAccountsInfo, eventEmitter);
+
+    await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     const assets = sender.accountAssets;
 
