@@ -99,7 +99,7 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
       throw new ConsensusException(NOT_MATCH, {
         to_compare_prop: `block version ${block.version}`,
         be_compare_prop: `blockChain version ${this.configHelper.version}`,
-        to_target: "body",
+        to_target: "block",
         be_target: "config",
         ...Function_Exception_Detail,
       });

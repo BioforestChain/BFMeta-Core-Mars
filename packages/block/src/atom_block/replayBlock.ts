@@ -127,6 +127,16 @@ export class ReplayBlockCore<T extends Block> {
         block,
       ));
 
+    if (block.version !== config.version) {
+      throw new ConsensusException(NOT_MATCH, {
+        to_compare_prop: `block version ${block.version}`,
+        be_compare_prop: `blockChain version ${config.version}`,
+        to_target: "block",
+        be_target: "config",
+        ...Function_Exception_Detail,
+      });
+    }
+
     if (block.height > 1) {
       const realRoundOfflineGeneratersHashMap = block.roundOfflineGeneratersHashMap;
       /// 主动生成掉块信息
