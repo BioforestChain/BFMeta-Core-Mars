@@ -23,6 +23,7 @@ import {
   INVALID_TRANSACTION_FROM_MAGIC,
   TRANSACTION_SENDER_SECOND_PUBLICKEY_ALREADY_CHANGE,
   NOT_MATCH,
+  PROP_SHOULD_LTE_FIELD,
 } from "@bfchain/core-util-exception";
 import {
   NewTransactionRefuseReason,
@@ -90,12 +91,11 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     } as const;
 
     // 校验交易版本号
-    if (transaction.version !== this.configHelper.version) {
-      throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: `transaction version ${transaction.version}`,
-        be_compare_prop: `blockChain version ${this.configHelper.version}`,
-        to_target: "body",
-        be_target: "config",
+    if (transaction.version > this.configHelper.version) {
+      throw new ConsensusException(PROP_SHOULD_LTE_FIELD, {
+        prop: `transaction ${transaction.version}`,
+        target: "transaction",
+        field: `blockChain version ${this.configHelper.version}`,
         ...Function_Exception_Detail,
       });
     }
