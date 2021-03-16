@@ -4,7 +4,7 @@ import { Writer, Reader, util } from "@bfchain/protobuf";
 import { Injectable, Inject, deepMix } from "@bfchain/util";
 import { EventLogicVerifier } from "@bfchain/core-transaction-logic-verifier";
 import { BLOCK_FACTORY_TYPES_MAP, GenesisBlockFactory } from "@bfchain/core-block";
-import { BLOCK_TYPES_BASE, Fraction, GenesisAssetModel } from "@bfchain/core-model";
+import { BLOCK_TYPES_BASE, GenesisAssetModel, FractionBigIntModel } from "@bfchain/core-model";
 
 const GenesisAssetModelSetup = GenesisAssetModel.$type.setup();
 GenesisAssetModel.encode = GenesisAssetModelSetup.encode = function GenesisAssetModel$encode(
@@ -291,7 +291,6 @@ export class V2_Patch extends PatchBase {
     switch (oldVersion) {
       case 0: {
         {
-          let oldAsset: BFChainCore.DeepPartial<BFChainCore.GenesisBlockAssetJSON> | undefined;
           /**在合适的条件下，更新共识
            * 如果需要，执行数据库升级。。。。
            */
@@ -299,11 +298,11 @@ export class V2_Patch extends PatchBase {
             this.patchEffectiveAfterHeight,
             () => {
               const oldBlock = this.config.getHookGenesisBlock(this.consensusVersion) || {};
-              oldBlock.asset = deepMix((oldAsset = oldBlock.asset), {
+              oldBlock.asset = deepMix(oldBlock.asset, {
                 genesisAsset: {
-                  maxMultipleOfAssetAndMainAsset: Fraction.fromObject({
-                    numerator: 100000,
-                    denominator: 1,
+                  maxMultipleOfAssetAndMainAsset: FractionBigIntModel.fromObject({
+                    numerator: "100000",
+                    denominator: "1",
                   }),
                 },
               });
@@ -312,9 +311,7 @@ export class V2_Patch extends PatchBase {
               BLOCK_FACTORY_TYPES_MAP.FK.set(V2_GenesisBlockFactory, BLOCK_TYPES_BASE.GENESIS);
             },
             () => {
-              const oldBlock = this.config.getHookGenesisBlock(this.consensusVersion) || {};
-              oldBlock.asset = oldAsset;
-              this.config.setHookGenesisBlock(this.consensusVersion, oldBlock);
+              this.config.rollBackHookGenesisBlock(this.consensusVersion);
               BLOCK_FACTORY_TYPES_MAP.KF.set(BLOCK_TYPES_BASE.GENESIS, GenesisBlockFactory);
               BLOCK_FACTORY_TYPES_MAP.FK.set(GenesisBlockFactory, BLOCK_TYPES_BASE.GENESIS);
             },

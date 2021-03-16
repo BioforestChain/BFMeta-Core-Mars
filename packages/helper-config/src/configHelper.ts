@@ -16,18 +16,16 @@ export class ConfigHelper {
       | GenesisBlock
       | BFChainCore.BlockJSON<BFChainCore.GenesisBlockAssetJSON>,
     public business: string,
-  ) {}
+  ) {
+    this._hookBlockMap.set(genesisBlock.version, genesisBlock);
+  }
   private hookedGenesisBlock: BFChainCore.BlockJSON<BFChainCore.GenesisBlockAssetJSON> = this
     .genesisBlock; //deepMix(this.genesisBlock,get)
   private _hookBlockMap = new Map<
     number,
     BFChainCore.DeepPartial<BFChainCore.BlockJSON<BFChainCore.GenesisBlockAssetJSON>>
   >();
-  setHookGenesisBlock(
-    version: number,
-    hookBlock: BFChainCore.DeepPartial<BFChainCore.BlockJSON<BFChainCore.GenesisBlockAssetJSON>>,
-  ) {
-    this._hookBlockMap.set(version, hookBlock);
+  private _applyHookGenesisBlock() {
     const vbList = [...this._hookBlockMap].sort((vb1, vb2) => vb1[0] - vb2[0]);
     this.hookedGenesisBlock = deepMix(
       this.genesisBlock,
@@ -35,8 +33,20 @@ export class ConfigHelper {
     );
     cleanAllGetterCache(this);
   }
+  setHookGenesisBlock(
+    version: number,
+    hookBlock: BFChainCore.DeepPartial<BFChainCore.BlockJSON<BFChainCore.GenesisBlockAssetJSON>>,
+  ) {
+    this._hookBlockMap.set(version, hookBlock);
+    this._applyHookGenesisBlock();
+  }
   getHookGenesisBlock(version: number) {
     return this._hookBlockMap.get(version);
+  }
+  rollBackHookGenesisBlock(version: number) {
+    if (this._hookBlockMap.delete(version)) {
+      this._applyHookGenesisBlock();
+    }
   }
 
   /**获取区块版本号 */
