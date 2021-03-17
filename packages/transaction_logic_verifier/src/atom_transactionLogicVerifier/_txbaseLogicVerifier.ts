@@ -93,8 +93,8 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     // 校验交易版本号
     if (transaction.version > this.configHelper.version) {
       throw new ConsensusException(PROP_SHOULD_LTE_FIELD, {
-        prop: `transaction ${transaction.version}`,
-        target: "transaction",
+        prop: `version ${transaction.version}`,
+        target: `transaction ${transaction.signature}`,
         field: `blockChain version ${this.configHelper.version}`,
         ...Function_Exception_Detail,
       });
