@@ -310,6 +310,7 @@ export class ConfigHelper {
       averageComputingPower: this.averageComputingPower,
       tpowOfWorkExemptionBlocks: this.tpowOfWorkExemptionBlocks,
       transactionPowOfWorkConfig: this.transactionPowOfWorkConfig,
+      maxMultipleOfAssetAndMainAsset: this.maxMultipleOfAssetAndMainAsset,
     };
   }
   //#endregion

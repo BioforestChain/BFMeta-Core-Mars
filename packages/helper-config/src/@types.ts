@@ -31,5 +31,6 @@ declare namespace BFChainCore {
     averageComputingPower: number;
     tpowOfWorkExemptionBlocks: number;
     transactionPowOfWorkConfig: BFChainCore.TransactionPowOfWorkConfigJSON;
+    maxMultipleOfAssetAndMainAsset: BFChainCore.FractionJSON<string>;
   }>;
 }
