@@ -56,6 +56,10 @@ declare namespace BFChainCore {
     statisticInfo: StatisticInfoJSON;
     /**锻造者掉线列表 */
     roundOfflineGeneratersHashMap: RoundOfflineGeneratersHashMap;
+    /**交易的发起者签名 */
+    signatureBuffer: Uint8Array;
+    /**锻造公钥 */
+    generatorPublicKeyBuffer: Uint8Array;
   }
   interface BlockJSON<AssetJSON extends object = object>
     extends BlockWithoutTransactionJSON<AssetJSON> {

@@ -238,6 +238,8 @@ export class Block<AJ extends object = object>
       asset: this.asset.toJSON() as AJ,
       statisticInfo: this.statisticInfo.toJSON(),
       roundOfflineGeneratersHashMap: this.roundOfflineGeneratersHashMap,
+      signatureBuffer: this.signatureBuffer,
+      generatorPublicKeyBuffer: this.generatorPublicKeyBuffer,
     };
 
     this.generatorSecondPublicKey && (res.generatorSecondPublicKey = this.generatorSecondPublicKey);
