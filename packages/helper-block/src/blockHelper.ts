@@ -1,11 +1,11 @@
-import { Injectable, Inject, getHexFromArrayBuffer, decodeBinaryToHex } from "@bfchain/util";
-import { ConfigHelper } from "@bfchain/core-helper-config";
 import { BaseHelper } from "@bfchain/core-helper-type";
 import { JSBIHelper } from "@bfchain/core-helper-bigint";
-import { PROP_SHOULD_LTE_FIELD, OUT_OF_RANGE } from "@bfchain/core-util-exception-errorcode";
-import { CoreExceptionGenerator, NOT_EXIST } from "@bfchain/core-util-exception";
+import { ConfigHelper } from "@bfchain/core-helper-config";
 import { BLOCK_TYPES_BASE, Block } from "@bfchain/core-model-block";
 import { AccountBaseHelper } from "@bfchain/core-helper-account-base";
+import { CoreExceptionGenerator, NOT_EXIST, NOT_MATCH } from "@bfchain/core-util-exception";
+import { PROP_SHOULD_LTE_FIELD, OUT_OF_RANGE } from "@bfchain/core-util-exception-errorcode";
+import { Injectable, Inject, getHexFromArrayBuffer, decodeBinaryToHex } from "@bfchain/util";
 type RoundLastBlock = import("@bfchain/core-model-block").RoundLastBlock;
 
 const {
@@ -14,6 +14,7 @@ const {
   ArgumentIllegalException,
   OutOfRangeException,
   IllegalStateException,
+  ConsensusException,
 } = CoreExceptionGenerator("HELPER", "blockHelper");
 
 @Injectable()
@@ -110,6 +111,25 @@ export class BlockHelper {
           `Invalid ${taskLabel} miss signSignature or senderSecondPublicKey`,
         );
       }
+    }
+  }
+
+  /**
+   * 校验区块版本信息
+   *
+   * @param block
+   * @param config
+   */
+  verifyBlockVersion(block: BFChainCore.Block, config = this.config) {
+    // FIXME: 区块暂时向下兼容
+    if (block.version > config.version) {
+      throw new ConsensusException(NOT_MATCH, {
+        to_compare_prop: `block version ${block.version}`,
+        be_compare_prop: `blockChain version ${config.version}`,
+        to_target: "block",
+        be_target: "config",
+        function: "verifyBlockVersion",
+      });
     }
   }
 

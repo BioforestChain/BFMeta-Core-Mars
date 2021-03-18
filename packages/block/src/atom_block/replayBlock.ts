@@ -127,16 +127,7 @@ export class ReplayBlockCore<T extends Block> {
         block,
       ));
 
-    // FIXME: 区块暂时向下兼容
-    if (block.version > config.version) {
-      throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: `block version ${block.version}`,
-        be_compare_prop: `blockChain version ${config.version}`,
-        to_target: "block",
-        be_target: "config",
-        ...Function_Exception_Detail,
-      });
-    }
+    this.blockHelper.verifyBlockVersion(block, config);
 
     if (block.height > 1) {
       const realRoundOfflineGeneratersHashMap = block.roundOfflineGeneratersHashMap;

@@ -94,16 +94,7 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
       function: "logicVerify",
     } as const;
 
-    // 校验区块版本号
-    if (block.version !== this.configHelper.version) {
-      throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: `block version ${block.version}`,
-        be_compare_prop: `blockChain version ${this.configHelper.version}`,
-        to_target: "block",
-        be_target: "config",
-        ...Function_Exception_Detail,
-      });
-    }
+    this.blockHelper.verifyBlockVersion(block, this.configHelper);
 
     if (!transactionGetterHelper) {
       throw new NoFoundException(NOT_EXIST, {
