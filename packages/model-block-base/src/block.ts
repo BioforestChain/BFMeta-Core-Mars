@@ -237,9 +237,7 @@ export class Block<AJ extends object = object>
       remark: this.remark,
       asset: this.asset.toJSON() as AJ,
       statisticInfo: this.statisticInfo.toJSON(),
-      roundOfflineGeneratersHashMap: this.roundOfflineGeneratersHashMap,
-      signatureBuffer: this.signatureBuffer,
-      generatorPublicKeyBuffer: this.generatorPublicKeyBuffer,
+      roundOfflineGeneratersHashMap: this.roundOfflineGeneratersHashMap
     };
 
     this.generatorSecondPublicKey && (res.generatorSecondPublicKey = this.generatorSecondPublicKey);
