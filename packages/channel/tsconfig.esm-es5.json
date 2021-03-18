@@ -15,9 +15,6 @@
       "path": "../model/tsconfig.esm-es5.json"
     },
     {
-      "path": "../patch/tsconfig.esm-es5.json"
-    },
-    {
       "path": "../transaction/tsconfig.esm-es5.json"
     },
     {

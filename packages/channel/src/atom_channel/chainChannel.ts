@@ -24,7 +24,6 @@ import {
   GenesisBlock,
 } from "@bfchain/core-model";
 import { Message } from "@bfchain/protobuf";
-import { PatchInstaller } from "@bfchain/core-patch";
 import { ChainChannelHelper } from "./chainChannelHelper";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 import { ConfigHelper, BaseHelper, ChainTimeHelper } from "@bfchain/core-helper";
@@ -51,7 +50,6 @@ export abstract class ChainChannelBase
   public abstract canBroadcastBlock: boolean;
   protected abstract config: ConfigHelper;
   protected abstract baseHelper: BaseHelper;
-  protected abstract patchInstaller: PatchInstaller;
   private _blockGetterHelper?: BFChainCore.BlockGetterHelperSimpleInterface & {
     maxHeight: number;
     lastBlock: Block;
@@ -148,8 +146,6 @@ export class ChainChannel<
   protected baseHelper!: BaseHelper;
   @Inject(ChainTimeHelper)
   protected timeHelper!: ChainTimeHelper;
-  @Inject(PatchInstaller)
-  protected patchInstaller!: PatchInstaller;
   @Inject(ChainChannelHelper)
   protected chainChannelHelper!: ChainChannelHelper;
   constructor(
@@ -200,8 +196,9 @@ export class ChainChannel<
     return this._maybeHeight;
   }
   /**最高的补丁共识版本 */
+  protected _lastConsensusVersion = 1;
   get lastConsensusVersion() {
-    return this.patchInstaller.lastConsensusVersion;
+    return this._lastConsensusVersion;
   }
   /**节点的地址身份 */
   protected _address = "";

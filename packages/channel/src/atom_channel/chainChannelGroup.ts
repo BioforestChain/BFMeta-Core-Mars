@@ -30,7 +30,6 @@ import {
   QueryBlockReturnModel,
   QueryTransactionReturnModel,
 } from "@bfchain/core-model";
-import { PatchInstaller } from "@bfchain/core-patch";
 import { ChainChannelHelper } from "./chainChannelHelper";
 import { ChainChannel, ChainChannelBase } from "./chainChannel";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
@@ -110,7 +109,6 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
   @Inject(ModuleStroge) private moduleMap!: ModuleStroge;
   @Inject(ChainTimeHelper) private timeHelper!: ChainTimeHelper;
   @Inject(ChainChannelHelper) private helper!: ChainChannelHelper;
-  @Inject(PatchInstaller) protected patchInstaller!: PatchInstaller;
   @Inject(TransactionHelper) private transactionHelper!: TransactionHelper;
 
   protected chainChannelSet = new Set<DH>();
@@ -1239,8 +1237,9 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     return this._maybeHeight;
   }
   /**最高的补丁共识版本 */
+  protected _lastConsensusVersion = 1;
   get lastConsensusVersion() {
-    return this.patchInstaller.lastConsensusVersion;
+    return this._lastConsensusVersion;
   }
   @cacheGetter
   get onMaybeHeightChanged(): (

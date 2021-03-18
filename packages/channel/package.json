@@ -16,7 +16,6 @@
   "dependencies": {
     "@bfchain/core-helper": "5.19.77",
     "@bfchain/core-model": "5.19.77",
-    "@bfchain/core-patch": "5.19.77",
     "@bfchain/core-transaction": "5.19.77",
     "@bfchain/core-typings": "5.19.76",
     "@bfchain/core-util-exception-errorcode": "5.19.76"

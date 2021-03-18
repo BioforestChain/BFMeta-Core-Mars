@@ -12,9 +12,6 @@
       "path": "../model/tsconfig.json"
     },
     {
-      "path": "../patch/tsconfig.json"
-    },
-    {
       "path": "../transaction/tsconfig.json"
     },
     {
