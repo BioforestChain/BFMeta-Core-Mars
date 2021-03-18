@@ -420,6 +420,7 @@ declare namespace BFChainCore {
     addChainChannel: [CC];
     removeChainChannel: [CC];
     maybeHeightChanged: [number, number | undefined];
+    consensusVersionChanged: [number];
   };
   interface ChainChannelBase {
     maybeHeight: number;

@@ -1265,6 +1265,12 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       this._chainChannelEvents.emit("maybeHeightChanged", newMaybeHeight, version);
     }
   }
+  private _tryChangeConsensusVersion(consensusVersion: number) {
+    if (this._lastConsensusVersion !== consensusVersion) {
+      this._lastConsensusVersion = consensusVersion;
+      this._chainChannelEvents.emit("consensusVersionChanged", consensusVersion);
+    }
+  }
   private _initMaybeHeightWatcher() {
     const onChainChannelNewBlock: BFChainUtil.EventHandler<
       NewBlockArgModel,
@@ -1286,6 +1292,9 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     this._chainChannelEvents.on("addChainChannel", (chainChannel) => {
       if (this._maybeHeight < chainChannel.maybeHeight) {
         this._tryChangeMaybeHeight(chainChannel.maybeHeight);
+      }
+      if(this._lastConsensusVersion < chainChannel.lastConsensusVersion) {
+        this._tryChangeConsensusVersion(chainChannel.lastConsensusVersion);
       }
       /// 监听其高度的变化来跟随其maybeHeight
       chainChannel.on("onNewBlock", onChainChannelNewBlock);
