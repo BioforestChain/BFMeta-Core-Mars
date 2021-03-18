@@ -284,7 +284,7 @@ export class V2_Patch extends PatchBase {
   eventLogicVerifier!: EventLogicVerifier;
 
   readonly name = "patch-v2";
-  readonly patchEffectiveAfterHeight = 88888888;
+  readonly patchEffectiveAfterHeight = 144486;
   protected _version = 1;
   readonly consensusVersion = 2;
   async upgradeHandler(oldVersion: number, newVersion: number) {
