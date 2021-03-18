@@ -127,7 +127,8 @@ export class ReplayBlockCore<T extends Block> {
         block,
       ));
 
-    if (block.version !== config.version) {
+    // FIXME: 区块暂时向下兼容
+    if (block.version > config.version) {
       throw new ConsensusException(NOT_MATCH, {
         to_compare_prop: `block version ${block.version}`,
         be_compare_prop: `blockChain version ${config.version}`,
