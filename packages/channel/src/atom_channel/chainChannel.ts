@@ -1,5 +1,3 @@
-import { ConfigHelper, BaseHelper, ChainTimeHelper } from "@bfchain/core-helper";
-import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 import {
   RESPONSE_STATUS,
   ResponseModel,
@@ -24,20 +22,13 @@ import {
   BlockQueryOptionsModel,
   SomeBlockModel,
   GenesisBlock,
-  NewTransactionRefuseReason,
 } from "@bfchain/core-model";
 import { Message } from "@bfchain/protobuf";
+import { PatchInstaller } from "@bfchain/core-patch";
 import { ChainChannelHelper } from "./chainChannelHelper";
-import {
-  QueneEventEmitterPro,
-  Inject,
-  PromiseOut,
-  sleep,
-  unsleep,
-  Resolvable,
-  Aborter,
-  safePromiseOffThen,
-} from "@bfchain/util";
+import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
+import { ConfigHelper, BaseHelper, ChainTimeHelper } from "@bfchain/core-helper";
+import { QueneEventEmitterPro, Inject, PromiseOut, sleep, Resolvable } from "@bfchain/util";
 
 const {
   RefuseException,
@@ -53,12 +44,14 @@ export abstract class ChainChannelBase
   extends QueneEventEmitterPro<BFChainCore.ChainChannelHanlderEventMap>
   implements BFChainCore.ChainChannelBase {
   public abstract maybeHeight: number;
+  public abstract lastConsensusVersion: number;
   public abstract canQueryTransaction: boolean;
   public abstract canQueryBlock: boolean;
   public abstract canBroadcastTransaction: boolean;
   public abstract canBroadcastBlock: boolean;
   protected abstract config: ConfigHelper;
   protected abstract baseHelper: BaseHelper;
+  protected abstract patchInstaller: PatchInstaller;
   private _blockGetterHelper?: BFChainCore.BlockGetterHelperSimpleInterface & {
     maxHeight: number;
     lastBlock: Block;
@@ -149,14 +142,16 @@ export class ChainChannel<
   }
   @Inject("bfchain-core:TransactionCore")
   protected transactionCore!: import("@bfchain/core-transaction").TransactionCore;
-  @Inject(ChainChannelHelper)
-  protected chainChannelHelper!: ChainChannelHelper;
   @Inject(ConfigHelper)
   protected config!: ConfigHelper;
   @Inject(BaseHelper)
   protected baseHelper!: BaseHelper;
   @Inject(ChainTimeHelper)
   protected timeHelper!: ChainTimeHelper;
+  @Inject(PatchInstaller)
+  protected patchInstaller!: PatchInstaller;
+  @Inject(ChainChannelHelper)
+  protected chainChannelHelper!: ChainChannelHelper;
   constructor(
     @Inject(CHANNEL_ARGS.ENDPOINT)
     public endpoint: BFChainCore.ChannelEndpointInterface,
@@ -203,6 +198,10 @@ export class ChainChannel<
   protected _maybeHeight = 1;
   get maybeHeight() {
     return this._maybeHeight;
+  }
+  /**最高的补丁共识版本 */
+  get lastConsensusVersion() {
+    return this.patchInstaller.lastConsensusVersion;
   }
   /**节点的地址身份 */
   protected _address = "";

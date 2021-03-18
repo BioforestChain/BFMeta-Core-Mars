@@ -13,13 +13,11 @@ import {
   EventEmitter,
   AfterInit,
   EasyMap,
-  cacheObjectGetter,
   ModuleStroge,
   safePromiseThen,
   safePromiseOffThen,
   OnInit,
 } from "@bfchain/util";
-import { BaseHelper, ChainTimeHelper, ConfigHelper, TransactionHelper } from "@bfchain/core-helper";
 import {
   Block,
   CommonBlock,
@@ -31,12 +29,16 @@ import {
   NewTransactionReturnModel,
   QueryBlockReturnModel,
   QueryTransactionReturnModel,
-  UsernameTransaction,
 } from "@bfchain/core-model";
-import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
+import { PatchInstaller } from "@bfchain/core-patch";
+import { ChainChannelHelper } from "./chainChannelHelper";
 import { ChainChannel, ChainChannelBase } from "./chainChannel";
+import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
+import { GroupQueryTransactionsBuilder, GroupQueryBlockBuilder } from "./GroupRequesterBuilder";
+import { BaseHelper, ChainTimeHelper, ConfigHelper, TransactionHelper } from "@bfchain/core-helper";
+import type { PromiseTimeout } from "./PromiseTimeout";
+
 const {
-  ResponseException,
   AbortException,
   InterruptedException,
   error,
@@ -47,15 +49,12 @@ const {
   TimeOutException,
 } = CoreExceptionGenerator("channel", "chainChannelGroup");
 
-import { GroupQueryTransactionsBuilder, GroupQueryBlockBuilder } from "./GroupRequesterBuilder";
-import { ChainChannelHelper } from "./chainChannelHelper";
-import type { PromiseTimeout } from "./PromiseTimeout";
-
 export const CHAIN_CHANNEL_GROUP_ARGS = {
   GROUP_NAME: Symbol("groupName"),
   CHANNEL_LIST: Symbol("channelList"),
   OPTIONS: Symbol("options"),
 };
+
 /**
  * 批量双工通讯管理器
  */
@@ -106,12 +105,13 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
   bfAfterInit() {
     this._initMaybeHeightWatcher();
   }
-  @Inject(ModuleStroge) private moduleMap!: ModuleStroge;
   @Inject(BaseHelper) protected baseHelper!: BaseHelper;
   @Inject(ConfigHelper) protected config!: ConfigHelper;
+  @Inject(ModuleStroge) private moduleMap!: ModuleStroge;
   @Inject(ChainTimeHelper) private timeHelper!: ChainTimeHelper;
-  @Inject(TransactionHelper) private transactionHelper!: TransactionHelper;
   @Inject(ChainChannelHelper) private helper!: ChainChannelHelper;
+  @Inject(PatchInstaller) protected patchInstaller!: PatchInstaller;
+  @Inject(TransactionHelper) private transactionHelper!: TransactionHelper;
 
   protected chainChannelSet = new Set<DH>();
   get size() {
@@ -1237,6 +1237,10 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
   private _maybeHeight = 1;
   get maybeHeight() {
     return this._maybeHeight;
+  }
+  /**最高的补丁共识版本 */
+  get lastConsensusVersion() {
+    return this.patchInstaller.lastConsensusVersion;
   }
   @cacheGetter
   get onMaybeHeightChanged(): (

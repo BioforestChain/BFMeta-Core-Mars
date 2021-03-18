@@ -423,6 +423,7 @@ declare namespace BFChainCore {
   };
   interface ChainChannelBase {
     maybeHeight: number;
+    lastConsensusVersion: number;
     toBlockGetterHelper(opts?: {
       maxHeight?: number;
       lastBlock?: Block;
