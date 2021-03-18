@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-helper-milestones",
-  "version": "5.19.80",
+  "version": "5.19.81",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,10 +14,10 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-helper-config": "5.19.80",
-    "@bfchain/core-helper-type": "5.19.80",
-    "@bfchain/core-typings": "5.19.80",
-    "@bfchain/core-util-exception-errorcode": "5.19.80"
+    "@bfchain/core-helper-config": "5.19.81",
+    "@bfchain/core-helper-type": "5.19.81",
+    "@bfchain/core-typings": "5.19.81",
+    "@bfchain/core-util-exception-errorcode": "5.19.81"
   },
   "gitHead": "ef41eb359371b11aafbec0516df1eba01f16ebfd"
 }
