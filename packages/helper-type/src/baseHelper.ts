@@ -489,25 +489,18 @@ export class BaseHelper {
     if (strArray.length !== 4) {
       return false;
     }
-    if (!this.isValidAssetType(strArray[0])) {
+    if (!/^[A-Z]{3,5}$/.test(strArray[0])) {
       return false;
     }
-    if (!this.isValidUpperChainName(strArray[1])) {
+    if (!/^[A-Z]{3,8}$/.test(strArray[1])) {
       return false;
     }
     const baseType = strArray[2];
-    if (!(this.isUpperCaseString(baseType) && baseType.length === 3)) {
+    if (!(baseType === baseType.trim().toUpperCase() && baseType.length === 3)) {
       return false;
     }
     const serialNumber = strArray[3];
-
-    if (
-      !(
-        this.isString(serialNumber) &&
-        this.isMakeUpWithNumber(serialNumber) &&
-        serialNumber.length === 2
-      )
-    ) {
+    if (!(/^[0-9]+$/.test(serialNumber) && serialNumber.length === 2)) {
       return false;
     }
     return true;
@@ -558,8 +551,7 @@ export class BaseHelper {
     if (!this.isString(chainName)) {
       return false;
     }
-    const pattern = new RegExp("^[A-Z]{3,8}$");
-    return pattern.test(chainName);
+    return /^[A-Z]{3,8}$/.test(chainName);
   }
 
   /**
@@ -571,8 +563,7 @@ export class BaseHelper {
     if (!this.isString(chainName)) {
       return false;
     }
-    const pattern = new RegExp("^[a-z]{3,8}$");
-    return pattern.test(chainName);
+    return /^[a-z]{3,8}$/.test(chainName);
   }
 
   /**
@@ -584,8 +575,7 @@ export class BaseHelper {
     if (!this.isString(assetType)) {
       return false;
     }
-    const pattern = new RegExp("^[A-Z]{3,5}$");
-    return pattern.test(assetType);
+    return /^[A-Z]{3,5}$/.test(assetType);
   }
 
   /**
@@ -594,17 +584,10 @@ export class BaseHelper {
    * @param magic
    */
   isValidChainMagic(magic: string) {
-    // if (!this.isString(magic)) {
-    //   return false;
-    // }
-    // const pattern = new RegExp("^[A-Z0-9]{9,16}$");
-    // return pattern.test(magic);
-
     if (!this.isString(magic)) {
       return false;
     }
-    const pattern = new RegExp("^[A-Z0-9]{5}$");
-    if (!pattern.test(magic)) {
+    if (!/^[A-Z0-9]{5}$/.test(magic)) {
       return false;
     }
     const realMagic = magic.slice(0, 4);
@@ -623,16 +606,10 @@ export class BaseHelper {
    * @param dappid
    */
   isValidDAppId(dappid: string) {
-    // if (!this.isString(dappid)) {
-    //   return false;
-    // }
-    // const pattern = new RegExp("^[A-Z0-9]{17,32}$");
-    // return pattern.test(dappid);
     if (!this.isString(dappid)) {
       return false;
     }
-    const pattern = new RegExp("^[A-Z0-9]{8}$");
-    if (!pattern.test(dappid)) {
+    if (!/^[A-Z0-9]{8}$/.test(dappid)) {
       return false;
     }
     const realDAppid = dappid.slice(0, 7);
@@ -648,19 +625,20 @@ export class BaseHelper {
   /**
    * 是否是合法的创世受托人名
    *
+   * 大小写字母、数字、下划线 1-20
+   *
    * @param username
    */
   isValidGenesisUsername(username: any) {
     if (!this.isString(username)) {
       return false;
     }
-    // 大小写字母、数字、下划线 1-20
-    const allowSymbols = /^[A-Za-z0-9_]{1,20}$/;
-    return allowSymbols.test(username);
+    return /^[A-Za-z0-9_]{1,20}$/.test(username);
   }
 
   /**
-   * 用户名是否合法：
+   * 用户名是否合法
+   *
    * 不能包含本链名
    * 只能由大小写字母、数字、下划线 1-20
    *
@@ -676,9 +654,13 @@ export class BaseHelper {
     return true;
   }
 
+  /**
+   * 数字组成
+   *
+   * @param stringNumber
+   */
   isMakeUpWithNumber(stringNumber: string) {
-    const allowSymbols = /^[0-9]+$/;
-    return allowSymbols.test(stringNumber);
+    return /^[0-9]+$/.test(stringNumber);
   }
 
   /**
@@ -948,8 +930,7 @@ export class BaseHelper {
    * @param value
    */
   isLowerCase(value: string) {
-    const pattern = /^[a-z]+$/;
-    return this.isString(value) && pattern.test(value);
+    return this.isString(value) && /^[a-z]+$/.test(value);
   }
 
   /**
@@ -958,8 +939,7 @@ export class BaseHelper {
    * @param value
    */
   isUpperCaseOrNumber(value: string) {
-    const pattern = /^[A-Z0-9]+$/;
-    return this.isString(value) && pattern.test(value);
+    return this.isString(value) && /^[A-Z0-9]+$/.test(value);
   }
 
   /**
@@ -968,8 +948,7 @@ export class BaseHelper {
    * @param value
    */
   isUpperCaseOrLowerCase(value: string) {
-    const pattern = /^[A-Za-z]+$/;
-    return this.isString(value) && pattern.test(value);
+    return this.isString(value) && /^[A-Za-z]+$/.test(value);
   }
 
   /**
@@ -978,8 +957,7 @@ export class BaseHelper {
    * @param value
    */
   isUpperCaseOrLowerCaseOrNumber(value: string) {
-    const pattern = /^[A-Za-z0-9]+$/;
-    return this.isString(value) && pattern.test(value);
+    return this.isString(value) && /^[A-Za-z0-9]+$/.test(value);
   }
 
   /**
@@ -988,8 +966,7 @@ export class BaseHelper {
    * @param value
    */
   isStartWithOrEndWithPoint(value: string) {
-    const pattern = /^[^\.].*[^\.]$/;
-    return !pattern.test(value);
+    return !/^[^\.].*[^\.]$/.test(value);
   }
 
   /**
@@ -998,8 +975,7 @@ export class BaseHelper {
    * @param value
    */
   isLowerCaseOrNumber(value: string) {
-    const patternm = /^[a-z0-9]+$/;
-    return patternm.test(value);
+    return /^[a-z0-9]+$/.test(value);
   }
 
   /**
@@ -1008,8 +984,7 @@ export class BaseHelper {
    * @param value
    */
   isLowerCaseOrNumberOrUnderline(value: string) {
-    const patternn = /^[a-z0-9][a-z0-9_]*[a-z0-9]+$/;
-    return patternn.test(value);
+    return /^[a-z0-9][a-z0-9_]*[a-z0-9]+$/.test(value);
   }
 
   /**
