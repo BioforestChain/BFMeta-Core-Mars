@@ -2,6 +2,7 @@ import { deepMix } from "@bfchain/util-deepmix";
 import { Injectable } from "@bfchain/util-dep-inject";
 import { FractionBigIntModel } from "@bfchain/core-model-common";
 import { cacheGetter, cleanAllGetterCache } from "@bfchain/util-decorator";
+import { MapEventEmitter as EventEmitter } from "@bfchain/util-event-map-emitter";
 type GenesisBlock = import("@bfchain/core-model-block").GenesisBlock;
 
 export enum NetType {
@@ -19,6 +20,11 @@ export class ConfigHelper {
   ) {
     this._hookBlockMap.set(genesisBlock.version, genesisBlock);
   }
+
+  readonly events = new EventEmitter<{
+    hookGenesisBlockApply: [BFChainCore.ConfigHelper];
+  }>();
+
   private hookedGenesisBlock: BFChainCore.BlockJSON<BFChainCore.GenesisBlockAssetJSON> = this
     .genesisBlock; //deepMix(this.genesisBlock,get)
   private _hookBlockMap = new Map<
@@ -31,6 +37,8 @@ export class ConfigHelper {
       this.genesisBlock,
       ...vbList.map((vb) => ({ ...vb[1], version: vb[0] })),
     );
+    //HookGenesisBlock更新生效，推送事件
+    this.events.emit("hookGenesisBlockApply", this.toJSON());
     cleanAllGetterCache(this);
   }
   setHookGenesisBlock(
