@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-model-common",
-  "version": "5.19.83-ch.0",
+  "version": "5.19.83",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,8 +14,8 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-model-cacher": "5.19.83-ch.0",
-    "@bfchain/core-typings": "5.19.83-ch.0"
+    "@bfchain/core-model-cacher": "5.19.83",
+    "@bfchain/core-typings": "5.19.83"
   },
   "gitHead": "ef41eb359371b11aafbec0516df1eba01f16ebfd"
 }
