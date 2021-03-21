@@ -37,9 +37,9 @@ export class ConfigHelper {
       this.genesisBlock,
       ...vbList.map((vb) => ({ ...vb[1], version: vb[0] })),
     );
+    cleanAllGetterCache(this);
     //HookGenesisBlock更新生效，推送事件
     this.events.emit("hookGenesisBlockApply", this.toJSON());
-    cleanAllGetterCache(this);
   }
   setHookGenesisBlock(
     version: number,
