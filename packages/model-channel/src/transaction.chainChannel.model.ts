@@ -71,6 +71,9 @@ export class TransactionQueryOptions
   /**在range中的元素 */
   @Field.d(TransactionQueryOptions.INC++, "string", "optional")
   range?: string;
+  /**账户地址 */
+  @Field.d(TransactionQueryOptions.INC++, "string", "optional")
+  address?: string;
   static fromObject<T extends Message>(
     this: BFChainProtobuf.Constructor<T>,
     object: BFChainProtobuf.ObjectFromType<TransactionQueryOptions>,
@@ -99,6 +102,7 @@ export class TransactionQueryOptions
       range: this.range,
       offset: this.offset,
       limit: this.limit,
+      address: this.address,
     };
 
     return res;
