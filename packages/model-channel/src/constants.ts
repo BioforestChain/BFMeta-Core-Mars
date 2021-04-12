@@ -8,8 +8,6 @@ export enum RESPONSE_STATUS {
 export enum BLOCKCHAIN_STATUS {
   /**离线：不可用 */
   OFFLINE,
-  /**重启中 */
-  RESTARTING,
   /**自由状态，有空闲资源可用 */
   FREE,
   /**繁忙：重建区块链 */

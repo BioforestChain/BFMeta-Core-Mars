@@ -45,6 +45,8 @@ declare namespace BFChainCore {
   // #region
   type MachineStatusJSON = {
     loadingModules: number;
+    /**重启中... */
+    restarting: number;
     rebuilding: number;
     peerScan: number;
     checkisync: number;
