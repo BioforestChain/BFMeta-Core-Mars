@@ -11,32 +11,34 @@ export const DEFAULT_CONSTANTS: BFChainCore.DefaultConstantsJSON = {
   machineStatus: {
     // 加载模块
     loadingModules: 0,
+    /**重启中 */
+    restarting: 1,
     // 加载本地区块，重建区块rebuilding，计算权益相关
-    rebuilding: 1,
+    rebuilding: 2,
     // 扫描节点
-    peerScan: 2,
+    peerScan: 3,
     // 检查是否启动同步
-    checkisync: 3,
+    checkisync: 4,
     // ip共识，获取自己的外网ip并保存
-    peerConsensus: 4,
+    peerConsensus: 5,
     // 解禁定时器
-    unBanSetInterval: 5,
+    unBanSetInterval: 6,
     // 同步进度
-    syncing: 6,
+    syncing: 7,
     // 等待打块
-    looping: 7,
+    looping: 8,
     // 接收区块中
-    receivedBlock: 8,
+    receivedBlock: 9,
     // 正在验证收到的区块
-    verifyBlock: 9,
+    verifyBlock: 10,
     // 正在处理交易
-    dealTransaction: 10,
+    dealTransaction: 11,
     // 正在出块
-    createBlock: 11,
+    createBlock: 12,
     // 正在发送区块
-    sendingBlock: 12,
+    sendingBlock: 13,
     // 磁盘空间不足
-    insufficientDiskSpace: 13,
+    insufficientDiskSpace: 14,
   },
   // 禁用的数字资产名称、缩写
   disableAssetType: [
