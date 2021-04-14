@@ -436,45 +436,11 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       resultGenerator.on("error", offCatch);
     }
 
-    const getChainChannelTimeout = this.helper.getChainChannelTimeout;
-    /**私有内部类 */
-    class AddChainChannelOptions implements BFChainCore.ChannelRequestOptions<DH> {
-      constructor(
-        private queryer: GroupQueryTransactionsBuilder<DH, QueryTransactionReturnModel<T>>,
-      ) {}
-      @cacheGetter
-      private get _exm() {
-        return new EasyMap<DH, Error>(
-          (cc) =>
-            new TimeOutException(
-              `peer({peerId}) queryTransactions(<offset:{offset},limit:{limit}>{query} - {sort}) timeout.`,
-              {
-                peerId: cc.address,
-                offset: this.queryer.query.offset,
-                limit: this.queryer.query.limit,
-                query: JSON.stringify(query),
-                sort: JSON.stringify(sort),
-              },
-            ),
-        );
-      }
-      @bindThis
-      timeoutException(env: BFChainCore.ChannelRequestEnv<DH>) {
-        return this._exm.forceGet(env.chainChannel);
-      }
-      timeout(env: BFChainCore.ChannelRequestEnv<DH>) {
-        return getChainChannelTimeout(env.chainChannel);
-      }
-      get rejected() {
-        return resultPo?.promise;
-      }
-    }
-
     const queryerMap = EasyMap.from<
       { offset: number; limit: number },
       {
         queryer: GroupQueryTransactionsBuilder<DH, QueryTransactionReturnModel<T>>;
-        options: AddChainChannelOptions;
+        options: AddChainChannelOptions<DH, T>;
       },
       string
     >({
@@ -487,7 +453,13 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
         );
         return {
           queryer,
-          options: new AddChainChannelOptions(queryer),
+          options: new AddChainChannelOptions<DH, T>(
+            query,
+            sort,
+            queryer,
+            this.helper.getChainChannelTimeout,
+            resultPo,
+          ),
         };
       },
     });
@@ -1293,7 +1265,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       if (this._maybeHeight < chainChannel.maybeHeight) {
         this._tryChangeMaybeHeight(chainChannel.maybeHeight);
       }
-      if(this._lastConsensusVersion < chainChannel.lastConsensusVersion) {
+      if (this._lastConsensusVersion < chainChannel.lastConsensusVersion) {
         this._tryChangeConsensusVersion(chainChannel.lastConsensusVersion);
       }
       /// 监听其高度的变化来跟随其maybeHeight
@@ -1318,4 +1290,46 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     });
   }
   //#endregion
+}
+/**私有内部类 */
+class AddChainChannelOptions<
+  DH extends BFChainCore.SimpleChainChannel,
+  T extends BFChainCore.Transaction
+> implements BFChainCore.ChannelRequestOptions<DH> {
+  constructor(
+    private query: {},
+    private sort: {} | undefined,
+    private queryer: GroupQueryTransactionsBuilder<DH, QueryTransactionReturnModel<T>>,
+    private getChainChannelTimeout: (
+      chainChannel: BFChainCore.SimpleChainChannel,
+      baseTime?: number,
+    ) => number,
+    private resultPo?: PromiseOut<unknown>,
+  ) {}
+  @cacheGetter
+  private get _exm() {
+    return new EasyMap<DH, Error>(
+      (cc) =>
+        new TimeOutException(
+          `peer({peerId}) queryTransactions(<offset:{offset},limit:{limit}>{query} - {sort}) timeout.`,
+          {
+            peerId: cc.address,
+            offset: this.queryer.query.offset,
+            limit: this.queryer.query.limit,
+            query: JSON.stringify(this.query),
+            sort: JSON.stringify(this.sort),
+          },
+        ),
+    );
+  }
+  @bindThis
+  timeoutException(env: BFChainCore.ChannelRequestEnv<DH>) {
+    return this._exm.forceGet(env.chainChannel);
+  }
+  timeout(env: BFChainCore.ChannelRequestEnv<DH>) {
+    return this.getChainChannelTimeout(env.chainChannel);
+  }
+  get rejected() {
+    return this.resultPo?.promise;
+  }
 }
