@@ -1273,20 +1273,21 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     });
     /// 如果有节点移除, 那么获取其余最高的节点
     this._chainChannelEvents.on("removeChainChannel", (chainChannel) => {
+      /// 移除监听
+      chainChannel.off("onNewBlock", onChainChannelNewBlock);
+      if (chainChannel.maybeHeight < this._maybeHeight) {
+        return;
+      }
       let newMaybeHeight = 1;
-      if (chainChannel.maybeHeight >= this._maybeHeight) {
-        /// 最高的值发生了改变,那么就要遍历寻找第二高的值
-        for (const cc of this.chainChannelSet) {
-          newMaybeHeight = Math.max(cc.maybeHeight, newMaybeHeight);
-          if (newMaybeHeight >= chainChannel.maybeHeight) {
-            /// 存在更最高节点一样高的节点, 无需改变
-            return;
-          }
+      /// 最高的值发生了改变,那么就要遍历寻找第二高的值
+      for (const cc of this.chainChannelSet) {
+        newMaybeHeight = Math.max(cc.maybeHeight, newMaybeHeight);
+        if (newMaybeHeight >= chainChannel.maybeHeight) {
+          /// 存在更最高节点一样高的节点, 无需改变
+          return;
         }
       }
       this._tryChangeMaybeHeight(newMaybeHeight);
-      /// 移除监听
-      chainChannel.off("onNewBlock", onChainChannelNewBlock);
     });
   }
   //#endregion
