@@ -91,6 +91,7 @@ export class ChainChannelHelper {
       range,
       offset,
       limit,
+      address,
     } = arg.query;
     let has_query_params = false;
     if (type) {
@@ -128,6 +129,16 @@ export class ChainChannelHelper {
         throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
           function: "boxQueryTransactionArg.query",
           field: `recipientId ${recipientId}`,
+        });
+      }
+    }
+    if (address) {
+      has_query_params = true;
+      // 不再验证字符串是否isAddress，只验证字符串的长度符合地址的最大长度即可
+      if (address.length > ChainChannelHelper.MAX_ADDRESS_LENGTH) {
+        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+          function: "boxQueryTransactionArg.query",
+          field: `address ${address}`,
         });
       }
     }

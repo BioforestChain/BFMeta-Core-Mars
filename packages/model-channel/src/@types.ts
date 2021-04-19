@@ -53,6 +53,8 @@ declare namespace BFChainCore {
     offset: number;
     /**查询结果分页：返回数量*/
     limit?: number;
+    /**账户地址 */
+    address?: string;
   };
 
   /**查询交易的排序选项 */

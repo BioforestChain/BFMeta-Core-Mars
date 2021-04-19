@@ -102,7 +102,7 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
     const memchain = await accountGetterHelper.getChain(sourceChainMagic);
     if (!memchain) {
       throw new ConsensusException(NOT_EXIST, {
-        prop: `Chain with magic ${sourceChainMagic}}`,
+        prop: `Chain with magic ${sourceChainMagic}`,
         target: "blockChain",
         ...Function_Exception_Detail,
       });

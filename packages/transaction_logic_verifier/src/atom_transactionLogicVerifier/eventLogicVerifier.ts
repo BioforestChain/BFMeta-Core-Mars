@@ -1040,7 +1040,7 @@ export class EventLogicVerifier {
         const memchain = await accountGetterHelper.getChain(magic);
         if (memchain) {
           throw new ConsensusException(ALREADY_EXIST, {
-            prop: `Chain with magic ${magic}}`,
+            prop: `Chain with magic ${magic}`,
             target: "blockChain",
             ...Function_Exception_Detail,
           });
