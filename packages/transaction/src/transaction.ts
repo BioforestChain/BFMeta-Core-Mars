@@ -84,7 +84,7 @@ export class TransactionCore {
     return this.transactionHelper.abortForbiddenTransaction;
   }
 
-  async getTransactionBytes<T extends Transaction>(
+  async createTransactionWithoutSignature<T extends Transaction>(
     TxFactory: BFChainCore.TransactionFactoryConstructor<T>,
     body: BFChainCore.TxBodyJSON,
     asset: BFChainCore.GetTransactionAssetJSON<T>,
@@ -127,7 +127,7 @@ export class TransactionCore {
     };
     // 生成交易体
     const trs: T = transactionFactory.init(txbody, asset);
-    return await this.asymmetricHelper.cryptoHelper.sha256(trs.getBytes(true, true));
+    return trs;
   }
 
   /**
