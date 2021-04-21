@@ -257,6 +257,8 @@ export class CustomTransactionEvent {
           ...Function_Exception_Detail,
         });
       }
+    } else if (RECORD_TYPE.UNKNOWN === recordType) {
+      /// 无需验证
     } else {
       throw new ArgumentIllegalException(NOT_EXIST, {
         prop: "recordType",

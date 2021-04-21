@@ -20,15 +20,17 @@ export enum LOCATION_NAME_OPERATION_TYPE {
  * lns 解析类型
  *
  */
-export enum RECORD_TYPE {
+export const enum RECORD_TYPE {
+  /**自由类型 */
+  UNKNOWN = 0,
   /**IPV4解析 */
-  IPV4 = "A",
+  IPV4 = 1,
   /**IPV6解析 */
-  IPV6 = "AAAA",
+  IPV6 = 2,
   /**经纬度解析 */
-  LNG_LAT = "LNG_LAT",
+  LNG_LAT = 3,
   /**账户地址解析 */
-  ADDRESSV1 = "BLOCK_CHAIN_ACCOUNT_ADDRESS",
+  ADDRESSV1 = 4,
 }
 
 /**
