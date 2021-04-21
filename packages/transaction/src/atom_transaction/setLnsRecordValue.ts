@@ -253,7 +253,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<
 
     if (!baseHelper.isValidLocationNameRecord(record)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `record ${record}`,
+        prop: `record ${JSON.stringify(record)}`,
         type: "location name record",
         ...LnsRecordValueAsset_Exception_Detail,
       });

@@ -251,7 +251,11 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
     }
 
     const { giftDistributionRule } = giftAsset;
-    if (!(giftDistributionRule in GIFT_DISTRIBUTION_RULE)) {
+    if (
+      giftDistributionRule !== GIFT_DISTRIBUTION_RULE.RANDOM &&
+      giftDistributionRule !== GIFT_DISTRIBUTION_RULE.AVERAGE &&
+      giftDistributionRule !== GIFT_DISTRIBUTION_RULE.RECIPIENT_RANDOM
+    ) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: `giftDistributionRule ${giftDistributionRule}`,
         type: "enum of GIFT_DISTRIBUTION_RULE",

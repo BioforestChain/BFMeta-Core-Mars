@@ -1,8 +1,8 @@
+import type { RANGE_TYPE } from "@bfchain/core-model-constants";
 import { Message, Type, Field, MapField } from "@bfchain/protobuf";
 import { getHexFromArrayBuffer, parseHexToArrayBuffer } from "@bfchain/util-encoding-hex";
 import { StringKeyMap } from "@bfchain/core-model-common";
 import { cacheBytesGetter } from "@bfchain/core-model-cacher";
-import { RANGE_TYPE } from "@bfchain/core-model-constants";
 import { EasyWeakMap } from "@bfchain/util-extends-map";
 const TrsRemarkMapWM = new EasyWeakMap((trs: Transaction) => new StringKeyMap(trs.remark));
 

@@ -129,7 +129,7 @@ async function getMarkTransaction(
     keypair,
     secondKeypair,
   );
-  console.log(trs.toJSON());
+  console.log(trs.toJSON().asset.mark);
 }
 
 (async () => {

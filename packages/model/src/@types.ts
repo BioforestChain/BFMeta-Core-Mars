@@ -150,7 +150,7 @@ declare namespace BFChainCore {
     /**dappid 的拥有者地址 */
     possessorAddress: string;
     type: DAPP_TYPE;
-    purchaseAsset?: DAppPurchaseAssetJSON;
+    purchaseAsset?: string;
   };
   /**发行 dappid 的相关事件 */
   type ApplyTransactionIssueDAppidEvent<

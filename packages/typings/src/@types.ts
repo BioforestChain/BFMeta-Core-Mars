@@ -1,4 +1,11 @@
 declare namespace BFChainCore {
+  //#region 类型别名
+  // type PrealnumJSON = string;
+  // type asset_amount = string
+  // type chain_name = string;
+  // type chain_magic = string;
+  //#endregion
+
   type ToJSONReturnType<T extends BFChainUtil.JSONAble> = ReturnType<T["toJSON"]>;
   type JSONToModelType<J extends object = object> = J & BFChainUtil.JSONAble<J>;
   type AssetJSONToModelType<J extends object = object> = JSONToModelType<J>;

@@ -5,7 +5,7 @@ import { JSBIHelper } from "@bfchain/core-helper-bigint";
 import { ConfigHelper } from "@bfchain/core-helper-config";
 import { ParityBitHelper } from "@bfchain/core-helper-parity-bit";
 import { AccountBaseHelper } from "@bfchain/core-helper-account-base";
-import { RANGE_TYPE, PARITY_BIT_MAPPING } from "@bfchain/core-model-constants";
+import { RANGE_TYPE, PARITY_BIT_MAPPING, RECORD_TYPE } from "@bfchain/core-model-constants";
 
 @Injectable()
 export class BaseHelper {
@@ -38,7 +38,20 @@ export class BaseHelper {
     if (!this.isObject(record)) {
       return false;
     }
-    if (!(record.recordType && record.recordValue)) {
+    const { recordType, recordValue } = record;
+    if (recordType === undefined || recordValue === undefined) {
+      return false;
+    }
+    if (
+      recordType !== RECORD_TYPE.IPV4 &&
+      recordType !== RECORD_TYPE.IPV6 &&
+      recordType !== RECORD_TYPE.LNG_LAT &&
+      recordType !== RECORD_TYPE.ADDRESSV1 &&
+      recordType !== RECORD_TYPE.UNKNOWN
+    ) {
+      return false;
+    }
+    if (!this.isString(recordValue)) {
       return false;
     }
     return true;
@@ -50,7 +63,12 @@ export class BaseHelper {
    * @param range
    */
   async isValidRange(rangeType: RANGE_TYPE, range: string[]) {
-    if (!RANGE_TYPE[rangeType]) {
+    if (
+      rangeType !== RANGE_TYPE.EMPTY &&
+      rangeType !== RANGE_TYPE.MULTI_ADDRESS &&
+      rangeType !== RANGE_TYPE.MULTI_DAPPID &&
+      rangeType !== RANGE_TYPE.MULTI_LOCATION_NAME
+    ) {
       return false;
     }
     if (!this.isArray(range)) {

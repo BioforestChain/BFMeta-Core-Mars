@@ -1,5 +1,5 @@
 import { Message, Field, Type } from "@bfchain/protobuf";
-import { LOCATION_NAME_OPERATION_TYPE } from "@bfchain/core-model-constants";
+import type { LOCATION_NAME_OPERATION_TYPE } from "@bfchain/core-model-constants";
 
 /**
  * locationName 交易 asset 模型
@@ -18,7 +18,7 @@ export class LocationNameInfo
   /**链域名所属的链网络标识符 */
   @Field.d(3, "string")
   sourceChainMagic!: string;
-  @Field.d(4, LOCATION_NAME_OPERATION_TYPE)
+  @Field.d(4, "uint32")
   operationType!: LOCATION_NAME_OPERATION_TYPE;
   toJSON() {
     return {

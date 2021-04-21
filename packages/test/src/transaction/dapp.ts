@@ -72,12 +72,7 @@ async function getDappTransaction(sender: AccountModel, dapp: BFChainCore.DAppJS
     sourceChainName: "bfchain",
     sourceChainMagic: bfchainCore.config.magic,
     type: DAPP_TYPE.PAID_APP,
-    purchaseAsset: {
-      sourceChainName: bfchainCore.config.chainName,
-      sourceChainMagic: bfchainCore.config.magic,
-      assetType: "QQQ",
-      amount: "1000",
-    },
+    purchaseAsset: "1000",
   });
   const xxx = getSenderWithoutSecondSecret();
   await getDappTransaction(xxx, {

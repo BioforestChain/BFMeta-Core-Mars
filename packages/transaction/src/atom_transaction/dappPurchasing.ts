@@ -190,20 +190,22 @@ export class DAppPurchasingTransactionFactory extends TransactionFactory<
   ) {
     const tasks = new TaskList();
     tasks.next = super.applyTransaction(transaction, eventEmitter, config);
-    const { sourceChainMagic, purchaseAsset } = transaction.asset.dappPurchasing.dappAsset;
-    /**
-     * @FIXME @WMC Why as any？
-     */
-    const { assetType, amount } = purchaseAsset as any;
+    const { magic, assetType } = config;
+    const { purchaseAsset } = transaction.asset.dappPurchasing.dappAsset;
 
-    const assetInfo = this.chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
+    const assetInfo = this.chainAssetInfoHelper.getAssetInfo(magic, assetType);
     // 扣除资产
-    tasks.next = this._applyTransactionEmitAsset(eventEmitter, transaction, amount, {
-      senderId: transaction.senderId,
-      senderPublicKeyBuffer: transaction.senderPublicKeyBuffer,
-      recipientId: transaction.recipientId,
-      assetInfo,
-    });
+    tasks.next = this._applyTransactionEmitAsset(
+      eventEmitter,
+      transaction,
+      purchaseAsset as string,
+      {
+        senderId: transaction.senderId,
+        senderPublicKeyBuffer: transaction.senderPublicKeyBuffer,
+        recipientId: transaction.recipientId,
+        assetInfo,
+      },
+    );
     return tasks.tryToPromise();
   }
 }

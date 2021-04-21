@@ -106,27 +106,17 @@ declare namespace BFChainCore {
     vote: VoteJSON;
   }
 
-  interface DAppPurchaseAssetJSON {
-    /**购买dappid使用权的权益所属链名，小写字母组成，3-8 位 */
-    sourceChainName: string;
-    /**购买 dappid 使用权的DAPPID付费所属链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
-    sourceChainMagic: string;
-    /**购买 dappid 使用权的权益名称，大写字母组成，3-5 个字符 */
-    assetType: string;
-    /**购买 dappid 使用权需要的权益数量(如果 dappid 是付费应用则必须携带，如果是免费应用则无需携带)，0-9 组成并且不包含小数点，必须大于 0 */
-    amount: string;
-  }
   interface DAppJSON {
     /**dappid 所属的链名，小写字母组成，3-8 位 */
-    sourceChainName: string;
+    sourceChainName: string; // chain_name;
     /**dappid 所属的链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
-    sourceChainMagic: string;
+    sourceChainMagic: string; // chain_magic;
     /**dappid，大写字母或数字组成，8 个字符，最后一位是校验位 */
     dappid: string;
     /**dappid 的类型，只能为 0 或 1；0 表示这个 dappid 是付费使用的，1 表示这个 dappid 是免费使用的 */
     type: BFChainCore.DAPP_TYPE;
     /**购买 dappid 使用的权益 */
-    purchaseAsset?: DAppPurchaseAssetJSON;
+    purchaseAsset?: string; // asset_amount;
   }
   interface DAppAssetJSON {
     /**发行 dapp 事件附带信息 */

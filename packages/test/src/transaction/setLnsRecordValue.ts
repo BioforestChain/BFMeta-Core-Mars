@@ -100,4 +100,11 @@ const lnsRecordValue: BFChainCore.SetLnsRecordValueJSON = {
     recordValue: "250.250.250.250",
   };
   await getSetLnsRecordValueTransaction(getSenderWithoutSecondSecret(), lnsRecordValue);
+  lnsRecordValue.operationType = RECORD_OPERATION_TYPE.ADD;
+  delete lnsRecordValue.deleteRecord;
+  lnsRecordValue.addRecord = {
+    recordType: RECORD_TYPE.UNKNOWN,
+    recordValue: "bbbbbbbbbbbbbbbbbbbb",
+  };
+  await getSetLnsRecordValueTransaction(getSenderWithSecondSecret(), lnsRecordValue);
 })();

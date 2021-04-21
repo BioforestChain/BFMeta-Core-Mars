@@ -1,6 +1,6 @@
 import { Message, Field, Type } from "@bfchain/protobuf";
 import { LocationNameRecordInfo } from "./locationNameRecord";
-import { RECORD_OPERATION_TYPE } from "@bfchain/core-model-constants";
+import type { RECORD_OPERATION_TYPE } from "@bfchain/core-model-constants";
 
 /**
  * setLnsRecordValue 交易 asset 模型
@@ -21,7 +21,7 @@ export class SetLnsRecordValueModel
   @Field.d(SetLnsRecordValueModel.INC++, "string")
   sourceChainMagic!: string;
   /**解析操作类型 */
-  @Field.d(SetLnsRecordValueModel.INC++, RECORD_OPERATION_TYPE)
+  @Field.d(SetLnsRecordValueModel.INC++, "uint32")
   operationType!: RECORD_OPERATION_TYPE;
   /**添加解析值 */
   @Field.d(SetLnsRecordValueModel.INC++, LocationNameRecordInfo, "optional")

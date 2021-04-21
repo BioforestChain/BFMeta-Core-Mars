@@ -53,10 +53,10 @@ export class ToExchangeSpecialAssetModel
   /**交换的资产数量 */
   @Field.d(ToExchangeSpecialAssetModel.INC++, "string")
   exchangeNumber!: string;
-  @Field.d(ToExchangeSpecialAssetModel.INC++, SPECIAL_ASSET_TYPE)
+  @Field.d(ToExchangeSpecialAssetModel.INC++, "uint32")
   exchangeAssetType!: SPECIAL_ASSET_TYPE;
   /**交换方向 */
-  @Field.d(ToExchangeSpecialAssetModel.INC++, EXCHANGE_DIRECTION)
+  @Field.d(ToExchangeSpecialAssetModel.INC++, "uint32")
   exchangeDirection!: EXCHANGE_DIRECTION;
 
   @cacheGetter

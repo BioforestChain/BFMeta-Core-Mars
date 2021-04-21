@@ -367,7 +367,7 @@
     - sourceChainMagic：所属链网络标识符，string
     - dappid：申请的 dappid，string
     - type：dappid 类型，DAPP_TYPE
-    - purchaseAsset：购买信息，BFChainCore.DAppPurchaseAssetJSON | undefined
+    - purchaseAsset：购买需要的主权益数，string
 
 - 范例
 
@@ -382,12 +382,7 @@
             sourceChainName: bfchainCore.config.chainName,
             sourceChainMagic: bfchainCore.config.magic,
             type: DAPP_TYPE.PAID_APP,
-            purchaseAsset: {
-                sourceChainName: bfchainCore.config.chainName,
-                sourceChainMagic: bfchainCore.config.magic,
-                assetType: "QAQ",
-                amount: "1000",
-            },
+            purchaseAsset: "1000",
         }
     }
   ```

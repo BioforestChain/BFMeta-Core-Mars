@@ -814,7 +814,7 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "issueDAppid",
       async ({ applyInfo }, next) => {
-        const { address, dappid, sourceChainMagic, purchaseAsset, possessorAddress } = applyInfo;
+        const { address, dappid, sourceChainMagic, possessorAddress } = applyInfo;
 
         if (address !== possessorAddress) {
           // 不能将冻结账户设置为 dapp 的拥有者
@@ -831,39 +831,6 @@ export class EventLogicVerifier {
                 ...Function_Exception_Detail,
               });
             }
-          }
-        }
-
-        // 用于购买的资产是否合法
-        if (purchaseAsset) {
-          const { sourceChainMagic: magic, sourceChainName, assetType, amount } = purchaseAsset;
-          const memAsset = await accountGetterHelper.getAsset(magic, assetType);
-          if (!memAsset) {
-            throw new ConsensusException(ASSET_NOT_EXIST, {
-              magic,
-              assetType,
-              ...Function_Exception_Detail,
-            });
-          }
-
-          if (magic !== this.configHelper.magic && assetType !== this.configHelper.assetType) {
-            if (memAsset.remainAssetPrealnum < BigInt(amount)) {
-              throw new ConsensusException(ASSET_NOT_ENOUGH, {
-                reason: `Purchase asset amount greater than remain assets, spend ${amount}, remain ${memAsset.remainAssetPrealnum}`,
-                errorId: NewTransactionRefuseReason.ASSET_NOT_ENOUGH,
-                ...Function_Exception_Detail,
-              });
-            }
-          }
-
-          if (memAsset.sourceChainName !== sourceChainName) {
-            throw new ConsensusException(NOT_MATCH, {
-              to_compare_prop: `memAsset.sourceChainName: ${memAsset.sourceChainName}`,
-              be_compare_prop: `sourceChainName: ${sourceChainName}`,
-              to_target: "memAsset",
-              be_target: "issueDAppid.applyInfo",
-              ...Function_Exception_Detail,
-            });
           }
         }
 
