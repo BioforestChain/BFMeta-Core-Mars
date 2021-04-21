@@ -664,7 +664,7 @@ export class ChainChannel<
               if (!task) {
                 if (req_id !== 0) {
                   error(
-                    new NoFoundException("onMessage get invalid req_id", {
+                    new NoFoundException("onMessage get invalid req_id: {req_id}", {
                       req_id,
                     }),
                   );
