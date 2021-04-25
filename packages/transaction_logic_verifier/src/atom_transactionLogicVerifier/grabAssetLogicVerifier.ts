@@ -149,8 +149,8 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
 
     if (should_grap_amount_BI.toString() !== grabAsset.amount) {
       throw new ConsensusException(SHOULD_BE, {
-        to_compare_prop: `amount ${should_grap_amount_BI.toString()}`,
-        to_target: `grabAsset ${grabAsset.amount}`,
+        to_compare_prop: `amount ${grabAsset.amount}`,
+        to_target: `grabAsset`,
         be_compare_prop: should_grap_amount_BI.toString(),
         ...Function_Exception_Detail,
       });
