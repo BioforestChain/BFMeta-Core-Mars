@@ -5,8 +5,8 @@ import { RangeModel } from "@bfchain/core-model-common";
 
 /**批量区块的进度事件进度模型 */
 @Type.d("BlocksProgressEvent")
-export class BlocksProgressEventModel
-  extends ProgressEventModel<"blocks">
+export class BlocksProgressEventModel<T extends string = "blocks">
+  extends ProgressEventModel<T>
   implements BFChainCore.JSONToModelType<BFChainCore.BlocksProgressEventJSON> {
   /**已经下载的区块的高度范围 */
   @Field.d(BlocksProgressEventModel.INC++, RangeModel, "repeated")
@@ -15,7 +15,7 @@ export class BlocksProgressEventModel
   @MapField.d(BlocksProgressEventModel.INC++, "uint32", TransactionsProgressEventModel)
   // processingDetails!: Map<number, TransactionsProgressEventModel>;
   processingDetails!: { [height: number]: TransactionsProgressEventModel };
-  toJSON(): BFChainCore.BlocksProgressEventJSON {
+  toJSON(): BFChainCore.BlocksProgressEventJSON<T> {
     // const processingDetails = this.processingDetails
     return Object.assign(
       {

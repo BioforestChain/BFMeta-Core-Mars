@@ -4,13 +4,13 @@ import { ProgressEventModel } from "./progressEvent.model";
 
 /**区块链重建中的事件进度模型 */
 @Type.d("BlockchainRebuidingProgressEvent")
-export class BlockchainRebuildingProgressEventModel
-  extends ProgressEventModel<"blockchainRebuiding">
-  implements BFChainCore.JSONToModelType<BFChainCore.BlockchainRebuildingProgressEventJSON> {
+export class BlockchainRebuildingProgressEventModel<T extends string = "blockchainRebuiding">
+  extends ProgressEventModel<T>
+  implements BFChainCore.JSONToModelType<BFChainCore.BlockchainRebuildingProgressEventJSON<T>> {
   /**当前正在处理的区块的进度 */
   @Field.d(BlockchainRebuildingProgressEventModel.INC++, BlocksProgressEventModel)
   currentBlockDetails!: BlocksProgressEventModel;
-  toJSON(): BFChainCore.BlockchainRebuildingProgressEventJSON {
+  toJSON(): BFChainCore.BlockchainRebuildingProgressEventJSON<T> {
     return Object.assign(
       {
         currentBlockDetails: this.currentBlockDetails.toJSON(),

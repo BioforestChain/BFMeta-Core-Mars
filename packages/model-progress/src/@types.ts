@@ -10,11 +10,13 @@ declare namespace BFChainCore {
     /**已经下载的交易的index范围 */
     finishedDetails: BFChainCore.RangeJSON[];
   };
-  type BlocksProgressEventJSON = ProgressEventJSON<"blocks"> & {
+  type BlocksProgressEventJSON<T extends string = "blocks"> = ProgressEventJSON<T> & {
     finishedDetails: BFChainCore.RangeJSON[];
     processingDetails: { [height: number]: TransactionsProgressEventJSON };
   };
-  type BlockchainRebuildingProgressEventJSON = ProgressEventJSON<"blockchainRebuiding"> & {
+  type BlockchainRebuildingProgressEventJSON<
+    T extends string = "blockchainRebuiding"
+  > = ProgressEventJSON<T> & {
     currentBlockDetails: BlocksProgressEventJSON;
   };
   type BlockchainPeerScanningProgressEventJSON = ProgressEventJSON<"blockchainPeerScanning"> & {};
