@@ -19,6 +19,9 @@ export class TransactionQueryOptions
   /**交易类型 */
   @Field.d(TransactionQueryOptions.INC++, "string", "optional")
   type?: string;
+  /**交易类型组 */
+  @Field.d(TransactionQueryOptions.INC++, "string", "repeated")
+  types?: string[];
   /**交易唯一编号 */
   @Field.d(TransactionQueryOptions.INC++, "bytes", "optional")
   signatureBuffer?: Uint8Array;
@@ -87,6 +90,7 @@ export class TransactionQueryOptions
   toJSON() {
     const res: BFChainCore.TransactionQueryOptionsJSON = {
       type: this.type,
+      types: this.types,
       signature: this.signature,
       senderId: this.senderId,
       recipientId: this.recipientId,

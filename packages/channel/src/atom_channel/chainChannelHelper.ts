@@ -76,6 +76,7 @@ export class ChainChannelHelper {
     //#region 查询参数校验
     const {
       type,
+      types,
       signature,
       senderId,
       recipientId,
@@ -101,6 +102,17 @@ export class ChainChannelHelper {
           function: "boxQueryTransactionArg",
           field: `type ${type}`,
         });
+      }
+    }
+    if (types) {
+      has_query_params = true;
+      for (const type of types) {
+        if (!BH.isValidTransactionType(type)) {
+          throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+            function: "boxQueryTransactionArg",
+            field: `types.type ${type}`,
+          });
+        }
       }
     }
     if (signature) {
