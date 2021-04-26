@@ -7,7 +7,7 @@ import { RangeModel } from "@bfchain/core-model-common";
 @Type.d("BlocksProgressEvent")
 export class BlocksProgressEventModel<T extends string = "blocks">
   extends ProgressEventModel<T>
-  implements BFChainCore.JSONToModelType<BFChainCore.BlocksProgressEventJSON> {
+  implements BFChainCore.JSONToModelType<BFChainCore.BlocksProgressEventJSON<T>> {
   /**已经下载的区块的高度范围 */
   @Field.d(BlocksProgressEventModel.INC++, RangeModel, "repeated")
   finishedDetails!: RangeModel[];
