@@ -257,6 +257,8 @@ export class CustomTransactionEvent {
           ...Function_Exception_Detail,
         });
       }
+    } else if (RECORD_TYPE.UNKNOWN === recordType) {
+      /// 无需验证
     } else {
       throw new ArgumentIllegalException(NOT_EXIST, {
         prop: "recordType",
@@ -393,7 +395,12 @@ export class CustomTransactionEvent {
     }
     if (applyResult.type === "frozenAccount") {
       const { accountStatus } = applyResult.applyInfo;
-      if (!ACCOUNT_STATUS[accountStatus]) {
+      if (
+        accountStatus !== ACCOUNT_STATUS.NORMAL &&
+        accountStatus !== ACCOUNT_STATUS.FROZEN_IN &&
+        accountStatus !== ACCOUNT_STATUS.FROZEN_OUT &&
+        accountStatus !== ACCOUNT_STATUS.FROZEN_IN_AND_OUT
+      ) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "accountStatus",
           ...Function_Exception_Detail,
@@ -414,18 +421,14 @@ export class CustomTransactionEvent {
       this.verifyChainName(sourceChainName);
       await this.verifyPossessorAddress(possessorAddress);
       this.verifyDAppid(dappid);
-      if (!DAPP_TYPE[type]) {
+      if (type !== DAPP_TYPE.FREE_APP && type !== DAPP_TYPE.PAID_APP) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "type",
           ...Function_Exception_Detail,
         });
       }
       if (purchaseAsset) {
-        const { sourceChainMagic, sourceChainName, assetType, amount } = purchaseAsset;
-        this.verifyMagic(sourceChainMagic);
-        this.verifyChainName(sourceChainName);
-        this.verifyAssetType(assetType);
-        this.verifyAssetNumber(amount);
+        this.verifyAssetNumber(purchaseAsset);
       }
       return;
     }

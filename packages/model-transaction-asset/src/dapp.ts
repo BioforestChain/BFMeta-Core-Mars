@@ -1,31 +1,5 @@
 import { Message, Field, Type } from "@bfchain/protobuf";
-import { DAPP_TYPE } from "@bfchain/core-model-constants";
-
-@Type.d("DAppPurchaseAssetModel")
-export class DAppPurchaseAssetModel
-  extends Message<DAppPurchaseAssetModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.DAppPurchaseAssetJSON> {
-  /**购买用的资产所属链名 */
-  @Field.d(1, "string")
-  sourceChainName!: string;
-  /**购买用的资产所属链网络标识符 */
-  @Field.d(2, "string")
-  sourceChainMagic!: string;
-  /**购买用的资产所属链网络标识符 */
-  @Field.d(3, "string")
-  assetType!: string;
-  /**购买用的资产所属链网络标识符 */
-  @Field.d(4, "string")
-  amount!: string;
-  toJSON() {
-    return {
-      sourceChainName: this.sourceChainName,
-      sourceChainMagic: this.sourceChainMagic,
-      assetType: this.assetType,
-      amount: this.amount,
-    };
-  }
-}
+import type { DAPP_TYPE } from "@bfchain/core-model-constants";
 
 /**
  * dapp 交易 asset 模型
@@ -46,11 +20,11 @@ export class DAppModel
   @Field.d(DAppModel.INC++, "string")
   dappid!: string;
   /**dapp 的类型 */
-  @Field.d(DAppModel.INC++, DAPP_TYPE)
+  @Field.d(DAppModel.INC++, "uint32")
   type!: DAPP_TYPE;
   /**指定购买资产和数量 */
-  @Field.d(DAppModel.INC++, DAppPurchaseAssetModel, "optional")
-  purchaseAsset?: DAppPurchaseAssetModel;
+  @Field.d(DAppModel.INC++, "string", "optional")
+  purchaseAsset?: string;
   toJSON() {
     const res: BFChainCore.DAppJSON = {
       sourceChainName: this.sourceChainName,
@@ -58,7 +32,7 @@ export class DAppModel
       dappid: this.dappid,
       type: this.type,
     };
-    this.purchaseAsset && (res.purchaseAsset = this.purchaseAsset.toJSON());
+    this.purchaseAsset && (res.purchaseAsset = this.purchaseAsset);
 
     return res;
   }

@@ -184,8 +184,10 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
     );
 
     const exchangeAssetType = toExchangeSpecialAsset.exchangeAssetType;
-
-    if (!SPECIAL_ASSET_TYPE[exchangeAssetType]) {
+    if (
+      exchangeAssetType !== SPECIAL_ASSET_TYPE.DAPP_ID &&
+      exchangeAssetType !== SPECIAL_ASSET_TYPE.LOCATION_NAME
+    ) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: exchangeAssetType,
         ...ToExchangeSpecialAssetAsset_Exception_Detail,
@@ -193,8 +195,10 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
     }
 
     const exchangeDirection = toExchangeSpecialAsset.exchangeDirection;
-
-    if (!EXCHANGE_DIRECTION[exchangeDirection]) {
+    if (
+      exchangeDirection !== EXCHANGE_DIRECTION.ASSET_FROM_SENDER &&
+      exchangeDirection !== EXCHANGE_DIRECTION.ASSET_FROM_RECIPIENT
+    ) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: exchangeDirection,
         ...ToExchangeSpecialAssetAsset_Exception_Detail,

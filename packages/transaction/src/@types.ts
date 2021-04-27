@@ -184,7 +184,7 @@ declare namespace BFChainCore {
       /**dappid 的拥有者地址 */
       possessorAddress: string;
       type: DAPP_TYPE;
-      purchaseAsset?: DAppPurchaseAssetJSON;
+      purchaseAsset?: string;
     };
   }
 

@@ -1,6 +1,6 @@
 import { Message, Field, Type } from "@bfchain/protobuf";
 import { getHexFromArrayBuffer, parseHexToArrayBuffer } from "@bfchain/util-encoding-hex";
-import { GIFT_DISTRIBUTION_RULE } from "@bfchain/core-model-constants";
+import type { GIFT_DISTRIBUTION_RULE } from "@bfchain/core-model-constants";
 /**缓存cipherTexts解析结果 */
 const BUFFER_LIST_PUBLICKEY_LIST_WM = new WeakMap<Uint8Array[], string[]>();
 
@@ -55,7 +55,7 @@ export class GiftAssetModel
   @Field.d(GiftAssetModel.INC++, "uint32", "optional")
   beginUnfrozenBlockHeight?: number;
   /**资产的分配规则 */
-  @Field.d(GiftAssetModel.INC++, GIFT_DISTRIBUTION_RULE)
+  @Field.d(GiftAssetModel.INC++, "uint32")
   giftDistributionRule!: GIFT_DISTRIBUTION_RULE;
   toJSON() {
     const res: BFChainCore.GiftAssetJSON = {

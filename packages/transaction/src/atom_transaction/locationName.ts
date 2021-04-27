@@ -256,7 +256,10 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
       });
     }
 
-    if (!LOCATION_NAME_OPERATION_TYPE[operationType]) {
+    if (
+      operationType !== LOCATION_NAME_OPERATION_TYPE.REGISTRATION &&
+      operationType !== LOCATION_NAME_OPERATION_TYPE.CANCELLATION
+    ) {
       throw new ArgumentIllegalException(NOT_MATCH, {
         to_compare_prop: `operationType ${operationType}`,
         be_compare_prop: "locationNameType",
@@ -334,7 +337,7 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
         applyInfo: {
           address: senderId,
           name,
-          sourceChainMagic
+          sourceChainMagic,
         },
       });
     }

@@ -3,13 +3,13 @@
  * 未知名称等级
  *
  */
-export enum LOCATION_NAME_LEVEL {
+export const enum LOCATION_NAME_LEVEL {
   /**顶级(1 级) */
   TOP_LEVEL = "TOP_LEVEL",
   /**多级(2、3、4..... 级) */
   MULTI_LEVEL = "MULTI_LEVEL",
 }
-export enum LOCATION_NAME_OPERATION_TYPE {
+export const enum LOCATION_NAME_OPERATION_TYPE {
   /**注册 lns */
   REGISTRATION,
   /**注销 */
@@ -20,22 +20,24 @@ export enum LOCATION_NAME_OPERATION_TYPE {
  * lns 解析类型
  *
  */
-export enum RECORD_TYPE {
+export const enum RECORD_TYPE {
+  /**自由类型 */
+  UNKNOWN = 0,
   /**IPV4解析 */
-  IPV4 = "A",
+  IPV4 = 1,
   /**IPV6解析 */
-  IPV6 = "AAAA",
+  IPV6 = 2,
   /**经纬度解析 */
-  LNG_LAT = "LNG_LAT",
+  LNG_LAT = 3,
   /**账户地址解析 */
-  ADDRESSV1 = "BLOCK_CHAIN_ACCOUNT_ADDRESS",
+  ADDRESSV1 = 4,
 }
 
 /**
  * lns 解析值操作类型
  *
  */
-export enum RECORD_OPERATION_TYPE {
+export const enum RECORD_OPERATION_TYPE {
   /**添加解析值 */
   ADD,
   /**删除解析值 */
@@ -47,7 +49,7 @@ export enum RECORD_OPERATION_TYPE {
 
 // #region account
 /**账户状态 */
-export enum ACCOUNT_STATUS {
+export const enum ACCOUNT_STATUS {
   /**
    * NORMAL: 正常账户
    */
@@ -69,7 +71,7 @@ export enum ACCOUNT_STATUS {
 
 // #region asset
 /**资产状态 */
-export enum ASSET_STATUS {
+export const enum ASSET_STATUS {
   /**
    * NORMAL: 正常资产
    */
@@ -86,7 +88,7 @@ export enum ASSET_STATUS {
  * DApp 类型
  *
  */
-export enum DAPP_TYPE {
+export const enum DAPP_TYPE {
   /**付费应用 */
   PAID_APP = 0, // "PAID_APP",
   /**免费应用 */
@@ -96,7 +98,7 @@ export enum DAPP_TYPE {
 
 // #region gift
 /**礼物的分配规则 */
-export enum GIFT_DISTRIBUTION_RULE {
+export const enum GIFT_DISTRIBUTION_RULE {
   /**平均分配 */
   AVERAGE,
   /**根据任意账户的地址的随机分配法 */
@@ -109,14 +111,14 @@ export enum GIFT_DISTRIBUTION_RULE {
 // #endregion
 
 // #region exchange asset
-export enum EXCHANGE_DIRECTION {
+export const enum EXCHANGE_DIRECTION {
   /**特殊资产来自 to 交易的发起账户，即出售 */
   ASSET_FROM_SENDER = 0,
   /**特殊资产来自 be 交易的发起账户，即求购 */
   ASSET_FROM_RECIPIENT = 1,
 }
 
-export enum SPECIAL_ASSET_TYPE {
+export const enum SPECIAL_ASSET_TYPE {
   /**特殊资产类型：dapp */
   DAPP_ID,
   /**特殊资产类型：链域名 */
@@ -125,7 +127,7 @@ export enum SPECIAL_ASSET_TYPE {
 // #endregion
 
 /**交易的接收范围 */
-export enum RANGE_TYPE {
+export const enum RANGE_TYPE {
   /**不限定范围 */
   EMPTY = 0,
   /**多地址 */

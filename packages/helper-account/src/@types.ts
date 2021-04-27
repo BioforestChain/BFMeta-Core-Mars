@@ -46,7 +46,7 @@ declare namespace BFChainCore {
     height: number;
     status: number;
     maxFrozenBlockHeight: number;
-    purchaseAsset?: BFChainCore.DAppPurchaseAssetJSON;
+    purchaseAsset?: string;
   };
   type LocationNameRecordInfo = {
     [recordType: string]: {

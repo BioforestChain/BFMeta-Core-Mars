@@ -206,7 +206,7 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
       });
     }
 
-    if (!DAPP_TYPE[type]) {
+    if (type !== DAPP_TYPE.FREE_APP && type !== DAPP_TYPE.PAID_APP) {
       throw new ArgumentIllegalException(NOT_MATCH, {
         to_compare_prop: `type ${type}`,
         be_compare_prop: "dappType",
@@ -224,23 +224,15 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
         });
       }
 
-      if (!baseHelper.isObject(purchaseAsset)) {
+      if (!baseHelper.isValidAssetNumber(purchaseAsset)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "purchaseAsset",
-          type: "purchase asset object",
+          type: "asset number",
           ...DappAsset_Exception_Detail,
         });
       }
 
-      const { sourceChainMagic, sourceChainName, assetType, amount } = purchaseAsset;
-
-      this.checkChainName(sourceChainName, "sourceChainName", DappAsset_Exception_Detail);
-
-      this.checkChainMagic(sourceChainMagic, "sourceChainMagic", DappAsset_Exception_Detail);
-
-      this.checkAssetType(assetType, "assetType", DappAsset_Exception_Detail);
-
-      this.checkAssetAmount(amount, "amount", DappAsset_Exception_Detail);
+      this.checkAssetAmount(purchaseAsset, "purchaseAsset", DappAsset_Exception_Detail);
     } else if (type === DAPP_TYPE.FREE_APP) {
       if (purchaseAsset) {
         throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
@@ -298,7 +290,7 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
         dappid,
         possessorAddress: transaction.recipientId,
         type,
-        purchaseAsset: purchaseAsset ? purchaseAsset.toJSON() : undefined,
+        purchaseAsset: purchaseAsset,
       },
     });
     return tasks.tryToPromise();
