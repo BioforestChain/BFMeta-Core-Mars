@@ -312,11 +312,12 @@ export class ChainChannelHelper {
     //#region 交易签名校验
     if (arg.status === RESPONSE_STATUS.success) {
       const { transactions } = arg;
-      transactions.forEach(async (item) => {
-        await this.transctionHelper.verifyTransactionSignature(item.transaction, {
+      // forEach 如果出错会有未捕获的异常
+      for (const trsInBlock of transactions) {
+        await this.transctionHelper.verifyTransactionSignature(trsInBlock.transaction, {
           taskLabel: "QueryTransactionReturn",
         });
-      });
+      }
     }
     //#endregion
     return arg;
