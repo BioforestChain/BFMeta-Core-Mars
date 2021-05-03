@@ -54,7 +54,7 @@ async function getVoteTransaction(sender: AccountModel) {
     keypair,
     secondKeypair,
   );
-  console.log(trs.toJSON().recipientId);
+  console.log(trs.toJSON());
 }
 
 (async () => {

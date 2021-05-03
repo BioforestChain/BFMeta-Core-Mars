@@ -149,11 +149,20 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     const right: BFChainCore.CanBePickAccount[] = [];
 
     for (let i = 0; i < temp_array.length; i++) {
-      if ((temp_array as any)[i][fields] > (pivot as any)[fields]) {
+      const item = temp_array[i];
+      if ((item as any)[fields] > (pivot as any)[fields]) {
         left[left.length] = temp_array[i];
-      } else {
-        right[right.length] = temp_array[i];
+        continue;
       }
+      if ((item as any)[fields] < (pivot as any)[fields]) {
+        right[right.length] = temp_array[i];
+        continue;
+      }
+      if (item.address < pivot.address) {
+        left[left.length] = temp_array[i];
+        continue;
+      }
+      right[right.length] = temp_array[i];
     }
     return this.sortDelegatesByFields(left, fields).concat(
       [pivot],
