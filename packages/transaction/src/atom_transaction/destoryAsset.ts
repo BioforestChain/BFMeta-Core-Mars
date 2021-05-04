@@ -254,6 +254,6 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
         sourceAmount: amount,
       },
     });
-    return tasks.tryToPromise();
+    return tasks.toPromise();
   }
 }

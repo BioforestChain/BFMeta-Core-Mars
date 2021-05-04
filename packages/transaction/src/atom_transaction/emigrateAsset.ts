@@ -287,6 +287,6 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
         accountStatus: ACCOUNT_STATUS.FROZEN_IN_AND_OUT,
       },
     });
-    return tasks.tryToPromise();
+    return tasks.toPromise();
   }
 }

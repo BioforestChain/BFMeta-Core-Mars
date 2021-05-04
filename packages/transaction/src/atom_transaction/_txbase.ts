@@ -713,6 +713,6 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
         },
       });
     }
-    return tasks.tryToPromise();
+    return tasks.toPromise();
   }
 }

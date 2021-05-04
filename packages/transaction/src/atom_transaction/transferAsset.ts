@@ -194,6 +194,6 @@ export class TransferAssetTransactionFactory extends TransactionFactory<Transfer
       recipientId: transaction.recipientId,
       assetInfo,
     });
-    return tasks.tryToPromise();
+    return tasks.toPromise();
   }
 }

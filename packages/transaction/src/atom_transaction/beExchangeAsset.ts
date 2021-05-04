@@ -387,6 +387,6 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<
         recipientId, // 资产冻结账户
       },
     });
-    return tasks.tryToPromise();
+    return tasks.toPromise();
   }
 }

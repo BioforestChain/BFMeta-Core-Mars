@@ -205,6 +205,6 @@ export class SetLnsManagerTransactionFactory extends TransactionFactory<SetLnsMa
         manager: transaction.recipientId,
       },
     });
-    return tasks.tryToPromise();
+    return tasks.toPromise();
   }
 }

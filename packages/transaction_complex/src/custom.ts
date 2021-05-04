@@ -123,6 +123,6 @@ export class CustomTransactionFactory extends TransactionFactory<CustomTransacti
       }
     }
     //  ....
-    return tasks.tryToPromise();
+    return tasks.toPromise();
   }
 }

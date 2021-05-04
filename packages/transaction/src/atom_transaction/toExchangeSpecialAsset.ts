@@ -361,6 +361,6 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
         });
       }
     }
-    return tasks.tryToPromise();
+    return tasks.toPromise();
   }
 }

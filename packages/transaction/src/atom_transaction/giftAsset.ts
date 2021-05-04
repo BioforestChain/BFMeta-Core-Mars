@@ -355,6 +355,6 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
     //     maxEffectiveHeight,
     //   },
     // });
-    return tasks.tryToPromise();
+    return tasks.toPromise();
   }
 }

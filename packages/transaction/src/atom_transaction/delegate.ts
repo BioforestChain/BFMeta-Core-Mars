@@ -133,6 +133,6 @@ export class DelegateTransactionFactory extends TransactionFactory<DelegateTrans
         publicKeyBuffer: transaction.senderPublicKeyBuffer,
       },
     });
-    return tasks.tryToPromise();
+    return tasks.toPromise();
   }
 }

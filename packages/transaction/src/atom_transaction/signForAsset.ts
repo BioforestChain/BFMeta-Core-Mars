@@ -277,6 +277,6 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
         recipientId: trustRecipientId, // 接收资产的账户
       },
     });
-    return tasks.tryToPromise();
+    return tasks.toPromise();
   }
 }

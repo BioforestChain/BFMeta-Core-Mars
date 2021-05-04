@@ -260,6 +260,6 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<
         frozenIdBuffer: transaction.signatureBuffer,
       },
     });
-    return tasks.tryToPromise();
+    return tasks.toPromise();
   }
 }

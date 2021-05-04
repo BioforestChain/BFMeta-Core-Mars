@@ -293,6 +293,6 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
         purchaseAsset: purchaseAsset,
       },
     });
-    return tasks.tryToPromise();
+    return tasks.toPromise();
   }
 }

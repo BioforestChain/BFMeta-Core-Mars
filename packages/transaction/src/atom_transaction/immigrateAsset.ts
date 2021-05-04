@@ -286,6 +286,6 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<
       },
     });
 
-    return tasks.tryToPromise();
+    return tasks.toPromise();
   }
 }

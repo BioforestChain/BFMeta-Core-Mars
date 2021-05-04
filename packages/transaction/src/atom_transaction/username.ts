@@ -240,6 +240,6 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
         alias: transaction.asset.username.alias,
       },
     });
-    return tasks.tryToPromise();
+    return tasks.toPromise();
   }
 }

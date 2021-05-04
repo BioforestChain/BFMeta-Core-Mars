@@ -299,6 +299,6 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
       },
     });
 
-    return tasks.tryToPromise();
+    return tasks.toPromise();
   }
 }

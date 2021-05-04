@@ -314,6 +314,6 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
         totalUnfrozenTimes: numberOfSignFor,
       },
     });
-    return tasks.tryToPromise();
+    return tasks.toPromise();
   }
 }

@@ -125,6 +125,6 @@ export class RejectVoteTransactionFactory extends TransactionFactory<RejectVoteT
         publicKeyBuffer: transaction.senderPublicKeyBuffer,
       },
     });
-    return tasks.tryToPromise();
+    return tasks.toPromise();
   }
 }

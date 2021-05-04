@@ -211,6 +211,6 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
         genesisBlock,
       },
     });
-    return tasks.tryToPromise();
+    return tasks.toPromise();
   }
 }
