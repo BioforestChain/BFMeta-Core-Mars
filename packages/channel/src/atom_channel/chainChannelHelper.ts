@@ -5,6 +5,7 @@ import {
   PromiseOut,
   safePromiseThen,
   safePromiseOffThen,
+  cacheGetter,
 } from "@bfchain/util";
 import {
   CoreExceptionGenerator,
@@ -23,6 +24,8 @@ import {
   NewBlockReturn,
   GetPeerInfoArgModel,
   GetPeerInfoReturnModel,
+  DownloadTransactionArgModel,
+  IndexTransactionReturnModel,
 } from "@bfchain/core-model";
 import { BaseHelper, TransactionHelper, BlockHelper, ChainTimeHelper } from "@bfchain/core-helper";
 import { PromiseTimeout } from "./PromiseTimeout";
@@ -322,6 +325,96 @@ export class ChainChannelHelper {
     //#endregion
     return arg;
   }
+  @cacheGetter
+  get boxIndexTransactionArg() {
+    return this.boxQueryTransactionArg;
+  }
+  @bindThis
+  async boxIndexTransactionReturn(params: ArrayBuffer | Uint8Array) {
+    if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
+      throw new ArgumentIllegalException(INVALID_PARAMS, {
+        function: "boxIndexTransactionReturn",
+        params,
+      });
+    }
+    let arg: IndexTransactionReturnModel;
+    try {
+      arg = IndexTransactionReturnModel.decode(
+        params instanceof Uint8Array ? params : new Uint8Array(params),
+      );
+    } catch (error) {
+      throw new ArgumentFormatException(INVALID_PARAMS, {
+        function: "boxIndexTransactionReturn",
+        error,
+        params,
+      });
+    }
+    /// 参数校验
+    return arg;
+  }
+
+  async boxDownloadTransactionArg(params: ArrayBuffer | Uint8Array) {
+    if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
+      throw new ArgumentIllegalException(INVALID_PARAMS, {
+        function: "boxDownloadTransactionArg",
+        params,
+      });
+    }
+    let arg: DownloadTransactionArgModel;
+    try {
+      arg = DownloadTransactionArgModel.decode(
+        params instanceof Uint8Array ? params : new Uint8Array(params),
+      );
+    } catch (error) {
+      if (error instanceof Exception) {
+        throw error;
+      }
+      throw new ArgumentFormatException(INVALID_PARAMS, {
+        function: "boxDownloadTransactionArg",
+        error,
+        params,
+      });
+    }
+    return arg;
+  }
+  /**
+   * 生成并校验交易查询的返回结果
+   */
+  @bindThis
+  async boxDownloadTransactionReturn(params: ArrayBuffer | Uint8Array) {
+    if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
+      throw new ArgumentIllegalException(INVALID_PARAMS, {
+        function: "boxDownloadTransactionReturn",
+        params,
+      });
+    }
+    let arg: QueryTransactionReturnModel;
+    try {
+      arg = QueryTransactionReturnModel.decode(
+        params instanceof Uint8Array ? params : new Uint8Array(params),
+      );
+    } catch (error) {
+      throw new ArgumentFormatException(INVALID_PARAMS, {
+        function: "boxDownloadTransactionReturn",
+        error,
+        params,
+      });
+    }
+    /// 参数校验
+    //#region 交易签名校验
+    if (arg.status === RESPONSE_STATUS.success) {
+      const { transactions } = arg;
+      // forEach 如果出错会有未捕获的异常
+      for (const trsInBlock of transactions) {
+        await this.transctionHelper.verifyTransactionSignature(trsInBlock.transaction, {
+          taskLabel: "DownloadTransactionReturn",
+        });
+      }
+    }
+    //#endregion
+    return arg;
+  }
+
   /**
    * 生成并校验交易广播的传入参数
    */

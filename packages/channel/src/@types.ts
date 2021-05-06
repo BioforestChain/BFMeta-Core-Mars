@@ -34,6 +34,22 @@ declare namespace BFChainCore {
       in: import("@bfchain/core-model").QueryTransactionArgModel;
       out: Uint8Array | undefined;
     };
+    onIndexTransaction: {
+      in: import("@bfchain/core-model").IndexTransactionArgModel;
+      out: IndexTransactionReturnParams | undefined;
+    };
+    onIndexTransactionBinary: {
+      in: import("@bfchain/core-model").IndexTransactionArgModel;
+      out: Uint8Array | undefined;
+    };
+    onDownloadTransaction: {
+      in: import("@bfchain/core-model").DownloadTransactionArgModel;
+      out: DownloadTransactionReturnParams | undefined;
+    };
+    onDownloadTransactionBinary: {
+      in: import("@bfchain/core-model").DownloadTransactionArgModel;
+      out: Uint8Array | undefined;
+    };
     onNewTransaction: {
       in: import("@bfchain/core-model").NewTransactionArgModel;
       out: NewTransactionReturnParams | undefined;

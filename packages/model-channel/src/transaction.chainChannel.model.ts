@@ -240,3 +240,99 @@ export class NewTransactionReturnModel
     return res;
   }
 }
+
+@Type.d("TransactionIndexModel")
+export class TransactionIndexModel
+  extends Message<TransactionIndexModel>
+  implements BFChainCore.JSONToModelType<BFChainCore.TransactionIndexJSON> {
+  @Field.d(1, "uint32")
+  height!: number;
+  @Field.d(2, "uint32")
+  index!: number;
+  toJSON() {
+    return {
+      height: this.height,
+      index: this.index,
+    };
+  }
+}
+
+/**
+ * 查询交易索引的传入参数
+ */
+@Type.d("IndexTransactionArg")
+export class IndexTransactionArgModel
+  extends Message<IndexTransactionArgModel>
+  implements BFChainCore.JSONToModelType<BFChainCore.IndexTransactionArgJSON> {
+  /**查询参数 */
+  @Field.d(1, TransactionQueryOptions)
+  query!: TransactionQueryOptions;
+  /**排序参数 */
+  @Field.d(2, TransactionSortOptions)
+  sort!: TransactionSortOptions;
+  toJSON() {
+    return {
+      query: this.query.toJSON(),
+      sort: this.sort.toJSON(),
+    };
+  }
+}
+/**
+ * 查询交易索引的返回值
+ * 可能的错误：查询参数有误
+ */
+@Type.d("IndexTransactionReturn")
+export class IndexTransactionReturnModel
+  extends CommonResponse
+  implements BFChainCore.JSONToModelType<BFChainCore.IndexTransactionReturnJSON> {
+  /**查询到的交易 */
+  @Field.d(IndexTransactionReturnModel.INC++, TransactionIndexModel, "repeated")
+  tIndexs!: TransactionIndexModel[];
+  toJSON() {
+    return Object.assign(
+      {
+        tIndexs: this.tIndexs.map((ti) => ti.toJSON()),
+      },
+      super.toJSON(),
+    );
+  }
+}
+
+/**
+ * 下载交易的传入参数
+ */
+@Type.d("DownloadTransactionArg")
+export class DownloadTransactionArgModel
+  extends Message<DownloadTransactionArgModel>
+  implements BFChainCore.JSONToModelType<BFChainCore.DownloadTransactionArgJSON> {
+  /**查询参数 */
+  @Field.d(1, TransactionIndexModel, "repeated")
+  tIndexs!: TransactionIndexModel[];
+  toJSON() {
+    return {
+      tIndexs: this.tIndexs.map((ti) => ti.toJSON()),
+    };
+  }
+}
+
+/**
+ * 下载交易的返回值
+ */
+@Type.d("DownloadTransactionReturn")
+export class DownloadTransactionReturnModel<
+    T extends BFChainCore.Transaction = BFChainCore.Transaction
+  >
+  extends CommonResponse
+  implements BFChainCore.JSONToModelType<BFChainCore.DownloadTransactionReturnJSON> {
+  /**查询到的交易 */
+  @Field.d(DownloadTransactionReturnModel.INC++, TransactionInBlock, "repeated")
+  transactions!: TransactionInBlock<T>[];
+  toJSON() {
+    return Object.assign(
+      {
+        transactions: this.transactions.map((tib) => tib.toJSON()),
+      },
+      super.toJSON(),
+    );
+  }
+}

@@ -22,6 +22,11 @@ import {
   BlockQueryOptionsModel,
   SomeBlockModel,
   GenesisBlock,
+  IndexTransactionReturnModel,
+  TransactionIndexModel,
+  DownloadTransactionReturnModel,
+  IndexTransactionArgModel,
+  DownloadTransactionArgModel,
 } from "@bfchain/core-model";
 import { Message } from "@bfchain/protobuf";
 import { ChainChannelHelper } from "./chainChannelHelper";
@@ -122,6 +127,14 @@ export class ChainChannel<
   protected _canQueryTransaction = true;
   get canQueryTransaction() {
     return this._canQueryTransaction;
+  }
+  protected _canIndexTransaction = false;
+  get canIndexTransaction() {
+    return this._canIndexTransaction;
+  }
+  protected _canDownloadTransaction = false;
+  get canDownloadTransaction() {
+    return this._canDownloadTransaction;
   }
   protected _canQueryBlock = true;
   get canQueryBlock() {
@@ -329,6 +342,52 @@ export class ChainChannel<
       opts,
     );
   }
+  /**查询交易索引 */
+  async indexTransactions(
+    query: BFChainCore.QueryTransactionArgJSON["query"],
+    sort?: BFChainCore.QueryTransactionArgJSON["sort"],
+    opts?: BFChainCore.ChannelRequestOptions<THIS>,
+  ) {
+    if (this.canIndexTransaction) {
+      return IndexTransactionReturnModel.fromObject({
+        status: RESPONSE_STATUS.error,
+        error: ErrorMessage.fromObject(new RefuseException("Refuse response index transaction")),
+      });
+    }
+    const arg = IndexTransactionArgModel.fromObject({
+      query: TransactionQueryOptions.fromObject(query),
+      sort: TransactionSortOptions.fromObject<TransactionSortOptions>(sort || {}),
+    });
+    return this._request(
+      DUPLEX_API_CMD.QUERY_TRANSACTION,
+      arg,
+      this.chainChannelHelper.boxIndexTransactionReturn,
+      opts,
+    );
+  }
+  async downloadTransactions<T extends BFChainCore.Transaction = BFChainCore.Transaction>(
+    tIndexs: BFChainCore.DownloadTransactionArgJSON["tIndexs"],
+    opts?: BFChainCore.ChannelRequestOptions<THIS>,
+  ) {
+    if (this.canDownloadTransaction) {
+      return DownloadTransactionReturnModel.fromObject({
+        status: RESPONSE_STATUS.error,
+        error: ErrorMessage.fromObject(new RefuseException("Refuse response download transaction")),
+      });
+    }
+    const arg = DownloadTransactionArgModel.fromObject({
+      tIndexs: tIndexs.map((ti) => TransactionIndexModel.fromObject<TransactionIndexModel>(ti)),
+    });
+    return this._request(
+      DUPLEX_API_CMD.QUERY_TRANSACTION,
+      arg,
+      this.chainChannelHelper.boxDownloadTransactionReturn as (
+        params: ArrayBuffer | Uint8Array,
+      ) => Promise<QueryTransactionReturnModel<T>>,
+      opts,
+    );
+  }
+
   async initBroadcastTransactionArg(
     transaction: BFChainCore.NewTransactionArgJSON["transaction"],
     opts?: BFChainCore.ChannelRequestOptions<THIS>,
@@ -476,6 +535,8 @@ export class ChainChannel<
   initOnMessage() {
     const responseCmdMap = new Map([
       [DUPLEX_API_CMD.QUERY_TRANSACTION, DUPLEX_API_CMD.QUERY_TRANSACTION_RETURN],
+      [DUPLEX_API_CMD.INDEX_TRANSACTION, DUPLEX_API_CMD.INDEX_TRANSACTION_RETURN],
+      [DUPLEX_API_CMD.DOWNLOAD_TRANSACTION, DUPLEX_API_CMD.DOWNLOAD_TRANSACTION_RETURN],
       [DUPLEX_API_CMD.NEW_TRANSACTION, DUPLEX_API_CMD.NEW_TRANSACTION_RETURN],
       [DUPLEX_API_CMD.QUERY_BLOCK, DUPLEX_API_CMD.QUERY_BLOCK_RETURN],
       [DUPLEX_API_CMD.NEW_BLOCK, DUPLEX_API_CMD.NEW_BLOCK_RETURN],
@@ -538,6 +599,74 @@ export class ChainChannel<
                 response.status = RESPONSE_STATUS.success;
                 response.transactions = queryResult.transactions.map((tib) =>
                   TransactionInBlock.fromObject(tib),
+                );
+              }
+              // 绑定返回结果
+              taskResult = response;
+              break;
+            }
+            /// 索引交易
+            case DUPLEX_API_CMD.INDEX_TRANSACTION: {
+              // 发送查询任务
+              if (this.has("onIndexTransactionBinary")) {
+                taskResultBinary = await this.emit(
+                  "onIndexTransactionBinary",
+                  await this.chainChannelHelper.boxIndexTransactionArg(binary),
+                );
+                break;
+              }
+              /**查询交易的响应，默认为繁忙 */
+              const response = IndexTransactionReturnModel.fromObject<IndexTransactionReturnModel>({
+                status: RESPONSE_STATUS.busy,
+                // transactions:[]
+              });
+              const queryResult = this.has("onQueryTransaction")
+                ? await this.emit(
+                    "onIndexTransaction",
+                    await this.chainChannelHelper.boxIndexTransactionArg(binary),
+                  )
+                : undefined;
+
+              /// 查询成功
+              if (queryResult) {
+                response.status = RESPONSE_STATUS.success;
+                response.tIndexs = queryResult.tIndexs.map((ti) =>
+                  TransactionIndexModel.fromObject<TransactionIndexModel>(ti),
+                );
+              }
+              // 绑定返回结果
+              taskResult = response;
+              break;
+            }
+            /// 下载交易
+            case DUPLEX_API_CMD.DOWNLOAD_TRANSACTION: {
+              // 发送查询任务
+              if (this.has("onDownloadTransactionBinary")) {
+                taskResultBinary = await this.emit(
+                  "onDownloadTransactionBinary",
+                  await this.chainChannelHelper.boxDownloadTransactionArg(binary),
+                );
+                break;
+              }
+              /**查询交易的响应，默认为繁忙 */
+              const response = DownloadTransactionReturnModel.fromObject<
+                DownloadTransactionReturnModel
+              >({
+                status: RESPONSE_STATUS.busy,
+                // transactions:[]
+              });
+              const queryResult = this.has("onDownloadTransaction")
+                ? await this.emit(
+                    "onDownloadTransaction",
+                    await this.chainChannelHelper.boxDownloadTransactionArg(binary),
+                  )
+                : undefined;
+
+              /// 查询成功
+              if (queryResult) {
+                response.status = RESPONSE_STATUS.success;
+                response.transactions = queryResult.transactions.map((ti) =>
+                  TransactionInBlock.fromObject(ti),
                 );
               }
               // 绑定返回结果
@@ -655,6 +784,8 @@ export class ChainChannel<
             }
             /// 响应信息
             case DUPLEX_API_CMD.QUERY_TRANSACTION_RETURN:
+            case DUPLEX_API_CMD.INDEX_TRANSACTION_RETURN:
+            case DUPLEX_API_CMD.DOWNLOAD_TRANSACTION_RETURN:
             case DUPLEX_API_CMD.NEW_TRANSACTION_RETURN:
             case DUPLEX_API_CMD.QUERY_BLOCK_RETURN:
             case DUPLEX_API_CMD.NEW_BLOCK_RETURN:

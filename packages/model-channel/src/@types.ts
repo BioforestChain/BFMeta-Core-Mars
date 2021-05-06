@@ -80,6 +80,32 @@ declare namespace BFChainCore {
     transactions: TransactionInBlockJSON[];
   }
 
+  /**查询交易的传入参数 */
+  type IndexTransactionArgJSON = {
+    /**查询参数 */
+    query: TransactionQueryOptionsJSON;
+    /**排序参数 */
+    sort: TransactionSortOptionsJSON;
+  };
+  interface IndexTransactionReturnJSON extends CommonResponseJSON, IndexTransactionReturnParams {}
+  interface IndexTransactionReturnParams {
+    tIndexs: TransactionIndexJSON[];
+  }
+  interface TransactionIndexJSON {
+    height: number;
+    index: number;
+  }
+
+  type DownloadTransactionArgJSON = {
+    tIndexs: TransactionIndexJSON[];
+  };
+  interface DownloadTransactionReturnJSON
+    extends CommonResponseJSON,
+      DownloadTransactionReturnParams {}
+  interface DownloadTransactionReturnParams {
+    transactions: TransactionInBlockJSON[];
+  }
+
   /**接收交易的参数 */
   type NewTransactionArgJSON = {
     /**红包的密码 */
