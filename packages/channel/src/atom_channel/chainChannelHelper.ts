@@ -24,8 +24,9 @@ import {
   NewBlockReturn,
   GetPeerInfoArgModel,
   GetPeerInfoReturnModel,
-  DownloadTransactionArgModel,
   IndexTransactionReturnModel,
+  DownloadTransactionArgModel,
+  DownloadTransactionReturnModel,
 } from "@bfchain/core-model";
 import { BaseHelper, TransactionHelper, BlockHelper, ChainTimeHelper } from "@bfchain/core-helper";
 import { PromiseTimeout } from "./PromiseTimeout";
@@ -388,9 +389,9 @@ export class ChainChannelHelper {
         params,
       });
     }
-    let arg: QueryTransactionReturnModel;
+    let arg: DownloadTransactionReturnModel;
     try {
-      arg = QueryTransactionReturnModel.decode(
+      arg = DownloadTransactionReturnModel.decode(
         params instanceof Uint8Array ? params : new Uint8Array(params),
       );
     } catch (error) {

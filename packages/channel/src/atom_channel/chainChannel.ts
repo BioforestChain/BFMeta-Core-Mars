@@ -388,7 +388,7 @@ export class ChainChannel<
       arg,
       this.chainChannelHelper.boxDownloadTransactionReturn as (
         params: ArrayBuffer | Uint8Array,
-      ) => Promise<QueryTransactionReturnModel<T>>,
+      ) => Promise<DownloadTransactionReturnModel<T>>,
       opts,
     );
   }
