@@ -371,7 +371,7 @@ export class ChainChannel<
     );
   }
   async downloadTransactions<T extends BFChainCore.Transaction = BFChainCore.Transaction>(
-    tIndexs: BFChainCore.DownloadTransactionArgJSON["tIndexs"],
+    tIndexes: BFChainCore.DownloadTransactionArgJSON["tIndexes"],
     opts?: BFChainCore.ChannelRequestOptions<THIS>,
   ) {
     if (this.canDownloadTransaction) {
@@ -381,7 +381,7 @@ export class ChainChannel<
       });
     }
     const arg = DownloadTransactionArgModel.fromObject({
-      tIndexs: tIndexs.map((ti) => TransactionIndexModel.fromObject<TransactionIndexModel>(ti)),
+      tIndexes: tIndexes.map((ti) => TransactionIndexModel.fromObject<TransactionIndexModel>(ti)),
     });
     return this._request(
       DUPLEX_API_CMD.QUERY_TRANSACTION,
@@ -635,7 +635,7 @@ export class ChainChannel<
               /// 查询成功
               if (queryResult) {
                 response.status = RESPONSE_STATUS.success;
-                response.tIndexs = queryResult.tIndexs.map((ti) =>
+                response.tIndexes = queryResult.tIndexes.map((ti) =>
                   TransactionIndexModel.fromObject<TransactionIndexModel>(ti),
                 );
               }

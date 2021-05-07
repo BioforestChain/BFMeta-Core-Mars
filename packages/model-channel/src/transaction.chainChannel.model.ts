@@ -287,11 +287,11 @@ export class IndexTransactionReturnModel
   implements BFChainCore.JSONToModelType<BFChainCore.IndexTransactionReturnJSON> {
   /**查询到的交易 */
   @Field.d(IndexTransactionReturnModel.INC++, TransactionIndexModel, "repeated")
-  tIndexs!: TransactionIndexModel[];
+  tIndexes!: TransactionIndexModel[];
   toJSON() {
     return Object.assign(
       {
-        tIndexs: this.tIndexs.map((ti) => ti.toJSON()),
+        tIndexes: this.tIndexes.map((ti) => ti.toJSON()),
       },
       super.toJSON(),
     );
@@ -307,10 +307,10 @@ export class DownloadTransactionArgModel
   implements BFChainCore.JSONToModelType<BFChainCore.DownloadTransactionArgJSON> {
   /**查询参数 */
   @Field.d(1, TransactionIndexModel, "repeated")
-  tIndexs!: TransactionIndexModel[];
+  tIndexes!: TransactionIndexModel[];
   toJSON() {
     return {
-      tIndexs: this.tIndexs.map((ti) => ti.toJSON()),
+      tIndexes: this.tIndexes.map((ti) => ti.toJSON()),
     };
   }
 }

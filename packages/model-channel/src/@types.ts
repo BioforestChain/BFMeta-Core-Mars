@@ -89,7 +89,7 @@ declare namespace BFChainCore {
   };
   interface IndexTransactionReturnJSON extends CommonResponseJSON, IndexTransactionReturnParams {}
   interface IndexTransactionReturnParams {
-    tIndexs: TransactionIndexJSON[];
+    tIndexes: TransactionIndexJSON[];
   }
   interface TransactionIndexJSON {
     height: number;
@@ -97,7 +97,7 @@ declare namespace BFChainCore {
   }
 
   type DownloadTransactionArgJSON = {
-    tIndexs: TransactionIndexJSON[];
+    tIndexes: TransactionIndexJSON[];
   };
   interface DownloadTransactionReturnJSON
     extends CommonResponseJSON,
