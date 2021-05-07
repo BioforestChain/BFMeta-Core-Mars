@@ -364,7 +364,7 @@ export class ChainChannel<
       sort: TransactionSortOptions.fromObject<TransactionSortOptions>(sort || {}),
     });
     return this._request(
-      DUPLEX_API_CMD.QUERY_TRANSACTION,
+      DUPLEX_API_CMD.INDEX_TRANSACTION,
       arg,
       this.chainChannelHelper.boxIndexTransactionReturn,
       opts,
@@ -384,7 +384,7 @@ export class ChainChannel<
       tIndexes: tIndexes.map((ti) => TransactionIndexModel.fromObject<TransactionIndexModel>(ti)),
     });
     return this._request(
-      DUPLEX_API_CMD.QUERY_TRANSACTION,
+      DUPLEX_API_CMD.DOWNLOAD_TRANSACTION,
       arg,
       this.chainChannelHelper.boxDownloadTransactionReturn as (
         params: ArrayBuffer | Uint8Array,
