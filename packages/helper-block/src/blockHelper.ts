@@ -665,6 +665,38 @@ export class BlockHelper {
    * 计算打块账户和投票账户可分配的奖励总额
    *
    * @param block
+   * @param generatorVote 打块账户上一轮获得的权益
+   * @returns
+   */
+  calcRewardsForForginAndVoting<T extends Block>(block: T, generatorVote: bigint) {
+    const blockFee = BigInt(block.totalFee);
+    const blockReward = BigInt(block.reward);
+    const result = {
+      blockFee,
+      blockReward,
+      reward: blockReward + blockFee,
+      vrewards: BigInt(0),
+      vrewardsRemaining: BigInt(0),
+    };
+    // 打块账户上一轮获得的权益大于 0 才需要把奖励分配给投票账户
+    if (block.height !== 1 && generatorVote > BigInt(0)) {
+      const { jsbiHelper, config } = this;
+      // 上一轮 给打块账户投票的用户 大于 0
+      const votePercent = config.rewardPercent.votePercent;
+      const fee = jsbiHelper.multiplyFloorFraction(blockFee, votePercent);
+      const reward = jsbiHelper.multiplyFloorFraction(blockReward, votePercent);
+      result.blockFee = blockFee - fee;
+      result.blockReward = blockReward - reward;
+      result.reward = result.blockFee + result.blockReward;
+      result.vrewards = fee + reward;
+    }
+    return result;
+  }
+
+  /**
+   * 计算打块账户和投票账户可分配的奖励总额
+   *
+   * @param block
    * @param voters 给打块账户投票的账户
    * @param generatorVote 打块账户上一轮获得的权益
    */
@@ -673,37 +705,12 @@ export class BlockHelper {
     voters: BFChainCore.VoterInfo[],
     generatorVote: bigint,
   ) {
-    const blockUpdateData: BFChainCore.BlockUpdateDataInfo = {
-      reward: BigInt(0),
-      vrewards: BigInt(0),
-      vrewardsRemaining: BigInt(0),
-      blockFee: BigInt(0),
-      blockReward: BigInt(0),
+    const result = this.calcRewardsForForginAndVoting(block, generatorVote);
+    const blockUpdateData = {
+      ...result,
       voters,
       totalEquity: generatorVote,
     };
-    const { jsbiHelper, config } = this;
-    const { height } = block;
-    // 计算给打块账户和投票账户的奖励总额
-    // 打块账户上一轮获得的权益大于 0 才需要把奖励分配给投票账户
-    if (height !== 1 && generatorVote > BigInt(0)) {
-      // 上一轮 给打块账户投票的用户 大于 0
-      const votePercent = config.rewardPercent.votePercent;
-      const fee = BigInt(jsbiHelper.multiplyFloorFraction(block.totalFee, votePercent).toString());
-      const reward = BigInt(jsbiHelper.multiplyFloorFraction(block.reward, votePercent).toString());
-
-      blockUpdateData.blockFee = BigInt(block.totalFee) - fee;
-      blockUpdateData.blockReward = BigInt(block.reward) - reward;
-      blockUpdateData.reward = BigInt(blockUpdateData.blockFee) + blockUpdateData.blockReward;
-
-      blockUpdateData.vrewards = BigInt(fee) + reward;
-      blockUpdateData.vrewardsRemaining = BigInt(0);
-    } else {
-      // 上一轮 给打块账户投票的用户 等于 0
-      blockUpdateData.reward = BigInt(block.reward) + BigInt(block.totalFee);
-      blockUpdateData.blockFee = BigInt(block.totalFee);
-      blockUpdateData.blockReward = BigInt(block.reward);
-    }
     return blockUpdateData;
   }
 
