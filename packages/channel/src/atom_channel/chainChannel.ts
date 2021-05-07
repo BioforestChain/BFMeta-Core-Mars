@@ -148,6 +148,11 @@ export class ChainChannel<
   get canBroadcastBlock() {
     return this._canBroadcastBlock;
   }
+  protected _queryTransactionsLimit = 100;
+  /**单次查询交易的上限 */
+  get queryTransactionsLimit() {
+    return this._queryTransactionsLimit;
+  }
   get defaultReqOptions(): BFChainCore.ChannelRequestOptions<THIS> | undefined {
     return;
   }

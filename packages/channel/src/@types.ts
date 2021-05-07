@@ -177,6 +177,9 @@ declare namespace BFChainCore {
     ): Promise<import("@bfchain/core-model").NewTransactionReturnModel>;
     readonly isRefusePushNewTransaction: boolean;
     readonly canQueryTransaction: boolean;
+    readonly canIndexTransaction: boolean;
+    readonly canDownloadTransaction: boolean;
+    readonly queryTransactionsLimit: number
     readonly canQueryBlock: boolean;
     readonly canBroadcastTransaction: boolean;
     readonly canBroadcastBlock: boolean;

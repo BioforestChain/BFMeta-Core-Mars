@@ -69,6 +69,22 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     }
     return false;
   }
+  get canIndexTransaction() {
+    for (const cc of this.chainChannelSet) {
+      if (cc.canIndexTransaction) {
+        return true;
+      }
+    }
+    return false;
+  }
+  get canDownloadTransaction() {
+    for (const cc of this.chainChannelSet) {
+      if (cc.canDownloadTransaction) {
+        return true;
+      }
+    }
+    return false;
+  }
   get canQueryBlock() {
     for (const cc of this.chainChannelSet) {
       if (cc.canQueryBlock) {
@@ -92,6 +108,16 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       }
     }
     return false;
+  }
+  get queryTransactionsLimit() {
+    let limit = 0;
+    for (const cc of this.chainChannelSet) {
+      const { queryTransactionsLimit } = cc;
+      if (queryTransactionsLimit > limit) {
+        limit = queryTransactionsLimit;
+      }
+    }
+    return limit;
   }
   bfOnInit() {
     /// 先遍历一下当下的节点
@@ -464,13 +490,14 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       },
     });
 
+    const queryUnitLength = opts?.queryUnitLength;
+
+    /**发往每一台节点的查询数量 */
+    const unitLength =
+      queryUnitLength || (totalLength ? totalLength / (this.chainChannelSet.size || 1) : 100);
+
     /// 在异步任务中进行任务分发
     (async () => {
-      /**发往每一台节点的查询数量 */
-      const chainChannelListLen = this.chainChannelList ? [...this.chainChannelList].length : 0;
-      const unitLength = Math.ceil(
-        (totalLength || opts?.queryUnitLength || 20) / (chainChannelListLen || 1),
-      );
       /**所有查询任务的链 */
       let taskChain = Promise.resolve();
       /**是否已经触碰到完结的边界了 */
@@ -515,13 +542,10 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       /**
        * 执行任务
        * @param task_offset
-       * @param times
+       * @param times 希望请求下来的条数
+       * @returns 最终去执行请求的条数
        */
-      const doTask = (task_offset: number, task_limit: number) => {
-        const { queryer, options } = queryerMap.forceGet({
-          offset: task_offset,
-          limit: task_limit,
-        });
+      const doTask = (task_offset: number, default_task_limit: number) => {
         /**
          * 失败次数
          */
@@ -531,7 +555,15 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
           async () => {
             do {
               const finished = await requestChainChannel(async (event) => {
-                waitUseableChainChannel.resolve();
+                const chain_task_limit = Math.min(
+                  event.chainChannel.queryTransactionsLimit,
+                  default_task_limit,
+                );
+                const { queryer, options } = queryerMap.forceGet({
+                  offset: task_offset,
+                  limit: chain_task_limit,
+                });
+                waitUseableChainChannel.resolve(chain_task_limit);
                 // 开始执行查询
                 try {
                   const res = await queryer.addChainChannel(event.chainChannel, options);
@@ -544,7 +576,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                         resultGenerator.push(trs);
                       }
                     });
-                    if (res.transactions.length < task_limit) {
+                    if (res.transactions.length < chain_task_limit) {
                       /// 如果是高度最高的那个节点返回空列表，那么基本就是空列表没跑了
                       const resultChannelMaybeHeight = queryer.getChainChannelByResult(res)
                         ?.maybeHeight;
@@ -622,10 +654,11 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       /**节点锁
        * 同一时间内节点只会由一个请求在执行
        */
-      let waitUseableChainChannel: PromiseOut<void>;
+      let waitUseableChainChannel: PromiseOut<number>;
 
       /// 分发任务
-      for (let i = 0, task_limit = Math.min(unitLength, limit); i < limit; i += task_limit) {
+      const default_task_limit = Math.min(unitLength, limit);
+      for (let i = 0, task_limit = default_task_limit; i < limit; i += task_limit) {
         const task_offset = i + offset;
         while (task_offset > maxOffset) {
           /// 因为query_done_offset影响着整个循环的生命周期,所以这里允许使用 query_done_offset 来控制进度锁
@@ -641,7 +674,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
           break;
         }
         waitUseableChainChannel = new PromiseOut();
-        await doTask(task_offset, task_limit);
+        task_limit = await doTask(task_offset, default_task_limit);
 
         if (i + task_limit > limit) {
           task_limit = i + task_limit - limit;
