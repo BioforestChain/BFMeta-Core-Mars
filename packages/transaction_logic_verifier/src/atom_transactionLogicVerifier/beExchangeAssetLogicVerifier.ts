@@ -147,6 +147,7 @@ export class BeExchangeAssetLogicVerifier extends TransactionLogicVerifier {
     const { rangeType, range } = toExchangeAssetJson;
 
     if (rangeType & RANGE_TYPE.MULTI_ADDRESS) {
+      range.push(toExchangeAssetJson.senderId);
       if (!range.includes(transaction.senderId)) {
         throw new ConsensusException(SHOULD_BE, {
           to_compare_prop: `senderId ${transaction.senderId}`,
