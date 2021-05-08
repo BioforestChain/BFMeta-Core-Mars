@@ -139,4 +139,35 @@ export class AccountBaseHelper {
       (await this.getPublicKeyStringFromSecondSecret(secret, secondSecret)) === secondPublicKey
     );
   }
+  //#region 新版
+
+  async createSecondSecretKeypairV2(secret: string, secondSecret: string) {
+    const fullSecondSecret = `v2:${secret}-${secondSecret}`;
+    return this.createSecretKeypair(fullSecondSecret);
+  }
+  /**根据私钥获取公钥Buffer */
+  async getPublicKeyFromSecondSecretV2(secret: string, secondSecret: string) {
+    return (await this.createSecondSecretKeypairV2(secret, secondSecret)).publicKey;
+  }
+
+  /**根据私钥获取公钥String */
+  async getPublicKeyStringFromSecondSecretV2(
+    secret: string,
+    secondSecret: string,
+    encode: BFChainUtil.HexBase64Latin1Encoding = "hex",
+  ) {
+    return (await this.getPublicKeyFromSecondSecretV2(secret, secondSecret)).toString(encode);
+  }
+  /**
+   * 校验二次密码公钥是否正确
+   * @param secret 主密码
+   * @param secondSecret 二次密码
+   * @param secondPublicKey 二次密码公钥
+   */
+  async checkSecondSecretV2(secret: string, secondSecret: string, secondPublicKey: string) {
+    return (
+      (await this.getPublicKeyStringFromSecondSecretV2(secret, secondSecret)) === secondPublicKey
+    );
+  }
+  //#endregion
 }
