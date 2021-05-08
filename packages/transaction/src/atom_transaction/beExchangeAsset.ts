@@ -230,7 +230,7 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<
     if (body.senderId === recipientId) {
       if (beExchangeNumber !== "0") {
         throw new ArgumentIllegalException(PROP_SHOULD_EQ_FIELD, {
-          prop: "beExchangeNumber",
+          prop: `beExchangeNumber ${beExchangeNumber}`,
           field: "0",
           ...BeExchangeAssetAsset_Exception_Detail,
         });
@@ -238,20 +238,17 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<
     } else {
       if (beExchangeNumber === "0") {
         throw new ArgumentIllegalException(PROP_SHOULD_GT_FIELD, {
-          prop: "beExchangeNumber",
+          prop: `beExchangeNumber ${beExchangeNumber}`,
           field: "0",
           ...BeExchangeAssetAsset_Exception_Detail,
         });
       }
       // 这里是用 to 算 be，所以是 to / 兑换比例，即 to * 兑换比例的倒数
-      const minBeExchangeNumber_BI = jsbiHelper.multiplyRoundFraction(
-        beExchangeAsset.toExchangeNumber,
-        {
-          numerator: exchangeAsset.exchangeRate.nextWeight,
-          denominator: exchangeAsset.exchangeRate.prevWeight,
-        },
-      );
-      if (minBeExchangeNumber_BI > BigInt(beExchangeAsset.beExchangeNumber)) {
+      const minBeExchangeNumber_BI = jsbiHelper.multiplyRoundFraction(toExchangeNumber, {
+        numerator: exchangeAsset.exchangeRate.nextWeight,
+        denominator: exchangeAsset.exchangeRate.prevWeight,
+      });
+      if (minBeExchangeNumber_BI > BigInt(beExchangeNumber)) {
         throw new ArgumentIllegalException(PROP_SHOULD_GTE_FIELD, {
           prop: `beExchangeNumber ${beExchangeNumber}`,
           field: minBeExchangeNumber_BI.toString(),
