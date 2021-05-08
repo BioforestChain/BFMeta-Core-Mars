@@ -347,6 +347,30 @@ export class ChainChannel<
       opts,
     );
   }
+
+  
+  /**
+   * 根据index和height查询交易
+   * @param query 
+   * @param sort 
+   * @param opts 
+   */
+  async queryTransactionsV2<T extends BFChainCore.Transaction = BFChainCore.Transaction>(
+    query: BFChainCore.QueryTransactionArgJSON["query"],
+    sort?: BFChainCore.QueryTransactionArgJSON["sort"],
+    opts?: BFChainCore.ChannelRequestOptions<THIS>,
+  ) {
+    if (!this.canQueryTransaction) {
+      return QueryTransactionReturnModel.fromObject({
+        status: RESPONSE_STATUS.error,
+        error: ErrorMessage.fromObject(new RefuseException("Refuse response query transaction")),
+      });
+    }
+    const indexReturn  = await this.indexTransactions(query,sort,opts);
+    return this.downloadTransactions(indexReturn.tIndexes,opts)
+    
+  }
+
   /**查询交易索引 */
   async indexTransactions(
     query: BFChainCore.QueryTransactionArgJSON["query"],
