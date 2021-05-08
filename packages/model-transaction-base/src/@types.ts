@@ -328,7 +328,7 @@ declare namespace BFChainCore {
     toExchangeAsset: string;
     /**被交换的权益名，大写字母组成，3-5 个字符 */
     beExchangeAsset: string;
-    /**用于交换的权益数量，0-9 组成并且不包含小数点，必须大于 0 */
+    /**用于交换的权益数量，0-9 组成并且不包含小数点 */
     toExchangeNumber: string;
     /**权益的交换比例 */
     exchangeRate: BFChainCore.RateJSON<string>;
@@ -343,9 +343,9 @@ declare namespace BFChainCore {
     transactionSignature: string;
     /**加密密钥生成的签名数组 */
     ciphertextSignature?: AccountSignatureJSON;
-    /**用于交换的权益数量，权益数量由0-9共十个数字组成，权益数量不包含小数点且必须大于0 */
+    /**用于交换的权益数量，权益数量由0-9共十个数字组成，权益数量不包含小数点 */
     toExchangeNumber: string;
-    /**交换得到的权益数量，权益数量由0-9共十个数字组成，权益数量不包含小数点且必须大于0 */
+    /**交换得到的权益数量，权益数量由0-9共十个数字组成，权益数量不包含小数点 */
     beExchangeNumber: string;
     /**权益交换信息 */
     exchangeAsset: ToExchangeAssetJSON;

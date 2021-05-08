@@ -67,7 +67,7 @@ async function getToExchangeAssetTransaction(
     beExchangeChainName: "bfchain",
     toExchangeAsset: "ZEK",
     beExchangeAsset: "WZX",
-    toExchangeNumber: "0",
+    toExchangeNumber: "100",
     exchangeRate: {
       prevWeight: "2",
       nextWeight: "3",
@@ -143,6 +143,9 @@ async function getBeExchangeAssetTransaction(
     beExchangeNumber: beExchangeNumber === 0n ? "1" : beExchangeNumber.toString(),
     exchangeAsset: toExchangeAsset,
   };
+  if (data.senderId === data.recipientId) {
+    beExchangeAsset.beExchangeNumber = "0";
+  }
   if (toExchangeAsset.cipherPublicKeys.length > 0) {
     const index = Math.floor(Math.random() * recipient.length);
     const signature = (
@@ -272,7 +275,7 @@ async function client(transaction: BFChainCore.Transaction) {
   await client(tx);
   console.log(tx.toJSON().asset);
   const yy = await getToExchangeAssetTransaction(aaa, [cc, dd], false);
-  const tx2 = await getBeExchangeAssetTransaction(cc, yy, []);
+  const tx2 = await getBeExchangeAssetTransaction(aaa, yy, []);
   await client(tx2);
   console.log(tx2.toJSON().asset);
 })();

@@ -10,7 +10,6 @@ import {
 } from "@bfchain/core-helper";
 import {
   CoreExceptionGenerator,
-  SHOULD_NOT_BE,
   PROP_IS_REQUIRE,
   SHOULD_BE,
   PARAM_LOST,
@@ -19,8 +18,9 @@ import {
   NOT_EXIST,
   PROP_SHOULD_GTE_FIELD,
   SHOULD_NOT_EXIST,
-  PROP_SHOULD_GT_FIELD,
   PROP_SHOULD_LTE_FIELD,
+  PROP_SHOULD_EQ_FIELD,
+  PROP_SHOULD_GT_FIELD,
 } from "@bfchain/core-util-exception";
 import { ToExchangeAssetTransactionFactory } from "./toExchangeAsset";
 import { Injectable, TaskList, parseHexToArrayBuffer } from "@bfchain/util";
@@ -97,15 +97,6 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<
     if (!recipientId) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "recipientId",
-        ...Function_Exception_Detail,
-      });
-    }
-
-    if (body.senderId === recipientId) {
-      throw new ArgumentIllegalException(SHOULD_NOT_BE, {
-        to_compare_prop: `senderId ${body.senderId}`,
-        to_target: "body",
-        be_compare_prop: `recipientId ${recipientId}`,
         ...Function_Exception_Detail,
       });
     }
@@ -214,13 +205,6 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<
         ...BeExchangeAssetAsset_Exception_Detail,
       });
     }
-    if (beExchangeNumber === "0") {
-      throw new ArgumentIllegalException(PROP_SHOULD_GT_FIELD, {
-        prop: "beExchangeNumber",
-        field: "0",
-        ...BeExchangeAssetAsset_Exception_Detail,
-      });
-    }
 
     const { exchangeAsset, ciphertextSignature } = beExchangeAsset;
 
@@ -243,20 +227,37 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<
       });
     }
 
-    // 这里是用 to 算 be，所以是 to / 兑换比例，即 to * 兑换比例的倒数
-    const minBeExchangeNumber_BI = jsbiHelper.multiplyRoundFraction(
-      beExchangeAsset.toExchangeNumber,
-      {
-        numerator: exchangeAsset.exchangeRate.nextWeight,
-        denominator: exchangeAsset.exchangeRate.prevWeight,
-      },
-    );
-    if (minBeExchangeNumber_BI > BigInt(beExchangeAsset.beExchangeNumber)) {
-      throw new ArgumentIllegalException(PROP_SHOULD_GTE_FIELD, {
-        prop: `beExchangeNumber ${beExchangeNumber}`,
-        field: minBeExchangeNumber_BI.toString(),
-        ...BeExchangeAssetAsset_Exception_Detail,
-      });
+    if (body.senderId === recipientId) {
+      if (beExchangeNumber !== "0") {
+        throw new ArgumentIllegalException(PROP_SHOULD_EQ_FIELD, {
+          prop: "beExchangeNumber",
+          field: "0",
+          ...BeExchangeAssetAsset_Exception_Detail,
+        });
+      }
+    } else {
+      if (beExchangeNumber === "0") {
+        throw new ArgumentIllegalException(PROP_SHOULD_GT_FIELD, {
+          prop: "beExchangeNumber",
+          field: "0",
+          ...BeExchangeAssetAsset_Exception_Detail,
+        });
+      }
+      // 这里是用 to 算 be，所以是 to / 兑换比例，即 to * 兑换比例的倒数
+      const minBeExchangeNumber_BI = jsbiHelper.multiplyRoundFraction(
+        beExchangeAsset.toExchangeNumber,
+        {
+          numerator: exchangeAsset.exchangeRate.nextWeight,
+          denominator: exchangeAsset.exchangeRate.prevWeight,
+        },
+      );
+      if (minBeExchangeNumber_BI > BigInt(beExchangeAsset.beExchangeNumber)) {
+        throw new ArgumentIllegalException(PROP_SHOULD_GTE_FIELD, {
+          prop: `beExchangeNumber ${beExchangeNumber}`,
+          field: minBeExchangeNumber_BI.toString(),
+          ...BeExchangeAssetAsset_Exception_Detail,
+        });
+      }
     }
 
     const { cipherPublicKeys } = exchangeAsset;
