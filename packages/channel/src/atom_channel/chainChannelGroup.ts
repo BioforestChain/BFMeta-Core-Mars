@@ -61,9 +61,9 @@ export const CHAIN_CHANNEL_GROUP_ARGS = {
 export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = ChainChannel>
   extends ChainChannelBase
   implements BFChainCore.ChainChannelGroup<DH>, AfterInit, OnInit {
-  get canQueryTransaction() {
+  get canQueryTransactions() {
     for (const cc of this.chainChannelSet) {
-      if (cc.canQueryTransaction) {
+      if (cc.canQueryTransactions) {
         return true;
       }
     }
@@ -71,7 +71,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
   }
   get canIndexTransaction() {
     for (const cc of this.chainChannelSet) {
-      if (cc.canIndexTransaction) {
+      if (cc.canIndexTransactions) {
         return true;
       }
     }
@@ -79,7 +79,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
   }
   get canDownloadTransaction() {
     for (const cc of this.chainChannelSet) {
-      if (cc.canDownloadTransaction) {
+      if (cc.canDownloadTransactions) {
         return true;
       }
     }
@@ -109,12 +109,22 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     }
     return false;
   }
-  get queryTransactionsLimit() {
+  get limitQueryTransactions() {
     let limit = 0;
     for (const cc of this.chainChannelSet) {
-      const { queryTransactionsLimit } = cc;
-      if (queryTransactionsLimit > limit) {
-        limit = queryTransactionsLimit;
+      const { limitQueryTransactions: ccLimit } = cc;
+      if (ccLimit > limit) {
+        limit = ccLimit;
+      }
+    }
+    return limit;
+  }
+  get limitIndexTransactions() {
+    let limit = 0;
+    for (const cc of this.chainChannelSet) {
+      const { limitIndexTransactions: ccLimit } = cc;
+      if (ccLimit > limit) {
+        limit = ccLimit;
       }
     }
     return limit;
@@ -556,7 +566,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
             do {
               const finished = await requestChainChannel(async (event) => {
                 const chain_task_limit = Math.min(
-                  event.chainChannel.queryTransactionsLimit,
+                  event.chainChannel.limitQueryTransactions,
                   default_task_limit,
                 );
                 const { queryer, options } = queryerMap.forceGet({

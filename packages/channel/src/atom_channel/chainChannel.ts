@@ -49,7 +49,7 @@ export abstract class ChainChannelBase
   implements BFChainCore.ChainChannelBase {
   public abstract maybeHeight: number;
   public abstract lastConsensusVersion: number;
-  public abstract canQueryTransaction: boolean;
+  public abstract canQueryTransactions: boolean;
   public abstract canQueryBlock: boolean;
   public abstract canBroadcastTransaction: boolean;
   public abstract canBroadcastBlock: boolean;
@@ -123,36 +123,37 @@ export class ChainChannel<
   >
   extends ChainChannelBase
   implements BFChainCore.ChainChannel<THIS> {
-  /**查询默认为true 广播默认为false */
-  protected _canQueryTransaction = true;
-  get canQueryTransaction() {
-    return this._canQueryTransaction;
+  //#region chainChannel接口状态，查询默认为false，下载为true，广播默认为true
+  get canQueryTransactions() {
+    return false;
   }
-  protected _canIndexTransaction = false;
-  get canIndexTransaction() {
-    return this._canIndexTransaction;
+  get canIndexTransactions() {
+    return false;
   }
-  protected _canDownloadTransaction = false;
-  get canDownloadTransaction() {
-    return this._canDownloadTransaction;
+  get canDownloadTransactions() {
+    return true;
   }
-  protected _canQueryBlock = true;
   get canQueryBlock() {
-    return this._canQueryBlock;
+    return true;
   }
-  protected _canBroadcastTransaction = false;
   get canBroadcastTransaction() {
-    return this._canBroadcastTransaction;
+    return true;
   }
-  protected _canBroadcastBlock = false;
   get canBroadcastBlock() {
-    return this._canBroadcastBlock;
+    return true;
   }
-  protected _queryTransactionsLimit = 100;
+  protected _limitQT = 100;
   /**单次查询交易的上限 */
-  get queryTransactionsLimit() {
-    return this._queryTransactionsLimit;
+  get limitQueryTransactions() {
+    return this._limitQT;
   }
+  protected _limitIT = 100;
+  /**单次查询交易索引的上限 */
+  get limitIndexTransactions() {
+    return this._limitIT;
+  }
+  //#endregion
+
   get defaultReqOptions(): BFChainCore.ChannelRequestOptions<THIS> | undefined {
     return;
   }
@@ -328,7 +329,7 @@ export class ChainChannel<
     sort?: BFChainCore.QueryTransactionArgJSON["sort"],
     opts?: BFChainCore.ChannelRequestOptions<THIS>,
   ) {
-    if (!this.canQueryTransaction) {
+    if (!this.canQueryTransactions) {
       return QueryTransactionReturnModel.fromObject({
         status: RESPONSE_STATUS.error,
         error: ErrorMessage.fromObject(new RefuseException("Refuse response query transaction")),
@@ -348,27 +349,25 @@ export class ChainChannel<
     );
   }
 
-  
   /**
    * 根据index和height查询交易
-   * @param query 
-   * @param sort 
-   * @param opts 
+   * @param query
+   * @param sort
+   * @param opts
    */
   async queryTransactionsV2<T extends BFChainCore.Transaction = BFChainCore.Transaction>(
     query: BFChainCore.QueryTransactionArgJSON["query"],
     sort?: BFChainCore.QueryTransactionArgJSON["sort"],
     opts?: BFChainCore.ChannelRequestOptions<THIS>,
   ) {
-    if (!this.canQueryTransaction) {
+    if (!this.canQueryTransactions) {
       return QueryTransactionReturnModel.fromObject({
         status: RESPONSE_STATUS.error,
         error: ErrorMessage.fromObject(new RefuseException("Refuse response query transaction")),
       });
     }
-    const indexReturn  = await this.indexTransactions(query,sort,opts);
-    return this.downloadTransactions(indexReturn.tIndexes,opts)
-    
+    const indexReturn = await this.indexTransactions(query, sort, opts);
+    return this.downloadTransactions(indexReturn.tIndexes, opts);
   }
 
   /**查询交易索引 */
@@ -377,7 +376,7 @@ export class ChainChannel<
     sort?: BFChainCore.QueryTransactionArgJSON["sort"],
     opts?: BFChainCore.ChannelRequestOptions<THIS>,
   ) {
-    if (this.canIndexTransaction) {
+    if (this.canIndexTransactions) {
       return IndexTransactionReturnModel.fromObject({
         status: RESPONSE_STATUS.error,
         error: ErrorMessage.fromObject(new RefuseException("Refuse response index transaction")),
@@ -399,7 +398,7 @@ export class ChainChannel<
     tIndexes: BFChainCore.DownloadTransactionArgJSON["tIndexes"],
     opts?: BFChainCore.ChannelRequestOptions<THIS>,
   ) {
-    if (this.canDownloadTransaction) {
+    if (this.canDownloadTransactions) {
       return DownloadTransactionReturnModel.fromObject({
         status: RESPONSE_STATUS.error,
         error: ErrorMessage.fromObject(new RefuseException("Refuse response download transaction")),
