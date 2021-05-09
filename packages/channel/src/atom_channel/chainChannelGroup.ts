@@ -37,6 +37,7 @@ import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 import { GroupGetTransactionsApiBuilder, GroupQueryBlockBuilder } from "./GroupRequesterBuilder";
 import { BaseHelper, ChainTimeHelper, ConfigHelper, TransactionHelper } from "@bfchain/core-helper";
 import type { PromiseTimeout } from "./PromiseTimeout";
+import { IntSet } from "./IntSet";
 
 const {
   AbortException,
@@ -1018,6 +1019,30 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       });
 
     return resultGenerator;
+  }
+  /**批量下载区块链事件
+   * @TODO 完成这个方法
+   */
+  async downloadTransactions<T extends BFChainCore.Transaction = BFChainCore.Transaction>(
+    tIndexes: BFChainCore.DownloadTransactionArgJSON["tIndexes"],
+    opts?: BFChainCore.ChannelRequestOptions<DH>,
+    _resultGenerator?: AsyncIteratorGenerator<TransactionInBlock<T>>,
+  ) {
+    /**这里预先将tIndex全部展开，因为可能存在重复的清空 */
+    const tIndexList = [];
+    /**每个高度之间都会有一个空白的元素间隔，使它们不连续 */
+    const heightBaseIndexs = new EasyMap<number, number>((height) => tIndexList.length + 1);
+    /**按照height进行排序
+     * 无需在意相同height中index的排序，因为它们会依次展开在有序的tIndexList数组中
+     */
+    for (const iIndex of tIndexes.slice().sort((a, b) => a.height - b.height)) {
+      const baseIndex = heightBaseIndexs.forceGet(iIndex.height);
+      for (let i = 0; i < iIndex.length; ++i) {
+        const index = baseIndex + i;
+        tIndexList[index] = index;
+      }
+    }
+    const offsetSet = new IntSet(tIndexList);
   }
 
   /**

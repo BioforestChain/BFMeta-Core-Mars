@@ -28,6 +28,7 @@
     "src/atom_channel/chainChannelHelper.ts",
     "src/atom_channel/GroupRequesterBuilder.ts",
     "src/atom_channel/index.ts",
+    "src/atom_channel/IntSet.ts",
     "src/atom_channel/PromiseTimeout.ts",
     "src/channel.ts",
     "src/index.ts"
