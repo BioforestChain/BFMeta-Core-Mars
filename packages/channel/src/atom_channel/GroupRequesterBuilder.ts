@@ -69,18 +69,6 @@ abstract class GroupRequesterBuilder<CC extends BFChainCore.SimpleChainChannel, 
       { chainChannel },
     );
   }
-  abstract getTimeoutExceptionInfo(
-    cc: CC,
-  ): readonly [
-    /**message */
-    string | undefined,
-    /**detail */
-    unknown,
-  ];
-  protected abstract _getFinishInfo(): {
-    message?: string | undefined;
-    detail?: any;
-  };
   removeChainChannel(chainChannel: CC) {
     return this._inQueneTaskMap.delete(chainChannel);
   }
@@ -92,30 +80,30 @@ abstract class GroupRequesterBuilder<CC extends BFChainCore.SimpleChainChannel, 
     return this._retCCMap.get(ret);
   }
   finish() {
-    const finishInfo = this._getFinishInfo();
     this._inQueneTaskMap.clear();
     this._retCCMap.clear();
   }
 }
 
-export const GROUP_QUERY_TRANSACTIONS_BUILDER_ARGS = {
+export const GROUP_GET_TRANSACTIONS_API_BUILDER_ARGS = {
   QUERY: Symbol("query"),
   SORT: Symbol("sort"),
 };
+
 /**
  * 数据请求器，确保重复的请求不会重复发起
  * @TODO 使用 ccbase 将请求参数一次性序列化好
  */
 @Resolvable()
-export class GroupQueryTransactionsBuilder<
+export class GroupGetTransactionsApiBuilder<
   CC extends BFChainCore.SimpleChainChannel,
-  R = BFChainUtil.PromiseReturnType<CC["queryTransactions"]>
+  R //= BFChainUtil.PromiseReturnType<CC["queryTransactions"]>
 > extends GroupRequesterBuilder<CC, R> {
   @Inject(ChainChannelHelper) protected readonly helper!: ChainChannelHelper;
   constructor(
-    @Inject(GROUP_QUERY_TRANSACTIONS_BUILDER_ARGS.QUERY)
+    @Inject(GROUP_GET_TRANSACTIONS_API_BUILDER_ARGS.QUERY)
     public readonly query: BFChainCore.TransactionQueryOptionsJSON,
-    @Inject(GROUP_QUERY_TRANSACTIONS_BUILDER_ARGS.SORT, { optional: true })
+    @Inject(GROUP_GET_TRANSACTIONS_API_BUILDER_ARGS.SORT, { optional: true })
     public readonly sort?: BFChainCore.TransactionSortOptionsJSON,
   ) {
     super();
@@ -123,33 +111,21 @@ export class GroupQueryTransactionsBuilder<
   protected _doRequest(cc: CC, opts: BFChainCore.ChannelRequestOptions<CC>) {
     return (cc.queryTransactions(this.query, this.sort, opts) as unknown) as PromiseLike<R>;
   }
-  getTimeoutExceptionInfo() {
-    return [
-      /**message */ "queryTransactions({query} / {sort}) timeout.",
-      /**detail */
-      {
-        query: JSON.stringify(this.query),
-        sort: JSON.stringify(this.sort),
-      },
-    ] as const;
-  }
-  protected _getFinishInfo(): { message?: string | undefined; detail?: any } {
-    return { message: "finish queryTransactions from other chainChannel" };
-  }
+
   static create<
     CC extends BFChainCore.SimpleChainChannel,
-    R = BFChainUtil.PromiseReturnType<CC["queryTransactions"]>
+    R //= BFChainUtil.PromiseReturnType<CC["queryTransactions"]>
   >(
     rootModuleMap: ModuleStroge,
     query: BFChainCore.TransactionQueryOptionsJSON,
     sort?: BFChainCore.TransactionSortOptionsJSON,
   ) {
-    return Resolve<GroupQueryTransactionsBuilder<CC, R>>(
-      GroupQueryTransactionsBuilder,
+    return Resolve<GroupGetTransactionsApiBuilder<CC, R>>(
+      GroupGetTransactionsApiBuilder,
       new ModuleStroge(
         [
-          [GROUP_QUERY_TRANSACTIONS_BUILDER_ARGS.QUERY, query],
-          [GROUP_QUERY_TRANSACTIONS_BUILDER_ARGS.SORT, sort],
+          [GROUP_GET_TRANSACTIONS_API_BUILDER_ARGS.QUERY, query],
+          [GROUP_GET_TRANSACTIONS_API_BUILDER_ARGS.SORT, sort],
         ],
         rootModuleMap,
       ),

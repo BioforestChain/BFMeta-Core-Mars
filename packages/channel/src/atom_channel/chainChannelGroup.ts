@@ -29,11 +29,12 @@ import {
   NewTransactionReturnModel,
   QueryBlockReturnModel,
   QueryTransactionReturnModel,
+  IndexTransactionReturnModel,
 } from "@bfchain/core-model";
 import { ChainChannelHelper } from "./chainChannelHelper";
 import { ChainChannel, ChainChannelBase } from "./chainChannel";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
-import { GroupQueryTransactionsBuilder, GroupQueryBlockBuilder } from "./GroupRequesterBuilder";
+import { GroupGetTransactionsApiBuilder, GroupQueryBlockBuilder } from "./GroupRequesterBuilder";
 import { BaseHelper, ChainTimeHelper, ConfigHelper, TransactionHelper } from "@bfchain/core-helper";
 import type { PromiseTimeout } from "./PromiseTimeout";
 
@@ -448,8 +449,9 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     const parallelTaskId = `Group(${this.groupName}) queryTransactions-${
       Date.now() + Math.random()
     }`;
+    const customChannelFilter = opts?.channelFilter || (() => true);
     const { requestChainChannel } = this.$startParallelTask(parallelTaskId, {
-      channelFilter: opts?.channelFilter,
+      channelFilter: (cc) => cc.canQueryTransactions && customChannelFilter(cc),
       abortWhenNoChainChannel: opts?.abortWhenNoChainChannel,
     });
 
@@ -472,24 +474,43 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       resultGenerator.on("error", offCatch);
     }
 
+    type QueryTransactionAddChainChannelOptions = _AddChainChannelOptions<
+      DH,
+      QueryTransactionReturnModel<T>,
+      { offset: number; limit: number },
+      BFChainCore.TransactionSortOptionsJSON
+    >;
+    const _addChainChannelOptionsExmBuilder = {
+      timeout: (self: QueryTransactionAddChainChannelOptions, cc: DH) =>
+        `peer(${cc.address}) queryTransactions(<offset:${self.query.offset},limit:${self.query.limit}>) timeout.` +
+        `\n[query:]${JSON.stringify(self.queryer.query)}` +
+        `\n[sort:]${JSON.stringify(self.queryer.sort)}`,
+    };
+
     const queryerMap = EasyMap.from<
       { offset: number; limit: number },
       {
-        queryer: GroupQueryTransactionsBuilder<DH, QueryTransactionReturnModel<T>>;
-        options: AddChainChannelOptions<DH, T>;
+        queryer: GroupGetTransactionsApiBuilder<DH, QueryTransactionReturnModel<T>>;
+        options: _AddChainChannelOptions<
+          DH,
+          QueryTransactionReturnModel<T>,
+          { offset: number; limit: number },
+          BFChainCore.TransactionSortOptionsJSON
+        >;
       },
       string
     >({
       transformKey: (query) => `${query.offset}-${query.limit}`,
       creater: (query) => {
-        const queryer = GroupQueryTransactionsBuilder.create<DH, QueryTransactionReturnModel<T>>(
+        const queryer = GroupGetTransactionsApiBuilder.create<DH, QueryTransactionReturnModel<T>>(
           this.moduleMap,
           { ...baseQueryCondition, ...query },
           sort,
         );
         return {
           queryer,
-          options: new AddChainChannelOptions<DH, T>(
+          options: new _AddChainChannelOptions(
+            _addChainChannelOptionsExmBuilder,
             query,
             sort,
             queryer,
@@ -565,6 +586,9 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
           async () => {
             do {
               const finished = await requestChainChannel(async (event) => {
+                /**
+                 * @FIXME 这里有可能会出现节点的limitQueryTransactions少于default_task_limit，导致查询量少了出现问题。需要后续做补充查询
+                 */
                 const chain_task_limit = Math.min(
                   event.chainChannel.limitQueryTransactions,
                   default_task_limit,
@@ -705,6 +729,297 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
 
     return resultGenerator;
   }
+
+  indexTransactions(
+    query: BFChainCore.QueryTransactionArgJSON["query"],
+    sort?: BFChainCore.QueryTransactionArgJSON["sort"],
+    opts?: BFChainCore.ChannelGroupRequestOptions<DH>,
+    _resultGenerator?: AsyncIteratorGenerator<BFChainCore.TransactionIndexJSON>,
+  ) {
+    // /**异常时重试次数 */
+    // const RETRY_TIMES = 3;
+    const { offset, limit: totalLength, ...baseQueryCondition } = query;
+    const limit = baseQueryCondition.signature ? 1 : totalLength || Infinity;
+
+    const parallelTaskId = `Group(${this.groupName}) indexTransactions-${
+      Date.now() + Math.random()
+    }`;
+    const customChannelFilter = opts?.channelFilter || (() => true);
+    const { requestChainChannel } = this.$startParallelTask(parallelTaskId, {
+      channelFilter: (cc) => cc.canIndexTransactions && customChannelFilter(cc),
+      abortWhenNoChainChannel: opts?.abortWhenNoChainChannel,
+    });
+
+    const resultPo =
+      opts &&
+      this.helper.parserAborterOptions(opts, {
+        channelGroup: this as BFChainCore.ChainChannelGroup<DH>,
+      });
+
+    const resultGenerator =
+      _resultGenerator || new AsyncIteratorGenerator<BFChainCore.TransactionIndexJSON>();
+
+    const resultPromise = resultPo && resultPo.promise;
+    if (resultPromise) {
+      safePromiseThen(resultPromise, undefined, resultGenerator.reject);
+      const offCatch = (_: unknown, next: () => void) => {
+        safePromiseOffThen(resultPromise, undefined, resultGenerator.reject);
+        next();
+      };
+      resultGenerator.on("done", offCatch);
+      resultGenerator.on("error", offCatch);
+    }
+
+    type IndexTransactionAddChainChannelOptions = _AddChainChannelOptions<
+      DH,
+      IndexTransactionReturnModel,
+      { offset: number; limit: number },
+      BFChainCore.TransactionSortOptionsJSON
+    >;
+    const _addChainChannelOptionsExmBuilder = {
+      timeout: (self: IndexTransactionAddChainChannelOptions, cc: DH) =>
+        `peer(${cc.address}) indexTransactions(<offset:${self.query.offset},limit:${self.query.limit}>) timeout.` +
+        `\n[query:]${JSON.stringify(self.queryer.query)}` +
+        `\n[sort:]${JSON.stringify(self.queryer.sort)}`,
+    };
+    const queryerMap = EasyMap.from<
+      { offset: number; limit: number },
+      {
+        queryer: GroupGetTransactionsApiBuilder<DH, IndexTransactionReturnModel>;
+        options: IndexTransactionAddChainChannelOptions;
+      },
+      string
+    >({
+      transformKey: (query) => `${query.offset}-${query.limit}`,
+      creater: (query) => {
+        const queryer = GroupGetTransactionsApiBuilder.create<DH, IndexTransactionReturnModel>(
+          this.moduleMap,
+          { ...baseQueryCondition, ...query },
+          sort,
+        );
+        return {
+          queryer,
+          options: new _AddChainChannelOptions(
+            _addChainChannelOptionsExmBuilder,
+            query,
+            sort,
+            queryer,
+            this.helper.getChainChannelTimeout,
+            resultPo,
+          ),
+        };
+      },
+    });
+
+    const queryUnitLength = opts?.queryUnitLength;
+
+    /**发往每一台节点的查询数量 */
+    const unitLength =
+      queryUnitLength || (totalLength ? totalLength / (this.chainChannelSet.size || 1) : 100);
+
+    /// 在异步任务中进行任务分发
+    (async () => {
+      /**所有查询任务的链 */
+      let taskChain = Promise.resolve();
+      /**是否已经触碰到完结的边界了 */
+      let queryDoneOffset = limit + offset;
+      /**更新边界,同时会释放迭代锁 */
+      const setQueryDoneOffset = (newOffset: number) => {
+        queryDoneOffset = newOffset;
+        freeIteratorLock();
+      };
+
+      /**迭代锁 */
+      let iteratorLock: PromiseOut<void> | undefined; //= new PromiseOut<void>();
+      /**释放迭代锁 */
+      const freeIteratorLock = () => {
+        if (iteratorLock) {
+          iteratorLock.resolve();
+          iteratorLock = undefined;
+        }
+      };
+      /**触发迭代锁的条件 */
+      let maxOffset = -1;
+
+      //#region 请求模式
+
+      /// 是要全部请求
+      resultGenerator.on("requestAll", (_, next) => {
+        freeIteratorLock();
+        maxOffset = Infinity;
+        next();
+      });
+      /// 还是一个个请求
+      resultGenerator.on("requestItem", (index, next) => {
+        const queryOffset = index + offset;
+        if (queryOffset > maxOffset) {
+          maxOffset = queryOffset;
+          freeIteratorLock();
+        }
+        next();
+      });
+      //#endregion
+
+      /**
+       * 执行任务
+       * @param task_offset
+       * @param times 希望请求下来的条数
+       * @returns 最终去执行请求的条数
+       */
+      const doTask = (task_offset: number, default_task_limit: number) => {
+        /**
+         * 失败次数
+         */
+        let times = 0;
+        // const waitUseableChainChannel = new PromiseOut<void>();
+        taskChain = taskChain.then(
+          async () => {
+            do {
+              const finished = await requestChainChannel(async (event) => {
+                /**
+                 * @FIXME 这里有可能会出现节点的limitQueryTransactions少于default_task_limit，导致查询量少了出现问题。需要后续做补充查询
+                 */
+                const chain_task_limit = Math.min(
+                  event.chainChannel.limitQueryTransactions,
+                  default_task_limit,
+                );
+                const { queryer, options } = queryerMap.forceGet({
+                  offset: task_offset,
+                  limit: chain_task_limit,
+                });
+                waitUseableChainChannel.resolve(chain_task_limit);
+                // 开始执行查询
+                try {
+                  const res = await queryer.addChainChannel(event.chainChannel, options);
+
+                  if (res.status === RESPONSE_STATUS.success) {
+                    // 保存查询结果
+                    res.tIndexes.forEach((ti, i) => {
+                      const index = task_offset - offset + i;
+                      if (resultGenerator.canPush(index)) {
+                        resultGenerator.push(ti);
+                      }
+                    });
+                    if (res.tIndexes.length < chain_task_limit) {
+                      /// 如果是高度最高的那个节点返回空列表，那么基本就是空列表没跑了
+                      const resultChannelMaybeHeight = queryer.getChainChannelByResult(res)
+                        ?.maybeHeight;
+                      if (
+                        resultChannelMaybeHeight &&
+                        resultChannelMaybeHeight >= this.maybeHeight
+                      ) {
+                        /// 得到了查询终点
+                        setQueryDoneOffset(task_offset);
+                        // 确认节点的工作，让其继续下一个工作
+                        event.autoFreeChainChannel = true;
+                        /// 中断这次查询
+                        return true;
+                      } else {
+                        // 移除无效的结果
+                        queryer.removeChainChannelByResult(res);
+                        // 重试任务，但是这个节点因为高度过低，暂时不用它来查询
+                        times++;
+                        return false;
+                      }
+                    } else {
+                      // 任务完成
+                      queryer.finish();
+                      // 确认节点的工作，让其继续下一个工作
+                      event.autoFreeChainChannel = true;
+                      return true;
+                    }
+                  } else if (res.status === RESPONSE_STATUS.busy) {
+                    // 移除无效的结果
+                    queryer.removeChainChannelByResult(res);
+                    // 重试任务，但是这个节点仍旧放在繁忙节点列表，暂时不信任
+                    times++;
+                    return false;
+                  } else if (res.status === RESPONSE_STATUS.error) {
+                    // 移除无效的结果
+                    queryer.removeChainChannelByResult(res);
+                    // 任务失败，抛出异常
+                    throw res.error;
+                  }
+                } catch (err) {
+                  queryer.removeChainChannelByResult(err);
+                  if (AbortException.is(err) || resultGenerator.is_done) {
+                    // 如果被中断了任务，那么直接结束任务
+                    throw err;
+                  }
+                  if (!TimeOutException.is(err)) {
+                    /// 如果时超时，默认不打印，因为超时时本地没收到数据的问题
+                    error(
+                      err,
+                      "[GROUP]:",
+                      this.groupName,
+                      "[QUERY]:",
+                      query,
+                      "[OFFSET]:",
+                      task_offset,
+                      "[TIMES]:",
+                      times,
+                    );
+                  }
+
+                  /// 如果异常次数过多，那么有必要终结这个查询
+                  return times++ > 100;
+                }
+              }, /**默认不释放节点 */ false);
+              if (finished) {
+                break;
+              }
+            } while (true);
+          },
+          (err) => waitUseableChainChannel.reject(err),
+        );
+        return waitUseableChainChannel.promise;
+      };
+
+      /**节点锁
+       * 同一时间内节点只会由一个请求在执行
+       */
+      let waitUseableChainChannel: PromiseOut<number>;
+
+      /// 分发任务
+      const default_task_limit = Math.min(unitLength, limit);
+      for (let i = 0, task_limit = default_task_limit; i < limit; i += task_limit) {
+        const task_offset = i + offset;
+        while (task_offset > maxOffset) {
+          /// 因为query_done_offset影响着整个循环的生命周期,所以这里允许使用 query_done_offset 来控制进度锁
+          if (task_offset >= queryDoneOffset) {
+            break;
+          }
+          if (!iteratorLock) {
+            iteratorLock = new PromiseOut();
+            await iteratorLock.promise;
+          }
+        }
+        if (task_offset >= queryDoneOffset) {
+          break;
+        }
+        waitUseableChainChannel = new PromiseOut();
+        task_limit = await doTask(task_offset, default_task_limit);
+
+        if (i + task_limit > limit) {
+          task_limit = i + task_limit - limit;
+          if (task_limit <= 0) {
+            break;
+          }
+        }
+      }
+      // 等待所有查询任务完成
+      await taskChain;
+      // 结束
+      await resultGenerator.done();
+    })()
+      .catch(resultGenerator.reject)
+      .finally(() => {
+        this.$releaseParallelTask(parallelTaskId);
+      });
+
+    return resultGenerator;
+  }
+
   /**
    * 广播交易体
    */
@@ -1336,15 +1651,20 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
   //#endregion
 }
 /**私有内部类 */
-class AddChainChannelOptions<
+class _AddChainChannelOptions<
   DH extends BFChainCore.SimpleChainChannel,
-  T extends BFChainCore.Transaction
+  QR,
+  Q extends {},
+  S extends {}
 > implements BFChainCore.ChannelRequestOptions<DH> {
   constructor(
-    private query: {},
-    private sort: {} | undefined,
-    private queryer: GroupQueryTransactionsBuilder<DH, QueryTransactionReturnModel<T>>,
-    private getChainChannelTimeout: (
+    private exmBuilder: {
+      timeout: (self: _AddChainChannelOptions<DH, QR, Q, S>, cc: DH) => string;
+    },
+    readonly query: Q,
+    readonly sort: S | undefined,
+    readonly queryer: GroupGetTransactionsApiBuilder<DH, QR>,
+    readonly getChainChannelTimeout: (
       chainChannel: BFChainCore.SimpleChainChannel,
       baseTime?: number,
     ) => number,
@@ -1354,16 +1674,13 @@ class AddChainChannelOptions<
   private get _exm() {
     return new EasyMap<DH, Error>(
       (cc) =>
-        new TimeOutException(
-          `peer({peerId}) queryTransactions(<offset:{offset},limit:{limit}>{query} - {sort}) timeout.`,
-          {
-            peerId: cc.address,
-            offset: this.queryer.query.offset,
-            limit: this.queryer.query.limit,
-            query: JSON.stringify(this.query),
-            sort: JSON.stringify(this.sort),
-          },
-        ),
+        new TimeOutException(this.exmBuilder.timeout(this, cc), {
+          peerId: cc.address,
+          offset: this.queryer.query.offset,
+          limit: this.queryer.query.limit,
+          query: JSON.stringify(this.query),
+          sort: JSON.stringify(this.sort),
+        }),
     );
   }
   @bindThis
