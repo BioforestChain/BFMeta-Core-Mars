@@ -94,6 +94,7 @@ declare namespace BFChainCore {
   interface TransactionIndexJSON {
     height: number;
     index: number;
+    length: number;
   }
 
   type DownloadTransactionArgJSON = {

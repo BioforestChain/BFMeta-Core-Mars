@@ -394,6 +394,7 @@ export class ChainChannel<
       opts,
     );
   }
+  /**下载交易索引 */
   async downloadTransactions<T extends BFChainCore.Transaction = BFChainCore.Transaction>(
     tIndexes: BFChainCore.DownloadTransactionArgJSON["tIndexes"],
     opts?: BFChainCore.ChannelRequestOptions<THIS>,

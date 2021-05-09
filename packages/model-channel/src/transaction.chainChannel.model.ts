@@ -249,10 +249,13 @@ export class TransactionIndexModel
   height!: number;
   @Field.d(2, "uint32")
   index!: number;
+  @Field.d(3, "uint32", "required", 1)
+  length!: number;
   toJSON() {
     return {
       height: this.height,
       index: this.index,
+      length: this.length,
     };
   }
 }
