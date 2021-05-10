@@ -152,6 +152,11 @@ export class ChainChannel<
   get limitIndexTransactions() {
     return this._limitIT;
   }
+  protected _limitDT = 100;
+  /**单次查询交易索引的上限 */
+  get limitDownloadTransactions() {
+    return this._limitDT;
+  }
   //#endregion
 
   get defaultReqOptions(): BFChainCore.ChannelRequestOptions<THIS> | undefined {

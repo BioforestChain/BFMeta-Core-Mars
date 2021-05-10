@@ -157,6 +157,17 @@ declare namespace BFChainCore {
       sort?: QueryTransactionArgJSON["sort"],
       opts?: ChannelRequestOptions<any>,
     ): Promise<import("@bfchain/core-model").QueryTransactionReturnModel<T>>;
+    /**查询交易索引 */
+    indexTransactions(
+      query: IndexTransactionArgJSON["query"],
+      sort?: IndexTransactionArgJSON["sort"],
+      opts?: ChannelRequestOptions<any>,
+    ): Promise<import("@bfchain/core-model").IndexTransactionReturnModel>;
+    /**下载交易 */
+    downloadTransactions<T extends Transaction = Transaction>(
+      tIndexs: DownloadTransactionArgJSON["tIndexes"],
+      opts?: ChannelRequestOptions<any>,
+    ): Promise<import("@bfchain/core-model").DownloadTransactionReturnModel<T>>;
     initBroadcastTransactionArg(
       transaction: NewTransactionArgJSON["transaction"],
       opts?: ChannelRequestOptions<any>,
@@ -185,6 +196,7 @@ declare namespace BFChainCore {
 
     readonly limitQueryTransactions: number;
     readonly limitIndexTransactions: number;
+    readonly limitDownloadTransactions: number;
 
     fastBroadcastTransaction(transaction: NewTransactionArgJSON["transaction"]): Promise<number>;
     /**查询区块 */

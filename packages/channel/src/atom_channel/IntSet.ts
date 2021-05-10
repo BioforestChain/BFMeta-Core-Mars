@@ -32,7 +32,7 @@ export class IntSet {
   }
 
   /**获取连续的一串数字 */
-  getSerial(maxCount: number) {
+  getSerialRangeSet(maxCount: number) {
     let start = -Infinity;
     let length = 0;
     const rubIte = this._rl[Symbol.iterator]();
@@ -101,11 +101,11 @@ export class IntSet {
   }
 
   /**获取一定数量的数字 */
-  getSet(count: number) {
+  getRangeSet(count: number) {
     let accCount = 0;
     const result = [];
     do {
-      const item = this.getSerial(count);
+      const item = this.getSerialRangeSet(count);
       if (item === undefined) {
         break;
       }

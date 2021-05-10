@@ -10,6 +10,12 @@ import {
 } from "@bfchain/util";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 import { ChainChannelHelper } from "./chainChannelHelper";
+import type {
+  DownloadTransactionReturnModel,
+  IndexTransactionReturnModel,
+  QueryTransactionReturnModel,
+} from "@bfchain/core-model-channel";
+import type { Transaction } from "@bfchain/core-model";
 
 const { AbortException, TimeOutException } = CoreExceptionGenerator("channel", "chainChannelGroup");
 
@@ -21,7 +27,7 @@ type InQueneResult<R> = PromiseLike<R> & {
   resolved?: boolean;
   rejected?: boolean;
 };
-abstract class GroupRequesterBuilder<CC extends BFChainCore.SimpleChainChannel, R> {
+export abstract class GroupRequesterBuilder<CC extends BFChainCore.SimpleChainChannel, R> {
   protected abstract _doRequest(
     cc: CC,
     opts?: BFChainCore.ChannelRequestOptions<CC>,
@@ -85,7 +91,7 @@ abstract class GroupRequesterBuilder<CC extends BFChainCore.SimpleChainChannel, 
   }
 }
 
-export const GROUP_GET_TRANSACTIONS_API_BUILDER_ARGS = {
+export const GROUP_QUERY_TRANSACTIONS_BUILDER_ARGS = {
   QUERY: Symbol("query"),
   SORT: Symbol("sort"),
 };
@@ -95,38 +101,116 @@ export const GROUP_GET_TRANSACTIONS_API_BUILDER_ARGS = {
  * @TODO 使用 ccbase 将请求参数一次性序列化好
  */
 @Resolvable()
-export class GroupGetTransactionsApiBuilder<
+export class GroupQueryTransactionsBuilder<
   CC extends BFChainCore.SimpleChainChannel,
-  R //= BFChainUtil.PromiseReturnType<CC["queryTransactions"]>
-> extends GroupRequesterBuilder<CC, R> {
+  T extends Transaction = Transaction
+> extends GroupRequesterBuilder<CC, QueryTransactionReturnModel<T>> {
   @Inject(ChainChannelHelper) protected readonly helper!: ChainChannelHelper;
   constructor(
-    @Inject(GROUP_GET_TRANSACTIONS_API_BUILDER_ARGS.QUERY)
+    @Inject(GROUP_QUERY_TRANSACTIONS_BUILDER_ARGS.QUERY)
     public readonly query: BFChainCore.TransactionQueryOptionsJSON,
-    @Inject(GROUP_GET_TRANSACTIONS_API_BUILDER_ARGS.SORT, { optional: true })
+    @Inject(GROUP_QUERY_TRANSACTIONS_BUILDER_ARGS.SORT, { optional: true })
     public readonly sort?: BFChainCore.TransactionSortOptionsJSON,
   ) {
     super();
   }
   protected _doRequest(cc: CC, opts: BFChainCore.ChannelRequestOptions<CC>) {
-    return (cc.queryTransactions(this.query, this.sort, opts) as unknown) as PromiseLike<R>;
+    return cc.queryTransactions<T>(this.query, this.sort, opts);
   }
 
-  static create<
-    CC extends BFChainCore.SimpleChainChannel,
-    R //= BFChainUtil.PromiseReturnType<CC["queryTransactions"]>
-  >(
+  static create<CC extends BFChainCore.SimpleChainChannel, T extends Transaction = Transaction>(
     rootModuleMap: ModuleStroge,
     query: BFChainCore.TransactionQueryOptionsJSON,
     sort?: BFChainCore.TransactionSortOptionsJSON,
   ) {
-    return Resolve<GroupGetTransactionsApiBuilder<CC, R>>(
-      GroupGetTransactionsApiBuilder,
+    return Resolve<GroupQueryTransactionsBuilder<CC, T>>(
+      GroupQueryTransactionsBuilder,
       new ModuleStroge(
         [
-          [GROUP_GET_TRANSACTIONS_API_BUILDER_ARGS.QUERY, query],
-          [GROUP_GET_TRANSACTIONS_API_BUILDER_ARGS.SORT, sort],
+          [GROUP_QUERY_TRANSACTIONS_BUILDER_ARGS.QUERY, query],
+          [GROUP_QUERY_TRANSACTIONS_BUILDER_ARGS.SORT, sort],
         ],
+        rootModuleMap,
+      ),
+    );
+  }
+}
+
+export const GROUP_INDEX_TRANSACTIONS_BUILDER_ARGS = {
+  QUERY: Symbol("query"),
+  SORT: Symbol("sort"),
+};
+
+/**
+ * 数据请求器，确保重复的请求不会重复发起
+ * @TODO 使用 ccbase 将请求参数一次性序列化好
+ */
+@Resolvable()
+export class GroupIndexTransactionsBuilder<
+  CC extends BFChainCore.SimpleChainChannel
+> extends GroupRequesterBuilder<CC, IndexTransactionReturnModel> {
+  @Inject(ChainChannelHelper) protected readonly helper!: ChainChannelHelper;
+  constructor(
+    @Inject(GROUP_INDEX_TRANSACTIONS_BUILDER_ARGS.QUERY)
+    public readonly query: BFChainCore.TransactionQueryOptionsJSON,
+    @Inject(GROUP_INDEX_TRANSACTIONS_BUILDER_ARGS.SORT, { optional: true })
+    public readonly sort?: BFChainCore.TransactionSortOptionsJSON,
+  ) {
+    super();
+  }
+  protected _doRequest(cc: CC, opts: BFChainCore.ChannelRequestOptions<CC>) {
+    return cc.indexTransactions(this.query, this.sort, opts);
+  }
+
+  static create<CC extends BFChainCore.SimpleChainChannel>(
+    rootModuleMap: ModuleStroge,
+    query: BFChainCore.TransactionQueryOptionsJSON,
+    sort?: BFChainCore.TransactionSortOptionsJSON,
+  ) {
+    return Resolve<GroupIndexTransactionsBuilder<CC>>(
+      GroupIndexTransactionsBuilder,
+      new ModuleStroge(
+        [
+          [GROUP_INDEX_TRANSACTIONS_BUILDER_ARGS.QUERY, query],
+          [GROUP_INDEX_TRANSACTIONS_BUILDER_ARGS.SORT, sort],
+        ],
+        rootModuleMap,
+      ),
+    );
+  }
+}
+
+export const GROUP_DOWNLOAD_TRANSACTIONS_API_BUILDER_ARGS = {
+  TINDEXS: Symbol("tIndexs"),
+};
+/**
+ * 数据请求器，确保重复的请求不会重复发起
+ * @TODO 使用 ccbase 将请求参数一次性序列化好
+ */
+@Resolvable()
+export class GroupDownloadTransactionsBuilder<
+  CC extends BFChainCore.SimpleChainChannel,
+  T extends Transaction = Transaction
+> extends GroupRequesterBuilder<CC, DownloadTransactionReturnModel<T>> {
+  @Inject(ChainChannelHelper) protected readonly helper!: ChainChannelHelper;
+  constructor(
+    @Inject(GROUP_DOWNLOAD_TRANSACTIONS_API_BUILDER_ARGS.TINDEXS)
+    public readonly tIndexs: BFChainCore.TransactionIndexJSON[],
+  ) {
+    super();
+  }
+  protected _doRequest(cc: CC, opts: BFChainCore.ChannelRequestOptions<CC>) {
+    return cc.downloadTransactions<T>(this.tIndexs, opts);
+  }
+
+  static create<CC extends BFChainCore.SimpleChainChannel, T extends Transaction = Transaction>(
+    rootModuleMap: ModuleStroge,
+    tIndexs: BFChainCore.TransactionIndexJSON[],
+  ) {
+    return Resolve<GroupDownloadTransactionsBuilder<CC, T>>(
+      GroupDownloadTransactionsBuilder,
+      new ModuleStroge(
+        [[GROUP_DOWNLOAD_TRANSACTIONS_API_BUILDER_ARGS.TINDEXS, tIndexs]],
         rootModuleMap,
       ),
     );

@@ -30,11 +30,18 @@ import {
   QueryBlockReturnModel,
   QueryTransactionReturnModel,
   IndexTransactionReturnModel,
+  DownloadTransactionReturnModel,
 } from "@bfchain/core-model";
 import { ChainChannelHelper } from "./chainChannelHelper";
 import { ChainChannel, ChainChannelBase } from "./chainChannel";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
-import { GroupGetTransactionsApiBuilder, GroupQueryBlockBuilder } from "./GroupRequesterBuilder";
+import {
+  GroupQueryTransactionsBuilder,
+  GroupQueryBlockBuilder,
+  GroupRequesterBuilder,
+  GroupDownloadTransactionsBuilder,
+  GroupIndexTransactionsBuilder,
+} from "./GroupRequesterBuilder";
 import { BaseHelper, ChainTimeHelper, ConfigHelper, TransactionHelper } from "@bfchain/core-helper";
 import type { PromiseTimeout } from "./PromiseTimeout";
 import { IntSet } from "./IntSet";
@@ -125,6 +132,16 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     let limit = 0;
     for (const cc of this.chainChannelSet) {
       const { limitIndexTransactions: ccLimit } = cc;
+      if (ccLimit > limit) {
+        limit = ccLimit;
+      }
+    }
+    return limit;
+  }
+  get limitDownloadTransactions() {
+    let limit = 0;
+    for (const cc of this.chainChannelSet) {
+      const { limitDownloadTransactions: ccLimit } = cc;
       if (ccLimit > limit) {
         limit = ccLimit;
       }
@@ -477,44 +494,37 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
 
     type QueryTransactionAddChainChannelOptions = _AddChainChannelOptions<
       DH,
-      QueryTransactionReturnModel<T>,
-      { offset: number; limit: number },
-      BFChainCore.TransactionSortOptionsJSON
+      GroupQueryTransactionsBuilder<DH, T>,
+      { offset: number; limit: number }
     >;
     const _addChainChannelOptionsExmBuilder = {
       timeout: (self: QueryTransactionAddChainChannelOptions, cc: DH) =>
-        `peer(${cc.address}) queryTransactions(<offset:${self.query.offset},limit:${self.query.limit}>) timeout.` +
-        `\n[query:]${JSON.stringify(self.queryer.query)}` +
-        `\n[sort:]${JSON.stringify(self.queryer.sort)}`,
+        `peer(${cc.address}) queryTransactions(<offset:${self.data.offset},limit:${self.data.limit}>) timeout.` +
+        `\n[query:]${JSON.stringify(self.requester.query)}` +
+        `\n[sort:]${JSON.stringify(self.requester.sort)}`,
     };
 
-    const queryerMap = EasyMap.from<
+    const requesterMap = EasyMap.from<
       { offset: number; limit: number },
       {
-        queryer: GroupGetTransactionsApiBuilder<DH, QueryTransactionReturnModel<T>>;
-        options: _AddChainChannelOptions<
-          DH,
-          QueryTransactionReturnModel<T>,
-          { offset: number; limit: number },
-          BFChainCore.TransactionSortOptionsJSON
-        >;
+        requester: GroupQueryTransactionsBuilder<DH, T>;
+        options: QueryTransactionAddChainChannelOptions;
       },
       string
     >({
       transformKey: (query) => `${query.offset}-${query.limit}`,
       creater: (query) => {
-        const queryer = GroupGetTransactionsApiBuilder.create<DH, QueryTransactionReturnModel<T>>(
+        const requester = GroupQueryTransactionsBuilder.create<DH, T>(
           this.moduleMap,
           { ...baseQueryCondition, ...query },
           sort,
         );
         return {
-          queryer,
+          requester: requester,
           options: new _AddChainChannelOptions(
             _addChainChannelOptionsExmBuilder,
             query,
-            sort,
-            queryer,
+            requester,
             this.helper.getChainChannelTimeout,
             resultPo,
           ),
@@ -594,7 +604,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                   event.chainChannel.limitQueryTransactions,
                   default_task_limit,
                 );
-                const { queryer, options } = queryerMap.forceGet({
+                const { requester: queryer, options } = requesterMap.forceGet({
                   offset: task_offset,
                   limit: chain_task_limit,
                 });
@@ -773,38 +783,36 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
 
     type IndexTransactionAddChainChannelOptions = _AddChainChannelOptions<
       DH,
-      IndexTransactionReturnModel,
-      { offset: number; limit: number },
-      BFChainCore.TransactionSortOptionsJSON
+      GroupIndexTransactionsBuilder<DH>,
+      { offset: number; limit: number }
     >;
     const _addChainChannelOptionsExmBuilder = {
       timeout: (self: IndexTransactionAddChainChannelOptions, cc: DH) =>
-        `peer(${cc.address}) indexTransactions(<offset:${self.query.offset},limit:${self.query.limit}>) timeout.` +
-        `\n[query:]${JSON.stringify(self.queryer.query)}` +
-        `\n[sort:]${JSON.stringify(self.queryer.sort)}`,
+        `peer(${cc.address}) indexTransactions(<offset:${self.data.offset},limit:${self.data.limit}>) timeout.` +
+        `\n[query:]${JSON.stringify(self.requester.query)}` +
+        `\n[sort:]${JSON.stringify(self.requester.sort)}`,
     };
     const queryerMap = EasyMap.from<
       { offset: number; limit: number },
       {
-        queryer: GroupGetTransactionsApiBuilder<DH, IndexTransactionReturnModel>;
+        requester: GroupIndexTransactionsBuilder<DH>;
         options: IndexTransactionAddChainChannelOptions;
       },
       string
     >({
       transformKey: (query) => `${query.offset}-${query.limit}`,
       creater: (query) => {
-        const queryer = GroupGetTransactionsApiBuilder.create<DH, IndexTransactionReturnModel>(
+        const requester = GroupIndexTransactionsBuilder.create<DH>(
           this.moduleMap,
           { ...baseQueryCondition, ...query },
           sort,
         );
         return {
-          queryer,
+          requester: requester,
           options: new _AddChainChannelOptions(
             _addChainChannelOptionsExmBuilder,
             query,
-            sort,
-            queryer,
+            requester,
             this.helper.getChainChannelTimeout,
             resultPo,
           ),
@@ -884,7 +892,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                   event.chainChannel.limitQueryTransactions,
                   default_task_limit,
                 );
-                const { queryer, options } = queryerMap.forceGet({
+                const { requester: queryer, options } = queryerMap.forceGet({
                   offset: task_offset,
                   limit: chain_task_limit,
                 });
@@ -1023,13 +1031,14 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
   /**批量下载区块链事件
    * @TODO 完成这个方法
    */
-  async downloadTransactions<T extends BFChainCore.Transaction = BFChainCore.Transaction>(
+  downloadTransactions<T extends BFChainCore.Transaction = BFChainCore.Transaction>(
     tIndexes: BFChainCore.DownloadTransactionArgJSON["tIndexes"],
-    opts?: BFChainCore.ChannelRequestOptions<DH>,
+    opts?: BFChainCore.ChannelGroupRequestOptions<DH> & { maxParallelNum?: number },
     _resultGenerator?: AsyncIteratorGenerator<TransactionInBlock<T>>,
   ) {
     /**这里预先将tIndex全部展开，因为可能存在重复的清空 */
     const tIndexList = [];
+    let count = 0;
     /**每个高度之间都会有一个空白的元素间隔，使它们不连续 */
     const heightBaseIndexs = new EasyMap<number, number>((height) => tIndexList.length + 1);
     /**按照height进行排序
@@ -1040,9 +1049,213 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       for (let i = 0; i < iIndex.length; ++i) {
         const index = baseIndex + i;
         tIndexList[index] = index;
+        ++count;
       }
     }
-    const offsetSet = new IntSet(tIndexList);
+    const tIndexSet = new IntSet(tIndexList);
+    const baseIndexHeightList = [...heightBaseIndexs].map(([baseIndex, height]) => ({
+      baseIndex,
+      height,
+    }));
+
+    const resultPo =
+      opts &&
+      this.helper.parserAborterOptions(opts, {
+        channelGroup: this,
+      });
+
+    const resultGenerator = _resultGenerator || new AsyncIteratorGenerator();
+
+    /**最大任务并发数量 */
+    const MAX_PARALLEL_NUM = Math.max(
+      1,
+      Math.min(
+        Math.ceil((this.size * 2) / 3),
+        // Math.ceil(ccGroup.averageDelay / 10),
+        opts?.maxParallelNum || Infinity,
+      ),
+    );
+    /**发往每一台节点的最大查询数量
+     * 如果 MAX_PARALLEL_NUM = 1
+     * 那么意味着一次性更这个节点进行查询全部的数据
+     * 虽然可能意味着阻塞，但由于对自己来说，因为MAX_PARALLEL_NUM=1，
+     * 往往也就意味着与自己连接的节点就是1个，由此网络中的节点可能极少，与我互相隔离
+     * 为此我不需要取在乎其它节点的资源消耗。我只需要自私的去尽可能一次性获取全部就好
+     *
+     * 而如果MAX_PARALLEL_NUM>1，说明网络中还有其它可用资源，
+     * 我可以减少一次性的获取数量，来共同维护网络的稳定性
+     */
+    const MAX_UNIT_LIMIT = Math.min(Math.ceil((this.limitIndexTransactions || 1) / Math.SQRT2), 1);
+
+    const parallelTaskId = `Group(${this.groupName}) downloadTransactions-${
+      Date.now() + Math.random()
+    }`;
+    const customChannelFilter = opts?.channelFilter || (() => true);
+    const { requestChainChannel } = this.$startParallelTask(parallelTaskId, {
+      channelFilter: (cc) => cc.canDownloadTransactions && customChannelFilter(cc),
+      abortWhenNoChainChannel: opts?.abortWhenNoChainChannel,
+    });
+
+    type DownloadTransactionAddChainChannelOptions = _AddChainChannelOptions<
+      DH,
+      GroupDownloadTransactionsBuilder<DH, T>,
+      BFChainCore.TransactionIndexJSON[]
+    >;
+    const _addChainChannelOptionsExmBuilder = {
+      timeout: (self: DownloadTransactionAddChainChannelOptions, cc: DH) =>
+        `peer(${cc.address}) downloadTransactions(<${self.data
+          .map((ti) => `${ti.height}/${ti.index}:${ti.length}`)
+          .join(",")}) timeout.`,
+    };
+    const requesterMap = EasyMap.from<
+      BFChainCore.TransactionIndexJSON[],
+      {
+        requester: GroupDownloadTransactionsBuilder<DH, T>;
+        options: DownloadTransactionAddChainChannelOptions;
+      },
+      string
+    >({
+      transformKey: (tIndexs) =>
+        tIndexs.map((ti) => `${ti.height}/${ti.index}:${ti.length}`).join(","),
+      creater: (tIndexs) => {
+        const requester = GroupDownloadTransactionsBuilder.create<DH, T>(this.moduleMap, tIndexs);
+
+        return {
+          requester,
+          options: new _AddChainChannelOptions(
+            _addChainChannelOptionsExmBuilder,
+            tIndexs,
+            requester,
+            this.helper.getChainChannelTimeout,
+            resultPo,
+          ),
+        };
+      },
+    });
+
+    (async () => {
+      /**是否已经触碰到完结的边界了 */
+      const queryDoneOffset = count;
+
+      /**迭代锁 */
+      let iteratorLock: PromiseOut<void> | undefined; //= new PromiseOut<void>();
+      /**释放迭代锁 */
+      const freeIteratorLock = () => {
+        if (iteratorLock) {
+          iteratorLock.resolve();
+          iteratorLock = undefined;
+        }
+      };
+      /**触发迭代锁的条件 */
+      let yieldIndex = -1;
+
+      //#region 请求模式
+
+      /// 是要全部请求
+      resultGenerator.on("requestAll", (_, next) => {
+        freeIteratorLock();
+        yieldIndex = Infinity;
+        next();
+      });
+      /// 还是一个个请求
+      resultGenerator.on("requestItem", (index, next) => {
+        if (index > yieldIndex) {
+          yieldIndex = index;
+          freeIteratorLock();
+        }
+        next();
+      });
+      //#endregion
+      let currIndex = 0;
+      const doTask = async () => {
+        do {
+          const tIndexs = tIndexSet.getRangeSet(MAX_UNIT_LIMIT).map((range) => {
+            const nextIndex = baseIndexHeightList.findIndex(
+              (item) => item.baseIndex > range.start,
+              currIndex,
+            );
+            currIndex = nextIndex === -1 ? baseIndexHeightList.length - 1 : nextIndex - 1;
+            const heightBaseIndexInfo = baseIndexHeightList[currIndex];
+            const height = heightBaseIndexInfo.height;
+            const index = range.start - heightBaseIndexInfo.baseIndex;
+            const length = range.length;
+            return {
+              height,
+              index,
+              length,
+            };
+          });
+          if (tIndexs.length === 0) {
+            break;
+          }
+          const needHeight = tIndexes[tIndexes.length - 1].height;
+          /**
+           * 失败次数
+           */
+          let times = 0;
+          while (true) {
+            const finished = await requestChainChannel(async (event) => {
+              /// 节点高度不满足查询条件
+              if (event.chainChannel.maybeHeight < needHeight) {
+                return false;
+              }
+
+              const { requester, options } = requesterMap.forceGet(tIndexes);
+              try {
+                const res = await requester.addChainChannel(event.chainChannel, options);
+                if (res.status === RESPONSE_STATUS.success) {
+                  /**
+                   * @TODO 这里应该判定 tIndexes 所请求的数量跟返回的数量是否一致
+                   */
+                  for (const trs of res.transactions) {
+                    resultGenerator.push(trs);
+                  }
+                } else if (res.status === RESPONSE_STATUS.busy) {
+                  // 移除无效的结果
+                  requester.removeChainChannelByResult(res);
+                  // 重试任务，但是这个节点仍旧放在繁忙节点列表，暂时不信任
+                  times++;
+                  return false;
+                } else if (res.status === RESPONSE_STATUS.error) {
+                  // 移除无效的结果
+                  requester.removeChainChannelByResult(res);
+                  // 任务失败，抛出异常
+                  throw res.error;
+                }
+              } catch (err) {
+                requester.removeChainChannelByResult(err);
+                if (AbortException.is(err) || resultGenerator.is_done) {
+                  // 如果被中断了任务，那么直接结束任务
+                  throw err;
+                }
+                if (!TimeOutException.is(err)) {
+                  /// 如果时超时，默认不打印，因为超时时本地没收到数据的问题
+                  error(err, "[GROUP]:", this.groupName, "[TINDEXS]:", tIndexs, "[TIMES]:", times);
+                }
+
+                /// 如果异常次数过多，那么有必要终结这个查询
+                return times++ > 100;
+              }
+            });
+            if (finished) {
+              break;
+            }
+          }
+        } while (true);
+      };
+
+      for (let i = 0; i < count; i += MAX_UNIT_LIMIT) {
+        while (i > yieldIndex) {
+          if (!iteratorLock) {
+            iteratorLock = new PromiseOut();
+          }
+          await iteratorLock.promise;
+        }
+        await doTask();
+      }
+    })();
+
+    return resultGenerator;
   }
 
   /**
@@ -1678,17 +1891,15 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
 /**私有内部类 */
 class _AddChainChannelOptions<
   DH extends BFChainCore.SimpleChainChannel,
-  QR,
-  Q extends {},
-  S extends {}
+  GR extends GroupRequesterBuilder<DH, any>,
+  DATA extends {}
 > implements BFChainCore.ChannelRequestOptions<DH> {
   constructor(
     private exmBuilder: {
-      timeout: (self: _AddChainChannelOptions<DH, QR, Q, S>, cc: DH) => string;
+      timeout: (self: _AddChainChannelOptions<DH, GR, DATA>, cc: DH) => string;
     },
-    readonly query: Q,
-    readonly sort: S | undefined,
-    readonly queryer: GroupGetTransactionsApiBuilder<DH, QR>,
+    readonly data: DATA,
+    readonly requester: GR,
     readonly getChainChannelTimeout: (
       chainChannel: BFChainCore.SimpleChainChannel,
       baseTime?: number,
@@ -1697,16 +1908,7 @@ class _AddChainChannelOptions<
   ) {}
   @cacheGetter
   private get _exm() {
-    return new EasyMap<DH, Error>(
-      (cc) =>
-        new TimeOutException(this.exmBuilder.timeout(this, cc), {
-          peerId: cc.address,
-          offset: this.queryer.query.offset,
-          limit: this.queryer.query.limit,
-          query: JSON.stringify(this.query),
-          sort: JSON.stringify(this.sort),
-        }),
-    );
+    return new EasyMap<DH, Error>((cc) => new TimeOutException(this.exmBuilder.timeout(this, cc)));
   }
   @bindThis
   timeoutException(env: BFChainCore.ChannelRequestEnv<DH>) {
