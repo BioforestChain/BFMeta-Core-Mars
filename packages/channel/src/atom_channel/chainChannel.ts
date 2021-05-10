@@ -381,7 +381,7 @@ export class ChainChannel<
     sort?: BFChainCore.QueryTransactionArgJSON["sort"],
     opts?: BFChainCore.ChannelRequestOptions<THIS>,
   ) {
-    if (this.canIndexTransactions) {
+    if (!this.canIndexTransactions) {
       return IndexTransactionReturnModel.fromObject({
         status: RESPONSE_STATUS.error,
         error: ErrorMessage.fromObject(new RefuseException("Refuse response index transaction")),
@@ -403,7 +403,7 @@ export class ChainChannel<
     tIndexes: BFChainCore.DownloadTransactionArgJSON["tIndexes"],
     opts?: BFChainCore.ChannelRequestOptions<THIS>,
   ) {
-    if (this.canDownloadTransactions) {
+    if (!this.canDownloadTransactions) {
       return DownloadTransactionReturnModel.fromObject({
         status: RESPONSE_STATUS.error,
         error: ErrorMessage.fromObject(new RefuseException("Refuse response download transaction")),
