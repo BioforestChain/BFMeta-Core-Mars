@@ -21,6 +21,7 @@
   "files": [
     "src/accountBaseHelper.ts",
     "src/base58Helper.ts",
-    "src/index.ts"
+    "src/index.ts",
+    "src/oldBuffer.ts"
   ]
 }

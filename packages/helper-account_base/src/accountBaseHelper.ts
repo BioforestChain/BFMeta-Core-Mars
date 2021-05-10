@@ -1,5 +1,6 @@
 import { ConfigHelper } from "@bfchain/core-helper-config";
 import { Base58Helper } from "./base58Helper";
+import { utf8Slice } from "./oldBuffer";
 import { Injectable, Inject, encodeUTF8ToBinary, encodeHexToBinary } from "@bfchain/util";
 import type { BNID_TYPE } from "@bfchain/core-model-block-base";
 
@@ -114,7 +115,7 @@ export class AccountBaseHelper {
       await this.cryptoHelper.md5(encodeUTF8ToBinary(secondSecret))
     ).toString("hex")}`;
     const secondHash = await this.cryptoHelper.sha256(encodeUTF8ToBinary(md5Second));
-    return this.createSecretKeypair(secondHash.toString());
+    return this.createSecretKeypair(utf8Slice(secondHash, 0, secondHash.length));
   }
   /**根据私钥获取公钥Buffer */
   async getPublicKeyFromSecondSecret(secret: string, secondSecret: string) {
