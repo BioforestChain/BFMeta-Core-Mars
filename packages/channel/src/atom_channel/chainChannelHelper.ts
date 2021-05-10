@@ -376,6 +376,34 @@ export class ChainChannelHelper {
         params,
       });
     }
+    const { tIndexes } = arg;
+    if (tIndexes.length === 0) {
+      throw new ArgumentIllegalException(
+        "Invalid Download transaction query params, no query conditions",
+      );
+    }
+    const BH = this.baseHelper;
+    for (const tIndex of tIndexes) {
+      const { height, index, length } = tIndex;
+      if (!BH.isPositiveInteger(height)) {
+        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+          function: "boxDownloadTransactionArg",
+          field: `height ${height}`,
+        });
+      }
+      if (!BH.isNaturalNumber(index)) {
+        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+          function: "boxDownloadTransactionArg",
+          field: `index ${index}`,
+        });
+      }
+      if (!BH.isPositiveInteger(length)) {
+        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+          function: "boxDownloadTransactionArg",
+          field: `length ${length}`,
+        });
+      }
+    }
     return arg;
   }
   /**

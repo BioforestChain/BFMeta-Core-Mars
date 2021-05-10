@@ -322,11 +322,17 @@ export class GenerateBlockCore<T extends Block> {
           eventEmitter.assetChangesGetter &&
             (tranItem.transactionAssetChanges = await eventEmitter.assetChangesGetter(tranItem));
           const transactionAssetChanges = tranItem.transactionAssetChanges;
+          const trsInfo = `height ${tranItem.height} index ${tranItem.index} type ${
+            trs.type
+          } senderId ${trs.senderId} ${
+            trs.recipientId ? " recipientId " + trs.recipientId : " "
+          } signature ${tranItem.transaction.signature}`;
           for (const transactionAssetChange of transactionAssetChanges) {
             if (BigInt(transactionAssetChange.assetBalance) < BigInt(0)) {
               throw new ArgumentIllegalException(PROP_IS_INVALID, {
                 prop: `assetBalance ${transactionAssetChange.assetBalance} ${transactionAssetChange.assetTypes}`,
                 target: "transactionAssetChanges",
+                detail: trsInfo,
                 function: "insertTransactions",
               });
             }
@@ -341,6 +347,7 @@ export class GenerateBlockCore<T extends Block> {
               throw new ArgumentIllegalException(PROP_IS_INVALID, {
                 prop: `remainAssetPrealnum ${remainAssetPrealnum}`,
                 target: "assetPrealnum",
+                detail: trsInfo,
                 function: "insertTransactions",
               });
             }
@@ -348,6 +355,7 @@ export class GenerateBlockCore<T extends Block> {
               throw new ArgumentIllegalException(PROP_IS_INVALID, {
                 prop: `frozenMainAssetPrealnum ${frozenMainAssetPrealnum}`,
                 target: "assetPrealnum",
+                detail: trsInfo,
                 function: "insertTransactions",
               });
             }
