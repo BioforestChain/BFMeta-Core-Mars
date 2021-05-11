@@ -1258,6 +1258,17 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     return resultGenerator;
   }
 
+  async queryTrandactionsV2<T extends BFChainCore.Transaction = BFChainCore.Transaction>(
+    query: BFChainCore.QueryTransactionArgJSON["query"],
+    sort?: BFChainCore.QueryTransactionArgJSON["sort"],
+    opts?: BFChainCore.ChannelGroupRequestOptions<DH> & { maxParallelNum?: number },
+    _indexesresultGenerator?: AsyncIteratorGenerator<BFChainCore.TransactionIndexJSON>,
+    _transactionResultGenerator?: AsyncIteratorGenerator<TransactionInBlock<T>>,
+  ) {
+    const tIndexes = await this.indexTransactions(query, sort, opts, _indexesresultGenerator);
+    return this.downloadTransactions(tIndexes, opts, _transactionResultGenerator);
+  }
+
   /**
    * 广播交易体
    */
