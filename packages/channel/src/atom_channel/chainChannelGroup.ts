@@ -1255,13 +1255,13 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     query: BFChainCore.QueryTransactionArgJSON["query"],
     sort?: BFChainCore.QueryTransactionArgJSON["sort"],
     opts?: BFChainCore.ChannelGroupRequestOptions<DH> & { maxParallelNum?: number },
-    _indexesresultGenerator?: AsyncIteratorGenerator<BFChainCore.TransactionIndexJSON>,
+    _indexesResultGenerator?: AsyncIteratorGenerator<BFChainCore.TransactionIndexJSON>,
     _transactionResultGenerator?: AsyncIteratorGenerator<TransactionInBlock<T>>,
   ) {
     const rg =
       _transactionResultGenerator || (_transactionResultGenerator = new AsyncIteratorGenerator());
     (async () => {
-      const tIndexes = await this.indexTransactions(query, sort, opts, _indexesresultGenerator);
+      const tIndexes = await this.indexTransactions(query, sort, opts, _indexesResultGenerator);
       return this.downloadTransactions(tIndexes, opts, rg);
     })();
     return rg;
