@@ -1,10 +1,10 @@
 {
   "name": "@bfchain/core-typings",
-  "version": "5.22.11",
+  "version": "5.22.12",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
-  "type": "build/cjs/index.d.ts",
+  "type": "commonjs",
   "keywords": [
     "core"
   ],
@@ -19,7 +19,8 @@
   },
   "peerDependencies": {
     "@bfchain/protobuf": "^4.1.9",
-    "@bfchain/util": "^4.10.29"
+    "@bfchain/util": "^4.12.2"
   },
-  "gitHead": "ef41eb359371b11aafbec0516df1eba01f16ebfd"
+  "gitHead": "ef41eb359371b11aafbec0516df1eba01f16ebfd",
+  "types": "build/cjs/index.d.ts"
 }
