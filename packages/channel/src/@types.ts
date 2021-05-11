@@ -375,13 +375,13 @@ declare namespace BFChainCore {
       sort?: IndexTransactionArgJSON["sort"],
       opts?: ChannelGroupRequestOptions<CC>,
       _resultGenerator?: import("@bfchain/util").AsyncIteratorGenerator<BFChainCore.TransactionIndexJSON>,
-      ): Promise<import("@bfchain/core-model").IndexTransactionReturnModel>;
+      ): import("@bfchain/util").AsyncIteratorGenerator<BFChainCore.TransactionIndexJSON>;
     /**下载交易 */
     downloadTransactions<T extends Transaction = Transaction>(
       tIndexs: DownloadTransactionArgJSON["tIndexes"],
       opts?: ChannelGroupRequestOptions<CC>,
       _resultGenerator?: import("@bfchain/util").AsyncIteratorGenerator<TransactionInBlock<T>>,
-      ): Promise<import("@bfchain/core-model").DownloadTransactionReturnModel<T>>;
+      ): import("@bfchain/util").AsyncIteratorGenerator<TransactionInBlock<T>>;
     /**
      * 查询交易
      */
