@@ -46,16 +46,8 @@ import { BaseHelper, ChainTimeHelper, ConfigHelper, TransactionHelper } from "@b
 import type { PromiseTimeout } from "./PromiseTimeout";
 import { IntSet } from "./IntSet";
 
-const {
-  AbortException,
-  InterruptedException,
-  error,
-  success,
-  info,
-  warn,
-  log,
-  TimeOutException,
-} = CoreExceptionGenerator("channel", "chainChannelGroup");
+const { AbortException, InterruptedException, error, success, info, warn, log, TimeOutException } =
+  CoreExceptionGenerator("channel", "chainChannelGroup");
 
 export const CHAIN_CHANNEL_GROUP_ARGS = {
   GROUP_NAME: Symbol("groupName"),
@@ -69,7 +61,8 @@ export const CHAIN_CHANNEL_GROUP_ARGS = {
 @Resolvable()
 export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = ChainChannel>
   extends ChainChannelBase
-  implements BFChainCore.ChainChannelGroup<DH>, AfterInit, OnInit {
+  implements BFChainCore.ChainChannelGroup<DH>, AfterInit, OnInit
+{
   get canQueryTransactions() {
     for (const cc of this.chainChannelSet) {
       if (cc.canQueryTransactions) {
@@ -623,8 +616,8 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                     });
                     if (res.transactions.length < chain_task_limit) {
                       /// 如果是高度最高的那个节点返回空列表，那么基本就是空列表没跑了
-                      const resultChannelMaybeHeight = queryer.getChainChannelByResult(res)
-                        ?.maybeHeight;
+                      const resultChannelMaybeHeight =
+                        queryer.getChainChannelByResult(res)?.maybeHeight;
                       if (
                         resultChannelMaybeHeight &&
                         resultChannelMaybeHeight >= this.maybeHeight
@@ -911,8 +904,8 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                     });
                     if (res.tIndexes.length < chain_task_limit) {
                       /// 如果是高度最高的那个节点返回空列表，那么基本就是空列表没跑了
-                      const resultChannelMaybeHeight = queryer.getChainChannelByResult(res)
-                        ?.maybeHeight;
+                      const resultChannelMaybeHeight =
+                        queryer.getChainChannelByResult(res)?.maybeHeight;
                       if (
                         resultChannelMaybeHeight &&
                         resultChannelMaybeHeight >= this.maybeHeight
@@ -1147,7 +1140,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
         }
       };
       /**触发迭代锁的条件 */
-      let yieldIndex = -1;
+      let yieldIndex = resultGenerator.requestProcess;
 
       //#region 请求模式
 
@@ -1245,7 +1238,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       };
 
       for (let i = 0; i < count; i += MAX_UNIT_LIMIT) {
-        while (i > yieldIndex) {
+        while (i >= yieldIndex) {
           if (!iteratorLock) {
             iteratorLock = new PromiseOut();
           }
@@ -1258,15 +1251,20 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     return resultGenerator;
   }
 
-  async queryTrandactionsV2<T extends BFChainCore.Transaction = BFChainCore.Transaction>(
+  queryTrandactionsV2<T extends BFChainCore.Transaction = BFChainCore.Transaction>(
     query: BFChainCore.QueryTransactionArgJSON["query"],
     sort?: BFChainCore.QueryTransactionArgJSON["sort"],
     opts?: BFChainCore.ChannelGroupRequestOptions<DH> & { maxParallelNum?: number },
     _indexesresultGenerator?: AsyncIteratorGenerator<BFChainCore.TransactionIndexJSON>,
     _transactionResultGenerator?: AsyncIteratorGenerator<TransactionInBlock<T>>,
   ) {
-    const tIndexes = await this.indexTransactions(query, sort, opts, _indexesresultGenerator);
-    return this.downloadTransactions(tIndexes, opts, _transactionResultGenerator);
+    const rg =
+      _transactionResultGenerator || (_transactionResultGenerator = new AsyncIteratorGenerator());
+    (async () => {
+      const tIndexes = await this.indexTransactions(query, sort, opts, _indexesresultGenerator);
+      return this.downloadTransactions(tIndexes, opts, rg);
+    })();
+    return rg;
   }
 
   /**
@@ -1903,8 +1901,9 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
 class _AddChainChannelOptions<
   DH extends BFChainCore.SimpleChainChannel,
   GR extends GroupRequesterBuilder<DH, any>,
-  DATA extends {}
-> implements BFChainCore.ChannelRequestOptions<DH> {
+  DATA extends {},
+> implements BFChainCore.ChannelRequestOptions<DH>
+{
   constructor(
     private exmBuilder: {
       timeout: (self: _AddChainChannelOptions<DH, GR, DATA>, cc: DH) => string;
