@@ -1251,7 +1251,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     return resultGenerator;
   }
 
-  queryTrandactionsV2<T extends BFChainCore.Transaction = BFChainCore.Transaction>(
+  queryTransactionsV2<T extends BFChainCore.Transaction = BFChainCore.Transaction>(
     query: BFChainCore.QueryTransactionArgJSON["query"],
     sort?: BFChainCore.QueryTransactionArgJSON["sort"],
     opts?: BFChainCore.ChannelGroupRequestOptions<DH> & { maxParallelNum?: number },
