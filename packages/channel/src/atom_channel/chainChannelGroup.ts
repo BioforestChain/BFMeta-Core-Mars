@@ -1208,7 +1208,9 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                     return false;
                   } else {
                     for (const trs of res.transactions) {
-                      resultGenerator.push(trs);
+                      if (resultGenerator.canPush(resultGenerator.list.length)) {
+                        resultGenerator.push(trs);
+                      }
                     }
                     return true;
                   }
@@ -1263,7 +1265,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
         }
         await doTask();
       }
-      resultGenerator.done();
+      await resultGenerator.done();
     })();
 
     return resultGenerator;
