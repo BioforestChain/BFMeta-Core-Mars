@@ -181,7 +181,7 @@ export class GroupIndexTransactionsBuilder<
 }
 
 export const GROUP_DOWNLOAD_TRANSACTIONS_API_BUILDER_ARGS = {
-  TINDEXS: Symbol("tIndexs"),
+  TINDEXES: Symbol("tIndexes"),
 };
 /**
  * 数据请求器，确保重复的请求不会重复发起
@@ -194,23 +194,23 @@ export class GroupDownloadTransactionsBuilder<
 > extends GroupRequesterBuilder<CC, DownloadTransactionReturnModel<T>> {
   @Inject(ChainChannelHelper) protected readonly helper!: ChainChannelHelper;
   constructor(
-    @Inject(GROUP_DOWNLOAD_TRANSACTIONS_API_BUILDER_ARGS.TINDEXS)
-    public readonly tIndexs: BFChainCore.TransactionIndexJSON[],
+    @Inject(GROUP_DOWNLOAD_TRANSACTIONS_API_BUILDER_ARGS.TINDEXES)
+    public readonly tIndexes: BFChainCore.TransactionIndexJSON[],
   ) {
     super();
   }
   protected _doRequest(cc: CC, opts: BFChainCore.ChannelRequestOptions<CC>) {
-    return cc.downloadTransactions<T>(this.tIndexs, opts);
+    return cc.downloadTransactions<T>(this.tIndexes, opts);
   }
 
   static create<CC extends BFChainCore.SimpleChainChannel, T extends Transaction = Transaction>(
     rootModuleMap: ModuleStroge,
-    tIndexs: BFChainCore.TransactionIndexJSON[],
+    tIndexes: BFChainCore.TransactionIndexJSON[],
   ) {
     return Resolve<GroupDownloadTransactionsBuilder<CC, T>>(
       GroupDownloadTransactionsBuilder,
       new ModuleStroge(
-        [[GROUP_DOWNLOAD_TRANSACTIONS_API_BUILDER_ARGS.TINDEXS, tIndexs]],
+        [[GROUP_DOWNLOAD_TRANSACTIONS_API_BUILDER_ARGS.TINDEXES, tIndexes]],
         rootModuleMap,
       ),
     );

@@ -165,7 +165,7 @@ declare namespace BFChainCore {
     ): Promise<import("@bfchain/core-model").IndexTransactionReturnModel>;
     /**下载交易 */
     downloadTransactions<T extends Transaction = Transaction>(
-      tIndexs: DownloadTransactionArgJSON["tIndexes"],
+      tIndexes: DownloadTransactionArgJSON["tIndexes"],
       opts?: ChannelRequestOptions<any>,
     ): Promise<import("@bfchain/core-model").DownloadTransactionReturnModel<T>>;
     initBroadcastTransactionArg(
@@ -369,19 +369,21 @@ declare namespace BFChainCore {
       opts?: ChannelGroupRequestOptions<CC>,
       _resultGenerator?: import("@bfchain/util").AsyncIteratorGenerator<TransactionInBlock<T>>,
     ): import("@bfchain/util").AsyncIteratorGenerator<TransactionInBlock<T>>;
-     /**查询交易索引 */
-     indexTransactions(
+    /**查询交易索引 */
+    indexTransactions(
       query: IndexTransactionArgJSON["query"],
       sort?: IndexTransactionArgJSON["sort"],
       opts?: ChannelGroupRequestOptions<CC>,
-      _resultGenerator?: import("@bfchain/util").AsyncIteratorGenerator<BFChainCore.TransactionIndexJSON>,
-      ): import("@bfchain/util").AsyncIteratorGenerator<BFChainCore.TransactionIndexJSON>;
+      _resultGenerator?: import("@bfchain/util").AsyncIteratorGenerator<
+        BFChainCore.TransactionIndexJSON
+      >,
+    ): import("@bfchain/util").AsyncIteratorGenerator<BFChainCore.TransactionIndexJSON>;
     /**下载交易 */
     downloadTransactions<T extends Transaction = Transaction>(
-      tIndexs: DownloadTransactionArgJSON["tIndexes"],
+      tIndexes: DownloadTransactionArgJSON["tIndexes"],
       opts?: ChannelGroupRequestOptions<CC>,
       _resultGenerator?: import("@bfchain/util").AsyncIteratorGenerator<TransactionInBlock<T>>,
-      ): import("@bfchain/util").AsyncIteratorGenerator<TransactionInBlock<T>>;
+    ): import("@bfchain/util").AsyncIteratorGenerator<TransactionInBlock<T>>;
     /**
      * 查询交易
      */
@@ -389,8 +391,12 @@ declare namespace BFChainCore {
       query: QueryTransactionArgJSON["query"],
       sort?: QueryTransactionArgJSON["sort"],
       opts?: ChannelGroupRequestOptions<CC>,
-      _indexesResultGenerator?:import("@bfchain/util").AsyncIteratorGenerator<BFChainCore.TransactionIndexJSON>,
-      _transactionResultGenerator?: import("@bfchain/util").AsyncIteratorGenerator<TransactionInBlock<T>>,
+      _indexesResultGenerator?: import("@bfchain/util").AsyncIteratorGenerator<
+        BFChainCore.TransactionIndexJSON
+      >,
+      _transactionResultGenerator?: import("@bfchain/util").AsyncIteratorGenerator<
+        TransactionInBlock<T>
+      >,
     ): import("@bfchain/util").AsyncIteratorGenerator<TransactionInBlock<T>>;
     /**
      * 广播交易体
