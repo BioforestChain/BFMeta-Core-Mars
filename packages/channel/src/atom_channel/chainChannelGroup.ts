@@ -1037,23 +1037,29 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     _resultGenerator?: AsyncIteratorGenerator<TransactionInBlock<T>>,
   ) {
     /**这里预先将tIndex全部展开，因为可能存在重复的清空 */
-    const tIndexList = [];
+    const looseFlatIndexList: number[] = [];
     let count = 0;
     /**每个高度之间都会有一个空白的元素间隔，使它们不连续 */
-    const heightBaseIndexes = new EasyMap<number, number>((height) => tIndexList.length + 1);
-    /**按照height进行排序
+    const heightFlatBaseIndexs = new EasyMap<number, number>(
+      (height) => looseFlatIndexList.length + 1,
+    );
+    /**按照height进行排序，这样相同height的一并处理完，然后进入下一个height的处理
      * 无需在意相同height中index的排序，因为它们会依次展开在有序的tIndexList数组中
      */
     for (const iIndex of tIndexes.slice().sort((a, b) => a.height - b.height)) {
-      const baseIndex = heightBaseIndexes.forceGet(iIndex.height);
+      const flatBaseIndex = heightFlatBaseIndexs.forceGet(iIndex.height);
       for (let i = 0; i < iIndex.length; ++i) {
-        const index = baseIndex + i;
-        tIndexList[index] = index;
+        const flatIndex = flatBaseIndex + i + iIndex.index;
+        looseFlatIndexList[flatIndex] = flatIndex;
         ++count;
       }
     }
-    const tIndexSet = new IntSet(tIndexList);
-    const baseIndexHeightList = [...heightBaseIndexes].map(([baseIndex, height]) => ({
+    /// 将宽松数字转为紧凑数组
+    const flatIndexList: number[] = [];
+    looseFlatIndexList.forEach((v) => (flatIndexList[flatIndexList.length] = v));
+
+    const flatIndexSet = new IntSet(flatIndexList);
+    const heightAndFlatBaseIndexList = [...heightFlatBaseIndexs].map(([baseIndex, height]) => ({
       baseIndex,
       height,
     }));
@@ -1066,15 +1072,6 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
 
     const resultGenerator = _resultGenerator || new AsyncIteratorGenerator();
 
-    /**最大任务并发数量 */
-    const MAX_PARALLEL_NUM = Math.max(
-      1,
-      Math.min(
-        Math.ceil((this.size * 2) / 3),
-        // Math.ceil(ccGroup.averageDelay / 10),
-        opts?.maxParallelNum || Infinity,
-      ),
-    );
     /**发往每一台节点的最大查询数量
      * 如果 MAX_PARALLEL_NUM = 1
      * 那么意味着一次性更这个节点进行查询全部的数据
@@ -1134,9 +1131,6 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     });
 
     (async () => {
-      /**是否已经触碰到完结的边界了 */
-      const queryDoneOffset = count;
-
       /**迭代锁 */
       let iteratorLock: PromiseOut<void> | undefined; //= new PromiseOut<void>();
       /**释放迭代锁 */
@@ -1166,16 +1160,21 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
         next();
       });
       //#endregion
-      let currIndex = 0;
+      /**
+       * 当前搜索的起点，因为我们是按顺序下载，而不是并发下载，所以执行过的就可以跳过了
+       */
+      let curr_HAFBIL_Index = 0;
       const doTask = async () => {
         do {
-          const tIndexes = tIndexSet.getRangeSet(MAX_UNIT_LIMIT).map((range) => {
-            const nextIndex = baseIndexHeightList.findIndex(
+          /**将flatIndex转为tIndex */
+          const tIndexsSlice = flatIndexSet.getRangeSet(MAX_UNIT_LIMIT).map((range) => {
+            const nextIndex = heightAndFlatBaseIndexList.findIndex(
               (item) => item.baseIndex > range.start,
-              currIndex,
+              curr_HAFBIL_Index,
             );
-            currIndex = nextIndex === -1 ? baseIndexHeightList.length - 1 : nextIndex - 1;
-            const heightBaseIndexInfo = baseIndexHeightList[currIndex];
+            curr_HAFBIL_Index =
+              nextIndex === -1 ? heightAndFlatBaseIndexList.length - 1 : nextIndex - 1;
+            const heightBaseIndexInfo = heightAndFlatBaseIndexList[curr_HAFBIL_Index];
             const height = heightBaseIndexInfo.height;
             const index = range.start - heightBaseIndexInfo.baseIndex;
             const length = range.length;
@@ -1185,10 +1184,11 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
               length,
             };
           });
-          if (tIndexes.length === 0) {
+          if (tIndexsSlice.length === 0) {
             break;
           }
-          const needHeight = tIndexes[tIndexes.length - 1].height;
+          const totalLenght = tIndexsSlice.reduce((tl, ti) => tl + ti.length, 0);
+          const needHeight = tIndexsSlice[tIndexsSlice.length - 1].height;
           /**
            * 失败次数
            */
@@ -1200,15 +1200,23 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                 return false;
               }
 
-              const { requester, options } = requesterMap.forceGet(tIndexes);
+              const { requester, options } = requesterMap.forceGet(tIndexsSlice);
               try {
                 const res = await requester.addChainChannel(event.chainChannel, options);
                 if (res.status === RESPONSE_STATUS.success) {
                   /**
-                   * @TODO 这里应该判定 tIndexes 所请求的数量跟返回的数量是否一致
+                   * @TODO 这里应该判定 tIndexsSlice 所请求的数量跟返回的数量是否一致
                    */
-                  for (const trs of res.transactions) {
-                    resultGenerator.push(trs);
+                  if (res.transactions.length < totalLenght) {
+                    // 移除无效的结果
+                    requester.removeChainChannelByResult(res);
+                    // 重试任务，但是这个节点仍旧放在繁忙节点列表，暂时不信任
+                    times++;
+                    return false;
+                  } else {
+                    for (const trs of res.transactions) {
+                      resultGenerator.push(trs);
+                    }
                   }
                 } else if (res.status === RESPONSE_STATUS.busy) {
                   // 移除无效的结果
@@ -1235,7 +1243,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                     "[GROUP]:",
                     this.groupName,
                     "[TINDEXES]:",
-                    tIndexes,
+                    tIndexsSlice,
                     "[TIMES]:",
                     times,
                   );

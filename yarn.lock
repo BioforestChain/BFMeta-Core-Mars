@@ -84,7 +84,7 @@
   dependencies:
     "@types/microsoft__typescript-etw" "^0.1.0"
 
-"@bfchain/devkit@^0.9.34":
+"@bfchain/devkit@^0.9.33":
   version "0.9.34"
   resolved "http://192.168.250.245:4873/@bfchain%2fdevkit/-/devkit-0.9.34.tgz#0435d46dcc520ad42a90d0035d414106e97d4780"
   integrity sha512-SRa8r8qXywoQNT+0rMTS1HO7i4l65GchSsPi58BN3rUSFr9qOzUmPfq3YJ0AauUc1B13NK35x2nKv4LHNR4fPw==
