@@ -1,6 +1,6 @@
 {
   "name": "@types/bfchain__core-typings",
   "types": "index.d.ts",
-  "version": "5.19.65",
+  "version": "5.22.18",
   "dependencies": {}
 }

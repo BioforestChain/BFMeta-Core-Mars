@@ -1,10 +1,10 @@
 {
   "name": "@types/bfchain__core-transaction-complex",
   "types": "index.d.ts",
-  "version": "5.19.65",
+  "version": "5.22.18",
   "dependencies": {
-    "@types/bfchain__core-block": "5.19.65",
-    "@types/bfchain__core-transaction": "5.19.65",
-    "@types/bfchain__core-typings": "5.19.65"
+    "@types/bfchain__core-block": "5.22.18",
+    "@types/bfchain__core-transaction": "5.22.18",
+    "@types/bfchain__core-typings": "5.22.18"
   }
 }
