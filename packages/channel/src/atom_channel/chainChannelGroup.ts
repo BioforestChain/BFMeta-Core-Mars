@@ -1021,50 +1021,71 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
 
     return resultGenerator;
   }
+
+  private _formatHiList(hiList: { height: number; index: number }[]) {
+    /**这里预先将tIndex全部展开，因为可能存在重复的清空
+     * 这里利用array的特性，它length
+     */
+    const loose_fi_List: number[] = [];
+    /**每个高度之间都会有一个空白的元素间隔，使它们不连续 */
+    const height_fiStart_EM = new EasyMap<number, number>((height) => loose_fi_List.length + 1);
+    /**按照height进行排序，这样相同height的一并处理完，然后进入下一个height的处理
+     * 无需在意相同height中index的排序，因为它们会依次展开在有序的tIndexList数组中，可以理解成同样height的并发，不同height的串行
+     */
+    for (const hi of hiList.slice().sort((a, b) => a.height - b.height)) {
+      const fiStart = height_fiStart_EM.forceGet(hi.height);
+      const fi = fiStart + hi.index;
+      loose_fi_List[fi] = fi;
+    }
+    /// 将宽松数字转为紧凑数组
+    const fi_List: number[] = [];
+    loose_fi_List.forEach((v) => (fi_List[fi_List.length] = v));
+
+    const fi_Set = new IntSet(fi_List);
+    const height_fiStart_List: {
+      baseIndex: number;
+      height: number;
+    }[] = [];
+    for (const item of height_fiStart_EM) {
+      height_fiStart_List[height_fiStart_List.length] = {
+        height: item[0],
+        baseIndex: item[1],
+      };
+    }
+
+    /**
+     * 当前搜索的起点，因为是有顺序的，所以遍历过的就可以不再遍历
+     */
+    let curr_HAFBIL_Index = 0;
+    return fi_Set.getRangeSet(Infinity).map((range) => {
+      const nextIndex = height_fiStart_List.findIndex(
+        (item) => item.baseIndex > range.start,
+        curr_HAFBIL_Index,
+      );
+      curr_HAFBIL_Index = nextIndex === -1 ? height_fiStart_List.length - 1 : nextIndex - 1;
+      const heightBaseIndexInfo = height_fiStart_List[curr_HAFBIL_Index];
+      const height = heightBaseIndexInfo.height;
+      const index = range.start - heightBaseIndexInfo.baseIndex;
+      const length = range.length;
+      return {
+        height,
+        index,
+        length,
+      };
+    });
+  }
   /**批量下载区块链事件
-   * @TODO 完成这个方法
+   * 📖📖📖📖📖📖
+   * 目前的tIndexe格式本质是height+Index+length，也就是一个个height+index的组合，所以以下简写成hi，hi是一个对象，有height和index属性。
+   *    同时，his代表着字符串版本的hi，就是`${height}-${index}`
+   * flatIndex和tIndex是类似，都是hi的纯数字版，但hi是虚拟出来的，不是准确的ti，以下简写fi
+   * 📖📖📖📖📖📖
    */
   downloadTransactions<T extends BFChainCore.Transaction = BFChainCore.Transaction>(
     tIndexes: BFChainCore.DownloadTransactionArgJSON["tIndexes"],
     opts?: BFChainCore.ChannelGroupRequestOptions<DH> & { maxParallelNum?: number },
     _resultGenerator?: AsyncIteratorGenerator<TransactionInBlock<T>>,
   ) {
-    /**这里预先将tIndex全部展开，因为可能存在重复的清空 */
-    const looseFlatIndexList: number[] = [];
-    let count = 0;
-    /**每个高度之间都会有一个空白的元素间隔，使它们不连续 */
-    const heightFlatBaseIndexs = new EasyMap<number, number>(
-      (height) => looseFlatIndexList.length + 1,
-    );
-    /**按照height进行排序，这样相同height的一并处理完，然后进入下一个height的处理
-     * 无需在意相同height中index的排序，因为它们会依次展开在有序的tIndexList数组中
-     */
-    for (const iIndex of tIndexes.slice().sort((a, b) => a.height - b.height)) {
-      const flatBaseIndex = heightFlatBaseIndexs.forceGet(iIndex.height);
-      for (let i = 0; i < iIndex.length; ++i) {
-        const flatIndex = flatBaseIndex + i + iIndex.index;
-        looseFlatIndexList[flatIndex] = flatIndex;
-        ++count;
-      }
-    }
-    /// 将宽松数字转为紧凑数组
-    const flatIndexList: number[] = [];
-    looseFlatIndexList.forEach((v) => (flatIndexList[flatIndexList.length] = v));
-
-    const flatIndexSet = new IntSet(flatIndexList);
-    const heightAndFlatBaseIndexList = [...heightFlatBaseIndexs].map(([height, baseIndex]) => ({
-      baseIndex,
-      height,
-    }));
-
-    const resultPo =
-      opts &&
-      this.helper.parserAborterOptions(opts, {
-        channelGroup: this,
-      });
-
-    const resultGenerator = _resultGenerator || new AsyncIteratorGenerator();
-
     /**发往每一台节点的最大查询数量
      * 如果 MAX_PARALLEL_NUM = 1
      * 那么意味着一次性更这个节点进行查询全部的数据
@@ -1075,7 +1096,38 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
      * 而如果MAX_PARALLEL_NUM>1，说明网络中还有其它可用资源，
      * 我可以减少一次性的获取数量，来共同维护网络的稳定性
      */
-    const MAX_UNIT_LIMIT = Math.min(Math.ceil((this.limitIndexTransactions || 1) / Math.SQRT2), 1);
+    const MAX_UNIT_LIMIT = Math.min(
+      Math.ceil((this.limitDownloadTransactions || 1) / Math.SQRT2),
+      1,
+    );
+
+    type HIS = `${number}-${number}`;
+    /**展开所有的tIndexe成heightIndex，并保持最原始的请求顺序的同时，剔除重复存在的请求
+     * 这里使用map的特性，重复插入的不会重新排序
+     */
+    const his_hi_Map = new Map<HIS, { height: number; index: number }>();
+    const addHisHi = (height: number, index: number) => {
+      his_hi_Map.set(`${height}-${index}` as const, { height, index });
+    };
+    for (const ti of tIndexes) {
+      if (ti.length > 1) {
+        for (let i = 0; i < ti.length; ++i) {
+          addHisHi(ti.height, ti.index + i);
+        }
+      } else {
+        addHisHi(ti.height, ti.index);
+      }
+    }
+    const hi_List = [...his_hi_Map.values()];
+    const totalDownloadCount = hi_List.length;
+
+    const resultPo =
+      opts &&
+      this.helper.parserAborterOptions(opts, {
+        channelGroup: this,
+      });
+
+    const resultGenerator = _resultGenerator || new AsyncIteratorGenerator();
 
     const parallelTaskId = `Group(${this.groupName}) downloadTransactions-${
       Date.now() + Math.random()
@@ -1154,34 +1206,19 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       });
       //#endregion
       /**
-       * 当前搜索的起点，因为我们是按顺序下载，而不是并发下载，所以执行过的就可以跳过了
+       * 当前查询的进度
        */
-      let curr_HAFBIL_Index = 0;
+      let curr_hi_index = 0;
       const doTask = async () => {
         do {
-          /**将flatIndex转为tIndex */
-          const tIndexsSlice = flatIndexSet.getRangeSet(MAX_UNIT_LIMIT).map((range) => {
-            const nextIndex = heightAndFlatBaseIndexList.findIndex(
-              (item) => item.baseIndex > range.start,
-              curr_HAFBIL_Index,
-            );
-            curr_HAFBIL_Index =
-              nextIndex === -1 ? heightAndFlatBaseIndexList.length - 1 : nextIndex - 1;
-            const heightBaseIndexInfo = heightAndFlatBaseIndexList[curr_HAFBIL_Index];
-            const height = heightBaseIndexInfo.height;
-            const index = range.start - heightBaseIndexInfo.baseIndex;
-            const length = range.length;
-            return {
-              height,
-              index,
-              length,
-            };
-          });
-          if (tIndexsSlice.length === 0) {
+          const hi_slice = hi_List.slice(curr_hi_index, curr_hi_index + MAX_UNIT_LIMIT);
+          if (hi_slice.length === 0) {
             break;
           }
-          const totalLenght = tIndexsSlice.reduce((tl, ti) => tl + ti.length, 0);
-          const needHeight = tIndexsSlice[tIndexsSlice.length - 1].height;
+          /**hi数组转化成tIndexs，节省请求指令的数据包大小 */
+          const tindexSlice = this._formatHiList(hi_slice);
+          const totalLength = hi_slice.length;
+          const needHeight = hi_slice[hi_slice.length - 1].height;
           /**
            * 失败次数
            */
@@ -1193,14 +1230,14 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                 return false;
               }
 
-              const { requester, options } = requesterMap.forceGet(tIndexsSlice);
+              const { requester, options } = requesterMap.forceGet(tindexSlice);
               try {
                 const res = await requester.addChainChannel(event.chainChannel, options);
                 if (res.status === RESPONSE_STATUS.success) {
                   /**
                    * @TODO 这里应该判定 tIndexsSlice 所请求的数量跟返回的数量是否一致
                    */
-                  if (res.transactions.length < totalLenght) {
+                  if (res.transactions.length < totalLength) {
                     // 移除无效的结果
                     requester.removeChainChannelByResult(res);
                     // 重试任务，但是这个节点仍旧放在繁忙节点列表，暂时不信任
@@ -1239,7 +1276,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                     "[GROUP]:",
                     this.groupName,
                     "[TINDEXES]:",
-                    tIndexsSlice,
+                    hi_slice,
                     "[TIMES]:",
                     times,
                   );
@@ -1256,7 +1293,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
         } while (true);
       };
 
-      for (let i = 0; i < count; i += MAX_UNIT_LIMIT) {
+      for (let i = 0; i < totalDownloadCount; i += MAX_UNIT_LIMIT) {
         while (i >= yieldIndex) {
           if (!iteratorLock) {
             iteratorLock = new PromiseOut();
