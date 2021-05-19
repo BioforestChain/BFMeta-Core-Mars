@@ -1244,9 +1244,20 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                     times++;
                     return false;
                   } else {
-                    for (const trs of res.transactions) {
+                    /// 将查询的结果用hi_List的顺序进行排列
+                    const tib_hiIndex_List = res.transactions
+                      .map((tib) => {
+                        return {
+                          tib,
+                          hiIndex: hi_List.findIndex(
+                            (hi) => hi.height === tib.height && hi.index === tib.index,
+                          ),
+                        };
+                      })
+                      .sort((a, b) => a.hiIndex - b.hiIndex);
+                    for (const item of tib_hiIndex_List) {
                       if (resultGenerator.canPush(resultGenerator.list.length)) {
-                        resultGenerator.push(trs);
+                        resultGenerator.push(item.tib);
                       }
                     }
                     return true;
