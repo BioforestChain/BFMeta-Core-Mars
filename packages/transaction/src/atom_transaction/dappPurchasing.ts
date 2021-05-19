@@ -16,7 +16,7 @@ import {
   SHOULD_NOT_BE,
 } from "@bfchain/core-util-exception";
 import { DAppTransactionFactory } from "./dapp";
-import { Injectable, TaskList } from "@bfchain/util";
+import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
   "DAppPurchasingTransactionFactory",
@@ -27,9 +27,7 @@ const { ArgumentIllegalException } = CoreExceptionGenerator(
  *
  */
 @Injectable()
-export class DAppPurchasingTransactionFactory extends TransactionFactory<
-  DAppPurchasingTransaction
-> {
+export class DAppPurchasingTransactionFactory extends TransactionFactory<DAppPurchasingTransaction> {
   constructor(
     public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,
@@ -183,29 +181,30 @@ export class DAppPurchasingTransactionFactory extends TransactionFactory<
    * @param transaction
    * @param eventEmitter
    */
-  async applyTransaction(
+  applyTransaction(
     transaction: DAppPurchasingTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ) {
-    const tasks = new TaskList();
-    tasks.next = super.applyTransaction(transaction, eventEmitter, config);
-    const { magic, assetType } = config;
-    const { purchaseAsset } = transaction.asset.dappPurchasing.dappAsset;
+    return wrapTaskList((taskList) => {
+      taskList.next = super.applyTransaction(transaction, eventEmitter, config);
+      const { magic, assetType } = config;
+      const { purchaseAsset } = transaction.asset.dappPurchasing.dappAsset;
 
-    const assetInfo = this.chainAssetInfoHelper.getAssetInfo(magic, assetType);
-    // 扣除资产
-    tasks.next = this._applyTransactionEmitAsset(
-      eventEmitter,
-      transaction,
-      purchaseAsset as string,
-      {
-        senderId: transaction.senderId,
-        senderPublicKeyBuffer: transaction.senderPublicKeyBuffer,
-        recipientId: transaction.recipientId,
-        assetInfo,
-      },
-    );
-    return tasks.toPromise();
+      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(magic, assetType);
+      // 扣除资产
+      taskList.next = this._applyTransactionEmitAsset(
+        eventEmitter,
+        transaction,
+        purchaseAsset as string,
+        {
+          senderId: transaction.senderId,
+          senderPublicKeyBuffer: transaction.senderPublicKeyBuffer,
+          recipientId: transaction.recipientId,
+          assetInfo,
+        },
+      );
+      return taskList.toPromise();
+    });
   }
 }

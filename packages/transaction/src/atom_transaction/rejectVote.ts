@@ -8,7 +8,7 @@ import {
   ChainAssetInfoHelper,
 } from "@bfchain/core-helper";
 import { CoreExceptionGenerator, SHOULD_NOT_EXIST, SHOULD_BE } from "@bfchain/core-util-exception";
-import { Injectable, TaskList } from "@bfchain/util";
+import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
   "RejectVoteTransactionFactory",
@@ -109,22 +109,23 @@ export class RejectVoteTransactionFactory extends TransactionFactory<RejectVoteT
    * @param transaction
    * @param eventEmitter
    */
-  async applyTransaction(
+  applyTransaction(
     transaction: RejectVoteTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ) {
-    const tasks = new TaskList();
-    tasks.next = super.applyTransaction(transaction, eventEmitter, config);
-    // 拒绝投票
-    tasks.next = eventEmitter.emit("rejectVote", {
-      type: "rejectVote",
-      transaction,
-      applyInfo: {
-        address: transaction.senderId,
-        publicKeyBuffer: transaction.senderPublicKeyBuffer,
-      },
+    return wrapTaskList((taskList) => {
+      taskList.next = super.applyTransaction(transaction, eventEmitter, config);
+      // 拒绝投票
+      taskList.next = eventEmitter.emit("rejectVote", {
+        type: "rejectVote",
+        transaction,
+        applyInfo: {
+          address: transaction.senderId,
+          publicKeyBuffer: transaction.senderPublicKeyBuffer,
+        },
+      });
+      return taskList.toPromise();
     });
-    return tasks.toPromise();
   }
 }

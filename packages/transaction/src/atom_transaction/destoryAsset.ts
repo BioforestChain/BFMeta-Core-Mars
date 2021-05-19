@@ -15,7 +15,7 @@ import {
   SHOULD_BE,
   NOT_MATCH,
 } from "@bfchain/core-util-exception";
-import { Injectable, TaskList } from "@bfchain/util";
+import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
   "DestoryAssetTransactionFactory",
@@ -206,54 +206,55 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
    * @param transaction
    * @param eventEmitter
    */
-  async applyTransaction(
+  applyTransaction(
     transaction: DestoryAssetTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ) {
-    const tasks = new TaskList();
-    tasks.next = super.applyTransaction(transaction, eventEmitter, config);
-    const { senderId, senderPublicKeyBuffer, recipientId } = transaction;
-    const { amount, assetType, sourceChainMagic } = transaction.asset.destoryAsset;
-    const assetInfo = this.chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
+    return wrapTaskList((taskList) => {
+      taskList.next = super.applyTransaction(transaction, eventEmitter, config);
+      const { senderId, senderPublicKeyBuffer, recipientId } = transaction;
+      const { amount, assetType, sourceChainMagic } = transaction.asset.destoryAsset;
+      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
 
-    // 发起账户扣除资产
-    tasks.next = eventEmitter.emit("asset", {
-      type: "asset",
-      transaction,
-      applyInfo: {
-        address: senderId,
-        publicKeyBuffer: senderPublicKeyBuffer,
-        assetInfo,
-        amount: `-${amount}`,
-        sourceAmount: amount,
-      },
+      // 发起账户扣除资产
+      taskList.next = eventEmitter.emit("asset", {
+        type: "asset",
+        transaction,
+        applyInfo: {
+          address: senderId,
+          publicKeyBuffer: senderPublicKeyBuffer,
+          assetInfo,
+          amount: `-${amount}`,
+          sourceAmount: amount,
+        },
+      });
+      // 接收账户累加资产
+      taskList.next = eventEmitter.emit("asset", {
+        type: "asset",
+        transaction,
+        applyInfo: {
+          address: recipientId,
+          publicKeyBuffer: senderPublicKeyBuffer,
+          assetInfo,
+          amount,
+          sourceAmount: amount,
+        },
+      });
+      // 赎回链资产
+      taskList.next = eventEmitter.emit("destoryAsset", {
+        type: "destoryAsset",
+        transaction,
+        applyInfo: {
+          address: senderId,
+          publicKeyBuffer: transaction.senderPublicKeyBuffer,
+          assetsApplyAddress: recipientId,
+          assetInfo,
+          amount,
+          sourceAmount: amount,
+        },
+      });
+      return taskList.toPromise();
     });
-    // 接收账户累加资产
-    tasks.next = eventEmitter.emit("asset", {
-      type: "asset",
-      transaction,
-      applyInfo: {
-        address: recipientId,
-        publicKeyBuffer: senderPublicKeyBuffer,
-        assetInfo,
-        amount,
-        sourceAmount: amount,
-      },
-    });
-    // 赎回链资产
-    tasks.next = eventEmitter.emit("destoryAsset", {
-      type: "destoryAsset",
-      transaction,
-      applyInfo: {
-        address: senderId,
-        publicKeyBuffer: transaction.senderPublicKeyBuffer,
-        assetsApplyAddress: recipientId,
-        assetInfo,
-        amount,
-        sourceAmount: amount,
-      },
-    });
-    return tasks.toPromise();
   }
 }

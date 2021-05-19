@@ -19,7 +19,7 @@ import {
   SHOULD_BE,
   SHOULD_NOT_INCLUDE,
 } from "@bfchain/core-util-exception";
-import { Injectable, TaskList } from "@bfchain/util";
+import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
   "UsernameTransactionFactory",
@@ -223,23 +223,24 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
    * @param transaction
    * @param eventEmitter
    */
-  async applyTransaction(
+  applyTransaction(
     transaction: UsernameTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ) {
-    const tasks = new TaskList();
-    tasks.next = super.applyTransaction(transaction, eventEmitter, config);
-    // 设置用户名
-    tasks.next = eventEmitter.emit("setUsername", {
-      type: "setUsername",
-      transaction,
-      applyInfo: {
-        address: transaction.senderId,
-        publicKeyBuffer: transaction.senderPublicKeyBuffer,
-        alias: transaction.asset.username.alias,
-      },
+    return wrapTaskList((taskList) => {
+      taskList.next = super.applyTransaction(transaction, eventEmitter, config);
+      // 设置用户名
+      taskList.next = eventEmitter.emit("setUsername", {
+        type: "setUsername",
+        transaction,
+        applyInfo: {
+          address: transaction.senderId,
+          publicKeyBuffer: transaction.senderPublicKeyBuffer,
+          alias: transaction.asset.username.alias,
+        },
+      });
+      return taskList.toPromise();
     });
-    return tasks.toPromise();
   }
 }

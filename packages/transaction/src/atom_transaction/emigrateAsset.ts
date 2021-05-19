@@ -18,7 +18,7 @@ import {
   SHOULD_NOT_EXIST,
   PROP_SHOULD_GT_FIELD,
 } from "@bfchain/core-util-exception";
-import { Injectable, parseHexToArrayBuffer, TaskList } from "@bfchain/util";
+import { Injectable, parseHexToArrayBuffer, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
   "EmigrateAssetTransactionFactory",
@@ -119,13 +119,8 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
       target: "emigrateAssetAsset",
     } as const;
 
-    const {
-      sourceChainMagic,
-      sourceChainName,
-      assetType,
-      amount,
-      genesisDelegateSignature,
-    } = emigrateAsset;
+    const { sourceChainMagic, sourceChainName, assetType, amount, genesisDelegateSignature } =
+      emigrateAsset;
 
     this.checkChainName(sourceChainName, "sourceChainName", EmigrateAssetAsset_Exception_Detail);
 
@@ -269,24 +264,25 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
    * @param transaction
    * @param eventEmitter
    */
-  async applyTransaction(
+  applyTransaction(
     transaction: EmigrateAssetTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ) {
-    const tasks = new TaskList();
-    tasks.next = super.applyTransaction(transaction, eventEmitter, config);
-    const { senderId, senderPublicKeyBuffer } = transaction;
-    // 冻结账户
-    tasks.next = eventEmitter.emit("frozenAccount", {
-      type: "frozenAccount",
-      transaction,
-      applyInfo: {
-        address: senderId,
-        publicKeyBuffer: senderPublicKeyBuffer,
-        accountStatus: ACCOUNT_STATUS.FROZEN_IN_AND_OUT,
-      },
+    return wrapTaskList((taskList) => {
+      taskList.next = super.applyTransaction(transaction, eventEmitter, config);
+      const { senderId, senderPublicKeyBuffer } = transaction;
+      // 冻结账户
+      taskList.next = eventEmitter.emit("frozenAccount", {
+        type: "frozenAccount",
+        transaction,
+        applyInfo: {
+          address: senderId,
+          publicKeyBuffer: senderPublicKeyBuffer,
+          accountStatus: ACCOUNT_STATUS.FROZEN_IN_AND_OUT,
+        },
+      });
+      return taskList.toPromise();
     });
-    return tasks.toPromise();
   }
 }

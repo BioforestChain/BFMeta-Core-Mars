@@ -23,7 +23,7 @@ import {
   PROP_SHOULD_GT_FIELD,
 } from "@bfchain/core-util-exception";
 import { ToExchangeAssetTransactionFactory } from "./toExchangeAsset";
-import { Injectable, TaskList, parseHexToArrayBuffer } from "@bfchain/util";
+import { Injectable, wrapTaskList, parseHexToArrayBuffer } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
   "BeExchangeAssetTransactionFactory",
@@ -34,9 +34,7 @@ const { ArgumentIllegalException } = CoreExceptionGenerator(
  *
  */
 @Injectable()
-export class BeExchangeAssetTransactionFactory extends TransactionFactory<
-  BeExchangeAssetTransaction
-> {
+export class BeExchangeAssetTransactionFactory extends TransactionFactory<BeExchangeAssetTransaction> {
   constructor(
     public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,
@@ -332,59 +330,62 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<
    * @param transaction
    * @param eventEmitter
    */
-  async applyTransaction(
+  applyTransaction(
     transaction: BeExchangeAssetTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ) {
-    const tasks = new TaskList();
-    tasks.next = super.applyTransaction(transaction, eventEmitter, config);
-    const { exchangeAsset, toExchangeNumber, beExchangeNumber } = transaction.asset.beExchangeAsset;
-    const { toExchangeSource, toExchangeAsset, beExchangeSource, beExchangeAsset } = exchangeAsset;
+    return wrapTaskList((taskList) => {
+      taskList.next = super.applyTransaction(transaction, eventEmitter, config);
+      const { exchangeAsset, toExchangeNumber, beExchangeNumber } =
+        transaction.asset.beExchangeAsset;
+      const { toExchangeSource, toExchangeAsset, beExchangeSource, beExchangeAsset } =
+        exchangeAsset;
 
-    const beAssetInfo = this.chainAssetInfoHelper.getAssetInfo(beExchangeSource, beExchangeAsset);
-    // 扣除发起账户用于交换资产
-    tasks.next = eventEmitter.emit("asset", {
-      type: "asset",
-      transaction,
-      applyInfo: {
-        address: transaction.senderId,
-        publicKeyBuffer: transaction.senderPublicKeyBuffer,
-        assetInfo: beAssetInfo,
-        amount: `-${beExchangeNumber}`,
-        sourceAmount: beExchangeNumber,
-      },
+      const beAssetInfo = this.chainAssetInfoHelper.getAssetInfo(beExchangeSource, beExchangeAsset);
+      // 扣除发起账户用于交换资产
+      taskList.next = eventEmitter.emit("asset", {
+        type: "asset",
+        transaction,
+        applyInfo: {
+          address: transaction.senderId,
+          publicKeyBuffer: transaction.senderPublicKeyBuffer,
+          assetInfo: beAssetInfo,
+          amount: `-${beExchangeNumber}`,
+          sourceAmount: beExchangeNumber,
+        },
+      });
+
+      // 累加接收账户交换得到的资产
+      const recipientId = transaction.recipientId;
+      taskList.next = eventEmitter.emit("asset", {
+        type: "asset",
+        transaction,
+        applyInfo: {
+          address: recipientId,
+          assetInfo: beAssetInfo,
+          amount: beExchangeNumber,
+          sourceAmount: beExchangeNumber,
+        },
+      });
+
+      const toAssetInfo = this.chainAssetInfoHelper.getAssetInfo(toExchangeSource, toExchangeAsset);
+
+      // 累加发起账户交换得到的资产
+      taskList.next = eventEmitter.emit("unfrozenAsset", {
+        type: "unfrozenAsset",
+        transaction,
+        applyInfo: {
+          address: transaction.senderId,
+          publicKeyBuffer: transaction.senderPublicKeyBuffer,
+          assetInfo: toAssetInfo,
+          amount: toExchangeNumber,
+          sourceAmount: toExchangeNumber,
+          frozenIdBuffer: transaction.asset.beExchangeAsset.transactionSignatureBuffer,
+          recipientId, // 资产冻结账户
+        },
+      });
+      return taskList.toPromise();
     });
-
-    // 累加接收账户交换得到的资产
-    const recipientId = transaction.recipientId;
-    tasks.next = eventEmitter.emit("asset", {
-      type: "asset",
-      transaction,
-      applyInfo: {
-        address: recipientId,
-        assetInfo: beAssetInfo,
-        amount: beExchangeNumber,
-        sourceAmount: beExchangeNumber,
-      },
-    });
-
-    const toAssetInfo = this.chainAssetInfoHelper.getAssetInfo(toExchangeSource, toExchangeAsset);
-
-    // 累加发起账户交换得到的资产
-    tasks.next = eventEmitter.emit("unfrozenAsset", {
-      type: "unfrozenAsset",
-      transaction,
-      applyInfo: {
-        address: transaction.senderId,
-        publicKeyBuffer: transaction.senderPublicKeyBuffer,
-        assetInfo: toAssetInfo,
-        amount: toExchangeNumber,
-        sourceAmount: toExchangeNumber,
-        frozenIdBuffer: transaction.asset.beExchangeAsset.transactionSignatureBuffer,
-        recipientId, // 资产冻结账户
-      },
-    });
-    return tasks.toPromise();
   }
 }

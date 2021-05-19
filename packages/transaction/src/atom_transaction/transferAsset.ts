@@ -15,7 +15,7 @@ import {
   SHOULD_BE,
   NOT_MATCH,
 } from "@bfchain/core-util-exception";
-import { Injectable, TaskList } from "@bfchain/util";
+import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
   "TransferAssetTransactionFactory",
@@ -178,22 +178,23 @@ export class TransferAssetTransactionFactory extends TransactionFactory<Transfer
    * @param transaction
    * @param eventEmitter
    */
-  async applyTransaction(
+  applyTransaction(
     transaction: TransferAssetTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ) {
-    const tasks = new TaskList();
-    tasks.next = super.applyTransaction(transaction, eventEmitter, config);
-    const { amount, assetType, sourceChainMagic } = transaction.asset.transferAsset;
-    const assetInfo = this.chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
-    // 扣除资产
-    tasks.next = this._applyTransactionEmitAsset(eventEmitter, transaction, amount, {
-      senderId: transaction.senderId,
-      senderPublicKeyBuffer: transaction.senderPublicKeyBuffer,
-      recipientId: transaction.recipientId,
-      assetInfo,
+    return wrapTaskList((taskList) => {
+      taskList.next = super.applyTransaction(transaction, eventEmitter, config);
+      const { amount, assetType, sourceChainMagic } = transaction.asset.transferAsset;
+      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
+      // 扣除资产
+      taskList.next = this._applyTransactionEmitAsset(eventEmitter, transaction, amount, {
+        senderId: transaction.senderId,
+        senderPublicKeyBuffer: transaction.senderPublicKeyBuffer,
+        recipientId: transaction.recipientId,
+        assetInfo,
+      });
+      return taskList.toPromise();
     });
-    return tasks.toPromise();
   }
 }

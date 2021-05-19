@@ -17,7 +17,7 @@ import {
   SHOULD_NOT_EXIST,
   PROP_LENGTH_SHOULD_EQ_FIELD,
 } from "@bfchain/core-util-exception";
-import { Injectable, TaskList } from "@bfchain/util";
+import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "DAppTransactionFactory");
 
 /**
@@ -264,35 +264,31 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
    * @param transaction
    * @param eventEmitter
    */
-  async applyTransaction(
+  applyTransaction(
     transaction: DAppTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ) {
-    const tasks = new TaskList();
-    tasks.next = super.applyTransaction(transaction, eventEmitter, config);
-    const {
-      sourceChainName,
-      sourceChainMagic,
-      dappid,
-      type,
-      purchaseAsset,
-    } = transaction.asset.dapp;
-    // 发行 dappid
-    tasks.next = eventEmitter.emit("issueDAppid", {
-      type: "issueDAppid",
-      transaction,
-      applyInfo: {
-        address: transaction.senderId,
-        publicKeyBuffer: transaction.senderPublicKeyBuffer,
-        sourceChainName,
-        sourceChainMagic,
-        dappid,
-        possessorAddress: transaction.recipientId,
-        type,
-        purchaseAsset: purchaseAsset,
-      },
+    return wrapTaskList((taskList) => {
+      taskList.next = super.applyTransaction(transaction, eventEmitter, config);
+      const { sourceChainName, sourceChainMagic, dappid, type, purchaseAsset } =
+        transaction.asset.dapp;
+      // 发行 dappid
+      taskList.next = eventEmitter.emit("issueDAppid", {
+        type: "issueDAppid",
+        transaction,
+        applyInfo: {
+          address: transaction.senderId,
+          publicKeyBuffer: transaction.senderPublicKeyBuffer,
+          sourceChainName,
+          sourceChainMagic,
+          dappid,
+          possessorAddress: transaction.recipientId,
+          type,
+          purchaseAsset: purchaseAsset,
+        },
+      });
+      return taskList.toPromise();
     });
-    return tasks.toPromise();
   }
 }

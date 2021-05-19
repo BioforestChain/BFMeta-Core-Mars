@@ -20,7 +20,7 @@ import {
   EXCHANGE_DIRECTION,
   SPECIAL_ASSET_TYPE,
 } from "@bfchain/core-model";
-import { Injectable, TaskList } from "@bfchain/util";
+import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
   "ToExchangeSpecialAssetTransactionFactory",
@@ -31,9 +31,7 @@ const { ArgumentIllegalException } = CoreExceptionGenerator(
  *
  */
 @Injectable()
-export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory<
-  ToExchangeSpecialAssetTransaction
-> {
+export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory<ToExchangeSpecialAssetTransaction> {
   constructor(
     public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,
@@ -291,76 +289,75 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
    * @param transaction
    * @param eventEmitter
    */
-  async applyTransaction(
+  applyTransaction(
     transaction: ToExchangeSpecialAssetTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ) {
-    const tasks = new TaskList();
-    tasks.next = super.applyTransaction(transaction, eventEmitter, config);
-    const {
-      toExchangeSource,
-      toExchangeAsset,
-      exchangeNumber,
-      exchangeDirection,
-      exchangeAssetType,
-    } = transaction.asset.toExchangeSpecialAsset;
-    // ASSET_FROM_RECIPIENT 特殊资产来自 be 交易的发起账户
-    if (exchangeDirection === EXCHANGE_DIRECTION.ASSET_FROM_RECIPIENT) {
-      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(toExchangeSource, toExchangeAsset);
-      // 冻结发起账户用于交换的资产
-      tasks.next = eventEmitter.emit("frozenAsset", {
-        type: "frozenAsset",
-        transaction,
-        applyInfo: {
-          address: transaction.senderId,
-          publicKeyBuffer: transaction.senderPublicKeyBuffer,
-          assetInfo,
-          amount: `-${exchangeNumber}`,
-          sourceAmount: exchangeNumber,
-          maxEffectiveHeight: this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
-          minEffectiveHeight: this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
-          frozenIdBuffer: transaction.signatureBuffer,
-        },
-      });
-    } else {
-      const senderId = transaction.senderId;
-      if (exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID) {
-        // 出售 dappid
-        tasks.next = eventEmitter.emit("saleDAppid", {
-          type: "saleDAppid",
+    return wrapTaskList((taskList) => {
+      taskList.next = super.applyTransaction(transaction, eventEmitter, config);
+      const {
+        toExchangeSource,
+        toExchangeAsset,
+        exchangeNumber,
+        exchangeDirection,
+        exchangeAssetType,
+      } = transaction.asset.toExchangeSpecialAsset;
+      // ASSET_FROM_RECIPIENT 特殊资产来自 be 交易的发起账户
+      if (exchangeDirection === EXCHANGE_DIRECTION.ASSET_FROM_RECIPIENT) {
+        const assetInfo = this.chainAssetInfoHelper.getAssetInfo(toExchangeSource, toExchangeAsset);
+        // 冻结发起账户用于交换的资产
+        taskList.next = eventEmitter.emit("frozenAsset", {
+          type: "frozenAsset",
           transaction,
           applyInfo: {
-            address: senderId,
-            sourceChainMagic: toExchangeSource,
-            dappid: toExchangeAsset,
-            minEffectiveHeight: this.transactionHelper.getTransactionMinEffectiveHeight(
-              transaction,
-            ),
-            maxEffectiveHeight: this.transactionHelper.getTransactionMaxEffectiveHeight(
-              transaction,
-            ),
+            address: transaction.senderId,
+            publicKeyBuffer: transaction.senderPublicKeyBuffer,
+            assetInfo,
+            amount: `-${exchangeNumber}`,
+            sourceAmount: exchangeNumber,
+            maxEffectiveHeight:
+              this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
+            minEffectiveHeight:
+              this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
+            frozenIdBuffer: transaction.signatureBuffer,
           },
         });
       } else {
-        // 出售链域名
-        tasks.next = eventEmitter.emit("saleLocationName", {
-          type: "saleLocationName",
-          transaction,
-          applyInfo: {
-            address: senderId,
-            sourceChainMagic: toExchangeSource,
-            name: toExchangeAsset,
-            minEffectiveHeight: this.transactionHelper.getTransactionMinEffectiveHeight(
-              transaction,
-            ),
-            maxEffectiveHeight: this.transactionHelper.getTransactionMaxEffectiveHeight(
-              transaction,
-            ),
-          },
-        });
+        const senderId = transaction.senderId;
+        if (exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID) {
+          // 出售 dappid
+          taskList.next = eventEmitter.emit("saleDAppid", {
+            type: "saleDAppid",
+            transaction,
+            applyInfo: {
+              address: senderId,
+              sourceChainMagic: toExchangeSource,
+              dappid: toExchangeAsset,
+              minEffectiveHeight:
+                this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
+              maxEffectiveHeight:
+                this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
+            },
+          });
+        } else {
+          // 出售链域名
+          taskList.next = eventEmitter.emit("saleLocationName", {
+            type: "saleLocationName",
+            transaction,
+            applyInfo: {
+              address: senderId,
+              sourceChainMagic: toExchangeSource,
+              name: toExchangeAsset,
+              minEffectiveHeight:
+                this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
+              maxEffectiveHeight:
+                this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
+            },
+          });
+        }
       }
-    }
-    return tasks.toPromise();
+      return taskList.toPromise();
+    });
   }
 }

@@ -17,7 +17,7 @@ import {
   SHOULD_BE,
   NOT_MATCH,
 } from "@bfchain/core-util-exception";
-import { Injectable, TaskList } from "@bfchain/util";
+import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
   "LocationNameTransactionFactory",
@@ -303,44 +303,41 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
    * @param transaction
    * @param eventEmitter
    */
-  async applyTransaction(
+  applyTransaction(
     transaction: LocationNameTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ) {
-    const tasks = new TaskList();
-    tasks.next = super.applyTransaction(transaction, eventEmitter, config);
-    const { senderId, recipientId } = transaction;
-    const {
-      name,
-      sourceChainMagic,
-      sourceChainName,
-      operationType,
-    } = transaction.asset.locationName;
-    // 发行链域名
-    if (operationType === LOCATION_NAME_OPERATION_TYPE.REGISTRATION) {
-      tasks.next = eventEmitter.emit("registerLocationName", {
-        type: "registerLocationName",
-        transaction,
-        applyInfo: {
-          address: senderId,
-          name,
-          sourceChainMagic,
-          sourceChainName,
-          possessorAddress: recipientId,
-        },
-      });
-    } else {
-      tasks.next = eventEmitter.emit("cancelLocationName", {
-        type: "cancelLocationName",
-        transaction,
-        applyInfo: {
-          address: senderId,
-          name,
-          sourceChainMagic,
-        },
-      });
-    }
-    return tasks.toPromise();
+    return wrapTaskList((taskList) => {
+      taskList.next = super.applyTransaction(transaction, eventEmitter, config);
+      const { senderId, recipientId } = transaction;
+      const { name, sourceChainMagic, sourceChainName, operationType } =
+        transaction.asset.locationName;
+      // 发行链域名
+      if (operationType === LOCATION_NAME_OPERATION_TYPE.REGISTRATION) {
+        taskList.next = eventEmitter.emit("registerLocationName", {
+          type: "registerLocationName",
+          transaction,
+          applyInfo: {
+            address: senderId,
+            name,
+            sourceChainMagic,
+            sourceChainName,
+            possessorAddress: recipientId,
+          },
+        });
+      } else {
+        taskList.next = eventEmitter.emit("cancelLocationName", {
+          type: "cancelLocationName",
+          transaction,
+          applyInfo: {
+            address: senderId,
+            name,
+            sourceChainMagic,
+          },
+        });
+      }
+      return taskList.toPromise();
+    });
   }
 }

@@ -15,7 +15,7 @@ import {
   PROP_IS_REQUIRE,
   SHOULD_NOT_EXIST,
 } from "@bfchain/core-util-exception";
-import { Injectable, TaskList } from "@bfchain/util";
+import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "VoteTransactionFactory");
 
 /**
@@ -140,26 +140,27 @@ export class VoteTransactionFactory extends TransactionFactory<VoteTransaction> 
    * @param transaction
    * @param eventEmitter
    */
-  async applyTransaction(
+  applyTransaction(
     transaction: VoteTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ) {
     const equity = transaction.asset.vote.equity;
-    const tasks = new TaskList();
-    tasks.next = super.applyTransaction(transaction, eventEmitter, config);
-    // 扣除投票权益
-    tasks.next = eventEmitter.emit("voteEquity", {
-      type: "voteEquity",
-      transaction,
-      applyInfo: {
-        address: transaction.senderId,
-        publicKeyBuffer: transaction.senderPublicKeyBuffer,
-        equity: "-" + equity,
-        sourceEquity: equity,
-        recipientId: transaction.recipientId as string,
-      },
+    return wrapTaskList((taskList) => {
+      taskList.next = super.applyTransaction(transaction, eventEmitter, config);
+      // 扣除投票权益
+      taskList.next = eventEmitter.emit("voteEquity", {
+        type: "voteEquity",
+        transaction,
+        applyInfo: {
+          address: transaction.senderId,
+          publicKeyBuffer: transaction.senderPublicKeyBuffer,
+          equity: "-" + equity,
+          sourceEquity: equity,
+          recipientId: transaction.recipientId as string,
+        },
+      });
+      return taskList.toPromise();
     });
-    return tasks.toPromise();
   }
 }
