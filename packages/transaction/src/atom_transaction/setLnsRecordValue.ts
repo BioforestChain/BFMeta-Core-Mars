@@ -22,7 +22,7 @@ import {
   NOT_MATCH,
   SHOULD_NOT_EXIST,
 } from "@bfchain/core-util-exception";
-import { Injectable, TaskList } from "@bfchain/util";
+import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
   "SetLnsRecordValueTransactionFactory",
@@ -33,9 +33,7 @@ const { ArgumentIllegalException } = CoreExceptionGenerator(
  *
  */
 @Injectable()
-export class SetLnsRecordValueTransactionFactory extends TransactionFactory<
-  SetLnsRecordValueTransaction
-> {
+export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetLnsRecordValueTransaction> {
   constructor(
     public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,
@@ -324,33 +322,29 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<
    * @param transaction
    * @param eventEmitter
    */
-  async applyTransaction(
+  applyTransaction(
     transaction: SetLnsRecordValueTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ) {
-    const tasks = new TaskList();
-    tasks.next = super.applyTransaction(transaction, eventEmitter, config);
-    const {
-      name,
-      sourceChainMagic,
-      operationType,
-      addRecord,
-      deleteRecord,
-    } = transaction.asset.lnsRecordValue;
-    tasks.next = eventEmitter.emit("setLnsRecordValue", {
-      type: "setLnsRecordValue",
-      transaction,
-      applyInfo: {
-        address: transaction.senderId,
-        publicKeyBuffer: transaction.senderPublicKeyBuffer,
-        name,
-        sourceChainMagic,
-        operationType,
-        addRecord,
-        deleteRecord,
-      },
+    return wrapTaskList((taskList) => {
+      taskList.next = super.applyTransaction(transaction, eventEmitter, config);
+      const { name, sourceChainMagic, operationType, addRecord, deleteRecord } =
+        transaction.asset.lnsRecordValue;
+      taskList.next = eventEmitter.emit("setLnsRecordValue", {
+        type: "setLnsRecordValue",
+        transaction,
+        applyInfo: {
+          address: transaction.senderId,
+          publicKeyBuffer: transaction.senderPublicKeyBuffer,
+          name,
+          sourceChainMagic,
+          operationType,
+          addRecord,
+          deleteRecord,
+        },
+      });
+      return taskList.toPromise();
     });
-    return tasks.toPromise();
   }
 }

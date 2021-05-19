@@ -7,16 +7,8 @@ import {
   ConfigHelper,
   ChainAssetInfoHelper,
 } from "@bfchain/core-helper";
-import {
-  CoreExceptionGenerator,
-  PARAM_LOST,
-  NOT_MATCH,
-  PROP_IS_REQUIRE,
-  PROP_IS_INVALID,
-  SHOULD_BE,
-  SHOULD_NOT_EXIST,
-} from "@bfchain/core-util-exception";
-import { Injectable, TaskList } from "@bfchain/util";
+import { CoreExceptionGenerator, SHOULD_BE, SHOULD_NOT_EXIST } from "@bfchain/core-util-exception";
+import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
   "DelegateTransactionFactory",
@@ -117,22 +109,23 @@ export class DelegateTransactionFactory extends TransactionFactory<DelegateTrans
    * @param transaction
    * @param eventEmitter
    */
-  async applyTransaction(
+  applyTransaction(
     transaction: DelegateTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ) {
-    const tasks = new TaskList();
-    tasks.next = super.applyTransaction(transaction, eventEmitter, config);
-    // 注册受托人
-    tasks.next = eventEmitter.emit("registerToDelegate", {
-      type: "registerToDelegate",
-      transaction,
-      applyInfo: {
-        address: transaction.senderId,
-        publicKeyBuffer: transaction.senderPublicKeyBuffer,
-      },
+    return wrapTaskList((taskList) => {
+      taskList.next = super.applyTransaction(transaction, eventEmitter, config);
+      // 注册受托人
+      taskList.next = eventEmitter.emit("registerToDelegate", {
+        type: "registerToDelegate",
+        transaction,
+        applyInfo: {
+          address: transaction.senderId,
+          publicKeyBuffer: transaction.senderPublicKeyBuffer,
+        },
+      });
+      return taskList.toPromise();
     });
-    return tasks.toPromise();
   }
 }

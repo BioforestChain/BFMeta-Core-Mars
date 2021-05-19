@@ -15,7 +15,7 @@ import {
   SHOULD_NOT_EXIST,
   SHOULD_BE,
 } from "@bfchain/core-util-exception";
-import { Injectable, TaskList } from "@bfchain/util";
+import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
   "SignatureTransactionFactory",
@@ -151,23 +151,24 @@ export class SignatureTransactionFactory extends TransactionFactory<SignatureTra
    * @param transaction
    * @param eventEmitter
    */
-  async applyTransaction(
+  applyTransaction(
     transaction: SignatureTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ) {
-    const tasks = new TaskList();
-    tasks.next = super.applyTransaction(transaction, eventEmitter, config);
-    // 设置二次密码
-    tasks.next = eventEmitter.emit("setSecondPublicKey", {
-      type: "setSecondPublicKey",
-      transaction,
-      applyInfo: {
-        address: transaction.senderId,
-        publicKeyBuffer: transaction.senderPublicKeyBuffer,
-        secondPublicKeyBuffer: transaction.asset.signature.publicKeyBuffer,
-      },
+    return wrapTaskList((taskList) => {
+      taskList.next = super.applyTransaction(transaction, eventEmitter, config);
+      // 设置二次密码
+      taskList.next = eventEmitter.emit("setSecondPublicKey", {
+        type: "setSecondPublicKey",
+        transaction,
+        applyInfo: {
+          address: transaction.senderId,
+          publicKeyBuffer: transaction.senderPublicKeyBuffer,
+          secondPublicKeyBuffer: transaction.asset.signature.publicKeyBuffer,
+        },
+      });
+      return taskList.toPromise();
     });
-    return tasks.toPromise();
   }
 }

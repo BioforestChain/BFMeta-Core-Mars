@@ -16,7 +16,7 @@ import {
   SHOULD_BE,
   SHOULD_NOT_BE,
 } from "@bfchain/core-util-exception";
-import { Injectable, TaskList } from "@bfchain/util";
+import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
   "SetLnsManagerTransactionFactory",
@@ -186,25 +186,26 @@ export class SetLnsManagerTransactionFactory extends TransactionFactory<SetLnsMa
    * @param transaction
    * @param eventEmitter
    */
-  async applyTransaction(
+  applyTransaction(
     transaction: SetLnsManagerTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ) {
-    const tasks = new TaskList();
-    tasks.next = super.applyTransaction(transaction, eventEmitter, config);
-    const { name, sourceChainMagic } = transaction.asset.lnsManager;
-    tasks.next = eventEmitter.emit("setLnsManager", {
-      type: "setLnsManager",
-      transaction,
-      applyInfo: {
-        address: transaction.senderId,
-        publicKeyBuffer: transaction.senderPublicKeyBuffer,
-        name,
-        sourceChainMagic,
-        manager: transaction.recipientId,
-      },
+    return wrapTaskList((taskList) => {
+      taskList.next = super.applyTransaction(transaction, eventEmitter, config);
+      const { name, sourceChainMagic } = transaction.asset.lnsManager;
+      taskList.next = eventEmitter.emit("setLnsManager", {
+        type: "setLnsManager",
+        transaction,
+        applyInfo: {
+          address: transaction.senderId,
+          publicKeyBuffer: transaction.senderPublicKeyBuffer,
+          name,
+          sourceChainMagic,
+          manager: transaction.recipientId,
+        },
+      });
+      return taskList.toPromise();
     });
-    return tasks.toPromise();
   }
 }

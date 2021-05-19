@@ -18,7 +18,7 @@ import {
   NOT_MATCH,
   PROP_SHOULD_GT_FIELD,
 } from "@bfchain/core-util-exception";
-import { Injectable, TaskList } from "@bfchain/util";
+import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
   "IssueAssetTransactionFactory",
@@ -249,45 +249,42 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
    * @param transaction
    * @param eventEmitter
    */
-  async applyTransaction(
+  applyTransaction(
     transaction: IssueAssetTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ) {
-    const tasks = new TaskList();
-    tasks.next = super.applyTransaction(transaction, eventEmitter, config);
-    const { senderId, recipientId, senderPublicKeyBuffer } = transaction;
-    const {
-      sourceChainName,
-      sourceChainMagic,
-      assetType,
-      expectedIssuedAssets,
-    } = transaction.asset.issueAsset;
-    // 冻结发起账户
-    tasks.next = eventEmitter.emit("frozenAccount", {
-      type: "frozenAccount",
-      transaction,
-      applyInfo: {
-        address: senderId,
-        publicKeyBuffer: senderPublicKeyBuffer,
-        accountStatus: ACCOUNT_STATUS.FROZEN_OUT,
-      },
+    return wrapTaskList((taskList) => {
+      taskList.next = super.applyTransaction(transaction, eventEmitter, config);
+      const { senderId, recipientId, senderPublicKeyBuffer } = transaction;
+      const { sourceChainName, sourceChainMagic, assetType, expectedIssuedAssets } =
+        transaction.asset.issueAsset;
+      // 冻结发起账户
+      taskList.next = eventEmitter.emit("frozenAccount", {
+        type: "frozenAccount",
+        transaction,
+        applyInfo: {
+          address: senderId,
+          publicKeyBuffer: senderPublicKeyBuffer,
+          accountStatus: ACCOUNT_STATUS.FROZEN_OUT,
+        },
+      });
+      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
+      // 发行数字资产
+      taskList.next = eventEmitter.emit("issueAsset", {
+        type: "issueAsset",
+        transaction,
+        applyInfo: {
+          address: senderId,
+          genesisAddress: recipientId,
+          publicKeyBuffer: senderPublicKeyBuffer,
+          sourceChainName,
+          assetInfo,
+          amount: expectedIssuedAssets,
+          sourceAmount: expectedIssuedAssets,
+        },
+      });
+      return taskList.toPromise();
     });
-    const assetInfo = this.chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
-    // 发行数字资产
-    tasks.next = eventEmitter.emit("issueAsset", {
-      type: "issueAsset",
-      transaction,
-      applyInfo: {
-        address: senderId,
-        genesisAddress: recipientId,
-        publicKeyBuffer: senderPublicKeyBuffer,
-        sourceChainName,
-        assetInfo,
-        amount: expectedIssuedAssets,
-        sourceAmount: expectedIssuedAssets,
-      },
-    });
-    return tasks.toPromise();
   }
 }

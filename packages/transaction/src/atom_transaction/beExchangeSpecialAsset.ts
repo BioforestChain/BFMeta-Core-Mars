@@ -1,6 +1,6 @@
 import { TransactionFactory } from "./_txbase";
 import { ToExchangeSpecialAssetTransactionFactory } from "./toExchangeSpecialAsset";
-import { Injectable, TaskList, parseHexToArrayBuffer } from "@bfchain/util";
+import { Injectable, wrapTaskList, parseHexToArrayBuffer } from "@bfchain/util";
 import {
   CoreExceptionGenerator,
   PROP_IS_REQUIRE,
@@ -35,9 +35,7 @@ const { ArgumentIllegalException } = CoreExceptionGenerator(
  *
  */
 @Injectable()
-export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory<
-  BeExchangeSpecialAssetTransaction
-> {
+export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory<BeExchangeSpecialAssetTransaction> {
   constructor(
     public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,
@@ -268,126 +266,131 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
    * @param transaction
    * @param eventEmitter
    */
-  async applyTransaction(
+  applyTransaction(
     transaction: BeExchangeSpecialAssetTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ) {
-    const tasks = new TaskList();
-    tasks.next = super.applyTransaction(transaction, eventEmitter, config);
-    const {
-      exchangeSpecialAsset,
-      transactionSignatureBuffer,
-    } = transaction.asset.beExchangeSpecialAsset;
-    const {
-      toExchangeSource,
-      toExchangeAsset,
-      beExchangeSource,
-      beExchangeAsset,
-      exchangeDirection,
-      exchangeNumber,
-      exchangeAssetType,
-    } = exchangeSpecialAsset;
-    const { senderId, senderPublicKeyBuffer, recipientId } = transaction;
-    // ASSET_FROM_RECIPIENT 特殊资产来自 be 交易的发起账户
-    if (exchangeDirection === EXCHANGE_DIRECTION.ASSET_FROM_RECIPIENT) {
-      // to 交易是购买交易
-      const toAssetInfo = this.chainAssetInfoHelper.getAssetInfo(toExchangeSource, toExchangeAsset);
-      // 发起账户将得到的资产解冻并收入账下(发起账户是出售特殊资产)
-      tasks.next = eventEmitter.emit("unfrozenAsset", {
-        type: "unfrozenAsset",
-        transaction,
-        applyInfo: {
-          address: senderId,
-          publicKeyBuffer: senderPublicKeyBuffer,
-          assetInfo: toAssetInfo,
-          amount: exchangeNumber,
-          sourceAmount: exchangeNumber,
-          frozenIdBuffer: transactionSignatureBuffer,
-          recipientId, // 资产冻结账户
-        },
-      });
-      if (exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID) {
-        // 接收账户成为 dappid 的拥有者
-        tasks.next = eventEmitter.emit("purchaseDAppid", {
-          type: "purchaseDAppid",
+    return wrapTaskList((taskList) => {
+      taskList.next = super.applyTransaction(transaction, eventEmitter, config);
+      const { exchangeSpecialAsset, transactionSignatureBuffer } =
+        transaction.asset.beExchangeSpecialAsset;
+      const {
+        toExchangeSource,
+        toExchangeAsset,
+        beExchangeSource,
+        beExchangeAsset,
+        exchangeDirection,
+        exchangeNumber,
+        exchangeAssetType,
+      } = exchangeSpecialAsset;
+      const { senderId, senderPublicKeyBuffer, recipientId } = transaction;
+      // ASSET_FROM_RECIPIENT 特殊资产来自 be 交易的发起账户
+      if (exchangeDirection === EXCHANGE_DIRECTION.ASSET_FROM_RECIPIENT) {
+        // to 交易是购买交易
+        const toAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
+          toExchangeSource,
+          toExchangeAsset,
+        );
+        // 发起账户将得到的资产解冻并收入账下(发起账户是出售特殊资产)
+        taskList.next = eventEmitter.emit("unfrozenAsset", {
+          type: "unfrozenAsset",
           transaction,
           applyInfo: {
             address: senderId,
             publicKeyBuffer: senderPublicKeyBuffer,
-            possessorAddress: recipientId,
-            sourceChainMagic: beExchangeSource,
-            dappid: beExchangeAsset,
+            assetInfo: toAssetInfo,
+            amount: exchangeNumber,
+            sourceAmount: exchangeNumber,
+            frozenIdBuffer: transactionSignatureBuffer,
+            recipientId, // 资产冻结账户
           },
         });
+        if (exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID) {
+          // 接收账户成为 dappid 的拥有者
+          taskList.next = eventEmitter.emit("purchaseDAppid", {
+            type: "purchaseDAppid",
+            transaction,
+            applyInfo: {
+              address: senderId,
+              publicKeyBuffer: senderPublicKeyBuffer,
+              possessorAddress: recipientId,
+              sourceChainMagic: beExchangeSource,
+              dappid: beExchangeAsset,
+            },
+          });
+        } else {
+          // 接收账户成为链域名的拥有者
+          taskList.next = eventEmitter.emit("purchaseLocationName", {
+            type: "purchaseLocationName",
+            transaction,
+            applyInfo: {
+              address: senderId,
+              publicKeyBuffer: senderPublicKeyBuffer,
+              possessorAddress: recipientId,
+              sourceChainMagic: beExchangeSource,
+              name: beExchangeAsset,
+            },
+          });
+        }
       } else {
-        // 接收账户成为链域名的拥有者
-        tasks.next = eventEmitter.emit("purchaseLocationName", {
-          type: "purchaseLocationName",
+        // to 交易时出售交易
+        const beAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
+          beExchangeSource,
+          beExchangeAsset,
+        );
+        // 扣除发起账户用于交换资产(发起账户是购买资产)
+        taskList.next = eventEmitter.emit("asset", {
+          type: "asset",
           transaction,
           applyInfo: {
-            address: senderId,
+            address: transaction.senderId,
             publicKeyBuffer: senderPublicKeyBuffer,
-            possessorAddress: recipientId,
-            sourceChainMagic: beExchangeSource,
-            name: beExchangeAsset,
+            assetInfo: beAssetInfo,
+            amount: `-${exchangeNumber}`,
+            sourceAmount: exchangeNumber,
           },
         });
+        // 累加接收账户得到的资产
+        taskList.next = eventEmitter.emit("asset", {
+          type: "asset",
+          transaction,
+          applyInfo: {
+            address: recipientId,
+            assetInfo: beAssetInfo,
+            amount: exchangeNumber,
+            sourceAmount: exchangeNumber,
+          },
+        });
+        if (exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID) {
+          // 发起账户成为 dappid 的拥有者
+          taskList.next = eventEmitter.emit("purchaseDAppid", {
+            type: "purchaseDAppid",
+            transaction,
+            applyInfo: {
+              address: senderId,
+              publicKeyBuffer: senderPublicKeyBuffer,
+              possessorAddress: senderId,
+              sourceChainMagic: toExchangeSource,
+              dappid: toExchangeAsset,
+            },
+          });
+        } else {
+          // 发起账户成为链域名的拥有者
+          taskList.next = eventEmitter.emit("purchaseLocationName", {
+            type: "purchaseLocationName",
+            transaction,
+            applyInfo: {
+              address: senderId,
+              publicKeyBuffer: senderPublicKeyBuffer,
+              possessorAddress: senderId,
+              sourceChainMagic: toExchangeSource,
+              name: toExchangeAsset,
+            },
+          });
+        }
       }
-    } else {
-      // to 交易时出售交易
-      const beAssetInfo = this.chainAssetInfoHelper.getAssetInfo(beExchangeSource, beExchangeAsset);
-      // 扣除发起账户用于交换资产(发起账户是购买资产)
-      tasks.next = eventEmitter.emit("asset", {
-        type: "asset",
-        transaction,
-        applyInfo: {
-          address: transaction.senderId,
-          publicKeyBuffer: senderPublicKeyBuffer,
-          assetInfo: beAssetInfo,
-          amount: `-${exchangeNumber}`,
-          sourceAmount: exchangeNumber,
-        },
-      });
-      // 累加接收账户得到的资产
-      tasks.next = eventEmitter.emit("asset", {
-        type: "asset",
-        transaction,
-        applyInfo: {
-          address: recipientId,
-          assetInfo: beAssetInfo,
-          amount: exchangeNumber,
-          sourceAmount: exchangeNumber,
-        },
-      });
-      if (exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID) {
-        // 发起账户成为 dappid 的拥有者
-        tasks.next = eventEmitter.emit("purchaseDAppid", {
-          type: "purchaseDAppid",
-          transaction,
-          applyInfo: {
-            address: senderId,
-            publicKeyBuffer: senderPublicKeyBuffer,
-            possessorAddress: senderId,
-            sourceChainMagic: toExchangeSource,
-            dappid: toExchangeAsset,
-          },
-        });
-      } else {
-        // 发起账户成为链域名的拥有者
-        tasks.next = eventEmitter.emit("purchaseLocationName", {
-          type: "purchaseLocationName",
-          transaction,
-          applyInfo: {
-            address: senderId,
-            publicKeyBuffer: senderPublicKeyBuffer,
-            possessorAddress: senderId,
-            sourceChainMagic: toExchangeSource,
-            name: toExchangeAsset,
-          },
-        });
-      }
-    }
-    return tasks.toPromise();
+      return taskList.toPromise();
+    });
   }
 }

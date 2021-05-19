@@ -21,7 +21,7 @@ import {
   SHOULD_NOT_DUPLICATE,
   SHOULD_INCLUDE,
 } from "@bfchain/core-util-exception";
-import { Injectable, TaskList } from "@bfchain/util";
+import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
   "TrustAssetTransactionFactory",
@@ -289,31 +289,32 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
    * @param transaction
    * @param eventEmitter
    */
-  async applyTransaction(
+  applyTransaction(
     transaction: TrustAssetTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ) {
-    const tasks = new TaskList();
-    tasks.next = super.applyTransaction(transaction, eventEmitter, config);
-    const { amount, assetType, sourceChainMagic, numberOfSignFor } = transaction.asset.trustAsset;
-    const assetInfo = this.chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
-    // 冻结发起账户用于交换的资产
-    tasks.next = eventEmitter.emit("frozenAsset", {
-      type: "frozenAsset",
-      transaction,
-      applyInfo: {
-        address: transaction.senderId,
-        publicKeyBuffer: transaction.senderPublicKeyBuffer,
-        assetInfo,
-        amount: `-${amount}`,
-        sourceAmount: amount,
-        maxEffectiveHeight: this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
-        minEffectiveHeight: this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
-        frozenIdBuffer: transaction.signatureBuffer,
-        totalUnfrozenTimes: numberOfSignFor,
-      },
+    return wrapTaskList((taskList) => {
+      taskList.next = super.applyTransaction(transaction, eventEmitter, config);
+      const { amount, assetType, sourceChainMagic, numberOfSignFor } = transaction.asset.trustAsset;
+      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
+      // 冻结发起账户用于交换的资产
+      taskList.next = eventEmitter.emit("frozenAsset", {
+        type: "frozenAsset",
+        transaction,
+        applyInfo: {
+          address: transaction.senderId,
+          publicKeyBuffer: transaction.senderPublicKeyBuffer,
+          assetInfo,
+          amount: `-${amount}`,
+          sourceAmount: amount,
+          maxEffectiveHeight: this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
+          minEffectiveHeight: this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
+          frozenIdBuffer: transaction.signatureBuffer,
+          totalUnfrozenTimes: numberOfSignFor,
+        },
+      });
+      return taskList.toPromise();
     });
-    return tasks.toPromise();
   }
 }

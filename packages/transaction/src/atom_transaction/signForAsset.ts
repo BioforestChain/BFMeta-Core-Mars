@@ -17,7 +17,7 @@ import {
   PERMISSION_DENIED,
 } from "@bfchain/core-util-exception";
 import { TrustAssetTransactionFactory } from "./trustAsset";
-import { Injectable, TaskList } from "@bfchain/util";
+import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
   "signForAssetTransactionFactory",
@@ -253,30 +253,28 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
    * @param transaction
    * @param eventEmitter
    */
-  async applyTransaction(
+  applyTransaction(
     transaction: SignForAssetTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ) {
-    const tasks = new TaskList();
-    tasks.next = super.applyTransaction(transaction, eventEmitter, config);
-    const {
-      transactionSignatureBuffer,
-      trustSenderId,
-      trustRecipientId,
-    } = transaction.asset.signForAsset;
-    // 接收账户(委托交易指定的签收人)将得到的资产解冻并收入账下
-    tasks.next = eventEmitter.emit("signForAsset", {
-      type: "signForAsset",
-      transaction,
-      applyInfo: {
-        address: transaction.senderId,
-        publicKeyBuffer: transaction.senderPublicKeyBuffer,
-        frozenIdBuffer: transactionSignatureBuffer,
-        frozenAddress: trustSenderId,
-        recipientId: trustRecipientId, // 接收资产的账户
-      },
+    return wrapTaskList((taskList) => {
+      taskList.next = super.applyTransaction(transaction, eventEmitter, config);
+      const { transactionSignatureBuffer, trustSenderId, trustRecipientId } =
+        transaction.asset.signForAsset;
+      // 接收账户(委托交易指定的签收人)将得到的资产解冻并收入账下
+      taskList.next = eventEmitter.emit("signForAsset", {
+        type: "signForAsset",
+        transaction,
+        applyInfo: {
+          address: transaction.senderId,
+          publicKeyBuffer: transaction.senderPublicKeyBuffer,
+          frozenIdBuffer: transactionSignatureBuffer,
+          frozenAddress: trustSenderId,
+          recipientId: trustRecipientId, // 接收资产的账户
+        },
+      });
+      return taskList.toPromise();
     });
-    return tasks.toPromise();
   }
 }

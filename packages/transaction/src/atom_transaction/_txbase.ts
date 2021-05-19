@@ -16,7 +16,7 @@ import {
   SHOULD_BE,
 } from "@bfchain/core-util-exception-errorcode";
 import { Transaction, RANGE_TYPE, TransactionInBlock } from "@bfchain/core-model";
-import { TaskList } from "@bfchain/util";
+import { wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "_txbase");
 
 type FunctionExceptionDetail = {
@@ -687,32 +687,33 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
       assetInfo: BFChainCore.AssetInfoJSON;
     },
   ) {
-    const tasks = new TaskList();
-    tasks.next = event.emit("asset", {
-      type: "asset",
-      transaction,
-      applyInfo: {
-        address: detail.senderId,
-        publicKeyBuffer: detail.senderPublicKeyBuffer,
-        assetInfo: detail.assetInfo,
-        amount: "-" + amount,
-        sourceAmount: amount,
-      },
-    });
-    if (detail.recipientId) {
-      tasks.next = event.emit("asset", {
+    return wrapTaskList((taskList) => {
+      taskList.next = event.emit("asset", {
         type: "asset",
         transaction,
         applyInfo: {
-          address: detail.recipientId,
-          publicKeyBuffer: detail.recipientPublicKeyBuffer,
-
+          address: detail.senderId,
+          publicKeyBuffer: detail.senderPublicKeyBuffer,
           assetInfo: detail.assetInfo,
-          amount,
+          amount: "-" + amount,
           sourceAmount: amount,
         },
       });
-    }
-    return tasks.toPromise();
+      if (detail.recipientId) {
+        taskList.next = event.emit("asset", {
+          type: "asset",
+          transaction,
+          applyInfo: {
+            address: detail.recipientId,
+            publicKeyBuffer: detail.recipientPublicKeyBuffer,
+
+            assetInfo: detail.assetInfo,
+            amount,
+            sourceAmount: amount,
+          },
+        });
+      }
+      return taskList.toPromise();
+    });
   }
 }

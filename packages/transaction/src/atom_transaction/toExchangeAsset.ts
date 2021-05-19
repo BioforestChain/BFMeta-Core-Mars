@@ -16,7 +16,7 @@ import {
   SHOULD_NOT_INCLUDE,
   PROP_IS_REQUIRE,
 } from "@bfchain/core-util-exception";
-import { Injectable, TaskList } from "@bfchain/util";
+import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
   "ToExchangeAssetTransactionFactory",
@@ -27,9 +27,7 @@ const { ArgumentIllegalException } = CoreExceptionGenerator(
  *
  */
 @Injectable()
-export class ToExchangeAssetTransactionFactory extends TransactionFactory<
-  ToExchangeAssetTransaction
-> {
+export class ToExchangeAssetTransactionFactory extends TransactionFactory<ToExchangeAssetTransaction> {
   constructor(
     public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,
@@ -232,34 +230,32 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<
    * @param transaction
    * @param eventEmitter
    */
-  async applyTransaction(
+  applyTransaction(
     transaction: ToExchangeAssetTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ) {
-    const tasks = new TaskList();
-    tasks.next = super.applyTransaction(transaction, eventEmitter, config);
-    const {
-      toExchangeSource,
-      toExchangeAsset,
-      toExchangeNumber,
-    } = transaction.asset.toExchangeAsset;
-    const toAssetInfo = this.chainAssetInfoHelper.getAssetInfo(toExchangeSource, toExchangeAsset);
-    // 冻结发起账户用于交换的资产
-    tasks.next = eventEmitter.emit("frozenAsset", {
-      type: "frozenAsset",
-      transaction,
-      applyInfo: {
-        address: transaction.senderId,
-        publicKeyBuffer: transaction.senderPublicKeyBuffer,
-        assetInfo: toAssetInfo,
-        amount: `-${toExchangeNumber}`,
-        sourceAmount: toExchangeNumber,
-        maxEffectiveHeight: this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
-        minEffectiveHeight: this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
-        frozenIdBuffer: transaction.signatureBuffer,
-      },
+    return wrapTaskList((taskList) => {
+      taskList.next = super.applyTransaction(transaction, eventEmitter, config);
+      const { toExchangeSource, toExchangeAsset, toExchangeNumber } =
+        transaction.asset.toExchangeAsset;
+      const toAssetInfo = this.chainAssetInfoHelper.getAssetInfo(toExchangeSource, toExchangeAsset);
+      // 冻结发起账户用于交换的资产
+      taskList.next = eventEmitter.emit("frozenAsset", {
+        type: "frozenAsset",
+        transaction,
+        applyInfo: {
+          address: transaction.senderId,
+          publicKeyBuffer: transaction.senderPublicKeyBuffer,
+          assetInfo: toAssetInfo,
+          amount: `-${toExchangeNumber}`,
+          sourceAmount: toExchangeNumber,
+          maxEffectiveHeight: this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
+          minEffectiveHeight: this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
+          frozenIdBuffer: transaction.signatureBuffer,
+        },
+      });
+      return taskList.toPromise();
     });
-    return tasks.toPromise();
   }
 }

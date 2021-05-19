@@ -19,7 +19,7 @@ import {
   SHOULD_NOT_EXIST,
 } from "@bfchain/core-util-exception";
 import { GiftAssetTransactionFactory } from "./giftAsset";
-import { Injectable, Inject, parseHexToArrayBuffer, TaskList } from "@bfchain/util";
+import { Injectable, Inject, parseHexToArrayBuffer, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
   "GrabAssetTransactionFactory",
@@ -271,34 +271,35 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
    * @param transaction
    * @param eventEmitter
    */
-  async applyTransaction(
+  applyTransaction(
     transaction: GrabAssetTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ) {
-    const tasks = new TaskList();
-    const { chainAssetInfoHelper } = this;
-    const { grabAsset } = transaction.asset;
-    const { amount, giftTransactionSignatureBuffer } = grabAsset;
-    const { assetType, sourceChainMagic /* unitReserveFee */ } = grabAsset.giftAsset;
-    const recipientId = transaction.recipientId;
-    const assetInfo = chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
-    tasks.next = super.applyTransaction(transaction, eventEmitter, config);
-    // 发起账户将得到的资产解冻并收入账下
-    tasks.next = eventEmitter.emit("unfrozenAsset", {
-      type: "unfrozenAsset",
-      transaction,
-      applyInfo: {
-        address: transaction.senderId,
-        publicKeyBuffer: transaction.senderPublicKeyBuffer,
-        assetInfo,
-        amount,
-        sourceAmount: amount,
-        frozenIdBuffer: giftTransactionSignatureBuffer,
-        recipientId, // 资产冻结账户
-      },
-    });
+    return wrapTaskList((taskList) => {
+      const { chainAssetInfoHelper } = this;
+      const { grabAsset } = transaction.asset;
+      const { amount, giftTransactionSignatureBuffer } = grabAsset;
+      const { assetType, sourceChainMagic /* unitReserveFee */ } = grabAsset.giftAsset;
+      const recipientId = transaction.recipientId;
+      const assetInfo = chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
+      taskList.next = super.applyTransaction(transaction, eventEmitter, config);
+      // 发起账户将得到的资产解冻并收入账下
+      taskList.next = eventEmitter.emit("unfrozenAsset", {
+        type: "unfrozenAsset",
+        transaction,
+        applyInfo: {
+          address: transaction.senderId,
+          publicKeyBuffer: transaction.senderPublicKeyBuffer,
+          assetInfo,
+          amount,
+          sourceAmount: amount,
+          frozenIdBuffer: giftTransactionSignatureBuffer,
+          recipientId, // 资产冻结账户
+        },
+      });
 
-    return tasks.toPromise();
+      return taskList.toPromise();
+    });
   }
 }

@@ -20,7 +20,7 @@ import {
   SHOULD_NOT_EXIST,
 } from "@bfchain/core-util-exception";
 import { EmigrateAssetTransactionFactory } from "./emigrateAsset";
-import { Injectable, parseHexToArrayBuffer, TaskList } from "@bfchain/util";
+import { Injectable, parseHexToArrayBuffer, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
   "ImmigrateAssetTransactionFactory",
@@ -31,9 +31,7 @@ const { ArgumentIllegalException } = CoreExceptionGenerator(
  *
  */
 @Injectable()
-export class ImmigrateAssetTransactionFactory extends TransactionFactory<
-  ImmigrateAssetTransaction
-> {
+export class ImmigrateAssetTransactionFactory extends TransactionFactory<ImmigrateAssetTransaction> {
   constructor(
     public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,
@@ -260,32 +258,30 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<
    * @param transaction
    * @param eventEmitter
    */
-  async applyTransaction(
+  applyTransaction(
     transaction: ImmigrateAssetTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ) {
-    const tasks = new TaskList();
-    tasks.next = super.applyTransaction(transaction, eventEmitter, config);
-    const {
-      amount,
-      sourceChainMagic,
-      assetType,
-    } = transaction.asset.immigrateAsset.emigrateAssetTransaction.asset.emigrateAsset;
-    const assetInfo = this.chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
-    // 累加资产
-    tasks.next = eventEmitter.emit("asset", {
-      type: "asset",
-      transaction,
-      applyInfo: {
-        address: transaction.senderId,
-        publicKeyBuffer: transaction.senderPublicKeyBuffer,
-        assetInfo,
-        amount,
-        sourceAmount: amount,
-      },
-    });
+    return wrapTaskList((taskList) => {
+      taskList.next = super.applyTransaction(transaction, eventEmitter, config);
+      const { amount, sourceChainMagic, assetType } =
+        transaction.asset.immigrateAsset.emigrateAssetTransaction.asset.emigrateAsset;
+      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
+      // 累加资产
+      taskList.next = eventEmitter.emit("asset", {
+        type: "asset",
+        transaction,
+        applyInfo: {
+          address: transaction.senderId,
+          publicKeyBuffer: transaction.senderPublicKeyBuffer,
+          assetInfo,
+          amount,
+          sourceAmount: amount,
+        },
+      });
 
-    return tasks.toPromise();
+      return taskList.toPromise();
+    });
   }
 }

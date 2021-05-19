@@ -22,11 +22,10 @@ import {
   NOT_MATCH,
   SHOULD_NOT_EXIST,
   PROP_SHOULD_LT_FIELD,
-  PROP_SHOULD_GT_FIELD,
   TRANSACTION_FEE_NOT_ENOUGH,
   PROP_SHOULD_LTE_FIELD,
 } from "@bfchain/core-util-exception";
-import { Injectable, TaskList } from "@bfchain/util";
+import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
   "GiftAssetTransactionFactory",
@@ -287,74 +286,44 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
    * @param transaction
    * @param eventEmitter
    */
-  async applyTransaction(
+  applyTransaction(
     transaction: GiftAssetTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ) {
-    const tasks = new TaskList();
-    tasks.next = super.applyTransaction(transaction, eventEmitter, config);
-    const { chainAssetInfoHelper } = this;
-    const {
-      amount,
-      assetType,
-      sourceChainMagic,
-      // unitReserveFee,
-      totalGrabableTimes,
-    } = transaction.asset.giftAsset;
-    const assetInfo = chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
-    const minEffectiveHeight = this.transactionHelper.getTransactionMinEffectiveHeight(transaction);
-    const maxEffectiveHeight = this.transactionHelper.getTransactionMaxEffectiveHeight(transaction);
+    return wrapTaskList((taskList) => {
+      taskList.next = super.applyTransaction(transaction, eventEmitter, config);
+      const { chainAssetInfoHelper } = this;
+      const {
+        amount,
+        assetType,
+        sourceChainMagic,
+        // unitReserveFee,
+        totalGrabableTimes,
+      } = transaction.asset.giftAsset;
+      const assetInfo = chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
+      const minEffectiveHeight =
+        this.transactionHelper.getTransactionMinEffectiveHeight(transaction);
+      const maxEffectiveHeight =
+        this.transactionHelper.getTransactionMaxEffectiveHeight(transaction);
 
-    // 冻结资产
-    tasks.next = eventEmitter.emit("frozenAsset", {
-      type: "frozenAsset",
-      transaction,
-      applyInfo: {
-        address: transaction.senderId,
-        publicKeyBuffer: transaction.senderPublicKeyBuffer,
-        assetInfo,
-        amount: `-${amount}`,
-        sourceAmount: amount,
-        frozenIdBuffer: transaction.signatureBuffer,
-        minEffectiveHeight,
-        maxEffectiveHeight,
-        totalUnfrozenTimes: totalGrabableTimes,
-      },
+      // 冻结资产
+      taskList.next = eventEmitter.emit("frozenAsset", {
+        type: "frozenAsset",
+        transaction,
+        applyInfo: {
+          address: transaction.senderId,
+          publicKeyBuffer: transaction.senderPublicKeyBuffer,
+          assetInfo,
+          amount: `-${amount}`,
+          sourceAmount: amount,
+          frozenIdBuffer: transaction.signatureBuffer,
+          minEffectiveHeight,
+          maxEffectiveHeight,
+          totalUnfrozenTimes: totalGrabableTimes,
+        },
+      });
+      return taskList.toPromise();
     });
-    // const chainAssetInfo = chainAssetInfoHelper.getAssetInfo(config.magic, config.assetType);
-    // const reserveFee = this.jsbiHelper.multiply(unitReserveFee, totalGrabableTimes).toString();
-    // // 一次性扣除预留手续费
-    // tasks.next = eventEmitter.emit("fee", {
-    //   type: "fee",
-    //   transaction: transaction,
-    //   applyInfo: {
-    //     address: transaction.senderId,
-    //     publicKeyBuffer: transaction.senderPublicKeyBuffer,
-    //     assetInfo: chainAssetInfo,
-    //     amount: `-${reserveFee}`,
-    //     sourceAmount: reserveFee,
-    //   },
-    // });
-    /**
-     * 冻结预留手续费
-     * 这里不使用扣除手续费,是因为如果使用扣除的模式,那么手续费会直接被当前这个区块锻造者全部拿走
-     * 所以使用冻结的模式,让其它区块的锻造者通过处理`Grab`交易来从冻结的手续费中获得处理交易的手续费奖励
-     */
-    // tasks.next = eventEmitter.emit("frozenAsset", {
-    //   type: "frozenAsset",
-    //   transaction: transaction,
-    //   applyInfo: {
-    //     address: transaction.senderId,
-    //     publicKeyBuffer: transaction.senderPublicKeyBuffer,
-    //     assetInfo: chainAssetInfo,
-    //     amount: `-${reserveFee}`,
-    //     sourceAmount: reserveFee,
-    //     frozenIdBuffer: transaction.signatureBuffer,
-    //     minEffectiveHeight,
-    //     maxEffectiveHeight,
-    //   },
-    // });
-    return tasks.toPromise();
   }
 }
