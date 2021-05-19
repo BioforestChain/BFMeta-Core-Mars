@@ -1211,7 +1211,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       let curr_hi_index = 0;
       const doTask = async () => {
         do {
-          const hi_slice = hi_List.slice(curr_hi_index, curr_hi_index + MAX_UNIT_LIMIT);
+          const hi_slice = hi_List.slice(curr_hi_index, (curr_hi_index += MAX_UNIT_LIMIT));
           if (hi_slice.length === 0) {
             break;
           }
