@@ -204,7 +204,6 @@ export class DAppPurchasingTransactionFactory extends TransactionFactory<DAppPur
           assetInfo,
         },
       );
-      return taskList.toPromise();
     });
   }
 }

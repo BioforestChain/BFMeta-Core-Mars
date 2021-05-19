@@ -168,7 +168,6 @@ export class SignatureTransactionFactory extends TransactionFactory<SignatureTra
           secondPublicKeyBuffer: transaction.asset.signature.publicKeyBuffer,
         },
       });
-      return taskList.toPromise();
     });
   }
 }

@@ -344,7 +344,6 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
           deleteRecord,
         },
       });
-      return taskList.toPromise();
     });
   }
 }

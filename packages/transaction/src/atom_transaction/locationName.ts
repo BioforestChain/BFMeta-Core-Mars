@@ -337,7 +337,6 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
           },
         });
       }
-      return taskList.toPromise();
     });
   }
 }

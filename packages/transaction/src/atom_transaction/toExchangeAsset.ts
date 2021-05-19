@@ -255,7 +255,6 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<ToExch
           frozenIdBuffer: transaction.signatureBuffer,
         },
       });
-      return taskList.toPromise();
     });
   }
 }

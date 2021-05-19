@@ -284,7 +284,6 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
           sourceAmount: expectedIssuedAssets,
         },
       });
-      return taskList.toPromise();
     });
   }
 }

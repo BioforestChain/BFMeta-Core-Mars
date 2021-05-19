@@ -125,7 +125,6 @@ export class AcceptVoteTransactionFactory extends TransactionFactory<AcceptVoteT
           publicKeyBuffer: transaction.senderPublicKeyBuffer,
         },
       });
-      return taskList.toPromise();
     });
   }
 }

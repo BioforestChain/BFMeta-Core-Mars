@@ -390,7 +390,6 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
           });
         }
       }
-      return taskList.toPromise();
     });
   }
 }

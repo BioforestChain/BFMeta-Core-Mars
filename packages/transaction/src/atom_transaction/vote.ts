@@ -160,7 +160,6 @@ export class VoteTransactionFactory extends TransactionFactory<VoteTransaction> 
           recipientId: transaction.recipientId as string,
         },
       });
-      return taskList.toPromise();
     });
   }
 }

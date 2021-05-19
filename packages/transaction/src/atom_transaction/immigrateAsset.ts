@@ -280,8 +280,6 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
           sourceAmount: amount,
         },
       });
-
-      return taskList.toPromise();
     });
   }
 }

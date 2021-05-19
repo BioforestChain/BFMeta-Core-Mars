@@ -298,8 +298,6 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
           recipientId, // 资产冻结账户
         },
       });
-
-      return taskList.toPromise();
     });
   }
 }

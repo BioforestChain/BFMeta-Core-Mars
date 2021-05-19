@@ -323,7 +323,6 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
           totalUnfrozenTimes: totalGrabableTimes,
         },
       });
-      return taskList.toPromise();
     });
   }
 }
