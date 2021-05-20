@@ -446,6 +446,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
   /**
    * 查询交易
    */
+  @bindThis
   queryTransactions<T extends BFChainCore.Transaction = BFChainCore.Transaction>(
     query: BFChainCore.QueryTransactionArgJSON["query"],
     sort?: BFChainCore.QueryTransactionArgJSON["sort"],
@@ -734,6 +735,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     return resultGenerator;
   }
 
+  @bindThis
   indexTransactions(
     query: BFChainCore.QueryTransactionArgJSON["query"],
     sort?: BFChainCore.QueryTransactionArgJSON["sort"],
@@ -1081,6 +1083,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
    * flatIndex和tIndex是类似，都是hi的纯数字版，但hi是虚拟出来的，不是准确的ti，以下简写fi
    * 📖📖📖📖📖📖
    */
+  @bindThis
   downloadTransactions<T extends BFChainCore.Transaction = BFChainCore.Transaction>(
     tIndexes: BFChainCore.DownloadTransactionArgJSON["tIndexes"],
     opts?: BFChainCore.ChannelGroupRequestOptions<DH> & { maxParallelNum?: number },
@@ -1318,7 +1321,8 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
 
     return resultGenerator;
   }
-
+  
+  @bindThis
   queryTransactionsV2<T extends BFChainCore.Transaction = BFChainCore.Transaction>(
     query: BFChainCore.QueryTransactionArgJSON["query"],
     sort?: BFChainCore.QueryTransactionArgJSON["sort"],
