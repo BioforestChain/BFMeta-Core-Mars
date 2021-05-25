@@ -1332,8 +1332,9 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     tibRG: AsyncIteratorGenerator<TransactionInBlock<T>> = new AsyncIteratorGenerator(),
   ) {
     /// 联动传递 for await 与 await ag 的信号
+    let _innerIndex = 0
     tibRG.on("requestItem", (index) => {
-      indexsRG.emit("requestItem", index);
+      indexsRG.emit("requestItem", _innerIndex++);
     });
     tibRG.on("requestAll", () => {
       indexsRG.emit("requestAll", undefined);
