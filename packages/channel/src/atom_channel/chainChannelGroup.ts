@@ -17,6 +17,7 @@ import {
   safePromiseThen,
   safePromiseOffThen,
   OnInit,
+  TaskList,
 } from "@bfchain/util";
 import {
   Block,
@@ -1327,16 +1328,59 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     query: BFChainCore.QueryTransactionArgJSON["query"],
     sort?: BFChainCore.QueryTransactionArgJSON["sort"],
     opts?: BFChainCore.ChannelGroupRequestOptions<DH> & { maxParallelNum?: number },
-    _indexesResultGenerator?: AsyncIteratorGenerator<BFChainCore.TransactionIndexJSON>,
-    _transactionResultGenerator?: AsyncIteratorGenerator<TransactionInBlock<T>>,
+    indexsRG: AsyncIteratorGenerator<BFChainCore.TransactionIndexJSON> = new AsyncIteratorGenerator(),
+    tibRG: AsyncIteratorGenerator<TransactionInBlock<T>> = new AsyncIteratorGenerator(),
   ) {
-    const rg =
-      _transactionResultGenerator || (_transactionResultGenerator = new AsyncIteratorGenerator());
-    (async () => {
-      const tIndexes = await this.indexTransactions(query, sort, opts, _indexesResultGenerator);
-      return this.downloadTransactions(tIndexes, opts, rg);
-    })();
-    return rg;
+    /// 联动传递 for await 与 await ag 的信号
+    tibRG.on("requestItem", (index) => {
+      indexsRG.emit("requestItem", index);
+    });
+    tibRG.on("requestAll", () => {
+      indexsRG.emit("requestAll", undefined);
+    });
+
+    /// 下载锁，用于确保前一个下载完成并插入到ag后，再去插入下一个数据
+    type DownloadLock = PromiseOut<void>;
+    const downloadLockList: DownloadLock[] = [];
+    const getDownloadLock = (index: number) => {
+      if (index < 0) {
+        return;
+      }
+      const donwloadLock = downloadLockList[index];
+      if (donwloadLock.is_finished) {
+        return;
+      }
+      return donwloadLock;
+    };
+
+    /// 得到索引数据后，开始进行下载，并且依次进行保存
+    indexsRG.on("push", async (item) => {
+      const currDownloadLock = getDownloadLock(item.index);
+      if (currDownloadLock === undefined) {
+        tibRG.throw(new Error(`could not push tibs, when:${item.index}`));
+        return;
+      }
+      try {
+        const tibs = await this.downloadTransactions([item.item], opts);
+        /// 等待前一个任务插入完成
+        const prevDownloadLock = getDownloadLock(item.index - 1);
+        if (prevDownloadLock) {
+          await prevDownloadLock.promise;
+        }
+
+        for (const tib of tibs) {
+          tibRG.push(tib as TransactionInBlock<T>);
+        }
+        currDownloadLock.resolve();
+      } catch (err) {
+        tibRG.throw(err);
+        currDownloadLock.reject(err);
+      }
+    });
+    /// 开启索引查询
+    this.indexTransactions(query, sort, opts, indexsRG);
+
+    return tibRG;
   }
 
   /**

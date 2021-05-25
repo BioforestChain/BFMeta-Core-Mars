@@ -46,7 +46,8 @@ const {
 
 export abstract class ChainChannelBase
   extends QueneEventEmitterPro<BFChainCore.ChainChannelHanlderEventMap>
-  implements BFChainCore.ChainChannelBase {
+  implements BFChainCore.ChainChannelBase
+{
   public abstract maybeHeight: number;
   public abstract lastConsensusVersion: number;
   public abstract canQueryTransactions: boolean;
@@ -119,10 +120,11 @@ const getReqId = () => {
  */
 @Resolvable()
 export class ChainChannel<
-    THIS extends BFChainCore.SimpleChainChannel = BFChainCore.SimpleChainChannel
+    THIS extends BFChainCore.SimpleChainChannel = BFChainCore.SimpleChainChannel,
   >
   extends ChainChannelBase
-  implements BFChainCore.ChainChannel<THIS> {
+  implements BFChainCore.ChainChannel<THIS>
+{
   //#region chainChannel接口状态，查询默认为false，下载为true，广播默认为true
   get canQueryTransactions() {
     return false;
@@ -305,7 +307,7 @@ export class ChainChannel<
         }) as BFChainCore.ChannelRequestOptions<THIS>;
       }
       req_task = this.chainChannelHelper.wrapOutAborterOptions(req_task, options, {
-        chainChannel: (this as unknown) as THIS,
+        chainChannel: this as unknown as THIS,
       });
     }
     const res = await ResonseBoxer(await req_task.promise);
@@ -372,7 +374,7 @@ export class ChainChannel<
       });
     }
     const indexReturn = await this.indexTransactions(query, sort, opts);
-    return this.downloadTransactions(indexReturn.tIndexes, opts);
+    return this.downloadTransactions<T>(indexReturn.tIndexes, opts);
   }
 
   /**查询交易索引 */
@@ -683,12 +685,11 @@ export class ChainChannel<
                 break;
               }
               /**查询交易的响应，默认为繁忙 */
-              const response = DownloadTransactionReturnModel.fromObject<
-                DownloadTransactionReturnModel
-              >({
-                status: RESPONSE_STATUS.busy,
-                // transactions:[]
-              });
+              const response =
+                DownloadTransactionReturnModel.fromObject<DownloadTransactionReturnModel>({
+                  status: RESPONSE_STATUS.busy,
+                  // transactions:[]
+                });
               const queryResult = this.has("onDownloadTransaction")
                 ? await this.emit(
                     "onDownloadTransaction",
