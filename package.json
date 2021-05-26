@@ -59,6 +59,7 @@
     "lerna": "^3.22.0"
   },
   "dependencies": {
-    "@bfchain/devkit": "^0.9.35"
+    "@bfchain/devkit": "^0.9.35",
+    "tslib": "^2.2.0"
   }
 }
