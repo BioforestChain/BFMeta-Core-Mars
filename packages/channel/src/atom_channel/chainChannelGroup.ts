@@ -1333,9 +1333,9 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
   ) {
     /// 联动传递 for await 、await 、break 等信号
     let hiWalk = { i: 0, count: 0 };
-    tibRG.on("requestItem", (index) => {
+    tibRG.on("requestItem", (index, next) => {
       if (index < hiWalk.count) {
-        return;
+        return next();
       }
       do {
         if (hiWalk.i < hiRG.list.length) {
@@ -1343,19 +1343,19 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
             const hi = hiRG.list[hiWalk.i];
             if (hi === undefined) {
               hiRG.emit("requestItem", hiWalk.i);
-              return;
+              return next();
             }
             hiWalk.count += hi.length;
             ++hiWalk.i;
           } while (hiWalk.i < hiRG.list.length);
         } else {
           hiRG.emit("requestItem", hiWalk.i);
-          return;
+          return next();
         }
       } while (hiWalk.count <= index);
     });
-    tibRG.on("requestAll", () => hiRG.emit("requestAll", undefined));
-    tibRG.on("done", () => hiRG.done());
+    tibRG.on("requestAll", (_, next) => (hiRG.emit("requestAll", undefined), next()));
+    tibRG.on("done", (_, next) => (hiRG.done(), next()));
 
     /// 下载锁，用于确保前一个下载完成并插入到ag后，再去插入下一个数据
     type DownloadLock = PromiseOut<void>;
@@ -1376,11 +1376,11 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     };
 
     /// 得到索引数据后，开始进行下载，并且依次进行保存
-    hiRG.on("push", async (item) => {
+    hiRG.on("push", async (item, next) => {
       const currDownloadLock = getDownloadLock(item.index);
       if (currDownloadLock === undefined) {
         tibRG.throw(new Error(`could not push tibs, when:${item.index}`));
-        return;
+        return next();
       }
       try {
         const tibs = await this.downloadTransactions([item.item], opts);
@@ -1390,7 +1390,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
           await prevDownloadLock.promise;
         }
 
-        if(tibRG.is_done===false){
+        if (tibRG.is_done === false) {
           for (const tib of tibs) {
             tibRG.push(tib as TransactionInBlock<T>);
           }
@@ -1409,12 +1409,14 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       ) {
         tibRG.done();
       }
+      return next();
     });
     // 如果没有查询到任何结果，那么直接完结
-    hiRG.on("done", () => {
+    hiRG.on("done", (_, next) => {
       if (hiRG.list.length === 0) {
         tibRG.done();
       }
+      return next();
     });
     /// 开启索引查询
     this.indexTransactions(query, sort, opts, hiRG);
