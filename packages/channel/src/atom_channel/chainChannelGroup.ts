@@ -1328,14 +1328,34 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     query: BFChainCore.QueryTransactionArgJSON["query"],
     sort?: BFChainCore.QueryTransactionArgJSON["sort"],
     opts?: BFChainCore.ChannelGroupRequestOptions<DH> & { maxParallelNum?: number },
-    indexsRG: AsyncIteratorGenerator<BFChainCore.TransactionIndexJSON> = new AsyncIteratorGenerator(),
+    hiRG: AsyncIteratorGenerator<BFChainCore.TransactionIndexJSON> = new AsyncIteratorGenerator(),
     tibRG: AsyncIteratorGenerator<TransactionInBlock<T>> = new AsyncIteratorGenerator(),
   ) {
     /// 联动传递 for await 、await 、break 等信号
-    let _innerIndex = 0;
-    tibRG.on("requestItem", (index) => indexsRG.emit("requestItem", _innerIndex++));
-    tibRG.on("requestAll", () => indexsRG.emit("requestAll", undefined));
-    tibRG.on("done", () => indexsRG.done());
+    let hiWalk = { i: 0, count: 0 };
+    tibRG.on("requestItem", (index) => {
+      if (index < hiWalk.count) {
+        return;
+      }
+      do {
+        if (hiWalk.i < hiRG.list.length) {
+          do {
+            const hi = hiRG.list[hiWalk.i];
+            if (hi === undefined) {
+              hiRG.emit("requestItem", hiWalk.i);
+              return;
+            }
+            hiWalk.count += hi.length;
+            ++hiWalk.i;
+          } while (hiWalk.i < hiRG.list.length);
+        } else {
+          hiRG.emit("requestItem", hiWalk.i);
+          return;
+        }
+      } while (hiWalk.count <= index);
+    });
+    tibRG.on("requestAll", () => hiRG.emit("requestAll", undefined));
+    tibRG.on("done", () => hiRG.done());
 
     /// 下载锁，用于确保前一个下载完成并插入到ag后，再去插入下一个数据
     type DownloadLock = PromiseOut<void>;
@@ -1356,7 +1376,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     };
 
     /// 得到索引数据后，开始进行下载，并且依次进行保存
-    indexsRG.on("push", async (item) => {
+    hiRG.on("push", async (item) => {
       const currDownloadLock = getDownloadLock(item.index);
       if (currDownloadLock === undefined) {
         tibRG.throw(new Error(`could not push tibs, when:${item.index}`));
@@ -1380,7 +1400,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       }
       /// 如果所有的任务都已经完成，那么完结tibRG
       if (
-        indexsRG.is_done &&
+        hiRG.is_done &&
         downloadLockList.every(
           (lock) => lock === true || (lock instanceof PromiseOut && lock.is_finished),
         )
@@ -1388,8 +1408,14 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
         tibRG.done();
       }
     });
+    // 如果没有查询到任何结果，那么直接完结
+    hiRG.on("done", () => {
+      if (hiRG.list.length === 0) {
+        tibRG.done();
+      }
+    });
     /// 开启索引查询
-    this.indexTransactions(query, sort, opts, indexsRG);
+    this.indexTransactions(query, sort, opts, hiRG);
 
     return tibRG;
   }
