@@ -1390,8 +1390,10 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
           await prevDownloadLock.promise;
         }
 
-        for (const tib of tibs) {
-          tibRG.push(tib as TransactionInBlock<T>);
+        if(tibRG.is_done===false){
+          for (const tib of tibs) {
+            tibRG.push(tib as TransactionInBlock<T>);
+          }
         }
         currDownloadLock.resolve();
       } catch (err) {
