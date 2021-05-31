@@ -860,6 +860,11 @@ export class ChainChannel<
 
               break;
             }
+            case DUPLEX_API_CMD.REFUSE: {
+              /// 正常执行不应该执行到refuse这里，对方节点暴乱，发生了不该发生的异常！
+              this.close("chain channel refuse accpet data.");
+              break;
+            }
             default: {
               throw new ArgumentFormatException("invalid message cmd", { cmd });
             }

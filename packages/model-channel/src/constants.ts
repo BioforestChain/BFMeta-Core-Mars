@@ -111,6 +111,7 @@ export enum NewTransactionRefuseReason {
 }
 
 export enum DUPLEX_API_CMD {
+  REFUSE = 0, // 拒绝接收数据
   RESPONSE = 0b1, // 1 << _inc++, //= "RESPONSE",
   QUERY_TRANSACTION = 0b10, // 1 << _inc++, //= "/transaction/query",
   NEW_TRANSACTION = 0b100, // 1 << _inc++, //= "/transaction/broadcast",

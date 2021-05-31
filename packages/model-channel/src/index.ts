@@ -23,4 +23,10 @@ export class ResponseModel extends Message<ResponseModel> {
   cmd!: DUPLEX_API_CMD;
   @Field.d(ResponseModel.INC++, "bytes")
   binary!: Uint8Array;
+  /**下一次数据请求的锁定时间 */
+  @Field.d(ResponseModel.INC++, "uint32")
+  lockTime!: number;
+  /**锁定时间累计超过refuseTime后会引发REFUSE响应，届时数据会丢包 */
+  @Field.d(ResponseModel.INC++, "uint32")
+  refuseTime!: number;
 }
