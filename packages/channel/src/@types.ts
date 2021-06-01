@@ -70,7 +70,42 @@ declare namespace BFChainCore {
       in: import("@bfchain/core-model").GetPeerInfoArgModel;
       out: GetPeerInfoReturnParams | undefined;
     };
+    /**如果打破了请求限制的规整 */
+    onBreakRequestLimit: {
+      in: {
+        cmd: import("@bfchain/core-model").DUPLEX_API_CMD;
+        requestLimitInfo: RequestLimitInfo;
+      };
+      out:
+        | { requestLimitStrategy: import("@bfchain/core-model").REQUEST_LIMIT_STRATEGY }
+        | undefined;
+    };
+    /**返回响应限制信息 */
+    onGetResponseLimitInfo: {
+      in: {
+        cmd: import("@bfchain/core-model").DUPLEX_API_CMD;
+        requestLimitInfo?: RequestLimitInfo;
+      };
+      out: ResponseLimitInfo | undefined;
+    };
   };
+
+  /**收到请求时，关于接口限制的一些信息 */
+  type RequestLimitInfo = {
+    /**上一次响应的时间 */
+    preResponseTime: number;
+    /**上一次拒绝响应的时间 */
+    preRefuseTime: number;
+    /**承诺的拒绝响应的累计时间 */
+    preResponseLimitInfo: ResponseLimitInfo;
+  };
+
+  /**返回响应时，关于接口限制的一些信息 */
+  type ResponseLimitInfo = {
+    lockTimespan: number;
+    refuseTimespan: number;
+  };
+
   /**请求中断器 */
   type AborterOptions<ENV = undefined> = {
     /**禁用下面的所有关于aborter的项 */
@@ -117,9 +152,8 @@ declare namespace BFChainCore {
   type ChannelFilter<CC extends BFChainCore.SimpleChainChannel> = (channel: CC) => boolean;
   //#endregion
 
-  type QueneEventEmitterPro<
-    EM extends BFChainUtil.EventInOutMap
-  > = import("@bfchain/util").QueneEventEmitterPro<EM>;
+  type QueneEventEmitterPro<EM extends BFChainUtil.EventInOutMap> =
+    import("@bfchain/util").QueneEventEmitterPro<EM>;
 
   interface SimpleChainChannel
     extends ChainChannelBase,
@@ -146,7 +180,7 @@ declare namespace BFChainCore {
     ): EventListenerRemover;
 
     /**发送响应数据 */
-    postResponseMessage(
+    postChainChannelMessage(
       req_id: number,
       cmd: import("@bfchain/core-model").DUPLEX_API_CMD,
       binary: Uint8Array,
@@ -264,7 +298,7 @@ declare namespace BFChainCore {
     ): EventListenerRemover;
 
     /**发送响应数据 */
-    postResponseMessage(
+    postChainChannelMessage(
       req_id: number,
       cmd: import("@bfchain/core-model").DUPLEX_API_CMD,
       binary: Uint8Array,
@@ -374,9 +408,7 @@ declare namespace BFChainCore {
       query: IndexTransactionArgJSON["query"],
       sort?: IndexTransactionArgJSON["sort"],
       opts?: ChannelGroupRequestOptions<CC>,
-      _resultGenerator?: import("@bfchain/util").AsyncIteratorGenerator<
-        BFChainCore.TransactionIndexJSON
-      >,
+      _resultGenerator?: import("@bfchain/util").AsyncIteratorGenerator<BFChainCore.TransactionIndexJSON>,
     ): import("@bfchain/util").AsyncIteratorGenerator<BFChainCore.TransactionIndexJSON>;
     /**下载交易 */
     downloadTransactions<T extends Transaction = Transaction>(
@@ -391,9 +423,7 @@ declare namespace BFChainCore {
       query: QueryTransactionArgJSON["query"],
       sort?: QueryTransactionArgJSON["sort"],
       opts?: ChannelGroupRequestOptions<CC>,
-      _indexesResultGenerator?: import("@bfchain/util").AsyncIteratorGenerator<
-        BFChainCore.TransactionIndexJSON
-      >,
+      _indexesResultGenerator?: import("@bfchain/util").AsyncIteratorGenerator<BFChainCore.TransactionIndexJSON>,
       _transactionResultGenerator?: import("@bfchain/util").AsyncIteratorGenerator<
         TransactionInBlock<T>
       >,
