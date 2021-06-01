@@ -74,34 +74,35 @@ declare namespace BFChainCore {
     onBreakRequestLimit: {
       in: {
         cmd: import("@bfchain/core-model").DUPLEX_API_CMD;
-        requestLimitInfo: RequestLimitInfo;
+        requestLimitInfo: ReqresLimitInfo;
+        requestLimitStrategy: import("@bfchain/core-model").REQUEST_LIMIT_STRATEGY;
       };
       out:
         | { requestLimitStrategy: import("@bfchain/core-model").REQUEST_LIMIT_STRATEGY }
         | undefined;
     };
     /**返回响应限制信息 */
-    onGetResponseLimitInfo: {
+    onGetResponseLimitConfig: {
       in: {
         cmd: import("@bfchain/core-model").DUPLEX_API_CMD;
-        requestLimitInfo?: RequestLimitInfo;
+        requestLimitInfo?: ReqresLimitInfo;
       };
-      out: ResponseLimitInfo | undefined;
+      out: LimitConfig | undefined;
     };
   };
 
   /**收到请求时，关于接口限制的一些信息 */
-  type RequestLimitInfo = {
+  type ReqresLimitInfo = {
     /**上一次响应的时间 */
     preResponseTime: number;
     /**上一次拒绝响应的时间 */
     preRefuseTime: number;
     /**承诺的拒绝响应的累计时间 */
-    preResponseLimitInfo: ResponseLimitInfo;
+    preResponseLimitConfig: LimitConfig;
   };
 
   /**返回响应时，关于接口限制的一些信息 */
-  type ResponseLimitInfo = {
+  type LimitConfig = {
     lockTimespan: number;
     refuseTimespan: number;
   };

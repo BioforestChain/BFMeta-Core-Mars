@@ -123,6 +123,17 @@ const getReqId = () => {
   }
   return req_id;
 };
+
+const REQRES_CMD_MAP = new Map([
+  [DUPLEX_API_CMD.QUERY_TRANSACTION, DUPLEX_API_CMD.QUERY_TRANSACTION_RETURN],
+  [DUPLEX_API_CMD.INDEX_TRANSACTION, DUPLEX_API_CMD.INDEX_TRANSACTION_RETURN],
+  [DUPLEX_API_CMD.DOWNLOAD_TRANSACTION, DUPLEX_API_CMD.DOWNLOAD_TRANSACTION_RETURN],
+  [DUPLEX_API_CMD.NEW_TRANSACTION, DUPLEX_API_CMD.NEW_TRANSACTION_RETURN],
+  [DUPLEX_API_CMD.QUERY_BLOCK, DUPLEX_API_CMD.QUERY_BLOCK_RETURN],
+  [DUPLEX_API_CMD.NEW_BLOCK, DUPLEX_API_CMD.NEW_BLOCK_RETURN],
+  [DUPLEX_API_CMD.GET_PEER_INFO, DUPLEX_API_CMD.GET_PEER_INFO_RETURN],
+]);
+
 /**
  * 为数据收发处理器包装数据处理
  */
@@ -323,19 +334,95 @@ export class ChainChannel<
     await this.emit("afterRequestWithBinaryData", { cmd, query: binary, res });
     return res;
   }
+
   /**请求限制的缓存信息，这里每一种cmd都可以独立配置
-   * 这里cmd只能是 RETURN
+   * 要区别的是，cmd其实是有分成两大类的
+   *
+   * 一类是主动发起的cmd：可以在这里通过这个cmd获取到 对方对我 的限制
+   * 另外一类是被动返回的cmd：可以在这里通过这个cmd获取到 我对对方 的限制
+   *
    */
-  readonly requestLimitInfoEM = EasyMap.from({
+  readonly reqresLimitInfoEM = EasyMap.from({
     creater(cmd: DUPLEX_API_CMD) {
       return {
         preResponseTime: 0,
         preRefuseTime: 0,
-        preResponseLimitInfo: {
+        preResponseLimitConfig: {
           lockTimespan: 0,
           refuseTimespan: Infinity,
         },
-      } as BFChainCore.RequestLimitInfo;
+      } as BFChainCore.ReqresLimitInfo;
+    },
+  });
+  private _msgPostQuene = EasyMap.from({
+    creater: (cmd: DUPLEX_API_CMD) => {
+      const postQuene = {
+        taskList: [] as {
+          req_id: number;
+          cmd: DUPLEX_API_CMD;
+          binary: Uint8Array;
+          sign: PromiseOut<void>;
+        }[],
+        running: false,
+        looper: async () => {
+          if (postQuene.running) {
+            return;
+          }
+          postQuene.running = true;
+
+          do {
+            const task = postQuene.taskList.shift();
+            if (task === undefined) {
+              break;
+            }
+            const requestLimitInfo = this.reqresLimitInfoEM.get(cmd);
+            /// 如果限制存在
+            if (requestLimitInfo !== undefined) {
+              /// 首先等待限制时间达成
+              const reqlockTimespan =
+                this.timeHelper.now() -
+                (requestLimitInfo.preResponseTime +
+                  requestLimitInfo.preResponseLimitConfig.lockTimespan);
+              if (reqlockTimespan > 0) {
+                log(
+                  "req chainChannel(%s) cmd:%d need wait %dms",
+                  this.address,
+                  task.cmd,
+                  reqlockTimespan,
+                );
+                await sleep(reqlockTimespan);
+              }
+            }
+            //#region 开始发送任务
+
+            /// 如果任务已经被取消
+            if (task.sign.is_rejected) {
+              continue;
+            }
+
+            const resModel = ChainChannelMessageModel.fromObject({
+              version: this.config.version,
+              req_id: task.req_id,
+              cmd: task.cmd,
+              binary: task.binary,
+            });
+            this.endpoint.postMessage(resModel.getBytes());
+            task.sign.resolve(); // 发送完成
+            //#endregion
+
+            //#region 等待任务完成再执行下一个
+
+            const taskResponser = req_response_map.get(task.req_id);
+            if (taskResponser) {
+              await new Promise<void>((resolve) => taskResponser.onFinished(resolve));
+            }
+            //#endregion
+          } while (postQuene.taskList.length > 0);
+
+          this._msgPostQuene.delete(cmd);
+        },
+      };
+      return postQuene;
     },
   });
 
@@ -346,27 +433,38 @@ export class ChainChannel<
     }
     let lockTimespan = 0;
     let refuseTimespan = 0;
-    if (
-      (cmd & DUPLEX_API_CMD.RESPONSE) !== 0 && // 如果是response指令，那么获取lockTime和refuseTime
-      this.has("onGetResponseLimitInfo")
-    ) {
-      const responseLimitInfo = await this.emit("onGetResponseLimitInfo", { cmd });
-      if (responseLimitInfo !== undefined) {
-        lockTimespan = responseLimitInfo.lockTimespan;
-        refuseTimespan = responseLimitInfo.refuseTimespan;
+
+    /// 如果是请求指令，那么先进行自我约束
+    if (REQRES_CMD_MAP.has(cmd)) {
+      const requestLimitInfo = this.reqresLimitInfoEM.get(cmd);
+      /// 如果有请求限制的约束，那么走遵循限制规整来进行逐个发送
+      if (requestLimitInfo !== undefined) {
+        const postQuene = this._msgPostQuene.forceGet(cmd);
+        const sign = new PromiseOut<void>();
+        postQuene.taskList.push({ req_id, cmd, binary, sign });
+        postQuene.looper();
+        return sign.promise;
+      }
+    }
+    /// 如果是response指令，那么获取lockTime和refuseTime
+    else if ((cmd & DUPLEX_API_CMD.RESPONSE) !== 0 && this.has("onGetResponseLimitConfig")) {
+      const limitConfig = await this.emit("onGetResponseLimitConfig", { cmd });
+      if (limitConfig !== undefined) {
+        lockTimespan = limitConfig.lockTimespan;
+        refuseTimespan = limitConfig.refuseTimespan;
 
         /// 如果提供了限制信息，那么对数据进行更新
-        const requestLimitInfo = this.requestLimitInfoEM.forceGet(cmd);
-        const preResponseLimitInfo = requestLimitInfo.preResponseLimitInfo;
+        const responseLimitInfo = this.reqresLimitInfoEM.forceGet(cmd);
+        const preResponseLimitConfig = responseLimitInfo.preResponseLimitConfig;
         const now = this.timeHelper.now();
         const lockEndTime =
-          (requestLimitInfo.preResponseTime || now) + preResponseLimitInfo.lockTimespan;
+          (responseLimitInfo.preResponseTime || now) + preResponseLimitConfig.lockTimespan;
         /// 如果没有等待完上一次锁定的时间，那么需要将多余的锁定时间进行累计
         if (lockEndTime < now) {
           lockTimespan += now - lockEndTime;
         }
-        requestLimitInfo.preResponseTime = now;
-        requestLimitInfo.preResponseLimitInfo = responseLimitInfo;
+        responseLimitInfo.preResponseTime = now;
+        responseLimitInfo.preResponseLimitConfig = limitConfig;
       }
     }
 
@@ -620,15 +718,6 @@ export class ChainChannel<
 
   /**处理接收到数据时的响应 */
   initOnMessage() {
-    const responseCmdMap = new Map([
-      [DUPLEX_API_CMD.QUERY_TRANSACTION, DUPLEX_API_CMD.QUERY_TRANSACTION_RETURN],
-      [DUPLEX_API_CMD.INDEX_TRANSACTION, DUPLEX_API_CMD.INDEX_TRANSACTION_RETURN],
-      [DUPLEX_API_CMD.DOWNLOAD_TRANSACTION, DUPLEX_API_CMD.DOWNLOAD_TRANSACTION_RETURN],
-      [DUPLEX_API_CMD.NEW_TRANSACTION, DUPLEX_API_CMD.NEW_TRANSACTION_RETURN],
-      [DUPLEX_API_CMD.QUERY_BLOCK, DUPLEX_API_CMD.QUERY_BLOCK_RETURN],
-      [DUPLEX_API_CMD.NEW_BLOCK, DUPLEX_API_CMD.NEW_BLOCK_RETURN],
-      [DUPLEX_API_CMD.GET_PEER_INFO, DUPLEX_API_CMD.GET_PEER_INFO_RETURN],
-    ]);
     this.endpoint.onMessage(async (message: Uint8Array) => {
       /* 测试了socket-io：
        * 使用client发送ArrayBuffer后，nodejs中server接收到的是Buffer。
@@ -664,13 +753,14 @@ export class ChainChannel<
           let reqUnLocked = true;
 
           if (
-            cmd === DUPLEX_API_CMD.QUERY_TRANSACTION ||
-            cmd === DUPLEX_API_CMD.INDEX_TRANSACTION ||
-            cmd === DUPLEX_API_CMD.DOWNLOAD_TRANSACTION
+            REQRES_CMD_MAP.has(cmd)
+            // cmd === DUPLEX_API_CMD.QUERY_TRANSACTION ||
+            // cmd === DUPLEX_API_CMD.INDEX_TRANSACTION ||
+            // cmd === DUPLEX_API_CMD.DOWNLOAD_TRANSACTION
           ) {
             const resCmd = cmd | DUPLEX_API_CMD.RESPONSE;
 
-            const requestLimitInfo = this.requestLimitInfoEM.get(resCmd);
+            const requestLimitInfo = this.reqresLimitInfoEM.get(resCmd);
 
             /// 如果有过限制配置，检查是否还在限制中
             if (requestLimitInfo) {
@@ -680,12 +770,12 @@ export class ChainChannel<
               /**数据请求的限制策略 */
               let requestLimitStrategy = REQUEST_LIMIT_STRATEGY.NOLIMIT;
               /// 如果请求时间还在限制的时间范围内，那么有可能会被拒绝响应
-              if (requestDiffTime < requestLimitInfo.preResponseLimitInfo.lockTimespan) {
+              if (requestDiffTime < requestLimitInfo.preResponseLimitConfig.lockTimespan) {
                 /// 如果累计的时间压力已经超过refuseEndTime了，那么理应该拒绝refuse
                 if (
-                  requestDiffTime < requestLimitInfo.preResponseLimitInfo.refuseTimespan && // 如果单次请求的时间间隔没有满 refuseTime
-                  requestLimitInfo.preResponseLimitInfo.lockTimespan - requestDiffTime >
-                    requestLimitInfo.preResponseLimitInfo.refuseTimespan // 并且累加的 lockTime 已经超出 refuseTime
+                  requestDiffTime < requestLimitInfo.preResponseLimitConfig.refuseTimespan && // 如果单次请求的时间间隔没有满 refuseTime
+                  requestLimitInfo.preResponseLimitConfig.lockTimespan - requestDiffTime >
+                    requestLimitInfo.preResponseLimitConfig.refuseTimespan // 并且累加的 lockTime 已经超出 refuseTime
                 ) {
                   requestLimitStrategy = REQUEST_LIMIT_STRATEGY.REFUSE;
                 } else {
@@ -716,6 +806,31 @@ export class ChainChannel<
                 reqUnLocked = false;
               }
             }
+          } else if ((cmd & DUPLEX_API_CMD.RESPONSE) !== 0) {
+            //#region 如果是响应信息，将相应信息中携带的请求限制进行缓存
+            const reqCmd = cmd - DUPLEX_API_CMD.RESPONSE;
+            let responseLimitInfo = this.reqresLimitInfoEM.get(reqCmd);
+            const { lockTimespan, refuseTimespan } = msg;
+            const hasLimit = lockTimespan !== 0 || refuseTimespan !== 0;
+            /// 如果没有过限制
+            if (responseLimitInfo === undefined) {
+              if (hasLimit) {
+                responseLimitInfo = this.reqresLimitInfoEM.forceGet(reqCmd);
+                responseLimitInfo.preResponseTime = this.timeHelper.now();
+                responseLimitInfo.preResponseLimitConfig = { lockTimespan, refuseTimespan };
+              }
+            }
+            /// 如果有过限制
+            else {
+              if (hasLimit === false) {
+                this.reqresLimitInfoEM.delete(reqCmd);
+              } else {
+                /// 更新限制信息
+                responseLimitInfo.preResponseTime = this.timeHelper.now();
+                responseLimitInfo.preResponseLimitConfig = { lockTimespan, refuseTimespan };
+              }
+            }
+            //#endregion
           }
 
           //#endregion
@@ -948,7 +1063,7 @@ export class ChainChannel<
             case DUPLEX_API_CMD.GET_PEER_INFO_RETURN:
             case DUPLEX_API_CMD.RESPONSE: {
               const task = req_response_map.get(req_id);
-              if (!task) {
+              if (task === undefined) {
                 if (req_id !== 0) {
                   error(
                     new NoFoundException("onMessage get invalid req_id: {req_id}", {
@@ -982,9 +1097,14 @@ export class ChainChannel<
               break;
             }
             case DUPLEX_API_CMD.REFUSE: {
-              /// 正常执行不应该执行到refuse这里，对方节点暴乱，发生了不该发生的异常！
+              const task = req_response_map.get(req_id);
+              if (task !== undefined) {
+                task.reject(new RefuseException("request limit"));
+                return;
+              }
+              /// 正常执行不应该执行到refuse这里，双方节点混乱，发生了不该发生的异常！不建议继续通讯，直接关闭
               this.close("chain channel refuse accpet data.");
-              break;
+              return;
             }
             default: {
               throw new ArgumentFormatException("invalid message cmd", { cmd });
@@ -999,7 +1119,7 @@ export class ChainChannel<
           );
           this.postChainChannelMessage(
             req_id,
-            responseCmdMap.get(cmd) || DUPLEX_API_CMD.RESPONSE,
+            REQRES_CMD_MAP.get(cmd) || DUPLEX_API_CMD.RESPONSE,
             CommonResponse.encode(errorResponse).finish(),
           );
           // 继续向外抛出错误
@@ -1008,7 +1128,7 @@ export class ChainChannel<
         if (taskResultBinary) {
           this.postChainChannelMessage(
             req_id,
-            responseCmdMap.get(cmd) || DUPLEX_API_CMD.RESPONSE,
+            REQRES_CMD_MAP.get(cmd) || DUPLEX_API_CMD.RESPONSE,
             taskResultBinary,
           );
           return;
@@ -1016,7 +1136,7 @@ export class ChainChannel<
         if (taskResult) {
           this.postChainChannelMessage(
             req_id,
-            responseCmdMap.get(cmd) || DUPLEX_API_CMD.RESPONSE,
+            REQRES_CMD_MAP.get(cmd) || DUPLEX_API_CMD.RESPONSE,
             // 将对象解析成二进制进行传输
             (taskResult.constructor as typeof CommonResponse).encode(taskResult).finish(),
           );
