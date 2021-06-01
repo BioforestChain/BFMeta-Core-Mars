@@ -483,6 +483,7 @@ declare namespace BFChainCore {
     type ParallelTaskOptions<CC extends SimpleChainChannel> = {
       channelFilter?: BFChainCore.ChannelFilter<CC>;
       abortWhenNoChainChannel?: boolean;
+      taskResponseCmd?: import("@bfchain/core-model").DUPLEX_API_CMD;
     };
     type ParallelTaskCache<CC extends SimpleChainChannel> = {
       freeChainChannelList: CC[];
@@ -517,6 +518,7 @@ declare namespace BFChainCore {
   };
   interface ChainChannelBase {
     maybeHeight: number;
+    getApiMaybeQueueTime(cmd: import("@bfchain/core-model").DUPLEX_API_CMD): number;
     lastConsensusVersion: number;
     toBlockGetterHelper(opts?: {
       maxHeight?: number;

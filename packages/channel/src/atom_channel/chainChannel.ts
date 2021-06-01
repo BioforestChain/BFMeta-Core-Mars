@@ -56,6 +56,7 @@ export abstract class ChainChannelBase
   extends QueneEventEmitterPro<BFChainCore.ChainChannelHanlderEventMap>
   implements BFChainCore.ChainChannelBase
 {
+  public abstract getApiMaybeQueueTime(cmd: DUPLEX_API_CMD): number;
   public abstract maybeHeight: number;
   public abstract lastConsensusVersion: number;
   public abstract canQueryTransactions: boolean;
@@ -255,7 +256,12 @@ export class ChainChannel<
   }
   /**存储延迟的历史记录 */
   protected _delayHistroyList = new Float32Array(32);
+  private _delayCache?: { value: number };
   get delay() {
+    if (this._delayCache) {
+      return this._delayCache.value;
+    }
+
     const { _delayHistroyList } = this;
     let acc_delay = 0;
     let len = _delayHistroyList.length;
@@ -267,7 +273,10 @@ export class ChainChannel<
         len -= 1;
       }
     }
-    return acc_delay / len || 0;
+    const delay = acc_delay / len || 0;
+    /// 缓存计算结果
+    this._delayCache = { value: delay };
+    return delay;
   }
   /**存储延迟记录 */
   protected pushDelayHistroy(delay: number) {
@@ -277,6 +286,8 @@ export class ChainChannel<
     _delayHistroyList.set(_delayHistroyList.subarray(1, LEN), 0);
     // 将新的数据放置到最后
     _delayHistroyList[LEN - 1] = delay;
+    /// 清除缓存
+    this._delayCache = undefined;
   }
   protected _request<T>(
     cmd: DUPLEX_API_CMD,
@@ -335,6 +346,55 @@ export class ChainChannel<
     return res;
   }
 
+  private _maybeQueneTimeFastCache?: {
+    cache: Map<DUPLEX_API_CMD, number>;
+    releaser: unknown;
+  };
+  private _getMaybeQueneTimeCache() {
+    let maybeQueneTimeFastCache = this._maybeQueneTimeFastCache;
+    if (maybeQueneTimeFastCache === undefined) {
+      maybeQueneTimeFastCache = this._maybeQueneTimeFastCache = {
+        cache: new Map(),
+        /// 缓存有效期一个microtask的时间，在sort等操作中可以使用缓存
+        releaser: queueMicrotask(() => (this._maybeQueneTimeFastCache = undefined)),
+      };
+    }
+    return maybeQueneTimeFastCache.cache;
+  }
+  /**
+   * 预估要得到收到某一个cmd预估的时间
+   *
+   * 比如要得到`queryTransactions`的响应时间，请使用`DUPLEX_API_CMD.QUERY_TRANSACTION_RETURN`
+   */
+  getApiMaybeQueueTime(cmd: DUPLEX_API_CMD) {
+    if ((cmd & DUPLEX_API_CMD.RESPONSE) === 0) {
+      return 0;
+    }
+
+    const cache = this._getMaybeQueneTimeCache();
+    let queneTime = cache.get(cmd);
+    if (queneTime === undefined) {
+      const limitInfo = this.reqresLimitInfoEM.get(cmd);
+      if (limitInfo === undefined) {
+        queneTime = 0;
+      } else {
+        const lockEndTime =
+          -limitInfo.preResponseTime - limitInfo.preResponseLimitConfig.lockTimespan;
+        const waitTimespan = Math.max(0, lockEndTime - this.timeHelper.now());
+        const postQuene = this._msgPostQuene.get(cmd);
+        if (postQuene === undefined) {
+          queneTime = waitTimespan;
+        } else {
+          queneTime =
+            postQuene.taskList.length * limitInfo.preResponseLimitConfig.lockTimespan +
+            waitTimespan;
+        }
+      }
+      cache.set(cmd, queneTime);
+    }
+    return queneTime;
+  }
+
   /**请求限制的缓存信息，这里每一种cmd都可以独立配置
    * 要区别的是，cmd其实是有分成两大类的
    *
@@ -342,7 +402,7 @@ export class ChainChannel<
    * 另外一类是被动返回的cmd：可以在这里通过这个cmd获取到 我对对方 的限制
    *
    */
-  readonly reqresLimitInfoEM = EasyMap.from({
+  private readonly reqresLimitInfoEM = EasyMap.from({
     creater(cmd: DUPLEX_API_CMD) {
       return {
         preResponseTime: 0,
