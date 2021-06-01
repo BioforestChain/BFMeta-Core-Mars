@@ -639,8 +639,9 @@ export class ChainChannel<
         let req_id: number;
         let cmd: DUPLEX_API_CMD;
         let binary: Uint8Array;
+        let msg: ChainChannelMessageModel;
         try {
-          const msg = ChainChannelMessageModel.decode(message);
+          msg = ChainChannelMessageModel.decode(message);
           req_id = msg.req_id;
           cmd = msg.cmd;
           binary = msg.binary;
@@ -662,54 +663,61 @@ export class ChainChannel<
           /**请求是否依据承诺解锁限制了 */
           let reqUnLocked = true;
 
-          const resCmd = cmd | DUPLEX_API_CMD.RESPONSE;
+          if (
+            cmd === DUPLEX_API_CMD.QUERY_TRANSACTION ||
+            cmd === DUPLEX_API_CMD.INDEX_TRANSACTION ||
+            cmd === DUPLEX_API_CMD.DOWNLOAD_TRANSACTION
+          ) {
+            const resCmd = cmd | DUPLEX_API_CMD.RESPONSE;
 
-          const requestLimitInfo = this.requestLimitInfoEM.get(resCmd);
+            const requestLimitInfo = this.requestLimitInfoEM.get(resCmd);
 
-          /// 如果有过限制配置，检查是否还在限制中
-          if (requestLimitInfo) {
-            const now = this.timeHelper.now();
-            const requestDiffTime = now - requestLimitInfo.preResponseTime;
+            /// 如果有过限制配置，检查是否还在限制中
+            if (requestLimitInfo) {
+              const now = this.timeHelper.now();
+              const requestDiffTime = now - requestLimitInfo.preResponseTime;
 
-            /**数据请求的限制策略 */
-            let requestLimitStrategy = REQUEST_LIMIT_STRATEGY.NOLIMIT;
-            /// 如果请求时间还在限制的时间范围内，那么有可能会被拒绝响应
-            if (requestDiffTime < requestLimitInfo.preResponseLimitInfo.lockTimespan) {
-              /// 如果累计的时间压力已经超过refuseEndTime了，那么理应该拒绝refuse
-              if (
-                requestDiffTime < requestLimitInfo.preResponseLimitInfo.refuseTimespan && // 如果单次请求的时间间隔没有满 refuseTime
-                requestLimitInfo.preResponseLimitInfo.lockTimespan - requestDiffTime >
-                  requestLimitInfo.preResponseLimitInfo.refuseTimespan // 并且累加的 lockTime 已经超出 refuseTime
-              ) {
-                requestLimitStrategy = REQUEST_LIMIT_STRATEGY.REFUSE;
-              } else {
-                requestLimitStrategy = REQUEST_LIMIT_STRATEGY.BUSY;
-              }
+              /**数据请求的限制策略 */
+              let requestLimitStrategy = REQUEST_LIMIT_STRATEGY.NOLIMIT;
+              /// 如果请求时间还在限制的时间范围内，那么有可能会被拒绝响应
+              if (requestDiffTime < requestLimitInfo.preResponseLimitInfo.lockTimespan) {
+                /// 如果累计的时间压力已经超过refuseEndTime了，那么理应该拒绝refuse
+                if (
+                  requestDiffTime < requestLimitInfo.preResponseLimitInfo.refuseTimespan && // 如果单次请求的时间间隔没有满 refuseTime
+                  requestLimitInfo.preResponseLimitInfo.lockTimespan - requestDiffTime >
+                    requestLimitInfo.preResponseLimitInfo.refuseTimespan // 并且累加的 lockTime 已经超出 refuseTime
+                ) {
+                  requestLimitStrategy = REQUEST_LIMIT_STRATEGY.REFUSE;
+                } else {
+                  requestLimitStrategy = REQUEST_LIMIT_STRATEGY.BUSY;
+                }
 
-              /// 在执行策略结果之前，允许开发者自行调整策略
-              if (this.has("onBreakRequestLimit")) {
-                const customPilicy = await this.emit("onBreakRequestLimit", {
-                  cmd,
-                  requestLimitInfo,
-                  requestLimitStrategy,
-                });
-                if (customPilicy !== undefined) {
-                  requestLimitStrategy = customPilicy.requestLimitStrategy;
-                  // useDefaultPolicy = false;
+                /// 在执行策略结果之前，允许开发者自行调整策略
+                if (this.has("onBreakRequestLimit")) {
+                  const customPilicy = await this.emit("onBreakRequestLimit", {
+                    cmd,
+                    requestLimitInfo,
+                    requestLimitStrategy,
+                  });
+                  if (customPilicy !== undefined) {
+                    requestLimitStrategy = customPilicy.requestLimitStrategy;
+                    // useDefaultPolicy = false;
+                  }
                 }
               }
-            }
-            /// 根最终决定的据策略做出决策
-            if (requestLimitStrategy === REQUEST_LIMIT_STRATEGY.REFUSE) {
-              requestLimitInfo.preRefuseTime = now; /// 在做响应的时候，可以尝试判断preRefuseTime来做出拒绝，减少带宽压力，这里默认保持响应，开发者根据这些信息做出调整
-              this.postChainChannelMessage(req_id, DUPLEX_API_CMD.REFUSE, new Uint8Array(0));
-              return;
-            }
-            if (requestLimitStrategy === REQUEST_LIMIT_STRATEGY.BUSY) {
-              /// 请求的限制还在，可以直接返回busy
-              reqUnLocked = false;
+              /// 根最终决定的据策略做出决策
+              if (requestLimitStrategy === REQUEST_LIMIT_STRATEGY.REFUSE) {
+                requestLimitInfo.preRefuseTime = now; /// 在做响应的时候，可以尝试判断preRefuseTime来做出拒绝，减少带宽压力，这里默认保持响应，开发者根据这些信息做出调整
+                this.postChainChannelMessage(req_id, DUPLEX_API_CMD.REFUSE, new Uint8Array(0));
+                return;
+              }
+              if (requestLimitStrategy === REQUEST_LIMIT_STRATEGY.BUSY) {
+                /// 请求的限制还在，可以直接返回busy
+                reqUnLocked = false;
+              }
             }
           }
+
           //#endregion
 
           switch (cmd) {
