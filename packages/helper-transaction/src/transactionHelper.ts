@@ -328,23 +328,6 @@ export class TransactionHelper {
         : customMinFeePerByte
       : minTransactionFeePerByte;
   }
-  private __calcMinFee(
-    feePerByte: {
-      numerator: bigint;
-      denominator: number;
-    },
-    standardMinFee: BFChainCore.FractionJSON<number>,
-    bytesLength: number,
-    fee: string,
-  ) {
-    // 比较手续费是否充足
-    const result = this.jsbiHelper.compareFraction(feePerByte, standardMinFee);
-
-    if (result < 0) {
-      return this.jsbiHelper.multiplyCeilFraction(bytesLength, standardMinFee).toString();
-    }
-    return fee;
-  }
   /**
    * 根据事件字节数计算事件最小手续费
    *
