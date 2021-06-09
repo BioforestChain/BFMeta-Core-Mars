@@ -375,7 +375,7 @@ export class ChainChannel<
         queneTime = 0;
       } else {
         const lockEndTime =
-          -limitInfo.preResponseTime - limitInfo.preResponseLimitConfig.lockTimespan;
+          limitInfo.preResponseTime + limitInfo.preResponseLimitConfig.lockTimespan;
         const waitTimespan = Math.max(0, lockEndTime - this.timeHelper.now());
         const postQuene = this._msgPostQuene.get(cmd);
         if (postQuene === undefined) {
