@@ -30,12 +30,8 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const {
-      sourceChainMagic,
-      assetType,
-      sourceChainName,
-      numberOfSignFor,
-    } = transaction.asset.trustAsset;
+    const { sourceChainMagic, assetType, sourceChainName, numberOfSignFor } =
+      transaction.asset.trustAsset;
     if (
       !(sourceChainMagic === this.configHelper.magic && assetType === this.configHelper.assetType)
     ) {
@@ -146,7 +142,6 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
     return this.isFeeEnough(
       transaction.fee,
       this.transactionHelper.calcTransactionMinFeeByMaxBytes(
-        transaction,
         transaction.asset.trustAsset.numberOfSignFor + 1,
       ),
     );
@@ -167,7 +162,6 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
     return this.isFeeEnough(
       transaction.fee,
       this.transactionHelper.calcTransactionMinFeeByMaxBytes(
-        transaction,
         transaction.asset.trustAsset.numberOfSignFor + 1,
         miningMachineMinFeePerByte,
       ),

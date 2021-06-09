@@ -25,11 +25,8 @@ import { AccountBaseHelper } from "@bfchain/core-helper-account-base";
 import { TRANSACTION_FILTER_SYMBOL, ABORT_FORBIDDEN_TRANSACTION_SYMBOL } from "./const";
 type Transaction = import("@bfchain/core-model-transaction").Transaction;
 
-const {
-  ArgumentFormatException,
-  ArgumentIllegalException,
-  NoFoundException,
-} = CoreExceptionGenerator("HELPER", "transactionHelper");
+const { ArgumentFormatException, ArgumentIllegalException, NoFoundException } =
+  CoreExceptionGenerator("HELPER", "transactionHelper");
 
 @Injectable()
 export class TransactionHelper {
@@ -360,41 +357,22 @@ export class TransactionHelper {
     bytesLength?: number,
     customMinFeePerByte?: BFChainCore.FractionJSON,
   ) {
-    const txFee = transaction.fee;
     const realByteLength = bytesLength || transaction.getBytes().length;
-    return this.__calcMinFee(
-      {
-        numerator: BigInt(txFee),
-        denominator: realByteLength,
-      },
-      this.__calcStandardMinFee(customMinFeePerByte),
-      realByteLength,
-      txFee,
-    );
+    return this.jsbiHelper
+      .multiplyCeilFraction(realByteLength, this.__calcStandardMinFee(customMinFeePerByte))
+      .toString();
   }
   /**
    * 根据共识最大事件字节数计算事件最小手续费
    *
-   * @param transaction 事件体
    * @param times 计费次数
    * @param customMinFeePerByte 自定义的最低手续费，如果比网络手续费小则自动采用网络手续费
    */
-  calcTransactionMinFeeByMaxBytes(
-    transaction: Transaction,
-    times: number,
-    customMinFeePerByte?: BFChainCore.FractionJSON,
-  ) {
-    const txFee = transaction.fee;
+  calcTransactionMinFeeByMaxBytes(times: number, customMinFeePerByte?: BFChainCore.FractionJSON) {
     const bytesLength = this.config.maxTransactionSize * times;
-    return this.__calcMinFee(
-      {
-        numerator: BigInt(txFee),
-        denominator: bytesLength,
-      },
-      this.__calcStandardMinFee(customMinFeePerByte),
-      bytesLength,
-      txFee,
-    );
+    return this.jsbiHelper
+      .multiplyCeilFraction(bytesLength, this.__calcStandardMinFee(customMinFeePerByte))
+      .toString();
   }
   /**
    * 计算事件最小手续费
@@ -411,7 +389,6 @@ export class TransactionHelper {
     // 红包事件按最大事件字节付费，并且给抢红包事件付费
     if (transaction.type === this.GIFT_ASSET) {
       return this.calcTransactionMinFeeByMaxBytes(
-        transaction,
         (transaction as BFChainCore.Transaction<BFChainCore.GiftAssetAssetJSON>).asset.giftAsset
           .totalGrabableTimes + 1,
         customMinFeePerByte,
@@ -420,7 +397,6 @@ export class TransactionHelper {
     // 见证事件按最大事件字节付费，并且给签收见证事件付费
     if (transaction.type === this.TRUST_ASSET) {
       return this.calcTransactionMinFeeByMaxBytes(
-        transaction,
         (transaction as BFChainCore.Transaction<BFChainCore.TrustAssetAssetJSON>).asset.trustAsset
           .numberOfSignFor + 1,
         customMinFeePerByte,
@@ -917,7 +893,7 @@ export class TransactionHelper {
    * @param transactionAssetChanges
    */
   sortTransactionAssetChanges<
-    T extends TransactionAssetChangeModel | BFChainCore.TransactionAssetChangeJSON
+    T extends TransactionAssetChangeModel | BFChainCore.TransactionAssetChangeJSON,
   >(transactionAssetChanges: T[]) {
     return transactionAssetChanges.sort((a, b) => {
       return a.accountType === b.accountType

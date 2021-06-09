@@ -20,12 +20,8 @@ export class GiftAssetLogicVerifier extends TransactionLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const {
-      sourceChainMagic,
-      assetType,
-      sourceChainName,
-      totalGrabableTimes,
-    } = transaction.asset.giftAsset;
+    const { sourceChainMagic, assetType, sourceChainName, totalGrabableTimes } =
+      transaction.asset.giftAsset;
 
     this.__checkTrsFee(transaction.fee, totalGrabableTimes);
 
@@ -93,7 +89,6 @@ export class GiftAssetLogicVerifier extends TransactionLogicVerifier {
     return this.isFeeEnough(
       transaction.fee,
       this.transactionHelper.calcTransactionMinFeeByMaxBytes(
-        transaction,
         transaction.asset.giftAsset.totalGrabableTimes + 1,
       ),
     );
@@ -114,7 +109,6 @@ export class GiftAssetLogicVerifier extends TransactionLogicVerifier {
     return this.isFeeEnough(
       transaction.fee,
       this.transactionHelper.calcTransactionMinFeeByMaxBytes(
-        transaction,
         transaction.asset.giftAsset.totalGrabableTimes + 1,
         miningMachineMinFeePerByte,
       ),

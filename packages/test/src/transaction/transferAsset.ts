@@ -42,7 +42,7 @@ async function getTransferAssetTransaction(sender: AccountModel) {
     rangeType: RANGE_TYPE.EMPTY,
     range: [], // 接收资产账户地址
     timestamp: 770880, // 生成交易时间戳
-    fee: "90", // 交易手续费
+    fee: "85", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
     dappid: getRandomDAppid(), // 交易所属的 dappid
     lns: bfchainCore.config.genesisLocationName,
@@ -62,10 +62,11 @@ async function getTransferAssetTransaction(sender: AccountModel) {
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
-      sender.secret,
-      sender.secondSecret,
-    );
+    data.senderSecondPublicKey =
+      await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+        sender.secret,
+        sender.secondSecret,
+      );
   }
   const pow =
     data.applyBlockHeight > bfchainCore.config.tpowOfWorkExemptionBlocks
@@ -93,9 +94,10 @@ async function getTransferAssetTransaction(sender: AccountModel) {
   const trsJson = trs.toJSON();
   const xx = await bfchainCore.transaction.recombineTransaction(trsJson);
 
-  const yy = bfchainCore.transactionLogicVerifier.getTransactionLogicVerifierFromType<
-    TransferAssetTransaction
-  >(trs.type);
+  const yy =
+    bfchainCore.transactionLogicVerifier.getTransactionLogicVerifierFromType<TransferAssetTransaction>(
+      trs.type,
+    );
 
   const result = yy.checkTrsFeeAndWebFee(trs, trs.getBytes().length);
 
@@ -116,6 +118,6 @@ async function getTransferAssetTransaction(sender: AccountModel) {
 }
 
 (async () => {
-  await getTransferAssetTransaction(getSenderWithSecondSecret());
   await getTransferAssetTransaction(getSenderWithoutSecondSecret());
+  await getTransferAssetTransaction(getSenderWithSecondSecret());
 })();
