@@ -74,8 +74,8 @@ declare namespace BFChainCore {
     onBreakRequestLimit: {
       in: {
         cmd: import("@bfchain/core-model").DUPLEX_API_CMD;
-        requestLimitInfo: ReqresLimitInfo;
         requestLimitStrategy: import("@bfchain/core-model").REQUEST_LIMIT_STRATEGY;
+        requestLimitInfo?: ReqresLimitInfo;
       };
       out:
         | { requestLimitStrategy: import("@bfchain/core-model").REQUEST_LIMIT_STRATEGY }
@@ -153,8 +153,9 @@ declare namespace BFChainCore {
   type ChannelFilter<CC extends BFChainCore.SimpleChainChannel> = (channel: CC) => boolean;
   //#endregion
 
-  type QueneEventEmitterPro<EM extends BFChainUtil.EventInOutMap> =
-    import("@bfchain/util").QueneEventEmitterPro<EM>;
+  type QueneEventEmitterPro<
+    EM extends BFChainUtil.EventInOutMap
+  > = import("@bfchain/util").QueneEventEmitterPro<EM>;
 
   interface SimpleChainChannel
     extends ChainChannelBase,
@@ -409,7 +410,9 @@ declare namespace BFChainCore {
       query: IndexTransactionArgJSON["query"],
       sort?: IndexTransactionArgJSON["sort"],
       opts?: ChannelGroupRequestOptions<CC>,
-      _resultGenerator?: import("@bfchain/util").AsyncIteratorGenerator<BFChainCore.TransactionIndexJSON>,
+      _resultGenerator?: import("@bfchain/util").AsyncIteratorGenerator<
+        BFChainCore.TransactionIndexJSON
+      >,
     ): import("@bfchain/util").AsyncIteratorGenerator<BFChainCore.TransactionIndexJSON>;
     /**下载交易 */
     downloadTransactions<T extends Transaction = Transaction>(
@@ -424,7 +427,9 @@ declare namespace BFChainCore {
       query: QueryTransactionArgJSON["query"],
       sort?: QueryTransactionArgJSON["sort"],
       opts?: ChannelGroupRequestOptions<CC>,
-      _indexesResultGenerator?: import("@bfchain/util").AsyncIteratorGenerator<BFChainCore.TransactionIndexJSON>,
+      _indexesResultGenerator?: import("@bfchain/util").AsyncIteratorGenerator<
+        BFChainCore.TransactionIndexJSON
+      >,
       _transactionResultGenerator?: import("@bfchain/util").AsyncIteratorGenerator<
         TransactionInBlock<T>
       >,
