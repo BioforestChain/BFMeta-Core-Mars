@@ -485,7 +485,12 @@ export class ChainChannel<
   });
 
   /**发送响应数据 */
-  async postChainChannelMessage(req_id: number, cmd: DUPLEX_API_CMD, binary: Uint8Array) {
+  async postChainChannelMessage(
+    req_id: number,
+    cmd: DUPLEX_API_CMD,
+    binary: Uint8Array,
+    reqMsgVersion = this.MESSAGE_VERSION,
+  ) {
     if (this._closed) {
       return;
     }
@@ -523,6 +528,21 @@ export class ChainChannel<
         }
         responseLimitInfo.preResponseTime = now;
         responseLimitInfo.preResponseLimitConfig = limitConfig;
+        //没更新反压的移动端，lockTime在接收端进行等待
+        if (reqMsgVersion === undefined) {
+          log(
+            "old version. req chainChannel(%s) cmd:%d need wait %dms",
+            this.address,
+            cmd,
+            lockTimespan,
+          );
+          await sleep(lockTimespan);
+        }
+      }
+    } else if (cmd === DUPLEX_API_CMD.REFUSE) {
+      //只有更新了反压的移动端，才返回refuse。否则不返回，让移动端自己超时
+      if (reqMsgVersion === undefined) {
+        return;
       }
     }
 
@@ -788,13 +808,13 @@ export class ChainChannel<
         let cmd: DUPLEX_API_CMD;
         let binary: Uint8Array;
         let msg: ChainChannelMessageModel;
-        let messageVersion: number;
+        let reqMsgVersion: number;
         try {
           msg = ChainChannelMessageModel.decode(message);
           req_id = msg.req_id;
           cmd = msg.cmd;
           binary = msg.binary;
-          messageVersion = msg.messageVersion;
+          reqMsgVersion = msg.messageVersion;
         } catch {
           throw new ArgumentFormatException("message type error");
         }
@@ -830,11 +850,10 @@ export class ChainChannel<
               const requestDiffTime = now - requestLimitInfo.preResponseTime;
               /// 如果请求时间还在限制的时间范围内，那么有可能会被拒绝响应
               if (requestDiffTime < requestLimitInfo.preResponseLimitConfig.lockTimespan) {
-                /// 如果累计的时间压力已经超过refuseEndTime了，那么理应该拒绝refuse
+                /// 比约定时间提前了N毫秒收到请求，如果N大于refuseTime则表示提前太多，队列无法装下，直接refuse。否则返回busy,让请求端继续等待
                 if (
-                  requestDiffTime < requestLimitInfo.preResponseLimitConfig.refuseTimespan && // 如果单次请求的时间间隔没有满 refuseTime
                   requestLimitInfo.preResponseLimitConfig.lockTimespan - requestDiffTime >
-                    requestLimitInfo.preResponseLimitConfig.refuseTimespan // 并且累加的 lockTime 已经超出 refuseTime
+                  requestLimitInfo.preResponseLimitConfig.refuseTimespan
                 ) {
                   requestLimitStrategy = REQUEST_LIMIT_STRATEGY.REFUSE;
                 } else {
@@ -859,10 +878,12 @@ export class ChainChannel<
               if (requestLimitInfo) {
                 requestLimitInfo.preRefuseTime = now; /// 在做响应的时候，可以尝试判断preRefuseTime来做出拒绝，减少带宽压力，这里默认保持响应，开发者根据这些信息做出调整
               }
-              //只有更新了反压的移动端，才返回refuse。否则不返回，让移动端自己超时
-              if (messageVersion === this.MESSAGE_VERSION) {
-                this.postChainChannelMessage(req_id, DUPLEX_API_CMD.REFUSE, new Uint8Array(0));
-              }
+              this.postChainChannelMessage(
+                req_id,
+                DUPLEX_API_CMD.REFUSE,
+                new Uint8Array(0),
+                reqMsgVersion,
+              );
               return;
             }
             if (requestLimitStrategy === REQUEST_LIMIT_STRATEGY.BUSY) {
@@ -1185,6 +1206,7 @@ export class ChainChannel<
             req_id,
             REQRES_CMD_MAP.get(cmd) || DUPLEX_API_CMD.RESPONSE,
             CommonResponse.encode(errorResponse).finish(),
+            reqMsgVersion,
           );
           // 继续向外抛出错误
           throw error;
@@ -1194,6 +1216,7 @@ export class ChainChannel<
             req_id,
             REQRES_CMD_MAP.get(cmd) || DUPLEX_API_CMD.RESPONSE,
             taskResultBinary,
+            reqMsgVersion,
           );
           return;
         }
@@ -1203,6 +1226,7 @@ export class ChainChannel<
             REQRES_CMD_MAP.get(cmd) || DUPLEX_API_CMD.RESPONSE,
             // 将对象解析成二进制进行传输
             (taskResult.constructor as typeof CommonResponse).encode(taskResult).finish(),
+            reqMsgVersion,
           );
         }
       } catch (err) {
