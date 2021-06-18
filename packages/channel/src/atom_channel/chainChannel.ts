@@ -54,8 +54,7 @@ const {
 
 export abstract class ChainChannelBase
   extends QueneEventEmitterPro<BFChainCore.ChainChannelHanlderEventMap>
-  implements BFChainCore.ChainChannelBase
-{
+  implements BFChainCore.ChainChannelBase {
   public abstract getApiMaybeQueueTime(cmd: DUPLEX_API_CMD): number;
   public abstract maybeHeight: number;
   public abstract lastConsensusVersion: number;
@@ -140,11 +139,8 @@ const REQRES_CMD_MAP = new Map([
  */
 @Resolvable()
 export class ChainChannel<
-    THIS extends BFChainCore.SimpleChainChannel = BFChainCore.SimpleChainChannel,
-  >
-  extends ChainChannelBase
-  implements BFChainCore.ChainChannel<THIS>
-{
+  THIS extends BFChainCore.SimpleChainChannel = BFChainCore.SimpleChainChannel
+> extends ChainChannelBase implements BFChainCore.ChainChannel<THIS> {
   //#region chainChannel接口状态，查询默认为false，下载为true，广播默认为true
   get canQueryTransactions() {
     return false;
@@ -223,7 +219,7 @@ export class ChainChannel<
     once?: boolean,
   ) {
     if (once) {
-      const remover = this.endpoint.onClose((err) => {
+      const remover = this.endpoint.onClose(err => {
         handler(err);
         remover();
       });
@@ -338,7 +334,7 @@ export class ChainChannel<
         }) as BFChainCore.ChannelRequestOptions<THIS>;
       }
       req_task = this.chainChannelHelper.wrapOutAborterOptions(req_task, options, {
-        chainChannel: this as unknown as THIS,
+        chainChannel: (this as unknown) as THIS,
       });
     }
     const res = await ResonseBoxer(await req_task.promise);
@@ -476,7 +472,7 @@ export class ChainChannel<
 
             const taskResponser = req_response_map.get(task.req_id);
             if (taskResponser) {
-              await new Promise<void>((resolve) => taskResponser.onFinished(resolve));
+              await new Promise<void>(resolve => taskResponser.onFinished(resolve));
             }
             //#endregion
           } while (postQuene.taskList.length > 0);
@@ -533,14 +529,14 @@ export class ChainChannel<
         requestLimitInfo: responseLimitInfo,
       });
       if (limitConfig !== undefined) {
-        responseLimitInfo ||= this.reqresLimitInfoEM.forceGet(cmd);
+        responseLimitInfo = responseLimitInfo || this.reqresLimitInfoEM.forceGet(cmd);
         responseLimitInfo.preResponseTime = now;
         responseLimitInfo.preResponseLimitConfig = limitConfig;
         lockTimespan = limitConfig.lockTimespan;
         refuseTimespan = limitConfig.refuseTimespan;
 
         //没更新反压的移动端，lockTime在接收端进行等待
-        if (reqMsgVersion === undefined) {
+        if (reqMsgVersion === 0) {
           log(
             "old version. req chainChannel(%s) cmd:%d need wait %dms",
             this.address,
@@ -552,7 +548,7 @@ export class ChainChannel<
       }
     } else if (cmd === DUPLEX_API_CMD.REFUSE) {
       //只有更新了反压的移动端，才返回refuse。否则不返回，让移动端自己超时
-      if (reqMsgVersion === undefined) {
+      if (reqMsgVersion === 0) {
         return;
       }
     }
@@ -651,7 +647,7 @@ export class ChainChannel<
       });
     }
     const arg = DownloadTransactionArgModel.fromObject({
-      tIndexes: tIndexes.map((ti) => TransactionIndexModel.fromObject<TransactionIndexModel>(ti)),
+      tIndexes: tIndexes.map(ti => TransactionIndexModel.fromObject<TransactionIndexModel>(ti)),
     });
     return this._request(
       DUPLEX_API_CMD.DOWNLOAD_TRANSACTION,
@@ -958,7 +954,7 @@ export class ChainChannel<
               /// 查询成功
               if (queryResult) {
                 response.status = RESPONSE_STATUS.success;
-                response.transactions = queryResult.transactions.map((tib) =>
+                response.transactions = queryResult.transactions.map(tib =>
                   TransactionInBlock.fromObject(tib),
                 );
               }
@@ -992,7 +988,7 @@ export class ChainChannel<
               /// 查询成功
               if (queryResult) {
                 response.status = RESPONSE_STATUS.success;
-                response.tIndexes = queryResult.tIndexes.map((ti) =>
+                response.tIndexes = queryResult.tIndexes.map(ti =>
                   TransactionIndexModel.fromObject<TransactionIndexModel>(ti),
                 );
               }
@@ -1011,11 +1007,12 @@ export class ChainChannel<
                 break;
               }
               /**查询交易的响应，默认为繁忙 */
-              const response =
-                DownloadTransactionReturnModel.fromObject<DownloadTransactionReturnModel>({
-                  status: RESPONSE_STATUS.busy,
-                  // transactions:[]
-                });
+              const response = DownloadTransactionReturnModel.fromObject<
+                DownloadTransactionReturnModel
+              >({
+                status: RESPONSE_STATUS.busy,
+                // transactions:[]
+              });
               const queryResult =
                 reqUnLocked && this.has("onDownloadTransaction")
                   ? await this.emit(
@@ -1027,7 +1024,7 @@ export class ChainChannel<
               /// 查询成功
               if (queryResult) {
                 response.status = RESPONSE_STATUS.success;
-                response.transactions = queryResult.transactions.map((ti) =>
+                response.transactions = queryResult.transactions.map(ti =>
                   TransactionInBlock.fromObject(ti),
                 );
               }
