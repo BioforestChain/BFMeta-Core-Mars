@@ -536,7 +536,7 @@ export class ChainChannel<
         refuseTimespan = limitConfig.refuseTimespan;
 
         //没更新反压的移动端，lockTime在接收端进行等待
-        if (reqMsgVersion === 0) {
+        if (reqMsgVersion === 0 && lockTimespan > 0) {
           log(
             "old version. req chainChannel(%s) cmd:%d need wait %dms",
             this.address,
