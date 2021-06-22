@@ -235,14 +235,8 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       function: "checkSecondPublicKey",
     } as const;
 
-    const {
-      type,
-      senderId,
-      senderSecondPublicKey,
-      applyBlockHeight,
-      signature,
-      signSignature,
-    } = tr;
+    const { type, senderId, senderSecondPublicKey, applyBlockHeight, signature, signSignature } =
+      tr;
     const secondPublicKey = accountInfo.secondPublicKey;
 
     if (secondPublicKey) {
@@ -687,20 +681,25 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   /**
    * 查询交易是否已经在链上
    *
-   * @param signature
-   * @param currentBlockHeight
+   * @param signature 事件签名
+   * @param applyBlockHeight 事件发起高度
+   * @param currentBlockHeight 事件最大有效高度
    * @param numberOfTransaction
    * @param transactionGetterHelper
    */
   async checkRepeatInBlockChainTransaction(
     signature: string,
+    applyBlockHeight: number,
     currentBlockHeight: number,
     numberOfTransaction = 0,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const txCount = await transactionGetterHelper.countTransactionInBlockChainBySignature(
       signature,
-      this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
+      this.transactionHelper.calcTransactionQueryRangeByApplyBlockHeight(
+        applyBlockHeight,
+        currentBlockHeight,
+      ),
     );
     if (txCount > numberOfTransaction) {
       throw new ConsensusException(ALREADY_EXIST, {

@@ -902,4 +902,20 @@ export class TransactionHelper {
       endHeight: currentBlockHeight - 1,
     };
   }
+
+  /**
+   * 计算事件的查询范围
+   *
+   * @param applyBlockHeight 事件的发起高度
+   * @param currentBlockHeight 当前区块高度
+   */
+  calcTransactionQueryRangeByApplyBlockHeight(
+    applyBlockHeight: number,
+    currentBlockHeight: number,
+  ) {
+    return {
+      startHeight: applyBlockHeight,
+      endHeight: currentBlockHeight - 1,
+    };
+  }
 }
