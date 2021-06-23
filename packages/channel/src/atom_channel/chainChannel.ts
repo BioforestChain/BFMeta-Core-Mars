@@ -1,6 +1,6 @@
 import {
   RESPONSE_STATUS,
-  ResponseModel,
+  ChainChannelMessageModel,
   CHANNEL_ARGS,
   Block,
   PeerInfoModel,
@@ -27,12 +27,20 @@ import {
   DownloadTransactionReturnModel,
   IndexTransactionArgModel,
   DownloadTransactionArgModel,
+  REQUEST_LIMIT_STRATEGY,
 } from "@bfchain/core-model";
 import { Message } from "@bfchain/protobuf";
 import { ChainChannelHelper } from "./chainChannelHelper";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 import { ConfigHelper, BaseHelper, ChainTimeHelper } from "@bfchain/core-helper";
-import { QueneEventEmitterPro, Inject, PromiseOut, sleep, Resolvable } from "@bfchain/util";
+import {
+  QueneEventEmitterPro,
+  Inject,
+  PromiseOut,
+  sleep,
+  Resolvable,
+  EasyMap,
+} from "@bfchain/util";
 
 const {
   RefuseException,
@@ -46,8 +54,8 @@ const {
 
 export abstract class ChainChannelBase
   extends QueneEventEmitterPro<BFChainCore.ChainChannelHanlderEventMap>
-  implements BFChainCore.ChainChannelBase
-{
+  implements BFChainCore.ChainChannelBase {
+  public abstract getApiMaybeQueueTime(cmd: DUPLEX_API_CMD): number;
   public abstract maybeHeight: number;
   public abstract lastConsensusVersion: number;
   public abstract canQueryTransactions: boolean;
@@ -115,16 +123,24 @@ const getReqId = () => {
   }
   return req_id;
 };
+
+const REQRES_CMD_MAP = new Map([
+  [DUPLEX_API_CMD.QUERY_TRANSACTION, DUPLEX_API_CMD.QUERY_TRANSACTION_RETURN],
+  [DUPLEX_API_CMD.INDEX_TRANSACTION, DUPLEX_API_CMD.INDEX_TRANSACTION_RETURN],
+  [DUPLEX_API_CMD.DOWNLOAD_TRANSACTION, DUPLEX_API_CMD.DOWNLOAD_TRANSACTION_RETURN],
+  [DUPLEX_API_CMD.NEW_TRANSACTION, DUPLEX_API_CMD.NEW_TRANSACTION_RETURN],
+  [DUPLEX_API_CMD.QUERY_BLOCK, DUPLEX_API_CMD.QUERY_BLOCK_RETURN],
+  [DUPLEX_API_CMD.NEW_BLOCK, DUPLEX_API_CMD.NEW_BLOCK_RETURN],
+  [DUPLEX_API_CMD.GET_PEER_INFO, DUPLEX_API_CMD.GET_PEER_INFO_RETURN],
+]);
+
 /**
  * 为数据收发处理器包装数据处理
  */
 @Resolvable()
 export class ChainChannel<
-    THIS extends BFChainCore.SimpleChainChannel = BFChainCore.SimpleChainChannel,
-  >
-  extends ChainChannelBase
-  implements BFChainCore.ChainChannel<THIS>
-{
+  THIS extends BFChainCore.SimpleChainChannel = BFChainCore.SimpleChainChannel
+> extends ChainChannelBase implements BFChainCore.ChainChannel<THIS> {
   //#region chainChannel接口状态，查询默认为false，下载为true，广播默认为true
   get canQueryTransactions() {
     return false;
@@ -159,6 +175,7 @@ export class ChainChannel<
   get limitDownloadTransactions() {
     return this._limitDT;
   }
+  readonly MESSAGE_VERSION = 1;
   //#endregion
 
   get defaultReqOptions(): BFChainCore.ChannelRequestOptions<THIS> | undefined {
@@ -202,7 +219,7 @@ export class ChainChannel<
     once?: boolean,
   ) {
     if (once) {
-      const remover = this.endpoint.onClose((err) => {
+      const remover = this.endpoint.onClose(err => {
         handler(err);
         remover();
       });
@@ -236,7 +253,12 @@ export class ChainChannel<
   }
   /**存储延迟的历史记录 */
   protected _delayHistroyList = new Float32Array(32);
+  private _delayCache?: { value: number };
   get delay() {
+    if (this._delayCache) {
+      return this._delayCache.value;
+    }
+
     const { _delayHistroyList } = this;
     let acc_delay = 0;
     let len = _delayHistroyList.length;
@@ -248,7 +270,10 @@ export class ChainChannel<
         len -= 1;
       }
     }
-    return acc_delay / len || 0;
+    const delay = acc_delay / len || 0;
+    /// 缓存计算结果
+    this._delayCache = { value: delay };
+    return delay;
   }
   /**存储延迟记录 */
   protected pushDelayHistroy(delay: number) {
@@ -258,6 +283,8 @@ export class ChainChannel<
     _delayHistroyList.set(_delayHistroyList.subarray(1, LEN), 0);
     // 将新的数据放置到最后
     _delayHistroyList[LEN - 1] = delay;
+    /// 清除缓存
+    this._delayCache = undefined;
   }
   protected _request<T>(
     cmd: DUPLEX_API_CMD,
@@ -272,7 +299,7 @@ export class ChainChannel<
   }
   private _reqIdSet = new Set<number>();
   _sendWithBinaryData(cmd: DUPLEX_API_CMD, binary: Uint8Array) {
-    this.postResponseMessage(0, cmd, binary);
+    return this.postChainChannelMessage(0, cmd, binary);
   }
   async _requestWithBinaryData<T>(
     cmd: DUPLEX_API_CMD,
@@ -282,7 +309,7 @@ export class ChainChannel<
   ) {
     const req_id = getReqId();
     this._reqIdSet.add(req_id);
-    this.postResponseMessage(req_id, cmd, binary);
+    await this.postChainChannelMessage(req_id, cmd, binary);
     let req_task = new PromiseOut<Uint8Array>();
     req_task.onFinished(() => {
       req_response_map.delete(req_id);
@@ -307,7 +334,7 @@ export class ChainChannel<
         }) as BFChainCore.ChannelRequestOptions<THIS>;
       }
       req_task = this.chainChannelHelper.wrapOutAborterOptions(req_task, options, {
-        chainChannel: this as unknown as THIS,
+        chainChannel: (this as unknown) as THIS,
       });
     }
     const res = await ResonseBoxer(await req_task.promise);
@@ -315,19 +342,227 @@ export class ChainChannel<
     await this.emit("afterRequestWithBinaryData", { cmd, query: binary, res });
     return res;
   }
+
+  private _maybeQueneTimeFastCache?: {
+    cache: Map<DUPLEX_API_CMD, number>;
+    releaser: unknown;
+  };
+  private _getMaybeQueneTimeCache() {
+    let maybeQueneTimeFastCache = this._maybeQueneTimeFastCache;
+    if (maybeQueneTimeFastCache === undefined) {
+      maybeQueneTimeFastCache = this._maybeQueneTimeFastCache = {
+        cache: new Map(),
+        /// 缓存有效期一个microtask的时间，在sort等操作中可以使用缓存
+        releaser: queueMicrotask(() => (this._maybeQueneTimeFastCache = undefined)),
+      };
+    }
+    return maybeQueneTimeFastCache.cache;
+  }
+  /**
+   * 预估要得到收到某一个cmd预估的时间
+   *
+   * 比如要得到`queryTransactions`的响应时间，请使用`DUPLEX_API_CMD.QUERY_TRANSACTION_RETURN`
+   */
+  getApiMaybeQueueTime(cmd: DUPLEX_API_CMD) {
+    if ((cmd & DUPLEX_API_CMD.RESPONSE) === 0) {
+      return 0;
+    }
+
+    const cache = this._getMaybeQueneTimeCache();
+    let queneTime = cache.get(cmd);
+    if (queneTime === undefined) {
+      const limitInfo = this.reqresLimitInfoEM.get(cmd);
+      if (limitInfo === undefined) {
+        queneTime = 0;
+      } else {
+        const lockEndTime =
+          limitInfo.preResponseTime + limitInfo.preResponseLimitConfig.lockTimespan;
+        const waitTimespan = Math.max(0, lockEndTime - this.timeHelper.now());
+        const postQuene = this._msgPostQuene.get(cmd);
+        if (postQuene === undefined) {
+          queneTime = waitTimespan;
+        } else {
+          queneTime =
+            postQuene.taskList.length * limitInfo.preResponseLimitConfig.lockTimespan +
+            waitTimespan;
+        }
+      }
+      cache.set(cmd, queneTime);
+    }
+    return queneTime;
+  }
+
+  /**请求限制的缓存信息，这里每一种cmd都可以独立配置
+   * 要区别的是，cmd其实是有分成两大类的
+   *
+   * 一类是主动发起的cmd：可以在这里通过这个cmd获取到 对方对我 的限制
+   * 另外一类是被动返回的cmd：可以在这里通过这个cmd获取到 我对对方 的限制
+   *
+   */
+  private readonly reqresLimitInfoEM = EasyMap.from({
+    creater(cmd: DUPLEX_API_CMD) {
+      return {
+        preResponseTime: 0,
+        preRefuseTime: 0,
+        preResponseLimitConfig: {
+          lockTimespan: 0,
+          refuseTimespan: Infinity,
+        },
+      } as BFChainCore.ReqresLimitInfo;
+    },
+  });
+  private _msgPostQuene = EasyMap.from({
+    creater: (cmd: DUPLEX_API_CMD) => {
+      const postQuene = {
+        taskList: [] as {
+          req_id: number;
+          cmd: DUPLEX_API_CMD;
+          binary: Uint8Array;
+          sign: PromiseOut<void>;
+        }[],
+        running: false,
+        looper: async () => {
+          if (postQuene.running) {
+            return;
+          }
+          postQuene.running = true;
+
+          do {
+            const task = postQuene.taskList.shift();
+            if (task === undefined) {
+              break;
+            }
+            const requestLimitInfo = this.reqresLimitInfoEM.get(cmd);
+            /// 如果限制存在
+            if (requestLimitInfo !== undefined) {
+              /// 首先等待限制时间达成
+              const reqlockTimespan =
+                requestLimitInfo.preResponseTime +
+                requestLimitInfo.preResponseLimitConfig.lockTimespan -
+                this.timeHelper.now();
+              if (reqlockTimespan > 0) {
+                log(
+                  "req chainChannel(%s) cmd:%d need wait %dms",
+                  this.address,
+                  task.cmd,
+                  reqlockTimespan,
+                );
+                await sleep(reqlockTimespan);
+              }
+            }
+            //#region 开始发送任务
+
+            /// 如果任务已经被取消
+            if (task.sign.is_rejected) {
+              continue;
+            }
+
+            const resModel = ChainChannelMessageModel.fromObject({
+              version: this.config.version,
+              req_id: task.req_id,
+              cmd: task.cmd,
+              binary: task.binary,
+              messageVersion: this.MESSAGE_VERSION,
+            });
+            this.endpoint.postMessage(resModel.getBytes());
+            task.sign.resolve(); // 发送完成
+            //#endregion
+
+            //#region 等待任务完成再执行下一个
+
+            const taskResponser = req_response_map.get(task.req_id);
+            if (taskResponser) {
+              await new Promise<void>(resolve => taskResponser.onFinished(resolve));
+            }
+            //#endregion
+          } while (postQuene.taskList.length > 0);
+
+          this._msgPostQuene.delete(cmd);
+        },
+      };
+      return postQuene;
+    },
+  });
+
   /**发送响应数据 */
-  postResponseMessage(req_id: number, cmd: DUPLEX_API_CMD, binary: Uint8Array) {
+  async postChainChannelMessage(
+    req_id: number,
+    cmd: DUPLEX_API_CMD,
+    binary: Uint8Array,
+    reqMsgVersion = this.MESSAGE_VERSION,
+  ) {
     if (this._closed) {
       return;
     }
-    return this.endpoint.postMessage(
-      ResponseModel.fromObject({
-        version: this.config.version,
-        req_id,
+    let lockTimespan = 0;
+    let refuseTimespan = 0;
+
+    /// 如果是请求指令，那么先进行自我约束
+    if (REQRES_CMD_MAP.has(cmd)) {
+      const requestLimitInfo = this.reqresLimitInfoEM.get(cmd);
+      /// 如果有请求限制的约束，那么走遵循限制规整来进行逐个发送
+      if (requestLimitInfo !== undefined) {
+        const postQuene = this._msgPostQuene.forceGet(cmd);
+        const sign = new PromiseOut<void>();
+        postQuene.taskList.push({ req_id, cmd, binary, sign });
+        postQuene.looper();
+        return sign.promise;
+      }
+    }
+    /// 如果是response指令，那么获取lockTime和refuseTime
+    else if ((cmd & DUPLEX_API_CMD.RESPONSE) !== 0 && this.has("onGetResponseLimitConfig")) {
+      let responseLimitInfo = this.reqresLimitInfoEM.get(cmd);
+      const now = this.timeHelper.now();
+      if (responseLimitInfo) {
+        const preResponseLimitConfig = responseLimitInfo.preResponseLimitConfig;
+        const preLockEndTime =
+          (responseLimitInfo.preResponseTime || now) + preResponseLimitConfig.lockTimespan;
+        /// 如果上一次的锁定已经完成了，那么等于滞空了这个锁定
+        if (preLockEndTime < now) {
+          responseLimitInfo = undefined;
+          // this.reqresLimitInfoEM.delete(cmd);
+        }
+      }
+
+      const limitConfig = await this.emit("onGetResponseLimitConfig", {
         cmd,
-        binary,
-      }).getBytes(),
-    );
+        requestLimitInfo: responseLimitInfo,
+      });
+      if (limitConfig !== undefined) {
+        responseLimitInfo = responseLimitInfo || this.reqresLimitInfoEM.forceGet(cmd);
+        responseLimitInfo.preResponseTime = now;
+        responseLimitInfo.preResponseLimitConfig = limitConfig;
+        lockTimespan = limitConfig.lockTimespan;
+        refuseTimespan = limitConfig.refuseTimespan;
+
+        //没更新反压的移动端，lockTime在接收端进行等待
+        if (reqMsgVersion === 0 && lockTimespan > 1) {
+          log(
+            "old version. req chainChannel(%s) cmd:%d need wait %dms",
+            this.address,
+            cmd,
+            lockTimespan,
+          );
+          await sleep(lockTimespan);
+        }
+      }
+    } else if (cmd === DUPLEX_API_CMD.REFUSE) {
+      //只有更新了反压的移动端，才返回refuse。否则不返回，让移动端自己超时
+      if (reqMsgVersion === 0) {
+        return;
+      }
+    }
+
+    const resModel = ChainChannelMessageModel.fromObject({
+      version: this.config.version,
+      req_id,
+      cmd,
+      binary,
+      lockTimespan,
+      refuseTimespan,
+      messageVersion: this.MESSAGE_VERSION,
+    });
+    return this.endpoint.postMessage(resModel.getBytes());
   }
 
   /**查询交易 */
@@ -412,7 +647,7 @@ export class ChainChannel<
       });
     }
     const arg = DownloadTransactionArgModel.fromObject({
-      tIndexes: tIndexes.map((ti) => TransactionIndexModel.fromObject<TransactionIndexModel>(ti)),
+      tIndexes: tIndexes.map(ti => TransactionIndexModel.fromObject<TransactionIndexModel>(ti)),
     });
     return this._request(
       DUPLEX_API_CMD.DOWNLOAD_TRANSACTION,
@@ -569,15 +804,6 @@ export class ChainChannel<
 
   /**处理接收到数据时的响应 */
   initOnMessage() {
-    const responseCmdMap = new Map([
-      [DUPLEX_API_CMD.QUERY_TRANSACTION, DUPLEX_API_CMD.QUERY_TRANSACTION_RETURN],
-      [DUPLEX_API_CMD.INDEX_TRANSACTION, DUPLEX_API_CMD.INDEX_TRANSACTION_RETURN],
-      [DUPLEX_API_CMD.DOWNLOAD_TRANSACTION, DUPLEX_API_CMD.DOWNLOAD_TRANSACTION_RETURN],
-      [DUPLEX_API_CMD.NEW_TRANSACTION, DUPLEX_API_CMD.NEW_TRANSACTION_RETURN],
-      [DUPLEX_API_CMD.QUERY_BLOCK, DUPLEX_API_CMD.QUERY_BLOCK_RETURN],
-      [DUPLEX_API_CMD.NEW_BLOCK, DUPLEX_API_CMD.NEW_BLOCK_RETURN],
-      [DUPLEX_API_CMD.GET_PEER_INFO, DUPLEX_API_CMD.GET_PEER_INFO_RETURN],
-    ]);
     this.endpoint.onMessage(async (message: Uint8Array) => {
       /* 测试了socket-io：
        * 使用client发送ArrayBuffer后，nodejs中server接收到的是Buffer。
@@ -588,11 +814,14 @@ export class ChainChannel<
         let req_id: number;
         let cmd: DUPLEX_API_CMD;
         let binary: Uint8Array;
+        let msg: ChainChannelMessageModel;
+        let reqMsgVersion: number;
         try {
-          const msg = ResponseModel.decode(message);
+          msg = ChainChannelMessageModel.decode(message);
           req_id = msg.req_id;
           cmd = msg.cmd;
           binary = msg.binary;
+          reqMsgVersion = msg.messageVersion;
         } catch {
           throw new ArgumentFormatException("message type error");
         }
@@ -606,11 +835,102 @@ export class ChainChannel<
           return response;
         };
         try {
+          //#region 根据反压协议进行响应
+
+          /**请求是否依据承诺解锁限制了 */
+          let reqUnLocked = true;
+
+          if (
+            REQRES_CMD_MAP.has(cmd)
+            // cmd === DUPLEX_API_CMD.QUERY_TRANSACTION ||
+            // cmd === DUPLEX_API_CMD.INDEX_TRANSACTION ||
+            // cmd === DUPLEX_API_CMD.DOWNLOAD_TRANSACTION
+          ) {
+            const resCmd = cmd | DUPLEX_API_CMD.RESPONSE;
+
+            const requestLimitInfo = this.reqresLimitInfoEM.get(resCmd);
+            const now = this.timeHelper.now();
+            /**数据请求的限制策略 */
+            let requestLimitStrategy = REQUEST_LIMIT_STRATEGY.NOLIMIT;
+            /// 如果有过限制配置，检查是否还在限制中
+            if (requestLimitInfo) {
+              const requestDiffTime = now - requestLimitInfo.preResponseTime;
+              /// 如果请求时间还在限制的时间范围内，那么有可能会被拒绝响应
+              if (requestDiffTime < requestLimitInfo.preResponseLimitConfig.lockTimespan) {
+                /// 比约定时间提前了N毫秒收到请求，如果N大于refuseTime则表示提前太多，队列无法装下，直接refuse。否则返回busy,让请求端继续等待
+                if (
+                  requestLimitInfo.preResponseLimitConfig.lockTimespan - requestDiffTime >
+                  requestLimitInfo.preResponseLimitConfig.refuseTimespan
+                ) {
+                  requestLimitStrategy = REQUEST_LIMIT_STRATEGY.REFUSE;
+                } else {
+                  requestLimitStrategy = REQUEST_LIMIT_STRATEGY.BUSY;
+                }
+              }
+            }
+            /// 在执行策略结果之前，允许开发者自行调整策略
+            if (this.has("onBreakRequestLimit")) {
+              const customPilicy = await this.emit("onBreakRequestLimit", {
+                cmd,
+                requestLimitStrategy,
+                requestLimitInfo,
+              });
+              if (customPilicy !== undefined) {
+                requestLimitStrategy = customPilicy.requestLimitStrategy;
+                // useDefaultPolicy = false;
+              }
+            }
+            /// 根最终决定的据策略做出决策
+            if (requestLimitStrategy === REQUEST_LIMIT_STRATEGY.REFUSE) {
+              if (requestLimitInfo) {
+                requestLimitInfo.preRefuseTime = now; /// 在做响应的时候，可以尝试判断preRefuseTime来做出拒绝，减少带宽压力，这里默认保持响应，开发者根据这些信息做出调整
+              }
+              this.postChainChannelMessage(
+                req_id,
+                DUPLEX_API_CMD.REFUSE,
+                new Uint8Array(0),
+                reqMsgVersion,
+              );
+              return;
+            }
+            if (requestLimitStrategy === REQUEST_LIMIT_STRATEGY.BUSY) {
+              /// 请求的限制还在，可以直接返回busy
+              reqUnLocked = false;
+            }
+          } else if ((cmd & DUPLEX_API_CMD.RESPONSE) !== 0) {
+            //#region 如果是响应信息，将相应信息中携带的请求限制进行缓存
+            const reqCmd = cmd - DUPLEX_API_CMD.RESPONSE;
+            let responseLimitInfo = this.reqresLimitInfoEM.get(reqCmd);
+            const { lockTimespan, refuseTimespan } = msg;
+            const hasLimit = lockTimespan !== 0 || refuseTimespan !== 0;
+            /// 如果没有过限制
+            if (responseLimitInfo === undefined) {
+              if (hasLimit) {
+                responseLimitInfo = this.reqresLimitInfoEM.forceGet(reqCmd);
+                responseLimitInfo.preResponseTime = this.timeHelper.now();
+                responseLimitInfo.preResponseLimitConfig = { lockTimespan, refuseTimespan };
+              }
+            }
+            /// 如果有过限制
+            else {
+              if (hasLimit === false) {
+                this.reqresLimitInfoEM.delete(reqCmd);
+              } else {
+                /// 更新限制信息
+                responseLimitInfo.preResponseTime = this.timeHelper.now();
+                responseLimitInfo.preResponseLimitConfig = { lockTimespan, refuseTimespan };
+              }
+            }
+            //#endregion
+          }
+
+          //#endregion
+
           switch (cmd) {
             /// 查询交易
             case DUPLEX_API_CMD.QUERY_TRANSACTION: {
               // 发送查询任务
-              if (this.has("onQueryTransactionBinary")) {
+              if (reqUnLocked && this.has("onQueryTransactionBinary")) {
                 taskResultBinary = await this.emit(
                   "onQueryTransactionBinary",
                   await this.chainChannelHelper.boxQueryTransactionArg(binary),
@@ -623,17 +943,18 @@ export class ChainChannel<
                 status: RESPONSE_STATUS.busy,
                 // transactions:[]
               });
-              const queryResult = this.has("onQueryTransaction")
-                ? await this.emit(
-                    "onQueryTransaction",
-                    await this.chainChannelHelper.boxQueryTransactionArg(binary),
-                  )
-                : undefined;
+              const queryResult =
+                reqUnLocked && this.has("onQueryTransaction")
+                  ? await this.emit(
+                      "onQueryTransaction",
+                      await this.chainChannelHelper.boxQueryTransactionArg(binary),
+                    )
+                  : undefined;
 
               /// 查询成功
               if (queryResult) {
                 response.status = RESPONSE_STATUS.success;
-                response.transactions = queryResult.transactions.map((tib) =>
+                response.transactions = queryResult.transactions.map(tib =>
                   TransactionInBlock.fromObject(tib),
                 );
               }
@@ -644,7 +965,7 @@ export class ChainChannel<
             /// 索引交易
             case DUPLEX_API_CMD.INDEX_TRANSACTION: {
               // 发送查询任务
-              if (this.has("onIndexTransactionBinary")) {
+              if (reqUnLocked && this.has("onIndexTransactionBinary")) {
                 taskResultBinary = await this.emit(
                   "onIndexTransactionBinary",
                   await this.chainChannelHelper.boxIndexTransactionArg(binary),
@@ -656,17 +977,18 @@ export class ChainChannel<
                 status: RESPONSE_STATUS.busy,
                 // transactions:[]
               });
-              const queryResult = this.has("onQueryTransaction")
-                ? await this.emit(
-                    "onIndexTransaction",
-                    await this.chainChannelHelper.boxIndexTransactionArg(binary),
-                  )
-                : undefined;
+              const queryResult =
+                reqUnLocked && this.has("onQueryTransaction")
+                  ? await this.emit(
+                      "onIndexTransaction",
+                      await this.chainChannelHelper.boxIndexTransactionArg(binary),
+                    )
+                  : undefined;
 
               /// 查询成功
               if (queryResult) {
                 response.status = RESPONSE_STATUS.success;
-                response.tIndexes = queryResult.tIndexes.map((ti) =>
+                response.tIndexes = queryResult.tIndexes.map(ti =>
                   TransactionIndexModel.fromObject<TransactionIndexModel>(ti),
                 );
               }
@@ -677,7 +999,7 @@ export class ChainChannel<
             /// 下载交易
             case DUPLEX_API_CMD.DOWNLOAD_TRANSACTION: {
               // 发送查询任务
-              if (this.has("onDownloadTransactionBinary")) {
+              if (reqUnLocked && this.has("onDownloadTransactionBinary")) {
                 taskResultBinary = await this.emit(
                   "onDownloadTransactionBinary",
                   await this.chainChannelHelper.boxDownloadTransactionArg(binary),
@@ -685,22 +1007,24 @@ export class ChainChannel<
                 break;
               }
               /**查询交易的响应，默认为繁忙 */
-              const response =
-                DownloadTransactionReturnModel.fromObject<DownloadTransactionReturnModel>({
-                  status: RESPONSE_STATUS.busy,
-                  // transactions:[]
-                });
-              const queryResult = this.has("onDownloadTransaction")
-                ? await this.emit(
-                    "onDownloadTransaction",
-                    await this.chainChannelHelper.boxDownloadTransactionArg(binary),
-                  )
-                : undefined;
+              const response = DownloadTransactionReturnModel.fromObject<
+                DownloadTransactionReturnModel
+              >({
+                status: RESPONSE_STATUS.busy,
+                // transactions:[]
+              });
+              const queryResult =
+                reqUnLocked && this.has("onDownloadTransaction")
+                  ? await this.emit(
+                      "onDownloadTransaction",
+                      await this.chainChannelHelper.boxDownloadTransactionArg(binary),
+                    )
+                  : undefined;
 
               /// 查询成功
               if (queryResult) {
                 response.status = RESPONSE_STATUS.success;
-                response.transactions = queryResult.transactions.map((ti) =>
+                response.transactions = queryResult.transactions.map(ti =>
                   TransactionInBlock.fromObject(ti),
                 );
               }
@@ -735,7 +1059,7 @@ export class ChainChannel<
             }
             /// 查询区块
             case DUPLEX_API_CMD.QUERY_BLOCK: {
-              if (this.has("onQueryBlockBinary")) {
+              if (reqUnLocked && this.has("onQueryBlockBinary")) {
                 taskResultBinary = await this.emit(
                   "onQueryBlockBinary",
                   this.chainChannelHelper.boxQueryBlockArg(binary),
@@ -747,9 +1071,13 @@ export class ChainChannel<
               const response = QueryBlockReturnModel.fromObject<QueryBlockReturnModel>({
                 status: RESPONSE_STATUS.busy,
               });
-              const queryResult = this.has("onQueryBlock")
-                ? await this.emit("onQueryBlock", this.chainChannelHelper.boxQueryBlockArg(binary))
-                : undefined;
+              const queryResult =
+                reqUnLocked && this.has("onQueryBlock")
+                  ? await this.emit(
+                      "onQueryBlock",
+                      this.chainChannelHelper.boxQueryBlockArg(binary),
+                    )
+                  : undefined;
 
               /// 查询成功
               if (queryResult && queryResult.block !== undefined) {
@@ -827,7 +1155,7 @@ export class ChainChannel<
             case DUPLEX_API_CMD.GET_PEER_INFO_RETURN:
             case DUPLEX_API_CMD.RESPONSE: {
               const task = req_response_map.get(req_id);
-              if (!task) {
+              if (task === undefined) {
                 if (req_id !== 0) {
                   error(
                     new NoFoundException("onMessage get invalid req_id: {req_id}", {
@@ -860,6 +1188,16 @@ export class ChainChannel<
 
               break;
             }
+            case DUPLEX_API_CMD.REFUSE: {
+              const task = req_response_map.get(req_id);
+              if (task !== undefined) {
+                task.reject(new RefuseException("request limit"));
+                return;
+              }
+              /// 正常执行不应该执行到refuse这里，双方节点混乱，发生了不该发生的异常！不建议继续通讯，直接关闭
+              this.close("chain channel refuse accpet data.");
+              return;
+            }
             default: {
               throw new ArgumentFormatException("invalid message cmd", { cmd });
             }
@@ -871,28 +1209,31 @@ export class ChainChannel<
             }),
             error,
           );
-          this.postResponseMessage(
+          this.postChainChannelMessage(
             req_id,
-            responseCmdMap.get(cmd) || DUPLEX_API_CMD.RESPONSE,
+            REQRES_CMD_MAP.get(cmd) || DUPLEX_API_CMD.RESPONSE,
             CommonResponse.encode(errorResponse).finish(),
+            reqMsgVersion,
           );
           // 继续向外抛出错误
           throw error;
         }
         if (taskResultBinary) {
-          this.postResponseMessage(
+          this.postChainChannelMessage(
             req_id,
-            responseCmdMap.get(cmd) || DUPLEX_API_CMD.RESPONSE,
+            REQRES_CMD_MAP.get(cmd) || DUPLEX_API_CMD.RESPONSE,
             taskResultBinary,
+            reqMsgVersion,
           );
           return;
         }
         if (taskResult) {
-          this.postResponseMessage(
+          this.postChainChannelMessage(
             req_id,
-            responseCmdMap.get(cmd) || DUPLEX_API_CMD.RESPONSE,
+            REQRES_CMD_MAP.get(cmd) || DUPLEX_API_CMD.RESPONSE,
             // 将对象解析成二进制进行传输
             (taskResult.constructor as typeof CommonResponse).encode(taskResult).finish(),
+            reqMsgVersion,
           );
         }
       } catch (err) {

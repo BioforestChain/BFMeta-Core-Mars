@@ -142,6 +142,21 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     }
     return limit;
   }
+
+  getApiMaybeQueueTime(cmd: DUPLEX_API_CMD): number {
+    let queue = Infinity;
+    for (let cc of this.chainChannelSet) {
+      queue = Math.min(cc.getApiMaybeQueueTime(cmd), queue);
+      if (queue === 0) {
+        break;
+      }
+    }
+    // if(queue===Infinity){
+    //   queue = 0
+    // }
+    return queue;
+  }
+
   bfOnInit() {
     /// 先遍历一下当下的节点
     let curMaxMaybeHeight = this._maybeHeight;
@@ -180,7 +195,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
   public options: { disableAutoRemove?: boolean } = {};
 
   constructor(
-    @Inject(CHAIN_CHANNEL_GROUP_ARGS.CHANNEL_LIST) private chainChannelList: Iterable<DH>,
+    @Inject(CHAIN_CHANNEL_GROUP_ARGS.CHANNEL_LIST) chainChannelList: Iterable<DH>,
     @Inject(CHAIN_CHANNEL_GROUP_ARGS.GROUP_NAME, { optional: true })
     public groupName = "",
     @Inject(CHAIN_CHANNEL_GROUP_ARGS.OPTIONS, { optional: true })
@@ -216,6 +231,14 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
 
     const { channelFilter, abortWhenNoChainChannel } = opts;
     const WCWM = this._workCountWM;
+    const { taskResponseCmd } = opts;
+    const sorter =
+      taskResponseCmd !== undefined
+        ? (a: DH, b: DH) =>
+            a.delay * WCWM.forceGet(a) +
+            a.getApiMaybeQueueTime(taskResponseCmd) -
+            (b.delay * WCWM.forceGet(b) + b.getApiMaybeQueueTime(taskResponseCmd))
+        : (a: DH, b: DH) => a.delay * WCWM.forceGet(a) - b.delay * WCWM.forceGet(b);
 
     //#region 可用节点的队列管理
     /**空闲节点列表
@@ -223,7 +246,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
      */
     const freeChainChannelList = [...this.chainChannelSet.values()]
       .filter(channelFilter ? channelFilter : Boolean)
-      .sort((a, b) => a.delay * WCWM.forceGet(a) - b.delay * WCWM.forceGet(b));
+      .sort(sorter);
     /**繁忙节点列表 */
     const busyChainChannels = new Set<DH>();
     /**请求排队列表 */
@@ -466,6 +489,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     const { requestChainChannel } = this.$startParallelTask(parallelTaskId, {
       channelFilter: (cc) => cc.canQueryTransactions && customChannelFilter(cc),
       abortWhenNoChainChannel: opts?.abortWhenNoChainChannel,
+      taskResponseCmd: DUPLEX_API_CMD.QUERY_TRANSACTION_RETURN,
     });
 
     const resultPo =
@@ -755,6 +779,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     const { requestChainChannel } = this.$startParallelTask(parallelTaskId, {
       channelFilter: (cc) => cc.canIndexTransactions && customChannelFilter(cc),
       abortWhenNoChainChannel: opts?.abortWhenNoChainChannel,
+      taskResponseCmd: DUPLEX_API_CMD.INDEX_TRANSACTION_RETURN,
     });
 
     const resultPo =
@@ -1140,6 +1165,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     const { requestChainChannel } = this.$startParallelTask(parallelTaskId, {
       channelFilter: (cc) => cc.canDownloadTransactions && customChannelFilter(cc),
       abortWhenNoChainChannel: opts?.abortWhenNoChainChannel,
+      taskResponseCmd: DUPLEX_API_CMD.DOWNLOAD_TRANSACTION_RETURN,
     });
 
     type DownloadTransactionAddChainChannelOptions = _AddChainChannelOptions<
@@ -1630,6 +1656,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     const { requestChainChannel } = this.$startParallelTask(parallelTaskId, {
       channelFilter: opts?.channelFilter,
       abortWhenNoChainChannel: opts?.abortWhenNoChainChannel,
+      taskResponseCmd: DUPLEX_API_CMD.QUERY_BLOCK_RETURN,
     });
 
     //#region 外部控制器

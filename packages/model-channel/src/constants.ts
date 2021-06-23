@@ -111,6 +111,7 @@ export enum NewTransactionRefuseReason {
 }
 
 export enum DUPLEX_API_CMD {
+  REFUSE = 0, // 拒绝接收数据
   RESPONSE = 0b1, // 1 << _inc++, //= "RESPONSE",
   QUERY_TRANSACTION = 0b10, // 1 << _inc++, //= "/transaction/query",
   NEW_TRANSACTION = 0b100, // 1 << _inc++, //= "/transaction/broadcast",
@@ -131,4 +132,10 @@ export enum DUPLEX_API_CMD {
   GET_PEER_INFO_RETURN = DUPLEX_API_CMD.RESPONSE | DUPLEX_API_CMD.GET_PEER_INFO,
   INDEX_TRANSACTION_RETURN = DUPLEX_API_CMD.RESPONSE | DUPLEX_API_CMD.INDEX_TRANSACTION,
   DOWNLOAD_TRANSACTION_RETURN = DUPLEX_API_CMD.RESPONSE | DUPLEX_API_CMD.DOWNLOAD_TRANSACTION,
+}
+
+export const enum REQUEST_LIMIT_STRATEGY {
+  NOLIMIT,
+  BUSY,
+  REFUSE,
 }
