@@ -885,7 +885,7 @@ export class ChainChannel<
               if (requestLimitInfo) {
                 requestLimitInfo.preRefuseTime = now; /// 在做响应的时候，可以尝试判断preRefuseTime来做出拒绝，减少带宽压力，这里默认保持响应，开发者根据这些信息做出调整
               }
-              this.postChainChannelMessage(
+              await this.postChainChannelMessage(
                 req_id,
                 DUPLEX_API_CMD.REFUSE,
                 new Uint8Array(0),
@@ -1209,7 +1209,7 @@ export class ChainChannel<
             }),
             error,
           );
-          this.postChainChannelMessage(
+          await this.postChainChannelMessage(
             req_id,
             REQRES_CMD_MAP.get(cmd) || DUPLEX_API_CMD.RESPONSE,
             CommonResponse.encode(errorResponse).finish(),
@@ -1219,7 +1219,7 @@ export class ChainChannel<
           throw error;
         }
         if (taskResultBinary) {
-          this.postChainChannelMessage(
+          await this.postChainChannelMessage(
             req_id,
             REQRES_CMD_MAP.get(cmd) || DUPLEX_API_CMD.RESPONSE,
             taskResultBinary,
@@ -1228,7 +1228,7 @@ export class ChainChannel<
           return;
         }
         if (taskResult) {
-          this.postChainChannelMessage(
+          await this.postChainChannelMessage(
             req_id,
             REQRES_CMD_MAP.get(cmd) || DUPLEX_API_CMD.RESPONSE,
             // 将对象解析成二进制进行传输
