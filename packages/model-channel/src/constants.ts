@@ -3,6 +3,8 @@ export enum RESPONSE_STATUS {
   error = 0,
   busy = 1,
   success = 2,
+  /*幂等性错误 */
+  idempotentError = 3,
 }
 /**区块链节点状态 */
 export enum BLOCKCHAIN_STATUS {
