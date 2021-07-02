@@ -62,4 +62,13 @@ export class IssueAssetLogicVerifier extends TransactionLogicVerifier {
 
     return true;
   }
+
+  /**
+   * 获取需要被加锁的数据
+   *
+   * @param transaction
+   */
+  getLockData(transaction: IssueAssetTransaction) {
+    return [transaction.type];
+  }
 }

@@ -38,10 +38,11 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
     const grabAsset = transaction.asset.grabAsset;
 
     const { transactionSignature } = grabAsset;
-    const trsWithBlockSign = await transactionGetterHelper.getTransactionAndBlockSignatureBySignature(
-      transactionSignature,
-      this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
-    );
+    const trsWithBlockSign =
+      await transactionGetterHelper.getTransactionAndBlockSignatureBySignature(
+        transactionSignature,
+        this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
+      );
 
     if (!trsWithBlockSign) {
       throw new NoFoundException(NOT_EXIST_OR_EXPIRED, {
@@ -51,9 +52,8 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
       });
     }
 
-    const trs = trsWithBlockSign.transaction as BFChainCore.TransactionJSON<
-      BFChainCore.GiftAssetAssetJSON
-    >;
+    const trs =
+      trsWithBlockSign.transaction as BFChainCore.TransactionJSON<BFChainCore.GiftAssetAssetJSON>;
 
     this.isValidRecipientId(transaction, trs);
     this.isBlockSignatureMatch(transaction, trsWithBlockSign.blockSignature);
@@ -316,5 +316,15 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
         function: "checkSecondaryTransaction",
       });
     }
+  }
+
+  /**
+   * 获取需要被加锁的数据
+   *
+   * @param transaction
+   */
+  getLockData(transaction: GrabAssetTransaction) {
+    const { transactionSignature } = transaction.asset.grabAsset;
+    return [transactionSignature];
   }
 }

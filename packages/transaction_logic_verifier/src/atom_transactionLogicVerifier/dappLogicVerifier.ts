@@ -46,4 +46,14 @@ export class DAppLogicVerifier extends TransactionLogicVerifier {
 
     return true;
   }
+
+  /**
+   * 获取需要被加锁的数据
+   *
+   * @param transaction
+   */
+  getLockData(transaction: DAppTransaction) {
+    // 锁定 dappid
+    return [transaction.asset.dapp.dappid];
+  }
 }

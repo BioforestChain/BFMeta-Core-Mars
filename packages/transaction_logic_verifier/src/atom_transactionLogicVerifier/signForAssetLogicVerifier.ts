@@ -211,4 +211,13 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
       });
     }
   }
+
+  /**
+   * 获取需要被加锁的数据
+   *
+   * @param transaction
+   */
+  getLockData(transaction: SignForAssetTransaction) {
+    return [transaction.asset.signForAsset.transactionSignature];
+  }
 }

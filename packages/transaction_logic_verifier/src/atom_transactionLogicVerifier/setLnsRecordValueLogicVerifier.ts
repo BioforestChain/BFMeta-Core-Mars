@@ -46,4 +46,13 @@ export class SetLnsRecordValueLogicVerifier extends TransactionLogicVerifier {
 
     return true;
   }
+
+  /**
+   * 获取需要被加锁的数据
+   *
+   * @param transaction
+   */
+  getLockData(transaction: SetLnsRecordValueTransaction) {
+    return [transaction.asset.lnsRecordValue.name];
+  }
 }

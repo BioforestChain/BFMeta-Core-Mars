@@ -775,4 +775,13 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     currentBlockHeight: number,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ): Promise<void>;
+
+  /**
+   * 获取需要被加锁的数据
+   *
+   * @param transaction
+   */
+  getLockData(transaction: T): string[] {
+    return [];
+  }
 }

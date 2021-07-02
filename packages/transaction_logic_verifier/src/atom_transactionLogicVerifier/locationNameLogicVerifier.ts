@@ -64,4 +64,13 @@ export class LocationNameLogicVerifier extends TransactionLogicVerifier {
 
     return true;
   }
+
+  /**
+   * 获取需要被加锁的数据
+   *
+   * @param transaction
+   */
+  getLockData(transaction: LocationNameTransaction) {
+    return [transaction.asset.locationName.name];
+  }
 }

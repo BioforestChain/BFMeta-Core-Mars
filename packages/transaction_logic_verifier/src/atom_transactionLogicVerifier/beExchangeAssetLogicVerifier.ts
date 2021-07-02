@@ -176,4 +176,13 @@ export class BeExchangeAssetLogicVerifier extends TransactionLogicVerifier {
       }
     }
   }
+
+  /**
+   * 获取需要被加锁的数据
+   *
+   * @param transaction
+   */
+  getLockData(transaction: BeExchangeAssetTransaction) {
+    return [transaction.asset.beExchangeAsset.transactionSignature];
+  }
 }

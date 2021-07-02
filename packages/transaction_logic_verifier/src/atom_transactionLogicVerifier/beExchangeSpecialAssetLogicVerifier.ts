@@ -93,10 +93,8 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
       eventEmitter,
     );
 
-    const {
-      exchangeDirection,
-      exchangeAssetType,
-    } = transaction.asset.beExchangeSpecialAsset.exchangeSpecialAsset;
+    const { exchangeDirection, exchangeAssetType } =
+      transaction.asset.beExchangeSpecialAsset.exchangeSpecialAsset;
     if (exchangeDirection === EXCHANGE_DIRECTION.ASSET_FROM_RECIPIENT) {
       eventLogicVerifier.listenEventUnfrozenAsset(
         transaction,
@@ -137,9 +135,7 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
    */
   private isValidRecipientId(
     transaction: BeExchangeSpecialAssetTransaction,
-    toExchangeSpecialAssetJson: BFChainCore.TransactionJSON<
-      BFChainCore.ToExchangeSpecialAssetAssetJSON
-    >,
+    toExchangeSpecialAssetJson: BFChainCore.TransactionJSON<BFChainCore.ToExchangeSpecialAssetAssetJSON>,
   ) {
     // be交易的接收账户必须是to交易的发起账户
     if (transaction.recipientId !== toExchangeSpecialAssetJson.senderId) {
@@ -161,21 +157,15 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
    */
   private isDependentTransactionMatch(
     transaction: BeExchangeSpecialAssetTransaction,
-    toExchangeSpecialAssetJson: BFChainCore.TransactionJSON<
-      BFChainCore.ToExchangeSpecialAssetAssetJSON
-    >,
+    toExchangeSpecialAssetJson: BFChainCore.TransactionJSON<BFChainCore.ToExchangeSpecialAssetAssetJSON>,
   ) {
     const Function_Exception_Detail = {
       function: "isDependentTransactionMatch",
     } as const;
     const beExchangeAssetAsset = transaction.asset.beExchangeSpecialAsset;
     const { exchangeSpecialAsset } = beExchangeAssetAsset;
-    const {
-      toExchangeSource,
-      toExchangeAsset,
-      beExchangeSource,
-      beExchangeAsset,
-    } = exchangeSpecialAsset;
+    const { toExchangeSource, toExchangeAsset, beExchangeSource, beExchangeAsset } =
+      exchangeSpecialAsset;
     const trsAsset = toExchangeSpecialAssetJson.asset.toExchangeSpecialAsset;
     if (
       trsAsset.toExchangeSource !== toExchangeSource ||
@@ -247,5 +237,14 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
         function: "checkSecondaryTransaction",
       });
     }
+  }
+
+  /**
+   * 获取需要被加锁的数据
+   *
+   * @param transaction
+   */
+  getLockData(transaction: BeExchangeSpecialAssetTransaction) {
+    return [transaction.asset.beExchangeSpecialAsset.transactionSignature];
   }
 }
