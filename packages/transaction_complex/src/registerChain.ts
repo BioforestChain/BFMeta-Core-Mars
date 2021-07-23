@@ -147,6 +147,7 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
     if (!chainConfig) {
       // 没有注册链的配置文件就生成一个
       chainConfig = new ConfigHelper(genesisBlockJson, this.configHelper.business);
+      this.configMap.set(genesisBlockJson.magic, chainConfig);
     }
 
     const genesisBlock = await this._blockCore.recombineBlock<
