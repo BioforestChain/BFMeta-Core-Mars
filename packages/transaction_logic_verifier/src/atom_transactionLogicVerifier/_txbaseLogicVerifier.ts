@@ -519,38 +519,39 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
         ...Function_Exception_Detail,
       });
     }
+    const possessorAddress = dapp.possessorAddress;
     // 获取dapp开发账户
-    const accountInfo = await accountGetterHelper.getAccountInfo(dapp.possessorAddress);
+    const accountInfo = await accountGetterHelper.getAccountInfo(possessorAddress);
     if (!accountInfo) {
       throw new ConsensusException(NOT_FOUND, {
-        porp: "Dapp possessor",
+        porp: `Dapp possessor ${possessorAddress}`,
         ...Function_Exception_Detail,
       });
     }
     // dapp 的拥有者不需要购买使用
-    if (dapp.type === DAPP_TYPE.PAID_APP /* && senderId !== dapp.possessorAddress */) {
+    if (dapp.type === DAPP_TYPE.PAID_APP /* && senderId !== possessorAddress */) {
       // FIXME: 付费一次永久生效
       const isPurchase = await transactionGetterHelper.getPurchaseDApp(senderId, dappid);
       if (!isPurchase) {
         throw new ConsensusException(NEED_PURCHASE_DAPPID_BEFORE_USE, {
-          dappid,
+          dappid: `${dappid} user ${senderId} possessor ${possessorAddress}`,
           ...Function_Exception_Detail,
         });
       }
     }
     // dapp 的拥有者不需要投票使用
-    if (accountInfo.isAcceptVote /* && senderId !== dapp.possessorAddress */) {
+    if (accountInfo.isAcceptVote /* && senderId !== possessorAddress */) {
       const curRound = this.blockHelper.calcRoundByHeight(currentBlockHeight);
       // 判断当前账户是否给 dapp 开发者投过票
       const isVote = await accountGetterHelper.getVoteForDelegate(
         senderId,
-        dapp.possessorAddress,
+        possessorAddress,
         dappid,
         curRound,
       );
       if (!isVote) {
         throw new ConsensusException(NEED_VOTE_FOR_DAPPID_POSSESSOR_BFCORE_USE, {
-          dappid,
+          dappid: `${dappid} user ${senderId} possessor ${possessorAddress}`,
           errorId: NewTransactionRefuseReason.MUSET_VOTE_FOR_DAPP_POSSESSOR,
           ...Function_Exception_Detail,
         });
