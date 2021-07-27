@@ -12,7 +12,7 @@ export class AccountHelper<
   DI extends BFChainCore.DAppInfo = BFChainCore.DAppInfo,
   LNI extends BFChainCore.LocationNameInfo = BFChainCore.LocationNameInfo,
   FA extends BFChainCore.FrozenAsset = BFChainCore.FrozenAsset,
-  IAI extends BFChainCore.IssuedAssetInfo = BFChainCore.IssuedAssetInfo
+  IAI extends BFChainCore.IssuedAssetInfo = BFChainCore.IssuedAssetInfo,
 > {
   @Inject("accountGetterHelper", { optional: true })
   private accountGetterHelper?: BFChainCore.AccountGetterHelperInterface<
@@ -179,24 +179,23 @@ export class AccountHelper<
     }
     return accountGetterHelper.isDAppPossessor(sourceChainMagic, address);
   }
-  getVoteForDelegate(
+  isVoteForDelegate(
     address: string,
     delegate: string,
-    dappid: string,
     round: number,
     accountGetterHelper = this.accountGetterHelper as Pick<
       BFChainCore.AccountGetterHelperInterface,
-      "getVoteForDelegate"
+      "isVoteForDelegate"
     >,
   ): Promise<boolean> {
     if (!accountGetterHelper) {
       throw new NoFoundException(NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getVoteForDelegate",
+        function: "AccountHelper.isVoteForDelegate",
       });
     }
-    return accountGetterHelper.getVoteForDelegate(address, delegate, dappid, round);
+    return accountGetterHelper.isVoteForDelegate(address, delegate, round);
   }
   getLocationName(
     sourceChainMagic: string,

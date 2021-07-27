@@ -543,10 +543,9 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     if (accountInfo.isAcceptVote /* && senderId !== possessorAddress */) {
       const curRound = this.blockHelper.calcRoundByHeight(currentBlockHeight);
       // 判断当前账户是否给 dapp 开发者投过票
-      const isVote = await accountGetterHelper.getVoteForDelegate(
+      const isVote = await accountGetterHelper.isVoteForDelegate(
         senderId,
         possessorAddress,
-        dappid,
         curRound,
       );
       if (!isVote) {

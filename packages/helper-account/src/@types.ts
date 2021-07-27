@@ -124,7 +124,7 @@ declare namespace BFChainCore {
     DI extends DAppInfo = DAppInfo,
     LNI extends LocationNameInfo = LocationNameInfo,
     FA extends FrozenAsset = FrozenAsset,
-    IAI extends IssuedAssetInfo = IssuedAssetInfo
+    IAI extends IssuedAssetInfo = IssuedAssetInfo,
   > {
     /**根据地址数组获取账户 */
     getAccounts(addressArr: string[], curRound: number): Promise<FSAI[]>;
@@ -151,10 +151,9 @@ declare namespace BFChainCore {
     /**某个账户是否是某个的 dappid 的持有者 */
     isDAppPossessor(sourceChainMagic: string, address: string): Promise<boolean>;
     /**某个账户是否给指定收托人投票(最近 2 轮) */
-    getVoteForDelegate(
+    isVoteForDelegate(
       address: string,
       delegate: string,
-      dappid: string,
       /**当前轮次 */
       round: number,
     ): Promise<boolean>;
