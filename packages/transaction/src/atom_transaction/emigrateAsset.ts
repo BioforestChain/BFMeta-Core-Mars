@@ -210,6 +210,7 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
         chainName: sourceChainName,
         magic: sourceChainMagic,
         assetType,
+        amount,
         senderId: body.senderId,
       }))
     ) {
@@ -229,6 +230,7 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
           chainName: sourceChainName,
           magic: sourceChainMagic,
           assetType,
+          amount,
           senderId: body.senderId,
           genesisSignatureBuffer: signatureBuffer,
         }))

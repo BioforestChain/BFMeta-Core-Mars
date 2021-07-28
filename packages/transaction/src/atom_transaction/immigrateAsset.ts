@@ -197,6 +197,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
       !(await this.transactionHelper.verifyImmigrateAssetGenesisSignature({
         secretPublicKey: parseHexToArrayBuffer(publicKey),
         signatureBuffer,
+        senderId: body.senderId,
         transactionSignatureBuffer: emigrateAssetTransactionModel.signatureBuffer,
       }))
     ) {
@@ -214,6 +215,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
           secretPublicKey: parseHexToArrayBuffer(secondPublicKey),
           signatureBuffer: parseHexToArrayBuffer(signSignature),
           transactionSignatureBuffer: emigrateAssetTransactionModel.signatureBuffer,
+          senderId: body.senderId,
           genesisSignatureBuffer: signatureBuffer,
         }))
       ) {

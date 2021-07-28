@@ -47,10 +47,11 @@ async function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = await fullBfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
-      sender.secret,
-      sender.secondSecret,
-    );
+    data.senderSecondPublicKey =
+      await fullBfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+        sender.secret,
+        sender.secondSecret,
+      );
   }
   const emigrateAsset: BFChainCore.EmigrateAssetJSON = {
     genesisDelegateSignature: {
@@ -67,6 +68,7 @@ async function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate
     chainName: emigrateAsset.sourceChainName,
     magic: emigrateAsset.sourceChainMagic,
     assetType: emigrateAsset.assetType,
+    amount: emigrateAsset.amount,
     senderId: sender.address,
   });
   emigrateAsset.genesisDelegateSignature = {
@@ -129,10 +131,11 @@ async function getImmigrateAssetTransaction(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = await fullRegisterBfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
-      sender.secret,
-      sender.secondSecret,
-    );
+    data.senderSecondPublicKey =
+      await fullRegisterBfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+        sender.secret,
+        sender.secondSecret,
+      );
   }
   const immigrateAsset: BFChainCore.ImmigrateAssetJSON = {
     genesisDelegateSignature: {
@@ -147,6 +150,7 @@ async function getImmigrateAssetTransaction(
   const signature = await fullBfchainCore.transactionHelper.immigrateAssetGenesisSignature({
     secretKeyBuffer: genesisKeypair.secretKey,
     transactionSignatureBuffer: parseHexToArrayBuffer(emigrateAssetTrs.signature),
+    senderId: data.senderId,
   });
   const genesisDelegateSignature: BFChainCore.AccountSignatureJSON = {
     publicKey: genesisDelegate.publicKey,
@@ -160,6 +164,7 @@ async function getImmigrateAssetTransaction(
     const signSignature = await fullBfchainCore.transactionHelper.immigrateAssetGenesisSignature({
       secretKeyBuffer: genesisSecondKeypair.secretKey,
       transactionSignatureBuffer: parseHexToArrayBuffer(emigrateAssetTrs.signature),
+      senderId: data.senderId,
       genesisSignatureBuffer: signature,
     });
     genesisDelegateSignature.secondPublicKey = genesisSecondKeypair.publicKey.toString("hex");
@@ -168,17 +173,16 @@ async function getImmigrateAssetTransaction(
   immigrateAsset.genesisDelegateSignature = genesisDelegateSignature;
   fullRegisterBfchainCore.configMap.set(fullBfchainCore.config.magic, fullBfchainCore.config);
 
-  const trs = await fullRegisterBfchainCore.transaction.createTransaction<
-    ImmigrateAssetTransaction
-  >(
-    ImmigrateAssetTransactionFactory,
-    data,
-    {
-      immigrateAsset,
-    },
-    keypair,
-    secondKeypair,
-  );
+  const trs =
+    await fullRegisterBfchainCore.transaction.createTransaction<ImmigrateAssetTransaction>(
+      ImmigrateAssetTransactionFactory,
+      data,
+      {
+        immigrateAsset,
+      },
+      keypair,
+      secondKeypair,
+    );
 
   const trsJson = trs.toJSON();
   const xx = await fullBfchainCore.transaction.recombineTransaction(trsJson);

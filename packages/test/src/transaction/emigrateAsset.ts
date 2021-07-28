@@ -45,10 +45,11 @@ async function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = await fullBfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
-      sender.secret,
-      sender.secondSecret,
-    );
+    data.senderSecondPublicKey =
+      await fullBfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+        sender.secret,
+        sender.secondSecret,
+      );
   }
   const emigrateAsset: BFChainCore.EmigrateAssetJSON = {
     genesisDelegateSignature: {
@@ -68,6 +69,7 @@ async function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate
     chainName: emigrateAsset.sourceChainName,
     magic: emigrateAsset.sourceChainMagic,
     assetType: emigrateAsset.assetType,
+    amount: emigrateAsset.amount,
     senderId: sender.address,
   });
   const genesisDelegateSignature: BFChainCore.AccountSignatureJSON = {
@@ -85,6 +87,7 @@ async function getEmigrateAssetTransaction(sender: AccountModel, genesisDelegate
       magic: emigrateAsset.sourceChainMagic,
       assetType: emigrateAsset.assetType,
       senderId: sender.address,
+      amount: emigrateAsset.amount,
       genesisSignatureBuffer: signature,
     });
     genesisDelegateSignature.secondPublicKey = genesisSecondKeypair.publicKey.toString("hex");

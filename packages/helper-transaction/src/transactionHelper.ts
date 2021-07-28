@@ -696,16 +696,38 @@ export class TransactionHelper {
     );
   }
 
+  async emigrateAssetGenesisSignature(args: {
+    secretKeyBuffer: Uint8Array;
+    chainName: string;
+    magic: string;
+    assetType: string;
+    amount: string;
+    senderId: string;
+    genesisSignatureBuffer?: Uint8Array;
+  }) {
+    const hash = this.cryptoHelper
+      .sha256()
+      .update(args.chainName)
+      .update(args.magic)
+      .update(args.assetType)
+      .update(args.amount)
+      .update(args.senderId);
+    if (args.genesisSignatureBuffer) {
+      hash.update(args.genesisSignatureBuffer);
+    }
+    return this.asymmetricHelper.detachedSign(await hash.digest(), args.secretKeyBuffer);
+  }
   /**
-   * 资产迁出交易创世账户签名
+   * 权益迁出交易创世受托人签名
    *
-   * @param args `所属链名称``网络标识符``资产名称``发起账户地址`
+   * @param args `创世受托人密钥 所属链名称 所属链网络标识符 迁出的权益名 迁出的权益数 发起账户地址 创世受托人签名`
    */
   async getEmigrateAssetGenesisSignature(args: {
     secret: string;
     chainName: string;
     magic: string;
     assetType: string;
+    amount: string;
     senderId: string;
     genesisSignatureBuffer?: Uint8Array;
   }) {
@@ -716,33 +738,15 @@ export class TransactionHelper {
       chainName: args.chainName,
       magic: args.magic,
       assetType: args.assetType,
+      amount: args.amount,
       senderId: args.senderId,
       genesisSignatureBuffer: args.genesisSignatureBuffer,
     });
   }
-  async emigrateAssetGenesisSignature(args: {
-    secretKeyBuffer: Uint8Array;
-    chainName: string;
-    magic: string;
-    assetType: string;
-    senderId: string;
-    genesisSignatureBuffer?: Uint8Array;
-  }) {
-    const hash = this.cryptoHelper
-      .sha256()
-      .update(args.chainName)
-      .update(args.magic)
-      .update(args.assetType)
-      .update(args.senderId);
-    if (args.genesisSignatureBuffer) {
-      hash.update(args.genesisSignatureBuffer);
-    }
-    return this.asymmetricHelper.detachedSign(await hash.digest(), args.secretKeyBuffer);
-  }
   /**
-   * 资产迁出交易创世账户签名验证
+   * 资产迁出交易创世受托人签名验证
    *
-   * @param args `创世账户公钥``密文签名``所属链名称``网络标识符``资产名称``发起账户地址`
+   * @param args `创世受托人公钥 创世受托人签名 所属链名称 所属链网络标识符 迁出的权益名 迁出的权益数 发起账户地址 创世受托人签名`
    */
   async verifyEmigrateAssetGenesisSignature(args: {
     secretPublicKey: Uint8Array;
@@ -750,6 +754,7 @@ export class TransactionHelper {
     chainName: string;
     magic: string;
     assetType: string;
+    amount: string;
     senderId: string;
     genesisSignatureBuffer?: Uint8Array;
   }) {
@@ -758,6 +763,7 @@ export class TransactionHelper {
       .update(args.chainName)
       .update(args.magic)
       .update(args.assetType)
+      .update(args.amount)
       .update(args.senderId);
     if (args.genesisSignatureBuffer) {
       hash.update(args.genesisSignatureBuffer);
@@ -769,14 +775,30 @@ export class TransactionHelper {
     );
   }
 
+  async immigrateAssetGenesisSignature(args: {
+    secretKeyBuffer: Uint8Array;
+    transactionSignatureBuffer: Uint8Array;
+    senderId: string;
+    genesisSignatureBuffer?: Uint8Array;
+  }) {
+    const hash = this.cryptoHelper
+      .sha256()
+      .update(args.transactionSignatureBuffer)
+      .update(args.senderId);
+    if (args.genesisSignatureBuffer) {
+      hash.update(args.genesisSignatureBuffer);
+    }
+    return this.asymmetricHelper.detachedSign(await hash.digest(), args.secretKeyBuffer);
+  }
   /**
-   * 资产迁入交易创世账户签名
+   * 资产迁入交易创世受托人签名
    *
-   * @param args `密文``to 交易签名`
+   * @param args `创世受托人密钥 权益迁出交易签名 迁入交易发起账户地址 创世受托人签名`
    */
   async getImmigrateAssetGenesisSignature(args: {
     secret: string;
     transactionSignatureBuffer: Uint8Array;
+    senderId: string;
     genesisSignatureBuffer?: Uint8Array;
   }) {
     const secretKeyBuffer = (await this.accountBaseHelper.createSecretKeypair(args.secret))
@@ -784,32 +806,26 @@ export class TransactionHelper {
     return this.immigrateAssetGenesisSignature({
       secretKeyBuffer,
       transactionSignatureBuffer: args.transactionSignatureBuffer,
+      senderId: args.senderId,
       genesisSignatureBuffer: args.genesisSignatureBuffer,
     });
   }
-  async immigrateAssetGenesisSignature(args: {
-    secretKeyBuffer: Uint8Array;
-    transactionSignatureBuffer: Uint8Array;
-    genesisSignatureBuffer?: Uint8Array;
-  }) {
-    const hash = this.cryptoHelper.sha256().update(args.transactionSignatureBuffer);
-    if (args.genesisSignatureBuffer) {
-      hash.update(args.genesisSignatureBuffer);
-    }
-    return this.asymmetricHelper.detachedSign(await hash.digest(), args.secretKeyBuffer);
-  }
   /**
-   * 资产迁入交易创世账户签名验证
+   * 权益迁入交易创世受托人签名验证
    *
-   * @param args `密文公钥``密文签名``交易签名``to 交易签名`
+   * @param args `创世受托人公钥 创世受托人签名 迁出交易签名 发起账户地址 创世受托人签名`
    */
   async verifyImmigrateAssetGenesisSignature(args: {
     secretPublicKey: Uint8Array;
     signatureBuffer: Uint8Array;
     transactionSignatureBuffer: Uint8Array;
+    senderId: string;
     genesisSignatureBuffer?: Uint8Array;
   }) {
-    const hash = this.cryptoHelper.sha256().update(args.transactionSignatureBuffer);
+    const hash = this.cryptoHelper
+      .sha256()
+      .update(args.transactionSignatureBuffer)
+      .update(args.senderId);
     if (args.genesisSignatureBuffer) {
       hash.update(args.genesisSignatureBuffer);
     }
