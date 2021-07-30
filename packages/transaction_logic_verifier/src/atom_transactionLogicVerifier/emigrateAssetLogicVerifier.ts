@@ -9,6 +9,8 @@ import {
   PROP_IS_REQUIRE,
   CAN_NOT_CARRY_SECOND_PUBLICKEY,
   CAN_NOT_CARRY_SECOND_SIGNATURE,
+  VOTE_RECENTLY,
+  POSSESS_FROZEN_ASSET,
 } from "@bfchain/core-util-exception";
 import { AccountBaseHelper } from "@bfchain/core-helper";
 
@@ -34,12 +36,8 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       function: "verify",
     } as const;
 
-    const {
-      sourceChainMagic,
-      assetType,
-      amount,
-      genesisDelegateSignature,
-    } = transaction.asset.emigrateAsset;
+    const { sourceChainMagic, assetType, amount, genesisDelegateSignature } =
+      transaction.asset.emigrateAsset;
 
     const { publicKey, secondPublicKey, signSignature } = genesisDelegateSignature;
 
@@ -128,6 +126,23 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     const assets = sender.accountAssets;
+
+    const isVote = await accountGetterHelper.isVoteRecently(
+      senderId,
+      this.blockHelper.calcRoundByHeight(currentBlockHeight),
+    );
+    if (isVote) {
+      throw new ConsensusException(VOTE_RECENTLY, {
+        ...Function_Exception_Detail,
+      });
+    }
+
+    const isFrozenAsset = await accountGetterHelper.isFrozenAsset(senderId);
+    if (isFrozenAsset) {
+      throw new ConsensusException(POSSESS_FROZEN_ASSET, {
+        ...Function_Exception_Detail,
+      });
+    }
 
     await this.helperLogicVerifier.isPossessAssetExceptChainAsset(
       senderId,

@@ -148,22 +148,24 @@ declare namespace BFChainCore {
       dappid: string,
       currentBlockHeight: number,
     ): Promise<DI | undefined>;
-    /**某个账户是否是某个的 dappid 的持有者 */
+    /**是否是某个的 dappid 的持有者 */
     isDAppPossessor(sourceChainMagic: string, address: string): Promise<boolean>;
-    /**某个账户是否给指定收托人投票(最近 2 轮) */
+    /**近期是否给指定收托人投票（2 轮内） */
     isVoteForDelegate(
       address: string,
       delegate: string,
       /**当前轮次 */
       round: number,
     ): Promise<boolean>;
+    /**近期是否参与投票（2 轮内） */
+    isVoteRecently(address: string, round: number): Promise<boolean>;
     /**查询指定的 LocationName */
     getLocationName(
       sourceChainMagic: string,
       locationName: string,
       currentBlockHeight: number,
     ): Promise<LNI | undefined>;
-    /**指定账户是否持有或关联指定的域名 */
+    /**是否持有或关联指定的域名 */
     isLocationNamePossessor(sourceChainMagic: string, address: string): Promise<boolean>;
     /**指定域名是否存在子域名 */
     isSubLocationNameExist(sourceChainMagic: string, endsWith: string): Promise<boolean>;
@@ -172,7 +174,9 @@ declare namespace BFChainCore {
     /**查询冻结的资产 */
     getFrozenAsset(address: string, signature: string): Promise<FA | undefined>;
     /**账户是否持有冻结的非主权益 */
-    isPossessFrozenAssetExceptMain(address: string): Promise<number>;
+    isPossessFrozenAssetExceptMain(address: string): Promise<boolean>;
+    /**是否冻结权益 */
+    isFrozenAsset(address: string): Promise<boolean>;
     /**查询指定的数字资产 */
     getAsset(magic: string, assetType: string): Promise<IAI | undefined>;
     /**查询指定的资产名 */

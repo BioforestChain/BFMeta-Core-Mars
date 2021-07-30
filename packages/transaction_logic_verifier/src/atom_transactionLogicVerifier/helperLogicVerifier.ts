@@ -57,8 +57,8 @@ export class HelperLogicVerifier {
         }
       }
     }
-    const count = await accountGetterHelper.isPossessFrozenAssetExceptMain(address);
-    if (count > 0) {
+    const isPossess = await accountGetterHelper.isPossessFrozenAssetExceptMain(address);
+    if (isPossess) {
       throw new ConsensusException(POSSESS_FROZEN_ASSET_EXCEPT_CHAIN_ASSET, {
         function: "isPossessAssetExceptChainAsset",
       });
