@@ -16,6 +16,7 @@ import {
   SHOULD_BE,
   NOT_MATCH,
   PARAM_LOST,
+  GENESIS_DELEGATE_NOT_ENOUGH,
 } from "@bfchain/core-util-exception";
 import { Injectable, Inject } from "@bfchain/util";
 import { BlockGeneratorCalculator } from "./blockGeneratorCalculator";
@@ -338,28 +339,48 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       });
     }
 
-    if (!baseHelper.isPositiveInteger(genesisAsset.blockPerRound)) {
+    const { blockPerRound, delegates, whetherToAllowDelegateContinusElections } = genesisAsset;
+
+    if (!baseHelper.isPositiveInteger(blockPerRound)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `blockPerRound ${genesisAsset.blockPerRound}`,
+        prop: `blockPerRound ${blockPerRound}`,
         type: "positive integer",
         ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isPositiveInteger(genesisAsset.delegates)) {
+    if (!baseHelper.isPositiveInteger(delegates)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `delegates ${genesisAsset.delegates}`,
+        prop: `delegates ${delegates}`,
         type: "positive integer",
         ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isBoolean(genesisAsset.whetherToAllowDelegateContinusElections)) {
+    if (!baseHelper.isBoolean(whetherToAllowDelegateContinusElections)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `whetherToAllowDelegateContinusElections ${genesisAsset.whetherToAllowDelegateContinusElections}`,
+        prop: `whetherToAllowDelegateContinusElections ${whetherToAllowDelegateContinusElections}`,
         type: "boolean",
         ...GenesisBlockAsset_Exception_Detail,
       });
+    }
+
+    if (whetherToAllowDelegateContinusElections) {
+      if (delegates < blockPerRound) {
+        throw new ArgumentIllegalException(GENESIS_DELEGATE_NOT_ENOUGH, {
+          expected: blockPerRound,
+          actual: delegates,
+          ...GenesisBlockAsset_Exception_Detail,
+        });
+      }
+    } else {
+      if (delegates < blockPerRound * 2) {
+        throw new ArgumentIllegalException(GENESIS_DELEGATE_NOT_ENOUGH, {
+          expected: blockPerRound * 2,
+          actual: delegates,
+          ...GenesisBlockAsset_Exception_Detail,
+        });
+      }
     }
 
     if (!baseHelper.isPositiveInteger(genesisAsset.forgeInterval)) {
@@ -500,10 +521,8 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
     const { growthFactor, participationRatio } = genesisAsset.transactionPowOfWorkConfig;
     // 校验交易POW的难度增长系数
     {
-      const {
-        denominator: growthFactorDenominator,
-        numerator: growthFactorNumerator,
-      } = growthFactor;
+      const { denominator: growthFactorDenominator, numerator: growthFactorNumerator } =
+        growthFactor;
       const growthFactorNumerator_BI = BigInt(growthFactorNumerator);
       const growthFactorDenominator_BI = BigInt(growthFactorDenominator);
       if (

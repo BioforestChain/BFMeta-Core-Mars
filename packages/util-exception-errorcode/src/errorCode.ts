@@ -317,6 +317,9 @@ export const NOT_EXIST_OR_EXPIRED = (ec.next =
 export const VOTE_RECENTLY = (ec.next = "Account participate vote recently when {function}");
 /**function */
 export const POSSESS_FROZEN_ASSET = (ec.next = "Account possess frozen asset when {function}");
+/**expected actual function */
+export const GENESIS_DELEGATE_NOT_ENOUGH = (ec.next =
+  "Genesis delegate not enough, at least {expected}, actual {actual} when {function}");
 // #endregion
 export const errorCode = new Map(
   ec.errorCode.concat([
