@@ -18,6 +18,8 @@ import {
   PARAM_LOST,
   GENESIS_DELEGATE_NOT_ENOUGH,
   PROP_SHOULD_GTE_FIELD,
+  PROP_SHOULD_BE_ARRAY,
+  PROP_LENGTH_SHOULD_GTE_FIELD,
 } from "@bfchain/core-util-exception";
 import { Injectable, Inject } from "@bfchain/util";
 import { BlockGeneratorCalculator } from "./blockGeneratorCalculator";
@@ -437,18 +439,99 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       });
     }
 
-    if (!genesisAsset.rewardPerBlock) {
+    const rewardPerBlock = genesisAsset.rewardPerBlock;
+    if (!rewardPerBlock) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "rewardPerBlock",
         ...GenesisBlockAsset_Exception_Detail,
       });
     }
-    if (!baseHelper.isValidChainRewardMilestones(genesisAsset.rewardPerBlock)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `rewardPerBlock ${genesisAsset.rewardPerBlock}`,
-        type: "chain rewards milestones",
+    if (!rewardPerBlock.heights) {
+      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        prop: "rewardPerBlock.heights",
         ...GenesisBlockAsset_Exception_Detail,
       });
+    }
+    if (!rewardPerBlock.rewards) {
+      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        prop: "rewardPerBlock.rewards",
+        ...GenesisBlockAsset_Exception_Detail,
+      });
+    }
+    const { heights, rewards } = rewardPerBlock;
+    if (!baseHelper.isArray(heights)) {
+      throw new ArgumentIllegalException(PROP_SHOULD_BE_ARRAY, {
+        prop: "rewardPerBlock.heights",
+        ...GenesisBlockAsset_Exception_Detail,
+      });
+    }
+    if (!baseHelper.isArray(rewards)) {
+      throw new ArgumentIllegalException(PROP_SHOULD_BE_ARRAY, {
+        prop: "rewardPerBlock.rewards",
+        ...GenesisBlockAsset_Exception_Detail,
+      });
+    }
+    const hlen = heights.length;
+    const rlen = rewards.length;
+    if (hlen < 1) {
+      throw new ArgumentIllegalException(PROP_LENGTH_SHOULD_GTE_FIELD, {
+        prop: "rewardPerBlock.heights",
+        field: 1,
+        ...GenesisBlockAsset_Exception_Detail,
+      });
+    }
+    if (rlen < 2) {
+      throw new ArgumentIllegalException(PROP_LENGTH_SHOULD_GTE_FIELD, {
+        prop: "rewardPerBlock.rewards",
+        field: 2,
+        ...GenesisBlockAsset_Exception_Detail,
+      });
+    }
+    if (rlen - hlen !== 1) {
+      throw new ArgumentIllegalException(SHOULD_BE, {
+        to_compare_prop: `rewards's length - heights's length ${rlen - hlen}`,
+        to_target: "rewardPerBlock",
+        be_compare_prop: 1,
+        ...GenesisBlockAsset_Exception_Detail,
+      });
+    }
+    if (rewards[rlen - 1] !== "0") {
+      throw new ArgumentIllegalException(SHOULD_BE, {
+        to_compare_prop: `the last one of rewards ${rewards[rlen - 1]}`,
+        to_target: "rewardPerBlock",
+        be_compare_prop: 0,
+        ...GenesisBlockAsset_Exception_Detail,
+      });
+    }
+    if (Number.isNaN(heights[0]) || !baseHelper.isValidNumber(heights[0])) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "rewardPerBlock.heights",
+        ...GenesisBlockAsset_Exception_Detail,
+      });
+    }
+    if (hlen > 1) {
+      for (let i = 0; i < hlen - 1; i++) {
+        if (Number.isNaN(heights[i + 1]) || !baseHelper.isValidNumber(heights[i + 1])) {
+          throw new ArgumentIllegalException(PROP_IS_INVALID, {
+            prop: "rewardPerBlock.heights",
+            ...GenesisBlockAsset_Exception_Detail,
+          });
+        }
+        if (heights[i] >= heights[i + 1]) {
+          throw new ArgumentIllegalException(PROP_IS_INVALID, {
+            prop: "rewardPerBlock.heights",
+            ...GenesisBlockAsset_Exception_Detail,
+          });
+        }
+      }
+    }
+    for (let i = 0; i < rlen; i++) {
+      if (!baseHelper.isValidAssetNumber(rewards[i])) {
+        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          prop: "rewardPerBlock.rewards",
+          ...GenesisBlockAsset_Exception_Detail,
+        });
+      }
     }
 
     if (genesisAsset.nextRoundDelegates.length !== config.blockPerRound) {

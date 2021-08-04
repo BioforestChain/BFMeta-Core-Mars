@@ -3,7 +3,7 @@
   "height": 1,
   "blockSize": 175459,
   "timestamp": 0,
-  "signature": "5ed14358bb596a22e4820e4616dd4c48faa59e6a75152979c28aa2a42a7ab2d50f64a2291770587d76ed95d39b38f0ee79c50ffec7e37f75b3b1d7ad4c001200",
+  "signature": "8786ad082dc97f62939448bcfa2ec6bb73b52cbae49e853eb4adc662d124a29f3dca2634f2adb6347caca51d30ec0e30d81dece9ce74c98aecc574ab1c715706",
   "generatorPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
   "generatorEquity": "0",
   "numberOfTransactions": 437,
@@ -16766,7 +16766,7 @@
       "registerChainMinChainAsset": "10000000000000",
       "maxApplyAndConfirmedBlockHeightDiff": 57,
       "blockPerRound": 57,
-      "delegates": 57,
+      "delegates": 114,
       "whetherToAllowDelegateContinusElections": false,
       "forgeInterval": 128,
       "rewardPercent": {

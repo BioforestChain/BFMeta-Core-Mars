@@ -303,9 +303,7 @@ export class BaseHelper {
    *
    * @param value
    */
-  isPositiveBigFloatContainZero(
-    value: unknown,
-  ): value is {
+  isPositiveBigFloatContainZero(value: unknown): value is {
     /**分子 */
     numerator: string;
     /**分母 */
@@ -326,9 +324,7 @@ export class BaseHelper {
    *
    * @param value
    */
-  isPositiveBigFloatNotContainZero(
-    value: unknown,
-  ): value is {
+  isPositiveBigFloatNotContainZero(value: unknown): value is {
     /**分子 */
     numerator: string;
     /**分母 */
@@ -882,13 +878,16 @@ export class BaseHelper {
     }
     const hlen = heights.length;
     const rlen = rewards.length;
-    if (rlen === 0 && hlen === 0) {
-      return true;
-    }
-    if (rlen === 0) {
+    if (hlen < 1) {
       return false;
     }
-    if (hlen === 0) {
+    if (rlen < 2) {
+      return false;
+    }
+    if (rlen - hlen !== 1) {
+      return false;
+    }
+    if (rewards[rlen - 1] !== "0") {
       return false;
     }
     if (Number.isNaN(heights[0]) || !this.isValidNumber(heights[0])) {
@@ -904,13 +903,10 @@ export class BaseHelper {
         }
       }
     }
-    for (let i = 0; i < rlen - 1; i++) {
+    for (let i = 0; i < rlen; i++) {
       if (!this.isValidAssetNumber(rewards[i])) {
         return false;
       }
-    }
-    if (milestones.rewards.length - milestones.heights.length !== 1) {
-      return false;
     }
     return true;
   }

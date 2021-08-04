@@ -320,6 +320,9 @@ export const POSSESS_FROZEN_ASSET = (ec.next = "Account possess frozen asset whe
 /**expected actual function */
 export const GENESIS_DELEGATE_NOT_ENOUGH = (ec.next =
   "Genesis delegate not enough, at least {expected}, actual {actual} when {function}");
+/**prop target function */
+export const PROP_SHOULD_BE_ARRAY = (ec.next =
+  "{prop} in {target} should be an array when {function}");
 // #endregion
 export const errorCode = new Map(
   ec.errorCode.concat([

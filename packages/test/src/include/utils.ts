@@ -176,7 +176,7 @@ export const registerchainAssetData: BFChainCore.GenesisAssetJSON = {
   maxApplyAndConfirmedBlockHeightDiff: 57,
   tpowOfWorkExemptionBlocks: 57,
   blockPerRound: 57,
-  delegates: 57,
+  delegates: 114,
   whetherToAllowDelegateContinusElections: false,
   forgeInterval: 128,
   rewardPercent: {

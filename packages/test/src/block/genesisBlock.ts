@@ -42,8 +42,8 @@ const argv = optimist
   .alias("rm", "random magic")
   .alias("o", "out")
   .alias("p", "genesisblock out path")
-  .default("b", 57)
-  .default("f", 128)
+  .default("b", 5)
+  .default("f", 10)
   .default("ri", false)
   .default("rm", false).argv;
 console.log(argv);
@@ -578,9 +578,8 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
       throw new Error(`Ips too short min ${totalDelegates}`);
     }
     const delegatesSecret = config.delegatesSecret.slice(0, totalDelegates);
-    const eventEmitter: BFChainCore.ApplyTransactionEventEmitter<any> = new QueneEventEmitter<
-      any
-    >();
+    const eventEmitter: BFChainCore.ApplyTransactionEventEmitter<any> =
+      new QueneEventEmitter<any>();
     for (let i = 0; i < delegatesSecret.length; i++) {
       const secret = delegatesSecret[i];
       const address = await core.accountBaseHelper.getAddressFromSecret(secret);
@@ -689,10 +688,11 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
     const generatorPublicKey = await core.accountBaseHelper.getPublicKeyStringFromSecret(
       config.genesisSecret,
     );
-    const generatorSecondPublicKey = await core.accountBaseHelper.getPublicKeyStringFromSecondSecret(
-      config.genesisSecret,
-      config.genesisSecondSecret,
-    );
+    const generatorSecondPublicKey =
+      await core.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+        config.genesisSecret,
+        config.genesisSecondSecret,
+      );
     const generatorKeypair = await core.accountBaseHelper.createSecretKeypair(config.genesisSecret);
     const generatorSecondKeypair = await core.accountBaseHelper.createSecondSecretKeypair(
       config.genesisSecret,
