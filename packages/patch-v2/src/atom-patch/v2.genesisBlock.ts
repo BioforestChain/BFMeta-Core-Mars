@@ -8,6 +8,8 @@ import {
   SHOULD_BE,
   NOT_MATCH,
   PARAM_LOST,
+  GENESIS_DELEGATE_NOT_ENOUGH,
+  PROP_SHOULD_GTE_FIELD,
 } from "@bfchain/core-util-exception";
 const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "GenesisBlockFactory");
 
@@ -259,34 +261,71 @@ export class V2_GenesisBlockFactory extends GenesisBlockFactory {
       });
     }
 
-    if (!baseHelper.isPositiveInteger(genesisAsset.blockPerRound)) {
+    const { blockPerRound, forgeInterval, delegates, whetherToAllowDelegateContinusElections } =
+      genesisAsset;
+
+    if (!baseHelper.isPositiveInteger(blockPerRound)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `blockPerRound ${genesisAsset.blockPerRound}`,
+        prop: `blockPerRound ${blockPerRound}`,
         type: "positive integer",
         ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isPositiveInteger(genesisAsset.delegates)) {
+    if (blockPerRound < 2) {
+      throw new ArgumentIllegalException(PROP_SHOULD_GTE_FIELD, {
+        prop: "blockPerRound",
+        field: 2,
+        ...GenesisBlockAsset_Exception_Detail,
+      });
+    }
+
+    if (!baseHelper.isPositiveInteger(delegates)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `delegates ${genesisAsset.delegates}`,
+        prop: `delegates ${delegates}`,
         type: "positive integer",
         ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isBoolean(genesisAsset.whetherToAllowDelegateContinusElections)) {
+    if (!baseHelper.isBoolean(whetherToAllowDelegateContinusElections)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `whetherToAllowDelegateContinusElections ${genesisAsset.whetherToAllowDelegateContinusElections}`,
+        prop: `whetherToAllowDelegateContinusElections ${whetherToAllowDelegateContinusElections}`,
         type: "boolean",
         ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isPositiveInteger(genesisAsset.forgeInterval)) {
+    if (whetherToAllowDelegateContinusElections) {
+      if (delegates < blockPerRound) {
+        throw new ArgumentIllegalException(GENESIS_DELEGATE_NOT_ENOUGH, {
+          expected: blockPerRound,
+          actual: delegates,
+          ...GenesisBlockAsset_Exception_Detail,
+        });
+      }
+    } else {
+      if (delegates < blockPerRound * 2) {
+        throw new ArgumentIllegalException(GENESIS_DELEGATE_NOT_ENOUGH, {
+          expected: blockPerRound * 2,
+          actual: delegates,
+          ...GenesisBlockAsset_Exception_Detail,
+        });
+      }
+    }
+
+    if (!baseHelper.isPositiveInteger(forgeInterval)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `forgeInterval ${genesisAsset.forgeInterval}`,
+        prop: `forgeInterval ${forgeInterval}`,
         type: "positive integer",
+        ...GenesisBlockAsset_Exception_Detail,
+      });
+    }
+
+    if (forgeInterval < 5) {
+      throw new ArgumentIllegalException(PROP_SHOULD_GTE_FIELD, {
+        prop: `forgeInterval ${forgeInterval}`,
+        field: 5,
         ...GenesisBlockAsset_Exception_Detail,
       });
     }
@@ -421,10 +460,8 @@ export class V2_GenesisBlockFactory extends GenesisBlockFactory {
     const { growthFactor, participationRatio } = genesisAsset.transactionPowOfWorkConfig;
     // 校验交易POW的难度增长系数
     {
-      const {
-        denominator: growthFactorDenominator,
-        numerator: growthFactorNumerator,
-      } = growthFactor;
+      const { denominator: growthFactorDenominator, numerator: growthFactorNumerator } =
+        growthFactor;
       const growthFactorNumerator_BI = BigInt(growthFactorNumerator);
       const growthFactorDenominator_BI = BigInt(growthFactorDenominator);
       if (
