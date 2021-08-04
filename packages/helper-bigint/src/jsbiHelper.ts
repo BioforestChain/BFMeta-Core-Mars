@@ -22,7 +22,7 @@ function formatParam(param: BI) {
     return BigInt(param);
   } catch (err) {
     throw new ArgumentIllegalException(PROP_IS_INVALID, {
-      prop: "param",
+      prop: `param ${param}`,
       type: "jsbi|string|number",
       function: "formatParam",
     });

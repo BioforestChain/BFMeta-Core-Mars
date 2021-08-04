@@ -282,19 +282,19 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       });
     }
 
-    if (!genesisAsset.maxMultipleOfAssetAndMainAsset) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "maxMultipleOfAssetAndMainAsset",
-        ...GenesisBlockAsset_Exception_Detail,
-      });
-    }
-    if (!baseHelper.isPositiveBigFloatNotContainZero(genesisAsset.maxMultipleOfAssetAndMainAsset)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `maxMultipleOfAssetAndMainAsset ${genesisAsset.maxMultipleOfAssetAndMainAsset}`,
-        type: "big float not contain zero",
-        ...GenesisBlockAsset_Exception_Detail,
-      });
-    }
+    // if (!genesisAsset.maxMultipleOfAssetAndMainAsset) {
+    //   throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+    //     prop: "maxMultipleOfAssetAndMainAsset",
+    //     ...GenesisBlockAsset_Exception_Detail,
+    //   });
+    // }
+    // if (!baseHelper.isPositiveBigFloatNotContainZero(genesisAsset.maxMultipleOfAssetAndMainAsset)) {
+    //   throw new ArgumentIllegalException(PROP_IS_INVALID, {
+    //     prop: `maxMultipleOfAssetAndMainAsset ${genesisAsset.maxMultipleOfAssetAndMainAsset}`,
+    //     type: "big float not contain zero",
+    //     ...GenesisBlockAsset_Exception_Detail,
+    //   });
+    // }
 
     if (!genesisAsset.registerChainMinChainAsset) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {

@@ -3,11 +3,8 @@ declare namespace BFChainCore {
   type BlockModelConstructor = typeof import("./").Block;
 
   type GetBlockMessageAssetModel<T> = T extends BlockJSON<infer U> ? U : any;
-  type GetBlockAssetModel<T> = GetBlockMessageAssetModel<
-    T
-  > extends import("@bfchain/protobuf").Message<infer U>
-    ? U
-    : any;
+  type GetBlockAssetModel<T> =
+    GetBlockMessageAssetModel<T> extends import("@bfchain/protobuf").Message<infer U> ? U : any;
 
   type GetBlockAssetJSON<T extends Block> = T["ASSET_JSON_TYPE"];
 
