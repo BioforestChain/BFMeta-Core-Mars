@@ -228,9 +228,6 @@ export class ReplayBlockCore<T extends Block> {
       }
     }
 
-    // 校验区块体
-    await this.commonBlockVerify.verifyBlockBody(block, block.remark);
-
     // 绑定交易相关的信息
     const transactionBufferList = await this.insertTransactionsForReplay(
       block,

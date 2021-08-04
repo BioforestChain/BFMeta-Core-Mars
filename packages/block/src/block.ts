@@ -86,6 +86,22 @@ export class BlockCore {
     return block;
   }
 
+  /**重放区块 */
+  async replayBlock<T extends Block>(
+    block: T,
+    transactions: AsyncIterable<TransactionInBlock>,
+    eventEmitter?: BFChainCore.GenerateBlockEventEmitter,
+    options: BFChainCore.ReplayBlockOptions = {},
+  ) {
+    const blockFactory = this.getBlockFactoryFromHeight(block.height);
+
+    await blockFactory.verifyBlockBody(block, block.asset);
+
+    const replayResult = await blockFactory.replayBlock(block, transactions, eventEmitter, options);
+
+    return replayResult;
+  }
+
   // #region Block模型的序列化相关
   /**
    * blockJson => blockModel
@@ -150,11 +166,13 @@ import * as ATOM_BLOCKFAC from "./atom_block";
 export const BLOCK_FACTORY_TYPES_MAP = (() => {
   const KF = new Map<BLOCK_TYPES_BASE, BFChainCore.BlockFactoryConstructor>();
   const FK = new Map<BFChainCore.BlockFactoryConstructor, BLOCK_TYPES_BASE>();
-  ([
-    [BLOCK_TYPES_BASE.GENESIS, ATOM_BLOCKFAC.GenesisBlockFactory],
-    [BLOCK_TYPES_BASE.COMMON, ATOM_BLOCKFAC.CommonBlockFactory],
-    [BLOCK_TYPES_BASE.ROUNDEND, ATOM_BLOCKFAC.RoundLastBlockFactory],
-  ] as [BLOCK_TYPES_BASE, BFChainCore.BlockFactoryConstructor][]).forEach(([K, F]) => {
+  (
+    [
+      [BLOCK_TYPES_BASE.GENESIS, ATOM_BLOCKFAC.GenesisBlockFactory],
+      [BLOCK_TYPES_BASE.COMMON, ATOM_BLOCKFAC.CommonBlockFactory],
+      [BLOCK_TYPES_BASE.ROUNDEND, ATOM_BLOCKFAC.RoundLastBlockFactory],
+    ] as [BLOCK_TYPES_BASE, BFChainCore.BlockFactoryConstructor][]
+  ).forEach(([K, F]) => {
     KF.set(K, F);
     FK.set(F, K);
   });

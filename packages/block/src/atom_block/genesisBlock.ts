@@ -17,6 +17,7 @@ import {
   NOT_MATCH,
   PARAM_LOST,
   GENESIS_DELEGATE_NOT_ENOUGH,
+  PROP_SHOULD_GTE_FIELD,
 } from "@bfchain/core-util-exception";
 import { Injectable, Inject } from "@bfchain/util";
 import { BlockGeneratorCalculator } from "./blockGeneratorCalculator";
@@ -339,12 +340,21 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       });
     }
 
-    const { blockPerRound, delegates, whetherToAllowDelegateContinusElections } = genesisAsset;
+    const { blockPerRound, forgeInterval, delegates, whetherToAllowDelegateContinusElections } =
+      genesisAsset;
 
     if (!baseHelper.isPositiveInteger(blockPerRound)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: `blockPerRound ${blockPerRound}`,
         type: "positive integer",
+        ...GenesisBlockAsset_Exception_Detail,
+      });
+    }
+
+    if (blockPerRound < 2) {
+      throw new ArgumentIllegalException(PROP_SHOULD_GTE_FIELD, {
+        prop: "blockPerRound",
+        field: 2,
         ...GenesisBlockAsset_Exception_Detail,
       });
     }
@@ -383,10 +393,18 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       }
     }
 
-    if (!baseHelper.isPositiveInteger(genesisAsset.forgeInterval)) {
+    if (!baseHelper.isPositiveInteger(forgeInterval)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `forgeInterval ${genesisAsset.forgeInterval}`,
+        prop: `forgeInterval ${forgeInterval}`,
         type: "positive integer",
+        ...GenesisBlockAsset_Exception_Detail,
+      });
+    }
+
+    if (forgeInterval < 5) {
+      throw new ArgumentIllegalException(PROP_SHOULD_GTE_FIELD, {
+        prop: `forgeInterval ${forgeInterval}`,
+        field: 5,
         ...GenesisBlockAsset_Exception_Detail,
       });
     }

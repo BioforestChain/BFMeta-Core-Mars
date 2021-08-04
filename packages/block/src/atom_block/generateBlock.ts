@@ -101,7 +101,7 @@ export class GenerateBlockCore<T extends Block> {
       ) {
         /// 主动生成掉块信息
         const lastBlock = await this.blockHelper.forceGetBlockByHeight(body.height - 1);
-        body.roundOfflineGeneratersHashMap = await (
+        body.roundOfflineGeneratersHashMap = (
           await this.blockGeneratorCalculator.calcGenerateBlockDelegate(lastBlock, {
             toTimestamp: body.timestamp,
           })

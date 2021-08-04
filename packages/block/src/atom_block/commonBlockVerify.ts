@@ -1,4 +1,3 @@
-import { Block } from "@bfchain/core-model-block";
 import {
   BlockHelper,
   BaseHelper,
@@ -13,8 +12,10 @@ import {
   NOT_MATCH,
   ALREADY_EXIST,
 } from "@bfchain/core-util-exception";
-import { cacheGetter, Injectable, Inject } from "@bfchain/util";
 import { Writer } from "@bfchain/protobuf";
+import { Block } from "@bfchain/core-model-block";
+import { cacheGetter, Injectable, Inject } from "@bfchain/util";
+
 const { ArgumentIllegalException, ConsensusException } = CoreExceptionGenerator(
   "CONTROLLER",
   "_blockbase",
