@@ -62,8 +62,7 @@ export const CHAIN_CHANNEL_GROUP_ARGS = {
 @Resolvable()
 export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = ChainChannel>
   extends ChainChannelBase
-  implements BFChainCore.ChainChannelGroup<DH>, AfterInit, OnInit
-{
+  implements BFChainCore.ChainChannelGroup<DH>, AfterInit, OnInit {
   get canQueryTransactions() {
     for (const cc of this.chainChannelSet) {
       if (cc.canQueryTransactions) {
@@ -235,9 +234,9 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     const sorter =
       taskResponseCmd !== undefined
         ? (a: DH, b: DH) =>
-            a.delay * WCWM.forceGet(a) +
-            a.getApiMaybeQueueTime(taskResponseCmd) -
-            (b.delay * WCWM.forceGet(b) + b.getApiMaybeQueueTime(taskResponseCmd))
+          a.delay * WCWM.forceGet(a) +
+          a.getApiMaybeQueueTime(taskResponseCmd) -
+          (b.delay * WCWM.forceGet(b) + b.getApiMaybeQueueTime(taskResponseCmd))
         : (a: DH, b: DH) => a.delay * WCWM.forceGet(a) - b.delay * WCWM.forceGet(b);
 
     //#region 可用节点的队列管理
@@ -482,9 +481,8 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     const { offset, limit: totalLength, ...baseQueryCondition } = query;
     const limit = baseQueryCondition.signature ? 1 : totalLength || Infinity;
 
-    const parallelTaskId = `Group(${this.groupName}) queryTransactions-${
-      Date.now() + Math.random()
-    }`;
+    const parallelTaskId = `Group(${this.groupName}) queryTransactions-${Date.now() + Math.random()
+      }`;
     const customChannelFilter = opts?.channelFilter || (() => true);
     const { requestChainChannel } = this.$startParallelTask(parallelTaskId, {
       channelFilter: (cc) => cc.canQueryTransactions && customChannelFilter(cc),
@@ -679,6 +677,11 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                     queryer.removeChainChannelByResult(res);
                     // 任务失败，抛出异常
                     throw res.error;
+                  } else if (res.status === RESPONSE_STATUS.idempotentError) {
+                    // 移除无效的结果
+                    queryer.removeChainChannelByResult(res);
+                    // 任务失败，抛出异常
+                    throw res.error;
                   }
                 } catch (err) {
                   queryer.removeChainChannelByResult(err);
@@ -772,9 +775,8 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     const { offset, limit: totalLength, ...baseQueryCondition } = query;
     const limit = baseQueryCondition.signature ? 1 : totalLength || Infinity;
 
-    const parallelTaskId = `Group(${this.groupName}) indexTransactions-${
-      Date.now() + Math.random()
-    }`;
+    const parallelTaskId = `Group(${this.groupName}) indexTransactions-${Date.now() + Math.random()
+      }`;
     const customChannelFilter = opts?.channelFilter || (() => true);
     const { requestChainChannel } = this.$startParallelTask(parallelTaskId, {
       channelFilter: (cc) => cc.canIndexTransactions && customChannelFilter(cc),
@@ -969,6 +971,11 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                     queryer.removeChainChannelByResult(res);
                     // 任务失败，抛出异常
                     throw res.error;
+                  } else if (res.status === RESPONSE_STATUS.idempotentError) {
+                    // 移除无效的结果
+                    queryer.removeChainChannelByResult(res);
+                    // 任务失败，抛出异常
+                    throw res.error;
                   }
                 } catch (err) {
                   queryer.removeChainChannelByResult(err);
@@ -1158,9 +1165,8 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
 
     const resultGenerator = _resultGenerator || new AsyncIteratorGenerator();
 
-    const parallelTaskId = `Group(${this.groupName}) downloadTransactions-${
-      Date.now() + Math.random()
-    }`;
+    const parallelTaskId = `Group(${this.groupName}) downloadTransactions-${Date.now() + Math.random()
+      }`;
     const customChannelFilter = opts?.channelFilter || (() => true);
     const { requestChainChannel } = this.$startParallelTask(parallelTaskId, {
       channelFilter: (cc) => cc.canDownloadTransactions && customChannelFilter(cc),
@@ -1299,6 +1305,11 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                   times++;
                   return false;
                 } else if (res.status === RESPONSE_STATUS.error) {
+                  // 移除无效的结果
+                  requester.removeChainChannelByResult(res);
+                  // 任务失败，抛出异常
+                  throw res.error;
+                } else if (res.status === RESPONSE_STATUS.idempotentError) {
                   // 移除无效的结果
                   requester.removeChainChannelByResult(res);
                   // 任务失败，抛出异常
@@ -1460,11 +1471,11 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
   ) {
     let initedArgs:
       | readonly [
-          DUPLEX_API_CMD,
-          Uint8Array,
-          (params: Uint8Array | ArrayBuffer) => NewTransactionReturnModel,
-          BFChainCore.ChannelRequestOptions<DH> | undefined,
-        ]
+        DUPLEX_API_CMD,
+        Uint8Array,
+        (params: Uint8Array | ArrayBuffer) => NewTransactionReturnModel,
+        BFChainCore.ChannelRequestOptions<DH> | undefined,
+      ]
       | undefined;
     const startTime = this.timeHelper.now();
     const resultList = [] as BFChainCore.BroadcastNewTransactionEvents<DH>["broadcasted"]["in"][];
@@ -1520,8 +1531,8 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                 resultPo &&
                 resultPo.sleepTime > 0 &&
                 needWaitTime +
-                  chainChannel.delay / 2 /* 这里只考虑发送的时长，所以只需要一般的延迟 */ >
-                  resultPo.sleepTime
+                chainChannel.delay / 2 /* 这里只考虑发送的时长，所以只需要一般的延迟 */ >
+                resultPo.sleepTime
               ) {
                 log("chainChannel(%s) need wait too much time, so skip in resultList.");
                 /// 这里直接独立去作业
@@ -1600,11 +1611,11 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
   ) {
     let initedArgs:
       | readonly [
-          DUPLEX_API_CMD,
-          Uint8Array,
-          (params: Uint8Array | ArrayBuffer) => NewTransactionReturnModel,
-          BFChainCore.ChannelRequestOptions<DH> | undefined,
-        ]
+        DUPLEX_API_CMD,
+        Uint8Array,
+        (params: Uint8Array | ArrayBuffer) => NewTransactionReturnModel,
+        BFChainCore.ChannelRequestOptions<DH> | undefined,
+      ]
       | undefined;
 
     let chainChannelList: DH[] = [];
@@ -1638,7 +1649,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       try {
         broadCount++;
         chainChannel._sendWithBinaryData(initedArgs[0], initedArgs[1]);
-      } catch (err) {}
+      } catch (err) { }
     }
     const endTime = this.timeHelper.now();
     event && event.emit("endBroadcast", { duraction: endTime - startTime });
@@ -1782,11 +1793,11 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
   ) {
     let initedArgs:
       | readonly [
-          DUPLEX_API_CMD,
-          Uint8Array,
-          (params: Uint8Array | ArrayBuffer) => NewBlockReturn,
-          BFChainCore.ChannelRequestOptions<DH> | undefined,
-        ]
+        DUPLEX_API_CMD,
+        Uint8Array,
+        (params: Uint8Array | ArrayBuffer) => NewBlockReturn,
+        BFChainCore.ChannelRequestOptions<DH> | undefined,
+      ]
       | undefined;
     let chainChannelList: DH[] = [];
     if (opts && opts.directAddress && opts.directAddress.size > 0) {
@@ -1852,11 +1863,11 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
   ) {
     let initedArgs:
       | readonly [
-          DUPLEX_API_CMD,
-          Uint8Array,
-          (params: Uint8Array | ArrayBuffer) => NewBlockReturn,
-          BFChainCore.ChannelRequestOptions<DH> | undefined,
-        ]
+        DUPLEX_API_CMD,
+        Uint8Array,
+        (params: Uint8Array | ArrayBuffer) => NewBlockReturn,
+        BFChainCore.ChannelRequestOptions<DH> | undefined,
+      ]
       | undefined;
 
     let chainChannelList: DH[] = [];
@@ -1882,7 +1893,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       try {
         broadCount++;
         chainChannel._sendWithBinaryData(initedArgs[0], initedArgs[1]);
-      } catch (err) {}
+      } catch (err) { }
     }
     return broadCount;
   }
@@ -2086,7 +2097,7 @@ class _AddChainChannelOptions<
   DH extends BFChainCore.SimpleChainChannel,
   GR extends GroupRequesterBuilder<DH, any>,
   DATA extends {},
-> implements BFChainCore.ChannelRequestOptions<DH>
+  > implements BFChainCore.ChannelRequestOptions<DH>
 {
   constructor(
     private exmBuilder: {
@@ -2099,7 +2110,7 @@ class _AddChainChannelOptions<
       baseTime?: number,
     ) => number,
     private resultPo?: PromiseOut<unknown>,
-  ) {}
+  ) { }
   @cacheGetter
   private get _exm() {
     return new EasyMap<DH, Error>((cc) => new TimeOutException(this.exmBuilder.timeout(this, cc)));
