@@ -1,5 +1,5 @@
 {
-  "name": "@bfchain/core-patch",
+  "name": "@bfchain/core-patch-v3",
   "version": "5.22.49",
   "main": "build/cjs/index.js",
   "type": "commonjs",
@@ -8,10 +8,10 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-patch-1": "5.22.49",
+    "@bfchain/core-block": "5.22.49",
+    "@bfchain/core-helper": "5.22.49",
     "@bfchain/core-patch-base": "5.22.49",
-    "@bfchain/core-patch-v2": "5.22.49",
-    "@bfchain/core-patch-v3": "5.22.49",
+    "@bfchain/core-transaction-logic-verifier": "5.22.49",
     "@bfchain/core-typings": "5.22.49"
   },
   "types": "build/cjs/index.d.ts"

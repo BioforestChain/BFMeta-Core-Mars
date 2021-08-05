@@ -9,16 +9,16 @@
   },
   "references": [
     {
-      "path": "../patch-1/tsconfig.esm.json"
+      "path": "../block/tsconfig.esm.json"
+    },
+    {
+      "path": "../helper/tsconfig.esm.json"
     },
     {
       "path": "../patch-base/tsconfig.esm.json"
     },
     {
-      "path": "../patch-v2/tsconfig.esm.json"
-    },
-    {
-      "path": "../patch-v3/tsconfig.esm.json"
+      "path": "../transaction_logic_verifier/tsconfig.esm.json"
     },
     {
       "path": "../typings/tsconfig.esm.json"

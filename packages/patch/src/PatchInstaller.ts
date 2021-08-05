@@ -9,6 +9,7 @@ import {
 } from "@bfchain/util";
 import { PatchBase } from "@bfchain/core-patch-base";
 import { V2_Patch } from "@bfchain/core-patch-v2";
+import { V3_Patch } from "@bfchain/core-patch-v3";
 import { ConfigHelper } from "@bfchain/core-helper";
 
 type Progress = EventEmitter<{ progress: [PatchBase]; done: []; error: [unknown] }>;
@@ -23,6 +24,7 @@ export class PatchInstaller
   bfAfterInit() {
     /// 静态载入
     this.installPatch(V2_Patch);
+    this.installPatch(V3_Patch);
     // this.installPatch(Patch_1_2);
   }
 
