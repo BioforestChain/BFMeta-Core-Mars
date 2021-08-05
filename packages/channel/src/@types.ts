@@ -418,18 +418,6 @@ declare namespace BFChainCore {
       _resultGenerator?: import("@bfchain/util").AsyncIteratorGenerator<TransactionInBlock<T>>,
     ): import("@bfchain/util").AsyncIteratorGenerator<TransactionInBlock<T>>;
     /**
-     * 查询交易
-     */
-    queryTransactionsV2<T extends Transaction = Transaction>(
-      query: QueryTransactionArgJSON["query"],
-      sort?: QueryTransactionArgJSON["sort"],
-      opts?: ChannelGroupRequestOptions<CC>,
-      _indexesResultGenerator?: import("@bfchain/util").AsyncIteratorGenerator<BFChainCore.TransactionIndexJSON>,
-      _transactionResultGenerator?: import("@bfchain/util").AsyncIteratorGenerator<
-        TransactionInBlock<T>
-      >,
-    ): import("@bfchain/util").AsyncIteratorGenerator<TransactionInBlock<T>>;
-    /**
      * 广播交易体
      */
     broadcastTransaction(
