@@ -1,3 +1,4 @@
+/// <reference lib="dom"/>
 import { ByteArray } from "./array";
 import { validateBase64, validateHex } from "./validate";
 

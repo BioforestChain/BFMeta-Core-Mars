@@ -6,7 +6,8 @@
   },
   "references": [
     {
-      "path": "../typings/tsconfig.json"
+      "path": "../typings/tsconfig.json",
+      "lib": ["es6", "es2015.iterable", "esnext.asynciterable", "dom"]
     }
   ],
   "files": [

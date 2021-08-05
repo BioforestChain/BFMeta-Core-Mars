@@ -4,7 +4,7 @@
   "workspaces": [
     "packages/*"
   ],
-  "version": "mono",
+  "version": "0.0.0",
   "description": "",
   "bdkMono": {
     "generateConfigFiles": [
@@ -15,7 +15,7 @@
         "to": "$PACKAGE/tsconfig.json"
       },
       {
-        "packages": "*,-test",
+        "packages": "*,-test,-util-exception",
         "type": "mergejson",
         "from": "$ROOT_PROJECT/config/tsconfig_template/tsconfig.esm-es5.json",
         "to": "$PACKAGE/tsconfig.esm-es5.json"

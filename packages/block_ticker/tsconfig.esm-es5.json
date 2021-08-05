@@ -24,7 +24,7 @@
       "path": "../typings/tsconfig.esm-es5.json"
     },
     {
-      "path": "../util-exception/tsconfig.esm-es5.json"
+      "path": "../util-exception/tsconfig.json"
     }
   ]
 }

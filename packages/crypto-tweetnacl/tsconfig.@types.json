@@ -13,7 +13,13 @@
   },
   "references": [
     {
-      "path": "../typings/tsconfig.@types.json"
+      "path": "../typings/tsconfig.@types.json",
+      "lib": [
+        "es6",
+        "es2015.iterable",
+        "esnext.asynciterable",
+        "dom"
+      ]
     }
   ]
 }
