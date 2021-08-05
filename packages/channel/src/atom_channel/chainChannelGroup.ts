@@ -47,8 +47,17 @@ import { BaseHelper, ChainTimeHelper, ConfigHelper, TransactionHelper } from "@b
 import type { PromiseTimeout } from "./PromiseTimeout";
 import { IntSet } from "./IntSet";
 
-const { AbortException, InterruptedException, error, success, info, warn, log, TimeOutException } =
-  CoreExceptionGenerator("channel", "chainChannelGroup");
+const {
+  AbortException,
+  InterruptedException,
+  error,
+  success,
+  info,
+  warn,
+  log,
+  TimeOutException,
+  IdempotentException,
+} = CoreExceptionGenerator("channel", "chainChannelGroup");
 
 export const CHAIN_CHANNEL_GROUP_ARGS = {
   GROUP_NAME: Symbol("groupName"),
@@ -682,8 +691,9 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                   } else if (res.status === RESPONSE_STATUS.idempotentError) {
                     // 移除无效的结果
                     queryer.removeChainChannelByResult(res);
-                    // 任务失败，抛出异常
-                    throw res.error;
+                    // 节点幂等保护，抛出异常
+                    const err = res.error!;
+                    throw new IdempotentException(err.message, err.detail, err.CODE);
                   }
 
                   res.status;
@@ -694,18 +704,22 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                     throw err;
                   }
                   if (!TimeOutException.is(err)) {
-                    /// 如果时超时，默认不打印，因为超时时本地没收到数据的问题
-                    error(
-                      err,
-                      "[GROUP]:",
-                      this.groupName,
-                      "[QUERY]:",
-                      query,
-                      "[OFFSET]:",
-                      task_offset,
-                      "[TIMES]:",
-                      times,
-                    );
+                    if (IdempotentException.is(err)) {
+                      warn("节点幂等性冲突", err.message);
+                    } else {
+                      /// 如果时超时，默认不打印，因为超时时本地没收到数据的问题
+                      error(
+                        err,
+                        "[GROUP]:",
+                        this.groupName,
+                        "[QUERY]:",
+                        query,
+                        "[OFFSET]:",
+                        task_offset,
+                        "[TIMES]:",
+                        times,
+                      );
+                    }
                   }
 
                   /// 如果异常次数过多，那么有必要终结这个查询
@@ -979,8 +993,9 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                   } else if (res.status === RESPONSE_STATUS.idempotentError) {
                     // 移除无效的结果
                     queryer.removeChainChannelByResult(res);
-                    // 任务失败，抛出异常
-                    throw res.error;
+                    // 节点幂等保护，抛出异常
+                    const err = res.error!;
+                    throw new IdempotentException(err.message, err.detail, err.CODE);
                   }
 
                   $safeEnd(res.status);
@@ -991,18 +1006,22 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                     throw err;
                   }
                   if (!TimeOutException.is(err)) {
-                    /// 如果时超时，默认不打印，因为超时时本地没收到数据的问题
-                    error(
-                      err,
-                      "[GROUP]:",
-                      this.groupName,
-                      "[QUERY]:",
-                      query,
-                      "[OFFSET]:",
-                      task_offset,
-                      "[TIMES]:",
-                      times,
-                    );
+                    if (IdempotentException.is(err)) {
+                      warn("节点幂等性冲突", err.message);
+                    } else {
+                      /// 如果时超时，默认不打印，因为超时时本地没收到数据的问题
+                      error(
+                        err,
+                        "[GROUP]:",
+                        this.groupName,
+                        "[QUERY]:",
+                        query,
+                        "[OFFSET]:",
+                        task_offset,
+                        "[TIMES]:",
+                        times,
+                      );
+                    }
                   }
 
                   /// 如果异常次数过多，那么有必要终结这个查询
@@ -1320,8 +1339,9 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                 } else if (res.status === RESPONSE_STATUS.idempotentError) {
                   // 移除无效的结果
                   requester.removeChainChannelByResult(res);
-                  // 任务失败，抛出异常
-                  throw res.error;
+                  // 节点幂等保护，抛出异常
+                  const err = res.error!;
+                  throw new IdempotentException(err.message, err.detail, err.CODE);
                 }
               } catch (err) {
                 requester.removeChainChannelByResult(err);
@@ -1330,16 +1350,20 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                   throw err;
                 }
                 if (!TimeOutException.is(err)) {
-                  /// 如果时超时，默认不打印，因为超时时本地没收到数据的问题
-                  error(
-                    err,
-                    "[GROUP]:",
-                    this.groupName,
-                    "[TINDEXES]:",
-                    hi_slice,
-                    "[TIMES]:",
-                    times,
-                  );
+                  if (IdempotentException.is(err)) {
+                    warn("节点幂等性冲突", err.message);
+                  } else {
+                    /// 如果时超时，默认不打印，因为超时时本地没收到数据的问题
+                    error(
+                      err,
+                      "[GROUP]:",
+                      this.groupName,
+                      "[TINDEXES]:",
+                      hi_slice,
+                      "[TIMES]:",
+                      times,
+                    );
+                  }
                 }
 
                 /// 如果异常次数过多，那么有必要终结这个查询
