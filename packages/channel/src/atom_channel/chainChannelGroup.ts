@@ -696,7 +696,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                     throw new IdempotentException(err.message, err.detail, err.CODE);
                   }
 
-                  res.status;
+                  $safeEnd(res.status);
                 } catch (err) {
                   queryer.removeChainChannelByResult(err);
                   if (AbortException.is(err) || resultGenerator.is_done) {
@@ -1343,6 +1343,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                   const err = res.error!;
                   throw new IdempotentException(err.message, err.detail, err.CODE);
                 }
+                $safeEnd(res.status);
               } catch (err) {
                 requester.removeChainChannelByResult(err);
                 if (AbortException.is(err) || resultGenerator.is_done) {
