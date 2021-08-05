@@ -28,8 +28,10 @@ export class ChannelCore {
   private _groupNameAcc = 1;
   /**传入一组双工通讯的链接，返回一个批量双工通讯管理器 */
   groupChannel<
-    DH extends BFChainCore.SimpleChainChannel,
-    GC extends BFChainUtil.Constructor<ChainChannelGroup<DH>>,
+    DH extends BFChainCore.SimpleChainChannel = BFChainCore.SimpleChainChannel,
+    GC extends BFChainUtil.Constructor<ChainChannelGroup<DH>> = BFChainUtil.Constructor<
+      ChainChannelGroup<DH>
+    >,
   >(
     chainChannelList: Iterable<DH>,
     groupName = `G${this._groupNameAcc++}`,
