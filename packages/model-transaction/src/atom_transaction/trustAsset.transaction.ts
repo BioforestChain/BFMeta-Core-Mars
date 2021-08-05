@@ -9,7 +9,8 @@ import { Type, Field } from "@bfchain/protobuf";
 @Type.d("TrustAssetTransaction")
 export class TrustAssetTransaction
   extends Transaction<BFChainCore.TrustAssetAssetJSON>
-  implements BFChainCore.TrustAssetTransactionJSON {
+  implements BFChainCore.TrustAssetTransactionJSON
+{
   toJSON!: () => BFChainCore.TrustAssetTransactionJSON;
   recipientId!: string;
   @Field.d(TrustAssetTransaction.INC++, TrustAssetAssetModel)

@@ -7,8 +7,10 @@ import { Type, Field } from "@bfchain/protobuf";
  *
  */
 @Type.d("GenesisBlock")
-export class GenesisBlock extends Block<BFChainCore.GenesisBlockAssetJSON>
-  implements BFChainCore.GenesisBlockJSON {
+export class GenesisBlock
+  extends Block<BFChainCore.GenesisBlockAssetJSON>
+  implements BFChainCore.GenesisBlockJSON
+{
   toJSON!: () => BFChainCore.GenesisBlockJSON;
   @Field.d(GenesisBlock.INC++, GenesisBlockAssetModel)
   asset!: GenesisBlockAssetModel;

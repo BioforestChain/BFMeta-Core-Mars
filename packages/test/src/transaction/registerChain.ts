@@ -490,9 +490,10 @@ const getTxs = (address: string) => {
   }
 
   async function getGenesisBlockAsync() {
-    const generatorPublicKey = await registerBfchainCore.accountBaseHelper.getPublicKeyStringFromSecret(
-      config.genesisSecret,
-    );
+    const generatorPublicKey =
+      await registerBfchainCore.accountBaseHelper.getPublicKeyStringFromSecret(
+        config.genesisSecret,
+      );
     //#region 模拟账户表的变更
     const registerChainAccountAssetMap = new Map<string, bigint>();
     registerChainAccountAssetMap.set(
@@ -569,9 +570,8 @@ const getTxs = (address: string) => {
 
     const height = 1;
     const blockTrsItems: TransactionInBlock[] = [];
-    const eventEmitter: BFChainCore.ApplyTransactionEventEmitter<any> = new QueneEventEmitter<
-      any
-    >();
+    const eventEmitter: BFChainCore.ApplyTransactionEventEmitter<any> =
+      new QueneEventEmitter<any>();
     const taskname = (eventEmitter.taskname = `test-registerChainGenesisBlock-${height}`);
     const statisticsInfo = registerStatistics.forceGetStatisticsInfoByBlock(
       taskname,
@@ -726,10 +726,11 @@ const getTxs = (address: string) => {
         sender.secret,
         sender.secondSecret,
       );
-      data.senderSecondPublicKey = await fullBfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
-        sender.secret,
-        sender.secondSecret,
-      );
+      data.senderSecondPublicKey =
+        await fullBfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+          sender.secret,
+          sender.secondSecret,
+        );
     }
 
     const genesisBlock = await getGenesisBlockAsync();
@@ -781,9 +782,8 @@ const getTxs = (address: string) => {
     const trsWithIndex = await getRegisterChainTransaction(sender);
     const height = 7;
     const blockTrsItems: TransactionInBlock[] = [];
-    const eventEmitter: BFChainCore.ApplyTransactionEventEmitter<any> = new QueneEventEmitter<
-      any
-    >();
+    const eventEmitter: BFChainCore.ApplyTransactionEventEmitter<any> =
+      new QueneEventEmitter<any>();
     const statisticsInfo = statistics.forceGetStatisticsInfoByBlock(
       `core-genesisblock-${height}`,
       "generateCommonBlock",

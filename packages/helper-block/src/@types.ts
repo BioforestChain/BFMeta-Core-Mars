@@ -58,12 +58,11 @@ declare namespace BFChainCore {
     replayingBlock?: Block;
     blockGetterHelper: BlockGetterHelperSimpleInterface;
   };
-  type CurrentReplayingBlockInfo<
-    CC extends SimpleChainChannel
-  > = CurrentReplayingBlockSimpleInfo & {
-    blockGetterHelper: BlockGetterHelperInterface<CC>;
-    chainChannelGroup?: ChainChannelGroup<CC>;
-  };
+  type CurrentReplayingBlockInfo<CC extends SimpleChainChannel> =
+    CurrentReplayingBlockSimpleInfo & {
+      blockGetterHelper: BlockGetterHelperInterface<CC>;
+      chainChannelGroup?: ChainChannelGroup<CC>;
+    };
 
   type ForSortAccountInfo = {
     productivity: number;

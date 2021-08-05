@@ -8,7 +8,8 @@ import { Fraction } from "@bfchain/core-model-common";
 @Type.d("FeeRateModel")
 export class FeeRateModel
   extends Message<FeeRateModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.FeeRateJSON> {
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.FeeRateJSON>
+{
   /**区块时间间隔 */
   @Field.d(1, Fraction)
   senderPaidFeeRate!: Fraction;

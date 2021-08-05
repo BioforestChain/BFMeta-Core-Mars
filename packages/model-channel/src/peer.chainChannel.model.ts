@@ -22,7 +22,8 @@ const SERVICEPEERINFO_BUFFER_WM = new WeakMap<ServicePeerInfoModel, Uint8Array>(
 @Type.d("GetPeerInfoArg")
 export class GetPeerInfoArgModel
   extends Message<GetPeerInfoArgModel>
-  implements BFChainCore.JSONToModelType<BFChainCore.GetPeerInfoArgJSON> {
+  implements BFChainCore.JSONToModelType<BFChainCore.GetPeerInfoArgJSON>
+{
   /**申请分配的UID */
   @Field.d(1, "uint32", "optional")
   uid?: number;
@@ -36,7 +37,8 @@ export class GetPeerInfoArgModel
 @Type.d("PeerConsensus")
 export class PeerConsensusModel
   extends Message<PeerConsensusModel>
-  implements BFChainCore.JSONToModelType<BFChainCore.PeerConsensusJSON> {
+  implements BFChainCore.JSONToModelType<BFChainCore.PeerConsensusJSON>
+{
   /**节点的时间 */
   @Field.d(1, "uint64")
   peerTimeLong!: Long;
@@ -59,7 +61,7 @@ export class PeerConsensusModel
     if (res !== object) {
       object.peerTime && (res.peerTime = object.peerTime);
     }
-    return (res as unknown) as T;
+    return res as unknown as T;
   }
 }
 
@@ -67,7 +69,8 @@ export class PeerConsensusModel
 @Type.d("ServicePeerInfo")
 export class ServicePeerInfoModel
   extends Message<ServicePeerInfoModel>
-  implements BFChainCore.JSONToModelType<BFChainCore.ServicePeerInfoJSON> {
+  implements BFChainCore.JSONToModelType<BFChainCore.ServicePeerInfoJSON>
+{
   static INC = 1;
   @Field.d(ServicePeerInfoModel.INC++, "uint32")
   peerInfoDelay!: number;
@@ -173,7 +176,7 @@ export class ServicePeerInfoModel
       object.systemDelegateVote && (res.systemDelegateVote = object.systemDelegateVote);
       object.dappOnChainBuy && (res.dappOnChainBuy = object.dappOnChainBuy);
     }
-    return (res as unknown) as T;
+    return res as unknown as T;
   }
 }
 
@@ -295,7 +298,8 @@ export class ServicePeerInfoModel
 @Type.d("BlockchainStatus")
 export class BlockchainStatusModel<S extends BLOCKCHAIN_STATUS = any>
   extends Message<BlockchainStatusModel<S>>
-  implements BFChainCore.JSONToModelType<BFChainCore.BlockchainStatusJSON<S>> {
+  implements BFChainCore.JSONToModelType<BFChainCore.BlockchainStatusJSON<S>>
+{
   static INC = 1;
   @Field.d(BlockchainStatusModel.INC++, BlockchainRebuildingProgressEventModel, "optional")
   rebuildingProgressEvent?: BlockchainRebuildingProgressEventModel;
@@ -425,7 +429,8 @@ export class BlockchainStatusModel<S extends BLOCKCHAIN_STATUS = any>
 @Type.d("PeerInfo")
 export class PeerInfoModel
   extends Message<PeerInfoModel>
-  implements BFChainCore.JSONToModelType<BFChainCore.PeerInfoJSON> {
+  implements BFChainCore.JSONToModelType<BFChainCore.PeerInfoJSON>
+{
   static INC = 1;
   @Field.d(PeerInfoModel.INC++, "uint32")
   uid!: number;
@@ -545,14 +550,15 @@ export class PeerInfoModel
       }
       res.servicePeerInfo = results;
     }
-    return (res as unknown) as T;
+    return res as unknown as T;
   }
 }
 
 @Type.d("GetPeerInfoReturn")
 export class GetPeerInfoReturnModel
   extends CommonResponse
-  implements BFChainCore.JSONToModelType<BFChainCore.GetPeerInfoReturnJSON> {
+  implements BFChainCore.JSONToModelType<BFChainCore.GetPeerInfoReturnJSON>
+{
   @Field.d(GetPeerInfoReturnModel.INC++, PeerInfoModel, "optional")
   peerInfo?: PeerInfoModel;
   toJSON() {

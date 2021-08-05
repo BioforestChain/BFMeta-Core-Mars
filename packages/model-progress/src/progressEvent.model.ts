@@ -24,7 +24,8 @@ export enum PROGRESS_EVENT_MODE {
 @Type.d("ProgressEvent")
 export class ProgressEventModel<EVENT extends string>
   extends Message<ProgressEventModel<EVENT>>
-  implements BFChainCore.JSONToModelType<BFChainCore.ProgressEventJSON<EVENT>> {
+  implements BFChainCore.JSONToModelType<BFChainCore.ProgressEventJSON<EVENT>>
+{
   static INC = 1;
   @Field.d(ProgressEventModel.INC++, "string")
   type!: EVENT;
@@ -73,6 +74,6 @@ export class ProgressEventModel<EVENT extends string>
     if (object.buffer) {
       res.buffer = object.buffer;
     }
-    return (res as unknown) as T;
+    return res as unknown as T;
   }
 }

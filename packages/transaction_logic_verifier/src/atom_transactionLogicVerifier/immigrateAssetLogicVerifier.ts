@@ -93,11 +93,8 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       }
     }
 
-    const {
-      sourceChainMagic,
-      assetType,
-      sourceChainName,
-    } = emigrateAssetTransaction.asset.emigrateAsset;
+    const { sourceChainMagic, assetType, sourceChainName } =
+      emigrateAssetTransaction.asset.emigrateAsset;
 
     const memchain = await accountGetterHelper.getChain(sourceChainMagic);
     if (!memchain) {

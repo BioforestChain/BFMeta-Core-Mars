@@ -52,10 +52,11 @@ async function getTrustAssetTransaction(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
-      sender.secret,
-      sender.secondSecret,
-    );
+    data.senderSecondPublicKey =
+      await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+        sender.secret,
+        sender.secondSecret,
+      );
   }
   trustees.push(sender.address);
   trustees.push(recipientId);
@@ -113,10 +114,11 @@ async function getSignForAssetTransaction(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
-      sender.secret,
-      sender.secondSecret,
-    );
+    data.senderSecondPublicKey =
+      await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+        sender.secret,
+        sender.secondSecret,
+      );
   }
 
   const { trustAsset } = trustAssetTrs.asset;

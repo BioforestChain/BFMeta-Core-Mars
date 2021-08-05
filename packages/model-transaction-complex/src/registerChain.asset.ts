@@ -9,7 +9,8 @@ let register_chain_field_index_acc = 1;
 @Type.d("RegisterChainModel")
 export class RegisterChainModel
   extends Message<RegisterChainModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.RegisterChainJSON> {
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.RegisterChainJSON>
+{
   /**创世块 */
   @Field.d(register_chain_field_index_acc++, GenesisBlock)
   genesisBlock!: GenesisBlock;
@@ -27,7 +28,8 @@ export class RegisterChainModel
 @Type.d("RegisterChainAssetModel")
 export class RegisterChainAssetModel
   extends Message<RegisterChainAssetModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.RegisterChainAssetJSON> {
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.RegisterChainAssetJSON>
+{
   @Field.d(1, RegisterChainModel)
   registerChain!: RegisterChainModel;
   toJSON() {

@@ -42,10 +42,11 @@ async function getDappTransaction(sender: AccountModel, dapp: BFChainCore.DAppJS
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
-      sender.secret,
-      sender.secondSecret,
-    );
+    data.senderSecondPublicKey =
+      await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+        sender.secret,
+        sender.secondSecret,
+      );
   }
   const trs = await bfchainCore.transaction.createTransaction<DAppTransaction>(
     DAppTransactionFactory,

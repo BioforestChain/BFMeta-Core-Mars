@@ -9,7 +9,8 @@ import { Type, Field } from "@bfchain/protobuf";
 @Type.d("DelegateTransaction")
 export class DelegateTransaction
   extends Transaction<BFChainCore.DelegateAssetJSON>
-  implements BFChainCore.DelegateTransactionJSON {
+  implements BFChainCore.DelegateTransactionJSON
+{
   toJSON!: () => BFChainCore.DelegateTransactionJSON;
   recipientId!: undefined;
   @Field.d(DelegateTransaction.INC++, DelegateAssetModel)

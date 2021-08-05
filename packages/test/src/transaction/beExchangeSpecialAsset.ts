@@ -52,10 +52,11 @@ async function getToExchangeSpecialAssetTransaction(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
-      sender.secret,
-      sender.secondSecret,
-    );
+    data.senderSecondPublicKey =
+      await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+        sender.secret,
+        sender.secondSecret,
+      );
   }
   const toExchangeSpecialAsset: BFChainCore.ToExchangeSpecialAssetJSON = {
     cipherPublicKeys: [],
@@ -88,9 +89,7 @@ async function getToExchangeSpecialAssetTransaction(
 
 async function getBeExchangeSpecialAssetTransaction(
   sender: AccountModel,
-  toExchangeSpecialAssetTrs: BFChainCore.TransactionMixJSON<
-    BFChainCore.ToExchangeSpecialAssetAssetJSON
-  >,
+  toExchangeSpecialAssetTrs: BFChainCore.TransactionMixJSON<BFChainCore.ToExchangeSpecialAssetAssetJSON>,
   recipient: AccountModel[],
 ) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
@@ -124,10 +123,11 @@ async function getBeExchangeSpecialAssetTransaction(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
-      sender.secret,
-      sender.secondSecret,
-    );
+    data.senderSecondPublicKey =
+      await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+        sender.secret,
+        sender.secondSecret,
+      );
   }
   const toExchangeSpecialAsset = toExchangeSpecialAssetTrs.asset.toExchangeSpecialAsset;
   const beExchangeSpecialAsset: BFChainCore.BeExchangeSpecialAssetJSON = {

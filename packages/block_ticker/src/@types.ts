@@ -9,9 +9,7 @@ declare namespace BFChainCore {
     /**更新投票账户轮某时余额/交易和权益 */
     saveVotingAccountLastInfoAndEquity(height: number): Promise<void>;
     /**获取投票账户最大初始余额和最大交易量和二者比值 */
-    getMaxBeginBalanceAndMaxTxCountAndRate(
-      round: number,
-    ): {
+    getMaxBeginBalanceAndMaxTxCountAndRate(round: number): {
       maxBeginBalance: string;
       maxTxCount: number;
       rate: string;

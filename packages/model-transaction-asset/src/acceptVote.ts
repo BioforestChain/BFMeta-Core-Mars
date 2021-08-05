@@ -7,7 +7,8 @@ import { Message, Field, Type } from "@bfchain/protobuf";
 @Type.d("AcceptVoteAssetModel")
 export class AcceptVoteAssetModel
   extends Message<AcceptVoteAssetModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.AcceptVoteAssetJSON> {
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.AcceptVoteAssetJSON>
+{
   toJSON() {
     return {};
   }

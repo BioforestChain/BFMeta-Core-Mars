@@ -7,7 +7,8 @@ import { Message, Field, Type } from "@bfchain/protobuf";
 @Type.d("UsernameModel")
 export class UsernameModel
   extends Message<UsernameModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.UsernameJSON> {
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.UsernameJSON>
+{
   /**新的用户名 */
   @Field.d(1, "string")
   alias!: string;
@@ -25,7 +26,8 @@ export class UsernameModel
 @Type.d("UsernameAssetModel")
 export class UsernameAssetModel
   extends Message<UsernameAssetModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.UsernameAssetJSON> {
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.UsernameAssetJSON>
+{
   @Field.d(1, UsernameModel)
   username!: UsernameModel;
   toJSON() {

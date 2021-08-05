@@ -25,8 +25,8 @@ export class ConfigHelper {
     hookGenesisBlockApply: [BFChainCore.ConfigHelper];
   }>();
 
-  private hookedGenesisBlock: BFChainCore.BlockJSON<BFChainCore.GenesisBlockAssetJSON> = this
-    .genesisBlock; //deepMix(this.genesisBlock,get)
+  private hookedGenesisBlock: BFChainCore.BlockJSON<BFChainCore.GenesisBlockAssetJSON> =
+    this.genesisBlock; //deepMix(this.genesisBlock,get)
   private _hookBlockMap = new Map<
     number,
     BFChainCore.DeepPartial<BFChainCore.BlockJSON<BFChainCore.GenesisBlockAssetJSON>>
@@ -164,8 +164,8 @@ export class ConfigHelper {
   /**冻结的主权益数允许发行的最大权益数量 */
   @cacheGetter
   get maxMultipleOfAssetAndMainAsset() {
-    const maxMultipleOfAssetAndMainAsset = this.hookedGenesisBlock.asset.genesisAsset
-      .maxMultipleOfAssetAndMainAsset;
+    const maxMultipleOfAssetAndMainAsset =
+      this.hookedGenesisBlock.asset.genesisAsset.maxMultipleOfAssetAndMainAsset;
 
     return maxMultipleOfAssetAndMainAsset &&
       maxMultipleOfAssetAndMainAsset.numerator &&

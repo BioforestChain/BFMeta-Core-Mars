@@ -38,9 +38,8 @@ export class TransactionLogicVerifierCore {
   getTransactionLogicVerifier<T extends Transaction>(
     LogicVerifier: BFChainCore.TransactionLogicVerifierConstructor<T>,
   ) {
-    let transactionLogicVerifier:
-      | TransactionLogicVerifier<T>
-      | undefined = this._txLogicVerifierCache.get(LogicVerifier);
+    let transactionLogicVerifier: TransactionLogicVerifier<T> | undefined =
+      this._txLogicVerifierCache.get(LogicVerifier);
     if (!transactionLogicVerifier) {
       transactionLogicVerifier = Resolve(LogicVerifier, this.moduleMap);
       this._txLogicVerifierCache.set(LogicVerifier, transactionLogicVerifier);
@@ -79,47 +78,47 @@ export const TRANSACTION_LOGIC_VERIFIER_TYPES_MAP = (() => {
     BFChainCore.TransactionLogicVerifierConstructor<any>,
     TRANSACTION_TYPES_BASE
   >();
-  ([
-    [TRANSACTION_TYPES_BASE.USERNAME, ATOM_TRSLGCVFR.UsernameLogicVerifier],
-    [TRANSACTION_TYPES_BASE.SIGNATURE, ATOM_TRSLGCVFR.SignatureLogicVerifier],
-    [TRANSACTION_TYPES_BASE.DELEGATE, ATOM_TRSLGCVFR.DelegateLogicVerifier],
-    [TRANSACTION_TYPES_BASE.VOTE, ATOM_TRSLGCVFR.VoteLogicVerifier],
-    [TRANSACTION_TYPES_BASE.ACCEPT_VOTE, ATOM_TRSLGCVFR.AcceptVoteLogicVerifier],
-    [TRANSACTION_TYPES_BASE.REJECT_VOTE, ATOM_TRSLGCVFR.RejectVoteLogicVerifier],
-    [TRANSACTION_TYPES_BASE.CUSTOM, ATOM_TRSLGCVFR.CustomLogicVerifier],
-    [TRANSACTION_TYPES_BASE.DAPP, ATOM_TRSLGCVFR.DAppLogicVerifier],
-    [TRANSACTION_TYPES_BASE.DAPP_PURCHASING, ATOM_TRSLGCVFR.DAppPurchasingLogicVerifier],
-    [TRANSACTION_TYPES_BASE.MARK, ATOM_TRSLGCVFR.MarkLogicVerifier],
-    [TRANSACTION_TYPES_BASE.REGISTER_CHAIN, ATOM_TRSLGCVFR.RegisterChainLogicVerifier],
-    [TRANSACTION_TYPES_BASE.ISSUE_ASSET, ATOM_TRSLGCVFR.IssueAssetLogicVerifier],
-    [TRANSACTION_TYPES_BASE.DESTORY_ASSET, ATOM_TRSLGCVFR.DestoryAssetLogicVerifier],
-    [TRANSACTION_TYPES_BASE.TRANSFER_ASSET, ATOM_TRSLGCVFR.TransferAssetLogicVerifier],
-    [TRANSACTION_TYPES_BASE.TO_EXCHANGE_ASSET, ATOM_TRSLGCVFR.ToExchangeAssetLogicVerifier],
-    [TRANSACTION_TYPES_BASE.BE_EXCHANGE_ASSET, ATOM_TRSLGCVFR.BeExchangeAssetLogicVerifier],
-    [TRANSACTION_TYPES_BASE.GIFT_ASSET, ATOM_TRSLGCVFR.GiftAssetLogicVerifier],
-    [TRANSACTION_TYPES_BASE.GRAB_ASSET, ATOM_TRSLGCVFR.GrabAssetLogicVerifier],
-    [TRANSACTION_TYPES_BASE.TRUST_ASSET, ATOM_TRSLGCVFR.TrustAssetLogicVerifier],
-    [TRANSACTION_TYPES_BASE.SIGN_FOR_ASSET, ATOM_TRSLGCVFR.SignForAssetLogicVerifier],
-    [TRANSACTION_TYPES_BASE.EMIGRATE_ASSET, ATOM_TRSLGCVFR.EmigrateAssetLogicVerifier],
-    [TRANSACTION_TYPES_BASE.IMMIGRATE_ASSET, ATOM_TRSLGCVFR.ImmigrateAssetLogicVerifier],
+  (
     [
-      TRANSACTION_TYPES_BASE.TO_EXCHANGE_SPECIAL_ASSET,
-      ATOM_TRSLGCVFR.ToExchangeSpecialAssetLogicVerifier,
-    ],
-    [
-      TRANSACTION_TYPES_BASE.BE_EXCHANGE_SPECIAL_ASSET,
-      ATOM_TRSLGCVFR.BeExchangeSpecialAssetLogicVerifier,
-    ],
+      [TRANSACTION_TYPES_BASE.USERNAME, ATOM_TRSLGCVFR.UsernameLogicVerifier],
+      [TRANSACTION_TYPES_BASE.SIGNATURE, ATOM_TRSLGCVFR.SignatureLogicVerifier],
+      [TRANSACTION_TYPES_BASE.DELEGATE, ATOM_TRSLGCVFR.DelegateLogicVerifier],
+      [TRANSACTION_TYPES_BASE.VOTE, ATOM_TRSLGCVFR.VoteLogicVerifier],
+      [TRANSACTION_TYPES_BASE.ACCEPT_VOTE, ATOM_TRSLGCVFR.AcceptVoteLogicVerifier],
+      [TRANSACTION_TYPES_BASE.REJECT_VOTE, ATOM_TRSLGCVFR.RejectVoteLogicVerifier],
+      [TRANSACTION_TYPES_BASE.CUSTOM, ATOM_TRSLGCVFR.CustomLogicVerifier],
+      [TRANSACTION_TYPES_BASE.DAPP, ATOM_TRSLGCVFR.DAppLogicVerifier],
+      [TRANSACTION_TYPES_BASE.DAPP_PURCHASING, ATOM_TRSLGCVFR.DAppPurchasingLogicVerifier],
+      [TRANSACTION_TYPES_BASE.MARK, ATOM_TRSLGCVFR.MarkLogicVerifier],
+      [TRANSACTION_TYPES_BASE.REGISTER_CHAIN, ATOM_TRSLGCVFR.RegisterChainLogicVerifier],
+      [TRANSACTION_TYPES_BASE.ISSUE_ASSET, ATOM_TRSLGCVFR.IssueAssetLogicVerifier],
+      [TRANSACTION_TYPES_BASE.DESTORY_ASSET, ATOM_TRSLGCVFR.DestoryAssetLogicVerifier],
+      [TRANSACTION_TYPES_BASE.TRANSFER_ASSET, ATOM_TRSLGCVFR.TransferAssetLogicVerifier],
+      [TRANSACTION_TYPES_BASE.TO_EXCHANGE_ASSET, ATOM_TRSLGCVFR.ToExchangeAssetLogicVerifier],
+      [TRANSACTION_TYPES_BASE.BE_EXCHANGE_ASSET, ATOM_TRSLGCVFR.BeExchangeAssetLogicVerifier],
+      [TRANSACTION_TYPES_BASE.GIFT_ASSET, ATOM_TRSLGCVFR.GiftAssetLogicVerifier],
+      [TRANSACTION_TYPES_BASE.GRAB_ASSET, ATOM_TRSLGCVFR.GrabAssetLogicVerifier],
+      [TRANSACTION_TYPES_BASE.TRUST_ASSET, ATOM_TRSLGCVFR.TrustAssetLogicVerifier],
+      [TRANSACTION_TYPES_BASE.SIGN_FOR_ASSET, ATOM_TRSLGCVFR.SignForAssetLogicVerifier],
+      [TRANSACTION_TYPES_BASE.EMIGRATE_ASSET, ATOM_TRSLGCVFR.EmigrateAssetLogicVerifier],
+      [TRANSACTION_TYPES_BASE.IMMIGRATE_ASSET, ATOM_TRSLGCVFR.ImmigrateAssetLogicVerifier],
+      [
+        TRANSACTION_TYPES_BASE.TO_EXCHANGE_SPECIAL_ASSET,
+        ATOM_TRSLGCVFR.ToExchangeSpecialAssetLogicVerifier,
+      ],
+      [
+        TRANSACTION_TYPES_BASE.BE_EXCHANGE_SPECIAL_ASSET,
+        ATOM_TRSLGCVFR.BeExchangeSpecialAssetLogicVerifier,
+      ],
 
-    [TRANSACTION_TYPES_BASE.LOCATION_NAME, ATOM_TRSLGCVFR.LocationNameLogicVerifier],
-    [TRANSACTION_TYPES_BASE.SET_LNS_RECORD_VALUE, ATOM_TRSLGCVFR.SetLnsRecordValueLogicVerifier],
-    [TRANSACTION_TYPES_BASE.SET_LNS_MANAGER, ATOM_TRSLGCVFR.SetLnsManagerLogicVerifier],
-  ] as [TRANSACTION_TYPES_BASE, BFChainCore.TransactionLogicVerifierConstructor<any>][]).forEach(
-    ([K, LV]) => {
-      BASE_LOGIC_VERIFIER.set(K, LV);
-      LOGIC_VERIFIER_BASE.set(LV, K);
-    },
-  );
+      [TRANSACTION_TYPES_BASE.LOCATION_NAME, ATOM_TRSLGCVFR.LocationNameLogicVerifier],
+      [TRANSACTION_TYPES_BASE.SET_LNS_RECORD_VALUE, ATOM_TRSLGCVFR.SetLnsRecordValueLogicVerifier],
+      [TRANSACTION_TYPES_BASE.SET_LNS_MANAGER, ATOM_TRSLGCVFR.SetLnsManagerLogicVerifier],
+    ] as [TRANSACTION_TYPES_BASE, BFChainCore.TransactionLogicVerifierConstructor<any>][]
+  ).forEach(([K, LV]) => {
+    BASE_LOGIC_VERIFIER.set(K, LV);
+    LOGIC_VERIFIER_BASE.set(LV, K);
+  });
 
   return {
     KLV: BASE_LOGIC_VERIFIER,

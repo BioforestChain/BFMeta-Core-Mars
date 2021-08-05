@@ -14,7 +14,8 @@ import { NewTransactionRefuseReason, NewTransactionStatus } from "./constants";
 @Type.d("TransactionQueryOptions")
 export class TransactionQueryOptions
   extends Message<TransactionQueryOptions>
-  implements BFChainCore.JSONToModelType<BFChainCore.TransactionQueryOptionsJSON> {
+  implements BFChainCore.JSONToModelType<BFChainCore.TransactionQueryOptionsJSON>
+{
   static INC = 1;
   /**交易类型 */
   @Field.d(TransactionQueryOptions.INC++, "string", "optional")
@@ -85,7 +86,7 @@ export class TransactionQueryOptions
     if (res !== object) {
       object.signature && (res.signature = object.signature);
     }
-    return (res as unknown) as T;
+    return res as unknown as T;
   }
   toJSON() {
     const res: BFChainCore.TransactionQueryOptionsJSON = {
@@ -119,7 +120,8 @@ export class TransactionQueryOptions
 @Type.d("TransactionSortOptions")
 export class TransactionSortOptions
   extends Message<TransactionSortOptions>
-  implements BFChainCore.JSONToModelType<BFChainCore.TransactionSortOptionsJSON> {
+  implements BFChainCore.JSONToModelType<BFChainCore.TransactionSortOptionsJSON>
+{
   static INC = 1;
   /**根据链上事件索引排序 */
   @Field.d(TransactionSortOptions.INC++, "int32", "required", 1)
@@ -149,7 +151,8 @@ export class TransactionSortOptions
 @Type.d("QueryTransactionArg")
 export class QueryTransactionArgModel
   extends Message<QueryTransactionArgModel>
-  implements BFChainCore.JSONToModelType<BFChainCore.QueryTransactionArgJSON> {
+  implements BFChainCore.JSONToModelType<BFChainCore.QueryTransactionArgJSON>
+{
   /**查询参数 */
   @Field.d(1, TransactionQueryOptions)
   query!: TransactionQueryOptions;
@@ -170,10 +173,11 @@ export class QueryTransactionArgModel
  */
 @Type.d("QueryTransactionReturn")
 export class QueryTransactionReturnModel<
-    T extends BFChainCore.Transaction = BFChainCore.Transaction
+    T extends BFChainCore.Transaction = BFChainCore.Transaction,
   >
   extends CommonResponse
-  implements BFChainCore.JSONToModelType<BFChainCore.QueryTransactionReturnJSON> {
+  implements BFChainCore.JSONToModelType<BFChainCore.QueryTransactionReturnJSON>
+{
   /**查询到的交易 */
   @Field.d(QueryTransactionReturnModel.INC++, TransactionInBlock, "repeated")
   transactions!: TransactionInBlock<T>[];
@@ -193,7 +197,8 @@ export class QueryTransactionReturnModel<
 @Type.d("NewTransactionArg")
 export class NewTransactionArgModel
   extends SomeTransactionModel
-  implements BFChainCore.JSONToModelType<BFChainCore.NewTransactionArgJSON> {
+  implements BFChainCore.JSONToModelType<BFChainCore.NewTransactionArgJSON>
+{
   /**红包的密码 */
   @Field.d(NewTransactionArgModel.INC++, "string", "optional")
   grabSecret?: string;
@@ -201,7 +206,7 @@ export class NewTransactionArgModel
     this: BFChainProtobuf.Constructor<T>,
     object: BFChainProtobuf.ObjectFromType<NewTransactionArgModel>,
   ) {
-    return (super.fromObject(object) as unknown) as T;
+    return super.fromObject(object) as unknown as T;
   }
 }
 
@@ -212,7 +217,8 @@ export class NewTransactionArgModel
 @Type.d("NewTransactionReturn")
 export class NewTransactionReturnModel
   extends CommonResponse
-  implements BFChainCore.JSONToModelType<BFChainCore.NewTransactionReturnJSON> {
+  implements BFChainCore.JSONToModelType<BFChainCore.NewTransactionReturnJSON>
+{
   /**交易的接收状态 */
   @Field.d(
     NewTransactionReturnModel.INC++,
@@ -244,7 +250,8 @@ export class NewTransactionReturnModel
 @Type.d("TransactionIndexModel")
 export class TransactionIndexModel
   extends Message<TransactionIndexModel>
-  implements BFChainCore.JSONToModelType<BFChainCore.TransactionIndexJSON> {
+  implements BFChainCore.JSONToModelType<BFChainCore.TransactionIndexJSON>
+{
   @Field.d(1, "uint32")
   height!: number;
   @Field.d(2, "uint32")
@@ -266,7 +273,8 @@ export class TransactionIndexModel
 @Type.d("IndexTransactionArg")
 export class IndexTransactionArgModel
   extends Message<IndexTransactionArgModel>
-  implements BFChainCore.JSONToModelType<BFChainCore.IndexTransactionArgJSON> {
+  implements BFChainCore.JSONToModelType<BFChainCore.IndexTransactionArgJSON>
+{
   /**查询参数 */
   @Field.d(1, TransactionQueryOptions)
   query!: TransactionQueryOptions;
@@ -287,7 +295,8 @@ export class IndexTransactionArgModel
 @Type.d("IndexTransactionReturn")
 export class IndexTransactionReturnModel
   extends CommonResponse
-  implements BFChainCore.JSONToModelType<BFChainCore.IndexTransactionReturnJSON> {
+  implements BFChainCore.JSONToModelType<BFChainCore.IndexTransactionReturnJSON>
+{
   /**查询到的交易 */
   @Field.d(IndexTransactionReturnModel.INC++, TransactionIndexModel, "repeated")
   tIndexes!: TransactionIndexModel[];
@@ -307,7 +316,8 @@ export class IndexTransactionReturnModel
 @Type.d("DownloadTransactionArg")
 export class DownloadTransactionArgModel
   extends Message<DownloadTransactionArgModel>
-  implements BFChainCore.JSONToModelType<BFChainCore.DownloadTransactionArgJSON> {
+  implements BFChainCore.JSONToModelType<BFChainCore.DownloadTransactionArgJSON>
+{
   /**查询参数 */
   @Field.d(1, TransactionIndexModel, "repeated")
   tIndexes!: TransactionIndexModel[];
@@ -323,10 +333,11 @@ export class DownloadTransactionArgModel
  */
 @Type.d("DownloadTransactionReturn")
 export class DownloadTransactionReturnModel<
-    T extends BFChainCore.Transaction = BFChainCore.Transaction
+    T extends BFChainCore.Transaction = BFChainCore.Transaction,
   >
   extends CommonResponse
-  implements BFChainCore.JSONToModelType<BFChainCore.DownloadTransactionReturnJSON> {
+  implements BFChainCore.JSONToModelType<BFChainCore.DownloadTransactionReturnJSON>
+{
   /**查询到的交易 */
   @Field.d(DownloadTransactionReturnModel.INC++, TransactionInBlock, "repeated")
   transactions!: TransactionInBlock<T>[];

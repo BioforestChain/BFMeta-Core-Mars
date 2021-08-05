@@ -7,8 +7,10 @@ import { Type, Field } from "@bfchain/protobuf";
  *
  */
 @Type.d("CommonBlock")
-export class CommonBlock extends Block<BFChainCore.CommonBlockAssetJSON>
-  implements BFChainCore.CommonBlockJSON {
+export class CommonBlock
+  extends Block<BFChainCore.CommonBlockAssetJSON>
+  implements BFChainCore.CommonBlockJSON
+{
   toJSON!: () => BFChainCore.CommonBlockJSON;
   @Field.d(CommonBlock.INC++, CommonBlockAssetModel)
   asset!: CommonBlockAssetModel;

@@ -4,7 +4,8 @@ import { Message, Type, Field } from "@bfchain/protobuf";
 @Type.d("Range")
 export class RangeModel
   extends Message<RangeModel>
-  implements BFChainUtil.JSONAble<BFChainCore.RangeJSON> {
+  implements BFChainUtil.JSONAble<BFChainCore.RangeJSON>
+{
   @Field.d(1, "uint32")
   start!: number;
   @Field.d(2, "uint32")

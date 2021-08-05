@@ -13,8 +13,10 @@ export enum TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE {
 }
 
 @Type.d("TransactionAssetChangeModel")
-export class TransactionAssetChangeModel extends Message
-  implements BFChainUtil.JSONAble<BFChainCore.TransactionAssetChangeJSON> {
+export class TransactionAssetChangeModel
+  extends Message
+  implements BFChainUtil.JSONAble<BFChainCore.TransactionAssetChangeJSON>
+{
   static INC = 1;
   /**账户类型 */
   @Field.d(TransactionAssetChangeModel.INC++, "uint32")
@@ -42,8 +44,10 @@ export class TransactionAssetChangeModel extends Message
 }
 
 @Type.d("AssetPrealnumModel")
-export class AssetPrealnumModel extends Message<AssetPrealnumModel>
-  implements BFChainCore.JSONToModelType<BFChainCore.AssetPrealnumJSON> {
+export class AssetPrealnumModel
+  extends Message<AssetPrealnumModel>
+  implements BFChainCore.JSONToModelType<BFChainCore.AssetPrealnumJSON>
+{
   static INC = 1;
   @Field.d(AssetPrealnumModel.INC++, "string")
   remainAssetPrealnum!: string;
@@ -60,9 +64,9 @@ export class AssetPrealnumModel extends Message<AssetPrealnumModel>
 
 /**交易与其在区块中的下标 */
 @Type.d("TransactionInBlock")
-export class TransactionInBlock<T extends Transaction = Transaction> extends SomeTransactionModel<
-  T
-> {
+export class TransactionInBlock<
+  T extends Transaction = Transaction,
+> extends SomeTransactionModel<T> {
   /**交易在区块内的索引 */
   @Field.d(TransactionInBlock.INC++, "uint32")
   index!: number;
@@ -138,6 +142,6 @@ export class TransactionInBlock<T extends Transaction = Transaction> extends Som
       object.signature && (res.signature = object.signature);
       object.signSignature && (res.signSignature = object.signSignature);
     }
-    return (res as unknown) as T;
+    return res as unknown as T;
   }
 }

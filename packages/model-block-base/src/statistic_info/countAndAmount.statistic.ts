@@ -3,7 +3,8 @@ import { Message, Field, Type, MapField } from "@bfchain/protobuf";
 @Type.d("CountAndAmountStatisticModel")
 export class CountAndAmountStatisticModel
   extends Message<CountAndAmountStatisticModel>
-  implements BFChainCore.JSONToModelType<BFChainCore.CountAndAmountStatisticJSON> {
+  implements BFChainCore.JSONToModelType<BFChainCore.CountAndAmountStatisticJSON>
+{
   static INC = 1;
 
   @Field.d(CountAndAmountStatisticModel.INC++, "string", "required", "0")

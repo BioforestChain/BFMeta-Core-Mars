@@ -385,7 +385,7 @@ export class BlockHelper {
     }
   }
   async getCurrentReplayingBlockInfo<
-    CC extends BFChainCore.SimpleChainChannel = BFChainCore.SimpleChainChannel
+    CC extends BFChainCore.SimpleChainChannel = BFChainCore.SimpleChainChannel,
   >(
     blockGetterHelper:
       | Pick<BFChainCore.BlockGetterHelperInterface<CC>, "getCurrentReplayingBlockInfo">
@@ -533,10 +533,8 @@ export class BlockHelper {
 
   /**计算账户一轮下来对应的票数 */
   calcAccountRoundEquity(accTxCount: number, accBalance: string, roundLastBlock: RoundLastBlock) {
-    const {
-      balanceWeight,
-      numberOfTransactionsWeight,
-    } = this.config.accountParticipationWeightRatio;
+    const { balanceWeight, numberOfTransactionsWeight } =
+      this.config.accountParticipationWeightRatio;
     const tradingEquity =
       BigInt(accTxCount) *
       BigInt(numberOfTransactionsWeight) *

@@ -5,7 +5,8 @@ import { CountAndAmountStatisticModel } from "./countAndAmount.statistic";
 @Type.d("AssetStatisticModel")
 export class AssetStatisticModel
   extends Message<AssetStatisticModel>
-  implements BFChainCore.JSONToModelType<BFChainCore.AssetStatisticJSON> {
+  implements BFChainCore.JSONToModelType<BFChainCore.AssetStatisticJSON>
+{
   static INC = 1;
   @Field.d(AssetStatisticModel.INC++, "string")
   magic!: string;
@@ -47,6 +48,6 @@ export class AssetStatisticModel
       });
     }
     const res = super.fromObject(object) as AssetStatisticModel;
-    return (res as unknown) as T;
+    return res as unknown as T;
   }
 }

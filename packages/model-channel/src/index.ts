@@ -29,6 +29,6 @@ export class ChainChannelMessageModel extends Message<ChainChannelMessageModel> 
   /**锁定时间累计超过refuseTime后会引发REFUSE响应，届时数据会丢包 */
   @Field.d(ChainChannelMessageModel.INC++, "uint32")
   refuseTimespan!: number;
-  @Field.d(ChainChannelMessageModel.INC++, "uint32") 
+  @Field.d(ChainChannelMessageModel.INC++, "uint32")
   messageVersion!: number;
 }

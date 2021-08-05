@@ -6,7 +6,8 @@ import { ProgressEventModel } from "./progressEvent.model";
 @Type.d("BlockchainRebuidingProgressEvent")
 export class BlockchainRebuildingProgressEventModel<T extends string = "blockchainRebuiding">
   extends ProgressEventModel<T>
-  implements BFChainCore.JSONToModelType<BFChainCore.BlockchainRebuildingProgressEventJSON<T>> {
+  implements BFChainCore.JSONToModelType<BFChainCore.BlockchainRebuildingProgressEventJSON<T>>
+{
   /**当前正在处理的区块的进度 */
   @Field.d(BlockchainRebuildingProgressEventModel.INC++, BlocksProgressEventModel)
   currentBlockDetails!: BlocksProgressEventModel;
@@ -37,7 +38,8 @@ export class BlockchainPeerScanningProgressEventModel
 @Type.d("BlockchainReplayBlockProgressEvent")
 export class BlockchainReplayBlockProgressEventModel
   extends ProgressEventModel<"blockchainReplayBlock">
-  implements BFChainCore.JSONToModelType<BFChainCore.BlockchainReplayBlockProgressEventJSON> {
+  implements BFChainCore.JSONToModelType<BFChainCore.BlockchainReplayBlockProgressEventJSON>
+{
   /**当前同步的区块的生效进度 */
   @MapField.d(BlockchainRebuildingProgressEventModel.INC++, "uint32", BlocksProgressEventModel)
   applyDetails!: { [height: number]: BlocksProgressEventModel };

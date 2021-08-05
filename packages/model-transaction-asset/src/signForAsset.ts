@@ -8,8 +8,10 @@ import { cacheBytesGetter } from "@bfchain/core-model-cacher";
  *
  */
 @Type.d("SignForAssetModel")
-export class SignForAssetModel extends Message<SignForAssetModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.SignForAssetJSON> {
+export class SignForAssetModel
+  extends Message<SignForAssetModel>
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.SignForAssetJSON>
+{
   static INC = 1;
   /**要签收的委托交易的签名 */
   @Field.d(SignForAssetModel.INC++, "bytes")
@@ -54,7 +56,7 @@ export class SignForAssetModel extends Message<SignForAssetModel>
     if (res !== object) {
       object.transactionSignature && (res.transactionSignature = object.transactionSignature);
     }
-    return (res as unknown) as T;
+    return res as unknown as T;
   }
 }
 
@@ -63,8 +65,10 @@ export class SignForAssetModel extends Message<SignForAssetModel>
  *
  */
 @Type.d("SignForAssetAssetModel")
-export class SignForAssetAssetModel extends Message<SignForAssetAssetModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.SignForAssetAssetJSON> {
+export class SignForAssetAssetModel
+  extends Message<SignForAssetAssetModel>
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.SignForAssetAssetJSON>
+{
   @Field.d(1, SignForAssetModel)
   signForAsset!: SignForAssetModel;
   toJSON() {

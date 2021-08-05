@@ -103,7 +103,7 @@ export const GROUP_QUERY_TRANSACTIONS_BUILDER_ARGS = {
 @Resolvable()
 export class GroupQueryTransactionsBuilder<
   CC extends BFChainCore.SimpleChainChannel,
-  T extends Transaction = Transaction
+  T extends Transaction = Transaction,
 > extends GroupRequesterBuilder<CC, QueryTransactionReturnModel<T>> {
   @Inject(ChainChannelHelper) protected readonly helper!: ChainChannelHelper;
   constructor(
@@ -147,7 +147,7 @@ export const GROUP_INDEX_TRANSACTIONS_BUILDER_ARGS = {
  */
 @Resolvable()
 export class GroupIndexTransactionsBuilder<
-  CC extends BFChainCore.SimpleChainChannel
+  CC extends BFChainCore.SimpleChainChannel,
 > extends GroupRequesterBuilder<CC, IndexTransactionReturnModel> {
   @Inject(ChainChannelHelper) protected readonly helper!: ChainChannelHelper;
   constructor(
@@ -190,7 +190,7 @@ export const GROUP_DOWNLOAD_TRANSACTIONS_API_BUILDER_ARGS = {
 @Resolvable()
 export class GroupDownloadTransactionsBuilder<
   CC extends BFChainCore.SimpleChainChannel,
-  T extends Transaction = Transaction
+  T extends Transaction = Transaction,
 > extends GroupRequesterBuilder<CC, DownloadTransactionReturnModel<T>> {
   @Inject(ChainChannelHelper) protected readonly helper!: ChainChannelHelper;
   constructor(
@@ -227,7 +227,7 @@ export const GROUP_QUERY_BLOCK_BUILDER_ARGS = {
 @Resolvable()
 export class GroupQueryBlockBuilder<
   CC extends BFChainCore.SimpleChainChannel,
-  R = BFChainUtil.PromiseReturnType<CC["queryBlock"]>
+  R = BFChainUtil.PromiseReturnType<CC["queryBlock"]>,
 > extends GroupRequesterBuilder<CC, R> {
   @Inject(ChainChannelHelper) protected readonly helper!: ChainChannelHelper;
   constructor(
@@ -237,7 +237,7 @@ export class GroupQueryBlockBuilder<
     super();
   }
   protected _doRequest(cc: CC, opts: BFChainCore.ChannelRequestOptions<CC>) {
-    return (cc.queryBlock(this.query, opts) as unknown) as PromiseLike<R>;
+    return cc.queryBlock(this.query, opts) as unknown as PromiseLike<R>;
   }
   getTimeoutExceptionInfo() {
     return ["[TIMEOUT]: queryBlock({query}).", { query: this.query }] as const;
@@ -247,7 +247,7 @@ export class GroupQueryBlockBuilder<
   }
   static create<
     CC extends BFChainCore.SimpleChainChannel,
-    R = BFChainUtil.PromiseReturnType<CC["queryBlock"]>
+    R = BFChainUtil.PromiseReturnType<CC["queryBlock"]>,
   >(
     rootModuleMap: ModuleStroge,
     query: BFChainCore.BlockQueryOptionsJSON,

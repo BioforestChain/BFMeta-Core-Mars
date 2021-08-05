@@ -342,13 +342,8 @@ export class CustomTransactionEvent {
       return;
     }
     if (applyResult.type === "frozenAsset") {
-      const {
-        magic,
-        assetType,
-        amount,
-        minEffectiveHeight,
-        maxEffectiveHeight,
-      } = applyResult.applyInfo;
+      const { magic, assetType, amount, minEffectiveHeight, maxEffectiveHeight } =
+        applyResult.applyInfo;
       this.verifyAssetNumber(amount);
       this.verifyMagic(magic);
       this.verifyAssetType(assetType);
@@ -409,14 +404,8 @@ export class CustomTransactionEvent {
       return;
     }
     if (applyResult.type === "issueDAppid") {
-      const {
-        sourceChainName,
-        sourceChainMagic,
-        dappid,
-        possessorAddress,
-        type,
-        purchaseAsset,
-      } = applyResult.applyInfo;
+      const { sourceChainName, sourceChainMagic, dappid, possessorAddress, type, purchaseAsset } =
+        applyResult.applyInfo;
       this.verifyMagic(sourceChainMagic);
       this.verifyChainName(sourceChainName);
       await this.verifyPossessorAddress(possessorAddress);
@@ -433,12 +422,8 @@ export class CustomTransactionEvent {
       return;
     }
     if (applyResult.type === "saleDAppid") {
-      const {
-        dappid,
-        sourceChainMagic,
-        minEffectiveHeight,
-        maxEffectiveHeight,
-      } = applyResult.applyInfo;
+      const { dappid, sourceChainMagic, minEffectiveHeight, maxEffectiveHeight } =
+        applyResult.applyInfo;
       this.verifyDAppid(dappid);
       this.verifyMagic(sourceChainMagic);
       this.verifyMinAndMaxEffectiveHeight(minEffectiveHeight, maxEffectiveHeight, transaction);
@@ -522,13 +507,8 @@ export class CustomTransactionEvent {
       return;
     }
     if (applyResult.type === "setLnsRecordValue") {
-      const {
-        name,
-        sourceChainMagic,
-        operationType,
-        addRecord,
-        deleteRecord,
-      } = applyResult.applyInfo;
+      const { name, sourceChainMagic, operationType, addRecord, deleteRecord } =
+        applyResult.applyInfo;
       this.verifyLocationName(name);
       this.verifyMagic(sourceChainMagic);
       if (operationType === RECORD_OPERATION_TYPE.ADD) {
@@ -583,12 +563,8 @@ export class CustomTransactionEvent {
       return;
     }
     if (applyResult.type === "saleLocationName") {
-      const {
-        name,
-        sourceChainMagic,
-        minEffectiveHeight,
-        maxEffectiveHeight,
-      } = applyResult.applyInfo;
+      const { name, sourceChainMagic, minEffectiveHeight, maxEffectiveHeight } =
+        applyResult.applyInfo;
       this.verifyLocationName(name);
       this.verifyMagic(sourceChainMagic);
       this.verifyMinAndMaxEffectiveHeight(minEffectiveHeight, maxEffectiveHeight, transaction);
@@ -702,14 +678,8 @@ export class CustomTransactionEvent {
       });
     }
     if (applyResult.type === "destoryAsset") {
-      const {
-        address,
-        publicKey,
-        magic,
-        assetType,
-        amount,
-        assetsApplyAddress,
-      } = applyResult.applyInfo;
+      const { address, publicKey, magic, assetType, amount, assetsApplyAddress } =
+        applyResult.applyInfo;
       const assetInfo = this.chainAssetInfoHelper.getAssetInfo(magic, assetType);
       return eventEmitter.emit("destoryAsset", {
         type: "destoryAsset",
@@ -753,15 +723,8 @@ export class CustomTransactionEvent {
       });
     }
     if (applyResult.type === "unfrozenAsset") {
-      const {
-        address,
-        publicKey,
-        magic,
-        assetType,
-        amount,
-        frozenId,
-        recipientId,
-      } = applyResult.applyInfo;
+      const { address, publicKey, magic, assetType, amount, frozenId, recipientId } =
+        applyResult.applyInfo;
       const assetInfo = this.chainAssetInfoHelper.getAssetInfo(magic, assetType);
       return eventEmitter.emit("unfrozenAsset", {
         type: "unfrozenAsset",
@@ -830,13 +793,8 @@ export class CustomTransactionEvent {
       });
     }
     if (applyResult.type === "saleDAppid") {
-      const {
-        address,
-        dappid,
-        sourceChainMagic,
-        minEffectiveHeight,
-        maxEffectiveHeight,
-      } = applyResult.applyInfo;
+      const { address, dappid, sourceChainMagic, minEffectiveHeight, maxEffectiveHeight } =
+        applyResult.applyInfo;
       return eventEmitter.emit("saleDAppid", {
         type: "saleDAppid",
         transaction,
@@ -850,13 +808,8 @@ export class CustomTransactionEvent {
       });
     }
     if (applyResult.type === "purchaseDAppid") {
-      const {
-        address,
-        publicKey,
-        dappid,
-        sourceChainMagic,
-        possessorAddress,
-      } = applyResult.applyInfo;
+      const { address, publicKey, dappid, sourceChainMagic, possessorAddress } =
+        applyResult.applyInfo;
       return eventEmitter.emit("purchaseDAppid", {
         type: "purchaseDAppid",
         transaction,
@@ -908,14 +861,8 @@ export class CustomTransactionEvent {
       });
     }
     if (applyResult.type === "registerLocationName") {
-      const {
-        address,
-        publicKey,
-        name,
-        sourceChainMagic,
-        sourceChainName,
-        possessorAddress,
-      } = applyResult.applyInfo;
+      const { address, publicKey, name, sourceChainMagic, sourceChainName, possessorAddress } =
+        applyResult.applyInfo;
       return eventEmitter.emit("registerLocationName", {
         type: "registerLocationName",
         transaction,
@@ -957,15 +904,8 @@ export class CustomTransactionEvent {
       });
     }
     if (applyResult.type === "setLnsRecordValue") {
-      const {
-        address,
-        publicKey,
-        name,
-        sourceChainMagic,
-        operationType,
-        addRecord,
-        deleteRecord,
-      } = applyResult.applyInfo;
+      const { address, publicKey, name, sourceChainMagic, operationType, addRecord, deleteRecord } =
+        applyResult.applyInfo;
       return eventEmitter.emit("setLnsRecordValue", {
         type: "setLnsRecordValue",
         transaction,
@@ -981,13 +921,8 @@ export class CustomTransactionEvent {
       });
     }
     if (applyResult.type === "saleLocationName") {
-      const {
-        address,
-        name,
-        sourceChainMagic,
-        minEffectiveHeight,
-        maxEffectiveHeight,
-      } = applyResult.applyInfo;
+      const { address, name, sourceChainMagic, minEffectiveHeight, maxEffectiveHeight } =
+        applyResult.applyInfo;
       return eventEmitter.emit("saleLocationName", {
         type: "saleLocationName",
         transaction,
@@ -1001,13 +936,8 @@ export class CustomTransactionEvent {
       });
     }
     if (applyResult.type === "purchaseLocationName") {
-      const {
-        address,
-        publicKey,
-        name,
-        sourceChainMagic,
-        possessorAddress,
-      } = applyResult.applyInfo;
+      const { address, publicKey, name, sourceChainMagic, possessorAddress } =
+        applyResult.applyInfo;
       return eventEmitter.emit("purchaseLocationName", {
         type: "purchaseLocationName",
         transaction,

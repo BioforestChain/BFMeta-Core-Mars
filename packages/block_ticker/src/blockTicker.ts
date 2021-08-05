@@ -50,11 +50,13 @@ export class BlockTickerCore {
 export const BLOCK_TICKER_TYPES_MAP = (() => {
   const KT = new Map<BLOCK_TYPES_BASE, BFChainCore.BlockTickerConstructor>();
   const TK = new Map<BFChainCore.BlockTickerConstructor, BLOCK_TYPES_BASE>();
-  ([
-    [BLOCK_TYPES_BASE.GENESIS, ATOM_BLOCKTKR.GenesisBlockTicker],
-    [BLOCK_TYPES_BASE.COMMON, ATOM_BLOCKTKR.CommonBlockTicker],
-    [BLOCK_TYPES_BASE.ROUNDEND, ATOM_BLOCKTKR.RoundLastBlockTicker],
-  ] as [BLOCK_TYPES_BASE, BFChainCore.BlockTickerConstructor][]).forEach(([K, F]) => {
+  (
+    [
+      [BLOCK_TYPES_BASE.GENESIS, ATOM_BLOCKTKR.GenesisBlockTicker],
+      [BLOCK_TYPES_BASE.COMMON, ATOM_BLOCKTKR.CommonBlockTicker],
+      [BLOCK_TYPES_BASE.ROUNDEND, ATOM_BLOCKTKR.RoundLastBlockTicker],
+    ] as [BLOCK_TYPES_BASE, BFChainCore.BlockTickerConstructor][]
+  ).forEach(([K, F]) => {
     KT.set(K, F);
     TK.set(F, K);
   });

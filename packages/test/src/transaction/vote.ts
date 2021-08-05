@@ -38,10 +38,11 @@ async function getVoteTransaction(sender: AccountModel) {
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
-      sender.secret,
-      sender.secondSecret,
-    );
+    data.senderSecondPublicKey =
+      await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+        sender.secret,
+        sender.secondSecret,
+      );
   }
   const trs = await bfchainCore.transaction.createTransaction<VoteTransaction>(
     VoteTransactionFactory,

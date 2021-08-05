@@ -99,15 +99,17 @@ export function BFChainCoreFactory(
   moduleMap = new ModuleStroge(),
   extendsions?: BFChainUtil.Constructor<any>[],
 ) {
-  ([
-    "config",
-    "Buffer",
-    "cryptoHelper",
-    "keypairHelper",
-    "ed2curveHelper",
-    "blockGetterHelper",
-    "TIME_SPEED",
-  ] as (keyof typeof args)[]).forEach((key) => {
+  (
+    [
+      "config",
+      "Buffer",
+      "cryptoHelper",
+      "keypairHelper",
+      "ed2curveHelper",
+      "blockGetterHelper",
+      "TIME_SPEED",
+    ] as (keyof typeof args)[]
+  ).forEach((key) => {
     if (!moduleMap.has(key)) {
       moduleMap.set(key, args[key]);
     }

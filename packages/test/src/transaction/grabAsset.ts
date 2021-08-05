@@ -55,10 +55,11 @@ async function getGiftAssetTransaction(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
-      sender.secret,
-      sender.secondSecret,
-    );
+    data.senderSecondPublicKey =
+      await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+        sender.secret,
+        sender.secondSecret,
+      );
   }
   const giftAsset: BFChainCore.GiftAssetJSON = {
     cipherPublicKeys: [],
@@ -128,10 +129,11 @@ async function getGrabAssetTransaction(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
-      sender.secret,
-      sender.secondSecret,
-    );
+    data.senderSecondPublicKey =
+      await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+        sender.secret,
+        sender.secondSecret,
+      );
   }
   const giftAsset = giftAssetTrs.asset.giftAsset;
 

@@ -7,8 +7,10 @@ import { cacheBytesGetter } from "@bfchain/core-model-cacher";
  * RoundLastBlock 区块 asset 外层模型
  */
 @Type.d("RoundLastAssetModel")
-export class RoundLastAssetModel extends RoundDelegateModel<RoundLastAssetModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.RoundLastAssetJSON> {
+export class RoundLastAssetModel
+  extends RoundDelegateModel<RoundLastAssetModel>
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.RoundLastAssetJSON>
+{
   /**链上链区块HASH, 包含当轮除最后一个区块外的区块signature以及上一轮 hash 合并后生成的hash*/
   @Field.d(RoundLastAssetModel.INC++, "bytes")
   hashBuffer!: Uint8Array;
@@ -38,7 +40,7 @@ export class RoundLastAssetModel extends RoundDelegateModel<RoundLastAssetModel>
     if (res !== object) {
       object.hash && (res.hash = object.hash);
     }
-    return (res as unknown) as T;
+    return res as unknown as T;
   }
 }
 
@@ -46,8 +48,10 @@ export class RoundLastAssetModel extends RoundDelegateModel<RoundLastAssetModel>
  * RoundLastBlock 区块 asset 外层模型
  */
 @Type.d("RoundLastBlockAssetModel")
-export class RoundLastBlockAssetModel extends Message<RoundLastBlockAssetModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.RoundLastBlockAssetJSON> {
+export class RoundLastBlockAssetModel
+  extends Message<RoundLastBlockAssetModel>
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.RoundLastBlockAssetJSON>
+{
   @Field.d(1, RoundLastAssetModel)
   roundLastAsset!: RoundLastAssetModel;
   toJSON() {

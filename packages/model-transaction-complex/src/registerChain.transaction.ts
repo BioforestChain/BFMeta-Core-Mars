@@ -9,7 +9,8 @@ import { Type, Field } from "@bfchain/protobuf";
 @Type.d("RegisterChainTransaction")
 export class RegisterChainTransaction
   extends Transaction<BFChainCore.RegisterChainAssetJSON>
-  implements BFChainCore.RegisterChainTransactionJSON {
+  implements BFChainCore.RegisterChainTransactionJSON
+{
   recipientId!: undefined;
   @Field.d(RegisterChainTransaction.INC++, RegisterChainAssetModel)
   asset!: RegisterChainAssetModel;

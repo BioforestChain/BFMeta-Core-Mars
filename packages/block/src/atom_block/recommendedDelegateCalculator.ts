@@ -216,15 +216,13 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     blockGetterHelper: BFChainCore.BlockGetterHelperInterface,
     aborter?: BFChainUtil.Aborter,
   ) {
-    const {
-      forgeInfoMap,
-      generatorAddressList,
-    } = await this.calDelegateNumberOfForgingAndPackagedTransactions(
-      currentBlockHeight,
-      recommendedDelegateOptions.numberOfRounds,
-      blockGetterHelper,
-      aborter,
-    );
+    const { forgeInfoMap, generatorAddressList } =
+      await this.calDelegateNumberOfForgingAndPackagedTransactions(
+        currentBlockHeight,
+        recommendedDelegateOptions.numberOfRounds,
+        blockGetterHelper,
+        aborter,
+      );
 
     const curRound = this.blockHelper.calcRoundByHeight(currentBlockHeight);
     const canBePickAccounts = await this.calCanBePickAccounts(

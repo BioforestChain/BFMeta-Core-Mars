@@ -49,10 +49,11 @@ async function getSetLnsRecordValueTransaction(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
-      sender.secret,
-      sender.secondSecret,
-    );
+    data.senderSecondPublicKey =
+      await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+        sender.secret,
+        sender.secondSecret,
+      );
   }
   const trs = await bfchainCore.transaction.createTransaction<SetLnsRecordValueTransaction>(
     SetLnsRecordValueTransactionFactory,

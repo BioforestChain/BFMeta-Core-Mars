@@ -43,10 +43,11 @@ async function getToExchangeSpecialAssetTransaction(sender: AccountModel, recipi
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
-      sender.secret,
-      sender.secondSecret,
-    );
+    data.senderSecondPublicKey =
+      await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+        sender.secret,
+        sender.secondSecret,
+      );
   }
   const info: BFChainCore.ToExchangeSpecialAssetAssetJSON = {
     toExchangeSpecialAsset: {

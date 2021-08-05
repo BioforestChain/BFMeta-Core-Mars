@@ -8,8 +8,10 @@ import { CommonBlock } from "./commonBlock.block";
  *
  */
 @Type.d("RoundLastBlock")
-export class RoundLastBlock extends Block<BFChainCore.RoundLastBlockAssetJSON>
-  implements BFChainCore.RoundLastBlockJSON {
+export class RoundLastBlock
+  extends Block<BFChainCore.RoundLastBlockAssetJSON>
+  implements BFChainCore.RoundLastBlockJSON
+{
   toJSON!: () => BFChainCore.RoundLastBlockJSON;
   @Field.d(CommonBlock.INC++, RoundLastBlockAssetModel)
   asset!: RoundLastBlockAssetModel;

@@ -8,7 +8,8 @@ import type { DAPP_TYPE } from "@bfchain/core-model-constants";
 @Type.d("DAppModel")
 export class DAppModel
   extends Message<DAppModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.DAppJSON> {
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.DAppJSON>
+{
   static INC = 1;
   /**dapp 的所属链名 */
   @Field.d(DAppModel.INC++, "string")
@@ -45,7 +46,8 @@ export class DAppModel
 @Type.d("DAppAssetModel")
 export class DAppAssetModel
   extends Message<DAppAssetModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.DAppAssetJSON> {
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.DAppAssetJSON>
+{
   @Field.d(1, DAppModel)
   dapp!: DAppModel;
   toJSON() {

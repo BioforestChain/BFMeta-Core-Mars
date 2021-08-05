@@ -54,35 +54,43 @@ export const TRANSACTION_TYPES_MAP = (() => {
   }
   const BASE_MODEL = new Map<TRANSACTION_TYPES_BASE, BFChainCore.TransactionModelConstructor>();
   const MODEL_BASE = new Map<BFChainCore.TransactionModelConstructor, TRANSACTION_TYPES_BASE>();
-  ([
-    [TRANSACTION_TYPES_BASE.USERNAME, ATOM_TRS.UsernameTransaction],
-    [TRANSACTION_TYPES_BASE.SIGNATURE, ATOM_TRS.SignatureTransaction],
-    [TRANSACTION_TYPES_BASE.DELEGATE, ATOM_TRS.DelegateTransaction],
-    [TRANSACTION_TYPES_BASE.VOTE, ATOM_TRS.VoteTransaction],
-    [TRANSACTION_TYPES_BASE.ACCEPT_VOTE, ATOM_TRS.AcceptVoteTransaction],
-    [TRANSACTION_TYPES_BASE.REJECT_VOTE, ATOM_TRS.RejectVoteTransaction],
-    [TRANSACTION_TYPES_BASE.DAPP, ATOM_TRS.DAppTransaction],
-    [TRANSACTION_TYPES_BASE.DAPP_PURCHASING, ATOM_TRS.DAppPurchasingTransaction],
-    [TRANSACTION_TYPES_BASE.MARK, ATOM_TRS.MarkTransaction],
+  (
+    [
+      [TRANSACTION_TYPES_BASE.USERNAME, ATOM_TRS.UsernameTransaction],
+      [TRANSACTION_TYPES_BASE.SIGNATURE, ATOM_TRS.SignatureTransaction],
+      [TRANSACTION_TYPES_BASE.DELEGATE, ATOM_TRS.DelegateTransaction],
+      [TRANSACTION_TYPES_BASE.VOTE, ATOM_TRS.VoteTransaction],
+      [TRANSACTION_TYPES_BASE.ACCEPT_VOTE, ATOM_TRS.AcceptVoteTransaction],
+      [TRANSACTION_TYPES_BASE.REJECT_VOTE, ATOM_TRS.RejectVoteTransaction],
+      [TRANSACTION_TYPES_BASE.DAPP, ATOM_TRS.DAppTransaction],
+      [TRANSACTION_TYPES_BASE.DAPP_PURCHASING, ATOM_TRS.DAppPurchasingTransaction],
+      [TRANSACTION_TYPES_BASE.MARK, ATOM_TRS.MarkTransaction],
 
-    [TRANSACTION_TYPES_BASE.ISSUE_ASSET, ATOM_TRS.IssueAssetTransaction],
-    [TRANSACTION_TYPES_BASE.DESTORY_ASSET, ATOM_TRS.DestoryAssetTransaction],
-    [TRANSACTION_TYPES_BASE.TRANSFER_ASSET, ATOM_TRS.TransferAssetTransaction],
-    [TRANSACTION_TYPES_BASE.TO_EXCHANGE_ASSET, ATOM_TRS.ToExchangeAssetTransaction],
-    [TRANSACTION_TYPES_BASE.BE_EXCHANGE_ASSET, ATOM_TRS.BeExchangeAssetTransaction],
-    [TRANSACTION_TYPES_BASE.GIFT_ASSET, ATOM_TRS.GiftAssetTransaction],
-    [TRANSACTION_TYPES_BASE.GRAB_ASSET, ATOM_TRS.GrabAssetTransaction],
-    [TRANSACTION_TYPES_BASE.TRUST_ASSET, ATOM_TRS.TrustAssetTransaction],
-    [TRANSACTION_TYPES_BASE.SIGN_FOR_ASSET, ATOM_TRS.SignForAssetTransaction],
-    [TRANSACTION_TYPES_BASE.EMIGRATE_ASSET, ATOM_TRS.EmigrateAssetTransaction],
-    [TRANSACTION_TYPES_BASE.IMMIGRATE_ASSET, ATOM_TRS.ImmigrateAssetTransaction],
-    [TRANSACTION_TYPES_BASE.TO_EXCHANGE_SPECIAL_ASSET, ATOM_TRS.ToExchangeSpecialAssetTransaction],
-    [TRANSACTION_TYPES_BASE.BE_EXCHANGE_SPECIAL_ASSET, ATOM_TRS.BeExchangeSpecialAssetTransaction],
+      [TRANSACTION_TYPES_BASE.ISSUE_ASSET, ATOM_TRS.IssueAssetTransaction],
+      [TRANSACTION_TYPES_BASE.DESTORY_ASSET, ATOM_TRS.DestoryAssetTransaction],
+      [TRANSACTION_TYPES_BASE.TRANSFER_ASSET, ATOM_TRS.TransferAssetTransaction],
+      [TRANSACTION_TYPES_BASE.TO_EXCHANGE_ASSET, ATOM_TRS.ToExchangeAssetTransaction],
+      [TRANSACTION_TYPES_BASE.BE_EXCHANGE_ASSET, ATOM_TRS.BeExchangeAssetTransaction],
+      [TRANSACTION_TYPES_BASE.GIFT_ASSET, ATOM_TRS.GiftAssetTransaction],
+      [TRANSACTION_TYPES_BASE.GRAB_ASSET, ATOM_TRS.GrabAssetTransaction],
+      [TRANSACTION_TYPES_BASE.TRUST_ASSET, ATOM_TRS.TrustAssetTransaction],
+      [TRANSACTION_TYPES_BASE.SIGN_FOR_ASSET, ATOM_TRS.SignForAssetTransaction],
+      [TRANSACTION_TYPES_BASE.EMIGRATE_ASSET, ATOM_TRS.EmigrateAssetTransaction],
+      [TRANSACTION_TYPES_BASE.IMMIGRATE_ASSET, ATOM_TRS.ImmigrateAssetTransaction],
+      [
+        TRANSACTION_TYPES_BASE.TO_EXCHANGE_SPECIAL_ASSET,
+        ATOM_TRS.ToExchangeSpecialAssetTransaction,
+      ],
+      [
+        TRANSACTION_TYPES_BASE.BE_EXCHANGE_SPECIAL_ASSET,
+        ATOM_TRS.BeExchangeSpecialAssetTransaction,
+      ],
 
-    [TRANSACTION_TYPES_BASE.LOCATION_NAME, ATOM_TRS.LocationNameTransaction],
-    [TRANSACTION_TYPES_BASE.SET_LNS_RECORD_VALUE, ATOM_TRS.SetLnsRecordValueTransaction],
-    [TRANSACTION_TYPES_BASE.SET_LNS_MANAGER, ATOM_TRS.SetLnsManagerTransaction],
-  ] as [TRANSACTION_TYPES_BASE, typeof Transaction][]).forEach(([K, M]) => {
+      [TRANSACTION_TYPES_BASE.LOCATION_NAME, ATOM_TRS.LocationNameTransaction],
+      [TRANSACTION_TYPES_BASE.SET_LNS_RECORD_VALUE, ATOM_TRS.SetLnsRecordValueTransaction],
+      [TRANSACTION_TYPES_BASE.SET_LNS_MANAGER, ATOM_TRS.SetLnsManagerTransaction],
+    ] as [TRANSACTION_TYPES_BASE, typeof Transaction][]
+  ).forEach(([K, M]) => {
     BASE_MODEL.set(K, M);
     MODEL_BASE.set(M, K);
   });
@@ -109,7 +117,8 @@ const TRS_BYTE_WM = new WeakMap<Uint8Array, Readonly<Transaction>>();
 @Type.d("SomeTransactionModel")
 export class SomeTransactionModel<T extends BFChainCore.Transaction = BFChainCore.Transaction>
   extends Message<SomeTransactionModel<T>>
-  implements BFChainCore.SomeTransactionJSON<T> {
+  implements BFChainCore.SomeTransactionJSON<T>
+{
   static INC = 1;
   @Field.d(SomeTransactionModel.INC++, "string")
   protected _trs_base_type!: TRANSACTION_TYPES_BASE;
@@ -170,7 +179,7 @@ export class SomeTransactionModel<T extends BFChainCore.Transaction = BFChainCor
         }
       }
     }
-    return (res as unknown) as T;
+    return res as unknown as T;
   }
   toJSON() {
     return {

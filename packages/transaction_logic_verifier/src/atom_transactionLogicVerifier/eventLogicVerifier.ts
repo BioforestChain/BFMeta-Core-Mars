@@ -1309,14 +1309,8 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "setLnsRecordValue",
       async ({ applyInfo }, next) => {
-        const {
-          address,
-          sourceChainMagic,
-          name,
-          operationType,
-          addRecord,
-          deleteRecord,
-        } = applyInfo;
+        const { address, sourceChainMagic, name, operationType, addRecord, deleteRecord } =
+          applyInfo;
 
         // 校验当前域名是否存存在
         const memLocation = (await accountGetterHelper.getLocationName(

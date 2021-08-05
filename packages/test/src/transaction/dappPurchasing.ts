@@ -50,10 +50,11 @@ async function getDappTransaction(sender: AccountModel) {
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
-      sender.secret,
-      sender.secondSecret,
-    );
+    data.senderSecondPublicKey =
+      await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+        sender.secret,
+        sender.secondSecret,
+      );
   }
   const trs = await bfchainCore.transaction.createTransaction<DAppTransaction>(
     DAppTransactionFactory,
@@ -106,10 +107,11 @@ async function getDappPurchasingTransaction(sender: AccountModel, dappTrs: DAppT
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
-      sender.secret,
-      sender.secondSecret,
-    );
+    data.senderSecondPublicKey =
+      await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+        sender.secret,
+        sender.secondSecret,
+      );
   }
   const trs = await bfchainCore.transaction.createTransaction<DAppPurchasingTransaction>(
     DAppPurchasingTransactionFactory,

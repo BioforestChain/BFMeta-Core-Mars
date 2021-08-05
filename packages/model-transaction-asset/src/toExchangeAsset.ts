@@ -12,7 +12,8 @@ const BUFFER_LIST_PUBLICKEY_LIST_WM = new WeakMap<Uint8Array[], Readonly<string[
 @Type.d("ToExchangeAssetModel")
 export class ToExchangeAssetModel
   extends Message<ToExchangeAssetModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.ToExchangeAssetJSON> {
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.ToExchangeAssetJSON>
+{
   static INC = 1;
   /**密钥交换 */
   @Field.d(ToExchangeAssetModel.INC++, "bytes", "repeated")
@@ -100,7 +101,7 @@ export class ToExchangeAssetModel
     if (res !== object) {
       object.cipherPublicKeys && (res.cipherPublicKeys = object.cipherPublicKeys);
     }
-    return (res as unknown) as T;
+    return res as unknown as T;
   }
 }
 
@@ -111,7 +112,8 @@ export class ToExchangeAssetModel
 @Type.d("ToExchangeAssetAssetModel")
 export class ToExchangeAssetAssetModel
   extends Message<ToExchangeAssetAssetModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.ToExchangeAssetAssetJSON> {
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.ToExchangeAssetAssetJSON>
+{
   @Field.d(1, ToExchangeAssetModel)
   toExchangeAsset!: ToExchangeAssetModel;
   toJSON() {

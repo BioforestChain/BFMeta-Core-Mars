@@ -143,13 +143,8 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
       function: "checkSecondPublicKey",
     } as const;
 
-    const {
-      height,
-      generatorPublicKey,
-      generatorSecondPublicKey,
-      signature,
-      signSignature,
-    } = block;
+    const { height, generatorPublicKey, generatorSecondPublicKey, signature, signSignature } =
+      block;
 
     const generatorAddress = await this.accountBaseHelper.getAddressFromPublicKeyString(
       generatorPublicKey,
@@ -402,9 +397,8 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
       if (
         calcRoundOfflineGeneraters.join(",") !== blockRoundOfflineGeneratersHashMap[roundOffset]
       ) {
-        const blockRoundOfflineGeneraters = blockRoundOfflineGeneratersHashMap[roundOffset].split(
-          ",",
-        );
+        const blockRoundOfflineGeneraters =
+          blockRoundOfflineGeneratersHashMap[roundOffset].split(",");
         if (calcRoundOfflineGeneraters.length !== blockRoundOfflineGeneraters.length) {
           throw new ConsensusException(NOT_MATCH, {
             to_compare_prop: `calcRoundOfflineGeneraters.length: ${calcRoundOfflineGeneraters.length}`,

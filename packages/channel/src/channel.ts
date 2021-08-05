@@ -9,7 +9,7 @@ export class ChannelCore {
   /**传入事件监听器，返回封装过的双工通讯 */
   registryChannel<T extends BFChainCore.SimpleChainChannel>(
     channelEndpoint: BFChainCore.ChannelEndpointInterface,
-    CustomChainChannel = (ChainChannel as unknown) as BFChainUtil.Constructor<T>,
+    CustomChainChannel = ChainChannel as unknown as BFChainUtil.Constructor<T>,
     moduleMap = this.moduleMap,
     refuseTime = 1000,
   ) {

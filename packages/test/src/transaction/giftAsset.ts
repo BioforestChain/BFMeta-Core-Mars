@@ -50,10 +50,11 @@ async function getGiftAssetTransaction(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
-      sender.secret,
-      sender.secondSecret,
-    );
+    data.senderSecondPublicKey =
+      await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+        sender.secret,
+        sender.secondSecret,
+      );
   }
   const giftAsset: BFChainCore.GiftAssetJSON = {
     cipherPublicKeys: [],
@@ -84,9 +85,10 @@ async function getGiftAssetTransaction(
   );
   const xx = await bfchainCore.transaction.recombineTransaction(trs.toJSON());
 
-  const yy = bfchainCore.transactionLogicVerifier.getTransactionLogicVerifierFromType<
-    GiftAssetTransaction
-  >(trs.type);
+  const yy =
+    bfchainCore.transactionLogicVerifier.getTransactionLogicVerifierFromType<GiftAssetTransaction>(
+      trs.type,
+    );
 
   console.log(trs.getBytes().length);
   console.log(bfchainCore.config.maxTransactionSize);

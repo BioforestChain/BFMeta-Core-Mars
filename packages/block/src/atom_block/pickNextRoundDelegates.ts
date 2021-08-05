@@ -38,7 +38,7 @@ export class PickNextRoundDelegates {
   }
 
   async calcForgingDelegates<
-    T extends BFChainCore.ForSortAccountInfo = BFChainCore.ForSortAccountInfo
+    T extends BFChainCore.ForSortAccountInfo = BFChainCore.ForSortAccountInfo,
   >(
     round: number,
     accountGetterHelper?: Pick<
@@ -86,9 +86,8 @@ export class PickNextRoundDelegates {
       return await this.getGenesisDelegates(results, pickAddressArr, accountGetterHelper);
     }
 
-    const generatorAddressArr: string[] = await this.blockHelper.forceGetBlockGeneratorAddressByRound(
-      round,
-    );
+    const generatorAddressArr: string[] =
+      await this.blockHelper.forceGetBlockGeneratorAddressByRound(round);
     const newGeneratorAddressArr: string[] = [];
     for (const address of generatorAddressArr) {
       if (!pickAddressArr.includes(address)) {

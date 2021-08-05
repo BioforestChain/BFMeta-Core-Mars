@@ -14,11 +14,10 @@ declare namespace BFChainCore {
     finishedDetails: BFChainCore.RangeJSON[];
     processingDetails: { [height: number]: TransactionsProgressEventJSON };
   };
-  type BlockchainRebuildingProgressEventJSON<
-    T extends string = "blockchainRebuiding"
-  > = ProgressEventJSON<T> & {
-    currentBlockDetails: BlocksProgressEventJSON;
-  };
+  type BlockchainRebuildingProgressEventJSON<T extends string = "blockchainRebuiding"> =
+    ProgressEventJSON<T> & {
+      currentBlockDetails: BlocksProgressEventJSON;
+    };
   type BlockchainPeerScanningProgressEventJSON = ProgressEventJSON<"blockchainPeerScanning"> & {};
   type BlockchainReplayBlockProgressEventJSON = ProgressEventJSON<"blockchainReplayBlock"> & {
     type: "blockchainReplayBlock";

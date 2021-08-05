@@ -4,7 +4,8 @@ import { parseHexToArrayBuffer, getHexFromArrayBuffer } from "@bfchain/util-enco
 @Type.d("AccountSignatureModel")
 export class AccountSignatureModel
   extends Message<AccountSignatureModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.AccountSignatureJSON> {
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.AccountSignatureJSON>
+{
   static INC = 1;
   @Field.d(AccountSignatureModel.INC++, "bytes")
   publicKeyBuffer!: Uint8Array;
@@ -66,6 +67,6 @@ export class AccountSignatureModel
       object.secondPublicKey && (res.secondPublicKey = object.secondPublicKey);
       object.signSignature && (res.signSignature = object.signSignature);
     }
-    return (res as unknown) as T;
+    return res as unknown as T;
   }
 }

@@ -10,8 +10,10 @@ const SIGNATURE_BUFFER_WM = new WeakMap<AccountSignatureModel, Uint8Array>();
  *
  */
 @Type.d("BeExchangeSpecialAssetModel")
-export class BeExchangeSpecialAssetModel extends Message<BeExchangeSpecialAssetModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.BeExchangeSpecialAssetJSON> {
+export class BeExchangeSpecialAssetModel
+  extends Message<BeExchangeSpecialAssetModel>
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.BeExchangeSpecialAssetJSON>
+{
   static INC = 1;
   /**要兑换的交易签名 */
   @Field.d(BeExchangeSpecialAssetModel.INC++, "bytes")
@@ -73,7 +75,7 @@ export class BeExchangeSpecialAssetModel extends Message<BeExchangeSpecialAssetM
       object.ciphertextSignature &&
         (res.ciphertextSignature = AccountSignatureModel.fromObject(object.ciphertextSignature));
     }
-    return (res as unknown) as T;
+    return res as unknown as T;
   }
 }
 
@@ -82,8 +84,10 @@ export class BeExchangeSpecialAssetModel extends Message<BeExchangeSpecialAssetM
  *
  */
 @Type.d("BeExchangeSpecialAssetAssetModel")
-export class BeExchangeSpecialAssetAssetModel extends Message<BeExchangeSpecialAssetAssetModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.BeExchangeSpecialAssetAssetJSON> {
+export class BeExchangeSpecialAssetAssetModel
+  extends Message<BeExchangeSpecialAssetAssetModel>
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.BeExchangeSpecialAssetAssetJSON>
+{
   @Field.d(1, BeExchangeSpecialAssetModel)
   beExchangeSpecialAsset!: BeExchangeSpecialAssetModel;
   toJSON() {

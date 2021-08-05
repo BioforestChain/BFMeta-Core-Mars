@@ -29,11 +29,13 @@ export enum BLOCK_TYPES_BASE {
 export const BLOCK_TYPES_MAP = (() => {
   const KM = new Map<BLOCK_TYPES_BASE, BFChainCore.BlockModelConstructor>();
   const MK = new Map<BFChainCore.BlockModelConstructor, BLOCK_TYPES_BASE>();
-  ([
-    [BLOCK_TYPES_BASE.GENESIS, GenesisBlock],
-    [BLOCK_TYPES_BASE.COMMON, CommonBlock],
-    [BLOCK_TYPES_BASE.ROUNDEND, RoundLastBlock],
-  ] as [BLOCK_TYPES_BASE, BFChainCore.BlockModelConstructor][]).forEach(([K, M]) => {
+  (
+    [
+      [BLOCK_TYPES_BASE.GENESIS, GenesisBlock],
+      [BLOCK_TYPES_BASE.COMMON, CommonBlock],
+      [BLOCK_TYPES_BASE.ROUNDEND, RoundLastBlock],
+    ] as [BLOCK_TYPES_BASE, BFChainCore.BlockModelConstructor][]
+  ).forEach(([K, M]) => {
     KM.set(K, M);
     MK.set(M, K);
   });
@@ -52,7 +54,8 @@ const BLOCK_BYTE_WM = new WeakMap<Uint8Array, BFChainCore.Block>();
 @Type.d("SomeBlockModel")
 export class SomeBlockModel<T extends BFChainCore.Block = BFChainCore.Block>
   extends Message<T>
-  implements BFChainCore.JSONToModelType<BFChainCore.SomeBlockJSON<T>> {
+  implements BFChainCore.JSONToModelType<BFChainCore.SomeBlockJSON<T>>
+{
   static INC = 1;
   @Field.d(SomeBlockModel.INC++, BLOCK_TYPES_BASE)
   protected _block_type!: BLOCK_TYPES_BASE;
@@ -106,7 +109,7 @@ export class SomeBlockModel<T extends BFChainCore.Block = BFChainCore.Block>
         }
       }
     }
-    return (res as unknown) as T;
+    return res as unknown as T;
   }
   toJSON() {
     return {

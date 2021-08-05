@@ -28,11 +28,8 @@ import {
 } from "@bfchain/core-util-exception";
 import { QueneEventEmitter, Injectable, Inject } from "@bfchain/util";
 import { CommonBlockVerify } from "./commonBlockVerify";
-const {
-  ArgumentIllegalException,
-  ArgumentFormatException,
-  ConsensusException,
-} = CoreExceptionGenerator("CONTROLLER", "_blockbase");
+const { ArgumentIllegalException, ArgumentFormatException, ConsensusException } =
+  CoreExceptionGenerator("CONTROLLER", "_blockbase");
 
 @Injectable()
 export class VerifyBlockCore<T extends Block> {
@@ -266,27 +263,26 @@ export class VerifyBlockCore<T extends Block> {
         }
         const totalSpend = BigInt("-" + amount) + BigInt("-" + fee);
         setAccountAsset(key, totalSpend);
-        calcTransactionAssetChanges[
-          calcTransactionAssetChanges.length
-        ] = TransactionAssetChangeModel.fromObject<TransactionAssetChangeModel>({
-          accountType: TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE.SENDER,
-          assetTypes: assetIndex,
-          assetBalance: getAccountAsset(key),
-        });
+        calcTransactionAssetChanges[calcTransactionAssetChanges.length] =
+          TransactionAssetChangeModel.fromObject<TransactionAssetChangeModel>({
+            accountType: TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE.SENDER,
+            assetTypes: assetIndex,
+            assetBalance: getAccountAsset(key),
+          });
         if (recipientId) {
           const rkey = getAccountAssetKey(recipientId, fromMagic, chainAssetType);
           setAccountAsset(rkey, BigInt(amount));
-          calcTransactionAssetChanges[
-            calcTransactionAssetChanges.length
-          ] = TransactionAssetChangeModel.fromObject<TransactionAssetChangeModel>({
-            accountType: TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE.RECIPIENT,
-            assetTypes: assetIndex,
-            assetBalance: getAccountAsset(rkey),
-          });
+          calcTransactionAssetChanges[calcTransactionAssetChanges.length] =
+            TransactionAssetChangeModel.fromObject<TransactionAssetChangeModel>({
+              accountType: TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE.RECIPIENT,
+              assetTypes: assetIndex,
+              assetBalance: getAccountAsset(rkey),
+            });
         }
-        calcTransactionAssetChanges = this.transactionCore.transactionHelper.sortTransactionAssetChanges(
-          calcTransactionAssetChanges,
-        );
+        calcTransactionAssetChanges =
+          this.transactionCore.transactionHelper.sortTransactionAssetChanges(
+            calcTransactionAssetChanges,
+          );
         const transactionAssetChanges = tranItem.transactionAssetChanges;
         const calcLength = calcTransactionAssetChanges.length;
         const realLength = transactionAssetChanges.length;

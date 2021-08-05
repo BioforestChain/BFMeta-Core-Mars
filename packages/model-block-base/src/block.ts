@@ -14,7 +14,8 @@ const TRANSACTION_BUFFER_WM = new WeakMap<TransactionInBlock, Uint8Array>();
 @Type.d("Block")
 export class Block<AJ extends object = object>
   extends Message<Block<AJ>>
-  implements BFChainCore.BlockJSON<AJ> {
+  implements BFChainCore.BlockJSON<AJ>
+{
   ASSET_MODEL_TYPE!: BFChainCore.AssetJSONToModelType<AJ>;
   ASSET_JSON_TYPE!: AJ;
   asset!: BFChainCore.AssetJSONToModelType<AJ>;
@@ -237,7 +238,7 @@ export class Block<AJ extends object = object>
       remark: this.remark,
       asset: this.asset.toJSON() as AJ,
       statisticInfo: this.statisticInfo.toJSON(),
-      roundOfflineGeneratersHashMap: this.roundOfflineGeneratersHashMap
+      roundOfflineGeneratersHashMap: this.roundOfflineGeneratersHashMap,
     };
 
     this.generatorSecondPublicKey && (res.generatorSecondPublicKey = this.generatorSecondPublicKey);
@@ -268,7 +269,7 @@ export class Block<AJ extends object = object>
       res.transactions = trsInBlock;
       object.signature && (res.signature = object.signature);
     }
-    return (res as unknown) as T;
+    return res as unknown as T;
   }
 }
 

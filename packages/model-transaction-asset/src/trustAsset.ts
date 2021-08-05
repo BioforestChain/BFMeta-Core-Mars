@@ -7,7 +7,8 @@ import { Message, Field, Type } from "@bfchain/protobuf";
 @Type.d("TrustAssetModel")
 export class TrustAssetModel
   extends Message<TrustAssetModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.TrustAssetJSON> {
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.TrustAssetJSON>
+{
   static INC = 1;
   /**托管人地址 */
   @Field.d(TrustAssetModel.INC++, "string", "repeated")
@@ -47,7 +48,8 @@ export class TrustAssetModel
 @Type.d("TrustAssetAssetModel")
 export class TrustAssetAssetModel
   extends Message<TrustAssetAssetModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.TrustAssetAssetJSON> {
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.TrustAssetAssetJSON>
+{
   @Field.d(1, TrustAssetModel)
   trustAsset!: TrustAssetModel;
   toJSON() {

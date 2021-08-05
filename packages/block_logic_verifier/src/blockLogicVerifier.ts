@@ -20,9 +20,8 @@ export class BlockLogicVerifierCore {
   getBlockLogicVerifier<T extends Block>(
     LogicVerifier: BFChainCore.BlockLogicVerifierConstructor<T>,
   ) {
-    let blockLogicVerifier: BlockLogicVerifier<T> | undefined = this._blockLogicVerifierCache.get(
-      LogicVerifier,
-    );
+    let blockLogicVerifier: BlockLogicVerifier<T> | undefined =
+      this._blockLogicVerifierCache.get(LogicVerifier);
     if (!blockLogicVerifier) {
       blockLogicVerifier = Resolve(LogicVerifier, this.moduleMap);
       this._blockLogicVerifierCache.set(LogicVerifier, blockLogicVerifier);
@@ -52,11 +51,13 @@ export class BlockLogicVerifierCore {
 export const BLOCK_LOGIC_VERIFIER_TYPES_MAP = (() => {
   const KLV = new Map<BLOCK_TYPES_BASE, BFChainCore.BlockLogicVerifierConstructor>();
   const LVK = new Map<BFChainCore.BlockLogicVerifierConstructor, BLOCK_TYPES_BASE>();
-  ([
-    [BLOCK_TYPES_BASE.GENESIS, ATOM_BLOCKLGCVFR.GenesisBlockLogicVerifier],
-    [BLOCK_TYPES_BASE.COMMON, ATOM_BLOCKLGCVFR.CommonBlockLogicVerifier],
-    [BLOCK_TYPES_BASE.ROUNDEND, ATOM_BLOCKLGCVFR.RoundLastBlockLogicVerifier],
-  ] as [BLOCK_TYPES_BASE, BFChainCore.BlockLogicVerifierConstructor][]).forEach(([K, LV]) => {
+  (
+    [
+      [BLOCK_TYPES_BASE.GENESIS, ATOM_BLOCKLGCVFR.GenesisBlockLogicVerifier],
+      [BLOCK_TYPES_BASE.COMMON, ATOM_BLOCKLGCVFR.CommonBlockLogicVerifier],
+      [BLOCK_TYPES_BASE.ROUNDEND, ATOM_BLOCKLGCVFR.RoundLastBlockLogicVerifier],
+    ] as [BLOCK_TYPES_BASE, BFChainCore.BlockLogicVerifierConstructor][]
+  ).forEach(([K, LV]) => {
     KLV.set(K, LV);
     LVK.set(LV, K);
   });

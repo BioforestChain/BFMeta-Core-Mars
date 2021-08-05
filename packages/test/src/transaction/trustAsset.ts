@@ -48,10 +48,11 @@ async function getTrustAssetTransaction(
       sender.secret,
       sender.secondSecret,
     );
-    data.senderSecondPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
-      sender.secret,
-      sender.secondSecret,
-    );
+    data.senderSecondPublicKey =
+      await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
+        sender.secret,
+        sender.secondSecret,
+      );
   }
   trustees.push(sender.address);
   trustees.push(recipientId);
@@ -75,9 +76,10 @@ async function getTrustAssetTransaction(
   const xx = await bfchainCore.transaction.recombineTransaction(trsJson);
   await bfchainCore.transactionHelper.verifyTransactionSignature(xx);
 
-  const yy = bfchainCore.transactionLogicVerifier.getTransactionLogicVerifierFromType<
-    TrustAssetTransaction
-  >(trs.type);
+  const yy =
+    bfchainCore.transactionLogicVerifier.getTransactionLogicVerifierFromType<TrustAssetTransaction>(
+      trs.type,
+    );
 
   await yy.verify(trs, 10, {} as any, {} as any, {} as any);
 

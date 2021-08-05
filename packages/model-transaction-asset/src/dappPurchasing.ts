@@ -8,7 +8,8 @@ import { DAppModel } from "./dapp";
 @Type.d("DAppPurchasingModel")
 export class DAppPurchasingModel
   extends Message<DAppPurchasingModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.DAppPurchasingJSON> {
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.DAppPurchasingJSON>
+{
   static INC = 1;
   /**要购买的 dapp 数据 */
   @Field.d(DAppPurchasingModel.INC++, DAppModel)
@@ -27,7 +28,8 @@ export class DAppPurchasingModel
 @Type.d("DAppPurchasingAssetModel")
 export class DAppPurchasingAssetModel
   extends Message<DAppPurchasingAssetModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.DAppPurchasingAssetJSON> {
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.DAppPurchasingAssetJSON>
+{
   @Field.d(1, DAppPurchasingModel)
   dappPurchasing!: DAppPurchasingModel;
   toJSON() {

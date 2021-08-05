@@ -1053,13 +1053,14 @@ function getChainOnChainHash(height: number) {
           }`,
         );
       }
-      const fastResult = await bfchainCore.block.blockGeneratorCalculator.fastCalcGenerateBlockDelegate(
-        {
-          timestamp: lastBlock.timestamp,
-          height: lastBlock.height,
-        },
-        { toTimestamp: result.timestamp },
-      );
+      const fastResult =
+        await bfchainCore.block.blockGeneratorCalculator.fastCalcGenerateBlockDelegate(
+          {
+            timestamp: lastBlock.timestamp,
+            height: lastBlock.height,
+          },
+          { toTimestamp: result.timestamp },
+        );
       console.assert(
         fastResult.timestamp === result.timestamp && fastResult.address === result.address,
         `${[fastResult.timestamp, result.timestamp]},
@@ -1139,12 +1140,11 @@ function getChainOnChainHash(height: number) {
       // console.time(`cost`);
       if (block && _lastBlock) {
         // print(`开始验证${block.height}`);
-        const calcGenerateBlockGenerator = bfchainCore.block.blockGeneratorCalculator.calcGenerateBlockDelegateGenerator(
-          {
+        const calcGenerateBlockGenerator =
+          bfchainCore.block.blockGeneratorCalculator.calcGenerateBlockDelegateGenerator({
             timestamp: _lastBlock.timestamp,
             height: _lastBlock.height,
-          },
-        );
+          });
         for await (const { address, timestamp } of calcGenerateBlockGenerator) {
           // print(timestamp,block.timestamp)
           if (timestamp === block.timestamp) {

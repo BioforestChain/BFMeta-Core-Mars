@@ -6,7 +6,8 @@ import { Message, Field, Type } from "@bfchain/protobuf";
 @Type.d("DelegateAssetModel")
 export class DelegateAssetModel
   extends Message<DelegateAssetModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.DelegateAssetJSON> {
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.DelegateAssetJSON>
+{
   toJSON() {
     return {};
   }

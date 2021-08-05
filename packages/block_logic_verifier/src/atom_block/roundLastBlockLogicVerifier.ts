@@ -96,10 +96,7 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
    * @param blockGetterHelper
    */
   async checkRemarkHash(height: number, hash: string, blockGetterHelper = this.blockGetterHelper) {
-    const hashString = await this.blockHelper.calcChainOnChainHash(
-      height,
-      blockGetterHelper,
-    );
+    const hashString = await this.blockHelper.calcChainOnChainHash(height, blockGetterHelper);
     if (hashString !== hash) {
       throw new ConsensusException(NOT_MATCH, {
         to_compare_prop: `hashString ${hashString}`,

@@ -15,7 +15,7 @@ export function decodeUTF8(s: string): ByteArray {
 }
 
 export function encodeBase64(a: ByteArray): string {
-  return btoa(fromCharCode.apply(null, (a as unknown) as number[]));
+  return btoa(fromCharCode.apply(null, a as unknown as number[]));
 }
 
 export function decodeBase64(s: string): ByteArray {

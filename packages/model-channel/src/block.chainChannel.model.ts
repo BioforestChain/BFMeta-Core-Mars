@@ -9,7 +9,8 @@ import { SomeBlockModel } from "@bfchain/core-model-block";
 @Type.d("BlockQueryOptions")
 export class BlockQueryOptionsModel
   extends Message<BlockQueryOptionsModel>
-  implements BFChainCore.JSONToModelType<BFChainCore.BlockQueryOptionsJSON> {
+  implements BFChainCore.JSONToModelType<BFChainCore.BlockQueryOptionsJSON>
+{
   @Field.d(1, "string", "optional")
   signature?: string;
   @Field.d(2, "uint32", "optional")
@@ -28,7 +29,8 @@ export class BlockQueryOptionsModel
 @Type.d("QueryBlockArg")
 export class QueryBlockArgModel
   extends Message<QueryBlockArgModel>
-  implements BFChainCore.JSONToModelType<BFChainCore.QueryBlockArgJSON> {
+  implements BFChainCore.JSONToModelType<BFChainCore.QueryBlockArgJSON>
+{
   /**查询参数 */
   @Field.d(1, BlockQueryOptionsModel)
   query!: BlockQueryOptionsModel;
@@ -43,7 +45,8 @@ export class QueryBlockArgModel
 @Type.d("QueryBlockReturn")
 export class QueryBlockReturnModel<B extends BFChainCore.Block = BFChainCore.Block>
   extends CommonResponse
-  implements BFChainCore.JSONToModelType<BFChainCore.QueryBlockReturnJSON> {
+  implements BFChainCore.JSONToModelType<BFChainCore.QueryBlockReturnJSON>
+{
   @Field.d(QueryBlockReturnModel.INC++, SomeBlockModel, "optional")
   someBlock?: SomeBlockModel<B>;
   toJSON() {
@@ -61,7 +64,8 @@ export class QueryBlockReturnModel<B extends BFChainCore.Block = BFChainCore.Blo
 @Type.d("NewBlockArg")
 export class NewBlockArgModel
   extends Message<NewBlockArgModel>
-  implements BFChainCore.JSONToModelType<BFChainCore.NewBlockArgJSON> {
+  implements BFChainCore.JSONToModelType<BFChainCore.NewBlockArgJSON>
+{
   static INC = 1;
   @Field.d(NewBlockArgModel.INC++, "uint32")
   height!: number;
@@ -108,7 +112,7 @@ export class NewBlockArgModel
     if (res !== object) {
       object.generatorPublicKey && (res.generatorPublicKey = object.generatorPublicKey);
     }
-    return (res as unknown) as T;
+    return res as unknown as T;
   }
 }
 

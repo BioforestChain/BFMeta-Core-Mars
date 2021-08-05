@@ -17,12 +17,8 @@ import {
 import { Reader } from "@bfchain/protobuf";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 
-const {
-  ArgumentFormatException,
-  OutOfRangeException,
-  ConsensusException,
-  warn,
-} = CoreExceptionGenerator("CONTROLLER", "transaction");
+const { ArgumentFormatException, OutOfRangeException, ConsensusException, warn } =
+  CoreExceptionGenerator("CONTROLLER", "transaction");
 
 @Injectable("bfchain-core:TransactionCore")
 export class TransactionCore {
@@ -409,46 +405,49 @@ export const TRANSACTION_FACTORY_TYPES_MAP = (() => {
     BFChainCore.TransactionFactoryConstructor<any>,
     TRANSACTION_TYPES_BASE
   >();
-  ([
-    [TRANSACTION_TYPES_BASE.USERNAME, ATOM_TRSFAC.UsernameTransactionFactory],
-    [TRANSACTION_TYPES_BASE.SIGNATURE, ATOM_TRSFAC.SignatureTransactionFactory],
-    [TRANSACTION_TYPES_BASE.DELEGATE, ATOM_TRSFAC.DelegateTransactionFactory],
-    [TRANSACTION_TYPES_BASE.VOTE, ATOM_TRSFAC.VoteTransactionFactory],
-    [TRANSACTION_TYPES_BASE.ACCEPT_VOTE, ATOM_TRSFAC.AcceptVoteTransactionFactory],
-    [TRANSACTION_TYPES_BASE.REJECT_VOTE, ATOM_TRSFAC.RejectVoteTransactionFactory],
-    [TRANSACTION_TYPES_BASE.DAPP, ATOM_TRSFAC.DAppTransactionFactory],
-    [TRANSACTION_TYPES_BASE.DAPP_PURCHASING, ATOM_TRSFAC.DAppPurchasingTransactionFactory],
-    [TRANSACTION_TYPES_BASE.MARK, ATOM_TRSFAC.MarkTransactionFactory],
-
-    [TRANSACTION_TYPES_BASE.ISSUE_ASSET, ATOM_TRSFAC.IssueAssetTransactionFactory],
-    [TRANSACTION_TYPES_BASE.DESTORY_ASSET, ATOM_TRSFAC.DestoryAssetTransactionFactory],
-    [TRANSACTION_TYPES_BASE.TRANSFER_ASSET, ATOM_TRSFAC.TransferAssetTransactionFactory],
-    [TRANSACTION_TYPES_BASE.TO_EXCHANGE_ASSET, ATOM_TRSFAC.ToExchangeAssetTransactionFactory],
-    [TRANSACTION_TYPES_BASE.BE_EXCHANGE_ASSET, ATOM_TRSFAC.BeExchangeAssetTransactionFactory],
-    [TRANSACTION_TYPES_BASE.GIFT_ASSET, ATOM_TRSFAC.GiftAssetTransactionFactory],
-    [TRANSACTION_TYPES_BASE.GRAB_ASSET, ATOM_TRSFAC.GrabAssetTransactionFactory],
-    [TRANSACTION_TYPES_BASE.TRUST_ASSET, ATOM_TRSFAC.TrustAssetTransactionFactory],
-    [TRANSACTION_TYPES_BASE.SIGN_FOR_ASSET, ATOM_TRSFAC.SignForAssetTransactionFactory],
-    [TRANSACTION_TYPES_BASE.EMIGRATE_ASSET, ATOM_TRSFAC.EmigrateAssetTransactionFactory],
-    [TRANSACTION_TYPES_BASE.IMMIGRATE_ASSET, ATOM_TRSFAC.ImmigrateAssetTransactionFactory],
+  (
     [
-      TRANSACTION_TYPES_BASE.TO_EXCHANGE_SPECIAL_ASSET,
-      ATOM_TRSFAC.ToExchangeSpecialAssetTransactionFactory,
-    ],
-    [
-      TRANSACTION_TYPES_BASE.BE_EXCHANGE_SPECIAL_ASSET,
-      ATOM_TRSFAC.BeExchangeSpecialAssetTransactionFactory,
-    ],
+      [TRANSACTION_TYPES_BASE.USERNAME, ATOM_TRSFAC.UsernameTransactionFactory],
+      [TRANSACTION_TYPES_BASE.SIGNATURE, ATOM_TRSFAC.SignatureTransactionFactory],
+      [TRANSACTION_TYPES_BASE.DELEGATE, ATOM_TRSFAC.DelegateTransactionFactory],
+      [TRANSACTION_TYPES_BASE.VOTE, ATOM_TRSFAC.VoteTransactionFactory],
+      [TRANSACTION_TYPES_BASE.ACCEPT_VOTE, ATOM_TRSFAC.AcceptVoteTransactionFactory],
+      [TRANSACTION_TYPES_BASE.REJECT_VOTE, ATOM_TRSFAC.RejectVoteTransactionFactory],
+      [TRANSACTION_TYPES_BASE.DAPP, ATOM_TRSFAC.DAppTransactionFactory],
+      [TRANSACTION_TYPES_BASE.DAPP_PURCHASING, ATOM_TRSFAC.DAppPurchasingTransactionFactory],
+      [TRANSACTION_TYPES_BASE.MARK, ATOM_TRSFAC.MarkTransactionFactory],
 
-    [TRANSACTION_TYPES_BASE.LOCATION_NAME, ATOM_TRSFAC.LocationNameTransactionFactory],
-    [TRANSACTION_TYPES_BASE.SET_LNS_RECORD_VALUE, ATOM_TRSFAC.SetLnsRecordValueTransactionFactory],
-    [TRANSACTION_TYPES_BASE.SET_LNS_MANAGER, ATOM_TRSFAC.SetLnsManagerTransactionFactory],
-  ] as [TRANSACTION_TYPES_BASE, BFChainCore.TransactionFactoryConstructor<any>][]).forEach(
-    ([K, F]) => {
-      BASE_FACTORY.set(K, F);
-      FACTORY_BASE.set(F, K);
-    },
-  );
+      [TRANSACTION_TYPES_BASE.ISSUE_ASSET, ATOM_TRSFAC.IssueAssetTransactionFactory],
+      [TRANSACTION_TYPES_BASE.DESTORY_ASSET, ATOM_TRSFAC.DestoryAssetTransactionFactory],
+      [TRANSACTION_TYPES_BASE.TRANSFER_ASSET, ATOM_TRSFAC.TransferAssetTransactionFactory],
+      [TRANSACTION_TYPES_BASE.TO_EXCHANGE_ASSET, ATOM_TRSFAC.ToExchangeAssetTransactionFactory],
+      [TRANSACTION_TYPES_BASE.BE_EXCHANGE_ASSET, ATOM_TRSFAC.BeExchangeAssetTransactionFactory],
+      [TRANSACTION_TYPES_BASE.GIFT_ASSET, ATOM_TRSFAC.GiftAssetTransactionFactory],
+      [TRANSACTION_TYPES_BASE.GRAB_ASSET, ATOM_TRSFAC.GrabAssetTransactionFactory],
+      [TRANSACTION_TYPES_BASE.TRUST_ASSET, ATOM_TRSFAC.TrustAssetTransactionFactory],
+      [TRANSACTION_TYPES_BASE.SIGN_FOR_ASSET, ATOM_TRSFAC.SignForAssetTransactionFactory],
+      [TRANSACTION_TYPES_BASE.EMIGRATE_ASSET, ATOM_TRSFAC.EmigrateAssetTransactionFactory],
+      [TRANSACTION_TYPES_BASE.IMMIGRATE_ASSET, ATOM_TRSFAC.ImmigrateAssetTransactionFactory],
+      [
+        TRANSACTION_TYPES_BASE.TO_EXCHANGE_SPECIAL_ASSET,
+        ATOM_TRSFAC.ToExchangeSpecialAssetTransactionFactory,
+      ],
+      [
+        TRANSACTION_TYPES_BASE.BE_EXCHANGE_SPECIAL_ASSET,
+        ATOM_TRSFAC.BeExchangeSpecialAssetTransactionFactory,
+      ],
+
+      [TRANSACTION_TYPES_BASE.LOCATION_NAME, ATOM_TRSFAC.LocationNameTransactionFactory],
+      [
+        TRANSACTION_TYPES_BASE.SET_LNS_RECORD_VALUE,
+        ATOM_TRSFAC.SetLnsRecordValueTransactionFactory,
+      ],
+      [TRANSACTION_TYPES_BASE.SET_LNS_MANAGER, ATOM_TRSFAC.SetLnsManagerTransactionFactory],
+    ] as [TRANSACTION_TYPES_BASE, BFChainCore.TransactionFactoryConstructor<any>][]
+  ).forEach(([K, F]) => {
+    BASE_FACTORY.set(K, F);
+    FACTORY_BASE.set(F, K);
+  });
 
   return {
     VK: V_K,

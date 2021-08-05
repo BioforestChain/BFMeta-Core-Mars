@@ -9,7 +9,8 @@ import { Type, Field } from "@bfchain/protobuf";
 @Type.d("VoteTransaction")
 export class VoteTransaction
   extends Transaction<BFChainCore.VoteAssetJSON>
-  implements BFChainCore.VoteTransactionJSON {
+  implements BFChainCore.VoteTransactionJSON
+{
   toJSON!: () => BFChainCore.VoteTransactionJSON;
   recipientId!: string;
   @Field.d(VoteTransaction.INC++, VoteAssetModel)

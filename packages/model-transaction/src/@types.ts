@@ -2,9 +2,8 @@ declare namespace BFChainCore {
   interface SomeTransactionJSON<T extends TransactionJSON> {
     transaction: T;
   }
-  type SomeTransactionModel<
-    T extends Transaction = Transaction
-  > = import("./").SomeTransactionModel<T>;
+  type SomeTransactionModel<T extends Transaction = Transaction> =
+    import("./").SomeTransactionModel<T>;
 
   type AssetPrealnumJSON = {
     /**剩余的权益数量 */

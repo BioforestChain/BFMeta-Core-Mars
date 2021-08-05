@@ -5,7 +5,8 @@ import { RESPONSE_STATUS } from "./constants";
 @Type.d("ExceptionMessage")
 export class ErrorMessage<D = any>
   extends Message<ErrorMessage>
-  implements BFChainCore.JSONToModelType<BFChainCore.ErrorMessageJSON> {
+  implements BFChainCore.JSONToModelType<BFChainCore.ErrorMessageJSON>
+{
   @Field.d(1, "string")
   message!: string;
   @Field.d(2, "string")
@@ -65,7 +66,8 @@ export function getCommonResponseFieldAccIndex() {
 @Type.d("CommonResponse")
 export class CommonResponse
   extends Message<CommonResponse>
-  implements BFChainCore.JSONToModelType<BFChainCore.CommonResponseJSON> {
+  implements BFChainCore.JSONToModelType<BFChainCore.CommonResponseJSON>
+{
   static INC = 1;
   /**响应状态 */
   @Field.d(CommonResponse.INC++, RESPONSE_STATUS)

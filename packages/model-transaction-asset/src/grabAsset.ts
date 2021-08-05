@@ -10,8 +10,10 @@ const SIGNATURE_BUFFER_WM = new WeakMap<AccountSignatureModel, Uint8Array>();
  *
  */
 @Type.d("GrabAssetModel")
-export class GrabAssetModel extends Message<GrabAssetModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.GrabAssetJSON> {
+export class GrabAssetModel
+  extends Message<GrabAssetModel>
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.GrabAssetJSON>
+{
   static INC = 1;
   /**赠送交易所在的区块签名 */
   @Field.d(GrabAssetModel.INC++, "bytes")
@@ -84,7 +86,7 @@ export class GrabAssetModel extends Message<GrabAssetModel>
       object.ciphertextSignature &&
         (res.ciphertextSignature = AccountSignatureModel.fromObject(object.ciphertextSignature));
     }
-    return (res as unknown) as T;
+    return res as unknown as T;
   }
 }
 
@@ -93,8 +95,10 @@ export class GrabAssetModel extends Message<GrabAssetModel>
  *
  */
 @Type.d("GrabAssetAssetModel")
-export class GrabAssetAssetModel extends Message<GrabAssetAssetModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.GrabAssetAssetJSON> {
+export class GrabAssetAssetModel
+  extends Message<GrabAssetAssetModel>
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.GrabAssetAssetJSON>
+{
   @Field.d(1, GrabAssetModel)
   grabAsset!: GrabAssetModel;
   toJSON() {

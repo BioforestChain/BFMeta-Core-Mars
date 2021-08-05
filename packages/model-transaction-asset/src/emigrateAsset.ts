@@ -10,7 +10,8 @@ const SIGNATURE_BUFFER_WM = new WeakMap<AccountSignatureModel, Uint8Array>();
 @Type.d("EmigrateAssetModel")
 export class EmigrateAssetModel
   extends Message<EmigrateAssetModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.EmigrateAssetJSON> {
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.EmigrateAssetJSON>
+{
   static INC = 1;
   @Field.d(EmigrateAssetModel.INC++, "bytes")
   genesisDelegateSignatureBuffer!: Uint8Array;
@@ -68,7 +69,7 @@ export class EmigrateAssetModel
           object.genesisDelegateSignature,
         ));
     }
-    return (res as unknown) as T;
+    return res as unknown as T;
   }
 }
 
@@ -79,7 +80,8 @@ export class EmigrateAssetModel
 @Type.d("EmigrateAssetAssetModel")
 export class EmigrateAssetAssetModel
   extends Message<EmigrateAssetAssetModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.EmigrateAssetAssetJSON> {
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.EmigrateAssetAssetJSON>
+{
   @Field.d(1, EmigrateAssetModel)
   emigrateAsset!: EmigrateAssetModel;
   toJSON() {

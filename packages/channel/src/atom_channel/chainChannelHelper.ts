@@ -31,11 +31,8 @@ import {
 import { BaseHelper, TransactionHelper, BlockHelper, ChainTimeHelper } from "@bfchain/core-helper";
 import { PromiseTimeout } from "./PromiseTimeout";
 
-const {
-  ArgumentIllegalException,
-  ArgumentFormatException,
-  TimeOutException,
-} = CoreExceptionGenerator("channel", "chainChannelHelper");
+const { ArgumentIllegalException, ArgumentFormatException, TimeOutException } =
+  CoreExceptionGenerator("channel", "chainChannelHelper");
 
 @Injectable()
 export class ChainChannelHelper {

@@ -70,7 +70,9 @@ quq.age = 66;
       effectiveBlockHeight: 100,
       timestamp: 500,
       senderId: await bfchainCore.accountBaseHelper.getAddressFromPublicKey(
-        (await bfchainCore.accountBaseHelper.createSecretKeypair("1")).publicKey,
+        (
+          await bfchainCore.accountBaseHelper.createSecretKeypair("1")
+        ).publicKey,
       ),
       senderPublicKey: (
         await bfchainCore.accountBaseHelper.createSecretKeypair("1")
@@ -78,7 +80,9 @@ quq.age = 66;
       rangeType: RANGE_TYPE.EMPTY,
       range: [
         await bfchainCore.accountBaseHelper.getAddressFromPublicKey(
-          (await bfchainCore.accountBaseHelper.createSecretKeypair("2")).publicKey,
+          (
+            await bfchainCore.accountBaseHelper.createSecretKeypair("2")
+          ).publicKey,
         ),
       ],
       fee: "23",

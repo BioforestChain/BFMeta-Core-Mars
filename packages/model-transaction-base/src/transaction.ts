@@ -12,7 +12,8 @@ export class TransactionBaseStorageModel
   extends Message<TransactionBaseStorageModel>
   implements
     BFChainCore.TransactionStorageJSON,
-    BFChainUtil.JSONAble<BFChainCore.TransactionStorageJSON> {
+    BFChainUtil.JSONAble<BFChainCore.TransactionStorageJSON>
+{
   static INC = 1;
   /// 'username'
   @Field.d(TransactionBaseStorageModel.INC++, "string")
@@ -29,7 +30,8 @@ export class TransactionBaseStorageModel
 @Type.d("Transaction")
 export class Transaction<AJ extends object = object>
   extends Message<Transaction<AJ>>
-  implements BFChainCore.TransactionJSON<AJ> {
+  implements BFChainCore.TransactionJSON<AJ>
+{
   static INC = 1;
   ASSET_MODEL_TYPE!: BFChainCore.AssetJSONToModelType<AJ>;
   ASSET_JSON_TYPE!: AJ;
@@ -215,6 +217,6 @@ export class Transaction<AJ extends object = object>
         });
       }
     }
-    return (res as unknown) as M;
+    return res as unknown as M;
   }
 }

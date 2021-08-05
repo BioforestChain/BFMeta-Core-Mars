@@ -11,7 +11,8 @@ import { BNID_TYPE } from "@bfchain/core-model-block-base";
 @Type.d("RewardPercentModel")
 export class RewardPercentModel
   extends Message<RewardPercentModel>
-  implements BFChainCore.JSONToModelType<BFChainCore.RewardPercentJSON> {
+  implements BFChainCore.JSONToModelType<BFChainCore.RewardPercentJSON>
+{
   /**分配给投票账户的奖励占区块总奖励的比例 */
   @Field.d(1, Fraction)
   votePercent!: Fraction;
@@ -33,7 +34,8 @@ export class RewardPercentModel
 @Type.d("RewardPerBlock")
 export class RewardPerBlock
   extends Message<RewardPerBlock>
-  implements BFChainCore.JSONToModelType<BFChainCore.RewardPerBlockJSON> {
+  implements BFChainCore.JSONToModelType<BFChainCore.RewardPerBlockJSON>
+{
   /**奖励变更区块高度 */
   @Field.d(1, "uint32", "repeated")
   heights!: number[];
@@ -55,7 +57,8 @@ export class RewardPerBlock
 @Type.d("PortsModel")
 export class PortsModel
   extends Message<PortsModel>
-  implements BFChainCore.JSONToModelType<BFChainCore.PortsJSON> {
+  implements BFChainCore.JSONToModelType<BFChainCore.PortsJSON>
+{
   /**默认端口号/区块链端口号 */
   @Field.d(1, "uint32")
   port!: number;
@@ -73,7 +76,8 @@ export class PortsModel
 @Type.d("TransactionPowOfWorkConfigModel")
 export class TransactionPowOfWorkConfigModel
   extends Message<TransactionPowOfWorkConfigModel>
-  implements BFChainCore.JSONToModelType<BFChainCore.TransactionPowOfWorkConfigJSON> {
+  implements BFChainCore.JSONToModelType<BFChainCore.TransactionPowOfWorkConfigJSON>
+{
   @Field.d(1, FractionBigIntModel)
   growthFactor!: FractionBigIntModel;
   @Field.d(2, Fraction)
@@ -92,7 +96,8 @@ export class TransactionPowOfWorkConfigModel
 @Type.d("AccountParticipationWeightRatioModel")
 export class AccountParticipationWeightRatioModel
   extends Message<AccountParticipationWeightRatioModel>
-  implements BFChainUtil.JSONAble<BFChainCore.AccountParticipationWeightRatioJSON> {
+  implements BFChainUtil.JSONAble<BFChainCore.AccountParticipationWeightRatioJSON>
+{
   /**账户持有权益量权重 */
   @Field.d(1, "uint32")
   balanceWeight!: number;
@@ -113,7 +118,8 @@ export class AccountParticipationWeightRatioModel
 @Type.d("BlockParticipationWeightRatioModel")
 export class BlockParticipationWeightRatioModel
   extends Message<BlockParticipationWeightRatioModel>
-  implements BFChainUtil.JSONAble<BFChainCore.BlockParticipationWeightRatioJSON> {
+  implements BFChainUtil.JSONAble<BFChainCore.BlockParticipationWeightRatioJSON>
+{
   /**块内涉及的权益总量权重 */
   @Field.d(1, "uint32")
   balanceWeight!: number;
@@ -135,7 +141,8 @@ export class BlockParticipationWeightRatioModel
 @Type.d("GenesisAssetModel")
 export class GenesisAssetModel
   extends RoundDelegateModel<GenesisAssetModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.GenesisAssetJSON> {
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.GenesisAssetJSON>
+{
   /**链名 */
   @Field.d(GenesisAssetModel.INC++, "string")
   chainName!: string;
@@ -292,7 +299,7 @@ export class GenesisAssetModel
           object.maxMultipleOfAssetAndMainAsset,
         ));
     }
-    return (res as unknown) as T;
+    return res as unknown as T;
   }
 }
 
@@ -302,7 +309,8 @@ export class GenesisAssetModel
 @Type.d("GenesisBlockAssetModel")
 export class GenesisBlockAssetModel
   extends Message<GenesisBlockAssetModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.GenesisBlockAssetJSON> {
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.GenesisBlockAssetJSON>
+{
   @Field.d(1, GenesisAssetModel)
   genesisAsset!: GenesisAssetModel;
   toJSON() {

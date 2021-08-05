@@ -6,7 +6,8 @@ import { RangeModel } from "@bfchain/core-model-common";
 @Type.d("TransactionsProgressEvent")
 export class TransactionsProgressEventModel
   extends ProgressEventModel<"transactions">
-  implements BFChainCore.JSONToModelType<BFChainCore.TransactionsProgressEventJSON> {
+  implements BFChainCore.JSONToModelType<BFChainCore.TransactionsProgressEventJSON>
+{
   /**已经下载的交易的index范围 */
   @Field.d(TransactionsProgressEventModel.INC++, RangeModel, "repeated")
   finishedDetails!: RangeModel[];

@@ -17,7 +17,8 @@ type Progress = EventEmitter<{ progress: [PatchBase]; done: []; error: [unknown]
 @Injectable()
 export class PatchInstaller
   extends EventEmitterPro<{ ready: []; install: [Progress]; error: [unknown] }>
-  implements AfterInit {
+  implements AfterInit
+{
   constructor(private moduleMap: ModuleStroge, private config: ConfigHelper) {
     super();
   }

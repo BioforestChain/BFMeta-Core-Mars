@@ -372,9 +372,9 @@ export class StatisticsInfo extends EventEmitter<{ destroy: [] }> {
 
 class CountAndAmountStatistic {
   constructor(
-    private readonly source_data = CountAndAmountStatisticModel.fromObject<
-      CountAndAmountStatisticModel
-    >({}),
+    private readonly source_data = CountAndAmountStatisticModel.fromObject<CountAndAmountStatisticModel>(
+      {},
+    ),
   ) {}
   private _changeAmount?: bigint;
   public get changeAmount() {

@@ -360,22 +360,7 @@ export function _hsalsa20(o: ByteArray, p: ByteArray, k: ByteArray, c: ByteArray
 }
 
 export const _sigma: ByteArray = new ByteArray([
-  101,
-  120,
-  112,
-  97,
-  110,
-  100,
-  32,
-  51,
-  50,
-  45,
-  98,
-  121,
-  116,
-  101,
-  32,
-  107,
+  101, 120, 112, 97, 110, 100, 32, 51, 50, 45, 98, 121, 116, 101, 32, 107,
 ]);
 // "expand 32-byte k"
 
