@@ -36,6 +36,9 @@
       "path": "../helper-config/tsconfig.esm.json"
     },
     {
+      "path": "../helper-migrate-certificate/tsconfig.esm.json"
+    },
+    {
       "path": "../helper-milestones/tsconfig.esm.json"
     },
     {

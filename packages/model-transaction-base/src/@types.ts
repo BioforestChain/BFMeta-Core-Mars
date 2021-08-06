@@ -193,28 +193,16 @@ declare namespace BFChainCore {
     /**权益销毁事件附带信息 */
     destoryAsset: DestoryAssetJSON;
   }
-  interface EmigrateAssetJSON {
-    /**创世受托人签名 */
-    genesisDelegateSignature: AccountSignatureJSON;
-    /**迁出的权益所属链名，小写字母组成，3-8 位 */
-    sourceChainName: string;
-    /**迁出的权益所属链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
-    sourceChainMagic: string;
-    /**迁出的权益名称，大写字母组成，3-5 个字符 */
-    assetType: string;
-    /**迁出的权益数量，0-9 组成并且不包含小数点，必须大于0 */
-    amount: string;
-  }
+  type EmigrateAssetJSON = MigrateCertificateJSON;
   interface EmigrateAssetAssetJSON {
     /**权益迁出事件附带信息 */
     emigrateAsset: EmigrateAssetJSON;
   }
-
   interface ImmigrateAssetJSON {
     /**创世受托人签名 */
     genesisDelegateSignature: AccountSignatureJSON;
-    /**完整的主权益迁出事件 */
-    emigrateAssetTransaction: EmigrateAssetTransactionJSON;
+    /**完整的迁移凭证 */
+    migrateCertificate: MigrateCertificateJSON;
   }
   interface ImmigrateAssetAssetJSON {
     /**权益迁入事件附带信息 */
@@ -282,16 +270,6 @@ declare namespace BFChainCore {
   interface TrustAssetAssetJSON {
     /**见证事件附带信息 */
     trustAsset: TrustAssetJSON;
-  }
-  interface AccountSignatureJSON {
-    /**账户密钥生成的公钥 */
-    publicKey: string;
-    /**账户公钥生成的签名 */
-    signature: string;
-    /**账户安全密钥生成的公钥 */
-    secondPublicKey?: string;
-    /**账户安全公钥生成的签名 */
-    signSignature?: string;
   }
   interface SignForAssetJSON {
     /**见证交易的签名，*/
@@ -479,11 +457,11 @@ declare namespace BFChainCore {
   >;
   type EmigrateAssetTransactionJSON = TransactionMixJSON<
     EmigrateAssetAssetJSON,
-    { hasRecipientId: false }
+    { hasRecipientId: true }
   >;
   type ImmigrateAssetTransactionJSON = TransactionMixJSON<
     ImmigrateAssetAssetJSON,
-    { hasRecipientId: false }
+    { hasRecipientId: true }
   >;
   type GiftAssetTransactionJSON = TransactionMixJSON<GiftAssetAssetJSON, { hasRecipientId: false }>;
   type GrabAssetTransactionJSON = TransactionMixJSON<GrabAssetAssetJSON, { hasRecipientId: true }>;

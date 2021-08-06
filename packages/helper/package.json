@@ -23,6 +23,7 @@
     "@bfchain/core-helper-chain-asset-info": "5.22.58",
     "@bfchain/core-helper-chain-time": "5.22.58",
     "@bfchain/core-helper-config": "5.22.58",
+    "@bfchain/core-helper-migrate-certificate": "5.22.50",
     "@bfchain/core-helper-milestones": "5.22.58",
     "@bfchain/core-helper-parity-bit": "5.22.58",
     "@bfchain/core-helper-transaction": "5.22.58",

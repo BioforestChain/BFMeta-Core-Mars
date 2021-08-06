@@ -1,8 +1,7 @@
 import { Message, Field, Type } from "@bfchain/protobuf";
 import { getHexFromArrayBuffer, parseHexToArrayBuffer } from "@bfchain/util-encoding-hex";
 import { ToExchangeSpecialAssetModel } from "./toExchangeSpecialAsset";
-import { RANGE_TYPE } from "@bfchain/core-model-constants";
-import { AccountSignatureModel } from "./accountSignature";
+import { AccountSignatureModel } from "@bfchain/core-model-common";
 const SIGNATURE_BUFFER_WM = new WeakMap<AccountSignatureModel, Uint8Array>();
 
 /**

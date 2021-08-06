@@ -1,0 +1,40 @@
+{
+  "extends": "./tsconfig",
+  "mixin": [
+    "./tsconfig.json",
+    "../../config/tsconfig_base/base.tsconfig.@types.json"
+  ],
+  "compilerOptions": {
+    "declarationDir": "../@types/bfchain__core-helper-migrate-certificate",
+    "declaration": true,
+    "outDir": "../../.cache/helper-migrate-certificate",
+    "tsBuildInfoFile": "../../.cache/helper-migrate-certificate/@types.tsbuildinfo",
+    "declarationMap": false
+  },
+  "references": [
+    {
+      "path": "../helper-account_base/tsconfig.@types.json"
+    },
+    {
+      "path": "../helper-asymmetric/tsconfig.@types.json"
+    },
+    {
+      "path": "../helper-chain_time/tsconfig.@types.json"
+    },
+    {
+      "path": "../helper-config/tsconfig.@types.json"
+    },
+    {
+      "path": "../helper-transaction/tsconfig.@types.json"
+    },
+    {
+      "path": "../helper-type/tsconfig.@types.json"
+    },
+    {
+      "path": "../model-common/tsconfig.@types.json"
+    },
+    {
+      "path": "../typings/tsconfig.@types.json"
+    }
+  ]
+}

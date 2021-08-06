@@ -1,11 +1,11 @@
 {
   "name": "@types/bfchain__core-model-block-base",
   "types": "index.d.ts",
-  "version": "5.22.57",
+  "version": "5.22.58",
   "dependencies": {
-    "@types/bfchain__core-model-cacher": "5.22.53",
-    "@types/bfchain__core-model-common": "5.22.53",
-    "@types/bfchain__core-model-transaction": "5.22.57",
-    "@types/bfchain__core-typings": "5.22.53"
+    "@types/bfchain__core-model-cacher": "5.22.58",
+    "@types/bfchain__core-model-common": "5.22.58",
+    "@types/bfchain__core-model-transaction": "5.22.58",
+    "@types/bfchain__core-typings": "5.22.58"
   }
 }

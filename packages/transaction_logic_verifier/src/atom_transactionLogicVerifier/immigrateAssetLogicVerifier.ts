@@ -40,7 +40,7 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       function: "verify",
     } as const;
 
-    const { emigrateAssetTransaction, genesisDelegateSignature } = transaction.asset.immigrateAsset;
+    const { migrateCertificate, genesisDelegateSignature } = transaction.asset.immigrateAsset;
 
     const { publicKey, secondPublicKey, signSignature } = genesisDelegateSignature;
 
@@ -93,13 +93,12 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       }
     }
 
-    const { sourceChainMagic, assetType, sourceChainName } =
-      emigrateAssetTransaction.asset.emigrateAsset;
+    const { fromChain, assetType } = migrateCertificate;
 
-    const memchain = await accountGetterHelper.getChain(sourceChainMagic);
+    const memchain = await accountGetterHelper.getChain(fromChain.magic);
     if (!memchain) {
       throw new ConsensusException(NOT_EXIST, {
-        prop: `Chain with magic ${sourceChainMagic}`,
+        prop: `Chain with magic ${fromChain.magic}`,
         target: "blockChain",
         ...Function_Exception_Detail,
       });
@@ -111,17 +110,17 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
         to_compare_prop: `assetType ${assetType}`,
         be_compare_prop: `assetType ${genesisAsset.assetType}`,
         to_target: "immigrateAsset.emigrateAssetTransaction.asset.emigrateAsset",
-        be_target: `registerChain in blockChain with magic ${sourceChainMagic}`,
+        be_target: `registerChain in blockChain with magic ${fromChain.magic}`,
         ...Function_Exception_Detail,
       });
     }
 
-    if (sourceChainName !== genesisAsset.chainName) {
+    if (fromChain.chainName !== genesisAsset.chainName) {
       throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: `sourceChainName ${sourceChainName}`,
+        to_compare_prop: `sourceChainName ${fromChain.chainName}`,
         be_compare_prop: `sourceChainName ${genesisAsset.chainName}`,
         to_target: "immigrateAsset.emigrateAssetTransaction.asset.emigrateAsset",
-        be_target: `registerChain in blockChain with magic ${sourceChainMagic}`,
+        be_target: `registerChain in blockChain with magic ${fromChain.magic}`,
         ...Function_Exception_Detail,
       });
     }

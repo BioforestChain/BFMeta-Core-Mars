@@ -12,7 +12,7 @@ export class ImmigrateAssetTransaction
   implements BFChainCore.ImmigrateAssetTransactionJSON
 {
   toJSON!: () => BFChainCore.ImmigrateAssetTransactionJSON;
-  recipientId!: undefined;
+  recipientId!: string;
   @Field.d(ImmigrateAssetTransaction.INC++, ImmigrateAssetAssetModel)
   asset!: ImmigrateAssetAssetModel;
 }
