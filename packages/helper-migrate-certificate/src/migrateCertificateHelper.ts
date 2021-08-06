@@ -38,7 +38,7 @@ export class MigrateCertificateHelper {
   }
   fromJSON = this.recombineMigrateCertificate;
 
-  private __getChainId(chainInfo: BFChainCore.ChainBaseInfo) {
+  getChainId(chainInfo: BFChainCore.ChainBaseInfo) {
     return `${this.version}/${chainInfo.magic}/${chainInfo.chainName}/${chainInfo.genesisBlockSignature}`;
   }
 
@@ -71,13 +71,13 @@ export class MigrateCertificateHelper {
       /**迁出凭证生成时间 Date.now().getTimes() */
       timestamp: this.chainTimeHelper.now(),
       /**迁出链的唯一标识 version+自定义格式，目前是 version/magic/chainName/genesisBlockSignature */
-      fromChainId: this.__getChainId({
+      fromChainId: this.getChainId({
         magic: config.magic,
         chainName: config.chainName,
         genesisBlockSignature: config.signature,
       }),
       /**迁入链的唯一标识 version+自定义格式，目前是 version/magic/chainName/genesisBlockSignature */
-      toChainId: this.__getChainId(toChainInfo),
+      toChainId: this.getChainId(toChainInfo),
       /**迁出的权益：version/assetType */
       assetTypeId: prefix + config.assetType,
       /**迁出的权益数量，0-9 组成并且不包含小数点，必须大于0 */
@@ -140,11 +140,11 @@ export class MigrateCertificateHelper {
     return migrateCertificate;
   }
 
-  private __getAddressFromUserId(userId: string): string {
+  getAddressFromUserId(userId: string): string {
     return userId.split("/")[1];
   }
 
-  private __getChainInfoFromChainId(chainId: string): BFChainCore.ChainBaseInfo {
+  getChainInfoFromChainId(chainId: string): BFChainCore.ChainBaseInfo {
     const items = chainId.split("/");
     return {
       magic: items[1],
@@ -153,7 +153,7 @@ export class MigrateCertificateHelper {
     };
   }
 
-  private __getAccountSignatureFromSignature(signature: string) {
+  getAccountSignatureFromSignature(signature: string) {
     const items = signature.split("/");
     const signatureKeyValue = items[1].split("-");
     const accountSignature: BFChainCore.AccountSignatureJSON = {
@@ -168,7 +168,7 @@ export class MigrateCertificateHelper {
     return accountSignature;
   }
 
-  private __getAssetTypeFromAssetTypeId(assetTypeId: string) {
+  getAssetTypeFromAssetTypeId(assetTypeId: string) {
     return assetTypeId.split("/")[1];
   }
 
@@ -177,15 +177,15 @@ export class MigrateCertificateHelper {
   ) {
     const migrateCertificateJson: BFChainCore.MigrateCertificate = {
       version: migrateCertificate.version,
-      senderId: this.__getAddressFromUserId(migrateCertificate.fromUserId),
-      recipientId: this.__getAddressFromUserId(migrateCertificate.toUserId),
+      senderId: this.getAddressFromUserId(migrateCertificate.fromUserId),
+      recipientId: this.getAddressFromUserId(migrateCertificate.toUserId),
       timestamp: migrateCertificate.timestamp,
-      fromChain: this.__getChainInfoFromChainId(migrateCertificate.fromChainId),
-      toChain: this.__getChainInfoFromChainId(migrateCertificate.toChainId),
-      assetType: this.__getAssetTypeFromAssetTypeId(migrateCertificate.assetTypeId),
+      fromChain: this.getChainInfoFromChainId(migrateCertificate.fromChainId),
+      toChain: this.getChainInfoFromChainId(migrateCertificate.toChainId),
+      assetType: this.getAssetTypeFromAssetTypeId(migrateCertificate.assetTypeId),
       assets: migrateCertificate.assets,
-      signature: this.__getAccountSignatureFromSignature(migrateCertificate.signature),
-      authSignature: this.__getAccountSignatureFromSignature(migrateCertificate.authSignature),
+      signature: this.getAccountSignatureFromSignature(migrateCertificate.signature),
+      authSignature: this.getAccountSignatureFromSignature(migrateCertificate.authSignature),
     };
     return migrateCertificateJson;
   }
