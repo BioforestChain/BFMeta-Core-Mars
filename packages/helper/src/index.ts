@@ -21,3 +21,5 @@ export * from "@bfchain/core-helper-block";
 export * from "@bfchain/core-helper-milestones";
 
 export * from "@bfchain/core-helper-transaction-pow";
+
+export * from "@bfchain/core-helper-migrate-certificate";

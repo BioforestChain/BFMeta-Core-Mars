@@ -1,0 +1,38 @@
+{
+  "extends": "../../config/tsconfig_base/base.tsconfig.cjs",
+  "compilerOptions": {
+    "outDir": "./build/cjs",
+    "rootDir": "./src"
+  },
+  "references": [
+    {
+      "path": "../helper-account_base/tsconfig.json"
+    },
+    {
+      "path": "../helper-asymmetric/tsconfig.json"
+    },
+    {
+      "path": "../helper-chain_time/tsconfig.json"
+    },
+    {
+      "path": "../helper-config/tsconfig.json"
+    },
+    {
+      "path": "../helper-transaction/tsconfig.json"
+    },
+    {
+      "path": "../helper-type/tsconfig.json"
+    },
+    {
+      "path": "../model-common/tsconfig.json"
+    },
+    {
+      "path": "../typings/tsconfig.json"
+    }
+  ],
+  "files": [
+    "src/@types.ts",
+    "src/index.ts",
+    "src/migrateCertificateHelper.ts"
+  ]
+}

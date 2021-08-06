@@ -6,19 +6,18 @@ import {
   BaseHelper,
   ConfigHelper,
   ChainAssetInfoHelper,
+  MigrateCertificateHelper,
 } from "@bfchain/core-helper";
 import {
   CoreExceptionGenerator,
+  NOT_MATCH,
   PARAM_LOST,
   PROP_IS_REQUIRE,
-  PROP_IS_INVALID,
   SHOULD_BE,
-  NOT_MATCH,
   SHOULD_NOT_BE,
   SHOULD_NOT_EXIST,
-  PROP_SHOULD_GT_FIELD,
 } from "@bfchain/core-util-exception";
-import { Injectable, parseHexToArrayBuffer, wrapTaskList } from "@bfchain/util";
+import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
   "EmigrateAssetTransactionFactory",
@@ -31,11 +30,12 @@ const { ArgumentIllegalException } = CoreExceptionGenerator(
 @Injectable()
 export class EmigrateAssetTransactionFactory extends TransactionFactory<EmigrateAssetTransaction> {
   constructor(
-    public accountBaseHelper: AccountBaseHelper,
-    public transactionHelper: TransactionHelper,
     public baseHelper: BaseHelper,
     public configHelper: ConfigHelper,
+    public accountBaseHelper: AccountBaseHelper,
+    public transactionHelper: TransactionHelper,
     public chainAssetInfoHelper: ChainAssetInfoHelper,
+    public migrateCertificateHelper: MigrateCertificateHelper,
   ) {
     super();
   }
@@ -71,8 +71,8 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
 
     this.emptyRangeType(body, Function_Exception_Detail);
 
-    if (body.recipientId) {
-      throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+    if (!body.recipientId) {
+      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "recipientId",
         ...Function_Exception_Detail,
       });
@@ -103,8 +103,6 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
       });
     }
 
-    const { baseHelper, accountBaseHelper } = this;
-
     const emigrateAsset = emigrateAssetAsset.emigrateAsset;
 
     if (!emigrateAsset) {
@@ -114,134 +112,19 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
       });
     }
 
-    const EmigrateAssetAsset_Exception_Detail = {
-      ...Function_Exception_Detail,
-      target: "emigrateAssetAsset",
-    } as const;
-
-    const { sourceChainMagic, sourceChainName, assetType, amount, genesisDelegateSignature } =
-      emigrateAsset;
-
-    this.checkChainName(sourceChainName, "sourceChainName", EmigrateAssetAsset_Exception_Detail);
-
-    if (sourceChainName !== config.chainName) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: `sourceChainName ${sourceChainName}`,
-        to_target: "body",
-        be_compare_prop: "local chain name",
-        ...EmigrateAssetAsset_Exception_Detail,
-      });
-    }
-
-    this.checkChainMagic(sourceChainMagic, "sourceChainMagic", EmigrateAssetAsset_Exception_Detail);
-
-    if (sourceChainMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: `sourceChainMagic ${sourceChainMagic}`,
-        to_target: "body",
-        be_compare_prop: "local chain magic",
-        ...EmigrateAssetAsset_Exception_Detail,
-      });
-    }
-
-    this.checkAssetType(assetType, "assetType", EmigrateAssetAsset_Exception_Detail);
-
-    if (assetType !== config.assetType) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
-        to_compare_prop: `assetType ${assetType}`,
-        to_target: "body",
-        be_compare_prop: "local chain assetType",
-        ...EmigrateAssetAsset_Exception_Detail,
-      });
-    }
-
-    this.checkAssetAmount(amount, "amount", EmigrateAssetAsset_Exception_Detail);
-
-    if (amount === "0") {
-      throw new ArgumentIllegalException(PROP_SHOULD_GT_FIELD, {
-        prop: "amount",
-        fueld: "0",
-        ...EmigrateAssetAsset_Exception_Detail,
-      });
-    }
-
-    if (!genesisDelegateSignature) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "genesisDelegateSignature",
-        ...EmigrateAssetAsset_Exception_Detail,
-      });
-    }
-
-    if (!baseHelper.isValidAccountSignature(genesisDelegateSignature)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `genesisDelegateSignature ${genesisDelegateSignature}`,
-        type: "account signature",
-        ...EmigrateAssetAsset_Exception_Detail,
-      });
-    }
-
-    const { publicKey, signature, secondPublicKey, signSignature } = genesisDelegateSignature;
-    const address = await accountBaseHelper.getAddressFromPublicKeyString(publicKey);
-
-    const genesisDelegates = this.transactionHelper.genesisDelegates(config);
-
-    const genesisAddress = await this.accountBaseHelper.getAddressFromPublicKeyString(
-      this.configHelper.genesisBlock.generatorPublicKey,
+    const migrateCertificateModel = await this.migrateCertificateHelper.verifyMigrateCertificate(
+      emigrateAsset,
+      config,
     );
 
-    genesisDelegates.push(genesisAddress);
-
-    if (!genesisDelegates.includes(address)) {
+    if (body.recipientId !== migrateCertificateModel.toUser) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: `signature address ${address}`,
-        be_compare_prop: "genesis delegate address",
-        to_target: "emigrateAsset",
-        be_target: "config",
-        ...EmigrateAssetAsset_Exception_Detail,
-      });
-    }
-
-    const signatureBuffer = parseHexToArrayBuffer(signature);
-
-    if (
-      !(await this.transactionHelper.verifyEmigrateAssetGenesisSignature({
-        secretPublicKey: parseHexToArrayBuffer(publicKey),
-        signatureBuffer,
-        chainName: sourceChainName,
-        magic: sourceChainMagic,
-        assetType,
-        amount,
-        senderId: body.senderId,
-      }))
-    ) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `genesisDelegateSignature ${signature}`,
-        type: "signature",
+        to_compare_prop: `recipientId ${body.recipientId}`,
+        be_compare_prop: `recipientId ${migrateCertificateModel.toUser}`,
+        to_target: "body",
+        be_target: "migrateCertificate",
         ...Function_Exception_Detail,
-        target: "emigrateAsset",
       });
-    }
-
-    if (secondPublicKey && signSignature) {
-      if (
-        !(await this.transactionHelper.verifyEmigrateAssetGenesisSignature({
-          secretPublicKey: parseHexToArrayBuffer(secondPublicKey),
-          signatureBuffer: parseHexToArrayBuffer(signSignature),
-          chainName: sourceChainName,
-          magic: sourceChainMagic,
-          assetType,
-          amount,
-          senderId: body.senderId,
-          genesisSignatureBuffer: signatureBuffer,
-        }))
-      ) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: `genesisDelegateSignSignature ${signSignature}`,
-          type: "signature",
-          ...Function_Exception_Detail,
-          target: "emigrateAsset",
-        });
-      }
     }
   }
 

@@ -24,7 +24,6 @@
   "files": [
     "src/@types.ts",
     "src/acceptVote.ts",
-    "src/accountSignature.ts",
     "src/beExchangeAsset.ts",
     "src/beExchangeSpecialAsset.ts",
     "src/dapp.ts",

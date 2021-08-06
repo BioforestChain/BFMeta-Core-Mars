@@ -36,13 +36,9 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       function: "verify",
     } as const;
 
-    const { sourceChainMagic, assetType, amount, genesisDelegateSignature } =
-      transaction.asset.emigrateAsset;
-
-    const { publicKey, secondPublicKey, signSignature } = genesisDelegateSignature;
-
+    const emigrateAsset = transaction.asset.emigrateAsset;
+    const { publicKey, secondPublicKey, signSignature } = emigrateAsset.signatureJson;
     const address = await this.accountBaseHelper.getAddressFromPublicKeyString(publicKey);
-
     const delegate = await accountGetterHelper.getAccountInfo(address);
 
     if (!delegate) {
@@ -162,9 +158,9 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       accountGetterHelper,
     );
 
-    const totalSpend = BigInt(transaction.fee) + BigInt(amount);
+    const totalSpend = BigInt(transaction.fee) + BigInt(emigrateAsset.assets);
 
-    if (assets[sourceChainMagic][assetType].assetNumber !== totalSpend) {
+    if (assets[emigrateAsset.fromChain.magic][emigrateAsset.assetType].assetNumber !== totalSpend) {
       throw new ConsensusException(NEED_EMIGRATE_TOTAL_ASSET, {
         address: senderId,
         ...Function_Exception_Detail,

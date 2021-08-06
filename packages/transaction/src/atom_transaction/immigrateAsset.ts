@@ -7,6 +7,7 @@ import {
   ConfigHelper,
   ChainAssetInfoHelper,
   ConfigHelperMap,
+  MigrateCertificateHelper,
 } from "@bfchain/core-helper";
 import {
   CoreExceptionGenerator,
@@ -17,7 +18,6 @@ import {
   NOT_MATCH,
   NOT_EXIST,
   SHOULD_NOT_BE,
-  SHOULD_NOT_EXIST,
 } from "@bfchain/core-util-exception";
 import { EmigrateAssetTransactionFactory } from "./emigrateAsset";
 import { Injectable, parseHexToArrayBuffer, wrapTaskList } from "@bfchain/util";
@@ -40,6 +40,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
     public chainAssetInfoHelper: ChainAssetInfoHelper,
     private emigrateAssetTransactionFactory: EmigrateAssetTransactionFactory,
     private configMap: ConfigHelperMap,
+    public migrateCertificateHelper: MigrateCertificateHelper,
   ) {
     super();
   }
@@ -76,8 +77,8 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
 
     const { baseHelper, accountBaseHelper, emigrateAssetTransactionFactory } = this;
 
-    if (body.recipientId) {
-      throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+    if (!body.recipientId) {
+      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "recipientId",
         ...Function_Exception_Detail,
       });
@@ -132,28 +133,37 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
       target: "migrateAssetAsset",
     } as const;
 
-    const { genesisDelegateSignature, emigrateAssetTransaction } = immigrateAsset;
+    const { genesisDelegateSignature, migrateCertificate } = immigrateAsset;
 
-    if (!emigrateAssetTransaction) {
+    if (!migrateCertificate) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "emigrateAssetTransaction",
+        prop: "migrateCertificate",
         ...ImmigrateAssetAsset_Exception_Detail,
       });
     }
 
     // 验证完整交易包含签名
-    const emigrateAssetTransactionModel = await emigrateAssetTransactionFactory.fromJSON(
-      emigrateAssetTransaction,
-    );
-    const otherChainConfig = this.configMap.get(emigrateAssetTransactionModel.fromMagic);
+    const fromChainId = migrateCertificate.fromChainId;
+    this.migrateCertificateHelper.verifyFromChainId(fromChainId);
+    const fromMagic = fromChainId.split("/")[1];
+    if (!baseHelper.isValidChainMagic(fromMagic)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: `migrateCertificate.fromChainMagic ${fromMagic}`,
+        ...ImmigrateAssetAsset_Exception_Detail,
+      });
+    }
+    const otherChainConfig = this.configMap.get(fromMagic);
     if (!otherChainConfig) {
       throw new ArgumentIllegalException(NOT_EXIST, {
-        prop: emigrateAssetTransactionModel.fromMagic,
+        prop: fromMagic,
         ...Function_Exception_Detail,
         target: "configMap",
       });
     }
-    await emigrateAssetTransactionFactory.verify(emigrateAssetTransactionModel, otherChainConfig);
+    const migrateCertificateModel = await this.migrateCertificateHelper.verifyMigrateCertificate(
+      migrateCertificate,
+      otherChainConfig,
+    );
 
     if (!genesisDelegateSignature) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
@@ -172,15 +182,11 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
 
     const { publicKey, signature, secondPublicKey, signSignature } = genesisDelegateSignature;
     const address = await accountBaseHelper.getAddressFromPublicKeyString(publicKey);
-
     const genesisDelegates = this.transactionHelper.genesisDelegates(config);
-
     const genesisAddress = await this.accountBaseHelper.getAddressFromPublicKeyString(
       this.configHelper.genesisBlock.generatorPublicKey,
     );
-
     genesisDelegates.push(genesisAddress);
-
     if (!genesisDelegates.includes(address)) {
       throw new ArgumentIllegalException(NOT_MATCH, {
         to_compare_prop: `signature address ${address}`,
@@ -192,13 +198,13 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
     }
 
     const signatureBuffer = parseHexToArrayBuffer(signature);
-
+    const migrateCertificateBuffer = migrateCertificateModel.getAuthBytes(false, false);
     if (
       !(await this.transactionHelper.verifyImmigrateAssetGenesisSignature({
         secretPublicKey: parseHexToArrayBuffer(publicKey),
         signatureBuffer,
         senderId: body.senderId,
-        transactionSignatureBuffer: emigrateAssetTransactionModel.signatureBuffer,
+        migrateCertificateBuffer,
       }))
     ) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
@@ -208,13 +214,12 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
         target: "immigrateAsset",
       });
     }
-
     if (secondPublicKey && signSignature) {
       if (
         !(await this.transactionHelper.verifyImmigrateAssetGenesisSignature({
           secretPublicKey: parseHexToArrayBuffer(secondPublicKey),
           signatureBuffer: parseHexToArrayBuffer(signSignature),
-          transactionSignatureBuffer: emigrateAssetTransactionModel.signatureBuffer,
+          migrateCertificateBuffer,
           senderId: body.senderId,
           genesisSignatureBuffer: signatureBuffer,
         }))
@@ -228,10 +233,11 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
       }
     }
 
-    if (storage.value !== emigrateAssetTransaction.signature) {
+    const authSignature = migrateCertificateModel.authSignatureJson.signature;
+    if (storage.value !== authSignature) {
       throw new ArgumentIllegalException(NOT_MATCH, {
         to_compare_prop: `value ${storage.value}`,
-        be_compare_prop: "signature",
+        be_compare_prop: `authSignature ${authSignature}`,
         to_target: "storage",
         be_target: "emigrateAssetTransaction",
         ...Function_Exception_Detail,
@@ -267,19 +273,18 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
   ) {
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
-      const { amount, sourceChainMagic, assetType } =
-        transaction.asset.immigrateAsset.emigrateAssetTransaction.asset.emigrateAsset;
-      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
+      const migrateAssetAsset = transaction.asset.immigrateAsset.migrateCertificate;
+      const { fromChain, assetType, assets } = migrateAssetAsset;
+      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(fromChain.magic, assetType);
       // 累加资产
       taskList.next = eventEmitter.emit("asset", {
         type: "asset",
         transaction,
         applyInfo: {
-          address: transaction.senderId,
-          publicKeyBuffer: transaction.senderPublicKeyBuffer,
+          address: transaction.recipientId,
           assetInfo,
-          amount,
-          sourceAmount: amount,
+          amount: assets,
+          sourceAmount: assets,
         },
       });
     });

@@ -1,7 +1,6 @@
 import { Message, Field, Type } from "@bfchain/protobuf";
-// import { EmigrateAssetTransaction } from "@bfchain/core-model/src/transactionModel/emigrateAsset.transaction";
-import { AccountSignatureModel } from "./accountSignature";
 import { cacheBytesGetter } from "@bfchain/core-model-cacher";
+import { AccountSignatureModel, MigrateCertificateModel } from "@bfchain/core-model-common";
 const SIGNATURE_BUFFER_WM = new WeakMap<AccountSignatureModel, Uint8Array>();
 
 /**
@@ -31,8 +30,8 @@ export class ImmigrateAssetModel
     this.genesisDelegateSignatureBuffer = buf;
   }
   /**完整的资产迁出交易 */
-  @Field.d(ImmigrateAssetModel.INC++, "EmigrateAssetTransaction")
-  emigrateAssetTransaction!: BFChainCore.JSONToModelType<BFChainCore.EmigrateAssetTransactionJSON>;
+  @Field.d(ImmigrateAssetModel.INC++, MigrateCertificateModel)
+  migrateCertificate!: MigrateCertificateModel;
   @cacheBytesGetter
   getBytes() {
     const props: PropertyDescriptorMap = {
@@ -44,7 +43,7 @@ export class ImmigrateAssetModel
   toJSON() {
     return {
       genesisDelegateSignature: this.genesisDelegateSignature.toJSON(),
-      emigrateAssetTransaction: this.emigrateAssetTransaction.toJSON(),
+      migrateCertificate: this.migrateCertificate.toJSON(),
     };
   }
   static fromObject<T extends Message>(

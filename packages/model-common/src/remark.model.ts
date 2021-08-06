@@ -1,5 +1,5 @@
 import { Message, MapField, Type } from "@bfchain/protobuf";
-import { StringKeyMap } from "./mapField";
+import { StringKeyMap } from "./mapField.model";
 import { cacheBytesGetter } from "@bfchain/core-model-cacher";
 
 @Type.d("TemplateRemark")

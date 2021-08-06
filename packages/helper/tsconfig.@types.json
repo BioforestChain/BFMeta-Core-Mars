@@ -40,6 +40,9 @@
       "path": "../helper-config/tsconfig.@types.json"
     },
     {
+      "path": "../helper-migrate-certificate/tsconfig.@types.json"
+    },
+    {
       "path": "../helper-milestones/tsconfig.@types.json"
     },
     {
