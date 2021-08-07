@@ -1,12 +1,12 @@
 {
   "name": "@types/bfchain__core-patch-v3",
   "types": "index.d.ts",
-  "version": "5.22.58",
+  "version": "5.22.61",
   "dependencies": {
-    "@types/bfchain__core-block": "5.22.58",
-    "@types/bfchain__core-helper": "5.22.58",
-    "@types/bfchain__core-patch-base": "5.22.58",
-    "@types/bfchain__core-transaction-logic-verifier": "5.22.58",
-    "@types/bfchain__core-typings": "5.22.58"
+    "@types/bfchain__core-block": "5.22.61",
+    "@types/bfchain__core-helper": "5.22.61",
+    "@types/bfchain__core-patch-base": "5.22.61",
+    "@types/bfchain__core-transaction-logic-verifier": "5.22.61",
+    "@types/bfchain__core-typings": "5.22.61"
   }
 }
