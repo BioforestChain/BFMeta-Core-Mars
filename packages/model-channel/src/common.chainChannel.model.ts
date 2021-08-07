@@ -9,14 +9,18 @@ export class ErrorMessage<D = any>
 {
   @Field.d(1, "string")
   message!: string;
-  @Field.d(2, "string")
+  @Field.d(2, "string", "required", "")
   detailJSON!: string;
   private _parsed_detail = false;
   private _detail!: D;
   get detail() {
     if (!this._parsed_detail) {
       this._parsed_detail = true;
-      this._detail = JSON.parse(this.detailJSON);
+      try {
+        this._detail = this.detailJSON ? JSON.parse(this.detailJSON) : {};
+      } catch {
+        this._detail = {} as D;
+      }
     }
     return this._detail;
   }
