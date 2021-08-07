@@ -1,6 +1,6 @@
 import type { ImmigrateAssetTransaction } from "@bfchain/core-model";
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
-import { Injectable, Inject, QueneEventEmitter } from "@bfchain/util";
+import { Injectable, Inject, QueneEventEmitter, parseHexToArrayBuffer } from "@bfchain/util";
 import {
   CoreExceptionGenerator,
   NOT_EXIST,
@@ -9,8 +9,15 @@ import {
   CAN_NOT_CARRY_SECOND_PUBLICKEY,
   CAN_NOT_CARRY_SECOND_SIGNATURE,
   PROP_IS_REQUIRE,
+  PROP_IS_INVALID,
 } from "@bfchain/core-util-exception";
-import { AccountBaseHelper, TransactionHelper } from "@bfchain/core-helper";
+import {
+  AccountBaseHelper,
+  ConfigHelperMap,
+  TransactionHelper,
+  ConfigHelper,
+  MigrateCertificateHelper,
+} from "@bfchain/core-helper";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
@@ -20,8 +27,12 @@ const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
 @Injectable()
 export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
   constructor(
-    @Inject(AccountBaseHelper) public accountBaseHelper: AccountBaseHelper,
-    @Inject(TransactionHelper) public transactionHelper: TransactionHelper,
+    @Inject(AccountBaseHelper)
+    public accountBaseHelper: AccountBaseHelper,
+    @Inject(TransactionHelper)
+    public transactionHelper: TransactionHelper,
+    private configMap: ConfigHelperMap,
+    private migrateCertificateHelper: MigrateCertificateHelper,
   ) {
     super();
   }
@@ -40,14 +51,33 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       function: "verify",
     } as const;
 
+    const senderId = transaction.senderId;
     const { migrateCertificate, genesisDelegateSignature } = transaction.asset.immigrateAsset;
 
-    const { publicKey, secondPublicKey, signSignature } = genesisDelegateSignature;
+    const { fromChain, assetType } = migrateCertificate;
+    const fromMagic = fromChain.magic;
+    let otherChainConfig = this.configMap.get(fromMagic);
+    if (!otherChainConfig) {
+      const memchain = await accountGetterHelper.getChain(fromMagic);
+      if (!memchain) {
+        throw new ConsensusException(NOT_EXIST, {
+          prop: `Chain with magic ${fromChain.magic}`,
+          target: "blockChain",
+          ...Function_Exception_Detail,
+        });
+      }
+      otherChainConfig = new ConfigHelper(memchain.genesisBlock, this.configHelper.business);
+      this.configMap.set(fromMagic, otherChainConfig);
+    }
 
+    await this.migrateCertificateHelper.verifyMigrateCertificate(
+      migrateCertificate,
+      otherChainConfig,
+    );
+
+    const { publicKey, signature, secondPublicKey, signSignature } = genesisDelegateSignature;
     const address = await this.accountBaseHelper.getAddressFromPublicKeyString(publicKey);
-
     const delegate = await accountGetterHelper.getAccountInfo(address);
-
     if (!delegate) {
       throw new ConsensusException(NOT_EXIST, {
         prop: `Account with address ${address}`,
@@ -55,7 +85,6 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
         ...Function_Exception_Detail,
       });
     }
-
     if (delegate.secondPublicKey) {
       if (!secondPublicKey) {
         throw new ConsensusException(PROP_IS_REQUIRE, {
@@ -92,33 +121,67 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
         });
       }
     }
-
-    const { fromChain, assetType } = migrateCertificate;
-
-    const memchain = await accountGetterHelper.getChain(fromChain.magic);
-    if (!memchain) {
-      throw new ConsensusException(NOT_EXIST, {
-        prop: `Chain with magic ${fromChain.magic}`,
-        target: "blockChain",
+    const signatureBuffer = parseHexToArrayBuffer(signature);
+    const migrateCertificateBuffer = migrateCertificate.getAuthBytes(false, false);
+    if (
+      !(await this.transactionHelper.verifyImmigrateAssetGenesisSignature({
+        secretPublicKey: parseHexToArrayBuffer(publicKey),
+        signatureBuffer,
+        senderId,
+        migrateCertificateBuffer,
+      }))
+    ) {
+      throw new ConsensusException(PROP_IS_INVALID, {
+        prop: `genesisDelegateSignature ${signature}`,
+        type: "signature",
+        ...Function_Exception_Detail,
+        target: "immigrateAsset",
+      });
+    }
+    if (secondPublicKey && signSignature) {
+      if (
+        !(await this.transactionHelper.verifyImmigrateAssetGenesisSignature({
+          secretPublicKey: parseHexToArrayBuffer(secondPublicKey),
+          signatureBuffer: parseHexToArrayBuffer(signSignature),
+          migrateCertificateBuffer,
+          senderId,
+          genesisSignatureBuffer: signatureBuffer,
+        }))
+      ) {
+        throw new ConsensusException(PROP_IS_INVALID, {
+          prop: `genesisDelegateSignSignature ${signSignature}`,
+          type: "signature",
+          ...Function_Exception_Detail,
+          target: "immigrateAsset",
+        });
+      }
+    }
+    if ((transaction.storage as BFChainCore.TransactionStorageJSON).value !== assetType) {
+      throw new ConsensusException(NOT_MATCH, {
+        to_compare_prop: `value ${
+          (transaction.storage as BFChainCore.TransactionStorageJSON).value
+        }`,
+        be_compare_prop: `assetType ${assetType}`,
+        to_target: "storage",
+        be_target: "emigrateAssetTransaction",
         ...Function_Exception_Detail,
       });
     }
 
-    const genesisAsset = memchain.genesisBlock.asset.genesisAsset;
-    if (assetType !== genesisAsset.assetType) {
+    if (assetType !== otherChainConfig.assetType) {
       throw new ConsensusException(NOT_MATCH, {
         to_compare_prop: `assetType ${assetType}`,
-        be_compare_prop: `assetType ${genesisAsset.assetType}`,
+        be_compare_prop: `assetType ${otherChainConfig.assetType}`,
         to_target: "immigrateAsset.emigrateAssetTransaction.asset.emigrateAsset",
         be_target: `registerChain in blockChain with magic ${fromChain.magic}`,
         ...Function_Exception_Detail,
       });
     }
 
-    if (fromChain.chainName !== genesisAsset.chainName) {
+    if (fromChain.chainName !== otherChainConfig.chainName) {
       throw new ConsensusException(NOT_MATCH, {
         to_compare_prop: `sourceChainName ${fromChain.chainName}`,
-        be_compare_prop: `sourceChainName ${genesisAsset.chainName}`,
+        be_compare_prop: `sourceChainName ${otherChainConfig.chainName}`,
         to_target: "immigrateAsset.emigrateAssetTransaction.asset.emigrateAsset",
         be_target: `registerChain in blockChain with magic ${fromChain.magic}`,
         ...Function_Exception_Detail,
@@ -162,14 +225,16 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
     currentBlockHeight: number,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
+    const migrateCertificateId =
+      transaction.asset.immigrateAsset.migrateCertificate.authSignatureJson.signature;
     const isSecondary = await transactionGetterHelper.checkSecondaryTransaction({
       type: this.transactionHelper.IMMIGRATE_ASSET,
-      storageValue: transaction.storageValue as string,
+      migrateCertificateId,
       heightRange: this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
     });
     if (isSecondary) {
       throw new ConsensusException(ASSET_IS_ALREADY_MIGRATION, {
-        signature: transaction.storageValue,
+        migrateCertificateId,
         function: "checkSecondaryTransaction",
       });
     }

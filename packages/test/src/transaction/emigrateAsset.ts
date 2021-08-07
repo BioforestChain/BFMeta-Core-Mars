@@ -44,6 +44,10 @@ async function getEmigrateAssetTransaction(
     toMagic: registerBfchainCore.config.magic, // 交易去往链的 magic
     applyBlockHeight: 10, // 交易发起高度
     effectiveBlockHeight: 10100,
+    storage: {
+      key: "assetType",
+      value: config.assetType,
+    },
   };
   let secondKeypair;
   if (sender.secondSecret) {
@@ -95,6 +99,16 @@ async function getEmigrateAssetTransaction(
   // console.log(xx.toJSON());
 }
 (async () => {
-  await getEmigrateAssetTransaction(getSenderWithSecondSecret(), getDelegateWithoutSecondSecret());
-  await getEmigrateAssetTransaction(getSenderWithoutSecondSecret(), getDelegateWithSecondSecret());
+  try {
+    await getEmigrateAssetTransaction(
+      getSenderWithSecondSecret(),
+      getDelegateWithoutSecondSecret(),
+    );
+    await getEmigrateAssetTransaction(
+      getSenderWithoutSecondSecret(),
+      getDelegateWithSecondSecret(),
+    );
+  } catch (e) {
+    console.log(e);
+  }
 })();

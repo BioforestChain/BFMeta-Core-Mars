@@ -96,9 +96,18 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
       });
     }
 
-    if (body.storage) {
-      throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+    if (!body.storage) {
+      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "storage",
+        ...Function_Exception_Detail,
+      });
+    }
+    const storage = body.storage;
+    if (storage.key !== "assetType") {
+      throw new ArgumentIllegalException(SHOULD_BE, {
+        to_compare_prop: `key ${storage.key}`,
+        to_target: "storage",
+        be_compare_prop: "assetType",
         ...Function_Exception_Detail,
       });
     }
@@ -117,12 +126,33 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
       config,
     );
 
+    if (body.senderId !== migrateCertificateModel.fromUser) {
+      throw new ArgumentIllegalException(NOT_MATCH, {
+        to_compare_prop: `senderId ${body.senderId}`,
+        be_compare_prop: `fromUser ${migrateCertificateModel.fromUser}`,
+        to_target: "body",
+        be_target: "migrateCertificate",
+        ...Function_Exception_Detail,
+      });
+    }
+
     if (body.recipientId !== migrateCertificateModel.toUser) {
       throw new ArgumentIllegalException(NOT_MATCH, {
         to_compare_prop: `recipientId ${body.recipientId}`,
-        be_compare_prop: `recipientId ${migrateCertificateModel.toUser}`,
+        be_compare_prop: `toUser ${migrateCertificateModel.toUser}`,
         to_target: "body",
         be_target: "migrateCertificate",
+        ...Function_Exception_Detail,
+      });
+    }
+
+    const assetType = migrateCertificateModel.assetType;
+    if (storage.value !== assetType) {
+      throw new ArgumentIllegalException(NOT_MATCH, {
+        to_compare_prop: `value ${storage.value}`,
+        be_compare_prop: `assetType ${assetType}`,
+        to_target: "storage",
+        be_target: "emigrateAssetTransaction",
         ...Function_Exception_Detail,
       });
     }

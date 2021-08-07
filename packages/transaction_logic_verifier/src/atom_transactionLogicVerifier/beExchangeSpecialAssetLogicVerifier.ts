@@ -8,7 +8,6 @@ import {
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
 import {
   CoreExceptionGenerator,
-  NOT_EXIST,
   NOT_MATCH,
   CAN_NOT_SECONDARY_TRANSACTION,
   SHOULD_BE,

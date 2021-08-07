@@ -59,7 +59,7 @@ export class MigrateCertificateHelper {
     const { senderSecret, senderSecondSecret, recipientId, toChainInfo, assets } = args;
     const keypair = await accountBaseHelper.createSecretKeypair(senderSecret);
     const publicKey = getHexFromArrayBuffer(keypair.publicKey);
-    const address = accountBaseHelper.getAddressFromPublicKey(keypair.publicKey);
+    const address = await accountBaseHelper.getAddressFromPublicKey(keypair.publicKey);
 
     const certificate = this.fromJSON({
       /**凭证版本 */

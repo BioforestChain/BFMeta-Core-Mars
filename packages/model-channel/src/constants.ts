@@ -110,6 +110,8 @@ export enum NewTransactionRefuseReason {
   ACCOUNT_IS_NOT_AN_DELEGATE,
   /**受托人拒绝收票 */
   DELEGATE_IS_ALREADY_REJECT_VOTE,
+  /**只能迁移主权益 */
+  MIGRATE_MAIN_ASSET_ONLY,
 }
 
 export enum DUPLEX_API_CMD {

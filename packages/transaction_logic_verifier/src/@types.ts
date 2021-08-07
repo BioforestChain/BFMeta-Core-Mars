@@ -67,7 +67,9 @@ declare namespace BFChainCore {
       /**事件发起账户地址 */
       senderId?: string;
       /**事件关联索引 */
-      storageValue: string;
+      storageValue?: string;
+      /**迁移凭证 */
+      migrateCertificateId?: string;
       /**事件查询范围 */
       heightRange: { startHeight: number; endHeight: number };
     }): Promise<boolean>;

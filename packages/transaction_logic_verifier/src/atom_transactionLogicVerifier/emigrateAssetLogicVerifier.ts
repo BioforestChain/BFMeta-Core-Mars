@@ -1,4 +1,4 @@
-import type { EmigrateAssetTransaction } from "@bfchain/core-model";
+import { EmigrateAssetTransaction, NewTransactionRefuseReason } from "@bfchain/core-model";
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { Injectable, Inject, QueneEventEmitter } from "@bfchain/util";
 import {
@@ -11,6 +11,8 @@ import {
   CAN_NOT_CARRY_SECOND_SIGNATURE,
   VOTE_RECENTLY,
   POSSESS_FROZEN_ASSET,
+  MIGRATE_MAIN_ASSET_ONLY,
+  DELEGATE_CAN_NOT_MIGRATE_ASSET,
 } from "@bfchain/core-util-exception";
 import { AccountBaseHelper } from "@bfchain/core-helper";
 
@@ -18,7 +20,10 @@ const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "EmigrateAsset
 
 @Injectable()
 export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
-  constructor(@Inject(AccountBaseHelper) protected accountBaseHelper: AccountBaseHelper) {
+  constructor(
+    @Inject(AccountBaseHelper)
+    protected accountBaseHelper: AccountBaseHelper,
+  ) {
     super();
   }
 
@@ -36,7 +41,24 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       function: "verify",
     } as const;
 
+    if (accountsInfo.sender.accountInfo.isDelegate) {
+      throw new ConsensusException(DELEGATE_CAN_NOT_MIGRATE_ASSET, {
+        ...Function_Exception_Detail,
+      });
+    }
+
     const emigrateAsset = transaction.asset.emigrateAsset;
+    const assetType = emigrateAsset.assetType;
+    const magic = emigrateAsset.fromChain.magic;
+    if (!(magic === this.configHelper.magic && assetType === this.configHelper.assetType)) {
+      throw new ConsensusException(MIGRATE_MAIN_ASSET_ONLY, {
+        assetType,
+        mainAsset: this.configHelper.assetType,
+        errorId: NewTransactionRefuseReason.MIGRATE_MAIN_ASSET_ONLY,
+        function: "verify",
+      });
+    }
+
     const { publicKey, secondPublicKey, signSignature } = emigrateAsset.signatureJson;
     const address = await this.accountBaseHelper.getAddressFromPublicKeyString(publicKey);
     const delegate = await accountGetterHelper.getAccountInfo(address);
@@ -160,7 +182,7 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
 
     const totalSpend = BigInt(transaction.fee) + BigInt(emigrateAsset.assets);
 
-    if (assets[emigrateAsset.fromChain.magic][emigrateAsset.assetType].assetNumber !== totalSpend) {
+    if (assets[magic][assetType].assetNumber !== totalSpend) {
       throw new ConsensusException(NEED_EMIGRATE_TOTAL_ASSET, {
         address: senderId,
         ...Function_Exception_Detail,

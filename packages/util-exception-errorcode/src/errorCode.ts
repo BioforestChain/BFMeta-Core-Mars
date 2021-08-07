@@ -239,9 +239,9 @@ export const UNFROZEN_TIME_USE_UP = (ec.next =
 /**frozenId function */
 export const GRABALE_TIME_USE_UP = (ec.next =
   "Gift asset grabale time use up, frozenId {frozenId} when {function}");
-/**signature function */
+/**migrateCertificateId function */
 export const ASSET_IS_ALREADY_MIGRATION = (ec.next =
-  "Asset is already migration, emigrate asset transaction signature {signature} when {function}");
+  "Asset is already migration, migrateCertificateId {migrateCertificateId} when {function}");
 /**reason function */
 export const TOO_MANY_EXPECTEDISSUEDASSETS = (ec.next =
   "Too many expectedIssuedAssets, reason {reason} when function");
@@ -323,6 +323,12 @@ export const GENESIS_DELEGATE_NOT_ENOUGH = (ec.next =
 /**prop target function */
 export const PROP_SHOULD_BE_ARRAY = (ec.next =
   "{prop} in {target} should be an array when {function}");
+/**assetType mainAsset function */
+export const MIGRATE_MAIN_ASSET_ONLY = (ec.next =
+  "You can only migrate main asset, {assetType} is not main asset {mainAsset}, when {function}");
+/**function */
+export const DELEGATE_CAN_NOT_MIGRATE_ASSET = (ec.next =
+  "Delegate can not migrate asset, when {function}");
 // #endregion
 export const errorCode = new Map(
   ec.errorCode.concat([
