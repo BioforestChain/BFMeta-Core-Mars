@@ -123,36 +123,47 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
 
     const migrateCertificateModel = await this.migrateCertificateHelper.verifyMigrateCertificate(
       emigrateAsset,
-      config,
+      {
+        forceCheckFrom: true,
+        fromChainBaseConfig: {
+          chainName: config.chainName,
+          magic: config.magic,
+          generatorPublicKey: config.generatorPublicKey,
+          genesisBlockSignature: config.signature,
+          genesisDelegates: this.transactionHelper.genesisDelegates(config),
+        },
+      },
     );
 
-    if (body.senderId !== migrateCertificateModel.fromUser) {
+    const migrateCertificateBody = migrateCertificateModel.body;
+
+    if (body.senderId !== migrateCertificateBody.fromUser) {
       throw new ArgumentIllegalException(NOT_MATCH, {
         to_compare_prop: `senderId ${body.senderId}`,
-        be_compare_prop: `fromUser ${migrateCertificateModel.fromUser}`,
+        be_compare_prop: `fromUser ${migrateCertificateBody.fromUser}`,
         to_target: "body",
         be_target: "migrateCertificate",
         ...Function_Exception_Detail,
       });
     }
 
-    if (body.recipientId !== migrateCertificateModel.toUser) {
+    if (body.recipientId !== migrateCertificateBody.toUser) {
       throw new ArgumentIllegalException(NOT_MATCH, {
         to_compare_prop: `recipientId ${body.recipientId}`,
-        be_compare_prop: `toUser ${migrateCertificateModel.toUser}`,
+        be_compare_prop: `toUser ${migrateCertificateBody.toUser}`,
         to_target: "body",
         be_target: "migrateCertificate",
         ...Function_Exception_Detail,
       });
     }
 
-    const assetType = migrateCertificateModel.assetType;
+    const assetType = migrateCertificateBody.assetType;
     if (storage.value !== assetType) {
       throw new ArgumentIllegalException(NOT_MATCH, {
         to_compare_prop: `value ${storage.value}`,
         be_compare_prop: `assetType ${assetType}`,
         to_target: "storage",
-        be_target: "emigrateAssetTransaction",
+        be_target: "migrateCertificateBody",
         ...Function_Exception_Detail,
       });
     }

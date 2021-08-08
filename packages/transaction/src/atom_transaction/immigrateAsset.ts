@@ -128,17 +128,8 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
       target: "migrateAssetAsset",
     } as const;
 
-    const { genesisDelegateSignature, migrateCertificate } = immigrateAsset;
-
-    if (!migrateCertificate) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "migrateCertificate",
-        ...ImmigrateAssetAsset_Exception_Detail,
-      });
-    }
-
     // 验证完整交易包含签名
-    const fromChainId = migrateCertificate.fromChainId;
+    const fromChainId = immigrateAsset.body.fromChainId;
     this.migrateCertificateHelper.verifyFromChainId(fromChainId);
     const fromMagic = fromChainId.split("/")[1];
     if (!baseHelper.isValidChainMagic(fromMagic)) {
@@ -148,35 +139,28 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
       });
     }
 
-    if (!genesisDelegateSignature) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "genesisDelegateSignature",
-        ...ImmigrateAssetAsset_Exception_Detail,
-      });
-    }
-
-    if (!baseHelper.isValidAccountSignature(genesisDelegateSignature)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `genesisDelegateSignature ${genesisDelegateSignature}`,
-        type: "account signature",
-        ...ImmigrateAssetAsset_Exception_Detail,
-      });
-    }
-
-    const { publicKey } = genesisDelegateSignature;
-    const address = await accountBaseHelper.getAddressFromPublicKeyString(publicKey);
-    const genesisDelegates = this.transactionHelper.genesisDelegates(config);
-    const genesisAddress = await this.accountBaseHelper.getAddressFromPublicKeyString(
-      this.configHelper.genesisBlock.generatorPublicKey,
+    const migrateCertificateModel = await this.migrateCertificateHelper.verifyMigrateCertificate(
+      immigrateAsset,
+      {
+        forceCheckTo: true,
+        toChainBaseConfig: {
+          chainName: config.chainName,
+          magic: config.magic,
+          generatorPublicKey: config.generatorPublicKey,
+          genesisBlockSignature: config.signature,
+          genesisDelegates: this.transactionHelper.genesisDelegates(config),
+        },
+      },
     );
-    genesisDelegates.push(genesisAddress);
-    if (!genesisDelegates.includes(address)) {
+
+    const assetType = migrateCertificateModel.body.assetType;
+    if (storage.value !== assetType) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: `signature address ${address}`,
-        be_compare_prop: "genesis delegate address",
-        to_target: "immigrateAsset",
-        be_target: "config",
-        ...ImmigrateAssetAsset_Exception_Detail,
+        to_compare_prop: `value ${storage.value}`,
+        be_compare_prop: `assetType ${assetType}`,
+        to_target: "storage",
+        be_target: "migrateCertificateBody",
+        ...Function_Exception_Detail,
       });
     }
   }
@@ -209,8 +193,8 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
   ) {
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
-      const migrateAssetAsset = transaction.asset.immigrateAsset.migrateCertificate;
-      const { fromChain, assetType, assets } = migrateAssetAsset;
+      const migrateAssetAsset = transaction.asset.immigrateAsset;
+      const { fromChain, assetType, assets } = migrateAssetAsset.body;
       const assetInfo = this.chainAssetInfoHelper.getAssetInfo(fromChain.magic, assetType);
       // 累加资产
       taskList.next = eventEmitter.emit("asset", {
@@ -221,6 +205,15 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
           assetInfo,
           amount: assets,
           sourceAmount: assets,
+        },
+      });
+
+      // 记录跨链凭证
+      taskList.next = eventEmitter.emit("migrateCertificate", {
+        type: "migrateCertificate",
+        transaction,
+        applyInfo: {
+          migrateCertificateId: migrateAssetAsset.fromAuthSignatureJson.signature,
         },
       });
     });

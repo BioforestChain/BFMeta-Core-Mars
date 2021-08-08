@@ -14,7 +14,12 @@ import {
   MIGRATE_MAIN_ASSET_ONLY,
   DELEGATE_CAN_NOT_MIGRATE_ASSET,
 } from "@bfchain/core-util-exception";
-import { AccountBaseHelper } from "@bfchain/core-helper";
+import {
+  AccountBaseHelper,
+  ConfigHelper,
+  ConfigHelperMap,
+  MigrateCertificateHelper,
+} from "@bfchain/core-helper";
 
 const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "EmigrateAssetLogicVerifier");
 
@@ -23,6 +28,8 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
   constructor(
     @Inject(AccountBaseHelper)
     protected accountBaseHelper: AccountBaseHelper,
+    private configMap: ConfigHelperMap,
+    private migrateCertificateHelper: MigrateCertificateHelper,
   ) {
     super();
   }
@@ -47,9 +54,11 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       });
     }
 
+    const { senderId, toMagic } = transaction;
+
     const emigrateAsset = transaction.asset.emigrateAsset;
-    const assetType = emigrateAsset.assetType;
-    const magic = emigrateAsset.fromChain.magic;
+    const assetType = emigrateAsset.body.assetType;
+    const magic = emigrateAsset.body.fromChain.magic;
     if (!(magic === this.configHelper.magic && assetType === this.configHelper.assetType)) {
       throw new ConsensusException(MIGRATE_MAIN_ASSET_ONLY, {
         assetType,
@@ -58,6 +67,27 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
         function: "verify",
       });
     }
+
+    let otherChainConfig = this.configMap.get(toMagic);
+    if (!otherChainConfig) {
+      const memchain = await accountGetterHelper.getChain(toMagic);
+      if (!memchain) {
+        throw new ConsensusException(NOT_EXIST, {
+          prop: `Chain with magic ${toMagic}`,
+          target: "blockChain",
+          ...Function_Exception_Detail,
+        });
+      }
+      otherChainConfig = new ConfigHelper(memchain.genesisBlock, this.configHelper.business);
+      this.configMap.set(toMagic, otherChainConfig);
+    }
+    await this.migrateCertificateHelper.checkChainInfo("toChain", emigrateAsset.body.toChain, {
+      chainName: otherChainConfig.chainName,
+      magic: otherChainConfig.magic,
+      generatorPublicKey: otherChainConfig.generatorPublicKey,
+      genesisBlockSignature: otherChainConfig.signature,
+      genesisDelegates: this.transactionHelper.genesisDelegates(otherChainConfig),
+    });
 
     const { publicKey, secondPublicKey, signSignature } = emigrateAsset.signatureJson;
     const address = await this.accountBaseHelper.getAddressFromPublicKeyString(publicKey);
@@ -120,7 +150,6 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       transactionGetterHelper,
     );
 
-    const senderId = transaction.senderId;
     const cloneAccountsAssets = {
       [senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
     };
@@ -180,8 +209,7 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       accountGetterHelper,
     );
 
-    const totalSpend = BigInt(transaction.fee) + BigInt(emigrateAsset.assets);
-
+    const totalSpend = BigInt(transaction.fee) + BigInt(emigrateAsset.body.assets);
     if (assets[magic][assetType].assetNumber !== totalSpend) {
       throw new ConsensusException(NEED_EMIGRATE_TOTAL_ASSET, {
         address: senderId,

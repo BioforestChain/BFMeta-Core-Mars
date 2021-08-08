@@ -696,67 +696,6 @@ export class TransactionHelper {
     );
   }
 
-  async immigrateAssetGenesisSignature(args: {
-    secretKeyBuffer: Uint8Array;
-    migrateCertificateBuffer: Uint8Array;
-    senderId: string;
-    genesisSignatureBuffer?: Uint8Array;
-  }) {
-    const hash = this.cryptoHelper
-      .sha256()
-      .update(args.migrateCertificateBuffer)
-      .update(args.senderId);
-    if (args.genesisSignatureBuffer) {
-      hash.update(args.genesisSignatureBuffer);
-    }
-    return this.asymmetricHelper.detachedSign(await hash.digest(), args.secretKeyBuffer);
-  }
-  /**
-   * 资产迁入交易创世受托人签名
-   *
-   * @param args `创世受托人密钥 迁移凭证 迁入交易发起账户地址 创世受托人签名`
-   */
-  async getImmigrateAssetGenesisSignature(args: {
-    secret: string;
-    migrateCertificateBuffer: Uint8Array;
-    senderId: string;
-    genesisSignatureBuffer?: Uint8Array;
-  }) {
-    const secretKeyBuffer = (await this.accountBaseHelper.createSecretKeypair(args.secret))
-      .secretKey;
-    return this.immigrateAssetGenesisSignature({
-      secretKeyBuffer,
-      migrateCertificateBuffer: args.migrateCertificateBuffer,
-      senderId: args.senderId,
-      genesisSignatureBuffer: args.genesisSignatureBuffer,
-    });
-  }
-  /**
-   * 权益迁入交易创世受托人签名验证
-   *
-   * @param args `创世受托人公钥 创世受托人签名 迁移凭证 发起账户地址 创世受托人签名`
-   */
-  async verifyImmigrateAssetGenesisSignature(args: {
-    secretPublicKey: Uint8Array;
-    signatureBuffer: Uint8Array;
-    migrateCertificateBuffer: Uint8Array;
-    senderId: string;
-    genesisSignatureBuffer?: Uint8Array;
-  }) {
-    const hash = this.cryptoHelper
-      .sha256()
-      .update(args.migrateCertificateBuffer)
-      .update(args.senderId);
-    if (args.genesisSignatureBuffer) {
-      hash.update(args.genesisSignatureBuffer);
-    }
-    return this.asymmetricHelper.detachedVeriy(
-      await hash.digest(),
-      args.signatureBuffer,
-      args.secretPublicKey,
-    );
-  }
-
   /**
    * 获取交易的最大有效区块高度
    * @param transaction

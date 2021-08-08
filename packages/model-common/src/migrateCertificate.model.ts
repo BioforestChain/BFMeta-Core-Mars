@@ -4,37 +4,37 @@ import { AccountSignatureModel } from "./accountSignature.model";
 import { cacheBytesGetter } from "@bfchain/core-model-cacher";
 
 /**
- * 迁移凭证模型
+ * 迁移凭证信息
  *
  */
-@Type.d("MigrateCertificateModel")
-export class MigrateCertificateModel
-  extends Message<MigrateCertificateModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.MigrateCertificateJSON>
+@Type.d("MigrateCertificateBodyModel")
+export class MigrateCertificateBodyModel
+  extends Message<MigrateCertificateBodyModel>
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.MigrateCertificateBodyJSON>
 {
   static INC = 1;
   /**凭证版本 */
-  @Field.d(MigrateCertificateModel.INC++, "string")
+  @Field.d(MigrateCertificateBodyModel.INC++, "string")
   version!: string;
   /**发起账户的唯一标识 version/address */
-  @Field.d(MigrateCertificateModel.INC++, "string")
+  @Field.d(MigrateCertificateBodyModel.INC++, "string")
   fromUserId!: string;
   @cacheGetter
   get fromUser() {
     return this.fromUserId.split("/")[1];
   }
   /**接收账户的唯一标识 version/address */
-  @Field.d(MigrateCertificateModel.INC++, "string")
+  @Field.d(MigrateCertificateBodyModel.INC++, "string")
   toUserId!: string;
   @cacheGetter
   get toUser() {
     return this.toUserId.split("/")[1];
   }
   /**迁出凭证生成时间 Date.now().getTimes() */
-  @Field.d(MigrateCertificateModel.INC++, "uint32")
+  @Field.d(MigrateCertificateBodyModel.INC++, "uint32")
   timestamp!: number;
   /**迁出链的唯一标识 version+自定义格式，目前是 version/magic/chainName/genesisBlockSignature */
-  @Field.d(MigrateCertificateModel.INC++, "string")
+  @Field.d(MigrateCertificateBodyModel.INC++, "string")
   fromChainId!: string;
   @cacheGetter
   get fromChain() {
@@ -46,7 +46,7 @@ export class MigrateCertificateModel
     };
   }
   /**迁入链的唯一标识 version+自定义格式，目前是 version/magic/chainName/genesisBlockSignature */
-  @Field.d(MigrateCertificateModel.INC++, "string")
+  @Field.d(MigrateCertificateBodyModel.INC++, "string")
   toChainId!: string;
   @cacheGetter
   get toChain() {
@@ -58,15 +58,44 @@ export class MigrateCertificateModel
     };
   }
   /**迁出的权益：version/assetType */
-  @Field.d(MigrateCertificateModel.INC++, "string")
+  @Field.d(MigrateCertificateBodyModel.INC++, "string")
   assetTypeId!: string;
   @cacheGetter
   get assetType() {
     return this.assetTypeId.split("/")[1];
   }
   /**迁出的权益数量，0-9 组成并且不包含小数点，必须大于0 */
-  @Field.d(MigrateCertificateModel.INC++, "string")
+  @Field.d(MigrateCertificateBodyModel.INC++, "string")
   assets!: string;
+
+  toJSON() {
+    const res: BFChainCore.MigrateCertificateBodyJSON = {
+      version: this.version,
+      fromUserId: this.fromUserId,
+      toUserId: this.toUserId,
+      timestamp: this.timestamp,
+      fromChainId: this.fromChainId,
+      toChainId: this.toChainId,
+      assetTypeId: this.assetTypeId,
+      assets: this.assets,
+    };
+    return res;
+  }
+}
+
+/**
+ * 迁移凭证模型
+ *
+ */
+@Type.d("MigrateCertificateModel")
+export class MigrateCertificateModel
+  extends Message<MigrateCertificateModel>
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.MigrateCertificateJSON>
+{
+  static INC = 1;
+  /**迁移信息 */
+  @Field.d(MigrateCertificateModel.INC++, MigrateCertificateBodyModel)
+  body!: MigrateCertificateBodyModel;
   /**发起账户签名 version/publicKey-signature/secondPublicKey-signSignature */
   @Field.d(MigrateCertificateModel.INC++, "string")
   signature!: string;
@@ -89,12 +118,12 @@ export class MigrateCertificateModel
   get signatureBuffer() {
     return AccountSignatureModel.fromObject(this.signatureJson);
   }
-  /**创世受托人签名 version/publicKey-signature/secondPublicKey-signSignature */
+  /**迁出链的授权签名 version/publicKey-signature/secondPublicKey-signSignature */
   @Field.d(MigrateCertificateModel.INC++, "string")
-  authSignature!: string;
+  fromAuthSignature!: string;
   @cacheGetter
-  get authSignatureJson() {
-    const items = this.signature.split("/");
+  get fromAuthSignatureJson() {
+    const items = this.fromAuthSignature.split("/");
     const signatureKeyValue = items[1].split("-");
     const res: BFChainCore.AccountSignatureJSON = {
       publicKey: signatureKeyValue[0],
@@ -108,8 +137,30 @@ export class MigrateCertificateModel
     return res;
   }
   @cacheGetter
-  get authSignatureBuffer() {
-    return AccountSignatureModel.fromObject(this.authSignatureJson);
+  get fromAuthSignatureBuffer() {
+    return AccountSignatureModel.fromObject(this.fromAuthSignatureJson);
+  }
+  /**迁入链的授权签名 version/publicKey-signature/secondPublicKey-signSignature */
+  @Field.d(MigrateCertificateModel.INC++, "string")
+  toAuthSignature!: string;
+  @cacheGetter
+  get toAuthSignatureJson() {
+    const items = this.toAuthSignature.split("/");
+    const signatureKeyValue = items[1].split("-");
+    const res: BFChainCore.AccountSignatureJSON = {
+      publicKey: signatureKeyValue[0],
+      signature: signatureKeyValue[1],
+    };
+    if (items[2]) {
+      const signSignatureKeyValue = items[2].split("-");
+      res.secondPublicKey = signSignatureKeyValue[0];
+      res.signSignature = signSignatureKeyValue[1];
+    }
+    return res;
+  }
+  @cacheGetter
+  get toAuthSignatureBuffer() {
+    return AccountSignatureModel.fromObject(this.toAuthSignatureJson);
   }
 
   @cacheBytesGetter
@@ -125,22 +176,41 @@ export class MigrateCertificateModel
         props.signature = { value: items[0] + "/" + items[1] };
       }
     }
-    props.authSignature = { value: null };
+    props.fromAuthSignature = { value: null };
+    props.toAuthSignature = { value: null };
     const certificateWrapper = Object.create(this, props);
     return this.$type.encode(certificateWrapper).finish();
   }
 
   @cacheBytesGetter
-  getAuthBytes(skipSignature?: boolean, skipSignSignature?: boolean) {
+  getFromAuthBytes(skipSignature?: boolean, skipSignSignature?: boolean) {
     const props: PropertyDescriptorMap = {};
     if (skipSignature) {
-      const items = this.authSignature.split("/");
-      props.authSignature = { value: items[0] };
+      const items = this.fromAuthSignature.split("/");
+      props.fromAuthSignature = { value: items[0] };
     }
     if (!skipSignature && skipSignSignature) {
-      const items = this.authSignature.split("/");
+      const items = this.fromAuthSignature.split("/");
       if (items[1]) {
-        props.authSignature = { value: items[0] + "/" + items[1] };
+        props.fromAuthSignature = { value: items[0] + "/" + items[1] };
+      }
+    }
+    props.toAuthSignature = { value: null };
+    const certificateWrapper = Object.create(this, props);
+    return this.$type.encode(certificateWrapper).finish();
+  }
+
+  @cacheBytesGetter
+  getToAuthBytes(skipSignature?: boolean, skipSignSignature?: boolean) {
+    const props: PropertyDescriptorMap = {};
+    if (skipSignature) {
+      const items = this.toAuthSignature.split("/");
+      props.toAuthSignature = { value: items[0] };
+    }
+    if (!skipSignature && skipSignSignature) {
+      const items = this.toAuthSignature.split("/");
+      if (items[1]) {
+        props.toAuthSignature = { value: items[0] + "/" + items[1] };
       }
     }
     const certificateWrapper = Object.create(this, props);
@@ -149,16 +219,10 @@ export class MigrateCertificateModel
 
   toJSON() {
     const res: BFChainCore.MigrateCertificateJSON = {
-      version: this.version,
-      fromUserId: this.fromUserId,
-      toUserId: this.toUserId,
-      timestamp: this.timestamp,
-      fromChainId: this.fromChainId,
-      toChainId: this.toChainId,
-      assetTypeId: this.assetTypeId,
-      assets: this.assets,
+      body: this.body.toJSON(),
       signature: this.signature,
-      authSignature: this.authSignature,
+      fromAuthSignature: this.fromAuthSignature,
+      toAuthSignature: this.toAuthSignature,
     };
     return res;
   }
