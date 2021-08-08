@@ -239,7 +239,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       return cache;
     }
 
-    const { channelFilter, abortWhenNoChainChannel } = opts;
+    const { channelFilter = () => true, abortWhenNoChainChannel } = opts;
     const WCWM = this._workCountWM;
     const { taskResponseCmd } = opts;
     const sorter =
@@ -255,7 +255,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
      * 基于工作量与延迟来进行排序
      */
     const freeChainChannelList = [...this.chainChannelSet.values()]
-      .filter(channelFilter ? channelFilter : Boolean)
+      .filter(channelFilter)
       .sort(sorter);
     /**繁忙节点列表 */
     const busyChainChannels = new Set<DH>();
@@ -364,6 +364,9 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
 
     /**节点可用，尝试分配任务 */
     const tryAddChainChannelToFree = (chainChannel: DH) => {
+      if (channelFilter(chainChannel) !== true) {
+        return;
+      }
       // 尝试将 cc 喂给等待队列
       const waiter = chainChannelWaiterQueue.dequeue(chainChannel);
       if (waiter === undefined) {
