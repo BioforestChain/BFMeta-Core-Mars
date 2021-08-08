@@ -46,6 +46,7 @@ import {
 import { BaseHelper, ChainTimeHelper, ConfigHelper, TransactionHelper } from "@bfchain/core-helper";
 import type { PromiseTimeout } from "./PromiseTimeout";
 import { IntSet } from "./IntSet";
+import { ChainChannelWaiter, ChainChannelWaiterQueue } from "./ChainChannelWaiter";
 
 const {
   AbortException,
@@ -259,7 +260,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     /**繁忙节点列表 */
     const busyChainChannels = new Set<DH>();
     /**请求排队列表 */
-    const queneChainChannelList: PromiseOut<DH>[] = [];
+    const chainChannelWaiterQueue = new ChainChannelWaiterQueue<DH>();
     /**定时任务集合 */
     const tiTasks = new Set<Promise<void>>();
     /**是否存在空闲节点 */
@@ -267,16 +268,20 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       return freeChainChannelList.length > 0;
     };
     /**获取空闲的节点 */
-    const getFreeChainChannel = () => {
+    const getFreeChainChannel = (opts: { filter?: (cc: DH) => boolean } = {}) => {
       if (abortWhenNoChainChannel && this.size === 0) {
         throw new AbortException(`${task_id} abort because the size is zero`);
       }
-      const chainChannel = freeChainChannelList.shift();
+      const filter = opts?.filter;
+      const chainChannel = (
+        filter // 自定义过滤
+          ? freeChainChannelList.filter(filter)
+          : freeChainChannelList
+      ).shift();
       if (chainChannel) {
         return chainChannel;
       }
-      const waiter = new PromiseOut<DH>();
-      queneChainChannelList.push(waiter);
+      const waiter = chainChannelWaiterQueue.enqueue(filter);
       return waiter.promise;
     };
     /**释放节点的繁忙状态 */
@@ -303,10 +308,11 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       return true;
     };
     const requestChainChannel = async <R>(
+      opts: { autoFreeChainChannel?: boolean; filter?: (cc: DH) => boolean } = {},
       cb: (event: BFChainCore.RequestChainChannelEvent<DH>) => Promise<R>,
-      autoFreeChainChannel = true,
     ) => {
-      const chainChannel = await getFreeChainChannel();
+      const { autoFreeChainChannel = true } = opts;
+      const chainChannel = await getFreeChainChannel(opts);
       busyChainChannel(chainChannel);
       const event: BFChainCore.RequestChainChannelEvent<DH> = {
         chainChannel,
@@ -315,7 +321,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       try {
         return await cb(event);
       } finally {
-        if (event.autoFreeChainChannel) {
+        if (autoFreeChainChannel) {
           freeChainChannel(chainChannel);
         }
       }
@@ -358,12 +364,10 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
 
     /**节点可用，尝试分配任务 */
     const tryAddChainChannelToFree = (chainChannel: DH) => {
-      const waiter = queneChainChannelList.shift();
-      if (waiter) {
-        // 如果有等待队列，那么将可用的 handler 给等待队列
-        waiter.resolve(chainChannel);
-      } else {
-        // 直接将可用的 handler 放置到空闲队列中
+      // 尝试将 cc 喂给等待队列
+      const waiter = chainChannelWaiterQueue.dequeue(chainChannel);
+      if (waiter === undefined) {
+        // 直接将可用的 cc 放置到空闲队列中
         freeChainChannelList.push(chainChannel);
       }
     };
@@ -390,7 +394,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     cache = {
       freeChainChannelList,
       busyChainChannels,
-      queneChainChannelList,
+      chainChannelWaiterQueue,
       tiTasks,
       onDestroy: () => {
         freeChainChannelList.length = 0;
@@ -624,108 +628,113 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
         taskChain = taskChain.then(
           async () => {
             do {
-              const finished = await requestChainChannel(async (event) => {
-                /**
-                 * @FIXME 这里有可能会出现节点的limitQueryTransactions少于default_task_limit，导致查询量少了出现问题。需要后续做补充查询
-                 */
-                const chain_task_limit = Math.min(
-                  event.chainChannel.limitQueryTransactions,
-                  default_task_limit,
-                );
-                const { requester: queryer, options } = requesterMap.forceGet({
-                  offset: task_offset,
-                  limit: chain_task_limit,
-                });
-                waitUseableChainChannel.resolve(chain_task_limit);
-                // 开始执行查询
-                try {
-                  const res = await queryer.addChainChannel(event.chainChannel, options);
+              const finished = await requestChainChannel(
+                {
+                  autoFreeChainChannel: false, // 默认不释放节点
+                },
+                async (event) => {
+                  /**
+                   * @FIXME 这里有可能会出现节点的limitQueryTransactions少于default_task_limit，导致查询量少了出现问题。需要后续做补充查询
+                   */
+                  const chain_task_limit = Math.min(
+                    event.chainChannel.limitQueryTransactions,
+                    default_task_limit,
+                  );
+                  const { requester: queryer, options } = requesterMap.forceGet({
+                    offset: task_offset,
+                    limit: chain_task_limit,
+                  });
+                  waitUseableChainChannel.resolve(chain_task_limit);
+                  // 开始执行查询
+                  try {
+                    const res = await queryer.addChainChannel(event.chainChannel, options);
 
-                  if (res.status === RESPONSE_STATUS.success) {
-                    // 保存查询结果
-                    res.transactions.forEach((trs, i) => {
-                      const index = task_offset - offset + i;
-                      if (resultGenerator.canPush(index)) {
-                        resultGenerator.push(trs);
-                      }
-                    });
-                    if (res.transactions.length < chain_task_limit) {
-                      /// 如果是高度最高的那个节点返回空列表，那么基本就是空列表没跑了
-                      const resultChannelMaybeHeight =
-                        queryer.getChainChannelByResult(res)?.maybeHeight;
-                      if (
-                        resultChannelMaybeHeight &&
-                        resultChannelMaybeHeight >= this.maybeHeight
-                      ) {
-                        /// 得到了查询终点
-                        setQueryDoneOffset(task_offset);
+                    if (res.status === RESPONSE_STATUS.success) {
+                      // 保存查询结果
+                      res.transactions.forEach((trs, i) => {
+                        const index = task_offset - offset + i;
+                        if (resultGenerator.canPush(index)) {
+                          resultGenerator.push(trs);
+                        }
+                      });
+                      if (res.transactions.length < chain_task_limit) {
+                        /// 如果是高度最高的那个节点返回空列表，那么基本就是空列表没跑了
+                        const resultChannelMaybeHeight =
+                          queryer.getChainChannelByResult(res)?.maybeHeight;
+                        if (
+                          resultChannelMaybeHeight &&
+                          resultChannelMaybeHeight >= this.maybeHeight
+                        ) {
+                          /// 得到了查询终点
+                          setQueryDoneOffset(task_offset);
+                          // 确认节点的工作，让其继续下一个工作
+                          event.autoFreeChainChannel = true;
+                          /// 中断这次查询
+                          return true;
+                        } else {
+                          // 移除无效的结果
+                          queryer.removeChainChannelByResult(res);
+                          // 重试任务，但是这个节点因为高度过低，暂时不用它来查询
+                          times++;
+                          return false;
+                        }
+                      } else {
+                        // 任务完成
+                        queryer.finish();
                         // 确认节点的工作，让其继续下一个工作
                         event.autoFreeChainChannel = true;
-                        /// 中断这次查询
                         return true;
-                      } else {
-                        // 移除无效的结果
-                        queryer.removeChainChannelByResult(res);
-                        // 重试任务，但是这个节点因为高度过低，暂时不用它来查询
-                        times++;
-                        return false;
                       }
-                    } else {
-                      // 任务完成
-                      queryer.finish();
-                      // 确认节点的工作，让其继续下一个工作
-                      event.autoFreeChainChannel = true;
-                      return true;
+                    } else if (res.status === RESPONSE_STATUS.busy) {
+                      // 移除无效的结果
+                      queryer.removeChainChannelByResult(res);
+                      // 重试任务，但是这个节点仍旧放在繁忙节点列表，暂时不信任
+                      times++;
+                      return false;
+                    } else if (res.status === RESPONSE_STATUS.error) {
+                      // 移除无效的结果
+                      queryer.removeChainChannelByResult(res);
+                      // 任务失败，抛出异常
+                      throw res.error;
+                    } else if (res.status === RESPONSE_STATUS.idempotentError) {
+                      // 移除无效的结果
+                      queryer.removeChainChannelByResult(res);
+                      // 节点幂等保护，抛出异常
+                      const err = res.error!;
+                      throw new IdempotentException(err.message, err.detail, err.CODE);
                     }
-                  } else if (res.status === RESPONSE_STATUS.busy) {
-                    // 移除无效的结果
-                    queryer.removeChainChannelByResult(res);
-                    // 重试任务，但是这个节点仍旧放在繁忙节点列表，暂时不信任
-                    times++;
-                    return false;
-                  } else if (res.status === RESPONSE_STATUS.error) {
-                    // 移除无效的结果
-                    queryer.removeChainChannelByResult(res);
-                    // 任务失败，抛出异常
-                    throw res.error;
-                  } else if (res.status === RESPONSE_STATUS.idempotentError) {
-                    // 移除无效的结果
-                    queryer.removeChainChannelByResult(res);
-                    // 节点幂等保护，抛出异常
-                    const err = res.error!;
-                    throw new IdempotentException(err.message, err.detail, err.CODE);
-                  }
 
-                  $safeEnd(res.status);
-                } catch (err) {
-                  queryer.removeChainChannelByResult(err);
-                  if (AbortException.is(err) || resultGenerator.is_done) {
-                    // 如果被中断了任务，那么直接结束任务
-                    throw err;
-                  }
-                  if (!TimeOutException.is(err)) {
-                    if (IdempotentException.is(err)) {
-                      warn("节点幂等性冲突", err.message);
-                    } else {
-                      /// 如果时超时，默认不打印，因为超时时本地没收到数据的问题
-                      error(
-                        err,
-                        "[GROUP]:",
-                        this.groupName,
-                        "[QUERY]:",
-                        query,
-                        "[OFFSET]:",
-                        task_offset,
-                        "[TIMES]:",
-                        times,
-                      );
+                    $safeEnd(res.status);
+                  } catch (err) {
+                    queryer.removeChainChannelByResult(err);
+                    if (AbortException.is(err) || resultGenerator.is_done) {
+                      // 如果被中断了任务，那么直接结束任务
+                      throw err;
                     }
-                  }
+                    if (!TimeOutException.is(err)) {
+                      if (IdempotentException.is(err)) {
+                        warn("节点幂等性冲突", err.message);
+                      } else {
+                        /// 如果时超时，默认不打印，因为超时时本地没收到数据的问题
+                        error(
+                          err,
+                          "[GROUP]:",
+                          this.groupName,
+                          "[QUERY]:",
+                          query,
+                          "[OFFSET]:",
+                          task_offset,
+                          "[TIMES]:",
+                          times,
+                        );
+                      }
+                    }
 
-                  /// 如果异常次数过多，那么有必要终结这个查询
-                  return times++ > 100;
-                }
-              }, /**默认不释放节点 */ false);
+                    /// 如果异常次数过多，那么有必要终结这个查询
+                    return times++ > 100;
+                  }
+                },
+              );
               if (finished) {
                 break;
               }
@@ -926,108 +935,113 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
         taskChain = taskChain.then(
           async () => {
             do {
-              const finished = await requestChainChannel(async (event) => {
-                /**
-                 * @FIXME 这里有可能会出现节点的limitQueryTransactions少于default_task_limit，导致查询量少了出现问题。需要后续做补充查询
-                 */
-                const chain_task_limit = Math.min(
-                  event.chainChannel.limitQueryTransactions,
-                  default_task_limit,
-                );
-                const { requester: queryer, options } = queryerMap.forceGet({
-                  offset: task_offset,
-                  limit: chain_task_limit,
-                });
-                waitUseableChainChannel.resolve(chain_task_limit);
-                // 开始执行查询
-                try {
-                  const res = await queryer.addChainChannel(event.chainChannel, options);
+              const finished = await requestChainChannel(
+                {
+                  autoFreeChainChannel: false, // 默认不释放节点
+                },
+                async (event) => {
+                  /**
+                   * @FIXME 这里有可能会出现节点的limitQueryTransactions少于default_task_limit，导致查询量少了出现问题。需要后续做补充查询
+                   */
+                  const chain_task_limit = Math.min(
+                    event.chainChannel.limitQueryTransactions,
+                    default_task_limit,
+                  );
+                  const { requester: queryer, options } = queryerMap.forceGet({
+                    offset: task_offset,
+                    limit: chain_task_limit,
+                  });
+                  waitUseableChainChannel.resolve(chain_task_limit);
+                  // 开始执行查询
+                  try {
+                    const res = await queryer.addChainChannel(event.chainChannel, options);
 
-                  if (res.status === RESPONSE_STATUS.success) {
-                    // 保存查询结果
-                    res.tIndexes.forEach((ti, i) => {
-                      const index = task_offset - offset + i;
-                      if (resultGenerator.canPush(index)) {
-                        resultGenerator.push(ti);
-                      }
-                    });
-                    if (res.tIndexes.length < chain_task_limit) {
-                      /// 如果是高度最高的那个节点返回空列表，那么基本就是空列表没跑了
-                      const resultChannelMaybeHeight =
-                        queryer.getChainChannelByResult(res)?.maybeHeight;
-                      if (
-                        resultChannelMaybeHeight &&
-                        resultChannelMaybeHeight >= this.maybeHeight
-                      ) {
-                        /// 得到了查询终点
-                        setQueryDoneOffset(task_offset);
+                    if (res.status === RESPONSE_STATUS.success) {
+                      // 保存查询结果
+                      res.tIndexes.forEach((ti, i) => {
+                        const index = task_offset - offset + i;
+                        if (resultGenerator.canPush(index)) {
+                          resultGenerator.push(ti);
+                        }
+                      });
+                      if (res.tIndexes.length < chain_task_limit) {
+                        /// 如果是高度最高的那个节点返回空列表，那么基本就是空列表没跑了
+                        const resultChannelMaybeHeight =
+                          queryer.getChainChannelByResult(res)?.maybeHeight;
+                        if (
+                          resultChannelMaybeHeight &&
+                          resultChannelMaybeHeight >= this.maybeHeight
+                        ) {
+                          /// 得到了查询终点
+                          setQueryDoneOffset(task_offset);
+                          // 确认节点的工作，让其继续下一个工作
+                          event.autoFreeChainChannel = true;
+                          /// 中断这次查询
+                          return true;
+                        } else {
+                          // 移除无效的结果
+                          queryer.removeChainChannelByResult(res);
+                          // 重试任务，但是这个节点因为高度过低，暂时不用它来查询
+                          times++;
+                          return false;
+                        }
+                      } else {
+                        // 任务完成
+                        queryer.finish();
                         // 确认节点的工作，让其继续下一个工作
                         event.autoFreeChainChannel = true;
-                        /// 中断这次查询
                         return true;
-                      } else {
-                        // 移除无效的结果
-                        queryer.removeChainChannelByResult(res);
-                        // 重试任务，但是这个节点因为高度过低，暂时不用它来查询
-                        times++;
-                        return false;
                       }
-                    } else {
-                      // 任务完成
-                      queryer.finish();
-                      // 确认节点的工作，让其继续下一个工作
-                      event.autoFreeChainChannel = true;
-                      return true;
+                    } else if (res.status === RESPONSE_STATUS.busy) {
+                      // 移除无效的结果
+                      queryer.removeChainChannelByResult(res);
+                      // 重试任务，但是这个节点仍旧放在繁忙节点列表，暂时不信任
+                      times++;
+                      return false;
+                    } else if (res.status === RESPONSE_STATUS.error) {
+                      // 移除无效的结果
+                      queryer.removeChainChannelByResult(res);
+                      // 任务失败，抛出异常
+                      throw res.error;
+                    } else if (res.status === RESPONSE_STATUS.idempotentError) {
+                      // 移除无效的结果
+                      queryer.removeChainChannelByResult(res);
+                      // 节点幂等保护，抛出异常
+                      const err = res.error!;
+                      throw new IdempotentException(err.message, err.detail, err.CODE);
                     }
-                  } else if (res.status === RESPONSE_STATUS.busy) {
-                    // 移除无效的结果
-                    queryer.removeChainChannelByResult(res);
-                    // 重试任务，但是这个节点仍旧放在繁忙节点列表，暂时不信任
-                    times++;
-                    return false;
-                  } else if (res.status === RESPONSE_STATUS.error) {
-                    // 移除无效的结果
-                    queryer.removeChainChannelByResult(res);
-                    // 任务失败，抛出异常
-                    throw res.error;
-                  } else if (res.status === RESPONSE_STATUS.idempotentError) {
-                    // 移除无效的结果
-                    queryer.removeChainChannelByResult(res);
-                    // 节点幂等保护，抛出异常
-                    const err = res.error!;
-                    throw new IdempotentException(err.message, err.detail, err.CODE);
-                  }
 
-                  $safeEnd(res.status);
-                } catch (err) {
-                  queryer.removeChainChannelByResult(err);
-                  if (AbortException.is(err) || resultGenerator.is_done) {
-                    // 如果被中断了任务，那么直接结束任务
-                    throw err;
-                  }
-                  if (!TimeOutException.is(err)) {
-                    if (IdempotentException.is(err)) {
-                      warn("节点幂等性冲突", err.message);
-                    } else {
-                      /// 如果时超时，默认不打印，因为超时时本地没收到数据的问题
-                      error(
-                        err,
-                        "[GROUP]:",
-                        this.groupName,
-                        "[QUERY]:",
-                        query,
-                        "[OFFSET]:",
-                        task_offset,
-                        "[TIMES]:",
-                        times,
-                      );
+                    $safeEnd(res.status);
+                  } catch (err) {
+                    queryer.removeChainChannelByResult(err);
+                    if (AbortException.is(err) || resultGenerator.is_done) {
+                      // 如果被中断了任务，那么直接结束任务
+                      throw err;
                     }
-                  }
+                    if (!TimeOutException.is(err)) {
+                      if (IdempotentException.is(err)) {
+                        warn("节点幂等性冲突", err.message);
+                      } else {
+                        /// 如果时超时，默认不打印，因为超时时本地没收到数据的问题
+                        error(
+                          err,
+                          "[GROUP]:",
+                          this.groupName,
+                          "[QUERY]:",
+                          query,
+                          "[OFFSET]:",
+                          task_offset,
+                          "[TIMES]:",
+                          times,
+                        );
+                      }
+                    }
 
-                  /// 如果异常次数过多，那么有必要终结这个查询
-                  return times++ > 100;
-                }
-              }, /**默认不释放节点 */ false);
+                    /// 如果异常次数过多，那么有必要终结这个查询
+                    return times++ > 100;
+                  }
+                },
+              );
               if (finished) {
                 break;
               }
@@ -1287,90 +1301,90 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
            */
           let times = 0;
           while (true) {
-            const finished = await requestChainChannel(async (event) => {
-              /// 节点高度不满足查询条件
-              if (event.chainChannel.maybeHeight < needHeight) {
-                return false;
-              }
-
-              const { requester, options } = requesterMap.forceGet(tindexSlice);
-              try {
-                const res = await requester.addChainChannel(event.chainChannel, options);
-                if (res.status === RESPONSE_STATUS.success) {
-                  /**
-                   * @TODO 这里应该判定 tIndexsSlice 所请求的数量跟返回的数量是否一致
-                   */
-                  if (res.transactions.length < totalLength) {
+            const finished = await requestChainChannel(
+              {
+                filter: (cc) => cc.maybeHeight >= needHeight,
+              },
+              async (event) => {
+                const { requester, options } = requesterMap.forceGet(tindexSlice);
+                try {
+                  const res = await requester.addChainChannel(event.chainChannel, options);
+                  if (res.status === RESPONSE_STATUS.success) {
+                    /**
+                     * @TODO 这里应该判定 tIndexsSlice 所请求的数量跟返回的数量是否一致
+                     */
+                    if (res.transactions.length < totalLength) {
+                      // 移除无效的结果
+                      requester.removeChainChannelByResult(res);
+                      // 重试任务，但是这个节点仍旧放在繁忙节点列表，暂时不信任
+                      times++;
+                      return false;
+                    } else {
+                      /// 将查询的结果用hi_List的顺序进行排列
+                      const tib_hiIndex_List = res.transactions
+                        .map((tib) => {
+                          return {
+                            tib,
+                            hiIndex: hi_List.findIndex(
+                              (hi) => hi.height === tib.height && hi.index === tib.index,
+                            ),
+                          };
+                        })
+                        .sort((a, b) => a.hiIndex - b.hiIndex);
+                      for (const item of tib_hiIndex_List) {
+                        if (resultGenerator.canPush(resultGenerator.list.length)) {
+                          resultGenerator.push(item.tib);
+                        }
+                      }
+                      return true;
+                    }
+                  } else if (res.status === RESPONSE_STATUS.busy) {
                     // 移除无效的结果
                     requester.removeChainChannelByResult(res);
                     // 重试任务，但是这个节点仍旧放在繁忙节点列表，暂时不信任
                     times++;
                     return false;
-                  } else {
-                    /// 将查询的结果用hi_List的顺序进行排列
-                    const tib_hiIndex_List = res.transactions
-                      .map((tib) => {
-                        return {
-                          tib,
-                          hiIndex: hi_List.findIndex(
-                            (hi) => hi.height === tib.height && hi.index === tib.index,
-                          ),
-                        };
-                      })
-                      .sort((a, b) => a.hiIndex - b.hiIndex);
-                    for (const item of tib_hiIndex_List) {
-                      if (resultGenerator.canPush(resultGenerator.list.length)) {
-                        resultGenerator.push(item.tib);
-                      }
+                  } else if (res.status === RESPONSE_STATUS.error) {
+                    // 移除无效的结果
+                    requester.removeChainChannelByResult(res);
+                    // 任务失败，抛出异常
+                    throw res.error;
+                  } else if (res.status === RESPONSE_STATUS.idempotentError) {
+                    // 移除无效的结果
+                    requester.removeChainChannelByResult(res);
+                    // 节点幂等保护，抛出异常
+                    const err = res.error!;
+                    throw new IdempotentException(err.message, err.detail, err.CODE);
+                  }
+                  $safeEnd(res.status);
+                } catch (err) {
+                  requester.removeChainChannelByResult(err);
+                  if (AbortException.is(err) || resultGenerator.is_done) {
+                    // 如果被中断了任务，那么直接结束任务
+                    throw err;
+                  }
+                  if (!TimeOutException.is(err)) {
+                    if (IdempotentException.is(err)) {
+                      warn("节点幂等性冲突", err.message);
+                    } else {
+                      /// 如果时超时，默认不打印，因为超时时本地没收到数据的问题
+                      error(
+                        err,
+                        "[GROUP]:",
+                        this.groupName,
+                        "[TINDEXES]:",
+                        hi_slice,
+                        "[TIMES]:",
+                        times,
+                      );
                     }
-                    return true;
                   }
-                } else if (res.status === RESPONSE_STATUS.busy) {
-                  // 移除无效的结果
-                  requester.removeChainChannelByResult(res);
-                  // 重试任务，但是这个节点仍旧放在繁忙节点列表，暂时不信任
-                  times++;
-                  return false;
-                } else if (res.status === RESPONSE_STATUS.error) {
-                  // 移除无效的结果
-                  requester.removeChainChannelByResult(res);
-                  // 任务失败，抛出异常
-                  throw res.error;
-                } else if (res.status === RESPONSE_STATUS.idempotentError) {
-                  // 移除无效的结果
-                  requester.removeChainChannelByResult(res);
-                  // 节点幂等保护，抛出异常
-                  const err = res.error!;
-                  throw new IdempotentException(err.message, err.detail, err.CODE);
-                }
-                $safeEnd(res.status);
-              } catch (err) {
-                requester.removeChainChannelByResult(err);
-                if (AbortException.is(err) || resultGenerator.is_done) {
-                  // 如果被中断了任务，那么直接结束任务
-                  throw err;
-                }
-                if (!TimeOutException.is(err)) {
-                  if (IdempotentException.is(err)) {
-                    warn("节点幂等性冲突", err.message);
-                  } else {
-                    /// 如果时超时，默认不打印，因为超时时本地没收到数据的问题
-                    error(
-                      err,
-                      "[GROUP]:",
-                      this.groupName,
-                      "[TINDEXES]:",
-                      hi_slice,
-                      "[TIMES]:",
-                      times,
-                    );
-                  }
-                }
 
-                /// 如果异常次数过多，那么有必要终结这个查询
-                return times++ > 100;
-              }
-            });
+                  /// 如果异常次数过多，那么有必要终结这个查询
+                  return times++ > 100;
+                }
+              },
+            );
             if (finished) {
               break;
             }
@@ -1659,48 +1673,54 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
         if (is_rejected) {
           return;
         }
-        await requestChainChannel(async (event) => {
-          try {
-            const result = await queryer.addChainChannel(event.chainChannel, options);
-            if (result.status === RESPONSE_STATUS.error) {
-              queryer.removeChainChannelByResult(result);
-              throw result.error;
-            }
-            if (result.status === RESPONSE_STATUS.busy) {
-              /// 失败，移除失败的节点，继续请求新节点进行查询
-              queryer.removeChainChannelByResult(result);
-              /// 抛出到异常处理函数去处理
-              throw undefined;
-            }
-            block = result.someBlock?.block;
-            if (!block) {
-              /**
-               * result.status === RESPONSE_STATUS.success
-               * 查询返回成功，却被告之没有区块，说明对方没有所需的区块
-               * 如果这是最高节点的返回，那么说明这个查询条件就是查询不到了，可以直接返回
-               * @TODO 这是不靠谱的，可能会遇到恶意返回，应该从底层协议去解决这个问题
-               */
-              const resultChannelMaybeHeight = queryer.getChainChannelByResult(result)?.maybeHeight;
-              if (resultChannelMaybeHeight && resultChannelMaybeHeight >= this.maybeHeight) {
+        await requestChainChannel(
+          {
+            autoFreeChainChannel: false, // 默认不释放节点
+          },
+          async (event) => {
+            try {
+              const result = await queryer.addChainChannel(event.chainChannel, options);
+              if (result.status === RESPONSE_STATUS.error) {
+                queryer.removeChainChannelByResult(result);
+                throw result.error;
+              }
+              if (result.status === RESPONSE_STATUS.busy) {
+                /// 失败，移除失败的节点，继续请求新节点进行查询
+                queryer.removeChainChannelByResult(result);
+                /// 抛出到异常处理函数去处理
+                throw undefined;
+              }
+              block = result.someBlock?.block;
+              if (!block) {
+                /**
+                 * result.status === RESPONSE_STATUS.success
+                 * 查询返回成功，却被告之没有区块，说明对方没有所需的区块
+                 * 如果这是最高节点的返回，那么说明这个查询条件就是查询不到了，可以直接返回
+                 * @TODO 这是不靠谱的，可能会遇到恶意返回，应该从底层协议去解决这个问题
+                 */
+                const resultChannelMaybeHeight =
+                  queryer.getChainChannelByResult(result)?.maybeHeight;
+                if (resultChannelMaybeHeight && resultChannelMaybeHeight >= this.maybeHeight) {
+                  is_rejected = true;
+                  return;
+                }
+              }
+              /// 完成任务
+              queryer.finish();
+            } catch (err) {
+              if (is_rejected) {
+                return;
+              }
+              queryer.removeChainChannelByResult(err);
+              err && warn(err);
+              retryTimes += 1;
+              if (retryTimes >= RETRY_TIMES) {
                 is_rejected = true;
                 return;
               }
             }
-            /// 完成任务
-            queryer.finish();
-          } catch (err) {
-            if (is_rejected) {
-              return;
-            }
-            queryer.removeChainChannelByResult(err);
-            err && warn(err);
-            retryTimes += 1;
-            if (retryTimes >= RETRY_TIMES) {
-              is_rejected = true;
-              return;
-            }
-          }
-        }, /**默认不自动释放节点 */ false);
+          },
+        );
       } while (!block);
       return block;
     } finally {

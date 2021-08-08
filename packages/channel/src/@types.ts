@@ -476,22 +476,36 @@ declare namespace BFChainCore {
     type ParallelTaskCache<CC extends SimpleChainChannel> = {
       freeChainChannelList: CC[];
       busyChainChannels: Set<CC>;
-      queneChainChannelList: import("@bfchain/util").PromiseOut<CC>[];
+      chainChannelWaiterQueue: ChainChannelWaiterQueue<CC>;
       tiTasks: Set<Promise<void>>;
       onDestroy: () => unknown;
       helpers: ParallelTaskHelpers<CC>;
       refs: Set<unknown>;
     };
+
+    type Filter<T> = (cc: T) => boolean;
     type ParallelTaskHelpers<CC extends SimpleChainChannel> = {
-      getFreeChainChannel: () => CC | Promise<CC>;
       freeChainChannel: (chainChannel: CC) => void;
       busyChainChannel: (chainChannel: CC) => void;
       hasFreeChainChannel: () => boolean;
+
+      getFreeChainChannel: (opts?: { filter?: Filter<CC> }) => CC | Promise<CC>;
       requestChainChannel: <R>(
+        config: { autoFreeChainChannel?: boolean; filter?: Filter<CC> },
         cb: (event: RequestChainChannelEvent<CC>) => Promise<R>,
-        autoFreeChainChannel?: boolean,
       ) => Promise<R>;
     };
+
+    interface ChainChannelWaiter<CC extends SimpleChainChannel> extends BFChainUtil.PromiseOut<CC> {
+      filter?: Filter<CC>;
+    }
+    interface ChainChannelWaiterQueue<CC extends SimpleChainChannel> {
+      size: number;
+      /**入列，增加一个排队者 */
+      enqueue(filter?: Filter<CC>): ChainChannelWaiter<CC>;
+      /**出列，减少一个排队者 */
+      dequeue(cc: CC): ChainChannelWaiter<CC> | undefined;
+    }
   }
 
   type RequestChainChannelEvent<CC extends SimpleChainChannel = ChainChannel> = {
