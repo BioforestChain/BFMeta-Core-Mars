@@ -27,7 +27,7 @@ declare namespace BFChainCore {
     signSignature?: string;
   }
 
-  interface MigrateCertificateJSON {
+  interface MigrateCertificateBodyJSON {
     /**凭证版本 */
     version: string;
     /**发起账户的唯一标识 version/address */
@@ -44,10 +44,17 @@ declare namespace BFChainCore {
     assetTypeId: string;
     /**迁出的权益数量，0-9 组成并且不包含小数点，必须大于0 */
     assets: string;
+  }
+
+  interface MigrateCertificateJSON {
+    /**凭证信息 */
+    body: MigrateCertificateBodyJSON;
     /**发起账户签名 version/publicKey-signature/secondPublicKey-signSignature */
     signature: string;
-    /**创世受托人签名 version/publicKey-signature/secondPublicKey-signSignature */
-    authSignature: string;
+    /**迁出链的授权签名 version/publicKey-signature/secondPublicKey-signSignature */
+    fromAuthSignature: string;
+    /**迁入链的授权签名 version/publicKey-signature/secondPublicKey-signSignature */
+    toAuthSignature: string;
   }
 
   type MigrateCertificateModel = import("./migrateCertificate.model").MigrateCertificateModel;

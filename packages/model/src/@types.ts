@@ -266,6 +266,13 @@ declare namespace BFChainCore {
   type ApplyTransactionPurchaseLocationNameEvent<EVENTNAME, T extends Transaction = Transaction> =
     ApplyTransactionEvent<ApplyInfo_PurchaseLocationName, EVENTNAME, T>;
 
+  type ApplyInfo_MigrateCertificate = {
+    migrateCertificateId: string;
+  };
+  /**跨链凭证 */
+  type ApplyTransactionMigrateCertificateEvent<EVENTNAME, T extends Transaction = Transaction> =
+    ApplyTransactionEvent<ApplyInfo_MigrateCertificate, EVENTNAME, T>;
+
   type ApplyTransactionEventMap<EM extends BFChainUtil.EventInOutMap = {}> = EM & {
     /**交易交易的POW */
     verifyTransactionProfOfWork: BFChainUtil.EventInOut<
@@ -470,6 +477,13 @@ declare namespace BFChainCore {
         "purchaseLocationName",
         | import("@bfchain/core-model-transaction").BeExchangeSpecialAssetTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
+      >
+    >;
+
+    migrateCertificate: BFChainUtil.EventInOut<
+      ApplyTransactionMigrateCertificateEvent<
+        "migrateCertificate",
+        import("@bfchain/core-model-transaction").ImmigrateAssetTransaction
       >
     >;
 

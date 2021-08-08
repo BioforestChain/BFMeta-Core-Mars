@@ -1,65 +1,5 @@
 import { Message, Field, Type } from "@bfchain/protobuf";
-import { cacheBytesGetter } from "@bfchain/core-model-cacher";
-import { AccountSignatureModel, MigrateCertificateModel } from "@bfchain/core-model-common";
-const SIGNATURE_BUFFER_WM = new WeakMap<AccountSignatureModel, Uint8Array>();
-
-/**
- * immigrateAsset 交易 asset 模型
- *
- */
-@Type.d("ImmigrateAssetModel")
-export class ImmigrateAssetModel
-  extends Message<ImmigrateAssetModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.ImmigrateAssetJSON>
-{
-  static INC = 1;
-  @Field.d(ImmigrateAssetModel.INC++, "bytes")
-  genesisDelegateSignatureBuffer!: Uint8Array;
-  get genesisDelegateSignature() {
-    const { genesisDelegateSignatureBuffer } = this;
-    const signature = AccountSignatureModel.decode(genesisDelegateSignatureBuffer);
-    SIGNATURE_BUFFER_WM.set(signature, genesisDelegateSignatureBuffer);
-    return signature;
-  }
-  set genesisDelegateSignature(signature: AccountSignatureModel) {
-    let buf = SIGNATURE_BUFFER_WM.get(signature);
-    if (!buf) {
-      buf = AccountSignatureModel.encode(signature).finish();
-      SIGNATURE_BUFFER_WM.set(signature, buf);
-    }
-    this.genesisDelegateSignatureBuffer = buf;
-  }
-  /**完整的资产迁出交易 */
-  @Field.d(ImmigrateAssetModel.INC++, MigrateCertificateModel)
-  migrateCertificate!: MigrateCertificateModel;
-  @cacheBytesGetter
-  getBytes() {
-    const props: PropertyDescriptorMap = {
-      genesisDelegateSignatureBuffer: { value: null },
-    };
-    const assetWrapper = Object.create(this, props);
-    return this.$type.encode(assetWrapper).finish();
-  }
-  toJSON() {
-    return {
-      genesisDelegateSignature: this.genesisDelegateSignature.toJSON(),
-      migrateCertificate: this.migrateCertificate.toJSON(),
-    };
-  }
-  static fromObject<T extends Message>(
-    this: BFChainProtobuf.Constructor<T>,
-    object: BFChainProtobuf.ObjectFromType<ImmigrateAssetModel>,
-  ) {
-    const res = super.fromObject(object) as ImmigrateAssetModel;
-    if (res !== object) {
-      object.genesisDelegateSignature &&
-        (res.genesisDelegateSignature = AccountSignatureModel.fromObject(
-          object.genesisDelegateSignature,
-        ));
-    }
-    return res as unknown as T;
-  }
-}
+import { MigrateCertificateModel } from "@bfchain/core-model-common";
 
 /**
  * immigrateAsset 交易 asset 外层模型
@@ -70,8 +10,8 @@ export class ImmigrateAssetAssetModel
   extends Message<ImmigrateAssetAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.ImmigrateAssetAssetJSON>
 {
-  @Field.d(1, ImmigrateAssetModel)
-  immigrateAsset!: ImmigrateAssetModel;
+  @Field.d(1, MigrateCertificateModel)
+  immigrateAsset!: MigrateCertificateModel;
   toJSON() {
     return {
       immigrateAsset: this.immigrateAsset.toJSON(),

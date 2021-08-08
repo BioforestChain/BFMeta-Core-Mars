@@ -51,10 +51,9 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       function: "verify",
     } as const;
 
-    const senderId = transaction.senderId;
-    const { migrateCertificate, genesisDelegateSignature } = transaction.asset.immigrateAsset;
+    const immigrateAsset = transaction.asset.immigrateAsset;
 
-    const { fromChain, assetType } = migrateCertificate;
+    const { fromChain } = immigrateAsset.body;
     const fromMagic = fromChain.magic;
     let otherChainConfig = this.configMap.get(fromMagic);
     if (!otherChainConfig) {
@@ -69,13 +68,15 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       otherChainConfig = new ConfigHelper(memchain.genesisBlock, this.configHelper.business);
       this.configMap.set(fromMagic, otherChainConfig);
     }
+    await this.migrateCertificateHelper.checkChainInfo("fromChain", immigrateAsset.body.fromChain, {
+      chainName: otherChainConfig.chainName,
+      magic: otherChainConfig.magic,
+      generatorPublicKey: otherChainConfig.generatorPublicKey,
+      genesisBlockSignature: otherChainConfig.signature,
+      genesisDelegates: this.transactionHelper.genesisDelegates(otherChainConfig),
+    });
 
-    await this.migrateCertificateHelper.verifyMigrateCertificate(
-      migrateCertificate,
-      otherChainConfig,
-    );
-
-    const { publicKey, signature, secondPublicKey, signSignature } = genesisDelegateSignature;
+    const { publicKey, secondPublicKey, signSignature } = immigrateAsset.signatureJson;
     const address = await this.accountBaseHelper.getAddressFromPublicKeyString(publicKey);
     const delegate = await accountGetterHelper.getAccountInfo(address);
     if (!delegate) {
@@ -121,72 +122,6 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
         });
       }
     }
-    const signatureBuffer = parseHexToArrayBuffer(signature);
-    const migrateCertificateBuffer = migrateCertificate.getAuthBytes(false, false);
-    if (
-      !(await this.transactionHelper.verifyImmigrateAssetGenesisSignature({
-        secretPublicKey: parseHexToArrayBuffer(publicKey),
-        signatureBuffer,
-        senderId,
-        migrateCertificateBuffer,
-      }))
-    ) {
-      throw new ConsensusException(PROP_IS_INVALID, {
-        prop: `genesisDelegateSignature ${signature}`,
-        type: "signature",
-        ...Function_Exception_Detail,
-        target: "immigrateAsset",
-      });
-    }
-    if (secondPublicKey && signSignature) {
-      if (
-        !(await this.transactionHelper.verifyImmigrateAssetGenesisSignature({
-          secretPublicKey: parseHexToArrayBuffer(secondPublicKey),
-          signatureBuffer: parseHexToArrayBuffer(signSignature),
-          migrateCertificateBuffer,
-          senderId,
-          genesisSignatureBuffer: signatureBuffer,
-        }))
-      ) {
-        throw new ConsensusException(PROP_IS_INVALID, {
-          prop: `genesisDelegateSignSignature ${signSignature}`,
-          type: "signature",
-          ...Function_Exception_Detail,
-          target: "immigrateAsset",
-        });
-      }
-    }
-    if ((transaction.storage as BFChainCore.TransactionStorageJSON).value !== assetType) {
-      throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: `value ${
-          (transaction.storage as BFChainCore.TransactionStorageJSON).value
-        }`,
-        be_compare_prop: `assetType ${assetType}`,
-        to_target: "storage",
-        be_target: "emigrateAssetTransaction",
-        ...Function_Exception_Detail,
-      });
-    }
-
-    if (assetType !== otherChainConfig.assetType) {
-      throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: `assetType ${assetType}`,
-        be_compare_prop: `assetType ${otherChainConfig.assetType}`,
-        to_target: "immigrateAsset.emigrateAssetTransaction.asset.emigrateAsset",
-        be_target: `registerChain in blockChain with magic ${fromChain.magic}`,
-        ...Function_Exception_Detail,
-      });
-    }
-
-    if (fromChain.chainName !== otherChainConfig.chainName) {
-      throw new ConsensusException(NOT_MATCH, {
-        to_compare_prop: `sourceChainName ${fromChain.chainName}`,
-        be_compare_prop: `sourceChainName ${otherChainConfig.chainName}`,
-        to_target: "immigrateAsset.emigrateAssetTransaction.asset.emigrateAsset",
-        be_target: `registerChain in blockChain with magic ${fromChain.magic}`,
-        ...Function_Exception_Detail,
-      });
-    }
 
     const { sender } = await this.logicVerify(
       transaction,
@@ -225,8 +160,7 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
     currentBlockHeight: number,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const migrateCertificateId =
-      transaction.asset.immigrateAsset.migrateCertificate.authSignatureJson.signature;
+    const migrateCertificateId = transaction.asset.immigrateAsset.fromAuthSignatureJson.signature;
     const isSecondary = await transactionGetterHelper.checkSecondaryTransaction({
       type: this.transactionHelper.IMMIGRATE_ASSET,
       migrateCertificateId,

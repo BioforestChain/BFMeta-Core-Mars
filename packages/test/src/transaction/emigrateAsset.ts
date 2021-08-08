@@ -76,7 +76,7 @@ async function getEmigrateAssetTransaction(
   let migrateCertificateModel =
     await fullBfchainCore.migrateCertificateHelper.generateMigrateCertificate(args);
   migrateCertificateModel =
-    await fullBfchainCore.migrateCertificateHelper.authSignMigrateCertificate({
+    await fullBfchainCore.migrateCertificateHelper.fromAuthSignMigrateCertificate({
       authSecret: genesisDelegate.secret,
       authSecondSecret: genesisDelegate.secondSecret,
       migrateCertificate: migrateCertificateModel,

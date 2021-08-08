@@ -198,12 +198,7 @@ declare namespace BFChainCore {
     /**权益迁出事件附带信息 */
     emigrateAsset: EmigrateAssetJSON;
   }
-  interface ImmigrateAssetJSON {
-    /**创世受托人签名 */
-    genesisDelegateSignature: AccountSignatureJSON;
-    /**完整的迁移凭证 */
-    migrateCertificate: MigrateCertificateJSON;
-  }
+  type ImmigrateAssetJSON = MigrateCertificateJSON;
   interface ImmigrateAssetAssetJSON {
     /**权益迁入事件附带信息 */
     immigrateAsset: ImmigrateAssetJSON;
