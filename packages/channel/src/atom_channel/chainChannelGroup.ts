@@ -239,7 +239,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       return cache;
     }
 
-    const { channelFilter = () => true, abortWhenNoChainChannel } = opts;
+    const { channelFirewall = () => true, abortWhenNoChainChannel } = opts;
     const WCWM = this._workCountWM;
     const { taskResponseCmd } = opts;
     const sorter =
@@ -254,9 +254,9 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     /**空闲节点列表
      * 基于工作量与延迟来进行排序
      */
-    const freeChainChannelList = [...this.chainChannelSet.values()]
-      .filter(channelFilter)
-      .sort(sorter);
+    const freeChainChannels = new Set(
+      [...this.chainChannelSet.values()].filter(channelFirewall).sort(sorter),
+    );
     /**繁忙节点列表 */
     const busyChainChannels = new Set<DH>();
     /**请求排队列表 */
@@ -265,7 +265,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     const tiTasks = new Set<Promise<void>>();
     /**是否存在空闲节点 */
     const hasFreeChainChannel = () => {
-      return freeChainChannelList.length > 0;
+      return freeChainChannels.size > 0;
     };
     /**获取空闲的节点 */
     const getFreeChainChannel = (opts: { filter?: (cc: DH) => boolean } = {}) => {
@@ -273,15 +273,14 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
         throw new AbortException(`${task_id} abort because the size is zero`);
       }
       const filter = opts?.filter;
-      const chainChannel = (
-        filter // 自定义过滤
-          ? freeChainChannelList.filter(filter)
-          : freeChainChannelList
-      ).shift();
-      if (chainChannel) {
-        return chainChannel;
+      for (const cc of freeChainChannels) {
+        if (filter === undefined || filter(cc)) {
+          return cc;
+        }
       }
+
       const waiter = chainChannelWaiterQueue.enqueue(filter);
+      _tryFreeChainChannel(); // 尝试做一个定时器来释放这个waiter
       return waiter.promise;
     };
     /**释放节点的繁忙状态 */
@@ -327,32 +326,39 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       }
     };
     /**
-     * 但繁忙节点增加或者可用节点减少的时候，自动进行释放工作
+     * 尝试增加可用的空闲节点
+     * 1. 尝试将繁忙节点强制转为空闲节点，来承接更多任务
+     * 2. 尝试将空闲节点分配给等待队列
      */
     const _tryFreeChainChannel = () => {
-      if (busyChainChannels.size > freeChainChannelList.length) {
-        /**
-         * @FIXME 因为 tiTasks.size 目前只用在这里，所以可以简单地这样去判断
-         */
-        if (busyChainChannels.size <= tiTasks.size) {
-          return;
-        }
-        /// 如果繁忙的节点已经超过原有可用节点的一半以上了，那么尝试慢慢恢复节点的可用性，这里的策略是随机恢复
+      if (
+        chainChannelWaiterQueue.size > busyChainChannels.size &&
+        busyChainChannels.size >
+          tiTasks.size /**@FIXME 因为 tiTasks.size 目前只用在这里，所以可以简单地这样去判断 */
+      ) {
         const ti = sleep(1000, () => {
           tiTasks.delete(ti);
-          if (busyChainChannels.size === 0) {
-            return;
+
+          /// 先寻找可用的空闲节点
+          for (const freeCc of freeChainChannels) {
+            const releasedWaiter = chainChannelWaiterQueue.dequeue(freeCc);
+            if (releasedWaiter !== undefined) {
+              return;
+            }
           }
-          /// 随机获取繁忙列表中的一个节点
-          const iterator = busyChainChannels.values();
-          let i = Math.floor(busyChainChannels.size * Math.random());
-          let tryFreeChainChannel: DH | undefined;
-          while (i >= 0) {
-            tryFreeChainChannel = iterator.next().value;
-            i--;
-          }
-          if (tryFreeChainChannel) {
-            freeChainChannel(tryFreeChainChannel);
+
+          /// 再随机挑选繁忙节点
+          if (busyChainChannels.size !== 0) {
+            const iterator = busyChainChannels.values();
+            let i = Math.floor(busyChainChannels.size * Math.random());
+            let tryFreeChainChannel: DH | undefined;
+            while (i >= 0) {
+              tryFreeChainChannel = iterator.next().value;
+              i--;
+            }
+            if (tryFreeChainChannel) {
+              freeChainChannel(tryFreeChainChannel);
+            }
           }
         });
         tiTasks.add(ti);
@@ -364,14 +370,14 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
 
     /**节点可用，尝试分配任务 */
     const tryAddChainChannelToFree = (chainChannel: DH) => {
-      if (channelFilter(chainChannel) !== true) {
+      if (channelFirewall(chainChannel) !== true) {
         return;
       }
       // 尝试将 cc 喂给等待队列
       const waiter = chainChannelWaiterQueue.dequeue(chainChannel);
       if (waiter === undefined) {
         // 直接将可用的 cc 放置到空闲队列中
-        freeChainChannelList.push(chainChannel);
+        freeChainChannels.add(chainChannel);
       }
     };
     /// 如果有新的节点，那么添加进来
@@ -379,8 +385,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
 
     const tryRemoveChainChannelFromList = (chainChannel: DH) => {
       busyChainChannels.delete(chainChannel);
-      const index = freeChainChannelList.indexOf(chainChannel);
-      index >= 0 && freeChainChannelList.splice(index, 1);
+      freeChainChannels.delete(chainChannel);
       WCWM.delete(chainChannel);
       _tryFreeChainChannel();
     };
@@ -395,12 +400,12 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       requestChainChannel,
     };
     cache = {
-      freeChainChannelList,
+      freeChainChannels,
       busyChainChannels,
       chainChannelWaiterQueue,
       tiTasks,
       onDestroy: () => {
-        freeChainChannelList.length = 0;
+        freeChainChannels.clear();
         busyChainChannels.clear();
         for (const ti of tiTasks) {
           unsleep(ti);
@@ -503,10 +508,19 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     }`;
     const customChannelFilter = opts?.channelFilter || (() => true);
     const { requestChainChannel } = this.$startParallelTask(parallelTaskId, {
-      channelFilter: (cc) => cc.canQueryTransactions && customChannelFilter(cc),
+      channelFirewall: (cc) => cc.canQueryTransactions && customChannelFilter(cc),
       abortWhenNoChainChannel: opts?.abortWhenNoChainChannel,
       taskResponseCmd: DUPLEX_API_CMD.QUERY_TRANSACTION_RETURN,
     });
+
+    /// 根据查询条件，定制一个节点的过滤器
+    let filter: BFChainCore.ChainChannelGroup.Filter<DH> = () => true;
+    {
+      const queryMaxHeight = query.maxHeight;
+      if (typeof queryMaxHeight === "number") {
+        filter = (cc) => cc.maybeHeight >= queryMaxHeight;
+      }
+    }
 
     const resultPo =
       opts &&
@@ -634,6 +648,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
               const finished = await requestChainChannel(
                 {
                   autoFreeChainChannel: false, // 默认不释放节点
+                  filter,
                 },
                 async (event) => {
                   /**
@@ -810,10 +825,18 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     }`;
     const customChannelFilter = opts?.channelFilter || (() => true);
     const { requestChainChannel } = this.$startParallelTask(parallelTaskId, {
-      channelFilter: (cc) => cc.canIndexTransactions && customChannelFilter(cc),
+      channelFirewall: (cc) => cc.canIndexTransactions && customChannelFilter(cc),
       abortWhenNoChainChannel: opts?.abortWhenNoChainChannel,
       taskResponseCmd: DUPLEX_API_CMD.INDEX_TRANSACTION_RETURN,
     });
+    /// 根据查询条件，定制一个节点的过滤器
+    let filter: BFChainCore.ChainChannelGroup.Filter<DH> = () => true;
+    {
+      const queryMaxHeight = query.maxHeight;
+      if (typeof queryMaxHeight === "number") {
+        filter = (cc) => cc.maybeHeight >= queryMaxHeight;
+      }
+    }
 
     const resultPo =
       opts &&
@@ -941,6 +964,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
               const finished = await requestChainChannel(
                 {
                   autoFreeChainChannel: false, // 默认不释放节点
+                  filter,
                 },
                 async (event) => {
                   /**
@@ -1213,7 +1237,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     }`;
     const customChannelFilter = opts?.channelFilter || (() => true);
     const { requestChainChannel } = this.$startParallelTask(parallelTaskId, {
-      channelFilter: (cc) => cc.canDownloadTransactions && customChannelFilter(cc),
+      channelFirewall: (cc) => cc.canDownloadTransactions && customChannelFilter(cc),
       abortWhenNoChainChannel: opts?.abortWhenNoChainChannel,
       taskResponseCmd: DUPLEX_API_CMD.DOWNLOAD_TRANSACTION_RETURN,
     });
@@ -1614,7 +1638,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
   ): Promise<B | undefined> {
     const parallelTaskId = `Group(${this.groupName}) queryBlock-${Date.now() + Math.random()}`;
     const { requestChainChannel } = this.$startParallelTask(parallelTaskId, {
-      channelFilter: opts?.channelFilter,
+      channelFirewall: opts?.channelFilter,
       abortWhenNoChainChannel: opts?.abortWhenNoChainChannel,
       taskResponseCmd: DUPLEX_API_CMD.QUERY_BLOCK_RETURN,
     });
@@ -1672,6 +1696,15 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
 
       let retryTimes = 0;
       let block: B | undefined;
+
+      /// 根据查询条件，定制一个节点的过滤器
+      let filter: BFChainCore.ChainChannelGroup.Filter<DH> = () => true;
+      {
+        const queryHeight = query.height;
+        if (typeof queryHeight === "number") {
+          filter = (cc) => cc.maybeHeight >= queryHeight;
+        }
+      }
       do {
         if (is_rejected) {
           return;
@@ -1679,6 +1712,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
         await requestChainChannel(
           {
             autoFreeChainChannel: false, // 默认不释放节点
+            filter,
           },
           async (event) => {
             try {

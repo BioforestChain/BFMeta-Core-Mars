@@ -469,12 +469,13 @@ declare namespace BFChainCore {
   }
   namespace ChainChannelGroup {
     type ParallelTaskOptions<CC extends SimpleChainChannel> = {
-      channelFilter?: BFChainCore.ChannelFilter<CC>;
+      /**节点防火墙，被拦截的节点绝对不会参与到任务中来 */
+      channelFirewall?: BFChainCore.ChannelFilter<CC>;
       abortWhenNoChainChannel?: boolean;
       taskResponseCmd?: import("@bfchain/core-model").DUPLEX_API_CMD;
     };
     type ParallelTaskCache<CC extends SimpleChainChannel> = {
-      freeChainChannelList: CC[];
+      freeChainChannels: Set<CC>;
       busyChainChannels: Set<CC>;
       chainChannelWaiterQueue: ChainChannelWaiterQueue<CC>;
       tiTasks: Set<Promise<void>>;
