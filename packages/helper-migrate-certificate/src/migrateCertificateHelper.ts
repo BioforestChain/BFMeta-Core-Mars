@@ -87,10 +87,13 @@ export class MigrateCertificateHelper {
       /**发起账户签名 version/publicKey-signature/secondPublicKey-signSignature */
       signature: version,
       /**迁出链的授权签名 version/publicKey-signature/secondPublicKey-signSignature */
-      fromAuthSignature: version,
+      fromAuthSignature: "",
       /**迁入链的授权签名 version/publicKey-signature/secondPublicKey-signSignature */
-      toAuthSignature: version,
+      toAuthSignature: "",
     });
+
+    this.checkMigrateCertificateBody(certificate.body);
+
     const signatureBuffer = await this.asymmetricHelper.detachedSign(
       certificate.getBytes(true, true),
       keypair.secretKey,
@@ -120,13 +123,14 @@ export class MigrateCertificateHelper {
     const asymmetricHelper = this.asymmetricHelper;
     const accountBaseHelper = this.accountBaseHelper;
     const { authSecret, authSecondSecret, migrateCertificate } = args;
+    const version = args.version || migrateCertificate.body.version;
     const keypair = await accountBaseHelper.createSecretKeypair(authSecret);
     const publicKey = getHexFromArrayBuffer(keypair.publicKey);
     const signatureBuffer = await asymmetricHelper.detachedSign(
       migrateCertificate.getFromAuthBytes(false, false),
       keypair.secretKey,
     );
-    migrateCertificate.fromAuthSignature += `/${publicKey}-${getHexFromArrayBuffer(
+    migrateCertificate.fromAuthSignature = `${version}/${publicKey}-${getHexFromArrayBuffer(
       signatureBuffer,
     )}`;
     if (authSecondSecret) {
@@ -139,7 +143,7 @@ export class MigrateCertificateHelper {
         migrateCertificate.getFromAuthBytes(false, true),
         secondKeypair.secretKey,
       );
-      migrateCertificate.fromAuthSignature += `/${secondPublicKey}-${getHexFromArrayBuffer(
+      migrateCertificate.fromAuthSignature = `${version}/${secondPublicKey}-${getHexFromArrayBuffer(
         signSignatureBuffer,
       )}`;
     }
@@ -155,13 +159,16 @@ export class MigrateCertificateHelper {
     const asymmetricHelper = this.asymmetricHelper;
     const accountBaseHelper = this.accountBaseHelper;
     const { authSecret, authSecondSecret, migrateCertificate } = args;
+    const version = args.version || migrateCertificate.body.version;
     const keypair = await accountBaseHelper.createSecretKeypair(authSecret);
     const publicKey = getHexFromArrayBuffer(keypair.publicKey);
     const signatureBuffer = await asymmetricHelper.detachedSign(
       migrateCertificate.getToAuthBytes(false, false),
       keypair.secretKey,
     );
-    migrateCertificate.toAuthSignature += `/${publicKey}-${getHexFromArrayBuffer(signatureBuffer)}`;
+    migrateCertificate.toAuthSignature = `${version}/${publicKey}-${getHexFromArrayBuffer(
+      signatureBuffer,
+    )}`;
     if (authSecondSecret) {
       const secondKeypair = await accountBaseHelper.createSecondSecretKeypairV2(
         authSecret,
@@ -172,7 +179,7 @@ export class MigrateCertificateHelper {
         migrateCertificate.getToAuthBytes(false, true),
         secondKeypair.secretKey,
       );
-      migrateCertificate.toAuthSignature += `/${secondPublicKey}-${getHexFromArrayBuffer(
+      migrateCertificate.toAuthSignature = `${version}/${secondPublicKey}-${getHexFromArrayBuffer(
         signSignatureBuffer,
       )}`;
     }

@@ -54,6 +54,8 @@ declare namespace BFChainCore {
     authSecret: string;
     /**授权账户安全密钥 */
     authSecondSecret?: string;
+    /**签名版本号 */
+    version?: string;
     /**迁移凭证 */
     migrateCertificate: import("@bfchain/core-model-common").MigrateCertificateModel;
   }
