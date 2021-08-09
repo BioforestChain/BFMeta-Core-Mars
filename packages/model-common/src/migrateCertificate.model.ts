@@ -163,60 +163,6 @@ export class MigrateCertificateModel
     return AccountSignatureModel.fromObject(this.toAuthSignatureJson);
   }
 
-  @cacheBytesGetter
-  getBytes(skipSignature?: boolean, skipSignSignature?: boolean) {
-    const props: PropertyDescriptorMap = {};
-    if (skipSignature) {
-      const items = this.signature.split("/");
-      props.signature = { value: items[0] };
-    }
-    if (!skipSignature && skipSignSignature) {
-      const items = this.signature.split("/");
-      if (items[1]) {
-        props.signature = { value: items[0] + "/" + items[1] };
-      }
-    }
-    props.fromAuthSignature = { value: null };
-    props.toAuthSignature = { value: null };
-    const certificateWrapper = Object.create(this, props);
-    return this.$type.encode(certificateWrapper).finish();
-  }
-
-  @cacheBytesGetter
-  getFromAuthBytes(skipSignature?: boolean, skipSignSignature?: boolean) {
-    const props: PropertyDescriptorMap = {};
-    if (skipSignature) {
-      const items = this.fromAuthSignature.split("/");
-      props.fromAuthSignature = { value: items[0] };
-    }
-    if (!skipSignature && skipSignSignature) {
-      const items = this.fromAuthSignature.split("/");
-      if (items[1]) {
-        props.fromAuthSignature = { value: items[0] + "/" + items[1] };
-      }
-    }
-    props.toAuthSignature = { value: null };
-    const certificateWrapper = Object.create(this, props);
-    return this.$type.encode(certificateWrapper).finish();
-  }
-
-  @cacheBytesGetter
-  getToAuthBytes(skipSignature?: boolean, skipSignSignature?: boolean) {
-    const props: PropertyDescriptorMap = {};
-    if (skipSignature) {
-      const items = this.toAuthSignature.split("/");
-      props.toAuthSignature = { value: items[0] };
-    }
-    if (!skipSignature && skipSignSignature) {
-      const items = this.toAuthSignature.split("/");
-      if (items[1]) {
-        props.toAuthSignature = { value: items[0] + "/" + items[1] };
-      }
-    }
-    const certificateWrapper = Object.create(this, props);
-    return this.$type.encode(certificateWrapper).finish();
-  }
-
   toJSON() {
     const res: BFChainCore.MigrateCertificateJSON = {
       body: this.body.toJSON(),

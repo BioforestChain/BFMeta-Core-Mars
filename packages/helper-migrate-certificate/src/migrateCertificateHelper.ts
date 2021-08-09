@@ -93,9 +93,14 @@ export class MigrateCertificateHelper {
     });
 
     this.checkMigrateCertificateBody(certificate.body);
-
     const signatureBuffer = await this.asymmetricHelper.detachedSign(
-      certificate.getBytes(true, true),
+      Buffer.from(
+        JSON.stringify({
+          body: certificate.body.toJSON(),
+          signture: certificate.signature,
+        }),
+        "utf-8",
+      ),
       keypair.secretKey,
     );
     certificate.signature += `/${publicKey}-${getHexFromArrayBuffer(signatureBuffer)}`;
@@ -106,7 +111,13 @@ export class MigrateCertificateHelper {
       );
       const secondPublicKey = getHexFromArrayBuffer(secondKeypair.publicKey);
       const signSignatureBuffer = await this.asymmetricHelper.detachedSign(
-        certificate.getBytes(false, true),
+        Buffer.from(
+          JSON.stringify({
+            body: certificate.body.toJSON(),
+            signture: certificate.signature,
+          }),
+          "utf-8",
+        ),
         secondKeypair.secretKey,
       );
       certificate.signature += `/${secondPublicKey}-${getHexFromArrayBuffer(signSignatureBuffer)}`;
@@ -123,14 +134,24 @@ export class MigrateCertificateHelper {
     const asymmetricHelper = this.asymmetricHelper;
     const accountBaseHelper = this.accountBaseHelper;
     const { authSecret, authSecondSecret, migrateCertificate } = args;
+
+    /**@FIXME 默认值不是bodyVersion */
     const version = args.version || migrateCertificate.body.version;
+    migrateCertificate.fromAuthSignature = version;
     const keypair = await accountBaseHelper.createSecretKeypair(authSecret);
     const publicKey = getHexFromArrayBuffer(keypair.publicKey);
     const signatureBuffer = await asymmetricHelper.detachedSign(
-      migrateCertificate.getFromAuthBytes(false, false),
+      Buffer.from(
+        JSON.stringify({
+          body: migrateCertificate.body.toJSON(),
+          signture: migrateCertificate.signature,
+          fromAuthSignature: migrateCertificate.fromAuthSignature,
+        }),
+        "utf-8",
+      ),
       keypair.secretKey,
     );
-    migrateCertificate.fromAuthSignature = `${version}/${publicKey}-${getHexFromArrayBuffer(
+    migrateCertificate.fromAuthSignature += `/${publicKey}-${getHexFromArrayBuffer(
       signatureBuffer,
     )}`;
     if (authSecondSecret) {
@@ -140,7 +161,14 @@ export class MigrateCertificateHelper {
       );
       const secondPublicKey = getHexFromArrayBuffer(secondKeypair.publicKey);
       const signSignatureBuffer = await asymmetricHelper.detachedSign(
-        migrateCertificate.getFromAuthBytes(false, true),
+        Buffer.from(
+          JSON.stringify({
+            body: migrateCertificate.body.toJSON(),
+            signture: migrateCertificate.signature,
+            fromAuthSignature: migrateCertificate.fromAuthSignature,
+          }),
+          "utf-8",
+        ),
         secondKeypair.secretKey,
       );
       migrateCertificate.fromAuthSignature = `${version}/${secondPublicKey}-${getHexFromArrayBuffer(
@@ -160,15 +188,22 @@ export class MigrateCertificateHelper {
     const accountBaseHelper = this.accountBaseHelper;
     const { authSecret, authSecondSecret, migrateCertificate } = args;
     const version = args.version || migrateCertificate.body.version;
+    migrateCertificate.toAuthSignature = version;
     const keypair = await accountBaseHelper.createSecretKeypair(authSecret);
     const publicKey = getHexFromArrayBuffer(keypair.publicKey);
     const signatureBuffer = await asymmetricHelper.detachedSign(
-      migrateCertificate.getToAuthBytes(false, false),
+      Buffer.from(
+        JSON.stringify({
+          body: migrateCertificate.body.toJSON(),
+          signture: migrateCertificate.signature,
+          fromAuthSignature: migrateCertificate.fromAuthSignature,
+          toAuthSignature: migrateCertificate.toAuthSignature,
+        }),
+        "utf-8",
+      ),
       keypair.secretKey,
     );
-    migrateCertificate.toAuthSignature = `${version}/${publicKey}-${getHexFromArrayBuffer(
-      signatureBuffer,
-    )}`;
+    migrateCertificate.toAuthSignature += `/${publicKey}-${getHexFromArrayBuffer(signatureBuffer)}`;
     if (authSecondSecret) {
       const secondKeypair = await accountBaseHelper.createSecondSecretKeypairV2(
         authSecret,
@@ -176,7 +211,15 @@ export class MigrateCertificateHelper {
       );
       const secondPublicKey = getHexFromArrayBuffer(secondKeypair.publicKey);
       const signSignatureBuffer = await asymmetricHelper.detachedSign(
-        migrateCertificate.getToAuthBytes(false, true),
+        Buffer.from(
+          JSON.stringify({
+            body: migrateCertificate.body.toJSON(),
+            signture: migrateCertificate.signature,
+            fromAuthSignature: migrateCertificate.fromAuthSignature,
+            toAuthSignature: migrateCertificate.toAuthSignature,
+          }),
+          "utf-8",
+        ),
         secondKeypair.secretKey,
       );
       migrateCertificate.toAuthSignature = `${version}/${secondPublicKey}-${getHexFromArrayBuffer(
