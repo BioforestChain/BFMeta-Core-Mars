@@ -193,12 +193,18 @@ declare namespace BFChainCore {
     /**权益销毁事件附带信息 */
     destoryAsset: DestoryAssetJSON;
   }
-  type EmigrateAssetJSON = MigrateCertificateJSON;
+  interface EmigrateAssetJSON {
+    /**迁移凭证 */
+    migrateCertificate: string;
+  }
   interface EmigrateAssetAssetJSON {
     /**权益迁出事件附带信息 */
     emigrateAsset: EmigrateAssetJSON;
   }
-  type ImmigrateAssetJSON = MigrateCertificateJSON;
+  interface ImmigrateAssetJSON {
+    /**迁移凭证 */
+    migrateCertificate: string;
+  }
   interface ImmigrateAssetAssetJSON {
     /**权益迁入事件附带信息 */
     immigrateAsset: ImmigrateAssetJSON;

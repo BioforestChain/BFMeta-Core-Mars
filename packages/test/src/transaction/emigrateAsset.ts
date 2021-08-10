@@ -10,13 +10,13 @@ import {
   getFullBfchainCoreEntry,
   AccountModel,
   getDelegateWithSecondSecret,
-  getRegisterBfchainCoreEntry,
+  getFullRegisterBfchainCoreEntry,
   getRandomDAppid,
 } from "../include";
 
 const fullBfchainCore = getFullBfchainCoreEntry(57, 128);
 
-const registerBfchainCore = getRegisterBfchainCoreEntry();
+const fullRegisterBfchainCore = getFullRegisterBfchainCoreEntry();
 
 async function getEmigrateAssetTransaction(
   sender: AccountModel,
@@ -41,7 +41,7 @@ async function getEmigrateAssetTransaction(
     lns: config.genesisLocationName,
     sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: fullBfchainCore.config.magic, // 交易来源链的 magic
-    toMagic: registerBfchainCore.config.magic, // 交易去往链的 magic
+    toMagic: fullRegisterBfchainCore.config.magic, // 交易去往链的 magic
     applyBlockHeight: 10, // 交易发起高度
     effectiveBlockHeight: 10100,
     storage: {
@@ -62,31 +62,31 @@ async function getEmigrateAssetTransaction(
       );
   }
 
-  const args: BFChainCore.GenerateMigrateCertificateArgs = {
+  const args: BFChainCore.CrossChain.GenerateMigrateCertificateArgs = {
     senderSecret: sender.secret,
     senderSecondSecret: sender.secondSecret,
     recipientId: recipientId || sender.address,
     toChainInfo: {
-      magic: config.magic,
-      chainName: config.chainName,
-      genesisBlockSignature: config.signature,
+      magic: fullRegisterBfchainCore.config.magic,
+      chainName: fullRegisterBfchainCore.config.chainName,
+      genesisBlockSignature: fullRegisterBfchainCore.config.signature,
     },
     assets: "10000",
   };
-  let migrateCertificateModel =
+  let migrateCertificate =
     await fullBfchainCore.migrateCertificateHelper.generateMigrateCertificate(args);
-  migrateCertificateModel =
+  migrateCertificate =
     await fullBfchainCore.migrateCertificateHelper.fromAuthSignMigrateCertificate({
       authSecret: genesisDelegate.secret,
       authSecondSecret: genesisDelegate.secondSecret,
-      migrateCertificate: migrateCertificateModel,
+      migrateCertificate: migrateCertificate,
     });
 
   const trs = await fullBfchainCore.transaction.createTransaction<EmigrateAssetTransaction>(
     EmigrateAssetTransactionFactory,
     data,
     {
-      emigrateAsset: migrateCertificateModel.toJSON(),
+      emigrateAsset: { migrateCertificate: JSON.stringify(migrateCertificate) },
     },
     keypair,
     secondKeypair,

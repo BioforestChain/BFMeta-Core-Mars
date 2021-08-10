@@ -12,6 +12,7 @@ import {
   CoreExceptionGenerator,
   NOT_MATCH,
   PARAM_LOST,
+  PROP_IS_INVALID,
   PROP_IS_REQUIRE,
   SHOULD_BE,
   SHOULD_NOT_BE,
@@ -121,8 +122,26 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
       });
     }
 
-    const migrateCertificateModel = await this.migrateCertificateHelper.verifyMigrateCertificate(
-      emigrateAsset,
+    if (!emigrateAsset.migrateCertificate) {
+      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        prop: "migrateCertificate",
+        target: "emigrateAsset",
+        function: "verifyTransactionBody",
+      });
+    }
+    let migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON;
+    try {
+      migrateCertificate = JSON.parse(emigrateAsset.migrateCertificate);
+    } catch (e) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "migrateCertificate",
+        target: "emigrateAsset",
+        function: "verifyTransactionBody",
+      });
+    }
+
+    const converter = await this.migrateCertificateHelper.verifyMigrateCertificate(
+      migrateCertificate,
       {
         forceCheckFrom: true,
         fromChainBaseConfig: {
@@ -135,33 +154,45 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
       },
     );
 
-    const migrateCertificateBody = migrateCertificateModel.body;
-
-    if (body.senderId !== migrateCertificateBody.fromUser) {
+    const { toChainId, fromId, toId, assetTypeId } = migrateCertificate.body;
+    const fromAddress = converter.fromId.decode(fromId, true);
+    if (body.senderId !== fromAddress) {
       throw new ArgumentIllegalException(NOT_MATCH, {
         to_compare_prop: `senderId ${body.senderId}`,
-        be_compare_prop: `fromUser ${migrateCertificateBody.fromUser}`,
+        be_compare_prop: `fromId ${fromAddress}`,
         to_target: "body",
         be_target: "migrateCertificate",
         ...Function_Exception_Detail,
       });
     }
 
-    if (body.recipientId !== migrateCertificateBody.toUser) {
+    const toAddress = converter.toId.decode(toId, true);
+    if (body.recipientId !== toAddress) {
       throw new ArgumentIllegalException(NOT_MATCH, {
         to_compare_prop: `recipientId ${body.recipientId}`,
-        be_compare_prop: `toUser ${migrateCertificateBody.toUser}`,
+        be_compare_prop: `toId ${toAddress}`,
         to_target: "body",
         be_target: "migrateCertificate",
         ...Function_Exception_Detail,
       });
     }
 
-    const assetType = migrateCertificateBody.assetType;
+    const toChain = converter.toChainId.decode(toChainId, true);
+    if (body.toMagic !== toChain.magic) {
+      throw new ArgumentIllegalException(NOT_MATCH, {
+        to_compare_prop: `toMagic ${body.toMagic}`,
+        be_compare_prop: `toChainId ${toChain.magic}`,
+        to_target: "body",
+        be_target: "migrateCertificate",
+        ...Function_Exception_Detail,
+      });
+    }
+
+    const assetType = converter.toId.decode(assetTypeId, true);
     if (storage.value !== assetType) {
       throw new ArgumentIllegalException(NOT_MATCH, {
         to_compare_prop: `value ${storage.value}`,
-        be_compare_prop: `assetType ${assetType}`,
+        be_compare_prop: `assetTypeId ${assetType}`,
         to_target: "storage",
         be_target: "migrateCertificateBody",
         ...Function_Exception_Detail,

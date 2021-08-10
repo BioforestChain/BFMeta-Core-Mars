@@ -32,7 +32,29 @@
   ],
   "files": [
     "src/@types.ts",
+    "src/constants/index.ts",
+    "src/converterMap/converterMap.ts",
+    "src/converterMap/index.ts",
+    "src/CrossChainConverterFactory.ts",
+    "src/default/1/assetTypeId/assetTypeId.v1.ts",
+    "src/default/1/assetTypeId/index.ts",
+    "src/default/1/fromChainId/fromChainId.v1.ts",
+    "src/default/1/fromChainId/index.ts",
+    "src/default/1/fromId/fromId.v1.ts",
+    "src/default/1/fromId/index.ts",
+    "src/default/1/index.ts",
+    "src/default/1/signature/index.ts",
+    "src/default/1/signature/signature.v1.ts",
+    "src/default/1/toChainId/index.ts",
+    "src/default/1/toChainId/toChainId.v1.ts",
+    "src/default/1/toId/index.ts",
+    "src/default/1/toId/toId.v1.ts",
+    "src/default/CrossChainV1DefaultConverter.ts",
+    "src/default/index.ts",
     "src/index.ts",
-    "src/migrateCertificateHelper.ts"
+    "src/migrateCertificateHelper.ts",
+    "src/patch/index.ts",
+    "src/patch/Magic1ChainV1Converter.ts",
+    "src/patch/Magic2ChainV1Converter.ts"
   ]
 }

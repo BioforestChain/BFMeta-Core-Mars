@@ -125,22 +125,39 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
 
     const ImmigrateAssetAsset_Exception_Detail = {
       ...Function_Exception_Detail,
-      target: "migrateAssetAsset",
+      target: "immigrateAsset",
     } as const;
 
-    // 验证完整交易包含签名
-    const fromChainId = immigrateAsset.body.fromChainId;
-    this.migrateCertificateHelper.verifyFromChainId(fromChainId);
-    const fromMagic = fromChainId.split("/")[1];
-    if (!baseHelper.isValidChainMagic(fromMagic)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `migrateCertificate.fromChainMagic ${fromMagic}`,
+    if (!immigrateAsset.migrateCertificate) {
+      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        prop: "migrateCertificate",
         ...ImmigrateAssetAsset_Exception_Detail,
       });
     }
 
-    const migrateCertificateModel = await this.migrateCertificateHelper.verifyMigrateCertificate(
-      immigrateAsset,
+    let migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON;
+    try {
+      migrateCertificate = JSON.parse(immigrateAsset.migrateCertificate);
+    } catch (e) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "migrateCertificate",
+        ...ImmigrateAssetAsset_Exception_Detail,
+      });
+    }
+
+    // 验证完整交易包含签名
+    // const fromChainId = immigrateAsset.body.fromChainId;
+    // this.migrateCertificateHelper.verifyFromChainId(fromChainId);
+    // const fromMagic = fromChainId.split("/")[1];
+    // if (!baseHelper.isValidChainMagic(fromMagic)) {
+    //   throw new ArgumentIllegalException(PROP_IS_INVALID, {
+    //     prop: `migrateCertificate.fromChainMagic ${fromMagic}`,
+    //     ...ImmigrateAssetAsset_Exception_Detail,
+    //   });
+    // }
+
+    const converter = await this.migrateCertificateHelper.verifyMigrateCertificate(
+      migrateCertificate,
       {
         forceCheckTo: true,
         toChainBaseConfig: {
@@ -153,13 +170,36 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
       },
     );
 
-    const assetType = migrateCertificateModel.body.assetType;
+    const { fromChainId, toId, assetTypeId } = migrateCertificate.body;
+    const toAddress = converter.toId.decode(toId, true);
+    if (body.recipientId !== toAddress) {
+      throw new ArgumentIllegalException(NOT_MATCH, {
+        to_compare_prop: `recipientId ${body.recipientId}`,
+        be_compare_prop: `toId ${toAddress}`,
+        to_target: "body",
+        be_target: "migrateCertificate",
+        ...Function_Exception_Detail,
+      });
+    }
+
+    const fromChain = converter.fromChainId.decode(fromChainId, true);
+    if (body.fromMagic !== fromChain.magic) {
+      throw new ArgumentIllegalException(NOT_MATCH, {
+        to_compare_prop: `fromMagic ${body.fromMagic}`,
+        be_compare_prop: `fromChainId ${fromChain.magic}`,
+        to_target: "body",
+        be_target: "migrateCertificate",
+        ...Function_Exception_Detail,
+      });
+    }
+
+    const assetType = converter.assetTypeId.decode(assetTypeId, true);
     if (storage.value !== assetType) {
       throw new ArgumentIllegalException(NOT_MATCH, {
         to_compare_prop: `value ${storage.value}`,
-        be_compare_prop: `assetType ${assetType}`,
+        be_compare_prop: `assetTypeId ${assetType}`,
         to_target: "storage",
-        be_target: "migrateCertificateBody",
+        be_target: "migrateCertificate",
         ...Function_Exception_Detail,
       });
     }
@@ -193,8 +233,20 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
   ) {
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
-      const migrateAssetAsset = transaction.asset.immigrateAsset;
-      const { fromChain, assetType, assets } = migrateAssetAsset.body;
+      let migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON;
+      try {
+        migrateCertificate = JSON.parse(transaction.asset.immigrateAsset.migrateCertificate);
+      } catch (e) {
+        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          prop: "migrateCertificate",
+          target: "transaction.asset.immigrateAsset",
+          function: "applyTransaction",
+        });
+      }
+      const converter = this.migrateCertificateHelper.getConverter(migrateCertificate);
+      const { fromChainId, assetTypeId, assets } = migrateCertificate.body;
+      const fromChain = converter.fromChainId.decode(fromChainId);
+      const assetType = converter.assetTypeId.decode(assetTypeId);
       const assetInfo = this.chainAssetInfoHelper.getAssetInfo(fromChain.magic, assetType);
       // 累加资产
       taskList.next = eventEmitter.emit("asset", {
@@ -213,7 +265,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
         type: "migrateCertificate",
         transaction,
         applyInfo: {
-          migrateCertificateId: migrateAssetAsset.fromAuthSignatureJson.signature,
+          migrateCertificateId: converter.getUUID(migrateCertificate),
         },
       });
     });

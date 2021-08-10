@@ -1,4 +1,4 @@
-import { Injectable, Inject } from "@bfchain/util-dep-inject";
+import { Injectable } from "@bfchain/util-dep-inject";
 import {
   CoreExceptionGenerator,
   NOT_MATCH,
@@ -7,14 +7,13 @@ import {
   PROP_SHOULD_GT_FIELD,
   SHOULD_BE,
 } from "@bfchain/core-util-exception";
-import { getHexFromArrayBuffer, parseHexToArrayBuffer } from "@bfchain/util-encoding-hex";
 import { BaseHelper } from "@bfchain/core-helper-type";
 import { ConfigHelper } from "@bfchain/core-helper-config";
 import { ChainTimeHelper } from "@bfchain/core-helper-chain-time";
 import { AsymmetricHelper } from "@bfchain/core-helper-asymmetric";
 import { AccountBaseHelper } from "@bfchain/core-helper-account-base";
 import { TransactionHelper } from "@bfchain/core-helper-transaction";
-import { MigrateCertificateModel } from "@bfchain/core-model-common";
+import { CrossChainConverterFactory } from "./CrossChainConverterFactory";
 
 const { ArgumentIllegalException } = CoreExceptionGenerator("HELPER", "transactionHelper");
 
@@ -23,8 +22,6 @@ export class MigrateCertificateHelper {
   readonly version = "1";
 
   constructor(
-    @Inject("cryptoHelper")
-    public cryptoHelper: BFChainCore.CryptoHelperInterface,
     public baseHelper: BaseHelper,
     public configHelper: ConfigHelper,
     public chainTimeHelper: ChainTimeHelper,
@@ -33,13 +30,33 @@ export class MigrateCertificateHelper {
     public transactionHelper: TransactionHelper,
   ) {}
 
-  recombineMigrateCertificate(migrateCertificateJson: BFChainCore.MigrateCertificateJSON) {
-    return MigrateCertificateModel.fromObject<MigrateCertificateModel>(migrateCertificateJson);
+  getConverter(migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON) {
+    return CrossChainConverterFactory(migrateCertificate);
   }
-  fromJSON = this.recombineMigrateCertificate;
 
-  getChainId(chainInfo: BFChainCore.ChainBaseInfo) {
-    return `${this.version}/${chainInfo.magic}/${chainInfo.chainName}/${chainInfo.genesisBlockSignature}`;
+  checkAssets(assets: string) {
+    if (!assets) {
+      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        prop: "assets",
+        target: "migrateCertificate",
+        function: "checkAssets",
+      });
+    }
+    if (!this.baseHelper.isValidAssetNumber(assets)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "assets",
+        target: "migrateCertificate",
+        function: "checkAssets",
+      });
+    }
+    if (assets === "0") {
+      throw new ArgumentIllegalException(PROP_SHOULD_GT_FIELD, {
+        prop: "assets",
+        fueld: "0",
+        target: "migrateCertificate",
+        function: "checkAssets",
+      });
+    }
   }
 
   /**
@@ -50,79 +67,87 @@ export class MigrateCertificateHelper {
    * @returns
    */
   async generateMigrateCertificate(
-    args: BFChainCore.GenerateMigrateCertificateArgs,
+    args: BFChainCore.CrossChain.GenerateMigrateCertificateArgs,
     config = this.configHelper,
   ) {
     const version = this.version;
-    const prefix = version + "/";
-    const accountBaseHelper = this.accountBaseHelper;
     const { senderSecret, senderSecondSecret, recipientId, toChainInfo, assets } = args;
-    const keypair = await accountBaseHelper.createSecretKeypair(senderSecret);
-    const publicKey = getHexFromArrayBuffer(keypair.publicKey);
-    const address = await accountBaseHelper.getAddressFromPublicKey(keypair.publicKey);
+    const converter = CrossChainConverterFactory();
 
-    const certificate = this.fromJSON({
+    this.checkAssets(assets);
+
+    const accountBaseHelper = this.accountBaseHelper;
+    const keypair = await accountBaseHelper.createSecretKeypair(senderSecret);
+    const address = await accountBaseHelper.getAddressFromPublicKey(keypair.publicKey);
+    let migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON = {
       body: {
         /**凭证版本 */
         version,
         /**发起账户的唯一标识 version/address */
-        fromUserId: prefix + address,
+        fromId: converter.fromId.encode(address, true),
         /**接收账户的唯一标识 version/address */
-        toUserId: prefix + recipientId,
+        toId: converter.toId.encode(recipientId, true),
         /**迁出凭证生成时间 Date.now().getTimes() */
         timestamp: this.chainTimeHelper.now(),
         /**迁出链的唯一标识 version+自定义格式，目前是 version/magic/chainName/genesisBlockSignature */
-        fromChainId: this.getChainId({
-          magic: config.magic,
-          chainName: config.chainName,
-          genesisBlockSignature: config.signature,
-        }),
+        fromChainId: converter.fromChainId.encode(
+          {
+            magic: config.magic,
+            chainName: config.chainName,
+            genesisBlockSignature: config.signature,
+          },
+          true,
+        ),
         /**迁入链的唯一标识 version+自定义格式，目前是 version/magic/chainName/genesisBlockSignature */
-        toChainId: this.getChainId(toChainInfo),
+        toChainId: converter.toChainId.encode(toChainInfo),
         /**迁出的权益：version/assetType */
-        assetTypeId: prefix + config.assetType,
+        assetTypeId: converter.assetTypeId.encode(config.assetType, true),
         /**迁出的权益数量，0-9 组成并且不包含小数点，必须大于0 */
         assets,
       },
       /**发起账户签名 version/publicKey-signature/secondPublicKey-signSignature */
-      signature: version,
+      signature: "",
       /**迁出链的授权签名 version/publicKey-signature/secondPublicKey-signSignature */
       fromAuthSignature: "",
       /**迁入链的授权签名 version/publicKey-signature/secondPublicKey-signSignature */
       toAuthSignature: "",
-    });
+    };
 
-    this.checkMigrateCertificateBody(certificate.body);
-    const signatureBuffer = await this.asymmetricHelper.detachedSign(
-      Buffer.from(
-        JSON.stringify({
-          body: certificate.body.toJSON(),
-          signture: certificate.signature,
-        }),
-        "utf-8",
-      ),
-      keypair.secretKey,
+    migrateCertificate = await converter.signature.generateMigrateCertificateSignature(
+      { secret: senderSecret, secondSecret: senderSecondSecret, migrateCertificate },
+      accountBaseHelper,
+      this.asymmetricHelper,
     );
-    certificate.signature += `/${publicKey}-${getHexFromArrayBuffer(signatureBuffer)}`;
-    if (senderSecondSecret) {
-      const secondKeypair = await accountBaseHelper.createSecondSecretKeypairV2(
-        senderSecret,
-        senderSecondSecret,
-      );
-      const secondPublicKey = getHexFromArrayBuffer(secondKeypair.publicKey);
-      const signSignatureBuffer = await this.asymmetricHelper.detachedSign(
-        Buffer.from(
-          JSON.stringify({
-            body: certificate.body.toJSON(),
-            signture: certificate.signature,
-          }),
-          "utf-8",
-        ),
-        secondKeypair.secretKey,
-      );
-      certificate.signature += `/${secondPublicKey}-${getHexFromArrayBuffer(signSignatureBuffer)}`;
-    }
-    return certificate;
+
+    return migrateCertificate;
+  }
+
+  parseMigrateCertificateToJson(migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON) {
+    const { body, signature, fromAuthSignature, toAuthSignature } = migrateCertificate;
+
+    const converter = CrossChainConverterFactory(migrateCertificate);
+    const migrateCertificateJson: BFChainCore.CrossChain.MigrateCertificate = {
+      body: {
+        version: body.version,
+        senderId: converter.fromId.decode(body.fromId),
+        recipientId: converter.toId.decode(body.toId),
+        timestamp: body.timestamp,
+        fromChain: converter.fromChainId.decode(body.fromChainId),
+        toChain: converter.toChainId.decode(body.toChainId),
+        assetType: converter.assetTypeId.decode(body.assetTypeId),
+        assets: body.assets,
+      },
+      signature: converter.signature.decode(signature),
+      fromAuthSignature:
+        fromAuthSignature && fromAuthSignature.includes("/")
+          ? converter.signature.decode(fromAuthSignature)
+          : undefined,
+      toAuthSignature:
+        toAuthSignature && toAuthSignature.includes("/")
+          ? converter.signature.decode(toAuthSignature)
+          : undefined,
+    };
+    return migrateCertificateJson;
   }
 
   /**
@@ -130,52 +155,15 @@ export class MigrateCertificateHelper {
    *
    * @param args
    */
-  async fromAuthSignMigrateCertificate(args: BFChainCore.AuthSignMigrateCertificateArgs) {
-    const asymmetricHelper = this.asymmetricHelper;
-    const accountBaseHelper = this.accountBaseHelper;
-    const { authSecret, authSecondSecret, migrateCertificate } = args;
-
-    /**@FIXME 默认值不是bodyVersion */
-    const version = args.version || migrateCertificate.body.version;
-    migrateCertificate.fromAuthSignature = version;
-    const keypair = await accountBaseHelper.createSecretKeypair(authSecret);
-    const publicKey = getHexFromArrayBuffer(keypair.publicKey);
-    const signatureBuffer = await asymmetricHelper.detachedSign(
-      Buffer.from(
-        JSON.stringify({
-          body: migrateCertificate.body.toJSON(),
-          signture: migrateCertificate.signature,
-          fromAuthSignature: migrateCertificate.fromAuthSignature,
-        }),
-        "utf-8",
-      ),
-      keypair.secretKey,
+  async fromAuthSignMigrateCertificate(
+    args: BFChainCore.CrossChain.AuthSignMigrateCertificateArgs,
+  ) {
+    const converter = CrossChainConverterFactory(args.migrateCertificate);
+    return converter.signature.generateMigrateCertificateFromAuthSignature(
+      args,
+      this.accountBaseHelper,
+      this.asymmetricHelper,
     );
-    migrateCertificate.fromAuthSignature += `/${publicKey}-${getHexFromArrayBuffer(
-      signatureBuffer,
-    )}`;
-    if (authSecondSecret) {
-      const secondKeypair = await accountBaseHelper.createSecondSecretKeypairV2(
-        authSecret,
-        authSecondSecret,
-      );
-      const secondPublicKey = getHexFromArrayBuffer(secondKeypair.publicKey);
-      const signSignatureBuffer = await asymmetricHelper.detachedSign(
-        Buffer.from(
-          JSON.stringify({
-            body: migrateCertificate.body.toJSON(),
-            signture: migrateCertificate.signature,
-            fromAuthSignature: migrateCertificate.fromAuthSignature,
-          }),
-          "utf-8",
-        ),
-        secondKeypair.secretKey,
-      );
-      migrateCertificate.fromAuthSignature = `${version}/${secondPublicKey}-${getHexFromArrayBuffer(
-        signSignatureBuffer,
-      )}`;
-    }
-    return migrateCertificate;
   }
 
   /**
@@ -183,110 +171,13 @@ export class MigrateCertificateHelper {
    *
    * @param args
    */
-  async toAuthSignMigrateCertificate(args: BFChainCore.AuthSignMigrateCertificateArgs) {
-    const asymmetricHelper = this.asymmetricHelper;
-    const accountBaseHelper = this.accountBaseHelper;
-    const { authSecret, authSecondSecret, migrateCertificate } = args;
-    const version = args.version || migrateCertificate.body.version;
-    migrateCertificate.toAuthSignature = version;
-    const keypair = await accountBaseHelper.createSecretKeypair(authSecret);
-    const publicKey = getHexFromArrayBuffer(keypair.publicKey);
-    const signatureBuffer = await asymmetricHelper.detachedSign(
-      Buffer.from(
-        JSON.stringify({
-          body: migrateCertificate.body.toJSON(),
-          signture: migrateCertificate.signature,
-          fromAuthSignature: migrateCertificate.fromAuthSignature,
-          toAuthSignature: migrateCertificate.toAuthSignature,
-        }),
-        "utf-8",
-      ),
-      keypair.secretKey,
+  async toAuthSignMigrateCertificate(args: BFChainCore.CrossChain.AuthSignMigrateCertificateArgs) {
+    const converter = CrossChainConverterFactory(args.migrateCertificate);
+    return converter.signature.generateMigrateCertificateToAuthSignature(
+      args,
+      this.accountBaseHelper,
+      this.asymmetricHelper,
     );
-    migrateCertificate.toAuthSignature += `/${publicKey}-${getHexFromArrayBuffer(signatureBuffer)}`;
-    if (authSecondSecret) {
-      const secondKeypair = await accountBaseHelper.createSecondSecretKeypairV2(
-        authSecret,
-        authSecondSecret,
-      );
-      const secondPublicKey = getHexFromArrayBuffer(secondKeypair.publicKey);
-      const signSignatureBuffer = await asymmetricHelper.detachedSign(
-        Buffer.from(
-          JSON.stringify({
-            body: migrateCertificate.body.toJSON(),
-            signture: migrateCertificate.signature,
-            fromAuthSignature: migrateCertificate.fromAuthSignature,
-            toAuthSignature: migrateCertificate.toAuthSignature,
-          }),
-          "utf-8",
-        ),
-        secondKeypair.secretKey,
-      );
-      migrateCertificate.toAuthSignature = `${version}/${secondPublicKey}-${getHexFromArrayBuffer(
-        signSignatureBuffer,
-      )}`;
-    }
-    return migrateCertificate;
-  }
-
-  getAddressFromUserId(userId: string): string {
-    return userId.split("/")[1];
-  }
-
-  getChainInfoFromChainId(chainId: string): BFChainCore.ChainBaseInfo {
-    const items = chainId.split("/");
-    return {
-      magic: items[1],
-      chainName: items[2],
-      genesisBlockSignature: items[3],
-    };
-  }
-
-  getAccountSignatureFromSignature(signature: string) {
-    const items = signature.split("/");
-    const signatureKeyValue = items[1].split("-");
-    const accountSignature: BFChainCore.AccountSignatureJSON = {
-      publicKey: signatureKeyValue[0],
-      signature: signatureKeyValue[1],
-    };
-    if (items[2]) {
-      const signSignatureKeyValue = items[1].split("-");
-      accountSignature.secondPublicKey = signSignatureKeyValue[0];
-      accountSignature.signSignature = signSignatureKeyValue[1];
-    }
-    return accountSignature;
-  }
-
-  getAssetTypeFromAssetTypeId(assetTypeId: string) {
-    return assetTypeId.split("/")[1];
-  }
-
-  parseMigrateCertificateToJson(
-    migrateCertificate: MigrateCertificateModel | BFChainCore.MigrateCertificateJSON,
-  ) {
-    const { body, signature, fromAuthSignature, toAuthSignature } = migrateCertificate;
-    const migrateCertificateJson: BFChainCore.MigrateCertificate = {
-      body: {
-        version: body.version,
-        senderId: this.getAddressFromUserId(body.fromUserId),
-        recipientId: this.getAddressFromUserId(body.toUserId),
-        timestamp: body.timestamp,
-        fromChain: this.getChainInfoFromChainId(body.fromChainId),
-        toChain: this.getChainInfoFromChainId(body.toChainId),
-        assetType: this.getAssetTypeFromAssetTypeId(body.assetTypeId),
-        assets: body.assets,
-      },
-      signature: this.getAccountSignatureFromSignature(signature),
-      fromAuthSignature:
-        fromAuthSignature && fromAuthSignature.includes("/")
-          ? this.getAccountSignatureFromSignature(fromAuthSignature)
-          : undefined,
-      toAuthSignature:
-        toAuthSignature && toAuthSignature.includes("/")
-          ? this.getAccountSignatureFromSignature(toAuthSignature)
-          : undefined,
-    };
-    return migrateCertificateJson;
   }
 
   /**
@@ -296,38 +187,17 @@ export class MigrateCertificateHelper {
    * @param opts
    */
   async verifyMigrateCertificateSignature(
-    migrateCertificate: MigrateCertificateModel,
+    migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON,
     opts?: {
       taskLabel?: string;
     },
   ) {
-    const taskLabel = (opts && opts.taskLabel) || "MigrateCertificate";
-    const asymmetricHelper = this.asymmetricHelper;
-    const items = migrateCertificate.signature.split("/");
-    const signatureKeyValue = items[1].split("-");
-    // 验证 signature 与 publicKey
-    if (
-      !(await asymmetricHelper.detachedVeriy(
-        migrateCertificate.getBytes(true, true),
-        parseHexToArrayBuffer(signatureKeyValue[1]),
-        parseHexToArrayBuffer(signatureKeyValue[0]),
-      ))
-    ) {
-      throw new ArgumentIllegalException(`Invalid ${taskLabel} signature`);
-    }
-    // 验证 signSignature 与 secondPublicKey
-    if (items[2]) {
-      const signSignatureKeyValue = items[2].split("-");
-      if (
-        !(await asymmetricHelper.detachedVeriy(
-          migrateCertificate.getBytes(false, true),
-          parseHexToArrayBuffer(signSignatureKeyValue[1]),
-          parseHexToArrayBuffer(signSignatureKeyValue[0]),
-        ))
-      ) {
-        throw new ArgumentIllegalException(`Invalid ${taskLabel} signSignature`);
-      }
-    }
+    const converter = CrossChainConverterFactory(migrateCertificate);
+    return converter.signature.verifyMigrateCertificateSignature(
+      migrateCertificate,
+      this.asymmetricHelper,
+      opts,
+    );
   }
 
   /**
@@ -337,38 +207,17 @@ export class MigrateCertificateHelper {
    * @param opts
    */
   async verifyMigrateCertificateFromAuthSignature(
-    migrateCertificate: MigrateCertificateModel,
+    migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON,
     opts?: {
       taskLabel?: string;
     },
   ) {
-    const taskLabel = (opts && opts.taskLabel) || "MigrateCertificate";
-    const asymmetricHelper = this.asymmetricHelper;
-    const items = migrateCertificate.fromAuthSignature.split("/");
-    const signatureKeyValue = items[1].split("-");
-    // 验证 signature 与 publicKey
-    if (
-      !(await asymmetricHelper.detachedVeriy(
-        migrateCertificate.getFromAuthBytes(true, true),
-        parseHexToArrayBuffer(signatureKeyValue[1]),
-        parseHexToArrayBuffer(signatureKeyValue[0]),
-      ))
-    ) {
-      throw new ArgumentIllegalException(`Invalid ${taskLabel} fromAuthSignature`);
-    }
-    // 验证 signSignature 与 secondPublicKey
-    if (items[2]) {
-      const signSignatureKeyValue = items[2].split("-");
-      if (
-        !(await asymmetricHelper.detachedVeriy(
-          migrateCertificate.getFromAuthBytes(false, true),
-          parseHexToArrayBuffer(signSignatureKeyValue[1]),
-          parseHexToArrayBuffer(signSignatureKeyValue[0]),
-        ))
-      ) {
-        throw new ArgumentIllegalException(`Invalid ${taskLabel} fromAuthSignSignature`);
-      }
-    }
+    const converter = CrossChainConverterFactory(migrateCertificate);
+    return converter.signature.verifyMigrateCertificateFromAuthSignature(
+      migrateCertificate,
+      this.asymmetricHelper,
+      opts,
+    );
   }
 
   /**
@@ -378,277 +227,23 @@ export class MigrateCertificateHelper {
    * @param opts
    */
   async verifyMigrateCertificateToAuthSignature(
-    migrateCertificate: MigrateCertificateModel,
+    migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON,
     opts?: {
       taskLabel?: string;
     },
   ) {
-    const taskLabel = (opts && opts.taskLabel) || "MigrateCertificate";
-    const asymmetricHelper = this.asymmetricHelper;
-    const items = migrateCertificate.toAuthSignature.split("/");
-    const signatureKeyValue = items[1].split("-");
-    // 验证 signature 与 publicKey
-    if (
-      !(await asymmetricHelper.detachedVeriy(
-        migrateCertificate.getToAuthBytes(true, true),
-        parseHexToArrayBuffer(signatureKeyValue[1]),
-        parseHexToArrayBuffer(signatureKeyValue[0]),
-      ))
-    ) {
-      throw new ArgumentIllegalException(`Invalid ${taskLabel} toAuthSignature`);
-    }
-    // 验证 signSignature 与 secondPublicKey
-    if (items[2]) {
-      const signSignatureKeyValue = items[2].split("-");
-      if (
-        !(await asymmetricHelper.detachedVeriy(
-          migrateCertificate.getToAuthBytes(false, true),
-          parseHexToArrayBuffer(signSignatureKeyValue[1]),
-          parseHexToArrayBuffer(signSignatureKeyValue[0]),
-        ))
-      ) {
-        throw new ArgumentIllegalException(`Invalid ${taskLabel} toAuthSignSignature`);
-      }
-    }
-  }
-
-  verifyFromChainId(fromChainId: string) {
-    const MigrateCertificate_Exception_Detail = {
-      target: "migrateCertificate",
-      function: "verifyMigrateCertificate",
-    } as const;
-
-    if (!fromChainId) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "fromChainId",
-        ...MigrateCertificate_Exception_Detail,
-      });
-    }
-    if (!this.baseHelper.isString(fromChainId)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "fromChainId",
-        ...MigrateCertificate_Exception_Detail,
-      });
-    }
-    if (fromChainId.split("/").length !== 4) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "fromChainId",
-        ...MigrateCertificate_Exception_Detail,
-      });
-    }
-  }
-
-  /**
-   * 验证迁移信息
-   *
-   * @param body
-   */
-  checkMigrateCertificateBody(body: BFChainCore.MigrateCertificateBodyJSON) {
-    const {
-      version,
-      fromUserId,
-      toUserId,
-      timestamp,
-      fromChainId,
-      toChainId,
-      assetTypeId,
-      assets,
-    } = body;
-
-    const baseHelper = this.baseHelper;
-
-    const Function_Exception_Detail = {
-      function: "checkMigrateCertificateBody",
-    } as const;
-
-    const MigrateCertificate_Exception_Detail = {
-      ...Function_Exception_Detail,
-      target: "migrateCertificateBody",
-    } as const;
-
-    if (!version) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "version",
-        ...MigrateCertificate_Exception_Detail,
-      });
-    }
-    if (version !== this.version) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: `version ${version}`,
-        be_compare_prop: `version ${this.version}`,
-        to_target: "migrateCertificate",
-        be_target: "blockChain.migrateCertificate",
-        ...Function_Exception_Detail,
-      });
-    }
-
-    if (!fromUserId) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "fromUserId",
-        ...MigrateCertificate_Exception_Detail,
-      });
-    }
-    if (!baseHelper.isString(fromUserId)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "fromUserId",
-        ...MigrateCertificate_Exception_Detail,
-      });
-    }
-    if (fromUserId.split("/").length !== 2) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "fromUserId",
-        ...MigrateCertificate_Exception_Detail,
-      });
-    }
-
-    if (!toUserId) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "toUserId",
-        ...MigrateCertificate_Exception_Detail,
-      });
-    }
-    if (!baseHelper.isString(toUserId)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "toUserId",
-        ...MigrateCertificate_Exception_Detail,
-      });
-    }
-    if (toUserId.split("/").length !== 2) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "toUserId",
-        ...MigrateCertificate_Exception_Detail,
-      });
-    }
-
-    if (!timestamp) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "timestamp",
-        ...MigrateCertificate_Exception_Detail,
-      });
-    }
-    if (!baseHelper.isPositiveInteger(timestamp)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "timestamp",
-        ...MigrateCertificate_Exception_Detail,
-      });
-    }
-
-    this.verifyFromChainId(fromChainId);
-
-    if (!toChainId) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "toChainId",
-        ...MigrateCertificate_Exception_Detail,
-      });
-    }
-    if (!baseHelper.isString(toChainId)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "toChainId",
-        ...MigrateCertificate_Exception_Detail,
-      });
-    }
-    if (toChainId.split("/").length !== 4) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "toChainId",
-        ...MigrateCertificate_Exception_Detail,
-      });
-    }
-
-    if (!assetTypeId) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "assetTypeId",
-        ...MigrateCertificate_Exception_Detail,
-      });
-    }
-    if (!baseHelper.isString(assetTypeId)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "assetTypeId",
-        ...MigrateCertificate_Exception_Detail,
-      });
-    }
-    if (assetTypeId.split("/").length !== 2) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "assetTypeId",
-        ...MigrateCertificate_Exception_Detail,
-      });
-    }
-
-    if (!assets) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "assets",
-        ...MigrateCertificate_Exception_Detail,
-      });
-    }
-    if (!baseHelper.isValidAssetNumber(assets)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "assets",
-        ...MigrateCertificate_Exception_Detail,
-      });
-    }
-    if (assets === "0") {
-      throw new ArgumentIllegalException(PROP_SHOULD_GT_FIELD, {
-        prop: "assets",
-        fueld: "0",
-        ...MigrateCertificate_Exception_Detail,
-      });
-    }
-  }
-
-  /**
-   * 验证迁移凭证的签名
-   *
-   * @param prop
-   * @param signature
-   */
-  checkMigrateCertificateSignature(prop: string, signature: string) {
-    const baseHelper = this.baseHelper;
-
-    const Function_Exception_Detail = {
-      function: "checkMigrateCertificateSignature",
-    } as const;
-
-    const MigrateCertificate_Exception_Detail = {
-      ...Function_Exception_Detail,
-      target: "migrateCertificate",
-    } as const;
-
-    if (!signature) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop,
-        ...MigrateCertificate_Exception_Detail,
-      });
-    }
-    if (!baseHelper.isString(signature)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop,
-        ...MigrateCertificate_Exception_Detail,
-      });
-    }
-    const signatures = signature.split("/");
-    if (signatures.length !== 2 && signatures.length !== 3) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop,
-        ...MigrateCertificate_Exception_Detail,
-      });
-    }
-    if (signatures[1].split("-").length !== 2) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop,
-        ...MigrateCertificate_Exception_Detail,
-      });
-    }
-    if (signatures[2] && signatures[2].split("-").length !== 2) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop,
-        ...MigrateCertificate_Exception_Detail,
-      });
-    }
+    const converter = CrossChainConverterFactory(migrateCertificate);
+    return converter.signature.verifyMigrateCertificateToAuthSignature(
+      migrateCertificate,
+      this.asymmetricHelper,
+      opts,
+    );
   }
 
   async checkChainInfo(
     key: string,
-    chainInfo: BFChainCore.ChainBaseInfo,
-    config: BFChainCore.ChainBaseConfig,
+    chainInfo: BFChainCore.CrossChain.ChainBaseInfo,
+    config: BFChainCore.CrossChain.ChainBaseConfig,
     authSignature?: BFChainCore.AccountSignatureJSON,
   ) {
     const Function_Exception_Detail = {
@@ -709,8 +304,8 @@ export class MigrateCertificateHelper {
    * @returns
    */
   async verifyMigrateCertificate(
-    migrateCertificate: BFChainCore.MigrateCertificateJSON,
-    options: BFChainCore.MigrateCertificateVerifyOptions,
+    migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON,
+    options: BFChainCore.CrossChain.MigrateCertificateVerifyOptions,
   ) {
     const Function_Exception_Detail = {
       function: "verifyMigrateCertificate",
@@ -721,50 +316,37 @@ export class MigrateCertificateHelper {
       target: "migrateCertificate",
     } as const;
 
+    const converter = CrossChainConverterFactory(migrateCertificate);
+
     const { forceCheckFrom, fromChainBaseConfig, forceCheckTo, toChainBaseConfig } = options;
 
     const { body, signature, fromAuthSignature, toAuthSignature } = migrateCertificate;
 
-    if (!body) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "version",
-        ...MigrateCertificate_Exception_Detail,
-      });
-    }
-
-    this.checkMigrateCertificateBody(body);
-    this.checkMigrateCertificateSignature("signature", signature);
-    if (forceCheckFrom) {
-      this.checkMigrateCertificateSignature("fromAuthSignature", fromAuthSignature);
-    }
-    if (forceCheckTo) {
-      this.checkMigrateCertificateSignature("toAuthSignature", toAuthSignature);
-    }
-
-    const migrateCertificateJson = this.parseMigrateCertificateToJson(migrateCertificate);
-    const {
-      body: bodyJson,
-      signature: acccountSignature,
-      fromAuthSignature: fromAuthAccountSignature,
-      toAuthSignature: toAuthAccountSignature,
-    } = migrateCertificateJson;
-
-    const { fromChain, toChain } = bodyJson;
+    converter.fromChainId.checkDecodeArgs(body.fromChainId);
+    converter.toChainId.checkDecodeArgs(body.toChainId);
+    converter.fromId.checkDecodeArgs(body.fromId);
+    converter.toId.checkDecodeArgs(body.toId);
+    converter.assetTypeId.checkDecodeArgs(body.assetTypeId);
+    this.checkAssets(body.assets);
+    converter.signature.checkDecodeArgs(signature);
 
     const baseHelper = this.baseHelper;
-
-    if (!baseHelper.isValidAccountSignature(acccountSignature)) {
+    const accountSignature = converter.signature.decode(signature);
+    if (!baseHelper.isValidAccountSignature(accountSignature)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: `signature ${signature}`,
         ...MigrateCertificate_Exception_Detail,
       });
     }
 
-    const migrateCertificateModel = this.fromJSON(migrateCertificate);
-
-    await this.verifyMigrateCertificateSignature(migrateCertificateModel);
+    await converter.signature.verifyMigrateCertificateSignature(
+      migrateCertificate,
+      this.asymmetricHelper,
+    );
 
     if (forceCheckFrom) {
+      converter.signature.checkDecodeArgs(fromAuthSignature);
+
       if (!fromChainBaseConfig) {
         throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
           prop: "fromChainBaseConfig",
@@ -773,6 +355,7 @@ export class MigrateCertificateHelper {
         });
       }
 
+      const fromAuthAccountSignature = converter.signature.decode(fromAuthSignature);
       if (!baseHelper.isValidAccountSignature(fromAuthAccountSignature)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: `fromAuthSignature ${fromAuthSignature}`,
@@ -780,6 +363,7 @@ export class MigrateCertificateHelper {
         });
       }
 
+      const fromChain = converter.fromChainId.decode(body.fromChainId);
       await this.checkChainInfo(
         "fromChain",
         fromChain,
@@ -788,11 +372,13 @@ export class MigrateCertificateHelper {
       );
 
       if (fromAuthSignature) {
-        await this.verifyMigrateCertificateFromAuthSignature(migrateCertificateModel);
+        await this.verifyMigrateCertificateFromAuthSignature(migrateCertificate);
       }
     }
 
     if (forceCheckTo) {
+      converter.signature.checkDecodeArgs(toAuthSignature);
+
       if (!toChainBaseConfig) {
         throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
           prop: "toChainBaseConfig",
@@ -801,6 +387,7 @@ export class MigrateCertificateHelper {
         });
       }
 
+      const toAuthAccountSignature = converter.signature.decode(toAuthSignature);
       if (!baseHelper.isValidAccountSignature(toAuthAccountSignature)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: `toAuthSignature ${toAuthSignature}`,
@@ -808,13 +395,14 @@ export class MigrateCertificateHelper {
         });
       }
 
+      const toChain = converter.toChainId.decode(body.toChainId);
       await this.checkChainInfo("toChain", toChain, toChainBaseConfig, toAuthAccountSignature);
 
       if (toAuthSignature) {
-        await this.verifyMigrateCertificateToAuthSignature(migrateCertificateModel);
+        await this.verifyMigrateCertificateToAuthSignature(migrateCertificate);
       }
     }
 
-    return migrateCertificateModel;
+    return converter;
   }
 }

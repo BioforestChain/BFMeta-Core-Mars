@@ -9,4 +9,6 @@ import type {} from "@bfchain/core-helper-transaction";
 
 import "./@types";
 
+export * from "./CrossChainConverterFactory";
+
 export * from "./migrateCertificateHelper";

@@ -15,7 +15,6 @@ import {
   getDelegateWithSecondSecret,
   getRandomDAppid,
 } from "../include";
-import { parseHexToArrayBuffer } from "@bfchain/util";
 
 const fullBfchainCore = getFullBfchainCoreEntry(57, 128);
 const fullRegisterBfchainCore = getFullRegisterBfchainCoreEntry();
@@ -64,7 +63,7 @@ async function getEmigrateAssetTransaction(
       );
   }
 
-  const args: BFChainCore.GenerateMigrateCertificateArgs = {
+  const args: BFChainCore.CrossChain.GenerateMigrateCertificateArgs = {
     senderSecret: sender.secret,
     senderSecondSecret: sender.secondSecret,
     recipientId: recipientId || sender.address,
@@ -75,20 +74,20 @@ async function getEmigrateAssetTransaction(
     },
     assets: "10000",
   };
-  let migrateCertificateModel =
+  let migrateCertificate =
     await fullBfchainCore.migrateCertificateHelper.generateMigrateCertificate(args);
-  migrateCertificateModel =
+  migrateCertificate =
     await fullBfchainCore.migrateCertificateHelper.fromAuthSignMigrateCertificate({
       authSecret: genesisDelegate.secret,
       authSecondSecret: genesisDelegate.secondSecret,
-      migrateCertificate: migrateCertificateModel,
+      migrateCertificate: migrateCertificate,
     });
 
   const trs = await fullBfchainCore.transaction.createTransaction<EmigrateAssetTransaction>(
     EmigrateAssetTransactionFactory,
     data,
     {
-      emigrateAsset: migrateCertificateModel.toJSON(),
+      emigrateAsset: { migrateCertificate: JSON.stringify(migrateCertificate) },
     },
     keypair,
     secondKeypair,
@@ -101,11 +100,14 @@ async function getImmigrateAssetTransaction(
   sender: AccountModel,
   recipientId: string,
   genesisDelegate: AccountModel,
-  migrateCertificateModel: BFChainCore.MigrateCertificateModel,
+  migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON,
 ) {
   const keypair = await fullRegisterBfchainCore.accountBaseHelper.createSecretKeypair(
     sender.secret,
   );
+
+  const converter = fullBfchainCore.migrateCertificateHelper.getConverter(migrateCertificate);
+
   const data: BFChainCore.TxBodyJSON = {
     version: fullRegisterBfchainCore.config.version,
     type: fullRegisterBfchainCore.transactionHelper.IMMIGRATE_ASSET, // 交易类型
@@ -127,7 +129,7 @@ async function getImmigrateAssetTransaction(
     effectiveBlockHeight: 57,
     storage: {
       key: "assetType",
-      value: migrateCertificateModel.body.assetType,
+      value: converter.assetTypeId.decode(migrateCertificate.body.assetTypeId),
     },
   };
   let secondKeypair;
@@ -143,11 +145,11 @@ async function getImmigrateAssetTransaction(
       );
   }
 
-  migrateCertificateModel =
+  migrateCertificate =
     await fullRegisterBfchainCore.migrateCertificateHelper.toAuthSignMigrateCertificate({
       authSecret: genesisDelegate.secret,
       authSecondSecret: genesisDelegate.secondSecret,
-      migrateCertificate: migrateCertificateModel,
+      migrateCertificate,
     });
 
   fullRegisterBfchainCore.configMap.set(fullBfchainCore.config.magic, fullBfchainCore.config);
@@ -157,7 +159,7 @@ async function getImmigrateAssetTransaction(
       ImmigrateAssetTransactionFactory,
       data,
       {
-        immigrateAsset: migrateCertificateModel.toJSON(),
+        immigrateAsset: { migrateCertificate: JSON.stringify(migrateCertificate) },
       },
       keypair,
       secondKeypair,
@@ -187,12 +189,12 @@ async function getImmigrateAssetTransaction(
     senderWithSecondSecret,
     emigrateAssetTrsWithSecondSecret.recipientId,
     genesisDelegateWithSecondSecret,
-    emigrateAssetTrsWithSecondSecret.asset.emigrateAsset,
+    JSON.parse(emigrateAssetTrsWithSecondSecret.asset.emigrateAsset.migrateCertificate),
   );
   await getImmigrateAssetTransaction(
     senderWithoutSecondSecret,
     emigrateAssetTrsWithSecondSecret.recipientId,
     genesisDelegateWithoutSecondSecret,
-    emigrateAssetTrsWithoutSecondSecret.asset.emigrateAsset,
+    JSON.parse(emigrateAssetTrsWithSecondSecret.asset.emigrateAsset.migrateCertificate),
   );
 })();

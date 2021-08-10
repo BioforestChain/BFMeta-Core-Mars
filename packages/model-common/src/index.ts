@@ -11,4 +11,3 @@ export * from "./remark.model";
 export * from "./mapField.model";
 
 export * from "./accountSignature.model";
-export * from "./migrateCertificate.model";

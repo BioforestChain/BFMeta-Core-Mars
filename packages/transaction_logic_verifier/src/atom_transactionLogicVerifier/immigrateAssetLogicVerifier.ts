@@ -51,10 +51,21 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       function: "verify",
     } as const;
 
-    const immigrateAsset = transaction.asset.immigrateAsset;
+    let migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON;
+    try {
+      migrateCertificate = JSON.parse(transaction.asset.immigrateAsset.migrateCertificate);
+    } catch (e) {
+      throw new ConsensusException(PROP_IS_INVALID, {
+        prop: "migrateCertificate",
+        target: "transaction.asset.immigrateAsset",
+        function: "checkSecondaryTransaction",
+      });
+    }
 
-    const { fromChain } = immigrateAsset.body;
-    const fromMagic = fromChain.magic;
+    const converter = this.migrateCertificateHelper.getConverter(migrateCertificate);
+
+    const fromChain = converter.fromChainId.decode(migrateCertificate.body.fromChainId, true);
+    const fromMagic = transaction.fromMagic;
     let otherChainConfig = this.configMap.get(fromMagic);
     if (!otherChainConfig) {
       const memchain = await accountGetterHelper.getChain(fromMagic);
@@ -68,7 +79,7 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       otherChainConfig = new ConfigHelper(memchain.genesisBlock, this.configHelper.business);
       this.configMap.set(fromMagic, otherChainConfig);
     }
-    await this.migrateCertificateHelper.checkChainInfo("fromChain", immigrateAsset.body.fromChain, {
+    await this.migrateCertificateHelper.checkChainInfo("fromChain", fromChain, {
       chainName: otherChainConfig.chainName,
       magic: otherChainConfig.magic,
       generatorPublicKey: otherChainConfig.generatorPublicKey,
@@ -76,7 +87,10 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       genesisDelegates: this.transactionHelper.genesisDelegates(otherChainConfig),
     });
 
-    const { publicKey, secondPublicKey, signSignature } = immigrateAsset.signatureJson;
+    const { publicKey, secondPublicKey, signSignature } = converter.signature.decode(
+      migrateCertificate.toAuthSignature,
+      true,
+    );
     const address = await this.accountBaseHelper.getAddressFromPublicKeyString(publicKey);
     const delegate = await accountGetterHelper.getAccountInfo(address);
     if (!delegate) {
@@ -160,7 +174,18 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
     currentBlockHeight: number,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const migrateCertificateId = transaction.asset.immigrateAsset.fromAuthSignatureJson.signature;
+    let migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON;
+    try {
+      migrateCertificate = JSON.parse(transaction.asset.immigrateAsset.migrateCertificate);
+    } catch (e) {
+      throw new ConsensusException(PROP_IS_INVALID, {
+        prop: "migrateCertificate",
+        target: "transaction.asset.immigrateAsset",
+        function: "checkSecondaryTransaction",
+      });
+    }
+    const converter = this.migrateCertificateHelper.getConverter(migrateCertificate);
+    const migrateCertificateId = converter.getUUID(migrateCertificate);
     const isSecondary = await transactionGetterHelper.checkSecondaryTransaction({
       type: this.transactionHelper.IMMIGRATE_ASSET,
       migrateCertificateId,

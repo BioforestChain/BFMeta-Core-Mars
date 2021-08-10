@@ -18,7 +18,6 @@
     "src/fraction.model.ts",
     "src/index.ts",
     "src/mapField.model.ts",
-    "src/migrateCertificate.model.ts",
     "src/range.model.ts",
     "src/rate.model.ts",
     "src/remark.model.ts"
