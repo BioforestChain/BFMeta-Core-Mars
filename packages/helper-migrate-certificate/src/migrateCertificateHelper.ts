@@ -30,7 +30,9 @@ export class MigrateCertificateHelper {
     public transactionHelper: TransactionHelper,
   ) {}
 
-  getMigrateCertificateConverter(migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON) {
+  getMigrateCertificateConverter(
+    migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON,
+  ) {
     return CrossChainConverterFactory(migrateCertificate);
   }
 
@@ -79,14 +81,11 @@ export class MigrateCertificateHelper {
     const accountBaseHelper = this.accountBaseHelper;
     const keypair = await accountBaseHelper.createSecretKeypair(senderSecret);
     const address = await accountBaseHelper.getAddressFromPublicKey(keypair.publicKey);
+    // 时间、地点、人物、起因、经过、结果
     let migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON = {
       body: {
         /**凭证版本 */
         version,
-        /**发起账户的唯一标识 version/address */
-        fromId: converter.fromId.encode(address, true),
-        /**接收账户的唯一标识 version/address */
-        toId: converter.toId.encode(recipientId, true),
         /**迁出凭证生成时间 Date.now().getTimes() */
         timestamp: this.chainTimeHelper.now(),
         /**迁出链的唯一标识 version+自定义格式，目前是 version/magic/chainName/genesisBlockSignature */
@@ -100,6 +99,10 @@ export class MigrateCertificateHelper {
         ),
         /**迁入链的唯一标识 version+自定义格式，目前是 version/magic/chainName/genesisBlockSignature */
         toChainId: converter.toChainId.encode(toChainInfo),
+        /**发起账户的唯一标识 version/address */
+        fromId: converter.fromId.encode(address, true),
+        /**接收账户的唯一标识 version/address */
+        toId: converter.toId.encode(recipientId, true),
         /**迁出的权益：version/assetType */
         assetTypeId: converter.assetTypeId.encode(config.assetType, true),
         /**迁出的权益数量，0-9 组成并且不包含小数点，必须大于0 */
@@ -113,11 +116,13 @@ export class MigrateCertificateHelper {
       toAuthSignature: "",
     };
 
-    migrateCertificate = await converter.signature.generateMigrateCertificateSignature(
-      { secret: senderSecret, secondSecret: senderSecondSecret, migrateCertificate },
-      accountBaseHelper,
-      this.asymmetricHelper,
-    );
+    if (senderSecret) {
+      migrateCertificate = await converter.signature.generateMigrateCertificateSignature(
+        { secret: senderSecret, secondSecret: senderSecondSecret, migrateCertificate },
+        accountBaseHelper,
+        this.asymmetricHelper,
+      );
+    }
 
     return migrateCertificate;
   }
