@@ -62,6 +62,32 @@ export class MigrateCertificateHelper {
   }
 
   /**
+   * 格式化凭证信息
+   *
+   * @param json
+   * @returns
+   */
+  formatMigrateCertificate(json: BFChainCore.CrossChain.MigrateCertificateJSON) {
+    const { body, signature, fromAuthSignature, toAuthSignature } = json;
+    const migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON = {
+      body: {
+        version: body.version,
+        timestamp: body.timestamp,
+        fromChainId: body.fromChainId,
+        toChainId: body.toChainId,
+        fromId: body.fromId,
+        toId: body.toId,
+        assetTypeId: body.assetTypeId,
+        assets: body.assets,
+      },
+      signature: signature || "",
+      fromAuthSignature: fromAuthSignature || "",
+      toAuthSignature: toAuthSignature || "",
+    };
+    return migrateCertificate;
+  }
+
+  /**
    * 生成迁移凭证信息
    *
    * @param args
