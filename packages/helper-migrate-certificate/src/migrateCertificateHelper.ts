@@ -30,7 +30,7 @@ export class MigrateCertificateHelper {
     public transactionHelper: TransactionHelper,
   ) {}
 
-  getConverter(migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON) {
+  getMigrateCertificateConverter(migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON) {
     return CrossChainConverterFactory(migrateCertificate);
   }
 

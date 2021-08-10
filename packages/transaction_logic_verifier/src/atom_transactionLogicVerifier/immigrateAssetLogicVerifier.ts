@@ -62,7 +62,7 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       });
     }
 
-    const converter = this.migrateCertificateHelper.getConverter(migrateCertificate);
+    const converter = this.migrateCertificateHelper.getMigrateCertificateConverter(migrateCertificate);
 
     const fromChain = converter.fromChainId.decode(migrateCertificate.body.fromChainId, true);
     const fromMagic = transaction.fromMagic;
@@ -184,7 +184,7 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
         function: "checkSecondaryTransaction",
       });
     }
-    const converter = this.migrateCertificateHelper.getConverter(migrateCertificate);
+    const converter = this.migrateCertificateHelper.getMigrateCertificateConverter(migrateCertificate);
     const migrateCertificateId = converter.getUUID(migrateCertificate);
     const isSecondary = await transactionGetterHelper.checkSecondaryTransaction({
       type: this.transactionHelper.IMMIGRATE_ASSET,

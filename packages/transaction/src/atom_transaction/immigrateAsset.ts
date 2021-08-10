@@ -243,7 +243,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
           function: "applyTransaction",
         });
       }
-      const converter = this.migrateCertificateHelper.getConverter(migrateCertificate);
+      const converter = this.migrateCertificateHelper.getMigrateCertificateConverter(migrateCertificate);
       const { fromChainId, assetTypeId, assets } = migrateCertificate.body;
       const fromChain = converter.fromChainId.decode(fromChainId);
       const assetType = converter.assetTypeId.decode(assetTypeId);

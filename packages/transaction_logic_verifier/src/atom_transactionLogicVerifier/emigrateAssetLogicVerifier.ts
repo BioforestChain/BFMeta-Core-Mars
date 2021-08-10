@@ -68,7 +68,7 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       });
     }
 
-    const converter = this.migrateCertificateHelper.getConverter(migrateCertificate);
+    const converter = this.migrateCertificateHelper.getMigrateCertificateConverter(migrateCertificate);
     const body = migrateCertificate.body;
 
     const assetType = converter.assetTypeId.decode(body.assetTypeId, true);

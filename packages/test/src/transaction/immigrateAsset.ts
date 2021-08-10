@@ -106,7 +106,7 @@ async function getImmigrateAssetTransaction(
     sender.secret,
   );
 
-  const converter = fullBfchainCore.migrateCertificateHelper.getConverter(migrateCertificate);
+  const converter = fullBfchainCore.migrateCertificateHelper.getMigrateCertificateConverter(migrateCertificate);
 
   const data: BFChainCore.TxBodyJSON = {
     version: fullRegisterBfchainCore.config.version,
