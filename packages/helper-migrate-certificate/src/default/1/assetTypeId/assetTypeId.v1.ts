@@ -14,14 +14,14 @@ export class AssetTypeIdV1Converter implements BFChainCore.CrossChain.AssetTypeI
   checkEncodeArgs(assetType: string) {
     if (!assetType) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "assetType",
+        prop: `assetType ${assetType}`,
         target: "encodeArgs",
         function: "checkEncodeArgs",
       });
     }
     if (typeof assetType !== "string") {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "assetType",
+        prop: `assetType ${assetType}`,
         target: "encodeArgs",
         function: "checkEncodeArgs",
       });
@@ -31,21 +31,24 @@ export class AssetTypeIdV1Converter implements BFChainCore.CrossChain.AssetTypeI
   checkDecodeArgs(assetTypeId: unknown) {
     if (!assetTypeId) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "decodeArgs",
+        prop: `assetTypeId ${assetTypeId}`,
+        target: "decodeArgs",
         function: "checkDecodeArgs",
       });
     }
 
     if (typeof assetTypeId !== "string") {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "decodeArgs",
+        prop: `assetTypeId ${assetTypeId}`,
+        target: "decodeArgs",
         function: "checkDecodeArgs",
       });
     }
 
     if (assetTypeId.split(KEY_SPLITTER).length !== 2) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "decodeArgs",
+        prop: `assetTypeId ${assetTypeId}`,
+        target: "decodeArgs",
         function: "checkDecodeArgs",
       });
     }

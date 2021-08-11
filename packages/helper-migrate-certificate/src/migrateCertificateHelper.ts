@@ -19,8 +19,6 @@ const { ArgumentIllegalException } = CoreExceptionGenerator("HELPER", "transacti
 
 @Injectable()
 export class MigrateCertificateHelper {
-  readonly version = "1";
-
   constructor(
     public baseHelper: BaseHelper,
     public configHelper: ConfigHelper,
@@ -132,7 +130,6 @@ export class MigrateCertificateHelper {
     args: BFChainCore.CrossChain.GenerateMigrateCertificateArgs,
     config = this.configHelper,
   ) {
-    const version = this.version;
     const { senderSecret, senderSecondSecret, recipientId, toChainInfo, assets } = args;
     const converter = CrossChainConverterFactory();
 
@@ -145,7 +142,7 @@ export class MigrateCertificateHelper {
     let migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON = {
       body: {
         /**凭证版本 */
-        version,
+        version: config.version.toString(),
         /**迁出凭证生成时间 Date.now().getTimes() */
         timestamp: this.chainTimeHelper.now(true),
         /**迁出链的唯一标识 version+自定义格式，目前是 version/magic/chainName/genesisBlockSignature */

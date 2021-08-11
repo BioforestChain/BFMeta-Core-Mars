@@ -19,14 +19,14 @@ export class SignatureV1Converter implements BFChainCore.CrossChain.SignatureCon
     const { publicKey, signature, secondPublicKey, signSignature } = accountSignature;
     if (!publicKey) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "publicKey",
+        prop: `publicKey ${publicKey}`,
         target: "encodeArgs",
         function: "checkEncodeArgs",
       });
     }
     if (typeof publicKey !== "string") {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "publicKey",
+        prop: `publicKey ${publicKey}`,
         target: "encodeArgs",
         function: "checkEncodeArgs",
       });
@@ -34,14 +34,14 @@ export class SignatureV1Converter implements BFChainCore.CrossChain.SignatureCon
 
     if (!signature) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "signature",
+        prop: `signature ${signature}`,
         target: "encodeArgs",
         function: "checkEncodeArgs",
       });
     }
     if (typeof signature !== "string") {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "signature",
+        prop: `signature ${signature}`,
         target: "encodeArgs",
         function: "checkEncodeArgs",
       });
@@ -50,28 +50,28 @@ export class SignatureV1Converter implements BFChainCore.CrossChain.SignatureCon
     if (secondPublicKey) {
       if (!secondPublicKey) {
         throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-          prop: "secondPublicKey",
+          prop: `secondPublicKey ${secondPublicKey}`,
           target: "encodeArgs",
           function: "checkEncodeArgs",
         });
       }
       if (typeof secondPublicKey !== "string") {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "secondPublicKey",
+          prop: `secondPublicKey ${secondPublicKey}`,
           target: "encodeArgs",
           function: "checkEncodeArgs",
         });
       }
       if (!signSignature) {
         throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-          prop: "signSignature",
+          prop: `signSignature ${signSignature}`,
           target: "encodeArgs",
           function: "checkEncodeArgs",
         });
       }
       if (typeof signSignature !== "string") {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "signSignature",
+          prop: `signSignature ${signSignature}`,
           target: "encodeArgs",
           function: "checkEncodeArgs",
         });
@@ -79,7 +79,7 @@ export class SignatureV1Converter implements BFChainCore.CrossChain.SignatureCon
     } else {
       if (signSignature) {
         throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
-          prop: "signSignature",
+          prop: `signSignature ${signSignature}`,
           target: "encodeArgs",
           function: "checkEncodeArgs",
         });
@@ -90,14 +90,16 @@ export class SignatureV1Converter implements BFChainCore.CrossChain.SignatureCon
   checkDecodeArgs(signature: unknown) {
     if (!signature) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "decodeArgs",
+        prop: `signature ${signature}`,
+        target: "decodeArgs",
         function: "checkDecodeArgs",
       });
     }
 
     if (typeof signature !== "string") {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "decodeArgs",
+        prop: `signature ${signature}`,
+        target: "decodeArgs",
         function: "checkDecodeArgs",
       });
     }
@@ -105,21 +107,24 @@ export class SignatureV1Converter implements BFChainCore.CrossChain.SignatureCon
     const signatures = signature.split("/");
     if (signatures.length !== 2 && signatures.length !== 3) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "decodeArgs",
+        prop: `signature ${signature}`,
+        target: "decodeArgs",
         function: "checkDecodeArgs",
       });
     }
 
     if (signatures[1].split("-").length !== 2) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "decodeArgs",
+        prop: `signature ${signature}`,
+        target: "decodeArgs",
         function: "checkDecodeArgs",
       });
     }
 
     if (signatures[2] && signatures[2].split("-").length !== 2) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "decodeArgs",
+        prop: `signature ${signature}`,
+        target: "decodeArgs",
         function: "checkDecodeArgs",
       });
     }

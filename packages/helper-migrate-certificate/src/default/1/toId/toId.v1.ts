@@ -14,14 +14,14 @@ export class ToIdV1Converter implements BFChainCore.CrossChain.IdConverter {
   checkEncodeArgs(address: string) {
     if (!address) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "address",
+        prop: `address ${address}`,
         target: "encodeArgs",
         function: "checkEncodeArgs",
       });
     }
     if (typeof address !== "string") {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "address",
+        prop: `address ${address}`,
         target: "encodeArgs",
         function: "checkEncodeArgs",
       });
@@ -31,21 +31,24 @@ export class ToIdV1Converter implements BFChainCore.CrossChain.IdConverter {
   checkDecodeArgs(toId: unknown) {
     if (!toId) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "decodeArgs",
+        prop: `toId ${toId}`,
+        target: "decodeArgs",
         function: "checkDecodeArgs",
       });
     }
 
     if (typeof toId !== "string") {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "decodeArgs",
+        prop: `toId ${toId}`,
+        target: "decodeArgs",
         function: "checkDecodeArgs",
       });
     }
 
     if (toId.split(KEY_SPLITTER).length !== 2) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "decodeArgs",
+        prop: `toId ${toId}`,
+        target: "decodeArgs",
         function: "checkDecodeArgs",
       });
     }

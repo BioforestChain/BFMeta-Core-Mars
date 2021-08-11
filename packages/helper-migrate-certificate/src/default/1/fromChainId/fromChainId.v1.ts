@@ -15,14 +15,14 @@ export class FromChainIdV1Converter implements BFChainCore.CrossChain.ChainIdCon
     const { chainName, magic, genesisBlockSignature } = chainInfo;
     if (!chainName) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "chainName",
+        prop: `chainName ${chainName}`,
         target: "encodeArgs",
         function: "checkEncodeArgs",
       });
     }
     if (typeof chainName !== "string") {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "chainName",
+        prop: `chainName ${chainName}`,
         target: "encodeArgs",
         function: "checkEncodeArgs",
       });
@@ -30,14 +30,14 @@ export class FromChainIdV1Converter implements BFChainCore.CrossChain.ChainIdCon
 
     if (!magic) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "magic",
+        prop: `magic ${magic}`,
         target: "encodeArgs",
         function: "checkEncodeArgs",
       });
     }
     if (typeof magic !== "string") {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "magic",
+        prop: `magic ${magic}`,
         target: "encodeArgs",
         function: "checkEncodeArgs",
       });
@@ -45,14 +45,14 @@ export class FromChainIdV1Converter implements BFChainCore.CrossChain.ChainIdCon
 
     if (!genesisBlockSignature) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "genesisBlockSignature",
+        prop: `genesisBlockSignature ${genesisBlockSignature}`,
         target: "encodeArgs",
         function: "checkEncodeArgs",
       });
     }
     if (typeof genesisBlockSignature !== "string") {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "genesisBlockSignature",
+        prop: `genesisBlockSignature ${genesisBlockSignature}`,
         target: "encodeArgs",
         function: "checkEncodeArgs",
       });
@@ -62,21 +62,24 @@ export class FromChainIdV1Converter implements BFChainCore.CrossChain.ChainIdCon
   checkDecodeArgs(fromChainId: unknown) {
     if (!fromChainId) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "decodeArgs",
+        prop: `fromChainId ${fromChainId}`,
+        target: "decodeArgs",
         function: "checkDecodeArgs",
       });
     }
 
     if (typeof fromChainId !== "string") {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "encodeArgs",
+        prop: `fromChainId ${fromChainId}`,
+        target: "decodeArgs",
         function: "checkDecodeArgs",
       });
     }
 
     if (fromChainId.split(KEY_SPLITTER).length !== 4) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "encodeArgs",
+        prop: `fromChainId ${fromChainId}`,
+        target: "decodeArgs",
         function: "checkDecodeArgs",
       });
     }
