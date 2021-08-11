@@ -36,6 +36,40 @@ export class MigrateCertificateHelper {
     return CrossChainConverterFactory(migrateCertificate);
   }
 
+  checkVersion(version: any) {
+    if (!version) {
+      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        prop: "version",
+        target: "migrateCertificate",
+        function: "checkVersion",
+      });
+    }
+    if (typeof version !== "string") {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "version",
+        target: "migrateCertificate",
+        function: "checkVersion",
+      });
+    }
+  }
+
+  checkTimestamp(timestamp: any) {
+    if (!timestamp) {
+      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        prop: "timestamp",
+        target: "migrateCertificate",
+        function: "checkTimestamp",
+      });
+    }
+    if (!this.baseHelper.isPositiveInteger(timestamp)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "timestamp",
+        target: "migrateCertificate",
+        function: "checkTimestamp",
+      });
+    }
+  }
+
   checkAssets(assets: string) {
     if (!assets) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
@@ -113,7 +147,7 @@ export class MigrateCertificateHelper {
         /**凭证版本 */
         version,
         /**迁出凭证生成时间 Date.now().getTimes() */
-        timestamp: this.chainTimeHelper.now(),
+        timestamp: this.chainTimeHelper.now(true),
         /**迁出链的唯一标识 version+自定义格式，目前是 version/magic/chainName/genesisBlockSignature */
         fromChainId: converter.fromChainId.encode(
           {
@@ -353,6 +387,8 @@ export class MigrateCertificateHelper {
 
     const { body, signature, fromAuthSignature, toAuthSignature } = migrateCertificate;
 
+    this.checkVersion(body.version);
+    this.checkTimestamp(body.timestamp);
     converter.fromChainId.checkDecodeArgs(body.fromChainId);
     converter.toChainId.checkDecodeArgs(body.toChainId);
     converter.fromId.checkDecodeArgs(body.fromId);
