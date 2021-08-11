@@ -62,7 +62,8 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       });
     }
 
-    const converter = this.migrateCertificateHelper.getMigrateCertificateConverter(migrateCertificate);
+    const converter =
+      this.migrateCertificateHelper.getMigrateCertificateConverter(migrateCertificate);
 
     const fromChain = converter.fromChainId.decode(migrateCertificate.body.fromChainId, true);
     const fromMagic = transaction.fromMagic;
@@ -157,45 +158,47 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
 
     eventLogicVerifier.listenEventAsset(cloneAccountsAssets, transaction, eventEmitter);
 
+    eventLogicVerifier.listenEventMigrateCertificate(accountGetterHelper, eventEmitter);
+
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     return true;
   }
 
-  /**
-   * 不能二次操作同一笔交易(权益迁入)
-   *
-   * @param transaction
-   * @param currentBlockHeight
-   * @param transactionGetterHelper
-   */
-  async checkSecondaryTransaction(
-    transaction: ImmigrateAssetTransaction,
-    currentBlockHeight: number,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
-  ) {
-    let migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON;
-    try {
-      migrateCertificate = JSON.parse(transaction.asset.immigrateAsset.migrateCertificate);
-    } catch (e) {
-      throw new ConsensusException(PROP_IS_INVALID, {
-        prop: "migrateCertificate",
-        target: "transaction.asset.immigrateAsset",
-        function: "checkSecondaryTransaction",
-      });
-    }
-    const converter = this.migrateCertificateHelper.getMigrateCertificateConverter(migrateCertificate);
-    const migrateCertificateId = converter.getUUID(migrateCertificate);
-    const isSecondary = await transactionGetterHelper.checkSecondaryTransaction({
-      type: this.transactionHelper.IMMIGRATE_ASSET,
-      migrateCertificateId,
-      heightRange: this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
-    });
-    if (isSecondary) {
-      throw new ConsensusException(ASSET_IS_ALREADY_MIGRATION, {
-        migrateCertificateId,
-        function: "checkSecondaryTransaction",
-      });
-    }
-  }
+  // /**
+  //  * 不能二次操作同一笔交易(权益迁入)
+  //  *
+  //  * @param transaction
+  //  * @param currentBlockHeight
+  //  * @param transactionGetterHelper
+  //  */
+  // async checkSecondaryTransaction(
+  //   transaction: ImmigrateAssetTransaction,
+  //   currentBlockHeight: number,
+  //   transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
+  // ) {
+  //   let migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON;
+  //   try {
+  //     migrateCertificate = JSON.parse(transaction.asset.immigrateAsset.migrateCertificate);
+  //   } catch (e) {
+  //     throw new ConsensusException(PROP_IS_INVALID, {
+  //       prop: "migrateCertificate",
+  //       target: "transaction.asset.immigrateAsset",
+  //       function: "checkSecondaryTransaction",
+  //     });
+  //   }
+  //   const converter = this.migrateCertificateHelper.getMigrateCertificateConverter(migrateCertificate);
+  //   const migrateCertificateId = converter.getUUID(migrateCertificate);
+  //   const isSecondary = await transactionGetterHelper.checkSecondaryTransaction({
+  //     type: this.transactionHelper.IMMIGRATE_ASSET,
+  //     migrateCertificateId,
+  //     heightRange: this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
+  //   });
+  //   if (isSecondary) {
+  //     throw new ConsensusException(ASSET_IS_ALREADY_MIGRATION, {
+  //       migrateCertificateId,
+  //       function: "checkSecondaryTransaction",
+  //     });
+  //   }
+  // }
 }

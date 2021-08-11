@@ -115,6 +115,21 @@ declare namespace BFChainCore {
     isAcceptVote: boolean;
   };
 
+  type CurrencyInfo = {
+    name: string;
+    height: number;
+  };
+
+  type AliasInfo = {
+    alias: string;
+    height: number;
+  };
+
+  type MigrateCertificateInfo = {
+    migrateCertificateId: string;
+    height: number;
+  };
+
   interface AccountGetterHelperInterface<
     ABI extends AccountBaseInfo = AccountBaseInfo,
     FSAI extends BFChainCore.ForSortAccountInfo = BFChainCore.ForSortAccountInfo,
@@ -125,6 +140,9 @@ declare namespace BFChainCore {
     LNI extends LocationNameInfo = LocationNameInfo,
     FA extends FrozenAsset = FrozenAsset,
     IAI extends IssuedAssetInfo = IssuedAssetInfo,
+    CI extends CurrencyInfo = CurrencyInfo,
+    ALI extends AliasInfo = AliasInfo,
+    MCI extends MigrateCertificateInfo = MigrateCertificateInfo,
   > {
     /**根据地址数组获取账户 */
     getAccounts(addressArr: string[], curRound: number): Promise<FSAI[]>;
@@ -170,7 +188,7 @@ declare namespace BFChainCore {
     /**指定域名是否存在子域名 */
     isSubLocationNameExist(sourceChainMagic: string, endsWith: string): Promise<boolean>;
     /**链域名是否被禁用 */
-    isLocationNameForbidden(name: string): Promise<boolean>;
+    isLocationNameForbidden(locationName: string): Promise<boolean>;
     /**查询冻结的资产 */
     getFrozenAsset(address: string, signature: string): Promise<FA | undefined>;
     /**账户是否持有冻结的非主权益 */
@@ -180,13 +198,15 @@ declare namespace BFChainCore {
     /**查询指定的数字资产 */
     getAsset(magic: string, assetType: string): Promise<IAI | undefined>;
     /**查询指定的资产名 */
-    getCurrency(assetType: string): Promise<number | undefined>;
+    getCurrency(currencyName: string): Promise<CI | undefined>;
     /**资产名是否被禁用 */
     isCurrencyForbidden(assetType: string): Promise<boolean>;
     /**查询指定的链 */
     getChain(magic: string): Promise<ChainInfo | undefined>;
     /**查询指定的用户名 */
-    getAlias(alias: string): Promise<number | undefined>;
+    getAlias(alias: string): Promise<ALI | undefined>;
+    /**查询指定的用户名 */
+    getMigrateCertificate(migrateCertificateId: string): Promise<MCI | undefined>;
     /**初始化账户公钥 */
     initAccountPublicKey(
       address: string,

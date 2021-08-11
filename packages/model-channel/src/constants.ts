@@ -112,6 +112,8 @@ export enum NewTransactionRefuseReason {
   DELEGATE_IS_ALREADY_REJECT_VOTE,
   /**只能迁移主权益 */
   MIGRATE_MAIN_ASSET_ONLY,
+  /**权益已经迁入 */
+  ASSET_IS_ALREADY_MIGRATION,
 }
 
 export enum DUPLEX_API_CMD {

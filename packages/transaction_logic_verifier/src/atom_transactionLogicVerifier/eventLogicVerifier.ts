@@ -31,6 +31,7 @@ import {
   NOT_MATCH,
   SHOULD_BE,
   PROP_SHOULD_LTE_FIELD,
+  ASSET_IS_ALREADY_MIGRATION,
 } from "@bfchain/core-util-exception";
 import {
   NewTransactionRefuseReason,
@@ -869,11 +870,11 @@ export class EventLogicVerifier {
       async ({ applyInfo }, next) => {
         const { address, sourceChainMagic, dappid } = applyInfo;
 
-        const memDapp = (await accountGetterHelper.getDApp(
+        const memDapp = await accountGetterHelper.getDApp(
           sourceChainMagic,
           dappid,
           currentBlockHeight,
-        )) as BFChainCore.DAppInfo | undefined;
+        );
         if (!memDapp) {
           throw new ConsensusException(DAPPID_IS_NOT_EXIST, {
             dappid,
@@ -916,11 +917,11 @@ export class EventLogicVerifier {
       async ({ applyInfo }, next) => {
         const { address, sourceChainMagic, dappid } = applyInfo;
 
-        const memDapp = (await accountGetterHelper.getDApp(
+        const memDapp = await accountGetterHelper.getDApp(
           sourceChainMagic,
           dappid,
           currentBlockHeight,
-        )) as BFChainCore.DAppInfo | undefined;
+        );
         if (!memDapp) {
           throw new ConsensusException(DAPPID_IS_NOT_EXIST, {
             dappid,
@@ -1053,11 +1054,11 @@ export class EventLogicVerifier {
         }
 
         // 已存在的域名不能重复添加
-        const memLocation = (await accountGetterHelper.getLocationName(
+        const memLocation = await accountGetterHelper.getLocationName(
           sourceChainMagic,
           name,
           currentBlockHeight,
-        )) as BFChainCore.LocationNameInfo | undefined;
+        );
         if (memLocation) {
           throw new ConsensusException(ALREADY_EXIST, {
             prop: name,
@@ -1128,11 +1129,11 @@ export class EventLogicVerifier {
         // }
 
         // 不存在的域名不能删除
-        const memLocation = (await accountGetterHelper.getLocationName(
+        const memLocation = await accountGetterHelper.getLocationName(
           sourceChainMagic,
           name,
           currentBlockHeight,
-        )) as BFChainCore.LocationNameInfo | undefined;
+        );
         if (!memLocation) {
           throw new ConsensusException(LOCATION_NAME_IS_NOT_EXIST, {
             locationName: name,
@@ -1221,11 +1222,11 @@ export class EventLogicVerifier {
         }
 
         // 链域名不存在不能设置管理员
-        const memLocation = (await accountGetterHelper.getLocationName(
+        const memLocation = await accountGetterHelper.getLocationName(
           sourceChainMagic,
           name,
           currentBlockHeight,
-        )) as BFChainCore.LocationNameInfo | undefined;
+        );
         if (!memLocation) {
           throw new ConsensusException(LOCATION_NAME_IS_NOT_EXIST, {
             locationName: name,
@@ -1256,11 +1257,11 @@ export class EventLogicVerifier {
           const names = name.split(".");
           const index = names[0].length + 1;
           const lastLocationName = name.substr(index);
-          const lastMemLocation = (await accountGetterHelper.getLocationName(
+          const lastMemLocation = await accountGetterHelper.getLocationName(
             sourceChainMagic,
             lastLocationName,
             currentBlockHeight,
-          )) as BFChainCore.LocationNameInfo | undefined;
+          );
           // 上级域名不存在
           if (!lastMemLocation) {
             throw new ConsensusException(SET_LOCATION_NAME_MANAGER_FIELD, {
@@ -1313,11 +1314,11 @@ export class EventLogicVerifier {
           applyInfo;
 
         // 校验当前域名是否存存在
-        const memLocation = (await accountGetterHelper.getLocationName(
+        const memLocation = await accountGetterHelper.getLocationName(
           sourceChainMagic,
           name.toLowerCase(),
           currentBlockHeight,
-        )) as BFChainCore.LocationNameInfo | undefined;
+        );
         if (!memLocation) {
           throw new ConsensusException(LOCATION_NAME_IS_NOT_EXIST, {
             locationName: name,
@@ -1397,11 +1398,11 @@ export class EventLogicVerifier {
         const { address, sourceChainMagic, name } = applyInfo;
 
         // 域名是否存在
-        const memLocation = (await accountGetterHelper.getLocationName(
+        const memLocation = await accountGetterHelper.getLocationName(
           sourceChainMagic,
           name,
           currentBlockHeight,
-        )) as BFChainCore.LocationNameInfo | undefined;
+        );
         if (!memLocation) {
           throw new ConsensusException(LOCATION_NAME_IS_NOT_EXIST, {
             locationName: name,
@@ -1452,11 +1453,11 @@ export class EventLogicVerifier {
         const { address, sourceChainMagic, name } = applyInfo;
 
         // 域名是否存在
-        const memLocation = (await accountGetterHelper.getLocationName(
+        const memLocation = await accountGetterHelper.getLocationName(
           sourceChainMagic,
           name,
           currentBlockHeight,
-        )) as BFChainCore.LocationNameInfo | undefined;
+        );
         if (!memLocation) {
           throw new ConsensusException(LOCATION_NAME_IS_NOT_EXIST, {
             locationName: name,
@@ -1481,6 +1482,37 @@ export class EventLogicVerifier {
         next();
       },
       { taskname: `applyTransaction/logicVerifier/purchaseLocationName` },
+    );
+  }
+
+  listenEventMigrateCertificate(
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
+  ) {
+    const Function_Exception_Detail = {
+      function: "eventLogicVerifier",
+    } as const;
+
+    // 记录迁移凭证
+    eventEmitter.on(
+      "migrateCertificate",
+      async ({ applyInfo }, next) => {
+        const { migrateCertificateId } = applyInfo;
+
+        // 获取迁移凭证
+        const migrateCertificate = await accountGetterHelper.getMigrateCertificate(
+          migrateCertificateId,
+        );
+        if (migrateCertificate) {
+          throw new ConsensusException(ASSET_IS_ALREADY_MIGRATION, {
+            migrateCertificateId,
+            ...Function_Exception_Detail,
+          });
+        }
+
+        next();
+      },
+      { taskname: `applyTransaction/logicVerifier/migrateCertificate` },
     );
   }
 
