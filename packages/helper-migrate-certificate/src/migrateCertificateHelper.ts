@@ -14,6 +14,7 @@ import { AsymmetricHelper } from "@bfchain/core-helper-asymmetric";
 import { AccountBaseHelper } from "@bfchain/core-helper-account-base";
 import { TransactionHelper } from "@bfchain/core-helper-transaction";
 import { CrossChainConverterFactory } from "./CrossChainConverterFactory";
+import { KEY_SPLITTER } from "./constants";
 
 const { ArgumentIllegalException } = CoreExceptionGenerator("HELPER", "transactionHelper");
 
@@ -302,6 +303,29 @@ export class MigrateCertificateHelper {
     );
   }
 
+  async checkAuthAccount(
+    config: BFChainCore.CrossChain.ChainBaseConfig,
+    authSignature: BFChainCore.AccountSignatureJSON,
+  ) {
+    const address = await this.accountBaseHelper.getAddressFromPublicKeyString(
+      authSignature.publicKey,
+    );
+    const genesisDelegates = config.genesisDelegates;
+    const genesisAddress = await this.accountBaseHelper.getAddressFromPublicKeyString(
+      config.generatorPublicKey,
+    );
+    genesisDelegates.push(genesisAddress);
+    if (!genesisDelegates.includes(address)) {
+      throw new ArgumentIllegalException(NOT_MATCH, {
+        to_compare_prop: `signature address ${address}`,
+        be_compare_prop: "genesis delegate address",
+        to_target: "migrateCertificate",
+        be_target: "fromChain",
+        function: "checkAuthAccount",
+      });
+    }
+  }
+
   async checkChainInfo(
     key: string,
     chainInfo: BFChainCore.CrossChain.ChainBaseInfo,
@@ -338,23 +362,7 @@ export class MigrateCertificateHelper {
     }
 
     if (authSignature) {
-      const address = await this.accountBaseHelper.getAddressFromPublicKeyString(
-        authSignature.publicKey,
-      );
-      const genesisDelegates = config.genesisDelegates;
-      const genesisAddress = await this.accountBaseHelper.getAddressFromPublicKeyString(
-        config.generatorPublicKey,
-      );
-      genesisDelegates.push(genesisAddress);
-      if (!genesisDelegates.includes(address)) {
-        throw new ArgumentIllegalException(NOT_MATCH, {
-          to_compare_prop: `signature address ${address}`,
-          be_compare_prop: "genesis delegate address",
-          to_target: "migrateCertificate",
-          be_target: "fromChain",
-          ...Function_Exception_Detail,
-        });
-      }
+      await this.checkAuthAccount(config, authSignature);
     }
   }
 
@@ -392,10 +400,10 @@ export class MigrateCertificateHelper {
     converter.toId.checkDecodeArgs(body.toId);
     converter.assetTypeId.checkDecodeArgs(body.assetTypeId);
     this.checkAssets(body.assets);
-    converter.signature.checkDecodeArgs(signature);
+    converter.signature.checkDecodeArgs(signature, "signature");
 
     const baseHelper = this.baseHelper;
-    const accountSignature = converter.signature.decode(signature);
+    const accountSignature = converter.signature.decode(signature, true);
     if (!baseHelper.isValidAccountSignature(accountSignature)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: `signature ${signature}`,
@@ -409,8 +417,6 @@ export class MigrateCertificateHelper {
     );
 
     if (forceCheckFrom) {
-      converter.signature.checkDecodeArgs(fromAuthSignature);
-
       if (!fromChainBaseConfig) {
         throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
           prop: "fromChainBaseConfig",
@@ -419,30 +425,24 @@ export class MigrateCertificateHelper {
         });
       }
 
-      const fromAuthAccountSignature = converter.signature.decode(fromAuthSignature);
-      if (!baseHelper.isValidAccountSignature(fromAuthAccountSignature)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: `fromAuthSignature ${fromAuthSignature}`,
-          ...MigrateCertificate_Exception_Detail,
-        });
-      }
-
       const fromChain = converter.fromChainId.decode(body.fromChainId);
-      await this.checkChainInfo(
-        "fromChain",
-        fromChain,
-        fromChainBaseConfig,
-        fromAuthAccountSignature,
-      );
+      await this.checkChainInfo("fromChain", fromChain, fromChainBaseConfig);
 
-      if (fromAuthSignature) {
+      if (fromAuthSignature && fromAuthSignature.includes(KEY_SPLITTER)) {
+        converter.signature.checkDecodeArgs(fromAuthSignature, "fromAuthSignature");
+        const fromAuthAccountSignature = converter.signature.decode(fromAuthSignature, true);
+        if (!baseHelper.isValidAccountSignature(fromAuthAccountSignature)) {
+          throw new ArgumentIllegalException(PROP_IS_INVALID, {
+            prop: `fromAuthSignature ${fromAuthSignature}`,
+            ...MigrateCertificate_Exception_Detail,
+          });
+        }
+        await this.checkAuthAccount(fromChainBaseConfig, fromAuthAccountSignature);
         await this.verifyMigrateCertificateFromAuthSignature(migrateCertificate);
       }
     }
 
     if (forceCheckTo) {
-      converter.signature.checkDecodeArgs(toAuthSignature);
-
       if (!toChainBaseConfig) {
         throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
           prop: "toChainBaseConfig",
@@ -451,18 +451,19 @@ export class MigrateCertificateHelper {
         });
       }
 
-      const toAuthAccountSignature = converter.signature.decode(toAuthSignature);
-      if (!baseHelper.isValidAccountSignature(toAuthAccountSignature)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: `toAuthSignature ${toAuthSignature}`,
-          ...MigrateCertificate_Exception_Detail,
-        });
-      }
-
       const toChain = converter.toChainId.decode(body.toChainId);
-      await this.checkChainInfo("toChain", toChain, toChainBaseConfig, toAuthAccountSignature);
+      await this.checkChainInfo("toChain", toChain, toChainBaseConfig);
 
-      if (toAuthSignature) {
+      if (toAuthSignature && toAuthSignature.includes(KEY_SPLITTER)) {
+        converter.signature.checkDecodeArgs(toAuthSignature, "toAuthSignature");
+        const toAuthAccountSignature = converter.signature.decode(toAuthSignature, true);
+        if (!baseHelper.isValidAccountSignature(toAuthAccountSignature)) {
+          throw new ArgumentIllegalException(PROP_IS_INVALID, {
+            prop: `toAuthSignature ${toAuthSignature}`,
+            ...MigrateCertificate_Exception_Detail,
+          });
+        }
+        await this.checkAuthAccount(toChainBaseConfig, toAuthAccountSignature);
         await this.verifyMigrateCertificateToAuthSignature(migrateCertificate);
       }
     }

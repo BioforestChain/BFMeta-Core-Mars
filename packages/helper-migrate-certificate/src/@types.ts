@@ -25,10 +25,10 @@ declare namespace BFChainCore {
       : never;
 
     interface Converter<T = unknown> {
+      checkEncodeArgs(args: T): void;
+      checkDecodeArgs(args: unknown, label?: string): void;
       encode(args: T, skipVerify?: boolean): string;
       decode(args: string, skipVerify?: boolean): T;
-      checkDecodeArgs(args: unknown): void;
-      checkEncodeArgs(args: T): void;
     }
     interface ChainIdConverter extends Converter<ChainBaseInfo> {}
     interface IdConverter extends Converter<string> {}

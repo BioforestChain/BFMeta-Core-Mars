@@ -87,10 +87,10 @@ export class SignatureV1Converter implements BFChainCore.CrossChain.SignatureCon
     }
   }
 
-  checkDecodeArgs(signature: unknown) {
+  checkDecodeArgs(signature: unknown, label?: string) {
     if (!signature) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: `signature ${signature}`,
+        prop: `${label || "signature"} ${signature}`,
         target: "decodeArgs",
         function: "checkDecodeArgs",
       });
@@ -98,7 +98,7 @@ export class SignatureV1Converter implements BFChainCore.CrossChain.SignatureCon
 
     if (typeof signature !== "string") {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `signature ${signature}`,
+        prop: `${label || "signature"} ${signature}`,
         target: "decodeArgs",
         function: "checkDecodeArgs",
       });
@@ -107,7 +107,7 @@ export class SignatureV1Converter implements BFChainCore.CrossChain.SignatureCon
     const signatures = signature.split("/");
     if (signatures.length !== 2 && signatures.length !== 3) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `signature ${signature}`,
+        prop: `${label || "signature"} ${signature}`,
         target: "decodeArgs",
         function: "checkDecodeArgs",
       });
@@ -115,7 +115,7 @@ export class SignatureV1Converter implements BFChainCore.CrossChain.SignatureCon
 
     if (signatures[1].split("-").length !== 2) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `signature ${signature}`,
+        prop: `${label || "signature"} ${signature}`,
         target: "decodeArgs",
         function: "checkDecodeArgs",
       });
@@ -123,7 +123,7 @@ export class SignatureV1Converter implements BFChainCore.CrossChain.SignatureCon
 
     if (signatures[2] && signatures[2].split("-").length !== 2) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `signature ${signature}`,
+        prop: `${label || "signature"} ${signature}`,
         target: "decodeArgs",
         function: "checkDecodeArgs",
       });
