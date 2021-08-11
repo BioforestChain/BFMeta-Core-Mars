@@ -13,6 +13,9 @@ export class AccountHelper<
   LNI extends BFChainCore.LocationNameInfo = BFChainCore.LocationNameInfo,
   FA extends BFChainCore.FrozenAsset = BFChainCore.FrozenAsset,
   IAI extends BFChainCore.IssuedAssetInfo = BFChainCore.IssuedAssetInfo,
+  CI extends BFChainCore.CurrencyInfo = BFChainCore.CurrencyInfo,
+  ALI extends BFChainCore.AliasInfo = BFChainCore.AliasInfo,
+  MCI extends BFChainCore.MigrateCertificateInfo = BFChainCore.MigrateCertificateInfo,
 > {
   @Inject("accountGetterHelper", { optional: true })
   private accountGetterHelper?: BFChainCore.AccountGetterHelperInterface<
@@ -24,7 +27,10 @@ export class AccountHelper<
     DI,
     LNI,
     FA,
-    IAI
+    IAI,
+    CI,
+    ALI,
+    MCI
   >;
 
   getAccounts(
@@ -305,7 +311,7 @@ export class AccountHelper<
       BFChainCore.AccountGetterHelperInterface,
       "getCurrency"
     >,
-  ): Promise<number | undefined> {
+  ): Promise<BFChainCore.CurrencyInfo | undefined> {
     if (!accountGetterHelper) {
       throw new NoFoundException(NOT_EXIST, {
         prop: "accountGetterHelper",
@@ -353,7 +359,7 @@ export class AccountHelper<
       BFChainCore.AccountGetterHelperInterface,
       "getAlias"
     >,
-  ): Promise<number | undefined> {
+  ): Promise<BFChainCore.AliasInfo | undefined> {
     if (!accountGetterHelper) {
       throw new NoFoundException(NOT_EXIST, {
         prop: "accountGetterHelper",
@@ -362,6 +368,22 @@ export class AccountHelper<
       });
     }
     return accountGetterHelper.getAlias(alias);
+  }
+  getMigrateCertificate(
+    migrateCertificateId: string,
+    accountGetterHelper = this.accountGetterHelper as Pick<
+      BFChainCore.AccountGetterHelperInterface,
+      "getMigrateCertificate"
+    >,
+  ): Promise<BFChainCore.MigrateCertificateInfo | undefined> {
+    if (!accountGetterHelper) {
+      throw new NoFoundException(NOT_EXIST, {
+        prop: "accountGetterHelper",
+        target: "moduleStroge",
+        function: "AccountHelper.getMigrateCertificate",
+      });
+    }
+    return accountGetterHelper.getMigrateCertificate(migrateCertificateId);
   }
   initAccountPublicKey(
     address: string,
