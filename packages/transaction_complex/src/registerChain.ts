@@ -15,6 +15,8 @@ import {
   SHOULD_BE,
   SHOULD_NOT_EXIST,
   NOT_MATCH,
+  PROP_IS_INVALID,
+  SHOULD_NOT_BE,
 } from "@bfchain/core-util-exception";
 import { Injectable, Inject, TaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
@@ -133,7 +135,43 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
       });
     }
 
-    if (config.initials !== genesisBlockJson.asset.genesisAsset.bnid) {
+    if (!(genesisBlockJson.asset && genesisBlockJson.asset.genesisAsset)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "genesisBlock",
+        ...RegisterChainAsset_Exception_Detail,
+      });
+    }
+
+    const { bnid, magic, assetType, chainName } = genesisBlockJson.asset.genesisAsset;
+
+    if (magic === config.magic) {
+      throw new ArgumentIllegalException(SHOULD_NOT_BE, {
+        magic: `magic ${magic}`,
+        to_target: "genesisBlockJson.asset.genesisAsset",
+        be_compare_prop: config.magic,
+        ...RegisterChainAsset_Exception_Detail,
+      });
+    }
+
+    if (assetType === config.assetType) {
+      throw new ArgumentIllegalException(SHOULD_NOT_BE, {
+        assetType: `assetType ${assetType}`,
+        to_target: "genesisBlockJson.asset.genesisAsset",
+        be_compare_prop: config.assetType,
+        ...RegisterChainAsset_Exception_Detail,
+      });
+    }
+
+    if (chainName === config.chainName) {
+      throw new ArgumentIllegalException(SHOULD_NOT_BE, {
+        chainName: `chainName ${chainName}`,
+        to_target: "genesisBlockJson.asset.genesisAsset",
+        be_compare_prop: config.chainName,
+        ...RegisterChainAsset_Exception_Detail,
+      });
+    }
+
+    if (config.initials !== bnid) {
       throw new ArgumentIllegalException(NOT_MATCH, {
         to_compare_prop: `initials ${config.initials}`,
         be_compare_prop: `bnid ${genesisBlockJson.remark.bnid}`,
@@ -143,11 +181,11 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
       });
     }
 
-    let chainConfig = this.configMap.get(genesisBlockJson.magic);
+    let chainConfig = this.configMap.get(magic);
     if (!chainConfig) {
       // 没有注册链的配置文件就生成一个
       chainConfig = new ConfigHelper(genesisBlockJson, this.configHelper.business);
-      this.configMap.set(genesisBlockJson.magic, chainConfig);
+      this.configMap.set(magic, chainConfig);
     }
 
     const genesisBlock = await this._blockCore.recombineBlock<
