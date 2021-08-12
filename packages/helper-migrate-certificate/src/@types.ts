@@ -25,6 +25,7 @@ declare namespace BFChainCore {
       : never;
 
     interface Converter<T = unknown> {
+      readonly version: string;
       checkEncodeArgs(args: T): void;
       checkDecodeArgs(args: unknown, label?: string): void;
       encode(args: T, skipVerify?: boolean): string;
@@ -154,6 +155,16 @@ declare namespace BFChainCore {
       toAuthSignature: string;
     }
 
+    type MigrateCertificateWithoutFromAuthSignatureJSON = Omit<
+      MigrateCertificateJSON,
+      "fromAuthSignature" | "toAuthSignature"
+    >;
+
+    type MigrateCertificateWithoutToAuthSignatureJSON = Omit<
+      MigrateCertificateJSON,
+      "toAuthSignature"
+    >;
+
     interface MigrateCertificate {
       /**迁移信息 */
       body: {
@@ -220,6 +231,17 @@ declare namespace BFChainCore {
       fromChainBaseConfig?: ChainBaseConfig;
       /**迁入链的基础配置信息 */
       toChainBaseConfig?: ChainBaseConfig;
+    }
+
+    interface CombineMigrateCertificateBodyArgs {
+      /**申请账户地址 */
+      senderId: string;
+      /**接收账户 */
+      recipientId: string;
+      /**去往链信息 */
+      toChainInfo: ChainBaseInfo;
+      /**迁移的数量 */
+      assets: string;
     }
   }
   // #endregion

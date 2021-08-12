@@ -120,6 +120,67 @@ export class MigrateCertificateHelper {
     return migrateCertificate;
   }
 
+  combineMigrateCertificateBody(
+    args: BFChainCore.CrossChain.CombineMigrateCertificateBodyArgs,
+    config = this.configHelper,
+  ) {
+    const converter = CrossChainConverterFactory();
+    const { senderId, recipientId, toChainInfo, assets } = args;
+    const migrateCertificate: BFChainCore.CrossChain.MigrateCertificateWithoutFromAuthSignatureJSON =
+      {
+        body: {
+          /**凭证版本 */
+          version: config.version.toString(),
+          /**迁出凭证生成时间 Date.now().getTimes() */
+          timestamp: this.chainTimeHelper.now(true),
+          /**迁出链的唯一标识 version+自定义格式，目前是 version/magic/chainName/genesisBlockSignature */
+          fromChainId: converter.fromChainId.encode(
+            {
+              magic: config.magic,
+              chainName: config.chainName,
+              genesisBlockSignature: config.signature,
+            },
+            true,
+          ),
+          /**迁入链的唯一标识 version+自定义格式，目前是 version/magic/chainName/genesisBlockSignature */
+          toChainId: converter.toChainId.encode(toChainInfo),
+          /**发起账户的唯一标识 version/address */
+          fromId: converter.fromId.encode(senderId, true),
+          /**接收账户的唯一标识 version/address */
+          toId: converter.toId.encode(recipientId, true),
+          /**迁出的权益：version/assetType */
+          assetTypeId: converter.assetTypeId.encode(config.assetType, true),
+          /**迁出的权益数量，0-9 组成并且不包含小数点，必须大于0 */
+          assets,
+        },
+        /**发起账户签名 version/publicKey-signature/secondPublicKey-signSignature */
+        signature: converter.signature.version,
+      };
+    return migrateCertificate;
+  }
+
+  combineMigrateCertificateSignature(
+    migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON,
+    opts: {
+      signature?: BFChainCore.AccountSignatureJSON;
+      fromAuthSignature?: BFChainCore.AccountSignatureJSON;
+      toAuthSignature?: BFChainCore.AccountSignatureJSON;
+    },
+  ) {
+    const converter = CrossChainConverterFactory(migrateCertificate);
+    const { signature, fromAuthSignature, toAuthSignature } = opts;
+    if (signature) {
+      migrateCertificate.signature = converter.signature.encode(signature);
+    }
+    if (fromAuthSignature) {
+      migrateCertificate.fromAuthSignature = converter.signature.encode(fromAuthSignature);
+    }
+    if (toAuthSignature) {
+      migrateCertificate.toAuthSignature = converter.signature.encode(toAuthSignature);
+    }
+    return migrateCertificate;
+  }
+
   /**
    * 生成迁移凭证信息
    *
