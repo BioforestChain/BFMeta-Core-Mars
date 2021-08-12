@@ -8,7 +8,7 @@ export class V3_Patch extends PatchBase {
   eventLogicVerifier!: EventLogicVerifier;
 
   readonly name = "patch-v3";
-  readonly patchEffectiveAfterHeight = 238000;
+  readonly patchEffectiveAfterHeight = 236300;
   protected _version = 1;
   readonly consensusVersion = 3;
   async upgradeHandler(oldVersion: number, newVersion: number) {
