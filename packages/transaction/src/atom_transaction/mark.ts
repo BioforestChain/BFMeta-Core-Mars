@@ -99,6 +99,13 @@ export class MarkTransactionFactory extends TransactionFactory<MarkTransaction> 
       });
     }
 
+    if (!body.dappid) {
+      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        prop: "dappid",
+        ...Function_Exception_Detail,
+      });
+    }
+
     if (!body.storage) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "storage",
@@ -133,6 +140,16 @@ export class MarkTransactionFactory extends TransactionFactory<MarkTransaction> 
     const dapp = mark.dapp;
 
     this.dappTransactionFactory.verifyDAppAsset(dapp);
+
+    if (body.dappid !== dapp.dappid) {
+      throw new ArgumentIllegalException(NOT_MATCH, {
+        to_compare_prop: `dappid ${storage.value}`,
+        be_compare_prop: `dappid ${dapp.dappid}`,
+        to_target: "body",
+        be_target: "mark",
+        ...Function_Exception_Detail,
+      });
+    }
 
     if (storage.value !== dapp.dappid) {
       throw new ArgumentIllegalException(NOT_MATCH, {
