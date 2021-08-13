@@ -8,6 +8,7 @@ import {
   SHOULD_BE,
   PROP_IS_INVALID,
   NOT_EXIST_OR_EXPIRED,
+  NOT_EXPECTED_RELATED_TRANSACTION,
 } from "@bfchain/core-util-exception";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
@@ -54,6 +55,13 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
 
     const trs =
       trsWithBlockSign.transaction as BFChainCore.TransactionJSON<BFChainCore.GiftAssetAssetJSON>;
+
+    if (trs.type !== this.transactionHelper.GIFT_ASSET) {
+      throw new ConsensusException(NOT_EXPECTED_RELATED_TRANSACTION, {
+        signature: `${transactionSignature}`,
+        ...Function_Exception_Detail,
+      });
+    }
 
     this.isValidRecipientId(transaction, trs);
     this.isBlockSignatureMatch(transaction, trsWithBlockSign.blockSignature);

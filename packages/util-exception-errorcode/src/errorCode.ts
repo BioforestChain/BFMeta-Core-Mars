@@ -329,6 +329,9 @@ export const MIGRATE_MAIN_ASSET_ONLY = (ec.next =
 /**function */
 export const DELEGATE_CAN_NOT_MIGRATE_ASSET = (ec.next =
   "Delegate can not migrate asset, when {function}");
+/**signature function */
+export const NOT_EXPECTED_RELATED_TRANSACTION = (ec.next =
+  "Transaction with signature {signature} is not an expected related transaction, when {function}");
 // #endregion
 export const errorCode = new Map(
   ec.errorCode.concat([

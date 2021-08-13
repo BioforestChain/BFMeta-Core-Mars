@@ -6,6 +6,7 @@ import {
   NOT_MATCH,
   SHOULD_BE,
   NOT_EXIST_OR_EXPIRED,
+  NOT_EXPECTED_RELATED_TRANSACTION,
 } from "@bfchain/core-util-exception";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
@@ -43,6 +44,13 @@ export class BeExchangeAssetLogicVerifier extends TransactionLogicVerifier {
       throw new NoFoundException(NOT_EXIST_OR_EXPIRED, {
         prop: `Transaction with signature ${transactionSignature}`,
         target: "blockChain",
+        ...Function_Exception_Detail,
+      });
+    }
+
+    if (trs.type !== this.transactionHelper.TO_EXCHANGE_ASSET) {
+      throw new ConsensusException(NOT_EXPECTED_RELATED_TRANSACTION, {
+        signature: `${transactionSignature}`,
         ...Function_Exception_Detail,
       });
     }

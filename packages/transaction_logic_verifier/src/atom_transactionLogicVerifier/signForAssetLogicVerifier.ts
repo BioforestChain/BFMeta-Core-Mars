@@ -6,6 +6,7 @@ import {
   NOT_MATCH,
   CAN_NOT_SECONDARY_TRANSACTION,
   NOT_EXIST_OR_EXPIRED,
+  NOT_EXPECTED_RELATED_TRANSACTION,
 } from "@bfchain/core-util-exception";
 import { AccountBaseHelper } from "@bfchain/core-helper";
 
@@ -45,6 +46,14 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
         ...Function_Exception_Detail,
       });
     }
+
+    if (trs.type !== this.transactionHelper.TRUST_ASSET) {
+      throw new ConsensusException(NOT_EXPECTED_RELATED_TRANSACTION, {
+        signature: `${transactionSignature}`,
+        ...Function_Exception_Detail,
+      });
+    }
+
     this.isValidRecipientId(transaction, trs);
     await this.isDependentTransactionMatch(transaction, trs);
 
