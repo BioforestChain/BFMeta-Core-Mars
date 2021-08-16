@@ -1,17 +1,17 @@
 {
   "name": "@types/bfchain__core-helper-transaction",
   "types": "index.d.ts",
-  "version": "5.23.16",
+  "version": "5.23.17",
   "dependencies": {
-    "@types/bfchain__core-helper-account-base": "5.23.16",
-    "@types/bfchain__core-helper-asymmetric": "5.23.16",
-    "@types/bfchain__core-helper-bigint": "5.23.16",
-    "@types/bfchain__core-helper-config": "5.23.16",
-    "@types/bfchain__core-helper-transaction-pow": "5.23.16",
-    "@types/bfchain__core-helper-type": "5.23.16",
-    "@types/bfchain__core-model-constants": "5.23.16",
-    "@types/bfchain__core-model-transaction": "5.23.16",
-    "@types/bfchain__core-typings": "5.23.16",
-    "@types/bfchain__core-util-exception": "5.23.16"
+    "@types/bfchain__core-helper-account-base": "5.23.17",
+    "@types/bfchain__core-helper-asymmetric": "5.23.17",
+    "@types/bfchain__core-helper-bigint": "5.23.17",
+    "@types/bfchain__core-helper-config": "5.23.17",
+    "@types/bfchain__core-helper-transaction-pow": "5.23.17",
+    "@types/bfchain__core-helper-type": "5.23.17",
+    "@types/bfchain__core-model-constants": "5.23.17",
+    "@types/bfchain__core-model-transaction": "5.23.17",
+    "@types/bfchain__core-typings": "5.23.17",
+    "@types/bfchain__core-util-exception": "5.23.17"
   }
 }
