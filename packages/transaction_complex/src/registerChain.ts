@@ -146,7 +146,7 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
 
     if (magic === config.magic) {
       throw new ArgumentIllegalException(SHOULD_NOT_BE, {
-        magic: `magic ${magic}`,
+        to_compare_prop: `magic ${magic}`,
         to_target: "genesisBlockJson.asset.genesisAsset",
         be_compare_prop: config.magic,
         ...RegisterChainAsset_Exception_Detail,
@@ -155,7 +155,7 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
 
     if (assetType === config.assetType) {
       throw new ArgumentIllegalException(SHOULD_NOT_BE, {
-        assetType: `assetType ${assetType}`,
+        to_compare_prop: `assetType ${assetType}`,
         to_target: "genesisBlockJson.asset.genesisAsset",
         be_compare_prop: config.assetType,
         ...RegisterChainAsset_Exception_Detail,
@@ -164,7 +164,7 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
 
     if (chainName === config.chainName) {
       throw new ArgumentIllegalException(SHOULD_NOT_BE, {
-        chainName: `chainName ${chainName}`,
+        to_compare_prop: `chainName ${chainName}`,
         to_target: "genesisBlockJson.asset.genesisAsset",
         be_compare_prop: config.chainName,
         ...RegisterChainAsset_Exception_Detail,
