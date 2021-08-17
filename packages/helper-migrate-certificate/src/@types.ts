@@ -27,7 +27,7 @@ declare namespace BFChainCore {
     interface Converter<T = unknown> {
       readonly version: string;
       checkEncodeArgs(args: T): void;
-      checkDecodeArgs(args: unknown, label?: string): void;
+      checkDecodeArgs(args: unknown): void;
       encode(args: T, skipVerify?: boolean): string;
       decode(args: string, skipVerify?: boolean): T;
     }
@@ -39,7 +39,7 @@ declare namespace BFChainCore {
       splitSignature(args: string): string;
       splitSignSignature(args: string): string;
 
-      generateMigrateCertificateSignature(
+      generateSignature(
         args: {
           secret: string;
           secondSecret?: string;
@@ -48,40 +48,8 @@ declare namespace BFChainCore {
         accountBaseHelper: AccountBaseHelper,
         asymmetricHelper: AsymmetricHelper,
       ): Promise<MigrateCertificateJSON>;
-      generateMigrateCertificateFromAuthSignature(
-        args: {
-          authSecret: string;
-          authSecondSecret?: string;
-          migrateCertificate: MigrateCertificateJSON;
-        },
-        accountBaseHelper: AccountBaseHelper,
-        asymmetricHelper: AsymmetricHelper,
-      ): Promise<MigrateCertificateJSON>;
-      generateMigrateCertificateToAuthSignature(
-        args: {
-          authSecret: string;
-          authSecondSecret?: string;
-          migrateCertificate: MigrateCertificateJSON;
-        },
-        accountBaseHelper: AccountBaseHelper,
-        asymmetricHelper: AsymmetricHelper,
-      ): Promise<MigrateCertificateJSON>;
 
-      verifyMigrateCertificateSignature(
-        migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON,
-        asymmetricHelper: AsymmetricHelper,
-        opts?: {
-          taskLabel?: string;
-        },
-      ): Promise<void>;
-      verifyMigrateCertificateFromAuthSignature(
-        migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON,
-        asymmetricHelper: AsymmetricHelper,
-        opts?: {
-          taskLabel?: string;
-        },
-      ): Promise<void>;
-      verifyMigrateCertificateToAuthSignature(
+      verifySignature(
         migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON,
         asymmetricHelper: AsymmetricHelper,
         opts?: {
@@ -89,7 +57,28 @@ declare namespace BFChainCore {
         },
       ): Promise<void>;
     }
+    interface AuthSignatureConverter extends Converter<BFChainCore.AccountSignatureJSON> {
+      splitSignature(args: string): string;
+      splitSignSignature(args: string): string;
 
+      generateSignature(
+        args: {
+          authSecret: string;
+          authSecondSecret?: string;
+          migrateCertificate: MigrateCertificateJSON;
+        },
+        accountBaseHelper: AccountBaseHelper,
+        asymmetricHelper: AsymmetricHelper,
+      ): Promise<MigrateCertificateJSON>;
+
+      verifySignature(
+        migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON,
+        asymmetricHelper: AsymmetricHelper,
+        opts?: {
+          taskLabel?: string;
+        },
+      ): Promise<void>;
+    }
     interface CrossChainConverter {
       fromChainId: ChainIdConverter;
       toChainId: ChainIdConverter;
@@ -97,6 +86,8 @@ declare namespace BFChainCore {
       toId: IdConverter;
       assetTypeId: AssetTypeIdConverter;
       signature: SignatureConverter;
+      fromAuthSignature: AuthSignatureConverter;
+      toAuthSignature: AuthSignatureConverter;
       getUUID: (migrateCertificate: MigrateCertificateJSON) => string;
     }
 

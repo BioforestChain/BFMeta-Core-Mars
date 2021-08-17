@@ -73,6 +73,7 @@ async function getEmigrateAssetTransaction(
     },
     assets: "10000",
   };
+
   let migrateCertificate =
     await fullBfchainCore.migrateCertificateHelper.generateMigrateCertificate(args);
   migrateCertificate =

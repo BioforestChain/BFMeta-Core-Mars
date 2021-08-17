@@ -11,7 +11,7 @@ export function CrossChainConverterFactory(json?: any): BFChainCore.CrossChain.C
   if (!json) {
     return new CrossChainDefaultConverter();
   }
-  const { body, signature } = json;
+  const { body, signature, fromAuthSignature, toAuthSignature } = json;
   if (!body) {
     throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
       prop: "json.body",
@@ -34,16 +34,32 @@ export function CrossChainConverterFactory(json?: any): BFChainCore.CrossChain.C
   const toIdVersion = getVerion(toId);
   const assetTypeIdVersion = getVerion(assetTypeId);
   const signatureVersion = getVerion(signature);
-
-  // if (patcthFieldConverter.has(fromChainIdVersion)) {
-  // } else {
-  return new CrossChainDefaultConverter({
+  const config: {
+    fromChainIdVersion: never;
+    toChainIdVersion: never;
+    fromIdVersion: never;
+    toIdVersion: never;
+    assetTypeIdVersion: never;
+    signatureVersion: never;
+    fromAuthSignatureVersion?: never;
+    toAuthSignatureVersion?: never;
+  } = {
     fromChainIdVersion: fromChainIdVersion as never,
     toChainIdVersion: toChainIdVersion as never,
     fromIdVersion: fromIdVersion as never,
     toIdVersion: toIdVersion as never,
     assetTypeIdVersion: assetTypeIdVersion as never,
     signatureVersion: signatureVersion as never,
-  });
+  };
+  if (fromAuthSignature) {
+    config.fromAuthSignatureVersion = getVerion(fromAuthSignature) as never;
+  }
+  if (toAuthSignature) {
+    config.toAuthSignatureVersion = getVerion(toAuthSignature) as never;
+  }
+
+  // if (patcthFieldConverter.has(fromChainIdVersion)) {
+  // } else {
+  return new CrossChainDefaultConverter(config);
   // }
 }

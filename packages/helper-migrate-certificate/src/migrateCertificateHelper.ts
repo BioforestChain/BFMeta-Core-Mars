@@ -173,10 +173,10 @@ export class MigrateCertificateHelper {
       migrateCertificate.signature = converter.signature.encode(signature);
     }
     if (fromAuthSignature) {
-      migrateCertificate.fromAuthSignature = converter.signature.encode(fromAuthSignature);
+      migrateCertificate.fromAuthSignature = converter.fromAuthSignature.encode(fromAuthSignature);
     }
     if (toAuthSignature) {
-      migrateCertificate.toAuthSignature = converter.signature.encode(toAuthSignature);
+      migrateCertificate.toAuthSignature = converter.toAuthSignature.encode(toAuthSignature);
     }
     return migrateCertificate;
   }
@@ -236,7 +236,7 @@ export class MigrateCertificateHelper {
     };
 
     if (senderSecret) {
-      migrateCertificate = await converter.signature.generateMigrateCertificateSignature(
+      migrateCertificate = await converter.signature.generateSignature(
         { secret: senderSecret, secondSecret: senderSecondSecret, migrateCertificate },
         accountBaseHelper,
         this.asymmetricHelper,
@@ -264,11 +264,11 @@ export class MigrateCertificateHelper {
       signature: converter.signature.decode(signature),
       fromAuthSignature:
         fromAuthSignature && fromAuthSignature.includes("/")
-          ? converter.signature.decode(fromAuthSignature)
+          ? converter.fromAuthSignature.decode(fromAuthSignature)
           : undefined,
       toAuthSignature:
         toAuthSignature && toAuthSignature.includes("/")
-          ? converter.signature.decode(toAuthSignature)
+          ? converter.toAuthSignature.decode(toAuthSignature)
           : undefined,
     };
     return migrateCertificateJson;
@@ -283,7 +283,7 @@ export class MigrateCertificateHelper {
     args: BFChainCore.CrossChain.AuthSignMigrateCertificateArgs,
   ) {
     const converter = CrossChainConverterFactory(args.migrateCertificate);
-    return converter.signature.generateMigrateCertificateFromAuthSignature(
+    return converter.fromAuthSignature.generateSignature(
       args,
       this.accountBaseHelper,
       this.asymmetricHelper,
@@ -297,7 +297,7 @@ export class MigrateCertificateHelper {
    */
   async toAuthSignMigrateCertificate(args: BFChainCore.CrossChain.AuthSignMigrateCertificateArgs) {
     const converter = CrossChainConverterFactory(args.migrateCertificate);
-    return converter.signature.generateMigrateCertificateToAuthSignature(
+    return converter.toAuthSignature.generateSignature(
       args,
       this.accountBaseHelper,
       this.asymmetricHelper,
@@ -317,11 +317,7 @@ export class MigrateCertificateHelper {
     },
   ) {
     const converter = CrossChainConverterFactory(migrateCertificate);
-    return converter.signature.verifyMigrateCertificateSignature(
-      migrateCertificate,
-      this.asymmetricHelper,
-      opts,
-    );
+    return converter.signature.verifySignature(migrateCertificate, this.asymmetricHelper, opts);
   }
 
   /**
@@ -337,7 +333,7 @@ export class MigrateCertificateHelper {
     },
   ) {
     const converter = CrossChainConverterFactory(migrateCertificate);
-    return converter.signature.verifyMigrateCertificateFromAuthSignature(
+    return converter.fromAuthSignature.verifySignature(
       migrateCertificate,
       this.asymmetricHelper,
       opts,
@@ -357,7 +353,7 @@ export class MigrateCertificateHelper {
     },
   ) {
     const converter = CrossChainConverterFactory(migrateCertificate);
-    return converter.signature.verifyMigrateCertificateToAuthSignature(
+    return converter.toAuthSignature.verifySignature(
       migrateCertificate,
       this.asymmetricHelper,
       opts,
@@ -461,7 +457,7 @@ export class MigrateCertificateHelper {
     converter.toId.checkDecodeArgs(body.toId);
     converter.assetTypeId.checkDecodeArgs(body.assetTypeId);
     this.checkAssets(body.assets);
-    converter.signature.checkDecodeArgs(signature, "signature");
+    converter.signature.checkDecodeArgs(signature);
 
     const baseHelper = this.baseHelper;
     const accountSignature = converter.signature.decode(signature, true);
@@ -472,10 +468,7 @@ export class MigrateCertificateHelper {
       });
     }
 
-    await converter.signature.verifyMigrateCertificateSignature(
-      migrateCertificate,
-      this.asymmetricHelper,
-    );
+    await converter.signature.verifySignature(migrateCertificate, this.asymmetricHelper);
 
     if (forceCheckFrom) {
       if (!fromChainBaseConfig) {
@@ -490,8 +483,11 @@ export class MigrateCertificateHelper {
       await this.checkChainInfo("fromChain", fromChain, fromChainBaseConfig);
 
       if (fromAuthSignature && fromAuthSignature.includes(KEY_SPLITTER)) {
-        converter.signature.checkDecodeArgs(fromAuthSignature, "fromAuthSignature");
-        const fromAuthAccountSignature = converter.signature.decode(fromAuthSignature, true);
+        converter.fromAuthSignature.checkDecodeArgs(fromAuthSignature);
+        const fromAuthAccountSignature = converter.fromAuthSignature.decode(
+          fromAuthSignature,
+          true,
+        );
         if (!baseHelper.isValidAccountSignature(fromAuthAccountSignature)) {
           throw new ArgumentIllegalException(PROP_IS_INVALID, {
             prop: `fromAuthSignature ${fromAuthSignature}`,
@@ -516,8 +512,8 @@ export class MigrateCertificateHelper {
       await this.checkChainInfo("toChain", toChain, toChainBaseConfig);
 
       if (toAuthSignature && toAuthSignature.includes(KEY_SPLITTER)) {
-        converter.signature.checkDecodeArgs(toAuthSignature, "toAuthSignature");
-        const toAuthAccountSignature = converter.signature.decode(toAuthSignature, true);
+        converter.toAuthSignature.checkDecodeArgs(toAuthSignature);
+        const toAuthAccountSignature = converter.toAuthSignature.decode(toAuthSignature, true);
         if (!baseHelper.isValidAccountSignature(toAuthAccountSignature)) {
           throw new ArgumentIllegalException(PROP_IS_INVALID, {
             prop: `toAuthSignature ${toAuthSignature}`,

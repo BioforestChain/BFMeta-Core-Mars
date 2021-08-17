@@ -4,6 +4,8 @@ import { FromIdConverter } from "./fromId";
 import { ToIdConverter } from "./toId";
 import { AssetTypeIdConverter } from "./assetTypeId";
 import { SignatureConverter } from "./signature";
+import { FromAuthSignatureConverter } from "./fromAuthSignature";
+import { ToAuthSignatureConverter } from "./toAuthSignature";
 import { ConverterMap } from "../../converterMap";
 
 export function FieldConverter<N extends number = 1>(name = 1 as N) {
@@ -13,5 +15,7 @@ export function FieldConverter<N extends number = 1>(name = 1 as N) {
     .mergeWithPrefix(`${name}/`, FromIdConverter())
     .mergeWithPrefix(`${name}/`, ToIdConverter())
     .mergeWithPrefix(`${name}/`, AssetTypeIdConverter())
-    .mergeWithPrefix(`${name}/`, SignatureConverter());
+    .mergeWithPrefix(`${name}/`, SignatureConverter())
+    .mergeWithPrefix(`${name}/`, FromAuthSignatureConverter())
+    .mergeWithPrefix(`${name}/`, ToAuthSignatureConverter());
 }
