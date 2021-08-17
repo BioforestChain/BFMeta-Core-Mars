@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-patch-v2",
-  "version": "5.23.17",
+  "version": "5.23.18",
   "main": "build/cjs/index.js",
   "type": "commonjs",
   "module": "build/esm/index.js",
@@ -8,11 +8,11 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-block": "5.23.17",
-    "@bfchain/core-helper": "5.23.17",
-    "@bfchain/core-patch-base": "5.23.17",
-    "@bfchain/core-transaction-logic-verifier": "5.23.17",
-    "@bfchain/core-typings": "5.23.17"
+    "@bfchain/core-block": "5.23.18",
+    "@bfchain/core-helper": "5.23.18",
+    "@bfchain/core-patch-base": "5.23.18",
+    "@bfchain/core-transaction-logic-verifier": "5.23.18",
+    "@bfchain/core-typings": "5.23.18"
   },
   "types": "build/cjs/index.d.ts"
 }
