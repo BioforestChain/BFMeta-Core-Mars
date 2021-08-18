@@ -445,7 +445,14 @@ export class MigrateCertificateHelper {
 
     const converter = CrossChainConverterFactory(migrateCertificate);
 
-    const { forceCheckFrom, fromChainBaseConfig, forceCheckTo, toChainBaseConfig } = options;
+    const {
+      forceCheckFromChainInfo,
+      fromChainBaseConfig,
+      forceCheckFromAuthSignature,
+      forceCheckToChainInfo,
+      toChainBaseConfig,
+      forceCheckToAuthSignature,
+    } = options;
 
     const { body, signature, fromAuthSignature, toAuthSignature } = migrateCertificate;
 
@@ -470,7 +477,7 @@ export class MigrateCertificateHelper {
 
     await converter.signature.verifySignature(migrateCertificate, this.asymmetricHelper);
 
-    if (forceCheckFrom) {
+    if (forceCheckFromChainInfo) {
       if (!fromChainBaseConfig) {
         throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
           prop: "fromChainBaseConfig",
@@ -495,11 +502,20 @@ export class MigrateCertificateHelper {
           });
         }
         await this.checkAuthAccount(fromChainBaseConfig, fromAuthAccountSignature);
-        await this.verifyMigrateCertificateFromAuthSignature(migrateCertificate);
       }
     }
 
-    if (forceCheckTo) {
+    if (forceCheckFromAuthSignature) {
+      if (!fromAuthSignature) {
+        throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+          prop: "fromAuthSignature",
+          ...MigrateCertificate_Exception_Detail,
+        });
+      }
+      await this.verifyMigrateCertificateFromAuthSignature(migrateCertificate);
+    }
+
+    if (forceCheckToChainInfo) {
       if (!toChainBaseConfig) {
         throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
           prop: "toChainBaseConfig",
@@ -521,8 +537,17 @@ export class MigrateCertificateHelper {
           });
         }
         await this.checkAuthAccount(toChainBaseConfig, toAuthAccountSignature);
-        await this.verifyMigrateCertificateToAuthSignature(migrateCertificate);
       }
+    }
+
+    if (forceCheckToAuthSignature) {
+      if (!toAuthSignature) {
+        throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+          prop: "toAuthSignature",
+          ...MigrateCertificate_Exception_Detail,
+        });
+      }
+      await this.verifyMigrateCertificateToAuthSignature(migrateCertificate);
     }
 
     return converter;

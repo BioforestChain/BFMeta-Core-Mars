@@ -54,12 +54,17 @@ export class ToIdV1Converter implements BFChainCore.CrossChain.IdConverter {
     }
   }
 
-  encode(address: string) {
+  encode(address: string, skipVerify = false) {
+    if (!skipVerify) {
+      this.checkEncodeArgs(address);
+    }
     return `${this.version}${KEY_SPLITTER}${address}`;
   }
 
-  decode(toId: string) {
-    this.checkDecodeArgs(toId);
+  decode(toId: string, skipVerify = false) {
+    if (!skipVerify) {
+      this.checkDecodeArgs(toId);
+    }
     const items = toId.split(KEY_SPLITTER);
     return items[1];
   }

@@ -142,7 +142,7 @@ export class ToAuthSignatureV1Converter implements BFChainCore.CrossChain.AuthSi
   }
 
   decode(signature: string, skipVerify = false) {
-    if (skipVerify) {
+    if (!skipVerify) {
       this.checkDecodeArgs(signature);
     }
     const items = signature.split(KEY_SPLITTER);

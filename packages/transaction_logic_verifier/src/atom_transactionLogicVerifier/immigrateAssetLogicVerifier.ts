@@ -88,7 +88,7 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       genesisDelegates: this.transactionHelper.genesisDelegates(otherChainConfig),
     });
 
-    const { publicKey, secondPublicKey, signSignature } = converter.signature.decode(
+    const { publicKey, secondPublicKey, signSignature } = converter.toAuthSignature.decode(
       migrateCertificate.toAuthSignature,
       true,
     );

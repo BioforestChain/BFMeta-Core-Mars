@@ -143,7 +143,7 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
     const converter = await this.migrateCertificateHelper.verifyMigrateCertificate(
       migrateCertificate,
       {
-        forceCheckFrom: true,
+        forceCheckFromChainInfo: true,
         fromChainBaseConfig: {
           chainName: config.chainName,
           magic: config.magic,
@@ -151,6 +151,7 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
           genesisBlockSignature: config.signature,
           genesisDelegates: this.transactionHelper.genesisDelegates(config),
         },
+        forceCheckFromAuthSignature: true,
       },
     );
 

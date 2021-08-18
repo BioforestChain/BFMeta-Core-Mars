@@ -142,7 +142,7 @@ export class SignatureV1Converter implements BFChainCore.CrossChain.SignatureCon
   }
 
   decode(signature: string, skipVerify = false) {
-    if (skipVerify) {
+    if (!skipVerify) {
       this.checkDecodeArgs(signature);
     }
     const items = signature.split(KEY_SPLITTER);

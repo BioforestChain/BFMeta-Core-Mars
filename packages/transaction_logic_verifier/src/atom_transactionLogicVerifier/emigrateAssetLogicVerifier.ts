@@ -107,8 +107,9 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       genesisDelegates: this.transactionHelper.genesisDelegates(otherChainConfig),
     });
 
-    const { publicKey, secondPublicKey, signSignature } = converter.signature.decode(
+    const { publicKey, secondPublicKey, signSignature } = converter.fromAuthSignature.decode(
       migrateCertificate.fromAuthSignature,
+      true,
     );
     const address = await this.accountBaseHelper.getAddressFromPublicKeyString(publicKey);
     const delegate = await accountGetterHelper.getAccountInfo(address);

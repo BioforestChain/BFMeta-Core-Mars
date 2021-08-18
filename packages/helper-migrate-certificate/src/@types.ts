@@ -215,13 +215,17 @@ declare namespace BFChainCore {
 
     interface MigrateCertificateVerifyOptions {
       /**验证迁出信息 */
-      forceCheckFrom?: boolean;
-      /**验证迁入信息 */
-      forceCheckTo?: boolean;
+      forceCheckFromChainInfo?: boolean;
       /**迁出链的基础配置信息 */
       fromChainBaseConfig?: ChainBaseConfig;
+      /**验证迁出授权签名 */
+      forceCheckFromAuthSignature?: boolean;
+      /**验证迁入信息 */
+      forceCheckToChainInfo?: boolean;
       /**迁入链的基础配置信息 */
       toChainBaseConfig?: ChainBaseConfig;
+      /**验证迁入授权签名 */
+      forceCheckToAuthSignature?: boolean;
     }
 
     interface CombineMigrateCertificateBodyArgs {
