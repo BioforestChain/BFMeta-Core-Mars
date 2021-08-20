@@ -436,32 +436,12 @@ export class ReplayBlockCore<T extends Block> {
           const { storageValue, type, senderId } = trs;
           if (
             storageValue &&
-            (type === transactionHelper.GRAB_ASSET ||
-              type === transactionHelper.SIGN_FOR_ASSET ||
-              type === transactionHelper.IMMIGRATE_ASSET)
+            (type === transactionHelper.GRAB_ASSET || type === transactionHelper.SIGN_FOR_ASSET)
           ) {
             const trsArray = trSignWithIndex.get(storageValue);
             if (trsArray) {
-              const opt: {
-                type?: string;
-                senderId?: string;
-              } = {};
-              if (type === transactionHelper.IMMIGRATE_ASSET) {
-                opt.type = type;
-              } else {
-                opt.senderId = senderId;
-              }
-
               for (const tr of trsArray) {
-                if (opt.type && tr.type === opt.type) {
-                  throw new ConsensusException(SHOULD_NOT_INCLUDE, {
-                    prop: `Transactions`,
-                    target: `block with height ${height}'`,
-                    value: `transaction with storageValue ${storageValue}`,
-                    ...Function_Exception_Detail,
-                  });
-                }
-                if (opt.senderId && tr.senderId === opt.senderId) {
+                if (tr.senderId === senderId) {
                   throw new ConsensusException(SHOULD_NOT_INCLUDE, {
                     prop: `Transactions`,
                     target: `block with height ${height}`,
