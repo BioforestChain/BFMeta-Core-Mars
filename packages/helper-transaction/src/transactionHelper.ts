@@ -253,6 +253,9 @@ export class TransactionHelper {
     }
     return delegatesArr;
   }
+  async getGensisAcountAddress(config = this.config) {
+    return this.accountBaseHelper.getAddressFromPublicKeyString(config.genesisAccountPublicKey)
+  }
   //#endregion
   /**
    * 校验交易的签名是否合法
