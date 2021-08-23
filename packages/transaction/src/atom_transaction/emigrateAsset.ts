@@ -155,6 +155,14 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
       },
     );
 
+    if (migrateCertificate.toAuthSignature) {
+      throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+        prop: "toAuthSignature",
+        ...Function_Exception_Detail,
+        target: "aemigrateAsset.migrateCertificate",
+      });
+    }
+
     const { toChainId, fromId, toId, assetTypeId } = migrateCertificate.body;
     const fromAddress = converter.fromId.decode(fromId, true);
     if (body.senderId !== fromAddress) {
