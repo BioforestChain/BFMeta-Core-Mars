@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-account",
-  "version": "5.23.21",
+  "version": "5.23.22",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,8 +14,8 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-helper-account-base": "5.23.21",
-    "@bfchain/core-typings": "5.23.21"
+    "@bfchain/core-helper-account-base": "5.23.22",
+    "@bfchain/core-typings": "5.23.22"
   },
   "gitHead": "ef41eb359371b11aafbec0516df1eba01f16ebfd",
   "types": "build/cjs/index.d.ts"
