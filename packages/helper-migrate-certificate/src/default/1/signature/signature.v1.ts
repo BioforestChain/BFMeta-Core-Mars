@@ -2,6 +2,7 @@ import type { AsymmetricHelper } from "@bfchain/core-helper-asymmetric";
 import type { AccountBaseHelper } from "@bfchain/core-helper-account-base";
 import { ENCODING_TYPE, KEY_SPLITTER } from "../../../constants";
 import { Injectable } from "@bfchain/util-dep-inject";
+import { BBuffer as Buffer } from "@bfchain/util-buffer";
 import { getHexFromArrayBuffer, parseHexToArrayBuffer } from "@bfchain/util-encoding-hex";
 import {
   CoreExceptionGenerator,
