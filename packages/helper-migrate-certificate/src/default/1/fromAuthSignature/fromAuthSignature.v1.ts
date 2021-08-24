@@ -185,7 +185,6 @@ export class FromAuthSignatureV1Converter implements BFChainCore.CrossChain.Auth
     accountBaseHelper: AccountBaseHelper,
     asymmetricHelper: AsymmetricHelper,
   ) {
-    debugger;
     const { authSecret, authSecondSecret, migrateCertificate } = args;
     migrateCertificate.fromAuthSignature = this.version;
 
