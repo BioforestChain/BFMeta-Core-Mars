@@ -42,19 +42,54 @@ export class BaseHelper {
     if (recordType === undefined || recordValue === undefined) {
       return false;
     }
-    if (
-      recordType !== RECORD_TYPE.IPV4 &&
-      recordType !== RECORD_TYPE.IPV6 &&
-      recordType !== RECORD_TYPE.LNG_LAT &&
-      recordType !== RECORD_TYPE.ADDRESSV1 &&
-      recordType !== RECORD_TYPE.UNKNOWN
-    ) {
-      return false;
+    if (recordType === RECORD_TYPE.IPV4) {
+      if (!this.isIpV4(recordValue)) {
+        return false;
+      }
+      return true;
     }
-    if (!this.isString(recordValue)) {
-      return false;
+    if (recordType === RECORD_TYPE.IPV6) {
+      if (!this.isIpV6(recordValue)) {
+        return false;
+      }
+      return true;
     }
-    return true;
+    if (recordType === RECORD_TYPE.LNG_LAT) {
+      const items = recordValue.split(",");
+      if (items.length !== 2) {
+        return false;
+      }
+      // 经度（-180，+180）：负坐标表示西半球，正坐标标识东半球
+      if (
+        !/^[\-\+]((0(\.\d{1,10})?)|(([1,9](\d)?)(\.\d{1,10})?)|(1[0-7]\d{1}(\.\d{1,10})?)|(180(\.0{1,10})?))$/.test(
+          items[0],
+        )
+      ) {
+        return false;
+      }
+      // 纬度（-90，+90）：负坐标标识南半球，正坐标表示北半球
+      if (
+        !/^[\-\+]((0(\.\d{1,10})?)|([1,9](\.\d{1,10})?)|([1-8]\d?(\.\d{1,10})?)|(90(\.0{1,10})?))$/.test(
+          items[1],
+        )
+      ) {
+        return false;
+      }
+      return true;
+    }
+    if (recordType === RECORD_TYPE.ADDRESSV1) {
+      if (!this.isString(recordValue)) {
+        return false;
+      }
+      return true;
+    }
+    if (recordType === RECORD_TYPE.UNKNOWN) {
+      if (!this.isString(recordValue)) {
+        return false;
+      }
+      return true;
+    }
+    return false;
   }
 
   /**

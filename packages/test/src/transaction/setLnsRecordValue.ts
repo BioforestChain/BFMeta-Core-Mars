@@ -108,4 +108,11 @@ const lnsRecordValue: BFChainCore.SetLnsRecordValueJSON = {
     recordValue: "bbbbbbbbbbbbbbbbbbbb",
   };
   await getSetLnsRecordValueTransaction(getSenderWithSecondSecret(), lnsRecordValue);
+  lnsRecordValue.operationType = RECORD_OPERATION_TYPE.ADD;
+  delete lnsRecordValue.deleteRecord;
+  lnsRecordValue.addRecord = {
+    recordType: RECORD_TYPE.LNG_LAT,
+    recordValue: "+180.0,+90.0",
+  };
+  await getSetLnsRecordValueTransaction(getSenderWithSecondSecret(), lnsRecordValue);
 })();
