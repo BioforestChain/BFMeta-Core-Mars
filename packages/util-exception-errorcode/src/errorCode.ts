@@ -332,6 +332,30 @@ export const DELEGATE_CAN_NOT_MIGRATE_ASSET = (ec.next =
 /**signature function */
 export const NOT_EXPECTED_RELATED_TRANSACTION = (ec.next =
   "Transaction with signature {signature} is not an expected related transaction, when {function}");
+/**factoryId function */
+export const ENTITY_FACTORY_IS_NOT_EXIST = (ec.next =
+  "Entity factory is not exist, factoryId {factoryId} when {function}");
+/**factoryId function */
+export const ENTITY_FACTORY_IS_ALREADY_EXIST = (ec.next =
+  "Entity factory is already exist, factoryId {factoryId} errorId {errorId} when {function}");
+/**entityId function */
+export const ENTITY_IS_NOT_EXIST = (ec.next =
+  "Entity is not exist, entityId {entityId} when {function}");
+/**entityId function */
+export const ENTITY_IS_ALREADY_EXIST = (ec.next =
+  "Entity is already exist, entityId {entityId} errorId {errorId} when {function}");
+/**entityId function */
+export const CAN_NOT_DESTORY_ENTITY = (ec.next =
+  "Can not destory entityId {entityId} reason {reason} when {function}");
+/**address entityId function */
+export const ACCOUNT_NOT_ENTITY_POSSESSOR = (ec.next =
+  "Account with address {address} not entityId {entityId} possessor errorId {errorId} when {function}");
+/**entityId function */
+export const ENTITY_ALREADY_FROZEN = (ec.next =
+  "Entity already frozen, entityId {entityId} when {function}");
+/**entityId function */
+export const ENTITY_ALREADY_DESTORY = (ec.next =
+  "Entity already destory, entityId {entityId} when {function}");
 // #endregion
 export const errorCode = new Map(
   ec.errorCode.concat([

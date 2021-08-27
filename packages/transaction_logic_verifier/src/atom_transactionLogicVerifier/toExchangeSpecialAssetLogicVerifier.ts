@@ -93,8 +93,14 @@ export class ToExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
           accountGetterHelper,
           eventEmitter,
         );
-      } else {
+      } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME) {
         eventLogicVerifier.listenEventSaleLocationName(
+          currentBlockHeight,
+          accountGetterHelper,
+          eventEmitter,
+        );
+      } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.ENTITY) {
+        eventLogicVerifier.listenEventFrozenEntity(
           currentBlockHeight,
           accountGetterHelper,
           eventEmitter,

@@ -709,7 +709,7 @@ export class BaseHelper {
    * @param stringNumber
    */
   isMakeUpWithNumber(stringNumber: string) {
-    return /^[0-9]+$/.test(stringNumber);
+    return /^(([0-9])|([1-9](\d)+?))$/.test(stringNumber);
   }
 
   /**
@@ -721,49 +721,23 @@ export class BaseHelper {
     if (!this.isString(stringNumber)) {
       return false;
     }
-    if (stringNumber.length > 1) {
-      if (stringNumber.startsWith("0")) {
-        return false;
-      }
-    }
     return this.isMakeUpWithNumber(stringNumber);
   }
 
-  /**
-   * 资产数量是否合法： 只能是数字组成的字符串
-   *
-   * @param assetNumber
-   */
-  isValidAssetNumber(assetNumber: any) {
-    return this.isValidStringNumber(assetNumber);
-  }
+  /**资产数量是否合法： 只能是数字组成的字符串 */
+  isValidAssetNumber = this.isValidStringNumber;
 
-  /**
-   * 权益数量是否合法： 只能是数字组成的字符串
-   *
-   * @param equity
-   */
-  isValidAccountEquity(equity: any) {
-    return this.isValidStringNumber(equity);
-  }
+  /**权益数量是否合法： 只能是数字组成的字符串 */
+  isValidAccountEquity = this.isValidStringNumber;
 
-  /**
-   * 区块的参与度是否合法： 只能是数字组成的字符串
-   *
-   * @param blockParticipation
-   */
-  isValidBlockParticipation(blockParticipation: any) {
-    return this.isValidStringNumber(blockParticipation);
-  }
+  /**区块的参与度是否合法： 只能是数字组成的字符串 */
+  isValidBlockParticipation = this.isValidStringNumber;
 
-  /**
-   * 权益比例是否合法： 只能是数字组成的字符串
-   *
-   * @param equity
-   */
-  isValidEquityRate(rate: any) {
-    return this.isValidStringNumber(rate);
-  }
+  /**权益比例是否合法： 只能是数字组成的字符串 */
+  isValidEquityRate = this.isValidStringNumber;
+
+  /**权益数量是否合法： 只能是数字组成的字符串 */
+  isValidAssetPrealnum = this.isValidStringNumber;
 
   /**
    * 链域名是否合法
@@ -903,6 +877,7 @@ export class BaseHelper {
    * @param milestones
    */
   isValidChainRewardMilestones(milestones: any): milestones is BFChainCore.RewardPerBlockJSON {
+    debugger;
     if (!(milestones && milestones.heights && milestones.rewards)) {
       return false;
     }
@@ -1113,5 +1088,42 @@ export class BaseHelper {
    */
   isValidTpowDiffFormula(tpowDiffFormula: string) {
     return true;
+  }
+
+  /**
+   * factoryId 是否合法，小写字母或数字，3-15 个字符
+   *
+   * @param factoryId
+   * @returns
+   */
+  isValidEntityFactoryId(factoryId: string) {
+    if (!this.isString(factoryId)) {
+      return false;
+    }
+
+    return /^[a-z0-9]{3,15}$/.test(factoryId);
+  }
+
+  /**
+   * entityId 是否合法，小写字母或数字，3-30 个字符
+   *
+   * @param entityId
+   * @returns
+   */
+  isValidEntityId(entityId: string) {
+    if (!this.isString(entityId)) {
+      return false;
+    }
+
+    const entitys = entityId.split("_");
+    if (entitys.length !== 2) {
+      return false;
+    }
+
+    if (!this.isValidEntityFactoryId(entitys[0])) {
+      return false;
+    }
+
+    return /^[a-z0-9]{3,30}$/.test(entitys[1]);
   }
 }

@@ -14,8 +14,14 @@ import {
   PROP_SHOULD_GTE_FIELD,
   PROP_SHOULD_LTE_FIELD,
   SHOULD_BE,
+  PROP_SHOULD_GT_FIELD,
 } from "@bfchain/core-util-exception-errorcode";
-import { Transaction, RANGE_TYPE, TransactionInBlock } from "@bfchain/core-model";
+import {
+  Transaction,
+  RANGE_TYPE,
+  TransactionInBlock,
+  PARENT_ASSET_TYPE,
+} from "@bfchain/core-model";
 import { wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "_txbase");
 
@@ -492,6 +498,83 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
   }
 
   /**
+   * 校验权益数
+   *
+   * @param assetPrealnum
+   * @param propName
+   * @param Function_Exception_Detail
+   */
+  checkAssetPrealnum(
+    assetPrealnum: any,
+    propName: string,
+    Function_Exception_Detail: FunctionExceptionDetail,
+  ) {
+    this.checkBaseAssetPrealnum(Function_Exception_Detail, propName, assetPrealnum);
+    this.isAssetPrealnumGtZero(assetPrealnum, propName, Function_Exception_Detail);
+  }
+
+  /**
+   * 校验基础权益数
+   *
+   * @param assetPrealnum
+   * @param propName
+   * @param Function_Exception_Detail
+   */
+  checkBaseAssetPrealnum(
+    assetPrealnum: any,
+    propName: string,
+    Function_Exception_Detail: FunctionExceptionDetail,
+  ) {
+    if (!assetPrealnum) {
+      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        prop: propName,
+        ...Function_Exception_Detail,
+      });
+    }
+
+    const { baseHelper } = this;
+
+    if (!baseHelper.isValidAssetNumber(assetPrealnum)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: `${propName} ${assetPrealnum}`,
+        type: "asset prealnum",
+        ...Function_Exception_Detail,
+      });
+    }
+
+    const minAssetPrealnum = BigInt(0);
+    const formatAssetPrealnum = BigInt(assetPrealnum);
+    if (minAssetPrealnum > formatAssetPrealnum) {
+      throw new ArgumentIllegalException(PROP_SHOULD_GTE_FIELD, {
+        prop: `${propName} ${assetPrealnum}`,
+        field: "0",
+        ...Function_Exception_Detail,
+      });
+    }
+  }
+
+  /**
+   * 权益数是否大于 0
+   *
+   * @param assetPrealnum
+   * @param propName
+   * @param Function_Exception_Detail
+   */
+  isAssetPrealnumGtZero(
+    assetPrealnum: string,
+    propName: string,
+    Function_Exception_Detail: FunctionExceptionDetail,
+  ) {
+    if (assetPrealnum === "0") {
+      throw new ArgumentIllegalException(PROP_SHOULD_GT_FIELD, {
+        prop: `${propName} ${assetPrealnum}`,
+        field: "0",
+        ...Function_Exception_Detail,
+      });
+    }
+  }
+
+  /**
    * 校验交易花费手续费
    *
    * @param fee
@@ -551,7 +634,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
    * @param Function_Exception_Detail
    */
   checkChainName(
-    chainName: string,
+    chainName: any,
     propName: string,
     Function_Exception_Detail: FunctionExceptionDetail,
   ) {
@@ -571,14 +654,14 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
   }
 
   /**
-   * 链名是否合法
+   * 链网络标识符是否合法
    *
    * @param chainMagic
    * @param propName
    * @param Function_Exception_Detail
    */
   checkChainMagic(
-    chainMagic: string,
+    chainMagic: any,
     propName: string,
     Function_Exception_Detail: FunctionExceptionDetail,
   ) {
@@ -598,14 +681,35 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
   }
 
   /**
-   * 链名是否合法
+   * 资产大类是否合法
+   *
+   * @param Function_Exception_Detail
+   * @param parentAssetType
+   */
+  checkParentAssetType(Function_Exception_Detail: FunctionExceptionDetail, parentAssetType: any) {
+    if (!parentAssetType) {
+      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        prop: "parentAssetType",
+        ...Function_Exception_Detail,
+      });
+    }
+    if (!PARENT_ASSET_TYPE[parentAssetType]) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: `parentAssetType ${parentAssetType}`,
+        ...Function_Exception_Detail,
+      });
+    }
+  }
+
+  /**
+   * 资产名是否合法
    *
    * @param assetType
    * @param propName
    * @param Function_Exception_Detail
    */
   checkAssetType(
-    assetType: string,
+    assetType: any,
     propName: string,
     Function_Exception_Detail: FunctionExceptionDetail,
   ) {
@@ -622,6 +726,126 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
         ...Function_Exception_Detail,
       });
     }
+  }
+
+  /**
+   * dappid 是否合法
+   *
+   * @param dappid
+   * @param Function_Exception_Detail
+   */
+  checkDAppid(dappid: any, Function_Exception_Detail: FunctionExceptionDetail) {
+    if (!dappid) {
+      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        prop: "dappid",
+        ...Function_Exception_Detail,
+      });
+    }
+    if (!this.baseHelper.isValidDAppId(dappid)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: `dappid ${dappid}`,
+        type: "dappid",
+        ...Function_Exception_Detail,
+      });
+    }
+  }
+
+  /**
+   * locationName 是否合法
+   *
+   * @param locationName
+   * @param Function_Exception_Detail
+   */
+  checkLocationName(locationName: any, Function_Exception_Detail: FunctionExceptionDetail) {
+    if (!locationName) {
+      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        prop: "locationName",
+        ...Function_Exception_Detail,
+      });
+    }
+    if (!this.baseHelper.isValidLnsName(locationName)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: `locationName ${locationName}`,
+        type: "locationName",
+        ...Function_Exception_Detail,
+      });
+    }
+  }
+
+  /**
+   * entity factory id 是否合法
+   *
+   * @param factoryId
+   * @param Function_Exception_Detail
+   */
+  checkEntityFactoryId(factoryId: any, Function_Exception_Detail: FunctionExceptionDetail) {
+    if (!factoryId) {
+      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        prop: "factoryId",
+        ...Function_Exception_Detail,
+      });
+    }
+    if (!this.baseHelper.isValidEntityFactoryId(factoryId)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: `factoryId ${factoryId}`,
+        type: "entity factory id",
+        ...Function_Exception_Detail,
+      });
+    }
+  }
+
+  /**
+   * entity id 是否合法
+   *
+   * @param entityId
+   * @param Function_Exception_Detail
+   */
+  checkEntityId(entityId: any, Function_Exception_Detail: FunctionExceptionDetail) {
+    if (!entityId) {
+      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        prop: "entityId",
+        ...Function_Exception_Detail,
+      });
+    }
+    if (!this.baseHelper.isValidEntityId(entityId)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: `entityId ${entityId}`,
+        type: "entity id",
+        ...Function_Exception_Detail,
+      });
+    }
+  }
+
+  checkAsset(
+    Function_Exception_Detail: FunctionExceptionDetail,
+    sourceChainName: any,
+    sourceChainMagic: any,
+    parentAssetType: BFChainCore.PARENT_ASSET_TYPE,
+    assetType: string,
+  ) {
+    this.checkChainName(Function_Exception_Detail, "sourceChainName", sourceChainName);
+    this.checkChainMagic(Function_Exception_Detail, "sourceChainMagic", sourceChainMagic);
+    this.checkParentAssetType(Function_Exception_Detail, parentAssetType);
+    if (parentAssetType === PARENT_ASSET_TYPE.ASSETS) {
+      this.checkAssetType(assetType, "assetType", Function_Exception_Detail);
+      return;
+    }
+    if (parentAssetType === PARENT_ASSET_TYPE.DAPP) {
+      this.checkDAppid(assetType, Function_Exception_Detail);
+      return;
+    }
+    if (parentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME) {
+      this.checkLocationName(assetType, Function_Exception_Detail);
+      return;
+    }
+    if (parentAssetType === PARENT_ASSET_TYPE.ENTITY) {
+      this.checkEntityId(assetType, Function_Exception_Detail);
+      return;
+    }
+    throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      prop: `parentAssetType ${parentAssetType}`,
+      ...Function_Exception_Detail,
+    });
   }
 
   /**

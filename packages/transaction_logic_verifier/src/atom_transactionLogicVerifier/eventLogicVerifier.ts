@@ -32,6 +32,14 @@ import {
   SHOULD_BE,
   PROP_SHOULD_LTE_FIELD,
   ASSET_IS_ALREADY_MIGRATION,
+  ENTITY_FACTORY_IS_ALREADY_EXIST,
+  ENTITY_FACTORY_IS_NOT_EXIST,
+  ENTITY_IS_ALREADY_EXIST,
+  ENTITY_IS_NOT_EXIST,
+  CAN_NOT_DESTORY_ENTITY,
+  ACCOUNT_NOT_ENTITY_POSSESSOR,
+  ENTITY_ALREADY_FROZEN,
+  ENTITY_ALREADY_DESTORY,
 } from "@bfchain/core-util-exception";
 import {
   NewTransactionRefuseReason,
@@ -247,7 +255,6 @@ export class EventLogicVerifier {
     transaction: BFChainCore.Transaction,
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     const Function_Exception_Detail = {
@@ -258,25 +265,13 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "unfrozenAsset",
       async ({ applyInfo }, next) => {
-        const { assetInfo, frozenIdBuffer, amount: spendAsset } = applyInfo;
+        const { assetInfo, frozenIdBuffer, amount: spendAsset, recipientId } = applyInfo;
         const { magic, assetType } = assetInfo;
         const transactionSignature = getHexFromArrayBuffer(frozenIdBuffer);
-        const trs = await await transactionGetterHelper.getTransactionBySignature(
-          transactionSignature,
-          this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
-        );
-
-        if (!trs) {
-          throw new NoFoundException(NOT_EXIST, {
-            prop: `Transaction with signature ${transactionSignature}`,
-            target: "grabAsset",
-            ...Function_Exception_Detail,
-          });
-        }
 
         // 获取冻结信息
         const frozenAsset = await accountGetterHelper.getFrozenAsset(
-          trs.senderId,
+          recipientId,
           transactionSignature,
         );
 
@@ -345,7 +340,6 @@ export class EventLogicVerifier {
     transaction: BFChainCore.Transaction,
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     const Function_Exception_Detail = {
@@ -356,20 +350,8 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "signForAsset",
       async ({ applyInfo }, next) => {
-        const { address, frozenIdBuffer, frozenAddress, recipientId } = applyInfo;
+        const { frozenIdBuffer, frozenAddress } = applyInfo;
         const transactionSignature = getHexFromArrayBuffer(frozenIdBuffer);
-        const trs = (await transactionGetterHelper.getTransactionBySignature(
-          transactionSignature,
-          this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
-        )) as BFChainCore.TrustAssetTransactionJSON;
-
-        if (!trs) {
-          throw new NoFoundException(NOT_EXIST, {
-            prop: `Transaction with signature ${transactionSignature}`,
-            target: "grabAsset",
-            ...Function_Exception_Detail,
-          });
-        }
 
         // 获取冻结信息
         const frozenAsset = await accountGetterHelper.getFrozenAsset(
@@ -553,20 +535,11 @@ export class EventLogicVerifier {
 
   listenEventRegisterToDelegate(
     accountsInfo: { [address: string]: BFChainCore.AccountInfo },
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     const Function_Exception_Detail = {
       function: "eventLogicVerifier",
     } as const;
-
-    if (!transactionGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "transactionGetterHelper",
-        target: "moduleStroge",
-        ...Function_Exception_Detail,
-      });
-    }
 
     // 注册成为受托人
     eventEmitter.on(
@@ -714,6 +687,20 @@ export class EventLogicVerifier {
 
         // 资产的发行账户不能是链域名的拥有者账户或管理账户
         await this.helperLogicVerifier.isLnsPossessorOrManager(
+          address,
+          this.configHelper,
+          accountGetterHelper,
+        );
+
+        // 资产的发行账户不能是 entityFactory 拥有者
+        await this.helperLogicVerifier.isEntityFactoryPossessor(
+          address,
+          this.configHelper,
+          accountGetterHelper,
+        );
+
+        // 资产的发行账户不能是 entity 拥有者
+        await this.helperLogicVerifier.isEntityPossessor(
           address,
           this.configHelper,
           accountGetterHelper,
@@ -998,6 +985,20 @@ export class EventLogicVerifier {
 
         // 资产的发行账户不能是链域名的拥有者账户或管理账户
         await this.helperLogicVerifier.isLnsPossessorOrManager(
+          address,
+          this.configHelper,
+          accountGetterHelper,
+        );
+
+        // 注册链的发行账户不能是 entityFactory 拥有者
+        await this.helperLogicVerifier.isEntityFactoryPossessor(
+          address,
+          this.configHelper,
+          accountGetterHelper,
+        );
+
+        // 注册链的发行账户不能是 entity 拥有者
+        await this.helperLogicVerifier.isEntityPossessor(
           address,
           this.configHelper,
           accountGetterHelper,
@@ -1516,6 +1517,374 @@ export class EventLogicVerifier {
         next();
       },
       { taskname: `applyTransaction/logicVerifier/purchaseLocationName` },
+    );
+  }
+
+  listenEventIssueEntityFactory(
+    accountAssets: BFChainCore.AccountAssets,
+    transaction: BFChainCore.Transaction,
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
+  ) {
+    const Function_Exception_Detail = {
+      function: "eventLogicVerifier",
+    } as const;
+
+    // 发行 entityFactory
+    eventEmitter.on(
+      "issueEntityFactory",
+      async ({ applyInfo }, next) => {
+        const { address, factoryId, sourceChainMagic, purchaseAssetPrealnum, possessorAddress } =
+          applyInfo;
+
+        // 不能将冻结账户设置为数字资产的创世账户
+        const possessor = await accountGetterHelper.getAccountInfo(possessorAddress);
+        if (possessor) {
+          const accountStatus = possessor.accountStatus;
+          if (
+            accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
+            accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
+            accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
+          ) {
+            throw new ConsensusException(ACCOUNT_FROZEN, {
+              address: possessorAddress,
+              ...Function_Exception_Detail,
+            });
+          }
+        }
+
+        // 是否持有除链资产外的其他资产
+        await this.helperLogicVerifier.isPossessAssetExceptChainAsset(
+          address,
+          accountAssets,
+          accountGetterHelper,
+        );
+
+        // entityFactory 的发行账户不能是dapp的拥有者
+        await this.helperLogicVerifier.isDAppPossessor(
+          address,
+          this.configHelper,
+          accountGetterHelper,
+        );
+
+        // entityFactory 的发行账户不能是链域名的拥有者账户或管理账户
+        await this.helperLogicVerifier.isLnsPossessorOrManager(
+          address,
+          this.configHelper,
+          accountGetterHelper,
+        );
+
+        // entityFactory 的发行账户不能是 entity 拥有者
+        await this.helperLogicVerifier.isEntityPossessor(
+          address,
+          this.configHelper,
+          accountGetterHelper,
+        );
+
+        // 保证账户上足够的本链资产，避免 py 操作
+        const {
+          magic: chainMagic,
+          assetType: chainAssetType,
+          issueEntityFactoryMinChainAsset,
+        } = this.configHelper;
+        const remainChainAsset =
+          accountAssets[chainMagic][chainAssetType].assetNumber - BigInt(transaction.fee);
+        if (BigInt(issueEntityFactoryMinChainAsset) > remainChainAsset) {
+          throw new ConsensusException(ASSET_NOT_ENOUGH, {
+            reason: `No enough asset, Min account asset ${issueEntityFactoryMinChainAsset}, remain Assets: ${remainChainAsset}`,
+            errorId: NewTransactionRefuseReason.CHAIN_ASSET_NOT_ENOUGH,
+            function: "verify",
+          });
+        }
+
+        // entityFactory 是否已经存在
+        const memEntityFactory = await accountGetterHelper.getEntityFactory(
+          sourceChainMagic,
+          factoryId,
+          currentBlockHeight,
+        );
+        if (memEntityFactory) {
+          throw new ConsensusException(ENTITY_FACTORY_IS_ALREADY_EXIST, {
+            factoryId,
+            errorId: NewTransactionRefuseReason.ENTITY_FACTORY_ALREADY_EXIST,
+            ...Function_Exception_Detail,
+          });
+        }
+
+        next();
+      },
+      { taskname: `applyTransaction/logicVerifier/issueEntityFactory` },
+    );
+  }
+
+  listenEventIssueEntity(
+    accountAssets: BFChainCore.AccountAssets,
+    transaction: BFChainCore.Transaction,
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
+  ) {
+    const Function_Exception_Detail = {
+      function: "eventLogicVerifier",
+    } as const;
+
+    // 发行 entityFactory
+    eventEmitter.on(
+      "issueEntity",
+      async ({ applyInfo }, next) => {
+        const { address, factoryId, entityId, sourceChainMagic, entityFrozenAssetPrealnum } =
+          applyInfo;
+
+        // 不能将冻结账户设置为 entityFactory 的拥有者
+        const possessor = await accountGetterHelper.getAccountInfo(address);
+        if (possessor) {
+          const accountStatus = possessor.accountStatus;
+          if (
+            accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
+            accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
+            accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
+          ) {
+            throw new ConsensusException(ACCOUNT_FROZEN, {
+              address,
+              ...Function_Exception_Detail,
+            });
+          }
+        }
+
+        // entityFactory 是否已经存在
+        const memEntityFactory = await accountGetterHelper.getEntityFactory(
+          sourceChainMagic,
+          factoryId,
+          currentBlockHeight,
+        );
+        if (!memEntityFactory) {
+          throw new ConsensusException(ENTITY_FACTORY_IS_NOT_EXIST, {
+            factoryId,
+            errorId: NewTransactionRefuseReason.ENTITY_FACTORY_NOT_EXIST,
+            ...Function_Exception_Detail,
+          });
+        }
+
+        // entityFactory 是否已经存在
+        const memEntity = await accountGetterHelper.getEntity(
+          sourceChainMagic,
+          entityId,
+          currentBlockHeight,
+        );
+        if (memEntity) {
+          throw new ConsensusException(ENTITY_IS_ALREADY_EXIST, {
+            entityId,
+            errorId: NewTransactionRefuseReason.ENTITY_ALREADY_EXIST,
+            ...Function_Exception_Detail,
+          });
+        }
+
+        const { magic: chainMagic, assetType: chainAssetType } = this.configHelper;
+        let remainBalance =
+          accountAssets[chainMagic][chainAssetType].assetNumber - BigInt(transaction.fee);
+        const purchaseAssetPrealnum = memEntityFactory.purchaseAssetPrealnum;
+        if (purchaseAssetPrealnum !== "0") {
+          remainBalance -= BigInt(purchaseAssetPrealnum);
+          if (remainBalance < BigInt(0)) {
+            throw new ConsensusException(ASSET_NOT_ENOUGH, {
+              reason: `No enough asset, Min account asset ${purchaseAssetPrealnum}, remain Assets: ${remainBalance}`,
+              errorId: NewTransactionRefuseReason.CHAIN_ASSET_NOT_ENOUGH,
+              ...Function_Exception_Detail,
+            });
+          }
+        }
+        if (entityFrozenAssetPrealnum !== "0") {
+          if (BigInt(entityFrozenAssetPrealnum) > remainBalance) {
+            throw new ConsensusException(ASSET_NOT_ENOUGH, {
+              reason: `No enough asset, Min account asset ${entityFrozenAssetPrealnum}, remain Assets: ${remainBalance}`,
+              errorId: NewTransactionRefuseReason.CHAIN_ASSET_NOT_ENOUGH,
+              ...Function_Exception_Detail,
+            });
+          }
+        }
+
+        next();
+      },
+      { taskname: `applyTransaction/logicVerifier/issueEntity` },
+    );
+  }
+
+  listenEventDestoryEntity(
+    transaction: BFChainCore.Transaction,
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
+  ) {
+    const Function_Exception_Detail = {
+      function: "eventLogicVerifier",
+    } as const;
+
+    // 资产销毁
+    eventEmitter.on(
+      "destoryEntity",
+      async ({ applyInfo }, next) => {
+        const { sourceChainMagic, entityId } = applyInfo;
+
+        const memEntity = await accountGetterHelper.getEntity(
+          sourceChainMagic,
+          entityId,
+          currentBlockHeight,
+        );
+        if (!memEntity) {
+          throw new ConsensusException(ENTITY_IS_NOT_EXIST, {
+            entityId,
+            errorId: NewTransactionRefuseReason.ENTITY_NOT_EXIST,
+            ...Function_Exception_Detail,
+          });
+        }
+
+        // 冻结状态的域名不能销毁
+        if (memEntity.status === ASSET_STATUS.FROZEN) {
+          throw new ConsensusException(CAN_NOT_DESTORY_ENTITY, {
+            entityId,
+            reason: "Frozen entity can not be destory",
+            ...Function_Exception_Detail,
+          });
+        }
+
+        // 冻结状态的域名不能销毁
+        if (memEntity.status === ASSET_STATUS.DESTORY) {
+          throw new ConsensusException(CAN_NOT_DESTORY_ENTITY, {
+            entityId,
+            reason: "Entity already be destory",
+            ...Function_Exception_Detail,
+          });
+        }
+
+        // 只有 entity 的拥有者才能删除域名
+        if (memEntity.possessorAddress !== transaction.senderId) {
+          throw new ConsensusException(CAN_NOT_DESTORY_ENTITY, {
+            entityId,
+            reason: `Only entity possessor can deestory entity ${entityId}`,
+            ...Function_Exception_Detail,
+          });
+        }
+
+        next();
+      },
+      { taskname: `applyTransaction/logicVerifier/destoryEntity` },
+    );
+  }
+
+  listenEventFrozenEntity(
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
+  ) {
+    const Function_Exception_Detail = {
+      function: "eventLogicVerifier",
+    } as const;
+
+    // 冻结 entity，entity 冻结
+    eventEmitter.on(
+      "frozenEntity",
+      async ({ applyInfo }, next) => {
+        const { address, sourceChainMagic, entityId } = applyInfo;
+
+        // entity 是否存在
+        const memEntity = (await accountGetterHelper.getEntity(
+          sourceChainMagic,
+          entityId,
+          currentBlockHeight,
+        )) as BFChainCore.IssueEntityInfo | undefined;
+        if (!memEntity) {
+          throw new ConsensusException(ENTITY_IS_NOT_EXIST, {
+            entityId,
+            errorId: NewTransactionRefuseReason.ENTITY_NOT_EXIST,
+            ...Function_Exception_Detail,
+          });
+        }
+        if (memEntity.possessorAddress !== address) {
+          throw new ConsensusException(ACCOUNT_NOT_ENTITY_POSSESSOR, {
+            address,
+            entityId,
+            errorId: NewTransactionRefuseReason.ACCOUNT_NOT_ENTITY_POSSESSOR,
+            ...Function_Exception_Detail,
+          });
+        }
+        // 实体处于冻结状态
+        if (memEntity.status === ASSET_STATUS.FROZEN) {
+          throw new ConsensusException(ENTITY_ALREADY_FROZEN, {
+            entityId,
+            ...Function_Exception_Detail,
+          });
+        }
+        // 实体已经销毁
+        if (memEntity.status === ASSET_STATUS.DESTORY) {
+          throw new ConsensusException(ENTITY_ALREADY_DESTORY, {
+            entityId,
+            ...Function_Exception_Detail,
+          });
+        }
+
+        next();
+      },
+      { taskname: `applyTransaction/logicVerifier/frozenEntity` },
+    );
+  }
+
+  listenEventUnfrozenEntity(
+    transaction: BFChainCore.Transaction,
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
+  ) {
+    const Function_Exception_Detail = {
+      function: "eventLogicVerifier",
+    } as const;
+
+    // 解冻 entity，entity 解冻，更换拥有者
+    eventEmitter.on(
+      "unfrozenEntity",
+      async ({ applyInfo }, next) => {
+        const { address, sourceChainMagic, entityId } = applyInfo;
+
+        // entity 是否存在
+        const memEntity = (await accountGetterHelper.getEntity(
+          sourceChainMagic,
+          entityId,
+          currentBlockHeight,
+        )) as BFChainCore.LocationNameInfo | undefined;
+        if (!memEntity) {
+          throw new ConsensusException(ENTITY_IS_ALREADY_EXIST, {
+            entityId,
+            errorId: NewTransactionRefuseReason.ENTITY_NOT_EXIST,
+            ...Function_Exception_Detail,
+          });
+        }
+        if (memEntity.possessorAddress === address) {
+          throw new ConsensusException(NO_NEED_TO_PURCHASE_SPECIAL_ASSET, {
+            type: "entity",
+            asset: entityId,
+            ...Function_Exception_Detail,
+          });
+        }
+        if (transaction.recipientId !== memEntity.possessorAddress) {
+          throw new ConsensusException(SHOULD_BE, {
+            to_compare_prop: "recipientId",
+            to_target: "transaction",
+            be_compare_prop: "entity possessor",
+            ...Function_Exception_Detail,
+          });
+        }
+        // 冻结状态的域名不能解冻
+        if (memEntity.status === ASSET_STATUS.DESTORY) {
+          throw new ConsensusException(CAN_NOT_DESTORY_ENTITY, {
+            entityId,
+            reason: "Entity already be destory",
+            ...Function_Exception_Detail,
+          });
+        }
+
+        next();
+      },
+      { taskname: `applyTransaction/logicVerifier/unfrozenEntity` },
     );
   }
 

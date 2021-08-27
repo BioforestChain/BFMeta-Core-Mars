@@ -230,6 +230,18 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       accountGetterHelper,
     );
 
+    await this.helperLogicVerifier.isEntityFactoryPossessor(
+      address,
+      this.configHelper,
+      accountGetterHelper,
+    );
+
+    await this.helperLogicVerifier.isEntityPossessor(
+      address,
+      this.configHelper,
+      accountGetterHelper,
+    );
+
     const totalSpend = BigInt(transaction.fee) + BigInt(body.assets);
     if (assets[magic][assetType].assetNumber !== totalSpend) {
       throw new ConsensusException(NEED_EMIGRATE_TOTAL_ASSET, {

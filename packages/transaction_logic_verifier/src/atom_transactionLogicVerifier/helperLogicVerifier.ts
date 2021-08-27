@@ -100,6 +100,44 @@ export class HelperLogicVerifier {
     }
   }
 
+  async isEntityFactoryPossessor(
+    address: string,
+    configHelper = this.configHelper,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+  ) {
+    // 发起账户账户不能是entityFactory拥有者
+    const isEntityFactoryPossessor = await accountGetterHelper.isEntityFactoryPossessor(
+      configHelper.magic,
+      address,
+    );
+    if (isEntityFactoryPossessor) {
+      throw new ConsensusException(ACCOUNT_CAN_NOT_BE_FROZEN, {
+        address,
+        reason: "EntityFactory possessor can not initiate a frozen account transaction",
+        function: "isEntityFactoryPossessor",
+      });
+    }
+  }
+
+  async isEntityPossessor(
+    address: string,
+    configHelper = this.configHelper,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+  ) {
+    // 发起账户不能是entity拥有者
+    const isEntityPossessor = await accountGetterHelper.isEntityPossessor(
+      configHelper.magic,
+      address,
+    );
+    if (isEntityPossessor) {
+      throw new ConsensusException(ACCOUNT_CAN_NOT_BE_FROZEN, {
+        address,
+        reason: "Entity possessor can not initiate a frozen account transaction",
+        function: "isEntityPossessor",
+      });
+    }
+  }
+
   async isAssetExist(
     sourceChainName: string,
     sourceChainMagic: string,

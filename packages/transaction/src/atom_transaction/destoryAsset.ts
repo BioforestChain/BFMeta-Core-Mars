@@ -139,7 +139,7 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
 
     const { sourceChainMagic, sourceChainName, assetType } = destoryAsset;
 
-    this.checkChainName(sourceChainName, "sourceChainName", DestoryAssetAsset_Exception_Detail);
+    // this.checkChainName(sourceChainName, "sourceChainName", DestoryAssetAsset_Exception_Detail);
 
     if (sourceChainName !== config.chainName) {
       throw new ArgumentIllegalException(SHOULD_BE, {
@@ -150,7 +150,7 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
       });
     }
 
-    this.checkChainMagic(sourceChainMagic, "sourceChainMagic", DestoryAssetAsset_Exception_Detail);
+    // this.checkChainMagic(sourceChainMagic, "sourceChainMagic", DestoryAssetAsset_Exception_Detail);
 
     if (sourceChainMagic !== config.magic) {
       throw new ArgumentIllegalException(SHOULD_BE, {

@@ -24,3 +24,6 @@ export * from "./beExchangeSpecialAsset";
 export * from "./locationName";
 export * from "./setLnsManager";
 export * from "./setLnsRecordValue";
+export * from "./issueEntityFactory";
+export * from "./issueEntity";
+export * from "./destoryEntity";

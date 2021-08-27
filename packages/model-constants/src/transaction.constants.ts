@@ -80,6 +80,10 @@ export const enum ASSET_STATUS {
    * FROZEN: 冻结资产
    */
   FROZEN = 0x11,
+  /**
+   * DESTORY: 已销毁
+   */
+  DESTORY = 0xff,
 }
 // #endregion
 
@@ -123,6 +127,23 @@ export const enum SPECIAL_ASSET_TYPE {
   DAPP_ID,
   /**特殊资产类型：链域名 */
   LOCATION_NAME,
+  /**特殊资产类型：资产权益（非同质化权益） */
+  ENTITY,
+}
+// #endregion
+
+// #region exchange asset
+export enum PARENT_ASSET_TYPE {
+  /**资产类型：dapp */
+  DAPP = 1,
+  /**资产类型：位名 */
+  LOCATION_NAME = 2,
+  /**资产类型：资产权益 */
+  ENTITY = 3,
+  // /**资产类型：资产权益模板 */
+  // ENTITY_FACTORY = 4,
+  /**资产类型: 权益 */
+  ASSETS = 5,
 }
 // #endregion
 
