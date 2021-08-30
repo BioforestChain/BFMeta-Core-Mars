@@ -120,6 +120,11 @@ declare namespace BFChainCore {
     height: number;
   };
 
+  type MagicInfo = {
+    magic: string;
+    height: Number;
+  };
+
   type AliasInfo = {
     alias: string;
     height: number;
@@ -141,6 +146,7 @@ declare namespace BFChainCore {
     FA extends FrozenAsset = FrozenAsset,
     IAI extends IssuedAssetInfo = IssuedAssetInfo,
     CI extends CurrencyInfo = CurrencyInfo,
+    MG extends MagicInfo = MagicInfo,
     ALI extends AliasInfo = AliasInfo,
     MCI extends MigrateCertificateInfo = MigrateCertificateInfo,
   > {
@@ -201,6 +207,8 @@ declare namespace BFChainCore {
     getCurrency(currencyName: string): Promise<CI | undefined>;
     /**资产名是否被禁用 */
     isCurrencyForbidden(assetType: string): Promise<boolean>;
+    /**查询指定的 magic */
+    getMagic(magic: string): Promise<MG | undefined>;
     /**查询指定的链 */
     getChain(magic: string): Promise<ChainInfo | undefined>;
     /**查询指定的用户名 */

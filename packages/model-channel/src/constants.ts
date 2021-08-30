@@ -114,6 +114,8 @@ export enum NewTransactionRefuseReason {
   MIGRATE_MAIN_ASSET_ONLY,
   /**权益已经迁入 */
   ASSET_IS_ALREADY_MIGRATION,
+  /**资产已经存在 */
+  MAGIC_ALREADY_EXIST,
 }
 
 export enum DUPLEX_API_CMD {

@@ -1003,8 +1003,42 @@ export class EventLogicVerifier {
           accountGetterHelper,
         );
 
+        const { magic, assetType, chainName } = genesisBlock.asset.genesisAsset;
+
+        // 验证链网络标识符是否已经存在
+        const memMagic = await accountGetterHelper.getMagic(magic);
+        if (memMagic) {
+          throw new ConsensusException(ALREADY_EXIST, {
+            prop: `Magic ${magic}`,
+            target: "blockChain",
+            errorId: NewTransactionRefuseReason.MAGIC_ALREADY_EXIST,
+            ...Function_Exception_Detail,
+          });
+        }
+
+        // 验证链名是否已经存在
+        const memChainName = await accountGetterHelper.getCurrency(chainName);
+        if (memChainName) {
+          throw new ConsensusException(ALREADY_EXIST, {
+            prop: `ChainNane ${chainName}`,
+            target: "blockChain",
+            errorId: NewTransactionRefuseReason.CHAINNAME_ALREADY_EXIST,
+            ...Function_Exception_Detail,
+          });
+        }
+
+        // 验证主权益名是否已经存在
+        const memAssetType = await accountGetterHelper.getCurrency(assetType);
+        if (memAssetType) {
+          throw new ConsensusException(ALREADY_EXIST, {
+            prop: `AssetType ${assetType}`,
+            target: "blockChain",
+            errorId: NewTransactionRefuseReason.ASSETTYPE_ALREADY_EXIST,
+            ...Function_Exception_Detail,
+          });
+        }
+
         // 链上是否已经存在这个链的创世块
-        const magic = genesisBlock.asset.genesisAsset.magic;
         const memchain = await accountGetterHelper.getChain(magic);
         if (memchain) {
           throw new ConsensusException(ALREADY_EXIST, {

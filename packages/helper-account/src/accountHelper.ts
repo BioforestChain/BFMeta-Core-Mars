@@ -14,6 +14,7 @@ export class AccountHelper<
   FA extends BFChainCore.FrozenAsset = BFChainCore.FrozenAsset,
   IAI extends BFChainCore.IssuedAssetInfo = BFChainCore.IssuedAssetInfo,
   CI extends BFChainCore.CurrencyInfo = BFChainCore.CurrencyInfo,
+  MG extends BFChainCore.MagicInfo = BFChainCore.MagicInfo,
   ALI extends BFChainCore.AliasInfo = BFChainCore.AliasInfo,
   MCI extends BFChainCore.MigrateCertificateInfo = BFChainCore.MigrateCertificateInfo,
 > {
@@ -29,6 +30,7 @@ export class AccountHelper<
     FA,
     IAI,
     CI,
+    MG,
     ALI,
     MCI
   >;
@@ -336,6 +338,22 @@ export class AccountHelper<
       });
     }
     return accountGetterHelper.isCurrencyForbidden(assetType);
+  }
+  getMagic(
+    magic: string,
+    accountGetterHelper = this.accountGetterHelper as Pick<
+      BFChainCore.AccountGetterHelperInterface,
+      "getMagic"
+    >,
+  ): Promise<BFChainCore.MagicInfo | undefined> {
+    if (!accountGetterHelper) {
+      throw new NoFoundException(NOT_EXIST, {
+        prop: "accountGetterHelper",
+        target: "moduleStroge",
+        function: "AccountHelper.getMagic",
+      });
+    }
+    return accountGetterHelper.getMagic(magic);
   }
   getChain(
     magic: string,
