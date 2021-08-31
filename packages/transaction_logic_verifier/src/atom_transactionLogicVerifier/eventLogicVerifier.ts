@@ -951,7 +951,7 @@ export class EventLogicVerifier {
   }
 
   listenEventRegisterChain(
-    accountsAssets: { [asddress: string]: BFChainCore.AccountAssets },
+    accountAssets: BFChainCore.AccountAssets,
     transaction: BFChainCore.Transaction,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -969,7 +969,7 @@ export class EventLogicVerifier {
         // 是否持有除链资产外的其他资产
         await this.helperLogicVerifier.isPossessAssetExceptChainAsset(
           address,
-          accountsAssets[address],
+          accountAssets,
           accountGetterHelper,
         );
 
@@ -980,7 +980,7 @@ export class EventLogicVerifier {
           registerChainMinChainAsset,
         } = this.configHelper;
         const remainBalance =
-          accountsAssets[address][chainMagic][chainAssetType].assetNumber - BigInt(transaction.fee);
+          accountAssets[chainMagic][chainAssetType].assetNumber - BigInt(transaction.fee);
         if (BigInt(registerChainMinChainAsset) > remainBalance) {
           throw new ConsensusException(ASSET_NOT_ENOUGH, {
             reason: `No enough asset, Min account asset ${registerChainMinChainAsset}, remain Assets: ${remainBalance}`,
