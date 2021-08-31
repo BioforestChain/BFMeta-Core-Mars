@@ -116,6 +116,16 @@ export enum NewTransactionRefuseReason {
   ASSET_IS_ALREADY_MIGRATION,
   /**资产已经存在 */
   MAGIC_ALREADY_EXIST,
+  /**entityFactory 已经存在*/
+  ENTITY_FACTORY_ALREADY_EXIST,
+  /**entityFactory 不存在*/
+  ENTITY_FACTORY_NOT_EXIST,
+  /**entity 已经存在*/
+  ENTITY_ALREADY_EXIST,
+  /**entity 不存在*/
+  ENTITY_NOT_EXIST,
+  /**账户不是 entity 拥有者 */
+  ACCOUNT_NOT_ENTITY_POSSESSOR,
 }
 
 export enum DUPLEX_API_CMD {

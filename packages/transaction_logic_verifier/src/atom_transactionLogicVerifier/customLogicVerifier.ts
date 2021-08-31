@@ -64,11 +64,7 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
 
     eventLogicVerifier.listenEventSetUsername(accountGetterHelper, eventEmitter);
 
-    eventLogicVerifier.listenEventRegisterToDelegate(
-      cloneAccountsInfo,
-      transactionGetterHelper,
-      eventEmitter,
-    );
+    eventLogicVerifier.listenEventRegisterToDelegate(cloneAccountsInfo, eventEmitter);
 
     eventLogicVerifier.listenEventAcceptVote(cloneAccountsInfo, eventEmitter);
 
@@ -99,7 +95,6 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
       transaction,
       currentBlockHeight,
       accountGetterHelper,
-      transactionGetterHelper,
       eventEmitter,
     );
 
@@ -152,6 +147,29 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
     );
 
     eventLogicVerifier.listenEventSetLnsRecordValue(
+      currentBlockHeight,
+      accountGetterHelper,
+      eventEmitter,
+    );
+
+    eventLogicVerifier.listenEventIssueEntityFactory(
+      accountAssets,
+      transaction,
+      currentBlockHeight,
+      accountGetterHelper,
+      eventEmitter,
+    );
+
+    eventLogicVerifier.listenEventIssueEntity(
+      accountAssets,
+      transaction,
+      currentBlockHeight,
+      accountGetterHelper,
+      eventEmitter,
+    );
+
+    eventLogicVerifier.listenEventDestoryEntity(
+      transaction,
       currentBlockHeight,
       accountGetterHelper,
       eventEmitter,

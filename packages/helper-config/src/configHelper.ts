@@ -182,6 +182,11 @@ export class ConfigHelper {
   get registerChainMinChainAsset() {
     return this.hookedGenesisBlock.asset.genesisAsset.registerChainMinChainAsset;
   }
+  /**发行资产权益模板的账户最小持有的主权益数量 */
+  @cacheGetter
+  get issueEntityFactoryMinChainAsset() {
+    return "10000000000000";
+  }
   /**最大的过期区块间隔数量 */
   @cacheGetter
   get maxApplyAndConfirmedBlockHeightDiff() {

@@ -87,7 +87,6 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
       transaction,
       currentBlockHeight,
       accountGetterHelper,
-      transactionGetterHelper,
       eventEmitter,
     );
 

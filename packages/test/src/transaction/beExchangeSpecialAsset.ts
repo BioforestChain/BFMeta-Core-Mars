@@ -64,10 +64,11 @@ async function getToExchangeSpecialAssetTransaction(
     beExchangeSource: bfchainCore.config.magic,
     toExchangeChainName: bfchainCore.config.chainName,
     beExchangeChainName: bfchainCore.config.chainName,
-    toExchangeAsset: getRandomDAppid(),
+    // toExchangeAsset: getRandomDAppid(),
+    toExchangeAsset: "skyrim_dragonborn",
     beExchangeAsset: "BFT",
     exchangeNumber: "1000000",
-    exchangeAssetType: SPECIAL_ASSET_TYPE.DAPP_ID,
+    exchangeAssetType: SPECIAL_ASSET_TYPE.ENTITY,
     exchangeDirection: EXCHANGE_DIRECTION.ASSET_FROM_SENDER,
   };
   if (recipient && recipient.length > 0) {

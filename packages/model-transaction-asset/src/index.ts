@@ -30,3 +30,6 @@ export * from "./toExchangeSpecialAsset";
 export * from "./beExchangeSpecialAsset";
 export * from "./feeRate";
 export * from "./locationNameRecord";
+export * from "./issueEntityFactory";
+export * from "./issueEntity";
+export * from "./destoryEntity";

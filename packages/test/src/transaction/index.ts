@@ -24,3 +24,6 @@ import "./beExchangeSpecialAsset";
 import "./locationName";
 import "./setLnsManager";
 import "./setLnsRecordValue";
+import "./issueEntityFactory";
+import "./issueEntity";
+import "./destoryEntity";

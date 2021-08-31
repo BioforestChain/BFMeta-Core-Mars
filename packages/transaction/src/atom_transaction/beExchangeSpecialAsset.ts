@@ -13,6 +13,7 @@ import {
   SHOULD_NOT_EXIST,
 } from "@bfchain/core-util-exception";
 import {
+  ASSET_STATUS,
   BeExchangeSpecialAssetTransaction,
   EXCHANGE_DIRECTION,
   SPECIAL_ASSET_TYPE,
@@ -319,7 +320,7 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
               dappid: beExchangeAsset,
             },
           });
-        } else {
+        } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME) {
           // 接收账户成为链域名的拥有者
           taskList.next = eventEmitter.emit("purchaseLocationName", {
             type: "purchaseLocationName",
@@ -330,6 +331,20 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
               possessorAddress: recipientId,
               sourceChainMagic: beExchangeSource,
               name: beExchangeAsset,
+            },
+          });
+        } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.ENTITY) {
+          // 接收账户成为 entityId 的拥有者
+          taskList.next = eventEmitter.emit("unfrozenEntity", {
+            type: "unfrozenEntity",
+            transaction,
+            applyInfo: {
+              address: senderId,
+              publicKeyBuffer: senderPublicKeyBuffer,
+              possessorAddress: recipientId,
+              sourceChainMagic: beExchangeSource,
+              entityId: beExchangeAsset,
+              status: ASSET_STATUS.NORMAL,
             },
           });
         }
@@ -375,7 +390,7 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
               dappid: toExchangeAsset,
             },
           });
-        } else {
+        } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME) {
           // 发起账户成为链域名的拥有者
           taskList.next = eventEmitter.emit("purchaseLocationName", {
             type: "purchaseLocationName",
@@ -387,6 +402,26 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
               sourceChainMagic: toExchangeSource,
               name: toExchangeAsset,
             },
+          });
+        } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.ENTITY) {
+          // 发起账户成为 entityId 的拥有者
+          taskList.next = eventEmitter.emit("unfrozenEntity", {
+            type: "unfrozenEntity",
+            transaction,
+            applyInfo: {
+              address: senderId,
+              publicKeyBuffer: senderPublicKeyBuffer,
+              possessorAddress: senderId,
+              sourceChainMagic: toExchangeSource,
+              entityId: toExchangeAsset,
+              status: ASSET_STATUS.NORMAL,
+            },
+          });
+        } else {
+          throw new ArgumentIllegalException(PROP_IS_INVALID, {
+            prop: `exchangeAssetType ${exchangeAssetType}`,
+            target: "transaction.asset.beExchangeSpecialAssetAsset.exchangeSpecialAsset",
+            function: "applyTransaction",
           });
         }
       }

@@ -266,6 +266,89 @@ declare namespace BFChainCore {
   type ApplyTransactionPurchaseLocationNameEvent<EVENTNAME, T extends Transaction = Transaction> =
     ApplyTransactionEvent<ApplyInfo_PurchaseLocationName, EVENTNAME, T>;
 
+  /**entityFactory 相关事件 */
+  type ApplyInfo_IssueEntityFactory = {
+    address: string;
+    publicKeyBuffer?: Uint8Array;
+    sourceChainName: string;
+    sourceChainMagic: string;
+    factoryId: string;
+    /**entityFactory 的拥有者地址 */
+    possessorAddress: string;
+    /**entity 数量 */
+    entityPrealnum: string;
+    /**单个 entity 冻结的主权益数量 */
+    entityFrozenAssetPrealnum: string;
+    /**购买 entity factory 使用权需要的主权益数量 */
+    purchaseAssetPrealnum: string;
+    status: ASSET_STATUS;
+  };
+  /**发行 entityFactory 的相关事件 */
+  type ApplyTransactionIssueEntityFactoryEvent<EVENTNAME, T extends Transaction = Transaction> =
+    ApplyTransactionEvent<ApplyInfo_IssueEntityFactory, EVENTNAME, T>;
+
+  /**entity 相关事件 */
+  type ApplyInfo_IssueEntity = {
+    address: string;
+    publicKeyBuffer?: Uint8Array;
+    sourceChainName: string;
+    sourceChainMagic: string;
+    factoryId: string;
+    entityId: string;
+    /**单个 entity 冻结的主权益数量 */
+    entityFrozenAssetPrealnum: string;
+    /**发行 entity 的事件 id */
+    frozenIdBuffer: Uint8Array;
+    /**entity 状态 */
+    status: ASSET_STATUS;
+  };
+  /**发行 entity 的相关事件 */
+  type ApplyTransactionIssueEntityEvent<EVENTNAME, T extends Transaction = Transaction> =
+    ApplyTransactionEvent<ApplyInfo_IssueEntity, EVENTNAME, T>;
+
+  /**destoryEntity 相关事件 */
+  type ApplyInfo_DestoryEntity = {
+    address: string;
+    publicKeyBuffer?: Uint8Array;
+    sourceChainName: string;
+    sourceChainMagic: string;
+    entityId: string;
+    /**entity 冻结的主权益数量 */
+    entityFrozenAssetPrealnum: string;
+    /**发行 entity 的事件 id */
+    frozenIdBuffer: Uint8Array;
+    /**entity 状态 */
+    status: ASSET_STATUS;
+  };
+  /**销毁 entity 的相关事件 */
+  type ApplyTransactionDestoryEntityEvent<EVENTNAME, T extends Transaction = Transaction> =
+    ApplyTransactionEvent<ApplyInfo_DestoryEntity, EVENTNAME, T>;
+  type ApplyInfo_FrozenEntity = {
+    address: string;
+    publicKeyBuffer?: Uint8Array;
+    sourceChainMagic: string;
+    entityId: string;
+    minEffectiveHeight: number;
+    maxEffectiveHeight: number;
+    status: ASSET_STATUS;
+  };
+  /**冻结 entityId */
+  type ApplyTransactionFrozenEntityEvent<EVENTNAME, T extends Transaction = Transaction> =
+    ApplyTransactionEvent<ApplyInfo_FrozenEntity, EVENTNAME, T>;
+
+  type ApplyInfo_UnfrozenEntity = {
+    address: string;
+    publicKeyBuffer?: Uint8Array;
+    /**entityId 的拥有者地址 */
+    possessorAddress: string;
+    sourceChainMagic: string;
+    entityId: string;
+    status: ASSET_STATUS;
+  };
+  /**解冻 entityId */
+  type ApplyTransactionUnfrozenEntityEvent<EVENTNAME, T extends Transaction = Transaction> =
+    ApplyTransactionEvent<ApplyInfo_UnfrozenEntity, EVENTNAME, T>;
+
   type ApplyInfo_MigrateCertificate = {
     migrateCertificateId: string;
     assetInfo: AssetInfoJSON;
@@ -355,6 +438,7 @@ declare namespace BFChainCore {
       ApplyTransactionFrozenAccountEvent<
         "frozenAccount",
         | import("@bfchain/core-model-transaction").IssueAssetTransaction
+        | import("@bfchain/core-model-transaction").IssueEntityFactoryTransaction
         | import("@bfchain/core-model-transaction-complex").RegisterChainTransaction
         | import("@bfchain/core-model-transaction").EmigrateAssetTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
@@ -370,6 +454,7 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction").SignForAssetTransaction
         | import("@bfchain/core-model-transaction").ToExchangeSpecialAssetTransaction
         | import("@bfchain/core-model-transaction").BeExchangeSpecialAssetTransaction
+        | import("@bfchain/core-model-transaction").IssueEntityTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
@@ -382,6 +467,7 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction").SignForAssetTransaction
         | import("@bfchain/core-model-transaction").ToExchangeSpecialAssetTransaction
         | import("@bfchain/core-model-transaction").BeExchangeSpecialAssetTransaction
+        | import("@bfchain/core-model-transaction").DestoryEntityTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
@@ -477,6 +563,46 @@ declare namespace BFChainCore {
     purchaseLocationName: BFChainUtil.EventInOut<
       ApplyTransactionPurchaseLocationNameEvent<
         "purchaseLocationName",
+        | import("@bfchain/core-model-transaction").BeExchangeSpecialAssetTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
+      >
+    >;
+    /**发行 entityFactory */
+    issueEntityFactory: BFChainUtil.EventInOut<
+      ApplyTransactionIssueEntityFactoryEvent<
+        "issueEntityFactory",
+        | import("@bfchain/core-model-transaction").IssueEntityFactoryTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
+      >
+    >;
+    /**发行 entity */
+    issueEntity: BFChainUtil.EventInOut<
+      ApplyTransactionIssueEntityEvent<
+        "issueEntity",
+        | import("@bfchain/core-model-transaction").IssueEntityTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
+      >
+    >;
+    /**销毁 entity */
+    destoryEntity: BFChainUtil.EventInOut<
+      ApplyTransactionDestoryEntityEvent<
+        "destoryEntity",
+        | import("@bfchain/core-model-transaction").DestoryEntityTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
+      >
+    >;
+    /**冻结 entity */
+    frozenEntity: BFChainUtil.EventInOut<
+      ApplyTransactionFrozenEntityEvent<
+        "frozenEntity",
+        | import("@bfchain/core-model-transaction").ToExchangeSpecialAssetTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
+      >
+    >;
+    /**解冻 entity */
+    unfrozenEntity: BFChainUtil.EventInOut<
+      ApplyTransactionUnfrozenEntityEvent<
+        "unfrozenEntity",
         | import("@bfchain/core-model-transaction").BeExchangeSpecialAssetTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >

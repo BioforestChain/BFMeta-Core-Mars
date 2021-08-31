@@ -19,6 +19,7 @@ import {
   ToExchangeSpecialAssetTransaction,
   EXCHANGE_DIRECTION,
   SPECIAL_ASSET_TYPE,
+  ASSET_STATUS,
 } from "@bfchain/core-model";
 import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
@@ -184,9 +185,10 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
     const exchangeAssetType = toExchangeSpecialAsset.exchangeAssetType;
     if (
       exchangeAssetType !== SPECIAL_ASSET_TYPE.DAPP_ID &&
-      exchangeAssetType !== SPECIAL_ASSET_TYPE.LOCATION_NAME
+      exchangeAssetType !== SPECIAL_ASSET_TYPE.LOCATION_NAME &&
+      exchangeAssetType !== SPECIAL_ASSET_TYPE.ENTITY
     ) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: exchangeAssetType,
         ...ToExchangeSpecialAssetAsset_Exception_Detail,
       });
@@ -218,6 +220,13 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
             ...ToExchangeSpecialAssetAsset_Exception_Detail,
           });
         }
+      } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.ENTITY) {
+        if (!baseHelper.isValidEntityId(beExchangeAsset)) {
+          throw new ArgumentIllegalException(PROP_IS_INVALID, {
+            prop: `beExchangeAsset ${beExchangeAsset}`,
+            ...ToExchangeSpecialAssetAsset_Exception_Detail,
+          });
+        }
       }
       if (!baseHelper.isValidAssetType(toExchangeAsset)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
@@ -235,6 +244,13 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
         }
       } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME) {
         if (!baseHelper.isValidLnsName(toExchangeAsset)) {
+          throw new ArgumentIllegalException(PROP_IS_INVALID, {
+            prop: `toExchangeAsset ${toExchangeAsset}`,
+            ...ToExchangeSpecialAssetAsset_Exception_Detail,
+          });
+        }
+      } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.ENTITY) {
+        if (!baseHelper.isValidEntityId(toExchangeAsset)) {
           throw new ArgumentIllegalException(PROP_IS_INVALID, {
             prop: `toExchangeAsset ${toExchangeAsset}`,
             ...ToExchangeSpecialAssetAsset_Exception_Detail,
@@ -340,7 +356,7 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
                 this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
             },
           });
-        } else {
+        } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME) {
           // 出售链域名
           taskList.next = eventEmitter.emit("saleLocationName", {
             type: "saleLocationName",
@@ -354,6 +370,28 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
               maxEffectiveHeight:
                 this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
             },
+          });
+        } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.ENTITY) {
+          // 出售 entityId
+          taskList.next = eventEmitter.emit("frozenEntity", {
+            type: "frozenEntity",
+            transaction,
+            applyInfo: {
+              address: senderId,
+              sourceChainMagic: toExchangeSource,
+              entityId: toExchangeAsset,
+              minEffectiveHeight:
+                this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
+              maxEffectiveHeight:
+                this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
+              status: ASSET_STATUS.FROZEN,
+            },
+          });
+        } else {
+          throw new ArgumentIllegalException(PROP_IS_INVALID, {
+            prop: `exchangeAssetType ${exchangeAssetType}`,
+            target: "transaction.asset.toExchangeSpecialAssetAsset",
+            function: "applyTransaction",
           });
         }
       }

@@ -42,11 +42,7 @@ export class DelegateLogicVerifier extends TransactionLogicVerifier {
 
     eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
 
-    eventLogicVerifier.listenEventRegisterToDelegate(
-      cloneAccountsInfo,
-      transactionGetterHelper,
-      eventEmitter,
-    );
+    eventLogicVerifier.listenEventRegisterToDelegate(cloneAccountsInfo, eventEmitter);
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 

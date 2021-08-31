@@ -130,6 +130,33 @@ declare namespace BFChainCore {
     height: number;
   };
 
+  type IssueEntityFactoryInfo = {
+    applyAddress: string;
+    possessorAddress: string;
+    sourceChainName: string;
+    sourceChainMagic: string;
+    factoryId: string;
+    entityPrealnum: string;
+    entityFrozenAssetPrealnum: string;
+    purchaseAssetPrealnum: string;
+    height: number;
+    status: number;
+    maxFrozenBlockHeight: number;
+  };
+
+  type IssueEntityInfo = {
+    frozenId: string;
+    possessorAddress: string;
+    sourceChainName: string;
+    sourceChainMagic: string;
+    factoryId: string;
+    entityId: string;
+    entityFrozenAssetPrealnum: string;
+    height: number;
+    status: number;
+    maxFrozenBlockHeight: number;
+  };
+
   type MigrateCertificateInfo = {
     migrateCertificateId: string;
     height: number;
@@ -148,6 +175,8 @@ declare namespace BFChainCore {
     CI extends CurrencyInfo = CurrencyInfo,
     MG extends MagicInfo = MagicInfo,
     ALI extends AliasInfo = AliasInfo,
+    IEFI extends IssueEntityFactoryInfo = IssueEntityFactoryInfo,
+    IEI extends IssueEntityInfo = IssueEntityInfo,
     MCI extends MigrateCertificateInfo = MigrateCertificateInfo,
   > {
     /**根据地址数组获取账户 */
@@ -232,5 +261,21 @@ declare namespace BFChainCore {
     getAccountVoteInfo(height: number, address: string): Promise<string[]>;
     /**获取矿机中的受托人账户 */
     getMemoryDelegates(): Promise<string[]>;
+    /**查询指定的 factoryId */
+    getEntityFactory(
+      sourceChainMagic: string,
+      factoryId: string,
+      currentBlockHeight: number,
+    ): Promise<IEFI | undefined>;
+    /**查询指定的 entityId */
+    getEntity(
+      sourceChainMagic: string,
+      entityId: string,
+      currentBlockHeight: number,
+    ): Promise<IEI | undefined>;
+    /**指定账户是否持有某个 entityFactory */
+    isEntityFactoryPossessor(sourceChainMagic: string, address: string): Promise<boolean>;
+    /**指定账户是否持有某个 entity */
+    isEntityPossessor(sourceChainMagic: string, address: string): Promise<boolean>;
   }
 }

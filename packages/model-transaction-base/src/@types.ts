@@ -421,6 +421,55 @@ declare namespace BFChainCore {
     /**设置位名解析值事件附带信息 */
     lnsRecordValue: SetLnsRecordValueJSON;
   }
+
+  interface IssueEntityFactoryJSON {
+    /**资产权益模板来源链名，小写字母组成，3-8 位 */
+    sourceChainName: string;
+    /**资产权益模板来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
+    sourceChainMagic: string;
+    /**资产权益模板 */
+    factoryId: string;
+    /**允许发行的资产权益数量 */
+    entityPrealnum: string;
+    /**发行资产权益时冻结的主权益数量，销毁时解冻 */
+    entityFrozenAssetPrealnum: string;
+    /**购买模板使用全的主权益数量 */
+    purchaseAssetPrealnum: string;
+  }
+  interface IssueEntityFactoryAssetJSON {
+    /**发行资产权益模板事件附带信息 */
+    issueEntityFactory: IssueEntityFactoryJSON;
+  }
+  interface IssueEntityJSON {
+    /**资产权益来源链名，小写字母组成，3-8 位 */
+    sourceChainName: string;
+    /**资产权益来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
+    sourceChainMagic: string;
+    /**资产权益名称 */
+    entityId: string;
+    /**资产权益的模板 */
+    entityFactory: IssueEntityFactoryJSON;
+  }
+  interface IssueEntityAssetJSON {
+    /**发行资产权益事件附带信息 */
+    issueEntity: IssueEntityJSON;
+  }
+  interface DestoryEntityJSON {
+    /**要销毁的资产权益发行事件的唯一标识符 */
+    transactionSignature: string;
+    /**要销毁的资产权益来源链名，小写字母组成，3-8 位 */
+    sourceChainName: string;
+    /**要销毁的资产权益来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
+    sourceChainMagic: string;
+    /**要销毁的资产权益名称 */
+    entityId: string;
+    /**要销毁的资产权益发行时冻结的主权益数 */
+    entityFrozenAssetPrealnum: string;
+  }
+  interface DestoryEntityAssetJSON {
+    /**销毁资产权益事件附带信息 */
+    destoryEntity: DestoryEntityJSON;
+  }
   //#endregion
 
   //#region Atom Transaction
@@ -502,6 +551,18 @@ declare namespace BFChainCore {
   type SetLnsRecordValueTransactionJSON = TransactionMixJSON<
     SetLnsRecordValueAssetJSON,
     { hasRecipientId: false }
+  >;
+  type IssueEntityFactoryTransactionJSON = TransactionMixJSON<
+    IssueEntityFactoryAssetJSON,
+    { hasRecipientId: true }
+  >;
+  type IssueEntityTransactionJSON = TransactionMixJSON<
+    IssueEntityAssetJSON,
+    { hasRecipientId: true }
+  >;
+  type DestoryEntityTransactionJSON = TransactionMixJSON<
+    DestoryEntityAssetJSON,
+    { hasRecipientId: true }
   >;
   //#endregion
 }

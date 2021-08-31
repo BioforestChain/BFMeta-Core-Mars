@@ -443,6 +443,13 @@ export const TRANSACTION_FACTORY_TYPES_MAP = (() => {
         ATOM_TRSFAC.SetLnsRecordValueTransactionFactory,
       ],
       [TRANSACTION_TYPES_BASE.SET_LNS_MANAGER, ATOM_TRSFAC.SetLnsManagerTransactionFactory],
+
+      [
+        TRANSACTION_TYPES_BASE.ISSUE_ENTITY_FACTORY,
+        ATOM_TRSFAC.IssueEntityFactoryTransactionFactory,
+      ],
+      [TRANSACTION_TYPES_BASE.ISSUE_ENTITY, ATOM_TRSFAC.IssueEntityTransactionFactory],
+      [TRANSACTION_TYPES_BASE.DESTORY_ENTITY, ATOM_TRSFAC.DestoryEntityTransactionFactory],
     ] as [TRANSACTION_TYPES_BASE, BFChainCore.TransactionFactoryConstructor<any>][]
   ).forEach(([K, F]) => {
     BASE_FACTORY.set(K, F);

@@ -163,7 +163,7 @@ export class TransactionHelper {
   get TRUST_ASSET() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.TRUST_ASSET);
   }
-  /**SIGN_FOR_ASSET: 签收资产委托 */
+  /**SIGN_FOR_ASSET: 签收权益委托 */
   get SIGN_FOR_ASSET() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.SIGN_FOR_ASSET);
   }
@@ -210,6 +210,19 @@ export class TransactionHelper {
   get SET_LNS_MANAGER() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.SET_LNS_MANAGER);
   }
+  /** ETY: 资产权益/entity */
+  /** ISSUE_ENTITY_FACTORY: 发行资产权益模板 */
+  get ISSUE_ENTITY_FACTORY() {
+    return this.getTransactionType(TRANSACTION_TYPES_BASE.ISSUE_ENTITY_FACTORY);
+  }
+  /** ISSUE_ENTITY: 发行资产权益 */
+  get ISSUE_ENTITY() {
+    return this.getTransactionType(TRANSACTION_TYPES_BASE.ISSUE_ENTITY);
+  }
+  /** DESTORY_ENTITY: 销毁资产权益 */
+  get DESTORY_ENTITY() {
+    return this.getTransactionType(TRANSACTION_TYPES_BASE.DESTORY_ENTITY);
+  }
 
   ALL_TRANSACTION_TYPES = [
     this.SIGNATURE,
@@ -239,6 +252,9 @@ export class TransactionHelper {
     this.LOCATION_NAME,
     this.SET_LNS_RECORD_VALUE,
     this.SET_LNS_MANAGER,
+    this.ISSUE_ENTITY_FACTORY,
+    this.ISSUE_ENTITY,
+    this.DESTORY_ENTITY,
   ];
 
   /**获取创世块里所有的受托人 */
@@ -254,7 +270,7 @@ export class TransactionHelper {
     return delegatesArr;
   }
   async getGensisAcountAddress(config = this.config) {
-    return this.accountBaseHelper.getAddressFromPublicKeyString(config.genesisAccountPublicKey)
+    return this.accountBaseHelper.getAddressFromPublicKeyString(config.genesisAccountPublicKey);
   }
   //#endregion
   /**

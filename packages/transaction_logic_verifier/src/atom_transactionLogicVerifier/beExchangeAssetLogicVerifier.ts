@@ -90,7 +90,6 @@ export class BeExchangeAssetLogicVerifier extends TransactionLogicVerifier {
       transaction,
       currentBlockHeight,
       accountGetterHelper,
-      transactionGetterHelper,
       eventEmitter,
     );
 

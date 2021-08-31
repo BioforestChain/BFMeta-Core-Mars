@@ -96,7 +96,6 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
       transaction,
       currentBlockHeight,
       accountGetterHelper,
-      transactionGetterHelper,
       eventEmitter,
     );
 
@@ -107,7 +106,6 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
         transaction,
         currentBlockHeight,
         accountGetterHelper,
-        transactionGetterHelper,
         eventEmitter,
       );
     } else {
@@ -121,8 +119,15 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
         accountGetterHelper,
         eventEmitter,
       );
-    } else {
+    } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME) {
       eventLogicVerifier.listenEventPurchaseLocationName(
+        currentBlockHeight,
+        accountGetterHelper,
+        eventEmitter,
+      );
+    } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.ENTITY) {
+      eventLogicVerifier.listenEventUnfrozenEntity(
+        transaction,
         currentBlockHeight,
         accountGetterHelper,
         eventEmitter,
