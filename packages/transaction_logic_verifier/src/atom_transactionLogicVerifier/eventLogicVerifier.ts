@@ -1020,7 +1020,7 @@ export class EventLogicVerifier {
         const memChainName = await accountGetterHelper.getCurrency(chainName);
         if (memChainName) {
           throw new ConsensusException(ALREADY_EXIST, {
-            prop: `ChainNane ${chainName}`,
+            prop: `ChainName ${chainName}`,
             target: "blockChain",
             errorId: NewTransactionRefuseReason.CHAINNAME_ALREADY_EXIST,
             ...Function_Exception_Detail,
