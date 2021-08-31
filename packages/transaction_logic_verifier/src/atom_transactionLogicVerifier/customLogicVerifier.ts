@@ -158,7 +158,7 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
     );
 
     eventLogicVerifier.listenEventRegisterChain(
-      cloneAccountsAssets,
+      accountAssets,
       transaction,
       accountGetterHelper,
       eventEmitter,
