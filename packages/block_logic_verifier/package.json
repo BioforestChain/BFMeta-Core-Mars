@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-block-logic-verifier",
-  "version": "5.23.30",
+  "version": "5.23.31",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,12 +14,12 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-block": "5.23.30",
-    "@bfchain/core-helper": "5.23.30",
-    "@bfchain/core-model": "5.23.30",
-    "@bfchain/core-transaction-logic-verifier": "5.23.30",
-    "@bfchain/core-typings": "5.23.30",
-    "@bfchain/core-util-exception": "5.23.30"
+    "@bfchain/core-block": "5.23.31",
+    "@bfchain/core-helper": "5.23.31",
+    "@bfchain/core-model": "5.23.31",
+    "@bfchain/core-transaction-logic-verifier": "5.23.31",
+    "@bfchain/core-typings": "5.23.31",
+    "@bfchain/core-util-exception": "5.23.31"
   },
   "gitHead": "ef41eb359371b11aafbec0516df1eba01f16ebfd",
   "types": "build/cjs/index.d.ts"
