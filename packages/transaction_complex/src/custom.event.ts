@@ -12,6 +12,7 @@ import {
   RECORD_TYPE,
   DAPP_TYPE,
   RECORD_OPERATION_TYPE,
+  ASSET_STATUS,
 } from "@bfchain/core-model";
 import {
   AccountBaseHelper,
@@ -421,7 +422,7 @@ export class CustomTransactionEvent {
       }
       return;
     }
-    if (applyResult.type === "saleDAppid") {
+    if (applyResult.type === "frozenDAppid") {
       const { dappid, sourceChainMagic, minEffectiveHeight, maxEffectiveHeight } =
         applyResult.applyInfo;
       this.verifyDAppid(dappid);
@@ -429,7 +430,7 @@ export class CustomTransactionEvent {
       this.verifyMinAndMaxEffectiveHeight(minEffectiveHeight, maxEffectiveHeight, transaction);
       return;
     }
-    if (applyResult.type === "purchaseDAppid") {
+    if (applyResult.type === "unfrozenDAppid") {
       const { dappid, possessorAddress, sourceChainMagic } = applyResult.applyInfo;
       this.verifyDAppid(dappid);
       this.verifyMagic(sourceChainMagic);
@@ -562,7 +563,7 @@ export class CustomTransactionEvent {
       }
       return;
     }
-    if (applyResult.type === "saleLocationName") {
+    if (applyResult.type === "frozenLocationName") {
       const { name, sourceChainMagic, minEffectiveHeight, maxEffectiveHeight } =
         applyResult.applyInfo;
       this.verifyLocationName(name);
@@ -570,7 +571,7 @@ export class CustomTransactionEvent {
       this.verifyMinAndMaxEffectiveHeight(minEffectiveHeight, maxEffectiveHeight, transaction);
       return;
     }
-    if (applyResult.type === "purchaseLocationName") {
+    if (applyResult.type === "unfrozenLocationName") {
       const { possessorAddress, name, sourceChainMagic } = applyResult.applyInfo;
       await this.verifyPossessorAddress(possessorAddress);
       this.verifyLocationName(name);
@@ -789,14 +790,15 @@ export class CustomTransactionEvent {
           possessorAddress,
           type,
           purchaseAsset,
+          status: ASSET_STATUS.NORMAL,
         },
       });
     }
-    if (applyResult.type === "saleDAppid") {
+    if (applyResult.type === "frozenDAppid") {
       const { address, dappid, sourceChainMagic, minEffectiveHeight, maxEffectiveHeight } =
         applyResult.applyInfo;
-      return eventEmitter.emit("saleDAppid", {
-        type: "saleDAppid",
+      return eventEmitter.emit("frozenDAppid", {
+        type: "frozenDAppid",
         transaction,
         applyInfo: {
           address,
@@ -804,14 +806,15 @@ export class CustomTransactionEvent {
           dappid,
           minEffectiveHeight,
           maxEffectiveHeight,
+          status: ASSET_STATUS.FROZEN,
         },
       });
     }
-    if (applyResult.type === "purchaseDAppid") {
+    if (applyResult.type === "unfrozenDAppid") {
       const { address, publicKey, dappid, sourceChainMagic, possessorAddress } =
         applyResult.applyInfo;
-      return eventEmitter.emit("purchaseDAppid", {
-        type: "purchaseDAppid",
+      return eventEmitter.emit("unfrozenDAppid", {
+        type: "unfrozenDAppid",
         transaction,
         applyInfo: {
           address,
@@ -819,6 +822,7 @@ export class CustomTransactionEvent {
           sourceChainMagic,
           dappid,
           possessorAddress,
+          status: ASSET_STATUS.NORMAL,
         },
       });
     }
@@ -873,6 +877,7 @@ export class CustomTransactionEvent {
           sourceChainMagic,
           sourceChainName,
           possessorAddress,
+          status: ASSET_STATUS.NORMAL,
         },
       });
     }
@@ -920,11 +925,11 @@ export class CustomTransactionEvent {
         },
       });
     }
-    if (applyResult.type === "saleLocationName") {
+    if (applyResult.type === "frozenLocationName") {
       const { address, name, sourceChainMagic, minEffectiveHeight, maxEffectiveHeight } =
         applyResult.applyInfo;
-      return eventEmitter.emit("saleLocationName", {
-        type: "saleLocationName",
+      return eventEmitter.emit("frozenLocationName", {
+        type: "frozenLocationName",
         transaction,
         applyInfo: {
           address,
@@ -932,14 +937,15 @@ export class CustomTransactionEvent {
           name,
           minEffectiveHeight,
           maxEffectiveHeight,
+          status: ASSET_STATUS.FROZEN,
         },
       });
     }
-    if (applyResult.type === "purchaseLocationName") {
+    if (applyResult.type === "unfrozenLocationName") {
       const { address, publicKey, name, sourceChainMagic, possessorAddress } =
         applyResult.applyInfo;
-      return eventEmitter.emit("purchaseLocationName", {
-        type: "purchaseLocationName",
+      return eventEmitter.emit("unfrozenLocationName", {
+        type: "unfrozenLocationName",
         transaction,
         applyInfo: {
           address,
@@ -947,6 +953,39 @@ export class CustomTransactionEvent {
           sourceChainMagic,
           name,
           possessorAddress,
+          status: ASSET_STATUS.NORMAL,
+        },
+      });
+    }
+    if (applyResult.type === "frozenEntity") {
+      const { address, entityId, sourceChainMagic, minEffectiveHeight, maxEffectiveHeight } =
+        applyResult.applyInfo;
+      return eventEmitter.emit("frozenEntity", {
+        type: "frozenEntity",
+        transaction,
+        applyInfo: {
+          address,
+          sourceChainMagic,
+          entityId,
+          minEffectiveHeight,
+          maxEffectiveHeight,
+          status: ASSET_STATUS.FROZEN,
+        },
+      });
+    }
+    if (applyResult.type === "unfrozenEntity") {
+      const { address, publicKey, entityId, sourceChainMagic, possessorAddress } =
+        applyResult.applyInfo;
+      return eventEmitter.emit("unfrozenEntity", {
+        type: "unfrozenEntity",
+        transaction,
+        applyInfo: {
+          address,
+          publicKeyBuffer: parseHexToArrayBuffer(publicKey),
+          sourceChainMagic,
+          entityId,
+          possessorAddress,
+          status: ASSET_STATUS.NORMAL,
         },
       });
     }

@@ -1,5 +1,5 @@
 import { TransactionFactory } from "./_txbase";
-import { DAppTransaction, DAPP_TYPE } from "@bfchain/core-model";
+import { ASSET_STATUS, DAppTransaction, DAPP_TYPE } from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
@@ -286,6 +286,7 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
           possessorAddress: transaction.recipientId,
           type,
           purchaseAsset: purchaseAsset,
+          status: ASSET_STATUS.NORMAL,
         },
       });
     });

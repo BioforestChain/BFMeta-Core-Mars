@@ -88,13 +88,13 @@ export class ToExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
       eventLogicVerifier.listenEventFrozenAsset(cloneAccountsAssets, transaction, eventEmitter);
     } else {
       if (exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID) {
-        eventLogicVerifier.listenEventSaleDAppid(
+        eventLogicVerifier.listenEventFrozenDAppid(
           currentBlockHeight,
           accountGetterHelper,
           eventEmitter,
         );
       } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME) {
-        eventLogicVerifier.listenEventSaleLocationName(
+        eventLogicVerifier.listenEventFrozenLocationName(
           currentBlockHeight,
           accountGetterHelper,
           eventEmitter,

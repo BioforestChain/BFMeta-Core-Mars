@@ -1,5 +1,9 @@
 import { TransactionFactory } from "./_txbase";
-import { LocationNameTransaction, LOCATION_NAME_OPERATION_TYPE } from "@bfchain/core-model";
+import {
+  ASSET_STATUS,
+  LocationNameTransaction,
+  LOCATION_NAME_OPERATION_TYPE,
+} from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
@@ -324,6 +328,7 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
             sourceChainMagic,
             sourceChainName,
             possessorAddress: recipientId,
+            status: ASSET_STATUS.NORMAL,
           },
         });
       } else {

@@ -187,8 +187,8 @@ declare namespace BFChainCore {
     };
   }
 
-  interface ApplyResult_SaleDAppidJSON {
-    type: "saleDAppid";
+  interface ApplyResult_FrozenDAppidJSON {
+    type: "frozenDAppid";
     applyInfo: {
       address: string;
       publicKey: string;
@@ -199,8 +199,8 @@ declare namespace BFChainCore {
     };
   }
 
-  interface ApplyResult_PurchaseDAppidJSON {
-    type: "purchaseDAppid";
+  interface ApplyResult_UnfrozenDAppidJSON {
+    type: "unfrozenDAppid";
     applyInfo: {
       address: string;
       publicKey: string;
@@ -285,8 +285,8 @@ declare namespace BFChainCore {
     };
   }
 
-  interface ApplyResult_SaleLocationNameJSON {
-    type: "saleLocationName";
+  interface ApplyResult_FrozenLocationNameJSON {
+    type: "frozenLocationName";
     applyInfo: {
       address: string;
       publicKey: string;
@@ -297,8 +297,8 @@ declare namespace BFChainCore {
     };
   }
 
-  interface ApplyResult_PurchaseLocationNameJSON {
-    type: "purchaseLocationName";
+  interface ApplyResult_UnfrozenLocationNameJSON {
+    type: "unfrozenLocationName";
     applyInfo: {
       address: string;
       publicKey: string;
@@ -306,6 +306,30 @@ declare namespace BFChainCore {
       possessorAddress: string;
       name: string;
       sourceChainMagic: string;
+    };
+  }
+
+  interface ApplyResult_FrozenEntityJSON {
+    type: "frozenEntity";
+    applyInfo: {
+      address: string;
+      publicKey: string;
+      sourceChainMagic: string;
+      entityId: string;
+      minEffectiveHeight: number;
+      maxEffectiveHeight: number;
+    };
+  }
+
+  interface ApplyResult_UnfrozenEntityJSON {
+    type: "unfrozenEntity";
+    applyInfo: {
+      address: string;
+      publicKey: string;
+      /**entityId 的拥有者地址 */
+      possessorAddress: string;
+      sourceChainMagic: string;
+      entityId: string;
     };
   }
 
@@ -323,16 +347,18 @@ declare namespace BFChainCore {
     | ApplyResult_SignForAssetJSON
     | ApplyResult_FrozenAccountJSON
     | ApplyResult_IssueDAppidJSON
-    | ApplyResult_SaleDAppidJSON
-    | ApplyResult_PurchaseDAppidJSON
+    | ApplyResult_FrozenDAppidJSON
+    | ApplyResult_UnfrozenDAppidJSON
     | ApplyResult_IssueAssetJSON
     | ApplyResult_RegisterChainJSON
     | ApplyResult_RegisterLocationNameJSON
     | ApplyResult_CancelLocationNameJSON
     | ApplyResult_SetLnsManagerJSON
     | ApplyResult_SetLnsRecordValueJSON
-    | ApplyResult_SaleLocationNameJSON
-    | ApplyResult_PurchaseLocationNameJSON;
+    | ApplyResult_FrozenLocationNameJSON
+    | ApplyResult_UnfrozenLocationNameJSON
+    | ApplyResult_FrozenEntityJSON
+    | ApplyResult_UnfrozenEntityJSON;
 
   interface CustomTrCenterInterface {
     verify(

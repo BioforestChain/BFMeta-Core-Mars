@@ -309,8 +309,8 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
         });
         if (exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID) {
           // 接收账户成为 dappid 的拥有者
-          taskList.next = eventEmitter.emit("purchaseDAppid", {
-            type: "purchaseDAppid",
+          taskList.next = eventEmitter.emit("unfrozenDAppid", {
+            type: "unfrozenDAppid",
             transaction,
             applyInfo: {
               address: senderId,
@@ -318,12 +318,13 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
               possessorAddress: recipientId,
               sourceChainMagic: beExchangeSource,
               dappid: beExchangeAsset,
+              status: ASSET_STATUS.NORMAL,
             },
           });
         } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME) {
           // 接收账户成为链域名的拥有者
-          taskList.next = eventEmitter.emit("purchaseLocationName", {
-            type: "purchaseLocationName",
+          taskList.next = eventEmitter.emit("unfrozenLocationName", {
+            type: "unfrozenLocationName",
             transaction,
             applyInfo: {
               address: senderId,
@@ -331,6 +332,7 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
               possessorAddress: recipientId,
               sourceChainMagic: beExchangeSource,
               name: beExchangeAsset,
+              status: ASSET_STATUS.NORMAL,
             },
           });
         } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.ENTITY) {
@@ -379,8 +381,8 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
         });
         if (exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID) {
           // 发起账户成为 dappid 的拥有者
-          taskList.next = eventEmitter.emit("purchaseDAppid", {
-            type: "purchaseDAppid",
+          taskList.next = eventEmitter.emit("unfrozenDAppid", {
+            type: "unfrozenDAppid",
             transaction,
             applyInfo: {
               address: senderId,
@@ -388,12 +390,13 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
               possessorAddress: senderId,
               sourceChainMagic: toExchangeSource,
               dappid: toExchangeAsset,
+              status: ASSET_STATUS.NORMAL,
             },
           });
         } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME) {
           // 发起账户成为链域名的拥有者
-          taskList.next = eventEmitter.emit("purchaseLocationName", {
-            type: "purchaseLocationName",
+          taskList.next = eventEmitter.emit("unfrozenLocationName", {
+            type: "unfrozenLocationName",
             transaction,
             applyInfo: {
               address: senderId,
@@ -401,6 +404,7 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
               possessorAddress: senderId,
               sourceChainMagic: toExchangeSource,
               name: toExchangeAsset,
+              status: ASSET_STATUS.NORMAL,
             },
           });
         } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.ENTITY) {

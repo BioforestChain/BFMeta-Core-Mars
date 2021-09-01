@@ -113,14 +113,14 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
     }
 
     if (exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID) {
-      eventLogicVerifier.listenEventPurchaseDAppid(
+      eventLogicVerifier.listenEventUnfrozenDAppid(
         transaction,
         currentBlockHeight,
         accountGetterHelper,
         eventEmitter,
       );
     } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME) {
-      eventLogicVerifier.listenEventPurchaseLocationName(
+      eventLogicVerifier.listenEventUnfrozenLocationName(
         currentBlockHeight,
         accountGetterHelper,
         eventEmitter,

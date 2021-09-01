@@ -842,7 +842,7 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventSaleDAppid(
+  listenEventFrozenDAppid(
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -851,9 +851,9 @@ export class EventLogicVerifier {
       function: "eventLogicVerifier",
     } as const;
 
-    // 出售 dappid
+    // 冻结 dappid
     eventEmitter.on(
-      "saleDAppid",
+      "frozenDAppid",
       async ({ applyInfo }, next) => {
         const { address, sourceChainMagic, dappid } = applyInfo;
 
@@ -884,11 +884,11 @@ export class EventLogicVerifier {
 
         next();
       },
-      { taskname: `applyTransaction/logicVerifier/saleDAppid` },
+      { taskname: `applyTransaction/logicVerifier/frozenDAppid` },
     );
   }
 
-  listenEventPurchaseDAppid(
+  listenEventUnfrozenDAppid(
     transaction: BFChainCore.Transaction,
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
@@ -900,7 +900,7 @@ export class EventLogicVerifier {
 
     // 购买 dappid
     eventEmitter.on(
-      "purchaseDAppid",
+      "unfrozenDAppid",
       async ({ applyInfo }, next) => {
         const { address, sourceChainMagic, dappid } = applyInfo;
 
@@ -933,7 +933,7 @@ export class EventLogicVerifier {
 
         next();
       },
-      { taskname: `applyTransaction/logicVerifier/purchaseDAppid` },
+      { taskname: `applyTransaction/logicVerifier/unfrozenDAppid` },
     );
   }
 
@@ -1417,7 +1417,7 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventSaleLocationName(
+  listenEventFrozenLocationName(
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -1426,13 +1426,13 @@ export class EventLogicVerifier {
       function: "eventLogicVerifier",
     } as const;
 
-    // 出售链域名
+    // 冻结位名
     eventEmitter.on(
-      "saleLocationName",
+      "frozenLocationName",
       async ({ applyInfo }, next) => {
         const { address, sourceChainMagic, name } = applyInfo;
 
-        // 域名是否存在
+        // 位名是否存在
         const memLocation = await accountGetterHelper.getLocationName(
           sourceChainMagic,
           name,
@@ -1468,11 +1468,11 @@ export class EventLogicVerifier {
 
         next();
       },
-      { taskname: `applyTransaction/logicVerifier/saleLocationName` },
+      { taskname: `applyTransaction/logicVerifier/frozenLocationName` },
     );
   }
 
-  listenEventPurchaseLocationName(
+  listenEventUnfrozenLocationName(
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -1481,9 +1481,9 @@ export class EventLogicVerifier {
       function: "eventLogicVerifier",
     } as const;
 
-    // 购买链域名，链域名解冻，更换拥有者
+    // 解冻位名，更换拥有者
     eventEmitter.on(
-      "purchaseLocationName",
+      "unfrozenLocationName",
       async ({ applyInfo }, next) => {
         const { address, sourceChainMagic, name } = applyInfo;
 
@@ -1516,7 +1516,7 @@ export class EventLogicVerifier {
 
         next();
       },
-      { taskname: `applyTransaction/logicVerifier/purchaseLocationName` },
+      { taskname: `applyTransaction/logicVerifier/unfrozenLocationName` },
     );
   }
 

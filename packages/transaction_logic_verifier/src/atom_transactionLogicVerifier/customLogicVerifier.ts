@@ -106,9 +106,9 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
       eventEmitter,
     );
 
-    eventLogicVerifier.listenEventSaleDAppid(currentBlockHeight, accountGetterHelper, eventEmitter);
+    eventLogicVerifier.listenEventFrozenDAppid(currentBlockHeight, accountGetterHelper, eventEmitter);
 
-    eventLogicVerifier.listenEventPurchaseDAppid(
+    eventLogicVerifier.listenEventUnfrozenDAppid(
       transaction,
       currentBlockHeight,
       accountGetterHelper,
@@ -128,13 +128,13 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
       eventEmitter,
     );
 
-    eventLogicVerifier.listenEventSaleLocationName(
+    eventLogicVerifier.listenEventFrozenLocationName(
       currentBlockHeight,
       accountGetterHelper,
       eventEmitter,
     );
 
-    eventLogicVerifier.listenEventPurchaseLocationName(
+    eventLogicVerifier.listenEventUnfrozenLocationName(
       currentBlockHeight,
       accountGetterHelper,
       eventEmitter,

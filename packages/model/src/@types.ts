@@ -135,34 +135,37 @@ declare namespace BFChainCore {
     possessorAddress: string;
     type: DAPP_TYPE;
     purchaseAsset?: string;
+    status: ASSET_STATUS;
   };
   /**发行 dappid 的相关事件 */
   type ApplyTransactionIssueDAppidEvent<EVENTNAME, T extends Transaction = Transaction> =
     ApplyTransactionEvent<ApplyInfo_IssueDAppid, EVENTNAME, T>;
 
-  type ApplyInfo_SaleDAppid = {
+  type ApplyInfo_FrozenDAppid = {
     address: string;
     publicKeyBuffer?: Uint8Array;
     dappid: string;
     sourceChainMagic: string;
     minEffectiveHeight: number;
     maxEffectiveHeight: number;
+    status: ASSET_STATUS;
   };
-  /**出售 dappid */
-  type ApplyTransactionSaleDAppidEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_SaleDAppid, EVENTNAME, T>;
+  /**冻结 dappid */
+  type ApplyTransactionFrozenDAppidEvent<EVENTNAME, T extends Transaction = Transaction> =
+    ApplyTransactionEvent<ApplyInfo_FrozenDAppid, EVENTNAME, T>;
 
-  type ApplyInfo_PurchaseDAppid = {
+  type ApplyInfo_UnfrozenDAppid = {
     address: string;
     publicKeyBuffer?: Uint8Array;
     /**新的 dappid 的拥有者地址 */
     possessorAddress: string;
     dappid: string;
     sourceChainMagic: string;
+    status: ASSET_STATUS;
   };
   /**购买 dappid */
-  type ApplyTransactionPurchaseDAppidEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_PurchaseDAppid, EVENTNAME, T>;
+  type ApplyTransactionUnfrozenDAppidEvent<EVENTNAME, T extends Transaction = Transaction> =
+    ApplyTransactionEvent<ApplyInfo_UnfrozenDAppid, EVENTNAME, T>;
 
   interface ApplyInfo_IssueAsset extends ApplyInfo_Asset {
     address: string;
@@ -203,6 +206,7 @@ declare namespace BFChainCore {
     sourceChainMagic: string;
     /**链域名的拥有者地址 */
     possessorAddress: string;
+    status: ASSET_STATUS;
   };
   /**注册链域名 */
   type ApplyTransactionRegisterLocationNameEvent<EVENTNAME, T extends Transaction = Transaction> =
@@ -242,29 +246,31 @@ declare namespace BFChainCore {
   type ApplyTransactionSetLnsRecordValueEvent<EVENTNAME, T extends Transaction = Transaction> =
     ApplyTransactionEvent<ApplyInfo_SetLnsRecordValue, EVENTNAME, T>;
 
-  type ApplyInfo_SaleLocationName = {
+  type ApplyInfo_FrozenLocationName = {
     address: string;
     publicKeyBuffer?: Uint8Array;
     name: string;
     sourceChainMagic: string;
     minEffectiveHeight: number;
     maxEffectiveHeight: number;
+    status: ASSET_STATUS;
   };
-  /**出售链域名 */
-  type ApplyTransactionSaleLocationNameEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_SaleLocationName, EVENTNAME, T>;
+  /**冻结链域名 */
+  type ApplyTransactionFrozenLocationNameEvent<EVENTNAME, T extends Transaction = Transaction> =
+    ApplyTransactionEvent<ApplyInfo_FrozenLocationName, EVENTNAME, T>;
 
-  type ApplyInfo_PurchaseLocationName = {
+  type ApplyInfo_UnfrozenLocationName = {
     address: string;
     publicKeyBuffer?: Uint8Array;
     /**链域名的拥有者地址 */
     possessorAddress: string;
     name: string;
     sourceChainMagic: string;
+    status: ASSET_STATUS;
   };
   /**购买链域名 */
-  type ApplyTransactionPurchaseLocationNameEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_PurchaseLocationName, EVENTNAME, T>;
+  type ApplyTransactionUnfrozenLocationNameEvent<EVENTNAME, T extends Transaction = Transaction> =
+    ApplyTransactionEvent<ApplyInfo_UnfrozenLocationName, EVENTNAME, T>;
 
   /**entityFactory 相关事件 */
   type ApplyInfo_IssueEntityFactory = {
@@ -487,18 +493,18 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
-    /**出售 dappid */
-    saleDAppid: BFChainUtil.EventInOut<
-      ApplyTransactionSaleDAppidEvent<
-        "saleDAppid",
+    /**冻结 dappid */
+    frozenDAppid: BFChainUtil.EventInOut<
+      ApplyTransactionFrozenDAppidEvent<
+        "frozenDAppid",
         | import("@bfchain/core-model-transaction").ToExchangeSpecialAssetTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
-    /**购买 dappid */
-    purchaseDAppid: BFChainUtil.EventInOut<
-      ApplyTransactionPurchaseDAppidEvent<
-        "purchaseDAppid",
+    /**解冻 dappid */
+    unfrozenDAppid: BFChainUtil.EventInOut<
+      ApplyTransactionUnfrozenDAppidEvent<
+        "unfrozenDAppid",
         | import("@bfchain/core-model-transaction").BeExchangeSpecialAssetTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
@@ -551,18 +557,18 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
-    /**出售链域名 */
-    saleLocationName: BFChainUtil.EventInOut<
-      ApplyTransactionSaleLocationNameEvent<
-        "saleLocationName",
+    /**冻结链域名 */
+    frozenLocationName: BFChainUtil.EventInOut<
+      ApplyTransactionFrozenLocationNameEvent<
+        "frozenLocationName",
         | import("@bfchain/core-model-transaction").ToExchangeSpecialAssetTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
-    /**购买链域名 */
-    purchaseLocationName: BFChainUtil.EventInOut<
-      ApplyTransactionPurchaseLocationNameEvent<
-        "purchaseLocationName",
+    /**解冻链域名 */
+    unfrozenLocationName: BFChainUtil.EventInOut<
+      ApplyTransactionUnfrozenLocationNameEvent<
+        "unfrozenLocationName",
         | import("@bfchain/core-model-transaction").BeExchangeSpecialAssetTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
