@@ -351,6 +351,9 @@ export const CAN_NOT_DESTORY_ENTITY = (ec.next =
 export const ACCOUNT_NOT_ENTITY_POSSESSOR = (ec.next =
   "Account with address {address} not entityId {entityId} possessor errorId {errorId} when {function}");
 /**entityId function */
+export const ENTITY_NOT_FROZEN = (ec.next =
+  "Entity not frozen, locationName {entityId} when {function}");
+/**entityId function */
 export const ENTITY_ALREADY_FROZEN = (ec.next =
   "Entity already frozen, entityId {entityId} when {function}");
 /**entityId function */

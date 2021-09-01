@@ -309,8 +309,8 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
         });
         if (exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID) {
           // 接收账户成为 dappid 的拥有者
-          taskList.next = eventEmitter.emit("unfrozenDAppid", {
-            type: "unfrozenDAppid",
+          taskList.next = eventEmitter.emit("changeDAppidPossessor", {
+            type: "changeDAppidPossessor",
             transaction,
             applyInfo: {
               address: senderId,
@@ -318,13 +318,12 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
               possessorAddress: recipientId,
               sourceChainMagic: beExchangeSource,
               dappid: beExchangeAsset,
-              status: ASSET_STATUS.NORMAL,
             },
           });
         } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME) {
           // 接收账户成为链域名的拥有者
-          taskList.next = eventEmitter.emit("unfrozenLocationName", {
-            type: "unfrozenLocationName",
+          taskList.next = eventEmitter.emit("changeLocationNamePossessor", {
+            type: "changeLocationNamePossessor",
             transaction,
             applyInfo: {
               address: senderId,
@@ -332,13 +331,12 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
               possessorAddress: recipientId,
               sourceChainMagic: beExchangeSource,
               name: beExchangeAsset,
-              status: ASSET_STATUS.NORMAL,
             },
           });
         } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.ENTITY) {
           // 接收账户成为 entityId 的拥有者
-          taskList.next = eventEmitter.emit("unfrozenEntity", {
-            type: "unfrozenEntity",
+          taskList.next = eventEmitter.emit("changeEntityPossessor", {
+            type: "changeEntityPossessor",
             transaction,
             applyInfo: {
               address: senderId,
@@ -346,7 +344,6 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
               possessorAddress: recipientId,
               sourceChainMagic: beExchangeSource,
               entityId: beExchangeAsset,
-              status: ASSET_STATUS.NORMAL,
             },
           });
         }

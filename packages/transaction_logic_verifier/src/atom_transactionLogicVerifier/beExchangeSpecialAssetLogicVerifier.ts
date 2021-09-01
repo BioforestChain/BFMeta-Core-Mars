@@ -90,15 +90,6 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
 
     eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
 
-    eventLogicVerifier.listenEventAsset(cloneAccountsAssets, transaction, eventEmitter);
-
-    eventLogicVerifier.listenEventUnfrozenAsset(
-      transaction,
-      currentBlockHeight,
-      accountGetterHelper,
-      eventEmitter,
-    );
-
     const { exchangeDirection, exchangeAssetType } =
       transaction.asset.beExchangeSpecialAsset.exchangeSpecialAsset;
     if (exchangeDirection === EXCHANGE_DIRECTION.ASSET_FROM_RECIPIENT) {
@@ -108,30 +99,54 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
         accountGetterHelper,
         eventEmitter,
       );
+
+      if (exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID) {
+        eventLogicVerifier.listenEventChangeDAppidPossessor(
+          transaction,
+          currentBlockHeight,
+          accountGetterHelper,
+          eventEmitter,
+        );
+      } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME) {
+        eventLogicVerifier.listenEventChangeLocationNamePossessor(
+          transaction,
+          currentBlockHeight,
+          accountGetterHelper,
+          eventEmitter,
+        );
+      } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.ENTITY) {
+        eventLogicVerifier.listenEventChangeEntityPossessor(
+          transaction,
+          currentBlockHeight,
+          accountGetterHelper,
+          eventEmitter,
+        );
+      }
     } else {
       eventLogicVerifier.listenEventAsset(cloneAccountsAssets, transaction, eventEmitter);
-    }
 
-    if (exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID) {
-      eventLogicVerifier.listenEventUnfrozenDAppid(
-        transaction,
-        currentBlockHeight,
-        accountGetterHelper,
-        eventEmitter,
-      );
-    } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME) {
-      eventLogicVerifier.listenEventUnfrozenLocationName(
-        currentBlockHeight,
-        accountGetterHelper,
-        eventEmitter,
-      );
-    } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.ENTITY) {
-      eventLogicVerifier.listenEventUnfrozenEntity(
-        transaction,
-        currentBlockHeight,
-        accountGetterHelper,
-        eventEmitter,
-      );
+      if (exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID) {
+        eventLogicVerifier.listenEventUnfrozenDAppid(
+          transaction,
+          currentBlockHeight,
+          accountGetterHelper,
+          eventEmitter,
+        );
+      } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME) {
+        eventLogicVerifier.listenEventUnfrozenLocationName(
+          transaction,
+          currentBlockHeight,
+          accountGetterHelper,
+          eventEmitter,
+        );
+      } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.ENTITY) {
+        eventLogicVerifier.listenEventUnfrozenEntity(
+          transaction,
+          currentBlockHeight,
+          accountGetterHelper,
+          eventEmitter,
+        );
+      }
     }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);

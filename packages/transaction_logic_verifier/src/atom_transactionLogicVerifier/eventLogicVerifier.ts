@@ -40,6 +40,9 @@ import {
   ACCOUNT_NOT_ENTITY_POSSESSOR,
   ENTITY_ALREADY_FROZEN,
   ENTITY_ALREADY_DESTORY,
+  ENTITY_NOT_FROZEN,
+  DAPPID_NOT_FROZEN,
+  LOCATION_NAME_NOT_FROZEN,
 } from "@bfchain/core-util-exception";
 import {
   NewTransactionRefuseReason,
@@ -898,7 +901,7 @@ export class EventLogicVerifier {
       function: "eventLogicVerifier",
     } as const;
 
-    // 购买 dappid
+    // 解冻 dappid
     eventEmitter.on(
       "unfrozenDAppid",
       async ({ applyInfo }, next) => {
@@ -911,6 +914,12 @@ export class EventLogicVerifier {
         );
         if (!memDapp) {
           throw new ConsensusException(DAPPID_IS_NOT_EXIST, {
+            dappid,
+            ...Function_Exception_Detail,
+          });
+        }
+        if (memDapp.status !== ASSET_STATUS.FROZEN) {
+          throw new ConsensusException(DAPPID_NOT_FROZEN, {
             dappid,
             ...Function_Exception_Detail,
           });
@@ -934,6 +943,56 @@ export class EventLogicVerifier {
         next();
       },
       { taskname: `applyTransaction/logicVerifier/unfrozenDAppid` },
+    );
+  }
+
+  listenEventChangeDAppidPossessor(
+    transaction: BFChainCore.Transaction,
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
+  ) {
+    const Function_Exception_Detail = {
+      function: "eventLogicVerifier",
+    } as const;
+
+    // 更改 dappid 拥有者
+    eventEmitter.on(
+      "changeDAppidPossessor",
+      async ({ applyInfo }, next) => {
+        const { sourceChainMagic, dappid } = applyInfo;
+
+        const memDapp = await accountGetterHelper.getDApp(
+          sourceChainMagic,
+          dappid,
+          currentBlockHeight,
+        );
+        if (!memDapp) {
+          throw new ConsensusException(DAPPID_IS_NOT_EXIST, {
+            dappid,
+            ...Function_Exception_Detail,
+          });
+        }
+        // 处于冻结状态的 dappid 不能更改拥有者
+        if (memDapp.status === ASSET_STATUS.FROZEN) {
+          throw new ConsensusException(DAPPID_ALREADY_FROZEN, {
+            dappid,
+            ...Function_Exception_Detail,
+          });
+        }
+        // dappid 的拥有者才能更改拥有者
+        if (transaction.senderId !== memDapp.possessorAddress) {
+          throw new ConsensusException(SHOULD_BE, {
+            to_compare_prop: "senderId",
+            to_target: "transaction",
+            be_compare_prop: "dapp possessor",
+            ...Function_Exception_Detail,
+          });
+        }
+
+        next();
+      },
+      { taskname: `applyTransaction/logicVerifier/changeDAppidPossessor` },
     );
   }
 
@@ -1445,14 +1504,6 @@ export class EventLogicVerifier {
             ...Function_Exception_Detail,
           });
         }
-        if (memLocation.possessorAddress !== address) {
-          throw new ConsensusException(ACCOUNT_NOT_LOCATION_NAME_POSSESSOR, {
-            address,
-            locationName: name,
-            errorId: NewTransactionRefuseReason.ACCOUNT_NOT_LNS_POSSESSOR,
-            ...Function_Exception_Detail,
-          });
-        }
         if (memLocation.status === ASSET_STATUS.FROZEN) {
           throw new ConsensusException(LOCATION_NAME_ALREADY_FROZEN, {
             locationName: name,
@@ -1465,6 +1516,14 @@ export class EventLogicVerifier {
             ...Function_Exception_Detail,
           });
         }
+        if (memLocation.possessorAddress !== address) {
+          throw new ConsensusException(ACCOUNT_NOT_LOCATION_NAME_POSSESSOR, {
+            address,
+            locationName: name,
+            errorId: NewTransactionRefuseReason.ACCOUNT_NOT_LNS_POSSESSOR,
+            ...Function_Exception_Detail,
+          });
+        }
 
         next();
       },
@@ -1473,6 +1532,7 @@ export class EventLogicVerifier {
   }
 
   listenEventUnfrozenLocationName(
+    transaction: BFChainCore.Transaction,
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -1500,10 +1560,9 @@ export class EventLogicVerifier {
             ...Function_Exception_Detail,
           });
         }
-        if (memLocation.possessorAddress === address) {
-          throw new ConsensusException(NO_NEED_TO_PURCHASE_SPECIAL_ASSET, {
-            type: "locationName",
-            asset: name,
+        if (memLocation.status !== ASSET_STATUS.FROZEN) {
+          throw new ConsensusException(LOCATION_NAME_NOT_FROZEN, {
+            locationName: name,
             ...Function_Exception_Detail,
           });
         }
@@ -1513,10 +1572,83 @@ export class EventLogicVerifier {
             ...Function_Exception_Detail,
           });
         }
+        if (memLocation.possessorAddress === address) {
+          throw new ConsensusException(NO_NEED_TO_PURCHASE_SPECIAL_ASSET, {
+            type: "locationName",
+            asset: name,
+            ...Function_Exception_Detail,
+          });
+        }
+        if (transaction.recipientId !== memLocation.possessorAddress) {
+          throw new ConsensusException(SHOULD_BE, {
+            to_compare_prop: "recipientId",
+            to_target: "transaction",
+            be_compare_prop: "locationName possessor",
+            ...Function_Exception_Detail,
+          });
+        }
 
         next();
       },
       { taskname: `applyTransaction/logicVerifier/unfrozenLocationName` },
+    );
+  }
+
+  listenEventChangeLocationNamePossessor(
+    transaction: BFChainCore.Transaction,
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
+  ) {
+    const Function_Exception_Detail = {
+      function: "eventLogicVerifier",
+    } as const;
+
+    // 更改链域名的拥有者
+    eventEmitter.on(
+      "changeLocationNamePossessor",
+      async ({ applyInfo }, next) => {
+        const { address, sourceChainMagic, name } = applyInfo;
+
+        // 域名是否存在
+        const memLocation = await accountGetterHelper.getLocationName(
+          sourceChainMagic,
+          name,
+          currentBlockHeight,
+        );
+        if (!memLocation) {
+          throw new ConsensusException(LOCATION_NAME_IS_NOT_EXIST, {
+            locationName: name,
+            errorId: NewTransactionRefuseReason.LOCATION_NAME_NOT_EXIST,
+            ...Function_Exception_Detail,
+          });
+        }
+        // 只有顶级域名才能更改拥有者
+        if (memLocation.level !== LOCATION_NAME_LEVEL.TOP_LEVEL) {
+          throw new ConsensusException(ONLY_TOP_LEVEL_LOCATION_NAME_CAN_EXCHANGE, {
+            ...Function_Exception_Detail,
+          });
+        }
+        // 处于冻结状态的域名不能更改拥有者
+        if (memLocation.status === ASSET_STATUS.FROZEN) {
+          throw new ConsensusException(LOCATION_NAME_ALREADY_FROZEN, {
+            locationName: name,
+            ...Function_Exception_Detail,
+          });
+        }
+        // 链域名的拥有者才能更改拥有者
+        if (transaction.senderId !== memLocation.possessorAddress) {
+          throw new ConsensusException(SHOULD_BE, {
+            to_compare_prop: "senderId",
+            to_target: "transaction",
+            be_compare_prop: "locationName possessor",
+            ...Function_Exception_Detail,
+          });
+        }
+
+        next();
+      },
+      { taskname: `applyTransaction/logicVerifier/changeLocationNamePossessor` },
     );
   }
 
@@ -1858,6 +1990,20 @@ export class EventLogicVerifier {
             ...Function_Exception_Detail,
           });
         }
+        // 实体处于非冻结状态
+        if (memEntity.status === ASSET_STATUS.NORMAL) {
+          throw new ConsensusException(ENTITY_NOT_FROZEN, {
+            entityId,
+            ...Function_Exception_Detail,
+          });
+        }
+        // 销毁状态的 entity 不能解冻
+        if (memEntity.status === ASSET_STATUS.DESTORY) {
+          throw new ConsensusException(ENTITY_ALREADY_DESTORY, {
+            entityId,
+            ...Function_Exception_Detail,
+          });
+        }
         if (memEntity.possessorAddress === address) {
           throw new ConsensusException(NO_NEED_TO_PURCHASE_SPECIAL_ASSET, {
             type: "entity",
@@ -1873,18 +2019,69 @@ export class EventLogicVerifier {
             ...Function_Exception_Detail,
           });
         }
-        // 冻结状态的域名不能解冻
-        if (memEntity.status === ASSET_STATUS.DESTORY) {
-          throw new ConsensusException(CAN_NOT_DESTORY_ENTITY, {
+
+        next();
+      },
+      { taskname: `applyTransaction/logicVerifier/unfrozenEntity` },
+    );
+  }
+
+  listenEventChangeEntityPossessor(
+    transaction: BFChainCore.Transaction,
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
+  ) {
+    const Function_Exception_Detail = {
+      function: "eventLogicVerifier",
+    } as const;
+
+    // 更改 entity 拥有者
+    eventEmitter.on(
+      "changeEntityPossessor",
+      async ({ applyInfo }, next) => {
+        const { address, sourceChainMagic, entityId } = applyInfo;
+
+        // entity 是否存在
+        const memEntity = (await accountGetterHelper.getEntity(
+          sourceChainMagic,
+          entityId,
+          currentBlockHeight,
+        )) as BFChainCore.LocationNameInfo | undefined;
+        if (!memEntity) {
+          throw new ConsensusException(ENTITY_IS_ALREADY_EXIST, {
             entityId,
-            reason: "Entity already be destory",
+            errorId: NewTransactionRefuseReason.ENTITY_NOT_EXIST,
+            ...Function_Exception_Detail,
+          });
+        }
+        // 冻结状态的 entity 不能更改拥有者
+        if (memEntity.status === ASSET_STATUS.FROZEN) {
+          throw new ConsensusException(ENTITY_ALREADY_FROZEN, {
+            entityId,
+            ...Function_Exception_Detail,
+          });
+        }
+        // 销毁状态的 entity 不能更改拥有者
+        if (memEntity.status === ASSET_STATUS.DESTORY) {
+          throw new ConsensusException(ENTITY_ALREADY_DESTORY, {
+            entityId,
+            ...Function_Exception_Detail,
+          });
+        }
+        // 只有 entity 拥有者才能更改拥有者
+        if (transaction.senderId !== memEntity.possessorAddress) {
+          throw new ConsensusException(SHOULD_BE, {
+            to_compare_prop: "senderId",
+            to_target: "transaction",
+            be_compare_prop: "entity possessor",
             ...Function_Exception_Detail,
           });
         }
 
         next();
       },
-      { taskname: `applyTransaction/logicVerifier/unfrozenEntity` },
+      { taskname: `applyTransaction/logicVerifier/changeEntityPossessor` },
     );
   }
 

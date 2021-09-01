@@ -106,9 +106,20 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
       eventEmitter,
     );
 
-    eventLogicVerifier.listenEventFrozenDAppid(currentBlockHeight, accountGetterHelper, eventEmitter);
+    eventLogicVerifier.listenEventFrozenDAppid(
+      currentBlockHeight,
+      accountGetterHelper,
+      eventEmitter,
+    );
 
     eventLogicVerifier.listenEventUnfrozenDAppid(
+      transaction,
+      currentBlockHeight,
+      accountGetterHelper,
+      eventEmitter,
+    );
+
+    eventLogicVerifier.listenEventChangeDAppidPossessor(
       transaction,
       currentBlockHeight,
       accountGetterHelper,
@@ -135,6 +146,14 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
     );
 
     eventLogicVerifier.listenEventUnfrozenLocationName(
+      transaction,
+      currentBlockHeight,
+      accountGetterHelper,
+      eventEmitter,
+    );
+
+    eventLogicVerifier.listenEventChangeLocationNamePossessor(
+      transaction,
       currentBlockHeight,
       accountGetterHelper,
       eventEmitter,
@@ -175,12 +194,34 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
       eventEmitter,
     );
 
+    eventLogicVerifier.listenEventFrozenEntity(
+      currentBlockHeight,
+      accountGetterHelper,
+      eventEmitter,
+    );
+
+    eventLogicVerifier.listenEventUnfrozenEntity(
+      transaction,
+      currentBlockHeight,
+      accountGetterHelper,
+      eventEmitter,
+    );
+
+    eventLogicVerifier.listenEventChangeEntityPossessor(
+      transaction,
+      currentBlockHeight,
+      accountGetterHelper,
+      eventEmitter,
+    );
+
     eventLogicVerifier.listenEventRegisterChain(
       accountAssets,
       transaction,
       accountGetterHelper,
       eventEmitter,
     );
+
+    eventLogicVerifier.listenEventMigrateCertificate(accountGetterHelper, eventEmitter);
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 

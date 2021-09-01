@@ -163,9 +163,21 @@ declare namespace BFChainCore {
     sourceChainMagic: string;
     status: ASSET_STATUS;
   };
-  /**购买 dappid */
+  /**解冻 dappid */
   type ApplyTransactionUnfrozenDAppidEvent<EVENTNAME, T extends Transaction = Transaction> =
     ApplyTransactionEvent<ApplyInfo_UnfrozenDAppid, EVENTNAME, T>;
+
+  type ApplyInfo_ChangeDAppidPossessor = {
+    address: string;
+    publicKeyBuffer?: Uint8Array;
+    /**新的 dappid 的拥有者地址 */
+    possessorAddress: string;
+    dappid: string;
+    sourceChainMagic: string;
+  };
+  /**更改 dappid 拥有者 */
+  type ApplyTransactionChangeDAppidPossessorEvent<EVENTNAME, T extends Transaction = Transaction> =
+    ApplyTransactionEvent<ApplyInfo_ChangeDAppidPossessor, EVENTNAME, T>;
 
   interface ApplyInfo_IssueAsset extends ApplyInfo_Asset {
     address: string;
@@ -268,11 +280,24 @@ declare namespace BFChainCore {
     sourceChainMagic: string;
     status: ASSET_STATUS;
   };
-  /**购买链域名 */
+  /**解冻链域名 */
   type ApplyTransactionUnfrozenLocationNameEvent<EVENTNAME, T extends Transaction = Transaction> =
     ApplyTransactionEvent<ApplyInfo_UnfrozenLocationName, EVENTNAME, T>;
 
-  /**entityFactory 相关事件 */
+  type ApplyInfo_ChangeLocationNamePossessor = {
+    address: string;
+    publicKeyBuffer?: Uint8Array;
+    /**链域名的拥有者地址 */
+    possessorAddress: string;
+    name: string;
+    sourceChainMagic: string;
+  };
+  /**更改链域名拥有者 */
+  type ApplyTransactionChangeLocationNamePossessorEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_ChangeLocationNamePossessor, EVENTNAME, T>;
+
   type ApplyInfo_IssueEntityFactory = {
     address: string;
     publicKeyBuffer?: Uint8Array;
@@ -289,11 +314,10 @@ declare namespace BFChainCore {
     purchaseAssetPrealnum: string;
     status: ASSET_STATUS;
   };
-  /**发行 entityFactory 的相关事件 */
+  /**发行 entityFactory */
   type ApplyTransactionIssueEntityFactoryEvent<EVENTNAME, T extends Transaction = Transaction> =
     ApplyTransactionEvent<ApplyInfo_IssueEntityFactory, EVENTNAME, T>;
 
-  /**entity 相关事件 */
   type ApplyInfo_IssueEntity = {
     address: string;
     publicKeyBuffer?: Uint8Array;
@@ -308,11 +332,10 @@ declare namespace BFChainCore {
     /**entity 状态 */
     status: ASSET_STATUS;
   };
-  /**发行 entity 的相关事件 */
+  /**发行 entity */
   type ApplyTransactionIssueEntityEvent<EVENTNAME, T extends Transaction = Transaction> =
     ApplyTransactionEvent<ApplyInfo_IssueEntity, EVENTNAME, T>;
 
-  /**destoryEntity 相关事件 */
   type ApplyInfo_DestoryEntity = {
     address: string;
     publicKeyBuffer?: Uint8Array;
@@ -326,9 +349,10 @@ declare namespace BFChainCore {
     /**entity 状态 */
     status: ASSET_STATUS;
   };
-  /**销毁 entity 的相关事件 */
+  /**销毁 entity */
   type ApplyTransactionDestoryEntityEvent<EVENTNAME, T extends Transaction = Transaction> =
     ApplyTransactionEvent<ApplyInfo_DestoryEntity, EVENTNAME, T>;
+
   type ApplyInfo_FrozenEntity = {
     address: string;
     publicKeyBuffer?: Uint8Array;
@@ -354,6 +378,18 @@ declare namespace BFChainCore {
   /**解冻 entityId */
   type ApplyTransactionUnfrozenEntityEvent<EVENTNAME, T extends Transaction = Transaction> =
     ApplyTransactionEvent<ApplyInfo_UnfrozenEntity, EVENTNAME, T>;
+
+  type ApplyInfo_ChangeEntityPossessor = {
+    address: string;
+    publicKeyBuffer?: Uint8Array;
+    /**entityId 的拥有者地址 */
+    possessorAddress: string;
+    sourceChainMagic: string;
+    entityId: string;
+  };
+  /**更改 entityId 拥有者 */
+  type ApplyTransactionChangeEntityPossessorEvent<EVENTNAME, T extends Transaction = Transaction> =
+    ApplyTransactionEvent<ApplyInfo_ChangeEntityPossessor, EVENTNAME, T>;
 
   type ApplyInfo_MigrateCertificate = {
     migrateCertificateId: string;
@@ -509,6 +545,14 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
+    /**更改 dappid 拥有者 */
+    changeDAppidPossessor: BFChainUtil.EventInOut<
+      ApplyTransactionChangeDAppidPossessorEvent<
+        "changeDAppidPossessor",
+        | import("@bfchain/core-model-transaction").BeExchangeSpecialAssetTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
+      >
+    >;
     /**发行数字资产 */
     issueAsset: BFChainUtil.EventInOut<
       ApplyTransactionIssueAssetEvent<
@@ -573,6 +617,14 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
+    /**更改链域名拥有者 */
+    changeLocationNamePossessor: BFChainUtil.EventInOut<
+      ApplyTransactionChangeLocationNamePossessorEvent<
+        "changeLocationNamePossessor",
+        | import("@bfchain/core-model-transaction").BeExchangeSpecialAssetTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
+      >
+    >;
     /**发行 entityFactory */
     issueEntityFactory: BFChainUtil.EventInOut<
       ApplyTransactionIssueEntityFactoryEvent<
@@ -609,6 +661,14 @@ declare namespace BFChainCore {
     unfrozenEntity: BFChainUtil.EventInOut<
       ApplyTransactionUnfrozenEntityEvent<
         "unfrozenEntity",
+        | import("@bfchain/core-model-transaction").BeExchangeSpecialAssetTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
+      >
+    >;
+    /**更改 entityId 拥有者 */
+    changeEntityPossessor: BFChainUtil.EventInOut<
+      ApplyTransactionChangeEntityPossessorEvent<
+        "changeEntityPossessor",
         | import("@bfchain/core-model-transaction").BeExchangeSpecialAssetTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
