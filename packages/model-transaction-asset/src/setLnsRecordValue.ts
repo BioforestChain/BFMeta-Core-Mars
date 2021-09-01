@@ -12,13 +12,13 @@ export class SetLnsRecordValueModel
   implements BFChainCore.AssetJSONToModelType<BFChainCore.SetLnsRecordValueJSON>
 {
   static INC = 1;
-  /**欲设置记录值的链域名 */
+  /**欲设置记录值的位名 */
   @Field.d(SetLnsRecordValueModel.INC++, "string")
   name!: string;
-  /**欲设置记录值的链域名所属的链名称 */
+  /**欲设置记录值的位名所属的链名称 */
   @Field.d(SetLnsRecordValueModel.INC++, "string")
   sourceChainName!: string;
-  /**欲设置记录值的链域名所属网络标识符 */
+  /**欲设置记录值的位名所属网络标识符 */
   @Field.d(SetLnsRecordValueModel.INC++, "string")
   sourceChainMagic!: string;
   /**解析操作类型 */

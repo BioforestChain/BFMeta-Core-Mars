@@ -53,11 +53,11 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
    * 必须携带查询用的索引存储
    * key 值必须是 "name" value 值必须是设定的值
    * asset 是完整的 locationName
-   * 必须携带合法的链域名：是一个字符串；长度要大于 2，最大不超过 1024；不能以 . 开头或结尾；一级域名只能是小写字母组成；
-   * 多级域名首字母只能是大小写字母，其他部分可以是数字；每级域名的长度最大为 128，根域名只能是本链链名
+   * 必须携带合法的位名：是一个字符串；长度要大于 2，最大不超过 1024；不能以 . 开头或结尾；一级位名只能是小写字母组成；
+   * 多级位名首字母只能是大小写字母，其他部分可以是数字；每级位名的长度最大为 128，根位名只能是本链链名
    * 必须携带合法的所属链名,并且是本链
    * 必须携带合法的所属链网络标识符,并且是本链
-   * 必须携带合法的链域名操作类型
+   * 必须携带合法的位名操作类型
    *
    * @param body
    * @param locationName
@@ -187,7 +187,7 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
         });
       }
       if (i === namesLength - 2) {
-        // 顶级域名必须是小写字母
+        // 顶级位名必须是小写字母
         if (!baseHelper.isLowerCase(lnsName)) {
           throw new ArgumentIllegalException(PROP_IS_INVALID, {
             prop: `name ${lnsName}`,
@@ -196,7 +196,7 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
           });
         }
       } else if (i === namesLength - 1) {
-        // 根域名必须是本链链名
+        // 根位名必须是本链链名
         if (lnsName !== config.chainName) {
           throw new ArgumentIllegalException(SHOULD_BE, {
             to_compare_prop: "root location name",
@@ -317,7 +317,7 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
       const { senderId, recipientId } = transaction;
       const { name, sourceChainMagic, sourceChainName, operationType } =
         transaction.asset.locationName;
-      // 发行链域名
+      // 发行位名
       if (operationType === LOCATION_NAME_OPERATION_TYPE.REGISTRATION) {
         taskList.next = eventEmitter.emit("registerLocationName", {
           type: "registerLocationName",

@@ -321,7 +321,7 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
             },
           });
         } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME) {
-          // 接收账户成为链域名的拥有者
+          // 接收账户成为位名的拥有者
           taskList.next = eventEmitter.emit("changeLocationNamePossessor", {
             type: "changeLocationNamePossessor",
             transaction,
@@ -391,7 +391,7 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
             },
           });
         } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME) {
-          // 发起账户成为链域名的拥有者
+          // 发起账户成为位名的拥有者
           taskList.next = eventEmitter.emit("unfrozenLocationName", {
             type: "unfrozenLocationName",
             transaction,

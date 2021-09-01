@@ -10,13 +10,13 @@ export class LocationNameInfo
   extends Message<LocationNameInfo>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.LocationNameJSON>
 {
-  /**链域名 */
+  /**位名 */
   @Field.d(1, "string")
   name!: string;
-  /**链域名所属的链名称 */
+  /**位名所属的链名称 */
   @Field.d(2, "string")
   sourceChainName!: string;
-  /**链域名所属的链网络标识符 */
+  /**位名所属的链网络标识符 */
   @Field.d(3, "string")
   sourceChainMagic!: string;
   @Field.d(4, "uint32")

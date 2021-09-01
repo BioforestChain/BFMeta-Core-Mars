@@ -688,7 +688,7 @@ export class EventLogicVerifier {
           accountGetterHelper,
         );
 
-        // 资产的发行账户不能是链域名的拥有者账户或管理账户
+        // 资产的发行账户不能是位名的拥有者账户或管理账户
         await this.helperLogicVerifier.isLnsPossessorOrManager(
           address,
           this.configHelper,
@@ -933,9 +933,9 @@ export class EventLogicVerifier {
         }
         if (transaction.recipientId !== memDapp.possessorAddress) {
           throw new ConsensusException(SHOULD_BE, {
-            to_compare_prop: "recipientId",
+            to_compare_prop: `recipientId ${transaction.recipientId}`,
             to_target: "transaction",
-            be_compare_prop: "dapp possessor",
+            be_compare_prop: `dapp possessor ${memDapp.possessorAddress}`,
             ...Function_Exception_Detail,
           });
         }
@@ -983,9 +983,9 @@ export class EventLogicVerifier {
         // dappid 的拥有者才能更改拥有者
         if (transaction.senderId !== memDapp.possessorAddress) {
           throw new ConsensusException(SHOULD_BE, {
-            to_compare_prop: "senderId",
+            to_compare_prop: `senderId ${transaction.senderId}`,
             to_target: "transaction",
-            be_compare_prop: "dapp possessor",
+            be_compare_prop: `dapp possessor ${memDapp.possessorAddress}`,
             ...Function_Exception_Detail,
           });
         }
@@ -1042,7 +1042,7 @@ export class EventLogicVerifier {
           accountGetterHelper,
         );
 
-        // 资产的发行账户不能是链域名的拥有者账户或管理账户
+        // 资产的发行账户不能是位名的拥有者账户或管理账户
         await this.helperLogicVerifier.isLnsPossessorOrManager(
           address,
           this.configHelper,
@@ -1123,7 +1123,7 @@ export class EventLogicVerifier {
       function: "eventLogicVerifier",
     } as const;
 
-    // 注册链域名
+    // 注册位名
     eventEmitter.on(
       "registerLocationName",
       async ({ applyInfo }, next) => {
@@ -1147,7 +1147,7 @@ export class EventLogicVerifier {
           }
         }
 
-        // 已存在的域名不能重复添加
+        // 已存在的位名不能重复添加
         const memLocation = await accountGetterHelper.getLocationName(
           sourceChainMagic,
           name,
@@ -1162,7 +1162,7 @@ export class EventLogicVerifier {
           });
         }
 
-        // 链域名是否被禁用
+        // 位名是否被禁用
         const result = await accountGetterHelper.isLocationNameForbidden(name);
         if (result) {
           throw new ConsensusException(FORBIDDEN, {
@@ -1174,7 +1174,7 @@ export class EventLogicVerifier {
 
         const names = name.split(".");
         if (names.length > 2) {
-          // 不能越级添加域名，即上级域名不存在则添加失败
+          // 不能越级添加位名，即上级位名不存在则添加失败
           const index = name.indexOf(".") + 1;
           const lastLocationName = name.substr(index);
           const lastMemLocation = await accountGetterHelper.getLocationName(
@@ -1206,14 +1206,14 @@ export class EventLogicVerifier {
       function: "eventLogicVerifier",
     } as const;
 
-    // 注销链域名
+    // 注销位名
     eventEmitter.on(
       "cancelLocationName",
       async ({ applyInfo }, next) => {
         const { sourceChainMagic, name } = applyInfo;
 
         // const names = name.split(".");
-        // // 顶级域名不能删除
+        // // 顶级位名不能删除
         // if (names.length === 2) {
         //   throw new ConsensusException(CAN_NOT_DELETE_LOCATION_NAME, {
         //     locationName: name,
@@ -1222,7 +1222,7 @@ export class EventLogicVerifier {
         //   });
         // }
 
-        // 不存在的域名不能删除
+        // 不存在的位名不能删除
         const memLocation = await accountGetterHelper.getLocationName(
           sourceChainMagic,
           name,
@@ -1236,7 +1236,7 @@ export class EventLogicVerifier {
           });
         }
 
-        // 冻结状态的域名不能删除
+        // 冻结状态的位名不能删除
         if (memLocation.status === ASSET_STATUS.FROZEN) {
           throw new ConsensusException(CAN_NOT_DELETE_LOCATION_NAME, {
             locationName: name,
@@ -1255,7 +1255,7 @@ export class EventLogicVerifier {
           });
         }
 
-        // 只有域名的拥有者才能删除域名
+        // 只有位名的拥有者才能删除位名
         if (memLocation.possessorAddress !== transaction.senderId) {
           throw new ConsensusException(CAN_NOT_DELETE_LOCATION_NAME, {
             locationName: name,
@@ -1264,7 +1264,7 @@ export class EventLogicVerifier {
           });
         }
 
-        // 不能越级删除域名，即有子域名的域名不能删除
+        // 不能越级删除位名，即有子位名的位名不能删除
         const isSubLnsExist = await accountGetterHelper.isSubLocationNameExist(
           sourceChainMagic,
           name,
@@ -1292,7 +1292,7 @@ export class EventLogicVerifier {
       function: "eventLogicVerifier",
     } as const;
 
-    // 设置链域名管理员
+    // 设置位名管理员
     eventEmitter.on(
       "setLnsManager",
       async ({ applyInfo }, next) => {
@@ -1315,7 +1315,7 @@ export class EventLogicVerifier {
           }
         }
 
-        // 链域名不存在不能设置管理员
+        // 位名不存在不能设置管理员
         const memLocation = await accountGetterHelper.getLocationName(
           sourceChainMagic,
           name,
@@ -1328,7 +1328,7 @@ export class EventLogicVerifier {
           });
         }
 
-        // 处于冻结状态的链域名不能设置管理员
+        // 处于冻结状态的位名不能设置管理员
         if (memLocation.status === ASSET_STATUS.FROZEN) {
           throw new ConsensusException(SET_LOCATION_NAME_MANAGER_FIELD, {
             locationName: name,
@@ -1356,7 +1356,7 @@ export class EventLogicVerifier {
             lastLocationName,
             currentBlockHeight,
           );
-          // 上级域名不存在
+          // 上级位名不存在
           if (!lastMemLocation) {
             throw new ConsensusException(SET_LOCATION_NAME_MANAGER_FIELD, {
               locationName: lastLocationName,
@@ -1365,7 +1365,7 @@ export class EventLogicVerifier {
             });
           }
 
-          // 多级域名只有域名的拥有者或者上级域名的管理员可以设置管理员
+          // 多级位名只有位名的拥有者或者上级位名的管理员可以设置管理员
           if (!(address === memLocation.possessorAddress || address === lastMemLocation.manager)) {
             throw new ConsensusException(SET_LOCATION_NAME_MANAGER_FIELD, {
               locationName: lastLocationName,
@@ -1375,7 +1375,7 @@ export class EventLogicVerifier {
             });
           }
         } else {
-          // 顶级域名只有域名的拥有者可以设置管理员
+          // 顶级位名只有位名的拥有者可以设置管理员
           if (address !== memLocation.possessorAddress) {
             throw new ConsensusException(SET_LOCATION_NAME_MANAGER_FIELD, {
               locationName: name,
@@ -1400,14 +1400,14 @@ export class EventLogicVerifier {
       function: "eventLogicVerifier",
     } as const;
 
-    // 设置链域名解析值
+    // 设置位名解析值
     eventEmitter.on(
       "setLnsRecordValue",
       async ({ applyInfo }, next) => {
         const { address, sourceChainMagic, name, operationType, addRecord, deleteRecord } =
           applyInfo;
 
-        // 校验当前域名是否存存在
+        // 校验当前位名是否存存在
         const memLocation = await accountGetterHelper.getLocationName(
           sourceChainMagic,
           name.toLowerCase(),
@@ -1422,7 +1422,7 @@ export class EventLogicVerifier {
         }
 
         const { records, status } = memLocation;
-        // 处于冻结状态的链域名不能设置解析值
+        // 处于冻结状态的位名不能设置解析值
         if (status === ASSET_STATUS.FROZEN) {
           throw new ConsensusException(SET_LOCATION_NAME_RECORD_VALUE_FIELD, {
             locationName: name,
@@ -1431,7 +1431,7 @@ export class EventLogicVerifier {
           });
         }
 
-        // 只有域名的拥有者或者管理员可以设置域名的解析值
+        // 只有位名的拥有者或者管理员可以设置位名的解析值
         if (!(address === memLocation.possessorAddress || address === memLocation.manager)) {
           throw new ConsensusException(SET_LOCATION_NAME_RECORD_VALUE_FIELD, {
             locationName: name,
@@ -1510,7 +1510,7 @@ export class EventLogicVerifier {
             ...Function_Exception_Detail,
           });
         }
-        // 只有顶级域名能交换
+        // 只有顶级位名能交换
         if (memLocation.level !== LOCATION_NAME_LEVEL.TOP_LEVEL) {
           throw new ConsensusException(ONLY_TOP_LEVEL_LOCATION_NAME_CAN_EXCHANGE, {
             ...Function_Exception_Detail,
@@ -1547,7 +1547,7 @@ export class EventLogicVerifier {
       async ({ applyInfo }, next) => {
         const { address, sourceChainMagic, name } = applyInfo;
 
-        // 域名是否存在
+        // 位名是否存在
         const memLocation = await accountGetterHelper.getLocationName(
           sourceChainMagic,
           name,
@@ -1566,7 +1566,7 @@ export class EventLogicVerifier {
             ...Function_Exception_Detail,
           });
         }
-        // 只有顶级域名能交换
+        // 只有顶级位名能交换
         if (memLocation.level !== LOCATION_NAME_LEVEL.TOP_LEVEL) {
           throw new ConsensusException(ONLY_TOP_LEVEL_LOCATION_NAME_CAN_EXCHANGE, {
             ...Function_Exception_Detail,
@@ -1581,9 +1581,9 @@ export class EventLogicVerifier {
         }
         if (transaction.recipientId !== memLocation.possessorAddress) {
           throw new ConsensusException(SHOULD_BE, {
-            to_compare_prop: "recipientId",
+            to_compare_prop: `recipientId ${transaction.recipientId}`,
             to_target: "transaction",
-            be_compare_prop: "locationName possessor",
+            be_compare_prop: `locationName possessor ${memLocation.possessorAddress}`,
             ...Function_Exception_Detail,
           });
         }
@@ -1604,13 +1604,13 @@ export class EventLogicVerifier {
       function: "eventLogicVerifier",
     } as const;
 
-    // 更改链域名的拥有者
+    // 更改位名的拥有者
     eventEmitter.on(
       "changeLocationNamePossessor",
       async ({ applyInfo }, next) => {
         const { address, sourceChainMagic, name } = applyInfo;
 
-        // 域名是否存在
+        // 位名是否存在
         const memLocation = await accountGetterHelper.getLocationName(
           sourceChainMagic,
           name,
@@ -1623,25 +1623,25 @@ export class EventLogicVerifier {
             ...Function_Exception_Detail,
           });
         }
-        // 只有顶级域名才能更改拥有者
+        // 只有顶级位名才能更改拥有者
         if (memLocation.level !== LOCATION_NAME_LEVEL.TOP_LEVEL) {
           throw new ConsensusException(ONLY_TOP_LEVEL_LOCATION_NAME_CAN_EXCHANGE, {
             ...Function_Exception_Detail,
           });
         }
-        // 处于冻结状态的域名不能更改拥有者
+        // 处于冻结状态的位名不能更改拥有者
         if (memLocation.status === ASSET_STATUS.FROZEN) {
           throw new ConsensusException(LOCATION_NAME_ALREADY_FROZEN, {
             locationName: name,
             ...Function_Exception_Detail,
           });
         }
-        // 链域名的拥有者才能更改拥有者
+        // 位名的拥有者才能更改拥有者
         if (transaction.senderId !== memLocation.possessorAddress) {
           throw new ConsensusException(SHOULD_BE, {
-            to_compare_prop: "senderId",
+            to_compare_prop: `senderId ${transaction.senderId}`,
             to_target: "transaction",
-            be_compare_prop: "locationName possessor",
+            be_compare_prop: `locationName possessor ${memLocation.possessorAddress}`,
             ...Function_Exception_Detail,
           });
         }
@@ -1700,7 +1700,7 @@ export class EventLogicVerifier {
           accountGetterHelper,
         );
 
-        // entityFactory 的发行账户不能是链域名的拥有者账户或管理账户
+        // entityFactory 的发行账户不能是位名的拥有者账户或管理账户
         await this.helperLogicVerifier.isLnsPossessorOrManager(
           address,
           this.configHelper,
@@ -1871,7 +1871,7 @@ export class EventLogicVerifier {
           });
         }
 
-        // 冻结状态的域名不能销毁
+        // 冻结状态的位名不能销毁
         if (memEntity.status === ASSET_STATUS.FROZEN) {
           throw new ConsensusException(CAN_NOT_DESTORY_ENTITY, {
             entityId,
@@ -1880,7 +1880,7 @@ export class EventLogicVerifier {
           });
         }
 
-        // 冻结状态的域名不能销毁
+        // 冻结状态的位名不能销毁
         if (memEntity.status === ASSET_STATUS.DESTORY) {
           throw new ConsensusException(CAN_NOT_DESTORY_ENTITY, {
             entityId,
@@ -1889,7 +1889,7 @@ export class EventLogicVerifier {
           });
         }
 
-        // 只有 entity 的拥有者才能删除域名
+        // 只有 entity 的拥有者才能删除位名
         if (memEntity.possessorAddress !== transaction.senderId) {
           throw new ConsensusException(CAN_NOT_DESTORY_ENTITY, {
             entityId,
@@ -2013,9 +2013,9 @@ export class EventLogicVerifier {
         }
         if (transaction.recipientId !== memEntity.possessorAddress) {
           throw new ConsensusException(SHOULD_BE, {
-            to_compare_prop: "recipientId",
+            to_compare_prop: `recipientId ${transaction.recipientId}`,
             to_target: "transaction",
-            be_compare_prop: "entity possessor",
+            be_compare_prop: `entity possessor ${memEntity.possessorAddress}`,
             ...Function_Exception_Detail,
           });
         }
@@ -2072,9 +2072,9 @@ export class EventLogicVerifier {
         // 只有 entity 拥有者才能更改拥有者
         if (transaction.senderId !== memEntity.possessorAddress) {
           throw new ConsensusException(SHOULD_BE, {
-            to_compare_prop: "senderId",
+            to_compare_prop: `senderId ${transaction.senderId}`,
             to_target: "transaction",
-            be_compare_prop: "entity possessor",
+            be_compare_prop: `entity possessor ${memEntity.possessorAddress}`,
             ...Function_Exception_Detail,
           });
         }

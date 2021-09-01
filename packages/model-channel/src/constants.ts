@@ -66,9 +66,9 @@ export enum NewTransactionRefuseReason {
   MUSET_VOTE_FOR_DAPP_POSSESSOR,
   /**交易资产负债 */
   TRANSACTION_ASSET_DEBT,
-  /**链域名不存在 */
+  /**位名不存在 */
   LOCATION_NAME_NOT_EXIST,
-  /**账户不是链域名的拥有者 */
+  /**账户不是位名的拥有者 */
   ACCOUNT_NOT_LNS_POSSESSOR,
   /**dapp 已经存在 */
   DAPP_ALREADY_EXISTS,
@@ -80,15 +80,15 @@ export enum NewTransactionRefuseReason {
   CHAINNAME_ALREADY_EXIST,
   /**资产已经存在 */
   ASSET_ALREADY_EXIST,
-  /**链域名已经存在 */
+  /**位名已经存在 */
   LOCATION_NAME_ALREADY_EXIST,
   /**不能将冻结账户设置为管理员 */
   CAN_NOT_SET_FROZEN_ACCOUNT_AS_MANAGER,
   /**不能将原来的管理员设置为管理员 */
   CAN_NOT_SET_SAME_ACCOUNT_AS_MANAGER,
-  /**没有设置链域名管理员的权限 */
+  /**没有设置位名管理员的权限 */
   SET_LNS_MANAGER_PERMISSION_DENIED,
-  /**没有设置链域名管理员的权限 */
+  /**没有设置位名管理员的权限 */
   SET_LNS_RECORD_VALUE_PERMISSION_DENIED,
   /**账户已经设置了用户名 */
   ACCOUNT_ALREADY_HAVE_USERNAME,

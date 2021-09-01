@@ -164,7 +164,7 @@ export class GenesisAssetModel
   set beginEpochTime(v) {
     this.beginEpochTimeLong = Long.fromNumber(v);
   }
-  /**创世链域名 */
+  /**创世位名 */
   @Field.d(GenesisAssetModel.INC++, "string")
   genesisLocationName!: string;
   /**创始账户初始余额 */

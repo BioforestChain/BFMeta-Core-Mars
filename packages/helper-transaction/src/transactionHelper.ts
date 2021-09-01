@@ -198,15 +198,15 @@ export class TransactionHelper {
    * app.ibt.bfchain(2 级)
    * ark.app.ibt.bfchain(3 级)
    */
-  /**LOCATION_NAME：注册/注销链域名 */
+  /**LOCATION_NAME：注册/注销位名 */
   get LOCATION_NAME() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.LOCATION_NAME);
   }
-  /** SET_LNS_RECORD_VALUE: 设置链域名解析值 */
+  /** SET_LNS_RECORD_VALUE: 设置位名解析值 */
   get SET_LNS_RECORD_VALUE() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.SET_LNS_RECORD_VALUE);
   }
-  /** SET_LNS_MANAGER: 设置链域名管理员 */
+  /** SET_LNS_MANAGER: 设置位名管理员 */
   get SET_LNS_MANAGER() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.SET_LNS_MANAGER);
   }

@@ -33,13 +33,13 @@ export class ToExchangeSpecialAssetModel
     BUFFER_LIST_PUBLICKEY_LIST_WM.set(bufList, cipherTextList);
     this.cipherPublicKeysBuffer = bufList;
   }
-  /**用于交换的域名来源链的网络标识符 */
+  /**用于交换的位名来源链的网络标识符 */
   @Field.d(ToExchangeSpecialAssetModel.INC++, "string")
   toExchangeSource!: string;
   /**被交换的资产来源链的网络标识符 */
   @Field.d(ToExchangeSpecialAssetModel.INC++, "string")
   beExchangeSource!: string;
-  /**用于交换的域名来源链的链名 */
+  /**用于交换的位名来源链的链名 */
   @Field.d(ToExchangeSpecialAssetModel.INC++, "string")
   toExchangeChainName!: string;
   /**被交换的资产来源链的链名 */

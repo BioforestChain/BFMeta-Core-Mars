@@ -125,7 +125,7 @@ export const enum EXCHANGE_DIRECTION {
 export const enum SPECIAL_ASSET_TYPE {
   /**特殊资产类型：dapp */
   DAPP_ID,
-  /**特殊资产类型：链域名 */
+  /**特殊资产类型：位名 */
   LOCATION_NAME,
   /**特殊资产类型：资产权益（非同质化权益） */
   ENTITY,
@@ -155,7 +155,7 @@ export const enum RANGE_TYPE {
   MULTI_ADDRESS = 1,
   /**DAppid范围 */
   MULTI_DAPPID = 2,
-  /**链域名范围 */
+  /**位名范围 */
   MULTI_LOCATION_NAME = 4,
 }
 

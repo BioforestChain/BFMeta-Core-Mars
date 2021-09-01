@@ -209,18 +209,18 @@ declare namespace BFChainCore {
   type ApplyTransactionRegisterChainEvent<EVENTNAME, T extends Transaction = Transaction> =
     ApplyTransactionEvent<ApplyInfo_RegisterChain, EVENTNAME, T>;
 
-  /**链域名相关事件 */
+  /**位名相关事件 */
   type ApplyInfo_LocationNameRegistration = {
     address: string;
     publicKeyBuffer?: Uint8Array;
     name: string;
     sourceChainName: string;
     sourceChainMagic: string;
-    /**链域名的拥有者地址 */
+    /**位名的拥有者地址 */
     possessorAddress: string;
     status: ASSET_STATUS;
   };
-  /**注册链域名 */
+  /**注册位名 */
   type ApplyTransactionRegisterLocationNameEvent<EVENTNAME, T extends Transaction = Transaction> =
     ApplyTransactionEvent<ApplyInfo_LocationNameRegistration, EVENTNAME, T>;
 
@@ -230,7 +230,7 @@ declare namespace BFChainCore {
     name: string;
     sourceChainMagic: string;
   };
-  /**注销链域名 */
+  /**注销位名 */
   type ApplyTransactionCancelLocationNameEvent<EVENTNAME, T extends Transaction = Transaction> =
     ApplyTransactionEvent<ApplyInfo_LocationNameCancellation, EVENTNAME, T>;
 
@@ -241,7 +241,7 @@ declare namespace BFChainCore {
     sourceChainMagic: string;
     manager: string;
   };
-  /**设置链域名管理员 */
+  /**设置位名管理员 */
   type ApplyTransactionSetLnsManagerEvent<EVENTNAME, T extends Transaction = Transaction> =
     ApplyTransactionEvent<ApplyInfo_SetLnsManager, EVENTNAME, T>;
 
@@ -254,7 +254,7 @@ declare namespace BFChainCore {
     addRecord?: LocationNameRecordJSON;
     deleteRecord?: LocationNameRecordJSON;
   };
-  /**设置链域名解析值 */
+  /**设置位名解析值 */
   type ApplyTransactionSetLnsRecordValueEvent<EVENTNAME, T extends Transaction = Transaction> =
     ApplyTransactionEvent<ApplyInfo_SetLnsRecordValue, EVENTNAME, T>;
 
@@ -267,32 +267,32 @@ declare namespace BFChainCore {
     maxEffectiveHeight: number;
     status: ASSET_STATUS;
   };
-  /**冻结链域名 */
+  /**冻结位名 */
   type ApplyTransactionFrozenLocationNameEvent<EVENTNAME, T extends Transaction = Transaction> =
     ApplyTransactionEvent<ApplyInfo_FrozenLocationName, EVENTNAME, T>;
 
   type ApplyInfo_UnfrozenLocationName = {
     address: string;
     publicKeyBuffer?: Uint8Array;
-    /**链域名的拥有者地址 */
+    /**位名的拥有者地址 */
     possessorAddress: string;
     name: string;
     sourceChainMagic: string;
     status: ASSET_STATUS;
   };
-  /**解冻链域名 */
+  /**解冻位名 */
   type ApplyTransactionUnfrozenLocationNameEvent<EVENTNAME, T extends Transaction = Transaction> =
     ApplyTransactionEvent<ApplyInfo_UnfrozenLocationName, EVENTNAME, T>;
 
   type ApplyInfo_ChangeLocationNamePossessor = {
     address: string;
     publicKeyBuffer?: Uint8Array;
-    /**链域名的拥有者地址 */
+    /**位名的拥有者地址 */
     possessorAddress: string;
     name: string;
     sourceChainMagic: string;
   };
-  /**更改链域名拥有者 */
+  /**更改位名拥有者 */
   type ApplyTransactionChangeLocationNamePossessorEvent<
     EVENTNAME,
     T extends Transaction = Transaction,
@@ -569,7 +569,7 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
-    /**注册链域名 */
+    /**注册位名 */
     registerLocationName: BFChainUtil.EventInOut<
       ApplyTransactionRegisterLocationNameEvent<
         "registerLocationName",
@@ -577,7 +577,7 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
-    /**注销链域名 */
+    /**注销位名 */
     cancelLocationName: BFChainUtil.EventInOut<
       ApplyTransactionCancelLocationNameEvent<
         "cancelLocationName",
@@ -585,7 +585,7 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
-    /**设置链域名管理员 */
+    /**设置位名管理员 */
     setLnsManager: BFChainUtil.EventInOut<
       ApplyTransactionSetLnsManagerEvent<
         "setLnsManager",
@@ -593,7 +593,7 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
-    /**设置链域名解析值 */
+    /**设置位名解析值 */
     setLnsRecordValue: BFChainUtil.EventInOut<
       ApplyTransactionSetLnsRecordValueEvent<
         "setLnsRecordValue",
@@ -601,7 +601,7 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
-    /**冻结链域名 */
+    /**冻结位名 */
     frozenLocationName: BFChainUtil.EventInOut<
       ApplyTransactionFrozenLocationNameEvent<
         "frozenLocationName",
@@ -609,7 +609,7 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
-    /**解冻链域名 */
+    /**解冻位名 */
     unfrozenLocationName: BFChainUtil.EventInOut<
       ApplyTransactionUnfrozenLocationNameEvent<
         "unfrozenLocationName",
@@ -617,7 +617,7 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
-    /**更改链域名拥有者 */
+    /**更改位名拥有者 */
     changeLocationNamePossessor: BFChainUtil.EventInOut<
       ApplyTransactionChangeLocationNamePossessorEvent<
         "changeLocationNamePossessor",

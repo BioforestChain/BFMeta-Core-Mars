@@ -30,7 +30,7 @@ export class BaseHelper {
   }
 
   /**
-   * 是否是合法的域名解析值
+   * 是否是合法的位名解析值
    *
    * @param record
    */
@@ -740,12 +740,12 @@ export class BaseHelper {
   isValidAssetPrealnum = this.isValidStringNumber;
 
   /**
-   * 链域名是否合法
-   * 总域名最大长度 1024
+   * 位名是否合法
+   * 总位名最大长度 1024
    * 不能以 . 开头或结尾
    * 只能包含大小写字母、数字、.
-   * 顶级域名只能是小写字母，多级域名每级只能是大小写字母、数字
-   * 每级域名的最大长度 128
+   * 顶级位名只能是小写字母，多级位名每级只能是大小写字母、数字
+   * 每级位名的最大长度 128
    *
    * @param name
    */
@@ -753,7 +753,7 @@ export class BaseHelper {
     if (!this.isString(name)) {
       return false;
     }
-    // 链域名总长度不大于 1024
+    // 位名总长度不大于 1024
     if (name.length > 1024) {
       return false;
     }
@@ -777,7 +777,7 @@ export class BaseHelper {
           return false;
         }
       } else if (i === len - 1) {
-        // 根域名必须是本链链名
+        // 根位名必须是本链链名
         if (item !== chainName) {
           return false;
         }

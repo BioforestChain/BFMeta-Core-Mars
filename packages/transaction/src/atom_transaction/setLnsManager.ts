@@ -48,9 +48,9 @@ export class SetLnsManagerTransactionFactory extends TransactionFactory<SetLnsMa
    * 必须携带查询用的索引存储
    *  key 值必须是 "name" value 值必须是设定的值
    * asset 是完整的 lnsManager 信息
-   * 必须携带合法的欲设置管理员的链域名
-   * 必须携带合法的欲设置管理员的链域名所属链的名称
-   * 必须携带合法的欲设置管理员的链域名所属链的网络标识符
+   * 必须携带合法的欲设置管理员的位名
+   * 必须携带合法的欲设置管理员的位名所属链的名称
+   * 必须携带合法的欲设置管理员的位名所属链的网络标识符
    * 必须携带合法的新的管理员账户地址
    * 新的管理员账户地址和交易的接收者必须相等
    *

@@ -86,7 +86,7 @@ export class HelperLogicVerifier {
     configHelper = this.configHelper,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
   ) {
-    // 资产的发行账户不能是链域名的拥有者账户或管理账户
+    // 资产的发行账户不能是位名的拥有者账户或管理账户
     const isLnsPossessor = await accountGetterHelper.isLocationNamePossessor(
       configHelper.magic,
       address,

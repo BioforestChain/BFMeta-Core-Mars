@@ -9,13 +9,13 @@ export class SetLnsManagerModel
   extends Message<SetLnsManagerModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.SetLnsManagerJSON>
 {
-  /**欲设置管理员的链域名 */
+  /**欲设置管理员的位名 */
   @Field.d(1, "string")
   name!: string;
-  /**欲设置管理员的链域名所属的链名称 */
+  /**欲设置管理员的位名所属的链名称 */
   @Field.d(2, "string")
   sourceChainName!: string;
-  /**欲设置管理员的链域名所属的链网络标识符 */
+  /**欲设置管理员的位名所属的链网络标识符 */
   @Field.d(3, "string")
   sourceChainMagic!: string;
   toJSON() {

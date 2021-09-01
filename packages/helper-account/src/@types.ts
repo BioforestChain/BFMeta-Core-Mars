@@ -218,11 +218,11 @@ declare namespace BFChainCore {
       locationName: string,
       currentBlockHeight: number,
     ): Promise<LNI | undefined>;
-    /**是否持有或关联指定的域名 */
+    /**是否持有或关联指定的位名 */
     isLocationNamePossessor(sourceChainMagic: string, address: string): Promise<boolean>;
-    /**指定域名是否存在子域名 */
+    /**指定位名是否存在子位名 */
     isSubLocationNameExist(sourceChainMagic: string, endsWith: string): Promise<boolean>;
-    /**链域名是否被禁用 */
+    /**位名是否被禁用 */
     isLocationNameForbidden(locationName: string): Promise<boolean>;
     /**查询冻结的资产 */
     getFrozenAsset(address: string, signature: string): Promise<FA | undefined>;
