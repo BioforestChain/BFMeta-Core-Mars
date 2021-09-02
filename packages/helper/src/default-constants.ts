@@ -439,6 +439,9 @@ export const DEFAULT_CONSTANTS: BFChainCore.DefaultConstantsJSON = {
   ],
   // 预注册的 LNS 名
   preRegisteredLNSName: [
+    "bnqkl",
+    "bngj",
+    "bagen",
     "google",
     "youtube",
     "facebook",
@@ -447,6 +450,8 @@ export const DEFAULT_CONSTANTS: BFChainCore.DefaultConstantsJSON = {
     "wikipedia",
     "amazon",
     "co",
+    "bytedance",
+    "tencent",
     "qq",
     "twitter",
     "live",
