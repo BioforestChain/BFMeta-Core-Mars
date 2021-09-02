@@ -676,26 +676,12 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                         }
                       });
                       if (res.transactions.length < chain_task_limit) {
-                        /// 如果是高度最高的那个节点返回空列表，那么基本就是空列表没跑了
-                        const resultChannelMaybeHeight =
-                          queryer.getChainChannelByResult(res)?.maybeHeight;
-                        if (
-                          resultChannelMaybeHeight &&
-                          resultChannelMaybeHeight >= this.maybeHeight
-                        ) {
-                          /// 得到了查询终点
-                          setQueryDoneOffset(task_offset);
-                          // 确认节点的工作，让其继续下一个工作
-                          event.autoFreeChainChannel = true;
-                          /// 中断这次查询
-                          return true;
-                        } else {
-                          // 移除无效的结果
-                          queryer.removeChainChannelByResult(res);
-                          // 重试任务，但是这个节点因为高度过低，暂时不用它来查询
-                          times++;
-                          return false;
-                        }
+                        /// 基于幂等性，得到了查询终点
+                        setQueryDoneOffset(task_offset);
+                        // 确认节点的工作，让其继续下一个工作
+                        event.autoFreeChainChannel = true;
+                        /// 中断这次查询
+                        return true;
                       } else {
                         // 任务完成
                         queryer.finish();
@@ -992,26 +978,12 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                         }
                       });
                       if (res.tIndexes.length < chain_task_limit) {
-                        /// 如果是高度最高的那个节点返回空列表，那么基本就是空列表没跑了
-                        const resultChannelMaybeHeight =
-                          queryer.getChainChannelByResult(res)?.maybeHeight;
-                        if (
-                          resultChannelMaybeHeight &&
-                          resultChannelMaybeHeight >= this.maybeHeight
-                        ) {
-                          /// 得到了查询终点
-                          setQueryDoneOffset(task_offset);
-                          // 确认节点的工作，让其继续下一个工作
-                          event.autoFreeChainChannel = true;
-                          /// 中断这次查询
-                          return true;
-                        } else {
-                          // 移除无效的结果
-                          queryer.removeChainChannelByResult(res);
-                          // 重试任务，但是这个节点因为高度过低，暂时不用它来查询
-                          times++;
-                          return false;
-                        }
+                        /// 基于幂等性，得到了查询终点
+                        setQueryDoneOffset(task_offset);
+                        // 确认节点的工作，让其继续下一个工作
+                        event.autoFreeChainChannel = true;
+                        /// 中断这次查询
+                        return true;
                       } else {
                         // 任务完成
                         queryer.finish();
