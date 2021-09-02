@@ -249,17 +249,9 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
       ...Function_Exception_Detail,
     } as const;
 
-    if (!baseHelper.isValidLocationNameRecord(record)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `record ${JSON.stringify(record)}`,
-        type: "location name record",
-        ...LnsRecordValueAsset_Exception_Detail,
-      });
-    }
-
     const { recordType, recordValue } = record;
 
-    if (RECORD_TYPE.IPV4 === recordType) {
+    if (recordType === RECORD_TYPE.IPV4) {
       if (!baseHelper.isIpV4(recordValue)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: `recordValue ${recordValue}`,
@@ -267,7 +259,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
           ...LnsRecordValueAsset_Exception_Detail,
         });
       }
-    } else if (RECORD_TYPE.IPV6 === recordType) {
+    } else if (recordType === RECORD_TYPE.IPV6) {
       if (!baseHelper.isIpV6(recordValue)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: `recordValue ${recordValue}`,
@@ -275,7 +267,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
           ...LnsRecordValueAsset_Exception_Detail,
         });
       }
-    } else if (RECORD_TYPE.LNG_LAT === recordType) {
+    } else if (recordType === RECORD_TYPE.LNG_LAT) {
       if (!baseHelper.isString(recordValue)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: `recordValue ${recordValue}`,
@@ -283,7 +275,36 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
           ...LnsRecordValueAsset_Exception_Detail,
         });
       }
-    } else if (RECORD_TYPE.ADDRESSV1 === recordType) {
+      const items = recordValue.split(",");
+      if (items.length !== 2) {
+        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          prop: `recordValue ${recordValue}`,
+          ...LnsRecordValueAsset_Exception_Detail,
+        });
+      }
+      // 经度（-180，+180）：负坐标表示西半球，正坐标标识东半球
+      if (
+        !/^[\-\+]((0(\.\d{1,10})?)|(([1,9](\d)?)(\.\d{1,10})?)|(1[0-7]\d{1}(\.\d{1,10})?)|(180(\.0{1,10})?))$/.test(
+          items[0],
+        )
+      ) {
+        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          prop: `recordValue ${recordValue}`,
+          ...LnsRecordValueAsset_Exception_Detail,
+        });
+      }
+      // 纬度（-90，+90）：负坐标标识南半球，正坐标表示北半球
+      if (
+        !/^[\-\+]((0(\.\d{1,10})?)|([1,9](\.\d{1,10})?)|([1-8]\d?(\.\d{1,10})?)|(90(\.0{1,10})?))$/.test(
+          items[1],
+        )
+      ) {
+        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          prop: `recordValue ${recordValue}`,
+          ...LnsRecordValueAsset_Exception_Detail,
+        });
+      }
+    } else if (recordType === RECORD_TYPE.ADDRESSV1) {
       if (!(await accountBaseHelper.isAddress(recordValue))) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: `recordValue ${recordValue}`,
@@ -291,7 +312,15 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
           ...LnsRecordValueAsset_Exception_Detail,
         });
       }
-    } else if (RECORD_TYPE.UNKNOWN === recordType) {
+    } else if (recordType === RECORD_TYPE.LOCATION_NAME) {
+      if (!baseHelper.isValidLnsName(recordValue)) {
+        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          prop: `recordValue ${recordValue}`,
+          type: "location name",
+          ...LnsRecordValueAsset_Exception_Detail,
+        });
+      }
+    } else if (recordType === RECORD_TYPE.UNKNOWN) {
       /// 无需验证
     } else {
       throw new ArgumentIllegalException(NOT_EXIST, {

@@ -115,4 +115,9 @@ const lnsRecordValue: BFChainCore.SetLnsRecordValueJSON = {
     recordValue: "+180.0,+90.0",
   };
   await getSetLnsRecordValueTransaction(getSenderWithSecondSecret(), lnsRecordValue);
+  lnsRecordValue.addRecord = {
+    recordType: RECORD_TYPE.LOCATION_NAME,
+    recordValue: "113.hyql.bfchain",
+  };
+  await getSetLnsRecordValueTransaction(getSenderWithSecondSecret(), lnsRecordValue);
 })();

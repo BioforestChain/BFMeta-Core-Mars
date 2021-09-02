@@ -31,6 +31,8 @@ export const enum RECORD_TYPE {
   LNG_LAT = 3,
   /**账户地址解析 */
   ADDRESSV1 = 4,
+  /**另一个位名 */
+  LOCATION_NAME = 5,
 }
 
 /**

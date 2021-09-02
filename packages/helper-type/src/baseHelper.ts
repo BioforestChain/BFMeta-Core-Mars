@@ -34,7 +34,7 @@ export class BaseHelper {
    *
    * @param record
    */
-  isValidLocationNameRecord(record: BFChainCore.LocationNameRecordJSON) {
+  async isValidLocationNameRecord(record: BFChainCore.LocationNameRecordJSON) {
     if (!this.isObject(record)) {
       return false;
     }
@@ -78,7 +78,13 @@ export class BaseHelper {
       return true;
     }
     if (recordType === RECORD_TYPE.ADDRESSV1) {
-      if (!this.isString(recordValue)) {
+      if (!(await this.accountBaseHelper.isAddress(recordValue))) {
+        return false;
+      }
+      return true;
+    }
+    if (recordType === RECORD_TYPE.LOCATION_NAME) {
+      if (!this.isValidLnsName(recordValue)) {
         return false;
       }
       return true;
@@ -877,7 +883,6 @@ export class BaseHelper {
    * @param milestones
    */
   isValidChainRewardMilestones(milestones: any): milestones is BFChainCore.RewardPerBlockJSON {
-    debugger;
     if (!(milestones && milestones.heights && milestones.rewards)) {
       return false;
     }

@@ -204,70 +204,6 @@ export class CustomTransactionEvent {
     }
   }
 
-  /**
-   * 校验解析值是否合法
-   *
-   * @param record
-   */
-  async verifyLocationNameRecord(record: BFChainCore.LocationNameRecordJSON) {
-    const { baseHelper, accountBaseHelper } = this;
-    const Function_Exception_Detail = {
-      target: "applyResult",
-      function: "verifyLocationNameRecord",
-    } as const;
-
-    if (!baseHelper.isValidLocationNameRecord(record)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: "record",
-        type: "location name record",
-        ...Function_Exception_Detail,
-      });
-    }
-
-    const { recordType, recordValue } = record;
-
-    if (RECORD_TYPE.IPV4 === recordType) {
-      if (!baseHelper.isIpV4(recordValue)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "recordValue",
-          type: "ipv4",
-          ...Function_Exception_Detail,
-        });
-      }
-    } else if (RECORD_TYPE.IPV6 === recordType) {
-      if (!baseHelper.isIpV6(recordValue)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "recordValue",
-          type: "ipv6",
-          ...Function_Exception_Detail,
-        });
-      }
-    } else if (RECORD_TYPE.LNG_LAT === recordType) {
-      if (!baseHelper.isString(recordValue)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "recordValue",
-          type: "string",
-          ...Function_Exception_Detail,
-        });
-      }
-    } else if (RECORD_TYPE.ADDRESSV1 === recordType) {
-      if (!(await accountBaseHelper.isAddress(recordValue))) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: "recordValue",
-          type: "block chain account address",
-          ...Function_Exception_Detail,
-        });
-      }
-    } else if (RECORD_TYPE.UNKNOWN === recordType) {
-      /// 无需验证
-    } else {
-      throw new ArgumentIllegalException(NOT_EXIST, {
-        prop: "recordType",
-        ...Function_Exception_Detail,
-      });
-    }
-  }
-
   async verifyApplyResult(
     applyResult: BFChainCore.ApplyResultJSON,
     transaction: CustomTransaction,
@@ -525,7 +461,12 @@ export class CustomTransactionEvent {
             ...Function_Exception_Detail,
           });
         }
-        await this.verifyLocationNameRecord(addRecord);
+        if (!(await baseHelper.isValidLocationNameRecord(addRecord))) {
+          throw new ArgumentIllegalException(PROP_IS_INVALID, {
+            prop: `addRecord ${JSON.stringify(addRecord)}`,
+            ...Function_Exception_Detail,
+          });
+        }
       } else if (operationType === RECORD_OPERATION_TYPE.DELETE) {
         if (addRecord) {
           throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
@@ -539,7 +480,12 @@ export class CustomTransactionEvent {
             ...Function_Exception_Detail,
           });
         }
-        await this.verifyLocationNameRecord(deleteRecord);
+        if (!(await baseHelper.isValidLocationNameRecord(deleteRecord))) {
+          throw new ArgumentIllegalException(PROP_IS_INVALID, {
+            prop: `deleteRecord ${JSON.stringify(deleteRecord)}`,
+            ...Function_Exception_Detail,
+          });
+        }
       } else if (operationType === RECORD_OPERATION_TYPE.UPDATE) {
         if (!addRecord) {
           throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
@@ -553,8 +499,18 @@ export class CustomTransactionEvent {
             ...Function_Exception_Detail,
           });
         }
-        await this.verifyLocationNameRecord(addRecord);
-        await this.verifyLocationNameRecord(deleteRecord);
+        if (!(await baseHelper.isValidLocationNameRecord(addRecord))) {
+          throw new ArgumentIllegalException(PROP_IS_INVALID, {
+            prop: `addRecord ${JSON.stringify(addRecord)}`,
+            ...Function_Exception_Detail,
+          });
+        }
+        if (!(await baseHelper.isValidLocationNameRecord(deleteRecord))) {
+          throw new ArgumentIllegalException(PROP_IS_INVALID, {
+            prop: `deleteRecord ${JSON.stringify(deleteRecord)}`,
+            ...Function_Exception_Detail,
+          });
+        }
       } else {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
           prop: "operationType",
