@@ -359,6 +359,39 @@ export const ENTITY_ALREADY_FROZEN = (ec.next =
 /**entityId function */
 export const ENTITY_ALREADY_DESTORY = (ec.next =
   "Entity already destory, entityId {entityId} when {function}");
+/**prop target value function */
+export const NOT_A_STRING = (ec.next =
+  "{prop} in {target} not a string, value {value} when {function}");
+/**prop target value function */
+export const NOT_A_IP = (ec.next = "{prop} in {target} not a ip, value {value} when {function}");
+/**prop target value function */
+export const NOT_A_IPV4 = (ec.next =
+  "{prop} in {target} not a ipv4, value {value} when {function}");
+/**prop target value function */
+export const NOT_A_IPV6 = (ec.next =
+  "{prop} in {target} not a ipv6, value {value} when {function}");
+/**prop target value function */
+export const NOT_A_LONGITUDE_LATITUDE = (ec.next =
+  "{prop} in {target} not a longitude-latitude, value {value} when {function}");
+/**prop target value function */
+export const NOT_A_LONGITUDE = (ec.next =
+  "{prop} in {target} not a longitude, value {value} when {function}");
+/**prop target value function */
+export const NOT_A_LATITUDE = (ec.next =
+  "{prop} in {target} not a latitude, value {value} when {function}");
+/**prop target value function */
+export const NOT_A_ADDRESS = (ec.next =
+  "{prop} in {target} not a address, value {value} when {function}");
+/**prop target value function */
+export const NOT_A_LOCATION_NAME = (ec.next =
+  "{prop} in {target} not a locationName, value {value} when {function}");
+/**prop target value function */
+export const NOT_A_DNS = (ec.next = "{prop} in {target} not a dns, value {value} when {function}");
+/**prop target value function */
+export const NOT_A_EMAIL = (ec.next =
+  "{prop} in {target} not a email, value {value} when {function}");
+/**prop target value function */
+export const NOT_A_URL = (ec.next = "{prop} in {target} not a url, value {value} when {function}");
 // #endregion
 export const errorCode = new Map(
   ec.errorCode.concat([

@@ -21,6 +21,17 @@ import {
   SHOULD_BE,
   NOT_MATCH,
   SHOULD_NOT_EXIST,
+  NOT_A_STRING,
+  NOT_A_IPV4,
+  NOT_A_IPV6,
+  NOT_A_LONGITUDE,
+  NOT_A_LONGITUDE_LATITUDE,
+  NOT_A_LATITUDE,
+  NOT_A_ADDRESS,
+  NOT_A_LOCATION_NAME,
+  NOT_A_DNS,
+  NOT_A_EMAIL,
+  NOT_A_URL,
 } from "@bfchain/core-util-exception";
 import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
@@ -251,72 +262,92 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
 
     const { recordType, recordValue } = record;
 
+    if (!baseHelper.isString(recordValue)) {
+      throw new ArgumentIllegalException(NOT_A_STRING, {
+        prop: "recordValue",
+        value: recordValue,
+        ...LnsRecordValueAsset_Exception_Detail,
+      });
+    }
+
     if (recordType === RECORD_TYPE.IPV4) {
       if (!baseHelper.isIpV4(recordValue)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: `recordValue ${recordValue}`,
-          type: "ipv4",
+        throw new ArgumentIllegalException(NOT_A_IPV4, {
+          prop: "recordValue",
+          value: recordValue,
           ...LnsRecordValueAsset_Exception_Detail,
         });
       }
     } else if (recordType === RECORD_TYPE.IPV6) {
       if (!baseHelper.isIpV6(recordValue)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: `recordValue ${recordValue}`,
-          type: "ipv6",
+        throw new ArgumentIllegalException(NOT_A_IPV6, {
+          prop: "recordValue",
+          value: recordValue,
           ...LnsRecordValueAsset_Exception_Detail,
         });
       }
     } else if (recordType === RECORD_TYPE.LNG_LAT) {
-      if (!baseHelper.isString(recordValue)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: `recordValue ${recordValue}`,
-          type: "string",
-          ...LnsRecordValueAsset_Exception_Detail,
-        });
-      }
       const items = recordValue.split(",");
       if (items.length !== 2) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: `recordValue ${recordValue}`,
+        throw new ArgumentIllegalException(NOT_A_LONGITUDE_LATITUDE, {
+          prop: "recordValue",
+          value: recordValue,
           ...LnsRecordValueAsset_Exception_Detail,
         });
       }
       // 经度（-180，+180）：负坐标表示西半球，正坐标标识东半球
-      if (
-        !/^[\-\+]((0(\.\d{1,10})?)|(([1,9](\d)?)(\.\d{1,10})?)|(1[0-7]\d{1}(\.\d{1,10})?)|(180(\.0{1,10})?))$/.test(
-          items[0],
-        )
-      ) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: `recordValue ${recordValue}`,
+      if (!baseHelper.isLongitude(items[0])) {
+        throw new ArgumentIllegalException(NOT_A_LONGITUDE, {
+          prop: "recordValue",
+          value: recordValue,
           ...LnsRecordValueAsset_Exception_Detail,
         });
       }
       // 纬度（-90，+90）：负坐标标识南半球，正坐标表示北半球
-      if (
-        !/^[\-\+]((0(\.\d{1,10})?)|([1,9](\.\d{1,10})?)|([1-8]\d?(\.\d{1,10})?)|(90(\.0{1,10})?))$/.test(
-          items[1],
-        )
-      ) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: `recordValue ${recordValue}`,
+      if (!baseHelper.isLatitude(items[1])) {
+        throw new ArgumentIllegalException(NOT_A_LATITUDE, {
+          prop: "recordValue",
+          value: recordValue,
           ...LnsRecordValueAsset_Exception_Detail,
         });
       }
     } else if (recordType === RECORD_TYPE.ADDRESSV1) {
       if (!(await accountBaseHelper.isAddress(recordValue))) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: `recordValue ${recordValue}`,
-          type: "block chain account address",
+        throw new ArgumentIllegalException(NOT_A_ADDRESS, {
+          prop: "recordValue",
+          value: recordValue,
           ...LnsRecordValueAsset_Exception_Detail,
         });
       }
     } else if (recordType === RECORD_TYPE.LOCATION_NAME) {
       if (!baseHelper.isValidLnsName(recordValue)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: `recordValue ${recordValue}`,
-          type: "location name",
+        throw new ArgumentIllegalException(NOT_A_LOCATION_NAME, {
+          prop: "recordValue",
+          value: recordValue,
+          ...LnsRecordValueAsset_Exception_Detail,
+        });
+      }
+    } else if (recordType === RECORD_TYPE.DNS) {
+      if (!baseHelper.isDNS(recordValue)) {
+        throw new ArgumentIllegalException(NOT_A_DNS, {
+          prop: "recordValue",
+          value: recordValue,
+          ...LnsRecordValueAsset_Exception_Detail,
+        });
+      }
+    } else if (recordType === RECORD_TYPE.EMAIL) {
+      if (!baseHelper.isEmail(recordValue)) {
+        throw new ArgumentIllegalException(NOT_A_EMAIL, {
+          prop: "recordValue",
+          value: recordValue,
+          ...LnsRecordValueAsset_Exception_Detail,
+        });
+      }
+    } else if (recordType === RECORD_TYPE.URL) {
+      if (!baseHelper.isURL(recordValue)) {
+        throw new ArgumentIllegalException(NOT_A_URL, {
+          prop: "recordValue",
+          value: recordValue,
           ...LnsRecordValueAsset_Exception_Detail,
         });
       }

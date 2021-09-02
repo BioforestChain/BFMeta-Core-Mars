@@ -120,4 +120,19 @@ const lnsRecordValue: BFChainCore.SetLnsRecordValueJSON = {
     recordValue: "113.hyql.bfchain",
   };
   await getSetLnsRecordValueTransaction(getSenderWithSecondSecret(), lnsRecordValue);
+  lnsRecordValue.addRecord = {
+    recordType: RECORD_TYPE.DNS,
+    recordValue: "www.baidu.com",
+  };
+  await getSetLnsRecordValueTransaction(getSenderWithSecondSecret(), lnsRecordValue);
+  lnsRecordValue.addRecord = {
+    recordType: RECORD_TYPE.EMAIL,
+    recordValue: "88888@qq.com",
+  };
+  await getSetLnsRecordValueTransaction(getSenderWithSecondSecret(), lnsRecordValue);
+  lnsRecordValue.addRecord = {
+    recordType: RECORD_TYPE.URL,
+    recordValue: "https://www.baidu.com/index.html?q=123",
+  };
+  await getSetLnsRecordValueTransaction(getSenderWithSecondSecret(), lnsRecordValue);
 })();

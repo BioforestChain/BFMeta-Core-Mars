@@ -30,6 +30,68 @@ export class BaseHelper {
   }
 
   /**
+   * 是否是经度,（-180，+180）：负坐标表示西半球，正坐标标识东半球
+   *
+   * @param lon
+   * @returns
+   */
+  isLongitude(lon: string) {
+    return /^[\-\+]((0(\.\d{1,10})?)|(([1,9](\d)?)(\.\d{1,10})?)|(1[0-7]\d{1}(\.\d{1,10})?)|(180(\.0{1,10})?))$/.test(
+      lon,
+    );
+  }
+
+  /**
+   * 是否是纬度，（-90，+90）：负坐标标识南半球，正坐标表示北半球
+   *
+   * @param lat
+   * @returns
+   */
+  isLatitude(lat: string) {
+    return /^[\-\+]((0(\.\d{1,10})?)|([1,9](\.\d{1,10})?)|([1-8]\d?(\.\d{1,10})?)|(90(\.0{1,10})?))$/.test(
+      lat,
+    );
+  }
+
+  /**
+   * 是否是域名
+   *
+   * @param dns
+   * @returns
+   */
+  isDNS(dns: string) {
+    return /^(?=^.{3,255}$)[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+$/.test(
+      dns,
+    );
+  }
+
+  /**
+   * 是否是电子邮箱
+   *
+   * @param email
+   * @returns
+   */
+  isEmail(email: string) {
+    if (!/^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/.test(email)) {
+      return false;
+    }
+    return [
+      "qq.com",
+      "163.com",
+      "vip.163.com",
+      "263.net",
+      "yeah.net",
+      "sohu.com",
+      "sina.cn",
+      "sina.com",
+      "eyou.com",
+      "gmail.com",
+      "hotmail.com",
+      "42du.cn",
+    ].includes(email.substring(email.indexOf("@") + 1));
+  }
+
+  /**
    * 是否是合法的位名解析值
    *
    * @param record
@@ -42,58 +104,39 @@ export class BaseHelper {
     if (recordType === undefined || recordValue === undefined) {
       return false;
     }
-    if (recordType === RECORD_TYPE.IPV4) {
-      if (!this.isIpV4(recordValue)) {
-        return false;
-      }
+    if (!this.isString(recordValue)) {
+      return false;
+    }
+    if (recordType === RECORD_TYPE.UNKNOWN) {
       return true;
     }
+    if (recordType === RECORD_TYPE.IPV4) {
+      return this.isIpV4(recordValue);
+    }
     if (recordType === RECORD_TYPE.IPV6) {
-      if (!this.isIpV6(recordValue)) {
-        return false;
-      }
-      return true;
+      return this.isIpV6(recordValue);
     }
     if (recordType === RECORD_TYPE.LNG_LAT) {
       const items = recordValue.split(",");
       if (items.length !== 2) {
         return false;
       }
-      // 经度（-180，+180）：负坐标表示西半球，正坐标标识东半球
-      if (
-        !/^[\-\+]((0(\.\d{1,10})?)|(([1,9](\d)?)(\.\d{1,10})?)|(1[0-7]\d{1}(\.\d{1,10})?)|(180(\.0{1,10})?))$/.test(
-          items[0],
-        )
-      ) {
-        return false;
-      }
-      // 纬度（-90，+90）：负坐标标识南半球，正坐标表示北半球
-      if (
-        !/^[\-\+]((0(\.\d{1,10})?)|([1,9](\.\d{1,10})?)|([1-8]\d?(\.\d{1,10})?)|(90(\.0{1,10})?))$/.test(
-          items[1],
-        )
-      ) {
-        return false;
-      }
-      return true;
+      return this.isLongitude(items[0]) && this.isLatitude(items[1]);
     }
     if (recordType === RECORD_TYPE.ADDRESSV1) {
-      if (!(await this.accountBaseHelper.isAddress(recordValue))) {
-        return false;
-      }
-      return true;
+      return await this.accountBaseHelper.isAddress(recordValue);
     }
     if (recordType === RECORD_TYPE.LOCATION_NAME) {
-      if (!this.isValidLnsName(recordValue)) {
-        return false;
-      }
-      return true;
+      return this.isValidLnsName(recordValue);
     }
-    if (recordType === RECORD_TYPE.UNKNOWN) {
-      if (!this.isString(recordValue)) {
-        return false;
-      }
-      return true;
+    if (recordType === RECORD_TYPE.DNS) {
+      return this.isDNS(recordValue);
+    }
+    if (recordType === RECORD_TYPE.EMAIL) {
+      return this.isEmail(recordValue);
+    }
+    if (recordType === RECORD_TYPE.URL) {
+      return this.isURL(recordValue);
     }
     return false;
   }

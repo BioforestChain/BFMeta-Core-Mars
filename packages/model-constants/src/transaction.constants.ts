@@ -33,6 +33,12 @@ export const enum RECORD_TYPE {
   ADDRESSV1 = 4,
   /**另一个位名 */
   LOCATION_NAME = 5,
+  /**域名 */
+  DNS = 6,
+  /**url */
+  URL = 7,
+  /**电子邮箱 */
+  EMAIL = 8,
 }
 
 /**
