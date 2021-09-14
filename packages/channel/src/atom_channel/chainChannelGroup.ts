@@ -1401,7 +1401,9 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
         await doTask();
       }
       await resultGenerator.done();
-    })();
+    })().finally(() => {
+      this.$releaseParallelTask(parallelTaskId);
+    });
 
     return resultGenerator;
   }
