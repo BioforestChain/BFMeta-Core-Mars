@@ -135,6 +135,9 @@ const REQRES_CMD_MAP = new Map([
   [DUPLEX_API_CMD.GET_PEER_INFO, DUPLEX_API_CMD.GET_PEER_INFO_RETURN],
 ]);
 
+/**message的最低版本号，低于这个版本号的message将不被处理 */
+const MIN_MESSAGE_VERSION = 2;
+
 /**
  * 为数据收发处理器包装数据处理
  */
@@ -179,7 +182,8 @@ export class ChainChannel<
   get limitDownloadTransactions() {
     return this._limitDT;
   }
-  readonly MESSAGE_VERSION = 1;
+  /**当前message的版本号，如果必须要求对方也升级，请同时修改 MIN_MESSAGE_VERSION */
+  readonly MESSAGE_VERSION = 2;
   //#endregion
 
   get defaultReqOptions(): BFChainCore.ChannelRequestOptions<THIS> | undefined {
@@ -489,12 +493,7 @@ export class ChainChannel<
   });
 
   /**发送响应数据 */
-  async postChainChannelMessage(
-    req_id: number,
-    cmd: DUPLEX_API_CMD,
-    binary: Uint8Array,
-    reqMsgVersion = this.MESSAGE_VERSION,
-  ) {
+  async postChainChannelMessage(req_id: number, cmd: DUPLEX_API_CMD, binary: Uint8Array) {
     if (this._closed) {
       return;
     }
@@ -538,22 +537,6 @@ export class ChainChannel<
         responseLimitInfo.preResponseLimitConfig = limitConfig;
         lockTimespan = limitConfig.lockTimespan;
         refuseTimespan = limitConfig.refuseTimespan;
-
-        //没更新反压的移动端，lockTime在接收端进行等待
-        if (reqMsgVersion === 0 && lockTimespan > 1) {
-          log(
-            "old version. req chainChannel(%s) cmd:%d need wait %dms",
-            this.address,
-            cmd,
-            lockTimespan,
-          );
-          await sleep(lockTimespan);
-        }
-      }
-    } else if (cmd === DUPLEX_API_CMD.REFUSE) {
-      //只有更新了反压的移动端，才返回refuse。否则不返回，让移动端自己超时
-      if (reqMsgVersion === 0) {
-        return;
       }
     }
 
@@ -808,6 +791,10 @@ export class ChainChannel<
         } catch {
           throw new ArgumentFormatException("message type error");
         }
+        if (reqMsgVersion < MIN_MESSAGE_VERSION) {
+          //低于最低版本号的message不处理，也不返回，直接让对方超时
+          return;
+        }
 
         /**通用的响应对象 */
         let taskResult: CommonResponse | undefined;
@@ -868,12 +855,7 @@ export class ChainChannel<
               if (requestLimitInfo) {
                 requestLimitInfo.preRefuseTime = now; /// 在做响应的时候，可以尝试判断preRefuseTime来做出拒绝，减少带宽压力，这里默认保持响应，开发者根据这些信息做出调整
               }
-              await this.postChainChannelMessage(
-                req_id,
-                DUPLEX_API_CMD.REFUSE,
-                new Uint8Array(0),
-                reqMsgVersion,
-              );
+              await this.postChainChannelMessage(req_id, DUPLEX_API_CMD.REFUSE, new Uint8Array(0));
               return;
             }
             if (requestLimitStrategy === REQUEST_LIMIT_STRATEGY.BUSY) {
@@ -1195,7 +1177,6 @@ export class ChainChannel<
             req_id,
             REQRES_CMD_MAP.get(cmd) || DUPLEX_API_CMD.RESPONSE,
             CommonResponse.encode(errorResponse).finish(),
-            reqMsgVersion,
           );
           // 继续向外抛出错误
           throw error;
@@ -1205,7 +1186,6 @@ export class ChainChannel<
             req_id,
             REQRES_CMD_MAP.get(cmd) || DUPLEX_API_CMD.RESPONSE,
             taskResultBinary,
-            reqMsgVersion,
           );
           return;
         }
@@ -1215,7 +1195,6 @@ export class ChainChannel<
             REQRES_CMD_MAP.get(cmd) || DUPLEX_API_CMD.RESPONSE,
             // 将对象解析成二进制进行传输
             (taskResult.constructor as typeof CommonResponse).encode(taskResult).finish(),
-            reqMsgVersion,
           );
         }
       } catch (err) {
