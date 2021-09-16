@@ -12,21 +12,7 @@ import {
   AccountBaseHelper,
   TransactionHelper,
 } from "@bfchain/core-helper";
-import {
-  CoreExceptionGenerator,
-  PARAM_LOST,
-  OUT_OF_RANGE,
-  NOT_MATCH,
-  NOT_EXIST,
-  TRAN_POW_VERIFY_FAIL,
-  PROP_SHOULD_GT_FIELD,
-  INVALID_BLOCK_GENERATOR,
-  SHOULD_NOT_INCLUDE,
-  PROP_IS_REQUIRE,
-  NOT_FOUND,
-  SHOULD_NOT_DUPLICATE,
-  PROP_SHOULD_LTE_FIELD,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import {
   QueneEventEmitter,
   EasyMap,
@@ -109,13 +95,11 @@ export class ReplayBlockCore<T extends Block> {
     config = this.config,
   ) {
     isDevGenerateBlock && info("begin replayBlock");
-    const Function_Exception_Detail = { function: "replayBlock" };
     const { verifySignature, recordForkBlock } = options;
 
     if (!transactions) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "transactions",
-        ...Function_Exception_Detail,
       });
     }
 
@@ -141,10 +125,9 @@ export class ReplayBlockCore<T extends Block> {
           if (!blockGetterHelper) {
             blockGetterHelper = this.moduleMap.get("blockGetterHelper");
             if (!blockGetterHelper) {
-              throw new NoFoundException(NOT_EXIST, {
+              throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
                 prop: "blockGetterHelper",
                 target: "moduleStroge",
-                ...Function_Exception_Detail,
               });
             }
           }
@@ -153,12 +136,11 @@ export class ReplayBlockCore<T extends Block> {
             BLOCK_FORK_CAUSE.DIFFERENT_PRE_BLOCK_SIGNATURE,
           );
         }
-        throw new ArgumentIllegalException(NOT_MATCH, {
+        throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
           to_compare_prop: `previousBlockSignature ${block.previousBlockSignature}`,
           be_compare_prop: `blockSignature ${block.signature}`,
           to_target: "block",
           be_target: "blockChain lastBlock",
-          ...Function_Exception_Detail,
         });
       }
 
@@ -167,11 +149,10 @@ export class ReplayBlockCore<T extends Block> {
       const blockSlotNumber = chainTimeHelper.getSlotNumberByTimestamp(block.timestamp);
       const calcBlockSlotNumber = chainTimeHelper.getNextSlotNumberByTimestamp(lastBlock.timestamp);
       if (blockSlotNumber < calcBlockSlotNumber) {
-        throw new ConsensusException(PROP_SHOULD_GT_FIELD, {
+        throw new ConsensusException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
           prop: `timestamp ${block.timestamp}`,
           target: "block",
           field: `lastBlock timestamp ${lastBlock.timestamp}`,
-          ...Function_Exception_Detail,
         });
       }
 
@@ -188,7 +169,7 @@ export class ReplayBlockCore<T extends Block> {
       );
       if (calcGeneratorAddress !== generatorAddress) {
         const currentSlot = chainTimeHelper.getSlotNumberByTimestamp(block.timestamp);
-        throw new ConsensusException(INVALID_BLOCK_GENERATOR, {
+        throw new ConsensusException(ERROR_LIST.INVALID_BLOCK_GENERATOR, {
           reason: `lastBlock.timestamp: ${lastBlock.timestamp} lastBlock.height: ${
             lastBlock.height
           }, block.timestamp: ${block.timestamp} curTime: ${chainTimeHelper.getTimeByTimestamp(
@@ -196,7 +177,6 @@ export class ReplayBlockCore<T extends Block> {
           )} 该区块的打块人校验不通过，区块signature：${block.signature} height: ${
             block.height
           } 当前slot为 ${currentSlot}，当前应该由委托人 ${calcGeneratorAddress} 打块，实际是由 ${generatorAddress} 打块，校验无法通过`,
-          ...Function_Exception_Detail,
         });
       }
 
@@ -208,23 +188,21 @@ export class ReplayBlockCore<T extends Block> {
           !delegateList ||
           delegateList.join(",") !== realRoundOfflineGeneratersHashMap[offsetRound]
         ) {
-          throw new ArgumentIllegalException(NOT_MATCH, {
+          throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
             to_compare_prop: "roundOfflineGeneratersHashMap",
             be_compare_prop: "roundOfflineGeneratersHashMap",
             to_target: "block",
             be_target: "calculate",
-            ...Function_Exception_Detail,
           });
         }
         mapSize++;
       }
       if (mapSize !== calcRoundOfflineGeneratersReadonlyMap.size) {
-        throw new ArgumentIllegalException(NOT_MATCH, {
+        throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
           to_compare_prop: `roundOfflineGeneratersHashMap size ${mapSize}`,
           be_compare_prop: `roundOfflineGeneratersHashMap size ${calcRoundOfflineGeneratersReadonlyMap.size}`,
           to_target: "block",
           be_target: "calculate",
-          ...Function_Exception_Detail,
         });
       }
     }
@@ -303,46 +281,41 @@ export class ReplayBlockCore<T extends Block> {
     const trsSet = new Set();
 
     if (!eventEmitter.assetChangesGetter) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "assetChangesGetter",
         target: "eventEmitter",
-        ...Function_Exception_Detail,
       });
     }
 
     if (!eventEmitter.assetPrealnumGetter) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "assetPrealnumGetter",
         target: "eventEmitter",
-        ...Function_Exception_Detail,
       });
     }
 
     if (!eventEmitter.numberOfSenderTranGetter) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "numberOfSenderTranGetter",
         target: "eventEmitter",
-        ...Function_Exception_Detail,
       });
     }
 
     if (!eventEmitter.blockGeneratorEquityGetter) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "blockGeneratorEquityGetter",
         target: "eventEmitter",
-        ...Function_Exception_Detail,
       });
     }
 
     // 获取打块账户获得的权益
     const generatorEquity = await eventEmitter.blockGeneratorEquityGetter(block.generatorPublicKey);
     if (block.generatorEquity !== generatorEquity) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `generatorEquity ${block.generatorEquity}`,
         be_compare_prop: `generatorEquity ${generatorEquity}`,
         to_target: "block",
         be_target: "calculate",
-        ...Function_Exception_Detail,
       });
     }
 
@@ -358,20 +331,18 @@ export class ReplayBlockCore<T extends Block> {
           log("insert transaction: %d / %d", tranItem.index + 1, block.numberOfTransactions);
         try {
           if (tranItem.index >= MAX_TRANSACTION_SIZE) {
-            throw new OutOfRangeException(OUT_OF_RANGE, {
+            throw new OutOfRangeException(ERROR_LIST.OUT_OF_RANGE, {
               variable: "transactions",
               index: tranItem.index,
               maxLength: MAX_TRANSACTION_SIZE,
-              ...Function_Exception_Detail,
             });
           }
           const trs = tranItem.transaction;
           const { type, senderId, storageValue, signature } = trs;
           if (trsSet.has(signature)) {
-            throw new ConsensusException(SHOULD_NOT_DUPLICATE, {
+            throw new ConsensusException(ERROR_LIST.SHOULD_NOT_DUPLICATE, {
               prop: `transaction with signature ${signature}`,
               target: `block with height ${block.height}`,
-              ...Function_Exception_Detail,
             });
           }
           trsSet.add(signature);
@@ -407,16 +378,13 @@ export class ReplayBlockCore<T extends Block> {
                 count,
               });
               if (checkResult === undefined) {
-                throw new NoFoundException(NOT_EXIST, {
+                throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
                   prop: "verifyTransactionProfOfWork",
                   target: "ApplyTransactionEventEmitter",
-                  function: "insertTransactionsForReplay",
                 });
               }
               if (!checkResult) {
-                throw new ArgumentFormatException(TRAN_POW_VERIFY_FAIL, {
-                  function: "insertTransactionsForReplay",
-                });
+                throw new ArgumentFormatException(ERROR_LIST.TRAN_POW_VERIFY_FAIL);
               }
               tranSenderCountMap.set(senderId, count + 1);
             }
@@ -424,12 +392,11 @@ export class ReplayBlockCore<T extends Block> {
           }
           // 保存交易
           if (transactionBufferList.length !== tranItem.index) {
-            throw new ArgumentIllegalException(NOT_MATCH, {
+            throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
               to_compare_prop: `index ${transactionBufferList.length}`,
               be_compare_prop: `index ${tranItem.index}`,
               to_target: "transactions",
               be_target: "calculate",
-              ...Function_Exception_Detail,
             });
           }
           transactionBufferList.push(tranItem.getBytes());
@@ -439,11 +406,10 @@ export class ReplayBlockCore<T extends Block> {
             if (trsArray) {
               for (const tr of trsArray) {
                 if (tr.senderId === senderId) {
-                  throw new ConsensusException(SHOULD_NOT_INCLUDE, {
+                  throw new ConsensusException(ERROR_LIST.SHOULD_NOT_INCLUDE, {
                     prop: `Transactions`,
                     target: `block with height ${height}`,
                     value: `transaction with storageValue ${storageValue}`,
-                    ...Function_Exception_Detail,
                   });
                 }
               }
@@ -464,12 +430,11 @@ export class ReplayBlockCore<T extends Block> {
             const calcLength = calcTransactionAssetChanges.length;
             const realLength = transactionAssetChanges.length;
             if (calcLength !== realLength) {
-              throw new ArgumentIllegalException(NOT_MATCH, {
+              throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
                 to_compare_prop: `transactionAssetChanges lenght ${realLength}`,
                 be_compare_prop: `transactionAssetChanges lenght ${calcLength}`,
                 to_target: `transactionInBlock ${senderId} ${signature}`,
                 be_target: "calculate",
-                ...Function_Exception_Detail,
               });
             }
             for (let i = 0; i < calcLength; i++) {
@@ -479,7 +444,7 @@ export class ReplayBlockCore<T extends Block> {
                   transactionAssetChanges[i].getBytes(),
                 )
               ) {
-                throw new ArgumentIllegalException(NOT_MATCH, {
+                throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
                   to_compare_prop: `transactionAssetChanges with index ${i} ${JSON.stringify(
                     transactionAssetChanges[i],
                   )}`,
@@ -488,7 +453,6 @@ export class ReplayBlockCore<T extends Block> {
                   )}`,
                   to_target: `transactionInBlock ${senderId} ${signature}`,
                   be_target: "calculate",
-                  ...Function_Exception_Detail,
                 });
               }
             }
@@ -497,14 +461,14 @@ export class ReplayBlockCore<T extends Block> {
             if (assetPrealnum) {
               const clalAssetPrealnum = await eventEmitter.assetPrealnumGetter(tranItem);
               if (!clalAssetPrealnum) {
-                throw new ArgumentIllegalException(NOT_FOUND, {
+                throw new ArgumentIllegalException(ERROR_LIST.NOT_FOUND, {
                   prop: `transaction assetPrealnum ${signature}`,
                   ...Function_Exception_Detail,
                   target: "blockChain",
                 });
               }
               if (clalAssetPrealnum.remainAssetPrealnum !== assetPrealnum.remainAssetPrealnum) {
-                throw new ArgumentIllegalException(NOT_MATCH, {
+                throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
                   to_compare_prop: `assetPrealnum.remainAssetPrealnum ${JSON.stringify(
                     assetPrealnum.remainAssetPrealnum,
                   )}`,
@@ -513,13 +477,12 @@ export class ReplayBlockCore<T extends Block> {
                   )}`,
                   to_target: `transactionInBlock ${senderId} ${signature}`,
                   be_target: "calculate",
-                  ...Function_Exception_Detail,
                 });
               }
               if (
                 clalAssetPrealnum.frozenMainAssetPrealnum !== assetPrealnum.frozenMainAssetPrealnum
               ) {
-                throw new ArgumentIllegalException(NOT_MATCH, {
+                throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
                   to_compare_prop: `assetPrealnum.frozenMainAssetPrealnum ${JSON.stringify(
                     assetPrealnum.frozenMainAssetPrealnum,
                   )}`,
@@ -528,7 +491,6 @@ export class ReplayBlockCore<T extends Block> {
                   )}`,
                   to_target: `transactionInBlock ${senderId} ${signature}`,
                   be_target: "calculate",
-                  ...Function_Exception_Detail,
                 });
               }
             }
@@ -538,12 +500,11 @@ export class ReplayBlockCore<T extends Block> {
             );
             // 校验 numberOfSenderTransactions
             if (calcNumberOfSenderTransactions !== tranItem.numberOfSenderTransactions) {
-              throw new ArgumentIllegalException(NOT_MATCH, {
+              throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
                 to_compare_prop: `numberOfSenderTransactions ${tranItem.numberOfSenderTransactions}`,
                 be_compare_prop: `numberOfSenderTransactions ${calcNumberOfSenderTransactions}`,
                 to_target: `transactionInBlock ${senderId} ${signature}`,
                 be_target: "calculate",
-                ...Function_Exception_Detail,
               });
             }
           }
@@ -563,10 +524,9 @@ export class ReplayBlockCore<T extends Block> {
             }
             if (block.generatorSecondPublicKeyBuffer) {
               if (!tranItem.signSignatureBuffer) {
-                throw new ArgumentFormatException(PROP_IS_REQUIRE, {
+                throw new ArgumentFormatException(ERROR_LIST.PROP_IS_REQUIRE, {
                   prop: "signSignature",
                   target: "transactionInBlock",
-                  ...Function_Exception_Detail,
                 });
               }
               if (
@@ -608,33 +568,30 @@ export class ReplayBlockCore<T extends Block> {
       const numberOfTransactions = transactionBufferList.length;
       if (block.numberOfTransactions !== numberOfTransactions) {
         /// 区块的交易数对不上
-        throw new ArgumentIllegalException(NOT_MATCH, {
+        throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
           to_compare_prop: `numberOfTransactions ${block.numberOfTransactions}`,
           be_compare_prop: `numberOfTransactions ${numberOfTransactions}`,
           to_target: "block",
           be_target: "calculate",
-          ...Function_Exception_Detail,
         });
       }
 
       if (block.payloadLength !== payloadLength) {
-        throw new ArgumentIllegalException(NOT_MATCH, {
+        throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
           to_compare_prop: `payloadLength ${block.payloadLength}`,
           be_compare_prop: `payloadLength ${payloadLength}`,
           to_target: "block",
           be_target: "calculate",
-          ...Function_Exception_Detail,
         });
       }
 
       const payloadHashHex = await payloadHash.digest("hex");
       if (block.payloadHash !== payloadHashHex) {
-        throw new ArgumentIllegalException(NOT_MATCH, {
+        throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
           to_compare_prop: `payloadHashHex ${block.payloadHash}`,
           be_compare_prop: `payloadHashHex ${payloadHashHex}`,
           to_target: "block",
           be_target: "calculate",
-          ...Function_Exception_Detail,
         });
       }
 
@@ -644,12 +601,11 @@ export class ReplayBlockCore<T extends Block> {
           numberOfTransactions,
         });
         if (block.blockParticipation !== blockParticipation) {
-          throw new ArgumentIllegalException(NOT_MATCH, {
+          throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
             to_compare_prop: `blockParticipation ${block.blockParticipation}`,
             be_compare_prop: `blockParticipation ${blockParticipation}`,
             to_target: "block",
             be_target: "calculate",
-            ...Function_Exception_Detail,
           });
         }
       }
@@ -661,34 +617,31 @@ export class ReplayBlockCore<T extends Block> {
             statisticsInfo.toModel().getBytes(),
           )
         ) {
-          throw new ArgumentIllegalException(NOT_MATCH, {
+          throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
             to_compare_prop: `statisticsInfo ${JSON.stringify(blockStatisticsInfo.toJSON())}`,
             be_compare_prop: `statisticsInfo ${JSON.stringify(statisticsInfo.toModel().toJSON())}`,
             to_target: "block",
             be_target: "calculate",
-            ...Function_Exception_Detail,
           });
         }
 
         const stotalAmount = statisticsInfo.totalAsset;
         const stotalFee = statisticsInfo.totalFee;
         if (BigInt(block.totalAmount) !== stotalAmount) {
-          throw new ArgumentIllegalException(NOT_MATCH, {
+          throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
             to_compare_prop: `totalAmount ${block.totalAmount}`,
             be_compare_prop: `totalAmount ${stotalAmount.toString()}`,
             to_target: "block",
             be_target: "calculate",
-            ...Function_Exception_Detail,
           });
         }
 
         if (BigInt(block.totalFee) !== stotalFee) {
-          throw new ArgumentIllegalException(NOT_MATCH, {
+          throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
             to_compare_prop: `totalFee ${block.totalFee}`,
             be_compare_prop: `totalFee ${stotalFee.toString()}`,
             to_target: "block",
             be_target: "calculate",
-            ...Function_Exception_Detail,
           });
         }
       }

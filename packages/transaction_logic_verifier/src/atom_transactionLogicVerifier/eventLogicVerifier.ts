@@ -1,49 +1,5 @@
 import { Injectable, Inject, getHexFromArrayBuffer } from "@bfchain/util";
-import {
-  CoreExceptionGenerator,
-  ASSET_NOT_ENOUGH,
-  NOT_EXIST,
-  NOT_BEGIN_UNFROZEN_YET,
-  FROZEN_ASSET_EXPIRATION,
-  ACCOUNT_REMAIN_EQUITY_NOT_ENOUGH,
-  ACCOUNT_FROZEN,
-  USERNAME_ALREADY_EXIST,
-  ACCOUNT_IS_NOT_AN_DELEGATE,
-  DELEGATE_IS_ALREADY_ACCEPT_VOTE,
-  ACCOUNT_IS_ALREADY_AN_DELEGATE,
-  DELEGATE_IS_ALREADY_REJECT_VOTE,
-  FORBIDDEN,
-  ALREADY_EXIST,
-  ASSET_NOT_EXIST,
-  DAPPID_IS_ALREADY_EXIST,
-  DAPPID_IS_NOT_EXIST,
-  ACCOUNT_NOT_DAPPID_POSSESSOR,
-  DAPPID_ALREADY_FROZEN,
-  LOCATION_NAME_IS_NOT_EXIST,
-  ACCOUNT_NOT_LOCATION_NAME_POSSESSOR,
-  LOCATION_NAME_ALREADY_FROZEN,
-  ONLY_TOP_LEVEL_LOCATION_NAME_CAN_EXCHANGE,
-  CAN_NOT_DELETE_LOCATION_NAME,
-  SET_LOCATION_NAME_MANAGER_FIELD,
-  SET_LOCATION_NAME_RECORD_VALUE_FIELD,
-  UNFROZEN_TIME_USE_UP,
-  NOT_MATCH,
-  SHOULD_BE,
-  PROP_SHOULD_LTE_FIELD,
-  ASSET_IS_ALREADY_MIGRATION,
-  ENTITY_FACTORY_IS_ALREADY_EXIST,
-  ENTITY_FACTORY_IS_NOT_EXIST,
-  ENTITY_IS_ALREADY_EXIST,
-  ENTITY_IS_NOT_EXIST,
-  CAN_NOT_DESTORY_ENTITY,
-  ACCOUNT_NOT_ENTITY_POSSESSOR,
-  ENTITY_ALREADY_FROZEN,
-  ENTITY_ALREADY_DESTORY,
-  ENTITY_NOT_FROZEN,
-  DAPPID_NOT_FROZEN,
-  LOCATION_NAME_NOT_FROZEN,
-  ISSUE_ENTITY_TIMES_USE_UP,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import {
   NewTransactionRefuseReason,
   ACCOUNT_STATUS,
@@ -81,10 +37,9 @@ export class EventLogicVerifier {
   ) {
     const { recordType, recordValue } = addRecord;
     if (records && records[recordType] && records[recordType][recordValue]) {
-      throw new ConsensusException(SET_LOCATION_NAME_RECORD_VALUE_FIELD, {
+      throw new ConsensusException(ERROR_LIST.SET_LOCATION_NAME_RECORD_VALUE_FIELD, {
         locationName,
         reason: "New location name record value already exist",
-        function: "addRecord",
       });
     }
   }
@@ -96,10 +51,9 @@ export class EventLogicVerifier {
   ) {
     const { recordType, recordValue } = deleteRecord;
     if (!(records[recordType] && records[recordType][recordValue])) {
-      throw new ConsensusException(SET_LOCATION_NAME_RECORD_VALUE_FIELD, {
+      throw new ConsensusException(ERROR_LIST.SET_LOCATION_NAME_RECORD_VALUE_FIELD, {
         locationName,
         reason: "Delete location name record value not exist",
-        function: "deleteRecord",
       });
     }
   }
@@ -108,10 +62,6 @@ export class EventLogicVerifier {
     accountsAssets: { [asddress: string]: BFChainCore.AccountAssets },
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const Function_Exception_Detail = {
-      function: "listenEventFee",
-    } as const;
-
     // 扣除手续费
     eventEmitter.on(
       "fee",
@@ -119,19 +69,17 @@ export class EventLogicVerifier {
         // 手续费扣除的只能是链资产
         const { magic, assetType } = this.configHelper;
         if (magic !== this.configHelper.magic) {
-          throw new ConsensusException(SHOULD_BE, {
+          throw new ConsensusException(ERROR_LIST.SHOULD_BE, {
             to_compare_prop: `magic ${magic}`,
             to_target: "applyInfo",
             be_compare_prop: this.configHelper.magic,
-            ...Function_Exception_Detail,
           });
         }
         if (assetType !== this.configHelper.assetType) {
-          throw new ConsensusException(SHOULD_BE, {
+          throw new ConsensusException(ERROR_LIST.SHOULD_BE, {
             to_compare_prop: `assetType ${assetType}`,
             to_target: "applyInfo",
             be_compare_prop: this.configHelper.assetType,
-            ...Function_Exception_Detail,
           });
         }
         const fee = BigInt(applyInfo.amount);
@@ -148,14 +96,13 @@ export class EventLogicVerifier {
         const remainAsset = hodingAsset.assetNumber;
         hodingAsset.assetNumber += fee;
         if (hodingAsset.assetNumber < BigInt(0)) {
-          throw new ConsensusException(ASSET_NOT_ENOUGH, {
+          throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
             reason: `Transaction signature: ${transaction.signature} address: ${address} magic ${
               applyInfo.assetInfo.magic
             } assetType: ${
               applyInfo.assetInfo.assetType
             } hodingAsset: ${remainAsset.toString()} spendFee: ${applyInfo.amount}`,
             errorId: NewTransactionRefuseReason.ASSET_NOT_ENOUGH,
-            ...Function_Exception_Detail,
           });
         }
 
@@ -169,10 +116,6 @@ export class EventLogicVerifier {
     accountsAssets: { [asddress: string]: BFChainCore.AccountAssets },
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const Function_Exception_Detail = {
-      function: "eventLogicVerifier",
-    } as const;
-
     // 扣除资产
     eventEmitter.on(
       "asset",
@@ -191,14 +134,13 @@ export class EventLogicVerifier {
         const remainAsset = hodingAsset.assetNumber;
         hodingAsset.assetNumber += BigInt(applyInfo.amount);
         if (hodingAsset.assetNumber < BigInt(0)) {
-          throw new ConsensusException(ASSET_NOT_ENOUGH, {
+          throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
             reason: `Transaction signature: ${transaction.signature} address: ${address} magic ${
               applyInfo.assetInfo.magic
             } assetType: ${
               applyInfo.assetInfo.assetType
             } hodingAsset: ${remainAsset.toString()} spendAsset: ${applyInfo.amount}`,
             errorId: NewTransactionRefuseReason.ASSET_NOT_ENOUGH,
-            ...Function_Exception_Detail,
           });
         }
 
@@ -212,10 +154,6 @@ export class EventLogicVerifier {
     accountsAssets: { [asddress: string]: BFChainCore.AccountAssets },
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const Function_Exception_Detail = {
-      function: "eventLogicVerifier",
-    } as const;
-
     // 冻结资产
     eventEmitter.on(
       "frozenAsset",
@@ -234,14 +172,13 @@ export class EventLogicVerifier {
         const remainAsset = hodingAsset.assetNumber;
         hodingAsset.assetNumber += BigInt(applyInfo.amount);
         if (hodingAsset.assetNumber < BigInt(0)) {
-          throw new ConsensusException(ASSET_NOT_ENOUGH, {
+          throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
             reason: `Transaction signature: ${transaction.signature} address: ${address} magic ${
               applyInfo.assetInfo.magic
             } assetType: ${
               applyInfo.assetInfo.assetType
             } hodingAsset: ${remainAsset.toString()} frozenAsset: ${applyInfo.amount}`,
             errorId: NewTransactionRefuseReason.ASSET_NOT_ENOUGH,
-            ...Function_Exception_Detail,
           });
         }
 
@@ -256,10 +193,6 @@ export class EventLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const Function_Exception_Detail = {
-      function: "eventLogicVerifier",
-    } as const;
-
     // 解冻资产
     eventEmitter.on(
       "unfrozenAsset",
@@ -275,10 +208,9 @@ export class EventLogicVerifier {
         );
 
         if (!frozenAsset) {
-          throw new ConsensusException(NOT_EXIST, {
+          throw new ConsensusException(ERROR_LIST.NOT_EXIST, {
             prop: `Frozen asset with signature ${transactionSignature}`,
             target: "blockChain",
-            ...Function_Exception_Detail,
           });
         }
 
@@ -290,41 +222,36 @@ export class EventLogicVerifier {
         } = frozenAsset;
         // 是否到达解冻高度
         if (minEffectiveHeight > transaction.applyBlockHeight) {
-          throw new ConsensusException(NOT_BEGIN_UNFROZEN_YET, {
+          throw new ConsensusException(ERROR_LIST.NOT_BEGIN_UNFROZEN_YET, {
             frozenId: transactionSignature,
-            ...Function_Exception_Detail,
           });
         }
 
         // 交易交易是否过期
         if (currentBlockHeight > maxEffectiveHeight) {
-          throw new ConsensusException(FROZEN_ASSET_EXPIRATION, {
+          throw new ConsensusException(ERROR_LIST.FROZEN_ASSET_EXPIRATION, {
             frozenId: transactionSignature,
-            ...Function_Exception_Detail,
           });
         }
 
         if (maxEffectiveHeight < transaction.applyBlockHeight) {
-          throw new ConsensusException(FROZEN_ASSET_EXPIRATION, {
+          throw new ConsensusException(ERROR_LIST.FROZEN_ASSET_EXPIRATION, {
             frozenId: transactionSignature,
-            ...Function_Exception_Detail,
           });
         }
 
         // 剩余资产是否足够
         if (BigInt(spendAsset) > BigInt(remainAsset)) {
-          throw new ConsensusException(ASSET_NOT_ENOUGH, {
+          throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
             reason: `No enough asset to unfrozen magic ${magic} assetType ${assetType} remain ${remainAsset} spend ${spendAsset}`,
-            ...Function_Exception_Detail,
           });
         }
 
         // 剩余解冻次数是否足够
         if (remainUnfrozenTimes !== undefined) {
           if (remainUnfrozenTimes === 0) {
-            throw new ConsensusException(UNFROZEN_TIME_USE_UP, {
+            throw new ConsensusException(ERROR_LIST.UNFROZEN_TIME_USE_UP, {
               frozenId: transactionSignature,
-              ...Function_Exception_Detail,
             });
           }
         }
@@ -340,10 +267,6 @@ export class EventLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const Function_Exception_Detail = {
-      function: "eventLogicVerifier",
-    } as const;
-
     // 解冻资产
     eventEmitter.on(
       "signForAsset",
@@ -358,51 +281,45 @@ export class EventLogicVerifier {
         );
 
         if (!frozenAsset) {
-          throw new ConsensusException(NOT_EXIST, {
+          throw new ConsensusException(ERROR_LIST.NOT_EXIST, {
             prop: `Frozen asset with signature ${transactionSignature}`,
             target: "blockChain",
-            ...Function_Exception_Detail,
           });
         }
 
         const { maxEffectiveHeight, minEffectiveHeight, remainUnfrozenTimes, amount } = frozenAsset;
         // 是否到达解冻高度
         if (minEffectiveHeight > transaction.applyBlockHeight) {
-          throw new ConsensusException(NOT_BEGIN_UNFROZEN_YET, {
+          throw new ConsensusException(ERROR_LIST.NOT_BEGIN_UNFROZEN_YET, {
             frozenId: transactionSignature,
-            ...Function_Exception_Detail,
           });
         }
 
         // 交易交易是否过期
         if (currentBlockHeight > maxEffectiveHeight) {
-          throw new ConsensusException(FROZEN_ASSET_EXPIRATION, {
+          throw new ConsensusException(ERROR_LIST.FROZEN_ASSET_EXPIRATION, {
             frozenId: transactionSignature,
-            ...Function_Exception_Detail,
           });
         }
 
         if (maxEffectiveHeight < transaction.applyBlockHeight) {
-          throw new ConsensusException(FROZEN_ASSET_EXPIRATION, {
+          throw new ConsensusException(ERROR_LIST.FROZEN_ASSET_EXPIRATION, {
             frozenId: transactionSignature,
-            ...Function_Exception_Detail,
           });
         }
 
         // 剩余资产是否足够
         if (BigInt(amount) === BigInt(0)) {
-          throw new ConsensusException(ASSET_NOT_ENOUGH, {
+          throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
             reason: `No enough asset to sign for magic ${frozenAsset.sourceChainMagic} assetType ${frozenAsset.assetType} remain ${amount}`,
-            ...Function_Exception_Detail,
           });
         }
 
         // 剩余解冻次数是否足够
         if (remainUnfrozenTimes !== undefined) {
           if (remainUnfrozenTimes === 0) {
-            throw new ConsensusException(UNFROZEN_TIME_USE_UP, {
+            throw new ConsensusException(ERROR_LIST.UNFROZEN_TIME_USE_UP, {
               frozenId: transactionSignature,
-              ...Function_Exception_Detail,
             });
           }
         }
@@ -418,10 +335,6 @@ export class EventLogicVerifier {
     curRound: number,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const Function_Exception_Detail = {
-      function: "eventLogicVerifier",
-    } as const;
-
     // 扣除权益
     eventEmitter.on(
       "voteEquity",
@@ -435,14 +348,13 @@ export class EventLogicVerifier {
         const remainEquity = accountEquity;
         accountEquity += BigInt(applyInfo.equity);
         if (accountEquity < minEquity) {
-          throw new ConsensusException(ACCOUNT_REMAIN_EQUITY_NOT_ENOUGH, {
+          throw new ConsensusException(ERROR_LIST.ACCOUNT_REMAIN_EQUITY_NOT_ENOUGH, {
             errorId: NewTransactionRefuseReason.ACCOUNT_REMAIN_EQUITY_NOT_ENOUGH,
             reason: `Transaction signature: ${
               transaction.signature
             } address: ${address} hodingEquity: ${remainEquity.toString()} spendEquity: ${
               applyInfo.equity
             }`,
-            ...Function_Exception_Detail,
           });
         }
 
@@ -456,10 +368,6 @@ export class EventLogicVerifier {
     accountsInfo: { [address: string]: BFChainCore.AccountInfo },
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const Function_Exception_Detail = {
-      function: "eventLogicVerifier",
-    } as const;
-
     // 冻结账户
     eventEmitter.on(
       "frozenAccount",
@@ -472,10 +380,9 @@ export class EventLogicVerifier {
           accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
           accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
         ) {
-          throw new ConsensusException(ACCOUNT_FROZEN, {
+          throw new ConsensusException(ERROR_LIST.ACCOUNT_FROZEN, {
             address,
             status: accountStatus,
-            ...Function_Exception_Detail,
           });
         }
 
@@ -489,28 +396,23 @@ export class EventLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const Function_Exception_Detail = {
-      function: "eventLogicVerifier",
-    } as const;
-
     // 设置用户名
     eventEmitter.on(
       "setUsername",
       async ({ applyInfo }, next) => {
         const { address, alias } = applyInfo;
         // 这个不统一做
-        //   if (accountsInfo[address].username) {
-        //     throw new ConsensusException(ACCOUNT_ALREADY_HAVE_USERNAME, {
-        //       errorId: NewTransactionRefuseReason.ACCOUNT_ALREADY_HAVE_USERNAME,
-        //       ...Function_Exception_Detail,
-        //     });
-        //   }
+        // if (accountsInfo[address].username) {
+        //   throw new ConsensusException(ERROR_LIST.ACCOUNT_ALREADY_HAVE_USERNAME, {
+        //     errorId: NewTransactionRefuseReason.ACCOUNT_ALREADY_HAVE_USERNAME,
+        //     ...Function_Exception_Detail,
+        //   });
+        // }
 
         const memUsername = await accountGetterHelper.getAlias(alias);
         if (memUsername) {
-          throw new ConsensusException(USERNAME_ALREADY_EXIST, {
+          throw new ConsensusException(ERROR_LIST.USERNAME_ALREADY_EXIST, {
             errorId: NewTransactionRefuseReason.USERNAME_ALREADY_EXIST,
-            ...Function_Exception_Detail,
           });
         }
 
@@ -535,28 +437,16 @@ export class EventLogicVerifier {
     accountsInfo: { [address: string]: BFChainCore.AccountInfo },
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const Function_Exception_Detail = {
-      function: "eventLogicVerifier",
-    } as const;
-
     // 注册成为受托人
     eventEmitter.on(
       "registerToDelegate",
       async ({ applyInfo }, next) => {
-        // if (this.configHelper.maxDelegateTxsPerRound === 0) {
-        //   throw new ConsensusException(REJECT_REGISTER_DELEGATE, {
-        //     reason: `every round can only deal ${this.configHelper.maxDelegateTxsPerRound} delegate transaction, reject receive delegate transaction`,
-        //     ...Function_Exception_Detail,
-        //   });
-        // }
-
         const { address } = applyInfo;
         accountsInfo[address] = accountsInfo[address] || {};
         if (accountsInfo[address].isDelegate) {
-          throw new ConsensusException(ACCOUNT_IS_ALREADY_AN_DELEGATE, {
+          throw new ConsensusException(ERROR_LIST.ACCOUNT_IS_ALREADY_AN_DELEGATE, {
             address,
             errorId: NewTransactionRefuseReason.ACCOUNT_ALREADY_DELEGATE,
-            ...Function_Exception_Detail,
           });
         }
 
@@ -570,10 +460,6 @@ export class EventLogicVerifier {
     accountsInfo: { [address: string]: BFChainCore.AccountInfo },
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const Function_Exception_Detail = {
-      function: "eventLogicVerifier",
-    } as const;
-
     // 开启接收投票
     eventEmitter.on(
       "acceptVote",
@@ -581,16 +467,16 @@ export class EventLogicVerifier {
         const { address } = applyInfo;
         accountsInfo[address] = accountsInfo[address] || {};
         if (!accountsInfo[address].isDelegate) {
-          throw new ConsensusException(ACCOUNT_IS_NOT_AN_DELEGATE, {
+          throw new ConsensusException(ERROR_LIST.ACCOUNT_IS_NOT_AN_DELEGATE, {
             address,
-            ...Function_Exception_Detail,
+            errorId: NewTransactionRefuseReason.ACCOUNT_IS_NOT_AN_DELEGATE,
           });
         }
 
         if (accountsInfo[address].isAcceptVote) {
-          throw new ConsensusException(DELEGATE_IS_ALREADY_ACCEPT_VOTE, {
+          throw new ConsensusException(ERROR_LIST.DELEGATE_IS_ALREADY_ACCEPT_VOTE, {
             address,
-            ...Function_Exception_Detail,
+            errorId: NewTransactionRefuseReason.DELEGATE_IS_ALREADY_ACCEPT_VOTE,
           });
         }
 
@@ -604,10 +490,6 @@ export class EventLogicVerifier {
     accountsInfo: { [address: string]: BFChainCore.AccountInfo },
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const Function_Exception_Detail = {
-      function: "eventLogicVerifier",
-    } as const;
-
     // 关闭接收投票
     eventEmitter.on(
       "rejectVote",
@@ -615,16 +497,16 @@ export class EventLogicVerifier {
         const { address } = applyInfo;
         accountsInfo[address] = accountsInfo[address] || {};
         if (!accountsInfo[address].isDelegate) {
-          throw new ConsensusException(ACCOUNT_IS_NOT_AN_DELEGATE, {
+          throw new ConsensusException(ERROR_LIST.ACCOUNT_IS_NOT_AN_DELEGATE, {
             address,
-            ...Function_Exception_Detail,
+            errorId: NewTransactionRefuseReason.ACCOUNT_IS_NOT_AN_DELEGATE,
           });
         }
 
         if (!accountsInfo[address].isAcceptVote) {
-          throw new ConsensusException(DELEGATE_IS_ALREADY_REJECT_VOTE, {
+          throw new ConsensusException(ERROR_LIST.DELEGATE_IS_ALREADY_REJECT_VOTE, {
             address,
-            ...Function_Exception_Detail,
+            errorId: NewTransactionRefuseReason.DELEGATE_IS_ALREADY_REJECT_VOTE,
           });
         }
 
@@ -639,10 +521,6 @@ export class EventLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const Function_Exception_Detail = {
-      function: "eventLogicVerifier",
-    } as const;
-
     // 发行数字资产
     eventEmitter.on(
       "issueAsset",
@@ -659,10 +537,9 @@ export class EventLogicVerifier {
             accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
             accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
           ) {
-            throw new ConsensusException(ACCOUNT_FROZEN, {
+            throw new ConsensusException(ERROR_LIST.ACCOUNT_FROZEN, {
               address: genesisAddress,
               status: accountStatus,
-              ...Function_Exception_Detail,
             });
           }
         }
@@ -711,10 +588,9 @@ export class EventLogicVerifier {
         const remainChainAsset =
           accountAssets[chainMagic][chainAssetType].assetNumber - BigInt(transaction.fee);
         if (BigInt(issueAssetMinChainAsset) > remainChainAsset) {
-          throw new ConsensusException(ASSET_NOT_ENOUGH, {
+          throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
             reason: `No enough asset, Min account asset ${issueAssetMinChainAsset}, remain Assets: ${remainChainAsset}`,
             errorId: NewTransactionRefuseReason.CHAIN_ASSET_NOT_ENOUGH,
-            function: "verify",
           });
         }
 
@@ -724,43 +600,39 @@ export class EventLogicVerifier {
           this.configHelper.maxMultipleOfAssetAndMainAsset,
         );
         if (BigInt(sourceAmount) > calcMaxAssets) {
-          throw new ConsensusException(PROP_SHOULD_LTE_FIELD, {
+          throw new ConsensusException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
             prop: `expectedIssuedAssets ${sourceAmount}`,
             target: `issueAsset`,
             field: `calc max assets ${calcMaxAssets}`,
-            function: "verify",
           });
         }
 
         // 验证资产名是否被禁用
         const result = await accountGetterHelper.isCurrencyForbidden(assetType);
         if (result) {
-          throw new ConsensusException(FORBIDDEN, {
+          throw new ConsensusException(ERROR_LIST.FORBIDDEN, {
             prop: `AssetType ${assetType}`,
             target: "blockChain",
-            ...Function_Exception_Detail,
           });
         }
 
         // 验证资产名是否已经存在
         const memLegalCurrency = await accountGetterHelper.getCurrency(assetType);
         if (memLegalCurrency) {
-          throw new ConsensusException(ALREADY_EXIST, {
+          throw new ConsensusException(ERROR_LIST.ALREADY_EXIST, {
             prop: `AssetType ${assetType}`,
             target: "blockChain",
             errorId: NewTransactionRefuseReason.ASSETTYPE_ALREADY_EXIST,
-            ...Function_Exception_Detail,
           });
         }
 
         // 验证资产是否已经存在
         const memAssets = await accountGetterHelper.getAsset(chainMagic, assetType);
         if (memAssets) {
-          throw new ConsensusException(ASSET_NOT_EXIST, {
+          throw new ConsensusException(ERROR_LIST.ASSET_NOT_EXIST, {
             magic: chainMagic,
             assetType,
             errorId: NewTransactionRefuseReason.ASSET_ALREADY_EXIST,
-            ...Function_Exception_Detail,
           });
         }
 
@@ -789,10 +661,6 @@ export class EventLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const Function_Exception_Detail = {
-      function: "eventLogicVerifier",
-    } as const;
-
     // 发行 dapid
     eventEmitter.on(
       "issueDAppid",
@@ -809,10 +677,9 @@ export class EventLogicVerifier {
               accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
               accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
             ) {
-              throw new ConsensusException(ACCOUNT_FROZEN, {
+              throw new ConsensusException(ERROR_LIST.ACCOUNT_FROZEN, {
                 address: possessorAddress,
                 status: accountStatus,
-                ...Function_Exception_Detail,
               });
             }
           }
@@ -825,10 +692,9 @@ export class EventLogicVerifier {
           currentBlockHeight,
         );
         if (memDapp) {
-          throw new ConsensusException(DAPPID_IS_ALREADY_EXIST, {
+          throw new ConsensusException(ERROR_LIST.DAPPID_IS_ALREADY_EXIST, {
             dappid,
             errorId: NewTransactionRefuseReason.DAPP_ALREADY_EXISTS,
-            ...Function_Exception_Detail,
           });
         }
 
@@ -843,10 +709,6 @@ export class EventLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const Function_Exception_Detail = {
-      function: "eventLogicVerifier",
-    } as const;
-
     // 冻结 dappid
     eventEmitter.on(
       "frozenDAppid",
@@ -859,22 +721,20 @@ export class EventLogicVerifier {
           currentBlockHeight,
         );
         if (!memDapp) {
-          throw new ConsensusException(DAPPID_IS_NOT_EXIST, {
+          throw new ConsensusException(ERROR_LIST.DAPPID_IS_NOT_EXIST, {
             dappid,
-            ...Function_Exception_Detail,
           });
         }
         if (memDapp.possessorAddress !== address) {
-          throw new ConsensusException(ACCOUNT_NOT_DAPPID_POSSESSOR, {
+          throw new ConsensusException(ERROR_LIST.ACCOUNT_NOT_DAPPID_POSSESSOR, {
             address,
             dappid,
-            ...Function_Exception_Detail,
+            errorId: NewTransactionRefuseReason.ACCOUNT_NOT_DAPPID_POSSESSOR,
           });
         }
         if (memDapp.status === ASSET_STATUS.FROZEN) {
-          throw new ConsensusException(DAPPID_ALREADY_FROZEN, {
+          throw new ConsensusException(ERROR_LIST.DAPPID_ALREADY_FROZEN, {
             dappid,
-            ...Function_Exception_Detail,
           });
         }
 
@@ -889,10 +749,6 @@ export class EventLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const Function_Exception_Detail = {
-      function: "eventLogicVerifier",
-    } as const;
-
     // 解冻 dappid
     eventEmitter.on(
       "unfrozenDAppid",
@@ -905,30 +761,26 @@ export class EventLogicVerifier {
           currentBlockHeight,
         );
         if (!memDapp) {
-          throw new ConsensusException(DAPPID_IS_NOT_EXIST, {
+          throw new ConsensusException(ERROR_LIST.DAPPID_IS_NOT_EXIST, {
             dappid,
-            ...Function_Exception_Detail,
           });
         }
         if (memDapp.status !== ASSET_STATUS.FROZEN) {
-          throw new ConsensusException(DAPPID_NOT_FROZEN, {
+          throw new ConsensusException(ERROR_LIST.DAPPID_NOT_FROZEN, {
             dappid,
-            ...Function_Exception_Detail,
           });
         }
         // if (memDapp.possessorAddress === address) {
-        //   throw new ConsensusException(NO_NEED_TO_PURCHASE_SPECIAL_ASSET, {
+        //   throw new ConsensusException(ERROR_LIST.NO_NEED_TO_PURCHASE_SPECIAL_ASSET, {
         //     type: "dappid",
         //     asset: dappid,
-        //     ...Function_Exception_Detail,
         //   });
         // }
         if (transaction.recipientId !== memDapp.possessorAddress) {
-          throw new ConsensusException(SHOULD_BE, {
+          throw new ConsensusException(ERROR_LIST.SHOULD_BE, {
             to_compare_prop: `recipientId ${transaction.recipientId}`,
             to_target: "transaction",
             be_compare_prop: `dapp possessor ${memDapp.possessorAddress}`,
-            ...Function_Exception_Detail,
           });
         }
 
@@ -943,10 +795,6 @@ export class EventLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const Function_Exception_Detail = {
-      function: "eventLogicVerifier",
-    } as const;
-
     // 更改 dappid 拥有者
     eventEmitter.on(
       "changeDAppidPossessor",
@@ -963,10 +811,9 @@ export class EventLogicVerifier {
               accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
               accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
             ) {
-              throw new ConsensusException(ACCOUNT_FROZEN, {
+              throw new ConsensusException(ERROR_LIST.ACCOUNT_FROZEN, {
                 address: possessorAddress,
                 status: accountStatus,
-                ...Function_Exception_Detail,
               });
             }
           }
@@ -978,25 +825,22 @@ export class EventLogicVerifier {
           currentBlockHeight,
         );
         if (!memDapp) {
-          throw new ConsensusException(DAPPID_IS_NOT_EXIST, {
+          throw new ConsensusException(ERROR_LIST.DAPPID_IS_NOT_EXIST, {
             dappid,
-            ...Function_Exception_Detail,
           });
         }
         // 处于冻结状态的 dappid 不能更改拥有者
         if (memDapp.status === ASSET_STATUS.FROZEN) {
-          throw new ConsensusException(DAPPID_ALREADY_FROZEN, {
+          throw new ConsensusException(ERROR_LIST.DAPPID_ALREADY_FROZEN, {
             dappid,
-            ...Function_Exception_Detail,
           });
         }
         // dappid 的拥有者才能更改拥有者
         if (transaction.senderId !== memDapp.possessorAddress) {
-          throw new ConsensusException(SHOULD_BE, {
+          throw new ConsensusException(ERROR_LIST.SHOULD_BE, {
             to_compare_prop: `senderId ${transaction.senderId}`,
             to_target: "transaction",
             be_compare_prop: `dapp possessor ${memDapp.possessorAddress}`,
-            ...Function_Exception_Detail,
           });
         }
 
@@ -1011,10 +855,6 @@ export class EventLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const Function_Exception_Detail = {
-      function: "eventLogicVerifier",
-    } as const;
-
     // 注册链
     eventEmitter.on(
       "registerChain",
@@ -1037,10 +877,9 @@ export class EventLogicVerifier {
         const remainBalance =
           accountAssets[chainMagic][chainAssetType].assetNumber - BigInt(transaction.fee);
         if (BigInt(registerChainMinChainAsset) > remainBalance) {
-          throw new ConsensusException(ASSET_NOT_ENOUGH, {
+          throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
             reason: `No enough asset, Min account asset ${registerChainMinChainAsset}, remain Assets: ${remainBalance}`,
             errorId: NewTransactionRefuseReason.CHAIN_ASSET_NOT_ENOUGH,
-            ...Function_Exception_Detail,
           });
         }
 
@@ -1077,43 +916,39 @@ export class EventLogicVerifier {
         // 验证链网络标识符是否已经存在
         const memMagic = await accountGetterHelper.getMagic(magic);
         if (memMagic) {
-          throw new ConsensusException(ALREADY_EXIST, {
+          throw new ConsensusException(ERROR_LIST.ALREADY_EXIST, {
             prop: `Magic ${magic}`,
             target: "blockChain",
             errorId: NewTransactionRefuseReason.MAGIC_ALREADY_EXIST,
-            ...Function_Exception_Detail,
           });
         }
 
         // 验证链名是否已经存在
         const memChainName = await accountGetterHelper.getCurrency(chainName);
         if (memChainName) {
-          throw new ConsensusException(ALREADY_EXIST, {
+          throw new ConsensusException(ERROR_LIST.ALREADY_EXIST, {
             prop: `ChainName ${chainName}`,
             target: "blockChain",
             errorId: NewTransactionRefuseReason.CHAINNAME_ALREADY_EXIST,
-            ...Function_Exception_Detail,
           });
         }
 
         // 验证主权益名是否已经存在
         const memAssetType = await accountGetterHelper.getCurrency(assetType);
         if (memAssetType) {
-          throw new ConsensusException(ALREADY_EXIST, {
+          throw new ConsensusException(ERROR_LIST.ALREADY_EXIST, {
             prop: `AssetType ${assetType}`,
             target: "blockChain",
             errorId: NewTransactionRefuseReason.ASSETTYPE_ALREADY_EXIST,
-            ...Function_Exception_Detail,
           });
         }
 
         // 链上是否已经存在这个链的创世块
         const memChain = await accountGetterHelper.getChain(magic);
         if (memChain) {
-          throw new ConsensusException(ALREADY_EXIST, {
+          throw new ConsensusException(ERROR_LIST.ALREADY_EXIST, {
             prop: `Chain with magic ${magic}`,
             target: "blockChain",
-            ...Function_Exception_Detail,
           });
         }
 
@@ -1128,10 +963,6 @@ export class EventLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const Function_Exception_Detail = {
-      function: "eventLogicVerifier",
-    } as const;
-
     // 注册位名
     eventEmitter.on(
       "registerLocationName",
@@ -1148,10 +979,9 @@ export class EventLogicVerifier {
               accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
               accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
             ) {
-              throw new ConsensusException(ACCOUNT_FROZEN, {
+              throw new ConsensusException(ERROR_LIST.ACCOUNT_FROZEN, {
                 address: possessorAddress,
                 status: accountStatus,
-                ...Function_Exception_Detail,
               });
             }
           }
@@ -1164,21 +994,19 @@ export class EventLogicVerifier {
           currentBlockHeight,
         );
         if (memLocation) {
-          throw new ConsensusException(ALREADY_EXIST, {
+          throw new ConsensusException(ERROR_LIST.LOCATION_NAME_IS_ALREADY_EXIST, {
             prop: name,
             target: "blockChain",
             errorId: NewTransactionRefuseReason.LOCATION_NAME_ALREADY_EXIST,
-            ...Function_Exception_Detail,
           });
         }
 
         // 位名是否被禁用
         const result = await accountGetterHelper.isLocationNameForbidden(name);
         if (result) {
-          throw new ConsensusException(FORBIDDEN, {
+          throw new ConsensusException(ERROR_LIST.FORBIDDEN, {
             prop: `Location name ${name}`,
             target: "blockChain",
-            ...Function_Exception_Detail,
           });
         }
 
@@ -1193,9 +1021,8 @@ export class EventLogicVerifier {
             currentBlockHeight,
           );
           if (!lastMemLocation) {
-            throw new ConsensusException(LOCATION_NAME_IS_NOT_EXIST, {
+            throw new ConsensusException(ERROR_LIST.LOCATION_NAME_IS_NOT_EXIST, {
               locationName: lastLocationName,
-              ...Function_Exception_Detail,
             });
           }
         }
@@ -1211,10 +1038,6 @@ export class EventLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const Function_Exception_Detail = {
-      function: "eventLogicVerifier",
-    } as const;
-
     // 注销位名
     eventEmitter.on(
       "cancelLocationName",
@@ -1224,10 +1047,9 @@ export class EventLogicVerifier {
         // const names = name.split(".");
         // // 顶级位名不能删除
         // if (names.length === 2) {
-        //   throw new ConsensusException(CAN_NOT_DELETE_LOCATION_NAME, {
+        //   throw new ConsensusException(ERROR_LIST.CAN_NOT_DELETE_LOCATION_NAME, {
         //     locationName: name,
         //     reason: "Top level location name can not be delete",
-        //     ...Function_Exception_Detail,
         //   });
         // }
 
@@ -1238,38 +1060,34 @@ export class EventLogicVerifier {
           currentBlockHeight,
         );
         if (!memLocation) {
-          throw new ConsensusException(LOCATION_NAME_IS_NOT_EXIST, {
+          throw new ConsensusException(ERROR_LIST.LOCATION_NAME_IS_NOT_EXIST, {
             locationName: name,
             errorId: NewTransactionRefuseReason.LOCATION_NAME_NOT_EXIST,
-            ...Function_Exception_Detail,
           });
         }
 
         // 冻结状态的位名不能删除
         if (memLocation.status === ASSET_STATUS.FROZEN) {
-          throw new ConsensusException(CAN_NOT_DELETE_LOCATION_NAME, {
+          throw new ConsensusException(ERROR_LIST.CAN_NOT_DELETE_LOCATION_NAME, {
             locationName: name,
             reason: "Frozen location name can not be delete",
-            ...Function_Exception_Detail,
           });
         }
 
         // 发起账户地址和接收账户地址必须是同一个
         if (transaction.senderId !== transaction.recipientId) {
-          throw new ConsensusException(SHOULD_BE, {
+          throw new ConsensusException(ERROR_LIST.SHOULD_BE, {
             to_compare_prop: `recipientId`,
             to_target: "transaction",
             be_compare_prop: transaction.senderId,
-            ...Function_Exception_Detail,
           });
         }
 
         // 只有位名的拥有者才能删除位名
         if (memLocation.possessorAddress !== transaction.senderId) {
-          throw new ConsensusException(CAN_NOT_DELETE_LOCATION_NAME, {
+          throw new ConsensusException(ERROR_LIST.CAN_NOT_DELETE_LOCATION_NAME, {
             locationName: name,
             reason: "Only location name possessor can delete location name",
-            ...Function_Exception_Detail,
           });
         }
 
@@ -1279,10 +1097,9 @@ export class EventLogicVerifier {
           name,
         );
         if (isSubLnsExist) {
-          throw new ConsensusException(CAN_NOT_DELETE_LOCATION_NAME, {
+          throw new ConsensusException(ERROR_LIST.CAN_NOT_DELETE_LOCATION_NAME, {
             locationName: name,
             reason: "Location name have child location name, please delete it at first",
-            ...Function_Exception_Detail,
           });
         }
 
@@ -1297,10 +1114,6 @@ export class EventLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const Function_Exception_Detail = {
-      function: "eventLogicVerifier",
-    } as const;
-
     // 设置位名管理员
     eventEmitter.on(
       "setLnsManager",
@@ -1316,10 +1129,9 @@ export class EventLogicVerifier {
             accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
             accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
           ) {
-            throw new ConsensusException(ACCOUNT_FROZEN, {
+            throw new ConsensusException(ERROR_LIST.ACCOUNT_FROZEN, {
               address: manager,
               errorId: NewTransactionRefuseReason.CAN_NOT_SET_FROZEN_ACCOUNT_AS_MANAGER,
-              ...Function_Exception_Detail,
             });
           }
         }
@@ -1331,28 +1143,25 @@ export class EventLogicVerifier {
           currentBlockHeight,
         );
         if (!memLocation) {
-          throw new ConsensusException(LOCATION_NAME_IS_NOT_EXIST, {
+          throw new ConsensusException(ERROR_LIST.LOCATION_NAME_IS_NOT_EXIST, {
             locationName: name,
-            ...Function_Exception_Detail,
           });
         }
 
         // 处于冻结状态的位名不能设置管理员
         if (memLocation.status === ASSET_STATUS.FROZEN) {
-          throw new ConsensusException(SET_LOCATION_NAME_MANAGER_FIELD, {
+          throw new ConsensusException(ERROR_LIST.SET_LOCATION_NAME_MANAGER_FIELD, {
             locationName: name,
             reason: "Frozen location name can not set manager",
-            ...Function_Exception_Detail,
           });
         }
 
         // 不能将原来的管理员设置为管理员
         if (manager === memLocation.manager) {
-          throw new ConsensusException(SET_LOCATION_NAME_MANAGER_FIELD, {
+          throw new ConsensusException(ERROR_LIST.SET_LOCATION_NAME_MANAGER_FIELD, {
             locationName: name,
             reason: "Can not set the same account as manager",
             errorId: NewTransactionRefuseReason.CAN_NOT_SET_SAME_ACCOUNT_AS_MANAGER,
-            ...Function_Exception_Detail,
           });
         }
 
@@ -1367,29 +1176,26 @@ export class EventLogicVerifier {
           );
           // 上级位名不存在
           if (!lastMemLocation) {
-            throw new ConsensusException(SET_LOCATION_NAME_MANAGER_FIELD, {
+            throw new ConsensusException(ERROR_LIST.SET_LOCATION_NAME_MANAGER_FIELD, {
               locationName: lastLocationName,
               reason: "Last location name is not exists",
-              ...Function_Exception_Detail,
             });
           }
 
           // 多级位名只有位名的拥有者或者上级位名的管理员可以设置管理员
           if (!(address === memLocation.possessorAddress || address === lastMemLocation.manager)) {
-            throw new ConsensusException(SET_LOCATION_NAME_MANAGER_FIELD, {
+            throw new ConsensusException(ERROR_LIST.SET_LOCATION_NAME_MANAGER_FIELD, {
               locationName: lastLocationName,
               reason:
                 "Only the location name possessor or upper level location name manager can set manager of multi level location name",
-              ...Function_Exception_Detail,
             });
           }
         } else {
           // 顶级位名只有位名的拥有者可以设置管理员
           if (address !== memLocation.possessorAddress) {
-            throw new ConsensusException(SET_LOCATION_NAME_MANAGER_FIELD, {
+            throw new ConsensusException(ERROR_LIST.SET_LOCATION_NAME_MANAGER_FIELD, {
               locationName: name,
               reason: "Only the location name possessor can set manager of top level location name",
-              ...Function_Exception_Detail,
             });
           }
         }
@@ -1405,10 +1211,6 @@ export class EventLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const Function_Exception_Detail = {
-      function: "eventLogicVerifier",
-    } as const;
-
     // 设置位名解析值
     eventEmitter.on(
       "setLnsRecordValue",
@@ -1423,56 +1225,50 @@ export class EventLogicVerifier {
           currentBlockHeight,
         );
         if (!memLocation) {
-          throw new ConsensusException(LOCATION_NAME_IS_NOT_EXIST, {
+          throw new ConsensusException(ERROR_LIST.LOCATION_NAME_IS_NOT_EXIST, {
             locationName: name,
             errorId: NewTransactionRefuseReason.LOCATION_NAME_NOT_EXIST,
-            ...Function_Exception_Detail,
           });
         }
 
         const { records, status } = memLocation;
         // 处于冻结状态的位名不能设置解析值
         if (status === ASSET_STATUS.FROZEN) {
-          throw new ConsensusException(SET_LOCATION_NAME_RECORD_VALUE_FIELD, {
+          throw new ConsensusException(ERROR_LIST.SET_LOCATION_NAME_RECORD_VALUE_FIELD, {
             locationName: name,
             reason: "Frozen location name can not set record value",
-            ...Function_Exception_Detail,
           });
         }
 
         // 只有位名的拥有者或者管理员可以设置位名的解析值
         if (!(address === memLocation.possessorAddress || address === memLocation.manager)) {
-          throw new ConsensusException(SET_LOCATION_NAME_RECORD_VALUE_FIELD, {
+          throw new ConsensusException(ERROR_LIST.SET_LOCATION_NAME_RECORD_VALUE_FIELD, {
             locationName: name,
             reason: "Only the location name possessor or manager can set record value",
-            ...Function_Exception_Detail,
           });
         }
 
         if (operationType === RECORD_OPERATION_TYPE.ADD) {
           if (!addRecord) {
-            throw new ConsensusException(SET_LOCATION_NAME_RECORD_VALUE_FIELD, {
+            throw new ConsensusException(ERROR_LIST.SET_LOCATION_NAME_RECORD_VALUE_FIELD, {
               locationName: name,
               reason: "New location name record value lose",
-              ...Function_Exception_Detail,
             });
           }
           this.addRecord(name, addRecord, records);
         } else if (operationType === RECORD_OPERATION_TYPE.DELETE) {
           if (!deleteRecord) {
-            throw new ConsensusException(SET_LOCATION_NAME_RECORD_VALUE_FIELD, {
+            throw new ConsensusException(ERROR_LIST.SET_LOCATION_NAME_RECORD_VALUE_FIELD, {
               locationName: name,
               reason: "Delete location name record value lose",
-              ...Function_Exception_Detail,
             });
           }
           this.deleteRecord(name, deleteRecord, records);
         } else if (operationType === RECORD_OPERATION_TYPE.UPDATE) {
           if (!(addRecord && deleteRecord)) {
-            throw new ConsensusException(SET_LOCATION_NAME_RECORD_VALUE_FIELD, {
+            throw new ConsensusException(ERROR_LIST.SET_LOCATION_NAME_RECORD_VALUE_FIELD, {
               locationName: name,
               reason: "New location name record value and delete location name record value lose",
-              ...Function_Exception_Detail,
             });
           }
           this.deleteRecord(name, deleteRecord, records);
@@ -1490,10 +1286,6 @@ export class EventLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const Function_Exception_Detail = {
-      function: "eventLogicVerifier",
-    } as const;
-
     // 冻结位名
     eventEmitter.on(
       "frozenLocationName",
@@ -1507,30 +1299,25 @@ export class EventLogicVerifier {
           currentBlockHeight,
         );
         if (!memLocation) {
-          throw new ConsensusException(LOCATION_NAME_IS_NOT_EXIST, {
+          throw new ConsensusException(ERROR_LIST.LOCATION_NAME_IS_NOT_EXIST, {
             locationName: name,
             errorId: NewTransactionRefuseReason.LOCATION_NAME_NOT_EXIST,
-            ...Function_Exception_Detail,
           });
         }
         if (memLocation.status === ASSET_STATUS.FROZEN) {
-          throw new ConsensusException(LOCATION_NAME_ALREADY_FROZEN, {
+          throw new ConsensusException(ERROR_LIST.LOCATION_NAME_ALREADY_FROZEN, {
             locationName: name,
-            ...Function_Exception_Detail,
           });
         }
         // 只有顶级位名能交换
         if (memLocation.level !== LOCATION_NAME_LEVEL.TOP_LEVEL) {
-          throw new ConsensusException(ONLY_TOP_LEVEL_LOCATION_NAME_CAN_EXCHANGE, {
-            ...Function_Exception_Detail,
-          });
+          throw new ConsensusException(ERROR_LIST.ONLY_TOP_LEVEL_LOCATION_NAME_CAN_EXCHANGE);
         }
         if (memLocation.possessorAddress !== address) {
-          throw new ConsensusException(ACCOUNT_NOT_LOCATION_NAME_POSSESSOR, {
+          throw new ConsensusException(ERROR_LIST.ACCOUNT_NOT_LOCATION_NAME_POSSESSOR, {
             address,
             locationName: name,
             errorId: NewTransactionRefuseReason.ACCOUNT_NOT_LNS_POSSESSOR,
-            ...Function_Exception_Detail,
           });
         }
 
@@ -1545,10 +1332,6 @@ export class EventLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const Function_Exception_Detail = {
-      function: "eventLogicVerifier",
-    } as const;
-
     // 解冻位名，更换拥有者
     eventEmitter.on(
       "unfrozenLocationName",
@@ -1562,37 +1345,31 @@ export class EventLogicVerifier {
           currentBlockHeight,
         );
         if (!memLocation) {
-          throw new ConsensusException(LOCATION_NAME_IS_NOT_EXIST, {
+          throw new ConsensusException(ERROR_LIST.LOCATION_NAME_IS_NOT_EXIST, {
             locationName: name,
             errorId: NewTransactionRefuseReason.LOCATION_NAME_NOT_EXIST,
-            ...Function_Exception_Detail,
           });
         }
         if (memLocation.status !== ASSET_STATUS.FROZEN) {
-          throw new ConsensusException(LOCATION_NAME_NOT_FROZEN, {
+          throw new ConsensusException(ERROR_LIST.LOCATION_NAME_NOT_FROZEN, {
             locationName: name,
-            ...Function_Exception_Detail,
           });
         }
         // 只有顶级位名能交换
         if (memLocation.level !== LOCATION_NAME_LEVEL.TOP_LEVEL) {
-          throw new ConsensusException(ONLY_TOP_LEVEL_LOCATION_NAME_CAN_EXCHANGE, {
-            ...Function_Exception_Detail,
-          });
+          throw new ConsensusException(ERROR_LIST.ONLY_TOP_LEVEL_LOCATION_NAME_CAN_EXCHANGE);
         }
         // if (memLocation.possessorAddress === address) {
-        //   throw new ConsensusException(NO_NEED_TO_PURCHASE_SPECIAL_ASSET, {
+        //   throw new ConsensusException(ERROR_LIST.NO_NEED_TO_PURCHASE_SPECIAL_ASSET, {
         //     type: "locationName",
         //     asset: name,
-        //     ...Function_Exception_Detail,
         //   });
         // }
         if (transaction.recipientId !== memLocation.possessorAddress) {
-          throw new ConsensusException(SHOULD_BE, {
+          throw new ConsensusException(ERROR_LIST.SHOULD_BE, {
             to_compare_prop: `recipientId ${transaction.recipientId}`,
             to_target: "transaction",
             be_compare_prop: `locationName possessor ${memLocation.possessorAddress}`,
-            ...Function_Exception_Detail,
           });
         }
 
@@ -1607,10 +1384,6 @@ export class EventLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const Function_Exception_Detail = {
-      function: "eventLogicVerifier",
-    } as const;
-
     // 更改位名的拥有者
     eventEmitter.on(
       "changeLocationNamePossessor",
@@ -1627,10 +1400,9 @@ export class EventLogicVerifier {
               accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
               accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
             ) {
-              throw new ConsensusException(ACCOUNT_FROZEN, {
+              throw new ConsensusException(ERROR_LIST.ACCOUNT_FROZEN, {
                 address: possessorAddress,
                 status: accountStatus,
-                ...Function_Exception_Detail,
               });
             }
           }
@@ -1643,32 +1415,27 @@ export class EventLogicVerifier {
           currentBlockHeight,
         );
         if (!memLocation) {
-          throw new ConsensusException(LOCATION_NAME_IS_NOT_EXIST, {
+          throw new ConsensusException(ERROR_LIST.LOCATION_NAME_IS_NOT_EXIST, {
             locationName: name,
             errorId: NewTransactionRefuseReason.LOCATION_NAME_NOT_EXIST,
-            ...Function_Exception_Detail,
           });
         }
         // 只有顶级位名才能更改拥有者
         if (memLocation.level !== LOCATION_NAME_LEVEL.TOP_LEVEL) {
-          throw new ConsensusException(ONLY_TOP_LEVEL_LOCATION_NAME_CAN_EXCHANGE, {
-            ...Function_Exception_Detail,
-          });
+          throw new ConsensusException(ERROR_LIST.ONLY_TOP_LEVEL_LOCATION_NAME_CAN_EXCHANGE);
         }
         // 处于冻结状态的位名不能更改拥有者
         if (memLocation.status === ASSET_STATUS.FROZEN) {
-          throw new ConsensusException(LOCATION_NAME_ALREADY_FROZEN, {
+          throw new ConsensusException(ERROR_LIST.LOCATION_NAME_ALREADY_FROZEN, {
             locationName: name,
-            ...Function_Exception_Detail,
           });
         }
         // 位名的拥有者才能更改拥有者
         if (transaction.senderId !== memLocation.possessorAddress) {
-          throw new ConsensusException(SHOULD_BE, {
+          throw new ConsensusException(ERROR_LIST.SHOULD_BE, {
             to_compare_prop: `senderId ${transaction.senderId}`,
             to_target: "transaction",
             be_compare_prop: `locationName possessor ${memLocation.possessorAddress}`,
-            ...Function_Exception_Detail,
           });
         }
 
@@ -1684,10 +1451,6 @@ export class EventLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const Function_Exception_Detail = {
-      function: "eventLogicVerifier",
-    } as const;
-
     // 发行 entityFactory
     eventEmitter.on(
       "issueEntityFactory",
@@ -1704,10 +1467,9 @@ export class EventLogicVerifier {
             accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
             accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
           ) {
-            throw new ConsensusException(ACCOUNT_FROZEN, {
+            throw new ConsensusException(ERROR_LIST.ACCOUNT_FROZEN, {
               address: possessorAddress,
               status: accountStatus,
-              ...Function_Exception_Detail,
             });
           }
         }
@@ -1749,10 +1511,9 @@ export class EventLogicVerifier {
         const remainChainAsset =
           accountAssets[chainMagic][chainAssetType].assetNumber - BigInt(transaction.fee);
         if (BigInt(issueEntityFactoryMinChainAsset) > remainChainAsset) {
-          throw new ConsensusException(ASSET_NOT_ENOUGH, {
+          throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
             reason: `No enough asset, Min account asset ${issueEntityFactoryMinChainAsset}, remain Assets: ${remainChainAsset}`,
             errorId: NewTransactionRefuseReason.CHAIN_ASSET_NOT_ENOUGH,
-            function: "verify",
           });
         }
 
@@ -1762,11 +1523,10 @@ export class EventLogicVerifier {
           this.configHelper.maxMultipleOfEntityAndMainAsset,
         );
         if (BigInt(numberOfEntities) > calcMaxEntities) {
-          throw new ConsensusException(PROP_SHOULD_LTE_FIELD, {
+          throw new ConsensusException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
             prop: `numberOfEntities ${numberOfEntities}`,
             target: `issueEntityFactory`,
             field: `calc max entities ${calcMaxEntities}`,
-            function: "verify",
           });
         }
 
@@ -1777,10 +1537,9 @@ export class EventLogicVerifier {
           currentBlockHeight,
         );
         if (memEntityFactory) {
-          throw new ConsensusException(ENTITY_FACTORY_IS_ALREADY_EXIST, {
+          throw new ConsensusException(ERROR_LIST.ENTITY_FACTORY_IS_ALREADY_EXIST, {
             factoryId,
             errorId: NewTransactionRefuseReason.ENTITY_FACTORY_ALREADY_EXIST,
-            ...Function_Exception_Detail,
           });
         }
 
@@ -1796,10 +1555,6 @@ export class EventLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const Function_Exception_Detail = {
-      function: "eventLogicVerifier",
-    } as const;
-
     // 发行 entityFactory
     eventEmitter.on(
       "issueEntity",
@@ -1824,10 +1579,9 @@ export class EventLogicVerifier {
               accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
               accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
             ) {
-              throw new ConsensusException(ACCOUNT_FROZEN, {
+              throw new ConsensusException(ERROR_LIST.ACCOUNT_FROZEN, {
                 address: possessorAddress,
                 status: accountStatus,
-                ...Function_Exception_Detail,
               });
             }
           }
@@ -1840,27 +1594,24 @@ export class EventLogicVerifier {
           currentBlockHeight,
         );
         if (!memEntityFactory) {
-          throw new ConsensusException(ENTITY_FACTORY_IS_NOT_EXIST, {
+          throw new ConsensusException(ERROR_LIST.ENTITY_FACTORY_IS_NOT_EXIST, {
             factoryId,
             errorId: NewTransactionRefuseReason.ENTITY_FACTORY_NOT_EXIST,
-            ...Function_Exception_Detail,
           });
         }
 
         if (entityFactoryPossessorAddress !== memEntityFactory.possessorAddress) {
-          throw new ConsensusException(NOT_MATCH, {
+          throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
             to_compare_prop: `entityFactoryPossessor ${entityFactoryPossessorAddress}`,
             be_compare_prop: "issueEntity",
             to_target: `possessorAddress ${memEntityFactory.possessorAddress}`,
             be_target: "memEntityFactory",
-            ...Function_Exception_Detail,
           });
         }
 
         if (memEntityFactory.remainNumberOfEntities === 0) {
-          throw new ConsensusException(ISSUE_ENTITY_TIMES_USE_UP, {
+          throw new ConsensusException(ERROR_LIST.ISSUE_ENTITY_TIMES_USE_UP, {
             entityFactory: factoryId,
-            ...Function_Exception_Detail,
           });
         }
 
@@ -1871,10 +1622,9 @@ export class EventLogicVerifier {
           currentBlockHeight,
         );
         if (memEntity) {
-          throw new ConsensusException(ENTITY_IS_ALREADY_EXIST, {
+          throw new ConsensusException(ERROR_LIST.ENTITY_IS_ALREADY_EXIST, {
             entityId,
             errorId: NewTransactionRefuseReason.ENTITY_ALREADY_EXIST,
-            ...Function_Exception_Detail,
           });
         }
 
@@ -1885,19 +1635,17 @@ export class EventLogicVerifier {
         if (purchaseAssetPrealnum !== "0") {
           remainBalance -= BigInt(purchaseAssetPrealnum);
           if (remainBalance < BigInt(0)) {
-            throw new ConsensusException(ASSET_NOT_ENOUGH, {
+            throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
               reason: `No enough asset, Min account asset ${purchaseAssetPrealnum}, remain Assets: ${remainBalance}`,
               errorId: NewTransactionRefuseReason.CHAIN_ASSET_NOT_ENOUGH,
-              ...Function_Exception_Detail,
             });
           }
         }
         if (entityFrozenAssetPrealnum !== "0") {
           if (BigInt(entityFrozenAssetPrealnum) > remainBalance) {
-            throw new ConsensusException(ASSET_NOT_ENOUGH, {
+            throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
               reason: `No enough asset, Min account asset ${entityFrozenAssetPrealnum}, remain Assets: ${remainBalance}`,
               errorId: NewTransactionRefuseReason.CHAIN_ASSET_NOT_ENOUGH,
-              ...Function_Exception_Detail,
             });
           }
         }
@@ -1913,10 +1661,6 @@ export class EventLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const Function_Exception_Detail = {
-      function: "eventLogicVerifier",
-    } as const;
-
     // 资产销毁
     eventEmitter.on(
       "destoryEntity",
@@ -1937,30 +1681,27 @@ export class EventLogicVerifier {
           currentBlockHeight,
         );
         if (!memEntityFactory) {
-          throw new ConsensusException(ENTITY_FACTORY_IS_NOT_EXIST, {
+          throw new ConsensusException(ERROR_LIST.ENTITY_FACTORY_IS_NOT_EXIST, {
             factoryId,
             errorId: NewTransactionRefuseReason.ENTITY_FACTORY_NOT_EXIST,
-            ...Function_Exception_Detail,
           });
         }
 
         if (entityFactoryApplicantAddress !== memEntityFactory.applyAddress) {
-          throw new ConsensusException(NOT_MATCH, {
+          throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
             to_compare_prop: `entityFactoryApplicant ${entityFactoryApplicantAddress}`,
             be_compare_prop: "destoryEntity",
             to_target: `applyAddress ${memEntityFactory.applyAddress}`,
             be_target: "memEntityFactory",
-            ...Function_Exception_Detail,
           });
         }
 
         if (entityFactoryPossessorAddress !== memEntityFactory.possessorAddress) {
-          throw new ConsensusException(NOT_MATCH, {
+          throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
             to_compare_prop: `entityFactoryPossessor ${entityFactoryPossessorAddress}`,
             be_compare_prop: "destoryEntity",
             to_target: `possessorAddress ${memEntityFactory.possessorAddress}`,
             be_target: "memEntityFactory",
-            ...Function_Exception_Detail,
           });
         }
 
@@ -1970,37 +1711,33 @@ export class EventLogicVerifier {
           currentBlockHeight,
         );
         if (!memEntity) {
-          throw new ConsensusException(ENTITY_IS_NOT_EXIST, {
+          throw new ConsensusException(ERROR_LIST.ENTITY_IS_NOT_EXIST, {
             entityId,
             errorId: NewTransactionRefuseReason.ENTITY_NOT_EXIST,
-            ...Function_Exception_Detail,
           });
         }
 
         // 冻结状态的位名不能销毁
         if (memEntity.status === ASSET_STATUS.FROZEN) {
-          throw new ConsensusException(CAN_NOT_DESTORY_ENTITY, {
+          throw new ConsensusException(ERROR_LIST.CAN_NOT_DESTORY_ENTITY, {
             entityId,
             reason: "Frozen entity can not be destory",
-            ...Function_Exception_Detail,
           });
         }
 
         // 冻结状态的位名不能销毁
         if (memEntity.status === ASSET_STATUS.DESTORY) {
-          throw new ConsensusException(CAN_NOT_DESTORY_ENTITY, {
+          throw new ConsensusException(ERROR_LIST.CAN_NOT_DESTORY_ENTITY, {
             entityId,
             reason: "Entity already be destory",
-            ...Function_Exception_Detail,
           });
         }
 
         // 只有 entity 的拥有者才能删除位名
         if (memEntity.possessorAddress !== transaction.senderId) {
-          throw new ConsensusException(CAN_NOT_DESTORY_ENTITY, {
+          throw new ConsensusException(ERROR_LIST.CAN_NOT_DESTORY_ENTITY, {
             entityId,
             reason: `Only entity possessor can deestory entity ${entityId}`,
-            ...Function_Exception_Detail,
           });
         }
 
@@ -2015,10 +1752,6 @@ export class EventLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const Function_Exception_Detail = {
-      function: "eventLogicVerifier",
-    } as const;
-
     // 冻结 entity，entity 冻结
     eventEmitter.on(
       "frozenEntity",
@@ -2032,32 +1765,28 @@ export class EventLogicVerifier {
           currentBlockHeight,
         )) as BFChainCore.IssueEntityInfo | undefined;
         if (!memEntity) {
-          throw new ConsensusException(ENTITY_IS_NOT_EXIST, {
+          throw new ConsensusException(ERROR_LIST.ENTITY_IS_NOT_EXIST, {
             entityId,
             errorId: NewTransactionRefuseReason.ENTITY_NOT_EXIST,
-            ...Function_Exception_Detail,
           });
         }
         if (memEntity.possessorAddress !== address) {
-          throw new ConsensusException(ACCOUNT_NOT_ENTITY_POSSESSOR, {
+          throw new ConsensusException(ERROR_LIST.ACCOUNT_NOT_ENTITY_POSSESSOR, {
             address,
             entityId,
             errorId: NewTransactionRefuseReason.ACCOUNT_NOT_ENTITY_POSSESSOR,
-            ...Function_Exception_Detail,
           });
         }
         // 实体处于冻结状态
         if (memEntity.status === ASSET_STATUS.FROZEN) {
-          throw new ConsensusException(ENTITY_ALREADY_FROZEN, {
+          throw new ConsensusException(ERROR_LIST.ENTITY_ALREADY_FROZEN, {
             entityId,
-            ...Function_Exception_Detail,
           });
         }
         // 实体已经销毁
         if (memEntity.status === ASSET_STATUS.DESTORY) {
-          throw new ConsensusException(ENTITY_ALREADY_DESTORY, {
+          throw new ConsensusException(ERROR_LIST.ENTITY_ALREADY_DESTORY, {
             entityId,
-            ...Function_Exception_Detail,
           });
         }
 
@@ -2072,10 +1801,6 @@ export class EventLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const Function_Exception_Detail = {
-      function: "eventLogicVerifier",
-    } as const;
-
     // 解冻 entity，entity 解冻，更换拥有者
     eventEmitter.on(
       "unfrozenEntity",
@@ -2089,39 +1814,34 @@ export class EventLogicVerifier {
           currentBlockHeight,
         )) as BFChainCore.LocationNameInfo | undefined;
         if (!memEntity) {
-          throw new ConsensusException(ENTITY_IS_ALREADY_EXIST, {
+          throw new ConsensusException(ERROR_LIST.ENTITY_IS_ALREADY_EXIST, {
             entityId,
             errorId: NewTransactionRefuseReason.ENTITY_NOT_EXIST,
-            ...Function_Exception_Detail,
           });
         }
         // 实体处于非冻结状态
         if (memEntity.status === ASSET_STATUS.NORMAL) {
-          throw new ConsensusException(ENTITY_NOT_FROZEN, {
+          throw new ConsensusException(ERROR_LIST.ENTITY_NOT_FROZEN, {
             entityId,
-            ...Function_Exception_Detail,
           });
         }
         // 销毁状态的 entity 不能解冻
         if (memEntity.status === ASSET_STATUS.DESTORY) {
-          throw new ConsensusException(ENTITY_ALREADY_DESTORY, {
+          throw new ConsensusException(ERROR_LIST.ENTITY_ALREADY_DESTORY, {
             entityId,
-            ...Function_Exception_Detail,
           });
         }
         // if (memEntity.possessorAddress === address) {
         //   throw new ConsensusException(NO_NEED_TO_PURCHASE_SPECIAL_ASSET, {
         //     type: "entity",
         //     asset: entityId,
-        //     ...Function_Exception_Detail,
         //   });
         // }
         if (transaction.recipientId !== memEntity.possessorAddress) {
-          throw new ConsensusException(SHOULD_BE, {
+          throw new ConsensusException(ERROR_LIST.SHOULD_BE, {
             to_compare_prop: `recipientId ${transaction.recipientId}`,
             to_target: "transaction",
             be_compare_prop: `entity possessor ${memEntity.possessorAddress}`,
-            ...Function_Exception_Detail,
           });
         }
 
@@ -2136,10 +1856,6 @@ export class EventLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const Function_Exception_Detail = {
-      function: "eventLogicVerifier",
-    } as const;
-
     // 更改 entity 拥有者
     eventEmitter.on(
       "changeEntityPossessor",
@@ -2156,10 +1872,9 @@ export class EventLogicVerifier {
               accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
               accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
             ) {
-              throw new ConsensusException(ACCOUNT_FROZEN, {
+              throw new ConsensusException(ERROR_LIST.ACCOUNT_FROZEN, {
                 address: possessorAddress,
                 status: accountStatus,
-                ...Function_Exception_Detail,
               });
             }
           }
@@ -2172,33 +1887,29 @@ export class EventLogicVerifier {
           currentBlockHeight,
         )) as BFChainCore.LocationNameInfo | undefined;
         if (!memEntity) {
-          throw new ConsensusException(ENTITY_IS_ALREADY_EXIST, {
+          throw new ConsensusException(ERROR_LIST.ENTITY_IS_ALREADY_EXIST, {
             entityId,
             errorId: NewTransactionRefuseReason.ENTITY_NOT_EXIST,
-            ...Function_Exception_Detail,
           });
         }
         // 冻结状态的 entity 不能更改拥有者
         if (memEntity.status === ASSET_STATUS.FROZEN) {
-          throw new ConsensusException(ENTITY_ALREADY_FROZEN, {
+          throw new ConsensusException(ERROR_LIST.ENTITY_ALREADY_FROZEN, {
             entityId,
-            ...Function_Exception_Detail,
           });
         }
         // 销毁状态的 entity 不能更改拥有者
         if (memEntity.status === ASSET_STATUS.DESTORY) {
-          throw new ConsensusException(ENTITY_ALREADY_DESTORY, {
+          throw new ConsensusException(ERROR_LIST.ENTITY_ALREADY_DESTORY, {
             entityId,
-            ...Function_Exception_Detail,
           });
         }
         // 只有 entity 拥有者才能更改拥有者
         if (transaction.senderId !== memEntity.possessorAddress) {
-          throw new ConsensusException(SHOULD_BE, {
+          throw new ConsensusException(ERROR_LIST.SHOULD_BE, {
             to_compare_prop: `senderId ${transaction.senderId}`,
             to_target: "transaction",
             be_compare_prop: `entity possessor ${memEntity.possessorAddress}`,
-            ...Function_Exception_Detail,
           });
         }
 
@@ -2212,10 +1923,6 @@ export class EventLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const Function_Exception_Detail = {
-      function: "eventLogicVerifier",
-    } as const;
-
     // 记录迁移凭证
     eventEmitter.on(
       "migrateCertificate",
@@ -2227,9 +1934,8 @@ export class EventLogicVerifier {
           migrateCertificateId,
         );
         if (migrateCertificate) {
-          throw new ConsensusException(ASSET_IS_ALREADY_MIGRATION, {
+          throw new ConsensusException(ERROR_LIST.ASSET_IS_ALREADY_MIGRATION, {
             migrateCertificateId,
-            ...Function_Exception_Detail,
           });
         }
 

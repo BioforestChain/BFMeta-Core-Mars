@@ -12,27 +12,7 @@ import {
   ConfigHelper,
   ChainAssetInfoHelper,
 } from "@bfchain/core-helper";
-import {
-  CoreExceptionGenerator,
-  PARAM_LOST,
-  PROP_IS_REQUIRE,
-  PROP_IS_INVALID,
-  NOT_EXIST,
-  SHOULD_BE,
-  NOT_MATCH,
-  SHOULD_NOT_EXIST,
-  NOT_A_STRING,
-  NOT_A_IPV4,
-  NOT_A_IPV6,
-  NOT_A_LONGITUDE,
-  NOT_A_LONGITUDE_LATITUDE,
-  NOT_A_LATITUDE,
-  NOT_A_ADDRESS,
-  NOT_A_LOCATION_NAME,
-  NOT_A_DNS,
-  NOT_A_EMAIL,
-  NOT_A_URL,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
@@ -83,7 +63,6 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
 
     const Function_Exception_Detail = {
       target: "body",
-      function: "verifyTransactionBody",
     } as const;
 
     this.emptyRangeType(body, Function_Exception_Detail);
@@ -91,14 +70,14 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
     const { baseHelper } = this;
 
     if (body.recipientId) {
-      throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
         prop: "recipientId",
         ...Function_Exception_Detail,
       });
     }
 
     if (body.fromMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -107,7 +86,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
     }
 
     if (body.toMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -116,7 +95,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
     }
 
     if (!body.storage) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "storage",
         ...Function_Exception_Detail,
       });
@@ -124,7 +103,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
 
     const storage = body.storage;
     if (storage.key !== "name") {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `storage.key ${storage.key}`,
         to_target: "storage",
         be_compare_prop: "name",
@@ -135,9 +114,8 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
     const lnsRecordValue = lnsRecordValueAsset.lnsRecordValue;
 
     if (!lnsRecordValue) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "lnsRecordValue",
-        function: "verifyTransactionBody",
       });
     }
 
@@ -149,14 +127,14 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
     const name = lnsRecordValue.name;
 
     if (!name) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "name",
         ...LnsRecordValueAsset_Exception_Detail,
       });
     }
 
     if (!baseHelper.isValidLnsName(name)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `name ${name}`,
         type: "location name",
         ...LnsRecordValueAsset_Exception_Detail,
@@ -164,7 +142,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
     }
 
     if (storage.value !== name) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `storage.value ${storage.value}`,
         be_compare_prop: `name ${name}`,
         to_target: "storage",
@@ -186,13 +164,13 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
     switch (lnsRecordValue.operationType) {
       case RECORD_OPERATION_TYPE.ADD:
         if (!lnsRecordValue.addRecord) {
-          throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
             prop: "addRecord",
             ...LnsRecordValueAsset_Exception_Detail,
           });
         }
         if (lnsRecordValue.deleteRecord) {
-          throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+          throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
             prop: "deleteRecord",
             ...LnsRecordValueAsset_Exception_Detail,
           });
@@ -201,13 +179,13 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
         break;
       case RECORD_OPERATION_TYPE.DELETE:
         if (lnsRecordValue.addRecord) {
-          throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+          throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
             prop: "addRecord",
             ...LnsRecordValueAsset_Exception_Detail,
           });
         }
         if (!lnsRecordValue.deleteRecord) {
-          throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
             prop: "deleteRecord",
             ...LnsRecordValueAsset_Exception_Detail,
           });
@@ -216,13 +194,13 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
         break;
       case RECORD_OPERATION_TYPE.UPDATE:
         if (!lnsRecordValue.addRecord) {
-          throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
             prop: "addRecord",
             ...LnsRecordValueAsset_Exception_Detail,
           });
         }
         if (!lnsRecordValue.deleteRecord) {
-          throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
             prop: "deleteRecord",
             ...LnsRecordValueAsset_Exception_Detail,
           });
@@ -231,7 +209,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
         await this.checkLocationNameRecord(lnsRecordValue.deleteRecord);
         break;
       default:
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: "operationType",
           type: "location name operation type",
           ...LnsRecordValueAsset_Exception_Detail,
@@ -246,24 +224,21 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
    */
   async checkLocationNameRecord(record: BFChainCore.LocationNameRecordJSON) {
     const { baseHelper, accountBaseHelper } = this;
-    const Function_Exception_Detail = { function: "verifyTransactionBody" } as const;
 
     if (!record) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "record",
-        ...Function_Exception_Detail,
       });
     }
 
     const LnsRecordValueAsset_Exception_Detail = {
       target: "lnsRecordValue",
-      ...Function_Exception_Detail,
     } as const;
 
     const { recordType, recordValue } = record;
 
     if (!baseHelper.isString(recordValue)) {
-      throw new ArgumentIllegalException(NOT_A_STRING, {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_A_STRING, {
         prop: "recordValue",
         value: recordValue,
         ...LnsRecordValueAsset_Exception_Detail,
@@ -272,7 +247,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
 
     if (recordType === RECORD_TYPE.IPV4) {
       if (!baseHelper.isIpV4(recordValue)) {
-        throw new ArgumentIllegalException(NOT_A_IPV4, {
+        throw new ArgumentIllegalException(ERROR_LIST.NOT_A_IPV4, {
           prop: "recordValue",
           value: recordValue,
           ...LnsRecordValueAsset_Exception_Detail,
@@ -280,7 +255,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
       }
     } else if (recordType === RECORD_TYPE.IPV6) {
       if (!baseHelper.isIpV6(recordValue)) {
-        throw new ArgumentIllegalException(NOT_A_IPV6, {
+        throw new ArgumentIllegalException(ERROR_LIST.NOT_A_IPV6, {
           prop: "recordValue",
           value: recordValue,
           ...LnsRecordValueAsset_Exception_Detail,
@@ -289,7 +264,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
     } else if (recordType === RECORD_TYPE.LNG_LAT) {
       const items = recordValue.split(",");
       if (items.length !== 2) {
-        throw new ArgumentIllegalException(NOT_A_LONGITUDE_LATITUDE, {
+        throw new ArgumentIllegalException(ERROR_LIST.NOT_A_LONGITUDE_LATITUDE, {
           prop: "recordValue",
           value: recordValue,
           ...LnsRecordValueAsset_Exception_Detail,
@@ -297,7 +272,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
       }
       // 经度（-180，+180）：负坐标表示西半球，正坐标标识东半球
       if (!baseHelper.isLongitude(items[0])) {
-        throw new ArgumentIllegalException(NOT_A_LONGITUDE, {
+        throw new ArgumentIllegalException(ERROR_LIST.NOT_A_LONGITUDE, {
           prop: "recordValue",
           value: recordValue,
           ...LnsRecordValueAsset_Exception_Detail,
@@ -305,7 +280,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
       }
       // 纬度（-90，+90）：负坐标标识南半球，正坐标表示北半球
       if (!baseHelper.isLatitude(items[1])) {
-        throw new ArgumentIllegalException(NOT_A_LATITUDE, {
+        throw new ArgumentIllegalException(ERROR_LIST.NOT_A_LATITUDE, {
           prop: "recordValue",
           value: recordValue,
           ...LnsRecordValueAsset_Exception_Detail,
@@ -313,7 +288,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
       }
     } else if (recordType === RECORD_TYPE.ADDRESSV1) {
       if (!(await accountBaseHelper.isAddress(recordValue))) {
-        throw new ArgumentIllegalException(NOT_A_ADDRESS, {
+        throw new ArgumentIllegalException(ERROR_LIST.NOT_A_ADDRESS, {
           prop: "recordValue",
           value: recordValue,
           ...LnsRecordValueAsset_Exception_Detail,
@@ -321,7 +296,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
       }
     } else if (recordType === RECORD_TYPE.LOCATION_NAME) {
       if (!baseHelper.isValidLnsName(recordValue)) {
-        throw new ArgumentIllegalException(NOT_A_LOCATION_NAME, {
+        throw new ArgumentIllegalException(ERROR_LIST.NOT_A_LOCATION_NAME, {
           prop: "recordValue",
           value: recordValue,
           ...LnsRecordValueAsset_Exception_Detail,
@@ -329,7 +304,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
       }
     } else if (recordType === RECORD_TYPE.DNS) {
       if (!baseHelper.isDNS(recordValue)) {
-        throw new ArgumentIllegalException(NOT_A_DNS, {
+        throw new ArgumentIllegalException(ERROR_LIST.NOT_A_DNS, {
           prop: "recordValue",
           value: recordValue,
           ...LnsRecordValueAsset_Exception_Detail,
@@ -337,7 +312,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
       }
     } else if (recordType === RECORD_TYPE.EMAIL) {
       if (!baseHelper.isEmail(recordValue)) {
-        throw new ArgumentIllegalException(NOT_A_EMAIL, {
+        throw new ArgumentIllegalException(ERROR_LIST.NOT_A_EMAIL, {
           prop: "recordValue",
           value: recordValue,
           ...LnsRecordValueAsset_Exception_Detail,
@@ -345,7 +320,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
       }
     } else if (recordType === RECORD_TYPE.URL) {
       if (!baseHelper.isURL(recordValue)) {
-        throw new ArgumentIllegalException(NOT_A_URL, {
+        throw new ArgumentIllegalException(ERROR_LIST.NOT_A_URL, {
           prop: "recordValue",
           value: recordValue,
           ...LnsRecordValueAsset_Exception_Detail,
@@ -354,7 +329,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
     } else if (recordType === RECORD_TYPE.UNKNOWN) {
       /// 无需验证
     } else {
-      throw new ArgumentIllegalException(NOT_EXIST, {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_EXIST, {
         prop: "recordType",
         ...LnsRecordValueAsset_Exception_Detail,
       });

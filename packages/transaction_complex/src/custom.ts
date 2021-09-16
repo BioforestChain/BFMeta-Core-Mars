@@ -7,11 +7,7 @@ import {
   ConfigHelper,
   ChainAssetInfoHelper,
 } from "@bfchain/core-helper";
-import {
-  CoreExceptionGenerator,
-  PARAM_LOST,
-  CUSTOM_TRANS_VERIFY_FAIL,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { Injectable, TaskList, Inject } from "@bfchain/util";
 import { CustomTransactionEvent } from "./custom.event";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
@@ -55,20 +51,16 @@ export class CustomTransactionFactory extends TransactionFactory<CustomTransacti
 
     // const { baseHelper } = this;
 
-    const Function_Exception_Detail = { function: "verifyTransactionBody" };
-
     // if (body.recipientId) {
-    //   throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+    //   throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
     //     prop: "recipientId",
     //     target: "body",
-    //     ...Function_Exception_Detail,
     //   });
     // }
 
     if (!custom) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "custom",
-        ...Function_Exception_Detail,
       });
     }
 
@@ -76,7 +68,7 @@ export class CustomTransactionFactory extends TransactionFactory<CustomTransacti
     if (this.customTransactionCenter) {
       const res = await this.customTransactionCenter.verify(body, customAsset);
       if (!res.ret) {
-        throw new ArgumentIllegalException(CUSTOM_TRANS_VERIFY_FAIL, {
+        throw new ArgumentIllegalException(ERROR_LIST.CUSTOM_TRANS_VERIFY_FAIL, {
           message: res.message,
         });
       }

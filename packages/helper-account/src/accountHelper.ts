@@ -1,5 +1,5 @@
 import { Injectable, Inject } from "@bfchain/util";
-import { CoreExceptionGenerator, NOT_EXIST } from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 const { NoFoundException } = CoreExceptionGenerator("helper-account", "accountHelper");
 
 @Injectable()
@@ -48,10 +48,9 @@ export class AccountHelper<
     >,
   ) {
     if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getAccounts",
       });
     }
     return accountGetterHelper.getAccounts(addressArr, currentBlockHeight);
@@ -65,10 +64,9 @@ export class AccountHelper<
   ) {
     if (!accountGetterHelper) {
       if (!accountGetterHelper) {
-        throw new NoFoundException(NOT_EXIST, {
+        throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
           prop: "accountGetterHelper",
           target: "moduleStroge",
-          function: "AccountHelper.getNextRoundDelegates",
         });
       }
     }
@@ -82,10 +80,9 @@ export class AccountHelper<
     >,
   ) {
     if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getDelegates",
       });
     }
     return accountGetterHelper.getDelegates(currentGeneraterPublicKeyList);
@@ -98,10 +95,9 @@ export class AccountHelper<
     >,
   ): Promise<BFChainCore.AccountInfo | undefined> {
     if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getAccountInfo",
       });
     }
     return accountGetterHelper.getAccountInfo(address);
@@ -114,10 +110,9 @@ export class AccountHelper<
     >,
   ): Promise<number | undefined> {
     if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getAccountTxCountInBlock",
       });
     }
     return accountGetterHelper.getAccountTxCountInBlock(address);
@@ -131,10 +126,9 @@ export class AccountHelper<
     >,
   ): Promise<BFChainCore.AccountAssets | undefined> {
     if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getAccountAssets",
       });
     }
     return accountGetterHelper.getAccountAssets(address, currentBlockHeight);
@@ -148,10 +142,9 @@ export class AccountHelper<
     >,
   ): Promise<BFChainCore.AccountInfoAndAssets | undefined> {
     if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getAccountInfoAndAssets",
       });
     }
     return accountGetterHelper.getAccountInfoAndAssets(address, currentBlockHeight);
@@ -166,10 +159,9 @@ export class AccountHelper<
     >,
   ): Promise<BFChainCore.DAppInfo | undefined> {
     if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getDApp",
       });
     }
     return accountGetterHelper.getDApp(sourceChainMagic, dappid, currentBlockHeight);
@@ -183,10 +175,9 @@ export class AccountHelper<
     >,
   ): Promise<boolean> {
     if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.isDAppPossessor",
       });
     }
     return accountGetterHelper.isDAppPossessor(sourceChainMagic, address);
@@ -201,10 +192,9 @@ export class AccountHelper<
     >,
   ): Promise<boolean> {
     if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.isVoteForDelegate",
       });
     }
     return accountGetterHelper.isVoteForDelegate(address, delegate, round);
@@ -219,10 +209,9 @@ export class AccountHelper<
     >,
   ): Promise<BFChainCore.LocationNameInfo | undefined> {
     if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getLocationName",
       });
     }
     return accountGetterHelper.getLocationName(sourceChainMagic, locationName, currentBlockHeight);
@@ -236,10 +225,9 @@ export class AccountHelper<
     >,
   ): Promise<boolean> {
     if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.isLocationNamePossessor",
       });
     }
     return accountGetterHelper.isLocationNamePossessor(sourceChainMagic, address);
@@ -253,10 +241,9 @@ export class AccountHelper<
     >,
   ): Promise<boolean> {
     if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.isSubLocationNameExist",
       });
     }
     return accountGetterHelper.isSubLocationNameExist(sourceChainMagic, endsWith);
@@ -269,10 +256,9 @@ export class AccountHelper<
     >,
   ): Promise<boolean> {
     if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.isLocationNameForbidden",
       });
     }
     return accountGetterHelper.isLocationNameForbidden(name);
@@ -286,10 +272,9 @@ export class AccountHelper<
     >,
   ): Promise<BFChainCore.FrozenAsset | undefined> {
     if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getFrozenAsset",
       });
     }
     return accountGetterHelper.getFrozenAsset(address, signature);
@@ -303,10 +288,9 @@ export class AccountHelper<
     >,
   ): Promise<BFChainCore.IssuedAssetInfo | undefined> {
     if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getAsset",
       });
     }
     return accountGetterHelper.getAsset(magic, assetType);
@@ -319,10 +303,9 @@ export class AccountHelper<
     >,
   ): Promise<BFChainCore.CurrencyInfo | undefined> {
     if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getCurrency",
       });
     }
     return accountGetterHelper.getCurrency(assetType);
@@ -335,10 +318,9 @@ export class AccountHelper<
     >,
   ): Promise<boolean> {
     if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.isCurrencyForbidden",
       });
     }
     return accountGetterHelper.isCurrencyForbidden(assetType);
@@ -351,10 +333,9 @@ export class AccountHelper<
     >,
   ): Promise<BFChainCore.MagicInfo | undefined> {
     if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getMagic",
       });
     }
     return accountGetterHelper.getMagic(magic);
@@ -367,10 +348,9 @@ export class AccountHelper<
     >,
   ): Promise<BFChainCore.ChainInfo | undefined> {
     if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getChain",
       });
     }
     return accountGetterHelper.getChain(magic);
@@ -383,10 +363,9 @@ export class AccountHelper<
     >,
   ): Promise<BFChainCore.AliasInfo | undefined> {
     if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getAlias",
       });
     }
     return accountGetterHelper.getAlias(alias);
@@ -399,10 +378,9 @@ export class AccountHelper<
     >,
   ): Promise<BFChainCore.MigrateCertificateInfo | undefined> {
     if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getMigrateCertificate",
       });
     }
     return accountGetterHelper.getMigrateCertificate(migrateCertificateId);
@@ -416,10 +394,9 @@ export class AccountHelper<
     >,
   ): Promise<void> {
     if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.mergeAccountMissedBlock",
       });
     }
     return accountGetterHelper.mergeAccountMissedBlock(height, accountAccumulation);
@@ -433,10 +410,9 @@ export class AccountHelper<
     >,
   ): Promise<void> {
     if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.mergeAccountEquity",
       });
     }
     return accountGetterHelper.mergeAccountEquity(height, accountEquity);
@@ -450,10 +426,9 @@ export class AccountHelper<
     >,
   ): Promise<string[]> {
     if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getAccountVoteInfo",
       });
     }
     return accountGetterHelper.getAccountVoteInfo(height, address);
@@ -465,10 +440,9 @@ export class AccountHelper<
     >,
   ): Promise<string[]> {
     if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        function: "AccountHelper.getMemoryDelegates",
       });
     }
     return accountGetterHelper.getMemoryDelegates();

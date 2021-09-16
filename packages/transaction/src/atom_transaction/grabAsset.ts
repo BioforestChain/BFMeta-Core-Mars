@@ -8,16 +8,7 @@ import {
   ChainAssetInfoHelper,
   AsymmetricHelper,
 } from "@bfchain/core-helper";
-import {
-  CoreExceptionGenerator,
-  PARAM_LOST,
-  PROP_IS_REQUIRE,
-  PROP_IS_INVALID,
-  SHOULD_BE,
-  NOT_MATCH,
-  NOT_EXIST,
-  SHOULD_NOT_EXIST,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { GiftAssetTransactionFactory } from "./giftAsset";
 import { Injectable, Inject, parseHexToArrayBuffer, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
@@ -80,7 +71,6 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
 
     const Function_Exception_Detail = {
       target: "body",
-      function: "verifyTransactionBody",
     } as const;
 
     this.emptyRangeType(body, Function_Exception_Detail);
@@ -90,14 +80,14 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
     const recipientId = body.recipientId;
 
     if (!recipientId) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "recipientId",
         ...Function_Exception_Detail,
       });
     }
 
     if (body.fromMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -106,7 +96,7 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
     }
 
     if (body.toMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -115,7 +105,7 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
     }
 
     if (!body.storage) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "storage",
         ...Function_Exception_Detail,
       });
@@ -123,7 +113,7 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
 
     const storage = body.storage;
     if (storage.key !== "transactionSignature") {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `storage.key ${storage.key}`,
         to_target: "storage",
         be_compare_prop: "transactionSignature",
@@ -134,9 +124,8 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
     const grabAsset = grabAssetAsset.grabAsset;
 
     if (!grabAsset) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "grabAsset",
-        function: "verifyTransactionBody",
       });
     }
 
@@ -148,14 +137,14 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
     const { blockSignature, transactionSignature } = grabAsset;
 
     if (!blockSignature) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "blockSignature",
         ...GrabAssetAsset_Exception_Detail,
       });
     }
 
     if (!baseHelper.isValidSignature(blockSignature)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `blockSignature ${blockSignature}`,
         type: "block signature",
         ...GrabAssetAsset_Exception_Detail,
@@ -163,14 +152,14 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
     }
 
     if (!transactionSignature) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "transactionSignature",
         ...GrabAssetAsset_Exception_Detail,
       });
     }
 
     if (!baseHelper.isValidSignature(transactionSignature)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `transactionSignature ${transactionSignature}`,
         type: "transaction signature",
         ...GrabAssetAsset_Exception_Detail,
@@ -178,7 +167,7 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
     }
 
     if (storage.value !== transactionSignature) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `storage.value ${storage.value}`,
         be_compare_prop: `transactionSignature ${transactionSignature}`,
         to_target: "storage",
@@ -199,14 +188,14 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
     /**如果是公钥模式，那么必须存在密文 */
     if (cipherPublicKeys.length > 0) {
       if (!ciphertextSignature) {
-        throw new ArgumentIllegalException(NOT_EXIST, {
+        throw new ArgumentIllegalException(ERROR_LIST.NOT_EXIST, {
           prop: `ciphertextSignature ${ciphertextSignature}`,
           ...GrabAssetAsset_Exception_Detail,
         });
       }
 
       if (!baseHelper.isValidAccountSignature(ciphertextSignature)) {
-        throw new ArgumentIllegalException(NOT_EXIST, {
+        throw new ArgumentIllegalException(ERROR_LIST.NOT_EXIST, {
           prop: `ciphertextSignature ${ciphertextSignature}`,
           ...GrabAssetAsset_Exception_Detail,
         });
@@ -215,7 +204,7 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
       const { publicKey, signature } = ciphertextSignature;
 
       if (!cipherPublicKeys.includes(publicKey)) {
-        throw new ArgumentIllegalException(NOT_MATCH, {
+        throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
           to_compare_prop: `publicKey ${publicKey}`,
           be_compare_prop: "cipherPublicKeys",
           to_target: "ciphertextSignature",
@@ -233,7 +222,7 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
           senderId: body.senderId,
         }))
       ) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `ciphertextSignature ${signature}`,
           type: "signature",
           ...GrabAssetAsset_Exception_Detail,
@@ -241,7 +230,7 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
       }
     } else {
       if (ciphertextSignature) {
-        throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+        throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
           prop: `ciphertextSignature ${ciphertextSignature}`,
           type: "grabAsset",
           ...GrabAssetAsset_Exception_Detail,

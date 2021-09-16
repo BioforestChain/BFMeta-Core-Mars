@@ -1,12 +1,5 @@
 import { Injectable } from "@bfchain/util-dep-inject";
-import {
-  CoreExceptionGenerator,
-  NOT_MATCH,
-  PROP_IS_INVALID,
-  PROP_IS_REQUIRE,
-  PROP_SHOULD_GT_FIELD,
-  SHOULD_BE,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { BaseHelper } from "@bfchain/core-helper-type";
 import { ConfigHelper } from "@bfchain/core-helper-config";
 import { ChainTimeHelper } from "@bfchain/core-helper-chain-time";
@@ -33,59 +26,52 @@ export class MigrateCertificateHelper {
 
   private __checkVersion(version: any) {
     if (!version) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "version",
         target: "migrateCertificate",
-        function: "checkVersion",
       });
     }
     if (typeof version !== "string") {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "version",
         target: "migrateCertificate",
-        function: "checkVersion",
       });
     }
   }
 
   private __checkTimestamp(timestamp: any) {
     if (!timestamp) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "timestamp",
         target: "migrateCertificate",
-        function: "checkTimestamp",
       });
     }
     if (!this.baseHelper.isPositiveInteger(timestamp)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "timestamp",
         target: "migrateCertificate",
-        function: "checkTimestamp",
       });
     }
   }
 
   private __checkAssets(assets: string) {
     if (!assets) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "assets",
         target: "migrateCertificate",
-        function: "checkAssets",
       });
     }
     if (!this.baseHelper.isValidAssetNumber(assets)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "assets",
         target: "migrateCertificate",
-        function: "checkAssets",
       });
     }
     if (assets === "0") {
-      throw new ArgumentIllegalException(PROP_SHOULD_GT_FIELD, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
         prop: "assets",
         fueld: "0",
         target: "migrateCertificate",
-        function: "checkAssets",
       });
     }
   }
@@ -377,12 +363,11 @@ export class MigrateCertificateHelper {
     );
     genesisDelegates.push(genesisAddress);
     if (!genesisDelegates.includes(address)) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `${key} auth signature address ${address}`,
         be_compare_prop: "genesis delegate address",
         to_target: "migrateCertificate",
         be_target: "fromChain",
-        function: "checkAuthAccount",
       });
     }
   }
@@ -393,32 +378,25 @@ export class MigrateCertificateHelper {
     config: BFChainCore.CrossChain.ChainBaseConfig,
     authSignature?: BFChainCore.AccountSignatureJSON,
   ) {
-    const Function_Exception_Detail = {
-      function: "checkChainInfo",
-    } as const;
-
     if (chainInfo.magic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `${key}.magic ${chainInfo.magic}`,
         to_target: "migrateCertificate",
         be_compare_prop: config.magic,
-        ...Function_Exception_Detail,
       });
     }
     if (chainInfo.chainName !== config.chainName) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `${key}.chainName ${chainInfo.chainName}`,
         to_target: "migrateCertificate",
         be_compare_prop: config.chainName,
-        ...Function_Exception_Detail,
       });
     }
     if (chainInfo.genesisBlockSignature !== chainInfo.genesisBlockSignature) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `${key}.genesisBlockSignature ${chainInfo.genesisBlockSignature}`,
         to_target: "migrateCertificate",
         be_compare_prop: chainInfo.genesisBlockSignature,
-        ...Function_Exception_Detail,
       });
     }
 
@@ -438,12 +416,7 @@ export class MigrateCertificateHelper {
     migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON,
     options: BFChainCore.CrossChain.MigrateCertificateVerifyOptions,
   ) {
-    const Function_Exception_Detail = {
-      function: "verifyMigrateCertificate",
-    } as const;
-
     const MigrateCertificate_Exception_Detail = {
-      ...Function_Exception_Detail,
       target: "migrateCertificate",
     } as const;
 
@@ -473,7 +446,7 @@ export class MigrateCertificateHelper {
     const baseHelper = this.baseHelper;
     const accountSignature = converter.signature.decode(signature, true);
     if (!baseHelper.isValidAccountSignature(accountSignature)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `signature ${signature}`,
         ...MigrateCertificate_Exception_Detail,
       });
@@ -483,10 +456,9 @@ export class MigrateCertificateHelper {
 
     if (forceCheckFromChainInfo) {
       if (!fromChainBaseConfig) {
-        throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
           prop: "fromChainBaseConfig",
           target: "options",
-          ...Function_Exception_Detail,
         });
       }
 
@@ -500,7 +472,7 @@ export class MigrateCertificateHelper {
           true,
         );
         if (!baseHelper.isValidAccountSignature(fromAuthAccountSignature)) {
-          throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
             prop: `fromAuthSignature ${fromAuthSignature}`,
             ...MigrateCertificate_Exception_Detail,
           });
@@ -511,7 +483,7 @@ export class MigrateCertificateHelper {
 
     if (forceCheckFromAuthSignature) {
       if (!fromAuthSignature) {
-        throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
           prop: "fromAuthSignature",
           ...MigrateCertificate_Exception_Detail,
         });
@@ -521,10 +493,9 @@ export class MigrateCertificateHelper {
 
     if (forceCheckToChainInfo) {
       if (!toChainBaseConfig) {
-        throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
           prop: "toChainBaseConfig",
           target: "options",
-          ...Function_Exception_Detail,
         });
       }
 
@@ -535,7 +506,7 @@ export class MigrateCertificateHelper {
         converter.toAuthSignature.checkDecodeArgs(toAuthSignature);
         const toAuthAccountSignature = converter.toAuthSignature.decode(toAuthSignature, true);
         if (!baseHelper.isValidAccountSignature(toAuthAccountSignature)) {
-          throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
             prop: `toAuthSignature ${toAuthSignature}`,
             ...MigrateCertificate_Exception_Detail,
           });
@@ -546,7 +517,7 @@ export class MigrateCertificateHelper {
 
     if (forceCheckToAuthSignature) {
       if (!toAuthSignature) {
-        throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
           prop: "toAuthSignature",
           ...MigrateCertificate_Exception_Detail,
         });

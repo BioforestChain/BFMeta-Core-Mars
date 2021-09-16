@@ -8,15 +8,7 @@ import {
   ChainAssetInfoHelper,
   MigrateCertificateHelper,
 } from "@bfchain/core-helper";
-import {
-  CoreExceptionGenerator,
-  PARAM_LOST,
-  PROP_IS_REQUIRE,
-  PROP_IS_INVALID,
-  SHOULD_BE,
-  NOT_MATCH,
-  SHOULD_NOT_BE,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
@@ -65,7 +57,6 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
 
     const Function_Exception_Detail = {
       target: "body",
-      function: "verifyTransactionBody",
     } as const;
 
     this.emptyRangeType(body, Function_Exception_Detail);
@@ -73,14 +64,14 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
     const { baseHelper, accountBaseHelper } = this;
 
     if (!body.recipientId) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "recipientId",
         ...Function_Exception_Detail,
       });
     }
 
     if (body.fromMagic === config.magic) {
-      throw new ArgumentIllegalException(SHOULD_NOT_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
         to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -89,7 +80,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
     }
 
     if (body.toMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -98,7 +89,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
     }
 
     if (!body.storage) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "storage",
         ...Function_Exception_Detail,
       });
@@ -106,7 +97,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
 
     const storage = body.storage;
     if (storage.key !== "assetType") {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `key ${storage.key}`,
         to_target: "storage",
         be_compare_prop: "assetType",
@@ -117,9 +108,8 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
     const immigrateAsset = immigrateAssetAsset.immigrateAsset;
 
     if (!immigrateAsset) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "immigrateAsset",
-        function: "verifyTransactionBody",
       });
     }
 
@@ -129,7 +119,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
     } as const;
 
     if (!immigrateAsset.migrateCertificate) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "migrateCertificate",
         ...ImmigrateAssetAsset_Exception_Detail,
       });
@@ -139,7 +129,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
     try {
       migrateCertificate = JSON.parse(immigrateAsset.migrateCertificate);
     } catch (e) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "migrateCertificate",
         ...ImmigrateAssetAsset_Exception_Detail,
       });
@@ -150,7 +140,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
     // this.migrateCertificateHelper.verifyFromChainId(fromChainId);
     // const fromMagic = fromChainId.split("/")[1];
     // if (!baseHelper.isValidChainMagic(fromMagic)) {
-    //   throw new ArgumentIllegalException(PROP_IS_INVALID, {
+    //   throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
     //     prop: `migrateCertificate.fromChainMagic ${fromMagic}`,
     //     ...ImmigrateAssetAsset_Exception_Detail,
     //   });
@@ -175,7 +165,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
     const { fromChainId, toId, assetId } = migrateCertificate.body;
     const toAddress = converter.toId.decode(toId, true);
     if (body.recipientId !== toAddress) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `recipientId ${body.recipientId}`,
         be_compare_prop: `toId ${toAddress}`,
         to_target: "body",
@@ -186,7 +176,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
 
     const fromChain = converter.fromChainId.decode(fromChainId, true);
     if (body.fromMagic !== fromChain.magic) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `fromMagic ${body.fromMagic}`,
         be_compare_prop: `fromChainId ${fromChain.magic}`,
         to_target: "body",
@@ -197,7 +187,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
 
     const asset = converter.assetId.decode(assetId, true);
     if (storage.value !== asset.assetType) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `value ${storage.value}`,
         be_compare_prop: `asset ${JSON.stringify(asset)}`,
         to_target: "storage",
@@ -239,10 +229,9 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
       try {
         migrateCertificate = JSON.parse(transaction.asset.immigrateAsset.migrateCertificate);
       } catch (e) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: "migrateCertificate",
           target: "transaction.asset.immigrateAsset",
-          function: "applyTransaction",
         });
       }
       const converter =
@@ -305,7 +294,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
     try {
       migrateCertificate = JSON.parse(transaction.asset.immigrateAsset.migrateCertificate);
     } catch (e) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "migrateCertificate",
         target: "transaction.asset.immigrateAsset",
         function: "getMoveAmount",

@@ -6,14 +6,7 @@ import {
   SPECIAL_ASSET_TYPE,
 } from "@bfchain/core-model";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
-import {
-  CoreExceptionGenerator,
-  NOT_MATCH,
-  CAN_NOT_SECONDARY_TRANSACTION,
-  SHOULD_BE,
-  NOT_EXIST_OR_EXPIRED,
-  NOT_EXPECTED_RELATED_TRANSACTION,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
@@ -36,10 +29,6 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const Function_Exception_Detail = {
-      function: "verify",
-    } as const;
-
     const beExchangeSpecialAsset = transaction.asset.beExchangeSpecialAsset;
     const { transactionSignature } = beExchangeSpecialAsset;
     const toExchangeSpecialAssetJson = (await transactionGetterHelper.getTransactionBySignature(
@@ -47,17 +36,15 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
       this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
     )) as BFChainCore.ToExchangeSpecialAssetTransactionJSON | undefined;
     if (!toExchangeSpecialAssetJson) {
-      throw new NoFoundException(NOT_EXIST_OR_EXPIRED, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST_OR_EXPIRED, {
         prop: `Transaction with signature ${transactionSignature}`,
         target: "blockChain",
-        ...Function_Exception_Detail,
       });
     }
 
     if (toExchangeSpecialAssetJson.type !== this.transactionHelper.TO_EXCHANGE_SPECIAL_ASSET) {
-      throw new ConsensusException(NOT_EXPECTED_RELATED_TRANSACTION, {
+      throw new ConsensusException(ERROR_LIST.NOT_EXPECTED_RELATED_TRANSACTION, {
         signature: `${transactionSignature}`,
-        ...Function_Exception_Detail,
       });
     }
 
@@ -159,12 +146,11 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
   ) {
     // be交易的接收账户必须是to交易的发起账户
     if (transaction.recipientId !== toExchangeSpecialAssetJson.senderId) {
-      throw new ConsensusException(NOT_MATCH, {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `BeExchangeSpecialAssetTransaction.recipientId ${transaction.recipientId}`,
         be_compare_prop: `ToExchangeSpecialAssetTransaction.senderId ${toExchangeSpecialAssetJson.senderId}`,
         to_target: "BeExchangeSpecialAssetTransaction",
         be_target: "ToExchangeSpecialAssetTransaction",
-        function: "isValidRecipientId",
       });
     }
   }
@@ -179,9 +165,6 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
     transaction: BeExchangeSpecialAssetTransaction,
     toExchangeSpecialAssetJson: BFChainCore.TransactionJSON<BFChainCore.ToExchangeSpecialAssetAssetJSON>,
   ) {
-    const Function_Exception_Detail = {
-      function: "isDependentTransactionMatch",
-    } as const;
     const beExchangeAssetAsset = transaction.asset.beExchangeSpecialAsset;
     const { exchangeSpecialAsset } = beExchangeAssetAsset;
     const { toExchangeSource, toExchangeAsset, beExchangeSource, beExchangeAsset } =
@@ -193,12 +176,11 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
       trsAsset.toExchangeAsset !== toExchangeAsset ||
       trsAsset.beExchangeAsset !== beExchangeAsset
     ) {
-      throw new ConsensusException(NOT_MATCH, {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `trsAsset: ${JSON.stringify(trsAsset)}`,
         be_compare_prop: `exchangeSpecialAsset: ${JSON.stringify(exchangeSpecialAsset.toJSON())}`,
         to_target: "BeExchangeSpecialAssetTransaction",
         be_target: "ToExchangeSpecialAssetTransaction",
-        ...Function_Exception_Detail,
       });
     }
 
@@ -206,29 +188,26 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
 
     if (rangeType & RANGE_TYPE.MULTI_ADDRESS) {
       if (!range.includes(transaction.senderId)) {
-        throw new ConsensusException(SHOULD_BE, {
+        throw new ConsensusException(ERROR_LIST.SHOULD_BE, {
           to_compare_prop: `senderId ${transaction.senderId}`,
           to_target: "beExchangeSpecialAssetTransaction",
           be_compare_prop: "teExchangeSpecialAssetTransaction.range",
-          ...Function_Exception_Detail,
         });
       }
     } else if (rangeType & RANGE_TYPE.MULTI_DAPPID) {
       if (!transaction.dappid || !range.includes(transaction.dappid)) {
-        throw new ConsensusException(SHOULD_BE, {
+        throw new ConsensusException(ERROR_LIST.SHOULD_BE, {
           to_compare_prop: `dappid ${transaction.senderId}`,
           to_target: "beExchangeSpecialAssetTransaction",
           be_compare_prop: "teExchangeSpecialAssetTransaction.range",
-          ...Function_Exception_Detail,
         });
       }
     } else if (rangeType & RANGE_TYPE.MULTI_LOCATION_NAME) {
       if (!transaction.lns || !range.includes(transaction.lns)) {
-        throw new ConsensusException(SHOULD_BE, {
+        throw new ConsensusException(ERROR_LIST.SHOULD_BE, {
           to_compare_prop: `lns ${transaction.lns}`,
           to_target: "beExchangeSpecialAssetTransaction",
           be_compare_prop: "teExchangeSpecialAssetTransaction.range",
-          ...Function_Exception_Detail,
         });
       }
     }
@@ -252,9 +231,8 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
       heightRange: this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
     });
     if (isSecondary) {
-      throw new ConsensusException(CAN_NOT_SECONDARY_TRANSACTION, {
+      throw new ConsensusException(ERROR_LIST.CAN_NOT_SECONDARY_TRANSACTION, {
         reason: `Can not secondary exchange special asset, sender ${transaction.senderId} exchange transaction signature ${transaction.storageValue}`,
-        function: "checkSecondaryTransaction",
       });
     }
   }

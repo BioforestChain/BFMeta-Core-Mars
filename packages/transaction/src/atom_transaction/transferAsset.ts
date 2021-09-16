@@ -7,14 +7,7 @@ import {
   ConfigHelper,
   ChainAssetInfoHelper,
 } from "@bfchain/core-helper";
-import {
-  CoreExceptionGenerator,
-  PARAM_LOST,
-  PROP_IS_REQUIRE,
-  SHOULD_NOT_BE,
-  SHOULD_BE,
-  NOT_MATCH,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
@@ -64,7 +57,6 @@ export class TransferAssetTransactionFactory extends TransactionFactory<Transfer
 
     const Function_Exception_Detail = {
       target: "body",
-      function: "verifyTransactionBody",
     } as const;
 
     this.emptyRangeType(body, Function_Exception_Detail);
@@ -72,14 +64,14 @@ export class TransferAssetTransactionFactory extends TransactionFactory<Transfer
     const recipientId = body.recipientId;
 
     if (!recipientId) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "recipientId",
         ...Function_Exception_Detail,
       });
     }
 
     if (body.senderId === recipientId) {
-      throw new ArgumentIllegalException(SHOULD_NOT_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
         to_compare_prop: `senderId ${body.senderId}`,
         to_target: "body",
         be_compare_prop: `recipientId ${recipientId}`,
@@ -88,7 +80,7 @@ export class TransferAssetTransactionFactory extends TransactionFactory<Transfer
     }
 
     if (body.fromMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -97,7 +89,7 @@ export class TransferAssetTransactionFactory extends TransactionFactory<Transfer
     }
 
     if (body.toMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -106,7 +98,7 @@ export class TransferAssetTransactionFactory extends TransactionFactory<Transfer
     }
 
     if (!body.storage) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "storage",
         ...Function_Exception_Detail,
       });
@@ -114,7 +106,7 @@ export class TransferAssetTransactionFactory extends TransactionFactory<Transfer
 
     const storage = body.storage;
     if (storage.key !== "assetType") {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `storage.key ${storage.key}`,
         to_target: "storage",
         be_compare_prop: "assetType",
@@ -125,9 +117,8 @@ export class TransferAssetTransactionFactory extends TransactionFactory<Transfer
     const transferAsset = transferAssetAsset.transferAsset;
 
     if (!transferAsset) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "transferAsset",
-        function: "verifyTransactionBody",
       });
     }
 
@@ -145,7 +136,7 @@ export class TransferAssetTransactionFactory extends TransactionFactory<Transfer
     this.checkAsset(assetType, "assetType", TransferAssetAsset_Exception_Detail);
 
     if (storage.value !== assetType) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `storage.value ${storage.value}`,
         be_compare_prop: `assetType ${assetType}`,
         to_target: "storage",

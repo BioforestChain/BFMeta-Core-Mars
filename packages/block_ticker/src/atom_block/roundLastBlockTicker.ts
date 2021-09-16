@@ -1,4 +1,4 @@
-import { CoreExceptionGenerator, NOT_EXIST, PROP_IS_INVALID } from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { Injectable } from "@bfchain/util";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
@@ -69,28 +69,22 @@ export class RoundLastBlockTicker extends BlockTicker {
     blockGetterHelper = this.blockGetterHelper,
     accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
   ) {
-    const Function_Exception_Detail = {
-      function: "saveDelegatesVoteAndTotalVote",
-    } as const;
     if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        ...Function_Exception_Detail,
       });
     }
     if (!blockGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "blockGetterHelper",
         target: "moduleStroge",
-        ...Function_Exception_Detail,
       });
     }
     if (typeof blockGetterHelper.getVoteRecords !== "function") {
-      throw new ConsensusException(PROP_IS_INVALID, {
+      throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "getVoteForDelegate",
         target: "blockGetterHelper",
-        ...Function_Exception_Detail,
       });
     }
     const delegatesEquity: BFChainCore.AccountEquityInfo = {};
@@ -121,10 +115,9 @@ export class RoundLastBlockTicker extends BlockTicker {
     blockTickGetterHelper = this.blockTickGetterHelper,
   ) {
     if (!blockTickGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "blockTickGetterHelper",
         target: "moduleStroge",
-        function: "saveVotingAccountEquity",
       });
     }
     await blockTickGetterHelper.saveVotingAccountEquity(height);
@@ -141,10 +134,9 @@ export class RoundLastBlockTicker extends BlockTicker {
     blockTickGetterHelper = this.blockTickGetterHelper,
   ) {
     if (!blockTickGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "blockTickGetterHelper",
         target: "moduleStroge",
-        function: "saveVotingAccountLastInfoAndEquity",
       });
     }
     await blockTickGetterHelper.saveVotingAccountLastInfoAndEquity(height);
@@ -161,10 +153,9 @@ export class RoundLastBlockTicker extends BlockTicker {
     blockTickGetterHelper = this.blockTickGetterHelper,
   ) {
     if (!blockTickGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "blockTickGetterHelper",
         target: "moduleStroge",
-        function: "getBalanceAndTxRate",
       });
     }
     return await blockTickGetterHelper.getMaxBeginBalanceAndMaxTxCountAndRate(round);

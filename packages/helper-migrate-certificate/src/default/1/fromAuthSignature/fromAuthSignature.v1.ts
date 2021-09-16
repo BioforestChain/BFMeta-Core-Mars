@@ -4,12 +4,7 @@ import { ENCODING_TYPE, KEY_SPLITTER } from "../../../constants";
 import { Injectable } from "@bfchain/util-dep-inject";
 import { BBuffer as Buffer } from "@bfchain/util-buffer";
 import { getHexFromArrayBuffer, parseHexToArrayBuffer } from "@bfchain/util-encoding-hex";
-import {
-  CoreExceptionGenerator,
-  PROP_IS_INVALID,
-  PROP_IS_REQUIRE,
-  SHOULD_NOT_EXIST,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 const { ArgumentIllegalException } = CoreExceptionGenerator("HELPER", "transactionHelper");
 
 @Injectable()
@@ -19,70 +14,61 @@ export class FromAuthSignatureV1Converter implements BFChainCore.CrossChain.Auth
   checkEncodeArgs(accountSignature: BFChainCore.AccountSignatureJSON) {
     const { publicKey, signature, secondPublicKey, signSignature } = accountSignature;
     if (!publicKey) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: `publicKey ${publicKey}`,
         target: "encodeArgs",
-        function: "checkEncodeArgs",
       });
     }
     if (typeof publicKey !== "string") {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `publicKey ${publicKey}`,
         target: "encodeArgs",
-        function: "checkEncodeArgs",
       });
     }
 
     if (!signature) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: `signature ${signature}`,
         target: "encodeArgs",
-        function: "checkEncodeArgs",
       });
     }
     if (typeof signature !== "string") {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `signature ${signature}`,
         target: "encodeArgs",
-        function: "checkEncodeArgs",
       });
     }
 
     if (secondPublicKey) {
       if (!secondPublicKey) {
-        throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
           prop: `secondPublicKey ${secondPublicKey}`,
           target: "encodeArgs",
-          function: "checkEncodeArgs",
         });
       }
       if (typeof secondPublicKey !== "string") {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `secondPublicKey ${secondPublicKey}`,
           target: "encodeArgs",
-          function: "checkEncodeArgs",
         });
       }
       if (!signSignature) {
-        throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
           prop: `signSignature ${signSignature}`,
           target: "encodeArgs",
-          function: "checkEncodeArgs",
         });
       }
       if (typeof signSignature !== "string") {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `signSignature ${signSignature}`,
           target: "encodeArgs",
-          function: "checkEncodeArgs",
         });
       }
     } else {
       if (signSignature) {
-        throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+        throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
           prop: `signSignature ${signSignature}`,
           target: "encodeArgs",
-          function: "checkEncodeArgs",
         });
       }
     }
@@ -90,43 +76,38 @@ export class FromAuthSignatureV1Converter implements BFChainCore.CrossChain.Auth
 
   checkDecodeArgs(signature: unknown) {
     if (!signature) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: `fromAuthSignature ${signature}`,
         target: "decodeArgs",
-        function: "checkDecodeArgs",
       });
     }
 
     if (typeof signature !== "string") {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `fromAuthSignature ${signature}`,
         target: "decodeArgs",
-        function: "checkDecodeArgs",
       });
     }
 
     const fromAuthSignatures = signature.split("/");
     if (fromAuthSignatures.length !== 2 && fromAuthSignatures.length !== 3) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `fromAuthSignature ${signature}`,
         target: "decodeArgs",
-        function: "checkDecodeArgs",
       });
     }
 
     if (fromAuthSignatures[1].split("-").length !== 2) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `fromAuthSignature ${signature}`,
         target: "decodeArgs",
-        function: "checkDecodeArgs",
       });
     }
 
     if (fromAuthSignatures[2] && fromAuthSignatures[2].split("-").length !== 2) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `fromAuthSignature ${signature}`,
         target: "decodeArgs",
-        function: "checkDecodeArgs",
       });
     }
   }

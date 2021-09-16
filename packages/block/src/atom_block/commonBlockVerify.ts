@@ -4,14 +4,7 @@ import {
   MilestonesHelper,
   ChainAssetInfoHelper,
 } from "@bfchain/core-helper";
-import {
-  CoreExceptionGenerator,
-  PARAM_LOST,
-  PROP_IS_INVALID,
-  PROP_IS_REQUIRE,
-  NOT_MATCH,
-  ALREADY_EXIST,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { Writer } from "@bfchain/protobuf";
 import { Block } from "@bfchain/core-model-block";
 import { cacheGetter, Injectable, Inject } from "@bfchain/util";
@@ -41,28 +34,24 @@ export class CommonBlockVerify<T extends Block> {
    */
   verifyBlockBody(body: BFChainCore.BlockBody, asset: BFChainCore.GetBlockAssetJSON<T>) {
     const { baseHelper } = this;
-    const Function_Exception_Detail = { function: "verifyBlockBody" };
     if (!body) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "body",
-        ...Function_Exception_Detail,
       });
     }
 
     if (!asset) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "asset",
-        ...Function_Exception_Detail,
       });
     }
 
     const BlockBody_Exception_Detail = {
       target: "body",
-      ...Function_Exception_Detail,
     };
 
     if (!baseHelper.isPositiveInteger(body.version)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `version ${body.version}`,
         type: "positive integer",
         ...BlockBody_Exception_Detail,
@@ -71,7 +60,7 @@ export class CommonBlockVerify<T extends Block> {
 
     const height = body.height;
     if (!baseHelper.isPositiveInteger(height)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `height ${height}`,
         type: "positive integer",
         ...BlockBody_Exception_Detail,
@@ -79,14 +68,14 @@ export class CommonBlockVerify<T extends Block> {
     }
 
     if (height > 1 && !body.previousBlockSignature) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "previousBlockSignature",
         ...BlockBody_Exception_Detail,
       });
     }
 
     if (!baseHelper.isNaturalNumber(body.timestamp)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `timestamp ${body.timestamp}`,
         type: "positive integer or 0",
         ...BlockBody_Exception_Detail,
@@ -94,7 +83,7 @@ export class CommonBlockVerify<T extends Block> {
     }
 
     if (!baseHelper.isValidAccountEquity(body.generatorEquity)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "generatorEquity",
         type: "account equity",
         ...BlockBody_Exception_Detail,
@@ -103,20 +92,20 @@ export class CommonBlockVerify<T extends Block> {
 
     const remark = body.remark;
     if (!remark) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "remark",
         ...BlockBody_Exception_Detail,
       });
     }
     if (baseHelper.getVariableType(remark) !== "[object Object]") {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "remark",
         ...BlockBody_Exception_Detail,
       });
     }
     for (const key in remark) {
       if (!baseHelper.isString(remark[key])) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: "remark",
           ...BlockBody_Exception_Detail,
         });
@@ -124,7 +113,7 @@ export class CommonBlockVerify<T extends Block> {
     }
 
     if (!remark && baseHelper.getVariableType(remark) !== "[object Object]") {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "remark",
         ...BlockBody_Exception_Detail,
       });
@@ -139,12 +128,11 @@ export class CommonBlockVerify<T extends Block> {
   verifyBlockReward(block: T) {
     const expectedReward = this.milestonesHelper.calcReward(block.height).toString();
     if (expectedReward !== block.reward) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `blockReward ${block.reward}`,
         be_compare_prop: `expectedReward ${expectedReward}`,
         to_target: "block",
         be_target: "calculate",
-        function: "verifyBlockReward",
       });
     }
   }
@@ -156,12 +144,11 @@ export class CommonBlockVerify<T extends Block> {
   verifyBlockSize(block: T, transactionBufferList?: Uint8Array[]) {
     const blockSize = this.calcBlockSize(block, transactionBufferList);
     if (block.blockSize !== blockSize) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `blockSize ${block.blockSize}`,
         be_compare_prop: `blockSize ${blockSize}`,
         to_target: "body",
         be_target: "calculate",
-        function: "verifyBlockSize",
       });
     }
   }
@@ -242,23 +229,18 @@ export class CommonBlockVerify<T extends Block> {
     height: number,
     blockGetterHelper: Pick<BFChainCore.BlockGetterHelperInterface, "getCountBlock">,
   ) {
-    const Function_Exception_Detail = {
-      function: "isBlockAlreadyExist",
-    } as const;
     if (typeof blockGetterHelper.getCountBlock !== "function") {
-      throw new ConsensusException(PROP_IS_INVALID, {
+      throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "getCountBlock",
         target: "blockGetterHelper",
-        ...Function_Exception_Detail,
       });
     }
     const count = await blockGetterHelper.getCountBlock({ signature });
     if (count > 0) {
-      throw new ConsensusException(ALREADY_EXIST, {
+      throw new ConsensusException(ERROR_LIST.ALREADY_EXIST, {
         prop: `Block with signature ${signature}`,
         target: "blockChain",
         errorId: `Block already exists: ${signature} height: ${height}`,
-        ...Function_Exception_Detail,
       });
     }
   }

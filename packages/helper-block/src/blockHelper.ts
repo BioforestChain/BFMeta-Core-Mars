@@ -12,12 +12,7 @@ import {
 } from "@bfchain/core-model-block";
 import { TRANSACTION_TYPES_BASE, TransactionInBlock } from "@bfchain/core-model-transaction";
 import { AccountBaseHelper } from "@bfchain/core-helper-account-base";
-import { CoreExceptionGenerator, NOT_EXIST, NOT_MATCH } from "@bfchain/core-util-exception";
-import {
-  PROP_SHOULD_LTE_FIELD,
-  OUT_OF_RANGE,
-  PROP_IS_INVALID,
-} from "@bfchain/core-util-exception-errorcode";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { Injectable, Inject, getHexFromArrayBuffer, decodeBinaryToHex } from "@bfchain/util";
 type RoundLastBlock = import("@bfchain/core-model-block").RoundLastBlock;
 
@@ -71,7 +66,7 @@ export class BlockHelper {
     const { maxBlockSize } = this.config;
     const blockSize = block.getBytes().length;
     if (blockSize > maxBlockSize) {
-      throw new ArgumentIllegalException(PROP_SHOULD_LTE_FIELD, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
         prop: `block size ${blockSize}`,
         target: "block",
         field: maxBlockSize,
@@ -236,7 +231,7 @@ export class BlockHelper {
       };
     } catch (e) {
       console.log(e);
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "bytes",
         target: "registerChain.asset",
       });
@@ -250,7 +245,7 @@ export class BlockHelper {
     if (
       !(await this.keypairHelper.detached_verify(hash, signatureBuffer, generatorPublicKeyBuffer))
     ) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "genesisBlock bytes",
         target: "registerChain",
       });
@@ -318,12 +313,11 @@ export class BlockHelper {
   verifyBlockVersion(block: BFChainCore.Block, config = this.config) {
     // FIXME: 区块暂时向下兼容
     if (block.version > config.version) {
-      throw new ConsensusException(NOT_MATCH, {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `block version ${block.version}`,
         be_compare_prop: `blockChain version ${config.version}`,
         to_target: "block",
         be_target: "config",
-        function: "verifyBlockVersion",
       });
     }
   }
@@ -387,18 +381,16 @@ export class BlockHelper {
       | undefined = this.blockGetterHelper,
   ) {
     if (!blockGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "blockGetterHelper",
         target: "moduleStroge",
-        function: "BlockGetterHelper.forceGetBlockByHeight",
       });
     }
     const block = await blockGetterHelper.getBlockByHeight(height);
     if (!block) {
-      throw new ArgumentFormatException(NOT_EXIST, {
+      throw new ArgumentFormatException(ERROR_LIST.NOT_EXIST, {
         prop: `height:${height}`,
         target: "blocks",
-        function: "BlockGetterHelper.forceGetBlockByHeight",
       });
     }
     return block as B;
@@ -410,18 +402,16 @@ export class BlockHelper {
       | undefined = this.blockGetterHelper,
   ) {
     if (!blockGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "blockGetterHelper",
         target: "moduleStroge",
-        function: "forceGetBlockBySignature",
       });
     }
     const block = await blockGetterHelper.getBlockBySignature(signature);
     if (!block) {
-      throw new ArgumentFormatException(NOT_EXIST, {
+      throw new ArgumentFormatException(ERROR_LIST.NOT_EXIST, {
         prop: `signature: ${signature}`,
         target: "blockChain",
-        function: "forceGetBlockBySignature",
       });
     }
     return block as B;
@@ -435,7 +425,7 @@ export class BlockHelper {
   ) {
     const result: BFChainCore.Block[] = [];
     if (min > max) {
-      throw new OutOfRangeException(OUT_OF_RANGE, {
+      throw new OutOfRangeException(ERROR_LIST.OUT_OF_RANGE, {
         variable: "min and max",
         message: `min: ${min} max: ${max}`,
       });
@@ -456,10 +446,9 @@ export class BlockHelper {
       | undefined = this.blockGetterHelper,
   ) {
     if (!blockGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "blockGetterHelper",
         target: "moduleStroge",
-        function: "BlockGetterHelper.forceGetBlockGeneratorAddressByHeight",
       });
     }
     const publicKeyBuffer =
@@ -467,10 +456,9 @@ export class BlockHelper {
         ? await blockGetterHelper.getBlockGeneratorPublicKeyBufferByHeight(height)
         : (await this.forceGetBlockByHeight(height, blockGetterHelper)).generatorPublicKeyBuffer;
     if (!publicKeyBuffer) {
-      throw new ArgumentFormatException(NOT_EXIST, {
+      throw new ArgumentFormatException(ERROR_LIST.NOT_EXIST, {
         prop: `height:${height}`,
         target: "generatorPublicKey",
-        function: "BlockGetterHelper.forceGetBlockGeneratorAddressByHeight",
       });
     }
     return this.accountBaseHelper.getAddressFromPublicKey(publicKeyBuffer);
@@ -485,10 +473,9 @@ export class BlockHelper {
       | undefined = this.blockGetterHelper,
   ) {
     if (!blockGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "blockGetterHelper",
         target: "moduleStroge",
-        function: "forceGetBlockSignatureByHeight",
       });
     }
     const signatureBuffer =
@@ -496,10 +483,9 @@ export class BlockHelper {
         ? await blockGetterHelper.getBlockSignatureByHeight(height)
         : (await this.forceGetBlockByHeight(height, blockGetterHelper)).signatureBuffer;
     if (!signatureBuffer) {
-      throw new ArgumentFormatException(NOT_EXIST, {
+      throw new ArgumentFormatException(ERROR_LIST.NOT_EXIST, {
         prop: `height:${height}`,
         target: "generatorPublicKey",
-        function: "forceGetBlockSignatureByHeight",
       });
     }
     return signatureBuffer;
@@ -525,10 +511,9 @@ export class BlockHelper {
       | undefined = this.blockGetterHelper,
   ) {
     if (!blockGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "blockGetterHelper",
         target: "moduleStroge",
-        function: "BlockGetterHelper.getLastBlock",
       });
     }
     return blockGetterHelper.getLastBlock();
@@ -543,10 +528,9 @@ export class BlockHelper {
       | undefined = this.blockGetterHelper,
   ) {
     if (!blockGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "blockGetterHelper",
         target: "moduleStroge",
-        function: "BlockGetterHelper.getBlocksByRange",
       });
     }
     if (!("getBlockByHeight" in blockGetterHelper) /* && blockGetterHelper.getBlocksByRange */) {
@@ -752,10 +736,9 @@ export class BlockHelper {
     blockGetterHelper = this.blockGetterHelper,
   ) {
     if (!blockGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "blockGetterHelper",
         target: "moduleStroge",
-        function: "BlockGetterHelper.forceGetBlockGeneratorAddressByHeight",
       });
     }
     const startHeight = (round - 1) * this.config.blockPerRound + 1;
@@ -767,10 +750,9 @@ export class BlockHelper {
           ? await blockGetterHelper.getBlockGeneratorPublicKeyBufferByHeight(height)
           : (await this.forceGetBlockByHeight(height, blockGetterHelper)).generatorPublicKeyBuffer;
       if (!publicKeyBuffer) {
-        throw new ArgumentFormatException(NOT_EXIST, {
+        throw new ArgumentFormatException(ERROR_LIST.NOT_EXIST, {
           prop: `height:${height}`,
           target: "generatorPublicKey",
-          function: "BlockGetterHelper.forceGetBlockGeneratorAddressByHeight",
         });
       }
       const address = await this.accountBaseHelper.getAddressFromPublicKey(publicKeyBuffer);

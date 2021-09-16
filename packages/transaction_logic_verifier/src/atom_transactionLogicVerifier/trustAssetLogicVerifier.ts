@@ -5,12 +5,7 @@ import {
   ACCOUNT_STATUS,
 } from "@bfchain/core-model";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
-import {
-  CoreExceptionGenerator,
-  ACCOUNT_FROZEN,
-  TRUST_MAIN_ASSET_ONLY,
-  TRANSACTION_FEE_NOT_ENOUGH,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 
 const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "TrustAssetLogicVerifier");
 
@@ -35,11 +30,10 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
     if (
       !(sourceChainMagic === this.configHelper.magic && assetType === this.configHelper.assetType)
     ) {
-      throw new ConsensusException(TRUST_MAIN_ASSET_ONLY, {
+      throw new ConsensusException(ERROR_LIST.TRUST_MAIN_ASSET_ONLY, {
         assetType,
         mainAsset: this.configHelper.assetType,
         errorId: NewTransactionRefuseReason.TRUST_MAIN_ASSET_ONLY,
-        function: "verify",
       });
     }
 
@@ -100,10 +94,9 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
       const trusteeAccountInfo = await accountGetterHelper.getAccountInfo(trustee);
       if (trusteeAccountInfo) {
         if (trusteeAccountInfo.accountStatus !== ACCOUNT_STATUS.NORMAL) {
-          throw new ConsensusException(ACCOUNT_FROZEN, {
+          throw new ConsensusException(ERROR_LIST.ACCOUNT_FROZEN, {
             address: trusteeAccountInfo.address,
             errorId: NewTransactionRefuseReason.TRANSACTION_SENDER_ASSET_FROZEN,
-            function: "isTrusteesFrozen",
           });
         }
       }
@@ -123,11 +116,10 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
       const minFee = this.jsbiHelper
         .multiplyCeilFraction(feePerByte.denominator, minTransactionFeePerByte)
         .toString();
-      throw new ConsensusException(TRANSACTION_FEE_NOT_ENOUGH, {
+      throw new ConsensusException(ERROR_LIST.TRANSACTION_FEE_NOT_ENOUGH, {
         errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
         minFee: minFee.toString(),
         target: "transaction",
-        function: "__checkTrsFee",
       });
     }
   }

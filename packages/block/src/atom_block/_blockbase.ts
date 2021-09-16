@@ -7,12 +7,7 @@ import type {
   AsymmetricHelper,
   BlockBaseStatisticsHelper,
 } from "@bfchain/core-helper";
-import {
-  CoreExceptionGenerator,
-  PARAM_LOST,
-  PROP_IS_INVALID,
-  PROP_IS_REQUIRE,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { isFlagInDev } from "@bfchain/util";
 import type { CommonBlockVerify } from "./commonBlockVerify";
 import type { VerifyBlockCore } from "./verifyBlock";
@@ -126,14 +121,9 @@ export abstract class BlockFactory<T extends Block> {
    * @param keypair
    */
   verifyKeypair(keypair: BFChainCore.Keypair) {
-    const Function_Exception_Detail = {
-      function: "verifyKeypair",
-    };
-
     if (!keypair) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "keypair",
-        ...Function_Exception_Detail,
       });
     }
 
@@ -144,27 +134,27 @@ export abstract class BlockFactory<T extends Block> {
 
     const { publicKey, secretKey } = keypair;
     if (!publicKey) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "publicKey",
         ...Keypair_Exception_Detail,
       });
     }
     if (!baseHelper.isValidPublicKey(publicKey)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `publicKey ${publicKey}`,
         ...Keypair_Exception_Detail,
       });
     }
 
     if (!secretKey) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         param: "secretKey",
         ...Keypair_Exception_Detail,
       });
     }
 
     if (!baseHelper.isValidSecretKey(secretKey)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `secretKey ${secretKey}`,
         ...Keypair_Exception_Detail,
       });

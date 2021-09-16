@@ -7,14 +7,7 @@ import {
   ConfigHelper,
   ChainAssetInfoHelper,
 } from "@bfchain/core-helper";
-import {
-  CoreExceptionGenerator,
-  PARAM_LOST,
-  PROP_IS_REQUIRE,
-  SHOULD_NOT_BE,
-  SHOULD_BE,
-  NOT_MATCH,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
@@ -65,7 +58,6 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
 
     const Function_Exception_Detail = {
       target: "body",
-      function: "verifyTransactionBody",
     } as const;
 
     this.emptyRangeType(body, Function_Exception_Detail);
@@ -73,14 +65,14 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
     const recipientId = body.recipientId;
 
     if (!recipientId) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "recipientId",
         ...Function_Exception_Detail,
       });
     }
 
     if (body.senderId === recipientId) {
-      throw new ArgumentIllegalException(SHOULD_NOT_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
         to_compare_prop: `senderId ${body.senderId}`,
         to_target: "body",
         be_compare_prop: `recipientId ${recipientId}`,
@@ -89,7 +81,7 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
     }
 
     if (body.fromMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -98,7 +90,7 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
     }
 
     if (body.toMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -107,7 +99,7 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
     }
 
     if (!body.storage) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "storage",
         ...Function_Exception_Detail,
       });
@@ -115,7 +107,7 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
 
     const storage = body.storage;
     if (storage.key !== "assetType") {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `storage.key ${storage.key}`,
         to_target: "storage",
         be_compare_prop: "assetType",
@@ -126,9 +118,8 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
     const destoryAsset = destoryAssetAsset.destoryAsset;
 
     if (!destoryAsset) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "destoryAsset",
-        function: "verifyTransactionBody",
       });
     }
 
@@ -142,7 +133,7 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
     // this.checkChainName(sourceChainName, "sourceChainName", DestoryAssetAsset_Exception_Detail);
 
     if (sourceChainName !== config.chainName) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: "sourceChainName",
         to_target: "body",
         be_compare_prop: "local chain name",
@@ -153,7 +144,7 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
     // this.checkChainMagic(sourceChainMagic, "sourceChainMagic", DestoryAssetAsset_Exception_Detail);
 
     if (sourceChainMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: "sourceChainMagic",
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -164,7 +155,7 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
     this.checkAsset(assetType, "assetType", DestoryAssetAsset_Exception_Detail);
 
     if (assetType === config.assetType) {
-      throw new ArgumentIllegalException(SHOULD_NOT_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
         to_compare_prop: "assetType",
         to_target: "destoryAsset",
         be_compare_prop: config.assetType,
@@ -173,7 +164,7 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
     }
 
     if (storage.value !== assetType) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `storage.value ${storage.value}`,
         be_compare_prop: `assetType ${assetType}`,
         to_target: "storage",

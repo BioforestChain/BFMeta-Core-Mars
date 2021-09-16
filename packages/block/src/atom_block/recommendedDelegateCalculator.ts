@@ -1,5 +1,5 @@
 import { Injectable, Inject } from "@bfchain/util";
-import { CoreExceptionGenerator, NOT_EXIST } from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { ConfigHelper, AccountBaseHelper, JSBIHelper, BlockHelper } from "@bfchain/core-helper";
 const { NoFoundException } = CoreExceptionGenerator("BLOCK", "RecommendedDelegateCalculator");
 
@@ -353,14 +353,10 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
       delegates?: BFChainCore.ForSortAccountInfo[];
     },
   ) {
-    const Function_Exception_Detail = {
-      function: "calRecommendedDelegate",
-    } as const;
     if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
-        ...Function_Exception_Detail,
       });
     }
 

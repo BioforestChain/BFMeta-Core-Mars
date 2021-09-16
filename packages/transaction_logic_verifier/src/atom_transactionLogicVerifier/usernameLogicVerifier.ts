@@ -1,10 +1,7 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { NewTransactionRefuseReason, UsernameTransaction } from "@bfchain/core-model";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
-import {
-  CoreExceptionGenerator,
-  ACCOUNT_ALREADY_HAVE_USERNAME,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 
 const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "UsernameLogicVerifier");
 
@@ -47,9 +44,8 @@ export class UsernameLogicVerifier extends TransactionLogicVerifier {
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     if (sender.accountInfo.username) {
-      throw new ConsensusException(ACCOUNT_ALREADY_HAVE_USERNAME, {
+      throw new ConsensusException(ERROR_LIST.ACCOUNT_ALREADY_HAVE_USERNAME, {
         errorId: NewTransactionRefuseReason.ACCOUNT_ALREADY_HAVE_USERNAME,
-        function: "verify",
       });
     }
 

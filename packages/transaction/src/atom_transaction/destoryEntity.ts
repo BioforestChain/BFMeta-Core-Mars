@@ -7,14 +7,7 @@ import {
   ConfigHelper,
   ChainAssetInfoHelper,
 } from "@bfchain/core-helper";
-import {
-  CoreExceptionGenerator,
-  PARAM_LOST,
-  PROP_IS_REQUIRE,
-  SHOULD_BE,
-  NOT_MATCH,
-  PROP_IS_INVALID,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { Injectable, wrapTaskList } from "@bfchain/util";
 import { IssueEntityFactoryTransactionFactory } from "./issueEntityFactory";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
@@ -54,20 +47,19 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
 
     const Function_Exception_Detail = {
       target: "body",
-      function: "verifyTransactionBody",
     } as const;
 
     this.emptyRangeType(body, Function_Exception_Detail);
 
     if (!body.recipientId) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "recipientId",
         ...Function_Exception_Detail,
       });
     }
 
     if (body.fromMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -76,7 +68,7 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
     }
 
     if (body.toMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -85,7 +77,7 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
     }
 
     if (!body.storage) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "storage",
         ...Function_Exception_Detail,
       });
@@ -93,7 +85,7 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
 
     const storage = body.storage;
     if (storage.key !== "entityId") {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `storage.key ${storage.key}`,
         to_target: "storage",
         be_compare_prop: "entityId",
@@ -104,9 +96,8 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
     const destoryEntity = destoryEntityAsset.destoryEntity;
 
     if (!destoryEntity) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "destoryEntity",
-        function: "verifyTransactionBody",
       });
     }
 
@@ -126,7 +117,7 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
     } = destoryEntity;
 
     if (sourceChainName !== config.chainName) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: "sourceChainName",
         to_target: "body",
         be_compare_prop: "local chain name",
@@ -135,7 +126,7 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
     }
 
     if (sourceChainMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: "sourceChainMagic",
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -146,14 +137,14 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
     const baseHelper = this.baseHelper;
 
     if (!entityId) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "entityId",
         ...DestoryEntityAsset_Exception_Detail,
       });
     }
 
     if (!baseHelper.isValidEntityId(entityId)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `entityId ${entityId}`,
         type: "entityId",
         ...DestoryEntityAsset_Exception_Detail,
@@ -161,7 +152,7 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
     }
 
     if (storage.value !== entityId) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `storage.value ${storage.value}`,
         be_compare_prop: `entityId ${entityId}`,
         to_target: "storage",
@@ -171,14 +162,14 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
     }
 
     if (!entityFactoryPossessor) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "entityFactoryPossessor",
         ...Function_Exception_Detail,
       });
     }
 
     if (!(await this.accountBaseHelper.isAddress(entityFactoryPossessor))) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `entityFactoryPossessor ${entityFactoryPossessor}`,
         type: "account address",
         ...Function_Exception_Detail,
@@ -187,14 +178,14 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
     }
 
     if (!entityFactoryApplicant) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "entityFactoryApplicant",
         ...Function_Exception_Detail,
       });
     }
 
     if (!(await this.accountBaseHelper.isAddress(entityFactoryApplicant))) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `entityFactoryApplicant ${entityFactoryApplicant}`,
         type: "account address",
         ...Function_Exception_Detail,
@@ -206,7 +197,7 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
 
     const factoryId = this.transactionHelper.getFactoryIdByEntityId(entityId);
     if (factoryId !== entityFactory.factoryId) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `factoryId ${factoryId}`,
         be_compare_prop: `factoryId ${entityFactory.factoryId}`,
         to_target: "entityId",
@@ -216,14 +207,14 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
     }
 
     if (!transactionSignature) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "transactionSignature",
         ...DestoryEntityAsset_Exception_Detail,
       });
     }
 
     if (!baseHelper.isValidTransactionSignature(transactionSignature)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `transactionSignature ${transactionSignature}`,
         type: "transaction signature",
         ...DestoryEntityAsset_Exception_Detail,

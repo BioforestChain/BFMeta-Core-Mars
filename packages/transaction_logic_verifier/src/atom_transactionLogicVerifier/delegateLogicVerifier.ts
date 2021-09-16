@@ -1,7 +1,7 @@
 import type { DelegateTransaction } from "@bfchain/core-model";
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
-import { CoreExceptionGenerator, REGISTER_DELEGTE_QUOTA_FULL } from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 
 const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "DelegateLogicVerifier");
 
@@ -62,9 +62,8 @@ export class DelegateLogicVerifier extends TransactionLogicVerifier {
       realMaxDelegateTxsPerRound = realMaxDelegateTxsPerRound + this.configHelper.delegates;
     }
     if (txCount >= realMaxDelegateTxsPerRound) {
-      throw new ConsensusException(REGISTER_DELEGTE_QUOTA_FULL, {
+      throw new ConsensusException(ERROR_LIST.REGISTER_DELEGTE_QUOTA_FULL, {
         round: curRound,
-        function: "eventLogicVerifier",
       });
     }
   }

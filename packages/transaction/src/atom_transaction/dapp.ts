@@ -7,16 +7,7 @@ import {
   ConfigHelper,
   ChainAssetInfoHelper,
 } from "@bfchain/core-helper";
-import {
-  CoreExceptionGenerator,
-  PARAM_LOST,
-  NOT_MATCH,
-  PROP_IS_REQUIRE,
-  PROP_IS_INVALID,
-  SHOULD_BE,
-  SHOULD_NOT_EXIST,
-  PROP_LENGTH_SHOULD_EQ_FIELD,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "DAppTransactionFactory");
 
@@ -66,20 +57,19 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
 
     const Function_Exception_Detail = {
       target: "body",
-      function: "verifyTransactionBody",
     } as const;
 
     this.emptyRangeType(body, Function_Exception_Detail);
 
     if (!body.recipientId) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "recipientId",
         ...Function_Exception_Detail,
       });
     }
 
     if (body.fromMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -88,7 +78,7 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
     }
 
     if (body.toMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -97,7 +87,7 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
     }
 
     if (!body.storage) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "storage",
         ...Function_Exception_Detail,
       });
@@ -106,7 +96,7 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
     const storage = body.storage;
 
     if (storage.key !== "dappid") {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `storage.key ${storage.key}`,
         to_target: "storage",
         be_compare_prop: "dappid",
@@ -119,7 +109,7 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
     this.verifyDAppAsset(dapp, config);
 
     if (storage.value !== dapp.dappid) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `storage.value ${storage.value}`,
         be_compare_prop: `dappid ${dapp.dappid}`,
         to_target: "storage",
@@ -134,11 +124,10 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
 
     const Function_Exception_Detail = {
       target: "body",
-      function: "verifyTransactionBody",
     } as const;
 
     if (!dapp) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "dapp",
         ...Function_Exception_Detail,
       });
@@ -152,14 +141,14 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
     const { dappid, sourceChainMagic, sourceChainName, type, purchaseAsset } = dapp;
 
     if (!dappid) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "dappid",
         ...DappAsset_Exception_Detail,
       });
     }
 
     if (!baseHelper.isString(dappid)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `dappid ${dappid}`,
         type: "string",
         ...DappAsset_Exception_Detail,
@@ -168,7 +157,7 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
 
     const len = dappid.length;
     if (len !== 8) {
-      throw new ArgumentIllegalException(PROP_LENGTH_SHOULD_EQ_FIELD, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_LENGTH_SHOULD_EQ_FIELD, {
         prop: `dappid ${dappid}`,
         fileds: 8,
         ...DappAsset_Exception_Detail,
@@ -176,7 +165,7 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
     }
 
     if (!baseHelper.isUpperCaseLetterOrNumber(dappid)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `dappid ${dappid}`,
         type: "uppercase or number",
         ...DappAsset_Exception_Detail,
@@ -186,7 +175,7 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
     this.checkChainName(sourceChainName, "sourceChainName", DappAsset_Exception_Detail);
 
     if (sourceChainName !== config.chainName) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `sourceChainName ${sourceChainName}`,
         to_target: "body",
         be_compare_prop: "local chain name",
@@ -197,7 +186,7 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
     this.checkChainMagic(sourceChainMagic, "sourceChainMagic", DappAsset_Exception_Detail);
 
     if (sourceChainMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `sourceChainMagic ${sourceChainMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -207,7 +196,7 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
     }
 
     if (type !== DAPP_TYPE.FREE_APP && type !== DAPP_TYPE.PAID_APP) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `type ${type}`,
         be_compare_prop: "dappType",
         to_target: "dapp",
@@ -218,14 +207,14 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
 
     if (type === DAPP_TYPE.PAID_APP) {
       if (!purchaseAsset) {
-        throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
           prop: "purchaseAsset",
           ...DappAsset_Exception_Detail,
         });
       }
 
       if (!baseHelper.isValidAssetNumber(purchaseAsset)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: "purchaseAsset",
           type: "asset number",
           ...DappAsset_Exception_Detail,
@@ -235,7 +224,7 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
       this.checkAssetAmount(purchaseAsset, "purchaseAsset", DappAsset_Exception_Detail);
     } else if (type === DAPP_TYPE.FREE_APP) {
       if (purchaseAsset) {
-        throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+        throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
           prop: "purchaseAmount",
           ...DappAsset_Exception_Detail,
         });

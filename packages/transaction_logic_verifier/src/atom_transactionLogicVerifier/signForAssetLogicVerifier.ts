@@ -1,13 +1,7 @@
 import type { SignForAssetTransaction } from "@bfchain/core-model";
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { Injectable, Inject, QueneEventEmitter } from "@bfchain/util";
-import {
-  CoreExceptionGenerator,
-  NOT_MATCH,
-  CAN_NOT_SECONDARY_TRANSACTION,
-  NOT_EXIST_OR_EXPIRED,
-  NOT_EXPECTED_RELATED_TRANSACTION,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { AccountBaseHelper } from "@bfchain/core-helper";
 
 const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "SignForAssetLogicVerifier");
@@ -28,10 +22,6 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const Function_Exception_Detail = {
-      function: "verify",
-    } as const;
-
     const { transactionSignature } = transaction.asset.signForAsset;
 
     const trs = (await transactionGetterHelper.getTransactionBySignature(
@@ -40,17 +30,15 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
     )) as BFChainCore.TrustAssetTransactionJSON;
 
     if (!trs) {
-      throw new ConsensusException(NOT_EXIST_OR_EXPIRED, {
+      throw new ConsensusException(ERROR_LIST.NOT_EXIST_OR_EXPIRED, {
         prop: `Transaction with signature ${transactionSignature}`,
         target: "blockChain",
-        ...Function_Exception_Detail,
       });
     }
 
     if (trs.type !== this.transactionHelper.TRUST_ASSET) {
-      throw new ConsensusException(NOT_EXPECTED_RELATED_TRANSACTION, {
+      throw new ConsensusException(ERROR_LIST.NOT_EXPECTED_RELATED_TRANSACTION, {
         signature: `${transactionSignature}`,
-        ...Function_Exception_Detail,
       });
     }
 
@@ -106,12 +94,11 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
   ) {
     // 签收交易的接收账户必须是委托交易的接收账户
     if (transaction.recipientId !== trustAssetJson.recipientId) {
-      throw new ConsensusException(NOT_MATCH, {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `SignForAssetTransaction.recipientId ${transaction.recipientId}`,
         be_compare_prop: `TrustAssetTransaction.recipientId ${trustAssetJson.recipientId}`,
         to_target: "SignForAssetTransaction",
         be_target: "TrustAssetTransaction",
-        function: "isValidRecipientId",
       });
     }
   }
@@ -126,9 +113,6 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
     transaction: SignForAssetTransaction,
     trustAssetJson: BFChainCore.TransactionJSON<BFChainCore.TrustAssetAssetJSON>,
   ) {
-    const Function_Exception_Detail = {
-      function: "isDependentTransactionMatch",
-    } as const;
     const { trustAsset } = transaction.asset.signForAsset;
     const trsAsset = trustAssetJson.asset.trustAsset;
 
@@ -138,12 +122,11 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
       trsAsset.amount !== trustAsset.amount ||
       trsAsset.trustees.length !== trustAsset.trustees.length
     ) {
-      throw new ConsensusException(NOT_MATCH, {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `trsAsset: ${JSON.stringify(trsAsset)}`,
         be_compare_prop: `trustAsset: ${JSON.stringify(trustAsset.toJSON())}`,
         to_target: "SignForAssetTransaction",
         be_target: "TrustAssetTransaction",
-        ...Function_Exception_Detail,
       });
     }
 
@@ -152,12 +135,11 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
 
     for (const address of trustTrsRange) {
       if (!trustRange.includes(address)) {
-        throw new ConsensusException(NOT_MATCH, {
+        throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
           to_compare_prop: `trustRange: ${JSON.stringify(trustRange)}`,
           be_compare_prop: `address: ${address}`,
           to_target: "SignForAssetTransaction",
           be_target: "TrustAssetTransaction",
-          ...Function_Exception_Detail,
         });
       }
     }
@@ -212,9 +194,8 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
       heightRange: this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
     });
     if (isSecondary) {
-      throw new ConsensusException(CAN_NOT_SECONDARY_TRANSACTION, {
+      throw new ConsensusException(ERROR_LIST.CAN_NOT_SECONDARY_TRANSACTION, {
         reason: `Can not secondary sign for asset, sender ${transaction.senderId} trust transaction signature ${transaction.storageValue}`,
-        function: "checkSecondaryTransaction",
       });
     }
   }

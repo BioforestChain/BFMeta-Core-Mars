@@ -5,17 +5,7 @@ import type {
   BaseHelper,
   ConfigHelper,
 } from "@bfchain/core-helper";
-import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
-import {
-  PARAM_LOST,
-  PROP_IS_REQUIRE,
-  PROP_IS_INVALID,
-  NOT_MATCH,
-  PROP_SHOULD_GTE_FIELD,
-  PROP_SHOULD_LTE_FIELD,
-  SHOULD_BE,
-  PROP_SHOULD_GT_FIELD,
-} from "@bfchain/core-util-exception-errorcode";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import {
   Transaction,
   RANGE_TYPE,
@@ -27,7 +17,6 @@ const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "_txba
 
 type FunctionExceptionDetail = {
   target: string;
-  function: string;
 };
 
 export abstract class TransactionFactory<T extends Transaction = Transaction> {
@@ -59,14 +48,9 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
    * @param keypair
    */
   verifyKeypair(keypair: BFChainCore.Keypair) {
-    const Function_Exception_Detail = {
-      function: "verifyKeypair",
-    } as const;
-
     if (!keypair) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "keypair",
-        ...Function_Exception_Detail,
       });
     }
 
@@ -75,14 +59,14 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     } as const;
 
     if (!keypair.publicKey) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "publicKey",
         ...Keypair_Exception_Detail,
       });
     }
 
     if (!keypair.secretKey) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         param: "secretKey",
         ...Keypair_Exception_Detail,
       });
@@ -95,14 +79,9 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
    * @param keypair
    */
   verifySecondKeypair(keypair: BFChainCore.Keypair) {
-    const Function_Exception_Detail = {
-      function: "verifySecondKeypair",
-    } as const;
-
     if (!keypair) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "keypair",
-        ...Function_Exception_Detail,
       });
     }
 
@@ -111,14 +90,14 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     } as const;
 
     if (!keypair.publicKey) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "publicKey",
         ...Keypair_Exception_Detail,
       });
     }
 
     if (!keypair.secretKey) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         param: "secretKey",
         ...Keypair_Exception_Detail,
       });
@@ -136,47 +115,40 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     asset: BFChainCore.GetTransactionAssetJSON<T>,
     config = this.configHelper,
   ) {
-    const Function_Exception_Detail = {
-      function: "verifyTransactionBody",
-    } as const;
-
     if (!body) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "body",
-        ...Function_Exception_Detail,
       });
     }
 
     if (!asset) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "asset",
-        ...Function_Exception_Detail,
       });
     }
 
     const TransactionBody_Exception_Detail = {
       target: "body",
-      ...Function_Exception_Detail,
     } as const;
 
     const { baseHelper, accountBaseHelper } = this;
 
     if (!baseHelper.isPositiveInteger(body.version)) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "version",
         ...TransactionBody_Exception_Detail,
       });
     }
 
     if (!body.type) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "type",
         ...TransactionBody_Exception_Detail,
       });
     }
 
     if (!baseHelper.isValidTransactionType(body.type)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "type",
         type: "transaction type",
         ...TransactionBody_Exception_Detail,
@@ -184,14 +156,14 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     }
 
     if (!body.senderId) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "senderId",
         ...TransactionBody_Exception_Detail,
       });
     }
 
     if (!(await accountBaseHelper.isAddress(body.senderId))) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `senderId ${body.senderId}`,
         type: "account address",
         ...TransactionBody_Exception_Detail,
@@ -199,14 +171,14 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     }
 
     if (!body.senderPublicKey) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "senderPublicKey",
         ...TransactionBody_Exception_Detail,
       });
     }
 
     if (!baseHelper.isValidPublicKey(body.senderPublicKey)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `senderPublicKey ${body.senderPublicKey}`,
         type: "account publicKey",
         ...TransactionBody_Exception_Detail,
@@ -215,7 +187,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
 
     const address = await accountBaseHelper.getAddressFromPublicKeyString(body.senderPublicKey);
     if (body.senderId !== address) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `senderId ${body.senderId}`,
         be_compare_prop: `publicKey => address ${address}`,
         to_target: "senderPublicKey",
@@ -226,7 +198,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
 
     if (body.senderSecondPublicKey) {
       if (!baseHelper.isValidPublicKey(body.senderSecondPublicKey)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `senderSecondPublicKey ${body.senderSecondPublicKey}`,
           type: "account publicKey",
           ...TransactionBody_Exception_Detail,
@@ -236,7 +208,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
 
     if (body.recipientId !== undefined) {
       if (!(await accountBaseHelper.isAddress(body.recipientId))) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `recipientId ${body.recipientId}`,
           type: "account address",
           ...TransactionBody_Exception_Detail,
@@ -245,7 +217,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     }
 
     if (!(await this.baseHelper.isValidRange(body.rangeType, body.range))) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `range ${body.rangeType}`,
         type: "transaction range",
         ...TransactionBody_Exception_Detail,
@@ -253,7 +225,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     }
 
     if (!baseHelper.isNaturalNumber(body.timestamp)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `timestamp ${body.timestamp}`,
         type: "natural number",
         ...TransactionBody_Exception_Detail,
@@ -262,7 +234,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
 
     const applyBlockHeight = body.applyBlockHeight;
     if (!baseHelper.isPositiveInteger(applyBlockHeight)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `applyBlockHeight ${applyBlockHeight}`,
         type: "positive integer",
         ...TransactionBody_Exception_Detail,
@@ -271,7 +243,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
 
     const effectiveBlockHeight = body.effectiveBlockHeight;
     if (!baseHelper.isPositiveInteger(effectiveBlockHeight)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `effectiveBlockHeight ${effectiveBlockHeight}`,
         type: "positive integer",
         ...TransactionBody_Exception_Detail,
@@ -279,7 +251,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     }
 
     if (effectiveBlockHeight < applyBlockHeight) {
-      throw new ArgumentIllegalException(PROP_SHOULD_GTE_FIELD, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GTE_FIELD, {
         prop: `effectiveBlockHeight ${effectiveBlockHeight}`,
         field: applyBlockHeight,
         ...TransactionBody_Exception_Detail,
@@ -289,7 +261,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     const { maxApplyAndConfirmedBlockHeightDiff } = config;
     const maxEffectiveBlockHeight = applyBlockHeight + maxApplyAndConfirmedBlockHeightDiff;
     if (effectiveBlockHeight > maxEffectiveBlockHeight) {
-      throw new ArgumentIllegalException(PROP_SHOULD_LTE_FIELD, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
         prop: `effectiveBlockHeight ${effectiveBlockHeight}`,
         field: maxEffectiveBlockHeight,
         ...TransactionBody_Exception_Detail,
@@ -300,14 +272,14 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     this.checkTrsBaseFee(body.fee, TransactionBody_Exception_Detail);
 
     if (!body.fromMagic) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "fromMagic",
         ...TransactionBody_Exception_Detail,
       });
     }
 
     if (!baseHelper.isValidChainMagic(body.fromMagic)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `fromMagic ${body.fromMagic}`,
         type: "chain magic",
         ...TransactionBody_Exception_Detail,
@@ -315,14 +287,14 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     }
 
     if (!body.toMagic) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "toMagic",
         ...TransactionBody_Exception_Detail,
       });
     }
 
     if (!baseHelper.isValidChainMagic(body.toMagic)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `toMagic ${body.toMagic}`,
         type: "chain magic",
         ...TransactionBody_Exception_Detail,
@@ -331,7 +303,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
 
     if (body.sourceIP !== undefined) {
       if (!baseHelper.isIp(body.sourceIP)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `sourceIP ${body.sourceIP}`,
           type: "ip",
           ...TransactionBody_Exception_Detail,
@@ -341,7 +313,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
 
     if (body.dappid !== undefined) {
       if (!baseHelper.isValidDAppId(body.dappid)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `dappid ${body.dappid}`,
           type: "dappid",
           ...TransactionBody_Exception_Detail,
@@ -351,7 +323,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
 
     if (body.lns !== undefined) {
       if (!baseHelper.isValidLnsName(body.lns, config.chainName)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `lns ${body.lns}`,
           type: "location name",
           ...TransactionBody_Exception_Detail,
@@ -361,20 +333,20 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
 
     const remark = body.remark;
     if (!remark) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "remark",
         ...TransactionBody_Exception_Detail,
       });
     }
     if (baseHelper.getVariableType(remark) !== "[object Object]") {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "remark",
         ...TransactionBody_Exception_Detail,
       });
     }
     for (const key in remark) {
       if (!baseHelper.isString(remark[key])) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: "remark",
           ...TransactionBody_Exception_Detail,
         });
@@ -388,13 +360,9 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
    * @param transaction
    */
   async verifyBaseInfo(transaction: T, config = this.configHelper) {
-    const Function_Exception_Detail = {
-      function: "verify",
-    } as const;
     if (!transaction) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "transaction",
-        ...Function_Exception_Detail,
       });
     }
 
@@ -402,20 +370,19 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
 
     const Trs_Exception_Detail = {
       target: "transaction",
-      ...Function_Exception_Detail,
     } as const;
 
     const { baseHelper } = this;
 
     if (!transaction.signature) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "signature",
         ...Trs_Exception_Detail,
       });
     }
 
     if (!baseHelper.isValidSignature(transaction.signature)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `signature ${transaction.signature}`,
         type: "signature",
         ...Trs_Exception_Detail,
@@ -424,7 +391,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
 
     if (transaction.signSignature) {
       if (!baseHelper.isValidSignature(transaction.signSignature)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `signSignature ${transaction.signSignature}`,
           type: "signature",
           ...Trs_Exception_Detail,
@@ -470,7 +437,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     Function_Exception_Detail: FunctionExceptionDetail,
   ) {
     if (!amount) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: propName,
         ...Function_Exception_Detail,
       });
@@ -479,7 +446,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     const { baseHelper } = this;
 
     if (!baseHelper.isValidAssetNumber(amount)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `${propName} ${amount}`,
         type: "asset number",
         ...Function_Exception_Detail,
@@ -489,7 +456,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     const minAmount = BigInt(0);
     const inputAmount = BigInt(amount);
     if (minAmount >= inputAmount) {
-      throw new ArgumentIllegalException(PROP_SHOULD_GTE_FIELD, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GTE_FIELD, {
         prop: `${propName} ${amount}`,
         field: "0",
         ...Function_Exception_Detail,
@@ -526,7 +493,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     Function_Exception_Detail: FunctionExceptionDetail,
   ) {
     if (!assetPrealnum) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: propName,
         ...Function_Exception_Detail,
       });
@@ -535,7 +502,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     const { baseHelper } = this;
 
     if (!baseHelper.isValidAssetNumber(assetPrealnum)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `${propName} ${assetPrealnum}`,
         type: "asset prealnum",
         ...Function_Exception_Detail,
@@ -545,7 +512,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     const minAssetPrealnum = BigInt(0);
     const formatAssetPrealnum = BigInt(assetPrealnum);
     if (minAssetPrealnum > formatAssetPrealnum) {
-      throw new ArgumentIllegalException(PROP_SHOULD_GTE_FIELD, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GTE_FIELD, {
         prop: `${propName} ${assetPrealnum}`,
         field: "0",
         ...Function_Exception_Detail,
@@ -566,7 +533,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     Function_Exception_Detail: FunctionExceptionDetail,
   ) {
     if (assetPrealnum === "0") {
-      throw new ArgumentIllegalException(PROP_SHOULD_GT_FIELD, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
         prop: `${propName} ${assetPrealnum}`,
         field: "0",
         ...Function_Exception_Detail,
@@ -582,7 +549,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
    */
   checkTrsBaseFee(fee: string, Function_Exception_Detail: FunctionExceptionDetail) {
     if (!fee) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "fee",
         ...Function_Exception_Detail,
       });
@@ -591,7 +558,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     const { baseHelper } = this;
 
     if (!baseHelper.isValidAssetNumber(fee)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `fee ${fee}`,
         type: "asset number",
         ...Function_Exception_Detail,
@@ -601,7 +568,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     const inputFee = BigInt(fee);
     const miniUnit = BigInt("0");
     if (miniUnit > inputFee) {
-      throw new ArgumentIllegalException(PROP_SHOULD_GTE_FIELD, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GTE_FIELD, {
         prop: `fee ${fee}`,
         field: "0",
         ...Function_Exception_Detail,
@@ -617,7 +584,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
    */
   emptyRangeType(body: BFChainCore.TxBodyJSON, Function_Exception_Detail: FunctionExceptionDetail) {
     if (body.rangeType !== RANGE_TYPE.EMPTY) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `rangeType ${body.rangeType}`,
         to_target: "body",
         be_compare_prop: "RANGE_TYPE.EMPTY",
@@ -639,13 +606,13 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     Function_Exception_Detail: FunctionExceptionDetail,
   ) {
     if (!chainName) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: propName,
         ...Function_Exception_Detail,
       });
     }
     if (!this.baseHelper.isValidChainName(chainName)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `${propName} ${chainName}`,
         type: "chain name",
         ...Function_Exception_Detail,
@@ -666,13 +633,13 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     Function_Exception_Detail: FunctionExceptionDetail,
   ) {
     if (!chainMagic) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: propName,
         ...Function_Exception_Detail,
       });
     }
     if (!this.baseHelper.isValidChainMagic(chainMagic)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `${propName} ${chainMagic}`,
         type: "chain magic",
         ...Function_Exception_Detail,
@@ -693,13 +660,13 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     Function_Exception_Detail: FunctionExceptionDetail,
   ) {
     if (!parentAssetType) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: propName,
         ...Function_Exception_Detail,
       });
     }
     if (!PARENT_ASSET_TYPE[parentAssetType]) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `${propName} ${parentAssetType}`,
         ...Function_Exception_Detail,
       });
@@ -715,13 +682,13 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
    */
   checkAsset(assetType: any, propName: string, Function_Exception_Detail: FunctionExceptionDetail) {
     if (!assetType) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: propName,
         ...Function_Exception_Detail,
       });
     }
     if (!this.baseHelper.isValidAssetType(assetType)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `${propName} ${assetType}`,
         ...Function_Exception_Detail,
       });
@@ -737,13 +704,13 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
    */
   checkDAppid(dappid: any, propName: string, Function_Exception_Detail: FunctionExceptionDetail) {
     if (!dappid) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: propName,
         ...Function_Exception_Detail,
       });
     }
     if (!this.baseHelper.isValidDAppId(dappid)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `${propName} ${dappid}`,
         ...Function_Exception_Detail,
       });
@@ -763,13 +730,13 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     Function_Exception_Detail: FunctionExceptionDetail,
   ) {
     if (!locationName) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: propName,
         ...Function_Exception_Detail,
       });
     }
     if (!this.baseHelper.isValidLnsName(locationName)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `${propName} ${locationName}`,
         ...Function_Exception_Detail,
       });
@@ -789,13 +756,13 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     Function_Exception_Detail: FunctionExceptionDetail,
   ) {
     if (!factoryId) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: propName,
         ...Function_Exception_Detail,
       });
     }
     if (!this.baseHelper.isValidEntityFactoryId(factoryId)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `${propName} ${factoryId}`,
         ...Function_Exception_Detail,
       });
@@ -815,13 +782,13 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     Function_Exception_Detail: FunctionExceptionDetail,
   ) {
     if (!entityId) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: propName,
         ...Function_Exception_Detail,
       });
     }
     if (!this.baseHelper.isValidEntityId(entityId)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `${propName} ${entityId}`,
         ...Function_Exception_Detail,
       });
@@ -859,7 +826,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
       this.checkEntityId(assetType, propName, Function_Exception_Detail);
       return;
     }
-    throw new ArgumentIllegalException(PROP_IS_INVALID, {
+    throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
       prop: `parentAssetType ${parentAssetType}`,
       ...Function_Exception_Detail,
     });

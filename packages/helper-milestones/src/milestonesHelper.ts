@@ -1,7 +1,7 @@
 import { Injectable } from "@bfchain/util";
 import { ConfigHelper } from "@bfchain/core-helper-config";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
-import { PROP_IS_INVALID } from "@bfchain/core-util-exception-errorcode";
+import { ERROR_LIST } from "@bfchain/core-util-exception-errorcode";
 import { BaseHelper } from "@bfchain/core-helper-type";
 const { ArgumentFormatException } = CoreExceptionGenerator("HELPER", "milestonesHelper");
 
@@ -22,12 +22,10 @@ export class MilestonesHelper {
    *
    */
   isVaildMilestones() {
-    const Function_Exception_Detail = { function: "isVaildMilestones" };
     if (!this.baseHelper.isValidChainRewardMilestones(this.config.milestones)) {
-      throw new ArgumentFormatException(PROP_IS_INVALID, {
+      throw new ArgumentFormatException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "milestones",
         target: "config",
-        ...Function_Exception_Detail,
       });
     }
   }
@@ -38,12 +36,10 @@ export class MilestonesHelper {
    * @param height
    */
   parseHeight(height: number) {
-    const Function_Exception_Detail = { function: "isVaildMilestones" };
     if (!this.baseHelper.isPositiveInteger(height)) {
-      throw new ArgumentFormatException(PROP_IS_INVALID, {
+      throw new ArgumentFormatException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "height",
         type: "positive integer",
-        ...Function_Exception_Detail,
       });
     }
     return Number(height);

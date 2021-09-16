@@ -7,17 +7,7 @@ import {
   ConfigHelper,
   ChainAssetInfoHelper,
 } from "@bfchain/core-helper";
-import {
-  CoreExceptionGenerator,
-  PARAM_LOST,
-  PROP_IS_REQUIRE,
-  PROP_IS_INVALID,
-  NOT_IN_EXPECTED_RANGE,
-  SHOULD_BE,
-  SHOULD_NOT_BE,
-  NOT_MATCH,
-  PROP_SHOULD_GT_FIELD,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
@@ -70,7 +60,6 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
 
     const Function_Exception_Detail = {
       target: "body",
-      function: "verifyTransactionBody",
     } as const;
 
     this.emptyRangeType(body, Function_Exception_Detail);
@@ -80,14 +69,14 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
     const recipientId = body.recipientId;
 
     if (!body.recipientId) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "recipientId",
         ...Function_Exception_Detail,
       });
     }
 
     if (body.senderId === recipientId) {
-      throw new ArgumentIllegalException(SHOULD_NOT_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
         to_compare_prop: `senderId ${body.senderId}`,
         to_target: "body",
         be_compare_prop: `recipientId ${recipientId}`,
@@ -96,7 +85,7 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
     }
 
     if (body.fromMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -105,7 +94,7 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
     }
 
     if (body.toMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -114,7 +103,7 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
     }
 
     if (!body.storage) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "storage",
         ...Function_Exception_Detail,
       });
@@ -122,7 +111,7 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
 
     const storage = body.storage;
     if (storage.key !== "assetType") {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `storage.key ${storage.key}`,
         to_target: "storage",
         be_compare_prop: "assetType",
@@ -133,9 +122,8 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
     const issueAsset = issueAssetAsset.issueAsset;
 
     if (!issueAsset) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "issueAsset",
-        function: "verifyTransactionBody",
       });
     }
 
@@ -149,7 +137,7 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
     this.checkChainName(sourceChainName, "sourceChainName", IssueAssetAsset_Exception_Detail);
 
     if (sourceChainName !== config.chainName) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `sourceChainName ${sourceChainName}`,
         to_target: "body",
         be_compare_prop: "local chain name",
@@ -160,7 +148,7 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
     this.checkChainMagic(sourceChainMagic, "sourceChainMagic", IssueAssetAsset_Exception_Detail);
 
     if (sourceChainMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `sourceChainMagic ${sourceChainName}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -169,14 +157,14 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
     }
 
     if (!assetType) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "assetType",
         ...IssueAssetAsset_Exception_Detail,
       });
     }
 
     if (!baseHelper.isUpperCaseLetter(assetType)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `assetType ${assetType}`,
         type: "uppercase",
         ...IssueAssetAsset_Exception_Detail,
@@ -185,7 +173,7 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
 
     const len = assetType.length;
     if (len < 3 || len > 5) {
-      throw new ArgumentIllegalException(NOT_IN_EXPECTED_RANGE, {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_IN_EXPECTED_RANGE, {
         prop: `assetType ${assetType}`,
         type: "string length",
         min: 3,
@@ -195,7 +183,7 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
     }
 
     if (storage.value !== assetType) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `storage.value ${storage.value}`,
         be_compare_prop: `assetType ${assetType}`,
         to_target: "storage",
@@ -205,14 +193,14 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
     }
 
     if (!expectedIssuedAssets) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "expectedIssuedAssets",
         ...IssueAssetAsset_Exception_Detail,
       });
     }
 
     if (!baseHelper.isValidAssetNumber(expectedIssuedAssets)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `expectedIssuedAssets ${expectedIssuedAssets}`,
         type: "asset number",
         ...IssueAssetAsset_Exception_Detail,
@@ -220,7 +208,7 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
     }
 
     if (BigInt(expectedIssuedAssets) <= BigInt(0)) {
-      throw new ArgumentIllegalException(PROP_SHOULD_GT_FIELD, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
         prop: "expectedIssuedAssets",
         field: "0",
         ...IssueAssetAsset_Exception_Detail,

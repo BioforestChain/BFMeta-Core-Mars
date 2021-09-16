@@ -1,13 +1,6 @@
 import { Injectable, Inject } from "@bfchain/util";
 import { ConfigHelper } from "@bfchain/core-helper";
-import {
-  CoreExceptionGenerator,
-  POSSESS_ASSET_EXCEPT_CHAIN_ASSET,
-  ACCOUNT_CAN_NOT_BE_FROZEN,
-  NOT_EXIST,
-  NOT_MATCH,
-  POSSESS_FROZEN_ASSET_EXCEPT_CHAIN_ASSET,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "HelperLogicVerifier");
 
 @Injectable()
@@ -50,18 +43,14 @@ export class HelperLogicVerifier {
       for (const assetType in magicAssets) {
         if (assetType !== configHelper.assetType) {
           if (magicAssets[assetType].assetNumber > BigInt(0)) {
-            throw new ConsensusException(POSSESS_ASSET_EXCEPT_CHAIN_ASSET, {
-              function: "isPossessAssetExceptChainAsset",
-            });
+            throw new ConsensusException(ERROR_LIST.POSSESS_ASSET_EXCEPT_CHAIN_ASSET);
           }
         }
       }
     }
     const isPossess = await accountGetterHelper.isPossessFrozenAssetExceptMain(address);
     if (isPossess) {
-      throw new ConsensusException(POSSESS_FROZEN_ASSET_EXCEPT_CHAIN_ASSET, {
-        function: "isPossessAssetExceptChainAsset",
-      });
+      throw new ConsensusException(ERROR_LIST.POSSESS_FROZEN_ASSET_EXCEPT_CHAIN_ASSET);
     }
   }
 
@@ -73,10 +62,9 @@ export class HelperLogicVerifier {
     // 资产的发行账户不能是dapp的拥有者
     const isDAppPossessor = await accountGetterHelper.isDAppPossessor(configHelper.magic, address);
     if (isDAppPossessor) {
-      throw new ConsensusException(ACCOUNT_CAN_NOT_BE_FROZEN, {
+      throw new ConsensusException(ERROR_LIST.ACCOUNT_CAN_NOT_BE_FROZEN, {
         address,
         reason: "DApp id possessor can not initiate a frozen account transaction",
-        function: "isDAppPossessor",
       });
     }
   }
@@ -92,10 +80,9 @@ export class HelperLogicVerifier {
       address,
     );
     if (isLnsPossessor) {
-      throw new ConsensusException(ACCOUNT_CAN_NOT_BE_FROZEN, {
+      throw new ConsensusException(ERROR_LIST.ACCOUNT_CAN_NOT_BE_FROZEN, {
         address,
         reason: "Location name possessor or manager can not initiate a frozen account transaction",
-        function: "isLnsPossessorOrManager",
       });
     }
   }
@@ -111,10 +98,9 @@ export class HelperLogicVerifier {
       address,
     );
     if (isEntityFactoryPossessor) {
-      throw new ConsensusException(ACCOUNT_CAN_NOT_BE_FROZEN, {
+      throw new ConsensusException(ERROR_LIST.ACCOUNT_CAN_NOT_BE_FROZEN, {
         address,
         reason: "EntityFactory possessor can not initiate a frozen account transaction",
-        function: "isEntityFactoryPossessor",
       });
     }
   }
@@ -130,10 +116,9 @@ export class HelperLogicVerifier {
       address,
     );
     if (isEntityPossessor) {
-      throw new ConsensusException(ACCOUNT_CAN_NOT_BE_FROZEN, {
+      throw new ConsensusException(ERROR_LIST.ACCOUNT_CAN_NOT_BE_FROZEN, {
         address,
         reason: "Entity possessor can not initiate a frozen account transaction",
-        function: "isEntityPossessor",
       });
     }
   }
@@ -144,27 +129,21 @@ export class HelperLogicVerifier {
     assetType: string,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
   ) {
-    const Function_Exception_Detail = {
-      function: "isAssetExist",
-    } as const;
-
     const memAsset = await accountGetterHelper.getAsset(sourceChainMagic, assetType);
 
     if (!memAsset) {
-      throw new ConsensusException(NOT_EXIST, {
+      throw new ConsensusException(ERROR_LIST.NOT_EXIST, {
         prop: `asset with magic ${sourceChainMagic} assetType ${assetType}`,
         target: "blockChain",
-        ...Function_Exception_Detail,
       });
     }
 
     if (memAsset.sourceChainName !== sourceChainName) {
-      throw new ConsensusException(NOT_MATCH, {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `sourceChainName ${memAsset.sourceChainName}`,
         be_compare_prop: `sourceChainName ${sourceChainName}`,
         to_target: `blockChain magic ${sourceChainMagic} assetType ${assetType}`,
         be_target: `transaction magic ${sourceChainMagic} assetType ${assetType}`,
-        ...Function_Exception_Detail,
       });
     }
 

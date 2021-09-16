@@ -1,10 +1,6 @@
 import { KEY_SPLITTER } from "../../../constants";
 import { Injectable } from "@bfchain/util-dep-inject";
-import {
-  CoreExceptionGenerator,
-  PROP_IS_INVALID,
-  PROP_IS_REQUIRE,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { PARENT_ASSET_TYPE } from "@bfchain/core-model-constants";
 const { ArgumentIllegalException } = CoreExceptionGenerator("HELPER", "transactionHelper");
 
@@ -14,10 +10,9 @@ export class AssetIdV1Converter implements BFChainCore.CrossChain.AssetIdConvert
 
   checkEncodeArgs(assetInfo: BFChainCore.CrossChain.AssetBaseInfo) {
     if (!assetInfo) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: `assetInfo ${assetInfo}`,
         target: "encodeArgs",
-        function: "checkEncodeArgs",
       });
     }
     const { parentAssetType, assetType } = assetInfo;
@@ -27,44 +22,39 @@ export class AssetIdV1Converter implements BFChainCore.CrossChain.AssetIdConvert
       parentAssetType !== PARENT_ASSET_TYPE.ENTITY &&
       parentAssetType !== PARENT_ASSET_TYPE.ASSETS
     ) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `parentAssetType ${parentAssetType}`,
         target: "encodeArgs",
-        function: "checkEncodeArgs",
       });
     }
 
     if (typeof assetType !== "string") {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `assetType ${assetType}`,
         target: "encodeArgs",
-        function: "checkEncodeArgs",
       });
     }
   }
 
   checkDecodeArgs(assetId: unknown) {
     if (!assetId) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: `assetId ${assetId}`,
         target: "decodeArgs",
-        function: "checkDecodeArgs",
       });
     }
 
     if (typeof assetId !== "string") {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `assetId ${assetId}`,
         target: "decodeArgs",
-        function: "checkDecodeArgs",
       });
     }
 
     if (assetId.split(KEY_SPLITTER).length !== 3) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `assetId ${assetId}`,
         target: "decodeArgs",
-        function: "checkDecodeArgs",
       });
     }
   }

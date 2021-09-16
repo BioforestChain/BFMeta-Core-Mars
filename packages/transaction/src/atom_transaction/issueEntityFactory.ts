@@ -7,16 +7,7 @@ import {
   ConfigHelper,
   ChainAssetInfoHelper,
 } from "@bfchain/core-helper";
-import {
-  CoreExceptionGenerator,
-  PARAM_LOST,
-  NOT_MATCH,
-  PROP_IS_REQUIRE,
-  PROP_IS_INVALID,
-  SHOULD_BE,
-  SHOULD_NOT_BE,
-  NOT_IN_EXPECTED_RANGE,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
@@ -55,21 +46,20 @@ export class IssueEntityFactoryTransactionFactory extends TransactionFactory<Iss
 
     const Function_Exception_Detail = {
       target: "body",
-      function: "verifyTransactionBody",
     } as const;
 
     this.emptyRangeType(body, Function_Exception_Detail);
 
     const recipientId = body.recipientId;
     if (!recipientId) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "recipientId",
         ...Function_Exception_Detail,
       });
     }
 
     if (body.senderId === recipientId) {
-      throw new ArgumentIllegalException(SHOULD_NOT_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
         to_compare_prop: `senderId ${body.senderId}`,
         to_target: "body",
         be_compare_prop: `recipientId ${recipientId}`,
@@ -78,7 +68,7 @@ export class IssueEntityFactoryTransactionFactory extends TransactionFactory<Iss
     }
 
     if (body.fromMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -87,7 +77,7 @@ export class IssueEntityFactoryTransactionFactory extends TransactionFactory<Iss
     }
 
     if (body.toMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -96,7 +86,7 @@ export class IssueEntityFactoryTransactionFactory extends TransactionFactory<Iss
     }
 
     if (!body.storage) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "storage",
         ...Function_Exception_Detail,
       });
@@ -105,7 +95,7 @@ export class IssueEntityFactoryTransactionFactory extends TransactionFactory<Iss
     const storage = body.storage;
 
     if (storage.key !== "factoryId") {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `storage.key ${storage.key}`,
         to_target: "storage",
         be_compare_prop: "factoryId",
@@ -118,7 +108,7 @@ export class IssueEntityFactoryTransactionFactory extends TransactionFactory<Iss
     this.verifyIssueEntityFactoryAsset(issueEntityFactory, config);
 
     if (storage.value !== issueEntityFactory.factoryId) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `storage.value ${storage.value}`,
         be_compare_prop: `factoryId ${issueEntityFactory.factoryId}`,
         to_target: "storage",
@@ -136,11 +126,10 @@ export class IssueEntityFactoryTransactionFactory extends TransactionFactory<Iss
 
     const Function_Exception_Detail = {
       target: "body",
-      function: "verifyTransactionBody",
     } as const;
 
     if (!issueEntityFactory) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "issueEntityFactory",
         ...Function_Exception_Detail,
       });
@@ -161,7 +150,7 @@ export class IssueEntityFactoryTransactionFactory extends TransactionFactory<Iss
     } = issueEntityFactory;
 
     if (sourceChainName !== config.chainName) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `sourceChainName ${sourceChainName}`,
         to_target: "body",
         be_compare_prop: "local chain name",
@@ -170,7 +159,7 @@ export class IssueEntityFactoryTransactionFactory extends TransactionFactory<Iss
     }
 
     if (sourceChainMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `sourceChainMagic ${sourceChainMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -180,14 +169,14 @@ export class IssueEntityFactoryTransactionFactory extends TransactionFactory<Iss
     }
 
     if (!factoryId) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "factoryId",
         ...IssueEntityFactoryAsset_Exception_Detail,
       });
     }
 
     if (!baseHelper.isString(factoryId)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `factoryId ${factoryId}`,
         type: "string",
         ...IssueEntityFactoryAsset_Exception_Detail,
@@ -196,7 +185,7 @@ export class IssueEntityFactoryTransactionFactory extends TransactionFactory<Iss
 
     const len = factoryId.length;
     if (len < 3 || len > 15) {
-      throw new ArgumentIllegalException(NOT_IN_EXPECTED_RANGE, {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_IN_EXPECTED_RANGE, {
         prop: `factoryId ${factoryId}`,
         type: "string length",
         min: 3,
@@ -206,7 +195,7 @@ export class IssueEntityFactoryTransactionFactory extends TransactionFactory<Iss
     }
 
     if (!baseHelper.isLowerCaseLetterOrNumber(factoryId)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `factoryId ${factoryId}`,
         type: "lowercase letter or number",
         ...IssueEntityFactoryAsset_Exception_Detail,
@@ -214,7 +203,7 @@ export class IssueEntityFactoryTransactionFactory extends TransactionFactory<Iss
     }
 
     if (!baseHelper.isPositiveInteger(numberOfEntities)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `numberOfEntities ${numberOfEntities}`,
         type: "positive integer",
         IssueEntityFactoryAsset_Exception_Detail,
@@ -222,14 +211,14 @@ export class IssueEntityFactoryTransactionFactory extends TransactionFactory<Iss
     }
 
     if (!entityFrozenAssetPrealnum) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "entityFrozenAssetPrealnum",
         ...IssueEntityFactoryAsset_Exception_Detail,
       });
     }
 
     if (!baseHelper.isValidAssetPrealnum(entityFrozenAssetPrealnum)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `entityFrozenAssetPrealnum ${entityFrozenAssetPrealnum}`,
         type: "string number",
         ...IssueEntityFactoryAsset_Exception_Detail,
@@ -237,14 +226,14 @@ export class IssueEntityFactoryTransactionFactory extends TransactionFactory<Iss
     }
 
     if (!purchaseAssetPrealnum) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "purchaseAssetPrealnum",
         ...IssueEntityFactoryAsset_Exception_Detail,
       });
     }
 
     if (!baseHelper.isValidAssetPrealnum(purchaseAssetPrealnum)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `purchaseAssetPrealnum ${purchaseAssetPrealnum}`,
         type: "string number",
         ...IssueEntityFactoryAsset_Exception_Detail,

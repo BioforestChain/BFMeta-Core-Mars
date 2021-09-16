@@ -9,15 +9,7 @@ import {
   AsymmetricHelper,
   BlockBaseStatisticsHelper,
 } from "@bfchain/core-helper";
-import {
-  CoreExceptionGenerator,
-  PROP_IS_INVALID,
-  NOT_MATCH,
-  PROP_SHOULD_LTE_FIELD,
-  PROP_SHOULD_EQ_FIELD,
-  NOT_EXIST,
-  PROP_IS_REQUIRE,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { Injectable, Inject, ModuleStroge } from "@bfchain/util";
 import { BlockGeneratorCalculator } from "./blockGeneratorCalculator";
 import { CommonBlockVerify } from "./commonBlockVerify";
@@ -94,32 +86,29 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
   ) {
     await super.verifyBlockBody(body, roundLastBlockAsset, config);
 
-    const Function_Exception_Detail = { function: "verifyBlockBody" };
-
     const roundLastAsset = roundLastBlockAsset.roundLastAsset;
 
     const RoundLastBlockAsset_Exception_Detail = {
       target: "roundLastBlockAsset",
-      ...Function_Exception_Detail,
     };
 
     const { baseHelper } = this;
     if (!roundLastAsset.nextRoundDelegates) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "nextRoundDelegates",
         ...RoundLastBlockAsset_Exception_Detail,
       });
     }
 
     if (!roundLastAsset.newDelegates) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "newDelegates",
         ...RoundLastBlockAsset_Exception_Detail,
       });
     }
 
     if (!baseHelper.isValidAssetNumber(roundLastAsset.maxBeginBalance)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "maxBeginBalance",
         type: "asset number",
         ...RoundLastBlockAsset_Exception_Detail,
@@ -127,7 +116,7 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
     }
 
     if (!baseHelper.isNaturalNumber(roundLastAsset.maxTxCount)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `maxTxCount ${roundLastAsset.maxTxCount}`,
         type: "block maxTxCount",
         ...RoundLastBlockAsset_Exception_Detail,
@@ -135,7 +124,7 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
     }
 
     if (!baseHelper.isValidChainOnChainHash(roundLastAsset.hash)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `chainOnChainHash ${roundLastAsset.hash}`,
         type: "chainOnChainHash",
         ...RoundLastBlockAsset_Exception_Detail,
@@ -143,7 +132,7 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
     }
 
     if (!baseHelper.isString(roundLastAsset.rate)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `rate ${roundLastAsset.rate}`,
         type: "rate",
         ...RoundLastBlockAsset_Exception_Detail,
@@ -188,10 +177,9 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
       if (!transactionGetterHelper) {
         transactionGetterHelper = this.moduleMap.get("transactionGetterHelper");
         if (!transactionGetterHelper) {
-          throw new NoFoundException(NOT_EXIST, {
+          throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
             prop: "transactionGetterHelper",
             target: "moduleStroge",
-            function: "replayBlock",
           });
         }
       }
@@ -208,10 +196,9 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
       if (!blockGetterHelper) {
         blockGetterHelper = this.moduleMap.get("blockGetterHelper");
         if (!blockGetterHelper) {
-          throw new NoFoundException(NOT_EXIST, {
+          throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
             prop: "blockGetterHelper",
             target: "moduleStroge",
-            function: "replayBlock",
           });
         }
       }
@@ -240,20 +227,18 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
     // 大于第一轮
     if (height > blockPerRound) {
       if (delegateCount > maxDelegateTxsPerRound) {
-        throw new ConsensusException(PROP_SHOULD_LTE_FIELD, {
+        throw new ConsensusException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
           prop: `delegateCount ${delegateCount}`,
           target: "block",
           field: `maxDelegateTxsPerRound ${maxDelegateTxsPerRound}`,
-          function: "checkNewDelegates",
         });
       }
     } else {
       if (delegates !== delegateCount) {
-        throw new ConsensusException(PROP_SHOULD_EQ_FIELD, {
+        throw new ConsensusException(ERROR_LIST.PROP_SHOULD_EQ_FIELD, {
           prop: `number of newDelegates ${delegateCount}`,
           target: "newDelegates",
           field: delegates,
-          function: "checkNewDelegates",
         });
       }
     }
@@ -271,30 +256,25 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
     newDelegates: string[],
     transactionGetterHelper: Pick<BFChainCore.TransactionGetterHelperInterface, "getNewDelegates">,
   ) {
-    const Function_Exception_Detail = {
-      function: "isValidNewDelegates",
-    } as const;
     // 校验新注册的受托人
     const calcNewDelegates = await this.checkNewDelegates(height, transactionGetterHelper);
     const newDelegatesLength = newDelegates.length;
     if (newDelegatesLength !== calcNewDelegates.length) {
-      throw new ConsensusException(NOT_MATCH, {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `number of new delegates ${newDelegatesLength}`,
         be_compare_prop: `number of new delegates ${calcNewDelegates.length}`,
         to_target: "block",
         be_target: "calculate",
-        ...Function_Exception_Detail,
       });
     }
     // 校验新注册的受托人是否与区块携带的一致
     for (let i = 0; i < newDelegatesLength; i++) {
       if (newDelegates[i] !== calcNewDelegates[i]) {
-        throw new ConsensusException(NOT_MATCH, {
+        throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
           to_compare_prop: `new delegates ${newDelegates[i]}`,
           be_compare_prop: `new delegates ${calcNewDelegates[i]}`,
           to_target: "block",
           be_target: "calculate",
-          ...Function_Exception_Detail,
         });
       }
     }
@@ -314,12 +294,11 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
   ) {
     const calcHash = await this.blockHelper.calcChainOnChainHash(height, blockGetterHelper);
     if (calcHash !== hash) {
-      throw new ConsensusException(NOT_MATCH, {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `remark hash ${hash}`,
         be_compare_prop: `remark hash ${calcHash}`,
         to_target: "block",
         be_target: "calculate",
-        function: "checkRemarkHash",
       });
     }
   }
@@ -336,9 +315,6 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
       Pick<BFChainCore.BlockGetterHelperInterface, "getNewForgingDelegates" | "getLastBlock">
     >,
   ) {
-    const Function_Exception_Detail = {
-      function: "checkNewForgingDelegates",
-    } as const;
     const calcNextRoundDelegates = await blockGetterHelper.getNewForgingDelegates(
       await blockGetterHelper.getLastBlock(),
       block.generatorPublicKey,
@@ -346,12 +322,11 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
     const nextRoundDelegates = block.asset.roundLastAsset.nextRoundDelegates;
     const delegateLength = calcNextRoundDelegates.length;
     if (delegateLength !== nextRoundDelegates.length) {
-      throw new ConsensusException(NOT_MATCH, {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `nextRoundDelegates length ${nextRoundDelegates.length}`,
         be_compare_prop: `nextRoundDelegates length ${calcNextRoundDelegates.length}`,
         to_target: "block remark",
         be_target: "calculate",
-        ...Function_Exception_Detail,
       });
     }
 
@@ -359,22 +334,20 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
       const { address, vote } = calcNextRoundDelegates[i];
       const nextRoundDelegate = nextRoundDelegates[i];
       if (nextRoundDelegate.address !== address) {
-        throw new ConsensusException(NOT_MATCH, {
+        throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
           to_compare_prop: `nextRoundDelegates index ${i} address ${nextRoundDelegate.address}`,
           be_compare_prop: `nextRoundDelegates index ${i} address ${address}`,
           to_target: "block remark",
           be_target: "calculate",
-          ...Function_Exception_Detail,
         });
       }
       const calcEquity = vote.toString();
       if (nextRoundDelegate.equity !== calcEquity) {
-        throw new ConsensusException(NOT_MATCH, {
+        throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
           to_compare_prop: `nextRoundDelegates index ${i} address ${nextRoundDelegate.address} equity ${nextRoundDelegate.equity}`,
           be_compare_prop: `nextRoundDelegates index ${i} address ${address} equity ${calcEquity}`,
           to_target: "block remark",
           be_target: "calculate",
-          ...Function_Exception_Detail,
         });
       }
     }
@@ -387,26 +360,21 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
    * @param tickResult
    */
   checkMaxBeginBalanceAndMaxTxCount(block: RoundLastBlock, tickResult: BFChainCore.TickResultInfo) {
-    const Function_Exception_Detail = {
-      function: "checkMaxBeginBalanceAndMaxTxCount",
-    } as const;
     const roundLastAsset = block.asset.roundLastAsset;
     if (roundLastAsset.maxBeginBalance !== tickResult.maxBeginBalance) {
-      throw new ConsensusException(NOT_MATCH, {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `maxBeginBalance ${roundLastAsset.maxBeginBalance}`,
         be_compare_prop: `maxBeginBalance ${tickResult.maxBeginBalance}`,
         to_target: "block remark",
         be_target: "calculate",
-        ...Function_Exception_Detail,
       });
     }
     if (roundLastAsset.maxTxCount !== tickResult.maxTxCount) {
-      throw new ConsensusException(NOT_MATCH, {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `maxTxCount ${roundLastAsset.maxTxCount}`,
         be_compare_prop: `maxTxCount ${tickResult.maxTxCount}`,
         to_target: "block remark",
         be_target: "calculate",
-        ...Function_Exception_Detail,
       });
     }
   }

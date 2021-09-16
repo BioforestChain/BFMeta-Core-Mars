@@ -1,9 +1,5 @@
 import { Injectable } from "@bfchain/util-dep-inject";
-import {
-  CoreExceptionGenerator,
-  PROP_IS_REQUIRE,
-  PROP_IS_INVALID,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { V2_GenesisBlockFactory } from "@bfchain/core-patch-v2";
 
 const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "GenesisBlockFactory");
@@ -27,14 +23,13 @@ export class V4_GenesisBlockFactory extends V2_GenesisBlockFactory {
 
     const GenesisBlockAsset_Exception_Detail = {
       target: "genesisAsset",
-      function: "verifyBlockBody",
     };
 
     const { issueEntityFactoryMinChainAsset, maxMultipleOfEntityAndMainAsset } =
       genesisBlockAsset.genesisAsset;
 
     if (!issueEntityFactoryMinChainAsset) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "issueEntityFactoryMinChainAsset",
         ...GenesisBlockAsset_Exception_Detail,
       });
@@ -42,21 +37,21 @@ export class V4_GenesisBlockFactory extends V2_GenesisBlockFactory {
 
     // 跳过 空串 和 undefined
     if (!baseHelper.isValidAssetNumber(issueEntityFactoryMinChainAsset)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `issueEntityFactoryMinChainAsset ${issueEntityFactoryMinChainAsset}`,
         ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
     if (!maxMultipleOfEntityAndMainAsset) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "maxMultipleOfEntityAndMainAsset",
         ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
     if (!baseHelper.isPositiveBigFloatNotContainZero(maxMultipleOfEntityAndMainAsset)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `maxMultipleOfEntityAndMainAsset ${maxMultipleOfEntityAndMainAsset}`,
         ...GenesisBlockAsset_Exception_Detail,
       });

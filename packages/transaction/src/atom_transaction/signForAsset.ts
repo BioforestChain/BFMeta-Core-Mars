@@ -7,15 +7,7 @@ import {
   ConfigHelper,
   ChainAssetInfoHelper,
 } from "@bfchain/core-helper";
-import {
-  CoreExceptionGenerator,
-  PARAM_LOST,
-  PROP_IS_REQUIRE,
-  PROP_IS_INVALID,
-  SHOULD_BE,
-  NOT_MATCH,
-  PERMISSION_DENIED,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { TrustAssetTransactionFactory } from "./trustAsset";
 import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
@@ -72,7 +64,6 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
 
     const Function_Exception_Detail = {
       target: "body",
-      function: "verifyTransactionBody",
     } as const;
 
     this.emptyRangeType(body, Function_Exception_Detail);
@@ -82,7 +73,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
     const recipientId = body.recipientId;
 
     if (!recipientId) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "recipientId",
         ...Function_Exception_Detail,
       });
@@ -91,7 +82,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
     const senderId = body.senderId;
 
     // if (senderId === recipientId) {
-    //   throw new ArgumentIllegalException(SHOULD_NOT_BE, {
+    //   throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
     //     to_compare_prop: "senderId",
     //     to_target: "body",
     //     be_compare_prop: "recipientId",
@@ -100,7 +91,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
     // }
 
     if (body.fromMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -109,7 +100,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
     }
 
     if (body.toMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -118,7 +109,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
     }
 
     if (!body.storage) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "storage",
         ...Function_Exception_Detail,
       });
@@ -126,7 +117,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
 
     const storage = body.storage;
     if (storage.key !== "transactionSignature") {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `storage.key ${storage.key}`,
         to_target: "storage",
         be_compare_prop: "transactionSignature",
@@ -142,22 +133,21 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
     const signForAsset = signForAssetAsset.signForAsset;
 
     if (!signForAsset) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "signForAsset",
-        function: "verifyTransactionBody",
       });
     }
 
     const { trustAsset, trustSenderId, trustRecipientId, transactionSignature } = signForAsset;
     if (!transactionSignature) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "transactionSignature",
         ...SignForAssetAsset_Exception_Detail,
       });
     }
 
     if (!baseHelper.isValidSignature(transactionSignature)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `transactionSignature ${transactionSignature}`,
         type: "transaction signature",
         ...SignForAssetAsset_Exception_Detail,
@@ -165,7 +155,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
     }
 
     if (storage.value !== transactionSignature) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `storage.value ${storage.value}`,
         be_compare_prop: `transactionSignature ${transactionSignature}`,
         to_target: "storage",
@@ -175,14 +165,14 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
     }
 
     if (!trustSenderId) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "trustSenderId",
         ...SignForAssetAsset_Exception_Detail,
       });
     }
 
     if (!(await accountBaseHelper.isAddress(trustSenderId))) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `trustSenderId ${trustSenderId}`,
         type: "account address",
         ...Function_Exception_Detail,
@@ -191,14 +181,14 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
     }
 
     if (!trustRecipientId) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "trustRecipientId",
         ...SignForAssetAsset_Exception_Detail,
       });
     }
 
     if (!(await accountBaseHelper.isAddress(trustRecipientId))) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `trustRecipientId ${trustRecipientId}`,
         type: "account address",
         ...SignForAssetAsset_Exception_Detail,
@@ -206,7 +196,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
     }
 
     if (recipientId !== trustRecipientId) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `recipientId ${recipientId}`,
         to_target: "body",
         be_compare_prop: `trustRecipientId ${trustRecipientId}`,
@@ -226,7 +216,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
     tempTrustees[tempTrustees.length] = trustRecipientId;
 
     if (!tempTrustees.includes(senderId)) {
-      throw new ArgumentIllegalException(PERMISSION_DENIED, {
+      throw new ArgumentIllegalException(ERROR_LIST.PERMISSION_DENIED, {
         operationName: `sign for asset ${transactionSignature}`,
         ...SignForAssetAsset_Exception_Detail,
       });

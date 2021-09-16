@@ -5,7 +5,7 @@ import {
   AccountBaseHelper,
   JSBIHelper,
 } from "@bfchain/core-helper";
-import { CoreExceptionGenerator, NOT_EXIST, PROP_IS_INVALID } from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { Injectable, Inject } from "@bfchain/util";
 import { BlockGeneratorCalculator } from "@bfchain/core-block";
 import type { Block } from "@bfchain/core-model-block";
@@ -65,21 +65,16 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
     height: number,
     blockGetterHelper = this.blockGetterHelper,
   ) {
-    const Function_Exception_Detail = {
-      function: "getVoteForDelegate",
-    } as const;
     if (!blockGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "blockGetterHelper",
         target: "moduleStroge",
-        ...Function_Exception_Detail,
       });
     }
     if (typeof blockGetterHelper.getVoteForDelegate !== "function") {
-      throw new ConsensusException(PROP_IS_INVALID, {
+      throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "getVoteForDelegate",
         target: "blockGetterHelper",
-        ...Function_Exception_Detail,
       });
     }
     const voterArray = await blockGetterHelper.getVoteForDelegate(generatorAddress, height);
@@ -107,14 +102,10 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
    * @param blockGetterHelper
    */
   async calcForgingAndVotingReward(block: T, blockGetterHelper = this.blockGetterHelper) {
-    const Function_Exception_Detail = {
-      function: "calcForgingAndVotingReward",
-    } as const;
     if (!blockGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "blockGetterHelper",
         target: "moduleStroge",
-        ...Function_Exception_Detail,
       });
     }
 
@@ -151,10 +142,9 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
     blockTickGetterHelper = this.blockTickGetterHelper,
   ) {
     if (!blockTickGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "blockGetterHelper",
         target: "moduleStroge",
-        function: "updateForgingAndVotingAccount",
       });
     }
     const { voters, totalEquity } = blockUpdateData;

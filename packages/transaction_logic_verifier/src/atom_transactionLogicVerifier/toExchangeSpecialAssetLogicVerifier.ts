@@ -5,11 +5,7 @@ import {
   SPECIAL_ASSET_TYPE,
 } from "@bfchain/core-model";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
-import {
-  CoreExceptionGenerator,
-  ONLY_TOP_LEVEL_LOCATION_NAME_CAN_EXCHANGE,
-  PROP_IS_INVALID,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 
 const { ConsensusException } = CoreExceptionGenerator(
   "VERIFIER",
@@ -32,10 +28,6 @@ export class ToExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const Function_Exception_Detail = {
-      function: "verify",
-    } as const;
-
     const toExchangeSpecialAssetAsset = transaction.asset.toExchangeSpecialAsset;
     const {
       toExchangeChainName,
@@ -64,10 +56,9 @@ export class ToExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
         accountGetterHelper,
       );
     } else {
-      throw new ConsensusException(PROP_IS_INVALID, {
+      throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "exchangeDirection",
         target: "toExchangeSpecialAssetAsset",
-        ...Function_Exception_Detail,
       });
     }
 
@@ -94,9 +85,7 @@ export class ToExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
         exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME &&
         beExchangeAsset.split(",").length > 2
       ) {
-        throw new ConsensusException(ONLY_TOP_LEVEL_LOCATION_NAME_CAN_EXCHANGE, {
-          ...Function_Exception_Detail,
-        });
+        throw new ConsensusException(ERROR_LIST.ONLY_TOP_LEVEL_LOCATION_NAME_CAN_EXCHANGE);
       }
       eventLogicVerifier.listenEventFrozenAsset(cloneAccountsAssets, eventEmitter);
     } else {

@@ -7,14 +7,7 @@ import {
   ConfigHelper,
   ChainAssetInfoHelper,
 } from "@bfchain/core-helper";
-import {
-  CoreExceptionGenerator,
-  PARAM_LOST,
-  NOT_MATCH,
-  PROP_IS_REQUIRE,
-  SHOULD_BE,
-  SHOULD_NOT_BE,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { DAppTransactionFactory } from "./dapp";
 import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
@@ -54,20 +47,19 @@ export class DAppPurchasingTransactionFactory extends TransactionFactory<DAppPur
 
     const Function_Exception_Detail = {
       target: "body",
-      function: "verifyTransactionBody",
     } as const;
 
     this.emptyRangeType(body, Function_Exception_Detail);
 
     const recipientId = body.recipientId;
     if (!recipientId) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "recipientId",
         ...Function_Exception_Detail,
       });
     }
     // if (body.senderId === recipientId) {
-    //   throw new ArgumentIllegalException(SHOULD_NOT_BE, {
+    //   throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
     //     to_compare_prop: "senderId",
     //     to_target: "body",
     //     be_compare_prop: "recipientId",
@@ -76,7 +68,7 @@ export class DAppPurchasingTransactionFactory extends TransactionFactory<DAppPur
     // }
 
     if (body.fromMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -85,7 +77,7 @@ export class DAppPurchasingTransactionFactory extends TransactionFactory<DAppPur
     }
 
     if (body.toMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -94,7 +86,7 @@ export class DAppPurchasingTransactionFactory extends TransactionFactory<DAppPur
     }
 
     if (!body.storage) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "storage",
         ...Function_Exception_Detail,
       });
@@ -102,7 +94,7 @@ export class DAppPurchasingTransactionFactory extends TransactionFactory<DAppPur
 
     const storage = body.storage;
     if (storage.key !== "dappid") {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `storage.key ${storage.key}`,
         to_target: "storage",
         be_compare_prop: "dappid",
@@ -113,9 +105,8 @@ export class DAppPurchasingTransactionFactory extends TransactionFactory<DAppPur
     const dappPurchasing = dappPurchasingAsset.dappPurchasing;
 
     if (!dappPurchasing) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "dappPurchasing",
-        function: "verifyTransactionBody",
       });
     }
 
@@ -129,7 +120,7 @@ export class DAppPurchasingTransactionFactory extends TransactionFactory<DAppPur
     this.dappTransactionFactory.verifyDAppAsset(dappAsset);
 
     if (storage.value !== dappAsset.dappid) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `storage.value ${storage.value}`,
         be_compare_prop: `dappid ${dappAsset.dappid}`,
         to_target: "storage",
@@ -139,7 +130,7 @@ export class DAppPurchasingTransactionFactory extends TransactionFactory<DAppPur
     }
 
     if (dappAsset.type !== DAPP_TYPE.PAID_APP) {
-      throw new ArgumentIllegalException(SHOULD_NOT_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
         to_compare_prop: `type ${dappAsset.type}`,
         to_target: "dappAsset",
         be_compare_prop: DAPP_TYPE.PAID_APP,

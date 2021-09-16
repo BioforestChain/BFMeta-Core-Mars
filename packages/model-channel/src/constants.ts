@@ -126,6 +126,10 @@ export enum NewTransactionRefuseReason {
   ENTITY_NOT_EXIST,
   /**账户不是 entity 拥有者 */
   ACCOUNT_NOT_ENTITY_POSSESSOR,
+  /**受托人拒绝收票 */
+  DELEGATE_IS_ALREADY_ACCEPT_VOTE,
+  /**账户不是 entity 拥有者 */
+  ACCOUNT_NOT_DAPPID_POSSESSOR,
 }
 
 export enum DUPLEX_API_CMD {

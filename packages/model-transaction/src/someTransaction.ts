@@ -1,7 +1,6 @@
 import type { Transaction } from "@bfchain/core-model-transaction-base";
 import { Type, Field, Message } from "@bfchain/protobuf";
-import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
-import { INVALID_TRANSACTION_BASE_TYPE } from "@bfchain/core-util-exception-errorcode";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 
 import * as ATOM_TRS from "./atom_transaction";
 
@@ -174,7 +173,7 @@ export class SomeTransactionModel<T extends BFChainCore.Transaction = BFChainCor
     if (!trs) {
       const Model = TRANSACTION_TYPES_MAP.VM.get(this._trs_base_type);
       if (!Model) {
-        throw new ArgumentFormatException(INVALID_TRANSACTION_BASE_TYPE, {
+        throw new ArgumentFormatException(ERROR_LIST.INVALID_TRANSACTION_BASE_TYPE, {
           base_type: this._trs_base_type,
         });
       }
@@ -187,7 +186,7 @@ export class SomeTransactionModel<T extends BFChainCore.Transaction = BFChainCor
   set transaction(trs: T) {
     const base_type = TRANSACTION_TYPES_MAP.trsTypeToV(trs.type);
     if (!TRANSACTION_TYPES_MAP.VK.has(base_type)) {
-      throw new ArgumentFormatException(INVALID_TRANSACTION_BASE_TYPE, { base_type });
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_TRANSACTION_BASE_TYPE, { base_type });
     }
     if (Object.isFrozen(this)) {
       throw new IllegalStateException("Transaction is in unchangable states.");
@@ -213,7 +212,7 @@ export class SomeTransactionModel<T extends BFChainCore.Transaction = BFChainCor
             const base_type = TRANSACTION_TYPES_MAP.trsTypeToV(type);
             const ModelCtor = TRANSACTION_TYPES_MAP.VM.get(base_type);
             if (!ModelCtor) {
-              throw new ArgumentFormatException(INVALID_TRANSACTION_BASE_TYPE, {
+              throw new ArgumentFormatException(ERROR_LIST.INVALID_TRANSACTION_BASE_TYPE, {
                 type_base: base_type,
               });
             }

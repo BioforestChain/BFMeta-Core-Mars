@@ -1,12 +1,7 @@
 import { VoteTransaction, NewTransactionRefuseReason } from "@bfchain/core-model";
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
-import {
-  CoreExceptionGenerator,
-  ACCOUNT_IS_NOT_AN_DELEGATE,
-  DELEGATE_IS_ALREADY_REJECT_VOTE,
-  NOT_FOUND,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
@@ -29,10 +24,6 @@ export class VoteLogicVerifier extends TransactionLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const Function_Exception_Detail = {
-      function: "verify",
-    } as const;
-
     const { sender, recipient, curRound } = await this.logicVerify(
       transaction,
       currentBlockHeight,
@@ -64,9 +55,8 @@ export class VoteLogicVerifier extends TransactionLogicVerifier {
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     if (!recipient) {
-      throw new NoFoundException(NOT_FOUND, {
+      throw new NoFoundException(ERROR_LIST.NOT_FOUND, {
         prop: `recipient ${transaction.recipientId}`,
-        ...Function_Exception_Detail,
       });
     }
     await this.isVoteForAcceptVoteDelegate(recipient);
@@ -80,25 +70,19 @@ export class VoteLogicVerifier extends TransactionLogicVerifier {
    * @param recipient
    */
   private async isVoteForAcceptVoteDelegate(recipient: BFChainCore.AccountInfoAndAssets) {
-    const Function_Exception_Detail = {
-      function: "isVoteForAcceptVoteDelegate",
-    } as const;
-
     const accountInfo = recipient.accountInfo;
 
     if (!accountInfo.isDelegate) {
-      throw new ConsensusException(ACCOUNT_IS_NOT_AN_DELEGATE, {
+      throw new ConsensusException(ERROR_LIST.ACCOUNT_IS_NOT_AN_DELEGATE, {
         address: accountInfo.address,
         errorId: NewTransactionRefuseReason.ACCOUNT_IS_NOT_AN_DELEGATE,
-        ...Function_Exception_Detail,
       });
     }
 
     if (!accountInfo.isAcceptVote) {
-      throw new ConsensusException(DELEGATE_IS_ALREADY_REJECT_VOTE, {
+      throw new ConsensusException(ERROR_LIST.DELEGATE_IS_ALREADY_REJECT_VOTE, {
         address: accountInfo.address,
         errorId: NewTransactionRefuseReason.DELEGATE_IS_ALREADY_REJECT_VOTE,
-        ...Function_Exception_Detail,
       });
     }
   }
