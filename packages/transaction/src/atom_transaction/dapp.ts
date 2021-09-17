@@ -175,7 +175,7 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
       });
     }
 
-    if (!baseHelper.isUpperCaseOrNumber(dappid)) {
+    if (!baseHelper.isUpperCaseLetterOrNumber(dappid)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: `dappid ${dappid}`,
         type: "uppercase or number",

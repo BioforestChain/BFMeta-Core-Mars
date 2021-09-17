@@ -822,7 +822,7 @@ export class BaseHelper {
         return false;
       }
       if (i === len - 2) {
-        if (!this.isLowerCase(item)) {
+        if (!this.isLowerCaseLetter(item)) {
           return false;
         }
       } else if (i === len - 1) {
@@ -832,11 +832,11 @@ export class BaseHelper {
         }
       } else {
         if (item.length <= 2) {
-          if (!this.isLowerCaseOrNumber(item)) {
+          if (!this.isLowerCaseLetterOrNumber(item)) {
             return false;
           }
         } else {
-          if (!this.isLowerCaseOrNumberOrUnderline(item)) {
+          if (!this.isLowerCaseLetterOrNumberOrUnderline(item)) {
             return false;
           }
         }
@@ -1001,8 +1001,17 @@ export class BaseHelper {
    *
    * @param value
    */
-  isLowerCase(value: string) {
+  isLowerCaseLetter(value: string) {
     return this.isString(value) && /^[a-z]+$/.test(value);
+  }
+
+  /**
+   * 是否时纯大写字母
+   *
+   * @param value
+   */
+  isUpperCaseLetter(value: string) {
+    return this.isString(value) && /^[A-Z]+$/.test(value);
   }
 
   /**
@@ -1010,7 +1019,7 @@ export class BaseHelper {
    *
    * @param value
    */
-  isUpperCaseOrNumber(value: string) {
+  isUpperCaseLetterOrNumber(value: string) {
     return this.isString(value) && /^[A-Z0-9]+$/.test(value);
   }
 
@@ -1019,7 +1028,7 @@ export class BaseHelper {
    *
    * @param value
    */
-  isUpperCaseOrLowerCase(value: string) {
+  isUpperCaseOrLowerCaseLetter(value: string) {
     return this.isString(value) && /^[A-Za-z]+$/.test(value);
   }
 
@@ -1028,7 +1037,7 @@ export class BaseHelper {
    *
    * @param value
    */
-  isUpperCaseOrLowerCaseOrNumber(value: string) {
+  isUpperCaseOrLowerCaseLetterOrNumber(value: string) {
     return this.isString(value) && /^[A-Za-z0-9]+$/.test(value);
   }
 
@@ -1042,11 +1051,11 @@ export class BaseHelper {
   }
 
   /**
-   * 字母或数字
+   * 小写字母或数字
    *
    * @param value
    */
-  isLowerCaseOrNumber(value: string) {
+  isLowerCaseLetterOrNumber(value: string) {
     return /^[a-z0-9]+$/.test(value);
   }
 
@@ -1055,7 +1064,7 @@ export class BaseHelper {
    *
    * @param value
    */
-  isLowerCaseOrNumberOrUnderline(value: string) {
+  isLowerCaseLetterOrNumberOrUnderline(value: string) {
     return /^[a-z0-9][a-z0-9_]*[a-z0-9]+$/.test(value);
   }
 

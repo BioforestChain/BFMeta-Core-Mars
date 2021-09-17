@@ -193,7 +193,7 @@ export class IssueEntityFactoryTransactionFactory extends TransactionFactory<Iss
       });
     }
 
-    if (!baseHelper.isLowerCaseOrNumber(factoryId)) {
+    if (!baseHelper.isLowerCaseLetterOrNumber(factoryId)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: `factoryId ${factoryId}`,
         type: "lowercase letter or number",

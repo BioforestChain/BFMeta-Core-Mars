@@ -175,7 +175,7 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
       });
     }
 
-    if (!baseHelper.isUpperCaseString(assetType)) {
+    if (!baseHelper.isUpperCaseLetter(assetType)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: `assetType ${assetType}`,
         type: "uppercase",

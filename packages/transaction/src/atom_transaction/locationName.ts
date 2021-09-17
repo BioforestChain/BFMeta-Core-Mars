@@ -188,7 +188,7 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
       }
       if (i === namesLength - 2) {
         // 顶级位名必须是小写字母
-        if (!baseHelper.isLowerCase(lnsName)) {
+        if (!baseHelper.isLowerCaseLetter(lnsName)) {
           throw new ArgumentIllegalException(PROP_IS_INVALID, {
             prop: `name ${lnsName}`,
             type: "lowercase",
@@ -207,7 +207,7 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
         }
       } else {
         if (lnsName.length <= 2) {
-          if (!baseHelper.isLowerCaseOrNumber(lnsName)) {
+          if (!baseHelper.isLowerCaseLetterOrNumber(lnsName)) {
             throw new ArgumentIllegalException(PROP_IS_INVALID, {
               prop: `name ${lnsName}`,
               type: "lowercase letter or number",
@@ -215,7 +215,7 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
             });
           }
         } else {
-          if (!baseHelper.isLowerCaseOrNumberOrUnderline(lnsName)) {
+          if (!baseHelper.isLowerCaseLetterOrNumberOrUnderline(lnsName)) {
             throw new ArgumentIllegalException(PROP_IS_INVALID, {
               prop: `name ${lnsName}`,
               type: "lowercase letter or number or underline",
