@@ -585,7 +585,8 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
 
     /**发往每一台节点的查询数量 */
     const unitLength =
-      queryUnitLength || (totalLength ? totalLength / (this.chainChannelSet.size || 1) : 100);
+      queryUnitLength ||
+      (totalLength ? Math.ceil(totalLength / (this.chainChannelSet.size || 1)) : 100);
 
     /// 在异步任务中进行任务分发
     (async () => {
@@ -775,7 +776,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
         task_limit = await doTask(task_offset, default_task_limit);
 
         if (i + task_limit > limit) {
-          task_limit = i + task_limit - limit;
+          task_limit = limit - i;
           if (task_limit <= 0) {
             break;
           }
@@ -887,7 +888,8 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
 
     /**发往每一台节点的查询数量 */
     const unitLength =
-      queryUnitLength || (totalLength ? totalLength / (this.chainChannelSet.size || 1) : 100);
+      queryUnitLength ||
+      (totalLength ? Math.ceil(totalLength / (this.chainChannelSet.size || 1)) : 100);
 
     /// 在异步任务中进行任务分发
     (async () => {
@@ -1077,7 +1079,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
         task_limit = await doTask(task_offset, default_task_limit);
 
         if (i + task_limit > limit) {
-          task_limit = i + task_limit - limit;
+          task_limit = limit - i;
           if (task_limit <= 0) {
             break;
           }
