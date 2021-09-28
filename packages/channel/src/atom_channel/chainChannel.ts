@@ -1051,7 +1051,7 @@ export class ChainChannel<
                   // 强制不传输交易
                   const proxyBlock = new Proxy<Block>(Block.fromObject(block), {
                     get(t, p, r) {
-                      if (p === "transactions") {
+                      if (p === "transactions" || p === "transactionBufferList") {
                         return [];
                       }
                       return Reflect.get(t, p, r);
