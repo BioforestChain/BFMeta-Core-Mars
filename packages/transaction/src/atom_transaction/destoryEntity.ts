@@ -273,4 +273,25 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
       }
     });
   }
+
+  /**
+   * 获取变动的权益数
+   *
+   * @param transaction
+   * @param argv
+   * @returns
+   */
+  getMoveAmount(
+    transaction: DestoryEntityTransaction,
+    argv = {
+      magic: this.configHelper.magic,
+      assetType: this.configHelper.assetType,
+    },
+  ) {
+    const { sourceChainMagic, entityFrozenAssetPrealnum } = transaction.asset.destoryEntity;
+    if (argv.magic === sourceChainMagic && argv.assetType === this.configHelper.assetType) {
+      return entityFrozenAssetPrealnum;
+    }
+    return "0";
+  }
 }

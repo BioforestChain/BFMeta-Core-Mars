@@ -194,4 +194,25 @@ export class DAppPurchasingTransactionFactory extends TransactionFactory<DAppPur
       );
     });
   }
+
+  /**
+   * 获取变动的权益数
+   *
+   * @param transaction
+   * @param argv
+   * @returns
+   */
+  getMoveAmount(
+    transaction: DAppPurchasingTransaction,
+    argv = {
+      magic: this.configHelper.magic,
+      assetType: this.configHelper.assetType,
+    },
+  ) {
+    const { sourceChainMagic, purchaseAsset } = transaction.asset.dappPurchasing.dappAsset;
+    if (argv.magic === sourceChainMagic && argv.assetType === this.configHelper.assetType) {
+      return purchaseAsset || "0";
+    }
+    return "0";
+  }
 }

@@ -428,4 +428,30 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
       }
     });
   }
+
+  /**
+   * 获取变动的权益数
+   *
+   * @param transaction
+   * @param argv
+   * @returns
+   */
+  getMoveAmount(
+    transaction: BeExchangeSpecialAssetTransaction,
+    argv = {
+      magic: this.configHelper.magic,
+      assetType: this.configHelper.assetType,
+    },
+  ) {
+    const { magic, assetType } = argv;
+    const { toExchangeSource, toExchangeAsset, beExchangeAsset, beExchangeSource, exchangeNumber } =
+      transaction.asset.beExchangeSpecialAsset.exchangeSpecialAsset;
+    if (magic === toExchangeSource && assetType === toExchangeAsset) {
+      return exchangeNumber;
+    }
+    if (magic === beExchangeSource && assetType === beExchangeAsset) {
+      return exchangeNumber;
+    }
+    return "0";
+  }
 }

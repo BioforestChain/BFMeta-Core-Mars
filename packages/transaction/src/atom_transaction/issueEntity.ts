@@ -305,4 +305,26 @@ export class IssueEntityTransactionFactory extends TransactionFactory<IssueEntit
       }
     });
   }
+
+  /**
+   * 获取变动的权益数
+   *
+   * @param transaction
+   * @param argv
+   * @returns
+   */
+  getMoveAmount(
+    transaction: IssueEntityTransaction,
+    argv = {
+      magic: this.configHelper.magic,
+      assetType: this.configHelper.assetType,
+    },
+  ) {
+    const { sourceChainMagic, entityFrozenAssetPrealnum, purchaseAssetPrealnum } =
+      transaction.asset.issueEntity.entityFactory;
+    if (argv.magic === sourceChainMagic && argv.assetType === this.configHelper.assetType) {
+      return (BigInt(entityFrozenAssetPrealnum) + BigInt(purchaseAssetPrealnum)).toString();
+    }
+    return "0";
+  }
 }

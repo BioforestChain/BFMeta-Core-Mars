@@ -276,4 +276,25 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
       });
     });
   }
+
+  /**
+   * 获取变动的权益数
+   *
+   * @param transaction
+   * @param argv
+   * @returns
+   */
+  getMoveAmount(
+    transaction: SignForAssetTransaction,
+    argv = {
+      magic: this.configHelper.magic,
+      assetType: this.configHelper.assetType,
+    },
+  ) {
+    const { sourceChainMagic, assetType, amount } = transaction.asset.signForAsset.trustAsset;
+    if (argv.magic === sourceChainMagic && argv.assetType === assetType) {
+      return amount;
+    }
+    return "0";
+  }
 }

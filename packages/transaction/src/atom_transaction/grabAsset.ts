@@ -300,4 +300,26 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
       });
     });
   }
+
+  /**
+   * 获取变动的权益数
+   *
+   * @param transaction
+   * @param argv
+   * @returns
+   */
+  getMoveAmount(
+    transaction: GrabAssetTransaction,
+    argv = {
+      magic: this.configHelper.magic,
+      assetType: this.configHelper.assetType,
+    },
+  ) {
+    const { amount, giftAsset } = transaction.asset.grabAsset;
+    const { sourceChainMagic, assetType } = giftAsset;
+    if (argv.magic === sourceChainMagic && argv.assetType === assetType) {
+      return amount;
+    }
+    return "0";
+  }
 }

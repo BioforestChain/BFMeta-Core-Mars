@@ -316,4 +316,25 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
       });
     });
   }
+
+  /**
+   * 获取变动的权益数
+   *
+   * @param transaction
+   * @param argv
+   * @returns
+   */
+  getMoveAmount(
+    transaction: TrustAssetTransaction,
+    argv = {
+      magic: this.configHelper.magic,
+      assetType: this.configHelper.assetType,
+    },
+  ) {
+    const { sourceChainMagic, assetType, amount } = transaction.asset.trustAsset;
+    if (argv.magic === sourceChainMagic && argv.assetType === assetType) {
+      return amount;
+    }
+    return "0";
+  }
 }

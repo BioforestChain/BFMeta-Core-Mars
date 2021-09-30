@@ -276,4 +276,39 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
       });
     });
   }
+
+  /**
+   * 获取变动的权益数
+   *
+   * @param transaction
+   * @param argv
+   * @returns
+   */
+  getMoveAmount(
+    transaction: ImmigrateAssetTransaction,
+    argv = {
+      magic: this.configHelper.magic,
+      assetType: this.configHelper.assetType,
+    },
+  ) {
+    let migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON;
+    try {
+      migrateCertificate = JSON.parse(transaction.asset.immigrateAsset.migrateCertificate);
+    } catch (e) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "migrateCertificate",
+        target: "transaction.asset.immigrateAsset",
+        function: "getMoveAmount",
+      });
+    }
+    const converter =
+      this.migrateCertificateHelper.getMigrateCertificateConverter(migrateCertificate);
+    const { fromChainId, assetTypeId, assets } = migrateCertificate.body;
+    const fromChain = converter.fromChainId.decode(fromChainId);
+    const assetType = converter.assetTypeId.decode(assetTypeId);
+    if (argv.magic === fromChain.magic && argv.assetType === assetType) {
+      return assets;
+    }
+    return "0";
+  }
 }

@@ -382,6 +382,23 @@ export class TransactionCore {
     }
     return trs_type;
   }
+
+  /**
+   * 获取变动的权益数
+   *
+   * @param transaction
+   * @param argv
+   * @returns
+   */
+  getMoveAmount<T extends Transaction>(
+    transaction: T,
+    argv = {
+      magic: this.config.magic,
+      assetType: this.config.assetType,
+    },
+  ) {
+    return this.getTransactionFactoryFromType(transaction.type).getMoveAmount(transaction, argv);
+  }
 }
 
 /**

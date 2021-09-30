@@ -939,4 +939,21 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
       }
     });
   }
+
+  /**
+   * 获取变动的权益数
+   *
+   * @param transaction
+   * @param argv
+   * @returns
+   */
+  getMoveAmount(
+    transaction: T,
+    argv = {
+      magic: this.configHelper.magic,
+      assetType: this.configHelper.assetType,
+    },
+  ) {
+    return "0";
+  }
 }

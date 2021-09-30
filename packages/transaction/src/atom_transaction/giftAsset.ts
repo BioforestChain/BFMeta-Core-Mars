@@ -325,4 +325,25 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
       });
     });
   }
+
+  /**
+   * 获取变动的权益数
+   *
+   * @param transaction
+   * @param argv
+   * @returns
+   */
+  getMoveAmount(
+    transaction: GiftAssetTransaction,
+    argv = {
+      magic: this.configHelper.magic,
+      assetType: this.configHelper.assetType,
+    },
+  ) {
+    const { sourceChainMagic, assetType, amount } = transaction.asset.giftAsset;
+    if (argv.magic === sourceChainMagic && argv.assetType === assetType) {
+      return amount;
+    }
+    return "0";
+  }
 }

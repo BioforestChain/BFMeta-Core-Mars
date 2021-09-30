@@ -286,4 +286,25 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
       });
     });
   }
+
+  /**
+   * 获取变动的权益数
+   *
+   * @param transaction
+   * @param argv
+   * @returns
+   */
+  getMoveAmount(
+    transaction: IssueAssetTransaction,
+    argv = {
+      magic: this.configHelper.magic,
+      assetType: this.configHelper.assetType,
+    },
+  ) {
+    const { sourceChainMagic, assetType, expectedIssuedAssets } = transaction.asset.issueAsset;
+    if (argv.magic === sourceChainMagic && argv.assetType === assetType) {
+      return expectedIssuedAssets;
+    }
+    return "0";
+  }
 }
