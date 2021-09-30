@@ -395,6 +395,7 @@ declare namespace BFChainCore {
     migrateCertificateId: string;
     assetInfo: AssetInfoJSON;
     assets: string;
+    migrateIdBuffer: Uint8Array;
   };
   /**跨链凭证 */
   type ApplyTransactionMigrateCertificateEvent<EVENTNAME, T extends Transaction = Transaction> =

@@ -271,6 +271,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
           migrateCertificateId: converter.getUUID(migrateCertificate),
           assetInfo,
           assets,
+          migrateIdBuffer: transaction.signatureBuffer,
         },
       });
     });
