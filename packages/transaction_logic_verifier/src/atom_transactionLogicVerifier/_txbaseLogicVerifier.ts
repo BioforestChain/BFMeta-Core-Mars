@@ -1,4 +1,4 @@
-import { Inject, parseHexToArrayBuffer } from "@bfchain/util";
+import { Inject, parseHexToArrayBuffer, EXCEPTION_SEVERIFY } from "@bfchain/util";
 import {
   CoreExceptionGenerator,
   NOT_EXIST,
@@ -293,10 +293,14 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     } as const;
     const applyBlockHeight = tr.applyBlockHeight;
     if (applyBlockHeight > currentBlockHeight) {
-      throw new ConsensusException(INVALID_TRANSACTION_APPLY_BLOCK_HEIGHT, {
-        reason: `applyBlockHeight ${applyBlockHeight} must less than currntBlockHeight ${currentBlockHeight}`,
-        ...Function_Exception_Detail,
-      });
+      throw new ConsensusException(
+        INVALID_TRANSACTION_APPLY_BLOCK_HEIGHT,
+        {
+          reason: `applyBlockHeight ${applyBlockHeight} must less than currntBlockHeight ${currentBlockHeight}`,
+          ...Function_Exception_Detail,
+        },
+        EXCEPTION_SEVERIFY.MINOR,
+      );
     }
   }
 
