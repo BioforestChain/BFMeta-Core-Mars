@@ -299,6 +299,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
           reason: `applyBlockHeight ${applyBlockHeight} must less than currntBlockHeight ${currentBlockHeight}`,
           ...Function_Exception_Detail,
         },
+        undefined,
         EXCEPTION_SEVERIFY.MINOR,
       );
     }
