@@ -26,7 +26,7 @@ export const DEFAULT_CONSTANTS: BFChainCore.DefaultConstantsJSON = {
     // 同步进度
     syncing: 7,
     // 等待打块
-    looping: 8,
+    free: 8,
     // 接收区块中
     receivedBlock: 9,
     // 正在验证收到的区块

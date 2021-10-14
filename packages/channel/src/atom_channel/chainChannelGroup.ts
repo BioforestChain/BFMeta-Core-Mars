@@ -302,6 +302,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
         return false;
       }
       busyChainChannels.add(chainChannel);
+      freeChainChannels.delete(chainChannel);
 
       _tryFreeChainChannel();
       return true;
@@ -320,7 +321,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       try {
         return await cb(event);
       } finally {
-        if (autoFreeChainChannel) {
+        if (event.autoFreeChainChannel) {
           freeChainChannel(chainChannel);
         }
       }

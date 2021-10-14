@@ -53,7 +53,7 @@ declare namespace BFChainCore {
     peerConsensus: number;
     unBanSetInterval: number;
     syncing: number;
-    looping: number;
+    free: number;
     receivedBlock: number;
     verifyBlock: number;
     dealTransaction: number;
