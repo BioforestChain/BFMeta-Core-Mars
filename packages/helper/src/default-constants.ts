@@ -9,36 +9,26 @@ export const DEFAULT_CONSTANTS: BFChainCore.DefaultConstantsJSON = {
   // 转换进制
   fixedPoint: 100000000,
   machineStatus: {
-    // 加载模块
-    loadingModules: 0,
+    // 初始化中
+    init: 0,
     /**重启中 */
     restarting: 1,
-    // 加载本地区块，重建区块rebuilding，计算权益相关
-    rebuilding: 2,
-    // 扫描节点
-    peerScan: 3,
-    // 检查是否启动同步
-    checkisync: 4,
-    // ip共识，获取自己的外网ip并保存
-    peerConsensus: 5,
-    // 解禁定时器
-    unBanSetInterval: 6,
-    // 同步进度
-    syncing: 7,
-    // 等待打块
-    free: 8,
-    // 接收区块中
-    receivedBlock: 9,
-    // 正在验证收到的区块
-    verifyBlock: 10,
-    // 正在处理交易
-    dealTransaction: 11,
-    // 正在出块
-    createBlock: 12,
-    // 正在发送区块
-    sendingBlock: 13,
-    // 磁盘空间不足
-    insufficientDiskSpace: 14,
+    // 关闭中
+    closing: 2,
+    // 运行中
+    running: 3,
+  },
+  peerStatus: {
+    // 重建区块链
+    rebuilding: 1,
+    // 同步中
+    syncing: 2,
+    // 空闲状态
+    free: 3,
+    // 锻造区块
+    createBlock: 4,
+    // 回滚区块
+    rollback: 5,
   },
   // 禁用的数字资产名称、缩写
   disableAssetType: [

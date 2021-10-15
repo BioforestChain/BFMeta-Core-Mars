@@ -44,30 +44,34 @@ declare namespace BFChainCore {
 
   // #region
   type MachineStatusJSON = {
-    loadingModules: number;
-    /**重启中... */
+    /**初始化 */
+    init: number;
+    /**重启中 */
     restarting: number;
-    rebuilding: number;
-    peerScan: number;
-    checkisync: number;
-    peerConsensus: number;
-    unBanSetInterval: number;
-    syncing: number;
-    free: number;
-    receivedBlock: number;
-    verifyBlock: number;
-    dealTransaction: number;
-    createBlock: number;
-    sendingBlock: number;
-    insufficientDiskSpace: number;
+    /**关闭中 */
+    closing: number;
+    /**运行中 */
+    running: number;
   };
-
+  type PeerStatusJSON = {
+    /**重建区块链 */
+    rebuilding: number;
+    /**同步区块 */
+    syncing: number;
+    /**空闲 */
+    free: number;
+    /**锻造区块 */
+    createBlock: number;
+    /**回滚区块 */
+    rollback: number;
+  };
   type DefaultConstantsJSON = {
     maxBatchSizeBytes: number;
     genesisAmount: string;
     miniUnit: string;
     fixedPoint: number;
     machineStatus: MachineStatusJSON;
+    peerStatus: PeerStatusJSON;
     disableAssetType: string[];
     preRegisteredLNSName: string[];
     disableLNSName: string[];
