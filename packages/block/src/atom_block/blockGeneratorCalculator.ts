@@ -93,6 +93,9 @@ export class BlockGeneratorCalculator {
       blockGetterHelper?: BFChainCore.BlockGetterHelperSimpleInterface;
       ignoreOfflineGeneraters?: boolean;
       yieldSkip?: number;
+      blockCache?: {
+        [height: number]: BFChainCore.Block;
+      };
     } = {},
   ) {
     const {
@@ -111,23 +114,26 @@ export class BlockGeneratorCalculator {
     /// 1
     const 这一轮已经出来的区块 = [] as BFChainCore.Block[];
     const 当前轮已经锻造的区块数 = currentBlock.height % this.config.blockPerRound;
+    const blockCache = opts.blockCache || {};
     for (let i = 0; i < 当前轮已经锻造的区块数; i++) {
+      const targetHeight = currentBlock.height - i;
       这一轮已经出来的区块.push(
-        await this.blockHelper.forceGetBlockByHeight(currentBlock.height - i, blockGetterHelper),
+        blockCache[targetHeight] ||
+          (await this.blockHelper.forceGetBlockByHeight(targetHeight, blockGetterHelper)),
       );
     }
     /// 2
-    const 上一轮轮末块 = await this.blockHelper.forceGetBlockByHeight<
-      BFChainCore.RoundLastBlock | BFChainCore.GenesisBlock
-    >(
-      Math.max(
-        1,
-        this.blockHelper.calcRoundEndHeight(
-          this.blockHelper.calcRoundByHeight(currentBlock.height + 1) - 1,
-        ),
+    const roundLastBlockHeight = Math.max(
+      1,
+      this.blockHelper.calcRoundEndHeight(
+        this.blockHelper.calcRoundByHeight(currentBlock.height + 1) - 1,
       ),
-      blockGetterHelper,
     );
+    const 上一轮轮末块 =
+      blockCache[roundLastBlockHeight] ||
+      (await this.blockHelper.forceGetBlockByHeight<
+        BFChainCore.RoundLastBlock | BFChainCore.GenesisBlock
+      >(roundLastBlockHeight, blockGetterHelper));
     const 当前轮次 = this.blockHelper.calcRoundByHeight(上一轮轮末块.height + 1);
 
     /**
@@ -154,10 +160,9 @@ export class BlockGeneratorCalculator {
     };
 
     /// 3
-    const 上一个块的信息 = await this.blockHelper.forceGetBlockByHeight(
-      currentBlock.height,
-      blockGetterHelper,
-    );
+    const 上一个块的信息 =
+      blockCache[currentBlock.height] ||
+      (await this.blockHelper.forceGetBlockByHeight(currentBlock.height, blockGetterHelper));
     if (ignoreOfflineGeneraters) {
       if (!Number.isSafeInteger(toTimestamp)) {
         throw new RangeError("toTimestamp must be an integer, when you ignore Offline Generaters.");
@@ -330,5 +335,25 @@ export class BlockGeneratorCalculator {
       } while (排序后的受托人列表.length);
     }
     //#endregion
+  }
+
+  async calcNextBlockGenerator(block: BFChainCore.Block) {
+    const toTimestamp = block.timestamp + this.config.forgeInterval;
+    /// 这里使用fromTimestamp，直接导致掉线人的顺序都直接跳过了，因为我们的目的只是快速地得出当下时间节点应该由谁来打块而已
+    for await (const result of this.calcGenerateBlockDelegateGenerator(
+      {
+        timestamp: block.timestamp,
+        height: block.height,
+      },
+      {
+        toTimestamp,
+        blockCache: { [block.height]: block },
+      },
+    )) {
+      if (result.timestamp === toTimestamp) {
+        return result;
+      }
+    }
+    throw new Error();
   }
 }
