@@ -12,6 +12,7 @@
   "files": [
     "src/@types.ts",
     "src/block.constants.ts",
+    "src/chain.constants.ts",
     "src/channel.constants.ts",
     "src/helper.constants.ts",
     "src/index.ts",

@@ -1,4 +1,6 @@
 declare namespace BFChainCore {
+  type BNID_TYPE = import("./").BNID_TYPE;
+  type NETWORK_TYPE = import("./").NETWORK_TYPE;
   type EXCHANGE_DIRECTION = import("./").EXCHANGE_DIRECTION;
   type SPECIAL_ASSET_TYPE = import("./").SPECIAL_ASSET_TYPE;
   type DAPP_TYPE = import("./").DAPP_TYPE;

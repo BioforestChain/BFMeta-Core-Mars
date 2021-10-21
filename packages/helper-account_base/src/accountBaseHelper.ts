@@ -2,7 +2,6 @@ import { ConfigHelper } from "@bfchain/core-helper-config";
 import { Base58Helper } from "./base58Helper";
 import { utf8Slice } from "./oldBuffer";
 import { Injectable, Inject, encodeUTF8ToBinary, encodeHexToBinary } from "@bfchain/util";
-import type { BNID_TYPE } from "@bfchain/core-model-block-base";
 
 const FROZEN_PK_ADD_WM = new WeakMap<Uint8Array, BFChainUtil.Buffer>();
 /**账户辅助模块
@@ -72,14 +71,14 @@ export class AccountBaseHelper {
     return address;
   }
   /**根据公钥字符串生成地址(base58) */
-  getAddressFromPublicKeyString(publicKey: string, prefix?: BNID_TYPE) {
+  getAddressFromPublicKeyString(publicKey: string, prefix?: BFChainCore.BNID_TYPE) {
     return this.getAddressFromPublicKey(encodeHexToBinary(publicKey), prefix);
   }
   /**
    * 根据主密码生成地址
    * @param secret 主密码
    */
-  async getAddressFromSecret(secret: string, prefix?: BNID_TYPE) {
+  async getAddressFromSecret(secret: string, prefix?: BFChainCore.BNID_TYPE) {
     return this.getAddressFromPublicKey(await this.getPublicKeyFromSecret(secret), prefix);
   }
   /**

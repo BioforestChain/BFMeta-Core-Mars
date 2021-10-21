@@ -193,7 +193,7 @@ declare namespace BFChainCore {
     /**链网络标识符 */
     magic: string;
     /**链网络类型，只能是 'b' 或 'c'，b 为正式网络，c 为测试网络 */
-    bnid: import("./constanst").BNID_TYPE;
+    bnid: BFChainCore.BNID_TYPE;
     /**链创世时间 */
     beginEpochTime: number;
     /**链创世位名 */

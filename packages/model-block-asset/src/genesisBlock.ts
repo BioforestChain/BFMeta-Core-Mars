@@ -2,7 +2,7 @@ import { Message, Field, Type, Long } from "@bfchain/protobuf";
 import { Fraction, FractionBigIntModel } from "@bfchain/core-model-common";
 import { cacheBytesGetter } from "@bfchain/core-model-cacher";
 import { RoundDelegateModel } from "./roundDelegate";
-import { BNID_TYPE } from "@bfchain/core-model-block-base";
+import { BNID_TYPE } from "@bfchain/core-model-constants";
 
 /**
  * RewardPercent 模型

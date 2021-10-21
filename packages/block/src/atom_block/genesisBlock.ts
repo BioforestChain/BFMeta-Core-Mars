@@ -1,5 +1,6 @@
 import { BlockFactory } from "./_blockbase";
-import { GenesisBlock, BNID_TYPE } from "@bfchain/core-model-block";
+import { BNID_TYPE } from "@bfchain/core-model-constants";
+import { GenesisBlock } from "@bfchain/core-model-block";
 import {
   BlockHelper,
   BaseHelper,

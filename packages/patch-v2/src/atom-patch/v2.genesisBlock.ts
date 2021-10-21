@@ -1,5 +1,5 @@
 import { Injectable } from "@bfchain/util-dep-inject";
-import { BNID_TYPE } from "@bfchain/core-model-block";
+import { BNID_TYPE } from "@bfchain/core-model-constants";
 import { GenesisBlockFactory } from "@bfchain/core-block";
 import {
   CoreExceptionGenerator,
