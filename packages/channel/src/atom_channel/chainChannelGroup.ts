@@ -1613,6 +1613,16 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     opts?: BFChainCore.ChannelGroupRequestOptions<DH>,
     event?: QueneEventEmitter<BFChainCore.BroadcastNewTransactionEvents<DH>>,
   ): Promise<B | undefined> {
+    if (typeof query.height === "number") {
+      const queryHeight = query.height;
+      //是否存在此高度下的节点，如果不存在，自然没有必要去请求节点(这里不考虑存在没有连接上的节点却符合条件的节点)
+      const filterChainChannel = [...this.chainChannelSet.values()].find(
+        (ccg) => ccg.maybeHeight >= queryHeight,
+      );
+      if (!filterChainChannel) {
+        return undefined;
+      }
+    }
     const parallelTaskId = `Group(${this.groupName}) queryBlock-${Date.now() + Math.random()}`;
     const { requestChainChannel } = this.$startParallelTask(parallelTaskId, {
       channelFirewall: opts?.channelFilter,
