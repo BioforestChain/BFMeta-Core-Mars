@@ -70,35 +70,24 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
 
     eventLogicVerifier.listenEventRejectVote(cloneAccountsInfo, eventEmitter);
 
-    eventLogicVerifier.listenEventVoteEquity(
-      cloneAccountsInfo,
-      transaction,
-      curRound,
-      eventEmitter,
-    );
+    eventLogicVerifier.listenEventVoteEquity(cloneAccountsInfo, curRound, eventEmitter);
 
     const accountAssets = this.helperLogicVerifier.deepClone(sender.accountAssets);
-    eventLogicVerifier.listenEventIssueAsset(
-      accountAssets,
-      transaction,
-      accountGetterHelper,
-      eventEmitter,
-    );
+    eventLogicVerifier.listenEventIssueAsset(accountAssets, accountGetterHelper, eventEmitter);
 
-    eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+    eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
 
-    eventLogicVerifier.listenEventAsset(cloneAccountsAssets, transaction, eventEmitter);
+    eventLogicVerifier.listenEventAsset(cloneAccountsAssets, eventEmitter);
 
-    eventLogicVerifier.listenEventFrozenAsset(cloneAccountsAssets, transaction, eventEmitter);
+    eventLogicVerifier.listenEventFrozenAsset(cloneAccountsAssets, eventEmitter);
 
     eventLogicVerifier.listenEventUnfrozenAsset(
-      transaction,
       currentBlockHeight,
       accountGetterHelper,
       eventEmitter,
     );
 
-    eventLogicVerifier.listenEventDestoryAsset(transaction, accountGetterHelper, eventEmitter);
+    eventLogicVerifier.listenEventDestoryAsset(accountGetterHelper, eventEmitter);
 
     eventLogicVerifier.listenEventIssueDAppid(
       currentBlockHeight,
@@ -113,14 +102,12 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
     );
 
     eventLogicVerifier.listenEventUnfrozenDAppid(
-      transaction,
       currentBlockHeight,
       accountGetterHelper,
       eventEmitter,
     );
 
     eventLogicVerifier.listenEventChangeDAppidPossessor(
-      transaction,
       currentBlockHeight,
       accountGetterHelper,
       eventEmitter,
@@ -133,7 +120,6 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
     );
 
     eventLogicVerifier.listenEventCancelLocationName(
-      transaction,
       currentBlockHeight,
       accountGetterHelper,
       eventEmitter,
@@ -146,14 +132,12 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
     );
 
     eventLogicVerifier.listenEventUnfrozenLocationName(
-      transaction,
       currentBlockHeight,
       accountGetterHelper,
       eventEmitter,
     );
 
     eventLogicVerifier.listenEventChangeLocationNamePossessor(
-      transaction,
       currentBlockHeight,
       accountGetterHelper,
       eventEmitter,
@@ -173,7 +157,7 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
 
     eventLogicVerifier.listenEventIssueEntityFactory(
       accountAssets,
-      transaction,
+
       currentBlockHeight,
       accountGetterHelper,
       eventEmitter,
@@ -181,14 +165,13 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
 
     eventLogicVerifier.listenEventIssueEntity(
       accountAssets,
-      transaction,
+
       currentBlockHeight,
       accountGetterHelper,
       eventEmitter,
     );
 
     eventLogicVerifier.listenEventDestoryEntity(
-      transaction,
       currentBlockHeight,
       accountGetterHelper,
       eventEmitter,
@@ -201,14 +184,12 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
     );
 
     eventLogicVerifier.listenEventUnfrozenEntity(
-      transaction,
       currentBlockHeight,
       accountGetterHelper,
       eventEmitter,
     );
 
     eventLogicVerifier.listenEventChangeEntityPossessor(
-      transaction,
       currentBlockHeight,
       accountGetterHelper,
       eventEmitter,
@@ -216,7 +197,7 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
 
     eventLogicVerifier.listenEventRegisterChain(
       accountAssets,
-      transaction,
+
       accountGetterHelper,
       eventEmitter,
     );

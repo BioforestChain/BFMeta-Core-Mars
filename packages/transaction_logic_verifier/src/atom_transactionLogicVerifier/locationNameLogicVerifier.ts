@@ -42,7 +42,7 @@ export class LocationNameLogicVerifier extends TransactionLogicVerifier {
 
     const { eventLogicVerifier } = this;
 
-    eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+    eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
 
     const operationType = transaction.asset.locationName.operationType;
     if (operationType === LOCATION_NAME_OPERATION_TYPE.REGISTRATION) {
@@ -53,7 +53,6 @@ export class LocationNameLogicVerifier extends TransactionLogicVerifier {
       );
     } else {
       eventLogicVerifier.listenEventCancelLocationName(
-        transaction,
         currentBlockHeight,
         accountGetterHelper,
         eventEmitter,

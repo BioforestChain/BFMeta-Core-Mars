@@ -57,14 +57,9 @@ export class VoteLogicVerifier extends TransactionLogicVerifier {
 
     const { eventLogicVerifier } = this;
 
-    eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+    eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
 
-    eventLogicVerifier.listenEventVoteEquity(
-      cloneAccountsInfo,
-      transaction,
-      curRound,
-      eventEmitter,
-    );
+    eventLogicVerifier.listenEventVoteEquity(cloneAccountsInfo, curRound, eventEmitter);
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 

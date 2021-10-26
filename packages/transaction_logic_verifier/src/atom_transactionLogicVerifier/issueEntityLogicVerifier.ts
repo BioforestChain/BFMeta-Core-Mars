@@ -41,19 +41,18 @@ export class IssueEntityLogicVerifier extends TransactionLogicVerifier {
     const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
     // 手续费
-    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
 
     // 单项冻结
-    this.eventLogicVerifier.listenEventFrozenAsset(cloneAccountsAssets, transaction, eventEmitter);
+    this.eventLogicVerifier.listenEventFrozenAsset(cloneAccountsAssets, eventEmitter);
 
     // 购买 entityFactory 使用权
-    this.eventLogicVerifier.listenEventAsset(cloneAccountsAssets, transaction, eventEmitter);
+    this.eventLogicVerifier.listenEventAsset(cloneAccountsAssets, eventEmitter);
 
     // 发行 entityId
     const accountAssets = this.helperLogicVerifier.deepClone(sender.accountAssets);
     this.eventLogicVerifier.listenEventIssueEntity(
       accountAssets,
-      transaction,
       currentBlockHeight,
       accountGetterHelper,
       eventEmitter,

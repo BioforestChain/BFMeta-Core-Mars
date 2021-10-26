@@ -34,9 +34,9 @@ export class DAppPurchasingLogicVerifier extends TransactionLogicVerifier {
 
     const { eventLogicVerifier } = this;
 
-    eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+    eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
 
-    eventLogicVerifier.listenEventAsset(cloneAccountsAssets, transaction, eventEmitter);
+    eventLogicVerifier.listenEventAsset(cloneAccountsAssets, eventEmitter);
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 

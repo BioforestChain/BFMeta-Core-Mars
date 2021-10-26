@@ -106,7 +106,6 @@ export class EventLogicVerifier {
 
   listenEventFee(
     accountsAssets: { [asddress: string]: BFChainCore.AccountAssets },
-    transaction: BFChainCore.Transaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     const Function_Exception_Detail = {
@@ -116,7 +115,7 @@ export class EventLogicVerifier {
     // 扣除手续费
     eventEmitter.on(
       "fee",
-      ({ applyInfo }, next) => {
+      ({ transaction, applyInfo }, next) => {
         // 手续费扣除的只能是链资产
         const { magic, assetType } = this.configHelper;
         if (magic !== this.configHelper.magic) {
@@ -168,7 +167,6 @@ export class EventLogicVerifier {
 
   listenEventAsset(
     accountsAssets: { [asddress: string]: BFChainCore.AccountAssets },
-    transaction: BFChainCore.Transaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     const Function_Exception_Detail = {
@@ -178,7 +176,7 @@ export class EventLogicVerifier {
     // 扣除资产
     eventEmitter.on(
       "asset",
-      ({ applyInfo }, next) => {
+      ({ transaction, applyInfo }, next) => {
         const { magic, assetType } = applyInfo.assetInfo;
         const address = applyInfo.address;
         accountsAssets[address] = accountsAssets[address] || {};
@@ -212,7 +210,6 @@ export class EventLogicVerifier {
 
   listenEventFrozenAsset(
     accountsAssets: { [asddress: string]: BFChainCore.AccountAssets },
-    transaction: BFChainCore.Transaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     const Function_Exception_Detail = {
@@ -222,7 +219,7 @@ export class EventLogicVerifier {
     // 冻结资产
     eventEmitter.on(
       "frozenAsset",
-      async ({ applyInfo }, next) => {
+      async ({ transaction, applyInfo }, next) => {
         const { magic, assetType } = applyInfo.assetInfo;
         const address = applyInfo.address;
         accountsAssets[address] = accountsAssets[address] || {};
@@ -255,7 +252,6 @@ export class EventLogicVerifier {
   }
 
   listenEventUnfrozenAsset(
-    transaction: BFChainCore.Transaction,
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -267,7 +263,7 @@ export class EventLogicVerifier {
     // 解冻资产
     eventEmitter.on(
       "unfrozenAsset",
-      async ({ applyInfo }, next) => {
+      async ({ transaction, applyInfo }, next) => {
         const { assetInfo, frozenIdBuffer, amount: spendAsset, recipientId } = applyInfo;
         const { magic, assetType } = assetInfo;
         const transactionSignature = getHexFromArrayBuffer(frozenIdBuffer);
@@ -340,7 +336,6 @@ export class EventLogicVerifier {
   }
 
   listenEventSignForAsset(
-    transaction: BFChainCore.Transaction,
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -352,7 +347,7 @@ export class EventLogicVerifier {
     // 解冻资产
     eventEmitter.on(
       "signForAsset",
-      async ({ applyInfo }, next) => {
+      async ({ transaction, applyInfo }, next) => {
         const { frozenIdBuffer, frozenAddress } = applyInfo;
         const transactionSignature = getHexFromArrayBuffer(frozenIdBuffer);
 
@@ -420,7 +415,6 @@ export class EventLogicVerifier {
 
   listenEventVoteEquity(
     accountsInfo: { [address: string]: BFChainCore.AccountInfo },
-    transaction: BFChainCore.Transaction,
     curRound: number,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -431,7 +425,7 @@ export class EventLogicVerifier {
     // 扣除权益
     eventEmitter.on(
       "voteEquity",
-      ({ applyInfo }, next) => {
+      ({ transaction, applyInfo }, next) => {
         const round = curRound - 1;
         const address = applyInfo.address;
         accountsInfo[address] = accountsInfo[address] || {};
@@ -641,7 +635,6 @@ export class EventLogicVerifier {
 
   listenEventIssueAsset(
     accountAssets: BFChainCore.AccountAssets,
-    transaction: BFChainCore.Transaction,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -652,7 +645,7 @@ export class EventLogicVerifier {
     // 发行数字资产
     eventEmitter.on(
       "issueAsset",
-      async ({ applyInfo }, next) => {
+      async ({ transaction, applyInfo }, next) => {
         const { address, assetInfo, genesisAddress, sourceAmount } = applyInfo;
         const { assetType } = assetInfo;
 
@@ -778,7 +771,6 @@ export class EventLogicVerifier {
   }
 
   listenEventDestoryAsset(
-    transaction: BFChainCore.Transaction,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -892,7 +884,6 @@ export class EventLogicVerifier {
   }
 
   listenEventUnfrozenDAppid(
-    transaction: BFChainCore.Transaction,
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -904,7 +895,7 @@ export class EventLogicVerifier {
     // 解冻 dappid
     eventEmitter.on(
       "unfrozenDAppid",
-      async ({ applyInfo }, next) => {
+      async ({ transaction, applyInfo }, next) => {
         const { address, sourceChainMagic, dappid } = applyInfo;
 
         const memDapp = await accountGetterHelper.getDApp(
@@ -947,7 +938,6 @@ export class EventLogicVerifier {
   }
 
   listenEventChangeDAppidPossessor(
-    transaction: BFChainCore.Transaction,
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -959,7 +949,7 @@ export class EventLogicVerifier {
     // 更改 dappid 拥有者
     eventEmitter.on(
       "changeDAppidPossessor",
-      async ({ applyInfo }, next) => {
+      async ({ transaction, applyInfo }, next) => {
         const { sourceChainMagic, dappid } = applyInfo;
 
         const memDapp = await accountGetterHelper.getDApp(
@@ -998,7 +988,6 @@ export class EventLogicVerifier {
 
   listenEventRegisterChain(
     accountAssets: BFChainCore.AccountAssets,
-    transaction: BFChainCore.Transaction,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -1009,7 +998,7 @@ export class EventLogicVerifier {
     // 注册链
     eventEmitter.on(
       "registerChain",
-      async ({ applyInfo }, next) => {
+      async ({ transaction, applyInfo }, next) => {
         const { address, genesisBlock } = applyInfo;
 
         // 是否持有除链资产外的其他资产
@@ -1197,7 +1186,6 @@ export class EventLogicVerifier {
   }
 
   listenEventCancelLocationName(
-    transaction: BFChainCore.Transaction,
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -1209,7 +1197,7 @@ export class EventLogicVerifier {
     // 注销位名
     eventEmitter.on(
       "cancelLocationName",
-      async ({ applyInfo }, next) => {
+      async ({ transaction, applyInfo }, next) => {
         const { sourceChainMagic, name } = applyInfo;
 
         // const names = name.split(".");
@@ -1532,7 +1520,6 @@ export class EventLogicVerifier {
   }
 
   listenEventUnfrozenLocationName(
-    transaction: BFChainCore.Transaction,
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -1544,7 +1531,7 @@ export class EventLogicVerifier {
     // 解冻位名，更换拥有者
     eventEmitter.on(
       "unfrozenLocationName",
-      async ({ applyInfo }, next) => {
+      async ({ transaction, applyInfo }, next) => {
         const { address, sourceChainMagic, name } = applyInfo;
 
         // 位名是否存在
@@ -1595,7 +1582,6 @@ export class EventLogicVerifier {
   }
 
   listenEventChangeLocationNamePossessor(
-    transaction: BFChainCore.Transaction,
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -1607,7 +1593,7 @@ export class EventLogicVerifier {
     // 更改位名的拥有者
     eventEmitter.on(
       "changeLocationNamePossessor",
-      async ({ applyInfo }, next) => {
+      async ({ transaction, applyInfo }, next) => {
         const { address, sourceChainMagic, name } = applyInfo;
 
         // 位名是否存在
@@ -1654,7 +1640,6 @@ export class EventLogicVerifier {
 
   listenEventIssueEntityFactory(
     accountAssets: BFChainCore.AccountAssets,
-    transaction: BFChainCore.Transaction,
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -1666,7 +1651,7 @@ export class EventLogicVerifier {
     // 发行 entityFactory
     eventEmitter.on(
       "issueEntityFactory",
-      async ({ applyInfo }, next) => {
+      async ({ transaction, applyInfo }, next) => {
         const { address, factoryId, sourceChainMagic, purchaseAssetPrealnum, possessorAddress } =
           applyInfo;
 
@@ -1752,7 +1737,6 @@ export class EventLogicVerifier {
 
   listenEventIssueEntity(
     accountAssets: BFChainCore.AccountAssets,
-    transaction: BFChainCore.Transaction,
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -1764,7 +1748,7 @@ export class EventLogicVerifier {
     // 发行 entityFactory
     eventEmitter.on(
       "issueEntity",
-      async ({ applyInfo }, next) => {
+      async ({ transaction, applyInfo }, next) => {
         const { address, factoryId, entityId, sourceChainMagic, entityFrozenAssetPrealnum } =
           applyInfo;
 
@@ -1843,7 +1827,6 @@ export class EventLogicVerifier {
   }
 
   listenEventDestoryEntity(
-    transaction: BFChainCore.Transaction,
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -1855,7 +1838,7 @@ export class EventLogicVerifier {
     // 资产销毁
     eventEmitter.on(
       "destoryEntity",
-      async ({ applyInfo }, next) => {
+      async ({ transaction, applyInfo }, next) => {
         const { sourceChainMagic, entityId } = applyInfo;
 
         const memEntity = await accountGetterHelper.getEntity(
@@ -1962,7 +1945,6 @@ export class EventLogicVerifier {
   }
 
   listenEventUnfrozenEntity(
-    transaction: BFChainCore.Transaction,
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -1974,7 +1956,7 @@ export class EventLogicVerifier {
     // 解冻 entity，entity 解冻，更换拥有者
     eventEmitter.on(
       "unfrozenEntity",
-      async ({ applyInfo }, next) => {
+      async ({ transaction, applyInfo }, next) => {
         const { address, sourceChainMagic, entityId } = applyInfo;
 
         // entity 是否存在
@@ -2027,7 +2009,6 @@ export class EventLogicVerifier {
   }
 
   listenEventChangeEntityPossessor(
-    transaction: BFChainCore.Transaction,
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -2039,7 +2020,7 @@ export class EventLogicVerifier {
     // 更改 entity 拥有者
     eventEmitter.on(
       "changeEntityPossessor",
-      async ({ applyInfo }, next) => {
+      async ({ transaction, applyInfo }, next) => {
         const { address, sourceChainMagic, entityId } = applyInfo;
 
         // entity 是否存在

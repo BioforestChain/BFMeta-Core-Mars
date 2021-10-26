@@ -83,9 +83,9 @@ export class ToExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
 
     const { eventLogicVerifier } = this;
 
-    eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+    eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
     if (exchangeDirection === EXCHANGE_DIRECTION.ASSET_FROM_RECIPIENT) {
-      eventLogicVerifier.listenEventFrozenAsset(cloneAccountsAssets, transaction, eventEmitter);
+      eventLogicVerifier.listenEventFrozenAsset(cloneAccountsAssets, eventEmitter);
     } else {
       if (exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID) {
         eventLogicVerifier.listenEventFrozenDAppid(

@@ -34,7 +34,7 @@ export class SetLnsRecordValueLogicVerifier extends TransactionLogicVerifier {
 
     const { eventLogicVerifier } = this;
 
-    eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+    eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
 
     eventLogicVerifier.listenEventSetLnsRecordValue(
       currentBlockHeight,

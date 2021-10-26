@@ -77,9 +77,9 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
 
     const { eventLogicVerifier } = this;
 
-    eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+    eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
 
-    eventLogicVerifier.listenEventFrozenAsset(cloneAccountsAssets, transaction, eventEmitter);
+    eventLogicVerifier.listenEventFrozenAsset(cloneAccountsAssets, eventEmitter);
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 

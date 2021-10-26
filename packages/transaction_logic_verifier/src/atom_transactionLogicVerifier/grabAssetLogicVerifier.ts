@@ -92,10 +92,9 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
 
     const { eventLogicVerifier } = this;
 
-    eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+    eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
 
     eventLogicVerifier.listenEventUnfrozenAsset(
-      transaction,
       currentBlockHeight,
       accountGetterHelper,
       eventEmitter,

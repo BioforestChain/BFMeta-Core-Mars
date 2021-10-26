@@ -37,11 +37,10 @@ export class DestoryEntityLogicVerifier extends TransactionLogicVerifier {
     const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
     // 手续费
-    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
 
     // 赎回单项冻结的资产
     this.eventLogicVerifier.listenEventUnfrozenAsset(
-      transaction,
       currentBlockHeight,
       accountGetterHelper,
       eventEmitter,
@@ -49,7 +48,6 @@ export class DestoryEntityLogicVerifier extends TransactionLogicVerifier {
 
     // 销毁 entity
     this.eventLogicVerifier.listenEventDestoryEntity(
-      transaction,
       currentBlockHeight,
       accountGetterHelper,
       eventEmitter,

@@ -187,7 +187,7 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
 
     const { eventLogicVerifier } = this;
 
-    eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+    eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
 
     eventLogicVerifier.listenEventFrozenAccount(cloneAccountsInfo, eventEmitter);
 

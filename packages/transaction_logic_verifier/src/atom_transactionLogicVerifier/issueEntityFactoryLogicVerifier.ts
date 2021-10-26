@@ -45,7 +45,7 @@ export class IssueEntityFactoryLogicVerifier extends TransactionLogicVerifier {
     const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
     // 手续费
-    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
 
     // 冻结发起账户
     this.eventLogicVerifier.listenEventFrozenAccount(cloneAccountsInfo, eventEmitter);
@@ -54,7 +54,6 @@ export class IssueEntityFactoryLogicVerifier extends TransactionLogicVerifier {
     const accountAssets = this.helperLogicVerifier.deepClone(sender.accountAssets);
     this.eventLogicVerifier.listenEventIssueEntityFactory(
       accountAssets,
-      transaction,
       currentBlockHeight,
       accountGetterHelper,
       eventEmitter,

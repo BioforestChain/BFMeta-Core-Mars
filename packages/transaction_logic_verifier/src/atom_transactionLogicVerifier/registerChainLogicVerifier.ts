@@ -37,17 +37,12 @@ export class RegisterChainLogicVerifier extends TransactionLogicVerifier {
 
     const { eventLogicVerifier } = this;
 
-    eventLogicVerifier.listenEventFee(cloneAccountsAssets, transaction, eventEmitter);
+    eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
 
     eventLogicVerifier.listenEventFrozenAccount(cloneAccountsInfo, eventEmitter);
 
     const accountAssets = this.helperLogicVerifier.deepClone(sender.accountAssets);
-    eventLogicVerifier.listenEventRegisterChain(
-      accountAssets,
-      transaction,
-      accountGetterHelper,
-      eventEmitter,
-    );
+    eventLogicVerifier.listenEventRegisterChain(accountAssets, accountGetterHelper, eventEmitter);
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
