@@ -5,7 +5,11 @@ import {
   SPECIAL_ASSET_TYPE,
 } from "@bfchain/core-model";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
-import { CoreExceptionGenerator, PROP_IS_INVALID } from "@bfchain/core-util-exception";
+import {
+  CoreExceptionGenerator,
+  ONLY_TOP_LEVEL_LOCATION_NAME_CAN_EXCHANGE,
+  PROP_IS_INVALID,
+} from "@bfchain/core-util-exception";
 
 const { ConsensusException } = CoreExceptionGenerator(
   "VERIFIER",
@@ -85,6 +89,15 @@ export class ToExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
 
     eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
     if (exchangeDirection === EXCHANGE_DIRECTION.ASSET_FROM_RECIPIENT) {
+      // 只能求购顶级域名
+      if (
+        exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME &&
+        beExchangeAsset.split(",").length > 2
+      ) {
+        throw new ConsensusException(ONLY_TOP_LEVEL_LOCATION_NAME_CAN_EXCHANGE, {
+          ...Function_Exception_Detail,
+        });
+      }
       eventLogicVerifier.listenEventFrozenAsset(cloneAccountsAssets, eventEmitter);
     } else {
       if (exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID) {
