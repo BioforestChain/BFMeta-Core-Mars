@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-helper-transaction",
-  "version": "5.24.20",
+  "version": "5.24.21",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,16 +14,16 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-helper-account-base": "5.24.20",
-    "@bfchain/core-helper-asymmetric": "5.24.20",
-    "@bfchain/core-helper-bigint": "5.24.20",
-    "@bfchain/core-helper-config": "5.24.20",
-    "@bfchain/core-helper-transaction-pow": "5.24.20",
-    "@bfchain/core-helper-type": "5.24.20",
-    "@bfchain/core-model-constants": "5.24.20",
-    "@bfchain/core-model-transaction": "5.24.20",
-    "@bfchain/core-typings": "5.24.20",
-    "@bfchain/core-util-exception": "5.24.20"
+    "@bfchain/core-helper-account-base": "5.24.21",
+    "@bfchain/core-helper-asymmetric": "5.24.21",
+    "@bfchain/core-helper-bigint": "5.24.21",
+    "@bfchain/core-helper-config": "5.24.21",
+    "@bfchain/core-helper-transaction-pow": "5.24.21",
+    "@bfchain/core-helper-type": "5.24.21",
+    "@bfchain/core-model-constants": "5.24.21",
+    "@bfchain/core-model-transaction": "5.24.21",
+    "@bfchain/core-typings": "5.24.21",
+    "@bfchain/core-util-exception": "5.24.21"
   },
   "gitHead": "ef41eb359371b11aafbec0516df1eba01f16ebfd",
   "types": "build/cjs/index.d.ts"
