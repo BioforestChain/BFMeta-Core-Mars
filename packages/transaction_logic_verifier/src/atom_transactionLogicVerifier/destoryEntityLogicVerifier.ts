@@ -1,6 +1,17 @@
 import type { DestoryEntityTransaction } from "@bfchain/core-model";
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
+import {
+  CoreExceptionGenerator,
+  NOT_MATCH,
+  NOT_EXIST_OR_EXPIRED,
+  NOT_EXPECTED_RELATED_TRANSACTION,
+} from "@bfchain/core-util-exception";
+
+const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
+  "VERIFIER",
+  "GrabAssetLogicVerifier",
+);
 
 @Injectable()
 export class DestoryEntityLogicVerifier extends TransactionLogicVerifier {
@@ -18,6 +29,45 @@ export class DestoryEntityLogicVerifier extends TransactionLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
+    const Function_Exception_Detail = {
+      function: "verify",
+    } as const;
+
+    const destoryEntity = transaction.asset.destoryEntity;
+
+    const { transactionSignature } = destoryEntity;
+    const trsWithBlockSign =
+      await transactionGetterHelper.getTransactionAndBlockSignatureBySignature(
+        transactionSignature,
+        this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
+      );
+
+    if (!trsWithBlockSign) {
+      throw new NoFoundException(NOT_EXIST_OR_EXPIRED, {
+        prop: `Transaction with signature ${transactionSignature}`,
+        target: "destoryEntity",
+        ...Function_Exception_Detail,
+      });
+    }
+
+    const trs = trsWithBlockSign.transaction as BFChainCore.IssueEntityTransactionJSON;
+
+    if (trs.type !== this.transactionHelper.ISSUE_ENTITY) {
+      throw new ConsensusException(NOT_EXPECTED_RELATED_TRANSACTION, {
+        signature: `${transactionSignature}`,
+        ...Function_Exception_Detail,
+      });
+    }
+
+    if (transaction.recipientId !== trs.senderId) {
+      throw new ConsensusException(NOT_MATCH, {
+        to_compare_prop: `recipientId ${transaction.recipientId}`,
+        be_compare_prop: `entityApplicant ${trs.senderId}`,
+        to_target: "transaction",
+        be_target: "issueEntityTransaction",
+      });
+    }
+
     const { sender, recipient } = await this.logicVerify(
       transaction,
       currentBlockHeight,

@@ -67,7 +67,7 @@ async function getIssueEntityFactoryTransaction(sender: AccountModel) {
         sourceChainName: bfchainCore.config.chainName,
         sourceChainMagic: bfchainCore.config.magic,
         factoryId: "skyrim",
-        entityPrealnum: "88888888",
+        numberOfEntities: 88888888,
         entityFrozenAssetPrealnum: "88888888",
         purchaseAssetPrealnum: "88888888",
       },
@@ -90,7 +90,7 @@ async function getIssueEntityTransaction(
     senderId: sender.address, // 发起者地址
     senderPublicKey: sender.publicKey, // 发起者公钥
     senderSecondPublicKey: "", // 发起者二次公钥
-    recipientId: genesisAddress,
+    recipientId: sender.address,
     rangeType: RANGE_TYPE.EMPTY,
     range: [], // 资产创世账户地址
     remark: { remark: "body.remark" }, // 交易备注，任意信息
@@ -129,6 +129,7 @@ async function getIssueEntityTransaction(
         sourceChainName: bfchainCore.config.chainName,
         sourceChainMagic: bfchainCore.config.magic,
         entityId: `${entityFactory.factoryId}_dragonborn`,
+        entityFactoryPossessor: genesisAddress,
         entityFactory,
       },
     },

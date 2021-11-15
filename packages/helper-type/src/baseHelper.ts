@@ -1139,6 +1139,26 @@ export class BaseHelper {
   }
 
   /**
+   * 兑换比例是否合法
+   *
+   * @param rate
+   */
+  isValidAssetExchangeWeightRatio(rate: BFChainCore.AssetExchangeWeightRatioJSON) {
+    if (!rate) {
+      return false;
+    }
+    if (
+      !(
+        this.isValidStringNumber(rate.toExchangeAssetWeight) &&
+        this.isValidStringNumber(rate.beExchangeAssetWeight)
+      )
+    ) {
+      return false;
+    }
+    return true;
+  }
+
+  /**
    * tpow 计算公式是否合法
    *
    * @param tpowDiffFormula

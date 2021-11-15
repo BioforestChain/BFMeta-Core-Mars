@@ -1,8 +1,9 @@
-import * as ATOM_TRS from "./atom_transaction";
-import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
-import { INVALID_TRANSACTION_BASE_TYPE } from "@bfchain/core-util-exception-errorcode";
 import type { Transaction } from "@bfchain/core-model-transaction-base";
 import { Type, Field, Message } from "@bfchain/protobuf";
+import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
+import { INVALID_TRANSACTION_BASE_TYPE } from "@bfchain/core-util-exception-errorcode";
+
+import * as ATOM_TRS from "./atom_transaction";
 
 const { ArgumentFormatException, error, IllegalStateException } = CoreExceptionGenerator(
   "MODEL",
@@ -62,12 +63,16 @@ export enum TRANSACTION_TYPES_BASE {
   SET_LNS_RECORD_VALUE = "LNS-01",
   /**设置位名管理员 */
   SET_LNS_MANAGER = "LNS-02",
-  /**创建资产权益模板 */
+  /**创建非同质资产模板 */
   ISSUE_ENTITY_FACTORY = "ETY-00",
-  /**创建资产权益 */
+  /**创建非同质资产 */
   ISSUE_ENTITY = "ETY-01",
-  /**销毁资产权益 */
+  /**销毁非同质资产 */
   DESTORY_ENTITY = "ETY-02",
+  /**发起资产交换 */
+  TO_EXCHANGE_ANY = "ECA-00",
+  /**接受资产交换 */
+  BE_EXCHANGE_ANY = "ECA-01",
   /**个性事件 */
   CUSTOM = "CUS-00",
 }
@@ -126,6 +131,9 @@ export const TRANSACTION_TYPES_MAP = (() => {
       [TRANSACTION_TYPES_BASE.ISSUE_ENTITY_FACTORY, ATOM_TRS.IssueEntityFactoryTransaction],
       [TRANSACTION_TYPES_BASE.ISSUE_ENTITY, ATOM_TRS.IssueEntityTransaction],
       [TRANSACTION_TYPES_BASE.DESTORY_ENTITY, ATOM_TRS.DestoryEntityTransaction],
+
+      [TRANSACTION_TYPES_BASE.TO_EXCHANGE_ANY, ATOM_TRS.ToExchangeAnyTransaction],
+      [TRANSACTION_TYPES_BASE.BE_EXCHANGE_ANY, ATOM_TRS.BeExchangeAnyTransaction],
     ] as [TRANSACTION_TYPES_BASE, typeof Transaction][]
   ).forEach(([K, M]) => {
     BASE_MODEL.set(K, M);

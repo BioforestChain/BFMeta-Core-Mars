@@ -17,6 +17,8 @@ import {
   CommonBlockFactory,
   TransferAssetTransaction,
   TransferAssetTransactionFactory,
+  IssueEntityTransaction,
+  DestoryEntityTransaction,
   RANGE_TYPE,
   RECORD_OPERATION_TYPE,
   LocationNameTransactionFactory,
@@ -578,6 +580,7 @@ const getTxs = (address: string) => {
       "generateRegisterChainGenesisBlock",
     );
     registerStatistics.bindApplyTransactionEventEmiter(eventEmitter, statisticsInfo);
+    const transactionHelper = registerBfchainCore.transactionHelper;
     for (let i = 0; i < txWithIndexList.length; i++) {
       const { index, trs } = txWithIndexList[i];
       const { senderId, recipientId, fee, fromMagic, type } = trs;

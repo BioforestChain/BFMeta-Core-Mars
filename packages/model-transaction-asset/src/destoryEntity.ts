@@ -1,8 +1,9 @@
 import { Message, Field, Type } from "@bfchain/protobuf";
 import { parseHexToArrayBuffer, getHexFromArrayBuffer } from "@bfchain/util-encoding-hex";
+import { IssueEntityFactoryModel } from "./issueEntityFactory";
 
 /**
- * 销毁资产权益的交易 asset 模型
+ * 销毁非同质资产的交易 asset 模型
  *
  */
 @Type.d("DestoryEntityModel")
@@ -20,25 +21,33 @@ export class DestoryEntityModel
   public set transactionSignature(value: string) {
     this.transactionSignatureBuffer = parseHexToArrayBuffer(value);
   }
-  /**资产权益的所属链名 */
+  /**非同质资产的所属链名 */
   @Field.d(DestoryEntityModel.INC++, "string")
   sourceChainName!: string;
-  /**资产权益的所属链网络标识符 */
+  /**非同质资产的所属链网络标识符 */
   @Field.d(DestoryEntityModel.INC++, "string")
   sourceChainMagic!: string;
-  /**资产权益的 id */
+  /**非同质资产的 id */
   @Field.d(DestoryEntityModel.INC++, "string")
   entityId!: string;
-  /**资产权益发行时冻结的主权益数量 */
+  /**非同质资产模板的申请者 */
   @Field.d(DestoryEntityModel.INC++, "string")
-  entityFrozenAssetPrealnum!: string;
+  entityFactoryApplicant!: string;
+  /**非同质资产模板的拥有者 */
+  @Field.d(DestoryEntityModel.INC++, "string")
+  entityFactoryPossessor!: string;
+  /**非同质资产模板 */
+  @Field.d(DestoryEntityModel.INC++, IssueEntityFactoryModel)
+  entityFactory!: IssueEntityFactoryModel;
   toJSON() {
     const res: BFChainCore.DestoryEntityJSON = {
       transactionSignature: this.transactionSignature,
       sourceChainName: this.sourceChainName,
       sourceChainMagic: this.sourceChainMagic,
       entityId: this.entityId,
-      entityFrozenAssetPrealnum: this.entityFrozenAssetPrealnum,
+      entityFactoryApplicant: this.entityFactoryApplicant,
+      entityFactoryPossessor: this.entityFactoryPossessor,
+      entityFactory: this.entityFactory.toJSON(),
     };
 
     return res;
@@ -56,7 +65,7 @@ export class DestoryEntityModel
 }
 
 /**
- * 销毁资产权益的交易 asset 外层模型
+ * 销毁非同质资产的交易 asset 外层模型
  *
  */
 @Type.d("DestoryEntityAssetModel")

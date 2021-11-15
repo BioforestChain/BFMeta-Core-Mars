@@ -1,8 +1,12 @@
 import type { Block } from "@bfchain/core-model-block";
+import type {
+  TransferAssetTransaction,
+  IssueEntityTransaction,
+  DestoryEntityTransaction,
+} from "@bfchain/core-model-transaction";
 import {
   TransactionInBlock,
   TRANSACTION_TYPES_BASE,
-  TransferAssetTransaction,
   TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE,
   TransactionAssetChangeModel,
 } from "@bfchain/core-model-transaction";
@@ -207,6 +211,7 @@ export class VerifyBlockCore<T extends Block> {
       if (!asset) {
         throw new Error("Statistic asset lose");
       }
+      const transactionHelper = this.transactionCore.transactionHelper;
       const assetIndex = asset.index;
       for (const tranItem of transactions) {
         const transaction = tranItem.transaction;
@@ -254,7 +259,7 @@ export class VerifyBlockCore<T extends Block> {
         }
         // 计算权益变动
         const trs = tranItem.transaction;
-        const { type, senderId, recipientId, fromMagic, fee } = trs;
+        const { type, senderId, recipientId, fromMagic, fee, asset } = trs;
         let calcTransactionAssetChanges: TransactionAssetChangeModel[] = [];
         const key = getAccountAssetKey(senderId, fromMagic, chainAssetType);
         let amount = "0";

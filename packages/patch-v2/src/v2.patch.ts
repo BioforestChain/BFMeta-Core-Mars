@@ -20,7 +20,7 @@ GenesisAssetModel.encode = GenesisAssetModelSetup.encode = function GenesisAsset
   if (m.nextRoundDelegates != null && m.nextRoundDelegates.length) {
     for (var i = 0; i < m.nextRoundDelegates.length; ++i)
       m.nextRoundDelegates[i] &&
-        m.$type._types[33].encode(m.nextRoundDelegates[i], w.uint32(34).fork()).ldelim();
+        m.$type._types[34].encode(m.nextRoundDelegates[i], w.uint32(34).fork()).ldelim();
   }
   if (m.chainName != null && m.chainName !== "") w.uint32(42).string(m.chainName);
   if (m.assetType != null && m.assetType !== "") w.uint32(50).string(m.assetType);
@@ -85,6 +85,8 @@ GenesisAssetModel.encode = GenesisAssetModelSetup.encode = function GenesisAsset
         m.$type._types[29].encode(m.maxMultipleOfAssetAndMainAsset, w.uint32(274).fork()).ldelim();
     }
   }
+  if (m.issueEntityFactoryMinChainAsset != null && m.issueEntityFactoryMinChainAsset !== "")
+    w.uint32(282).string(m.issueEntityFactoryMinChainAsset);
   return w;
 };
 GenesisAssetModel.decode = GenesisAssetModelSetup.decode = function GenesisAssetModel$decode(
@@ -189,6 +191,9 @@ GenesisAssetModel.decode = GenesisAssetModelSetup.decode = function GenesisAsset
       case 34:
         m.maxMultipleOfAssetAndMainAsset = m.$type._types[29].decode(r, r.uint32());
         break;
+      case 35:
+        m.issueEntityFactoryMinChainAsset = r.string();
+        break;
       case 1:
         m.newDelegates.push(r.string());
         break;
@@ -199,7 +204,7 @@ GenesisAssetModel.decode = GenesisAssetModelSetup.decode = function GenesisAsset
         m.maxTxCount = r.uint32();
         break;
       case 4:
-        m.nextRoundDelegates.push(m.$type._types[33].decode(r, r.uint32()));
+        m.nextRoundDelegates.push(m.$type._types[34].decode(r, r.uint32()));
         break;
       default:
         r.skipType(t & 7);
@@ -267,6 +272,9 @@ GenesisAssetModel.decode = GenesisAssetModelSetup.decode = function GenesisAsset
     throw util.ProtocolError("missing required 'transactionPowOfWorkConfig'", { instance: m });
   if (m.maxMultipleOfAssetAndMainAsset == null) m.maxMultipleOfAssetAndMainAsset = undefined;
   // throw util.ProtocolError("missing required 'maxMultipleOfAssetAndMainAsset'",{instance:m})
+  if (m.issueEntityFactoryMinChainAsset == null || m.issueEntityFactoryMinChainAsset == "")
+    m.issueEntityFactoryMinChainAsset = undefined;
+  // throw util.ProtocolError("missing required 'issueEntityFactoryMinChainAsset'",{instance:m})
   if (m.newDelegates == null)
     throw util.ProtocolError("missing required 'newDelegates'", { instance: m });
   if (m.maxBeginBalance == null)

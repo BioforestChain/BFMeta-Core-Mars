@@ -10,6 +10,10 @@ export enum TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE {
    * 现在`recipient`是一个数组，这里应该说是`1+`的正整数
    */
   RECIPIENT = 1,
+  /**非同质资产模板的发起者 */
+  ENTITY_FACTORY_APPLICANT = 2,
+  /**非同质资产模板的拥有者 */
+  ENTITY_FACTORY_POSSESSOR = 3,
 }
 
 @Type.d("TransactionAssetChangeModel")
@@ -79,7 +83,7 @@ export class TransactionInBlock<
   /**交易验证完成后账户变动 */
   @Field.d(TransactionInBlock.INC++, TransactionAssetChangeModel, "repeated")
   transactionAssetChanges!: TransactionAssetChangeModel[];
-  /**资产权益信息 */
+  /**非同质资产信息 */
   @Field.d(TransactionInBlock.INC++, AssetPrealnumModel, "optional")
   assetPrealnum?: AssetPrealnumModel;
   /**区块锻造者的签名 */

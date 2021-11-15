@@ -24,6 +24,7 @@
   "files": [
     "src/@types.ts",
     "src/acceptVote.ts",
+    "src/beExchangeAny.ts",
     "src/beExchangeAsset.ts",
     "src/beExchangeSpecialAsset.ts",
     "src/dapp.ts",
@@ -48,6 +49,7 @@
     "src/setLnsRecordValue.ts",
     "src/signature.ts",
     "src/signForAsset.ts",
+    "src/toExchangeAny.ts",
     "src/toExchangeAsset.ts",
     "src/toExchangeSpecialAsset.ts",
     "src/transferAsset.ts",

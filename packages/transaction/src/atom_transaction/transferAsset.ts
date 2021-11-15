@@ -142,7 +142,7 @@ export class TransferAssetTransactionFactory extends TransactionFactory<Transfer
 
     this.checkChainMagic(sourceChainMagic, "sourceChainMagic", TransferAssetAsset_Exception_Detail);
 
-    this.checkAssetType(assetType, "assetType", TransferAssetAsset_Exception_Detail);
+    this.checkAsset(assetType, "assetType", TransferAssetAsset_Exception_Detail);
 
     if (storage.value !== assetType) {
       throw new ArgumentIllegalException(NOT_MATCH, {

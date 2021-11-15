@@ -35,6 +35,9 @@ export * from "./issueEntityFactoryLogicVerifier";
 export * from "./issueEntityLogicVerifier";
 export * from "./destoryEntityLogicVerifier";
 
+export * from "./toExchangeAnyLogicVerifier";
+export * from "./beExchangeAnyLogicVerifier";
+
 export * from "./customLogicVerifier";
 
 export * from "./eventLogicVerifier";

@@ -28,9 +28,7 @@ const { ArgumentIllegalException } = CoreExceptionGenerator(
  *
  */
 @Injectable()
-export class IssueEntityFactoryTransactionFactory extends TransactionFactory<
-  IssueEntityFactoryTransaction
-> {
+export class IssueEntityFactoryTransactionFactory extends TransactionFactory<IssueEntityFactoryTransaction> {
   constructor(
     public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,
@@ -157,6 +155,7 @@ export class IssueEntityFactoryTransactionFactory extends TransactionFactory<
       sourceChainMagic,
       sourceChainName,
       factoryId,
+      numberOfEntities,
       entityFrozenAssetPrealnum,
       purchaseAssetPrealnum,
     } = issueEntityFactory;
@@ -211,6 +210,14 @@ export class IssueEntityFactoryTransactionFactory extends TransactionFactory<
         prop: `factoryId ${factoryId}`,
         type: "lowercase letter or number",
         ...IssueEntityFactoryAsset_Exception_Detail,
+      });
+    }
+
+    if (!baseHelper.isPositiveInteger(numberOfEntities)) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: `numberOfEntities ${numberOfEntities}`,
+        type: "positive integer",
+        IssueEntityFactoryAsset_Exception_Detail,
       });
     }
 
@@ -280,7 +287,7 @@ export class IssueEntityFactoryTransactionFactory extends TransactionFactory<
         sourceChainName,
         sourceChainMagic,
         factoryId,
-        entityPrealnum,
+        numberOfEntities,
         entityFrozenAssetPrealnum,
         purchaseAssetPrealnum,
       } = transaction.asset.issueEntityFactory;
@@ -304,7 +311,7 @@ export class IssueEntityFactoryTransactionFactory extends TransactionFactory<
           sourceChainName,
           sourceChainMagic,
           factoryId,
-          entityPrealnum,
+          numberOfEntities,
           entityFrozenAssetPrealnum,
           possessorAddress: transaction.recipientId,
           purchaseAssetPrealnum,

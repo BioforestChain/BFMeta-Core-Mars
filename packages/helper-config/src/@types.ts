@@ -32,5 +32,6 @@ declare namespace BFChainCore {
     tpowOfWorkExemptionBlocks: number;
     transactionPowOfWorkConfig: BFChainCore.TransactionPowOfWorkConfigJSON;
     maxMultipleOfAssetAndMainAsset: BFChainCore.FractionJSON<string>;
+    issueEntityFactoryMinChainAsset: string;
   }>;
 }

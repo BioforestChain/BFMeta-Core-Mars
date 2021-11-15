@@ -53,8 +53,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
       });
     }
 
-    const trs =
-      trsWithBlockSign.transaction as BFChainCore.TransactionJSON<BFChainCore.GiftAssetAssetJSON>;
+    const trs = trsWithBlockSign.transaction as BFChainCore.GiftAssetTransactionJSON;
 
     if (trs.type !== this.transactionHelper.GIFT_ASSET) {
       throw new ConsensusException(NOT_EXPECTED_RELATED_TRANSACTION, {

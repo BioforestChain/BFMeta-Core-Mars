@@ -182,10 +182,12 @@ export class ConfigHelper {
   get registerChainMinChainAsset() {
     return this.hookedGenesisBlock.asset.genesisAsset.registerChainMinChainAsset;
   }
-  /**发行资产权益模板的账户最小持有的主权益数量 */
+  /**发行非同质资产模板的账户最小持有的主权益数量 */
   @cacheGetter
   get issueEntityFactoryMinChainAsset() {
-    return "10000000000000";
+    const issueEntityFactoryMinChainAsset =
+      this.hookedGenesisBlock.asset.genesisAsset.issueEntityFactoryMinChainAsset;
+    return issueEntityFactoryMinChainAsset || "10000000000000";
   }
   /**最大的过期区块间隔数量 */
   @cacheGetter
@@ -324,6 +326,7 @@ export class ConfigHelper {
       tpowOfWorkExemptionBlocks: this.tpowOfWorkExemptionBlocks,
       transactionPowOfWorkConfig: this.transactionPowOfWorkConfig,
       maxMultipleOfAssetAndMainAsset: this.maxMultipleOfAssetAndMainAsset,
+      issueEntityFactoryMinChainAsset: this.issueEntityFactoryMinChainAsset,
     };
   }
   //#endregion

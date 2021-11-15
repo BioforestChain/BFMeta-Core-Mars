@@ -218,6 +218,8 @@ declare namespace BFChainCore {
     issueAssetMinChainAsset: string;
     /**冻结的主权益数允许发行的最大权益数量 */
     maxMultipleOfAssetAndMainAsset: FractionJSON<string>;
+    /**发行非同质资产模板的账户最小持有的链主权益数量 */
+    issueEntityFactoryMinChainAsset: string;
     /**注册创世块的账户最小持有的主权益数量 */
     registerChainMinChainAsset: string;
     /**最大的过期区块间隔数量 */

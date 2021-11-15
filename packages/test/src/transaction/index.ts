@@ -27,3 +27,5 @@ import "./setLnsRecordValue";
 import "./issueEntityFactory";
 import "./issueEntity";
 import "./destoryEntity";
+import "./toExchangeAny";
+import "./beExchangeAny";

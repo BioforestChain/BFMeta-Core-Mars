@@ -16,6 +16,8 @@ import {
   TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE,
   TransferAssetTransactionFactory,
   TransferAssetTransaction,
+  IssueEntityTransaction,
+  DestoryEntityTransaction,
   ConfigHelper,
   BFChainCoreFactory,
   RANGE_TYPE,

@@ -161,7 +161,7 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
       });
     }
 
-    this.checkAssetType(assetType, "assetType", DestoryAssetAsset_Exception_Detail);
+    this.checkAsset(assetType, "assetType", DestoryAssetAsset_Exception_Detail);
 
     if (assetType === config.assetType) {
       throw new ArgumentIllegalException(SHOULD_NOT_BE, {

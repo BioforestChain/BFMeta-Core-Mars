@@ -241,6 +241,9 @@ export class GenesisAssetModel
   /**冻结的主权益数允许发行的最大权益数量 */
   @Field.d(GenesisAssetModel.INC++, FractionBigIntModel)
   maxMultipleOfAssetAndMainAsset!: FractionBigIntModel;
+  /**发行非同质资产模板最小的持有本链资产数量 */
+  @Field.d(GenesisAssetModel.INC++, "string")
+  issueEntityFactoryMinChainAsset!: string;
   toJSON(): BFChainCore.GenesisAssetJSON {
     const res: BFChainCore.GenesisAssetJSON = Object.assign(
       {
@@ -280,6 +283,8 @@ export class GenesisAssetModel
 
     this.maxMultipleOfAssetAndMainAsset &&
       (res.maxMultipleOfAssetAndMainAsset = this.maxMultipleOfAssetAndMainAsset.toJSON());
+    this.issueEntityFactoryMinChainAsset &&
+      (res.issueEntityFactoryMinChainAsset = this.issueEntityFactoryMinChainAsset);
 
     return res;
   }

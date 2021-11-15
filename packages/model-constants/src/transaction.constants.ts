@@ -135,7 +135,7 @@ export const enum SPECIAL_ASSET_TYPE {
   DAPP_ID,
   /**特殊资产类型：位名 */
   LOCATION_NAME,
-  /**特殊资产类型：资产权益（非同质化权益） */
+  /**特殊资产类型：非同质资产（非同质化权益） */
   ENTITY,
 }
 // #endregion
@@ -146,9 +146,9 @@ export enum PARENT_ASSET_TYPE {
   DAPP = 1,
   /**资产类型：位名 */
   LOCATION_NAME = 2,
-  /**资产类型：资产权益 */
+  /**资产类型：非同质资产 */
   ENTITY = 3,
-  // /**资产类型：资产权益模板 */
+  // /**资产类型：非同质资产模板 */
   // ENTITY_FACTORY = 4,
   /**资产类型: 权益 */
   ASSETS = 5,

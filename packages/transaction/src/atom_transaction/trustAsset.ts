@@ -255,7 +255,7 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
 
     this.checkChainMagic(sourceChainMagic, "sourceChainMagic", TrustAssetAsset_Exception_Detail);
 
-    this.checkAssetType(trustAsset.assetType, "assetType", TrustAssetAsset_Exception_Detail);
+    this.checkAsset(trustAsset.assetType, "assetType", TrustAssetAsset_Exception_Detail);
 
     this.checkAssetAmount(trustAsset.amount, "amount", TrustAssetAsset_Exception_Detail);
 
