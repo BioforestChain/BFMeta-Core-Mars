@@ -11,7 +11,6 @@ import {
   CoreExceptionGenerator,
   PARAM_LOST,
   PROP_IS_REQUIRE,
-  SHOULD_NOT_BE,
   SHOULD_BE,
   NOT_MATCH,
   PROP_IS_INVALID,
@@ -58,9 +57,7 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
 
     this.emptyRangeType(body, Function_Exception_Detail);
 
-    const recipientId = body.recipientId;
-
-    if (!recipientId) {
+    if (!body.recipientId) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "recipientId",
         ...Function_Exception_Detail,

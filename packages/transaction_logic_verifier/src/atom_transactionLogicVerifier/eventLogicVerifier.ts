@@ -1392,8 +1392,14 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "setLnsRecordValue",
       async ({ applyInfo }, next) => {
-        const { address, sourceChainMagic, name, operationType, addRecord, deleteRecord } =
-          applyInfo;
+        const {
+          address,
+          sourceChainMagic,
+          name,
+          operationType,
+          addRecord,
+          deleteRecord,
+        } = applyInfo;
 
         // 校验当前位名是否存存在
         const memLocation = await accountGetterHelper.getLocationName(
@@ -1652,8 +1658,7 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "issueEntityFactory",
       async ({ transaction, applyInfo }, next) => {
-        const { address, factoryId, sourceChainMagic, purchaseAssetPrealnum, possessorAddress } =
-          applyInfo;
+        const { address, factoryId, sourceChainMagic, possessorAddress } = applyInfo;
 
         // 不能将冻结账户设置为数字资产的创世账户
         const possessor = await accountGetterHelper.getAccountInfo(possessorAddress);
@@ -1749,24 +1754,7 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "issueEntity",
       async ({ transaction, applyInfo }, next) => {
-        const { address, factoryId, entityId, sourceChainMagic, entityFrozenAssetPrealnum } =
-          applyInfo;
-
-        // 不能将冻结账户设置为 entityFactory 的拥有者
-        const possessor = await accountGetterHelper.getAccountInfo(address);
-        if (possessor) {
-          const accountStatus = possessor.accountStatus;
-          if (
-            accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
-            accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
-            accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
-          ) {
-            throw new ConsensusException(ACCOUNT_FROZEN, {
-              address,
-              ...Function_Exception_Detail,
-            });
-          }
-        }
+        const { factoryId, entityId, sourceChainMagic, entityFrozenAssetPrealnum } = applyInfo;
 
         // entityFactory 是否已经存在
         const memEntityFactory = await accountGetterHelper.getEntityFactory(
@@ -1778,6 +1766,16 @@ export class EventLogicVerifier {
           throw new ConsensusException(ENTITY_FACTORY_IS_NOT_EXIST, {
             factoryId,
             errorId: NewTransactionRefuseReason.ENTITY_FACTORY_NOT_EXIST,
+            ...Function_Exception_Detail,
+          });
+        }
+
+        if (transaction.recipientId !== memEntityFactory.possessorAddress) {
+          throw new ConsensusException(NOT_MATCH, {
+            to_compare_prop: `recipientId ${transaction.recipientId}`,
+            be_compare_prop: "transaction",
+            to_target: `possessorAddress ${memEntityFactory.possessorAddress}`,
+            be_target: "memEntityFactory",
             ...Function_Exception_Detail,
           });
         }

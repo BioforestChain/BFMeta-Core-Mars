@@ -15,7 +15,6 @@ import {
   NOT_IN_EXPECTED_RANGE,
   SHOULD_BE,
   NOT_MATCH,
-  SHOULD_NOT_BE,
 } from "@bfchain/core-util-exception";
 import { Injectable, wrapTaskList } from "@bfchain/util";
 import { IssueEntityFactoryTransactionFactory } from "./issueEntityFactory";
@@ -64,20 +63,9 @@ export class IssueEntityTransactionFactory extends TransactionFactory<IssueEntit
 
     const { baseHelper } = this;
 
-    const recipientId = body.recipientId;
-
     if (!body.recipientId) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "recipientId",
-        ...Function_Exception_Detail,
-      });
-    }
-
-    if (body.senderId === recipientId) {
-      throw new ArgumentIllegalException(SHOULD_NOT_BE, {
-        to_compare_prop: `senderId ${body.senderId}`,
-        to_target: "body",
-        be_compare_prop: `recipientId ${recipientId}`,
         ...Function_Exception_Detail,
       });
     }
@@ -244,8 +232,12 @@ export class IssueEntityTransactionFactory extends TransactionFactory<IssueEntit
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
       const { senderId, recipientId, senderPublicKeyBuffer, signatureBuffer } = transaction;
-      const { sourceChainName, sourceChainMagic, entityId, entityFactory } =
-        transaction.asset.issueEntity;
+      const {
+        sourceChainName,
+        sourceChainMagic,
+        entityId,
+        entityFactory,
+      } = transaction.asset.issueEntity;
       const { factoryId, entityFrozenAssetPrealnum, purchaseAssetPrealnum } = entityFactory;
       // 发行 entity
       taskList.next = eventEmitter.emit("issueEntity", {
@@ -258,6 +250,7 @@ export class IssueEntityTransactionFactory extends TransactionFactory<IssueEntit
           sourceChainMagic,
           factoryId,
           entityId,
+          possessorAddress: senderId,
           entityFrozenAssetPrealnum,
           frozenIdBuffer: signatureBuffer,
           status: ASSET_STATUS.NORMAL,
@@ -269,8 +262,9 @@ export class IssueEntityTransactionFactory extends TransactionFactory<IssueEntit
       );
       // 冻结主权益，销毁时赎回
       if (entityFrozenAssetPrealnum !== "0") {
-        const minEffectiveHeight =
-          this.transactionHelper.getTransactionMinEffectiveHeight(transaction);
+        const minEffectiveHeight = this.transactionHelper.getTransactionMinEffectiveHeight(
+          transaction,
+        );
         const maxEffectiveHeight = Number.MAX_SAFE_INTEGER;
         taskList.next = eventEmitter.emit("frozenAsset", {
           type: "frozenAsset",
@@ -289,7 +283,7 @@ export class IssueEntityTransactionFactory extends TransactionFactory<IssueEntit
         });
       }
       // 付费
-      if (purchaseAssetPrealnum !== "0") {
+      if (purchaseAssetPrealnum !== "0" && senderId !== recipientId) {
         // 扣除资产
         taskList.next = this._applyTransactionEmitAsset(
           eventEmitter,
@@ -320,8 +314,11 @@ export class IssueEntityTransactionFactory extends TransactionFactory<IssueEntit
       assetType: this.configHelper.assetType,
     },
   ) {
-    const { sourceChainMagic, entityFrozenAssetPrealnum, purchaseAssetPrealnum } =
-      transaction.asset.issueEntity.entityFactory;
+    const {
+      sourceChainMagic,
+      entityFrozenAssetPrealnum,
+      purchaseAssetPrealnum,
+    } = transaction.asset.issueEntity.entityFactory;
     if (argv.magic === sourceChainMagic && argv.assetType === this.configHelper.assetType) {
       return (BigInt(entityFrozenAssetPrealnum) + BigInt(purchaseAssetPrealnum)).toString();
     }

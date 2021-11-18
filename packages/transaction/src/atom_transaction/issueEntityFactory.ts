@@ -14,6 +14,7 @@ import {
   PROP_IS_REQUIRE,
   PROP_IS_INVALID,
   SHOULD_BE,
+  SHOULD_NOT_BE,
   NOT_IN_EXPECTED_RANGE,
 } from "@bfchain/core-util-exception";
 import { Injectable, wrapTaskList } from "@bfchain/util";
@@ -27,7 +28,9 @@ const { ArgumentIllegalException } = CoreExceptionGenerator(
  *
  */
 @Injectable()
-export class IssueEntityFactoryTransactionFactory extends TransactionFactory<IssueEntityFactoryTransaction> {
+export class IssueEntityFactoryTransactionFactory extends TransactionFactory<
+  IssueEntityFactoryTransaction
+> {
   constructor(
     public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,
@@ -59,9 +62,19 @@ export class IssueEntityFactoryTransactionFactory extends TransactionFactory<Iss
 
     this.emptyRangeType(body, Function_Exception_Detail);
 
-    if (!body.recipientId) {
+    const recipientId = body.recipientId;
+    if (!recipientId) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "recipientId",
+        ...Function_Exception_Detail,
+      });
+    }
+
+    if (body.senderId === recipientId) {
+      throw new ArgumentIllegalException(SHOULD_NOT_BE, {
+        to_compare_prop: `senderId ${body.senderId}`,
+        to_target: "body",
+        be_compare_prop: `recipientId ${recipientId}`,
         ...Function_Exception_Detail,
       });
     }
