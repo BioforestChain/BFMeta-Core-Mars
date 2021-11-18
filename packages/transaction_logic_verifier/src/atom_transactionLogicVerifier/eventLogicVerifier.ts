@@ -649,21 +649,20 @@ export class EventLogicVerifier {
         const { address, assetInfo, genesisAddress, sourceAmount } = applyInfo;
         const { assetType } = assetInfo;
 
-        if (address !== genesisAddress) {
-          // 不能将冻结账户设置为数字资产的创世账户
-          const possessor = await accountGetterHelper.getAccountInfo(genesisAddress);
-          if (possessor) {
-            const accountStatus = possessor.accountStatus;
-            if (
-              accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
-              accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
-              accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
-            ) {
-              throw new ConsensusException(ACCOUNT_FROZEN, {
-                address: genesisAddress,
-                ...Function_Exception_Detail,
-              });
-            }
+        // 不能将冻结账户设置为数字资产的创世账户
+        const possessor = await accountGetterHelper.getAccountInfo(genesisAddress);
+        if (possessor) {
+          const accountStatus = possessor.accountStatus;
+          if (
+            accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
+            accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
+            accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
+          ) {
+            throw new ConsensusException(ACCOUNT_FROZEN, {
+              address: genesisAddress,
+              status: accountStatus,
+              ...Function_Exception_Detail,
+            });
           }
         }
 
@@ -811,6 +810,7 @@ export class EventLogicVerifier {
             ) {
               throw new ConsensusException(ACCOUNT_FROZEN, {
                 address: possessorAddress,
+                status: accountStatus,
                 ...Function_Exception_Detail,
               });
             }
@@ -950,7 +950,26 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "changeDAppidPossessor",
       async ({ transaction, applyInfo }, next) => {
-        const { sourceChainMagic, dappid } = applyInfo;
+        const { address, possessorAddress, sourceChainMagic, dappid } = applyInfo;
+
+        if (address !== possessorAddress) {
+          // 不能将冻结账户设置为 dappid 的拥有者
+          const possessor = await accountGetterHelper.getAccountInfo(possessorAddress);
+          if (possessor) {
+            const accountStatus = possessor.accountStatus;
+            if (
+              accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
+              accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
+              accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
+            ) {
+              throw new ConsensusException(ACCOUNT_FROZEN, {
+                address: possessorAddress,
+                status: accountStatus,
+                ...Function_Exception_Detail,
+              });
+            }
+          }
+        }
 
         const memDapp = await accountGetterHelper.getDApp(
           sourceChainMagic,
@@ -1130,6 +1149,7 @@ export class EventLogicVerifier {
             ) {
               throw new ConsensusException(ACCOUNT_FROZEN, {
                 address: possessorAddress,
+                status: accountStatus,
                 ...Function_Exception_Detail,
               });
             }
@@ -1600,7 +1620,26 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "changeLocationNamePossessor",
       async ({ transaction, applyInfo }, next) => {
-        const { address, sourceChainMagic, name } = applyInfo;
+        const { address, possessorAddress, sourceChainMagic, name } = applyInfo;
+
+        if (address !== possessorAddress) {
+          // 不能将冻结账户设置为链域名的拥有者
+          const possessor = await accountGetterHelper.getAccountInfo(possessorAddress);
+          if (possessor) {
+            const accountStatus = possessor.accountStatus;
+            if (
+              accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
+              accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
+              accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
+            ) {
+              throw new ConsensusException(ACCOUNT_FROZEN, {
+                address: possessorAddress,
+                status: accountStatus,
+                ...Function_Exception_Detail,
+              });
+            }
+          }
+        }
 
         // 位名是否存在
         const memLocation = await accountGetterHelper.getLocationName(
@@ -1671,6 +1710,7 @@ export class EventLogicVerifier {
           ) {
             throw new ConsensusException(ACCOUNT_FROZEN, {
               address: possessorAddress,
+              status: accountStatus,
               ...Function_Exception_Detail,
             });
           }
@@ -2019,7 +2059,26 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "changeEntityPossessor",
       async ({ transaction, applyInfo }, next) => {
-        const { address, sourceChainMagic, entityId } = applyInfo;
+        const { address, possessorAddress, sourceChainMagic, entityId } = applyInfo;
+
+        if (address !== possessorAddress) {
+          // 不能将冻结账户设置为非同质资产的拥有者
+          const possessor = await accountGetterHelper.getAccountInfo(possessorAddress);
+          if (possessor) {
+            const accountStatus = possessor.accountStatus;
+            if (
+              accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
+              accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
+              accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
+            ) {
+              throw new ConsensusException(ACCOUNT_FROZEN, {
+                address: possessorAddress,
+                status: accountStatus,
+                ...Function_Exception_Detail,
+              });
+            }
+          }
+        }
 
         // entity 是否存在
         const memEntity = (await accountGetterHelper.getEntity(
