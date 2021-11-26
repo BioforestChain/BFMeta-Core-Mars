@@ -41,9 +41,9 @@ declare namespace BFChainCore {
     /**非对称解密 */
     open(
       msg: Uint8Array,
+      nonce: Uint8Array,
       publicKey: Uint8Array,
       secretKey: Uint8Array,
-      nonce: Uint8Array,
     ): BFChainUtil.PromiseMaybe<Uint8Array | false>;
   }
   type Keypair = {

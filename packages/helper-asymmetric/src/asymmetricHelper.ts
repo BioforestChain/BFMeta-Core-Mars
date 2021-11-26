@@ -74,9 +74,9 @@ export class AsymmetricHelper {
     const curveDecryptSK = await this.ed2curveHelper.convertSecretKey(decryptSK);
     const decryptedMessage = await this.keypairHelper.open(
       encryptedMessage,
+      nonce,
       curveEncryptPK,
       curveDecryptSK,
-      nonce,
     );
     return decryptedMessage;
   }
