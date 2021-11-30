@@ -683,36 +683,37 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
   /**
    * 资产大类是否合法
    *
-   * @param Function_Exception_Detail
    * @param parentAssetType
+   * @param propName
+   * @param Function_Exception_Detail
    */
-  checkParentAssetType(Function_Exception_Detail: FunctionExceptionDetail, parentAssetType: any) {
+  checkParentAssetType(
+    parentAssetType: any,
+    propName: string,
+    Function_Exception_Detail: FunctionExceptionDetail,
+  ) {
     if (!parentAssetType) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "parentAssetType",
+        prop: propName,
         ...Function_Exception_Detail,
       });
     }
     if (!PARENT_ASSET_TYPE[parentAssetType]) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `parentAssetType ${parentAssetType}`,
+        prop: `${propName} ${parentAssetType}`,
         ...Function_Exception_Detail,
       });
     }
   }
 
   /**
-   * 资产名是否合法
+   * 同质权益名是否合法
    *
    * @param assetType
    * @param propName
    * @param Function_Exception_Detail
    */
-  checkAssetType(
-    assetType: any,
-    propName: string,
-    Function_Exception_Detail: FunctionExceptionDetail,
-  ) {
+  checkAsset(assetType: any, propName: string, Function_Exception_Detail: FunctionExceptionDetail) {
     if (!assetType) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: propName,
@@ -722,7 +723,6 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     if (!this.baseHelper.isValidAssetType(assetType)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: `${propName} ${assetType}`,
-        type: "asset type",
         ...Function_Exception_Detail,
       });
     }
@@ -732,19 +732,19 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
    * dappid 是否合法
    *
    * @param dappid
+   * @param propName
    * @param Function_Exception_Detail
    */
-  checkDAppid(dappid: any, Function_Exception_Detail: FunctionExceptionDetail) {
+  checkDAppid(dappid: any, propName: string, Function_Exception_Detail: FunctionExceptionDetail) {
     if (!dappid) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "dappid",
+        prop: propName,
         ...Function_Exception_Detail,
       });
     }
     if (!this.baseHelper.isValidDAppId(dappid)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `dappid ${dappid}`,
-        type: "dappid",
+        prop: `${propName} ${dappid}`,
         ...Function_Exception_Detail,
       });
     }
@@ -754,19 +754,23 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
    * locationName 是否合法
    *
    * @param locationName
+   * @param propName
    * @param Function_Exception_Detail
    */
-  checkLocationName(locationName: any, Function_Exception_Detail: FunctionExceptionDetail) {
+  checkLocationName(
+    locationName: any,
+    propName: string,
+    Function_Exception_Detail: FunctionExceptionDetail,
+  ) {
     if (!locationName) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "locationName",
+        prop: propName,
         ...Function_Exception_Detail,
       });
     }
     if (!this.baseHelper.isValidLnsName(locationName)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `locationName ${locationName}`,
-        type: "locationName",
+        prop: `${propName} ${locationName}`,
         ...Function_Exception_Detail,
       });
     }
@@ -776,19 +780,23 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
    * entity factory id 是否合法
    *
    * @param factoryId
+   * @param propName
    * @param Function_Exception_Detail
    */
-  checkEntityFactoryId(factoryId: any, Function_Exception_Detail: FunctionExceptionDetail) {
+  checkEntityFactoryId(
+    factoryId: any,
+    propName: string,
+    Function_Exception_Detail: FunctionExceptionDetail,
+  ) {
     if (!factoryId) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "factoryId",
+        prop: propName,
         ...Function_Exception_Detail,
       });
     }
     if (!this.baseHelper.isValidEntityFactoryId(factoryId)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `factoryId ${factoryId}`,
-        type: "entity factory id",
+        prop: `${propName} ${factoryId}`,
         ...Function_Exception_Detail,
       });
     }
@@ -798,48 +806,57 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
    * entity id 是否合法
    *
    * @param entityId
+   * @param propName
    * @param Function_Exception_Detail
    */
-  checkEntityId(entityId: any, Function_Exception_Detail: FunctionExceptionDetail) {
+  checkEntityId(
+    entityId: any,
+    propName: string,
+    Function_Exception_Detail: FunctionExceptionDetail,
+  ) {
     if (!entityId) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "entityId",
+        prop: propName,
         ...Function_Exception_Detail,
       });
     }
     if (!this.baseHelper.isValidEntityId(entityId)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `entityId ${entityId}`,
-        type: "entity id",
+        prop: `${propName} ${entityId}`,
         ...Function_Exception_Detail,
       });
     }
   }
 
-  checkAsset(
-    Function_Exception_Detail: FunctionExceptionDetail,
-    sourceChainName: any,
-    sourceChainMagic: any,
+  /**
+   * 资产名是否合法
+   *
+   * @param parentAssetType
+   * @param assetType
+   * @param propName
+   * @param Function_Exception_Detail
+   * @returns
+   */
+  checkAssetType(
     parentAssetType: BFChainCore.PARENT_ASSET_TYPE,
-    assetType: string,
+    assetType: any,
+    propName: string,
+    Function_Exception_Detail: FunctionExceptionDetail,
   ) {
-    this.checkChainName(Function_Exception_Detail, "sourceChainName", sourceChainName);
-    this.checkChainMagic(Function_Exception_Detail, "sourceChainMagic", sourceChainMagic);
-    this.checkParentAssetType(Function_Exception_Detail, parentAssetType);
     if (parentAssetType === PARENT_ASSET_TYPE.ASSETS) {
-      this.checkAssetType(assetType, "assetType", Function_Exception_Detail);
+      this.checkAsset(assetType, propName, Function_Exception_Detail);
       return;
     }
     if (parentAssetType === PARENT_ASSET_TYPE.DAPP) {
-      this.checkDAppid(assetType, Function_Exception_Detail);
+      this.checkDAppid(assetType, propName, Function_Exception_Detail);
       return;
     }
     if (parentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME) {
-      this.checkLocationName(assetType, Function_Exception_Detail);
+      this.checkLocationName(assetType, propName, Function_Exception_Detail);
       return;
     }
     if (parentAssetType === PARENT_ASSET_TYPE.ENTITY) {
-      this.checkEntityId(assetType, Function_Exception_Detail);
+      this.checkEntityId(assetType, propName, Function_Exception_Detail);
       return;
     }
     throw new ArgumentIllegalException(PROP_IS_INVALID, {

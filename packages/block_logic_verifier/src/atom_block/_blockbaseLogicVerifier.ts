@@ -22,7 +22,6 @@ import {
   BLOCK_SHOULD_NOT_HAVE_SIGN_SIGNATURE,
 } from "@bfchain/core-util-exception";
 import type { Block } from "@bfchain/core-model-block";
-import { TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE } from "@bfchain/core-model-transaction";
 import { Inject } from "@bfchain/util";
 import { BlockGeneratorCalculator } from "@bfchain/core-block";
 import { BLOCK_FORK_CAUSE } from "@bfchain/core-model";

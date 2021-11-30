@@ -45,7 +45,7 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
     const toExchangeSpecialAssetJson = (await transactionGetterHelper.getTransactionBySignature(
       transactionSignature,
       this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
-    )) as BFChainCore.TransactionJSON<BFChainCore.ToExchangeSpecialAssetAssetJSON> | undefined;
+    )) as BFChainCore.ToExchangeSpecialAssetTransactionJSON | undefined;
     if (!toExchangeSpecialAssetJson) {
       throw new NoFoundException(NOT_EXIST_OR_EXPIRED, {
         prop: `Transaction with signature ${transactionSignature}`,

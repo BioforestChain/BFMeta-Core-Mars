@@ -27,6 +27,7 @@
   "files": [
     "src/@types.ts",
     "src/atom_transaction/acceptVote.transaction.ts",
+    "src/atom_transaction/beExchangeAny.transaction.ts",
     "src/atom_transaction/beExchangeAsset.transaction.ts",
     "src/atom_transaction/beExchangeSpecialAsset.transaction.ts",
     "src/atom_transaction/dapp.transaction.ts",
@@ -49,6 +50,7 @@
     "src/atom_transaction/setLnsRecordValue.transaction.ts",
     "src/atom_transaction/signature.transaction.ts",
     "src/atom_transaction/signForAsset.transaction.ts",
+    "src/atom_transaction/toExchangeAny.transaction.ts",
     "src/atom_transaction/toExchangeAsset.transaction.ts",
     "src/atom_transaction/toExchangeSpecialAsset.transaction.ts",
     "src/atom_transaction/transferAsset.transaction.ts",

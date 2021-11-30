@@ -24,6 +24,7 @@
   "files": [
     "src/@types.ts",
     "src/atom_transactionLogicVerifier/acceptVoteLogicVerifier.ts",
+    "src/atom_transactionLogicVerifier/beExchangeAnyLogicVerifier.ts",
     "src/atom_transactionLogicVerifier/beExchangeAssetLogicVerifier.ts",
     "src/atom_transactionLogicVerifier/beExchangeSpecialAssetLogicVerifier.ts",
     "src/atom_transactionLogicVerifier/customLogicVerifier.ts",
@@ -50,6 +51,7 @@
     "src/atom_transactionLogicVerifier/setLnsRecordValueLogicVerifier.ts",
     "src/atom_transactionLogicVerifier/signatureLogicVerifier.ts",
     "src/atom_transactionLogicVerifier/signForAssetLogicVerifier.ts",
+    "src/atom_transactionLogicVerifier/toExchangeAnyLogicVerifier.ts",
     "src/atom_transactionLogicVerifier/toExchangeAssetLogicVerifier.ts",
     "src/atom_transactionLogicVerifier/toExchangeSpecialAssetLogicVerifier.ts",
     "src/atom_transactionLogicVerifier/transferAssetLogicVerifier.ts",

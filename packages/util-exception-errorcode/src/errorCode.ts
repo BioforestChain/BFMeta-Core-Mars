@@ -392,6 +392,9 @@ export const NOT_A_EMAIL = (ec.next =
   "{prop} in {target} not a email, value {value} when {function}");
 /**prop target value function */
 export const NOT_A_URL = (ec.next = "{prop} in {target} not a url, value {value} when {function}");
+/**entityFactory function */
+export const ISSUE_ENTITY_TIMES_USE_UP = (ec.next =
+  "Issue entity times use up, entityFactory {entityFactory} when {function}");
 // #endregion
 export const errorCode = new Map(
   ec.errorCode.concat([

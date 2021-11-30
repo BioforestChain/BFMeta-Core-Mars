@@ -17,7 +17,6 @@ import {
   ASSET_NOT_EXIST,
   DAPPID_IS_ALREADY_EXIST,
   DAPPID_IS_NOT_EXIST,
-  NO_NEED_TO_PURCHASE_SPECIAL_ASSET,
   ACCOUNT_NOT_DAPPID_POSSESSOR,
   DAPPID_ALREADY_FROZEN,
   LOCATION_NAME_IS_NOT_EXIST,
@@ -43,6 +42,7 @@ import {
   ENTITY_NOT_FROZEN,
   DAPPID_NOT_FROZEN,
   LOCATION_NAME_NOT_FROZEN,
+  ISSUE_ENTITY_TIMES_USE_UP,
 } from "@bfchain/core-util-exception";
 import {
   NewTransactionRefuseReason,
@@ -915,13 +915,13 @@ export class EventLogicVerifier {
             ...Function_Exception_Detail,
           });
         }
-        if (memDapp.possessorAddress === address) {
-          throw new ConsensusException(NO_NEED_TO_PURCHASE_SPECIAL_ASSET, {
-            type: "dappid",
-            asset: dappid,
-            ...Function_Exception_Detail,
-          });
-        }
+        // if (memDapp.possessorAddress === address) {
+        //   throw new ConsensusException(NO_NEED_TO_PURCHASE_SPECIAL_ASSET, {
+        //     type: "dappid",
+        //     asset: dappid,
+        //     ...Function_Exception_Detail,
+        //   });
+        // }
         if (transaction.recipientId !== memDapp.possessorAddress) {
           throw new ConsensusException(SHOULD_BE, {
             to_compare_prop: `recipientId ${transaction.recipientId}`,
@@ -1412,14 +1412,8 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "setLnsRecordValue",
       async ({ applyInfo }, next) => {
-        const {
-          address,
-          sourceChainMagic,
-          name,
-          operationType,
-          addRecord,
-          deleteRecord,
-        } = applyInfo;
+        const { address, sourceChainMagic, name, operationType, addRecord, deleteRecord } =
+          applyInfo;
 
         // 校验当前位名是否存存在
         const memLocation = await accountGetterHelper.getLocationName(
@@ -1585,13 +1579,13 @@ export class EventLogicVerifier {
             ...Function_Exception_Detail,
           });
         }
-        if (memLocation.possessorAddress === address) {
-          throw new ConsensusException(NO_NEED_TO_PURCHASE_SPECIAL_ASSET, {
-            type: "locationName",
-            asset: name,
-            ...Function_Exception_Detail,
-          });
-        }
+        // if (memLocation.possessorAddress === address) {
+        //   throw new ConsensusException(NO_NEED_TO_PURCHASE_SPECIAL_ASSET, {
+        //     type: "locationName",
+        //     asset: name,
+        //     ...Function_Exception_Detail,
+        //   });
+        // }
         if (transaction.recipientId !== memLocation.possessorAddress) {
           throw new ConsensusException(SHOULD_BE, {
             to_compare_prop: `recipientId ${transaction.recipientId}`,
@@ -1794,7 +1788,34 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "issueEntity",
       async ({ transaction, applyInfo }, next) => {
-        const { factoryId, entityId, sourceChainMagic, entityFrozenAssetPrealnum } = applyInfo;
+        const {
+          address,
+          possessorAddress,
+          entityFactoryPossessorAddress,
+          factoryId,
+          entityId,
+          sourceChainMagic,
+          entityFrozenAssetPrealnum,
+        } = applyInfo;
+
+        if (address !== possessorAddress) {
+          // 不能将冻结账户设置为非同质资产的拥有者
+          const possessor = await accountGetterHelper.getAccountInfo(possessorAddress);
+          if (possessor) {
+            const accountStatus = possessor.accountStatus;
+            if (
+              accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
+              accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
+              accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
+            ) {
+              throw new ConsensusException(ACCOUNT_FROZEN, {
+                address: possessorAddress,
+                status: accountStatus,
+                ...Function_Exception_Detail,
+              });
+            }
+          }
+        }
 
         // entityFactory 是否已经存在
         const memEntityFactory = await accountGetterHelper.getEntityFactory(
@@ -1810,12 +1831,19 @@ export class EventLogicVerifier {
           });
         }
 
-        if (transaction.recipientId !== memEntityFactory.possessorAddress) {
+        if (entityFactoryPossessorAddress !== memEntityFactory.possessorAddress) {
           throw new ConsensusException(NOT_MATCH, {
-            to_compare_prop: `recipientId ${transaction.recipientId}`,
-            be_compare_prop: "transaction",
+            to_compare_prop: `entityFactoryPossessor ${entityFactoryPossessorAddress}`,
+            be_compare_prop: "issueEntity",
             to_target: `possessorAddress ${memEntityFactory.possessorAddress}`,
             be_target: "memEntityFactory",
+            ...Function_Exception_Detail,
+          });
+        }
+
+        if (memEntityFactory.remainNumberOfEntities === 0) {
+          throw new ConsensusException(ISSUE_ENTITY_TIMES_USE_UP, {
+            entityFactory: factoryId,
             ...Function_Exception_Detail,
           });
         }
@@ -1877,7 +1905,48 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "destoryEntity",
       async ({ transaction, applyInfo }, next) => {
-        const { sourceChainMagic, entityId } = applyInfo;
+        const {
+          sourceChainMagic,
+          entityId,
+          entityFactoryApplicantAddress,
+          entityFactoryPossessorAddress,
+          entityFactory,
+        } = applyInfo;
+
+        const factoryId = entityFactory.factoryId;
+        // entityFactory 是否已经存在
+        const memEntityFactory = await accountGetterHelper.getEntityFactory(
+          sourceChainMagic,
+          factoryId,
+          currentBlockHeight,
+        );
+        if (!memEntityFactory) {
+          throw new ConsensusException(ENTITY_FACTORY_IS_NOT_EXIST, {
+            factoryId,
+            errorId: NewTransactionRefuseReason.ENTITY_FACTORY_NOT_EXIST,
+            ...Function_Exception_Detail,
+          });
+        }
+
+        if (entityFactoryApplicantAddress !== memEntityFactory.applyAddress) {
+          throw new ConsensusException(NOT_MATCH, {
+            to_compare_prop: `entityFactoryApplicant ${entityFactoryApplicantAddress}`,
+            be_compare_prop: "destoryEntity",
+            to_target: `applyAddress ${memEntityFactory.applyAddress}`,
+            be_target: "memEntityFactory",
+            ...Function_Exception_Detail,
+          });
+        }
+
+        if (entityFactoryPossessorAddress !== memEntityFactory.possessorAddress) {
+          throw new ConsensusException(NOT_MATCH, {
+            to_compare_prop: `entityFactoryPossessor ${entityFactoryPossessorAddress}`,
+            be_compare_prop: "destoryEntity",
+            to_target: `possessorAddress ${memEntityFactory.possessorAddress}`,
+            be_target: "memEntityFactory",
+            ...Function_Exception_Detail,
+          });
+        }
 
         const memEntity = await accountGetterHelper.getEntity(
           sourceChainMagic,
@@ -2024,13 +2093,13 @@ export class EventLogicVerifier {
             ...Function_Exception_Detail,
           });
         }
-        if (memEntity.possessorAddress === address) {
-          throw new ConsensusException(NO_NEED_TO_PURCHASE_SPECIAL_ASSET, {
-            type: "entity",
-            asset: entityId,
-            ...Function_Exception_Detail,
-          });
-        }
+        // if (memEntity.possessorAddress === address) {
+        //   throw new ConsensusException(NO_NEED_TO_PURCHASE_SPECIAL_ASSET, {
+        //     type: "entity",
+        //     asset: entityId,
+        //     ...Function_Exception_Detail,
+        //   });
+        // }
         if (transaction.recipientId !== memEntity.possessorAddress) {
           throw new ConsensusException(SHOULD_BE, {
             to_compare_prop: `recipientId ${transaction.recipientId}`,

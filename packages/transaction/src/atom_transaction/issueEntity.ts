@@ -1,5 +1,5 @@
 import { TransactionFactory } from "./_txbase";
-import { IssueEntityTransaction, ASSET_STATUS, PARENT_ASSET_TYPE } from "@bfchain/core-model";
+import { IssueEntityTransaction, ASSET_STATUS } from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
@@ -119,7 +119,8 @@ export class IssueEntityTransactionFactory extends TransactionFactory<IssueEntit
       target: "issueEntityAsset",
     } as const;
 
-    const { sourceChainName, sourceChainMagic, entityId, entityFactory } = issueEntity;
+    const { sourceChainName, sourceChainMagic, entityId, entityFactoryPossessor, entityFactory } =
+      issueEntity;
 
     if (sourceChainName !== config.chainName) {
       throw new ArgumentIllegalException(SHOULD_BE, {
@@ -136,6 +137,22 @@ export class IssueEntityTransactionFactory extends TransactionFactory<IssueEntit
         to_target: "body",
         be_compare_prop: "local chain magic",
         ...Function_Exception_Detail,
+      });
+    }
+
+    if (!entityFactoryPossessor) {
+      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        prop: "entityFactoryPossessor",
+        ...Function_Exception_Detail,
+      });
+    }
+
+    if (!(await this.accountBaseHelper.isAddress(entityFactoryPossessor))) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: `entityFactoryPossessor ${entityFactoryPossessor}`,
+        type: "account address",
+        ...Function_Exception_Detail,
+        target: "issueEntity",
       });
     }
 
@@ -232,12 +249,8 @@ export class IssueEntityTransactionFactory extends TransactionFactory<IssueEntit
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
       const { senderId, recipientId, senderPublicKeyBuffer, signatureBuffer } = transaction;
-      const {
-        sourceChainName,
-        sourceChainMagic,
-        entityId,
-        entityFactory,
-      } = transaction.asset.issueEntity;
+      const { sourceChainName, sourceChainMagic, entityId, entityFactoryPossessor, entityFactory } =
+        transaction.asset.issueEntity;
       const { factoryId, entityFrozenAssetPrealnum, purchaseAssetPrealnum } = entityFactory;
       // 发行 entity
       taskList.next = eventEmitter.emit("issueEntity", {
@@ -250,9 +263,10 @@ export class IssueEntityTransactionFactory extends TransactionFactory<IssueEntit
           sourceChainMagic,
           factoryId,
           entityId,
-          possessorAddress: senderId,
+          possessorAddress: recipientId,
+          entityFactoryPossessorAddress: entityFactoryPossessor,
           entityFrozenAssetPrealnum,
-          frozenIdBuffer: signatureBuffer,
+          issueIdBuffer: signatureBuffer,
           status: ASSET_STATUS.NORMAL,
         },
       });
@@ -262,9 +276,8 @@ export class IssueEntityTransactionFactory extends TransactionFactory<IssueEntit
       );
       // 冻结主权益，销毁时赎回
       if (entityFrozenAssetPrealnum !== "0") {
-        const minEffectiveHeight = this.transactionHelper.getTransactionMinEffectiveHeight(
-          transaction,
-        );
+        const minEffectiveHeight =
+          this.transactionHelper.getTransactionMinEffectiveHeight(transaction);
         const maxEffectiveHeight = Number.MAX_SAFE_INTEGER;
         taskList.next = eventEmitter.emit("frozenAsset", {
           type: "frozenAsset",
@@ -283,7 +296,7 @@ export class IssueEntityTransactionFactory extends TransactionFactory<IssueEntit
         });
       }
       // 付费
-      if (purchaseAssetPrealnum !== "0" && senderId !== recipientId) {
+      if (purchaseAssetPrealnum !== "0") {
         // 扣除资产
         taskList.next = this._applyTransactionEmitAsset(
           eventEmitter,
@@ -292,7 +305,7 @@ export class IssueEntityTransactionFactory extends TransactionFactory<IssueEntit
           {
             senderId,
             senderPublicKeyBuffer: senderPublicKeyBuffer,
-            recipientId,
+            recipientId: entityFactoryPossessor,
             assetInfo,
           },
         );
@@ -314,11 +327,8 @@ export class IssueEntityTransactionFactory extends TransactionFactory<IssueEntit
       assetType: this.configHelper.assetType,
     },
   ) {
-    const {
-      sourceChainMagic,
-      entityFrozenAssetPrealnum,
-      purchaseAssetPrealnum,
-    } = transaction.asset.issueEntity.entityFactory;
+    const { sourceChainMagic, entityFrozenAssetPrealnum, purchaseAssetPrealnum } =
+      transaction.asset.issueEntity.entityFactory;
     if (argv.magic === sourceChainMagic && argv.assetType === this.configHelper.assetType) {
       return (BigInt(entityFrozenAssetPrealnum) + BigInt(purchaseAssetPrealnum)).toString();
     }

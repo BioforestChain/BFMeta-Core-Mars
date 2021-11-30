@@ -423,52 +423,112 @@ declare namespace BFChainCore {
   }
 
   interface IssueEntityFactoryJSON {
-    /**资产权益模板来源链名，小写字母组成，3-8 位 */
+    /**非同质资产模板来源链名，小写字母组成，3-8 位 */
     sourceChainName: string;
-    /**资产权益模板来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
+    /**非同质资产模板来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
     sourceChainMagic: string;
-    /**资产权益模板 */
+    /**非同质资产模板 */
     factoryId: string;
-    /**允许发行的资产权益数量 */
-    entityPrealnum: string;
-    /**发行资产权益时冻结的主权益数量，销毁时解冻 */
+    /**允许发行的非同质资产数量 */
+    numberOfEntities: number;
+    /**发行非同质资产时冻结的主权益数量，销毁时解冻 */
     entityFrozenAssetPrealnum: string;
     /**购买模板使用全的主权益数量 */
     purchaseAssetPrealnum: string;
   }
   interface IssueEntityFactoryAssetJSON {
-    /**发行资产权益模板事件附带信息 */
+    /**发行非同质资产模板事件附带信息 */
     issueEntityFactory: IssueEntityFactoryJSON;
   }
   interface IssueEntityJSON {
-    /**资产权益来源链名，小写字母组成，3-8 位 */
+    /**非同质资产来源链名，小写字母组成，3-8 位 */
     sourceChainName: string;
-    /**资产权益来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
+    /**非同质资产来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
     sourceChainMagic: string;
-    /**资产权益名称 */
+    /**非同质资产名称 */
     entityId: string;
-    /**资产权益的模板 */
+    /**非同质资产模板的拥有者 */
+    entityFactoryPossessor: string;
+    /**非同质资产的模板 */
     entityFactory: IssueEntityFactoryJSON;
   }
   interface IssueEntityAssetJSON {
-    /**发行资产权益事件附带信息 */
+    /**发行非同质资产事件附带信息 */
     issueEntity: IssueEntityJSON;
   }
   interface DestoryEntityJSON {
-    /**要销毁的资产权益发行事件的唯一标识符 */
+    /**要销毁的非同质资产发行事件的唯一标识符 */
     transactionSignature: string;
-    /**要销毁的资产权益来源链名，小写字母组成，3-8 位 */
+    /**要销毁的非同质资产来源链名，小写字母组成，3-8 位 */
     sourceChainName: string;
-    /**要销毁的资产权益来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
+    /**要销毁的非同质资产来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
     sourceChainMagic: string;
-    /**要销毁的资产权益名称 */
+    /**要销毁的非同质资产名称 */
     entityId: string;
-    /**要销毁的资产权益发行时冻结的主权益数 */
-    entityFrozenAssetPrealnum: string;
+    /**非同质资产模板的申请者 */
+    entityFactoryApplicant: string;
+    /**非同质资产模板的拥有者 */
+    entityFactoryPossessor: string;
+    /**非同质资产的模板 */
+    entityFactory: IssueEntityFactoryJSON;
   }
   interface DestoryEntityAssetJSON {
-    /**销毁资产权益事件附带信息 */
+    /**销毁非同质资产事件附带信息 */
     destoryEntity: DestoryEntityJSON;
+  }
+
+  interface AssetExchangeWeightRatioJSON {
+    /**用于交换的权益权重 */
+    toExchangeAssetWeight: string;
+    /**被交换的权益权重 */
+    beExchangeAssetWeight: string;
+  }
+  interface ToExchangeAnyJSON {
+    /**加密密钥生成的公钥数组 */
+    cipherPublicKeys: string[];
+    /**用于交换的资产来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
+    toExchangeSource: string;
+    /**被交换的资产来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
+    beExchangeSource: string;
+    /**用于交换的资产来源链名，小写字母组成，3-8 位 */
+    toExchangeChainName: string;
+    /**被交换的资产来源链名，小写字母组成，3-8 位 */
+    beExchangeChainName: string;
+    /**用于交换的资产所属大类 */
+    toExchangeParentAssetType: PARENT_ASSET_TYPE;
+    /**被交换的资产所属大类 */
+    beExchangeParentAssetType: PARENT_ASSET_TYPE;
+    /**用于交换的资产名 */
+    toExchangeAssetType: string;
+    /**被交换的资产名 */
+    beExchangeAssetType: string;
+    /**用于交换的资产数量，0-9 组成并且不包含小数点 */
+    toExchangeAssetPrealnum: string;
+    /**被交换的权益数量，0-9 组成并且不包含小数点，非同质权益交换时必填 */
+    beExchangeAssetPrealnum?: string;
+    /**交换比例，同质权益交换时必填 */
+    assetExchangeWeightRatio?: AssetExchangeWeightRatioJSON;
+  }
+  interface ToExchangeAnyAssetJSON {
+    /**发起权益交换事件附带信息 */
+    toExchangeAny: ToExchangeAnyJSON;
+  }
+
+  interface BeExchangeAnyJSON {
+    /**发起权益交换的事件签名，128 个字节的 16 进制字符串 */
+    transactionSignature: string;
+    /**加密密钥生成的签名数组 */
+    ciphertextSignature?: AccountSignatureJSON;
+    /**用于交换的权益数量，权益数量由0-9共十个数字组成，权益数量不包含小数点 */
+    toExchangeAssetPrealnum: string;
+    /**交换得到的权益数量，权益数量由0-9共十个数字组成，权益数量不包含小数点 */
+    beExchangeAssetPrealnum: string;
+    /**权益交换信息 */
+    exchangeAny: ToExchangeAnyJSON;
+  }
+  interface BeExchangeAnyAssetJSON {
+    /**接收权益交换事件附带信息 */
+    beExchangeAny: BeExchangeAnyJSON;
   }
   //#endregion
 
@@ -562,6 +622,15 @@ declare namespace BFChainCore {
   >;
   type DestoryEntityTransactionJSON = TransactionMixJSON<
     DestoryEntityAssetJSON,
+    { hasRecipientId: true }
+  >;
+
+  type ToExchangeAnyTransactionJSON = TransactionMixJSON<
+    ToExchangeAnyAssetJSON,
+    { hasRecipientId: false }
+  >;
+  type BeExchangeAnyTransactionJSON = TransactionMixJSON<
+    BeExchangeAnyAssetJSON,
     { hasRecipientId: true }
   >;
   //#endregion

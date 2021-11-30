@@ -37,7 +37,7 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
     const trs = (await transactionGetterHelper.getTransactionBySignature(
       transactionSignature,
       this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
-    )) as BFChainCore.TransactionJSON<BFChainCore.TrustAssetAssetJSON>;
+    )) as BFChainCore.TrustAssetTransactionJSON;
 
     if (!trs) {
       throw new ConsensusException(NOT_EXIST_OR_EXPIRED, {

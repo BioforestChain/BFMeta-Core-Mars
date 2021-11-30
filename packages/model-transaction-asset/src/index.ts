@@ -33,3 +33,5 @@ export * from "./locationNameRecord";
 export * from "./issueEntityFactory";
 export * from "./issueEntity";
 export * from "./destoryEntity";
+export * from "./toExchangeAny";
+export * from "./beExchangeAny";

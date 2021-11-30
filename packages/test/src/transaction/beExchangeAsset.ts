@@ -277,7 +277,7 @@ async function client(transaction: BFChainCore.Transaction) {
   await client(tx);
   console.log(tx.toJSON().asset);
   const yy = await getToExchangeAssetTransaction(aaa, [cc, dd], false);
-  const tx2 = await getBeExchangeAssetTransaction(aaa, yy, []);
+  const tx2 = await getBeExchangeAssetTransaction(ddd, yy, []);
   await client(tx2);
   console.log(tx2.toJSON().asset);
 })();

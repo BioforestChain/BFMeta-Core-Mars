@@ -212,7 +212,7 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
 
     this.checkChainMagic(sourceChainMagic, "sourceChainMagic", GiftAssetAsset_Exception_Detail);
 
-    this.checkAssetType(assetType, "assetType", GiftAssetAsset_Exception_Detail);
+    this.checkAsset(assetType, "assetType", GiftAssetAsset_Exception_Detail);
 
     if (!baseHelper.isPositiveInteger(giftAsset.totalGrabableTimes)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {

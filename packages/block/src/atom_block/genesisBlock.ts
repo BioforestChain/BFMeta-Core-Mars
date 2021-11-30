@@ -285,19 +285,32 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       });
     }
 
-    // if (!genesisAsset.maxMultipleOfAssetAndMainAsset) {
-    //   throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-    //     prop: "maxMultipleOfAssetAndMainAsset",
-    //     ...GenesisBlockAsset_Exception_Detail,
-    //   });
-    // }
-    // if (!baseHelper.isPositiveBigFloatNotContainZero(genesisAsset.maxMultipleOfAssetAndMainAsset)) {
-    //   throw new ArgumentIllegalException(PROP_IS_INVALID, {
-    //     prop: `maxMultipleOfAssetAndMainAsset ${genesisAsset.maxMultipleOfAssetAndMainAsset}`,
-    //     type: "big float not contain zero",
-    //     ...GenesisBlockAsset_Exception_Detail,
-    //   });
-    // }
+    const maxMultipleOfAssetAndMainAsset = genesisAsset.maxMultipleOfAssetAndMainAsset;
+    if (
+      maxMultipleOfAssetAndMainAsset &&
+      maxMultipleOfAssetAndMainAsset.numerator &&
+      maxMultipleOfAssetAndMainAsset.denominator
+    ) {
+      if (
+        !baseHelper.isPositiveBigFloatNotContainZero(genesisAsset.maxMultipleOfAssetAndMainAsset)
+      ) {
+        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          prop: `maxMultipleOfAssetAndMainAsset ${genesisAsset.maxMultipleOfAssetAndMainAsset}`,
+          type: "big float not contain zero",
+          ...GenesisBlockAsset_Exception_Detail,
+        });
+      }
+    }
+
+    if (genesisAsset.issueEntityFactoryMinChainAsset) {
+      if (!baseHelper.isValidAssetNumber(genesisAsset.issueEntityFactoryMinChainAsset)) {
+        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          prop: `issueEntityFactoryMinChainAsset ${genesisAsset.issueEntityFactoryMinChainAsset}`,
+          type: "asset number",
+          ...GenesisBlockAsset_Exception_Detail,
+        });
+      }
+    }
 
     if (!genesisAsset.registerChainMinChainAsset) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {

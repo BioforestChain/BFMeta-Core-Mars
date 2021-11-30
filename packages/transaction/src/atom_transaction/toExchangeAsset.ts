@@ -162,7 +162,7 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<ToExch
       ToExchangeAssetAsset_Exception_Detail,
     );
 
-    this.checkAssetType(
+    this.checkAsset(
       toExchangeAsset.toExchangeAsset,
       "toExchangeAsset",
       ToExchangeAssetAsset_Exception_Detail,
@@ -180,7 +180,7 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<ToExch
       ToExchangeAssetAsset_Exception_Detail,
     );
 
-    this.checkAssetType(
+    this.checkAsset(
       toExchangeAsset.beExchangeAsset,
       "beExchangeAsset",
       ToExchangeAssetAsset_Exception_Detail,

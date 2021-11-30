@@ -1,5 +1,5 @@
 import { TransactionFactory } from "./_txbase";
-import { DestoryEntityTransaction, ASSET_STATUS, PARENT_ASSET_TYPE } from "@bfchain/core-model";
+import { DestoryEntityTransaction, ASSET_STATUS } from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
@@ -16,6 +16,7 @@ import {
   PROP_IS_INVALID,
 } from "@bfchain/core-util-exception";
 import { Injectable, wrapTaskList } from "@bfchain/util";
+import { IssueEntityFactoryTransactionFactory } from "./issueEntityFactory";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
   "DestoryEntityTransactionFactory",
@@ -33,6 +34,7 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
     public baseHelper: BaseHelper,
     public configHelper: ConfigHelper,
     public chainAssetInfoHelper: ChainAssetInfoHelper,
+    private issueEntityFactoryTransactionFactory: IssueEntityFactoryTransactionFactory,
   ) {
     super();
   }
@@ -117,7 +119,9 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
       sourceChainMagic,
       sourceChainName,
       entityId,
-      entityFrozenAssetPrealnum,
+      entityFactoryApplicant,
+      entityFactoryPossessor,
+      entityFactory,
       transactionSignature,
     } = destoryEntity;
 
@@ -166,18 +170,48 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
       });
     }
 
-    if (!entityFrozenAssetPrealnum) {
+    if (!entityFactoryPossessor) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
-        prop: "entityFrozenAssetPrealnum",
-        ...DestoryEntityAsset_Exception_Detail,
+        prop: "entityFactoryPossessor",
+        ...Function_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isValidAssetPrealnum(entityFrozenAssetPrealnum)) {
+    if (!(await this.accountBaseHelper.isAddress(entityFactoryPossessor))) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
-        prop: `entityFrozenAssetPrealnum ${entityFrozenAssetPrealnum}`,
-        type: "string number",
-        ...DestoryEntityAsset_Exception_Detail,
+        prop: `entityFactoryPossessor ${entityFactoryPossessor}`,
+        type: "account address",
+        ...Function_Exception_Detail,
+        target: "destoryEntity",
+      });
+    }
+
+    if (!entityFactoryApplicant) {
+      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        prop: "entityFactoryApplicant",
+        ...Function_Exception_Detail,
+      });
+    }
+
+    if (!(await this.accountBaseHelper.isAddress(entityFactoryApplicant))) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: `entityFactoryApplicant ${entityFactoryApplicant}`,
+        type: "account address",
+        ...Function_Exception_Detail,
+        target: "destoryEntity",
+      });
+    }
+
+    this.issueEntityFactoryTransactionFactory.verifyIssueEntityFactoryAsset(entityFactory);
+
+    const factoryId = this.transactionHelper.getFactoryIdByEntityId(entityId);
+    if (factoryId !== entityFactory.factoryId) {
+      throw new ArgumentIllegalException(NOT_MATCH, {
+        to_compare_prop: `factoryId ${factoryId}`,
+        be_compare_prop: `factoryId ${entityFactory.factoryId}`,
+        to_target: "entityId",
+        be_target: "entityFactory",
+        ...Function_Exception_Detail,
       });
     }
 
@@ -230,7 +264,9 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
         sourceChainMagic,
         sourceChainName,
         entityId,
-        entityFrozenAssetPrealnum,
+        entityFactoryApplicant,
+        entityFactoryPossessor,
+        entityFactory,
         transactionSignatureBuffer,
       } = transaction.asset.destoryEntity;
       // 销毁 entity
@@ -243,11 +279,14 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
           sourceChainMagic,
           sourceChainName,
           entityId,
-          entityFrozenAssetPrealnum,
+          entityFactoryApplicantAddress: entityFactoryApplicant,
+          entityFactoryPossessorAddress: entityFactoryPossessor,
+          entityFactory: entityFactory.toJSON(),
           frozenIdBuffer: transactionSignatureBuffer,
           status: ASSET_STATUS.DESTORY,
         },
       });
+      const entityFrozenAssetPrealnum = entityFactory.entityFrozenAssetPrealnum;
       if (entityFrozenAssetPrealnum !== "0") {
         // 赎回链资产
         const assetInfo = this.chainAssetInfoHelper.getAssetInfo(
@@ -285,9 +324,9 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
       assetType: this.configHelper.assetType,
     },
   ) {
-    const { sourceChainMagic, entityFrozenAssetPrealnum } = transaction.asset.destoryEntity;
+    const { sourceChainMagic, entityFactory } = transaction.asset.destoryEntity;
     if (argv.magic === sourceChainMagic && argv.assetType === this.configHelper.assetType) {
-      return entityFrozenAssetPrealnum;
+      return entityFactory.entityFrozenAssetPrealnum;
     }
     return "0";
   }

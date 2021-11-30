@@ -210,18 +210,28 @@ export class TransactionHelper {
   get SET_LNS_MANAGER() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.SET_LNS_MANAGER);
   }
-  /** ETY: 资产权益/entity */
-  /** ISSUE_ENTITY_FACTORY: 发行资产权益模板 */
+  /** ETY: 非同质资产/entity */
+  /** ISSUE_ENTITY_FACTORY: 发行非同质资产模板 */
   get ISSUE_ENTITY_FACTORY() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.ISSUE_ENTITY_FACTORY);
   }
-  /** ISSUE_ENTITY: 发行资产权益 */
+  /** ISSUE_ENTITY: 发行非同质资产 */
   get ISSUE_ENTITY() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.ISSUE_ENTITY);
   }
-  /** DESTORY_ENTITY: 销毁资产权益 */
+  /** DESTORY_ENTITY: 销毁非同质资产 */
   get DESTORY_ENTITY() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.DESTORY_ENTITY);
+  }
+
+  /** ECA: 任意资产交换 */
+  /** TO_EXCHANGE_ANY: 发起资产交换 */
+  get TO_EXCHANGE_ANY() {
+    return this.getTransactionType(TRANSACTION_TYPES_BASE.TO_EXCHANGE_ANY);
+  }
+  /** BE_EXCHANGE_ANY: 接受资产交换 */
+  get BE_EXCHANGE_ANY() {
+    return this.getTransactionType(TRANSACTION_TYPES_BASE.BE_EXCHANGE_ANY);
   }
 
   ALL_TRANSACTION_TYPES = [
@@ -255,6 +265,8 @@ export class TransactionHelper {
     this.ISSUE_ENTITY_FACTORY,
     this.ISSUE_ENTITY,
     this.DESTORY_ENTITY,
+    this.TO_EXCHANGE_ANY,
+    this.BE_EXCHANGE_ANY,
   ];
 
   /**获取创世块里所有的受托人 */
@@ -812,5 +824,15 @@ export class TransactionHelper {
       startHeight: applyBlockHeight,
       endHeight: currentBlockHeight - 1,
     };
+  }
+
+  /**
+   * 根据 entityId 获取 factoryId
+   *
+   * @param entityId
+   * @returns
+   */
+  getFactoryIdByEntityId(entityId: string) {
+    return entityId.split("_")[0];
   }
 }
