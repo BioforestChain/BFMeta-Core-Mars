@@ -8,7 +8,8 @@ export class V3_Patch extends PatchBase {
   eventLogicVerifier!: EventLogicVerifier;
 
   readonly name = "patch-v3";
-  readonly patchEffectiveAfterHeight = 236300;
+  // FIXNE: 先这样，后面再想办法搞
+  readonly patchEffectiveAfterHeight = this.config.chainName === "bfchain" ? 236300 : 0;
   protected _version = 1;
   readonly consensusVersion = 3;
   async upgradeHandler(oldVersion: number, newVersion: number) {
@@ -22,11 +23,14 @@ export class V3_Patch extends PatchBase {
             this.patchEffectiveAfterHeight,
             () => {
               const oldBlock = this.config.getHookGenesisBlock(this.consensusVersion) || {};
-              oldBlock.asset = deepMix(oldBlock.asset, {
-                genesisAsset: {
-                  registerChainMinChainAsset: "0",
-                },
-              });
+              // FIXNE: 先这样，后面再想办法搞
+              if (this.config.chainName === "bfchain") {
+                oldBlock.asset = deepMix(oldBlock.asset, {
+                  genesisAsset: {
+                    registerChainMinChainAsset: "0",
+                  },
+                });
+              }
               this.config.setHookGenesisBlock(this.consensusVersion, oldBlock);
             },
             () => {

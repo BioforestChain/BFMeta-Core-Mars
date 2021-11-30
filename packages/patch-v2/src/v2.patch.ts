@@ -292,7 +292,8 @@ export class V2_Patch extends PatchBase {
   eventLogicVerifier!: EventLogicVerifier;
 
   readonly name = "patch-v2";
-  readonly patchEffectiveAfterHeight = 144486;
+  // FIXNE: 先这样，后面再想办法搞
+  readonly patchEffectiveAfterHeight = this.config.chainName === "bfchain" ? 144486 : 0;
   protected _version = 1;
   readonly consensusVersion = 2;
   async upgradeHandler(oldVersion: number, newVersion: number) {
@@ -306,14 +307,17 @@ export class V2_Patch extends PatchBase {
             this.patchEffectiveAfterHeight,
             () => {
               const oldBlock = this.config.getHookGenesisBlock(this.consensusVersion) || {};
-              oldBlock.asset = deepMix(oldBlock.asset, {
-                genesisAsset: {
-                  maxMultipleOfAssetAndMainAsset: FractionBigIntModel.fromObject({
-                    numerator: "100000",
-                    denominator: "1",
-                  }),
-                },
-              });
+              // FIXNE: 先这样，后面再想办法搞
+              if (this.config.chainName === "bfchain") {
+                oldBlock.asset = deepMix(oldBlock.asset, {
+                  genesisAsset: {
+                    maxMultipleOfAssetAndMainAsset: FractionBigIntModel.fromObject({
+                      numerator: "100000",
+                      denominator: "1",
+                    }),
+                  },
+                });
+              }
               this.config.setHookGenesisBlock(this.consensusVersion, oldBlock);
               BLOCK_FACTORY_TYPES_MAP.KF.set(BLOCK_TYPES_BASE.GENESIS, V2_GenesisBlockFactory);
               BLOCK_FACTORY_TYPES_MAP.FK.set(V2_GenesisBlockFactory, BLOCK_TYPES_BASE.GENESIS);
