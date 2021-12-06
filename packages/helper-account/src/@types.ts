@@ -245,12 +245,6 @@ declare namespace BFChainCore {
     getAlias(alias: string): Promise<ALI | undefined>;
     /**查询指定的用户名 */
     getMigrateCertificate(migrateCertificateId: string): Promise<MCI | undefined>;
-    /**初始化账户公钥 */
-    initAccountPublicKey(
-      address: string,
-      publicKey: string,
-      currentBlockHeight: number,
-    ): Promise<void>;
     /**更新账户掉块数量 */
     mergeAccountMissedBlock(
       height: number,

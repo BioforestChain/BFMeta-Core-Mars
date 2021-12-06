@@ -407,24 +407,6 @@ export class AccountHelper<
     }
     return accountGetterHelper.getMigrateCertificate(migrateCertificateId);
   }
-  initAccountPublicKey(
-    address: string,
-    publicKey: string,
-    currentBlockHeight: number,
-    accountGetterHelper = this.accountGetterHelper as Pick<
-      BFChainCore.AccountGetterHelperInterface,
-      "initAccountPublicKey"
-    >,
-  ): Promise<void> {
-    if (!accountGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-        function: "AccountHelper.initAccountPublicKey",
-      });
-    }
-    return accountGetterHelper.initAccountPublicKey(address, publicKey, currentBlockHeight);
-  }
   mergeAccountMissedBlock(
     height: number,
     accountAccumulation: BFChainCore.AccountAccumulationInfo,

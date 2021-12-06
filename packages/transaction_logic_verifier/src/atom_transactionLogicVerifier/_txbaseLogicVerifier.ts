@@ -110,12 +110,6 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       });
     }
     const senderAccountInfo = sender.accountInfo;
-    // 初始化账户公钥
-    // if (!senderAccountInfo.publicKey) {
-    //   const address = senderAccountInfo.address;
-    //   await accountGetterHelper.initAccountPublicKey(address, senderPublicKey, currentBlockHeight);
-    //   senderAccountInfo.publicKey = senderPublicKey;
-    // }
     // 校验发起账户状态
     this.checkSenderAccountStatus(senderAccountInfo);
     // 检验二次密码
