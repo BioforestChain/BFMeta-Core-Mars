@@ -30,6 +30,7 @@ import {
   mainChainAssetData,
   DelegateTransaction,
   LocationNameTransaction,
+  GenesisAssetModel,
 } from "../include";
 import { QueneEventEmitter, Resolve } from "@bfchain/util";
 import optimist from "optimist";

@@ -244,6 +244,9 @@ export class GenesisAssetModel
   /**发行非同质资产模板最小的持有本链资产数量 */
   @Field.d(GenesisAssetModel.INC++, "string")
   issueEntityFactoryMinChainAsset!: string;
+  /**冻结的主权益数允许发行的最大非同质权益数量 */
+  @Field.d(GenesisAssetModel.INC++, FractionBigIntModel)
+  maxMultipleOfEntityAndMainAsset!: FractionBigIntModel;
   toJSON(): BFChainCore.GenesisAssetJSON {
     const res: BFChainCore.GenesisAssetJSON = Object.assign(
       {
@@ -285,6 +288,8 @@ export class GenesisAssetModel
       (res.maxMultipleOfAssetAndMainAsset = this.maxMultipleOfAssetAndMainAsset.toJSON());
     this.issueEntityFactoryMinChainAsset &&
       (res.issueEntityFactoryMinChainAsset = this.issueEntityFactoryMinChainAsset);
+    this.maxMultipleOfEntityAndMainAsset &&
+      (res.maxMultipleOfEntityAndMainAsset = this.maxMultipleOfEntityAndMainAsset.toJSON());
 
     return res;
   }
@@ -302,6 +307,10 @@ export class GenesisAssetModel
       object.maxMultipleOfAssetAndMainAsset &&
         (res.maxMultipleOfAssetAndMainAsset = FractionBigIntModel.fromObject<FractionBigIntModel>(
           object.maxMultipleOfAssetAndMainAsset,
+        ));
+      object.maxMultipleOfEntityAndMainAsset &&
+        (res.maxMultipleOfEntityAndMainAsset = FractionBigIntModel.fromObject<FractionBigIntModel>(
+          object.maxMultipleOfEntityAndMainAsset,
         ));
     }
     return res as unknown as T;

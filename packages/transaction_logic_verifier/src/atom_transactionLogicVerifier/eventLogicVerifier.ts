@@ -1691,7 +1691,8 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "issueEntityFactory",
       async ({ transaction, applyInfo }, next) => {
-        const { address, factoryId, sourceChainMagic, possessorAddress } = applyInfo;
+        const { address, factoryId, sourceChainMagic, possessorAddress, numberOfEntities } =
+          applyInfo;
 
         // 不能将冻结账户设置为数字资产的创世账户
         const possessor = await accountGetterHelper.getAccountInfo(possessorAddress);
@@ -1750,6 +1751,20 @@ export class EventLogicVerifier {
           throw new ConsensusException(ASSET_NOT_ENOUGH, {
             reason: `No enough asset, Min account asset ${issueEntityFactoryMinChainAsset}, remain Assets: ${remainChainAsset}`,
             errorId: NewTransactionRefuseReason.CHAIN_ASSET_NOT_ENOUGH,
+            function: "verify",
+          });
+        }
+
+        // 验证最大发行数量
+        const calcMaxEntities = this.jsbiHelper.multiplyFloorFraction(
+          remainChainAsset,
+          this.configHelper.maxMultipleOfEntityAndMainAsset,
+        );
+        if (BigInt(numberOfEntities) > calcMaxEntities) {
+          throw new ConsensusException(PROP_SHOULD_LTE_FIELD, {
+            prop: `numberOfEntities ${numberOfEntities}`,
+            target: `issueEntityFactory`,
+            field: `calc max entities ${calcMaxEntities}`,
             function: "verify",
           });
         }

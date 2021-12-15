@@ -285,28 +285,45 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       });
     }
 
-    const maxMultipleOfAssetAndMainAsset = genesisAsset.maxMultipleOfAssetAndMainAsset;
+    const {
+      maxMultipleOfAssetAndMainAsset,
+      issueEntityFactoryMinChainAsset,
+      maxMultipleOfEntityAndMainAsset,
+    } = genesisAsset;
+
     if (
       maxMultipleOfAssetAndMainAsset &&
       maxMultipleOfAssetAndMainAsset.numerator &&
       maxMultipleOfAssetAndMainAsset.denominator
     ) {
-      if (
-        !baseHelper.isPositiveBigFloatNotContainZero(genesisAsset.maxMultipleOfAssetAndMainAsset)
-      ) {
+      if (!baseHelper.isPositiveBigFloatNotContainZero(maxMultipleOfAssetAndMainAsset)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: `maxMultipleOfAssetAndMainAsset ${genesisAsset.maxMultipleOfAssetAndMainAsset}`,
+          prop: `maxMultipleOfAssetAndMainAsset ${maxMultipleOfAssetAndMainAsset}`,
           type: "big float not contain zero",
           ...GenesisBlockAsset_Exception_Detail,
         });
       }
     }
 
-    if (genesisAsset.issueEntityFactoryMinChainAsset) {
-      if (!baseHelper.isValidAssetNumber(genesisAsset.issueEntityFactoryMinChainAsset)) {
+    if (issueEntityFactoryMinChainAsset) {
+      if (!baseHelper.isValidAssetNumber(issueEntityFactoryMinChainAsset)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {
-          prop: `issueEntityFactoryMinChainAsset ${genesisAsset.issueEntityFactoryMinChainAsset}`,
+          prop: `issueEntityFactoryMinChainAsset ${issueEntityFactoryMinChainAsset}`,
           type: "asset number",
+          ...GenesisBlockAsset_Exception_Detail,
+        });
+      }
+    }
+
+    if (
+      maxMultipleOfEntityAndMainAsset &&
+      maxMultipleOfEntityAndMainAsset.numerator &&
+      maxMultipleOfEntityAndMainAsset.denominator
+    ) {
+      if (!baseHelper.isPositiveBigFloatNotContainZero(maxMultipleOfEntityAndMainAsset)) {
+        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          prop: `maxMultipleOfEntityAndMainAsset ${maxMultipleOfEntityAndMainAsset}`,
+          type: "big float not contain zero",
           ...GenesisBlockAsset_Exception_Detail,
         });
       }

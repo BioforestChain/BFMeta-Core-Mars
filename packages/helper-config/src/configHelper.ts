@@ -189,6 +189,21 @@ export class ConfigHelper {
       this.hookedGenesisBlock.asset.genesisAsset.issueEntityFactoryMinChainAsset;
     return issueEntityFactoryMinChainAsset || "10000000000000";
   }
+  /**发行非同质资产模板的账户最小持有的主权益数量 */
+  @cacheGetter
+  get maxMultipleOfEntityAndMainAsset() {
+    const maxMultipleOfEntityAndMainAsset =
+      this.hookedGenesisBlock.asset.genesisAsset.maxMultipleOfEntityAndMainAsset;
+
+    return maxMultipleOfEntityAndMainAsset &&
+      maxMultipleOfEntityAndMainAsset.numerator &&
+      maxMultipleOfEntityAndMainAsset.denominator
+      ? maxMultipleOfEntityAndMainAsset
+      : FractionBigIntModel.fromObject({
+          numerator: "100000",
+          denominator: "1",
+        });
+  }
   /**最大的过期区块间隔数量 */
   @cacheGetter
   get maxApplyAndConfirmedBlockHeightDiff() {
@@ -327,6 +342,7 @@ export class ConfigHelper {
       transactionPowOfWorkConfig: this.transactionPowOfWorkConfig,
       maxMultipleOfAssetAndMainAsset: this.maxMultipleOfAssetAndMainAsset,
       issueEntityFactoryMinChainAsset: this.issueEntityFactoryMinChainAsset,
+      maxMultipleOfEntityAndMainAsset: this.maxMultipleOfEntityAndMainAsset,
     };
   }
   //#endregion

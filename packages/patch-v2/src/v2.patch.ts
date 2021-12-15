@@ -20,7 +20,7 @@ GenesisAssetModel.encode = GenesisAssetModelSetup.encode = function GenesisAsset
   if (m.nextRoundDelegates != null && m.nextRoundDelegates.length) {
     for (var i = 0; i < m.nextRoundDelegates.length; ++i)
       m.nextRoundDelegates[i] &&
-        m.$type._types[34].encode(m.nextRoundDelegates[i], w.uint32(34).fork()).ldelim();
+        m.$type._types[35].encode(m.nextRoundDelegates[i], w.uint32(34).fork()).ldelim();
   }
   if (m.chainName != null && m.chainName !== "") w.uint32(42).string(m.chainName);
   if (m.assetType != null && m.assetType !== "") w.uint32(50).string(m.assetType);
@@ -81,12 +81,16 @@ GenesisAssetModel.encode = GenesisAssetModelSetup.encode = function GenesisAsset
       m.$type._types[28].encode(m.transactionPowOfWorkConfig, w.uint32(266).fork()).ldelim();
   if (m.maxMultipleOfAssetAndMainAsset != null) {
     if (m.maxMultipleOfAssetAndMainAsset.denominator) {
-      m.maxMultipleOfAssetAndMainAsset &&
-        m.$type._types[29].encode(m.maxMultipleOfAssetAndMainAsset, w.uint32(274).fork()).ldelim();
+      m.$type._types[29].encode(m.maxMultipleOfAssetAndMainAsset, w.uint32(274).fork()).ldelim();
     }
   }
   if (m.issueEntityFactoryMinChainAsset != null && m.issueEntityFactoryMinChainAsset !== "")
     w.uint32(282).string(m.issueEntityFactoryMinChainAsset);
+  if (m.maxMultipleOfEntityAndMainAsset != null) {
+    if (m.maxMultipleOfEntityAndMainAsset.denominator) {
+      m.$type._types[31].encode(m.maxMultipleOfEntityAndMainAsset, w.uint32(290).fork()).ldelim();
+    }
+  }
   return w;
 };
 GenesisAssetModel.decode = GenesisAssetModelSetup.decode = function GenesisAssetModel$decode(
@@ -194,6 +198,9 @@ GenesisAssetModel.decode = GenesisAssetModelSetup.decode = function GenesisAsset
       case 35:
         m.issueEntityFactoryMinChainAsset = r.string();
         break;
+      case 36:
+        m.maxMultipleOfEntityAndMainAsset = m.$type._types[31].decode(r, r.uint32());
+        break;
       case 1:
         m.newDelegates.push(r.string());
         break;
@@ -204,7 +211,7 @@ GenesisAssetModel.decode = GenesisAssetModelSetup.decode = function GenesisAsset
         m.maxTxCount = r.uint32();
         break;
       case 4:
-        m.nextRoundDelegates.push(m.$type._types[34].decode(r, r.uint32()));
+        m.nextRoundDelegates.push(m.$type._types[35].decode(r, r.uint32()));
         break;
       default:
         r.skipType(t & 7);
@@ -275,6 +282,8 @@ GenesisAssetModel.decode = GenesisAssetModelSetup.decode = function GenesisAsset
   if (m.issueEntityFactoryMinChainAsset == null || m.issueEntityFactoryMinChainAsset == "")
     m.issueEntityFactoryMinChainAsset = undefined;
   // throw util.ProtocolError("missing required 'issueEntityFactoryMinChainAsset'",{instance:m})
+  if (m.maxMultipleOfEntityAndMainAsset == null) m.maxMultipleOfEntityAndMainAsset = undefined;
+  // throw util.ProtocolError("missing required 'maxMultipleOfEntityAndMainAsset'",{instance:m})
   if (m.newDelegates == null)
     throw util.ProtocolError("missing required 'newDelegates'", { instance: m });
   if (m.maxBeginBalance == null)
