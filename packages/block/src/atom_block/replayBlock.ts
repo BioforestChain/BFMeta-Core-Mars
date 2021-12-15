@@ -25,6 +25,7 @@ import {
   PROP_IS_REQUIRE,
   NOT_FOUND,
   SHOULD_NOT_DUPLICATE,
+  PROP_SHOULD_LTE_FIELD,
 } from "@bfchain/core-util-exception";
 import {
   QueneEventEmitter,
@@ -284,11 +285,13 @@ export class ReplayBlockCore<T extends Block> {
     } = block;
     const { tpowOfWorkExemptionBlocks } = config;
     const needTPow = height > tpowOfWorkExemptionBlocks;
-    const abortForbiddenTransaction = this.transactionCore.abortForbiddenTransaction;
     const Function_Exception_Detail = { function: "insertTransactionsForReplay" };
+    const MAX_VOTES_PER_BLOCK = this.config.maxVotesPerBlock;
     const MAX_TRANSACTION_SIZE = this.config.maxTransactionSize;
     /**所有交易的sha256hash */
     const payloadHash = this.cryptoHelper.sha256();
+    /**区块打包的投票交易数 */
+    let numberOfVotes = 0;
     /**所有交易体的总字节长度 */
     let payloadLength = 0;
     /**本块交易所涉及的资产信息 */
@@ -298,6 +301,8 @@ export class ReplayBlockCore<T extends Block> {
     );
     const transactionBufferList: Uint8Array[] = [];
     const { transactionCore, asymmetricHelper, transactionHelper, baseHelper } = this;
+    const { VOTE, GRAB_ASSET, SIGN_FOR_ASSET } = transactionHelper;
+    const abortForbiddenTransaction = transactionCore.abortForbiddenTransaction;
     const trsSet = new Set();
 
     if (!eventEmitter.assetChangesGetter) {
@@ -364,18 +369,17 @@ export class ReplayBlockCore<T extends Block> {
             });
           }
           const trs = tranItem.transaction;
-          if (trsSet.has(trs.signature)) {
+          const { type, senderId, storageValue, signature } = trs;
+          if (trsSet.has(signature)) {
             throw new ConsensusException(SHOULD_NOT_DUPLICATE, {
-              prop: `transaction with signature ${trs.signature}`,
+              prop: `transaction with signature ${signature}`,
               target: `block with height ${block.height}`,
               ...Function_Exception_Detail,
             });
           }
-          trsSet.add(trs.signature);
-          if (!this.commonBlockVerify.canInsertTransaction(trs.type)) {
-            const trsName = TRANSACTION_TYPES_MAP.VK.get(
-              TRANSACTION_TYPES_MAP.trsTypeToV(trs.type),
-            );
+          trsSet.add(signature);
+          if (!this.commonBlockVerify.canInsertTransaction(type)) {
+            const trsName = TRANSACTION_TYPES_MAP.VK.get(TRANSACTION_TYPES_MAP.trsTypeToV(type));
             const exp = new ConsensusException("Disabled insert {trsName} Transaction", {
               trsName,
             });
@@ -388,7 +392,7 @@ export class ReplayBlockCore<T extends Block> {
           if (needTPow) {
             //#region 校验交易pow
             {
-              const count = tranSenderCountMap.forceGet(trs.senderId);
+              const count = tranSenderCountMap.forceGet(senderId);
               /**
                * 再共识里头强制触发校验
                * 但这里的校验的实现是由外部来自定义实现的
@@ -417,7 +421,7 @@ export class ReplayBlockCore<T extends Block> {
                   function: "insertTransactionsForReplay",
                 });
               }
-              tranSenderCountMap.set(trs.senderId, count + 1);
+              tranSenderCountMap.set(senderId, count + 1);
             }
             //#endregion
           }
@@ -433,11 +437,7 @@ export class ReplayBlockCore<T extends Block> {
           }
           transactionBufferList.push(tranItem.getBytes());
           // 验证块内是否存在不合法交易
-          const { storageValue, type, senderId } = trs;
-          if (
-            storageValue &&
-            (type === transactionHelper.GRAB_ASSET || type === transactionHelper.SIGN_FOR_ASSET)
-          ) {
+          if (storageValue && (type === GRAB_ASSET || type === SIGN_FOR_ASSET)) {
             const trsArray = trSignWithIndex.get(storageValue);
             if (trsArray) {
               for (const tr of trsArray) {
@@ -456,7 +456,7 @@ export class ReplayBlockCore<T extends Block> {
             }
           }
           /// 交易生效
-          const txFactory = transactionCore.getTransactionFactoryFromType(trs.type);
+          const txFactory = transactionCore.getTransactionFactoryFromType(type);
           await txFactory.beginDealTransaction(trs, eventEmitter);
           await txFactory.applyTransaction(trs, eventEmitter);
           if (!skipVerifyStatisticInfo) {
@@ -470,7 +470,7 @@ export class ReplayBlockCore<T extends Block> {
               throw new ArgumentIllegalException(NOT_MATCH, {
                 to_compare_prop: `transactionAssetChanges lenght ${realLength}`,
                 be_compare_prop: `transactionAssetChanges lenght ${calcLength}`,
-                to_target: `transactionInBlock ${trs.senderId} ${trs.signature}`,
+                to_target: `transactionInBlock ${senderId} ${signature}`,
                 be_target: "calculate",
                 ...Function_Exception_Detail,
               });
@@ -489,7 +489,7 @@ export class ReplayBlockCore<T extends Block> {
                   be_compare_prop: `transactionAssetChanges with index ${i} ${JSON.stringify(
                     calcTransactionAssetChanges[i],
                   )}`,
-                  to_target: `transactionInBlock ${trs.senderId} ${trs.signature}`,
+                  to_target: `transactionInBlock ${senderId} ${signature}`,
                   be_target: "calculate",
                   ...Function_Exception_Detail,
                 });
@@ -501,7 +501,7 @@ export class ReplayBlockCore<T extends Block> {
               const clalAssetPrealnum = await eventEmitter.assetPrealnumGetter(tranItem);
               if (!clalAssetPrealnum) {
                 throw new ArgumentIllegalException(NOT_FOUND, {
-                  prop: `transaction assetPrealnum ${trs.signature}`,
+                  prop: `transaction assetPrealnum ${signature}`,
                   ...Function_Exception_Detail,
                   target: "blockChain",
                 });
@@ -514,7 +514,7 @@ export class ReplayBlockCore<T extends Block> {
                   be_compare_prop: `assetPrealnum.remainAssetPrealnum ${JSON.stringify(
                     clalAssetPrealnum.remainAssetPrealnum,
                   )}`,
-                  to_target: `transactionInBlock ${trs.senderId} ${trs.signature}`,
+                  to_target: `transactionInBlock ${senderId} ${signature}`,
                   be_target: "calculate",
                   ...Function_Exception_Detail,
                 });
@@ -529,7 +529,7 @@ export class ReplayBlockCore<T extends Block> {
                   be_compare_prop: `assetPrealnum.frozenMainAssetPrealnum ${JSON.stringify(
                     clalAssetPrealnum.frozenMainAssetPrealnum,
                   )}`,
-                  to_target: `transactionInBlock ${trs.senderId} ${trs.signature}`,
+                  to_target: `transactionInBlock ${senderId} ${signature}`,
                   be_target: "calculate",
                   ...Function_Exception_Detail,
                 });
@@ -544,7 +544,7 @@ export class ReplayBlockCore<T extends Block> {
               throw new ArgumentIllegalException(NOT_MATCH, {
                 to_compare_prop: `numberOfSenderTransactions ${tranItem.numberOfSenderTransactions}`,
                 be_compare_prop: `numberOfSenderTransactions ${calcNumberOfSenderTransactions}`,
-                to_target: `transactionInBlock ${trs.senderId} ${trs.signature}`,
+                to_target: `transactionInBlock ${senderId} ${signature}`,
                 be_target: "calculate",
                 ...Function_Exception_Detail,
               });
@@ -594,6 +594,9 @@ export class ReplayBlockCore<T extends Block> {
           // 更新总字节长度
           payloadLength += tranItemBinary.length;
           await txFactory.endDealTransaction(tranItem, eventEmitter);
+          if (type === VOTE) {
+            numberOfVotes++;
+          }
         } catch (error) {
           const res = await eventEmitter.emit("error", {
             error,
@@ -607,6 +610,15 @@ export class ReplayBlockCore<T extends Block> {
         }
       }
       isDevGenerateBlock && info("finish insertTransactionsForReplay");
+
+      if (numberOfVotes > MAX_VOTES_PER_BLOCK) {
+        throw new ConsensusException(PROP_SHOULD_LTE_FIELD, {
+          prop: `numberOfVotes ${numberOfVotes}`,
+          target: "block",
+          field: `maxVotesPerBlock ${MAX_VOTES_PER_BLOCK}`,
+          ...Function_Exception_Detail,
+        });
+      }
 
       const numberOfTransactions = transactionBufferList.length;
       if (block.numberOfTransactions !== numberOfTransactions) {

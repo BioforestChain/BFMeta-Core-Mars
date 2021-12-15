@@ -56,7 +56,7 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
 
     const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
-    const { eventLogicVerifier } = this;
+    const { eventLogicVerifier, helperLogicVerifier } = this;
 
     eventLogicVerifier.listenEventFrozenAccount(cloneAccountsInfo, eventEmitter);
 
@@ -70,10 +70,18 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
 
     eventLogicVerifier.listenEventRejectVote(cloneAccountsInfo, eventEmitter);
 
-    eventLogicVerifier.listenEventVoteEquity(cloneAccountsInfo, curRound, eventEmitter);
+    eventLogicVerifier.listenEventVoteEquity(
+      cloneAccountsInfo,
+      helperLogicVerifier.deepClone(sender.accountAssets),
+      curRound,
+      eventEmitter,
+    );
 
-    const accountAssets = this.helperLogicVerifier.deepClone(sender.accountAssets);
-    eventLogicVerifier.listenEventIssueAsset(accountAssets, accountGetterHelper, eventEmitter);
+    eventLogicVerifier.listenEventIssueAsset(
+      helperLogicVerifier.deepClone(sender.accountAssets),
+      accountGetterHelper,
+      eventEmitter,
+    );
 
     eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
 
@@ -156,16 +164,14 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
     );
 
     eventLogicVerifier.listenEventIssueEntityFactory(
-      accountAssets,
-
+      helperLogicVerifier.deepClone(sender.accountAssets),
       currentBlockHeight,
       accountGetterHelper,
       eventEmitter,
     );
 
     eventLogicVerifier.listenEventIssueEntity(
-      accountAssets,
-
+      helperLogicVerifier.deepClone(sender.accountAssets),
       currentBlockHeight,
       accountGetterHelper,
       eventEmitter,
@@ -196,8 +202,7 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
     );
 
     eventLogicVerifier.listenEventRegisterChain(
-      accountAssets,
-
+      helperLogicVerifier.deepClone(sender.accountAssets),
       accountGetterHelper,
       eventEmitter,
     );

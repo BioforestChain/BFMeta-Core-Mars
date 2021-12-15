@@ -20,7 +20,7 @@ GenesisAssetModel.encode = GenesisAssetModelSetup.encode = function GenesisAsset
   if (m.nextRoundDelegates != null && m.nextRoundDelegates.length) {
     for (var i = 0; i < m.nextRoundDelegates.length; ++i)
       m.nextRoundDelegates[i] &&
-        m.$type._types[35].encode(m.nextRoundDelegates[i], w.uint32(34).fork()).ldelim();
+        m.$type._types[37].encode(m.nextRoundDelegates[i], w.uint32(34).fork()).ldelim();
   }
   if (m.chainName != null && m.chainName !== "") w.uint32(42).string(m.chainName);
   if (m.assetType != null && m.assetType !== "") w.uint32(50).string(m.assetType);
@@ -91,6 +91,10 @@ GenesisAssetModel.encode = GenesisAssetModelSetup.encode = function GenesisAsset
       m.$type._types[31].encode(m.maxMultipleOfEntityAndMainAsset, w.uint32(290).fork()).ldelim();
     }
   }
+  if (m.maxVotesPerBlock != null && m.maxVotesPerBlock !== 0)
+    w.uint32(296).uint32(m.maxVotesPerBlock);
+  if (m.voteMinChainAsset != null && m.voteMinChainAsset !== "")
+    w.uint32(306).string(m.voteMinChainAsset);
   return w;
 };
 GenesisAssetModel.decode = GenesisAssetModelSetup.decode = function GenesisAssetModel$decode(
@@ -201,6 +205,12 @@ GenesisAssetModel.decode = GenesisAssetModelSetup.decode = function GenesisAsset
       case 36:
         m.maxMultipleOfEntityAndMainAsset = m.$type._types[31].decode(r, r.uint32());
         break;
+      case 37:
+        m.maxVotesPerBlock = r.uint32();
+        break;
+      case 38:
+        m.voteMinChainAsset = r.string();
+        break;
       case 1:
         m.newDelegates.push(r.string());
         break;
@@ -211,7 +221,7 @@ GenesisAssetModel.decode = GenesisAssetModelSetup.decode = function GenesisAsset
         m.maxTxCount = r.uint32();
         break;
       case 4:
-        m.nextRoundDelegates.push(m.$type._types[35].decode(r, r.uint32()));
+        m.nextRoundDelegates.push(m.$type._types[37].decode(r, r.uint32()));
         break;
       default:
         r.skipType(t & 7);
@@ -278,12 +288,16 @@ GenesisAssetModel.decode = GenesisAssetModelSetup.decode = function GenesisAsset
   if (m.transactionPowOfWorkConfig == null)
     throw util.ProtocolError("missing required 'transactionPowOfWorkConfig'", { instance: m });
   if (m.maxMultipleOfAssetAndMainAsset == null) m.maxMultipleOfAssetAndMainAsset = undefined;
-  // throw util.ProtocolError("missing required 'maxMultipleOfAssetAndMainAsset'",{instance:m})
+  // throw util.ProtocolError("missing required 'maxMultipleOfAssetAndMainAsset'", { instance: m });
   if (m.issueEntityFactoryMinChainAsset == null || m.issueEntityFactoryMinChainAsset == "")
-    m.issueEntityFactoryMinChainAsset = undefined;
-  // throw util.ProtocolError("missing required 'issueEntityFactoryMinChainAsset'",{instance:m})
+    m.maxMultipleOfAssetAndMainAsset = undefined;
+  // throw util.ProtocolError("missing required 'issueEntityFactoryMinChainAsset'", { instance: m });
   if (m.maxMultipleOfEntityAndMainAsset == null) m.maxMultipleOfEntityAndMainAsset = undefined;
-  // throw util.ProtocolError("missing required 'maxMultipleOfEntityAndMainAsset'",{instance:m})
+  // throw util.ProtocolError("missing required 'maxMultipleOfEntityAndMainAsset'", { instance: m });
+  if (m.maxVotesPerBlock == null)
+    throw util.ProtocolError("missing required 'maxVotesPerBlock'", { instance: m });
+  if (m.voteMinChainAsset == null || m.voteMinChainAsset == "") m.voteMinChainAsset = undefined;
+  // throw util.ProtocolError("missing required 'voteMinChainAsset'", { instance: m });
   if (m.newDelegates == null)
     throw util.ProtocolError("missing required 'newDelegates'", { instance: m });
   if (m.maxBeginBalance == null)

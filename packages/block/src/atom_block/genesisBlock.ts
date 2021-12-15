@@ -271,6 +271,29 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       });
     }
 
+    const { maxVotesPerBlock, voteMinChainAsset } = genesisAsset;
+
+    if (maxVotesPerBlock !== undefined) {
+      if (!baseHelper.isNaturalNumber(maxVotesPerBlock)) {
+        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          prop: `maxVotesPerBlock ${maxVotesPerBlock}`,
+          type: "natural number",
+          ...GenesisBlockAsset_Exception_Detail,
+        });
+      }
+    }
+
+    // 跳过 空串 和 undefined
+    if (voteMinChainAsset) {
+      if (!baseHelper.isValidAssetNumber(voteMinChainAsset)) {
+        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          prop: `voteMinChainAsset ${voteMinChainAsset}`,
+          type: "asset number",
+          ...GenesisBlockAsset_Exception_Detail,
+        });
+      }
+    }
+
     if (!genesisAsset.issueAssetMinChainAsset) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "issueAssetMinChainAsset",
@@ -305,6 +328,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       }
     }
 
+    // 跳过 空串 和 undefined
     if (issueEntityFactoryMinChainAsset) {
       if (!baseHelper.isValidAssetNumber(issueEntityFactoryMinChainAsset)) {
         throw new ArgumentIllegalException(PROP_IS_INVALID, {

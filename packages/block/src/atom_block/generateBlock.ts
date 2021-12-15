@@ -17,6 +17,7 @@ import {
   NOT_EXIST,
   TRAN_POW_VERIFY_FAIL,
   SHOULD_NOT_DUPLICATE,
+  PROP_SHOULD_LTE_FIELD,
 } from "@bfchain/core-util-exception";
 import { QueneEventEmitter, EasyMap, isFlagInDev, Injectable, Inject } from "@bfchain/util";
 const {
@@ -216,13 +217,18 @@ export class GenerateBlockCore<T extends Block> {
     },
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter = new QueneEventEmitter(),
   ) {
-    const abortForbiddenTransaction = this.transactionCore.abortForbiddenTransaction;
+    const transactionCore = this.transactionCore;
+    const abortForbiddenTransaction = transactionCore.abortForbiddenTransaction;
     const Function_Exception_Detail = { function: "insertTransactions" };
+    const VOTE = transactionCore.transactionHelper.VOTE;
+    const MAX_VOTES_PER_BLOCK = this.config.maxVotesPerBlock;
     const MAX_TRANSACTION_SIZE = this.config.maxTransactionSize;
     const { height, generatorPublicKey, statisticInfo: blockStatisticsInfo } = block;
     const { tpowOfWorkExemptionBlocks, maxBlockSize } = this.config;
     /**所有事件的sha256hash */
     const payloadHash = this.cryptoHelper.sha256();
+    /**区块打包的投票交易数 */
+    let numberOfVotes = 0;
     /**区块打包的事件的总字节长度 */
     let payloadLength = 0;
     /**本块事件所涉及的资产信息 */
@@ -253,18 +259,17 @@ export class GenerateBlockCore<T extends Block> {
             });
           }
           const trs = tranItem.transaction;
-          if (trsSet.has(trs.signature)) {
+          const { type, senderId, signature } = trs;
+          if (trsSet.has(signature)) {
             throw new ConsensusException(SHOULD_NOT_DUPLICATE, {
-              prop: `transaction with signature ${trs.signature}`,
+              prop: `transaction with signature ${signature}`,
               target: `block with height ${block.height}`,
               ...Function_Exception_Detail,
             });
           }
-          trsSet.add(trs.signature);
-          if (!this.commonBlockVerify.canInsertTransaction(trs.type)) {
-            const trsName = TRANSACTION_TYPES_MAP.VK.get(
-              TRANSACTION_TYPES_MAP.trsTypeToV(trs.type),
-            );
+          trsSet.add(signature);
+          if (!this.commonBlockVerify.canInsertTransaction(type)) {
+            const trsName = TRANSACTION_TYPES_MAP.VK.get(TRANSACTION_TYPES_MAP.trsTypeToV(type));
             const exp = new ConsensusException("Disabled insert {trsName} Transaction", {
               trsName,
             });
@@ -277,7 +282,7 @@ export class GenerateBlockCore<T extends Block> {
           if (needTPow) {
             //#region 校验交易pow
             {
-              const count = tranSenderCountMap.forceGet(trs.senderId);
+              const count = tranSenderCountMap.forceGet(senderId);
               /**
                * 再共识里头强制触发校验
                * 但这里的校验的实现是由外部来自定义实现的
@@ -296,7 +301,7 @@ export class GenerateBlockCore<T extends Block> {
               });
               if (checkResult === undefined) {
                 throw new NoFoundException(NOT_EXIST, {
-                  prop: `verifyTransactionProfOfWork count ${count} signature ${trs.signature} senderId ${trs.senderId} nonce ${trs.nonce}`,
+                  prop: `verifyTransactionProfOfWork count ${count} signature ${signature} senderId ${senderId} nonce ${trs.nonce}`,
                   target: "ApplyTransactionEventEmitter",
                   function: "insertTransactions",
                 });
@@ -306,7 +311,7 @@ export class GenerateBlockCore<T extends Block> {
                   function: "insertTransactions",
                 });
               }
-              tranSenderCountMap.set(trs.senderId, count + 1);
+              tranSenderCountMap.set(senderId, count + 1);
             }
             //#endregion
           }
@@ -315,16 +320,16 @@ export class GenerateBlockCore<T extends Block> {
           transactions.push(tranItem);
           tranItem.height = block.height;
           /// 交易生效
-          const txFactory = this.transactionCore.getTransactionFactoryFromType(trs.type);
+          const txFactory = transactionCore.getTransactionFactoryFromType(type);
           await txFactory.beginDealTransaction(trs, eventEmitter);
           await txFactory.applyTransaction(trs, eventEmitter);
           // 在 apply 之后，获取变更记录
           eventEmitter.assetChangesGetter &&
             (tranItem.transactionAssetChanges = await eventEmitter.assetChangesGetter(tranItem));
           const transactionAssetChanges = tranItem.transactionAssetChanges;
-          const trsInfo = `height ${tranItem.height} index ${tranItem.index} type ${
-            trs.type
-          } senderId ${trs.senderId} ${
+          const trsInfo = `height ${tranItem.height} index ${
+            tranItem.index
+          } type ${type} senderId ${senderId} ${
             trs.recipientId ? " recipientId " + trs.recipientId : " "
           } signature ${tranItem.transaction.signature}`;
           for (const transactionAssetChange of transactionAssetChanges) {
@@ -389,6 +394,9 @@ export class GenerateBlockCore<T extends Block> {
             await eventEmitter.emit("nearMaxPayloadLength", { payloadLength });
           }
           await txFactory.endDealTransaction(tranItem, eventEmitter);
+          if (type === VOTE) {
+            numberOfVotes++;
+          }
         } catch (error) {
           const res = await eventEmitter.emit("error", {
             error,
@@ -402,6 +410,16 @@ export class GenerateBlockCore<T extends Block> {
         }
       }
       isDevGenerateBlock && info("finish insertTransactions");
+
+      if (numberOfVotes > MAX_VOTES_PER_BLOCK) {
+        throw new ConsensusException(PROP_SHOULD_LTE_FIELD, {
+          prop: `numberOfVotes ${numberOfVotes}`,
+          target: "block",
+          field: `maxVotesPerBlock ${MAX_VOTES_PER_BLOCK}`,
+          ...Function_Exception_Detail,
+        });
+      }
+
       block.statisticInfo = statisticsInfo.toModel();
       block.payloadHashBuffer = await payloadHash.digest();
       block.payloadLength = payloadLength;
