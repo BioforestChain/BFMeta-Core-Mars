@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-model-block-asset",
-  "version": "5.24.27",
+  "version": "5.24.28",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,10 +14,10 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-model-block-base": "5.24.27",
-    "@bfchain/core-model-cacher": "5.24.27",
-    "@bfchain/core-model-common": "5.24.27",
-    "@bfchain/core-typings": "5.24.27"
+    "@bfchain/core-model-block-base": "5.24.28",
+    "@bfchain/core-model-cacher": "5.24.28",
+    "@bfchain/core-model-common": "5.24.28",
+    "@bfchain/core-typings": "5.24.28"
   },
   "gitHead": "ef41eb359371b11aafbec0516df1eba01f16ebfd",
   "types": "build/cjs/index.d.ts"
