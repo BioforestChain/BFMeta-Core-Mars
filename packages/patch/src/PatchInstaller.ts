@@ -36,6 +36,12 @@ export class PatchInstaller
   get lastConsensusVersion() {
     return this._lastConsensusVersion;
   }
+
+  private _lastPatchEffectiveHeight = 1;
+  get lastPatchEffectiveHeight() {
+    return this._lastPatchEffectiveHeight;
+  }
+
   /// 动态载入
   installPatch(PatchCtor: BFChainUtil.Constructor<PatchBase>) {
     Resolve(PatchCtor, this.moduleMap);
@@ -84,6 +90,9 @@ export class PatchInstaller
           this._patchVersionMap.set(patch.name, patch.version);
           if (this._lastConsensusVersion < patch.consensusVersion) {
             this._lastConsensusVersion = patch.consensusVersion;
+          }
+          if (this._lastPatchEffectiveHeight < patch.patchEffectiveAfterHeight) {
+            this._lastPatchEffectiveHeight = patch.patchEffectiveAfterHeight;
           }
         }
       }
