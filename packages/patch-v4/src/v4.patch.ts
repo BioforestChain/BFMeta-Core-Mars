@@ -1,39 +1,39 @@
-import { V2_GenesisBlockFactory } from "./atom-patch";
+import { V4_GenesisBlockFactory } from "./atom-patch";
 import { PatchBase } from "@bfchain/core-patch-base";
 import { Type, Reader } from "@bfchain/protobuf";
-import { Injectable, Inject, deepMix } from "@bfchain/util";
+import { Injectable, Inject } from "@bfchain/util";
 import { EventLogicVerifier } from "@bfchain/core-transaction-logic-verifier";
-import { BLOCK_FACTORY_TYPES_MAP, GenesisBlockFactory } from "@bfchain/core-block";
+import { BLOCK_FACTORY_TYPES_MAP } from "@bfchain/core-block";
 import {
   BLOCK_TYPES_BASE,
   GenesisAssetModel,
-  GenesisAssetV0Model,
-  FractionBigIntModel,
+  GenesisAssetV1Model,
   Block,
   CommonBlock,
   GenesisBlock,
   RoundLastBlock,
   BlockVersionReader,
 } from "@bfchain/core-model";
+import { V2_GenesisBlockFactory } from "@bfchain/core-patch-v2";
 
 const GenesisAssetModelSetup = GenesisAssetModel.$type.setup();
 const GenesisAssetModel_encode = GenesisAssetModelSetup.encode;
 const GenesisAssetModel_decode = GenesisAssetModelSetup.decode;
 
-const GenesisAssetV0ModelSetup = GenesisAssetV0Model.$type.setup();
-const GenesisAssetV0Model_encode = GenesisAssetV0ModelSetup.encode;
-const GenesisAssetV0Model_decode = GenesisAssetV0ModelSetup.decode;
+const GenesisAssetV1ModelSetup = GenesisAssetV1Model.$type.setup();
+const GenesisAssetV1Model_encode = GenesisAssetV1ModelSetup.encode;
+const GenesisAssetV1Model_decode = GenesisAssetV1ModelSetup.decode;
 
 @Injectable()
-export class V2_Patch extends PatchBase {
+export class V4_Patch extends PatchBase {
   @Inject(EventLogicVerifier)
   eventLogicVerifier!: EventLogicVerifier;
 
-  readonly name = "patch-v2";
+  readonly name = "patch-v4";
   // FIXNE: 先这样，后面再想办法搞
-  readonly patchEffectiveAfterHeight = this.config.chainName === "bfchain" ? 144486 : 0;
+  readonly patchEffectiveAfterHeight = this.config.chainName === "bfchain" ? 305000 : 0;
   protected _version = 1;
-  readonly consensusVersion = 2;
+  readonly consensusVersion = 4;
   async upgradeHandler(oldVersion: number, newVersion: number) {
     switch (oldVersion) {
       case 0: {
@@ -48,13 +48,17 @@ export class V2_Patch extends PatchBase {
                 const BlockSetup = Block.$type.setup();
                 const BlockSetup_encode = BlockSetup.encode;
                 BlockSetup.src_encode = BlockSetup_encode;
-                const BlockSetup_encode_v2 = function (this: Type, block: Block) {
+                const BlockSetup_encode_v4 = function (this: Type, block: Block) {
                   try {
-                    if (block.version < 2) {
+                    if (block.version < 4) {
                       const asset = (block.asset as any).genesisAsset;
                       if (asset) {
-                        // delete asset.maxMultipleOfAssetAndMainAsset;
-                        GenesisAssetModelSetup.encode = GenesisAssetV0Model_encode;
+                        // delete asset.issueEntityFactoryMinChainAsset;
+                        // delete asset.maxMultipleOfEntityAndMainAsset;
+                        // delete asset.maxVotesPerBlock;
+                        // delete asset.voteMinChainAsset;
+
+                        GenesisAssetModelSetup.encode = GenesisAssetV1Model_encode;
                       }
                     }
 
@@ -66,13 +70,13 @@ export class V2_Patch extends PatchBase {
 
                 const BlockSetup_decode = BlockSetup.decode;
                 BlockSetup.src_decode = BlockSetup_decode;
-                const BlockSetup_decode_v2 = function (this: Type, reader: Uint8Array | Reader) {
+                const BlockSetup_decode_v4 = function (this: Type, reader: Uint8Array | Reader) {
                   try {
                     const versionInfo = BlockVersionReader.decode(
                       reader instanceof Reader ? reader.buf : reader,
                     );
-                    if (versionInfo.version < 2) {
-                      GenesisAssetModelSetup.decode = GenesisAssetV0Model_decode;
+                    if (versionInfo.version < 4) {
+                      GenesisAssetModelSetup.decode = GenesisAssetV1Model_decode;
                     }
                     return BlockSetup_decode.call(this, reader);
                   } finally {
@@ -80,25 +84,14 @@ export class V2_Patch extends PatchBase {
                   }
                 };
 
-                BlockSetup.encode = BlockSetup_encode_v2;
-                BlockSetup.decode = BlockSetup_decode_v2;
+                BlockSetup.encode = BlockSetup_encode_v4;
+                BlockSetup.decode = BlockSetup_decode_v4;
               }
 
               const oldBlock = this.config.getHookGenesisBlock(this.consensusVersion) || {};
-              // FIXNE: 先这样，后面再想办法搞
-              if (this.config.chainName === "bfchain") {
-                oldBlock.asset = deepMix(oldBlock.asset, {
-                  genesisAsset: {
-                    maxMultipleOfAssetAndMainAsset: FractionBigIntModel.fromObject({
-                      numerator: "100000",
-                      denominator: "1",
-                    }),
-                  },
-                });
-              }
               this.config.setHookGenesisBlock(this.consensusVersion, oldBlock);
-              BLOCK_FACTORY_TYPES_MAP.KF.set(BLOCK_TYPES_BASE.GENESIS, V2_GenesisBlockFactory);
-              BLOCK_FACTORY_TYPES_MAP.FK.set(V2_GenesisBlockFactory, BLOCK_TYPES_BASE.GENESIS);
+              BLOCK_FACTORY_TYPES_MAP.KF.set(BLOCK_TYPES_BASE.GENESIS, V4_GenesisBlockFactory);
+              BLOCK_FACTORY_TYPES_MAP.FK.set(V4_GenesisBlockFactory, BLOCK_TYPES_BASE.GENESIS);
             },
             () => {
               for (const Block of [CommonBlock, GenesisBlock, RoundLastBlock]) {
@@ -108,8 +101,8 @@ export class V2_Patch extends PatchBase {
               }
 
               this.config.rollBackHookGenesisBlock(this.consensusVersion);
-              BLOCK_FACTORY_TYPES_MAP.KF.set(BLOCK_TYPES_BASE.GENESIS, GenesisBlockFactory);
-              BLOCK_FACTORY_TYPES_MAP.FK.set(GenesisBlockFactory, BLOCK_TYPES_BASE.GENESIS);
+              BLOCK_FACTORY_TYPES_MAP.KF.set(BLOCK_TYPES_BASE.GENESIS, V2_GenesisBlockFactory);
+              BLOCK_FACTORY_TYPES_MAP.FK.set(V2_GenesisBlockFactory, BLOCK_TYPES_BASE.GENESIS);
             },
           );
         }

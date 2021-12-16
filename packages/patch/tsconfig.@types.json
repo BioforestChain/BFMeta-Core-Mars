@@ -25,6 +25,9 @@
       "path": "../patch-v3/tsconfig.@types.json"
     },
     {
+      "path": "../patch-v4/tsconfig.@types.json"
+    },
+    {
       "path": "../typings/tsconfig.@types.json"
     }
   ]

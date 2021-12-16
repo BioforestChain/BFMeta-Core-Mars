@@ -11,6 +11,12 @@ const TrsRemarkMapWM = new EasyWeakMap((block: Block) => new StringKeyMap(block.
 const BUFFER_LIST_TRANSACTION_LIST_WM = new WeakMap<Uint8Array[], TransactionInBlock[]>();
 const TRANSACTION_BUFFER_WM = new WeakMap<TransactionInBlock, Uint8Array>();
 
+@Type.d("BlockVersionReader")
+export class BlockVersionReader extends Message<BlockVersionReader> {
+  @Field.d(1, "uint32")
+  version!: number;
+}
+
 @Type.d("Block")
 export class Block<AJ extends object = object>
   extends Message<Block<AJ>>
@@ -175,7 +181,7 @@ export class Block<AJ extends object = object>
     BUFFER_LIST_TRANSACTION_LIST_WM.set(bufList, trsList);
     this.transactionBufferList = bufList;
   }
-  @cacheBytesGetter
+  // @cacheBytesGetter
   getBytes(
     skipSignature?: boolean,
     skipSignSignature?: boolean,

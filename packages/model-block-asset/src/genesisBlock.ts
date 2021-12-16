@@ -134,29 +134,22 @@ export class BlockParticipationWeightRatioModel
   }
 }
 
-/**
- * GenesisBlock 区块 asset 模型
- *
- */
-@Type.d("GenesisAssetModel")
-export class GenesisAssetModel
-  extends RoundDelegateModel<GenesisAssetModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.GenesisAssetJSON>
-{
+@Type.d("GenesisAssetV0Model")
+export class GenesisAssetV0Model<T extends GenesisAssetV0Model<T>> extends RoundDelegateModel<T> {
   /**链名 */
-  @Field.d(GenesisAssetModel.INC++, "string")
+  @Field.d(GenesisAssetV0Model.INC++, "string")
   chainName!: string;
   /**链资产名 */
-  @Field.d(GenesisAssetModel.INC++, "string")
+  @Field.d(GenesisAssetV0Model.INC++, "string")
   assetType!: string;
   /**网络标识符 */
-  @Field.d(GenesisAssetModel.INC++, "string")
+  @Field.d(GenesisAssetV0Model.INC++, "string")
   magic!: string;
   /**区块链网络识别码 */
-  @Field.d(GenesisAssetModel.INC++, "string")
+  @Field.d(GenesisAssetV0Model.INC++, "string")
   bnid!: BNID_TYPE;
   /**链的创世时间 */
-  @Field.d(GenesisAssetModel.INC++, "uint64")
+  @Field.d(GenesisAssetV0Model.INC++, "uint64")
   beginEpochTimeLong!: Long;
   get beginEpochTime() {
     return this.beginEpochTimeLong.toNumber();
@@ -165,82 +158,97 @@ export class GenesisAssetModel
     this.beginEpochTimeLong = Long.fromNumber(v);
   }
   /**创世位名 */
-  @Field.d(GenesisAssetModel.INC++, "string")
+  @Field.d(GenesisAssetV0Model.INC++, "string")
   genesisLocationName!: string;
   /**创始账户初始余额 */
-  @Field.d(GenesisAssetModel.INC++, "string")
+  @Field.d(GenesisAssetV0Model.INC++, "string")
   genesisAmount!: string;
   /**交易每个字节最小手续费 */
-  @Field.d(GenesisAssetModel.INC++, Fraction)
+  @Field.d(GenesisAssetV0Model.INC++, Fraction)
   minTransactionFeePerByte!: Fraction;
   /**最大交易长度 */
-  @Field.d(GenesisAssetModel.INC++, "uint32")
+  @Field.d(GenesisAssetV0Model.INC++, "uint32")
   maxTransactionSize!: number;
   /**最大区块长度，包含区块头和 asset */
-  @Field.d(GenesisAssetModel.INC++, "uint32")
+  @Field.d(GenesisAssetV0Model.INC++, "uint32")
   maxBlockSize!: number;
   /**区块最大 tps */
-  @Field.d(GenesisAssetModel.INC++, "uint32")
+  @Field.d(GenesisAssetV0Model.INC++, "uint32")
   maxTPSPerBlock!: number;
   /**区块不同数量大于某个值时同步前需要先共识的 */
-  @Field.d(GenesisAssetModel.INC++, "uint32")
+  @Field.d(GenesisAssetV0Model.INC++, "uint32")
   consessusBeforeSyncBlockDiff!: number;
   /**每轮可处理的受托人交易数量 */
-  @Field.d(GenesisAssetModel.INC++, "uint32")
+  @Field.d(GenesisAssetV0Model.INC++, "uint32")
   maxDelegateTxsPerRound!: number;
   /**资产赠送最大可获取次数 */
-  @Field.d(GenesisAssetModel.INC++, "uint32")
+  @Field.d(GenesisAssetV0Model.INC++, "uint32")
   maxGrabTimesOfGiftAsset!: number;
   /**发行资产最小的持有本链资产数量 */
-  @Field.d(GenesisAssetModel.INC++, "string")
+  @Field.d(GenesisAssetV0Model.INC++, "string")
   issueAssetMinChainAsset!: string;
   /**注册链最小的持有本链资产数量 */
-  @Field.d(GenesisAssetModel.INC++, "string")
+  @Field.d(GenesisAssetV0Model.INC++, "string")
   registerChainMinChainAsset!: string;
   /**交易的发起高度和确认高度最大的区块高度间隔 */
-  @Field.d(GenesisAssetModel.INC++, "uint32")
+  @Field.d(GenesisAssetV0Model.INC++, "uint32")
   maxApplyAndConfirmedBlockHeightDiff!: number;
   /**每轮的区块数量 */
-  @Field.d(GenesisAssetModel.INC++, "uint32")
+  @Field.d(GenesisAssetV0Model.INC++, "uint32")
   blockPerRound!: number;
   /**创世受托人数量 */
-  @Field.d(GenesisAssetModel.INC++, "uint32")
+  @Field.d(GenesisAssetV0Model.INC++, "uint32")
   delegates!: number;
   /**是否允许受托人连续参与打块竞选 */
-  @Field.d(GenesisAssetModel.INC++, "bool")
+  @Field.d(GenesisAssetV0Model.INC++, "bool")
   whetherToAllowDelegateContinusElections!: boolean;
   /**区块时间间隔 */
-  @Field.d(GenesisAssetModel.INC++, "uint32", "required")
+  @Field.d(GenesisAssetV0Model.INC++, "uint32", "required")
   forgeInterval!: number;
   /**奖励比例 */
-  @Field.d(GenesisAssetModel.INC++, RewardPercentModel, "required")
+  @Field.d(GenesisAssetV0Model.INC++, RewardPercentModel, "required")
   rewardPercent!: RewardPercentModel;
   /**端口号 */
-  @Field.d(GenesisAssetModel.INC++, PortsModel, "required")
+  @Field.d(GenesisAssetV0Model.INC++, PortsModel, "required")
   ports!: PortsModel;
   /**奖励里程 */
-  @Field.d(GenesisAssetModel.INC++, RewardPerBlock, "required")
+  @Field.d(GenesisAssetV0Model.INC++, RewardPerBlock, "required")
   rewardPerBlock!: RewardPerBlock;
   /**账户参与度权重比 */
-  @Field.d(GenesisAssetModel.INC++, AccountParticipationWeightRatioModel, "required")
+  @Field.d(GenesisAssetV0Model.INC++, AccountParticipationWeightRatioModel, "required")
   accountParticipationWeightRatio!: AccountParticipationWeightRatioModel;
   /**区块参与度权重比 */
-  @Field.d(GenesisAssetModel.INC++, BlockParticipationWeightRatioModel, "required")
+  @Field.d(GenesisAssetV0Model.INC++, BlockParticipationWeightRatioModel, "required")
   blockParticipationWeightRatio!: BlockParticipationWeightRatioModel;
   // /**tpow 计算公式 */
-  // @Field.d(GenesisAssetModel.INC++, "string", "required")
+  // @Field.d(GenesisAssetV0Model.INC++, "string", "required")
   // tpowDiffFormula!: string;
   /**全网平均算了 */
-  @Field.d(GenesisAssetModel.INC++, "uint32", "required")
+  @Field.d(GenesisAssetV0Model.INC++, "uint32", "required")
   averageComputingPower!: number;
   /**前 n 个块 交易的 pow豁免 */
-  @Field.d(GenesisAssetModel.INC++, "uint32", "required")
+  @Field.d(GenesisAssetV0Model.INC++, "uint32", "required")
   tpowOfWorkExemptionBlocks!: number;
-  @Field.d(GenesisAssetModel.INC++, TransactionPowOfWorkConfigModel)
+  @Field.d(GenesisAssetV0Model.INC++, TransactionPowOfWorkConfigModel)
   transactionPowOfWorkConfig!: TransactionPowOfWorkConfigModel;
+}
+
+@Type.d("GenesisAssetV1Model")
+export class GenesisAssetV1Model<T extends GenesisAssetV1Model<T>> extends GenesisAssetV0Model<T> {
   /**冻结的主权益数允许发行的最大权益数量 */
-  @Field.d(GenesisAssetModel.INC++, FractionBigIntModel)
+  @Field.d(GenesisAssetV1Model.INC++, FractionBigIntModel)
   maxMultipleOfAssetAndMainAsset!: FractionBigIntModel;
+}
+
+/**
+ * GenesisBlock 区块 asset 模型
+ *
+ */
+@Type.d("GenesisAssetModel")
+export class GenesisAssetModel
+  extends GenesisAssetV1Model<GenesisAssetModel>
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.GenesisAssetJSON>
+{
   /**发行非同质资产模板最小的持有本链资产数量 */
   @Field.d(GenesisAssetModel.INC++, "string")
   issueEntityFactoryMinChainAsset!: string;

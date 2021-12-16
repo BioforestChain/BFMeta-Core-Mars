@@ -185,7 +185,7 @@ declare namespace BFChainCore {
     numberOfTransactionsWeight: number;
   }
 
-  interface GenesisAssetJSON extends RoundDelegateJSON {
+  interface GenesisAssetV0JSON extends RoundDelegateJSON {
     /**链名 */
     chainName: string;
     /**链主权益名 */
@@ -214,18 +214,8 @@ declare namespace BFChainCore {
     maxDelegateTxsPerRound: number;
     /**权益赠送事件最大可抢次数 */
     maxGrabTimesOfGiftAsset: number;
-    /**每个区块最大能处理的投票数 */
-    maxVotesPerBlock: number;
-    /**投票账户最少持有的主权益数 */
-    voteMinChainAsset: string;
     /**发行权益的账户最少持有的链主权益数量 */
     issueAssetMinChainAsset: string;
-    /**冻结的主权益数允许发行的最大权益数量 */
-    maxMultipleOfAssetAndMainAsset: FractionJSON<string>;
-    /**发行非同质资产模板的账户最少持有的链主权益数量 */
-    issueEntityFactoryMinChainAsset: string;
-    /**冻结的主权益数允许发行的最大非同质权益数量 */
-    maxMultipleOfEntityAndMainAsset: FractionJSON<string>;
     /**注册创世块的账户最小持有的主权益数量 */
     registerChainMinChainAsset: string;
     /**最大的过期区块间隔数量 */
@@ -254,6 +244,22 @@ declare namespace BFChainCore {
     tpowOfWorkExemptionBlocks: number;
     /**tpow配置，JSON对象 */
     transactionPowOfWorkConfig: TransactionPowOfWorkConfigJSON;
+  }
+
+  interface GenesisAssetV1JSON extends GenesisAssetV0JSON {
+    /**冻结的主权益数允许发行的最大权益数量 */
+    maxMultipleOfAssetAndMainAsset: FractionJSON<string>;
+  }
+
+  interface GenesisAssetJSON extends GenesisAssetV1JSON {
+    /**发行非同质资产模板的账户最少持有的链主权益数量 */
+    issueEntityFactoryMinChainAsset: string;
+    /**冻结的主权益数允许发行的最大非同质权益数量 */
+    maxMultipleOfEntityAndMainAsset: FractionJSON<string>;
+    /**每个区块最大能处理的投票数 */
+    maxVotesPerBlock: number;
+    /**投票账户最少持有的主权益数 */
+    voteMinChainAsset: string;
   }
   interface GenesisBlockAssetJSON {
     /**创世块附带信息 */
