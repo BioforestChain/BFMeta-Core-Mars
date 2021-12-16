@@ -415,6 +415,7 @@ export class EventLogicVerifier {
 
   listenEventVoteEquity(
     accountsInfo: { [address: string]: BFChainCore.AccountInfo },
+    accountAssets: BFChainCore.AccountAssets,
     curRound: number,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -442,6 +443,29 @@ export class EventLogicVerifier {
             } address: ${address} hodingEquity: ${remainEquity.toString()} spendEquity: ${
               applyInfo.equity
             }`,
+            ...Function_Exception_Detail,
+          });
+        }
+
+        const { magic, assetType, voteMinChainAsset } = this.configHelper;
+        const fee = BigInt(transaction.fee);
+        accountAssets = accountAssets || {};
+        accountAssets[magic] = accountAssets[magic] || {};
+        accountAssets[magic][assetType] = accountAssets[magic][assetType] || {
+          sourceChainMagic: magic,
+          assetType,
+          assetNumber: BigInt(0),
+          history: {},
+        };
+        const hodingAsset = accountAssets[magic][assetType];
+        const remainAsset = hodingAsset.assetNumber;
+        hodingAsset.assetNumber -= fee;
+        if (hodingAsset.assetNumber < BigInt(voteMinChainAsset)) {
+          throw new ConsensusException(ASSET_NOT_ENOUGH, {
+            reason: `Transaction signature: ${
+              transaction.signature
+            } address: ${address} magic ${magic} assetType: ${assetType} hodingAsset: ${remainAsset.toString()} spendFee: ${fee} voteMinChainAsset ${voteMinChainAsset}`,
+            errorId: NewTransactionRefuseReason.ASSET_NOT_ENOUGH,
             ...Function_Exception_Detail,
           });
         }

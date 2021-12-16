@@ -55,6 +55,9 @@ if (randomMagic) {
   registerchainAssetData.magic = getRandomMagic();
 }
 
+registerchainAssetData.maxVotesPerBlock =
+  registerchainAssetData.maxTPSPerBlock * registerchainAssetData.forgeInterval;
+
 const registerBfchainCore = BFChainCoreFactory({
   config: new ConfigHelper(
     GenesisBlock.fromObject({ version: 1, asset: { genesisAsset: registerchainAssetData } }),
