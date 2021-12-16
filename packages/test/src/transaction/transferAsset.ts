@@ -12,6 +12,7 @@ import {
   getBfchainCoreEntry,
   getRandomDAppid,
 } from "../include";
+import { sleep } from "@bfchain/util";
 
 const bfchainCore = getBfchainCoreEntry();
 
@@ -120,4 +121,12 @@ async function getTransferAssetTransaction(sender: AccountModel) {
 (async () => {
   await getTransferAssetTransaction(getSenderWithoutSecondSecret());
   await getTransferAssetTransaction(getSenderWithSecondSecret());
+
+  console.log(bfchainCore.config.version);
+
+  bfchainCore.patchInstaller.changeHeight(50000000);
+
+  await sleep(1000);
+
+  console.log(bfchainCore.config.version);
 })();

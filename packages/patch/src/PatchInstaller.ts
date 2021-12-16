@@ -23,15 +23,20 @@ export class PatchInstaller
   constructor(private moduleMap: ModuleStroge, private config: ConfigHelper) {
     super();
   }
+  private _isPatchReady?: Promise<void>;
   bfAfterInit() {
     /// 静态载入
-    this.installPatch(V2_Patch);
-    this.installPatch(V3_Patch);
-    this.installPatch(V4_Patch);
+    this._installPatch(V2_Patch);
+    this._installPatch(V3_Patch);
+    this._installPatch(V4_Patch);
     // this.installPatch(Patch_1_2);
+
+    this._isPatchReady = this._installPatchs().then(() => {
+      this._isPatchReady = undefined;
+    });
   }
 
-  private _run_install_lock = false;
+  // private _run_install_lock = false;
   private _lastConsensusVersion = 1;
   get lastConsensusVersion() {
     return this._lastConsensusVersion;
@@ -43,19 +48,20 @@ export class PatchInstaller
   }
 
   /// 动态载入
-  installPatch(PatchCtor: BFChainUtil.Constructor<PatchBase>) {
+  private _installPatch(PatchCtor: BFChainUtil.Constructor<PatchBase>) {
     Resolve(PatchCtor, this.moduleMap);
-    if (this._run_install_lock === false) {
-      this._run_install_lock = true;
-      queueMicrotask(() => {
-        this._run_install_lock = false;
-        this._installPatchs();
-      });
-    }
+    // if (this._run_install_lock === false) {
+    //   this._run_install_lock = true;
+    //   queueMicrotask(() => {
+    //     this._run_install_lock = false;
+    //     this._installPatchs();
+    //   });
+    // }
   }
 
   /**通知补丁高度变更 */
-  changeHeight(height: number) {
+  async changeHeight(height: number) {
+    await this._isPatchReady;
     const patchs = this.moduleMap.groupGet(PatchBase as BFChainUtil.Constructor<PatchBase>);
     for (const patch of patchs) {
       patch.changeHeight(height);
