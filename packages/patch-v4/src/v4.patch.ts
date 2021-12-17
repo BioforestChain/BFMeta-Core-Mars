@@ -13,6 +13,7 @@ import {
   GenesisBlock,
   RoundLastBlock,
   BlockVersionReader,
+  BNID_TYPE,
 } from "@bfchain/core-model";
 import { V2_GenesisBlockFactory } from "@bfchain/core-patch-v2";
 
@@ -31,7 +32,8 @@ export class V4_Patch extends PatchBase {
 
   readonly name = "patch-v4";
   // FIXNE: 先这样，后面再想办法搞
-  readonly patchEffectiveAfterHeight = this.config.chainName === "bfchain" ? 305000 : 0;
+  readonly patchEffectiveAfterHeight =
+    this.config.chainName === "bfchain" && this.config.bnid === BNID_TYPE.MAINNET ? 305000 : 0;
   protected _version = 1;
   readonly consensusVersion = 4;
   async upgradeHandler(oldVersion: number, newVersion: number) {
