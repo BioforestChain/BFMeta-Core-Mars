@@ -2,6 +2,7 @@ import {
   ToExchangeAssetTransaction,
   ToExchangeAssetTransactionFactory,
   RANGE_TYPE,
+  BFChainCore,
 } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
@@ -12,9 +13,11 @@ import {
   getRandomDAppid,
 } from "../include";
 
-const bfchainCore = getBfchainCoreEntry();
-
-async function getToExchangeAssetTransaction(sender: AccountModel, recipientId: any) {
+async function getToExchangeAssetTransaction(
+  sender: AccountModel,
+  recipientId: any,
+  bfchainCore: BFChainCore,
+) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: bfchainCore.config.version,
@@ -79,6 +82,12 @@ async function getToExchangeAssetTransaction(sender: AccountModel, recipientId: 
   console.log(trs.toJSON());
 }
 (async () => {
-  await getToExchangeAssetTransaction(getSenderWithSecondSecret(), "");
-  await getToExchangeAssetTransaction(getSenderWithoutSecondSecret(), getGenesisAccount().address);
+  const bfchainCore = await getBfchainCoreEntry();
+
+  await getToExchangeAssetTransaction(getSenderWithSecondSecret(), "", bfchainCore);
+  await getToExchangeAssetTransaction(
+    getSenderWithoutSecondSecret(),
+    getGenesisAccount().address,
+    bfchainCore,
+  );
 })();

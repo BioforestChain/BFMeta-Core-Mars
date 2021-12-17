@@ -6,6 +6,7 @@ import {
   DestoryEntityTransaction,
   DestoryEntityTransactionFactory,
   RANGE_TYPE,
+  BFChainCore,
 } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
@@ -18,10 +19,8 @@ import {
   getRecipientWithoutSecondSecret,
 } from "../include";
 
-const bfchainCore = getBfchainCoreEntry();
-
 const genesisAddress = getGenesisAccount().address;
-async function getIssueEntityFactoryTransaction(sender: AccountModel) {
+async function getIssueEntityFactoryTransaction(sender: AccountModel, bfchainCore: BFChainCore) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
@@ -84,6 +83,7 @@ async function getIssueEntityFactoryTransaction(sender: AccountModel) {
 async function getIssueEntityTransaction(
   sender: AccountModel,
   entityFactory: BFChainCore.IssueEntityFactoryJSON,
+  bfchainCore: BFChainCore,
 ) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
@@ -147,6 +147,7 @@ async function getDestoryEntityTransaction(
   sender: AccountModel,
   transactionSignature: string,
   issueEntityTrs: BFChainCore.IssueEntityTransactionJSON,
+  bfchainCore: BFChainCore,
 ) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
 
@@ -210,24 +211,38 @@ async function getDestoryEntityTransaction(
   console.log(trs.toJSON());
 }
 (async () => {
-  const entityFactoryTrs1 = await getIssueEntityFactoryTransaction(getRecipientWithSecondSecret());
+  const bfchainCore = await getBfchainCoreEntry();
+
+  const entityFactoryTrs1 = await getIssueEntityFactoryTransaction(
+    getRecipientWithSecondSecret(),
+    bfchainCore,
+  );
   const entityFactoryTrs2 = await getIssueEntityFactoryTransaction(
     getRecipientWithoutSecondSecret(),
+    bfchainCore,
   );
 
   const entityTrs1 = await getIssueEntityTransaction(
     getSenderWithSecondSecret(),
     entityFactoryTrs1.asset.issueEntityFactory,
+    bfchainCore,
   );
   const entityTrs2 = await getIssueEntityTransaction(
     getSenderWithoutSecondSecret(),
     entityFactoryTrs2.asset.issueEntityFactory,
+    bfchainCore,
   );
 
-  await getDestoryEntityTransaction(getSenderWithSecondSecret(), entityTrs1.signature, entityTrs1);
+  await getDestoryEntityTransaction(
+    getSenderWithSecondSecret(),
+    entityTrs1.signature,
+    entityTrs1,
+    bfchainCore,
+  );
   await getDestoryEntityTransaction(
     getSenderWithoutSecondSecret(),
     entityTrs2.signature,
     entityTrs2,
+    bfchainCore,
   );
 })();

@@ -3,6 +3,7 @@ import {
   ToExchangeAnyTransactionFactory,
   RANGE_TYPE,
   PARENT_ASSET_TYPE,
+  BFChainCore,
 } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
@@ -13,12 +14,11 @@ import {
   getRandomDAppid,
 } from "../include";
 
-const bfchainCore = getBfchainCoreEntry();
-
 async function getToExchangeAnyTransaction(
   sender: AccountModel,
   recipientId: any,
   toExchangeAny: BFChainCore.ToExchangeAnyJSON,
+  bfchainCore: BFChainCore,
 ) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
@@ -69,6 +69,8 @@ async function getToExchangeAnyTransaction(
 }
 
 (async () => {
+  const bfchainCore = await getBfchainCoreEntry();
+
   const toExchangeAny: BFChainCore.ToExchangeAnyJSON = {
     cipherPublicKeys: [],
     toExchangeSource: bfchainCore.config.magic,
@@ -91,8 +93,8 @@ async function getToExchangeAnyTransaction(
   const recipientId = getGenesisAccount().address;
 
   const test0 = async () => {
-    await getToExchangeAnyTransaction(aa, "", toExchangeAny);
-    await getToExchangeAnyTransaction(aaa, recipientId, toExchangeAny);
+    await getToExchangeAnyTransaction(aa, "", toExchangeAny, bfchainCore);
+    await getToExchangeAnyTransaction(aaa, recipientId, toExchangeAny, bfchainCore);
   };
 
   const test1 = async () => {
@@ -104,8 +106,8 @@ async function getToExchangeAnyTransaction(
     toExchangeAnyCopy.beExchangeAssetPrealnum = "1000";
     toExchangeAnyCopy.assetExchangeWeightRatio = undefined;
 
-    await getToExchangeAnyTransaction(aa, "", toExchangeAnyCopy);
-    await getToExchangeAnyTransaction(aaa, recipientId, toExchangeAnyCopy);
+    await getToExchangeAnyTransaction(aa, "", toExchangeAnyCopy, bfchainCore);
+    await getToExchangeAnyTransaction(aaa, recipientId, toExchangeAnyCopy, bfchainCore);
   };
 
   const test2 = async () => {
@@ -117,8 +119,8 @@ async function getToExchangeAnyTransaction(
     toExchangeAnyCopy.beExchangeAssetPrealnum = "1000";
     toExchangeAnyCopy.assetExchangeWeightRatio = undefined;
 
-    await getToExchangeAnyTransaction(aa, "", toExchangeAnyCopy);
-    await getToExchangeAnyTransaction(aaa, recipientId, toExchangeAnyCopy);
+    await getToExchangeAnyTransaction(aa, "", toExchangeAnyCopy, bfchainCore);
+    await getToExchangeAnyTransaction(aaa, recipientId, toExchangeAnyCopy, bfchainCore);
   };
 
   const test3 = async () => {
@@ -130,8 +132,8 @@ async function getToExchangeAnyTransaction(
     toExchangeAnyCopy.beExchangeAssetPrealnum = "1000";
     toExchangeAnyCopy.assetExchangeWeightRatio = undefined;
 
-    await getToExchangeAnyTransaction(aa, "", toExchangeAnyCopy);
-    await getToExchangeAnyTransaction(aaa, recipientId, toExchangeAnyCopy);
+    await getToExchangeAnyTransaction(aa, "", toExchangeAnyCopy, bfchainCore);
+    await getToExchangeAnyTransaction(aaa, recipientId, toExchangeAnyCopy, bfchainCore);
   };
 
   const test4 = async () => {
@@ -142,8 +144,8 @@ async function getToExchangeAnyTransaction(
     toExchangeAnyCopy.beExchangeAssetPrealnum = "1";
     toExchangeAnyCopy.assetExchangeWeightRatio = undefined;
 
-    await getToExchangeAnyTransaction(aa, "", toExchangeAnyCopy);
-    await getToExchangeAnyTransaction(aaa, recipientId, toExchangeAnyCopy);
+    await getToExchangeAnyTransaction(aa, "", toExchangeAnyCopy, bfchainCore);
+    await getToExchangeAnyTransaction(aaa, recipientId, toExchangeAnyCopy, bfchainCore);
   };
 
   const test5 = async () => {
@@ -154,8 +156,8 @@ async function getToExchangeAnyTransaction(
     toExchangeAnyCopy.beExchangeAssetPrealnum = "1";
     toExchangeAnyCopy.assetExchangeWeightRatio = undefined;
 
-    await getToExchangeAnyTransaction(aa, "", toExchangeAnyCopy);
-    await getToExchangeAnyTransaction(aaa, recipientId, toExchangeAnyCopy);
+    await getToExchangeAnyTransaction(aa, "", toExchangeAnyCopy, bfchainCore);
+    await getToExchangeAnyTransaction(aaa, recipientId, toExchangeAnyCopy, bfchainCore);
   };
 
   const test6 = async () => {
@@ -166,8 +168,8 @@ async function getToExchangeAnyTransaction(
     toExchangeAnyCopy.beExchangeAssetPrealnum = "1";
     toExchangeAnyCopy.assetExchangeWeightRatio = undefined;
 
-    await getToExchangeAnyTransaction(aa, "", toExchangeAnyCopy);
-    await getToExchangeAnyTransaction(aaa, recipientId, toExchangeAnyCopy);
+    await getToExchangeAnyTransaction(aa, "", toExchangeAnyCopy, bfchainCore);
+    await getToExchangeAnyTransaction(aaa, recipientId, toExchangeAnyCopy, bfchainCore);
   };
 
   const test7 = async () => {
@@ -180,8 +182,8 @@ async function getToExchangeAnyTransaction(
     toExchangeAnyCopy.beExchangeAssetPrealnum = "1";
     toExchangeAnyCopy.assetExchangeWeightRatio = undefined;
 
-    await getToExchangeAnyTransaction(aa, "", toExchangeAnyCopy);
-    await getToExchangeAnyTransaction(aaa, recipientId, toExchangeAnyCopy);
+    await getToExchangeAnyTransaction(aa, "", toExchangeAnyCopy, bfchainCore);
+    await getToExchangeAnyTransaction(aaa, recipientId, toExchangeAnyCopy, bfchainCore);
   };
 
   const test8 = async () => {
@@ -194,8 +196,8 @@ async function getToExchangeAnyTransaction(
     toExchangeAnyCopy.beExchangeAssetPrealnum = "1";
     toExchangeAnyCopy.assetExchangeWeightRatio = undefined;
 
-    await getToExchangeAnyTransaction(aa, "", toExchangeAnyCopy);
-    await getToExchangeAnyTransaction(aaa, recipientId, toExchangeAnyCopy);
+    await getToExchangeAnyTransaction(aa, "", toExchangeAnyCopy, bfchainCore);
+    await getToExchangeAnyTransaction(aaa, recipientId, toExchangeAnyCopy, bfchainCore);
   };
 
   await test0();

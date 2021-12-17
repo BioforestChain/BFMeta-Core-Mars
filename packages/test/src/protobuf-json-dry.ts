@@ -4,7 +4,6 @@ import { Type, Field, Message, util } from "@bfchain/protobuf";
 import { JSONDryFactory } from "json-dry-factory";
 import { TransferAssetTransactionFactory, RANGE_TYPE } from "@bfchain/core";
 
-const bfchainCore = getBfchainCoreEntry();
 const jsonDry = new JSONDryFactory("protobuf");
 
 @Type.d("QAQ")
@@ -61,6 +60,8 @@ qaq.name = "gaubee";
 const quq = new QUQ();
 quq.age = 66;
 (async () => {
+  const bfchainCore = await getBfchainCoreEntry();
+
   const trs = await bfchainCore.transaction.createTransaction(
     TransferAssetTransactionFactory,
     {

@@ -1,4 +1,9 @@
-import { TrustAssetTransaction, TrustAssetTransactionFactory, RANGE_TYPE } from "@bfchain/core";
+import {
+  TrustAssetTransaction,
+  TrustAssetTransactionFactory,
+  RANGE_TYPE,
+  BFChainCore,
+} from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,
@@ -10,12 +15,11 @@ import {
   getRandomDAppid,
 } from "../include";
 
-const bfchainCore = getBfchainCoreEntry();
-
 async function getTrustAssetTransaction(
   sender: AccountModel,
   recipientId: string,
   trustees: string[],
+  bfchainCore: BFChainCore,
 ) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
@@ -86,15 +90,19 @@ async function getTrustAssetTransaction(
   console.log(xx);
 }
 (async () => {
+  const bfchainCore = await getBfchainCoreEntry();
+
   const trustees = [getGenesisAccount().address];
   await getTrustAssetTransaction(
     getSenderWithSecondSecret(),
     getRecipientWithSecondSecret().address,
     [...trustees],
+    bfchainCore,
   );
   await getTrustAssetTransaction(
     getSenderWithoutSecondSecret(),
     getRecipientWithoutSecondSecret().address,
     [...trustees],
+    bfchainCore,
   );
 })();

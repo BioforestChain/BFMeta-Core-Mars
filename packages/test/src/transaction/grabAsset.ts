@@ -5,6 +5,7 @@ import {
   GrabAssetTransactionFactory,
   GIFT_DISTRIBUTION_RULE,
   RANGE_TYPE,
+  BFChainCore,
 } from "@bfchain/core";
 import { parseHexToArrayBuffer } from "@bfchain/util";
 import {
@@ -18,10 +19,9 @@ import {
   getFullBfchainCoreEntry,
 } from "../include";
 
-const bfchainCore = getFullBfchainCoreEntry(5, 10);
-
 async function getGiftAssetTransaction(
   sender: AccountModel,
+  bfchainCore: BFChainCore,
   recipient?: AccountModel[],
   cipher?: boolean,
 ) {
@@ -97,6 +97,7 @@ async function getGrabAssetTransaction(
   sender: AccountModel,
   giftAssetTrs: GiftAssetTransaction,
   grabAccounts: AccountModel[],
+  bfchainCore: BFChainCore,
 ) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
@@ -186,6 +187,8 @@ async function getGrabAssetTransaction(
 }
 
 (async () => {
+  const bfchainCore = await getFullBfchainCoreEntry(5, 10);
+
   const ss = getSenderWithSecondSecret();
   const sss = getSenderWithoutSecondSecret();
   const rr = getRecipientWithSecondSecret();
@@ -193,13 +196,13 @@ async function getGrabAssetTransaction(
 
   const gg = getGenesisAccount();
 
-  const x = await getGiftAssetTransaction(rr, [gg, ss], false);
-  await getGrabAssetTransaction(ss, x, [gg, ss]);
-  const o = await getGiftAssetTransaction(rrr, [gg, ss]);
-  await getGrabAssetTransaction(gg, o, [gg]);
+  const x = await getGiftAssetTransaction(rr, bfchainCore, [gg, ss], false);
+  await getGrabAssetTransaction(ss, x, [gg, ss], bfchainCore);
+  const o = await getGiftAssetTransaction(rrr, bfchainCore, [gg, ss]);
+  await getGrabAssetTransaction(gg, o, [gg], bfchainCore);
 
-  const xx = await getGiftAssetTransaction(rr, [gg, ss], true);
-  await getGrabAssetTransaction(ss, xx, [gg, ss]);
-  const oo = await getGiftAssetTransaction(rrr, [gg, ss]);
-  await getGrabAssetTransaction(gg, oo, [gg]);
+  const xx = await getGiftAssetTransaction(rr, bfchainCore, [gg, ss], true);
+  await getGrabAssetTransaction(ss, xx, [gg, ss], bfchainCore);
+  const oo = await getGiftAssetTransaction(rrr, bfchainCore, [gg, ss]);
+  await getGrabAssetTransaction(gg, oo, [gg], bfchainCore);
 })();

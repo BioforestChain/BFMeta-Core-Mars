@@ -2,6 +2,7 @@ import {
   EmigrateAssetTransaction,
   EmigrateAssetTransactionFactory,
   RANGE_TYPE,
+  BFChainCore,
 } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
@@ -14,13 +15,11 @@ import {
   getRandomDAppid,
 } from "../include";
 
-const fullBfchainCore = getFullBfchainCoreEntry(57, 128);
-
-const fullRegisterBfchainCore = getFullRegisterBfchainCoreEntry();
-
 async function getEmigrateAssetTransaction(
   sender: AccountModel,
   genesisDelegate: AccountModel,
+  fullBfchainCore: BFChainCore,
+  fullRegisterBfchainCore: BFChainCore,
   recipientId?: string,
 ) {
   const config = fullBfchainCore.config;
@@ -101,13 +100,21 @@ async function getEmigrateAssetTransaction(
 }
 (async () => {
   try {
+    const fullBfchainCore = await getFullBfchainCoreEntry(57, 128);
+
+    const fullRegisterBfchainCore = await getFullRegisterBfchainCoreEntry();
+
     await getEmigrateAssetTransaction(
       getSenderWithSecondSecret(),
       getDelegateWithoutSecondSecret(),
+      fullBfchainCore,
+      fullRegisterBfchainCore,
     );
     await getEmigrateAssetTransaction(
       getSenderWithoutSecondSecret(),
       getDelegateWithSecondSecret(),
+      fullBfchainCore,
+      fullRegisterBfchainCore,
     );
   } catch (e) {
     console.log(e);

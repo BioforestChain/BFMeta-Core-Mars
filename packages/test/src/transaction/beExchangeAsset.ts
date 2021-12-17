@@ -5,6 +5,7 @@ import {
   BeExchangeAssetTransactionFactory,
   JSBIHelper,
   RANGE_TYPE,
+  BFChainCore,
 } from "@bfchain/core";
 import { QueneEventEmitter, parseHexToArrayBuffer } from "@bfchain/util";
 import {
@@ -18,12 +19,11 @@ import {
   getRandomDAppid,
 } from "../include";
 
-const bfchainCore = getBfchainCoreEntry();
-
 const jsbiHelper = new JSBIHelper();
 
 async function getToExchangeAssetTransaction(
   sender: AccountModel,
+  bfchainCore: BFChainCore,
   recipient?: AccountModel[],
   cipher?: boolean,
 ) {
@@ -95,6 +95,7 @@ async function getBeExchangeAssetTransaction(
   sender: AccountModel,
   toExchangeAssetTrs: BFChainCore.TransactionMixJSON<BFChainCore.ToExchangeAssetAssetJSON>,
   recipient: AccountModel[],
+  bfchainCore: BFChainCore,
 ) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const toExchangeAsset = toExchangeAssetTrs.asset.toExchangeAsset;
@@ -175,7 +176,7 @@ async function getBeExchangeAssetTransaction(
   return trs;
 }
 
-async function client(transaction: BFChainCore.Transaction) {
+async function client(transaction: BFChainCore.Transaction, bfchainCore: BFChainCore) {
   const accountAssets: {
     [address: string]: {
       [magic: string]: {
@@ -266,18 +267,20 @@ async function client(transaction: BFChainCore.Transaction) {
 }
 
 (async () => {
+  const bfchainCore = await getBfchainCoreEntry();
+
   const aa = getSenderWithSecondSecret();
   const aaa = getSenderWithoutSecondSecret();
   const cc = getGenesisAccount();
   const dd = getRecipientWithSecondSecret();
   const ddd = getRecipientWithoutSecondSecret();
 
-  const xx = await getToExchangeAssetTransaction(aa, [cc, dd], true);
-  const tx = await getBeExchangeAssetTransaction(dd, xx, [cc, dd]);
-  await client(tx);
+  const xx = await getToExchangeAssetTransaction(aa, bfchainCore, [cc, dd], true);
+  const tx = await getBeExchangeAssetTransaction(dd, xx, [cc, dd], bfchainCore);
+  await client(tx, bfchainCore);
   console.log(tx.toJSON().asset);
-  const yy = await getToExchangeAssetTransaction(aaa, [cc, dd], false);
-  const tx2 = await getBeExchangeAssetTransaction(ddd, yy, []);
-  await client(tx2);
+  const yy = await getToExchangeAssetTransaction(aaa, bfchainCore, [cc, dd], false);
+  const tx2 = await getBeExchangeAssetTransaction(ddd, yy, [], bfchainCore);
+  await client(tx2, bfchainCore);
   console.log(tx2.toJSON().asset);
 })();

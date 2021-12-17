@@ -5,6 +5,7 @@ import {
   RANGE_TYPE,
   MarkTransaction,
   MarkTransactionFactory,
+  BFChainCore,
 } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
@@ -16,9 +17,7 @@ import {
   getRandomDAppid,
 } from "../include";
 
-const bfchainCore = getBfchainCoreEntry();
-
-async function getDappTransaction(sender: AccountModel) {
+async function getDappTransaction(sender: AccountModel, bfchainCore: BFChainCore) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const dappid = getRandomDAppid();
   const data: BFChainCore.TxBodyJSON = {
@@ -79,6 +78,7 @@ async function getMarkTransaction(
   sender: AccountModel,
   dappTrs: DAppTransaction,
   possessor: AccountModel,
+  bfchainCore: BFChainCore,
 ) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const dapp = dappTrs.asset.dapp;
@@ -135,13 +135,15 @@ async function getMarkTransaction(
 }
 
 (async () => {
+  const bfchainCore = await getBfchainCoreEntry();
+
   const ss = getSenderWithSecondSecret();
   const sss = getSenderWithoutSecondSecret();
   const yy = getRecipientWithSecondSecret();
   const yyy = getRecipientWithoutSecondSecret();
 
-  const tx1 = await getDappTransaction(ss);
-  await getMarkTransaction(ss, tx1, ss);
-  const tx2 = await getDappTransaction(sss);
-  await getMarkTransaction(sss, tx1, yyy);
+  const tx1 = await getDappTransaction(ss, bfchainCore);
+  await getMarkTransaction(ss, tx1, ss, bfchainCore);
+  const tx2 = await getDappTransaction(sss, bfchainCore);
+  await getMarkTransaction(sss, tx1, yyy, bfchainCore);
 })();

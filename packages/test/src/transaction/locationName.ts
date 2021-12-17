@@ -3,6 +3,7 @@ import {
   LocationNameTransactionFactory,
   RANGE_TYPE,
   LOCATION_NAME_OPERATION_TYPE,
+  BFChainCore,
 } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
@@ -12,10 +13,9 @@ import {
   getRandomDAppid,
   getGenesisAccount,
 } from "../include";
-const bfchainCore = getBfchainCoreEntry();
 
 const genesisAddress = getGenesisAccount().address;
-async function getLocationNameTransaction(sender: AccountModel) {
+async function getLocationNameTransaction(sender: AccountModel, bfchainCore: BFChainCore) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: bfchainCore.config.version,
@@ -69,6 +69,8 @@ async function getLocationNameTransaction(sender: AccountModel) {
   console.log(trs.toJSON());
 }
 (async () => {
-  await getLocationNameTransaction(getSenderWithSecondSecret());
-  await getLocationNameTransaction(getSenderWithoutSecondSecret());
+  const bfchainCore = await getBfchainCoreEntry();
+
+  await getLocationNameTransaction(getSenderWithSecondSecret(), bfchainCore);
+  await getLocationNameTransaction(getSenderWithoutSecondSecret(), bfchainCore);
 })();

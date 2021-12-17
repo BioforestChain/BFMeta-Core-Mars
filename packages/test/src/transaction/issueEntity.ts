@@ -4,6 +4,7 @@ import {
   IssueEntityTransaction,
   IssueEntityTransactionFactory,
   RANGE_TYPE,
+  BFChainCore,
 } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
@@ -16,10 +17,8 @@ import {
   getRecipientWithoutSecondSecret,
 } from "../include";
 
-const bfchainCore = getBfchainCoreEntry();
-
 const genesisAddress = getGenesisAccount().address;
-async function getIssueEntityFactoryTransaction(sender: AccountModel) {
+async function getIssueEntityFactoryTransaction(sender: AccountModel, bfchainCore: BFChainCore) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
@@ -82,6 +81,7 @@ async function getIssueEntityFactoryTransaction(sender: AccountModel) {
 async function getIssueEntityTransaction(
   sender: AccountModel,
   entityFactory: BFChainCore.IssueEntityFactoryJSON,
+  bfchainCore: BFChainCore,
 ) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
@@ -141,17 +141,25 @@ async function getIssueEntityTransaction(
 }
 
 (async () => {
-  const entityFactoryTrs1 = await getIssueEntityFactoryTransaction(getRecipientWithSecondSecret());
+  const bfchainCore = await getBfchainCoreEntry();
+
+  const entityFactoryTrs1 = await getIssueEntityFactoryTransaction(
+    getRecipientWithSecondSecret(),
+    bfchainCore,
+  );
   const entityFactoryTrs2 = await getIssueEntityFactoryTransaction(
     getRecipientWithoutSecondSecret(),
+    bfchainCore,
   );
 
   await getIssueEntityTransaction(
     getSenderWithSecondSecret(),
     entityFactoryTrs1.asset.issueEntityFactory,
+    bfchainCore,
   );
   await getIssueEntityTransaction(
     getSenderWithoutSecondSecret(),
     entityFactoryTrs2.asset.issueEntityFactory,
+    bfchainCore,
   );
 })();

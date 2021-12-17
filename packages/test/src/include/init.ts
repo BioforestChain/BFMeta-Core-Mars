@@ -7,9 +7,9 @@ const rootPath = path.resolve(__dirname, "../../../../../assets");
 
 export const moduleMap = new ModuleStroge();
 
-function getBfchainCoreEntry(bnid = BNID_TYPE.TESTNET) {
+async function getBfchainCoreEntry(bnid = BNID_TYPE.TESTNET) {
   mainChainAssetData.bnid = bnid;
-  return BFChainCoreFactory(
+  const core = BFChainCoreFactory(
     {
       config: new ConfigHelper(
         GenesisBlock.fromObject({ version: 1, asset: { genesisAsset: mainChainAssetData } }),
@@ -22,17 +22,25 @@ function getBfchainCoreEntry(bnid = BNID_TYPE.TESTNET) {
     },
     moduleMap,
   );
+
+  await core.patchInstaller.changeHeight(Number.MAX_SAFE_INTEGER);
+
+  return core;
 }
 
-function getFullBfchainCoreEntry(blockPerRound: number, forgeInterval: number) {
+async function getFullBfchainCoreEntry(blockPerRound: number, forgeInterval: number) {
   const genesisBlock = require(`${rootPath}/genesisBlock-${blockPerRound}b-${forgeInterval}s.json`);
-  return BFChainCoreFactory({
+  const core = BFChainCoreFactory({
     config: new ConfigHelper(GenesisBlock.fromObject(genesisBlock), "genesisBlock"),
     Buffer: Buffer as any,
     cryptoHelper: NodeJsCryptoHelper,
     keypairHelper: NodeJsKeypairHelper,
     ed2curveHelper: Ed2curveHelper,
   });
+
+  await core.patchInstaller.changeHeight(Number.MAX_SAFE_INTEGER);
+
+  return core;
 }
 
 function getRegisterBfchainCoreEntry(bnid = BNID_TYPE.TESTNET) {

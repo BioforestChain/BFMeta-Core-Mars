@@ -4,6 +4,7 @@ import {
   ImmigrateAssetTransactionFactory,
   ImmigrateAssetTransaction,
   RANGE_TYPE,
+  BFChainCore,
 } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
@@ -16,12 +17,11 @@ import {
   getRandomDAppid,
 } from "../include";
 
-const fullBfchainCore = getFullBfchainCoreEntry(57, 128);
-const fullRegisterBfchainCore = getFullRegisterBfchainCoreEntry();
-
 async function getEmigrateAssetTransaction(
   sender: AccountModel,
   genesisDelegate: AccountModel,
+  fullBfchainCore: BFChainCore,
+  fullRegisterBfchainCore: BFChainCore,
   recipientId?: string,
 ) {
   const config = fullBfchainCore.config;
@@ -101,6 +101,8 @@ async function getImmigrateAssetTransaction(
   recipientId: string,
   genesisDelegate: AccountModel,
   migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON,
+  fullBfchainCore: BFChainCore,
+  fullRegisterBfchainCore: BFChainCore,
 ) {
   const keypair = await fullRegisterBfchainCore.accountBaseHelper.createSecretKeypair(
     sender.secret,
@@ -174,6 +176,9 @@ async function getImmigrateAssetTransaction(
   return trs;
 }
 (async () => {
+  const fullBfchainCore = await getFullBfchainCoreEntry(57, 128);
+  const fullRegisterBfchainCore = await getFullRegisterBfchainCoreEntry();
+
   const senderWithSecondSecret = getSenderWithSecondSecret();
   const senderWithoutSecondSecret = getSenderWithoutSecondSecret();
   const genesisDelegateWithSecondSecret = getDelegateWithSecondSecret();
@@ -181,21 +186,29 @@ async function getImmigrateAssetTransaction(
   const emigrateAssetTrsWithSecondSecret = await getEmigrateAssetTransaction(
     senderWithSecondSecret,
     genesisDelegateWithSecondSecret,
+    fullBfchainCore,
+    fullRegisterBfchainCore,
   );
   const emigrateAssetTrsWithoutSecondSecret = await getEmigrateAssetTransaction(
     senderWithoutSecondSecret,
     genesisDelegateWithoutSecondSecret,
+    fullBfchainCore,
+    fullRegisterBfchainCore,
   );
   await getImmigrateAssetTransaction(
     senderWithSecondSecret,
     emigrateAssetTrsWithSecondSecret.recipientId,
     genesisDelegateWithSecondSecret,
     JSON.parse(emigrateAssetTrsWithSecondSecret.asset.emigrateAsset.migrateCertificate),
+    fullBfchainCore,
+    fullRegisterBfchainCore,
   );
   await getImmigrateAssetTransaction(
     senderWithoutSecondSecret,
     emigrateAssetTrsWithSecondSecret.recipientId,
     genesisDelegateWithoutSecondSecret,
     JSON.parse(emigrateAssetTrsWithSecondSecret.asset.emigrateAsset.migrateCertificate),
+    fullBfchainCore,
+    fullRegisterBfchainCore,
   );
 })();

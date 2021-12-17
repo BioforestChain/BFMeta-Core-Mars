@@ -3,6 +3,7 @@ import {
   TransferAssetTransactionFactory,
   RANGE_TYPE,
   Transaction,
+  BFChainCore,
 } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
@@ -13,8 +14,6 @@ import {
   getRandomDAppid,
 } from "../include";
 import { sleep } from "@bfchain/util";
-
-const bfchainCore = getBfchainCoreEntry();
 
 const _powCount: { [add: string]: number } = {};
 function getPOWInfo<T extends Transaction>(address: string) {
@@ -31,7 +30,7 @@ function getPOWInfo<T extends Transaction>(address: string) {
   return res;
 }
 
-async function getTransferAssetTransaction(sender: AccountModel) {
+async function getTransferAssetTransaction(sender: AccountModel, bfchainCore: BFChainCore) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: bfchainCore.config.version,
@@ -119,8 +118,10 @@ async function getTransferAssetTransaction(sender: AccountModel) {
 }
 
 (async () => {
-  await getTransferAssetTransaction(getSenderWithoutSecondSecret());
-  await getTransferAssetTransaction(getSenderWithSecondSecret());
+  const bfchainCore = await getBfchainCoreEntry();
+
+  await getTransferAssetTransaction(getSenderWithoutSecondSecret(), bfchainCore);
+  await getTransferAssetTransaction(getSenderWithSecondSecret(), bfchainCore);
 
   console.log(bfchainCore.config.version);
 

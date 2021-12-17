@@ -1,4 +1,9 @@
-import { UsernameTransaction, UsernameTransactionFactory, RANGE_TYPE } from "@bfchain/core";
+import {
+  UsernameTransaction,
+  UsernameTransactionFactory,
+  RANGE_TYPE,
+  BFChainCore,
+} from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,
@@ -7,9 +12,7 @@ import {
   getRandomDAppid,
 } from "../include";
 
-const bfchainCore = getBfchainCoreEntry();
-
-async function getUsernameTransaction(sender: AccountModel) {
+async function getUsernameTransaction(sender: AccountModel, bfchainCore: BFChainCore) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: bfchainCore.config.version,
@@ -61,6 +64,8 @@ async function getUsernameTransaction(sender: AccountModel) {
 }
 
 (async () => {
-  await getUsernameTransaction(getSenderWithSecondSecret());
-  await getUsernameTransaction(getSenderWithoutSecondSecret());
+  const bfchainCore = await getBfchainCoreEntry();
+
+  await getUsernameTransaction(getSenderWithSecondSecret(), bfchainCore);
+  await getUsernameTransaction(getSenderWithoutSecondSecret(), bfchainCore);
 })();

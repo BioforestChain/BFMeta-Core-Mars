@@ -6,6 +6,7 @@ import {
   BeExchangeSpecialAssetTransaction,
   BeExchangeSpecialAssetTransactionFactory,
   RANGE_TYPE,
+  BFChainCore,
 } from "@bfchain/core";
 import { parseHexToArrayBuffer } from "@bfchain/util";
 import {
@@ -19,10 +20,9 @@ import {
   getRandomDAppid,
 } from "../include";
 
-const bfchainCore = getBfchainCoreEntry();
-
 async function getToExchangeSpecialAssetTransaction(
   sender: AccountModel,
+  bfchainCore: BFChainCore,
   recipient?: AccountModel[],
   cipher?: boolean,
 ) {
@@ -92,6 +92,7 @@ async function getBeExchangeSpecialAssetTransaction(
   sender: AccountModel,
   toExchangeSpecialAssetTrs: BFChainCore.TransactionMixJSON<BFChainCore.ToExchangeSpecialAssetAssetJSON>,
   recipient: AccountModel[],
+  bfchainCore: BFChainCore,
 ) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
@@ -164,14 +165,16 @@ async function getBeExchangeSpecialAssetTransaction(
   console.log(oo.asset);
 }
 (async () => {
+  const bfchainCore = await getBfchainCoreEntry();
+
   const aa = getSenderWithSecondSecret();
   const aaa = getSenderWithoutSecondSecret();
   const cc = getGenesisAccount();
   const dd = getRecipientWithSecondSecret();
   const ddd = getRecipientWithoutSecondSecret();
 
-  const xx = await getToExchangeSpecialAssetTransaction(aa, [cc, dd], true);
-  await getBeExchangeSpecialAssetTransaction(dd, xx, [cc, dd]);
+  const xx = await getToExchangeSpecialAssetTransaction(aa, bfchainCore, [cc, dd], true);
+  await getBeExchangeSpecialAssetTransaction(dd, xx, [cc, dd], bfchainCore);
   // const yy = await getToExchangeSpecialAssetTransaction(aaa, [cc, dd], false);
   // getBeExchangeSpecialAssetTransaction(cc, yy, []);
 })();

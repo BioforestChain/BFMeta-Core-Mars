@@ -3,6 +3,7 @@ import {
   GiftAssetTransactionFactory,
   GIFT_DISTRIBUTION_RULE,
   RANGE_TYPE,
+  BFChainCore,
 } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
@@ -13,10 +14,9 @@ import {
   getRandomDAppid,
 } from "../include";
 
-const bfchainCore = getBfchainCoreEntry();
-
 async function getGiftAssetTransaction(
   sender: AccountModel,
+  bfchainCore: BFChainCore,
   recipient?: AccountModel[],
   cipher?: boolean,
 ) {
@@ -112,6 +112,8 @@ async function getGiftAssetTransaction(
 }
 
 (async () => {
+  const bfchainCore = await getBfchainCoreEntry();
+
   // const recipient: AccountModel[] = [];
   // for (let i = 0; i < 6000; i++) {
   //   const secret = `secret ${i}`;
@@ -121,6 +123,11 @@ async function getGiftAssetTransaction(
   //     publicKey: await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecret(secret),
   //   };
   // }
-  await getGiftAssetTransaction(getSenderWithSecondSecret(), [getGenesisAccount()], true);
-  await getGiftAssetTransaction(getSenderWithoutSecondSecret(), [getGenesisAccount()]);
+  await getGiftAssetTransaction(
+    getSenderWithSecondSecret(),
+    bfchainCore,
+    [getGenesisAccount()],
+    true,
+  );
+  await getGiftAssetTransaction(getSenderWithoutSecondSecret(), bfchainCore, [getGenesisAccount()]);
 })();

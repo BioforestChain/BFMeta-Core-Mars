@@ -4,6 +4,7 @@ import {
   RECORD_TYPE,
   RANGE_TYPE,
   RECORD_OPERATION_TYPE,
+  BFChainCore,
 } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
@@ -13,11 +14,10 @@ import {
   getBfchainCoreEntry,
 } from "../include";
 
-const bfchainCore = getBfchainCoreEntry();
-
 async function getSetLnsRecordValueTransaction(
   sender: AccountModel,
   lnsRecordValue: BFChainCore.SetLnsRecordValueJSON,
+  bfchainCore: BFChainCore,
 ) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
@@ -67,30 +67,37 @@ async function getSetLnsRecordValueTransaction(
   console.log(trs.toJSON().asset);
 }
 
-const lnsRecordValue: BFChainCore.SetLnsRecordValueJSON = {
-  name: bfchainCore.config.genesisLocationName,
-  sourceChainName: bfchainCore.config.chainName,
-  sourceChainMagic: bfchainCore.config.magic,
-  operationType: RECORD_OPERATION_TYPE.ADD,
-  addRecord: {
-    recordType: RECORD_TYPE.IPV4,
-    recordValue: "127.0.0.1",
-  },
-};
 (async () => {
-  await getSetLnsRecordValueTransaction(getSenderWithSecondSecret(), lnsRecordValue);
+  const bfchainCore = await getBfchainCoreEntry();
+
+  const lnsRecordValue: BFChainCore.SetLnsRecordValueJSON = {
+    name: bfchainCore.config.genesisLocationName,
+    sourceChainName: bfchainCore.config.chainName,
+    sourceChainMagic: bfchainCore.config.magic,
+    operationType: RECORD_OPERATION_TYPE.ADD,
+    addRecord: {
+      recordType: RECORD_TYPE.IPV4,
+      recordValue: "127.0.0.1",
+    },
+  };
+
+  await getSetLnsRecordValueTransaction(getSenderWithSecondSecret(), lnsRecordValue, bfchainCore);
   lnsRecordValue.addRecord = {
     recordType: RECORD_TYPE.ADDRESSV1,
     recordValue: getSenderWithSecondSecret().address,
   };
-  await getSetLnsRecordValueTransaction(getSenderWithSecondSecret(), lnsRecordValue);
+  await getSetLnsRecordValueTransaction(getSenderWithSecondSecret(), lnsRecordValue, bfchainCore);
   lnsRecordValue.operationType = RECORD_OPERATION_TYPE.DELETE;
   delete lnsRecordValue.addRecord;
   lnsRecordValue.deleteRecord = {
     recordType: RECORD_TYPE.IPV6,
     recordValue: "21DA:00D3:0000:2F3B:02AA:00FF:FE28:9C5A",
   };
-  await getSetLnsRecordValueTransaction(getSenderWithoutSecondSecret(), lnsRecordValue);
+  await getSetLnsRecordValueTransaction(
+    getSenderWithoutSecondSecret(),
+    lnsRecordValue,
+    bfchainCore,
+  );
   lnsRecordValue.operationType = RECORD_OPERATION_TYPE.UPDATE;
   lnsRecordValue.addRecord = {
     recordType: RECORD_TYPE.IPV6,
@@ -100,39 +107,43 @@ const lnsRecordValue: BFChainCore.SetLnsRecordValueJSON = {
     recordType: RECORD_TYPE.IPV4,
     recordValue: "250.250.250.250",
   };
-  await getSetLnsRecordValueTransaction(getSenderWithoutSecondSecret(), lnsRecordValue);
+  await getSetLnsRecordValueTransaction(
+    getSenderWithoutSecondSecret(),
+    lnsRecordValue,
+    bfchainCore,
+  );
   lnsRecordValue.operationType = RECORD_OPERATION_TYPE.ADD;
   delete lnsRecordValue.deleteRecord;
   lnsRecordValue.addRecord = {
     recordType: RECORD_TYPE.UNKNOWN,
     recordValue: "bbbbbbbbbbbbbbbbbbbb",
   };
-  await getSetLnsRecordValueTransaction(getSenderWithSecondSecret(), lnsRecordValue);
+  await getSetLnsRecordValueTransaction(getSenderWithSecondSecret(), lnsRecordValue, bfchainCore);
   lnsRecordValue.operationType = RECORD_OPERATION_TYPE.ADD;
   delete lnsRecordValue.deleteRecord;
   lnsRecordValue.addRecord = {
     recordType: RECORD_TYPE.LNG_LAT,
     recordValue: "+180.0,+90.0",
   };
-  await getSetLnsRecordValueTransaction(getSenderWithSecondSecret(), lnsRecordValue);
+  await getSetLnsRecordValueTransaction(getSenderWithSecondSecret(), lnsRecordValue, bfchainCore);
   lnsRecordValue.addRecord = {
     recordType: RECORD_TYPE.LOCATION_NAME,
     recordValue: "113.hyql.bfchain",
   };
-  await getSetLnsRecordValueTransaction(getSenderWithSecondSecret(), lnsRecordValue);
+  await getSetLnsRecordValueTransaction(getSenderWithSecondSecret(), lnsRecordValue, bfchainCore);
   lnsRecordValue.addRecord = {
     recordType: RECORD_TYPE.DNS,
     recordValue: "www.baidu.com",
   };
-  await getSetLnsRecordValueTransaction(getSenderWithSecondSecret(), lnsRecordValue);
+  await getSetLnsRecordValueTransaction(getSenderWithSecondSecret(), lnsRecordValue, bfchainCore);
   lnsRecordValue.addRecord = {
     recordType: RECORD_TYPE.EMAIL,
     recordValue: "88888@qq.com",
   };
-  await getSetLnsRecordValueTransaction(getSenderWithSecondSecret(), lnsRecordValue);
+  await getSetLnsRecordValueTransaction(getSenderWithSecondSecret(), lnsRecordValue, bfchainCore);
   lnsRecordValue.addRecord = {
     recordType: RECORD_TYPE.URL,
     recordValue: "https://www.baidu.com/index.html?q=123",
   };
-  await getSetLnsRecordValueTransaction(getSenderWithSecondSecret(), lnsRecordValue);
+  await getSetLnsRecordValueTransaction(getSenderWithSecondSecret(), lnsRecordValue, bfchainCore);
 })();

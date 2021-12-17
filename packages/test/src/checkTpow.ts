@@ -1,8 +1,6 @@
 import { parseHexToArrayBuffer } from "@bfchain/util";
 import { getBfchainCoreEntry } from "./include";
 
-const bfchainCore = getBfchainCoreEntry();
-
 async function checkTpow() {
   // const powCheckResult = await bfchainCore.transactionHelper.checkTransactionProfOfWork(
   //   parseHexToArrayBuffer(
@@ -15,6 +13,7 @@ async function checkTpow() {
   //   accountNumberOfTransactionInBlock: 1,
   //   accountParticipation: "17662716016028",
   // });
+  const bfchainCore = await getBfchainCoreEntry();
 
   const powCheckResult = await bfchainCore.transactionHelper.checkTransactionProfOfWork(
     parseHexToArrayBuffer(
@@ -67,6 +66,9 @@ async function calcMilestone() {
     "1000000000",
   ].map((item) => item + "0".repeat(8));
   const results: any = [];
+
+  const bfchainCore = await getBfchainCoreEntry();
+
   for (const senderEquity of senderEquityList) {
     // const senderEquity = "1024188093598";
     const transactionHelper = bfchainCore.transactionHelper;

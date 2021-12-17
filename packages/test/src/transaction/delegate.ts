@@ -1,4 +1,9 @@
-import { DelegateTransaction, DelegateTransactionFactory, RANGE_TYPE } from "@bfchain/core";
+import {
+  DelegateTransaction,
+  DelegateTransactionFactory,
+  RANGE_TYPE,
+  BFChainCore,
+} from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,
@@ -7,9 +12,7 @@ import {
   getRandomDAppid,
 } from "../include";
 
-const bfchainCore = getBfchainCoreEntry();
-
-async function getDelegateTransaction(sender: AccountModel) {
+async function getDelegateTransaction(sender: AccountModel, bfchainCore: BFChainCore) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: bfchainCore.config.version,
@@ -53,6 +56,8 @@ async function getDelegateTransaction(sender: AccountModel) {
 }
 
 (async () => {
-  await getDelegateTransaction(getSenderWithSecondSecret());
-  await getDelegateTransaction(getSenderWithoutSecondSecret());
+  const bfchainCore = await getBfchainCoreEntry();
+
+  await getDelegateTransaction(getSenderWithSecondSecret(), bfchainCore);
+  await getDelegateTransaction(getSenderWithoutSecondSecret(), bfchainCore);
 })();

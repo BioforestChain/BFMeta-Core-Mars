@@ -2,6 +2,7 @@ import {
   SetLnsManagerTransaction,
   SetLnsManagerTransactionFactory,
   RANGE_TYPE,
+  BFChainCore,
 } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
@@ -12,9 +13,7 @@ import {
   getBfchainCoreEntry,
 } from "../include";
 
-const bfchainCore = getBfchainCoreEntry();
-
-async function getSetLnsManagerTransaction(sender: AccountModel) {
+async function getSetLnsManagerTransaction(sender: AccountModel, bfchainCore: BFChainCore) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: bfchainCore.config.version,
@@ -68,6 +67,8 @@ async function getSetLnsManagerTransaction(sender: AccountModel) {
   console.log(trs.toJSON());
 }
 (async () => {
-  await getSetLnsManagerTransaction(getSenderWithSecondSecret());
-  await getSetLnsManagerTransaction(getSenderWithoutSecondSecret());
+  const bfchainCore = await getBfchainCoreEntry();
+
+  await getSetLnsManagerTransaction(getSenderWithSecondSecret(), bfchainCore);
+  await getSetLnsManagerTransaction(getSenderWithoutSecondSecret(), bfchainCore);
 })();

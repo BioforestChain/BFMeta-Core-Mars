@@ -12,14 +12,14 @@ import {
   getDelegateWithSecondSecret,
   getBfchainCoreEntry,
   getRandomDAppid,
+  BFChainCore,
 } from "../include";
-
-const bfchainCore = getBfchainCoreEntry();
 
 async function getTrustAssetTransaction(
   sender: AccountModel,
   recipientId: string,
   trustees: string[],
+  bfchainCore: BFChainCore,
 ) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
@@ -82,6 +82,7 @@ async function getTrustAssetTransaction(
 async function getSignForAssetTransaction(
   sender: AccountModel,
   trustAssetTrs: TrustAssetTransaction,
+  bfchainCore: BFChainCore,
 ) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
@@ -145,18 +146,30 @@ async function getSignForAssetTransaction(
 }
 
 (async () => {
+  const bfchainCore = await getBfchainCoreEntry();
+
   const trustee = getDelegateWithSecondSecret();
   const trusAssetTrsWithSecret = await getTrustAssetTransaction(
     getSenderWithSecondSecret(),
     getRecipientWithSecondSecret().address,
     [trustee.address],
+    bfchainCore,
   );
   const trusAssetTrsWithoutSecret = await getTrustAssetTransaction(
     getSenderWithoutSecondSecret(),
     getRecipientWithoutSecondSecret().address,
     [trustee.address],
+    bfchainCore,
   );
 
-  await getSignForAssetTransaction(getRecipientWithSecondSecret(), trusAssetTrsWithSecret);
-  await getSignForAssetTransaction(getRecipientWithoutSecondSecret(), trusAssetTrsWithoutSecret);
+  await getSignForAssetTransaction(
+    getRecipientWithSecondSecret(),
+    trusAssetTrsWithSecret,
+    bfchainCore,
+  );
+  await getSignForAssetTransaction(
+    getRecipientWithoutSecondSecret(),
+    trusAssetTrsWithoutSecret,
+    bfchainCore,
+  );
 })();

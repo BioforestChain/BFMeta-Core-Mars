@@ -538,6 +538,17 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
   }
 
   async function getGenesisBlockAsync() {
+    // const blockJson = require(process.cwd() + "/assets/bft-genesisBlock-mainnet-57b-128s.json");
+    // await core.patchInstaller.changeHeight(66666666);
+
+    // const block = await core.block.recombineBlock(blockJson);
+
+    // const factory = core.block.getBlockFactoryFromHeight(1);
+
+    // factory.commonBlockVerify.verifyBlockSize(block);
+
+    await core.patchInstaller.changeHeight(Number.MAX_SAFE_INTEGER);
+
     //#region 模拟账户表的变更
     const accountAssetMap = new Map<string, bigint>();
     accountAssetMap.set(

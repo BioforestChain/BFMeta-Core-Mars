@@ -1,4 +1,4 @@
-import { VoteTransaction, VoteTransactionFactory, RANGE_TYPE } from "@bfchain/core";
+import { VoteTransaction, VoteTransactionFactory, RANGE_TYPE, BFChainCore } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,
@@ -8,9 +8,7 @@ import {
   getRandomDAppid,
 } from "../include";
 
-const bfchainCore = getBfchainCoreEntry();
-
-async function getVoteTransaction(sender: AccountModel) {
+async function getVoteTransaction(sender: AccountModel, bfchainCore: BFChainCore) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: bfchainCore.config.version,
@@ -59,6 +57,8 @@ async function getVoteTransaction(sender: AccountModel) {
 }
 
 (async () => {
-  await getVoteTransaction(getSenderWithSecondSecret());
-  await getVoteTransaction(getSenderWithoutSecondSecret());
+  const bfchainCore = await getBfchainCoreEntry();
+
+  await getVoteTransaction(getSenderWithSecondSecret(), bfchainCore);
+  await getVoteTransaction(getSenderWithoutSecondSecret(), bfchainCore);
 })();

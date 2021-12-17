@@ -22,15 +22,12 @@ import {
   BeExchangeSpecialAssetTransaction,
   BeExchangeSpecialAssetTransactionFactory,
   RANGE_TYPE,
+  BFChainCore,
 } from "@bfchain/core";
 import { QueneEventEmitter, Resolve } from "@bfchain/util";
 import { AccountModel, getBfchainCoreEntry } from "../include";
 
-const bfchainCore = getBfchainCoreEntry();
-
 const jsbiHelper = new JSBIHelper();
-
-const statistics = Resolve(BlockBaseStatisticsHelper, bfchainCore.moduleMap);
 
 const genesisSecret = require(require("path").join(process.cwd(), "././assets/secret.json"))
   .genesis as string;
@@ -38,12 +35,16 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
   .delegates as string[];
 
 (async () => {
+  const bfchainCore = await getBfchainCoreEntry();
+  const statistics = Resolve(BlockBaseStatisticsHelper, bfchainCore.moduleMap);
+
   async function getTransferAssetTransaction(
     sender: AccountModel,
     recipientId: any,
     sourceChainMagic: string,
     sourceChainName: string,
     assetType: string,
+    bfchainCore: BFChainCore,
   ) {
     const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
     const data: BFChainCore.TxBodyJSON = {
@@ -122,7 +123,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
     };
   }
 
-  async function getDestoryAssetTransaction(sender: AccountModel) {
+  async function getDestoryAssetTransaction(sender: AccountModel, bfchainCore: BFChainCore) {
     const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
     const data: BFChainCore.TxBodyJSON = {
       version: bfchainCore.config.version,
@@ -197,6 +198,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
     sender: AccountModel,
     recipientId: any,
     toExchangeAsset: any,
+    bfchainCore: BFChainCore,
   ) {
     const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
     const data: BFChainCore.TxBodyJSON = {
@@ -263,6 +265,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
     sender: AccountModel,
     recipient: any,
     toExchangeAssetTrs: ToExchangeAssetTransaction,
+    bfchainCore: BFChainCore,
   ) {
     const toExchangeAsset = toExchangeAssetTrs.asset.toExchangeAsset;
     const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
@@ -347,7 +350,11 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
     };
   }
 
-  async function getToExchangeSpecialAssetTransaction(sender: AccountModel, recipientId: string) {
+  async function getToExchangeSpecialAssetTransaction(
+    sender: AccountModel,
+    recipientId: string,
+    bfchainCore: BFChainCore,
+  ) {
     const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
     const data: BFChainCore.TxBodyJSON = {
       version: bfchainCore.config.version,
@@ -408,6 +415,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
   async function getBeExchangeSpecialAssetTransaction(
     sender: AccountModel,
     toExchangeSpecialAssetTrs: BFChainCore.TransactionMixJSON<BFChainCore.ToExchangeSpecialAssetAssetJSON>,
+    bfchainCore: BFChainCore,
   ) {
     const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
     const data: BFChainCore.TxBodyJSON = {
@@ -463,19 +471,19 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
     return { trs, applyResult: [] };
   }
 
-  async function getAddressFromSecret(secret: string) {
+  async function getAddressFromSecret(secret: string, bfchainCore: BFChainCore) {
     return bfchainCore.accountBaseHelper.getAddressFromSecret(secret);
   }
 
-  async function getPublicKeyFromSecret(secret: string) {
+  async function getPublicKeyFromSecret(secret: string, bfchainCore: BFChainCore) {
     return bfchainCore.accountBaseHelper.getPublicKeyStringFromSecret(secret);
   }
 
-  async function getAccountWithSecret(secret: string) {
+  async function getAccountWithSecret(secret: string, bfchainCore: BFChainCore) {
     return {
       secret,
-      address: await getAddressFromSecret(secret),
-      publicKey: await getPublicKeyFromSecret(secret),
+      address: await getAddressFromSecret(secret, bfchainCore),
+      publicKey: await getPublicKeyFromSecret(secret, bfchainCore),
     };
   }
   const genesisAccountKeypair = await bfchainCore.accountBaseHelper.createSecretKeypair(
@@ -486,7 +494,11 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
     publicKey: genesisAccountKeypair.publicKey.toString("hex"),
     publicKeyBuffer: genesisAccountKeypair.publicKey,
   };
-  async function getTrsInBlock(height: number, statisticsInfo: StatisticsInfo) {
+  async function getTrsInBlock(
+    height: number,
+    statisticsInfo: StatisticsInfo,
+    bfchainCore: BFChainCore,
+  ) {
     //#region
     const accountAssetMap = new Map<string, bigint>();
     accountAssetMap.set(
@@ -526,24 +538,25 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
         assetNumber: bigint;
       }[];
     }[] = [];
-    const sender0 = await getAccountWithSecret(delegatesSecret[0]);
-    const sender1 = await getAccountWithSecret(delegatesSecret[1]);
-    const sender2 = await getAccountWithSecret(delegatesSecret[2]);
-    const sender3 = await getAccountWithSecret(delegatesSecret[3]);
-    const sender4 = await getAccountWithSecret(delegatesSecret[4]);
-    const sender5 = await getAccountWithSecret(delegatesSecret[5]);
-    const sender6 = await getAccountWithSecret(delegatesSecret[6]);
-    const sender7 = await getAccountWithSecret(delegatesSecret[7]);
-    const sender8 = await getAccountWithSecret(delegatesSecret[8]);
+    const sender0 = await getAccountWithSecret(delegatesSecret[0], bfchainCore);
+    const sender1 = await getAccountWithSecret(delegatesSecret[1], bfchainCore);
+    const sender2 = await getAccountWithSecret(delegatesSecret[2], bfchainCore);
+    const sender3 = await getAccountWithSecret(delegatesSecret[3], bfchainCore);
+    const sender4 = await getAccountWithSecret(delegatesSecret[4], bfchainCore);
+    const sender5 = await getAccountWithSecret(delegatesSecret[5], bfchainCore);
+    const sender6 = await getAccountWithSecret(delegatesSecret[6], bfchainCore);
+    const sender7 = await getAccountWithSecret(delegatesSecret[7], bfchainCore);
+    const sender8 = await getAccountWithSecret(delegatesSecret[8], bfchainCore);
     txs[txs.length] = await getTransferAssetTransaction(
       sender2,
       sender3.address,
       "FUCK",
       "fucking",
       "FUCK",
+      bfchainCore,
     );
     const recipient: string[] = [];
-    txs[txs.length] = await getDestoryAssetTransaction(sender4);
+    txs[txs.length] = await getDestoryAssetTransaction(sender4, bfchainCore);
     const toExchangeAsset: BFChainCore.ToExchangeAssetJSON = {
       cipherPublicKeys: [],
       toExchangeSource: "5F720C81E82CFC99",
@@ -573,17 +586,24 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
     //     nextWeight: 100,
     //   },
     // };
-    const data = await getToExchangeAssetTransaction(sender6, sender5.address, toExchangeAsset);
+    const data = await getToExchangeAssetTransaction(
+      sender6,
+      sender5.address,
+      toExchangeAsset,
+      bfchainCore,
+    );
     txs[txs.length] = data;
-    txs[txs.length] = await getBeExchangeAssetTransaction(sender5, sender6, data.trs);
+    txs[txs.length] = await getBeExchangeAssetTransaction(sender5, sender6, data.trs, bfchainCore);
     //#endregion
     const toExchangeAssetSpecialAssetTrs = await getToExchangeSpecialAssetTransaction(
       sender8,
       sender7.address,
+      bfchainCore,
     );
     txs[txs.length] = await getBeExchangeSpecialAssetTransaction(
       sender7,
       toExchangeAssetSpecialAssetTrs,
+      bfchainCore,
     );
     const blockTrsItems: TransactionInBlock[] = [];
     for (let i = 0; i < txs.length; i++) {
@@ -637,7 +657,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
     const statisticsInfo = statistics.forceGetStatisticsInfoByBlock(taskname, "generateBlock");
     statistics.bindApplyTransactionEventEmiter(eventEmitter, statisticsInfo);
 
-    const blockTrsItems = await getTrsInBlock(height, statisticsInfo);
+    const blockTrsItems = await getTrsInBlock(height, statisticsInfo, bfchainCore);
 
     eventEmitter.on("verifyTransactionProfOfWork", ({ transaction, count }) => {
       // return bfchainCore.transactionHelper.checkTransactionProfOfWork(transaction.signatureBuffer, {
@@ -681,7 +701,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
 
   //#region 开始测试
 
-  const sender = await getAccountWithSecret(delegatesSecret[9]);
+  const sender = await getAccountWithSecret(delegatesSecret[9], bfchainCore);
   const commonBlockJSON = (await getCommonBlockAsync(sender)).toJSON();
   const xx = bfchainCore.block.recombineBlock(commonBlockJSON);
   commonBlockJSON.transactions.map((transaction) => {

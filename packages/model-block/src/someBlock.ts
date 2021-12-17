@@ -1,12 +1,40 @@
+import type { Block } from "@bfchain/core-model-block-base";
 import { GenesisBlock, CommonBlock, RoundLastBlock } from "./atom_block";
-
-import { Type, Field, Message } from "@bfchain/protobuf";
+import { Type, Field, Message, Reader } from "@bfchain/protobuf";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 import {
   INVALID_BLOCK_CONSTRUCTOR,
   INVALID_BLOCK_TYPE,
 } from "@bfchain/core-util-exception-errorcode";
+import { GenesisAssetModel, GenesisAssetV0Model } from "@bfchain/core-model-block-asset";
+
 const { ArgumentFormatException } = CoreExceptionGenerator("MODEL", "blockModel");
+
+// 默认使用 v0 版本，随着补丁的生效逐步升级
+const GenesisAssetModelSetup = GenesisAssetModel.$type.setup();
+const GenesisAssetV0ModelSetup = GenesisAssetV0Model.$type.setup();
+const GenesisAssetV0Model_encode = GenesisAssetV0ModelSetup.encode;
+const GenesisAssetV0Model_decode = GenesisAssetV0ModelSetup.decode;
+
+for (const Block of [CommonBlock, GenesisBlock, RoundLastBlock]) {
+  const BlockSetup = Block.$type.setup();
+  const BlockSetup_encode = BlockSetup.encode;
+  BlockSetup.src_encode = BlockSetup_encode;
+  const BlockSetup_encode_v0 = function (this: Type, block: Block) {
+    GenesisAssetModelSetup.encode = GenesisAssetV0Model_encode;
+    return BlockSetup_encode.call(this, block);
+  };
+
+  const BlockSetup_decode = BlockSetup.decode;
+  BlockSetup.src_decode = BlockSetup_decode;
+  const BlockSetup_decode_v0 = function (this: Type, reader: Uint8Array | Reader) {
+    GenesisAssetModelSetup.decode = GenesisAssetV0Model_decode;
+    return BlockSetup_decode.call(this, reader);
+  };
+
+  BlockSetup.encode = BlockSetup_encode_v0;
+  BlockSetup.decode = BlockSetup_decode_v0;
+}
 
 /**
  * 区块类型

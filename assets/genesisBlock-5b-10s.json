@@ -1,13 +1,13 @@
 {
-  "version": 1,
+  "version": 4,
   "height": 1,
-  "blockSize": 14158,
+  "blockSize": 14180,
   "timestamp": 0,
-  "signature": "457ed3452554086dc66cf13dc539c1ad3559fc79df4e34193ed8841f6fc150ac5c2d7db53a6eed5d09d0ac9b1aee61fa9641663daf25c1a653b810542af0d007",
+  "signature": "a33cc2ee47e1e5d1599553051ce1693360fbc4605b60357d508131e9e789182d124389df33904b146d87ab34e57b738504793a5f754d1f8ea70f8cf1e82fc90d",
   "generatorPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
   "generatorEquity": "0",
   "numberOfTransactions": 41,
-  "payloadHash": "6663e94561bd603641a11bbe0b10fbf865ce5910ca8830130da6e159096b39b8",
+  "payloadHash": "446d626a7fa0eac2a59b7fdf71cf78d5c8bb72f271a02a759953975278f1d1a4",
   "payloadLength": 12762,
   "previousBlockSignature": "",
   "totalAmount": "1497",
@@ -32,9 +32,9 @@
           "assetBalance": "244645364561314044"
         }
       ],
-      "signature": "e32a2ddaf34613c8ccea5697f5d31a4ab23e3fff742b14a7a87ee304bcfac99631ff8754de808f6381b2a88ab4864d566d011e9f6f3a043a06bb2f8117d29009",
+      "signature": "dad1c39c7737d1536914e7166d87fbae4ab9cbf01171a534fe840427caf67217ed9aca512deb680a60e973f714f0cd1e199e71a912efea2852d6bf320f65d80a",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-LNS-00",
         "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
         "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
@@ -46,7 +46,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "8a643dd81b66410f5ead75532e8445b7c4cb3f3eae459a0d4227ece6813c918f445ad6d159bfecb999eda598f00593a8b14606d894990409c98e3a69fcaca500",
+        "signature": "cb6ddfed96dd5dac74fe83dd35d0bd021ddd4c8d0a4c7c15bbc314ce435d83a6dacb6d58018fcedfee143362a21d11942d22a08392d78132abed8290f24d2a0c",
         "remark": {},
         "asset": {
           "locationName": {
@@ -78,9 +78,9 @@
           "assetBalance": "60"
         }
       ],
-      "signature": "42b84b177393bd3af23835fdd1a5338956f5d73fce52126095c939fcf13b186aa62472dc7c7c10e4cdb94ce1c282f68d932db8f8d61c25161998333fe4002d0b",
+      "signature": "99dfc5521d734cc25ccb64bb61edb25cbc0a0c34e607b015d05601abaa8920d37136d814c96f5a216c114c536d51562bdaf5c8656687a40fb24b4b1ca593b504",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-AST-01",
         "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
         "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
@@ -92,7 +92,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "ae312973c4ec237596864474c9c1a80e5354ca4d7b46c5d84868c576fd064b580ee06ae22e28e2d6f8e811f4ce4d483dea3037afa91e3971996438ae499b2f0b",
+        "signature": "55908a851ac7b64186d9d0cb906ca50e01adad012feedca16e5c7a05941d268c87bfd3b778062490ff1c66b0f109ac7cbef16e77ed3e3d3fcdef982b1012cb02",
         "remark": {},
         "asset": {
           "transferAsset": {
@@ -119,9 +119,9 @@
           "assetBalance": "38"
         }
       ],
-      "signature": "d271837800bfe5417e2bff566349182933445c1a1c0221c72a8a2311eb6730a0213b8d4cd29f9fe68d225c5d623345571d7f926d1882498155734af1d8047706",
+      "signature": "a4fb32320a9d60f39dbf292f045bb317ebb514e0b67ca839956b9980c32bff783d88ec904504b04c9b912cac9a45ad04bc2896d46f635bcb27e1267ff1f71202",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-BSE-04",
         "senderId": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
         "senderPublicKey": "6e8330144a8c123c017a8f5c363531868d3ce21c45b4a668cc1767c2b4695c84",
@@ -133,7 +133,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "fa7dfbfec7ec684a19cc012a9f745416c959d4daf29c40a63e26167f08041744b5e85464545769d026328cc423b6660592918be6b3deaff2b26b5d7830395300",
+        "signature": "6fd4ea5c6808ce9477d8d05e1e390a5cb551b8568c6a05dd353e9d3c1c8eceaab10dbc6672d03feec833b182003b5c4ddcaf405f155d74d900b74c29db66a20e",
         "remark": {},
         "asset": {
           "username": {
@@ -156,9 +156,9 @@
           "assetBalance": "19"
         }
       ],
-      "signature": "11f02ee54ef873dfbfa5c8da2c1afd550dcd9721818ccc669441dc49a27d47ab83659109094c5a1b8be8d2d729664cdff0ab85b0aaa0cec0264d75942e56c603",
+      "signature": "6fe7dba2d20d73721b56dc0525a56e67f6be700618d12752d8351e38b0ba83fc817646f08c3ab64e6a3a7e3cff5e2ca7e3e5327ab23453a8e52fc98520129c0a",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-BSE-02",
         "senderId": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
         "senderPublicKey": "6e8330144a8c123c017a8f5c363531868d3ce21c45b4a668cc1767c2b4695c84",
@@ -170,7 +170,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "89c321769480542563e48eea8e0549e567dd9600759c4798db1c8d9b932321e3f52d005d7ad830541eebb9b3263b95d674963b97b1df6794f27583ce0c01f201",
+        "signature": "e273efeb3c114856fc9b0a6efcdd53042d85dc58789e0fdd5276950c8c747544d6e6dd439d4bf8e5e1fb2dbbb95f1898a65a185165b95f2ab368a227c23aaa02",
         "remark": {},
         "asset": {},
         "nonce": 0
@@ -187,9 +187,9 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "f8723b75617ddb1f14127d9ea9361a084eff45949f0718e7ba5cf5e7fb445fee9534bf0bce703d25c300a63a64b14e90d1f3bb7e784f67a873ca0f8c1195d502",
+      "signature": "9340a91a7c4f9a41678ed39b339cdc3c5bf46a5a493b9bbcb5ad98f0e50a8472c7af863d54c964a6d4df381c0d35870ac7477066f18025fa09f52b9a4737de0d",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-BSE-05",
         "senderId": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
         "senderPublicKey": "6e8330144a8c123c017a8f5c363531868d3ce21c45b4a668cc1767c2b4695c84",
@@ -201,7 +201,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "58a9dd2434392d79040c04bca569cb8f3fe835ebf4afc77416c3275168abe16ca38840151d50c4dd0ed123e8c5865732eaccdc8cbf678a2c8bb07975d9bfa706",
+        "signature": "8b6ae6999075893a3cbe151f748cd14628512eddeba38d87a10ccd39d5088ef8831ea813c159dfa28fd98a8d1a75685f32d43f670af83a1a4b94f14c80b93801",
         "remark": {},
         "asset": {},
         "nonce": 0
@@ -223,9 +223,9 @@
           "assetBalance": "60"
         }
       ],
-      "signature": "5ece92cbd0fd71f8b068858f4533faac5d6779de7397cd25ccdbec08f4309de9aa40ee7f6bc6bb69cfe2685e9fca947c2be1698eb5ddab12e33764fb44f7270a",
+      "signature": "7952274cc2f568080f36bb596d9aa65106ddbabb19cdec761900615b65c8bef6054e72e603270bdcfa5620ede60fc5c5aec00e854a73fca1f1b906cf86c90809",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-AST-01",
         "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
         "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
@@ -237,7 +237,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "64e0de0b2a52bb213e4a9eb9526d65e18267e82571118f241cacc608f1309e31db4ab06a20498b4c46c3d630ca1afe9ac911184eb32e4034e15d20bfb6411606",
+        "signature": "e13929ae781c30b7f7cd11eea0bca64f6f3111fcf5aae967fa01a6b62ecc90f1b925089d845cad7f228f028107a288b09740c9e9a06d5d2d2d5254280fbac60e",
         "remark": {},
         "asset": {
           "transferAsset": {
@@ -264,9 +264,9 @@
           "assetBalance": "38"
         }
       ],
-      "signature": "7db0b2e25762ddf9899796d12aa87da35d9c994af2a44500e6c3cf34f1d18e662f3884e68cd93ede49ee9df90697e2b784f9e4f055217ca53cccf14bea376b0e",
+      "signature": "62e093e73e6f77cc1c2f180195c2806f0db08eac4b0d659268413984d9319e8b23fc332bf042ba29e1da1354b84448961e93f9344118470cf71a8951fa645d06",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-BSE-04",
         "senderId": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
         "senderPublicKey": "0f88fe3a155927907b507c10ccd0318a7f3b2f55aeb6c90913756ef43db4e836",
@@ -278,7 +278,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "5399773c67d788a171c2d014b77a07b47aacd60d943f051f81a03c315b798ed736f1e7fe88cfd595368f1664935d26d3ee67a8061cd20587b63700367d702603",
+        "signature": "e9a661bb72cd389d5eb52fc6fc5eac2dc5f8fa069d7631333902819ce4da9caa5dab432070484e703e6547f31ea09f41e80b9caf2c97d030e9fe8ab2c57c1708",
         "remark": {},
         "asset": {
           "username": {
@@ -301,9 +301,9 @@
           "assetBalance": "19"
         }
       ],
-      "signature": "8ca357d97e5ac285c448b256832bddc2af39544e3339ea3aebb46bb3d08e3309b8487b829187cb594beb1bec6ff1f358a3cdb2624994dc8becd36f4c13b73304",
+      "signature": "a1e3e9f7f8ba56b5b975a11261b8f743f90ffe0ff0dcbc3b0391abfd50f7c46a53c10bc392f01eee09d458976a051ad9bda952817349f9362d88a3c66fd7d100",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-BSE-02",
         "senderId": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
         "senderPublicKey": "0f88fe3a155927907b507c10ccd0318a7f3b2f55aeb6c90913756ef43db4e836",
@@ -315,7 +315,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "076405507f48df63d7d4caf18b4e90b5ac37e00d015225eb1f00d53339dc5fbc07bc8993dfa94700f8e0e3f58428ff7278bfd22336fe672b57dbfe999eb1ab07",
+        "signature": "8e6dea932d6be563b4f4787e86ee6ab86a1976398b07a0a7e35d0bdd2d8c014dc7b18cf4010ca3a69934bff38a4eef936fb3a37bce199c4992721560874d7804",
         "remark": {},
         "asset": {},
         "nonce": 0
@@ -332,9 +332,9 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "0c584970d981185a5722f08ce593ef414b60ed6b6a56a00582153b0230f41eeccd50f51bac390149f4a43ec27abe54765842d96c7f319da03c8969ce0e0fc603",
+      "signature": "09a25889470db0745d96e9aeb904b49bf8a078f341534bd13baec7b823dc46076d5d4104802c103dccad0e90da71cb7d9e157c231ca6449ca41ad81be4310606",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-BSE-05",
         "senderId": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
         "senderPublicKey": "0f88fe3a155927907b507c10ccd0318a7f3b2f55aeb6c90913756ef43db4e836",
@@ -346,7 +346,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "1b65a317556bff5bcf521ad953668ad9a4f970a51afde86b59348860a746838241715cb7891ae99cdde3a79bf232624c0a790a5919c0d09b38af78f1541b120c",
+        "signature": "5bad81a26944b774d84f1ef5c6414149ca1465cf200e1affacaf6662e94648c594ce6f9f9d797ad3c5446a58ec078dc21e0e0437bd18d6c7cf83231f22a3ac0c",
         "remark": {},
         "asset": {},
         "nonce": 0
@@ -368,9 +368,9 @@
           "assetBalance": "60"
         }
       ],
-      "signature": "fe7025c4ab703e28c2b281e32e74b60bff8af9b248c707977655ee52b1fcfa94b7b9a0318d453e35b6cd2539fad539f10143b3ca0ca6b983f84f0f84f5d8220e",
+      "signature": "c19cdc05e18ec9c79193e8cdde03de5b40be4ce4b00111ab98785ca983fcc77d703a0b80abc19d7882f472f570c447029d76672995a5efdedfc5fb8f3faa030e",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-AST-01",
         "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
         "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
@@ -382,7 +382,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "9d7b5632ebf9f966cd92ccb4fa24aca5f08e7d233cd28604a318db969f18ae6474237e19914a4bec69a39ff957b1dc7717f8be06a66fd067db18c0528b0ebe05",
+        "signature": "38723c7fca2aa95c52a9e0a9a8ae170949a4c24d8c506711098f9c8d05de29649d6cf8ca152bd57784a07d7eb29cf7020088a80f0e823ae6100e21d981bb3908",
         "remark": {},
         "asset": {
           "transferAsset": {
@@ -409,9 +409,9 @@
           "assetBalance": "38"
         }
       ],
-      "signature": "eabd5be16f80a2103a71f34e36fa10676f38d0747028765700cac574e86c6182f5c1c4cef0a6a19a8aab1f0ffec9493239e62cd6488bf5b6135ab3be15c83a09",
+      "signature": "1ad031771e1912501d12dcd12c0568975529e1c83aea33cf5eaf431535d65977cb1e65c9b47f660072c1c3d5c764711a1ee5b9d3cb156e187866153454e66002",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-BSE-04",
         "senderId": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
         "senderPublicKey": "526b2c534f8e0b2c75394e8c2968196510f912ebee80c17193baea45c73c07fa",
@@ -423,7 +423,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "7a8e463539167bceea052e2ddbe80e8298541dd2ceb3b34207c5678cfc23e05967ae1f00cbdf1c9be425f6918b58718640ffee4b545d7b3d6f6c6a008defc506",
+        "signature": "9e40e0c35e0edc821f8b863b2ae697737cb4e89912a1115b71095758481dc2d5a21c2989b996351345e2722723f3818986417c925619e5a363e3e9423211cc01",
         "remark": {},
         "asset": {
           "username": {
@@ -446,9 +446,9 @@
           "assetBalance": "19"
         }
       ],
-      "signature": "aeb06fdfd44c1192b1d52bd7e223a2ed8167d86ba34ce81e22e62942e4d6be148fade773a3359a4f0976e367a75901d5249d9add4f65a0efa92fd5de01fc0908",
+      "signature": "f77ebe93d33b7509af1494802662011ab12594976e7261a94b787973da275b4a3300691a8ee6db744436516ca80911b5bef0995416c081eba18a25418f6e8c0d",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-BSE-02",
         "senderId": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
         "senderPublicKey": "526b2c534f8e0b2c75394e8c2968196510f912ebee80c17193baea45c73c07fa",
@@ -460,7 +460,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "f2ff20edaf6322be44c28d0f4fec9300bb4f27ee1314c2d503f28f1d291e26717c52d55c486d7f9acefa80bd6f221f4fbfd8c5e15cf800c1ee9148c52ef0ee05",
+        "signature": "752581a5f70dc4e574f8a73e10fb77d2a1dbb9551ad3e4b4f27548d599846fc119af217259e81fb80bf205fa944e1fc50f4941500e32948c07e8020ed4ef8f09",
         "remark": {},
         "asset": {},
         "nonce": 0
@@ -477,9 +477,9 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "7d227020c35eb247ad67cb9ffafeb8078717ca0b5f96f0851b235ad39b3dba50e1d3229ba6da008c69794cfbc182aa195a8b6c35310643ade79b66cc084e1c01",
+      "signature": "42b7b44a8180c74de24e65df83d48e5392d8f6ad1e0bb85b466d82d7bcec7e5ca00786e2ecdd88dcd4a42858e16c754a3c2fc6aa7380686648e9c168f955420a",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-BSE-05",
         "senderId": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
         "senderPublicKey": "526b2c534f8e0b2c75394e8c2968196510f912ebee80c17193baea45c73c07fa",
@@ -491,7 +491,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "3890b51e81ea28474a977c64cf433d443075806277fa7e18917df85e87cd89bc89152e98f507eefece092bedeb041e7af10b2eeaca887aca9076f26d42ea660f",
+        "signature": "2ad2063bf29e8bab564a313b2ae6a17a935c57eab9cd581a8172577cc8b43eb25c4ebe484d12957003d7a75696f6d6eab5203a7959da8f8510acf72ada3ad20d",
         "remark": {},
         "asset": {},
         "nonce": 0
@@ -513,9 +513,9 @@
           "assetBalance": "60"
         }
       ],
-      "signature": "08aee2caa3f1933e28e7dd24c6081fbb6d1bed3e4dc4bb82448bf95afa605b3e6c5ad617d75185b3c34fbe148e12a5e4df0180480dd89d3e856e1fd476fbe20f",
+      "signature": "46a0ab02ff770558cf12e2fc82b057155eb6acba376d96e8a487291ef3b7f181e00d49c495641e88259aae8781c8fd7878bcb119ea0504a850e5480b9fe07a09",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-AST-01",
         "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
         "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
@@ -527,7 +527,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "97ee275d0600c1b785ac6b5d75b013719763d6653372dfc96a9545f21cff8c825bdf6b0ffb8c939bfc8dd001b0e3b81aea9f7c15d6c9e9eae51dbbc2a045c30d",
+        "signature": "a9ad538efe95ec0c1682e5ca8af0d68b3ee1e0e91284c4027c76b00372502e0f13c7e36c0b067720fe82a92927c5888d1a630fa76bd82547aa1d27f824aaaf00",
         "remark": {},
         "asset": {
           "transferAsset": {
@@ -554,9 +554,9 @@
           "assetBalance": "38"
         }
       ],
-      "signature": "00869dd40a6fe5d7af252d3c0cada7e48599909d5248fff5fe88c8d7fa4c5d3f32549c7aa997abbaa08f3d65d4b8345ebbf3c185dae095310b9cda945c05450c",
+      "signature": "ff48f3197e04b31636c89b349fa85f04c90bbd5c57315d0fbe37b6f23040f83737da4b9aa328b896beccf637763ef87dcdcf11122782835f5c639af198c09d0a",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-BSE-04",
         "senderId": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
         "senderPublicKey": "72eb8d56261b211e0f77029cd8010b6378fa23342cb21c1169e4ac2c00debaa0",
@@ -568,7 +568,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "221b1dcd127abcd19f05697c9f258134da47d8cd7b973a070f8661d2c84e341a494b468a0bd0c582152cd180ebb1665ff491d27205347821bcdabdce46ee0209",
+        "signature": "2b8a40e51018a9e4aaa27d6c1e6233a5b506feb9063faec314a388a0d75c631043c68efe9b764c737671a0db6ecae7efb605a3117cbcb242aedfd55e971a9008",
         "remark": {},
         "asset": {
           "username": {
@@ -591,9 +591,9 @@
           "assetBalance": "19"
         }
       ],
-      "signature": "bfcdae0b997b04c76f2838996b7b2f2a388982b63a90f9f4b2fd4fe0322cf8c79fc4936f85985ef4113006cf7fbbf62c3af342b8c205a077b66f2a754fbfed08",
+      "signature": "cfbae408cf7414b1f4106245fc0817acd507db2ae42a08fe0268d5bb82187d1a0f8cf5336e4c929b452c948c07ca531ebee2418293c80e7c10bdb5e00a2b8b05",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-BSE-02",
         "senderId": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
         "senderPublicKey": "72eb8d56261b211e0f77029cd8010b6378fa23342cb21c1169e4ac2c00debaa0",
@@ -605,7 +605,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "47565a469f04b894a92a93a00b31c7beb8201cb3cc271a3d6f6b25a0158fae11b27b2fd45108c44d43b24be09e0073df55f5592aae418cd9d6ccc9d2fc8fb506",
+        "signature": "85a0c4194c21eab8ca01a51dde28301a5fff3c1f8dd23a66bde12087045884fafe4d82f75cc5f654e087571537605449e02c1247b37adfb55c08ea60edddcd09",
         "remark": {},
         "asset": {},
         "nonce": 0
@@ -622,9 +622,9 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "f4e394484fc5cbb2f2026bcfefd8249f3a4f15c4e1d26c8f77a424cddb5a73e8e5038970dc8da86c620e3050c3eeb050e5a9be269078540a1c02ca6d29a0700a",
+      "signature": "e86f7efb2dd3c6a32bc7643dd41fe804de5e08c3685d7a49388133d91ae316f1a92c8b81bce53e78af97a3a22ba98e12a2d27ceca5092bc80527f2eb12e0720f",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-BSE-05",
         "senderId": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
         "senderPublicKey": "72eb8d56261b211e0f77029cd8010b6378fa23342cb21c1169e4ac2c00debaa0",
@@ -636,7 +636,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "a9b4abdffa44bd75198aea818c900260381fdbdaf32b1ac9131a4bee8118465b86e16dc1cc0567f2d62fae3388269455a099344a5b4a45833fba45be5ef69802",
+        "signature": "a1fba3494026f6360c2c0ed4e6d8dbf94818208b28068a604587669b7dd6fa1890687b81fc0a5739266be2c7e225efe49404dc5e64a2ae8a5d13dfe63881060e",
         "remark": {},
         "asset": {},
         "nonce": 0
@@ -658,9 +658,9 @@
           "assetBalance": "60"
         }
       ],
-      "signature": "56b55e4d46860ab309a0d257bec7d00eebe698aef99584c62ac12f2a9fb7b6e104af47c88dd69a2b5889633f413051efeffec3ba51255c5194d623b737969f06",
+      "signature": "3b0715ffe4e252369d0d10b744f19a8a22bb925b880654fddef27e73fe3a67ac2c7e731ed8b7146b1ca1d50afc6a274d2744f249cd11e7c4fe35dfeedba4c707",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-AST-01",
         "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
         "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
@@ -672,7 +672,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "5940791f610e24b4c52843413214bc3cc417b724c7017a36558fe5ec8224f2ccba62e208aa3e2a5aca0c68f268cc1bf1f7683599525204a87e956db1a6aaa10c",
+        "signature": "17188c9e8cb126cdd5396068c04b2c132ad4943d0e62a7a64c97ba9d2ed9284272ee1a087390261f9e23d5679610c0e0d9d32df7f5b5b0c9368a282d8695de0b",
         "remark": {},
         "asset": {
           "transferAsset": {
@@ -699,9 +699,9 @@
           "assetBalance": "38"
         }
       ],
-      "signature": "3d7c06945b92dc7298fea4629a537161280b8c1a8193a195f7156138fef35f10a854256c6867e5b6d1a76177d7fa6f0506000f856aa49fda0c8b0a59d359b106",
+      "signature": "8e43a309369786a3311d2fc42da0b7dc4bbc215af35216e63ce3320851360745655df6298a051cca9831f5980e197f901fada490effc04923045495e7623330b",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-BSE-04",
         "senderId": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
         "senderPublicKey": "58f751e6ffd7e67d1ddf3d687f02e828a4f855a6ba78fd06bdbeb934ba56ec77",
@@ -713,7 +713,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "96efcdeebba467c5272da2f3a7ffb0c2ca9ea8fc2b1b0eea43a4c4834c691fe321f2ef597a8b5e3d4b53f3dec6327c104791c861dbb010ff7b6fa8a7f7c26302",
+        "signature": "8df60d78fd7a9399d8e9f96a876d5690620c9f2efdb9920ae2fd15e3da323d6f3c6464f426a723f1a07af8a6b285e6a880714903a17ab634e1b6942dbd5cac0f",
         "remark": {},
         "asset": {
           "username": {
@@ -736,9 +736,9 @@
           "assetBalance": "19"
         }
       ],
-      "signature": "4d76e7611ceb4240acc136c2535fcf130fdf1636fd31b90e7199485cee3242f8391472e816df4b90cb685ded3ade35a8347cdef28dd0efe655b958dcd9d2fd0f",
+      "signature": "0b229e9e7f48621c79815e4378e8e5b6b4a95426b90b0984a2d5577e0eaba7afb5ccd7194ce7e29e49cbb57ac8a2aea97df031844bd0fe67ac600bac99c1c302",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-BSE-02",
         "senderId": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
         "senderPublicKey": "58f751e6ffd7e67d1ddf3d687f02e828a4f855a6ba78fd06bdbeb934ba56ec77",
@@ -750,7 +750,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "72f5148a53b6a7ec82eb31f9e6fd5411a06192bf3102cd1d4a8d236b81169c7bc2278a1fd592a229b394dc1abfa988903eec8b2823481b73400c9d842eaabb09",
+        "signature": "9c3818b31551968512ba049db27a4d954a5f023ac00f498b0f86d7ba804d9940141a8c1f4458a3782f635aa2c3af31fe7f15b9f4291a2639b8664ffb15a0de0a",
         "remark": {},
         "asset": {},
         "nonce": 0
@@ -767,9 +767,9 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "f3642d6c98ef2b3555797029f87a1f373c3a62a611fe8c0d12d3551b859bda62e997dbc024354bf5611fb0ac0e677bffcf590ae138b63d164bbaec226e5f2f05",
+      "signature": "520c4b21a6b82ab26e48d59b2cc244d46b4f9ffcd275fda404413c8bcaf62af33f735821ca9d32666e806b2d85b29809193f6e1e7ecbc1624814e8f42f0e7b0b",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-BSE-05",
         "senderId": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
         "senderPublicKey": "58f751e6ffd7e67d1ddf3d687f02e828a4f855a6ba78fd06bdbeb934ba56ec77",
@@ -781,7 +781,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "1db02b25849a0e76a85ef6db1f7482e563d267e46e2ceff7c20478440e8e434aacf9238a15e8449407f21a149090d77773a1f5fdea8b9594cb185eafac82e203",
+        "signature": "6664c7d98b21e3034a156e11e625dd85720d1234895ec92018a78ac79eba633c58a114a5a29f27e991c8af59b1c8b2ce38d6bac41d1c7a83f41a297f23f50f0f",
         "remark": {},
         "asset": {},
         "nonce": 0
@@ -803,9 +803,9 @@
           "assetBalance": "60"
         }
       ],
-      "signature": "9ed2e60f592e1acac4e7dc5c35c3390c487d1d4b1476f81cacded95adb9e5253cf1cc5a6b55c1c377dc494b6ee36a2683535840e92c9ec06b6758204abdbd602",
+      "signature": "f31a742ced0403bc041a7ee32099d11922e1e038947c1ef124d06b03aa12f9c5154d5422f2a30c71fce924aea18bf9ea5050d4c137bf0ab0de86662b2c5c2806",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-AST-01",
         "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
         "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
@@ -817,7 +817,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "1753b57df3059fa0c3810c7ac77b08bd0c1acd22685bffad7aa3e1ee418c3a602298d2897f6f4f2ef1c339268ab68c955ec4f3b89101fc332df1de36bfcde10a",
+        "signature": "2bc9ec84be9ae0f9b79ea81fba6f61df560abba2ddecdbe12acc6042900b471a83f1fcb06748f851cf2bd49a1222d9e1b5cf0b82dedb6875b8f5a313d00b3906",
         "remark": {},
         "asset": {
           "transferAsset": {
@@ -844,9 +844,9 @@
           "assetBalance": "38"
         }
       ],
-      "signature": "2f11a6578119cab0d80d9068f7060584c4b3cac9ad9262de0ae621316b704ef3d707c8c1b38b9fb40696096917168fb7d1690009189df183a80cb6c750576102",
+      "signature": "52f0007ed18d5307563ce15dd9ea776692dd1861d8657633e82c3abc5bb8932dd687858d274a66e33f6b400ab85e5cd3cdab1886009ea02c45d480502419df02",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-BSE-04",
         "senderId": "cGnmjV6fk5kFbTWztDtZhyr1a4Van4NPvR",
         "senderPublicKey": "a210c3565083922100ce8ba1c2f99da5769fbc78e90594b052ccb0388d3155c2",
@@ -858,7 +858,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "f526337972d44b8a23652bd01f7b98994ded035e2b13b6ad3800e1439a0e674c49a71fa238cad32192c7d8b194d7e21e9ceed2d06e8ede626d3d15d609ed2a03",
+        "signature": "01844d1816dd9be839cdfb60970b609785d0bf49b994af9e99fddf5477d82b9311d52b9cd75770b6460eaf5df91cea702ebfbea3dc0554e934cd3e9d7c05b00b",
         "remark": {},
         "asset": {
           "username": {
@@ -881,9 +881,9 @@
           "assetBalance": "19"
         }
       ],
-      "signature": "08ebe4708321bc698c002caba0d722913acf877930af82374b8bd7e711ba250205bae743098a6d6aa1dda02c040426404854f3f973e80abe9a1368f513bc0c0b",
+      "signature": "421d6a1692afe2c0e7f345b3fb4929f394d8f61ff9977d5cb285caff3b68889ae6b99252390c38b7215ca17ffb5cd24881abf0701f0d6b59b0ddf15f3291140c",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-BSE-02",
         "senderId": "cGnmjV6fk5kFbTWztDtZhyr1a4Van4NPvR",
         "senderPublicKey": "a210c3565083922100ce8ba1c2f99da5769fbc78e90594b052ccb0388d3155c2",
@@ -895,7 +895,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "6765e35f1d9ea5d39340aeadf813aa96ebe8ac3124f81a626c68b09722498a28e7ee44eadad7b4f6bb2e0005c9ffed6cdfa60cacb4899318dc12c7fa9e02520b",
+        "signature": "452958ba9a146477d2e3ca1d08f02162bc9421529160cd4e813104d63a834e476c518d9caef69524b6a8c0aceb9142818f322712de857f3f175f004278777c03",
         "remark": {},
         "asset": {},
         "nonce": 0
@@ -912,9 +912,9 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "20c6161e36d2f265a75ddb0b8dae4dbf3aeceba45c46bb36140513b0e2ee17316f01aa2c5a90de3e096cdc9b5bce410c9668690fa8a7d34786c47fefa247900e",
+      "signature": "3e29b4494fa685ad27c7dc4031999015a6c4edf0a35e21982467a04fff9b7a8226f67fe5660a434d3f042fa4d4f9df732ced214fa73946102d703f57101d6504",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-BSE-05",
         "senderId": "cGnmjV6fk5kFbTWztDtZhyr1a4Van4NPvR",
         "senderPublicKey": "a210c3565083922100ce8ba1c2f99da5769fbc78e90594b052ccb0388d3155c2",
@@ -926,7 +926,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "e3767f06644bd51767d98282292623b584e6f9024533d381d6109effa4ff723fbc5ad1d31831d6545389e397b3b4219255104f6e05090e72157d161b291ec301",
+        "signature": "25678dac49a3b90fe2bc23941941b007cd20c328867b775687cc87146a49d32d137f6fb31429e6cbd0c7e2016f0cb4653dc10c531446852ec8aa83810e22e004",
         "remark": {},
         "asset": {},
         "nonce": 0
@@ -948,9 +948,9 @@
           "assetBalance": "60"
         }
       ],
-      "signature": "dff82f9ef1940f8d4a5a265f95dcc7d16bc967ca8560fc5f3d25357c67c60613f12636a220bfb6f43d2b585aa7fb6649aeb52ccea947f6328544711af4b79c07",
+      "signature": "58b4d08c485344d017064338f4a740a266a370e21ba8bd460547d2bcc0738954d42535de02541930666a6fa19f6f0bcb333d818c49a6afaa2268f71ad65ea106",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-AST-01",
         "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
         "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
@@ -962,7 +962,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "41a5a6c8c6e703fa70abb0b513222d7b602fb5269db6d5aad7c91a9cfd0bbf7d21b0ceb7db584b85e4f373ec151d9d3bbfaccce737867db9a67c8691be91d00d",
+        "signature": "89c2678482eb8dccf83e107ab34e1ed985170b637f689997034c817f460a9116dc59da78434fb54353e214ff7c4763f4670ca564efa36a592123ed2305bae50a",
         "remark": {},
         "asset": {
           "transferAsset": {
@@ -989,9 +989,9 @@
           "assetBalance": "38"
         }
       ],
-      "signature": "18f58f7626e18a690d909adfee282bbf6cccbe5d6bb1e4712729e8bdb86b4ad0cec724c31cd88508925f910b267623cb43d7c12eb3137c3ff146e5fb072e0607",
+      "signature": "83f2584a10f6c2e126a079a83f900cd0907babf1dc41c49a1680297382ca4d730c1373bb9b70cc459705d78cc8f159140e141be5964d5adaafd459c473c93309",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-BSE-04",
         "senderId": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
         "senderPublicKey": "ca78e16aad7980933da93844a1b91a719bf7793a05c566de8c9806efd90761e2",
@@ -1003,7 +1003,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "58c286f5c87962d00718bc274978725a636b6130bfca4d37cef9ae6d4430434a3a66a0a9f40b923f383b435f5374818d610234938f4a54d03d7551a49387f30a",
+        "signature": "cfd7c8d8e0b4d5957dd4a802ce90e591a7b5f63a22681194806d9d81d55bdab506434033c731a7a58f2c9dbbb285f6ecf9eb72233fb46db59e7019e543d6080f",
         "remark": {},
         "asset": {
           "username": {
@@ -1026,9 +1026,9 @@
           "assetBalance": "19"
         }
       ],
-      "signature": "4f43af3c7e3c1368dde713c27dacc4b096f855610686a59ad57f043efb4f86385a7e2997148645a07845ca6143c53f9a4a06ed1a2288ce357f57041b15780608",
+      "signature": "0df96f37f4942809d25d6d65464105cb43618679d930eace8736f618c363171b0ae60b301d797ca986e745bc89ab12760ec280534ab4a0ec868345e6c69bc401",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-BSE-02",
         "senderId": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
         "senderPublicKey": "ca78e16aad7980933da93844a1b91a719bf7793a05c566de8c9806efd90761e2",
@@ -1040,7 +1040,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "d474e975ccd8f439c5a37d1d25b2a42abfa0438a64997f01a561337f172566b009569e38031adf49b4d0b5d97197f0676f3cd9ae648d92bfdb40dc83d00c9602",
+        "signature": "734af767058f214247796057ec3d24ce2d5197a41305c86a98eb7439327eb03a34001f75073f40539f3ec1fde4f062afb9d498a498e445afe2f05bd43185e908",
         "remark": {},
         "asset": {},
         "nonce": 0
@@ -1057,9 +1057,9 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "c58f70d766ee80a2706520076bdc5fd8bfa1fb29d07470df020735468fe1fd594099c2a870373c629852ade0235c8819a6d434cf7c12f341839b832ca63e1e05",
+      "signature": "1f3435c307c2fb82d894955c8299fc4363ec1d75b6c7e6e0bdcaeac60fb96eedc58d9b01f3da03a0dad23315f9b2b68d4c60eaf5cb878c690d1f65a69b4ac207",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-BSE-05",
         "senderId": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
         "senderPublicKey": "ca78e16aad7980933da93844a1b91a719bf7793a05c566de8c9806efd90761e2",
@@ -1071,7 +1071,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "4a2ea029b8f5dcc4aa1eb52e5af763064a2dd1703186fdb6c5a9819a9ff6b6764121896a6979cd5ad355a9f015ab545f117d00114fa603ec4117f7dbad1da60f",
+        "signature": "1477c6b497024cfe87d93bf68ec655d96b19ee16a69a13940aeb9aecb77a02555371fc83bc8d437e6b165b74f011e9e33a2acde3c8c358bd013af6587bdce406",
         "remark": {},
         "asset": {},
         "nonce": 0
@@ -1093,9 +1093,9 @@
           "assetBalance": "60"
         }
       ],
-      "signature": "2ac0ddacfcd97c7cf28b29db1eba5151a769374d92004f52c1832d9a3e099223633b3c5e5a1739722f191638ee538ddbf4f7c6695b1f5fe8d155a168c05b3a06",
+      "signature": "44040f5a405658afbc022adb5459a41403d77c07e495a09295bd3b9f9a8278d222ebb8befe2b6d916a57eac15ec2d5fa5105231b04e929ed25bf048d3b51df0d",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-AST-01",
         "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
         "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
@@ -1107,7 +1107,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "a0c893fd00cbbcf05d52f963b39357b064a99c2c90cef4ecf93a686c02827b299f2888483ed56577f9dc1cb151b389ff4105164d5575a35715763b38e7bcbe0a",
+        "signature": "554c0a3e16556c0dabc83616e8c5e60be89ecdc6c6e87981c1c00050582cd6f772aa0985e9c69e854b7965a46d8d7e6be32bca7012162b307be6cce60534b100",
         "remark": {},
         "asset": {
           "transferAsset": {
@@ -1134,9 +1134,9 @@
           "assetBalance": "38"
         }
       ],
-      "signature": "4beac20b20e6049abd3db567e6b1e6b2d4fbd7d99d58c3107a71628819a9f41acc607ef8fe7f9882d39a293ac5b70fa9ef82722a8e9a30202b55de4bb842d804",
+      "signature": "f6c4eb10ff04b2949a824b26eda8114e909a34c45d436b4b22e95effe88f4fdb304e3fa1ebc3a5b333514f2b92713209e43d84c71e9fbb20f1c6c8fa7f7e3c00",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-BSE-04",
         "senderId": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
         "senderPublicKey": "85ea51eefe25fecfa3e7fcb7b47c28dc8e1e47b7152c6a94791b5f2d50ae165a",
@@ -1148,7 +1148,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "390157f0609c56cfe20a2ac33c0c11edbc7681a952403697a6e4dc829ddbdc06a5b58adf472e48b82785d928887a2a2a28435fab463bcd82dfa8c0f7f041d700",
+        "signature": "f16f79686f472af7076fb0d4c782a69948d83762a6dbccd32612f3a47a0fdeeba7827549e8d3dd9e17609baa9412a77642662887dea39671837a048839e91e06",
         "remark": {},
         "asset": {
           "username": {
@@ -1171,9 +1171,9 @@
           "assetBalance": "19"
         }
       ],
-      "signature": "df0d48753019c6d1c452de71dc41bb21db5c1f8fcd2389c76700aa2ca1c160af1f4a4e32aa244fb223d8e6d12a342c6c218d0d627dde3efbe20af874c8101000",
+      "signature": "17b24a1924466b14b4c8d2e27c65ea946e765d49eeed1abc9b59576e0fc294068e64202474652c257d3bebd57c84c7d4625138a8a1d29afcf998182e18813402",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-BSE-02",
         "senderId": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
         "senderPublicKey": "85ea51eefe25fecfa3e7fcb7b47c28dc8e1e47b7152c6a94791b5f2d50ae165a",
@@ -1185,7 +1185,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "15cca50e5f8ae33d0663cf510a115cf3a22492a190a82a2370b32479669981d390e2772b82afdd4c750ce48860a8e69347f7b638b1c815f824be60ffec8bf707",
+        "signature": "c83655e066e6976a096e72d9080453308c9d6e3b41749dafa1603ebf63747e39538cb02542508604ca1a881e2d54f6228d47c5d11e0409a03f7c75657281cb0c",
         "remark": {},
         "asset": {},
         "nonce": 0
@@ -1202,9 +1202,9 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "ee6f2564a53cf4f93097f90596248c42d8e4994a34c192ef0a0f00e3b516efaac06b431a9dc2bd04c4c28f5183b950f992c8646b972f3a9cf80db37115cbf10f",
+      "signature": "d70cb4c7f3fab1eb8f3a702894680ddc4f3c336bc8f49e7e06f84057332cf75ecf231d620bef60d10d8e29b88ef44c5d1d404a29f95624938d6945663c7e310f",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-BSE-05",
         "senderId": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
         "senderPublicKey": "85ea51eefe25fecfa3e7fcb7b47c28dc8e1e47b7152c6a94791b5f2d50ae165a",
@@ -1216,7 +1216,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "c7952e3bcd794949037217f0b112ec12439eed27d5d052ad45fe73f713a6ffbf12b408762749c90f2053d8dce57e63ffade697a4730bd932b5b54e8ceb0fa10b",
+        "signature": "fff0f6f6f73f3ffba129a480650b629070579789588316990b828a35820545b45c311b3b3ca93f853c7c93e1fe74e17477dae1e2c711fa8d425e8587b0879f03",
         "remark": {},
         "asset": {},
         "nonce": 0
@@ -1238,9 +1238,9 @@
           "assetBalance": "60"
         }
       ],
-      "signature": "f0425bf33ffb6269d110403bf72d47a96923ea9b16d7bb095edcf92e3af08531a981a20f4f7412ee1ba8e27e77cb3e187cba606768cce9d81b25e27bba6d830a",
+      "signature": "d9d09256982815d993bf5e62fcfb5386ce37a1728fae81df39335def1b39aac2c4c796f194346c44b770b195b350b857f91207783c47a52a45b0f125b25cd306",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-AST-01",
         "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
         "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
@@ -1252,7 +1252,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "cb8acfb75d551fb7b2fff44c61c292166a1dae414d9d909572197cf4333a2cb64dd1edb2bdc03b833683d11c7362d562d9443cd70d48453cd45b14ecdacbd803",
+        "signature": "835b31db96e045ebc8e992ce84aba75abd8aab6badad71e39e97f5908fa15a4d9f3b74123eddf66afd8b27bc111982d0fc16dbc8ec7df0b59257b4632cb4b403",
         "remark": {},
         "asset": {
           "transferAsset": {
@@ -1279,9 +1279,9 @@
           "assetBalance": "38"
         }
       ],
-      "signature": "6b2876feaddb23987bf9cbc7060dba768440a9ad0876996f85e07eeb5aa63ef98ff57c4cbefe9afb80158d8339ac2ec3a5f9c79cdf9f852dfe77b8e5a8f29905",
+      "signature": "f521108b4919c776fbd505592b1b982e4615fcedb37de0023826d1105f2e4205f5d5dc7c0c618c3e3350bf8fb36b1dbe19d33e2962a8a2d2506013d9ce6a110b",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-BSE-04",
         "senderId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
         "senderPublicKey": "846f681c2d957b372f9b606737dbf8bcc99a8cb8de989c02d8ca162a10132903",
@@ -1293,7 +1293,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "eacc42f70c982430923b7b60fa8f31007684376e9d68948672ccd3f1dfc80d7361e120660ae42a28fcf9c965e09265aa704c8aecd9acce1949c4c76bb21d3e0e",
+        "signature": "abdeb8ed9f1808d543f4f4fc6168e2a66060a3f9b774bca5b2e7dc225b06c2d7b4c28d2cb6e42b4fa4588a2fceff2c06891d35a15f6360bef7a2d606fa63ba0d",
         "remark": {},
         "asset": {
           "username": {
@@ -1316,9 +1316,9 @@
           "assetBalance": "19"
         }
       ],
-      "signature": "e32474ad454009f9bc87f5e9893056fe3dc2dba9397625980d0630f787b235d7b9233858e309b72815fd32ef2627542ba05dcf14482cdd5798c7759b1ea03809",
+      "signature": "e25af4b4941df468d7b618ab0cea8d010a24b1e87ecad55733c71ad6195b2d73497f9b0d940490078c9358e3b768d5189861752cebce7511a28a2813c1240d00",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-BSE-02",
         "senderId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
         "senderPublicKey": "846f681c2d957b372f9b606737dbf8bcc99a8cb8de989c02d8ca162a10132903",
@@ -1330,7 +1330,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "bd8becd7d91115f62470cc6bf1da46c5e6c4a4162f84acdfc03aa8e0da1ccad20be56b34b7a890b68ffa0a58c245e9fa874dfbe209f77e59e3fcb577d2a9af00",
+        "signature": "7f72a945dfbbd288a0d405fbc929bf8e5d3e5921a19d737e06b61b7132b5fb8d35138276561d9c99a44d1d734444b0df94eda326de631819614eed599038f801",
         "remark": {},
         "asset": {},
         "nonce": 0
@@ -1347,9 +1347,9 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "56ebb46b893d21ccea369e5fa64ea8915ca22d9c1a9438e94ed0447bf392b3ba442aae29c883faaa973689568161962b47d61aa053d3613144c77d9a0d252406",
+      "signature": "3825595b3b58601a3425310a7692de92772f188d53a9e46de2af3ac467aca1e203e61b72c570638bc0e2479f90b883bde3dd667ecf3caf478722f5c23f413908",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-BSE-05",
         "senderId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
         "senderPublicKey": "846f681c2d957b372f9b606737dbf8bcc99a8cb8de989c02d8ca162a10132903",
@@ -1361,7 +1361,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "8697df3b8e02d6a6cb150bfc9ecb343f48c18501c340db3d80d96b7ad279b282596033388fdd7ca9e2d1f930394c41d8f4faa69f4c5c34db3880b36b78fdec00",
+        "signature": "567541499e39feb0b6b23788923968f08f0557558a36a47de9b88a61510c4e38e237599ab486c5a00447331a4df8940aef83eaf875a4a55c749662e0f49c0e01",
         "remark": {},
         "asset": {},
         "nonce": 0
@@ -1383,9 +1383,9 @@
           "assetBalance": "60"
         }
       ],
-      "signature": "0f48c18ee2be439daa1846de975c4eeb20a10dcd5116c379bd2dc028045ec7790d0ed0ce385d678f36e3c5f35564d1f77564f71974b8e4c79fc6256dff07ee0c",
+      "signature": "f4deb2885351b693f89ad01f498202a8171fbc75dad56916b77e670f5a14894df08f38a30777861cb6e80e1e8167334c696788ea2d7bcdd94e13c7b270507306",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-AST-01",
         "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
         "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
@@ -1397,7 +1397,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "7d7609675fa69a4927a73f7be23b542aef00aeeb7742f1be02696d2533e40e0cfce4e2caf37443a1f790fc3500f192c4dbf58002863f818dd54f8aa8a8ef5602",
+        "signature": "aaf801849de871b7649b5013340b730775e4ba8a09c15862a38c0aa615d7dc21566162d803aeae6e2ec056ac5d6d2c9ec56e2f671aa7fe45a80e02d1d545af0e",
         "remark": {},
         "asset": {
           "transferAsset": {
@@ -1424,9 +1424,9 @@
           "assetBalance": "38"
         }
       ],
-      "signature": "9a0224451994083d59c05ddd77e6d3655aaeb259ac8c543be4b9acd16200935d485b116de6a2c86703ab33ecd8b72a5570d9cb08ddd17dbe5241d0587ab5a60a",
+      "signature": "1b8e8da487eb8471a6867e797786fbbb02c41fe8b5e473136dd6c6ed14f5c802c8ada3b60132e379f3b2fc293610a8a0d0318c29635f5b1d95dc31fd31cd5f0c",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-BSE-04",
         "senderId": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
         "senderPublicKey": "5ff43d2626b6a60602645333df040189db9339ca424ac2dc4fa7f32cd4da1923",
@@ -1438,7 +1438,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "977535d63fee6c22ebe7358f2eff6bcb4a8541441111a934c88e5cf9d326c27219496a7aed5f19d46cb1ee128cbe41c51b86a14449444915d096c1575e78d80d",
+        "signature": "f1a8c0cd60fce0c002714d73be7998ff1361c2fa5464b2127b0e27d07c5be7a67a42c8381c770a3320f0ead80837d43bd5ecc1cbf445902cdfe521ff67ef8906",
         "remark": {},
         "asset": {
           "username": {
@@ -1461,9 +1461,9 @@
           "assetBalance": "19"
         }
       ],
-      "signature": "5410b96fd97cca05ac049f711f93fcef3dadfee31d41e7e43ad05a52d79da328535449104ac1949cd2801edec57e08c4cc5c2fe428a63c64c76e027c179ae202",
+      "signature": "d40bdc7e72cdc4403ce16e86193e73867de1c46174bacd5adc9c57c682a65f1411057f14a7195e6f4870e0827b3709f8941ac611db6c5382ca0a449aff894707",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-BSE-02",
         "senderId": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
         "senderPublicKey": "5ff43d2626b6a60602645333df040189db9339ca424ac2dc4fa7f32cd4da1923",
@@ -1475,7 +1475,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "b503801395fd52385511488711e2dd43edc0e766acc0e64c04440cfb2426cd7eeb62a64a9cd21d78d0abd43f8efdf8ed745c6ba6c0055262e47eb18bfe836407",
+        "signature": "7c882ad89ab6ca4f24e93e2c3609d2fa5d41aa1000312732cb7c39c05b121071aadff23b8daa15828e1300acc62e96ef3aad75b49e40100719af32614e05b608",
         "remark": {},
         "asset": {},
         "nonce": 0
@@ -1492,9 +1492,9 @@
           "assetBalance": "0"
         }
       ],
-      "signature": "ebc0ca5b48325fcd655857d819db59e745fbeeb36e95a70a671050f57cb6e2ddbca2fdcb1a335984a68b23c54277dfcd2ea85ab0364032b3cb59820eadf6e509",
+      "signature": "dcbe2e2587dae55ceae4c4fe3601f1b551c8a54021207ff80ba5e39746bb11f45c5d32c4d9ea3c0be306dc0229b5f71a4ca10db7de21819f2ddb5000d914fe02",
       "transaction": {
-        "version": 1,
+        "version": 4,
         "type": "BFT-BFCHAIN-BSE-05",
         "senderId": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
         "senderPublicKey": "5ff43d2626b6a60602645333df040189db9339ca424ac2dc4fa7f32cd4da1923",
@@ -1506,7 +1506,7 @@
         "toMagic": "E00EI",
         "applyBlockHeight": 1,
         "effectiveBlockHeight": 1,
-        "signature": "489b64ddb78dcdfb1967f5cd2e4c036b0b9ffeae8a49ec6652ccbba5943139f879d9766519834e4ab12dd0b6172935b53143fbcd7451701530c96af5f00f120b",
+        "signature": "156f52788fa9d67378b2faa6c22085d9b1ef1077e004326f7041d77d4c6c072ed0ef58207ccec6d2bc2236bbe626cc3425735ff661325d819b27ee033c1f770d",
         "remark": {},
         "asset": {},
         "nonce": 0
@@ -1659,7 +1659,13 @@
         "numerator": "100000",
         "denominator": "1"
       },
-      "issueEntityFactoryMinChainAsset": "50000000000000"
+      "issueEntityFactoryMinChainAsset": "50000000000000",
+      "maxMultipleOfEntityAndMainAsset": {
+        "numerator": "100000",
+        "denominator": "1"
+      },
+      "maxVotesPerBlock": 10000,
+      "voteMinChainAsset": "0"
     }
   },
   "statisticInfo": {

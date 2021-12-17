@@ -1,4 +1,9 @@
-import { DestoryAssetTransaction, DestoryAssetTransactionFactory, RANGE_TYPE } from "@bfchain/core";
+import {
+  DestoryAssetTransaction,
+  DestoryAssetTransactionFactory,
+  RANGE_TYPE,
+  BFChainCore,
+} from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,
@@ -8,10 +13,8 @@ import {
   getRandomDAppid,
 } from "../include";
 
-const bfchainCore = getBfchainCoreEntry();
-
 const genesisAddress = getGenesisAccount().address;
-async function getDestoryAssetTransaction(sender: AccountModel) {
+async function getDestoryAssetTransaction(sender: AccountModel, bfchainCore: BFChainCore) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: bfchainCore.config.version,
@@ -66,6 +69,8 @@ async function getDestoryAssetTransaction(sender: AccountModel) {
   console.log(trs.toJSON());
 }
 (async () => {
-  await getDestoryAssetTransaction(getSenderWithSecondSecret());
-  await getDestoryAssetTransaction(getSenderWithoutSecondSecret());
+  const bfchainCore = await getBfchainCoreEntry();
+
+  await getDestoryAssetTransaction(getSenderWithSecondSecret(), bfchainCore);
+  await getDestoryAssetTransaction(getSenderWithoutSecondSecret(), bfchainCore);
 })();

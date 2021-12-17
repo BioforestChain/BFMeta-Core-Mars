@@ -5,6 +5,7 @@ import {
   DAppTransactionFactory,
   DAPP_TYPE,
   RANGE_TYPE,
+  BFChainCore,
 } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
@@ -15,9 +16,7 @@ import {
   getRandomDAppid,
 } from "../include";
 
-const bfchainCore = getBfchainCoreEntry();
-
-async function getDappTransaction(sender: AccountModel) {
+async function getDappTransaction(sender: AccountModel, bfchainCore: BFChainCore) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const dappid = getRandomDAppid();
   const data: BFChainCore.TxBodyJSON = {
@@ -74,7 +73,11 @@ async function getDappTransaction(sender: AccountModel) {
   return trs;
 }
 
-async function getDappPurchasingTransaction(sender: AccountModel, dappTrs: DAppTransaction) {
+async function getDappPurchasingTransaction(
+  sender: AccountModel,
+  dappTrs: DAppTransaction,
+  bfchainCore: BFChainCore,
+) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const dapp = dappTrs.asset.dapp;
   const data: BFChainCore.TxBodyJSON = {
@@ -128,9 +131,25 @@ async function getDappPurchasingTransaction(sender: AccountModel, dappTrs: DAppT
 }
 
 (async () => {
-  const dappWithSecondSecretTrs = await getDappTransaction(getRecipientWithSecondSecret());
-  const dappWithoutSecondSecretTrs = await getDappTransaction(getRecipientWithSecondSecret());
+  const bfchainCore = await getBfchainCoreEntry();
 
-  await getDappPurchasingTransaction(getSenderWithSecondSecret(), dappWithSecondSecretTrs);
-  await getDappPurchasingTransaction(getSenderWithoutSecondSecret(), dappWithoutSecondSecretTrs);
+  const dappWithSecondSecretTrs = await getDappTransaction(
+    getRecipientWithSecondSecret(),
+    bfchainCore,
+  );
+  const dappWithoutSecondSecretTrs = await getDappTransaction(
+    getRecipientWithSecondSecret(),
+    bfchainCore,
+  );
+
+  await getDappPurchasingTransaction(
+    getSenderWithSecondSecret(),
+    dappWithSecondSecretTrs,
+    bfchainCore,
+  );
+  await getDappPurchasingTransaction(
+    getSenderWithoutSecondSecret(),
+    dappWithoutSecondSecretTrs,
+    bfchainCore,
+  );
 })();

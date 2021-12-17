@@ -5,16 +5,15 @@ import {
   AcceptVoteTransactionFactory,
   TransactionInBlock,
   RANGE_TYPE,
+  BFChainCore,
 } from "@bfchain/core";
 const { dump } = require("dumper.js");
 
 import { getSenderWithoutSecondSecret, AccountModel, getBfchainCoreEntry } from "../include";
 
-const bfchainCore = getBfchainCoreEntry();
-
 const delegatesSecret = require("../../../assets/secret.json").delegates as string[];
 
-async function getAcceptVoteTransaction(sender: AccountModel) {
+async function getAcceptVoteTransaction(sender: AccountModel, bfchainCore: BFChainCore) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: bfchainCore.config.version,
@@ -54,7 +53,7 @@ async function getAcceptVoteTransaction(sender: AccountModel) {
   return trs;
 }
 
-async function getTrsInBlock() {
+async function getTrsInBlock(bfchainCore: BFChainCore) {
   const txs = [];
   for (const secret of delegatesSecret) {
     const address = await bfchainCore.accountBaseHelper.getAddressFromSecret(secret);
@@ -64,7 +63,7 @@ async function getTrsInBlock() {
       address,
       publicKey,
     };
-    txs[txs.length] = getAcceptVoteTransaction(delegate);
+    txs[txs.length] = getAcceptVoteTransaction(delegate, bfchainCore);
   }
   const blockTrsItems: TransactionInBlock[] = [];
   for (let i = 0; i < txs.length; i++) {
@@ -78,7 +77,9 @@ async function getTrsInBlock() {
 }
 
 async function getCommonBlockAsync(sender: AccountModel) {
-  const blockTrsItems = await getTrsInBlock();
+  const bfchainCore = await getBfchainCoreEntry();
+
+  const blockTrsItems = await getTrsInBlock(bfchainCore);
   const generatorPublicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecret(
     sender.secret,
   );

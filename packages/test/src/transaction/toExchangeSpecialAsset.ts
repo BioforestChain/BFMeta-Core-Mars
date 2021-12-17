@@ -4,6 +4,7 @@ import {
   EXCHANGE_DIRECTION,
   SPECIAL_ASSET_TYPE,
   RANGE_TYPE,
+  BFChainCore,
 } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
@@ -14,9 +15,11 @@ import {
   getBfchainCoreEntry,
 } from "../include";
 
-const bfchainCore = getBfchainCoreEntry();
-
-async function getToExchangeSpecialAssetTransaction(sender: AccountModel, recipientId: string) {
+async function getToExchangeSpecialAssetTransaction(
+  sender: AccountModel,
+  recipientId: string,
+  bfchainCore: BFChainCore,
+) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: bfchainCore.config.version,
@@ -77,9 +80,12 @@ async function getToExchangeSpecialAssetTransaction(sender: AccountModel, recipi
   console.log(trs.toJSON());
 }
 (async () => {
-  await getToExchangeSpecialAssetTransaction(getSenderWithSecondSecret(), "");
+  const bfchainCore = await getBfchainCoreEntry();
+
+  await getToExchangeSpecialAssetTransaction(getSenderWithSecondSecret(), "", bfchainCore);
   await getToExchangeSpecialAssetTransaction(
     getSenderWithoutSecondSecret(),
     getGenesisAccount().address,
+    bfchainCore,
   );
 })();

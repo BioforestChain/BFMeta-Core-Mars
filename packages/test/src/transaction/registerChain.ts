@@ -48,30 +48,6 @@ import {
 
 const defaultIpsPath = path.join(process.cwd(), "./assets/defaultIps.json");
 
-const fullBfchainCore = getFullBfchainCoreEntry(57, 128);
-const randomMagic = false;
-
-if (randomMagic) {
-  registerchainAssetData.magic = getRandomMagic();
-}
-
-registerchainAssetData.maxVotesPerBlock =
-  registerchainAssetData.maxTPSPerBlock * registerchainAssetData.forgeInterval;
-
-const registerBfchainCore = BFChainCoreFactory({
-  config: new ConfigHelper(
-    GenesisBlock.fromObject({ version: 1, asset: { genesisAsset: registerchainAssetData } }),
-    "genesisBlock",
-  ),
-  Buffer: Buffer as any,
-  cryptoHelper: NodeJsCryptoHelper,
-  keypairHelper: NodeJsKeypairHelper,
-  ed2curveHelper,
-});
-
-const registerStatistics = Resolve(BlockBaseStatisticsHelper, registerBfchainCore.moduleMap);
-const statistics = Resolve(BlockBaseStatisticsHelper, fullBfchainCore.moduleMap);
-
 type DelegateInfo = {
   address: string;
   secret: string;
@@ -101,7 +77,7 @@ const getTxs = (address: string) => {
 };
 
 (async () => {
-  async function getUsernameTransaction(sender: DelegateInfo) {
+  async function getUsernameTransaction(sender: DelegateInfo, registerBfchainCore: BFChainCore) {
     const keypair = await registerBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
     const secondKeypair =
       (sender.secondSecret &&
@@ -167,7 +143,7 @@ const getTxs = (address: string) => {
     };
   }
 
-  async function getDelegateTransaction(sender: DelegateInfo) {
+  async function getDelegateTransaction(sender: DelegateInfo, registerBfchainCore: BFChainCore) {
     const keypair = await registerBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
     const secondKeypair =
       (sender.secondSecret &&
@@ -225,7 +201,7 @@ const getTxs = (address: string) => {
     };
   }
 
-  async function getAcceptVoteTransaction(sender: DelegateInfo) {
+  async function getAcceptVoteTransaction(sender: DelegateInfo, registerBfchainCore: BFChainCore) {
     const keypair = await registerBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
     const secondKeypair =
       (sender.secondSecret &&
@@ -283,7 +259,15 @@ const getTxs = (address: string) => {
     };
   }
 
-  async function getLocationNameTransaction() {
+  async function getLocationNameTransaction(
+    registerBfchainCore: BFChainCore,
+    genesisAccountInfo: {
+      address: string;
+      publicKey: string;
+      publicKeyBuffer: Buffer;
+    },
+    genesisAccountKeypair: BFChainCore.Keypair,
+  ) {
     const pow =
       1 > registerBfchainCore.config.tpowOfWorkExemptionBlocks
         ? getPOWInfo<LocationNameTransaction>(genesisAccountInfo.address)
@@ -349,6 +333,7 @@ const getTxs = (address: string) => {
   async function getSetLnsRecordValueTransaction(
     sender: DelegateInfo,
     record: BFChainCore.LocationNameRecordJSON,
+    registerBfchainCore: BFChainCore,
   ) {
     const keypair = await registerBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
     const secondKeypair =
@@ -420,20 +405,17 @@ const getTxs = (address: string) => {
     };
   }
 
-  const genesisAccountKeypair = await registerBfchainCore.accountBaseHelper.createSecretKeypair(
-    config.genesisSecret,
-  );
-  const genesisAccountInfo = {
-    address: await registerBfchainCore.accountBaseHelper.getAddressFromPublicKey(
-      genesisAccountKeypair.publicKey,
-    ),
-    publicKey: genesisAccountKeypair.publicKey.toString("hex"),
-    publicKeyBuffer: genesisAccountKeypair.publicKey,
-  };
   async function getTransferAssetTransaction(
     bfchainCore: BFChainCore,
     recipient: DelegateInfo,
     amount: string,
+    genesisAccountInfo: {
+      address: string;
+      publicKey: string;
+      publicKeyBuffer: Buffer;
+    },
+    genesisAccountKeypair: BFChainCore.Keypair,
+    registerBfchainCore: BFChainCore,
   ) {
     const pow =
       1 > registerBfchainCore.config.tpowOfWorkExemptionBlocks
@@ -494,7 +476,20 @@ const getTxs = (address: string) => {
     };
   }
 
-  async function getGenesisBlockAsync() {
+  async function getGenesisBlockAsync(registerBfchainCore: BFChainCore) {
+    const registerStatistics = Resolve(BlockBaseStatisticsHelper, registerBfchainCore.moduleMap);
+
+    const genesisAccountKeypair = await registerBfchainCore.accountBaseHelper.createSecretKeypair(
+      config.genesisSecret,
+    );
+    const genesisAccountInfo = {
+      address: await registerBfchainCore.accountBaseHelper.getAddressFromPublicKey(
+        genesisAccountKeypair.publicKey,
+      ),
+      publicKey: genesisAccountKeypair.publicKey.toString("hex"),
+      publicKeyBuffer: genesisAccountKeypair.publicKey,
+    };
+
     const generatorPublicKey =
       await registerBfchainCore.accountBaseHelper.getPublicKeyStringFromSecret(
         config.genesisSecret,
@@ -525,7 +520,13 @@ const getTxs = (address: string) => {
     }
     //#endregion
     const txWithIndexList: { index: number; trs: Transaction }[] = [];
-    txWithIndexList.push(await getLocationNameTransaction());
+    txWithIndexList.push(
+      await getLocationNameTransaction(
+        registerBfchainCore,
+        genesisAccountInfo,
+        genesisAccountKeypair,
+      ),
+    );
     const delegatesSecret = config.delegatesSecret;
     const ips = getIps(delegatesSecret.length, false, defaultIpsPath);
     for (let i = 0; i < delegatesSecret.slice(5).length; i++) {
@@ -552,9 +553,9 @@ const getTxs = (address: string) => {
       };
       // 要在创始块中实施的交易
       const tempTrsWithIndexList = [
-        await getUsernameTransaction(delegate),
-        await getDelegateTransaction(delegate),
-        await getAcceptVoteTransaction(delegate),
+        await getUsernameTransaction(delegate, registerBfchainCore),
+        await getDelegateTransaction(delegate, registerBfchainCore),
+        await getAcceptVoteTransaction(delegate, registerBfchainCore),
         // await getSetLnsRecordValueTransaction(delegate, {
         //   recordType: RECORD_TYPE.IPV4,
         //   recordValue: ips[i],
@@ -567,7 +568,14 @@ const getTxs = (address: string) => {
       );
       if (total_fee !== "0") {
         txWithIndexList.push(
-          await getTransferAssetTransaction(registerBfchainCore, delegate, total_fee),
+          await getTransferAssetTransaction(
+            registerBfchainCore,
+            delegate,
+            total_fee,
+            genesisAccountInfo,
+            genesisAccountKeypair,
+            registerBfchainCore,
+          ),
         );
       }
       txWithIndexList.push(...tempTrsWithIndexList);
@@ -700,7 +708,11 @@ const getTxs = (address: string) => {
     return genesisBlock;
   }
 
-  async function getRegisterChainTransaction(sender: AccountModel) {
+  async function getRegisterChainTransaction(
+    sender: AccountModel,
+    fullBfchainCore: BFChainCore,
+    registerBfchainCore: BFChainCore,
+  ) {
     const keypair = await fullBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
     const data: BFChainCore.TxBodyJSON = {
       version: fullBfchainCore.config.version,
@@ -739,7 +751,7 @@ const getTxs = (address: string) => {
         );
     }
 
-    const genesisBlock = await getGenesisBlockAsync();
+    const genesisBlock = await getGenesisBlockAsync(registerBfchainCore);
     const trs = await fullBfchainCore.transaction.createTransaction<RegisterChainTransaction>(
       RegisterChainTransactionFactory,
       data,
@@ -764,6 +776,29 @@ const getTxs = (address: string) => {
   }
 
   async function getCommonBlockAsync(sender: AccountModel) {
+    const fullBfchainCore = await getFullBfchainCoreEntry(57, 128);
+    const randomMagic = false;
+
+    if (randomMagic) {
+      registerchainAssetData.magic = getRandomMagic();
+    }
+
+    registerchainAssetData.maxVotesPerBlock =
+      registerchainAssetData.maxTPSPerBlock * registerchainAssetData.forgeInterval;
+
+    const registerBfchainCore = BFChainCoreFactory({
+      config: new ConfigHelper(
+        GenesisBlock.fromObject({ version: 1, asset: { genesisAsset: registerchainAssetData } }),
+        "genesisBlock",
+      ),
+      Buffer: Buffer as any,
+      cryptoHelper: NodeJsCryptoHelper,
+      keypairHelper: NodeJsKeypairHelper,
+      ed2curveHelper,
+    });
+
+    const statistics = Resolve(BlockBaseStatisticsHelper, fullBfchainCore.moduleMap);
+
     //#region 模拟账户表的变更
     const accountAssetMap = new Map<string, bigint>();
     accountAssetMap.set(
@@ -785,7 +820,11 @@ const getTxs = (address: string) => {
       return assetNumber ? assetNumber.toString() : "0";
     }
     //#endregion
-    const trsWithIndex = await getRegisterChainTransaction(sender);
+    const trsWithIndex = await getRegisterChainTransaction(
+      sender,
+      fullBfchainCore,
+      registerBfchainCore,
+    );
     const height = 7;
     const blockTrsItems: TransactionInBlock[] = [];
     const eventEmitter: BFChainCore.ApplyTransactionEventEmitter<any> =

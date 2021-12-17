@@ -2,7 +2,7 @@
 // // import sha256 from "sha.js";
 // // import md5 from "md5.js";
 // import { getBfchainCoreEntry } from "./include/init";
-// const bfchainCore = getBfchainCoreEntry();
+// const bfchainCore = await getBfchainCoreEntry();
 
 // (async function test() {
 //   // const block = await bfchainCore.block.generateBlock(

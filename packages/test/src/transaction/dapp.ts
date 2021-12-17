@@ -1,4 +1,10 @@
-import { DAppTransaction, DAppTransactionFactory, DAPP_TYPE, RANGE_TYPE } from "@bfchain/core";
+import {
+  DAppTransaction,
+  DAppTransactionFactory,
+  DAPP_TYPE,
+  RANGE_TYPE,
+  BFChainCore,
+} from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,
@@ -8,10 +14,12 @@ import {
   getRandomDAppid,
 } from "../include";
 
-const bfchainCore = getBfchainCoreEntry();
-
 const genesisAddress = getGenesisAccount().address;
-async function getDappTransaction(sender: AccountModel, dapp: BFChainCore.DAppJSON) {
+async function getDappTransaction(
+  sender: AccountModel,
+  dapp: BFChainCore.DAppJSON,
+  bfchainCore: BFChainCore,
+) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: bfchainCore.config.version,
@@ -67,19 +75,29 @@ async function getDappTransaction(sender: AccountModel, dapp: BFChainCore.DAppJS
   console.log(trs.toJSON());
 }
 (async () => {
+  const bfchainCore = await getBfchainCoreEntry();
+
   const xx = getSenderWithSecondSecret();
-  await getDappTransaction(xx, {
-    dappid: getRandomDAppid(),
-    sourceChainName: "bfchain",
-    sourceChainMagic: bfchainCore.config.magic,
-    type: DAPP_TYPE.PAID_APP,
-    purchaseAsset: "1000",
-  });
+  await getDappTransaction(
+    xx,
+    {
+      dappid: getRandomDAppid(),
+      sourceChainName: "bfchain",
+      sourceChainMagic: bfchainCore.config.magic,
+      type: DAPP_TYPE.PAID_APP,
+      purchaseAsset: "1000",
+    },
+    bfchainCore,
+  );
   const xxx = getSenderWithoutSecondSecret();
-  await getDappTransaction(xxx, {
-    dappid: getRandomDAppid(),
-    sourceChainName: "bfchain",
-    sourceChainMagic: bfchainCore.config.magic,
-    type: DAPP_TYPE.FREE_APP,
-  });
+  await getDappTransaction(
+    xxx,
+    {
+      dappid: getRandomDAppid(),
+      sourceChainName: "bfchain",
+      sourceChainMagic: bfchainCore.config.magic,
+      type: DAPP_TYPE.FREE_APP,
+    },
+    bfchainCore,
+  );
 })();

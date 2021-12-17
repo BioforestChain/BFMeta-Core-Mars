@@ -1,4 +1,9 @@
-import { SignatureTransaction, SignatureTransactionFactory, RANGE_TYPE } from "@bfchain/core";
+import {
+  SignatureTransaction,
+  SignatureTransactionFactory,
+  RANGE_TYPE,
+  BFChainCore,
+} from "@bfchain/core";
 import {
   getRandomDAppid,
   getSenderWithoutSecondSecret,
@@ -6,9 +11,7 @@ import {
   getBfchainCoreEntry,
 } from "../include";
 
-const bfchainCore = getBfchainCoreEntry();
-
-async function getSignatureTransaction(sender: AccountModel) {
+async function getSignatureTransaction(sender: AccountModel, bfchainCore: BFChainCore) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const publicKey = await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
     sender.secret,
@@ -59,6 +62,8 @@ async function getSignatureTransaction(sender: AccountModel) {
   console.log(trs.toJSON());
 }
 (async () => {
+  const bfchainCore = await getBfchainCoreEntry();
+
   // getSignatureTransaction(getSenderWithSecondSecret());
-  await getSignatureTransaction(getSenderWithoutSecondSecret());
+  await getSignatureTransaction(getSenderWithoutSecondSecret(), bfchainCore);
 })();

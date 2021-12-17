@@ -47,40 +47,32 @@ export class V4_Patch extends PatchBase {
               for (const Block of [CommonBlock, GenesisBlock, RoundLastBlock]) {
                 const BlockSetup = Block.$type.setup();
                 const BlockSetup_encode = BlockSetup.encode;
-                BlockSetup.src_encode = BlockSetup_encode;
                 const BlockSetup_encode_v4 = function (this: Type, block: Block) {
                   try {
-                    if (block.version < 4) {
+                    if (block.version > 3) {
                       const asset = (block.asset as any).genesisAsset;
                       if (asset) {
-                        // delete asset.issueEntityFactoryMinChainAsset;
-                        // delete asset.maxMultipleOfEntityAndMainAsset;
-                        // delete asset.maxVotesPerBlock;
-                        // delete asset.voteMinChainAsset;
-
-                        GenesisAssetModelSetup.encode = GenesisAssetV1Model_encode;
+                        GenesisAssetModelSetup.encode = GenesisAssetModel_encode;
                       }
                     }
-
                     return BlockSetup_encode.call(this, block);
                   } finally {
-                    GenesisAssetModelSetup.encode = GenesisAssetModel_encode;
+                    GenesisAssetModelSetup.encode = GenesisAssetV1Model_encode;
                   }
                 };
 
                 const BlockSetup_decode = BlockSetup.decode;
-                BlockSetup.src_decode = BlockSetup_decode;
                 const BlockSetup_decode_v4 = function (this: Type, reader: Uint8Array | Reader) {
                   try {
                     const versionInfo = BlockVersionReader.decode(
                       reader instanceof Reader ? reader.buf : reader,
                     );
-                    if (versionInfo.version < 4) {
-                      GenesisAssetModelSetup.decode = GenesisAssetV1Model_decode;
+                    if (versionInfo.version > 3) {
+                      GenesisAssetModelSetup.decode = GenesisAssetModel_decode;
                     }
                     return BlockSetup_decode.call(this, reader);
                   } finally {
-                    GenesisAssetModelSetup.decode = GenesisAssetModel_decode;
+                    GenesisAssetModelSetup.decode = GenesisAssetV1Model_decode;
                   }
                 };
 
@@ -96,8 +88,8 @@ export class V4_Patch extends PatchBase {
             () => {
               for (const Block of [CommonBlock, GenesisBlock, RoundLastBlock]) {
                 const BlockSetup = Block.$type.setup();
-                BlockSetup.encode = BlockSetup.src_encode;
-                BlockSetup.decode = BlockSetup.src_decode;
+                BlockSetup.encode = GenesisAssetV1Model_encode;
+                BlockSetup.decode = GenesisAssetV1Model_decode;
               }
 
               this.config.rollBackHookGenesisBlock(this.consensusVersion);
