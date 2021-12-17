@@ -23,6 +23,10 @@ export class PatchInstaller
   constructor(private moduleMap: ModuleStroge, private config: ConfigHelper) {
     super();
   }
+
+  /**共识版本对应的补丁生效高度 */
+  private _consensusVersionAndHeightMap = new Map<number, number>();
+
   private _isPatchReady?: Promise<void>;
   bfAfterInit() {
     /// 静态载入
@@ -59,6 +63,24 @@ export class PatchInstaller
     // }
   }
 
+  async getPatchEffectiveAfterHeightByVersion(version: number) {
+    let height = 0;
+    if (version <= 1) {
+      return 0;
+    }
+    await this._isPatchReady;
+    for (const [
+      consensusVersion,
+      patchEffectiveAfterHeight,
+    ] of this._consensusVersionAndHeightMap.entries()) {
+      if (version === consensusVersion) {
+        return patchEffectiveAfterHeight;
+      }
+      height = patchEffectiveAfterHeight;
+    }
+    return height;
+  }
+
   /**通知补丁高度变更 */
   async changeHeight(height: number) {
     await this._isPatchReady;
@@ -91,6 +113,10 @@ export class PatchInstaller
         progress.emit("progress", patch);
         const oldVersion = this._patchVersionMap.forceGet(patch.name);
         if (oldVersion < patch.version) {
+          this._consensusVersionAndHeightMap.set(
+            patch.consensusVersion,
+            patch.patchEffectiveAfterHeight,
+          );
           const newVersion = maxVersionMap.forceGet(patch.name);
           await patch.upgradeHandler(oldVersion, newVersion);
           this._patchVersionMap.set(patch.name, patch.version);
