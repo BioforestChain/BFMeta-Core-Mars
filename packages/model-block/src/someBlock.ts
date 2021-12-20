@@ -1,6 +1,6 @@
 import type { Block } from "@bfchain/core-model-block-base";
 import { GenesisBlock, CommonBlock, RoundLastBlock } from "./atom_block";
-import { Type, Field, Message, Reader } from "@bfchain/protobuf";
+import { Type, Field, Message, Reader, Writer } from "@bfchain/protobuf";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 import {
   INVALID_BLOCK_CONSTRUCTOR,
@@ -20,9 +20,9 @@ for (const Block of [CommonBlock, GenesisBlock, RoundLastBlock]) {
   const BlockSetup = Block.$type.setup();
   const BlockSetup_encode = BlockSetup.encode;
   BlockSetup.src_encode = BlockSetup_encode;
-  const BlockSetup_encode_v0 = function (this: Type, block: Block) {
+  const BlockSetup_encode_v0 = function (this: Type, block: Block, writer?: Writer) {
     GenesisAssetModelSetup.encode = GenesisAssetV0Model_encode;
-    return BlockSetup_encode.call(this, block);
+    return BlockSetup_encode.call(this, block, writer);
   };
 
   const BlockSetup_decode = BlockSetup.decode;

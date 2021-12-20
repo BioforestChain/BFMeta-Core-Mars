@@ -1,6 +1,6 @@
 import { V4_GenesisBlockFactory } from "./atom-patch";
 import { PatchBase } from "@bfchain/core-patch-base";
-import { Type, Reader } from "@bfchain/protobuf";
+import { Type, Reader, Writer } from "@bfchain/protobuf";
 import { Injectable, Inject } from "@bfchain/util";
 import { EventLogicVerifier } from "@bfchain/core-transaction-logic-verifier";
 import { BLOCK_FACTORY_TYPES_MAP } from "@bfchain/core-block";
@@ -49,7 +49,7 @@ export class V4_Patch extends PatchBase {
               for (const Block of [CommonBlock, GenesisBlock, RoundLastBlock]) {
                 const BlockSetup = Block.$type.setup();
                 const BlockSetup_encode = BlockSetup.encode;
-                const BlockSetup_encode_v4 = function (this: Type, block: Block) {
+                const BlockSetup_encode_v4 = function (this: Type, block: Block, writer?: Writer) {
                   try {
                     if (block.version > 3) {
                       const asset = (block.asset as any).genesisAsset;
@@ -57,7 +57,7 @@ export class V4_Patch extends PatchBase {
                         GenesisAssetModelSetup.encode = GenesisAssetModel_encode;
                       }
                     }
-                    return BlockSetup_encode.call(this, block);
+                    return BlockSetup_encode.call(this, block, writer);
                   } finally {
                     GenesisAssetModelSetup.encode = GenesisAssetV1Model_encode;
                   }
