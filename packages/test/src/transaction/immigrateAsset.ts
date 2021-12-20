@@ -5,6 +5,7 @@ import {
   ImmigrateAssetTransaction,
   RANGE_TYPE,
   BFChainCore,
+  PARENT_ASSET_TYPE,
 } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
@@ -72,7 +73,11 @@ async function getEmigrateAssetTransaction(
       chainName: fullRegisterBfchainCore.config.chainName,
       genesisBlockSignature: fullRegisterBfchainCore.config.signature,
     },
-    assets: "10000",
+    assetInfo: {
+      parentAssetType: PARENT_ASSET_TYPE.ASSETS,
+      assetType: fullBfchainCore.config.assetType,
+    },
+    assetPrealnum: "10000",
   };
   let migrateCertificate =
     await fullBfchainCore.migrateCertificateHelper.generateMigrateCertificate(args);
@@ -132,7 +137,7 @@ async function getImmigrateAssetTransaction(
     effectiveBlockHeight: 57,
     storage: {
       key: "assetType",
-      value: converter.assetTypeId.decode(migrateCertificate.body.assetTypeId),
+      value: converter.assetId.decode(migrateCertificate.body.assetId).assetType,
     },
   };
   let secondKeypair;

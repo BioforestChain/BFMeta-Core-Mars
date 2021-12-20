@@ -1,5 +1,5 @@
 import { TransactionFactory } from "./_txbase";
-import { ImmigrateAssetTransaction } from "@bfchain/core-model";
+import { ImmigrateAssetTransaction, PARENT_ASSET_TYPE } from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
@@ -172,7 +172,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
       },
     );
 
-    const { fromChainId, toId, assetTypeId } = migrateCertificate.body;
+    const { fromChainId, toId, assetId } = migrateCertificate.body;
     const toAddress = converter.toId.decode(toId, true);
     if (body.recipientId !== toAddress) {
       throw new ArgumentIllegalException(NOT_MATCH, {
@@ -195,11 +195,11 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
       });
     }
 
-    const assetType = converter.assetTypeId.decode(assetTypeId, true);
-    if (storage.value !== assetType) {
+    const asset = converter.assetId.decode(assetId, true);
+    if (storage.value !== asset.assetType) {
       throw new ArgumentIllegalException(NOT_MATCH, {
         to_compare_prop: `value ${storage.value}`,
-        be_compare_prop: `assetTypeId ${assetType}`,
+        be_compare_prop: `asset ${JSON.stringify(asset)}`,
         to_target: "storage",
         be_target: "migrateCertificate",
         ...Function_Exception_Detail,
@@ -247,21 +247,28 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
       }
       const converter =
         this.migrateCertificateHelper.getMigrateCertificateConverter(migrateCertificate);
-      const { fromChainId, assetTypeId, assets } = migrateCertificate.body;
+      const { fromChainId, assetId, assetPrealnum } = migrateCertificate.body;
       const fromChain = converter.fromChainId.decode(fromChainId);
-      const assetType = converter.assetTypeId.decode(assetTypeId);
-      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(fromChain.magic, assetType);
-      // 累加资产
-      taskList.next = eventEmitter.emit("asset", {
-        type: "asset",
-        transaction,
-        applyInfo: {
-          address: transaction.recipientId,
-          assetInfo,
-          amount: assets,
-          sourceAmount: assets,
-        },
-      });
+      const asset = converter.assetId.decode(assetId);
+      const { parentAssetType, assetType } = asset;
+
+      if (parentAssetType === PARENT_ASSET_TYPE.ASSETS) {
+        const assetInfo = this.chainAssetInfoHelper.getAssetInfo(fromChain.magic, assetType);
+        // 累加资产
+        taskList.next = eventEmitter.emit("asset", {
+          type: "asset",
+          transaction,
+          applyInfo: {
+            address: transaction.recipientId,
+            assetInfo,
+            amount: assetPrealnum,
+            sourceAmount: assetPrealnum,
+          },
+        });
+      } else {
+        // FIXME: 需要时候再完善
+        throw new Error(`目前只支持权益`);
+      }
 
       // 记录跨链凭证
       taskList.next = eventEmitter.emit("migrateCertificate", {
@@ -269,8 +276,11 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
         transaction,
         applyInfo: {
           migrateCertificateId: converter.getUUID(migrateCertificate),
-          assetInfo,
-          assets,
+          assetInfo: {
+            magic: fromChain.magic,
+            assetType,
+          },
+          assets: assetPrealnum,
           migrateIdBuffer: transaction.signatureBuffer,
         },
       });
@@ -303,11 +313,11 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
     }
     const converter =
       this.migrateCertificateHelper.getMigrateCertificateConverter(migrateCertificate);
-    const { fromChainId, assetTypeId, assets } = migrateCertificate.body;
+    const { fromChainId, assetId, assetPrealnum } = migrateCertificate.body;
     const fromChain = converter.fromChainId.decode(fromChainId);
-    const assetType = converter.assetTypeId.decode(assetTypeId);
-    if (argv.magic === fromChain.magic && argv.assetType === assetType) {
-      return assets;
+    const asset = converter.assetId.decode(assetId);
+    if (argv.magic === fromChain.magic && argv.assetType === asset.assetType) {
+      return assetPrealnum;
     }
     return "0";
   }

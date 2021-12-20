@@ -163,8 +163,8 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
       });
     }
 
-    const { toChainId, fromId, toId, assetTypeId } = migrateCertificate.body;
-    const fromAddress = converter.fromId.decode(fromId, true);
+    const { toChainId, fromId, toId, assetId } = migrateCertificate.body;
+    const fromAddress = converter.fromId.decode(fromId);
     if (body.senderId !== fromAddress) {
       throw new ArgumentIllegalException(NOT_MATCH, {
         to_compare_prop: `senderId ${body.senderId}`,
@@ -175,7 +175,7 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
       });
     }
 
-    const toAddress = converter.toId.decode(toId, true);
+    const toAddress = converter.toId.decode(toId);
     if (body.recipientId !== toAddress) {
       throw new ArgumentIllegalException(NOT_MATCH, {
         to_compare_prop: `recipientId ${body.recipientId}`,
@@ -186,7 +186,7 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
       });
     }
 
-    const toChain = converter.toChainId.decode(toChainId, true);
+    const toChain = converter.toChainId.decode(toChainId);
     if (body.toMagic !== toChain.magic) {
       throw new ArgumentIllegalException(NOT_MATCH, {
         to_compare_prop: `toMagic ${body.toMagic}`,
@@ -197,11 +197,11 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
       });
     }
 
-    const assetType = converter.toId.decode(assetTypeId, true);
-    if (storage.value !== assetType) {
+    const asset = converter.assetId.decode(assetId);
+    if (storage.value !== asset.assetType) {
       throw new ArgumentIllegalException(NOT_MATCH, {
         to_compare_prop: `value ${storage.value}`,
-        be_compare_prop: `assetTypeId ${assetType}`,
+        be_compare_prop: `assetTypeId ${asset.assetType}`,
         to_target: "storage",
         be_target: "migrateCertificateBody",
         ...Function_Exception_Detail,

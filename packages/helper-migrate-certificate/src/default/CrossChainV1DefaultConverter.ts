@@ -17,7 +17,7 @@ export class CrossChainV1DefaultConverter implements BFChainCore.CrossChain.Cros
   protected __toChainId!: BFChainCore.CrossChain.ChainIdConverter;
   protected __fromId!: BFChainCore.CrossChain.IdConverter;
   protected __toId!: BFChainCore.CrossChain.IdConverter;
-  protected __assetTypeId!: BFChainCore.CrossChain.AssetTypeIdConverter;
+  protected __assetId!: BFChainCore.CrossChain.AssetIdConverter;
   protected __signature!: BFChainCore.CrossChain.SignatureConverter;
   protected __fromAuthSignature!: BFChainCore.CrossChain.AuthSignatureConverter;
   protected __toAuthSignature!: BFChainCore.CrossChain.AuthSignatureConverter;
@@ -34,8 +34,8 @@ export class CrossChainV1DefaultConverter implements BFChainCore.CrossChain.Cros
   get toId() {
     return this.__toId;
   }
-  get assetTypeId() {
-    return this.__assetTypeId;
+  get assetId() {
+    return this.__assetId;
   }
   get signature() {
     return this.__signature;
@@ -57,7 +57,7 @@ export class CrossChainV1DefaultConverter implements BFChainCore.CrossChain.Cros
       toChainIdVersion: SomeFieldNameVersion<DefaultKeys, "toChainId">;
       fromIdVersion: SomeFieldNameVersion<DefaultKeys, "fromId">;
       toIdVersion: SomeFieldNameVersion<DefaultKeys, "toId">;
-      assetTypeIdVersion: SomeFieldNameVersion<DefaultKeys, "assetTypeId">;
+      assetIdVersion: SomeFieldNameVersion<DefaultKeys, "assetId">;
       signatureVersion: SomeFieldNameVersion<DefaultKeys, "signature">;
       fromAuthSignatureVersion?: SomeFieldNameVersion<DefaultKeys, "fromAuthSignature">;
       toAuthSignatureVersion?: SomeFieldNameVersion<DefaultKeys, "toAuthSignature">;
@@ -72,7 +72,7 @@ export class CrossChainV1DefaultConverter implements BFChainCore.CrossChain.Cros
       this.__toChainId = fieldConverter.get(`1/toChainId/1`);
       this.__fromId = fieldConverter.get(`1/fromId/1`);
       this.__toId = fieldConverter.get(`1/toId/1`);
-      this.__assetTypeId = fieldConverter.get(`1/assetTypeId/1`);
+      this.__assetId = fieldConverter.get(`1/assetId/1`);
       this.__signature = fieldConverter.get(`1/signature/1`);
       this.__fromAuthSignature = fieldConverter.get(`1/fromAuthSignature/1`);
       this.__toAuthSignature = fieldConverter.get(`1/toAuthSignature/1`);
@@ -84,7 +84,7 @@ export class CrossChainV1DefaultConverter implements BFChainCore.CrossChain.Cros
       toChainIdVersion,
       fromIdVersion,
       toIdVersion,
-      assetTypeIdVersion,
+      assetIdVersion,
       signatureVersion,
       fromAuthSignatureVersion,
       toAuthSignatureVersion,
@@ -93,7 +93,7 @@ export class CrossChainV1DefaultConverter implements BFChainCore.CrossChain.Cros
     this.__toChainId = fieldConverter.get(`1/toChainId/${toChainIdVersion}` as never);
     this.__fromId = fieldConverter.get(`1/fromId/${fromIdVersion}` as never);
     this.__toId = fieldConverter.get(`1/toId/${toIdVersion}` as never);
-    this.__assetTypeId = fieldConverter.get(`1/assetTypeId/${assetTypeIdVersion}` as never);
+    this.__assetId = fieldConverter.get(`1/assetId/${assetIdVersion}` as never);
     this.__signature = fieldConverter.get(`1/signature/${signatureVersion}` as never);
     this.__fromAuthSignature = fieldConverter.get(
       `1/fromAuthSignature/${fromAuthSignatureVersion || signatureVersion}` as never,
@@ -121,8 +121,8 @@ export class CrossChainV1DefaultConverter implements BFChainCore.CrossChain.Cros
     if (!this.__toId) {
       throw new SyntaxError(`unknown toId version ${this.config.toIdVersion}`);
     }
-    if (!this.__assetTypeId) {
-      throw new SyntaxError(`unknown assetTypeId version ${this.config.assetTypeIdVersion}`);
+    if (!this.__assetId) {
+      throw new SyntaxError(`unknown assetId version ${this.config.assetIdVersion}`);
     }
     if (!this.__signature) {
       throw new SyntaxError(`unknown signature version ${this.config.signatureVersion}`);

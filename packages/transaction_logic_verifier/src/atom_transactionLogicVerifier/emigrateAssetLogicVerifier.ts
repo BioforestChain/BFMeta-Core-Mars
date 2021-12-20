@@ -1,4 +1,8 @@
-import { EmigrateAssetTransaction, NewTransactionRefuseReason } from "@bfchain/core-model";
+import {
+  EmigrateAssetTransaction,
+  NewTransactionRefuseReason,
+  PARENT_ASSET_TYPE,
+} from "@bfchain/core-model";
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { Injectable, Inject, QueneEventEmitter } from "@bfchain/util";
 import {
@@ -72,12 +76,12 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       this.migrateCertificateHelper.getMigrateCertificateConverter(migrateCertificate);
     const body = migrateCertificate.body;
 
-    const assetType = converter.assetTypeId.decode(body.assetTypeId, true);
+    const asset = converter.assetId.decode(body.assetId, true);
     const fromChain = converter.fromChainId.decode(body.fromChainId, true);
     const magic = fromChain.magic;
-    if (!(magic === this.configHelper.magic && assetType === this.configHelper.assetType)) {
+    if (!(magic === this.configHelper.magic && asset.assetType === this.configHelper.assetType)) {
       throw new ConsensusException(MIGRATE_MAIN_ASSET_ONLY, {
-        assetType,
+        assetType: asset.assetType,
         mainAsset: this.configHelper.assetType,
         errorId: NewTransactionRefuseReason.MIGRATE_MAIN_ASSET_ONLY,
         function: "verify",
@@ -242,12 +246,17 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       accountGetterHelper,
     );
 
-    const totalSpend = BigInt(transaction.fee) + BigInt(body.assets);
-    if (assets[magic][assetType].assetNumber !== totalSpend) {
-      throw new ConsensusException(NEED_EMIGRATE_TOTAL_ASSET, {
-        address: senderId,
-        ...Function_Exception_Detail,
-      });
+    if (asset.parentAssetType === PARENT_ASSET_TYPE.ASSETS) {
+      const totalSpend =
+        asset.assetType === this.configHelper.assetType
+          ? BigInt(transaction.fee) + BigInt(body.assetPrealnum)
+          : BigInt(body.assetPrealnum);
+      if (assets[magic][asset.assetType].assetNumber !== totalSpend) {
+        throw new ConsensusException(NEED_EMIGRATE_TOTAL_ASSET, {
+          address: senderId,
+          ...Function_Exception_Detail,
+        });
+      }
     }
 
     return true;

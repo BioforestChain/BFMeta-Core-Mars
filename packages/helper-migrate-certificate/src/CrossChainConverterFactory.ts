@@ -26,20 +26,20 @@ export function CrossChainConverterFactory(json?: any): BFChainCore.CrossChain.C
     });
   }
 
-  const { fromChainId, toChainId, fromId, toId, assetTypeId } = body;
+  const { fromChainId, toChainId, fromId, toId, assetId } = body;
 
   const fromChainIdVersion = getVerion(fromChainId);
   const toChainIdVersion = getVerion(toChainId);
   const fromIdVersion = getVerion(fromId);
   const toIdVersion = getVerion(toId);
-  const assetTypeIdVersion = getVerion(assetTypeId);
+  const assetIdVersion = getVerion(assetId);
   const signatureVersion = getVerion(signature);
   const config: {
     fromChainIdVersion: never;
     toChainIdVersion: never;
     fromIdVersion: never;
     toIdVersion: never;
-    assetTypeIdVersion: never;
+    assetIdVersion: never;
     signatureVersion: never;
     fromAuthSignatureVersion?: never;
     toAuthSignatureVersion?: never;
@@ -48,7 +48,7 @@ export function CrossChainConverterFactory(json?: any): BFChainCore.CrossChain.C
     toChainIdVersion: toChainIdVersion as never,
     fromIdVersion: fromIdVersion as never,
     toIdVersion: toIdVersion as never,
-    assetTypeIdVersion: assetTypeIdVersion as never,
+    assetIdVersion: assetIdVersion as never,
     signatureVersion: signatureVersion as never,
   };
   if (fromAuthSignature) {

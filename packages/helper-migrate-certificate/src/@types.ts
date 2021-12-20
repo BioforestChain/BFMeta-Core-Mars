@@ -14,6 +14,13 @@ declare namespace BFChainCore {
       genesisBlockSignature: string;
     }
 
+    interface AssetBaseInfo {
+      /**资产所属类型 */
+      parentAssetType: BFChainCore.PARENT_ASSET_TYPE;
+      /**资产名 */
+      assetType: string;
+    }
+
     type GetConverterType<C> = C extends Converter<infer T> ? T : never;
     type Item<K extends string = string, C extends Converter = Converter> = readonly [K, C];
     type GetValue<T> = T extends Item<infer _, infer V> ? V : never;
@@ -33,7 +40,7 @@ declare namespace BFChainCore {
     }
     interface ChainIdConverter extends Converter<ChainBaseInfo> {}
     interface IdConverter extends Converter<string> {}
-    interface AssetTypeIdConverter extends Converter<string> {}
+    interface AssetIdConverter extends Converter<AssetBaseInfo> {}
 
     interface SignatureConverter extends Converter<BFChainCore.AccountSignatureJSON> {
       splitSignature(args: string): string;
@@ -84,7 +91,7 @@ declare namespace BFChainCore {
       toChainId: ChainIdConverter;
       fromId: IdConverter;
       toId: IdConverter;
-      assetTypeId: AssetTypeIdConverter;
+      assetId: AssetIdConverter;
       signature: SignatureConverter;
       fromAuthSignature: AuthSignatureConverter;
       toAuthSignature: AuthSignatureConverter;
@@ -129,10 +136,10 @@ declare namespace BFChainCore {
       fromChainId: string;
       /**迁入链的唯一标识 version+自定义格式，目前是 version/magic/chainName/genesisBlockSignature */
       toChainId: string;
-      /**迁出的权益：version/assetType */
-      assetTypeId: string;
+      /**迁出的权益：version/parentAssetType/assetType */
+      assetId: string;
       /**迁出的权益数量，0-9 组成并且不包含小数点，必须大于0 */
-      assets: string;
+      assetPrealnum: string;
     }
 
     interface MigrateCertificateJSON {
@@ -171,10 +178,10 @@ declare namespace BFChainCore {
         fromChain: ChainBaseInfo;
         /**迁入链信息 */
         toChain: ChainBaseInfo;
-        /**迁出的权益名 */
-        assetType: string;
+        /**迁出的权益信息 */
+        asset: AssetBaseInfo;
         /**迁出的权益数量，0-9 组成并且不包含小数点，必须大于0 */
-        assets: string;
+        assetPrealnum: string;
       };
       /**发起账户签名 */
       signature: BFChainCore.AccountSignatureJSON;
@@ -193,8 +200,10 @@ declare namespace BFChainCore {
       recipientId: string;
       /**去往链信息 */
       toChainInfo: ChainBaseInfo;
+      /**资产信息 */
+      assetInfo: AssetBaseInfo;
       /**迁移的数量 */
-      assets: string;
+      assetPrealnum: string;
     }
 
     interface AuthSignMigrateCertificateArgs {
@@ -235,8 +244,10 @@ declare namespace BFChainCore {
       recipientId: string;
       /**去往链信息 */
       toChainInfo: ChainBaseInfo;
+      /**资产信息 */
+      assetInfo: AssetBaseInfo;
       /**迁移的数量 */
-      assets: string;
+      assetPrealnum: string;
     }
   }
   // #endregion

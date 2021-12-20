@@ -110,8 +110,8 @@ export class MigrateCertificateHelper {
         toChainId: body.toChainId,
         fromId: body.fromId,
         toId: body.toId,
-        assetTypeId: body.assetTypeId,
-        assets: body.assets,
+        assetId: body.assetId,
+        assetPrealnum: body.assetPrealnum,
       },
       signature: signature || "",
       fromAuthSignature: fromAuthSignature || "",
@@ -125,7 +125,7 @@ export class MigrateCertificateHelper {
     config = this.configHelper,
   ) {
     const converter = CrossChainConverterFactory();
-    const { senderId, recipientId, toChainInfo, assets } = args;
+    const { senderId, recipientId, toChainInfo, assetInfo, assetPrealnum } = args;
     const migrateCertificate: BFChainCore.CrossChain.MigrateCertificateWithoutFromAuthSignatureJSON =
       {
         body: {
@@ -149,9 +149,9 @@ export class MigrateCertificateHelper {
           /**接收账户的唯一标识 version/address */
           toId: converter.toId.encode(recipientId, true),
           /**迁出的权益：version/assetType */
-          assetTypeId: converter.assetTypeId.encode(config.assetType, true),
+          assetId: converter.assetId.encode(assetInfo, true),
           /**迁出的权益数量，0-9 组成并且不包含小数点，必须大于0 */
-          assets,
+          assetPrealnum,
         },
         /**发起账户签名 version/publicKey-signature/secondPublicKey-signSignature */
         signature: converter.signature.version,
@@ -192,10 +192,11 @@ export class MigrateCertificateHelper {
     args: BFChainCore.CrossChain.GenerateMigrateCertificateArgs,
     config = this.configHelper,
   ) {
-    const { senderSecret, senderSecondSecret, recipientId, toChainInfo, assets } = args;
+    const { senderSecret, senderSecondSecret, recipientId, toChainInfo, assetInfo, assetPrealnum } =
+      args;
     const converter = CrossChainConverterFactory();
 
-    this.checkAssets(assets);
+    this.checkAssets(assetPrealnum);
 
     const accountBaseHelper = this.accountBaseHelper;
     const keypair = await accountBaseHelper.createSecretKeypair(senderSecret);
@@ -222,10 +223,10 @@ export class MigrateCertificateHelper {
         fromId: converter.fromId.encode(address, true),
         /**接收账户的唯一标识 version/address */
         toId: converter.toId.encode(recipientId, true),
-        /**迁出的权益：version/assetType */
-        assetTypeId: converter.assetTypeId.encode(config.assetType, true),
+        /**迁出的权益：version/parentAssetType/assetType */
+        assetId: converter.assetId.encode(assetInfo, true),
         /**迁出的权益数量，0-9 组成并且不包含小数点，必须大于0 */
-        assets,
+        assetPrealnum,
       },
       /**发起账户签名 version/publicKey-signature/secondPublicKey-signSignature */
       signature: "",
@@ -258,8 +259,8 @@ export class MigrateCertificateHelper {
         timestamp: body.timestamp,
         fromChain: converter.fromChainId.decode(body.fromChainId),
         toChain: converter.toChainId.decode(body.toChainId),
-        assetType: converter.assetTypeId.decode(body.assetTypeId),
-        assets: body.assets,
+        asset: converter.assetId.decode(body.assetId),
+        assetPrealnum: body.assetPrealnum,
       },
       signature: converter.signature.decode(signature),
       fromAuthSignature:
@@ -462,8 +463,8 @@ export class MigrateCertificateHelper {
     converter.toChainId.checkDecodeArgs(body.toChainId);
     converter.fromId.checkDecodeArgs(body.fromId);
     converter.toId.checkDecodeArgs(body.toId);
-    converter.assetTypeId.checkDecodeArgs(body.assetTypeId);
-    this.checkAssets(body.assets);
+    converter.assetId.checkDecodeArgs(body.assetId);
+    this.checkAssets(body.assetPrealnum);
     converter.signature.checkDecodeArgs(signature);
 
     const baseHelper = this.baseHelper;

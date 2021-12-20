@@ -12,6 +12,14 @@ export class FromChainIdV1Converter implements BFChainCore.CrossChain.ChainIdCon
   readonly version = "1" as const;
 
   checkEncodeArgs(chainInfo: BFChainCore.CrossChain.ChainBaseInfo) {
+    if (!chainInfo) {
+      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        prop: `chainInfo ${chainInfo}`,
+        target: "encodeArgs",
+        function: "checkEncodeArgs",
+      });
+    }
+
     const { chainName, magic, genesisBlockSignature } = chainInfo;
     if (!chainName) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
