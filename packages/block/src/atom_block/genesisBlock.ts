@@ -408,14 +408,6 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       });
     }
 
-    if (blockPerRound < 2) {
-      throw new ArgumentIllegalException(PROP_SHOULD_GTE_FIELD, {
-        prop: "blockPerRound",
-        field: 2,
-        ...GenesisBlockAsset_Exception_Detail,
-      });
-    }
-
     if (!baseHelper.isPositiveInteger(delegates)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: `delegates ${delegates}`,
