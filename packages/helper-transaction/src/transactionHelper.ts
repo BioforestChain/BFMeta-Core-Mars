@@ -359,6 +359,24 @@ export class TransactionHelper {
         : customMinFeePerByte
       : minTransactionFeePerByte;
   }
+  private __calcMinFeePerBytes(
+    fee: string,
+    bytesLength: number,
+    minTransactionFeePerByte = this.config.minTransactionFeePerByte,
+  ) {
+    let byte_num = bytesLength;
+    let cur_fee = fee;
+    do {
+      const min_fee = this.jsbiHelper
+        .multiplyCeilFraction(byte_num, minTransactionFeePerByte)
+        .toString();
+      if (min_fee.length === cur_fee.length) {
+        return min_fee;
+      }
+      byte_num += min_fee.length - cur_fee.length;
+      cur_fee = min_fee;
+    } while (true);
+  }
   /**
    * 根据事件字节数计算事件最小手续费
    *
@@ -371,10 +389,11 @@ export class TransactionHelper {
     bytesLength?: number,
     customMinFeePerByte?: BFChainCore.FractionJSON,
   ) {
-    const realByteLength = bytesLength || transaction.getBytes().length;
-    return this.jsbiHelper
-      .multiplyCeilFraction(realByteLength, this.__calcStandardMinFee(customMinFeePerByte))
-      .toString();
+    return this.__calcMinFeePerBytes(
+      transaction.fee,
+      bytesLength || transaction.getBytes().length,
+      this.__calcStandardMinFee(customMinFeePerByte),
+    );
   }
   /**
    * 根据共识最大事件字节数计算事件最小手续费
@@ -423,18 +442,7 @@ export class TransactionHelper {
     trs: Transaction,
     minTransactionFeePerByte = this.config.minTransactionFeePerByte,
   ) {
-    let byte_num = trs.getBytes().length;
-    let cur_fee = trs.fee;
-    do {
-      const min_fee = this.jsbiHelper
-        .multiplyCeilFraction(byte_num, minTransactionFeePerByte)
-        .toString();
-      if (min_fee.length === cur_fee.length) {
-        return min_fee;
-      }
-      byte_num += min_fee.length - cur_fee.length;
-      cur_fee = min_fee;
-    } while (true);
+    return this.__calcMinFeePerBytes(trs.fee, trs.getBytes().length, minTransactionFeePerByte);
   }
 
   /**

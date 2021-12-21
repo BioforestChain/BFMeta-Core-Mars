@@ -100,13 +100,11 @@ async function getTransferAssetTransaction(sender: AccountModel, bfchainCore: BF
     );
 
   const result = yy.checkTrsFeeAndWebFee(trs, trs.getBytes().length);
-
-  const result2 = yy.checkTrsFeeAndMiningMachineFeeAndWebFee(trs, trs.getBytes().length, {
-    numerator: 200,
-    denominator: 1024,
-  });
-
   if (result.isFeeEnough) {
+    const result2 = yy.checkTrsFeeAndMiningMachineFeeAndWebFee(trs, trs.getBytes().length, {
+      numerator: 1000,
+      denominator: 1024,
+    });
     if (result2.isFeeEnough) {
       console.log(xx.toJSON());
     } else {
