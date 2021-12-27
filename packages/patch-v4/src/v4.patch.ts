@@ -7,6 +7,8 @@ import { BLOCK_FACTORY_TYPES_MAP } from "@bfchain/core-block";
 import {
   BLOCK_TYPES_BASE,
   GenesisAssetModel,
+  GenesisAssetV1Model,
+  GenesisAssetV0Model,
   Block,
   CommonBlock,
   GenesisBlock,
@@ -15,11 +17,22 @@ import {
   BNID_TYPE,
 } from "@bfchain/core-model";
 import { V2_GenesisBlockFactory } from "@bfchain/core-patch-v2";
+import { GenesisBlockFactory } from "@bfchain/core-block";
 
 const GenesisAssetModelSetup = GenesisAssetModel.$type.setup();
 const GenesisAssetModel_encode = GenesisAssetModelSetup.encode;
 const GenesisAssetModel_decode = GenesisAssetModelSetup.decode;
 const GenesisAssetModel_fromObject = GenesisAssetModelSetup.fromObject;
+
+const GenesisAssetV1ModelSetup = GenesisAssetV1Model.$type.setup();
+const GenesisAssetV1Model_encode = GenesisAssetV1ModelSetup.encode;
+const GenesisAssetV1Model_decode = GenesisAssetV1ModelSetup.decode;
+const GenesisAssetV1Model_fromObject = GenesisAssetV1ModelSetup.fromObject;
+
+const GenesisAssetV0ModelSetup = GenesisAssetV0Model.$type.setup();
+const GenesisAssetV0Model_encode = GenesisAssetV0ModelSetup.encode;
+const GenesisAssetV0Model_decode = GenesisAssetV0ModelSetup.decode;
+const GenesisAssetV0Model_fromObject = GenesisAssetV0ModelSetup.fromObject;
 
 @Injectable()
 export class V4_Patch extends PatchBase {
@@ -45,39 +58,86 @@ export class V4_Patch extends PatchBase {
               for (const Block of [CommonBlock, GenesisBlock, RoundLastBlock]) {
                 const BlockSetup = Block.$type.setup();
                 const BlockSetup_encode = BlockSetup.encode;
-                BlockSetup.src_encode = GenesisAssetModelSetup.encode;
                 const BlockSetup_encode_v4 = function (this: Type, block: Block, writer?: Writer) {
                   try {
-                    if (block.version > 3) {
+                    const version = block.version;
+                    if (version > 3) {
                       const asset = (block.asset as any).genesisAsset;
                       if (asset) {
                         GenesisAssetModelSetup.encode = GenesisAssetModel_encode;
+                        BLOCK_FACTORY_TYPES_MAP.KF.set(
+                          BLOCK_TYPES_BASE.GENESIS,
+                          V4_GenesisBlockFactory,
+                        );
+                        BLOCK_FACTORY_TYPES_MAP.FK.set(
+                          V4_GenesisBlockFactory,
+                          BLOCK_TYPES_BASE.GENESIS,
+                        );
                       }
+                    } else if (version > 2) {
+                      GenesisAssetModelSetup.encode = GenesisAssetV1Model_encode;
+                      BLOCK_FACTORY_TYPES_MAP.KF.set(
+                        BLOCK_TYPES_BASE.GENESIS,
+                        V2_GenesisBlockFactory,
+                      );
+                      BLOCK_FACTORY_TYPES_MAP.FK.set(
+                        V2_GenesisBlockFactory,
+                        BLOCK_TYPES_BASE.GENESIS,
+                      );
+                    } else {
+                      GenesisAssetModelSetup.encode = GenesisAssetV0Model_encode;
+                      BLOCK_FACTORY_TYPES_MAP.KF.set(BLOCK_TYPES_BASE.GENESIS, GenesisBlockFactory);
+                      BLOCK_FACTORY_TYPES_MAP.FK.set(GenesisBlockFactory, BLOCK_TYPES_BASE.GENESIS);
                     }
                     return BlockSetup_encode.call(this, block, writer);
                   } finally {
-                    GenesisAssetModelSetup.encode = BlockSetup.src_encode;
+                    GenesisAssetModelSetup.encode = GenesisAssetV0Model_encode;
+                    BLOCK_FACTORY_TYPES_MAP.KF.set(BLOCK_TYPES_BASE.GENESIS, GenesisBlockFactory);
+                    BLOCK_FACTORY_TYPES_MAP.FK.set(GenesisBlockFactory, BLOCK_TYPES_BASE.GENESIS);
                   }
                 };
 
                 const BlockSetup_decode = BlockSetup.decode;
-                BlockSetup.src_decode = GenesisAssetModelSetup.decode;
                 const BlockSetup_decode_v4 = function (this: Type, reader: Uint8Array | Reader) {
                   try {
                     const versionInfo = BlockVersionReader.decode(
                       reader instanceof Reader ? reader.buf : reader,
                     );
-                    if (versionInfo.version > 3) {
+                    const version = versionInfo.version;
+                    if (version > 3) {
                       GenesisAssetModelSetup.decode = GenesisAssetModel_decode;
+                      BLOCK_FACTORY_TYPES_MAP.KF.set(
+                        BLOCK_TYPES_BASE.GENESIS,
+                        V4_GenesisBlockFactory,
+                      );
+                      BLOCK_FACTORY_TYPES_MAP.FK.set(
+                        V4_GenesisBlockFactory,
+                        BLOCK_TYPES_BASE.GENESIS,
+                      );
+                    } else if (version > 2) {
+                      GenesisAssetModelSetup.decode = GenesisAssetV1Model_decode;
+                      BLOCK_FACTORY_TYPES_MAP.KF.set(
+                        BLOCK_TYPES_BASE.GENESIS,
+                        V2_GenesisBlockFactory,
+                      );
+                      BLOCK_FACTORY_TYPES_MAP.FK.set(
+                        V2_GenesisBlockFactory,
+                        BLOCK_TYPES_BASE.GENESIS,
+                      );
+                    } else {
+                      GenesisAssetModelSetup.decode = GenesisAssetV0Model_decode;
+                      BLOCK_FACTORY_TYPES_MAP.KF.set(BLOCK_TYPES_BASE.GENESIS, GenesisBlockFactory);
+                      BLOCK_FACTORY_TYPES_MAP.FK.set(GenesisBlockFactory, BLOCK_TYPES_BASE.GENESIS);
                     }
                     return BlockSetup_decode.call(this, reader);
                   } finally {
-                    GenesisAssetModelSetup.decode = BlockSetup.src_decode;
+                    GenesisAssetModelSetup.decode = GenesisAssetV0Model_decode;
+                    BLOCK_FACTORY_TYPES_MAP.KF.set(BLOCK_TYPES_BASE.GENESIS, GenesisBlockFactory);
+                    BLOCK_FACTORY_TYPES_MAP.FK.set(GenesisBlockFactory, BLOCK_TYPES_BASE.GENESIS);
                   }
                 };
 
                 const BlockSetup_fromObject = BlockSetup.fromObject;
-                BlockSetup.src_fromObject = GenesisAssetModelSetup.fromObject;
                 const BlockSetup_fromObject_v4 = function (
                   this: BFChainProtobuf.Constructor<any>,
                   object: BFChainProtobuf.ObjectFromType<
@@ -85,12 +145,37 @@ export class V4_Patch extends PatchBase {
                   >,
                 ) {
                   try {
-                    if ((object.version as number) > 3) {
+                    const version = object.version as number;
+                    if (version > 3) {
                       GenesisAssetModelSetup.fromObject = GenesisAssetModel_fromObject;
+                      BLOCK_FACTORY_TYPES_MAP.KF.set(
+                        BLOCK_TYPES_BASE.GENESIS,
+                        V4_GenesisBlockFactory,
+                      );
+                      BLOCK_FACTORY_TYPES_MAP.FK.set(
+                        V4_GenesisBlockFactory,
+                        BLOCK_TYPES_BASE.GENESIS,
+                      );
+                    } else if (version > 2) {
+                      GenesisAssetModelSetup.fromObject = GenesisAssetV1Model_fromObject;
+                      BLOCK_FACTORY_TYPES_MAP.KF.set(
+                        BLOCK_TYPES_BASE.GENESIS,
+                        V2_GenesisBlockFactory,
+                      );
+                      BLOCK_FACTORY_TYPES_MAP.FK.set(
+                        V2_GenesisBlockFactory,
+                        BLOCK_TYPES_BASE.GENESIS,
+                      );
+                    } else {
+                      GenesisAssetModelSetup.fromObject = GenesisAssetV0Model_fromObject;
+                      BLOCK_FACTORY_TYPES_MAP.KF.set(BLOCK_TYPES_BASE.GENESIS, GenesisBlockFactory);
+                      BLOCK_FACTORY_TYPES_MAP.FK.set(GenesisBlockFactory, BLOCK_TYPES_BASE.GENESIS);
                     }
                     return BlockSetup_fromObject.call(this, object);
                   } finally {
-                    GenesisAssetModelSetup.fromObject = BlockSetup.src_fromObject;
+                    GenesisAssetModelSetup.fromObject = GenesisAssetV0Model_fromObject;
+                    BLOCK_FACTORY_TYPES_MAP.KF.set(BLOCK_TYPES_BASE.GENESIS, GenesisBlockFactory);
+                    BLOCK_FACTORY_TYPES_MAP.FK.set(GenesisBlockFactory, BLOCK_TYPES_BASE.GENESIS);
                   }
                 };
 
@@ -101,20 +186,9 @@ export class V4_Patch extends PatchBase {
 
               const oldBlock = this.config.getHookGenesisBlock(this.consensusVersion) || {};
               this.config.setHookGenesisBlock(this.consensusVersion, oldBlock);
-              BLOCK_FACTORY_TYPES_MAP.KF.set(BLOCK_TYPES_BASE.GENESIS, V4_GenesisBlockFactory);
-              BLOCK_FACTORY_TYPES_MAP.FK.set(V4_GenesisBlockFactory, BLOCK_TYPES_BASE.GENESIS);
             },
             () => {
-              for (const Block of [CommonBlock, GenesisBlock, RoundLastBlock]) {
-                const BlockSetup = Block.$type.setup();
-                GenesisAssetModelSetup.encode = BlockSetup.src_encode;
-                GenesisAssetModelSetup.decode = BlockSetup.src_decode;
-                GenesisAssetModelSetup.fromObject = BlockSetup.src_fromObject;
-              }
-
               this.config.rollBackHookGenesisBlock(this.consensusVersion);
-              BLOCK_FACTORY_TYPES_MAP.KF.set(BLOCK_TYPES_BASE.GENESIS, V2_GenesisBlockFactory);
-              BLOCK_FACTORY_TYPES_MAP.FK.set(V2_GenesisBlockFactory, BLOCK_TYPES_BASE.GENESIS);
             },
           );
         }
