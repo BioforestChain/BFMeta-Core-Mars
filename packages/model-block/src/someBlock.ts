@@ -15,25 +15,36 @@ const GenesisAssetModelSetup = GenesisAssetModel.$type.setup();
 const GenesisAssetV0ModelSetup = GenesisAssetV0Model.$type.setup();
 const GenesisAssetV0Model_encode = GenesisAssetV0ModelSetup.encode;
 const GenesisAssetV0Model_decode = GenesisAssetV0ModelSetup.decode;
+const GenesisAssetV0Model_fromObject = GenesisAssetV0ModelSetup.fromObject;
 
 for (const Block of [CommonBlock, GenesisBlock, RoundLastBlock]) {
   const BlockSetup = Block.$type.setup();
   const BlockSetup_encode = BlockSetup.encode;
-  BlockSetup.src_encode = BlockSetup_encode;
   const BlockSetup_encode_v0 = function (this: Type, block: Block, writer?: Writer) {
     GenesisAssetModelSetup.encode = GenesisAssetV0Model_encode;
     return BlockSetup_encode.call(this, block, writer);
   };
 
   const BlockSetup_decode = BlockSetup.decode;
-  BlockSetup.src_decode = BlockSetup_decode;
   const BlockSetup_decode_v0 = function (this: Type, reader: Uint8Array | Reader) {
     GenesisAssetModelSetup.decode = GenesisAssetV0Model_decode;
     return BlockSetup_decode.call(this, reader);
   };
 
+  const BlockSetup_fromObject = BlockSetup.fromObject;
+  const BlockSetup_fromObject_v0 = function (
+    this: BFChainProtobuf.Constructor<any>,
+    object: BFChainProtobuf.ObjectFromType<
+      BFChainCore.BlockJSON<BFChainCore.GetBlockMessageAssetModel<any>>
+    >,
+  ) {
+    GenesisAssetModelSetup.fromObject = GenesisAssetV0Model_fromObject;
+    return BlockSetup_fromObject.call(this, object);
+  };
+
   BlockSetup.encode = BlockSetup_encode_v0;
   BlockSetup.decode = BlockSetup_decode_v0;
+  BlockSetup.fromObject = BlockSetup_fromObject_v0;
 }
 
 /**

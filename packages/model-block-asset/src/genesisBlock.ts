@@ -231,6 +231,16 @@ export class GenesisAssetV0Model<T extends GenesisAssetV0Model<T>> extends Round
   tpowOfWorkExemptionBlocks!: number;
   @Field.d(GenesisAssetV0Model.INC++, TransactionPowOfWorkConfigModel)
   transactionPowOfWorkConfig!: TransactionPowOfWorkConfigModel;
+  static fromObject<T extends Message>(
+    this: BFChainProtobuf.Constructor<T>,
+    object: BFChainProtobuf.ObjectFromType<GenesisAssetModel>,
+  ) {
+    const res = super.fromObject(object) as GenesisAssetModel;
+    if (res !== object) {
+      object.beginEpochTime && (res.beginEpochTime = object.beginEpochTime);
+    }
+    return res as unknown as T;
+  }
 }
 
 @Type.d("GenesisAssetV1Model")
@@ -238,6 +248,20 @@ export class GenesisAssetV1Model<T extends GenesisAssetV1Model<T>> extends Genes
   /**冻结的主权益数允许发行的最大权益数量 */
   @Field.d(GenesisAssetV1Model.INC++, FractionBigIntModel)
   maxMultipleOfAssetAndMainAsset!: FractionBigIntModel;
+  static fromObject<T extends Message>(
+    this: BFChainProtobuf.Constructor<T>,
+    object: BFChainProtobuf.ObjectFromType<GenesisAssetModel>,
+  ) {
+    const res = super.fromObject(object) as GenesisAssetModel;
+    if (res !== object) {
+      object.beginEpochTime && (res.beginEpochTime = object.beginEpochTime);
+      object.maxMultipleOfAssetAndMainAsset &&
+        (res.maxMultipleOfAssetAndMainAsset = FractionBigIntModel.fromObject<FractionBigIntModel>(
+          object.maxMultipleOfAssetAndMainAsset,
+        ));
+    }
+    return res as unknown as T;
+  }
 }
 
 /**
@@ -319,15 +343,27 @@ export class GenesisAssetModel
   ) {
     const res = super.fromObject(object) as GenesisAssetModel;
     if (res !== object) {
-      object.beginEpochTime && (res.beginEpochTime = object.beginEpochTime);
-      object.maxMultipleOfAssetAndMainAsset &&
-        (res.maxMultipleOfAssetAndMainAsset = FractionBigIntModel.fromObject<FractionBigIntModel>(
-          object.maxMultipleOfAssetAndMainAsset,
-        ));
-      object.maxMultipleOfEntityAndMainAsset &&
-        (res.maxMultipleOfEntityAndMainAsset = FractionBigIntModel.fromObject<FractionBigIntModel>(
-          object.maxMultipleOfEntityAndMainAsset,
-        ));
+      const { beginEpochTime, maxMultipleOfAssetAndMainAsset, maxMultipleOfEntityAndMainAsset } =
+        object;
+      beginEpochTime !== undefined && (res.beginEpochTime = beginEpochTime);
+      if (
+        maxMultipleOfAssetAndMainAsset &&
+        maxMultipleOfAssetAndMainAsset.numerator &&
+        maxMultipleOfAssetAndMainAsset.denominator
+      ) {
+        res.maxMultipleOfAssetAndMainAsset = FractionBigIntModel.fromObject<FractionBigIntModel>(
+          maxMultipleOfAssetAndMainAsset,
+        );
+      }
+      if (
+        maxMultipleOfEntityAndMainAsset &&
+        maxMultipleOfEntityAndMainAsset.numerator &&
+        maxMultipleOfEntityAndMainAsset.denominator
+      ) {
+        res.maxMultipleOfEntityAndMainAsset = FractionBigIntModel.fromObject<FractionBigIntModel>(
+          maxMultipleOfEntityAndMainAsset,
+        );
+      }
     }
     return res as unknown as T;
   }

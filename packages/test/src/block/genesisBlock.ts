@@ -549,9 +549,13 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
 
     const block = await core.block.recombineBlock(blockJson);
 
+    const xx = block.toJSON();
+
+    const yy = await core.block.recombineBlock(xx);
+
     const factory = core.block.getBlockFactoryFromHeight(1);
 
-    factory.commonBlockVerify.verifyBlockSize(block);
+    factory.commonBlockVerify.verifyBlockSize(yy);
 
     // await core.patchInstaller.changeHeight(Number.MAX_SAFE_INTEGER);
 

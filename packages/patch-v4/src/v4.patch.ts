@@ -7,7 +7,6 @@ import { BLOCK_FACTORY_TYPES_MAP } from "@bfchain/core-block";
 import {
   BLOCK_TYPES_BASE,
   GenesisAssetModel,
-  GenesisAssetV1Model,
   Block,
   CommonBlock,
   GenesisBlock,
@@ -20,10 +19,7 @@ import { V2_GenesisBlockFactory } from "@bfchain/core-patch-v2";
 const GenesisAssetModelSetup = GenesisAssetModel.$type.setup();
 const GenesisAssetModel_encode = GenesisAssetModelSetup.encode;
 const GenesisAssetModel_decode = GenesisAssetModelSetup.decode;
-
-const GenesisAssetV1ModelSetup = GenesisAssetV1Model.$type.setup();
-const GenesisAssetV1Model_encode = GenesisAssetV1ModelSetup.encode;
-const GenesisAssetV1Model_decode = GenesisAssetV1ModelSetup.decode;
+const GenesisAssetModel_fromObject = GenesisAssetModelSetup.fromObject;
 
 @Injectable()
 export class V4_Patch extends PatchBase {
@@ -49,6 +45,7 @@ export class V4_Patch extends PatchBase {
               for (const Block of [CommonBlock, GenesisBlock, RoundLastBlock]) {
                 const BlockSetup = Block.$type.setup();
                 const BlockSetup_encode = BlockSetup.encode;
+                BlockSetup.src_encode = GenesisAssetModelSetup.encode;
                 const BlockSetup_encode_v4 = function (this: Type, block: Block, writer?: Writer) {
                   try {
                     if (block.version > 3) {
@@ -59,11 +56,12 @@ export class V4_Patch extends PatchBase {
                     }
                     return BlockSetup_encode.call(this, block, writer);
                   } finally {
-                    GenesisAssetModelSetup.encode = GenesisAssetV1Model_encode;
+                    GenesisAssetModelSetup.encode = BlockSetup.src_encode;
                   }
                 };
 
                 const BlockSetup_decode = BlockSetup.decode;
+                BlockSetup.src_decode = GenesisAssetModelSetup.decode;
                 const BlockSetup_decode_v4 = function (this: Type, reader: Uint8Array | Reader) {
                   try {
                     const versionInfo = BlockVersionReader.decode(
@@ -74,12 +72,31 @@ export class V4_Patch extends PatchBase {
                     }
                     return BlockSetup_decode.call(this, reader);
                   } finally {
-                    GenesisAssetModelSetup.decode = GenesisAssetV1Model_decode;
+                    GenesisAssetModelSetup.decode = BlockSetup.src_decode;
+                  }
+                };
+
+                const BlockSetup_fromObject = BlockSetup.fromObject;
+                BlockSetup.src_fromObject = GenesisAssetModelSetup.fromObject;
+                const BlockSetup_fromObject_v4 = function (
+                  this: BFChainProtobuf.Constructor<any>,
+                  object: BFChainProtobuf.ObjectFromType<
+                    BFChainCore.BlockJSON<BFChainCore.GetBlockMessageAssetModel<any>>
+                  >,
+                ) {
+                  try {
+                    if ((object.version as number) > 3) {
+                      GenesisAssetModelSetup.fromObject = GenesisAssetModel_fromObject;
+                    }
+                    return BlockSetup_fromObject.call(this, object);
+                  } finally {
+                    GenesisAssetModelSetup.fromObject = BlockSetup.src_fromObject;
                   }
                 };
 
                 BlockSetup.encode = BlockSetup_encode_v4;
                 BlockSetup.decode = BlockSetup_decode_v4;
+                BlockSetup.fromObject = BlockSetup_fromObject_v4;
               }
 
               const oldBlock = this.config.getHookGenesisBlock(this.consensusVersion) || {};
@@ -90,8 +107,9 @@ export class V4_Patch extends PatchBase {
             () => {
               for (const Block of [CommonBlock, GenesisBlock, RoundLastBlock]) {
                 const BlockSetup = Block.$type.setup();
-                BlockSetup.encode = GenesisAssetV1Model_encode;
-                BlockSetup.decode = GenesisAssetV1Model_decode;
+                GenesisAssetModelSetup.encode = BlockSetup.src_encode;
+                GenesisAssetModelSetup.decode = BlockSetup.src_decode;
+                GenesisAssetModelSetup.fromObject = BlockSetup.src_fromObject;
               }
 
               this.config.rollBackHookGenesisBlock(this.consensusVersion);

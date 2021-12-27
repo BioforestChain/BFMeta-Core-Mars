@@ -2,7 +2,6 @@ import { Message, Type, MapField, Field } from "@bfchain/protobuf";
 import { parseHexToArrayBuffer, getHexFromArrayBuffer } from "@bfchain/util-encoding-hex";
 import { TransactionInBlock } from "@bfchain/core-model-transaction";
 import { StatisticInfoModel } from "./statistic_info";
-import { cacheBytesGetter } from "@bfchain/core-model-cacher";
 import { EasyWeakMap } from "@bfchain/util-extends-map";
 import { StringKeyMap } from "@bfchain/core-model-common";
 const TrsRemarkMapWM = new EasyWeakMap((block: Block) => new StringKeyMap(block.remark));
@@ -223,6 +222,33 @@ export class Block<AJ extends object = object>
   }
 
   toJSON() {
+    const assetJson = this.asset.toJSON();
+
+    // FIXME: 没辙，吐了
+    if (this.height === 1) {
+      if (this.version < 2) {
+        delete ((assetJson as BFChainCore.GenesisBlockAssetJSON).genesisAsset as any)
+          .maxMultipleOfAssetAndMainAsset;
+        delete ((assetJson as BFChainCore.GenesisBlockAssetJSON).genesisAsset as any)
+          .issueEntityFactoryMinChainAsset;
+        delete ((assetJson as BFChainCore.GenesisBlockAssetJSON).genesisAsset as any)
+          .maxMultipleOfEntityAndMainAsset;
+        delete ((assetJson as BFChainCore.GenesisBlockAssetJSON).genesisAsset as any)
+          .maxVotesPerBlock;
+        delete ((assetJson as BFChainCore.GenesisBlockAssetJSON).genesisAsset as any)
+          .voteMinChainAsset;
+      } else if (this.version < 4) {
+        delete ((assetJson as BFChainCore.GenesisBlockAssetJSON).genesisAsset as any)
+          .issueEntityFactoryMinChainAsset;
+        delete ((assetJson as BFChainCore.GenesisBlockAssetJSON).genesisAsset as any)
+          .maxMultipleOfEntityAndMainAsset;
+        delete ((assetJson as BFChainCore.GenesisBlockAssetJSON).genesisAsset as any)
+          .maxVotesPerBlock;
+        delete ((assetJson as BFChainCore.GenesisBlockAssetJSON).genesisAsset as any)
+          .voteMinChainAsset;
+      }
+    }
+
     const res: BFChainCore.BlockJSON<AJ> = {
       version: this.version,
       height: this.height,
@@ -242,7 +268,7 @@ export class Block<AJ extends object = object>
       blockParticipation: this.blockParticipation,
       transactions: this.transactions.map((transaction) => transaction.toJSON()),
       remark: this.remark,
-      asset: this.asset.toJSON() as AJ,
+      asset: assetJson as AJ,
       statisticInfo: this.statisticInfo.toJSON(),
       roundOfflineGeneratersHashMap: this.roundOfflineGeneratersHashMap,
     };
