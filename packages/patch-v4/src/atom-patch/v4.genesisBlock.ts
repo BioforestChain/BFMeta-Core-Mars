@@ -25,8 +25,34 @@ export class V4_GenesisBlockFactory extends V2_GenesisBlockFactory {
       target: "genesisAsset",
     };
 
-    const { issueEntityFactoryMinChainAsset, maxMultipleOfEntityAndMainAsset } =
-      genesisBlockAsset.genesisAsset;
+    const {
+      maxVotesPerBlock,
+      voteMinChainAsset,
+      issueEntityFactoryMinChainAsset,
+      maxMultipleOfEntityAndMainAsset,
+    } = genesisBlockAsset.genesisAsset;
+
+    if (!baseHelper.isNaturalNumber(maxVotesPerBlock)) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+        prop: `maxVotesPerBlock ${maxVotesPerBlock}`,
+        ...GenesisBlockAsset_Exception_Detail,
+      });
+    }
+
+    if (!voteMinChainAsset) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
+        prop: "voteMinChainAsset",
+        ...GenesisBlockAsset_Exception_Detail,
+      });
+    }
+
+    // 跳过 空串 和 undefined
+    if (!baseHelper.isValidAssetNumber(voteMinChainAsset)) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+        prop: `voteMinChainAsset ${voteMinChainAsset}`,
+        ...GenesisBlockAsset_Exception_Detail,
+      });
+    }
 
     if (!issueEntityFactoryMinChainAsset) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {

@@ -278,6 +278,12 @@ export class GenesisAssetModel
   /**冻结的主权益数允许发行的最大非同质权益数量 */
   @Field.d(GenesisAssetModel.INC++, FractionBigIntModel)
   maxMultipleOfEntityAndMainAsset!: FractionBigIntModel;
+  /**每个区块最大能处理的投票数 */
+  @Field.d(GenesisAssetModel.INC++, "uint32")
+  maxVotesPerBlock!: number;
+  /**投票账户最少持有的主权益数 */
+  @Field.d(GenesisAssetModel.INC++, "string")
+  voteMinChainAsset!: string;
   toJSON(): BFChainCore.GenesisAssetJSON {
     const res: BFChainCore.GenesisAssetJSON = Object.assign(
       {
@@ -321,6 +327,8 @@ export class GenesisAssetModel
       (res.issueEntityFactoryMinChainAsset = this.issueEntityFactoryMinChainAsset);
     this.maxMultipleOfEntityAndMainAsset &&
       (res.maxMultipleOfEntityAndMainAsset = this.maxMultipleOfEntityAndMainAsset.toJSON());
+    this.maxVotesPerBlock !== undefined && (res.maxVotesPerBlock = this.maxVotesPerBlock);
+    this.voteMinChainAsset && (res.voteMinChainAsset = this.voteMinChainAsset);
 
     return res;
   }

@@ -78,6 +78,8 @@ mainChainAssetData.blockPerRound = blockPerRound;
 mainChainAssetData.tpowOfWorkExemptionBlocks = blockPerRound;
 mainChainAssetData.delegates = blockPerRound * 2;
 mainChainAssetData.forgeInterval = forgeInterval;
+mainChainAssetData.maxVotesPerBlock =
+  mainChainAssetData.maxTPSPerBlock * mainChainAssetData.forgeInterval;
 // mainChainAssetData.tpowOfWorkExemptionBlocks = 0;
 // mainChainAssetData.tpowDiffFormula = mainChainAssetData.tpowDiffFormula
 //   .trim()
