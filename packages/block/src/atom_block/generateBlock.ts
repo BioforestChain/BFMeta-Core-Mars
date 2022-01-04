@@ -219,7 +219,6 @@ export class GenerateBlockCore<T extends Block> {
     const transactionCore = this.transactionCore;
     const abortForbiddenTransaction = transactionCore.abortForbiddenTransaction;
     const Function_Exception_Detail = { function: "insertTransactions" };
-    const VOTE = transactionCore.transactionHelper.VOTE;
     const MAX_TRANSACTION_SIZE = this.config.maxTransactionSize;
     const { height, generatorPublicKey, statisticInfo: blockStatisticsInfo } = block;
     const { tpowOfWorkExemptionBlocks, maxBlockSize } = this.config;

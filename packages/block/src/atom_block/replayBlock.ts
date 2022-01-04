@@ -298,7 +298,7 @@ export class ReplayBlockCore<T extends Block> {
     );
     const transactionBufferList: Uint8Array[] = [];
     const { transactionCore, asymmetricHelper, transactionHelper, baseHelper } = this;
-    const { VOTE, GRAB_ASSET, SIGN_FOR_ASSET } = transactionHelper;
+    const { GRAB_ASSET, SIGN_FOR_ASSET } = transactionHelper;
     const abortForbiddenTransaction = transactionCore.abortForbiddenTransaction;
     const trsSet = new Set();
 

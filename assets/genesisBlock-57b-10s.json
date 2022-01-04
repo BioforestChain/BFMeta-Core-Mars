@@ -1,9 +1,9 @@
 {
   "version": 4,
   "height": 1,
-  "blockSize": 147103,
+  "blockSize": 147095,
   "timestamp": 0,
-  "signature": "82b5f22a8e44cb279c4222639ff0f826dd7bc17905d42789e6e85c4b6109ffcd2bbc5cb1c8484425935159ac8c0c088d95b2febb17a1bb7940110ddb8341310d",
+  "signature": "0917d9554ed97925628a700f2f14280989e52103e0ca2af63f4b87e3ead07d0324c1620b3c541eeab6c5b37bc329bbfaa4d4f419b6ba00adb1f3b1a5b4c3070b",
   "generatorPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
   "generatorEquity": "0",
   "numberOfTransactions": 457,
@@ -16951,9 +16951,7 @@
       "maxMultipleOfEntityAndMainAsset": {
         "numerator": "100000",
         "denominator": "1"
-      },
-      "maxVotesPerBlock": 10000,
-      "voteMinChainAsset": "0"
+      }
     }
   },
   "statisticInfo": {
