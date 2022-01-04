@@ -286,12 +286,9 @@ export class ReplayBlockCore<T extends Block> {
     const { tpowOfWorkExemptionBlocks } = config;
     const needTPow = height > tpowOfWorkExemptionBlocks;
     const Function_Exception_Detail = { function: "insertTransactionsForReplay" };
-    const MAX_VOTES_PER_BLOCK = this.config.maxVotesPerBlock;
     const MAX_TRANSACTION_SIZE = this.config.maxTransactionSize;
     /**所有交易的sha256hash */
     const payloadHash = this.cryptoHelper.sha256();
-    /**区块打包的投票交易数 */
-    let numberOfVotes = 0;
     /**所有交易体的总字节长度 */
     let payloadLength = 0;
     /**本块交易所涉及的资产信息 */
@@ -594,9 +591,6 @@ export class ReplayBlockCore<T extends Block> {
           // 更新总字节长度
           payloadLength += tranItemBinary.length;
           await txFactory.endDealTransaction(tranItem, eventEmitter);
-          if (type === VOTE) {
-            numberOfVotes++;
-          }
         } catch (error) {
           const res = await eventEmitter.emit("error", {
             error,
@@ -610,15 +604,6 @@ export class ReplayBlockCore<T extends Block> {
         }
       }
       isDevGenerateBlock && info("finish insertTransactionsForReplay");
-
-      if (numberOfVotes > MAX_VOTES_PER_BLOCK) {
-        throw new ConsensusException(PROP_SHOULD_LTE_FIELD, {
-          prop: `numberOfVotes ${numberOfVotes}`,
-          target: "block",
-          field: `maxVotesPerBlock ${MAX_VOTES_PER_BLOCK}`,
-          ...Function_Exception_Detail,
-        });
-      }
 
       const numberOfTransactions = transactionBufferList.length;
       if (block.numberOfTransactions !== numberOfTransactions) {

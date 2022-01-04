@@ -256,10 +256,6 @@ declare namespace BFChainCore {
     issueEntityFactoryMinChainAsset: string;
     /**冻结的主权益数允许发行的最大非同质权益数量 */
     maxMultipleOfEntityAndMainAsset: FractionJSON<string>;
-    /**每个区块最大能处理的投票数 */
-    maxVotesPerBlock: number;
-    /**投票账户最少持有的主权益数 */
-    voteMinChainAsset: string;
   }
   interface GenesisBlockAssetJSON {
     /**创世块附带信息 */

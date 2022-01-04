@@ -17,7 +17,6 @@ import {
   NOT_EXIST,
   TRAN_POW_VERIFY_FAIL,
   SHOULD_NOT_DUPLICATE,
-  PROP_SHOULD_LTE_FIELD,
 } from "@bfchain/core-util-exception";
 import { QueneEventEmitter, EasyMap, isFlagInDev, Injectable, Inject } from "@bfchain/util";
 const {
@@ -221,14 +220,11 @@ export class GenerateBlockCore<T extends Block> {
     const abortForbiddenTransaction = transactionCore.abortForbiddenTransaction;
     const Function_Exception_Detail = { function: "insertTransactions" };
     const VOTE = transactionCore.transactionHelper.VOTE;
-    const MAX_VOTES_PER_BLOCK = this.config.maxVotesPerBlock;
     const MAX_TRANSACTION_SIZE = this.config.maxTransactionSize;
     const { height, generatorPublicKey, statisticInfo: blockStatisticsInfo } = block;
     const { tpowOfWorkExemptionBlocks, maxBlockSize } = this.config;
     /**所有事件的sha256hash */
     const payloadHash = this.cryptoHelper.sha256();
-    /**区块打包的投票交易数 */
-    let numberOfVotes = 0;
     /**区块打包的事件的总字节长度 */
     let payloadLength = 0;
     /**本块事件所涉及的资产信息 */
@@ -394,9 +390,6 @@ export class GenerateBlockCore<T extends Block> {
             await eventEmitter.emit("nearMaxPayloadLength", { payloadLength });
           }
           await txFactory.endDealTransaction(tranItem, eventEmitter);
-          if (type === VOTE) {
-            numberOfVotes++;
-          }
         } catch (error) {
           const res = await eventEmitter.emit("error", {
             error,
@@ -410,15 +403,6 @@ export class GenerateBlockCore<T extends Block> {
         }
       }
       isDevGenerateBlock && info("finish insertTransactions");
-
-      if (numberOfVotes > MAX_VOTES_PER_BLOCK) {
-        throw new ConsensusException(PROP_SHOULD_LTE_FIELD, {
-          prop: `numberOfVotes ${numberOfVotes}`,
-          target: "block",
-          field: `maxVotesPerBlock ${MAX_VOTES_PER_BLOCK}`,
-          ...Function_Exception_Detail,
-        });
-      }
 
       block.statisticInfo = statisticsInfo.toModel();
       block.payloadHashBuffer = await payloadHash.digest();

@@ -156,19 +156,6 @@ export class ConfigHelper {
   get maxGrabTimesOfGiftAsset() {
     return this.hookedGenesisBlock.asset.genesisAsset.maxGrabTimesOfGiftAsset;
   }
-  /**每个区块最大能处理的投票数 */
-  @cacheGetter
-  get maxVotesPerBlock() {
-    const maxVotesPerBlock = this.hookedGenesisBlock.asset.genesisAsset.maxVotesPerBlock;
-    return maxVotesPerBlock === undefined
-      ? this.maxTPSPerBlock * this.forgeInterval
-      : maxVotesPerBlock;
-  }
-  /**投票账户最少持有的主权益数 */
-  @cacheGetter
-  get voteMinChainAsset() {
-    return this.hookedGenesisBlock.asset.genesisAsset.voteMinChainAsset || "0";
-  }
   /**发行权益的账户最小持有的链主权益数量 */
   @cacheGetter
   get issueAssetMinChainAsset() {
@@ -356,8 +343,6 @@ export class ConfigHelper {
       maxMultipleOfAssetAndMainAsset: this.maxMultipleOfAssetAndMainAsset,
       issueEntityFactoryMinChainAsset: this.issueEntityFactoryMinChainAsset,
       maxMultipleOfEntityAndMainAsset: this.maxMultipleOfEntityAndMainAsset,
-      maxVotesPerBlock: this.maxVotesPerBlock,
-      voteMinChainAsset: this.voteMinChainAsset,
     };
   }
   //#endregion

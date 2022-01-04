@@ -59,13 +59,7 @@ export class VoteLogicVerifier extends TransactionLogicVerifier {
 
     eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
 
-    const accountAssets = this.helperLogicVerifier.deepClone(sender.accountAssets);
-    eventLogicVerifier.listenEventVoteEquity(
-      cloneAccountsInfo,
-      accountAssets,
-      curRound,
-      eventEmitter,
-    );
+    eventLogicVerifier.listenEventVoteEquity(cloneAccountsInfo, curRound, eventEmitter);
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 

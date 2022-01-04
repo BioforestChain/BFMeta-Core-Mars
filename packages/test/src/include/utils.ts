@@ -48,8 +48,6 @@ export const mainChainAssetData: BFChainCore.GenesisAssetJSON = {
   maxDelegateTxsPerRound: 10,
   maxGrabTimesOfGiftAsset: 1000000,
   issueAssetMinChainAsset: "50000000000000",
-  maxVotesPerBlock: 0,
-  voteMinChainAsset: "0",
   maxMultipleOfAssetAndMainAsset: {
     numerator: "100000",
     denominator: "1",
@@ -153,8 +151,6 @@ export const registerchainAssetData: BFChainCore.GenesisAssetJSON = {
   consessusBeforeSyncBlockDiff: 7,
   maxDelegateTxsPerRound: 10,
   maxGrabTimesOfGiftAsset: 1000000,
-  maxVotesPerBlock: 0,
-  voteMinChainAsset: "0",
   issueAssetMinChainAsset: "10000000000000",
   maxMultipleOfAssetAndMainAsset: {
     numerator: "100000",
