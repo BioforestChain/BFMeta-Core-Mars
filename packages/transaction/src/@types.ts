@@ -232,7 +232,7 @@ declare namespace BFChainCore {
     applyInfo: {
       address: string;
       publicKey: string;
-      genesisBlock: BlockJSON<GenesisBlockAssetJSON>;
+      genesisBlock: string;
     };
   }
 

@@ -1,10 +1,23 @@
+import { Reader } from "@bfchain/protobuf";
 import { BaseHelper } from "@bfchain/core-helper-type";
 import { JSBIHelper } from "@bfchain/core-helper-bigint";
 import { ConfigHelper } from "@bfchain/core-helper-config";
-import { BLOCK_TYPES_BASE, Block } from "@bfchain/core-model-block";
+import {
+  BLOCK_TYPES_BASE,
+  Block,
+  GenesisBlockAssetModel,
+  GenesisAssetModel,
+  GenesisAssetV0Model,
+  StatisticInfoModel,
+} from "@bfchain/core-model-block";
+import { TRANSACTION_TYPES_BASE, TransactionInBlock } from "@bfchain/core-model-transaction";
 import { AccountBaseHelper } from "@bfchain/core-helper-account-base";
 import { CoreExceptionGenerator, NOT_EXIST, NOT_MATCH } from "@bfchain/core-util-exception";
-import { PROP_SHOULD_LTE_FIELD, OUT_OF_RANGE } from "@bfchain/core-util-exception-errorcode";
+import {
+  PROP_SHOULD_LTE_FIELD,
+  OUT_OF_RANGE,
+  PROP_IS_INVALID,
+} from "@bfchain/core-util-exception-errorcode";
 import { Injectable, Inject, getHexFromArrayBuffer, decodeBinaryToHex } from "@bfchain/util";
 type RoundLastBlock = import("@bfchain/core-model-block").RoundLastBlock;
 
@@ -16,6 +29,10 @@ const {
   IllegalStateException,
   ConsensusException,
 } = CoreExceptionGenerator("HELPER", "blockHelper");
+
+const GenesisAssetModelSetup = GenesisAssetModel.$type.setup();
+const GenesisAssetV0ModelSetup = GenesisAssetV0Model.$type.setup();
+const GenesisAssetV0Model_decode = GenesisAssetV0ModelSetup.decode;
 
 @Injectable()
 export class BlockHelper {
@@ -58,6 +75,184 @@ export class BlockHelper {
         prop: `block size ${blockSize}`,
         target: "block",
         field: maxBlockSize,
+      });
+    }
+  }
+
+  genesisBlockBaseInfoReader(bytes: Uint8Array) {
+    const reader = new Reader(bytes);
+    const end = reader.len;
+
+    let k: string | number = "0";
+    let genesisBlock: BFChainCore.GenesisBlock = {
+      remark: {},
+      transactions: [],
+      roundOfflineGeneratersHashMap: {},
+    } as any;
+
+    GenesisAssetModelSetup.decode = GenesisAssetV0Model_decode;
+
+    const StatisticInfoModelSetup = StatisticInfoModel.$type.setup();
+    const GenesisBlockAssetModelSetup = GenesisBlockAssetModel.$type.setup();
+
+    let prevSignPos = 0;
+    let nextSignPos = 0;
+
+    let prevTranPos = 0;
+    let nextTranPos = 0;
+
+    try {
+      while (reader.pos < end) {
+        var t = reader.uint32();
+        switch (t >>> 3) {
+          case 21:
+            genesisBlock.asset = GenesisBlockAssetModelSetup.decode(reader, reader.uint32());
+            break;
+          case 1:
+            genesisBlock.version = reader.uint32();
+            break;
+          case 2:
+            genesisBlock.height = reader.uint32();
+            prevSignPos = reader.pos;
+            break;
+          case 3:
+            genesisBlock.signatureBuffer = reader.bytes();
+            nextSignPos = reader.pos;
+            break;
+          case 4:
+            genesisBlock.timestamp = reader.uint32();
+            break;
+          case 5:
+            genesisBlock.generatorPublicKeyBuffer = reader.bytes();
+            break;
+          case 6:
+            genesisBlock.previousBlockSignature = reader.string();
+            break;
+          case 7:
+            genesisBlock.numberOfTransactions = reader.uint32();
+            break;
+          case 8:
+            genesisBlock.magic = reader.string();
+            break;
+          case 9:
+            genesisBlock.generatorSecondPublicKeyBuffer = reader.bytes();
+            break;
+          case 10:
+            genesisBlock.signSignatureBuffer = reader.bytes();
+            break;
+          case 11:
+            genesisBlock.blockSize = reader.uint32();
+            break;
+          case 12:
+            genesisBlock.payloadHashBuffer = reader.bytes();
+            break;
+          case 13:
+            genesisBlock.payloadLength = reader.uint32();
+            break;
+          case 14:
+            genesisBlock.blockParticipation = reader.string();
+            break;
+          case 15:
+            genesisBlock.generatorEquity = reader.string();
+            break;
+          case 16:
+            reader.skip().pos++;
+            k = reader.string();
+            reader.pos++;
+            genesisBlock.remark[k] = reader.string();
+            break;
+          case 17:
+            genesisBlock.statisticInfo = StatisticInfoModelSetup.decode(reader, reader.uint32());
+            prevTranPos = reader.pos;
+            break;
+          case 18:
+            genesisBlock.reward = reader.string();
+            break;
+          case 19:
+            genesisBlock.transactions.push(TransactionInBlock.decode(reader.bytes()));
+            nextTranPos = reader.pos;
+            break;
+          case 20:
+            reader.skip().pos++;
+            k = reader.uint32();
+            reader.pos++;
+            genesisBlock.roundOfflineGeneratersHashMap[k] = reader.string();
+            break;
+          default:
+            reader.skipType(t & 7);
+            break;
+        }
+      }
+      if (!genesisBlock.generatorPublicKeyBuffer) {
+        throw new Error();
+      }
+      if (!genesisBlock.signatureBuffer) {
+        throw new Error();
+      }
+      if (genesisBlock.transactions.length <= 0) {
+        throw new Error();
+      }
+      if (
+        !(
+          genesisBlock.asset &&
+          genesisBlock.asset.genesisAsset &&
+          genesisBlock.asset.genesisAsset.bnid &&
+          genesisBlock.asset.genesisAsset.magic &&
+          genesisBlock.asset.genesisAsset.assetType &&
+          genesisBlock.asset.genesisAsset.chainName
+        )
+      ) {
+        throw new Error();
+      }
+
+      const genesisAsset = genesisBlock.asset.genesisAsset;
+      const transactions = genesisBlock.transactions;
+      const genesisDelegates: string[] = [];
+      let genesisAccount = "";
+      for (const tib of transactions) {
+        if (tib.transaction.type.includes(TRANSACTION_TYPES_BASE.DELEGATE)) {
+          genesisDelegates.push(tib.transaction.senderId);
+          continue;
+        }
+        if (tib.transaction.type.includes(TRANSACTION_TYPES_BASE.LOCATION_NAME)) {
+          genesisAccount = tib.transaction.senderId;
+        }
+      }
+
+      return {
+        bnid: genesisAsset.bnid,
+        magic: genesisAsset.magic,
+        assetType: genesisAsset.assetType,
+        chainName: genesisAsset.chainName,
+        generatorPublicKeyBuffer: genesisBlock.generatorPublicKeyBuffer,
+        signatureBuffer: genesisBlock.signatureBuffer,
+        bytesWithoutSignature: this.Buffer.concat([
+          bytes.slice(0, prevSignPos),
+          bytes.slice(nextSignPos, prevTranPos),
+          bytes.slice(nextTranPos),
+        ]),
+        genesisAccount,
+        genesisDelegates,
+      };
+    } catch (e) {
+      console.log(e);
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "bytes",
+        target: "registerChain.asset",
+      });
+    }
+  }
+
+  async verifyRegisterBlockSignature(bytes: Uint8Array) {
+    const { generatorPublicKeyBuffer, signatureBuffer, bytesWithoutSignature } =
+      this.genesisBlockBaseInfoReader(bytes);
+    const hash = await this.cryptoHelper.sha256(bytesWithoutSignature);
+    if (
+      !(await this.keypairHelper.detached_verify(hash, signatureBuffer, generatorPublicKeyBuffer))
+    ) {
+      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        prop: "genesisBlock bytes",
+        target: "registerChain",
       });
     }
   }

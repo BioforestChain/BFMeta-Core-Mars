@@ -30,7 +30,7 @@ import {
   BFChainCoreFactory,
   ConfigHelper,
 } from "@bfchain/core";
-import { QueneEventEmitter, Resolve } from "@bfchain/util";
+import { QueneEventEmitter, Resolve, getHexFromArrayBuffer } from "@bfchain/util";
 import * as path from "path";
 import {
   getSenderWithoutSecondSecret,
@@ -757,7 +757,7 @@ const getTxs = (address: string) => {
       data,
       {
         registerChain: {
-          genesisBlock,
+          genesisBlock: getHexFromArrayBuffer(genesisBlock.getBytes()),
         },
       },
       keypair,
@@ -765,7 +765,7 @@ const getTxs = (address: string) => {
     );
 
     const trsJson = trs.toJSON();
-    console.log(trsJson.asset.registerChain.genesisBlock.transactions[0]);
+    console.log(trsJson.asset.registerChain.genesisBlock);
     const xx = await fullBfchainCore.transaction.recombineTransaction(trsJson);
     await fullBfchainCore.transactionHelper.verifyTransactionSignature(xx);
 

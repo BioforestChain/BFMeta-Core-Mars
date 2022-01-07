@@ -107,14 +107,11 @@ export class Block<AJ extends object = object>
     this.signSignatureBuffer = parseHexToArrayBuffer(value);
   }
 
-  /// 往后开始自由组合
-  static INC = 11;
-
   /**区块大小 */
-  @Field.d(Block.INC++, "uint32")
+  @Field.d(11, "uint32")
   blockSize!: number;
   /**交易 hash */
-  @Field.d(Block.INC++, "bytes")
+  @Field.d(12, "bytes")
   payloadHashBuffer!: Uint8Array; // 交易还在传输，这个hash代表所有的交易
   get payloadHash(): string {
     return getHexFromArrayBuffer(this.payloadHashBuffer);
@@ -123,16 +120,16 @@ export class Block<AJ extends object = object>
     this.payloadHashBuffer = parseHexToArrayBuffer(value);
   }
   /**交易 hash 长度 */
-  @Field.d(Block.INC++, "uint32")
+  @Field.d(13, "uint32")
   payloadLength!: number; // 交易还在传输，这个length代表所有的交易
   /**区块参与度 */
-  @Field.d(Block.INC++, "string")
+  @Field.d(14, "string")
   blockParticipation!: string;
   /**打块账户权益 */
-  @Field.d(Block.INC++, "string")
+  @Field.d(15, "string")
   generatorEquity!: string;
   /**交易的备注信息 */
-  @MapField.d(Block.INC++, "string", "string")
+  @MapField.d(16, "string", "string")
   remark!: { [key: string]: string };
   get remarkMap() {
     // 直接 return TrsRemarkMapWM.forceGet(this) 类型识别错误
@@ -140,7 +137,7 @@ export class Block<AJ extends object = object>
     return remarkMap;
   }
   /**区块统计信息 */
-  @Field.d(Block.INC++, StatisticInfoModel)
+  @Field.d(17, StatisticInfoModel)
   statisticInfo!: StatisticInfoModel;
   /**区块总资产数量 */
   get totalAmount() {
@@ -151,10 +148,10 @@ export class Block<AJ extends object = object>
     return this.statisticInfo.totalFee || "0";
   }
   /**区块奖励 */
-  @Field.d(Block.INC++, "string", "required", "0")
+  @Field.d(18, "string", "required", "0")
   reward!: string;
   /**区块交易 */
-  @Field.d(Block.INC++, "bytes", "repeated")
+  @Field.d(19, "bytes", "repeated")
   transactionBufferList!: Uint8Array[];
   get transactions() {
     const { transactionBufferList } = this;
@@ -180,6 +177,24 @@ export class Block<AJ extends object = object>
     BUFFER_LIST_TRANSACTION_LIST_WM.set(bufList, trsList);
     this.transactionBufferList = bufList;
   }
+
+  @MapField.d(20, "uint32", "string")
+  roundOfflineGeneratersHashMap!: BFChainCore.RoundOfflineGeneratersHashMap;
+  _roundOfflineGeneratersReadonlyMap?: BFChainCore.RoundOfflineGeneratersReadonlyMap;
+  get roundOfflineGeneratersReadonlyMap(): BFChainCore.RoundOfflineGeneratersReadonlyMap {
+    const map = new Map<number, readonly string[]>();
+    for (const rIndex in this.roundOfflineGeneratersHashMap) {
+      const offlineGeneraters = this.roundOfflineGeneratersHashMap[rIndex];
+      const offlineGeneraterList: string[] = offlineGeneraters.split(",");
+
+      map.set(parseInt(rIndex), offlineGeneraterList);
+    }
+    return map;
+  }
+
+  /// 新增的字段从 22 开始，21 固定为 asset
+  static INC = 22;
+
   // @cacheBytesGetter
   getBytes(
     skipSignature?: boolean,
@@ -201,19 +216,7 @@ export class Block<AJ extends object = object>
     const blockWrapper = Object.create(this, props);
     return this.$type.encode(blockWrapper).finish();
   }
-  @MapField.d(Block.INC++, "uint32", "string")
-  roundOfflineGeneratersHashMap!: BFChainCore.RoundOfflineGeneratersHashMap;
-  _roundOfflineGeneratersReadonlyMap?: BFChainCore.RoundOfflineGeneratersReadonlyMap;
-  get roundOfflineGeneratersReadonlyMap(): BFChainCore.RoundOfflineGeneratersReadonlyMap {
-    const map = new Map<number, readonly string[]>();
-    for (const rIndex in this.roundOfflineGeneratersHashMap) {
-      const offlineGeneraters = this.roundOfflineGeneratersHashMap[rIndex];
-      const offlineGeneraterList: string[] = offlineGeneraters.split(",");
 
-      map.set(parseInt(rIndex), offlineGeneraterList);
-    }
-    return map;
-  }
   get delay() {
     for (let k in this.roundOfflineGeneratersHashMap) {
       return true;
@@ -233,19 +236,11 @@ export class Block<AJ extends object = object>
           .issueEntityFactoryMinChainAsset;
         delete ((assetJson as BFChainCore.GenesisBlockAssetJSON).genesisAsset as any)
           .maxMultipleOfEntityAndMainAsset;
-        delete ((assetJson as BFChainCore.GenesisBlockAssetJSON).genesisAsset as any)
-          .maxVotesPerBlock;
-        delete ((assetJson as BFChainCore.GenesisBlockAssetJSON).genesisAsset as any)
-          .voteMinChainAsset;
       } else if (this.version < 4) {
         delete ((assetJson as BFChainCore.GenesisBlockAssetJSON).genesisAsset as any)
           .issueEntityFactoryMinChainAsset;
         delete ((assetJson as BFChainCore.GenesisBlockAssetJSON).genesisAsset as any)
           .maxMultipleOfEntityAndMainAsset;
-        delete ((assetJson as BFChainCore.GenesisBlockAssetJSON).genesisAsset as any)
-          .maxVotesPerBlock;
-        delete ((assetJson as BFChainCore.GenesisBlockAssetJSON).genesisAsset as any)
-          .voteMinChainAsset;
       }
     }
 

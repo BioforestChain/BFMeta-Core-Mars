@@ -4,8 +4,10 @@ import {
   NOT_EXIST,
   PROP_IS_REQUIRE,
   SHOULD_NOT_EXIST,
+  SHOULD_NOT_BE,
+  NOT_MATCH,
 } from "@bfchain/core-util-exception";
-import { parseHexToArrayBuffer, Injectable, Inject } from "@bfchain/util";
+import { getHexFromArrayBuffer, parseHexToArrayBuffer, Injectable, Inject } from "@bfchain/util";
 import {
   ACCOUNT_STATUS,
   CustomTransaction,
@@ -413,21 +415,52 @@ export class CustomTransactionEvent {
       return;
     }
     if (applyResult.type === "registerChain") {
-      const { genesisBlock: genesisBlockJson } = applyResult.applyInfo;
-      let chainConfig = this.configMap.get(genesisBlockJson.magic);
-      if (!chainConfig) {
-        // 没有注册链的配置文件就生成一个
-        chainConfig = new ConfigHelper(genesisBlockJson, this.configHelper.business);
-      }
+      const config = this.configHelper;
+      const { genesisBlock } = applyResult.applyInfo;
 
-      const genesisBlock = await this._blockCore.recombineBlock<
-        BFChainCore.Block<BFChainCore.GenesisBlockAssetJSON>
-      >(genesisBlockJson);
-      await this._blockCore
-        .getBlockFactoryFromHeight<BFChainCore.Block<BFChainCore.GenesisBlockAssetJSON>>(
-          genesisBlock.height,
-        )
-        .verify(genesisBlock, chainConfig);
+      if (!this.baseHelper.isHexString(genesisBlock)) {
+        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          prop: "genesisBlock",
+          ...Function_Exception_Detail,
+        });
+      }
+      const bytes = parseHexToArrayBuffer(genesisBlock);
+      await this._blockCore.blockHelper.verifyRegisterBlockSignature(bytes);
+      const baseInfo = this._blockCore.blockHelper.genesisBlockBaseInfoReader(bytes);
+      const { bnid, magic, assetType, chainName } = baseInfo;
+      if (magic === config.magic) {
+        throw new ArgumentIllegalException(SHOULD_NOT_BE, {
+          to_compare_prop: `magic ${magic}`,
+          to_target: "register genesisBlock",
+          be_compare_prop: config.magic,
+          ...Function_Exception_Detail,
+        });
+      }
+      if (assetType === config.assetType) {
+        throw new ArgumentIllegalException(SHOULD_NOT_BE, {
+          to_compare_prop: `assetType ${assetType}`,
+          to_target: "register genesisBlock",
+          be_compare_prop: config.assetType,
+          ...Function_Exception_Detail,
+        });
+      }
+      if (chainName === config.chainName) {
+        throw new ArgumentIllegalException(SHOULD_NOT_BE, {
+          to_compare_prop: `chainName ${chainName}`,
+          to_target: "register genesisBlock",
+          be_compare_prop: config.chainName,
+          ...Function_Exception_Detail,
+        });
+      }
+      if (config.initials !== bnid) {
+        throw new ArgumentIllegalException(NOT_MATCH, {
+          to_compare_prop: `initials ${config.initials}`,
+          be_compare_prop: `bnid ${bnid}`,
+          to_target: "config",
+          be_target: "register genesisBlock",
+          ...Function_Exception_Detail,
+        });
+      }
     }
     if (applyResult.type === "registerLocationName") {
       const { sourceChainName, sourceChainMagic, name, possessorAddress } = applyResult.applyInfo;
@@ -809,6 +842,19 @@ export class CustomTransactionEvent {
     }
     if (applyResult.type === "registerChain") {
       const { address, publicKey, genesisBlock } = applyResult.applyInfo;
+      const baseInfo = this._blockCore.blockHelper.genesisBlockBaseInfoReader(
+        parseHexToArrayBuffer(genesisBlock),
+      );
+      const {
+        bnid,
+        magic,
+        assetType,
+        chainName,
+        generatorPublicKeyBuffer,
+        signatureBuffer,
+        genesisAccount,
+        genesisDelegates,
+      } = baseInfo;
 
       return eventEmitter.emit("registerChain", {
         type: "registerChain",
@@ -816,7 +862,17 @@ export class CustomTransactionEvent {
         applyInfo: {
           address,
           publicKeyBuffer: parseHexToArrayBuffer(publicKey),
-          genesisBlock,
+          genesisBlock: {
+            bnid,
+            magic,
+            assetType,
+            chainName,
+            generatorPublicKey: getHexFromArrayBuffer(generatorPublicKeyBuffer),
+            signature: getHexFromArrayBuffer(signatureBuffer),
+            genesisAccount,
+            genesisDelegates,
+            hexString: genesisBlock,
+          },
         },
       });
     }
