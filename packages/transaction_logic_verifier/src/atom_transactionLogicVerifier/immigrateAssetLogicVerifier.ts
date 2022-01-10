@@ -67,25 +67,22 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
 
     const fromChain = converter.fromChainId.decode(migrateCertificate.body.fromChainId, true);
     const fromMagic = transaction.fromMagic;
-    let otherChainConfig = this.configMap.get(fromMagic);
-    if (!otherChainConfig) {
-      const memchain = await accountGetterHelper.getChain(fromMagic);
-      if (!memchain) {
-        throw new ConsensusException(NOT_EXIST, {
-          prop: `Chain with magic ${fromChain.magic}`,
-          target: "blockChain",
-          ...Function_Exception_Detail,
-        });
-      }
-      otherChainConfig = new ConfigHelper(memchain.genesisBlock, this.configHelper.business);
-      this.configMap.set(fromMagic, otherChainConfig);
+
+    const memChain = await accountGetterHelper.getChain(fromMagic);
+    if (!memChain) {
+      throw new ConsensusException(NOT_EXIST, {
+        prop: `Chain with magic ${fromChain.magic}`,
+        target: "blockChain",
+        ...Function_Exception_Detail,
+      });
     }
+    const genesisBlock = memChain.genesisBlock;
     await this.migrateCertificateHelper.checkChainInfo("fromChain", fromChain, {
-      chainName: otherChainConfig.chainName,
-      magic: otherChainConfig.magic,
-      generatorPublicKey: otherChainConfig.generatorPublicKey,
-      genesisBlockSignature: otherChainConfig.signature,
-      genesisDelegates: this.transactionHelper.genesisDelegates(otherChainConfig),
+      chainName: genesisBlock.chainName,
+      magic: genesisBlock.magic,
+      generatorPublicKey: genesisBlock.generatorPublicKey,
+      genesisBlockSignature: genesisBlock.signature,
+      genesisDelegates: genesisBlock.genesisDelegates,
     });
 
     const { publicKey, secondPublicKey, signSignature } = converter.toAuthSignature.decode(

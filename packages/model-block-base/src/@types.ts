@@ -8,6 +8,18 @@ declare namespace BFChainCore {
 
   type GetBlockAssetJSON<T extends Block> = T["ASSET_JSON_TYPE"];
 
+  interface RegisterChainInfo {
+    bnid: string;
+    magic: string;
+    assetType: string;
+    chainName: string;
+    generatorPublicKey: string;
+    signature: string;
+    genesisAccount: string;
+    genesisDelegates: string[];
+    hexString: string;
+  }
+
   interface BlockWithoutTransactionJSON<AssetJSON extends object = object> {
     /**区块版本号 */
     version: number;

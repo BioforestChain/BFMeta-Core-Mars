@@ -84,7 +84,7 @@ declare namespace BFChainCore {
   };
 
   type ChainInfo = {
-    genesisBlock: BlockJSON<GenesisBlockAssetJSON>;
+    genesisBlock: BFChainCore.RegisterChainInfo;
     height: number;
   };
 
