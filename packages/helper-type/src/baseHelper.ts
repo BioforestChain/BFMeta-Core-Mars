@@ -534,6 +534,16 @@ export class BaseHelper {
   }
 
   /**
+   * 是否是一个 16 进制字符串
+   *
+   * @param str
+   * @returns
+   */
+  isHexString(str: unknown): str is string {
+    return typeof str === "string" && /^[A-F0-9]+$/i.test(str);
+  }
+
+  /**
    * 是否是一个数组
    *
    * @param arr

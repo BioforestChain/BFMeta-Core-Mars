@@ -12,6 +12,6 @@ export class CommonBlock
   implements BFChainCore.CommonBlockJSON
 {
   toJSON!: () => BFChainCore.CommonBlockJSON;
-  @Field.d(CommonBlock.INC++, CommonBlockAssetModel)
+  @Field.d(21, CommonBlockAssetModel)
   asset!: CommonBlockAssetModel;
 }

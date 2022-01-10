@@ -12,6 +12,6 @@ export class GenesisBlock
   implements BFChainCore.GenesisBlockJSON
 {
   toJSON!: () => BFChainCore.GenesisBlockJSON;
-  @Field.d(GenesisBlock.INC++, GenesisBlockAssetModel)
+  @Field.d(21, GenesisBlockAssetModel)
   asset!: GenesisBlockAssetModel;
 }

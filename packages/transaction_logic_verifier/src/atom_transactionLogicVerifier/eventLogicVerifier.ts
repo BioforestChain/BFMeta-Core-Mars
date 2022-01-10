@@ -1071,7 +1071,7 @@ export class EventLogicVerifier {
           accountGetterHelper,
         );
 
-        const { magic, assetType, chainName } = genesisBlock.asset.genesisAsset;
+        const { magic, assetType, chainName } = genesisBlock;
 
         // 验证链网络标识符是否已经存在
         const memMagic = await accountGetterHelper.getMagic(magic);
@@ -1107,8 +1107,8 @@ export class EventLogicVerifier {
         }
 
         // 链上是否已经存在这个链的创世块
-        const memchain = await accountGetterHelper.getChain(magic);
-        if (memchain) {
+        const memChain = await accountGetterHelper.getChain(magic);
+        if (memChain) {
           throw new ConsensusException(ALREADY_EXIST, {
             prop: `Chain with magic ${magic}`,
             target: "blockChain",

@@ -1,7 +1,6 @@
 import { Block } from "@bfchain/core-model-block-base";
 import { RoundLastBlockAssetModel } from "@bfchain/core-model-block-asset";
 import { Type, Field } from "@bfchain/protobuf";
-import { CommonBlock } from "./commonBlock.block";
 
 /**
  * roundLastBlock 区块模型
@@ -13,6 +12,6 @@ export class RoundLastBlock
   implements BFChainCore.RoundLastBlockJSON
 {
   toJSON!: () => BFChainCore.RoundLastBlockJSON;
-  @Field.d(CommonBlock.INC++, RoundLastBlockAssetModel)
+  @Field.d(21, RoundLastBlockAssetModel)
   asset!: RoundLastBlockAssetModel;
 }

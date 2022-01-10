@@ -536,8 +536,9 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
   }
 
   async function getGenesisBlockAsync() {
-    // const blockJson = require(process.cwd() + "/assets/bft-genesisBlock-mainnet-57b-128s.json");
-    const blockJson = require(process.cwd() + "/assets/genesisBlock-57b-128s.json");
+    const blockJson = require(process.cwd() + "/assets/bft-genesisBlock-mainnet-57b-128s.json");
+    // const blockJson = require(process.cwd() + "/assets/bft-genesisBlock-testnet-10b-10s.json");
+    // const blockJson = require(process.cwd() + "/assets/genesisBlock-57b-128s.json");
 
     const height = await core.patchInstaller.getPatchEffectiveAfterHeightByVersion(
       blockJson.version,
@@ -547,13 +548,18 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
 
     const block = await core.block.recombineBlock(blockJson);
 
-    const xx = block.toJSON();
+    const bytes = block.getBytes();
 
-    const yy = await core.block.recombineBlock(xx);
+    const xx = core.blockHelper.genesisBlockBaseInfoReader(bytes);
+    console.log(xx);
 
-    const factory = core.block.getBlockFactoryFromHeight(1);
+    // const xx = block.toJSON();
 
-    factory.commonBlockVerify.verifyBlockSize(yy);
+    // const yy = await core.block.recombineBlock(xx);
+
+    // const factory = core.block.getBlockFactoryFromHeight(1);
+
+    // factory.commonBlockVerify.verifyBlockSize(yy);
 
     // await core.patchInstaller.changeHeight(Number.MAX_SAFE_INTEGER);
 

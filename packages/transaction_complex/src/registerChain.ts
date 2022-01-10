@@ -18,7 +18,13 @@ import {
   PROP_IS_INVALID,
   SHOULD_NOT_BE,
 } from "@bfchain/core-util-exception";
-import { Injectable, Inject, TaskList } from "@bfchain/util";
+import {
+  Injectable,
+  Inject,
+  TaskList,
+  getHexFromArrayBuffer,
+  parseHexToArrayBuffer,
+} from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
   "RegisterChainTransactionFactory",
@@ -127,23 +133,24 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
       target: "registerChainAsset",
     } as const;
 
-    const genesisBlockJson = registerChain.genesisBlock;
-    if (!genesisBlockJson) {
+    const genesisBlockHexString = registerChain.genesisBlock;
+    if (!genesisBlockHexString) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "genesisBlock",
         ...RegisterChainAsset_Exception_Detail,
       });
     }
-
-    if (!(genesisBlockJson.asset && genesisBlockJson.asset.genesisAsset)) {
+    if (!this.baseHelper.isHexString(genesisBlockHexString)) {
       throw new ArgumentIllegalException(PROP_IS_INVALID, {
         prop: "genesisBlock",
         ...RegisterChainAsset_Exception_Detail,
       });
     }
 
-    const { bnid, magic, assetType, chainName } = genesisBlockJson.asset.genesisAsset;
-
+    const bytes = parseHexToArrayBuffer(genesisBlockHexString);
+    await this._blockCore.blockHelper.verifyRegisterBlockSignature(bytes);
+    const baseInfo = this._blockCore.blockHelper.genesisBlockBaseInfoReader(bytes);
+    const { bnid, magic, assetType, chainName } = baseInfo;
     if (magic === config.magic) {
       throw new ArgumentIllegalException(SHOULD_NOT_BE, {
         to_compare_prop: `magic ${magic}`,
@@ -152,7 +159,6 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
         ...RegisterChainAsset_Exception_Detail,
       });
     }
-
     if (assetType === config.assetType) {
       throw new ArgumentIllegalException(SHOULD_NOT_BE, {
         to_compare_prop: `assetType ${assetType}`,
@@ -161,7 +167,6 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
         ...RegisterChainAsset_Exception_Detail,
       });
     }
-
     if (chainName === config.chainName) {
       throw new ArgumentIllegalException(SHOULD_NOT_BE, {
         to_compare_prop: `chainName ${chainName}`,
@@ -170,32 +175,15 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
         ...RegisterChainAsset_Exception_Detail,
       });
     }
-
     if (config.initials !== bnid) {
       throw new ArgumentIllegalException(NOT_MATCH, {
         to_compare_prop: `initials ${config.initials}`,
-        be_compare_prop: `bnid ${genesisBlockJson.remark.bnid}`,
+        be_compare_prop: `bnid ${bnid}`,
         to_target: "config",
         be_target: "genesisBlockJson.asset.genesisBlock",
         ...Function_Exception_Detail,
       });
     }
-
-    let chainConfig = this.configMap.get(magic);
-    if (!chainConfig) {
-      // 没有注册链的配置文件就生成一个
-      chainConfig = new ConfigHelper(genesisBlockJson, this.configHelper.business);
-      this.configMap.set(magic, chainConfig);
-    }
-
-    const genesisBlock = await this._blockCore.recombineBlock<
-      BFChainCore.Block<BFChainCore.GenesisBlockAssetJSON>
-    >(genesisBlockJson);
-    await this._blockCore
-      .getBlockFactoryFromHeight<BFChainCore.Block<BFChainCore.GenesisBlockAssetJSON>>(
-        genesisBlockJson.height,
-      )
-      .verify(genesisBlock, chainConfig);
   }
 
   @Inject("bfchain-core:BlockCore")
@@ -230,6 +218,22 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
     tasks.next = super.applyTransaction(transaction, eventEmitter, config);
     const { senderId, senderPublicKeyBuffer } = transaction;
     const { genesisBlock } = transaction.asset.registerChain;
+
+    const baseInfo = this._blockCore.blockHelper.genesisBlockBaseInfoReader(
+      parseHexToArrayBuffer(genesisBlock),
+    );
+
+    const {
+      bnid,
+      magic,
+      assetType,
+      chainName,
+      generatorPublicKeyBuffer,
+      signatureBuffer,
+      genesisAccount,
+      genesisDelegates,
+    } = baseInfo;
+
     // 冻结发起账户
     tasks.next = eventEmitter.emit("frozenAccount", {
       type: "frozenAccount",
@@ -247,7 +251,17 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
       applyInfo: {
         address: senderId,
         publicKeyBuffer: senderPublicKeyBuffer,
-        genesisBlock,
+        genesisBlock: {
+          bnid,
+          magic,
+          assetType,
+          chainName,
+          generatorPublicKey: getHexFromArrayBuffer(generatorPublicKeyBuffer),
+          signature: getHexFromArrayBuffer(signatureBuffer),
+          genesisAccount,
+          genesisDelegates,
+          hexString: genesisBlock,
+        },
       },
     });
     return tasks.toPromise();
