@@ -201,7 +201,7 @@ declare namespace BFChainCore {
   type ApplyInfo_RegisterChain = {
     address: string;
     publicKeyBuffer?: Uint8Array;
-    genesisBlock: BFChainCore.RegisterChainInfo;
+    genesisBlock: BFChainCore.RegisterChainInfoJSON;
   };
   /**注册链的相关事件 */
   type ApplyTransactionRegisterChainEvent<EVENTNAME, T extends Transaction = Transaction> =

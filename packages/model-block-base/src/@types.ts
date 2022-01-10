@@ -8,7 +8,7 @@ declare namespace BFChainCore {
 
   type GetBlockAssetJSON<T extends Block> = T["ASSET_JSON_TYPE"];
 
-  interface RegisterChainInfo {
+  interface RegisterChainInfoJSON {
     bnid: string;
     magic: string;
     assetType: string;
