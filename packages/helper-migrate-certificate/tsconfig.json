@@ -32,6 +32,8 @@
   ],
   "files": [
     "src/@types.ts",
+    "src/config/config.ts",
+    "src/config/index.ts",
     "src/constants/index.ts",
     "src/converterMap/converterMap.ts",
     "src/converterMap/index.ts",

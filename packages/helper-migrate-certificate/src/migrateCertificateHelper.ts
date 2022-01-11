@@ -14,6 +14,7 @@ import { AsymmetricHelper } from "@bfchain/core-helper-asymmetric";
 import { AccountBaseHelper } from "@bfchain/core-helper-account-base";
 import { TransactionHelper } from "@bfchain/core-helper-transaction";
 import { CrossChainConverterFactory } from "./CrossChainConverterFactory";
+import { Config } from "./config";
 import { KEY_SPLITTER } from "./constants";
 
 const { ArgumentIllegalException } = CoreExceptionGenerator("HELPER", "transactionHelper");
@@ -27,15 +28,10 @@ export class MigrateCertificateHelper {
     public asymmetricHelper: AsymmetricHelper,
     public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,
+    public config: Config,
   ) {}
 
-  getMigrateCertificateConverter(
-    migrateCertificate?: BFChainCore.CrossChain.MigrateCertificateJSON,
-  ) {
-    return CrossChainConverterFactory(migrateCertificate);
-  }
-
-  checkVersion(version: any) {
+  private __checkVersion(version: any) {
     if (!version) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "version",
@@ -52,7 +48,7 @@ export class MigrateCertificateHelper {
     }
   }
 
-  checkTimestamp(timestamp: any) {
+  private __checkTimestamp(timestamp: any) {
     if (!timestamp) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "timestamp",
@@ -69,7 +65,7 @@ export class MigrateCertificateHelper {
     }
   }
 
-  checkAssets(assets: string) {
+  private __checkAssets(assets: string) {
     if (!assets) {
       throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
         prop: "assets",
@@ -92,6 +88,12 @@ export class MigrateCertificateHelper {
         function: "checkAssets",
       });
     }
+  }
+
+  getMigrateCertificateConverter(
+    migrateCertificate?: BFChainCore.CrossChain.MigrateCertificateJSON,
+  ) {
+    return CrossChainConverterFactory(migrateCertificate);
   }
 
   /**
@@ -196,7 +198,7 @@ export class MigrateCertificateHelper {
       args;
     const converter = CrossChainConverterFactory();
 
-    this.checkAssets(assetPrealnum);
+    this.__checkAssets(assetPrealnum);
 
     const accountBaseHelper = this.accountBaseHelper;
     const keypair = await accountBaseHelper.createSecretKeypair(senderSecret);
@@ -205,7 +207,7 @@ export class MigrateCertificateHelper {
     let migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON = {
       body: {
         /**凭证版本 */
-        version: config.version.toString(),
+        version: this.config.version,
         /**迁出凭证生成时间 Date.now().getTimes() */
         timestamp: this.chainTimeHelper.now(true),
         /**迁出链的唯一标识 version+自定义格式，目前是 version/magic/chainName/genesisBlockSignature */
@@ -457,14 +459,14 @@ export class MigrateCertificateHelper {
 
     const { body, signature, fromAuthSignature, toAuthSignature } = migrateCertificate;
 
-    this.checkVersion(body.version);
-    this.checkTimestamp(body.timestamp);
+    this.__checkVersion(body.version);
+    this.__checkTimestamp(body.timestamp);
     converter.fromChainId.checkDecodeArgs(body.fromChainId);
     converter.toChainId.checkDecodeArgs(body.toChainId);
     converter.fromId.checkDecodeArgs(body.fromId);
     converter.toId.checkDecodeArgs(body.toId);
     converter.assetId.checkDecodeArgs(body.assetId);
-    this.checkAssets(body.assetPrealnum);
+    this.__checkAssets(body.assetPrealnum);
     converter.signature.checkDecodeArgs(signature);
 
     const baseHelper = this.baseHelper;

@@ -474,6 +474,7 @@ export class EventLogicVerifier {
         ) {
           throw new ConsensusException(ACCOUNT_FROZEN, {
             address,
+            status: accountStatus,
             ...Function_Exception_Detail,
           });
         }
