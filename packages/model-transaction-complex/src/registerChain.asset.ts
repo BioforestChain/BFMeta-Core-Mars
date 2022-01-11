@@ -24,6 +24,17 @@ export class RegisterChainModel
       genesisBlock: this.genesisBlock,
     };
   }
+
+  static fromObject<T extends Message>(
+    this: BFChainProtobuf.Constructor<T>,
+    object: BFChainProtobuf.ObjectFromType<RegisterChainModel>,
+  ) {
+    const res = super.fromObject(object) as RegisterChainModel;
+    if (res !== object) {
+      object.genesisBlock && (res.genesisBlock = object.genesisBlock);
+    }
+    return res as unknown as T;
+  }
 }
 
 /**
