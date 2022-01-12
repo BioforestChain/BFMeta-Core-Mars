@@ -363,7 +363,8 @@ export class MigrateCertificateHelper {
     );
   }
 
-  async checkAuthAccount(
+  private async __checkAuthAccount(
+    key: string,
     config: BFChainCore.CrossChain.ChainBaseConfig,
     authSignature: BFChainCore.AccountSignatureJSON,
   ) {
@@ -377,7 +378,7 @@ export class MigrateCertificateHelper {
     genesisDelegates.push(genesisAddress);
     if (!genesisDelegates.includes(address)) {
       throw new ArgumentIllegalException(NOT_MATCH, {
-        to_compare_prop: `signature address ${address}`,
+        to_compare_prop: `${key} auth signature address ${address}`,
         be_compare_prop: "genesis delegate address",
         to_target: "migrateCertificate",
         be_target: "fromChain",
@@ -422,7 +423,7 @@ export class MigrateCertificateHelper {
     }
 
     if (authSignature) {
-      await this.checkAuthAccount(config, authSignature);
+      await this.__checkAuthAccount(key, config, authSignature);
     }
   }
 
@@ -504,7 +505,7 @@ export class MigrateCertificateHelper {
             ...MigrateCertificate_Exception_Detail,
           });
         }
-        await this.checkAuthAccount(fromChainBaseConfig, fromAuthAccountSignature);
+        await this.__checkAuthAccount("fromChain", fromChainBaseConfig, fromAuthAccountSignature);
       }
     }
 
@@ -539,7 +540,7 @@ export class MigrateCertificateHelper {
             ...MigrateCertificate_Exception_Detail,
           });
         }
-        await this.checkAuthAccount(toChainBaseConfig, toAuthAccountSignature);
+        await this.__checkAuthAccount("toChain", toChainBaseConfig, toAuthAccountSignature);
       }
     }
 
