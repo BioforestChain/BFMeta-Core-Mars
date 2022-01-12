@@ -350,15 +350,11 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
 
           /// 再随机挑选繁忙节点
           if (busyChainChannels.size !== 0) {
-            const iterator = busyChainChannels.values();
             let i = Math.floor(busyChainChannels.size * Math.random());
-            let tryFreeChainChannel: DH | undefined;
-            while (i >= 0) {
-              tryFreeChainChannel = iterator.next().value;
-              i--;
-            }
-            if (tryFreeChainChannel) {
-              freeChainChannel(tryFreeChainChannel);
+            for (const cc of busyChainChannels) {
+              if (i-- <= 0) {
+                freeChainChannel(cc);
+              }
             }
           }
         });
@@ -818,7 +814,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       taskResponseCmd: DUPLEX_API_CMD.INDEX_TRANSACTION_RETURN,
     });
     /// 根据查询条件，定制一个节点的过滤器
-    let filter: BFChainCore.ChainChannelGroup.Filter<DH> = () => true;
+    let filter: BFChainCore.ChainChannelGroup.Filter<DH> | undefined;
     {
       const queryMaxHeight = query.maxHeight;
       if (typeof queryMaxHeight === "number") {
