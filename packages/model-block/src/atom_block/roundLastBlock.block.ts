@@ -12,6 +12,7 @@ export class RoundLastBlock
   implements BFChainCore.RoundLastBlockJSON
 {
   toJSON!: () => BFChainCore.RoundLastBlockJSON;
-  @Field.d(21, RoundLastBlockAssetModel)
+  // 这是个天坑
+  @Field.d(22, RoundLastBlockAssetModel)
   asset!: RoundLastBlockAssetModel;
 }
