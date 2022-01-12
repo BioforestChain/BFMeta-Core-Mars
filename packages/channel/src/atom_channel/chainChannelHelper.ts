@@ -7,11 +7,7 @@ import {
   safePromiseOffThen,
   cacheGetter,
 } from "@bfchain/util";
-import {
-  CoreExceptionGenerator,
-  INVALID_PARAMS,
-  INVALID_PARAMS_FIELD,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import {
   QueryTransactionArgModel,
   QueryTransactionReturnModel,
@@ -55,8 +51,7 @@ export class ChainChannelHelper {
     params: ArrayBuffer | Uint8Array,
   ): Promise<QueryTransactionArgModel> {
     if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
-      throw new ArgumentIllegalException(INVALID_PARAMS, {
-        function: "boxQueryTransactionArg",
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS, {
         params,
       });
     }
@@ -66,8 +61,7 @@ export class ChainChannelHelper {
         params instanceof Uint8Array ? params : new Uint8Array(params),
       );
     } catch (error) {
-      throw new ArgumentFormatException(INVALID_PARAMS, {
-        function: "boxQueryTransactionArg",
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_PARAMS, {
         error,
         params,
       });
@@ -99,8 +93,7 @@ export class ChainChannelHelper {
     if (type) {
       has_query_params = true;
       if (!BH.isValidTransactionType(type)) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-          function: "boxQueryTransactionArg",
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           field: `type ${type}`,
         });
       }
@@ -109,8 +102,7 @@ export class ChainChannelHelper {
       has_query_params = true;
       for (const type of types) {
         if (!BH.isValidTransactionType(type)) {
-          throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-            function: "boxQueryTransactionArg",
+          throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
             field: `types.type ${type}`,
           });
         }
@@ -120,8 +112,7 @@ export class ChainChannelHelper {
       has_query_params = true;
       // 只验证签名长度
       if (signature.length !== ChainChannelHelper.MAX_SIGNATURE_LENGTH) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-          function: "boxQueryTransactionArg.query",
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           field: `signature ${signature}`,
         });
       }
@@ -130,8 +121,7 @@ export class ChainChannelHelper {
       has_query_params = true;
       // 不再验证字符串是否isAddress，只验证字符串的长度符合地址的最大长度即可
       if (senderId.length > ChainChannelHelper.MAX_ADDRESS_LENGTH) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-          function: "boxQueryTransactionArg.query",
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           field: `senderId ${senderId}`,
         });
       }
@@ -139,8 +129,7 @@ export class ChainChannelHelper {
     if (recipientId) {
       has_query_params = true;
       if (recipientId.length > ChainChannelHelper.MAX_ADDRESS_LENGTH) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-          function: "boxQueryTransactionArg.query",
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           field: `recipientId ${recipientId}`,
         });
       }
@@ -149,8 +138,7 @@ export class ChainChannelHelper {
       has_query_params = true;
       // 不再验证字符串是否isAddress，只验证字符串的长度符合地址的最大长度即可
       if (address.length > ChainChannelHelper.MAX_ADDRESS_LENGTH) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-          function: "boxQueryTransactionArg.query",
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           field: `address ${address}`,
         });
       }
@@ -158,8 +146,7 @@ export class ChainChannelHelper {
     if (dappid) {
       has_query_params = true;
       if (!BH.isValidDAppId(dappid)) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-          function: "boxQueryTransactionArg.query",
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           field: `dappid ${dappid}`,
         });
       }
@@ -167,8 +154,7 @@ export class ChainChannelHelper {
     if (lns) {
       has_query_params = true;
       if (!BH.isValidLnsName(lns)) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-          function: "boxQueryTransactionArg.query",
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           field: `lns ${lns}`,
         });
       }
@@ -176,14 +162,12 @@ export class ChainChannelHelper {
     if (storage) {
       has_query_params = true;
       if (!(storage.key && storage.key.length)) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-          function: "boxQueryTransactionArg.query",
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           field: `storage.key ${storage.key}`,
         });
       }
       if (!(storage.value && storage.value.length)) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-          function: "boxQueryTransactionArg.query",
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           field: `storage.value ${storage.value}`,
         });
       }
@@ -192,8 +176,7 @@ export class ChainChannelHelper {
       has_query_params = true;
       // 只验证签名长度
       if (blockSignature.length !== ChainChannelHelper.MAX_SIGNATURE_LENGTH) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-          function: "boxQueryTransactionArg.query",
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           field: `blockSignature ${blockSignature}`,
         });
       }
@@ -201,8 +184,7 @@ export class ChainChannelHelper {
     if (minHeight !== undefined) {
       has_query_params = true;
       if (!BH.isUint32(minHeight)) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-          function: "boxQueryTransactionArg.query",
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           field: `minHeight ${minHeight}`,
         });
       }
@@ -210,8 +192,7 @@ export class ChainChannelHelper {
     if (maxHeight !== undefined) {
       has_query_params = true;
       if (!BH.isUint32(maxHeight)) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-          function: "boxQueryTransactionArg.query",
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           field: `maxHeight ${maxHeight}`,
         });
       }
@@ -219,8 +200,7 @@ export class ChainChannelHelper {
     if (numberOfSenderTransactions) {
       has_query_params = true;
       if (!BH.isNaturalNumber(numberOfSenderTransactions)) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-          function: "boxQueryTransactionArg.query",
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           field: `numberOfSenderTransactions ${numberOfSenderTransactions}`,
         });
       }
@@ -228,8 +208,7 @@ export class ChainChannelHelper {
     if (trusteeId) {
       has_query_params = true;
       if (trusteeId.length > ChainChannelHelper.MAX_ADDRESS_LENGTH) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-          function: "boxQueryTransactionArg.query",
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           field: `trusteeId ${trusteeId}`,
         });
       }
@@ -237,8 +216,7 @@ export class ChainChannelHelper {
     if (purchaseDAppid) {
       has_query_params = true;
       if (!BH.isValidDAppId(purchaseDAppid)) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-          function: "boxQueryTransactionArg.query",
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           field: `purchaseDAppid ${purchaseDAppid}`,
         });
       }
@@ -246,8 +224,7 @@ export class ChainChannelHelper {
     if (range) {
       has_query_params = true;
       if (!BH.isString(range)) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-          function: "boxQueryTransactionArg.query",
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           field: `range ${range}`,
         });
       }
@@ -259,15 +236,13 @@ export class ChainChannelHelper {
       );
     }
     if (!BH.isUint32(offset)) {
-      throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-        function: "boxQueryTransactionArg.query",
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
         field: `offset ${offset}`,
       });
     }
     if (limit) {
       if (!BH.isUint32(limit)) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-          function: "boxQueryTransactionArg.query",
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           field: `limit ${limit}`,
         });
       }
@@ -277,8 +252,7 @@ export class ChainChannelHelper {
     const { tIndex } = arg.sort;
     if (tIndex !== undefined) {
       if (tIndex !== -1 && tIndex !== 1) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-          function: "boxQueryTransactionArg.sort",
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           field: `tIndex ${tIndex}`,
         });
       }
@@ -292,8 +266,7 @@ export class ChainChannelHelper {
   @bindThis
   async boxQueryTransactionReturn(params: ArrayBuffer | Uint8Array) {
     if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
-      throw new ArgumentIllegalException(INVALID_PARAMS, {
-        function: "boxQueryTransactionReturn",
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS, {
         params,
       });
     }
@@ -303,8 +276,7 @@ export class ChainChannelHelper {
         params instanceof Uint8Array ? params : new Uint8Array(params),
       );
     } catch (error) {
-      throw new ArgumentFormatException(INVALID_PARAMS, {
-        function: "boxQueryTransactionReturn",
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_PARAMS, {
         error,
         params,
       });
@@ -330,8 +302,7 @@ export class ChainChannelHelper {
   @bindThis
   async boxIndexTransactionReturn(params: ArrayBuffer | Uint8Array) {
     if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
-      throw new ArgumentIllegalException(INVALID_PARAMS, {
-        function: "boxIndexTransactionReturn",
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS, {
         params,
       });
     }
@@ -341,8 +312,7 @@ export class ChainChannelHelper {
         params instanceof Uint8Array ? params : new Uint8Array(params),
       );
     } catch (error) {
-      throw new ArgumentFormatException(INVALID_PARAMS, {
-        function: "boxIndexTransactionReturn",
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_PARAMS, {
         error,
         params,
       });
@@ -353,8 +323,7 @@ export class ChainChannelHelper {
 
   async boxDownloadTransactionArg(params: ArrayBuffer | Uint8Array) {
     if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
-      throw new ArgumentIllegalException(INVALID_PARAMS, {
-        function: "boxDownloadTransactionArg",
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS, {
         params,
       });
     }
@@ -367,8 +336,7 @@ export class ChainChannelHelper {
       if (error instanceof Exception) {
         throw error;
       }
-      throw new ArgumentFormatException(INVALID_PARAMS, {
-        function: "boxDownloadTransactionArg",
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_PARAMS, {
         error,
         params,
       });
@@ -383,20 +351,17 @@ export class ChainChannelHelper {
     for (const tIndex of tIndexes) {
       const { height, index, length } = tIndex;
       if (!BH.isPositiveInteger(height)) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-          function: "boxDownloadTransactionArg",
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           field: `height ${height}`,
         });
       }
       if (!BH.isNaturalNumber(index)) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-          function: "boxDownloadTransactionArg",
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           field: `index ${index}`,
         });
       }
       if (!BH.isPositiveInteger(length)) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-          function: "boxDownloadTransactionArg",
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           field: `length ${length}`,
         });
       }
@@ -409,8 +374,7 @@ export class ChainChannelHelper {
   @bindThis
   async boxDownloadTransactionReturn(params: ArrayBuffer | Uint8Array) {
     if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
-      throw new ArgumentIllegalException(INVALID_PARAMS, {
-        function: "boxDownloadTransactionReturn",
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS, {
         params,
       });
     }
@@ -420,8 +384,7 @@ export class ChainChannelHelper {
         params instanceof Uint8Array ? params : new Uint8Array(params),
       );
     } catch (error) {
-      throw new ArgumentFormatException(INVALID_PARAMS, {
-        function: "boxDownloadTransactionReturn",
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_PARAMS, {
         error,
         params,
       });
@@ -447,8 +410,7 @@ export class ChainChannelHelper {
   @bindThis
   async boxNewTransactionArg(params: ArrayBuffer | Uint8Array) {
     if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
-      throw new ArgumentIllegalException(INVALID_PARAMS, {
-        function: "boxNewTransactionArg",
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS, {
         params,
       });
     }
@@ -461,8 +423,7 @@ export class ChainChannelHelper {
       if (error instanceof Exception) {
         throw error;
       }
-      throw new ArgumentFormatException(INVALID_PARAMS, {
-        function: "boxNewTransactionArg",
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_PARAMS, {
         error,
         params,
       });
@@ -482,8 +443,7 @@ export class ChainChannelHelper {
   @bindThis
   boxNewTransactionReturn(params: ArrayBuffer | Uint8Array) {
     if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
-      throw new ArgumentIllegalException(INVALID_PARAMS, {
-        function: "boxNewTransactionReturn",
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS, {
         params,
       });
     }
@@ -493,8 +453,7 @@ export class ChainChannelHelper {
         params instanceof Uint8Array ? params : new Uint8Array(params),
       );
     } catch (error) {
-      throw new ArgumentFormatException(INVALID_PARAMS, {
-        function: "boxNewTransactionReturn",
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_PARAMS, {
         error,
         params,
       });
@@ -503,8 +462,7 @@ export class ChainChannelHelper {
     //#region 交易签名校验
     if (arg.status === RESPONSE_STATUS.success) {
       if (Number.isNaN(parseFloat(arg.minFee)) || BigInt(arg.minFee) < BigInt(0)) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-          function: "boxNewTransactionReturn",
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           field: "minFee",
         });
       }
@@ -518,7 +476,9 @@ export class ChainChannelHelper {
   @bindThis
   boxQueryBlockArg(params: ArrayBuffer | Uint8Array): QueryBlockArgModel {
     if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
-      throw new ArgumentIllegalException(INVALID_PARAMS, { function: "boxQueryBlockArg", params });
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS, {
+        params,
+      });
     }
     let arg: QueryBlockArgModel;
     try {
@@ -526,8 +486,7 @@ export class ChainChannelHelper {
         params instanceof Uint8Array ? params : new Uint8Array(params),
       );
     } catch (error) {
-      throw new ArgumentFormatException(INVALID_PARAMS, {
-        function: "boxQueryBlockArg",
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_PARAMS, {
         error,
         params,
       });
@@ -542,8 +501,7 @@ export class ChainChannelHelper {
     if (height) {
       has_query_params = true;
       if (!BH.isUint32(height)) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-          function: "boxQueryBlockArg",
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           field: "height",
         });
       }
@@ -551,8 +509,7 @@ export class ChainChannelHelper {
     if (signature) {
       has_query_params = true;
       if (!BH.isValidBlockSignature(signature)) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-          function: "boxQueryBlockArg",
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           field: "signature",
         });
       }
@@ -569,9 +526,7 @@ export class ChainChannelHelper {
   @bindThis
   async boxQueryBlockReturn(params: ArrayBuffer | Uint8Array) {
     if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
-      throw new ArgumentIllegalException(INVALID_PARAMS, {
-        function: "boxQueryBlockReturn",
-
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS, {
         params,
       });
     }
@@ -581,8 +536,7 @@ export class ChainChannelHelper {
         params instanceof Uint8Array ? params : new Uint8Array(params),
       );
     } catch (error) {
-      throw new ArgumentFormatException(INVALID_PARAMS, {
-        function: "boxQueryBlockReturn",
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_PARAMS, {
         error,
         params,
       });
@@ -605,7 +559,9 @@ export class ChainChannelHelper {
   @bindThis
   boxNewBlockArg(params: ArrayBuffer | Uint8Array): NewBlockArgModel {
     if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
-      throw new ArgumentIllegalException(INVALID_PARAMS, { function: "boxNewBlockArg", params });
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS, {
+        params,
+      });
     }
     let newBlockArg: NewBlockArgModel;
     try {
@@ -613,8 +569,7 @@ export class ChainChannelHelper {
         params instanceof Uint8Array ? params : new Uint8Array(params),
       );
     } catch (error) {
-      throw new ArgumentFormatException(INVALID_PARAMS, {
-        function: "boxNewBlockArg",
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_PARAMS, {
         error,
         params,
       });
@@ -623,50 +578,42 @@ export class ChainChannelHelper {
     /// 参数校验
     //#region 查询参数校验
     if (!BH.isUint32(newBlockArg.height)) {
-      throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-        function: "boxNewBlockArg",
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
         field: `height ${newBlockArg.height}`,
       });
     }
     if (!BH.isValidBlockSignature(newBlockArg.signature)) {
-      throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-        function: "boxNewBlockArg",
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
         field: `signature ${newBlockArg.signature}`,
       });
     }
     if (!BH.isValidBlockSignature(newBlockArg.previousBlockSignature)) {
-      throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-        function: "boxNewBlockArg",
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
         field: `previousBlockSignature ${newBlockArg.previousBlockSignature}`,
       });
     }
     if (!BH.isFiniteBigInt(newBlockArg.totalFee)) {
-      throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-        function: "boxNewBlockArg",
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
         field: `totalFee ${newBlockArg.totalFee}`,
       });
     }
     if (!BH.isUint32(newBlockArg.numberOfTransactions)) {
-      throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-        function: "boxNewBlockArg",
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
         field: `numberOfTransactions ${newBlockArg.numberOfTransactions}`,
       });
     }
     if (!BH.isUint32(newBlockArg.timestamp)) {
-      throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-        function: "boxNewBlockArg",
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
         field: `timestamp ${newBlockArg.timestamp}`,
       });
     }
     if (!BH.isValidPublicKey(newBlockArg.generatorPublicKeyBuffer)) {
-      throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-        function: "boxNewBlockArg",
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
         field: `generatorPublicKey ${newBlockArg.generatorPublicKey}`,
       });
     }
     if (!BH.isUint32(newBlockArg.version)) {
-      throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
-        function: "boxNewBlockArg",
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
         field: `version ${newBlockArg.version}`,
       });
     }
@@ -679,7 +626,9 @@ export class ChainChannelHelper {
   @bindThis
   boxNewBlockReturn(params: ArrayBuffer | Uint8Array): NewBlockReturn {
     if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
-      throw new ArgumentIllegalException(INVALID_PARAMS, { function: "boxNewBlockReturn", params });
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS, {
+        params,
+      });
     }
     try {
       const arg = NewBlockReturn.decode(
@@ -687,8 +636,7 @@ export class ChainChannelHelper {
       );
       return arg;
     } catch (error) {
-      throw new ArgumentFormatException(INVALID_PARAMS, {
-        function: "boxNewBlockReturn",
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_PARAMS, {
         error,
         params,
       });
@@ -700,7 +648,9 @@ export class ChainChannelHelper {
   @bindThis
   boxGetPeerInfoArg(params: ArrayBuffer | Uint8Array): GetPeerInfoArgModel {
     if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
-      throw new ArgumentIllegalException(INVALID_PARAMS, { function: "boxGetPeerInfoArg", params });
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS, {
+        params,
+      });
     }
     try {
       const arg = GetPeerInfoArgModel.decode(
@@ -708,8 +658,7 @@ export class ChainChannelHelper {
       );
       return arg;
     } catch (error) {
-      throw new ArgumentFormatException(INVALID_PARAMS, {
-        function: "boxGetPeerInfoArg",
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_PARAMS, {
         error,
         params,
       });
@@ -721,8 +670,7 @@ export class ChainChannelHelper {
   @bindThis
   boxGetPeerInfoReturn(params: ArrayBuffer | Uint8Array): GetPeerInfoReturnModel {
     if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
-      throw new ArgumentIllegalException(INVALID_PARAMS, {
-        function: "boxGetPeerInfoReturn",
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS, {
         params,
       });
     }
@@ -732,8 +680,7 @@ export class ChainChannelHelper {
       );
       return arg;
     } catch (error) {
-      throw new ArgumentFormatException(INVALID_PARAMS, {
-        function: "boxGetPeerInfoReturn",
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_PARAMS, {
         error,
         params,
       });

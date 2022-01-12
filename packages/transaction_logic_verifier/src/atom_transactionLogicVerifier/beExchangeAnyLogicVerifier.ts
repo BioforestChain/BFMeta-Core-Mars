@@ -1,20 +1,7 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
-import {
-  BeExchangeAnyTransaction,
-  RANGE_TYPE,
-  EXCHANGE_DIRECTION,
-  SPECIAL_ASSET_TYPE,
-  PARENT_ASSET_TYPE,
-} from "@bfchain/core-model";
+import { BeExchangeAnyTransaction, RANGE_TYPE, PARENT_ASSET_TYPE } from "@bfchain/core-model";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
-import {
-  CoreExceptionGenerator,
-  NOT_MATCH,
-  CAN_NOT_SECONDARY_TRANSACTION,
-  SHOULD_BE,
-  NOT_EXIST_OR_EXPIRED,
-  NOT_EXPECTED_RELATED_TRANSACTION,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
@@ -48,7 +35,7 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
       this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
     )) as BFChainCore.ToExchangeAnyTransactionJSON | undefined;
     if (!toExchangeAnyJson) {
-      throw new NoFoundException(NOT_EXIST_OR_EXPIRED, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST_OR_EXPIRED, {
         prop: `Transaction with signature ${transactionSignature}`,
         target: "blockChain",
         ...Function_Exception_Detail,
@@ -56,7 +43,7 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
     }
 
     if (toExchangeAnyJson.type !== this.transactionHelper.TO_EXCHANGE_ANY) {
-      throw new ConsensusException(NOT_EXPECTED_RELATED_TRANSACTION, {
+      throw new ConsensusException(ERROR_LIST.NOT_EXPECTED_RELATED_TRANSACTION, {
         signature: `${transactionSignature}`,
         ...Function_Exception_Detail,
       });
@@ -64,7 +51,7 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
 
     // be交易的接收账户必须是to交易的发起账户
     if (transaction.recipientId !== toExchangeAnyJson.senderId) {
-      throw new ConsensusException(NOT_MATCH, {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `BeExchangeAnyTransaction.recipientId ${transaction.recipientId}`,
         be_compare_prop: `ToExchangeAnyTransaction.senderId ${toExchangeAnyJson.senderId}`,
         to_target: "BeExchangeAnyTransaction",
@@ -190,7 +177,7 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
       trsAsset.toExchangeAssetType !== toExchangeAssetType ||
       trsAsset.beExchangeAssetType !== beExchangeAssetType
     ) {
-      throw new ConsensusException(NOT_MATCH, {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `trsAsset: ${JSON.stringify(trsAsset)}`,
         be_compare_prop: `exchangeAny: ${JSON.stringify(exchangeAny.toJSON())}`,
         to_target: "BeExchangeAnyTransaction",
@@ -204,7 +191,7 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
     if (rangeType & RANGE_TYPE.MULTI_ADDRESS) {
       range.push(toExchangeAnyJson.senderId);
       if (!range.includes(transaction.senderId)) {
-        throw new ConsensusException(SHOULD_BE, {
+        throw new ConsensusException(ERROR_LIST.SHOULD_BE, {
           to_compare_prop: `senderId ${transaction.senderId}`,
           to_target: "beExchangeAnyTransaction",
           be_compare_prop: "beExchangeAnyTransaction.range",
@@ -213,7 +200,7 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
       }
     } else if (rangeType & RANGE_TYPE.MULTI_DAPPID) {
       if (!transaction.dappid || !range.includes(transaction.dappid)) {
-        throw new ConsensusException(SHOULD_BE, {
+        throw new ConsensusException(ERROR_LIST.SHOULD_BE, {
           to_compare_prop: `dappid ${transaction.senderId}`,
           to_target: "beExchangeAnyTransaction",
           be_compare_prop: "beExchangeAnyTransaction.range",
@@ -222,7 +209,7 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
       }
     } else if (rangeType & RANGE_TYPE.MULTI_LOCATION_NAME) {
       if (!transaction.lns || !range.includes(transaction.lns)) {
-        throw new ConsensusException(SHOULD_BE, {
+        throw new ConsensusException(ERROR_LIST.SHOULD_BE, {
           to_compare_prop: `lns ${transaction.lns}`,
           to_target: "beExchangeAnyTransaction",
           be_compare_prop: "beExchangeAnyTransaction.range",

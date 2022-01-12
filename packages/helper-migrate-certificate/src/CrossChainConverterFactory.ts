@@ -1,5 +1,5 @@
 import { CrossChainDefaultConverter } from "./default";
-import { CoreExceptionGenerator, PROP_IS_REQUIRE } from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 
 const { ArgumentIllegalException } = CoreExceptionGenerator("HELPER", "transactionHelper");
 
@@ -13,16 +13,14 @@ export function CrossChainConverterFactory(json?: any): BFChainCore.CrossChain.C
   }
   const { body, signature, fromAuthSignature, toAuthSignature } = json;
   if (!body) {
-    throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+    throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
       prop: "json.body",
-      function: "MigrateCertificateFactory",
     });
   }
 
   if (!signature) {
-    throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+    throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
       prop: "json.signature",
-      function: "MigrateCertificateFactory",
     });
   }
 

@@ -1,5 +1,5 @@
 import { Injectable } from "@bfchain/util-dep-inject";
-import { PROP_IS_INVALID } from "@bfchain/core-util-exception-errorcode";
+import { ERROR_LIST } from "@bfchain/core-util-exception-errorcode";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 
 const { ArgumentIllegalException } = CoreExceptionGenerator("HELPER", "jsbiHelper");
@@ -21,10 +21,9 @@ function formatParam(param: BI) {
     }
     return BigInt(param);
   } catch (err) {
-    throw new ArgumentIllegalException(PROP_IS_INVALID, {
+    throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
       prop: `param ${param}`,
       type: "jsbi|string|number",
-      function: "formatParam",
     });
   }
 }

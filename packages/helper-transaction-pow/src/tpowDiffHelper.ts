@@ -1,11 +1,6 @@
 import { Injectable } from "@bfchain/util";
 import { ConfigHelper } from "@bfchain/core-helper-config";
-import {
-  PROP_IS_INVALID,
-  PROP_IS_REQUIRE,
-  SHOULD_BE,
-  PROP_LENGTH_SHOULD_EQ_FIELD,
-} from "@bfchain/core-util-exception-errorcode";
+import { ERROR_LIST } from "@bfchain/core-util-exception-errorcode";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 import {
   TPOW_PARAMETER_LIST,
@@ -214,10 +209,9 @@ export class TPOWDiffHelper {
       if (TPOW_PARAMETER_LIST.includes(param as any)) {
         // 必须提供相应的参数实值
         if ((params as any)[param] === undefined) {
-          throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
             prop: param,
             target: "params",
-            function: "checkCalcTpowDiffParam",
           });
         }
         formulas[formulas.length] = param;
@@ -231,10 +225,9 @@ export class TPOWDiffHelper {
         const { realParam, brackets, direction } = this.separateParamAndBracket(param);
         if (realParam && TPOW_PARAMETER_LIST.includes(realParam as any)) {
           if ((params as any)[realParam] === undefined) {
-            throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+            throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
               prop: realParam,
               target: "params",
-              function: "checkCalcTpowDiffParam",
             });
           }
         }
@@ -304,10 +297,9 @@ export class TPOWDiffHelper {
       case TPOW_OPERATOR.MODULAR:
         return 2;
       default:
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `operator ${operator}`,
           target: "tpowDiffFormula",
-          function: "getOperatorPriority",
         });
     }
   }
@@ -364,18 +356,16 @@ export class TPOWDiffHelper {
             // 操作符栈不为空却没有足够的运算数
             const nextItem = dataStack.pop();
             if (nextItem === undefined) {
-              throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+              throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
                 prop: "nextIntem",
                 target: "dataStack",
-                function: "pushStack",
               });
             }
             const prevItem = dataStack.pop();
             if (prevItem === undefined) {
-              throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+              throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
                 prop: "prevItem",
                 target: "dataStack",
-                function: "pushStack",
               });
             }
             // 进行计算并且将结果入栈
@@ -398,10 +388,9 @@ export class TPOWDiffHelper {
         while (true) {
           const operator = operatorStack.pop();
           if (!operator) {
-            throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+            throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
               prop: "operator",
               target: "operatorStack",
-              function: "pushStack",
             });
           }
           // 当前操作符是 "(" 计算结束
@@ -410,10 +399,9 @@ export class TPOWDiffHelper {
           }
           const nextItem = dataStack.pop();
           if (nextItem === undefined) {
-            throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+            throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
               prop: "nextIntem",
               target: "dataStack",
-              function: "pushStack",
             });
           }
           const prevItem = dataStack.pop();
@@ -422,20 +410,18 @@ export class TPOWDiffHelper {
             const nextOperator = operatorStack.pop();
             // 如果操作符栈顶元素不是 ")"，则肯定出错了
             if (nextOperator !== TPOW_AUXILIARY_SYMBOL.LEFT_BRACKET) {
-              throw new ArgumentIllegalException(SHOULD_BE, {
+              throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
                 to_compare_prop: "nextOperator",
                 to_target: "operatorStack",
                 be_compare_prop: TPOW_AUXILIARY_SYMBOL.LEFT_BRACKET,
-                function: "pushStack",
               });
             }
             // 没有运算数却还有操作符
             if (operatorStack.size() > 0) {
-              throw new ArgumentIllegalException(PROP_LENGTH_SHOULD_EQ_FIELD, {
+              throw new ArgumentIllegalException(ERROR_LIST.PROP_LENGTH_SHOULD_EQ_FIELD, {
                 prop: "size",
                 target: "operatorStack",
                 field: 0,
-                function: "pushStack",
               });
             }
             // 将最终结果入栈，并且结束计算
@@ -457,26 +443,23 @@ export class TPOWDiffHelper {
         }
         const operator = operatorStack.pop();
         if (!operator) {
-          throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
             prop: "operator",
             target: "operatorStack",
-            function: "pushStack",
           });
         }
         const nextItem = dataStack.pop();
         if (nextItem === undefined) {
-          throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
             prop: "nextIntem",
             target: "dataStack",
-            function: "pushStack",
           });
         }
         const prevItem = dataStack.pop();
         if (prevItem === undefined) {
-          throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
             prop: "prevItem",
             target: "dataStack",
-            function: "pushStack",
           });
         }
         // 进行计算并且将结果入栈

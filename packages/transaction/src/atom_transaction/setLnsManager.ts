@@ -7,15 +7,7 @@ import {
   ConfigHelper,
   ChainAssetInfoHelper,
 } from "@bfchain/core-helper";
-import {
-  CoreExceptionGenerator,
-  PARAM_LOST,
-  NOT_MATCH,
-  PROP_IS_REQUIRE,
-  PROP_IS_INVALID,
-  SHOULD_BE,
-  SHOULD_NOT_BE,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
@@ -66,7 +58,6 @@ export class SetLnsManagerTransactionFactory extends TransactionFactory<SetLnsMa
 
     const Function_Exception_Detail = {
       target: "body",
-      function: "verifyTransactionBody",
     } as const;
 
     this.emptyRangeType(body, Function_Exception_Detail);
@@ -76,14 +67,14 @@ export class SetLnsManagerTransactionFactory extends TransactionFactory<SetLnsMa
     const recipientId = body.recipientId;
 
     if (!recipientId) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "recipientId",
         ...Function_Exception_Detail,
       });
     }
 
     if (body.fromMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -92,7 +83,7 @@ export class SetLnsManagerTransactionFactory extends TransactionFactory<SetLnsMa
     }
 
     if (body.toMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -101,7 +92,7 @@ export class SetLnsManagerTransactionFactory extends TransactionFactory<SetLnsMa
     }
 
     if (!body.storage) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "storage",
         ...Function_Exception_Detail,
       });
@@ -109,7 +100,7 @@ export class SetLnsManagerTransactionFactory extends TransactionFactory<SetLnsMa
 
     const storage = body.storage;
     if (storage.key !== "name") {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `storage.key ${storage.key}`,
         to_target: "storage",
         be_compare_prop: "name",
@@ -120,9 +111,8 @@ export class SetLnsManagerTransactionFactory extends TransactionFactory<SetLnsMa
     const lnsManager = lnsManagerAsset.lnsManager;
 
     if (!lnsManager) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "lnsManager",
-        function: "verifyTransactionBody",
       });
     }
 
@@ -134,14 +124,14 @@ export class SetLnsManagerTransactionFactory extends TransactionFactory<SetLnsMa
     const name = lnsManager.name;
 
     if (!name) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "name",
         ...LnsManagerAsset_Exception_Detail,
       });
     }
 
     if (!baseHelper.isValidLnsName(name)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `name ${name}`,
         type: "location name",
         ...LnsManagerAsset_Exception_Detail,
@@ -149,7 +139,7 @@ export class SetLnsManagerTransactionFactory extends TransactionFactory<SetLnsMa
     }
 
     if (storage.value !== name) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `storage.value ${storage.value}`,
         be_compare_prop: `name ${name}`,
         to_target: "storage",

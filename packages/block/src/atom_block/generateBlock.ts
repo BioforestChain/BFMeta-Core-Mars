@@ -9,15 +9,7 @@ import {
   BlockBaseStatisticsHelper,
 } from "@bfchain/core-helper";
 import { TransactionInBlock, TRANSACTION_TYPES_MAP } from "@bfchain/core-model-transaction";
-import {
-  CoreExceptionGenerator,
-  PARAM_LOST,
-  OUT_OF_RANGE,
-  PROP_IS_INVALID,
-  NOT_EXIST,
-  TRAN_POW_VERIFY_FAIL,
-  SHOULD_NOT_DUPLICATE,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { QueneEventEmitter, EasyMap, isFlagInDev, Injectable, Inject } from "@bfchain/util";
 const {
   ArgumentIllegalException,
@@ -62,23 +54,19 @@ export class GenerateBlockCore<T extends Block> {
     transactions: AsyncIterable<TransactionInBlock>,
     eventEmitter?: BFChainCore.GenerateBlockEventEmitter,
   ) {
-    const Function_Exception_Detail = { function: "generateBlock" };
     if (!body) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "body",
-        ...Function_Exception_Detail,
       });
     }
     if (!asset) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "asset",
-        ...Function_Exception_Detail,
       });
     }
     if (!transactions) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "transactions",
-        ...Function_Exception_Detail,
       });
     }
 
@@ -218,7 +206,6 @@ export class GenerateBlockCore<T extends Block> {
   ) {
     const transactionCore = this.transactionCore;
     const abortForbiddenTransaction = transactionCore.abortForbiddenTransaction;
-    const Function_Exception_Detail = { function: "insertTransactions" };
     const MAX_TRANSACTION_SIZE = this.config.maxTransactionSize;
     const { height, generatorPublicKey, statisticInfo: blockStatisticsInfo } = block;
     const { tpowOfWorkExemptionBlocks, maxBlockSize } = this.config;
@@ -246,20 +233,18 @@ export class GenerateBlockCore<T extends Block> {
           log("insert transaction: %d / %d", tranItem.index + 1, block.numberOfTransactions);
         try {
           if (tranItem.index >= MAX_TRANSACTION_SIZE) {
-            throw new OutOfRangeException(OUT_OF_RANGE, {
+            throw new OutOfRangeException(ERROR_LIST.OUT_OF_RANGE, {
               variable: "transactions",
               index: tranItem.index,
               maxLength: MAX_TRANSACTION_SIZE,
-              ...Function_Exception_Detail,
             });
           }
           const trs = tranItem.transaction;
           const { type, senderId, signature } = trs;
           if (trsSet.has(signature)) {
-            throw new ConsensusException(SHOULD_NOT_DUPLICATE, {
+            throw new ConsensusException(ERROR_LIST.SHOULD_NOT_DUPLICATE, {
               prop: `transaction with signature ${signature}`,
               target: `block with height ${block.height}`,
-              ...Function_Exception_Detail,
             });
           }
           trsSet.add(signature);
@@ -295,16 +280,13 @@ export class GenerateBlockCore<T extends Block> {
                 count,
               });
               if (checkResult === undefined) {
-                throw new NoFoundException(NOT_EXIST, {
+                throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
                   prop: `verifyTransactionProfOfWork count ${count} signature ${signature} senderId ${senderId} nonce ${trs.nonce}`,
                   target: "ApplyTransactionEventEmitter",
-                  function: "insertTransactions",
                 });
               }
               if (!checkResult) {
-                throw new ArgumentFormatException(TRAN_POW_VERIFY_FAIL, {
-                  function: "insertTransactions",
-                });
+                throw new ArgumentFormatException(ERROR_LIST.TRAN_POW_VERIFY_FAIL);
               }
               tranSenderCountMap.set(senderId, count + 1);
             }
@@ -329,11 +311,10 @@ export class GenerateBlockCore<T extends Block> {
           } signature ${tranItem.transaction.signature}`;
           for (const transactionAssetChange of transactionAssetChanges) {
             if (BigInt(transactionAssetChange.assetBalance) < BigInt(0)) {
-              throw new ArgumentIllegalException(PROP_IS_INVALID, {
+              throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
                 prop: `assetBalance ${transactionAssetChange.assetBalance} ${transactionAssetChange.assetTypes}`,
                 target: "transactionAssetChanges",
                 detail: trsInfo,
-                function: "insertTransactions",
               });
             }
           }
@@ -344,19 +325,17 @@ export class GenerateBlockCore<T extends Block> {
           if (assetPrealnum) {
             const { remainAssetPrealnum, frozenMainAssetPrealnum } = assetPrealnum;
             if (BigInt(remainAssetPrealnum) < BigInt(0)) {
-              throw new ArgumentIllegalException(PROP_IS_INVALID, {
+              throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
                 prop: `remainAssetPrealnum ${remainAssetPrealnum}`,
                 target: "assetPrealnum",
                 detail: trsInfo,
-                function: "insertTransactions",
               });
             }
             if (BigInt(frozenMainAssetPrealnum) < BigInt(0)) {
-              throw new ArgumentIllegalException(PROP_IS_INVALID, {
+              throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
                 prop: `frozenMainAssetPrealnum ${frozenMainAssetPrealnum}`,
                 target: "assetPrealnum",
                 detail: trsInfo,
-                function: "insertTransactions",
               });
             }
           }

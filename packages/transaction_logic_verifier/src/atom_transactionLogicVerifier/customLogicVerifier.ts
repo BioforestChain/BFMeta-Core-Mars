@@ -1,12 +1,7 @@
 import type { CustomTransaction } from "@bfchain/core-model";
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
-import {
-  CoreExceptionGenerator,
-  NOT_EXIST,
-  PROP_IS_INVALID,
-  REGISTER_DELEGTE_QUOTA_FULL,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 
 const { NoFoundException, ArgumentIllegalException, ConsensusException } = CoreExceptionGenerator(
   "VERIFIER",
@@ -30,10 +25,6 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
     customTransactionCenter = this.customTransactionCenter,
   ): Promise<boolean> {
-    const Function_Exception_Detail = {
-      function: "verify",
-    } as const;
-
     const { sender, recipient, curRound } = await this.logicVerify(
       transaction,
       currentBlockHeight,
@@ -211,20 +202,18 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     if (!customTransactionCenter) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "customTransactionCenter",
         target: "moduleStroge",
-        ...Function_Exception_Detail,
       });
     }
 
     const result = await customTransactionCenter.logicVerify(transaction);
 
     if (!(result && result.ret)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "transaction",
         target: "transaction",
-        ...Function_Exception_Detail,
       });
     }
 
@@ -244,9 +233,8 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
       realMaxDelegateTxsPerRound = realMaxDelegateTxsPerRound + this.configHelper.delegates;
     }
     if (txCount >= realMaxDelegateTxsPerRound) {
-      throw new ConsensusException(REGISTER_DELEGTE_QUOTA_FULL, {
+      throw new ConsensusException(ERROR_LIST.REGISTER_DELEGTE_QUOTA_FULL, {
         round: curRound,
-        function: "eventLogicVerifier",
       });
     }
   }

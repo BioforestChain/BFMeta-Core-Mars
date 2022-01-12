@@ -1,11 +1,7 @@
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import type { MarkTransaction } from "@bfchain/core-model";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
-import {
-  CoreExceptionGenerator,
-  DAPPID_IS_NOT_EXIST,
-  NOT_MATCH,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 
 const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "MarkLogicVerifier");
 
@@ -82,24 +78,19 @@ export class MarkLogicVerifier extends TransactionLogicVerifier {
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
   ) {
-    const Function_Exception_Detail = {
-      function: "isDAppidAlreadyExist",
-    } as const;
     const memDapp = await accountGetterHelper.getDApp(magic, dappid, currentBlockHeight);
     if (!memDapp) {
-      throw new ConsensusException(DAPPID_IS_NOT_EXIST, {
+      throw new ConsensusException(ERROR_LIST.DAPPID_IS_NOT_EXIST, {
         dappid,
-        ...Function_Exception_Detail,
       });
     }
 
     if (chainName !== memDapp.sourceChainName) {
-      throw new ConsensusException(NOT_MATCH, {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `sourceChainName ${chainName}`,
         be_compare_prop: `sourceChainName ${memDapp.sourceChainName}`,
         to_target: "mark",
         be_target: "blockChain dapp",
-        ...Function_Exception_Detail,
       });
     }
   }

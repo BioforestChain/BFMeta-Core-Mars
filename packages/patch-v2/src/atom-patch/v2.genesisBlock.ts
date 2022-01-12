@@ -1,10 +1,6 @@
 import { Injectable } from "@bfchain/util-dep-inject";
 import { GenesisBlockFactory } from "@bfchain/core-block";
-import {
-  CoreExceptionGenerator,
-  PROP_IS_REQUIRE,
-  PROP_IS_INVALID,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "GenesisBlockFactory");
 
 @Injectable()
@@ -25,19 +21,16 @@ export class V2_GenesisBlockFactory extends GenesisBlockFactory {
     const { maxMultipleOfAssetAndMainAsset } = genesisBlockAsset.genesisAsset;
 
     if (!maxMultipleOfAssetAndMainAsset) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "maxMultipleOfAssetAndMainAsset",
         target: "genesisAsset",
-        function: "verifyBlockBody",
       });
     }
 
     if (!this.baseHelper.isPositiveBigFloatNotContainZero(maxMultipleOfAssetAndMainAsset)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `maxMultipleOfAssetAndMainAsset ${maxMultipleOfAssetAndMainAsset}`,
-        type: "big float not contain zero",
         target: "genesisAsset",
-        function: "verifyBlockBody",
       });
     }
   }

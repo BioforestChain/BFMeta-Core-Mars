@@ -1,10 +1,6 @@
 import { ConfigHelper } from "@bfchain/core-helper-config";
 import { BaseHelper } from "@bfchain/core-helper-type";
-import {
-  CoreExceptionGenerator,
-  PROP_SHOULD_LTE_FIELD,
-  NOT_EXIST,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { GIFT_DISTRIBUTION_RULE } from "@bfchain/core-model-constants";
 import {
   TRANSACTION_TYPES_MAP,
@@ -343,7 +339,7 @@ export class TransactionHelper {
     const { maxTransactionSize } = this.config;
     const trsSize = transaction.getBytes().length;
     if (trsSize > maxTransactionSize) {
-      throw new ArgumentIllegalException(PROP_SHOULD_LTE_FIELD, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
         prop: `transaction size ${trsSize}`,
         target: "transaction",
         field: maxTransactionSize,
@@ -589,10 +585,9 @@ export class TransactionHelper {
     }
     const grabWeight_BI = weightMap.get(grabId);
     if (!grabWeight_BI) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: `grabId(${grabId})`,
         target: "giftTransactionRecipient",
-        function: "calcGrabRecipientRandomGiftAssetNumber",
       });
     }
 

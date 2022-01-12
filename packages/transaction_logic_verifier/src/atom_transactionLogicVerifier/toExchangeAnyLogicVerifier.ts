@@ -5,14 +5,7 @@ import {
 } from "@bfchain/core-model";
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
-import {
-  CoreExceptionGenerator,
-  DAPPID_IS_NOT_EXIST,
-  ENTITY_IS_NOT_EXIST,
-  LOCATION_NAME_IS_NOT_EXIST,
-  ONLY_TOP_LEVEL_LOCATION_NAME_CAN_EXCHANGE,
-  PROP_IS_INVALID,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 
 const { ConsensusException } = CoreExceptionGenerator(
   "VERIFIER",
@@ -114,7 +107,7 @@ export class ToExchangeAnyLogicVerifier extends TransactionLogicVerifier {
         currentBlockHeight,
       );
       if (!memDapp) {
-        throw new ConsensusException(DAPPID_IS_NOT_EXIST, {
+        throw new ConsensusException(ERROR_LIST.DAPPID_IS_NOT_EXIST, {
           dappid: beExchangeAssetType,
           function: "verify",
         });
@@ -122,7 +115,7 @@ export class ToExchangeAnyLogicVerifier extends TransactionLogicVerifier {
     } else if (beExchangeParentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME) {
       // 只有顶级域名才能交换
       if (beExchangeAssetType.split(",").length > 2) {
-        throw new ConsensusException(ONLY_TOP_LEVEL_LOCATION_NAME_CAN_EXCHANGE, {
+        throw new ConsensusException(ERROR_LIST.ONLY_TOP_LEVEL_LOCATION_NAME_CAN_EXCHANGE, {
           function: "verify",
         });
       }
@@ -132,7 +125,7 @@ export class ToExchangeAnyLogicVerifier extends TransactionLogicVerifier {
         currentBlockHeight,
       );
       if (!memLocation) {
-        throw new ConsensusException(LOCATION_NAME_IS_NOT_EXIST, {
+        throw new ConsensusException(ERROR_LIST.LOCATION_NAME_IS_NOT_EXIST, {
           locationName: beExchangeAssetType,
           errorId: NewTransactionRefuseReason.LOCATION_NAME_NOT_EXIST,
           function: "verify",
@@ -145,7 +138,7 @@ export class ToExchangeAnyLogicVerifier extends TransactionLogicVerifier {
         currentBlockHeight,
       );
       if (!memEntity) {
-        throw new ConsensusException(ENTITY_IS_NOT_EXIST, {
+        throw new ConsensusException(ERROR_LIST.ENTITY_IS_NOT_EXIST, {
           entityId: beExchangeAssetType,
           errorId: NewTransactionRefuseReason.ENTITY_NOT_EXIST,
           function: "verify",

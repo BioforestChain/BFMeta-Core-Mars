@@ -7,18 +7,7 @@ import {
   ConfigHelper,
   ChainAssetInfoHelper,
 } from "@bfchain/core-helper";
-import {
-  CoreExceptionGenerator,
-  PARAM_LOST,
-  NOT_MATCH,
-  PROP_IS_REQUIRE,
-  PROP_IS_INVALID,
-  SHOULD_NOT_BE,
-  NOT_IN_EXPECTED_RANGE,
-  SHOULD_NOT_EXIST,
-  SHOULD_BE,
-  SHOULD_NOT_INCLUDE,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
@@ -66,7 +55,6 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
 
     const Function_Exception_Detail = {
       target: "body",
-      function: "verifyTransactionBody",
     } as const;
 
     this.emptyRangeType(body, Function_Exception_Detail);
@@ -74,14 +62,14 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
     const { baseHelper, accountBaseHelper } = this;
 
     if (body.recipientId) {
-      throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
         prop: "recipientId",
         ...Function_Exception_Detail,
       });
     }
 
     if (body.fromMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -90,7 +78,7 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
     }
 
     if (body.toMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -99,7 +87,7 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
     }
 
     if (!body.storage) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "storage",
         ...Function_Exception_Detail,
       });
@@ -107,7 +95,7 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
 
     const storage = body.storage;
     if (storage.key !== "alias") {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `storage.key ${storage.key}`,
         to_target: "storage",
         be_compare_prop: "alias",
@@ -118,9 +106,8 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
     const username = usernameAsset.username;
 
     if (!username) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "username",
-        function: "verifyTransactionBody",
       });
     }
 
@@ -131,14 +118,14 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
 
     const alias = username.alias;
     if (!alias) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "alias",
         ...UsernameAsset_Exception_Detail,
       });
     }
 
     if (!baseHelper.isString(alias)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `username ${alias}`,
         type: "string",
         ...UsernameAsset_Exception_Detail,
@@ -149,7 +136,7 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
     // 创世受托人的用户名 是 链名 + 索引
     if (body.applyBlockHeight === 1) {
       if (!allowSymbols.test(alias)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `alias ${alias}`,
           type: "genesis username",
           ...UsernameAsset_Exception_Detail,
@@ -157,7 +144,7 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
       }
     } else {
       if (!allowSymbols.test(alias)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `alias ${alias}`,
           type: "username",
           ...UsernameAsset_Exception_Detail,
@@ -165,7 +152,7 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
       }
 
       if (alias.toLowerCase().includes(this.configHelper.chainName)) {
-        throw new ArgumentIllegalException(SHOULD_NOT_INCLUDE, {
+        throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_INCLUDE, {
           prop: `alias ${alias}`,
           value: "chain name",
           ...UsernameAsset_Exception_Detail,
@@ -174,7 +161,7 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
     }
 
     if (storage.value !== alias) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `storage.value ${storage.value}`,
         be_compare_prop: `alias ${alias}`,
         to_target: "storage",
@@ -184,7 +171,7 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
     }
 
     if (await accountBaseHelper.isAddress(alias)) {
-      throw new ArgumentIllegalException(SHOULD_NOT_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
         to_compare_prop: `username ${alias}`,
         to_target: "usernameAsset",
         be_compare_prop: "address",
@@ -193,7 +180,7 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
     }
 
     if (alias.length === 0 || alias.length > 20) {
-      throw new ArgumentIllegalException(NOT_IN_EXPECTED_RANGE, {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_IN_EXPECTED_RANGE, {
         prop: `alias ${alias}`,
         min: 1,
         max: 20,

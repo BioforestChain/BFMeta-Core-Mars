@@ -1,12 +1,4 @@
-import {
-  CoreExceptionGenerator,
-  PROP_IS_INVALID,
-  NOT_EXIST,
-  PROP_IS_REQUIRE,
-  SHOULD_NOT_EXIST,
-  SHOULD_NOT_BE,
-  NOT_MATCH,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { getHexFromArrayBuffer, parseHexToArrayBuffer, Injectable, Inject } from "@bfchain/util";
 import {
   ACCOUNT_STATUS,
@@ -40,10 +32,9 @@ export class CustomTransactionEvent {
   async verifyAddress(address: string) {
     const Function_Exception_Detail = {
       target: "applyResult",
-      function: "verifyAddress",
     } as const;
     if (!(await this.accountBaseHelper.isAddress(address))) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "address",
         ...Function_Exception_Detail,
       });
@@ -51,118 +42,82 @@ export class CustomTransactionEvent {
   }
 
   verifyPublicKey(publicKey: string) {
-    const Function_Exception_Detail = {
-      target: "applyResult",
-      function: "verifyPublicKey",
-    } as const;
     if (!this.baseHelper.isValidPublicKey(publicKey)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "publicKey",
-        ...Function_Exception_Detail,
+        target: "applyResult",
       });
     }
   }
 
   async verifyFrozenAddress(frozenAddress: string) {
-    const Function_Exception_Detail = {
-      target: "applyResult",
-      function: "verifyFrozenAddress",
-    } as const;
     if (!(await this.accountBaseHelper.isAddress(frozenAddress))) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "frozenAddress",
-        ...Function_Exception_Detail,
+        target: "applyResult",
       });
     }
   }
 
   async verifyRecipientId(recipientId: string) {
-    const Function_Exception_Detail = {
-      target: "applyResult",
-      function: "verifyRecipientId",
-    } as const;
     if (!(await this.accountBaseHelper.isAddress(recipientId))) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "recipientId",
-        ...Function_Exception_Detail,
+        target: "applyResult",
       });
     }
   }
 
   async verifyPossessorAddress(possessorAddress: string) {
-    const Function_Exception_Detail = {
-      target: "applyResult",
-      function: "verifyPossessorAddress",
-    } as const;
     if (!(await this.accountBaseHelper.isAddress(possessorAddress))) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "possessorAddress",
-        ...Function_Exception_Detail,
+        target: "applyResult",
       });
     }
   }
 
   verifyAssetNumber(assetNumber: string) {
-    const Function_Exception_Detail = {
-      target: "applyResult",
-      function: "verifyPublicKey",
-    } as const;
     if (!this.baseHelper.isValidAssetNumber(assetNumber)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "amount",
-        ...Function_Exception_Detail,
+        target: "applyResult",
       });
     }
   }
 
   verifyMagic(magic: string) {
-    const Function_Exception_Detail = {
-      target: "applyResult",
-      function: "verifyMagic",
-    } as const;
     if (!this.baseHelper.isValidChainMagic(magic)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "magic",
-        ...Function_Exception_Detail,
+        target: "applyResult",
       });
     }
   }
 
   verifyAssetType(assetType: string) {
-    const Function_Exception_Detail = {
-      target: "applyResult",
-      function: "verifyAssetType",
-    } as const;
     if (!this.baseHelper.isValidAssetType(assetType)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "assetType",
-        ...Function_Exception_Detail,
+        target: "applyResult",
       });
     }
   }
 
   verifyChainName(chainName: string) {
-    const Function_Exception_Detail = {
-      target: "applyResult",
-      function: "verifyChainName",
-    } as const;
     if (!this.baseHelper.isValidChainName(chainName)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "chainName",
-        ...Function_Exception_Detail,
+        target: "applyResult",
       });
     }
   }
 
   verifyDAppid(dappid: string) {
-    const Function_Exception_Detail = {
-      target: "applyResult",
-      function: "verifyDAppid",
-    } as const;
     if (!this.baseHelper.isValidDAppId(dappid)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "dappid",
-        ...Function_Exception_Detail,
+        target: "applyResult",
       });
     }
   }
@@ -173,35 +128,28 @@ export class CustomTransactionEvent {
     transaction: CustomTransaction,
   ) {
     const { transactionHelper } = this;
-    const Function_Exception_Detail = {
-      target: "applyResult",
-      function: "verifyMinAndMaxEffectiveHeight",
-    } as const;
+
     const calMinEffectiveHeight = transactionHelper.getTransactionMinEffectiveHeight(transaction);
     if (minEffectiveHeight !== calMinEffectiveHeight) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "minEffectiveHeight",
-        ...Function_Exception_Detail,
+        target: "applyResult",
       });
     }
     const calMaxEffectiveHeight = transactionHelper.getTransactionMaxEffectiveHeight(transaction);
     if (maxEffectiveHeight !== calMaxEffectiveHeight) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "maxEffectiveHeight",
-        ...Function_Exception_Detail,
+        target: "applyResult",
       });
     }
   }
 
   verifyLocationName(lns: string) {
-    const Function_Exception_Detail = {
-      target: "applyResult",
-      function: "verifyLocationName",
-    } as const;
     if (!this.baseHelper.isValidLnsName(lns)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "locationName",
-        ...Function_Exception_Detail,
+        target: "applyResult",
       });
     }
   }
@@ -213,7 +161,6 @@ export class CustomTransactionEvent {
     const { baseHelper, accountBaseHelper, transactionHelper } = this;
     const Function_Exception_Detail = {
       target: "applyResult",
-      function: "verifyApplyResult",
     } as const;
     const { address, publicKey } = applyResult.applyInfo;
     await this.verifyAddress(address);
@@ -224,7 +171,7 @@ export class CustomTransactionEvent {
     if (applyResult.type === "setSecondPublicKey") {
       const { secondPublicKey } = applyResult.applyInfo;
       if (!baseHelper.isValidSecondPublicKey(secondPublicKey)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: "secondPublicKey",
           ...Function_Exception_Detail,
         });
@@ -235,7 +182,7 @@ export class CustomTransactionEvent {
     if (applyResult.type === "setUsername") {
       const applyInfo = applyResult.applyInfo;
       if (!baseHelper.isValidUsername(applyInfo.alias)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: "alias",
           ...Function_Exception_Detail,
         });
@@ -252,7 +199,7 @@ export class CustomTransactionEvent {
     if (applyResult.type === "voteEquity") {
       const { equity, recipientId } = applyResult.applyInfo;
       if (!baseHelper.isValidAccountEquity(equity)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: "voteEquity",
           ...Function_Exception_Detail,
         });
@@ -266,7 +213,7 @@ export class CustomTransactionEvent {
       this.verifyMagic(magic);
       this.verifyAssetType(assetType);
       if (!(action === "+" || action === "-")) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: "action",
           ...Function_Exception_Detail,
         });
@@ -302,7 +249,7 @@ export class CustomTransactionEvent {
           transaction.storage.value === frozenId
         )
       ) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: "frozenId",
           ...Function_Exception_Detail,
         });
@@ -320,7 +267,7 @@ export class CustomTransactionEvent {
           transaction.storage.value === frozenId
         )
       ) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: "frozenId",
           ...Function_Exception_Detail,
         });
@@ -335,7 +282,7 @@ export class CustomTransactionEvent {
         accountStatus !== ACCOUNT_STATUS.FROZEN_OUT &&
         accountStatus !== ACCOUNT_STATUS.FROZEN_IN_AND_OUT
       ) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: "accountStatus",
           ...Function_Exception_Detail,
         });
@@ -350,7 +297,7 @@ export class CustomTransactionEvent {
       await this.verifyPossessorAddress(possessorAddress);
       this.verifyDAppid(dappid);
       if (type !== DAPP_TYPE.FREE_APP && type !== DAPP_TYPE.PAID_APP) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: "type",
           ...Function_Exception_Detail,
         });
@@ -389,25 +336,25 @@ export class CustomTransactionEvent {
       this.verifyChainName(sourceChainName);
       this.verifyAssetType(assetType);
       if (!(await accountBaseHelper.isAddress(applyAddress))) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: "applyAddress",
           ...Function_Exception_Detail,
         });
       }
       if (!(await accountBaseHelper.isAddress(genesisAddress))) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: "genesisAddress",
           ...Function_Exception_Detail,
         });
       }
       if (!baseHelper.isValidAssetNumber(expectedIssuedAssets)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: "expectedIssuedAssets",
           ...Function_Exception_Detail,
         });
       }
       if (!baseHelper.isValidAssetNumber(remainAssets)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: "remainAssets",
           ...Function_Exception_Detail,
         });
@@ -419,7 +366,7 @@ export class CustomTransactionEvent {
       const { genesisBlock } = applyResult.applyInfo;
 
       if (!this.baseHelper.isHexString(genesisBlock)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: "genesisBlock",
           ...Function_Exception_Detail,
         });
@@ -429,7 +376,7 @@ export class CustomTransactionEvent {
       const baseInfo = this._blockCore.blockHelper.genesisBlockBaseInfoReader(bytes);
       const { bnid, magic, assetType, chainName } = baseInfo;
       if (magic === config.magic) {
-        throw new ArgumentIllegalException(SHOULD_NOT_BE, {
+        throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
           to_compare_prop: `magic ${magic}`,
           to_target: "register genesisBlock",
           be_compare_prop: config.magic,
@@ -437,7 +384,7 @@ export class CustomTransactionEvent {
         });
       }
       if (assetType === config.assetType) {
-        throw new ArgumentIllegalException(SHOULD_NOT_BE, {
+        throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
           to_compare_prop: `assetType ${assetType}`,
           to_target: "register genesisBlock",
           be_compare_prop: config.assetType,
@@ -445,7 +392,7 @@ export class CustomTransactionEvent {
         });
       }
       if (chainName === config.chainName) {
-        throw new ArgumentIllegalException(SHOULD_NOT_BE, {
+        throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
           to_compare_prop: `chainName ${chainName}`,
           to_target: "register genesisBlock",
           be_compare_prop: config.chainName,
@@ -453,7 +400,7 @@ export class CustomTransactionEvent {
         });
       }
       if (config.initials !== bnid) {
-        throw new ArgumentIllegalException(NOT_MATCH, {
+        throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
           to_compare_prop: `initials ${config.initials}`,
           be_compare_prop: `bnid ${bnid}`,
           to_target: "config",
@@ -483,69 +430,69 @@ export class CustomTransactionEvent {
       this.verifyMagic(sourceChainMagic);
       if (operationType === RECORD_OPERATION_TYPE.ADD) {
         if (!addRecord) {
-          throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
             prop: "addRecord",
             ...Function_Exception_Detail,
           });
         }
         if (deleteRecord) {
-          throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+          throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
             prop: "deleteRecord",
             ...Function_Exception_Detail,
           });
         }
         if (!(await baseHelper.isValidLocationNameRecord(addRecord))) {
-          throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
             prop: `addRecord ${JSON.stringify(addRecord)}`,
             ...Function_Exception_Detail,
           });
         }
       } else if (operationType === RECORD_OPERATION_TYPE.DELETE) {
         if (addRecord) {
-          throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+          throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
             prop: "addRecord",
             ...Function_Exception_Detail,
           });
         }
         if (!deleteRecord) {
-          throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
             prop: "deleteRecord",
             ...Function_Exception_Detail,
           });
         }
         if (!(await baseHelper.isValidLocationNameRecord(deleteRecord))) {
-          throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
             prop: `deleteRecord ${JSON.stringify(deleteRecord)}`,
             ...Function_Exception_Detail,
           });
         }
       } else if (operationType === RECORD_OPERATION_TYPE.UPDATE) {
         if (!addRecord) {
-          throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
             prop: "addRecord",
             ...Function_Exception_Detail,
           });
         }
         if (!deleteRecord) {
-          throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
             prop: "deleteRecord",
             ...Function_Exception_Detail,
           });
         }
         if (!(await baseHelper.isValidLocationNameRecord(addRecord))) {
-          throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
             prop: `addRecord ${JSON.stringify(addRecord)}`,
             ...Function_Exception_Detail,
           });
         }
         if (!(await baseHelper.isValidLocationNameRecord(deleteRecord))) {
-          throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
             prop: `deleteRecord ${JSON.stringify(deleteRecord)}`,
             ...Function_Exception_Detail,
           });
         }
       } else {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: "operationType",
           ...Function_Exception_Detail,
         });
@@ -567,7 +514,7 @@ export class CustomTransactionEvent {
       this.verifyMagic(sourceChainMagic);
       return;
     }
-    throw new ArgumentIllegalException(PROP_IS_INVALID, {
+    throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
       prop: "type",
       ...Function_Exception_Detail,
     });
@@ -1001,10 +948,9 @@ export class CustomTransactionEvent {
         },
       });
     }
-    throw new ArgumentIllegalException(PROP_IS_INVALID, {
+    throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
       prop: "eventType",
       target: "applyResult",
-      function: "combineApplyEvent",
     });
   }
 }

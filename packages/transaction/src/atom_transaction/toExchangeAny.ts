@@ -7,15 +7,7 @@ import {
   ConfigHelper,
   ChainAssetInfoHelper,
 } from "@bfchain/core-helper";
-import {
-  CoreExceptionGenerator,
-  PARAM_LOST,
-  PROP_IS_INVALID,
-  SHOULD_BE,
-  SHOULD_NOT_EXIST,
-  SHOULD_NOT_INCLUDE,
-  PROP_IS_REQUIRE,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
@@ -57,14 +49,14 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
     } as const;
 
     if (body.recipientId) {
-      throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
         prop: "recipientId",
         ...Function_Exception_Detail,
       });
     }
 
     if (body.fromMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -73,7 +65,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
     }
 
     if (body.toMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -82,7 +74,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
     }
 
     if (body.range.includes(body.senderId)) {
-      throw new ArgumentIllegalException(SHOULD_NOT_INCLUDE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_INCLUDE, {
         prop: "range",
         value: body.senderId,
         ...Function_Exception_Detail,
@@ -94,7 +86,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
     this.verifyToExchangeAny(toExchangeAny, config);
 
     if (body.storage) {
-      throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
         prop: "storage",
         ...Function_Exception_Detail,
       });
@@ -111,7 +103,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
     const Function_Exception_Detail = { function: "verifyTransactionBody" } as const;
 
     if (!toExchangeAny) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "toExchangeAny",
         ...Function_Exception_Detail,
       });
@@ -123,7 +115,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
     } as const;
 
     if (!baseHelper.isValidCipherPublicKeys(toExchangeAny.cipherPublicKeys)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "cipherPublicKeys",
         ...ToExchangeAnyAsset_Exception_Detail,
       });
@@ -185,13 +177,13 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
       toExchangeAny;
 
     if (!toExchangeAssetPrealnum) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "toExchangeAssetPrealnum",
         ...ToExchangeAnyAsset_Exception_Detail,
       });
     }
     if (!baseHelper.isValidAssetNumber(toExchangeAssetPrealnum)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "toExchangeAssetPrealnum",
         ...ToExchangeAnyAsset_Exception_Detail,
       });
@@ -201,7 +193,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
     // to 不是同质资产
     if (toExchangeParentAssetType !== PARENT_ASSET_TYPE.ASSETS) {
       if (toExchangeAssetPrealnum !== "1") {
-        throw new ArgumentIllegalException(SHOULD_BE, {
+        throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
           to_compare_prop: `toExchangeAssetPrealnum ${toExchangeAssetPrealnum}`,
           to_target: "toExchangeAnyAsset",
           be_compare_prop: "1",
@@ -209,19 +201,19 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
         });
       }
       if (!beExchangeAssetPrealnum) {
-        throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
           prop: "beExchangeAssetPrealnum",
           ...ToExchangeAnyAsset_Exception_Detail,
         });
       }
       if (assetExchangeWeightRatio) {
-        throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+        throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
           prop: "assetExchangeWeightRatio",
           ...ToExchangeAnyAsset_Exception_Detail,
         });
       }
       if (!baseHelper.isValidAssetNumber(beExchangeAssetPrealnum)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: "beExchangeAssetPrealnum",
           ...ToExchangeAnyAsset_Exception_Detail,
         });
@@ -229,7 +221,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
       // be 不是同质资产
       if (beExchangeParentAssetType !== PARENT_ASSET_TYPE.ASSETS) {
         if (beExchangeAssetPrealnum !== "1") {
-          throw new ArgumentIllegalException(SHOULD_BE, {
+          throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
             to_compare_prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
             to_target: "toExchangeAnyAsset",
             be_compare_prop: "1",
@@ -243,7 +235,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
     // be 不是同质资产
     if (beExchangeParentAssetType !== PARENT_ASSET_TYPE.ASSETS) {
       if (beExchangeAssetPrealnum !== "1") {
-        throw new ArgumentIllegalException(SHOULD_BE, {
+        throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
           to_compare_prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
           to_target: "toExchangeAnyAsset",
           be_compare_prop: "1",
@@ -251,7 +243,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
         });
       }
       if (assetExchangeWeightRatio) {
-        throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+        throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
           prop: "assetExchangeWeightRatio",
           ...ToExchangeAnyAsset_Exception_Detail,
         });
@@ -261,19 +253,19 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
     // to 是同质资产
     // be 是同质资产
     if (beExchangeAssetPrealnum) {
-      throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
         prop: "beExchangeAssetPrealnum",
         ...ToExchangeAnyAsset_Exception_Detail,
       });
     }
     if (!assetExchangeWeightRatio) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "assetExchangeWeightRatio",
         ...ToExchangeAnyAsset_Exception_Detail,
       });
     }
     if (!baseHelper.isValidAssetExchangeWeightRatio(assetExchangeWeightRatio)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `assetExchangeWeightRatio ${assetExchangeWeightRatio}`,
         ...ToExchangeAnyAsset_Exception_Detail,
       });

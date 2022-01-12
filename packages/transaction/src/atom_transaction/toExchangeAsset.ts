@@ -7,15 +7,7 @@ import {
   ConfigHelper,
   ChainAssetInfoHelper,
 } from "@bfchain/core-helper";
-import {
-  CoreExceptionGenerator,
-  PARAM_LOST,
-  PROP_IS_INVALID,
-  SHOULD_BE,
-  SHOULD_NOT_EXIST,
-  SHOULD_NOT_INCLUDE,
-  PROP_IS_REQUIRE,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
@@ -70,18 +62,17 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<ToExch
 
     const Function_Exception_Detail = {
       target: "body",
-      function: "verifyTransactionBody",
     } as const;
 
     if (body.recipientId) {
-      throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
         prop: "recipientId",
         ...Function_Exception_Detail,
       });
     }
 
     if (body.fromMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -90,7 +81,7 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<ToExch
     }
 
     if (body.toMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -99,7 +90,7 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<ToExch
     }
 
     if (body.range.includes(body.senderId)) {
-      throw new ArgumentIllegalException(SHOULD_NOT_INCLUDE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_INCLUDE, {
         prop: "range",
         value: body.senderId,
         ...Function_Exception_Detail,
@@ -111,7 +102,7 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<ToExch
     this.verifyToExchangeAsset(toExchangeAsset, config);
 
     if (body.storage) {
-      throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
         prop: "storage",
         ...Function_Exception_Detail,
       });
@@ -128,22 +119,19 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<ToExch
     config = this.configHelper,
   ) {
     const { baseHelper } = this;
-    const Function_Exception_Detail = { function: "verifyTransactionBody" } as const;
 
     if (!toExchangeAsset) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "toExchangeAsset",
-        ...Function_Exception_Detail,
       });
     }
 
     const ToExchangeAssetAsset_Exception_Detail = {
       target: "toExchangeAssetAsset",
-      ...Function_Exception_Detail,
     } as const;
 
     if (!baseHelper.isValidCipherPublicKeys(toExchangeAsset.cipherPublicKeys)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "cipherPublicKeys",
         type: "cipher publicKeys",
         ...ToExchangeAssetAsset_Exception_Detail,
@@ -187,13 +175,13 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<ToExch
     );
 
     if (!toExchangeAsset.toExchangeNumber) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "toExchangeNumber",
         ...ToExchangeAssetAsset_Exception_Detail,
       });
     }
     if (!baseHelper.isValidAssetNumber(toExchangeAsset.toExchangeNumber)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "toExchangeNumber",
         type: "asset number",
         ...ToExchangeAssetAsset_Exception_Detail,
@@ -201,7 +189,7 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<ToExch
     }
 
     if (!baseHelper.isValidRate(toExchangeAsset.exchangeRate)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `exchangeRate ${toExchangeAsset.exchangeRate}`,
         type: "rate",
         ...ToExchangeAssetAsset_Exception_Detail,

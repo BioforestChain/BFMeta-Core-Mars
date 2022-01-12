@@ -6,15 +6,7 @@ import {
   ConfigHelper,
   ChainAssetInfoHelper,
 } from "@bfchain/core-helper";
-import {
-  CoreExceptionGenerator,
-  PARAM_LOST,
-  PROP_IS_REQUIRE,
-  PROP_IS_INVALID,
-  SHOULD_BE,
-  SHOULD_NOT_EXIST,
-  SHOULD_NOT_INCLUDE,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import {
   ToExchangeSpecialAssetTransaction,
   EXCHANGE_DIRECTION,
@@ -58,18 +50,17 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
 
     const Function_Exception_Detail = {
       target: "body",
-      function: "verifyTransactionBody",
     } as const;
 
     if (body.recipientId) {
-      throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
         prop: "recipientId",
         ...Function_Exception_Detail,
       });
     }
 
     if (body.fromMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -78,7 +69,7 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
     }
 
     if (body.toMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -87,7 +78,7 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
     }
 
     if (body.range.includes(body.senderId)) {
-      throw new ArgumentIllegalException(SHOULD_NOT_INCLUDE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_INCLUDE, {
         prop: "range",
         value: body.senderId,
         ...Function_Exception_Detail,
@@ -99,7 +90,7 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
     this.verifyExchangeSpecialAsset(toExchangeSpecialAsset);
 
     if (body.storage) {
-      throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
         prop: "storage",
         ...Function_Exception_Detail,
       });
@@ -107,12 +98,9 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
   }
 
   verifyExchangeSpecialAsset(toExchangeSpecialAsset: BFChainCore.ToExchangeSpecialAssetJSON) {
-    const Function_Exception_Detail = { function: "verifyTransactionBody" } as const;
-
     if (!toExchangeSpecialAsset) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "toExchangeSpecialAsset",
-        ...Function_Exception_Detail,
       });
     }
 
@@ -120,11 +108,10 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
 
     const ToExchangeSpecialAssetAsset_Exception_Detail = {
       target: "toExchangeSpecialAssetAsset",
-      ...Function_Exception_Detail,
     } as const;
 
     if (!baseHelper.isValidCipherPublicKeys(toExchangeSpecialAsset.cipherPublicKeys)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "cipherPublicKeys",
         type: "cipher publicKeys",
         ...ToExchangeSpecialAssetAsset_Exception_Detail,
@@ -170,7 +157,7 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
       exchangeAssetType !== SPECIAL_ASSET_TYPE.LOCATION_NAME &&
       exchangeAssetType !== SPECIAL_ASSET_TYPE.ENTITY
     ) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: exchangeAssetType,
         ...ToExchangeSpecialAssetAsset_Exception_Detail,
       });
@@ -181,7 +168,7 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
       exchangeDirection !== EXCHANGE_DIRECTION.ASSET_FROM_SENDER &&
       exchangeDirection !== EXCHANGE_DIRECTION.ASSET_FROM_RECIPIENT
     ) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: exchangeDirection,
         ...ToExchangeSpecialAssetAsset_Exception_Detail,
       });
@@ -190,28 +177,28 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
     if (exchangeDirection === EXCHANGE_DIRECTION.ASSET_FROM_RECIPIENT) {
       if (exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID) {
         if (!baseHelper.isValidDAppId(beExchangeAsset)) {
-          throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
             prop: `beExchangeAsset ${beExchangeAsset}`,
             ...ToExchangeSpecialAssetAsset_Exception_Detail,
           });
         }
       } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME) {
         if (!baseHelper.isValidLnsName(beExchangeAsset)) {
-          throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
             prop: `beExchangeAsset ${beExchangeAsset}`,
             ...ToExchangeSpecialAssetAsset_Exception_Detail,
           });
         }
       } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.ENTITY) {
         if (!baseHelper.isValidEntityId(beExchangeAsset)) {
-          throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
             prop: `beExchangeAsset ${beExchangeAsset}`,
             ...ToExchangeSpecialAssetAsset_Exception_Detail,
           });
         }
       }
       if (!baseHelper.isValidAssetType(toExchangeAsset)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `toExchangeAsset ${toExchangeAsset}`,
           ...ToExchangeSpecialAssetAsset_Exception_Detail,
         });
@@ -219,28 +206,28 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
     } else {
       if (exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID) {
         if (!baseHelper.isValidDAppId(toExchangeAsset)) {
-          throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
             prop: `toExchangeAsset ${toExchangeAsset}`,
             ...ToExchangeSpecialAssetAsset_Exception_Detail,
           });
         }
       } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME) {
         if (!baseHelper.isValidLnsName(toExchangeAsset)) {
-          throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
             prop: `toExchangeAsset ${toExchangeAsset}`,
             ...ToExchangeSpecialAssetAsset_Exception_Detail,
           });
         }
       } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.ENTITY) {
         if (!baseHelper.isValidEntityId(toExchangeAsset)) {
-          throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
             prop: `toExchangeAsset ${toExchangeAsset}`,
             ...ToExchangeSpecialAssetAsset_Exception_Detail,
           });
         }
       }
       if (!baseHelper.isValidAssetType(beExchangeAsset)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `beExchangeAsset ${beExchangeAsset}`,
           ...ToExchangeSpecialAssetAsset_Exception_Detail,
         });
@@ -248,14 +235,14 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
     }
 
     if (!toExchangeSpecialAsset.exchangeNumber) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "beExchangeNumber",
         ...ToExchangeSpecialAssetAsset_Exception_Detail,
       });
     }
 
     if (!baseHelper.isValidAssetNumber(toExchangeSpecialAsset.exchangeNumber)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `beExchangeNumber ${toExchangeSpecialAsset.exchangeNumber}`,
         type: "asset number",
         ...ToExchangeSpecialAssetAsset_Exception_Detail,
@@ -372,10 +359,9 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
             },
           });
         } else {
-          throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
             prop: `exchangeAssetType ${exchangeAssetType}`,
             target: "transaction.asset.toExchangeSpecialAssetAsset",
-            function: "applyTransaction",
           });
         }
       }

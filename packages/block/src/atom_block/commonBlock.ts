@@ -8,14 +8,12 @@ import {
   AsymmetricHelper,
   BlockBaseStatisticsHelper,
 } from "@bfchain/core-helper";
-import { CoreExceptionGenerator, PROP_IS_INVALID } from "@bfchain/core-util-exception";
 import { Injectable, Inject } from "@bfchain/util";
 import { BlockGeneratorCalculator } from "./blockGeneratorCalculator";
 import { CommonBlockVerify } from "./commonBlockVerify";
 import { VerifyBlockCore } from "./verifyBlock";
 import { GenerateBlockCore } from "./generateBlock";
 import { ReplayBlockCore } from "./replayBlock";
-const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "CommonBlockFactory");
 
 /**
  * commonBlock 工厂

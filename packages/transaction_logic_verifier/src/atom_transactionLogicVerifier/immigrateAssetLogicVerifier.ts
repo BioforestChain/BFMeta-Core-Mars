@@ -1,16 +1,7 @@
 import type { ImmigrateAssetTransaction } from "@bfchain/core-model";
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { Injectable, Inject, QueneEventEmitter, parseHexToArrayBuffer } from "@bfchain/util";
-import {
-  CoreExceptionGenerator,
-  NOT_EXIST,
-  NOT_MATCH,
-  ASSET_IS_ALREADY_MIGRATION,
-  CAN_NOT_CARRY_SECOND_PUBLICKEY,
-  CAN_NOT_CARRY_SECOND_SIGNATURE,
-  PROP_IS_REQUIRE,
-  PROP_IS_INVALID,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import {
   AccountBaseHelper,
   ConfigHelperMap,
@@ -47,18 +38,13 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const Function_Exception_Detail = {
-      function: "verify",
-    } as const;
-
     let migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON;
     try {
       migrateCertificate = JSON.parse(transaction.asset.immigrateAsset.migrateCertificate);
     } catch (e) {
-      throw new ConsensusException(PROP_IS_INVALID, {
+      throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "migrateCertificate",
         target: "transaction.asset.immigrateAsset",
-        function: "checkSecondaryTransaction",
       });
     }
 
@@ -70,10 +56,9 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
 
     const memChain = await accountGetterHelper.getChain(fromMagic);
     if (!memChain) {
-      throw new ConsensusException(NOT_EXIST, {
+      throw new ConsensusException(ERROR_LIST.NOT_EXIST, {
         prop: `Chain with magic ${fromChain.magic}`,
         target: "blockChain",
-        ...Function_Exception_Detail,
       });
     }
     const genesisBlock = memChain.genesisBlock;
@@ -92,46 +77,38 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
     const address = await this.accountBaseHelper.getAddressFromPublicKeyString(publicKey);
     const delegate = await accountGetterHelper.getAccountInfo(address);
     if (!delegate) {
-      throw new ConsensusException(NOT_EXIST, {
+      throw new ConsensusException(ERROR_LIST.NOT_EXIST, {
         prop: `Account with address ${address}`,
         target: "blockChain",
-        ...Function_Exception_Detail,
       });
     }
     if (delegate.secondPublicKey) {
       if (!secondPublicKey) {
-        throw new ConsensusException(PROP_IS_REQUIRE, {
+        throw new ConsensusException(ERROR_LIST.PROP_IS_REQUIRE, {
           prop: `secondPublicKey`,
           target: "genesisDelegateSignature",
-          ...Function_Exception_Detail,
         });
       }
       if (!signSignature) {
-        throw new ConsensusException(PROP_IS_REQUIRE, {
+        throw new ConsensusException(ERROR_LIST.PROP_IS_REQUIRE, {
           prop: `signSignature`,
           target: "genesisDelegateSignature",
-          ...Function_Exception_Detail,
         });
       }
       if (delegate.secondPublicKey !== secondPublicKey) {
-        throw new ConsensusException(NOT_MATCH, {
+        throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
           to_compare_prop: `secondPublicKey ${delegate.secondPublicKey}`,
           be_compare_prop: `secondPublicKey ${secondPublicKey}`,
           to_target: "transaction",
           be_target: "delegate",
-          ...Function_Exception_Detail,
         });
       }
     } else {
       if (secondPublicKey) {
-        throw new ConsensusException(CAN_NOT_CARRY_SECOND_PUBLICKEY, {
-          ...Function_Exception_Detail,
-        });
+        throw new ConsensusException(ERROR_LIST.CAN_NOT_CARRY_SECOND_PUBLICKEY);
       }
       if (signSignature) {
-        throw new ConsensusException(CAN_NOT_CARRY_SECOND_SIGNATURE, {
-          ...Function_Exception_Detail,
-        });
+        throw new ConsensusException(ERROR_LIST.CAN_NOT_CARRY_SECOND_SIGNATURE);
       }
     }
 
@@ -178,10 +155,9 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
   //   try {
   //     migrateCertificate = JSON.parse(transaction.asset.immigrateAsset.migrateCertificate);
   //   } catch (e) {
-  //     throw new ConsensusException(PROP_IS_INVALID, {
+  //     throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
   //       prop: "migrateCertificate",
   //       target: "transaction.asset.immigrateAsset",
-  //       function: "checkSecondaryTransaction",
   //     });
   //   }
   //   const converter = this.migrateCertificateHelper.getMigrateCertificateConverter(migrateCertificate);
@@ -192,9 +168,8 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
   //     heightRange: this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
   //   });
   //   if (isSecondary) {
-  //     throw new ConsensusException(ASSET_IS_ALREADY_MIGRATION, {
+  //     throw new ConsensusException(ERROR_LIST.ASSET_IS_ALREADY_MIGRATION, {
   //       migrateCertificateId,
-  //       function: "checkSecondaryTransaction",
   //     });
   //   }
   // }

@@ -7,14 +7,7 @@ import {
   ConfigHelper,
   ChainAssetInfoHelper,
 } from "@bfchain/core-helper";
-import {
-  CoreExceptionGenerator,
-  PROP_IS_INVALID,
-  SHOULD_BE,
-  PARAM_LOST,
-  PROP_IS_REQUIRE,
-  SHOULD_NOT_EXIST,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "VoteTransactionFactory");
 
@@ -57,7 +50,6 @@ export class VoteTransactionFactory extends TransactionFactory<VoteTransaction> 
 
     const Function_Exception_Detail = {
       target: "body",
-      function: "verifyTransactionBody",
     } as const;
 
     this.emptyRangeType(body, Function_Exception_Detail);
@@ -65,14 +57,14 @@ export class VoteTransactionFactory extends TransactionFactory<VoteTransaction> 
     const { baseHelper } = this;
 
     if (!body.recipientId) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "recipientId",
         ...Function_Exception_Detail,
       });
     }
 
     if (body.fromMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -81,7 +73,7 @@ export class VoteTransactionFactory extends TransactionFactory<VoteTransaction> 
     }
 
     if (body.toMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -90,7 +82,7 @@ export class VoteTransactionFactory extends TransactionFactory<VoteTransaction> 
     }
 
     if (body.storage) {
-      throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
         prop: "storage",
         ...Function_Exception_Detail,
       });
@@ -99,9 +91,8 @@ export class VoteTransactionFactory extends TransactionFactory<VoteTransaction> 
     const vote = voteAsset.vote;
 
     if (!vote) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "voteAsset",
-        function: "verifyTransactionBody",
       });
     }
 
@@ -111,7 +102,7 @@ export class VoteTransactionFactory extends TransactionFactory<VoteTransaction> 
     } as const;
 
     if (!baseHelper.isValidAccountEquity(vote.equity)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `equity ${vote.equity}`,
         type: "account equity",
         ...VoteAsset_Exception_Detail,

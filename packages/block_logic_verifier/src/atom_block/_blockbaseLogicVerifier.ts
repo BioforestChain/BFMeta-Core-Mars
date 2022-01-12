@@ -7,20 +7,7 @@ import {
   ChainAssetInfoHelper,
   StatisticsInfo,
 } from "@bfchain/core-helper";
-import {
-  CoreExceptionGenerator,
-  NOT_EXIST,
-  ALREADY_EXIST,
-  NOT_MATCH,
-  PROP_SHOULD_GT_FIELD,
-  PROP_SHOULD_LTE_FIELD,
-  INVALID_BLOCK_GENERATOR,
-  PROP_IS_INVALID,
-  BLOCK_SIGN_SIGNATURE_IS_REQUIRED,
-  BLOCK_GENERATOR_SECOND_PUBLICKEY_ALREADY_CHANGE,
-  BLOCK_SHOULD_NOT_HAVE_GENERATOR_SECOND_PUBLICKEY,
-  BLOCK_SHOULD_NOT_HAVE_SIGN_SIGNATURE,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import type { Block } from "@bfchain/core-model-block";
 import { Inject } from "@bfchain/util";
 import { BlockGeneratorCalculator } from "@bfchain/core-block";
@@ -89,24 +76,18 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
     transactionGetterHelper = this.transactionGetterHelper,
     blockGetterHelper = this.blockGetterHelper,
   ) {
-    const Function_Exception_Detail = {
-      function: "logicVerify",
-    } as const;
-
     this.blockHelper.verifyBlockVersion(block, this.configHelper);
 
     if (!transactionGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "transactionGetterHelper",
         target: "moduleStroge",
-        ...Function_Exception_Detail,
       });
     }
     if (!blockGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "blockGetterHelper",
         target: "moduleStroge",
-        ...Function_Exception_Detail,
       });
     }
 
@@ -138,10 +119,6 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
    * @param generatorInfo
    */
   async checkSecondPublicKey(block: T, generatorInfo: BFChainCore.AccountInfo) {
-    const Function_Exception_Detail = {
-      function: "checkSecondPublicKey",
-    } as const;
-
     const { height, generatorPublicKey, generatorSecondPublicKey, signature, signSignature } =
       block;
 
@@ -149,46 +126,41 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
       generatorPublicKey,
     );
     if (!generatorInfo) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: `delegate with address ${generatorAddress}`,
         target: "blockChain",
-        ...Function_Exception_Detail,
       });
     }
 
     if (generatorInfo.secondPublicKey) {
       if (!(generatorSecondPublicKey && signSignature)) {
-        throw new ConsensusException(BLOCK_SIGN_SIGNATURE_IS_REQUIRED, {
+        throw new ConsensusException(ERROR_LIST.BLOCK_SIGN_SIGNATURE_IS_REQUIRED, {
           signature,
           generatorAddress,
           height,
-          ...Function_Exception_Detail,
         });
       }
 
       if (generatorInfo.secondPublicKey !== generatorSecondPublicKey) {
-        throw new ConsensusException(BLOCK_GENERATOR_SECOND_PUBLICKEY_ALREADY_CHANGE, {
+        throw new ConsensusException(ERROR_LIST.BLOCK_GENERATOR_SECOND_PUBLICKEY_ALREADY_CHANGE, {
           signature,
           generatorAddress,
           height,
-          ...Function_Exception_Detail,
         });
       }
     } else {
       if (generatorSecondPublicKey) {
-        throw new ConsensusException(BLOCK_SHOULD_NOT_HAVE_GENERATOR_SECOND_PUBLICKEY, {
+        throw new ConsensusException(ERROR_LIST.BLOCK_SHOULD_NOT_HAVE_GENERATOR_SECOND_PUBLICKEY, {
           signature,
           generatorAddress,
           height,
-          ...Function_Exception_Detail,
         });
       }
       if (signSignature) {
-        throw new ConsensusException(BLOCK_SHOULD_NOT_HAVE_SIGN_SIGNATURE, {
+        throw new ConsensusException(ERROR_LIST.BLOCK_SHOULD_NOT_HAVE_SIGN_SIGNATURE, {
           signature,
           generatorAddress,
           height,
-          ...Function_Exception_Detail,
         });
       }
     }
@@ -208,13 +180,6 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
       console.debug(
         `Block timestamp in future. Block time is ahead of the time on the server, block timestamp ${block.timestamp}, block timestamp slot ${trsSlot}, blockChain now timestamp ${nowTimestamp}, blockChain now timestamp slot ${nowSlot}`,
       );
-      // throw new ConsensusException(INVALID_BLOCK_TIMESTAMP, {
-      //   reason: `Block timestamp in future. Block time is ahead of the time on the server, block timestamp ${block.timestamp}, block timestamp slot ${trsSlot}, blockChain now timestamp ${nowTimestamp}, blockChain now timestamp slot ${nowSlot}`,
-      //   signature: block.signature,
-      //   height: block.height,
-      //   generatorPublicKey: block.generatorPublicKey,
-      //   function: "checkBlockTimestamp",
-      // });
     }
   }
 
@@ -230,30 +195,24 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
     height: number,
     blockGetterHelper = this.blockGetterHelper,
   ) {
-    const Function_Exception_Detail = {
-      function: "isBlockAlreadyExist",
-    } as const;
     if (!blockGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "blockGetterHelper",
         target: "moduleStroge",
-        ...Function_Exception_Detail,
       });
     }
     if (typeof blockGetterHelper.getCountBlock !== "function") {
-      throw new ConsensusException(PROP_IS_INVALID, {
+      throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "getCountBlock",
         target: "blockGetterHelper",
-        ...Function_Exception_Detail,
       });
     }
     const count = await blockGetterHelper.getCountBlock({ signature });
     if (count > 0) {
-      throw new ConsensusException(ALREADY_EXIST, {
+      throw new ConsensusException(ERROR_LIST.ALREADY_EXIST, {
         prop: `Block with signature ${signature}`,
         target: "blockChain",
         errorId: `Block already exists: ${signature} height: ${height}`,
-        ...Function_Exception_Detail,
       });
     }
   }
@@ -279,42 +238,35 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
    * @param blockGetterHelper
    */
   async checkPreviousBlock(block: T, blockGetterHelper = this.blockGetterHelper) {
-    const Function_Exception_Detail = {
-      function: "checkPreviousBlock",
-    } as const;
     if (!blockGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "blockGetterHelper",
         target: "moduleStroge",
-        ...Function_Exception_Detail,
       });
     }
     if (typeof blockGetterHelper.chainBlockFork !== "function") {
-      throw new ConsensusException(PROP_IS_INVALID, {
+      throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "chainBlockFork",
         target: "blockGetterHelper",
-        ...Function_Exception_Detail,
       });
     }
     const { height, previousBlockSignature, timestamp } = block;
     const lastBlock = await blockGetterHelper.getBlockByHeight(height - 1);
     if (!lastBlock) {
-      throw new ConsensusException(NOT_EXIST, {
+      throw new ConsensusException(ERROR_LIST.NOT_EXIST, {
         prop: `Block with height ${height - 1}`,
         target: "blockChain",
-        ...Function_Exception_Detail,
       });
     }
     const __signature = lastBlock.signature;
     if (previousBlockSignature !== __signature) {
       // 记录分叉区块信息
       await blockGetterHelper.chainBlockFork(block, BLOCK_FORK_CAUSE.DIFFERENT_PRE_BLOCK_SIGNATURE);
-      throw new ConsensusException(NOT_MATCH, {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `previousBlockSignature: ${previousBlockSignature}`,
         be_compare_prop: `__signature: ${__signature}`,
         to_target: `block ${height}`,
         be_target: `lastBlock ${lastBlock.height}`,
-        ...Function_Exception_Detail,
       });
     }
 
@@ -323,11 +275,10 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
     const blockSlotNumber = timeHelper.getSlotNumberByTimestamp(timestamp);
     const calcBlockSlotNumber = timeHelper.getNextSlotNumberByTimestamp(lastBlock.timestamp);
     if (blockSlotNumber < calcBlockSlotNumber) {
-      throw new ConsensusException(PROP_SHOULD_GT_FIELD, {
+      throw new ConsensusException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
         prop: `timestamp ${timestamp}`,
         target: "block",
         field: `lastBlock timestamp ${lastBlock.timestamp}`,
-        ...Function_Exception_Detail,
       });
     }
   }
@@ -339,14 +290,10 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
    * @param blockGetterHelper
    */
   async isValidBlockSlot(block: T, blockGetterHelper = this.blockGetterHelper) {
-    const Function_Exception_Detail = {
-      function: "isValidBlockSlot",
-    } as const;
     if (!blockGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "blockGetterHelper",
         target: "moduleStroge",
-        ...Function_Exception_Detail,
       });
     }
 
@@ -365,7 +312,7 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
       { toTimestamp: block.timestamp, blockGetterHelper },
     );
     if (calcResult.address !== generatorAddress) {
-      throw new ConsensusException(INVALID_BLOCK_GENERATOR, {
+      throw new ConsensusException(ERROR_LIST.INVALID_BLOCK_GENERATOR, {
         reason: `lastBlock.timestamp: ${lastBlock.timestamp} lastBlock.height: ${
           lastBlock.height
         }, block.timestamp: ${block.timestamp} curTime: ${timeHelper.getTimeByTimestamp(
@@ -375,7 +322,6 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
         } 当前slot为${currentSlot}，当前应该由委托人${
           calcResult.address
         }打块，实际是由${generatorAddress}打块，校验无法通过`,
-        ...Function_Exception_Detail,
       });
     }
 
@@ -385,12 +331,11 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
       calcRoundOfflineGeneraters,
     ] of calcResult.roundOfflineGeneratersReadonlyMap) {
       if (!blockRoundOfflineGeneratersHashMap[roundOffset]) {
-        throw new ConsensusException(NOT_MATCH, {
+        throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
           to_compare_prop: "roundOfflineGeneratersHashMap",
           be_compare_prop: "roundOfflineGeneratersHashMap",
           to_target: "calcGenerateBlockDelegate",
           be_target: `block with height ${block.height}, signature ${block.signature}`,
-          ...Function_Exception_Detail,
         });
       }
       if (
@@ -399,21 +344,19 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
         const blockRoundOfflineGeneraters =
           blockRoundOfflineGeneratersHashMap[roundOffset].split(",");
         if (calcRoundOfflineGeneraters.length !== blockRoundOfflineGeneraters.length) {
-          throw new ConsensusException(NOT_MATCH, {
+          throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
             to_compare_prop: `calcRoundOfflineGeneraters.length: ${calcRoundOfflineGeneraters.length}`,
             be_compare_prop: `blockRoundOfflineGeneraters.length: ${blockRoundOfflineGeneraters.length}`,
             to_target: "calcGenerateBlockDelegate",
             be_target: `block with height ${block.height}, signature ${block.signature}`,
-            ...Function_Exception_Detail,
           });
         }
         for (const generator of calcRoundOfflineGeneraters) {
           // 正常来说如果掉线顺序不一致也是错误的
           if (!blockRoundOfflineGeneraters.includes(generator)) {
-            throw new ConsensusException(NOT_EXIST, {
+            throw new ConsensusException(ERROR_LIST.NOT_EXIST, {
               prop: `offlineGenerater ${generator}`,
               target: `block.roundOfflineGeneratersHashMap with height ${block.height}, signature ${block.signature}`,
-              ...Function_Exception_Detail,
             });
           }
         }
@@ -431,14 +374,10 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
     height: number,
     transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const Function_Exception_Detail = {
-      function: "checkNewDelegates",
-    } as const;
     if (!transactionGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "transactionGetterHelper",
         target: "moduleStroge",
-        ...Function_Exception_Detail,
       });
     }
 
@@ -448,20 +387,18 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
     const delegateCount = newDelegates.length;
     if (round === 1) {
       if (delegateCount > maxDelegateTxsPerRound + delegates) {
-        throw new ConsensusException(PROP_SHOULD_LTE_FIELD, {
+        throw new ConsensusException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
           prop: `delegateCount ${delegateCount}`,
           target: "block",
           field: `maxDelegateTxsPerRound ${maxDelegateTxsPerRound + delegates}`,
-          ...Function_Exception_Detail,
         });
       }
     } else {
       if (delegateCount > maxDelegateTxsPerRound) {
-        throw new ConsensusException(PROP_SHOULD_LTE_FIELD, {
+        throw new ConsensusException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
           prop: `delegateCount ${delegateCount}`,
           target: "block",
           field: `maxDelegateTxsPerRound ${maxDelegateTxsPerRound}`,
-          ...Function_Exception_Detail,
         });
       }
     }

@@ -8,16 +8,7 @@ import {
   ConfigHelperMap,
   ChainAssetInfoHelper,
 } from "@bfchain/core-helper";
-import {
-  CoreExceptionGenerator,
-  PARAM_LOST,
-  PROP_IS_REQUIRE,
-  SHOULD_BE,
-  SHOULD_NOT_EXIST,
-  NOT_MATCH,
-  PROP_IS_INVALID,
-  SHOULD_NOT_BE,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import {
   Injectable,
   Inject,
@@ -72,20 +63,19 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
 
     const Function_Exception_Detail = {
       target: "body",
-      function: "verifyTransactionBody",
     } as const;
 
     this.emptyRangeType(body, Function_Exception_Detail);
 
     if (body.recipientId) {
-      throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
         prop: "recipientId",
         ...Function_Exception_Detail,
       });
     }
 
     if (body.fromMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "chain magic",
@@ -94,7 +84,7 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
     }
 
     if (body.toMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "chain magic",
@@ -103,7 +93,7 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
     }
 
     if (!body.storage) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "storage",
         ...Function_Exception_Detail,
       });
@@ -111,7 +101,7 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
 
     const storage = body.storage;
     if (storage.key !== "magic") {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `key ${storage.key}`,
         to_target: "storage",
         be_compare_prop: "magic",
@@ -122,9 +112,8 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
     const registerChain = registerChainAsset.registerChain;
 
     if (!registerChain) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "registerChain",
-        function: "verifyTransactionBody",
       });
     }
 
@@ -135,13 +124,13 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
 
     const genesisBlockHexString = registerChain.genesisBlock;
     if (!genesisBlockHexString) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "genesisBlock",
         ...RegisterChainAsset_Exception_Detail,
       });
     }
     if (!this.baseHelper.isHexString(genesisBlockHexString)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "genesisBlock",
         ...RegisterChainAsset_Exception_Detail,
       });
@@ -152,7 +141,7 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
     const baseInfo = this._blockCore.blockHelper.genesisBlockBaseInfoReader(bytes);
     const { bnid, magic, assetType, chainName } = baseInfo;
     if (magic === config.magic) {
-      throw new ArgumentIllegalException(SHOULD_NOT_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
         to_compare_prop: `magic ${magic}`,
         to_target: "genesisBlockJson.asset.genesisAsset",
         be_compare_prop: config.magic,
@@ -160,7 +149,7 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
       });
     }
     if (assetType === config.assetType) {
-      throw new ArgumentIllegalException(SHOULD_NOT_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
         to_compare_prop: `assetType ${assetType}`,
         to_target: "genesisBlockJson.asset.genesisAsset",
         be_compare_prop: config.assetType,
@@ -168,7 +157,7 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
       });
     }
     if (chainName === config.chainName) {
-      throw new ArgumentIllegalException(SHOULD_NOT_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
         to_compare_prop: `chainName ${chainName}`,
         to_target: "genesisBlockJson.asset.genesisAsset",
         be_compare_prop: config.chainName,
@@ -176,7 +165,7 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
       });
     }
     if (config.initials !== bnid) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `initials ${config.initials}`,
         be_compare_prop: `bnid ${bnid}`,
         to_target: "config",

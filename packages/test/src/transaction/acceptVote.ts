@@ -10,6 +10,7 @@ import {
   getBfchainCoreEntry,
   getRandomDAppid,
 } from "../include";
+import { I18N_LANGUAGE_TYPE } from "@bfchain/util-i18n";
 
 async function getAcceptVoteTransaction(sender: AccountModel, bfchainCore: BFChainCore) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
@@ -22,7 +23,7 @@ async function getAcceptVoteTransaction(sender: AccountModel, bfchainCore: BFCha
     rangeType: RANGE_TYPE.EMPTY,
     range: [],
     timestamp: 770880, // 生成交易时间戳
-    fee: "78622", // 交易手续费
+    fee: "--", // 交易手续费
     remark: { remark: "body.remark".repeat(1000) }, // 交易备注，任意信息
     dappid: getRandomDAppid(), // 交易所属的 dappid
     lns: bfchainCore.config.genesisLocationName,
@@ -60,6 +61,7 @@ async function getAcceptVoteTransaction(sender: AccountModel, bfchainCore: BFCha
 
 (async () => {
   const bfchainCore = await getBfchainCoreEntry();
+  bfchainCore.i18N.setLanguage(I18N_LANGUAGE_TYPE.CHINESE);
 
   // getAcceptVoteTransaction(getSenderWithSecondSecret());
   await getAcceptVoteTransaction(getSenderWithoutSecondSecret(), bfchainCore);

@@ -1,7 +1,7 @@
 import { GiftAssetTransaction, NewTransactionRefuseReason } from "@bfchain/core-model";
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
-import { CoreExceptionGenerator, TRANSACTION_FEE_NOT_ENOUGH } from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 const { ConsensusException } = CoreExceptionGenerator("CONTROLLER", "GiftAssetLogicVerifier");
 
 @Injectable()
@@ -70,11 +70,10 @@ export class GiftAssetLogicVerifier extends TransactionLogicVerifier {
       const minFee = this.jsbiHelper
         .multiplyCeilFraction(feePerByte.denominator, minTransactionFeePerByte)
         .toString();
-      throw new ConsensusException(TRANSACTION_FEE_NOT_ENOUGH, {
+      throw new ConsensusException(ERROR_LIST.TRANSACTION_FEE_NOT_ENOUGH, {
         errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
         minFee: minFee.toString(),
         target: "transaction",
-        function: "__checkTrsFee",
       });
     }
   }

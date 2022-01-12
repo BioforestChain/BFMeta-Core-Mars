@@ -1,17 +1,7 @@
 import { TransactionFactory } from "./_txbase";
 import { ToExchangeSpecialAssetTransactionFactory } from "./toExchangeSpecialAsset";
 import { Injectable, wrapTaskList, parseHexToArrayBuffer } from "@bfchain/util";
-import {
-  CoreExceptionGenerator,
-  PROP_IS_REQUIRE,
-  SHOULD_NOT_BE,
-  SHOULD_BE,
-  PARAM_LOST,
-  PROP_IS_INVALID,
-  NOT_MATCH,
-  NOT_EXIST,
-  SHOULD_NOT_EXIST,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import {
   ASSET_STATUS,
   BeExchangeSpecialAssetTransaction,
@@ -83,7 +73,6 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
 
     const Function_Exception_Detail = {
       target: "body",
-      function: "verifyTransactionBody",
     } as const;
 
     this.emptyRangeType(body, Function_Exception_Detail);
@@ -93,14 +82,14 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
     const recipientId = body.recipientId;
 
     if (!recipientId) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "recipientId",
         ...Function_Exception_Detail,
       });
     }
 
     if (body.senderId === recipientId) {
-      throw new ArgumentIllegalException(SHOULD_NOT_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
         to_compare_prop: `senderId ${body.senderId}`,
         to_target: "body",
         be_compare_prop: `recipientId ${recipientId}`,
@@ -109,7 +98,7 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
     }
 
     if (body.fromMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -118,7 +107,7 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
     }
 
     if (body.toMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -127,7 +116,7 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
     }
 
     if (!body.storage) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "storage",
         ...Function_Exception_Detail,
       });
@@ -135,7 +124,7 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
 
     const storage = body.storage;
     if (storage.key !== "transactionSignature") {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `storage.key ${storage.key}`,
         to_target: "storage",
         be_compare_prop: "transactionSignature",
@@ -146,7 +135,7 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
     const beExchangeSpecialAsset = beExchangeSpecialAssetAsset.beExchangeSpecialAsset;
 
     if (!beExchangeSpecialAsset) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "beExchangeSpecialAsset",
         ...Function_Exception_Detail,
       });
@@ -159,14 +148,14 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
 
     const transactionSignature = beExchangeSpecialAsset.transactionSignature;
     if (!transactionSignature) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "transactionSignature",
         ...BeExchangeSpecialAssetAsset_Exception_Detail,
       });
     }
 
     if (!baseHelper.isValidSignature(transactionSignature)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `transactionSignature ${transactionSignature}`,
         type: "transaction signature",
         ...BeExchangeSpecialAssetAsset_Exception_Detail,
@@ -174,7 +163,7 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
     }
 
     if (storage.value !== transactionSignature) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `storage.value ${storage.value}`,
         be_compare_prop: `transactionSignature ${transactionSignature}`,
         to_target: "storage",
@@ -193,14 +182,14 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
     /**如果是公钥模式，那么必须存在密文 */
     if (cipherPublicKeys.length > 0) {
       if (!ciphertextSignature) {
-        throw new ArgumentIllegalException(NOT_EXIST, {
+        throw new ArgumentIllegalException(ERROR_LIST.NOT_EXIST, {
           prop: `ciphertextSignature ${ciphertextSignature}`,
           ...BeExchangeSpecialAssetAsset_Exception_Detail,
         });
       }
 
       if (!baseHelper.isValidAccountSignature(ciphertextSignature)) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `ciphertextSignature ${ciphertextSignature}`,
           ...BeExchangeSpecialAssetAsset_Exception_Detail,
         });
@@ -209,7 +198,7 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
       const { signature, publicKey } = ciphertextSignature;
 
       if (!cipherPublicKeys.includes(publicKey)) {
-        throw new ArgumentIllegalException(NOT_MATCH, {
+        throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
           to_compare_prop: `publicKey ${publicKey}`,
           be_compare_prop: "cipherPublicKeys",
           to_target: "ciphertextSignature",
@@ -227,7 +216,7 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
           senderId: body.senderId,
         }))
       ) {
-        throw new ArgumentIllegalException(PROP_IS_INVALID, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `ciphertextSignature ${signature}`,
           type: "signature",
           ...BeExchangeSpecialAssetAsset_Exception_Detail,
@@ -235,7 +224,7 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
       }
     } else {
       if (ciphertextSignature) {
-        throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+        throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
           prop: `ciphertextSignature ${beExchangeSpecialAsset.ciphertextSignature}`,
           ...BeExchangeSpecialAssetAsset_Exception_Detail,
         });
@@ -419,10 +408,9 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
             },
           });
         } else {
-          throw new ArgumentIllegalException(PROP_IS_INVALID, {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
             prop: `exchangeAssetType ${exchangeAssetType}`,
             target: "transaction.asset.beExchangeSpecialAssetAsset.exchangeSpecialAsset",
-            function: "applyTransaction",
           });
         }
       }

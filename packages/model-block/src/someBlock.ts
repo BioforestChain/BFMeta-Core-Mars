@@ -2,10 +2,7 @@ import type { Block } from "@bfchain/core-model-block-base";
 import { GenesisBlock, CommonBlock, RoundLastBlock } from "./atom_block";
 import { Type, Field, Message, Reader, Writer } from "@bfchain/protobuf";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
-import {
-  INVALID_BLOCK_CONSTRUCTOR,
-  INVALID_BLOCK_TYPE,
-} from "@bfchain/core-util-exception-errorcode";
+import { ERROR_LIST } from "@bfchain/core-util-exception-errorcode";
 import { GenesisAssetModel, GenesisAssetV0Model } from "@bfchain/core-model-block-asset";
 
 const { ArgumentFormatException } = CoreExceptionGenerator("MODEL", "blockModel");
@@ -105,7 +102,7 @@ export class SomeBlockModel<T extends BFChainCore.Block = BFChainCore.Block>
     if (!block) {
       const Model = BLOCK_TYPES_MAP.KM.get(this._block_type);
       if (!Model) {
-        throw new ArgumentFormatException(INVALID_BLOCK_TYPE, {
+        throw new ArgumentFormatException(ERROR_LIST.INVALID_BLOCK_TYPE, {
           type: this._block_type,
         });
       }
@@ -118,7 +115,7 @@ export class SomeBlockModel<T extends BFChainCore.Block = BFChainCore.Block>
     const ctor = block.constructor as BFChainCore.BlockModelConstructor;
     const block_type = BLOCK_TYPES_MAP.MK.get(ctor);
     if (block_type === undefined) {
-      throw new ArgumentFormatException(INVALID_BLOCK_CONSTRUCTOR, { name: ctor.name });
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_BLOCK_CONSTRUCTOR, { name: ctor.name });
     }
     this._block_type = block_type;
     this._block_bytes = new Uint8Array(ctor.encode(block).finish());

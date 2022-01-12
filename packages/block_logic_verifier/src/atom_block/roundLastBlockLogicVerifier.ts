@@ -1,11 +1,6 @@
 import { BlockLogicVerifier, PROCESSBLOCK_TYPE } from "./_blockbaseLogicVerifier";
 import type { RoundLastBlock } from "@bfchain/core-model-block";
-import {
-  CoreExceptionGenerator,
-  NOT_MATCH,
-  NOT_EXIST,
-  PROP_IS_INVALID,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
   "BlockLogicVerifier",
@@ -60,29 +55,24 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
     newDelegates: string[],
     transactionGetterHelper = this.transactionGetterHelper,
   ) {
-    const Function_Exception_Detail = {
-      function: "isValidNewDelegates",
-    } as const;
     // 校验新注册的受托人
     const realNewDelegates = await this.checkNewDelegates(height, transactionGetterHelper);
     if (newDelegates.length !== realNewDelegates.length) {
-      throw new ConsensusException(NOT_MATCH, {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `newDelegates length ${newDelegates.length}`,
         be_compare_prop: `newDelegates length ${realNewDelegates.length}`,
         to_target: "block",
         be_target: "blockChain",
-        ...Function_Exception_Detail,
       });
     }
     // 校验新注册的受托人是否与区块携带的一致
     for (const address of newDelegates) {
       if (!realNewDelegates.includes(address)) {
-        throw new ConsensusException(NOT_MATCH, {
+        throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
           to_compare_prop: `newDelegates ${JSON.stringify(realNewDelegates)}`,
           be_compare_prop: `newDelegates ${address}`,
           to_target: "block",
           be_target: "blockChain",
-          ...Function_Exception_Detail,
         });
       }
     }
@@ -98,12 +88,11 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
   async checkRemarkHash(height: number, hash: string, blockGetterHelper = this.blockGetterHelper) {
     const hashString = await this.blockHelper.calcChainOnChainHash(height, blockGetterHelper);
     if (hashString !== hash) {
-      throw new ConsensusException(NOT_MATCH, {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `hashString ${hashString}`,
         be_compare_prop: `hash ${hash}`,
         to_target: "block",
         be_target: "calculate",
-        function: "checkRemarkHash",
       });
     }
   }
@@ -118,21 +107,16 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
     block: RoundLastBlock,
     blockGetterHelper = this.blockGetterHelper,
   ) {
-    const Function_Exception_Detail = {
-      function: "checkNewForgingDelegates",
-    } as const;
     if (!blockGetterHelper) {
-      throw new NoFoundException(NOT_EXIST, {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "blockGetterHelper",
         target: "moduleStroge",
-        ...Function_Exception_Detail,
       });
     }
     if (typeof blockGetterHelper.getNewForgingDelegates !== "function") {
-      throw new ConsensusException(PROP_IS_INVALID, {
+      throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "getNewForgingDelegates",
         target: "blockGetterHelper",
-        ...Function_Exception_Detail,
       });
     }
     const delegates = await blockGetterHelper.getNewForgingDelegates(
@@ -141,12 +125,11 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
     );
     const nextRoundDelegates = block.asset.roundLastAsset.nextRoundDelegates;
     if (delegates.length !== nextRoundDelegates.length) {
-      throw new ConsensusException(NOT_MATCH, {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `delegates length ${delegates.length}`,
         be_compare_prop: `delegates length ${nextRoundDelegates.length}`,
         to_target: "block remark",
         be_target: "calculate",
-        ...Function_Exception_Detail,
       });
     }
 
@@ -154,22 +137,20 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
       const address = delegates[i].address;
       const nextRoundDelegate = nextRoundDelegates[i];
       if (nextRoundDelegate.address !== address) {
-        throw new ConsensusException(NOT_MATCH, {
+        throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
           to_compare_prop: `nextRoundDelegates index ${i} address ${nextRoundDelegate.address}`,
           be_compare_prop: `nextRoundDelegates index ${i} address ${address}`,
           to_target: "block remark",
           be_target: "calculate",
-          ...Function_Exception_Detail,
         });
       }
       const calcEquity = delegates[i].vote.toString();
       if (nextRoundDelegate.equity !== calcEquity) {
-        throw new ConsensusException(NOT_MATCH, {
+        throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
           to_compare_prop: `nextRoundDelegates index ${i} address ${nextRoundDelegate.address} equity ${nextRoundDelegate.equity}`,
           be_compare_prop: `nextRoundDelegates index ${i} address ${address} equity ${calcEquity}`,
           to_target: "block remark",
           be_target: "calculate",
-          ...Function_Exception_Detail,
         });
       }
     }
@@ -182,26 +163,21 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
    * @param tickResult
    */
   checkMaxBeginBalanceAndMaxTxCount(block: RoundLastBlock, tickResult: BFChainCore.TickResultInfo) {
-    const Function_Exception_Detail = {
-      function: "checkMaxBeginBalanceAndMaxTxCount",
-    } as const;
     const roundLastAsset = block.asset.roundLastAsset;
     if (roundLastAsset.maxBeginBalance !== tickResult.maxBeginBalance) {
-      throw new ConsensusException(NOT_MATCH, {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `maxBeginBalance ${roundLastAsset.maxBeginBalance}`,
         be_compare_prop: `maxBeginBalance ${tickResult.maxBeginBalance}`,
         to_target: "block remark",
         be_target: "calculate",
-        ...Function_Exception_Detail,
       });
     }
     if (roundLastAsset.maxTxCount !== tickResult.maxTxCount) {
-      throw new ConsensusException(NOT_MATCH, {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `maxTxCount ${roundLastAsset.maxTxCount}`,
         be_compare_prop: `maxTxCount ${tickResult.maxTxCount}`,
         to_target: "block remark",
         be_target: "calculate",
-        ...Function_Exception_Detail,
       });
     }
   }

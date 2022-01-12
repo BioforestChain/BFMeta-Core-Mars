@@ -39,9 +39,10 @@ import {
   ParityBitHelper,
   MigrateCertificateHelper,
 } from "@bfchain/core-helper";
-import { Injectable, Inject, ModuleStroge, Resolve } from "@bfchain/util";
+import { Injectable, Inject, ModuleStroge, Resolve, I18N } from "@bfchain/util";
 
 import { PatchInstaller } from "@bfchain/core-patch";
+import { ERROR_LIST, translatedErrorCodeListMap } from "@bfchain/core-util-exception-errorcode";
 
 // export default Helper;
 @Injectable()
@@ -82,10 +83,14 @@ export class BFChainCore {
     public moduleMap: ModuleStroge,
     /**补丁安装器 */
     public readonly patchInstaller: PatchInstaller,
+    /**多语言管理器 */
+    public i18N: I18N,
   ) {
     // moduleMap.set("___",(argsA)=>{
     //   return Resolve(BFChainCore,argsA)
     // })
+
+    this.i18N.addErrorCodeList("BFCHAIN-CORE", ERROR_LIST, translatedErrorCodeListMap);
   }
 }
 export function BFChainCoreFactory(

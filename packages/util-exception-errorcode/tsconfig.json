@@ -11,6 +11,9 @@
   ],
   "files": [
     "src/errorCode.ts",
-    "src/index.ts"
+    "src/index.ts",
+    "src/locales/errorCode_list_en.ts",
+    "src/locales/errorCode_list_zh.ts",
+    "src/locales/index.ts"
   ]
 }

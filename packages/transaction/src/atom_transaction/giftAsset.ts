@@ -13,18 +13,7 @@ import {
   ChainAssetInfoHelper,
   JSBIHelper,
 } from "@bfchain/core-helper";
-import {
-  CoreExceptionGenerator,
-  PARAM_LOST,
-  PROP_IS_REQUIRE,
-  PROP_IS_INVALID,
-  SHOULD_BE,
-  NOT_MATCH,
-  SHOULD_NOT_EXIST,
-  PROP_SHOULD_LT_FIELD,
-  TRANSACTION_FEE_NOT_ENOUGH,
-  PROP_SHOULD_LTE_FIELD,
-} from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
@@ -79,18 +68,17 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
 
     const Function_Exception_Detail = {
       target: "body",
-      function: "verifyTransactionBody",
     } as const;
 
     if (body.recipientId) {
-      throw new ArgumentIllegalException(SHOULD_NOT_EXIST, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
         prop: "recipientId",
         ...Function_Exception_Detail,
       });
     }
 
     if (body.fromMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `fromMagic ${body.fromMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -99,7 +87,7 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
     }
 
     if (body.toMagic !== config.magic) {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
@@ -108,7 +96,7 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
     }
 
     if (!body.storage) {
-      throw new ArgumentIllegalException(PROP_IS_REQUIRE, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "storage",
         ...Function_Exception_Detail,
       });
@@ -116,7 +104,7 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
 
     const storage = body.storage;
     if (storage.key !== "assetType") {
-      throw new ArgumentIllegalException(SHOULD_BE, {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `storage.key ${storage.key}`,
         to_target: "storage",
         be_compare_prop: "assetType",
@@ -129,7 +117,7 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
 
     if (giftAsset.giftDistributionRule === GIFT_DISTRIBUTION_RULE.RECIPIENT_RANDOM) {
       if (body.rangeType !== RANGE_TYPE.MULTI_ADDRESS) {
-        throw new ArgumentIllegalException(SHOULD_BE, {
+        throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
           to_compare_prop: `rangeType ${body.rangeType}`,
           to_target: "body",
           be_compare_prop: RANGE_TYPE.MULTI_ADDRESS,
@@ -140,7 +128,7 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
 
     if (giftAsset.beginUnfrozenBlockHeight) {
       if (giftAsset.beginUnfrozenBlockHeight >= body.effectiveBlockHeight) {
-        throw new ArgumentIllegalException(PROP_SHOULD_LT_FIELD, {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_LT_FIELD, {
           prop: `beginUnfrozenBlockHeight ${giftAsset.beginUnfrozenBlockHeight}`,
           field: body.effectiveBlockHeight,
           ...Function_Exception_Detail,
@@ -150,7 +138,7 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
     }
 
     if (storage.value !== giftAsset.assetType) {
-      throw new ArgumentIllegalException(NOT_MATCH, {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `storage.value ${storage.value}`,
         be_compare_prop: `assetType ${giftAsset.assetType}`,
         to_target: "storage",
@@ -171,7 +159,7 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
       const minFee = this.jsbiHelper
         .multiplyCeilFraction(feePerByte.denominator, minTransactionFeePerByte)
         .toString();
-      throw new ArgumentIllegalException(TRANSACTION_FEE_NOT_ENOUGH, {
+      throw new ArgumentIllegalException(ERROR_LIST.TRANSACTION_FEE_NOT_ENOUGH, {
         errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
         minFee: minFee.toString(),
         ...Function_Exception_Detail,
@@ -184,22 +172,19 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
    */
   verifyGiftAsset(giftAsset: BFChainCore.GiftAssetJSON, config = this.configHelper) {
     const { baseHelper } = this;
-    const Function_Exception_Detail = { function: "verifyTransactionBody" } as const;
 
     if (!giftAsset) {
-      throw new ArgumentIllegalException(PARAM_LOST, {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "giftAsset",
-        ...Function_Exception_Detail,
       });
     }
 
     const GiftAssetAsset_Exception_Detail = {
       target: "giftAssetAsset",
-      ...Function_Exception_Detail,
     } as const;
 
     if (!baseHelper.isValidCipherPublicKeys(giftAsset.cipherPublicKeys)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "cipherPublicKeys",
         type: "cipher publicKeys",
         ...GiftAssetAsset_Exception_Detail,
@@ -215,7 +200,7 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
     this.checkAsset(assetType, "assetType", GiftAssetAsset_Exception_Detail);
 
     if (!baseHelper.isPositiveInteger(giftAsset.totalGrabableTimes)) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `totalGrabableTimes ${giftAsset.totalGrabableTimes}`,
         type: "positive integer",
         ...GiftAssetAsset_Exception_Detail,
@@ -223,7 +208,7 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
     }
 
     if (giftAsset.totalGrabableTimes > config.maxGrabTimesOfGiftAsset) {
-      throw new ArgumentIllegalException(PROP_SHOULD_LTE_FIELD, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
         prop: `totalGrabableTimes ${giftAsset.totalGrabableTimes}`,
         field: config.maxGrabTimesOfGiftAsset,
         ...GiftAssetAsset_Exception_Detail,
@@ -231,7 +216,7 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
     }
 
     // if (!baseHelper.isValidAssetNumber(giftAsset.unitReserveFee)) {
-    //   throw new ArgumentIllegalException(PROP_IS_INVALID, {
+    //   throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
     //     prop: "unitReserveFee",
     //     type: "asset number",
     //     ...GiftAssetAsset_Exception_Detail,
@@ -242,7 +227,7 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
       giftAsset.beginUnfrozenBlockHeight !== undefined &&
       !baseHelper.isPositiveInteger(giftAsset.beginUnfrozenBlockHeight)
     ) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `beginUnfrozenBlockHeight ${giftAsset.beginUnfrozenBlockHeight}`,
         type: "positive integer",
         ...GiftAssetAsset_Exception_Detail,
@@ -255,7 +240,7 @@ export class GiftAssetTransactionFactory extends TransactionFactory<GiftAssetTra
       giftDistributionRule !== GIFT_DISTRIBUTION_RULE.AVERAGE &&
       giftDistributionRule !== GIFT_DISTRIBUTION_RULE.RECIPIENT_RANDOM
     ) {
-      throw new ArgumentIllegalException(PROP_IS_INVALID, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `giftDistributionRule ${giftDistributionRule}`,
         type: "enum of GIFT_DISTRIBUTION_RULE",
         ...GiftAssetAsset_Exception_Detail,
