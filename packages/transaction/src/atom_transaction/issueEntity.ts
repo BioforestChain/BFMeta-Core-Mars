@@ -62,15 +62,6 @@ export class IssueEntityTransactionFactory extends TransactionFactory<IssueEntit
       });
     }
 
-    if (body.senderId === recipientId) {
-      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
-        to_compare_prop: `senderId ${body.senderId}`,
-        to_target: "body",
-        be_compare_prop: `recipientId ${recipientId}`,
-        ...Function_Exception_Detail,
-      });
-    }
-
     if (body.fromMagic !== config.magic) {
       throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `fromMagic ${body.fromMagic}`,
@@ -153,6 +144,24 @@ export class IssueEntityTransactionFactory extends TransactionFactory<IssueEntit
         type: "account address",
         ...Function_Exception_Detail,
         target: "issueEntity",
+      });
+    }
+
+    if (body.senderId === entityFactoryPossessor) {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
+        to_compare_prop: `senderId ${body.senderId}`,
+        to_target: "body",
+        be_compare_prop: `entityFactoryPossessor ${entityFactoryPossessor}`,
+        ...Function_Exception_Detail,
+      });
+    }
+
+    if (recipientId === entityFactoryPossessor) {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
+        to_compare_prop: `recipientId ${recipientId}`,
+        to_target: "body",
+        be_compare_prop: `entityFactoryPossessor ${entityFactoryPossessor}`,
+        ...Function_Exception_Detail,
       });
     }
 
