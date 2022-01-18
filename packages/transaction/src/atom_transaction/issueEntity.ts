@@ -147,24 +147,6 @@ export class IssueEntityTransactionFactory extends TransactionFactory<IssueEntit
       });
     }
 
-    if (body.senderId === entityFactoryPossessor) {
-      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
-        to_compare_prop: `senderId ${body.senderId}`,
-        to_target: "body",
-        be_compare_prop: `entityFactoryPossessor ${entityFactoryPossessor}`,
-        ...Function_Exception_Detail,
-      });
-    }
-
-    if (recipientId === entityFactoryPossessor) {
-      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
-        to_compare_prop: `recipientId ${recipientId}`,
-        to_target: "body",
-        be_compare_prop: `entityFactoryPossessor ${entityFactoryPossessor}`,
-        ...Function_Exception_Detail,
-      });
-    }
-
     if (!entityId) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "entityId",

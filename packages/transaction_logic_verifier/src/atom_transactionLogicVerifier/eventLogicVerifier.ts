@@ -1609,6 +1609,15 @@ export class EventLogicVerifier {
           });
         }
 
+        if (possessorAddress === memEntityFactory.applyAddress) {
+          throw new ConsensusException(ERROR_LIST.SHOULD_NOT_BE, {
+            to_compare_prop: `entityPossessor ${possessorAddress}`,
+            be_compare_prop: "issueEntity",
+            to_target: `entityFactoryApplicant ${memEntityFactory.applyAddress}`,
+            be_target: "memEntityFactory",
+          });
+        }
+
         if (memEntityFactory.remainNumberOfEntities === 0) {
           throw new ConsensusException(ERROR_LIST.ISSUE_ENTITY_TIMES_USE_UP, {
             entityFactory: factoryId,
