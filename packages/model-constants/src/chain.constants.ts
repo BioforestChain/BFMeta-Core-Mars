@@ -11,3 +11,6 @@ export const enum NETWORK_TYPE {
   /**正式网络 */
   MAINNET = "mainnet",
 }
+
+/**一个代币 = 100,000,000 本 */
+export const TOKEN_TO_BEN = "100000000";

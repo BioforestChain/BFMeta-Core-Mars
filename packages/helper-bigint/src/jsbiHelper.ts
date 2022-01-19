@@ -39,6 +39,70 @@ export class JSBIHelper {
     return this.multiplyFloorFraction(x, this.numberToFraction(y));
   }
   /**
+   * 分数下取整
+   *
+   * @param x
+   * @returns
+   */
+  floorFraction(x: BFChainCore.FractionJSON<BI>) {
+    const numerator = formatParam(x.numerator);
+    const denominator = formatParam(x.denominator);
+    return numerator / denominator;
+  }
+  /**
+   * 分数上取整
+   *
+   * @param x
+   * @returns
+   */
+  ceilFraction(x: BFChainCore.FractionJSON<BI>) {
+    const numerator = formatParam(x.numerator);
+    const denominator = formatParam(x.denominator);
+    const result = numerator / denominator;
+    // 如果能够正确还原，说明是整除
+    if (result * denominator === numerator) {
+      return result;
+    }
+    return result + BigInt(1);
+  }
+  /**
+   * 两个分数相乘
+   *
+   * @param x
+   * @param y
+   */
+  multiplyFraction(
+    x: BFChainCore.FractionJSON<BI>,
+    y: BFChainCore.FractionJSON<BI>,
+  ): BFChainCore.FractionJSON<bigint> {
+    const numeratorX = BigInt(x.numerator);
+    const denominatorX = BigInt(x.denominator);
+    const numeratorY = BigInt(y.numerator);
+    const denominatorY = BigInt(y.denominator);
+    return {
+      numerator: numeratorX * numeratorY,
+      denominator: denominatorX * denominatorY,
+    };
+  }
+  /**
+   * 两个分数相乘，并且下取整
+   *
+   * @param x
+   * @param y
+   */
+  multiplyFractionAndFloor(x: BFChainCore.FractionJSON<BI>, y: BFChainCore.FractionJSON<BI>) {
+    return this.floorFraction(this.multiplyFraction(x, y));
+  }
+  /**
+   * 两个分数相乘，并且下取整
+   *
+   * @param x
+   * @param y
+   */
+  multiplyFractionAndCeil(x: BFChainCore.FractionJSON<BI>, y: BFChainCore.FractionJSON<BI>) {
+    return this.ceilFraction(this.multiplyFraction(x, y));
+  }
+  /**
    * 与分数相乘，向下取整
    *
    * @param z

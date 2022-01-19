@@ -38,6 +38,7 @@ import {
   ChainTimeHelper,
   ParityBitHelper,
   MigrateCertificateHelper,
+  JSBIHelper,
 } from "@bfchain/core-helper";
 import { Injectable, Inject, ModuleStroge, Resolve, I18N } from "@bfchain/util";
 
@@ -54,6 +55,7 @@ export class BFChainCore {
     @Inject("ed2curveHelper") public ed2curveHelper: BFChainCore.Ed2curveHelperInterface,
     @Inject("Buffer") public Buffer: BFChainUtil.BufferConstructor,
     public base58Helper: Base58Helper,
+    public jsbiHelper: JSBIHelper,
     public asymmetricHelper: AsymmetricHelper,
     public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,

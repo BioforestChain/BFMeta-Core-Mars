@@ -6,6 +6,7 @@ import {
   ASSET_STATUS,
   LOCATION_NAME_LEVEL,
   RECORD_OPERATION_TYPE,
+  TOKEN_TO_BEN,
 } from "@bfchain/core-model";
 import { ConfigHelper, BlockHelper, TransactionHelper, JSBIHelper } from "@bfchain/core-helper";
 import { HelperLogicVerifier } from "./helperLogicVerifier";
@@ -1518,8 +1519,12 @@ export class EventLogicVerifier {
         }
 
         // 验证最大发行数量
-        const calcMaxEntities = this.jsbiHelper.multiplyFloorFraction(
-          remainChainAsset,
+        const calcMaxEntities = this.jsbiHelper.multiplyFractionAndFloor(
+          /// 要把 本 换算成 个
+          {
+            numerator: remainChainAsset,
+            denominator: TOKEN_TO_BEN,
+          },
           this.configHelper.maxMultipleOfEntityAndMainAsset,
         );
         if (BigInt(numberOfEntities) > calcMaxEntities) {
