@@ -51,7 +51,11 @@ export class IssueAssetLogicVerifier extends TransactionLogicVerifier {
     eventLogicVerifier.listenEventFrozenAccount(cloneAccountsInfo, eventEmitter);
 
     const accountAssets = this.helperLogicVerifier.deepClone(sender.accountAssets);
-    eventLogicVerifier.listenEventIssueAsset(accountAssets, accountGetterHelper, eventEmitter);
+    eventLogicVerifier.listenEventIssueAsset(
+      accountAssets,
+      accountGetterHelper,
+      eventEmitter,
+    );
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 

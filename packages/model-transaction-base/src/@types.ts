@@ -557,6 +557,7 @@ declare namespace BFChainCore {
     IssueAssetAssetJSON,
     { hasRecipientId: true }
   >;
+  type IssueAssetTransactionV1JSON = IssueAssetTransactionJSON;
   type TransferAssetTransactionJSON = TransactionMixJSON<
     TransferAssetAssetJSON,
     { hasRecipientId: true }
@@ -616,6 +617,7 @@ declare namespace BFChainCore {
     IssueEntityFactoryAssetJSON,
     { hasRecipientId: true }
   >;
+  type IssueEntityFactoryTransactionV1JSON = IssueEntityFactoryTransactionJSON;
   type IssueEntityTransactionJSON = TransactionMixJSON<
     IssueEntityAssetJSON,
     { hasRecipientId: true }

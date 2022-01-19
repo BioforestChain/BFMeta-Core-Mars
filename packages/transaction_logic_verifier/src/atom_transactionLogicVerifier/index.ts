@@ -32,6 +32,7 @@ export * from "./setLnsRecordValueLogicVerifier";
 export * from "./registerChainLogicVerifier";
 
 export * from "./issueEntityFactoryLogicVerifier";
+export * from "./issueEntityFactoryV1LogicVerifier";
 export * from "./issueEntityLogicVerifier";
 export * from "./destoryEntityLogicVerifier";
 

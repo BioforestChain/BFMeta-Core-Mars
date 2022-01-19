@@ -6,6 +6,7 @@ import {
   BaseHelper,
   ConfigHelper,
   ChainAssetInfoHelper,
+  JSBIHelper,
 } from "@bfchain/core-helper";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { Injectable, wrapTaskList } from "@bfchain/util";
@@ -26,18 +27,12 @@ export class IssueEntityFactoryTransactionFactory extends TransactionFactory<Iss
     public baseHelper: BaseHelper,
     public configHelper: ConfigHelper,
     public chainAssetInfoHelper: ChainAssetInfoHelper,
+    public jsbiHelper: JSBIHelper,
   ) {
     super();
   }
 
-  /**
-   * 校验输入信息
-   *
-   * @param body
-   * @param dappAsset
-   * @param config
-   */
-  async verifyTransactionBody(
+  async commonVerifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
     issueEntityFactoryAssetJSON: BFChainCore.IssueEntityFactoryAssetJSON,
     config = this.configHelper,
@@ -54,15 +49,6 @@ export class IssueEntityFactoryTransactionFactory extends TransactionFactory<Iss
     if (!recipientId) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "recipientId",
-        ...Function_Exception_Detail,
-      });
-    }
-
-    if (body.senderId === recipientId) {
-      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
-        to_compare_prop: `senderId ${body.senderId}`,
-        to_target: "body",
-        be_compare_prop: `recipientId ${recipientId}`,
         ...Function_Exception_Detail,
       });
     }
@@ -114,6 +100,30 @@ export class IssueEntityFactoryTransactionFactory extends TransactionFactory<Iss
         to_target: "storage",
         be_target: "dapp",
         ...Function_Exception_Detail,
+      });
+    }
+  }
+
+  /**
+   * 校验输入信息
+   *
+   * @param body
+   * @param dappAsset
+   * @param config
+   */
+  async verifyTransactionBody(
+    body: BFChainCore.TxBodyJSON,
+    issueEntityFactoryAssetJSON: BFChainCore.IssueEntityFactoryAssetJSON,
+    config = this.configHelper,
+  ) {
+    await this.commonVerifyTransactionBody(body, issueEntityFactoryAssetJSON, config);
+
+    if (body.senderId === body.recipientId) {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
+        to_compare_prop: `senderId ${body.senderId}`,
+        to_target: "body",
+        be_compare_prop: `recipientId ${body.recipientId}`,
+        target: "body",
       });
     }
   }
@@ -291,8 +301,8 @@ export class IssueEntityFactoryTransactionFactory extends TransactionFactory<Iss
         },
       });
       // 发行 entityFactory
-      taskList.next = eventEmitter.emit("issueEntityFactory", {
-        type: "issueEntityFactory",
+      taskList.next = eventEmitter.emit("issueEntityFactoryByFrozen", {
+        type: "issueEntityFactoryByFrozen",
         transaction,
         applyInfo: {
           address: transaction.senderId,

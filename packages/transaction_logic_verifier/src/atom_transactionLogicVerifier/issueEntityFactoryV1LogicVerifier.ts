@@ -4,7 +4,7 @@ import { Injectable, Inject, QueneEventEmitter } from "@bfchain/util";
 import { AccountBaseHelper, TransactionHelper } from "@bfchain/core-helper";
 
 @Injectable()
-export class IssueEntityFactoryLogicVerifier extends TransactionLogicVerifier {
+export class IssueEntityFactoryV1LogicVerifier extends TransactionLogicVerifier {
   constructor(
     @Inject(AccountBaseHelper) public accountBaseHelper: AccountBaseHelper,
     @Inject(TransactionHelper) public transactionHelper: TransactionHelper,
@@ -38,28 +38,28 @@ export class IssueEntityFactoryLogicVerifier extends TransactionLogicVerifier {
       cloneAccountsAssets[address] = this.helperLogicVerifier.deepClone(recipient.accountAssets);
     }
 
-    const cloneAccountsInfo = {
-      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountInfo),
-    };
-
     const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
-    // 手续费
-    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
+    const { eventLogicVerifier } = this;
 
-    // 冻结发起账户
-    this.eventLogicVerifier.listenEventFrozenAccount(cloneAccountsInfo, eventEmitter);
+    // 手续费
+    eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
+
+    // 销毁主权益
+    eventLogicVerifier.listenEventDestoryMainAsset(
+      cloneAccountsAssets,
+      accountGetterHelper,
+      eventEmitter,
+    );
 
     // 发行 entityFactory
-    const accountAssets = this.helperLogicVerifier.deepClone(sender.accountAssets);
-    this.eventLogicVerifier.listenEventIssueEntityFactoryByFrozen(
-      accountAssets,
+    eventLogicVerifier.listenEventIssueEntityFactoryByDestory(
       currentBlockHeight,
       accountGetterHelper,
       eventEmitter,
     );
 
-    await this.eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
+    await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     return true;
   }

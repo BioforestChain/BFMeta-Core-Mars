@@ -469,6 +469,10 @@ export const TRANSACTION_FACTORY_TYPES_MAP = (() => {
         TRANSACTION_TYPES_BASE.ISSUE_ENTITY_FACTORY,
         ATOM_TRSFAC.IssueEntityFactoryTransactionFactory,
       ],
+      [
+        TRANSACTION_TYPES_BASE.ISSUE_ENTITY_FACTORY_V1,
+        ATOM_TRSFAC.IssueEntityFactoryTransactionFactoryV1,
+      ],
       [TRANSACTION_TYPES_BASE.ISSUE_ENTITY, ATOM_TRSFAC.IssueEntityTransactionFactory],
       [TRANSACTION_TYPES_BASE.DESTORY_ENTITY, ATOM_TRSFAC.DestoryEntityTransactionFactory],
 

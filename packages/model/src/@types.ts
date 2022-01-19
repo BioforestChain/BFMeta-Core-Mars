@@ -30,6 +30,12 @@ declare namespace BFChainCore {
   > = EVENTNAME extends "fee"
     ? ApplyTransactionEvent<ApplyInfo_Asset, "fee", T>
     : ApplyTransactionEvent<ApplyInfo_FeeFromUnfrozenAsset, "feeFromUnfrozen", T>;
+
+  interface ApplyInfo_DestoryMainAsset extends ApplyInfo_Asset {}
+  /**销毁主权益的相关事件 */
+  type ApplyTransactionDestoryMainAssetEvent<EVENTNAME, T extends Transaction = Transaction> =
+    ApplyTransactionEvent<ApplyInfo_DestoryMainAsset, EVENTNAME, T>;
+
   interface ApplyInfo_FrozenAsset extends ApplyInfo_Asset {
     /**冻结的索引 */
     frozenIdBuffer: Uint8Array;
@@ -435,6 +441,16 @@ declare namespace BFChainCore {
     fee: BFChainUtil.EventInOut<ApplyTransactionFeeEvent<"fee", Transaction>, void>;
     feeFromUnfrozen: BFChainUtil.EventInOut<ApplyTransactionFeeEvent<"feeFromUnfrozen">>;
 
+    /**销毁主权益 */
+    destoryMainAsset: BFChainUtil.EventInOut<
+      ApplyTransactionDestoryMainAssetEvent<
+        "destoryMainAsset",
+        | import("@bfchain/core-model-transaction").IssueEntityFactoryTransactionV1
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
+      >,
+      void
+    >;
+
     /**扣除资产数量 */
     asset: BFChainUtil.EventInOut<ApplyTransactionAssetEvent<"asset">>;
 
@@ -651,10 +667,17 @@ declare namespace BFChainCore {
       >
     >;
     /**发行 entityFactory */
-    issueEntityFactory: BFChainUtil.EventInOut<
+    issueEntityFactoryByFrozen: BFChainUtil.EventInOut<
       ApplyTransactionIssueEntityFactoryEvent<
-        "issueEntityFactory",
+        "issueEntityFactoryByFrozen",
         | import("@bfchain/core-model-transaction").IssueEntityFactoryTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
+      >
+    >;
+    issueEntityFactoryByDestory: BFChainUtil.EventInOut<
+      ApplyTransactionIssueEntityFactoryEvent<
+        "issueEntityFactoryByDestory",
+        | import("@bfchain/core-model-transaction").IssueEntityFactoryTransactionV1
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;

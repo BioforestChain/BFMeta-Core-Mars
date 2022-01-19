@@ -1,7 +1,11 @@
 import { ConfigHelper } from "@bfchain/core-helper-config";
 import { BaseHelper } from "@bfchain/core-helper-type";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
-import { GIFT_DISTRIBUTION_RULE, PARENT_ASSET_TYPE } from "@bfchain/core-model-constants";
+import {
+  GIFT_DISTRIBUTION_RULE,
+  PARENT_ASSET_TYPE,
+  TOKEN_TO_BEN,
+} from "@bfchain/core-model-constants";
 import {
   TRANSACTION_TYPES_MAP,
   TRANSACTION_TYPES_BASE,
@@ -207,9 +211,13 @@ export class TransactionHelper {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.SET_LNS_MANAGER);
   }
   /** ETY: 非同质资产/entity */
-  /** ISSUE_ENTITY_FACTORY: 发行非同质资产模板 */
+  /** ISSUE_ENTITY_FACTORY: 发行非同质资产模板 - V0 版，冻结发行 */
   get ISSUE_ENTITY_FACTORY() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.ISSUE_ENTITY_FACTORY);
+  }
+  /** ISSUE_ENTITY_FACTORY: 发行非同质资产模板 - V1 版，销毁发行 */
+  get ISSUE_ENTITY_FACTORY_V1() {
+    return this.getTransactionType(TRANSACTION_TYPES_BASE.ISSUE_ENTITY_FACTORY_V1);
   }
   /** ISSUE_ENTITY: 发行非同质资产 */
   get ISSUE_ENTITY() {
@@ -839,6 +847,26 @@ export class TransactionHelper {
    */
   getFactoryIdByEntityId(entityId: string) {
     return entityId.split("_")[0];
+  }
+
+  /* 计算发行非同质资产模板需要销毁的主权益数
+   *
+   * @param entityPrealnum
+   * @param config
+   * @returns
+   */
+  calcDestoryMainAssetsOfIsseuEntityFactory(entityPrealnum: string, config = this.config) {
+    const jsbiHelper = this.jsbiHelper;
+    // 一共需要多少 个 主权益
+    const mainAssetPrealnum = jsbiHelper.divisionFraction(
+      { numerator: entityPrealnum, denominator: "1" },
+      config.maxMultipleOfEntityAndMainAsset,
+    );
+    // 一共需要多少 本 主权益
+    const destoryAssets = jsbiHelper
+      .multiplyCeilFraction(TOKEN_TO_BEN, mainAssetPrealnum)
+      .toString();
+    return destoryAssets;
   }
 
   /**

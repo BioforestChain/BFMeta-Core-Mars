@@ -25,6 +25,7 @@ export * from "./locationName";
 export * from "./setLnsManager";
 export * from "./setLnsRecordValue";
 export * from "./issueEntityFactory";
+export * from "./issueEntityFactoryV1";
 export * from "./issueEntity";
 export * from "./destoryEntity";
 export * from "./toExchangeAny";

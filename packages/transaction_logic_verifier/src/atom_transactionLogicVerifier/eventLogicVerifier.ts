@@ -115,6 +115,78 @@ export class EventLogicVerifier {
     );
   }
 
+  listenEventDestoryMainAsset(
+    accountsAssets: { [asddress: string]: BFChainCore.AccountAssets },
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
+  ) {
+    // 扣除手续费
+    eventEmitter.on(
+      "destoryMainAsset",
+      async ({ transaction, applyInfo }, next) => {
+        // 手续费扣除的只能是链资产
+        const { magic, assetType } = this.configHelper;
+        if (magic !== this.configHelper.magic) {
+          throw new ConsensusException(ERROR_LIST.SHOULD_BE, {
+            to_compare_prop: `magic ${magic}`,
+            to_target: "applyInfo",
+            be_compare_prop: this.configHelper.magic,
+          });
+        }
+        if (assetType !== this.configHelper.assetType) {
+          throw new ConsensusException(ERROR_LIST.SHOULD_BE, {
+            to_compare_prop: `assetType ${assetType}`,
+            to_target: "applyInfo",
+            be_compare_prop: this.configHelper.assetType,
+          });
+        }
+        const { amount, sourceAmount } = applyInfo;
+        const destoryAmount = BigInt(amount);
+        const address = applyInfo.address;
+        accountsAssets[address] = accountsAssets[address] || {};
+        accountsAssets[address][magic] = accountsAssets[address][magic] || {};
+        accountsAssets[address][magic][assetType] = accountsAssets[address][magic][assetType] || {
+          sourceChainMagic: magic,
+          assetType,
+          assetNumber: BigInt(0),
+          history: {},
+        };
+        const hodingAsset = accountsAssets[address][magic][assetType];
+        const remainAsset = hodingAsset.assetNumber;
+        hodingAsset.assetNumber += destoryAmount;
+        if (hodingAsset.assetNumber < BigInt(0)) {
+          throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
+            reason: `Transaction signature: ${transaction.signature} address: ${address} magic ${
+              applyInfo.assetInfo.magic
+            } assetType: ${
+              applyInfo.assetInfo.assetType
+            } hodingAsset: ${remainAsset.toString()} destoryAsset: ${amount}`,
+            errorId: NewTransactionRefuseReason.ASSET_NOT_ENOUGH,
+          });
+        }
+
+        // 是否有足够的剩余主权益
+        const memAssets = await accountGetterHelper.getAsset(magic, assetType);
+        if (!memAssets) {
+          throw new ConsensusException(ERROR_LIST.ASSET_NOT_EXIST, {
+            magic: magic,
+            assetType,
+            errorId: NewTransactionRefuseReason.ASSET_NOT_EXIST,
+          });
+        }
+        if (memAssets.remainAssetPrealnum < BigInt(sourceAmount)) {
+          throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
+            reason: `Asset ${magic} ${assetType} remain: ${memAssets.remainAssetPrealnum.toString()} destoryAsset: ${amount}`,
+            errorId: NewTransactionRefuseReason.ASSET_NOT_ENOUGH,
+          });
+        }
+
+        next();
+      },
+      { taskname: `applyTransaction/logicVerifier/destoryMainAsset` },
+    );
+  }
+
   listenEventAsset(
     accountsAssets: { [asddress: string]: BFChainCore.AccountAssets },
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -517,6 +589,59 @@ export class EventLogicVerifier {
     );
   }
 
+  private async __checkAsset(
+    genesisAddress: string,
+    assetType: string,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+  ) {
+    // 不能将冻结账户设置为同质资产的创世账户
+    const possessor = await accountGetterHelper.getAccountInfo(genesisAddress);
+    if (possessor) {
+      const accountStatus = possessor.accountStatus;
+      if (
+        accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
+        accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
+        accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
+      ) {
+        throw new ConsensusException(ERROR_LIST.ACCOUNT_FROZEN, {
+          address: genesisAddress,
+          status: accountStatus,
+        });
+      }
+    }
+
+    const chainMagic = this.configHelper.magic;
+
+    // 验证资产名是否被禁用
+    const result = await accountGetterHelper.isCurrencyForbidden(assetType);
+    if (result) {
+      throw new ConsensusException(ERROR_LIST.FORBIDDEN, {
+        prop: `AssetType ${assetType}`,
+        target: "blockChain",
+      });
+    }
+
+    // 验证资产名是否已经存在
+    const memLegalCurrency = await accountGetterHelper.getCurrency(assetType);
+    if (memLegalCurrency) {
+      throw new ConsensusException(ERROR_LIST.ALREADY_EXIST, {
+        prop: `AssetType ${assetType}`,
+        target: "blockChain",
+        errorId: NewTransactionRefuseReason.ASSETTYPE_ALREADY_EXIST,
+      });
+    }
+
+    // 验证资产是否已经存在
+    const memAssets = await accountGetterHelper.getAsset(chainMagic, assetType);
+    if (memAssets) {
+      throw new ConsensusException(ERROR_LIST.ASSET_NOT_EXIST, {
+        magic: chainMagic,
+        assetType,
+        errorId: NewTransactionRefuseReason.ASSET_NOT_EXIST,
+      });
+    }
+  }
+
   listenEventIssueAsset(
     accountAssets: BFChainCore.AccountAssets,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
@@ -529,21 +654,7 @@ export class EventLogicVerifier {
         const { address, assetInfo, genesisAddress, sourceAmount } = applyInfo;
         const { assetType } = assetInfo;
 
-        // 不能将冻结账户设置为数字资产的创世账户
-        const possessor = await accountGetterHelper.getAccountInfo(genesisAddress);
-        if (possessor) {
-          const accountStatus = possessor.accountStatus;
-          if (
-            accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
-            accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
-            accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
-          ) {
-            throw new ConsensusException(ERROR_LIST.ACCOUNT_FROZEN, {
-              address: genesisAddress,
-              status: accountStatus,
-            });
-          }
-        }
+        await this.__checkAsset(genesisAddress, assetType, accountGetterHelper);
 
         // 是否持有除链资产外的其他资产
         await this.helperLogicVerifier.isPossessAssetExceptChainAsset(
@@ -605,35 +716,6 @@ export class EventLogicVerifier {
             prop: `expectedIssuedAssets ${sourceAmount}`,
             target: `issueAsset`,
             field: `calc max assets ${calcMaxAssets}`,
-          });
-        }
-
-        // 验证资产名是否被禁用
-        const result = await accountGetterHelper.isCurrencyForbidden(assetType);
-        if (result) {
-          throw new ConsensusException(ERROR_LIST.FORBIDDEN, {
-            prop: `AssetType ${assetType}`,
-            target: "blockChain",
-          });
-        }
-
-        // 验证资产名是否已经存在
-        const memLegalCurrency = await accountGetterHelper.getCurrency(assetType);
-        if (memLegalCurrency) {
-          throw new ConsensusException(ERROR_LIST.ALREADY_EXIST, {
-            prop: `AssetType ${assetType}`,
-            target: "blockChain",
-            errorId: NewTransactionRefuseReason.ASSETTYPE_ALREADY_EXIST,
-          });
-        }
-
-        // 验证资产是否已经存在
-        const memAssets = await accountGetterHelper.getAsset(chainMagic, assetType);
-        if (memAssets) {
-          throw new ConsensusException(ERROR_LIST.ASSET_ALREADY_EXIST, {
-            magic: chainMagic,
-            assetType,
-            errorId: NewTransactionRefuseReason.ASSET_ALREADY_EXIST,
           });
         }
 
@@ -1448,7 +1530,44 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventIssueEntityFactory(
+  private async __checkEntityFactory(
+    currentBlockHeight: number,
+    possessorAddress: string,
+    sourceChainMagic: string,
+    factoryId: string,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+  ) {
+    // 不能将冻结账户设置为非同质资产模板的拥有者账户
+    const possessor = await accountGetterHelper.getAccountInfo(possessorAddress);
+    if (possessor) {
+      const accountStatus = possessor.accountStatus;
+      if (
+        accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
+        accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
+        accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
+      ) {
+        throw new ConsensusException(ERROR_LIST.ACCOUNT_FROZEN, {
+          address: possessorAddress,
+          status: accountStatus,
+        });
+      }
+    }
+
+    // entityFactory 是否已经存在
+    const memEntityFactory = await accountGetterHelper.getEntityFactory(
+      sourceChainMagic,
+      factoryId,
+      currentBlockHeight,
+    );
+    if (memEntityFactory) {
+      throw new ConsensusException(ERROR_LIST.ENTITY_FACTORY_IS_ALREADY_EXIST, {
+        factoryId,
+        errorId: NewTransactionRefuseReason.ENTITY_FACTORY_ALREADY_EXIST,
+      });
+    }
+  }
+
+  listenEventIssueEntityFactoryByFrozen(
     accountAssets: BFChainCore.AccountAssets,
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
@@ -1456,26 +1575,18 @@ export class EventLogicVerifier {
   ) {
     // 发行 entityFactory
     eventEmitter.on(
-      "issueEntityFactory",
+      "issueEntityFactoryByFrozen",
       async ({ transaction, applyInfo }, next) => {
         const { address, factoryId, sourceChainMagic, possessorAddress, entityPrealnum } =
           applyInfo;
 
-        // 不能将冻结账户设置为数字资产的创世账户
-        const possessor = await accountGetterHelper.getAccountInfo(possessorAddress);
-        if (possessor) {
-          const accountStatus = possessor.accountStatus;
-          if (
-            accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
-            accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
-            accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
-          ) {
-            throw new ConsensusException(ERROR_LIST.ACCOUNT_FROZEN, {
-              address: possessorAddress,
-              status: accountStatus,
-            });
-          }
-        }
+        await this.__checkEntityFactory(
+          currentBlockHeight,
+          possessorAddress,
+          sourceChainMagic,
+          factoryId,
+          accountGetterHelper,
+        );
 
         // 是否持有除链资产外的其他资产
         await this.helperLogicVerifier.isPossessAssetExceptChainAsset(
@@ -1537,22 +1648,34 @@ export class EventLogicVerifier {
           });
         }
 
-        // entityFactory 是否已经存在
-        const memEntityFactory = await accountGetterHelper.getEntityFactory(
+        next();
+      },
+      { taskname: `applyTransaction/logicVerifier/issueEntityFactoryByFrozen` },
+    );
+  }
+
+  listenEventIssueEntityFactoryByDestory(
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
+  ) {
+    // 发行 entityFactory
+    eventEmitter.on(
+      "issueEntityFactoryByDestory",
+      async ({ transaction, applyInfo }, next) => {
+        const { factoryId, sourceChainMagic, possessorAddress } = applyInfo;
+
+        await this.__checkEntityFactory(
+          currentBlockHeight,
+          possessorAddress,
           sourceChainMagic,
           factoryId,
-          currentBlockHeight,
+          accountGetterHelper,
         );
-        if (memEntityFactory) {
-          throw new ConsensusException(ERROR_LIST.ENTITY_FACTORY_IS_ALREADY_EXIST, {
-            factoryId,
-            errorId: NewTransactionRefuseReason.ENTITY_FACTORY_ALREADY_EXIST,
-          });
-        }
 
         next();
       },
-      { taskname: `applyTransaction/logicVerifier/issueEntityFactory` },
+      { taskname: `applyTransaction/logicVerifier/issueEntityFactoryByDestory` },
     );
   }
 
@@ -1651,14 +1774,14 @@ export class EventLogicVerifier {
           });
         }
 
-        if (possessorAddress === memEntityFactory.applyAddress) {
-          throw new ConsensusException(ERROR_LIST.SHOULD_NOT_BE, {
-            to_compare_prop: `entityPossessor ${possessorAddress}`,
-            be_compare_prop: `entityFactoryApplicant ${memEntityFactory.applyAddress}`,
-            to_target: `issueEntity`,
-            be_target: "memEntityFactory",
-          });
-        }
+        // if (possessorAddress === memEntityFactory.applyAddress) {
+        //   throw new ConsensusException(ERROR_LIST.SHOULD_NOT_BE, {
+        //     to_compare_prop: `entityPossessor ${possessorAddress}`,
+        //     be_compare_prop: `entityFactoryApplicant ${memEntityFactory.applyAddress}`,
+        //     to_target: `issueEntity`,
+        //     be_target: "memEntityFactory",
+        //   });
+        // }
 
         const { remainEntityPrealnum } = memEntityFactory;
         if (remainEntityPrealnum === BigInt(0)) {

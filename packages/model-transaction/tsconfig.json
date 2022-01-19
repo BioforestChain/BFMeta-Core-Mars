@@ -43,6 +43,7 @@
     "src/atom_transaction/issueAsset.transaction.ts",
     "src/atom_transaction/issueEntity.transaction.ts",
     "src/atom_transaction/issueEntityFactory.transaction.ts",
+    "src/atom_transaction/issueEntityFactoryV1.transaction.ts",
     "src/atom_transaction/locationName.transaction.ts",
     "src/atom_transaction/mark.transaction.ts",
     "src/atom_transaction/rejectVote.transaction.ts",

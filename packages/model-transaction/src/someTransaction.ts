@@ -62,8 +62,10 @@ export enum TRANSACTION_TYPES_BASE {
   SET_LNS_RECORD_VALUE = "LNS-01",
   /**设置位名管理员 */
   SET_LNS_MANAGER = "LNS-02",
-  /**创建非同质资产模板 */
+  /**创建非同质资产模板 - V0 版，冻结发行 */
   ISSUE_ENTITY_FACTORY = "ETY-00",
+  /**创建非同质资产模板 - V1 版，销毁发行 */
+  ISSUE_ENTITY_FACTORY_V1 = "ETY-03",
   /**创建非同质资产 */
   ISSUE_ENTITY = "ETY-01",
   /**销毁非同质资产 */
@@ -128,6 +130,7 @@ export const TRANSACTION_TYPES_MAP = (() => {
       [TRANSACTION_TYPES_BASE.SET_LNS_MANAGER, ATOM_TRS.SetLnsManagerTransaction],
 
       [TRANSACTION_TYPES_BASE.ISSUE_ENTITY_FACTORY, ATOM_TRS.IssueEntityFactoryTransaction],
+      [TRANSACTION_TYPES_BASE.ISSUE_ENTITY_FACTORY_V1, ATOM_TRS.IssueEntityFactoryTransactionV1],
       [TRANSACTION_TYPES_BASE.ISSUE_ENTITY, ATOM_TRS.IssueEntityTransaction],
       [TRANSACTION_TYPES_BASE.DESTORY_ENTITY, ATOM_TRS.DestoryEntityTransaction],
 

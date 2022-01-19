@@ -24,6 +24,7 @@ export * from "./locationName.transaction";
 export * from "./setLnsManager.transaction";
 export * from "./setLnsRecordValue.transaction";
 export * from "./issueEntityFactory.transaction";
+export * from "./issueEntityFactoryV1.transaction";
 export * from "./issueEntity.transaction";
 export * from "./destoryEntity.transaction";
 export * from "./toExchangeAny.transaction";

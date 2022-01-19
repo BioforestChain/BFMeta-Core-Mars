@@ -192,7 +192,62 @@ export class JSBIHelper {
     }
     return result + BigInt(1);
   }
-
+  /**
+   * 与分数相除，向上取整
+   *
+   * @param x
+   * @param y
+   */
+  divisionCeilFraction(x: BI, y: BFChainCore.FractionJSON<BI>) {
+    const formatX = formatParam(x);
+    const numerator = BigInt(y.numerator);
+    const denominator = BigInt(y.denominator);
+    /// 乘分子，除分母
+    const xn = formatX * denominator;
+    const result = xn / numerator;
+    // 如果能够正确还原，说明是整除
+    if (result * numerator === xn) {
+      return result;
+    }
+    return result + BigInt(1);
+  }
+  /**
+   * 两个分数相除
+   *
+   * @param x
+   * @param y
+   */
+  divisionFraction(
+    x: BFChainCore.FractionJSON<BI>,
+    y: BFChainCore.FractionJSON<BI>,
+  ): BFChainCore.FractionJSON<bigint> {
+    const numeratorX = BigInt(x.numerator);
+    const denominatorX = BigInt(x.denominator);
+    const numeratorY = BigInt(y.numerator);
+    const denominatorY = BigInt(y.denominator);
+    return {
+      numerator: numeratorX * denominatorY,
+      denominator: denominatorX * numeratorY,
+    };
+  }
+  /**
+   * 两个分数相除，并且下取整
+   *
+   * @param x
+   * @param y
+   */
+  divisionFractionAndFloor(x: BFChainCore.FractionJSON<BI>, y: BFChainCore.FractionJSON<BI>) {
+    return this.floorFraction(this.divisionFraction(x, y));
+  }
+  /**
+   * 两个分数相除，并且下取整
+   *
+   * @param x
+   * @param y
+   */
+  divisionFractionAndCeil(x: BFChainCore.FractionJSON<BI>, y: BFChainCore.FractionJSON<BI>) {
+    return this.ceilFraction(this.divisionFraction(x, y));
+  }
   /**
    * 比较两个分数的大小
    *
