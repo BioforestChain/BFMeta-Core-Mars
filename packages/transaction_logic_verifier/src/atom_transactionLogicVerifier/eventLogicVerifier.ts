@@ -1608,8 +1608,8 @@ export class EventLogicVerifier {
         if (entityFactoryPossessorAddress !== memEntityFactory.possessorAddress) {
           throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
             to_compare_prop: `entityFactoryPossessor ${entityFactoryPossessorAddress}`,
-            be_compare_prop: "issueEntity",
-            to_target: `possessorAddress ${memEntityFactory.possessorAddress}`,
+            be_compare_prop: "possessorAddress ${memEntityFactory.possessorAddress}",
+            to_target: `issueEntity`,
             be_target: "memEntityFactory",
           });
         }
@@ -1617,8 +1617,8 @@ export class EventLogicVerifier {
         if (possessorAddress === memEntityFactory.applyAddress) {
           throw new ConsensusException(ERROR_LIST.SHOULD_NOT_BE, {
             to_compare_prop: `entityPossessor ${possessorAddress}`,
-            be_compare_prop: "issueEntity",
-            to_target: `entityFactoryApplicant ${memEntityFactory.applyAddress}`,
+            be_compare_prop: "entityFactoryApplicant ${memEntityFactory.applyAddress}",
+            to_target: `issueEntity`,
             be_target: "memEntityFactory",
           });
         }
@@ -1704,8 +1704,8 @@ export class EventLogicVerifier {
         if (entityFactoryApplicantAddress !== memEntityFactory.applyAddress) {
           throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
             to_compare_prop: `entityFactoryApplicant ${entityFactoryApplicantAddress}`,
-            be_compare_prop: "destoryEntity",
-            to_target: `applyAddress ${memEntityFactory.applyAddress}`,
+            be_compare_prop: "applyAddress ${memEntityFactory.applyAddress}",
+            to_target: `destoryEntity`,
             be_target: "memEntityFactory",
           });
         }
@@ -1713,8 +1713,8 @@ export class EventLogicVerifier {
         if (entityFactoryPossessorAddress !== memEntityFactory.possessorAddress) {
           throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
             to_compare_prop: `entityFactoryPossessor ${entityFactoryPossessorAddress}`,
-            be_compare_prop: "destoryEntity",
-            to_target: `possessorAddress ${memEntityFactory.possessorAddress}`,
+            be_compare_prop: "possessorAddress ${memEntityFactory.possessorAddress}",
+            to_target: `destoryEntity`,
             be_target: "memEntityFactory",
           });
         }
