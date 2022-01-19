@@ -144,7 +144,7 @@ export class IssueEntityFactoryTransactionFactory extends TransactionFactory<Iss
       sourceChainMagic,
       sourceChainName,
       factoryId,
-      numberOfEntities,
+      entityPrealnum,
       entityFrozenAssetPrealnum,
       purchaseAssetPrealnum,
     } = issueEntityFactory;
@@ -202,9 +202,9 @@ export class IssueEntityFactoryTransactionFactory extends TransactionFactory<Iss
       });
     }
 
-    if (!baseHelper.isPositiveInteger(numberOfEntities)) {
+    if (!baseHelper.isPositiveStringNumber(entityPrealnum)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: `numberOfEntities ${numberOfEntities}`,
+        prop: `entityPrealnum ${entityPrealnum}`,
         type: "positive integer",
         IssueEntityFactoryAsset_Exception_Detail,
       });
@@ -276,7 +276,7 @@ export class IssueEntityFactoryTransactionFactory extends TransactionFactory<Iss
         sourceChainName,
         sourceChainMagic,
         factoryId,
-        numberOfEntities,
+        entityPrealnum,
         entityFrozenAssetPrealnum,
         purchaseAssetPrealnum,
       } = transaction.asset.issueEntityFactory;
@@ -300,7 +300,7 @@ export class IssueEntityFactoryTransactionFactory extends TransactionFactory<Iss
           sourceChainName,
           sourceChainMagic,
           factoryId,
-          numberOfEntities,
+          entityPrealnum,
           entityFrozenAssetPrealnum,
           possessorAddress: transaction.recipientId,
           purchaseAssetPrealnum,

@@ -68,7 +68,7 @@ async function getIssueEntityFactoryTransaction(sender: AccountModel, bfchainCor
         sourceChainName: bfchainCore.config.chainName,
         sourceChainMagic: bfchainCore.config.magic,
         factoryId: "skyrim",
-        numberOfEntities: 88888888,
+        entityPrealnum: "88888888",
         entityFrozenAssetPrealnum: "88888888",
         purchaseAssetPrealnum: "88888888",
       },

@@ -1456,7 +1456,7 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "issueEntityFactory",
       async ({ transaction, applyInfo }, next) => {
-        const { address, factoryId, sourceChainMagic, possessorAddress, numberOfEntities } =
+        const { address, factoryId, sourceChainMagic, possessorAddress, entityPrealnum } =
           applyInfo;
 
         // 不能将冻结账户设置为数字资产的创世账户
@@ -1527,9 +1527,9 @@ export class EventLogicVerifier {
           },
           this.configHelper.maxMultipleOfEntityAndMainAsset,
         );
-        if (BigInt(numberOfEntities) > calcMaxEntities) {
+        if (BigInt(entityPrealnum) > calcMaxEntities) {
           throw new ConsensusException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
-            prop: `numberOfEntities ${numberOfEntities}`,
+            prop: `entityPrealnum ${entityPrealnum}`,
             target: `issueEntityFactory`,
             field: `calc max entities ${calcMaxEntities}`,
           });
@@ -1623,7 +1623,7 @@ export class EventLogicVerifier {
           });
         }
 
-        if (memEntityFactory.remainNumberOfEntities === 0) {
+        if (memEntityFactory.remainEntityPrealnum === BigInt(0)) {
           throw new ConsensusException(ERROR_LIST.ISSUE_ENTITY_TIMES_USE_UP, {
             entityFactory: factoryId,
           });

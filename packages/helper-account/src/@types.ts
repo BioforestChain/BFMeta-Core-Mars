@@ -136,8 +136,8 @@ declare namespace BFChainCore {
     sourceChainName: string;
     sourceChainMagic: string;
     factoryId: string;
-    numberOfEntities: number;
-    remainNumberOfEntities: number;
+    entityPrealnum: bigint;
+    remainEntityPrealnum: bigint;
     entityFrozenAssetPrealnum: string;
     purchaseAssetPrealnum: string;
     height: number;

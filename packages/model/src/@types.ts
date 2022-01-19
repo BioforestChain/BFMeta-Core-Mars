@@ -305,7 +305,7 @@ declare namespace BFChainCore {
     /**entityFactory 的拥有者地址 */
     possessorAddress: string;
     /**entity 数量 */
-    numberOfEntities: number;
+    entityPrealnum: string;
     /**单个 entity 冻结的主权益数量 */
     entityFrozenAssetPrealnum: string;
     /**购买 entity factory 使用权需要的主权益数量 */

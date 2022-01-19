@@ -783,6 +783,10 @@ export class BaseHelper {
     return this.isMakeUpWithNumber(stringNumber);
   }
 
+  isPositiveStringNumber(stringNumber: any) {
+    return this.isValidStringNumber(stringNumber) && BigInt(stringNumber) > BigInt(0);
+  }
+
   /**资产数量是否合法： 只能是数字组成的字符串 */
   isValidAssetNumber = this.isValidStringNumber;
 

@@ -20,8 +20,8 @@ export class IssueEntityFactoryModel
   @Field.d(IssueEntityFactoryModel.INC++, "string")
   factoryId!: string;
   /**非同质资产模板的允许创建数量 */
-  @Field.d(IssueEntityFactoryModel.INC++, "uint32")
-  numberOfEntities!: number;
+  @Field.d(IssueEntityFactoryModel.INC++, "string")
+  entityPrealnum!: string;
   /**非同质资产发行时冻结的主权益数量 */
   @Field.d(IssueEntityFactoryModel.INC++, "string")
   entityFrozenAssetPrealnum!: string;
@@ -33,7 +33,7 @@ export class IssueEntityFactoryModel
       sourceChainName: this.sourceChainName,
       sourceChainMagic: this.sourceChainMagic,
       factoryId: this.factoryId,
-      numberOfEntities: this.numberOfEntities,
+      entityPrealnum: this.entityPrealnum,
       entityFrozenAssetPrealnum: this.entityFrozenAssetPrealnum,
       purchaseAssetPrealnum: this.purchaseAssetPrealnum,
     };
