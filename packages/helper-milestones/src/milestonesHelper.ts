@@ -86,7 +86,7 @@ export class MilestonesHelper {
   }
 
   /**
-   * 计算流通总量
+   * 计算某个高度的流通总量
    *
    * @param height
    */
@@ -96,24 +96,54 @@ export class MilestonesHelper {
     const milestone = Math.floor(this.binarySearchMiles(this.heights, height));
     // 流通的总币数
     let supply = BigInt(this.genesisAmount);
-    const rewardAlready = new Map<bigint, bigint>();
+    const rewardAlready = new Map<number, bigint>();
     let mile;
     let multiplier;
     for (let i = 0; i <= milestone; i++) {
       multiplier = BigInt(this.rewards[i]);
       if (i === 0) {
-        mile = 0;
+        mile = this.heights[i] - 1; // 第一段是从1高度到第一个元素的高度
       } else if (i === milestone) {
         mile = height - this.heights[i - 1];
       } else {
         mile = this.heights[i] - this.heights[i - 1];
       }
       mile = BigInt(mile);
-      rewardAlready.set(mile, multiplier);
+      rewardAlready.set(i, multiplier * mile);
     }
-    rewardAlready.forEach((mile, reward) => {
-      const mileRewards = mile * reward;
-      supply = supply + mileRewards;
+    rewardAlready.forEach((result, i) => {
+      supply += result;
+    });
+    return supply.toString();
+  }
+
+  /**
+   * 计算某个高度的流通总量
+   *
+   */
+  calcAllSupply() {
+    const lastRewardHeight = this.heights[this.heights.length - 1];
+    // 根据高度计算当前处于第几奖励周期
+    const milestone = this.heights.length;
+    // 流通的总币数
+    let supply = BigInt(this.genesisAmount);
+    const rewardAlready = new Map<number, bigint>();
+    let mile;
+    let multiplier;
+    for (let i = 0; i <= milestone; i++) {
+      multiplier = BigInt(this.rewards[i]);
+      if (i === 0) {
+        mile = this.heights[i] - 1; // 第一段是从1高度到第一个元素的高度
+      } else if (i === milestone) {
+        mile = lastRewardHeight - this.heights[i - 1];
+      } else {
+        mile = this.heights[i] - this.heights[i - 1];
+      }
+      mile = BigInt(mile);
+      rewardAlready.set(i, multiplier * mile);
+    }
+    rewardAlready.forEach((result, i) => {
+      supply += result;
     });
     return supply.toString();
   }
