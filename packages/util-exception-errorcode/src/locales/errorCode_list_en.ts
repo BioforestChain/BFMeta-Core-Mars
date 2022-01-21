@@ -50,6 +50,10 @@ export const ERROR_CODE_LIST_EN = {
   "001-00048": "Invalid block constructor: {name}",
   "001-00049": "Invalid block type: {type}",
   "001-00050": "Custom transaction verify fail: {message}",
+  "001-00051": "Disabled create {trsName} Transaction",
+  "001-00052": "Disabled insert {trsName} Transaction",
+  "001-00053": "Transaction is in unchangable state",
+  "001-00054": "AssetStatistic index: {index} already in use",
   // #endregion
 
   // #region logic
@@ -145,11 +149,29 @@ export const ERROR_CODE_LIST_EN = {
   "001-12004":
     "Block should not have signSignature, signature {signature} generatorAddress {generatorAddress} height {height}",
   "001-12005": "{variable} out of range",
+  "001-12006": "Failed to find nearest same block in one round, should not happen",
+  "001-12007":
+    "GenesisBlock not match, the signature of genesisBlock and synchronized peer's genesisBlock's signature not equal",
+  "000-12008": "Falied to get blocks by range({minHeight}~{maxHeight})",
   // #endregion
 
   // #endregion channel
   "001-22001": "Invalid params: {params}",
   "001-22002": "Invalid params field: {field}",
   "001-22003": "GenesisBlock maybe no equal",
+  "001-22004": "Invalid QueryBlockArg query params, no query conditions",
+  "001-22005": "QueryBlock ({query}) from peer({peerId}) timeout",
+  "001-22006": "ReqId reuse",
+  "001-22007": "ChainChannel closed",
+  "001-22008": "Refuse response query transaction",
+  "001-22009": "Refuse response index transaction",
+  "001-22010": "Refuse response download transaction",
+  "001-22011": "Refuse response broadcast transaction",
+  "001-22012": "Refuse response query block",
+  "001-22013": "Refuse response broadcast block",
+  "001-22014": "Message type error",
+  "001-22015": "OnMessage get invalid req_id: {req_id}",
+  "001-22016": "Request limit",
+  "001-22017": "Invalid message cmd",
   // #endregion
 } as const;

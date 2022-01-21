@@ -515,7 +515,7 @@ export class ChainChannelHelper {
       }
     }
     if (has_query_params === false) {
-      throw new ArgumentIllegalException("Invalid QueryBlockArg query params, no query conditions");
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_QUERYBLOCKARG_QUERY_PARAMS);
     }
     //#endregion
     return arg;

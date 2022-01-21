@@ -116,6 +116,16 @@ export const ERROR_LIST = {
   INVALID_BLOCK_CONSTRUCTOR: new ErrorCode("001-00048", "Invalid block constructor: {name}"),
   INVALID_BLOCK_TYPE: new ErrorCode("001-00049", "Invalid block type: {type}"),
   CUSTOM_TRANS_VERIFY_FAIL: new ErrorCode("001-00050", "Custom transaction verify fail: {message}"),
+  DISABLED_CREATE_TRANSACTION: new ErrorCode("001-00051", "Disabled create {trsName} Transaction"),
+  DISABLED_INSERT_TRANSACTION: new ErrorCode("001-00052", "Disabled insert {trsName} Transaction"),
+  TRANSACTION_IS_IN_UNCHANGABLE_STATE: new ErrorCode(
+    "001-00053",
+    "Transaction is in unchangable state",
+  ),
+  ASSETSTATISTIC_INDEX_ALREADY_IN_USE: new ErrorCode(
+    "001-00054",
+    "AssetStatistic index: {index} already in use",
+  ),
   // #endregion
 
   // #region logic
@@ -350,7 +360,6 @@ export const ERROR_LIST = {
   ),
 
   // block logic
-
   BLOCK_SIGN_SIGNATURE_IS_REQUIRED: new ErrorCode(
     "001-12001",
     "Block signSignature is required, signature {signature} generatorAddress {generatorAddress} height {height}",
@@ -367,13 +376,60 @@ export const ERROR_LIST = {
     "001-12004",
     "Block should not have signSignature, signature {signature} generatorAddress {generatorAddress} height {height}",
   ),
-  OUT_OF_RANGE: new ErrorCode("001-11074", "{variable} out of range"),
+  OUT_OF_RANGE: new ErrorCode("001-12005", "{variable} out of range"),
+  FAILED_TO_FIND_NEAREST_SAME_BLOCK_IN_ONE_ROUND: new ErrorCode(
+    "001-12006",
+    "Failed to find nearest same block in one round, should not happen",
+  ),
+  GENESIS_BLOCK_NOT_MATCH: new ErrorCode(
+    "001-12007",
+    "GenesisBlock not match, the signature of genesisBlock and synchronized peer's genesisBlock's signature not equal",
+  ),
+  FAILED_TO_GET_BLOCKS_BY_RANGE: new ErrorCode(
+    "000-12008",
+    "Falied to get blocks by range({minHeight}~{maxHeight})",
+  ),
   // #endregion
 
   // #endregion channel
   INVALID_PARAMS: new ErrorCode("001-22001", "Invalid params: {params}"),
   INVALID_PARAMS_FIELD: new ErrorCode("001-22002", "Invalid params field: {field}"),
-  GENESIS_BLOCK_NO_EQUAL: new ErrorCode("001-22003", "GenesisBlock maybe no equal"),
+  GENESIS_BLOCK_MAYBE_NO_EQUAL: new ErrorCode("001-22003", "GenesisBlock maybe no equal"),
+  INVALID_QUERYBLOCKARG_QUERY_PARAMS: new ErrorCode(
+    "001-22004",
+    "Invalid QueryBlockArg query params, no query conditions",
+  ),
+  QUERY_BLOCK_FROM_PEER_TIMEOUT: new ErrorCode(
+    "001-22005",
+    "QueryBlock ({query}) from peer({peerId}) timeout",
+  ),
+  REQID_REUSE: new ErrorCode("001-22006", "ReqId reuse"),
+  CHAINCHANNEL_CLOSED: new ErrorCode("001-22007", "chainChannel closed"),
+  REFUSE_RESPONSE_QUERY_TRANSACTION: new ErrorCode(
+    "001-22008",
+    "Refuse response query transaction",
+  ),
+  REFUSE_RESPONSE_INDEX_TRANSACTION: new ErrorCode(
+    "001-22009",
+    "Refuse response index transaction",
+  ),
+  REFUSE_RESPONSE_DOWNLOAD_TRANSACTION: new ErrorCode(
+    "001-22010",
+    "Refuse response download transaction",
+  ),
+  REFUSE_RESPONSE_BROADCAST_TRANSACTION: new ErrorCode(
+    "001-22011",
+    "Refuse response broadcast transaction",
+  ),
+  REFUSE_RESPONSE_QUERY_BLOCK: new ErrorCode("001-22012", "Refuse response query block"),
+  REFUSE_RESPONSE_BROADCAST_BLOCK: new ErrorCode("001-22013", "Refuse response broadcast block"),
+  MESSAGE_TYPE_ERROR: new ErrorCode("001-22014", "Message type error"),
+  ONMESSAGE_GET_INVALID_REQ_ID: new ErrorCode(
+    "001-22015",
+    "OnMessage get invalid req_id: {req_id}",
+  ),
+  REQUEST_LIMIT: new ErrorCode("001-22016", "Request limit"),
+  INVALID_MESSAGE_CMD: new ErrorCode("001-22017", "Invalid message cmd"),
   // #endregion
 };
 // #endregion

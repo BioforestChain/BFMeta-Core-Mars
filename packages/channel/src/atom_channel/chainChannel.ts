@@ -31,7 +31,7 @@ import {
 } from "@bfchain/core-model";
 import { Message } from "@bfchain/protobuf";
 import { ChainChannelHelper } from "./chainChannelHelper";
-import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { ConfigHelper, BaseHelper, ChainTimeHelper } from "@bfchain/core-helper";
 import {
   QueneEventEmitterPro,
@@ -119,7 +119,7 @@ const getReqId = () => {
   const req_id = _req_id_acc[0]++ || _req_id_acc[0]++;
   const reqTask = req_response_map.get(req_id);
   if (reqTask) {
-    reqTask.reject(new TimeOutException("reqId reuse"));
+    reqTask.reject(new TimeOutException(ERROR_LIST.REQID_REUSE));
     req_response_map.delete(req_id);
   }
   return req_id;
@@ -212,7 +212,7 @@ export class ChainChannel<
       for (const reqId of this._reqIdSet) {
         const reqTask = req_response_map.get(reqId);
         if (reqTask) {
-          reqTask.reject(new TimeOutException("chainChannel closed"));
+          reqTask.reject(new TimeOutException(ERROR_LIST.CHAINCHANNEL_CLOSED));
           req_response_map.delete(reqId);
         }
       }
@@ -561,7 +561,9 @@ export class ChainChannel<
     if (!this.canQueryTransactions) {
       return QueryTransactionReturnModel.fromObject({
         status: RESPONSE_STATUS.error,
-        error: ErrorMessage.fromObject(new RefuseException("Refuse response query transaction")),
+        error: ErrorMessage.fromObject(
+          new RefuseException(ERROR_LIST.REFUSE_RESPONSE_QUERY_TRANSACTION),
+        ),
       });
     }
     const arg = QueryTransactionArgModel.fromObject({
@@ -587,7 +589,9 @@ export class ChainChannel<
     if (!this.canIndexTransactions) {
       return IndexTransactionReturnModel.fromObject({
         status: RESPONSE_STATUS.error,
-        error: ErrorMessage.fromObject(new RefuseException("Refuse response index transaction")),
+        error: ErrorMessage.fromObject(
+          new RefuseException(ERROR_LIST.REFUSE_RESPONSE_INDEX_TRANSACTION),
+        ),
       });
     }
     const arg = IndexTransactionArgModel.fromObject({
@@ -609,7 +613,9 @@ export class ChainChannel<
     if (!this.canDownloadTransactions) {
       return DownloadTransactionReturnModel.fromObject({
         status: RESPONSE_STATUS.error,
-        error: ErrorMessage.fromObject(new RefuseException("Refuse response download transaction")),
+        error: ErrorMessage.fromObject(
+          new RefuseException(ERROR_LIST.REFUSE_RESPONSE_DOWNLOAD_TRANSACTION),
+        ),
       });
     }
     const arg = DownloadTransactionArgModel.fromObject({
@@ -661,7 +667,7 @@ export class ChainChannel<
       return NewTransactionReturnModel.fromObject({
         status: RESPONSE_STATUS.error,
         error: ErrorMessage.fromObject(
-          new RefuseException("Refuse response broadcast transaction"),
+          new RefuseException(ERROR_LIST.REFUSE_RESPONSE_BROADCAST_TRANSACTION),
         ),
       });
     }
@@ -718,7 +724,7 @@ export class ChainChannel<
     if (!this.canQueryBlock) {
       return QueryBlockReturnModel.fromObject({
         status: RESPONSE_STATUS.error,
-        error: ErrorMessage.fromObject(new RefuseException("Refuse response query block")),
+        error: ErrorMessage.fromObject(new RefuseException(ERROR_LIST.REFUSE_RESPONSE_QUERY_BLOCK)),
       });
     }
     const arg = QueryBlockArgModel.fromObject({
@@ -760,7 +766,9 @@ export class ChainChannel<
     if (!this.canBroadcastBlock) {
       return NewBlockReturn.fromObject({
         status: RESPONSE_STATUS.error,
-        error: ErrorMessage.fromObject(new RefuseException("Refuse response broadcast block")),
+        error: ErrorMessage.fromObject(
+          new RefuseException(ERROR_LIST.REFUSE_RESPONSE_BROADCAST_BLOCK),
+        ),
       });
     }
     const res = await this._requestWithBinaryData(...this.initBroadcastBlockArg(blockInfo, opts));
@@ -789,7 +797,7 @@ export class ChainChannel<
           binary = msg.binary;
           reqMsgVersion = msg.messageVersion;
         } catch {
-          throw new ArgumentFormatException("message type error");
+          throw new ArgumentFormatException(ERROR_LIST.MESSAGE_TYPE_ERROR);
         }
         if (reqMsgVersion < MIN_MESSAGE_VERSION) {
           //低于最低版本号的message不处理，也不返回，直接让对方超时
@@ -1122,7 +1130,7 @@ export class ChainChannel<
               if (task === undefined) {
                 if (req_id !== 0) {
                   error(
-                    new NoFoundException("onMessage get invalid req_id: {req_id}", {
+                    new NoFoundException(ERROR_LIST.ONMESSAGE_GET_INVALID_REQ_ID, {
                       req_id,
                     }),
                   );
@@ -1155,7 +1163,7 @@ export class ChainChannel<
             case DUPLEX_API_CMD.REFUSE: {
               const task = req_response_map.get(req_id);
               if (task !== undefined) {
-                task.reject(new RefuseException("request limit"));
+                task.reject(new RefuseException(ERROR_LIST.REQUEST_LIMIT));
                 return;
               }
               /// 正常执行不应该执行到refuse这里，双方节点混乱，发生了不该发生的异常！不建议继续通讯，直接关闭
@@ -1163,7 +1171,7 @@ export class ChainChannel<
               return;
             }
             default: {
-              throw new ArgumentFormatException("invalid message cmd", { cmd });
+              throw new ArgumentFormatException(ERROR_LIST.INVALID_MESSAGE_CMD, { cmd });
             }
           }
         } catch (error) {

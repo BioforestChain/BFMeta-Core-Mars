@@ -35,7 +35,7 @@ import {
 } from "@bfchain/core-model";
 import { ChainChannelHelper } from "./chainChannelHelper";
 import { ChainChannel, ChainChannelBase } from "./chainChannel";
-import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import {
   GroupQueryTransactionsBuilder,
   GroupQueryBlockBuilder,
@@ -1667,7 +1667,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       {
         const exCache = new EasyMap<DH, Error>(
           (cc) =>
-            new TimeOutException("peer({peerId}) queryBlock({query}) timeout.", {
+            new TimeOutException(ERROR_LIST.QUERY_BLOCK_FROM_PEER_TIMEOUT, {
               query: JSON.stringify(queryer.query),
               peerId: cc.address,
             }),

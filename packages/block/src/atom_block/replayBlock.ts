@@ -348,7 +348,7 @@ export class ReplayBlockCore<T extends Block> {
           trsSet.add(signature);
           if (!this.commonBlockVerify.canInsertTransaction(type)) {
             const trsName = TRANSACTION_TYPES_MAP.VK.get(TRANSACTION_TYPES_MAP.trsTypeToV(type));
-            const exp = new ConsensusException("Disabled insert {trsName} Transaction", {
+            const exp = new ConsensusException(ERROR_LIST.DISABLED_INSERT_TRANSACTION, {
               trsName,
             });
             if (abortForbiddenTransaction) {

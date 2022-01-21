@@ -506,7 +506,7 @@ export class BlockForkChecker {
     blockGetterHelper2?: BFChainCore.BlockGetterHelperSimpleInterface,
   ) {
     if (theHeight < 1) {
-      throw new ConsensusException(ERROR_LIST.GENESIS_BLOCK_NO_EQUAL);
+      throw new ConsensusException(ERROR_LIST.GENESIS_BLOCK_MAYBE_NO_EQUAL);
     }
     // 1 从当前高度逐一验证id到上一轮的最后一个区块
     const lastRound = this.blockHelper.calcRoundByHeight(theHeight) - 1;
@@ -550,7 +550,7 @@ export class BlockForkChecker {
       blockGetterHelper2,
     );
     if (!result2) {
-      throw new ConsensusException("should not happen in findNearestSameBlock.");
+      throw new ConsensusException(ERROR_LIST.FAILED_TO_FIND_NEAREST_SAME_BLOCK_IN_ONE_ROUND);
     }
     return result2;
   }
@@ -579,7 +579,7 @@ export class BlockForkChecker {
       } else {
         // console.log(` 高度 ${compareHeight} 不一致，还在分叉，继续找上一个块`);
         if (compareHeight === 1) {
-          throw new ConsensusException(`创世块不匹配, 同步节点创世块signature都不对了`);
+          throw new ConsensusException(ERROR_LIST.GENESIS_BLOCK_NOT_MATCH);
         }
         continue;
       }

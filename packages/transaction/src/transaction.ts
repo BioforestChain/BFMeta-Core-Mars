@@ -15,7 +15,7 @@ import {
   TRANSACTION_TYPES_MAP,
 } from "@bfchain/core-model-transaction";
 import { Reader } from "@bfchain/protobuf";
-import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 
 const { ArgumentFormatException, OutOfRangeException, ConsensusException, warn } =
   CoreExceptionGenerator("CONTROLLER", "transaction");
@@ -90,7 +90,7 @@ export class TransactionCore {
       body.type || this.getTransactionTypeFromTransactionFactoryConstructor(TxFactory);
     if (!this.canCreateTransaction(trsType)) {
       const trsName = TRANSACTION_TYPES_MAP.VK.get(TRANSACTION_TYPES_MAP.trsTypeToV(trsType));
-      const exp = new ConsensusException("Disabled create {trsName} Transaction", { trsName });
+      const exp = new ConsensusException(ERROR_LIST.DISABLED_CREATE_TRANSACTION, { trsName });
       if (this.abortForbiddenTransaction) {
         throw exp;
       }
@@ -159,7 +159,7 @@ export class TransactionCore {
       body.type || this.getTransactionTypeFromTransactionFactoryConstructor(TxFactory);
     if (!this.canCreateTransaction(trsType)) {
       const trsName = TRANSACTION_TYPES_MAP.VK.get(TRANSACTION_TYPES_MAP.trsTypeToV(trsType));
-      const exp = new ConsensusException("Disabled create {trsName} Transaction", { trsName });
+      const exp = new ConsensusException(ERROR_LIST.DISABLED_CREATE_TRANSACTION, { trsName });
       if (this.abortForbiddenTransaction) {
         throw exp;
       }

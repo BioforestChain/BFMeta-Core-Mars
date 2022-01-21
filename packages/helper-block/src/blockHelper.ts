@@ -548,7 +548,7 @@ export class BlockHelper {
       }
       return res;
     }
-    throw new IllegalStateException("Could not getBlocksByRange({minHeight}~{maxHeight})", {
+    throw new IllegalStateException(ERROR_LIST.FAILED_TO_GET_BLOCKS_BY_RANGE, {
       minHeight,
       maxHeight,
     });

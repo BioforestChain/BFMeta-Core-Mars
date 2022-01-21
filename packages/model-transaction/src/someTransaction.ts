@@ -189,7 +189,7 @@ export class SomeTransactionModel<T extends BFChainCore.Transaction = BFChainCor
       throw new ArgumentFormatException(ERROR_LIST.INVALID_TRANSACTION_BASE_TYPE, { base_type });
     }
     if (Object.isFrozen(this)) {
-      throw new IllegalStateException("Transaction is in unchangable states.");
+      throw new IllegalStateException(ERROR_LIST.TRANSACTION_IS_IN_UNCHANGABLE_STATE);
     }
     this._trs_base_type = base_type;
     this._trs_bytes = new Uint8Array((trs.constructor as typeof Message).encode(trs).finish());

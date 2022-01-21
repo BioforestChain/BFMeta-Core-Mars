@@ -15,7 +15,7 @@ import {
   EventEmitter,
   EasyWeakMap,
 } from "@bfchain/util";
-import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "helper-block_base_statistics",
   "blockBaseStatisticsHelper",
@@ -326,7 +326,7 @@ export class StatisticsInfo extends EventEmitter<{ destroy: [] }> {
     if (!assetStatistic) {
       assetStatistic = new AssetStatistic();
       if (this._assetStatisticHashMap[index]) {
-        throw new ArgumentIllegalException("assetStatistic index:{index} already in use.", {
+        throw new ArgumentIllegalException(ERROR_LIST.ASSETSTATISTIC_INDEX_ALREADY_IN_USE, {
           index,
         });
       }
