@@ -270,7 +270,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     /**获取空闲的节点 */
     const getFreeChainChannel = (opts: { filter?: (cc: DH) => boolean } = {}) => {
       if (abortWhenNoChainChannel && this.size === 0) {
-        throw new AbortException(`${task_id} abort because the size is zero`);
+        throw new AbortException(ERROR_LIST.TASK_ABORT, { task_id });
       }
       const filter = opts?.filter;
       for (const cc of freeChainChannels) {

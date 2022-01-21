@@ -333,7 +333,7 @@ export class ChainChannel<
         options = Object.create(options, {
           timeoutException: {
             get() {
-              return new TimeOutException(`ChainChannel Timeout: cmd:{cmd}`, {
+              return new TimeOutException(ERROR_LIST.CHAINCHANNEL_TIMEOUT, {
                 endpoint: this.endpoint,
                 cmd: DUPLEX_API_CMD[cmd],
               });

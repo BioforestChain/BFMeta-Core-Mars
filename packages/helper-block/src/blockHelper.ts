@@ -274,7 +274,7 @@ export class BlockHelper {
     if (
       !(await this.keypairHelper.detached_verify(hash, signatureBuffer, generatorPublicKeyBuffer))
     ) {
-      throw new ArgumentFormatException(`Invalid ${taskLabel} signature`);
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_SIGNATURE, { taskLabel });
     }
 
     // 验证 signSignature 与 secondPublicKey
@@ -294,7 +294,7 @@ export class BlockHelper {
             Buffer.from(generatorSecondPublicKeyBuffer),
           )
         ) {
-          throw new ArgumentFormatException(`Invalid ${taskLabel} signSignature`);
+          throw new ArgumentFormatException(ERROR_LIST.INVALID_SIGNSIGNATURE, { taskLabel });
         }
       } else {
         throw new ArgumentFormatException(

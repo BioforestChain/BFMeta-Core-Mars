@@ -1608,7 +1608,7 @@ export class EventLogicVerifier {
         if (entityFactoryPossessorAddress !== memEntityFactory.possessorAddress) {
           throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
             to_compare_prop: `entityFactoryPossessor ${entityFactoryPossessorAddress}`,
-            be_compare_prop: "possessorAddress ${memEntityFactory.possessorAddress}",
+            be_compare_prop: `possessorAddress ${memEntityFactory.possessorAddress}`,
             to_target: `issueEntity`,
             be_target: "memEntityFactory",
           });
@@ -1617,7 +1617,7 @@ export class EventLogicVerifier {
         if (possessorAddress === memEntityFactory.applyAddress) {
           throw new ConsensusException(ERROR_LIST.SHOULD_NOT_BE, {
             to_compare_prop: `entityPossessor ${possessorAddress}`,
-            be_compare_prop: "entityFactoryApplicant ${memEntityFactory.applyAddress}",
+            be_compare_prop: `entityFactoryApplicant ${memEntityFactory.applyAddress}`,
             to_target: `issueEntity`,
             be_target: "memEntityFactory",
           });

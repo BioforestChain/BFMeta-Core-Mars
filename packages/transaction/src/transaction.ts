@@ -60,7 +60,7 @@ export class TransactionCore {
   getTransactionFactoryFromBaseType<T extends Transaction>(base_type: TRANSACTION_TYPES_BASE) {
     const TransactionFactory = TRANSACTION_FACTORY_TYPES_MAP.VF.get(base_type);
     if (!TransactionFactory) {
-      throw new ArgumentFormatException(`Invalid base type: ${base_type}`);
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_BASE_TYPE, { base_type });
     }
     return this.getTransactionFactory<T>(TransactionFactory);
   }
@@ -360,7 +360,7 @@ export class TransactionCore {
   getTransactionModelConstructorFromBaseType(base_type: TRANSACTION_TYPES_BASE) {
     const TransactionModelConstructor = TRANSACTION_TYPES_MAP.VM.get(base_type);
     if (!TransactionModelConstructor) {
-      throw new ArgumentFormatException(`Invalid base type: ${base_type}`);
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_BASE_TYPE, { base_type });
     }
     return TransactionModelConstructor;
   }
@@ -370,15 +370,19 @@ export class TransactionCore {
   ) {
     const trs_base = TRANSACTION_FACTORY_TYPES_MAP.FV.get(TxFactory);
     if (!trs_base) {
-      throw new ArgumentFormatException(`Unregistered TransactionFactory: ${TxFactory.name}`);
+      throw new ArgumentFormatException(ERROR_LIST.UNREGISTERED_TRANSACTION_FACTORY, {
+        factoryName: TxFactory.name,
+      });
     }
     const trs_key = TRANSACTION_FACTORY_TYPES_MAP.VK.get(trs_base);
     if (!trs_key) {
-      throw new ArgumentFormatException(`Unregistered Transaction base type: ${trs_base}`);
+      throw new ArgumentFormatException(ERROR_LIST.UNREGISTERED_TRANSACTION_BASE_TYPE, {
+        trs_base,
+      });
     }
     const trs_type = (this.transactionHelper as any)[trs_key] as string;
     if (!trs_type) {
-      throw new ArgumentFormatException(`Unregistered Transaction type: ${trs_key}`);
+      throw new ArgumentFormatException(ERROR_LIST.UNREGISTERED_TRANSACTION_TYPE, { trs_key });
     }
     return trs_type;
   }

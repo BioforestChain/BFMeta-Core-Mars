@@ -54,6 +54,16 @@ export const ERROR_CODE_LIST_ZH = {
   "001-00052": "禁止插入事件 {trsName}",
   "001-00053": "事件处于不可变状态",
   "001-00054": "资产统计索引：{index} 已经被使用",
+  "001-00055": "不合法的 {taskLabel} signature",
+  "001-00056": "不合法的 {taskLabel} signSignature",
+  "001-00057": "不合法的 base type {base_type}",
+  "001-00058": "未注册的事件 factory {factoryName}",
+  "001-00059": "未注册的事件 base type {trs_base}",
+  "001-00060": "未注册的事件 type {trs_key}",
+  "001-00061": "不合法的 {taskLabel} fromAuthSignature",
+  "001-00062": "不合法的 {taskLabel} fromAuthSignSignature",
+  "001-00063": "不合法的 {taskLabel} toAuthSignature",
+  "001-00064": "不合法的 {taskLabel} toAuthSignSignature",
   // #endregion
 
   // #region logic
@@ -165,8 +175,10 @@ export const ERROR_CODE_LIST_ZH = {
   "001-22012": "拒绝响应查询区块",
   "001-22013": "拒绝响应广播区块",
   "001-22014": "Message 类型错误",
-  "001-22015": "OnMessage 获取到不合法的 req_id: {req_id}",
+  "001-22015": "OnMessage 获取到不合法的 req_id：{req_id}",
   "001-22016": "请求限制",
   "001-22017": "不合法的 message cmd",
+  "001-22018": "ChainChannel 超时，cmd {cmd}",
+  "001-22019": "Task {task_id} 中断，因为空闲 chainChannel 数为 0",
   // #endregion
 } as const;

@@ -237,7 +237,7 @@ export class SignatureV1Converter implements BFChainCore.CrossChain.SignatureCon
         parseHexToArrayBuffer(accountSignature.publicKey),
       ))
     ) {
-      throw new ArgumentIllegalException(`Invalid ${taskLabel} signature`);
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_SIGNATURE, { taskLabel });
     }
     // 验证 signSignature 与 secondPublicKey
     if (accountSignature.secondPublicKey && accountSignature.signSignature) {
@@ -254,7 +254,7 @@ export class SignatureV1Converter implements BFChainCore.CrossChain.SignatureCon
           parseHexToArrayBuffer(accountSignature.secondPublicKey),
         ))
       ) {
-        throw new ArgumentIllegalException(`Invalid ${taskLabel} signSignature`);
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_SIGNSIGNATURE, { taskLabel });
       }
     }
   }

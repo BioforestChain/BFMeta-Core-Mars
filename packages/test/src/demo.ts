@@ -35,7 +35,7 @@
 // })().catch(console.error);
 
 import { PromiseOut, safePromiseThen } from "@bfchain/util";
-import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 const { TimeOutException } = CoreExceptionGenerator("channel", "chainChannelHelper");
 import { PromiseTimeout } from "@bfchain/core-channel/build/cjs/atom_channel/PromiseTimeout";
 
@@ -56,8 +56,9 @@ async function _requestWithBinaryData<T>(
       options = Object.create(options, {
         timeoutException: {
           get() {
-            return new TimeOutException(`ChainChannel Timeout: cmd:{cmd}`, {
+            return new TimeOutException(ERROR_LIST.CHAINCHANNEL_TIMEOUT, {
               endpoint: this.endpoint,
+              cmd: "QAQ",
             });
           },
         },

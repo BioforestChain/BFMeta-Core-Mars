@@ -7,7 +7,7 @@ import {
   AsymmetricHelper,
 } from "@bfchain/core-helper";
 import { Injectable, Inject, ModuleStroge, Resolve } from "@bfchain/util";
-import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import type { TransactionLogicVerifier } from "./atom_transactionLogicVerifier";
 
 const { ArgumentFormatException } = CoreExceptionGenerator(
@@ -58,7 +58,7 @@ export class TransactionLogicVerifierCore {
   ) {
     const TransactionLogicVerifier = TRANSACTION_LOGIC_VERIFIER_TYPES_MAP.KLV.get(base_type);
     if (!TransactionLogicVerifier) {
-      throw new ArgumentFormatException(`Invalid base type: ${base_type}`);
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_BASE_TYPE, { base_type });
     }
     return this.getTransactionLogicVerifier<T>(TransactionLogicVerifier);
   }

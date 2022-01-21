@@ -3,7 +3,7 @@ import { BLOCK_TYPES_BASE, Block } from "@bfchain/core-model-block";
 import { Injectable, Resolve, ModuleStroge } from "@bfchain/util";
 import type { BlockLogicVerifier } from "./atom_block";
 import { BlockHelper } from "@bfchain/core-helper";
-import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 const { ArgumentFormatException } = CoreExceptionGenerator("Core", "BlockLogicVerifierCore");
 
 @Injectable("bfchain-core:BlockLogicVerifierCore")
@@ -37,7 +37,7 @@ export class BlockLogicVerifierCore {
   getBlockLogicVerifierFromBaseType<T extends Block>(base_type: BLOCK_TYPES_BASE) {
     const BlockLogicVerifier = BLOCK_LOGIC_VERIFIER_TYPES_MAP.KLV.get(base_type);
     if (!BlockLogicVerifier) {
-      throw new ArgumentFormatException(`Invalid base type: ${base_type}`);
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_BASE_TYPE, { base_type });
     }
     return this.getBlockLogicVerifier<T>(BlockLogicVerifier);
   }

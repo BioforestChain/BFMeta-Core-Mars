@@ -301,7 +301,7 @@ export class TransactionHelper {
     const hash = await this.cryptoHelper.sha256().update(transaction.getBytes(true, true)).digest();
     // 验证 signature 与 publicKey
     if (!(await this.keypairHelper.detached_verify(hash, signatureBuffer, senderPublicKeyBuffer))) {
-      throw new ArgumentFormatException(`Invalid ${taskLabel} signature`);
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_SIGNATURE, { taskLabel });
     }
 
     // 验证 signSignature 与 secondPublicKey
@@ -321,7 +321,7 @@ export class TransactionHelper {
             senderSecondPublicKeyBuffer,
           ))
         ) {
-          throw new ArgumentFormatException(`Invalid ${taskLabel} signSignature`);
+          throw new ArgumentFormatException(ERROR_LIST.INVALID_SIGNSIGNATURE, { taskLabel });
         }
       } else {
         throw new ArgumentFormatException(

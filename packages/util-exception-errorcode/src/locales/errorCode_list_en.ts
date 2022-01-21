@@ -54,6 +54,16 @@ export const ERROR_CODE_LIST_EN = {
   "001-00052": "Disabled insert {trsName} Transaction",
   "001-00053": "Transaction is in unchangable state",
   "001-00054": "AssetStatistic index: {index} already in use",
+  "001-00055": "Invalid {taskLabel} signature",
+  "001-00056": "Invalid {taskLabel} signSignature",
+  "001-00057": "Invalid base type {base_type}",
+  "001-00058": "Unregistered TransactionFactory {factoryName}",
+  "001-00059": "Unregistered Transaction base type {trs_base}",
+  "001-00060": "Unregistered Transaction type {trs_key}",
+  "001-00061": "Invalid {taskLabel} fromAuthSignature",
+  "001-00062": "Invalid {taskLabel} fromAuthSignSignature",
+  "001-00063": "Invalid {taskLabel} toAuthSignature",
+  "001-00064": "Invalid {taskLabel} toAuthSignSignature",
   // #endregion
 
   // #region logic
@@ -173,5 +183,7 @@ export const ERROR_CODE_LIST_EN = {
   "001-22015": "OnMessage get invalid req_id: {req_id}",
   "001-22016": "Request limit",
   "001-22017": "Invalid message cmd",
+  "001-22018": "ChainChannel Timeout, cmd {cmd}",
+  "001-22019": "Task {task_id} abort because the free chainChannel size is zero",
   // #endregion
 } as const;

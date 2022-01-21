@@ -2,7 +2,7 @@ import type { TransactionInBlock } from "@bfchain/core-model-transaction";
 import { Block, BLOCK_TYPES_BASE, BLOCK_TYPES_MAP } from "@bfchain/core-model-block";
 import { Reader } from "@bfchain/protobuf";
 import { AsymmetricHelper, BlockHelper } from "@bfchain/core-helper";
-import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { BlockFactory, BlockGeneratorCalculator } from "./atom_block";
 import { Inject, Injectable, ModuleStroge, Resolve, getHexFromArrayBuffer } from "@bfchain/util";
 
@@ -44,7 +44,7 @@ export class BlockCore {
   getBlockFactoryFromBaseType<T extends Block>(base_type: BLOCK_TYPES_BASE) {
     const BlockFactory = BLOCK_FACTORY_TYPES_MAP.KF.get(base_type);
     if (!BlockFactory) {
-      throw new ArgumentFormatException(`Invalid base type: ${base_type}`);
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_BASE_TYPE, { base_type });
     }
     return this.getBlockFactory<T>(BlockFactory);
   }
@@ -143,7 +143,7 @@ export class BlockCore {
     const base_type = this.blockHelper.parseTypeByHeight(height);
     const BlockModelConstructor = BLOCK_TYPES_MAP.KM.get(base_type);
     if (!BlockModelConstructor) {
-      throw new ArgumentFormatException(`Invalid base type: ${base_type}`);
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_BASE_TYPE, { base_type });
     }
     return BlockModelConstructor;
   }

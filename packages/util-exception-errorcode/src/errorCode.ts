@@ -126,6 +126,32 @@ export const ERROR_LIST = {
     "001-00054",
     "AssetStatistic index: {index} already in use",
   ),
+  INVALID_SIGNATURE: new ErrorCode("001-00055", "Invalid {taskLabel} signature"),
+  INVALID_SIGNSIGNATURE: new ErrorCode("001-00056", "Invalid {taskLabel} signSignature"),
+  INVALID_BASE_TYPE: new ErrorCode("001-00057", "Invalid base type {base_type}"),
+
+  UNREGISTERED_TRANSACTION_FACTORY: new ErrorCode(
+    "001-00058",
+    "Unregistered TransactionFactory {factoryName}",
+  ),
+  UNREGISTERED_TRANSACTION_BASE_TYPE: new ErrorCode(
+    "001-00059",
+    "Unregistered Transaction base type {trs_base}",
+  ),
+  UNREGISTERED_TRANSACTION_TYPE: new ErrorCode(
+    "001-00060",
+    "Unregistered Transaction type {trs_key}",
+  ),
+  INVALID_FROMAUTHSIGNATURE: new ErrorCode("001-00061", "Invalid {taskLabel} fromAuthSignature"),
+  INVALID_FROMAUTHSIGNSIGNATURE: new ErrorCode(
+    "001-00062",
+    "Invalid {taskLabel} fromAuthSignSignature",
+  ),
+  INVALID_TOAUTHSIGNATURE: new ErrorCode("001-00063", "Invalid {taskLabel} toAuthSignature"),
+  INVALID_TOAUTHSIGNSIGNATURE: new ErrorCode(
+    "001-00064",
+    "Invalid {taskLabel} toAuthSignSignature",
+  ),
   // #endregion
 
   // #region logic
@@ -430,6 +456,11 @@ export const ERROR_LIST = {
   ),
   REQUEST_LIMIT: new ErrorCode("001-22016", "Request limit"),
   INVALID_MESSAGE_CMD: new ErrorCode("001-22017", "Invalid message cmd"),
+  CHAINCHANNEL_TIMEOUT: new ErrorCode("001-22018", "ChainChannel Timeout, cmd {cmd}"),
+  TASK_ABORT: new ErrorCode(
+    "001-22019",
+    "Task {task_id} abort because the free chainChannel size is zero",
+  ),
   // #endregion
 };
 // #endregion

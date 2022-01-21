@@ -222,7 +222,9 @@ export class VerifyBlockCore<T extends Block> {
             block.generatorPublicKeyBuffer,
           ))
         ) {
-          throw new ArgumentFormatException(`Invalid transactionInBlock signature`);
+          throw new ArgumentFormatException(ERROR_LIST.INVALID_SIGNATURE, {
+            taskLabel: "transactionInBlock",
+          });
         }
         // 校验 TIB 安全签名
         if (block.generatorSecondPublicKeyBuffer) {
@@ -239,7 +241,9 @@ export class VerifyBlockCore<T extends Block> {
               block.generatorSecondPublicKeyBuffer,
             ))
           ) {
-            throw new ArgumentFormatException(`Invalid transactionInBlock signSignature`);
+            throw new ArgumentFormatException(ERROR_LIST.INVALID_SIGNSIGNATURE, {
+              taskLabel: "transactionInBlock",
+            });
           }
         }
         // 计算权益变动

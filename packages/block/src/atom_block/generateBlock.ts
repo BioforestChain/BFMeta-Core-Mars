@@ -389,9 +389,11 @@ export class GenerateBlockCore<T extends Block> {
       const numberOfTransactions = transactions.length;
       if (block.numberOfTransactions !== 0 && block.numberOfTransactions !== numberOfTransactions) {
         /// 区块的交易数对不上
-        throw new ConsensusException(`block should have {num1} Transactions, but only get {num2}`, {
-          num1: block.numberOfTransactions,
-          num2: numberOfTransactions,
+        throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+          to_compare_prop: `numberOfTransactions ${block.numberOfTransactions}`,
+          be_compare_prop: "block",
+          to_target: `numberOfTransactions ${numberOfTransactions}`,
+          be_target: "calculate",
         });
       }
       block.numberOfTransactions = numberOfTransactions;
