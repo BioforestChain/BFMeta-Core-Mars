@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-util-base58",
-  "version": "5.25.9",
+  "version": "5.25.10",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,8 +14,8 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-typings": "5.25.9",
-    "@bfchain/core-util-exception-errorcode": "5.25.9"
+    "@bfchain/core-typings": "5.25.10",
+    "@bfchain/core-util-exception-errorcode": "5.25.10"
   },
   "gitHead": "ef41eb359371b11aafbec0516df1eba01f16ebfd",
   "types": "build/cjs/index.d.ts"
