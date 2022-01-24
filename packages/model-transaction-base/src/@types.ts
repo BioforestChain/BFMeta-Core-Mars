@@ -431,9 +431,9 @@ declare namespace BFChainCore {
     factoryId: string;
     /**允许发行的非同质资产数量 */
     entityPrealnum: string;
-    /**发行非同质资产时冻结的主权益数量，销毁时解冻 */
+    /**发行非同质资产时冻结的主权益数量，销毁时解冻（单个） */
     entityFrozenAssetPrealnum: string;
-    /**购买模板使用全的主权益数量 */
+    /**购买模板使用全的主权益数量（单个） */
     purchaseAssetPrealnum: string;
   }
   interface IssueEntityFactoryAssetJSON {

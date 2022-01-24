@@ -22,10 +22,10 @@ export class IssueEntityFactoryModel
   /**非同质资产模板的允许创建数量 */
   @Field.d(IssueEntityFactoryModel.INC++, "string")
   entityPrealnum!: string;
-  /**非同质资产发行时冻结的主权益数量 */
+  /**非同质资产发行时冻结的主权益数量（单个） */
   @Field.d(IssueEntityFactoryModel.INC++, "string")
   entityFrozenAssetPrealnum!: string;
-  /**指定购买资产和数量 */
+  /**指定购买资产和数量（单个） */
   @Field.d(IssueEntityFactoryModel.INC++, "string")
   purchaseAssetPrealnum!: string;
   toJSON() {
