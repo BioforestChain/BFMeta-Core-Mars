@@ -148,6 +148,7 @@ export const ERROR_CODE_LIST_EN = {
   "001-11068": "You can only trust main asset, {assetType} is not main asset {mainAsset}",
   "001-11069": "Account already has a username, errorId {errorId}",
   "001-11070": "Issue entity times use up, entityFactory {entityFactory}",
+  "001-11071": "Asset already exist, magic {magic} assetType {assetType}",
 
   // block logic
   "001-12001":

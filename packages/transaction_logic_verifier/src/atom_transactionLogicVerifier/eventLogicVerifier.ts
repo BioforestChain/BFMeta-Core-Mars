@@ -630,7 +630,7 @@ export class EventLogicVerifier {
         // 验证资产是否已经存在
         const memAssets = await accountGetterHelper.getAsset(chainMagic, assetType);
         if (memAssets) {
-          throw new ConsensusException(ERROR_LIST.ASSET_NOT_EXIST, {
+          throw new ConsensusException(ERROR_LIST.ASSET_ALREADY_EXIST, {
             magic: chainMagic,
             assetType,
             errorId: NewTransactionRefuseReason.ASSET_ALREADY_EXIST,
@@ -651,6 +651,25 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "destoryAsset",
       async ({ applyInfo }, next) => {
+        const { sourceAmount, assetInfo } = applyInfo;
+        const { magic, assetType } = assetInfo;
+        // 验证资产是否已经存在
+        const memAssets = await accountGetterHelper.getAsset(magic, assetType);
+        if (!memAssets) {
+          throw new ConsensusException(ERROR_LIST.ASSET_NOT_EXIST, {
+            magic,
+            assetType,
+            errorId: NewTransactionRefuseReason.ASSET_NOT_EXIST,
+          });
+        }
+
+        if (memAssets.remainAssetPrealnum < BigInt(sourceAmount)) {
+          throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
+            reason: `Asset ${magic} ${assetType} remain: ${memAssets.remainAssetPrealnum.toString()} destoryAsset: ${sourceAmount}`,
+            errorId: NewTransactionRefuseReason.ASSET_NOT_ENOUGH,
+          });
+        }
+
         next();
       },
       { taskname: `applyTransaction/logicVerifier/destoryAsset` },

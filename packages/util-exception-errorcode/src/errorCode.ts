@@ -384,6 +384,10 @@ export const ERROR_LIST = {
     "001-11070",
     "Issue entity times use up, entityFactory {entityFactory}",
   ),
+  ASSET_ALREADY_EXIST: new ErrorCode(
+    "001-11071",
+    "Asset already exist, magic {magic} assetType {assetType}",
+  ),
 
   // block logic
   BLOCK_SIGN_SIGNATURE_IS_REQUIRED: new ErrorCode(
