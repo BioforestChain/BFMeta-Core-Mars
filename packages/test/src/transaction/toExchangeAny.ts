@@ -23,7 +23,7 @@ async function getToExchangeAnyTransaction(
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: bfchainCore.config.version,
-    type: bfchainCore.transactionHelper.TO_EXCHANGE_ASSET, // 交易类型
+    type: bfchainCore.transactionHelper.TO_EXCHANGE_ANY, // 交易类型
     senderId: sender.address, // 发起者地址
     senderPublicKey: sender.publicKey, // 发起者公钥
     senderSecondPublicKey: "", // 发起者二次公钥
