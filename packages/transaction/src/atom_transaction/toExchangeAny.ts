@@ -301,6 +301,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
       const {
+        toExchangeChainName,
         toExchangeSource,
         toExchangeParentAssetType,
         toExchangeAssetType,
@@ -339,6 +340,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
           transaction,
           applyInfo: {
             address: senderId,
+            sourceChainName: toExchangeChainName,
             sourceChainMagic: toExchangeSource,
             dappid: toExchangeAssetType,
             minEffectiveHeight:
@@ -357,6 +359,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
           transaction,
           applyInfo: {
             address: senderId,
+            sourceChainName: toExchangeChainName,
             sourceChainMagic: toExchangeSource,
             name: toExchangeAssetType,
             minEffectiveHeight:
@@ -375,6 +378,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
           transaction,
           applyInfo: {
             address: senderId,
+            sourceChainName: toExchangeChainName,
             sourceChainMagic: toExchangeSource,
             entityId: toExchangeAssetType,
             minEffectiveHeight:

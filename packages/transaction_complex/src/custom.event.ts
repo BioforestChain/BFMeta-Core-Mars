@@ -731,13 +731,20 @@ export class CustomTransactionEvent {
       });
     }
     if (applyResult.type === "frozenDAppid") {
-      const { address, dappid, sourceChainMagic, minEffectiveHeight, maxEffectiveHeight } =
-        applyResult.applyInfo;
+      const {
+        address,
+        dappid,
+        sourceChainMagic,
+        sourceChainName,
+        minEffectiveHeight,
+        maxEffectiveHeight,
+      } = applyResult.applyInfo;
       return eventEmitter.emit("frozenDAppid", {
         type: "frozenDAppid",
         transaction,
         applyInfo: {
           address,
+          sourceChainName,
           sourceChainMagic,
           dappid,
           minEffectiveHeight,
@@ -747,7 +754,7 @@ export class CustomTransactionEvent {
       });
     }
     if (applyResult.type === "unfrozenDAppid") {
-      const { address, publicKey, dappid, sourceChainMagic, possessorAddress } =
+      const { address, publicKey, dappid, sourceChainMagic, sourceChainName, possessorAddress } =
         applyResult.applyInfo;
       return eventEmitter.emit("unfrozenDAppid", {
         type: "unfrozenDAppid",
@@ -755,6 +762,7 @@ export class CustomTransactionEvent {
         applyInfo: {
           address,
           publicKeyBuffer: parseHexToArrayBuffer(publicKey),
+          sourceChainName,
           sourceChainMagic,
           dappid,
           possessorAddress,
@@ -841,43 +849,55 @@ export class CustomTransactionEvent {
       });
     }
     if (applyResult.type === "cancelLocationName") {
-      const { address, publicKey, name, sourceChainMagic } = applyResult.applyInfo;
+      const { address, publicKey, name, sourceChainMagic, sourceChainName } = applyResult.applyInfo;
       return eventEmitter.emit("cancelLocationName", {
         type: "cancelLocationName",
         transaction,
         applyInfo: {
           address,
           publicKeyBuffer: parseHexToArrayBuffer(publicKey),
-          name,
+          sourceChainName,
           sourceChainMagic,
+          name,
         },
       });
     }
     if (applyResult.type === "setLnsManager") {
-      const { address, publicKey, name, sourceChainMagic, manager } = applyResult.applyInfo;
+      const { address, publicKey, name, sourceChainMagic, sourceChainName, manager } =
+        applyResult.applyInfo;
       return eventEmitter.emit("setLnsManager", {
         type: "setLnsManager",
         transaction,
         applyInfo: {
           address,
           publicKeyBuffer: parseHexToArrayBuffer(publicKey),
-          name,
+          sourceChainName,
           sourceChainMagic,
+          name,
           manager,
         },
       });
     }
     if (applyResult.type === "setLnsRecordValue") {
-      const { address, publicKey, name, sourceChainMagic, operationType, addRecord, deleteRecord } =
-        applyResult.applyInfo;
+      const {
+        address,
+        publicKey,
+        name,
+        sourceChainMagic,
+        sourceChainName,
+        operationType,
+        addRecord,
+        deleteRecord,
+      } = applyResult.applyInfo;
       return eventEmitter.emit("setLnsRecordValue", {
         type: "setLnsRecordValue",
         transaction,
         applyInfo: {
           address,
           publicKeyBuffer: parseHexToArrayBuffer(publicKey),
-          name,
+          sourceChainName,
           sourceChainMagic,
+          name,
           operationType,
           addRecord,
           deleteRecord,
@@ -885,13 +905,20 @@ export class CustomTransactionEvent {
       });
     }
     if (applyResult.type === "frozenLocationName") {
-      const { address, name, sourceChainMagic, minEffectiveHeight, maxEffectiveHeight } =
-        applyResult.applyInfo;
+      const {
+        address,
+        name,
+        sourceChainMagic,
+        sourceChainName,
+        minEffectiveHeight,
+        maxEffectiveHeight,
+      } = applyResult.applyInfo;
       return eventEmitter.emit("frozenLocationName", {
         type: "frozenLocationName",
         transaction,
         applyInfo: {
           address,
+          sourceChainName,
           sourceChainMagic,
           name,
           minEffectiveHeight,
@@ -901,7 +928,7 @@ export class CustomTransactionEvent {
       });
     }
     if (applyResult.type === "unfrozenLocationName") {
-      const { address, publicKey, name, sourceChainMagic, possessorAddress } =
+      const { address, publicKey, name, sourceChainMagic, sourceChainName, possessorAddress } =
         applyResult.applyInfo;
       return eventEmitter.emit("unfrozenLocationName", {
         type: "unfrozenLocationName",
@@ -909,6 +936,7 @@ export class CustomTransactionEvent {
         applyInfo: {
           address,
           publicKeyBuffer: parseHexToArrayBuffer(publicKey),
+          sourceChainName,
           sourceChainMagic,
           name,
           possessorAddress,
@@ -917,13 +945,20 @@ export class CustomTransactionEvent {
       });
     }
     if (applyResult.type === "frozenEntity") {
-      const { address, entityId, sourceChainMagic, minEffectiveHeight, maxEffectiveHeight } =
-        applyResult.applyInfo;
+      const {
+        address,
+        entityId,
+        sourceChainMagic,
+        sourceChainName,
+        minEffectiveHeight,
+        maxEffectiveHeight,
+      } = applyResult.applyInfo;
       return eventEmitter.emit("frozenEntity", {
         type: "frozenEntity",
         transaction,
         applyInfo: {
           address,
+          sourceChainName,
           sourceChainMagic,
           entityId,
           minEffectiveHeight,
@@ -933,7 +968,7 @@ export class CustomTransactionEvent {
       });
     }
     if (applyResult.type === "unfrozenEntity") {
-      const { address, publicKey, entityId, sourceChainMagic, possessorAddress } =
+      const { address, publicKey, entityId, sourceChainMagic, sourceChainName, possessorAddress } =
         applyResult.applyInfo;
       return eventEmitter.emit("unfrozenEntity", {
         type: "unfrozenEntity",
@@ -941,6 +976,7 @@ export class CustomTransactionEvent {
         applyInfo: {
           address,
           publicKeyBuffer: parseHexToArrayBuffer(publicKey),
+          sourceChainName,
           sourceChainMagic,
           entityId,
           possessorAddress,

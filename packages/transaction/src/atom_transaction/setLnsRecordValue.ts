@@ -364,7 +364,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
   ) {
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
-      const { name, sourceChainMagic, operationType, addRecord, deleteRecord } =
+      const { name, sourceChainMagic, sourceChainName, operationType, addRecord, deleteRecord } =
         transaction.asset.lnsRecordValue;
       taskList.next = eventEmitter.emit("setLnsRecordValue", {
         type: "setLnsRecordValue",
@@ -372,8 +372,9 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
         applyInfo: {
           address: transaction.senderId,
           publicKeyBuffer: transaction.senderPublicKeyBuffer,
-          name,
           sourceChainMagic,
+          sourceChainName,
+          name,
           operationType,
           addRecord,
           deleteRecord,

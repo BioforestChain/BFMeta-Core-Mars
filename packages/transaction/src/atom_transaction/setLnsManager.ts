@@ -183,15 +183,16 @@ export class SetLnsManagerTransactionFactory extends TransactionFactory<SetLnsMa
   ) {
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
-      const { name, sourceChainMagic } = transaction.asset.lnsManager;
+      const { name, sourceChainMagic, sourceChainName } = transaction.asset.lnsManager;
       taskList.next = eventEmitter.emit("setLnsManager", {
         type: "setLnsManager",
         transaction,
         applyInfo: {
           address: transaction.senderId,
           publicKeyBuffer: transaction.senderPublicKeyBuffer,
-          name,
+          sourceChainName,
           sourceChainMagic,
+          name,
           manager: transaction.recipientId,
         },
       });

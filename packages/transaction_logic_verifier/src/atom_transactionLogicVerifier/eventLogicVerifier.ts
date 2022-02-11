@@ -733,18 +733,15 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "frozenDAppid",
       async ({ applyInfo }, next) => {
-        const { address, sourceChainMagic, dappid } = applyInfo;
+        const { address, sourceChainName, sourceChainMagic, dappid } = applyInfo;
 
-        const memDapp = await accountGetterHelper.getDApp(
+        const memDapp = await this.helperLogicVerifier.isDAppExist(
+          sourceChainName,
           sourceChainMagic,
           dappid,
           currentBlockHeight,
+          accountGetterHelper,
         );
-        if (!memDapp) {
-          throw new ConsensusException(ERROR_LIST.DAPPID_IS_NOT_EXIST, {
-            dappid,
-          });
-        }
         if (memDapp.possessorAddress !== address) {
           throw new ConsensusException(ERROR_LIST.ACCOUNT_NOT_DAPPID_POSSESSOR, {
             address,
@@ -773,18 +770,15 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "unfrozenDAppid",
       async ({ transaction, applyInfo }, next) => {
-        const { address, sourceChainMagic, dappid } = applyInfo;
+        const { address, sourceChainName, sourceChainMagic, dappid } = applyInfo;
 
-        const memDapp = await accountGetterHelper.getDApp(
+        const memDapp = await this.helperLogicVerifier.isDAppExist(
+          sourceChainName,
           sourceChainMagic,
           dappid,
           currentBlockHeight,
+          accountGetterHelper,
         );
-        if (!memDapp) {
-          throw new ConsensusException(ERROR_LIST.DAPPID_IS_NOT_EXIST, {
-            dappid,
-          });
-        }
         if (memDapp.status !== ASSET_STATUS.FROZEN) {
           throw new ConsensusException(ERROR_LIST.DAPPID_NOT_FROZEN, {
             dappid,
@@ -819,7 +813,7 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "changeDAppidPossessor",
       async ({ transaction, applyInfo }, next) => {
-        const { address, possessorAddress, sourceChainMagic, dappid } = applyInfo;
+        const { address, possessorAddress, sourceChainName, sourceChainMagic, dappid } = applyInfo;
 
         if (address !== possessorAddress) {
           // 不能将冻结账户设置为 dappid 的拥有者
@@ -839,16 +833,13 @@ export class EventLogicVerifier {
           }
         }
 
-        const memDapp = await accountGetterHelper.getDApp(
+        const memDapp = await this.helperLogicVerifier.isDAppExist(
+          sourceChainName,
           sourceChainMagic,
           dappid,
           currentBlockHeight,
+          accountGetterHelper,
         );
-        if (!memDapp) {
-          throw new ConsensusException(ERROR_LIST.DAPPID_IS_NOT_EXIST, {
-            dappid,
-          });
-        }
         // 处于冻结状态的 dappid 不能更改拥有者
         if (memDapp.status === ASSET_STATUS.FROZEN) {
           throw new ConsensusException(ERROR_LIST.DAPPID_ALREADY_FROZEN, {
@@ -1062,7 +1053,7 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "cancelLocationName",
       async ({ transaction, applyInfo }, next) => {
-        const { sourceChainMagic, name } = applyInfo;
+        const { sourceChainName, sourceChainMagic, name } = applyInfo;
 
         // const names = name.split(".");
         // // 顶级位名不能删除
@@ -1074,17 +1065,13 @@ export class EventLogicVerifier {
         // }
 
         // 不存在的位名不能删除
-        const memLocation = await accountGetterHelper.getLocationName(
+        const memLocation = await this.helperLogicVerifier.isLocationNameExist(
+          sourceChainName,
           sourceChainMagic,
           name,
           currentBlockHeight,
+          accountGetterHelper,
         );
-        if (!memLocation) {
-          throw new ConsensusException(ERROR_LIST.LOCATION_NAME_IS_NOT_EXIST, {
-            locationName: name,
-            errorId: NewTransactionRefuseReason.LOCATION_NAME_NOT_EXIST,
-          });
-        }
 
         // 冻结状态的位名不能删除
         if (memLocation.status === ASSET_STATUS.FROZEN) {
@@ -1138,7 +1125,7 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "setLnsManager",
       async ({ applyInfo }, next) => {
-        const { address, sourceChainMagic, name, manager } = applyInfo;
+        const { address, sourceChainName, sourceChainMagic, name, manager } = applyInfo;
 
         // 不能将冻结账户设置为管理员
         const newManager = await accountGetterHelper.getAccountInfo(manager);
@@ -1157,16 +1144,13 @@ export class EventLogicVerifier {
         }
 
         // 位名不存在不能设置管理员
-        const memLocation = await accountGetterHelper.getLocationName(
+        const memLocation = await this.helperLogicVerifier.isLocationNameExist(
+          sourceChainName,
           sourceChainMagic,
           name,
           currentBlockHeight,
+          accountGetterHelper,
         );
-        if (!memLocation) {
-          throw new ConsensusException(ERROR_LIST.LOCATION_NAME_IS_NOT_EXIST, {
-            locationName: name,
-          });
-        }
 
         // 处于冻结状态的位名不能设置管理员
         if (memLocation.status === ASSET_STATUS.FROZEN) {
@@ -1235,21 +1219,24 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "setLnsRecordValue",
       async ({ applyInfo }, next) => {
-        const { address, sourceChainMagic, name, operationType, addRecord, deleteRecord } =
-          applyInfo;
+        const {
+          address,
+          sourceChainName,
+          sourceChainMagic,
+          name,
+          operationType,
+          addRecord,
+          deleteRecord,
+        } = applyInfo;
 
         // 校验当前位名是否存存在
-        const memLocation = await accountGetterHelper.getLocationName(
+        const memLocation = await this.helperLogicVerifier.isLocationNameExist(
+          sourceChainName,
           sourceChainMagic,
-          name.toLowerCase(),
+          name,
           currentBlockHeight,
+          accountGetterHelper,
         );
-        if (!memLocation) {
-          throw new ConsensusException(ERROR_LIST.LOCATION_NAME_IS_NOT_EXIST, {
-            locationName: name,
-            errorId: NewTransactionRefuseReason.LOCATION_NAME_NOT_EXIST,
-          });
-        }
 
         const { records, status } = memLocation;
         // 处于冻结状态的位名不能设置解析值
@@ -1310,20 +1297,16 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "frozenLocationName",
       async ({ applyInfo }, next) => {
-        const { address, sourceChainMagic, name } = applyInfo;
+        const { address, sourceChainName, sourceChainMagic, name } = applyInfo;
 
         // 位名是否存在
-        const memLocation = await accountGetterHelper.getLocationName(
+        const memLocation = await this.helperLogicVerifier.isLocationNameExist(
+          sourceChainName,
           sourceChainMagic,
           name,
           currentBlockHeight,
+          accountGetterHelper,
         );
-        if (!memLocation) {
-          throw new ConsensusException(ERROR_LIST.LOCATION_NAME_IS_NOT_EXIST, {
-            locationName: name,
-            errorId: NewTransactionRefuseReason.LOCATION_NAME_NOT_EXIST,
-          });
-        }
         if (memLocation.status === ASSET_STATUS.FROZEN) {
           throw new ConsensusException(ERROR_LIST.LOCATION_NAME_ALREADY_FROZEN, {
             locationName: name,
@@ -1356,20 +1339,16 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "unfrozenLocationName",
       async ({ transaction, applyInfo }, next) => {
-        const { address, sourceChainMagic, name } = applyInfo;
+        const { address, sourceChainName, sourceChainMagic, name } = applyInfo;
 
         // 位名是否存在
-        const memLocation = await accountGetterHelper.getLocationName(
+        const memLocation = await this.helperLogicVerifier.isLocationNameExist(
+          sourceChainName,
           sourceChainMagic,
           name,
           currentBlockHeight,
+          accountGetterHelper,
         );
-        if (!memLocation) {
-          throw new ConsensusException(ERROR_LIST.LOCATION_NAME_IS_NOT_EXIST, {
-            locationName: name,
-            errorId: NewTransactionRefuseReason.LOCATION_NAME_NOT_EXIST,
-          });
-        }
         if (memLocation.status !== ASSET_STATUS.FROZEN) {
           throw new ConsensusException(ERROR_LIST.LOCATION_NAME_NOT_FROZEN, {
             locationName: name,
@@ -1408,7 +1387,7 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "changeLocationNamePossessor",
       async ({ transaction, applyInfo }, next) => {
-        const { address, possessorAddress, sourceChainMagic, name } = applyInfo;
+        const { address, possessorAddress, sourceChainName, sourceChainMagic, name } = applyInfo;
 
         if (address !== possessorAddress) {
           // 不能将冻结账户设置为链域名的拥有者
@@ -1429,17 +1408,13 @@ export class EventLogicVerifier {
         }
 
         // 位名是否存在
-        const memLocation = await accountGetterHelper.getLocationName(
+        const memLocation = await this.helperLogicVerifier.isLocationNameExist(
+          sourceChainName,
           sourceChainMagic,
           name,
           currentBlockHeight,
+          accountGetterHelper,
         );
-        if (!memLocation) {
-          throw new ConsensusException(ERROR_LIST.LOCATION_NAME_IS_NOT_EXIST, {
-            locationName: name,
-            errorId: NewTransactionRefuseReason.LOCATION_NAME_NOT_EXIST,
-          });
-        }
         // 只有顶级位名才能更改拥有者
         if (memLocation.level !== LOCATION_NAME_LEVEL.TOP_LEVEL) {
           throw new ConsensusException(ERROR_LIST.ONLY_TOP_LEVEL_LOCATION_NAME_CAN_EXCHANGE);
@@ -1789,20 +1764,16 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "frozenEntity",
       async ({ applyInfo }, next) => {
-        const { address, sourceChainMagic, entityId } = applyInfo;
+        const { address, sourceChainName, sourceChainMagic, entityId } = applyInfo;
 
         // entity 是否存在
-        const memEntity = (await accountGetterHelper.getEntity(
+        const memEntity = await this.helperLogicVerifier.isEntityExist(
+          sourceChainName,
           sourceChainMagic,
           entityId,
           currentBlockHeight,
-        )) as BFChainCore.IssueEntityInfo | undefined;
-        if (!memEntity) {
-          throw new ConsensusException(ERROR_LIST.ENTITY_IS_NOT_EXIST, {
-            entityId,
-            errorId: NewTransactionRefuseReason.ENTITY_NOT_EXIST,
-          });
-        }
+          accountGetterHelper,
+        );
         if (memEntity.possessorAddress !== address) {
           throw new ConsensusException(ERROR_LIST.ACCOUNT_NOT_ENTITY_POSSESSOR, {
             address,
@@ -1838,20 +1809,16 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "unfrozenEntity",
       async ({ transaction, applyInfo }, next) => {
-        const { address, sourceChainMagic, entityId } = applyInfo;
+        const { address, sourceChainName, sourceChainMagic, entityId } = applyInfo;
 
         // entity 是否存在
-        const memEntity = (await accountGetterHelper.getEntity(
+        const memEntity = await this.helperLogicVerifier.isEntityExist(
+          sourceChainName,
           sourceChainMagic,
           entityId,
           currentBlockHeight,
-        )) as BFChainCore.LocationNameInfo | undefined;
-        if (!memEntity) {
-          throw new ConsensusException(ERROR_LIST.ENTITY_IS_ALREADY_EXIST, {
-            entityId,
-            errorId: NewTransactionRefuseReason.ENTITY_NOT_EXIST,
-          });
-        }
+          accountGetterHelper,
+        );
         // 实体处于非冻结状态
         if (memEntity.status === ASSET_STATUS.NORMAL) {
           throw new ConsensusException(ERROR_LIST.ENTITY_NOT_FROZEN, {
@@ -1893,7 +1860,8 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "changeEntityPossessor",
       async ({ transaction, applyInfo }, next) => {
-        const { address, possessorAddress, sourceChainMagic, entityId } = applyInfo;
+        const { address, possessorAddress, sourceChainName, sourceChainMagic, entityId } =
+          applyInfo;
 
         if (address !== possessorAddress) {
           // 不能将冻结账户设置为非同质资产的拥有者
@@ -1914,17 +1882,13 @@ export class EventLogicVerifier {
         }
 
         // entity 是否存在
-        const memEntity = (await accountGetterHelper.getEntity(
+        const memEntity = await this.helperLogicVerifier.isEntityExist(
+          sourceChainName,
           sourceChainMagic,
           entityId,
           currentBlockHeight,
-        )) as BFChainCore.LocationNameInfo | undefined;
-        if (!memEntity) {
-          throw new ConsensusException(ERROR_LIST.ENTITY_IS_ALREADY_EXIST, {
-            entityId,
-            errorId: NewTransactionRefuseReason.ENTITY_NOT_EXIST,
-          });
-        }
+          accountGetterHelper,
+        );
         // 冻结状态的 entity 不能更改拥有者
         if (memEntity.status === ASSET_STATUS.FROZEN) {
           throw new ConsensusException(ERROR_LIST.ENTITY_ALREADY_FROZEN, {

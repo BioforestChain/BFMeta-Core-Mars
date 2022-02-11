@@ -282,6 +282,7 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
       const {
+        toExchangeChainName,
         toExchangeSource,
         toExchangeAsset,
         exchangeNumber,
@@ -317,6 +318,7 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
             transaction,
             applyInfo: {
               address: senderId,
+              sourceChainName: toExchangeChainName,
               sourceChainMagic: toExchangeSource,
               dappid: toExchangeAsset,
               minEffectiveHeight:
@@ -333,6 +335,7 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
             transaction,
             applyInfo: {
               address: senderId,
+              sourceChainName: toExchangeChainName,
               sourceChainMagic: toExchangeSource,
               name: toExchangeAsset,
               minEffectiveHeight:
@@ -349,6 +352,7 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
             transaction,
             applyInfo: {
               address: senderId,
+              sourceChainName: toExchangeChainName,
               sourceChainMagic: toExchangeSource,
               entityId: toExchangeAsset,
               minEffectiveHeight:

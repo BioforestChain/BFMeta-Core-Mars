@@ -132,6 +132,8 @@ export enum NewTransactionRefuseReason {
   ACCOUNT_NOT_DAPPID_POSSESSOR,
   /**资产不存在 */
   ASSET_NOT_EXIST,
+  /**dappid 不存在 */
+  DAPPID_NOT_EXIST,
 }
 
 export enum DUPLEX_API_CMD {

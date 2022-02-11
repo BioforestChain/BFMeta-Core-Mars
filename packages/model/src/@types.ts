@@ -144,8 +144,9 @@ declare namespace BFChainCore {
   type ApplyInfo_FrozenDAppid = {
     address: string;
     publicKeyBuffer?: Uint8Array;
-    dappid: string;
+    sourceChainName: string;
     sourceChainMagic: string;
+    dappid: string;
     minEffectiveHeight: number;
     maxEffectiveHeight: number;
     status: ASSET_STATUS;
@@ -157,10 +158,11 @@ declare namespace BFChainCore {
   type ApplyInfo_UnfrozenDAppid = {
     address: string;
     publicKeyBuffer?: Uint8Array;
+    sourceChainMagic: string;
+    sourceChainName: string;
+    dappid: string;
     /**新的 dappid 的拥有者地址 */
     possessorAddress: string;
-    dappid: string;
-    sourceChainMagic: string;
     status: ASSET_STATUS;
   };
   /**解冻 dappid */
@@ -170,10 +172,11 @@ declare namespace BFChainCore {
   type ApplyInfo_ChangeDAppidPossessor = {
     address: string;
     publicKeyBuffer?: Uint8Array;
+    sourceChainName: string;
+    sourceChainMagic: string;
     /**新的 dappid 的拥有者地址 */
     possessorAddress: string;
     dappid: string;
-    sourceChainMagic: string;
   };
   /**更改 dappid 拥有者 */
   type ApplyTransactionChangeDAppidPossessorEvent<EVENTNAME, T extends Transaction = Transaction> =
@@ -225,8 +228,9 @@ declare namespace BFChainCore {
   type ApplyInfo_LocationNameCancellation = {
     address: string;
     publicKeyBuffer?: Uint8Array;
-    name: string;
+    sourceChainName: string;
     sourceChainMagic: string;
+    name: string;
   };
   /**注销位名 */
   type ApplyTransactionCancelLocationNameEvent<EVENTNAME, T extends Transaction = Transaction> =
@@ -235,8 +239,9 @@ declare namespace BFChainCore {
   type ApplyInfo_SetLnsManager = {
     address: string;
     publicKeyBuffer?: Uint8Array;
-    name: string;
+    sourceChainName: string;
     sourceChainMagic: string;
+    name: string;
     manager: string;
   };
   /**设置位名管理员 */
@@ -246,8 +251,9 @@ declare namespace BFChainCore {
   type ApplyInfo_SetLnsRecordValue = {
     address: string;
     publicKeyBuffer?: Uint8Array;
-    name: string;
+    sourceChainName: string;
     sourceChainMagic: string;
+    name: string;
     operationType: RECORD_OPERATION_TYPE;
     addRecord?: LocationNameRecordJSON;
     deleteRecord?: LocationNameRecordJSON;
@@ -259,8 +265,9 @@ declare namespace BFChainCore {
   type ApplyInfo_FrozenLocationName = {
     address: string;
     publicKeyBuffer?: Uint8Array;
-    name: string;
+    sourceChainName: string;
     sourceChainMagic: string;
+    name: string;
     minEffectiveHeight: number;
     maxEffectiveHeight: number;
     status: ASSET_STATUS;
@@ -272,10 +279,11 @@ declare namespace BFChainCore {
   type ApplyInfo_UnfrozenLocationName = {
     address: string;
     publicKeyBuffer?: Uint8Array;
+    sourceChainName: string;
+    sourceChainMagic: string;
+    name: string;
     /**位名的拥有者地址 */
     possessorAddress: string;
-    name: string;
-    sourceChainMagic: string;
     status: ASSET_STATUS;
   };
   /**解冻位名 */
@@ -285,10 +293,11 @@ declare namespace BFChainCore {
   type ApplyInfo_ChangeLocationNamePossessor = {
     address: string;
     publicKeyBuffer?: Uint8Array;
+    sourceChainName: string;
+    sourceChainMagic: string;
     /**位名的拥有者地址 */
     possessorAddress: string;
     name: string;
-    sourceChainMagic: string;
   };
   /**更改位名拥有者 */
   type ApplyTransactionChangeLocationNamePossessorEvent<
@@ -361,6 +370,7 @@ declare namespace BFChainCore {
   type ApplyInfo_FrozenEntity = {
     address: string;
     publicKeyBuffer?: Uint8Array;
+    sourceChainName: string;
     sourceChainMagic: string;
     entityId: string;
     minEffectiveHeight: number;
@@ -374,10 +384,11 @@ declare namespace BFChainCore {
   type ApplyInfo_UnfrozenEntity = {
     address: string;
     publicKeyBuffer?: Uint8Array;
-    /**entityId 的拥有者地址 */
-    possessorAddress: string;
+    sourceChainName: string;
     sourceChainMagic: string;
     entityId: string;
+    /**entityId 的拥有者地址 */
+    possessorAddress: string;
     status: ASSET_STATUS;
   };
   /**解冻 entityId */
@@ -387,10 +398,11 @@ declare namespace BFChainCore {
   type ApplyInfo_ChangeEntityPossessor = {
     address: string;
     publicKeyBuffer?: Uint8Array;
-    /**entityId 的拥有者地址 */
-    possessorAddress: string;
+    sourceChainName: string;
     sourceChainMagic: string;
     entityId: string;
+    /**entityId 的拥有者地址 */
+    possessorAddress: string;
   };
   /**更改 entityId 拥有者 */
   type ApplyTransactionChangeEntityPossessorEvent<EVENTNAME, T extends Transaction = Transaction> =

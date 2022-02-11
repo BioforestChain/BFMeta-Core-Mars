@@ -192,8 +192,9 @@ declare namespace BFChainCore {
     applyInfo: {
       address: string;
       publicKey: string;
-      dappid: string;
+      sourceChainName: string;
       sourceChainMagic: string;
+      dappid: string;
       minEffectiveHeight: number;
       maxEffectiveHeight: number;
     };
@@ -204,10 +205,11 @@ declare namespace BFChainCore {
     applyInfo: {
       address: string;
       publicKey: string;
+      sourceChainName: string;
+      sourceChainMagic: string;
       dappid: string;
       /**dappid 的拥有者地址 */
       possessorAddress: string;
-      sourceChainMagic: string;
     };
   }
 
@@ -256,8 +258,9 @@ declare namespace BFChainCore {
       /**事件的发起账户地址 */
       address: string;
       publicKey: string;
-      name: string;
+      sourceChainName: string;
       sourceChainMagic: string;
+      name: string;
     };
   }
 
@@ -266,8 +269,9 @@ declare namespace BFChainCore {
     applyInfo: {
       address: string;
       publicKey: string;
-      name: string;
+      sourceChainName: string;
       sourceChainMagic: string;
+      name: string;
       manager: string;
     };
   }
@@ -277,8 +281,9 @@ declare namespace BFChainCore {
     applyInfo: {
       address: string;
       publicKey: string;
-      name: string;
+      sourceChainName: string;
       sourceChainMagic: string;
+      name: string;
       operationType: RECORD_OPERATION_TYPE;
       addRecord?: LocationNameRecordJSON;
       deleteRecord?: LocationNameRecordJSON;
@@ -290,8 +295,9 @@ declare namespace BFChainCore {
     applyInfo: {
       address: string;
       publicKey: string;
-      name: string;
+      sourceChainName: string;
       sourceChainMagic: string;
+      name: string;
       minEffectiveHeight: number;
       maxEffectiveHeight: number;
     };
@@ -302,10 +308,11 @@ declare namespace BFChainCore {
     applyInfo: {
       address: string;
       publicKey: string;
+      sourceChainName: string;
+      sourceChainMagic: string;
+      name: string;
       /**lns 的拥有者地址 */
       possessorAddress: string;
-      name: string;
-      sourceChainMagic: string;
     };
   }
 
@@ -314,6 +321,7 @@ declare namespace BFChainCore {
     applyInfo: {
       address: string;
       publicKey: string;
+      sourceChainName: string;
       sourceChainMagic: string;
       entityId: string;
       minEffectiveHeight: number;
@@ -328,6 +336,7 @@ declare namespace BFChainCore {
       publicKey: string;
       /**entityId 的拥有者地址 */
       possessorAddress: string;
+      sourceChainName: string;
       sourceChainMagic: string;
       entityId: string;
     };

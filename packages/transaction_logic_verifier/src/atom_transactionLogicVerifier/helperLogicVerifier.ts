@@ -1,6 +1,7 @@
 import { Injectable, Inject } from "@bfchain/util";
 import { ConfigHelper } from "@bfchain/core-helper";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
+import { NewTransactionRefuseReason } from "@bfchain/core-model-channel";
 const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "HelperLogicVerifier");
 
 @Injectable()
@@ -148,5 +149,97 @@ export class HelperLogicVerifier {
     }
 
     return memAsset;
+  }
+
+  async isDAppExist(
+    sourceChainName: string,
+    sourceChainMagic: string,
+    dappid: string,
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+  ) {
+    const memDApp = await accountGetterHelper.getDApp(sourceChainMagic, dappid, currentBlockHeight);
+
+    if (!memDApp) {
+      throw new ConsensusException(ERROR_LIST.DAPPID_IS_NOT_EXIST, {
+        dappid,
+        errorId: NewTransactionRefuseReason.DAPPID_NOT_EXIST,
+      });
+    }
+
+    if (memDApp.sourceChainName !== sourceChainName) {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+        to_compare_prop: `sourceChainName ${memDApp.sourceChainName}`,
+        be_compare_prop: `sourceChainName ${sourceChainName}`,
+        to_target: `blockChain magic ${sourceChainMagic} dappid ${dappid}`,
+        be_target: `transaction magic ${sourceChainMagic} dappid ${dappid}`,
+      });
+    }
+
+    return memDApp;
+  }
+
+  async isLocationNameExist(
+    sourceChainName: string,
+    sourceChainMagic: string,
+    locationName: string,
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+  ) {
+    const memLocationName = await accountGetterHelper.getLocationName(
+      sourceChainMagic,
+      locationName,
+      currentBlockHeight,
+    );
+
+    if (!memLocationName) {
+      throw new ConsensusException(ERROR_LIST.LOCATION_NAME_IS_NOT_EXIST, {
+        locationName,
+        errorId: NewTransactionRefuseReason.LOCATION_NAME_NOT_EXIST,
+      });
+    }
+
+    if (memLocationName.sourceChainName !== sourceChainName) {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+        to_compare_prop: `sourceChainName ${memLocationName.sourceChainName}`,
+        be_compare_prop: `sourceChainName ${sourceChainName}`,
+        to_target: `blockChain magic ${sourceChainMagic} locationName ${locationName}`,
+        be_target: `transaction magic ${sourceChainMagic} locationName ${locationName}`,
+      });
+    }
+
+    return memLocationName;
+  }
+
+  async isEntityExist(
+    sourceChainName: string,
+    sourceChainMagic: string,
+    entityId: string,
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+  ) {
+    const memEntity = await accountGetterHelper.getEntity(
+      sourceChainMagic,
+      entityId,
+      currentBlockHeight,
+    );
+
+    if (!memEntity) {
+      throw new ConsensusException(ERROR_LIST.ENTITY_IS_NOT_EXIST, {
+        entityId,
+        errorId: NewTransactionRefuseReason.ENTITY_NOT_EXIST,
+      });
+    }
+
+    if (memEntity.sourceChainName !== sourceChainName) {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+        to_compare_prop: `sourceChainName ${memEntity.sourceChainName}`,
+        be_compare_prop: `sourceChainName ${sourceChainName}`,
+        to_target: `blockChain magic ${sourceChainMagic} entityId ${entityId}`,
+        be_target: `transaction magic ${sourceChainMagic} entityId ${entityId}`,
+      });
+    }
+
+    return memEntity;
   }
 }
