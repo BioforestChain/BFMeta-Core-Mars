@@ -1,5 +1,9 @@
 import { TransactionFactory } from "./_txbase";
-import { IssueEntityTransaction, ASSET_STATUS } from "@bfchain/core-model";
+import {
+  IssueEntityTransaction,
+  ASSET_STATUS,
+  IssueEntityTransactionV1,
+} from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
@@ -20,14 +24,16 @@ const { ArgumentIllegalException } = CoreExceptionGenerator(
  *
  */
 @Injectable()
-export class IssueEntityTransactionFactory extends TransactionFactory<IssueEntityTransaction> {
+export class IssueEntityTransactionFactory<
+  T extends IssueEntityTransaction = IssueEntityTransaction,
+> extends TransactionFactory<T> {
   constructor(
     public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,
     public baseHelper: BaseHelper,
     public configHelper: ConfigHelper,
     public chainAssetInfoHelper: ChainAssetInfoHelper,
-    private issueEntityFactoryTransactionFactory: IssueEntityFactoryTransactionFactory,
+    public issueEntityFactoryTransactionFactory: IssueEntityFactoryTransactionFactory,
   ) {
     super();
   }
@@ -223,7 +229,7 @@ export class IssueEntityTransactionFactory extends TransactionFactory<IssueEntit
       asset: issueEntityAsset,
     });
 
-    return transaction;
+    return transaction as T;
   }
 
   /**
@@ -233,7 +239,7 @@ export class IssueEntityTransactionFactory extends TransactionFactory<IssueEntit
    * @param eventEmitter
    */
   async applyTransaction(
-    transaction: IssueEntityTransaction,
+    transaction: T,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ) {

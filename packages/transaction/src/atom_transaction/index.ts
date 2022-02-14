@@ -27,6 +27,7 @@ export * from "./setLnsRecordValue";
 export * from "./issueEntityFactory";
 export * from "./issueEntityFactoryV1";
 export * from "./issueEntity";
+export * from "./issueEntityV1";
 export * from "./destoryEntity";
 export * from "./toExchangeAny";
 export * from "./beExchangeAny";

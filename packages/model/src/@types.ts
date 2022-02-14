@@ -354,6 +354,13 @@ declare namespace BFChainCore {
   type ApplyTransactionIssueEntityEvent<EVENTNAME, T extends Transaction = Transaction> =
     ApplyTransactionEvent<ApplyInfo_IssueEntity, EVENTNAME, T>;
 
+  interface ApplyInfo_IssueEntityV1 extends ApplyInfo_IssueEntity {
+    taxAssetPrealnum: string;
+  }
+  /**发行 entity */
+  type ApplyTransactionIssueEntityV1Event<EVENTNAME, T extends Transaction = Transaction> =
+    ApplyTransactionEvent<ApplyInfo_IssueEntityV1, EVENTNAME, T>;
+
   type ApplyInfo_DestoryEntity = {
     address: string;
     publicKeyBuffer?: Uint8Array;
@@ -687,6 +694,13 @@ declare namespace BFChainCore {
         "issueEntity",
         | import("@bfchain/core-model-transaction").IssueEntityTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
+      >
+    >;
+    /**发行 entity */
+    issueEntityV1: BFChainUtil.EventInOut<
+      ApplyTransactionIssueEntityV1Event<
+        "issueEntityV1",
+        import("@bfchain/core-model-transaction").IssueEntityTransactionV1
       >
     >;
     /**销毁 entity */

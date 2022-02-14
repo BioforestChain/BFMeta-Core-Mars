@@ -41,6 +41,7 @@
     "src/issueAsset.ts",
     "src/issueEntity.ts",
     "src/issueEntityFactory.ts",
+    "src/issueEntityV1.ts",
     "src/locationName.ts",
     "src/locationNameRecord.ts",
     "src/mark.ts",

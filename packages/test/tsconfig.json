@@ -55,6 +55,7 @@
     "src/transaction/issueAsset.ts",
     "src/transaction/issueEntity.ts",
     "src/transaction/issueEntityFactory.ts",
+    "src/transaction/issueEntityV1.ts",
     "src/transaction/locationName.ts",
     "src/transaction/mark.ts",
     "src/transaction/registerChain.ts",

@@ -32,6 +32,7 @@ export * from "./feeRate";
 export * from "./locationNameRecord";
 export * from "./issueEntityFactory";
 export * from "./issueEntity";
+export * from "./issueEntityV1";
 export * from "./destoryEntity";
 export * from "./toExchangeAny";
 export * from "./beExchangeAny";

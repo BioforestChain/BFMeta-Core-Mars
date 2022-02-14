@@ -34,6 +34,7 @@ export * from "./registerChainLogicVerifier";
 export * from "./issueEntityFactoryLogicVerifier";
 export * from "./issueEntityFactoryV1LogicVerifier";
 export * from "./issueEntityLogicVerifier";
+export * from "./issueEntityV1LogicVerifier";
 export * from "./destoryEntityLogicVerifier";
 
 export * from "./toExchangeAnyLogicVerifier";

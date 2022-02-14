@@ -456,6 +456,26 @@ declare namespace BFChainCore {
     /**发行非同质资产事件附带信息 */
     issueEntity: IssueEntityJSON;
   }
+
+  interface IssueEntityV1JSON extends IssueEntityJSON {
+    /**非同质资产来源链名，小写字母组成，3-8 位 */
+    sourceChainName: string;
+    /**非同质资产来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
+    sourceChainMagic: string;
+    /**非同质资产名称 */
+    entityId: string;
+    /**非同质资产流通需要缴纳的版税 */
+    taxAssetPrealnum: string;
+    /**非同质资产模板的拥有者 */
+    entityFactoryPossessor: string;
+    /**非同质资产的模板 */
+    entityFactory: IssueEntityFactoryJSON;
+  }
+  interface IssueEntityAssetV1JSON {
+    /**发行非同质资产事件附带信息 */
+    issueEntity: IssueEntityV1JSON;
+  }
+
   interface DestoryEntityJSON {
     /**要销毁的非同质资产发行事件的唯一标识符 */
     transactionSignature: string;
@@ -620,6 +640,10 @@ declare namespace BFChainCore {
   type IssueEntityFactoryTransactionV1JSON = IssueEntityFactoryTransactionJSON;
   type IssueEntityTransactionJSON = TransactionMixJSON<
     IssueEntityAssetJSON,
+    { hasRecipientId: true }
+  >;
+  type IssueEntityTransactionV1JSON = TransactionMixJSON<
+    IssueEntityAssetV1JSON,
     { hasRecipientId: true }
   >;
   type DestoryEntityTransactionJSON = TransactionMixJSON<
