@@ -5,7 +5,7 @@ declare namespace BFChainCore {
   type GetMessageAssetModel<T> = T extends TransactionJSON<infer U> ? U : any;
   type GetAssetModel<T> = GetMessageAssetModel<T> extends import("@bfchain/protobuf").Message<
     infer U
-  >
+    >
     ? U
     : any;
   type GetTransactionJSONAssetJSON<T extends TransactionJSON> = T["asset"];
@@ -15,10 +15,10 @@ declare namespace BFChainCore {
 
   type TransactionMixJSON<AssetJSON extends object = object, Opts extends TransactionOptions = {}> =
     Opts["hasRecipientId"] extends true
-      ? Omit<TransactionJSON<AssetJSON>, "recipientId"> & { recipientId: string }
-      : Opts["hasRecipientId"] extends false
-      ? Omit<TransactionJSON<AssetJSON>, "recipientId"> & { recipientId: undefined }
-      : TransactionJSON<AssetJSON>;
+    ? Omit<TransactionJSON<AssetJSON>, "recipientId"> & { recipientId: string }
+    : Opts["hasRecipientId"] extends false
+    ? Omit<TransactionJSON<AssetJSON>, "recipientId"> & { recipientId: undefined }
+    : TransactionJSON<AssetJSON>;
 
   type TransactionOptions = {
     hasRecipientId?: boolean;
@@ -92,9 +92,9 @@ declare namespace BFChainCore {
     /**地址名命事件附带信息 */
     username: UsernameJSON;
   }
-  interface DelegateAssetJSON {}
-  interface AcceptVoteAssetJSON {}
-  interface RejectVoteAssetJSON {}
+  interface DelegateAssetJSON { }
+  interface AcceptVoteAssetJSON { }
+  interface RejectVoteAssetJSON { }
   interface VoteJSON {
     /**投出的权益数，0-9 组成并且不包含小数点，允许为 0 */
     equity: string;
@@ -497,6 +497,25 @@ declare namespace BFChainCore {
     destoryEntity: DestoryEntityJSON;
   }
 
+  interface TransferAnyJSON {
+    /**转移的权益所属链名，小写字母组成，3-8 位 */
+    sourceChainName: string;
+    /**转移的权益所属链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
+    sourceChainMagic: string;
+    /**转移的资产所属大类 */
+    parentAssetType: PARENT_ASSET_TYPE;
+    /**转移的权益名称，大写字母组成，3-5 个字符 */
+    assetType: string;
+    /**转移的权益数量，0-9 组成并且不包含小数点，必须大于0 */
+    amount: string;
+    /**收税信息 */
+    taxInformation?: BFChainCore.TaxInformationJson;
+  }
+  interface TransferAnyAssetJSON {
+    /**权益转移事件附带信息 */
+    transferAny: TransferAnyJSON;
+  }
+
   interface AssetExchangeWeightRatioJSON {
     /**用于交换的权益权重 */
     toExchangeAssetWeight: string;
@@ -648,6 +667,11 @@ declare namespace BFChainCore {
   >;
   type DestoryEntityTransactionJSON = TransactionMixJSON<
     DestoryEntityAssetJSON,
+    { hasRecipientId: true }
+  >;
+
+  type TransferAnyTransactionJSON = TransactionMixJSON<
+    TransferAnyAssetJSON,
     { hasRecipientId: true }
   >;
 

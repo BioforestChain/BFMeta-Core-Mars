@@ -28,5 +28,7 @@ export * from "./issueEntityFactoryV1.transaction";
 export * from "./issueEntity.transaction";
 export * from "./issueEntityV1.transaction";
 export * from "./destoryEntity.transaction";
+
+export * from "./transferAny.transaction";
 export * from "./toExchangeAny.transaction";
 export * from "./beExchangeAny.transaction";

@@ -1,6 +1,6 @@
-import type {} from "@bfchain/util";
+import type { } from "@bfchain/util";
 import "@bfchain/core-typings";
-import type {} from "@bfchain/core-model-transaction-base";
+import type { } from "@bfchain/core-model-transaction-base";
 import "./@types";
 
 export * from "./username";
@@ -14,6 +14,7 @@ export * from "./dappPurchasing";
 export * from "./mark";
 export * from "./issueAsset";
 export * from "./transferAsset";
+export * from "./transferAny";
 export * from "./destoryAsset";
 export * from "./giftAsset";
 export * from "./grabAsset";

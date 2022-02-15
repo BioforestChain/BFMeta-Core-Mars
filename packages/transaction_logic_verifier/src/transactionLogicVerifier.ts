@@ -26,7 +26,7 @@ export class TransactionLogicVerifierCore {
     @Inject("Buffer") public Buffer: BFChainUtil.BufferConstructor,
     public config: ConfigHelper,
     public moduleMap: ModuleStroge,
-  ) {}
+  ) { }
 
   // #region txLogicVerifier
   /**各种交易逻辑校验器的实例缓存 */
@@ -95,6 +95,7 @@ export const TRANSACTION_LOGIC_VERIFIER_TYPES_MAP = (() => {
       [TRANSACTION_TYPES_BASE.ISSUE_ASSET, ATOM_TRSLGCVFR.IssueAssetLogicVerifier],
       [TRANSACTION_TYPES_BASE.DESTORY_ASSET, ATOM_TRSLGCVFR.DestoryAssetLogicVerifier],
       [TRANSACTION_TYPES_BASE.TRANSFER_ASSET, ATOM_TRSLGCVFR.TransferAssetLogicVerifier],
+      [TRANSACTION_TYPES_BASE.TRANSFER_ANY, ATOM_TRSLGCVFR.TransferAnyLogicVerifier],
       [TRANSACTION_TYPES_BASE.TO_EXCHANGE_ASSET, ATOM_TRSLGCVFR.ToExchangeAssetLogicVerifier],
       [TRANSACTION_TYPES_BASE.BE_EXCHANGE_ASSET, ATOM_TRSLGCVFR.BeExchangeAssetLogicVerifier],
       [TRANSACTION_TYPES_BASE.GIFT_ASSET, ATOM_TRSLGCVFR.GiftAssetLogicVerifier],

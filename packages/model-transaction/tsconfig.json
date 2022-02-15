@@ -55,6 +55,7 @@
     "src/atom_transaction/toExchangeAny.transaction.ts",
     "src/atom_transaction/toExchangeAsset.transaction.ts",
     "src/atom_transaction/toExchangeSpecialAsset.transaction.ts",
+    "src/atom_transaction/transferAny.transaction.ts",
     "src/atom_transaction/transferAsset.transaction.ts",
     "src/atom_transaction/trustAsset.transaction.ts",
     "src/atom_transaction/username.transaction.ts",

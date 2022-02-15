@@ -1,8 +1,8 @@
 import { TransferAssetTransaction, ACCOUNT_STATUS } from "@bfchain/core-model";
-import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
+import { TransactionLogicVerifier } from "../_txbaseLogicVerifier";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
-const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
+const { ConsensusException } = CoreExceptionGenerator(
   "VERIFIER",
   "TransactionLogicVerifier",
 );

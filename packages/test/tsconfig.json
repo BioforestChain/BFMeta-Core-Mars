@@ -68,6 +68,7 @@
     "src/transaction/toExchangeAny.ts",
     "src/transaction/toExchangeAsset.ts",
     "src/transaction/toExchangeSpecialAsset.ts",
+    "src/transaction/transferAny.ts",
     "src/transaction/transferAsset.ts",
     "src/transaction/trustAsset.ts",
     "src/transaction/username.ts",

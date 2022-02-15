@@ -13,7 +13,9 @@ export * from "./dappPurchasingLogicVerifier";
 export * from "./markLogicVerifier";
 
 export * from "./issueAssetLogicVerifier";
-export * from "./transferAssetLogicVerifier";
+
+export * from "./transferLogicVerifier";
+
 export * from "./destoryAssetLogicVerifier";
 export * from "./giftAssetLogicVerifier";
 export * from "./grabAssetLogicVerifier";

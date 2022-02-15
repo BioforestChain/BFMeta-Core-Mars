@@ -26,4 +26,11 @@ declare namespace BFChainCore {
     /**账户安全公钥生成的签名 */
     signSignature?: string;
   }
+
+  interface TaxInformationJson {
+    /**收税人 */
+    taxCollector: string;
+    /**缴纳数量 */
+    taxAssetPrealnum: string;
+  }
 }

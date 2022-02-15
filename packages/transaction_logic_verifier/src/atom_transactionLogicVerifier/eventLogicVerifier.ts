@@ -9,6 +9,7 @@ import {
   TOKEN_TO_BEN,
   IssueEntityTransaction,
   DestoryEntityTransaction,
+  PARENT_ASSET_TYPE,
 } from "@bfchain/core-model";
 import { ConfigHelper, BlockHelper, TransactionHelper, JSBIHelper } from "@bfchain/core-helper";
 import { HelperLogicVerifier } from "./helperLogicVerifier";
@@ -2231,6 +2232,43 @@ export class EventLogicVerifier {
         next();
       },
       { taskname: `applyTransaction/logicVerifier/migrateCertificate` },
+    );
+  }
+
+  listenEventPayTax(
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
+  ) {
+    // 记录迁移凭证
+    eventEmitter.on(
+      "payTax",
+      async ({ applyInfo }, next) => {
+        const { sourceChainName, sourceChainMagic, parentAssetType, assetType, taxCollector } =
+          applyInfo;
+
+        if (parentAssetType === PARENT_ASSET_TYPE.ENTITY) {
+          const memEntity = await this.helperLogicVerifier.isEntityExist(
+            sourceChainName,
+            sourceChainMagic,
+            assetType,
+            currentBlockHeight,
+            accountGetterHelper,
+          );
+
+          if (memEntity.applyAddress !== taxCollector) {
+            throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+              to_compare_prop: `entityApplicant ${memEntity.applyAddress}`,
+              be_compare_prop: `taxCollector ${taxCollector}`,
+              to_target: `taxInformation`,
+              be_target: "memEntity",
+            });
+          }
+        }
+
+        next();
+      },
+      { taskname: `applyTransaction/logicVerifier/payTax` },
     );
   }
 

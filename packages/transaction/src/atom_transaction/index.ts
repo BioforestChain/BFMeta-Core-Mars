@@ -9,7 +9,10 @@ export * from "./dapp";
 export * from "./dappPurchasing";
 export * from "./mark";
 export * from "./issueAsset";
-export * from "./transferAsset";
+
+export * from "./transfer";
+
+
 export * from "./destoryAsset";
 export * from "./toExchangeAsset";
 export * from "./beExchangeAsset";

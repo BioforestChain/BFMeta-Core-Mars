@@ -70,10 +70,15 @@ export enum TRANSACTION_TYPES_BASE {
   ISSUE_ENTITY = "ETY-01",
   /**销毁非同质资产 */
   DESTORY_ENTITY = "ETY-02",
-  /**发起资产交换 */
+
+  /**任意资产转移 */
+  TRANSFER_ANY = "AST-13",
+
+  /**发起任意资产交换 */
   TO_EXCHANGE_ANY = "ECA-00",
-  /**接受资产交换 */
+  /**接受任意资产交换 */
   BE_EXCHANGE_ANY = "ECA-01",
+
   /**个性事件 */
   CUSTOM = "CUS-00",
 }
@@ -134,6 +139,7 @@ export const TRANSACTION_TYPES_MAP = (() => {
       [TRANSACTION_TYPES_BASE.ISSUE_ENTITY, ATOM_TRS.IssueEntityTransactionV1],
       [TRANSACTION_TYPES_BASE.DESTORY_ENTITY, ATOM_TRS.DestoryEntityTransaction],
 
+      [TRANSACTION_TYPES_BASE.TRANSFER_ANY, ATOM_TRS.TransferAnyTransaction],
       [TRANSACTION_TYPES_BASE.TO_EXCHANGE_ANY, ATOM_TRS.ToExchangeAnyTransaction],
       [TRANSACTION_TYPES_BASE.BE_EXCHANGE_ANY, ATOM_TRS.BeExchangeAnyTransaction],
     ] as [TRANSACTION_TYPES_BASE, typeof Transaction][]

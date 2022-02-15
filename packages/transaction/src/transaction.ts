@@ -32,7 +32,7 @@ export class TransactionCore {
     @Inject("Buffer") public Buffer: BFChainUtil.BufferConstructor,
     public config: ConfigHelper,
     public moduleMap: ModuleStroge,
-  ) {}
+  ) { }
   // #region txFactory
   /**各种交易工厂的实例缓存 */
   private _txFactoryCache = new Map<
@@ -441,6 +441,7 @@ export const TRANSACTION_FACTORY_TYPES_MAP = (() => {
       [TRANSACTION_TYPES_BASE.ISSUE_ASSET, ATOM_TRSFAC.IssueAssetTransactionFactory],
       [TRANSACTION_TYPES_BASE.DESTORY_ASSET, ATOM_TRSFAC.DestoryAssetTransactionFactory],
       [TRANSACTION_TYPES_BASE.TRANSFER_ASSET, ATOM_TRSFAC.TransferAssetTransactionFactory],
+      [TRANSACTION_TYPES_BASE.TRANSFER_ANY, ATOM_TRSFAC.TransferAnyTransactionFactory],
       [TRANSACTION_TYPES_BASE.TO_EXCHANGE_ASSET, ATOM_TRSFAC.ToExchangeAssetTransactionFactory],
       [TRANSACTION_TYPES_BASE.BE_EXCHANGE_ASSET, ATOM_TRSFAC.BeExchangeAssetTransactionFactory],
       [TRANSACTION_TYPES_BASE.GIFT_ASSET, ATOM_TRSFAC.GiftAssetTransactionFactory],

@@ -8,7 +8,7 @@ declare namespace BFChainCore {
   }
   /**处理交易流程相关的事件 */
   interface ApplyTransactionFlowEvent<EVENTNAME, T extends Transaction = Transaction>
-    extends ApplyTransactionEvent<undefined, EVENTNAME, T> {}
+    extends ApplyTransactionEvent<undefined, EVENTNAME, T> { }
 
   type ApplyInfo_Asset = {
     address: string;
@@ -27,11 +27,11 @@ declare namespace BFChainCore {
   type ApplyTransactionFeeEvent<
     EVENTNAME extends "fee" | "feeFromUnfrozen" = "fee",
     T extends Transaction = Transaction,
-  > = EVENTNAME extends "fee"
+    > = EVENTNAME extends "fee"
     ? ApplyTransactionEvent<ApplyInfo_Asset, "fee", T>
     : ApplyTransactionEvent<ApplyInfo_FeeFromUnfrozenAsset, "feeFromUnfrozen", T>;
 
-  interface ApplyInfo_DestoryMainAsset extends ApplyInfo_Asset {}
+  interface ApplyInfo_DestoryMainAsset extends ApplyInfo_Asset { }
   /**销毁主权益的相关事件 */
   type ApplyTransactionDestoryMainAssetEvent<EVENTNAME, T extends Transaction = Transaction> =
     ApplyTransactionEvent<ApplyInfo_DestoryMainAsset, EVENTNAME, T>;
@@ -86,7 +86,7 @@ declare namespace BFChainCore {
     T extends Transaction,
     // AssetModel extends object = object,
     // AssetJSON extends object = object
-  > = ApplyTransactionEvent<ApplyInfo_Account, EVENTNAME, T>;
+    > = ApplyTransactionEvent<ApplyInfo_Account, EVENTNAME, T>;
 
   type ApplyInfo_Equity = {
     address: string;
@@ -310,7 +310,7 @@ declare namespace BFChainCore {
   type ApplyTransactionChangeLocationNamePossessorEvent<
     EVENTNAME,
     T extends Transaction = Transaction,
-  > = ApplyTransactionEvent<ApplyInfo_ChangeLocationNamePossessor, EVENTNAME, T>;
+    > = ApplyTransactionEvent<ApplyInfo_ChangeLocationNamePossessor, EVENTNAME, T>;
 
   type ApplyInfo_IssueEntityFactory = {
     address: string;
@@ -431,6 +431,18 @@ declare namespace BFChainCore {
   /**跨链凭证 */
   type ApplyTransactionMigrateCertificateEvent<EVENTNAME, T extends Transaction = Transaction> =
     ApplyTransactionEvent<ApplyInfo_MigrateCertificate, EVENTNAME, T>;
+
+  type ApplyInfo_PayTax = {
+    sourceChainName: string;
+    sourceChainMagic: string;
+    parentAssetType: BFChainCore.PARENT_ASSET_TYPE;
+    assetType: string;
+    taxCollector: string;
+  };
+  /**验证纳税信息 */
+  type ApplyTransactionPayTaxEvent<EVENTNAME, T extends Transaction = Transaction> =
+    ApplyTransactionEvent<ApplyInfo_PayTax, EVENTNAME, T>;
+
 
   type ApplyTransactionEventMap<EM extends BFChainUtil.EventInOutMap = {}> = EM & {
     /**交易交易的POW */
@@ -593,6 +605,7 @@ declare namespace BFChainCore {
     changeDAppidPossessor: BFChainUtil.EventInOut<
       ApplyTransactionChangeDAppidPossessorEvent<
         "changeDAppidPossessor",
+        | import("@bfchain/core-model-transaction").TransferAnyTransaction
         | import("@bfchain/core-model-transaction").BeExchangeSpecialAssetTransaction
         | import("@bfchain/core-model-transaction").BeExchangeAnyTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
@@ -668,6 +681,7 @@ declare namespace BFChainCore {
     changeLocationNamePossessor: BFChainUtil.EventInOut<
       ApplyTransactionChangeLocationNamePossessorEvent<
         "changeLocationNamePossessor",
+        | import("@bfchain/core-model-transaction").TransferAnyTransaction
         | import("@bfchain/core-model-transaction").BeExchangeSpecialAssetTransaction
         | import("@bfchain/core-model-transaction").BeExchangeAnyTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
@@ -733,6 +747,7 @@ declare namespace BFChainCore {
     changeEntityPossessor: BFChainUtil.EventInOut<
       ApplyTransactionChangeEntityPossessorEvent<
         "changeEntityPossessor",
+        | import("@bfchain/core-model-transaction").TransferAnyTransaction
         | import("@bfchain/core-model-transaction").BeExchangeSpecialAssetTransaction
         | import("@bfchain/core-model-transaction").BeExchangeAnyTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
@@ -743,6 +758,16 @@ declare namespace BFChainCore {
       ApplyTransactionMigrateCertificateEvent<
         "migrateCertificate",
         import("@bfchain/core-model-transaction").ImmigrateAssetTransaction
+      >
+    >;
+
+    payTax: BFChainUtil.EventInOut<
+      ApplyTransactionPayTaxEvent<
+        "payTax",
+        | import("@bfchain/core-model-transaction").TransferAnyTransaction
+        | import("@bfchain/core-model-transaction").GiftAssetTransaction
+        | import("@bfchain/core-model-transaction").BeExchangeSpecialAssetTransaction
+        | import("@bfchain/core-model-transaction").BeExchangeAnyTransaction
       >
     >;
 
@@ -786,32 +811,32 @@ declare namespace BFChainCore {
   type GenerateBlockEventEmitter<
     B extends Block = Block,
     ES extends BFChainUtil.EventInOutMap = {},
-  > = ApplyTransactionEventEmitter<
-    {
-      beforeGenerateBlock: BFChainUtil.EventInOut<BFChainCore.BlockBody>;
-      /**在区块签名前
-       * 这里可以对区块做最后的调整
-       */
-      beforeSignatureBlock: BFChainUtil.EventInOut<B>;
-      /**
-       * 处理完成所有交易,完整产出区块，
-       * 这时候账户、交易、区块都已经写定
-       * 可以在这个事件中进行最后的资源释放了
-       * 或者准备广播交易需要的动作
-       */
-      generatedBlock: BFChainUtil.EventInOut<B>;
-      /**
-       * 扩展异常信息
-       */
-      blockError: BFChainUtil.EventInOut<
-        {
-          type: string;
-          error: unknown;
-          blockBody: BlockBody | B;
-        },
-        void
-      >;
-    } & ES
-  >;
+    > = ApplyTransactionEventEmitter<
+      {
+        beforeGenerateBlock: BFChainUtil.EventInOut<BFChainCore.BlockBody>;
+        /**在区块签名前
+         * 这里可以对区块做最后的调整
+         */
+        beforeSignatureBlock: BFChainUtil.EventInOut<B>;
+        /**
+         * 处理完成所有交易,完整产出区块，
+         * 这时候账户、交易、区块都已经写定
+         * 可以在这个事件中进行最后的资源释放了
+         * 或者准备广播交易需要的动作
+         */
+        generatedBlock: BFChainUtil.EventInOut<B>;
+        /**
+         * 扩展异常信息
+         */
+        blockError: BFChainUtil.EventInOut<
+          {
+            type: string;
+            error: unknown;
+            blockBody: BlockBody | B;
+          },
+          void
+        >;
+      } & ES
+    >;
   //#endregion
 }

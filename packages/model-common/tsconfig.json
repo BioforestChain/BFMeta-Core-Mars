@@ -20,6 +20,7 @@
     "src/mapField.model.ts",
     "src/range.model.ts",
     "src/rate.model.ts",
-    "src/remark.model.ts"
+    "src/remark.model.ts",
+    "src/taxInformation.model.ts"
   ]
 }
