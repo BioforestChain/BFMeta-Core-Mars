@@ -44,7 +44,7 @@ export class V4_Patch extends PatchBase {
   readonly name = "patch-v4";
   // FIXNE: 先这样，后面再想办法搞
   readonly patchEffectiveAfterHeight =
-    this.config.chainName === "bfchain" && this.config.bnid === BNID_TYPE.MAINNET ? 361950 : 0;
+    this.config.chainName === "bfchain" && this.config.bnid === BNID_TYPE.MAINNET ? 361950 : 30;
   protected _version = 1;
   readonly consensusVersion = 4;
   async upgradeHandler(oldVersion: number, newVersion: number) {
@@ -76,7 +76,7 @@ export class V4_Patch extends PatchBase {
                           BLOCK_TYPES_BASE.GENESIS,
                         );
                       }
-                    } else if (version > 2) {
+                    } else if (version > 1) {
                       GenesisAssetModelSetup.encode = GenesisAssetV1Model_encode;
                       BLOCK_FACTORY_TYPES_MAP.KF.set(
                         BLOCK_TYPES_BASE.GENESIS,
@@ -116,7 +116,7 @@ export class V4_Patch extends PatchBase {
                         V4_GenesisBlockFactory,
                         BLOCK_TYPES_BASE.GENESIS,
                       );
-                    } else if (version > 2) {
+                    } else if (version > 1) {
                       GenesisAssetModelSetup.decode = GenesisAssetV1Model_decode;
                       BLOCK_FACTORY_TYPES_MAP.KF.set(
                         BLOCK_TYPES_BASE.GENESIS,
@@ -158,7 +158,7 @@ export class V4_Patch extends PatchBase {
                         V4_GenesisBlockFactory,
                         BLOCK_TYPES_BASE.GENESIS,
                       );
-                    } else if (version > 2) {
+                    } else if (version > 1) {
                       GenesisAssetModelSetup.fromObject = GenesisAssetV1Model_fromObject;
                       BLOCK_FACTORY_TYPES_MAP.KF.set(
                         BLOCK_TYPES_BASE.GENESIS,

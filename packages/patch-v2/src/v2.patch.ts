@@ -8,6 +8,7 @@ import {
   BLOCK_TYPES_BASE,
   GenesisAssetModel,
   GenesisAssetV0Model,
+  GenesisAssetV1Model,
   FractionBigIntModel,
   Block,
   CommonBlock,
@@ -18,9 +19,11 @@ import {
 } from "@bfchain/core-model";
 
 const GenesisAssetModelSetup = GenesisAssetModel.$type.setup();
-const GenesisAssetModel_encode = GenesisAssetModelSetup.encode;
-const GenesisAssetModel_decode = GenesisAssetModelSetup.decode;
-const GenesisAssetModel_fromObject = GenesisAssetModelSetup.fromObject;
+
+const GenesisAssetV1ModelSetup = GenesisAssetV1Model.$type.setup();
+const GenesisAssetV1Model_encode = GenesisAssetV1ModelSetup.encode;
+const GenesisAssetV1Model_decode = GenesisAssetV1ModelSetup.decode;
+const GenesisAssetV1Model_fromObject = GenesisAssetV1ModelSetup.fromObject;
 
 const GenesisAssetV0ModelSetup = GenesisAssetV0Model.$type.setup();
 const GenesisAssetV0Model_encode = GenesisAssetV0ModelSetup.encode;
@@ -56,7 +59,7 @@ export class V2_Patch extends PatchBase {
                     const version = block.version;
                     // const asset = (block.asset as any).genesisAsset;
                     if (version > 1) {
-                      GenesisAssetModelSetup.encode = GenesisAssetModel_encode;
+                      GenesisAssetModelSetup.encode = GenesisAssetV1Model_encode;
                       BLOCK_FACTORY_TYPES_MAP.KF.set(
                         BLOCK_TYPES_BASE.GENESIS,
                         V2_GenesisBlockFactory,
@@ -87,7 +90,7 @@ export class V2_Patch extends PatchBase {
                     );
                     const version = versionInfo.version;
                     if (version > 1) {
-                      GenesisAssetModelSetup.decode = GenesisAssetModel_decode;
+                      GenesisAssetModelSetup.decode = GenesisAssetV1Model_decode;
                       BLOCK_FACTORY_TYPES_MAP.KF.set(
                         BLOCK_TYPES_BASE.GENESIS,
                         V2_GenesisBlockFactory,
@@ -120,7 +123,7 @@ export class V2_Patch extends PatchBase {
                   try {
                     const version = object.version as number;
                     if (version > 1) {
-                      GenesisAssetModelSetup.fromObject = GenesisAssetModel_fromObject;
+                      GenesisAssetModelSetup.fromObject = GenesisAssetV1Model_fromObject;
                       BLOCK_FACTORY_TYPES_MAP.KF.set(
                         BLOCK_TYPES_BASE.GENESIS,
                         V2_GenesisBlockFactory,
