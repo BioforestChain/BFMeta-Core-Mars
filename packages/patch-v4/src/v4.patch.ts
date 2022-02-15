@@ -1,9 +1,9 @@
 import { V4_GenesisBlockFactory } from "./atom-patch";
 import { PatchBase } from "@bfchain/core-patch-base";
 import { Type, Reader, Writer } from "@bfchain/protobuf";
-import { Injectable, Inject } from "@bfchain/util";
+import { Injectable, Inject, EasyMap } from "@bfchain/util";
 import { EventLogicVerifier } from "@bfchain/core-transaction-logic-verifier";
-import { BLOCK_FACTORY_TYPES_MAP } from "@bfchain/core-block";
+import { BlockGeneratorCalculator, BLOCK_FACTORY_TYPES_MAP } from "@bfchain/core-block";
 import {
   BLOCK_TYPES_BASE,
   GenesisAssetModel,
@@ -38,11 +38,13 @@ const GenesisAssetV0Model_fromObject = GenesisAssetV0ModelSetup.fromObject;
 export class V4_Patch extends PatchBase {
   @Inject(EventLogicVerifier)
   eventLogicVerifier!: EventLogicVerifier;
+  @Inject(BlockGeneratorCalculator)
+  blockGeneratorCalculator!: BlockGeneratorCalculator;
 
   readonly name = "patch-v4";
   // FIXNE: 先这样，后面再想办法搞
   readonly patchEffectiveAfterHeight =
-    this.config.chainName === "bfchain" && this.config.bnid === BNID_TYPE.MAINNET ? 362000 : 0;
+    this.config.chainName === "bfchain" && this.config.bnid === BNID_TYPE.MAINNET ? 361950 : 0;
   protected _version = 1;
   readonly consensusVersion = 4;
   async upgradeHandler(oldVersion: number, newVersion: number) {
@@ -186,9 +188,30 @@ export class V4_Patch extends PatchBase {
 
               const oldBlock = this.config.getHookGenesisBlock(this.consensusVersion) || {};
               this.config.setHookGenesisBlock(this.consensusVersion, oldBlock);
+              this.blockGeneratorCalculator.getAddressSeedMap = (seed: number) => {
+                const 种子与地址结果值缓存 = new EasyMap((address: string) => {
+                  let num = 0;
+                  for (let i = 1; i < address.length; i++) {
+                    num += address.charCodeAt(i);
+                  }
+                  return (num * seed) % 256;
+                });
+                return 种子与地址结果值缓存;
+              };
             },
             () => {
               this.config.rollBackHookGenesisBlock(this.consensusVersion);
+
+              this.blockGeneratorCalculator.getAddressSeedMap = (seed: number) => {
+                const 种子与地址结果值缓存 = new EasyMap((address: string) => {
+                  let num = 0;
+                  for (let i = 1; i < address.length; i++) {
+                    num += address.charCodeAt(i);
+                  }
+                  return num * seed;
+                });
+                return 种子与地址结果值缓存;
+              };
             },
           );
         }

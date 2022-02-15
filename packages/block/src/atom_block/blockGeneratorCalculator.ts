@@ -253,16 +253,12 @@ export class BlockGeneratorCalculator {
       return 剩余可用的受托人;
     };
     const 基于前块的排序种子 = 上一个块的信息.generatorPublicKeyBuffer.reduce((r, v) => r + v, 0);
-    const 种子与地址结果值缓存 = new EasyMap((address: string) => {
-      let num = 0;
-      for (let i = 1; i < address.length; i++) {
-        num += address.charCodeAt(i);
-      }
-      return num * 基于前块的排序种子;
-    });
+
     const 对受托人排序 = (候选名单: string[]) => {
       return 候选名单.slice().sort((a1, a2) => {
-        const sortRes = 种子与地址结果值缓存.forceGet(a1) - 种子与地址结果值缓存.forceGet(a2);
+        const sortRes =
+          this.getAddressSeedMap(基于前块的排序种子).forceGet(a1) -
+          this.getAddressSeedMap(基于前块的排序种子).forceGet(a2);
         if (sortRes === 0) {
           // 确保排序稳定
           return 候选名单.indexOf(a1) - 候选名单.indexOf(a2);
@@ -336,6 +332,17 @@ export class BlockGeneratorCalculator {
     }
     //#endregion
   }
+
+  getAddressSeedMap = (seed: number) => {
+    const 种子与地址结果值缓存 = new EasyMap((address: string) => {
+      let num = 0;
+      for (let i = 1; i < address.length; i++) {
+        num += address.charCodeAt(i);
+      }
+      return num * seed;
+    });
+    return 种子与地址结果值缓存;
+  };
 
   async calcNextBlockGenerator(block: BFChainCore.Block) {
     const toTimestamp = block.timestamp + this.config.forgeInterval;
