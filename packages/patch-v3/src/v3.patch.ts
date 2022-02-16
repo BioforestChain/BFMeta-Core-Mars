@@ -26,7 +26,7 @@ export class V3_Patch extends PatchBase {
             () => {
               const oldBlock = this.config.getHookGenesisBlock(this.consensusVersion) || {};
               // FIXNE: 先这样，后面再想办法搞
-              if (this.config.chainName === "bfchain") {
+              if (this.config.chainName === "bfchain" && this.config.bnid === BNID_TYPE.MAINNET) {
                 oldBlock.asset = deepMix(oldBlock.asset, {
                   genesisAsset: {
                     registerChainMinChainAsset: "0",
