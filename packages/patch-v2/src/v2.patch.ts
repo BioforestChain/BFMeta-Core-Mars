@@ -20,15 +20,21 @@ import {
 
 const GenesisAssetModelSetup = GenesisAssetModel.$type.setup();
 
+const GenesisAssetV1Model_encode = GenesisAssetV1Model.encode;
+const GenesisAssetV1Model_decode = GenesisAssetV1Model.decode;
+const GenesisAssetV1Model_fromObject = GenesisAssetV1Model.fromObject;
 const GenesisAssetV1ModelSetup = GenesisAssetV1Model.$type.setup();
-const GenesisAssetV1Model_encode = GenesisAssetV1ModelSetup.encode;
-const GenesisAssetV1Model_decode = GenesisAssetV1ModelSetup.decode;
-const GenesisAssetV1Model_fromObject = GenesisAssetV1ModelSetup.fromObject;
+const GenesisAssetV1ModelSetup_encode = GenesisAssetV1ModelSetup.encode;
+const GenesisAssetV1ModelSetup_decode = GenesisAssetV1ModelSetup.decode;
+const GenesisAssetV1ModelSetup_fromObject = GenesisAssetV1ModelSetup.fromObject;
 
+const GenesisAssetV0Model_encode = GenesisAssetV0Model.encode;
+const GenesisAssetV0Model_decode = GenesisAssetV0Model.decode;
+const GenesisAssetV0Model_fromObject = GenesisAssetV0Model.fromObject;
 const GenesisAssetV0ModelSetup = GenesisAssetV0Model.$type.setup();
-const GenesisAssetV0Model_encode = GenesisAssetV0ModelSetup.encode;
-const GenesisAssetV0Model_decode = GenesisAssetV0ModelSetup.decode;
-const GenesisAssetV0Model_fromObject = GenesisAssetV0ModelSetup.fromObject;
+const GenesisAssetV0ModelSetup_encode = GenesisAssetV0ModelSetup.encode;
+const GenesisAssetV0ModelSetup_decode = GenesisAssetV0ModelSetup.decode;
+const GenesisAssetV0ModelSetup_fromObject = GenesisAssetV0ModelSetup.fromObject;
 
 @Injectable()
 export class V2_Patch extends PatchBase {
@@ -59,7 +65,8 @@ export class V2_Patch extends PatchBase {
                     const version = block.version;
                     // const asset = (block.asset as any).genesisAsset;
                     if (version > 1) {
-                      GenesisAssetModelSetup.encode = GenesisAssetV1Model_encode;
+                      GenesisAssetModel.encode = GenesisAssetV1Model_encode;
+                      GenesisAssetModelSetup.encode = GenesisAssetV1ModelSetup_encode;
                       BLOCK_FACTORY_TYPES_MAP.KF.set(
                         BLOCK_TYPES_BASE.GENESIS,
                         V2_GenesisBlockFactory,
@@ -69,14 +76,16 @@ export class V2_Patch extends PatchBase {
                         BLOCK_TYPES_BASE.GENESIS,
                       );
                     } else {
-                      GenesisAssetModelSetup.encode = GenesisAssetV0Model_encode;
+                      GenesisAssetModel.encode = GenesisAssetV0Model_encode;
+                      GenesisAssetModelSetup.encode = GenesisAssetV0ModelSetup_encode;
                       BLOCK_FACTORY_TYPES_MAP.KF.set(BLOCK_TYPES_BASE.GENESIS, GenesisBlockFactory);
                       BLOCK_FACTORY_TYPES_MAP.FK.set(GenesisBlockFactory, BLOCK_TYPES_BASE.GENESIS);
                     }
 
                     return BlockSetup_encode.call(this, block, writer);
                   } finally {
-                    GenesisAssetModelSetup.encode = GenesisAssetV0Model_encode;
+                    GenesisAssetModel.encode = GenesisAssetV0Model_encode;
+                    GenesisAssetModelSetup.encode = GenesisAssetV0ModelSetup_encode;
                     BLOCK_FACTORY_TYPES_MAP.KF.set(BLOCK_TYPES_BASE.GENESIS, GenesisBlockFactory);
                     BLOCK_FACTORY_TYPES_MAP.FK.set(GenesisBlockFactory, BLOCK_TYPES_BASE.GENESIS);
                   }
@@ -90,7 +99,8 @@ export class V2_Patch extends PatchBase {
                     );
                     const version = versionInfo.version;
                     if (version > 1) {
-                      GenesisAssetModelSetup.decode = GenesisAssetV1Model_decode;
+                      GenesisAssetModel.decode = GenesisAssetV1Model_decode;
+                      GenesisAssetModelSetup.decode = GenesisAssetV1ModelSetup_decode;
                       BLOCK_FACTORY_TYPES_MAP.KF.set(
                         BLOCK_TYPES_BASE.GENESIS,
                         V2_GenesisBlockFactory,
@@ -100,13 +110,15 @@ export class V2_Patch extends PatchBase {
                         BLOCK_TYPES_BASE.GENESIS,
                       );
                     } else {
-                      GenesisAssetModelSetup.decode = GenesisAssetV0Model_decode;
+                      GenesisAssetModel.decode = GenesisAssetV0Model_decode;
+                      GenesisAssetModelSetup.decode = GenesisAssetV0ModelSetup_decode;
                       BLOCK_FACTORY_TYPES_MAP.KF.set(BLOCK_TYPES_BASE.GENESIS, GenesisBlockFactory);
                       BLOCK_FACTORY_TYPES_MAP.FK.set(GenesisBlockFactory, BLOCK_TYPES_BASE.GENESIS);
                     }
                     return BlockSetup_decode.call(this, reader);
                   } finally {
-                    GenesisAssetModelSetup.decode = BlockSetup.src_decode;
+                    GenesisAssetModel.decode = GenesisAssetV0Model_decode;
+                    GenesisAssetModelSetup.decode = GenesisAssetV0ModelSetup_decode;
                     BLOCK_FACTORY_TYPES_MAP.KF.set(BLOCK_TYPES_BASE.GENESIS, GenesisBlockFactory);
                     BLOCK_FACTORY_TYPES_MAP.FK.set(GenesisBlockFactory, BLOCK_TYPES_BASE.GENESIS);
                   }
@@ -123,7 +135,8 @@ export class V2_Patch extends PatchBase {
                   try {
                     const version = object.version as number;
                     if (version > 1) {
-                      GenesisAssetModelSetup.fromObject = GenesisAssetV1Model_fromObject;
+                      GenesisAssetModel.fromObject = GenesisAssetV1Model_fromObject;
+                      GenesisAssetModelSetup.fromObject = GenesisAssetV1ModelSetup_fromObject;
                       BLOCK_FACTORY_TYPES_MAP.KF.set(
                         BLOCK_TYPES_BASE.GENESIS,
                         V2_GenesisBlockFactory,
@@ -133,13 +146,15 @@ export class V2_Patch extends PatchBase {
                         BLOCK_TYPES_BASE.GENESIS,
                       );
                     } else {
-                      GenesisAssetModelSetup.fromObject = GenesisAssetV0Model_fromObject;
+                      GenesisAssetModel.fromObject = GenesisAssetV0Model_fromObject;
+                      GenesisAssetModelSetup.fromObject = GenesisAssetV0ModelSetup_fromObject;
                       BLOCK_FACTORY_TYPES_MAP.KF.set(BLOCK_TYPES_BASE.GENESIS, GenesisBlockFactory);
                       BLOCK_FACTORY_TYPES_MAP.FK.set(GenesisBlockFactory, BLOCK_TYPES_BASE.GENESIS);
                     }
                     return BlockSetup_fromObject.call(this, object);
                   } finally {
-                    GenesisAssetModelSetup.fromObject = GenesisAssetV0Model_fromObject;
+                    GenesisAssetModel.fromObject = GenesisAssetV0Model_fromObject;
+                    GenesisAssetModelSetup.fromObject = GenesisAssetV0ModelSetup_fromObject;
                     BLOCK_FACTORY_TYPES_MAP.KF.set(BLOCK_TYPES_BASE.GENESIS, GenesisBlockFactory);
                     BLOCK_FACTORY_TYPES_MAP.FK.set(GenesisBlockFactory, BLOCK_TYPES_BASE.GENESIS);
                   }

@@ -254,7 +254,6 @@ export class GenesisAssetV1Model<T extends GenesisAssetV1Model<T>> extends Genes
   ) {
     const res = super.fromObject(object) as GenesisAssetModel;
     if (res !== object) {
-      object.beginEpochTime && (res.beginEpochTime = object.beginEpochTime);
       object.maxMultipleOfAssetAndMainAsset &&
         (res.maxMultipleOfAssetAndMainAsset = FractionBigIntModel.fromObject<FractionBigIntModel>(
           object.maxMultipleOfAssetAndMainAsset,
@@ -335,18 +334,8 @@ export class GenesisAssetModel
   ) {
     const res = super.fromObject(object) as GenesisAssetModel;
     if (res !== object) {
-      const { beginEpochTime, maxMultipleOfAssetAndMainAsset, maxMultipleOfEntityAndMainAsset } =
+      const { maxMultipleOfEntityAndMainAsset } =
         object;
-      beginEpochTime !== undefined && (res.beginEpochTime = beginEpochTime);
-      if (
-        maxMultipleOfAssetAndMainAsset &&
-        maxMultipleOfAssetAndMainAsset.numerator &&
-        maxMultipleOfAssetAndMainAsset.denominator
-      ) {
-        res.maxMultipleOfAssetAndMainAsset = FractionBigIntModel.fromObject<FractionBigIntModel>(
-          maxMultipleOfAssetAndMainAsset,
-        );
-      }
       if (
         maxMultipleOfEntityAndMainAsset &&
         maxMultipleOfEntityAndMainAsset.numerator &&
