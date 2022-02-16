@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-crypto-tweetnacl",
-  "version": "5.25.17",
+  "version": "5.25.18",
   "main": "build/cjs/index.js",
   "type": "commonjs",
   "module": "build/esm/index.js",
@@ -8,7 +8,7 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-typings": "5.25.17"
+    "@bfchain/core-typings": "5.25.18"
   },
   "gitHead": "ef41eb359371b11aafbec0516df1eba01f16ebfd",
   "types": "build/cjs/index.d.ts"
