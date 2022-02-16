@@ -146,7 +146,7 @@ export class CustomTransactionEvent {
   }
 
   verifyLocationName(lns: string) {
-    if (!this.baseHelper.isValidLnsName(lns)) {
+    if (!this.baseHelper.isValidLocationName(lns)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "locationName",
         target: "applyResult",

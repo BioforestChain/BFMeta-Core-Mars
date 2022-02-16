@@ -130,7 +130,7 @@ export class SetLnsManagerTransactionFactory extends TransactionFactory<SetLnsMa
       });
     }
 
-    if (!baseHelper.isValidLnsName(name)) {
+    if (!baseHelper.isValidLocationName(name)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `name ${name}`,
         type: "location name",

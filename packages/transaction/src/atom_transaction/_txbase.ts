@@ -322,7 +322,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     }
 
     if (body.lns !== undefined) {
-      if (!baseHelper.isValidLnsName(body.lns, config.chainName)) {
+      if (!baseHelper.isValidLocationName(body.lns, config.chainName)) {
         throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `lns ${body.lns}`,
           type: "location name",
@@ -735,7 +735,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
         ...Function_Exception_Detail,
       });
     }
-    if (!this.baseHelper.isValidLnsName(locationName)) {
+    if (!this.baseHelper.isValidLocationName(locationName)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `${propName} ${locationName}`,
         ...Function_Exception_Detail,

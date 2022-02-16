@@ -153,7 +153,7 @@ export class ChainChannelHelper {
     }
     if (lns) {
       has_query_params = true;
-      if (!BH.isValidLnsName(lns)) {
+      if (!BH.isValidLocationName(lns)) {
         throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           field: `lns ${lns}`,
         });

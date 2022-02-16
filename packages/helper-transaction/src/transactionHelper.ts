@@ -1,7 +1,7 @@
 import { ConfigHelper } from "@bfchain/core-helper-config";
 import { BaseHelper } from "@bfchain/core-helper-type";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
-import { GIFT_DISTRIBUTION_RULE } from "@bfchain/core-model-constants";
+import { GIFT_DISTRIBUTION_RULE, PARENT_ASSET_TYPE } from "@bfchain/core-model-constants";
 import {
   TRANSACTION_TYPES_MAP,
   TRANSACTION_TYPES_BASE,
@@ -837,5 +837,28 @@ export class TransactionHelper {
    */
   getFactoryIdByEntityId(entityId: string) {
     return entityId.split("_")[0];
+  }
+
+  /**
+   * 根据资产名获取资产所属类型
+   *
+   * @param assetType
+   * @returns
+   */
+  getParentAssetType(assetType: string) {
+    const baseHelper = this.baseHelper;
+    if (baseHelper.isValidAssetType(assetType)) {
+      return PARENT_ASSET_TYPE.ASSETS;
+    }
+    if (baseHelper.isValidDAppId(assetType)) {
+      return PARENT_ASSET_TYPE.DAPP;
+    }
+    if (baseHelper.isValidLocationName(assetType)) {
+      return PARENT_ASSET_TYPE.LOCATION_NAME;
+    }
+    if (baseHelper.isValidEntityId(assetType)) {
+      return PARENT_ASSET_TYPE.ENTITY;
+    }
+    return PARENT_ASSET_TYPE.ASSETS;
   }
 }

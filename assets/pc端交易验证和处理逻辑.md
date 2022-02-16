@@ -42,7 +42,7 @@
                       break;
                   case RANGE_TYPE.MULTI_LOCATION_NAME:
                       for (const item of range) {
-                          if (!this.isValidLnsName(item)) {
+                          if (!this.isValidLocationName(item)) {
                               return false;
                           }
                       }
@@ -592,7 +592,7 @@
       *
       * @param name
       */
-      isValidLnsName(name: string, chainName?: string) {
+      isValidLocationName(name: string, chainName?: string) {
           if (!this.isString(name)) {
               return false;
           }
@@ -775,7 +775,7 @@
           if (!this.isValidAssetType(parentInfo.assetType)) {
               return false;
           }
-          if (!this.isValidLnsName(parentInfo.genesisNodeAddress)) {
+          if (!this.isValidLocationName(parentInfo.genesisNodeAddress)) {
               return false;
           }
           return true;
@@ -1120,7 +1120,7 @@
     18. 如果携带交易所属的 lns
         - lns 必须合法链域名
         ```
-            if (!isValidLnsName(body.lns, config.chainName)) {
+            if (!isValidLocationName(body.lns, config.chainName)) {
                 throw new Error
             }
         ```
@@ -3264,7 +3264,7 @@
                                         throw new Error
                                     }
                                 } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME) {
-                                    if (!baseHelper.isValidLnsName(beExchangeAsset)) {
+                                    if (!baseHelper.isValidLocationName(beExchangeAsset)) {
                                         throw new Error
                                     }
                                 }
@@ -3277,7 +3277,7 @@
                                         throw new Error
                                     }
                                 } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME) {
-                                    if (!baseHelper.isValidLnsName(toExchangeAsset)) {
+                                    if (!baseHelper.isValidLocationName(toExchangeAsset)) {
                                         throw new Error
                                     }
                                 }
@@ -3613,7 +3613,7 @@
                             if (!name) {
                                 throw new Error
                             }
-                            if (!isValidLnsName(name)) {
+                            if (!isValidLocationName(name)) {
                                 throw new Error
                             }
                         ```
@@ -3716,7 +3716,7 @@
                     - 必须携带合法的欲设置管理员的链域名
                         ```
                             name = lnsManager.name;
-                            if (!isValidLnsName(name)) {
+                            if (!isValidLocationName(name)) {
                                 throw new Error
                             }
                         ```

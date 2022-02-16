@@ -127,7 +127,7 @@ export class BaseHelper {
       return await this.accountBaseHelper.isAddress(recordValue);
     }
     if (recordType === RECORD_TYPE.LOCATION_NAME) {
-      return this.isValidLnsName(recordValue);
+      return this.isValidLocationName(recordValue);
     }
     if (recordType === RECORD_TYPE.DNS) {
       return this.isDNS(recordValue);
@@ -183,7 +183,7 @@ export class BaseHelper {
           break;
         case RANGE_TYPE.MULTI_LOCATION_NAME:
           for (const item of range) {
-            if (!this.isValidLnsName(item)) {
+            if (!this.isValidLocationName(item)) {
               return false;
             }
           }
@@ -812,7 +812,7 @@ export class BaseHelper {
    *
    * @param name
    */
-  isValidLnsName(name: string, chainName = this.configHelper.chainName) {
+  isValidLocationName(name: string, chainName = this.configHelper.chainName) {
     if (!this.isString(name)) {
       return false;
     }

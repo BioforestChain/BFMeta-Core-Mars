@@ -183,7 +183,7 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
           });
         }
       } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME) {
-        if (!baseHelper.isValidLnsName(beExchangeAsset)) {
+        if (!baseHelper.isValidLocationName(beExchangeAsset)) {
           throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
             prop: `beExchangeAsset ${beExchangeAsset}`,
             ...ToExchangeSpecialAssetAsset_Exception_Detail,
@@ -212,7 +212,7 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
           });
         }
       } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME) {
-        if (!baseHelper.isValidLnsName(toExchangeAsset)) {
+        if (!baseHelper.isValidLocationName(toExchangeAsset)) {
           throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
             prop: `toExchangeAsset ${toExchangeAsset}`,
             ...ToExchangeSpecialAssetAsset_Exception_Detail,

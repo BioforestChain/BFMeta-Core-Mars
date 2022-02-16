@@ -178,7 +178,7 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       });
     }
 
-    if (!baseHelper.isValidLnsName(genesisLocationName, config.chainName)) {
+    if (!baseHelper.isValidLocationName(genesisLocationName, config.chainName)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `genesisLocationName ${genesisAsset.genesisLocationName}`,
         type: "url",

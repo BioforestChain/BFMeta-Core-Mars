@@ -133,7 +133,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
       });
     }
 
-    if (!baseHelper.isValidLnsName(name)) {
+    if (!baseHelper.isValidLocationName(name)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `name ${name}`,
         type: "location name",
@@ -295,7 +295,7 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
         });
       }
     } else if (recordType === RECORD_TYPE.LOCATION_NAME) {
-      if (!baseHelper.isValidLnsName(recordValue)) {
+      if (!baseHelper.isValidLocationName(recordValue)) {
         throw new ArgumentIllegalException(ERROR_LIST.NOT_A_LOCATION_NAME, {
           prop: "recordValue",
           value: recordValue,
