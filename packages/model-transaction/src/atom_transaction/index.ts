@@ -30,5 +30,7 @@ export * from "./issueEntityV1.transaction";
 export * from "./destoryEntity.transaction";
 
 export * from "./transferAny.transaction";
+export * from "./giftAny.transaction";
+export * from "./grabAny.transaction";
 export * from "./toExchangeAny.transaction";
 export * from "./beExchangeAny.transaction";

@@ -833,6 +833,49 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
   }
 
   /**
+   * 校验纳税信息
+   *
+   * @param taxInformation
+   * @param Function_Exception_Detail
+   */
+  async checkTaxInformation(
+    Function_Exception_Detail: FunctionExceptionDetail,
+    taxInformation?: BFChainCore.TaxInformationJson,
+  ) {
+    if (!taxInformation) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
+        prop: "taxInformation",
+        ...Function_Exception_Detail,
+      });
+    }
+    const { taxCollector, taxAssetPrealnum } = taxInformation;
+    if (!taxCollector) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
+        prop: "taxInformation.taxCollector",
+        ...Function_Exception_Detail,
+      });
+    }
+    if (!(await this.accountBaseHelper.isAddress(taxCollector))) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+        prop: `taxInformation.taxCollector ${taxCollector}`,
+        ...Function_Exception_Detail,
+      });
+    }
+    if (!taxAssetPrealnum) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
+        prop: "taxInformation.taxAssetPrealnum",
+        ...Function_Exception_Detail,
+      });
+    }
+    if (!this.baseHelper.isValidAssetPrealnum(taxAssetPrealnum)) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+        prop: `taxInformation.taxAssetPrealnum ${taxAssetPrealnum}`,
+        ...Function_Exception_Detail,
+      });
+    }
+  }
+
+  /**
    * 交易生效，对账务产生影响
    *
    * @param trs

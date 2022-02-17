@@ -1,4 +1,4 @@
-import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
+import { TransactionLogicVerifier } from "../_txbaseLogicVerifier";
 import { GrabAssetTransaction, RANGE_TYPE, GIFT_DISTRIBUTION_RULE } from "@bfchain/core-model";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";

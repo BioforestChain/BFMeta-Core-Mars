@@ -5,7 +5,7 @@ declare namespace BFChainCore {
   type GetMessageAssetModel<T> = T extends TransactionJSON<infer U> ? U : any;
   type GetAssetModel<T> = GetMessageAssetModel<T> extends import("@bfchain/protobuf").Message<
     infer U
-    >
+  >
     ? U
     : any;
   type GetTransactionJSONAssetJSON<T extends TransactionJSON> = T["asset"];
@@ -15,10 +15,10 @@ declare namespace BFChainCore {
 
   type TransactionMixJSON<AssetJSON extends object = object, Opts extends TransactionOptions = {}> =
     Opts["hasRecipientId"] extends true
-    ? Omit<TransactionJSON<AssetJSON>, "recipientId"> & { recipientId: string }
-    : Opts["hasRecipientId"] extends false
-    ? Omit<TransactionJSON<AssetJSON>, "recipientId"> & { recipientId: undefined }
-    : TransactionJSON<AssetJSON>;
+      ? Omit<TransactionJSON<AssetJSON>, "recipientId"> & { recipientId: string }
+      : Opts["hasRecipientId"] extends false
+      ? Omit<TransactionJSON<AssetJSON>, "recipientId"> & { recipientId: undefined }
+      : TransactionJSON<AssetJSON>;
 
   type TransactionOptions = {
     hasRecipientId?: boolean;
@@ -92,9 +92,9 @@ declare namespace BFChainCore {
     /**地址名命事件附带信息 */
     username: UsernameJSON;
   }
-  interface DelegateAssetJSON { }
-  interface AcceptVoteAssetJSON { }
-  interface RejectVoteAssetJSON { }
+  interface DelegateAssetJSON {}
+  interface AcceptVoteAssetJSON {}
+  interface RejectVoteAssetJSON {}
   interface VoteJSON {
     /**投出的权益数，0-9 组成并且不包含小数点，允许为 0 */
     equity: string;
@@ -516,6 +516,56 @@ declare namespace BFChainCore {
     transferAny: TransferAnyJSON;
   }
 
+  interface GiftAnyJSON {
+    /**加密密钥生成的公钥数组 */
+    cipherPublicKeys: string[];
+    /**赠送的资产所属链名，小写字母组成，3-8 位 */
+    sourceChainName: string;
+    /**赠送的资产所属链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
+    sourceChainMagic: string;
+    /**赠送的资产所属大类 */
+    parentAssetType: PARENT_ASSET_TYPE;
+    /**赠送的资产名称，大写字母组成，3-5 个字符 */
+    assetType: string;
+    /**赠送的资产数量，0-9 组成并且不包含小数点，必须大于0 */
+    amount: string;
+    /**可被接收的次数，0-9 组成并且不包含小数点，必须大于 0 */
+    totalGrabableTimes: number;
+    /**开始被签收的区块高度，0-9 组成并且不包含小数点 */
+    beginUnfrozenBlockHeight?: number;
+    /**接收规则，只能为 0，1 或 2，0 表示平均分配，1 表示根据任意账户的地址的随机分配，2 表示根据接收者列表中账户地址的随机分配 */
+    giftDistributionRule?: BFChainCore.GIFT_DISTRIBUTION_RULE;
+    /**收税信息 */
+    taxInformation?: BFChainCore.TaxInformationJson;
+  }
+  interface GiftAnyAssetJSON {
+    /**任意资产赠送事件附带信息 */
+    giftAny: GiftAnyJSON;
+  }
+
+  interface GrabAnyJSON {
+    /**赠送事件所在的区块签名，128 个字节的 16 进制字符串 */
+    blockSignature: string;
+    /**赠送事件的签名，128 个字节的 16 进制字符串 */
+    transactionSignature: string;
+    /**根据共识规则计算出来的：抢到的金额 */
+    amount: string;
+    /**用于校验身份的密文签名，如果需要的话 */
+    ciphertextSignature?: AccountSignatureJSON;
+    //#region 冗余的字段
+    /**以下是冗余的字段
+     * 都是能从`transactionSignature`中查询出来的，但这个仍然做了存储，是为了确保能够在独立的情况下仍然能够将之渲染出来
+     */
+
+    /**礼物配置 */
+    giftAny: GiftAnyJSON;
+    //#endregion
+  }
+  interface GrabAnyAssetJSON {
+    /**接收权益赠送事件附带信息 */
+    grabAny: GrabAnyJSON;
+  }
+
   interface AssetExchangeWeightRatioJSON {
     /**用于交换的权益权重 */
     toExchangeAssetWeight: string;
@@ -674,7 +724,8 @@ declare namespace BFChainCore {
     TransferAnyAssetJSON,
     { hasRecipientId: true }
   >;
-
+  type GiftAnyTransactionJSON = TransactionMixJSON<GiftAnyAssetJSON, { hasRecipientId: false }>;
+  type GrabAnyTransactionJSON = TransactionMixJSON<GrabAnyAssetJSON, { hasRecipientId: true }>;
   type ToExchangeAnyTransactionJSON = TransactionMixJSON<
     ToExchangeAnyAssetJSON,
     { hasRecipientId: false }

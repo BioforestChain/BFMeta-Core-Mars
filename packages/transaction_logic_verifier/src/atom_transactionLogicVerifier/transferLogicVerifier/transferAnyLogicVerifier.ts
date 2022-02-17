@@ -3,10 +3,7 @@ import { TransactionLogicVerifier } from "../_txbaseLogicVerifier";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 
-const { ConsensusException } = CoreExceptionGenerator(
-  "VERIFIER",
-  "TransactionLogicVerifier",
-);
+const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "TransactionLogicVerifier");
 
 @Injectable()
 export class TransferAnyLogicVerifier extends TransactionLogicVerifier<TransferAnyTransaction> {
@@ -24,7 +21,6 @@ export class TransferAnyLogicVerifier extends TransactionLogicVerifier<TransferA
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
-
     const { sender, recipient } = await this.logicVerify(
       transaction,
       currentBlockHeight,
@@ -33,7 +29,8 @@ export class TransferAnyLogicVerifier extends TransactionLogicVerifier<TransferA
       transactionGetterHelper,
     );
 
-    const { sourceChainName, sourceChainMagic, parentAssetType, assetType } = transaction.asset.transferAny;
+    const { sourceChainName, sourceChainMagic, parentAssetType, assetType } =
+      transaction.asset.transferAny;
 
     const cloneAccountsAssets = {
       [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
@@ -81,6 +78,8 @@ export class TransferAnyLogicVerifier extends TransactionLogicVerifier<TransferA
         accountGetterHelper,
         eventEmitter,
       );
+
+      eventLogicVerifier.listenEventAsset(cloneAccountsAssets, eventEmitter);
 
       eventLogicVerifier.listenEventPayTax(currentBlockHeight, accountGetterHelper, eventEmitter);
     }

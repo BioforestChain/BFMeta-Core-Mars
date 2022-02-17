@@ -1,4 +1,8 @@
-import type { TransferAssetTransaction, TransferAnyTransaction } from "@bfchain/core-model";
+import {
+  GiftAnyTransaction,
+  GiftAssetTransaction,
+  NewTransactionRefuseReason,
+} from "@bfchain/core-model";
 import { TransactionFactory } from "../_txbase";
 import {
   AccountBaseHelper,
@@ -6,22 +10,20 @@ import {
   BaseHelper,
   ConfigHelper,
   ChainAssetInfoHelper,
+  JSBIHelper,
 } from "@bfchain/core-helper";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { Injectable } from "@bfchain/util";
 
-const { ArgumentIllegalException } = CoreExceptionGenerator(
-  "CONTROLLER",
-  "TransferTransactionFactory",
-);
+const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "GiftTransactionFactory");
 
 /**
- * transfer 交易工厂
+ * gift 交易工厂
  *
  */
 @Injectable()
-export abstract class TransferTransactionFactory<
-  T extends TransferAssetTransaction | TransferAnyTransaction = TransferAssetTransaction,
+export abstract class GiftTransactionFactory<
+  T extends GiftAssetTransaction | GiftAnyTransaction,
 > extends TransactionFactory<T> {
   constructor(
     public accountBaseHelper: AccountBaseHelper,
@@ -29,6 +31,7 @@ export abstract class TransferTransactionFactory<
     public baseHelper: BaseHelper,
     public configHelper: ConfigHelper,
     public chainAssetInfoHelper: ChainAssetInfoHelper,
+    public jsbiHelper: JSBIHelper,
   ) {
     super();
   }
@@ -50,22 +53,9 @@ export abstract class TransferTransactionFactory<
       target: "body",
     } as const;
 
-    this.emptyRangeType(body, Function_Exception_Detail);
-
-    const recipientId = body.recipientId;
-
-    if (!recipientId) {
-      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
+    if (body.recipientId) {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
         prop: "recipientId",
-        ...Function_Exception_Detail,
-      });
-    }
-
-    if (body.senderId === recipientId) {
-      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
-        to_compare_prop: `senderId ${body.senderId}`,
-        to_target: "body",
-        be_compare_prop: `recipientId ${recipientId}`,
         ...Function_Exception_Detail,
       });
     }
@@ -108,5 +98,26 @@ export abstract class TransferTransactionFactory<
     return storage;
   }
 
-  abstract init(body: BFChainCore.TxBodyJSON, transfer: BFChainCore.GetTransactionAssetJSON<T>): T;
+  checkTransactionFee(fee: string, totalGrabableTimes: number, config = this.configHelper) {
+    const { maxTransactionSize, minTransactionFeePerByte } = config;
+    const byteLength = maxTransactionSize * (totalGrabableTimes + 1);
+    const feePerByte = {
+      numerator: BigInt(fee),
+      denominator: byteLength,
+    };
+    const result = this.jsbiHelper.compareFraction(feePerByte, minTransactionFeePerByte);
+    if (result < 0) {
+      // 赠送交易默认按照最大交易体付手续费
+      const minFee = this.jsbiHelper
+        .multiplyCeilFraction(feePerByte.denominator, minTransactionFeePerByte)
+        .toString();
+      throw new ArgumentIllegalException(ERROR_LIST.TRANSACTION_FEE_NOT_ENOUGH, {
+        errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
+        minFee: minFee.toString(),
+        target: "body",
+      });
+    }
+  }
+
+  abstract init(body: BFChainCore.TxBodyJSON, giftAsset: BFChainCore.GetTransactionAssetJSON<T>): T;
 }

@@ -12,12 +12,13 @@ export * from "./issueAsset";
 
 export * from "./transfer";
 
-
 export * from "./destoryAsset";
 export * from "./toExchangeAsset";
 export * from "./beExchangeAsset";
-export * from "./giftAsset";
-export * from "./grabAsset";
+
+export * from "./gift";
+export * from "./grab";
+
 export * from "./trustAsset";
 export * from "./signForAsset";
 export * from "./emigrateAsset";

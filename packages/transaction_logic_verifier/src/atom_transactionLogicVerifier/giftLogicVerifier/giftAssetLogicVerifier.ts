@@ -1,5 +1,5 @@
 import type { GiftAssetTransaction } from "@bfchain/core-model";
-import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
+import { TransactionLogicVerifier } from "../_txbaseLogicVerifier";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
 
 @Injectable()

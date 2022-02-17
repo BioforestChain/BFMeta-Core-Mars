@@ -1,73 +1,50 @@
-import { TransactionFactory } from "./_txbase";
-import { GrabAssetTransaction } from "@bfchain/core-model";
+import { TransactionFactory } from "../_txbase";
+import { GiftAnyTransactionFactory } from "../gift";
+import { ASSET_STATUS, GrabAnyTransaction, PARENT_ASSET_TYPE } from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
   BaseHelper,
   ConfigHelper,
   ChainAssetInfoHelper,
-  AsymmetricHelper,
 } from "@bfchain/core-helper";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
-import { GiftAssetTransactionFactory } from "./giftAsset";
-import { Injectable, Inject, parseHexToArrayBuffer, wrapTaskList } from "@bfchain/util";
+import { Injectable, parseHexToArrayBuffer, wrapTaskList } from "@bfchain/util";
+
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
-  "GrabAssetTransactionFactory",
+  "GrabAnyTransactionFactory",
 );
 
 /**
- * grabAsset 交易工厂
+ * grabAny 交易工厂
  *
  */
 @Injectable()
-export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTransaction> {
+export class GrabAnyTransactionFactory extends TransactionFactory<GrabAnyTransaction> {
   constructor(
     public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,
     public baseHelper: BaseHelper,
     public configHelper: ConfigHelper,
     public chainAssetInfoHelper: ChainAssetInfoHelper,
-    private giftAssetTransactionFactory: GiftAssetTransactionFactory,
-    private asymmetricHelper: AsymmetricHelper,
-    @Inject("cryptoHelper") private cryptoHelper: BFChainCore.CryptoHelperInterface,
-    @Inject("Buffer") private Buffer: BFChainUtil.BufferConstructor,
+    private __giftAnyTransactionFactory: GiftAnyTransactionFactory,
   ) {
     super();
   }
 
   /**
    * 校验输入信息
-   * 要验证 grabAsset 交易的基础信息是否合法和 asset 信息是否存在
-   * 交易的 rangeType 必须是 empty
-   * 必须携带交易的接收账户地址(是 giftAsset 交易的发起账户地址)
-   * 交易的来源链和去往链的网络标识符必须是本链的网络标识符
-   * 必须携带查询用的索引存储
-   * key 值必须是 "transactionSignature" value 必须是 giftAsset 的签名
-   * asset 是完整的 grabAsset 信息
-   * 必须携带 发红包交易 被确认的区块签名
-   * 必须携带 发红包交易 的签名
-   * 必须携带 发红包交易 的 接收范围类型 rangeType
-   * 必须携带 发红包交易 的 接收范围 range
-   *  如果 range 长度大于 0
-   *    rangeType === MULTI_ADDRESS 交易的发起账户地址必须在 range 中
-   *    rangeType === MULTI_DAPPID 交易的 dappid 必须在 range 中
-   *    rangeType === MULTI_LOCATION_NAME 交易的 lns 必须在 range 中
-   * 必须携带 发红包交易 的发起交易高度
-   * 如果 发红包交易 有指定开始交易高度间隔，则必须携带则个值
-   * 如果 发红包交易 有指定交易的有效区块高度，则必须携带这个值
-   * 如果是公钥模式，则密文必须存在，且密文签名合法
-   * 根据 发红包交易 的模式，校验金额是否正确
    *
    * @param body
-   * @param grabAssetAsset
+   * @param grabAnyAsset
    */
   async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
-    grabAssetAsset: BFChainCore.GrabAssetAssetJSON,
+    grabAnyAsset: BFChainCore.GrabAnyAssetJSON,
     config = this.configHelper,
   ) {
-    await super.verifyTransactionBody(body, grabAssetAsset, config);
+    await super.verifyTransactionBody(body, grabAnyAsset, config);
 
     const Function_Exception_Detail = {
       target: "body",
@@ -121,25 +98,25 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
       });
     }
 
-    const grabAsset = grabAssetAsset.grabAsset;
+    const grabAny = grabAnyAsset.grabAny;
 
-    if (!grabAsset) {
+    if (!grabAny) {
       throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
-        param: "grabAsset",
+        param: "grabAny",
       });
     }
 
-    const GrabAssetAsset_Exception_Detail = {
+    const GrabAnyAsset_Exception_Detail = {
       ...Function_Exception_Detail,
-      target: "grabAssetAsset",
+      target: "grabAnyAsset",
     } as const;
 
-    const { blockSignature, transactionSignature } = grabAsset;
+    const { blockSignature, transactionSignature } = grabAny;
 
     if (!blockSignature) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "blockSignature",
-        ...GrabAssetAsset_Exception_Detail,
+        ...GrabAnyAsset_Exception_Detail,
       });
     }
 
@@ -147,14 +124,14 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `blockSignature ${blockSignature}`,
         type: "block signature",
-        ...GrabAssetAsset_Exception_Detail,
+        ...GrabAnyAsset_Exception_Detail,
       });
     }
 
     if (!transactionSignature) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "transactionSignature",
-        ...GrabAssetAsset_Exception_Detail,
+        ...GrabAnyAsset_Exception_Detail,
       });
     }
 
@@ -162,7 +139,7 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `transactionSignature ${transactionSignature}`,
         type: "transaction signature",
-        ...GrabAssetAsset_Exception_Detail,
+        ...GrabAnyAsset_Exception_Detail,
       });
     }
 
@@ -176,28 +153,29 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
       });
     }
 
-    this.checkAssetAmount(grabAsset.amount, "amount", GrabAssetAsset_Exception_Detail);
+    this.checkAssetAmount(grabAny.amount, "amount", GrabAnyAsset_Exception_Detail);
 
-    const { giftAsset, ciphertextSignature } = grabAsset;
+    const { giftAny, ciphertextSignature } = grabAny;
+
     /**
-     * 校验`giftAsset`的基本格式
+     * 校验`giftAny`的基本格式
      */
-    this.giftAssetTransactionFactory.verifyGiftAsset(giftAsset);
+    await this.__giftAnyTransactionFactory.verifyGiftAny(giftAny);
 
-    const { cipherPublicKeys } = giftAsset;
+    const { cipherPublicKeys } = giftAny;
     /**如果是公钥模式，那么必须存在密文 */
     if (cipherPublicKeys.length > 0) {
       if (!ciphertextSignature) {
         throw new ArgumentIllegalException(ERROR_LIST.NOT_EXIST, {
           prop: `ciphertextSignature ${ciphertextSignature}`,
-          ...GrabAssetAsset_Exception_Detail,
+          ...GrabAnyAsset_Exception_Detail,
         });
       }
 
       if (!baseHelper.isValidAccountSignature(ciphertextSignature)) {
         throw new ArgumentIllegalException(ERROR_LIST.NOT_EXIST, {
           prop: `ciphertextSignature ${ciphertextSignature}`,
-          ...GrabAssetAsset_Exception_Detail,
+          ...GrabAnyAsset_Exception_Detail,
         });
       }
 
@@ -209,7 +187,7 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
           be_compare_prop: "cipherPublicKeys",
           to_target: "ciphertextSignature",
           be_target: "cipherPublicKeys",
-          ...GrabAssetAsset_Exception_Detail,
+          ...GrabAnyAsset_Exception_Detail,
         });
       }
 
@@ -225,7 +203,7 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
         throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `ciphertextSignature ${signature}`,
           type: "signature",
-          ...GrabAssetAsset_Exception_Detail,
+          ...GrabAnyAsset_Exception_Detail,
         });
       }
     } else {
@@ -233,22 +211,22 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
         throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
           prop: `ciphertextSignature ${ciphertextSignature}`,
           type: "grabAsset",
-          ...GrabAssetAsset_Exception_Detail,
+          ...GrabAnyAsset_Exception_Detail,
         });
       }
     }
   }
 
   /**
-   * 初始化 grabAsset 交易
+   * 初始化 grabAny 交易
    *
    * @param body
-   * @param grabAsset
+   * @param grabAny
    */
-  init(body: BFChainCore.TxBodyJSON, grabAsset: BFChainCore.GrabAssetAssetJSON) {
-    const transaction = GrabAssetTransaction.fromObject({
+  init(body: BFChainCore.TxBodyJSON, grabAny: BFChainCore.GrabAnyAssetJSON) {
+    const transaction = GrabAnyTransaction.fromObject({
       ...body,
-      asset: grabAsset,
+      asset: grabAny,
     });
 
     return transaction;
@@ -261,32 +239,83 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
    * @param eventEmitter
    */
   applyTransaction(
-    transaction: GrabAssetTransaction,
+    transaction: GrabAnyTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ) {
     return wrapTaskList((taskList) => {
       const { chainAssetInfoHelper } = this;
-      const { grabAsset } = transaction.asset;
-      const { amount, giftTransactionSignatureBuffer } = grabAsset;
-      const { assetType, sourceChainMagic /* unitReserveFee */ } = grabAsset.giftAsset;
-      const recipientId = transaction.recipientId;
+      const { senderId, recipientId, senderPublicKeyBuffer, signatureBuffer, asset } = transaction;
+      const { amount, giftTransactionSignatureBuffer, giftAny } = asset.grabAny;
+      const { assetType, parentAssetType, sourceChainMagic, sourceChainName } = giftAny;
+
       const assetInfo = chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
-      // 发起账户将得到的资产解冻并收入账下
-      taskList.next = eventEmitter.emit("unfrozenAsset", {
-        type: "unfrozenAsset",
-        transaction,
-        applyInfo: {
-          address: transaction.senderId,
-          publicKeyBuffer: transaction.senderPublicKeyBuffer,
-          assetInfo,
-          amount,
-          sourceAmount: amount,
-          frozenIdBuffer: giftTransactionSignatureBuffer,
-          recipientId, // 资产冻结账户
-        },
-      });
+
+      if (parentAssetType === PARENT_ASSET_TYPE.ASSETS) {
+        // 发起账户将得到的资产解冻并收入账下
+        taskList.next = eventEmitter.emit("unfrozenAsset", {
+          type: "unfrozenAsset",
+          transaction,
+          applyInfo: {
+            address: senderId,
+            publicKeyBuffer: senderPublicKeyBuffer,
+            assetInfo,
+            amount,
+            sourceAmount: amount,
+            frozenIdBuffer: giftTransactionSignatureBuffer,
+            recipientId, // 资产冻结账户
+          },
+        });
+      } else if (parentAssetType === PARENT_ASSET_TYPE.DAPP) {
+        taskList.next = eventEmitter.emit("unfrozenDAppid", {
+          type: "unfrozenDAppid",
+          transaction,
+          applyInfo: {
+            address: senderId,
+            publicKeyBuffer: senderPublicKeyBuffer,
+            possessorAddress: senderId,
+            sourceChainName,
+            sourceChainMagic,
+            dappid: assetType,
+            status: ASSET_STATUS.NORMAL,
+          },
+        });
+      } else if (parentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME) {
+        taskList.next = eventEmitter.emit("unfrozenLocationName", {
+          type: "unfrozenLocationName",
+          transaction,
+          applyInfo: {
+            address: senderId,
+            publicKeyBuffer: senderPublicKeyBuffer,
+            possessorAddress: senderId,
+            sourceChainName,
+            sourceChainMagic,
+            name: assetType,
+            status: ASSET_STATUS.NORMAL,
+          },
+        });
+      } else if (parentAssetType === PARENT_ASSET_TYPE.ENTITY) {
+        taskList.next = eventEmitter.emit("unfrozenEntity", {
+          type: "unfrozenEntity",
+          transaction,
+          applyInfo: {
+            address: senderId,
+            publicKeyBuffer: senderPublicKeyBuffer,
+            possessorAddress: senderId,
+            sourceChainName,
+            sourceChainMagic,
+            entityId: assetType,
+            status: ASSET_STATUS.NORMAL,
+          },
+        });
+      } else {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+          prop: `parentAssetType ${parentAssetType}`,
+          target: "transaction.asset.grabAny.giftAny",
+          function: "applyTransaction",
+        });
+      }
     });
   }
 
@@ -298,14 +327,14 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
    * @returns
    */
   getMoveAmount(
-    transaction: GrabAssetTransaction,
+    transaction: GrabAnyTransaction,
     argv = {
       magic: this.configHelper.magic,
       assetType: this.configHelper.assetType,
     },
   ) {
-    const { amount, giftAsset } = transaction.asset.grabAsset;
-    const { sourceChainMagic, assetType } = giftAsset;
+    const { amount, giftAny } = transaction.asset.grabAny;
+    const { sourceChainMagic, assetType } = giftAny;
     if (argv.magic === sourceChainMagic && argv.assetType === assetType) {
       return amount;
     }

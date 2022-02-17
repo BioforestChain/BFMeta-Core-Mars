@@ -17,8 +17,10 @@ export * from "./issueAssetLogicVerifier";
 export * from "./transferLogicVerifier";
 
 export * from "./destoryAssetLogicVerifier";
-export * from "./giftAssetLogicVerifier";
-export * from "./grabAssetLogicVerifier";
+
+export * from "./giftLogicVerifier";
+export * from "./grabLogicVerifier";
+
 export * from "./trustAssetLogicVerifier";
 export * from "./signForAssetLogicVerifier";
 export * from "./toExchangeAssetLogicVerifier";

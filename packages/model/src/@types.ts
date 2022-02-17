@@ -8,7 +8,7 @@ declare namespace BFChainCore {
   }
   /**处理交易流程相关的事件 */
   interface ApplyTransactionFlowEvent<EVENTNAME, T extends Transaction = Transaction>
-    extends ApplyTransactionEvent<undefined, EVENTNAME, T> { }
+    extends ApplyTransactionEvent<undefined, EVENTNAME, T> {}
 
   type ApplyInfo_Asset = {
     address: string;
@@ -27,11 +27,11 @@ declare namespace BFChainCore {
   type ApplyTransactionFeeEvent<
     EVENTNAME extends "fee" | "feeFromUnfrozen" = "fee",
     T extends Transaction = Transaction,
-    > = EVENTNAME extends "fee"
+  > = EVENTNAME extends "fee"
     ? ApplyTransactionEvent<ApplyInfo_Asset, "fee", T>
     : ApplyTransactionEvent<ApplyInfo_FeeFromUnfrozenAsset, "feeFromUnfrozen", T>;
 
-  interface ApplyInfo_DestoryMainAsset extends ApplyInfo_Asset { }
+  interface ApplyInfo_DestoryMainAsset extends ApplyInfo_Asset {}
   /**销毁主权益的相关事件 */
   type ApplyTransactionDestoryMainAssetEvent<EVENTNAME, T extends Transaction = Transaction> =
     ApplyTransactionEvent<ApplyInfo_DestoryMainAsset, EVENTNAME, T>;
@@ -86,7 +86,7 @@ declare namespace BFChainCore {
     T extends Transaction,
     // AssetModel extends object = object,
     // AssetJSON extends object = object
-    > = ApplyTransactionEvent<ApplyInfo_Account, EVENTNAME, T>;
+  > = ApplyTransactionEvent<ApplyInfo_Account, EVENTNAME, T>;
 
   type ApplyInfo_Equity = {
     address: string;
@@ -310,7 +310,7 @@ declare namespace BFChainCore {
   type ApplyTransactionChangeLocationNamePossessorEvent<
     EVENTNAME,
     T extends Transaction = Transaction,
-    > = ApplyTransactionEvent<ApplyInfo_ChangeLocationNamePossessor, EVENTNAME, T>;
+  > = ApplyTransactionEvent<ApplyInfo_ChangeLocationNamePossessor, EVENTNAME, T>;
 
   type ApplyInfo_IssueEntityFactory = {
     address: string;
@@ -443,7 +443,6 @@ declare namespace BFChainCore {
   type ApplyTransactionPayTaxEvent<EVENTNAME, T extends Transaction = Transaction> =
     ApplyTransactionEvent<ApplyInfo_PayTax, EVENTNAME, T>;
 
-
   type ApplyTransactionEventMap<EM extends BFChainUtil.EventInOutMap = {}> = EM & {
     /**交易交易的POW */
     verifyTransactionProfOfWork: BFChainUtil.EventInOut<
@@ -544,10 +543,11 @@ declare namespace BFChainCore {
     frozenAsset: BFChainUtil.EventInOut<
       ApplyTransactionFrozenAssetEvent<
         "frozenAsset",
-        | import("@bfchain/core-model-transaction").ToExchangeAssetTransaction
         | import("@bfchain/core-model-transaction").GiftAssetTransaction
+        | import("@bfchain/core-model-transaction").GiftAnyTransaction
         | import("@bfchain/core-model-transaction").TrustAssetTransaction
         | import("@bfchain/core-model-transaction").SignForAssetTransaction
+        | import("@bfchain/core-model-transaction").ToExchangeAssetTransaction
         | import("@bfchain/core-model-transaction").ToExchangeSpecialAssetTransaction
         | import("@bfchain/core-model-transaction").IssueEntityTransaction
         | import("@bfchain/core-model-transaction").ToExchangeAnyTransaction
@@ -559,6 +559,7 @@ declare namespace BFChainCore {
       ApplyTransactionUnfrozenAssetEvent<
         "unfrozenAsset",
         | import("@bfchain/core-model-transaction").BeExchangeAssetTransaction
+        | import("@bfchain/core-model-transaction").GrabAnyTransaction
         | import("@bfchain/core-model-transaction").GrabAssetTransaction
         | import("@bfchain/core-model-transaction").SignForAssetTransaction
         | import("@bfchain/core-model-transaction").BeExchangeSpecialAssetTransaction
@@ -587,6 +588,7 @@ declare namespace BFChainCore {
     frozenDAppid: BFChainUtil.EventInOut<
       ApplyTransactionFrozenDAppidEvent<
         "frozenDAppid",
+        | import("@bfchain/core-model-transaction").GiftAnyTransaction
         | import("@bfchain/core-model-transaction").ToExchangeSpecialAssetTransaction
         | import("@bfchain/core-model-transaction").ToExchangeAnyTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
@@ -596,6 +598,7 @@ declare namespace BFChainCore {
     unfrozenDAppid: BFChainUtil.EventInOut<
       ApplyTransactionUnfrozenDAppidEvent<
         "unfrozenDAppid",
+        | import("@bfchain/core-model-transaction").GrabAnyTransaction
         | import("@bfchain/core-model-transaction").BeExchangeSpecialAssetTransaction
         | import("@bfchain/core-model-transaction").BeExchangeAnyTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
@@ -663,6 +666,7 @@ declare namespace BFChainCore {
     frozenLocationName: BFChainUtil.EventInOut<
       ApplyTransactionFrozenLocationNameEvent<
         "frozenLocationName",
+        | import("@bfchain/core-model-transaction").GiftAnyTransaction
         | import("@bfchain/core-model-transaction").ToExchangeSpecialAssetTransaction
         | import("@bfchain/core-model-transaction").ToExchangeAnyTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
@@ -672,6 +676,7 @@ declare namespace BFChainCore {
     unfrozenLocationName: BFChainUtil.EventInOut<
       ApplyTransactionUnfrozenLocationNameEvent<
         "unfrozenLocationName",
+        | import("@bfchain/core-model-transaction").GrabAnyTransaction
         | import("@bfchain/core-model-transaction").BeExchangeSpecialAssetTransaction
         | import("@bfchain/core-model-transaction").BeExchangeAnyTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
@@ -729,6 +734,7 @@ declare namespace BFChainCore {
     frozenEntity: BFChainUtil.EventInOut<
       ApplyTransactionFrozenEntityEvent<
         "frozenEntity",
+        | import("@bfchain/core-model-transaction").GiftAnyTransaction
         | import("@bfchain/core-model-transaction").ToExchangeSpecialAssetTransaction
         | import("@bfchain/core-model-transaction").ToExchangeAnyTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
@@ -738,6 +744,7 @@ declare namespace BFChainCore {
     unfrozenEntity: BFChainUtil.EventInOut<
       ApplyTransactionUnfrozenEntityEvent<
         "unfrozenEntity",
+        | import("@bfchain/core-model-transaction").GrabAnyTransaction
         | import("@bfchain/core-model-transaction").BeExchangeSpecialAssetTransaction
         | import("@bfchain/core-model-transaction").BeExchangeAnyTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
@@ -765,6 +772,7 @@ declare namespace BFChainCore {
       ApplyTransactionPayTaxEvent<
         "payTax",
         | import("@bfchain/core-model-transaction").TransferAnyTransaction
+        | import("@bfchain/core-model-transaction").GiftAnyTransaction
         | import("@bfchain/core-model-transaction").GiftAssetTransaction
         | import("@bfchain/core-model-transaction").BeExchangeSpecialAssetTransaction
         | import("@bfchain/core-model-transaction").BeExchangeAnyTransaction
@@ -811,32 +819,32 @@ declare namespace BFChainCore {
   type GenerateBlockEventEmitter<
     B extends Block = Block,
     ES extends BFChainUtil.EventInOutMap = {},
-    > = ApplyTransactionEventEmitter<
-      {
-        beforeGenerateBlock: BFChainUtil.EventInOut<BFChainCore.BlockBody>;
-        /**在区块签名前
-         * 这里可以对区块做最后的调整
-         */
-        beforeSignatureBlock: BFChainUtil.EventInOut<B>;
-        /**
-         * 处理完成所有交易,完整产出区块，
-         * 这时候账户、交易、区块都已经写定
-         * 可以在这个事件中进行最后的资源释放了
-         * 或者准备广播交易需要的动作
-         */
-        generatedBlock: BFChainUtil.EventInOut<B>;
-        /**
-         * 扩展异常信息
-         */
-        blockError: BFChainUtil.EventInOut<
-          {
-            type: string;
-            error: unknown;
-            blockBody: BlockBody | B;
-          },
-          void
-        >;
-      } & ES
-    >;
+  > = ApplyTransactionEventEmitter<
+    {
+      beforeGenerateBlock: BFChainUtil.EventInOut<BFChainCore.BlockBody>;
+      /**在区块签名前
+       * 这里可以对区块做最后的调整
+       */
+      beforeSignatureBlock: BFChainUtil.EventInOut<B>;
+      /**
+       * 处理完成所有交易,完整产出区块，
+       * 这时候账户、交易、区块都已经写定
+       * 可以在这个事件中进行最后的资源释放了
+       * 或者准备广播交易需要的动作
+       */
+      generatedBlock: BFChainUtil.EventInOut<B>;
+      /**
+       * 扩展异常信息
+       */
+      blockError: BFChainUtil.EventInOut<
+        {
+          type: string;
+          error: unknown;
+          blockBody: BlockBody | B;
+        },
+        void
+      >;
+    } & ES
+  >;
   //#endregion
 }

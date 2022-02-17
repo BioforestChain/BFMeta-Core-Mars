@@ -14,7 +14,6 @@ export * from "./dappPurchasing";
 export * from "./mark";
 export * from "./issueAsset";
 export * from "./transferAsset";
-export * from "./transferAny";
 export * from "./destoryAsset";
 export * from "./giftAsset";
 export * from "./grabAsset";
@@ -35,5 +34,11 @@ export * from "./issueEntityFactory";
 export * from "./issueEntity";
 export * from "./issueEntityV1";
 export * from "./destoryEntity";
+
+export * from "./transferAny";
+
+export * from "./giftAny";
+export * from "./grabAny";
+
 export * from "./toExchangeAny";
 export * from "./beExchangeAny";

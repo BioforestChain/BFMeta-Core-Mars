@@ -48,7 +48,8 @@ export class TransferAnyTransactionFactory extends TransferTransactionFactory<Tr
       });
     }
 
-    const { sourceChainMagic, sourceChainName, parentAssetType, assetType } = transferAny;
+    const { sourceChainMagic, sourceChainName, parentAssetType, assetType, taxInformation } =
+      transferAny;
 
     this.checkChainName(sourceChainName, "sourceChainName", TransferAnyAsset_Exception_Detail);
 
@@ -67,6 +68,10 @@ export class TransferAnyTransactionFactory extends TransferTransactionFactory<Tr
     }
 
     this.checkAssetAmount(transferAny.amount, "amount", TransferAnyAsset_Exception_Detail);
+
+    if (parentAssetType === PARENT_ASSET_TYPE.ENTITY) {
+      await this.checkTaxInformation(TransferAnyAsset_Exception_Detail, taxInformation);
+    }
   }
 
   /**

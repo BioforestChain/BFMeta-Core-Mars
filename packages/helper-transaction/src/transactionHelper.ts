@@ -40,7 +40,7 @@ export class TransactionHelper {
     private asymmetricHelper: AsymmetricHelper,
     private accountBaseHelper: AccountBaseHelper,
     private tpowHelper: TPOWHelper,
-  ) { }
+  ) {}
   get _ASSETTYPE() {
     return this.config.assetType;
   }
@@ -228,9 +228,18 @@ export class TransactionHelper {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.DESTORY_ENTITY);
   }
 
-  /** TRANSFER_ASSET: 权益转移 */
+  /** TRANSFER_ANY: 任意资产转移 */
   get TRANSFER_ANY() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.TRANSFER_ANY);
+  }
+
+  /** GIFT_ANY: 任意资产赠送 */
+  get GIFT_ANY() {
+    return this.getTransactionType(TRANSACTION_TYPES_BASE.GIFT_ANY);
+  }
+  /** GRAB_ANY: 接受任意资产赠送 */
+  get GRAB_ANY() {
+    return this.getTransactionType(TRANSACTION_TYPES_BASE.GRAB_ANY);
   }
 
   /** ECA: 任意资产交换 */
@@ -276,6 +285,9 @@ export class TransactionHelper {
     this.DESTORY_ENTITY,
 
     this.TRANSFER_ANY,
+
+    this.GIFT_ANY,
+    this.GRAB_ANY,
 
     this.TO_EXCHANGE_ANY,
     this.BE_EXCHANGE_ANY,
@@ -805,15 +817,15 @@ export class TransactionHelper {
    */
   sortTransactionAssetChanges<
     T extends TransactionAssetChangeModel | BFChainCore.TransactionAssetChangeJSON,
-    >(transactionAssetChanges: T[]) {
+  >(transactionAssetChanges: T[]) {
     return transactionAssetChanges.sort((a, b) => {
       return a.accountType === b.accountType
         ? a.assetTypes > b.assetTypes
           ? 1
           : -1
         : a.accountType > b.accountType
-          ? 1
-          : -1;
+        ? 1
+        : -1;
     });
   }
 
