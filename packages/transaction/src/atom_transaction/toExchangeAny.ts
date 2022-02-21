@@ -300,6 +300,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
   ) {
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
+      const { senderId, senderPublicKeyBuffer } = transaction;
       const {
         toExchangeChainName,
         toExchangeSource,
@@ -318,8 +319,8 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
           type: "frozenAsset",
           transaction,
           applyInfo: {
-            address: transaction.senderId,
-            publicKeyBuffer: transaction.senderPublicKeyBuffer,
+            address: senderId,
+            publicKeyBuffer: senderPublicKeyBuffer,
             assetInfo: toAssetInfo,
             amount: `-${toExchangeAssetPrealnum}`,
             sourceAmount: toExchangeAssetPrealnum,
@@ -330,10 +331,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
             frozenIdBuffer: transaction.signatureBuffer,
           },
         });
-        return;
-      }
-      const senderId = transaction.senderId;
-      if (toExchangeParentAssetType === PARENT_ASSET_TYPE.DAPP) {
+      } else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.DAPP) {
         // 冻结 dappid
         taskList.next = eventEmitter.emit("frozenDAppid", {
           type: "frozenDAppid",
@@ -350,9 +348,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
             status: ASSET_STATUS.FROZEN,
           },
         });
-        return;
-      }
-      if (toExchangeParentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME) {
+      } else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME) {
         // 冻结位名
         taskList.next = eventEmitter.emit("frozenLocationName", {
           type: "frozenLocationName",
@@ -370,8 +366,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
           },
         });
         return;
-      }
-      if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
+      } else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
         // 冻结 entityId
         taskList.next = eventEmitter.emit("frozenEntity", {
           type: "frozenEntity",
@@ -389,6 +384,12 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
           },
         });
         return;
+      } else {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+          prop: `toExchangeParentAssetType ${toExchangeParentAssetType}`,
+          target: "transaction.asset.toExchangeAny",
+          function: "applyTransaction",
+        });
       }
     });
   }

@@ -114,6 +114,12 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
         accountGetterHelper,
         eventEmitter,
       );
+    } else {
+      throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
+        prop: `toExchangeParentAssetType ${toExchangeParentAssetType}`,
+        target: "transaction.asset.beExchangeAny.exchangeAny",
+        function: "applyTransaction",
+      });
     }
 
     if (beExchangeAny.beExchangeAssetPrealnum !== "0") {
@@ -137,6 +143,12 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
           accountGetterHelper,
           eventEmitter,
         );
+      } else {
+        throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
+          prop: `beExchangeParentAssetType ${beExchangeParentAssetType}`,
+          target: "transaction.asset.beExchangeAny.exchangeAny",
+          function: "applyTransaction",
+        });
       }
     }
 

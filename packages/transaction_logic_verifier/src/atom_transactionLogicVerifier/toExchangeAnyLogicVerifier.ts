@@ -66,31 +66,36 @@ export class ToExchangeAnyLogicVerifier extends TransactionLogicVerifier {
         accountGetterHelper,
       );
       eventLogicVerifier.listenEventFrozenAsset(cloneAccountsAssets, eventEmitter);
+    }
+    // 冻结 dappid
+    else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.DAPP) {
+      eventLogicVerifier.listenEventFrozenDAppid(
+        currentBlockHeight,
+        accountGetterHelper,
+        eventEmitter,
+      );
+    }
+    // 冻结 locationName
+    else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME) {
+      eventLogicVerifier.listenEventFrozenLocationName(
+        currentBlockHeight,
+        accountGetterHelper,
+        eventEmitter,
+      );
+    }
+    // 冻结 entity
+    else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
+      eventLogicVerifier.listenEventFrozenEntity(
+        currentBlockHeight,
+        accountGetterHelper,
+        eventEmitter,
+      );
     } else {
-      // 冻结 dappid
-      if (toExchangeParentAssetType === PARENT_ASSET_TYPE.DAPP) {
-        eventLogicVerifier.listenEventFrozenDAppid(
-          currentBlockHeight,
-          accountGetterHelper,
-          eventEmitter,
-        );
-      }
-      // 冻结 locationName
-      else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME) {
-        eventLogicVerifier.listenEventFrozenLocationName(
-          currentBlockHeight,
-          accountGetterHelper,
-          eventEmitter,
-        );
-      }
-      // 冻结 entity
-      else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
-        eventLogicVerifier.listenEventFrozenEntity(
-          currentBlockHeight,
-          accountGetterHelper,
-          eventEmitter,
-        );
-      }
+      throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
+        prop: `toExchangeParentAssetType ${toExchangeParentAssetType}`,
+        target: "transaction.asset.toExchangeAny",
+        function: "applyTransaction",
+      });
     }
 
     if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
@@ -144,6 +149,12 @@ export class ToExchangeAnyLogicVerifier extends TransactionLogicVerifier {
           function: "verify",
         });
       }
+    } else {
+      throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
+        prop: `beExchangeParentAssetType ${beExchangeParentAssetType}`,
+        target: "transaction.asset.toExchangeAny",
+        function: "applyTransaction",
+      });
     }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
