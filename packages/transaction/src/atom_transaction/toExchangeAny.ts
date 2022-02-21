@@ -365,7 +365,6 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
             status: ASSET_STATUS.FROZEN,
           },
         });
-        return;
       } else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
         // 冻结 entityId
         taskList.next = eventEmitter.emit("frozenEntity", {
@@ -383,7 +382,6 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
             status: ASSET_STATUS.FROZEN,
           },
         });
-        return;
       } else {
         throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `toExchangeParentAssetType ${toExchangeParentAssetType}`,
