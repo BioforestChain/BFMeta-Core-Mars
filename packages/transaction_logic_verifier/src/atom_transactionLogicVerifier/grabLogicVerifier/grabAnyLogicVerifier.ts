@@ -84,7 +84,7 @@ export class GrabAnyLogicVerifier extends TransactionLogicVerifier {
 
     eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
 
-    const { parentAssetType } = giftAny;
+    const { parentAssetType, taxInformation } = giftAny;
 
     if (parentAssetType === PARENT_ASSET_TYPE.ASSETS) {
       eventLogicVerifier.listenEventUnfrozenAsset(
@@ -110,6 +110,14 @@ export class GrabAnyLogicVerifier extends TransactionLogicVerifier {
         accountGetterHelper,
         eventEmitter,
       );
+
+      if (taxInformation && taxInformation.taxAssetPrealnum !== "0") {
+        eventLogicVerifier.listenEventUnfrozenAsset(
+          currentBlockHeight,
+          accountGetterHelper,
+          eventEmitter,
+        );
+      }
     }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);

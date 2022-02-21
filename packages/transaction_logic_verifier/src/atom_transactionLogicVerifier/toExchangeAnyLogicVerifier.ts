@@ -91,6 +91,10 @@ export class ToExchangeAnyLogicVerifier extends TransactionLogicVerifier {
         accountGetterHelper,
         eventEmitter,
       );
+
+      eventLogicVerifier.listenEventFrozenAsset(cloneAccountsAssets, eventEmitter);
+
+      eventLogicVerifier.listenEventPayTax(currentBlockHeight, accountGetterHelper, eventEmitter);
     } else {
       throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `toExchangeParentAssetType ${toExchangeParentAssetType}`,

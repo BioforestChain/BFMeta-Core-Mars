@@ -81,7 +81,8 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
 
     eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
 
-    const { toExchangeParentAssetType, beExchangeParentAssetType } = beExchangeAny.exchangeAny;
+    const { toExchangeParentAssetType, beExchangeParentAssetType, taxInformation } =
+      beExchangeAny.exchangeAny;
 
     if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
       eventLogicVerifier.listenEventUnfrozenAsset(
@@ -107,6 +108,14 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
         accountGetterHelper,
         eventEmitter,
       );
+
+      if (taxInformation && taxInformation.taxAssetPrealnum !== "0") {
+        eventLogicVerifier.listenEventUnfrozenAsset(
+          currentBlockHeight,
+          accountGetterHelper,
+          eventEmitter,
+        );
+      }
     } else {
       throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `toExchangeParentAssetType ${toExchangeParentAssetType}`,
@@ -135,6 +144,12 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
           accountGetterHelper,
           eventEmitter,
         );
+
+        eventLogicVerifier.listenEventPayTax(currentBlockHeight, accountGetterHelper, eventEmitter);
+
+        if (beExchangeAny.taxInformation && beExchangeAny.taxInformation.taxAssetPrealnum !== "0") {
+          eventLogicVerifier.listenEventAsset(cloneAccountsAssets, eventEmitter);
+        }
       } else {
         throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `beExchangeParentAssetType ${beExchangeParentAssetType}`,

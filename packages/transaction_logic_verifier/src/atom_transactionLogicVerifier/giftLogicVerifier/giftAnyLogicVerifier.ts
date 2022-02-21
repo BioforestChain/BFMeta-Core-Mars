@@ -72,7 +72,7 @@ export class GiftAnyLogicVerifier extends TransactionLogicVerifier {
         eventEmitter,
       );
 
-      eventLogicVerifier.listenEventAsset(cloneAccountsAssets, eventEmitter);
+      eventLogicVerifier.listenEventFrozenAsset(cloneAccountsAssets, eventEmitter);
 
       eventLogicVerifier.listenEventPayTax(currentBlockHeight, accountGetterHelper, eventEmitter);
     }

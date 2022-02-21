@@ -2,6 +2,7 @@ import { Message, Field, Type } from "@bfchain/protobuf";
 import { cacheGetter } from "@bfchain/util-decorator";
 import { getHexFromArrayBuffer, parseHexToArrayBuffer } from "@bfchain/util-encoding-hex";
 import { PARENT_ASSET_TYPE } from "@bfchain/core-model-constants";
+import { TaxInformationModel } from "@bfchain/core-model-common";
 
 /**缓存cipherTexts解析结果 */
 const BUFFER_LIST_PUBLICKEY_LIST_WM = new WeakMap<Uint8Array[], string[]>();
@@ -89,6 +90,9 @@ export class ToExchangeAnyModel
   /**交换的比例 */
   @Field.d(ToExchangeAnyModel.INC++, AssetExchangeWeightRatioModel, "optional")
   assetExchangeWeightRatio?: AssetExchangeWeightRatioModel;
+  /**收税信息 */
+  @Field.d(ToExchangeAnyModel.INC++, TaxInformationModel, "optional")
+  taxInformation?: TaxInformationModel;
 
   @cacheGetter
   get to() {
@@ -126,6 +130,7 @@ export class ToExchangeAnyModel
     this.beExchangeAssetPrealnum && (res.beExchangeAssetPrealnum = this.beExchangeAssetPrealnum);
     this.assetExchangeWeightRatio &&
       (res.assetExchangeWeightRatio = this.assetExchangeWeightRatio.toJSON());
+    this.taxInformation && (res.taxInformation = this.taxInformation.toJSON());
 
     return res;
   }

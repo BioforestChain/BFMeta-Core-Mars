@@ -245,7 +245,7 @@ export class GrabAnyTransactionFactory extends TransactionFactory<GrabAnyTransac
   ) {
     return wrapTaskList((taskList) => {
       const { chainAssetInfoHelper } = this;
-      const { senderId, recipientId, senderPublicKeyBuffer, signatureBuffer, asset } = transaction;
+      const { senderId, recipientId, senderPublicKeyBuffer, asset } = transaction;
       const { amount, giftTransactionSignatureBuffer, giftAny } = asset.grabAny;
       const { assetType, parentAssetType, sourceChainMagic, sourceChainName } = giftAny;
 
@@ -309,6 +309,26 @@ export class GrabAnyTransactionFactory extends TransactionFactory<GrabAnyTransac
             status: ASSET_STATUS.NORMAL,
           },
         });
+        if (giftAny.taxInformation && giftAny.taxInformation.taxAssetPrealnum !== "0") {
+          const { taxCollector, taxAssetPrealnum } = giftAny.taxInformation;
+          const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
+            config.magic,
+            config.assetType,
+          );
+          taskList.next = eventEmitter.emit("unfrozenAsset", {
+            type: "unfrozenAsset",
+            transaction,
+            applyInfo: {
+              address: taxCollector,
+              publicKeyBuffer: senderPublicKeyBuffer,
+              assetInfo: chainAssetInfo,
+              amount: taxAssetPrealnum,
+              sourceAmount: taxAssetPrealnum,
+              frozenIdBuffer: giftTransactionSignatureBuffer,
+              recipientId, // 资产冻结账户
+            },
+          });
+        }
       } else {
         throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `parentAssetType ${parentAssetType}`,

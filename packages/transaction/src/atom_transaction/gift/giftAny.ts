@@ -37,6 +37,18 @@ export class GiftAnyTransactionFactory extends GiftTransactionFactory<GiftAnyTra
 
     await this.verifyGiftAny(giftAny, config);
 
+    if (
+      body.rangeType === RANGE_TYPE.MULTI_ADDRESS &&
+      giftAny.parentAssetType !== PARENT_ASSET_TYPE.ASSETS &&
+      body.range.includes(body.senderId)
+    ) {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_INCLUDE, {
+        prop: "range",
+        target: "body",
+        value: body.senderId,
+      });
+    }
+
     if (giftAny.giftDistributionRule === GIFT_DISTRIBUTION_RULE.RECIPIENT_RANDOM) {
       if (body.rangeType !== RANGE_TYPE.MULTI_ADDRESS) {
         throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
@@ -301,21 +313,29 @@ export class GiftAnyTransactionFactory extends GiftTransactionFactory<GiftAnyTra
             taxCollector: taxInformation.taxCollector,
           },
         });
-        const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
-          config.magic,
-          config.assetType,
-        );
-        taskList.next = this._applyTransactionEmitAsset(
-          eventEmitter,
-          transaction,
-          taxInformation.taxAssetPrealnum,
-          {
-            senderId,
-            senderPublicKeyBuffer,
-            recipientId: taxInformation.taxCollector,
-            assetInfo: chainAssetInfo,
-          },
-        );
+        const { taxAssetPrealnum } = taxInformation;
+        if (taxAssetPrealnum !== "0") {
+          const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
+            config.magic,
+            config.assetType,
+          );
+          taskList.next = eventEmitter.emit("frozenAsset", {
+            type: "frozenAsset",
+            transaction,
+            applyInfo: {
+              address: senderId,
+              publicKeyBuffer: senderPublicKeyBuffer,
+              assetInfo: chainAssetInfo,
+              amount: `-${taxAssetPrealnum}`,
+              sourceAmount: taxAssetPrealnum,
+              maxEffectiveHeight:
+                this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
+              minEffectiveHeight:
+                this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
+              frozenIdBuffer: transaction.signatureBuffer,
+            },
+          });
+        }
       } else {
         throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `parentAssetType ${parentAssetType}`,

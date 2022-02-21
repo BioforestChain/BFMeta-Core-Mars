@@ -597,6 +597,8 @@ declare namespace BFChainCore {
     beExchangeAssetPrealnum?: string;
     /**交换比例，同质权益交换时必填 */
     assetExchangeWeightRatio?: AssetExchangeWeightRatioJSON;
+    /**收税信息 */
+    taxInformation?: BFChainCore.TaxInformationJson;
   }
   interface ToExchangeAnyAssetJSON {
     /**发起权益交换事件附带信息 */
@@ -614,6 +616,8 @@ declare namespace BFChainCore {
     beExchangeAssetPrealnum: string;
     /**权益交换信息 */
     exchangeAny: ToExchangeAnyJSON;
+    /**收税信息 */
+    taxInformation?: BFChainCore.TaxInformationJson;
   }
   interface BeExchangeAnyAssetJSON {
     /**接收权益交换事件附带信息 */

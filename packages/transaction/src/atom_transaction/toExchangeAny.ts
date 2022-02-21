@@ -82,7 +82,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
 
     const toExchangeAny = toExchangeAnyAsset.toExchangeAny;
 
-    this.verifyToExchangeAny(toExchangeAny, config);
+    await this.verifyToExchangeAny(toExchangeAny, config);
 
     if (body.storage) {
       throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
@@ -97,7 +97,10 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
    *
    * @param toExchangeAny
    */
-  verifyToExchangeAny(toExchangeAny: BFChainCore.ToExchangeAnyJSON, config = this.configHelper) {
+  async verifyToExchangeAny(
+    toExchangeAny: BFChainCore.ToExchangeAnyJSON,
+    config = this.configHelper,
+  ) {
     const { baseHelper } = this;
 
     if (!toExchangeAny) {
@@ -141,7 +144,12 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
       ToExchangeAnyAsset_Exception_Detail,
     );
 
-    const { toExchangeParentAssetType, beExchangeParentAssetType } = toExchangeAny;
+    const {
+      toExchangeParentAssetType,
+      toExchangeAssetType,
+      beExchangeParentAssetType,
+      beExchangeAssetType,
+    } = toExchangeAny;
 
     this.checkParentAssetType(
       toExchangeParentAssetType,
@@ -157,20 +165,24 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
 
     this.checkAssetType(
       toExchangeParentAssetType,
-      toExchangeAny.toExchangeAssetType,
+      toExchangeAssetType,
       "toExchangeAssetType",
       ToExchangeAnyAsset_Exception_Detail,
     );
 
     this.checkAssetType(
       beExchangeParentAssetType,
-      toExchangeAny.beExchangeAssetType,
+      beExchangeAssetType,
       "beExchangeAssetType",
       ToExchangeAnyAsset_Exception_Detail,
     );
 
-    const { toExchangeAssetPrealnum, beExchangeAssetPrealnum, assetExchangeWeightRatio } =
-      toExchangeAny;
+    const {
+      toExchangeAssetPrealnum,
+      beExchangeAssetPrealnum,
+      assetExchangeWeightRatio,
+      taxInformation,
+    } = toExchangeAny;
 
     if (!toExchangeAssetPrealnum) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
@@ -224,9 +236,28 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
             ...ToExchangeAnyAsset_Exception_Detail,
           });
         }
+        // 没必要自己和自己换
+        if (beExchangeAssetType === toExchangeAssetType) {
+          throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
+            to_compare_prop: `beExchangeAssetType ${beExchangeAssetType}`,
+            to_target: "toExchangeAny",
+            be_compare_prop: toExchangeAssetType,
+          });
+        }
+      }
+      if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
+        await this.checkTaxInformation(ToExchangeAnyAsset_Exception_Detail, taxInformation);
       }
       return;
     }
+
+    if (taxInformation) {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
+        prop: "taxInformation",
+        ...Function_Exception_Detail,
+      });
+    }
+
     // to 是同质资产
     // be 不是同质资产
     if (beExchangeParentAssetType !== PARENT_ASSET_TYPE.ASSETS) {
@@ -303,6 +334,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
         toExchangeParentAssetType,
         toExchangeAssetType,
         toExchangeAssetPrealnum,
+        taxInformation,
       } = transaction.asset.toExchangeAny;
 
       if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
@@ -361,7 +393,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
             status: ASSET_STATUS.FROZEN,
           },
         });
-      } else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
+      } else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY && taxInformation) {
         // 冻结 entityId
         taskList.next = eventEmitter.emit("frozenEntity", {
           type: "frozenEntity",
@@ -378,6 +410,41 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
             status: ASSET_STATUS.FROZEN,
           },
         });
+        // 纳税
+        taskList.next = eventEmitter.emit("payTax", {
+          type: "payTax",
+          transaction,
+          applyInfo: {
+            sourceChainName: toExchangeChainName,
+            sourceChainMagic: toExchangeSource,
+            parentAssetType: toExchangeParentAssetType,
+            assetType: toExchangeAssetType,
+            taxCollector: taxInformation.taxCollector,
+          },
+        });
+        const { taxAssetPrealnum } = taxInformation;
+        if (taxAssetPrealnum !== "0") {
+          const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
+            config.magic,
+            config.assetType,
+          );
+          taskList.next = eventEmitter.emit("frozenAsset", {
+            type: "frozenAsset",
+            transaction,
+            applyInfo: {
+              address: senderId,
+              publicKeyBuffer: senderPublicKeyBuffer,
+              assetInfo: chainAssetInfo,
+              amount: `-${taxAssetPrealnum}`,
+              sourceAmount: taxAssetPrealnum,
+              maxEffectiveHeight:
+                this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
+              minEffectiveHeight:
+                this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
+              frozenIdBuffer: transaction.signatureBuffer,
+            },
+          });
+        }
       } else {
         throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `toExchangeParentAssetType ${toExchangeParentAssetType}`,

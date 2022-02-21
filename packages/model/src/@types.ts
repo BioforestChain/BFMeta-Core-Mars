@@ -775,6 +775,7 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction").GiftAnyTransaction
         | import("@bfchain/core-model-transaction").GiftAssetTransaction
         | import("@bfchain/core-model-transaction").BeExchangeSpecialAssetTransaction
+        | import("@bfchain/core-model-transaction").ToExchangeAnyTransaction
         | import("@bfchain/core-model-transaction").BeExchangeAnyTransaction
       >
     >;

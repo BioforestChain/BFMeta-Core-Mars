@@ -1,5 +1,5 @@
 import { Message, Field, Type } from "@bfchain/protobuf";
-import { AccountSignatureModel } from "@bfchain/core-model-common";
+import { AccountSignatureModel, TaxInformationModel } from "@bfchain/core-model-common";
 import { getHexFromArrayBuffer, parseHexToArrayBuffer } from "@bfchain/util-encoding-hex";
 import { ToExchangeAnyModel } from "./toExchangeAny";
 
@@ -61,6 +61,10 @@ export class BeExchangeAnyModel
   @Field.d(BeExchangeAnyModel.INC++, ToExchangeAnyModel)
   exchangeAny!: ToExchangeAnyModel;
 
+  /**收税信息 */
+  @Field.d(ToExchangeAnyModel.INC++, TaxInformationModel, "optional")
+  taxInformation?: TaxInformationModel;
+
   toJSON() {
     const res: BFChainCore.BeExchangeAnyJSON = {
       transactionSignature: this.transactionSignature,
@@ -70,6 +74,7 @@ export class BeExchangeAnyModel
     };
 
     this.ciphertextSignature && (res.ciphertextSignature = this.ciphertextSignature.toJSON());
+    this.taxInformation && (res.taxInformation = this.taxInformation.toJSON());
 
     return res;
   }

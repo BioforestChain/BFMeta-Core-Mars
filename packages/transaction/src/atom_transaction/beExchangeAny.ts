@@ -1,5 +1,10 @@
 import { TransactionFactory } from "./_txbase";
-import { ASSET_STATUS, BeExchangeAnyTransaction, PARENT_ASSET_TYPE } from "@bfchain/core-model";
+import {
+  ASSET_STATUS,
+  BeExchangeAnyTransaction,
+  PARENT_ASSET_TYPE,
+  TaxInformationModel,
+} from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
@@ -171,8 +176,8 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
     const { exchangeAny, ciphertextSignature } = beExchangeAny;
 
     /**校验`exchangeAny`的基本格式 */
-    this.toExchangeAnyTransactionFactory.verifyToExchangeAny(exchangeAny);
-    const { beExchangeParentAssetType, assetExchangeWeightRatio } = exchangeAny;
+    await this.toExchangeAnyTransactionFactory.verifyToExchangeAny(exchangeAny);
+    const { beExchangeParentAssetType, assetExchangeWeightRatio, taxInformation } = exchangeAny;
 
     // 这里的 to 就是 to 交易发起人给出权益，be 是 be 交易发起人给出的权益
     if (BigInt(toExchangeAssetPrealnum) > BigInt(exchangeAny.toExchangeAssetPrealnum)) {
@@ -192,6 +197,16 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
         });
       }
     } else {
+      if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
+        await this.checkTaxInformation(BeExchangeAnyAsset_Exception_Detail, taxInformation);
+      } else {
+        if (beExchangeAny.taxInformation) {
+          throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
+            prop: "taxInformation",
+            ...Function_Exception_Detail,
+          });
+        }
+      }
       // 被动解冻
       if (assetExchangeWeightRatio) {
         // 按比例计算验证是否满足最少需要付的钱，允许多付钱
@@ -318,6 +333,7 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
         exchangeAny,
         toExchangeAssetPrealnum,
         beExchangeAssetPrealnum,
+        taxInformation,
       } = transaction.asset.beExchangeAny;
       const {
         toExchangeChainName,
@@ -399,6 +415,26 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
             status: ASSET_STATUS.NORMAL,
           },
         });
+        if (exchangeAny.taxInformation && exchangeAny.taxInformation.taxAssetPrealnum !== "0") {
+          const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
+            config.magic,
+            config.assetType,
+          );
+          const { taxCollector, taxAssetPrealnum } = exchangeAny.taxInformation;
+          taskList.next = eventEmitter.emit("unfrozenAsset", {
+            type: "unfrozenAsset",
+            transaction,
+            applyInfo: {
+              address: taxCollector,
+              publicKeyBuffer: senderPublicKeyBuffer,
+              assetInfo: chainAssetInfo,
+              amount: taxAssetPrealnum,
+              sourceAmount: taxAssetPrealnum,
+              frozenIdBuffer: transactionSignatureBuffer,
+              recipientId, // 资产冻结账户
+            },
+          });
+        }
       } else {
         throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `toExchangeParentAssetType ${toExchangeParentAssetType}`,
@@ -475,7 +511,7 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
         });
       }
       // 接收账户成为 entityId 的拥有者
-      else if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
+      else if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY && taxInformation) {
         taskList.next = eventEmitter.emit("changeEntityPossessor", {
           type: "changeEntityPossessor",
           transaction,
@@ -488,6 +524,35 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
             entityId: beExchangeAssetType,
           },
         });
+        // 纳税
+        taskList.next = eventEmitter.emit("payTax", {
+          type: "payTax",
+          transaction,
+          applyInfo: {
+            sourceChainName: beExchangeChainName,
+            sourceChainMagic: beExchangeSource,
+            parentAssetType: beExchangeParentAssetType,
+            assetType: beExchangeAssetType,
+            taxCollector: taxInformation.taxCollector,
+          },
+        });
+        if (taxInformation.taxAssetPrealnum !== "0") {
+          const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
+            config.magic,
+            config.assetType,
+          );
+          taskList.next = this._applyTransactionEmitAsset(
+            eventEmitter,
+            transaction,
+            taxInformation.taxAssetPrealnum,
+            {
+              senderId,
+              senderPublicKeyBuffer,
+              recipientId: taxInformation.taxCollector,
+              assetInfo: chainAssetInfo,
+            },
+          );
+        }
       } else {
         throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `beExchangeParentAssetType ${beExchangeParentAssetType}`,
