@@ -226,12 +226,12 @@ export class V4_Patch extends PatchBase {
                 return 种子与地址结果值缓存;
               };
 
-              this.block.replayBlock = <T extends Block>(
+              this.block.replayBlock = function <T extends Block>(
                 block: T,
                 transactions: AsyncIterable<TransactionInBlock>,
                 eventEmitter?: BFChainCore.GenerateBlockEventEmitter,
                 options: BFChainCore.ReplayBlockOptions = {},
-              ) => {
+              ) {
                 try {
                   if (block.height === 1) {
                     if (block.version > 3) {
