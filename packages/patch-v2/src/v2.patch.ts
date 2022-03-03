@@ -3,7 +3,7 @@ import { PatchBase } from "@bfchain/core-patch-base";
 import { Type, Reader, Writer } from "@bfchain/protobuf";
 import { Injectable, Inject, deepMix } from "@bfchain/util";
 import { EventLogicVerifier } from "@bfchain/core-transaction-logic-verifier";
-import { BLOCK_FACTORY_TYPES_MAP, GenesisBlockFactory } from "@bfchain/core-block";
+import { BLOCK_FACTORY_TYPES_MAP, GenesisBlockFactory, BlockCore } from "@bfchain/core-block";
 import {
   BLOCK_TYPES_BASE,
   GenesisAssetModel,
@@ -16,6 +16,7 @@ import {
   RoundLastBlock,
   BlockVersionReader,
   BNID_TYPE,
+  TransactionInBlock,
 } from "@bfchain/core-model";
 
 const GenesisAssetModelSetup = GenesisAssetModel.$type.setup();
@@ -35,6 +36,8 @@ const GenesisAssetV0ModelSetup = GenesisAssetV0Model.$type.setup();
 const GenesisAssetV0ModelSetup_encode = GenesisAssetV0ModelSetup.encode;
 const GenesisAssetV0ModelSetup_decode = GenesisAssetV0ModelSetup.decode;
 const GenesisAssetV0ModelSetup_fromObject = GenesisAssetV0ModelSetup.fromObject;
+
+const Block_replayBlock = BlockCore.prototype.replayBlock;
 
 @Injectable()
 export class V2_Patch extends PatchBase {
@@ -165,6 +168,35 @@ export class V2_Patch extends PatchBase {
                 BlockSetup.fromObject = BlockSetup_fromObject_v2;
               }
 
+              this.block.replayBlock = function <T extends Block>(
+                block: T,
+                transactions: AsyncIterable<TransactionInBlock>,
+                eventEmitter?: BFChainCore.GenerateBlockEventEmitter,
+                options: BFChainCore.ReplayBlockOptions = {},
+              ) {
+                try {
+                  if (block.height === 1) {
+                    if (block.version > 1) {
+                      BLOCK_FACTORY_TYPES_MAP.KF.set(
+                        BLOCK_TYPES_BASE.GENESIS,
+                        V2_GenesisBlockFactory,
+                      );
+                      BLOCK_FACTORY_TYPES_MAP.FK.set(
+                        V2_GenesisBlockFactory,
+                        BLOCK_TYPES_BASE.GENESIS,
+                      );
+                    } else {
+                      BLOCK_FACTORY_TYPES_MAP.KF.set(BLOCK_TYPES_BASE.GENESIS, GenesisBlockFactory);
+                      BLOCK_FACTORY_TYPES_MAP.FK.set(GenesisBlockFactory, BLOCK_TYPES_BASE.GENESIS);
+                    }
+                  }
+                  return Block_replayBlock.call(this, block, transactions, eventEmitter, options);
+                } finally {
+                  BLOCK_FACTORY_TYPES_MAP.KF.set(BLOCK_TYPES_BASE.GENESIS, GenesisBlockFactory);
+                  BLOCK_FACTORY_TYPES_MAP.FK.set(GenesisBlockFactory, BLOCK_TYPES_BASE.GENESIS);
+                }
+              };
+
               const oldBlock = this.config.getHookGenesisBlock(this.consensusVersion) || {};
               // FIXNE: 先这样，后面再想办法搞
               if (this.config.chainName === "bfchain") {
@@ -177,6 +209,7 @@ export class V2_Patch extends PatchBase {
                   },
                 });
               }
+
               this.config.setHookGenesisBlock(this.consensusVersion, oldBlock);
             },
             () => {
