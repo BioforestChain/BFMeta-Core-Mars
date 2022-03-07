@@ -61,7 +61,7 @@ export class V4_Patch extends PatchBase {
   readonly name = "patch-v4";
   // FIXNE: 先这样，后面再想办法搞
   readonly patchEffectiveAfterHeight =
-    this.config.chainName === "bfchain" && this.config.bnid === BNID_TYPE.MAINNET ? 361950 : 0;
+    this.config.chainName === "bfchain" && this.config.bnid === BNID_TYPE.MAINNET ? 345990 : 0;
   protected _version = 1;
   readonly consensusVersion = 4;
   async upgradeHandler(oldVersion: number, newVersion: number) {
