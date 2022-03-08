@@ -24,6 +24,7 @@ import {
 } from "@bfchain/core-model";
 import { V2_GenesisBlockFactory } from "@bfchain/core-patch-v2";
 import { GenesisBlockFactory } from "@bfchain/core-block";
+import { BlockHelper } from "@bfchain/core-helper-block";
 
 const GenesisAssetModel_encode = GenesisAssetModel.encode;
 const GenesisAssetModel_decode = GenesisAssetModel.decode;
@@ -51,17 +52,21 @@ const GenesisAssetV0ModelSetup_fromObject = GenesisAssetV0ModelSetup.fromObject;
 
 const Block_replayBlock = BlockCore.prototype.replayBlock;
 
+const BlockHelper_calcAccountRoundEquity = BlockHelper.prototype.calcAccountRoundEquity;
+
 @Injectable()
 export class V4_Patch extends PatchBase {
   @Inject(EventLogicVerifier)
   eventLogicVerifier!: EventLogicVerifier;
   @Inject(BlockGeneratorCalculator)
   blockGeneratorCalculator!: BlockGeneratorCalculator;
+  @Inject(BlockHelper)
+  blockHelper!: BlockHelper;
 
   readonly name = "patch-v4";
   // FIXNE: 先这样，后面再想办法搞
   readonly patchEffectiveAfterHeight =
-    this.config.chainName === "bfchain" && this.config.bnid === BNID_TYPE.MAINNET ? 345990 : 0;
+    this.config.chainName === "bfchain" && this.config.bnid === BNID_TYPE.MAINNET ? 345990 : 30;
   protected _version = 1;
   readonly consensusVersion = 4;
   async upgradeHandler(oldVersion: number, newVersion: number) {
@@ -264,11 +269,25 @@ export class V4_Patch extends PatchBase {
                 }
               };
 
+              this.blockHelper.calcAccountRoundEquity = function (
+                accTxCount: number,
+                accBalance: string,
+                roundLastBlock: RoundLastBlock,
+              ) {
+                const { balanceWeight, numberOfTransactionsWeight } =
+                  this.config.accountParticipationWeightRatio;
+                const tradingEquity = BigInt(accTxCount) * BigInt(numberOfTransactionsWeight);
+                const equity = BigInt(accBalance) * BigInt(balanceWeight) + tradingEquity;
+                return equity.toString() as string;
+              };
+
               const oldBlock = this.config.getHookGenesisBlock(this.consensusVersion) || {};
               this.config.setHookGenesisBlock(this.consensusVersion, oldBlock);
             },
             () => {
               this.config.rollBackHookGenesisBlock(this.consensusVersion);
+
+              this.blockHelper.calcAccountRoundEquity = BlockHelper_calcAccountRoundEquity;
 
               this.blockGeneratorCalculator.getAddressSeedMap = (seed: number) => {
                 const 种子与地址结果值缓存 = new EasyMap((address: string) => {
