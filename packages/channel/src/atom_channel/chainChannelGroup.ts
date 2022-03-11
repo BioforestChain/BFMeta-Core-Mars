@@ -332,12 +332,20 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
      * 2. 尝试将空闲节点分配给等待队列
      */
     const _tryFreeChainChannel = () => {
+      /**
+       * 默认等待5s后尝试让节点继续承载任务
+       * 如果队列中的节点过多，那么加速它尝试的事件
+       * 最快可以加速到1s
+       */
+      const tryTime =
+        5000 - Math.min(chainChannelWaiterQueue.size / busyChainChannels.size, 1) * 4000;
+
+      /**释放队列 尝试释放所有的 繁忙队列  */
       if (
-        chainChannelWaiterQueue.size > busyChainChannels.size &&
         busyChainChannels.size >
-          tiTasks.size /**@FIXME 因为 tiTasks.size 目前只用在这里，所以可以简单地这样去判断 */
+        tiTasks.size /**@FIXME 因为 tiTasks.size 目前只用在这里，所以可以简单地这样去判断 */
       ) {
-        const ti = sleep(1000, () => {
+        const ti = sleep(tryTime, () => {
           tiTasks.delete(ti);
 
           /// 先寻找可用的空闲节点
