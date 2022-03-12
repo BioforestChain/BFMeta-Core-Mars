@@ -1,5 +1,6 @@
 import {
   AsyncIteratorGenerator,
+  AsyncIteratorGeneratorTransfer,
   bindThis,
   Inject,
   ParallelPool,
@@ -493,15 +494,12 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       }
     }
   }
-  /**
-   * 查询交易
-   */
-  @bindThis
-  queryTransactions<T extends BFChainCore.Transaction = BFChainCore.Transaction>(
+
+  queryTransactionsVerbose<T extends BFChainCore.Transaction = BFChainCore.Transaction>(
     query: BFChainCore.QueryTransactionArgJSON["query"],
     sort?: BFChainCore.QueryTransactionArgJSON["sort"],
     opts?: BFChainCore.ChannelGroupRequestOptions<DH>,
-    _resultGenerator?: AsyncIteratorGenerator<TransactionInBlock<T>>,
+    _verboseGenerator?: AsyncIteratorGenerator<BFChainCore.VerboseInfo<TransactionInBlock<T>>>,
   ) {
     // /**异常时重试次数 */
     // const RETRY_TIMES = 3;
@@ -533,17 +531,18 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
         channelGroup: this as BFChainCore.ChainChannelGroup<DH>,
       });
 
-    const resultGenerator = _resultGenerator || new AsyncIteratorGenerator<TransactionInBlock<T>>();
+    const verboseGenerator: NonNullable<typeof _verboseGenerator> =
+      _verboseGenerator || new AsyncIteratorGenerator();
 
     const resultPromise = resultPo && resultPo.promise;
     if (resultPromise) {
-      safePromiseThen(resultPromise, undefined, resultGenerator.reject);
+      safePromiseThen(resultPromise, undefined, verboseGenerator.reject);
       const offCatch = (_: unknown, next: () => void) => {
-        safePromiseOffThen(resultPromise, undefined, resultGenerator.reject);
+        safePromiseOffThen(resultPromise, undefined, verboseGenerator.reject);
         next();
       };
-      resultGenerator.on("done", offCatch);
-      resultGenerator.on("error", offCatch);
+      verboseGenerator.on("done", offCatch);
+      verboseGenerator.on("error", offCatch);
     }
 
     type QueryTransactionAddChainChannelOptions = _AddChainChannelOptions<
@@ -620,14 +619,15 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       //#region 请求模式
 
       /// 是要全部请求
-      resultGenerator.on("requestAll", (_, next) => {
+      verboseGenerator.on("requestAll", (_, next) => {
         freeIteratorLock();
         maxOffset = Infinity;
         next();
       });
+      let resultIndex = 0;
       /// 还是一个个请求
-      resultGenerator.on("requestItem", (index, next) => {
-        const queryOffset = index + offset;
+      verboseGenerator.on("requestItem", (_, next) => {
+        const queryOffset = resultIndex + offset;
         if (queryOffset > maxOffset) {
           maxOffset = queryOffset;
           freeIteratorLock();
@@ -657,6 +657,10 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                   filter,
                 },
                 async (event) => {
+                  verboseGenerator.push({
+                    type: "success",
+                    value: `申请到可用节点(${event.chainChannel.address})用于请求`,
+                  });
                   /**
                    * @FIXME 这里有可能会出现节点的limitQueryTransactions少于default_task_limit，导致查询量少了出现问题。需要后续做补充查询
                    */
@@ -671,14 +675,26 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                   waitUseableChainChannel.resolve(chain_task_limit);
                   // 开始执行查询
                   try {
+                    const startTime = Date.now();
                     const res = await queryer.addChainChannel(event.chainChannel, options);
+                    const endTime = Date.now();
+                    const diffTime = endTime - startTime;
 
                     if (res.status === RESPONSE_STATUS.success) {
+                      verboseGenerator.push({
+                        type: "success",
+                        value: `节点(${event.chainChannel.address})返回成功响应 +${diffTime}ms`,
+                      });
                       // 保存查询结果
                       res.transactions.forEach((trs, i) => {
                         const index = task_offset - offset + i;
-                        if (resultGenerator.canPush(index)) {
-                          resultGenerator.push(trs);
+                        if (
+                          verboseGenerator.canPush(
+                            verboseGenerator.list.length - resultIndex + index,
+                          )
+                        ) {
+                          resultIndex += 1;
+                          verboseGenerator.push({ type: "result", value: trs });
                         }
                       });
                       if (res.transactions.length < chain_task_limit) {
@@ -696,17 +712,29 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                         return true;
                       }
                     } else if (res.status === RESPONSE_STATUS.busy) {
+                      verboseGenerator.push({
+                        type: "info",
+                        value: `节点(${event.chainChannel.address})繁忙 +${diffTime}ms`,
+                      });
                       // 移除无效的结果
                       queryer.removeChainChannelByResult(res);
                       // 重试任务，但是这个节点仍旧放在繁忙节点列表，暂时不信任
                       times++;
                       return false;
                     } else if (res.status === RESPONSE_STATUS.error) {
+                      verboseGenerator.push({
+                        type: "warn",
+                        value: `节点(${event.chainChannel.address})报告异常: ${res.error?.message} +${diffTime}ms`,
+                      });
                       // 移除无效的结果
                       queryer.removeChainChannelByResult(res);
                       // 任务失败，抛出异常
                       throw res.error;
                     } else if (res.status === RESPONSE_STATUS.idempotentError) {
+                      verboseGenerator.push({
+                        type: "warn",
+                        value: `节点(${event.chainChannel.address})报告幂等性异常: ${res.error?.message} +${diffTime}ms`,
+                      });
                       // 移除无效的结果
                       queryer.removeChainChannelByResult(res);
                       // 节点幂等保护，抛出异常
@@ -717,8 +745,12 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                     $safeEnd(res.status);
                   } catch (err) {
                     queryer.removeChainChannelByResult(err);
-                    if (AbortException.is(err) || resultGenerator.is_done) {
+                    if (AbortException.is(err) || verboseGenerator.is_done) {
                       // 如果被中断了任务，那么直接结束任务
+                      verboseGenerator.push({
+                        type: "info",
+                        value: `任务停止`,
+                      });
                       throw err;
                     }
                     if (!TimeOutException.is(err)) {
@@ -740,6 +772,10 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                       }
                     }
 
+                    verboseGenerator.push({
+                      type: "info",
+                      value: `已重试${times}次`,
+                    });
                     /// 如果异常次数过多，那么有必要终结这个查询
                     return times++ > 100;
                   }
@@ -790,22 +826,52 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       // 等待所有查询任务完成
       await taskChain;
       // 结束
-      await resultGenerator.done();
+      await verboseGenerator.done();
     })()
-      .catch(resultGenerator.reject)
+      .catch(verboseGenerator.reject)
       .finally(() => {
         this.$releaseParallelTask(parallelTaskId);
       });
 
+    return verboseGenerator;
+  }
+
+  /**
+   * 查询交易
+   */
+  @bindThis
+  queryTransactions<T extends BFChainCore.Transaction = BFChainCore.Transaction>(
+    query: BFChainCore.QueryTransactionArgJSON["query"],
+    sort?: BFChainCore.QueryTransactionArgJSON["sort"],
+    opts?: BFChainCore.ChannelGroupRequestOptions<DH>,
+    resultGenerator = new AsyncIteratorGenerator<TransactionInBlock<T>>(),
+  ) {
+    AsyncIteratorGeneratorTransfer(
+      this.queryTransactionsVerbose(query, sort, opts),
+      resultGenerator,
+      (verbose) => {
+        if (verbose.type === "result") {
+          return {
+            filter: true ,
+            map: verbose.value,
+          };
+        }
+        return {
+          filter: false ,
+        };
+      },
+    );
     return resultGenerator;
   }
 
   @bindThis
-  indexTransactions(
+  indexTransactionsVerbose(
     query: BFChainCore.QueryTransactionArgJSON["query"],
     sort?: BFChainCore.QueryTransactionArgJSON["sort"],
     opts?: BFChainCore.ChannelGroupRequestOptions<DH>,
-    _resultGenerator?: AsyncIteratorGenerator<BFChainCore.TransactionIndexJSON>,
+    _verboseGenerator?: AsyncIteratorGenerator<
+      BFChainCore.VerboseInfo<BFChainCore.TransactionIndexJSON>
+    >,
   ) {
     // /**异常时重试次数 */
     // const RETRY_TIMES = 3;
@@ -836,18 +902,18 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
         channelGroup: this as BFChainCore.ChainChannelGroup<DH>,
       });
 
-    const resultGenerator =
-      _resultGenerator || new AsyncIteratorGenerator<BFChainCore.TransactionIndexJSON>();
+    const verboseGenerator: NonNullable<typeof _verboseGenerator> =
+      _verboseGenerator || new AsyncIteratorGenerator();
 
     const resultPromise = resultPo && resultPo.promise;
     if (resultPromise) {
-      safePromiseThen(resultPromise, undefined, resultGenerator.reject);
+      safePromiseThen(resultPromise, undefined, verboseGenerator.reject);
       const offCatch = (_: unknown, next: () => void) => {
-        safePromiseOffThen(resultPromise, undefined, resultGenerator.reject);
+        safePromiseOffThen(resultPromise, undefined, verboseGenerator.reject);
         next();
       };
-      resultGenerator.on("done", offCatch);
-      resultGenerator.on("error", offCatch);
+      verboseGenerator.on("done", offCatch);
+      verboseGenerator.on("error", offCatch);
     }
 
     type IndexTransactionAddChainChannelOptions = _AddChainChannelOptions<
@@ -923,14 +989,15 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       //#region 请求模式
 
       /// 是要全部请求
-      resultGenerator.on("requestAll", (_, next) => {
+      verboseGenerator.on("requestAll", (_, next) => {
         freeIteratorLock();
         maxOffset = Infinity;
         next();
       });
+      let resultIndex = 0;
       /// 还是一个个请求
-      resultGenerator.on("requestItem", (index, next) => {
-        const queryOffset = index + offset;
+      verboseGenerator.on("requestItem", (index, next) => {
+        const queryOffset = resultIndex + offset;
         if (queryOffset > maxOffset) {
           maxOffset = queryOffset;
           freeIteratorLock();
@@ -960,6 +1027,10 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                   filter,
                 },
                 async (event) => {
+                  verboseGenerator.push({
+                    type: "success",
+                    value: `申请到可用节点(${event.chainChannel.address})用于请求`,
+                  });
                   /**
                    * @FIXME 这里有可能会出现节点的limitQueryTransactions少于default_task_limit，导致查询量少了出现问题。需要后续做补充查询
                    */
@@ -974,14 +1045,26 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                   waitUseableChainChannel.resolve(chain_task_limit);
                   // 开始执行查询
                   try {
+                    const startTime = Date.now();
                     const res = await queryer.addChainChannel(event.chainChannel, options);
+                    const endTime = Date.now();
+                    const diffTime = endTime - startTime;
 
                     if (res.status === RESPONSE_STATUS.success) {
+                      verboseGenerator.push({
+                        type: "success",
+                        value: `节点(${event.chainChannel.address})返回成功响应 +${diffTime}ms`,
+                      });
                       // 保存查询结果
                       res.tIndexes.forEach((ti, i) => {
                         const index = task_offset - offset + i;
-                        if (resultGenerator.canPush(index)) {
-                          resultGenerator.push(ti);
+                        if (
+                          verboseGenerator.canPush(
+                            verboseGenerator.list.length - resultIndex + index,
+                          )
+                        ) {
+                          resultIndex += 1;
+                          verboseGenerator.push({ type: "result", value: ti });
                         }
                       });
                       if (res.tIndexes.length < chain_task_limit) {
@@ -999,17 +1082,29 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                         return true;
                       }
                     } else if (res.status === RESPONSE_STATUS.busy) {
+                      verboseGenerator.push({
+                        type: "info",
+                        value: `节点(${event.chainChannel.address})繁忙 +${diffTime}ms`,
+                      });
                       // 移除无效的结果
                       queryer.removeChainChannelByResult(res);
                       // 重试任务，但是这个节点仍旧放在繁忙节点列表，暂时不信任
                       times++;
                       return false;
                     } else if (res.status === RESPONSE_STATUS.error) {
+                      verboseGenerator.push({
+                        type: "warn",
+                        value: `节点(${event.chainChannel.address})报告异常: ${res.error?.message} +${diffTime}ms`,
+                      });
                       // 移除无效的结果
                       queryer.removeChainChannelByResult(res);
                       // 任务失败，抛出异常
                       throw res.error;
                     } else if (res.status === RESPONSE_STATUS.idempotentError) {
+                      verboseGenerator.push({
+                        type: "warn",
+                        value: `节点(${event.chainChannel.address})报告幂等性异常: ${res.error?.message} +${diffTime}ms`,
+                      });
                       // 移除无效的结果
                       queryer.removeChainChannelByResult(res);
                       // 节点幂等保护，抛出异常
@@ -1020,8 +1115,12 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                     $safeEnd(res.status);
                   } catch (err) {
                     queryer.removeChainChannelByResult(err);
-                    if (AbortException.is(err) || resultGenerator.is_done) {
+                    if (AbortException.is(err) || verboseGenerator.is_done) {
                       // 如果被中断了任务，那么直接结束任务
+                      verboseGenerator.push({
+                        type: "info",
+                        value: `任务停止`,
+                      });
                       throw err;
                     }
                     if (!TimeOutException.is(err)) {
@@ -1043,6 +1142,10 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                       }
                     }
 
+                    verboseGenerator.push({
+                      type: "info",
+                      value: `已重试${times}次`,
+                    });
                     /// 如果异常次数过多，那么有必要终结这个查询
                     return times++ > 100;
                   }
@@ -1093,13 +1196,40 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       // 等待所有查询任务完成
       await taskChain;
       // 结束
-      await resultGenerator.done();
+      await verboseGenerator.done();
     })()
-      .catch(resultGenerator.reject)
+      .catch(verboseGenerator.reject)
       .finally(() => {
         this.$releaseParallelTask(parallelTaskId);
       });
 
+    return verboseGenerator;
+  }
+  /**
+   * 查询交易
+   */
+  @bindThis
+  indexTransactions(
+    query: BFChainCore.QueryTransactionArgJSON["query"],
+    sort?: BFChainCore.QueryTransactionArgJSON["sort"],
+    opts?: BFChainCore.ChannelGroupRequestOptions<DH>,
+    resultGenerator = new AsyncIteratorGenerator<BFChainCore.TransactionIndexJSON>(),
+  ) {
+    AsyncIteratorGeneratorTransfer(
+      this.indexTransactionsVerbose(query, sort, opts),
+      resultGenerator,
+      (verbose) => {
+        if (verbose.type === "result") {
+          return {
+            filter: true,
+            map: verbose.value,
+          };
+        }
+        return {
+          filter: false,
+        };
+      },
+    );
     return resultGenerator;
   }
 

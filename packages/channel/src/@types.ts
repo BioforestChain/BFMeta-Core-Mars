@@ -528,4 +528,11 @@ declare namespace BFChainCore {
       lastBlock?: Block;
     }): BlockGetterHelperSimpleInterface;
   }
+
+  type VerboseInfo<R> =
+    | { type: "result"; value: R }
+    | { type: "info"; value: unknown }
+    | { type: "success"; value: unknown }
+    | { type: "warn"; value: unknown }
+    | { type: "error"; value: unknown };
 }
