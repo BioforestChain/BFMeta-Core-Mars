@@ -1293,10 +1293,10 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
    * 📖📖📖📖📖📖
    */
   @bindThis
-  downloadTransactions<T extends BFChainCore.Transaction = BFChainCore.Transaction>(
+  downloadTransactionsVerbose<T extends BFChainCore.Transaction = BFChainCore.Transaction>(
     tIndexes: BFChainCore.DownloadTransactionArgJSON["tIndexes"],
     opts?: BFChainCore.ChannelGroupRequestOptions<DH> & { maxParallelNum?: number },
-    _resultGenerator?: AsyncIteratorGenerator<TransactionInBlock<T>>,
+    _verboseGenerator?: AsyncIteratorGenerator<BFChainCore.VerboseInfo<TransactionInBlock<T>>>,
   ) {
     /**发往每一台节点的最大查询数量
      * 如果 MAX_PARALLEL_NUM = 1
@@ -1339,7 +1339,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
         channelGroup: this,
       });
 
-    const resultGenerator = _resultGenerator || new AsyncIteratorGenerator();
+    const verboseGenerator = _verboseGenerator || new AsyncIteratorGenerator();
 
     const parallelTaskId = `Group(${this.groupName}) downloadTransactions-${
       Date.now() + Math.random()
@@ -1402,19 +1402,19 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
        * 从0开始，代表着还没有被yield过
        * for await 进来一次， 它就+1
        */
-      let nextYieldIndex = resultGenerator.requestProcess;
+      let nextYieldIndex = verboseGenerator.requestProcess;
 
       //#region 请求模式
 
       /// 是要全部请求
-      resultGenerator.on("requestAll", (_, next) => {
+      verboseGenerator.on("requestAll", (_, next) => {
         freeIteratorLock();
         nextYieldIndex = Infinity;
         next();
       });
       /// 还是一个个请求
-      resultGenerator.on("requestItem", (index, next) => {
-        if (index > nextYieldIndex) {
+      verboseGenerator.on("requestItem", (index, next) => {
+        if (index >= nextYieldIndex) {
           nextYieldIndex = index + 1;
           freeIteratorLock();
         }
@@ -1445,10 +1445,23 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                 filter: (cc) => cc.maybeHeight >= needHeight,
               },
               async (event) => {
+                verboseGenerator.push({
+                  type: "success",
+                  value: `申请到可用节点(${event.chainChannel.address})用于请求`,
+                });
+
                 const { requester, options } = requesterMap.forceGet(tindexSlice);
                 try {
+                  const startTime = Date.now();
                   const res = await requester.addChainChannel(event.chainChannel, options);
+                  const endTime = Date.now();
+                  const diffTime = endTime - startTime;
+
                   if (res.status === RESPONSE_STATUS.success) {
+                    verboseGenerator.push({
+                      type: "success",
+                      value: `节点(${event.chainChannel.address})返回成功响应 +${diffTime}ms`,
+                    });
                     /**
                      * @TODO 这里应该判定 tIndexsSlice 所请求的数量跟返回的数量是否一致
                      */
@@ -1471,24 +1484,36 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                         })
                         .sort((a, b) => a.hiIndex - b.hiIndex);
                       for (const item of tib_hiIndex_List) {
-                        if (resultGenerator.canPush(resultGenerator.list.length)) {
-                          resultGenerator.push(item.tib);
+                        if (verboseGenerator.canPush(verboseGenerator.list.length)) {
+                          verboseGenerator.push({ type: "result", value: item.tib });
                         }
                       }
                       return true;
                     }
                   } else if (res.status === RESPONSE_STATUS.busy) {
+                    verboseGenerator.push({
+                      type: "info",
+                      value: `节点(${event.chainChannel.address})繁忙 +${diffTime}ms`,
+                    });
                     // 移除无效的结果
                     requester.removeChainChannelByResult(res);
                     // 重试任务，但是这个节点仍旧放在繁忙节点列表，暂时不信任
                     times++;
                     return false;
                   } else if (res.status === RESPONSE_STATUS.error) {
+                    verboseGenerator.push({
+                      type: "warn",
+                      value: `节点(${event.chainChannel.address})报告异常: ${res.error?.message} +${diffTime}ms`,
+                    });
                     // 移除无效的结果
                     requester.removeChainChannelByResult(res);
                     // 任务失败，抛出异常
                     throw res.error;
                   } else if (res.status === RESPONSE_STATUS.idempotentError) {
+                    verboseGenerator.push({
+                      type: "warn",
+                      value: `节点(${event.chainChannel.address})报告幂等性异常: ${res.error?.message} +${diffTime}ms`,
+                    });
                     // 移除无效的结果
                     requester.removeChainChannelByResult(res);
                     // 节点幂等保护，抛出异常
@@ -1498,8 +1523,12 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                   $safeEnd(res.status);
                 } catch (err) {
                   requester.removeChainChannelByResult(err);
-                  if (AbortException.is(err) || resultGenerator.is_done) {
+                  if (AbortException.is(err) || verboseGenerator.is_done) {
                     // 如果被中断了任务，那么直接结束任务
+                    verboseGenerator.push({
+                      type: "info",
+                      value: `任务停止`,
+                    });
                     throw err;
                   }
                   if (!TimeOutException.is(err)) {
@@ -1519,6 +1548,10 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                     }
                   }
 
+                  verboseGenerator.push({
+                    type: "info",
+                    value: `已重试${times}次`,
+                  });
                   /// 如果异常次数过多，那么有必要终结这个查询
                   return times++ > 100;
                 }
@@ -1540,14 +1573,37 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
         }
         await doTask();
       }
-      await resultGenerator.done();
+      await verboseGenerator.done();
     })().finally(() => {
       this.$releaseParallelTask(parallelTaskId);
     });
 
-    return resultGenerator;
+    return verboseGenerator;
   }
 
+  @bindThis
+  downloadTransactions<T extends BFChainCore.Transaction = BFChainCore.Transaction>(
+    tIndexes: BFChainCore.DownloadTransactionArgJSON["tIndexes"],
+    opts?: BFChainCore.ChannelGroupRequestOptions<DH> & { maxParallelNum?: number },
+    resultGenerator = new AsyncIteratorGenerator<TransactionInBlock<T>>(),
+  ) {
+    AsyncIteratorGeneratorTransfer(
+      this.downloadTransactionsVerbose(tIndexes, opts),
+      resultGenerator,
+      (verbose) => {
+        if (verbose.type === "result") {
+          return {
+            filter: true,
+            map: verbose.value,
+          };
+        }
+        return {
+          filter: false,
+        };
+      },
+    );
+    return resultGenerator;
+  }
   /**
    * 广播交易体
    */
