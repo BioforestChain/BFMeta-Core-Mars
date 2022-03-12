@@ -852,12 +852,12 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       (verbose) => {
         if (verbose.type === "result") {
           return {
-            filter: true ,
+            filter: true,
             map: verbose.value,
           };
         }
         return {
-          filter: false ,
+          filter: false,
         };
       },
     );
@@ -996,7 +996,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       });
       let resultIndex = 0;
       /// 还是一个个请求
-      verboseGenerator.on("requestItem", (index, next) => {
+      verboseGenerator.on("requestItem", (_, next) => {
         const queryOffset = resultIndex + offset;
         if (queryOffset > maxOffset) {
           maxOffset = queryOffset;
@@ -1398,21 +1398,24 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
           iteratorLock = undefined;
         }
       };
-      /**触发迭代锁的条件 */
-      let yieldIndex = resultGenerator.requestProcess;
+      /**触发迭代锁的条件
+       * 从0开始，代表着还没有被yield过
+       * for await 进来一次， 它就+1
+       */
+      let nextYieldIndex = resultGenerator.requestProcess;
 
       //#region 请求模式
 
       /// 是要全部请求
       resultGenerator.on("requestAll", (_, next) => {
         freeIteratorLock();
-        yieldIndex = Infinity;
+        nextYieldIndex = Infinity;
         next();
       });
       /// 还是一个个请求
       resultGenerator.on("requestItem", (index, next) => {
-        if (index > yieldIndex) {
-          yieldIndex = index;
+        if (index > nextYieldIndex) {
+          nextYieldIndex = index + 1;
           freeIteratorLock();
         }
         next();
@@ -1529,7 +1532,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       };
 
       for (let i = 0; i < totalDownloadCount; i += MAX_UNIT_LIMIT) {
-        while (i >= yieldIndex) {
+        while (i >= nextYieldIndex) {
           if (!iteratorLock) {
             iteratorLock = new PromiseOut();
           }
