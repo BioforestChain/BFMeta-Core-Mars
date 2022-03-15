@@ -185,7 +185,7 @@ declare namespace BFChainCore {
       req_id: number,
       cmd: import("@bfchain/core-model").DUPLEX_API_CMD,
       binary: Uint8Array,
-    ): void;
+    ): Promise<void>;
     /**查询交易 */
     queryTransactions<T extends Transaction = Transaction>(
       query: QueryTransactionArgJSON["query"],
@@ -271,7 +271,7 @@ declare namespace BFChainCore {
     _sendWithBinaryData(
       cmd: import("@bfchain/core-model").DUPLEX_API_CMD,
       binary: Uint8Array,
-    ): void;
+    ): Promise<void>;
   }
 
   interface ChainChannel<THIS extends SimpleChainChannel = SimpleChainChannel>
@@ -303,7 +303,7 @@ declare namespace BFChainCore {
       req_id: number,
       cmd: import("@bfchain/core-model").DUPLEX_API_CMD,
       binary: Uint8Array,
-    ): void;
+    ): Promise<void>;
     /**查询交易 */
     queryTransactions<T extends Transaction = Transaction>(
       query: QueryTransactionArgJSON["query"],

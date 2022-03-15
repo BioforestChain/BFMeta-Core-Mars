@@ -1791,7 +1791,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       initedArgs || (initedArgs = await chainChannel.initBroadcastTransactionArg(transaction));
       try {
         broadCount++;
-        chainChannel._sendWithBinaryData(initedArgs[0], initedArgs[1]);
+        await chainChannel._sendWithBinaryData(initedArgs[0], initedArgs[1]);
       } catch (err) {}
     }
     const endTime = this.timeHelper.now();
@@ -2061,7 +2061,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       initedArgs || (initedArgs = chainChannel.initBroadcastBlockArg(blockInfo));
       try {
         broadCount++;
-        chainChannel._sendWithBinaryData(initedArgs[0], initedArgs[1]);
+        await chainChannel._sendWithBinaryData(initedArgs[0], initedArgs[1]);
       } catch (err) {}
     }
     return broadCount;

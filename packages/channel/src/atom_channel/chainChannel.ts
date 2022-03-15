@@ -713,7 +713,7 @@ export class ChainChannel<
       return 0;
     }
     const args = await this.initBroadcastTransactionArg(transaction);
-    this._sendWithBinaryData(args[0], args[1]);
+    await this._sendWithBinaryData(args[0], args[1]);
     return 1;
   }
   /**查询区块 */
