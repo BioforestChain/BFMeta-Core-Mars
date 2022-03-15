@@ -52,8 +52,6 @@ const GenesisAssetV0ModelSetup_fromObject = GenesisAssetV0ModelSetup.fromObject;
 
 const Block_replayBlock = BlockCore.prototype.replayBlock;
 
-const BlockHelper_calcAccountRoundEquity = BlockHelper.prototype.calcAccountRoundEquity;
-
 @Injectable()
 export class V4_Patch extends PatchBase {
   @Inject(EventLogicVerifier)
@@ -287,7 +285,20 @@ export class V4_Patch extends PatchBase {
             () => {
               this.config.rollBackHookGenesisBlock(this.consensusVersion);
 
-              this.blockHelper.calcAccountRoundEquity = BlockHelper_calcAccountRoundEquity;
+              this.blockHelper.calcAccountRoundEquity = function (
+                accTxCount: number,
+                accBalance: string,
+                roundLastBlock: RoundLastBlock,
+              ) {
+                const { balanceWeight, numberOfTransactionsWeight } =
+                  this.config.accountParticipationWeightRatio;
+                const tradingEquity =
+                  BigInt(accTxCount) *
+                  BigInt(numberOfTransactionsWeight) *
+                  BigInt(roundLastBlock.asset.roundLastAsset.rate);
+                const equity = BigInt(accBalance) * BigInt(balanceWeight) + tradingEquity;
+                return equity.toString() as string;
+              };
 
               this.blockGeneratorCalculator.getAddressSeedMap = (seed: number) => {
                 const 种子与地址结果值缓存 = new EasyMap((address: string) => {
