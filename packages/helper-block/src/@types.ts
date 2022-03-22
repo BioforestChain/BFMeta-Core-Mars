@@ -1,22 +1,68 @@
 declare namespace BFChainCore {
   interface BlockGetterHelperSimpleInterface {
-    /**根据高度获取区块 */
+    /**
+     * 根据区块高度获取区块
+     *
+     * @param height 高度
+     */
     getBlockByHeight(height: number): Promise<Block | undefined>;
-    /**根据区块 signature 获取区块 */
+    /**
+     * 根据区块 signature 获取区块
+     *
+     * @param signature 区块签名
+     */
     getBlockBySignature(signature: string): Promise<Block | undefined>;
+    /**
+     * 根据区块高度获取锻造公钥
+     *
+     * @param height
+     *
+     */
     getBlockGeneratorPublicKeyBufferByHeight?: (height: number) => Promise<Uint8Array | undefined>;
+    /**
+     * 根据区块高度获取区块签名
+     *
+     * @param height 区块高度
+     *
+     */
     getBlockSignatureByHeight?: (height: number) => Promise<Uint8Array | undefined>;
+    /**
+     * 获取链上最新的区块
+     *
+     */
     getLastBlock(): Promise<Block>;
+    /**
+     * 获取当前锻造的区块
+     *
+     */
     getCurrentGenerateBlock?(): Promise<CurrentGeneratingBlockInfo | undefined>;
+    /**
+     * 获取当前重放中的区块信息
+     *
+     */
     getCurrentReplayingBlockInfo?(): Promise<CurrentReplayingBlockSimpleInfo | undefined>;
-    /**记录链区块分叉信息 */
+    /**
+     * 记录链区块分叉信息
+     *
+     * @param block
+     * @param cause
+     */
     chainBlockFork?(block: BFChainCore.Block, cause: string): Promise<void>;
-    /**获取新一轮的打块受托人 */
+    /**
+     * 获取新一轮的打块受托人
+     *
+     * @param lastBlock
+     * @param currentGeneraterPublicKey
+     */
     getNewForgingDelegates?<T extends Block>(
       lastBlock: LastBlockInfo<T>,
       currentGeneraterPublicKey: string,
     ): Promise<BFChainCore.ForSortAccountInfo[]>;
-    /**查询交易是否存在 */
+    /**
+     * 查询区块是否存在
+     *
+     * @param args
+     */
     getCountBlock?(args: {
       /**区块高度 */
       height?: number;
@@ -27,10 +73,24 @@ declare namespace BFChainCore {
       /**区块的版本号 */
       version?: number;
     }): Promise<number>;
-    /**获取给某个账户投票的账户 */
+    /**
+     * 获取给某个账户投票的账户
+     *
+     * @param generatorAddress
+     * @param height
+     */
     getVoteForDelegate?(generatorAddress: string, height: number): Promise<VoterInfo[]>;
-    /**获取投票记录 */
+    /**
+     * 获取投票记录
+     *
+     */
     getVoteRecords?(): Promise<VoteRecord>;
+    /**
+     * 根据高度范围获取区块
+     *
+     * @param minHeight
+     * @param maxHeight
+     */
     getBlocksByRange?(minHeight: number, maxHeight: number): Promise<Block[]>;
   }
   interface BlockGetterHelperInterface<CC extends SimpleChainChannel = SimpleChainChannel>

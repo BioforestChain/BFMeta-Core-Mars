@@ -14,7 +14,6 @@ declare namespace BFChainCore {
      *
      * @param signature 事件签名
      * @param heightRange 查询范围
-     *
      */
     getTransactionAndBlockSignatureBySignature(
       signature: string,
@@ -36,7 +35,12 @@ declare namespace BFChainCore {
       signature: string,
       heightRange: { startHeight: number; endHeight: number },
     ): Promise<TransactionJSON | undefined>;
-    /**某个账户是否购买指定的 dappid */
+    /**
+     * 某个账户是否购买指定的 dappid
+     *
+     * @param address 账户地址
+     * @param dappid dappid
+     */
     getPurchaseDApp(address: string, dappid: string): Promise<boolean>;
     /**
      * 查询事件在未处理事件中的数量
@@ -73,9 +77,16 @@ declare namespace BFChainCore {
       /**事件查询范围 */
       heightRange: { startHeight: number; endHeight: number };
     }): Promise<boolean>;
-    /**查询新生成的受托人 */
+    /**
+     * 查询新注册的受托人
+     *
+     * @param height 区块高度
+     */
     getNewDelegates(height: number): Promise<string[]>;
-    /**查询新注册的受托人数量 */
+    /**
+     * 查询当前轮新注册的受托人数量
+     *
+     */
     getNumberOfNewDelegate(): Promise<number>;
   }
   // #endregion
