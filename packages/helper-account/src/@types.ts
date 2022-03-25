@@ -169,7 +169,7 @@ declare namespace BFChainCore {
     /**新受托人资产要求连续轮数 */
     continuityRounds: number;
     /**新受托人资产要求值 */
-    assetNumber: number;
+    assetNumber: bigint;
   };
 
   interface AccountGetterHelperInterface<
