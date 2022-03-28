@@ -1715,7 +1715,7 @@ export class EventLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    // 发行 entityFactory
+    // 发行 entityId
     eventEmitter.on(
       "issueEntity",
       async ({ transaction, applyInfo }, next) => {
@@ -1841,7 +1841,7 @@ export class EventLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    // 发行 entityFactory
+    // 发行 entityId
     eventEmitter.on(
       "issueEntityV1",
       async ({ transaction, applyInfo }, next) => {
@@ -1910,7 +1910,7 @@ export class EventLogicVerifier {
           });
         }
 
-        // entityFactory 是否已经存在
+        // entityId 是否已经存在
         const memEntity = await accountGetterHelper.getEntity(
           sourceChainMagic,
           entityId,
@@ -1921,6 +1921,131 @@ export class EventLogicVerifier {
             entityId,
             errorId: NewTransactionRefuseReason.ENTITY_ALREADY_EXIST,
           });
+        }
+
+        const { magic: chainMagic, assetType: chainAssetType } = this.configHelper;
+        let remainBalance =
+          accountAssets[chainMagic][chainAssetType].assetNumber - BigInt(transaction.fee);
+        const purchaseAssetPrealnum = memEntityFactory.purchaseAssetPrealnum;
+        if (purchaseAssetPrealnum !== "0") {
+          remainBalance -= BigInt(purchaseAssetPrealnum);
+          if (remainBalance < BigInt(0)) {
+            throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
+              reason: `No enough asset, Min account asset ${purchaseAssetPrealnum}, remain Assets: ${remainBalance}`,
+              errorId: NewTransactionRefuseReason.CHAIN_ASSET_NOT_ENOUGH,
+            });
+          }
+        }
+        if (entityFrozenAssetPrealnum !== "0") {
+          if (BigInt(entityFrozenAssetPrealnum) > remainBalance) {
+            throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
+              reason: `No enough asset, Min account asset ${entityFrozenAssetPrealnum}, remain Assets: ${remainBalance}`,
+              errorId: NewTransactionRefuseReason.CHAIN_ASSET_NOT_ENOUGH,
+            });
+          }
+        }
+
+        next();
+      },
+      { taskname: `applyTransaction/logicVerifier/issueEntityV1` },
+    );
+  }
+
+  listenEventIssueEntityMultiV1(
+    accountAssets: BFChainCore.AccountAssets,
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
+  ) {
+    // 批量发行 entityId
+    eventEmitter.on(
+      "issueEntityMultiV1",
+      async ({ transaction, applyInfo }, next) => {
+        const {
+          address,
+          possessorAddress,
+          entityFactoryPossessorAddress,
+          factoryId,
+          entityStructList,
+          sourceChainMagic,
+          entityFrozenAssetPrealnum,
+        } = applyInfo;
+
+        if (address !== possessorAddress) {
+          // 不能将冻结账户设置为非同质资产的拥有者
+          const possessor = await accountGetterHelper.getAccountInfo(possessorAddress);
+          if (possessor) {
+            const accountStatus = possessor.accountStatus;
+            if (
+              accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
+              accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
+              accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
+            ) {
+              throw new ConsensusException(ERROR_LIST.ACCOUNT_FROZEN, {
+                address: possessorAddress,
+                status: accountStatus,
+              });
+            }
+          }
+        }
+
+        // entityFactory 是否已经存在
+        const memEntityFactory = await accountGetterHelper.getEntityFactory(
+          sourceChainMagic,
+          factoryId,
+          currentBlockHeight,
+        );
+        if (!memEntityFactory) {
+          throw new ConsensusException(ERROR_LIST.ENTITY_FACTORY_IS_NOT_EXIST, {
+            factoryId,
+            errorId: NewTransactionRefuseReason.ENTITY_FACTORY_NOT_EXIST,
+          });
+        }
+
+        if (entityFactoryPossessorAddress !== memEntityFactory.possessorAddress) {
+          throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+            to_compare_prop: `entityFactoryPossessor ${entityFactoryPossessorAddress}`,
+            be_compare_prop: `possessorAddress ${memEntityFactory.possessorAddress}`,
+            to_target: `issueEntity`,
+            be_target: "memEntityFactory",
+          });
+        }
+
+        // if (possessorAddress === memEntityFactory.applyAddress) {
+        //   throw new ConsensusException(ERROR_LIST.SHOULD_NOT_BE, {
+        //     to_compare_prop: `entityPossessor ${possessorAddress}`,
+        //     be_compare_prop: `entityFactoryApplicant ${memEntityFactory.applyAddress}`,
+        //     to_target: `issueEntity`,
+        //     be_target: "memEntityFactory",
+        //   });
+        // }
+
+        const { remainEntityPrealnum } = memEntityFactory;
+        if (remainEntityPrealnum === BigInt(0)) {
+          throw new ConsensusException(ERROR_LIST.ISSUE_ENTITY_TIMES_USE_UP, {
+            entityFactory: factoryId,
+          });
+        }
+
+        if (remainEntityPrealnum < BigInt(entityStructList.length)) {
+          throw new ConsensusException(ERROR_LIST.NOT_ENOUGH_ISSUE_ENTITY_TIMES, {
+            entityFactory: factoryId,
+          });
+        }
+
+        for (const { entityId } of entityStructList) {
+          // entityId 是否已经存在
+          const memEntity = await accountGetterHelper.getEntity(
+            sourceChainMagic,
+            entityId,
+            currentBlockHeight,
+          );
+          if (memEntity) {
+            throw new ConsensusException(ERROR_LIST.ENTITY_IS_ALREADY_EXIST, {
+              entityId,
+              errorId: NewTransactionRefuseReason.ENTITY_ALREADY_EXIST,
+            });
+          }
         }
 
         const { magic: chainMagic, assetType: chainAssetType } = this.configHelper;

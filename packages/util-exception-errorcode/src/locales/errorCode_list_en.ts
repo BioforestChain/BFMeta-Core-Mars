@@ -150,6 +150,7 @@ export const ERROR_CODE_LIST_EN = {
   "001-11070": "Issue entity times use up, entityFactory {entityFactory}",
   "001-11071": "Asset already exist, magic {magic} assetType {assetType}",
   "001-11072": "Frozen asset with signature {signature} in blockChain not exist or expired",
+  "001-11073": "Not enough issue entity times, entityFactory {entityFactory}",
 
   // block logic
   "001-12001":

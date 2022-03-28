@@ -104,4 +104,26 @@ export class TransferAnyLogicVerifier extends TransactionLogicVerifier<TransferA
       }
     }
   }
+
+  /**
+   * 获取需要被加锁的数据
+   *
+   * @param transaction
+   */
+  getLockData(transaction: TransferAnyTransaction) {
+    const { parentAssetType, assetType, taxInformation } = transaction.asset.transferAny;
+    const locks: string[] = [];
+    if (
+      parentAssetType === PARENT_ASSET_TYPE.DAPP ||
+      parentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME
+    ) {
+      locks.push(assetType);
+    } else if (parentAssetType === PARENT_ASSET_TYPE.ENTITY) {
+      locks.push(assetType);
+      if (taxInformation) {
+        locks.push(taxInformation.taxCollector);
+      }
+    }
+    return locks;
+  }
 }

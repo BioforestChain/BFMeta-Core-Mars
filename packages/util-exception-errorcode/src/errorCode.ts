@@ -392,6 +392,10 @@ export const ERROR_LIST = {
     "001-11072",
     "Frozen asset with signature {signature} in blockChain not exist or expired",
   ),
+  NOT_ENOUGH_ISSUE_ENTITY_TIMES: new ErrorCode(
+    "001-11073",
+    "Not enough issue entity times, entityFactory {entityFactory}",
+  ),
 
   // block logic
   BLOCK_SIGN_SIGNATURE_IS_REQUIRED: new ErrorCode(

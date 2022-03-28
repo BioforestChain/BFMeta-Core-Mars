@@ -33,5 +33,8 @@ export * from "./issueEntityFactoryV1";
 export * from "./issueEntity";
 export * from "./issueEntityV1";
 export * from "./destoryEntity";
+
 export * from "./toExchangeAny";
 export * from "./beExchangeAny";
+
+export * from "./issueEntityMultiV1";

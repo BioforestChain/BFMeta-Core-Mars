@@ -1214,14 +1214,28 @@ export class BaseHelper {
     }
 
     const entitys = entityId.split("_");
-    if (entitys.length !== 2) {
+    if (entitys.length !== 2 && entitys.length !== 3) {
       return false;
+    }
+
+    const pattern = /^[a-z0-9]{3,30}$/;
+
+    if (entitys.length === 3) {
+      if (entitys[0] !== "m") {
+        return false;
+      }
+
+      if (!this.isValidEntityFactoryId(entitys[1])) {
+        return false;
+      }
+
+      return pattern.test(entitys[2]);
     }
 
     if (!this.isValidEntityFactoryId(entitys[0])) {
       return false;
     }
 
-    return /^[a-z0-9]{3,30}$/.test(entitys[1]);
+    return pattern.test(entitys[1]);
   }
 }

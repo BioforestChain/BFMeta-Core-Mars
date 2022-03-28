@@ -48,6 +48,7 @@
     "src/atom_transactionLogicVerifier/issueEntityFactoryLogicVerifier.ts",
     "src/atom_transactionLogicVerifier/issueEntityFactoryV1LogicVerifier.ts",
     "src/atom_transactionLogicVerifier/issueEntityLogicVerifier.ts",
+    "src/atom_transactionLogicVerifier/issueEntityMultiV1LogicVerifier.ts",
     "src/atom_transactionLogicVerifier/issueEntityV1LogicVerifier.ts",
     "src/atom_transactionLogicVerifier/locationNameLogicVerifier.ts",
     "src/atom_transactionLogicVerifier/markLogicVerifier.ts",

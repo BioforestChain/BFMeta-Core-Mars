@@ -42,7 +42,10 @@ export class DestoryEntityLogicVerifier extends TransactionLogicVerifier {
 
     const trs = trsWithBlockSign.transaction as BFChainCore.IssueEntityTransactionJSON;
 
-    if (trs.type !== this.transactionHelper.ISSUE_ENTITY) {
+    if (
+      trs.type !== this.transactionHelper.ISSUE_ENTITY &&
+      trs.type !== this.transactionHelper.ISSUE_ENTITY_MULTI
+    ) {
       throw new ConsensusException(ERROR_LIST.NOT_EXPECTED_RELATED_TRANSACTION, {
         signature: `${transactionSignature}`,
       });

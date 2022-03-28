@@ -252,6 +252,11 @@ export class TransactionHelper {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.BE_EXCHANGE_ANY);
   }
 
+  /** ISSUE_ENTITY_MULTI: 批量发行非同质资产 */
+  get ISSUE_ENTITY_MULTI() {
+    return this.getTransactionType(TRANSACTION_TYPES_BASE.ISSUE_ENTITY_MULTI);
+  }
+
   ALL_TRANSACTION_TYPES = [
     this.SIGNATURE,
     this.DELEGATE,
@@ -291,6 +296,8 @@ export class TransactionHelper {
 
     this.TO_EXCHANGE_ANY,
     this.BE_EXCHANGE_ANY,
+
+    this.ISSUE_ENTITY_MULTI,
   ];
 
   /**获取创世块里所有的受托人 */
@@ -449,6 +456,13 @@ export class TransactionHelper {
     if (transaction.type === this.GIFT_ASSET) {
       return this.calcTransactionMinFeeByMaxBytes(
         (transaction as BFChainCore.Transaction<BFChainCore.GiftAssetAssetJSON>).asset.giftAsset
+          .totalGrabableTimes + 1,
+        customMinFeePerByte,
+      );
+    }
+    if (transaction.type === this.GIFT_ANY) {
+      return this.calcTransactionMinFeeByMaxBytes(
+        (transaction as BFChainCore.Transaction<BFChainCore.GiftAnyAssetJSON>).asset.giftAny
           .totalGrabableTimes + 1,
         customMinFeePerByte,
       );
@@ -866,7 +880,8 @@ export class TransactionHelper {
    * @returns
    */
   getFactoryIdByEntityId(entityId: string) {
-    return entityId.split("_")[0];
+    const entityStruct = entityId.split("_");
+    return entityStruct.length > 2 ? entityStruct[1] : entityStruct[0];
   }
 
   /* 计算发行非同质资产模板需要销毁的主权益数

@@ -130,6 +130,8 @@ export const TRANSACTION_LOGIC_VERIFIER_TYPES_MAP = (() => {
 
       [TRANSACTION_TYPES_BASE.TO_EXCHANGE_ANY, ATOM_TRSLGCVFR.ToExchangeAnyLogicVerifier],
       [TRANSACTION_TYPES_BASE.BE_EXCHANGE_ANY, ATOM_TRSLGCVFR.BeExchangeAnyLogicVerifier],
+
+      [TRANSACTION_TYPES_BASE.ISSUE_ENTITY_MULTI, ATOM_TRSLGCVFR.IssueEntityMultiV1LogicVerifier],
     ] as [TRANSACTION_TYPES_BASE, BFChainCore.TransactionLogicVerifierConstructor<any>][]
   ).forEach(([K, LV]) => {
     BASE_LOGIC_VERIFIER.set(K, LV);

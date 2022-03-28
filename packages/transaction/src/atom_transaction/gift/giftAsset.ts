@@ -60,7 +60,7 @@ export class GiftAssetTransactionFactory extends GiftTransactionFactory<GiftAsse
       });
     }
 
-    this.checkTransactionFee(body.fee, giftAsset.totalGrabableTimes + 1, config);
+    this.checkTransactionFee(body.fee, giftAsset.totalGrabableTimes, config);
   }
   /**
    * 校验`GiftAsset`内容

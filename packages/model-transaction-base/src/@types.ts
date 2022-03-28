@@ -458,18 +458,8 @@ declare namespace BFChainCore {
   }
 
   interface IssueEntityV1JSON extends IssueEntityJSON {
-    /**非同质资产来源链名，小写字母组成，3-8 位 */
-    sourceChainName: string;
-    /**非同质资产来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
-    sourceChainMagic: string;
-    /**非同质资产名称 */
-    entityId: string;
     /**非同质资产流通需要缴纳的版税 */
     taxAssetPrealnum: string;
-    /**非同质资产模板的拥有者 */
-    entityFactoryPossessor: string;
-    /**非同质资产的模板 */
-    entityFactory: IssueEntityFactoryJSON;
   }
   interface IssueEntityAssetV1JSON {
     /**发行非同质资产事件附带信息 */
@@ -623,6 +613,31 @@ declare namespace BFChainCore {
     /**接收权益交换事件附带信息 */
     beExchangeAny: BeExchangeAnyJSON;
   }
+
+  interface EntityStructJSON {
+    /**非同质资产名称 */
+    entityId: string;
+    /**非同质资产流通需要缴纳的版税 */
+    taxAssetPrealnum: string;
+  }
+
+  interface IssueEntityMultiV1JSON {
+    /**非同质资产来源链名，小写字母组成，3-8 位 */
+    sourceChainName: string;
+    /**非同质资产来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
+    sourceChainMagic: string;
+    /**非同质资产列表 */
+    entityStructList: EntityStructJSON[];
+    /**非同质资产模板的拥有者 */
+    entityFactoryPossessor: string;
+    /**非同质资产的模板 */
+    entityFactory: IssueEntityFactoryJSON;
+  }
+  interface IssueEntityMultiAssetV1JSON {
+    /**发行非同质资产事件附带信息 */
+    issueEntityMulti: IssueEntityMultiV1JSON;
+  }
+
   //#endregion
 
   //#region Atom Transaction
@@ -736,6 +751,11 @@ declare namespace BFChainCore {
   >;
   type BeExchangeAnyTransactionJSON = TransactionMixJSON<
     BeExchangeAnyAssetJSON,
+    { hasRecipientId: true }
+  >;
+
+  type IssueEntityMultiTransactionV1JSON = TransactionMixJSON<
+    IssueEntityMultiAssetV1JSON,
     { hasRecipientId: true }
   >;
   //#endregion

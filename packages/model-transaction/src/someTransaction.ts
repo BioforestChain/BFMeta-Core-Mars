@@ -64,12 +64,15 @@ export enum TRANSACTION_TYPES_BASE {
   SET_LNS_MANAGER = "LNS-02",
   /**创建非同质资产模板 - V0 版，冻结发行 */
   ISSUE_ENTITY_FACTORY = "ETY-00",
-  /**创建非同质资产模板 - V1 版，销毁发行 */
-  ISSUE_ENTITY_FACTORY_V1 = "ETY-03",
   /**创建非同质资产 */
   ISSUE_ENTITY = "ETY-01",
   /**销毁非同质资产 */
   DESTORY_ENTITY = "ETY-02",
+
+  /**创建非同质资产模板 - V1 版，销毁发行 */
+  ISSUE_ENTITY_FACTORY_V1 = "ETY-03",
+  /**批量创建非同质资产 */
+  ISSUE_ENTITY_MULTI = "ETY-04",
 
   /**任意资产转移 */
   TRANSFER_ANY = "AST-13",
@@ -147,6 +150,8 @@ export const TRANSACTION_TYPES_MAP = (() => {
       [TRANSACTION_TYPES_BASE.GRAB_ANY, ATOM_TRS.GrabAnyTransaction],
       [TRANSACTION_TYPES_BASE.TO_EXCHANGE_ANY, ATOM_TRS.ToExchangeAnyTransaction],
       [TRANSACTION_TYPES_BASE.BE_EXCHANGE_ANY, ATOM_TRS.BeExchangeAnyTransaction],
+
+      [TRANSACTION_TYPES_BASE.ISSUE_ENTITY_MULTI, ATOM_TRS.IssueEntityMultiTransactionV1],
     ] as [TRANSACTION_TYPES_BASE, typeof Transaction][]
   ).forEach(([K, M]) => {
     BASE_MODEL.set(K, M);

@@ -117,4 +117,22 @@ export class GiftAnyLogicVerifier extends TransactionLogicVerifier {
       ),
     );
   }
+
+  /**
+   * 获取需要被加锁的数据
+   *
+   * @param transaction
+   */
+  getLockData(transaction: GiftAnyTransaction) {
+    const { parentAssetType, assetType } = transaction.asset.giftAny;
+    const locks: string[] = [];
+    if (
+      parentAssetType === PARENT_ASSET_TYPE.DAPP ||
+      parentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME ||
+      parentAssetType === PARENT_ASSET_TYPE.ENTITY
+    ) {
+      locks.push(assetType);
+    }
+    return locks;
+  }
 }

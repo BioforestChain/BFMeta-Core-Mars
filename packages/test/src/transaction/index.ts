@@ -28,5 +28,11 @@ import "./issueEntityFactory";
 import "./issueEntity";
 import "./issueEntityV1";
 import "./destoryEntity";
+
+import "./transferAny";
+import "./giftAny";
+import "./grabAny";
 import "./toExchangeAny";
 import "./beExchangeAny";
+
+import "./issueEntityMultiV1";

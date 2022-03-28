@@ -236,7 +236,7 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    */
   getLockData(transaction: BeExchangeAnyTransaction) {
-    const { transactionSignature, exchangeAny } = transaction.asset.beExchangeAny;
+    const { transactionSignature, exchangeAny, taxInformation } = transaction.asset.beExchangeAny;
     const { toExchangeParentAssetType, beExchangeParentAssetType } = exchangeAny;
     const locks: string[] = [transactionSignature];
     if (
@@ -248,10 +248,17 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
     }
     if (
       beExchangeParentAssetType === PARENT_ASSET_TYPE.DAPP ||
-      beExchangeParentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME ||
-      beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY
+      beExchangeParentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME
     ) {
       locks.push(exchangeAny.beExchangeAssetType);
+    } else if (exchangeAny.beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
+      locks.push(exchangeAny.beExchangeAssetType);
+      if (taxInformation) {
+        locks.push(taxInformation.taxCollector);
+      }
+      if (exchangeAny.taxInformation) {
+        locks.push(exchangeAny.taxInformation.taxCollector);
+      }
     }
     return locks;
   }

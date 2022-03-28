@@ -1,6 +1,6 @@
-import type { } from "@bfchain/util";
+import type {} from "@bfchain/util";
 import "@bfchain/core-typings";
-import type { } from "@bfchain/core-model-transaction-base";
+import type {} from "@bfchain/core-model-transaction-base";
 import "./@types";
 
 export * from "./username";
@@ -42,3 +42,5 @@ export * from "./grabAny";
 
 export * from "./toExchangeAny";
 export * from "./beExchangeAny";
+
+export * from "./issueEntityMultiV1";

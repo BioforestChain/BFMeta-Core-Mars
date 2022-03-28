@@ -78,7 +78,7 @@ export class GiftAnyTransactionFactory extends GiftTransactionFactory<GiftAnyTra
       });
     }
 
-    this.checkTransactionFee(body.fee, giftAny.totalGrabableTimes + 1, config);
+    this.checkTransactionFee(body.fee, giftAny.totalGrabableTimes, config);
   }
 
   /**

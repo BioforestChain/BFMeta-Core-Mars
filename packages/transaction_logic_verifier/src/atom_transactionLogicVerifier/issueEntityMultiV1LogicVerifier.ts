@@ -1,10 +1,16 @@
-import type { IssueEntityTransactionV1 } from "@bfchain/core-model";
+import { IssueEntityMultiTransactionV1, NewTransactionRefuseReason } from "@bfchain/core-model";
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { Injectable, Inject, QueneEventEmitter } from "@bfchain/util";
 import { AccountBaseHelper, TransactionHelper } from "@bfchain/core-helper";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
+
+const { ConsensusException } = CoreExceptionGenerator(
+  "CONTROLLER",
+  "IssueEntityMultiV1LogicVerifier",
+);
 
 @Injectable()
-export class IssueEntityV1LogicVerifier extends TransactionLogicVerifier {
+export class IssueEntityMultiV1LogicVerifier extends TransactionLogicVerifier {
   constructor(
     @Inject(AccountBaseHelper) public accountBaseHelper: AccountBaseHelper,
     @Inject(TransactionHelper) public transactionHelper: TransactionHelper,
@@ -13,7 +19,7 @@ export class IssueEntityV1LogicVerifier extends TransactionLogicVerifier {
   }
 
   async verify(
-    transaction: IssueEntityTransactionV1,
+    transaction: IssueEntityMultiTransactionV1,
     currentBlockHeight: number,
     accountsInfo: {
       sender: BFChainCore.AccountInfoAndAssets;
@@ -22,6 +28,8 @@ export class IssueEntityV1LogicVerifier extends TransactionLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
+    this.__checkTrsFee(transaction);
+
     const { sender, recipient } = await this.logicVerify(
       transaction,
       currentBlockHeight,
@@ -51,7 +59,7 @@ export class IssueEntityV1LogicVerifier extends TransactionLogicVerifier {
 
     // 发行 entityId
     const accountAssets = this.helperLogicVerifier.deepClone(sender.accountAssets);
-    this.eventLogicVerifier.listenEventIssueEntityV1(
+    this.eventLogicVerifier.listenEventIssueEntityMultiV1(
       accountAssets,
       currentBlockHeight,
       accountGetterHelper,
@@ -63,12 +71,26 @@ export class IssueEntityV1LogicVerifier extends TransactionLogicVerifier {
     return true;
   }
 
+  private __checkTrsFee(transaction: IssueEntityMultiTransactionV1) {
+    const minFee = this.transactionHelper.calcMinFeePerBytes("0", transaction.getBytes().length);
+    const requiredFee =
+      BigInt(minFee) * BigInt(transaction.asset.issueEntityMulti.entityStructList.length);
+    if (BigInt(transaction.fee) < requiredFee) {
+      // 红包交易默认按照最大交易体付手续费
+      throw new ConsensusException(ERROR_LIST.TRANSACTION_FEE_NOT_ENOUGH, {
+        errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
+        minFee: requiredFee.toString(),
+        target: "transaction",
+      });
+    }
+  }
+
   /**
    * 获取需要被加锁的数据
    *
    * @param transaction
    */
-  getLockData(transaction: IssueEntityTransactionV1) {
-    return [transaction.asset.issueEntity.entityFactoryPossessor];
+  getLockData(transaction: IssueEntityMultiTransactionV1) {
+    return [transaction.asset.issueEntityMulti.entityFactoryPossessor];
   }
 }

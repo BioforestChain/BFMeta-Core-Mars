@@ -332,13 +332,12 @@ declare namespace BFChainCore {
   type ApplyTransactionIssueEntityFactoryEvent<EVENTNAME, T extends Transaction = Transaction> =
     ApplyTransactionEvent<ApplyInfo_IssueEntityFactory, EVENTNAME, T>;
 
-  type ApplyInfo_IssueEntity = {
+  interface ApplyInfo_IssueEntity_Base {
     address: string;
     publicKeyBuffer?: Uint8Array;
     sourceChainName: string;
     sourceChainMagic: string;
     factoryId: string;
-    entityId: string;
     /**entity 的拥有者地址 */
     possessorAddress: string;
     /**entityFactory 的拥有者地址 */
@@ -349,7 +348,11 @@ declare namespace BFChainCore {
     issueIdBuffer: Uint8Array;
     /**entity 状态 */
     status: ASSET_STATUS;
-  };
+  }
+
+  interface ApplyInfo_IssueEntity extends ApplyInfo_IssueEntity_Base {
+    entityId: string;
+  }
   /**发行 entity */
   type ApplyTransactionIssueEntityEvent<EVENTNAME, T extends Transaction = Transaction> =
     ApplyTransactionEvent<ApplyInfo_IssueEntity, EVENTNAME, T>;
@@ -360,6 +363,13 @@ declare namespace BFChainCore {
   /**发行 entity */
   type ApplyTransactionIssueEntityV1Event<EVENTNAME, T extends Transaction = Transaction> =
     ApplyTransactionEvent<ApplyInfo_IssueEntityV1, EVENTNAME, T>;
+
+  interface ApplyInfo_IssueEntityMultiV1 extends ApplyInfo_IssueEntity_Base {
+    entityStructList: BFChainCore.EntityStructJSON[];
+  }
+  /**发行 entity */
+  type ApplyTransactionIssueEntityMultiV1Event<EVENTNAME, T extends Transaction = Transaction> =
+    ApplyTransactionEvent<ApplyInfo_IssueEntityMultiV1, EVENTNAME, T>;
 
   type ApplyInfo_DestoryEntity = {
     address: string;
@@ -550,6 +560,8 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction").ToExchangeAssetTransaction
         | import("@bfchain/core-model-transaction").ToExchangeSpecialAssetTransaction
         | import("@bfchain/core-model-transaction").IssueEntityTransaction
+        | import("@bfchain/core-model-transaction").IssueEntityTransactionV1
+        | import("@bfchain/core-model-transaction").IssueEntityMultiTransactionV1
         | import("@bfchain/core-model-transaction").ToExchangeAnyTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
@@ -720,6 +732,13 @@ declare namespace BFChainCore {
       ApplyTransactionIssueEntityV1Event<
         "issueEntityV1",
         import("@bfchain/core-model-transaction").IssueEntityTransactionV1
+      >
+    >;
+    /**批量发行 entity */
+    issueEntityMultiV1: BFChainUtil.EventInOut<
+      ApplyTransactionIssueEntityMultiV1Event<
+        "issueEntityMultiV1",
+        import("@bfchain/core-model-transaction").IssueEntityMultiTransactionV1
       >
     >;
     /**销毁 entity */

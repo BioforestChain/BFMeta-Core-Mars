@@ -34,3 +34,5 @@ export * from "./giftAny.transaction";
 export * from "./grabAny.transaction";
 export * from "./toExchangeAny.transaction";
 export * from "./beExchangeAny.transaction";
+
+export * from "./issueEntityMultiV1.transaction";
