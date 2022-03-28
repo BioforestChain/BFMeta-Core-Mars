@@ -211,7 +211,7 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     activeDelegates: string[],
     accountGetterHelper: Pick<
       BFChainCore.AccountGetterHelperInterface,
-      "getAccounts" | "getNewDelegates"
+      "getAccounts" | "getRecommendedNewDelegates"
     >,
     blockGetterHelper: BFChainCore.BlockGetterHelperInterface,
     aborter?: BFChainUtil.Aborter,
@@ -272,13 +272,13 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     // 获取 n 个 新受托人账户
     const newDelegates = aborter
       ? await aborter.wrapAsync(
-          accountGetterHelper.getNewDelegates(
+          accountGetterHelper.getRecommendedNewDelegates(
             newNum,
             currentBlockHeight,
             recommendedDelegateOptions.newDelegateAssetNeedInfo,
           ),
         )
-      : await accountGetterHelper.getNewDelegates(
+      : await accountGetterHelper.getRecommendedNewDelegates(
           newNum,
           currentBlockHeight,
           recommendedDelegateOptions.newDelegateAssetNeedInfo,
@@ -354,7 +354,7 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     recommendedDelegateOptions: BFChainCore.RecommendedDelegateOptions,
     accountGetterHelper: Pick<
       BFChainCore.AccountGetterHelperInterface,
-      "getAccountVoteInfo" | "getMemoryDelegates" | "getAccounts" | "getNewDelegates"
+      "getAccountVoteInfo" | "getMemoryDelegates" | "getAccounts" | "getRecommendedNewDelegates"
     >,
     blockGetterHelper: BFChainCore.BlockGetterHelperInterface,
     options?: {

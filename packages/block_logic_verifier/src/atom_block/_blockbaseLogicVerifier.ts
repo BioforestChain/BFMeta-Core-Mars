@@ -382,7 +382,7 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
     }
 
     const round = this.blockHelper.calcRoundByHeight(height);
-    const newDelegates = await transactionGetterHelper.getNewDelegates(height);
+    const newDelegates = await transactionGetterHelper.getRegisterNewDelegates(height);
     const { delegates, maxDelegateTxsPerRound } = this.configHelper;
     const delegateCount = newDelegates.length;
     if (round === 1) {

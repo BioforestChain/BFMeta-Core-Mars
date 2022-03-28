@@ -219,9 +219,12 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
    */
   async checkNewDelegates(
     height: number,
-    transactionGetterHelper: Pick<BFChainCore.TransactionGetterHelperInterface, "getNewDelegates">,
+    transactionGetterHelper: Pick<
+      BFChainCore.TransactionGetterHelperInterface,
+      "getRegisterNewDelegates"
+    >,
   ) {
-    const newDelegates = await transactionGetterHelper.getNewDelegates(height);
+    const newDelegates = await transactionGetterHelper.getRegisterNewDelegates(height);
     const { maxDelegateTxsPerRound, delegates, blockPerRound } = this.config;
     const delegateCount = newDelegates.length;
     // 大于第一轮
@@ -254,7 +257,10 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
   private async checkBlockNewDelegates(
     height: number,
     newDelegates: string[],
-    transactionGetterHelper: Pick<BFChainCore.TransactionGetterHelperInterface, "getNewDelegates">,
+    transactionGetterHelper: Pick<
+      BFChainCore.TransactionGetterHelperInterface,
+      "getRegisterNewDelegates"
+    >,
   ) {
     // 校验新注册的受托人
     const calcNewDelegates = await this.checkNewDelegates(height, transactionGetterHelper);

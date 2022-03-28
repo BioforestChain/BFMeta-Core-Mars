@@ -82,7 +82,7 @@ declare namespace BFChainCore {
      *
      * @param height 区块高度
      */
-    getNewDelegates(height: number): Promise<string[]>;
+    getRegisterNewDelegates(height: number): Promise<string[]>;
     /**
      * 查询当前轮新注册的受托人数量
      *

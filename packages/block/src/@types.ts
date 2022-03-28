@@ -40,7 +40,7 @@ declare namespace BFChainCore {
     skipVerifyParticipation?: boolean;
     recordForkBlock?: boolean;
     transactionGetterHelper?: Required<
-      Pick<BFChainCore.TransactionGetterHelperInterface, "getNewDelegates">
+      Pick<BFChainCore.TransactionGetterHelperInterface, "getRegisterNewDelegates">
     >;
     blockGetterHelper?: Required<
       Pick<

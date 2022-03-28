@@ -196,7 +196,7 @@ declare namespace BFChainCore {
     /**获取准备计算的受托人 */
     getDelegates(currentGeneraterPublicKeyList: (Uint8Array | string)[]): Promise<ABI[]>;
     /**获取全新的受托人账户(在线率 100%)  */
-    getNewDelegates(
+    getRecommendedNewDelegates(
       limit: number,
       height: number,
       assetNeedInfo?: NewDelegateAssetNeedInfo,
