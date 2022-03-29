@@ -272,17 +272,9 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     // 获取 n 个 新受托人账户
     const newDelegates = aborter
       ? await aborter.wrapAsync(
-          accountGetterHelper.getRecommendedNewDelegates(
-            newNum,
-            currentBlockHeight,
-            recommendedDelegateOptions.newDelegateAssetNeedInfo,
-          ),
+          accountGetterHelper.getRecommendedNewDelegates(newNum, currentBlockHeight),
         )
-      : await accountGetterHelper.getRecommendedNewDelegates(
-          newNum,
-          currentBlockHeight,
-          recommendedDelegateOptions.newDelegateAssetNeedInfo,
-        );
+      : await accountGetterHelper.getRecommendedNewDelegates(newNum, currentBlockHeight);
     const newArray: string[] = [];
     for (const delegate of newDelegates) {
       if (delegate.isAcceptVote) {

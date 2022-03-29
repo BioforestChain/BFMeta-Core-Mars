@@ -164,14 +164,6 @@ declare namespace BFChainCore {
     height: number;
   };
 
-  /**新受托人资产要求信息 */
-  type NewDelegateAssetNeedInfo = {
-    /**新受托人资产要求连续轮数 */
-    continuityRounds: number;
-    /**新受托人资产要求值 */
-    assetNumber: bigint;
-  };
-
   interface AccountGetterHelperInterface<
     ABI extends AccountBaseInfo = AccountBaseInfo,
     FSAI extends BFChainCore.ForSortAccountInfo = BFChainCore.ForSortAccountInfo,
@@ -196,11 +188,7 @@ declare namespace BFChainCore {
     /**获取准备计算的受托人 */
     getDelegates(currentGeneraterPublicKeyList: (Uint8Array | string)[]): Promise<ABI[]>;
     /**获取全新的受托人账户(在线率 100%)  */
-    getRecommendedNewDelegates(
-      limit: number,
-      height: number,
-      assetNeedInfo?: NewDelegateAssetNeedInfo,
-    ): Promise<FSAI[]>;
+    getRecommendedNewDelegates(limit: number, height: number): Promise<FSAI[]>;
     /**获取账户信息 */
     getAccountInfo(address: string): Promise<AI | undefined>;
     /**获取账户的块内交易 */

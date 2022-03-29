@@ -29,8 +29,6 @@ declare namespace BFChainCore {
     newDelegatePercent: BFChainCore.FractionJSON;
     /**最小可被推荐得账户在线率 */
     minBeSelectProductivity: BFChainCore.FractionJSON;
-    /**新受托人资产要求信息 */
-    newDelegateAssetNeedInfo?: NewDelegateAssetNeedInfo;
   };
 
   type ReplayBlockOptions = {
