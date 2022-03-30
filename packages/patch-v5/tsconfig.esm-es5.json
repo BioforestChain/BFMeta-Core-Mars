@@ -9,22 +9,16 @@
   },
   "references": [
     {
-      "path": "../patch-1/tsconfig.esm-es5.json"
+      "path": "../block/tsconfig.esm-es5.json"
+    },
+    {
+      "path": "../helper/tsconfig.esm-es5.json"
     },
     {
       "path": "../patch-base/tsconfig.esm-es5.json"
     },
     {
-      "path": "../patch-v2/tsconfig.esm-es5.json"
-    },
-    {
-      "path": "../patch-v3/tsconfig.esm-es5.json"
-    },
-    {
-      "path": "../patch-v4/tsconfig.esm-es5.json"
-    },
-    {
-      "path": "../patch-v5/tsconfig.esm-es5.json"
+      "path": "../transaction_logic_verifier/tsconfig.esm-es5.json"
     },
     {
       "path": "../typings/tsconfig.esm-es5.json"

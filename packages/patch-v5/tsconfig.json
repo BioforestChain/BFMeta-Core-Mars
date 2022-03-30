@@ -6,22 +6,16 @@
   },
   "references": [
     {
-      "path": "../patch-1/tsconfig.json"
+      "path": "../block/tsconfig.json"
+    },
+    {
+      "path": "../helper/tsconfig.json"
     },
     {
       "path": "../patch-base/tsconfig.json"
     },
     {
-      "path": "../patch-v2/tsconfig.json"
-    },
-    {
-      "path": "../patch-v3/tsconfig.json"
-    },
-    {
-      "path": "../patch-v4/tsconfig.json"
-    },
-    {
-      "path": "../patch-v5/tsconfig.json"
+      "path": "../transaction_logic_verifier/tsconfig.json"
     },
     {
       "path": "../typings/tsconfig.json"
@@ -29,6 +23,6 @@
   ],
   "files": [
     "src/index.ts",
-    "src/PatchInstaller.ts"
+    "src/v5.patch.ts"
   ]
 }

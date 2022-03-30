@@ -1,9 +1,9 @@
 {
   "name": "@types/bfchain__core-helper-chain-asset-info",
   "types": "index.d.ts",
-  "version": "5.24.39",
+  "version": "5.25.42",
   "dependencies": {
-    "@types/bfchain__core-typings": "5.24.39",
-    "@types/bfchain__core-util-exception-errorcode": "5.24.39"
+    "@types/bfchain__core-typings": "5.25.42",
+    "@types/bfchain__core-util-exception-errorcode": "5.25.42"
   }
 }

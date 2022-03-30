@@ -19,7 +19,7 @@
   },
   "peerDependencies": {
     "@bfchain/protobuf": "^4.1.10",
-    "@bfchain/util": "^4.12.26"
+    "@bfchain/util": "^4.12.44"
   },
   "gitHead": "ef41eb359371b11aafbec0516df1eba01f16ebfd",
   "types": "build/cjs/index.d.ts"
