@@ -161,4 +161,22 @@ export class ToExchangeAnyLogicVerifier extends TransactionLogicVerifier {
 
     return true;
   }
+
+  /**
+   * 获取需要被加锁的数据
+   *
+   * @param transaction
+   */
+  getLockData(transaction: ToExchangeAnyTransaction) {
+    const { toExchangeParentAssetType, toExchangeAssetType } = transaction.asset.toExchangeAny;
+    const locks: string[] = [];
+    if (
+      toExchangeParentAssetType === PARENT_ASSET_TYPE.DAPP ||
+      toExchangeParentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME ||
+      toExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY
+    ) {
+      locks.push(toExchangeAssetType);
+    }
+    return locks;
+  }
 }

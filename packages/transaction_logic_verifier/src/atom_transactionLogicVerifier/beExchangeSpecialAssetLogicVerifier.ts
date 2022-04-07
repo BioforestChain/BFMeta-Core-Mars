@@ -243,6 +243,27 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
    * @param transaction
    */
   getLockData(transaction: BeExchangeSpecialAssetTransaction) {
-    return [transaction.asset.beExchangeSpecialAsset.transactionSignature];
+    const { transactionSignature, exchangeSpecialAsset } = transaction.asset.beExchangeSpecialAsset;
+    const { exchangeAssetType, exchangeDirection, toExchangeAsset, beExchangeAsset } =
+      exchangeSpecialAsset;
+    const locks: string[] = [transactionSignature];
+    if (exchangeDirection === EXCHANGE_DIRECTION.ASSET_FROM_SENDER) {
+      if (
+        exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID ||
+        exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME ||
+        exchangeAssetType === SPECIAL_ASSET_TYPE.ENTITY
+      ) {
+        locks.push(toExchangeAsset);
+      }
+    } else {
+      if (
+        exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID ||
+        exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME ||
+        exchangeAssetType === SPECIAL_ASSET_TYPE.ENTITY
+      ) {
+        locks.push(beExchangeAsset);
+      }
+    }
+    return locks;
   }
 }

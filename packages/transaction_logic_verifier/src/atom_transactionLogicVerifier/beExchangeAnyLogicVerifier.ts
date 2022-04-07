@@ -237,6 +237,23 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    */
   getLockData(transaction: BeExchangeAnyTransaction) {
-    return [transaction.asset.beExchangeAny.transactionSignature];
+    const { transactionSignature, exchangeAny } = transaction.asset.beExchangeAny;
+    const { toExchangeParentAssetType, beExchangeParentAssetType } = exchangeAny;
+    const locks: string[] = [transactionSignature];
+    if (
+      toExchangeParentAssetType === PARENT_ASSET_TYPE.DAPP ||
+      toExchangeParentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME ||
+      toExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY
+    ) {
+      locks.push(exchangeAny.toExchangeAssetType);
+    }
+    if (
+      beExchangeParentAssetType === PARENT_ASSET_TYPE.DAPP ||
+      beExchangeParentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME ||
+      beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY
+    ) {
+      locks.push(exchangeAny.beExchangeAssetType);
+    }
+    return locks;
   }
 }

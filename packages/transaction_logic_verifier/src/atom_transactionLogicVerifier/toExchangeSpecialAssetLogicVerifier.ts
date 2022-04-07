@@ -114,4 +114,25 @@ export class ToExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
 
     return true;
   }
+
+  /**
+   * 获取需要被加锁的数据
+   *
+   * @param transaction
+   */
+  getLockData(transaction: ToExchangeSpecialAssetTransaction) {
+    const { exchangeAssetType, exchangeDirection, toExchangeAsset } =
+      transaction.asset.toExchangeSpecialAsset;
+    const locks: string[] = [];
+    if (exchangeDirection === EXCHANGE_DIRECTION.ASSET_FROM_SENDER) {
+      if (
+        exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID ||
+        exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME ||
+        exchangeAssetType === SPECIAL_ASSET_TYPE.ENTITY
+      ) {
+        locks.push(toExchangeAsset);
+      }
+    }
+    return locks;
+  }
 }
