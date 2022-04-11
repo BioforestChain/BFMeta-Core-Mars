@@ -15,9 +15,9 @@ export enum TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE {
   /**非同质资产模板的拥有者 */
   ENTITY_FACTORY_POSSESSOR = 3,
   /**非同质资产的发起者 */
-  ENTITY_APPLICANT = 2,
+  ENTITY_APPLICANT = 4,
   /**非同质资产的拥有者 */
-  ENTITY_POSSESSOR = 3,
+  ENTITY_POSSESSOR = 5,
 }
 
 @Type.d("TransactionAssetChangeModel")
