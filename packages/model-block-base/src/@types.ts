@@ -102,7 +102,7 @@ declare namespace BFChainCore {
     /**权益在块内的索引 */
     index: number;
     /**区块打包的事件类型统计明细，JSON 对象 */
-    typeStatisticHashMap: { [baseType: number]: CountAndAmountStatisticJSON };
+    typeStatisticHashMap: { [baseType: string]: CountAndAmountStatisticJSON };
     /**区块打包的事件权益类型统计，JSON 对象 */
     total: CountAndAmountStatisticJSON;
   }
