@@ -69,6 +69,6 @@ export class IssueEntityLogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    */
   getLockData(transaction: IssueEntityTransaction) {
-    return [transaction.type];
+    return [transaction.asset.issueEntity.entityFactoryPossessor];
   }
 }
