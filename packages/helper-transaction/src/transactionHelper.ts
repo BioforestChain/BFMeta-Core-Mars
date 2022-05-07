@@ -355,7 +355,7 @@ export class TransactionHelper {
         : customMinFeePerByte
       : minTransactionFeePerByte;
   }
-  private __calcMinFeePerBytes(
+  calcMinFeePerBytes(
     fee: string,
     bytesLength: number,
     minTransactionFeePerByte = this.config.minTransactionFeePerByte,
@@ -385,7 +385,7 @@ export class TransactionHelper {
     bytesLength?: number,
     customMinFeePerByte?: BFChainCore.FractionJSON,
   ) {
-    return this.__calcMinFeePerBytes(
+    return this.calcMinFeePerBytes(
       transaction.fee,
       bytesLength || transaction.getBytes().length,
       this.__calcStandardMinFee(customMinFeePerByte),
@@ -438,7 +438,7 @@ export class TransactionHelper {
     trs: Transaction,
     minTransactionFeePerByte = this.config.minTransactionFeePerByte,
   ) {
-    return this.__calcMinFeePerBytes(trs.fee, trs.getBytes().length, minTransactionFeePerByte);
+    return this.calcMinFeePerBytes(trs.fee, trs.getBytes().length, minTransactionFeePerByte);
   }
 
   /**
