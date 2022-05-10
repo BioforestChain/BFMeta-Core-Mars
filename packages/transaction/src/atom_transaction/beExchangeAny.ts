@@ -1,10 +1,5 @@
 import { TransactionFactory } from "./_txbase";
-import {
-  ASSET_STATUS,
-  BeExchangeAnyTransaction,
-  PARENT_ASSET_TYPE,
-  TaxInformationModel,
-} from "@bfchain/core-model";
+import { ASSET_STATUS, BeExchangeAnyTransaction, PARENT_ASSET_TYPE } from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
@@ -22,7 +17,7 @@ const { ArgumentIllegalException } = CoreExceptionGenerator(
 );
 
 /**
- * beExchangeAsset 交易工厂
+ * beExchangeAny 交易工厂
  *
  */
 @Injectable()
@@ -138,7 +133,7 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
         to_compare_prop: `storage.value ${storage.value}`,
         be_compare_prop: `transactionSignature ${transactionSignature}`,
         to_target: "storage",
-        be_target: "beExchangeAsset",
+        be_target: "beExchangeAny",
         ...Function_Exception_Detail,
       });
     }
@@ -198,12 +193,15 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
       }
     } else {
       if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
-        await this.checkTaxInformation(BeExchangeAnyAsset_Exception_Detail, taxInformation);
+        await this.checkTaxInformation(
+          BeExchangeAnyAsset_Exception_Detail,
+          beExchangeAny.taxInformation,
+        );
       } else {
         if (beExchangeAny.taxInformation) {
           throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
             prop: "taxInformation",
-            ...Function_Exception_Detail,
+            ...BeExchangeAnyAsset_Exception_Detail,
           });
         }
       }
@@ -511,7 +509,7 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
         });
       }
       // 接收账户成为 entityId 的拥有者
-      else if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY && taxInformation) {
+      else if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
         taskList.next = eventEmitter.emit("changeEntityPossessor", {
           type: "changeEntityPossessor",
           transaction,
@@ -524,34 +522,36 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
             entityId: beExchangeAssetType,
           },
         });
-        // 纳税
-        taskList.next = eventEmitter.emit("payTax", {
-          type: "payTax",
-          transaction,
-          applyInfo: {
-            sourceChainName: beExchangeChainName,
-            sourceChainMagic: beExchangeSource,
-            parentAssetType: beExchangeParentAssetType,
-            assetType: beExchangeAssetType,
-            taxCollector: taxInformation.taxCollector,
-          },
-        });
-        if (taxInformation.taxAssetPrealnum !== "0") {
-          const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
-            config.magic,
-            config.assetType,
-          );
-          taskList.next = this._applyTransactionEmitAsset(
-            eventEmitter,
+        if (taxInformation) {
+          // 纳税
+          taskList.next = eventEmitter.emit("payTax", {
+            type: "payTax",
             transaction,
-            taxInformation.taxAssetPrealnum,
-            {
-              senderId,
-              senderPublicKeyBuffer,
-              recipientId: taxInformation.taxCollector,
-              assetInfo: chainAssetInfo,
+            applyInfo: {
+              sourceChainName: beExchangeChainName,
+              sourceChainMagic: beExchangeSource,
+              parentAssetType: beExchangeParentAssetType,
+              assetType: beExchangeAssetType,
+              taxCollector: taxInformation.taxCollector,
             },
-          );
+          });
+          if (taxInformation.taxAssetPrealnum !== "0") {
+            const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
+              config.magic,
+              config.assetType,
+            );
+            taskList.next = this._applyTransactionEmitAsset(
+              eventEmitter,
+              transaction,
+              taxInformation.taxAssetPrealnum,
+              {
+                senderId,
+                senderPublicKeyBuffer,
+                recipientId: taxInformation.taxCollector,
+                assetInfo: chainAssetInfo,
+              },
+            );
+          }
         }
       } else {
         throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {

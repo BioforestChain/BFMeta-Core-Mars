@@ -49,3 +49,6 @@ export * from "./toExchangeAnyLogicVerifier";
 export * from "./beExchangeAnyLogicVerifier";
 
 export * from "./issueEntityMultiV1LogicVerifier";
+
+export * from "./toExchangeAnyMultiLogicVerifier";
+export * from "./beExchangeAnyMultiLogicVerifier";

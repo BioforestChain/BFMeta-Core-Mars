@@ -340,7 +340,6 @@ export class GiftAnyTransactionFactory extends GiftTransactionFactory<GiftAnyTra
         throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `parentAssetType ${parentAssetType}`,
           target: "transaction.asset.giftAny",
-          function: "applyTransaction",
         });
       }
     });

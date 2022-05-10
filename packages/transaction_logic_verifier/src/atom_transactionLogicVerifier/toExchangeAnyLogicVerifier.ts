@@ -8,10 +8,7 @@ import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 
-const { ConsensusException } = CoreExceptionGenerator(
-  "VERIFIER",
-  "ToExchangeSpecialAssetLogicVerifier",
-);
+const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "ToExchangeAnyLogicVerifier");
 
 @Injectable()
 export class ToExchangeAnyLogicVerifier extends TransactionLogicVerifier {

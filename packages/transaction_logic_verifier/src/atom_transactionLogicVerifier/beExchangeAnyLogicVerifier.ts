@@ -245,19 +245,18 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
       toExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY
     ) {
       locks.push(exchangeAny.toExchangeAssetType);
+      if (exchangeAny.taxInformation) {
+        locks.push(exchangeAny.taxInformation.taxCollector);
+      }
     }
     if (
       beExchangeParentAssetType === PARENT_ASSET_TYPE.DAPP ||
-      beExchangeParentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME
+      beExchangeParentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME ||
+      beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY
     ) {
-      locks.push(exchangeAny.beExchangeAssetType);
-    } else if (exchangeAny.beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
       locks.push(exchangeAny.beExchangeAssetType);
       if (taxInformation) {
         locks.push(taxInformation.taxCollector);
-      }
-      if (exchangeAny.taxInformation) {
-        locks.push(exchangeAny.taxInformation.taxCollector);
       }
     }
     return locks;

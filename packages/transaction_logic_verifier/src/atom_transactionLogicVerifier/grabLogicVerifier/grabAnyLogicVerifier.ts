@@ -349,10 +349,9 @@ export class GrabAnyLogicVerifier extends TransactionLogicVerifier {
     const locks: string[] = [transactionSignature];
     if (
       parentAssetType === PARENT_ASSET_TYPE.DAPP ||
-      parentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME
+      parentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME ||
+      parentAssetType === PARENT_ASSET_TYPE.ENTITY
     ) {
-      locks.push(assetType);
-    } else if (parentAssetType === PARENT_ASSET_TYPE.ENTITY) {
       locks.push(assetType);
       if (taxInformation) {
         locks.push(taxInformation.taxCollector);

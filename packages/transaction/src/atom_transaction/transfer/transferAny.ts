@@ -201,7 +201,6 @@ export class TransferAnyTransactionFactory extends TransferTransactionFactory<Tr
         throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `parentAssetType ${parentAssetType}`,
           target: "transaction.asset.transferAsset",
-          function: "applyTransaction",
         });
       }
     });

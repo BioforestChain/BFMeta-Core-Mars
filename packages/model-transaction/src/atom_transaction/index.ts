@@ -36,3 +36,6 @@ export * from "./toExchangeAny.transaction";
 export * from "./beExchangeAny.transaction";
 
 export * from "./issueEntityMultiV1.transaction";
+
+export * from "./toExchangeAnyMulti.transaction";
+export * from "./beExchangeAnyMulti.transaction";

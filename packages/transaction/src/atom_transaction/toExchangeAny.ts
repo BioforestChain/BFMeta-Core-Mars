@@ -68,7 +68,6 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
         to_compare_prop: `toMagic ${body.toMagic}`,
         to_target: "body",
         be_compare_prop: "local chain magic",
-        ...Function_Exception_Detail,
       });
     }
 
@@ -233,7 +232,6 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
             to_compare_prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
             to_target: "toExchangeAnyAsset",
             be_compare_prop: "1",
-            ...ToExchangeAnyAsset_Exception_Detail,
           });
         }
         // 没必要自己和自己换
@@ -254,7 +252,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
     if (taxInformation) {
       throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
         prop: "taxInformation",
-        ...Function_Exception_Detail,
+        ...ToExchangeAnyAsset_Exception_Detail,
       });
     }
 
@@ -266,7 +264,6 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
           to_compare_prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
           to_target: "toExchangeAnyAsset",
           be_compare_prop: "1",
-          ...ToExchangeAnyAsset_Exception_Detail,
         });
       }
       if (assetExchangeWeightRatio) {
@@ -393,7 +390,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
             status: ASSET_STATUS.FROZEN,
           },
         });
-      } else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY && taxInformation) {
+      } else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
         // 冻结 entityId
         taskList.next = eventEmitter.emit("frozenEntity", {
           type: "frozenEntity",
@@ -410,40 +407,42 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
             status: ASSET_STATUS.FROZEN,
           },
         });
-        // 纳税
-        taskList.next = eventEmitter.emit("payTax", {
-          type: "payTax",
-          transaction,
-          applyInfo: {
-            sourceChainName: toExchangeChainName,
-            sourceChainMagic: toExchangeSource,
-            parentAssetType: toExchangeParentAssetType,
-            assetType: toExchangeAssetType,
-            taxCollector: taxInformation.taxCollector,
-          },
-        });
-        const { taxAssetPrealnum } = taxInformation;
-        if (taxAssetPrealnum !== "0") {
-          const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
-            config.magic,
-            config.assetType,
-          );
-          taskList.next = eventEmitter.emit("frozenAsset", {
-            type: "frozenAsset",
+        if (taxInformation) {
+          // 纳税
+          taskList.next = eventEmitter.emit("payTax", {
+            type: "payTax",
             transaction,
             applyInfo: {
-              address: senderId,
-              publicKeyBuffer: senderPublicKeyBuffer,
-              assetInfo: chainAssetInfo,
-              amount: `-${taxAssetPrealnum}`,
-              sourceAmount: taxAssetPrealnum,
-              maxEffectiveHeight:
-                this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
-              minEffectiveHeight:
-                this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
-              frozenIdBuffer: transaction.signatureBuffer,
+              sourceChainName: toExchangeChainName,
+              sourceChainMagic: toExchangeSource,
+              parentAssetType: toExchangeParentAssetType,
+              assetType: toExchangeAssetType,
+              taxCollector: taxInformation.taxCollector,
             },
           });
+          const { taxAssetPrealnum } = taxInformation;
+          if (taxAssetPrealnum !== "0") {
+            const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
+              config.magic,
+              config.assetType,
+            );
+            taskList.next = eventEmitter.emit("frozenAsset", {
+              type: "frozenAsset",
+              transaction,
+              applyInfo: {
+                address: senderId,
+                publicKeyBuffer: senderPublicKeyBuffer,
+                assetInfo: chainAssetInfo,
+                amount: `-${taxAssetPrealnum}`,
+                sourceAmount: taxAssetPrealnum,
+                maxEffectiveHeight:
+                  this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
+                minEffectiveHeight:
+                  this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
+                frozenIdBuffer: transaction.signatureBuffer,
+              },
+            });
+          }
         }
       } else {
         throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {

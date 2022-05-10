@@ -72,17 +72,56 @@ export class IssueEntityMultiV1LogicVerifier extends TransactionLogicVerifier {
   }
 
   private __checkTrsFee(transaction: IssueEntityMultiTransactionV1) {
-    const minFee = this.transactionHelper.calcMinFeePerBytes("0", transaction.getBytes().length);
-    const requiredFee =
-      BigInt(minFee) * BigInt(transaction.asset.issueEntityMulti.entityStructList.length);
-    if (BigInt(transaction.fee) < requiredFee) {
-      // 红包交易默认按照最大交易体付手续费
+    const minFee = this.transactionHelper.calcTransactionMinFeeByMulti(
+      transaction,
+      transaction.asset.issueEntityMulti.entityStructList.length,
+    );
+    if (BigInt(transaction.fee) < BigInt(minFee)) {
       throw new ConsensusException(ERROR_LIST.TRANSACTION_FEE_NOT_ENOUGH, {
         errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
-        minFee: requiredFee.toString(),
+        minFee,
         target: "transaction",
       });
     }
+  }
+
+  /**
+   * 校验交易的手续费是否大于等于网络手续费
+   *
+   * @param transaction
+   * @param byteLength
+   */
+  checkTrsFeeAndWebFee(transaction: IssueEntityMultiTransactionV1, byteLength: number) {
+    return this.isFeeEnough(
+      transaction.fee,
+      this.transactionHelper.calcTransactionMinFeeByMulti(
+        transaction,
+        transaction.asset.issueEntityMulti.entityStructList.length,
+      ),
+    );
+  }
+
+  /**
+   * 检验交易的手续费是否大于等于矿机手续费和网络手续费
+   *
+   * @param transaction
+   * @param byteLength
+   * @param miningMachineMinFeePerByte
+   */
+  checkTrsFeeAndMiningMachineFeeAndWebFee(
+    transaction: IssueEntityMultiTransactionV1,
+    byteLength: number,
+    miningMachineMinFeePerByte: BFChainCore.FractionJSON,
+  ) {
+    return this.isFeeEnough(
+      transaction.fee,
+      this.transactionHelper.calcTransactionMinFeeByMulti(
+        transaction,
+        transaction.asset.issueEntityMulti.entityStructList.length,
+        undefined,
+        miningMachineMinFeePerByte,
+      ),
+    );
   }
 
   /**

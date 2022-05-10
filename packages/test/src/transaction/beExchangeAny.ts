@@ -166,6 +166,13 @@ async function getBeExchangeAnyTransaction(
     };
   }
 
+  if (toExchangeAny.beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
+    beExchangeAny.taxInformation = {
+      taxCollector: sender.address,
+      taxAssetPrealnum: "1000",
+    };
+  }
+
   const trs = await bfchainCore.transaction.createTransaction<BeExchangeAnyTransaction>(
     BeExchangeAnyTransactionFactory,
     data,
@@ -377,16 +384,16 @@ async function getBeExchangeAnyTransaction(
       [cc, dd],
       true,
     );
-    await getBeExchangeAnyTransaction(dd, t15, [cc, dd], bfchainCore);
-    const t16 = await getToExchangeAnyTransaction(
-      aaa,
-      { ...toExchangeAnyCopy },
-      bfchainCore,
-      [cc, dd],
-      false,
-    );
-    await getBeExchangeAnyTransaction(ddd, t16, [cc, dd], bfchainCore);
-    await getBeExchangeAnyTransaction(aaa, t16, [cc, dd], bfchainCore);
+    await getBeExchangeAnyTransaction(aa, t15, [cc, dd], bfchainCore);
+    // const t16 = await getToExchangeAnyTransaction(
+    //   aaa,
+    //   { ...toExchangeAnyCopy },
+    //   bfchainCore,
+    //   [cc, dd],
+    //   false,
+    // );
+    // await getBeExchangeAnyTransaction(ddd, t16, [cc, dd], bfchainCore);
+    // await getBeExchangeAnyTransaction(aaa, t16, [cc, dd], bfchainCore);
   };
 
   const test7 = async () => {
@@ -456,6 +463,10 @@ async function getBeExchangeAnyTransaction(
     toExchangeAnyCopy.toExchangeAssetPrealnum = "1";
     toExchangeAnyCopy.beExchangeAssetPrealnum = "1";
     toExchangeAnyCopy.assetExchangeWeightRatio = undefined;
+    toExchangeAnyCopy.taxInformation = {
+      taxCollector: aa.address,
+      taxAssetPrealnum: "1000",
+    };
 
     const t19 = await getToExchangeAnyTransaction(
       aa,
@@ -477,7 +488,7 @@ async function getBeExchangeAnyTransaction(
   };
 
   // asset => asset
-  await test0();
+  // await test0();
   // dappid => asset
   // await test1();
   // lns => asset
@@ -489,7 +500,7 @@ async function getBeExchangeAnyTransaction(
   // asset => lns
   // await test5();
   // asset => entityId
-  // await test6();
+  await test6();
   // dapp => entityId
   // await test7();
   // dappid => lns

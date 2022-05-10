@@ -591,26 +591,26 @@ declare namespace BFChainCore {
     taxInformation?: BFChainCore.TaxInformationJson;
   }
   interface ToExchangeAnyAssetJSON {
-    /**发起权益交换事件附带信息 */
+    /**发起资产交换事件附带信息 */
     toExchangeAny: ToExchangeAnyJSON;
   }
 
   interface BeExchangeAnyJSON {
-    /**发起权益交换的事件签名，128 个字节的 16 进制字符串 */
+    /**发起资产交换的事件签名，128 个字节的 16 进制字符串 */
     transactionSignature: string;
     /**加密密钥生成的签名数组 */
     ciphertextSignature?: AccountSignatureJSON;
-    /**用于交换的权益数量，权益数量由0-9共十个数字组成，权益数量不包含小数点 */
+    /**用于交换的资产数量，资产数量由0-9共十个数字组成，资产数量不包含小数点 */
     toExchangeAssetPrealnum: string;
-    /**交换得到的权益数量，权益数量由0-9共十个数字组成，权益数量不包含小数点 */
+    /**交换得到的资产数量，资产数量由0-9共十个数字组成，资产数量不包含小数点 */
     beExchangeAssetPrealnum: string;
-    /**权益交换信息 */
+    /**资产交换信息 */
     exchangeAny: ToExchangeAnyJSON;
     /**收税信息 */
     taxInformation?: BFChainCore.TaxInformationJson;
   }
   interface BeExchangeAnyAssetJSON {
-    /**接收权益交换事件附带信息 */
+    /**接收资产交换事件附带信息 */
     beExchangeAny: BeExchangeAnyJSON;
   }
 
@@ -636,6 +636,64 @@ declare namespace BFChainCore {
   interface IssueEntityMultiAssetV1JSON {
     /**发行非同质资产事件附带信息 */
     issueEntityMulti: IssueEntityMultiV1JSON;
+  }
+
+  interface ToExchangeAssetV1JSON {
+    /**用于交换的资产来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
+    toExchangeSource: string;
+    /**用于交换的资产来源链名，小写字母组成，3-8 位 */
+    toExchangeChainName: string;
+    /**用于交换的资产资产所属大类 */
+    toExchangeParentAssetType: PARENT_ASSET_TYPE;
+    /**用于交换的资产名 */
+    toExchangeAssetType: string;
+    /**用于交换的资产数量，0-9 组成并且不包含小数点 */
+    toExchangeAssetPrealnum: string;
+    /**交换比例，同质权益交换时必填 */
+    assetExchangeWeightRatio?: AssetExchangeWeightRatioJSON;
+    /**收税信息 */
+    taxInformation?: BFChainCore.TaxInformationJson;
+  }
+  interface BeExchangeAssetV1JSON {
+    /**被交换的资产来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
+    beExchangeSource: string;
+    /**被交换的资产来源链名，小写字母组成，3-8 位 */
+    beExchangeChainName: string;
+    /**被交换的资产所属大类 */
+    beExchangeParentAssetType: PARENT_ASSET_TYPE;
+    /**被交换的资产名 */
+    beExchangeAssetType: string;
+    /**被交换的资产数量，0-9 组成并且不包含小数点，非同质资产交换时必填 */
+    beExchangeAssetPrealnum?: string;
+    /**收税信息 */
+    taxInformation?: BFChainCore.TaxInformationJson;
+  }
+  interface ToExchangeAnyMultiJSON {
+    /**加密密钥生成的公钥数组 */
+    cipherPublicKeys: string[];
+    /**用于交换的资产信息 */
+    toExchangeAssets: ToExchangeAssetV1JSON[];
+    /**被交换的资产信息 */
+    beExchangeAsset: BeExchangeAssetV1JSON;
+  }
+  interface ToExchangeAnyMultiAssetJSON {
+    /**发起资产交换事件附带信息 */
+    toExchangeAnyMulti: ToExchangeAnyMultiJSON;
+  }
+
+  interface BeExchangeAnyMultiJSON {
+    /**发起资产交换的事件签名，128 个字节的 16 进制字符串 */
+    transactionSignature: string;
+    /**加密密钥生成的签名数组 */
+    ciphertextSignature?: AccountSignatureJSON;
+    /**用于交换的资产信息 */
+    toExchangeAssets: ToExchangeAssetV1JSON[];
+    /**被交换的资产信息 */
+    beExchangeAsset: BeExchangeAssetV1JSON;
+  }
+  interface BeExchangeAnyMultiAssetJSON {
+    /**接收资产交换事件附带信息 */
+    beExchangeAnyMulti: BeExchangeAnyMultiJSON;
   }
 
   //#endregion
@@ -756,6 +814,15 @@ declare namespace BFChainCore {
 
   type IssueEntityMultiTransactionV1JSON = TransactionMixJSON<
     IssueEntityMultiAssetV1JSON,
+    { hasRecipientId: true }
+  >;
+
+  type ToExchangeAnyMultiTransactionJSON = TransactionMixJSON<
+    ToExchangeAnyMultiAssetJSON,
+    { hasRecipientId: false }
+  >;
+  type BeExchangeAnyMultiTransactionJSON = TransactionMixJSON<
+    BeExchangeAnyMultiAssetJSON,
     { hasRecipientId: true }
   >;
   //#endregion

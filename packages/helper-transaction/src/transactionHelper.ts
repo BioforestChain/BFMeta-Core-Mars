@@ -257,6 +257,15 @@ export class TransactionHelper {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.ISSUE_ENTITY_MULTI);
   }
 
+  /** TO_EXCHANGE_ANY_MULTI: 发起批量任意资产交换 */
+  get TO_EXCHANGE_ANY_MULTI() {
+    return this.getTransactionType(TRANSACTION_TYPES_BASE.TO_EXCHANGE_ANY_MULTI);
+  }
+  /** BE_EXCHANGE_ANY_MULTI: 接受批量任意资产交换 */
+  get BE_EXCHANGE_ANY_MULTI() {
+    return this.getTransactionType(TRANSACTION_TYPES_BASE.BE_EXCHANGE_ANY_MULTI);
+  }
+
   ALL_TRANSACTION_TYPES = [
     this.SIGNATURE,
     this.DELEGATE,
@@ -298,6 +307,9 @@ export class TransactionHelper {
     this.BE_EXCHANGE_ANY,
 
     this.ISSUE_ENTITY_MULTI,
+
+    this.TO_EXCHANGE_ANY_MULTI,
+    this.BE_EXCHANGE_ANY_MULTI,
   ];
 
   /**获取创世块里所有的受托人 */
@@ -440,6 +452,20 @@ export class TransactionHelper {
       ) * BigInt(times)
     ).toString();
   }
+  /**根据倍数计算最低手续费 */
+  calcTransactionMinFeeByMulti(
+    transaction: Transaction,
+    multiple: number,
+    bytesLength?: number,
+    customMinFeePerByte?: BFChainCore.FractionJSON,
+  ) {
+    const minFee = this.calcMinFeePerBytes(
+      transaction.fee,
+      bytesLength || transaction.getBytes().length,
+      this.__calcStandardMinFee(customMinFeePerByte),
+    );
+    return (BigInt(minFee) * BigInt(multiple)).toString();
+  }
   /**
    * 计算事件最小手续费
    *
@@ -452,15 +478,16 @@ export class TransactionHelper {
     bytesLength?: number,
     customMinFeePerByte?: BFChainCore.FractionJSON,
   ) {
+    const type = transaction.type;
     // 红包事件按最大事件字节付费，并且给抢红包事件付费
-    if (transaction.type === this.GIFT_ASSET) {
+    if (type === this.GIFT_ASSET) {
       return this.calcTransactionMinFeeByMaxBytes(
         (transaction as BFChainCore.Transaction<BFChainCore.GiftAssetAssetJSON>).asset.giftAsset
           .totalGrabableTimes + 1,
         customMinFeePerByte,
       );
     }
-    if (transaction.type === this.GIFT_ANY) {
+    if (type === this.GIFT_ANY) {
       return this.calcTransactionMinFeeByMaxBytes(
         (transaction as BFChainCore.Transaction<BFChainCore.GiftAnyAssetJSON>).asset.giftAny
           .totalGrabableTimes + 1,
@@ -468,10 +495,37 @@ export class TransactionHelper {
       );
     }
     // 见证事件按最大事件字节付费，并且给签收见证事件付费
-    if (transaction.type === this.TRUST_ASSET) {
+    if (type === this.TRUST_ASSET) {
       return this.calcTransactionMinFeeByMaxBytes(
         (transaction as BFChainCore.Transaction<BFChainCore.TrustAssetAssetJSON>).asset.trustAsset
           .numberOfSignFor + 1,
+        customMinFeePerByte,
+      );
+    }
+    if (type === this.ISSUE_ENTITY_MULTI) {
+      return this.calcTransactionMinFeeByMulti(
+        transaction,
+        (transaction as BFChainCore.Transaction<BFChainCore.IssueEntityMultiAssetV1JSON>).asset
+          .issueEntityMulti.entityStructList.length,
+        undefined,
+        customMinFeePerByte,
+      );
+    }
+    if (type == this.TO_EXCHANGE_ANY_MULTI) {
+      return this.calcTransactionMinFeeByMulti(
+        transaction,
+        (transaction as BFChainCore.Transaction<BFChainCore.ToExchangeAnyMultiAssetJSON>).asset
+          .toExchangeAnyMulti.toExchangeAssets.length,
+        undefined,
+        customMinFeePerByte,
+      );
+    }
+    if (type === this.BE_EXCHANGE_ANY_MULTI) {
+      return this.calcTransactionMinFeeByMulti(
+        transaction,
+        (transaction as BFChainCore.Transaction<BFChainCore.BeExchangeAnyMultiAssetJSON>).asset
+          .beExchangeAnyMulti.toExchangeAssets.length,
+        undefined,
         customMinFeePerByte,
       );
     }

@@ -38,3 +38,6 @@ export * from "./toExchangeAny";
 export * from "./beExchangeAny";
 
 export * from "./issueEntityMultiV1";
+
+export * from "./toExchangeAnyMulti";
+export * from "./beExchangeAnyMulti";

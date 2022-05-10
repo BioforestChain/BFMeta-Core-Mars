@@ -61,7 +61,12 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
 
     eventLogicVerifier.listenEventRejectVote(cloneAccountsInfo, eventEmitter);
 
-    eventLogicVerifier.listenEventVoteEquity(cloneAccountsInfo, curRound, eventEmitter);
+    eventLogicVerifier.listenEventVoteEquity(
+      cloneAccountsInfo,
+      helperLogicVerifier.deepClone(sender.accountAssets),
+      curRound,
+      eventEmitter,
+    );
 
     eventLogicVerifier.listenEventIssueAsset(
       helperLogicVerifier.deepClone(sender.accountAssets),

@@ -115,10 +115,9 @@ export class TransferAnyLogicVerifier extends TransactionLogicVerifier<TransferA
     const locks: string[] = [];
     if (
       parentAssetType === PARENT_ASSET_TYPE.DAPP ||
-      parentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME
+      parentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME ||
+      parentAssetType === PARENT_ASSET_TYPE.ENTITY
     ) {
-      locks.push(assetType);
-    } else if (parentAssetType === PARENT_ASSET_TYPE.ENTITY) {
       locks.push(assetType);
       if (taxInformation) {
         locks.push(taxInformation.taxCollector);

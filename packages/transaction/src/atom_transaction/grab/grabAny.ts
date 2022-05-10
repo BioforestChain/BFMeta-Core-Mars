@@ -333,7 +333,6 @@ export class GrabAnyTransactionFactory extends TransactionFactory<GrabAnyTransac
         throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `parentAssetType ${parentAssetType}`,
           target: "transaction.asset.grabAny.giftAny",
-          function: "applyTransaction",
         });
       }
     });

@@ -147,7 +147,7 @@ export class ToExchangeAnyModel
 }
 
 /**
- * toExchangeAsset 交易 asset 外层模型
+ * toExchangeAny 交易 asset 外层模型
  *
  */
 @Type.d("ToExchangeAnyAssetModel")

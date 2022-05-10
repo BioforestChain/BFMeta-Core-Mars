@@ -7,9 +7,11 @@ import {
   LOCATION_NAME_LEVEL,
   RECORD_OPERATION_TYPE,
   TOKEN_TO_BEN,
+  PARENT_ASSET_TYPE,
   IssueEntityTransaction,
   DestoryEntityTransaction,
-  PARENT_ASSET_TYPE,
+  IssueEntityTransactionV1,
+  IssueEntityMultiTransactionV1,
 } from "@bfchain/core-model";
 import { ConfigHelper, BlockHelper, TransactionHelper, JSBIHelper } from "@bfchain/core-helper";
 import { HelperLogicVerifier } from "./helperLogicVerifier";
@@ -406,6 +408,7 @@ export class EventLogicVerifier {
 
   listenEventVoteEquity(
     accountsInfo: { [address: string]: BFChainCore.AccountInfo },
+    accountAssets: BFChainCore.AccountAssets,
     curRound: number,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -429,6 +432,16 @@ export class EventLogicVerifier {
             } address: ${address} hodingEquity: ${remainEquity.toString()} spendEquity: ${
               applyInfo.equity
             }`,
+          });
+        }
+
+        const { magic, assetType, voteMinChainAsset } = this.configHelper;
+        const remainChainAsset =
+          accountAssets[magic][assetType].assetNumber - BigInt(transaction.fee);
+        if (BigInt(voteMinChainAsset) > remainChainAsset) {
+          throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
+            reason: `No enough asset, Min account asset ${voteMinChainAsset}, remain Assets: ${remainChainAsset}`,
+            errorId: NewTransactionRefuseReason.CHAIN_ASSET_NOT_ENOUGH,
           });
         }
 
@@ -1886,6 +1899,12 @@ export class EventLogicVerifier {
           });
         }
 
+        this.__isEntityFactoryMatch(
+          (transaction as IssueEntityTransactionV1).asset.issueEntity.entityFactory.toJSON(),
+          memEntityFactory,
+          "IssueEntityTransactionV1",
+        );
+
         if (entityFactoryPossessorAddress !== memEntityFactory.possessorAddress) {
           throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
             to_compare_prop: `entityFactoryPossessor ${entityFactoryPossessorAddress}`,
@@ -2002,6 +2021,14 @@ export class EventLogicVerifier {
           });
         }
 
+        this.__isEntityFactoryMatch(
+          (
+            transaction as IssueEntityMultiTransactionV1
+          ).asset.issueEntityMulti.entityFactory.toJSON(),
+          memEntityFactory,
+          "IssueEntityMultiTransactionV1",
+        );
+
         if (entityFactoryPossessorAddress !== memEntityFactory.possessorAddress) {
           throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
             to_compare_prop: `entityFactoryPossessor ${entityFactoryPossessorAddress}`,
@@ -2033,18 +2060,21 @@ export class EventLogicVerifier {
           });
         }
 
-        for (const { entityId } of entityStructList) {
-          // entityId 是否已经存在
-          const memEntity = await accountGetterHelper.getEntity(
-            sourceChainMagic,
-            entityId,
-            currentBlockHeight,
-          );
-          if (memEntity) {
-            throw new ConsensusException(ERROR_LIST.ENTITY_IS_ALREADY_EXIST, {
+        // 如果这个模板没有使用过，就不用检查 entityId 是否已经存在
+        if (memEntityFactory.entityPrealnum !== remainEntityPrealnum) {
+          for (const { entityId } of entityStructList) {
+            // entityId 是否已经存在
+            const memEntity = await accountGetterHelper.getEntity(
+              sourceChainMagic,
               entityId,
-              errorId: NewTransactionRefuseReason.ENTITY_ALREADY_EXIST,
-            });
+              currentBlockHeight,
+            );
+            if (memEntity) {
+              throw new ConsensusException(ERROR_LIST.ENTITY_IS_ALREADY_EXIST, {
+                entityId,
+                errorId: NewTransactionRefuseReason.ENTITY_ALREADY_EXIST,
+              });
+            }
           }
         }
 
