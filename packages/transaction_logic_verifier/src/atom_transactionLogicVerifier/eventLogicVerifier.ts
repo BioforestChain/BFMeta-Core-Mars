@@ -1617,23 +1617,27 @@ export class EventLogicVerifier {
           });
         }
 
-        if (memEntityFactory.remainEntityPrealnum === BigInt(0)) {
+        const { remainEntityPrealnum } = memEntityFactory;
+        if (remainEntityPrealnum === BigInt(0)) {
           throw new ConsensusException(ERROR_LIST.ISSUE_ENTITY_TIMES_USE_UP, {
             entityFactory: factoryId,
           });
         }
 
-        // entityFactory 是否已经存在
-        const memEntity = await accountGetterHelper.getEntity(
-          sourceChainMagic,
-          entityId,
-          currentBlockHeight,
-        );
-        if (memEntity) {
-          throw new ConsensusException(ERROR_LIST.ENTITY_IS_ALREADY_EXIST, {
+        // 如果模板没有被使用过，则不需要校验 entity 是否已经存在
+        if (memEntityFactory.entityPrealnum !== remainEntityPrealnum) {
+          // entityFactory 是否已经存在
+          const memEntity = await accountGetterHelper.getEntity(
+            sourceChainMagic,
             entityId,
-            errorId: NewTransactionRefuseReason.ENTITY_ALREADY_EXIST,
-          });
+            currentBlockHeight,
+          );
+          if (memEntity) {
+            throw new ConsensusException(ERROR_LIST.ENTITY_IS_ALREADY_EXIST, {
+              entityId,
+              errorId: NewTransactionRefuseReason.ENTITY_ALREADY_EXIST,
+            });
+          }
         }
 
         const { magic: chainMagic, assetType: chainAssetType } = this.configHelper;
