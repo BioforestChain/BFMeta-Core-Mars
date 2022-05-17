@@ -266,7 +266,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
     }
     if (!baseHelper.isValidAssetExchangeWeightRatio(assetExchangeWeightRatio)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: `assetExchangeWeightRatio ${assetExchangeWeightRatio}`,
+        prop: `assetExchangeWeightRatio ${JSON.stringify(assetExchangeWeightRatio)}`,
         ...ToExchangeAnyAsset_Exception_Detail,
       });
     }

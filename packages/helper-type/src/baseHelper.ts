@@ -1144,8 +1144,11 @@ export class BaseHelper {
     const prevWeight = rate.prevWeight;
     const nextWeight = rate.nextWeight;
     try {
-      BigInt(prevWeight);
-      BigInt(nextWeight);
+      const x = BigInt(prevWeight);
+      const y = BigInt(nextWeight);
+      if (x === BigInt(0) || y === BigInt(0)) {
+        return false;
+      }
       return typeof nextWeight === typeof prevWeight;
     } catch (err) {
       return false;
@@ -1161,12 +1164,16 @@ export class BaseHelper {
     if (!rate) {
       return false;
     }
+    const { toExchangeAssetWeight, beExchangeAssetWeight } = rate;
     if (
       !(
         this.isValidStringNumber(rate.toExchangeAssetWeight) &&
         this.isValidStringNumber(rate.beExchangeAssetWeight)
       )
     ) {
+      return false;
+    }
+    if (toExchangeAssetWeight === "0" || beExchangeAssetWeight === "0") {
       return false;
     }
     return true;

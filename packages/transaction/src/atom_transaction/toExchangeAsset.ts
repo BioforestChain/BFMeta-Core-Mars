@@ -190,7 +190,7 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<ToExch
 
     if (!baseHelper.isValidRate(toExchangeAsset.exchangeRate)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: `exchangeRate ${toExchangeAsset.exchangeRate}`,
+        prop: `exchangeRate ${JSON.stringify(toExchangeAsset.exchangeRate)}`,
         type: "rate",
         ...ToExchangeAssetAsset_Exception_Detail,
       });
