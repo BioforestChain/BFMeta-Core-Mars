@@ -7,6 +7,8 @@ import {
   LOCATION_NAME_LEVEL,
   RECORD_OPERATION_TYPE,
   TOKEN_TO_BEN,
+  IssueEntityTransaction,
+  DestoryEntityTransaction,
 } from "@bfchain/core-model";
 import { ConfigHelper, BlockHelper, TransactionHelper, JSBIHelper } from "@bfchain/core-helper";
 import { HelperLogicVerifier } from "./helperLogicVerifier";
@@ -1548,6 +1550,36 @@ export class EventLogicVerifier {
     );
   }
 
+  private __isEntityFactoryMatch(
+    prevEntityFactory: BFChainCore.IssueEntityFactoryJSON,
+    nextEntityFactory: BFChainCore.IssueEntityFactoryInfo,
+    transactionType: string,
+  ) {
+    if (
+      prevEntityFactory.sourceChainMagic !== nextEntityFactory.sourceChainMagic ||
+      prevEntityFactory.sourceChainName !== nextEntityFactory.sourceChainName ||
+      prevEntityFactory.factoryId !== nextEntityFactory.factoryId ||
+      prevEntityFactory.entityPrealnum !== nextEntityFactory.entityPrealnum.toString() ||
+      prevEntityFactory.entityFrozenAssetPrealnum !== nextEntityFactory.entityFrozenAssetPrealnum ||
+      prevEntityFactory.purchaseAssetPrealnum! ||
+      nextEntityFactory.purchaseAssetPrealnum
+    ) {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+        to_compare_prop: `entityFactory ${JSON.stringify(prevEntityFactory)}`,
+        be_compare_prop: `entityFactory ${JSON.stringify({
+          sourceChainName: nextEntityFactory.sourceChainName,
+          sourceChainMagic: nextEntityFactory.sourceChainMagic,
+          factoryId: nextEntityFactory.factoryId,
+          entityPrealnum: nextEntityFactory.entityPrealnum.toString(),
+          entityFrozenAssetPrealnum: nextEntityFactory.entityFrozenAssetPrealnum,
+          purchaseAssetPrealnum: nextEntityFactory.purchaseAssetPrealnum,
+        })}`,
+        to_target: transactionType,
+        be_target: "blockChain",
+      });
+    }
+  }
+
   listenEventIssueEntity(
     accountAssets: BFChainCore.AccountAssets,
     currentBlockHeight: number,
@@ -1598,6 +1630,12 @@ export class EventLogicVerifier {
             errorId: NewTransactionRefuseReason.ENTITY_FACTORY_NOT_EXIST,
           });
         }
+
+        this.__isEntityFactoryMatch(
+          (transaction as IssueEntityTransaction).asset.issueEntity.entityFactory.toJSON(),
+          memEntityFactory,
+          "IssueEntityTransaction",
+        );
 
         if (entityFactoryPossessorAddress !== memEntityFactory.possessorAddress) {
           throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
@@ -1698,6 +1736,12 @@ export class EventLogicVerifier {
             errorId: NewTransactionRefuseReason.ENTITY_FACTORY_NOT_EXIST,
           });
         }
+
+        this.__isEntityFactoryMatch(
+          (transaction as DestoryEntityTransaction).asset.destoryEntity.entityFactory.toJSON(),
+          memEntityFactory,
+          "DestoryEntityTransaction",
+        );
 
         if (entityFactoryApplicantAddress !== memEntityFactory.applyAddress) {
           throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
