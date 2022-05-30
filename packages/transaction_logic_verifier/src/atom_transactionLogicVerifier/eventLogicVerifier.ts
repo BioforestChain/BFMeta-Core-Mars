@@ -1561,8 +1561,7 @@ export class EventLogicVerifier {
       prevEntityFactory.factoryId !== nextEntityFactory.factoryId ||
       prevEntityFactory.entityPrealnum !== nextEntityFactory.entityPrealnum.toString() ||
       prevEntityFactory.entityFrozenAssetPrealnum !== nextEntityFactory.entityFrozenAssetPrealnum ||
-      prevEntityFactory.purchaseAssetPrealnum! ||
-      nextEntityFactory.purchaseAssetPrealnum
+      prevEntityFactory.purchaseAssetPrealnum !== nextEntityFactory.purchaseAssetPrealnum
     ) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `entityFactory ${JSON.stringify(prevEntityFactory)}`,
