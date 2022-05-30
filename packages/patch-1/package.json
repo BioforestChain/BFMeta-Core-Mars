@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-patch-1",
-  "version": "5.25.66",
+  "version": "5.25.67",
   "main": "build/cjs/index.js",
   "type": "commonjs",
   "module": "build/esm/index.js",
@@ -8,8 +8,8 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-patch-base": "5.25.66",
-    "@bfchain/core-typings": "5.25.66"
+    "@bfchain/core-patch-base": "5.25.67",
+    "@bfchain/core-typings": "5.25.67"
   },
   "types": "build/cjs/index.d.ts"
 }
