@@ -398,10 +398,12 @@ export class TransactionHelper {
    * @param customMinFeePerByte 自定义的最低手续费，如果比网络手续费小则自动采用网络手续费
    */
   calcTransactionMinFeeByMaxBytes(times: number, customMinFeePerByte?: BFChainCore.FractionJSON) {
-    const bytesLength = this.config.maxTransactionSize * times;
-    return this.jsbiHelper
-      .multiplyCeilFraction(bytesLength, this.__calcStandardMinFee(customMinFeePerByte))
-      .toString();
+    return (
+      this.jsbiHelper.multiplyCeilFraction(
+        this.config.maxTransactionSize,
+        this.__calcStandardMinFee(customMinFeePerByte),
+      ) * BigInt(times)
+    ).toString();
   }
   /**
    * 计算事件最小手续费
