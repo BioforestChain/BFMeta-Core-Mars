@@ -1083,6 +1083,14 @@ export class EventLogicVerifier {
           });
         }
 
+        // 冻结状态的位名不能删除
+        if (memLocation.status === ASSET_STATUS.DESTORY) {
+          throw new ConsensusException(ERROR_LIST.CAN_NOT_DELETE_LOCATION_NAME, {
+            locationName: name,
+            reason: "Location name has been deleted",
+          });
+        }
+
         // 发起账户地址和接收账户地址必须是同一个
         if (transaction.senderId !== transaction.recipientId) {
           throw new ConsensusException(ERROR_LIST.SHOULD_BE, {

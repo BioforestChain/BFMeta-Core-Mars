@@ -585,36 +585,6 @@ export class BaseHelper {
   }
 
   /**
-   * 交易类型是否合法
-   *
-   * @param type
-   */
-  isValidTransactionType(type: string) {
-    if (!this.isString(type)) {
-      return false;
-    }
-    const strArray = type.split("-");
-    if (strArray.length !== 4) {
-      return false;
-    }
-    if (!/^[A-Z]{3,5}$/.test(strArray[0])) {
-      return false;
-    }
-    if (!/^[A-Z]{3,8}$/.test(strArray[1])) {
-      return false;
-    }
-    const baseType = strArray[2];
-    if (!(baseType === baseType.trim().toUpperCase() && baseType.length === 3)) {
-      return false;
-    }
-    const serialNumber = strArray[3];
-    if (!(/^[0-9]+$/.test(serialNumber) && serialNumber.length === 2)) {
-      return false;
-    }
-    return true;
-  }
-
-  /**
    * 交易 signature 是否合法
    *
    * @param signature
@@ -659,11 +629,11 @@ export class BaseHelper {
     if (!this.isString(chainName)) {
       return false;
     }
-    return /^[A-Z]{3,8}$/.test(chainName);
+    return /^[A-Z]{5,10}$/.test(chainName);
   }
 
   /**
-   * 链名是否合法：小写字母 3-8
+   * 链名是否合法：小写字母 5-10
    *
    * @param chainName
    */
@@ -671,7 +641,7 @@ export class BaseHelper {
     if (!this.isString(chainName)) {
       return false;
     }
-    return /^[a-z]{3,8}$/.test(chainName);
+    return /^[a-z]{5,10}$/.test(chainName);
   }
 
   /**
@@ -706,6 +676,36 @@ export class BaseHelper {
       return false;
     }
     return PARITY_BIT_MAPPING[mapKey].toString() === parityBit;
+  }
+
+  /**
+   * 交易类型是否合法
+   *
+   * @param type
+   */
+  isValidTransactionType(type: string) {
+    if (!this.isString(type)) {
+      return false;
+    }
+    const strArray = type.split("-");
+    if (strArray.length !== 4) {
+      return false;
+    }
+    if (!this.isValidAssetType(strArray[0])) {
+      return false;
+    }
+    if (!this.isValidUpperChainName(strArray[1])) {
+      return false;
+    }
+    const baseType = strArray[2];
+    if (!(baseType === baseType.trim().toUpperCase() && baseType.length === 3)) {
+      return false;
+    }
+    const serialNumber = strArray[3];
+    if (!(/^[0-9]+$/.test(serialNumber) && serialNumber.length === 2)) {
+      return false;
+    }
+    return true;
   }
 
   /**

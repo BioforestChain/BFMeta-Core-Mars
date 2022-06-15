@@ -231,6 +231,7 @@ declare namespace BFChainCore {
     sourceChainName: string;
     sourceChainMagic: string;
     name: string;
+    status: ASSET_STATUS;
   };
   /**注销位名 */
   type ApplyTransactionCancelLocationNameEvent<EVENTNAME, T extends Transaction = Transaction> =

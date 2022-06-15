@@ -859,6 +859,7 @@ export class CustomTransactionEvent {
           sourceChainName,
           sourceChainMagic,
           name,
+          status: ASSET_STATUS.DESTORY,
         },
       });
     }

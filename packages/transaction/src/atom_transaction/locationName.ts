@@ -329,6 +329,7 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
             sourceChainName,
             sourceChainMagic,
             name,
+            status: ASSET_STATUS.DESTORY,
           },
         });
       }

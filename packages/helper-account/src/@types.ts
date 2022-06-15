@@ -146,7 +146,7 @@ declare namespace BFChainCore {
   };
 
   type IssueEntityInfo = {
-    frozenId: string;
+    issueId: string;
     applyAddress: string;
     possessorAddress: string;
     sourceChainName: string;
