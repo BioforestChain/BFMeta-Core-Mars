@@ -722,7 +722,7 @@ export class ChainChannel<
     opts?: BFChainCore.ChannelRequestOptions<THIS>,
   ) {
     if (!this.canQueryBlock) {
-      return QueryBlockReturnModel.fromObject({
+      return QueryBlockReturnModel.fromObject<QueryBlockReturnModel<B>>({
         status: RESPONSE_STATUS.error,
         error: ErrorMessage.fromObject(new RefuseException(ERROR_LIST.REFUSE_RESPONSE_QUERY_BLOCK)),
       });
