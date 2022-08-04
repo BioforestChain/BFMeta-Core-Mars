@@ -24,10 +24,6 @@ export class DestoryEntityLogicVerifier extends TransactionLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const Function_Exception_Detail = {
-      function: "verify",
-    } as const;
-
     const destoryEntity = transaction.asset.destoryEntity;
 
     const { transactionSignature } = destoryEntity;
@@ -41,7 +37,6 @@ export class DestoryEntityLogicVerifier extends TransactionLogicVerifier {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST_OR_EXPIRED, {
         prop: `Transaction with signature ${transactionSignature}`,
         target: "destoryEntity",
-        ...Function_Exception_Detail,
       });
     }
 
@@ -50,7 +45,6 @@ export class DestoryEntityLogicVerifier extends TransactionLogicVerifier {
     if (trs.type !== this.transactionHelper.ISSUE_ENTITY) {
       throw new ConsensusException(ERROR_LIST.NOT_EXPECTED_RELATED_TRANSACTION, {
         signature: `${transactionSignature}`,
-        ...Function_Exception_Detail,
       });
     }
 

@@ -297,7 +297,6 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "migrateCertificate",
         target: "transaction.asset.immigrateAsset",
-        function: "getMoveAmount",
       });
     }
     const converter =

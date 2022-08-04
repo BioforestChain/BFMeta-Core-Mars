@@ -45,7 +45,6 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
 
     const Function_Exception_Detail = {
       target: "body",
-      function: "verifyTransactionBody",
     } as const;
 
     if (body.recipientId) {
@@ -100,18 +99,15 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
    */
   verifyToExchangeAny(toExchangeAny: BFChainCore.ToExchangeAnyJSON, config = this.configHelper) {
     const { baseHelper } = this;
-    const Function_Exception_Detail = { function: "verifyTransactionBody" } as const;
 
     if (!toExchangeAny) {
       throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "toExchangeAny",
-        ...Function_Exception_Detail,
       });
     }
 
     const ToExchangeAnyAsset_Exception_Detail = {
       target: "toExchangeAnyAsset",
-      ...Function_Exception_Detail,
     } as const;
 
     if (!baseHelper.isValidCipherPublicKeys(toExchangeAny.cipherPublicKeys)) {
@@ -386,7 +382,6 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
         throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `toExchangeParentAssetType ${toExchangeParentAssetType}`,
           target: "transaction.asset.toExchangeAny",
-          function: "applyTransaction",
         });
       }
     });

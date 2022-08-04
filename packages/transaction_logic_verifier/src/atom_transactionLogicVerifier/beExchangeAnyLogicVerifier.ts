@@ -24,10 +24,6 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const Function_Exception_Detail = {
-      function: "verify",
-    } as const;
-
     const beExchangeAny = transaction.asset.beExchangeAny;
     const { transactionSignature } = beExchangeAny;
     const toExchangeAnyJson = (await transactionGetterHelper.getTransactionBySignature(
@@ -38,14 +34,12 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST_OR_EXPIRED, {
         prop: `Transaction with signature ${transactionSignature}`,
         target: "blockChain",
-        ...Function_Exception_Detail,
       });
     }
 
     if (toExchangeAnyJson.type !== this.transactionHelper.TO_EXCHANGE_ANY) {
       throw new ConsensusException(ERROR_LIST.NOT_EXPECTED_RELATED_TRANSACTION, {
         signature: `${transactionSignature}`,
-        ...Function_Exception_Detail,
       });
     }
 
@@ -56,7 +50,6 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
         be_compare_prop: `ToExchangeAnyTransaction.senderId ${toExchangeAnyJson.senderId}`,
         to_target: "BeExchangeAnyTransaction",
         be_target: "ToExchangeAnyTransaction",
-        function: "isValidRecipientId",
       });
     }
 
@@ -118,7 +111,6 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
       throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `toExchangeParentAssetType ${toExchangeParentAssetType}`,
         target: "transaction.asset.beExchangeAny.exchangeAny",
-        function: "applyTransaction",
       });
     }
 
@@ -147,7 +139,6 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
         throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `beExchangeParentAssetType ${beExchangeParentAssetType}`,
           target: "transaction.asset.beExchangeAny.exchangeAny",
-          function: "applyTransaction",
         });
       }
     }
@@ -167,9 +158,6 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
     transaction: BeExchangeAnyTransaction,
     toExchangeAnyJson: BFChainCore.TransactionJSON<BFChainCore.ToExchangeAnyAssetJSON>,
   ) {
-    const Function_Exception_Detail = {
-      function: "isDependentTransactionMatch",
-    } as const;
     const beExchangeAny = transaction.asset.beExchangeAny;
     const { exchangeAny } = beExchangeAny;
     const {
@@ -194,7 +182,6 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
         be_compare_prop: `exchangeAny: ${JSON.stringify(exchangeAny.toJSON())}`,
         to_target: "BeExchangeAnyTransaction",
         be_target: "ToExchangeAnyTransaction",
-        ...Function_Exception_Detail,
       });
     }
 
@@ -207,7 +194,6 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
           to_compare_prop: `senderId ${transaction.senderId}`,
           to_target: "beExchangeAnyTransaction",
           be_compare_prop: "beExchangeAnyTransaction.range",
-          ...Function_Exception_Detail,
         });
       }
     } else if (rangeType & RANGE_TYPE.MULTI_DAPPID) {
@@ -216,7 +202,6 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
           to_compare_prop: `dappid ${transaction.senderId}`,
           to_target: "beExchangeAnyTransaction",
           be_compare_prop: "beExchangeAnyTransaction.range",
-          ...Function_Exception_Detail,
         });
       }
     } else if (rangeType & RANGE_TYPE.MULTI_LOCATION_NAME) {
@@ -225,7 +210,6 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
           to_compare_prop: `lns ${transaction.lns}`,
           to_target: "beExchangeAnyTransaction",
           be_compare_prop: "beExchangeAnyTransaction.range",
-          ...Function_Exception_Detail,
         });
       }
     }

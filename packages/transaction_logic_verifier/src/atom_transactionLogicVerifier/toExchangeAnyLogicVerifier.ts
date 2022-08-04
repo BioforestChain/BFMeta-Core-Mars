@@ -1,4 +1,5 @@
 import {
+  ASSET_STATUS,
   NewTransactionRefuseReason,
   PARENT_ASSET_TYPE,
   ToExchangeAnyTransaction,
@@ -94,7 +95,6 @@ export class ToExchangeAnyLogicVerifier extends TransactionLogicVerifier {
       throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `toExchangeParentAssetType ${toExchangeParentAssetType}`,
         target: "transaction.asset.toExchangeAny",
-        function: "applyTransaction",
       });
     }
 
@@ -114,15 +114,12 @@ export class ToExchangeAnyLogicVerifier extends TransactionLogicVerifier {
       if (!memDapp) {
         throw new ConsensusException(ERROR_LIST.DAPPID_IS_NOT_EXIST, {
           dappid: beExchangeAssetType,
-          function: "verify",
         });
       }
     } else if (beExchangeParentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME) {
       // 只有顶级域名才能交换
       if (beExchangeAssetType.split(",").length > 2) {
-        throw new ConsensusException(ERROR_LIST.ONLY_TOP_LEVEL_LOCATION_NAME_CAN_EXCHANGE, {
-          function: "verify",
-        });
+        throw new ConsensusException(ERROR_LIST.ONLY_TOP_LEVEL_LOCATION_NAME_CAN_EXCHANGE);
       }
       const memLocation = await accountGetterHelper.getLocationName(
         beExchangeSource,
@@ -133,7 +130,6 @@ export class ToExchangeAnyLogicVerifier extends TransactionLogicVerifier {
         throw new ConsensusException(ERROR_LIST.LOCATION_NAME_IS_NOT_EXIST, {
           locationName: beExchangeAssetType,
           errorId: NewTransactionRefuseReason.LOCATION_NAME_NOT_EXIST,
-          function: "verify",
         });
       }
     } else if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
@@ -146,14 +142,18 @@ export class ToExchangeAnyLogicVerifier extends TransactionLogicVerifier {
         throw new ConsensusException(ERROR_LIST.ENTITY_IS_NOT_EXIST, {
           entityId: beExchangeAssetType,
           errorId: NewTransactionRefuseReason.ENTITY_NOT_EXIST,
-          function: "verify",
+        });
+      }
+      if (memEntity.status === ASSET_STATUS.DESTORY) {
+        throw new ConsensusException(ERROR_LIST.CAN_NOT_DESTORY_ENTITY, {
+          entityId: beExchangeAssetType,
+          reason: "Entity already be destory",
         });
       }
     } else {
       throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `beExchangeParentAssetType ${beExchangeParentAssetType}`,
         target: "transaction.asset.toExchangeAny",
-        function: "applyTransaction",
       });
     }
 

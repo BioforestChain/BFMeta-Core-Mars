@@ -104,7 +104,6 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
     if (!beExchangeAny) {
       throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
         param: "beExchangeAny",
-        function: "verifyTransactionBody",
       });
     }
 
@@ -404,7 +403,6 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
         throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `toExchangeParentAssetType ${toExchangeParentAssetType}`,
           target: "transaction.asset.beExchangeAny.exchangeAny",
-          function: "applyTransaction",
         });
       }
 
@@ -494,7 +492,6 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
         throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `beExchangeParentAssetType ${beExchangeParentAssetType}`,
           target: "transaction.asset.beExchangeAny.exchangeAny",
-          function: "applyTransaction",
         });
       }
     });

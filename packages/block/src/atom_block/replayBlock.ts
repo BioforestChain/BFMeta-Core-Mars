@@ -263,7 +263,6 @@ export class ReplayBlockCore<T extends Block> {
     } = block;
     const { tpowOfWorkExemptionBlocks } = config;
     const needTPow = height > tpowOfWorkExemptionBlocks;
-    const Function_Exception_Detail = { function: "insertTransactionsForReplay" };
     const MAX_TRANSACTION_SIZE = this.config.maxTransactionSize;
     /**所有交易的sha256hash */
     const payloadHash = this.cryptoHelper.sha256();
@@ -463,7 +462,6 @@ export class ReplayBlockCore<T extends Block> {
               if (!clalAssetPrealnum) {
                 throw new ArgumentIllegalException(ERROR_LIST.NOT_FOUND, {
                   prop: `transaction assetPrealnum ${signature}`,
-                  ...Function_Exception_Detail,
                   target: "blockChain",
                 });
               }
