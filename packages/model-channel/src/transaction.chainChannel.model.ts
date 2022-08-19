@@ -234,6 +234,7 @@ export class NewTransactionReturnModel
   @Field.d(NewTransactionReturnModel.INC++, NewTransactionRefuseReason, "optional")
   refuseReason?: NewTransactionRefuseReason;
   /**错误码 */
+  @Field.d(NewTransactionReturnModel.INC++, "string", "optional")
   errorCode?: string;
   toJSON() {
     const res: BFChainCore.NewTransactionReturnJSON = Object.assign(
