@@ -115,7 +115,9 @@ declare namespace BFChainCore {
     transaction: TransactionJSON<any> | Transaction;
   };
   /**接收交易的返回 */
-  interface NewTransactionReturnJSON extends CommonResponseJSON, NewTransactionReturnParams {}
+  interface NewTransactionReturnJSON extends CommonResponseJSON, NewTransactionReturnParams {
+    errorCode?: string;
+  }
   interface NewTransactionReturnParams {
     /**交易的接收状态 */
     newTrsStatus: NewTransactionStatus;
@@ -123,6 +125,8 @@ declare namespace BFChainCore {
     minFee: string;
     /**拒绝的错误码 */
     refuseReason?: import("./").NewTransactionRefuseReason;
+    /**错误码 */
+    errorCode?: string;
   }
   /**查询交易的查询条件 */
   type BlockQueryOptionsJSON = {

@@ -1023,6 +1023,7 @@ export class ChainChannel<
                 response.minFee = broadcastResult.minFee;
                 response.newTrsStatus = broadcastResult.newTrsStatus;
                 response.refuseReason = broadcastResult.refuseReason;
+                response.errorCode = broadcastResult.errorCode;
               }
 
               // 绑定返回结果

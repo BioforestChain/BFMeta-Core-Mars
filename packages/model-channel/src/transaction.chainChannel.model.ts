@@ -233,16 +233,18 @@ export class NewTransactionReturnModel
   /**最低手续费 */
   @Field.d(NewTransactionReturnModel.INC++, NewTransactionRefuseReason, "optional")
   refuseReason?: NewTransactionRefuseReason;
+  /**错误码 */
+  errorCode?: string;
   toJSON() {
     const res: BFChainCore.NewTransactionReturnJSON = Object.assign(
       {
         newTrsStatus: this.newTrsStatus,
         minFee: this.minFee,
-        refuseReason: this.refuseReason,
       },
       super.toJSON(),
     );
     this.refuseReason ?? (res.refuseReason = this.refuseReason);
+    this.errorCode ?? (res.errorCode = this.errorCode);
     return res;
   }
 }
