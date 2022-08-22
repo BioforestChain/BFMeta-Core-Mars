@@ -145,6 +145,7 @@ export const ERROR_CODE_LIST_ZH = {
   "001-11069": "账户已经设置了用户名，错误 id {errorId}",
   "001-11070": "模板发行 entity 的次数用完，entityFactory {entityFactory}",
   "001-11071": "权益已经存在，所属链的网络标识符 {magic} 权益名 {assetType}",
+  "001-11072": "链上的冻结资产 signature {signature} 不存在或者已经过期",
 
   // block logic
   "001-12001":
