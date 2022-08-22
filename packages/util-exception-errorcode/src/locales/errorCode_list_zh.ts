@@ -84,7 +84,7 @@ export const ERROR_CODE_LIST_ZH = {
   "001-11010":
     "事件的去往链的网络标识符不合法，原因 {reason}，事件签名 {signature} 事件发起账户地址 {senderId} 事件发起高度 {applyBlockHeight} 事件类型 {type}",
   "001-11011":
-    "事件的事件戳不合法，原因 {reason}，事件签名 {signature} 事件发起账户地址 {senderId} 事件发起高度 {applyBlockHeight} 事件类型 {type}",
+    "事件的时间戳不合法，原因 {reason}，事件签名 {signature} 事件发起账户地址 {senderId} 事件发起高度 {applyBlockHeight} 事件类型 {type}",
   "001-11012": "DAppid 不存在，dappid {dappid}",
   "001-11013": "DAppid 已经存在, dappid {dappid}，错误 id {errorId}",
   "001-11014": "位名不存在, 位名 {locationName}，错误 id {errorId}",
