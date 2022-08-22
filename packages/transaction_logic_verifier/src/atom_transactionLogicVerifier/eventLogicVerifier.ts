@@ -211,9 +211,8 @@ export class EventLogicVerifier {
         );
 
         if (!frozenAsset) {
-          throw new ConsensusException(ERROR_LIST.NOT_EXIST, {
-            prop: `Frozen asset with signature ${transactionSignature}`,
-            target: "blockChain",
+          throw new ConsensusException(ERROR_LIST.FROZEN_ASSET_NOT_EXIST_OR_EXPIRED, {
+            signature: transactionSignature,
           });
         }
 
@@ -284,9 +283,8 @@ export class EventLogicVerifier {
         );
 
         if (!frozenAsset) {
-          throw new ConsensusException(ERROR_LIST.NOT_EXIST, {
-            prop: `Frozen asset with signature ${transactionSignature}`,
-            target: "blockChain",
+          throw new ConsensusException(ERROR_LIST.FROZEN_ASSET_NOT_EXIST_OR_EXPIRED, {
+            signature: transactionSignature,
           });
         }
 

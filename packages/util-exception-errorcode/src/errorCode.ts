@@ -388,6 +388,10 @@ export const ERROR_LIST = {
     "001-11071",
     "Asset already exist, magic {magic} assetType {assetType}",
   ),
+  FROZEN_ASSET_NOT_EXIST_OR_EXPIRED: new ErrorCode(
+    "001-11073",
+    "Frozen asset with signature {signature} in blockChain not exist or expired",
+  ),
 
   // block logic
   BLOCK_SIGN_SIGNATURE_IS_REQUIRED: new ErrorCode(
