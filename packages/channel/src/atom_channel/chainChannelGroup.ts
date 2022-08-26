@@ -1,53 +1,56 @@
 import {
+  BaseHelper,
+  BlobHelper,
+  ChainTimeHelper,
+  ConfigHelper,
+  TransactionHelper,
+} from "@bfchain/core-helper";
+import {
+  Block,
+  CommonBlock,
+  DUPLEX_API_CMD,
+  NewBlockArgModel,
+  NewBlockReturn,
+  NewTransactionReturnModel,
+  QueryBlockReturnModel,
+  RESPONSE_STATUS,
+  TransactionInBlock,
+} from "@bfchain/core-model";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
+import {
+  $safeEnd,
+  AfterInit,
   AsyncIteratorGenerator,
   AsyncIteratorGeneratorTransfer,
   bindThis,
+  cacheGetter,
+  EasyMap,
+  EasyWeakMap,
+  EventEmitter,
   Inject,
+  ModuleStroge,
+  OnInit,
   ParallelPool,
   PromiseOut,
   QueneEventEmitter,
   Resolvable,
-  cacheGetter,
-  EasyWeakMap,
+  safePromiseOffThen,
+  safePromiseThen,
   sleep,
   unsleep,
-  EventEmitter,
-  AfterInit,
-  EasyMap,
-  ModuleStroge,
-  safePromiseThen,
-  safePromiseOffThen,
-  OnInit,
-  $safeEnd,
 } from "@bfchain/util";
-import {
-  Block,
-  CommonBlock,
-  RESPONSE_STATUS,
-  TransactionInBlock,
-  NewBlockArgModel,
-  DUPLEX_API_CMD,
-  NewBlockReturn,
-  NewTransactionReturnModel,
-  QueryBlockReturnModel,
-  QueryTransactionReturnModel,
-  IndexTransactionReturnModel,
-  DownloadTransactionReturnModel,
-} from "@bfchain/core-model";
-import { ChainChannelHelper } from "./chainChannelHelper";
 import { ChainChannel, ChainChannelBase } from "./chainChannel";
-import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
+import { ChainChannelHelper } from "./chainChannelHelper";
+import { ChainChannelWaiterQueue } from "./ChainChannelWaiter";
 import {
-  GroupQueryTransactionsBuilder,
-  GroupQueryBlockBuilder,
-  GroupRequesterBuilder,
   GroupDownloadTransactionsBuilder,
   GroupIndexTransactionsBuilder,
+  GroupQueryBlockBuilder,
+  GroupQueryTransactionsBuilder,
+  GroupRequesterBuilder,
 } from "./GroupRequesterBuilder";
-import { BaseHelper, ChainTimeHelper, ConfigHelper, TransactionHelper } from "@bfchain/core-helper";
-import type { PromiseTimeout } from "./PromiseTimeout";
 import { IntSet } from "./IntSet";
-import { ChainChannelWaiter, ChainChannelWaiterQueue } from "./ChainChannelWaiter";
+import type { PromiseTimeout } from "./PromiseTimeout";
 
 const {
   AbortException,
@@ -94,6 +97,31 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
   get canDownloadTransaction() {
     for (const cc of this.chainChannelSet) {
       if (cc.canDownloadTransactions) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  get canOpenBlob() {
+    for (const cc of this.chainChannelSet) {
+      if (cc.canOpenBlob) {
+        return true;
+      }
+    }
+    return false;
+  }
+  get canReadBlob() {
+    for (const cc of this.chainChannelSet) {
+      if (cc.canReadBlob) {
+        return true;
+      }
+    }
+    return false;
+  }
+  get canCloseBlob() {
+    for (const cc of this.chainChannelSet) {
+      if (cc.canCloseBlob) {
         return true;
       }
     }
@@ -185,6 +213,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
   @Inject(ChainTimeHelper) private timeHelper!: ChainTimeHelper;
   @Inject(ChainChannelHelper) private helper!: ChainChannelHelper;
   @Inject(TransactionHelper) private transactionHelper!: TransactionHelper;
+  @Inject(BlobHelper) protected blobHelper!: BlobHelper;
 
   protected chainChannelSet = new Set<DH>();
   get size() {

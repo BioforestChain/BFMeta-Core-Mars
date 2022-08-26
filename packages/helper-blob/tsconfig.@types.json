@@ -1,0 +1,22 @@
+{
+  "extends": "./tsconfig",
+  "mixin": [
+    "./tsconfig.json",
+    "../../config/tsconfig_base/base.tsconfig.@types.json"
+  ],
+  "compilerOptions": {
+    "declarationDir": "../@types/bfchain__core-helper-blob",
+    "declaration": true,
+    "declarationMap": false,
+    "outDir": "../../.cache/helper-blob",
+    "tsBuildInfoFile": "../../.cache/helper-blob/@types.tsbuildinfo"
+  },
+  "references": [
+    {
+      "path": "../model-channel/tsconfig.@types.json"
+    },
+    {
+      "path": "../typings/tsconfig.@types.json"
+    }
+  ]
+}

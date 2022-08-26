@@ -23,6 +23,12 @@ import {
   IndexTransactionReturnModel,
   DownloadTransactionArgModel,
   DownloadTransactionReturnModel,
+  OpenBlobArgModel,
+  OpenBlobReturnModel,
+  CloseBlobArgModel,
+  CloseBlobReturnModel,
+  ReadBlobArgModel,
+  ReadBlobReturnModel,
 } from "@bfchain/core-model";
 import { BaseHelper, TransactionHelper, BlockHelper, ChainTimeHelper } from "@bfchain/core-helper";
 import { PromiseTimeout } from "./PromiseTimeout";
@@ -470,6 +476,156 @@ export class ChainChannelHelper {
     //#endregion
     return arg;
   }
+  @bindThis
+  async boxOpenBlobArg(params: ArrayBuffer | Uint8Array) {
+    if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS, {
+        params,
+      });
+    }
+    let arg: OpenBlobArgModel;
+    try {
+      arg = OpenBlobArgModel.decode(params instanceof Uint8Array ? params : new Uint8Array(params));
+    } catch (error) {
+      if (error instanceof Exception) {
+        throw error;
+      }
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_PARAMS, {
+        error,
+        params,
+      });
+    }
+    const { hash: sha256 } = arg;
+    if (sha256 === undefined || sha256.length !== 32) {
+      throw new ArgumentIllegalException("Invalid Open Blob query params, wrong sha256 value");
+    }
+
+    return arg;
+  }
+  /**
+   * 生成并校验交易查询的返回结果
+   */
+  @bindThis
+  async boxOpenBlobReturn(params: ArrayBuffer | Uint8Array) {
+    if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS, {
+        params,
+      });
+    }
+    let arg: OpenBlobReturnModel;
+    try {
+      arg = OpenBlobReturnModel.decode(
+        params instanceof Uint8Array ? params : new Uint8Array(params),
+      );
+    } catch (error) {
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_PARAMS, {
+        error,
+        params,
+      });
+    }
+    //#endregion
+    return arg;
+  }
+
+  @bindThis
+  async boxCloseBlobArg(params: ArrayBuffer | Uint8Array) {
+    if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS, {
+        params,
+      });
+    }
+    let arg: CloseBlobArgModel;
+    try {
+      arg = CloseBlobArgModel.decode(
+        params instanceof Uint8Array ? params : new Uint8Array(params),
+      );
+    } catch (error) {
+      if (error instanceof Exception) {
+        throw error;
+      }
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_PARAMS, {
+        error,
+        params,
+      });
+    }
+
+    return arg;
+  }
+  /**
+   * 生成并校验交易查询的返回结果
+   */
+  @bindThis
+  async boxCloseBlobReturn(params: ArrayBuffer | Uint8Array) {
+    if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS, {
+        params,
+      });
+    }
+    let arg: CloseBlobReturnModel;
+    try {
+      arg = CloseBlobReturnModel.decode(
+        params instanceof Uint8Array ? params : new Uint8Array(params),
+      );
+    } catch (error) {
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_PARAMS, {
+        error,
+        params,
+      });
+    }
+    //#endregion
+    return arg;
+  }
+
+  @bindThis
+  async boxReadBlobArg(params: ArrayBuffer | Uint8Array) {
+    if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS, {
+        params,
+      });
+    }
+    let arg: ReadBlobArgModel;
+    try {
+      arg = ReadBlobArgModel.decode(params instanceof Uint8Array ? params : new Uint8Array(params));
+    } catch (error) {
+      if (error instanceof Exception) {
+        throw error;
+      }
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_PARAMS, {
+        error,
+        params,
+      });
+    }
+    const { start, end } = arg;
+    if (start < 0 || start >= end) {
+      throw new ArgumentIllegalException("Invalid Read Blob range");
+    }
+    return arg;
+  }
+  /**
+   * 生成并校验交易查询的返回结果
+   */
+  @bindThis
+  async boxReadBlobReturn(params: ArrayBuffer | Uint8Array) {
+    if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS, {
+        params,
+      });
+    }
+    let arg: ReadBlobReturnModel;
+    try {
+      arg = ReadBlobReturnModel.decode(
+        params instanceof Uint8Array ? params : new Uint8Array(params),
+      );
+    } catch (error) {
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_PARAMS, {
+        error,
+        params,
+      });
+    }
+    //#endregion
+    return arg;
+  }
+
   /**
    * 生成并校验区块查询的传入参数
    */

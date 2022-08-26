@@ -25,6 +25,9 @@
       "path": "../helper-bigint/tsconfig.@types.json"
     },
     {
+      "path": "../helper-blob/tsconfig.@types.json"
+    },
+    {
       "path": "../helper-block_base_statistics/tsconfig.@types.json"
     },
     {

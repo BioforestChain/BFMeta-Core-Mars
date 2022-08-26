@@ -7,6 +7,7 @@ import type {} from "@bfchain/core-model-block";
 export * from "./constants";
 export * from "./common.chainChannel.model";
 export * from "./transaction.chainChannel.model";
+export * from "./resource.chainChannel.model";
 export * from "./block.chainChannel.model";
 export * from "./peer.chainChannel.model";
 

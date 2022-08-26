@@ -144,8 +144,11 @@ export enum DUPLEX_API_CMD {
   QUERY_BLOCK = 0b1000, // 1 << _inc++, //= "/block/query",
   NEW_BLOCK = 0b10000, // 1 << _inc++, //= "/block/broadcast",
   GET_PEER_INFO = 0b100000, // 1 << _inc++, //= "/peer/info",
-  INDEX_TRANSACTION = 0b1000000, // 1 << _inc++, //= "/peer/info",
-  DOWNLOAD_TRANSACTION = 0b10000000, // 1 << _inc++, //= "/peer/info",
+  INDEX_TRANSACTION = 0b1000000, // 1 << _inc++, //= "/transaction/index",
+  DOWNLOAD_TRANSACTION = 0b10000000, // 1 << _inc++, //= "/transaction/download",
+  OPEN_BLOB = 0b100000000, // 1 << _inc++, //= "/resource/open",
+  READ_BLOB = 0b1000000000, // 1 << _inc++, //= "/resource/read",
+  CLOSE_BLOB = 0b1000000000, // 1 << _inc++, //= "/resource/close",
 
   /**
    * @TODO 使用这些RETURN替代单纯的RESPONSE，
@@ -158,6 +161,9 @@ export enum DUPLEX_API_CMD {
   GET_PEER_INFO_RETURN = DUPLEX_API_CMD.RESPONSE | DUPLEX_API_CMD.GET_PEER_INFO,
   INDEX_TRANSACTION_RETURN = DUPLEX_API_CMD.RESPONSE | DUPLEX_API_CMD.INDEX_TRANSACTION,
   DOWNLOAD_TRANSACTION_RETURN = DUPLEX_API_CMD.RESPONSE | DUPLEX_API_CMD.DOWNLOAD_TRANSACTION,
+  OPEN_BLOB_RETURN = DUPLEX_API_CMD.RESPONSE | DUPLEX_API_CMD.OPEN_BLOB,
+  READ_BLOB_RETURN = DUPLEX_API_CMD.RESPONSE | DUPLEX_API_CMD.READ_BLOB,
+  CLOSE_BLOB_RETURN = DUPLEX_API_CMD.RESPONSE | DUPLEX_API_CMD.CLOSE_BLOB,
 }
 
 export const enum REQUEST_LIMIT_STRATEGY {
