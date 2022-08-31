@@ -3,7 +3,7 @@ declare namespace BFChainCore {
     has(hash: string): Promise<boolean>;
     open(hash: string): Promise<number>;
     state(fd: number): Promise<BlobMetadata>;
-    read(fd: number, start?: number, end?: number): Promise<Uint8Array>;
+    read(fd: number, start: number, end: number): Promise<Uint8Array>;
     close(fd: number): Promise<void>;
   }
   type BlobMetadata = {
@@ -43,7 +43,7 @@ declare namespace BFChainCore {
      * @param contentType 类型
      * @returns 返回HASH值
      */
-    saveAsBlob(ptr: number, contentType?: string): Promise<string>;
+    saveAsBlob(ptr: number): Promise<string>;
 
     /**
      * 将 Blob 移动到 永久区域或者临时区域

@@ -254,12 +254,12 @@ export class BlobHelper {
    * @param contentType 类型
    * @returns 返回HASH值
    */
-  saveAsBlob(ptr: number, contentType: string) {
+  saveAsBlob(ptr: number) {
     const { blobSha256Writer: sha256BlobWriter } = this;
     if (!sha256BlobWriter) {
       throw new RefuseException(ERROR_LIST.FAIL_TO_GENERATE_BLOB, { ptr });
     }
-    return sha256BlobWriter.saveAsBlob(ptr, contentType);
+    return sha256BlobWriter.saveAsBlob(ptr);
   }
 
   changeBlobStrategy(
