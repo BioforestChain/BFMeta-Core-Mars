@@ -26,6 +26,7 @@ import {
   cacheGetter,
   EasyMap,
   EasyWeakMap,
+  EasySet,
   EventEmitter,
   Inject,
   ModuleStroge,
@@ -103,29 +104,50 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     return false;
   }
 
-  get canOpenBlob() {
-    for (const cc of this.chainChannelSet) {
-      if (cc.canOpenBlob) {
-        return true;
+  private _ccBlobSupportAlgorithms = EasyMap.from({
+    creater: (algorithm: BFChainCore.OpenBlobArgJSON.Algorithm) => {
+      const set = EasySet.from<DH>({
+        afterDelete: () => {
+          if (set.size === 0) {
+            this._ccBlobSupportAlgorithms.delete(algorithm);
+          }
+        },
+      });
+      return set;
+    },
+  });
+  /**缓存 */
+  private _blobSupportAlgorithms?: readonly BFChainCore.OpenBlobArgJSON.Algorithm[];
+
+  private _initBlobSupportAlgorithmsBinding = false;
+  get blobSupportAlgorithms() {
+    const ccBlobSupportAlgorithms = this._ccBlobSupportAlgorithms;
+    if (this._initBlobSupportAlgorithmsBinding === false) {
+      this._initBlobSupportAlgorithmsBinding = true;
+      /// 把现有的节点放进来
+      for (const cc of this.chainChannelSet) {
+        for (const algorithm of cc.blobSupportAlgorithms) {
+          ccBlobSupportAlgorithms.forceGet(algorithm).add(cc);
+        }
       }
+
+      /// 监听节点变动
+      this._chainChannelEvents.on("addChainChannel", (cc) => {
+        for (const algorithm of cc.blobSupportAlgorithms) {
+          ccBlobSupportAlgorithms.forceGet(algorithm).add(cc);
+        }
+        // 清空缓存
+        this._blobSupportAlgorithms = undefined;
+      });
+      this._chainChannelEvents.on("removeChainChannel", (cc) => {
+        for (const algorithm of cc.blobSupportAlgorithms) {
+          ccBlobSupportAlgorithms.forceGet(algorithm).delete(cc);
+        }
+        // 清空缓存
+        this._blobSupportAlgorithms = undefined;
+      });
     }
-    return false;
-  }
-  get canReadBlob() {
-    for (const cc of this.chainChannelSet) {
-      if (cc.canReadBlob) {
-        return true;
-      }
-    }
-    return false;
-  }
-  get canCloseBlob() {
-    for (const cc of this.chainChannelSet) {
-      if (cc.canCloseBlob) {
-        return true;
-      }
-    }
-    return false;
+    return (this._blobSupportAlgorithms ??= [...ccBlobSupportAlgorithms.keys()]);
   }
   get canQueryBlock() {
     for (const cc of this.chainChannelSet) {

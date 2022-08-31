@@ -12,6 +12,7 @@ declare namespace BFChainCore {
     /**大小 */
     size: number;
   };
+  type BlobMode = "read" | "write" | "readwrite";
 
   interface BlobWriter {
     /**

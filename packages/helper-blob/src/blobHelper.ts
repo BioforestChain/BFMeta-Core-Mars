@@ -85,10 +85,10 @@ class FdCtrl {
 @Injectable()
 export class BlobHelper {
   constructor(readonly timeHelper: ChainTimeHelper) {}
-  @Inject("sha256BlobReader", { optional: true })
-  sha256BlobReader?: BFChainCore.BlobReader;
-  @Inject("sha256BlobWriter", { optional: true })
-  sha256BlobWriter?: BFChainCore.BlobWriter;
+  @Inject("blobSha256Reader", { optional: true })
+  blobSha256Reader?: BFChainCore.BlobReader;
+  @Inject("blobSha256Writer", { optional: true })
+  blobSha256Writer?: BFChainCore.BlobWriter;
   private targetDescriptorCtrlMap = EasyMap.from({
     creater: (target: object) => {
       return new DescriptorCtrl(this.timeHelper);
@@ -96,7 +96,7 @@ export class BlobHelper {
   });
   private sha256fdCtrlMap = EasyMap.from({
     creater: async (sha256: string) => {
-      const sha256BlobHelper = this.sha256BlobReader!;
+      const sha256BlobHelper = this.blobSha256Reader!;
       if ((await sha256BlobHelper.has(sha256)) === false) {
         throw new NoFoundException(ERROR_LIST.OPEN_BLOB_NOFOUND, { hash: `SHA256:${sha256}` });
       }
@@ -112,8 +112,36 @@ export class BlobHelper {
     },
   });
 
+  support(
+    algorithm: BFChainCore.OpenBlobArgJSON.Algorithm,
+    mode: BFChainCore.BlobMode = "readwrite",
+  ) {
+    let support = true;
+    if (algorithm === "SHA256") {
+      if (mode.includes("read")) {
+        support = support && this.blobSha256Reader !== undefined;
+      }
+      if (mode.includes("write")) {
+        support = support && this.blobSha256Writer !== undefined;
+      }
+    } else {
+      support = false;
+    }
+    return support;
+  }
+
+  supportAlgorithms(mode: BFChainCore.BlobMode) {
+    const algorithms = new Set<BFChainCore.OpenBlobArgJSON.Algorithm>();
+    for (const algorithm of ["SHA256"] as const) {
+      if (this.support(algorithm, mode)) {
+        algorithms.add(algorithm);
+      }
+    }
+    return algorithms;
+  }
+
   async exists(openArg: BFChainCore.OpenBlobArgJSON) {
-    const { sha256BlobReader } = this;
+    const { blobSha256Reader: sha256BlobReader } = this;
     if (!sha256BlobReader || openArg.algorithm !== "SHA256") {
       return false;
     }
@@ -122,7 +150,7 @@ export class BlobHelper {
 
   async open(target: object, openArg: BFChainCore.OpenBlobArgJSON) {
     const { hash, algorithm } = openArg;
-    const { sha256BlobReader: sha256BlobHelper } = this;
+    const { blobSha256Reader: sha256BlobHelper } = this;
     if (algorithm !== "SHA256") {
       throw new ArgumentIllegalException(ERROR_LIST.OPEN_BLOB_INVALID_HASH, {
         hash: `${openArg.algorithm}:${openArg.hash}`,
@@ -150,7 +178,7 @@ export class BlobHelper {
     return openResult;
   }
   async read(target: object, readArg: BFChainCore.ReadBlobArgJSON) {
-    const { sha256BlobReader: sha256BlobHelper } = this;
+    const { blobSha256Reader: sha256BlobHelper } = this;
     if (sha256BlobHelper === undefined) {
       throw new ArgumentIllegalException(ERROR_LIST.READ_BLOB_INVALID_DESCRIPTOR, {
         descriptor: readArg.descriptor,
@@ -170,7 +198,7 @@ export class BlobHelper {
     return readResult;
   }
   async close(target: object, closeArg: BFChainCore.CloseBlobArgJSON) {
-    const { sha256BlobReader: sha256BlobHelper } = this;
+    const { blobSha256Reader: sha256BlobHelper } = this;
     if (sha256BlobHelper === undefined) {
       throw new ArgumentIllegalException(ERROR_LIST.CLOSE_BLOB_INVALID_DESCRIPTOR, {
         descriptor: closeArg.descriptor,
@@ -201,7 +229,7 @@ export class BlobHelper {
     contentType: string,
     strategy: STORAGE_STRATEGY = STORAGE_STRATEGY.TEMPORARY,
   ) {
-    const { sha256BlobWriter } = this;
+    const { blobSha256Writer: sha256BlobWriter } = this;
     if (!sha256BlobWriter) {
       throw new RefuseException(ERROR_LIST.REFUSE_REQUEST_BLOB_STORAGE, { size: totalSize });
     }
@@ -214,7 +242,7 @@ export class BlobHelper {
    * @param chunk 分片数据
    */
   saveChunk(ptr: number, index: number, chunk: Uint8Array) {
-    const { sha256BlobWriter } = this;
+    const { blobSha256Writer: sha256BlobWriter } = this;
     if (!sha256BlobWriter) {
       throw new RefuseException(ERROR_LIST.FAIL_TO_STORE_BLOB_CHUNK, { ptr, index });
     }
@@ -227,7 +255,7 @@ export class BlobHelper {
    * @returns 返回HASH值
    */
   saveAsBlob(ptr: number, contentType: string) {
-    const { sha256BlobWriter } = this;
+    const { blobSha256Writer: sha256BlobWriter } = this;
     if (!sha256BlobWriter) {
       throw new RefuseException(ERROR_LIST.FAIL_TO_GENERATE_BLOB, { ptr });
     }
@@ -238,7 +266,7 @@ export class BlobHelper {
     openArg: BFChainCore.OpenBlobArgJSON,
     strategy: import("./blobHelper").STORAGE_STRATEGY,
   ) {
-    const { sha256BlobWriter } = this;
+    const { blobSha256Writer: sha256BlobWriter } = this;
     if (!sha256BlobWriter) {
       throw new RefuseException(ERROR_LIST.FAIL_TO_CHANGE_BLOB_STRATEGY, {
         hash: `${openArg.algorithm}:${openArg.hash}`,

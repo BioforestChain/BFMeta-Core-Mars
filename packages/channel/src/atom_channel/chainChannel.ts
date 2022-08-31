@@ -70,9 +70,7 @@ export abstract class ChainChannelBase
   public abstract canQueryBlock: boolean;
   public abstract canBroadcastTransaction: boolean;
   public abstract canBroadcastBlock: boolean;
-  public abstract canOpenBlob: boolean;
-  public abstract canReadBlob: boolean;
-  public abstract canCloseBlob: boolean;
+  public abstract blobSupportAlgorithms: readonly BFChainCore.OpenBlobArgJSON.Algorithm[];
   protected abstract config: ConfigHelper;
   protected abstract baseHelper: BaseHelper;
   protected abstract blobHelper: BlobHelper;
@@ -172,14 +170,8 @@ export class ChainChannel<
   get canDownloadTransactions() {
     return true;
   }
-  get canOpenBlob() {
-    return true;
-  }
-  get canReadBlob() {
-    return true;
-  }
-  get canCloseBlob() {
-    return true;
+  get blobSupportAlgorithms() {
+    return [] as readonly BFChainCore.OpenBlobArgJSON.Algorithm[];
   }
   get canQueryBlock() {
     return true;
@@ -663,30 +655,35 @@ export class ChainChannel<
     return res;
   }
 
+  private _openedBlobs = new Set<number>();
   async openBlob(
-    blobInfo: BFChainCore.OpenBlobArgJSON,
+    openArg: BFChainCore.OpenBlobArgJSON,
     opts?: BFChainCore.ChannelRequestOptions<THIS>,
   ) {
-    if (!this.canOpenBlob) {
+    if (!this.blobSupportAlgorithms.includes(openArg.algorithm)) {
       return OpenBlobReturnModel.fromObject({
         status: RESPONSE_STATUS.error,
         error: ErrorMessage.fromObject(new RefuseException(ERROR_LIST.REFUSE_RESPONSE_OPEN_BLOB)),
       });
     }
-    const arg = OpenBlobArgModel.fromObject(blobInfo);
-    return this._request(
+    const arg = OpenBlobArgModel.fromObject(openArg);
+    const openRes = await this._request(
       DUPLEX_API_CMD.OPEN_BLOB,
       arg,
       this.chainChannelHelper.boxOpenBlobReturn,
       opts,
     );
+    if (openRes.descriptor > 0) {
+      this._openedBlobs.add(openRes.descriptor);
+    }
+    return openRes;
   }
 
   async readBlob(
     blobInfo: BFChainCore.ReadBlobArgJSON,
     opts?: BFChainCore.ChannelRequestOptions<THIS>,
   ) {
-    if (!this.canReadBlob) {
+    if (this._openedBlobs.has(blobInfo.descriptor) === false) {
       return ReadBlobReturnModel.fromObject({
         status: RESPONSE_STATUS.error,
         error: ErrorMessage.fromObject(new RefuseException(ERROR_LIST.REFUSE_RESPONSE_READ_BLOB)),
@@ -704,19 +701,23 @@ export class ChainChannel<
     blobInfo: BFChainCore.CloseBlobArgJSON,
     opts?: BFChainCore.ChannelRequestOptions<THIS>,
   ) {
-    if (!this.canCloseBlob) {
+    if (this._openedBlobs.has(blobInfo.descriptor) === false) {
       return CloseBlobReturnModel.fromObject({
         status: RESPONSE_STATUS.error,
         error: ErrorMessage.fromObject(new RefuseException(ERROR_LIST.REFUSE_RESPONSE_CLOSE_BLOB)),
       });
     }
     const arg = CloseBlobArgModel.fromObject(blobInfo);
-    return this._request(
+    const closeRes = await this._request(
       DUPLEX_API_CMD.CLOSE_BLOB,
       arg,
       this.chainChannelHelper.boxCloseBlobReturn,
       opts,
     );
+    if (closeRes.status === RESPONSE_STATUS.success) {
+      this._openedBlobs.delete(blobInfo.descriptor);
+    }
+    return closeRes;
   }
 
   async downloadBlob(openArg: BFChainCore.OpenBlobArgJSON) {

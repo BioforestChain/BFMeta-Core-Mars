@@ -253,9 +253,7 @@ declare namespace BFChainCore {
     readonly canQueryTransactions: boolean;
     readonly canIndexTransactions: boolean;
     readonly canDownloadTransactions: boolean;
-    readonly canOpenBlob: boolean;
-    readonly canReadBlob: boolean;
-    readonly canCloseBlob: boolean;
+    readonly blobSupportAlgorithms: readonly BFChainCore.OpenBlobArgJSON.Algorithm[];
     readonly canQueryBlock: boolean;
     readonly canBroadcastTransaction: boolean;
     readonly canBroadcastBlock: boolean;

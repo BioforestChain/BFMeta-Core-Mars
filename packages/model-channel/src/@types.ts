@@ -128,12 +128,7 @@ declare namespace BFChainCore {
     /**句柄过期时间 */
     expriedTime: number;
   }
-
-  type CloseBlobArgJSON = {
-    /**句柄描述符 */
-    descriptor: number;
-  };
-
+  
   type ReadBlobArgJSON = {
     /**句柄描述符 */
     descriptor: number;
@@ -149,6 +144,11 @@ declare namespace BFChainCore {
   interface ReadBlobReturnParams {
     chunkBuffer: Uint8Array;
   }
+
+  type CloseBlobArgJSON = {
+    /**句柄描述符 */
+    descriptor: number;
+  };
 
   interface CloseBlobReturnJSON extends CommonResponseJSON, CloseBlobReturnParams {}
   interface CloseBlobReturnParams {}
