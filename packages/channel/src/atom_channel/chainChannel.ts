@@ -778,7 +778,7 @@ export class ChainChannel<
         continue;
       }
       /// 下载完成，保存成 blob 对象
-      await this.blobHelper.saveAsBlob(blob_prt, contentType);
+      await this.blobHelper.saveAsBlob(blob_prt);
       /// 关闭连接
       await this.closeBlob({ descriptor });
     } while (true);
