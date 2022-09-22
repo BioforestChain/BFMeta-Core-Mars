@@ -18,6 +18,7 @@
     "@bfchain/core-helper-account-base": "5.25.83",
     "@bfchain/core-helper-asymmetric": "5.25.83",
     "@bfchain/core-helper-bigint": "5.25.83",
+    "@bfchain/core-helper-blob": "5.25.83",
     "@bfchain/core-helper-block": "5.25.83",
     "@bfchain/core-helper-block-base-statistics": "5.25.83",
     "@bfchain/core-helper-chain-asset-info": "5.25.83",

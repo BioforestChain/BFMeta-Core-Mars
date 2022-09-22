@@ -107,6 +107,52 @@ declare namespace BFChainCore {
     transactions: TransactionInBlockJSON[];
   }
 
+  type OpenBlobArgJSON = {
+    /**未来可能会有其它hash算法的支持 */
+    algorithm: OpenBlobArgJSON.Algorithm;
+    hash: string;
+  };
+  namespace OpenBlobArgJSON {
+    type Algorithm = "SHA256";
+  }
+  interface OpenBlobReturnJSON extends CommonResponseJSON, OpenBlobReturnParams {}
+  interface OpenBlobReturnParams {
+    /**句柄描述符 */
+    descriptor: number;
+    /**类型 */
+    contentType: string;
+    /**大小 */
+    size: number;
+    /**下载时，推荐的分片大小 */
+    chunkSize: number;
+    /**句柄过期时间 */
+    expriedTime: number;
+  }
+  
+  type ReadBlobArgJSON = {
+    /**句柄描述符 */
+    descriptor: number;
+    /**起始位置 */
+    start: number;
+    /**结束位置 */
+    end: number;
+  };
+
+  interface ReadBlobReturnJSON extends CommonResponseJSON {
+    chunk: string;
+  }
+  interface ReadBlobReturnParams {
+    chunkBuffer: Uint8Array;
+  }
+
+  type CloseBlobArgJSON = {
+    /**句柄描述符 */
+    descriptor: number;
+  };
+
+  interface CloseBlobReturnJSON extends CommonResponseJSON, CloseBlobReturnParams {}
+  interface CloseBlobReturnParams {}
+
   /**接收交易的参数 */
   type NewTransactionArgJSON = {
     /**红包的密码 */

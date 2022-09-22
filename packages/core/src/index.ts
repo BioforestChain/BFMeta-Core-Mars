@@ -103,6 +103,8 @@ export function BFChainCoreFactory(
     keypairHelper: BFChainCore.KeypairHelperInterface;
     ed2curveHelper: BFChainCore.Ed2curveHelperInterface;
     blockGetterHelper?: BFChainCore.BlockGetterHelperInterface;
+    blobSha256Reader?: BFChainCore.BlobReader;
+    blobSha256Writer?: BFChainCore.BlobWriter;
     TIME_SPEED?: number;
   },
   moduleMap = new ModuleStroge(),
@@ -116,6 +118,8 @@ export function BFChainCoreFactory(
       "keypairHelper",
       "ed2curveHelper",
       "blockGetterHelper",
+      "blobSha256Reader",
+      "blobSha256Writer",
       "TIME_SPEED",
     ] as (keyof typeof args)[]
   ).forEach((key) => {

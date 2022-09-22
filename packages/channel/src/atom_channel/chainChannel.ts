@@ -1,46 +1,53 @@
+import { BaseHelper, BlobHelper, ChainTimeHelper, ConfigHelper } from "@bfchain/core-helper";
 import {
-  RESPONSE_STATUS,
+  Block,
+  BlockQueryOptionsModel,
   ChainChannelMessageModel,
   CHANNEL_ARGS,
-  Block,
-  PeerInfoModel,
-  TransactionInBlock,
-  TransactionQueryOptions,
-  QueryTransactionArgModel,
-  TransactionSortOptions,
-  NewTransactionArgModel,
-  GetPeerInfoReturnModel,
-  QueryTransactionReturnModel,
-  ErrorMessage,
-  NewTransactionReturnModel,
+  CloseBlobArgModel,
+  CloseBlobReturnModel,
   CommonResponse,
-  QueryBlockArgModel,
-  QueryBlockReturnModel,
+  DownloadTransactionArgModel,
+  DownloadTransactionReturnModel,
+  DUPLEX_API_CMD,
+  ErrorMessage,
+  GenesisBlock,
+  GetPeerInfoReturnModel,
+  IndexTransactionArgModel,
+  IndexTransactionReturnModel,
   NewBlockArgModel,
   NewBlockReturn,
-  DUPLEX_API_CMD,
-  BlockQueryOptionsModel,
-  SomeBlockModel,
-  GenesisBlock,
-  IndexTransactionReturnModel,
-  TransactionIndexModel,
-  DownloadTransactionReturnModel,
-  IndexTransactionArgModel,
-  DownloadTransactionArgModel,
+  NewTransactionArgModel,
+  NewTransactionReturnModel,
+  OpenBlobArgModel,
+  OpenBlobReturnModel,
+  PeerInfoModel,
+  QueryBlockArgModel,
+  QueryBlockReturnModel,
+  QueryTransactionArgModel,
+  QueryTransactionReturnModel,
+  ReadBlobArgModel,
+  ReadBlobReturnModel,
   REQUEST_LIMIT_STRATEGY,
+  RESPONSE_STATUS,
+  SomeBlockModel,
+  Transaction,
+  TransactionInBlock,
+  TransactionIndexModel,
+  TransactionQueryOptions,
+  TransactionSortOptions,
 } from "@bfchain/core-model";
-import { Message } from "@bfchain/protobuf";
-import { ChainChannelHelper } from "./chainChannelHelper";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
-import { ConfigHelper, BaseHelper, ChainTimeHelper } from "@bfchain/core-helper";
+import { Message } from "@bfchain/protobuf";
 import {
-  QueneEventEmitterPro,
+  EasyMap,
   Inject,
   PromiseOut,
-  sleep,
+  QueneEventEmitterPro,
   Resolvable,
-  EasyMap,
+  sleep,
 } from "@bfchain/util";
+import { ChainChannelHelper } from "./chainChannelHelper";
 
 const {
   RefuseException,
@@ -63,8 +70,10 @@ export abstract class ChainChannelBase
   public abstract canQueryBlock: boolean;
   public abstract canBroadcastTransaction: boolean;
   public abstract canBroadcastBlock: boolean;
+  public abstract blobSupportAlgorithms: readonly BFChainCore.OpenBlobArgJSON.Algorithm[];
   protected abstract config: ConfigHelper;
   protected abstract baseHelper: BaseHelper;
+  protected abstract blobHelper: BlobHelper;
   private _blockGetterHelper?: BFChainCore.BlockGetterHelperSimpleInterface & {
     maxHeight: number;
     lastBlock: Block;
@@ -133,6 +142,9 @@ const REQRES_CMD_MAP = new Map([
   [DUPLEX_API_CMD.QUERY_BLOCK, DUPLEX_API_CMD.QUERY_BLOCK_RETURN],
   [DUPLEX_API_CMD.NEW_BLOCK, DUPLEX_API_CMD.NEW_BLOCK_RETURN],
   [DUPLEX_API_CMD.GET_PEER_INFO, DUPLEX_API_CMD.GET_PEER_INFO_RETURN],
+  [DUPLEX_API_CMD.OPEN_BLOB, DUPLEX_API_CMD.OPEN_BLOB_RETURN],
+  [DUPLEX_API_CMD.READ_BLOB, DUPLEX_API_CMD.READ_BLOB_RETURN],
+  [DUPLEX_API_CMD.CLOSE_BLOB, DUPLEX_API_CMD.CLOSE_BLOB_RETURN],
 ]);
 
 /**message的最低版本号，低于这个版本号的message将不被处理 */
@@ -157,6 +169,9 @@ export class ChainChannel<
   }
   get canDownloadTransactions() {
     return true;
+  }
+  get blobSupportAlgorithms() {
+    return [] as readonly BFChainCore.OpenBlobArgJSON.Algorithm[];
   }
   get canQueryBlock() {
     return true;
@@ -199,6 +214,8 @@ export class ChainChannel<
   protected timeHelper!: ChainTimeHelper;
   @Inject(ChainChannelHelper)
   protected chainChannelHelper!: ChainChannelHelper;
+  @Inject(BlobHelper)
+  protected blobHelper!: BlobHelper;
   constructor(
     @Inject(CHANNEL_ARGS.ENDPOINT)
     public endpoint: BFChainCore.ChannelEndpointInterface,
@@ -217,6 +234,8 @@ export class ChainChannel<
         }
       }
       this._reqIdSet.clear();
+
+      this.blobHelper.destroyTarget(this);
     });
   }
   get diffTime() {
@@ -570,7 +589,7 @@ export class ChainChannel<
       query: TransactionQueryOptions.fromObject(query),
       sort: TransactionSortOptions.fromObject<TransactionSortOptions>(sort || {}),
     });
-    return this._request(
+    const res = await this._request(
       DUPLEX_API_CMD.QUERY_TRANSACTION,
       arg,
       this.chainChannelHelper.boxQueryTransactionReturn as (
@@ -578,6 +597,8 @@ export class ChainChannel<
       ) => Promise<QueryTransactionReturnModel<T>>,
       opts,
     );
+    await this._downloadBlobFromTibs(res.transactions);
+    return res;
   }
 
   /**查询交易索引 */
@@ -621,7 +642,7 @@ export class ChainChannel<
     const arg = DownloadTransactionArgModel.fromObject({
       tIndexes: tIndexes.map((ti) => TransactionIndexModel.fromObject<TransactionIndexModel>(ti)),
     });
-    return this._request(
+    const res = await this._request(
       DUPLEX_API_CMD.DOWNLOAD_TRANSACTION,
       arg,
       this.chainChannelHelper.boxDownloadTransactionReturn as (
@@ -629,6 +650,149 @@ export class ChainChannel<
       ) => Promise<DownloadTransactionReturnModel<T>>,
       opts,
     );
+
+    await this._downloadBlobFromTibs(res.transactions);
+    return res;
+  }
+
+  private _openedBlobs = new Set<number>();
+  async openBlob(
+    openArg: BFChainCore.OpenBlobArgJSON,
+    opts?: BFChainCore.ChannelRequestOptions<THIS>,
+  ) {
+    if (!this.blobSupportAlgorithms.includes(openArg.algorithm)) {
+      return OpenBlobReturnModel.fromObject({
+        status: RESPONSE_STATUS.error,
+        error: ErrorMessage.fromObject(new RefuseException(ERROR_LIST.REFUSE_RESPONSE_OPEN_BLOB)),
+      });
+    }
+    const arg = OpenBlobArgModel.fromObject(openArg);
+    const openRes = await this._request(
+      DUPLEX_API_CMD.OPEN_BLOB,
+      arg,
+      this.chainChannelHelper.boxOpenBlobReturn,
+      opts,
+    );
+    if (openRes.descriptor > 0) {
+      this._openedBlobs.add(openRes.descriptor);
+    }
+    return openRes;
+  }
+
+  async readBlob(
+    blobInfo: BFChainCore.ReadBlobArgJSON,
+    opts?: BFChainCore.ChannelRequestOptions<THIS>,
+  ) {
+    if (this._openedBlobs.has(blobInfo.descriptor) === false) {
+      return ReadBlobReturnModel.fromObject({
+        status: RESPONSE_STATUS.error,
+        error: ErrorMessage.fromObject(new RefuseException(ERROR_LIST.REFUSE_RESPONSE_READ_BLOB)),
+      });
+    }
+    const arg = ReadBlobArgModel.fromObject(blobInfo);
+    return this._request(
+      DUPLEX_API_CMD.READ_BLOB,
+      arg,
+      this.chainChannelHelper.boxReadBlobReturn,
+      opts,
+    );
+  }
+  async closeBlob(
+    blobInfo: BFChainCore.CloseBlobArgJSON,
+    opts?: BFChainCore.ChannelRequestOptions<THIS>,
+  ) {
+    if (this._openedBlobs.has(blobInfo.descriptor) === false) {
+      return CloseBlobReturnModel.fromObject({
+        status: RESPONSE_STATUS.error,
+        error: ErrorMessage.fromObject(new RefuseException(ERROR_LIST.REFUSE_RESPONSE_CLOSE_BLOB)),
+      });
+    }
+    const arg = CloseBlobArgModel.fromObject(blobInfo);
+    const closeRes = await this._request(
+      DUPLEX_API_CMD.CLOSE_BLOB,
+      arg,
+      this.chainChannelHelper.boxCloseBlobReturn,
+      opts,
+    );
+    if (closeRes.status === RESPONSE_STATUS.success) {
+      this._openedBlobs.delete(blobInfo.descriptor);
+    }
+    return closeRes;
+  }
+
+  async downloadBlob(openArg: BFChainCore.OpenBlobArgJSON) {
+    const progress = {
+      totalSize: -1,
+      // current: -1,
+      totalCount: -1,
+      currentCount: -1,
+    };
+    if (await this.blobHelper.exists(openArg)) {
+      return;
+    }
+    do {
+      // const startTime = this.timeHelper.now();
+      const openRes = await this.openBlob(openArg);
+      if (openRes.status === RESPONSE_STATUS.busy) {
+        await sleep(5000); //
+      }
+      if (openRes.status !== RESPONSE_STATUS.success) {
+        throw openRes.error;
+      }
+
+      const { chunkSize, expriedTime, descriptor, size, contentType } = openRes;
+      if (size === 0) {
+        return;
+      }
+      const blob_prt = await this.blobHelper.requestStorage(openArg, size, chunkSize, contentType);
+
+      progress.totalSize = size;
+
+      progress.totalCount = Math.ceil(progress.totalSize / chunkSize);
+      progress.currentCount = 0;
+
+      while (progress.currentCount < progress.totalCount) {
+        // 超时了,跳出循环,重新申请
+        if (expriedTime <= this.timeHelper.now()) {
+          break;
+        }
+        const readRes = await this.readBlob({
+          descriptor,
+          start: chunkSize * progress.currentCount,
+          end: chunkSize * (progress.currentCount + 1),
+        });
+        if (readRes.status === RESPONSE_STATUS.busy) {
+          continue;
+        }
+        if (readRes.status !== RESPONSE_STATUS.success) {
+          throw readRes.error;
+        }
+        this.blobHelper.saveChunk(blob_prt, progress.currentCount, readRes.chunkBuffer);
+        progress.currentCount += 1;
+        // yield readRes.chunkBuffer;
+      }
+
+      /// 还没完成, 却跳出来了. 说明请求超时了, 重新open并read
+      if (progress.currentCount < progress.totalCount) {
+        await sleep(2000);
+        continue;
+      }
+      /// 下载完成，保存成 blob 对象
+      await this.blobHelper.saveAsBlob(blob_prt, contentType);
+      /// 关闭连接
+      await this.closeBlob({ descriptor });
+    } while (true);
+  }
+
+  private async _downloadBlobFromTibs(tibs: Iterable<TransactionInBlock>) {
+    for (const tib of tibs) {
+      await this._downloadBlobFromTrs(tib.transaction);
+    }
+  }
+  private async _downloadBlobFromTrs(trs: Transaction) {
+    for (const [algorithm, hash] of trs.blobMap.values()) {
+      await this.downloadBlob({ algorithm, hash });
+    }
   }
 
   async initBroadcastTransactionArg(
@@ -1030,6 +1194,59 @@ export class ChainChannel<
               taskResult = response;
               break;
             }
+            case DUPLEX_API_CMD.OPEN_BLOB: {
+              const response = OpenBlobReturnModel.fromObject<OpenBlobReturnModel>({
+                status: RESPONSE_STATUS.busy,
+              });
+              const openArg = await this.chainChannelHelper.boxOpenBlobArg(binary);
+              const openResult = this.has("onOpenBlob")
+                ? await this.emit("onOpenBlob", openArg)
+                : await this.blobHelper.open(this, openArg);
+              if (openResult) {
+                response.status = RESPONSE_STATUS.success;
+
+                response.descriptor = openResult.descriptor;
+                response.contentType = openResult.contentType;
+                response.size = openResult.size;
+                response.chunkSize = openResult.chunkSize;
+                response.expriedTime = openResult.expriedTime;
+              }
+              taskResult = response;
+              break;
+            }
+
+            case DUPLEX_API_CMD.READ_BLOB: {
+              const response = ReadBlobReturnModel.fromObject<ReadBlobReturnModel>({
+                status: RESPONSE_STATUS.busy,
+              });
+              const readArg = await this.chainChannelHelper.boxReadBlobArg(binary);
+              const readResult = this.has("onReadBlob")
+                ? await this.emit("onReadBlob", readArg)
+                : await this.blobHelper.read(this, readArg);
+
+              if (readResult) {
+                response.status = RESPONSE_STATUS.success;
+
+                response.chunkBuffer = readResult.chunkBuffer;
+              }
+              taskResult = response;
+              break;
+            }
+            case DUPLEX_API_CMD.CLOSE_BLOB: {
+              const response = CloseBlobReturnModel.fromObject<CloseBlobReturnModel>({
+                status: RESPONSE_STATUS.busy,
+              });
+              const closeArg = await this.chainChannelHelper.boxCloseBlobArg(binary);
+              const readResult = this.has("onCloseBlob")
+                ? await this.emit("onCloseBlob", closeArg)
+                : await this.blobHelper.close(this, closeArg);
+              if (readResult) {
+                response.status = RESPONSE_STATUS.success;
+              }
+              taskResult = response;
+              break;
+            }
+
             /// 查询区块
             case DUPLEX_API_CMD.QUERY_BLOCK: {
               if (reqUnLocked && this.has("onQueryBlockBinary")) {
@@ -1126,6 +1343,9 @@ export class ChainChannel<
             case DUPLEX_API_CMD.QUERY_BLOCK_RETURN:
             case DUPLEX_API_CMD.NEW_BLOCK_RETURN:
             case DUPLEX_API_CMD.GET_PEER_INFO_RETURN:
+            case DUPLEX_API_CMD.OPEN_BLOB_RETURN:
+            case DUPLEX_API_CMD.READ_BLOB_RETURN:
+            case DUPLEX_API_CMD.CLOSE_BLOB_RETURN:
             case DUPLEX_API_CMD.RESPONSE: {
               const task = req_response_map.get(req_id);
               if (task === undefined) {
@@ -1207,7 +1427,7 @@ export class ChainChannel<
           );
         }
       } catch (err) {
-        this.emit("handleMessageError", { handleName: "onMessage", error: err });
+        this.emit("handleMessageError", { handleName: "onMessage", error: err as Error });
       }
     });
   }

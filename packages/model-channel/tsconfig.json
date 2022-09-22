@@ -28,6 +28,7 @@
     "src/constants.ts",
     "src/index.ts",
     "src/peer.chainChannel.model.ts",
+    "src/resource.chainChannel.model.ts",
     "src/transaction.chainChannel.model.ts"
   ]
 }

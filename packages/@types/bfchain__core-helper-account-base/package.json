@@ -1,11 +1,11 @@
 {
   "name": "@types/bfchain__core-helper-account-base",
   "types": "index.d.ts",
-  "version": "5.25.42",
+  "version": "5.25.80",
   "dependencies": {
-    "@types/bfchain__core-helper-config": "5.25.42",
-    "@types/bfchain__core-model-block-base": "5.25.42",
-    "@types/bfchain__core-typings": "5.25.42",
-    "@types/bfchain__core-util-base58": "5.25.42"
+    "@types/bfchain__core-helper-config": "5.25.80",
+    "@types/bfchain__core-model-block-base": "5.25.80",
+    "@types/bfchain__core-typings": "5.25.80",
+    "@types/bfchain__core-util-base58": "5.25.80"
   }
 }

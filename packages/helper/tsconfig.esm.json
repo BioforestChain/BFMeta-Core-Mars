@@ -21,6 +21,9 @@
       "path": "../helper-bigint/tsconfig.esm.json"
     },
     {
+      "path": "../helper-blob/tsconfig.esm.json"
+    },
+    {
       "path": "../helper-block_base_statistics/tsconfig.esm.json"
     },
     {

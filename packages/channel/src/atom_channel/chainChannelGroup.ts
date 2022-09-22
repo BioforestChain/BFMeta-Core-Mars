@@ -1,53 +1,57 @@
 import {
+  BaseHelper,
+  BlobHelper,
+  ChainTimeHelper,
+  ConfigHelper,
+  TransactionHelper,
+} from "@bfchain/core-helper";
+import {
+  Block,
+  CommonBlock,
+  DUPLEX_API_CMD,
+  NewBlockArgModel,
+  NewBlockReturn,
+  NewTransactionReturnModel,
+  QueryBlockReturnModel,
+  RESPONSE_STATUS,
+  TransactionInBlock,
+} from "@bfchain/core-model";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
+import {
+  $safeEnd,
+  AfterInit,
   AsyncIteratorGenerator,
   AsyncIteratorGeneratorTransfer,
   bindThis,
+  cacheGetter,
+  EasyMap,
+  EasyWeakMap,
+  EasySet,
+  EventEmitter,
   Inject,
+  ModuleStroge,
+  OnInit,
   ParallelPool,
   PromiseOut,
   QueneEventEmitter,
   Resolvable,
-  cacheGetter,
-  EasyWeakMap,
+  safePromiseOffThen,
+  safePromiseThen,
   sleep,
   unsleep,
-  EventEmitter,
-  AfterInit,
-  EasyMap,
-  ModuleStroge,
-  safePromiseThen,
-  safePromiseOffThen,
-  OnInit,
-  $safeEnd,
 } from "@bfchain/util";
-import {
-  Block,
-  CommonBlock,
-  RESPONSE_STATUS,
-  TransactionInBlock,
-  NewBlockArgModel,
-  DUPLEX_API_CMD,
-  NewBlockReturn,
-  NewTransactionReturnModel,
-  QueryBlockReturnModel,
-  QueryTransactionReturnModel,
-  IndexTransactionReturnModel,
-  DownloadTransactionReturnModel,
-} from "@bfchain/core-model";
-import { ChainChannelHelper } from "./chainChannelHelper";
 import { ChainChannel, ChainChannelBase } from "./chainChannel";
-import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
+import { ChainChannelHelper } from "./chainChannelHelper";
+import { ChainChannelWaiterQueue } from "./ChainChannelWaiter";
 import {
-  GroupQueryTransactionsBuilder,
-  GroupQueryBlockBuilder,
-  GroupRequesterBuilder,
   GroupDownloadTransactionsBuilder,
   GroupIndexTransactionsBuilder,
+  GroupQueryBlockBuilder,
+  GroupQueryTransactionsBuilder,
+  GroupRequesterBuilder,
 } from "./GroupRequesterBuilder";
-import { BaseHelper, ChainTimeHelper, ConfigHelper, TransactionHelper } from "@bfchain/core-helper";
-import type { PromiseTimeout } from "./PromiseTimeout";
 import { IntSet } from "./IntSet";
-import { ChainChannelWaiter, ChainChannelWaiterQueue } from "./ChainChannelWaiter";
+import type { PromiseTimeout } from "./PromiseTimeout";
 
 const {
   AbortException,
@@ -98,6 +102,52 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       }
     }
     return false;
+  }
+
+  private _ccBlobSupportAlgorithms = EasyMap.from({
+    creater: (algorithm: BFChainCore.OpenBlobArgJSON.Algorithm) => {
+      const set = EasySet.from<DH>({
+        afterDelete: () => {
+          if (set.size === 0) {
+            this._ccBlobSupportAlgorithms.delete(algorithm);
+          }
+        },
+      });
+      return set;
+    },
+  });
+  /**缓存 */
+  private _blobSupportAlgorithms?: readonly BFChainCore.OpenBlobArgJSON.Algorithm[];
+
+  private _initBlobSupportAlgorithmsBinding = false;
+  get blobSupportAlgorithms() {
+    const ccBlobSupportAlgorithms = this._ccBlobSupportAlgorithms;
+    if (this._initBlobSupportAlgorithmsBinding === false) {
+      this._initBlobSupportAlgorithmsBinding = true;
+      /// 把现有的节点放进来
+      for (const cc of this.chainChannelSet) {
+        for (const algorithm of cc.blobSupportAlgorithms) {
+          ccBlobSupportAlgorithms.forceGet(algorithm).add(cc);
+        }
+      }
+
+      /// 监听节点变动
+      this._chainChannelEvents.on("addChainChannel", (cc) => {
+        for (const algorithm of cc.blobSupportAlgorithms) {
+          ccBlobSupportAlgorithms.forceGet(algorithm).add(cc);
+        }
+        // 清空缓存
+        this._blobSupportAlgorithms = undefined;
+      });
+      this._chainChannelEvents.on("removeChainChannel", (cc) => {
+        for (const algorithm of cc.blobSupportAlgorithms) {
+          ccBlobSupportAlgorithms.forceGet(algorithm).delete(cc);
+        }
+        // 清空缓存
+        this._blobSupportAlgorithms = undefined;
+      });
+    }
+    return (this._blobSupportAlgorithms ??= [...ccBlobSupportAlgorithms.keys()]);
   }
   get canQueryBlock() {
     for (const cc of this.chainChannelSet) {
@@ -185,6 +235,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
   @Inject(ChainTimeHelper) private timeHelper!: ChainTimeHelper;
   @Inject(ChainChannelHelper) private helper!: ChainChannelHelper;
   @Inject(TransactionHelper) private transactionHelper!: TransactionHelper;
+  @Inject(BlobHelper) protected blobHelper!: BlobHelper;
 
   protected chainChannelSet = new Set<DH>();
   get size() {

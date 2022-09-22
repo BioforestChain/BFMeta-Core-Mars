@@ -469,6 +469,33 @@ export const ERROR_LIST = {
     "001-22019",
     "Task {task_id} abort because the free chainChannel size is zero",
   ),
+
+  REFUSE_RESPONSE_OPEN_BLOB: new ErrorCode("001-22020", "Refuse response open blob"),
+  REFUSE_RESPONSE_READ_BLOB: new ErrorCode("001-22021", "Refuse response read blob"),
+  REFUSE_RESPONSE_CLOSE_BLOB: new ErrorCode("001-22022", "Refuse response close blob"),
+  OPEN_BLOB_NOFOUND: new ErrorCode("001-2203", "No found blob by hash: {hash}"),
+  OPEN_BLOB_INVALID_HASH: new ErrorCode("001-2204", "could no open blob by hash: {hash}"),
+  READ_BLOB_INVALID_DESCRIPTOR: new ErrorCode(
+    "001-2205",
+    "could no read blob by descriptor: {descriptor}",
+  ),
+  CLOSE_BLOB_INVALID_DESCRIPTOR: new ErrorCode(
+    "001-2206",
+    "could no close blob by descriptor: {descriptor}",
+  ),
+  REFUSE_REQUEST_BLOB_STORAGE: new ErrorCode(
+    "001-2207",
+    "could no request storage for write blob with size: {size}",
+  ),
+  FAIL_TO_STORE_BLOB_CHUNK: new ErrorCode(
+    "001-2208",
+    "could no save chunk for blob ptr: {ptr+index}",
+  ),
+  FAIL_TO_GENERATE_BLOB: new ErrorCode("001-2209", "fail to generate blob ptr: {ptr}"),
+  FAIL_TO_CHANGE_BLOB_STRATEGY: new ErrorCode(
+    "001-2210",
+    "fail to change blob({hash}) strategy({strategy})",
+  ),
   // #endregion
 };
 // #endregion

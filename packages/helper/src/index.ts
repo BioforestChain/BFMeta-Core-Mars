@@ -13,6 +13,7 @@ export * from "@bfchain/core-helper-parity-bit";
 export * from "@bfchain/core-helper-account-base";
 export * from "@bfchain/core-helper-type";
 export * from "@bfchain/core-helper-transaction";
+export * from "@bfchain/core-helper-blob";
 
 export * from "@bfchain/core-helper-chain-asset-info";
 export * from "@bfchain/core-helper-block-base-statistics";

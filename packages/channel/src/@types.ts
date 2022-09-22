@@ -54,6 +54,18 @@ declare namespace BFChainCore {
       in: import("@bfchain/core-model").NewTransactionArgModel;
       out: NewTransactionReturnParams | undefined;
     };
+    onOpenBlob: {
+      in: import("@bfchain/core-model").OpenBlobArgModel;
+      out: OpenBlobReturnParams | undefined;
+    };
+    onReadBlob: {
+      in: import("@bfchain/core-model").ReadBlobArgModel;
+      out: ReadBlobReturnParams | undefined;
+    };
+    onCloseBlob: {
+      in: import("@bfchain/core-model").CloseBlobArgModel;
+      out: CloseBlobReturnParams | undefined;
+    };
     onQueryBlock: {
       in: import("@bfchain/core-model").QueryBlockArgModel;
       out: QueryBlockReturnParams | undefined;
@@ -221,10 +233,27 @@ declare namespace BFChainCore {
       transaction: NewTransactionArgJSON["transaction"],
       opts?: ChannelRequestOptions<any>,
     ): Promise<import("@bfchain/core-model").NewTransactionReturnModel>;
+
+    openBlob(
+      openArg: OpenBlobArgJSON,
+      opts?: ChannelRequestOptions<any>,
+    ): Promise<import("@bfchain/core-model").OpenBlobReturnModel>;
+
+    readBlob(
+      readArg: ReadBlobArgJSON,
+      opts?: ChannelRequestOptions<any>,
+    ): Promise<import("@bfchain/core-model").ReadBlobReturnModel>;
+
+    closeBlob(
+      closeArg: CloseBlobArgJSON,
+      opts?: ChannelRequestOptions<any>,
+    ): Promise<import("@bfchain/core-model").CloseBlobReturnModel>;
+
     readonly isRefusePushNewTransaction: boolean;
     readonly canQueryTransactions: boolean;
     readonly canIndexTransactions: boolean;
     readonly canDownloadTransactions: boolean;
+    readonly blobSupportAlgorithms: readonly BFChainCore.OpenBlobArgJSON.Algorithm[];
     readonly canQueryBlock: boolean;
     readonly canBroadcastTransaction: boolean;
     readonly canBroadcastBlock: boolean;
