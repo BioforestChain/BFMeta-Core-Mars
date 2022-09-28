@@ -4,9 +4,25 @@ import { getHexFromArrayBuffer, parseHexToArrayBuffer } from "@bfchain/util-enco
 import { StringKeyMap } from "@bfchain/core-model-common";
 import { cacheBytesGetter } from "@bfchain/core-model-cacher";
 import { EasyWeakMap } from "@bfchain/util-extends-map";
-import { cacheGetter } from "@bfchain/util-decorator";
 import { decodeHex } from "@bfchain/util-encoding-hex";
 const TrsRemarkMapWM = new EasyWeakMap((trs: Transaction) => new StringKeyMap(trs.remark));
+const blobMapWM = new EasyWeakMap((trs: Transaction) => {
+  const blob: { [key: string]: ["SHA256", string, Uint8Array] } = {};
+  const blob_sha256_prefix = BLOB_IN_TRS_REMARK_PREFIX.SHA256;
+  for (const key in trs.remark) {
+    const value = trs.remark[key];
+    if (value.startsWith(blob_sha256_prefix)) {
+      const sha256_hex = value.slice(blob_sha256_prefix.length);
+      try {
+        const sha256 = decodeHex(sha256_hex);
+        if (sha256.length === 32) {
+          blob[key] = ["SHA256", sha256_hex, sha256];
+        }
+      } catch {}
+    }
+  }
+  return new StringKeyMap(blob);
+});
 
 export const enum BLOB_IN_TRS_REMARK_PREFIX {
   SHA256 = "blob+sha256+hex://",
@@ -158,24 +174,9 @@ export class Transaction<AJ extends object = object>
     const remarkMap = TrsRemarkMapWM.forceGet(this);
     return remarkMap;
   }
-
-  @cacheGetter
   get blobMap() {
-    const blob: { [key: string]: ["SHA256", string, Uint8Array] } = {};
-    const blob_sha256_prefix = BLOB_IN_TRS_REMARK_PREFIX.SHA256;
-    for (const key in this.remark) {
-      const value = this.remark[key];
-      if (value.startsWith(blob_sha256_prefix)) {
-        const sha256_hex = value.slice(blob_sha256_prefix.length);
-        try {
-          const sha256 = decodeHex(sha256_hex);
-          if (sha256.length === 32) {
-            blob[key] = ["SHA256", sha256_hex, sha256];
-          }
-        } catch {}
-      }
-    }
-    return new StringKeyMap(blob);
+    const blobMap = blobMapWM.forceGet(this);
+    return blobMap;
   }
   /* liveMap: 实时推流: live+id+hex:// */
 
