@@ -8,6 +8,7 @@
     "build"
   ],
   "dependencies": {
+    "@bfchain/core-helper-chain-time": "5.25.84",
     "@bfchain/core-model-channel": "5.25.84",
     "@bfchain/core-typings": "5.25.83"
   },

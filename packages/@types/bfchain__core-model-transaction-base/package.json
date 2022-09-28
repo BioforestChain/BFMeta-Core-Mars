@@ -1,7 +1,7 @@
 {
   "name": "@types/bfchain__core-model-transaction-base",
   "types": "index.d.ts",
-  "version": "5.25.83",
+  "version": "5.25.84",
   "dependencies": {
     "@types/bfchain__core-model-cacher": "5.25.83",
     "@types/bfchain__core-model-common": "5.25.83",

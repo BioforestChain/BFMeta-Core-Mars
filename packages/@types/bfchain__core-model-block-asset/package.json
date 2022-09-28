@@ -1,9 +1,9 @@
 {
   "name": "@types/bfchain__core-model-block-asset",
   "types": "index.d.ts",
-  "version": "5.25.83",
+  "version": "5.25.84",
   "dependencies": {
-    "@types/bfchain__core-model-block-base": "5.25.83",
+    "@types/bfchain__core-model-block-base": "5.25.84",
     "@types/bfchain__core-model-cacher": "5.25.83",
     "@types/bfchain__core-model-common": "5.25.83",
     "@types/bfchain__core-typings": "5.25.83"

@@ -9,6 +9,9 @@
   },
   "references": [
     {
+      "path": "../helper-chain_time/tsconfig.esm.json"
+    },
+    {
       "path": "../model-channel/tsconfig.esm.json"
     },
     {

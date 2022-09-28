@@ -13,6 +13,9 @@
   },
   "references": [
     {
+      "path": "../helper-chain_time/tsconfig.@types.json"
+    },
+    {
       "path": "../model-channel/tsconfig.@types.json"
     },
     {
