@@ -2399,7 +2399,7 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "payTax",
       async ({ applyInfo }, next) => {
-        const { sourceChainName, sourceChainMagic, parentAssetType, assetType, taxCollector } =
+        const { sourceChainName, sourceChainMagic, parentAssetType, assetType, taxInformation } =
           applyInfo;
 
         if (parentAssetType === PARENT_ASSET_TYPE.ENTITY) {
@@ -2411,10 +2411,19 @@ export class EventLogicVerifier {
             accountGetterHelper,
           );
 
-          if (memEntity.applyAddress !== taxCollector) {
+          if (memEntity.applyAddress !== taxInformation.taxCollector) {
             throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
               to_compare_prop: `entityApplicant ${memEntity.applyAddress}`,
-              be_compare_prop: `taxCollector ${taxCollector}`,
+              be_compare_prop: `taxCollector ${taxInformation.taxCollector}`,
+              to_target: `taxInformation`,
+              be_target: "memEntity",
+            });
+          }
+
+          if (memEntity.taxAssetPrealnum !== taxInformation.taxAssetPrealnum) {
+            throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+              to_compare_prop: `taxAssetPrealnum ${memEntity.taxAssetPrealnum}`,
+              be_compare_prop: `taxAssetPrealnum ${taxInformation.taxAssetPrealnum}`,
               to_target: `taxInformation`,
               be_target: "memEntity",
             });

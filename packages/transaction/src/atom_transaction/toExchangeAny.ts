@@ -417,7 +417,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
               sourceChainMagic: toExchangeSource,
               parentAssetType: toExchangeParentAssetType,
               assetType: toExchangeAssetType,
-              taxCollector: taxInformation.taxCollector,
+              taxInformation: taxInformation.toJSON(),
             },
           });
           const { taxAssetPrealnum } = taxInformation;

@@ -179,7 +179,7 @@ export class TransferAnyTransactionFactory extends TransferTransactionFactory<Tr
             sourceChainMagic,
             parentAssetType,
             assetType,
-            taxCollector: taxInformation.taxCollector,
+            taxInformation: taxInformation.toJSON(),
           },
         });
         const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(

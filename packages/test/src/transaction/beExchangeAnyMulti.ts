@@ -214,10 +214,10 @@ async function getBeExchangeAnyMultiTransaction(
           toExchangeParentAssetType: PARENT_ASSET_TYPE.ASSETS,
           toExchangeAssetType: "BFT",
           toExchangeAssetPrealnum: "100",
-          // assetExchangeWeightRatio: {
-          //   toExchangeAssetWeight: "1",
-          //   beExchangeAssetWeight: "100",
-          // },
+          assetExchangeWeightRatio: {
+            toExchangeAssetWeight: "1",
+            beExchangeAssetWeight: "100",
+          },
         },
         {
           toExchangeSource: bfchainCore.config.magic,
@@ -246,21 +246,21 @@ async function getBeExchangeAnyMultiTransaction(
         // },
       ],
       beExchangeAsset: {
-        // beExchangeSource: bfchainCore.config.magic,
-        // beExchangeChainName: "bfchain",
-        // beExchangeParentAssetType: PARENT_ASSET_TYPE.ASSETS,
-        // beExchangeAssetType: "BFT",
-        // beExchangeAssetPrealnum: "1",
-
         beExchangeSource: bfchainCore.config.magic,
         beExchangeChainName: "bfchain",
-        beExchangeParentAssetType: PARENT_ASSET_TYPE.ENTITY,
-        beExchangeAssetType: `skyrim_llq`,
+        beExchangeParentAssetType: PARENT_ASSET_TYPE.ASSETS,
+        beExchangeAssetType: "BFT",
         beExchangeAssetPrealnum: "1",
-        taxInformation: {
-          taxCollector: cc.address,
-          taxAssetPrealnum: "1000",
-        },
+
+        // beExchangeSource: bfchainCore.config.magic,
+        // beExchangeChainName: "bfchain",
+        // beExchangeParentAssetType: PARENT_ASSET_TYPE.ENTITY,
+        // beExchangeAssetType: `skyrim_llq`,
+        // beExchangeAssetPrealnum: "1",
+        // taxInformation: {
+        //   taxCollector: cc.address,
+        //   taxAssetPrealnum: "1000",
+        // },
       },
     };
     const t1 = await getToExchangeAnyMultiTransaction(
@@ -395,15 +395,15 @@ async function getBeExchangeAnyMultiTransaction(
       true,
     );
     await getBeExchangeAnyMultiTransaction(dd, t7, [cc, dd], bfchainCore);
-    const t8 = await getToExchangeAnyMultiTransaction(
-      aaa,
-      { ...toExchangeAny },
-      bfchainCore,
-      [cc, dd],
-      false,
-    );
-    await getBeExchangeAnyMultiTransaction(ddd, t8, [cc, dd], bfchainCore);
-    await getBeExchangeAnyMultiTransaction(aaa, t8, [cc, dd], bfchainCore);
+    // const t8 = await getToExchangeAnyMultiTransaction(
+    //   aaa,
+    //   { ...toExchangeAny },
+    //   bfchainCore,
+    //   [cc, dd],
+    //   false,
+    // );
+    // await getBeExchangeAnyMultiTransaction(ddd, t8, [cc, dd], bfchainCore);
+    // await getBeExchangeAnyMultiTransaction(aaa, t8, [cc, dd], bfchainCore);
   };
 
   const test4 = async () => {
@@ -504,6 +504,10 @@ async function getBeExchangeAnyMultiTransaction(
         beExchangeParentAssetType: PARENT_ASSET_TYPE.ENTITY,
         beExchangeAssetType: `skyrim_hylq`,
         beExchangeAssetPrealnum: "1",
+        taxInformation: {
+          taxCollector: cc.address,
+          taxAssetPrealnum: "1000",
+        },
       },
     };
 

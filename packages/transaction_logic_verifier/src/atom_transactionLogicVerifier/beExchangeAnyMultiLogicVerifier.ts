@@ -230,6 +230,24 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
       }
     }
 
+    // 不是赎回，并且是出售某种资产
+    if (
+      transaction.senderId !== transaction.recipientId &&
+      prevBeExchangeAsset.beExchangeAssetPrealnum &&
+      nextBeExchangeAsset.beExchangeAssetPrealnum
+    ) {
+      if (
+        BigInt(nextBeExchangeAsset.beExchangeAssetPrealnum) <
+        BigInt(prevBeExchangeAsset.beExchangeAssetPrealnum)
+      ) {
+        throw new ConsensusException(ERROR_LIST.PROP_SHOULD_GTE_FIELD, {
+          prop: `toExchangeAssets.beExchangeAssetPrealnum ${nextBeExchangeAsset.beExchangeAssetPrealnum}`,
+          target: "beExchangeAnyMulti",
+          field: prevBeExchangeAsset.beExchangeAssetPrealnum,
+        });
+      }
+    }
+
     const prevAssets: {
       [key: string]: {
         toExchangeAssetPrealnum: string;

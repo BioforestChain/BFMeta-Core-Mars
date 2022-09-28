@@ -532,7 +532,7 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
               sourceChainMagic: beExchangeSource,
               parentAssetType: beExchangeParentAssetType,
               assetType: beExchangeAssetType,
-              taxCollector: taxInformation.taxCollector,
+              taxInformation: taxInformation.toJSON(),
             },
           });
           if (taxInformation.taxAssetPrealnum !== "0") {

@@ -157,6 +157,7 @@ declare namespace BFChainCore {
     height: number;
     status: number;
     maxFrozenBlockHeight: number;
+    taxAssetPrealnum: string;
   };
 
   type MigrateCertificateInfo = {

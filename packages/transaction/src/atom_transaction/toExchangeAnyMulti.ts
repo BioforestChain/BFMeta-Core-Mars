@@ -473,7 +473,7 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
                 sourceChainMagic: toExchangeSource,
                 parentAssetType: toExchangeParentAssetType,
                 assetType: toExchangeAssetType,
-                taxCollector: taxInformation.taxCollector,
+                taxInformation: taxInformation.toJSON(),
               },
             });
             const { taxAssetPrealnum } = taxInformation;

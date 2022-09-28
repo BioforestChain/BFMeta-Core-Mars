@@ -310,7 +310,7 @@ export class GiftAnyTransactionFactory extends GiftTransactionFactory<GiftAnyTra
             sourceChainMagic,
             parentAssetType,
             assetType,
-            taxCollector: taxInformation.taxCollector,
+            taxInformation: taxInformation.toJSON(),
           },
         });
         const { taxAssetPrealnum } = taxInformation;

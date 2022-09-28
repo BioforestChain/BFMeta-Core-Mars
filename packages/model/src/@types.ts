@@ -447,7 +447,7 @@ declare namespace BFChainCore {
     sourceChainMagic: string;
     parentAssetType: BFChainCore.PARENT_ASSET_TYPE;
     assetType: string;
-    taxCollector: string;
+    taxInformation: BFChainCore.TaxInformationJson;
   };
   /**验证纳税信息 */
   type ApplyTransactionPayTaxEvent<EVENTNAME, T extends Transaction = Transaction> =
