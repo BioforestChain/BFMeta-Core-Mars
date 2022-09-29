@@ -106,7 +106,7 @@ export class ToExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
         });
       }
       if (memEntity.status === ASSET_STATUS.DESTORY) {
-        throw new ConsensusException(ERROR_LIST.CAN_NOT_DESTORY_ENTITY, {
+        throw new ConsensusException(ERROR_LIST.ENTITY_ALREADY_DESTORY, {
           entityId: beExchangeAssetType,
           reason: "Entity already be destory",
         });
