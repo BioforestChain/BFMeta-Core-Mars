@@ -1,48 +1,9 @@
-import type { Block } from "@bfchain/core-model-block-base";
 import { GenesisBlock, CommonBlock, RoundLastBlock } from "./atom_block";
-import { Type, Field, Message, Reader, Writer } from "@bfchain/protobuf";
+import { Type, Field, Message } from "@bfchain/protobuf";
 import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
 import { ERROR_LIST } from "@bfchain/core-util-exception-errorcode";
-import { GenesisAssetModel, GenesisAssetV0Model } from "@bfchain/core-model-block-asset";
 
 const { ArgumentFormatException } = CoreExceptionGenerator("MODEL", "blockModel");
-
-// 默认使用 v0 版本，随着补丁的生效逐步升级
-const GenesisAssetModelSetup = GenesisAssetModel.$type.setup();
-const GenesisAssetV0ModelSetup = GenesisAssetV0Model.$type.setup();
-const GenesisAssetV0Model_encode = GenesisAssetV0ModelSetup.encode;
-const GenesisAssetV0Model_decode = GenesisAssetV0ModelSetup.decode;
-const GenesisAssetV0Model_fromObject = GenesisAssetV0ModelSetup.fromObject;
-
-for (const Block of [CommonBlock, GenesisBlock, RoundLastBlock]) {
-  const BlockSetup = Block.$type.setup();
-  const BlockSetup_encode = BlockSetup.encode;
-  const BlockSetup_encode_v0 = function (this: Type, block: Block, writer?: Writer) {
-    GenesisAssetModelSetup.encode = GenesisAssetV0Model_encode;
-    return BlockSetup_encode.call(this, block, writer);
-  };
-
-  const BlockSetup_decode = BlockSetup.decode;
-  const BlockSetup_decode_v0 = function (this: Type, reader: Uint8Array | Reader) {
-    GenesisAssetModelSetup.decode = GenesisAssetV0Model_decode;
-    return BlockSetup_decode.call(this, reader);
-  };
-
-  const BlockSetup_fromObject = BlockSetup.fromObject;
-  const BlockSetup_fromObject_v0 = function (
-    this: BFChainProtobuf.Constructor<any>,
-    object: BFChainProtobuf.ObjectFromType<
-      BFChainCore.BlockJSON<BFChainCore.GetBlockMessageAssetModel<any>>
-    >,
-  ) {
-    GenesisAssetModelSetup.fromObject = GenesisAssetV0Model_fromObject;
-    return BlockSetup_fromObject.call(this, object);
-  };
-
-  BlockSetup.encode = BlockSetup_encode_v0;
-  BlockSetup.decode = BlockSetup_decode_v0;
-  BlockSetup.fromObject = BlockSetup_fromObject_v0;
-}
 
 /**
  * 区块类型

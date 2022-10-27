@@ -197,7 +197,7 @@ declare namespace BFChainCore {
     numberOfTransactionsWeight: number;
   }
 
-  interface GenesisAssetV0JSON extends RoundDelegateJSON {
+  interface GenesisAssetJSON extends RoundDelegateJSON {
     /**链名 */
     chainName: string;
     /**链主权益名 */
@@ -256,14 +256,10 @@ declare namespace BFChainCore {
     tpowOfWorkExemptionBlocks: number;
     /**tpow配置，JSON对象 */
     transactionPowOfWorkConfig: TransactionPowOfWorkConfigJSON;
-  }
 
-  interface GenesisAssetV1JSON extends GenesisAssetV0JSON {
     /**冻结的主权益数允许发行的最大权益数量 */
     maxMultipleOfAssetAndMainAsset: FractionJSON<string>;
-  }
 
-  interface GenesisAssetJSON extends GenesisAssetV1JSON {
     /**发行非同质资产模板的账户最少持有的链主权益数量 */
     issueEntityFactoryMinChainAsset: string;
     /**冻结的主权益数允许发行的最大非同质权益数量 */

@@ -8,10 +8,6 @@ import {
   EventEmitter,
 } from "@bfchain/util";
 import { PatchBase } from "@bfchain/core-patch-base";
-import { V2_Patch } from "@bfchain/core-patch-v2";
-import { V3_Patch } from "@bfchain/core-patch-v3";
-import { V4_Patch } from "@bfchain/core-patch-v4";
-import { V5_Patch } from "@bfchain/core-patch-v5";
 import { ConfigHelper } from "@bfchain/core-helper";
 
 type Progress = EventEmitter<{ progress: [PatchBase]; done: []; error: [unknown] }>;
@@ -31,10 +27,6 @@ export class PatchInstaller
   private _isPatchReady?: Promise<void>;
   bfAfterInit() {
     /// 静态载入
-    this._installPatch(V2_Patch);
-    this._installPatch(V3_Patch);
-    this._installPatch(V4_Patch);
-    this._installPatch(V5_Patch);
     // this.installPatch(Patch_1_2);
 
     this._isPatchReady = this._installPatchs().then(() => {

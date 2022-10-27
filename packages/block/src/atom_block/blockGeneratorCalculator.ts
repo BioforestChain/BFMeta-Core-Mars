@@ -339,7 +339,7 @@ export class BlockGeneratorCalculator {
       for (let i = 1; i < address.length; i++) {
         num += address.charCodeAt(i);
       }
-      return num * seed;
+      return (num * seed) % 256;
     });
     return 种子与地址结果值缓存;
   };

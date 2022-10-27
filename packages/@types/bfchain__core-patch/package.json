@@ -1,14 +1,14 @@
 {
   "name": "@types/bfchain__core-patch",
   "types": "index.d.ts",
-  "version": "5.25.84",
+  "version": "5.25.87-carbon",
   "dependencies": {
-    "@types/bfchain__core-patch-1": "5.25.84",
-    "@types/bfchain__core-patch-base": "5.25.84",
-    "@types/bfchain__core-patch-v2": "5.25.84",
-    "@types/bfchain__core-patch-v3": "5.25.84",
-    "@types/bfchain__core-typings": "5.25.83",
-    "@types/bfchain__core-patch-v4": "5.25.84",
-    "@types/bfchain__core-patch-v5": "5.25.84"
+    "@types/bfchain__core-patch-1": "5.25.87-carbon",
+    "@types/bfchain__core-patch-base": "5.25.87-carbon",
+    "@types/bfchain__core-patch-v2": "5.25.87-carbon",
+    "@types/bfchain__core-patch-v3": "5.25.87-carbon",
+    "@types/bfchain__core-typings": "5.25.87-carbon",
+    "@types/bfchain__core-patch-v4": "5.25.87-carbon",
+    "@types/bfchain__core-patch-v5": "5.25.87-carbon"
   }
 }

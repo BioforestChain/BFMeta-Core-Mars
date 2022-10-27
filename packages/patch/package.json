@@ -10,10 +10,6 @@
   "dependencies": {
     "@bfchain/core-patch-1": "5.25.87-carbon",
     "@bfchain/core-patch-base": "5.25.87-carbon",
-    "@bfchain/core-patch-v2": "5.25.87-carbon",
-    "@bfchain/core-patch-v3": "5.25.87-carbon",
-    "@bfchain/core-patch-v4": "5.25.87-carbon",
-    "@bfchain/core-patch-v5": "5.25.87-carbon",
     "@bfchain/core-typings": "5.25.87-carbon"
   },
   "types": "build/cjs/index.d.ts"

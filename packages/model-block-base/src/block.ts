@@ -225,25 +225,6 @@ export class Block<AJ extends object = object>
   }
 
   toJSON() {
-    const assetJson = this.asset.toJSON();
-
-    // FIXME: 没辙，吐了
-    if (this.height === 1) {
-      if (this.version < 2) {
-        delete ((assetJson as BFChainCore.GenesisBlockAssetJSON).genesisAsset as any)
-          .maxMultipleOfAssetAndMainAsset;
-        delete ((assetJson as BFChainCore.GenesisBlockAssetJSON).genesisAsset as any)
-          .issueEntityFactoryMinChainAsset;
-        delete ((assetJson as BFChainCore.GenesisBlockAssetJSON).genesisAsset as any)
-          .maxMultipleOfEntityAndMainAsset;
-      } else if (this.version < 4) {
-        delete ((assetJson as BFChainCore.GenesisBlockAssetJSON).genesisAsset as any)
-          .issueEntityFactoryMinChainAsset;
-        delete ((assetJson as BFChainCore.GenesisBlockAssetJSON).genesisAsset as any)
-          .maxMultipleOfEntityAndMainAsset;
-      }
-    }
-
     const res: BFChainCore.BlockJSON<AJ> = {
       version: this.version,
       height: this.height,
@@ -263,7 +244,7 @@ export class Block<AJ extends object = object>
       blockParticipation: this.blockParticipation,
       transactions: this.transactions.map((transaction) => transaction.toJSON()),
       remark: this.remark,
-      asset: assetJson as AJ,
+      asset: this.asset.toJSON(),
       statisticInfo: this.statisticInfo.toJSON(),
       roundOfflineGeneratersHashMap: this.roundOfflineGeneratersHashMap,
     };

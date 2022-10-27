@@ -54,6 +54,7 @@ async function getVoteTransaction(sender: AccountModel, bfchainCore: BFChainCore
     secondKeypair,
   );
   console.log(trs.toJSON());
+  console.log(trs.getBytes().length);
 }
 
 (async () => {

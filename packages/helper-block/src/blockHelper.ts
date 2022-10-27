@@ -6,8 +6,6 @@ import {
   BLOCK_TYPES_BASE,
   Block,
   GenesisBlockAssetModel,
-  GenesisAssetModel,
-  GenesisAssetV0Model,
   StatisticInfoModel,
 } from "@bfchain/core-model-block";
 import { TRANSACTION_TYPES_BASE, TransactionInBlock } from "@bfchain/core-model-transaction";
@@ -24,10 +22,6 @@ const {
   IllegalStateException,
   ConsensusException,
 } = CoreExceptionGenerator("HELPER", "blockHelper");
-
-const GenesisAssetModelSetup = GenesisAssetModel.$type.setup();
-const GenesisAssetV0ModelSetup = GenesisAssetV0Model.$type.setup();
-const GenesisAssetV0Model_decode = GenesisAssetV0ModelSetup.decode;
 
 @Injectable()
 export class BlockHelper {
@@ -84,8 +78,6 @@ export class BlockHelper {
       transactions: [],
       roundOfflineGeneratersHashMap: {},
     } as any;
-
-    GenesisAssetModelSetup.decode = GenesisAssetV0Model_decode;
 
     const StatisticInfoModelSetup = StatisticInfoModel.$type.setup();
     const GenesisBlockAssetModelSetup = GenesisBlockAssetModel.$type.setup();
@@ -714,10 +706,7 @@ export class BlockHelper {
   calcAccountRoundEquity(accTxCount: number, accBalance: string, roundLastBlock: RoundLastBlock) {
     const { balanceWeight, numberOfTransactionsWeight } =
       this.config.accountParticipationWeightRatio;
-    const tradingEquity =
-      BigInt(accTxCount) *
-      BigInt(numberOfTransactionsWeight) *
-      BigInt(roundLastBlock.asset.roundLastAsset.rate);
+    const tradingEquity = BigInt(accTxCount) * BigInt(numberOfTransactionsWeight);
     const equity = BigInt(accBalance) * BigInt(balanceWeight) + tradingEquity;
     return equity.toString() as string;
   }

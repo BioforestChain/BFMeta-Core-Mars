@@ -1,9 +1,9 @@
 {
   "name": "@types/bfchain__core-crypto-ed2curve",
   "types": "index.d.ts",
-  "version": "5.25.83",
+  "version": "5.25.87-carbon",
   "dependencies": {
-    "@types/bfchain__core-crypto-tweetnacl": "5.25.83",
-    "@types/bfchain__core-typings": "5.25.83"
+    "@types/bfchain__core-crypto-tweetnacl": "5.25.87-carbon",
+    "@types/bfchain__core-typings": "5.25.87-carbon"
   }
 }

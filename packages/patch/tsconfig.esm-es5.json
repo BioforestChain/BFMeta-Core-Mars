@@ -15,18 +15,6 @@
       "path": "../patch-base/tsconfig.esm-es5.json"
     },
     {
-      "path": "../patch-v2/tsconfig.esm-es5.json"
-    },
-    {
-      "path": "../patch-v3/tsconfig.esm-es5.json"
-    },
-    {
-      "path": "../patch-v4/tsconfig.esm-es5.json"
-    },
-    {
-      "path": "../patch-v5/tsconfig.esm-es5.json"
-    },
-    {
       "path": "../typings/tsconfig.esm-es5.json"
     }
   ]

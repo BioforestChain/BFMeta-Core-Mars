@@ -1,9 +1,9 @@
 {
   "name": "@types/bfchain__core-patch-1",
   "types": "index.d.ts",
-  "version": "5.25.84",
+  "version": "5.25.87-carbon",
   "dependencies": {
-    "@types/bfchain__core-patch-base": "5.25.84",
-    "@types/bfchain__core-typings": "5.25.83"
+    "@types/bfchain__core-patch-base": "5.25.87-carbon",
+    "@types/bfchain__core-typings": "5.25.87-carbon"
   }
 }

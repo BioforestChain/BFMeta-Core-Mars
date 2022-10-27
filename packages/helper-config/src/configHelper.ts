@@ -12,6 +12,7 @@ export enum NetType {
 
 @Injectable("config")
 export class ConfigHelper {
+  private hookedGenesisBlock: BFChainCore.BlockJSON<BFChainCore.GenesisBlockAssetJSON>;
   constructor(
     public readonly genesisBlock:
       | GenesisBlock
@@ -19,14 +20,13 @@ export class ConfigHelper {
     public business: string,
   ) {
     this._hookBlockMap.set(genesisBlock.version, genesisBlock);
+    this.hookedGenesisBlock = this.genesisBlock;
   }
 
   readonly events = new EventEmitter<{
     hookGenesisBlockApply: [BFChainCore.ConfigHelper];
   }>();
 
-  private hookedGenesisBlock: BFChainCore.BlockJSON<BFChainCore.GenesisBlockAssetJSON> =
-    this.genesisBlock; //deepMix(this.genesisBlock,get)
   private _hookBlockMap = new Map<
     number,
     BFChainCore.DeepPartial<BFChainCore.BlockJSON<BFChainCore.GenesisBlockAssetJSON>>
@@ -177,18 +177,7 @@ export class ConfigHelper {
   /**冻结的主权益数允许发行的最大权益数量 */
   @cacheGetter
   get maxMultipleOfAssetAndMainAsset() {
-    const maxMultipleOfAssetAndMainAsset =
-      this.hookedGenesisBlock.asset.genesisAsset.maxMultipleOfAssetAndMainAsset;
-
-    return maxMultipleOfAssetAndMainAsset &&
-      maxMultipleOfAssetAndMainAsset.numerator &&
-      maxMultipleOfAssetAndMainAsset.denominator
-      ? maxMultipleOfAssetAndMainAsset
-      : // FIXME: 暂时使用外网最大倍数
-        FractionBigIntModel.fromObject({
-          numerator: "19999600008175832963412690",
-          denominator: "1",
-        });
+    return this.hookedGenesisBlock.asset.genesisAsset.maxMultipleOfAssetAndMainAsset;
   }
   /**注册创世块的账户最小持有的主权益数量 */
   @cacheGetter
@@ -198,24 +187,12 @@ export class ConfigHelper {
   /**发行非同质资产模板的账户最小持有的主权益数量 */
   @cacheGetter
   get issueEntityFactoryMinChainAsset() {
-    const issueEntityFactoryMinChainAsset =
-      this.hookedGenesisBlock.asset.genesisAsset.issueEntityFactoryMinChainAsset;
-    return issueEntityFactoryMinChainAsset || "10000000000000";
+    return this.hookedGenesisBlock.asset.genesisAsset.issueEntityFactoryMinChainAsset;
   }
   /**发行非同质资产模板的账户最小持有的主权益数量 */
   @cacheGetter
   get maxMultipleOfEntityAndMainAsset() {
-    const maxMultipleOfEntityAndMainAsset =
-      this.hookedGenesisBlock.asset.genesisAsset.maxMultipleOfEntityAndMainAsset;
-
-    return maxMultipleOfEntityAndMainAsset &&
-      maxMultipleOfEntityAndMainAsset.numerator &&
-      maxMultipleOfEntityAndMainAsset.denominator
-      ? maxMultipleOfEntityAndMainAsset
-      : FractionBigIntModel.fromObject({
-          numerator: "100000",
-          denominator: "1",
-        });
+    return this.hookedGenesisBlock.asset.genesisAsset.maxMultipleOfEntityAndMainAsset;
   }
   /**最大的过期区块间隔数量 */
   @cacheGetter
