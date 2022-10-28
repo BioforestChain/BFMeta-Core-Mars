@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-helper-block-base-statistics",
-  "version": "5.25.87-carbon",
+  "version": "8.0.0",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,12 +14,12 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-helper-chain-asset-info": "5.25.87-carbon",
-    "@bfchain/core-helper-config": "5.25.87-carbon",
-    "@bfchain/core-helper-transaction": "5.25.87-carbon",
-    "@bfchain/core-model": "5.25.87-carbon",
-    "@bfchain/core-typings": "5.25.87-carbon",
-    "@bfchain/core-util-exception-errorcode": "5.25.87-carbon"
+    "@bfchain/core-helper-chain-asset-info": "8.0.0",
+    "@bfchain/core-helper-config": "8.0.0",
+    "@bfchain/core-helper-transaction": "8.0.0",
+    "@bfchain/core-model": "8.0.0",
+    "@bfchain/core-typings": "8.0.0",
+    "@bfchain/core-util-exception-errorcode": "8.0.0"
   },
   "gitHead": "ef41eb359371b11aafbec0516df1eba01f16ebfd",
   "types": "build/cjs/index.d.ts"
