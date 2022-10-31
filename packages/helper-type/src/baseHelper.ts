@@ -645,7 +645,7 @@ export class BaseHelper {
   }
 
   /**
-   * 链资产名是否合法：大写字母 3-5
+   * 链资产名是否合法：大写字母 3-8
    *
    * @param assetType
    */
@@ -653,7 +653,7 @@ export class BaseHelper {
     if (!this.isString(assetType)) {
       return false;
     }
-    return /^[A-Z]{3,5}$/.test(assetType);
+    return /^[A-Z]{3,8}$/.test(assetType);
   }
 
   /**
