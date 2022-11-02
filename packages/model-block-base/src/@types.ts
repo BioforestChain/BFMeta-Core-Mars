@@ -98,13 +98,16 @@ declare namespace BFChainCore {
     /**交易次数统一 */
     transactionCount: number;
   }
-  interface AssetStatisticJSON extends AssetInfoJSON {
-    /**权益在块内的索引 */
-    index: number;
+  interface AssetStatisticJSON {
     /**区块打包的事件类型统计明细，JSON 对象 */
     typeStatisticHashMap: { [baseType: string]: CountAndAmountStatisticJSON };
-    /**区块打包的事件权益类型统计，JSON 对象 */
+    /**区块打包的事件类型统计，JSON 对象 */
     total: CountAndAmountStatisticJSON;
+  }
+
+  interface AssetTypeAssetStatisticJSON {
+    /**区块打包的权益统计明细，JSON 对象 */
+    assetTypeTypeStatisticHashMap: { [assetType: string]: AssetStatisticJSON };
   }
 
   interface StatisticInfoJSON {
@@ -116,8 +119,8 @@ declare namespace BFChainCore {
     totalChainAsset: string;
     /**区块打包的事件涉及的总账户数 */
     totalAccount: number;
-    /**区块打包的事件权益类型统计明细，JSON 对象 */
-    assetStatisticHashMap: { [index: number]: AssetStatisticJSON };
+    /**区块打包的权益统计明细，JSON 对象 */
+    magicAssetTypeTypeStatisticHashMap: { [magic: string]: AssetTypeAssetStatisticJSON };
   }
 
   //#endregion

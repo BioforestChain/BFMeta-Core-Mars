@@ -604,7 +604,6 @@ const getTxs = (address: string) => {
         fromMagic,
         assetType,
       );
-      statisticsInfo.initAssetStatistic(chainAssetInfo, statisticsInfo.assetStatisticCount);
       const assetChanges: {
         accountType: number;
         magic: string;
@@ -632,22 +631,26 @@ const getTxs = (address: string) => {
       }
       const transactionAssetChanges: BFChainCore.TransactionAssetChangeJSON[] = [];
       for (const assetChange of assetChanges) {
-        const { accountType, assetNumber } = assetChange;
+        const { accountType, magic, assetType, assetNumber } = assetChange;
         const asset = statisticsInfo.getAssetStatistic(chainAssetInfo);
         if (!asset) {
           throw new Error("Statistic asset lose");
         }
         transactionAssetChanges[transactionAssetChanges.length] = {
           accountType,
-          assetTypes: asset.index,
-          assetBalance: assetNumber,
+          sourceChainMagic: magic,
+          assetType,
+          assetPrealnum: assetNumber,
         };
       }
       const trsInBlock = TransactionInBlock.fromObject({
         index: i,
         height,
         numberOfSenderTransactions: index,
-        transactionAssetChanges,
+        transactionAssetChanges:
+          registerBfchainCore.transactionHelper.sortTransactionAssetChanges(
+            transactionAssetChanges,
+          ),
         transaction: trs,
       });
       blockTrsItems[blockTrsItems.length] = trsInBlock;
@@ -858,22 +861,24 @@ const getTxs = (address: string) => {
     };
     const transactionAssetChanges: BFChainCore.TransactionAssetChangeJSON[] = [];
     for (const assetChange of assetChanges) {
-      const { accountType, assetNumber } = assetChange;
+      const { accountType, magic, assetType, assetNumber } = assetChange;
       const asset = statisticsInfo.getAssetStatistic(chainAssetInfo);
       if (!asset) {
         throw new Error("Statistic asset lose");
       }
       transactionAssetChanges[transactionAssetChanges.length] = {
         accountType,
-        assetTypes: asset.index,
-        assetBalance: assetNumber,
+        sourceChainMagic: magic,
+        assetType,
+        assetPrealnum: assetNumber,
       };
     }
     const trsInBlock = TransactionInBlock.fromObject({
       index: 0,
       height,
       numberOfSenderTransactions: index,
-      transactionAssetChanges,
+      transactionAssetChanges:
+        fullBfchainCore.transactionHelper.sortTransactionAssetChanges(transactionAssetChanges),
     });
     trsInBlock.transaction = trs;
     blockTrsItems[blockTrsItems.length] = trsInBlock;

@@ -887,13 +887,33 @@ export class TransactionHelper {
     T extends TransactionAssetChangeModel | BFChainCore.TransactionAssetChangeJSON,
   >(transactionAssetChanges: T[]) {
     return transactionAssetChanges.sort((a, b) => {
-      return a.accountType === b.accountType
-        ? a.assetTypes > b.assetTypes
-          ? 1
-          : -1
-        : a.accountType > b.accountType
-        ? 1
-        : -1;
+      if (a.accountType > b.accountType) {
+        return 1;
+      }
+      if (a.accountType < b.accountType) {
+        return -1;
+      }
+      if (a.sourceChainMagic > b.sourceChainMagic) {
+        return 1;
+      }
+      if (a.sourceChainMagic < b.sourceChainMagic) {
+        return -1;
+      }
+      if (a.assetType > b.assetType) {
+        return 1;
+      }
+      if (a.assetType < b.assetType) {
+        return -1;
+      }
+      const prevAsset = BigInt(a.assetPrealnum);
+      const nextAsset = BigInt(b.assetPrealnum);
+      if (prevAsset > nextAsset) {
+        return 1;
+      }
+      if (prevAsset < nextAsset) {
+        return -1;
+      }
+      return 0;
     });
   }
 

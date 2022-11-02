@@ -1,4 +1,4 @@
-import { Message, Field, Type, MapField } from "@bfchain/protobuf";
+import { Message, Field, Type } from "@bfchain/protobuf";
 
 @Type.d("CountAndAmountStatisticModel")
 export class CountAndAmountStatisticModel

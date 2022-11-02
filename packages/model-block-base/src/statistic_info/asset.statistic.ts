@@ -1,5 +1,6 @@
-import { Message, Field, Type, MapField } from "@bfchain/protobuf";
 import { StringKeyMap } from "@bfchain/core-model-common";
+import { Message, Field, Type, MapField } from "@bfchain/protobuf";
+import { assetStatisticformat } from "./assetStatisticformat";
 import { CountAndAmountStatisticModel } from "./countAndAmount.statistic";
 
 @Type.d("AssetStatisticModel")
@@ -8,12 +9,6 @@ export class AssetStatisticModel
   implements BFChainCore.JSONToModelType<BFChainCore.AssetStatisticJSON>
 {
   static INC = 1;
-  @Field.d(AssetStatisticModel.INC++, "string")
-  magic!: string;
-  @Field.d(AssetStatisticModel.INC++, "string")
-  assetType!: string;
-  @Field.d(AssetStatisticModel.INC++, "uint32")
-  index!: number;
   @MapField.d(AssetStatisticModel.INC++, "string", CountAndAmountStatisticModel)
   typeStatisticHashMap!: { [baseType: string]: CountAndAmountStatisticModel };
   _typeStatisticMap?: StringKeyMap<CountAndAmountStatisticModel>;
@@ -30,10 +25,7 @@ export class AssetStatisticModel
 
   toJSON() {
     return {
-      magic: this.magic,
-      assetType: this.assetType,
-      index: this.index,
-      typeStatisticHashMap: this.typeStatisticHashMap,
+      typeStatisticHashMap: this.typeStatisticMap.toJSON(),
       total: this.total.toJSON(),
     };
   }
@@ -48,6 +40,53 @@ export class AssetStatisticModel
       });
     }
     const res = super.fromObject(object) as AssetStatisticModel;
+    return res as unknown as T;
+  }
+
+  format() {
+    assetStatisticformat(this.typeStatisticHashMap, this.typeStatisticMap, (argv) => argv);
+    return this;
+  }
+}
+
+@Type.d("AssetTypeAssetStatisticModel")
+export class AssetTypeAssetStatisticModel
+  extends Message<AssetTypeAssetStatisticModel>
+  implements BFChainCore.JSONToModelType<BFChainCore.AssetTypeAssetStatisticJSON>
+{
+  static INC = 1;
+  @MapField.d(AssetTypeAssetStatisticModel.INC++, "string", AssetStatisticModel)
+  assetTypeTypeStatisticHashMap!: { [assetType: string]: AssetStatisticModel };
+  _assetTypeTypeStatisticMap?: StringKeyMap<AssetStatisticModel>;
+  get assetTypeTypeStatisticMap() {
+    return (
+      this._assetTypeTypeStatisticMap ||
+      (this._assetTypeTypeStatisticMap = new StringKeyMap<AssetStatisticModel>(
+        this.assetTypeTypeStatisticHashMap,
+      ))
+    );
+  }
+
+  toJSON() {
+    return {
+      assetTypeTypeStatisticHashMap: this.assetTypeTypeStatisticMap.toJSON(),
+    };
+  }
+
+  format() {
+    assetStatisticformat(
+      this.assetTypeTypeStatisticHashMap,
+      this.assetTypeTypeStatisticMap,
+      (argv) => argv.format(),
+    );
+    return this;
+  }
+
+  static fromObject<T extends Message>(
+    this: BFChainProtobuf.Constructor<T>,
+    object: BFChainProtobuf.ObjectFromType<AssetTypeAssetStatisticModel>,
+  ) {
+    const res = super.fromObject(object) as AssetTypeAssetStatisticModel;
     return res as unknown as T;
   }
 }

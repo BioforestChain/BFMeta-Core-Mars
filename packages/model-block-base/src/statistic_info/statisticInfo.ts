@@ -1,7 +1,8 @@
 import { Message, Field, Type, MapField } from "@bfchain/protobuf";
-import { NumberKeyMap } from "@bfchain/core-model-common";
+import { StringKeyMap } from "@bfchain/core-model-common";
 import { cacheBytesGetter } from "@bfchain/core-model-cacher";
-import { AssetStatisticModel } from "./asset.statistic";
+import { AssetTypeAssetStatisticModel } from "./asset.statistic";
+import { assetStatisticformat } from "./assetStatisticformat";
 
 /**
  * 区块资产统计信息
@@ -26,13 +27,15 @@ export class StatisticInfoModel
   @Field.d(StatisticInfoModel.INC++, "uint32", "required", 0)
   totalAccount!: number;
   /**资产信息 */
-  @MapField.d(StatisticInfoModel.INC++, "uint32", AssetStatisticModel)
-  assetStatisticHashMap!: { [index: number]: AssetStatisticModel };
-  private _assetStatisticMap?: NumberKeyMap<AssetStatisticModel>;
-  public get assetStatisticMap() {
+  @MapField.d(StatisticInfoModel.INC++, "string", AssetTypeAssetStatisticModel)
+  magicAssetTypeTypeStatisticHashMap!: { [assetType: string]: AssetTypeAssetStatisticModel };
+  _magicAssetTypeTypeStatisticMap?: StringKeyMap<AssetTypeAssetStatisticModel>;
+  get magicAssetTypeTypeStatisticMap() {
     return (
-      this._assetStatisticMap ||
-      (this._assetStatisticMap = new NumberKeyMap<AssetStatisticModel>(this.assetStatisticHashMap))
+      this._magicAssetTypeTypeStatisticMap ||
+      (this._magicAssetTypeTypeStatisticMap = new StringKeyMap<AssetTypeAssetStatisticModel>(
+        this.magicAssetTypeTypeStatisticHashMap,
+      ))
     );
   }
 
@@ -42,11 +45,20 @@ export class StatisticInfoModel
       totalAsset: this.totalAsset,
       totalChainAsset: this.totalChainAsset,
       totalAccount: this.totalAccount,
-      assetStatisticHashMap: this.assetStatisticMap.toJSON(),
+      magicAssetTypeTypeStatisticHashMap: this.magicAssetTypeTypeStatisticMap.toJSON(),
     };
   }
   @cacheBytesGetter
   getBytes() {
     return super.getBytes();
+  }
+
+  format() {
+    assetStatisticformat(
+      this.magicAssetTypeTypeStatisticHashMap,
+      this.magicAssetTypeTypeStatisticMap,
+      (argv) => argv.format(),
+    );
+    return this;
   }
 }

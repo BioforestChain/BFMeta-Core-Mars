@@ -29,17 +29,21 @@ export class TransactionAssetChangeModel
   /**账户类型 */
   @Field.d(TransactionAssetChangeModel.INC++, "uint32")
   accountType!: TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE;
-  /**资产编号 */
-  @Field.d(TransactionAssetChangeModel.INC++, "uint32")
-  assetTypes!: number;
+  /**资产所属链网络标识符 */
+  @Field.d(TransactionAssetChangeModel.INC++, "string")
+  sourceChainMagic!: string;
+  /**资产名 */
+  @Field.d(TransactionAssetChangeModel.INC++, "string")
+  assetType!: string;
   /**交易校验完成后账户持有的资产余额 */
   @Field.d(TransactionAssetChangeModel.INC++, "string")
-  assetBalance!: string;
+  assetPrealnum!: string;
   toJSON() {
     return {
       accountType: this.accountType,
-      assetTypes: this.assetTypes,
-      assetBalance: this.assetBalance,
+      sourceChainMagic: this.sourceChainMagic,
+      assetType: this.assetType,
+      assetPrealnum: this.assetPrealnum,
     };
   }
   @cacheBytesGetter

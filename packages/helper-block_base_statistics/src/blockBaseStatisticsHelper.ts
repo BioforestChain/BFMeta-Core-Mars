@@ -1,8 +1,8 @@
 import {
   AssetStatisticModel,
+  AssetTypeAssetStatisticModel,
   CountAndAmountStatisticModel,
   StatisticInfoModel,
-  StringKeyMap,
 } from "@bfchain/core-model";
 import { TransactionHelper } from "@bfchain/core-helper-transaction";
 import { ChainAssetInfoHelper, ChainAssetInfo } from "@bfchain/core-helper-chain-asset-info";
@@ -64,6 +64,7 @@ export class BlockBaseStatisticsHelper {
         this.tempConfig = undefined;
       });
     }
+
     return statistics_info;
   }
 
@@ -79,12 +80,21 @@ export class BlockBaseStatisticsHelper {
     const { baseType } = this.transactionHelper.parseType(transaction.type);
     // 统计资产信息
     const assetStatistic = statistics_info.initAssetStatistic(assetInfo);
-    assetStatistic.total.changeAmount = assetStatistic.total.changeAmount + sourceAmount;
-    assetStatistic.total.moveAmount = assetStatistic.total.moveAmount + sourceAmount;
+    assetStatistic.total.changeAmount = (
+      BigInt(assetStatistic.total.changeAmount) + sourceAmount
+    ).toString();
+    assetStatistic.total.moveAmount = (
+      BigInt(assetStatistic.total.moveAmount) + sourceAmount
+    ).toString();
     assetStatistic.total.changeCount += 1;
-    assetStatistic.total.addTransactionCount(transaction.signature);
+    // FIXME: subId @wmc
+    const subId = transaction.signature;
+    if (!statistics_info.subIdMap.has(subId)) {
+      assetStatistic.total.transactionCount += 1;
+      statistics_info.subIdMap.set(subId, true);
+    }
     /**需要统计的交易类型 */
-    const typeStatistic = assetStatistic.initTypeStatistic(baseType);
+    const typeStatistic = statistics_info.initTypeStatistic(assetInfo, baseType);
 
     /**
      * 统计总手续费
@@ -105,10 +115,13 @@ export class BlockBaseStatisticsHelper {
     /**
      * 对交易类型进行变动量统计
      */
-    typeStatistic.changeAmount = typeStatistic.changeAmount + sourceAmount;
+    typeStatistic.changeAmount = (BigInt(typeStatistic.changeAmount) + sourceAmount).toString();
     typeStatistic.changeCount += 1;
-    typeStatistic.moveAmount = typeStatistic.moveAmount + sourceAmount;
-    typeStatistic.addTransactionCount(transaction.signature);
+    typeStatistic.moveAmount = (BigInt(typeStatistic.moveAmount) + sourceAmount).toString();
+    if (!statistics_info.typeSubIdMap.has(subId)) {
+      typeStatistic.transactionCount += 1;
+      statistics_info.typeSubIdMap.set(subId, true);
+    }
   }
   /**asset事件 */
   private _applyAsset(
@@ -125,20 +138,30 @@ export class BlockBaseStatisticsHelper {
     /**需要统计的资产 */
     const assetStatistic = statistics_info.initAssetStatistic(applyInfo.assetInfo);
     /**需要统计的交易类型 */
-    const typeStatistic = assetStatistic.initTypeStatistic(baseType);
+    const typeStatistic = statistics_info.initTypeStatistic(applyInfo.assetInfo, baseType);
 
     /**
      * 对资产进行变动量统计
      */
-    assetStatistic.total.changeAmount = assetStatistic.total.changeAmount + sourceAmount;
+    assetStatistic.total.changeAmount = (
+      BigInt(assetStatistic.total.changeAmount) + sourceAmount
+    ).toString();
     assetStatistic.total.changeCount += 1;
-    assetStatistic.total.addTransactionCount(transaction.signature);
+    // FIXME: subId @wmc
+    const subId = transaction.signature;
+    if (!statistics_info.subIdMap.has(subId)) {
+      assetStatistic.total.transactionCount += 1;
+      statistics_info.subIdMap.set(subId, true);
+    }
     /**
      * 对交易类型进行变动量统计
      */
-    typeStatistic.changeAmount = typeStatistic.changeAmount + sourceAmount;
+    typeStatistic.changeAmount = (BigInt(typeStatistic.changeAmount) + sourceAmount).toString();
     typeStatistic.changeCount += 1;
-    typeStatistic.addTransactionCount(transaction.signature);
+    if (!statistics_info.typeSubIdMap.has(subId)) {
+      typeStatistic.transactionCount += 1;
+      statistics_info.typeSubIdMap.set(subId, true);
+    }
     /**
      * 发起者和接收者不能重复累加
      * 统计资产移动、统计指定交易类型的变动
@@ -148,7 +171,9 @@ export class BlockBaseStatisticsHelper {
       /**
        * 资产移动统计
        */
-      assetStatistic.total.moveAmount = assetStatistic.total.moveAmount + sourceAmount;
+      assetStatistic.total.moveAmount = (
+        BigInt(assetStatistic.total.moveAmount) + sourceAmount
+      ).toString();
       /**
        * 统计流通的资产总量
        */
@@ -164,7 +189,7 @@ export class BlockBaseStatisticsHelper {
       /**
        * 针对交易的类型进行统计
        */
-      typeStatistic.moveAmount = typeStatistic.moveAmount + sourceAmount;
+      typeStatistic.moveAmount = (BigInt(typeStatistic.moveAmount) + sourceAmount).toString();
     }
     /**
      * 统计涉及的账户总数量
@@ -251,14 +276,11 @@ export class StatisticsInfo extends EventEmitter<{ destroy: [] }> {
     public chainAssetInfoHelper: ChainAssetInfoHelper,
   ) {
     super();
-    for (const assetStatistic of source_data.assetStatisticMap.values()) {
-      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(
-        assetStatistic.magic,
-        assetStatistic.assetType,
-      );
-      this._storeChainAssetStatistic(assetInfo, new AssetStatistic(assetStatistic));
-    }
   }
+
+  subIdMap = new Map<string, boolean>();
+  typeSubIdMap = new Map<string, boolean>();
+
   /**累计手续费 */
   private _totalFee?: bigint;
   public get totalFee() {
@@ -296,52 +318,89 @@ export class StatisticsInfo extends EventEmitter<{ destroy: [] }> {
     return (this.source_data.totalAccount =
       this._souce_data_totalAccount + this._accountAddressSet.size);
   }
-  /**资产统计 */
-  private _chainAssetStatisticMap = new Map<ChainAssetInfo, AssetStatistic>();
-  private _assetStatisticHashMap: { [index: number]: AssetStatisticModel } = {};
-  private _formatChainAssetInfo(chainAsset: BFChainCore.AssetInfoJSON) {
-    return this.chainAssetInfoHelper.isChainAssetInfo(chainAsset)
-      ? chainAsset
-      : this.chainAssetInfoHelper.getAssetInfo(chainAsset.magic, chainAsset.assetType);
+  getAssetTypeTypeStatisticMap(magic: string) {
+    let assetTypeTypeStatistic = this.source_data.magicAssetTypeTypeStatisticMap.get(magic);
+    if (!assetTypeTypeStatistic) {
+      assetTypeTypeStatistic = AssetTypeAssetStatisticModel.fromObject({});
+      this.source_data.magicAssetTypeTypeStatisticMap.set(magic, assetTypeTypeStatistic);
+    }
+    return assetTypeTypeStatistic.assetTypeTypeStatisticMap;
   }
-  private _storeChainAssetStatistic(
-    chainAssetInfo: ChainAssetInfo,
-    assetStatistic: AssetStatistic,
-  ) {
-    this._chainAssetStatisticMap.set(chainAssetInfo, assetStatistic);
-    /// 这里使用toModel，拿到了是 assetStatistic 的 source_data
-    this._assetStatisticHashMap[assetStatistic.index] = assetStatistic.toModel();
+  private __initAssetStatistic() {
+    return AssetStatisticModel.fromObject({
+      typeStatisticHashMap: {},
+      total: {
+        changeAmount: "0",
+        changeCount: 0,
+        moveAmount: "0",
+        transactionCount: 0,
+      },
+    });
   }
   getAssetStatistic(chainAsset: BFChainCore.AssetInfoJSON) {
-    return this._chainAssetStatisticMap.get(this._formatChainAssetInfo(chainAsset));
-  }
-  setAssetStatistic(chainAsset: BFChainCore.AssetInfoJSON, assetStatistic: AssetStatistic) {
-    this._storeChainAssetStatistic(this._formatChainAssetInfo(chainAsset), assetStatistic);
-    this.source_data.assetStatisticMap.set(assetStatistic.index, assetStatistic.toModel());
-    return this;
-  }
-  initAssetStatistic(chainAsset: BFChainCore.AssetInfoJSON, index = this.assetStatisticCount) {
-    chainAsset = this._formatChainAssetInfo(chainAsset);
-    let assetStatistic = this._chainAssetStatisticMap.get(chainAsset);
+    const { magic, assetType } = chainAsset;
+    const assetTypeTypeStatisticMap = this.getAssetTypeTypeStatisticMap(magic);
+    let assetStatistic = assetTypeTypeStatisticMap.get(assetType);
     if (!assetStatistic) {
-      assetStatistic = new AssetStatistic();
-      if (this._assetStatisticHashMap[index]) {
-        throw new ArgumentIllegalException(ERROR_LIST.ASSETSTATISTIC_INDEX_ALREADY_IN_USE, {
-          index,
-        });
-      }
-      assetStatistic.index = index;
-      assetStatistic.magic = chainAsset.magic;
-      assetStatistic.assetType = chainAsset.assetType;
-      this.setAssetStatistic(chainAsset, assetStatistic);
+      assetStatistic = this.__initAssetStatistic();
+      assetTypeTypeStatisticMap.set(assetType, assetStatistic);
     }
     return assetStatistic;
   }
-  getAssetStatisticByIndex(index: number) {
-    return this._assetStatisticHashMap[index] as AssetStatisticModel | undefined;
+  setAssetStatistic(chainAsset: BFChainCore.AssetInfoJSON, assetStatistic: AssetStatisticModel) {
+    const { magic, assetType } = chainAsset;
+    const magicAssetTypeTypeStatisticMap = this.source_data.magicAssetTypeTypeStatisticMap;
+    let assetTypeTypeStatisticMap = magicAssetTypeTypeStatisticMap.get(magic);
+    if (!assetTypeTypeStatisticMap) {
+      assetTypeTypeStatisticMap = AssetTypeAssetStatisticModel.fromObject({});
+      this.source_data.magicAssetTypeTypeStatisticMap.set(magic, assetTypeTypeStatisticMap);
+    }
+    assetTypeTypeStatisticMap.assetTypeTypeStatisticMap.set(assetType, assetStatistic);
+    return this;
   }
-  get assetStatisticCount() {
-    return this._chainAssetStatisticMap.size;
+  initAssetStatistic(chainAsset: BFChainCore.AssetInfoJSON) {
+    const { magic, assetType } = chainAsset;
+    const assetTypeTypeStatisticMap = this.getAssetTypeTypeStatisticMap(magic);
+    let assetStatistic = assetTypeTypeStatisticMap.get(assetType);
+    if (!assetStatistic) {
+      assetStatistic = this.__initAssetStatistic();
+      assetTypeTypeStatisticMap.set(assetType, assetStatistic);
+    }
+    return assetStatistic;
+  }
+  private __initTypeStatistic() {
+    return CountAndAmountStatisticModel.fromObject({
+      changeAmount: "0",
+      changeCount: 0,
+      moveAmount: "0",
+      transactionCount: 0,
+    });
+  }
+  getTypeStatistic(chainAsset: BFChainCore.AssetInfoJSON, baseType: string) {
+    const assetStatistic = this.getAssetStatistic(chainAsset);
+    let typeStatistic = assetStatistic.typeStatisticMap.get(baseType);
+    if (!typeStatistic) {
+      typeStatistic = this.__initTypeStatistic();
+    }
+    return typeStatistic;
+  }
+  setTypeStatistic(
+    chainAsset: BFChainCore.AssetInfoJSON,
+    baseType: string,
+    typeStatistic: CountAndAmountStatisticModel,
+  ) {
+    const assetStatistic = this.getAssetStatistic(chainAsset);
+    assetStatistic.typeStatisticMap.set(baseType, typeStatistic);
+    return this;
+  }
+  initTypeStatistic(chainAsset: BFChainCore.AssetInfoJSON, baseType: string) {
+    const assetStatistic = this.getAssetStatistic(chainAsset);
+    let typeStatistic = assetStatistic.typeStatisticMap.get(baseType);
+    if (!typeStatistic) {
+      typeStatistic = this.__initTypeStatistic();
+      assetStatistic.typeStatisticMap.set(baseType, typeStatistic);
+    }
+    return typeStatistic;
   }
 
   // /**交易类型统计 */
@@ -362,144 +421,6 @@ export class StatisticsInfo extends EventEmitter<{ destroy: [] }> {
     this._totalAsset && (this.source_data.totalAsset = this._totalAsset.toString());
     this._totalChainAsset && (this.source_data.totalChainAsset = this._totalChainAsset.toString());
 
-    // 强制将内存更新
-    this._chainAssetStatisticMap.forEach((assetStatistic) => assetStatistic.toModel());
-    this.source_data.assetStatisticHashMap = this._assetStatisticHashMap;
-
-    return this.source_data;
-  }
-}
-
-class CountAndAmountStatistic {
-  constructor(
-    private readonly source_data = CountAndAmountStatisticModel.fromObject<CountAndAmountStatisticModel>(
-      {},
-    ),
-  ) {}
-  private _changeAmount?: bigint;
-  public get changeAmount() {
-    return this._changeAmount || (this._changeAmount = BigInt(this.source_data.changeAmount));
-  }
-  public set changeAmount(value: bigint) {
-    this._changeAmount = value;
-  }
-  public get changeCount() {
-    return this.source_data.changeCount;
-  }
-  public set changeCount(value: number) {
-    this.source_data.changeCount = value;
-  }
-  private _moveAmount?: bigint;
-  public get moveAmount() {
-    return this._moveAmount || (this._moveAmount = BigInt(this.source_data.moveAmount));
-  }
-  public set moveAmount(value: bigint) {
-    this._moveAmount = value;
-  }
-  private _transactionSignatureSet = new Set();
-  private _souce_data_transactionCount = this.source_data.transactionCount;
-  public get transactionCount() {
-    return this.source_data.transactionCount;
-  }
-  addTransactionCount(signature: string) {
-    this._transactionSignatureSet.add(signature);
-    return (this.source_data.transactionCount =
-      this._transactionSignatureSet.size + this._souce_data_transactionCount);
-  }
-  toModel() {
-    this._changeAmount && (this.source_data.changeAmount = this._changeAmount.toString());
-    this._moveAmount && (this.source_data.moveAmount = this._moveAmount.toString());
-    return this.source_data;
-  }
-}
-class AssetStatistic {
-  constructor(private readonly source_data = AssetStatisticModel.fromObject({ total: {} })) {
-    for (const [baseType, typeStatistic] of source_data.typeStatisticMap) {
-      this._typeStatisticMap.set(baseType, new CountAndAmountStatistic(typeStatistic));
-    }
-  }
-  public get magic() {
-    return this.source_data.magic;
-  }
-  public set magic(value: string) {
-    this.source_data.magic = value;
-  }
-  public get assetType(): string {
-    return this.source_data.assetType;
-  }
-  public set assetType(value: string) {
-    this.source_data.assetType = value;
-  }
-  total = new CountAndAmountStatistic(this.source_data.total);
-  /**
-   * @TODO 使用get、set，而不是Proxy来实现接口
-   */
-  // getTypeStatistic(baseType:string){
-  // }
-  // setTypeStatistic(baseType:string,countAndAmountStatistic:CountAndAmountStatistic){
-  // }
-  _typeStatisticMap = new Map<string, CountAndAmountStatistic>();
-  typeStatisticMap = new StringKeyMap<CountAndAmountStatistic>(
-    (() => {
-      const typeStatisticHashMap = this.source_data.typeStatisticHashMap;
-      const typeStatisticHashMap2: { [baseType: string]: CountAndAmountStatistic } = {};
-      return new Proxy(typeStatisticHashMap2, {
-        get(source, key: string, r) {
-          if (key in source) {
-            return source[key];
-          }
-          if (key in typeStatisticHashMap) {
-            return (source[key] = new CountAndAmountStatistic(typeStatisticHashMap[key]));
-          }
-        },
-        set(source, key: string, value, r) {
-          if (value instanceof CountAndAmountStatistic) {
-            source[key] = value;
-            typeStatisticHashMap[key] = value.toModel();
-            return true;
-          }
-          return false;
-        },
-      });
-    })(),
-  );
-  getTypeStatistic(baseType: string) {
-    return this._typeStatisticMap.get(baseType);
-  }
-  setTypeStatistic(baseType: string, assetStatistic: CountAndAmountStatistic) {
-    this._typeStatisticMap.set(baseType, assetStatistic);
-    this.source_data.typeStatisticMap.set(baseType, assetStatistic.toModel());
-    return this;
-  }
-  initTypeStatistic(baseType: string) {
-    let assetStatistic = this._typeStatisticMap.get(baseType);
-    if (!assetStatistic) {
-      assetStatistic = new CountAndAmountStatistic();
-      this.setTypeStatistic(baseType, assetStatistic);
-    }
-    return assetStatistic;
-  }
-  get assetStatisticCount() {
-    return this._typeStatisticMap.size;
-  }
-  public get index() {
-    return this.source_data.index;
-  }
-  public set index(value: number) {
-    this.source_data.index = value;
-  }
-  toModel() {
-    this.total.changeAmount &&
-      (this.source_data.total.changeAmount = this.total.changeAmount.toString());
-    this.total.moveAmount && (this.source_data.total.moveAmount = this.total.moveAmount.toString());
-    if (this._typeStatisticMap) {
-      const typeStatisticHashMap: { [baseType: string]: CountAndAmountStatisticModel } = {};
-      const { _typeStatisticMap } = this;
-      _typeStatisticMap.forEach((countAndAmountStatistic, baseType) => {
-        typeStatisticHashMap[baseType] = countAndAmountStatistic.toModel();
-      });
-      this.source_data.typeStatisticHashMap = typeStatisticHashMap;
-    }
-    return this.source_data;
+    return this.source_data.format();
   }
 }
