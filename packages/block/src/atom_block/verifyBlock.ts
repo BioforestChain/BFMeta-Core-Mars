@@ -160,7 +160,7 @@ export class VerifyBlockCore<T extends Block> {
 
     const transactions = block.transactions;
     /**重复交易 */
-    const trsSet = new Set<string>();
+    const appliedTransactions = new Set<string>();
     /**所有交易的sha256hash */
     const payloadHash = this.cryptoHelper.sha256();
     /**所有交易体的总字节长度 */
@@ -177,42 +177,23 @@ export class VerifyBlockCore<T extends Block> {
       config,
     );
     try {
-      /**
-       * 这里的`statisticInfoModel`需要进行重新生成，
-       * 在校验执行apply的时候重新进行统计
-       * 但`assetInfo`对应的`index`需要沿用下来
-       */
-      for (const [index, assetStatistic] of sourceStatisticsInfoModel.assetStatisticMap) {
-        const chainAsset = this.chainAssetInfoHelper.getAssetInfo(
-          assetStatistic.magic,
-          assetStatistic.assetType,
-        );
-        statisticsInfo.initAssetStatistic(chainAsset, index);
-      }
       /**绑定统计功能到事件触发器上 */
       this.statisticsHelper.bindApplyTransactionEventEmiter(eventEmitter, statisticsInfo);
       // FIXME: 这里只验证创世块，一般不会涉及到主权益外的权益，所以就暂时这么做，有需要再改
       const { magic: chainMaigc, assetType: chainAssetType } = config;
-      const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(chainMaigc, chainAssetType);
-      const asset = statisticsInfo.getAssetStatistic(chainAssetInfo);
-      if (!asset) {
-        throw new Error("Statistic asset lose");
-      }
-      const transactionHelper = this.transactionCore.transactionHelper;
-      const assetIndex = asset.index;
       for (const tranItem of transactions) {
         const transaction = tranItem.transaction;
         // 验证区块内每笔交易的基本信息
         await this.transactionCore
           .getTransactionFactoryFromType(transaction.type)
           .verify(transaction, config);
-        if (trsSet.has(transaction.signature)) {
+        if (appliedTransactions.has(transaction.signature)) {
           throw new ConsensusException(ERROR_LIST.SHOULD_NOT_DUPLICATE, {
             prop: `transaction with signature ${transaction.signature}`,
             target: `block with height ${block.height}`,
           });
         }
-        trsSet.add(transaction.signature);
+        appliedTransactions.add(transaction.signature);
 
         // 校验 TIB 签名
         if (
@@ -248,7 +229,7 @@ export class VerifyBlockCore<T extends Block> {
         }
         // 计算权益变动
         const trs = tranItem.transaction;
-        const { type, senderId, recipientId, fromMagic, fee, asset } = trs;
+        const { type, senderId, recipientId, fromMagic, fee } = trs;
         let calcTransactionAssetChanges: TransactionAssetChangeModel[] = [];
         const key = getAccountAssetKey(senderId, fromMagic, chainAssetType);
         let amount = "0";
@@ -260,8 +241,9 @@ export class VerifyBlockCore<T extends Block> {
         calcTransactionAssetChanges[calcTransactionAssetChanges.length] =
           TransactionAssetChangeModel.fromObject<TransactionAssetChangeModel>({
             accountType: TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE.SENDER,
-            assetTypes: assetIndex,
-            assetBalance: getAccountAsset(key),
+            sourceChainMagic: chainMaigc,
+            assetType: chainAssetType,
+            assetPrealnum: getAccountAsset(key),
           });
         if (recipientId) {
           const rkey = getAccountAssetKey(recipientId, fromMagic, chainAssetType);
@@ -269,8 +251,9 @@ export class VerifyBlockCore<T extends Block> {
           calcTransactionAssetChanges[calcTransactionAssetChanges.length] =
             TransactionAssetChangeModel.fromObject<TransactionAssetChangeModel>({
               accountType: TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE.RECIPIENT,
-              assetTypes: assetIndex,
-              assetBalance: getAccountAsset(rkey),
+              sourceChainMagic: chainMaigc,
+              assetType: chainAssetType,
+              assetPrealnum: getAccountAsset(rkey),
             });
         }
         calcTransactionAssetChanges =

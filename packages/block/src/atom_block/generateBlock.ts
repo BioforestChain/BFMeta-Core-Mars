@@ -314,9 +314,9 @@ export class GenerateBlockCore<T extends Block> {
             trs.recipientId ? " recipientId " + trs.recipientId : " "
           } signature ${tranItem.transaction.signature}`;
           for (const transactionAssetChange of transactionAssetChanges) {
-            if (BigInt(transactionAssetChange.assetBalance) < BigInt(0)) {
+            if (BigInt(transactionAssetChange.assetPrealnum) < BigInt(0)) {
               throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-                prop: `assetBalance ${transactionAssetChange.assetBalance} ${transactionAssetChange.assetTypes}`,
+                prop: `assetBalance ${transactionAssetChange.assetPrealnum}  ${transactionAssetChange.sourceChainMagic} ${transactionAssetChange.assetType}`,
                 target: "transactionAssetChanges",
                 detail: trsInfo,
               });

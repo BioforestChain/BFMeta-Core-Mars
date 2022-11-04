@@ -653,6 +653,19 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
       console.groupEnd();
     }
 
+    for (const txWithIndex of txWithIndexList) {
+      const trs = txWithIndex.trs;
+      const yy =
+        core.transactionLogicVerifier.getTransactionLogicVerifierFromType<TransferAssetTransaction>(
+          trs.type,
+        );
+      const result = yy.checkTrsFeeAndWebFee(trs, trs.getBytes().length);
+      if (!result.isFeeEnough) {
+        console.log(trs.toJSON());
+        throw new Error(`Tx fee not enough, minFee ${result.minFee}`);
+      }
+    }
+
     const height = 1;
     const blockTrsItems: TransactionInBlock[] = [];
 
@@ -668,7 +681,6 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
         amount = (trs as TransferAssetTransaction).asset.transferAsset.amount;
       }
       const chainAssetInfo = core.chainAssetInfoHelper.getAssetInfo(fromMagic, assetType);
-      statisticsInfo.initAssetStatistic(chainAssetInfo, statisticsInfo.assetStatisticCount);
       const assetChanges: {
         accountType: number;
         magic: string;
@@ -696,22 +708,24 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
       }
       const transactionAssetChanges: BFChainCore.TransactionAssetChangeJSON[] = [];
       for (const assetChange of assetChanges) {
-        const { accountType, assetNumber } = assetChange;
+        const { accountType, magic, assetType, assetNumber } = assetChange;
         const asset = statisticsInfo.getAssetStatistic(chainAssetInfo);
         if (!asset) {
           throw new Error("Statistic asset lose");
         }
         transactionAssetChanges[transactionAssetChanges.length] = {
           accountType,
-          assetTypes: asset.index,
-          assetBalance: assetNumber,
+          sourceChainMagic: magic,
+          assetType,
+          assetPrealnum: assetNumber,
         };
       }
       const trsInBlock = TransactionInBlock.fromObject({
         index: i,
         height,
         numberOfSenderTransactions: index,
-        transactionAssetChanges,
+        transactionAssetChanges:
+          core.transactionHelper.sortTransactionAssetChanges(transactionAssetChanges),
         transaction: trs,
       });
       blockTrsItems.push(trsInBlock);

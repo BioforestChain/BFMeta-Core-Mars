@@ -622,22 +622,25 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
           transactionAssetChanges[transactionAssetChanges.length] =
             TransactionAssetChangeModel.fromObject<TransactionAssetChangeModel>({
               accountType: TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE.SENDER,
-              assetTypes: assetStatistic.index,
-              assetBalance: getAccountAsset(key),
+              sourceChainMagic: magic,
+              assetType,
+              assetPrealnum: getAccountAsset(key),
             });
         } else {
           transactionAssetChanges[transactionAssetChanges.length] =
             TransactionAssetChangeModel.fromObject<TransactionAssetChangeModel>({
               accountType: TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE.RECIPIENT,
-              assetTypes: assetStatistic.index,
-              assetBalance: getAccountAsset(key),
+              sourceChainMagic: magic,
+              assetType,
+              assetPrealnum: getAccountAsset(key),
             });
         }
       }
       const trsInBlock = TransactionInBlock.fromObject({
         index: i,
         height,
-        transactionAssetChanges,
+        transactionAssetChanges:
+          bfchainCore.transactionHelper.sortTransactionAssetChanges(transactionAssetChanges),
       });
       trsInBlock.transaction = trs;
       blockTrsItems[blockTrsItems.length] = trsInBlock;
