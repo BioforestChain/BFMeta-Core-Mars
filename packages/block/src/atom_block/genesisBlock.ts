@@ -59,13 +59,13 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
     opts?: { verify?: boolean; config?: ConfigHelper },
   ) {
     const block = GenesisBlock.fromObject(blockBody);
-    if (blockBody.transactions && blockBody.transactions.length > 0) {
-      block.transactions = blockBody.transactions.map((twi) => {
-        return this.transactionInBlockFromJSON(twi);
-      });
-    } else {
-      block.transactions = [];
-    }
+    // if (blockBody.transactions && blockBody.transactions.length > 0) {
+    //   block.transactions = blockBody.transactions.map((twi) => {
+    //     return this.transactionInBlockFromJSON(twi);
+    //   });
+    // } else {
+    //   block.transactions = [];
+    // }
     if (opts && opts.verify) {
       await this.verify(block, opts.config);
     }
@@ -696,7 +696,6 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
     const block = GenesisBlock.fromObject({
       ...body,
       asset: genesisBlockAsset,
-      statisticInfo: {},
     });
     block.generatorPublicKey = body.generatorPublicKey;
     // 绑定区块奖励

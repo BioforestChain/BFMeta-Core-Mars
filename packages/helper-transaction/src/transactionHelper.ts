@@ -315,7 +315,7 @@ export class TransactionHelper {
   /**获取创世块里所有的受托人 */
   genesisDelegates(config = this.config) {
     const delegatesArr: string[] = [];
-    const transactions = config.genesisBlock.transactions;
+    const transactions = config.genesisBlock.transactionInfo.transactionInBlocks;
     for (const tr of transactions) {
       const { baseType } = this.parseType(tr.transaction.type);
       if (baseType === TRANSACTION_TYPES_BASE.DELEGATE) {

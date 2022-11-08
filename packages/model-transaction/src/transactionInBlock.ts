@@ -79,15 +79,12 @@ export class AssetPrealnumModel
 export class TransactionInBlock<
   T extends Transaction = Transaction,
 > extends SomeTransactionModel<T> {
-  /**交易在区块内的索引 */
+  /**交易在链内的索引 */
   @Field.d(TransactionInBlock.INC++, "uint32")
-  index!: number;
+  tIndex!: number;
   /**交易所属的区块高度 */
   @Field.d(TransactionInBlock.INC++, "uint32")
   height!: number;
-  /**交易发起账户的第 i 笔交易 */
-  @Field.d(TransactionInBlock.INC++, "uint32")
-  numberOfSenderTransactions!: number;
   /**交易验证完成后账户变动 */
   @Field.d(TransactionInBlock.INC++, TransactionAssetChangeModel, "repeated")
   transactionAssetChanges!: TransactionAssetChangeModel[];
@@ -130,9 +127,8 @@ export class TransactionInBlock<
   }
   toJSON() {
     const res: BFChainCore.TransactionInBlockJSON<BFChainUtil.ToJSONType<T>> = {
-      index: this.index,
+      tIndex: this.tIndex,
       height: this.height,
-      numberOfSenderTransactions: this.numberOfSenderTransactions,
       transactionAssetChanges: this.transactionAssetChanges.map((transactionAssetChange) =>
         transactionAssetChange.toJSON(),
       ),

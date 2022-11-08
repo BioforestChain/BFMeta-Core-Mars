@@ -217,6 +217,22 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     // }
     return queue;
   }
+  get canQueryTindex() {
+    for (const cc of this.chainChannelSet) {
+      if (cc.canQueryTindex) {
+        return true;
+      }
+    }
+    return false;
+  }
+  get canGetTransactionInBlock() {
+    for (const cc of this.chainChannelSet) {
+      if (cc.canGetTransactionInBlock) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   bfOnInit() {
     /// 先遍历一下当下的节点
@@ -1529,7 +1545,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                           return {
                             tib,
                             hiIndex: hi_List.findIndex(
-                              (hi) => hi.height === tib.height && hi.index === tib.index,
+                              (hi) => hi.height === tib.height && hi.index === tib.tIndex,
                             ),
                           };
                         })

@@ -152,18 +152,8 @@ declare namespace BFChainCore {
     generatorSecondPublicKey?: string;
     /**锻造者权益 */
     generatorEquity: string;
-    /**区块事件数量 */
-    numberOfTransactions: number;
-    /**区块事件摘要 */
-    payloadHash: string;
-    /**区块事件摘要长度 */
-    payloadLength: number;
     /**前块签名 */
     previousBlockSignature: string;
-    /**总发生资产量 */
-    totalAmount: string;
-    /**总发生手续费 */
-    totalFee: string;
     /**区块奖励值 */
     reward: string;
     /**区块的链标识符 */
@@ -176,6 +166,8 @@ declare namespace BFChainCore {
     signSignature?: string;
     /**区块备注信息 */
     remark: { [key: string]: string };
+    /**区块事件信息 */
+    transactionInfo: BFChainCore.BlockTransactionInfo;
     /**区块附加信息 */
     asset: GetBlockAssetJSON<T>;
   };

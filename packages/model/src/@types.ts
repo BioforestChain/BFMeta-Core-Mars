@@ -834,6 +834,10 @@ declare namespace BFChainCore {
   };
   type ApplyTransactionEventEmitter<ES extends BFChainUtil.EventInOutMap = {}> = {
     taskname?: string;
+    tIndexGetter?: (
+      tib: TransactionInBlock,
+    ) => BFChainUtil.PromiseMaybe<TransactionInBlock["tIndex"]>;
+    startTindexGetter?: () => BFChainUtil.PromiseMaybe<TransactionInBlock["tIndex"]>;
     assetChangesGetter?: (
       tib: TransactionInBlock,
     ) => BFChainUtil.PromiseMaybe<TransactionInBlock["transactionAssetChanges"]>;
@@ -842,9 +846,6 @@ declare namespace BFChainCore {
     ) => BFChainUtil.PromiseMaybe<
       import("@bfchain/core-model-transaction").AssetPrealnumModel | undefined
     >;
-    numberOfSenderTranGetter?: (
-      tib: TransactionInBlock,
-    ) => BFChainUtil.PromiseMaybe<TransactionInBlock["numberOfSenderTransactions"]>;
     blockNumberOfVotesGetter?: (height: number) => BFChainUtil.PromiseMaybe<number>;
     blockGeneratorEquityGetter?: (generatoryPublicKey: string) => BFChainUtil.PromiseMaybe<string>;
   } & BFChainUtil.QueneEventEmitter<ApplyTransactionEventMap<ES>>;

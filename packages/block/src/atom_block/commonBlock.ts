@@ -52,13 +52,13 @@ export class CommonBlockFactory extends BlockFactory<CommonBlock> {
     opts?: { verify?: boolean; config?: ConfigHelper },
   ) {
     const block = CommonBlock.fromObject(blockBody);
-    if (blockBody.transactions && blockBody.transactions.length > 0) {
-      block.transactions = blockBody.transactions.map((twi) => {
-        return this.transactionInBlockFromJSON(twi);
-      });
-    } else {
-      block.transactions = [];
-    }
+    // if (blockBody.transactions && blockBody.transactions.length > 0) {
+    //   block.transactions = blockBody.transactions.map((twi) => {
+    //     return this.transactionInBlockFromJSON(twi);
+    //   });
+    // } else {
+    //   block.transactions = [];
+    // }
 
     if (opts && opts.verify) {
       await this.verify(block, opts.config);
@@ -87,7 +87,7 @@ export class CommonBlockFactory extends BlockFactory<CommonBlock> {
    * @param commonBlockAset
    */
   _generateBlock(body: BFChainCore.BlockBody, commonBlockAset: BFChainCore.CommonBlockAssetJSON) {
-    const block = CommonBlock.fromObject({ ...body, asset: commonBlockAset, statisticInfo: {} });
+    const block = CommonBlock.fromObject({ ...body, asset: commonBlockAset });
     // 绑定区块奖励
     block.reward = this.milestonesHelper.calcReward(block.height);
 

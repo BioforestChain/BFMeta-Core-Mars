@@ -43,8 +43,6 @@ declare namespace BFChainCore {
     minHeight?: number;
     /**查询的区块的最大高度 */
     maxHeight?: number;
-    /**交易发起账户的第 i 笔交易 */
-    numberOfSenderTransactions?: number;
     /**交易见证者地址 */
     trusteeId?: string;
     /**购买的 dappid */
@@ -79,6 +77,36 @@ declare namespace BFChainCore {
   interface QueryTransactionReturnParams {
     transactions: TransactionInBlockJSON[];
   }
+  /**查询交易索引返回结果 */
+  interface QueryTindexReturnParams {
+    tIndexes: number[];
+  }
+  interface QueryTindexReturnJSON extends CommonResponseJSON, QueryTindexReturnParams {}
+  /**
+   * 查询范围
+   */
+  type TransactionTindexRangeJSON = {
+    startTindex: number;
+    length: number;
+  };
+  /**查询 transactionInBlock 的查询条件 */
+  type TransactionInBlockGetOptionsJSON = {
+    tIndexRange: TransactionTindexRangeJSON;
+  };
+  /**根据 tIndex 查询块内交易的传入参数 */
+  type GetTransactionInBlockArgJSON = {
+    /**查询参数: Array<tIndex> */
+    query: TransactionInBlockGetOptionsJSON;
+    /**排序参数 */
+    sort: TransactionSortOptionsJSON;
+  };
+  /**根据 tIndex 查询块内交易的返回结果 */
+  interface GetTransactionInBlockReturnParams {
+    transactionInBlocks: TransactionInBlockJSON[];
+  }
+  interface GetTransactionInBlockReturnJSON
+    extends CommonResponseJSON,
+      GetTransactionInBlockReturnParams {}
 
   /**查询交易的传入参数 */
   type IndexTransactionArgJSON = {

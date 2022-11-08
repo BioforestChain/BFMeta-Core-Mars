@@ -36,6 +36,10 @@ import {
   TransactionIndexModel,
   TransactionQueryOptions,
   TransactionSortOptions,
+  QueryTindexReturnModel,
+  TransactionInBlockGetOptionsModel,
+  GetTransactionInBlockArgModel,
+  GetTransactionInBlockReturnModel,
 } from "@bfchain/core-model";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { Message } from "@bfchain/protobuf";
@@ -70,6 +74,8 @@ export abstract class ChainChannelBase
   public abstract canQueryBlock: boolean;
   public abstract canBroadcastTransaction: boolean;
   public abstract canBroadcastBlock: boolean;
+  public abstract canQueryTindex: boolean;
+  public abstract canGetTransactionInBlock: boolean;
   public abstract blobSupportAlgorithms: readonly BFChainCore.OpenBlobArgJSON.Algorithm[];
   protected abstract config: ConfigHelper;
   protected abstract baseHelper: BaseHelper;
@@ -181,6 +187,14 @@ export class ChainChannel<
   }
   get canBroadcastBlock() {
     return true;
+  }
+  protected _canQueryTindex = false;
+  get canQueryTindex() {
+    return this._canQueryTindex;
+  }
+  protected _canGetTransactionInBlock = false;
+  get canGetTransactionInBlock() {
+    return this._canGetTransactionInBlock;
   }
   protected _limitQT = 100;
   /**单次查询交易的上限 */
@@ -940,6 +954,60 @@ export class ChainChannel<
     return res;
   }
 
+  /**查询交易 */
+  async queryTindexes(
+    query: BFChainCore.QueryTransactionArgJSON["query"],
+    sort?: BFChainCore.QueryTransactionArgJSON["sort"],
+    opts?: BFChainCore.ChannelRequestOptions<THIS>,
+  ) {
+    if (!this.canQueryTindex) {
+      return QueryTindexReturnModel.fromObject({
+        status: RESPONSE_STATUS.error,
+        error: ErrorMessage.fromObject(
+          new RefuseException("Refuse response query transaction index"),
+        ),
+      });
+    }
+    const arg = QueryTransactionArgModel.fromObject({
+      query: TransactionQueryOptionsModel.fromObject(query),
+      sort: TransactionSortOptions.fromObject<TransactionSortOptions>(sort || {}),
+    });
+    return this._request(
+      DUPLEX_API_CMD.QUERY_TINDEX,
+      arg,
+      this.chainChannelHelper.boxQueryTindexReturn as (
+        params: ArrayBuffer | Uint8Array,
+      ) => Promise<QueryTindexReturnModel>,
+      opts,
+    );
+  }
+  async queryTransactionInBlocks<T extends BFChainCore.Transaction = BFChainCore.Transaction>(
+    query: BFChainCore.GetTransactionInBlockArgJSON["query"],
+    sort?: BFChainCore.GetTransactionInBlockArgJSON["sort"],
+    opts?: BFChainCore.ChannelRequestOptions<THIS>,
+  ) {
+    if (!this.canGetTransactionInBlock) {
+      return GetTransactionInBlockReturnModel.fromObject({
+        status: RESPONSE_STATUS.error,
+        error: ErrorMessage.fromObject(
+          new RefuseException("Refuse response query transactionInBlock"),
+        ),
+      });
+    }
+    const arg = GetTransactionInBlockArgModel.fromObject({
+      query: TransactionInBlockGetOptionsModel.fromObject(query),
+      sort: TransactionSortOptions.fromObject<TransactionSortOptions>(sort || {}),
+    });
+    return this._request(
+      DUPLEX_API_CMD.GET_TRANSACTIONINBLOCK,
+      arg,
+      this.chainChannelHelper.boxGetTransactionInBlockReturn as (
+        params: ArrayBuffer | Uint8Array,
+      ) => Promise<GetTransactionInBlockReturnModel<T>>,
+      opts,
+    );
+  }
+
   /**处理接收到数据时的响应 */
   initOnMessage() {
     this.endpoint.onMessage(async (message: Uint8Array) => {
@@ -1335,6 +1403,59 @@ export class ChainChannel<
               taskResult = response;
               break;
             }
+            /// 查询 tIndex
+            case DUPLEX_API_CMD.QUERY_TINDEX: {
+              /**查询交易的响应，默认为繁忙 */
+              const response = QueryTindexReturnModel.fromObject<QueryTindexReturnModel>({
+                status: RESPONSE_STATUS.busy,
+                // tIndexes: []
+              });
+              // 发送查询任务
+
+              const queryResult = this.has("onQueryTindexes")
+                ? await this.emit(
+                    "onQueryTindexes",
+                    await this.chainChannelHelper.boxQueryTransactionArg(binary),
+                  )
+                : undefined;
+
+              /// 查询成功
+              if (queryResult) {
+                response.status = RESPONSE_STATUS.success;
+                response.tIndexes = queryResult.tIndexes;
+              }
+              // 绑定返回结果
+              taskResult = response;
+              break;
+            }
+            /// 查询 transactionInBLock
+            case DUPLEX_API_CMD.GET_TRANSACTIONINBLOCK: {
+              /**查询交易的响应，默认为繁忙 */
+              const response =
+                GetTransactionInBlockReturnModel.fromObject<GetTransactionInBlockReturnModel>({
+                  status: RESPONSE_STATUS.busy,
+                  // transactionInBlocks: []
+                });
+              // 发送查询任务
+
+              const queryResult = this.has("onGetTransactionInBlocks")
+                ? await this.emit(
+                    "onGetTransactionInBlocks",
+                    await this.chainChannelHelper.boxGetTransactionInBlockArg(binary),
+                  )
+                : undefined;
+
+              /// 查询成功
+              if (queryResult) {
+                response.status = RESPONSE_STATUS.success;
+                response.transactionInBlocks = queryResult.transactionInBlocks.map((tib) =>
+                  TransactionInBlock.fromObject(tib),
+                );
+              }
+              // 绑定返回结果
+              taskResult = response;
+              break;
+            }
             /// 响应信息
             case DUPLEX_API_CMD.QUERY_TRANSACTION_RETURN:
             case DUPLEX_API_CMD.INDEX_TRANSACTION_RETURN:
@@ -1346,6 +1467,8 @@ export class ChainChannel<
             case DUPLEX_API_CMD.OPEN_BLOB_RETURN:
             case DUPLEX_API_CMD.READ_BLOB_RETURN:
             case DUPLEX_API_CMD.CLOSE_BLOB_RETURN:
+            case DUPLEX_API_CMD.QUERY_TINDEX_RETURN:
+            case DUPLEX_API_CMD.GET_TRANSACTIONINBLOCK_RETURN:
             case DUPLEX_API_CMD.RESPONSE: {
               const task = req_response_map.get(req_id);
               if (task === undefined) {

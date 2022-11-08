@@ -259,3 +259,58 @@ export class GroupQueryBlockBuilder<
     );
   }
 }
+
+export const GROUP_QUERY_TRANSACTIONS_INDEX_BUILDER_ARGS = {
+  QUERY: Symbol("query"),
+  SORT: Symbol("sort"),
+};
+@Resolvable()
+export class GroupQueryTransactionsByTIndexBuilder<
+  CC extends BFChainCore.SimpleChainChannel,
+  R = BFChainUtil.PromiseReturnType<CC["queryTransactionInBlocks"]>,
+> extends GroupRequesterBuilder<CC, R> {
+  @Inject(ChainChannelHelper) protected readonly helper!: ChainChannelHelper;
+  constructor(
+    @Inject(GROUP_QUERY_TRANSACTIONS_INDEX_BUILDER_ARGS.QUERY)
+    public readonly query: BFChainCore.TransactionInBlockGetOptionsJSON,
+    @Inject(GROUP_QUERY_TRANSACTIONS_INDEX_BUILDER_ARGS.SORT, { optional: true })
+    public readonly sort?: BFChainCore.TransactionSortOptionsJSON,
+  ) {
+    super();
+  }
+  protected _doRequest(cc: CC, opts: BFChainCore.ChannelRequestOptions<CC>) {
+    return cc.queryTransactionInBlocks(this.query, this.sort, opts) as unknown as PromiseLike<R>;
+  }
+  getTimeoutExceptionInfo() {
+    return [
+      /**message */ "queryTransactionInBlocks({query} / {sort}) timeout.",
+      /**detail */
+      {
+        query: JSON.stringify(this.query),
+        sort: JSON.stringify(this.sort),
+      },
+    ] as const;
+  }
+  protected _getFinishInfo(): { message?: string | undefined; detail?: any } {
+    return { message: "finish queryTransactionInBlocks from other chainChannel" };
+  }
+  static create<
+    CC extends BFChainCore.SimpleChainChannel,
+    R = BFChainUtil.PromiseReturnType<CC["queryTransactionInBlocks"]>,
+  >(
+    rootModuleMap: ModuleStroge,
+    query: BFChainCore.TransactionInBlockGetOptionsJSON,
+    sort?: BFChainCore.TransactionSortOptionsJSON,
+  ) {
+    return Resolve<GroupQueryTransactionsByTIndexBuilder<CC, R>>(
+      GroupQueryTransactionsByTIndexBuilder,
+      new ModuleStroge(
+        [
+          [GROUP_QUERY_TRANSACTIONS_INDEX_BUILDER_ARGS.QUERY, query],
+          [GROUP_QUERY_TRANSACTIONS_INDEX_BUILDER_ARGS.SORT, sort],
+        ],
+        rootModuleMap,
+      ),
+    );
+  }
+}

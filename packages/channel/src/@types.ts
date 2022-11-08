@@ -82,6 +82,18 @@ declare namespace BFChainCore {
       in: import("@bfchain/core-model").GetPeerInfoArgModel;
       out: GetPeerInfoReturnParams | undefined;
     };
+    // FIXME：替代 onQueryTransaction
+    onQueryTindexes: {
+      in: import("@bfchain/core-model").QueryTransactionArgModel;
+      /**Array<tIndex> */
+      out: QueryTindexReturnParams | undefined;
+    };
+    onGetTransactionInBlocks: {
+      /**Array<tIndex> */
+      in: import("@bfchain/core-model").GetTransactionInBlockArgModel;
+      /**Array<tib> */
+      out: GetTransactionInBlockReturnParams | undefined;
+    };
     /**如果打破了请求限制的规整 */
     onBreakRequestLimit: {
       in: {
@@ -257,6 +269,8 @@ declare namespace BFChainCore {
     readonly canQueryBlock: boolean;
     readonly canBroadcastTransaction: boolean;
     readonly canBroadcastBlock: boolean;
+    readonly canQueryTindex: boolean;
+    readonly canGetTransactionInBlock: boolean;
 
     readonly limitQueryTransactions: number;
     readonly limitIndexTransactions: number;
@@ -301,6 +315,19 @@ declare namespace BFChainCore {
       cmd: import("@bfchain/core-model").DUPLEX_API_CMD,
       binary: Uint8Array,
     ): Promise<void>;
+    /**查询交易索引 */
+    queryTindexes(
+      query: BFChainCore.QueryTransactionArgJSON["query"],
+      sort?: BFChainCore.QueryTransactionArgJSON["sort"],
+      opts?: BFChainCore.ChannelRequestOptions<any>,
+    ): Promise<import("@bfchain/core-model").QueryTindexReturnModel>;
+
+    /**根据索引获取块内交易 */
+    queryTransactionInBlocks<T extends BFChainCore.Transaction = BFChainCore.Transaction>(
+      query: BFChainCore.GetTransactionInBlockArgJSON["query"],
+      sort?: BFChainCore.GetTransactionInBlockArgJSON["sort"],
+      opts?: BFChainCore.ChannelRequestOptions<any>,
+    ): Promise<import("@bfchain/core-model").GetTransactionInBlockReturnModel<T>>;
   }
 
   interface ChainChannel<THIS extends SimpleChainChannel = SimpleChainChannel>
