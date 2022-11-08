@@ -34,7 +34,13 @@ import {
   GetTransactionInBlockArgModel,
   GetTransactionInBlockReturnModel,
 } from "@bfchain/core-model";
-import { BaseHelper, TransactionHelper, BlockHelper, ChainTimeHelper } from "@bfchain/core-helper";
+import {
+  BaseHelper,
+  TransactionHelper,
+  BlockHelper,
+  ChainTimeHelper,
+  AccountBaseHelper,
+} from "@bfchain/core-helper";
 import { PromiseTimeout } from "./PromiseTimeout";
 
 const { ArgumentIllegalException, ArgumentFormatException, TimeOutException } =
@@ -47,6 +53,7 @@ export class ChainChannelHelper {
     private transctionHelper: TransactionHelper,
     private blockHelper: BlockHelper,
     private timeHelper: ChainTimeHelper,
+    private accountBaseHelper: AccountBaseHelper,
   ) {}
 
   // FIXME: 这里没确定 base58 编码的最大长度，临时使用 40
@@ -844,7 +851,7 @@ export class ChainChannelHelper {
   @bindThis
   async boxQueryTindexArg(params: ArrayBuffer | Uint8Array): Promise<QueryTindexArgModel> {
     if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
-      throw new ArgumentIllegalException(INVALID_PARAMS, {
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS, {
         function: "boxQueryTindexArg",
         params,
       });
@@ -855,7 +862,7 @@ export class ChainChannelHelper {
         params instanceof Uint8Array ? params : new Uint8Array(params),
       );
     } catch (error) {
-      throw new ArgumentFormatException(INVALID_PARAMS, {
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_PARAMS, {
         function: "boxQueryTindexArg",
         error,
         params,
@@ -887,7 +894,7 @@ export class ChainChannelHelper {
     if (type) {
       has_query_params = true;
       if (!BH.isValidTransactionType(type)) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           function: "boxQueryTindexArg",
           field: `type ${type}`,
         });
@@ -896,7 +903,7 @@ export class ChainChannelHelper {
     if (trsId) {
       has_query_params = true;
       if (!BH.isValidTransactionId(trsId)) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           function: "boxQueryTindexArg.query",
           field: `trsId ${trsId}`,
         });
@@ -905,7 +912,7 @@ export class ChainChannelHelper {
     if (subId) {
       has_query_params = true;
       if (!BH.isValidTransactionSubId(subId)) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           function: "boxQueryTindexArg.query",
           field: `subId ${subId}`,
         });
@@ -914,7 +921,7 @@ export class ChainChannelHelper {
     if (senderId) {
       has_query_params = true;
       if (!(await this.accountBaseHelper.isAddress(senderId))) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           function: "boxQueryTindexArg.query",
           field: `senderId ${senderId}`,
         });
@@ -923,7 +930,7 @@ export class ChainChannelHelper {
     if (recipientId) {
       has_query_params = true;
       if (!(await this.accountBaseHelper.isAddress(recipientId))) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           function: "boxQueryTindexArg.query",
           field: `recipientId ${recipientId}`,
         });
@@ -932,7 +939,7 @@ export class ChainChannelHelper {
     if (dappid) {
       has_query_params = true;
       if (!BH.isValidDAppId(dappid)) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           function: "boxQueryTindexArg.query",
           field: `dappid ${dappid}`,
         });
@@ -941,7 +948,7 @@ export class ChainChannelHelper {
     if (lns) {
       has_query_params = true;
       if (!BH.isValidLnsName(lns)) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           function: "boxQueryTindexArg.query",
           field: `lns ${lns}`,
         });
@@ -950,13 +957,13 @@ export class ChainChannelHelper {
     if (storage) {
       has_query_params = true;
       if (!(storage.key && storage.key.length)) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           function: "boxQueryTindexArg.query",
           field: `storage.key ${storage.key}`,
         });
       }
       if (!(storage.value && storage.value.length)) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           function: "boxQueryTindexArg.query",
           field: `storage.value ${storage.value}`,
         });
@@ -965,7 +972,7 @@ export class ChainChannelHelper {
     if (blockId) {
       has_query_params = true;
       if (!BH.isValidBlockSignature(blockId)) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           function: "boxQueryTindexArg.query",
           field: `blockId ${blockId}`,
         });
@@ -974,7 +981,7 @@ export class ChainChannelHelper {
     if (minHeight !== undefined) {
       has_query_params = true;
       if (!BH.isUint32(minHeight)) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           function: "boxQueryTindexArg.query",
           field: `minHeight ${minHeight}`,
         });
@@ -983,7 +990,7 @@ export class ChainChannelHelper {
     if (maxHeight !== undefined) {
       has_query_params = true;
       if (!BH.isUint32(maxHeight)) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           function: "boxQueryTindexArg.query",
           field: `maxHeight ${maxHeight}`,
         });
@@ -992,7 +999,7 @@ export class ChainChannelHelper {
     if (trusteeId) {
       has_query_params = true;
       if (!(await this.accountBaseHelper.isAddress(trusteeId))) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           function: "boxQueryTindexArg.query",
           field: `trusteeId ${trusteeId}`,
         });
@@ -1001,7 +1008,7 @@ export class ChainChannelHelper {
     if (purchaseDAppid) {
       has_query_params = true;
       if (!BH.isValidDAppId(purchaseDAppid)) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           function: "boxQueryTindexArg.query",
           field: `purchaseDAppid ${purchaseDAppid}`,
         });
@@ -1010,7 +1017,7 @@ export class ChainChannelHelper {
     if (range) {
       has_query_params = true;
       if (!BH.isString(range)) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           function: "boxQueryTindexArg.query",
           field: `range ${range}`,
         });
@@ -1019,7 +1026,7 @@ export class ChainChannelHelper {
     if (address) {
       has_query_params = true;
       if (!(await this.accountBaseHelper.isAddress(address))) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           function: "boxQueryTindexArg.query",
           field: `address ${address}`,
         });
@@ -1032,7 +1039,7 @@ export class ChainChannelHelper {
       );
     }
     if (!BH.isUint32(offset)) {
-      throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
         function: "boxQueryTindexArg.query",
         field: `offset ${offset}`,
       });
@@ -1040,7 +1047,7 @@ export class ChainChannelHelper {
     if (limit) {
       // if (typeof limit === "number") {
       if (!BH.isUint32(limit)) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           function: "boxQueryTindexArg.query",
           field: `limit ${limit}`,
         });
@@ -1052,7 +1059,7 @@ export class ChainChannelHelper {
     if (tIndex !== undefined) {
       // if (typeof timestamp === "number") {
       if (tIndex !== -1 && tIndex !== 1) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           function: "boxQueryTindexArg.sort",
           field: `tIndex ${tIndex}`,
         });
@@ -1062,7 +1069,7 @@ export class ChainChannelHelper {
     // if (index) {
     //   // if (typeof timestamp === "number") {
     //   if (index !== -1 && index !== 1) {
-    //     throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+    //     throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
     //       function: "boxQueryTindexArg.sort",
     //       field: "timestamp",
     //     });
@@ -1077,7 +1084,7 @@ export class ChainChannelHelper {
   @bindThis
   async boxQueryTindexReturn(params: ArrayBuffer | Uint8Array) {
     if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
-      throw new ArgumentIllegalException(INVALID_PARAMS, {
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS, {
         function: "boxQueryTindexesReturn",
         params,
       });
@@ -1088,7 +1095,7 @@ export class ChainChannelHelper {
         params instanceof Uint8Array ? params : new Uint8Array(params),
       );
     } catch (error) {
-      throw new ArgumentFormatException(INVALID_PARAMS, {
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_PARAMS, {
         function: "boxQueryTindexesReturn",
         error,
         params,
@@ -1101,7 +1108,7 @@ export class ChainChannelHelper {
       const BH = this.baseHelper;
       for (const tIndex of tIndexes) {
         if (!BH.isNaturalNumber(tIndex)) {
-          throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+          throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
             function: "boxQueryTindexesReturn",
             field: `tIndexes ${tIndex}`,
           });
@@ -1119,7 +1126,7 @@ export class ChainChannelHelper {
     params: ArrayBuffer | Uint8Array,
   ): Promise<GetTransactionInBlockArgModel> {
     if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
-      throw new ArgumentIllegalException(INVALID_PARAMS, {
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS, {
         function: "boxGetTransactionInBlockArg",
         params,
       });
@@ -1130,7 +1137,7 @@ export class ChainChannelHelper {
         params instanceof Uint8Array ? params : new Uint8Array(params),
       );
     } catch (error) {
-      throw new ArgumentFormatException(INVALID_PARAMS, {
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_PARAMS, {
         function: "boxGetTransactionInBlockArg",
         error,
         params,
@@ -1141,13 +1148,13 @@ export class ChainChannelHelper {
     //#region 查询参数校验
     const { startTindex, length } = arg.query.tIndexRange;
     if (!BH.isUint32(startTindex)) {
-      throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
         function: "boxGetTransactionInBlockArg.query.tIndexRange.startTindex",
         field: `startTindex ${startTindex}`,
       });
     }
     if (!BH.isUint32(length)) {
-      throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
         function: "boxGetTransactionInBlockArg.query.tIndexRange.length",
         field: `length ${length}`,
       });
@@ -1158,7 +1165,7 @@ export class ChainChannelHelper {
     if (tIndex !== undefined) {
       // if (typeof timestamp === "number") {
       if (tIndex !== -1 && tIndex !== 1) {
-        throw new ArgumentIllegalException(INVALID_PARAMS_FIELD, {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           function: "boxGetTransactionInBlockArg.sort",
           field: `tIndex ${tIndex}`,
         });
@@ -1173,7 +1180,7 @@ export class ChainChannelHelper {
   @bindThis
   async boxGetTransactionInBlockReturn(params: ArrayBuffer | Uint8Array) {
     if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
-      throw new ArgumentIllegalException(INVALID_PARAMS, {
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS, {
         function: "boxGetTransactionInBlockReturn",
         params,
       });
@@ -1184,7 +1191,7 @@ export class ChainChannelHelper {
         params instanceof Uint8Array ? params : new Uint8Array(params),
       );
     } catch (error) {
-      throw new ArgumentFormatException(INVALID_PARAMS, {
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_PARAMS, {
         function: "boxGetTransactionInBlockReturn",
         error,
         params,

@@ -4,6 +4,7 @@ import { TransactionInBlock } from "@bfchain/core-model-transaction";
 import { StatisticInfoModel } from "./statistic_info";
 import { EasyWeakMap } from "@bfchain/util-extends-map";
 import { StringKeyMap } from "@bfchain/core-model-common";
+import { cacheBytesGetter } from "@bfchain/core-model-cacher";
 const TrsRemarkMapWM = new EasyWeakMap((block: Block) => new StringKeyMap(block.remark));
 
 /**缓存trasList解析结果 */
@@ -19,7 +20,8 @@ export class BlockVersionReader extends Message<BlockVersionReader> {
 @Type.d("BlockTransactionInfo")
 export class BlockTransactionInfoModel
   extends Message<BlockTransactionInfoModel>
-  implements BFChainCore.BlockTransactionInfoJSON {
+  implements BFChainCore.BlockTransactionInfoJSON
+{
   static INC = 1;
 
   /**交易起始索引 */
@@ -109,7 +111,7 @@ export class BlockTransactionInfoModel
       }
       res.transactionInBlocks = trsInBlocks;
     }
-    return (res as unknown) as T;
+    return res as unknown as T;
   }
 }
 
@@ -220,7 +222,7 @@ export class Block<AJ extends object = object>
   /**区块奖励 */
   @Field.d(18, "string", "required", "0")
   reward!: string;
- 
+
   /**区块事件信息 */
   @Field.d(Block.INC++, BlockTransactionInfoModel)
   transactionInfo!: BlockTransactionInfoModel;
@@ -239,6 +241,18 @@ export class Block<AJ extends object = object>
   /**区块事件 hash 长度 */
   get payloadLength() {
     return this.transactionInfo.payloadLength;
+  }
+  /**区块事件总权益量 */
+  get totalAmount() {
+    return this.transactionInfo.totalAmount;
+  }
+  /**区块事件总手续费 */
+  get totalFee() {
+    return this.transactionInfo.totalFee;
+  }
+  /**区块事件统计信息 */
+  get statisticInfo() {
+    return this.transactionInfo.statisticInfo;
   }
   /**区块事件 */
   @Field.d(19, "bytes", "repeated")
@@ -261,10 +275,14 @@ export class Block<AJ extends object = object>
     return map;
   }
 
-  /// 新增的字段从 22 开始，21 固定为 asset
-  static INC = 22;
+  get delay() {
+    for (let k in this.roundOfflineGeneratersHashMap) {
+      return true;
+    }
+    return false;
+  }
 
-  // @cacheBytesGetter
+  @cacheBytesGetter
   getBytes(
     skipSignature?: boolean,
     skipSignSignature?: boolean,
@@ -278,19 +296,33 @@ export class Block<AJ extends object = object>
       props.signSignatureBuffer = { value: null };
     }
     if (skipOrCustomTransactions) {
-      props.transactionBufferList = {
-        value: skipOrCustomTransactions === true ? [] : skipOrCustomTransactions,
-      };
+      const transactionInfo = this.transactionInfo;
+      if (skipOrCustomTransactions === true) {
+        props.transactionInfo = {
+          value: {
+            startTindex: transactionInfo.startTindex,
+            numberOfTransactions: transactionInfo.numberOfTransactions,
+            payloadHashBuffer: transactionInfo.payloadHashBuffer,
+            payloadLength: transactionInfo.payloadLength,
+            statisticInfo: transactionInfo.statisticInfo,
+            transactionInBlockBufferList: [],
+          },
+        };
+      } else {
+        props.transactionInfo = {
+          value: {
+            startTindex: transactionInfo.startTindex,
+            numberOfTransactions: skipOrCustomTransactions.length,
+            payloadHashBuffer: transactionInfo.payloadHashBuffer,
+            payloadLength: transactionInfo.payloadLength,
+            statisticInfo: transactionInfo.statisticInfo,
+            transactionInBlockBufferList: skipOrCustomTransactions,
+          },
+        };
+      }
     }
     const blockWrapper = Object.create(this, props);
     return this.$type.encode(blockWrapper).finish();
-  }
-
-  get delay() {
-    for (let k in this.roundOfflineGeneratersHashMap) {
-      return true;
-    }
-    return false;
   }
 
   toJSON() {
@@ -302,19 +334,13 @@ export class Block<AJ extends object = object>
       signature: this.signature,
       generatorPublicKey: this.generatorPublicKey,
       generatorEquity: this.generatorEquity,
-      numberOfTransactions: this.numberOfTransactions,
-      payloadHash: this.payloadHash,
-      payloadLength: this.payloadLength,
       previousBlockSignature: this.previousBlockSignature,
-      totalAmount: this.totalAmount,
-      totalFee: this.totalFee,
       reward: this.reward,
       magic: this.magic,
       blockParticipation: this.blockParticipation,
-      transactions: this.transactions.map((transaction) => transaction.toJSON()),
       remark: this.remark,
       asset: this.asset.toJSON(),
-      statisticInfo: this.statisticInfo.toJSON(),
+      transactionInfo: this.transactionInfo.toJSON(),
       roundOfflineGeneratersHashMap: this.roundOfflineGeneratersHashMap,
     };
 
@@ -333,19 +359,8 @@ export class Block<AJ extends object = object>
     object.generatorPublicKey && (res.generatorPublicKey = object.generatorPublicKey);
     object.generatorSecondPublicKey &&
       (res.generatorSecondPublicKey = object.generatorSecondPublicKey);
+    object.signature && (res.signature = object.signature);
     object.signSignature && (res.signSignature = object.signSignature);
-    if (res !== (object as unknown)) {
-      object.payloadHash && (res.payloadHash = object.payloadHash);
-      const trsInBlock: TransactionInBlock[] = [];
-      if (object.transactions) {
-        const transactions = object.transactions;
-        for (const transaction of transactions) {
-          trsInBlock[trsInBlock.length] = TransactionInBlock.fromObject(transaction);
-        }
-      }
-      res.transactions = trsInBlock;
-      object.signature && (res.signature = object.signature);
-    }
     return res as unknown as T;
   }
 }

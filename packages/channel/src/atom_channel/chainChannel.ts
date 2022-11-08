@@ -969,7 +969,7 @@ export class ChainChannel<
       });
     }
     const arg = QueryTransactionArgModel.fromObject({
-      query: TransactionQueryOptionsModel.fromObject(query),
+      query: TransactionQueryOptions.fromObject(query),
       sort: TransactionSortOptions.fromObject<TransactionSortOptions>(sort || {}),
     });
     return this._request(
