@@ -60,13 +60,13 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
     opts?: { verify?: boolean; config?: ConfigHelper },
   ) {
     const block = RoundLastBlock.fromObject(blockBody);
-    if (blockBody.transactions && blockBody.transactions.length > 0) {
-      block.transactions = blockBody.transactions.map((twi) => {
-        return this.transactionInBlockFromJSON(twi);
-      });
-    } else {
-      block.transactions = [];
-    }
+    // if (blockBody.transactions && blockBody.transactions.length > 0) {
+    //   block.transactions = blockBody.transactions.map((twi) => {
+    //     return this.transactionInBlockFromJSON(twi);
+    //   });
+    // } else {
+    //   block.transactions = [];
+    // }
     if (opts && opts.verify) {
       await this.verify(block, opts.config);
     }
@@ -153,7 +153,6 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
     const block = RoundLastBlock.fromObject({
       ...body,
       asset: roundLastBlockAsset,
-      statisticInfo: {},
     });
     // 绑定区块奖励
     block.reward = this.milestonesHelper.calcReward(block.height);

@@ -45,6 +45,7 @@ import {
   getRandomMagic,
   getRandomDAppid,
 } from "../include";
+import * as fs from "fs";
 
 const defaultIpsPath = path.join(process.cwd(), "./assets/defaultIps.json");
 
@@ -75,6 +76,8 @@ const getTxs = (address: string) => {
   _txs[address] = count + 1;
   return _txs[address];
 };
+
+registerchainAssetData.blockPerRound = 5;
 
 (async () => {
   async function getUsernameTransaction(sender: DelegateInfo, registerBfchainCore: BFChainCore) {
@@ -528,8 +531,11 @@ const getTxs = (address: string) => {
       ),
     );
     const delegatesSecret = config.delegatesSecret;
-    const ips = getIps(delegatesSecret.length, false, defaultIpsPath);
-    for (let i = 0; i < delegatesSecret.slice(5).length; i++) {
+    for (
+      let i = 0;
+      i < delegatesSecret.slice(0, registerchainAssetData.blockPerRound * 2).length;
+      i++
+    ) {
       const secret = delegatesSecret[i];
       const address = await registerBfchainCore.accountBaseHelper.getAddressFromSecret(secret);
 
@@ -644,9 +650,8 @@ const getTxs = (address: string) => {
         };
       }
       const trsInBlock = TransactionInBlock.fromObject({
-        index: i,
+        tIndex: i,
         height,
-        numberOfSenderTransactions: index,
         transactionAssetChanges:
           registerBfchainCore.transactionHelper.sortTransactionAssetChanges(
             transactionAssetChanges,
@@ -755,6 +760,9 @@ const getTxs = (address: string) => {
     }
 
     const genesisBlock = await getGenesisBlockAsync(registerBfchainCore);
+    const bytes = genesisBlock.getBytes();
+    const yyy = fullBfchainCore.block.parseBytesToSomeBlock(bytes);
+    await fullBfchainCore.blockHelper.verifyBlockSignature(yyy);
     const trs = await fullBfchainCore.transaction.createTransaction<RegisterChainTransaction>(
       RegisterChainTransactionFactory,
       data,
@@ -874,9 +882,8 @@ const getTxs = (address: string) => {
       };
     }
     const trsInBlock = TransactionInBlock.fromObject({
-      index: 0,
+      tIndex: 0,
       height,
-      numberOfSenderTransactions: index,
       transactionAssetChanges:
         fullBfchainCore.transactionHelper.sortTransactionAssetChanges(transactionAssetChanges),
     });

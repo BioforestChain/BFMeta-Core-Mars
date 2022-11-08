@@ -276,11 +276,25 @@ export class ReplayBlockCore<T extends Block> {
       eventEmitter.taskname || `core-replay-${height}`,
       signature,
     );
-    const transactionBufferList: Uint8Array[] = [];
+    const transactionInBlockBufferList: Uint8Array[] = [];
     const { transactionCore, asymmetricHelper, transactionHelper, baseHelper } = this;
     const { VOTE, GRAB_ASSET, SIGN_FOR_ASSET } = transactionHelper;
     const abortForbiddenTransaction = transactionCore.abortForbiddenTransaction;
     const trsSet = new Set();
+
+    if (!eventEmitter.startTindexGetter) {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
+        prop: "startTindexGetter",
+        target: "eventEmitter",
+      });
+    }
+
+    if (!eventEmitter.tIndexGetter) {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
+        prop: "tIndexGetter",
+        target: "eventEmitter",
+      });
+    }
 
     if (!eventEmitter.assetChangesGetter) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
@@ -296,17 +310,21 @@ export class ReplayBlockCore<T extends Block> {
       });
     }
 
-    if (!eventEmitter.numberOfSenderTranGetter) {
-      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-        prop: "numberOfSenderTranGetter",
-        target: "eventEmitter",
-      });
-    }
-
     if (!eventEmitter.blockGeneratorEquityGetter) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "blockGeneratorEquityGetter",
         target: "eventEmitter",
+      });
+    }
+
+    // 校验 startTindex
+    const startTindex = await eventEmitter.startTindexGetter();
+    if (block.startTindex !== startTindex) {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
+        to_compare_prop: `startTindex ${block.startTindex}`,
+        be_compare_prop: `startTindex ${startTindex}`,
+        to_target: "block",
+        be_target: "calculate",
       });
     }
 
@@ -329,13 +347,14 @@ export class ReplayBlockCore<T extends Block> {
       const tranSenderCountMap = new EasyMap<string, number>((address) => 0);
       isDevGenerateBlock && info("begin insertTransactionsForReplay");
       for await (const tranItem of trsGenerator) {
+        const tIndex = eventEmitter.tIndexGetter(tranItem);
         isDevGenerateBlock &&
-          log("insert transaction: %d / %d", tranItem.index + 1, block.numberOfTransactions);
+          log("insert transaction: %d / %d", tranItem.tIndex + 1, block.numberOfTransactions);
         try {
-          if (tranItem.index >= MAX_TRANSACTION_SIZE) {
+          if (tranItem.tIndex >= MAX_TRANSACTION_SIZE) {
             throw new OutOfRangeException(ERROR_LIST.OUT_OF_RANGE, {
               variable: "transactions",
-              index: tranItem.index,
+              tIndex: tranItem.tIndex,
               maxLength: MAX_TRANSACTION_SIZE,
             });
           }
@@ -393,15 +412,7 @@ export class ReplayBlockCore<T extends Block> {
             //#endregion
           }
           // 保存交易
-          if (transactionBufferList.length !== tranItem.index) {
-            throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
-              to_compare_prop: `index ${transactionBufferList.length}`,
-              be_compare_prop: `index ${tranItem.index}`,
-              to_target: "transactions",
-              be_target: "calculate",
-            });
-          }
-          transactionBufferList.push(tranItem.getBytes());
+          transactionInBlockBufferList.push(tranItem.getBytes());
           // 验证块内是否存在不合法交易
           if (storageValue && (type === GRAB_ASSET || type === SIGN_FOR_ASSET)) {
             const trsArray = trSignWithIndex.get(storageValue);
@@ -495,19 +506,6 @@ export class ReplayBlockCore<T extends Block> {
                 });
               }
             }
-            // 获取是发送者的第几比交易
-            const calcNumberOfSenderTransactions = await eventEmitter.numberOfSenderTranGetter(
-              tranItem,
-            );
-            // 校验 numberOfSenderTransactions
-            if (calcNumberOfSenderTransactions !== tranItem.numberOfSenderTransactions) {
-              throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
-                to_compare_prop: `numberOfSenderTransactions ${tranItem.numberOfSenderTransactions}`,
-                be_compare_prop: `numberOfSenderTransactions ${calcNumberOfSenderTransactions}`,
-                to_target: `transactionInBlock ${senderId} ${signature}`,
-                be_target: "calculate",
-              });
-            }
           }
           // 校验 TIB 签名 和 安全签名
           if (verifySignature) {
@@ -577,7 +575,7 @@ export class ReplayBlockCore<T extends Block> {
         });
       }
 
-      const numberOfTransactions = transactionBufferList.length;
+      const numberOfTransactions = transactionInBlockBufferList.length;
       if (block.numberOfTransactions !== numberOfTransactions) {
         /// 区块的交易数对不上
         throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
@@ -656,6 +654,7 @@ export class ReplayBlockCore<T extends Block> {
             be_target: "calculate",
           });
         }
+        block.transactionInfo.transactionInBlockBufferList = transactionInBlockBufferList;
       }
 
       /// 临时恢复的操作，但会曝出警告
@@ -670,6 +669,6 @@ export class ReplayBlockCore<T extends Block> {
       statisticsInfo.unref(block.signature);
     }
 
-    return transactionBufferList;
+    return transactionInBlockBufferList;
   }
 }

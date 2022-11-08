@@ -158,13 +158,13 @@ export class GenerateBlockCore<T extends Block> {
     // 计算并赋值区块大小
     block.blockSize = this.commonBlockVerify.calcBlockSize(block);
 
-    // 进行区块签名
+    // 进行区块签名，因为已经有 payloadHash，所以这里可以跳过交易
     block.signatureBuffer = await this.asymmetricHelper.detachedSign(
       block.getBytes(true, true, true),
       keypair.secretKey,
     );
 
-    // 进行区块二次签名
+    // 进行区块二次签名，因为已经有 payloadHash，所以这里可以跳过交易
     if (secondKeypair) {
       block.signSignatureBuffer = await this.asymmetricHelper.detachedSign(
         block.getBytes(false, true, true),
@@ -234,15 +234,8 @@ export class GenerateBlockCore<T extends Block> {
       isDevGenerateBlock && info("begin insertTransactions");
       for await (const tranItem of trsGenerator) {
         isDevGenerateBlock &&
-          log("insert transaction: %d / %d", tranItem.index + 1, block.numberOfTransactions);
+          log("insert transaction: %d / %d", tranItem.tIndex, block.numberOfTransactions);
         try {
-          if (tranItem.index >= MAX_TRANSACTION_SIZE) {
-            throw new OutOfRangeException(ERROR_LIST.OUT_OF_RANGE, {
-              variable: "transactions",
-              index: tranItem.index,
-              maxLength: MAX_TRANSACTION_SIZE,
-            });
-          }
           const trs = tranItem.transaction;
           const { type, senderId, signature } = trs;
           if (trsSet.has(signature)) {
@@ -297,7 +290,6 @@ export class GenerateBlockCore<T extends Block> {
             //#endregion
           }
           // 保存交易
-          tranItem.index = transactions.length;
           transactions.push(tranItem);
           tranItem.height = block.height;
           /// 交易生效
@@ -308,8 +300,8 @@ export class GenerateBlockCore<T extends Block> {
           eventEmitter.assetChangesGetter &&
             (tranItem.transactionAssetChanges = await eventEmitter.assetChangesGetter(tranItem));
           const transactionAssetChanges = tranItem.transactionAssetChanges;
-          const trsInfo = `height ${tranItem.height} index ${
-            tranItem.index
+          const trsInfo = `height ${tranItem.height} tIndex ${
+            tranItem.tIndex
           } type ${type} senderId ${senderId} ${
             trs.recipientId ? " recipientId " + trs.recipientId : " "
           } signature ${tranItem.transaction.signature}`;
@@ -343,11 +335,6 @@ export class GenerateBlockCore<T extends Block> {
               });
             }
           }
-          // 获取是发送者的第几比交易
-          eventEmitter.numberOfSenderTranGetter &&
-            (tranItem.numberOfSenderTransactions = await eventEmitter.numberOfSenderTranGetter(
-              tranItem,
-            ));
 
           // 对 TIB 进行签名
           tranItem.signatureBuffer = await this.asymmetricHelper.detachedSign(
@@ -397,21 +384,32 @@ export class GenerateBlockCore<T extends Block> {
         });
       }
 
-      block.statisticInfo = statisticsInfo.toModel();
-      block.payloadHashBuffer = await payloadHash.digest();
-      block.payloadLength = payloadLength;
-      block.transactions = transactions;
       const numberOfTransactions = transactions.length;
-      if (block.numberOfTransactions !== 0 && block.numberOfTransactions !== numberOfTransactions) {
-        /// 区块的交易数对不上
-        throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-          to_compare_prop: `numberOfTransactions ${block.numberOfTransactions}`,
-          be_compare_prop: "block",
-          to_target: `numberOfTransactions ${numberOfTransactions}`,
-          be_target: "calculate",
-        });
+      // if (block.numberOfTransactions !== 0 && block.numberOfTransactions !== numberOfTransactions) {
+      //   /// 区块的交易数对不上
+      //   throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+      //     to_compare_prop: `numberOfTransactions ${block.numberOfTransactions}`,
+      //     be_compare_prop: "block",
+      //     to_target: `numberOfTransactions ${numberOfTransactions}`,
+      //     be_target: "calculate",
+      //   });
+      // }
+      block.transactionInfo.numberOfTransactions = numberOfTransactions;
+      if (numberOfTransactions > 0) {
+        block.transactionInfo.startTindex = transactions[0].tIndex;
+      } else {
+        if (!eventEmitter.startTindexGetter) {
+          throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
+            prop: "startTindexGetter",
+            target: "eventEmitter",
+          });
+        }
+        block.transactionInfo.startTindex = await eventEmitter.startTindexGetter();
       }
-      block.numberOfTransactions = numberOfTransactions;
+      block.transactionInfo.statisticInfo = statisticsInfo.toModel();
+      block.transactionInfo.payloadHashBuffer = await payloadHash.digest();
+      block.transactionInfo.payloadLength = payloadLength;
+      block.transactionInfo.transactionInBlocks = transactions;
       block.blockParticipation = this.blockHelper.calcBlockParticipation({
         totalChainAsset: statisticsInfo.totalChainAsset,
         numberOfTransactions,

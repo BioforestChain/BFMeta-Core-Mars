@@ -29,8 +29,18 @@ import {
   CloseBlobReturnModel,
   ReadBlobArgModel,
   ReadBlobReturnModel,
+  QueryTindexArgModel,
+  QueryTindexReturnModel,
+  GetTransactionInBlockArgModel,
+  GetTransactionInBlockReturnModel,
 } from "@bfchain/core-model";
-import { BaseHelper, TransactionHelper, BlockHelper, ChainTimeHelper } from "@bfchain/core-helper";
+import {
+  BaseHelper,
+  TransactionHelper,
+  BlockHelper,
+  ChainTimeHelper,
+  AccountBaseHelper,
+} from "@bfchain/core-helper";
 import { PromiseTimeout } from "./PromiseTimeout";
 
 const { ArgumentIllegalException, ArgumentFormatException, TimeOutException } =
@@ -43,6 +53,7 @@ export class ChainChannelHelper {
     private transctionHelper: TransactionHelper,
     private blockHelper: BlockHelper,
     private timeHelper: ChainTimeHelper,
+    private accountBaseHelper: AccountBaseHelper,
   ) {}
 
   // FIXME: 这里没确定 base58 编码的最大长度，临时使用 40
@@ -87,7 +98,6 @@ export class ChainChannelHelper {
       blockSignature,
       minHeight,
       maxHeight,
-      numberOfSenderTransactions,
       trusteeId,
       purchaseDAppid,
       range,
@@ -200,14 +210,6 @@ export class ChainChannelHelper {
       if (!BH.isUint32(maxHeight)) {
         throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           field: `maxHeight ${maxHeight}`,
-        });
-      }
-    }
-    if (numberOfSenderTransactions) {
-      has_query_params = true;
-      if (!BH.isNaturalNumber(numberOfSenderTransactions)) {
-        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
-          field: `numberOfSenderTransactions ${numberOfSenderTransactions}`,
         });
       }
     }
@@ -354,16 +356,16 @@ export class ChainChannelHelper {
       );
     }
     const BH = this.baseHelper;
-    for (const tIndex of tIndexes) {
-      const { height, index, length } = tIndex;
+    for (const item of tIndexes) {
+      const { height, tIndex, length } = item;
       if (!BH.isPositiveInteger(height)) {
         throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           field: `height ${height}`,
         });
       }
-      if (!BH.isNaturalNumber(index)) {
+      if (!BH.isNaturalNumber(tIndex)) {
         throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
-          field: `index ${index}`,
+          field: `tIndex ${tIndex}`,
         });
       }
       if (!BH.isPositiveInteger(length)) {
@@ -841,6 +843,343 @@ export class ChainChannelHelper {
         params,
       });
     }
+  }
+
+  /**
+   * 生成并校验交易查询的传入参数
+   */
+  @bindThis
+  async boxQueryTindexArg(params: ArrayBuffer | Uint8Array): Promise<QueryTindexArgModel> {
+    if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS, {
+        function: "boxQueryTindexArg",
+        params,
+      });
+    }
+    let arg: QueryTindexArgModel;
+    try {
+      arg = QueryTindexArgModel.decode(
+        params instanceof Uint8Array ? params : new Uint8Array(params),
+      );
+    } catch (error) {
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_PARAMS, {
+        function: "boxQueryTindexArg",
+        error,
+        params,
+      });
+    }
+    const BH = this.baseHelper;
+    /// 参数校验
+    //#region 查询参数校验
+    const {
+      type,
+      signature,
+      senderId,
+      recipientId,
+      dappid,
+      lns,
+      storage,
+      blockSignature,
+      minHeight,
+      maxHeight,
+      trusteeId,
+      purchaseDAppid,
+      range,
+      address,
+      offset,
+      limit,
+    } = arg.query;
+    let has_query_params = false;
+    if (type) {
+      has_query_params = true;
+      if (!BH.isValidTransactionType(type)) {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
+          function: "boxQueryTindexArg",
+          field: `type ${type}`,
+        });
+      }
+    }
+    if (signature) {
+      has_query_params = true;
+      if (!BH.isValidTransactionSignature(signature)) {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
+          function: "boxQueryTindexArg.query",
+          field: `signature ${signature}`,
+        });
+      }
+    }
+    if (senderId) {
+      has_query_params = true;
+      if (!(await this.accountBaseHelper.isAddress(senderId))) {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
+          function: "boxQueryTindexArg.query",
+          field: `senderId ${senderId}`,
+        });
+      }
+    }
+    if (recipientId) {
+      has_query_params = true;
+      if (!(await this.accountBaseHelper.isAddress(recipientId))) {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
+          function: "boxQueryTindexArg.query",
+          field: `recipientId ${recipientId}`,
+        });
+      }
+    }
+    if (dappid) {
+      has_query_params = true;
+      if (!BH.isValidDAppId(dappid)) {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
+          function: "boxQueryTindexArg.query",
+          field: `dappid ${dappid}`,
+        });
+      }
+    }
+    if (lns) {
+      has_query_params = true;
+      if (!BH.isValidLocationName(lns)) {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
+          function: "boxQueryTindexArg.query",
+          field: `lns ${lns}`,
+        });
+      }
+    }
+    if (storage) {
+      has_query_params = true;
+      if (!(storage.key && storage.key.length)) {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
+          function: "boxQueryTindexArg.query",
+          field: `storage.key ${storage.key}`,
+        });
+      }
+      if (!(storage.value && storage.value.length)) {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
+          function: "boxQueryTindexArg.query",
+          field: `storage.value ${storage.value}`,
+        });
+      }
+    }
+    if (blockSignature) {
+      has_query_params = true;
+      if (!BH.isValidBlockSignature(blockSignature)) {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
+          function: "boxQueryTindexArg.query",
+          field: `blockSignature ${blockSignature}`,
+        });
+      }
+    }
+    if (minHeight !== undefined) {
+      has_query_params = true;
+      if (!BH.isUint32(minHeight)) {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
+          function: "boxQueryTindexArg.query",
+          field: `minHeight ${minHeight}`,
+        });
+      }
+    }
+    if (maxHeight !== undefined) {
+      has_query_params = true;
+      if (!BH.isUint32(maxHeight)) {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
+          function: "boxQueryTindexArg.query",
+          field: `maxHeight ${maxHeight}`,
+        });
+      }
+    }
+    if (trusteeId) {
+      has_query_params = true;
+      if (!(await this.accountBaseHelper.isAddress(trusteeId))) {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
+          function: "boxQueryTindexArg.query",
+          field: `trusteeId ${trusteeId}`,
+        });
+      }
+    }
+    if (purchaseDAppid) {
+      has_query_params = true;
+      if (!BH.isValidDAppId(purchaseDAppid)) {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
+          function: "boxQueryTindexArg.query",
+          field: `purchaseDAppid ${purchaseDAppid}`,
+        });
+      }
+    }
+    if (range) {
+      has_query_params = true;
+      if (!BH.isString(range)) {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
+          function: "boxQueryTindexArg.query",
+          field: `range ${range}`,
+        });
+      }
+    }
+    if (address) {
+      has_query_params = true;
+      if (!(await this.accountBaseHelper.isAddress(address))) {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
+          function: "boxQueryTindexArg.query",
+          field: `address ${address}`,
+        });
+      }
+    }
+
+    if (has_query_params === false) {
+      throw new ArgumentIllegalException(
+        "Invalid QueryTransaction query params, no query conditions",
+      );
+    }
+    if (!BH.isUint32(offset)) {
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
+        function: "boxQueryTindexArg.query",
+        field: `offset ${offset}`,
+      });
+    }
+    if (limit) {
+      // if (typeof limit === "number") {
+      if (!BH.isUint32(limit)) {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
+          function: "boxQueryTindexArg.query",
+          field: `limit ${limit}`,
+        });
+      }
+    }
+    //#endregion
+    //#region 排序参数校验
+    const { tIndex } = arg.sort;
+    if (tIndex !== undefined) {
+      // if (typeof timestamp === "number") {
+      if (tIndex !== -1 && tIndex !== 1) {
+        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
+          function: "boxQueryTindexArg.sort",
+          field: `tIndex ${tIndex}`,
+        });
+      }
+    }
+    // const { index } = arg.sort;
+    // if (index) {
+    //   // if (typeof timestamp === "number") {
+    //   if (index !== -1 && index !== 1) {
+    //     throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
+    //       function: "boxQueryTindexArg.sort",
+    //       field: "timestamp",
+    //     });
+    //   }
+    // }
+    //#endregion
+    return arg;
+  }
+  /**
+   * 生成并校验交易查询的返回结果
+   */
+  @bindThis
+  async boxQueryTindexReturn(params: ArrayBuffer | Uint8Array) {
+    if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS, {
+        function: "boxQueryTindexesReturn",
+        params,
+      });
+    }
+    let arg: QueryTindexReturnModel;
+    try {
+      arg = QueryTindexReturnModel.decode(
+        params instanceof Uint8Array ? params : new Uint8Array(params),
+      );
+    } catch (error) {
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_PARAMS, {
+        function: "boxQueryTindexesReturn",
+        error,
+        params,
+      });
+    }
+    /// 参数校验
+    //#region 交易签名校验
+    if (arg.status === RESPONSE_STATUS.success) {
+      const tIndexes = arg.tIndexes;
+      const BH = this.baseHelper;
+      for (const tIndex of tIndexes) {
+        if (!BH.isNaturalNumber(tIndex)) {
+          throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
+            function: "boxQueryTindexesReturn",
+            field: `tIndexes ${tIndex}`,
+          });
+        }
+      }
+    }
+    //#endregion
+    return arg;
+  }
+  /**
+   * 生成并校验交易查询的传入参数
+   */
+  @bindThis
+  async boxGetTransactionInBlockArg(
+    params: ArrayBuffer | Uint8Array,
+  ): Promise<GetTransactionInBlockArgModel> {
+    if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS, {
+        function: "boxGetTransactionInBlockArg",
+        params,
+      });
+    }
+    let arg: GetTransactionInBlockArgModel;
+    try {
+      arg = GetTransactionInBlockArgModel.decode(
+        params instanceof Uint8Array ? params : new Uint8Array(params),
+      );
+    } catch (error) {
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_PARAMS, {
+        function: "boxGetTransactionInBlockArg",
+        error,
+        params,
+      });
+    }
+    const BH = this.baseHelper;
+    /// 参数校验
+    //#region 查询参数校验
+    if (!BH.isValidTindexRanges(arg.query.tIndexRanges)) {
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
+        function: "boxGetTransactionInBlockArg.query.tIndexRanges",
+        field: `tIndexRanges ${arg.query.tIndexRanges}`,
+      });
+    }
+    //#endregion
+    return arg;
+  }
+  /**
+   * 生成并校验交易查询的返回结果
+   */
+  @bindThis
+  async boxGetTransactionInBlockReturn(params: ArrayBuffer | Uint8Array) {
+    if (!(params instanceof ArrayBuffer || params instanceof Uint8Array)) {
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS, {
+        function: "boxGetTransactionInBlockReturn",
+        params,
+      });
+    }
+    let arg: GetTransactionInBlockReturnModel;
+    try {
+      arg = GetTransactionInBlockReturnModel.decode(
+        params instanceof Uint8Array ? params : new Uint8Array(params),
+      );
+    } catch (error) {
+      throw new ArgumentFormatException(ERROR_LIST.INVALID_PARAMS, {
+        function: "boxGetTransactionInBlockReturn",
+        error,
+        params,
+      });
+    }
+    /// 参数校验
+    //#region 交易签名校验
+    if (arg.status === RESPONSE_STATUS.success) {
+      const { transactionInBlocks } = arg;
+      transactionInBlocks.forEach(async (item) => {
+        await this.transctionHelper.verifyTransactionSignature(item.transaction, {
+          taskLabel: "GetTransactionInBlockReturn",
+        });
+      });
+    }
+    //#endregion
+    return arg;
   }
 
   @bindThis

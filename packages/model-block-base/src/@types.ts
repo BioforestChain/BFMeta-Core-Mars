@@ -39,18 +39,8 @@ declare namespace BFChainCore {
     generatorSecondPublicKey?: string;
     /**锻造者权益 */
     generatorEquity: string;
-    /**区块事件数量 */
-    numberOfTransactions: number;
-    /**区块事件摘要 */
-    payloadHash: string;
-    /**区块事件摘要长度 */
-    payloadLength: number;
     /**前块签名 */
     previousBlockSignature: string;
-    /**总发生资产量 */
-    totalAmount: string;
-    /**总发生手续费 */
-    totalFee: string;
     /**区块奖励值 */
     reward: string;
     /**区块的链标识符 */
@@ -61,15 +51,25 @@ declare namespace BFChainCore {
     remark: { [key: string]: string };
     /**区块附加信息 */
     asset: AssetJSON;
-    /**区块统计信息 */
-    statisticInfo: StatisticInfoJSON;
     /**锻造者掉线列表 */
     roundOfflineGeneratersHashMap: RoundOfflineGeneratersHashMap;
   }
+
+  type BlockTransactionInfoJSON = {
+    startTindex: number;
+    numberOfTransactions: number;
+    payloadHash: string;
+    payloadLength: number;
+    totalAmount: string;
+    totalFee: string;
+    transactionInBlocks: TransactionInBlockJSON[];
+    statisticInfo: StatisticInfoJSON;
+  };
+
   interface BlockJSON<AssetJSON extends object = object>
     extends BlockWithoutTransactionJSON<AssetJSON> {
     /**事件 */
-    transactions: TransactionInBlockJSON[];
+    transactionInfo: BlockTransactionInfoJSON;
   }
   type RoundOfflineGeneratersReadonlyMap = Omit<
     Map<number, readonly string[]>,
@@ -278,4 +278,5 @@ declare namespace BFChainCore {
   }
   type GenesisBlockJSON = BlockJSON<GenesisBlockAssetJSON>;
   //#endregion
+  type BlockTransactionInfo = import("./block").BlockTransactionInfoModel;
 }

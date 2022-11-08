@@ -637,7 +637,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
         }
       }
       const trsInBlock = TransactionInBlock.fromObject({
-        index: i,
+        tIndex: i,
         height,
         transactionAssetChanges:
           bfchainCore.transactionHelper.sortTransactionAssetChanges(transactionAssetChanges),
@@ -707,7 +707,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
   const sender = await getAccountWithSecret(delegatesSecret[9], bfchainCore);
   const commonBlockJSON = (await getCommonBlockAsync(sender)).toJSON();
   const xx = bfchainCore.block.recombineBlock(commonBlockJSON);
-  commonBlockJSON.transactions.map((transaction) => {
+  commonBlockJSON.transactionInfo.transactionInBlocks.map((transaction) => {
     // console.log(transaction.signature);
     // console.log(transaction.transactionAssetChanges);
   });
