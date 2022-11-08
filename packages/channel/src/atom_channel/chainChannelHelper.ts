@@ -1146,30 +1146,11 @@ export class ChainChannelHelper {
     const BH = this.baseHelper;
     /// 参数校验
     //#region 查询参数校验
-    const { startTindex, length } = arg.query.tIndexRange;
-    if (!BH.isUint32(startTindex)) {
+    if (!BH.isValidTindexRanges(arg.query.tIndexRanges)) {
       throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
-        function: "boxGetTransactionInBlockArg.query.tIndexRange.startTindex",
-        field: `startTindex ${startTindex}`,
+        function: "boxGetTransactionInBlockArg.query.tIndexRanges",
+        field: `tIndexRanges ${arg.query.tIndexRanges}`,
       });
-    }
-    if (!BH.isUint32(length)) {
-      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
-        function: "boxGetTransactionInBlockArg.query.tIndexRange.length",
-        field: `length ${length}`,
-      });
-    }
-    //#endregion
-    //#region 排序参数校验
-    const { tIndex } = arg.sort;
-    if (tIndex !== undefined) {
-      // if (typeof timestamp === "number") {
-      if (tIndex !== -1 && tIndex !== 1) {
-        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
-          function: "boxGetTransactionInBlockArg.sort",
-          field: `tIndex ${tIndex}`,
-        });
-      }
     }
     //#endregion
     return arg;

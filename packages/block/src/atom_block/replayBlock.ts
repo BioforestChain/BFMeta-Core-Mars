@@ -282,6 +282,13 @@ export class ReplayBlockCore<T extends Block> {
     const abortForbiddenTransaction = transactionCore.abortForbiddenTransaction;
     const trsSet = new Set();
 
+    if (!eventEmitter.startTindexGetter) {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
+        prop: "startTindexGetter",
+        target: "eventEmitter",
+      });
+    }
+
     if (!eventEmitter.tIndexGetter) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "tIndexGetter",
@@ -307,6 +314,17 @@ export class ReplayBlockCore<T extends Block> {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "blockGeneratorEquityGetter",
         target: "eventEmitter",
+      });
+    }
+
+    // 校验 startTindex
+    const startTindex = await eventEmitter.startTindexGetter();
+    if (block.startTindex !== startTindex) {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
+        to_compare_prop: `startTindex ${block.startTindex}`,
+        be_compare_prop: `startTindex ${startTindex}`,
+        to_target: "block",
+        be_target: "calculate",
       });
     }
 

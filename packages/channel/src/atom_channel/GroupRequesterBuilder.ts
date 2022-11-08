@@ -262,7 +262,6 @@ export class GroupQueryBlockBuilder<
 
 export const GROUP_QUERY_TRANSACTIONS_INDEX_BUILDER_ARGS = {
   QUERY: Symbol("query"),
-  SORT: Symbol("sort"),
 };
 @Resolvable()
 export class GroupQueryTransactionsByTIndexBuilder<
@@ -273,13 +272,11 @@ export class GroupQueryTransactionsByTIndexBuilder<
   constructor(
     @Inject(GROUP_QUERY_TRANSACTIONS_INDEX_BUILDER_ARGS.QUERY)
     public readonly query: BFChainCore.TransactionInBlockGetOptionsJSON,
-    @Inject(GROUP_QUERY_TRANSACTIONS_INDEX_BUILDER_ARGS.SORT, { optional: true })
-    public readonly sort?: BFChainCore.TransactionSortOptionsJSON,
   ) {
     super();
   }
   protected _doRequest(cc: CC, opts: BFChainCore.ChannelRequestOptions<CC>) {
-    return cc.queryTransactionInBlocks(this.query, this.sort, opts) as unknown as PromiseLike<R>;
+    return cc.queryTransactionInBlocks(this.query, opts) as unknown as PromiseLike<R>;
   }
   getTimeoutExceptionInfo() {
     return [
@@ -287,7 +284,6 @@ export class GroupQueryTransactionsByTIndexBuilder<
       /**detail */
       {
         query: JSON.stringify(this.query),
-        sort: JSON.stringify(this.sort),
       },
     ] as const;
   }
@@ -304,13 +300,7 @@ export class GroupQueryTransactionsByTIndexBuilder<
   ) {
     return Resolve<GroupQueryTransactionsByTIndexBuilder<CC, R>>(
       GroupQueryTransactionsByTIndexBuilder,
-      new ModuleStroge(
-        [
-          [GROUP_QUERY_TRANSACTIONS_INDEX_BUILDER_ARGS.QUERY, query],
-          [GROUP_QUERY_TRANSACTIONS_INDEX_BUILDER_ARGS.SORT, sort],
-        ],
-        rootModuleMap,
-      ),
+      new ModuleStroge([[GROUP_QUERY_TRANSACTIONS_INDEX_BUILDER_ARGS.QUERY, query]], rootModuleMap),
     );
   }
 }

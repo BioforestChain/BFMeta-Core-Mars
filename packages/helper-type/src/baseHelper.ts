@@ -1238,4 +1238,28 @@ export class BaseHelper {
 
     return pattern.test(entitys[1]);
   }
+
+  /**
+   * tIndexRanges 是否合法
+   *
+   * @param tIndexRanges
+   */
+  isValidTindexRanges(tIndexRanges: number[]) {
+    const len = tIndexRanges.length;
+    if (len === 0) {
+      return false;
+    }
+    if (len % 2 !== 0) {
+      return false;
+    }
+    if (!this.isNaturalNumber(tIndexRanges[0])) {
+      return false;
+    }
+    for (let i = 1; i < len; i++) {
+      if (!this.isPositiveInteger(tIndexRanges[i])) {
+        return false;
+      }
+    }
+    return true;
+  }
 }

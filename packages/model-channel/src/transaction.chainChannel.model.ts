@@ -190,136 +190,116 @@ export class QueryTransactionReturnModel<
 /**
  * 查询交易的传入参数
  */
- @Type.d("QueryTindexArg")
- export class QueryTindexArgModel
-   extends Message<QueryTindexArgModel>
-   implements BFChainCore.JSONToModelType<BFChainCore.QueryTransactionArgJSON> {
-   /**查询参数 */
-   @Field.d(1, TransactionQueryOptions)
-   query!: TransactionQueryOptions;
-   /**排序参数 */
-   @Field.d(2, TransactionSortOptions)
-   sort!: TransactionSortOptions;
-   toJSON() {
-     return {
-       query: this.query,
-       sort: this.sort,
-     };
-   }
- }
- 
- /**
-  * 查询 tIndex 的返回值
-  * 可能的错误：查询参数有误
-  */
- @Type.d("QueryTindexReturn")
- export class QueryTindexReturnModel
-   extends CommonResponse
-   implements BFChainCore.JSONToModelType<BFChainCore.QueryTindexReturnJSON> {
-   /**查询到的交易 */
-   @Field.d(QueryTindexReturnModel.INC++, "uint32", "repeated")
-   tIndexes!: number[];
-   toJSON() {
-     return Object.assign(
-       {
-         tIndexes: this.tIndexes,
-       },
-       super.toJSON(),
-     );
-   }
- }
- 
- /**
-  * tIndex range
-  */
- @Type.d("TransactionTindexRange")
- export class TransactionTindexRangeModel
-   extends Message<TransactionTindexRangeModel>
-   implements BFChainCore.JSONToModelType<BFChainCore.TransactionTindexRangeJSON> {
-   static INC = 1;
-   @Field.d(TransactionTindexRangeModel.INC++, "int32")
-   startTindex!: number;
-   @Field.d(TransactionTindexRangeModel.INC++, "int32")
-   length!: number;
-   toJSON() {
-     return {
-       startTindex: this.startTindex,
-       length: this.length,
-     };
-   }
- }
- 
- /**
-  * 查询 transactionInBlock 的查询条件
-  */
- @Type.d("TransactionInBlockGetOptions")
- export class TransactionInBlockGetOptionsModel
-   extends Message<TransactionInBlockGetOptionsModel>
-   implements BFChainCore.JSONToModelType<BFChainCore.TransactionInBlockGetOptionsJSON> {
-   static INC = 1;
-   @Field.d(TransactionInBlockGetOptionsModel.INC++, TransactionTindexRangeModel)
-   tIndexRange!: TransactionTindexRangeModel;
-   static fromObject<T extends Message>(
-     this: BFChainProtobuf.Constructor<T>,
-     object: BFChainProtobuf.ObjectFromType<TransactionInBlockGetOptionsModel>,
-   ) {
-     const res = super.fromObject(object) as TransactionInBlockGetOptionsModel;
-     return (res as unknown) as T;
-   }
-   toJSON() {
-     const res: BFChainCore.TransactionInBlockGetOptionsJSON = {
-       tIndexRange: this.tIndexRange.toJSON(),
-     };
- 
-     return res;
-   }
- }
- 
- /**
-  * 查询 transactionInBlock 的传入参数
-  */
- @Type.d("GetTransactionInBlockArg")
- export class GetTransactionInBlockArgModel
-   extends Message<GetTransactionInBlockArgModel>
-   implements BFChainCore.JSONToModelType<BFChainCore.GetTransactionInBlockArgJSON> {
-   /**查询参数 */
-   @Field.d(1, TransactionInBlockGetOptionsModel)
-   query!: TransactionInBlockGetOptionsModel;
-   /**排序参数 */
-   @Field.d(2, TransactionSortOptions)
-   sort!: TransactionSortOptions;
-   toJSON() {
-     return {
-       query: this.query,
-       sort: this.sort,
-     };
-   }
- }
- 
- /**
-  * 查询 transactionInBlock 的返回值
-  * 可能的错误：查询参数有误
-  */
- @Type.d("GetTransactionInBlockReturn")
- export class GetTransactionInBlockReturnModel<
-     T extends BFChainCore.Transaction = BFChainCore.Transaction
-   >
-   extends CommonResponse
-   implements BFChainCore.JSONToModelType<BFChainCore.GetTransactionInBlockReturnJSON> {
-   /**查询到的交易 */
-   @Field.d(GetTransactionInBlockReturnModel.INC++, TransactionInBlock, "repeated")
-   transactionInBlocks!: TransactionInBlock<T>[];
-   toJSON() {
-     return Object.assign(
-       {
-         transactionInBlocks: this.transactionInBlocks.map((tib) => tib.toJSON()),
-       },
-       super.toJSON(),
-     );
-   }
- }
+@Type.d("QueryTindexArg")
+export class QueryTindexArgModel
+  extends Message<QueryTindexArgModel>
+  implements BFChainCore.JSONToModelType<BFChainCore.QueryTransactionArgJSON>
+{
+  /**查询参数 */
+  @Field.d(1, TransactionQueryOptions)
+  query!: TransactionQueryOptions;
+  /**排序参数 */
+  @Field.d(2, TransactionSortOptions)
+  sort!: TransactionSortOptions;
+  toJSON() {
+    return {
+      query: this.query,
+      sort: this.sort,
+    };
+  }
+}
 
- 
+/**
+ * 查询 tIndex 的返回值
+ * 可能的错误：查询参数有误
+ */
+@Type.d("QueryTindexReturn")
+export class QueryTindexReturnModel
+  extends CommonResponse
+  implements BFChainCore.JSONToModelType<BFChainCore.QueryTindexReturnJSON>
+{
+  /**查询到的交易 */
+  @Field.d(QueryTindexReturnModel.INC++, "uint32", "repeated")
+  tIndexes!: number[];
+  toJSON() {
+    return Object.assign(
+      {
+        tIndexes: this.tIndexes,
+      },
+      super.toJSON(),
+    );
+  }
+}
+
+/**
+ * 查询 transactionInBlock 的查询条件
+ */
+@Type.d("TransactionInBlockGetOptions")
+export class TransactionInBlockGetOptionsModel
+  extends Message<TransactionInBlockGetOptionsModel>
+  implements BFChainCore.JSONToModelType<BFChainCore.TransactionInBlockGetOptionsJSON>
+{
+  static INC = 1;
+  @Field.d(TransactionInBlockGetOptionsModel.INC++, "uint32", "repeated")
+  tIndexRanges!: number[];
+  static fromObject<T extends Message>(
+    this: BFChainProtobuf.Constructor<T>,
+    object: BFChainProtobuf.ObjectFromType<TransactionInBlockGetOptionsModel>,
+  ) {
+    const res = super.fromObject(object) as TransactionInBlockGetOptionsModel;
+    return res as unknown as T;
+  }
+  toJSON() {
+    const res: BFChainCore.TransactionInBlockGetOptionsJSON = {
+      tIndexRanges: this.tIndexRanges,
+    };
+
+    return res;
+  }
+}
+
+/**
+ * 查询 transactionInBlock 的传入参数
+ */
+@Type.d("GetTransactionInBlockArg")
+export class GetTransactionInBlockArgModel
+  extends Message<GetTransactionInBlockArgModel>
+  implements BFChainCore.JSONToModelType<BFChainCore.GetTransactionInBlockArgJSON>
+{
+  /**查询参数 */
+  @Field.d(1, TransactionInBlockGetOptionsModel)
+  query!: TransactionInBlockGetOptionsModel;
+  toJSON() {
+    return {
+      query: this.query,
+    };
+  }
+}
+
+/**
+ * 查询 transactionInBlock 的返回值
+ * 可能的错误：查询参数有误
+ */
+@Type.d("GetTransactionInBlockReturn")
+export class GetTransactionInBlockReturnModel<
+    T extends BFChainCore.Transaction = BFChainCore.Transaction,
+  >
+  extends CommonResponse
+  implements BFChainCore.JSONToModelType<BFChainCore.GetTransactionInBlockReturnJSON>
+{
+  /**查询到的交易 */
+  @Field.d(GetTransactionInBlockReturnModel.INC++, TransactionInBlock, "repeated")
+  transactionInBlocks!: TransactionInBlock<T>[];
+  toJSON() {
+    return Object.assign(
+      {
+        transactionInBlocks: this.transactionInBlocks.map((tib) => tib.toJSON()),
+      },
+      super.toJSON(),
+    );
+  }
+}
+
 /**
  * 广播交易的传入参数
  */

@@ -55,7 +55,7 @@ declare namespace BFChainCore {
      * @param currentGeneraterPublicKey
      */
     getNewForgingDelegates?<T extends Block>(
-      lastBlock: LastBlockInfo<T>,
+      lastBlock: T,
       currentGeneraterPublicKey: string,
     ): Promise<BFChainCore.ForSortAccountInfo[]>;
     /**
@@ -167,7 +167,7 @@ declare namespace BFChainCore {
     /**区块备注信息 */
     remark: { [key: string]: string };
     /**区块事件信息 */
-    transactionInfo: BFChainCore.BlockTransactionInfo;
+    transactionInfo: BFChainCore.BlockTransactionInfoJSON;
     /**区块附加信息 */
     asset: GetBlockAssetJSON<T>;
   };

@@ -983,7 +983,6 @@ export class ChainChannel<
   }
   async queryTransactionInBlocks<T extends BFChainCore.Transaction = BFChainCore.Transaction>(
     query: BFChainCore.GetTransactionInBlockArgJSON["query"],
-    sort?: BFChainCore.GetTransactionInBlockArgJSON["sort"],
     opts?: BFChainCore.ChannelRequestOptions<THIS>,
   ) {
     if (!this.canGetTransactionInBlock) {
@@ -996,7 +995,6 @@ export class ChainChannel<
     }
     const arg = GetTransactionInBlockArgModel.fromObject({
       query: TransactionInBlockGetOptionsModel.fromObject(query),
-      sort: TransactionSortOptions.fromObject<TransactionSortOptions>(sort || {}),
     });
     return this._request(
       DUPLEX_API_CMD.GET_TRANSACTIONINBLOCK,

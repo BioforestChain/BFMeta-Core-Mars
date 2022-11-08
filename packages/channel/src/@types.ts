@@ -325,7 +325,6 @@ declare namespace BFChainCore {
     /**根据索引获取块内交易 */
     queryTransactionInBlocks<T extends BFChainCore.Transaction = BFChainCore.Transaction>(
       query: BFChainCore.GetTransactionInBlockArgJSON["query"],
-      sort?: BFChainCore.GetTransactionInBlockArgJSON["sort"],
       opts?: BFChainCore.ChannelRequestOptions<any>,
     ): Promise<import("@bfchain/core-model").GetTransactionInBlockReturnModel<T>>;
   }

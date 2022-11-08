@@ -39,7 +39,7 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
     // 校验链上链 hash
     const { height, asset } = block;
     const { newDelegates, hash } = asset.roundLastAsset;
-    await this.checkRemarkHash(height, hash, blockGetterHelper);
+    await this.checkChainOnChainHash(height, hash, blockGetterHelper);
     await this.isValidNewDelegates(height, newDelegates, transactionGetterHelper);
     await this.checkNewForgingDelegates(block, blockGetterHelper);
   }
@@ -85,7 +85,11 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
    * @param hash
    * @param blockGetterHelper
    */
-  async checkRemarkHash(height: number, hash: string, blockGetterHelper = this.blockGetterHelper) {
+  async checkChainOnChainHash(
+    height: number,
+    hash: string,
+    blockGetterHelper = this.blockGetterHelper,
+  ) {
     const hashString = await this.blockHelper.calcChainOnChainHash(height, blockGetterHelper);
     if (hashString !== hash) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
@@ -128,7 +132,7 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `delegates length ${delegates.length}`,
         be_compare_prop: `delegates length ${nextRoundDelegates.length}`,
-        to_target: "block remark",
+        to_target: "block asset",
         be_target: "calculate",
       });
     }
@@ -140,7 +144,7 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
         throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
           to_compare_prop: `nextRoundDelegates index ${i} address ${nextRoundDelegate.address}`,
           be_compare_prop: `nextRoundDelegates index ${i} address ${address}`,
-          to_target: "block remark",
+          to_target: "block asset",
           be_target: "calculate",
         });
       }
@@ -149,7 +153,7 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
         throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
           to_compare_prop: `nextRoundDelegates index ${i} address ${nextRoundDelegate.address} equity ${nextRoundDelegate.equity}`,
           be_compare_prop: `nextRoundDelegates index ${i} address ${address} equity ${calcEquity}`,
-          to_target: "block remark",
+          to_target: "block asset",
           be_target: "calculate",
         });
       }
@@ -168,7 +172,7 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `maxBeginBalance ${roundLastAsset.maxBeginBalance}`,
         be_compare_prop: `maxBeginBalance ${tickResult.maxBeginBalance}`,
-        to_target: "block remark",
+        to_target: "block asset",
         be_target: "calculate",
       });
     }
@@ -176,7 +180,7 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `maxTxCount ${roundLastAsset.maxTxCount}`,
         be_compare_prop: `maxTxCount ${tickResult.maxTxCount}`,
-        to_target: "block remark",
+        to_target: "block asset",
         be_target: "calculate",
       });
     }
