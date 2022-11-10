@@ -212,7 +212,7 @@ export class Block<AJ extends object = object>
   @Field.d(Block.INC++, "string")
   generatorEquity!: string;
   /**交易的备注信息 */
-  @MapField.d(16, "string", "string")
+  @MapField.d(Block.INC++, "string", "string")
   remark!: { [key: string]: string };
   get remarkMap() {
     // 直接 return TrsRemarkMapWM.forceGet(this) 类型识别错误
@@ -220,7 +220,7 @@ export class Block<AJ extends object = object>
     return remarkMap;
   }
   /**区块奖励 */
-  @Field.d(18, "string", "required", "0")
+  @Field.d(Block.INC++, "string", "required", "0")
   reward!: string;
 
   /**区块事件信息 */
@@ -255,13 +255,13 @@ export class Block<AJ extends object = object>
     return this.transactionInfo.statisticInfo;
   }
   /**区块事件 */
-  @Field.d(19, "bytes", "repeated")
+  @Field.d(Block.INC++, "bytes", "repeated")
   transactionBufferList!: Uint8Array[];
   get transactions() {
     return this.transactionInfo.transactionInBlocks;
   }
 
-  @MapField.d(20, "uint32", "string")
+  @MapField.d(Block.INC++, "uint32", "string")
   roundOfflineGeneratersHashMap!: BFChainCore.RoundOfflineGeneratersHashMap;
   _roundOfflineGeneratersReadonlyMap?: BFChainCore.RoundOfflineGeneratersReadonlyMap;
   get roundOfflineGeneratersReadonlyMap(): BFChainCore.RoundOfflineGeneratersReadonlyMap {

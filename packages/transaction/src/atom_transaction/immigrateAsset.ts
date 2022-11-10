@@ -206,7 +206,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
   init(body: BFChainCore.TxBodyJSON, immigrateAssetAsset: BFChainCore.ImmigrateAssetAssetJSON) {
     const transaction = ImmigrateAssetTransaction.fromObject<ImmigrateAssetTransaction>({
       ...body,
-      asset: immigrateAssetAsset as any,
+      asset: immigrateAssetAsset,
     });
 
     return transaction;

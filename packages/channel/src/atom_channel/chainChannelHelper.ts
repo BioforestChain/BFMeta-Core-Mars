@@ -873,14 +873,13 @@ export class ChainChannelHelper {
     //#region 查询参数校验
     const {
       type,
-      trsId,
-      subId,
+      signature,
       senderId,
       recipientId,
       dappid,
       lns,
       storage,
-      blockId,
+      blockSignature,
       minHeight,
       maxHeight,
       trusteeId,
@@ -900,21 +899,12 @@ export class ChainChannelHelper {
         });
       }
     }
-    if (trsId) {
+    if (signature) {
       has_query_params = true;
-      if (!BH.isValidTransactionId(trsId)) {
+      if (!BH.isValidTransactionSignature(signature)) {
         throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           function: "boxQueryTindexArg.query",
-          field: `trsId ${trsId}`,
-        });
-      }
-    }
-    if (subId) {
-      has_query_params = true;
-      if (!BH.isValidTransactionSubId(subId)) {
-        throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
-          function: "boxQueryTindexArg.query",
-          field: `subId ${subId}`,
+          field: `signature ${signature}`,
         });
       }
     }
@@ -947,7 +937,7 @@ export class ChainChannelHelper {
     }
     if (lns) {
       has_query_params = true;
-      if (!BH.isValidLnsName(lns)) {
+      if (!BH.isValidLocationName(lns)) {
         throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           function: "boxQueryTindexArg.query",
           field: `lns ${lns}`,
@@ -969,12 +959,12 @@ export class ChainChannelHelper {
         });
       }
     }
-    if (blockId) {
+    if (blockSignature) {
       has_query_params = true;
-      if (!BH.isValidBlockSignature(blockId)) {
+      if (!BH.isValidBlockSignature(blockSignature)) {
         throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           function: "boxQueryTindexArg.query",
-          field: `blockId ${blockId}`,
+          field: `blockSignature ${blockSignature}`,
         });
       }
     }

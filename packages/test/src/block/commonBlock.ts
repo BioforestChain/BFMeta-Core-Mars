@@ -68,7 +68,7 @@ async function getTrsInBlock(bfchainCore: BFChainCore) {
   const blockTrsItems: TransactionInBlock[] = [];
   for (let i = 0; i < txs.length; i++) {
     const trsInBlock = TransactionInBlock.fromObject({
-      index: i,
+      tIndex: i,
     });
     trsInBlock.transaction = txs[i];
     blockTrsItems[blockTrsItems.length] = trsInBlock;
@@ -113,7 +113,7 @@ async function getCommonBlockAsync(sender: AccountModel) {
 (async () => {
   try {
     const commonBlockJSON = (await getCommonBlockAsync(getSenderWithoutSecondSecret())).toJSON();
-    commonBlockJSON.transactions.length = 0;
+    commonBlockJSON.transactionInfo.transactionInBlocks.length = 0;
     dump(commonBlockJSON);
   } catch (e) {
     console.log(e);
