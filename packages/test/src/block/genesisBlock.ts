@@ -721,9 +721,8 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
         };
       }
       const trsInBlock = TransactionInBlock.fromObject({
-        index: i,
+        tIndex: i,
         height,
-        numberOfSenderTransactions: index,
         transactionAssetChanges:
           core.transactionHelper.sortTransactionAssetChanges(transactionAssetChanges),
         transaction: trs,

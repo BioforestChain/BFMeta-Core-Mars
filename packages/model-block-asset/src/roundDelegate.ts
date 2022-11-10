@@ -67,9 +67,10 @@ export class RoundDelegateModel<T extends RoundDelegateModel<T>>
   toJSON() {
     const res: BFChainCore.RoundDelegateJSON = {
       newDelegates: this.newDelegates,
-      maxBalance: this.maxBalance,
+      maxBeginBalance: this.maxBeginBalance,
       maxTxCount: this.maxTxCount,
       nextRoundDelegates: this.nextRoundDelegates.map((rd) => rd.toJSON()),
+      rate: this.rate,
     };
 
     return res;

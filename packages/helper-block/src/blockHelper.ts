@@ -7,6 +7,8 @@ import {
   Block,
   GenesisBlockAssetModel,
   StatisticInfoModel,
+  BlockTransactionInfoModel,
+  GenesisBlock,
 } from "@bfchain/core-model-block";
 import { TRANSACTION_TYPES_BASE, TransactionInBlock } from "@bfchain/core-model-transaction";
 import { AccountBaseHelper } from "@bfchain/core-helper-account-base";
@@ -68,16 +70,175 @@ export class BlockHelper {
     }
   }
 
+  // 旧版
+  // genesisBlockBaseInfoReader(bytes: Uint8Array) {
+  //   const reader = new Reader(bytes);
+  //   const end = reader.len;
+
+  //   let k: string | number = "0";
+  //   let genesisBlock: BFChainCore.GenesisBlock = {
+  //     remark: {},
+  //     transactions: [],
+  //     roundOfflineGeneratersHashMap: {},
+  //   } as any;
+
+  //   const StatisticInfoModelSetup = StatisticInfoModel.$type.setup();
+  //   const GenesisBlockAssetModelSetup = GenesisBlockAssetModel.$type.setup();
+
+  //   let prevSignPos = 0;
+  //   let nextSignPos = 0;
+
+  //   let prevTranPos = 0;
+  //   let nextTranPos = 0;
+
+  //   try {
+  //     while (reader.pos < end) {
+  //       var t = reader.uint32();
+  //       switch (t >>> 3) {
+  //         case 21:
+  //           genesisBlock.asset = GenesisBlockAssetModelSetup.decode(reader, reader.uint32());
+  //           break;
+  //         case 1:
+  //           genesisBlock.version = reader.uint32();
+  //           break;
+  //         case 2:
+  //           genesisBlock.height = reader.uint32();
+  //           prevSignPos = reader.pos;
+  //           break;
+  //         case 3:
+  //           genesisBlock.signatureBuffer = reader.bytes();
+  //           nextSignPos = reader.pos;
+  //           break;
+  //         case 4:
+  //           genesisBlock.timestamp = reader.uint32();
+  //           break;
+  //         case 5:
+  //           genesisBlock.generatorPublicKeyBuffer = reader.bytes();
+  //           break;
+  //         case 6:
+  //           genesisBlock.previousBlockSignature = reader.string();
+  //           break;
+  //         case 7:
+  //           genesisBlock.numberOfTransactions = reader.uint32();
+  //           break;
+  //         case 8:
+  //           genesisBlock.magic = reader.string();
+  //           break;
+  //         case 9:
+  //           genesisBlock.generatorSecondPublicKeyBuffer = reader.bytes();
+  //           break;
+  //         case 10:
+  //           genesisBlock.signSignatureBuffer = reader.bytes();
+  //           break;
+  //         case 11:
+  //           genesisBlock.blockSize = reader.uint32();
+  //           break;
+  //         case 12:
+  //           genesisBlock.payloadHashBuffer = reader.bytes();
+  //           break;
+  //         case 13:
+  //           genesisBlock.payloadLength = reader.uint32();
+  //           break;
+  //         case 14:
+  //           genesisBlock.blockParticipation = reader.string();
+  //           break;
+  //         case 15:
+  //           genesisBlock.generatorEquity = reader.string();
+  //           break;
+  //         case 16:
+  //           reader.skip().pos++;
+  //           k = reader.string();
+  //           reader.pos++;
+  //           genesisBlock.remark[k] = reader.string();
+  //           break;
+  //         case 17:
+  //           genesisBlock.statisticInfo = StatisticInfoModelSetup.decode(reader, reader.uint32());
+  //           prevTranPos = reader.pos;
+  //           break;
+  //         case 18:
+  //           genesisBlock.reward = reader.string();
+  //           break;
+  //         case 19:
+  //           genesisBlock.transactions.push(TransactionInBlock.decode(reader.bytes()));
+  //           nextTranPos = reader.pos;
+  //           break;
+  //         case 20:
+  //           reader.skip().pos++;
+  //           k = reader.uint32();
+  //           reader.pos++;
+  //           genesisBlock.roundOfflineGeneratersHashMap[k] = reader.string();
+  //           break;
+  //         default:
+  //           reader.skipType(t & 7);
+  //           break;
+  //       }
+  //     }
+  //     if (!genesisBlock.generatorPublicKeyBuffer) {
+  //       throw new Error();
+  //     }
+  //     if (!genesisBlock.signatureBuffer) {
+  //       throw new Error();
+  //     }
+  //     if (genesisBlock.transactions.length <= 0) {
+  //       throw new Error();
+  //     }
+  //     if (
+  //       !(
+  //         genesisBlock.asset &&
+  //         genesisBlock.asset.genesisAsset &&
+  //         genesisBlock.asset.genesisAsset.bnid &&
+  //         genesisBlock.asset.genesisAsset.magic &&
+  //         genesisBlock.asset.genesisAsset.assetType &&
+  //         genesisBlock.asset.genesisAsset.chainName
+  //       )
+  //     ) {
+  //       throw new Error();
+  //     }
+
+  //     const genesisAsset = genesisBlock.asset.genesisAsset;
+  //     const transactions = genesisBlock.transactions;
+  //     const genesisDelegates: string[] = [];
+  //     let genesisAccount = "";
+  //     for (const tib of transactions) {
+  //       if (tib.transaction.type.includes(TRANSACTION_TYPES_BASE.DELEGATE)) {
+  //         genesisDelegates.push(tib.transaction.senderId);
+  //         continue;
+  //       }
+  //       if (tib.transaction.type.includes(TRANSACTION_TYPES_BASE.LOCATION_NAME)) {
+  //         genesisAccount = tib.transaction.senderId;
+  //       }
+  //     }
+
+  //     return {
+  //       bnid: genesisAsset.bnid,
+  //       magic: genesisAsset.magic,
+  //       assetType: genesisAsset.assetType,
+  //       chainName: genesisAsset.chainName,
+  //       generatorPublicKeyBuffer: genesisBlock.generatorPublicKeyBuffer,
+  //       signatureBuffer: genesisBlock.signatureBuffer,
+  //       bytesWithoutSignature: this.Buffer.concat([
+  //         bytes.slice(0, prevSignPos),
+  //         bytes.slice(nextSignPos, prevTranPos),
+  //         bytes.slice(nextTranPos),
+  //       ]),
+  //       genesisAccount,
+  //       genesisDelegates,
+  //     };
+  //   } catch (e) {
+  //     console.log(e);
+  //     throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+  //       prop: "bytes",
+  //       target: "registerChain.asset",
+  //     });
+  //   }
+  // }
+
   genesisBlockBaseInfoReader(bytes: Uint8Array) {
     const reader = new Reader(bytes);
     const end = reader.len;
 
     let k: string | number = "0";
-    let genesisBlock: BFChainCore.GenesisBlock = {
-      remark: {},
-      transactions: [],
-      roundOfflineGeneratersHashMap: {},
-    } as any;
+    let genesisBlock: BFChainCore.GenesisBlock = GenesisBlock.fromObject({});
 
     const StatisticInfoModelSetup = StatisticInfoModel.$type.setup();
     const GenesisBlockAssetModelSetup = GenesisBlockAssetModel.$type.setup();
@@ -85,6 +246,8 @@ export class BlockHelper {
     let prevSignPos = 0;
     let nextSignPos = 0;
 
+    let nextTranInfoPos = 0;
+    let beforeSizePos = 0;
     let prevTranPos = 0;
     let nextTranPos = 0;
 
@@ -116,50 +279,74 @@ export class BlockHelper {
             genesisBlock.previousBlockSignature = reader.string();
             break;
           case 7:
-            genesisBlock.numberOfTransactions = reader.uint32();
-            break;
-          case 8:
             genesisBlock.magic = reader.string();
             break;
-          case 9:
+          case 8:
             genesisBlock.generatorSecondPublicKeyBuffer = reader.bytes();
             break;
-          case 10:
+          case 9:
             genesisBlock.signSignatureBuffer = reader.bytes();
             break;
-          case 11:
+          case 10:
             genesisBlock.blockSize = reader.uint32();
             break;
-          case 12:
-            genesisBlock.payloadHashBuffer = reader.bytes();
-            break;
-          case 13:
-            genesisBlock.payloadLength = reader.uint32();
-            break;
-          case 14:
+          case 11:
             genesisBlock.blockParticipation = reader.string();
             break;
-          case 15:
+          case 12:
             genesisBlock.generatorEquity = reader.string();
             break;
-          case 16:
+          case 13:
             reader.skip().pos++;
             k = reader.string();
             reader.pos++;
             genesisBlock.remark[k] = reader.string();
             break;
-          case 17:
-            genesisBlock.statisticInfo = StatisticInfoModelSetup.decode(reader, reader.uint32());
-            prevTranPos = reader.pos;
-            break;
-          case 18:
+          case 14:
             genesisBlock.reward = reader.string();
             break;
-          case 19:
-            genesisBlock.transactions.push(TransactionInBlock.decode(reader.bytes()));
+          case 15:
+            const transactionInfo = genesisBlock.transactionInfo;
+            transactionInfo.transactionInBlockBufferList = [];
+            nextTranInfoPos = reader.pos;
+            const transactionInfoEnd = reader.uint32();
+            beforeSizePos = reader.pos;
+            while (reader.pos < transactionInfoEnd) {
+              var tt = reader.uint32();
+              switch (tt >>> 3) {
+                case 1:
+                  transactionInfo.startTindex = reader.uint32();
+                  break;
+                case 2:
+                  transactionInfo.numberOfTransactions = reader.uint32();
+                  break;
+                case 3:
+                  transactionInfo.payloadHashBuffer = reader.bytes();
+                  break;
+                case 4:
+                  transactionInfo.payloadLength = reader.uint32();
+                  break;
+                case 5:
+                  transactionInfo.statisticInfo = StatisticInfoModelSetup.decode(
+                    reader,
+                    reader.uint32(),
+                  );
+                  prevTranPos = reader.pos;
+                  break;
+                case 6:
+                  transactionInfo.transactionInBlockBufferList.push(reader.bytes());
+                  break;
+                default:
+                  reader.skipType(tt & 7);
+                  break;
+              }
+            }
             nextTranPos = reader.pos;
             break;
-          case 20:
+          case 16:
+            genesisBlock.transactionBufferList.push(reader.bytes());
+            break;
+          case 17:
             reader.skip().pos++;
             k = reader.uint32();
             reader.pos++;
@@ -176,7 +363,7 @@ export class BlockHelper {
       if (!genesisBlock.signatureBuffer) {
         throw new Error();
       }
-      if (genesisBlock.transactions.length <= 0) {
+      if (genesisBlock.transactionInfo.transactionInBlockBufferList.length <= 0) {
         throw new Error();
       }
       if (
@@ -206,6 +393,7 @@ export class BlockHelper {
         }
       }
 
+      const size = prevTranPos - beforeSizePos;
       return {
         bnid: genesisAsset.bnid,
         magic: genesisAsset.magic,
@@ -215,7 +403,9 @@ export class BlockHelper {
         signatureBuffer: genesisBlock.signatureBuffer,
         bytesWithoutSignature: this.Buffer.concat([
           bytes.slice(0, prevSignPos),
-          bytes.slice(nextSignPos, prevTranPos),
+          bytes.slice(nextSignPos, nextTranInfoPos),
+          new Uint8Array([size]),
+          bytes.slice(nextTranInfoPos + 2, prevTranPos),
           bytes.slice(nextTranPos),
         ]),
         genesisAccount,
