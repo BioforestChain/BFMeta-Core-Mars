@@ -367,13 +367,13 @@ export class TransactionIndexModel
   @Field.d(1, "uint32")
   height!: number;
   @Field.d(2, "uint32")
-  index!: number;
+  tIndex!: number;
   @Field.d(3, "uint32", "required", 1)
   length!: number;
   toJSON() {
     return {
       height: this.height,
-      index: this.index,
+      tIndex: this.tIndex,
       length: this.length,
     };
   }

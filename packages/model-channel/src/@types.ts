@@ -131,7 +131,7 @@ declare namespace BFChainCore {
   }
   interface TransactionIndexJSON {
     height: number;
-    index: number;
+    tIndex: number;
     length: number;
   }
 

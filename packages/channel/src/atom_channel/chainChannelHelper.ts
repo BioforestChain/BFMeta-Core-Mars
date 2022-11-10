@@ -356,16 +356,16 @@ export class ChainChannelHelper {
       );
     }
     const BH = this.baseHelper;
-    for (const tIndex of tIndexes) {
-      const { height, index, length } = tIndex;
+    for (const item of tIndexes) {
+      const { height, tIndex, length } = item;
       if (!BH.isPositiveInteger(height)) {
         throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           field: `height ${height}`,
         });
       }
-      if (!BH.isNaturalNumber(index)) {
+      if (!BH.isNaturalNumber(tIndex)) {
         throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
-          field: `index ${index}`,
+          field: `tIndex ${tIndex}`,
         });
       }
       if (!BH.isPositiveInteger(length)) {

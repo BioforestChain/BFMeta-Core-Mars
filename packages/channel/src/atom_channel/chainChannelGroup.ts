@@ -1300,7 +1300,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     return resultGenerator;
   }
 
-  private _formatHiList(hiList: { height: number; index: number }[]) {
+  private _formatHiList(hiList: { height: number; tIndex: number }[]) {
     /**这里预先将tIndex全部展开，因为可能存在重复的清空
      * 这里利用array的特性，它length
      */
@@ -1312,7 +1312,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
      */
     for (const hi of hiList.slice().sort((a, b) => a.height - b.height)) {
       const fiStart = height_fiStart_EM.forceGet(hi.height);
-      const fi = fiStart + hi.index;
+      const fi = fiStart + hi.tIndex;
       loose_fi_List[fi] = fi;
     }
     /// 将宽松数字转为紧凑数组
@@ -1347,7 +1347,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       const length = range.length;
       return {
         height,
-        index,
+        tIndex: index,
         length,
       };
     });
@@ -1384,17 +1384,17 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     /**展开所有的tIndexe成heightIndex，并保持最原始的请求顺序的同时，剔除重复存在的请求
      * 这里使用map的特性，重复插入的不会重新排序
      */
-    const his_hi_Map = new Map<HIS, { height: number; index: number }>();
-    const addHisHi = (height: number, index: number) => {
-      his_hi_Map.set(`${height}-${index}` as const, { height, index });
+    const his_hi_Map = new Map<HIS, { height: number; tIndex: number }>();
+    const addHisHi = (height: number, tIndex: number) => {
+      his_hi_Map.set(`${height}-${tIndex}` as const, { height, tIndex });
     };
     for (const ti of tIndexes) {
       if (ti.length > 1) {
         for (let i = 0; i < ti.length; ++i) {
-          addHisHi(ti.height, ti.index + i);
+          addHisHi(ti.height, ti.tIndex + i);
         }
       } else {
-        addHisHi(ti.height, ti.index);
+        addHisHi(ti.height, ti.tIndex);
       }
     }
     const hi_List = [...his_hi_Map.values()];
@@ -1426,7 +1426,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     const _addChainChannelOptionsExmBuilder = {
       timeout: (self: DownloadTransactionAddChainChannelOptions, cc: DH) =>
         `peer(${cc.address}) downloadTransactions(<${self.data
-          .map((ti) => `${ti.height}/${ti.index}:${ti.length}`)
+          .map((ti) => `${ti.height}/${ti.tIndex}:${ti.length}`)
           .join(",")}) timeout.`,
     };
     const requesterMap = EasyMap.from<
@@ -1438,7 +1438,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       string
     >({
       transformKey: (tIndexes) =>
-        tIndexes.map((ti) => `${ti.height}/${ti.index}:${ti.length}`).join(","),
+        tIndexes.map((ti) => `${ti.height}/${ti.tIndex}:${ti.length}`).join(","),
       creater: (tIndexes) => {
         const requester = GroupDownloadTransactionsBuilder.create<DH, T>(this.moduleMap, tIndexes);
 
@@ -1491,10 +1491,10 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       /**
        * 当前查询的进度
        */
-      let curr_hi_index = 0;
+      let curr_hi_tIndex = 0;
       const doTask = async () => {
         do {
-          const hi_slice = hi_List.slice(curr_hi_index, (curr_hi_index += MAX_UNIT_LIMIT));
+          const hi_slice = hi_List.slice(curr_hi_tIndex, (curr_hi_tIndex += MAX_UNIT_LIMIT));
           if (hi_slice.length === 0) {
             break;
           }
@@ -1545,7 +1545,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
                           return {
                             tib,
                             hiIndex: hi_List.findIndex(
-                              (hi) => hi.height === tib.height && hi.index === tib.tIndex,
+                              (hi) => hi.height === tib.height && hi.tIndex === tib.tIndex,
                             ),
                           };
                         })
