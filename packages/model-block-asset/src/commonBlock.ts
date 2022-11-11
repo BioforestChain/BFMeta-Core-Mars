@@ -1,4 +1,4 @@
-import { Message, Type, Field } from "@bfchain/protobuf";
+import { Message, Type } from "@bfchain/protobuf";
 
 /**
  * CommonBlock 区块 asset 外层模型
@@ -9,6 +9,7 @@ export class CommonBlockAssetModel
   implements BFChainCore.AssetJSONToModelType<BFChainCore.CommonBlockAssetJSON>
 {
   toJSON() {
-    return {};
+    const res: BFChainCore.CommonBlockAssetJSON = {};
+    return res;
   }
 }

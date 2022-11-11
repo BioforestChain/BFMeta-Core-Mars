@@ -15,11 +15,9 @@ declare namespace BFChainCore {
   interface TransactionInBlockJSON<T extends TransactionJSON = TransactionJSON>
     extends SomeTransactionJSON<T> {
     /**事件在区块内的索引 */
-    index: number;
+    tIndex: number;
     /**区块高度 */
     height: number;
-    /**事件发起账户的事件量 */
-    numberOfSenderTransactions: number;
     /**事件涉及的账户权益变动信息 */
     transactionAssetChanges: TransactionAssetChangeJSON[];
     /**权益销毁前权益的最新信息 */

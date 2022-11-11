@@ -315,7 +315,7 @@ export class TransactionHelper {
   /**获取创世块里所有的受托人 */
   genesisDelegates(config = this.config) {
     const delegatesArr: string[] = [];
-    const transactions = config.genesisBlock.transactions;
+    const transactions = config.genesisBlock.transactionInfo.transactionInBlocks;
     for (const tr of transactions) {
       const { baseType } = this.parseType(tr.transaction.type);
       if (baseType === TRANSACTION_TYPES_BASE.DELEGATE) {
@@ -999,5 +999,45 @@ export class TransactionHelper {
       return PARENT_ASSET_TYPE.ENTITY;
     }
     return PARENT_ASSET_TYPE.ASSETS;
+  }
+
+  /**
+   * 将 tIndexRanges 数组转成纯 Array<tIndex>
+   *
+   * @param tIndexRanges
+   */
+  tIndexRangesToTindexes(tIndexRanges: number[]) {
+    let curTindex = tIndexRanges[0];
+    const results = [curTindex];
+    for (let i = 1; i < tIndexRanges.length; i++) {
+      if (i % 2 === 1) {
+        for (let j = 0; j < tIndexRanges[i] - 1; j++) {
+          results[results.length] = ++curTindex;
+        }
+      } else {
+        curTindex += tIndexRanges[i] + 1;
+        results[results.length] = curTindex;
+      }
+    }
+    return results;
+  }
+
+  /**
+   * 将 tIndexRanges 数组转成 {startTindex: number, length: number} 数组
+   *
+   * @param tIndexRanges
+   */
+  tIndexRangesToStartAndEndTindex(tIndexRanges: number[]) {
+    let curTindex = tIndexRanges[0];
+    const results = [curTindex];
+    curTindex += tIndexRanges[1];
+    results.push(curTindex - 1);
+    for (let i = 2; i < tIndexRanges.length; i += 2) {
+      curTindex += tIndexRanges[i];
+      results.push(curTindex);
+      curTindex += tIndexRanges[i + 1];
+      results.push(curTindex - 1);
+    }
+    return results;
   }
 }

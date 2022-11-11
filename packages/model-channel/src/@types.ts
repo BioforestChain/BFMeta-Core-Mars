@@ -43,8 +43,6 @@ declare namespace BFChainCore {
     minHeight?: number;
     /**查询的区块的最大高度 */
     maxHeight?: number;
-    /**交易发起账户的第 i 笔交易 */
-    numberOfSenderTransactions?: number;
     /**交易见证者地址 */
     trusteeId?: string;
     /**购买的 dappid */
@@ -79,6 +77,46 @@ declare namespace BFChainCore {
   interface QueryTransactionReturnParams {
     transactions: TransactionInBlockJSON[];
   }
+  /**查询交易索引返回结果 */
+  interface QueryTindexReturnParams {
+    tIndexes: number[];
+  }
+  interface QueryTindexReturnJSON extends CommonResponseJSON, QueryTindexReturnParams {}
+  /**查询 transactionInBlock 的查询条件 */
+  type TransactionInBlockGetOptionsJSON = {
+    /**
+     * 1、数组长度为大于 0，并且为偶数，每 2 位为一个组
+     *
+     * 2、数组第 0 位为实际的 tIndex，自然数
+     *
+     * 3、数组第 1 位为取的个数，正整数
+     *
+     * 4、数组第 2 位开始的偶数位为距离前组的偏移量，奇数位为取的个数，都为正整数
+     *
+     * 例如：tIndexRanges: [0, 3, 4, 5, 1, 1]
+     *
+     * 1、第一组 [0, 3] 表示：从起始 tIndex 为 0 开始 取 3 个，即 0，1，2
+     *
+     * 2、第二组 [4, 5] 表示：由前组可知此时 tIndex 索引为 2，偏移 4 个，则起始 tIndex 为 7，取 5 个，即 7，8，9，10，11
+     *
+     * 3、第三组 [1, 1] 表示：由前组可知此时 tIndex 索引为 11，偏移 1 个，则起始 tIndex 为 13，取 1 个，即 13
+     *
+     * 最终的返回结果为：[0, 1, 2, 7, 8, 9, 10, 11, 13]
+     */
+    tIndexRanges: number[];
+  };
+  /**根据 tIndex 查询块内交易的传入参数 */
+  type GetTransactionInBlockArgJSON = {
+    /**查询参数: Array<tIndex> */
+    query: TransactionInBlockGetOptionsJSON;
+  };
+  /**根据 tIndex 查询块内交易的返回结果 */
+  interface GetTransactionInBlockReturnParams {
+    transactionInBlocks: TransactionInBlockJSON[];
+  }
+  interface GetTransactionInBlockReturnJSON
+    extends CommonResponseJSON,
+      GetTransactionInBlockReturnParams {}
 
   /**查询交易的传入参数 */
   type IndexTransactionArgJSON = {
@@ -93,7 +131,7 @@ declare namespace BFChainCore {
   }
   interface TransactionIndexJSON {
     height: number;
-    index: number;
+    tIndex: number;
     length: number;
   }
 
@@ -128,7 +166,7 @@ declare namespace BFChainCore {
     /**句柄过期时间 */
     expriedTime: number;
   }
-  
+
   type ReadBlobArgJSON = {
     /**句柄描述符 */
     descriptor: number;
