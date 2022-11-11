@@ -590,16 +590,16 @@ export class TransactionHelper {
   /**
    * 计算抢到的`Random`资产数量
    * @param grabId
-   * @param blockSignatureBuffer
-   * @param giftTransactionSignatureBuffer
+   * @param blockIdBuffer
+   * @param transactionSubIdBuffer
    * @param gifterId
    * @param totalGiftAssetNumber
    * @param totalGrabableTimes
    */
   async calcGrabRandomGiftAssetNumber(
     grabId: string,
-    blockSignatureBuffer: Uint8Array,
-    giftTransactionSignatureBuffer: Uint8Array,
+    blockIdBuffer: Uint8Array,
+    transactionSubIdBuffer: Uint8Array,
     gifterId: string,
     totalGiftAssetNumber: string,
     totalGrabableTimes: number,
@@ -619,8 +619,8 @@ export class TransactionHelper {
       `0x${await this.cryptoHelper
         .md5()
         .update(grabId)
-        .update(blockSignatureBuffer)
-        .update(giftTransactionSignatureBuffer)
+        .update(blockIdBuffer)
+        .update(transactionSubIdBuffer)
         .update(gifterId)
         .digest("hex")}`,
     );
@@ -649,8 +649,8 @@ export class TransactionHelper {
   /**
    * 计算抢到的`RecipientRandom`的资产数量
    * @param grabId
-   * @param blockSignatureBuffer
-   * @param giftTransactionSignatureBuffer
+   * @param blockIdBuffer
+   * @param transactionSubIdBuffer
    * @param gifterId
    * @param giftTransactionRecipient
    * @param totalGiftAssetNumber
@@ -658,8 +658,8 @@ export class TransactionHelper {
    */
   async calcGrabRecipientRandomGiftAssetNumber(
     grabId: string,
-    blockSignatureBuffer: Uint8Array,
-    giftTransactionSignatureBuffer: Uint8Array,
+    blockIdBuffer: Uint8Array,
+    transactionSubIdBuffer: Uint8Array,
     gifterId: string,
     giftTransactionRecipient: string[],
     totalGiftAssetNumber: string,
@@ -671,8 +671,8 @@ export class TransactionHelper {
         `0x${(
           await this.cryptoHelper
             .md5()
-            .update(blockSignatureBuffer)
-            .update(giftTransactionSignatureBuffer)
+            .update(blockIdBuffer)
+            .update(transactionSubIdBuffer)
             .update(gifterId)
             .update(recipientId)
             .digest("hex")
@@ -718,7 +718,7 @@ export class TransactionHelper {
   calcGrabGiftAssetNumber(
     grabId: string,
     giftTransaction: GiftAssetTransaction,
-    blockSignatureBuffer: Uint8Array,
+    blockIdBuffer: Uint8Array,
   ) {
     const giftAsset = giftTransaction.asset.giftAsset;
     switch (giftAsset.giftDistributionRule) {
@@ -727,7 +727,7 @@ export class TransactionHelper {
       case GIFT_DISTRIBUTION_RULE.RANDOM:
         return this.calcGrabRandomGiftAssetNumber(
           grabId,
-          blockSignatureBuffer,
+          blockIdBuffer,
           giftTransaction.signatureBuffer,
           giftTransaction.senderId,
           giftAsset.amount,
@@ -736,7 +736,7 @@ export class TransactionHelper {
       case GIFT_DISTRIBUTION_RULE.RECIPIENT_RANDOM:
         return this.calcGrabRandomGiftAssetNumber(
           grabId,
-          blockSignatureBuffer,
+          blockIdBuffer,
           giftTransaction.signatureBuffer,
           giftTransaction.senderId,
           giftAsset.amount,
@@ -748,7 +748,7 @@ export class TransactionHelper {
   /**基于gift交易以及要生成grab交易的账户信息，生成grabAsset */
   async generateGrabAsset(
     giftTransaction: GiftAssetTransaction,
-    blockSignatureBuffer: Uint8Array,
+    blockIdBuffer: Uint8Array,
     opts: BFChainCore.TransactionHelper.GenerateGrabAssetOptions,
   ) {
     const grabKeypair = await this.accountBaseHelper.createSecretKeypair(opts.mainSecret);
@@ -757,14 +757,14 @@ export class TransactionHelper {
       grabId = await this.accountBaseHelper.getAddressFromPublicKey(grabKeypair.publicKey),
       grabSecret,
     } = opts;
-    const giftTransactionSignatureBuffer = giftTransaction.signatureBuffer;
+    const transactionSubIdBuffer = giftTransaction.subIdBuffer;
 
     let ciphertextSignature: AccountSignatureModel | undefined;
     if (grabSecret) {
       ciphertextSignature = AccountSignatureModel.fromObject({
         signatureBuffer: await this.getCiphertextSignature({
           secret: grabSecret,
-          transactionSignatureBuffer: giftTransactionSignatureBuffer,
+          transactionSubIdBuffer,
           senderId: grabId,
         }),
         publicKeyBuffer: grabKeypair.publicKey,
@@ -772,8 +772,8 @@ export class TransactionHelper {
     }
 
     const result = GrabAssetModel.fromObject({
-      blockSignatureBuffer,
-      giftTransactionSignatureBuffer,
+      blockIdBuffer,
+      transactionSubIdBuffer,
 
       giftAsset,
       ciphertextSignature,
@@ -781,7 +781,7 @@ export class TransactionHelper {
 
     // 根据共识规则计算出能抢到的金额数量
     result.amount = (
-      await this.calcGrabGiftAssetNumber(grabId, giftTransaction, blockSignatureBuffer)
+      await this.calcGrabGiftAssetNumber(grabId, giftTransaction, blockIdBuffer)
     ).toString();
 
     return result;
@@ -794,13 +794,13 @@ export class TransactionHelper {
    */
   async getCiphertextSignature(args: {
     secret: string;
-    transactionSignatureBuffer: Uint8Array;
+    transactionSubIdBuffer: Uint8Array;
     senderId: string;
   }) {
     return this.asymmetricHelper.detachedSign(
       await this.cryptoHelper
         .sha256()
-        .update(args.transactionSignatureBuffer)
+        .update(args.transactionSubIdBuffer)
         .update(args.senderId)
         .digest(),
       (await this.accountBaseHelper.createSecretKeypair(args.secret)).secretKey,
@@ -814,13 +814,13 @@ export class TransactionHelper {
   async verifyCiphertextSignature(args: {
     secretPublicKey: Uint8Array;
     ciphertextSignatureBuffer: Uint8Array;
-    transactionSignatureBuffer: Uint8Array;
+    transactionSubIdBuffer: Uint8Array;
     senderId: string;
   }) {
     return this.asymmetricHelper.detachedVeriy(
       await this.cryptoHelper
         .sha256()
-        .update(args.transactionSignatureBuffer)
+        .update(args.transactionSubIdBuffer)
         .update(args.senderId)
         .digest(),
       args.ciphertextSignatureBuffer,

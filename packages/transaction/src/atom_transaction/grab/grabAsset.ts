@@ -89,11 +89,11 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
     }
 
     const storage = body.storage;
-    if (storage.key !== "transactionSignature") {
+    if (storage.key !== "transactionSubId") {
       throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `storage.key ${storage.key}`,
         to_target: "storage",
-        be_compare_prop: "transactionSignature",
+        be_compare_prop: "transactionSubId",
         ...Function_Exception_Detail,
       });
     }
@@ -111,42 +111,42 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
       target: "grabAssetAsset",
     } as const;
 
-    const { blockSignature, transactionSignature } = grabAsset;
+    const { blockId, transactionSubId } = grabAsset;
 
-    if (!blockSignature) {
+    if (!blockId) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
-        prop: "blockSignature",
+        prop: "blockId",
         ...GrabAssetAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isValidSignature(blockSignature)) {
+    if (!baseHelper.isValidBlockId(blockId)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: `blockSignature ${blockSignature}`,
-        type: "block signature",
+        prop: `blockId ${blockId}`,
+        type: "block id",
         ...GrabAssetAsset_Exception_Detail,
       });
     }
 
-    if (!transactionSignature) {
+    if (!transactionSubId) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
-        prop: "transactionSignature",
+        prop: "transactionSubId",
         ...GrabAssetAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isValidSignature(transactionSignature)) {
+    if (!baseHelper.isValidTransactionId(transactionSubId)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: `transactionSignature ${transactionSignature}`,
-        type: "transaction signature",
+        prop: `transactionSubId ${transactionSubId}`,
+        type: "transaction id",
         ...GrabAssetAsset_Exception_Detail,
       });
     }
 
-    if (storage.value !== transactionSignature) {
+    if (storage.value !== transactionSubId) {
       throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `storage.value ${storage.value}`,
-        be_compare_prop: `transactionSignature ${transactionSignature}`,
+        be_compare_prop: `transactionSubId ${transactionSubId}`,
         to_target: "storage",
         be_target: "grabAsset",
         ...Function_Exception_Detail,
@@ -195,7 +195,7 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
         !(await this.transactionHelper.verifyCiphertextSignature({
           secretPublicKey: parseHexToArrayBuffer(publicKey),
           ciphertextSignatureBuffer: parseHexToArrayBuffer(signature),
-          transactionSignatureBuffer: parseHexToArrayBuffer(transactionSignature),
+          transactionSubIdBuffer: parseHexToArrayBuffer(transactionSubId),
           senderId: body.senderId,
         }))
       ) {
@@ -245,7 +245,7 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
     return wrapTaskList((taskList) => {
       const { chainAssetInfoHelper } = this;
       const { grabAsset } = transaction.asset;
-      const { amount, giftTransactionSignatureBuffer } = grabAsset;
+      const { amount, transactionSubIdBuffer } = grabAsset;
       const { assetType, sourceChainMagic /* unitReserveFee */ } = grabAsset.giftAsset;
       const recipientId = transaction.recipientId;
       const assetInfo = chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
@@ -260,7 +260,7 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
           assetInfo,
           amount,
           sourceAmount: amount,
-          frozenIdBuffer: giftTransactionSignatureBuffer,
+          frozenIdBuffer: transactionSubIdBuffer,
           recipientId, // 资产冻结账户
         },
       });

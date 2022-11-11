@@ -29,27 +29,31 @@ async function getEmigrateAssetTransaction(
   const keypair = await fullBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: config.version,
+
+    subEnvParams: {},
     type: fullBfchainCore.transactionHelper.EMIGRATE_ASSET, // 交易类型
     senderId: sender.address, // 发起者地址
     recipientId: recipientId || sender.address,
     senderPublicKey: sender.publicKey, // 发起者公钥
     senderSecondPublicKey: "", // 发起者二次公钥
+    maxFee: "100000000",
     rangeType: RANGE_TYPE.EMPTY,
     range: [], // 接收资产账户地址
-    timestamp: 10000, // 生成交易时间戳
-    fee: "1000", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
     dappid: getRandomDAppid(), // 交易所属的 dappid
     lns: fullBfchainCore.config.genesisLocationName,
-    sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: fullBfchainCore.config.magic, // 交易来源链的 magic
     toMagic: fullRegisterBfchainCore.config.magic, // 交易去往链的 magic
-    applyBlockHeight: 10, // 交易发起高度
-    effectiveBlockHeight: 10100,
     storage: {
       key: "assetType",
       value: config.assetType,
     },
+
+    fee: "1000", // 交易手续费
+    timestamp: 10000, // 生成交易时间戳
+    sourceIP: "127.0.0.1", // 交易来源 ip
+    applyBlockHeight: 10, // 交易发起高度
+    effectiveBlockHeight: 10100,
   };
   let secondKeypair;
   if (sender.secondSecret) {
@@ -118,27 +122,31 @@ async function getImmigrateAssetTransaction(
 
   const data: BFChainCore.TxBodyJSON = {
     version: fullRegisterBfchainCore.config.version,
+
+    subEnvParams: {},
     type: fullRegisterBfchainCore.transactionHelper.IMMIGRATE_ASSET, // 交易类型
     senderId: sender.address, // 发起者地址
     senderPublicKey: sender.publicKey, // 发起者公钥
     senderSecondPublicKey: "", // 发起者二次公钥
+    maxFee: "100000000",
     recipientId,
     rangeType: RANGE_TYPE.EMPTY,
     range: [], // 接收资产账户地址
-    timestamp: 10000, // 生成交易时间戳
-    fee: "1000", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
     dappid: getRandomDAppid(), // 交易所属的 dappid
     lns: fullRegisterBfchainCore.config.genesisLocationName,
-    sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: fullBfchainCore.config.magic, // 交易来源链的 magic
     toMagic: fullRegisterBfchainCore.config.magic, // 交易去往链的 magic
-    applyBlockHeight: 10, // 交易发起高度
-    effectiveBlockHeight: 57,
     storage: {
       key: "assetType",
       value: converter.assetId.decode(migrateCertificate.body.assetId).assetType,
     },
+
+    fee: "1000", // 交易手续费
+    timestamp: 10000, // 生成交易时间戳
+    sourceIP: "127.0.0.1", // 交易来源 ip
+    applyBlockHeight: 10, // 交易发起高度
+    effectiveBlockHeight: 57,
   };
   let secondKeypair;
   if (sender.secondSecret) {

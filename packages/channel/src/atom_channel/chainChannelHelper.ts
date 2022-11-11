@@ -652,7 +652,7 @@ export class ChainChannelHelper {
     const BH = this.baseHelper;
     /// 参数校验
     //#region 查询参数校验
-    const { height, signature } = arg.query;
+    const { height, blockId } = arg.query;
     /**是否有查询条件 */
     let has_query_params = false;
     // if (typeof height === "number") {
@@ -664,11 +664,11 @@ export class ChainChannelHelper {
         });
       }
     }
-    if (signature) {
+    if (blockId) {
       has_query_params = true;
-      if (!BH.isValidBlockSignature(signature)) {
+      if (!BH.isValidBlockId(blockId)) {
         throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
-          field: "signature",
+          field: "blockId",
         });
       }
     }
@@ -740,14 +740,14 @@ export class ChainChannelHelper {
         field: `height ${newBlockArg.height}`,
       });
     }
-    if (!BH.isValidBlockSignature(newBlockArg.signature)) {
+    if (!BH.isValidBlockId(newBlockArg.blockId)) {
       throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
-        field: `signature ${newBlockArg.signature}`,
+        field: `blockId ${newBlockArg.blockId}`,
       });
     }
-    if (!BH.isValidBlockSignature(newBlockArg.previousBlockSignature)) {
+    if (!BH.isValidBlockId(newBlockArg.previousBlockId)) {
       throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
-        field: `previousBlockSignature ${newBlockArg.previousBlockSignature}`,
+        field: `previousBlockId ${newBlockArg.previousBlockId}`,
       });
     }
     if (!BH.isFiniteBigInt(newBlockArg.totalFee)) {

@@ -113,7 +113,7 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
       entityFactoryApplicant,
       entityFactoryPossessor,
       entityFactory,
-      transactionSignature,
+      transactionSubId,
     } = destoryEntity;
 
     if (sourceChainName !== config.chainName) {
@@ -206,17 +206,17 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
       });
     }
 
-    if (!transactionSignature) {
+    if (!transactionSubId) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
-        prop: "transactionSignature",
+        prop: "transactionSubId",
         ...DestoryEntityAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isValidTransactionSignature(transactionSignature)) {
+    if (!baseHelper.isValidTransactionId(transactionSubId)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: `transactionSignature ${transactionSignature}`,
-        type: "transaction signature",
+        prop: `transactionSubId ${transactionSubId}`,
+        type: "transaction id",
         ...DestoryEntityAsset_Exception_Detail,
       });
     }
@@ -258,7 +258,7 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
         entityFactoryApplicant,
         entityFactoryPossessor,
         entityFactory,
-        transactionSignatureBuffer,
+        transactionSubIdBuffer,
       } = transaction.asset.destoryEntity;
       // 销毁 entity
       taskList.next = eventEmitter.emit("destoryEntity", {
@@ -273,7 +273,7 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
           entityFactoryApplicantAddress: entityFactoryApplicant,
           entityFactoryPossessorAddress: entityFactoryPossessor,
           entityFactory: entityFactory.toJSON(),
-          frozenIdBuffer: transactionSignatureBuffer,
+          frozenIdBuffer: transactionSubIdBuffer,
           status: ASSET_STATUS.DESTORY,
         },
       });
@@ -293,7 +293,7 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
             assetInfo,
             amount: entityFrozenAssetPrealnum,
             sourceAmount: entityFrozenAssetPrealnum,
-            frozenIdBuffer: transactionSignatureBuffer,
+            frozenIdBuffer: transactionSubIdBuffer,
             recipientId, // 资产冻结账户
           },
         });

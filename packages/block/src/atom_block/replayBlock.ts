@@ -119,7 +119,7 @@ export class ReplayBlockCore<T extends Block> {
       /// 主动生成掉块信息
       const lastBlock = await this.blockHelper.forceGetBlockByHeight(block.height - 1);
       // 校验区块的前块签名
-      if (block.previousBlockSignature !== lastBlock.signature) {
+      if (block.previousBlockId !== lastBlock.blockId) {
         if (recordForkBlock) {
           let blockGetterHelper = options.blockGetterHelper;
           if (!blockGetterHelper) {
@@ -137,7 +137,7 @@ export class ReplayBlockCore<T extends Block> {
           );
         }
         throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
-          to_compare_prop: `previousBlockSignature ${block.previousBlockSignature}`,
+          to_compare_prop: `previousBlockId ${block.previousBlockId}`,
           be_compare_prop: `blockSignature ${block.signature}`,
           to_target: "block",
           be_target: "blockChain lastBlock",

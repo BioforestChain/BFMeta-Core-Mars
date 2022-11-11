@@ -14,23 +14,23 @@ export class GrabAnyModel
   implements BFChainCore.AssetJSONToModelType<BFChainCore.GrabAnyJSON>
 {
   static INC = 1;
-  /**赠送交易所在的区块签名 */
+  /**赠送交易所在的区块 id */
   @Field.d(GrabAnyModel.INC++, "bytes")
-  blockSignatureBuffer!: Uint8Array;
-  public get blockSignature(): string {
-    return getHexFromArrayBuffer(this.blockSignatureBuffer);
+  blockIdBuffer!: Uint8Array;
+  public get blockId(): string {
+    return getHexFromArrayBuffer(this.blockIdBuffer);
   }
-  public set blockSignature(value: string) {
-    this.blockSignatureBuffer = parseHexToArrayBuffer(value);
+  public set blockId(value: string) {
+    this.blockIdBuffer = parseHexToArrayBuffer(value);
   }
   /**要抢的红包交易的签名 */
   @Field.d(GrabAnyModel.INC++, "bytes")
-  giftTransactionSignatureBuffer!: Uint8Array;
-  public get transactionSignature(): string {
-    return getHexFromArrayBuffer(this.giftTransactionSignatureBuffer);
+  transactionSubIdBuffer!: Uint8Array;
+  public get transactionSubId(): string {
+    return getHexFromArrayBuffer(this.transactionSubIdBuffer);
   }
-  public set transactionSignature(value: string) {
-    this.giftTransactionSignatureBuffer = parseHexToArrayBuffer(value);
+  public set transactionSubId(value: string) {
+    this.transactionSubIdBuffer = parseHexToArrayBuffer(value);
   }
   /**抢到的资产数量 */
   @Field.d(GrabAnyModel.INC++, "string")
@@ -65,8 +65,8 @@ export class GrabAnyModel
   giftAny!: GiftAnyModel;
   toJSON() {
     const res: BFChainCore.GrabAnyJSON = {
-      blockSignature: this.blockSignature,
-      transactionSignature: this.transactionSignature,
+      blockId: this.blockId,
+      transactionSubId: this.transactionSubId,
       amount: this.amount,
       giftAny: this.giftAny.toJSON(),
     };
@@ -80,8 +80,8 @@ export class GrabAnyModel
   ) {
     const res = super.fromObject(object) as GrabAnyModel;
     if (res !== object) {
-      object.blockSignature && (res.blockSignature = object.blockSignature);
-      object.transactionSignature && (res.transactionSignature = object.transactionSignature);
+      object.blockId && (res.blockId = object.blockId);
+      object.transactionSubId && (res.transactionSubId = object.transactionSubId);
       object.ciphertextSignature &&
         (res.ciphertextSignature = AccountSignatureModel.fromObject(object.ciphertextSignature));
     }

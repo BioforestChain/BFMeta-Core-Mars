@@ -214,7 +214,7 @@ declare namespace BFChainCore {
   }
   /**查询交易的查询条件 */
   type BlockQueryOptionsJSON = {
-    signature?: string;
+    blockId?: string;
     height?: number;
   };
   /**查询交易的传入对象 */
@@ -232,10 +232,10 @@ declare namespace BFChainCore {
   type NewBlockArgJSON = {
     /**区块高度 */
     height: number;
-    /**区块 signature */
-    signature: string;
-    /**前块 signature */
-    previousBlockSignature: string;
+    /**区块 id */
+    blockId: string;
+    /**前块 id */
+    previousBlockId: string;
     /**区块事件戳 */
     timestamp: number;
     /**区块总手续费 */

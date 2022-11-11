@@ -14,23 +14,23 @@ export class GrabAssetModel
   implements BFChainCore.AssetJSONToModelType<BFChainCore.GrabAssetJSON>
 {
   static INC = 1;
-  /**赠送交易所在的区块签名 */
+  /**赠送交易所在的区块 id */
   @Field.d(GrabAssetModel.INC++, "bytes")
-  blockSignatureBuffer!: Uint8Array;
-  public get blockSignature(): string {
-    return getHexFromArrayBuffer(this.blockSignatureBuffer);
+  blockIdBuffer!: Uint8Array;
+  public get blockId(): string {
+    return getHexFromArrayBuffer(this.blockIdBuffer);
   }
-  public set blockSignature(value: string) {
-    this.blockSignatureBuffer = parseHexToArrayBuffer(value);
+  public set blockId(value: string) {
+    this.blockIdBuffer = parseHexToArrayBuffer(value);
   }
-  /**要抢的红包交易的签名 */
+  /**要抢的红包事件的唯一标识 */
   @Field.d(GrabAssetModel.INC++, "bytes")
-  giftTransactionSignatureBuffer!: Uint8Array;
-  public get transactionSignature(): string {
-    return getHexFromArrayBuffer(this.giftTransactionSignatureBuffer);
+  transactionSubIdBuffer!: Uint8Array;
+  public get transactionSubId(): string {
+    return getHexFromArrayBuffer(this.transactionSubIdBuffer);
   }
-  public set transactionSignature(value: string) {
-    this.giftTransactionSignatureBuffer = parseHexToArrayBuffer(value);
+  public set transactionSubId(value: string) {
+    this.transactionSubIdBuffer = parseHexToArrayBuffer(value);
   }
   /**抢到的资产数量 */
   @Field.d(GrabAssetModel.INC++, "string")
@@ -65,8 +65,8 @@ export class GrabAssetModel
   giftAsset!: GiftAssetModel;
   toJSON() {
     const res: BFChainCore.GrabAssetJSON = {
-      blockSignature: this.blockSignature,
-      transactionSignature: this.transactionSignature,
+      blockId: this.blockId,
+      transactionSubId: this.transactionSubId,
       amount: this.amount,
       giftAsset: this.giftAsset.toJSON(),
     };
@@ -80,8 +80,8 @@ export class GrabAssetModel
   ) {
     const res = super.fromObject(object) as GrabAssetModel;
     if (res !== object) {
-      object.blockSignature && (res.blockSignature = object.blockSignature);
-      object.transactionSignature && (res.transactionSignature = object.transactionSignature);
+      object.blockId && (res.blockId = object.blockId);
+      object.transactionSubId && (res.transactionSubId = object.transactionSubId);
       object.ciphertextSignature &&
         (res.ciphertextSignature = AccountSignatureModel.fromObject(object.ciphertextSignature));
     }

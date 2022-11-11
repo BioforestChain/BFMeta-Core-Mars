@@ -407,11 +407,11 @@ export class VerifyBlockCore<T extends Block> {
     const { baseHelper } = this;
     if (
       block.height !== 1 &&
-      !block.previousBlockSignature &&
-      baseHelper.isValidBlockSignature(block.previousBlockSignature)
+      !block.previousBlockId &&
+      baseHelper.isValidBlockId(block.previousBlockId)
     ) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: `previousBlockSignature ${block.previousBlockSignature}`,
+        prop: `previousBlockId ${block.previousBlockId}`,
         ...Block_Exception_Detail,
       });
     }

@@ -97,8 +97,8 @@ export abstract class ChainChannelBase
         getBlockByHeight: (height: number) => {
           return this.findBlock({ height });
         },
-        getBlockBySignature: (signature: string) => {
-          return this.findBlock({ signature });
+        getBlockById: (blockId: string) => {
+          return this.findBlock({ blockId });
         },
         maxHeight: 1,
         lastBlock: GenesisBlock.fromObject(this.config.genesisBlock),

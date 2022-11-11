@@ -337,7 +337,7 @@ export const ERROR_LIST = {
   NOT_EXIST_OR_EXPIRED: new ErrorCode("001-11054", "{prop} in {target} not exist or expired"),
   NOT_EXPECTED_RELATED_TRANSACTION: new ErrorCode(
     "001-11055",
-    "Transaction with signature {signature} is not an expected related transaction",
+    "Transaction with subId {subId} is not an expected related transaction",
   ),
   CAN_NOT_SECONDARY_TRANSACTION: new ErrorCode(
     "001-11056",

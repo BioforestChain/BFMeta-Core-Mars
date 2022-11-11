@@ -131,7 +131,7 @@ export const ERROR_CODE_LIST_EN = {
   "001-11052": "Entity already destory, entityId {entityId}",
   "001-11053": "Asset is already migration, migrateCertificateId {migrateCertificateId}",
   "001-11054": "{prop} in {target} not exist or expired",
-  "001-11055": "Transaction with signature {signature} is not an expected related transaction",
+  "001-11055": "Transaction with subId {subId} is not an expected related transaction",
   "001-11056": "Can not secondary transaction, reason {reason}",
   "001-11057": "The register delegate quota is full in round {round}",
   "001-11058": "Delegate can not migrate asset",

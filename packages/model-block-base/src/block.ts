@@ -142,6 +142,12 @@ export class Block<AJ extends object = object>
   set signature(value: string) {
     this.signatureBuffer = parseHexToArrayBuffer(value);
   }
+  get blockId() {
+    return this.signature;
+  }
+  get blockIdBuffer() {
+    return this.signatureBuffer;
+  }
 
   /**
    * 4. 锻造时间戳
@@ -160,10 +166,10 @@ export class Block<AJ extends object = object>
     this.generatorPublicKeyBuffer = parseHexToArrayBuffer(value);
   }
   /**
-   * 6. 前块 signature
+   * 6. 前块 id
    */
   @Field.d(6, "string")
-  previousBlockSignature!: string;
+  previousBlockId!: string;
   /**
    * 7. 区块所属的链网络标识符
    */
@@ -327,6 +333,7 @@ export class Block<AJ extends object = object>
 
   toJSON() {
     const res: BFChainCore.BlockJSON<AJ> = {
+      blockId: this.blockId,
       version: this.version,
       height: this.height,
       blockSize: this.blockSize,
@@ -334,7 +341,7 @@ export class Block<AJ extends object = object>
       signature: this.signature,
       generatorPublicKey: this.generatorPublicKey,
       generatorEquity: this.generatorEquity,
-      previousBlockSignature: this.previousBlockSignature,
+      previousBlockId: this.previousBlockId,
       reward: this.reward,
       magic: this.magic,
       blockParticipation: this.blockParticipation,

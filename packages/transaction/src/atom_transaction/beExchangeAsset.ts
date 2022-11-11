@@ -42,7 +42,7 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<BeExch
    * 必须携带交易的接收账户地址(是 toExchangeAsset 交易的发起账户地址)
    * 交易的来源链和去往链的网络标识符必须是本链的网络标识符
    * 必须携带查询用的索引存储
-   * key 值必须是 "transactionSignature" value 值必须是 to 交易的签名
+   * key 值必须是 "transactionSubId" value 值必须是 to 交易的签名
    * asset 是完整的 beExchangeAsset 的交易
    * 必须携带 toExchangeAsset 的签名
    * 必须携带用于交换的资产数量和交换得到的资产数量
@@ -111,11 +111,11 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<BeExch
     }
 
     const storage = body.storage;
-    if (storage.key !== "transactionSignature") {
+    if (storage.key !== "transactionSubId") {
       throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `storage.key ${storage.key}`,
         to_target: "storage",
-        be_compare_prop: "transactionSignature",
+        be_compare_prop: "transactionSubId",
         ...Function_Exception_Detail,
       });
     }
@@ -133,26 +133,26 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<BeExch
       target: "beExchangeAsset",
     } as const;
 
-    const { transactionSignature } = beExchangeAsset;
-    if (!transactionSignature) {
+    const { transactionSubId } = beExchangeAsset;
+    if (!transactionSubId) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
-        prop: "transactionSignature",
+        prop: "transactionSubId",
         ...BeExchangeAssetAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isValidSignature(transactionSignature)) {
+    if (!baseHelper.isValidTransactionId(transactionSubId)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: `transactionSignature ${transactionSignature}`,
-        type: "transaction signature",
+        prop: `transactionSubId ${transactionSubId}`,
+        type: "transaction id",
         ...BeExchangeAssetAsset_Exception_Detail,
       });
     }
 
-    if (storage.value !== transactionSignature) {
+    if (storage.value !== transactionSubId) {
       throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `storage.value ${storage.value}`,
-        be_compare_prop: `transactionSignature ${transactionSignature}`,
+        be_compare_prop: `transactionSubId ${transactionSubId}`,
         to_target: "storage",
         be_target: "beExchangeAsset",
         ...Function_Exception_Detail,
@@ -274,7 +274,7 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<BeExch
         !(await this.transactionHelper.verifyCiphertextSignature({
           secretPublicKey: parseHexToArrayBuffer(publicKey),
           ciphertextSignatureBuffer: parseHexToArrayBuffer(signature),
-          transactionSignatureBuffer: parseHexToArrayBuffer(transactionSignature),
+          transactionSubIdBuffer: parseHexToArrayBuffer(transactionSubId),
           senderId: body.senderId,
         }))
       ) {
@@ -366,7 +366,7 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<BeExch
           assetInfo: toAssetInfo,
           amount: toExchangeNumber,
           sourceAmount: toExchangeNumber,
-          frozenIdBuffer: transaction.asset.beExchangeAsset.transactionSignatureBuffer,
+          frozenIdBuffer: transaction.asset.beExchangeAsset.transactionSubIdBuffer,
           recipientId, // 资产冻结账户
         },
       });

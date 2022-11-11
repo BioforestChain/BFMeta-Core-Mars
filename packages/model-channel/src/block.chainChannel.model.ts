@@ -12,12 +12,12 @@ export class BlockQueryOptionsModel
   implements BFChainCore.JSONToModelType<BFChainCore.BlockQueryOptionsJSON>
 {
   @Field.d(1, "string", "optional")
-  signature?: string;
+  blockId?: string;
   @Field.d(2, "uint32", "optional")
   height?: number;
   toJSON() {
     const res: BFChainCore.BlockQueryOptionsJSON = super.toJSON();
-    this.signature && (res.signature = this.signature);
+    this.blockId && (res.blockId = this.blockId);
     this.height && (res.height = this.height);
     return res;
   }
@@ -70,9 +70,9 @@ export class NewBlockArgModel
   @Field.d(NewBlockArgModel.INC++, "uint32")
   height!: number;
   @Field.d(NewBlockArgModel.INC++, "string")
-  signature!: string;
+  blockId!: string;
   @Field.d(NewBlockArgModel.INC++, "string")
-  previousBlockSignature!: string;
+  previousBlockId!: string;
   @Field.d(NewBlockArgModel.INC++, "uint32")
   timestamp!: number;
   @Field.d(NewBlockArgModel.INC++, "string")
@@ -94,8 +94,8 @@ export class NewBlockArgModel
   toJSON() {
     return {
       height: this.height,
-      signature: this.signature,
-      previousBlockSignature: this.previousBlockSignature,
+      blockId: this.blockId,
+      previousBlockId: this.previousBlockId,
       timestamp: this.timestamp,
       totalFee: this.totalFee,
       numberOfTransactions: this.numberOfTransactions,

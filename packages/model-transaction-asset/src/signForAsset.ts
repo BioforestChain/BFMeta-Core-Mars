@@ -13,14 +13,14 @@ export class SignForAssetModel
   implements BFChainCore.AssetJSONToModelType<BFChainCore.SignForAssetJSON>
 {
   static INC = 1;
-  /**要签收的委托交易的签名 */
+  /**要签收的见证事件的唯一标识 */
   @Field.d(SignForAssetModel.INC++, "bytes")
-  transactionSignatureBuffer!: Uint8Array;
-  public get transactionSignature(): string {
-    return getHexFromArrayBuffer(this.transactionSignatureBuffer);
+  transactionSubIdBuffer!: Uint8Array;
+  public get transactionSubId(): string {
+    return getHexFromArrayBuffer(this.transactionSubIdBuffer);
   }
-  public set transactionSignature(value: string) {
-    this.transactionSignatureBuffer = parseHexToArrayBuffer(value);
+  public set transactionSubId(value: string) {
+    this.transactionSubIdBuffer = parseHexToArrayBuffer(value);
   }
   /**委托交易的发起账户地址 */
   @Field.d(SignForAssetModel.INC++, "string")
@@ -41,7 +41,7 @@ export class SignForAssetModel
   }
   toJSON() {
     const res: BFChainCore.SignForAssetJSON = {
-      transactionSignature: this.transactionSignature,
+      transactionSubId: this.transactionSubId,
       trustSenderId: this.trustSenderId,
       trustRecipientId: this.trustRecipientId,
       trustAsset: this.trustAsset.toJSON(),
@@ -54,7 +54,7 @@ export class SignForAssetModel
   ) {
     const res = super.fromObject(object) as SignForAssetModel;
     if (res !== object) {
-      object.transactionSignature && (res.transactionSignature = object.transactionSignature);
+      object.transactionSubId && (res.transactionSubId = object.transactionSubId);
     }
     return res as unknown as T;
   }

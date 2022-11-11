@@ -250,7 +250,7 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
         target: "blockGetterHelper",
       });
     }
-    const { height, previousBlockSignature, timestamp } = block;
+    const { height, previousBlockId, timestamp } = block;
     const lastBlock = await blockGetterHelper.getBlockByHeight(height - 1);
     if (!lastBlock) {
       throw new ConsensusException(ERROR_LIST.NOT_EXIST, {
@@ -258,13 +258,13 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
         target: "blockChain",
       });
     }
-    const __signature = lastBlock.signature;
-    if (previousBlockSignature !== __signature) {
+    const lastBlockId = lastBlock.blockId;
+    if (previousBlockId !== lastBlockId) {
       // 记录分叉区块信息
       await blockGetterHelper.chainBlockFork(block, BLOCK_FORK_CAUSE.DIFFERENT_PRE_BLOCK_SIGNATURE);
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-        to_compare_prop: `previousBlockSignature: ${previousBlockSignature}`,
-        be_compare_prop: `__signature: ${__signature}`,
+        to_compare_prop: `previousBlockId: ${previousBlockId}`,
+        be_compare_prop: `previousBlockId: ${lastBlockId}`,
         to_target: `block ${height}`,
         be_target: `lastBlock ${lastBlock.height}`,
       });

@@ -32,20 +32,24 @@ async function getToExchangeAnyMultiTransaction(
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: bfchainCore.config.version,
+
+    subEnvParams: {},
     type: bfchainCore.transactionHelper.TO_EXCHANGE_ANY_MULTI, // 交易类型
     senderId: sender.address, // 发起者地址
     senderPublicKey: sender.publicKey, // 发起者公钥
     senderSecondPublicKey: "", // 发起者二次公钥
+    maxFee: "100000000",
     rangeType: RANGE_TYPE.EMPTY,
     range: [], // 接收者账户
-    timestamp: 770880, // 生成交易时间戳
-    fee: "78622", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
     dappid: getRandomDAppid(), // 交易所属的 dappid
     lns: bfchainCore.config.genesisLocationName,
-    sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic
+
+    fee: "78622", // 交易手续费
+    timestamp: 770880, // 生成交易时间戳
+    sourceIP: "127.0.0.1", // 交易来源 ip
     applyBlockHeight: 10086, // 交易发起高度
     effectiveBlockHeight: 10100,
   };
@@ -90,27 +94,31 @@ async function getBeExchangeAnyMultiTransaction(
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: bfchainCore.config.version,
+
+    subEnvParams: {},
     type: bfchainCore.transactionHelper.BE_EXCHANGE_ANY_MULTI, // 交易类型
     senderId: sender.address, // 发起者地址
     senderPublicKey: sender.publicKey, // 发起者公钥
     senderSecondPublicKey: "", // 发起者二次公钥
+    maxFee: "100000000",
     recipientId: toExchangeAnyMultiTrs.senderId,
     rangeType: RANGE_TYPE.EMPTY,
     range: [],
-    timestamp: 770880, // 生成交易时间戳
-    fee: "78622", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
     dappid: getRandomDAppid(), // 交易所属的 dappid
     lns: bfchainCore.config.genesisLocationName,
-    sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic
-    applyBlockHeight: 10086, // 交易发起高度
-    effectiveBlockHeight: 10100,
     storage: {
       key: "transactionSignature",
       value: toExchangeAnyMultiTrs.signature,
     },
+
+    fee: "78622", // 交易手续费
+    timestamp: 770880, // 生成交易时间戳
+    sourceIP: "127.0.0.1", // 交易来源 ip
+    applyBlockHeight: 10086, // 交易发起高度
+    effectiveBlockHeight: 10100,
   };
   let secondKeypair;
   if (sender.secondSecret) {
@@ -146,7 +154,7 @@ async function getBeExchangeAnyMultiTransaction(
   }
 
   const beExchangeAnyMulti: BFChainCore.BeExchangeAnyMultiJSON = {
-    transactionSignature: toExchangeAnyMultiTrs.signature,
+    transactionSubId: toExchangeAnyMultiTrs.subId,
     toExchangeAssets: results,
     beExchangeAsset: {
       ...beExchangeAsset,
@@ -168,7 +176,7 @@ async function getBeExchangeAnyMultiTransaction(
     const signature = (
       await bfchainCore.transactionHelper.getCiphertextSignature({
         secret: recipient[index].secret,
-        transactionSignatureBuffer: parseHexToArrayBuffer(toExchangeAnyMultiTrs.signature),
+        transactionSubIdBuffer: parseHexToArrayBuffer(toExchangeAnyMultiTrs.subId),
         senderId: sender.address,
       })
     ).toString("hex");

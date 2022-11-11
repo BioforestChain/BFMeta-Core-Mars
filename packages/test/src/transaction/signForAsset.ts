@@ -125,7 +125,7 @@ async function getSignForAssetTransaction(
   const { trustAsset } = trustAssetTrs.asset;
 
   const signForAsset: BFChainCore.SignForAssetJSON = {
-    transactionSignature: trustAssetTrs.signature,
+    transactionSubId: trustAssetTrs.subId,
     trustSenderId: trustAssetTrs.senderId,
     trustRecipientId: trustAssetTrs.recipientId,
     trustAsset,

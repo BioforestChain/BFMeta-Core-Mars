@@ -32,21 +32,21 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
     this.__checkTrsFee(transaction);
 
     const beExchangeAnyMulti = transaction.asset.beExchangeAnyMulti;
-    const { transactionSignature } = beExchangeAnyMulti;
-    const toExchangeAnyJson = (await transactionGetterHelper.getTransactionBySignature(
-      transactionSignature,
+    const { transactionSubId } = beExchangeAnyMulti;
+    const toExchangeAnyJson = (await transactionGetterHelper.getTransactionBySubId(
+      transactionSubId,
       this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
     )) as BFChainCore.ToExchangeAnyMultiTransactionJSON | undefined;
     if (!toExchangeAnyJson) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST_OR_EXPIRED, {
-        prop: `Transaction with signature ${transactionSignature}`,
+        prop: `Transaction with subId ${transactionSubId}`,
         target: "blockChain",
       });
     }
 
     if (toExchangeAnyJson.type !== this.transactionHelper.TO_EXCHANGE_ANY_MULTI) {
       throw new ConsensusException(ERROR_LIST.NOT_EXPECTED_RELATED_TRANSACTION, {
-        signature: `${transactionSignature}`,
+        subId: `${transactionSubId}`,
       });
     }
 
@@ -458,9 +458,9 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    */
   getLockData(transaction: BeExchangeAnyMultiTransaction) {
-    const { transactionSignature, toExchangeAssets, beExchangeAsset } =
+    const { transactionSubId, toExchangeAssets, beExchangeAsset } =
       transaction.asset.beExchangeAnyMulti;
-    const locks: string[] = [transactionSignature];
+    const locks: string[] = [transactionSubId];
     const { beExchangeParentAssetType, beExchangeAssetType } = beExchangeAsset;
     for (const toExchangeAsset of toExchangeAssets) {
       const { toExchangeParentAssetType, toExchangeAssetType, taxInformation } = toExchangeAsset;

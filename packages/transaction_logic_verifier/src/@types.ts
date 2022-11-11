@@ -10,29 +10,50 @@ declare namespace BFChainCore {
   // #region TransactionGetterHelperInterface
   interface TransactionGetterHelperInterface {
     /**
-     * 根据交易 signature 获取交易和交易所在的区块签名
+     * 根据交易 trsId 获取交易和交易所在的区块签名
      *
-     * @param signature 事件签名
+     * @param signature 事件 id
      * @param heightRange 查询范围
      */
-    getTransactionAndBlockSignatureBySignature(
-      signature: string,
+    getTransactionAndBlockIdById(
+      trsId: string,
       heightRange: { startHeight: number; endHeight: number },
     ): Promise<
       | {
           transaction: TransactionJSON;
-          blockSignature: string;
+          blockId: string;
+        }
+      | undefined
+    >;
+    /**根据交易 subId 获取交易和交易所在的区块id */
+    getTransactionAndBlockIdBySubId(
+      subId: string,
+      heightRange: { startHeight: number; endHeight: number },
+    ): Promise<
+      | {
+          transaction: TransactionJSON;
+          blockId: string;
         }
       | undefined
     >;
     /**
-     * 根据交易 signature 获取交易
+     * 根据交易 id 获取交易
      *
-     * @param signature 事件签名
+     * @param trsId 事件签名
      * @param heightRange 查询范围
      */
-    getTransactionBySignature(
-      signature: string,
+    getTransactionById(
+      trsId: string,
+      heightRange: { startHeight: number; endHeight: number },
+    ): Promise<TransactionJSON | undefined>;
+    /**
+     * 根据交易 subId 获取交易
+     *
+     * @param subId
+     * @param heightRange
+     */
+    getTransactionBySubId(
+      subId: string,
       heightRange: { startHeight: number; endHeight: number },
     ): Promise<TransactionJSON | undefined>;
     /**

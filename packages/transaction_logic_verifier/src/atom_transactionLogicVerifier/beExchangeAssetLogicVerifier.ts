@@ -25,21 +25,21 @@ export class BeExchangeAssetLogicVerifier extends TransactionLogicVerifier {
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const beExchangeAssetAsset = transaction.asset.beExchangeAsset;
-    const { transactionSignature } = beExchangeAssetAsset;
-    const trs = (await transactionGetterHelper.getTransactionBySignature(
-      transactionSignature,
+    const { transactionSubId } = beExchangeAssetAsset;
+    const trs = (await transactionGetterHelper.getTransactionBySubId(
+      transactionSubId,
       this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
     )) as BFChainCore.ToExchangeAssetTransactionJSON | undefined;
     if (!trs) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST_OR_EXPIRED, {
-        prop: `Transaction with signature ${transactionSignature}`,
+        prop: `Transaction with subId ${transactionSubId}`,
         target: "blockChain",
       });
     }
 
     if (trs.type !== this.transactionHelper.TO_EXCHANGE_ASSET) {
       throw new ConsensusException(ERROR_LIST.NOT_EXPECTED_RELATED_TRANSACTION, {
-        signature: `${transactionSignature}`,
+        subId: `${transactionSubId}`,
       });
     }
 
@@ -169,6 +169,6 @@ export class BeExchangeAssetLogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    */
   getLockData(transaction: BeExchangeAssetTransaction) {
-    return [transaction.asset.beExchangeAsset.transactionSignature];
+    return [transaction.asset.beExchangeAsset.transactionSubId];
   }
 }

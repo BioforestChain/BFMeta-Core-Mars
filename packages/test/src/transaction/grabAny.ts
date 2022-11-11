@@ -31,26 +31,30 @@ async function getGiftAnyTransaction(
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: bfchainCore.config.version,
+
+    subEnvParams: {},
     type: bfchainCore.transactionHelper.GIFT_ANY, // 交易类型
     senderId: sender.address, // 发起者地址
     senderPublicKey: sender.publicKey, // 发起者公钥
     senderSecondPublicKey: "", // 发起者二次公钥
+    maxFee: "100000000",
     rangeType: RANGE_TYPE.MULTI_ADDRESS,
     range: [],
-    timestamp: 770880, // 生成交易时间戳
-    fee: "440001", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
     dappid: getRandomDAppid(), // 交易所属的 dappid
     lns: bfchainCore.config.genesisLocationName,
-    sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic
-    applyBlockHeight: 10086, // 交易发起高度
-    effectiveBlockHeight: 10100,
     storage: {
       key: "assetType",
       value: assetType,
     },
+
+    fee: "440001", // 交易手续费
+    timestamp: 770880, // 生成交易时间戳
+    sourceIP: "127.0.0.1", // 交易来源 ip
+    applyBlockHeight: 10086, // 交易发起高度
+    effectiveBlockHeight: 10100,
   };
   let secondKeypair;
   if (sender.secondSecret) {
@@ -109,27 +113,31 @@ async function getGrabAnyTransaction(
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: bfchainCore.config.version,
+
+    subEnvParams: {},
     type: bfchainCore.transactionHelper.GRAB_ANY, // 交易类型
     senderId: sender.address, // 发起者地址
     senderPublicKey: sender.publicKey, // 发起者公钥
     senderSecondPublicKey: "", // 发起者二次公钥
+    maxFee: "100000000",
     recipientId: giftAnyTrs.senderId,
     rangeType: RANGE_TYPE.EMPTY,
     range: [],
-    timestamp: 770880, // 生成交易时间戳
-    fee: "0", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
     dappid: getRandomDAppid(), // 交易所属的 dappid
     lns: bfchainCore.config.genesisLocationName,
-    sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic
-    applyBlockHeight: 10086, // 交易发起高度
-    effectiveBlockHeight: 10100,
     storage: {
       key: "transactionSignature",
       value: giftAnyTrs.signature,
     },
+
+    fee: "0", // 交易手续费
+    timestamp: 770880, // 生成交易时间戳
+    sourceIP: "127.0.0.1", // 交易来源 ip
+    applyBlockHeight: 10086, // 交易发起高度
+    effectiveBlockHeight: 10100,
   };
   let secondKeypair;
   if (sender.secondSecret) {
@@ -146,8 +154,8 @@ async function getGrabAnyTransaction(
   const giftAny = giftAnyTrs.asset.giftAny;
 
   const grabAny: BFChainCore.GrabAnyJSON = {
-    blockSignature: bfchainCore.config.signature,
-    transactionSignature: giftAnyTrs.signature,
+    blockId: bfchainCore.config.signature,
+    transactionSubId: giftAnyTrs.subId,
     amount: "0", // 交易资产数量
     giftAny,
   };
@@ -155,8 +163,8 @@ async function getGrabAnyTransaction(
   const amount = (
     await bfchainCore.transactionHelper.calcGrabRandomGiftAssetNumber(
       data.senderId,
-      parseHexToArrayBuffer(grabAny.blockSignature),
-      giftAnyTrs.signatureBuffer,
+      parseHexToArrayBuffer(grabAny.blockId),
+      giftAnyTrs.subIdBuffer,
       giftAnyTrs.senderId,
       giftAny.amount,
       giftAny.totalGrabableTimes,
@@ -168,7 +176,7 @@ async function getGrabAnyTransaction(
     const signature = (
       await bfchainCore.transactionHelper.getCiphertextSignature({
         secret: grabAccounts[index].secret,
-        transactionSignatureBuffer: parseHexToArrayBuffer(giftAnyTrs.signature),
+        transactionSubIdBuffer: parseHexToArrayBuffer(giftAnyTrs.subId),
         senderId: sender.address,
       })
     ).toString("hex");

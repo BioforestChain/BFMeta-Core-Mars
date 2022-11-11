@@ -21,27 +21,31 @@ async function getDappTransaction(sender: AccountModel, bfchainCore: BFChainCore
   const dappid = getRandomDAppid();
   const data: BFChainCore.TxBodyJSON = {
     version: bfchainCore.config.version,
+
+    subEnvParams: {},
     type: bfchainCore.transactionHelper.DAPP, // 交易类型
     senderId: sender.address, // 发起者地址
     recipientId: "cP2kxhREzSCNE36mqUrQCMyesw4LKEJ67M",
     senderPublicKey: sender.publicKey, // 发起者公钥
     senderSecondPublicKey: "", // 发起者二次公钥
+    maxFee: "100000000",
     rangeType: RANGE_TYPE.EMPTY,
     range: [],
-    timestamp: 770880, // 生成交易时间戳
-    fee: "78622", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
     dappid, // 交易所属的 dappid
     lns: bfchainCore.config.genesisLocationName,
-    sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic
-    applyBlockHeight: 10086, // 交易发起高度
-    effectiveBlockHeight: 10100,
     storage: {
       key: "dappid",
       value: dappid,
     },
+
+    fee: "78622", // 交易手续费
+    timestamp: 770880, // 生成交易时间戳
+    sourceIP: "127.0.0.1", // 交易来源 ip
+    applyBlockHeight: 10086, // 交易发起高度
+    effectiveBlockHeight: 10100,
   };
   let secondKeypair;
   if (sender.secondSecret) {
@@ -82,27 +86,31 @@ async function getDappPurchasingTransaction(
   const dapp = dappTrs.asset.dapp;
   const data: BFChainCore.TxBodyJSON = {
     version: bfchainCore.config.version,
+
+    subEnvParams: {},
     type: bfchainCore.transactionHelper.DAPP_PURCHASING, // 交易类型
     senderId: sender.address, // 发起者地址
     senderPublicKey: sender.publicKey, // 发起者公钥
     senderSecondPublicKey: "", // 发起者二次公钥
+    maxFee: "100000000",
     recipientId: dappTrs.recipientId,
     rangeType: RANGE_TYPE.EMPTY,
     range: [],
-    timestamp: 770880, // 生成交易时间戳
-    fee: "78622", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
     dappid: dapp.dappid, // 交易所属的 dappid
     lns: bfchainCore.config.genesisLocationName,
-    sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic
-    applyBlockHeight: 10086, // 交易发起高度
-    effectiveBlockHeight: 10100,
     storage: {
       key: "dappid",
       value: dapp.dappid,
     },
+
+    fee: "78622", // 交易手续费
+    timestamp: 770880, // 生成交易时间戳
+    sourceIP: "127.0.0.1", // 交易来源 ip
+    applyBlockHeight: 10086, // 交易发起高度
+    effectiveBlockHeight: 10100,
   };
   let secondKeypair;
   if (sender.secondSecret) {

@@ -128,7 +128,7 @@ export const ERROR_CODE_LIST_ZH = {
   "001-11052": "Entity 已经销毁 entityId {entityId}",
   "001-11053": "权益已经迁移，迁移凭证的 id {migrateCertificateId}",
   "001-11054": "{target} 的 {prop} 不存在或已经过期",
-  "001-11055": "事件 {signature} 不是预期的关联事件",
+  "001-11055": "事件 {subId} 不是预期的关联事件",
   "001-11056": "不能二次使用同一笔事件，原因 {reason}",
   "001-11057": "轮次 {round} 的注册受托人名额已满",
   "001-11058": "受托人不能迁移权益",

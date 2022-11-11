@@ -17,12 +17,12 @@ export class BeExchangeAnyMultiModel
   static INC = 1;
   /**要兑换的交易签名 */
   @Field.d(BeExchangeAnyMultiModel.INC++, "bytes")
-  transactionSignatureBuffer!: Uint8Array;
-  public get transactionSignature(): string {
-    return getHexFromArrayBuffer(this.transactionSignatureBuffer);
+  transactionSubIdBuffer!: Uint8Array;
+  public get transactionSubId(): string {
+    return getHexFromArrayBuffer(this.transactionSubIdBuffer);
   }
-  public set transactionSignature(value: string) {
-    this.transactionSignatureBuffer = parseHexToArrayBuffer(value);
+  public set transactionSubId(value: string) {
+    this.transactionSubIdBuffer = parseHexToArrayBuffer(value);
   }
 
   /**用于校验身份的密文签名，如果需要的话 */
@@ -66,7 +66,7 @@ export class BeExchangeAnyMultiModel
 
   toJSON() {
     const res: BFChainCore.BeExchangeAnyMultiJSON = {
-      transactionSignature: this.transactionSignature,
+      transactionSubId: this.transactionSubId,
       toExchangeAssets: this.toExchangeAssets.map((item) => item.toJSON()),
       beExchangeAsset: this.beExchangeAsset.toJSON(),
     };
@@ -82,7 +82,7 @@ export class BeExchangeAnyMultiModel
   ) {
     const res = super.fromObject(object) as BeExchangeAnyMultiModel;
     if (res !== object) {
-      object.transactionSignature && (res.transactionSignature = object.transactionSignature);
+      object.transactionSubId && (res.transactionSubId = object.transactionSubId);
       object.ciphertextSignature &&
         (res.ciphertextSignature = AccountSignatureModel.fromObject(object.ciphertextSignature));
     }

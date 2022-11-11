@@ -14,12 +14,12 @@ export class DestoryEntityModel
   static INC = 1;
   /**要抢的红包交易的签名 */
   @Field.d(DestoryEntityModel.INC++, "bytes")
-  transactionSignatureBuffer!: Uint8Array;
-  public get transactionSignature(): string {
-    return getHexFromArrayBuffer(this.transactionSignatureBuffer);
+  transactionSubIdBuffer!: Uint8Array;
+  public get transactionSubId(): string {
+    return getHexFromArrayBuffer(this.transactionSubIdBuffer);
   }
-  public set transactionSignature(value: string) {
-    this.transactionSignatureBuffer = parseHexToArrayBuffer(value);
+  public set transactionSubId(value: string) {
+    this.transactionSubIdBuffer = parseHexToArrayBuffer(value);
   }
   /**非同质资产的所属链名 */
   @Field.d(DestoryEntityModel.INC++, "string")
@@ -41,7 +41,7 @@ export class DestoryEntityModel
   entityFactory!: IssueEntityFactoryModel;
   toJSON() {
     const res: BFChainCore.DestoryEntityJSON = {
-      transactionSignature: this.transactionSignature,
+      transactionSubId: this.transactionSubId,
       sourceChainName: this.sourceChainName,
       sourceChainMagic: this.sourceChainMagic,
       entityId: this.entityId,
@@ -58,7 +58,7 @@ export class DestoryEntityModel
   ) {
     const res = super.fromObject(object) as DestoryEntityModel;
     if (res !== object) {
-      object.transactionSignature && (res.transactionSignature = object.transactionSignature);
+      object.transactionSubId && (res.transactionSubId = object.transactionSubId);
     }
     return res as unknown as T;
   }

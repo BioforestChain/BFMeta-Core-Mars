@@ -25,10 +25,12 @@ async function getIssueEntityFactoryTransaction(sender: AccountModel, bfchainCor
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
 
+    subEnvParams: {},
     type: bfchainCore.transactionHelper.ISSUE_ENTITY_FACTORY, // 交易类型
     senderId: sender.address, // 发起者地址
     senderPublicKey: sender.publicKey, // 发起者公钥
     senderSecondPublicKey: "", // 发起者二次公钥
+    maxFee: "100000000",
     recipientId: genesisAddress,
     rangeType: RANGE_TYPE.EMPTY,
     range: [], // 资产创世账户地址
@@ -89,10 +91,12 @@ async function getIssueEntityTransaction(
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
 
+    subEnvParams: {},
     type: bfchainCore.transactionHelper.ISSUE_ENTITY, // 交易类型
     senderId: sender.address, // 发起者地址
     senderPublicKey: sender.publicKey, // 发起者公钥
     senderSecondPublicKey: "", // 发起者二次公钥
+    maxFee: "100000000",
     recipientId: sender.address,
     rangeType: RANGE_TYPE.EMPTY,
     range: [], // 资产创世账户地址
@@ -145,7 +149,7 @@ async function getIssueEntityTransaction(
 
 async function getDestoryEntityTransaction(
   sender: AccountModel,
-  transactionSignature: string,
+  transactionSubId: string,
   issueEntityTrs: BFChainCore.IssueEntityTransactionJSON,
   bfchainCore: BFChainCore,
 ) {
@@ -156,10 +160,12 @@ async function getDestoryEntityTransaction(
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
 
+    subEnvParams: {},
     type: bfchainCore.transactionHelper.DESTORY_ENTITY, // 交易类型
     senderId: sender.address, // 发起者地址
     senderPublicKey: sender.publicKey, // 发起者公钥
     senderSecondPublicKey: "", // 发起者二次公钥
+    maxFee: "100000000",
     recipientId: genesisAddress,
     rangeType: RANGE_TYPE.EMPTY,
     range: [],
@@ -196,7 +202,7 @@ async function getDestoryEntityTransaction(
     data,
     {
       destoryEntity: {
-        transactionSignature,
+        transactionSubId,
         sourceChainName: bfchainCore.config.chainName,
         sourceChainMagic: bfchainCore.config.magic,
         entityId: issueEntity.entityId,
@@ -235,13 +241,13 @@ async function getDestoryEntityTransaction(
 
   await getDestoryEntityTransaction(
     getSenderWithSecondSecret(),
-    entityTrs1.signature,
+    entityTrs1.subId,
     entityTrs1,
     bfchainCore,
   );
   await getDestoryEntityTransaction(
     getSenderWithoutSecondSecret(),
-    entityTrs2.signature,
+    entityTrs2.subId,
     entityTrs2,
     bfchainCore,
   );

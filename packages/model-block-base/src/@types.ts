@@ -29,6 +29,8 @@ declare namespace BFChainCore {
     blockSize: number;
     /**区块时间戳 */
     timestamp: number;
+    /**区块 id */
+    blockId: string;
     /**区块签名 */
     signature: string;
     /**区块安全签名 */
@@ -39,8 +41,8 @@ declare namespace BFChainCore {
     generatorSecondPublicKey?: string;
     /**锻造者权益 */
     generatorEquity: string;
-    /**前块签名 */
-    previousBlockSignature: string;
+    /**前块 id */
+    previousBlockId: string;
     /**区块奖励值 */
     reward: string;
     /**区块的链标识符 */
@@ -56,19 +58,27 @@ declare namespace BFChainCore {
   }
 
   type BlockTransactionInfoJSON = {
+    /**块内事件的起始索引 */
     startTindex: number;
+    /**块内事件量 */
     numberOfTransactions: number;
+    /**块内事件摘要 */
     payloadHash: string;
+    /**块内事件摘要长度 */
     payloadLength: number;
+    /**总发生资产量 */
     totalAmount: string;
+    /**总发生手续费 */
     totalFee: string;
+    /**块内事件列表 */
     transactionInBlocks: TransactionInBlockJSON[];
+    /**块内事件统计信息 */
     statisticInfo: StatisticInfoJSON;
   };
 
   interface BlockJSON<AssetJSON extends object = object>
     extends BlockWithoutTransactionJSON<AssetJSON> {
-    /**事件 */
+    /**区块打包的事件信息 */
     transactionInfo: BlockTransactionInfoJSON;
   }
   type RoundOfflineGeneratersReadonlyMap = Omit<

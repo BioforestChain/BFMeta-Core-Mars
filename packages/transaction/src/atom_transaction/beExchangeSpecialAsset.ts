@@ -41,25 +41,6 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
 
   /**
    * 校验输入信息
-   * 要验证 beExchangeSpecialAsset 交易的基础信息是否合法和 asset 信息是否存在
-   * 交易的手续费必须大于 0
-   * 交易的 rangeType 必须是 empty
-   * 必须携带交易的接收账户地址，并且不能是交易的发起账户(是 toExchangeSpecialAsset 交易的发起账户地址)
-   * 交易的来源链和去往链的网络标识符必须是本链的网络标识符
-   * 必须携带查询用索引存储
-   * key 值必须是 "transactionSignature"，value 必须是 申请特殊资产交换交易 的签名
-   * 必须携带生成接收特殊资产交换交易的合法数据
-   * 必须携带 申请特殊资产交换交易 的签名
-   * 必须携带 申请特殊资产交换交易 的发起交易高度
-   * 如果 申请特殊资产交换交易 有指定开始交易高度间隔，则必须携带则个值
-   * 如果 申请特殊资产交换交易 有指定交易的有效区块高度，则必须携带这个值
-   * 必须携带 申请特殊资产交换交易 的 接收范围类型 rangeType
-   * 必须携带 申请特殊资产交换交易 的 接收范围 range
-   *  如果 range 长度大于 0
-   *    rangeType === MULTI_ADDRESS 交易的发起账户地址必须在 range 中
-   *    rangeType === MULTI_DAPPID 交易的 dappid 必须在 range 中
-   *    rangeType === MULTI_LOCATION_NAME 交易的 lns 必须在 range 中
-   * 如果是公钥模式，则密文必须存在，且密文签名合法
    *
    * @param body
    * @param beExchangeSpecialAssetAsset
@@ -123,11 +104,11 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
     }
 
     const storage = body.storage;
-    if (storage.key !== "transactionSignature") {
+    if (storage.key !== "transactionSubId") {
       throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `storage.key ${storage.key}`,
         to_target: "storage",
-        be_compare_prop: "transactionSignature",
+        be_compare_prop: "transactionSubId",
         ...Function_Exception_Detail,
       });
     }
@@ -146,26 +127,26 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
       target: "beExchangeSpecialAsset",
     } as const;
 
-    const transactionSignature = beExchangeSpecialAsset.transactionSignature;
-    if (!transactionSignature) {
+    const transactionSubId = beExchangeSpecialAsset.transactionSubId;
+    if (!transactionSubId) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
-        prop: "transactionSignature",
+        prop: "transactionSubId",
         ...BeExchangeSpecialAssetAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isValidSignature(transactionSignature)) {
+    if (!baseHelper.isValidTransactionId(transactionSubId)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: `transactionSignature ${transactionSignature}`,
-        type: "transaction signature",
+        prop: `transactionSubId ${transactionSubId}`,
+        type: "transaction id",
         ...BeExchangeSpecialAssetAsset_Exception_Detail,
       });
     }
 
-    if (storage.value !== transactionSignature) {
+    if (storage.value !== transactionSubId) {
       throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `storage.value ${storage.value}`,
-        be_compare_prop: `transactionSignature ${transactionSignature}`,
+        be_compare_prop: `transactionSubId ${transactionSubId}`,
         to_target: "storage",
         be_target: "beExchangeSpecialAsset",
         ...Function_Exception_Detail,
@@ -212,7 +193,7 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
         !(await this.transactionHelper.verifyCiphertextSignature({
           secretPublicKey: parseHexToArrayBuffer(publicKey),
           ciphertextSignatureBuffer: parseHexToArrayBuffer(signature),
-          transactionSignatureBuffer: parseHexToArrayBuffer(transactionSignature),
+          transactionSubIdBuffer: parseHexToArrayBuffer(transactionSubId),
           senderId: body.senderId,
         }))
       ) {
@@ -263,7 +244,7 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
   ) {
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
-      const { exchangeSpecialAsset, transactionSignatureBuffer } =
+      const { exchangeSpecialAsset, transactionSubIdBuffer } =
         transaction.asset.beExchangeSpecialAsset;
       const {
         toExchangeChainName,
@@ -294,7 +275,7 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
             assetInfo: toAssetInfo,
             amount: exchangeNumber,
             sourceAmount: exchangeNumber,
-            frozenIdBuffer: transactionSignatureBuffer,
+            frozenIdBuffer: transactionSubIdBuffer,
             recipientId, // 资产冻结账户
           },
         });

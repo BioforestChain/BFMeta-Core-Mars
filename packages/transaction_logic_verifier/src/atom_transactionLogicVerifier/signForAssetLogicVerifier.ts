@@ -22,23 +22,23 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const { transactionSignature } = transaction.asset.signForAsset;
+    const { transactionSubId } = transaction.asset.signForAsset;
 
-    const trs = (await transactionGetterHelper.getTransactionBySignature(
-      transactionSignature,
+    const trs = (await transactionGetterHelper.getTransactionBySubId(
+      transactionSubId,
       this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
     )) as BFChainCore.TrustAssetTransactionJSON;
 
     if (!trs) {
       throw new ConsensusException(ERROR_LIST.NOT_EXIST_OR_EXPIRED, {
-        prop: `Transaction with signature ${transactionSignature}`,
+        prop: `Transaction with subId ${transactionSubId}`,
         target: "blockChain",
       });
     }
 
     if (trs.type !== this.transactionHelper.TRUST_ASSET) {
       throw new ConsensusException(ERROR_LIST.NOT_EXPECTED_RELATED_TRANSACTION, {
-        signature: `${transactionSignature}`,
+        subId: `${transactionSubId}`,
       });
     }
 
@@ -195,7 +195,7 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
     });
     if (isSecondary) {
       throw new ConsensusException(ERROR_LIST.CAN_NOT_SECONDARY_TRANSACTION, {
-        reason: `Can not secondary sign for asset, sender ${transaction.senderId} trust transaction signature ${transaction.storageValue}`,
+        reason: `Can not secondary sign for asset, sender ${transaction.senderId} trust transaction subId ${transaction.storageValue}`,
       });
     }
   }
@@ -206,6 +206,6 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    */
   getLockData(transaction: SignForAssetTransaction) {
-    return [transaction.asset.signForAsset.transactionSignature];
+    return [transaction.asset.signForAsset.transactionSubId];
   }
 }

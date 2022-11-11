@@ -7,11 +7,11 @@ declare namespace BFChainCore {
      */
     getBlockByHeight(height: number): Promise<Block | undefined>;
     /**
-     * 根据区块 signature 获取区块
+     * 根据区块 id 获取区块
      *
-     * @param signature 区块签名
+     * @param blockId 区块签名
      */
-    getBlockBySignature(signature: string): Promise<Block | undefined>;
+    getBlockById(blockId: string): Promise<Block | undefined>;
     /**
      * 根据区块高度获取锻造公钥
      *
@@ -25,7 +25,7 @@ declare namespace BFChainCore {
      * @param height 区块高度
      *
      */
-    getBlockSignatureByHeight?: (height: number) => Promise<Uint8Array | undefined>;
+    getBlockIdByHeight?: (height: number) => Promise<Uint8Array | undefined>;
     /**
      * 获取链上最新的区块
      *
@@ -106,9 +106,10 @@ declare namespace BFChainCore {
     numberOfTransactions: number;
     /**手续费 */
     totalFee: bigint;
-    /**区块signature,如果没有signature,就用`ff*128` */
-    signature: string;
-    previousBlockSignature: string;
+    /**区块 id,如果没有 id,就用`ff*128` */
+    blockId: string;
+    /**前块 id */
+    previousBlockId: string;
   }>;
   type CurrentGeneratingBlockInfo =
     | Omit<NewBlockArgJSON, "signature">

@@ -89,11 +89,11 @@ export class GrabAnyTransactionFactory extends TransactionFactory<GrabAnyTransac
     }
 
     const storage = body.storage;
-    if (storage.key !== "transactionSignature") {
+    if (storage.key !== "transactionSubId") {
       throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `storage.key ${storage.key}`,
         to_target: "storage",
-        be_compare_prop: "transactionSignature",
+        be_compare_prop: "transactionSubId",
         ...Function_Exception_Detail,
       });
     }
@@ -111,42 +111,42 @@ export class GrabAnyTransactionFactory extends TransactionFactory<GrabAnyTransac
       target: "grabAnyAsset",
     } as const;
 
-    const { blockSignature, transactionSignature } = grabAny;
+    const { blockId, transactionSubId } = grabAny;
 
-    if (!blockSignature) {
+    if (!blockId) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
-        prop: "blockSignature",
+        prop: "blockId",
         ...GrabAnyAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isValidSignature(blockSignature)) {
+    if (!baseHelper.isValidBlockId(blockId)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: `blockSignature ${blockSignature}`,
-        type: "block signature",
+        prop: `blockId ${blockId}`,
+        type: "block id",
         ...GrabAnyAsset_Exception_Detail,
       });
     }
 
-    if (!transactionSignature) {
+    if (!transactionSubId) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
-        prop: "transactionSignature",
+        prop: "transactionSubId",
         ...GrabAnyAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isValidSignature(transactionSignature)) {
+    if (!baseHelper.isValidTransactionId(transactionSubId)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: `transactionSignature ${transactionSignature}`,
-        type: "transaction signature",
+        prop: `transactionSubId ${transactionSubId}`,
+        type: "transaction id",
         ...GrabAnyAsset_Exception_Detail,
       });
     }
 
-    if (storage.value !== transactionSignature) {
+    if (storage.value !== transactionSubId) {
       throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `storage.value ${storage.value}`,
-        be_compare_prop: `transactionSignature ${transactionSignature}`,
+        be_compare_prop: `transactionSubId ${transactionSubId}`,
         to_target: "storage",
         be_target: "grabAsset",
         ...Function_Exception_Detail,
@@ -196,7 +196,7 @@ export class GrabAnyTransactionFactory extends TransactionFactory<GrabAnyTransac
         !(await this.transactionHelper.verifyCiphertextSignature({
           secretPublicKey: parseHexToArrayBuffer(publicKey),
           ciphertextSignatureBuffer: parseHexToArrayBuffer(signature),
-          transactionSignatureBuffer: parseHexToArrayBuffer(transactionSignature),
+          transactionSubIdBuffer: parseHexToArrayBuffer(transactionSubId),
           senderId: body.senderId,
         }))
       ) {
@@ -246,7 +246,7 @@ export class GrabAnyTransactionFactory extends TransactionFactory<GrabAnyTransac
     return wrapTaskList((taskList) => {
       const { chainAssetInfoHelper } = this;
       const { senderId, recipientId, senderPublicKeyBuffer, asset } = transaction;
-      const { amount, giftTransactionSignatureBuffer, giftAny } = asset.grabAny;
+      const { amount, transactionSubIdBuffer, giftAny } = asset.grabAny;
       const { assetType, parentAssetType, sourceChainMagic, sourceChainName } = giftAny;
 
       const assetInfo = chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
@@ -263,7 +263,7 @@ export class GrabAnyTransactionFactory extends TransactionFactory<GrabAnyTransac
             assetInfo,
             amount,
             sourceAmount: amount,
-            frozenIdBuffer: giftTransactionSignatureBuffer,
+            frozenIdBuffer: transactionSubIdBuffer,
             recipientId, // 资产冻结账户
           },
         });
@@ -324,7 +324,7 @@ export class GrabAnyTransactionFactory extends TransactionFactory<GrabAnyTransac
               assetInfo: chainAssetInfo,
               amount: taxAssetPrealnum,
               sourceAmount: taxAssetPrealnum,
-              frozenIdBuffer: giftTransactionSignatureBuffer,
+              frozenIdBuffer: transactionSubIdBuffer,
               recipientId, // 资产冻结账户
             },
           });

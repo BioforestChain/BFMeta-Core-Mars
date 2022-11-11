@@ -29,9 +29,33 @@ declare namespace BFChainCore {
     /**事件的索引值，提供额外查询使用的字段值 */
     value: string;
   }
-  interface TransactionJSON<AssetJSON extends object = object> {
-    /**事件版本号 */
-    version: number;
+  interface EnvironmentParametersJSON {
+    /**事件事件戳 */
+    timestamp: number;
+    /**事件发起区块高度 */
+    applyBlockHeight: number;
+    /**事件有效区块高度 */
+    effectiveBlockHeight: number;
+    /**事件来源 ip */
+    sourceIP?: string;
+    /**事件难度噪点 */
+    nonce: number;
+  }
+  type SubEnvironmentParametersJSON = {
+    /**事件事件戳 */
+    timestamp?: number;
+    /**事件发起区块高度 */
+    applyBlockHeight?: number;
+    /**事件有效区块高度 */
+    effectiveBlockHeight?: number;
+    /**事件来源 ip */
+    sourceIP?: string;
+  };
+  interface SubjectiveParametersJSON<AssetJSON extends object = object> {
+    /**事件的唯一标识 */
+    subId: string;
+    /**事件的环境变量 */
+    subEnvParams: SubEnvironmentParametersJSON;
     /**事件类型 */
     type: string;
     /**事件的发起账户地址，base58 编码的 16 进制字符串 */
@@ -42,33 +66,21 @@ declare namespace BFChainCore {
     senderSecondPublicKey?: string;
     /**事件的接收账户地址，base58 编码的 16 进制字符串 */
     recipientId?: string;
-    /**事件的接收范围类型 */
+    /**事件最大手续费 */
+    maxFee: string;
+    /**事件接收范围类型 */
     rangeType: BFChainCore.RANGE_TYPE;
     /**事件的接收范围 */
     range: string[];
-    /**事件的手续费 */
-    fee: string;
-    /**事件的时间戳 */
-    timestamp: number;
     /**事件所属的 dappid */
     dappid?: string;
     /**事件所属的位名 */
     lns?: string;
-    /**事件的来源IP，IPv4或者IPv6，不包含头尾(例如: 127.0.0.1)，默认为空 */
-    sourceIP?: string;
     /**事件的来源链网络标识符 */
     fromMagic: string;
     /**事件的去往链网络标识符 */
     toMagic: string;
-    /**事件的发起高度 */
-    applyBlockHeight: number;
-    /**事件的有效高度 */
-    effectiveBlockHeight: number;
-    /**事件的签名 */
-    signature: string;
-    /**事件的安全签名 */
-    signSignature?: string;
-    /**事件的备注信息 */
+    /**事件备注信息 */
     remark: { [key: string]: string };
     /**实际事件部分 */
     asset: AssetJSON;
@@ -78,8 +90,20 @@ declare namespace BFChainCore {
     storageKey?: TransactionStorageJSON["key"];
     /**事件的索引值，提供额外查询使用的字段值 */
     storageValue?: TransactionStorageJSON["value"];
-    /**事件 pow 噪点 */
-    nonce: number;
+  }
+  interface TransactionJSON<AssetJSON extends object = object>
+    extends EnvironmentParametersJSON,
+      SubjectiveParametersJSON<AssetJSON> {
+    /**事件版本号 */
+    version: number;
+    /**事件手续费 */
+    fee: string;
+    /**事件 id */
+    trsId: string;
+    /**事件签名 */
+    signature: string;
+    /**事件安全签名 */
+    signSignature?: string;
   }
   //#endregion
 
@@ -233,10 +257,10 @@ declare namespace BFChainCore {
   }
 
   interface GrabAssetJSON {
-    /**赠送事件所在的区块签名，128 个字节的 16 进制字符串 */
-    blockSignature: string;
-    /**赠送事件的签名，128 个字节的 16 进制字符串 */
-    transactionSignature: string;
+    /**赠送事件所在的区块 id，128 个字节的 16 进制字符串 */
+    blockId: string;
+    /**赠送事件的唯一标识 subId，128 个字节的 16 进制字符串 */
+    transactionSubId: string;
     /**根据共识规则计算出来的：抢到的金额 */
     amount: string;
     /**用于校验身份的密文签名，如果需要的话 */
@@ -273,11 +297,11 @@ declare namespace BFChainCore {
     trustAsset: TrustAssetJSON;
   }
   interface SignForAssetJSON {
-    /**见证交易的签名，*/
-    transactionSignature: string;
-    /**见证交易的发起账户地址，base58 编码的 16 进制字符串 */
+    /**见证事件的唯一标识 subId*/
+    transactionSubId: string;
+    /**见证事件的发起账户地址，base58 编码的 16 进制字符串 */
     trustSenderId: string;
-    /**见证交易的接收账户地址，base58 编码的 16 进制字符串 */
+    /**见证事件的接收账户地址，base58 编码的 16 进制字符串 */
     trustRecipientId: string;
     /**见证信息 */
     trustAsset: TrustAssetJSON;
@@ -316,8 +340,8 @@ declare namespace BFChainCore {
   }
 
   interface BeExchangeAssetJSON {
-    /**发起权益交换的事件签名，128 个字节的 16 进制字符串 */
-    transactionSignature: string;
+    /**发起权益交换的事件的唯一标识，128 个字节的 16 进制字符串 */
+    transactionSubId: string;
     /**加密密钥生成的签名数组 */
     ciphertextSignature?: AccountSignatureJSON;
     /**用于交换的权益数量，权益数量由0-9共十个数字组成，权益数量不包含小数点 */
@@ -359,8 +383,8 @@ declare namespace BFChainCore {
     toExchangeSpecialAsset: ToExchangeSpecialAssetJSON;
   }
   interface BeExchangeSpecialAssetJSON {
-    /**发起资产交换的事件签名，128 个字节的 16 进制字符串 */
-    transactionSignature: string;
+    /**发起资产交换的事件的唯一标识，128 个字节的 16 进制字符串 */
+    transactionSubId: string;
     /**加密密钥生成的签名数组 */
     ciphertextSignature?: AccountSignatureJSON;
     /**资产交换信息 */
@@ -468,7 +492,7 @@ declare namespace BFChainCore {
 
   interface DestoryEntityJSON {
     /**要销毁的非同质资产发行事件的唯一标识符 */
-    transactionSignature: string;
+    transactionSubId: string;
     /**要销毁的非同质资产来源链名，小写字母组成，3-8 位 */
     sourceChainName: string;
     /**要销毁的非同质资产来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
@@ -534,10 +558,10 @@ declare namespace BFChainCore {
   }
 
   interface GrabAnyJSON {
-    /**赠送事件所在的区块签名，128 个字节的 16 进制字符串 */
-    blockSignature: string;
-    /**赠送事件的签名，128 个字节的 16 进制字符串 */
-    transactionSignature: string;
+    /**赠送事件所在的区块 id，128 个字节的 16 进制字符串 */
+    blockId: string;
+    /**赠送事件的唯一标识，128 个字节的 16 进制字符串 */
+    transactionSubId: string;
     /**根据共识规则计算出来的：抢到的金额 */
     amount: string;
     /**用于校验身份的密文签名，如果需要的话 */
@@ -596,8 +620,8 @@ declare namespace BFChainCore {
   }
 
   interface BeExchangeAnyJSON {
-    /**发起资产交换的事件签名，128 个字节的 16 进制字符串 */
-    transactionSignature: string;
+    /**发起资产交换的事件的唯一标识，128 个字节的 16 进制字符串 */
+    transactionSubId: string;
     /**加密密钥生成的签名数组 */
     ciphertextSignature?: AccountSignatureJSON;
     /**用于交换的资产数量，资产数量由0-9共十个数字组成，资产数量不包含小数点 */
@@ -682,8 +706,8 @@ declare namespace BFChainCore {
   }
 
   interface BeExchangeAnyMultiJSON {
-    /**发起资产交换的事件签名，128 个字节的 16 进制字符串 */
-    transactionSignature: string;
+    /**发起资产交换的事件唯一标识，128 个字节的 16 进制字符串 */
+    transactionSubId: string;
     /**加密密钥生成的签名数组 */
     ciphertextSignature?: AccountSignatureJSON;
     /**用于交换的资产信息 */

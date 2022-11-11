@@ -30,21 +30,21 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const beExchangeSpecialAsset = transaction.asset.beExchangeSpecialAsset;
-    const { transactionSignature } = beExchangeSpecialAsset;
-    const toExchangeSpecialAssetJson = (await transactionGetterHelper.getTransactionBySignature(
-      transactionSignature,
+    const { transactionSubId } = beExchangeSpecialAsset;
+    const toExchangeSpecialAssetJson = (await transactionGetterHelper.getTransactionBySubId(
+      transactionSubId,
       this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
     )) as BFChainCore.ToExchangeSpecialAssetTransactionJSON | undefined;
     if (!toExchangeSpecialAssetJson) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST_OR_EXPIRED, {
-        prop: `Transaction with signature ${transactionSignature}`,
+        prop: `Transaction with subId ${transactionSubId}`,
         target: "blockChain",
       });
     }
 
     if (toExchangeSpecialAssetJson.type !== this.transactionHelper.TO_EXCHANGE_SPECIAL_ASSET) {
       throw new ConsensusException(ERROR_LIST.NOT_EXPECTED_RELATED_TRANSACTION, {
-        signature: `${transactionSignature}`,
+        subId: `${transactionSubId}`,
       });
     }
 
@@ -232,7 +232,7 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
     });
     if (isSecondary) {
       throw new ConsensusException(ERROR_LIST.CAN_NOT_SECONDARY_TRANSACTION, {
-        reason: `Can not secondary exchange special asset, sender ${transaction.senderId} exchange transaction signature ${transaction.storageValue}`,
+        reason: `Can not secondary exchange special asset, sender ${transaction.senderId} exchange transaction subId ${transaction.storageValue}`,
       });
     }
   }
@@ -243,10 +243,10 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
    * @param transaction
    */
   getLockData(transaction: BeExchangeSpecialAssetTransaction) {
-    const { transactionSignature, exchangeSpecialAsset } = transaction.asset.beExchangeSpecialAsset;
+    const { transactionSubId, exchangeSpecialAsset } = transaction.asset.beExchangeSpecialAsset;
     const { exchangeAssetType, exchangeDirection, toExchangeAsset, beExchangeAsset } =
       exchangeSpecialAsset;
-    const locks: string[] = [transactionSignature];
+    const locks: string[] = [transactionSubId];
     if (exchangeDirection === EXCHANGE_DIRECTION.ASSET_FROM_SENDER) {
       if (
         exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID ||

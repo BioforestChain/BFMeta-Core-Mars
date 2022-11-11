@@ -26,16 +26,15 @@ export class DestoryEntityLogicVerifier extends TransactionLogicVerifier {
   ) {
     const destoryEntity = transaction.asset.destoryEntity;
 
-    const { transactionSignature } = destoryEntity;
-    const trsWithBlockSign =
-      await transactionGetterHelper.getTransactionAndBlockSignatureBySignature(
-        transactionSignature,
-        this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
-      );
+    const { transactionSubId } = destoryEntity;
+    const trsWithBlockSign = await transactionGetterHelper.getTransactionAndBlockIdBySubId(
+      transactionSubId,
+      this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
+    );
 
     if (!trsWithBlockSign) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST_OR_EXPIRED, {
-        prop: `Transaction with signature ${transactionSignature}`,
+        prop: `Transaction with subId ${transactionSubId}`,
         target: "destoryEntity",
       });
     }
@@ -47,7 +46,7 @@ export class DestoryEntityLogicVerifier extends TransactionLogicVerifier {
       trs.type !== this.transactionHelper.ISSUE_ENTITY_MULTI
     ) {
       throw new ConsensusException(ERROR_LIST.NOT_EXPECTED_RELATED_TRANSACTION, {
-        signature: `${transactionSignature}`,
+        subId: `${transactionSubId}`,
       });
     }
 

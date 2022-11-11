@@ -135,10 +135,7 @@ export class BlockForkChecker {
        * 我们之前都是一样,时间戳也是一样的,说明打块人是同一个
        * 这时候就依次选择参与度更高 交易量更多 手续费更多 signature更骚 的区块
        */
-      if (
-        pc1.previousBlockSignature === pc2.previousBlockSignature &&
-        pc1.timestamp === pc2.timestamp
-      ) {
+      if (pc1.previousBlockId === pc2.previousBlockId && pc1.timestamp === pc2.timestamp) {
         if (pc1.blockParticipation > pc2.blockParticipation) {
           return BLOCK_CHAIN_PLOT.KEEP;
         } else if (pc1.blockParticipation === pc2.blockParticipation) {
@@ -148,9 +145,9 @@ export class BlockForkChecker {
             if (pc1.totalFee > pc2.totalFee) {
               return BLOCK_CHAIN_PLOT.KEEP;
             } else if (pc1.totalFee === pc2.totalFee) {
-              if (pc1.signature > pc2.signature) {
+              if (pc1.blockId > pc2.blockId) {
                 return BLOCK_CHAIN_PLOT.KEEP;
-              } else if (pc1.signature === pc2.signature) {
+              } else if (pc1.blockId === pc2.blockId) {
                 return BLOCK_CHAIN_PLOT.MERGE;
               }
             }
@@ -346,27 +343,27 @@ export class BlockForkChecker {
      */
     if (pc1.height < pc2.height) {
       /// 入侵者的链更长
-      const pc4PreviousBlockSignature =
+      const pc4PreviousBlockId =
         pc1.height === pc2.height - 1
           ? /// 如果新区块是我现在所需要的下一个区块
-            pc2.previousBlockSignature
-          : /// 使用forceGetBlockSignatureByHeight判定等高的区块signature是否一致，这样意味着下一个区块的前块signature
-            await this.blockHelper.forceGetBlockSignatureByHeight(pc1.height, blockGetterHelper2);
+            pc2.previousBlockId
+          : /// 使用 forceGetBlockIdByHeight 判定等高的区块 blockId 是否一致，这样意味着下一个区块的前块 blockId
+            await this.blockHelper.forceGetBlockIdByHeight(pc1.height, blockGetterHelper2);
 
-      if (pc4PreviousBlockSignature === pc1.signature) {
-        /// 因为前块signature是匹配的，所以直接信任新区快就行了
+      if (pc4PreviousBlockId === pc1.blockId) {
+        /// 因为前块 blockId 是匹配的，所以直接信任新区快就行了
         return $MERGE;
       }
       /// 如果新区块的前块ID与我的区块不同，那么进入回滚判定
       return ROLLBACK$();
     } else if (pc1.height === pc2.height) {
       /// 二者等长
-      if (pc1.signature === pc2.signature) {
+      if (pc1.blockId === pc2.blockId) {
         /// 二者完全相同
         return $MERGE;
       }
       /// 区块ID不一样
-      if (pc1.previousBlockSignature === pc2.previousBlockSignature) {
+      if (pc1.previousBlockId === pc2.previousBlockId) {
         /// 前块ID相等的情况下，两个区块直接进行优先级对比。这里是一个优化过的分叉判定，否则直接 FORK 就行了
         const checkedPlot = this.checkSameHeightBlockPlot_(pc1, pc2);
         if (checkedPlot === BLOCK_CHAIN_PLOT.FORK) {

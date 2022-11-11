@@ -585,12 +585,39 @@ export class BaseHelper {
   }
 
   /**
+   * 签名是否合法
+   *
+   * @param signature
+   */
+  isValidSignature(signature: any) {
+    return this.isValidBufferSize(signature, 64);
+  }
+
+  /**
+   * Id是否合法
+   *
+   * @param signature
+   */
+  isValidId(id: any) {
+    return this.isValidBufferSize(id, 64);
+  }
+
+  /**
    * 交易 signature 是否合法
    *
    * @param signature
    */
   isValidTransactionSignature(signature: string) {
     return this.isValidSignature(signature);
+  }
+
+  /**
+   * 交易 id 是否合法
+   *
+   * @param trsId
+   */
+  isValidTransactionId(trsId: string) {
+    return this.isValidId(trsId);
   }
 
   /**
@@ -603,12 +630,12 @@ export class BaseHelper {
   }
 
   /**
-   * 签名是否合法
+   * 区块 id 是否合法
    *
-   * @param signature
+   * @param id
    */
-  isValidSignature(signature: any) {
-    return this.isValidBufferSize(signature, 64);
+  isValidBlockId(id: string) {
+    return this.isValidId(id);
   }
 
   /**

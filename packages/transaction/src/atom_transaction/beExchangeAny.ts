@@ -90,11 +90,11 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
     }
 
     const storage = body.storage;
-    if (storage.key !== "transactionSignature") {
+    if (storage.key !== "transactionSubId") {
       throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `storage.key ${storage.key}`,
         to_target: "storage",
-        be_compare_prop: "transactionSignature",
+        be_compare_prop: "transactionSubId",
         ...Function_Exception_Detail,
       });
     }
@@ -112,26 +112,26 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
       target: "beExchangeAny",
     } as const;
 
-    const { transactionSignature } = beExchangeAny;
-    if (!transactionSignature) {
+    const { transactionSubId } = beExchangeAny;
+    if (!transactionSubId) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
-        prop: "transactionSignature",
+        prop: "transactionSubId",
         ...BeExchangeAnyAsset_Exception_Detail,
       });
     }
 
-    if (!baseHelper.isValidSignature(transactionSignature)) {
+    if (!baseHelper.isValidTransactionId(transactionSubId)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: `transactionSignature ${transactionSignature}`,
-        type: "transaction signature",
+        prop: `transactionSubId ${transactionSubId}`,
+        type: "transaction id",
         ...BeExchangeAnyAsset_Exception_Detail,
       });
     }
 
-    if (storage.value !== transactionSignature) {
+    if (storage.value !== transactionSubId) {
       throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `storage.value ${storage.value}`,
-        be_compare_prop: `transactionSignature ${transactionSignature}`,
+        be_compare_prop: `transactionSubId ${transactionSubId}`,
         to_target: "storage",
         be_target: "beExchangeAny",
         ...Function_Exception_Detail,
@@ -277,7 +277,7 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
         !(await this.transactionHelper.verifyCiphertextSignature({
           secretPublicKey: parseHexToArrayBuffer(publicKey),
           ciphertextSignatureBuffer: parseHexToArrayBuffer(signature),
-          transactionSignatureBuffer: parseHexToArrayBuffer(transactionSignature),
+          transactionSubIdBuffer: parseHexToArrayBuffer(transactionSubId),
           senderId: body.senderId,
         }))
       ) {
@@ -327,7 +327,7 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
       const { senderId, recipientId, senderPublicKeyBuffer } = transaction;
       const {
-        transactionSignatureBuffer,
+        transactionSubIdBuffer,
         exchangeAny,
         toExchangeAssetPrealnum,
         beExchangeAssetPrealnum,
@@ -360,7 +360,7 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
             assetInfo: toAssetInfo,
             amount: toExchangeAssetPrealnum,
             sourceAmount: toExchangeAssetPrealnum,
-            frozenIdBuffer: transactionSignatureBuffer,
+            frozenIdBuffer: transactionSubIdBuffer,
             recipientId, // 资产冻结账户
           },
         });
@@ -428,7 +428,7 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
               assetInfo: chainAssetInfo,
               amount: taxAssetPrealnum,
               sourceAmount: taxAssetPrealnum,
-              frozenIdBuffer: transactionSignatureBuffer,
+              frozenIdBuffer: transactionSubIdBuffer,
               recipientId, // 资产冻结账户
             },
           });

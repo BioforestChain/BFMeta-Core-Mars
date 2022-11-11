@@ -26,16 +26,15 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
   ) {
     const grabAsset = transaction.asset.grabAsset;
 
-    const { transactionSignature } = grabAsset;
-    const trsWithBlockSign =
-      await transactionGetterHelper.getTransactionAndBlockSignatureBySignature(
-        transactionSignature,
-        this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
-      );
+    const { transactionSubId } = grabAsset;
+    const trsWithBlockSign = await transactionGetterHelper.getTransactionAndBlockIdBySubId(
+      transactionSubId,
+      this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
+    );
 
     if (!trsWithBlockSign) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST_OR_EXPIRED, {
-        prop: `Transaction with signature ${transactionSignature}`,
+        prop: `Transaction with subId ${transactionSubId}`,
         target: "grabAsset",
       });
     }
@@ -44,12 +43,12 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
 
     if (trs.type !== this.transactionHelper.GIFT_ASSET) {
       throw new ConsensusException(ERROR_LIST.NOT_EXPECTED_RELATED_TRANSACTION, {
-        signature: `${transactionSignature}`,
+        subId: `${transactionSubId}`,
       });
     }
 
     this.isValidRecipientId(transaction, trs);
-    this.isBlockSignatureMatch(transaction, trsWithBlockSign.blockSignature);
+    this.isBlockIdMatch(transaction, trsWithBlockSign.blockId);
     this.isDependentTransactionMatch(transaction, trs);
     await this.isValidAmount(transaction);
 
@@ -93,7 +92,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
   private async isValidAmount(transaction: GrabAssetTransaction) {
     const { senderId, recipientId, asset } = transaction;
     const grabAsset = asset.grabAsset;
-    const { giftAsset, blockSignatureBuffer, giftTransactionSignatureBuffer } = grabAsset;
+    const { giftAsset, blockIdBuffer, transactionSubIdBuffer } = grabAsset;
 
     /**校验金额 */
     let should_grap_amount_BI: bigint | undefined;
@@ -107,8 +106,8 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
       case GIFT_DISTRIBUTION_RULE.RANDOM:
         should_grap_amount_BI = await this.transactionHelper.calcGrabRandomGiftAssetNumber(
           senderId,
-          blockSignatureBuffer,
-          giftTransactionSignatureBuffer,
+          blockIdBuffer,
+          transactionSubIdBuffer,
           recipientId,
           giftAsset.amount,
           giftAsset.totalGrabableTimes,
@@ -117,8 +116,8 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
       case GIFT_DISTRIBUTION_RULE.RECIPIENT_RANDOM:
         should_grap_amount_BI = await this.transactionHelper.calcGrabRandomGiftAssetNumber(
           senderId,
-          blockSignatureBuffer,
-          giftTransactionSignatureBuffer,
+          blockIdBuffer,
+          transactionSubIdBuffer,
           recipientId,
           giftAsset.amount,
           giftAsset.totalGrabableTimes,
@@ -167,13 +166,13 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
    * 交易所在的区块签名是否匹配
    *
    * @param transaction
-   * @param blockSignature
+   * @param blockId
    */
-  private isBlockSignatureMatch(transaction: GrabAssetTransaction, blockSignature: string) {
-    if (blockSignature !== transaction.asset.grabAsset.blockSignature) {
+  private isBlockIdMatch(transaction: GrabAssetTransaction, blockId: string) {
+    if (blockId !== transaction.asset.grabAsset.blockId) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-        to_compare_prop: `blockSignature ${blockSignature}`,
-        be_compare_prop: `blockSignature ${transaction.asset.grabAsset.blockSignature}`,
+        to_compare_prop: `blockId ${blockId}`,
+        be_compare_prop: `blockId ${transaction.asset.grabAsset.blockId}`,
         to_target: "grabAsset",
         be_target: "blockChain",
       });
@@ -289,7 +288,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
     });
     if (isSecondary) {
       throw new ConsensusException(ERROR_LIST.CAN_NOT_SECONDARY_TRANSACTION, {
-        reason: `Can not secondary grab asset, sender ${transaction.senderId} gift transaction signature ${transaction.storageValue}`,
+        reason: `Can not secondary grab asset, sender ${transaction.senderId} gift transaction subId ${transaction.storageValue}`,
       });
     }
   }
@@ -300,7 +299,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    */
   getLockData(transaction: GrabAssetTransaction) {
-    const { transactionSignature } = transaction.asset.grabAsset;
-    return [transactionSignature];
+    const { transactionSubId } = transaction.asset.grabAsset;
+    return [transactionSubId];
   }
 }
