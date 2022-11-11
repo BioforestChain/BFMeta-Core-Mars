@@ -66,10 +66,9 @@ quq.age = 66;
     TransferAssetTransactionFactory,
     {
       version: bfchainCore.config.version,
+
+      subEnvParams: {},
       type: bfchainCore.transactionHelper.TRANSFER_ASSET,
-      applyBlockHeight: 2,
-      effectiveBlockHeight: 100,
-      timestamp: 500,
       senderId: await bfchainCore.accountBaseHelper.getAddressFromPublicKey(
         (
           await bfchainCore.accountBaseHelper.createSecretKeypair("1")
@@ -78,6 +77,7 @@ quq.age = 66;
       senderPublicKey: (
         await bfchainCore.accountBaseHelper.createSecretKeypair("1")
       ).publicKey.toString("hex"),
+      maxFee: "100000000",
       rangeType: RANGE_TYPE.EMPTY,
       range: [
         await bfchainCore.accountBaseHelper.getAddressFromPublicKey(
@@ -86,10 +86,14 @@ quq.age = 66;
           ).publicKey,
         ),
       ],
-      fee: "23",
       fromMagic: bfchainCore.config.magic,
       toMagic: bfchainCore.config.magic,
       remark: {},
+
+      fee: "23",
+      timestamp: 500,
+      applyBlockHeight: 2,
+      effectiveBlockHeight: 100,
     },
     {
       transferAsset: {

@@ -49,27 +49,31 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
     const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
     const data: BFChainCore.TxBodyJSON = {
       version: bfchainCore.config.version,
+
+      subEnvParams: {},
       type: bfchainCore.transactionHelper.TRANSFER_ASSET, // 交易类型
       senderId: sender.address, // 发起者地址
       senderPublicKey: sender.publicKey, // 发起者公钥
       senderSecondPublicKey: "", // 发起者二次公钥
+      maxFee: "100000000",
       recipientId,
       rangeType: RANGE_TYPE.EMPTY,
       range: [], // 接收资产账户地址
-      timestamp: 770880, // 生成交易时间戳
-      fee: "100", // 交易手续费
       remark: {}, // 交易备注，任意信息
       dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
       lns: bfchainCore.config.genesisLocationName,
-      sourceIP: "127.0.0.1", // 交易来源 ip
       fromMagic: "5F720C81E82CFC99", // 交易来源链的 magic
       toMagic: "5F720C81E82CFC99", // 交易去往链的 magic
-      applyBlockHeight: 10086, // 交易发起高度
-      effectiveBlockHeight: 10100,
       storage: {
         key: "assetType",
         value: assetType,
       },
+
+      fee: "100", // 交易手续费
+      timestamp: 770880, // 生成交易时间戳
+      sourceIP: "127.0.0.1", // 交易来源 ip
+      applyBlockHeight: 10086, // 交易发起高度
+      effectiveBlockHeight: 10100,
     };
     let secondKeypair;
     if (sender.secondSecret) {
@@ -127,26 +131,30 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
     const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
     const data: BFChainCore.TxBodyJSON = {
       version: bfchainCore.config.version,
+
+      subEnvParams: {},
       type: bfchainCore.transactionHelper.DESTORY_ASSET, // 交易类型
       senderId: sender.address, // 发起者地址
       senderPublicKey: sender.publicKey, // 发起者公钥
       senderSecondPublicKey: "", // 发起者二次公钥
+      maxFee: "100000000",
       rangeType: RANGE_TYPE.EMPTY,
       range: [],
-      timestamp: 770880, // 生成交易时间戳
-      fee: "100", // 交易手续费
       remark: { remark: "body.remark" }, // 交易备注，任意信息
       dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
       lns: bfchainCore.config.genesisLocationName,
-      sourceIP: "127.0.0.1", // 交易来源 ip
       fromMagic: "5F720C81E82CFC99", // 交易来源链的 magic
       toMagic: "5F720C81E82CFC99", // 交易去往链的 magic
-      applyBlockHeight: 10086, // 交易发起高度
-      effectiveBlockHeight: 10100,
       storage: {
         key: "assetType",
         value: "ZEK",
       },
+
+      fee: "100", // 交易手续费
+      timestamp: 770880, // 生成交易时间戳
+      sourceIP: "127.0.0.1", // 交易来源 ip
+      applyBlockHeight: 10086, // 交易发起高度
+      effectiveBlockHeight: 10100,
     };
     let secondKeypair;
     if (sender.secondSecret) {
@@ -203,20 +211,24 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
     const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
     const data: BFChainCore.TxBodyJSON = {
       version: bfchainCore.config.version,
+
+      subEnvParams: {},
       type: bfchainCore.transactionHelper.TO_EXCHANGE_ASSET, // 交易类型
       senderId: sender.address, // 发起者地址
       senderPublicKey: sender.publicKey, // 发起者公钥
       senderSecondPublicKey: "", // 发起者二次公钥
+      maxFee: "100000000",
       rangeType: RANGE_TYPE.EMPTY,
       range: [], // 接收者账户
-      timestamp: 770880, // 生成交易时间戳
-      fee: "100", // 交易手续费
       remark: { remark: "body.remark" }, // 交易备注，任意信息
       dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
       lns: bfchainCore.config.genesisLocationName,
-      sourceIP: "127.0.0.1", // 交易来源 ip
       fromMagic: "5F720C81E82CFC99", // 交易来源链的 magic
       toMagic: "5F720C81E82CFC99", // 交易去往链的 magic
+
+      fee: "100", // 交易手续费
+      timestamp: 770880, // 生成交易时间戳
+      sourceIP: "127.0.0.1", // 交易来源 ip
       applyBlockHeight: 10086, // 交易发起高度
       effectiveBlockHeight: 10100,
     };
@@ -271,27 +283,31 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
     const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
     const data: BFChainCore.TxBodyJSON = {
       version: bfchainCore.config.version,
+
+      subEnvParams: {},
       type: bfchainCore.transactionHelper.BE_EXCHANGE_ASSET, // 交易类型
       senderId: sender.address, // 发起者地址
       senderPublicKey: sender.publicKey, // 发起者公钥
       senderSecondPublicKey: "", // 发起者二次公钥
+      maxFee: "100000000",
       recipientId: toExchangeAssetTrs.senderId,
       rangeType: RANGE_TYPE.EMPTY,
       range: [],
-      timestamp: 770880, // 生成交易时间戳
-      fee: "100", // 交易手续费
       remark: { remark: "body.remark" }, // 交易备注，任意信息
       dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
       lns: bfchainCore.config.genesisLocationName,
-      sourceIP: "127.0.0.1", // 交易来源 ip
       fromMagic: "5F720C81E82CFC99", // 交易来源链的 magic
       toMagic: "5F720C81E82CFC99", // 交易去往链的 magic
-      applyBlockHeight: 10086, // 交易发起高度
-      effectiveBlockHeight: 10100,
       storage: {
         key: "transactionSignature",
         value: toExchangeAssetTrs.signature,
       },
+
+      fee: "100", // 交易手续费
+      timestamp: 770880, // 生成交易时间戳
+      sourceIP: "127.0.0.1", // 交易来源 ip
+      applyBlockHeight: 10086, // 交易发起高度
+      effectiveBlockHeight: 10100,
     };
     let secondKeypair;
     if (sender.secondSecret) {
@@ -311,7 +327,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
       data,
       {
         beExchangeAsset: {
-          transactionSignature: toExchangeAssetTrs.signature,
+          transactionSubId: toExchangeAssetTrs.subId,
           toExchangeNumber: jsbiHelper
             .multiplyRoundFraction("50", {
               numerator: exchangeRate.nextWeight,
@@ -358,20 +374,24 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
     const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
     const data: BFChainCore.TxBodyJSON = {
       version: bfchainCore.config.version,
+
+      subEnvParams: {},
       type: bfchainCore.transactionHelper.TO_EXCHANGE_SPECIAL_ASSET, // 交易类型
       senderId: sender.address, // 发起者地址
       senderPublicKey: sender.publicKey, // 发起者公钥
       senderSecondPublicKey: "", // 发起者二次公钥
+      maxFee: "100000000",
       rangeType: RANGE_TYPE.EMPTY,
       range: [],
-      timestamp: 770880, // 生成交易时间戳
-      fee: "78622", // 交易手续费
       remark: { remark: "body.remark" }, // 交易备注，任意信息
       dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
       lns: bfchainCore.config.genesisLocationName,
-      sourceIP: "127.0.0.1", // 交易来源 ip
       fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
       toMagic: bfchainCore.config.magic, // 交易去往链的 magic
+
+      fee: "78622", // 交易手续费
+      timestamp: 770880, // 生成交易时间戳
+      sourceIP: "127.0.0.1", // 交易来源 ip
       applyBlockHeight: 10086, // 交易发起高度
       effectiveBlockHeight: 10100,
     };
@@ -420,27 +440,31 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
     const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
     const data: BFChainCore.TxBodyJSON = {
       version: bfchainCore.config.version,
+
+      subEnvParams: {},
       type: bfchainCore.transactionHelper.BE_EXCHANGE_SPECIAL_ASSET, // 交易类型
       senderId: sender.address, // 发起者地址
       senderPublicKey: sender.publicKey, // 发起者公钥
       senderSecondPublicKey: "", // 发起者二次公钥
+      maxFee: "100000000",
       recipientId: toExchangeSpecialAssetTrs.senderId,
       rangeType: RANGE_TYPE.EMPTY,
       range: [],
-      timestamp: 770880, // 生成交易时间戳
-      fee: "78622", // 交易手续费
       remark: { remark: "body.remark" }, // 交易备注，任意信息
       dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
       lns: bfchainCore.config.genesisLocationName,
-      sourceIP: "127.0.0.1", // 交易来源 ip
       fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
       toMagic: bfchainCore.config.magic, // 交易去往链的 magic
-      applyBlockHeight: 10086, // 交易发起高度
-      effectiveBlockHeight: 10100,
       storage: {
         key: "transactionSignature",
         value: toExchangeSpecialAssetTrs.signature,
       },
+
+      fee: "78622", // 交易手续费
+      timestamp: 770880, // 生成交易时间戳
+      sourceIP: "127.0.0.1", // 交易来源 ip
+      applyBlockHeight: 10086, // 交易发起高度
+      effectiveBlockHeight: 10100,
     };
     let secondKeypair;
     if (sender.secondSecret) {
@@ -456,7 +480,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
     }
     const info: BFChainCore.BeExchangeSpecialAssetAssetJSON = {
       beExchangeSpecialAsset: {
-        transactionSignature: toExchangeSpecialAssetTrs.signature,
+        transactionSubId: toExchangeSpecialAssetTrs.subId,
         exchangeSpecialAsset: toExchangeSpecialAssetTrs.asset.toExchangeSpecialAsset,
       },
     };

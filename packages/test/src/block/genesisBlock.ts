@@ -154,23 +154,27 @@ async function getUsernameTransaction(sender: DelegateInfo) {
       UsernameTransactionFactory,
       {
         version: core.config.version,
+
+        subEnvParams: {},
         type: core.transactionHelper.USERNAME, // 交易类型
         senderId: sender.address, // 发起者地址
         senderPublicKey: sender.publicKey, // 发起者公钥
         senderSecondPublicKey: secondKeypair && secondKeypair.publicKey.toString("hex"), // 发起者二次公钥
+        maxFee: "666",
         rangeType: RANGE_TYPE.EMPTY,
         range: [],
-        timestamp: 0, // 生成交易时间戳
-        fee: fee === "AUTO" ? "1" : fee, // 交易手续费
         fromMagic: core.config.magic, // 交易来源链的 magic
         toMagic: core.config.magic, // 交易去往链的 magic
-        applyBlockHeight: 1, // 交易发起高度
-        effectiveBlockHeight: 1,
         remark: {},
         storage: {
           key: "alias",
           value: sender.username,
         },
+
+        fee: fee === "AUTO" ? "1" : fee, // 交易手续费
+        timestamp: 0, // 生成交易时间戳
+        applyBlockHeight: 1, // 交易发起高度
+        effectiveBlockHeight: 1,
       },
       {
         username: {
@@ -227,19 +231,23 @@ async function getDelegateTransaction(sender: DelegateInfo) {
       DelegateTransactionFactory,
       {
         version: core.config.version,
+
+        subEnvParams: {},
         type: core.transactionHelper.DELEGATE, // 交易类型
         senderId: sender.address, // 发起者地址
         senderPublicKey: sender.publicKey, // 发起者公钥
         senderSecondPublicKey: secondKeypair && secondKeypair.publicKey.toString("hex"), // 发起者二次公钥
+        maxFee: "666",
         rangeType: RANGE_TYPE.EMPTY,
         range: [],
-        timestamp: 0, // 生成交易时间戳
-        fee: fee === "AUTO" ? "1" : fee, // 交易手续费
         fromMagic: core.config.magic, // 交易来源链的 magic
         toMagic: core.config.magic, // 交易去往链的 magic
+        remark: {},
+
+        fee: fee === "AUTO" ? "1" : fee, // 交易手续费
+        timestamp: 0, // 生成交易时间戳
         applyBlockHeight: 1, // 交易发起高度
         effectiveBlockHeight: 1,
-        remark: {},
       },
       {},
       keypair,
@@ -282,17 +290,21 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
       AcceptVoteTransactionFactory,
       {
         version: core.config.version,
+
+        subEnvParams: {},
         type: core.transactionHelper.ACCEPT_VOTE, // 交易类型
         senderId: sender.address, // 发起者地址
         senderPublicKey: sender.publicKey, // 发起者公钥
         senderSecondPublicKey: secondKeypair && secondKeypair.publicKey.toString("hex"), // 发起者二次公钥
+        maxFee: "666",
         rangeType: RANGE_TYPE.EMPTY,
         range: [], // 接收账户地址
-        timestamp: 0, // 生成交易时间戳
-        fee: fee === "AUTO" ? "1" : fee, // 交易手续费
         remark: {}, // 交易备注，任意信息
         fromMagic: core.config.magic, // 交易来源链的 magic
         toMagic: core.config.magic, // 交易去往链的 magic
+
+        fee: fee === "AUTO" ? "1" : fee, // 交易手续费
+        timestamp: 0, // 生成交易时间戳
         applyBlockHeight: 1, // 交易发起高度
         effectiveBlockHeight: 1,
       },
@@ -346,23 +358,27 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
         TransferAssetTransactionFactory,
         {
           version: core.config.version,
+
+          subEnvParams: {},
           type: core.transactionHelper.TRANSFER_ASSET, // 交易类型
           senderId: genesisAccountInfo.address, // 发起者地址
           senderPublicKey: genesisAccountInfo.publicKey, // 发起者公钥
+          maxFee: "666",
           recipientId: recipient.address,
           rangeType: RANGE_TYPE.EMPTY,
           range: [], // 接收范围
-          timestamp: 0, // 生成交易时间戳
-          fee: fee === "AUTO" ? "1" : fee, // 交易手续费
           fromMagic: core.config.magic, // 交易来源链的 magic
           toMagic: core.config.magic, // 交易去往链的 magic
-          applyBlockHeight: 1, // 交易发起高度
-          effectiveBlockHeight: 1,
           remark: {},
           storage: {
             key: "assetType",
             value: core.config.assetType,
           },
+
+          fee: fee === "AUTO" ? "1" : fee, // 交易手续费
+          timestamp: 0, // 生成交易时间戳
+          applyBlockHeight: 1, // 交易发起高度
+          effectiveBlockHeight: 1,
           nonce,
         },
         {
@@ -416,23 +432,27 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
         LocationNameTransactionFactory,
         {
           version: core.config.version,
+
+          subEnvParams: {},
           type: core.transactionHelper.LOCATION_NAME, // 交易类型
           senderId: genesisAccountInfo.address, // 发起者地址
           senderPublicKey: genesisAccountInfo.publicKey, // 发起者公钥
+          maxFee: "666",
           recipientId: genesisAccountInfo.address,
           rangeType: RANGE_TYPE.EMPTY,
           range: [], // 接收范围
-          timestamp: 0, // 生成交易时间戳
-          fee: fee === "AUTO" ? "1" : fee, // 交易手续费
           fromMagic: core.config.magic, // 交易来源链的 magic
           toMagic: core.config.magic, // 交易去往链的 magic
-          applyBlockHeight: 1, // 交易发起高度
-          effectiveBlockHeight: 1,
           remark: {},
           storage: {
             key: "name",
             value: core.config.genesisLocationName,
           },
+
+          fee: fee === "AUTO" ? "1" : fee, // 交易手续费
+          timestamp: 0, // 生成交易时间戳
+          applyBlockHeight: 1, // 交易发起高度
+          effectiveBlockHeight: 1,
         },
         {
           locationName: {
@@ -492,22 +512,26 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
         SetLnsRecordValueTransactionFactory,
         {
           version: core.config.version,
+
+          subEnvParams: {},
           type: core.transactionHelper.SET_LNS_RECORD_VALUE, // 交易类型
           senderId: sender.address, // 发起者地址
           senderPublicKey: sender.publicKey, // 发起者公钥
+          maxFee: "666",
           rangeType: RANGE_TYPE.EMPTY,
           range: [], // 接收范围
-          timestamp: 0, // 生成交易时间戳
-          fee: fee === "AUTO" ? "1" : fee, // 交易手续费
           fromMagic: core.config.magic, // 交易来源链的 magic
           toMagic: core.config.magic, // 交易去往链的 magic
-          applyBlockHeight: 1, // 交易发起高度
-          effectiveBlockHeight: 1,
           remark: {},
           storage: {
             key: "name",
             value: core.config.genesisLocationName,
           },
+
+          fee: fee === "AUTO" ? "1" : fee, // 交易手续费
+          timestamp: 0, // 生成交易时间戳
+          applyBlockHeight: 1, // 交易发起高度
+          effectiveBlockHeight: 1,
         },
         {
           lnsRecordValue: {

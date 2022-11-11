@@ -101,24 +101,28 @@ export class TransactionCore {
     await transactionFactory.verifyTransactionBody(body, asset, config);
     const txbody: BFChainCore.TxBodyJSON = {
       version: body.version,
+
+      subEnvParams: body.subEnvParams || {},
       type: body.type || this.getTransactionTypeFromTransactionFactoryConstructor(TxFactory), // 交易类型
       senderId: body.senderId, // 发起者地址
       senderPublicKey: body.senderPublicKey, // 发起者公钥
       senderSecondPublicKey: body.senderSecondPublicKey, // 发起者二次公钥
       recipientId: body.recipientId || undefined,
+      maxFee: body.maxFee,
       rangeType: body.rangeType, // 接收类型
       range: body.range, // 接收人地址,必须赋值
-      timestamp: body.timestamp, // 生成交易时间戳
-      fee: body.fee, // 交易手续费
       remark: body.remark, // 交易备注，任意信息
       dappid: body.dappid || undefined, // 交易所属的 dappid
       lns: body.lns || undefined, // 交易所属的 域
-      sourceIP: body.sourceIP || undefined, // 交易来源 ip
       fromMagic: body.fromMagic, // 交易来源链的 magic
       toMagic: body.toMagic, // 交易去往链的 magic
+      storage: body.storage, // 查询用的索引存储
+
+      fee: body.fee, // 交易手续费
+      timestamp: body.timestamp, // 生成交易时间戳
       applyBlockHeight: body.applyBlockHeight, // 交易发起高度
       effectiveBlockHeight: body.effectiveBlockHeight, // 有效区块数量
-      storage: body.storage, // 查询用的索引存储
+      sourceIP: body.sourceIP || undefined, // 交易来源 ip
       nonce: body.nonce || 0,
     };
     // 生成交易体
@@ -176,24 +180,28 @@ export class TransactionCore {
     await transactionFactory.verifyTransactionBody(body, asset, config);
     const txbody: BFChainCore.TxBodyJSON = {
       version: body.version,
+
+      subEnvParams: body.subEnvParams || {},
       type: body.type || this.getTransactionTypeFromTransactionFactoryConstructor(TxFactory), // 交易类型
       senderId: body.senderId, // 发起者地址
       senderPublicKey: body.senderPublicKey, // 发起者公钥
       senderSecondPublicKey: body.senderSecondPublicKey, // 发起者二次公钥
       recipientId: body.recipientId || undefined,
+      maxFee: body.maxFee,
       rangeType: body.rangeType, // 接收类型
       range: body.range, // 接收人地址,必须赋值
-      timestamp: body.timestamp, // 生成交易时间戳
-      fee: body.fee, // 交易手续费
       remark: body.remark, // 交易备注，任意信息
       dappid: body.dappid || undefined, // 交易所属的 dappid
       lns: body.lns || undefined, // 交易所属的 域
-      sourceIP: body.sourceIP || undefined, // 交易来源 ip
       fromMagic: body.fromMagic, // 交易来源链的 magic
       toMagic: body.toMagic, // 交易去往链的 magic
+      storage: body.storage, // 查询用的索引存储
+
+      fee: body.fee, // 交易手续费
+      timestamp: body.timestamp, // 生成交易时间戳
       applyBlockHeight: body.applyBlockHeight, // 交易发起高度
       effectiveBlockHeight: body.effectiveBlockHeight, // 有效区块数量
-      storage: body.storage, // 查询用的索引存储
+      sourceIP: body.sourceIP || undefined, // 交易来源 ip
       nonce: body.nonce,
     };
     // 生成交易体

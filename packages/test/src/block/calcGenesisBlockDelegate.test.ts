@@ -31,7 +31,7 @@ function print(obj: any) {
       }
       return block;
     },
-    async getBlockBySignature() {
+    async getBlockById() {
       return {} as any;
     },
     getLastBlock() {

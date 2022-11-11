@@ -17,17 +17,21 @@ async function getAcceptVoteTransaction(sender: AccountModel, bfchainCore: BFCha
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: bfchainCore.config.version,
+
+    subEnvParams: {},
     type: bfchainCore.transactionHelper.ACCEPT_VOTE, // 交易类型
     senderId: sender.address, // 发起者地址
     senderPublicKey: sender.publicKey, // 发起者公钥
     senderSecondPublicKey: "", // 发起者二次公钥
+    maxFee: "100000000",
     rangeType: RANGE_TYPE.EMPTY,
     range: [], // 接收账户地址
-    timestamp: 770880, // 生成交易时间戳
-    fee: "10", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic
+
+    fee: "10", // 交易手续费
+    timestamp: 770880, // 生成交易时间戳
     applyBlockHeight: 1, // 交易发起高度
     effectiveBlockHeight: 10100,
   };
