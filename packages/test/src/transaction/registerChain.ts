@@ -98,23 +98,27 @@ registerchainAssetData.blockPerRound = 5;
         UsernameTransactionFactory,
         {
           version: registerBfchainCore.config.version,
+
+          subEnvParams: {},
           type: registerBfchainCore.transactionHelper.USERNAME, // 交易类型
           senderId: sender.address, // 发起者地址
           senderPublicKey: sender.publicKey, // 发起者公钥
           senderSecondPublicKey: secondKeypair && secondKeypair.publicKey.toString("hex"), // 发起者二次公钥
+          maxFee: "100000000",
           rangeType: RANGE_TYPE.EMPTY,
           range: [],
-          timestamp: 0, // 生成交易时间戳
-          fee, // 交易手续费
           fromMagic: registerBfchainCore.config.magic, // 交易来源链的 magic
           toMagic: registerBfchainCore.config.magic, // 交易去往链的 magic
-          applyBlockHeight: 1, // 交易发起高度
-          effectiveBlockHeight: 1,
           remark: { remark: "交易备注，任意信息，这个是设置用户名交易" }, // 交易备注，任意信息
           storage: {
             key: "alias",
             value: sender.username,
           },
+
+          fee, // 交易手续费
+          timestamp: 0, // 生成交易时间戳
+          applyBlockHeight: 1, // 交易发起高度
+          effectiveBlockHeight: 1,
         },
         {
           username: {
@@ -164,19 +168,23 @@ registerchainAssetData.blockPerRound = 5;
         DelegateTransactionFactory,
         {
           version: registerBfchainCore.config.version,
+
+          subEnvParams: {},
           type: registerBfchainCore.transactionHelper.DELEGATE, // 交易类型
           senderId: sender.address, // 发起者地址
           senderPublicKey: sender.publicKey, // 发起者公钥
           senderSecondPublicKey: secondKeypair && secondKeypair.publicKey.toString("hex"), // 发起者二次公钥
+          maxFee: "100000000",
           rangeType: RANGE_TYPE.EMPTY,
           range: [],
-          timestamp: 0, // 生成交易时间戳
-          fee, // 交易手续费
           fromMagic: registerBfchainCore.config.magic, // 交易来源链的 magic
           toMagic: registerBfchainCore.config.magic, // 交易去往链的 magic
+          remark: { remark: "交易备注，任意信息，这个是注册受托人交易" }, // 交易备注，任意信息
+
+          fee, // 交易手续费
+          timestamp: 0, // 生成交易时间戳
           applyBlockHeight: 1, // 交易发起高度
           effectiveBlockHeight: 1,
-          remark: { remark: "交易备注，任意信息，这个是注册受托人交易" }, // 交易备注，任意信息
         },
         {},
         keypair,
@@ -222,17 +230,21 @@ registerchainAssetData.blockPerRound = 5;
         AcceptVoteTransactionFactory,
         {
           version: registerBfchainCore.config.version,
+
+          subEnvParams: {},
           type: registerBfchainCore.transactionHelper.ACCEPT_VOTE, // 交易类型
           senderId: sender.address, // 发起者地址
           senderPublicKey: sender.publicKey, // 发起者公钥
           senderSecondPublicKey: secondKeypair && secondKeypair.publicKey.toString("hex"), // 发起者二次公钥
+          maxFee: "100000000",
           rangeType: RANGE_TYPE.EMPTY,
           range: [],
-          timestamp: 0, // 生成交易时间戳
-          fee, // 交易手续费
-          remark: { remark: "交易备注，任意信息，这个是接收投票交易" }, // 交易备注，任意信息
           fromMagic: registerBfchainCore.config.magic, // 交易来源链的 magic
           toMagic: registerBfchainCore.config.magic, // 交易去往链的 magic
+
+          fee, // 交易手续费
+          timestamp: 0, // 生成交易时间戳
+          remark: { remark: "交易备注，任意信息，这个是接收投票交易" }, // 交易备注，任意信息
           applyBlockHeight: 1, // 交易发起高度
           effectiveBlockHeight: 1,
         },
@@ -280,23 +292,27 @@ registerchainAssetData.blockPerRound = 5;
         LocationNameTransactionFactory,
         {
           version: registerBfchainCore.config.version,
+
+          subEnvParams: {},
           type: registerBfchainCore.transactionHelper.LOCATION_NAME, // 交易类型
           senderId: genesisAccountInfo.address, // 发起者地址
           senderPublicKey: genesisAccountInfo.publicKey, // 发起者公钥
+          maxFee: "100000000",
           recipientId: genesisAccountInfo.address,
           rangeType: RANGE_TYPE.EMPTY,
           range: [], // 接收范围
-          timestamp: 0, // 生成交易时间戳
-          fee: fee === "AUTO" ? "1" : fee, // 交易手续费
           fromMagic: registerBfchainCore.config.magic, // 交易来源链的 magic
           toMagic: registerBfchainCore.config.magic, // 交易去往链的 magic
-          applyBlockHeight: 1, // 交易发起高度
-          effectiveBlockHeight: 1,
           remark: {},
           storage: {
             key: "name",
             value: registerBfchainCore.config.genesisLocationName,
           },
+
+          fee: fee === "AUTO" ? "1" : fee, // 交易手续费
+          timestamp: 0, // 生成交易时间戳
+          applyBlockHeight: 1, // 交易发起高度
+          effectiveBlockHeight: 1,
         },
         {
           locationName: {
@@ -355,22 +371,26 @@ registerchainAssetData.blockPerRound = 5;
         SetLnsRecordValueTransactionFactory,
         {
           version: registerBfchainCore.config.version,
+
+          subEnvParams: {},
           type: registerBfchainCore.transactionHelper.SET_LNS_RECORD_VALUE, // 交易类型
           senderId: sender.address, // 发起者地址
           senderPublicKey: sender.publicKey, // 发起者公钥
+          maxFee: "100000000",
           rangeType: RANGE_TYPE.EMPTY,
           range: [], // 接收范围
-          timestamp: 0, // 生成交易时间戳
-          fee: fee === "AUTO" ? "1" : fee, // 交易手续费
           fromMagic: registerBfchainCore.config.magic, // 交易来源链的 magic
           toMagic: registerBfchainCore.config.magic, // 交易去往链的 magic
-          applyBlockHeight: 1, // 交易发起高度
-          effectiveBlockHeight: 1,
           remark: {},
           storage: {
             key: "name",
             value: registerBfchainCore.config.genesisLocationName,
           },
+
+          fee: fee === "AUTO" ? "1" : fee, // 交易手续费
+          timestamp: 0, // 生成交易时间戳
+          applyBlockHeight: 1, // 交易发起高度
+          effectiveBlockHeight: 1,
         },
         {
           lnsRecordValue: {
@@ -429,23 +449,27 @@ registerchainAssetData.blockPerRound = 5;
         TransferAssetTransactionFactory,
         {
           version: bfchainCore.config.version,
+
+          subEnvParams: {},
           type: bfchainCore.transactionHelper.TRANSFER_ASSET, // 交易类型
           senderId: genesisAccountInfo.address, // 发起者地址
           senderPublicKey: genesisAccountInfo.publicKey, // 发起者公钥
+          maxFee: "100000000",
           recipientId: recipient.address,
           rangeType: RANGE_TYPE.EMPTY,
           range: [], // 接收账户地址
-          timestamp: 0, // 生成交易时间戳
-          fee, // 交易手续费
           fromMagic: registerBfchainCore.config.magic, // 交易来源链的 magic
           toMagic: registerBfchainCore.config.magic, // 交易去往链的 magic
-          applyBlockHeight: 1, // 交易发起高度
-          effectiveBlockHeight: 1,
           remark: { remark: "交易备注，任意信息，这个是转账交易" }, // 交易备注，任意信息
           storage: {
             key: "assetType",
             value: registerBfchainCore.config.assetType,
           },
+
+          fee, // 交易手续费
+          timestamp: 0, // 生成交易时间戳
+          applyBlockHeight: 1, // 交易发起高度
+          effectiveBlockHeight: 1,
         },
         {
           transferAsset: {
@@ -724,26 +748,30 @@ registerchainAssetData.blockPerRound = 5;
     const keypair = await fullBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
     const data: BFChainCore.TxBodyJSON = {
       version: fullBfchainCore.config.version,
+
+      subEnvParams: {},
       type: fullBfchainCore.transactionHelper.REGISTER_CHAIN, // 交易类型
       senderId: sender.address, // 发起者地址
       senderPublicKey: sender.publicKey, // 发起者公钥
       senderSecondPublicKey: "", // 发起者二次公钥
+      maxFee: "100000000",
       rangeType: RANGE_TYPE.EMPTY,
       range: [],
-      timestamp: 770880, // 生成交易时间戳
-      fee: "78622", // 交易手续费
       remark: { remark: "body.remark" }, // 交易备注，任意信息
       dappid: getRandomDAppid(), // 交易所属的 dappid
       lns: fullBfchainCore.config.genesisLocationName,
-      sourceIP: "127.0.0.1", // 交易来源 ip
       fromMagic: fullBfchainCore.config.magic,
       toMagic: fullBfchainCore.config.magic,
-      applyBlockHeight: 10086, // 交易发起高度
-      effectiveBlockHeight: 10100,
       storage: {
         key: "magic",
         value: registerBfchainCore.config.magic,
       },
+
+      fee: "78622", // 交易手续费
+      timestamp: 770880, // 生成交易时间戳
+      sourceIP: "127.0.0.1", // 交易来源 ip
+      applyBlockHeight: 10086, // 交易发起高度
+      effectiveBlockHeight: 10100,
     };
 
     let secondKeypair;
