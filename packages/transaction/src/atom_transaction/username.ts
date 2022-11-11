@@ -195,12 +195,13 @@ export class UsernameTransactionFactory extends TransactionFactory<UsernameTrans
    * @param body
    * @param usernameAsset
    */
-  init(body: BFChainCore.TxBodyJSON, usernameAsset: BFChainCore.UsernameAssetJSON) {
+  async init(body: BFChainCore.TxBodyJSON, usernameAsset: BFChainCore.UsernameAssetJSON) {
     const transaction = UsernameTransaction.fromObject({
       ...body,
       asset: usernameAsset,
     });
 
+    transaction.subIdBuffer = await this.transactionHelper.generateSubId(transaction.getSubBytes());
     return transaction;
   }
 

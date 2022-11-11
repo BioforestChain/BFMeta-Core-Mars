@@ -222,12 +222,13 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
    * @param body
    * @param issueAsset
    */
-  init(body: BFChainCore.TxBodyJSON, issueAsset: BFChainCore.IssueAssetAssetJSON) {
+  async init(body: BFChainCore.TxBodyJSON, issueAsset: BFChainCore.IssueAssetAssetJSON) {
     const transaction = IssueAssetTransaction.fromObject({
       ...body,
       asset: issueAsset,
     });
 
+    transaction.subIdBuffer = await this.transactionHelper.generateSubId(transaction.getSubBytes());
     return transaction;
   }
 

@@ -238,12 +238,13 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
    * @param body
    * @param dappAsset
    */
-  init(body: BFChainCore.TxBodyJSON, dappAsset: BFChainCore.DAppAssetJSON) {
+  async init(body: BFChainCore.TxBodyJSON, dappAsset: BFChainCore.DAppAssetJSON) {
     const transaction = DAppTransaction.fromObject({
       ...body,
       asset: dappAsset,
     });
 
+    transaction.subIdBuffer = await this.transactionHelper.generateSubId(transaction.getSubBytes());
     return transaction;
   }
 

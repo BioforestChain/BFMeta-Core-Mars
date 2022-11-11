@@ -52,7 +52,6 @@ export class TransferAssetTransactionFactory extends TransferTransactionFactory<
         be_compare_prop: `assetType ${assetType}`,
         to_target: "storage",
         be_target: "transferAsset",
-
       });
     }
 
@@ -65,12 +64,13 @@ export class TransferAssetTransactionFactory extends TransferTransactionFactory<
    * @param body
    * @param transferAssetAsset
    */
-  init(body: BFChainCore.TxBodyJSON, transferAssetAsset: BFChainCore.TransferAssetAssetJSON) {
+  async init(body: BFChainCore.TxBodyJSON, transferAssetAsset: BFChainCore.TransferAssetAssetJSON) {
     const transaction = TransferAssetTransaction.fromObject({
       ...body,
       asset: transferAssetAsset,
     });
 
+    transaction.subIdBuffer = await this.transactionHelper.generateSubId(transaction.getSubBytes());
     return transaction;
   }
 

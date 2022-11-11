@@ -45,8 +45,8 @@ const argv = optimist
   .alias("rm", "random magic")
   .alias("o", "out")
   .alias("p", "genesisblock out path")
-  .default("b", 5)
-  .default("f", 10)
+  .default("b", 10)
+  .default("f", 20)
   .default("ri", false)
   .default("rm", false).argv;
 console.log(argv);
@@ -832,6 +832,9 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
     );
     statisticsInfo.unref("getGenesisBlock");
     const _genesisBlock = genesisBlock.toJSON();
+    const bytes = genesisBlock.getBytes();
+    const yyy = core.block.parseBytesToSomeBlock(bytes);
+    await core.blockHelper.verifyBlockSignature(yyy);
     const __genesisBlock = await core.block.recombineBlock(_genesisBlock);
     await core.block.getBlockFactoryFromHeight(__genesisBlock.height).verify(__genesisBlock);
     await core.blockHelper.verifyBlockSignature(__genesisBlock, {

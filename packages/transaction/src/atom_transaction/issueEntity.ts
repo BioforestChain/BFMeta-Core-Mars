@@ -223,12 +223,13 @@ export class IssueEntityTransactionFactory<
    * @param body
    * @param issueEntityAsset
    */
-  init(body: BFChainCore.TxBodyJSON, issueEntityAsset: BFChainCore.IssueEntityAssetJSON) {
+  async init(body: BFChainCore.TxBodyJSON, issueEntityAsset: BFChainCore.IssueEntityAssetJSON) {
     const transaction = IssueEntityTransaction.fromObject({
       ...body,
       asset: issueEntityAsset,
     });
 
+    transaction.subIdBuffer = await this.transactionHelper.generateSubId(transaction.getSubBytes());
     return transaction as T;
   }
 

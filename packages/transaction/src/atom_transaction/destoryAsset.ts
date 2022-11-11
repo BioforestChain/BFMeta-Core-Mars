@@ -182,12 +182,13 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
    * @param body
    * @param destoryAsset
    */
-  init(body: BFChainCore.TxBodyJSON, destoryAsset: BFChainCore.DestoryAssetAssetJSON) {
+  async init(body: BFChainCore.TxBodyJSON, destoryAsset: BFChainCore.DestoryAssetAssetJSON) {
     const transaction = DestoryAssetTransaction.fromObject({
       ...body,
       asset: destoryAsset,
     });
 
+    transaction.subIdBuffer = await this.transactionHelper.generateSubId(transaction.getSubBytes());
     return transaction;
   }
 

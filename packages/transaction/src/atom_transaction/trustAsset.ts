@@ -255,12 +255,13 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
    * @param body
    * @param trustAssetAsset
    */
-  init(body: BFChainCore.TxBodyJSON, trustAssetAsset: BFChainCore.TrustAssetAssetJSON) {
+  async init(body: BFChainCore.TxBodyJSON, trustAssetAsset: BFChainCore.TrustAssetAssetJSON) {
     const transaction = TrustAssetTransaction.fromObject({
       ...body,
       asset: trustAssetAsset,
     });
 
+    transaction.subIdBuffer = await this.transactionHelper.generateSubId(transaction.getSubBytes());
     return transaction;
   }
 

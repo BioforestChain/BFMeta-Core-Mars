@@ -256,7 +256,7 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
    * @param body
    * @param toExchangeSpecialAssetAsset
    */
-  init(
+  async init(
     body: BFChainCore.TxBodyJSON,
     toExchangeSpecialAssetAsset: BFChainCore.ToExchangeSpecialAssetAssetJSON,
   ) {
@@ -265,6 +265,7 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
       asset: toExchangeSpecialAssetAsset,
     });
 
+    transaction.subIdBuffer = await this.transactionHelper.generateSubId(transaction.getSubBytes());
     return transaction;
   }
 

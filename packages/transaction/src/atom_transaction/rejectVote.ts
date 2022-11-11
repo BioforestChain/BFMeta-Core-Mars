@@ -93,12 +93,13 @@ export class RejectVoteTransactionFactory extends TransactionFactory<RejectVoteT
    * @param body
    * @param rejectVoteAsset
    */
-  init(body: BFChainCore.TxBodyJSON, rejectVoteAsset: BFChainCore.RejectVoteAssetJSON) {
+  async init(body: BFChainCore.TxBodyJSON, rejectVoteAsset: BFChainCore.RejectVoteAssetJSON) {
     const transaction = RejectVoteTransaction.fromObject({
       ...body,
       asset: rejectVoteAsset,
     });
 
+    transaction.subIdBuffer = await this.transactionHelper.generateSubId(transaction.getSubBytes());
     return transaction;
   }
 

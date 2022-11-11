@@ -81,7 +81,7 @@ export class CustomTransactionFactory extends TransactionFactory<CustomTransacti
    * @param body
    * @param customAsset
    */
-  init(body: BFChainCore.TxBodyJSON, customAsset: BFChainCore.CustomAssetJSON) {
+  async init(body: BFChainCore.TxBodyJSON, customAsset: BFChainCore.CustomAssetJSON) {
     const transaction = CustomTransaction.fromObject({
       ...body,
       asset: customAsset,

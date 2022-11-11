@@ -80,12 +80,13 @@ export class TransferAnyTransactionFactory extends TransferTransactionFactory<Tr
    * @param body
    * @param transferAnyAsset
    */
-  init(body: BFChainCore.TxBodyJSON, transferAnyAsset: BFChainCore.TransferAnyAssetJSON) {
+  async init(body: BFChainCore.TxBodyJSON, transferAnyAsset: BFChainCore.TransferAnyAssetJSON) {
     const transaction = TransferAnyTransaction.fromObject({
       ...body,
       asset: transferAnyAsset,
     });
 
+    transaction.subIdBuffer = await this.transactionHelper.generateSubId(transaction.getSubBytes());
     return transaction;
   }
 

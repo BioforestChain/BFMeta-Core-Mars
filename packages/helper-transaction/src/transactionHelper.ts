@@ -25,7 +25,7 @@ import { AccountBaseHelper } from "@bfchain/core-helper-account-base";
 import { TRANSACTION_FILTER_SYMBOL, ABORT_FORBIDDEN_TRANSACTION_SYMBOL } from "./const";
 type Transaction = import("@bfchain/core-model-transaction").Transaction;
 
-const { ArgumentFormatException, ArgumentIllegalException, NoFoundException } =
+const { ArgumentFormatException, ArgumentIllegalException, NoFoundException, ConsensusException } =
   CoreExceptionGenerator("HELPER", "transactionHelper");
 
 @Injectable()
@@ -328,6 +328,29 @@ export class TransactionHelper {
     return this.accountBaseHelper.getAddressFromPublicKeyString(config.genesisAccountPublicKey);
   }
   //#endregion
+
+  async generateSubId(message: Uint8Array) {
+    return await this.cryptoHelper.sha256(message);
+  }
+
+  /**
+   * 校验 subId
+   *
+   * @param transaction
+   */
+  async verifySubId<SOME_TRS extends BFChainCore.Transaction>(transaction: SOME_TRS) {
+    const subId = transaction.subId;
+    const calcSubId = decodeBinaryToHex(await this.generateSubId(transaction.getSubBytes()));
+    if (subId !== calcSubId) {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+        to_compare_prop: `subId ${subId}`,
+        be_compare_prop: `subId ${calcSubId}`,
+        to_target: `transaction`,
+        be_target: `calculate`,
+      });
+    }
+  }
+
   /**
    * 校验交易的签名是否合法
    */
@@ -434,7 +457,7 @@ export class TransactionHelper {
   ) {
     return this.calcMinFeePerBytes(
       transaction.fee,
-      bytesLength || transaction.getBytes().length,
+      bytesLength || transaction.getFeeBytes().length,
       this.__calcStandardMinFee(customMinFeePerByte),
     );
   }
@@ -461,7 +484,7 @@ export class TransactionHelper {
   ) {
     const minFee = this.calcMinFeePerBytes(
       transaction.fee,
-      bytesLength || transaction.getBytes().length,
+      bytesLength || transaction.getFeeBytes().length,
       this.__calcStandardMinFee(customMinFeePerByte),
     );
     return (BigInt(minFee) * BigInt(multiple)).toString();
@@ -536,7 +559,7 @@ export class TransactionHelper {
     trs: Transaction,
     minTransactionFeePerByte = this.config.minTransactionFeePerByte,
   ) {
-    return this.calcMinFeePerBytes(trs.fee, trs.getBytes().length, minTransactionFeePerByte);
+    return this.calcMinFeePerBytes(trs.fee, trs.getFeeBytes().length, minTransactionFeePerByte);
   }
 
   /**

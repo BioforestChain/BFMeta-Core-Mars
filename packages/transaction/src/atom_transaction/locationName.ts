@@ -281,12 +281,13 @@ export class LocationNameTransactionFactory extends TransactionFactory<LocationN
    * @param body
    * @param locationName
    */
-  init(body: BFChainCore.TxBodyJSON, locationName: BFChainCore.LocationNameAssetJSON) {
+  async init(body: BFChainCore.TxBodyJSON, locationName: BFChainCore.LocationNameAssetJSON) {
     const transaction = LocationNameTransaction.fromObject({
       ...body,
       asset: locationName,
     });
 
+    transaction.subIdBuffer = await this.transactionHelper.generateSubId(transaction.getSubBytes());
     return transaction;
   }
 

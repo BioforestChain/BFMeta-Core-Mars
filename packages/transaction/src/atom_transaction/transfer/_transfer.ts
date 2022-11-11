@@ -108,5 +108,8 @@ export abstract class TransferTransactionFactory<
     return storage;
   }
 
-  abstract init(body: BFChainCore.TxBodyJSON, transfer: BFChainCore.GetTransactionAssetJSON<T>): T;
+  abstract init(
+    body: BFChainCore.TxBodyJSON,
+    transfer: BFChainCore.GetTransactionAssetJSON<T>,
+  ): Promise<T>;
 }

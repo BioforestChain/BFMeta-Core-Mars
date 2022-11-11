@@ -29,7 +29,7 @@ export class IssueEntityFactoryTransactionFactoryV1 extends IssueEntityFactoryTr
    * @param body
    * @param issueEntityFactoryAsset
    */
-  init(
+  async init(
     body: BFChainCore.TxBodyJSON,
     issueEntityFactoryAsset: BFChainCore.IssueEntityFactoryAssetJSON,
   ) {
@@ -38,6 +38,7 @@ export class IssueEntityFactoryTransactionFactoryV1 extends IssueEntityFactoryTr
       asset: issueEntityFactoryAsset,
     });
 
+    transaction.subIdBuffer = await this.transactionHelper.generateSubId(transaction.getSubBytes());
     return transaction;
   }
 

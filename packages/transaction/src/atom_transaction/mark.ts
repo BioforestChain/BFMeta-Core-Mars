@@ -207,12 +207,13 @@ export class MarkTransactionFactory extends TransactionFactory<MarkTransaction> 
    * @param body
    * @param markAsset
    */
-  init(body: BFChainCore.TxBodyJSON, markAsset: BFChainCore.MarkAssetJSON) {
+  async init(body: BFChainCore.TxBodyJSON, markAsset: BFChainCore.MarkAssetJSON) {
     const transaction = MarkTransaction.fromObject({
       ...body,
       asset: markAsset,
     });
 
+    transaction.subIdBuffer = await this.transactionHelper.generateSubId(transaction.getSubBytes());
     return transaction;
   }
 }

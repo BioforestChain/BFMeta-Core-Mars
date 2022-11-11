@@ -127,12 +127,13 @@ export class SignatureTransactionFactory extends TransactionFactory<SignatureTra
    * @param body
    * @param signatureAsset
    */
-  init(body: BFChainCore.TxBodyJSON, signatureAsset: BFChainCore.SignatureAssetJSON) {
+  async init(body: BFChainCore.TxBodyJSON, signatureAsset: BFChainCore.SignatureAssetJSON) {
     const transaction = SignatureTransaction.fromObject({
       ...body,
       asset: signatureAsset,
     });
 
+    transaction.subIdBuffer = await this.transactionHelper.generateSubId(transaction.getSubBytes());
     return transaction;
   }
 

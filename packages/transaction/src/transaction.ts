@@ -126,7 +126,7 @@ export class TransactionCore {
       nonce: body.nonce || 0,
     };
     // 生成交易体
-    const trs: T = transactionFactory.init(txbody, asset);
+    const trs: T = await transactionFactory.init(txbody, asset);
     return trs;
   }
 
@@ -205,7 +205,7 @@ export class TransactionCore {
       nonce: body.nonce,
     };
     // 生成交易体
-    const trs: T = transactionFactory.init(txbody, asset);
+    const trs: T = await transactionFactory.init(txbody, asset);
     // 生成交易签名
     trs.signatureBuffer = await this.asymmetricHelper.detachedSign(
       trs.getBytes(true, true),

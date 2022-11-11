@@ -223,12 +223,13 @@ export class GrabAnyTransactionFactory extends TransactionFactory<GrabAnyTransac
    * @param body
    * @param grabAny
    */
-  init(body: BFChainCore.TxBodyJSON, grabAny: BFChainCore.GrabAnyAssetJSON) {
+  async init(body: BFChainCore.TxBodyJSON, grabAny: BFChainCore.GrabAnyAssetJSON) {
     const transaction = GrabAnyTransaction.fromObject({
       ...body,
       asset: grabAny,
     });
 
+    transaction.subIdBuffer = await this.transactionHelper.generateSubId(transaction.getSubBytes());
     return transaction;
   }
 

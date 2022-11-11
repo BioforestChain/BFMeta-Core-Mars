@@ -93,12 +93,13 @@ export class AcceptVoteTransactionFactory extends TransactionFactory<AcceptVoteT
    * @param body
    * @param acceptVoteAsset
    */
-  init(body: BFChainCore.TxBodyJSON, acceptVoteAsset: BFChainCore.AcceptVoteAssetJSON) {
+  async init(body: BFChainCore.TxBodyJSON, acceptVoteAsset: BFChainCore.AcceptVoteAssetJSON) {
     const transaction = AcceptVoteTransaction.fromObject({
       ...body,
       asset: acceptVoteAsset,
     });
 
+    transaction.subIdBuffer = await this.transactionHelper.generateSubId(transaction.getSubBytes());
     return transaction;
   }
 

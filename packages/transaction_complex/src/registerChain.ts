@@ -184,7 +184,7 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
    * @param body
    * @param registerChain
    */
-  init(body: BFChainCore.TxBodyJSON, registerChain: BFChainCore.RegisterChainAssetJSON) {
+  async init(body: BFChainCore.TxBodyJSON, registerChain: BFChainCore.RegisterChainAssetJSON) {
     const transaction = RegisterChainTransaction.fromObject({
       ...body,
       asset: registerChain,

@@ -26,7 +26,10 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
   abstract configHelper: ConfigHelper;
   abstract chainAssetInfoHelper: ChainAssetInfoHelper;
 
-  abstract init(body: BFChainCore.TxBodyJSON, asset: BFChainCore.GetTransactionAssetJSON<T>): T;
+  abstract init(
+    body: BFChainCore.TxBodyJSON,
+    asset: BFChainCore.GetTransactionAssetJSON<T>,
+  ): Promise<T>;
   /**
    * 从 json 转出 protobuf-message
    * JSON格式一般是进程内部通讯在使用,所以JSON格式默认不校验
@@ -35,7 +38,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     trs: BFChainCore.TransactionJSON<BFChainCore.GetTransactionAssetJSON<T>>,
     opts?: { verify?: boolean; config?: ConfigHelper },
   ) {
-    const transaction = this.init(trs, trs.asset);
+    const transaction = await this.init(trs, trs.asset);
     if (opts && opts.verify) {
       await this.verify(transaction, opts.config);
     }

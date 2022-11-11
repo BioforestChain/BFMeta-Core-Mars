@@ -161,12 +161,13 @@ export class SetLnsManagerTransactionFactory extends TransactionFactory<SetLnsMa
    * @param body
    * @param setLnsManagerAsset
    */
-  init(body: BFChainCore.TxBodyJSON, lnsManagerAsset: BFChainCore.SetLnsManagerAssetJSON) {
+  async init(body: BFChainCore.TxBodyJSON, lnsManagerAsset: BFChainCore.SetLnsManagerAssetJSON) {
     const transaction = SetLnsManagerTransaction.fromObject({
       ...body,
       asset: lnsManagerAsset,
     });
 
+    transaction.subIdBuffer = await this.transactionHelper.generateSubId(transaction.getSubBytes());
     return transaction;
   }
 

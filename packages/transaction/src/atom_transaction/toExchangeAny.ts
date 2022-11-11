@@ -302,12 +302,13 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
    * @param body
    * @param toExchangeAny
    */
-  init(body: BFChainCore.TxBodyJSON, toExchangeAny: BFChainCore.ToExchangeAnyAssetJSON) {
+  async init(body: BFChainCore.TxBodyJSON, toExchangeAny: BFChainCore.ToExchangeAnyAssetJSON) {
     const transaction = ToExchangeAnyTransaction.fromObject({
       ...body,
       asset: toExchangeAny,
     });
 
+    transaction.subIdBuffer = await this.transactionHelper.generateSubId(transaction.getSubBytes());
     return transaction;
   }
 

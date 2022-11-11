@@ -203,12 +203,16 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
    * @param body
    * @param immigrateAssetAsset
    */
-  init(body: BFChainCore.TxBodyJSON, immigrateAssetAsset: BFChainCore.ImmigrateAssetAssetJSON) {
+  async init(
+    body: BFChainCore.TxBodyJSON,
+    immigrateAssetAsset: BFChainCore.ImmigrateAssetAssetJSON,
+  ) {
     const transaction = ImmigrateAssetTransaction.fromObject<ImmigrateAssetTransaction>({
       ...body,
       asset: immigrateAssetAsset,
     });
 
+    transaction.subIdBuffer = await this.transactionHelper.generateSubId(transaction.getSubBytes());
     return transaction;
   }
 

@@ -324,7 +324,7 @@ export class Transaction<AJ extends object = object>
     return this.signatureBuffer;
   }
   /**事件的发起者二次签名 */
-  @Field.d(TransactionSubjectiveModel.INC++, "bytes", "optional")
+  @Field.d(Transaction.INC++, "bytes", "optional")
   signSignatureBuffer?: Uint8Array;
   get signSignature() {
     return (

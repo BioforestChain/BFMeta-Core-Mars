@@ -228,12 +228,13 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
    * @param body
    * @param destoryEntity
    */
-  init(body: BFChainCore.TxBodyJSON, destoryEntity: BFChainCore.DestoryEntityAssetJSON) {
+  async init(body: BFChainCore.TxBodyJSON, destoryEntity: BFChainCore.DestoryEntityAssetJSON) {
     const transaction = DestoryEntityTransaction.fromObject({
       ...body,
       asset: destoryEntity,
     });
 
+    transaction.subIdBuffer = await this.transactionHelper.generateSubId(transaction.getSubBytes());
     return transaction;
   }
 

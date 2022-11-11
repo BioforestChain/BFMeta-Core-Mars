@@ -300,12 +300,13 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<BeExch
    * @param body
    * @param beExchangeAsset
    */
-  init(body: BFChainCore.TxBodyJSON, beExchangeAsset: BFChainCore.BeExchangeAssetAssetJSON) {
+  async init(body: BFChainCore.TxBodyJSON, beExchangeAsset: BFChainCore.BeExchangeAssetAssetJSON) {
     const transaction = BeExchangeAssetTransaction.fromObject({
       ...body,
       asset: beExchangeAsset,
     });
 
+    transaction.subIdBuffer = await this.transactionHelper.generateSubId(transaction.getSubBytes());
     return transaction;
   }
 

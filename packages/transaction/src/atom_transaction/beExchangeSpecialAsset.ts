@@ -219,7 +219,7 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
    * @param body
    * @param beExchangeSpecialAsset
    */
-  init(
+  async init(
     body: BFChainCore.TxBodyJSON,
     beExchangeSpecialAsset: BFChainCore.BeExchangeSpecialAssetAssetJSON,
   ) {
@@ -228,6 +228,7 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
       asset: beExchangeSpecialAsset,
     });
 
+    transaction.subIdBuffer = await this.transactionHelper.generateSubId(transaction.getSubBytes());
     return transaction;
   }
 

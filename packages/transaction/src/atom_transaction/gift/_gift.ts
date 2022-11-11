@@ -119,5 +119,8 @@ export abstract class GiftTransactionFactory<
     }
   }
 
-  abstract init(body: BFChainCore.TxBodyJSON, giftAsset: BFChainCore.GetTransactionAssetJSON<T>): T;
+  abstract init(
+    body: BFChainCore.TxBodyJSON,
+    giftAsset: BFChainCore.GetTransactionAssetJSON<T>,
+  ): Promise<T>;
 }

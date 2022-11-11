@@ -54,12 +54,13 @@ export class IssueEntityTransactionFactoryV1 extends IssueEntityTransactionFacto
    * @param body
    * @param issueEntityAsset
    */
-  init(body: BFChainCore.TxBodyJSON, issueEntityAsset: BFChainCore.IssueEntityAssetV1JSON) {
+  async init(body: BFChainCore.TxBodyJSON, issueEntityAsset: BFChainCore.IssueEntityAssetV1JSON) {
     const transaction = IssueEntityTransactionV1.fromObject({
       ...body,
       asset: issueEntityAsset,
     });
 
+    transaction.subIdBuffer = await this.transactionHelper.generateSubId(transaction.getSubBytes());
     return transaction;
   }
 

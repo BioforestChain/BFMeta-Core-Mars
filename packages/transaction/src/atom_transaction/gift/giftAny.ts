@@ -199,12 +199,13 @@ export class GiftAnyTransactionFactory extends GiftTransactionFactory<GiftAnyTra
    * @param body
    * @param giftAny
    */
-  init(body: BFChainCore.TxBodyJSON, giftAny: BFChainCore.GiftAnyAssetJSON) {
+  async init(body: BFChainCore.TxBodyJSON, giftAny: BFChainCore.GiftAnyAssetJSON) {
     const transaction = GiftAnyTransaction.fromObject({
       ...body,
       asset: giftAny,
     });
 
+    transaction.subIdBuffer = await this.transactionHelper.generateSubId(transaction.getSubBytes());
     return transaction;
   }
 

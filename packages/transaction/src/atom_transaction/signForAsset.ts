@@ -229,11 +229,13 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
    * @param body
    * @param signForAssetAsset
    */
-  init(body: BFChainCore.TxBodyJSON, signForAssetAsset: BFChainCore.SignForAssetAssetJSON) {
+  async init(body: BFChainCore.TxBodyJSON, signForAssetAsset: BFChainCore.SignForAssetAssetJSON) {
     const transaction = SignForAssetTransaction.fromObject({
       ...body,
       asset: signForAssetAsset,
     });
+
+    transaction.subIdBuffer = await this.transactionHelper.generateSubId(transaction.getSubBytes());
     return transaction;
   }
 

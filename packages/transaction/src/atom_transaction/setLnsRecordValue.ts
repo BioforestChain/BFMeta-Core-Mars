@@ -342,12 +342,16 @@ export class SetLnsRecordValueTransactionFactory extends TransactionFactory<SetL
    * @param body
    * @param setLnsRecordValueAsset
    */
-  init(body: BFChainCore.TxBodyJSON, lnsRecordValueAsset: BFChainCore.SetLnsRecordValueAssetJSON) {
+  async init(
+    body: BFChainCore.TxBodyJSON,
+    lnsRecordValueAsset: BFChainCore.SetLnsRecordValueAssetJSON,
+  ) {
     const transaction = SetLnsRecordValueTransaction.fromObject({
       ...body,
       asset: lnsRecordValueAsset,
     });
 
+    transaction.subIdBuffer = await this.transactionHelper.generateSubId(transaction.getSubBytes());
     return transaction;
   }
 

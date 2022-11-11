@@ -93,12 +93,13 @@ export class DelegateTransactionFactory extends TransactionFactory<DelegateTrans
    * @param body
    * @param delegateAsset
    */
-  init(body: BFChainCore.TxBodyJSON, delegateAsset: BFChainCore.DelegateAssetJSON) {
+  async init(body: BFChainCore.TxBodyJSON, delegateAsset: BFChainCore.DelegateAssetJSON) {
     const transaction = DelegateTransaction.fromObject({
       ...body,
       asset: delegateAsset,
     });
 
+    transaction.subIdBuffer = await this.transactionHelper.generateSubId(transaction.getSubBytes());
     return transaction;
   }
 

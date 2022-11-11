@@ -273,12 +273,16 @@ export class BeExchangeAnyMultiTransactionFactory extends TransactionFactory<BeE
    * @param body
    * @param beExchangeAnyMulti
    */
-  init(body: BFChainCore.TxBodyJSON, beExchangeAnyMulti: BFChainCore.BeExchangeAnyMultiAssetJSON) {
+  async init(
+    body: BFChainCore.TxBodyJSON,
+    beExchangeAnyMulti: BFChainCore.BeExchangeAnyMultiAssetJSON,
+  ) {
     const transaction = BeExchangeAnyMultiTransaction.fromObject({
       ...body,
       asset: beExchangeAnyMulti,
     });
 
+    transaction.subIdBuffer = await this.transactionHelper.generateSubId(transaction.getSubBytes());
     return transaction;
   }
 
