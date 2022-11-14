@@ -141,6 +141,8 @@ declare namespace BFChainCore {
   type LastBlockInfo<T extends Block> = {
     /**区块版本号 */
     version: number;
+    /**区块 id */
+    blockId: string;
     /**区块高度 */
     height: number;
     /**区块时间戳 */
@@ -154,7 +156,7 @@ declare namespace BFChainCore {
     /**锻造者权益 */
     generatorEquity: string;
     /**前块签名 */
-    previousBlockSignature: string;
+    previousBlockId: string;
     /**区块奖励值 */
     reward: string;
     /**区块的链标识符 */
