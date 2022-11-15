@@ -116,7 +116,7 @@ export class BlockHelper {
   //           genesisBlock.generatorPublicKeyBuffer = reader.bytes();
   //           break;
   //         case 6:
-  //           genesisBlock.previousBlockSignature = reader.string();
+  //           genesisBlock.previousBlockId = reader.string();
   //           break;
   //         case 7:
   //           genesisBlock.numberOfTransactions = reader.uint32();

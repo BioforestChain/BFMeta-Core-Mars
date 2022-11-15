@@ -67,9 +67,9 @@ export class CommonBlockVerify<T extends Block> {
       });
     }
 
-    if (height > 1 && !body.previousBlockSignature) {
+    if (height > 1 && !body.previousBlockId) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
-        prop: "previousBlockSignature",
+        prop: "previousBlockId",
         ...BlockBody_Exception_Detail,
       });
     }

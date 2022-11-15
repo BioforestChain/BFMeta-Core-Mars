@@ -21,11 +21,13 @@ declare namespace BFChainCore {
 
   /**查询交易的查询条件 */
   type TransactionQueryOptionsJSON = {
+    /**交易唯一编号 */
+    subId?: string;
     /**交易类型 */
     type?: string;
     /**交易类型组 */
     types?: string[];
-    /**交易唯一编号 */
+    /**交易签名 */
     signature?: string;
     /**交易发送者地址 */
     senderId?: string;
