@@ -103,7 +103,7 @@ export class EventLogicVerifier {
         hodingAsset.assetNumber += fee;
         if (hodingAsset.assetNumber < BigInt(0)) {
           throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
-            reason: `Transaction signature: ${transaction.signature} address: ${address} magic ${
+            reason: `Transaction trsId: ${transaction.trsId} address: ${address} magic ${
               applyInfo.assetInfo.magic
             } assetType: ${
               applyInfo.assetInfo.assetType
@@ -159,7 +159,7 @@ export class EventLogicVerifier {
         hodingAsset.assetNumber += destoryAmount;
         if (hodingAsset.assetNumber < BigInt(0)) {
           throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
-            reason: `Transaction signature: ${transaction.signature} address: ${address} magic ${
+            reason: `Transaction trsId: ${transaction.trsId} address: ${address} magic ${
               applyInfo.assetInfo.magic
             } assetType: ${
               applyInfo.assetInfo.assetType
@@ -213,7 +213,7 @@ export class EventLogicVerifier {
         hodingAsset.assetNumber += BigInt(applyInfo.amount);
         if (hodingAsset.assetNumber < BigInt(0)) {
           throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
-            reason: `Transaction signature: ${transaction.signature} address: ${address} magic ${
+            reason: `Transaction trsId: ${transaction.trsId} address: ${address} magic ${
               applyInfo.assetInfo.magic
             } assetType: ${
               applyInfo.assetInfo.assetType
@@ -251,7 +251,7 @@ export class EventLogicVerifier {
         hodingAsset.assetNumber += BigInt(applyInfo.amount);
         if (hodingAsset.assetNumber < BigInt(0)) {
           throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
-            reason: `Transaction signature: ${transaction.signature} address: ${address} magic ${
+            reason: `Transaction trsId: ${transaction.trsId} address: ${address} magic ${
               applyInfo.assetInfo.magic
             } assetType: ${
               applyInfo.assetInfo.assetType
@@ -277,17 +277,14 @@ export class EventLogicVerifier {
       async ({ transaction, applyInfo }, next) => {
         const { assetInfo, frozenIdBuffer, amount: spendAsset, recipientId } = applyInfo;
         const { magic, assetType } = assetInfo;
-        const transactionSignature = getHexFromArrayBuffer(frozenIdBuffer);
+        const transactionSubId = getHexFromArrayBuffer(frozenIdBuffer);
 
         // 获取冻结信息
-        const frozenAsset = await accountGetterHelper.getFrozenAsset(
-          recipientId,
-          transactionSignature,
-        );
+        const frozenAsset = await accountGetterHelper.getFrozenAsset(recipientId, transactionSubId);
 
         if (!frozenAsset) {
           throw new ConsensusException(ERROR_LIST.FROZEN_ASSET_NOT_EXIST_OR_EXPIRED, {
-            signature: transactionSignature,
+            subId: transactionSubId,
           });
         }
 
@@ -300,20 +297,20 @@ export class EventLogicVerifier {
         // 是否到达解冻高度
         if (minEffectiveHeight > transaction.applyBlockHeight) {
           throw new ConsensusException(ERROR_LIST.NOT_BEGIN_UNFROZEN_YET, {
-            frozenId: transactionSignature,
+            frozenId: transactionSubId,
           });
         }
 
         // 交易交易是否过期
         if (currentBlockHeight > maxEffectiveHeight) {
           throw new ConsensusException(ERROR_LIST.FROZEN_ASSET_EXPIRATION, {
-            frozenId: transactionSignature,
+            frozenId: transactionSubId,
           });
         }
 
         if (maxEffectiveHeight < transaction.applyBlockHeight) {
           throw new ConsensusException(ERROR_LIST.FROZEN_ASSET_EXPIRATION, {
-            frozenId: transactionSignature,
+            frozenId: transactionSubId,
           });
         }
 
@@ -328,7 +325,7 @@ export class EventLogicVerifier {
         if (remainUnfrozenTimes !== undefined) {
           if (remainUnfrozenTimes === 0) {
             throw new ConsensusException(ERROR_LIST.UNFROZEN_TIME_USE_UP, {
-              frozenId: transactionSignature,
+              frozenId: transactionSubId,
             });
           }
         }
@@ -349,17 +346,17 @@ export class EventLogicVerifier {
       "signForAsset",
       async ({ transaction, applyInfo }, next) => {
         const { frozenIdBuffer, frozenAddress } = applyInfo;
-        const transactionSignature = getHexFromArrayBuffer(frozenIdBuffer);
+        const transactionSubId = getHexFromArrayBuffer(frozenIdBuffer);
 
         // 获取冻结信息
         const frozenAsset = await accountGetterHelper.getFrozenAsset(
           frozenAddress,
-          transactionSignature,
+          transactionSubId,
         );
 
         if (!frozenAsset) {
           throw new ConsensusException(ERROR_LIST.FROZEN_ASSET_NOT_EXIST_OR_EXPIRED, {
-            signature: transactionSignature,
+            subId: transactionSubId,
           });
         }
 
@@ -367,20 +364,20 @@ export class EventLogicVerifier {
         // 是否到达解冻高度
         if (minEffectiveHeight > transaction.applyBlockHeight) {
           throw new ConsensusException(ERROR_LIST.NOT_BEGIN_UNFROZEN_YET, {
-            frozenId: transactionSignature,
+            frozenId: transactionSubId,
           });
         }
 
         // 交易交易是否过期
         if (currentBlockHeight > maxEffectiveHeight) {
           throw new ConsensusException(ERROR_LIST.FROZEN_ASSET_EXPIRATION, {
-            frozenId: transactionSignature,
+            frozenId: transactionSubId,
           });
         }
 
         if (maxEffectiveHeight < transaction.applyBlockHeight) {
           throw new ConsensusException(ERROR_LIST.FROZEN_ASSET_EXPIRATION, {
-            frozenId: transactionSignature,
+            frozenId: transactionSubId,
           });
         }
 
@@ -395,7 +392,7 @@ export class EventLogicVerifier {
         if (remainUnfrozenTimes !== undefined) {
           if (remainUnfrozenTimes === 0) {
             throw new ConsensusException(ERROR_LIST.UNFROZEN_TIME_USE_UP, {
-              frozenId: transactionSignature,
+              frozenId: transactionSubId,
             });
           }
         }
@@ -427,8 +424,8 @@ export class EventLogicVerifier {
         if (accountEquity < minEquity) {
           throw new ConsensusException(ERROR_LIST.ACCOUNT_REMAIN_EQUITY_NOT_ENOUGH, {
             errorId: NewTransactionRefuseReason.ACCOUNT_REMAIN_EQUITY_NOT_ENOUGH,
-            reason: `Transaction signature: ${
-              transaction.signature
+            reason: `Transaction trsId: ${
+              transaction.trsId
             } address: ${address} hodingEquity: ${remainEquity.toString()} spendEquity: ${
               applyInfo.equity
             }`,

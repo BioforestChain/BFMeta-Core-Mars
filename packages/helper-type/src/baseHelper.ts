@@ -621,6 +621,15 @@ export class BaseHelper {
   }
 
   /**
+   * 交易 subId 是否合法
+   *
+   * @param subId
+   */
+  isValidTransactionSubId(subId: string) {
+    return this.isValidBufferSize(subId, 32);
+  }
+
+  /**
    * 区块 signature 是否合法
    *
    * @param signature

@@ -190,7 +190,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     if (secondPublicKey) {
       if (!(senderSecondPublicKey && signSignature)) {
         throw new ConsensusException(ERROR_LIST.TRANSACTION_SIGN_SIGNATURE_IS_REQUIRED, {
-          signature,
+          trsId: tr.trsId,
           senderId,
           applyBlockHeight,
           type,
@@ -201,7 +201,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
         throw new ConsensusException(
           ERROR_LIST.TRANSACTION_SENDER_SECOND_PUBLICKEY_ALREADY_CHANGE,
           {
-            signature,
+            trsId: tr.trsId,
             senderId,
             applyBlockHeight,
             type,
@@ -213,7 +213,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
         throw new ConsensusException(
           ERROR_LIST.TRANSACTION_SHOULD_NOT_HAVE_SENDER_SECOND_PUBLICKEY,
           {
-            signature,
+            trsId: tr.trsId,
             senderId,
             applyBlockHeight,
             type,
@@ -222,7 +222,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       }
       if (signSignature) {
         throw new ConsensusException(ERROR_LIST.TRANSACTION_SHOULD_NOT_HAVE_SIGN_SIGNATURE, {
-          signature,
+          trsId: tr.trsId,
           senderId,
           applyBlockHeight,
           type,
@@ -290,7 +290,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       if (!chain) {
         throw new ConsensusException(ERROR_LIST.INVALID_TRANSACTION_TO_MAGIC, {
           reason: "Transaction toMagic chain not exists",
-          signature: tr.signature,
+          trsId: tr.trsId,
           senderId: tr.senderId,
           applyBlockHeight: tr.applyBlockHeight,
           type: tr.type,
@@ -303,7 +303,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       if (!chain) {
         throw new ConsensusException(ERROR_LIST.INVALID_TRANSACTION_FROM_MAGIC, {
           reason: "Transaction fromMagic chain not exists",
-          signature: tr.signature,
+          trsId: tr.trsId,
           senderId: tr.senderId,
           applyBlockHeight: tr.applyBlockHeight,
           type: tr.type,
@@ -314,7 +314,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       if (toMagic !== chainMagic) {
         throw new ConsensusException(ERROR_LIST.INVALID_TRANSACTION_TO_MAGIC, {
           reason: "Transaction to magic must be local",
-          signature: tr.signature,
+          trsId: tr.trsId,
           senderId: tr.senderId,
           applyBlockHeight: tr.applyBlockHeight,
           type: tr.type,
@@ -336,7 +336,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     if (trsSlot > nowSlot) {
       throw new ConsensusException(ERROR_LIST.INVALID_TRANSACTION_TIMESTAMP, {
         reason: `Transaction timestamp in future. Transaction time is ahead of the time on the server, transaction timestamp ${tr.timestamp}, transaction timestamp slot ${trsSlot}, blockChain now timestamp ${nowTimestamp}, blockChain now timestamp slot ${nowSlot}`,
-        signature: tr.signature,
+        trsId: tr.trsId,
         senderId: tr.senderId,
         applyBlockHeight: tr.applyBlockHeight,
         type: tr.type,
@@ -569,11 +569,11 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    * 查询交易是否已经在未处理交易中
    *
    * @param senderId
-   * @param signature
+   * @param subId
    */
   async checkRepeatInUntreatedTransaction(
     senderId: string,
-    signature: string,
+    subId: string,
     transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     if (!transactionGetterHelper) {
@@ -582,13 +582,13 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
         target: "moduleStroge",
       });
     }
-    const txCount = await transactionGetterHelper.countTransactionInUntreatedBySignature(
+    const txCount = await transactionGetterHelper.countTransactionInUntreatedBySubId(
       senderId,
-      signature,
+      subId,
     );
     if (txCount > 0) {
       throw new ConsensusException(ERROR_LIST.ALREADY_EXIST, {
-        prop: `Transaction with signature ${signature}`,
+        prop: `Transaction with subId ${subId}`,
         target: "untreated transaction",
       });
     }
@@ -597,21 +597,21 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   /**
    * 查询交易是否已经在链上
    *
-   * @param signature 事件签名
+   * @param subId 事件签名
    * @param applyBlockHeight 事件发起高度
    * @param currentBlockHeight 事件最大有效高度
    * @param numberOfTransaction
    * @param transactionGetterHelper
    */
   async checkRepeatInBlockChainTransaction(
-    signature: string,
+    subId: string,
     applyBlockHeight: number,
     currentBlockHeight: number,
     numberOfTransaction = 0,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const txCount = await transactionGetterHelper.countTransactionInBlockChainBySignature(
-      signature,
+    const txCount = await transactionGetterHelper.countTransactionInBlockChainBySubId(
+      subId,
       this.transactionHelper.calcTransactionQueryRangeByApplyBlockHeight(
         applyBlockHeight,
         currentBlockHeight,
@@ -619,7 +619,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     );
     if (txCount > numberOfTransaction) {
       throw new ConsensusException(ERROR_LIST.ALREADY_EXIST, {
-        prop: `Transaction with signature ${signature}`,
+        prop: `Transaction with subId ${subId}`,
         target: "blockChain",
       });
     }

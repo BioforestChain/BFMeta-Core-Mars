@@ -119,8 +119,7 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
    * @param generatorInfo
    */
   async checkSecondPublicKey(block: T, generatorInfo: BFChainCore.AccountInfo) {
-    const { height, generatorPublicKey, generatorSecondPublicKey, signature, signSignature } =
-      block;
+    const { height, generatorPublicKey, generatorSecondPublicKey, blockId, signSignature } = block;
 
     const generatorAddress = await this.accountBaseHelper.getAddressFromPublicKeyString(
       generatorPublicKey,
@@ -135,7 +134,7 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
     if (generatorInfo.secondPublicKey) {
       if (!(generatorSecondPublicKey && signSignature)) {
         throw new ConsensusException(ERROR_LIST.BLOCK_SIGN_SIGNATURE_IS_REQUIRED, {
-          signature,
+          blockId,
           generatorAddress,
           height,
         });
@@ -143,7 +142,7 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
 
       if (generatorInfo.secondPublicKey !== generatorSecondPublicKey) {
         throw new ConsensusException(ERROR_LIST.BLOCK_GENERATOR_SECOND_PUBLICKEY_ALREADY_CHANGE, {
-          signature,
+          blockId,
           generatorAddress,
           height,
         });
@@ -151,14 +150,14 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
     } else {
       if (generatorSecondPublicKey) {
         throw new ConsensusException(ERROR_LIST.BLOCK_SHOULD_NOT_HAVE_GENERATOR_SECOND_PUBLICKEY, {
-          signature,
+          blockId,
           generatorAddress,
           height,
         });
       }
       if (signSignature) {
         throw new ConsensusException(ERROR_LIST.BLOCK_SHOULD_NOT_HAVE_SIGN_SIGNATURE, {
-          signature,
+          blockId,
           generatorAddress,
           height,
         });
@@ -186,12 +185,12 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
   /**
    * 指定的区块是否已经存在
    *
-   * @param signature
+   * @param blockId
    * @param height
    * @param blockGetterHelper
    */
   async isBlockAlreadyExist(
-    signature: string,
+    blockId: string,
     height: number,
     blockGetterHelper = this.blockGetterHelper,
   ) {
@@ -207,12 +206,12 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
         target: "blockGetterHelper",
       });
     }
-    const count = await blockGetterHelper.getCountBlock({ signature });
+    const count = await blockGetterHelper.getCountBlock({ blockId });
     if (count > 0) {
       throw new ConsensusException(ERROR_LIST.ALREADY_EXIST, {
-        prop: `Block with signature ${signature}`,
+        prop: `Block with signature ${blockId}`,
         target: "blockChain",
-        errorId: `Block already exists: ${signature} height: ${height}`,
+        errorId: `Block already exists: ${blockId} height: ${height}`,
       });
     }
   }

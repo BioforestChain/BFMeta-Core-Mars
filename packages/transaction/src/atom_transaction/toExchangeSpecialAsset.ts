@@ -307,7 +307,7 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
               this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
             minEffectiveHeight:
               this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
-            frozenIdBuffer: transaction.signatureBuffer,
+            frozenIdBuffer: transaction.subIdBuffer,
           },
         });
       } else {

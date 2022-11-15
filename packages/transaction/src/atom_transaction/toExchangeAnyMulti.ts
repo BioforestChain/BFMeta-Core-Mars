@@ -413,7 +413,7 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
                 this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
               minEffectiveHeight:
                 this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
-              frozenIdBuffer: transaction.signatureBuffer,
+              frozenIdBuffer: transaction.subIdBuffer,
             },
           });
         } else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.DAPP) {
@@ -514,7 +514,7 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
             minEffectiveHeight:
               this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
             frozenIdBuffer: parseHexToArrayBuffer(
-              getHexFromArrayBuffer(transaction.signatureBuffer) +
+              getHexFromArrayBuffer(transaction.subIdBuffer) +
                 this.Buffer.from("_entity").toString("hex"),
             ),
           },

@@ -289,7 +289,7 @@ export class IssueEntityMultiTransactionFactoryV1 extends TransactionFactory<Iss
     config = this.configHelper,
   ) {
     return wrapTaskList((taskList) => {
-      const { senderId, recipientId, senderPublicKeyBuffer, signatureBuffer, fee } = transaction;
+      const { senderId, recipientId, senderPublicKeyBuffer, subIdBuffer, fee } = transaction;
       const {
         sourceChainName,
         sourceChainMagic,
@@ -325,7 +325,7 @@ export class IssueEntityMultiTransactionFactoryV1 extends TransactionFactory<Iss
           possessorAddress: recipientId,
           entityFactoryPossessorAddress: entityFactoryPossessor,
           entityFrozenAssetPrealnum,
-          issueIdBuffer: signatureBuffer,
+          issueIdBuffer: subIdBuffer,
           status: ASSET_STATUS.NORMAL,
         },
       });
@@ -347,7 +347,7 @@ export class IssueEntityMultiTransactionFactoryV1 extends TransactionFactory<Iss
             assetInfo,
             amount: `-${sourceAmount}`,
             sourceAmount,
-            frozenIdBuffer: signatureBuffer,
+            frozenIdBuffer: subIdBuffer,
             minEffectiveHeight,
             maxEffectiveHeight,
             totalUnfrozenTimes: numberOfEntities,

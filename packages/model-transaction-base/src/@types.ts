@@ -267,7 +267,7 @@ declare namespace BFChainCore {
     ciphertextSignature?: AccountSignatureJSON;
     //#region 冗余的字段
     /**以下是冗余的字段
-     * 都是能从`transactionSignature`中查询出来的，但这个仍然做了存储，是为了确保能够在独立的情况下仍然能够将之渲染出来
+     * 都是能从`transactionSubId`中查询出来的，但这个仍然做了存储，是为了确保能够在独立的情况下仍然能够将之渲染出来
      */
 
     /**礼物配置 */
@@ -568,7 +568,7 @@ declare namespace BFChainCore {
     ciphertextSignature?: AccountSignatureJSON;
     //#region 冗余的字段
     /**以下是冗余的字段
-     * 都是能从`transactionSignature`中查询出来的，但这个仍然做了存储，是为了确保能够在独立的情况下仍然能够将之渲染出来
+     * 都是能从`transactionSubId`中查询出来的，但这个仍然做了存储，是为了确保能够在独立的情况下仍然能够将之渲染出来
      */
 
     /**礼物配置 */

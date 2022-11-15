@@ -571,7 +571,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     // /**异常时重试次数 */
     // const RETRY_TIMES = 3;
     const { offset, limit: totalLength, ...baseQueryCondition } = query;
-    const limit = baseQueryCondition.signature ? 1 : totalLength || Infinity;
+    const limit = baseQueryCondition.blockId ? 1 : totalLength || Infinity;
 
     const parallelTaskId = `Group(${this.groupName}) queryTransactions-${
       Date.now() + Math.random()
@@ -943,7 +943,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
     // /**异常时重试次数 */
     // const RETRY_TIMES = 3;
     const { offset, limit: totalLength, ...baseQueryCondition } = query;
-    const limit = baseQueryCondition.signature ? 1 : totalLength || Infinity;
+    const limit = baseQueryCondition.blockId ? 1 : totalLength || Infinity;
 
     const parallelTaskId = `Group(${this.groupName}) indexTransactions-${
       Date.now() + Math.random()

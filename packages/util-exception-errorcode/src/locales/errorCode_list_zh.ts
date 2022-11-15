@@ -70,21 +70,21 @@ export const ERROR_CODE_LIST_ZH = {
   "001-11001": "{target} 的 {prop} 丢失",
   "001-11002": "账户 {address} 已经冻结，状态 {status}，错误 id {errorId}",
   "001-11003":
-    "事件的安全签名是必须的，事件签名 {signature} 事件发起账户地址 {senderId} 事件发起高度 {applyBlockHeight} 事件类型 {type}",
+    "事件的安全签名是必须的，事件 id {trsId} 事件发起账户地址 {senderId} 事件发起高度 {applyBlockHeight} 事件类型 {type}",
   "001-11004":
-    "事件的发起账户安全密钥已经改变，事件签名 {signature} 事件发起账户地址 {senderId} 事件发起高度 {applyBlockHeight} 事件类型 {type}",
+    "事件的发起账户安全密钥已经改变，事件 id {trsId} 事件发起账户地址 {senderId} 事件发起高度 {applyBlockHeight} 事件类型 {type}",
   "001-11005":
-    "事件不应该携带发起账户的安全公钥，事件签名 {signature} 事件发起账户地址 {senderId} 事件发起高度 {applyBlockHeight} 事件类型 {type}",
+    "事件不应该携带发起账户的安全公钥，事件 id {trsId} 事件发起账户地址 {senderId} 事件发起高度 {applyBlockHeight} 事件类型 {type}",
   "001-11006":
-    "件不应该携带安全签名，事件签名 {signature} 事件发起账户地址 {senderId} 事件发起高度 {applyBlockHeight} 事件类型 {type}",
+    "件不应该携带安全签名，事件 id {trsId} 事件发起账户地址 {senderId} 事件发起高度 {applyBlockHeight} 事件类型 {type}",
   "001-11007": "事件的发起高度不合法，原因 {reason}",
   "001-11008": "事件的有效高度不合法，原因 {reason}",
   "001-11009":
-    "事件的来源链的网络标识符不合法，原因 {reason}，事件签名 {signature} 事件发起账户地址 {senderId} 事件发起高度 {applyBlockHeight} 事件类型 {type}",
+    "事件的来源链的网络标识符不合法，原因 {reason}，事件 id {trsId} 事件发起账户地址 {senderId} 事件发起高度 {applyBlockHeight} 事件类型 {type}",
   "001-11010":
-    "事件的去往链的网络标识符不合法，原因 {reason}，事件签名 {signature} 事件发起账户地址 {senderId} 事件发起高度 {applyBlockHeight} 事件类型 {type}",
+    "事件的去往链的网络标识符不合法，原因 {reason}，事件 id {trsId} 事件发起账户地址 {senderId} 事件发起高度 {applyBlockHeight} 事件类型 {type}",
   "001-11011":
-    "事件的时间戳不合法，原因 {reason}，事件签名 {signature} 事件发起账户地址 {senderId} 事件发起高度 {applyBlockHeight} 事件类型 {type}",
+    "事件的时间戳不合法，原因 {reason}，事件 id {trsId} 事件发起账户地址 {senderId} 事件发起高度 {applyBlockHeight} 事件类型 {type}",
   "001-11012": "DAppid 不存在，dappid {dappid}",
   "001-11013": "DAppid 已经存在, dappid {dappid}，错误 id {errorId}",
   "001-11014": "位名不存在, 位名 {locationName}，错误 id {errorId}",
@@ -134,7 +134,7 @@ export const ERROR_CODE_LIST_ZH = {
   "001-11058": "受托人不能迁移权益",
   "001-11059": "你只能迁移主权益，{assetType} 不是主权益 {mainAsset}",
   "001-11060": "不能携带安全公钥",
-  "001-11061": "不能携带安全签名",
+  "001-11061": "不能携带安全签名，事件 id {trsId}",
   "001-11062": "账户近期参与了投票",
   "001-11063": "账户拥有冻结的权益",
   "001-11064": "需要迁出全部权益，地址 {address}",
@@ -145,18 +145,18 @@ export const ERROR_CODE_LIST_ZH = {
   "001-11069": "账户已经设置了用户名，错误 id {errorId}",
   "001-11070": "模板发行 entity 的次数用完，entityFactory {entityFactory}",
   "001-11071": "权益已经存在，所属链的网络标识符 {magic} 权益名 {assetType}",
-  "001-11072": "链上的冻结资产 signature {signature} 不存在或者已经过期",
+  "001-11072": "链上的冻结资产 subId {subId} 不存在或者已经过期",
   "001-11073": "模板没有足够的发行 entity 次数，entityFactory {entityFactory}",
 
   // block logic
   "001-12001":
-    "区块的安全签名是必须的，区块签名 {signature} 锻造者的地址 {generatorAddress} 区块高度 {height}",
+    "区块的安全签名是必须的，区块 id {blockId} 锻造者的地址 {generatorAddress} 区块高度 {height}",
   "001-12002":
-    "区块锻造者的安全签名已经改变，区块签名 {signature} 锻造者的地址 {generatorAddress} 区块高度 {height}",
+    "区块锻造者的安全签名已经改变，区块 id {blockId} 锻造者的地址 {generatorAddress} 区块高度 {height}",
   "001-12003":
-    "区块不应该携带锻造者的安全公钥，区块签名 {signature} 锻造者的地址 {generatorAddress} 区块高度 {height}",
+    "区块不应该携带锻造者的安全公钥，区块 id {blockId} 锻造者的地址 {generatorAddress} 区块高度 {height}",
   "001-12004":
-    "区块不应该携带安全签名，区块签名 {signature} 锻造者的地址 {generatorAddress} 区块高度 {height}",
+    "区块不应该携带安全签名，区块 id {blockId} 锻造者的地址 {generatorAddress} 区块高度 {height}",
   "001-12005": "{variable} 超出范围",
   "001-12006": "获取最接近的相同区块失败，不应该发生",
   "001-12007": "创世块不匹配, 创世块的 signature 和被同步节点的创世块的 signature 不相等",

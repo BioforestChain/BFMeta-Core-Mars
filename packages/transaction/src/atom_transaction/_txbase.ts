@@ -377,6 +377,21 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
 
     const { baseHelper } = this;
 
+    if (!transaction.subId) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
+        prop: "subId",
+        ...Trs_Exception_Detail,
+      });
+    }
+
+    if (!baseHelper.isValidTransactionSubId(transaction.subId)) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+        prop: `subId ${transaction.subId}`,
+        type: "subId",
+        ...Trs_Exception_Detail,
+      });
+    }
+
     if (!transaction.signature) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "signature",

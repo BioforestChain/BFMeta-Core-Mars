@@ -58,7 +58,7 @@ export class ChainChannelHelper {
 
   // FIXME: 这里没确定 base58 编码的最大长度，临时使用 40
   private static MAX_ADDRESS_LENGTH = 40;
-  private static MAX_SIGNATURE_LENGTH = 128;
+  private static MAX_ID_LENGTH = 64;
 
   /**
    * 生成并校验交易查询的传入参数
@@ -89,13 +89,13 @@ export class ChainChannelHelper {
     const {
       type,
       types,
-      signature,
+      subId,
       senderId,
       recipientId,
       dappid,
       lns,
       storage,
-      blockSignature,
+      blockId,
       minHeight,
       maxHeight,
       trusteeId,
@@ -124,12 +124,12 @@ export class ChainChannelHelper {
         }
       }
     }
-    if (signature) {
+    if (subId) {
       has_query_params = true;
       // 只验证签名长度
-      if (signature.length !== ChainChannelHelper.MAX_SIGNATURE_LENGTH) {
+      if (subId.length !== ChainChannelHelper.MAX_ID_LENGTH) {
         throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
-          field: `signature ${signature}`,
+          field: `subId ${subId}`,
         });
       }
     }
@@ -188,12 +188,12 @@ export class ChainChannelHelper {
         });
       }
     }
-    if (blockSignature) {
+    if (blockId) {
       has_query_params = true;
       // 只验证签名长度
-      if (blockSignature.length !== ChainChannelHelper.MAX_SIGNATURE_LENGTH) {
+      if (blockId.length !== ChainChannelHelper.MAX_ID_LENGTH) {
         throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
-          field: `blockSignature ${blockSignature}`,
+          field: `blockId ${blockId}`,
         });
       }
     }
@@ -873,13 +873,13 @@ export class ChainChannelHelper {
     //#region 查询参数校验
     const {
       type,
-      signature,
+      subId,
       senderId,
       recipientId,
       dappid,
       lns,
       storage,
-      blockSignature,
+      blockId,
       minHeight,
       maxHeight,
       trusteeId,
@@ -899,12 +899,12 @@ export class ChainChannelHelper {
         });
       }
     }
-    if (signature) {
+    if (subId) {
       has_query_params = true;
-      if (!BH.isValidTransactionSignature(signature)) {
+      if (!BH.isValidTransactionSubId(subId)) {
         throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           function: "boxQueryTindexArg.query",
-          field: `signature ${signature}`,
+          field: `subId ${subId}`,
         });
       }
     }
@@ -959,12 +959,12 @@ export class ChainChannelHelper {
         });
       }
     }
-    if (blockSignature) {
+    if (blockId) {
       has_query_params = true;
-      if (!BH.isValidBlockSignature(blockSignature)) {
+      if (!BH.isValidBlockId(blockId)) {
         throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
           function: "boxQueryTindexArg.query",
-          field: `blockSignature ${blockSignature}`,
+          field: `blockId ${blockId}`,
         });
       }
     }

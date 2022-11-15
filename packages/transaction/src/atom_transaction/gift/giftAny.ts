@@ -223,7 +223,7 @@ export class GiftAnyTransactionFactory extends GiftTransactionFactory<GiftAnyTra
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
       const { chainAssetInfoHelper } = this;
-      const { senderId, senderPublicKeyBuffer, signatureBuffer, asset } = transaction;
+      const { senderId, senderPublicKeyBuffer, subIdBuffer, asset } = transaction;
       const {
         taxInformation,
         amount,
@@ -251,7 +251,7 @@ export class GiftAnyTransactionFactory extends GiftTransactionFactory<GiftAnyTra
             assetInfo,
             amount: `-${amount}`,
             sourceAmount: amount,
-            frozenIdBuffer: transaction.signatureBuffer,
+            frozenIdBuffer: subIdBuffer,
             minEffectiveHeight,
             maxEffectiveHeight,
             totalUnfrozenTimes: totalGrabableTimes,
@@ -333,7 +333,7 @@ export class GiftAnyTransactionFactory extends GiftTransactionFactory<GiftAnyTra
                 this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
               minEffectiveHeight:
                 this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
-              frozenIdBuffer: transaction.signatureBuffer,
+              frozenIdBuffer: subIdBuffer,
             },
           });
         }

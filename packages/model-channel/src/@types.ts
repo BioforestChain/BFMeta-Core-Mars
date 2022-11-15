@@ -27,8 +27,6 @@ declare namespace BFChainCore {
     type?: string;
     /**交易类型组 */
     types?: string[];
-    /**交易签名 */
-    signature?: string;
     /**交易发送者地址 */
     senderId?: string;
     /**交易接收者地址 */
@@ -39,8 +37,8 @@ declare namespace BFChainCore {
     lns?: string;
     /**查询自定义存储的KV */
     storage?: TransactionStorageJSON;
-    /**查询的区块的signature */
-    blockSignature?: string;
+    /**查询的区块的 blockId */
+    blockId?: string;
     /**查询的区块的最小高度 */
     minHeight?: number;
     /**查询的区块的最大高度 */

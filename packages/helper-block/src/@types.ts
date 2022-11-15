@@ -69,7 +69,7 @@ declare namespace BFChainCore {
       /**区块的锻造者公钥 */
       generatorPublicKey?: string;
       /**区块的签名 */
-      signature?: string;
+      blockId?: string;
       /**区块的版本号 */
       version?: number;
     }): Promise<number>;

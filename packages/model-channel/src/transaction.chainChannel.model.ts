@@ -25,13 +25,13 @@ export class TransactionQueryOptions
   types?: string[];
   /**交易唯一编号 */
   @Field.d(TransactionQueryOptions.INC++, "bytes", "optional")
-  signatureBuffer?: Uint8Array;
-  get signature() {
-    return (this.signatureBuffer && getHexFromArrayBuffer(this.signatureBuffer)) || undefined;
+  subIdBuffer?: Uint8Array;
+  get subId() {
+    return (this.subIdBuffer && getHexFromArrayBuffer(this.subIdBuffer)) || undefined;
   }
-  set signature(value: string | undefined) {
+  set subId(value: string | undefined) {
     /// 空字符串也当成undefined处理
-    this.signatureBuffer = parseHexToArrayBuffer(value);
+    this.subIdBuffer = parseHexToArrayBuffer(value);
   }
   /**交易发送者地址 */
   @Field.d(TransactionQueryOptions.INC++, "string", "optional")
@@ -50,7 +50,7 @@ export class TransactionQueryOptions
   storage?: TransactionBaseStorageModel;
   /**查询的区块的ID */
   @Field.d(TransactionQueryOptions.INC++, "string", "optional")
-  blockSignature?: string;
+  blockId?: string;
   /**查询的区块的最小高度 */
   @Field.d(TransactionQueryOptions.INC++, "uint32", "optional")
   minHeight?: number;
@@ -81,21 +81,21 @@ export class TransactionQueryOptions
   ) {
     const res = super.fromObject(object) as TransactionQueryOptions;
     if (res !== object) {
-      object.signature && (res.signature = object.signature);
+      object.subId && (res.subId = object.subId);
     }
     return res as unknown as T;
   }
   toJSON() {
     const res: BFChainCore.TransactionQueryOptionsJSON = {
       type: this.type,
+      subId: this.subId,
       types: this.types,
-      signature: this.signature,
       senderId: this.senderId,
       recipientId: this.recipientId,
       dappid: this.dappid,
       lns: this.lns,
       storage: this.storage,
-      blockSignature: this.blockSignature,
+      blockId: this.blockId,
       minHeight: this.minHeight,
       maxHeight: this.maxHeight,
       trusteeId: this.trusteeId,

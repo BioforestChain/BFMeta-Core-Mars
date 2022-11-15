@@ -135,7 +135,7 @@ export class GrabAnyTransactionFactory extends TransactionFactory<GrabAnyTransac
       });
     }
 
-    if (!baseHelper.isValidTransactionId(transactionSubId)) {
+    if (!baseHelper.isValidTransactionSubId(transactionSubId)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `transactionSubId ${transactionSubId}`,
         type: "transaction id",

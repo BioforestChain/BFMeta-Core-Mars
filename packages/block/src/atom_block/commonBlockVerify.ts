@@ -220,12 +220,12 @@ export class CommonBlockVerify<T extends Block> {
   /**
    * 指定的区块是否已经存在
    *
-   * @param signature
+   * @param blockId
    * @param height
    * @param blockGetterHelper
    */
   async isBlockAlreadyExist(
-    signature: string,
+    blockId: string,
     height: number,
     blockGetterHelper: Pick<BFChainCore.BlockGetterHelperInterface, "getCountBlock">,
   ) {
@@ -235,12 +235,12 @@ export class CommonBlockVerify<T extends Block> {
         target: "blockGetterHelper",
       });
     }
-    const count = await blockGetterHelper.getCountBlock({ signature });
+    const count = await blockGetterHelper.getCountBlock({ blockId });
     if (count > 0) {
       throw new ConsensusException(ERROR_LIST.ALREADY_EXIST, {
-        prop: `Block with signature ${signature}`,
+        prop: `Block with blockId ${blockId}`,
         target: "blockChain",
-        errorId: `Block already exists: ${signature} height: ${height}`,
+        errorId: `Block already exists: ${blockId} height: ${height}`,
       });
     }
   }

@@ -70,21 +70,21 @@ export const ERROR_CODE_LIST_EN = {
   "001-11001": "{prop} in {target} lose",
   "001-11002": "Account with address {address} was frozen, status {status}, errorId {errorId}",
   "001-11003":
-    "Transaction signSignature is required, signature {signature} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type}",
+    "Transaction signSignature is required, trsId {trsId} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type}",
   "001-11004":
-    "Transaction sender second secret have already change, signature {signature} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type}",
+    "Transaction sender second secret have already change, trsId {trsId} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type}",
   "001-11005":
-    "Transaction should not have senderSecondPublicKey, signature {signature} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type}",
+    "Transaction should not have senderSecondPublicKey, trsId {trsId} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type}",
   "001-11006":
-    "Transaction should not have signSignature, signature {signature} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type}",
+    "Transaction should not have signSignature, trsId {trsId} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type}",
   "001-11007": "Invalid transaction apply block height, reason {reason}",
   "001-11008": "Invalid transaction effective block height, reason {reason}",
   "001-11009":
-    "Invalid transaction from magic, reason {reason} signature {signature} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type}",
+    "Invalid transaction from magic, reason {reason} trsId {trsId} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type}",
   "001-11010":
-    "Invalid transaction to magic, reason {reason} signature {signature} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type}",
+    "Invalid transaction to magic, reason {reason} trsId {trsId} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type}",
   "001-11011":
-    "Invalid transaction timestamp, reason {reason} signature {signature} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type}",
+    "Invalid transaction timestamp, reason {reason} trsId {trsId} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type}",
   "001-11012": "DAppid is not exist, dappid {dappid}",
   "001-11013": "DAppid is already exist, dappid {dappid}, errorId {errorId}",
   "001-11014": "LocationName is not exist, locationName {locationName}, errorId {errorId}",
@@ -137,7 +137,7 @@ export const ERROR_CODE_LIST_EN = {
   "001-11058": "Delegate can not migrate asset",
   "001-11059": "You can only migrate main asset, {assetType} is not main asset {mainAsset}",
   "001-11060": "Can not carry second publicKey",
-  "001-11061": "Can not carry second signature",
+  "001-11061": "Can not carry second signature, trsId {trsId}",
   "001-11062": "Account participate vote recently",
   "001-11063": "Account possess frozen asset",
   "001-11064": "Need emigrate total asset, address {address}",
@@ -149,18 +149,18 @@ export const ERROR_CODE_LIST_EN = {
   "001-11069": "Account already has a username, errorId {errorId}",
   "001-11070": "Issue entity times use up, entityFactory {entityFactory}",
   "001-11071": "Asset already exist, magic {magic} assetType {assetType}",
-  "001-11072": "Frozen asset with signature {signature} in blockChain not exist or expired",
+  "001-11072": "Frozen asset with subId {subId} in blockChain not exist or expired",
   "001-11073": "Not enough issue entity times, entityFactory {entityFactory}",
 
   // block logic
   "001-12001":
-    "Block signSignature is required, signature {signature} generatorAddress {generatorAddress} height {height}",
+    "Block signSignature is required, blockId {blockId} generatorAddress {generatorAddress} height {height}",
   "001-12002":
-    "Block generator second secret have already change, signature {signature} generatorAddress {generatorAddress} height {height}",
+    "Block generator second secret have already change, blockId {blockId} generatorAddress {generatorAddress} height {height}",
   "001-12003":
-    "Block should not have generatorSecondPublicKey, signature {signature} generatorAddress {generatorAddress} height {height}",
+    "Block should not have generatorSecondPublicKey, blockId {blockId} generatorAddress {generatorAddress} height {height}",
   "001-12004":
-    "Block should not have signSignature, signature {signature} generatorAddress {generatorAddress} height {height}",
+    "Block should not have signSignature, blockId {blockId} generatorAddress {generatorAddress} height {height}",
   "001-12005": "{variable} out of range",
   "001-12006": "Failed to find nearest same block in one round, should not happen",
   "001-12007":

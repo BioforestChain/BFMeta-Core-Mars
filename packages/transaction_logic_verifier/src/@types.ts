@@ -9,22 +9,6 @@ declare namespace BFChainCore {
 
   // #region TransactionGetterHelperInterface
   interface TransactionGetterHelperInterface {
-    /**
-     * 根据交易 trsId 获取交易和交易所在的区块签名
-     *
-     * @param signature 事件 id
-     * @param heightRange 查询范围
-     */
-    getTransactionAndBlockIdById(
-      trsId: string,
-      heightRange: { startHeight: number; endHeight: number },
-    ): Promise<
-      | {
-          transaction: TransactionJSON;
-          blockId: string;
-        }
-      | undefined
-    >;
     /**根据交易 subId 获取交易和交易所在的区块id */
     getTransactionAndBlockIdBySubId(
       subId: string,
@@ -36,16 +20,6 @@ declare namespace BFChainCore {
         }
       | undefined
     >;
-    /**
-     * 根据交易 id 获取交易
-     *
-     * @param trsId 事件签名
-     * @param heightRange 查询范围
-     */
-    getTransactionById(
-      trsId: string,
-      heightRange: { startHeight: number; endHeight: number },
-    ): Promise<TransactionJSON | undefined>;
     /**
      * 根据交易 subId 获取交易
      *
@@ -66,18 +40,18 @@ declare namespace BFChainCore {
     /**
      * 查询事件在未处理事件中的数量
      *
-     * @param signature
+     * @param subId
      * @param heightRange
      */
-    countTransactionInUntreatedBySignature(senderId: string, signature: string): Promise<number>;
+    countTransactionInUntreatedBySubId(senderId: string, subId: string): Promise<number>;
     /**
      * 查询事件在链上的数量
      *
      * @param signature
      * @param heightRange
      */
-    countTransactionInBlockChainBySignature(
-      signature: string,
+    countTransactionInBlockChainBySubId(
+      subId: string,
       heightRange: { startHeight: number; endHeight: number },
     ): Promise<number>;
 

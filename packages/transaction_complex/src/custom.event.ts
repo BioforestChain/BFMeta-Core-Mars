@@ -245,7 +245,7 @@ export class CustomTransactionEvent {
       if (
         !(
           transaction.storage &&
-          transaction.storage.key === "transactionSignature" &&
+          transaction.storage.key === "transactionSubId" &&
           transaction.storage.value === frozenId
         )
       ) {
@@ -263,7 +263,7 @@ export class CustomTransactionEvent {
       if (
         !(
           transaction.storage &&
-          transaction.storage.key === "transactionSignature" &&
+          transaction.storage.key === "transactionSubId" &&
           transaction.storage.value === frozenId
         )
       ) {
@@ -652,7 +652,7 @@ export class CustomTransactionEvent {
           assetInfo,
           amount: `-${amount}`,
           sourceAmount: amount,
-          frozenIdBuffer: transaction.signatureBuffer,
+          frozenIdBuffer: transaction.subIdBuffer,
           minEffectiveHeight,
           maxEffectiveHeight,
           totalUnfrozenTimes,

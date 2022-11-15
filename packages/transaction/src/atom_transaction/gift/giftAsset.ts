@@ -193,7 +193,7 @@ export class GiftAssetTransactionFactory extends GiftTransactionFactory<GiftAsse
           assetInfo,
           amount: `-${amount}`,
           sourceAmount: amount,
-          frozenIdBuffer: transaction.signatureBuffer,
+          frozenIdBuffer: transaction.subIdBuffer,
           minEffectiveHeight,
           maxEffectiveHeight,
           totalUnfrozenTimes: totalGrabableTimes,
