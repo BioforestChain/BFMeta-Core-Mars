@@ -569,11 +569,11 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    * 查询交易是否已经在未处理交易中
    *
    * @param senderId
-   * @param subId
+   * @param trsId
    */
   async checkRepeatInUntreatedTransaction(
     senderId: string,
-    subId: string,
+    trsId: string,
     transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     if (!transactionGetterHelper) {
@@ -582,13 +582,10 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
         target: "moduleStroge",
       });
     }
-    const txCount = await transactionGetterHelper.countTransactionInUntreatedBySubId(
-      senderId,
-      subId,
-    );
+    const txCount = await transactionGetterHelper.countTransactionInUntreatedById(senderId, trsId);
     if (txCount > 0) {
       throw new ConsensusException(ERROR_LIST.ALREADY_EXIST, {
-        prop: `Transaction with subId ${subId}`,
+        prop: `Transaction with trsId ${trsId}`,
         target: "untreated transaction",
       });
     }

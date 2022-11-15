@@ -40,10 +40,10 @@ declare namespace BFChainCore {
     /**
      * 查询事件在未处理事件中的数量
      *
-     * @param subId
+     * @param trsId
      * @param heightRange
      */
-    countTransactionInUntreatedBySubId(senderId: string, subId: string): Promise<number>;
+    countTransactionInUntreatedById(senderId: string, trsId: string): Promise<number>;
     /**
      * 查询事件在链上的数量
      *
