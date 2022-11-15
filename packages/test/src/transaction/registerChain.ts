@@ -707,7 +707,7 @@ registerchainAssetData.blockPerRound = 5;
         timestamp: 0,
         generatorPublicKey,
         generatorEquity: "0",
-        previousBlockSignature: "",
+        previousBlockId: "",
         remark: {
           QWQ: "人定胜天",
         },
@@ -943,7 +943,7 @@ registerchainAssetData.blockPerRound = 5;
         timestamp: 0,
         generatorPublicKey,
         generatorEquity: "0",
-        previousBlockSignature:
+        previousBlockId:
           "a8b6f856eae3d0cf57ace98d6d5890db6713a2356f06159a5e34e8924431895a2c0b19f1444120a632bf48442a2b033003a262fb78691bdcc4513ca255c57a11",
       },
       {

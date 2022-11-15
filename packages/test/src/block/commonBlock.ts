@@ -96,7 +96,7 @@ async function getCommonBlockAsync(sender: AccountModel) {
       timestamp: 0,
       generatorPublicKey,
       generatorEquity: "0",
-      previousBlockSignature: "",
+      previousBlockId: "",
     },
     {
       debug: "debug",

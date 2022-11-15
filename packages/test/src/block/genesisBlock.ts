@@ -815,7 +815,7 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
         generatorPublicKey,
         // generatorSecondPublicKey,
         generatorEquity: "0",
-        previousBlockSignature: "",
+        previousBlockId: "",
       },
       {
         genesisAsset: mainChainAssetData,

@@ -905,10 +905,10 @@ function print(obj: any) {
 
   //const map = new Map();
   const lastBlock = {
-    signature: bfchainCore.config.genesisBlock.signature,
+    blockId: bfchainCore.config.genesisBlock.blockId,
     timestamp: bfchainCore.config.genesisBlock.timestamp,
     height: bfchainCore.config.genesisBlock.height,
-    previousBlockSignature: bfchainCore.config.genesisBlock.signature,
+    previousBlockId: bfchainCore.config.genesisBlock.blockId,
   };
   let count = 0;
 
@@ -934,7 +934,7 @@ function print(obj: any) {
           timestamp: result.timestamp,
           generatorPublicKey: delegate.pk,
           generatorEquity: "0",
-          previousBlockSignature: lastBlock.previousBlockSignature,
+          previousBlockId: lastBlock.previousBlockId,
           roundOfflineGeneratersHashMap: result.roundOfflineGeneratersHashMap,
         };
         if (lastBlock.height % bfchainCore.config.blockPerRound !== 0) {
@@ -950,8 +950,8 @@ function print(obj: any) {
             asyncIteratorGenerator,
             delegate.keypair,
           );
-          lastBlock.previousBlockSignature = lastBlock.signature;
-          lastBlock.signature = commonBlock.signature;
+          lastBlock.previousBlockId = lastBlock.blockId;
+          lastBlock.blockId = commonBlock.blockId;
           blockMap.set(lastBlock.height, commonBlock);
         } else if (lastBlock.height % bfchainCore.config.blockPerRound === 0) {
           // 本轮打块的人
@@ -1012,14 +1012,14 @@ function print(obj: any) {
             asyncIteratorGenerator,
             delegate.keypair,
           );
-          lastBlock.previousBlockSignature = roundLastBlock.signature;
-          lastBlock.signature = roundLastBlock.signature;
+          lastBlock.previousBlockId = roundLastBlock.blockId;
+          lastBlock.blockId = roundLastBlock.blockId;
           blockMap.set(lastBlock.height, roundLastBlock);
         }
       }
       disableLog ||
         print(
-          `${label}生成区块 ${lastBlock.signature.substr(0, 5)} ${lastBlock.height}. ${
+          `${label}生成区块 ${lastBlock.blockId.substr(0, 5)} ${lastBlock.height}. ${
             result.address
           } time: ${result.timestamp} `,
         );

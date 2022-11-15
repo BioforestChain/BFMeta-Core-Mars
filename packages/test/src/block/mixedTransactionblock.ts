@@ -705,7 +705,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
         timestamp: 0,
         generatorPublicKey,
         generatorEquity: "0",
-        previousBlockSignature: "6ed38b5fd642f79689ade7cff598bdf9548de56182c85f05b244c66b17a89dc1",
+        previousBlockId: "6ed38b5fd642f79689ade7cff598bdf9548de56182c85f05b244c66b17a89dc1",
       },
       {
         debug: "debug",
