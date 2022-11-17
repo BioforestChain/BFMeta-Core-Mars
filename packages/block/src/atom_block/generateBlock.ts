@@ -208,7 +208,6 @@ export class GenerateBlockCore<T extends Block> {
     const abortForbiddenTransaction = transactionCore.abortForbiddenTransaction;
     const VOTE = transactionCore.transactionHelper.VOTE;
     const MAX_VOTES_PER_BLOCK = this.config.maxVotesPerBlock;
-    const MAX_TRANSACTION_SIZE = this.config.maxTransactionSize;
     const { height, generatorPublicKey, statisticInfo: blockStatisticsInfo } = block;
     const { tpowOfWorkExemptionBlocks, maxBlockSize } = this.config;
     /**所有事件的sha256hash */
@@ -233,6 +232,8 @@ export class GenerateBlockCore<T extends Block> {
       const tranSenderCountMap = new EasyMap<string, number>((address) => 0);
       isDevGenerateBlock && info("begin insertTransactions");
       for await (const tranItem of trsGenerator) {
+        // 获取交易在链上的索引
+        eventEmitter.tIndexGetter && (tranItem.tIndex = await eventEmitter.tIndexGetter(tranItem));
         isDevGenerateBlock &&
           log("insert transaction: %d / %d", tranItem.tIndex, block.numberOfTransactions);
         try {

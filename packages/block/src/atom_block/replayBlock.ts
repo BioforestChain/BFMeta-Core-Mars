@@ -264,7 +264,6 @@ export class ReplayBlockCore<T extends Block> {
     const { tpowOfWorkExemptionBlocks } = config;
     const needTPow = height > tpowOfWorkExemptionBlocks;
     const MAX_VOTES_PER_BLOCK = this.config.maxVotesPerBlock;
-    const MAX_TRANSACTION_SIZE = this.config.maxTransactionSize;
     /**所有交易的sha256hash */
     const payloadHash = this.cryptoHelper.sha256();
     /**区块打包的投票交易数 */
@@ -351,11 +350,12 @@ export class ReplayBlockCore<T extends Block> {
         isDevGenerateBlock &&
           log("insert transaction: %d / %d", tranItem.tIndex + 1, block.numberOfTransactions);
         try {
-          if (tranItem.tIndex >= MAX_TRANSACTION_SIZE) {
-            throw new OutOfRangeException(ERROR_LIST.OUT_OF_RANGE, {
-              variable: "transactions",
-              tIndex: tranItem.tIndex,
-              maxLength: MAX_TRANSACTION_SIZE,
+          if (tranItem.tIndex !== tIndex) {
+            throw new OutOfRangeException(ERROR_LIST.NOT_MATCH, {
+              to_compare_prop: `tIndex ${tranItem.tIndex}`,
+              be_compare_prop: `tIndex ${tIndex}`,
+              to_target: "transactionInBlock",
+              be_target: "calculate",
             });
           }
           const trs = tranItem.transaction;
