@@ -106,6 +106,8 @@ export class DestoryEntityLogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    */
   getLockData(transaction: DestoryEntityTransaction) {
-    return [transaction.asset.destoryEntity.entityId];
+    const { entityFactoryApplicant, entityFactoryPossessor, entityId } =
+      transaction.asset.destoryEntity;
+    return [entityFactoryApplicant, entityFactoryPossessor, entityId];
   }
 }
