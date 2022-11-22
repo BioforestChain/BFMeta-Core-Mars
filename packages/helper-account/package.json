@@ -1,17 +1,17 @@
 {
   "name": "@bfchain/core-helper-account",
-  "version": "8.0.4",
+  "version": "8.0.5",
   "main": "build/cjs/index.js",
   "type": "commonjs",
   "files": [
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-helper-block": "8.0.4",
-    "@bfchain/core-model-block-base": "8.0.4",
-    "@bfchain/core-model-transaction-base": "8.0.4",
-    "@bfchain/core-typings": "8.0.4",
-    "@bfchain/core-util-exception": "8.0.4"
+    "@bfchain/core-helper-block": "8.0.5",
+    "@bfchain/core-model-block-base": "8.0.5",
+    "@bfchain/core-model-transaction-base": "8.0.5",
+    "@bfchain/core-typings": "8.0.5",
+    "@bfchain/core-util-exception": "8.0.5"
   },
   "module": "build/esm/index.js",
   "gitHead": "ef41eb359371b11aafbec0516df1eba01f16ebfd",
