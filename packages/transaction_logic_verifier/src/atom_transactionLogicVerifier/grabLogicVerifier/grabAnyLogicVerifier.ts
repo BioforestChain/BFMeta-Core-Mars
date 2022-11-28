@@ -237,21 +237,57 @@ export class GrabAnyLogicVerifier extends TransactionLogicVerifier {
   ) {
     const giftAny = transaction.asset.grabAny.giftAny;
 
-    const { sourceChainMagic, assetType, giftDistributionRule } = giftAny;
+    const {
+      sourceChainMagic,
+      assetType,
+      giftDistributionRule,
+      totalGrabableTimes,
+      beginUnfrozenBlockHeight,
+      taxInformation,
+    } = giftAny;
 
     const trsAsset = giftAnyJson.asset.giftAny;
 
     if (
       trsAsset.sourceChainMagic !== sourceChainMagic ||
       trsAsset.assetType !== assetType ||
-      trsAsset.giftDistributionRule !== giftDistributionRule
+      trsAsset.giftDistributionRule !== giftDistributionRule ||
+      trsAsset.totalGrabableTimes !== totalGrabableTimes ||
+      trsAsset.beginUnfrozenBlockHeight !== beginUnfrozenBlockHeight
     ) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-        to_compare_prop: `trsAsset: ${JSON.stringify(trsAsset)}`,
-        be_compare_prop: `giftAsset: ${JSON.stringify(giftAny.toJSON())}`,
+        to_compare_prop: `grabAny.giftAny: ${JSON.stringify(giftAny.toJSON())}`,
+        be_compare_prop: `giftAny: ${JSON.stringify(trsAsset)}`,
         to_target: "GrabAnyTransaction",
         be_target: "GiftAnyTransaction",
       });
+    }
+
+    if (trsAsset.taxInformation) {
+      if (!taxInformation) {
+        throw new ConsensusException(ERROR_LIST.PROP_IS_REQUIRE, {
+          prop: "taxInformation",
+          target: "grabAny.giftAny",
+        });
+      }
+      if (
+        trsAsset.taxInformation.taxAssetPrealnum !== taxInformation.taxAssetPrealnum ||
+        trsAsset.taxInformation.taxCollector !== taxInformation.taxCollector
+      ) {
+        throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+          to_compare_prop: `grabAny.giftAny: ${JSON.stringify(giftAny.toJSON())}`,
+          be_compare_prop: `giftAny: ${JSON.stringify(trsAsset)}`,
+          to_target: "GrabAnyTransaction",
+          be_target: "GiftAnyTransaction",
+        });
+      }
+    } else {
+      if (taxInformation) {
+        throw new ConsensusException(ERROR_LIST.SHOULD_NOT_EXIST, {
+          prop: "taxInformation",
+          target: "grabAny.giftAny",
+        });
+      }
     }
 
     const { rangeType, range } = giftAnyJson;

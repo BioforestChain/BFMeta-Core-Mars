@@ -2038,15 +2038,6 @@ export class EventLogicVerifier {
           });
         }
 
-        // if (possessorAddress === memEntityFactory.applyAddress) {
-        //   throw new ConsensusException(ERROR_LIST.SHOULD_NOT_BE, {
-        //     to_compare_prop: `entityPossessor ${possessorAddress}`,
-        //     be_compare_prop: `entityFactoryApplicant ${memEntityFactory.applyAddress}`,
-        //     to_target: `issueEntity`,
-        //     be_target: "memEntityFactory",
-        //   });
-        // }
-
         const { remainEntityPrealnum } = memEntityFactory;
         if (remainEntityPrealnum === BigInt(0)) {
           throw new ConsensusException(ERROR_LIST.ISSUE_ENTITY_TIMES_USE_UP, {
