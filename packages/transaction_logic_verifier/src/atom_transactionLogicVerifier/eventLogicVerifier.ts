@@ -2174,7 +2174,7 @@ export class EventLogicVerifier {
 
         // 冻结状态的位名不能销毁
         if (memEntity.status === ASSET_STATUS.DESTORY) {
-          throw new ConsensusException(ERROR_LIST.CAN_NOT_DESTORY_ENTITY, {
+          throw new ConsensusException(ERROR_LIST.ENTITY_ALREADY_DESTORY, {
             entityId,
             reason: "Entity already be destory",
           });
