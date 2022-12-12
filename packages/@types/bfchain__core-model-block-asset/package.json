@@ -1,11 +1,11 @@
 {
   "name": "@types/bfchain__core-model-block-asset",
   "types": "index.d.ts",
-  "version": "5.25.87-carbon",
+  "version": "8.0.7",
   "dependencies": {
-    "@types/bfchain__core-model-block-base": "5.25.87-carbon",
-    "@types/bfchain__core-model-cacher": "5.25.87-carbon",
-    "@types/bfchain__core-model-common": "5.25.87-carbon",
-    "@types/bfchain__core-typings": "5.25.87-carbon"
+    "@types/bfchain__core-model-block-base": "8.0.7",
+    "@types/bfchain__core-model-cacher": "8.0.7",
+    "@types/bfchain__core-model-common": "8.0.7",
+    "@types/bfchain__core-typings": "8.0.7"
   }
 }
