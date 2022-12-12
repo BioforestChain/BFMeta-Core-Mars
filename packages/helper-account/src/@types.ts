@@ -138,6 +138,7 @@ declare namespace BFChainCore {
     factoryId: string;
     entityPrealnum: bigint;
     remainEntityPrealnum: bigint;
+    destoryedEntityPrealnum: bigint;
     entityFrozenAssetPrealnum: string;
     purchaseAssetPrealnum: string;
     height: number;
