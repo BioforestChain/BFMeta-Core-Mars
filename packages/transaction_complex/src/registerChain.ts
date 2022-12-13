@@ -7,6 +7,7 @@ import {
   ConfigHelper,
   ConfigHelperMap,
   ChainAssetInfoHelper,
+  RegisterChainCertificateHelper,
 } from "@bfchain/core-helper";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import {
@@ -33,6 +34,7 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
     public baseHelper: BaseHelper,
     public configHelper: ConfigHelper,
     public chainAssetInfoHelper: ChainAssetInfoHelper,
+    public registerChainCertificateHelper: RegisterChainCertificateHelper,
     private configMap: ConfigHelperMap,
   ) {
     super();
@@ -122,24 +124,22 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
       target: "registerChainAsset",
     } as const;
 
-    const genesisBlockHexString = registerChain.genesisBlock;
-    if (!genesisBlockHexString) {
+    const genesisBlockString = registerChain.genesisBlock;
+    if (!genesisBlockString) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "genesisBlock",
         ...RegisterChainAsset_Exception_Detail,
       });
     }
-    if (!this.baseHelper.isHexString(genesisBlockHexString)) {
+    if (!this.baseHelper.isString(genesisBlockString)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "genesisBlock",
         ...RegisterChainAsset_Exception_Detail,
       });
     }
-
-    const bytes = parseHexToArrayBuffer(genesisBlockHexString);
-    await this._blockCore.blockHelper.verifyRegisterBlockSignature(bytes);
-    const baseInfo = this._blockCore.blockHelper.genesisBlockBaseInfoReader(bytes);
-    const { bnid, magic, assetType, chainName } = baseInfo;
+    const certificate = this.registerChainCertificateHelper.decode(genesisBlockString);
+    await this.registerChainCertificateHelper.verifyRegisterChainCertificate(certificate);
+    const { bnid, magic, assetType, chainName } = certificate.body.genesisBlockInfo;
     if (magic === config.magic) {
       throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
         to_compare_prop: `magic ${magic}`,
@@ -206,22 +206,18 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
     const tasks = new TaskList();
     tasks.next = super.applyTransaction(transaction, eventEmitter, config);
     const { senderId, senderPublicKeyBuffer } = transaction;
-    const { genesisBlock } = transaction.asset.registerChain;
-
-    const baseInfo = this._blockCore.blockHelper.genesisBlockBaseInfoReader(
-      parseHexToArrayBuffer(genesisBlock),
-    );
+    const genesisBlockString = transaction.asset.registerChain.genesisBlock;
+    const genesisBlock = this.registerChainCertificateHelper.decode(genesisBlockString);
 
     const {
+      genesisAccount,
+      genesisBlockSignature,
       bnid,
       magic,
       assetType,
       chainName,
-      generatorPublicKeyBuffer,
-      signatureBuffer,
-      genesisAccount,
       genesisDelegates,
-    } = baseInfo;
+    } = genesisBlock.body.genesisBlockInfo;
 
     // 冻结发起账户
     tasks.next = eventEmitter.emit("frozenAccount", {
@@ -245,11 +241,9 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
           magic,
           assetType,
           chainName,
-          generatorPublicKey: getHexFromArrayBuffer(generatorPublicKeyBuffer),
-          signature: getHexFromArrayBuffer(signatureBuffer),
+          signature: genesisBlockSignature,
           genesisAccount,
           genesisDelegates,
-          hexString: genesisBlock,
         },
       },
     });

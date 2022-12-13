@@ -79,9 +79,9 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
     await this.migrateCertificateHelper.checkChainInfo("toChain", toChain, {
       chainName: genesisBlock.chainName,
       magic: genesisBlock.magic,
-      generatorPublicKey: genesisBlock.generatorPublicKey,
+      generatorPublicKey: genesisBlock.genesisAccount.publicKey,
       genesisBlockSignature: genesisBlock.signature,
-      genesisDelegates: genesisBlock.genesisDelegates,
+      genesisDelegates: genesisBlock.genesisDelegates.map((item) => item.address),
     });
 
     const { publicKey, secondPublicKey, signSignature } = converter.fromAuthSignature.decode(

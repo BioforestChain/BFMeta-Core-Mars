@@ -27,6 +27,7 @@
     "@bfchain/core-helper-migrate-certificate": "8.0.7",
     "@bfchain/core-helper-milestones": "8.0.7",
     "@bfchain/core-helper-parity-bit": "8.0.7",
+    "@bfchain/core-helper-register-chain-certificate": "8.0.7",
     "@bfchain/core-helper-transaction": "8.0.7",
     "@bfchain/core-helper-transaction-pow": "8.0.7",
     "@bfchain/core-helper-type": "8.0.7",

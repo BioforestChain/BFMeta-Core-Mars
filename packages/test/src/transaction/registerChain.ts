@@ -763,12 +763,39 @@ registerchainAssetData.blockPerRound = 5;
     const bytes = genesisBlock.getBytes();
     const yyy = fullBfchainCore.block.parseBytesToSomeBlock(bytes);
     await fullBfchainCore.blockHelper.verifyBlockSignature(yyy);
+    const { generatorPublicKey, signature, asset, transactionInfo } = genesisBlock;
+    const { genesisAsset } = asset;
+    const certificate =
+      await fullBfchainCore.registerChainCertificateHelper.generateRegisterChainCertificate({
+        generatorSecret: config.genesisSecret,
+        genesisBlockInfo: {
+          genesisBlockSignature: signature,
+          chainName: genesisAsset.chainName,
+          assetType: genesisAsset.assetType,
+          magic: genesisAsset.magic,
+          bnid: genesisAsset.bnid,
+          beginEpochTime: genesisAsset.beginEpochTime,
+          genesisLocationName: genesisAsset.genesisLocationName,
+          blockPerRound: genesisAsset.blockPerRound,
+          delegates: genesisAsset.delegates,
+          forgeInterval: genesisAsset.forgeInterval,
+          genesisDelegates: transactionInfo.transactionInBlocks
+            .filter((tib) => tib.transaction.type === fullBfchainCore.transactionHelper.DELEGATE)
+            .map((tib) => {
+              return {
+                address: tib.transaction.senderId,
+                publicKey: tib.transaction.senderPublicKey,
+              };
+            }),
+        },
+      });
+
     const trs = await fullBfchainCore.transaction.createTransaction<RegisterChainTransaction>(
       RegisterChainTransactionFactory,
       data,
       {
         registerChain: {
-          genesisBlock: getHexFromArrayBuffer(genesisBlock.getBytes()),
+          genesisBlock: fullBfchainCore.registerChainCertificateHelper.encode(certificate),
         },
       },
       keypair,

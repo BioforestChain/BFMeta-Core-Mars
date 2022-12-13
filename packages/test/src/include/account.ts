@@ -48,21 +48,21 @@ function getGenesisAccount() {
 function getDelegateWithSecondSecret() {
   return {
     secret:
-      "joke engine front stairs horse shield proud motion sun net person index draw cement blast soul guilt cargo initial inquiry inspire cute regret educate",
+      "upgrade jump sugar congress glare expect other firm morning donate motor pride minute frame amount chimney wood gallery twelve barely dose blame convince enhance",
     secondSecret: "may this soul always smile",
-    address: "c8Ke6FeamgemKfaAdppcUVoGfModE4CEyT",
-    publicKey: "3b219fc3f94643fdafff9db830746f30d4f91624ca667522ff8f66e1e2093fd7",
-    username: "bfchain11",
+    address: "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
+    publicKey: "0f88fe3a155927907b507c10ccd0318a7f3b2f55aeb6c90913756ef43db4e836",
+    username: "bfchain2",
   };
 }
 
 function getDelegateWithoutSecondSecret() {
   return {
     secret:
-      "joke engine front stairs horse shield proud motion sun net person index draw cement blast soul guilt cargo initial inquiry inspire cute regret educate",
-    address: "c8Ke6FeamgemKfaAdppcUVoGfModE4CEyT",
-    publicKey: "3b219fc3f94643fdafff9db830746f30d4f91624ca667522ff8f66e1e2093fd7",
-    username: "bfchain11",
+      "upgrade jump sugar congress glare expect other firm morning donate motor pride minute frame amount chimney wood gallery twelve barely dose blame convince enhance",
+    address: "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
+    publicKey: "0f88fe3a155927907b507c10ccd0318a7f3b2f55aeb6c90913756ef43db4e836",
+    username: "bfchain2",
   };
 }
 

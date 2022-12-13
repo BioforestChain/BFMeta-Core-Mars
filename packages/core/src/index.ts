@@ -38,6 +38,7 @@ import {
   ChainTimeHelper,
   ParityBitHelper,
   MigrateCertificateHelper,
+  RegisterChainCertificateHelper,
   JSBIHelper,
 } from "@bfchain/core-helper";
 import { Injectable, Inject, ModuleStroge, Resolve, I18N } from "@bfchain/util";
@@ -65,6 +66,7 @@ export class BFChainCore {
     public baseHelper: BaseHelper,
     public chainAssetInfoHelper: ChainAssetInfoHelper,
     public migrateCertificateHelper: MigrateCertificateHelper,
+    public registerChainCertificateHelper: RegisterChainCertificateHelper,
     public configMap: ConfigHelperMap,
     //#region 核心模块
     /**区块 */

@@ -13,11 +13,15 @@ declare namespace BFChainCore {
     magic: string;
     assetType: string;
     chainName: string;
-    generatorPublicKey: string;
     signature: string;
-    genesisAccount: string;
-    genesisDelegates: string[];
-    hexString: string;
+    genesisAccount: {
+      address: string;
+      publicKey: string;
+    };
+    genesisDelegates: {
+      address: string;
+      publicKey: string;
+    }[];
   }
 
   interface BlockWithoutTransactionJSON<AssetJSON extends object = object> {

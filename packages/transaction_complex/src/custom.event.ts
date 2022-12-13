@@ -15,6 +15,7 @@ import {
   TransactionHelper,
   ChainAssetInfoHelper,
   ConfigHelperMap,
+  RegisterChainCertificateHelper,
 } from "@bfchain/core-helper";
 const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "CustomTransactionEvent");
 
@@ -26,6 +27,7 @@ export class CustomTransactionEvent {
     public configHelper: ConfigHelper,
     public transactionHelper: TransactionHelper,
     public chainAssetInfoHelper: ChainAssetInfoHelper,
+    public registerChainCertificateHelper: RegisterChainCertificateHelper,
     private configMap: ConfigHelperMap,
   ) {}
 
@@ -363,18 +365,16 @@ export class CustomTransactionEvent {
     }
     if (applyResult.type === "registerChain") {
       const config = this.configHelper;
-      const { genesisBlock } = applyResult.applyInfo;
-
-      if (!this.baseHelper.isHexString(genesisBlock)) {
+      const genesisBlockString = applyResult.applyInfo.genesisBlock;
+      if (!this.baseHelper.isString(genesisBlockString)) {
         throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: "genesisBlock",
           ...Function_Exception_Detail,
         });
       }
-      const bytes = parseHexToArrayBuffer(genesisBlock);
-      await this._blockCore.blockHelper.verifyRegisterBlockSignature(bytes);
-      const baseInfo = this._blockCore.blockHelper.genesisBlockBaseInfoReader(bytes);
-      const { bnid, magic, assetType, chainName } = baseInfo;
+      const certificate = this.registerChainCertificateHelper.decode(genesisBlockString);
+      await this.registerChainCertificateHelper.verifyRegisterChainCertificate(certificate);
+      const { bnid, magic, assetType, chainName } = certificate.body.genesisBlockInfo;
       if (magic === config.magic) {
         throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
           to_compare_prop: `magic ${magic}`,
@@ -797,19 +797,16 @@ export class CustomTransactionEvent {
     }
     if (applyResult.type === "registerChain") {
       const { address, publicKey, genesisBlock } = applyResult.applyInfo;
-      const baseInfo = this._blockCore.blockHelper.genesisBlockBaseInfoReader(
-        parseHexToArrayBuffer(genesisBlock),
-      );
+      const certificate = this.registerChainCertificateHelper.decode(genesisBlock);
       const {
+        genesisAccount,
+        genesisBlockSignature,
         bnid,
         magic,
         assetType,
         chainName,
-        generatorPublicKeyBuffer,
-        signatureBuffer,
-        genesisAccount,
         genesisDelegates,
-      } = baseInfo;
+      } = certificate.body.genesisBlockInfo;
 
       return eventEmitter.emit("registerChain", {
         type: "registerChain",
@@ -822,11 +819,9 @@ export class CustomTransactionEvent {
             magic,
             assetType,
             chainName,
-            generatorPublicKey: getHexFromArrayBuffer(generatorPublicKeyBuffer),
-            signature: getHexFromArrayBuffer(signatureBuffer),
-            genesisAccount,
+            signature: genesisBlockSignature,
+            genesisAccount: genesisAccount,
             genesisDelegates,
-            hexString: genesisBlock,
           },
         },
       });

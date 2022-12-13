@@ -20,6 +20,7 @@
     "@types/bfchain__core-helper-transaction-pow": "8.0.7",
     "@types/bfchain__core-helper-type": "8.0.7",
     "@types/bfchain__core-typings": "8.0.7",
-    "@types/bfchain__core-util-exception-errorcode": "8.0.7"
+    "@types/bfchain__core-util-exception-errorcode": "8.0.7",
+    "@types/bfchain__core-helper-register-chain-certificate": "8.0.7"
   }
 }

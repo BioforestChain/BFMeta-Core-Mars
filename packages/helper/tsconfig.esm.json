@@ -48,6 +48,9 @@
       "path": "../helper-parity-bit/tsconfig.esm.json"
     },
     {
+      "path": "../helper-register-chain-certificate/tsconfig.esm.json"
+    },
+    {
       "path": "../helper-transaction-pow/tsconfig.esm.json"
     },
     {
