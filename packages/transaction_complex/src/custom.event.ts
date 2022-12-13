@@ -798,15 +798,6 @@ export class CustomTransactionEvent {
     if (applyResult.type === "registerChain") {
       const { address, publicKey, genesisBlock } = applyResult.applyInfo;
       const certificate = this.registerChainCertificateHelper.decode(genesisBlock);
-      const {
-        genesisAccount,
-        genesisBlockSignature,
-        bnid,
-        magic,
-        assetType,
-        chainName,
-        genesisDelegates,
-      } = certificate.body.genesisBlockInfo;
 
       return eventEmitter.emit("registerChain", {
         type: "registerChain",
@@ -814,15 +805,7 @@ export class CustomTransactionEvent {
         applyInfo: {
           address,
           publicKeyBuffer: parseHexToArrayBuffer(publicKey),
-          genesisBlock: {
-            bnid,
-            magic,
-            assetType,
-            chainName,
-            signature: genesisBlockSignature,
-            genesisAccount: genesisAccount,
-            genesisDelegates,
-          },
+          genesisBlock: certificate.body.genesisBlockInfo,
         },
       });
     }

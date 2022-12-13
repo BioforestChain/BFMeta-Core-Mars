@@ -209,16 +209,6 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
     const genesisBlockString = transaction.asset.registerChain.genesisBlock;
     const genesisBlock = this.registerChainCertificateHelper.decode(genesisBlockString);
 
-    const {
-      genesisAccount,
-      genesisBlockSignature,
-      bnid,
-      magic,
-      assetType,
-      chainName,
-      genesisDelegates,
-    } = genesisBlock.body.genesisBlockInfo;
-
     // 冻结发起账户
     tasks.next = eventEmitter.emit("frozenAccount", {
       type: "frozenAccount",
@@ -236,15 +226,7 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
       applyInfo: {
         address: senderId,
         publicKeyBuffer: senderPublicKeyBuffer,
-        genesisBlock: {
-          bnid,
-          magic,
-          assetType,
-          chainName,
-          signature: genesisBlockSignature,
-          genesisAccount,
-          genesisDelegates,
-        },
+        genesisBlock: genesisBlock.body.genesisBlockInfo,
       },
     });
     return tasks.toPromise();

@@ -80,7 +80,7 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       chainName: genesisBlock.chainName,
       magic: genesisBlock.magic,
       generatorPublicKey: genesisBlock.genesisAccount.publicKey,
-      genesisBlockSignature: genesisBlock.signature,
+      genesisBlockSignature: genesisBlock.genesisBlockSignature,
       genesisDelegates: genesisBlock.genesisDelegates.map((item) => item.address),
     });
 
