@@ -175,7 +175,7 @@ export class ToAuthSignatureV1Converter implements BFChainCore.CrossChain.AuthSi
       Buffer.from(
         JSON.stringify({
           body: migrateCertificate.body,
-          signture: migrateCertificate.signature,
+          signature: migrateCertificate.signature,
           fromAuthSignature: migrateCertificate.fromAuthSignature,
           toAuthSignature: migrateCertificate.toAuthSignature,
         }),
@@ -194,7 +194,7 @@ export class ToAuthSignatureV1Converter implements BFChainCore.CrossChain.AuthSi
         Buffer.from(
           JSON.stringify({
             body: migrateCertificate.body,
-            signture: migrateCertificate.signature,
+            signature: migrateCertificate.signature,
             fromAuthSignature: migrateCertificate.fromAuthSignature,
             toAuthSignature: migrateCertificate.toAuthSignature,
           }),
@@ -232,7 +232,7 @@ export class ToAuthSignatureV1Converter implements BFChainCore.CrossChain.AuthSi
         Buffer.from(
           JSON.stringify({
             body: migrateCertificate.body,
-            signture: migrateCertificate.signature,
+            signature: migrateCertificate.signature,
             fromAuthSignature: migrateCertificate.fromAuthSignature,
             toAuthSignature: this.splitSignature(signature),
           }),
@@ -251,7 +251,7 @@ export class ToAuthSignatureV1Converter implements BFChainCore.CrossChain.AuthSi
           Buffer.from(
             JSON.stringify({
               body: migrateCertificate.body,
-              signture: migrateCertificate.signature,
+              signature: migrateCertificate.signature,
               fromAuthSignature: migrateCertificate.fromAuthSignature,
               toAuthSignature: this.splitSignSignature(signature),
             }),

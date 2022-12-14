@@ -175,7 +175,7 @@ export class FromAuthSignatureV1Converter implements BFChainCore.CrossChain.Auth
       Buffer.from(
         JSON.stringify({
           body: migrateCertificate.body,
-          signture: migrateCertificate.signature,
+          signature: migrateCertificate.signature,
           fromAuthSignature: migrateCertificate.fromAuthSignature,
         }),
         ENCODING_TYPE,
@@ -195,7 +195,7 @@ export class FromAuthSignatureV1Converter implements BFChainCore.CrossChain.Auth
         Buffer.from(
           JSON.stringify({
             body: migrateCertificate.body,
-            signture: migrateCertificate.signature,
+            signature: migrateCertificate.signature,
             fromAuthSignature: migrateCertificate.fromAuthSignature,
           }),
           ENCODING_TYPE,
@@ -232,7 +232,7 @@ export class FromAuthSignatureV1Converter implements BFChainCore.CrossChain.Auth
         Buffer.from(
           JSON.stringify({
             body: migrateCertificate.body,
-            signture: migrateCertificate.signature,
+            signature: migrateCertificate.signature,
             fromAuthSignature: this.splitSignature(signature),
           }),
           ENCODING_TYPE,
@@ -250,7 +250,7 @@ export class FromAuthSignatureV1Converter implements BFChainCore.CrossChain.Auth
           Buffer.from(
             JSON.stringify({
               body: migrateCertificate.body,
-              signture: migrateCertificate.signature,
+              signature: migrateCertificate.signature,
               fromAuthSignature: this.splitSignSignature(signature),
             }),
             ENCODING_TYPE,
