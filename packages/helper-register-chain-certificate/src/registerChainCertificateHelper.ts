@@ -207,6 +207,14 @@ export class RegisterChainCertificateHelper {
         be_target: "registerChainCertificate.body.genesisBlockInfo",
       });
     }
+    if (body.genesisBlockInfo.delegates !== body.genesisBlockInfo.genesisDelegates.length) {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
+        to_compare_prop: `delegates ${body.genesisBlockInfo.delegates}`,
+        be_compare_prop: `genesisDelegates length ${body.genesisBlockInfo.genesisDelegates.length}`,
+        to_target: "registerChainCertificate.body.genesisBlockInfo",
+        be_target: "registerChainCertificate.body.genesisBlockInfo",
+      });
+    }
     this.__checkVersion(body.version);
     this.__checkTimestamp(body.timestamp);
     this.__checkPublicKey(publicKey);

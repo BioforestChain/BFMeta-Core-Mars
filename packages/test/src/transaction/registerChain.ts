@@ -29,6 +29,7 @@ import {
   SetLnsRecordValueTransaction,
   BFChainCoreFactory,
   ConfigHelper,
+  TRANSACTION_TYPES_BASE,
 } from "@bfchain/core";
 import { QueneEventEmitter, Resolve, getHexFromArrayBuffer } from "@bfchain/util";
 import * as path from "path";
@@ -780,7 +781,7 @@ registerchainAssetData.blockPerRound = 5;
           delegates: genesisAsset.delegates,
           forgeInterval: genesisAsset.forgeInterval,
           genesisDelegates: transactionInfo.transactionInBlocks
-            .filter((tib) => tib.transaction.type === fullBfchainCore.transactionHelper.DELEGATE)
+            .filter((tib) => tib.transaction.type === TRANSACTION_TYPES_BASE.DELEGATE)
             .map((tib) => {
               return {
                 address: tib.transaction.senderId,
