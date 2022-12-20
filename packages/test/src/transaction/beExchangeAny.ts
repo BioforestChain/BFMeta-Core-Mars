@@ -183,6 +183,7 @@ async function getBeExchangeAnyTransaction(
     secondKeypair,
   );
 
+  console.log(`senderId ${trs.senderId}, recipientId ${trs.recipientId}`);
   console.log(trs.asset.beExchangeAny.toJSON());
 }
 (async () => {
@@ -295,6 +296,10 @@ async function getBeExchangeAnyTransaction(
     toExchangeAnyCopy.toExchangeAssetPrealnum = "1";
     toExchangeAnyCopy.beExchangeAssetPrealnum = "1000";
     toExchangeAnyCopy.assetExchangeWeightRatio = undefined;
+    toExchangeAnyCopy.taxInformation = {
+      taxCollector: cc.address,
+      taxAssetPrealnum: "1000",
+    };
 
     const t7 = await getToExchangeAnyTransaction(
       aa,

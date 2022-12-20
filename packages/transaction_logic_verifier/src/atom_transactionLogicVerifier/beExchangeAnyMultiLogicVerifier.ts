@@ -241,7 +241,7 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
         BigInt(prevBeExchangeAsset.beExchangeAssetPrealnum)
       ) {
         throw new ConsensusException(ERROR_LIST.PROP_SHOULD_GTE_FIELD, {
-          prop: `toExchangeAssets.beExchangeAssetPrealnum ${nextBeExchangeAsset.beExchangeAssetPrealnum}`,
+          prop: `beExchangeAsset.beExchangeAssetPrealnum ${nextBeExchangeAsset.beExchangeAssetPrealnum}`,
           target: "beExchangeAnyMulti",
           field: prevBeExchangeAsset.beExchangeAssetPrealnum,
         });

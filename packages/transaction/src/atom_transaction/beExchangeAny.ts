@@ -175,7 +175,8 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
     const { beExchangeParentAssetType, assetExchangeWeightRatio, taxInformation } = exchangeAny;
 
     // 这里的 to 就是 to 交易发起人给出权益，be 是 be 交易发起人给出的权益
-    if (BigInt(toExchangeAssetPrealnum) > BigInt(exchangeAny.toExchangeAssetPrealnum)) {
+    const bigIntToExchangeAssetPrealnum = BigInt(toExchangeAssetPrealnum);
+    if (bigIntToExchangeAssetPrealnum > BigInt(exchangeAny.toExchangeAssetPrealnum)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
         prop: `toExchangeAssetPrealnum ${toExchangeAssetPrealnum}`,
         field: exchangeAny.toExchangeAssetPrealnum,
@@ -184,6 +185,25 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
     }
     if (body.senderId === recipientId) {
       // 主动解冻
+      if (exchangeAny.toExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
+        // 可数资产自己赎回也要大于 0 份
+        if (bigIntToExchangeAssetPrealnum <= BigInt(1)) {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
+            prop: `toExchangeAssetPrealnum ${toExchangeAssetPrealnum}`,
+            field: "0",
+            ...BeExchangeAnyAsset_Exception_Detail,
+          });
+        }
+      } else {
+        // 不可数资产只有 1 份
+        if (toExchangeAssetPrealnum !== "1") {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_EQ_FIELD, {
+            prop: `toExchangeAssetPrealnum ${toExchangeAssetPrealnum}`,
+            field: "1",
+            ...BeExchangeAnyAsset_Exception_Detail,
+          });
+        }
+      }
       if (beExchangeAssetPrealnum !== "0") {
         throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_EQ_FIELD, {
           prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
@@ -192,6 +212,8 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
         });
       }
     } else {
+      // 被动解冻
+      // 非同质资产需要携带流通版税
       if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
         await this.checkTaxInformation(
           BeExchangeAnyAsset_Exception_Detail,
@@ -205,7 +227,13 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
           });
         }
       }
-      // 被动解冻
+      if (toExchangeAssetPrealnum === "0" && beExchangeAssetPrealnum === "0") {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
+          prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
+          field: "0",
+          ...BeExchangeAnyAsset_Exception_Detail,
+        });
+      }
       if (assetExchangeWeightRatio) {
         // 按比例计算验证是否满足最少需要付的钱，允许多付钱
         // 这里是用 to 算 be，所以是 to / 兑换比例，即 to * 兑换比例的倒数
@@ -344,8 +372,8 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
         beExchangeAssetType,
       } = exchangeAny;
 
-      // 发起交易冻结了同质资产
       if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
+        // 发起交易冻结了同质资产
         // 发起账户将得到的资产解冻并收入账下
         const toAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
           toExchangeSource,
@@ -364,80 +392,87 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
             recipientId, // 资产冻结账户
           },
         });
-      }
-      // 发起交易冻结的不是同质资产
-      // 发起账户成为 dappid 的拥有者
-      else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.DAPP) {
-        taskList.next = eventEmitter.emit("unfrozenDAppid", {
-          type: "unfrozenDAppid",
-          transaction,
-          applyInfo: {
-            address: senderId,
-            publicKeyBuffer: senderPublicKeyBuffer,
-            possessorAddress: senderId,
-            sourceChainName: toExchangeChainName,
-            sourceChainMagic: toExchangeSource,
-            dappid: toExchangeAssetType,
-            status: ASSET_STATUS.NORMAL,
-          },
-        });
-      }
-      // 发起账户成为位名的拥有者
-      else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME) {
-        taskList.next = eventEmitter.emit("unfrozenLocationName", {
-          type: "unfrozenLocationName",
-          transaction,
-          applyInfo: {
-            address: senderId,
-            publicKeyBuffer: senderPublicKeyBuffer,
-            possessorAddress: senderId,
-            sourceChainName: toExchangeChainName,
-            sourceChainMagic: toExchangeSource,
-            name: toExchangeAssetType,
-            status: ASSET_STATUS.NORMAL,
-          },
-        });
-      }
-      // 发起账户成为 entityId 的拥有者
-      else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
-        taskList.next = eventEmitter.emit("unfrozenEntity", {
-          type: "unfrozenEntity",
-          transaction,
-          applyInfo: {
-            address: senderId,
-            publicKeyBuffer: senderPublicKeyBuffer,
-            possessorAddress: senderId,
-            sourceChainName: toExchangeChainName,
-            sourceChainMagic: toExchangeSource,
-            entityId: toExchangeAssetType,
-            status: ASSET_STATUS.NORMAL,
-          },
-        });
-        if (exchangeAny.taxInformation && exchangeAny.taxInformation.taxAssetPrealnum !== "0") {
-          const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
-            config.magic,
-            config.assetType,
-          );
-          const { taxCollector, taxAssetPrealnum } = exchangeAny.taxInformation;
-          taskList.next = eventEmitter.emit("unfrozenAsset", {
-            type: "unfrozenAsset",
+      } else {
+        // 发起交易冻结的不是同质资产
+        // 发起账户成为不可数资产的拥有者
+        let possessorAddress = senderId;
+        if (toExchangeAssetPrealnum === "0") {
+          // 白给，不可数资产的拥有者没有变化，只需要解冻
+          possessorAddress = recipientId;
+        }
+        if (toExchangeParentAssetType === PARENT_ASSET_TYPE.DAPP) {
+          taskList.next = eventEmitter.emit("unfrozenDAppid", {
+            type: "unfrozenDAppid",
             transaction,
             applyInfo: {
-              address: taxCollector,
+              address: senderId,
               publicKeyBuffer: senderPublicKeyBuffer,
-              assetInfo: chainAssetInfo,
-              amount: taxAssetPrealnum,
-              sourceAmount: taxAssetPrealnum,
-              frozenIdBuffer: transactionSignatureBuffer,
-              recipientId, // 资产冻结账户
+              possessorAddress,
+              sourceChainName: toExchangeChainName,
+              sourceChainMagic: toExchangeSource,
+              dappid: toExchangeAssetType,
+              status: ASSET_STATUS.NORMAL,
             },
           });
+        } else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME) {
+          taskList.next = eventEmitter.emit("unfrozenLocationName", {
+            type: "unfrozenLocationName",
+            transaction,
+            applyInfo: {
+              address: senderId,
+              publicKeyBuffer: senderPublicKeyBuffer,
+              possessorAddress,
+              sourceChainName: toExchangeChainName,
+              sourceChainMagic: toExchangeSource,
+              name: toExchangeAssetType,
+              status: ASSET_STATUS.NORMAL,
+            },
+          });
+        } else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
+          taskList.next = eventEmitter.emit("unfrozenEntity", {
+            type: "unfrozenEntity",
+            transaction,
+            applyInfo: {
+              address: senderId,
+              publicKeyBuffer: senderPublicKeyBuffer,
+              possessorAddress,
+              sourceChainName: toExchangeChainName,
+              sourceChainMagic: toExchangeSource,
+              entityId: toExchangeAssetType,
+              status: ASSET_STATUS.NORMAL,
+            },
+          });
+          if (
+            // 非同质资产流通
+            toExchangeAssetPrealnum === "1" &&
+            exchangeAny.taxInformation &&
+            exchangeAny.taxInformation.taxAssetPrealnum !== "0"
+          ) {
+            const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
+              config.magic,
+              config.assetType,
+            );
+            const { taxCollector, taxAssetPrealnum } = exchangeAny.taxInformation;
+            taskList.next = eventEmitter.emit("unfrozenAsset", {
+              type: "unfrozenAsset",
+              transaction,
+              applyInfo: {
+                address: taxCollector,
+                publicKeyBuffer: senderPublicKeyBuffer,
+                assetInfo: chainAssetInfo,
+                amount: taxAssetPrealnum,
+                sourceAmount: taxAssetPrealnum,
+                frozenIdBuffer: transactionSignatureBuffer,
+                recipientId, // 资产冻结账户
+              },
+            });
+          }
+        } else {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+            prop: `toExchangeParentAssetType ${toExchangeParentAssetType}`,
+            target: "transaction.asset.beExchangeAny.exchangeAny",
+          });
         }
-      } else {
-        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-          prop: `toExchangeParentAssetType ${toExchangeParentAssetType}`,
-          target: "transaction.asset.beExchangeAny.exchangeAny",
-        });
       }
 
       // 主动解冻
