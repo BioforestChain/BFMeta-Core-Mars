@@ -118,8 +118,10 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
 
     if (
       trsAsset.sourceChainMagic !== trustAsset.sourceChainMagic ||
+      trsAsset.sourceChainName !== trustAsset.sourceChainName ||
       trsAsset.assetType !== trustAsset.assetType ||
       trsAsset.amount !== trustAsset.amount ||
+      trsAsset.numberOfSignFor !== trustAsset.numberOfSignFor ||
       trsAsset.trustees.length !== trustAsset.trustees.length
     ) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {

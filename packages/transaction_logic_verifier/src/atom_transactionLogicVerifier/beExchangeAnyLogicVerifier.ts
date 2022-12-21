@@ -176,7 +176,7 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
     toExchangeAnyJson: BFChainCore.TransactionJSON<BFChainCore.ToExchangeAnyAssetJSON>,
   ) {
     const beExchangeAny = transaction.asset.beExchangeAny;
-    const { exchangeAny } = beExchangeAny;
+    const { exchangeAny, ciphertextSignature } = beExchangeAny;
     const {
       toExchangeSource,
       toExchangeAssetType,
@@ -184,6 +184,11 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
       beExchangeSource,
       beExchangeAssetType,
       beExchangeParentAssetType,
+      toExchangeAssetPrealnum,
+      beExchangeAssetPrealnum,
+      cipherPublicKeys,
+      assetExchangeWeightRatio,
+      taxInformation,
     } = exchangeAny;
     const trsAsset = toExchangeAnyJson.asset.toExchangeAny;
     if (
@@ -192,7 +197,8 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
       trsAsset.toExchangeParentAssetType !== toExchangeParentAssetType ||
       trsAsset.beExchangeParentAssetType !== beExchangeParentAssetType ||
       trsAsset.toExchangeAssetType !== toExchangeAssetType ||
-      trsAsset.beExchangeAssetType !== beExchangeAssetType
+      trsAsset.beExchangeAssetType !== beExchangeAssetType ||
+      trsAsset.toExchangeAssetPrealnum !== toExchangeAssetPrealnum
     ) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `trsAsset: ${JSON.stringify(trsAsset)}`,
@@ -200,6 +206,135 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
         to_target: "BeExchangeAnyTransaction",
         be_target: "ToExchangeAnyTransaction",
       });
+    }
+    if (trsAsset.beExchangeAssetPrealnum) {
+      if (!beExchangeAssetPrealnum) {
+        throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+          to_compare_prop: `trsAsset: ${JSON.stringify(trsAsset)}`,
+          be_compare_prop: `exchangeAny: ${JSON.stringify(exchangeAny.toJSON())}`,
+          to_target: "BeExchangeAnyTransaction",
+          be_target: "ToExchangeAnyTransaction",
+        });
+      }
+      if (trsAsset.beExchangeAssetPrealnum !== beExchangeAssetPrealnum) {
+        throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+          to_compare_prop: `trsAsset: ${JSON.stringify(trsAsset)}`,
+          be_compare_prop: `exchangeAny: ${JSON.stringify(exchangeAny.toJSON())}`,
+          to_target: "BeExchangeAnyTransaction",
+          be_target: "ToExchangeAnyTransaction",
+        });
+      }
+    } else {
+      if (beExchangeAssetPrealnum) {
+        throw new ConsensusException(ERROR_LIST.SHOULD_NOT_EXIST, {
+          prop: "beExchangeAssetPrealnum",
+          target: "BeExchangeAnyTransaction.beExchangeAny.exchangeAny",
+        });
+      }
+    }
+
+    if (trsAsset.assetExchangeWeightRatio) {
+      if (!assetExchangeWeightRatio) {
+        throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+          to_compare_prop: `trsAsset: ${JSON.stringify(trsAsset)}`,
+          be_compare_prop: `exchangeAny: ${JSON.stringify(exchangeAny.toJSON())}`,
+          to_target: "BeExchangeAnyTransaction",
+          be_target: "ToExchangeAnyTransaction",
+        });
+      }
+      if (
+        trsAsset.assetExchangeWeightRatio.toExchangeAssetWeight !==
+          assetExchangeWeightRatio.toExchangeAssetWeight ||
+        trsAsset.assetExchangeWeightRatio.beExchangeAssetWeight !==
+          assetExchangeWeightRatio.beExchangeAssetWeight
+      ) {
+        throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+          to_compare_prop: `trsAsset: ${JSON.stringify(trsAsset)}`,
+          be_compare_prop: `exchangeAny: ${JSON.stringify(exchangeAny.toJSON())}`,
+          to_target: "BeExchangeAnyTransaction",
+          be_target: "ToExchangeAnyTransaction",
+        });
+      }
+    } else {
+      if (assetExchangeWeightRatio) {
+        throw new ConsensusException(ERROR_LIST.SHOULD_NOT_EXIST, {
+          prop: "assetExchangeWeightRatio",
+          target: "BeExchangeAnyTransaction.beExchangeAny.exchangeAny",
+        });
+      }
+    }
+
+    if (trsAsset.taxInformation) {
+      if (!taxInformation) {
+        throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+          to_compare_prop: `trsAsset: ${JSON.stringify(trsAsset)}`,
+          be_compare_prop: `exchangeAny: ${JSON.stringify(exchangeAny.toJSON())}`,
+          to_target: "BeExchangeAnyTransaction",
+          be_target: "ToExchangeAnyTransaction",
+        });
+      }
+      if (
+        trsAsset.taxInformation.taxCollector !== taxInformation.taxCollector ||
+        trsAsset.taxInformation.taxAssetPrealnum !== taxInformation.taxAssetPrealnum
+      ) {
+        throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+          to_compare_prop: `trsAsset: ${JSON.stringify(trsAsset)}`,
+          be_compare_prop: `exchangeAny: ${JSON.stringify(exchangeAny.toJSON())}`,
+          to_target: "BeExchangeAnyTransaction",
+          be_target: "ToExchangeAnyTransaction",
+        });
+      }
+    } else {
+      if (taxInformation) {
+        throw new ConsensusException(ERROR_LIST.SHOULD_NOT_EXIST, {
+          prop: "taxInformation",
+          target: "BeExchangeAnyTransaction.beExchangeAny.exchangeAny",
+        });
+      }
+    }
+
+    if (trsAsset.cipherPublicKeys.length !== cipherPublicKeys.length) {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+        to_compare_prop: `trsAsset: ${JSON.stringify(trsAsset)}`,
+        be_compare_prop: `exchangeAny: ${JSON.stringify(exchangeAny.toJSON())}`,
+        to_target: "BeExchangeAnyTransaction",
+        be_target: "ToExchangeAnyTransaction",
+      });
+    }
+    for (const pk of trsAsset.cipherPublicKeys) {
+      if (!cipherPublicKeys.includes(pk)) {
+        throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+          to_compare_prop: `trsAsset: ${JSON.stringify(trsAsset)}`,
+          be_compare_prop: `exchangeAny: ${JSON.stringify(exchangeAny.toJSON())}`,
+          to_target: "BeExchangeAnyTransaction",
+          be_target: "ToExchangeAnyTransaction",
+        });
+      }
+    }
+    /**如果是公钥模式，那么必须存在密文 */
+    if (cipherPublicKeys.length > 0) {
+      if (!ciphertextSignature) {
+        throw new ConsensusException(ERROR_LIST.NOT_EXIST, {
+          prop: `ciphertextSignature`,
+          target: "beExchangeAny",
+        });
+      }
+      const { publicKey } = ciphertextSignature;
+      if (!cipherPublicKeys.includes(publicKey)) {
+        throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+          to_compare_prop: `publicKey ${publicKey}`,
+          be_compare_prop: "cipherPublicKeys",
+          to_target: "beExchangeAny.ciphertextSignature",
+          be_target: "toExchangeAny.cipherPublicKeys",
+        });
+      }
+    } else {
+      if (ciphertextSignature) {
+        throw new ConsensusException(ERROR_LIST.SHOULD_NOT_EXIST, {
+          prop: `ciphertextSignature`,
+          target: "beExchangeAny",
+        });
+      }
     }
 
     const { rangeType, range } = toExchangeAnyJson;

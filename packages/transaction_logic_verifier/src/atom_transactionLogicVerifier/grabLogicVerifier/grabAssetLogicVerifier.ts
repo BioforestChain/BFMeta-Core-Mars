@@ -191,15 +191,24 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
     giftAssetJson: BFChainCore.TransactionJSON<BFChainCore.GiftAssetAssetJSON>,
   ) {
     const grabAsset = transaction.asset.grabAsset;
-    const { giftAsset } = grabAsset;
+    const { giftAsset, ciphertextSignature } = grabAsset;
 
-    const { sourceChainMagic, assetType, giftDistributionRule } = giftAsset;
+    const {
+      sourceChainMagic,
+      sourceChainName,
+      assetType,
+      amount,
+      giftDistributionRule,
+      cipherPublicKeys,
+    } = giftAsset;
 
     const trsAsset = giftAssetJson.asset.giftAsset;
 
     if (
       trsAsset.sourceChainMagic !== sourceChainMagic ||
+      trsAsset.sourceChainName !== sourceChainName ||
       trsAsset.assetType !== assetType ||
+      trsAsset.amount !== amount ||
       trsAsset.giftDistributionRule !== giftDistributionRule
     ) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
@@ -208,6 +217,50 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
         to_target: "GrabAssetTransaction",
         be_target: "GiftAssetTransaction",
       });
+    }
+
+    if (trsAsset.cipherPublicKeys.length !== cipherPublicKeys.length) {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+        to_compare_prop: `trsAsset: ${JSON.stringify(trsAsset)}`,
+        be_compare_prop: `giftAsset: ${JSON.stringify(giftAsset.toJSON())}`,
+        to_target: "GrabAssetTransaction",
+        be_target: "GiftAssetTransaction",
+      });
+    }
+    for (const pk of trsAsset.cipherPublicKeys) {
+      if (!cipherPublicKeys.includes(pk)) {
+        throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+          to_compare_prop: `trsAsset: ${JSON.stringify(trsAsset)}`,
+          be_compare_prop: `giftAsset: ${JSON.stringify(giftAsset.toJSON())}`,
+          to_target: "GrabAssetTransaction",
+          be_target: "GiftAssetTransaction",
+        });
+      }
+    }
+    /**如果是公钥模式，那么必须存在密文 */
+    if (cipherPublicKeys.length > 0) {
+      if (!ciphertextSignature) {
+        throw new ConsensusException(ERROR_LIST.NOT_EXIST, {
+          prop: `ciphertextSignature`,
+          target: "grabAsset",
+        });
+      }
+      const { publicKey } = ciphertextSignature;
+      if (!cipherPublicKeys.includes(publicKey)) {
+        throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+          to_compare_prop: `publicKey ${publicKey}`,
+          be_compare_prop: "cipherPublicKeys",
+          to_target: "grabAsset.ciphertextSignature",
+          be_target: "giftAsset.cipherPublicKeys",
+        });
+      }
+    } else {
+      if (ciphertextSignature) {
+        throw new ConsensusException(ERROR_LIST.SHOULD_NOT_EXIST, {
+          prop: `ciphertextSignature`,
+          target: "grabAsset",
+        });
+      }
     }
 
     const { rangeType, range } = giftAssetJson;

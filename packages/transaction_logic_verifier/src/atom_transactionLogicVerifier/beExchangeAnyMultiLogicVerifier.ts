@@ -252,20 +252,29 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
 
     const prevAssets: {
       [key: string]: {
+        toExchangeChainName: string;
+        toExchangeParentAssetType: BFChainCore.PARENT_ASSET_TYPE;
         toExchangeAssetPrealnum: string;
         assetExchangeWeightRatio?: BFChainCore.AssetExchangeWeightRatioJSON;
+        taxInformation?: BFChainCore.TaxInformationJson;
       };
     } = {};
     for (const toExchangeAsset of prevToExchangeAssets) {
       const {
         toExchangeSource,
+        toExchangeChainName,
+        toExchangeParentAssetType,
         toExchangeAssetType,
         toExchangeAssetPrealnum,
         assetExchangeWeightRatio,
+        taxInformation,
       } = toExchangeAsset;
       prevAssets[`${toExchangeSource}${toExchangeAssetType}`] = {
+        toExchangeChainName,
+        toExchangeParentAssetType,
         toExchangeAssetPrealnum,
         assetExchangeWeightRatio,
+        taxInformation,
       };
     }
 
@@ -273,9 +282,11 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
       const {
         toExchangeSource,
         toExchangeChainName,
+        toExchangeParentAssetType,
         toExchangeAssetType,
         toExchangeAssetPrealnum,
         assetExchangeWeightRatio,
+        taxInformation,
       } = toExchangeAsset;
       const key = `${toExchangeSource}${toExchangeAssetType}`;
       const item = prevAssets[key];
@@ -284,6 +295,24 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
           prop: "toExchangeAssets",
           target: "toExchangeAnyMulti",
           value: `toExchangeChainName ${toExchangeChainName} toExchangeSource ${toExchangeSource} toExchangeAssetType ${toExchangeAssetType}`,
+        });
+      }
+      if (
+        item.toExchangeChainName !== toExchangeChainName ||
+        item.toExchangeParentAssetType !== toExchangeParentAssetType
+      ) {
+        throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+          to_compare_prop: `toExchangeAssets.toExchangeAsset: ${JSON.stringify({
+            toExchangeSource,
+            toExchangeChainName: item.toExchangeChainName,
+            toExchangeParentAssetType: item.toExchangeParentAssetType,
+            toExchangeAssetType,
+          })}`,
+          be_compare_prop: `toExchangeAssets.toExchangeAsset: ${JSON.stringify(
+            toExchangeAsset.toJSON(),
+          )}`,
+          to_target: "toExchangeAnyMulti",
+          be_target: "beExchangeAnyMulti",
         });
       }
       if (isBeExchangeMulti) {
@@ -303,19 +332,13 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
           });
         }
       }
-      if (item.assetExchangeWeightRatio && !assetExchangeWeightRatio) {
-        throw new ConsensusException(ERROR_LIST.PROP_IS_REQUIRE, {
-          prop: "assetExchangeWeightRatio",
-          target: "beExchangeAnyMulti.beExchangeAsset",
-        });
-      }
-      if (!item.assetExchangeWeightRatio && assetExchangeWeightRatio) {
-        throw new ConsensusException(ERROR_LIST.SHOULD_NOT_EXIST, {
-          prop: "assetExchangeWeightRatio",
-          target: "beExchangeAnyMulti.beExchangeAsset",
-        });
-      }
-      if (item.assetExchangeWeightRatio && assetExchangeWeightRatio) {
+      if (item.assetExchangeWeightRatio) {
+        if (!assetExchangeWeightRatio) {
+          throw new ConsensusException(ERROR_LIST.PROP_IS_REQUIRE, {
+            prop: "assetExchangeWeightRatio",
+            target: "beExchangeAnyMulti.beExchangeAsset",
+          });
+        }
         if (
           item.assetExchangeWeightRatio.toExchangeAssetWeight !==
             assetExchangeWeightRatio.toExchangeAssetWeight ||
@@ -335,11 +358,60 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
             be_target: "beExchangeAnyMulti",
           });
         }
+      } else {
+        if (assetExchangeWeightRatio) {
+          throw new ConsensusException(ERROR_LIST.SHOULD_NOT_EXIST, {
+            prop: "assetExchangeWeightRatio",
+            target: "beExchangeAnyMulti.beExchangeAsset",
+          });
+        }
+      }
+
+      if (item.taxInformation) {
+        if (!taxInformation) {
+          throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+            to_compare_prop: `toExchangeAssets.toExchangeAsset: ${JSON.stringify({
+              toExchangeSource,
+              toExchangeChainName,
+              toExchangeAssetType,
+            })}`,
+            be_compare_prop: `toExchangeAssets.toExchangeAsset: ${JSON.stringify(
+              toExchangeAsset.toJSON(),
+            )}`,
+            to_target: "toExchangeAnyMulti",
+            be_target: "beExchangeAnyMulti",
+          });
+        }
+        if (
+          item.taxInformation.taxCollector !== taxInformation.taxCollector ||
+          item.taxInformation.taxAssetPrealnum !== taxInformation.taxAssetPrealnum
+        ) {
+          throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+            to_compare_prop: `toExchangeAssets.toExchangeAsset: ${JSON.stringify({
+              toExchangeSource,
+              toExchangeChainName,
+              toExchangeAssetType,
+            })}`,
+            be_compare_prop: `toExchangeAssets.toExchangeAsset: ${JSON.stringify(
+              toExchangeAsset.toJSON(),
+            )}`,
+            to_target: "toExchangeAnyMulti",
+            be_target: "beExchangeAnyMulti",
+          });
+        }
+      } else {
+        if (taxInformation) {
+          throw new ConsensusException(ERROR_LIST.SHOULD_NOT_EXIST, {
+            prop: "taxInformation",
+            target: "BeExchangeAnyMultiTransaction.beExchangeAnyMulti.toExchangeAsset",
+          });
+        }
       }
     }
 
     if (
       prevBeExchangeAsset.beExchangeSource !== nextBeExchangeAsset.beExchangeSource ||
+      prevBeExchangeAsset.beExchangeChainName !== nextBeExchangeAsset.beExchangeChainName ||
       prevBeExchangeAsset.beExchangeParentAssetType !==
         nextBeExchangeAsset.beExchangeParentAssetType ||
       prevBeExchangeAsset.beExchangeAssetType !== nextBeExchangeAsset.beExchangeAssetType
@@ -367,6 +439,13 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
           be_compare_prop: "cipherPublicKeys",
           to_target: "beExchangeAnyMulti.ciphertextSignature",
           be_target: "toExchangeAnyMulti.cipherPublicKeys",
+        });
+      }
+    } else {
+      if (ciphertextSignature) {
+        throw new ConsensusException(ERROR_LIST.SHOULD_NOT_EXIST, {
+          prop: `ciphertextSignature`,
+          target: "beExchangeAnyMulti",
         });
       }
     }
