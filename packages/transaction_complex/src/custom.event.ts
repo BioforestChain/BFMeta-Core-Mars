@@ -678,7 +678,8 @@ export class CustomTransactionEvent {
       });
     }
     if (applyResult.type === "signForAsset") {
-      const { address, publicKey, frozenId, frozenAddress, recipientId } = applyResult.applyInfo;
+      const { address, publicKey, frozenId, frozenAddress, recipientId, assetInfo } =
+        applyResult.applyInfo;
       return eventEmitter.emit("signForAsset", {
         type: "signForAsset",
         transaction,
@@ -688,6 +689,7 @@ export class CustomTransactionEvent {
           frozenIdBuffer: parseHexToArrayBuffer(frozenId),
           frozenAddress,
           recipientId,
+          assetInfo,
         },
       });
     }

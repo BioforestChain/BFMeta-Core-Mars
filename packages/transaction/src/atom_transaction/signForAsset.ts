@@ -250,8 +250,12 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
   ) {
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
-      const { transactionSignatureBuffer, trustSenderId, trustRecipientId } =
+      const { transactionSignatureBuffer, trustSenderId, trustRecipientId, trustAsset } =
         transaction.asset.signForAsset;
+      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(
+        trustAsset.sourceChainMagic,
+        trustAsset.assetType,
+      );
       // 接收账户(委托交易指定的签收人)将得到的资产解冻并收入账下
       taskList.next = eventEmitter.emit("signForAsset", {
         type: "signForAsset",
@@ -262,6 +266,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
           frozenIdBuffer: transactionSignatureBuffer,
           frozenAddress: trustSenderId,
           recipientId: trustRecipientId, // 接收资产的账户
+          assetInfo,
         },
       });
     });

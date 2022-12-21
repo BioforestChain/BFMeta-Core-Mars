@@ -229,7 +229,7 @@ declare namespace BFChainCore {
     /**位名是否被禁用 */
     isLocationNameForbidden(locationName: string): Promise<boolean>;
     /**查询冻结的资产 */
-    getFrozenAsset(address: string, signature: string): Promise<FA | undefined>;
+    getFrozenAsset(address: string, signature: string, assetType: string): Promise<FA | undefined>;
     /**账户是否持有冻结的非主权益 */
     isPossessFrozenAssetExceptMain(address: string): Promise<boolean>;
     /**是否冻结权益 */

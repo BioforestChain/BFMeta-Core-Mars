@@ -266,6 +266,7 @@ export class AccountHelper<
   getFrozenAsset(
     address: string,
     signature: string,
+    assetType: string,
     accountGetterHelper = this.accountGetterHelper as Pick<
       BFChainCore.AccountGetterHelperInterface,
       "getFrozenAsset"
@@ -277,7 +278,7 @@ export class AccountHelper<
         target: "moduleStroge",
       });
     }
-    return accountGetterHelper.getFrozenAsset(address, signature);
+    return accountGetterHelper.getFrozenAsset(address, signature, assetType);
   }
   getAsset(
     magic: string,

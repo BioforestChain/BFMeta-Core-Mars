@@ -283,6 +283,7 @@ export class EventLogicVerifier {
         const frozenAsset = await accountGetterHelper.getFrozenAsset(
           recipientId,
           transactionSignature,
+          assetType,
         );
 
         if (!frozenAsset) {
@@ -348,13 +349,14 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "signForAsset",
       async ({ transaction, applyInfo }, next) => {
-        const { frozenIdBuffer, frozenAddress } = applyInfo;
+        const { frozenIdBuffer, frozenAddress, assetInfo } = applyInfo;
         const transactionSignature = getHexFromArrayBuffer(frozenIdBuffer);
 
         // 获取冻结信息
         const frozenAsset = await accountGetterHelper.getFrozenAsset(
           frozenAddress,
           transactionSignature,
+          assetInfo.assetType,
         );
 
         if (!frozenAsset) {

@@ -72,6 +72,7 @@ declare namespace BFChainCore {
      * 如果要将解冻资产是否要回到冻结者账户上,那就填自己就完事了
      */
     recipientId: string;
+    assetInfo: AssetInfoJSON;
   }
   type ApplyTransactionSignForAssetEvent<EVENTNAME, T extends Transaction = Transaction> =
     ApplyTransactionEvent<ApplyInfo_SignForAsset, EVENTNAME, T>;

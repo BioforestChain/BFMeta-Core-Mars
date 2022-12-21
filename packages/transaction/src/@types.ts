@@ -160,6 +160,7 @@ declare namespace BFChainCore {
       frozenAddress: string;
       /**冻结事件的接收账户地址 */
       recipientId: string;
+      assetInfo: AssetInfoJSON;
     };
   }
 
