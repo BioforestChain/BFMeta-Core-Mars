@@ -145,8 +145,6 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
           eventEmitter,
         );
 
-        eventLogicVerifier.listenEventPayTax(currentBlockHeight, accountGetterHelper, eventEmitter);
-
         if (beExchangeAny.taxInformation && beExchangeAny.taxInformation.taxAssetPrealnum !== "0") {
           eventLogicVerifier.listenEventAsset(cloneAccountsAssets, eventEmitter);
         }
@@ -156,6 +154,10 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
           target: "transaction.asset.beExchangeAny.exchangeAny",
         });
       }
+    }
+
+    if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
+      eventLogicVerifier.listenEventPayTax(currentBlockHeight, accountGetterHelper, eventEmitter);
     }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);

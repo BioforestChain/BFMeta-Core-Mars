@@ -183,6 +183,20 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
         ...BeExchangeAnyAsset_Exception_Detail,
       });
     }
+    // 非同质资产需要携带流通版税
+    if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
+      await this.checkTaxInformation(
+        BeExchangeAnyAsset_Exception_Detail,
+        beExchangeAny.taxInformation,
+      );
+    } else {
+      if (beExchangeAny.taxInformation) {
+        throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
+          prop: "taxInformation",
+          ...BeExchangeAnyAsset_Exception_Detail,
+        });
+      }
+    }
     if (body.senderId === recipientId) {
       // 主动解冻
       if (exchangeAny.toExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
@@ -213,20 +227,6 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
       }
     } else {
       // 被动解冻
-      // 非同质资产需要携带流通版税
-      if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
-        await this.checkTaxInformation(
-          BeExchangeAnyAsset_Exception_Detail,
-          beExchangeAny.taxInformation,
-        );
-      } else {
-        if (beExchangeAny.taxInformation) {
-          throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
-            prop: "taxInformation",
-            ...BeExchangeAnyAsset_Exception_Detail,
-          });
-        }
-      }
       if (toExchangeAssetPrealnum === "0" && beExchangeAssetPrealnum === "0") {
         throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
           prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,

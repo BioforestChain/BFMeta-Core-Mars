@@ -511,5 +511,5 @@ async function getBeExchangeAnyTransaction(
   // dappid => lns
   // await test8();
   // entityId => lns
-  await test9();
+  // await test9();
 })();
