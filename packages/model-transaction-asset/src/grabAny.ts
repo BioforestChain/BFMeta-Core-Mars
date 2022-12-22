@@ -25,12 +25,12 @@ export class GrabAnyModel
   }
   /**要抢的红包交易的签名 */
   @Field.d(GrabAnyModel.INC++, "bytes")
-  giftTransactionSignatureBuffer!: Uint8Array;
+  transactionSignatureBuffer!: Uint8Array;
   public get transactionSignature(): string {
-    return getHexFromArrayBuffer(this.giftTransactionSignatureBuffer);
+    return getHexFromArrayBuffer(this.transactionSignatureBuffer);
   }
   public set transactionSignature(value: string) {
-    this.giftTransactionSignatureBuffer = parseHexToArrayBuffer(value);
+    this.transactionSignatureBuffer = parseHexToArrayBuffer(value);
   }
   /**抢到的资产数量 */
   @Field.d(GrabAnyModel.INC++, "string")

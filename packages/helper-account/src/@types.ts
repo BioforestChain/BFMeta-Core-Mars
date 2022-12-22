@@ -47,6 +47,7 @@ declare namespace BFChainCore {
     status: number;
     maxFrozenBlockHeight: number;
     purchaseAsset?: string;
+    frozenId: string;
   };
   type LocationNameRecordInfo = {
     [recordType: string]: {
@@ -65,6 +66,7 @@ declare namespace BFChainCore {
     status: number;
     maxFrozenBlockHeight: number;
     isDelete?: boolean;
+    frozenId: string;
   };
   type FrozenAssetInfo = {
     sourceChainMagic: string;
@@ -159,6 +161,7 @@ declare namespace BFChainCore {
     status: number;
     maxFrozenBlockHeight: number;
     taxAssetPrealnum: string;
+    frozenId: string;
   };
 
   type MigrateCertificateInfo = {

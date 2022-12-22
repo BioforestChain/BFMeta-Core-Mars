@@ -171,6 +171,7 @@ declare namespace BFChainCore {
     /**新的 dappid 的拥有者地址 */
     possessorAddress: string;
     status: ASSET_STATUS;
+    frozenId: string;
   };
   /**解冻 dappid */
   type ApplyTransactionUnfrozenDAppidEvent<EVENTNAME, T extends Transaction = Transaction> =
@@ -293,6 +294,7 @@ declare namespace BFChainCore {
     /**位名的拥有者地址 */
     possessorAddress: string;
     status: ASSET_STATUS;
+    frozenId: string;
   };
   /**解冻位名 */
   type ApplyTransactionUnfrozenLocationNameEvent<EVENTNAME, T extends Transaction = Transaction> =
@@ -415,6 +417,7 @@ declare namespace BFChainCore {
     /**entityId 的拥有者地址 */
     possessorAddress: string;
     status: ASSET_STATUS;
+    frozenId: string;
   };
   /**解冻 entityId */
   type ApplyTransactionUnfrozenEntityEvent<EVENTNAME, T extends Transaction = Transaction> =

@@ -211,6 +211,7 @@ declare namespace BFChainCore {
       dappid: string;
       /**dappid 的拥有者地址 */
       possessorAddress: string;
+      frozenId: string;
     };
   }
 
@@ -314,6 +315,7 @@ declare namespace BFChainCore {
       name: string;
       /**lns 的拥有者地址 */
       possessorAddress: string;
+      frozenId: string;
     };
   }
 
@@ -340,6 +342,7 @@ declare namespace BFChainCore {
       sourceChainName: string;
       sourceChainMagic: string;
       entityId: string;
+      frozenId: string;
     };
   }
 

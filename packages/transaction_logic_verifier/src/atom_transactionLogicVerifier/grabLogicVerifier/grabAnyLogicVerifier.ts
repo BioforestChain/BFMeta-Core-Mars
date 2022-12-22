@@ -128,7 +128,7 @@ export class GrabAnyLogicVerifier extends TransactionLogicVerifier {
   private async isValidAmount(transaction: GrabAnyTransaction) {
     const { senderId, recipientId, asset } = transaction;
     const grabAny = asset.grabAny;
-    const { giftAny, blockSignatureBuffer, giftTransactionSignatureBuffer } = grabAny;
+    const { giftAny, blockSignatureBuffer, transactionSignatureBuffer } = grabAny;
     const { giftDistributionRule, parentAssetType, totalGrabableTimes, amount } = giftAny;
 
     if (parentAssetType === PARENT_ASSET_TYPE.ASSETS) {
@@ -145,7 +145,7 @@ export class GrabAnyLogicVerifier extends TransactionLogicVerifier {
           should_grap_amount_BI = await this.transactionHelper.calcGrabRandomGiftAssetNumber(
             senderId,
             blockSignatureBuffer,
-            giftTransactionSignatureBuffer,
+            transactionSignatureBuffer,
             recipientId,
             amount,
             totalGrabableTimes,
@@ -155,7 +155,7 @@ export class GrabAnyLogicVerifier extends TransactionLogicVerifier {
           should_grap_amount_BI = await this.transactionHelper.calcGrabRandomGiftAssetNumber(
             senderId,
             blockSignatureBuffer,
-            giftTransactionSignatureBuffer,
+            transactionSignatureBuffer,
             recipientId,
             amount,
             totalGrabableTimes,

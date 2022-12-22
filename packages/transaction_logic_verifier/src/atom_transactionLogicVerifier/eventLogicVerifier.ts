@@ -868,7 +868,7 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "unfrozenDAppid",
       async ({ transaction, applyInfo }, next) => {
-        const { address, sourceChainName, sourceChainMagic, dappid } = applyInfo;
+        const { address, sourceChainName, sourceChainMagic, dappid, frozenId } = applyInfo;
 
         const memDapp = await this.helperLogicVerifier.isDAppExist(
           sourceChainName,
@@ -877,9 +877,18 @@ export class EventLogicVerifier {
           currentBlockHeight,
           accountGetterHelper,
         );
+        // dapp 尚未冻结
         if (memDapp.status !== ASSET_STATUS.FROZEN) {
           throw new ConsensusException(ERROR_LIST.DAPPID_NOT_FROZEN, {
             dappid,
+          });
+        }
+        // 冻结 id 不匹配
+        if (memDapp.frozenId !== frozenId) {
+          throw new ConsensusException(ERROR_LIST.SHOULD_BE, {
+            to_compare_prop: `frozenId ${frozenId}`,
+            to_target: "transaction",
+            be_compare_prop: `dapp frozenId ${memDapp.frozenId}`,
           });
         }
         // if (memDapp.possessorAddress === address) {
@@ -1445,7 +1454,7 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "unfrozenLocationName",
       async ({ transaction, applyInfo }, next) => {
-        const { address, sourceChainName, sourceChainMagic, name } = applyInfo;
+        const { address, sourceChainName, sourceChainMagic, name, frozenId } = applyInfo;
 
         // 位名是否存在
         const memLocation = await this.helperLogicVerifier.isLocationNameExist(
@@ -1455,9 +1464,18 @@ export class EventLogicVerifier {
           currentBlockHeight,
           accountGetterHelper,
         );
+        // 位名尚未冻结
         if (memLocation.status !== ASSET_STATUS.FROZEN) {
           throw new ConsensusException(ERROR_LIST.LOCATION_NAME_NOT_FROZEN, {
             locationName: name,
+          });
+        }
+        // 冻结 id 不匹配
+        if (memLocation.frozenId !== frozenId) {
+          throw new ConsensusException(ERROR_LIST.SHOULD_BE, {
+            to_compare_prop: `frozenId ${frozenId}`,
+            to_target: "transaction",
+            be_compare_prop: `location name frozenId ${memLocation.frozenId}`,
           });
         }
         // 只有顶级位名能交换
@@ -2250,7 +2268,7 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "unfrozenEntity",
       async ({ transaction, applyInfo }, next) => {
-        const { address, sourceChainName, sourceChainMagic, entityId } = applyInfo;
+        const { address, sourceChainName, sourceChainMagic, entityId, frozenId } = applyInfo;
 
         // entity 是否存在
         const memEntity = await this.helperLogicVerifier.isEntityExist(
@@ -2264,6 +2282,14 @@ export class EventLogicVerifier {
         if (memEntity.status === ASSET_STATUS.NORMAL) {
           throw new ConsensusException(ERROR_LIST.ENTITY_NOT_FROZEN, {
             entityId,
+          });
+        }
+        // 冻结 id 不匹配
+        if (memEntity.frozenId !== frozenId) {
+          throw new ConsensusException(ERROR_LIST.SHOULD_BE, {
+            to_compare_prop: `frozenId ${frozenId}`,
+            to_target: "transaction",
+            be_compare_prop: `entity frozenId ${memEntity.frozenId}`,
           });
         }
         // 销毁状态的 entity 不能解冻

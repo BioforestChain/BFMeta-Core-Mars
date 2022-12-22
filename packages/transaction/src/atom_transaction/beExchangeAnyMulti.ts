@@ -334,8 +334,12 @@ export class BeExchangeAnyMultiTransactionFactory extends TransactionFactory<BeE
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
       const { senderId, recipientId, senderPublicKeyBuffer } = transaction;
-      const { transactionSignatureBuffer, toExchangeAssets, beExchangeAsset } =
-        transaction.asset.beExchangeAnyMulti;
+      const {
+        transactionSignatureBuffer,
+        toExchangeAssets,
+        beExchangeAsset,
+        transactionSignature,
+      } = transaction.asset.beExchangeAnyMulti;
       // 因为 nft 的版税，导致一条交易出现多条冻结记录，但是又不能混合
       // 这里就简单的把冻结 id 搞一些花里胡哨的东西
       // 这个交易本来就比尿还骚，加一些骚东西也是没办法的
@@ -405,6 +409,7 @@ export class BeExchangeAnyMultiTransactionFactory extends TransactionFactory<BeE
                 sourceChainMagic: toExchangeSource,
                 dappid: toExchangeAssetType,
                 status: ASSET_STATUS.NORMAL,
+                frozenId: transactionSignature,
               },
             });
             paidTimes++;
@@ -420,6 +425,7 @@ export class BeExchangeAnyMultiTransactionFactory extends TransactionFactory<BeE
                 sourceChainMagic: toExchangeSource,
                 name: toExchangeAssetType,
                 status: ASSET_STATUS.NORMAL,
+                frozenId: transactionSignature,
               },
             });
             paidTimes++;
@@ -435,6 +441,7 @@ export class BeExchangeAnyMultiTransactionFactory extends TransactionFactory<BeE
                 sourceChainMagic: toExchangeSource,
                 entityId: toExchangeAssetType,
                 status: ASSET_STATUS.NORMAL,
+                frozenId: transactionSignature,
               },
             });
             paidTimes++;

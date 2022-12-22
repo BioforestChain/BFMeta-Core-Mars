@@ -756,8 +756,15 @@ export class CustomTransactionEvent {
       });
     }
     if (applyResult.type === "unfrozenDAppid") {
-      const { address, publicKey, dappid, sourceChainMagic, sourceChainName, possessorAddress } =
-        applyResult.applyInfo;
+      const {
+        address,
+        publicKey,
+        dappid,
+        sourceChainMagic,
+        sourceChainName,
+        possessorAddress,
+        frozenId,
+      } = applyResult.applyInfo;
       return eventEmitter.emit("unfrozenDAppid", {
         type: "unfrozenDAppid",
         transaction,
@@ -769,6 +776,7 @@ export class CustomTransactionEvent {
           dappid,
           possessorAddress,
           status: ASSET_STATUS.NORMAL,
+          frozenId,
         },
       });
     }
@@ -909,8 +917,15 @@ export class CustomTransactionEvent {
       });
     }
     if (applyResult.type === "unfrozenLocationName") {
-      const { address, publicKey, name, sourceChainMagic, sourceChainName, possessorAddress } =
-        applyResult.applyInfo;
+      const {
+        address,
+        publicKey,
+        name,
+        sourceChainMagic,
+        sourceChainName,
+        possessorAddress,
+        frozenId,
+      } = applyResult.applyInfo;
       return eventEmitter.emit("unfrozenLocationName", {
         type: "unfrozenLocationName",
         transaction,
@@ -922,6 +937,7 @@ export class CustomTransactionEvent {
           name,
           possessorAddress,
           status: ASSET_STATUS.NORMAL,
+          frozenId,
         },
       });
     }
@@ -949,8 +965,15 @@ export class CustomTransactionEvent {
       });
     }
     if (applyResult.type === "unfrozenEntity") {
-      const { address, publicKey, entityId, sourceChainMagic, sourceChainName, possessorAddress } =
-        applyResult.applyInfo;
+      const {
+        address,
+        publicKey,
+        entityId,
+        sourceChainMagic,
+        sourceChainName,
+        possessorAddress,
+        frozenId,
+      } = applyResult.applyInfo;
       return eventEmitter.emit("unfrozenEntity", {
         type: "unfrozenEntity",
         transaction,
@@ -962,6 +985,7 @@ export class CustomTransactionEvent {
           entityId,
           possessorAddress,
           status: ASSET_STATUS.NORMAL,
+          frozenId,
         },
       });
     }

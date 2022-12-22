@@ -246,7 +246,7 @@ export class GrabAnyTransactionFactory extends TransactionFactory<GrabAnyTransac
     return wrapTaskList((taskList) => {
       const { chainAssetInfoHelper } = this;
       const { senderId, recipientId, senderPublicKeyBuffer, asset } = transaction;
-      const { amount, giftTransactionSignatureBuffer, giftAny } = asset.grabAny;
+      const { amount, transactionSignatureBuffer, giftAny, transactionSignature } = asset.grabAny;
       const { assetType, parentAssetType, sourceChainMagic, sourceChainName } = giftAny;
 
       const assetInfo = chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
@@ -263,7 +263,7 @@ export class GrabAnyTransactionFactory extends TransactionFactory<GrabAnyTransac
             assetInfo,
             amount,
             sourceAmount: amount,
-            frozenIdBuffer: giftTransactionSignatureBuffer,
+            frozenIdBuffer: transactionSignatureBuffer,
             recipientId, // 资产冻结账户
           },
         });
@@ -279,6 +279,7 @@ export class GrabAnyTransactionFactory extends TransactionFactory<GrabAnyTransac
             sourceChainMagic,
             dappid: assetType,
             status: ASSET_STATUS.NORMAL,
+            frozenId: transactionSignature,
           },
         });
       } else if (parentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME) {
@@ -293,6 +294,7 @@ export class GrabAnyTransactionFactory extends TransactionFactory<GrabAnyTransac
             sourceChainMagic,
             name: assetType,
             status: ASSET_STATUS.NORMAL,
+            frozenId: transactionSignature,
           },
         });
       } else if (parentAssetType === PARENT_ASSET_TYPE.ENTITY) {
@@ -307,6 +309,7 @@ export class GrabAnyTransactionFactory extends TransactionFactory<GrabAnyTransac
             sourceChainMagic,
             entityId: assetType,
             status: ASSET_STATUS.NORMAL,
+            frozenId: transactionSignature,
           },
         });
         if (giftAny.taxInformation && giftAny.taxInformation.taxAssetPrealnum !== "0") {
@@ -324,7 +327,7 @@ export class GrabAnyTransactionFactory extends TransactionFactory<GrabAnyTransac
               assetInfo: chainAssetInfo,
               amount: taxAssetPrealnum,
               sourceAmount: taxAssetPrealnum,
-              frozenIdBuffer: giftTransactionSignatureBuffer,
+              frozenIdBuffer: transactionSignatureBuffer,
               recipientId, // 资产冻结账户
             },
           });

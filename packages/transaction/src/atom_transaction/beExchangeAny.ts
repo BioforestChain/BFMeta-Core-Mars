@@ -360,6 +360,7 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
         toExchangeAssetPrealnum,
         beExchangeAssetPrealnum,
         taxInformation,
+        transactionSignature,
       } = transaction.asset.beExchangeAny;
       const {
         toExchangeChainName,
@@ -412,6 +413,7 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
               sourceChainMagic: toExchangeSource,
               dappid: toExchangeAssetType,
               status: ASSET_STATUS.NORMAL,
+              frozenId: transactionSignature,
             },
           });
         } else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME) {
@@ -426,6 +428,7 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
               sourceChainMagic: toExchangeSource,
               name: toExchangeAssetType,
               status: ASSET_STATUS.NORMAL,
+              frozenId: transactionSignature,
             },
           });
         } else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
@@ -440,6 +443,7 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
               sourceChainMagic: toExchangeSource,
               entityId: toExchangeAssetType,
               status: ASSET_STATUS.NORMAL,
+              frozenId: transactionSignature,
             },
           });
           if (

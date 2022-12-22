@@ -263,7 +263,7 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
   ) {
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
-      const { exchangeSpecialAsset, transactionSignatureBuffer } =
+      const { exchangeSpecialAsset, transactionSignatureBuffer, transactionSignature } =
         transaction.asset.beExchangeSpecialAsset;
       const {
         toExchangeChainName,
@@ -383,6 +383,7 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
               sourceChainMagic: toExchangeSource,
               dappid: toExchangeAsset,
               status: ASSET_STATUS.NORMAL,
+              frozenId: transactionSignature,
             },
           });
         } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME) {
@@ -398,6 +399,7 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
               sourceChainMagic: toExchangeSource,
               name: toExchangeAsset,
               status: ASSET_STATUS.NORMAL,
+              frozenId: transactionSignature,
             },
           });
         } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.ENTITY) {
@@ -413,6 +415,7 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
               sourceChainMagic: toExchangeSource,
               entityId: toExchangeAsset,
               status: ASSET_STATUS.NORMAL,
+              frozenId: transactionSignature,
             },
           });
         } else {
