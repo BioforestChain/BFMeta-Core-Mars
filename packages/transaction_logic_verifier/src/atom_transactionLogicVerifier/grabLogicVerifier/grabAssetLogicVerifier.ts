@@ -93,7 +93,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
   private async isValidAmount(transaction: GrabAssetTransaction) {
     const { senderId, recipientId, asset } = transaction;
     const grabAsset = asset.grabAsset;
-    const { giftAsset, blockSignatureBuffer, giftTransactionSignatureBuffer } = grabAsset;
+    const { giftAsset, blockSignatureBuffer, transactionSignatureBuffer } = grabAsset;
 
     /**校验金额 */
     let should_grap_amount_BI: bigint | undefined;
@@ -108,7 +108,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
         should_grap_amount_BI = await this.transactionHelper.calcGrabRandomGiftAssetNumber(
           senderId,
           blockSignatureBuffer,
-          giftTransactionSignatureBuffer,
+          transactionSignatureBuffer,
           recipientId,
           giftAsset.amount,
           giftAsset.totalGrabableTimes,
@@ -118,7 +118,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
         should_grap_amount_BI = await this.transactionHelper.calcGrabRandomGiftAssetNumber(
           senderId,
           blockSignatureBuffer,
-          giftTransactionSignatureBuffer,
+          transactionSignatureBuffer,
           recipientId,
           giftAsset.amount,
           giftAsset.totalGrabableTimes,

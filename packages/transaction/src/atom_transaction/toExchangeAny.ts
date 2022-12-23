@@ -324,7 +324,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
   ) {
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
-      const { senderId, senderPublicKeyBuffer } = transaction;
+      const { senderId, senderPublicKeyBuffer, signature } = transaction;
       const {
         toExchangeChainName,
         toExchangeSource,
@@ -353,7 +353,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
               this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
             minEffectiveHeight:
               this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
-            frozenIdBuffer: transaction.signatureBuffer,
+            frozenId: signature,
           },
         });
       } else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.DAPP) {
@@ -371,6 +371,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
             maxEffectiveHeight:
               this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
             status: ASSET_STATUS.FROZEN,
+            frozenId: signature,
           },
         });
       } else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME) {
@@ -388,6 +389,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
             maxEffectiveHeight:
               this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
             status: ASSET_STATUS.FROZEN,
+            frozenId: signature,
           },
         });
       } else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
@@ -405,6 +407,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
             maxEffectiveHeight:
               this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
             status: ASSET_STATUS.FROZEN,
+            frozenId: signature,
           },
         });
         if (taxInformation) {
@@ -439,7 +442,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
                   this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
                 minEffectiveHeight:
                   this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
-                frozenIdBuffer: transaction.signatureBuffer,
+                frozenId: signature,
               },
             });
           }

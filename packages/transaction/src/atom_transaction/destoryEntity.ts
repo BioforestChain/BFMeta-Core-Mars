@@ -258,7 +258,7 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
         entityFactoryApplicant,
         entityFactoryPossessor,
         entityFactory,
-        transactionSignatureBuffer,
+        transactionSignature,
       } = transaction.asset.destoryEntity;
       // 销毁 entity
       taskList.next = eventEmitter.emit("destoryEntity", {
@@ -273,7 +273,7 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
           entityFactoryApplicantAddress: entityFactoryApplicant,
           entityFactoryPossessorAddress: entityFactoryPossessor,
           entityFactory: entityFactory.toJSON(),
-          frozenIdBuffer: transactionSignatureBuffer,
+          frozenId: transactionSignature,
           status: ASSET_STATUS.DESTORY,
         },
       });
@@ -293,7 +293,7 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
             assetInfo,
             amount: entityFrozenAssetPrealnum,
             sourceAmount: entityFrozenAssetPrealnum,
-            frozenIdBuffer: transactionSignatureBuffer,
+            frozenId: transactionSignature,
             recipientId, // 资产冻结账户
           },
         });

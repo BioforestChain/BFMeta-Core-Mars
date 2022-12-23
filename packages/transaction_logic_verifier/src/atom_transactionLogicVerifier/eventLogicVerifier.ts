@@ -275,20 +275,19 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "unfrozenAsset",
       async ({ transaction, applyInfo }, next) => {
-        const { assetInfo, frozenIdBuffer, amount: spendAsset, recipientId } = applyInfo;
+        const { assetInfo, frozenId, amount: spendAsset, recipientId } = applyInfo;
         const { magic, assetType } = assetInfo;
-        const transactionSignature = getHexFromArrayBuffer(frozenIdBuffer);
 
         // 获取冻结信息
         const frozenAsset = await accountGetterHelper.getFrozenAsset(
           recipientId,
-          transactionSignature,
+          frozenId,
           assetType,
         );
 
         if (!frozenAsset) {
           throw new ConsensusException(ERROR_LIST.FROZEN_ASSET_NOT_EXIST_OR_EXPIRED, {
-            signature: transactionSignature,
+            signature: frozenId,
           });
         }
 
@@ -301,20 +300,20 @@ export class EventLogicVerifier {
         // 是否到达解冻高度
         if (minEffectiveHeight > transaction.applyBlockHeight) {
           throw new ConsensusException(ERROR_LIST.NOT_BEGIN_UNFROZEN_YET, {
-            frozenId: transactionSignature,
+            frozenId,
           });
         }
 
         // 交易交易是否过期
         if (currentBlockHeight > maxEffectiveHeight) {
           throw new ConsensusException(ERROR_LIST.FROZEN_ASSET_EXPIRATION, {
-            frozenId: transactionSignature,
+            frozenId,
           });
         }
 
         if (maxEffectiveHeight < transaction.applyBlockHeight) {
           throw new ConsensusException(ERROR_LIST.FROZEN_ASSET_EXPIRATION, {
-            frozenId: transactionSignature,
+            frozenId,
           });
         }
 
@@ -329,7 +328,7 @@ export class EventLogicVerifier {
         if (remainUnfrozenTimes !== undefined) {
           if (remainUnfrozenTimes === 0) {
             throw new ConsensusException(ERROR_LIST.UNFROZEN_TIME_USE_UP, {
-              frozenId: transactionSignature,
+              frozenId,
             });
           }
         }
@@ -349,19 +348,18 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "signForAsset",
       async ({ transaction, applyInfo }, next) => {
-        const { frozenIdBuffer, frozenAddress, assetInfo } = applyInfo;
-        const transactionSignature = getHexFromArrayBuffer(frozenIdBuffer);
+        const { frozenId, frozenAddress, assetInfo } = applyInfo;
 
         // 获取冻结信息
         const frozenAsset = await accountGetterHelper.getFrozenAsset(
           frozenAddress,
-          transactionSignature,
+          frozenId,
           assetInfo.assetType,
         );
 
         if (!frozenAsset) {
           throw new ConsensusException(ERROR_LIST.FROZEN_ASSET_NOT_EXIST_OR_EXPIRED, {
-            signature: transactionSignature,
+            signature: frozenId,
           });
         }
 
@@ -369,20 +367,20 @@ export class EventLogicVerifier {
         // 是否到达解冻高度
         if (minEffectiveHeight > transaction.applyBlockHeight) {
           throw new ConsensusException(ERROR_LIST.NOT_BEGIN_UNFROZEN_YET, {
-            frozenId: transactionSignature,
+            frozenId,
           });
         }
 
         // 交易交易是否过期
         if (currentBlockHeight > maxEffectiveHeight) {
           throw new ConsensusException(ERROR_LIST.FROZEN_ASSET_EXPIRATION, {
-            frozenId: transactionSignature,
+            frozenId,
           });
         }
 
         if (maxEffectiveHeight < transaction.applyBlockHeight) {
           throw new ConsensusException(ERROR_LIST.FROZEN_ASSET_EXPIRATION, {
-            frozenId: transactionSignature,
+            frozenId,
           });
         }
 
@@ -397,7 +395,7 @@ export class EventLogicVerifier {
         if (remainUnfrozenTimes !== undefined) {
           if (remainUnfrozenTimes === 0) {
             throw new ConsensusException(ERROR_LIST.UNFROZEN_TIME_USE_UP, {
-              frozenId: transactionSignature,
+              frozenId,
             });
           }
         }

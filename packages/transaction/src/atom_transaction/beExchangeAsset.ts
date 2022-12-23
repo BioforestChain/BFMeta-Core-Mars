@@ -366,7 +366,7 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<BeExch
           assetInfo: toAssetInfo,
           amount: toExchangeNumber,
           sourceAmount: toExchangeNumber,
-          frozenIdBuffer: transaction.asset.beExchangeAsset.transactionSignatureBuffer,
+          frozenId: transaction.asset.beExchangeAsset.transactionSignature,
           recipientId, // 资产冻结账户
         },
       });

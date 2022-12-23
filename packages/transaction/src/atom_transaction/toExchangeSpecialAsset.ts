@@ -281,6 +281,7 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
   ) {
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
+      const signature = transaction.signature;
       const {
         toExchangeChainName,
         toExchangeSource,
@@ -306,7 +307,7 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
               this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
             minEffectiveHeight:
               this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
-            frozenIdBuffer: transaction.signatureBuffer,
+            frozenId: signature,
           },
         });
       } else {
@@ -326,6 +327,7 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
               maxEffectiveHeight:
                 this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
               status: ASSET_STATUS.FROZEN,
+              frozenId: signature,
             },
           });
         } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME) {
@@ -343,6 +345,7 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
               maxEffectiveHeight:
                 this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
               status: ASSET_STATUS.FROZEN,
+              frozenId: signature,
             },
           });
         } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.ENTITY) {
@@ -360,6 +363,7 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
               maxEffectiveHeight:
                 this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
               status: ASSET_STATUS.FROZEN,
+              frozenId: signature,
             },
           });
         } else {

@@ -246,7 +246,7 @@ export class GrabAnyTransactionFactory extends TransactionFactory<GrabAnyTransac
     return wrapTaskList((taskList) => {
       const { chainAssetInfoHelper } = this;
       const { senderId, recipientId, senderPublicKeyBuffer, asset } = transaction;
-      const { amount, transactionSignatureBuffer, giftAny, transactionSignature } = asset.grabAny;
+      const { amount, giftAny, transactionSignature } = asset.grabAny;
       const { assetType, parentAssetType, sourceChainMagic, sourceChainName } = giftAny;
 
       const assetInfo = chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
@@ -263,8 +263,8 @@ export class GrabAnyTransactionFactory extends TransactionFactory<GrabAnyTransac
             assetInfo,
             amount,
             sourceAmount: amount,
-            frozenIdBuffer: transactionSignatureBuffer,
             recipientId, // 资产冻结账户
+            frozenId: transactionSignature,
           },
         });
       } else if (parentAssetType === PARENT_ASSET_TYPE.DAPP) {
@@ -327,8 +327,8 @@ export class GrabAnyTransactionFactory extends TransactionFactory<GrabAnyTransac
               assetInfo: chainAssetInfo,
               amount: taxAssetPrealnum,
               sourceAmount: taxAssetPrealnum,
-              frozenIdBuffer: transactionSignatureBuffer,
               recipientId, // 资产冻结账户
+              frozenId: transactionSignature,
             },
           });
         }

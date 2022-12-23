@@ -376,7 +376,7 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
   ) {
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
-      const { senderId, senderPublicKeyBuffer } = transaction;
+      const { senderId, senderPublicKeyBuffer, signature } = transaction;
       const { toExchangeAssets } = transaction.asset.toExchangeAnyMulti;
 
       let frozenAmount = BigInt(0);
@@ -409,7 +409,7 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
                 this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
               minEffectiveHeight:
                 this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
-              frozenIdBuffer: transaction.signatureBuffer,
+              frozenId: signature,
             },
           });
         } else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.DAPP) {
@@ -427,6 +427,7 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
               maxEffectiveHeight:
                 this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
               status: ASSET_STATUS.FROZEN,
+              frozenId: signature,
             },
           });
         } else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME) {
@@ -444,6 +445,7 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
               maxEffectiveHeight:
                 this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
               status: ASSET_STATUS.FROZEN,
+              frozenId: signature,
             },
           });
         } else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
@@ -461,6 +463,7 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
               maxEffectiveHeight:
                 this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
               status: ASSET_STATUS.FROZEN,
+              frozenId: signature,
             },
           });
           if (taxInformation) {
@@ -488,9 +491,6 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
           });
         }
       }
-      // 因为 nft 的版税，导致一条交易出现多条冻结记录，但是又不能混合
-      // 这里就简单的把冻结 id 搞一些花里胡哨的东西
-      // 这个交易本来就比尿还骚，加一些骚东西也是没办法的
       if (frozenAmount !== BigInt(0)) {
         const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
           config.magic,
@@ -509,10 +509,10 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
               this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
             minEffectiveHeight:
               this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
-            frozenIdBuffer: parseHexToArrayBuffer(
-              getHexFromArrayBuffer(transaction.signatureBuffer) +
-                this.Buffer.from("_entity").toString("hex"),
-            ),
+            // 因为 nft 的版税，导致一条交易出现多条冻结记录，但是又不能混合
+            // 这里就简单的把冻结 id 搞一些花里胡哨的东西
+            // 这个交易本来就比尿还骚，加一些骚东西也是没办法的
+            frozenId: signature + this.Buffer.from("_entity").toString("hex"),
           },
         });
       }

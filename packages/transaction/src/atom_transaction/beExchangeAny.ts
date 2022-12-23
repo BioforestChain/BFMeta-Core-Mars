@@ -355,7 +355,6 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
       const { senderId, recipientId, senderPublicKeyBuffer } = transaction;
       const {
-        transactionSignatureBuffer,
         exchangeAny,
         toExchangeAssetPrealnum,
         beExchangeAssetPrealnum,
@@ -389,7 +388,7 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
             assetInfo: toAssetInfo,
             amount: toExchangeAssetPrealnum,
             sourceAmount: toExchangeAssetPrealnum,
-            frozenIdBuffer: transactionSignatureBuffer,
+            frozenId: transactionSignature,
             recipientId, // 资产冻结账户
           },
         });
@@ -466,7 +465,7 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
                 assetInfo: chainAssetInfo,
                 amount: taxAssetPrealnum,
                 sourceAmount: taxAssetPrealnum,
-                frozenIdBuffer: transactionSignatureBuffer,
+                frozenId: transactionSignature,
                 recipientId, // 资产冻结账户
               },
             });

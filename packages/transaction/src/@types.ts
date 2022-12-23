@@ -198,6 +198,7 @@ declare namespace BFChainCore {
       dappid: string;
       minEffectiveHeight: number;
       maxEffectiveHeight: number;
+      frozenId: string;
     };
   }
 
@@ -302,6 +303,7 @@ declare namespace BFChainCore {
       name: string;
       minEffectiveHeight: number;
       maxEffectiveHeight: number;
+      frozenId: string;
     };
   }
 
@@ -329,6 +331,7 @@ declare namespace BFChainCore {
       entityId: string;
       minEffectiveHeight: number;
       maxEffectiveHeight: number;
+      frozenId: string;
     };
   }
 

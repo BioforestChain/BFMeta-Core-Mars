@@ -250,7 +250,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
   ) {
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
-      const { transactionSignatureBuffer, trustSenderId, trustRecipientId, trustAsset } =
+      const { transactionSignature, trustSenderId, trustRecipientId, trustAsset } =
         transaction.asset.signForAsset;
       const assetInfo = this.chainAssetInfoHelper.getAssetInfo(
         trustAsset.sourceChainMagic,
@@ -263,7 +263,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
         applyInfo: {
           address: transaction.senderId,
           publicKeyBuffer: transaction.senderPublicKeyBuffer,
-          frozenIdBuffer: transactionSignatureBuffer,
+          frozenId: transactionSignature,
           frozenAddress: trustSenderId,
           recipientId: trustRecipientId, // 接收资产的账户
           assetInfo,

@@ -294,7 +294,7 @@ export class BeExchangeSpecialAssetTransactionFactory extends TransactionFactory
             assetInfo: toAssetInfo,
             amount: exchangeNumber,
             sourceAmount: exchangeNumber,
-            frozenIdBuffer: transactionSignatureBuffer,
+            frozenId: transactionSignature,
             recipientId, // 资产冻结账户
           },
         });

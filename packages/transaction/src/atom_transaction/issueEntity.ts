@@ -245,7 +245,7 @@ export class IssueEntityTransactionFactory<
   ) {
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
-      const { senderId, recipientId, senderPublicKeyBuffer, signatureBuffer } = transaction;
+      const { senderId, recipientId, senderPublicKeyBuffer, signature } = transaction;
       const { sourceChainName, sourceChainMagic, entityId, entityFactoryPossessor, entityFactory } =
         transaction.asset.issueEntity;
       const { factoryId, entityFrozenAssetPrealnum, purchaseAssetPrealnum } = entityFactory;
@@ -263,7 +263,7 @@ export class IssueEntityTransactionFactory<
           possessorAddress: recipientId,
           entityFactoryPossessorAddress: entityFactoryPossessor,
           entityFrozenAssetPrealnum,
-          issueIdBuffer: signatureBuffer,
+          issueId: signature,
           status: ASSET_STATUS.NORMAL,
         },
       });
@@ -285,7 +285,7 @@ export class IssueEntityTransactionFactory<
             assetInfo,
             amount: `-${entityFrozenAssetPrealnum}`,
             sourceAmount: entityFrozenAssetPrealnum,
-            frozenIdBuffer: signatureBuffer,
+            frozenId: signature,
             minEffectiveHeight,
             maxEffectiveHeight,
             totalUnfrozenTimes: 1,

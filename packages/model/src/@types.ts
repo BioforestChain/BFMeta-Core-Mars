@@ -22,7 +22,7 @@ declare namespace BFChainCore {
     ApplyTransactionEvent<ApplyInfo_Asset, EVENTNAME, T>;
   interface ApplyInfo_FeeFromUnfrozenAsset extends ApplyInfo_Asset {
     /**冻结的索引 */
-    frozenIdBuffer: Uint8Array;
+    frozenId: string;
   }
   type ApplyTransactionFeeEvent<
     EVENTNAME extends "fee" | "feeFromUnfrozen" = "fee",
@@ -38,7 +38,7 @@ declare namespace BFChainCore {
 
   interface ApplyInfo_FrozenAsset extends ApplyInfo_Asset {
     /**冻结的索引 */
-    frozenIdBuffer: Uint8Array;
+    frozenId: string;
     /**最小有效高度 */
     minEffectiveHeight: number;
     /**最大有效高度 */
@@ -51,7 +51,7 @@ declare namespace BFChainCore {
 
   interface ApplyInfo_UnfrozenAsset extends ApplyInfo_Asset {
     /**冻结的索引 */
-    frozenIdBuffer: Uint8Array;
+    frozenId: string;
     /**解冻者的账户地址
      * 这里的解冻者本质是资金的接收者
      * 如果要将解冻资产是否要回到冻结者账户上,那就填自己就完事了
@@ -65,7 +65,7 @@ declare namespace BFChainCore {
     address: string;
     publicKeyBuffer: Uint8Array;
     /**冻结的索引 */
-    frozenIdBuffer: Uint8Array;
+    frozenId: string;
     frozenAddress: string;
     /**解冻者的账户地址
      * 这里的解冻者本质是资金的接收者
@@ -157,6 +157,7 @@ declare namespace BFChainCore {
     minEffectiveHeight: number;
     maxEffectiveHeight: number;
     status: ASSET_STATUS;
+    frozenId: string;
   };
   /**冻结 dappid */
   type ApplyTransactionFrozenDAppidEvent<EVENTNAME, T extends Transaction = Transaction> =
@@ -280,6 +281,7 @@ declare namespace BFChainCore {
     minEffectiveHeight: number;
     maxEffectiveHeight: number;
     status: ASSET_STATUS;
+    frozenId: string;
   };
   /**冻结位名 */
   type ApplyTransactionFrozenLocationNameEvent<EVENTNAME, T extends Transaction = Transaction> =
@@ -348,7 +350,7 @@ declare namespace BFChainCore {
     /**单个 entity 冻结的主权益数量 */
     entityFrozenAssetPrealnum: string;
     /**发行 entity 的事件 id */
-    issueIdBuffer: Uint8Array;
+    issueId: string;
     /**entity 状态 */
     status: ASSET_STATUS;
   }
@@ -386,7 +388,7 @@ declare namespace BFChainCore {
     entityFactoryPossessorAddress: string;
     entityFactory: BFChainCore.IssueEntityFactoryJSON;
     /**发行 entity 的事件 id */
-    frozenIdBuffer: Uint8Array;
+    frozenId: string;
     /**entity 状态 */
     status: ASSET_STATUS;
   };
@@ -403,6 +405,7 @@ declare namespace BFChainCore {
     minEffectiveHeight: number;
     maxEffectiveHeight: number;
     status: ASSET_STATUS;
+    frozenId: string;
   };
   /**冻结 entityId */
   type ApplyTransactionFrozenEntityEvent<EVENTNAME, T extends Transaction = Transaction> =

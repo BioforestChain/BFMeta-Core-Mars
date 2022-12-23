@@ -757,14 +757,14 @@ export class TransactionHelper {
       grabId = await this.accountBaseHelper.getAddressFromPublicKey(grabKeypair.publicKey),
       grabSecret,
     } = opts;
-    const giftTransactionSignatureBuffer = giftTransaction.signatureBuffer;
+    const transactionSignatureBuffer = giftTransaction.signatureBuffer;
 
     let ciphertextSignature: AccountSignatureModel | undefined;
     if (grabSecret) {
       ciphertextSignature = AccountSignatureModel.fromObject({
         signatureBuffer: await this.getCiphertextSignature({
           secret: grabSecret,
-          transactionSignatureBuffer: giftTransactionSignatureBuffer,
+          transactionSignatureBuffer,
           senderId: grabId,
         }),
         publicKeyBuffer: grabKeypair.publicKey,
@@ -773,7 +773,7 @@ export class TransactionHelper {
 
     const result = GrabAssetModel.fromObject({
       blockSignatureBuffer,
-      giftTransactionSignatureBuffer,
+      transactionSignatureBuffer,
 
       giftAsset,
       ciphertextSignature,

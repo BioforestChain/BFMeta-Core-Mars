@@ -240,7 +240,7 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<ToExch
           sourceAmount: toExchangeNumber,
           maxEffectiveHeight: this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
           minEffectiveHeight: this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
-          frozenIdBuffer: transaction.signatureBuffer,
+          frozenId: transaction.signature,
         },
       });
     });

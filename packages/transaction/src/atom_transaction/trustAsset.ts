@@ -291,7 +291,7 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
           sourceAmount: amount,
           maxEffectiveHeight: this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
           minEffectiveHeight: this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
-          frozenIdBuffer: transaction.signatureBuffer,
+          frozenId: transaction.signature,
           totalUnfrozenTimes: numberOfSignFor,
         },
       });

@@ -1,5 +1,5 @@
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
-import { getHexFromArrayBuffer, parseHexToArrayBuffer, Injectable, Inject } from "@bfchain/util";
+import { parseHexToArrayBuffer, Injectable, Inject } from "@bfchain/util";
 import {
   ACCOUNT_STATUS,
   CustomTransaction,
@@ -652,7 +652,7 @@ export class CustomTransactionEvent {
           assetInfo,
           amount: `-${amount}`,
           sourceAmount: amount,
-          frozenIdBuffer: transaction.signatureBuffer,
+          frozenId: transaction.signature,
           minEffectiveHeight,
           maxEffectiveHeight,
           totalUnfrozenTimes,
@@ -672,7 +672,7 @@ export class CustomTransactionEvent {
           assetInfo,
           amount,
           sourceAmount: amount,
-          frozenIdBuffer: parseHexToArrayBuffer(frozenId),
+          frozenId,
           recipientId,
         },
       });
@@ -686,7 +686,7 @@ export class CustomTransactionEvent {
         applyInfo: {
           address,
           publicKeyBuffer: parseHexToArrayBuffer(publicKey),
-          frozenIdBuffer: parseHexToArrayBuffer(frozenId),
+          frozenId: frozenId,
           frozenAddress,
           recipientId,
           assetInfo,
@@ -740,6 +740,7 @@ export class CustomTransactionEvent {
         sourceChainName,
         minEffectiveHeight,
         maxEffectiveHeight,
+        frozenId,
       } = applyResult.applyInfo;
       return eventEmitter.emit("frozenDAppid", {
         type: "frozenDAppid",
@@ -752,6 +753,7 @@ export class CustomTransactionEvent {
           minEffectiveHeight,
           maxEffectiveHeight,
           status: ASSET_STATUS.FROZEN,
+          frozenId,
         },
       });
     }
@@ -901,6 +903,7 @@ export class CustomTransactionEvent {
         sourceChainName,
         minEffectiveHeight,
         maxEffectiveHeight,
+        frozenId,
       } = applyResult.applyInfo;
       return eventEmitter.emit("frozenLocationName", {
         type: "frozenLocationName",
@@ -913,6 +916,7 @@ export class CustomTransactionEvent {
           minEffectiveHeight,
           maxEffectiveHeight,
           status: ASSET_STATUS.FROZEN,
+          frozenId,
         },
       });
     }
@@ -949,6 +953,7 @@ export class CustomTransactionEvent {
         sourceChainName,
         minEffectiveHeight,
         maxEffectiveHeight,
+        frozenId,
       } = applyResult.applyInfo;
       return eventEmitter.emit("frozenEntity", {
         type: "frozenEntity",
@@ -961,6 +966,7 @@ export class CustomTransactionEvent {
           minEffectiveHeight,
           maxEffectiveHeight,
           status: ASSET_STATUS.FROZEN,
+          frozenId,
         },
       });
     }

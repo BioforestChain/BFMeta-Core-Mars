@@ -75,7 +75,7 @@ export class IssueEntityTransactionFactoryV1 extends IssueEntityTransactionFacto
     config = this.configHelper,
   ) {
     return wrapTaskList((taskList) => {
-      const { senderId, recipientId, senderPublicKeyBuffer, signatureBuffer, fee } = transaction;
+      const { senderId, recipientId, senderPublicKeyBuffer, signature, fee } = transaction;
       const {
         sourceChainName,
         sourceChainMagic,
@@ -113,7 +113,7 @@ export class IssueEntityTransactionFactoryV1 extends IssueEntityTransactionFacto
           possessorAddress: recipientId,
           entityFactoryPossessorAddress: entityFactoryPossessor,
           entityFrozenAssetPrealnum,
-          issueIdBuffer: signatureBuffer,
+          issueId: signature,
           status: ASSET_STATUS.NORMAL,
         },
       });
@@ -131,7 +131,7 @@ export class IssueEntityTransactionFactoryV1 extends IssueEntityTransactionFacto
             assetInfo,
             amount: `-${entityFrozenAssetPrealnum}`,
             sourceAmount: entityFrozenAssetPrealnum,
-            frozenIdBuffer: signatureBuffer,
+            frozenId: signature,
             minEffectiveHeight,
             maxEffectiveHeight,
             totalUnfrozenTimes: 1,

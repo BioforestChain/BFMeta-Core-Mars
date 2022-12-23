@@ -222,7 +222,7 @@ export class GiftAnyTransactionFactory extends GiftTransactionFactory<GiftAnyTra
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
       const { chainAssetInfoHelper } = this;
-      const { senderId, senderPublicKeyBuffer, signatureBuffer, asset } = transaction;
+      const { senderId, senderPublicKeyBuffer, signature, asset } = transaction;
       const {
         taxInformation,
         amount,
@@ -250,10 +250,10 @@ export class GiftAnyTransactionFactory extends GiftTransactionFactory<GiftAnyTra
             assetInfo,
             amount: `-${amount}`,
             sourceAmount: amount,
-            frozenIdBuffer: transaction.signatureBuffer,
             minEffectiveHeight,
             maxEffectiveHeight,
             totalUnfrozenTimes: totalGrabableTimes,
+            frozenId: signature,
           },
         });
       } else if (parentAssetType === PARENT_ASSET_TYPE.DAPP) {
@@ -269,6 +269,7 @@ export class GiftAnyTransactionFactory extends GiftTransactionFactory<GiftAnyTra
             minEffectiveHeight,
             maxEffectiveHeight,
             status: ASSET_STATUS.FROZEN,
+            frozenId: signature,
           },
         });
       } else if (parentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME) {
@@ -284,6 +285,7 @@ export class GiftAnyTransactionFactory extends GiftTransactionFactory<GiftAnyTra
             minEffectiveHeight,
             maxEffectiveHeight,
             status: ASSET_STATUS.FROZEN,
+            frozenId: signature,
           },
         });
       } else if (parentAssetType === PARENT_ASSET_TYPE.ENTITY && taxInformation) {
@@ -299,6 +301,7 @@ export class GiftAnyTransactionFactory extends GiftTransactionFactory<GiftAnyTra
             minEffectiveHeight,
             maxEffectiveHeight,
             status: ASSET_STATUS.FROZEN,
+            frozenId: signature,
           },
         });
         // 纳税
@@ -332,7 +335,7 @@ export class GiftAnyTransactionFactory extends GiftTransactionFactory<GiftAnyTra
                 this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
               minEffectiveHeight:
                 this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
-              frozenIdBuffer: transaction.signatureBuffer,
+              frozenId: signature,
             },
           });
         }
