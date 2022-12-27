@@ -37,18 +37,6 @@ export class GiftAnyTransactionFactory extends GiftTransactionFactory<GiftAnyTra
 
     await this.verifyGiftAny(giftAny, config);
 
-    if (
-      body.rangeType === RANGE_TYPE.MULTI_ADDRESS &&
-      giftAny.parentAssetType !== PARENT_ASSET_TYPE.ASSETS &&
-      body.range.includes(body.senderId)
-    ) {
-      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_INCLUDE, {
-        prop: "range",
-        target: "body",
-        value: body.senderId,
-      });
-    }
-
     if (giftAny.giftDistributionRule === GIFT_DISTRIBUTION_RULE.RECIPIENT_RANDOM) {
       if (body.rangeType !== RANGE_TYPE.MULTI_ADDRESS) {
         throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {

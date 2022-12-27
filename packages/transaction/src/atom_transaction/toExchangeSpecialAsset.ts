@@ -77,14 +77,6 @@ export class ToExchangeSpecialAssetTransactionFactory extends TransactionFactory
       });
     }
 
-    if (body.range.includes(body.senderId)) {
-      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_INCLUDE, {
-        prop: "range",
-        value: body.senderId,
-        ...Function_Exception_Detail,
-      });
-    }
-
     const toExchangeSpecialAsset = toExchangeSpecialAssetAsset.toExchangeSpecialAsset;
 
     this.verifyExchangeSpecialAsset(toExchangeSpecialAsset);

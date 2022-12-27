@@ -84,14 +84,6 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
       });
     }
 
-    if (body.range.includes(body.senderId)) {
-      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_INCLUDE, {
-        prop: "range",
-        value: body.senderId,
-        ...Function_Exception_Detail,
-      });
-    }
-
     const toExchangeAnyMulti = toExchangeAnyMultiAsset.toExchangeAnyMulti;
 
     if (!toExchangeAnyMulti) {

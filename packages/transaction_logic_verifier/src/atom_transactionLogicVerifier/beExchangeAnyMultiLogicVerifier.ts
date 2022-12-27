@@ -453,7 +453,6 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
     const { rangeType, range } = toExchangeAnyMultiJson;
 
     if (rangeType & RANGE_TYPE.MULTI_ADDRESS) {
-      range.push(toExchangeAnyMultiJson.senderId);
       if (!range.includes(transaction.senderId)) {
         throw new ConsensusException(ERROR_LIST.SHOULD_BE, {
           to_compare_prop: `senderId ${transaction.senderId}`,
