@@ -456,7 +456,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     const minAmount = BigInt(0);
     const inputAmount = BigInt(amount);
     if (minAmount >= inputAmount) {
-      throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GTE_FIELD, {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
         prop: `${propName} ${amount}`,
         field: "0",
         ...Function_Exception_Detail,

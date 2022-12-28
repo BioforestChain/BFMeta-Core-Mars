@@ -200,6 +200,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
       amount,
       giftDistributionRule,
       cipherPublicKeys,
+      beginUnfrozenBlockHeight,
     } = giftAsset;
 
     const trsAsset = giftAssetJson.asset.giftAsset;
@@ -217,6 +218,29 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
         to_target: "GrabAssetTransaction",
         be_target: "GiftAssetTransaction",
       });
+    }
+    if (trsAsset.beginUnfrozenBlockHeight !== undefined) {
+      if (beginUnfrozenBlockHeight === undefined) {
+        throw new ConsensusException(ERROR_LIST.PROP_IS_REQUIRE, {
+          prop: `beginUnfrozenBlockHeight`,
+          target: "grabAsset",
+        });
+      }
+      if (trsAsset.beginUnfrozenBlockHeight !== beginUnfrozenBlockHeight) {
+        throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+          to_compare_prop: `trsAsset: ${JSON.stringify(trsAsset)}`,
+          be_compare_prop: `giftAsset: ${JSON.stringify(giftAsset.toJSON())}`,
+          to_target: "GrabAssetTransaction",
+          be_target: "GiftAssetTransaction",
+        });
+      }
+    } else {
+      if (beginUnfrozenBlockHeight !== undefined) {
+        throw new ConsensusException(ERROR_LIST.SHOULD_NOT_EXIST, {
+          prop: `beginUnfrozenBlockHeight`,
+          target: "grabAsset",
+        });
+      }
     }
 
     if (trsAsset.cipherPublicKeys.length !== cipherPublicKeys.length) {
@@ -240,7 +264,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
     /**如果是公钥模式，那么必须存在密文 */
     if (cipherPublicKeys.length > 0) {
       if (!ciphertextSignature) {
-        throw new ConsensusException(ERROR_LIST.NOT_EXIST, {
+        throw new ConsensusException(ERROR_LIST.PROP_IS_REQUIRE, {
           prop: `ciphertextSignature`,
           target: "grabAsset",
         });
