@@ -199,6 +199,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
       assetType,
       amount,
       giftDistributionRule,
+      totalGrabableTimes,
       cipherPublicKeys,
       beginUnfrozenBlockHeight,
     } = giftAsset;
@@ -209,6 +210,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
       trsAsset.sourceChainMagic !== sourceChainMagic ||
       trsAsset.sourceChainName !== sourceChainName ||
       trsAsset.assetType !== assetType ||
+      trsAsset.totalGrabableTimes !== totalGrabableTimes ||
       trsAsset.amount !== amount ||
       trsAsset.giftDistributionRule !== giftDistributionRule
     ) {
@@ -219,6 +221,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
         be_target: "GiftAssetTransaction",
       });
     }
+
     if (trsAsset.beginUnfrozenBlockHeight !== undefined) {
       if (beginUnfrozenBlockHeight === undefined) {
         throw new ConsensusException(ERROR_LIST.PROP_IS_REQUIRE, {

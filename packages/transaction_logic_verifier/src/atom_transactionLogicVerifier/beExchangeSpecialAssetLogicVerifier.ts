@@ -166,15 +166,30 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
     toExchangeSpecialAssetJson: BFChainCore.TransactionJSON<BFChainCore.ToExchangeSpecialAssetAssetJSON>,
   ) {
     const beExchangeAssetAsset = transaction.asset.beExchangeSpecialAsset;
-    const { exchangeSpecialAsset } = beExchangeAssetAsset;
-    const { toExchangeSource, toExchangeAsset, beExchangeSource, beExchangeAsset } =
-      exchangeSpecialAsset;
+    const { exchangeSpecialAsset, ciphertextSignature } = beExchangeAssetAsset;
+    const {
+      toExchangeSource,
+      toExchangeAsset,
+      beExchangeSource,
+      beExchangeAsset,
+      toExchangeChainName,
+      beExchangeChainName,
+      exchangeNumber,
+      exchangeAssetType,
+      exchangeDirection,
+      cipherPublicKeys,
+    } = exchangeSpecialAsset;
     const trsAsset = toExchangeSpecialAssetJson.asset.toExchangeSpecialAsset;
     if (
       trsAsset.toExchangeSource !== toExchangeSource ||
       trsAsset.beExchangeSource !== beExchangeSource ||
       trsAsset.toExchangeAsset !== toExchangeAsset ||
-      trsAsset.beExchangeAsset !== beExchangeAsset
+      trsAsset.beExchangeAsset !== beExchangeAsset ||
+      trsAsset.toExchangeChainName !== toExchangeChainName ||
+      trsAsset.beExchangeChainName !== beExchangeChainName ||
+      trsAsset.exchangeNumber !== exchangeNumber ||
+      trsAsset.exchangeAssetType !== exchangeAssetType ||
+      trsAsset.exchangeDirection !== exchangeDirection
     ) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `trsAsset: ${JSON.stringify(trsAsset)}`,
@@ -182,6 +197,50 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
         to_target: "BeExchangeSpecialAssetTransaction",
         be_target: "ToExchangeSpecialAssetTransaction",
       });
+    }
+
+    if (trsAsset.cipherPublicKeys.length !== cipherPublicKeys.length) {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+        to_compare_prop: `trsAsset: ${JSON.stringify(trsAsset)}`,
+        be_compare_prop: `exchangeSpecialAsset: ${JSON.stringify(exchangeSpecialAsset.toJSON())}`,
+        to_target: "BeExchangeSpecialAssetTransaction",
+        be_target: "ToExchangeSpecialAssetTransaction",
+      });
+    }
+    for (const pk of trsAsset.cipherPublicKeys) {
+      if (!cipherPublicKeys.includes(pk)) {
+        throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+          to_compare_prop: `trsAsset: ${JSON.stringify(trsAsset)}`,
+          be_compare_prop: `exchangeSpecialAsset: ${JSON.stringify(exchangeSpecialAsset.toJSON())}`,
+          to_target: "BeExchangeSpecialAssetTransaction",
+          be_target: "ToExchangeSpecialAssetTransaction",
+        });
+      }
+    }
+    /**如果是公钥模式，那么必须存在密文 */
+    if (cipherPublicKeys.length > 0) {
+      if (!ciphertextSignature) {
+        throw new ConsensusException(ERROR_LIST.NOT_EXIST, {
+          prop: `ciphertextSignature`,
+          target: "beExchangeSpecialAsset",
+        });
+      }
+      const { publicKey } = ciphertextSignature;
+      if (!cipherPublicKeys.includes(publicKey)) {
+        throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+          to_compare_prop: `publicKey ${publicKey}`,
+          be_compare_prop: "cipherPublicKeys",
+          to_target: "beExchangeSpecialAsset.ciphertextSignature",
+          be_target: "toExchangeSpecialAsset.cipherPublicKeys",
+        });
+      }
+    } else {
+      if (ciphertextSignature) {
+        throw new ConsensusException(ERROR_LIST.SHOULD_NOT_EXIST, {
+          prop: `ciphertextSignature`,
+          target: "beExchangeSpecialAsset",
+        });
+      }
     }
 
     const { rangeType, range } = toExchangeSpecialAssetJson;
