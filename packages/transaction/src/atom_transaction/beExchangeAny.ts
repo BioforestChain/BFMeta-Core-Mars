@@ -478,6 +478,21 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
         }
       }
 
+      if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY && taxInformation) {
+        // 纳税
+        taskList.next = eventEmitter.emit("payTax", {
+          type: "payTax",
+          transaction,
+          applyInfo: {
+            sourceChainName: beExchangeChainName,
+            sourceChainMagic: beExchangeSource,
+            parentAssetType: beExchangeParentAssetType,
+            assetType: beExchangeAssetType,
+            taxInformation: taxInformation.toJSON(),
+          },
+        });
+      }
+
       // 主动解冻
       if (beExchangeAssetPrealnum === "0") {
         return;
@@ -561,18 +576,6 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
           },
         });
         if (taxInformation) {
-          // 纳税
-          taskList.next = eventEmitter.emit("payTax", {
-            type: "payTax",
-            transaction,
-            applyInfo: {
-              sourceChainName: beExchangeChainName,
-              sourceChainMagic: beExchangeSource,
-              parentAssetType: beExchangeParentAssetType,
-              assetType: beExchangeAssetType,
-              taxInformation: taxInformation.toJSON(),
-            },
-          });
           if (taxInformation.taxAssetPrealnum !== "0") {
             const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
               config.magic,
