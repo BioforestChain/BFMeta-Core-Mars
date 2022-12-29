@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-helper-config",
-  "version": "8.0.18",
+  "version": "8.0.19",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,10 +14,10 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-model-block": "8.0.18",
-    "@bfchain/core-model-common": "8.0.18",
-    "@bfchain/core-typings": "8.0.18",
-    "@bfchain/core-util-exception-errorcode": "8.0.18"
+    "@bfchain/core-model-block": "8.0.19",
+    "@bfchain/core-model-common": "8.0.19",
+    "@bfchain/core-typings": "8.0.19",
+    "@bfchain/core-util-exception-errorcode": "8.0.19"
   },
   "gitHead": "ef41eb359371b11aafbec0516df1eba01f16ebfd",
   "types": "build/cjs/index.d.ts"
