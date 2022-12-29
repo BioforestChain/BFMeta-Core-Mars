@@ -257,8 +257,7 @@ export class GrabAnyLogicVerifier extends TransactionLogicVerifier {
       trsAsset.assetType !== assetType ||
       trsAsset.amount !== amount ||
       trsAsset.giftDistributionRule !== giftDistributionRule ||
-      trsAsset.totalGrabableTimes !== totalGrabableTimes ||
-      trsAsset.beginUnfrozenBlockHeight !== beginUnfrozenBlockHeight
+      trsAsset.totalGrabableTimes !== totalGrabableTimes
     ) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `grabAny.giftAny: ${JSON.stringify(giftAny.toJSON())}`,
@@ -266,6 +265,30 @@ export class GrabAnyLogicVerifier extends TransactionLogicVerifier {
         to_target: "GrabAnyTransaction",
         be_target: "GiftAnyTransaction",
       });
+    }
+
+    if (trsAsset.beginUnfrozenBlockHeight !== undefined) {
+      if (beginUnfrozenBlockHeight === undefined) {
+        throw new ConsensusException(ERROR_LIST.PROP_IS_REQUIRE, {
+          prop: `beginUnfrozenBlockHeight`,
+          target: "grabAsset",
+        });
+      }
+      if (trsAsset.beginUnfrozenBlockHeight !== beginUnfrozenBlockHeight) {
+        throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+          to_compare_prop: `trsAsset: ${JSON.stringify(trsAsset)}`,
+          be_compare_prop: `giftAny: ${JSON.stringify(giftAny.toJSON())}`,
+          to_target: "GrabAnyTransaction",
+          be_target: "GiftAnyTransaction",
+        });
+      }
+    } else {
+      if (beginUnfrozenBlockHeight !== undefined) {
+        throw new ConsensusException(ERROR_LIST.SHOULD_NOT_EXIST, {
+          prop: `beginUnfrozenBlockHeight`,
+          target: "grabAsset",
+        });
+      }
     }
 
     if (trsAsset.taxInformation) {
