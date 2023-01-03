@@ -75,6 +75,14 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
 
     await this.verifyToExchangeAny(toExchangeAny, config);
 
+    if (toExchangeAny.toExchangeAssetPrealnum === "0") {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
+        prop: "toExchangeAssetPrealnum",
+        field: "0",
+        target: "toExchangeAny",
+      });
+    }
+
     if (body.storage) {
       throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
         prop: "storage",

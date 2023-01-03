@@ -108,6 +108,16 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
       config,
     );
 
+    for (const toExchangeAsset of toExchangeAssets) {
+      if (toExchangeAsset.toExchangeAssetPrealnum === "0") {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
+          prop: "toExchangeAssetPrealnum",
+          field: "0",
+          target: "toExchangeAnyMulti.toExchangeAssets.toExchangeAsset",
+        });
+      }
+    }
+
     const beExchangeAssetPrealnum = beExchangeAsset.beExchangeAssetPrealnum;
 
     if (isNeedBeExchangeAssetPrealnum) {

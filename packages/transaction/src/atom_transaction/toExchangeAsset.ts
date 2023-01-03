@@ -93,6 +93,14 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<ToExch
 
     this.verifyToExchangeAsset(toExchangeAsset, config);
 
+    if (toExchangeAsset.toExchangeNumber === "0") {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
+        prop: "toExchangeNumber",
+        field: "0",
+        target: "toExchangeAsset",
+      });
+    }
+
     if (body.storage) {
       throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
         prop: "storage",
