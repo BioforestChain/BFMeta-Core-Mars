@@ -201,7 +201,7 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
       // 主动解冻
       if (exchangeAny.toExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
         // 可数资产自己赎回也要大于 0 份
-        if (bigIntToExchangeAssetPrealnum <= BigInt(1)) {
+        if (bigIntToExchangeAssetPrealnum < BigInt(1)) {
           throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
             prop: `toExchangeAssetPrealnum ${toExchangeAssetPrealnum}`,
             field: "0",
