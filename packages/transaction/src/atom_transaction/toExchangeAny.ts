@@ -196,9 +196,55 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
       });
     }
 
-    // 非同质资产不可分
-    // to 不是同质资产
-    if (toExchangeParentAssetType !== PARENT_ASSET_TYPE.ASSETS) {
+    if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
+      // to 是同质资产
+      // be 是同质资产
+      if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
+        if (beExchangeAssetPrealnum) {
+          throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
+            prop: "beExchangeAssetPrealnum",
+            ...ToExchangeAnyAsset_Exception_Detail,
+          });
+        }
+        if (!assetExchangeWeightRatio) {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
+            prop: "assetExchangeWeightRatio",
+            ...ToExchangeAnyAsset_Exception_Detail,
+          });
+        }
+        if (!baseHelper.isValidAssetExchangeWeightRatio(assetExchangeWeightRatio)) {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+            prop: `assetExchangeWeightRatio ${JSON.stringify(assetExchangeWeightRatio)}`,
+            ...ToExchangeAnyAsset_Exception_Detail,
+          });
+        }
+      }
+      // be 是非同质资产
+      else {
+        if (!beExchangeAssetPrealnum) {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
+            prop: "beExchangeAssetPrealnum",
+            ...ToExchangeAnyAsset_Exception_Detail,
+          });
+        }
+        // 非同质资产数量只能是 1
+        if (beExchangeAssetPrealnum !== "1") {
+          throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
+            to_compare_prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
+            to_target: "toExchangeAnyAsset",
+            be_compare_prop: "1",
+          });
+        }
+        if (assetExchangeWeightRatio) {
+          throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
+            prop: "assetExchangeWeightRatio",
+            ...ToExchangeAnyAsset_Exception_Detail,
+          });
+        }
+      }
+    } else {
+      // to 不是同质资产
+      // 非同质资产不可分
       if (toExchangeAssetPrealnum !== "1") {
         throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
           to_compare_prop: `toExchangeAssetPrealnum ${toExchangeAssetPrealnum}`,
@@ -245,6 +291,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
       }
     }
 
+    // 只有 to 是 entity 时需要携带 taxInformation
     if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
       await this.checkTaxInformation(ToExchangeAnyAsset_Exception_Detail, taxInformation);
     } else {
@@ -254,45 +301,6 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
           ...ToExchangeAnyAsset_Exception_Detail,
         });
       }
-    }
-
-    // to 是同质资产
-    // be 不是同质资产
-    if (beExchangeParentAssetType !== PARENT_ASSET_TYPE.ASSETS) {
-      if (beExchangeAssetPrealnum !== "1") {
-        throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
-          to_compare_prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
-          to_target: "toExchangeAnyAsset",
-          be_compare_prop: "1",
-        });
-      }
-      if (assetExchangeWeightRatio) {
-        throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
-          prop: "assetExchangeWeightRatio",
-          ...ToExchangeAnyAsset_Exception_Detail,
-        });
-      }
-      return;
-    }
-    // to 是同质资产
-    // be 是同质资产
-    if (beExchangeAssetPrealnum) {
-      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
-        prop: "beExchangeAssetPrealnum",
-        ...ToExchangeAnyAsset_Exception_Detail,
-      });
-    }
-    if (!assetExchangeWeightRatio) {
-      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
-        prop: "assetExchangeWeightRatio",
-        ...ToExchangeAnyAsset_Exception_Detail,
-      });
-    }
-    if (!baseHelper.isValidAssetExchangeWeightRatio(assetExchangeWeightRatio)) {
-      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: `assetExchangeWeightRatio ${JSON.stringify(assetExchangeWeightRatio)}`,
-        ...ToExchangeAnyAsset_Exception_Detail,
-      });
     }
   }
 

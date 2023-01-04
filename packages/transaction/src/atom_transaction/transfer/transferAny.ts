@@ -69,8 +69,25 @@ export class TransferAnyTransactionFactory extends TransferTransactionFactory<Tr
 
     this.checkAssetAmount(transferAny.amount, "amount", TransferAnyAsset_Exception_Detail);
 
+    if (parentAssetType !== PARENT_ASSET_TYPE.ASSETS) {
+      if (transferAny.amount !== "1") {
+        throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
+          to_compare_prop: `amount ${transferAny.amount}`,
+          to_target: "transferAny",
+          be_compare_prop: "1",
+        });
+      }
+    }
+
     if (parentAssetType === PARENT_ASSET_TYPE.ENTITY) {
       await this.checkTaxInformation(TransferAnyAsset_Exception_Detail, taxInformation);
+    } else {
+      if (taxInformation) {
+        throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
+          prop: "taxInformation",
+          ...TransferAnyAsset_Exception_Detail,
+        });
+      }
     }
   }
 

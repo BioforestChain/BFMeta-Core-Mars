@@ -142,6 +142,12 @@ export class GiftAnyTransactionFactory extends GiftTransactionFactory<GiftAnyTra
     this.checkAssetAmount(amount, "amount", GiftAnyAsset_Exception_Detail);
 
     if (parentAssetType === PARENT_ASSET_TYPE.ASSETS) {
+      if (giftDistributionRule === undefined) {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
+          prop: "giftDistributionRule",
+          ...GiftAnyAsset_Exception_Detail,
+        });
+      }
       if (
         giftDistributionRule !== GIFT_DISTRIBUTION_RULE.RANDOM &&
         giftDistributionRule !== GIFT_DISTRIBUTION_RULE.AVERAGE &&
@@ -178,6 +184,13 @@ export class GiftAnyTransactionFactory extends GiftTransactionFactory<GiftAnyTra
 
     if (parentAssetType === PARENT_ASSET_TYPE.ENTITY) {
       await this.checkTaxInformation(GiftAnyAsset_Exception_Detail, taxInformation);
+    } else {
+      if (taxInformation) {
+        throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
+          prop: "taxInformation",
+          ...GiftAnyAsset_Exception_Detail,
+        });
+      }
     }
   }
 

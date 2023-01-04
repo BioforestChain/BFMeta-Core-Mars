@@ -131,6 +131,10 @@ async function getToExchangeAnyTransaction(
     toExchangeAnyCopy.toExchangeAssetPrealnum = "1";
     toExchangeAnyCopy.beExchangeAssetPrealnum = "1000";
     toExchangeAnyCopy.assetExchangeWeightRatio = undefined;
+    toExchangeAnyCopy.taxInformation = {
+      taxCollector: aa.address,
+      taxAssetPrealnum: "1000",
+    };
 
     await getToExchangeAnyTransaction(aa, "", toExchangeAnyCopy, bfchainCore);
     await getToExchangeAnyTransaction(aaa, recipientId, toExchangeAnyCopy, bfchainCore);

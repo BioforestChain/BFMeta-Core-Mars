@@ -84,7 +84,11 @@ async function getTransferAnyTransaction(sender: AccountModel, bfchainCore: BFCh
         sourceChainMagic: bfchainCore.config.magic,
         parentAssetType: PARENT_ASSET_TYPE.ENTITY,
         assetType,
-        amount: "1000",
+        amount: "1",
+        taxInformation: {
+          taxCollector: sender.address,
+          taxAssetPrealnum: "1000",
+        },
       },
     },
     keypair,
