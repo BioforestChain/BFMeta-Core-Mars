@@ -243,17 +243,17 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
           });
         }
       }
-      if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
-        await this.checkTaxInformation(ToExchangeAnyAsset_Exception_Detail, taxInformation);
-      }
-      return;
     }
 
-    if (taxInformation) {
-      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
-        prop: "taxInformation",
-        ...ToExchangeAnyAsset_Exception_Detail,
-      });
+    if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
+      await this.checkTaxInformation(ToExchangeAnyAsset_Exception_Detail, taxInformation);
+    } else {
+      if (taxInformation) {
+        throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
+          prop: "taxInformation",
+          ...ToExchangeAnyAsset_Exception_Detail,
+        });
+      }
     }
 
     // to 是同质资产
