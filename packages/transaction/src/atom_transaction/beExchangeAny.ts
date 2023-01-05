@@ -5,7 +5,6 @@ import {
   TransactionHelper,
   BaseHelper,
   ConfigHelper,
-  JSBIHelper,
   ChainAssetInfoHelper,
 } from "@bfchain/core-helper";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
@@ -28,7 +27,6 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
     public baseHelper: BaseHelper,
     public configHelper: ConfigHelper,
     public chainAssetInfoHelper: ChainAssetInfoHelper,
-    public jsbiHelper: JSBIHelper,
     public toExchangeAnyTransactionFactory: ToExchangeAnyTransactionFactory,
   ) {
     super();
@@ -53,7 +51,7 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
 
     this.emptyRangeType(body, Function_Exception_Detail);
 
-    const { baseHelper, jsbiHelper } = this;
+    const { baseHelper } = this;
 
     const recipientId = body.recipientId;
 
@@ -172,11 +170,10 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
 
     /**校验`exchangeAny`的基本格式 */
     await this.toExchangeAnyTransactionFactory.verifyToExchangeAny(exchangeAny);
-    const { beExchangeParentAssetType, assetExchangeWeightRatio, taxInformation } = exchangeAny;
+    const { beExchangeParentAssetType } = exchangeAny;
 
     // 这里的 to 就是 to 交易发起人给出权益，be 是 be 交易发起人给出的权益
-    const bigIntToExchangeAssetPrealnum = BigInt(toExchangeAssetPrealnum);
-    if (bigIntToExchangeAssetPrealnum > BigInt(exchangeAny.toExchangeAssetPrealnum)) {
+    if (BigInt(toExchangeAssetPrealnum) > BigInt(exchangeAny.toExchangeAssetPrealnum)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
         prop: `toExchangeAssetPrealnum ${toExchangeAssetPrealnum}`,
         field: exchangeAny.toExchangeAssetPrealnum,
@@ -195,79 +192,6 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
           prop: "taxInformation",
           ...BeExchangeAnyAsset_Exception_Detail,
         });
-      }
-    }
-    if (body.senderId === recipientId) {
-      // 主动解冻
-      if (exchangeAny.toExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
-        // 可数资产自己赎回也要大于 0 份
-        if (bigIntToExchangeAssetPrealnum < BigInt(1)) {
-          throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
-            prop: `toExchangeAssetPrealnum ${toExchangeAssetPrealnum}`,
-            field: "0",
-            ...BeExchangeAnyAsset_Exception_Detail,
-          });
-        }
-      } else {
-        // 不可数资产只有 1 份
-        if (toExchangeAssetPrealnum !== "1") {
-          throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_EQ_FIELD, {
-            prop: `toExchangeAssetPrealnum ${toExchangeAssetPrealnum}`,
-            field: "1",
-            ...BeExchangeAnyAsset_Exception_Detail,
-          });
-        }
-      }
-      if (beExchangeAssetPrealnum !== "0") {
-        throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_EQ_FIELD, {
-          prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
-          field: "0",
-          ...BeExchangeAnyAsset_Exception_Detail,
-        });
-      }
-    } else {
-      // 被动解冻
-      if (toExchangeAssetPrealnum === "0" && beExchangeAssetPrealnum === "0") {
-        throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
-          prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
-          field: "0",
-          ...BeExchangeAnyAsset_Exception_Detail,
-        });
-      }
-      if (assetExchangeWeightRatio) {
-        // 按比例计算验证是否满足最少需要付的钱，允许多付钱
-        // 这里是用 to 算 be，所以是 to / 兑换比例，即 to * 兑换比例的倒数
-        const minBeExchangePrealnum_BI = jsbiHelper.multiplyRoundFraction(toExchangeAssetPrealnum, {
-          numerator: assetExchangeWeightRatio.beExchangeAssetWeight,
-          denominator: assetExchangeWeightRatio.toExchangeAssetWeight,
-        });
-        if (minBeExchangePrealnum_BI > BigInt(beExchangeAssetPrealnum)) {
-          throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GTE_FIELD, {
-            prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
-            field: minBeExchangePrealnum_BI.toString(),
-            ...BeExchangeAnyAsset_Exception_Detail,
-          });
-        }
-      } else {
-        // 允许多付钱
-        if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
-          // 这里的 to 就是 to 交易发起人给出权益，be 是 be 交易发起人给出的权益
-          if (BigInt(beExchangeAssetPrealnum) < BigInt(exchangeAny.beExchangeAssetPrealnum)) {
-            throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
-              prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
-              field: exchangeAny.beExchangeAssetPrealnum,
-              ...BeExchangeAnyAsset_Exception_Detail,
-            });
-          }
-        } else {
-          if (beExchangeAssetPrealnum !== "1") {
-            throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_EQ_FIELD, {
-              prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
-              field: "1",
-              ...BeExchangeAnyAsset_Exception_Detail,
-            });
-          }
-        }
       }
     }
 

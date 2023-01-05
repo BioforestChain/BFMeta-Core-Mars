@@ -2,6 +2,7 @@ import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { BeExchangeAnyTransaction, RANGE_TYPE, PARENT_ASSET_TYPE } from "@bfchain/core-model";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
+import { JSBIHelper } from "@bfchain/core-helper-bigint";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
@@ -10,7 +11,7 @@ const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
 
 @Injectable()
 export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
-  constructor() {
+  constructor(public jsbiHelper: JSBIHelper) {
     super();
   }
 
@@ -177,28 +178,16 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
   ) {
     const beExchangeAny = transaction.asset.beExchangeAny;
     const { exchangeAny, ciphertextSignature } = beExchangeAny;
-    const {
-      toExchangeSource,
-      toExchangeAssetType,
-      toExchangeParentAssetType,
-      beExchangeSource,
-      beExchangeAssetType,
-      beExchangeParentAssetType,
-      toExchangeAssetPrealnum,
-      beExchangeAssetPrealnum,
-      cipherPublicKeys,
-      assetExchangeWeightRatio,
-      taxInformation,
-    } = exchangeAny;
+    const { cipherPublicKeys, assetExchangeWeightRatio, taxInformation } = exchangeAny;
     const trsAsset = toExchangeAnyJson.asset.toExchangeAny;
     if (
-      trsAsset.toExchangeSource !== toExchangeSource ||
-      trsAsset.beExchangeSource !== beExchangeSource ||
-      trsAsset.toExchangeParentAssetType !== toExchangeParentAssetType ||
-      trsAsset.beExchangeParentAssetType !== beExchangeParentAssetType ||
-      trsAsset.toExchangeAssetType !== toExchangeAssetType ||
-      trsAsset.beExchangeAssetType !== beExchangeAssetType ||
-      trsAsset.toExchangeAssetPrealnum !== toExchangeAssetPrealnum
+      trsAsset.toExchangeSource !== exchangeAny.toExchangeSource ||
+      trsAsset.beExchangeSource !== exchangeAny.beExchangeSource ||
+      trsAsset.toExchangeParentAssetType !== exchangeAny.toExchangeParentAssetType ||
+      trsAsset.beExchangeParentAssetType !== exchangeAny.beExchangeParentAssetType ||
+      trsAsset.toExchangeAssetType !== exchangeAny.toExchangeAssetType ||
+      trsAsset.beExchangeAssetType !== exchangeAny.beExchangeAssetType ||
+      trsAsset.toExchangeAssetPrealnum !== exchangeAny.toExchangeAssetPrealnum
     ) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `trsAsset: ${JSON.stringify(trsAsset)}`,
@@ -208,7 +197,7 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
       });
     }
     if (trsAsset.beExchangeAssetPrealnum) {
-      if (!beExchangeAssetPrealnum) {
+      if (!exchangeAny.beExchangeAssetPrealnum) {
         throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
           to_compare_prop: `trsAsset: ${JSON.stringify(trsAsset)}`,
           be_compare_prop: `exchangeAny: ${JSON.stringify(exchangeAny.toJSON())}`,
@@ -216,7 +205,7 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
           be_target: "ToExchangeAnyTransaction",
         });
       }
-      if (trsAsset.beExchangeAssetPrealnum !== beExchangeAssetPrealnum) {
+      if (trsAsset.beExchangeAssetPrealnum !== exchangeAny.beExchangeAssetPrealnum) {
         throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
           to_compare_prop: `trsAsset: ${JSON.stringify(trsAsset)}`,
           be_compare_prop: `exchangeAny: ${JSON.stringify(exchangeAny.toJSON())}`,
@@ -225,7 +214,7 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
         });
       }
     } else {
-      if (beExchangeAssetPrealnum) {
+      if (exchangeAny.beExchangeAssetPrealnum) {
         throw new ConsensusException(ERROR_LIST.SHOULD_NOT_EXIST, {
           prop: "beExchangeAssetPrealnum",
           target: "BeExchangeAnyTransaction.beExchangeAny.exchangeAny",
@@ -334,6 +323,84 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
           prop: `ciphertextSignature`,
           target: "beExchangeAny",
         });
+      }
+    }
+
+    const { toExchangeAssetPrealnum, beExchangeAssetPrealnum } = beExchangeAny;
+    if (transaction.senderId === transaction.recipientId) {
+      // 主动解冻
+      if (exchangeAny.toExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
+        // 可数资产自己赎回也要大于 0 份
+        if (beExchangeAssetPrealnum === "0") {
+          throw new ConsensusException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
+            prop: `toExchangeAssetPrealnum ${toExchangeAssetPrealnum}`,
+            field: "0",
+            target: "beExchangeAny",
+          });
+        }
+      } else {
+        // 不可数资产只有 1 份
+        if (toExchangeAssetPrealnum !== "1") {
+          throw new ConsensusException(ERROR_LIST.PROP_SHOULD_EQ_FIELD, {
+            prop: `toExchangeAssetPrealnum ${toExchangeAssetPrealnum}`,
+            field: "1",
+            target: "beExchangeAny",
+          });
+        }
+      }
+      if (beExchangeAssetPrealnum !== "0") {
+        throw new ConsensusException(ERROR_LIST.PROP_SHOULD_EQ_FIELD, {
+          prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
+          field: "0",
+          target: "beExchangeAny",
+        });
+      }
+    } else {
+      // 被动解冻
+      if (toExchangeAssetPrealnum === "0" && beExchangeAssetPrealnum === "0") {
+        throw new ConsensusException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
+          prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
+          field: "0",
+          target: "beExchangeAny",
+        });
+      }
+      if (assetExchangeWeightRatio) {
+        // 按比例计算验证是否满足最少需要付的钱，允许多付钱
+        // 这里是用 to 算 be，所以是 to / 兑换比例，即 to * 兑换比例的倒数
+        const minBeExchangePrealnum_BI = this.jsbiHelper.multiplyRoundFraction(
+          toExchangeAssetPrealnum,
+          {
+            numerator: assetExchangeWeightRatio.beExchangeAssetWeight,
+            denominator: assetExchangeWeightRatio.toExchangeAssetWeight,
+          },
+        );
+        if (minBeExchangePrealnum_BI > BigInt(beExchangeAssetPrealnum)) {
+          throw new ConsensusException(ERROR_LIST.PROP_SHOULD_GTE_FIELD, {
+            prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
+            field: minBeExchangePrealnum_BI.toString(),
+            target: "beExchangeAny",
+          });
+        }
+      } else {
+        // 允许多付钱
+        if (exchangeAny.beExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
+          // 这里的 to 就是 to 交易发起人给出权益，be 是 be 交易发起人给出的权益
+          if (BigInt(beExchangeAssetPrealnum) < BigInt(exchangeAny.beExchangeAssetPrealnum)) {
+            throw new ConsensusException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
+              prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
+              field: exchangeAny.beExchangeAssetPrealnum,
+              target: "beExchangeAny",
+            });
+          }
+        } else {
+          if (beExchangeAssetPrealnum !== "1") {
+            throw new ConsensusException(ERROR_LIST.PROP_SHOULD_EQ_FIELD, {
+              prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
+              field: "1",
+              target: "beExchangeAny",
+            });
+          }
+        }
       }
     }
 
