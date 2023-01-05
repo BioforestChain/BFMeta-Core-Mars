@@ -13,7 +13,6 @@ import {
   ChainAssetInfoHelper,
 } from "@bfchain/core-helper";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
-import { ToExchangeAnyMultiTransactionFactory } from "./toExchangeAnyMulti";
 import {
   Injectable,
   Inject,
@@ -41,9 +40,196 @@ export class BeExchangeAnyMultiTransactionFactory extends TransactionFactory<BeE
     public configHelper: ConfigHelper,
     public chainAssetInfoHelper: ChainAssetInfoHelper,
     public jsbiHelper: JSBIHelper,
-    public toExchangeAnyMultiTransactionFactory: ToExchangeAnyMultiTransactionFactory,
   ) {
     super();
+  }
+
+  /**
+   * 校验 toExchangeAny 内容
+   *
+   * @param toExchangeAny
+   */
+  async verifyToExchangeAnyMulti(
+    propName: string,
+    toExchangeAssets: BFChainCore.ToExchangeAssetV1JSON[],
+    beExchangeAsset: BFChainCore.BeExchangeAssetV1JSON,
+    config = this.configHelper,
+  ) {
+    const { baseHelper } = this;
+
+    if (!toExchangeAssets) {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
+        param: `${propName}.toExchangeAssets`,
+      });
+    }
+    if (!beExchangeAsset) {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
+        param: `${propName}.beExchangeAsset`,
+      });
+    }
+
+    if (toExchangeAssets.length <= 0) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_LENGTH_SHOULD_GT_FIELD, {
+        prop: "toExchangeAssets",
+        target: propName,
+        field: 0,
+      });
+    }
+
+    const {
+      beExchangeChainName,
+      beExchangeSource,
+      beExchangeParentAssetType,
+      beExchangeAssetType,
+      beExchangeAssetPrealnum,
+    } = beExchangeAsset;
+
+    const BeExchangeAsset_Exception_Detail = { target: `${propName}.beExchangeAsset` };
+
+    this.checkChainName(
+      beExchangeChainName,
+      "beExchangeChainName",
+      BeExchangeAsset_Exception_Detail,
+    );
+    this.checkChainMagic(beExchangeSource, "beExchangeSource", BeExchangeAsset_Exception_Detail);
+    this.checkParentAssetType(
+      beExchangeParentAssetType,
+      "beExchangeParentAssetType",
+      BeExchangeAsset_Exception_Detail,
+    );
+    this.checkAssetType(
+      beExchangeParentAssetType,
+      beExchangeAssetType,
+      "beExchangeAssetType",
+      BeExchangeAsset_Exception_Detail,
+    );
+
+    let isNeedBeExchangeAssetPrealnum = false;
+    let assetTypeSet = new Set<string>();
+
+    const ToExchangeAssets_Exception_Detail = {
+      target: `${propName}.toExchangeAssets.toExchangeAsset`,
+    };
+
+    for (const toExchangeAsset of toExchangeAssets) {
+      const {
+        toExchangeChainName,
+        toExchangeSource,
+        toExchangeParentAssetType,
+        toExchangeAssetType,
+        toExchangeAssetPrealnum,
+        assetExchangeWeightRatio,
+        taxInformation,
+      } = toExchangeAsset;
+      if (assetTypeSet.has(toExchangeAssetType)) {
+        throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_DUPLICATE, {
+          prop: `toExchangeAssets ${JSON.stringify(toExchangeAssets)}`,
+          target: propName,
+        });
+      }
+      assetTypeSet.add(toExchangeAssetType);
+      this.checkChainName(
+        toExchangeChainName,
+        "toExchangeChainName",
+        ToExchangeAssets_Exception_Detail,
+      );
+      this.checkChainMagic(toExchangeSource, "toExchangeSource", ToExchangeAssets_Exception_Detail);
+      this.checkParentAssetType(
+        toExchangeParentAssetType,
+        "toExchangeParentAssetType",
+        ToExchangeAssets_Exception_Detail,
+      );
+      this.checkAssetType(
+        toExchangeParentAssetType,
+        toExchangeAssetType,
+        "toExchangeAssetType",
+        ToExchangeAssets_Exception_Detail,
+      );
+      if (!toExchangeAssetPrealnum) {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
+          prop: "toExchangeAssetPrealnum",
+          ...ToExchangeAssets_Exception_Detail,
+        });
+      }
+      if (!baseHelper.isValidAssetNumber(toExchangeAssetPrealnum)) {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+          prop: "toExchangeAssetPrealnum",
+          ...ToExchangeAssets_Exception_Detail,
+        });
+      }
+      if (toExchangeParentAssetType !== PARENT_ASSET_TYPE.ASSETS) {
+        isNeedBeExchangeAssetPrealnum = true;
+        if (assetExchangeWeightRatio) {
+          throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
+            prop: "assetExchangeWeightRatio",
+            ...ToExchangeAssets_Exception_Detail,
+          });
+        }
+        if (beExchangeParentAssetType !== PARENT_ASSET_TYPE.ASSETS) {
+          // 没必要自己和自己换
+          if (beExchangeAssetType === toExchangeAssetType) {
+            throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
+              to_compare_prop: `beExchangeAssetType ${beExchangeAssetType}`,
+              to_target: "toExchangeAnyMulti.beExchangeAsset",
+              be_compare_prop: toExchangeAssetType,
+            });
+          }
+        }
+        if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
+          await this.checkTaxInformation(ToExchangeAssets_Exception_Detail, taxInformation);
+        }
+      } else {
+        if (taxInformation) {
+          throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
+            prop: "taxInformation",
+            ...ToExchangeAssets_Exception_Detail,
+          });
+        }
+        if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
+          if (!assetExchangeWeightRatio) {
+            throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
+              prop: "assetExchangeWeightRatio",
+              ...ToExchangeAssets_Exception_Detail,
+            });
+          }
+          if (!baseHelper.isValidAssetExchangeWeightRatio(assetExchangeWeightRatio)) {
+            throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+              prop: `assetExchangeWeightRatio ${assetExchangeWeightRatio}`,
+              ...ToExchangeAssets_Exception_Detail,
+            });
+          }
+        } else {
+          if (assetExchangeWeightRatio) {
+            throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
+              prop: "assetExchangeWeightRatio",
+              ...ToExchangeAssets_Exception_Detail,
+            });
+          }
+          // to 是同质资产，be 是非同质资产必须指明希望得到的资产数量
+          isNeedBeExchangeAssetPrealnum = true;
+        }
+      }
+    }
+    if (isNeedBeExchangeAssetPrealnum) {
+      if (!beExchangeAssetPrealnum) {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
+          prop: "beExchangeAssetPrealnum",
+          ...BeExchangeAsset_Exception_Detail,
+        });
+      }
+      if (!baseHelper.isValidAssetNumber(beExchangeAssetPrealnum)) {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+          prop: "beExchangeAssetPrealnum",
+          ...BeExchangeAsset_Exception_Detail,
+        });
+      }
+    }
+
+    if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
+      this.checkTaxInformation(BeExchangeAsset_Exception_Detail, beExchangeAsset.taxInformation);
+    }
+
+    return isNeedBeExchangeAssetPrealnum;
   }
 
   /**
@@ -153,7 +339,7 @@ export class BeExchangeAnyMultiTransactionFactory extends TransactionFactory<BeE
     const { toExchangeAssets, beExchangeAsset, ciphertextSignature } = beExchangeAnyMulti;
 
     /**校验`beExchangeAnyMulti`的基本格式 */
-    await this.toExchangeAnyMultiTransactionFactory.verifyToExchangeAnyMulti(
+    await this.verifyToExchangeAnyMulti(
       "beExchangeAnyMulti",
       toExchangeAssets,
       beExchangeAsset,

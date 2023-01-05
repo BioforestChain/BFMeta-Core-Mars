@@ -220,9 +220,7 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
       ciphertextSignature,
     } = transaction.asset.beExchangeAnyMulti;
 
-    let isBeExchangeMulti =
-      prevBeExchangeAsset.beExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS;
-    if (!isBeExchangeMulti) {
+    if (prevBeExchangeAsset.beExchangeParentAssetType !== PARENT_ASSET_TYPE.ASSETS) {
       if (prevToExchangeAssets.length !== nextToExchangeAssets.length) {
         throw new ConsensusException(ERROR_LIST.PROP_LENGTH_SHOULD_EQ_FIELD, {
           prop: "toExchangeAssets",
@@ -315,22 +313,12 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
           be_target: "beExchangeAnyMulti",
         });
       }
-      if (isBeExchangeMulti) {
-        if (BigInt(toExchangeAssetPrealnum) > BigInt(item.toExchangeAssetPrealnum)) {
-          throw new ConsensusException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
-            prop: `toExchangeAssets.toExchangeAsset ${toExchangeAssetPrealnum}`,
-            target: "beExchangeAnyMulti",
-            field: item.toExchangeAssetPrealnum,
-          });
-        }
-      } else {
-        if (toExchangeAssetPrealnum !== item.toExchangeAssetPrealnum) {
-          throw new ConsensusException(ERROR_LIST.PROP_SHOULD_EQ_FIELD, {
-            prop: `toExchangeAssets.toExchangeAsset ${toExchangeAssetPrealnum}`,
-            target: "beExchangeAnyMulti",
-            field: item.toExchangeAssetPrealnum,
-          });
-        }
+      if (BigInt(toExchangeAssetPrealnum) > BigInt(item.toExchangeAssetPrealnum)) {
+        throw new ConsensusException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
+          prop: `toExchangeAssets.toExchangeAsset ${toExchangeAssetPrealnum}`,
+          target: "beExchangeAnyMulti",
+          field: item.toExchangeAssetPrealnum,
+        });
       }
       if (item.assetExchangeWeightRatio) {
         if (!assetExchangeWeightRatio) {

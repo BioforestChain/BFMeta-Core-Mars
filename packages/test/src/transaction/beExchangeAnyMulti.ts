@@ -68,6 +68,7 @@ async function getToExchangeAnyMultiTransaction(
     if (cipher) {
       toExchangeAnyMulti.cipherPublicKeys = recipient.map((r) => r.publicKey);
     }
+    data.range.push(sender.address);
   }
 
   const trs = await bfchainCore.transaction.createTransaction<ToExchangeAnyMultiTransaction>(
