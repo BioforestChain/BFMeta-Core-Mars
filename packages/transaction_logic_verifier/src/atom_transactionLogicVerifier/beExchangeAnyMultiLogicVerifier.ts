@@ -221,47 +221,6 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
       ciphertextSignature,
     } = transaction.asset.beExchangeAnyMulti;
 
-    const isActive = transaction.senderId === transaction.recipientId;
-
-    // 不是主动赎回，并被交换的资产是不可数，则被交换的数量只能是 1
-    if (!isActive && prevBeExchangeAsset.beExchangeParentAssetType !== PARENT_ASSET_TYPE.ASSETS) {
-      if (prevBeExchangeAsset.beExchangeAssetPrealnum !== "1") {
-        throw new ConsensusException(ERROR_LIST.SHOULD_BE, {
-          to_compare_prop: `beExchangeAssetPrealnum ${prevBeExchangeAsset.beExchangeAssetPrealnum}`,
-          to_target: "beExchangeAnyMulti.beExchangeAsset",
-          be_compare_prop: "1",
-        });
-      }
-    }
-
-    if (prevBeExchangeAsset.beExchangeParentAssetType !== PARENT_ASSET_TYPE.ASSETS) {
-      if (prevToExchangeAssets.length !== nextToExchangeAssets.length) {
-        throw new ConsensusException(ERROR_LIST.PROP_LENGTH_SHOULD_EQ_FIELD, {
-          prop: "toExchangeAssets",
-          target: "beExchangeAnyMulti",
-          field: prevToExchangeAssets.length,
-        });
-      }
-    }
-
-    // 不是赎回，并且是出售某种资产
-    if (
-      transaction.senderId !== transaction.recipientId &&
-      prevBeExchangeAsset.beExchangeAssetPrealnum &&
-      nextBeExchangeAsset.beExchangeAssetPrealnum
-    ) {
-      if (
-        BigInt(nextBeExchangeAsset.beExchangeAssetPrealnum) <
-        BigInt(prevBeExchangeAsset.beExchangeAssetPrealnum)
-      ) {
-        throw new ConsensusException(ERROR_LIST.PROP_SHOULD_GTE_FIELD, {
-          prop: `beExchangeAsset.beExchangeAssetPrealnum ${nextBeExchangeAsset.beExchangeAssetPrealnum}`,
-          target: "beExchangeAnyMulti",
-          field: prevBeExchangeAsset.beExchangeAssetPrealnum,
-        });
-      }
-    }
-
     const prevAssets: {
       [key: string]: {
         toExchangeChainName: string;
@@ -290,8 +249,7 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
       };
     }
 
-    const beExchangeAssetPrealnum = nextBeExchangeAsset.beExchangeAssetPrealnum;
-    const beapn = BigInt(beExchangeAssetPrealnum);
+    // 基础校验
     for (const toExchangeAsset of nextToExchangeAssets) {
       const {
         toExchangeSource,
@@ -411,86 +369,6 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
           });
         }
       }
-
-      const bigIntToExchangeAssetPrealnum = BigInt(toExchangeAssetPrealnum);
-      if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
-        // 可数资产
-        // 这里的 to 就是 to 交易发起人给出权益，be 是 be 交易发起人给出的权益
-        if (bigIntToExchangeAssetPrealnum > BigInt(toExchangeAssetPrealnum)) {
-          throw new ConsensusException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
-            prop: `toExchangeAssetPrealnum ${toExchangeAssetPrealnum}`,
-            field: toExchangeAssetPrealnum,
-            target: "BeExchangeAnyMultiTransaction.beExchangeAnyMulti.toExchangeAsset",
-          });
-        }
-        // 主动解冻
-        if (isActive) {
-          // 可数资产自己赎回也要大于 0 份
-          if (bigIntToExchangeAssetPrealnum < BigInt(1)) {
-            throw new ConsensusException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
-              prop: `toExchangeAssetPrealnum ${toExchangeAssetPrealnum}`,
-              field: "0",
-              target: "BeExchangeAnyMultiTransaction.beExchangeAnyMulti.toExchangeAsset",
-            });
-          }
-          // 主动赎回换到的资产数只能是 0
-          if (beExchangeAssetPrealnum !== "0") {
-            throw new ConsensusException(ERROR_LIST.PROP_SHOULD_EQ_FIELD, {
-              prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
-              field: "0",
-              target: "BeExchangeAnyMultiTransaction.beExchangeAnyMulti.toExchangeAsset",
-            });
-          }
-        }
-        // 被动解冻
-        else {
-          if (toExchangeAssetPrealnum === "0" && beExchangeAssetPrealnum === "0") {
-            throw new ConsensusException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
-              prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
-              field: "0",
-              target: "BeExchangeAnyMultiTransaction.beExchangeAnyMulti.toExchangeAsset",
-            });
-          }
-          if (assetExchangeWeightRatio) {
-            // 按比例计算验证是否满足最少需要付的钱，允许多付钱
-            // 这里是用 to 算 be，所以是 to / 兑换比例，即 to * 兑换比例的倒数
-            const minBeExchangePrealnum_BI = this.jsbiHelper.multiplyRoundFraction(
-              toExchangeAssetPrealnum,
-              {
-                numerator: assetExchangeWeightRatio.beExchangeAssetWeight,
-                denominator: assetExchangeWeightRatio.toExchangeAssetWeight,
-              },
-            );
-            if (minBeExchangePrealnum_BI > beapn) {
-              throw new ConsensusException(ERROR_LIST.PROP_SHOULD_GTE_FIELD, {
-                prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
-                field: minBeExchangePrealnum_BI.toString(),
-                target: "BeExchangeAnyMultiTransaction.beExchangeAnyMulti.toExchangeAsset",
-              });
-            }
-          }
-        }
-      } else {
-        // 不可数资产
-        // 主动解冻
-        if (isActive) {
-          if (toExchangeAssetPrealnum !== "1") {
-            throw new ConsensusException(ERROR_LIST.PROP_SHOULD_EQ_FIELD, {
-              prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
-              field: "1",
-              target: "BeExchangeAnyMultiTransaction.beExchangeAnyMulti.toExchangeAsset",
-            });
-          }
-          // 主动赎回换到的资产数只能是 0
-          if (beExchangeAssetPrealnum !== "0") {
-            throw new ConsensusException(ERROR_LIST.PROP_SHOULD_EQ_FIELD, {
-              prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
-              field: "0",
-              target: "BeExchangeAnyMultiTransaction.beExchangeAnyMulti.toExchangeAsset",
-            });
-          }
-        }
-      }
     }
 
     if (
@@ -506,6 +384,108 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
         to_target: "toExchangeAnyMulti",
         be_target: "beExchangeAnyMulti",
       });
+    }
+
+    // 逻辑校验
+    const { beExchangeAssetPrealnum, beExchangeParentAssetType } = nextBeExchangeAsset;
+    const beapn = BigInt(beExchangeAssetPrealnum);
+    // 主动解冻
+    if (transaction.senderId === transaction.recipientId) {
+      for (const toExchangeAsset of nextToExchangeAssets) {
+        const { toExchangeParentAssetType, toExchangeAssetPrealnum } = toExchangeAsset;
+        // 自己赎回也要大于 0 份
+        if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
+          if (toExchangeAssetPrealnum === "0") {
+            throw new ConsensusException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
+              prop: `toExchangeAssetPrealnum ${toExchangeAssetPrealnum}`,
+              field: "0",
+              target: "BeExchangeAnyMultiTransaction.beExchangeAnyMulti.toExchangeAssets",
+            });
+          }
+        } else {
+          if (toExchangeAssetPrealnum !== "1") {
+            throw new ConsensusException(ERROR_LIST.PROP_SHOULD_EQ_FIELD, {
+              prop: `toExchangeAssetPrealnum ${toExchangeAssetPrealnum}`,
+              field: "1",
+              target: "BeExchangeAnyMultiTransaction.beExchangeAnyMulti.toExchangeAssets",
+            });
+          }
+        }
+      }
+      // 主动赎回换到的资产数只能是 0
+      if (beExchangeAssetPrealnum !== "0") {
+        throw new ConsensusException(ERROR_LIST.PROP_SHOULD_EQ_FIELD, {
+          prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
+          field: "0",
+          target: "BeExchangeAnyMultiTransaction.beExchangeAnyMulti.beExchangeAsset",
+        });
+      }
+    }
+    // 被动解冻
+    else {
+      // 被动解冻换到的资产数必须大于 0
+      if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
+        let isComplex = false;
+        for (const toExchangeAsset of nextToExchangeAssets) {
+          const { toExchangeParentAssetType, toExchangeAssetPrealnum, assetExchangeWeightRatio } =
+            toExchangeAsset;
+          if (toExchangeParentAssetType !== PARENT_ASSET_TYPE.ASSETS) {
+            isComplex = true;
+          }
+          if (assetExchangeWeightRatio) {
+            // 按比例计算验证是否满足最少需要付的钱，允许多付钱
+            // 这里是用 to 算 be，所以是 to / 兑换比例，即 to * 兑换比例的倒数
+            const minBeExchangePrealnum_BI = this.jsbiHelper.multiplyRoundFraction(
+              toExchangeAssetPrealnum,
+              {
+                numerator: assetExchangeWeightRatio.beExchangeAssetWeight,
+                denominator: assetExchangeWeightRatio.toExchangeAssetWeight,
+              },
+            );
+            if (minBeExchangePrealnum_BI > beapn) {
+              throw new ConsensusException(ERROR_LIST.PROP_SHOULD_GTE_FIELD, {
+                prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
+                field: minBeExchangePrealnum_BI.toString(),
+                target: "BeExchangeAnyMultiTransaction.beExchangeAnyMulti.beExchangeAsset",
+              });
+            }
+          }
+        }
+        if (isComplex) {
+          if (
+            prevBeExchangeAsset.beExchangeAssetPrealnum &&
+            nextBeExchangeAsset.beExchangeAssetPrealnum
+          ) {
+            if (
+              BigInt(nextBeExchangeAsset.beExchangeAssetPrealnum) <
+              BigInt(prevBeExchangeAsset.beExchangeAssetPrealnum)
+            ) {
+              throw new ConsensusException(ERROR_LIST.PROP_SHOULD_GTE_FIELD, {
+                prop: `beExchangeAsset.beExchangeAssetPrealnum ${nextBeExchangeAsset.beExchangeAssetPrealnum}`,
+                target: "beExchangeAnyMulti",
+                field: prevBeExchangeAsset.beExchangeAssetPrealnum,
+              });
+            }
+          }
+        }
+        if (beExchangeAssetPrealnum === "0") {
+          throw new ConsensusException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
+            prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
+            field: "0",
+            target: "BeExchangeAnyMultiTransaction.beExchangeAnyMulti.beExchangeAsset",
+          });
+        }
+      }
+      // 如果换到的不是可数资产，则只能有 1 份
+      else {
+        if (beExchangeAssetPrealnum !== "1") {
+          throw new ConsensusException(ERROR_LIST.PROP_SHOULD_EQ_FIELD, {
+            prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
+            field: "1",
+            target: "BeExchangeAnyMultiTransaction.beExchangeAnyMulti.beExchangeAsset",
+          });
+        }
+      }
     }
 
     /**如果是公钥模式，那么必须存在密文 */

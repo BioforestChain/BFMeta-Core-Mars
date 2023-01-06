@@ -12,13 +12,7 @@ import {
   ChainAssetInfoHelper,
 } from "@bfchain/core-helper";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
-import {
-  Injectable,
-  Inject,
-  wrapTaskList,
-  getHexFromArrayBuffer,
-  parseHexToArrayBuffer,
-} from "@bfchain/util";
+import { Injectable, Inject, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
   "ToExchangeAnyMultiTransactionFactory",

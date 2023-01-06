@@ -87,6 +87,8 @@ async function getBeExchangeAnyMultiTransaction(
   toExchangeAnyMultiTrs: BFChainCore.TransactionMixJSON<BFChainCore.ToExchangeAnyMultiAssetJSON>,
   recipient: AccountModel[],
   bfchainCore: BFChainCore,
+  toExchangeAssetPrealnum?: string,
+  beExchangeAssetPrealnum?: string,
 ) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
@@ -132,26 +134,28 @@ async function getBeExchangeAnyMultiTransaction(
   let assetPrealnum = BigInt(1);
   const results: BFChainCore.ToExchangeAssetV1JSON[] = [];
   for (const toExchangeAsset of toExchangeAssets) {
-    const { toExchangeParentAssetType, toExchangeAssetPrealnum, assetExchangeWeightRatio } =
-      toExchangeAsset;
+    const { toExchangeParentAssetType, assetExchangeWeightRatio } = toExchangeAsset;
     if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS && assetExchangeWeightRatio) {
-      const beExchangeAssetPrealnum = jsbiHelper.multiplyRoundFraction(toExchangeAssetPrealnum, {
-        numerator: assetExchangeWeightRatio.beExchangeAssetWeight,
-        denominator: assetExchangeWeightRatio.toExchangeAssetWeight,
-      });
+      const beExchangeAssetPrealnum = jsbiHelper.multiplyRoundFraction(
+        toExchangeAsset.toExchangeAssetPrealnum,
+        {
+          numerator: assetExchangeWeightRatio.beExchangeAssetWeight,
+          denominator: assetExchangeWeightRatio.toExchangeAssetWeight,
+        },
+      );
       if (assetPrealnum < beExchangeAssetPrealnum) {
         assetPrealnum = beExchangeAssetPrealnum;
       }
     }
     results.push({
       ...toExchangeAsset,
-      toExchangeAssetPrealnum: toExchangeAsset.toExchangeAssetPrealnum,
+      toExchangeAssetPrealnum: toExchangeAssetPrealnum || toExchangeAsset.toExchangeAssetPrealnum,
     });
   }
 
   const beExchangeAnyMulti: BFChainCore.BeExchangeAnyMultiJSON = {
     transactionSignature: toExchangeAnyMultiTrs.signature,
-    toExchangeAssets: results,
+    toExchangeAssets: results.slice(0, 1),
     beExchangeAsset: {
       ...beExchangeAsset,
       beExchangeAssetPrealnum:
@@ -161,14 +165,20 @@ async function getBeExchangeAnyMultiTransaction(
     },
   };
 
-  if (data.senderId === data.recipientId) {
-    beExchangeAnyMulti.beExchangeAsset.beExchangeAssetPrealnum = "0";
-  }
   if (beExchangeAsset.beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
     beExchangeAnyMulti.beExchangeAsset.taxInformation = {
       taxCollector: toExchangeAnyMultiTrs.senderId,
       taxAssetPrealnum: "1000",
     };
+  }
+  if (beExchangeAsset.beExchangeParentAssetType !== PARENT_ASSET_TYPE.ASSETS) {
+    beExchangeAnyMulti.beExchangeAsset.beExchangeAssetPrealnum = "1";
+  }
+  if (data.senderId === data.recipientId) {
+    beExchangeAnyMulti.beExchangeAsset.beExchangeAssetPrealnum = "0";
+  }
+  if (beExchangeAssetPrealnum) {
+    beExchangeAnyMulti.beExchangeAsset.beExchangeAssetPrealnum = beExchangeAssetPrealnum;
   }
   if (cipherPublicKeys.length > 0) {
     const index = Math.floor(Math.random() * recipient.length);
@@ -628,6 +638,28 @@ async function getBeExchangeAnyMultiTransaction(
         {
           toExchangeSource: bfchainCore.config.magic,
           toExchangeChainName: "bfchain",
+          toExchangeParentAssetType: PARENT_ASSET_TYPE.ASSETS,
+          toExchangeAssetType: "BFT",
+          toExchangeAssetPrealnum: "10000",
+          assetExchangeWeightRatio: {
+            toExchangeAssetWeight: "10000",
+            beExchangeAssetWeight: "1",
+          },
+        },
+        {
+          toExchangeSource: bfchainCore.config.magic,
+          toExchangeChainName: "bfchain",
+          toExchangeParentAssetType: PARENT_ASSET_TYPE.ASSETS,
+          toExchangeAssetType: "FTT",
+          toExchangeAssetPrealnum: "100",
+          assetExchangeWeightRatio: {
+            toExchangeAssetWeight: "1",
+            beExchangeAssetWeight: "3",
+          },
+        },
+        {
+          toExchangeSource: bfchainCore.config.magic,
+          toExchangeChainName: "bfchain",
           toExchangeParentAssetType: PARENT_ASSET_TYPE.ENTITY,
           toExchangeAssetType: "skyrim_hylq",
           toExchangeAssetPrealnum: "1",
@@ -636,13 +668,26 @@ async function getBeExchangeAnyMultiTransaction(
             taxAssetPrealnum: "1000",
           },
         },
+        // {
+        //   toExchangeSource: bfchainCore.config.magic,
+        //   toExchangeChainName: "bfchain",
+        //   toExchangeParentAssetType: PARENT_ASSET_TYPE.LOCATION_NAME,
+        //   toExchangeAssetType: `hylq.${bfchainCore.config.chainName}`,
+        //   toExchangeAssetPrealnum: "1",
+        // },
       ],
       beExchangeAsset: {
+        // beExchangeSource: bfchainCore.config.magic,
+        // beExchangeChainName: "bfchain",
+        // beExchangeParentAssetType: PARENT_ASSET_TYPE.LOCATION_NAME,
+        // beExchangeAssetType: `hylq.${bfchainCore.config.chainName}`,
+        // beExchangeAssetPrealnum: "1",
+
         beExchangeSource: bfchainCore.config.magic,
         beExchangeChainName: "bfchain",
-        beExchangeParentAssetType: PARENT_ASSET_TYPE.LOCATION_NAME,
-        beExchangeAssetType: `hylq.${bfchainCore.config.chainName}`,
-        beExchangeAssetPrealnum: "1",
+        beExchangeParentAssetType: PARENT_ASSET_TYPE.ASSETS,
+        beExchangeAssetType: "BFT",
+        beExchangeAssetPrealnum: "100",
       },
     };
 
@@ -653,16 +698,16 @@ async function getBeExchangeAnyMultiTransaction(
       [cc, dd],
       true,
     );
-    await getBeExchangeAnyMultiTransaction(dd, t19, [cc, dd], bfchainCore);
-    const t20 = await getToExchangeAnyMultiTransaction(
-      aaa,
-      { ...toExchangeAny },
-      bfchainCore,
-      [cc, dd],
-      false,
-    );
-    await getBeExchangeAnyMultiTransaction(ddd, t20, [cc, dd], bfchainCore);
-    await getBeExchangeAnyMultiTransaction(aaa, t20, [cc, dd], bfchainCore);
+    await getBeExchangeAnyMultiTransaction(dd, t19, [cc, dd], bfchainCore, "10000", "1");
+    // const t20 = await getToExchangeAnyMultiTransaction(
+    //   aaa,
+    //   { ...toExchangeAny },
+    //   bfchainCore,
+    //   [cc, dd],
+    //   false,
+    // );
+    // await getBeExchangeAnyMultiTransaction(ddd, t20, [cc, dd], bfchainCore);
+    // await getBeExchangeAnyMultiTransaction(aaa, t20, [cc, dd], bfchainCore);
   };
 
   // asset => asset
