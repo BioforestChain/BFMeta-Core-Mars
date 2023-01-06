@@ -390,7 +390,7 @@ export const ERROR_LIST = {
   ),
   FROZEN_ASSET_NOT_EXIST_OR_EXPIRED: new ErrorCode(
     "001-11072",
-    "Frozen asset with signature {signature} in blockChain not exist or expired",
+    "Frozen asset with signature {signature} assetType ${assetType} in blockChain not exist or expired",
   ),
   NOT_ENOUGH_ISSUE_ENTITY_TIMES: new ErrorCode(
     "001-11073",

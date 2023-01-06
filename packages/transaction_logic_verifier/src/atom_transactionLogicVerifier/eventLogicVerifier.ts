@@ -288,6 +288,7 @@ export class EventLogicVerifier {
         if (!frozenAsset) {
           throw new ConsensusException(ERROR_LIST.FROZEN_ASSET_NOT_EXIST_OR_EXPIRED, {
             signature: frozenId,
+            assetType,
           });
         }
 
@@ -360,6 +361,7 @@ export class EventLogicVerifier {
         if (!frozenAsset) {
           throw new ConsensusException(ERROR_LIST.FROZEN_ASSET_NOT_EXIST_OR_EXPIRED, {
             signature: frozenId,
+            assetType: assetInfo.assetType,
           });
         }
 
