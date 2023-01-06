@@ -289,7 +289,7 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
       }
       if (BigInt(toExchangeAssetPrealnum) > BigInt(item.toExchangeAssetPrealnum)) {
         throw new ConsensusException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
-          prop: `toExchangeAssets.toExchangeAsset ${toExchangeAssetPrealnum}`,
+          prop: `toExchangeAssets.toExchangeAsset.toExchangeAssetPrealnum ${toExchangeAssetPrealnum}`,
           target: "beExchangeAnyMulti",
           field: item.toExchangeAssetPrealnum,
         });
@@ -450,6 +450,13 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
               });
             }
           }
+          if (toExchangeAssetPrealnum === "0" && beExchangeAssetPrealnum === "0") {
+            throw new ConsensusException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
+              prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
+              field: "0",
+              target: "BeExchangeAnyMultiTransaction.beExchangeAnyMulti.beExchangeAsset",
+            });
+          }
         }
         if (isComplex) {
           if (
@@ -467,13 +474,6 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
               });
             }
           }
-        }
-        if (beExchangeAssetPrealnum === "0") {
-          throw new ConsensusException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
-            prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
-            field: "0",
-            target: "BeExchangeAnyMultiTransaction.beExchangeAnyMulti.beExchangeAsset",
-          });
         }
       }
       // 如果换到的不是可数资产，则只能有 1 份

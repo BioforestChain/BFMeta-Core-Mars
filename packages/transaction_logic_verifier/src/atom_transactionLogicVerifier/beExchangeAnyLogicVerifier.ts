@@ -331,7 +331,7 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
       // 主动解冻
       if (exchangeAny.toExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
         // 可数资产自己赎回也要大于 0 份
-        if (beExchangeAssetPrealnum === "0") {
+        if (toExchangeAssetPrealnum === "0") {
           throw new ConsensusException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
             prop: `toExchangeAssetPrealnum ${toExchangeAssetPrealnum}`,
             field: "0",

@@ -152,10 +152,11 @@ async function getBeExchangeAnyMultiTransaction(
       toExchangeAssetPrealnum: toExchangeAssetPrealnum || toExchangeAsset.toExchangeAssetPrealnum,
     });
   }
+  results[2].toExchangeAssetPrealnum = "0";
 
   const beExchangeAnyMulti: BFChainCore.BeExchangeAnyMultiJSON = {
     transactionSignature: toExchangeAnyMultiTrs.signature,
-    toExchangeAssets: results.slice(0, 1),
+    toExchangeAssets: results.slice(0, 3),
     beExchangeAsset: {
       ...beExchangeAsset,
       beExchangeAssetPrealnum:
@@ -640,10 +641,10 @@ async function getBeExchangeAnyMultiTransaction(
           toExchangeChainName: "bfchain",
           toExchangeParentAssetType: PARENT_ASSET_TYPE.ASSETS,
           toExchangeAssetType: "BFT",
-          toExchangeAssetPrealnum: "10000",
+          toExchangeAssetPrealnum: "100",
           assetExchangeWeightRatio: {
-            toExchangeAssetWeight: "10000",
-            beExchangeAssetWeight: "1",
+            toExchangeAssetWeight: "1",
+            beExchangeAssetWeight: "100",
           },
         },
         {
@@ -698,7 +699,7 @@ async function getBeExchangeAnyMultiTransaction(
       [cc, dd],
       true,
     );
-    await getBeExchangeAnyMultiTransaction(dd, t19, [cc, dd], bfchainCore, "10000", "1");
+    await getBeExchangeAnyMultiTransaction(dd, t19, [cc, dd], bfchainCore, "10", "100");
     // const t20 = await getToExchangeAnyMultiTransaction(
     //   aaa,
     //   { ...toExchangeAny },
