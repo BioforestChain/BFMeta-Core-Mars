@@ -262,6 +262,16 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
           ...ToExchangeAssets_Exception_Detail,
         });
       }
+      if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
+        await this.checkTaxInformation(ToExchangeAssets_Exception_Detail, taxInformation);
+      } else {
+        if (taxInformation) {
+          throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
+            prop: "taxInformation",
+            ...ToExchangeAssets_Exception_Detail,
+          });
+        }
+      }
       if (toExchangeParentAssetType !== PARENT_ASSET_TYPE.ASSETS) {
         isNeedBeExchangeAssetPrealnum = true;
         if (toExchangeAssetPrealnum !== "1") {
@@ -287,16 +297,7 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
             });
           }
         }
-        if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
-          await this.checkTaxInformation(ToExchangeAssets_Exception_Detail, taxInformation);
-        }
       } else {
-        if (taxInformation) {
-          throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
-            prop: "taxInformation",
-            ...ToExchangeAssets_Exception_Detail,
-          });
-        }
         if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
           if (!assetExchangeWeightRatio) {
             throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
@@ -339,6 +340,13 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
 
     if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
       this.checkTaxInformation(BeExchangeAsset_Exception_Detail, beExchangeAsset.taxInformation);
+    } else {
+      if (beExchangeAsset.taxInformation) {
+        throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
+          prop: "taxInformation",
+          target: `${propName}.toExchangeAssets.beExchangeAsset`,
+        });
+      }
     }
 
     return isNeedBeExchangeAssetPrealnum;

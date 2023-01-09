@@ -155,6 +155,16 @@ export class BeExchangeAnyMultiTransactionFactory extends TransactionFactory<BeE
           ...ToExchangeAssets_Exception_Detail,
         });
       }
+      if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
+        await this.checkTaxInformation(ToExchangeAssets_Exception_Detail, taxInformation);
+      } else {
+        if (taxInformation) {
+          throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
+            prop: "taxInformation",
+            ...ToExchangeAssets_Exception_Detail,
+          });
+        }
+      }
       if (toExchangeParentAssetType !== PARENT_ASSET_TYPE.ASSETS) {
         isNeedBeExchangeAssetPrealnum = true;
         if (assetExchangeWeightRatio) {
@@ -173,16 +183,7 @@ export class BeExchangeAnyMultiTransactionFactory extends TransactionFactory<BeE
             });
           }
         }
-        if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
-          await this.checkTaxInformation(ToExchangeAssets_Exception_Detail, taxInformation);
-        }
       } else {
-        if (taxInformation) {
-          throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
-            prop: "taxInformation",
-            ...ToExchangeAssets_Exception_Detail,
-          });
-        }
         if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
           if (!assetExchangeWeightRatio) {
             throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
