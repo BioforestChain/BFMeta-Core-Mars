@@ -172,7 +172,7 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    * @param toExchangeAnyJson
    */
-  private isDependentTransactionMatch(
+  isDependentTransactionMatch(
     transaction: BeExchangeAnyTransaction,
     toExchangeAnyJson: BFChainCore.TransactionJSON<BFChainCore.ToExchangeAnyAssetJSON>,
   ) {

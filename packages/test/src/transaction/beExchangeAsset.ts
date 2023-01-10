@@ -70,8 +70,8 @@ async function getToExchangeAssetTransaction(
     beExchangeAsset: "WZX",
     toExchangeNumber: "100",
     exchangeRate: {
-      prevWeight: "2",
-      nextWeight: "3",
+      prevWeight: "1",
+      nextWeight: "10",
     },
   };
   if (recipient && recipient.length > 0) {
@@ -146,8 +146,12 @@ async function getBeExchangeAssetTransaction(
     beExchangeNumber: beExchangeNumber === 0n ? "1" : beExchangeNumber.toString(),
     exchangeAsset: toExchangeAsset,
   };
+  console.log(data.senderId, data.recipientId);
   if (data.senderId === data.recipientId) {
     beExchangeAsset.beExchangeNumber = "0";
+  } else {
+    beExchangeAsset.toExchangeNumber = "5";
+    beExchangeAsset.beExchangeNumber = "50";
   }
   if (toExchangeAsset.cipherPublicKeys.length > 0) {
     const index = Math.floor(Math.random() * recipient.length);
@@ -173,6 +177,13 @@ async function getBeExchangeAssetTransaction(
     keypair,
     secondKeypair,
   );
+
+  const xx = bfchainCore.transactionLogicVerifier.getTransactionLogicVerifierFromType(trs.type);
+
+  (xx as any).isDependentTransactionMatch(trs, toExchangeAssetTrs);
+
+  console.log(trs.asset.beExchangeAsset);
+
   return trs;
 }
 
@@ -275,12 +286,13 @@ async function client(transaction: BFChainCore.Transaction, bfchainCore: BFChain
   const dd = getRecipientWithSecondSecret();
   const ddd = getRecipientWithoutSecondSecret();
 
-  const xx = await getToExchangeAssetTransaction(aa, bfchainCore, [cc, dd], true);
-  const tx = await getBeExchangeAssetTransaction(dd, xx, [cc, dd], bfchainCore);
-  await client(tx, bfchainCore);
-  console.log(tx.toJSON().asset);
-  const yy = await getToExchangeAssetTransaction(aaa, bfchainCore, [cc, dd], false);
-  const tx2 = await getBeExchangeAssetTransaction(ddd, yy, [], bfchainCore);
-  await client(tx2, bfchainCore);
-  console.log(tx2.toJSON().asset);
+  const xx = await getToExchangeAssetTransaction(aa, bfchainCore, [], true);
+  // const tx1 = await getBeExchangeAssetTransaction(aa, xx, [], bfchainCore);
+  const tx = await getBeExchangeAssetTransaction(dd, xx, [], bfchainCore);
+  // await client(tx, bfchainCore);
+  // console.log(tx.toJSON().asset);
+  // const yy = await getToExchangeAssetTransaction(aaa, bfchainCore, [cc, dd], false);
+  // const tx2 = await getBeExchangeAssetTransaction(ddd, yy, [], bfchainCore);
+  // await client(tx2, bfchainCore);
+  // console.log(tx2.toJSON().asset);
 })();

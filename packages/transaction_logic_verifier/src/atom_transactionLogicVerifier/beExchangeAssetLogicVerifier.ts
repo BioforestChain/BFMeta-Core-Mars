@@ -2,6 +2,7 @@ import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { BeExchangeAssetTransaction, RANGE_TYPE } from "@bfchain/core-model";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
+import { JSBIHelper } from "@bfchain/core-helper-bigint";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
@@ -10,7 +11,7 @@ const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
 
 @Injectable()
 export class BeExchangeAssetLogicVerifier extends TransactionLogicVerifier {
-  constructor() {
+  constructor(public jsbiHelper: JSBIHelper) {
     super();
   }
 
@@ -112,32 +113,23 @@ export class BeExchangeAssetLogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    * @param toExchangeAssetJson
    */
-  private isDependentTransactionMatch(
+  isDependentTransactionMatch(
     transaction: BeExchangeAssetTransaction,
     toExchangeAssetJson: BFChainCore.TransactionJSON<BFChainCore.ToExchangeAssetAssetJSON>,
   ) {
     const beExchangeAssetAsset = transaction.asset.beExchangeAsset;
-    const { exchangeAsset, ciphertextSignature } = beExchangeAssetAsset;
-    const {
-      toExchangeSource,
-      toExchangeAsset,
-      beExchangeSource,
-      beExchangeAsset,
-      toExchangeChainName,
-      beExchangeChainName,
-      toExchangeNumber,
-      cipherPublicKeys,
-      exchangeRate,
-    } = exchangeAsset;
+    const { exchangeAsset, ciphertextSignature, toExchangeNumber, beExchangeNumber } =
+      beExchangeAssetAsset;
+    const { cipherPublicKeys, exchangeRate } = exchangeAsset;
     const trsAsset = toExchangeAssetJson.asset.toExchangeAsset;
     if (
-      trsAsset.toExchangeSource !== toExchangeSource ||
-      trsAsset.beExchangeSource !== beExchangeSource ||
-      trsAsset.toExchangeChainName !== toExchangeChainName ||
-      trsAsset.beExchangeChainName !== beExchangeChainName ||
-      trsAsset.toExchangeAsset !== toExchangeAsset ||
-      trsAsset.beExchangeAsset !== beExchangeAsset ||
-      trsAsset.toExchangeNumber !== toExchangeNumber
+      trsAsset.toExchangeSource !== exchangeAsset.toExchangeSource ||
+      trsAsset.beExchangeSource !== exchangeAsset.beExchangeSource ||
+      trsAsset.toExchangeChainName !== exchangeAsset.toExchangeChainName ||
+      trsAsset.beExchangeChainName !== exchangeAsset.beExchangeChainName ||
+      trsAsset.toExchangeAsset !== exchangeAsset.toExchangeAsset ||
+      trsAsset.beExchangeAsset !== exchangeAsset.beExchangeAsset ||
+      trsAsset.toExchangeNumber !== exchangeAsset.toExchangeNumber
     ) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `trsAsset: ${JSON.stringify(trsAsset)}`,
@@ -172,6 +164,43 @@ export class BeExchangeAssetLogicVerifier extends TransactionLogicVerifier {
         throw new ConsensusException(ERROR_LIST.SHOULD_NOT_EXIST, {
           prop: "exchangeRate",
           target: "BeExchangeAssetTransaction.beExchangeAsset.exchangeAsset",
+        });
+      }
+    }
+
+    if (transaction.senderId === transaction.recipientId) {
+      if (toExchangeNumber === "0") {
+        throw new ConsensusException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
+          prop: `toExchangeNumber ${toExchangeNumber}`,
+          field: "0",
+          target: "BeExchangeAssetTransaction.beExchangeAsset",
+        });
+      }
+      if (beExchangeNumber !== "0") {
+        throw new ConsensusException(ERROR_LIST.PROP_SHOULD_EQ_FIELD, {
+          prop: `beExchangeNumber ${beExchangeNumber}`,
+          field: "0",
+          target: "BeExchangeAssetTransaction.beExchangeAsset",
+        });
+      }
+    } else {
+      if (toExchangeNumber === "0" && beExchangeNumber === "0") {
+        throw new ConsensusException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
+          prop: `beExchangeNumber ${beExchangeNumber}`,
+          field: "0",
+          target: "beExchangeAsset",
+        });
+      }
+      // 这里是用 to 算 be，所以是 to / 兑换比例，即 to * 兑换比例的倒数
+      const minBeExchangeNumber_BI = this.jsbiHelper.multiplyRoundFraction(toExchangeNumber, {
+        numerator: exchangeAsset.exchangeRate.nextWeight,
+        denominator: exchangeAsset.exchangeRate.prevWeight,
+      });
+      if (minBeExchangeNumber_BI > BigInt(beExchangeNumber)) {
+        throw new ConsensusException(ERROR_LIST.PROP_SHOULD_GTE_FIELD, {
+          prop: `beExchangeNumber ${beExchangeNumber}`,
+          field: minBeExchangeNumber_BI.toString(),
+          target: "BeExchangeAssetTransaction.beExchangeAsset",
         });
       }
     }
