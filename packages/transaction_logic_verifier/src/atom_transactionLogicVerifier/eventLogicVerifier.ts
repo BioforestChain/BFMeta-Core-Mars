@@ -442,7 +442,7 @@ export class EventLogicVerifier {
           accountAssets[magic][assetType].assetNumber - BigInt(transaction.fee);
         if (BigInt(voteMinChainAsset) > remainChainAsset) {
           throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
-            reason: `No enough asset, Min account asset ${voteMinChainAsset}, remain Assets: ${remainChainAsset}`,
+            reason: `No enough asset, vote account need min remain asset ${voteMinChainAsset}, remain Assets: ${remainChainAsset}`,
             errorId: NewTransactionRefuseReason.CHAIN_ASSET_NOT_ENOUGH,
           });
         }
