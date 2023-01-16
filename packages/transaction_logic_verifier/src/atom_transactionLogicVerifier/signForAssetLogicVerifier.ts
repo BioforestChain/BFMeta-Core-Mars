@@ -42,7 +42,6 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
       });
     }
 
-    this.isValidRecipientId(transaction, trs);
     await this.isDependentTransactionMatch(transaction, trs);
 
     const { sender, recipient } = await this.logicVerify(
@@ -83,27 +82,6 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
   }
 
   /**
-   * 接收账户是否合法
-   *
-   * @param transaction
-   * @param trustAssetJson
-   */
-  private isValidRecipientId(
-    transaction: SignForAssetTransaction,
-    trustAssetJson: BFChainCore.TransactionJSON<BFChainCore.TrustAssetAssetJSON>,
-  ) {
-    // 签收交易的接收账户必须是委托交易的接收账户
-    if (transaction.recipientId !== trustAssetJson.recipientId) {
-      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-        to_compare_prop: `SignForAssetTransaction.recipientId ${transaction.recipientId}`,
-        be_compare_prop: `TrustAssetTransaction.recipientId ${trustAssetJson.recipientId}`,
-        to_target: "SignForAssetTransaction",
-        be_target: "TrustAssetTransaction",
-      });
-    }
-  }
-
-  /**
    * 依赖的交易是否匹配
    *
    * @param transaction
@@ -113,8 +91,27 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
     transaction: SignForAssetTransaction,
     trustAssetJson: BFChainCore.TransactionJSON<BFChainCore.TrustAssetAssetJSON>,
   ) {
-    const { trustAsset } = transaction.asset.signForAsset;
+    const { trustAsset, trustSenderId, trustRecipientId } = transaction.asset.signForAsset;
     const trsAsset = trustAssetJson.asset.trustAsset;
+
+    if (trustSenderId !== trustAssetJson.senderId) {
+      throw new ConsensusException(ERROR_LIST.SHOULD_BE, {
+        to_compare_prop: `trustSenderId ${trustSenderId}`,
+        be_compare_prop: `trustSenderId ${trustAssetJson.senderId}`,
+        to_target: "SignForAssetTransaction.asset.signForAsset",
+        be_target: "TrustAssetTransaction",
+      });
+    }
+
+    // 签收交易的接收账户必须是委托交易的接收账户
+    if (trustRecipientId !== trustAssetJson.recipientId) {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+        to_compare_prop: `SignForAssetTransaction.recipientId ${transaction.recipientId}`,
+        be_compare_prop: `TrustAssetTransaction.recipientId ${trustAssetJson.recipientId}`,
+        to_target: "SignForAssetTransaction",
+        be_target: "TrustAssetTransaction",
+      });
+    }
 
     if (
       trsAsset.sourceChainMagic !== trustAsset.sourceChainMagic ||
@@ -127,8 +124,8 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `trsAsset: ${JSON.stringify(trsAsset)}`,
         be_compare_prop: `trustAsset: ${JSON.stringify(trustAsset.toJSON())}`,
-        to_target: "SignForAssetTransaction",
-        be_target: "TrustAssetTransaction",
+        to_target: "SignForAssetTransaction.asset.signForAsset",
+        be_target: "TrustAssetTransaction.asset.trustAsset",
       });
     }
 
@@ -138,10 +135,10 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
     for (const address of trustTrsRange) {
       if (!trustRange.includes(address)) {
         throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-          to_compare_prop: `trustRange: ${JSON.stringify(trustRange)}`,
+          to_compare_prop: `trustees: ${JSON.stringify(trustRange)}`,
           be_compare_prop: `address: ${address}`,
-          to_target: "SignForAssetTransaction",
-          be_target: "TrustAssetTransaction",
+          to_target: "SignForAssetTransaction.asset.signForAsset.trustAsset",
+          be_target: "TrustAssetTransaction.asset.trustAsset",
         });
       }
     }

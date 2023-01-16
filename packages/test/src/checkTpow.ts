@@ -1,5 +1,5 @@
 import { parseHexToArrayBuffer } from "@bfchain/util";
-import { getBfchainCoreEntry } from "./include";
+import { getBfchainCoreEntry, getFullBfchainCoreEntry } from "./include";
 
 async function checkTpow() {
   // const powCheckResult = await bfchainCore.transactionHelper.checkTransactionProfOfWork(
@@ -67,13 +67,13 @@ async function calcMilestone() {
   ].map((item) => item + "0".repeat(8));
   const results: any = [];
 
-  const bfchainCore = await getBfchainCoreEntry();
+  const bfchainCore = await getFullBfchainCoreEntry(5, 10);
 
   for (const senderEquity of senderEquityList) {
     // const senderEquity = "1024188093598";
     const transactionHelper = bfchainCore.transactionHelper;
     let isSeperate = false;
-    for (let i = 0; i < 60; i++) {
+    for (let i = 0; i < 10; i++) {
       // 验证交易的 pow
       // const { height, transaction } = trsDocs[i];
       // debugger;
