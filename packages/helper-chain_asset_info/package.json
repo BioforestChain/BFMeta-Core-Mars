@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-helper-chain-asset-info",
-  "version": "8.0.31",
+  "version": "8.0.32",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,8 +14,8 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-typings": "8.0.31",
-    "@bfchain/core-util-exception-errorcode": "8.0.31"
+    "@bfchain/core-typings": "8.0.32",
+    "@bfchain/core-util-exception-errorcode": "8.0.32"
   },
   "gitHead": "ef41eb359371b11aafbec0516df1eba01f16ebfd",
   "types": "build/cjs/index.d.ts"
