@@ -169,7 +169,7 @@ export class QueryTransactionArgModel
  */
 @Type.d("QueryTransactionReturn")
 export class QueryTransactionReturnModel<
-    T extends BFChainCore.Transaction = BFChainCore.Transaction,
+  T extends BFChainCore.Transaction = BFChainCore.Transaction,
   >
   extends CommonResponse
   implements BFChainCore.JSONToModelType<BFChainCore.QueryTransactionReturnJSON>
@@ -282,7 +282,7 @@ export class GetTransactionInBlockArgModel
  */
 @Type.d("GetTransactionInBlockReturn")
 export class GetTransactionInBlockReturnModel<
-    T extends BFChainCore.Transaction = BFChainCore.Transaction,
+  T extends BFChainCore.Transaction = BFChainCore.Transaction,
   >
   extends CommonResponse
   implements BFChainCore.JSONToModelType<BFChainCore.GetTransactionInBlockReturnJSON>
@@ -370,12 +370,16 @@ export class TransactionIndexModel
   tIndex!: number;
   @Field.d(3, "uint32", "required", 1)
   length!: number;
+  @Field.d(4, "string")
+  blockSignature!: string;
   toJSON() {
-    return {
+    const res: BFChainCore.TransactionIndexJSON = {
       height: this.height,
       tIndex: this.tIndex,
       length: this.length,
     };
+    this.blockSignature && (res.blockSignature = this.blockSignature);
+    return res
   }
 }
 
@@ -445,7 +449,7 @@ export class DownloadTransactionArgModel
  */
 @Type.d("DownloadTransactionReturn")
 export class DownloadTransactionReturnModel<
-    T extends BFChainCore.Transaction = BFChainCore.Transaction,
+  T extends BFChainCore.Transaction = BFChainCore.Transaction,
   >
   extends CommonResponse
   implements BFChainCore.JSONToModelType<BFChainCore.DownloadTransactionReturnJSON>
