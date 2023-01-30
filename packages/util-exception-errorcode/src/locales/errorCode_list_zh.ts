@@ -148,7 +148,6 @@ export const ERROR_CODE_LIST_ZH = {
   "001-11072":
     "链上的冻结资产 frozenAddress {frozenAddress} signature {signature} assetType {assetType} 不存在或者已经过期",
   "001-11073": "模板没有足够的发行 entity 次数，entityFactory {entityFactory}",
-  "001-11074": "未知的 assetType, assetType {assetType}",
 
   // block logic
   "001-12001":
