@@ -396,6 +396,7 @@ export const ERROR_LIST = {
     "001-11073",
     "Not enough issue entity times, entityFactory {entityFactory}",
   ),
+  UNKNOWN_ASSET_TYPE: new ErrorCode("001-11074", "Unknow assetType, assetType {assetType}"),
 
   // block logic
   BLOCK_SIGN_SIGNATURE_IS_REQUIRED: new ErrorCode(

@@ -998,7 +998,9 @@ export class TransactionHelper {
     if (baseHelper.isValidEntityId(assetType)) {
       return PARENT_ASSET_TYPE.ENTITY;
     }
-    return PARENT_ASSET_TYPE.ASSETS;
+    throw new NoFoundException(ERROR_LIST.UNKNOWN_ASSET_TYPE, {
+      assetType,
+    });
   }
 
   /**
