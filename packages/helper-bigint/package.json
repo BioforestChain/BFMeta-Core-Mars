@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-helper-bigint",
-  "version": "8.0.37",
+  "version": "8.0.38",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,8 +14,8 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-typings": "8.0.37",
-    "@bfchain/core-util-exception-errorcode": "8.0.37"
+    "@bfchain/core-typings": "8.0.38",
+    "@bfchain/core-util-exception-errorcode": "8.0.38"
   },
   "gitHead": "ef41eb359371b11aafbec0516df1eba01f16ebfd",
   "types": "build/cjs/index.d.ts"
