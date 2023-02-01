@@ -195,6 +195,10 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
       }
     }
 
+    if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
+      eventLogicVerifier.listenEventPayTax(currentBlockHeight, accountGetterHelper, eventEmitter);
+    }
+
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     return true;
