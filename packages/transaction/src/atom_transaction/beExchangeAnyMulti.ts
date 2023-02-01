@@ -225,7 +225,10 @@ export class BeExchangeAnyMultiTransactionFactory extends TransactionFactory<BeE
     }
 
     if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
-      this.checkTaxInformation(BeExchangeAsset_Exception_Detail, beExchangeAsset.taxInformation);
+      await this.checkTaxInformation(
+        BeExchangeAsset_Exception_Detail,
+        beExchangeAsset.taxInformation,
+      );
     }
 
     return isNeedBeExchangeAssetPrealnum;

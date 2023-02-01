@@ -339,7 +339,10 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
     }
 
     if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
-      this.checkTaxInformation(BeExchangeAsset_Exception_Detail, beExchangeAsset.taxInformation);
+      await this.checkTaxInformation(
+        BeExchangeAsset_Exception_Detail,
+        beExchangeAsset.taxInformation,
+      );
     } else {
       if (beExchangeAsset.taxInformation) {
         throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
