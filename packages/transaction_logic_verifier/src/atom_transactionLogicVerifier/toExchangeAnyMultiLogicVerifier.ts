@@ -59,6 +59,8 @@ export class ToExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
       beExchangeAssetType,
     } = beExchangeAsset;
 
+    let alreadyListenPayTax = false;
+
     if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
       await this.helperLogicVerifier.isAssetExist(
         beExchangeChainName,
@@ -111,6 +113,9 @@ export class ToExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
           reason: "Entity already be destory",
         });
       }
+
+      eventLogicVerifier.listenEventPayTax(currentBlockHeight, accountGetterHelper, eventEmitter);
+      alreadyListenPayTax = true;
     } else {
       throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `beExchangeParentAssetType ${beExchangeParentAssetType}`,
@@ -122,7 +127,6 @@ export class ToExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
     let alreadyListenFrozenDAppid = false;
     let alreadyListenFrozenLocationName = false;
     let alreadyListenFrozenEntity = false;
-    let alreadyListenPayTax = false;
 
     for (const toExchangeAsset of toExchangeAssets) {
       const {

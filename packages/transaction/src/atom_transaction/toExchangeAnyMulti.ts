@@ -384,7 +384,7 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
       const { senderId, senderPublicKeyBuffer, signature } = transaction;
-      const { toExchangeAssets } = transaction.asset.toExchangeAnyMulti;
+      const { toExchangeAssets, beExchangeAsset } = transaction.asset.toExchangeAnyMulti;
 
       let frozenAmount = BigInt(0);
       for (const toExchangeAsset of toExchangeAssets) {
@@ -520,6 +520,20 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
             // 这里就简单的把冻结 id 搞一些花里胡哨的东西
             // 这个交易本来就比尿还骚，加一些骚东西也是没办法的
             frozenId: signature + this.Buffer.from("_entity").toString("hex"),
+          },
+        });
+      }
+      if (beExchangeAsset.taxInformation) {
+        // 纳税
+        taskList.next = eventEmitter.emit("payTax", {
+          type: "payTax",
+          transaction,
+          applyInfo: {
+            sourceChainName: beExchangeAsset.beExchangeChainName,
+            sourceChainMagic: beExchangeAsset.beExchangeSource,
+            parentAssetType: beExchangeAsset.beExchangeParentAssetType,
+            assetType: beExchangeAsset.beExchangeAssetType,
+            taxInformation: beExchangeAsset.taxInformation.toJSON(),
           },
         });
       }
