@@ -232,11 +232,13 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
       });
     }
 
-    this.checkChainName(sourceChainName, "sourceChainName", TrustAssetAsset_Exception_Detail);
+    if (sourceChainMagic === this.configHelper.magic) {
+      this.checkChainName(sourceChainName, "sourceChainName", TrustAssetAsset_Exception_Detail);
 
-    this.checkChainMagic(sourceChainMagic, "sourceChainMagic", TrustAssetAsset_Exception_Detail);
+      this.checkChainMagic(sourceChainMagic, "sourceChainMagic", TrustAssetAsset_Exception_Detail);
 
-    this.checkAsset(trustAsset.assetType, "assetType", TrustAssetAsset_Exception_Detail);
+      this.checkAsset(trustAsset.assetType, "assetType", TrustAssetAsset_Exception_Detail);
+    }
 
     this.checkAssetAmount(trustAsset.amount, "amount", TrustAssetAsset_Exception_Detail);
 

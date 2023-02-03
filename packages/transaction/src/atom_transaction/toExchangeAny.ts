@@ -119,30 +119,6 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
       });
     }
 
-    this.checkChainName(
-      toExchangeAny.toExchangeChainName,
-      "toExchangeChainName",
-      ToExchangeAnyAsset_Exception_Detail,
-    );
-
-    this.checkChainName(
-      toExchangeAny.beExchangeChainName,
-      "beExchangeChainName",
-      ToExchangeAnyAsset_Exception_Detail,
-    );
-
-    this.checkChainMagic(
-      toExchangeAny.toExchangeSource,
-      "toExchangeSource",
-      ToExchangeAnyAsset_Exception_Detail,
-    );
-
-    this.checkChainMagic(
-      toExchangeAny.beExchangeSource,
-      "beExchangeSource",
-      ToExchangeAnyAsset_Exception_Detail,
-    );
-
     const {
       toExchangeParentAssetType,
       toExchangeAssetType,
@@ -162,19 +138,47 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
       ToExchangeAnyAsset_Exception_Detail,
     );
 
-    this.checkAssetType(
-      toExchangeParentAssetType,
-      toExchangeAssetType,
-      "toExchangeAssetType",
-      ToExchangeAnyAsset_Exception_Detail,
-    );
+    if (toExchangeAny.toExchangeSource === this.configHelper.magic) {
+      this.checkChainName(
+        toExchangeAny.toExchangeChainName,
+        "toExchangeChainName",
+        ToExchangeAnyAsset_Exception_Detail,
+      );
 
-    this.checkAssetType(
-      beExchangeParentAssetType,
-      beExchangeAssetType,
-      "beExchangeAssetType",
-      ToExchangeAnyAsset_Exception_Detail,
-    );
+      this.checkChainMagic(
+        toExchangeAny.toExchangeSource,
+        "toExchangeSource",
+        ToExchangeAnyAsset_Exception_Detail,
+      );
+
+      this.checkAssetType(
+        toExchangeParentAssetType,
+        toExchangeAssetType,
+        "toExchangeAssetType",
+        ToExchangeAnyAsset_Exception_Detail,
+      );
+    }
+
+    if (toExchangeAny.beExchangeSource === this.configHelper.magic) {
+      this.checkChainName(
+        toExchangeAny.beExchangeChainName,
+        "beExchangeChainName",
+        ToExchangeAnyAsset_Exception_Detail,
+      );
+
+      this.checkChainMagic(
+        toExchangeAny.beExchangeSource,
+        "beExchangeSource",
+        ToExchangeAnyAsset_Exception_Detail,
+      );
+
+      this.checkAssetType(
+        beExchangeParentAssetType,
+        beExchangeAssetType,
+        "beExchangeAssetType",
+        ToExchangeAnyAsset_Exception_Detail,
+      );
+    }
 
     const {
       toExchangeAssetPrealnum,

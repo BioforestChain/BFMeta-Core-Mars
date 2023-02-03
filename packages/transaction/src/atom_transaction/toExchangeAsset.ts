@@ -138,41 +138,45 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<ToExch
       });
     }
 
-    this.checkChainName(
-      toExchangeAsset.toExchangeChainName,
-      "toExchangeChainName",
-      ToExchangeAssetAsset_Exception_Detail,
-    );
+    if (toExchangeAsset.toExchangeSource === this.configHelper.magic) {
+      this.checkChainName(
+        toExchangeAsset.toExchangeChainName,
+        "toExchangeChainName",
+        ToExchangeAssetAsset_Exception_Detail,
+      );
 
-    this.checkChainMagic(
-      toExchangeAsset.toExchangeSource,
-      "toExchangeSource",
-      ToExchangeAssetAsset_Exception_Detail,
-    );
+      this.checkChainMagic(
+        toExchangeAsset.toExchangeSource,
+        "toExchangeSource",
+        ToExchangeAssetAsset_Exception_Detail,
+      );
 
-    this.checkAsset(
-      toExchangeAsset.toExchangeAsset,
-      "toExchangeAsset",
-      ToExchangeAssetAsset_Exception_Detail,
-    );
+      this.checkAsset(
+        toExchangeAsset.toExchangeAsset,
+        "toExchangeAsset",
+        ToExchangeAssetAsset_Exception_Detail,
+      );
+    }
 
-    this.checkChainName(
-      toExchangeAsset.beExchangeChainName,
-      "beExchangeChainName",
-      ToExchangeAssetAsset_Exception_Detail,
-    );
+    if (toExchangeAsset.beExchangeSource === this.configHelper.magic) {
+      this.checkChainName(
+        toExchangeAsset.beExchangeChainName,
+        "beExchangeChainName",
+        ToExchangeAssetAsset_Exception_Detail,
+      );
 
-    this.checkChainMagic(
-      toExchangeAsset.beExchangeSource,
-      "beExchangeSource",
-      ToExchangeAssetAsset_Exception_Detail,
-    );
+      this.checkChainMagic(
+        toExchangeAsset.beExchangeSource,
+        "beExchangeSource",
+        ToExchangeAssetAsset_Exception_Detail,
+      );
 
-    this.checkAsset(
-      toExchangeAsset.beExchangeAsset,
-      "beExchangeAsset",
-      ToExchangeAssetAsset_Exception_Detail,
-    );
+      this.checkAsset(
+        toExchangeAsset.beExchangeAsset,
+        "beExchangeAsset",
+        ToExchangeAssetAsset_Exception_Detail,
+      );
+    }
 
     if (!toExchangeAsset.toExchangeNumber) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {

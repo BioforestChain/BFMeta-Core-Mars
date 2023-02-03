@@ -191,23 +191,28 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
 
     const BeExchangeAsset_Exception_Detail = { target: `${propName}.beExchangeAsset` };
 
-    this.checkChainName(
-      beExchangeChainName,
-      "beExchangeChainName",
-      BeExchangeAsset_Exception_Detail,
-    );
-    this.checkChainMagic(beExchangeSource, "beExchangeSource", BeExchangeAsset_Exception_Detail);
+    const chainMagic = this.configHelper.magic;
+
     this.checkParentAssetType(
       beExchangeParentAssetType,
       "beExchangeParentAssetType",
       BeExchangeAsset_Exception_Detail,
     );
-    this.checkAssetType(
-      beExchangeParentAssetType,
-      beExchangeAssetType,
-      "beExchangeAssetType",
-      BeExchangeAsset_Exception_Detail,
-    );
+
+    if (beExchangeSource === chainMagic) {
+      this.checkChainName(
+        beExchangeChainName,
+        "beExchangeChainName",
+        BeExchangeAsset_Exception_Detail,
+      );
+      this.checkChainMagic(beExchangeSource, "beExchangeSource", BeExchangeAsset_Exception_Detail);
+      this.checkAssetType(
+        beExchangeParentAssetType,
+        beExchangeAssetType,
+        "beExchangeAssetType",
+        BeExchangeAsset_Exception_Detail,
+      );
+    }
 
     let isNeedBeExchangeAssetPrealnum = false;
     let assetTypeSet = new Set<string>();
@@ -233,23 +238,29 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
         });
       }
       assetTypeSet.add(toExchangeAssetType);
-      this.checkChainName(
-        toExchangeChainName,
-        "toExchangeChainName",
-        ToExchangeAssets_Exception_Detail,
-      );
-      this.checkChainMagic(toExchangeSource, "toExchangeSource", ToExchangeAssets_Exception_Detail);
       this.checkParentAssetType(
         toExchangeParentAssetType,
         "toExchangeParentAssetType",
         ToExchangeAssets_Exception_Detail,
       );
-      this.checkAssetType(
-        toExchangeParentAssetType,
-        toExchangeAssetType,
-        "toExchangeAssetType",
-        ToExchangeAssets_Exception_Detail,
-      );
+      if (toExchangeSource === chainMagic) {
+        this.checkChainName(
+          toExchangeChainName,
+          "toExchangeChainName",
+          ToExchangeAssets_Exception_Detail,
+        );
+        this.checkChainMagic(
+          toExchangeSource,
+          "toExchangeSource",
+          ToExchangeAssets_Exception_Detail,
+        );
+        this.checkAssetType(
+          toExchangeParentAssetType,
+          toExchangeAssetType,
+          "toExchangeAssetType",
+          ToExchangeAssets_Exception_Detail,
+        );
+      }
       if (!toExchangeAssetPrealnum) {
         throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
           prop: "toExchangeAssetPrealnum",

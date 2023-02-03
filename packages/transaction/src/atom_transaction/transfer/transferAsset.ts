@@ -40,11 +40,17 @@ export class TransferAssetTransactionFactory extends TransferTransactionFactory<
 
     const { sourceChainMagic, sourceChainName, assetType, amount } = transferAsset;
 
-    this.checkChainName(sourceChainName, "sourceChainName", TransferAssetAsset_Exception_Detail);
+    if (sourceChainMagic === this.configHelper.magic) {
+      this.checkChainName(sourceChainName, "sourceChainName", TransferAssetAsset_Exception_Detail);
 
-    this.checkChainMagic(sourceChainMagic, "sourceChainMagic", TransferAssetAsset_Exception_Detail);
+      this.checkChainMagic(
+        sourceChainMagic,
+        "sourceChainMagic",
+        TransferAssetAsset_Exception_Detail,
+      );
 
-    this.checkAsset(assetType, "assetType", TransferAssetAsset_Exception_Detail);
+      this.checkAsset(assetType, "assetType", TransferAssetAsset_Exception_Detail);
+    }
 
     if (storage.value !== assetType) {
       throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
@@ -52,7 +58,6 @@ export class TransferAssetTransactionFactory extends TransferTransactionFactory<
         be_compare_prop: `assetType ${assetType}`,
         to_target: "storage",
         be_target: "transferAsset",
-
       });
     }
 

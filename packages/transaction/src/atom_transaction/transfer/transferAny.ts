@@ -51,11 +51,18 @@ export class TransferAnyTransactionFactory extends TransferTransactionFactory<Tr
     const { sourceChainMagic, sourceChainName, parentAssetType, assetType, taxInformation } =
       transferAny;
 
-    this.checkChainName(sourceChainName, "sourceChainName", TransferAnyAsset_Exception_Detail);
+    if (sourceChainMagic === this.configHelper.magic) {
+      this.checkChainName(sourceChainName, "sourceChainName", TransferAnyAsset_Exception_Detail);
 
-    this.checkChainMagic(sourceChainMagic, "sourceChainMagic", TransferAnyAsset_Exception_Detail);
+      this.checkChainMagic(sourceChainMagic, "sourceChainMagic", TransferAnyAsset_Exception_Detail);
 
-    this.checkAssetType(parentAssetType, assetType, "assetType", TransferAnyAsset_Exception_Detail);
+      this.checkAssetType(
+        parentAssetType,
+        assetType,
+        "assetType",
+        TransferAnyAsset_Exception_Detail,
+      );
+    }
 
     if (storage.value !== assetType) {
       throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {

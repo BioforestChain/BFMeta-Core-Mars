@@ -106,11 +106,13 @@ export class GiftAnyTransactionFactory extends GiftTransactionFactory<GiftAnyTra
       taxInformation,
     } = giftAny;
 
-    this.checkChainName(sourceChainName, "sourceChainName", GiftAnyAsset_Exception_Detail);
+    if (sourceChainMagic === this.configHelper.magic) {
+      this.checkChainName(sourceChainName, "sourceChainName", GiftAnyAsset_Exception_Detail);
 
-    this.checkChainMagic(sourceChainMagic, "sourceChainMagic", GiftAnyAsset_Exception_Detail);
+      this.checkChainMagic(sourceChainMagic, "sourceChainMagic", GiftAnyAsset_Exception_Detail);
 
-    this.checkAssetType(parentAssetType, assetType, "assetType", GiftAnyAsset_Exception_Detail);
+      this.checkAssetType(parentAssetType, assetType, "assetType", GiftAnyAsset_Exception_Detail);
+    }
 
     if (!baseHelper.isPositiveInteger(totalGrabableTimes)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {

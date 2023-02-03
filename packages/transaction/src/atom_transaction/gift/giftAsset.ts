@@ -97,11 +97,13 @@ export class GiftAssetTransactionFactory extends GiftTransactionFactory<GiftAsse
       beginUnfrozenBlockHeight,
     } = giftAsset;
 
-    this.checkChainName(sourceChainName, "sourceChainName", GiftAssetAsset_Exception_Detail);
+    if (sourceChainMagic === this.configHelper.magic) {
+      this.checkChainName(sourceChainName, "sourceChainName", GiftAssetAsset_Exception_Detail);
 
-    this.checkChainMagic(sourceChainMagic, "sourceChainMagic", GiftAssetAsset_Exception_Detail);
+      this.checkChainMagic(sourceChainMagic, "sourceChainMagic", GiftAssetAsset_Exception_Detail);
 
-    this.checkAsset(assetType, "assetType", GiftAssetAsset_Exception_Detail);
+      this.checkAsset(assetType, "assetType", GiftAssetAsset_Exception_Detail);
+    }
 
     if (!baseHelper.isPositiveInteger(totalGrabableTimes)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
