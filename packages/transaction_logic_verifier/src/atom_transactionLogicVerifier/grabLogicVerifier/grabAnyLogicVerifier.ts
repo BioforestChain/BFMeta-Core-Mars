@@ -271,13 +271,13 @@ export class GrabAnyLogicVerifier extends TransactionLogicVerifier {
       if (beginUnfrozenBlockHeight === undefined) {
         throw new ConsensusException(ERROR_LIST.PROP_IS_REQUIRE, {
           prop: `beginUnfrozenBlockHeight`,
-          target: "grabAsset",
+          target: "grabAny.giftAny",
         });
       }
       if (trsAsset.beginUnfrozenBlockHeight !== beginUnfrozenBlockHeight) {
         throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-          to_compare_prop: `trsAsset: ${JSON.stringify(trsAsset)}`,
-          be_compare_prop: `giftAny: ${JSON.stringify(giftAny.toJSON())}`,
+          to_compare_prop: `grabAny.giftAny: ${JSON.stringify(giftAny.toJSON())}`,
+          be_compare_prop: `giftAny: ${JSON.stringify(trsAsset)}`,
           to_target: "GrabAnyTransaction",
           be_target: "GiftAnyTransaction",
         });
@@ -286,7 +286,7 @@ export class GrabAnyLogicVerifier extends TransactionLogicVerifier {
       if (beginUnfrozenBlockHeight !== undefined) {
         throw new ConsensusException(ERROR_LIST.SHOULD_NOT_EXIST, {
           prop: `beginUnfrozenBlockHeight`,
-          target: "grabAsset",
+          target: "grabAny.giftAny",
         });
       }
     }
@@ -320,8 +320,8 @@ export class GrabAnyLogicVerifier extends TransactionLogicVerifier {
 
     if (trsAsset.cipherPublicKeys.length !== cipherPublicKeys.length) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-        to_compare_prop: `trsAsset: ${JSON.stringify(trsAsset)}`,
-        be_compare_prop: `giftAny: ${JSON.stringify(giftAny.toJSON())}`,
+        to_compare_prop: `grabAny.giftAny: ${JSON.stringify(giftAny.toJSON())}`,
+        be_compare_prop: `giftAny: ${JSON.stringify(trsAsset)}`,
         to_target: "GrabAnyTransaction",
         be_target: "GiftAnyTransaction",
       });
@@ -329,8 +329,8 @@ export class GrabAnyLogicVerifier extends TransactionLogicVerifier {
     for (const pk of trsAsset.cipherPublicKeys) {
       if (!cipherPublicKeys.includes(pk)) {
         throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-          to_compare_prop: `trsAsset: ${JSON.stringify(trsAsset)}`,
-          be_compare_prop: `giftAny: ${JSON.stringify(giftAny.toJSON())}`,
+          to_compare_prop: `grabAny.giftAny: ${JSON.stringify(giftAny.toJSON())}`,
+          be_compare_prop: `giftAny: ${JSON.stringify(trsAsset)}`,
           to_target: "GrabAnyTransaction",
           be_target: "GiftAnyTransaction",
         });

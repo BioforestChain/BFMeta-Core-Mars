@@ -386,7 +386,7 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
         if (exchangeAny.beExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
           // 这里的 to 就是 to 交易发起人给出权益，be 是 be 交易发起人给出的权益
           if (BigInt(beExchangeAssetPrealnum) < BigInt(exchangeAny.beExchangeAssetPrealnum)) {
-            throw new ConsensusException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
+            throw new ConsensusException(ERROR_LIST.PROP_SHOULD_GTE_FIELD, {
               prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
               field: exchangeAny.beExchangeAssetPrealnum,
               target: "beExchangeAny",
