@@ -498,7 +498,7 @@ export class ChainChannelHelper {
       });
     }
     const { hash: sha256 } = arg;
-    if (sha256 === undefined || sha256.length !== 32) {
+    if (sha256 === undefined || sha256.length !== 64) {
       throw new ArgumentIllegalException("Invalid Open Blob query params, wrong sha256 value");
     }
 

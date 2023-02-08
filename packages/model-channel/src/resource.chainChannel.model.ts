@@ -46,7 +46,6 @@ export class OpenBlobReturnModel
   extends CommonResponse
   implements BFChainCore.JSONToModelType<BFChainCore.OpenBlobReturnJSON>
 {
-  static INC = 1;
   @Field.d(OpenBlobReturnModel.INC++, "uint32", "optional")
   descriptor!: number;
   @Field.d(OpenBlobReturnModel.INC++, "string", "optional")
