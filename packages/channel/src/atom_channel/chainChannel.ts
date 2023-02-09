@@ -809,17 +809,18 @@ export class ChainChannel<
       }
       /// 并发下载
       let offset = 0;
-      let isSuccess = false;
+      let isSuccess = true;
       while (true) {
         const tempTasks = tasks.slice(offset, offset + 3);
-        const allResults = await Promise.all(tempTasks.map((tempTask) => tempTask()));
-        if (allResults.includes(false)) {
-          isSuccess = false;
-        }
-        if (!isSuccess) {
+        if (tempTasks.length === 0) {
           break;
         }
-        offset += 3;
+        const results = await Promise.all(tempTasks.map((tempTask) => tempTask()));
+        if (results.includes(false)) {
+          isSuccess = false;
+          break;
+        }
+        offset += tempTasks.length;
       }
       if (!isSuccess) {
         throw new RefuseException(ERROR_LIST.FAIL_TO_DOWNLOAD_BLOB, {
