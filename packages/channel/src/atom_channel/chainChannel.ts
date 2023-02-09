@@ -1,4 +1,10 @@
-import { BaseHelper, BlobHelper, ChainTimeHelper, ConfigHelper } from "@bfchain/core-helper";
+import {
+  BaseHelper,
+  BlobHelper,
+  ChainTimeHelper,
+  ConfigHelper,
+  STORAGE_STRATEGY,
+} from "@bfchain/core-helper";
 import {
   Block,
   BlockQueryOptionsModel,
@@ -744,66 +750,93 @@ export class ChainChannel<
     if (await this.blobHelper.exists(openArg)) {
       return;
     }
-    do {
-      try {
-        // const startTime = this.timeHelper.now();
-        const openRes = await this.openBlob(openArg);
-        if (openRes.status === RESPONSE_STATUS.busy) {
-          await sleep(5000); //
-        }
-        if (openRes.status !== RESPONSE_STATUS.success) {
-          throw openRes.error;
-        }
-
-        const { chunkSize, expriedTime, descriptor, size, contentType } = openRes;
-        if (size === 0) {
-          return;
-        }
-        const blob_prt = await this.blobHelper.requestStorage(
-          openArg,
-          size,
-          chunkSize,
-          contentType,
-        );
-
-        progress.totalSize = size;
-
-        progress.totalCount = Math.ceil(progress.totalSize / chunkSize);
-        progress.currentCount = 0;
-
-        while (progress.currentCount < progress.totalCount) {
-          // 超时了,跳出循环,重新申请
-          if (expriedTime <= this.timeHelper.now()) {
-            break;
-          }
-          const readRes = await this.readBlob({
-            descriptor,
-            start: chunkSize * progress.currentCount,
-            end: chunkSize * (progress.currentCount + 1),
+    /// 打开连接
+    const openRes = await this.openBlob(openArg);
+    if (openRes.status === RESPONSE_STATUS.busy) {
+      await sleep(5000); //
+    }
+    if (openRes.status !== RESPONSE_STATUS.success) {
+      throw openRes.error;
+    }
+    const { chunkSize, expriedTime, descriptor, size, contentType } = openRes;
+    if (size === 0) {
+      return;
+    }
+    /// 申请存储位置
+    const blob_prt = await this.blobHelper.requestStorage(openArg, size, chunkSize, contentType);
+    try {
+      // const startTime = this.timeHelper.now();
+      const totalCount = Math.ceil(size / chunkSize);
+      progress.totalSize = size;
+      progress.totalCount = totalCount;
+      progress.currentCount = 0;
+      const tasks: (() => Promise<boolean>)[] = [];
+      for (let index = 0; index < totalCount; index++) {
+        tasks.push(() => {
+          return new Promise<boolean>(async (resolve, reject) => {
+            let retryTimes = 0;
+            let isSuccess = false;
+            while (retryTimes < 3) {
+              try {
+                // 超时了, 跳出循环, 重新申请
+                // if (expriedTime <= this.timeHelper.now()) {
+                //   break;
+                // }
+                const readRes = await this.readBlob({
+                  descriptor,
+                  start: chunkSize * index,
+                  end: chunkSize * (index + 1),
+                });
+                if (readRes.status === RESPONSE_STATUS.busy) {
+                  retryTimes++;
+                  continue;
+                }
+                if (readRes.status !== RESPONSE_STATUS.success) {
+                  throw readRes.error;
+                }
+                await this.blobHelper.saveChunk(blob_prt, index, readRes.chunkBuffer);
+                isSuccess = true;
+                break;
+              } catch (error) {
+                retryTimes++;
+                // 休息一下，来杯玉叶凉茶
+                await sleep(100);
+              }
+            }
+            return resolve(isSuccess);
           });
-          if (readRes.status === RESPONSE_STATUS.busy) {
-            continue;
-          }
-          if (readRes.status !== RESPONSE_STATUS.success) {
-            throw readRes.error;
-          }
-          await this.blobHelper.saveChunk(blob_prt, progress.currentCount, readRes.chunkBuffer);
-          progress.currentCount += 1;
-          // yield readRes.chunkBuffer;
+        });
+      }
+      /// 并发下载
+      let offset = 0;
+      let isSuccess = false;
+      while (true) {
+        const tempTasks = tasks.slice(offset, offset + 3);
+        const allResults = await Promise.all(tempTasks.map((tempTask) => tempTask()));
+        if (allResults.includes(false)) {
+          isSuccess = false;
         }
-
-        /// 还没完成, 却跳出来了. 说明请求超时了, 重新open并read
-        if (progress.currentCount < progress.totalCount) {
-          await sleep(2000);
-          continue;
+        if (!isSuccess) {
+          break;
         }
-        /// 下载完成，保存成 blob 对象
-        await this.blobHelper.saveAsBlob(blob_prt);
-        /// 关闭连接
-        await this.closeBlob({ descriptor });
-        break;
-      } catch (error) {}
-    } while (true);
+        offset += 3;
+      }
+      if (!isSuccess) {
+        throw new RefuseException(ERROR_LIST.FAIL_TO_DOWNLOAD_BLOB, {
+          hash: openArg.hash,
+          strategy: STORAGE_STRATEGY.TEMPORARY,
+        });
+      }
+      /// 还没完成, 却跳出来了. 说明请求超时了, 重新open并read
+      // if (progress.currentCount < progress.totalCount) {
+      //   await sleep(2000);
+      // }
+      /// 下载完成，保存成 blob 对象
+      await this.blobHelper.saveAsBlob(blob_prt);
+    } finally {
+      /// 关闭连接
+      await this.closeBlob({ descriptor });
+    }
   }
 
   private async _downloadBlobFromTibs(tibs: Iterable<TransactionInBlock>) {

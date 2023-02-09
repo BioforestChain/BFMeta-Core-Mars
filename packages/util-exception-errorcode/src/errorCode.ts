@@ -429,7 +429,7 @@ export const ERROR_LIST = {
   ),
   // #endregion
 
-  // #endregion channel
+  // #region channel
   INVALID_PARAMS: new ErrorCode("001-22001", "Invalid params: {params}"),
   INVALID_PARAMS_FIELD: new ErrorCode("001-22002", "Invalid params field: {field}"),
   GENESIS_BLOCK_MAYBE_NO_EQUAL: new ErrorCode("001-22003", "GenesisBlock maybe no equal"),
@@ -499,6 +499,10 @@ export const ERROR_LIST = {
   FAIL_TO_CHANGE_BLOB_STRATEGY: new ErrorCode(
     "001-2210",
     "fail to change blob({hash}) strategy({strategy})",
+  ),
+  FAIL_TO_DOWNLOAD_BLOB: new ErrorCode(
+    "001-2211",
+    "fail to download blob({hash}) strategy({strategy})",
   ),
   // #endregion
 };

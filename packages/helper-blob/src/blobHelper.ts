@@ -14,12 +14,12 @@ class DescriptorCtrl {
   }
   private _descriptor_df_map = new Map<
     /* descriptor: */ number,
-    /* fd: */ { fd: number; expriedTime: number; ti: number; doDestroy: Function }
+    /* fd: */ { fd: string; expriedTime: number; ti: number; doDestroy: Function }
   >();
   allDescriptors() {
     return this._descriptor_df_map.keys();
   }
-  saveDescriptor(fd: number, expDuration: number, onTimeout: Function) {
+  saveDescriptor(fd: string, expDuration: number, onTimeout: Function) {
     const descriptor = this.newDescriptor();
     const expriedTime = this.timeHelper.now() + expDuration;
     const doDestroy = () => {
@@ -48,7 +48,7 @@ class DescriptorCtrl {
 class FdCtrl {
   constructor(
     readonly sha256: string,
-    readonly fd: number,
+    readonly fd: string,
     readonly state: BFChainCore.BlobMetadata,
     private selfDeleter: Function,
     private targetDescriptorCtrlWM: EasyMap<object, DescriptorCtrl>,
@@ -241,7 +241,7 @@ export class BlobHelper {
    * @param index 分片下标
    * @param chunk 分片数据
    */
-  saveChunk(ptr: number, index: number, chunk: Uint8Array) {
+  saveChunk(ptr: string, index: number, chunk: Uint8Array) {
     const { blobSha256Writer: sha256BlobWriter } = this;
     if (!sha256BlobWriter) {
       throw new RefuseException(ERROR_LIST.FAIL_TO_STORE_BLOB_CHUNK, { ptr, index });
@@ -254,7 +254,7 @@ export class BlobHelper {
    * @param contentType 类型
    * @returns 返回HASH值
    */
-  saveAsBlob(ptr: number) {
+  saveAsBlob(ptr: string) {
     const { blobSha256Writer: sha256BlobWriter } = this;
     if (!sha256BlobWriter) {
       throw new RefuseException(ERROR_LIST.FAIL_TO_GENERATE_BLOB, { ptr });
