@@ -979,29 +979,6 @@ export class TransactionHelper {
   }
 
   /**
-   * 根据资产名获取资产所属类型
-   *
-   * @param assetType
-   * @returns
-   */
-  getParentAssetType(assetType: string) {
-    const baseHelper = this.baseHelper;
-    if (baseHelper.isValidAssetType(assetType)) {
-      return PARENT_ASSET_TYPE.ASSETS;
-    }
-    if (baseHelper.isValidDAppId(assetType)) {
-      return PARENT_ASSET_TYPE.DAPP;
-    }
-    if (baseHelper.isValidLocationName(assetType)) {
-      return PARENT_ASSET_TYPE.LOCATION_NAME;
-    }
-    if (baseHelper.isValidEntityId(assetType)) {
-      return PARENT_ASSET_TYPE.ENTITY;
-    }
-    return undefined;
-  }
-
-  /**
    * 将 tIndexRanges 数组转成纯 Array<tIndex>
    *
    * @param tIndexRanges
