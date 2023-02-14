@@ -21,15 +21,7 @@ export class MarkLogicVerifier extends TransactionLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const mark = transaction.asset.mark;
-    const { sourceChainMagic, dappid, sourceChainName } = mark.dapp;
-    await this.isDAppidValid(
-      sourceChainMagic,
-      sourceChainName,
-      dappid,
-      currentBlockHeight,
-      accountGetterHelper,
-    );
+    await this.isDAppidMatch(transaction, currentBlockHeight, accountGetterHelper);
 
     const { sender, recipient } = await this.logicVerify(
       transaction,
@@ -63,35 +55,64 @@ export class MarkLogicVerifier extends TransactionLogicVerifier {
   }
 
   /**
-   * dappid 是否已经存在
+   * dapp 是否匹配
    *
-   * @param magic
-   * @param chainName
-   * @param dappid
+   * @param transaction
    * @param currentBlockHeight
    * @param accountGetterHelper
    */
-  private async isDAppidValid(
-    magic: string,
-    chainName: string,
-    dappid: string,
+  private async isDAppidMatch(
+    transaction: MarkTransaction,
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
   ) {
-    const memDapp = await accountGetterHelper.getDApp(magic, dappid, currentBlockHeight);
+    const { dapp } = transaction.asset.mark;
+    const { sourceChainMagic, dappid } = dapp;
+    const memDapp = await accountGetterHelper.getDApp(sourceChainMagic, dappid, currentBlockHeight);
     if (!memDapp) {
       throw new ConsensusException(ERROR_LIST.DAPPID_IS_NOT_EXIST, {
         dappid,
       });
     }
-
-    if (chainName !== memDapp.sourceChainName) {
+    if (dapp.sourceChainName !== memDapp.sourceChainName || dapp.type !== memDapp.type) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-        to_compare_prop: `sourceChainName ${chainName}`,
-        be_compare_prop: `sourceChainName ${memDapp.sourceChainName}`,
-        to_target: "mark",
+        to_compare_prop: `dapp ${JSON.stringify(dapp.toJSON())}`,
+        be_compare_prop: `dapp ${JSON.stringify({
+          sourceChainMagic: dapp.sourceChainMagic,
+          sourceChainName: memDapp.sourceChainName,
+          type: memDapp.type,
+        })}`,
+        to_target: "MarkTransaction.asset.mark",
         be_target: "blockChain dapp",
       });
+    }
+    if (memDapp.purchaseAsset) {
+      if (!dapp.purchaseAsset) {
+        throw new ConsensusException(ERROR_LIST.PROP_IS_REQUIRE, {
+          prop: "purchaseAsset",
+          target: "MarkTransaction.asset.mark.dapp",
+        });
+      }
+      if (dapp.purchaseAsset !== memDapp.purchaseAsset) {
+        throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+          to_compare_prop: `dapp ${JSON.stringify(dapp.toJSON())}`,
+          be_compare_prop: `dapp ${JSON.stringify({
+            sourceChainMagic: dapp.sourceChainMagic,
+            sourceChainName: memDapp.sourceChainName,
+            type: memDapp.type,
+            purchaseAsset: memDapp.purchaseAsset,
+          })}`,
+          to_target: "MarkTransaction.asset.mark",
+          be_target: "blockChain dapp",
+        });
+      }
+    } else {
+      if (dapp.purchaseAsset) {
+        throw new ConsensusException(ERROR_LIST.SHOULD_NOT_EXIST, {
+          prop: "purchaseAsset",
+          target: "MarkTransaction.asset.mark.dapp",
+        });
+      }
     }
   }
 }
