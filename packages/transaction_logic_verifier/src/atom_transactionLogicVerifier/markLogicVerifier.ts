@@ -80,6 +80,7 @@ export class MarkLogicVerifier extends TransactionLogicVerifier {
         be_compare_prop: `dapp ${JSON.stringify({
           sourceChainMagic: dapp.sourceChainMagic,
           sourceChainName: memDapp.sourceChainName,
+          dappid,
           type: memDapp.type,
         })}`,
         to_target: "MarkTransaction.asset.mark",
@@ -99,6 +100,7 @@ export class MarkLogicVerifier extends TransactionLogicVerifier {
           be_compare_prop: `dapp ${JSON.stringify({
             sourceChainMagic: dapp.sourceChainMagic,
             sourceChainName: memDapp.sourceChainName,
+            dappid,
             type: memDapp.type,
             purchaseAsset: memDapp.purchaseAsset,
           })}`,

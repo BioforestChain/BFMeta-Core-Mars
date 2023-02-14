@@ -74,6 +74,7 @@ export class DAppPurchasingLogicVerifier extends TransactionLogicVerifier {
         be_compare_prop: `dapp ${JSON.stringify({
           sourceChainMagic: dappAsset.sourceChainMagic,
           sourceChainName: memDapp.sourceChainName,
+          dappid,
           type: memDapp.type,
         })}`,
         to_target: "DAppPurchasingTransaction.asset.dappPurchasing",
@@ -93,6 +94,7 @@ export class DAppPurchasingLogicVerifier extends TransactionLogicVerifier {
           be_compare_prop: `dapp ${JSON.stringify({
             sourceChainMagic: dappAsset.sourceChainMagic,
             sourceChainName: memDapp.sourceChainName,
+            dappid,
             type: memDapp.type,
             purchaseAsset: memDapp.purchaseAsset,
           })}`,
