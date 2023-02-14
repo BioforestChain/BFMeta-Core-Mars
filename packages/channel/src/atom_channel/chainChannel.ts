@@ -842,10 +842,10 @@ export class ChainChannel<
 
   private async _downloadBlobFromTibs(tibs: Iterable<TransactionInBlock>) {
     for (const tib of tibs) {
-      await this._downloadBlobFromTrs(tib.transaction);
+      await this.downloadBlobFromTrs(tib.transaction);
     }
   }
-  private async _downloadBlobFromTrs(trs: Transaction) {
+  async downloadBlobFromTrs(trs: Transaction) {
     for (const [algorithm, hash] of trs.blobMap.values()) {
       await this.downloadBlob({ algorithm, hash });
     }
