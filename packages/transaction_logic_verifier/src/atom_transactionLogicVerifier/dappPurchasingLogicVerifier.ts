@@ -68,6 +68,13 @@ export class DAppPurchasingLogicVerifier extends TransactionLogicVerifier {
         dappid,
       });
     }
+    if (transaction.recipientId !== memDapp.possessorAddress) {
+      throw new ConsensusException(ERROR_LIST.SHOULD_BE, {
+        to_compare_prop: `recipientId ${transaction.recipientId}`,
+        to_target: "DAppPurchasingTransaction",
+        be_compare_prop: `dapp possessor ${memDapp.possessorAddress}`,
+      });
+    }
     if (dappAsset.sourceChainName !== memDapp.sourceChainName || dappAsset.type !== memDapp.type) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `dapp ${JSON.stringify(dappAsset.toJSON())}`,
