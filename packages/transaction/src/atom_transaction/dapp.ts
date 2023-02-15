@@ -225,7 +225,7 @@ export class DAppTransactionFactory extends TransactionFactory<DAppTransaction> 
     } else if (type === DAPP_TYPE.FREE_APP) {
       if (purchaseAsset) {
         throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
-          prop: "purchaseAmount",
+          prop: "purchaseAsset",
           ...DappAsset_Exception_Detail,
         });
       }

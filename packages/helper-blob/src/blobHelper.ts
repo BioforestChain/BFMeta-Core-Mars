@@ -288,7 +288,10 @@ export class BlobHelper {
   }
 }
 
+/**存储策略 */
 export const enum STORAGE_STRATEGY {
+  /**临时的 */
   TEMPORARY = 0,
+  /**持久的 */
   PERSISTENT = 1,
 }
