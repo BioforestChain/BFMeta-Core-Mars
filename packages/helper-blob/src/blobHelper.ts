@@ -237,29 +237,31 @@ export class BlobHelper {
   }
   /**
    * 保存分片数据
-   * @param ptr 逻辑地址
+   *
+   * @param pointer 逻辑地址
    * @param index 分片下标
    * @param chunk 分片数据
    */
-  saveChunk(ptr: string, index: number, chunk: Uint8Array) {
+  saveChunk(pointer: string, index: number, chunk: Uint8Array) {
     const { blobSha256Writer: sha256BlobWriter } = this;
     if (!sha256BlobWriter) {
-      throw new RefuseException(ERROR_LIST.FAIL_TO_STORE_BLOB_CHUNK, { ptr, index });
+      throw new RefuseException(ERROR_LIST.FAIL_TO_STORE_BLOB_CHUNK, { pointer, index });
     }
-    return sha256BlobWriter.saveChunk(ptr, index, chunk);
+    return sha256BlobWriter.saveChunk(pointer, index, chunk);
   }
   /**
    * 保存成不可变的 Blob 对象
-   * @param ptr 逻辑地址
+   *
+   * @param pointer 逻辑地址
    * @param contentType 类型
    * @returns 返回HASH值
    */
-  saveAsBlob(ptr: string) {
+  saveAsBlob(pointer: string) {
     const { blobSha256Writer: sha256BlobWriter } = this;
     if (!sha256BlobWriter) {
-      throw new RefuseException(ERROR_LIST.FAIL_TO_GENERATE_BLOB, { ptr });
+      throw new RefuseException(ERROR_LIST.FAIL_TO_GENERATE_BLOB, { pointer });
     }
-    return sha256BlobWriter.saveAsBlob(ptr);
+    return sha256BlobWriter.saveAsBlob(pointer);
   }
 
   changeBlobStrategy(

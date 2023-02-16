@@ -189,5 +189,20 @@ export const ERROR_CODE_LIST_EN = {
   "001-22017": "Invalid message cmd",
   "001-22018": "ChainChannel Timeout, cmd {cmd}",
   "001-22019": "Task {task_id} abort because the free chainChannel size is zero",
+  "001-22020": "Refuse response open blob",
+  "001-22021": "Refuse response read blob",
+  "001-22022": "Refuse response close blob",
+  // #endregion
+
+  // #region blob
+  "001-23001": "Not found blob by hash: {hash}",
+  "001-23002": "Could not open blob by hash: {hash}",
+  "001-23003": "Could not read blob by descriptor: {descriptor}",
+  "001-23004": "Could not close blob by descriptor: {descriptor}",
+  "001-23005": "Could not request storage for write blob with size: {size}",
+  "001-23006": "Could not save chunk for blob pointer {pointer} index {index}",
+  "001-23007": "Fail to generate blob pointer: {pointer}",
+  "001-23008": "Fail to change blob({hash}) strategy({strategy})",
+  "001-23009": "Fail to download blob({hash}) strategy({strategy})",
   // #endregion
 } as const;

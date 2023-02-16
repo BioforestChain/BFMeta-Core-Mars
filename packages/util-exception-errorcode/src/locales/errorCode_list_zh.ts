@@ -184,5 +184,20 @@ export const ERROR_CODE_LIST_ZH = {
   "001-22017": "不合法的 message cmd",
   "001-22018": "ChainChannel 超时，cmd {cmd}",
   "001-22019": "Task {task_id} 中断，因为空闲 chainChannel 数为 0",
+  "001-22020": "拒绝响应开启 blob",
+  "001-22021": "拒绝响应读取 blob",
+  "001-22022": "拒绝响应关闭 blob",
+  // #endregion
+
+  // #region blob
+  "001-23001": "blob 未找到 hash: {hash}",
+  "001-23002": "无法打开 blob hash: {hash}",
+  "001-23003": "无法读取 blob descriptor: {descriptor}",
+  "001-23004": "无法关闭 blob descriptor: {descriptor}",
+  "001-23005": "无法申请 blob 的存储空间 size: {size}",
+  "001-23006": "无法存储 blob 的分片 pointer {pointer} index {index}",
+  "001-23007": "生成 blob pointer: {pointer} 失败",
+  "001-23008": "移动 blob({hash}) strategy({strategy}) 失败",
+  "001-23009": "下载 blob({hash}) strategy({strategy}) 失败",
   // #endregion
 } as const;

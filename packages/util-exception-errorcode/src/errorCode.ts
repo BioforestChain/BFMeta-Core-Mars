@@ -8,6 +8,7 @@ import { ErrorCode } from "@bfchain/util-exception-error-code";
  * - 00 通用校验错误
  * - 11 逻辑校验错误
  * - 22 channel
+ * - 23 blob
  *
  */
 export const ERROR_LIST = {
@@ -477,32 +478,35 @@ export const ERROR_LIST = {
   REFUSE_RESPONSE_OPEN_BLOB: new ErrorCode("001-22020", "Refuse response open blob"),
   REFUSE_RESPONSE_READ_BLOB: new ErrorCode("001-22021", "Refuse response read blob"),
   REFUSE_RESPONSE_CLOSE_BLOB: new ErrorCode("001-22022", "Refuse response close blob"),
-  OPEN_BLOB_NOFOUND: new ErrorCode("001-2203", "No found blob by hash: {hash}"),
-  OPEN_BLOB_INVALID_HASH: new ErrorCode("001-2204", "could no open blob by hash: {hash}"),
+  // #endregion
+
+  // #region blob
+  OPEN_BLOB_NOFOUND: new ErrorCode("001-23001", "Not found blob by hash: {hash}"),
+  OPEN_BLOB_INVALID_HASH: new ErrorCode("001-23002", "Could not open blob by hash: {hash}"),
   READ_BLOB_INVALID_DESCRIPTOR: new ErrorCode(
-    "001-2205",
-    "could no read blob by descriptor: {descriptor}",
+    "001-23003",
+    "Could not read blob by descriptor: {descriptor}",
   ),
   CLOSE_BLOB_INVALID_DESCRIPTOR: new ErrorCode(
-    "001-2206",
-    "could no close blob by descriptor: {descriptor}",
+    "001-23004",
+    "Could not close blob by descriptor: {descriptor}",
   ),
   REFUSE_REQUEST_BLOB_STORAGE: new ErrorCode(
-    "001-2207",
-    "could no request storage for write blob with size: {size}",
+    "001-23005",
+    "Could not request storage for write blob with size: {size}",
   ),
   FAIL_TO_STORE_BLOB_CHUNK: new ErrorCode(
-    "001-2208",
-    "could no save chunk for blob ptr: {ptr+index}",
+    "001-23006",
+    "Could not save chunk for blob pointer {pointer} index {index}",
   ),
-  FAIL_TO_GENERATE_BLOB: new ErrorCode("001-2209", "fail to generate blob ptr: {ptr}"),
+  FAIL_TO_GENERATE_BLOB: new ErrorCode("001-23007", "Fail to generate blob pointer: {pointer}"),
   FAIL_TO_CHANGE_BLOB_STRATEGY: new ErrorCode(
-    "001-2210",
-    "fail to change blob({hash}) strategy({strategy})",
+    "001-23008",
+    "Fail to change blob({hash}) strategy({strategy})",
   ),
   FAIL_TO_DOWNLOAD_BLOB: new ErrorCode(
-    "001-2211",
-    "fail to download blob({hash}) strategy({strategy})",
+    "001-23009",
+    "Fail to download blob({hash}) strategy({strategy})",
   ),
   // #endregion
 };
