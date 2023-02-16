@@ -804,7 +804,7 @@ export class BaseHelper {
 
   /**
    * 位名是否合法
-   * 总位名最大长度 1024
+   * 总位名最大长度 512
    * 不能以 . 开头或结尾
    * 只能包含大小写字母、数字、.
    * 顶级位名只能是小写字母，多级位名每级只能是大小写字母、数字
@@ -816,8 +816,8 @@ export class BaseHelper {
     if (!this.isString(name)) {
       return false;
     }
-    // 位名总长度不大于 1024
-    if (name.length > 1024) {
+    // 位名总长度不大于 512
+    if (name.length > 512) {
       return false;
     }
     // 不能以 . 开头或结尾
