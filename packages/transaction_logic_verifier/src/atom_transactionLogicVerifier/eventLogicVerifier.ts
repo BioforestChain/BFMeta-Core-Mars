@@ -1286,7 +1286,7 @@ export class EventLogicVerifier {
           });
         }
 
-        if (memLocation.level === LOCATION_NAME_LEVEL.MULTI_LEVEL) {
+        if (memLocation.type === LOCATION_NAME_LEVEL.MULTI_LEVEL) {
           const names = name.split(".");
           const index = names[0].length + 1;
           const lastLocationName = name.substr(index);
@@ -1430,7 +1430,7 @@ export class EventLogicVerifier {
           });
         }
         // 只有顶级位名能交换
-        if (memLocation.level !== LOCATION_NAME_LEVEL.TOP_LEVEL) {
+        if (memLocation.type !== LOCATION_NAME_LEVEL.TOP_LEVEL) {
           throw new ConsensusException(ERROR_LIST.ONLY_TOP_LEVEL_LOCATION_NAME_CAN_EXCHANGE);
         }
         if (memLocation.possessorAddress !== address) {
@@ -1481,7 +1481,7 @@ export class EventLogicVerifier {
           });
         }
         // 只有顶级位名能交换
-        if (memLocation.level !== LOCATION_NAME_LEVEL.TOP_LEVEL) {
+        if (memLocation.type !== LOCATION_NAME_LEVEL.TOP_LEVEL) {
           throw new ConsensusException(ERROR_LIST.ONLY_TOP_LEVEL_LOCATION_NAME_CAN_EXCHANGE);
         }
         // if (memLocation.possessorAddress === address) {
@@ -1542,7 +1542,7 @@ export class EventLogicVerifier {
           accountGetterHelper,
         );
         // 只有顶级位名才能更改拥有者
-        if (memLocation.level !== LOCATION_NAME_LEVEL.TOP_LEVEL) {
+        if (memLocation.type !== LOCATION_NAME_LEVEL.TOP_LEVEL) {
           throw new ConsensusException(ERROR_LIST.ONLY_TOP_LEVEL_LOCATION_NAME_CAN_EXCHANGE);
         }
         // 处于冻结状态的位名不能更改拥有者

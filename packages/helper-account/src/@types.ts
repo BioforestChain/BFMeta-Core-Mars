@@ -61,7 +61,8 @@ declare namespace BFChainCore {
     possessorAddress: string;
     manager: string;
     records: LocationNameRecordInfo;
-    level: string;
+    type: string;
+    level: number;
     height: number;
     status: number;
     maxFrozenBlockHeight: number;
