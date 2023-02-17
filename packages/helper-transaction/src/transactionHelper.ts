@@ -393,6 +393,21 @@ export class TransactionHelper {
       });
     }
   }
+  /**
+   * 校验交易携带的 blob 大小
+   *
+   * @param transaction
+   */
+  verifyTransactionBlobSize<SOME_TRS extends BFChainCore.Transaction>(transaction: SOME_TRS) {
+    const { maxBlobSizePerTransaction } = this.config;
+    if (transaction.blobSize > maxBlobSizePerTransaction) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
+        prop: `transaction blob size ${transaction.blobSize}`,
+        target: "transaction",
+        field: maxBlobSizePerTransaction,
+      });
+    }
+  }
   private __calcStandardMinFee(customMinFeePerByte?: BFChainCore.FractionJSON) {
     const minTransactionFeePerByte = this.config.minTransactionFeePerByte;
     // 获取最小手续费
@@ -432,10 +447,12 @@ export class TransactionHelper {
     bytesLength?: number,
     customMinFeePerByte?: BFChainCore.FractionJSON,
   ) {
-    return this.calcMinFeePerBytes(
-      transaction.fee,
-      bytesLength || transaction.getBytes().length,
-      this.__calcStandardMinFee(customMinFeePerByte),
+    return BigInt(
+      this.calcMinFeePerBytes(
+        transaction.fee,
+        bytesLength || transaction.getBytes().length,
+        this.__calcStandardMinFee(customMinFeePerByte),
+      ),
     );
   }
   /**
@@ -450,7 +467,7 @@ export class TransactionHelper {
         this.config.maxTransactionSize,
         this.__calcStandardMinFee(customMinFeePerByte),
       ) * BigInt(times)
-    ).toString();
+    );
   }
   /**根据倍数计算最低手续费 */
   calcTransactionMinFeeByMulti(
@@ -464,7 +481,29 @@ export class TransactionHelper {
       bytesLength || transaction.getBytes().length,
       this.__calcStandardMinFee(customMinFeePerByte),
     );
-    return (BigInt(minFee) * BigInt(multiple)).toString();
+    return BigInt(minFee) * BigInt(multiple);
+  }
+  /**计算 blob 的最低手续费 */
+  calcTransactionBlobFee(transaction: Transaction, customMinFeePerByte?: BFChainCore.FractionJSON) {
+    const blobSize = transaction.blobSize;
+    if (blobSize === 0) {
+      return BigInt(0);
+    }
+    const minFee = this.calcMinFeePerBytes(
+      transaction.fee,
+      blobSize,
+      this.__calcStandardMinFee(customMinFeePerByte),
+    );
+    /// 先按照 10 倍收费
+    return BigInt(minFee) * BigInt(10);
+  }
+  /**根据倍数计算 blob 的最低手续费 */
+  calcTransactionBlobFeeByMulti(
+    transaction: Transaction,
+    multiple: number,
+    customMinFeePerByte?: BFChainCore.FractionJSON,
+  ) {
+    return this.calcTransactionBlobFee(transaction, customMinFeePerByte) * BigInt(multiple);
   }
   /**
    * 计算事件最小手续费
@@ -481,55 +520,73 @@ export class TransactionHelper {
     const type = transaction.type;
     // 红包事件按最大事件字节付费，并且给抢红包事件付费
     if (type === this.GIFT_ASSET) {
-      return this.calcTransactionMinFeeByMaxBytes(
+      const times =
         (transaction as BFChainCore.Transaction<BFChainCore.GiftAssetAssetJSON>).asset.giftAsset
-          .totalGrabableTimes + 1,
-        customMinFeePerByte,
-      );
+          .totalGrabableTimes + 1;
+      return (
+        this.calcTransactionMinFeeByMaxBytes(times, customMinFeePerByte) +
+        this.calcTransactionBlobFeeByMulti(transaction, times, customMinFeePerByte)
+      ).toString();
     }
     if (type === this.GIFT_ANY) {
-      return this.calcTransactionMinFeeByMaxBytes(
+      const times =
         (transaction as BFChainCore.Transaction<BFChainCore.GiftAnyAssetJSON>).asset.giftAny
-          .totalGrabableTimes + 1,
-        customMinFeePerByte,
-      );
+          .totalGrabableTimes + 1;
+      return (
+        this.calcTransactionMinFeeByMaxBytes(times, customMinFeePerByte) +
+        this.calcTransactionBlobFeeByMulti(transaction, times, customMinFeePerByte)
+      ).toString();
     }
     // 见证事件按最大事件字节付费，并且给签收见证事件付费
     if (type === this.TRUST_ASSET) {
-      return this.calcTransactionMinFeeByMaxBytes(
+      const times =
         (transaction as BFChainCore.Transaction<BFChainCore.TrustAssetAssetJSON>).asset.trustAsset
-          .numberOfSignFor + 1,
-        customMinFeePerByte,
-      );
+          .numberOfSignFor + 1;
+      return (
+        this.calcTransactionMinFeeByMaxBytes(times, customMinFeePerByte) +
+        this.calcTransactionBlobFeeByMulti(transaction, times, customMinFeePerByte)
+      ).toString();
     }
     if (type === this.ISSUE_ENTITY_MULTI) {
-      return this.calcTransactionMinFeeByMulti(
-        transaction,
-        (transaction as BFChainCore.Transaction<BFChainCore.IssueEntityMultiAssetV1JSON>).asset
-          .issueEntityMulti.entityStructList.length,
-        undefined,
-        customMinFeePerByte,
-      );
+      return (
+        this.calcTransactionMinFeeByMulti(
+          transaction,
+          (transaction as BFChainCore.Transaction<BFChainCore.IssueEntityMultiAssetV1JSON>).asset
+            .issueEntityMulti.entityStructList.length,
+          undefined,
+          customMinFeePerByte,
+        ) + this.calcTransactionBlobFee(transaction, customMinFeePerByte)
+      ).toString();
     }
     if (type == this.TO_EXCHANGE_ANY_MULTI) {
-      return this.calcTransactionMinFeeByMulti(
-        transaction,
-        (transaction as BFChainCore.Transaction<BFChainCore.ToExchangeAnyMultiAssetJSON>).asset
-          .toExchangeAnyMulti.toExchangeAssets.length,
-        undefined,
-        customMinFeePerByte,
-      );
+      return (
+        this.calcTransactionMinFeeByMulti(
+          transaction,
+          (transaction as BFChainCore.Transaction<BFChainCore.ToExchangeAnyMultiAssetJSON>).asset
+            .toExchangeAnyMulti.toExchangeAssets.length,
+          undefined,
+          customMinFeePerByte,
+        ) + this.calcTransactionBlobFee(transaction, customMinFeePerByte)
+      ).toString();
     }
     if (type === this.BE_EXCHANGE_ANY_MULTI) {
-      return this.calcTransactionMinFeeByMulti(
-        transaction,
-        (transaction as BFChainCore.Transaction<BFChainCore.BeExchangeAnyMultiAssetJSON>).asset
-          .beExchangeAnyMulti.toExchangeAssets.length,
-        undefined,
-        customMinFeePerByte,
-      );
+      return (
+        this.calcTransactionMinFeeByMulti(
+          transaction,
+          (transaction as BFChainCore.Transaction<BFChainCore.BeExchangeAnyMultiAssetJSON>).asset
+            .beExchangeAnyMulti.toExchangeAssets.length,
+          undefined,
+          customMinFeePerByte,
+        ) + this.calcTransactionBlobFee(transaction, customMinFeePerByte)
+      ).toString();
     }
-    return this.calcTransactionMinFeeByBytes(transaction, bytesLength, customMinFeePerByte);
+    if (type === this.GRAB_ASSET || type === this.GRAB_ANY || type === this.SIGN_FOR_ASSET) {
+      return "0";
+    }
+    return (
+      this.calcTransactionMinFeeByBytes(transaction, bytesLength, customMinFeePerByte) +
+      this.calcTransactionBlobFee(transaction, customMinFeePerByte)
+    ).toString();
   }
   /**计算交易手续费 */
   calcTransactionFee(

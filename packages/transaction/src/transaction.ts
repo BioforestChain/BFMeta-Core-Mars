@@ -226,6 +226,8 @@ export class TransactionCore {
 
     // 校验交易的大小
     this.transactionHelper.verifyTransactionSize(trs);
+    // 校验交易携带的 blob 大小
+    this.transactionHelper.verifyTransactionBlobSize(trs);
 
     return trs;
   }

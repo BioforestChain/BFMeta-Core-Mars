@@ -270,6 +270,8 @@ export class ReplayBlockCore<T extends Block> {
     let numberOfVotes = 0;
     /**所有交易体的总字节长度 */
     let payloadLength = 0;
+    /**区块打包的事件携带的 blob 长度 */
+    let blobSize = 0;
     /**本块交易所涉及的资产信息 */
     const statisticsInfo = this.statisticsHelper.forceGetStatisticsInfoByBlock(
       eventEmitter.taskname || `core-replay-${height}`,
@@ -549,6 +551,8 @@ export class ReplayBlockCore<T extends Block> {
           payloadHash.update(tranItemBinary);
           // 更新总字节长度
           payloadLength += tranItemBinary.length;
+          // 更新 blob 长度
+          blobSize += tranItem.transaction.blobSize;
           await txFactory.endDealTransaction(tranItem, eventEmitter);
           if (type === VOTE) {
             numberOfVotes++;
@@ -590,6 +594,15 @@ export class ReplayBlockCore<T extends Block> {
         throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
           to_compare_prop: `payloadLength ${block.payloadLength}`,
           be_compare_prop: `payloadLength ${payloadLength}`,
+          to_target: "block",
+          be_target: "calculate",
+        });
+      }
+
+      if (block.blobSize !== blobSize) {
+        throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
+          to_compare_prop: `blobSize ${block.blobSize}`,
+          be_compare_prop: `blobSize ${blobSize}`,
           to_target: "block",
           be_target: "calculate",
         });

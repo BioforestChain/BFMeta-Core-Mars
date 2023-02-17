@@ -216,6 +216,8 @@ export class GenerateBlockCore<T extends Block> {
     let numberOfVotes = 0;
     /**区块打包的事件的总字节长度 */
     let payloadLength = 0;
+    /**区块打包的事件携带的 blob 长度 */
+    let blobSize = 0;
     /**本块事件所涉及的资产信息 */
     const statisticsInfo = this.statisticsHelper.forceGetStatisticsInfoByBlock(
       eventEmitter.taskname || `core-generate-${height}`,
@@ -359,6 +361,8 @@ export class GenerateBlockCore<T extends Block> {
           if (payloadLength > maxBlockSize * 0.95) {
             await eventEmitter.emit("nearMaxPayloadLength", { payloadLength });
           }
+          // 更新 blob 长度
+          blobSize += tranItem.transaction.blobSize;
           await txFactory.endDealTransaction(tranItem, eventEmitter);
           if (type === VOTE) {
             numberOfVotes++;
@@ -410,6 +414,7 @@ export class GenerateBlockCore<T extends Block> {
       block.transactionInfo.statisticInfo = statisticsInfo.toModel();
       block.transactionInfo.payloadHashBuffer = await payloadHash.digest();
       block.transactionInfo.payloadLength = payloadLength;
+      block.transactionInfo.blobSize = blobSize;
       block.transactionInfo.transactionInBlocks = transactions;
       block.blockParticipation = this.blockHelper.calcBlockParticipation({
         totalChainAsset: statisticsInfo.totalChainAsset,

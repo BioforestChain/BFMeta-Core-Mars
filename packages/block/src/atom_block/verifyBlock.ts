@@ -165,6 +165,8 @@ export class VerifyBlockCore<T extends Block> {
     const payloadHash = this.cryptoHelper.sha256();
     /**所有交易体的总字节长度 */
     let payloadLength = 0;
+    /**区块打包的事件携带的 blob 长度 */
+    let blobSize = 0;
     const sourceStatisticsInfoModel = block.statisticInfo;
     const eventEmitter: BFChainCore.ApplyTransactionEventEmitter = new QueneEventEmitter();
     /**
@@ -296,6 +298,8 @@ export class VerifyBlockCore<T extends Block> {
         payloadHash.update(tranItemBinary);
         // 更新总字节长度
         payloadLength += tranItemBinary.length;
+        // 更新 blob 长度
+        blobSize += tranItem.transaction.blobSize;
         /// 交易生效
         const txFactory = this.transactionCore.getTransactionFactoryFromType(trs.type);
         /**
@@ -355,6 +359,15 @@ export class VerifyBlockCore<T extends Block> {
         prop: "payloadLength",
         reason: `payloadLength: ${payloadLength} max: ${config.maxBlockSize}`,
         ...Block_Exception_Detail,
+      });
+    }
+
+    if (block.blobSize !== blobSize) {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
+        to_compare_prop: `blobSize ${block.blobSize}`,
+        be_compare_prop: `blobSize ${blobSize}`,
+        to_target: "block",
+        be_target: "calculate",
       });
     }
 

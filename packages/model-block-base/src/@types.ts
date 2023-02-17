@@ -85,6 +85,7 @@ declare namespace BFChainCore {
     numberOfTransactions: number;
     payloadHash: string;
     payloadLength: number;
+    blobSize: number;
     totalAmount: string;
     totalFee: string;
     transactionInBlocks: TransactionInBlockJSON[];
@@ -296,6 +297,8 @@ declare namespace BFChainCore {
     maxVotesPerBlock: number;
     /**投票账户最少持有的主权益数 */
     voteMinChainAsset: string;
+    /**每笔交易允许携带的最大 blob 长度 */
+    maxBlobSizePerTransaction: number;
   }
   interface GenesisBlockAssetJSON {
     /**创世块附带信息 */

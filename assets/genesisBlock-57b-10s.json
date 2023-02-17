@@ -1,9 +1,9 @@
 {
   "version": 1,
   "height": 1,
-  "blockSize": 152603,
+  "blockSize": 152328,
   "timestamp": 0,
-  "signature": "dbc054f775e6aea462ef4481e19c9064d4e6b355bc820efb7695ca394c61ed1a3865ba70a3d98ec1557ef4c1b3c03a1aa52b7ae19cff7bf82fd07f223e7db30c",
+  "signature": "74cb8ac17e0121d34bc0f7365b69654cfcc29d5ccfd7e64b82000aef5a7d66d2a6166ecb0db58e5ed259c2fadbfdfec6c0422f33abe2537ae3d33f809a422608",
   "generatorPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
   "generatorEquity": "0",
   "previousBlockSignature": "",
@@ -53,56 +53,14 @@
       },
       "rewardPerBlock": {
         "heights": [
-          1,
-          100000,
-          18900000,
-          37800000,
-          56700000,
-          75600000,
-          94500000,
-          113400000,
-          132300000,
-          151200000,
-          170100000,
-          189000000,
-          207900000,
-          226800000,
-          245700000,
-          264600000,
-          283500000,
-          302400000,
-          321300000,
-          340200000,
-          359100000,
-          378000000,
-          396900000,
-          403200000
+          48712,
+          9806288,
+          40193712
         ],
         "rewards": [
           "0",
-          "3500000000",
-          "9000000000",
-          "4500000000",
-          "2250000000",
-          "1125000000",
-          "562500000",
-          "281250000",
-          "140625000",
-          "70312500",
-          "35156250",
-          "17578125",
-          "8789062",
-          "4394531",
-          "2197265",
-          "1098632",
-          "549316",
-          "274658",
-          "137329",
-          "68664",
-          "34332",
-          "17166",
-          "8583",
-          "4291",
+          "4000000000",
+          "2000000000",
           "0"
         ]
       },
@@ -370,7 +328,8 @@
         "denominator": "1"
       },
       "maxVotesPerBlock": 10000,
-      "voteMinChainAsset": "0"
+      "voteMinChainAsset": "0",
+      "maxBlobSizePerTransaction": 1073741824
     }
   },
   "transactionInfo": {
@@ -378,6 +337,7 @@
     "numberOfTransactions": 457,
     "payloadHash": "99cda2489950c216afebe9a7933b5b9ef1a5a0f39d9001338bef16f966d9bcb5",
     "payloadLength": 147819,
+    "blobSize": 0,
     "totalAmount": "16784",
     "totalFee": "9944",
     "transactionInBlocks": [

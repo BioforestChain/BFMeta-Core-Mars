@@ -94,10 +94,12 @@ export class IssueEntityMultiV1LogicVerifier extends TransactionLogicVerifier {
   checkTrsFeeAndWebFee(transaction: IssueEntityMultiTransactionV1, byteLength: number) {
     return this.isFeeEnough(
       transaction.fee,
-      this.transactionHelper.calcTransactionMinFeeByMulti(
-        transaction,
-        transaction.asset.issueEntityMulti.entityStructList.length,
-      ),
+      (
+        this.transactionHelper.calcTransactionMinFeeByMulti(
+          transaction,
+          transaction.asset.issueEntityMulti.entityStructList.length,
+        ) + this.transactionHelper.calcTransactionBlobFee(transaction)
+      ).toString(),
     );
   }
 
@@ -115,12 +117,14 @@ export class IssueEntityMultiV1LogicVerifier extends TransactionLogicVerifier {
   ) {
     return this.isFeeEnough(
       transaction.fee,
-      this.transactionHelper.calcTransactionMinFeeByMulti(
-        transaction,
-        transaction.asset.issueEntityMulti.entityStructList.length,
-        undefined,
-        miningMachineMinFeePerByte,
-      ),
+      (
+        this.transactionHelper.calcTransactionMinFeeByMulti(
+          transaction,
+          transaction.asset.issueEntityMulti.entityStructList.length,
+          undefined,
+          miningMachineMinFeePerByte,
+        ) + this.transactionHelper.calcTransactionBlobFee(transaction, miningMachineMinFeePerByte)
+      ).toString(),
     );
   }
 

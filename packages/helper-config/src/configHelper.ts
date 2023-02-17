@@ -159,10 +159,12 @@ export class ConfigHelper {
   /**每个区块最大能处理的投票数 */
   @cacheGetter
   get maxVotesPerBlock() {
-    const maxVotesPerBlock = this.hookedGenesisBlock.asset.genesisAsset.maxVotesPerBlock;
-    return maxVotesPerBlock === undefined
-      ? this.maxTPSPerBlock * this.forgeInterval
-      : maxVotesPerBlock;
+    return this.hookedGenesisBlock.asset.genesisAsset.maxVotesPerBlock;
+  }
+  /**每笔交易允许携带的最大 blob 长度 */
+  @cacheGetter
+  get maxBlobSizePerTransaction() {
+    return this.hookedGenesisBlock.asset.genesisAsset.maxBlobSizePerTransaction;
   }
   /**投票账户最少持有的主权益数 */
   @cacheGetter

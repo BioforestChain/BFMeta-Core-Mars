@@ -539,7 +539,10 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   checkTrsFeeAndWebFee(transaction: BFChainCore.Transaction, byteLength: number) {
     return this.isFeeEnough(
       transaction.fee,
-      this.transactionHelper.calcTransactionMinFeeByBytes(transaction, byteLength),
+      (
+        this.transactionHelper.calcTransactionMinFeeByBytes(transaction, byteLength) +
+        this.transactionHelper.calcTransactionBlobFee(transaction)
+      ).toString(),
     );
   }
 
@@ -557,11 +560,13 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   ) {
     return this.isFeeEnough(
       transaction.fee,
-      this.transactionHelper.calcTransactionMinFeeByBytes(
-        transaction,
-        byteLength,
-        miningMachineMinFeePerByte,
-      ),
+      (
+        this.transactionHelper.calcTransactionMinFeeByBytes(
+          transaction,
+          byteLength,
+          miningMachineMinFeePerByte,
+        ) + this.transactionHelper.calcTransactionBlobFee(transaction, miningMachineMinFeePerByte)
+      ).toString(),
     );
   }
 

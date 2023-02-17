@@ -108,11 +108,13 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
    * @param byteLength
    */
   checkTrsFeeAndWebFee(transaction: TrustAssetTransaction, byteLength: number) {
+    const times = transaction.asset.trustAsset.numberOfSignFor + 1;
     return this.isFeeEnough(
       transaction.fee,
-      this.transactionHelper.calcTransactionMinFeeByMaxBytes(
-        transaction.asset.trustAsset.numberOfSignFor + 1,
-      ),
+      (
+        this.transactionHelper.calcTransactionMinFeeByMaxBytes(times) +
+        this.transactionHelper.calcTransactionBlobFeeByMulti(transaction, times)
+      ).toString(),
     );
   }
 
@@ -128,12 +130,17 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
     byteLength: number,
     miningMachineMinFeePerByte: BFChainCore.FractionJSON,
   ) {
+    const times = transaction.asset.trustAsset.numberOfSignFor + 1;
     return this.isFeeEnough(
       transaction.fee,
-      this.transactionHelper.calcTransactionMinFeeByMaxBytes(
-        transaction.asset.trustAsset.numberOfSignFor + 1,
-        miningMachineMinFeePerByte,
-      ),
+      (
+        this.transactionHelper.calcTransactionMinFeeByMaxBytes(times, miningMachineMinFeePerByte) +
+        this.transactionHelper.calcTransactionBlobFeeByMulti(
+          transaction,
+          times,
+          miningMachineMinFeePerByte,
+        )
+      ).toString(),
     );
   }
 }

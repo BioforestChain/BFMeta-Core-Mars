@@ -7,16 +7,16 @@ import { EasyWeakMap } from "@bfchain/util-extends-map";
 import { decodeHex } from "@bfchain/util-encoding-hex";
 const TrsRemarkMapWM = new EasyWeakMap((trs: Transaction) => new StringKeyMap(trs.remark));
 const blobMapWM = new EasyWeakMap((trs: Transaction) => {
-  const blob: { [key: string]: ["SHA256", string, Uint8Array] } = {};
+  const blob: { [key: string]: ["SHA256", string, Uint8Array, number] } = {};
   const blob_sha256_prefix = BLOB_IN_TRS_REMARK_PREFIX.SHA256;
   for (const key in trs.remark) {
     const value = trs.remark[key];
     if (value.startsWith(blob_sha256_prefix)) {
-      const sha256_hex = value.slice(blob_sha256_prefix.length);
+      const items = value.slice(blob_sha256_prefix.length).split("?");
       try {
-        const sha256 = decodeHex(sha256_hex);
+        const sha256 = decodeHex(items[0]);
         if (sha256.length === 32) {
-          blob[key] = ["SHA256", sha256_hex, sha256];
+          blob[key] = ["SHA256", items[0], sha256, Number(items[1])];
         }
       } catch {}
     }
@@ -177,6 +177,14 @@ export class Transaction<AJ extends object = object>
   get blobMap() {
     const blobMap = blobMapWM.forceGet(this);
     return blobMap;
+  }
+  get blobSize() {
+    let totalSize = 0;
+    const blobMap = this.blobMap.values();
+    for (const items of blobMap) {
+      totalSize += items[3];
+    }
+    return totalSize;
   }
   /* liveMap: 实时推流: live+id+hex:// */
 

@@ -41,7 +41,10 @@ export class BlockTransactionInfoModel
   }
   /**交易 hash 长度 */
   @Field.d(BlockTransactionInfoModel.INC++, "uint32")
-  payloadLength!: number; // 交易还在传输，这个length代表所有的交易
+  payloadLength!: number;
+  /**交易携带的 blob 长度 */
+  @Field.d(BlockTransactionInfoModel.INC++, "uint32")
+  blobSize!: number;
   /**区块统计信息 */
   @Field.d(BlockTransactionInfoModel.INC++, StatisticInfoModel)
   statisticInfo!: StatisticInfoModel;
@@ -86,6 +89,7 @@ export class BlockTransactionInfoModel
       numberOfTransactions: this.numberOfTransactions,
       payloadHash: this.payloadHash,
       payloadLength: this.payloadLength,
+      blobSize: this.blobSize,
       totalAmount: this.totalAmount,
       totalFee: this.totalFee,
       transactionInBlocks: this.transactionInBlocks.map((trsInBlock) => trsInBlock.toJSON()),
@@ -242,6 +246,10 @@ export class Block<AJ extends object = object>
   get payloadLength() {
     return this.transactionInfo.payloadLength;
   }
+  /**区块事件携带的 blob 长度 */
+  get blobSize() {
+    return this.transactionInfo.blobSize;
+  }
   /**区块事件总权益量 */
   get totalAmount() {
     return this.transactionInfo.totalAmount;
@@ -304,6 +312,7 @@ export class Block<AJ extends object = object>
             numberOfTransactions: transactionInfo.numberOfTransactions,
             payloadHashBuffer: transactionInfo.payloadHashBuffer,
             payloadLength: transactionInfo.payloadLength,
+            blobSize: transactionInfo.blobSize,
             statisticInfo: transactionInfo.statisticInfo,
             transactionInBlockBufferList: [],
           },
@@ -315,6 +324,7 @@ export class Block<AJ extends object = object>
             numberOfTransactions: skipOrCustomTransactions.length,
             payloadHashBuffer: transactionInfo.payloadHashBuffer,
             payloadLength: transactionInfo.payloadLength,
+            blobSize: transactionInfo.blobSize,
             statisticInfo: transactionInfo.statisticInfo,
             transactionInBlockBufferList: skipOrCustomTransactions,
           },

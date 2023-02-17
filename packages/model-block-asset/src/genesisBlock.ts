@@ -255,6 +255,9 @@ export class GenesisAssetModel
   /**投票账户最少持有的主权益数 */
   @Field.d(GenesisAssetModel.INC++, "string", "required")
   voteMinChainAsset!: string;
+  /**每笔交易允许携带的最大 blob 长度 */
+  @Field.d(GenesisAssetModel.INC++, "uint32", "required")
+  maxBlobSizePerTransaction!: number;
   toJSON(): BFChainCore.GenesisAssetJSON {
     const res: BFChainCore.GenesisAssetJSON = Object.assign(
       {
@@ -300,6 +303,8 @@ export class GenesisAssetModel
       (res.maxMultipleOfEntityAndMainAsset = this.maxMultipleOfEntityAndMainAsset.toJSON());
     this.maxVotesPerBlock !== undefined && (res.maxVotesPerBlock = this.maxVotesPerBlock);
     this.voteMinChainAsset && (res.voteMinChainAsset = this.voteMinChainAsset);
+    this.maxBlobSizePerTransaction &&
+      (res.maxBlobSizePerTransaction = this.maxBlobSizePerTransaction);
 
     return res;
   }

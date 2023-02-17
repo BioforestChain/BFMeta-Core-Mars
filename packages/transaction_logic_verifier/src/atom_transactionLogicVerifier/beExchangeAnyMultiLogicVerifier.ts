@@ -570,10 +570,12 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
   checkTrsFeeAndWebFee(transaction: BeExchangeAnyMultiTransaction, byteLength: number) {
     return this.isFeeEnough(
       transaction.fee,
-      this.transactionHelper.calcTransactionMinFeeByMulti(
-        transaction,
-        transaction.asset.beExchangeAnyMulti.toExchangeAssets.length,
-      ),
+      (
+        this.transactionHelper.calcTransactionMinFeeByMulti(
+          transaction,
+          transaction.asset.beExchangeAnyMulti.toExchangeAssets.length,
+        ) + this.transactionHelper.calcTransactionBlobFee(transaction)
+      ).toString(),
     );
   }
 
@@ -591,12 +593,14 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
   ) {
     return this.isFeeEnough(
       transaction.fee,
-      this.transactionHelper.calcTransactionMinFeeByMulti(
-        transaction,
-        transaction.asset.beExchangeAnyMulti.toExchangeAssets.length,
-        undefined,
-        miningMachineMinFeePerByte,
-      ),
+      (
+        this.transactionHelper.calcTransactionMinFeeByMulti(
+          transaction,
+          transaction.asset.beExchangeAnyMulti.toExchangeAssets.length,
+          undefined,
+          miningMachineMinFeePerByte,
+        ) + this.transactionHelper.calcTransactionBlobFee(transaction, miningMachineMinFeePerByte)
+      ).toString(),
     );
   }
 
