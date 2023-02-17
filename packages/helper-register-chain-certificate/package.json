@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-helper-register-chain-certificate",
-  "version": "8.0.49",
+  "version": "8.0.50",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,11 +14,11 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-helper-account-base": "8.0.49",
-    "@bfchain/core-helper-asymmetric": "8.0.49",
-    "@bfchain/core-helper-chain-time": "8.0.49",
-    "@bfchain/core-helper-type": "8.0.49",
-    "@bfchain/core-typings": "8.0.49"
+    "@bfchain/core-helper-account-base": "8.0.50",
+    "@bfchain/core-helper-asymmetric": "8.0.50",
+    "@bfchain/core-helper-chain-time": "8.0.50",
+    "@bfchain/core-helper-type": "8.0.50",
+    "@bfchain/core-typings": "8.0.50"
   },
   "gitHead": "ef41eb359371b11aafbec0516df1eba01f16ebfd",
   "types": "build/cjs/index.d.ts"
