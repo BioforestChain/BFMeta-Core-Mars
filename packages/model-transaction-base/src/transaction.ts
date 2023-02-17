@@ -13,10 +13,25 @@ const blobMapWM = new EasyWeakMap((trs: Transaction) => {
     const value = trs.remark[key];
     if (value.startsWith(blob_sha256_prefix)) {
       const items = value.slice(blob_sha256_prefix.length).split("?");
+      if (items.length !== 2) {
+        continue;
+      }
       try {
         const sha256 = decodeHex(items[0]);
         if (sha256.length === 32) {
-          blob[key] = ["SHA256", items[0], sha256, Number(items[1])];
+          const subItems = items[1].split("=");
+          if (subItems.length !== 2) {
+            continue;
+          }
+          if (subItems[0] !== "size") {
+            continue;
+          }
+          const value = Number(items[1]);
+          // 不是正整数
+          if (!(Number.isInteger(value) && value > 0)) {
+            continue;
+          }
+          blob[key] = ["SHA256", items[0], sha256, value];
         }
       } catch {}
     }
