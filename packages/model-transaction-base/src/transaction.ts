@@ -26,7 +26,7 @@ const blobMapWM = new EasyWeakMap((trs: Transaction) => {
           if (subItems[0] !== "size") {
             continue;
           }
-          const value = Number(items[1]);
+          const value = Number(subItems[1]);
           // 不是正整数
           if (!(Number.isInteger(value) && value > 0)) {
             continue;
