@@ -22,10 +22,13 @@ export class OpenBlobArgModel
   set hash(value: string) {
     this.hashBuffer = parseHexToArrayBuffer(value);
   }
+  @Field.d(OpenBlobArgModel.INC++, "int32")
+  downloadSize!: number;
   toJSON() {
     return {
       algorithm: this.algorithm,
       hash: this.hash,
+      downloadSize: this.downloadSize,
     };
   }
   static fromObject<T extends Message>(

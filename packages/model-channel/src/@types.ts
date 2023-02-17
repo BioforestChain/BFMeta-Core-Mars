@@ -73,7 +73,7 @@ declare namespace BFChainCore {
     sort: TransactionSortOptionsJSON;
   };
   /**查询交易的返回结果 */
-  interface QueryTransactionReturnJSON extends CommonResponseJSON, QueryTransactionReturnParams { }
+  interface QueryTransactionReturnJSON extends CommonResponseJSON, QueryTransactionReturnParams {}
   interface QueryTransactionReturnParams {
     transactions: TransactionInBlockJSON[];
   }
@@ -81,7 +81,7 @@ declare namespace BFChainCore {
   interface QueryTindexReturnParams {
     tIndexes: number[];
   }
-  interface QueryTindexReturnJSON extends CommonResponseJSON, QueryTindexReturnParams { }
+  interface QueryTindexReturnJSON extends CommonResponseJSON, QueryTindexReturnParams {}
   /**查询 transactionInBlock 的查询条件 */
   type TransactionInBlockGetOptionsJSON = {
     /**
@@ -116,7 +116,7 @@ declare namespace BFChainCore {
   }
   interface GetTransactionInBlockReturnJSON
     extends CommonResponseJSON,
-    GetTransactionInBlockReturnParams { }
+      GetTransactionInBlockReturnParams {}
 
   /**查询交易的传入参数 */
   type IndexTransactionArgJSON = {
@@ -125,7 +125,7 @@ declare namespace BFChainCore {
     /**排序参数 */
     sort: TransactionSortOptionsJSON;
   };
-  interface IndexTransactionReturnJSON extends CommonResponseJSON, IndexTransactionReturnParams { }
+  interface IndexTransactionReturnJSON extends CommonResponseJSON, IndexTransactionReturnParams {}
   interface IndexTransactionReturnParams {
     tIndexes: TransactionIndexJSON[];
   }
@@ -141,7 +141,7 @@ declare namespace BFChainCore {
   };
   interface DownloadTransactionReturnJSON
     extends CommonResponseJSON,
-    DownloadTransactionReturnParams { }
+      DownloadTransactionReturnParams {}
   interface DownloadTransactionReturnParams {
     transactions: TransactionInBlockJSON[];
   }
@@ -150,11 +150,12 @@ declare namespace BFChainCore {
     /**未来可能会有其它hash算法的支持 */
     algorithm: OpenBlobArgJSON.Algorithm;
     hash: string;
+    downloadSize: number;
   };
   namespace OpenBlobArgJSON {
     type Algorithm = "SHA256";
   }
-  interface OpenBlobReturnJSON extends CommonResponseJSON, OpenBlobReturnParams { }
+  interface OpenBlobReturnJSON extends CommonResponseJSON, OpenBlobReturnParams {}
   interface OpenBlobReturnParams {
     /**句柄描述符 */
     descriptor: number;
@@ -189,8 +190,8 @@ declare namespace BFChainCore {
     descriptor: number;
   };
 
-  interface CloseBlobReturnJSON extends CommonResponseJSON, CloseBlobReturnParams { }
-  interface CloseBlobReturnParams { }
+  interface CloseBlobReturnJSON extends CommonResponseJSON, CloseBlobReturnParams {}
+  interface CloseBlobReturnParams {}
 
   /**接收交易的参数 */
   type NewTransactionArgJSON = {
@@ -251,8 +252,8 @@ declare namespace BFChainCore {
     version: number;
   };
   /**接收交易的返回结果 */
-  interface NewBlockReturnJSON extends CommonResponseJSON, NewBlockReturnParams { }
-  interface NewBlockReturnParams { }
+  interface NewBlockReturnJSON extends CommonResponseJSON, NewBlockReturnParams {}
+  interface NewBlockReturnParams {}
 
   //#region WebRTC 建立连接
   //#region 第一步：握手，申请`rtcUid`资源
@@ -260,7 +261,7 @@ declare namespace BFChainCore {
   /**节点收到WebRTC返回 */
   interface WebRTCPeerConnectionReturnJSON
     extends CommonResponseJSON,
-    WebRTCPeerConnectionReturnParams { }
+      WebRTCPeerConnectionReturnParams {}
   interface WebRTCPeerConnectionReturnParams {
     answerSdp: string;
     rtcUid: number;
@@ -273,8 +274,8 @@ declare namespace BFChainCore {
   };
   interface WebRTCIceCandidateReturnJSON
     extends CommonResponseJSON,
-    WebRTCIceCandidateReturnParams { }
-  interface WebRTCIceCandidateReturnParams { }
+      WebRTCIceCandidateReturnParams {}
+  interface WebRTCIceCandidateReturnParams {}
   //#endregion
   //#endregion
 
@@ -438,5 +439,5 @@ declare namespace BFChainCore {
     /**节点信息 */
     peerInfo?: BFChainCore.PeerInfoJSON;
   }
-  interface GetPeerInfoReturnJSON extends CommonResponseJSON, GetPeerInfoReturnParams { }
+  interface GetPeerInfoReturnJSON extends CommonResponseJSON, GetPeerInfoReturnParams {}
 }

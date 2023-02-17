@@ -758,16 +758,34 @@ export class ChainChannel<
     if (openRes.status !== RESPONSE_STATUS.success) {
       throw openRes.error;
     }
-    const { chunkSize, expriedTime, descriptor, size, contentType } = openRes;
-    if (size === 0) {
+    const { /* chunkSize, */ expriedTime, descriptor, size, contentType } = openRes;
+    /// 空文件
+    // if (size === 0) {
+    //   return;
+    // }
+    /// 申请存储位置
+    const downloadSize = openArg.downloadSize;
+    if (downloadSize === 0) {
       return;
     }
-    /// 申请存储位置
-    const blob_prt = await this.blobHelper.requestStorage(openArg, size, chunkSize, contentType);
+    /// 文件缺失
+    // if (downloadSize > size) {
+    //   return;
+    // }
+    const chunkSize = 1024 * 1024; /* 1MB */
+    const blob_prt = await this.blobHelper.requestStorage(
+      openArg,
+      downloadSize,
+      chunkSize,
+      contentType,
+    );
     try {
       // const startTime = this.timeHelper.now();
-      const totalCount = Math.ceil(size / chunkSize);
-      progress.totalSize = size;
+      /// 总下载次数
+      const totalCount = Math.ceil(downloadSize / chunkSize);
+      /// 最后一次下载的分片大小
+      const lastChunkSize = downloadSize - (totalCount - 1) * chunkSize;
+      progress.totalSize = downloadSize;
       progress.totalCount = totalCount;
       progress.currentCount = 0;
       const tasks: (() => Promise<boolean>)[] = [];
@@ -782,10 +800,11 @@ export class ChainChannel<
                 // if (expriedTime <= this.timeHelper.now()) {
                 //   break;
                 // }
+                const start = chunkSize * index;
                 const readRes = await this.readBlob({
                   descriptor,
-                  start: chunkSize * index,
-                  end: chunkSize * (index + 1),
+                  start,
+                  end: index === totalCount - 1 ? start + lastChunkSize : start + chunkSize,
                 });
                 if (readRes.status === RESPONSE_STATUS.busy) {
                   retryTimes++;
@@ -846,8 +865,8 @@ export class ChainChannel<
     }
   }
   async downloadBlobFromTrs(trs: Transaction) {
-    for (const [algorithm, hash] of trs.blobMap.values()) {
-      await this.downloadBlob({ algorithm, hash });
+    for (const [algorithm, hash, _, size] of trs.blobMap.values()) {
+      await this.downloadBlob({ algorithm, hash, downloadSize: size });
     }
   }
 
