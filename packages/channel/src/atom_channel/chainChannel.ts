@@ -865,7 +865,7 @@ export class ChainChannel<
     }
   }
   async downloadBlobFromTrs(trs: Transaction) {
-    for (const [algorithm, hash, _, size] of trs.blobMap.values()) {
+    for (const [algorithm, hash, hashBuffer, size] of trs.blobMap.values()) {
       await this.downloadBlob({ algorithm, hash, downloadSize: size });
     }
   }
