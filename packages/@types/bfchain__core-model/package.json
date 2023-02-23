@@ -1,16 +1,16 @@
 {
   "name": "@types/bfchain__core-model",
   "types": "index.d.ts",
-  "version": "8.0.7",
+  "version": "8.0.54",
   "dependencies": {
-    "@types/bfchain__core-model-block": "8.0.7",
-    "@types/bfchain__core-model-cacher": "8.0.7",
-    "@types/bfchain__core-model-channel": "8.0.7",
-    "@types/bfchain__core-model-common": "8.0.7",
-    "@types/bfchain__core-model-constants": "8.0.7",
-    "@types/bfchain__core-model-progress": "8.0.7",
-    "@types/bfchain__core-model-transaction": "8.0.7",
-    "@types/bfchain__core-model-transaction-complex": "8.0.7",
-    "@types/bfchain__core-typings": "8.0.7"
+    "@types/bfchain__core-model-block": "8.0.54",
+    "@types/bfchain__core-model-cacher": "8.0.54",
+    "@types/bfchain__core-model-channel": "8.0.54",
+    "@types/bfchain__core-model-common": "8.0.54",
+    "@types/bfchain__core-model-constants": "8.0.54",
+    "@types/bfchain__core-model-progress": "8.0.54",
+    "@types/bfchain__core-model-transaction": "8.0.54",
+    "@types/bfchain__core-model-transaction-complex": "8.0.54",
+    "@types/bfchain__core-typings": "8.0.54"
   }
 }

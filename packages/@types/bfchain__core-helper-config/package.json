@@ -1,11 +1,11 @@
 {
   "name": "@types/bfchain__core-helper-config",
   "types": "index.d.ts",
-  "version": "8.0.7",
+  "version": "8.0.54",
   "dependencies": {
-    "@types/bfchain__core-model-block": "8.0.7",
-    "@types/bfchain__core-model-common": "8.0.7",
-    "@types/bfchain__core-typings": "8.0.7",
-    "@types/bfchain__core-util-exception-errorcode": "8.0.7"
+    "@types/bfchain__core-model-block": "8.0.54",
+    "@types/bfchain__core-model-common": "8.0.54",
+    "@types/bfchain__core-typings": "8.0.54",
+    "@types/bfchain__core-util-exception-errorcode": "8.0.54"
   }
 }

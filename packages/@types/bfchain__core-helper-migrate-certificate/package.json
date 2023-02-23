@@ -1,15 +1,15 @@
 {
   "name": "@types/bfchain__core-helper-migrate-certificate",
   "types": "index.d.ts",
-  "version": "8.0.7",
+  "version": "8.0.54",
   "dependencies": {
-    "@types/bfchain__core-helper-account-base": "8.0.7",
-    "@types/bfchain__core-helper-asymmetric": "8.0.7",
-    "@types/bfchain__core-helper-chain-time": "8.0.7",
-    "@types/bfchain__core-helper-config": "8.0.7",
-    "@types/bfchain__core-helper-transaction": "8.0.7",
-    "@types/bfchain__core-helper-type": "8.0.7",
-    "@types/bfchain__core-model-common": "8.0.7",
-    "@types/bfchain__core-typings": "8.0.7"
+    "@types/bfchain__core-helper-account-base": "8.0.54",
+    "@types/bfchain__core-helper-asymmetric": "8.0.54",
+    "@types/bfchain__core-helper-chain-time": "8.0.54",
+    "@types/bfchain__core-helper-config": "8.0.54",
+    "@types/bfchain__core-helper-transaction": "8.0.54",
+    "@types/bfchain__core-helper-type": "8.0.54",
+    "@types/bfchain__core-model-common": "8.0.54",
+    "@types/bfchain__core-typings": "8.0.54"
   }
 }
