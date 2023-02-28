@@ -672,25 +672,22 @@ export class BeExchangeAnyMultiTransactionFactory extends TransactionFactory<BeE
             entityId: beExchangeAssetType,
           },
         });
-        const taxInformation = beExchangeAsset.taxInformation;
-        if (taxInformation) {
-          if (taxInformation.taxAssetPrealnum !== "0") {
-            const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
-              config.magic,
-              config.assetType,
-            );
-            taskList.next = this._applyTransactionEmitAsset(
-              eventEmitter,
-              transaction,
-              taxInformation.taxAssetPrealnum,
-              {
-                senderId,
-                senderPublicKeyBuffer,
-                recipientId: taxInformation.taxCollector,
-                assetInfo: chainAssetInfo,
-              },
-            );
-          }
+        if (beExchangeAsset.taxInformation) {
+          const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
+            config.magic,
+            config.assetType,
+          );
+          taskList.next = this._applyTransactionEmitAsset(
+            eventEmitter,
+            transaction,
+            beExchangeAsset.taxInformation.taxAssetPrealnum,
+            {
+              senderId,
+              senderPublicKeyBuffer,
+              recipientId: beExchangeAsset.taxInformation.taxCollector,
+              assetInfo: chainAssetInfo,
+            },
+          );
         }
       } else {
         throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
