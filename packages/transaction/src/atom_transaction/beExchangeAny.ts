@@ -369,11 +369,7 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
               frozenId: transactionSignature,
             },
           });
-          if (
-            // 非同质资产流通
-            toExchangeAssetPrealnum === "1" &&
-            exchangeAny.taxInformation
-          ) {
+          if (exchangeAny.taxInformation) {
             const { taxCollector, taxAssetPrealnum } = exchangeAny.taxInformation;
             if (taxAssetPrealnum === "0") {
               const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(

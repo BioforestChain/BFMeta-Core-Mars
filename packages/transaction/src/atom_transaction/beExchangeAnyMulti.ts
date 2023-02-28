@@ -535,11 +535,7 @@ export class BeExchangeAnyMultiTransactionFactory extends TransactionFactory<BeE
               },
             });
             paidTimes++;
-            if (
-              // 非同质资产流通
-              toExchangeAssetPrealnum !== "0" &&
-              taxInformation
-            ) {
+            if (taxInformation) {
               const { taxCollector, taxAssetPrealnum } = taxInformation;
               if (taxAssetPrealnum === "0") {
                 const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
