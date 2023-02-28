@@ -115,7 +115,7 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
           eventEmitter,
         );
 
-        if (taxInformation && taxInformation.taxAssetPrealnum !== "0") {
+        if (taxInformation) {
           eventLogicVerifier.listenEventAsset(cloneAccountsAssets, eventEmitter);
         }
       } else {

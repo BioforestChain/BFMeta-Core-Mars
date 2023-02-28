@@ -372,27 +372,44 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
           if (
             // 非同质资产流通
             toExchangeAssetPrealnum === "1" &&
-            exchangeAny.taxInformation &&
-            exchangeAny.taxInformation.taxAssetPrealnum !== "0"
+            exchangeAny.taxInformation
           ) {
-            const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
-              config.magic,
-              config.assetType,
-            );
             const { taxCollector, taxAssetPrealnum } = exchangeAny.taxInformation;
-            taskList.next = eventEmitter.emit("unfrozenAsset", {
-              type: "unfrozenAsset",
-              transaction,
-              applyInfo: {
-                address: taxCollector,
-                publicKeyBuffer: senderPublicKeyBuffer,
-                assetInfo: chainAssetInfo,
-                amount: taxAssetPrealnum,
-                sourceAmount: taxAssetPrealnum,
-                frozenId: transactionSignature,
-                recipientId, // 资产冻结账户
-              },
-            });
+            if (taxAssetPrealnum === "0") {
+              const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
+                config.magic,
+                config.assetType,
+              );
+              taskList.next = this._applyTransactionEmitAsset(
+                eventEmitter,
+                transaction,
+                taxAssetPrealnum,
+                {
+                  senderId,
+                  senderPublicKeyBuffer,
+                  recipientId: taxCollector,
+                  assetInfo: chainAssetInfo,
+                },
+              );
+            } else {
+              const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
+                config.magic,
+                config.assetType,
+              );
+              taskList.next = eventEmitter.emit("unfrozenAsset", {
+                type: "unfrozenAsset",
+                transaction,
+                applyInfo: {
+                  address: taxCollector,
+                  publicKeyBuffer: senderPublicKeyBuffer,
+                  assetInfo: chainAssetInfo,
+                  amount: taxAssetPrealnum,
+                  sourceAmount: taxAssetPrealnum,
+                  frozenId: transactionSignature,
+                  recipientId, // 资产冻结账户
+                },
+              });
+            }
           }
         } else {
           throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
@@ -419,6 +436,18 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
 
       // 主动解冻
       if (beExchangeAssetPrealnum === "0") {
+        if (taxInformation) {
+          const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
+            config.magic,
+            config.assetType,
+          );
+          taskList.next = this._applyTransactionEmitAsset(eventEmitter, transaction, "0", {
+            senderId,
+            senderPublicKeyBuffer,
+            recipientId: taxInformation.taxCollector,
+            assetInfo: chainAssetInfo,
+          });
+        }
         return;
       }
 

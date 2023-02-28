@@ -111,12 +111,21 @@ export class GrabAnyLogicVerifier extends TransactionLogicVerifier {
         eventEmitter,
       );
 
-      if (taxInformation && taxInformation.taxAssetPrealnum !== "0") {
-        eventLogicVerifier.listenEventUnfrozenAsset(
-          currentBlockHeight,
-          accountGetterHelper,
-          eventEmitter,
-        );
+      if (taxInformation) {
+        if (taxInformation.taxAssetPrealnum === "0") {
+          eventLogicVerifier.listenEventAsset(cloneAccountsAssets, eventEmitter);
+          eventLogicVerifier.listenEventPayTax(
+            currentBlockHeight,
+            accountGetterHelper,
+            eventEmitter,
+          );
+        } else {
+          eventLogicVerifier.listenEventUnfrozenAsset(
+            currentBlockHeight,
+            accountGetterHelper,
+            eventEmitter,
+          );
+        }
       }
     }
 

@@ -538,29 +538,46 @@ export class BeExchangeAnyMultiTransactionFactory extends TransactionFactory<BeE
             if (
               // 非同质资产流通
               toExchangeAssetPrealnum !== "0" &&
-              taxInformation &&
-              taxInformation.taxAssetPrealnum !== "0"
+              taxInformation
             ) {
-              const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
-                config.magic,
-                config.assetType,
-              );
               const { taxCollector, taxAssetPrealnum } = taxInformation;
-              taskList.next = eventEmitter.emit("unfrozenAsset", {
-                type: "unfrozenAsset",
-                transaction,
-                applyInfo: {
-                  address: taxCollector,
-                  assetInfo: chainAssetInfo,
-                  amount: taxAssetPrealnum,
-                  sourceAmount: taxAssetPrealnum,
-                  // 因为 nft 的版税，导致一条交易出现多条冻结记录，但是又不能混合
-                  // 这里就简单的把冻结 id 搞一些花里胡哨的东西
-                  // 这个交易本来就比尿还骚，加一些骚东西也是没办法的
-                  frozenId: transactionSignature + this.Buffer.from("_entity").toString("hex"),
-                  recipientId, // 资产冻结账户
-                },
-              });
+              if (taxAssetPrealnum === "0") {
+                const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
+                  config.magic,
+                  config.assetType,
+                );
+                taskList.next = this._applyTransactionEmitAsset(
+                  eventEmitter,
+                  transaction,
+                  taxAssetPrealnum,
+                  {
+                    senderId,
+                    senderPublicKeyBuffer,
+                    recipientId: taxCollector,
+                    assetInfo: chainAssetInfo,
+                  },
+                );
+              } else {
+                const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
+                  config.magic,
+                  config.assetType,
+                );
+                taskList.next = eventEmitter.emit("unfrozenAsset", {
+                  type: "unfrozenAsset",
+                  transaction,
+                  applyInfo: {
+                    address: taxCollector,
+                    assetInfo: chainAssetInfo,
+                    amount: taxAssetPrealnum,
+                    sourceAmount: taxAssetPrealnum,
+                    // 因为 nft 的版税，导致一条交易出现多条冻结记录，但是又不能混合
+                    // 这里就简单的把冻结 id 搞一些花里胡哨的东西
+                    // 这个交易本来就比尿还骚，加一些骚东西也是没办法的
+                    frozenId: transactionSignature + this.Buffer.from("_entity").toString("hex"),
+                    recipientId, // 资产冻结账户
+                  },
+                });
+              }
             }
           } else {
             throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
@@ -591,6 +608,18 @@ export class BeExchangeAnyMultiTransactionFactory extends TransactionFactory<BeE
 
       // 主动解冻
       if (beExchangeAssetPrealnum === "0") {
+        if (beExchangeAsset.taxInformation) {
+          const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
+            config.magic,
+            config.assetType,
+          );
+          taskList.next = this._applyTransactionEmitAsset(eventEmitter, transaction, "0", {
+            senderId,
+            senderPublicKeyBuffer,
+            recipientId: beExchangeAsset.taxInformation.taxCollector,
+            assetInfo: chainAssetInfo,
+          });
+        }
         return;
       }
 
