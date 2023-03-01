@@ -93,9 +93,16 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
 
     const { beExchangeParentAssetType, taxInformation } = beExchangeAsset;
 
+    let alreadyListenAsset = false;
+    let alreadyListenUnfrozenAsset = false;
+    let alreadyListenUnfrozenDAppid = false;
+    let alreadyListenUnfrozenLocationName = false;
+    let alreadyListenUnfrozenEntity = false;
+
     if (beExchangeAnyMulti.beExchangeAssetPrealnum !== "0") {
       if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
         eventLogicVerifier.listenEventAsset(cloneAccountsAssets, eventEmitter);
+        alreadyListenAsset = true;
       } else if (beExchangeParentAssetType === PARENT_ASSET_TYPE.DAPP) {
         eventLogicVerifier.listenEventChangeDAppidPossessor(
           currentBlockHeight,
@@ -114,10 +121,6 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
           accountGetterHelper,
           eventEmitter,
         );
-
-        if (taxInformation) {
-          eventLogicVerifier.listenEventAsset(cloneAccountsAssets, eventEmitter);
-        }
       } else {
         throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `beExchangeParentAssetType ${beExchangeParentAssetType}`,
@@ -129,11 +132,6 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
     if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
       eventLogicVerifier.listenEventPayTax(currentBlockHeight, accountGetterHelper, eventEmitter);
     }
-
-    let alreadyListenUnfrozenAsset = false;
-    let alreadyListenUnfrozenDAppid = false;
-    let alreadyListenUnfrozenLocationName = false;
-    let alreadyListenUnfrozenEntity = false;
 
     for (const toExchangeAsset of toExchangeAssets) {
       const { toExchangeParentAssetType, taxInformation } = toExchangeAsset;
@@ -177,14 +175,21 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
           alreadyListenUnfrozenEntity = true;
         }
 
-        if (taxInformation && taxInformation.taxAssetPrealnum !== "0") {
-          if (!alreadyListenUnfrozenAsset) {
-            eventLogicVerifier.listenEventUnfrozenAsset(
-              currentBlockHeight,
-              accountGetterHelper,
-              eventEmitter,
-            );
-            alreadyListenUnfrozenAsset = true;
+        if (taxInformation) {
+          if (taxInformation.taxAssetPrealnum === "0") {
+            if (!alreadyListenAsset) {
+              eventLogicVerifier.listenEventAsset(cloneAccountsAssets, eventEmitter);
+              alreadyListenAsset = true;
+            }
+          } else {
+            if (!alreadyListenUnfrozenAsset) {
+              eventLogicVerifier.listenEventUnfrozenAsset(
+                currentBlockHeight,
+                accountGetterHelper,
+                eventEmitter,
+              );
+              alreadyListenUnfrozenAsset = true;
+            }
           }
         }
       } else {
@@ -197,6 +202,9 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
 
     if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
       eventLogicVerifier.listenEventPayTax(currentBlockHeight, accountGetterHelper, eventEmitter);
+      if (!alreadyListenAsset) {
+        eventLogicVerifier.listenEventAsset(cloneAccountsAssets, eventEmitter);
+      }
     }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
