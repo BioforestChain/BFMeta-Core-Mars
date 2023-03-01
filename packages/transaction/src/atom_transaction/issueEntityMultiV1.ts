@@ -353,21 +353,19 @@ export class IssueEntityMultiTransactionFactoryV1 extends TransactionFactory<Iss
           },
         });
       }
+      /// 就算是 purchaseAssetPrealnum 0，也要让 entityFactoryPossessor 出现在 assetChange 里面
       // 付费
-      if (purchaseAssetPrealnum !== "0") {
-        // 扣除资产
-        taskList.next = this._applyTransactionEmitAsset(
-          eventEmitter,
-          transaction,
-          (BigInt(purchaseAssetPrealnum) * BigInt(numberOfEntities)).toString(),
-          {
-            senderId,
-            senderPublicKeyBuffer: senderPublicKeyBuffer,
-            recipientId: entityFactoryPossessor,
-            assetInfo,
-          },
-        );
-      }
+      taskList.next = this._applyTransactionEmitAsset(
+        eventEmitter,
+        transaction,
+        (BigInt(purchaseAssetPrealnum) * BigInt(numberOfEntities)).toString(),
+        {
+          senderId,
+          senderPublicKeyBuffer: senderPublicKeyBuffer,
+          recipientId: entityFactoryPossessor,
+          assetInfo,
+        },
+      );
     });
   }
 

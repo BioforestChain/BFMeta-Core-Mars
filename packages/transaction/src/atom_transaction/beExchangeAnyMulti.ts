@@ -537,6 +537,7 @@ export class BeExchangeAnyMultiTransactionFactory extends TransactionFactory<BeE
             paidTimes++;
             if (taxInformation) {
               const { taxCollector, taxAssetPrealnum } = taxInformation;
+              /// 就算是 taxAssetPrealnum 0，也要让 taxCollector 出现在 assetChange 里面
               if (taxAssetPrealnum === "0") {
                 const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
                   config.magic,
@@ -604,6 +605,7 @@ export class BeExchangeAnyMultiTransactionFactory extends TransactionFactory<BeE
 
       // 主动解冻
       if (beExchangeAssetPrealnum === "0") {
+        /// 就算是 taxAssetPrealnum 退回，也要让 taxCollector 出现在 assetChange 里面
         if (beExchangeAsset.taxInformation) {
           const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
             config.magic,

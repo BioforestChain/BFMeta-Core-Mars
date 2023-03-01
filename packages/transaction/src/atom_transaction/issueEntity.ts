@@ -292,21 +292,19 @@ export class IssueEntityTransactionFactory<
           },
         });
       }
+      /// 就算是 purchaseAssetPrealnum 0，也要让 entityFactoryPossessor 出现在 assetChange 里面
       // 付费
-      if (purchaseAssetPrealnum !== "0") {
-        // 扣除资产
-        taskList.next = this._applyTransactionEmitAsset(
-          eventEmitter,
-          transaction,
-          purchaseAssetPrealnum,
-          {
-            senderId,
-            senderPublicKeyBuffer: senderPublicKeyBuffer,
-            recipientId: entityFactoryPossessor,
-            assetInfo,
-          },
-        );
-      }
+      taskList.next = this._applyTransactionEmitAsset(
+        eventEmitter,
+        transaction,
+        purchaseAssetPrealnum,
+        {
+          senderId,
+          senderPublicKeyBuffer: senderPublicKeyBuffer,
+          recipientId: entityFactoryPossessor,
+          assetInfo,
+        },
+      );
     });
   }
 

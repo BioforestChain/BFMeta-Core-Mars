@@ -371,6 +371,7 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
           });
           if (exchangeAny.taxInformation) {
             const { taxCollector, taxAssetPrealnum } = exchangeAny.taxInformation;
+            /// 就算是 taxAssetPrealnum 0，也要让 taxCollector 出现在 assetChange 里面
             if (taxAssetPrealnum === "0") {
               const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
                 config.magic,
@@ -432,6 +433,7 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
 
       // 主动解冻
       if (beExchangeAssetPrealnum === "0") {
+        /// 就算是 taxAssetPrealnum 退回，也要让 taxCollector 出现在 assetChange 里面
         if (taxInformation) {
           const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
             config.magic,
