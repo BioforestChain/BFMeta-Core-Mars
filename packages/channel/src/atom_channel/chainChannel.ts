@@ -772,7 +772,8 @@ export class ChainChannel<
     // if (downloadSize > size) {
     //   return;
     // }
-    const chunkSize = 1024 * 1024; /* 1MB */
+    let chunkSize = 1024 * 1024; /* 1MB */
+    chunkSize = chunkSize < downloadSize ? chunkSize : downloadSize;
     const blob_prt = await this.blobHelper.requestStorage(
       openArg,
       downloadSize,
