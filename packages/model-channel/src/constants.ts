@@ -148,9 +148,9 @@ export enum DUPLEX_API_CMD {
   DOWNLOAD_TRANSACTION = 0b10000000, // 1 << _inc++, //= "/transaction/download",
   OPEN_BLOB = 0b100000000, // 1 << _inc++, //= "/resource/open",
   READ_BLOB = 0b1000000000, // 1 << _inc++, //= "/resource/read",
-  CLOSE_BLOB = 0b1000000000, // 1 << _inc++, //= "/resource/close",
-  QUERY_TINDEX = 0b10000000000, // 1 << _inc++, //= "/transaction/queryTindexs",
-  GET_TRANSACTIONINBLOCK = 0b100000000000, // 1 << _inc++, //= "/transaction/getTransactionInBlocks",
+  CLOSE_BLOB = 0b10000000000, // 1 << _inc++, //= "/resource/close",
+  QUERY_TINDEX = 0b100000000000, // 1 << _inc++, //= "/transaction/queryTindexs",
+  GET_TRANSACTIONINBLOCK = 0b1000000000000, // 1 << _inc++, //= "/transaction/getTransactionInBlocks",
 
   /**
    * @TODO 使用这些RETURN替代单纯的RESPONSE，
