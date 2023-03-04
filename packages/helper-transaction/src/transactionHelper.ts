@@ -498,25 +498,6 @@ export class TransactionHelper {
     return BigInt(minFee) * BigInt(100000);
   }
   /**
-   * 根据共识最大事件字节数计算事件最小手续费
-   *
-   * @param times 计费次数
-   * @param customMinFeePerByte 自定义的最低手续费，如果比网络手续费小则自动采用网络手续费
-   */
-  calcTransactionMinBlobFeeByMaxBytes(
-    times: number,
-    customMinFeePerByte?: BFChainCore.FractionJSON,
-  ) {
-    return (
-      this.jsbiHelper.multiplyCeilFraction(
-        this.config.maxBlobSizePerTransaction,
-        this.__calcStandardMinFee(customMinFeePerByte),
-      ) *
-      BigInt(100000) *
-      BigInt(times)
-    );
-  }
-  /**
    * 计算事件最小手续费
    *
    * @param transaction 事件体
@@ -536,7 +517,7 @@ export class TransactionHelper {
           .totalGrabableTimes + 1;
       return (
         this.calcTransactionMinFeeByMaxBytes(times, customMinFeePerByte) +
-        this.calcTransactionMinBlobFeeByMaxBytes(times, customMinFeePerByte)
+        this.calcTransactionBlobFee(transaction, customMinFeePerByte)
       ).toString();
     }
     if (type === this.GIFT_ANY) {
@@ -545,7 +526,7 @@ export class TransactionHelper {
           .totalGrabableTimes + 1;
       return (
         this.calcTransactionMinFeeByMaxBytes(times, customMinFeePerByte) +
-        this.calcTransactionMinBlobFeeByMaxBytes(times, customMinFeePerByte)
+        this.calcTransactionBlobFee(transaction, customMinFeePerByte)
       ).toString();
     }
     // 见证事件按最大事件字节付费，并且给签收见证事件付费
@@ -555,7 +536,7 @@ export class TransactionHelper {
           .numberOfSignFor + 1;
       return (
         this.calcTransactionMinFeeByMaxBytes(times, customMinFeePerByte) +
-        this.calcTransactionMinBlobFeeByMaxBytes(times, customMinFeePerByte)
+        this.calcTransactionBlobFee(transaction, customMinFeePerByte)
       ).toString();
     }
     if (type === this.ISSUE_ENTITY_MULTI) {
@@ -592,7 +573,7 @@ export class TransactionHelper {
       ).toString();
     }
     if (type === this.GRAB_ASSET || type === this.GRAB_ANY || type === this.SIGN_FOR_ASSET) {
-      return "0";
+      return this.calcTransactionBlobFee(transaction, customMinFeePerByte);
     }
     return (
       this.calcTransactionMinFeeByBytes(transaction, bytesLength, customMinFeePerByte) +

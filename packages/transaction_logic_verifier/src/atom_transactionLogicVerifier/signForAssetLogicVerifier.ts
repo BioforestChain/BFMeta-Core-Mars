@@ -151,10 +151,10 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
    * @param byteLength
    */
   checkTrsFeeAndWebFee(transaction: SignForAssetTransaction, byteLength: number) {
-    return {
-      isFeeEnough: true,
-      minFee: "0",
-    };
+    return this.isFeeEnough(
+      transaction.fee,
+      this.transactionHelper.calcTransactionBlobFee(transaction).toString(),
+    );
   }
 
   /**
@@ -169,10 +169,12 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
     byteLength: number,
     miningMachineMinFeePerByte: BFChainCore.FractionJSON,
   ) {
-    return {
-      isFeeEnough: true,
-      minFee: "0",
-    };
+    return this.isFeeEnough(
+      transaction.fee,
+      this.transactionHelper
+        .calcTransactionBlobFee(transaction, miningMachineMinFeePerByte)
+        .toString(),
+    );
   }
 
   /**

@@ -65,7 +65,7 @@ export class GiftAssetLogicVerifier extends TransactionLogicVerifier {
       transaction.fee,
       (
         this.transactionHelper.calcTransactionMinFeeByMaxBytes(times) +
-        this.transactionHelper.calcTransactionMinBlobFeeByMaxBytes(times)
+        this.transactionHelper.calcTransactionBlobFee(transaction)
       ).toString(),
     );
   }
@@ -87,10 +87,7 @@ export class GiftAssetLogicVerifier extends TransactionLogicVerifier {
       transaction.fee,
       (
         this.transactionHelper.calcTransactionMinFeeByMaxBytes(times, miningMachineMinFeePerByte) +
-        this.transactionHelper.calcTransactionMinBlobFeeByMaxBytes(
-          times,
-          miningMachineMinFeePerByte,
-        )
+        this.transactionHelper.calcTransactionBlobFee(transaction, miningMachineMinFeePerByte)
       ).toString(),
     );
   }
