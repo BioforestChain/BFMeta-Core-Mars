@@ -494,16 +494,27 @@ export class TransactionHelper {
       blobSize,
       this.__calcStandardMinFee(customMinFeePerByte),
     );
-    /// 先按照 10 倍收费
-    return BigInt(minFee) * BigInt(10);
+    /// 先按照 100000 倍收费
+    return BigInt(minFee) * BigInt(100000);
   }
-  /**根据倍数计算 blob 的最低手续费 */
-  calcTransactionBlobFeeByMulti(
-    transaction: Transaction,
-    multiple: number,
+  /**
+   * 根据共识最大事件字节数计算事件最小手续费
+   *
+   * @param times 计费次数
+   * @param customMinFeePerByte 自定义的最低手续费，如果比网络手续费小则自动采用网络手续费
+   */
+  calcTransactionMinBlobFeeByMaxBytes(
+    times: number,
     customMinFeePerByte?: BFChainCore.FractionJSON,
   ) {
-    return this.calcTransactionBlobFee(transaction, customMinFeePerByte) * BigInt(multiple);
+    return (
+      this.jsbiHelper.multiplyCeilFraction(
+        this.config.maxBlobSizePerTransaction,
+        this.__calcStandardMinFee(customMinFeePerByte),
+      ) *
+      BigInt(100000) *
+      BigInt(times)
+    );
   }
   /**
    * 计算事件最小手续费
@@ -525,7 +536,7 @@ export class TransactionHelper {
           .totalGrabableTimes + 1;
       return (
         this.calcTransactionMinFeeByMaxBytes(times, customMinFeePerByte) +
-        this.calcTransactionBlobFeeByMulti(transaction, times, customMinFeePerByte)
+        this.calcTransactionMinBlobFeeByMaxBytes(times, customMinFeePerByte)
       ).toString();
     }
     if (type === this.GIFT_ANY) {
@@ -534,7 +545,7 @@ export class TransactionHelper {
           .totalGrabableTimes + 1;
       return (
         this.calcTransactionMinFeeByMaxBytes(times, customMinFeePerByte) +
-        this.calcTransactionBlobFeeByMulti(transaction, times, customMinFeePerByte)
+        this.calcTransactionMinBlobFeeByMaxBytes(times, customMinFeePerByte)
       ).toString();
     }
     // 见证事件按最大事件字节付费，并且给签收见证事件付费
@@ -544,7 +555,7 @@ export class TransactionHelper {
           .numberOfSignFor + 1;
       return (
         this.calcTransactionMinFeeByMaxBytes(times, customMinFeePerByte) +
-        this.calcTransactionBlobFeeByMulti(transaction, times, customMinFeePerByte)
+        this.calcTransactionMinBlobFeeByMaxBytes(times, customMinFeePerByte)
       ).toString();
     }
     if (type === this.ISSUE_ENTITY_MULTI) {

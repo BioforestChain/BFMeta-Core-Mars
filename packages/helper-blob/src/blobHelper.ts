@@ -98,7 +98,7 @@ export class BlobHelper {
     creater: async (sha256: string) => {
       const sha256BlobHelper = this.blobSha256Reader!;
       if ((await sha256BlobHelper.has(sha256)) === false) {
-        throw new NoFoundException(ERROR_LIST.OPEN_BLOB_NOFOUND, { hash: `SHA256:${sha256}` });
+        throw new NoFoundException(ERROR_LIST.OPEN_BLOB_NOT_FOUND, { hash: `SHA256:${sha256}` });
       }
       const fd = await sha256BlobHelper.open(sha256);
       const state = await sha256BlobHelper.state(fd);
@@ -157,7 +157,7 @@ export class BlobHelper {
       });
     }
     if (sha256BlobHelper === undefined) {
-      throw new NoFoundException(ERROR_LIST.OPEN_BLOB_NOFOUND, {
+      throw new NoFoundException(ERROR_LIST.OPEN_BLOB_NOT_FOUND, {
         hash: `${openArg.algorithm}:${openArg.hash}`,
       });
     }

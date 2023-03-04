@@ -113,7 +113,7 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
       transaction.fee,
       (
         this.transactionHelper.calcTransactionMinFeeByMaxBytes(times) +
-        this.transactionHelper.calcTransactionBlobFeeByMulti(transaction, times)
+        this.transactionHelper.calcTransactionMinBlobFeeByMaxBytes(times)
       ).toString(),
     );
   }
@@ -135,8 +135,7 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
       transaction.fee,
       (
         this.transactionHelper.calcTransactionMinFeeByMaxBytes(times, miningMachineMinFeePerByte) +
-        this.transactionHelper.calcTransactionBlobFeeByMulti(
-          transaction,
+        this.transactionHelper.calcTransactionMinBlobFeeByMaxBytes(
           times,
           miningMachineMinFeePerByte,
         )

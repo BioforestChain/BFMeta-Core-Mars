@@ -481,7 +481,7 @@ export const ERROR_LIST = {
   // #endregion
 
   // #region blob
-  OPEN_BLOB_NOFOUND: new ErrorCode("001-23001", "Not found blob by hash: {hash}"),
+  OPEN_BLOB_NOT_FOUND: new ErrorCode("001-23001", "Not found blob by hash: {hash}"),
   OPEN_BLOB_INVALID_HASH: new ErrorCode("001-23002", "Could not open blob by hash: {hash}"),
   READ_BLOB_INVALID_DESCRIPTOR: new ErrorCode(
     "001-23003",
