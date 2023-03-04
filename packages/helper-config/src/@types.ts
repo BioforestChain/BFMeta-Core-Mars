@@ -36,5 +36,6 @@ declare namespace BFChainCore {
     maxMultipleOfEntityAndMainAsset: BFChainCore.FractionJSON<string>;
     maxVotesPerBlock: number;
     voteMinChainAsset: string;
+    maxBlobSizePerTransaction: number;
   }>;
 }

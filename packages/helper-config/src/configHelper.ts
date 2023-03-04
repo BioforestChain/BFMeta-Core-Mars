@@ -337,6 +337,7 @@ export class ConfigHelper {
       maxMultipleOfEntityAndMainAsset: this.maxMultipleOfEntityAndMainAsset,
       maxVotesPerBlock: this.maxVotesPerBlock,
       voteMinChainAsset: this.voteMinChainAsset,
+      maxBlobSizePerTransaction: this.maxBlobSizePerTransaction
     };
   }
   //#endregion
