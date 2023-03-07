@@ -1319,7 +1319,7 @@ export class ChainChannelHelper {
         field: `openArg.downloadSize ${downloadSize}`,
       });
     }
-    if (downloadSize < 0) {
+    if (downloadSize <= 0) {
       throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
         function: "openArg.downloadSize",
         field: `openArg.downloadSize ${downloadSize}`,

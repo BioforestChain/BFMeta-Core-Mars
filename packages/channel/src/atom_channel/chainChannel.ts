@@ -766,9 +766,9 @@ export class ChainChannel<
     // }
     /// 申请存储位置
     const downloadSize = openArg.downloadSize;
-    if (downloadSize <= 0) {
-      return;
-    }
+    // if (downloadSize <= 0) {
+    //   return;
+    // }
     /// 文件缺失
     // if (downloadSize > size) {
     //   return;
