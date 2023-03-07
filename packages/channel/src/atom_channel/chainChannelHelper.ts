@@ -1313,6 +1313,12 @@ export class ChainChannelHelper {
 
   verifyDownloadBlobArgs(argv: BFChainCore.OpenBlobArgJSON) {
     const { algorithm, hash, downloadSize } = argv;
+    if (!Number.isInteger(downloadSize)) {
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
+        function: "openArg.downloadSize",
+        field: `openArg.downloadSize ${downloadSize}`,
+      });
+    }
     if (downloadSize < 0) {
       throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
         function: "openArg.downloadSize",

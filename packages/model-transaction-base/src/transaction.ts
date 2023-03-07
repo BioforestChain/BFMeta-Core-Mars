@@ -27,8 +27,7 @@ const blobMapWM = new EasyWeakMap((trs: Transaction) => {
             continue;
           }
           const value = Number(subItems[1]);
-          // 不是正整数
-          if (!(Number.isInteger(value) && value > 0)) {
+          if (Number.isNaN(value)) {
             continue;
           }
           blob[key] = ["SHA256", items[0], sha256, value];
