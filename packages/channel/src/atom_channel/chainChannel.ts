@@ -741,6 +741,7 @@ export class ChainChannel<
   }
 
   async downloadBlob(openArg: BFChainCore.OpenBlobArgJSON) {
+    this.chainChannelHelper.verifyDownloadBlobArgs(openArg);
     const progress = {
       totalSize: -1,
       // current: -1,
@@ -765,7 +766,7 @@ export class ChainChannel<
     // }
     /// 申请存储位置
     const downloadSize = openArg.downloadSize;
-    if (downloadSize === 0) {
+    if (downloadSize <= 0) {
       return;
     }
     /// 文件缺失

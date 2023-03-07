@@ -1310,4 +1310,14 @@ export class ChainChannelHelper {
       Math.max(Number.isFinite(chainChannel.delay) ? chainChannel.delay : 1000, 2000) + baseTime
     );
   }
+
+  verifyDownloadBlobArgs(argv: BFChainCore.OpenBlobArgJSON) {
+    const { algorithm, hash, downloadSize } = argv;
+    if (downloadSize < 0) {
+      throw new ArgumentIllegalException(ERROR_LIST.INVALID_PARAMS_FIELD, {
+        function: "openArg.downloadSize",
+        field: `openArg.downloadSize ${downloadSize}`,
+      });
+    }
+  }
 }
