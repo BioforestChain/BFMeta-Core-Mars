@@ -319,7 +319,8 @@ export class Block<AJ extends object = object>
             numberOfTransactions: transactionInfo.numberOfTransactions,
             payloadHashBuffer: transactionInfo.payloadHashBuffer,
             payloadLength: transactionInfo.payloadLength,
-            blobSize: transactionInfo.blobSize,
+            /// 这 protobuf 秀的我头皮发麻 🌾
+            blobSizeLong: transactionInfo.blobSizeLong,
             statisticInfo: transactionInfo.statisticInfo,
             transactionInBlockBufferList: [],
           },
@@ -331,7 +332,8 @@ export class Block<AJ extends object = object>
             numberOfTransactions: skipOrCustomTransactions.length,
             payloadHashBuffer: transactionInfo.payloadHashBuffer,
             payloadLength: transactionInfo.payloadLength,
-            blobSize: transactionInfo.blobSize,
+            /// 这 protobuf 秀的我头皮发麻 🌾
+            blobSizeLong: transactionInfo.blobSizeLong,
             statisticInfo: transactionInfo.statisticInfo,
             transactionInBlockBufferList: skipOrCustomTransactions,
           },
@@ -339,7 +341,9 @@ export class Block<AJ extends object = object>
       }
     }
     const blockWrapper = Object.create(this, props);
-    return this.$type.encode(blockWrapper).finish();
+    const xx = this.$type.encode(blockWrapper).finish();
+    console.log(xx.length);
+    return xx;
   }
 
   toJSON() {

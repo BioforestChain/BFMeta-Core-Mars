@@ -118,19 +118,14 @@ async function getTransferAssetTransaction(sender: AccountModel, bfchainCore: BF
 (async () => {
   const bfchainCore = await getBfchainCoreEntry();
 
-  const kp = await bfchainCore.accountBaseHelper.createSecretKeypair("123");
-  console.log(kp.publicKey.toString("hex"));
-  const address = await bfchainCore.accountBaseHelper.getAddressFromPublicKey(kp.publicKey);
-  console.log(address);
+  await getTransferAssetTransaction(getSenderWithoutSecondSecret(), bfchainCore);
+  await getTransferAssetTransaction(getSenderWithSecondSecret(), bfchainCore);
 
-  // await getTransferAssetTransaction(getSenderWithoutSecondSecret(), bfchainCore);
-  // await getTransferAssetTransaction(getSenderWithSecondSecret(), bfchainCore);
+  console.log(bfchainCore.config.version);
 
-  // console.log(bfchainCore.config.version);
+  bfchainCore.patchInstaller.changeHeight(50000000);
 
-  // bfchainCore.patchInstaller.changeHeight(50000000);
+  await sleep(1000);
 
-  // await sleep(1000);
-
-  // console.log(bfchainCore.config.version);
+  console.log(bfchainCore.config.version);
 })();
