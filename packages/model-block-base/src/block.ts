@@ -1,4 +1,4 @@
-import { Message, Type, MapField, Field } from "@bfchain/protobuf";
+import { Message, Type, MapField, Field, Long } from "@bfchain/protobuf";
 import { parseHexToArrayBuffer, getHexFromArrayBuffer } from "@bfchain/util-encoding-hex";
 import { TransactionInBlock } from "@bfchain/core-model-transaction";
 import { StatisticInfoModel } from "./statistic_info";
@@ -43,8 +43,14 @@ export class BlockTransactionInfoModel
   @Field.d(BlockTransactionInfoModel.INC++, "uint32")
   payloadLength!: number;
   /**交易携带的 blob 长度 */
-  @Field.d(BlockTransactionInfoModel.INC++, "uint32")
-  blobSize!: number;
+  @Field.d(BlockTransactionInfoModel.INC++, "uint64")
+  blobSizeLong!: Long;
+  get blobSize() {
+    return this.blobSizeLong.toNumber();
+  }
+  set blobSize(v) {
+    this.blobSizeLong = Long.fromNumber(v);
+  }
   /**区块统计信息 */
   @Field.d(BlockTransactionInfoModel.INC++, StatisticInfoModel)
   statisticInfo!: StatisticInfoModel;
@@ -105,6 +111,7 @@ export class BlockTransactionInfoModel
   ) {
     const res = super.fromObject(object as any) as BlockTransactionInfoModel;
     if (res !== (object as unknown)) {
+      object.blobSize && (res.blobSize = object.blobSize);
       object.payloadHash && (res.payloadHash = object.payloadHash);
       const trsInBlocks: TransactionInBlock[] = [];
       if (object.transactionInBlocks) {
