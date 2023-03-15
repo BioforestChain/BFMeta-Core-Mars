@@ -354,10 +354,10 @@ export class VerifyBlockCore<T extends Block> {
       });
     }
 
-    if (payloadLength > config.maxBlockSize) {
+    if (block.blockSize > config.maxBlockSize) {
       throw new ArgumentIllegalException(ERROR_LIST.TOO_LARGE, {
-        prop: "payloadLength",
-        reason: `payloadLength: ${payloadLength} max: ${config.maxBlockSize}`,
+        prop: "blockSize",
+        reason: `blockSize: ${block.blockSize} max: ${config.maxBlockSize}`,
         ...Block_Exception_Detail,
       });
     }

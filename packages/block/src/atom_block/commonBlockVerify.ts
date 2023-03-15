@@ -147,7 +147,7 @@ export class CommonBlockVerify<T extends Block> {
       throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `blockSize ${block.blockSize}`,
         be_compare_prop: `blockSize ${blockSize}`,
-        to_target: "body",
+        to_target: "block",
         be_target: "calculate",
       });
     }

@@ -54,23 +54,6 @@ export class BlockHelper {
   }
 
   /**
-   * 校验区块的大小
-   *
-   * @param block
-   */
-  verifyBlockSize<SOME_BLOCK extends BFChainCore.Block>(block: SOME_BLOCK) {
-    const { maxBlockSize } = this.config;
-    const blockSize = block.getBytes().length;
-    if (blockSize > maxBlockSize) {
-      throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
-        prop: `block size ${blockSize}`,
-        target: "block",
-        field: maxBlockSize,
-      });
-    }
-  }
-
-  /**
    * 校验区块的签名是否合法
    */
   async verifyBlockSignature(

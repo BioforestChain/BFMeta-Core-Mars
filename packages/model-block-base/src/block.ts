@@ -341,9 +341,7 @@ export class Block<AJ extends object = object>
       }
     }
     const blockWrapper = Object.create(this, props);
-    const xx = this.$type.encode(blockWrapper).finish();
-    console.log(xx.length);
-    return xx;
+    return this.$type.encode(blockWrapper).finish();
   }
 
   toJSON() {
