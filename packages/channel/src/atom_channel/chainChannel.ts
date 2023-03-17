@@ -815,6 +815,10 @@ export class ChainChannel<
                 if (readRes.status !== RESPONSE_STATUS.success) {
                   throw readRes.error;
                 }
+                // 没有读取到数据
+                if (readRes.chunkBuffer.length === 0) {
+                  break;
+                }
                 await this.blobHelper.saveChunk(blob_prt, index, readRes.chunkBuffer);
                 isSuccess = true;
                 break;
