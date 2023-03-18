@@ -111,7 +111,7 @@ export class BlockTransactionInfoModel
   ) {
     const res = super.fromObject(object as any) as BlockTransactionInfoModel;
     if (res !== (object as unknown)) {
-      object.blobSize && (res.blobSize = object.blobSize);
+      object.blobSize !== undefined && (res.blobSize = object.blobSize);
       object.payloadHash && (res.payloadHash = object.payloadHash);
       const trsInBlocks: TransactionInBlock[] = [];
       if (object.transactionInBlocks) {

@@ -59,7 +59,7 @@ export class PeerConsensusModel
   ) {
     const res = super.fromObject(object) as PeerConsensusModel;
     if (res !== object) {
-      object.peerTime && (res.peerTime = object.peerTime);
+      object.peerTime !== undefined && (res.peerTime = object.peerTime);
     }
     return res as unknown as T;
   }

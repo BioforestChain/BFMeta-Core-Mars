@@ -318,7 +318,7 @@ export class GenesisAssetModel
   ) {
     const res = super.fromObject(object) as GenesisAssetModel;
     if (res !== object) {
-      object.beginEpochTime && (res.beginEpochTime = object.beginEpochTime);
+      object.beginEpochTime !== undefined && (res.beginEpochTime = object.beginEpochTime);
 
       object.maxMultipleOfAssetAndMainAsset &&
         (res.maxMultipleOfAssetAndMainAsset = FractionBigIntModel.fromObject<FractionBigIntModel>(

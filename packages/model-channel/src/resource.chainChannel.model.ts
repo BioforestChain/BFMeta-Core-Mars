@@ -81,7 +81,7 @@ export class OpenBlobReturnModel
     object: BFChainProtobuf.ObjectFromType<BFChainCore.OpenBlobReturnJSON>,
   ) {
     const res = super.fromObject(object as any) as OpenBlobReturnModel;
-    object.expriedTime && (res.expriedTime = object.expriedTime);
+    object.expriedTime !== undefined && (res.expriedTime = object.expriedTime);
     return res as unknown as T;
   }
 }
