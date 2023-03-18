@@ -139,17 +139,17 @@
     validate-npm-package-name "^3.0.0"
     yaml "^1.10.0"
 
-"@bfchain/protobuf-typings@4.1.12":
-  version "4.1.12"
-  resolved "http://192.168.250.245:4873/@bfchain%2fprotobuf-typings/-/protobuf-typings-4.1.12.tgz#9c5e66b63c626251dcfffc3dde4e50536345bb4e"
-  integrity sha512-d+jFtocqb33AZPtRdW/ZxEQgN+msvun0crq6DUOe9squc09FqOXPHvZkN4he/8vLmaWGDPFIEJBozQJCNhoDxg==
+"@bfchain/protobuf-typings@4.1.13":
+  version "4.1.13"
+  resolved "http://192.168.250.245:4873/@bfchain%2fprotobuf-typings/-/protobuf-typings-4.1.13.tgz#0f9f6beb16418fcaee3fe0f6e61e437f621b16a6"
+  integrity sha512-3Kay6LpcW1s50PDG41Uk8JPOrwpJw2MdGr+WjVqqeH8fZu7kQuahQIY4azDV33IrDpBmDv9jrQcSaNbD2KfkWg==
 
-"@bfchain/protobuf@^4.1.12":
-  version "4.1.12"
-  resolved "http://192.168.250.245:4873/@bfchain%2fprotobuf/-/protobuf-4.1.12.tgz#263a40b04d896d08f833b482695e1d41865e155c"
-  integrity sha512-d9jv+C0Pdnfk1zmSq3sgxfJsO3UGW01xtVuoFrX/DT6s7Ca1rmHyRJKQXxmhOj9Mfw6hlZIJgIPe9aKMftoMGQ==
+"@bfchain/protobuf@^4.1.13":
+  version "4.1.13"
+  resolved "http://192.168.250.245:4873/@bfchain%2fprotobuf/-/protobuf-4.1.13.tgz#ea2b5e4580f98bccaaf0fc6da4961c6479ce2246"
+  integrity sha512-IHSrhBitJV1QWb/tmQcTr9k5mUnHoBzgnVTmiy97bY6tYnoib/rM6WQydKfTBE/vW8DgRMAjQ+b6i4nKnvvVRA==
   dependencies:
-    "@bfchain/protobuf-typings" "4.1.12"
+    "@bfchain/protobuf-typings" "4.1.13"
     "@protobufjs/aspromise" "^1.1.2"
     "@protobufjs/base64" "^1.1.2"
     "@protobufjs/codegen" "^2.0.4"
