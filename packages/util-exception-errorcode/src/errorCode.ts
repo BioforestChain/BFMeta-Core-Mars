@@ -508,6 +508,10 @@ export const ERROR_LIST = {
     "001-23009",
     "Fail to download blob({hash}) strategy({strategy})",
   ),
+  FAIL_TO_CLOSE_BLOB: new ErrorCode(
+    "001-23010",
+    "Fail to close blob({hash}) descriptor({descriptor})",
+  ),
   // #endregion
 };
 // #endregion

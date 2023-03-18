@@ -751,38 +751,29 @@ export class ChainChannel<
     if (await this.blobHelper.exists(openArg)) {
       return;
     }
-    /// 打开连接
-    const openRes = await this.openBlob(openArg);
-    if (openRes.status === RESPONSE_STATUS.busy) {
-      await sleep(5000); //
-    }
-    if (openRes.status !== RESPONSE_STATUS.success) {
-      throw openRes.error;
-    }
-    const { /* chunkSize, */ expriedTime, descriptor, size, contentType } = openRes;
-    /// 空文件
-    // if (size === 0) {
-    //   return;
-    // }
-    /// 申请存储位置
-    const downloadSize = openArg.downloadSize;
-    // if (downloadSize <= 0) {
-    //   return;
-    // }
-    /// 文件缺失
-    // if (downloadSize > size) {
-    //   return;
-    // }
-    let chunkSize = 1024 * 1024; /* 1MB */
-    chunkSize = chunkSize < downloadSize ? chunkSize : downloadSize;
-    const blob_prt = await this.blobHelper.requestStorage(
-      openArg,
-      downloadSize,
-      chunkSize,
-      contentType,
-    );
+
+    let descriptor!: number;
     try {
-      // const startTime = this.timeHelper.now();
+      /// 打开连接
+      const openRes = await this.openBlob(openArg);
+      if (openRes.status === RESPONSE_STATUS.busy) {
+        await sleep(5000); //
+      }
+      if (openRes.status !== RESPONSE_STATUS.success) {
+        throw openRes.error;
+      }
+      descriptor = openRes.descriptor;
+      /// 申请存储位置
+      const downloadSize = openArg.downloadSize;
+      /**分片大小 1MB */
+      let chunkSize = 1024 * 1024;
+      chunkSize = chunkSize < downloadSize ? chunkSize : downloadSize;
+      const blob_prt = await this.blobHelper.requestStorage(
+        openArg,
+        downloadSize,
+        chunkSize,
+        openRes.contentType,
+      );
       /// 总下载次数
       const totalCount = Math.ceil(downloadSize / chunkSize);
       /// 最后一次下载的分片大小
@@ -805,10 +796,6 @@ export class ChainChannel<
             let bytesRead = 0;
             while (retryTimes < 3) {
               try {
-                // 超时了, 跳出循环, 重新申请
-                // if (expriedTime <= this.timeHelper.now()) {
-                //   break;
-                // }
                 const start = chunkSize * index;
                 const readRes = await this.readBlob({
                   descriptor,
@@ -866,15 +853,20 @@ export class ChainChannel<
           strategy: STORAGE_STRATEGY.TEMPORARY,
         });
       }
-      /// 还没完成, 却跳出来了. 说明请求超时了, 重新open并read
-      // if (progress.currentCount < progress.totalCount) {
-      //   await sleep(2000);
-      // }
       /// 下载完成，保存成 blob 对象
       await this.blobHelper.saveAsBlob(blob_prt);
     } finally {
       /// 关闭连接
-      await this.closeBlob({ descriptor });
+      if (descriptor !== undefined) {
+        try {
+          await this.closeBlob({ descriptor });
+        } catch (error) {
+          throw new RefuseException(ERROR_LIST.FAIL_TO_CLOSE_BLOB, {
+            hash: openArg.hash,
+            descriptor,
+          });
+        }
+      }
     }
   }
 

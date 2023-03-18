@@ -204,5 +204,6 @@ export const ERROR_CODE_LIST_EN = {
   "001-23007": "Fail to generate blob pointer: {pointer}",
   "001-23008": "Fail to change blob({hash}) strategy({strategy})",
   "001-23009": "Fail to download blob({hash}) strategy({strategy})",
+  "001-23010": "Fail to close blob({hash}) descriptor({descriptor})",
   // #endregion
 } as const;

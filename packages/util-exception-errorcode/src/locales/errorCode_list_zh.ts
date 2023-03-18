@@ -199,5 +199,6 @@ export const ERROR_CODE_LIST_ZH = {
   "001-23007": "生成 blob pointer: {pointer} 失败",
   "001-23008": "移动 blob({hash}) strategy({strategy}) 失败",
   "001-23009": "下载 blob({hash}) strategy({strategy}) 失败",
+  "001-23010": "关闭 blob({hash}) descriptor({descriptor}) 失败",
   // #endregion
 } as const;
