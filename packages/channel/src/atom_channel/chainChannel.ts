@@ -790,12 +790,19 @@ export class ChainChannel<
       progress.totalSize = downloadSize;
       progress.totalCount = totalCount;
       progress.currentCount = 0;
-      const tasks: (() => Promise<boolean>)[] = [];
+      const tasks: (() => Promise<{
+        isSuccess: boolean;
+        bytesRead: number;
+      }>)[] = [];
       for (let index = 0; index < totalCount; index++) {
         tasks.push(() => {
-          return new Promise<boolean>(async (resolve, reject) => {
+          return new Promise<{
+            isSuccess: boolean;
+            bytesRead: number;
+          }>(async (resolve, reject) => {
             let retryTimes = 0;
             let isSuccess = false;
+            let bytesRead = 0;
             while (retryTimes < 3) {
               try {
                 // 超时了, 跳出循环, 重新申请
@@ -815,8 +822,9 @@ export class ChainChannel<
                 if (readRes.status !== RESPONSE_STATUS.success) {
                   throw readRes.error;
                 }
+                bytesRead = readRes.chunkBuffer.length;
                 // 没有读取到数据
-                if (readRes.chunkBuffer.length === 0) {
+                if (bytesRead === 0) {
                   break;
                 }
                 await this.blobHelper.saveChunk(blob_prt, index, readRes.chunkBuffer);
@@ -828,26 +836,31 @@ export class ChainChannel<
                 await sleep(100);
               }
             }
-            return resolve(isSuccess);
+            return resolve({ isSuccess, bytesRead });
           });
         });
       }
       /// 并发下载
       let offset = 0;
       let isSuccess = true;
-      while (true) {
+      let totalBytesRead = 0;
+      outer: while (true) {
         const tempTasks = tasks.slice(offset, offset + 3);
         if (tempTasks.length === 0) {
           break;
         }
         const results = await Promise.all(tempTasks.map((tempTask) => tempTask()));
-        if (results.includes(false)) {
-          isSuccess = false;
-          break;
+        for (const result of results) {
+          if (result.isSuccess === false) {
+            isSuccess = false;
+            break outer;
+          }
+          totalBytesRead += result.bytesRead;
         }
         offset += tempTasks.length;
       }
-      if (!isSuccess) {
+      /// blob 缺失
+      if (!(isSuccess && totalBytesRead === downloadSize)) {
         throw new RefuseException(ERROR_LIST.FAIL_TO_DOWNLOAD_BLOB, {
           hash: openArg.hash,
           strategy: STORAGE_STRATEGY.TEMPORARY,
