@@ -63,7 +63,8 @@ export class OpenBlobReturnModel
     return this.expriedTimeLong.toNumber();
   }
   set expriedTime(v) {
-    this.expriedTimeLong = Long.fromNumber(v);
+    // fromNumber 传 ture 才是 uint64
+    this.expriedTimeLong = Long.fromNumber(v, true);
   }
   toJSON() {
     const res = super.toJSON() as BFChainCore.OpenBlobReturnJSON;

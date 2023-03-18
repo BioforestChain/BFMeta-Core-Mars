@@ -162,7 +162,7 @@ export class GenesisAssetModel
     return this.beginEpochTimeLong.toNumber();
   }
   set beginEpochTime(v) {
-    this.beginEpochTimeLong = Long.fromNumber(v);
+    this.beginEpochTimeLong = Long.fromNumber(v, true);
   }
   /**创世位名 */
   @Field.d(GenesisAssetModel.INC++, "string")

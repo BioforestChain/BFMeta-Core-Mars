@@ -49,7 +49,7 @@ export class BlockTransactionInfoModel
     return this.blobSizeLong.toNumber();
   }
   set blobSize(v) {
-    this.blobSizeLong = Long.fromNumber(v);
+    this.blobSizeLong = Long.fromNumber(v, true);
   }
   /**区块统计信息 */
   @Field.d(BlockTransactionInfoModel.INC++, StatisticInfoModel)

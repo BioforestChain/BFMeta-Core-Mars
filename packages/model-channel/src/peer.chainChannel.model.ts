@@ -46,7 +46,7 @@ export class PeerConsensusModel
     return this.peerTimeLong.toNumber();
   }
   set peerTime(v) {
-    this.peerTimeLong = Long.fromNumber(v);
+    this.peerTimeLong = Long.fromNumber(v, true);
   }
   toJSON() {
     return {
