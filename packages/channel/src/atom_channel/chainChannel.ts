@@ -855,7 +855,13 @@ export class ChainChannel<
       }
       /// 下载完成，保存成 blob 对象
       await this.blobHelper.saveAsBlob(blob_prt);
-    } finally {
+      /// 关闭连接
+      try {
+        await this.closeBlob({ descriptor });
+      } catch (err) {
+        /// 流程已经走完了，就算文件没关掉也已经与本节点无关
+      }
+    } catch (error) {
       /// 关闭连接
       if (descriptor !== undefined) {
         try {
