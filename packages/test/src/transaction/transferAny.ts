@@ -126,14 +126,68 @@ async function getTransferAnyTransaction(sender: AccountModel, bfchainCore: BFCh
 (async () => {
   const bfchainCore = await getBfchainCoreEntry();
 
-  await getTransferAnyTransaction(getSenderWithoutSecondSecret(), bfchainCore);
-  await getTransferAnyTransaction(getSenderWithSecondSecret(), bfchainCore);
+  // await getTransferAnyTransaction(getSenderWithoutSecondSecret(), bfchainCore);
+  // await getTransferAnyTransaction(getSenderWithSecondSecret(), bfchainCore);
 
-  console.log(bfchainCore.config.version);
+  // console.log(bfchainCore.config.version);
 
-  bfchainCore.patchInstaller.changeHeight(50000000);
+  // bfchainCore.patchInstaller.changeHeight(50000000);
 
-  await sleep(1000);
+  // await sleep(1000);
 
-  console.log(bfchainCore.config.version);
+  // console.log(bfchainCore.config.version);
+
+  const xx: BFChainCore.BeExchangeAnyMultiTransactionJSON = {
+    version: 1,
+    type: "BFMTEST-BFMETATEST-ECA-03",
+    timestamp: 9662724,
+    senderId: "cLSGxDVHzCK9eMsmmdZNL9zUFrWqegR3Ki",
+    senderPublicKey: "ef579d69df200bddcd988899fc2cef0f8651be0b28af15ec5466554012197095",
+    fee: "2557",
+    signature:
+      "5166558cbde4de652f82a94f2de59de67217c38529347d10d2b819f85473da0c547f2816bf58efcebd100d6275e46a272392d6706b4c8649941c44b6d67c5508",
+    applyBlockHeight: 81,
+    effectiveBlockHeight: 138,
+    rangeType: RANGE_TYPE.EMPTY,
+    range: [],
+    fromMagic: "PPPPW",
+    toMagic: "PPPPW",
+    asset: {
+      beExchangeAnyMulti: {
+        transactionSignature:
+          "eca9152a4cfc1c99d002f5920149a95c6bfd867ae62913f315e4caa4bec623980a54a2dd1ce59ba4104707c871fd1ef7c416c20ba9ed1daa86a42ffa87597e04",
+        toExchangeAssets: [
+          {
+            toExchangeSource: "PPPPW",
+            toExchangeChainName: "bfmetatest",
+            toExchangeParentAssetType: 3,
+            toExchangeAssetType: "m_bfchain0111_dragonborn10002",
+            toExchangeAssetPrealnum: "1",
+            taxInformation: {
+              taxCollector: "cB9HrEJWuho8Bxo6SFer5miYErpnCY8EVj",
+              taxAssetPrealnum: "1",
+            },
+          },
+        ],
+        beExchangeAsset: {
+          beExchangeSource: "PPPPW",
+          beExchangeChainName: "bfmetatest",
+          beExchangeParentAssetType: 5,
+          beExchangeAssetType: "BFMTEST",
+          beExchangeAssetPrealnum: "1000000",
+        },
+      },
+    },
+    nonce: 0,
+    recipientId: "cB9HrEJWuho8Bxo6SFer5miYErpnCY8EVj",
+    remark: {},
+    storageKey: "transactionSignature",
+    storageValue:
+      "eca9152a4cfc1c99d002f5920149a95c6bfd867ae62913f315e4caa4bec623980a54a2dd1ce59ba4104707c871fd1ef7c416c20ba9ed1daa86a42ffa87597e04",
+  };
+
+  debugger;
+  const yy = await bfchainCore.transaction.recombineTransaction(xx);
+  await bfchainCore.transactionHelper.verifyTransactionSignature(yy);
+  console.log(yy.asset);
 })();

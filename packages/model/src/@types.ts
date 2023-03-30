@@ -572,6 +572,7 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction").ToExchangeAnyTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
         | import("@bfchain/core-model-transaction").ToExchangeAnyMultiTransaction
+        | import("@bfchain/core-model-transaction").ToExchangeAnyMultiAllTransaction
       >
     >;
     /**解冻资产 */
@@ -587,6 +588,7 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction").BeExchangeAnyTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
         | import("@bfchain/core-model-transaction").BeExchangeAnyMultiTransaction
+        | import("@bfchain/core-model-transaction").BeExchangeAnyMultiAllTransaction
       >
     >;
     /**签收资产 */
@@ -614,6 +616,7 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction").ToExchangeAnyTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
         | import("@bfchain/core-model-transaction").ToExchangeAnyMultiTransaction
+        | import("@bfchain/core-model-transaction").ToExchangeAnyMultiAllTransaction
       >
     >;
     /**解冻 dappid */
@@ -625,6 +628,7 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction").BeExchangeAnyTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
         | import("@bfchain/core-model-transaction").BeExchangeAnyMultiTransaction
+        | import("@bfchain/core-model-transaction").BeExchangeAnyMultiAllTransaction
       >
     >;
     /**更改 dappid 拥有者 */
@@ -636,6 +640,7 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction").BeExchangeAnyTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
         | import("@bfchain/core-model-transaction").BeExchangeAnyMultiTransaction
+        | import("@bfchain/core-model-transaction").BeExchangeAnyMultiAllTransaction
       >
     >;
     /**发行数字资产 */
@@ -695,6 +700,7 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction").ToExchangeAnyTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
         | import("@bfchain/core-model-transaction").ToExchangeAnyMultiTransaction
+        | import("@bfchain/core-model-transaction").ToExchangeAnyMultiAllTransaction
       >
     >;
     /**解冻位名 */
@@ -706,6 +712,7 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction").BeExchangeAnyTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
         | import("@bfchain/core-model-transaction").BeExchangeAnyMultiTransaction
+        | import("@bfchain/core-model-transaction").BeExchangeAnyMultiAllTransaction
       >
     >;
     /**更改位名拥有者 */
@@ -717,6 +724,7 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction").BeExchangeAnyTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
         | import("@bfchain/core-model-transaction").BeExchangeAnyMultiTransaction
+        | import("@bfchain/core-model-transaction").BeExchangeAnyMultiAllTransaction
       >
     >;
     /**发行 entityFactory */
@@ -773,6 +781,7 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction").ToExchangeAnyTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
         | import("@bfchain/core-model-transaction").ToExchangeAnyMultiTransaction
+        | import("@bfchain/core-model-transaction").ToExchangeAnyMultiAllTransaction
       >
     >;
     /**解冻 entity */
@@ -784,6 +793,7 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction").BeExchangeAnyTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
         | import("@bfchain/core-model-transaction").BeExchangeAnyMultiTransaction
+        | import("@bfchain/core-model-transaction").BeExchangeAnyMultiAllTransaction
       >
     >;
     /**更改 entityId 拥有者 */
@@ -795,6 +805,7 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction").BeExchangeAnyTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
         | import("@bfchain/core-model-transaction").BeExchangeAnyMultiTransaction
+        | import("@bfchain/core-model-transaction").BeExchangeAnyMultiAllTransaction
       >
     >;
 
@@ -816,6 +827,8 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction").BeExchangeAnyTransaction
         | import("@bfchain/core-model-transaction").ToExchangeAnyMultiTransaction
         | import("@bfchain/core-model-transaction").BeExchangeAnyMultiTransaction
+        | import("@bfchain/core-model-transaction").ToExchangeAnyMultiAllTransaction
+        | import("@bfchain/core-model-transaction").BeExchangeAnyMultiAllTransaction
       >
     >;
 

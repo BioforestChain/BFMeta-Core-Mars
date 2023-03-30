@@ -34,34 +34,34 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
 
     const beExchangeAnyMulti = transaction.asset.beExchangeAnyMulti;
     const { transactionSignature } = beExchangeAnyMulti;
-    const toExchangeAnyJson = (await transactionGetterHelper.getTransactionBySignature(
+    const toExchangeAnyMultiJson = (await transactionGetterHelper.getTransactionBySignature(
       transactionSignature,
       this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
     )) as BFChainCore.ToExchangeAnyMultiTransactionJSON | undefined;
-    if (!toExchangeAnyJson) {
+    if (!toExchangeAnyMultiJson) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST_OR_EXPIRED, {
         prop: `Transaction with signature ${transactionSignature}`,
         target: "blockChain",
       });
     }
 
-    if (toExchangeAnyJson.type !== this.transactionHelper.TO_EXCHANGE_ANY_MULTI) {
+    if (toExchangeAnyMultiJson.type !== this.transactionHelper.TO_EXCHANGE_ANY_MULTI) {
       throw new ConsensusException(ERROR_LIST.NOT_EXPECTED_RELATED_TRANSACTION, {
         signature: `${transactionSignature}`,
       });
     }
 
     // be交易的接收账户必须是to交易的发起账户
-    if (transaction.recipientId !== toExchangeAnyJson.senderId) {
+    if (transaction.recipientId !== toExchangeAnyMultiJson.senderId) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-        to_compare_prop: `BeExchangeAnyMultiTransaction.recipientId ${transaction.recipientId}`,
-        be_compare_prop: `ToExchangeAnyTransaction.senderId ${toExchangeAnyJson.senderId}`,
+        to_compare_prop: `recipientId ${transaction.recipientId}`,
+        be_compare_prop: `senderId ${toExchangeAnyMultiJson.senderId}`,
         to_target: "BeExchangeAnyMultiTransaction",
-        be_target: "ToExchangeAnyTransaction",
+        be_target: "ToExchangeAnyMultiTransaction",
       });
     }
 
-    this.isDependentTransactionMatch(transaction, toExchangeAnyJson);
+    this.isDependentTransactionMatch(transaction, toExchangeAnyMultiJson);
 
     const { sender, recipient } = await this.logicVerify(
       transaction,
@@ -99,7 +99,7 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
     let alreadyListenUnfrozenLocationName = false;
     let alreadyListenUnfrozenEntity = false;
 
-    if (beExchangeAnyMulti.beExchangeAssetPrealnum !== "0") {
+    if (beExchangeAsset.beExchangeAssetPrealnum !== "0") {
       if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
         eventLogicVerifier.listenEventAsset(cloneAccountsAssets, eventEmitter);
         alreadyListenAsset = true;
@@ -124,7 +124,7 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
       } else {
         throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `beExchangeParentAssetType ${beExchangeParentAssetType}`,
-          target: "transaction.asset.beExchangeAnyMulti.toExchangeAssets.beExchangeAsset",
+          target: "beExchangeAnyMulti.toExchangeAssets.beExchangeAsset",
         });
       }
     }
@@ -195,7 +195,7 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
       } else {
         throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `toExchangeParentAssetType ${toExchangeParentAssetType}`,
-          target: "transaction.asset.beExchangeAnyMulti.toExchangeAssets.toExchangeAsset",
+          target: "beExchangeAnyMulti.toExchangeAssets.toExchangeAsset",
         });
       }
     }

@@ -2,7 +2,7 @@ import { TransactionFactory } from "./_txbase";
 import {
   ASSET_STATUS,
   PARENT_ASSET_TYPE,
-  ToExchangeAnyMultiTransaction,
+  ToExchangeAnyMultiAllTransaction,
 } from "@bfchain/core-model";
 import {
   AccountBaseHelper,
@@ -15,15 +15,15 @@ import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception
 import { Injectable, Inject, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
-  "ToExchangeAnyMultiTransactionFactory",
+  "ToExchangeAnyMultiAllTransactionFactory",
 );
 
 /**
- * toExchangeAnyMulti 交易工厂
+ * toExchangeAnyMultiAll 交易工厂
  *
  */
 @Injectable()
-export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToExchangeAnyMultiTransaction> {
+export class ToExchangeAnyMultiAllTransactionFactory extends TransactionFactory<ToExchangeAnyMultiAllTransaction> {
   constructor(
     @Inject("Buffer")
     public Buffer: BFChainUtil.BufferConstructor,
@@ -40,14 +40,14 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
    * 校验输入信息
    *
    * @param body
-   * @param toExchangeAnyMulti
+   * @param toExchangeAnyMultiAllAsset
    */
   async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
-    toExchangeAnyMultiAsset: BFChainCore.ToExchangeAnyMultiAssetJSON,
+    toExchangeAnyMultiAllAsset: BFChainCore.ToExchangeAnyMultiAllAssetJSON,
     config = this.configHelper,
   ) {
-    await super.verifyTransactionBody(body, toExchangeAnyMultiAsset, config);
+    await super.verifyTransactionBody(body, toExchangeAnyMultiAllAsset, config);
 
     const Function_Exception_Detail = {
       target: "body",
@@ -78,66 +78,46 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
       });
     }
 
-    const toExchangeAnyMulti = toExchangeAnyMultiAsset.toExchangeAnyMulti;
+    const toExchangeAnyMultiAll = toExchangeAnyMultiAllAsset.toExchangeAnyMultiAll;
 
-    if (!toExchangeAnyMulti) {
+    if (!toExchangeAnyMultiAll) {
       throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
-        param: "toExchangeAnyMulti",
+        param: "toExchangeAnyMultiAll",
         ...Function_Exception_Detail,
       });
     }
 
-    if (!this.baseHelper.isValidCipherPublicKeys(toExchangeAnyMulti.cipherPublicKeys)) {
+    if (!this.baseHelper.isValidCipherPublicKeys(toExchangeAnyMultiAll.cipherPublicKeys)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: "toExchangeAnyMulti.cipherPublicKeys",
+        prop: "toExchangeAnyMultiAll.cipherPublicKeys",
         ...Function_Exception_Detail,
       });
     }
 
-    const { toExchangeAssets, beExchangeAsset } = toExchangeAnyMulti;
-    const isNeedBeExchangeAssetPrealnum = await this.verifyToExchangeAnyMulti(
-      "toExchangeAnyMulti",
+    const { toExchangeAssets, beExchangeAssets } = toExchangeAnyMultiAll;
+    await this.verifyExchangeAnyMultiAll(
+      "toExchangeAnyMultiAll",
       toExchangeAssets,
-      beExchangeAsset,
+      beExchangeAssets,
       config,
     );
-
-    for (const toExchangeAsset of toExchangeAssets) {
-      if (toExchangeAsset.toExchangeAssetPrealnum === "0") {
-        throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
-          prop: "toExchangeAssetPrealnum",
-          field: "0",
-          target: "toExchangeAnyMulti.toExchangeAssets.toExchangeAsset",
-        });
-      }
-    }
-
-    const beExchangeAssetPrealnum = beExchangeAsset.beExchangeAssetPrealnum;
-
-    if (isNeedBeExchangeAssetPrealnum) {
-      if (beExchangeAsset.beExchangeParentAssetType !== PARENT_ASSET_TYPE.ASSETS) {
-        if (beExchangeAssetPrealnum !== "1") {
-          throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
-            to_compare_prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
-            to_target: "toExchangeAnyMulti.beExchangeAsset",
-            be_compare_prop: "1",
+    for (const { beExchangeParentAssetType, beExchangeAssetPrealnum } of beExchangeAssets) {
+      if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
+        if (beExchangeAssetPrealnum === "0") {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
+            prop: "beExchangeAssetPrealnum",
+            field: "0",
+            target: "toExchangeAnyMultiAll.beExchangeAssets.beExchangeAsset",
           });
         }
       } else {
-        if (beExchangeAssetPrealnum === "0") {
-          throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
-            prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
-            target: "toExchangeAnyMulti.beExchangeAsset",
-            field: "0",
+        if (beExchangeAssetPrealnum !== "1") {
+          throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
+            to_compare_prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
+            to_target: "toExchangeAnyMultiAll.beExchangeAssets.beExchangeAsset",
+            be_compare_prop: "1",
           });
         }
-      }
-    } else {
-      if (beExchangeAssetPrealnum) {
-        throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
-          prop: "beExchangeAssetPrealnum",
-          target: "toExchangeAnyMulti.beExchangeAsset",
-        });
       }
     }
 
@@ -150,18 +130,17 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
   }
 
   /**
-   * toExchangeAnyMulti
+   * 校验 toExchangeAnyMultiAll 内容
    *
    * @param propName
    * @param toExchangeAssets
-   * @param beExchangeAsset
+   * @param beExchangeAssets
    * @param config
-   * @returns
    */
-  async verifyToExchangeAnyMulti(
+  async verifyExchangeAnyMultiAll(
     propName: string,
-    toExchangeAssets: BFChainCore.ToExchangeAssetV1JSON[],
-    beExchangeAsset: BFChainCore.BeExchangeAssetV1JSON,
+    toExchangeAssets: BFChainCore.ToExchangeAssetV2JSON[],
+    beExchangeAssets: BFChainCore.BeExchangeAssetV2JSON[],
     config = this.configHelper,
   ) {
     const { baseHelper } = this;
@@ -171,12 +150,11 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
         param: `${propName}.toExchangeAssets`,
       });
     }
-    if (!beExchangeAsset) {
+    if (!beExchangeAssets) {
       throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
-        param: `${propName}.beExchangeAsset`,
+        param: `${propName}.beExchangeAssets`,
       });
     }
-
     if (toExchangeAssets.length <= 0) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_LENGTH_SHOULD_GT_FIELD, {
         prop: "toExchangeAssets",
@@ -184,47 +162,20 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
         field: 0,
       });
     }
-
-    const {
-      beExchangeChainName,
-      beExchangeSource,
-      beExchangeParentAssetType,
-      beExchangeAssetType,
-      beExchangeAssetPrealnum,
-    } = beExchangeAsset;
-
-    const BeExchangeAsset_Exception_Detail = { target: `${propName}.beExchangeAsset` };
+    if (beExchangeAssets.length <= 0) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_LENGTH_SHOULD_GT_FIELD, {
+        prop: "beExchangeAssets",
+        target: propName,
+        field: 0,
+      });
+    }
 
     const chainMagic = this.configHelper.magic;
 
-    this.checkParentAssetType(
-      beExchangeParentAssetType,
-      "beExchangeParentAssetType",
-      BeExchangeAsset_Exception_Detail,
-    );
-
-    if (beExchangeSource === chainMagic) {
-      this.checkChainName(
-        beExchangeChainName,
-        "beExchangeChainName",
-        BeExchangeAsset_Exception_Detail,
-      );
-      this.checkChainMagic(beExchangeSource, "beExchangeSource", BeExchangeAsset_Exception_Detail);
-      this.checkAssetType(
-        beExchangeParentAssetType,
-        beExchangeAssetType,
-        "beExchangeAssetType",
-        BeExchangeAsset_Exception_Detail,
-      );
-    }
-
-    let isNeedBeExchangeAssetPrealnum = false;
-    let assetTypeSet = new Set<string>();
-
+    const toAssetTypeSet = new Set<string>();
     const ToExchangeAssets_Exception_Detail = {
       target: `${propName}.toExchangeAssets.toExchangeAsset`,
     };
-
     for (const toExchangeAsset of toExchangeAssets) {
       const {
         toExchangeChainName,
@@ -232,16 +183,16 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
         toExchangeParentAssetType,
         toExchangeAssetType,
         toExchangeAssetPrealnum,
-        assetExchangeWeightRatio,
         taxInformation,
       } = toExchangeAsset;
-      if (assetTypeSet.has(toExchangeAssetType)) {
+      const key = `${toExchangeSource}-${toExchangeAssetType}`;
+      if (toAssetTypeSet.has(key)) {
         throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_DUPLICATE, {
-          prop: `toExchangeAssets ${JSON.stringify(toExchangeAssets)}`,
+          prop: `toExchangeAssets.toExchangeAsset ${JSON.stringify(toExchangeAsset)}`,
           target: propName,
         });
       }
-      assetTypeSet.add(toExchangeAssetType);
+      toAssetTypeSet.add(key);
       this.checkParentAssetType(
         toExchangeParentAssetType,
         "toExchangeParentAssetType",
@@ -287,99 +238,114 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
           });
         }
       }
-      if (toExchangeParentAssetType !== PARENT_ASSET_TYPE.ASSETS) {
-        isNeedBeExchangeAssetPrealnum = true;
+      if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
+        if (toExchangeAssetPrealnum === "0") {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
+            prop: "toExchangeAssetPrealnum",
+            field: "0",
+            target: `${propName}.toExchangeAssets.toExchangeAsset`,
+          });
+        }
+      } else {
         if (toExchangeAssetPrealnum !== "1") {
           throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
             to_compare_prop: `toExchangeAssetPrealnum ${toExchangeAssetPrealnum}`,
-            to_target: "toExchangeAnyMulti.toExchangeAssets",
+            to_target: `${propName}.toExchangeAssets.toExchangeAsset`,
             be_compare_prop: "1",
           });
         }
-        if (assetExchangeWeightRatio) {
-          throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
-            prop: "assetExchangeWeightRatio",
-            ...ToExchangeAssets_Exception_Detail,
-          });
-        }
-        if (beExchangeParentAssetType !== PARENT_ASSET_TYPE.ASSETS) {
-          // 没必要自己和自己换
-          if (beExchangeAssetType === toExchangeAssetType) {
-            throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
-              to_compare_prop: `beExchangeAssetType ${beExchangeAssetType}`,
-              to_target: "toExchangeAnyMulti.beExchangeAsset",
-              be_compare_prop: toExchangeAssetType,
-            });
-          }
-        }
-      } else {
-        if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
-          if (!assetExchangeWeightRatio) {
-            throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
-              prop: "assetExchangeWeightRatio",
-              ...ToExchangeAssets_Exception_Detail,
-            });
-          }
-          if (!baseHelper.isValidAssetExchangeWeightRatio(assetExchangeWeightRatio)) {
-            throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-              prop: `assetExchangeWeightRatio ${assetExchangeWeightRatio}`,
-              ...ToExchangeAssets_Exception_Detail,
-            });
-          }
-        } else {
-          if (assetExchangeWeightRatio) {
-            throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
-              prop: "assetExchangeWeightRatio",
-              ...ToExchangeAssets_Exception_Detail,
-            });
-          }
-          // to 是同质资产，be 是非同质资产必须指明希望得到的资产数量
-          isNeedBeExchangeAssetPrealnum = true;
-        }
       }
     }
-    if (isNeedBeExchangeAssetPrealnum) {
+
+    const BeExchangeAssets_Exception_Detail = {
+      target: `${propName}.beExchangeAssets.beExchangeAsset`,
+    };
+    const beAssetTypeSet = new Set<string>();
+    for (const beExchangeAsset of beExchangeAssets) {
+      const {
+        beExchangeChainName,
+        beExchangeSource,
+        beExchangeParentAssetType,
+        beExchangeAssetType,
+        beExchangeAssetPrealnum,
+        taxInformation,
+      } = beExchangeAsset;
+      const key = `${beExchangeSource}-${beExchangeAssetType}`;
+      if (beAssetTypeSet.has(key)) {
+        throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_DUPLICATE, {
+          prop: `beExchangeAssets.beExchangeAsset ${JSON.stringify(beExchangeAsset)}`,
+          target: propName,
+        });
+      }
+      beAssetTypeSet.add(key);
+      if (toAssetTypeSet.has(key)) {
+        throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
+          to_compare_prop: `beExchangeAssetType ${beExchangeAssetType}`,
+          to_target: "toExchangeAnyMultiAll.beExchangeAssets",
+          be_compare_prop: beExchangeAssetType,
+        });
+      }
+      this.checkParentAssetType(
+        beExchangeParentAssetType,
+        "beExchangeParentAssetType",
+        BeExchangeAssets_Exception_Detail,
+      );
+      if (beExchangeSource === chainMagic) {
+        this.checkChainName(
+          beExchangeChainName,
+          "beExchangeChainName",
+          BeExchangeAssets_Exception_Detail,
+        );
+        this.checkChainMagic(
+          beExchangeSource,
+          "beExchangeSource",
+          BeExchangeAssets_Exception_Detail,
+        );
+        this.checkAssetType(
+          beExchangeParentAssetType,
+          beExchangeAssetType,
+          "beExchangeAssetType",
+          BeExchangeAssets_Exception_Detail,
+        );
+      }
       if (!beExchangeAssetPrealnum) {
         throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
           prop: "beExchangeAssetPrealnum",
-          ...BeExchangeAsset_Exception_Detail,
+          ...BeExchangeAssets_Exception_Detail,
         });
       }
       if (!baseHelper.isValidAssetNumber(beExchangeAssetPrealnum)) {
         throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: "beExchangeAssetPrealnum",
-          ...BeExchangeAsset_Exception_Detail,
+          ...BeExchangeAssets_Exception_Detail,
         });
       }
-    }
-
-    if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
-      await this.checkTaxInformation(
-        BeExchangeAsset_Exception_Detail,
-        beExchangeAsset.taxInformation,
-      );
-    } else {
-      if (beExchangeAsset.taxInformation) {
-        throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
-          prop: "taxInformation",
-          target: `${propName}.toExchangeAssets.beExchangeAsset`,
-        });
+      if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
+        await this.checkTaxInformation(BeExchangeAssets_Exception_Detail, taxInformation);
+      } else {
+        if (taxInformation) {
+          throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
+            prop: "taxInformation",
+            target: `${propName}.beExchangeAssets.beExchangeAsset`,
+          });
+        }
       }
     }
-
-    return isNeedBeExchangeAssetPrealnum;
   }
 
   /**
-   * 初始化 toExchangeAnyMulti 交易
+   * 初始化 toExchangeAnyMultiAll 交易
    *
    * @param body
-   * @param toExchangeAnyMulti
+   * @param toExchangeAnyMultiAll
    */
-  init(body: BFChainCore.TxBodyJSON, toExchangeAnyMulti: BFChainCore.ToExchangeAnyMultiAssetJSON) {
-    const transaction = ToExchangeAnyMultiTransaction.fromObject({
+  init(
+    body: BFChainCore.TxBodyJSON,
+    toExchangeAnyMultiAll: BFChainCore.ToExchangeAnyMultiAllAssetJSON,
+  ) {
+    const transaction = ToExchangeAnyMultiAllTransaction.fromObject({
       ...body,
-      asset: toExchangeAnyMulti,
+      asset: toExchangeAnyMultiAll,
     });
 
     return transaction;
@@ -392,14 +358,14 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
    * @param eventEmitter
    */
   applyTransaction(
-    transaction: ToExchangeAnyMultiTransaction,
+    transaction: ToExchangeAnyMultiAllTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ) {
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
       const { senderId, senderPublicKeyBuffer, signature } = transaction;
-      const { toExchangeAssets, beExchangeAsset } = transaction.asset.toExchangeAnyMulti;
+      const { toExchangeAssets, beExchangeAssets } = transaction.asset.toExchangeAnyMultiAll;
 
       let frozenAmount = BigInt(0);
       for (const toExchangeAsset of toExchangeAssets) {
@@ -509,7 +475,7 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
         } else {
           throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
             prop: `toExchangeParentAssetType ${toExchangeParentAssetType}`,
-            target: "transaction.asset.toExchangeAnyMulti",
+            target: "toExchangeAnyMultiAll.toExchangeAssets.toExchangeAsset",
           });
         }
       }
@@ -538,19 +504,21 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
           },
         });
       }
-      if (beExchangeAsset.taxInformation) {
-        // 纳税
-        taskList.next = eventEmitter.emit("payTax", {
-          type: "payTax",
-          transaction,
-          applyInfo: {
-            sourceChainName: beExchangeAsset.beExchangeChainName,
-            sourceChainMagic: beExchangeAsset.beExchangeSource,
-            parentAssetType: beExchangeAsset.beExchangeParentAssetType,
-            assetType: beExchangeAsset.beExchangeAssetType,
-            taxInformation: beExchangeAsset.taxInformation.toJSON(),
-          },
-        });
+      for (const beExchangeAsset of beExchangeAssets) {
+        if (beExchangeAsset.taxInformation) {
+          // 纳税
+          taskList.next = eventEmitter.emit("payTax", {
+            type: "payTax",
+            transaction,
+            applyInfo: {
+              sourceChainName: beExchangeAsset.beExchangeChainName,
+              sourceChainMagic: beExchangeAsset.beExchangeSource,
+              parentAssetType: beExchangeAsset.beExchangeParentAssetType,
+              assetType: beExchangeAsset.beExchangeAssetType,
+              taxInformation: beExchangeAsset.taxInformation.toJSON(),
+            },
+          });
+        }
       }
     });
   }
@@ -563,14 +531,14 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
    * @returns
    */
   getMoveAmount(
-    transaction: ToExchangeAnyMultiTransaction,
+    transaction: ToExchangeAnyMultiAllTransaction,
     argv = {
       magic: this.configHelper.magic,
       assetType: this.configHelper.assetType,
     },
   ) {
     const { magic, assetType } = argv;
-    const toExchangeAssets = transaction.asset.toExchangeAnyMulti.toExchangeAssets;
+    const toExchangeAssets = transaction.asset.toExchangeAnyMultiAll.toExchangeAssets;
     for (const toExchangeAsset of toExchangeAssets) {
       const { toExchangeSource, toExchangeAssetType, toExchangeAssetPrealnum } = toExchangeAsset;
       if (magic === toExchangeSource && assetType === toExchangeAssetType) {

@@ -234,13 +234,6 @@ export class BeExchangeAnyMultiTransactionFactory extends TransactionFactory<BeE
       }
     }
 
-    if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
-      await this.checkTaxInformation(
-        BeExchangeAsset_Exception_Detail,
-        beExchangeAsset.taxInformation,
-      );
-    }
-
     return isNeedBeExchangeAssetPrealnum;
   }
 
@@ -371,7 +364,7 @@ export class BeExchangeAnyMultiTransactionFactory extends TransactionFactory<BeE
     if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
       await this.checkTaxInformation(BeExchangeAnyMultiAsset_Exception_Detail, taxInformation);
     } else {
-      if (beExchangeAsset.taxInformation) {
+      if (taxInformation) {
         throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
           prop: "beExchangeAsset.taxInformation",
           ...BeExchangeAnyMultiAsset_Exception_Detail,

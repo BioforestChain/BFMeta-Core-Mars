@@ -495,6 +495,15 @@ export const TRANSACTION_FACTORY_TYPES_MAP = (() => {
         TRANSACTION_TYPES_BASE.BE_EXCHANGE_ANY_MULTI,
         ATOM_TRSFAC.BeExchangeAnyMultiTransactionFactory,
       ],
+
+      [
+        TRANSACTION_TYPES_BASE.TO_EXCHANGE_ANY_MULTI_ALL,
+        ATOM_TRSFAC.ToExchangeAnyMultiAllTransactionFactory,
+      ],
+      [
+        TRANSACTION_TYPES_BASE.BE_EXCHANGE_ANY_MULTI_ALL,
+        ATOM_TRSFAC.BeExchangeAnyMultiAllTransactionFactory,
+      ],
     ] as [TRANSACTION_TYPES_BASE, BFChainCore.TransactionFactoryConstructor<any>][]
   ).forEach(([K, F]) => {
     BASE_FACTORY.set(K, F);

@@ -266,6 +266,15 @@ export class TransactionHelper {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.BE_EXCHANGE_ANY_MULTI);
   }
 
+  /** TO_EXCHANGE_ANY_MULTI_ALL: 发起批量任意资产全量交换 */
+  get TO_EXCHANGE_ANY_MULTI_ALL() {
+    return this.getTransactionType(TRANSACTION_TYPES_BASE.TO_EXCHANGE_ANY_MULTI_ALL);
+  }
+  /** BE_EXCHANGE_ANY_MULTI_ALL: 接受批量任意资产全量交换 */
+  get BE_EXCHANGE_ANY_MULTI_ALL() {
+    return this.getTransactionType(TRANSACTION_TYPES_BASE.BE_EXCHANGE_ANY_MULTI_ALL);
+  }
+
   ALL_TRANSACTION_TYPES = [
     this.SIGNATURE,
     this.DELEGATE,
@@ -310,6 +319,9 @@ export class TransactionHelper {
 
     this.TO_EXCHANGE_ANY_MULTI,
     this.BE_EXCHANGE_ANY_MULTI,
+
+    this.TO_EXCHANGE_ANY_MULTI_ALL,
+    this.BE_EXCHANGE_ANY_MULTI_ALL,
   ];
 
   /**获取创世块里所有的受托人 */

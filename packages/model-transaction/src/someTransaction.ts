@@ -90,6 +90,11 @@ export enum TRANSACTION_TYPES_BASE {
   /**接受批量任意资产交换 */
   BE_EXCHANGE_ANY_MULTI = "ECA-03",
 
+  /**发起批量任意资产全量交换 */
+  TO_EXCHANGE_ANY_MULTI_ALL = "ECA-04",
+  /**接受批量任意资产全量交换 */
+  BE_EXCHANGE_ANY_MULTI_ALL = "ECA-05",
+
   /**个性事件 */
   CUSTOM = "CUS-00",
 }
@@ -160,6 +165,9 @@ export const TRANSACTION_TYPES_MAP = (() => {
 
       [TRANSACTION_TYPES_BASE.TO_EXCHANGE_ANY_MULTI, ATOM_TRS.ToExchangeAnyMultiTransaction],
       [TRANSACTION_TYPES_BASE.BE_EXCHANGE_ANY_MULTI, ATOM_TRS.BeExchangeAnyMultiTransaction],
+
+      [TRANSACTION_TYPES_BASE.TO_EXCHANGE_ANY_MULTI_ALL, ATOM_TRS.ToExchangeAnyMultiAllTransaction],
+      [TRANSACTION_TYPES_BASE.BE_EXCHANGE_ANY_MULTI_ALL, ATOM_TRS.BeExchangeAnyMultiAllTransaction],
     ] as [TRANSACTION_TYPES_BASE, typeof Transaction][]
   ).forEach(([K, M]) => {
     BASE_MODEL.set(K, M);

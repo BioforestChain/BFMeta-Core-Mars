@@ -696,6 +696,62 @@ declare namespace BFChainCore {
     beExchangeAnyMulti: BeExchangeAnyMultiJSON;
   }
 
+  interface ToExchangeAssetV2JSON {
+    /**用于交换的资产来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
+    toExchangeSource: string;
+    /**用于交换的资产来源链名，小写字母组成，3-8 位 */
+    toExchangeChainName: string;
+    /**用于交换的资产资产所属大类 */
+    toExchangeParentAssetType: PARENT_ASSET_TYPE;
+    /**用于交换的资产名 */
+    toExchangeAssetType: string;
+    /**用于交换的资产数量，0-9 组成并且不包含小数点 */
+    toExchangeAssetPrealnum: string;
+    /**收税信息 */
+    taxInformation?: BFChainCore.TaxInformationJson;
+  }
+  interface BeExchangeAssetV2JSON {
+    /**被交换的资产来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
+    beExchangeSource: string;
+    /**被交换的资产来源链名，小写字母组成，3-8 位 */
+    beExchangeChainName: string;
+    /**被交换的资产所属大类 */
+    beExchangeParentAssetType: PARENT_ASSET_TYPE;
+    /**被交换的资产名 */
+    beExchangeAssetType: string;
+    /**被交换的资产数量，0-9 组成并且不包含小数点，非同质资产交换时必填 */
+    beExchangeAssetPrealnum: string;
+    /**收税信息 */
+    taxInformation?: BFChainCore.TaxInformationJson;
+  }
+  interface ToExchangeAnyMultiAllJSON {
+    /**加密密钥生成的公钥数组 */
+    cipherPublicKeys: string[];
+    /**用于交换的资产信息 */
+    toExchangeAssets: ToExchangeAssetV2JSON[];
+    /**被交换的资产信息 */
+    beExchangeAssets: BeExchangeAssetV2JSON[];
+  }
+  interface ToExchangeAnyMultiAllAssetJSON {
+    /**发起批量全量任意资产交换事件附带信息 */
+    toExchangeAnyMultiAll: ToExchangeAnyMultiAllJSON;
+  }
+
+  interface BeExchangeAnyMultiAllJSON {
+    /**发起资产交换的事件签名，128 个字节的 16 进制字符串 */
+    transactionSignature: string;
+    /**加密密钥生成的签名数组 */
+    ciphertextSignature?: AccountSignatureJSON;
+    /**用于交换的资产信息 */
+    toExchangeAssets: ToExchangeAssetV2JSON[];
+    /**被交换的资产信息 */
+    beExchangeAssets: BeExchangeAssetV2JSON[];
+  }
+  interface BeExchangeAnyMultiAllAssetJSON {
+    /**接收批量全量任意资产交换事件附带信息 */
+    beExchangeAnyMultiAll: BeExchangeAnyMultiAllJSON;
+  }
+
   //#endregion
 
   //#region Atom Transaction
@@ -823,6 +879,15 @@ declare namespace BFChainCore {
   >;
   type BeExchangeAnyMultiTransactionJSON = TransactionMixJSON<
     BeExchangeAnyMultiAssetJSON,
+    { hasRecipientId: true }
+  >;
+
+  type ToExchangeAnyMultiAllTransactionJSON = TransactionMixJSON<
+    ToExchangeAnyMultiAllAssetJSON,
+    { hasRecipientId: false }
+  >;
+  type BeExchangeAnyMultiAllTransactionJSON = TransactionMixJSON<
+    BeExchangeAnyMultiAllAssetJSON,
     { hasRecipientId: true }
   >;
   //#endregion

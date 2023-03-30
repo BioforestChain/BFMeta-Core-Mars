@@ -99,8 +99,8 @@ export class BeExchangeAssetLogicVerifier extends TransactionLogicVerifier {
     // be交易的接收账户必须是to交易的发起账户
     if (transaction.recipientId !== toExchangeAssetJson.senderId) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-        to_compare_prop: `BeExchangeAssetTransaction recipientId ${transaction.recipientId}`,
-        be_compare_prop: `ToExchangeAssetTransaction senderId ${toExchangeAssetJson.senderId}`,
+        to_compare_prop: `recipientId ${transaction.recipientId}`,
+        be_compare_prop: `senderId ${toExchangeAssetJson.senderId}`,
         to_target: "BeExchangeAssetTransaction",
         be_target: "ToExchangeAssetTransaction",
       });

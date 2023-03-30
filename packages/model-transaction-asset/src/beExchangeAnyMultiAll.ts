@@ -1,22 +1,22 @@
 import { Message, Field, Type } from "@bfchain/protobuf";
 import { AccountSignatureModel } from "@bfchain/core-model-common";
 import { getHexFromArrayBuffer, parseHexToArrayBuffer } from "@bfchain/util-encoding-hex";
-import { BeExchangeAssetV1Model, ToExchangeAssetV1Model } from "./toExchangeAnyMulti";
+import { BeExchangeAssetV2Model, ToExchangeAssetV2Model } from "./toExchangeAnyMultiAll";
 
 const SIGNATURE_BUFFER_WM = new WeakMap<AccountSignatureModel, Uint8Array>();
 
 /**
- * beExchangeAny 交易 asset 模型
+ * beExchangeAnyMultiAll 交易 asset 模型
  *
  */
-@Type.d("BeExchangeAnyMultiModel")
-export class BeExchangeAnyMultiModel
-  extends Message<BeExchangeAnyMultiModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.BeExchangeAnyMultiJSON>
+@Type.d("BeExchangeAnyMultiAllModel")
+export class BeExchangeAnyMultiAllModel
+  extends Message<BeExchangeAnyMultiAllModel>
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.BeExchangeAnyMultiAllJSON>
 {
   static INC = 1;
   /**要兑换的交易签名 */
-  @Field.d(BeExchangeAnyMultiModel.INC++, "bytes")
+  @Field.d(BeExchangeAnyMultiAllModel.INC++, "bytes")
   transactionSignatureBuffer!: Uint8Array;
   public get transactionSignature(): string {
     return getHexFromArrayBuffer(this.transactionSignatureBuffer);
@@ -26,7 +26,7 @@ export class BeExchangeAnyMultiModel
   }
 
   /**用于校验身份的密文签名，如果需要的话 */
-  @Field.d(BeExchangeAnyMultiModel.INC++, "bytes", "optional")
+  @Field.d(BeExchangeAnyMultiAllModel.INC++, "bytes", "optional")
   ciphertextSignatureBuffer?: Uint8Array;
   get ciphertextSignature() {
     const { ciphertextSignatureBuffer } = this;
@@ -50,25 +50,18 @@ export class BeExchangeAnyMultiModel
     }
   }
 
-  // /**希望交换得到的资产数量 */
-  // @Field.d(BeExchangeAnyMultiModel.INC++, "string")
-  // toExchangeAssetPrealnum!: string;
-  // /**用于交换的资产数量 */
-  // @Field.d(BeExchangeAnyMultiModel.INC++, "string")
-  // beExchangeAssetPrealnum!: string;
-
   /**交换的配置信息 */
-  @Field.d(BeExchangeAnyMultiModel.INC++, ToExchangeAssetV1Model, "repeated")
-  toExchangeAssets!: ToExchangeAssetV1Model[];
+  @Field.d(BeExchangeAnyMultiAllModel.INC++, ToExchangeAssetV2Model, "repeated")
+  toExchangeAssets!: ToExchangeAssetV2Model[];
   /**收税信息 */
-  @Field.d(BeExchangeAnyMultiModel.INC++, BeExchangeAssetV1Model)
-  beExchangeAsset!: BeExchangeAssetV1Model;
+  @Field.d(BeExchangeAnyMultiAllModel.INC++, BeExchangeAssetV2Model, "repeated")
+  beExchangeAssets!: BeExchangeAssetV2Model[];
 
   toJSON() {
-    const res: BFChainCore.BeExchangeAnyMultiJSON = {
+    const res: BFChainCore.BeExchangeAnyMultiAllJSON = {
       transactionSignature: this.transactionSignature,
       toExchangeAssets: this.toExchangeAssets.map((item) => item.toJSON()),
-      beExchangeAsset: this.beExchangeAsset.toJSON(),
+      beExchangeAssets: this.beExchangeAssets.map((item) => item.toJSON()),
     };
 
     this.ciphertextSignature && (res.ciphertextSignature = this.ciphertextSignature.toJSON());
@@ -78,9 +71,9 @@ export class BeExchangeAnyMultiModel
 
   static fromObject<T extends Message>(
     this: BFChainProtobuf.Constructor<T>,
-    object: BFChainProtobuf.ObjectFromType<BeExchangeAnyMultiModel>,
+    object: BFChainProtobuf.ObjectFromType<BeExchangeAnyMultiAllModel>,
   ) {
-    const res = super.fromObject(object) as BeExchangeAnyMultiModel;
+    const res = super.fromObject(object) as BeExchangeAnyMultiAllModel;
     if (res !== object) {
       object.transactionSignature && (res.transactionSignature = object.transactionSignature);
       object.ciphertextSignature &&
@@ -91,19 +84,19 @@ export class BeExchangeAnyMultiModel
 }
 
 /**
- * beExchangeAnyMulti 交易 asset 外层模型
+ * beExchangeAnyMultiAll 交易 asset 外层模型
  *
  */
-@Type.d("BeExchangeAnyMultiAssetModel")
-export class BeExchangeAnyMultiAssetModel
-  extends Message<BeExchangeAnyMultiAssetModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.BeExchangeAnyMultiAssetJSON>
+@Type.d("BeExchangeAnyMultiAllAssetModel")
+export class BeExchangeAnyMultiAllAssetModel
+  extends Message<BeExchangeAnyMultiAllAssetModel>
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.BeExchangeAnyMultiAllAssetJSON>
 {
-  @Field.d(1, BeExchangeAnyMultiModel)
-  beExchangeAnyMulti!: BeExchangeAnyMultiModel;
+  @Field.d(1, BeExchangeAnyMultiAllModel)
+  beExchangeAnyMultiAll!: BeExchangeAnyMultiAllModel;
   toJSON() {
     return {
-      beExchangeAnyMulti: this.beExchangeAnyMulti.toJSON(),
+      beExchangeAnyMultiAll: this.beExchangeAnyMultiAll.toJSON(),
     };
   }
 }
