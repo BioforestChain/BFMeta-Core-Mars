@@ -45,7 +45,7 @@ export class BeExchangeAnyMultiAllLogicVerifier extends TransactionLogicVerifier
       });
     }
 
-    if (toExchangeAnyMultiAllJson.type !== this.transactionHelper.TO_EXCHANGE_ANY_MULTI) {
+    if (toExchangeAnyMultiAllJson.type !== this.transactionHelper.TO_EXCHANGE_ANY_MULTI_ALL) {
       throw new ConsensusException(ERROR_LIST.NOT_EXPECTED_RELATED_TRANSACTION, {
         signature: `${transactionSignature}`,
       });
@@ -254,6 +254,23 @@ export class BeExchangeAnyMultiAllLogicVerifier extends TransactionLogicVerifier
       beExchangeAssets: nextBeExchangeAssets,
       ciphertextSignature,
     } = transaction.asset.beExchangeAnyMultiAll;
+
+    if (prevToExchangeAssets.length !== nextToExchangeAssets.length) {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+        to_compare_prop: `toExchangeAssets.length: ${prevToExchangeAssets.length}`,
+        be_compare_prop: `toExchangeAssets.length: ${nextToExchangeAssets.length}`,
+        to_target: "toExchangeAnyMultiAll",
+        be_target: "beExchangeAnyMultiAll",
+      });
+    }
+    if (prevBeExchangeAssets.length !== nextBeExchangeAssets.length) {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+        to_compare_prop: `beExchangeAssets.length: ${prevBeExchangeAssets.length}`,
+        be_compare_prop: `beExchangeAssets.length: ${nextBeExchangeAssets.length}`,
+        to_target: "toExchangeAnyMultiAll",
+        be_target: "beExchangeAnyMultiAll",
+      });
+    }
 
     const prevAssets: {
       [key: string]: {
