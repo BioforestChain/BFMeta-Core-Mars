@@ -175,3 +175,15 @@ export const enum REQUEST_LIMIT_STRATEGY {
   BUSY,
   REFUSE,
 }
+
+export const enum BLOB_CONTENT_TYPE {
+  BYTES = "bytes",
+}
+
+/**blob 存储策略 */
+export const enum BLOB_STORAGE_STRATEGY {
+  /**临时的 */
+  TEMPORARY = 0,
+  /**持久的 */
+  PERSISTENT = 1,
+}

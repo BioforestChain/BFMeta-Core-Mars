@@ -1,3 +1,4 @@
+import type { BLOB_CONTENT_TYPE } from "./constants";
 import { Field, Message, Type, Long } from "@bfchain/protobuf";
 import { CommonResponse } from "./common.chainChannel.model";
 import { getHexFromArrayBuffer, parseHexToArrayBuffer } from "@bfchain/util-encoding-hex";
@@ -49,30 +50,16 @@ export class OpenBlobReturnModel
   extends CommonResponse
   implements BFChainCore.JSONToModelType<BFChainCore.OpenBlobReturnJSON>
 {
-  @Field.d(OpenBlobReturnModel.INC++, "uint32", "optional")
-  descriptor!: number;
   @Field.d(OpenBlobReturnModel.INC++, "string", "optional")
-  contentType!: string;
+  descriptor!: string;
+  @Field.d(OpenBlobReturnModel.INC++, "string", "optional")
+  contentType!: BLOB_CONTENT_TYPE;
   @Field.d(OpenBlobReturnModel.INC++, "uint32", "optional")
   size!: number;
-  @Field.d(OpenBlobReturnModel.INC++, "uint32", "optional")
-  chunkSize!: number;
-  @Field.d(OpenBlobReturnModel.INC++, "uint64", "optional")
-  expriedTimeLong!: Long;
-  get expriedTime() {
-    return this.expriedTimeLong.toNumber();
-  }
-  set expriedTime(v) {
-    // fromNumber 传 ture 才是 uint64
-    this.expriedTimeLong = Long.fromNumber(v, true);
-  }
   toJSON() {
     const res = super.toJSON() as BFChainCore.OpenBlobReturnJSON;
     res.descriptor = this.descriptor;
     res.contentType = this.contentType;
-    res.size = this.size;
-    res.chunkSize = this.chunkSize;
-    res.expriedTime = this.expriedTime;
     return res;
   }
 
@@ -81,7 +68,6 @@ export class OpenBlobReturnModel
     object: BFChainProtobuf.ObjectFromType<BFChainCore.OpenBlobReturnJSON>,
   ) {
     const res = super.fromObject(object as any) as OpenBlobReturnModel;
-    object.expriedTime !== undefined && (res.expriedTime = object.expriedTime);
     return res as unknown as T;
   }
 }
@@ -93,8 +79,8 @@ export class CloseBlobArgModel
 {
   static INC = 1;
   /**查询参数 */
-  @Field.d(CloseBlobArgModel.INC++, "uint32")
-  descriptor!: number;
+  @Field.d(CloseBlobArgModel.INC++, "string")
+  descriptor!: string;
 
   toJSON() {
     return {
@@ -115,8 +101,8 @@ export class ReadBlobArgModel
 {
   static INC = 1;
   /**查询参数 */
-  @Field.d(ReadBlobArgModel.INC++, "uint32")
-  descriptor!: number;
+  @Field.d(ReadBlobArgModel.INC++, "string")
+  descriptor!: string;
   @Field.d(ReadBlobArgModel.INC++, "uint32")
   start!: number;
   @Field.d(ReadBlobArgModel.INC++, "uint32")

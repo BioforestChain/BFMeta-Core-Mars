@@ -12,7 +12,7 @@ declare namespace BFChainCore {
      * @param hash
      * @returns 返回一个逻辑地址的值
      */
-    open(hash: string): Promise<string>;
+    open(hash: string): Promise<BFChainCore.OpenBlobReturnParams>;
     /**
      * 获取 blob 基础信息
      *
@@ -57,7 +57,7 @@ declare namespace BFChainCore {
       totalSize: number,
       chunkSize: number,
       contentType: string,
-      strategy: import("./blobHelper").STORAGE_STRATEGY,
+      strategy: BFChainCore.BLOB_STORAGE_STRATEGY,
     ): Promise<string>;
     /**
      * 保存分片数据
@@ -85,7 +85,7 @@ declare namespace BFChainCore {
      */
     changeBlobStrategy(
       openArg: OpenBlobArgJSON,
-      strategy: import("./blobHelper").STORAGE_STRATEGY,
+      strategy: BFChainCore.BLOB_STORAGE_STRATEGY,
     ): Promise<boolean>;
   }
 }

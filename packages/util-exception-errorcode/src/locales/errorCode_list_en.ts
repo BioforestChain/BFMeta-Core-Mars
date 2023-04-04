@@ -195,15 +195,7 @@ export const ERROR_CODE_LIST_EN = {
   // #endregion
 
   // #region blob
-  "001-23001": "Not found blob by hash: {hash}",
-  "001-23002": "Could not open blob by hash: {hash}",
-  "001-23003": "Could not read blob by descriptor: {descriptor}",
-  "001-23004": "Could not close blob by descriptor: {descriptor}",
-  "001-23005": "Could not request storage for write blob with size: {size}",
-  "001-23006": "Could not save chunk for blob pointer {pointer} index {index}",
-  "001-23007": "Fail to generate blob pointer: {pointer}",
-  "001-23008": "Fail to change blob({hash}) strategy({strategy})",
-  "001-23009": "Fail to download blob({hash}) strategy({strategy})",
-  "001-23010": "Fail to close blob({hash}) descriptor({descriptor})",
+  "001-23001": "blob({hash}) algorithm({algorithm}) is invalid",
+  "001-23002": "Fail to download blob({hash}) size({size})",
   // #endregion
 } as const;

@@ -190,15 +190,7 @@ export const ERROR_CODE_LIST_ZH = {
   // #endregion
 
   // #region blob
-  "001-23001": "blob 未找到 hash: {hash}",
-  "001-23002": "无法打开 blob hash: {hash}",
-  "001-23003": "无法读取 blob descriptor: {descriptor}",
-  "001-23004": "无法关闭 blob descriptor: {descriptor}",
-  "001-23005": "无法申请 blob 的存储空间 size: {size}",
-  "001-23006": "无法存储 blob 的分片 pointer {pointer} index {index}",
-  "001-23007": "生成 blob pointer: {pointer} 失败",
-  "001-23008": "移动 blob({hash}) strategy({strategy}) 失败",
-  "001-23009": "下载 blob({hash}) strategy({strategy}) 失败",
-  "001-23010": "关闭 blob({hash}) descriptor({descriptor}) 失败",
+  "001-23001": "blob({hash}) 的 algorithm({algorithm}) 不合法",
+  "001-23002": "下载 blob({hash}) size({size}) 失败",
   // #endregion
 } as const;

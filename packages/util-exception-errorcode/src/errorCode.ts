@@ -481,37 +481,11 @@ export const ERROR_LIST = {
   // #endregion
 
   // #region blob
-  OPEN_BLOB_NOT_FOUND: new ErrorCode("001-23001", "Not found blob by hash: {hash}"),
-  OPEN_BLOB_INVALID_HASH: new ErrorCode("001-23002", "Could not open blob by hash: {hash}"),
-  READ_BLOB_INVALID_DESCRIPTOR: new ErrorCode(
-    "001-23003",
-    "Could not read blob by descriptor: {descriptor}",
+  BLOB_ALGORITHM_IS_INVALID: new ErrorCode(
+    "001-23001",
+    "blob({hash}) algorithm({algorithm}) is invalid",
   ),
-  CLOSE_BLOB_INVALID_DESCRIPTOR: new ErrorCode(
-    "001-23004",
-    "Could not close blob by descriptor: {descriptor}",
-  ),
-  REFUSE_REQUEST_BLOB_STORAGE: new ErrorCode(
-    "001-23005",
-    "Could not request storage for write blob with size: {size}",
-  ),
-  FAIL_TO_STORE_BLOB_CHUNK: new ErrorCode(
-    "001-23006",
-    "Could not save chunk for blob pointer {pointer} index {index}",
-  ),
-  FAIL_TO_GENERATE_BLOB: new ErrorCode("001-23007", "Fail to generate blob pointer: {pointer}"),
-  FAIL_TO_CHANGE_BLOB_STRATEGY: new ErrorCode(
-    "001-23008",
-    "Fail to change blob({hash}) strategy({strategy})",
-  ),
-  FAIL_TO_DOWNLOAD_BLOB: new ErrorCode(
-    "001-23009",
-    "Fail to download blob({hash}) strategy({strategy})",
-  ),
-  FAIL_TO_CLOSE_BLOB: new ErrorCode(
-    "001-23010",
-    "Fail to close blob({hash}) descriptor({descriptor})",
-  ),
+  FAIL_TO_DOWNLOAD_BLOB: new ErrorCode("001-23002", "Fail to download blob({hash}) size({size})"),
   // #endregion
 };
 // #endregion

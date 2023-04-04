@@ -1,10 +1,4 @@
-import {
-  BaseHelper,
-  BlobHelper,
-  ChainTimeHelper,
-  ConfigHelper,
-  STORAGE_STRATEGY,
-} from "@bfchain/core-helper";
+import { BaseHelper, BlobHelper, ChainTimeHelper, ConfigHelper } from "@bfchain/core-helper";
 import {
   Block,
   BlockQueryOptionsModel,
@@ -46,6 +40,7 @@ import {
   TransactionInBlockGetOptionsModel,
   GetTransactionInBlockArgModel,
   GetTransactionInBlockReturnModel,
+  BLOB_STORAGE_STRATEGY,
 } from "@bfchain/core-model";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { Message } from "@bfchain/protobuf";
@@ -255,7 +250,7 @@ export class ChainChannel<
       }
       this._reqIdSet.clear();
 
-      this.blobHelper.destroyTarget(this);
+      // this.blobHelper.destroyTarget(this);
     });
   }
   get diffTime() {
@@ -675,7 +670,7 @@ export class ChainChannel<
     return res;
   }
 
-  private _openedBlobs = new Set<number>();
+  private _openedBlobs = new Set<string>();
   async openBlob(
     openArg: BFChainCore.OpenBlobArgJSON,
     opts?: BFChainCore.ChannelRequestOptions<THIS>,
@@ -693,7 +688,7 @@ export class ChainChannel<
       this.chainChannelHelper.boxOpenBlobReturn,
       opts,
     );
-    if (openRes.descriptor > 0) {
+    if (openRes.descriptor) {
       this._openedBlobs.add(openRes.descriptor);
     }
     return openRes;
@@ -752,7 +747,7 @@ export class ChainChannel<
       return;
     }
 
-    let descriptor!: number;
+    let descriptor!: string;
     try {
       /// 打开连接
       const openRes = await this.openBlob(openArg);
@@ -773,6 +768,7 @@ export class ChainChannel<
         downloadSize,
         chunkSize,
         openRes.contentType,
+        BLOB_STORAGE_STRATEGY.TEMPORARY,
       );
       /// 总下载次数
       const totalCount = Math.ceil(downloadSize / chunkSize);
@@ -846,11 +842,20 @@ export class ChainChannel<
         }
         offset += tempTasks.length;
       }
-      /// blob 缺失
-      if (!(isSuccess && totalBytesRead === downloadSize)) {
+      /// blob 下载失败
+      if (!isSuccess) {
         throw new RefuseException(ERROR_LIST.FAIL_TO_DOWNLOAD_BLOB, {
           hash: openArg.hash,
-          strategy: STORAGE_STRATEGY.TEMPORARY,
+          size: downloadSize,
+        });
+      }
+      /// blob 缺失
+      if (totalBytesRead !== downloadSize) {
+        throw new RefuseException(ERROR_LIST.NOT_MATCH, {
+          to_compare_prop: `downloadSize ${totalBytesRead}`,
+          to_target: "real downloaded",
+          be_compare_prop: `downloadSize ${downloadSize}`,
+          be_target: "transaction blob",
         });
       }
       /// 下载完成，保存成 blob 对象
@@ -1340,15 +1345,12 @@ export class ChainChannel<
               const openArg = await this.chainChannelHelper.boxOpenBlobArg(binary);
               const openResult = this.has("onOpenBlob")
                 ? await this.emit("onOpenBlob", openArg)
-                : await this.blobHelper.open(this, openArg);
+                : await this.blobHelper.open(openArg);
               if (openResult) {
                 response.status = RESPONSE_STATUS.success;
 
                 response.descriptor = openResult.descriptor;
                 response.contentType = openResult.contentType;
-                response.size = openResult.size;
-                response.chunkSize = openResult.chunkSize;
-                response.expriedTime = openResult.expriedTime;
               }
               taskResult = response;
               break;
@@ -1361,7 +1363,7 @@ export class ChainChannel<
               const readArg = await this.chainChannelHelper.boxReadBlobArg(binary);
               const readResult = this.has("onReadBlob")
                 ? await this.emit("onReadBlob", readArg)
-                : await this.blobHelper.read(this, readArg);
+                : await this.blobHelper.read(readArg);
 
               if (readResult) {
                 response.status = RESPONSE_STATUS.success;
@@ -1378,7 +1380,7 @@ export class ChainChannel<
               const closeArg = await this.chainChannelHelper.boxCloseBlobArg(binary);
               const readResult = this.has("onCloseBlob")
                 ? await this.emit("onCloseBlob", closeArg)
-                : await this.blobHelper.close(this, closeArg);
+                : await this.blobHelper.close(closeArg);
               if (readResult) {
                 response.status = RESPONSE_STATUS.success;
               }

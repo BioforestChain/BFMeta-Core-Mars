@@ -1,8 +1,10 @@
 /// <reference lib="dom"/>
 declare namespace BFChainCore {
-  type RESPONSE_STATUS = import("./").RESPONSE_STATUS;
-  type BLOCKCHAIN_STATUS = import("./").BLOCKCHAIN_STATUS;
-  type NewTransactionStatus = import("./").NewTransactionStatus;
+  type RESPONSE_STATUS = import("./constants").RESPONSE_STATUS;
+  type BLOCKCHAIN_STATUS = import("./constants").BLOCKCHAIN_STATUS;
+  type NewTransactionStatus = import("./constants").NewTransactionStatus;
+  type BLOB_CONTENT_TYPE = import("./constants").BLOB_CONTENT_TYPE;
+  type BLOB_STORAGE_STRATEGY = import("./constants").BLOB_STORAGE_STRATEGY;
 
   interface ErrorMessageJSON {
     message: string;
@@ -157,21 +159,15 @@ declare namespace BFChainCore {
   }
   interface OpenBlobReturnJSON extends CommonResponseJSON, OpenBlobReturnParams {}
   interface OpenBlobReturnParams {
-    /**句柄描述符 */
-    descriptor: number;
+    /**blob 描述符 */
+    descriptor: string;
     /**类型 */
-    contentType: string;
-    /**大小 */
-    size: number;
-    /**下载时，推荐的分片大小 */
-    chunkSize: number;
-    /**句柄过期时间 */
-    expriedTime: number;
+    contentType: BLOB_CONTENT_TYPE;
   }
 
   type ReadBlobArgJSON = {
-    /**句柄描述符 */
-    descriptor: number;
+    /**blob 描述符 */
+    descriptor: string;
     /**起始位置 */
     start: number;
     /**结束位置 */
@@ -186,8 +182,8 @@ declare namespace BFChainCore {
   }
 
   type CloseBlobArgJSON = {
-    /**句柄描述符 */
-    descriptor: number;
+    /**blob 描述符 */
+    descriptor: string;
   };
 
   interface CloseBlobReturnJSON extends CommonResponseJSON, CloseBlobReturnParams {}
