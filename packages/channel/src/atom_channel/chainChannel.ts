@@ -782,45 +782,42 @@ export class ChainChannel<
         bytesRead: number;
       }>)[] = [];
       for (let index = 0; index < totalCount; index++) {
-        tasks.push(() => {
-          return new Promise<{
-            isSuccess: boolean;
-            bytesRead: number;
-          }>(async (resolve, reject) => {
-            let retryTimes = 0;
-            let isSuccess = false;
-            let bytesRead = 0;
-            while (retryTimes < 3) {
-              try {
-                const start = chunkSize * index;
-                const readRes = await this.readBlob({
-                  descriptor,
-                  start,
-                  end: index === totalCount - 1 ? start + lastChunkSize : start + chunkSize,
-                });
-                if (readRes.status === RESPONSE_STATUS.busy) {
-                  retryTimes++;
-                  continue;
-                }
-                if (readRes.status !== RESPONSE_STATUS.success) {
-                  throw readRes.error;
-                }
-                bytesRead = readRes.chunkBuffer.length;
-                // 没有读取到数据
-                if (bytesRead === 0) {
-                  break;
-                }
-                await this.blobHelper.saveChunk(blob_prt, index, readRes.chunkBuffer);
-                isSuccess = true;
-                break;
-              } catch (error) {
-                retryTimes++;
-                // 休息一下，来杯玉叶凉茶
-                await sleep(100);
+        tasks.push(async () => {
+          let retryTimes = 0;
+          let isSuccess = false;
+          let bytesRead = 0;
+          while (retryTimes < 3) {
+            try {
+              const start = chunkSize * index;
+              const readRes = await this.readBlob({
+                descriptor,
+                start,
+                end: index === totalCount - 1 ? start + lastChunkSize : start + chunkSize,
+              });
+              if (readRes.status === RESPONSE_STATUS.busy) {
+                throw readRes;
               }
+              if (readRes.status !== RESPONSE_STATUS.success) {
+                throw readRes;
+              }
+              bytesRead = readRes.chunkBuffer.length;
+              // 没有读取到数据
+              if (bytesRead === 0) {
+                break;
+              }
+              await this.blobHelper.saveChunk(blob_prt, index, readRes.chunkBuffer);
+              isSuccess = true;
+              break;
+            } catch (error) {
+              retryTimes++;
+              if (retryTimes >= 3) {
+                throw error;
+              }
+              // 休息一下，来杯玉叶凉茶
+              await sleep(100);
             }
-            return resolve({ isSuccess, bytesRead });
-          });
+          }
+          return { isSuccess, bytesRead };
         });
       }
       /// 并发下载
