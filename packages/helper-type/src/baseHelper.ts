@@ -621,7 +621,7 @@ export class BaseHelper {
   }
 
   /**
-   * 大写链名
+   * 大写链名: 5-20
    *
    * @param chainName
    */
@@ -629,11 +629,11 @@ export class BaseHelper {
     if (!this.isString(chainName)) {
       return false;
     }
-    return /^[A-Z]{5,10}$/.test(chainName);
+    return /^[A-Z]{5,20}$/.test(chainName);
   }
 
   /**
-   * 链名是否合法：小写字母 5-10
+   * 链名是否合法：小写字母 5-20
    *
    * @param chainName
    */
@@ -641,11 +641,11 @@ export class BaseHelper {
     if (!this.isString(chainName)) {
       return false;
     }
-    return /^[a-z]{5,10}$/.test(chainName);
+    return /^[a-z]{5,20}$/.test(chainName);
   }
 
   /**
-   * 链资产名是否合法：大写字母 3-8
+   * 链资产名是否合法：大写字母 3-10
    *
    * @param assetType
    */
@@ -653,7 +653,7 @@ export class BaseHelper {
     if (!this.isString(assetType)) {
       return false;
     }
-    return /^[A-Z]{3,8}$/.test(assetType);
+    return /^[A-Z]{3,10}$/.test(assetType);
   }
 
   /**

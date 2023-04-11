@@ -20,7 +20,7 @@ export class TransferAnyModel
   /**转移的资产所属大类 */
   @Field.d(3, PARENT_ASSET_TYPE)
   parentAssetType!: PARENT_ASSET_TYPE;
-  /**转移的权益名称，大写字母组成，3-5 个字符 */
+  /**转移的权益名称，大写字母组成，3-10 个字符 */
   @Field.d(4, "string")
   assetType!: string;
   /**转移的权益数量，0-9 组成并且不包含小数点，必须大于0 */

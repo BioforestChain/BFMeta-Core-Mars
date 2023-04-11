@@ -42,7 +42,7 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
    * asset 是完整的 issueAsset 信息
    * 需要携带合法的资产所属链名称,并且是本链
    * 需要携带合法的资产所属链的网络标识符,并且是本链
-   * 需要携带合法的资产缩写：3-5 位 大小写字母组成的字符串
+   * 需要携带合法的资产缩写：3-10 位 大小写字母组成的字符串
    * 需要携带合法的预计发行资产信息
    * 需要携带合法的资产创世账户地址
    * 资产的创世账户地址不能是交易的发起账户

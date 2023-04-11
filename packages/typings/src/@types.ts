@@ -12,7 +12,7 @@ declare namespace BFChainCore {
   type AssetInfoJSON = {
     /**权益所属的链网络标识，大写字母或数字组成，5 个字符，最后一位是校验位 */
     magic: string;
-    /**权益名，大写字母组成，3-5 个字符 */
+    /**权益名，大写字母组成，3-10 个字符 */
     assetType: string;
   };
 

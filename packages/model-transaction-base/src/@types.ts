@@ -105,7 +105,7 @@ declare namespace BFChainCore {
   }
 
   interface DAppJSON {
-    /**dappid 所属的链名，小写字母组成，3-8 位 */
+    /**dappid 所属的链名，小写字母组成，5-20 位 */
     sourceChainName: string; // chain_name;
     /**dappid 所属的链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
     sourceChainMagic: string; // chain_magic;
@@ -152,11 +152,11 @@ declare namespace BFChainCore {
   }
 
   interface IssueAssetJSON {
-    /**权益所属链名，小写字母组成，3-8 位 */
+    /**权益所属链名，小写字母组成，5-20 位 */
     sourceChainName: string;
     /**权益所属链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
     sourceChainMagic: string;
-    /**权益名称，大写字母组成，3-5 个字符 */
+    /**权益名称，大写字母组成，3-10 个字符 */
     assetType: string;
     /**发行的新权益总数，权益数量由0-9共十个数字组成，权益数量不包含小数点且必须大于0 */
     expectedIssuedAssets: string;
@@ -166,11 +166,11 @@ declare namespace BFChainCore {
     issueAsset: IssueAssetJSON;
   }
   interface TransferAssetJSON {
-    /**转移的权益所属链名，小写字母组成，3-8 位 */
+    /**转移的权益所属链名，小写字母组成，5-20 位 */
     sourceChainName: string;
     /**转移的权益所属链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
     sourceChainMagic: string;
-    /**转移的权益名称，大写字母组成，3-5 个字符 */
+    /**转移的权益名称，大写字母组成，3-10 个字符 */
     assetType: string;
     /**转移的权益数量，0-9 组成并且不包含小数点，必须大于0 */
     amount: string;
@@ -180,11 +180,11 @@ declare namespace BFChainCore {
     transferAsset: TransferAssetJSON;
   }
   interface DestoryAssetJSON {
-    /**销毁的权益所属链名，小写字母组成，3-8 位 */
+    /**销毁的权益所属链名，小写字母组成，5-20 位 */
     sourceChainName: string;
     /**销毁的的权益所属链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
     sourceChainMagic: string;
-    /**销毁的权益名称，大写字母组成，3-5 个字符 */
+    /**销毁的权益名称，大写字母组成，3-10 个字符 */
     assetType: string;
     /**销毁的权益数量，0-9 组成并且不包含小数点，必须大于0 */
     amount: string;
@@ -212,11 +212,11 @@ declare namespace BFChainCore {
   interface GiftAssetJSON {
     /**加密密钥生成的公钥数组 */
     cipherPublicKeys: string[];
-    /**赠送的权益所属链名，小写字母组成，3-8 位 */
+    /**赠送的权益所属链名，小写字母组成，5-20 位 */
     sourceChainName: string;
     /**赠送的权益所属链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
     sourceChainMagic: string;
-    /**赠送的权益名称，大写字母组成，3-5 个字符 */
+    /**赠送的权益名称，大写字母组成，3-10 个字符 */
     assetType: string;
     /**赠送的权益数量，0-9 组成并且不包含小数点，必须大于0 */
     amount: string;
@@ -259,11 +259,11 @@ declare namespace BFChainCore {
     trustees: string[];
     /**签收时需要的见证人签名数量，0-9 组成，必须大于 0，最大值为指定的受托人数量+2 */
     numberOfSignFor: number;
-    /**见证的权益所属链名，小写字母组成，3-8 位 */
+    /**见证的权益所属链名，小写字母组成，5-20 位 */
     sourceChainName: string;
     /**见证的权益所属链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
     sourceChainMagic: string;
-    /**见证的权益名称，大写字母组成，3-5 个字符 */
+    /**见证的权益名称，大写字母组成，3-10 个字符 */
     assetType: string;
     /**见证的权益数量，0-9 组成并且不包含小数点，必须大于0 */
     amount: string;
@@ -297,13 +297,13 @@ declare namespace BFChainCore {
     toExchangeSource: string;
     /**被交换的权益来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
     beExchangeSource: string;
-    /**用于交换的权益来源链名，小写字母组成，3-8 位 */
+    /**用于交换的权益来源链名，小写字母组成，5-20 位 */
     toExchangeChainName: string;
-    /**被交换的权益来源链名，小写字母组成，3-8 位 */
+    /**被交换的权益来源链名，小写字母组成，5-20 位 */
     beExchangeChainName: string;
-    /**用于交换的权益名，大写字母组成，3-5 个字符 */
+    /**用于交换的权益名，大写字母组成，3-10 个字符 */
     toExchangeAsset: string;
-    /**被交换的权益名，大写字母组成，3-5 个字符 */
+    /**被交换的权益名，大写字母组成，3-10 个字符 */
     beExchangeAsset: string;
     /**用于交换的权益数量，0-9 组成并且不包含小数点 */
     toExchangeNumber: string;
@@ -339,13 +339,13 @@ declare namespace BFChainCore {
     toExchangeSource: string;
     /**被交换的资产/权益来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
     beExchangeSource: string;
-    /**用于交换的权益/资产来源链名，小写字母组成，3-8 位 */
+    /**用于交换的权益/资产来源链名，小写字母组成，5-20 位 */
     toExchangeChainName: string;
-    /**被交换的资产/权益来源链名，小写字母组成，3-8 位 */
+    /**被交换的资产/权益来源链名，小写字母组成，5-20 位 */
     beExchangeChainName: string;
-    /**用于交换的权益/资产名，大写字母组成，3-5 个字符 */
+    /**用于交换的权益/资产名，大写字母组成，3-10 个字符 */
     toExchangeAsset: string;
-    /**被交换的资产/权益名，大写字母组成，3-5 个字符 */
+    /**被交换的资产/权益名，大写字母组成，3-10 个字符 */
     beExchangeAsset: string;
     /**用于交换或交换得到的权益数量，权益数量由0-9共十个数字组成，权益数量不包含小数点且必须大于0 */
     exchangeNumber: string;
@@ -374,7 +374,7 @@ declare namespace BFChainCore {
   interface LocationNameJSON {
     /**注册/注销的位名，1-512 个字符，每级位名最大长度为 128 个字符，一级位名只能是小写字母组成，二级及以上开头及结尾只能由小写字母或数字组成，中间可以包含下划线，根位名必须是本链链名 */
     name: string;
-    /**注册/注销的位名来源链名，小写字母组成，3-8 位 */
+    /**注册/注销的位名来源链名，小写字母组成，5-20 位 */
     sourceChainName: string;
     /**注册/注销的位名来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
     sourceChainMagic: string;
@@ -394,7 +394,7 @@ declare namespace BFChainCore {
   interface SetLnsManagerJSON {
     /**位名，1-512 个字符，每级位名最大长度为 128 个字符，一级位名只能是小写字母组成，二级及以上开头及结尾只能由小写字母或数字组成，中间可以包含下划线，根位名必须是本链链名 */
     name: string;
-    /**位名来源链名，小写字母组成，3-8 位 */
+    /**位名来源链名，小写字母组成，5-20 位 */
     sourceChainName: string;
     /**位名来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
     sourceChainMagic: string;
@@ -406,7 +406,7 @@ declare namespace BFChainCore {
   interface SetLnsRecordValueJSON {
     /**位名，1-512 个字符，每级位名最大长度为 128 个字符，一级位名只能是小写字母组成，二级及以上开头及结尾只能由小写字母或数字组成，中间可以包含下划线，根位名必须是本链链名 */
     name: string;
-    /**位名来源链名，小写字母组成，3-8 位 */
+    /**位名来源链名，小写字母组成，5-20 位 */
     sourceChainName: string;
     /**位名来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
     sourceChainMagic: string;
@@ -423,7 +423,7 @@ declare namespace BFChainCore {
   }
 
   interface IssueEntityFactoryJSON {
-    /**非同质资产模板来源链名，小写字母组成，3-8 位 */
+    /**非同质资产模板来源链名，小写字母组成，5-20 位 */
     sourceChainName: string;
     /**非同质资产模板来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
     sourceChainMagic: string;
@@ -441,7 +441,7 @@ declare namespace BFChainCore {
     issueEntityFactory: IssueEntityFactoryJSON;
   }
   interface IssueEntityJSON {
-    /**非同质资产来源链名，小写字母组成，3-8 位 */
+    /**非同质资产来源链名，小写字母组成，5-20 位 */
     sourceChainName: string;
     /**非同质资产来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
     sourceChainMagic: string;
@@ -469,7 +469,7 @@ declare namespace BFChainCore {
   interface DestoryEntityJSON {
     /**要销毁的非同质资产发行事件的唯一标识符 */
     transactionSignature: string;
-    /**要销毁的非同质资产来源链名，小写字母组成，3-8 位 */
+    /**要销毁的非同质资产来源链名，小写字母组成，5-20 位 */
     sourceChainName: string;
     /**要销毁的非同质资产来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
     sourceChainMagic: string;
@@ -488,13 +488,13 @@ declare namespace BFChainCore {
   }
 
   interface TransferAnyJSON {
-    /**转移的权益所属链名，小写字母组成，3-8 位 */
+    /**转移的权益所属链名，小写字母组成，5-20 位 */
     sourceChainName: string;
     /**转移的权益所属链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
     sourceChainMagic: string;
     /**转移的资产所属大类 */
     parentAssetType: PARENT_ASSET_TYPE;
-    /**转移的权益名称，大写字母组成，3-5 个字符 */
+    /**转移的权益名称，大写字母组成，3-10 个字符 */
     assetType: string;
     /**转移的权益数量，0-9 组成并且不包含小数点，必须大于0 */
     amount: string;
@@ -509,13 +509,13 @@ declare namespace BFChainCore {
   interface GiftAnyJSON {
     /**加密密钥生成的公钥数组 */
     cipherPublicKeys: string[];
-    /**赠送的资产所属链名，小写字母组成，3-8 位 */
+    /**赠送的资产所属链名，小写字母组成，5-20 位 */
     sourceChainName: string;
     /**赠送的资产所属链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
     sourceChainMagic: string;
     /**赠送的资产所属大类 */
     parentAssetType: PARENT_ASSET_TYPE;
-    /**赠送的资产名称，大写字母组成，3-5 个字符 */
+    /**赠送的资产名称，大写字母组成，3-10 个字符 */
     assetType: string;
     /**赠送的资产数量，0-9 组成并且不包含小数点，必须大于0 */
     amount: string;
@@ -569,9 +569,9 @@ declare namespace BFChainCore {
     toExchangeSource: string;
     /**被交换的资产来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
     beExchangeSource: string;
-    /**用于交换的资产来源链名，小写字母组成，3-8 位 */
+    /**用于交换的资产来源链名，小写字母组成，5-20 位 */
     toExchangeChainName: string;
-    /**被交换的资产来源链名，小写字母组成，3-8 位 */
+    /**被交换的资产来源链名，小写字母组成，5-20 位 */
     beExchangeChainName: string;
     /**用于交换的资产所属大类 */
     toExchangeParentAssetType: PARENT_ASSET_TYPE;
@@ -622,7 +622,7 @@ declare namespace BFChainCore {
   }
 
   interface IssueEntityMultiV1JSON {
-    /**非同质资产来源链名，小写字母组成，3-8 位 */
+    /**非同质资产来源链名，小写字母组成，5-20 位 */
     sourceChainName: string;
     /**非同质资产来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
     sourceChainMagic: string;
@@ -641,7 +641,7 @@ declare namespace BFChainCore {
   interface ToExchangeAssetV1JSON {
     /**用于交换的资产来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
     toExchangeSource: string;
-    /**用于交换的资产来源链名，小写字母组成，3-8 位 */
+    /**用于交换的资产来源链名，小写字母组成，5-20 位 */
     toExchangeChainName: string;
     /**用于交换的资产资产所属大类 */
     toExchangeParentAssetType: PARENT_ASSET_TYPE;
@@ -657,7 +657,7 @@ declare namespace BFChainCore {
   interface BeExchangeAssetV1JSON {
     /**被交换的资产来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
     beExchangeSource: string;
-    /**被交换的资产来源链名，小写字母组成，3-8 位 */
+    /**被交换的资产来源链名，小写字母组成，5-20 位 */
     beExchangeChainName: string;
     /**被交换的资产所属大类 */
     beExchangeParentAssetType: PARENT_ASSET_TYPE;
@@ -699,7 +699,7 @@ declare namespace BFChainCore {
   interface ToExchangeAssetV2JSON {
     /**用于交换的资产来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
     toExchangeSource: string;
-    /**用于交换的资产来源链名，小写字母组成，3-8 位 */
+    /**用于交换的资产来源链名，小写字母组成，5-20 位 */
     toExchangeChainName: string;
     /**用于交换的资产资产所属大类 */
     toExchangeParentAssetType: PARENT_ASSET_TYPE;
@@ -713,7 +713,7 @@ declare namespace BFChainCore {
   interface BeExchangeAssetV2JSON {
     /**被交换的资产来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
     beExchangeSource: string;
-    /**被交换的资产来源链名，小写字母组成，3-8 位 */
+    /**被交换的资产来源链名，小写字母组成，5-20 位 */
     beExchangeChainName: string;
     /**被交换的资产所属大类 */
     beExchangeParentAssetType: PARENT_ASSET_TYPE;
