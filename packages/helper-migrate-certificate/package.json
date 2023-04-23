@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-helper-migrate-certificate",
-  "version": "8.0.81",
+  "version": "8.0.82",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -14,14 +14,14 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-helper-account-base": "8.0.81",
-    "@bfchain/core-helper-asymmetric": "8.0.81",
-    "@bfchain/core-helper-chain-time": "8.0.81",
-    "@bfchain/core-helper-config": "8.0.81",
-    "@bfchain/core-helper-transaction": "8.0.81",
-    "@bfchain/core-helper-type": "8.0.81",
-    "@bfchain/core-model-common": "8.0.81",
-    "@bfchain/core-typings": "8.0.81"
+    "@bfchain/core-helper-account-base": "8.0.82",
+    "@bfchain/core-helper-asymmetric": "8.0.82",
+    "@bfchain/core-helper-chain-time": "8.0.82",
+    "@bfchain/core-helper-config": "8.0.82",
+    "@bfchain/core-helper-transaction": "8.0.82",
+    "@bfchain/core-helper-type": "8.0.82",
+    "@bfchain/core-model-common": "8.0.82",
+    "@bfchain/core-typings": "8.0.82"
   },
   "gitHead": "ef41eb359371b11aafbec0516df1eba01f16ebfd",
   "types": "build/cjs/index.d.ts"
