@@ -97,6 +97,9 @@ export enum TRANSACTION_TYPES_BASE {
 
   /**个性事件 */
   CUSTOM = "CUS-00",
+
+  /**组合事件 */
+  MULTIPLE = "MTP-02",
 }
 
 /**

@@ -275,6 +275,11 @@ export class TransactionHelper {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.BE_EXCHANGE_ANY_MULTI_ALL);
   }
 
+  /** MULTIPLE: 组合 */
+  get MULTIPLE() {
+    return this.getTransactionType(TRANSACTION_TYPES_BASE.MULTIPLE);
+  }
+
   ALL_TRANSACTION_TYPES = [
     this.SIGNATURE,
     this.DELEGATE,
@@ -322,6 +327,8 @@ export class TransactionHelper {
 
     this.TO_EXCHANGE_ANY_MULTI_ALL,
     this.BE_EXCHANGE_ANY_MULTI_ALL,
+
+    this.MULTIPLE,
   ];
 
   /**获取创世块里所有的受托人 */

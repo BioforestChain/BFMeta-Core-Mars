@@ -23,7 +23,7 @@ async function getAcceptVoteTransaction(sender: AccountModel, bfchainCore: BFCha
     rangeType: RANGE_TYPE.EMPTY,
     range: [],
     timestamp: 770880, // 生成交易时间戳
-    fee: "--", // 交易手续费
+    fee: "100", // 交易手续费
     remark: { remark: "body.remark".repeat(1000) }, // 交易备注，任意信息
     dappid: getRandomDAppid(), // 交易所属的 dappid
     lns: bfchainCore.config.genesisLocationName,
