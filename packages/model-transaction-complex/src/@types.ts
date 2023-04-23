@@ -18,4 +18,12 @@ declare namespace BFChainCore {
     RegisterChainAssetJSON,
     { hasRecipientId: false }
   >;
+
+  interface MultipleJSON {
+    transactions: BFChainCore.TransactionJSON[];
+  }
+  interface MultipleAssetJSON {
+    multiple: MultipleJSON;
+  }
+  type MultipleTransactionJSON = TransactionMixJSON<MultipleAssetJSON, { hasRecipientId: false }>;
 }
