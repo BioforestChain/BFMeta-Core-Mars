@@ -63,6 +63,7 @@
     "src/transaction/issueEntityV1.ts",
     "src/transaction/locationName.ts",
     "src/transaction/mark.ts",
+    "src/transaction/multiple.ts",
     "src/transaction/registerChain.ts",
     "src/transaction/rejectVote.ts",
     "src/transaction/setLnsManager.ts",
