@@ -40,12 +40,30 @@ export class DestoryEntityLogicVerifier extends TransactionLogicVerifier {
       });
     }
 
-    const trs = trsWithBlockSign.transaction as BFChainCore.IssueEntityTransactionJSON;
-
-    if (
-      trs.type !== this.transactionHelper.ISSUE_ENTITY &&
-      trs.type !== this.transactionHelper.ISSUE_ENTITY_MULTI
-    ) {
+    const trs = trsWithBlockSign.transaction;
+    if (trs.type === this.transactionHelper.ISSUE_ENTITY) {
+      const entityInfo = (trs as BFChainCore.IssueEntityTransactionJSON).asset.issueEntity;
+      if (entityInfo.entityId !== destoryEntity.entityId) {
+        throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+          to_compare_prop: `entityId ${destoryEntity.entityId}`,
+          be_compare_prop: `entityId ${entityInfo.entityId}`,
+          to_target: "transaction",
+          be_target: "issueEntityTransaction",
+        });
+      }
+    } else if (trs.type === this.transactionHelper.ISSUE_ENTITY_MULTI) {
+      const entityList = (
+        trs as BFChainCore.IssueEntityMultiTransactionV1JSON
+      ).asset.issueEntityMulti.entityStructList.map((item) => item.entityId);
+      if (!entityList.includes(destoryEntity.entityId)) {
+        throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+          to_compare_prop: `entityId ${destoryEntity.entityId}`,
+          be_compare_prop: `entityId [${entityList.slice(0, 3).join(",")}...]`,
+          to_target: "transaction",
+          be_target: "issueEntityTransaction",
+        });
+      }
+    } else {
       throw new ConsensusException(ERROR_LIST.NOT_EXPECTED_RELATED_TRANSACTION, {
         signature: `${transactionSignature}`,
       });
