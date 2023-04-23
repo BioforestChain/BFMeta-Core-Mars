@@ -29,6 +29,8 @@
     "src/custom.asset.ts",
     "src/custom.transaction.ts",
     "src/index.ts",
+    "src/multiple.asset.ts",
+    "src/multiple.transaction.ts",
     "src/registerChain.asset.ts",
     "src/registerChain.transaction.ts"
   ]
