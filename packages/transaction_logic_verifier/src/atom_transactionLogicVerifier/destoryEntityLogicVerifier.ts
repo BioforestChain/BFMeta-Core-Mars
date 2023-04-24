@@ -60,7 +60,7 @@ export class DestoryEntityLogicVerifier extends TransactionLogicVerifier {
           to_compare_prop: `entityId ${destoryEntity.entityId}`,
           be_compare_prop: `entityId [${entityList.slice(0, 3).join(",")}...]`,
           to_target: "transaction",
-          be_target: "issueEntityTransaction",
+          be_target: "issueEntityMultiTransaction",
         });
       }
     } else {
