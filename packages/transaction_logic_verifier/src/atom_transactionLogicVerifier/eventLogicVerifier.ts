@@ -300,7 +300,7 @@ export class EventLogicVerifier {
           amount: remainAsset,
         } = frozenAsset;
         // 是否到达解冻高度
-        if (minEffectiveHeight > transaction.applyBlockHeight) {
+        if (minEffectiveHeight > currentBlockHeight) {
           throw new ConsensusException(ERROR_LIST.NOT_BEGIN_UNFROZEN_YET, {
             frozenId,
           });
@@ -313,7 +313,7 @@ export class EventLogicVerifier {
           });
         }
 
-        if (maxEffectiveHeight < transaction.applyBlockHeight) {
+        if (maxEffectiveHeight < currentBlockHeight) {
           throw new ConsensusException(ERROR_LIST.FROZEN_ASSET_EXPIRATION, {
             frozenId,
           });
@@ -369,7 +369,7 @@ export class EventLogicVerifier {
 
         const { maxEffectiveHeight, minEffectiveHeight, remainUnfrozenTimes, amount } = frozenAsset;
         // 是否到达解冻高度
-        if (minEffectiveHeight > transaction.applyBlockHeight) {
+        if (minEffectiveHeight > currentBlockHeight) {
           throw new ConsensusException(ERROR_LIST.NOT_BEGIN_UNFROZEN_YET, {
             frozenId,
           });
@@ -382,7 +382,7 @@ export class EventLogicVerifier {
           });
         }
 
-        if (maxEffectiveHeight < transaction.applyBlockHeight) {
+        if (maxEffectiveHeight < currentBlockHeight) {
           throw new ConsensusException(ERROR_LIST.FROZEN_ASSET_EXPIRATION, {
             frozenId,
           });
