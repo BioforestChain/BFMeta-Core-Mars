@@ -5,6 +5,8 @@ import { RegisterChainTransactionFactory } from "./registerChain";
 import { MultipleTransactionFactory } from "./multiple";
 import { PromiseTransactionFactory } from "./promise";
 import { PromiseResolveTransactionFactory } from "./promiseResolve";
+import { MacroTransactionFactory } from "./macro";
+import { MacroCallTransactionFactory } from "./macroCall";
 
 TRANSACTION_FACTORY_TYPES_MAP.VF.set(
   TRANSACTION_TYPES_BASE.CUSTOM,
@@ -49,6 +51,24 @@ TRANSACTION_FACTORY_TYPES_MAP.VF.set(
 TRANSACTION_FACTORY_TYPES_MAP.FV.set(
   PromiseResolveTransactionFactory as BFChainCore.TransactionFactoryConstructor<any>,
   TRANSACTION_TYPES_BASE.PROMISE_RESOLVE,
+);
+
+TRANSACTION_FACTORY_TYPES_MAP.VF.set(
+  TRANSACTION_TYPES_BASE.MACRO,
+  MacroTransactionFactory as BFChainCore.TransactionFactoryConstructor<any>,
+);
+TRANSACTION_FACTORY_TYPES_MAP.FV.set(
+  MacroTransactionFactory as BFChainCore.TransactionFactoryConstructor<any>,
+  TRANSACTION_TYPES_BASE.MACRO,
+);
+
+TRANSACTION_FACTORY_TYPES_MAP.VF.set(
+  TRANSACTION_TYPES_BASE.MACRO_CALL,
+  MacroCallTransactionFactory as BFChainCore.TransactionFactoryConstructor<any>,
+);
+TRANSACTION_FACTORY_TYPES_MAP.FV.set(
+  MacroCallTransactionFactory as BFChainCore.TransactionFactoryConstructor<any>,
+  TRANSACTION_TYPES_BASE.MACRO_CALL,
 );
 
 export * from "./custom";
@@ -57,3 +77,5 @@ export * from "./registerChain";
 export * from "./multiple";
 export * from "./promise";
 export * from "./promiseResolve";
+export * from "./macro";
+export * from "./macroCall";
