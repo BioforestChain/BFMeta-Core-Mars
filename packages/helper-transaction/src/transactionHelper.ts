@@ -278,6 +278,14 @@ export class TransactionHelper {
   get MULTIPLE() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.MULTIPLE);
   }
+  /** PROMISE: 承诺 */
+  get PROMISE() {
+    return this.getTransactionType(TRANSACTION_TYPES_BASE.PROMISE);
+  }
+  /** PROMISE_RESOLVE: 承诺兑现 */
+  get PROMISE_RESOLVE() {
+    return this.getTransactionType(TRANSACTION_TYPES_BASE.PROMISE_RESOLVE);
+  }
 
   ALL_TRANSACTION_TYPES = [
     this.SIGNATURE,
@@ -328,6 +336,8 @@ export class TransactionHelper {
     this.BE_EXCHANGE_ANY_MULTI_ALL,
 
     this.MULTIPLE,
+    this.PROMISE,
+    this.PROMISE_RESOLVE,
   ];
 
   /**获取创世块里所有的受托人 */
