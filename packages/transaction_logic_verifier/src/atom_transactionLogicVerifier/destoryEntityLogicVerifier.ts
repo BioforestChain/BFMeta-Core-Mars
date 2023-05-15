@@ -5,7 +5,7 @@ import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
-  "GrabAssetLogicVerifier",
+  "DestoryEntityLogicVerifier",
 );
 
 @Injectable()

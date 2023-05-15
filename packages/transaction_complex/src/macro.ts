@@ -1,5 +1,5 @@
 import { Injectable, Inject, wrapTaskList } from "@bfchain/util";
-import { PromiseResolveTransaction } from "@bfchain/core-model";
+import { MacroTransaction } from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
@@ -8,19 +8,19 @@ import {
   ChainAssetInfoHelper,
 } from "@bfchain/core-helper";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
-import { TransactionFactory } from "@bfchain/core-transaction";
+import { TransactionFactory, TransactionCore } from "@bfchain/core-transaction";
 
-const { ArgumentIllegalException } = CoreExceptionGenerator(
-  "CONTROLLER",
-  "PromiseResolveTransactionFactory",
-);
+const { ArgumentIllegalException } = CoreExceptionGenerator("CONTROLLER", "MacrotionFactory");
 
 /**
- * promiseResolve 交易工厂
+ * macro 交易工厂
  *
  */
 @Injectable()
-export class PromiseResolveTransactionFactory extends TransactionFactory<PromiseResolveTransaction> {
+export class MacroTransactionFactory extends TransactionFactory<MacroTransaction> {
+  @Inject("bfchain-core:TransactionCore", { dynamics: true })
+  public transactionCore!: TransactionCore;
+
   constructor(
     public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,
@@ -35,14 +35,14 @@ export class PromiseResolveTransactionFactory extends TransactionFactory<Promise
    * 校验输入信息
    *
    * @param body
-   * @param promiseResolveAsset
+   * @param macroAsset
    */
   async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
-    promiseResolveAsset: BFChainCore.PromiseResolveAssetJSON,
+    macroAsset: BFChainCore.MacroAssetJSON,
     config = this.configHelper,
   ) {
-    await super.verifyTransactionBody(body, promiseResolveAsset, config);
+    await super.verifyTransactionBody(body, macroAsset, config);
 
     const Function_Exception_Detail = {
       target: "body",
@@ -50,8 +50,8 @@ export class PromiseResolveTransactionFactory extends TransactionFactory<Promise
 
     this.emptyRangeType(body, Function_Exception_Detail);
 
-    if (!body.recipientId) {
-      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
+    if (body.recipientId) {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
         prop: "recipientId",
         ...Function_Exception_Detail,
       });
@@ -75,73 +75,68 @@ export class PromiseResolveTransactionFactory extends TransactionFactory<Promise
       });
     }
 
-    if (!body.storage) {
-      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
+    if (body.storage) {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
         prop: "storage",
         ...Function_Exception_Detail,
       });
     }
 
-    const storage = body.storage;
-    if (storage.key !== "promiseId") {
-      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
-        to_compare_prop: `storage.key ${storage.key}`,
-        to_target: "storage",
-        be_compare_prop: "promiseId",
-        ...Function_Exception_Detail,
-      });
-    }
+    const macro = macroAsset.macro;
 
-    const resolve = promiseResolveAsset.resolve;
-
-    if (!resolve) {
+    if (!macro) {
       throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
-        param: "resolve",
+        param: "macro",
       });
     }
 
-    const PromiseResolveAsset_Exception_Detail = {
+    const MacroAsset_Exception_Detail = {
       ...Function_Exception_Detail,
-      target: "resolve",
+      target: "macro",
     } as const;
 
-    const { promiseId } = resolve;
-    if (!promiseId) {
+    const { inputs, template } = macro;
+    if (!inputs) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
-        prop: "promiseId",
-        ...PromiseResolveAsset_Exception_Detail,
+        prop: "inputs",
+        ...MacroAsset_Exception_Detail,
       });
     }
 
-    if (!this.baseHelper.isValidSignature(promiseId)) {
-      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: `promiseId ${promiseId}`,
-        type: "transaction signature",
-        ...PromiseResolveAsset_Exception_Detail,
+    if (inputs.length === 0) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_LENGTH_SHOULD_GT_FIELD, {
+        prop: "inputs",
+        field: 0,
+        ...MacroAsset_Exception_Detail,
       });
     }
 
-    if (storage.value !== promiseId) {
-      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
-        to_compare_prop: `storage.value ${storage.value}`,
-        be_compare_prop: `promiseId ${promiseId}`,
-        to_target: "storage",
-        be_target: "resolve",
-        ...Function_Exception_Detail,
+    for (const input of inputs) {
+      /// FIXME: 完善校验
+    }
+
+    if (!template) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
+        prop: "template",
+        ...MacroAsset_Exception_Detail,
       });
     }
+
+    const factory = this.transactionCore.getTransactionFactoryFromType(template.type);
+    const transaction = await factory.fromJSON(template);
+    await factory.verify(transaction);
   }
 
   /**
-   * 初始化 promiseResolve 交易
+   * 初始化 macro 交易
    *
    * @param body
-   * @param promiseResolveAsset
+   * @param macroAsset
    */
-  init(body: BFChainCore.TxBodyJSON, promiseResolveAsset: BFChainCore.PromiseResolveAssetJSON) {
-    const transaction = PromiseResolveTransaction.fromObject({
+  init(body: BFChainCore.TxBodyJSON, macroAsset: BFChainCore.MacroAssetJSON) {
+    const transaction = MacroTransaction.fromObject({
       ...body,
-      asset: promiseResolveAsset,
+      asset: macroAsset,
     });
 
     return transaction;
@@ -154,21 +149,12 @@ export class PromiseResolveTransactionFactory extends TransactionFactory<Promise
    * @param eventEmitter
    */
   applyTransaction(
-    transaction: PromiseResolveTransaction,
+    transaction: MacroTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ) {
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
-
-      taskList.next = eventEmitter.emit("promiseResolve", {
-        type: "promiseResolve",
-        transaction,
-        applyInfo: {
-          promiseId: transaction.asset.resolve.promiseId,
-          recipientId: transaction.recipientId,
-        },
-      });
     });
   }
 
@@ -180,7 +166,7 @@ export class PromiseResolveTransactionFactory extends TransactionFactory<Promise
    * @returns
    */
   getMoveAmount(
-    transaction: PromiseResolveTransaction,
+    transaction: MacroTransaction,
     argv = {
       magic: this.configHelper.magic,
       assetType: this.configHelper.assetType,
