@@ -1,0 +1,26 @@
+{
+  "name": "@bfchain/core-transaction-complex-logic-verifier",
+  "version": "8.0.90",
+  "description": "",
+  "main": "build/cjs/index.js",
+  "module": "build/esm/index.js",
+  "type": "commonjs",
+  "keywords": [
+    "core"
+  ],
+  "author": "BFChain Team",
+  "license": "MIT",
+  "files": [
+    "build"
+  ],
+  "dependencies": {
+    "@bfchain/core-helper": "8.0.90",
+    "@bfchain/core-model": "8.0.90",
+    "@bfchain/core-transaction": "8.0.90",
+    "@bfchain/core-transaction-complex": "8.0.90",
+    "@bfchain/core-typings": "8.0.90",
+    "@bfchain/core-util-exception": "8.0.90"
+  },
+  "gitHead": "ef41eb359371b11aafbec0516df1eba01f16ebfd",
+  "types": "build/cjs/index.d.ts"
+}

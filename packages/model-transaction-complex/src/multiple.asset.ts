@@ -31,7 +31,15 @@ export class MultipleModel
     let trsList = TRANSACTION_BUFFER_LIST_WM.get(transactionBufferList);
     if (!trsList) {
       trsList = this.transactionBufferList.map((buf) => {
-        const trs = Transaction.decode(buf);
+        const baseTrs = Transaction.decode(buf);
+        const base_type = TRANSACTION_TYPES_MAP.trsTypeToV(baseTrs.type);
+        const ModelCtor = TRANSACTION_TYPES_MAP.VM.get(base_type);
+        if (!ModelCtor) {
+          throw new ArgumentFormatException(ERROR_LIST.INVALID_TRANSACTION_BASE_TYPE, {
+            type_base: base_type,
+          });
+        }
+        const trs = ModelCtor.decode(buf);
         TRANSACTION_BUFFER_WM.set(trs, buf);
         return trs;
       });
@@ -42,7 +50,7 @@ export class MultipleModel
     const bufList = trsList.map((trs) => {
       let buf = TRANSACTION_BUFFER_WM.get(trs);
       if (!buf) {
-        buf = Transaction.encode(trs).finish();
+        buf = trs.getBytes();
         TRANSACTION_BUFFER_WM.set(trs, buf);
       }
       return buf;
