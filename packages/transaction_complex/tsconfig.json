@@ -20,6 +20,8 @@
     "src/custom.ts",
     "src/index.ts",
     "src/multiple.ts",
+    "src/promise.ts",
+    "src/promiseResolve.ts",
     "src/registerChain.ts"
   ]
 }
