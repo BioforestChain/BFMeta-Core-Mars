@@ -62,6 +62,8 @@
     "src/transaction/issueEntityMultiV1.ts",
     "src/transaction/issueEntityV1.ts",
     "src/transaction/locationName.ts",
+    "src/transaction/macro.ts",
+    "src/transaction/macroCall.ts",
     "src/transaction/mark.ts",
     "src/transaction/multiple.ts",
     "src/transaction/promise.ts",

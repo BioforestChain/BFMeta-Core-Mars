@@ -88,6 +88,22 @@ declare namespace BFChainCore {
      *
      */
     getNumberOfNewDelegate(): Promise<number>;
+    /**
+     * 根据 promiseId 获取承诺交易
+     *
+     * @param promiseId 事件签名
+     */
+    getPromiseTransaction(promiseId: string): Promise<BFChainCore.TransactionJSON | undefined>;
+    /**
+     * 根据 macroId 获取宏调用交易
+     *
+     * @param macroId 事件签名
+     * @param inputs 调整参数
+     */
+    getMacroCallTransaction(
+      macroId: string,
+      inputs: { [name: string]: string },
+    ): Promise<BFChainCore.TransactionJSON | undefined>;
   }
   // #endregion
 }
