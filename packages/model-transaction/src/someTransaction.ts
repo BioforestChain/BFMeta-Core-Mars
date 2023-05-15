@@ -105,6 +105,11 @@ export enum TRANSACTION_TYPES_BASE {
   PROMISE = "PMS-00",
   /**承诺兑现事件 */
   PROMISE_RESOLVE = "PMS-01",
+
+  /**宏事件 */
+  MACRO = "MAC-00",
+  /**宏调用事件 */
+  MACRO_CALL = "MAC-01",
 }
 
 /**
