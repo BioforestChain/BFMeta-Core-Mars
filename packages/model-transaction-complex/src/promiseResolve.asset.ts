@@ -1,4 +1,3 @@
-import { TRANSACTION_TYPES_MAP } from "@bfchain/core-model-transaction";
 import { getHexFromArrayBuffer, parseHexToArrayBuffer } from "@bfchain/util-encoding-hex";
 import { Message, Field, Type } from "@bfchain/protobuf";
 

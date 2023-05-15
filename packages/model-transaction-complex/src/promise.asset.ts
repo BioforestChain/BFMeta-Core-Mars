@@ -22,14 +22,22 @@ export class PromiseModel
 {
   static INC = 1;
 
-  /**交易列表 */
+  /**交易 */
   @Field.d(PromiseModel.INC++, "bytes")
   transactionBuffer!: Uint8Array;
   get transaction() {
     const { transactionBuffer } = this;
     let trs = TRANSACTION_BUFFER_WM_KV.get(transactionBuffer);
     if (!trs) {
-      trs = Transaction.decode(transactionBuffer);
+      const baseTrs = Transaction.decode(transactionBuffer);
+      const base_type = TRANSACTION_TYPES_MAP.trsTypeToV(baseTrs.type);
+      const ModelCtor = TRANSACTION_TYPES_MAP.VM.get(base_type);
+      if (!ModelCtor) {
+        throw new ArgumentFormatException(ERROR_LIST.INVALID_TRANSACTION_BASE_TYPE, {
+          type_base: base_type,
+        });
+      }
+      trs = ModelCtor.decode(transactionBuffer);
       TRANSACTION_BUFFER_WM_VK.set(trs, transactionBuffer);
       TRANSACTION_BUFFER_WM_KV.set(transactionBuffer, trs);
     }
@@ -38,7 +46,7 @@ export class PromiseModel
   set transaction(trs: Transaction) {
     let buf = TRANSACTION_BUFFER_WM_VK.get(trs);
     if (!buf) {
-      buf = Transaction.encode(trs).finish();
+      buf = trs.getBytes();
       TRANSACTION_BUFFER_WM_VK.set(trs, buf);
       TRANSACTION_BUFFER_WM_KV.set(buf, trs);
     }
