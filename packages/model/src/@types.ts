@@ -524,6 +524,18 @@ declare namespace BFChainCore {
     T extends Transaction = Transaction,
   > = ApplyTransactionEvent<ApplyInfo_PayTax, EVENTNAME, T>;
 
+  interface ApplyInfo_PromiseResolve {
+    /**承诺的索引 */
+    promiseId: string;
+    /**解冻者的账户地址
+     * 这里的解冻者本质是资金的接收者
+     * 如果要将解冻资产是否要回到冻结者账户上,那就填自己就完事了
+     */
+    recipientId: string;
+  }
+  type ApplyTransactionPromiseResolveEvent<EVENTNAME, T extends Transaction = Transaction> =
+    ApplyTransactionEvent<ApplyInfo_PromiseResolve, EVENTNAME, T>;
+
   type ApplyTransactionEventMap<EM extends BFChainUtil.EventInOutMap = {}> = EM & {
     /**交易交易的POW */
     verifyTransactionProfOfWork: BFChainUtil.EventInOut<
@@ -893,6 +905,13 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction").BeExchangeAnyMultiTransaction
         | import("@bfchain/core-model-transaction").ToExchangeAnyMultiAllTransaction
         | import("@bfchain/core-model-transaction").BeExchangeAnyMultiAllTransaction
+      >
+    >;
+
+    promiseResolve: BFChainUtil.EventInOut<
+      ApplyTransactionPromiseResolveEvent<
+        "promiseResolve",
+        import("@bfchain/core-model-transaction-complex").PromiseResolveTransaction
       >
     >;
 

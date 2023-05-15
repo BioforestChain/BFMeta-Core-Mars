@@ -1,5 +1,5 @@
 import { Injectable, Inject, wrapTaskList } from "@bfchain/util";
-import { MultipleTransaction } from "@bfchain/core-model";
+import { PromiseResolveTransaction } from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
@@ -12,15 +12,15 @@ import { TransactionFactory, TransactionCore } from "@bfchain/core-transaction";
 
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
-  "MultipleTransactionFactory",
+  "PromiseResolveTransactionFactory",
 );
 
 /**
- * multiple 交易工厂
+ * promiseResolve 交易工厂
  *
  */
 @Injectable()
-export class MultipleTransactionFactory extends TransactionFactory<MultipleTransaction> {
+export class PromiseResolveTransactionFactory extends TransactionFactory<PromiseResolveTransaction> {
   @Inject("bfchain-core:TransactionCore", { dynamics: true })
   public transactionCore!: TransactionCore;
 
@@ -38,14 +38,14 @@ export class MultipleTransactionFactory extends TransactionFactory<MultipleTrans
    * 校验输入信息
    *
    * @param body
-   * @param multipleAsset
+   * @param promiseResolveAsset
    */
   async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
-    multipleAsset: BFChainCore.MultipleAssetJSON,
+    promiseResolveAsset: BFChainCore.PromiseResolveAssetJSON,
     config = this.configHelper,
   ) {
-    await super.verifyTransactionBody(body, multipleAsset, config);
+    await super.verifyTransactionBody(body, promiseResolveAsset, config);
 
     const Function_Exception_Detail = {
       target: "body",
@@ -53,8 +53,8 @@ export class MultipleTransactionFactory extends TransactionFactory<MultipleTrans
 
     this.emptyRangeType(body, Function_Exception_Detail);
 
-    if (body.recipientId) {
-      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
+    if (!body.recipientId) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "recipientId",
         ...Function_Exception_Detail,
       });
@@ -78,59 +78,73 @@ export class MultipleTransactionFactory extends TransactionFactory<MultipleTrans
       });
     }
 
-    if (body.storage) {
-      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
+    if (!body.storage) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "storage",
         ...Function_Exception_Detail,
       });
     }
 
-    const multiple = multipleAsset.multiple;
-
-    if (!multiple) {
-      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
-        param: "multiple",
+    const storage = body.storage;
+    if (storage.key !== "promiseId") {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
+        to_compare_prop: `storage.key ${storage.key}`,
+        to_target: "storage",
+        be_compare_prop: "promiseId",
+        ...Function_Exception_Detail,
       });
     }
 
-    const MultipleAsset_Exception_Detail = {
+    const resolve = promiseResolveAsset.resolve;
+
+    if (!resolve) {
+      throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
+        param: "resolve",
+      });
+    }
+
+    const PromiseAsset_Exception_Detail = {
       ...Function_Exception_Detail,
-      target: "multiple",
+      target: "resolve",
     } as const;
 
-    const { transactions } = multiple;
-    if (!transactions) {
+    const { promiseId } = resolve;
+    if (!promiseId) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
-        prop: "transactions",
-        ...MultipleAsset_Exception_Detail,
+        prop: "promiseId",
+        ...PromiseAsset_Exception_Detail,
       });
     }
 
-    if (transactions.length === 0) {
-      throw new ArgumentIllegalException(ERROR_LIST.PROP_LENGTH_SHOULD_GT_FIELD, {
-        prop: "transactions",
-        field: 0,
-        ...MultipleAsset_Exception_Detail,
+    if (!this.baseHelper.isValidSignature(promiseId)) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+        prop: `promiseId ${promiseId}`,
+        type: "transaction signature",
+        ...PromiseAsset_Exception_Detail,
       });
     }
 
-    for (const trsJson of transactions) {
-      const factory = this.transactionCore.getTransactionFactoryFromType(trsJson.type);
-      const transaction = await factory.fromJSON(trsJson);
-      await factory.verify(transaction);
+    if (storage.value !== promiseId) {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
+        to_compare_prop: `storage.value ${storage.value}`,
+        be_compare_prop: `promiseId ${promiseId}`,
+        to_target: "storage",
+        be_target: "resolve",
+        ...Function_Exception_Detail,
+      });
     }
   }
 
   /**
-   * 初始化 multiple 交易
+   * 初始化 promiseResolve 交易
    *
    * @param body
-   * @param multipleAsset
+   * @param promiseResolveAsset
    */
-  init(body: BFChainCore.TxBodyJSON, multipleAsset: BFChainCore.MultipleAssetJSON) {
-    const transaction = MultipleTransaction.fromObject({
+  init(body: BFChainCore.TxBodyJSON, promiseResolveAsset: BFChainCore.PromiseResolveAssetJSON) {
+    const transaction = PromiseResolveTransaction.fromObject({
       ...body,
-      asset: multipleAsset,
+      asset: promiseResolveAsset,
     });
 
     return transaction;
@@ -143,17 +157,21 @@ export class MultipleTransactionFactory extends TransactionFactory<MultipleTrans
    * @param eventEmitter
    */
   applyTransaction(
-    transaction: MultipleTransaction,
+    transaction: PromiseResolveTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ) {
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
-      const { transactions } = transaction.asset.multiple;
-      for (const subTransaction of transactions) {
-        const factory = this.transactionCore.getTransactionFactoryFromType(subTransaction.type);
-        taskList.next = factory.applyTransaction(subTransaction, eventEmitter, config);
-      }
+
+      taskList.next = eventEmitter.emit("promiseResolve", {
+        type: "promiseResolve",
+        transaction,
+        applyInfo: {
+          promiseId: transaction.asset.resolve.promiseId,
+          recipientId: transaction.recipientId,
+        },
+      });
     });
   }
 
@@ -165,7 +183,7 @@ export class MultipleTransactionFactory extends TransactionFactory<MultipleTrans
    * @returns
    */
   getMoveAmount(
-    transaction: MultipleTransaction,
+    transaction: PromiseResolveTransaction,
     argv = {
       magic: this.configHelper.magic,
       assetType: this.configHelper.assetType,

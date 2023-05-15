@@ -64,6 +64,8 @@
     "src/transaction/locationName.ts",
     "src/transaction/mark.ts",
     "src/transaction/multiple.ts",
+    "src/transaction/promise.ts",
+    "src/transaction/promiseResolve.ts",
     "src/transaction/registerChain.ts",
     "src/transaction/rejectVote.ts",
     "src/transaction/setLnsManager.ts",
