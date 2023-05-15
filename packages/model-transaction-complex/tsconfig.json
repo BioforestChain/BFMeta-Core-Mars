@@ -31,6 +31,10 @@
     "src/index.ts",
     "src/multiple.asset.ts",
     "src/multiple.transaction.ts",
+    "src/promise.asset.ts",
+    "src/promise.transaction.ts",
+    "src/promiseResolve.asset.ts",
+    "src/promiseResolve.transaction.ts",
     "src/registerChain.asset.ts",
     "src/registerChain.transaction.ts"
   ]
