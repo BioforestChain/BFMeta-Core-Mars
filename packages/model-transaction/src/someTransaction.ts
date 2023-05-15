@@ -99,7 +99,12 @@ export enum TRANSACTION_TYPES_BASE {
   CUSTOM = "CUS-00",
 
   /**组合事件 */
-  MULTIPLE = "MTP-02",
+  MULTIPLE = "MTP-00",
+
+  /**承诺事件 */
+  PROMISE = "PMS-00",
+  /**承诺兑现事件 */
+  PROMISE_RESOLVE = "PMS-01",
 }
 
 /**
