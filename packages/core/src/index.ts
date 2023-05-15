@@ -5,6 +5,7 @@ export * from "@bfchain/core-helper";
 export * from "@bfchain/core-account";
 export * from "@bfchain/core-transaction";
 export * from "@bfchain/core-transaction-logic-verifier";
+export * from "@bfchain/core-transaction-complex-logic-verifier";
 export * from "@bfchain/core-block";
 export * from "@bfchain/core-block-logic-verifier";
 export * from "@bfchain/core-block-ticker";

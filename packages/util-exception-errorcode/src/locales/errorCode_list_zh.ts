@@ -64,6 +64,8 @@ export const ERROR_CODE_LIST_ZH = {
   "001-00062": "不合法的 {taskLabel} fromAuthSignSignature",
   "001-00063": "不合法的 {taskLabel} toAuthSignature",
   "001-00064": "不合法的 {taskLabel} toAuthSignSignature",
+  "001-00065": "不合法的宏输入类型: {type}",
+  "001-00066": "{target} 的 {prop} 已经过期",
   // #endregion
 
   // #region logic

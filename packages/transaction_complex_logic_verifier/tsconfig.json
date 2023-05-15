@@ -1,0 +1,35 @@
+{
+  "extends": "../../config/tsconfig_base/base.tsconfig.cjs",
+  "compilerOptions": {
+    "outDir": "./build/cjs",
+    "rootDir": "./src"
+  },
+  "references": [
+    {
+      "path": "../helper/tsconfig.json"
+    },
+    {
+      "path": "../model/tsconfig.json"
+    },
+    {
+      "path": "../transaction_complex/tsconfig.json"
+    },
+    {
+      "path": "../transaction/tsconfig.json"
+    },
+    {
+      "path": "../typings/tsconfig.json"
+    },
+    {
+      "path": "../util-exception/tsconfig.json"
+    }
+  ],
+  "files": [
+    "src/index.ts",
+    "src/macroCallLogicVerifier.ts",
+    "src/macroLogicVerifier.ts",
+    "src/multipleLogicVerifier.ts",
+    "src/promiseLogicVerifier.ts",
+    "src/promiseResolveLogicVerifier.ts"
+  ]
+}

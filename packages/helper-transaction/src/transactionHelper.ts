@@ -287,6 +287,14 @@ export class TransactionHelper {
   get PROMISE_RESOLVE() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.PROMISE_RESOLVE);
   }
+  /** MACRO: 宏 */
+  get MACRO() {
+    return this.getTransactionType(TRANSACTION_TYPES_BASE.MACRO);
+  }
+  /** MACRO_CALL: 宏调用 */
+  get MACRO_CALL() {
+    return this.getTransactionType(TRANSACTION_TYPES_BASE.MACRO_CALL);
+  }
 
   ALL_TRANSACTION_TYPES = [
     this.SIGNATURE,
@@ -339,6 +347,8 @@ export class TransactionHelper {
     this.MULTIPLE,
     this.PROMISE,
     this.PROMISE_RESOLVE,
+    this.MACRO,
+    this.MACRO_CALL,
   ];
 
   /**获取创世块里所有的受托人 */
