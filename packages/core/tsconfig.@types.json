@@ -40,6 +40,9 @@
       "path": "../patch/tsconfig.@types.json"
     },
     {
+      "path": "../transaction_complex_logic_verifier/tsconfig.@types.json"
+    },
+    {
       "path": "../transaction_complex/tsconfig.@types.json"
     },
     {
