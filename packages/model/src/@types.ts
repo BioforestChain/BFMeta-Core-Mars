@@ -527,14 +527,18 @@ declare namespace BFChainCore {
   interface ApplyInfo_PromiseResolve {
     /**承诺的索引 */
     promiseId: string;
-    /**解冻者的账户地址
-     * 这里的解冻者本质是资金的接收者
-     * 如果要将解冻资产是否要回到冻结者账户上,那就填自己就完事了
-     */
     recipientId: string;
   }
   type ApplyTransactionPromiseResolveEvent<EVENTNAME, T extends Transaction = Transaction> =
     ApplyTransactionEvent<ApplyInfo_PromiseResolve, EVENTNAME, T>;
+
+  interface ApplyInfo_MacroCall {
+    /**承诺的索引 */
+    macroId: string;
+    inputs: { [key: string]: string };
+  }
+  type ApplyTransactionMacroCallEvent<EVENTNAME, T extends Transaction = Transaction> =
+    ApplyTransactionEvent<ApplyInfo_MacroCall, EVENTNAME, T>;
 
   type ApplyTransactionEventMap<EM extends BFChainUtil.EventInOutMap = {}> = EM & {
     /**交易交易的POW */
@@ -912,6 +916,13 @@ declare namespace BFChainCore {
       ApplyTransactionPromiseResolveEvent<
         "promiseResolve",
         import("@bfchain/core-model-transaction-complex").PromiseResolveTransaction
+      >
+    >;
+
+    macroCall: BFChainUtil.EventInOut<
+      ApplyTransactionMacroCallEvent<
+        "macroCall",
+        import("@bfchain/core-model-transaction-complex").MacroCallTransaction
       >
     >;
 

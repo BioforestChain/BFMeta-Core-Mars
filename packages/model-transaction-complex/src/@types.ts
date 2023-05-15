@@ -50,35 +50,55 @@ declare namespace BFChainCore {
   //#endregion
 
   //#region 宏交易
-  interface MacroJSON {
-    inputs: MacroJSON.Inputs[];
-    /// json 模板
-    transactionTemplate: string;
-  }
-  namespace MacroJSON {
-    interface BaseInput {
+
+  namespace Macro {
+    type MACRO_INPUT_TYPE = import("./atom_input/constants").MACRO_INPUT_TYPE;
+    type BaseInputModel = import("./atom_input/_baseInput").BaseInputModel;
+
+    interface BaseInputJSON {
+      type: MACRO_INPUT_TYPE;
       name: string;
-      pattern?: string; // regexp
+      keyPath: string;
+      // regexp
+      pattern?: string;
     }
-    interface TextInput extends BaseInput {}
-    interface AddressInput extends TextInput {}
-    interface SignatureInput extends TextInput {}
+    interface TextInputJSON extends BaseInputJSON {}
+    interface AddressInputJSON extends TextInputJSON {}
+    interface SignatureInputJSON extends TextInputJSON {}
 
-    interface NumberInput extends BaseInput {
-      min?: number;
-      max?: number;
-      step?: number;
+    interface NumberInputJSON extends BaseInputJSON {
+      min?: FractionJSON<string>;
+      max?: FractionJSON<string>;
+      step?: FractionJSON<string>;
     }
 
-    interface CalcInput extends NumberInput {
+    interface CalcInputJSON extends NumberInputJSON {
       calc: string;
     }
 
-    type Inputs = TextInput | AddressInput | SignatureInput | NumberInput | CalcInput;
+    type InputJSON =
+      | TextInputJSON
+      | AddressInputJSON
+      | SignatureInputJSON
+      | NumberInputJSON
+      | CalcInputJSON;
+  }
+  interface MacroJSON {
+    inputs: Macro.InputJSON[];
+    template: BFChainCore.TransactionJSON;
   }
   interface MacroAssetJSON {
     macro: MacroJSON;
   }
   type MacroTransactionJSON = TransactionMixJSON<MacroAssetJSON, { hasRecipientId: false }>;
+
+  interface MacroCallJSON {
+    macroId: string;
+    inputs: { [name: string]: string };
+  }
+  interface MacroCallAssetJSON {
+    call: MacroCallJSON;
+  }
+  type MacroCallTransactionJSON = TransactionMixJSON<MacroCallAssetJSON, { hasRecipientId: false }>;
   //#endregion
 }
