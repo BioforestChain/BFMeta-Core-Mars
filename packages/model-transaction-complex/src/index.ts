@@ -8,12 +8,15 @@ export * from "./registerChain.transaction";
 
 export * from "./multiple.asset";
 export * from "./multiple.transaction";
-
 export * from "./promise.asset";
 export * from "./promise.transaction";
-
 export * from "./promiseResolve.asset";
 export * from "./promiseResolve.transaction";
+export * from "./atom_input";
+export * from "./macro.asset";
+export * from "./macro.transaction";
+export * from "./macroCall.asset";
+export * from "./macroCall.transaction";
 
 import { TRANSACTION_TYPES_MAP, TRANSACTION_TYPES_BASE } from "@bfchain/core-model-transaction";
 import { CustomTransaction } from "./custom.transaction";
@@ -25,7 +28,12 @@ import { MultipleTransaction } from "./multiple.transaction";
 import { PromiseTransaction } from "./promise.transaction";
 /// 承诺兑现交易
 import { PromiseResolveTransaction } from "./promiseResolve.transaction";
+/// 宏交易
+import { MacroTransaction } from "./macro.transaction";
+/// 宏交易
+import { MacroCallTransaction } from "./macroCall.transaction";
 import type { Transaction } from "@bfchain/core-model-transaction-base";
+
 TRANSACTION_TYPES_MAP.VM.set(
   TRANSACTION_TYPES_BASE.CUSTOM,
   CustomTransaction as typeof Transaction,
@@ -69,4 +77,16 @@ TRANSACTION_TYPES_MAP.VM.set(
 TRANSACTION_TYPES_MAP.MV.set(
   PromiseResolveTransaction as typeof Transaction,
   TRANSACTION_TYPES_BASE.PROMISE_RESOLVE,
+);
+
+TRANSACTION_TYPES_MAP.VM.set(TRANSACTION_TYPES_BASE.MACRO, MacroTransaction as typeof Transaction);
+TRANSACTION_TYPES_MAP.MV.set(MacroTransaction as typeof Transaction, TRANSACTION_TYPES_BASE.MACRO);
+
+TRANSACTION_TYPES_MAP.VM.set(
+  TRANSACTION_TYPES_BASE.MACRO_CALL,
+  MacroCallTransaction as typeof Transaction,
+);
+TRANSACTION_TYPES_MAP.MV.set(
+  MacroCallTransaction as typeof Transaction,
+  TRANSACTION_TYPES_BASE.MACRO_CALL,
 );

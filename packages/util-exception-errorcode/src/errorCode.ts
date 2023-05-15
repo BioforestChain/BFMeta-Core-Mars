@@ -153,6 +153,8 @@ export const ERROR_LIST = {
     "001-00064",
     "Invalid {taskLabel} toAuthSignSignature",
   ),
+  INVALID_MACRO_INPUT_TYPE: new ErrorCode("001-00065", "Invalid macro input type: {type}"),
+  ALREADY_EXPIRED: new ErrorCode("001-00066", "{prop} in {target} already expired"),
   // #endregion
 
   // #region logic

@@ -22,7 +22,7 @@ export class PromiseModel
 {
   static INC = 1;
 
-  /**交易列表 */
+  /**交易 */
   @Field.d(PromiseModel.INC++, "bytes")
   transactionBuffer!: Uint8Array;
   get transaction() {
@@ -38,7 +38,7 @@ export class PromiseModel
   set transaction(trs: Transaction) {
     let buf = TRANSACTION_BUFFER_WM_VK.get(trs);
     if (!buf) {
-      buf = Transaction.encode(trs).finish();
+      buf = trs.getBytes();
       TRANSACTION_BUFFER_WM_VK.set(trs, buf);
       TRANSACTION_BUFFER_WM_KV.set(buf, trs);
     }

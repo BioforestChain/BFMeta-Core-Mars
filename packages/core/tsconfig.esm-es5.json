@@ -36,6 +36,9 @@
       "path": "../patch/tsconfig.esm-es5.json"
     },
     {
+      "path": "../transaction_complex_logic_verifier/tsconfig.esm-es5.json"
+    },
+    {
       "path": "../transaction_complex/tsconfig.esm-es5.json"
     },
     {
