@@ -9,6 +9,7 @@ import {
   BFChainCore,
   MACRO_INPUT_TYPE,
   Transaction,
+  MACRO_NUMBER_FORMAT,
 } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
@@ -140,12 +141,13 @@ async function getMacroTransaction(
     secondKeypair,
   );
 
-  return trs.toJSON();
+  return trs;
 }
 
 async function getMacroCallTransaction(
   sender: AccountModel,
   macroCall: BFChainCore.MacroCallJSON,
+  macroTrs: MacroTransaction,
   bfchainCore: BFChainCore,
 ) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
@@ -196,12 +198,18 @@ async function getMacroCallTransaction(
 
   const xx = await bfchainCore.transaction.recombineTransaction<MacroCallTransaction>(trsJson);
 
-  const factory = bfchainCore.transaction.getTransactionFactoryFromType(xx.type);
+  const factory = bfchainCore.transaction.getTransactionFactoryFromType<MacroCallTransaction>(
+    xx.type,
+  ) as unknown as MacroCallTransactionFactory;
 
   await factory.verifySignature(xx);
 
-  console.log(trsJson.asset.call);
-  console.log(`json equal ${util.isDeepStrictEqual(trsJson, xx.toJSON())}`);
+  const { template, inputs } = macroTrs.asset.macro;
+  const yy = await factory.generateTransaction(template, inputs, macroCall.inputs);
+  console.log(yy.toJSON());
+
+  // console.log(trsJson.asset.call);
+  // console.log(`json equal ${util.isDeepStrictEqual(trsJson, xx.toJSON())}`);
 }
 
 (async () => {
@@ -210,27 +218,32 @@ async function getMacroCallTransaction(
   const macroAsset: BFChainCore.MacroJSON = {
     inputs: [
       {
-        type: MACRO_INPUT_TYPE.CALC,
+        type: MACRO_INPUT_TYPE.ADDRESS,
         name: "qaq",
-        keyPath: "qwq",
-        calc: "a+b",
+        keyPath: "recipientId",
+      },
+      {
+        type: MACRO_INPUT_TYPE.SIGNATURE,
+        name: "qqq",
+        keyPath: "signature",
       },
       {
         type: MACRO_INPUT_TYPE.NUMBER,
-        name: "qaq",
-        keyPath: "qwq",
+        name: "qwq",
+        keyPath: "asset.transferAsset.amount",
         min: {
-          numerator: "1",
+          numerator: "10",
           denominator: "1",
         },
         max: {
-          numerator: "100",
-          denominator: "1",
+          numerator: "200",
+          denominator: "2",
         },
         step: {
           numerator: "20",
           denominator: "1",
         },
+        format: MACRO_NUMBER_FORMAT.STRING,
       },
     ],
     template: await getTransferAssetTransaction(getSenderWithoutSecondSecret(), bfchainCore),
@@ -241,8 +254,13 @@ async function getMacroCallTransaction(
     getSenderWithSecondSecret(),
     {
       macroId: macroTrs.signature,
-      inputs: { qaq: "qwq" },
+      inputs: {
+        qaq: "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
+        qwq: "100",
+        qqq: "82b37cd5461c8624d8b7fda89ff3612c32eee7272331b26db407f594c7a750e89a582074bfe83197146fbad32a94b11665795fe8d476554e50ea7a03a99ddc05",
+      },
     },
+    macroTrs,
     bfchainCore,
   );
 })();

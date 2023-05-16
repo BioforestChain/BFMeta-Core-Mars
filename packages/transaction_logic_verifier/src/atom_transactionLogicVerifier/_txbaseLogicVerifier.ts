@@ -224,6 +224,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       throw new ConsensusException(
         ERROR_LIST.INVALID_TRANSACTION_APPLY_BLOCK_HEIGHT,
         {
+          signature: tr.signature,
           reason: `applyBlockHeight ${applyBlockHeight} must less than currntBlockHeight ${currentBlockHeight}`,
         },
         undefined,
@@ -242,6 +243,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     const effectiveBlockHeight = tr.effectiveBlockHeight;
     if (effectiveBlockHeight < currentBlockHeight) {
       throw new ConsensusException(ERROR_LIST.INVALID_TRANSACTION_EFFECTIVE_BLOCK_HEIGHT, {
+        signature: tr.signature,
         reason: `effectiveBlockHeight ${effectiveBlockHeight} must greate than or equal to currntBlockHeight ${currentBlockHeight}`,
       });
     }
