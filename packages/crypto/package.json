@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-crypto",
-  "version": "8.0.84",
+  "version": "8.0.85",
   "main": "build/cjs/index.js",
   "type": "commonjs",
   "module": "build/esm/index.js",
@@ -8,9 +8,9 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-crypto-ed2curve": "8.0.84",
-    "@bfchain/core-crypto-tweetnacl": "8.0.84",
-    "@bfchain/core-typings": "8.0.84"
+    "@bfchain/core-crypto-ed2curve": "8.0.85",
+    "@bfchain/core-crypto-tweetnacl": "8.0.85",
+    "@bfchain/core-typings": "8.0.85"
   },
   "gitHead": "ef41eb359371b11aafbec0516df1eba01f16ebfd",
   "types": "build/cjs/index.d.ts"
