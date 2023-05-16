@@ -41,6 +41,7 @@
     "src/macro.transaction.ts",
     "src/macroCall.asset.ts",
     "src/macroCall.transaction.ts",
+    "src/macroCallHelper.ts",
     "src/multiple.asset.ts",
     "src/multiple.transaction.ts",
     "src/promise.asset.ts",

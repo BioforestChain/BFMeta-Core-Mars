@@ -1,11 +1,12 @@
 import { Message, Field, Type } from "@bfchain/protobuf";
 import { FractionBigIntModel } from "@bfchain/core-model-common";
 import { BaseInputModel } from "./_baseInput";
+import { MACRO_INPUT_TYPE, MACRO_NUMBER_FORMAT } from "./constants";
 
 @Type.d("NumberInputModel")
-export class NumberInputModel
-  extends BaseInputModel
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.Macro.NumberInputJSON>
+export class NumberInputModel<T extends MACRO_INPUT_TYPE = MACRO_INPUT_TYPE.NUMBER>
+  extends BaseInputModel<T>
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.Macro.NumberInputJSON<T>>
 {
   @Field.d(NumberInputModel.INC++, FractionBigIntModel, "optional")
   min?: FractionBigIntModel;
@@ -14,11 +15,17 @@ export class NumberInputModel
   @Field.d(NumberInputModel.INC++, FractionBigIntModel, "optional")
   step?: FractionBigIntModel;
 
+  @Field.d(NumberInputModel.INC++, "string", "required", MACRO_NUMBER_FORMAT.LITERAL)
+  format!: MACRO_NUMBER_FORMAT;
+
   toJSON() {
-    const resp: BFChainCore.Macro.NumberInputJSON = super.toJSON();
-    this.min !== undefined && (resp.min = this.min.toJSON());
-    this.max !== undefined && (resp.max = this.max.toJSON());
-    this.step !== undefined && (resp.step = this.step.toJSON());
+    const resp: BFChainCore.Macro.NumberInputJSON<T> = {
+      ...super.toJSON(),
+      format: this.format,
+      min: this.min?.toJSON(),
+      max: this.max?.toJSON(),
+      step: this.step?.toJSON(),
+    };
     return resp;
   }
 }

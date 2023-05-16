@@ -53,26 +53,36 @@ declare namespace BFChainCore {
 
   namespace Macro {
     type MACRO_INPUT_TYPE = import("./atom_input/constants").MACRO_INPUT_TYPE;
-    type BaseInputModel = import("./atom_input/_baseInput").BaseInputModel;
+    type MACRO_NUMBER_FORMAT = import("./atom_input/constants").MACRO_NUMBER_FORMAT;
+    type BaseInputModel<T extends MACRO_INPUT_TYPE> =
+      import("./atom_input/_baseInput").BaseInputModel<T>;
 
-    interface BaseInputJSON {
-      type: MACRO_INPUT_TYPE;
+    interface BaseInputJSON<T extends MACRO_INPUT_TYPE> {
+      type: T;
       name: string;
       keyPath: string;
       // regexp
       pattern?: string;
     }
-    interface TextInputJSON extends BaseInputJSON {}
-    interface AddressInputJSON extends TextInputJSON {}
-    interface SignatureInputJSON extends TextInputJSON {}
+    interface TextInputJSON<
+      T extends MACRO_INPUT_TYPE = import("./atom_input/constants").MACRO_INPUT_TYPE.TEXT,
+    > extends BaseInputJSON<T> {}
+    interface AddressInputJSON
+      extends TextInputJSON<import("./atom_input/constants").MACRO_INPUT_TYPE.ADDRESS> {}
+    interface SignatureInputJSON
+      extends TextInputJSON<import("./atom_input/constants").MACRO_INPUT_TYPE.SIGNATURE> {}
 
-    interface NumberInputJSON extends BaseInputJSON {
+    interface NumberInputJSON<
+      T extends MACRO_INPUT_TYPE = import("./atom_input/constants").MACRO_INPUT_TYPE.NUMBER,
+    > extends BaseInputJSON<T> {
       min?: FractionJSON<string>;
       max?: FractionJSON<string>;
       step?: FractionJSON<string>;
+      format: MACRO_NUMBER_FORMAT;
     }
 
-    interface CalcInputJSON extends NumberInputJSON {
+    interface CalcInputJSON
+      extends NumberInputJSON<import("./atom_input/constants").MACRO_INPUT_TYPE.CALC> {
       calc: string;
     }
 
@@ -96,6 +106,7 @@ declare namespace BFChainCore {
     macroId: string;
     inputs: { [name: string]: string };
   }
+  type MacroCallInputs = { [key: string]: string };
   interface MacroCallAssetJSON {
     call: MacroCallJSON;
   }

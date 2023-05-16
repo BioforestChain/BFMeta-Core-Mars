@@ -1,5 +1,10 @@
-import { Injectable, Inject, wrapTaskList } from "@bfchain/util";
-import { MacroCallTransaction } from "@bfchain/core-model";
+import { Injectable, Inject, wrapTaskList, $safeEnd } from "@bfchain/util";
+import {
+  MacroCallTransaction,
+  MACRO_INPUT_TYPE,
+  MACRO_NUMBER_FORMAT,
+  ToExchangeAnyMultiAssetModel,
+} from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
@@ -8,7 +13,8 @@ import {
   ChainAssetInfoHelper,
 } from "@bfchain/core-helper";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
-import { TransactionFactory } from "@bfchain/core-transaction";
+import { TransactionCore, TransactionFactory } from "@bfchain/core-transaction";
+import * as calc from "@bnqkl/calc";
 
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
@@ -30,7 +36,76 @@ export class MacroCallTransactionFactory extends TransactionFactory<MacroCallTra
   ) {
     super();
   }
+  @Inject("bfchain-core:TransactionCore", { dynamics: true })
+  public transactionCore!: TransactionCore;
+  async generateTransaction<T extends BFChainCore.Transaction>(
+    template: T,
+    defineInputs: BFChainCore.Macro.InputJSON[],
+    inputs: BFChainCore.MacroCallInputs,
+  ) {
+    /// 复制出一份JSON
+    const transaction = template.toJSON();
+    for (const defineInput of defineInputs) {
+      let value: unknown = inputs[defineInput.name];
+      if (typeof value !== "string") {
+        throw new SyntaxError(`miss input:${defineInput.name}`);
+      }
+      if (defineInput.pattern && new RegExp(defineInput.pattern).test(value) === false) {
+        throw new TypeError(`input:${defineInput.name} not match pattern`);
+      }
+      switch (defineInput.type) {
+        case MACRO_INPUT_TYPE.ADDRESS:
+          if ((await this.accountBaseHelper.isAddress(value)) === false) {
+            throw new TypeError(`input:${defineInput.name} should be an address`);
+          }
+          break;
+        case MACRO_INPUT_TYPE.SIGNATURE:
+          if (this.transactionHelper.isValidTransactionSignature(value) === false) {
+            throw new TypeError(`input:${defineInput.name} should be an address`);
+          }
+          break;
+        case MACRO_INPUT_TYPE.TEXT:
+          break;
+        case MACRO_INPUT_TYPE.CALC:
+          value = calc.evaluate(defineInput.calc, inputs);
+        case MACRO_INPUT_TYPE.NUMBER:
+          if (defineInput.format === MACRO_NUMBER_FORMAT.LITERAL) {
+            value = Number(value);
+          }
+          /// TODO 这里需要进行 max/min/step 的判定
+          break;
+        default:
+          $safeEnd(defineInput);
+      }
+      /// 写入值
+      if (this.trySet(transaction, defineInput.keyPath, value) === false) {
+        throw new SyntaxError(`invalid keyPath:${defineInput.keyPath}`);
+      }
+    }
+    const transactionModel = await this.transactionCore.recombineTransaction<T>(transaction);
+    return transactionModel;
+  }
+  trySet(target: object, keyPath: string, value: unknown) {
+    let setPath: string;
+    if (keyPath.includes(".")) {
+      const getsPath = keyPath.split(".");
+      setPath = getsPath.pop()!;
+      for (const getPath of getsPath) {
+        if (target.hasOwnProperty(getPath) === false) {
+          return false;
+        }
+        target = (target as any)[getPath];
+      }
+    } else {
+      setPath = keyPath;
+    }
 
+    if (target.hasOwnProperty(setPath) === false) {
+      return false;
+    }
+    (target as any)[setPath] = value;
+    return true;
+  }
   /**
    * 校验输入信息
    *
