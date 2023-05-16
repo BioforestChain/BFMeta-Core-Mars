@@ -52,17 +52,14 @@ export class MacroCallLogicVerifier extends TransactionLogicVerifier {
 
     const { macroId, inputs } = transaction.asset.call;
 
-    const macroIdTransaction = await transactionGetterHelper.getMacroCallTransaction(
-      macroId,
-      inputs,
-    );
-    if (!macroIdTransaction) {
+    const macroTransaction = await transactionGetterHelper.getMacroCallTransaction(macroId, inputs);
+    if (!macroTransaction) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: `Transaction with signature ${macroId}`,
         target: "blockChain",
       });
     }
-    if (macroIdTransaction.effectiveBlockHeight < currentBlockHeight) {
+    if (macroTransaction.effectiveBlockHeight < currentBlockHeight) {
       throw new NoFoundException(ERROR_LIST.ALREADY_EXPIRED, {
         prop: `Transaction with signature ${macroId}`,
         target: "blockChain",
@@ -77,9 +74,9 @@ export class MacroCallLogicVerifier extends TransactionLogicVerifier {
     }
 
     const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
-      macroIdTransaction.type,
+      macroTransaction.type,
     );
-    const { senderId: subSenderId, recipientId: subRecipientId } = macroIdTransaction;
+    const { senderId: subSenderId, recipientId: subRecipientId } = macroTransaction;
     let subSender = accountMap.get(subSenderId);
     if (!subSender) {
       const result = await accountGetterHelper.getAccountInfoAndAssets(
@@ -111,7 +108,7 @@ export class MacroCallLogicVerifier extends TransactionLogicVerifier {
       accountMap.set(subRecipientId, subRecipient);
     }
     await logicVerify.verify(
-      macroIdTransaction,
+      macroTransaction,
       currentBlockHeight,
       { sender: subSender, recipient: subRecipient },
       accountGetterHelper,
