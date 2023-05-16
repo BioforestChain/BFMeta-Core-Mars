@@ -1,3 +1,4 @@
+import { Injectable, TaskList } from "@bfchain/util";
 import { TransactionFactory } from "@bfchain/core-transaction";
 import { RegisterChainTransaction, ACCOUNT_STATUS } from "@bfchain/core-model";
 import {
@@ -10,7 +11,6 @@ import {
   RegisterChainCertificateHelper,
 } from "@bfchain/core-helper";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
-import { Injectable, TaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
   "RegisterChainTransactionFactory",

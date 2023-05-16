@@ -61,6 +61,17 @@ declare namespace BFChainCore {
     ): Promise<number>;
 
     /**
+     * 查询事件在链上的数量
+     *
+     * @param signatures
+     * @param heightRange
+     */
+    countTransactionsInBlockChainBySignature(
+      signatures: string[],
+      heightRange: { startHeight: number; endHeight: number },
+    ): Promise<number>;
+
+    /**
      * 查询是否二次操作某笔交易
      *
      * @param args 查新条件

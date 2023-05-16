@@ -79,8 +79,8 @@ export const ERROR_CODE_LIST_EN = {
     "Transaction should not have senderSecondPublicKey, signature {signature} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type}",
   "001-11006":
     "Transaction should not have signSignature, signature {signature} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type}",
-  "001-11007": "Invalid transaction apply block height, reason {reason}",
-  "001-11008": "Invalid transaction effective block height, reason {reason}",
+  "001-11007": "Invalid transaction({signature}) apply block height, reason {reason}",
+  "001-11008": "Invalid transaction({signature}) effective block height, reason {reason}",
   "001-11009":
     "Invalid transaction from magic, reason {reason} signature {signature} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type}",
   "001-11010":
@@ -154,6 +154,7 @@ export const ERROR_CODE_LIST_EN = {
   "001-11072":
     "Frozen asset with frozenAddress {frozenAddress} signature {signature} assetType {assetType} in blockChain not exist or expired",
   "001-11073": "Not enough issue entity times, entityFactory {entityFactory}",
+  "001-11074": "Promise is not begin to resolve yet, promiseId {promiseId}",
 
   // block logic
   "001-12001":
