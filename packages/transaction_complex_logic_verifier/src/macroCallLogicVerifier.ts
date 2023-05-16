@@ -5,6 +5,7 @@ import {
 } from "@bfchain/core-transaction-logic-verifier";
 import { Injectable, Inject, QueneEventEmitter } from "@bfchain/util";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
+import { TransactionCore } from "@bfchain/core-transaction";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
@@ -13,6 +14,8 @@ const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
 
 @Injectable()
 export class MacroCallLogicVerifier extends TransactionLogicVerifier {
+  @Inject("bfchain-core:TransactionCore", { dynamics: true })
+  public transactionCore!: TransactionCore;
   @Inject("bfchain-core:TransactionLogicVerifierCore", { dynamics: true })
   public transactionLogicVerifierCore!: TransactionLogicVerifierCore;
 
@@ -52,14 +55,17 @@ export class MacroCallLogicVerifier extends TransactionLogicVerifier {
 
     const { macroId, inputs } = transaction.asset.call;
 
-    const macroTransaction = await transactionGetterHelper.getMacroCallTransaction(macroId, inputs);
-    if (!macroTransaction) {
+    const macroTransactionJson = await transactionGetterHelper.getMacroCallTransaction(
+      macroId,
+      inputs,
+    );
+    if (!macroTransactionJson) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: `Transaction with signature ${macroId}`,
         target: "blockChain",
       });
     }
-    if (macroTransaction.effectiveBlockHeight < currentBlockHeight) {
+    if (macroTransactionJson.effectiveBlockHeight < currentBlockHeight) {
       throw new NoFoundException(ERROR_LIST.ALREADY_EXPIRED, {
         prop: `Transaction with signature ${macroId}`,
         target: "blockChain",
@@ -74,9 +80,9 @@ export class MacroCallLogicVerifier extends TransactionLogicVerifier {
     }
 
     const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
-      macroTransaction.type,
+      macroTransactionJson.type,
     );
-    const { senderId: subSenderId, recipientId: subRecipientId } = macroTransaction;
+    const { senderId: subSenderId, recipientId: subRecipientId } = macroTransactionJson;
     let subSender = accountMap.get(subSenderId);
     if (!subSender) {
       const result = await accountGetterHelper.getAccountInfoAndAssets(
@@ -107,6 +113,7 @@ export class MacroCallLogicVerifier extends TransactionLogicVerifier {
       subRecipient = result;
       accountMap.set(subRecipientId, subRecipient);
     }
+    const macroTransaction = await this.transactionCore.recombineTransaction(macroTransactionJson);
     await logicVerify.verify(
       macroTransaction,
       currentBlockHeight,

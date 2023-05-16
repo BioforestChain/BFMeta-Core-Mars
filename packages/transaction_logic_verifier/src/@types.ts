@@ -93,7 +93,7 @@ declare namespace BFChainCore {
      *
      * @param promiseId 事件签名
      */
-    getPromiseTransaction(promiseId: string): Promise<Transaction | undefined>;
+    getPromiseTransaction(promiseId: string): Promise<BFChainCore.TransactionJSON | undefined>;
     /**
      * 根据 macroId 获取宏调用交易
      *
@@ -103,7 +103,7 @@ declare namespace BFChainCore {
     getMacroCallTransaction(
       macroId: string,
       inputs: { [name: string]: string },
-    ): Promise<Transaction | undefined>;
+    ): Promise<BFChainCore.TransactionJSON | undefined>;
   }
   // #endregion
 }

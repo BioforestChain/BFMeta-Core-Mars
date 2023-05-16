@@ -29,7 +29,15 @@ export class PromiseModel
     const { transactionBuffer } = this;
     let trs = TRANSACTION_BUFFER_WM_KV.get(transactionBuffer);
     if (!trs) {
-      trs = Transaction.decode(transactionBuffer);
+      const baseTrs = Transaction.decode(transactionBuffer);
+      const base_type = TRANSACTION_TYPES_MAP.trsTypeToV(baseTrs.type);
+      const ModelCtor = TRANSACTION_TYPES_MAP.VM.get(base_type);
+      if (!ModelCtor) {
+        throw new ArgumentFormatException(ERROR_LIST.INVALID_TRANSACTION_BASE_TYPE, {
+          type_base: base_type,
+        });
+      }
+      trs = ModelCtor.decode(transactionBuffer);
       TRANSACTION_BUFFER_WM_VK.set(trs, transactionBuffer);
       TRANSACTION_BUFFER_WM_KV.set(transactionBuffer, trs);
     }

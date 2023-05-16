@@ -5,6 +5,7 @@ import {
 } from "@bfchain/core-transaction-logic-verifier";
 import { Injectable, Inject, QueneEventEmitter } from "@bfchain/util";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
+import { TransactionCore } from "@bfchain/core-transaction";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
@@ -13,6 +14,8 @@ const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
 
 @Injectable()
 export class PromiseResolveLogicVerifier extends TransactionLogicVerifier {
+  @Inject("bfchain-core:TransactionCore", { dynamics: true })
+  public transactionCore!: TransactionCore;
   @Inject("bfchain-core:TransactionLogicVerifierCore", { dynamics: true })
   public transactionLogicVerifierCore!: TransactionLogicVerifierCore;
 
@@ -52,14 +55,14 @@ export class PromiseResolveLogicVerifier extends TransactionLogicVerifier {
 
     const { promiseId } = transaction.asset.resolve;
 
-    const promiseTransaction = await transactionGetterHelper.getPromiseTransaction(promiseId);
-    if (!promiseTransaction) {
+    const promiseTransactionJson = await transactionGetterHelper.getPromiseTransaction(promiseId);
+    if (!promiseTransactionJson) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: `Transaction with signature ${promiseId}`,
         target: "blockChain",
       });
     }
-    if (promiseTransaction.effectiveBlockHeight < currentBlockHeight) {
+    if (promiseTransactionJson.effectiveBlockHeight < currentBlockHeight) {
       throw new NoFoundException(ERROR_LIST.ALREADY_EXPIRED, {
         prop: `Transaction with signature ${promiseId}`,
         target: "blockChain",
@@ -74,9 +77,9 @@ export class PromiseResolveLogicVerifier extends TransactionLogicVerifier {
     }
 
     const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
-      promiseTransaction.type,
+      promiseTransactionJson.type,
     );
-    const { senderId: subSenderId, recipientId: subRecipientId } = promiseTransaction;
+    const { senderId: subSenderId, recipientId: subRecipientId } = promiseTransactionJson;
     let subSender = accountMap.get(subSenderId);
     if (!subSender) {
       const result = await accountGetterHelper.getAccountInfoAndAssets(
@@ -107,6 +110,9 @@ export class PromiseResolveLogicVerifier extends TransactionLogicVerifier {
       subRecipient = result;
       accountMap.set(subRecipientId, subRecipient);
     }
+    const promiseTransaction = await this.transactionCore.recombineTransaction(
+      promiseTransactionJson,
+    );
     await logicVerify.verify(
       promiseTransaction,
       currentBlockHeight,
