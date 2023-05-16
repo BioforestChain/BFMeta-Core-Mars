@@ -10,7 +10,8 @@
   "dependencies": {
     "@bfchain/core-block": "8.0.90",
     "@bfchain/core-transaction": "8.0.90",
-    "@bfchain/core-typings": "8.0.90"
+    "@bfchain/core-typings": "8.0.90",
+    "@bnqkl/calc": "^0.1.1"
   },
   "gitHead": "ef41eb359371b11aafbec0516df1eba01f16ebfd",
   "types": "build/cjs/index.d.ts"
