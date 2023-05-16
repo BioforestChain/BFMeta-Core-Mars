@@ -35,7 +35,7 @@ export class MacroModel
       return input;
     });
   }
-  set inputs(inputList: BaseInputModel[]) {
+  set inputs(inputList: BaseInputModel<any>[]) {
     const inputBufferList = inputList.map((input) => {
       return input.getBytes();
     });
@@ -75,10 +75,10 @@ export class MacroModel
     if (res !== object) {
       if (object.inputs) {
         const obj_inputs = object.inputs;
-        const results: BaseInputModel[] = [];
+        const results: BaseInputModel<any>[] = [];
         for (const obj_input of obj_inputs) {
           if (obj_input instanceof Message) {
-            results.push(obj_input as BaseInputModel);
+            results.push(obj_input as BaseInputModel<any>);
           } else {
             const type = obj_input.type as BFChainCore.Macro.MACRO_INPUT_TYPE;
             const ModelCtor = MACRO_INPUT_TYPES_MAP.VM.get(type);
@@ -87,7 +87,7 @@ export class MacroModel
                 type_base: type,
               });
             }
-            results.push(ModelCtor.fromObject<BaseInputModel>(obj_input));
+            results.push(ModelCtor.fromObject<BaseInputModel<any>>(obj_input));
           }
         }
         res.inputs = results;

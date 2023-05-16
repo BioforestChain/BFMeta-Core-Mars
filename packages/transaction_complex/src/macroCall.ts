@@ -1,14 +1,16 @@
-import { Injectable, Inject, wrapTaskList } from "@bfchain/util";
-import { MacroCallTransaction } from "@bfchain/core-model";
+import { Injectable, Inject, wrapTaskList, $safeEnd } from "@bfchain/util";
+import { MacroCallTransaction, MACRO_INPUT_TYPE, MACRO_NUMBER_FORMAT } from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
   BaseHelper,
   ConfigHelper,
   ChainAssetInfoHelper,
+  JSBIHelper,
 } from "@bfchain/core-helper";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
-import { TransactionFactory } from "@bfchain/core-transaction";
+import { TransactionCore, TransactionFactory } from "@bfchain/core-transaction";
+import * as calc from "@bnqkl/calc";
 
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
@@ -27,8 +29,130 @@ export class MacroCallTransactionFactory extends TransactionFactory<MacroCallTra
     public baseHelper: BaseHelper,
     public configHelper: ConfigHelper,
     public chainAssetInfoHelper: ChainAssetInfoHelper,
+    public jsbiHelper: JSBIHelper,
   ) {
     super();
+  }
+  @Inject("bfchain-core:TransactionCore", { dynamics: true })
+  public transactionCore!: TransactionCore;
+
+  async generateTransaction<T extends BFChainCore.Transaction>(
+    template: T,
+    defineInputs: BFChainCore.Macro.InputJSON[],
+    inputs: BFChainCore.MacroCallInputs,
+  ) {
+    /// 复制出一份JSON
+    const transaction = template.toJSON();
+    for (const defineInput of defineInputs) {
+      const { name, pattern } = defineInput;
+      let value: unknown = inputs[name];
+      if (typeof value !== "string") {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+          prop: `${defineInput.name} ${value}`,
+          target: "inputs",
+        });
+      }
+      if (pattern && new RegExp(pattern).test(value) === false) {
+        throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
+          to_compare_prop: `${name} ${value}`,
+          to_target: "inputs",
+          be_compare_prop: `pattern ${pattern}`,
+          be_target: "defineInput",
+        });
+      }
+      switch (defineInput.type) {
+        case MACRO_INPUT_TYPE.ADDRESS:
+          if ((await this.accountBaseHelper.isAddress(value)) === false) {
+            throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
+              to_compare_prop: `${name} ${value}`,
+              to_target: "inputs",
+              be_compare_prop: `pattern chain address`,
+              be_target: "defineInput",
+            });
+          }
+          break;
+        case MACRO_INPUT_TYPE.SIGNATURE:
+          if (this.transactionHelper.isValidTransactionSignature(value) === false) {
+            throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
+              to_compare_prop: `${name} ${value}`,
+              to_target: "inputs",
+              be_compare_prop: `pattern chain signature`,
+              be_target: "defineInput",
+            });
+          }
+          break;
+        case MACRO_INPUT_TYPE.TEXT:
+          break;
+        case MACRO_INPUT_TYPE.CALC:
+          value = calc.evaluate(defineInput.calc, inputs);
+        case MACRO_INPUT_TYPE.NUMBER: {
+          if (defineInput.format === MACRO_NUMBER_FORMAT.LITERAL) {
+            value = Number(value);
+          }
+          if (
+            defineInput.min &&
+            this.jsbiHelper.compareFraction(defineInput.min, {
+              numerator: value as string,
+              denominator: "1",
+            }) === 1
+          ) {
+            throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GTE_FIELD, {
+              prop: `name ${name} ${value}`,
+              target: "inputs",
+              field: JSON.stringify(defineInput.min),
+            });
+          }
+          if (
+            defineInput.max &&
+            this.jsbiHelper.compareFraction(defineInput.max, {
+              numerator: value as string,
+              denominator: "1",
+            }) === -1
+          ) {
+            throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
+              prop: `name ${name} ${value}`,
+              target: "inputs",
+              field: JSON.stringify(defineInput.max),
+            });
+          }
+          /// step 不知道咋验证啊
+          break;
+        }
+        default:
+          $safeEnd(defineInput);
+      }
+      /// 写入值
+      if (this.trySet(transaction, defineInput.keyPath, value) === false) {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+          prop: `name ${name}`,
+          target: "inputs",
+        });
+      }
+    }
+    const transactionModel = await this.transactionCore.recombineTransaction<T>(transaction);
+    return transactionModel;
+  }
+
+  trySet(target: object, keyPath: string, value: unknown) {
+    let setPath: string;
+    if (keyPath.includes(".")) {
+      const getsPath = keyPath.split(".");
+      setPath = getsPath.pop()!;
+      for (const getPath of getsPath) {
+        if (target.hasOwnProperty(getPath) === false) {
+          return false;
+        }
+        target = (target as any)[getPath];
+      }
+    } else {
+      setPath = keyPath;
+    }
+
+    if (target.hasOwnProperty(setPath) === false) {
+      return false;
+    }
+    (target as any)[setPath] = value;
+    return true;
   }
 
   /**
@@ -127,10 +251,6 @@ export class MacroCallTransactionFactory extends TransactionFactory<MacroCallTra
         prop: "inputs",
         ...MacroCallAsset_Exception_Detail,
       });
-    }
-
-    for (const input in inputs) {
-      ///
     }
 
     if (storage.value !== macroId) {

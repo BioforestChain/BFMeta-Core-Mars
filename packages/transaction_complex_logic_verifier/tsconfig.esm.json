@@ -18,6 +18,9 @@
       "path": "../transaction_complex/tsconfig.esm.json"
     },
     {
+      "path": "../transaction_logic_verifier/tsconfig.esm.json"
+    },
+    {
       "path": "../transaction/tsconfig.esm.json"
     },
     {

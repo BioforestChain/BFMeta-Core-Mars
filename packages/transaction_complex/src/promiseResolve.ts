@@ -1,4 +1,4 @@
-import { Injectable, Inject, wrapTaskList } from "@bfchain/util";
+import { Injectable, wrapTaskList } from "@bfchain/util";
 import { PromiseResolveTransaction } from "@bfchain/core-model";
 import {
   AccountBaseHelper,
@@ -113,10 +113,9 @@ export class PromiseResolveTransactionFactory extends TransactionFactory<Promise
       });
     }
 
-    if (!this.baseHelper.isValidSignature(promiseId)) {
+    if (this.baseHelper.isValidSignature(promiseId) === false) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `promiseId ${promiseId}`,
-        type: "transaction signature",
         ...PromiseResolveAsset_Exception_Detail,
       });
     }
