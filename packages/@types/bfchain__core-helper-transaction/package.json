@@ -1,17 +1,17 @@
 {
   "name": "@types/bfchain__core-helper-transaction",
   "types": "index.d.ts",
-  "version": "8.0.54",
+  "version": "8.0.83",
   "dependencies": {
-    "@types/bfchain__core-helper-account-base": "8.0.54",
-    "@types/bfchain__core-helper-asymmetric": "8.0.54",
-    "@types/bfchain__core-helper-bigint": "8.0.54",
-    "@types/bfchain__core-helper-config": "8.0.54",
-    "@types/bfchain__core-helper-transaction-pow": "8.0.54",
-    "@types/bfchain__core-helper-type": "8.0.54",
-    "@types/bfchain__core-model-constants": "8.0.54",
-    "@types/bfchain__core-model-transaction": "8.0.54",
-    "@types/bfchain__core-typings": "8.0.54",
-    "@types/bfchain__core-util-exception": "8.0.54"
+    "@types/bfchain__core-helper-account-base": "8.0.83",
+    "@types/bfchain__core-helper-asymmetric": "8.0.83",
+    "@types/bfchain__core-helper-bigint": "8.0.83",
+    "@types/bfchain__core-helper-config": "8.0.83",
+    "@types/bfchain__core-helper-transaction-pow": "8.0.83",
+    "@types/bfchain__core-helper-type": "8.0.83",
+    "@types/bfchain__core-model-constants": "8.0.83",
+    "@types/bfchain__core-model-transaction": "8.0.83",
+    "@types/bfchain__core-typings": "8.0.83",
+    "@types/bfchain__core-util-exception": "8.0.83"
   }
 }
