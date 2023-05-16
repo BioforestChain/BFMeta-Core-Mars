@@ -54,17 +54,26 @@ export class PromiseResolveLogicVerifier extends TransactionLogicVerifier {
     const { eventLogicVerifier } = this;
 
     const { promiseId } = transaction.asset.resolve;
-
     const promiseTransactionJson = await transactionGetterHelper.getPromiseTransaction(promiseId);
     if (!promiseTransactionJson) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-        prop: `Transaction with signature ${promiseId}`,
+        prop: `Promise transaction ${promiseId}`,
         target: "blockChain",
       });
     }
     if (promiseTransactionJson.effectiveBlockHeight < currentBlockHeight) {
-      throw new NoFoundException(ERROR_LIST.ALREADY_EXPIRED, {
-        prop: `Transaction with signature ${promiseId}`,
+      throw new ConsensusException(ERROR_LIST.ALREADY_EXPIRED, {
+        prop: `Promise transaction ${promiseId}`,
+        target: "blockChain",
+      });
+    }
+    const result = await transactionGetterHelper.getTransactionBySignature(
+      promiseTransactionJson.signature,
+      this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
+    );
+    if (result) {
+      throw new ConsensusException(ERROR_LIST.ALREADY_EXIST, {
+        prop: `Promise transaction ${promiseTransactionJson.signature}`,
         target: "blockChain",
       });
     }

@@ -58,11 +58,26 @@ export class MultipleLogicVerifier extends TransactionLogicVerifier {
     if (recipientId && recipient) {
       accountMap.set(recipientId, recipient);
     }
+    const queryRange = this.transactionHelper.calcTransactionQueryRange(currentBlockHeight);
     for (const subTransaction of transactions) {
+      const {
+        senderId: subSenderId,
+        recipientId: subRecipientId,
+        signature: subSignature,
+      } = subTransaction;
+      const result = await transactionGetterHelper.getTransactionBySignature(
+        subSignature,
+        queryRange,
+      );
+      if (result) {
+        throw new ConsensusException(ERROR_LIST.ALREADY_EXIST, {
+          prop: `transaction ${subSignature}`,
+          target: "blockChain",
+        });
+      }
       const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
         subTransaction.type,
       );
-      const { senderId: subSenderId, recipientId: subRecipientId } = subTransaction;
       let subSender = accountMap.get(subSenderId);
       if (!subSender) {
         const result = await accountGetterHelper.getAccountInfoAndAssets(

@@ -1,4 +1,4 @@
-import { Injectable, Inject, wrapTaskList } from "@bfchain/util";
+import { Injectable, wrapTaskList } from "@bfchain/util";
 import { PromiseResolveTransaction } from "@bfchain/core-model";
 import {
   AccountBaseHelper,
