@@ -7,6 +7,7 @@ import {
   BFChainCore,
   MACRO_INPUT_TYPE,
   Transaction,
+  MACRO_NUMBER_FORMAT,
 } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
@@ -155,17 +156,21 @@ async function getMacroTransaction(
   const macroAsset: BFChainCore.MacroJSON = {
     inputs: [
       {
-        type: MACRO_INPUT_TYPE.CALC,
+        type: MACRO_INPUT_TYPE.ADDRESS,
         name: "qaq",
-        keyPath: "qwq",
-        calc: "a+b",
+        keyPath: "recipientId",
+      },
+      {
+        type: MACRO_INPUT_TYPE.SIGNATURE,
+        name: "qqq",
+        keyPath: "signature",
       },
       {
         type: MACRO_INPUT_TYPE.NUMBER,
-        name: "qaq",
-        keyPath: "qwq",
+        name: "qwq",
+        keyPath: "asset.transferAsset.amount",
         min: {
-          numerator: "1",
+          numerator: "10",
           denominator: "1",
         },
         max: {
@@ -176,6 +181,7 @@ async function getMacroTransaction(
           numerator: "20",
           denominator: "1",
         },
+        format: MACRO_NUMBER_FORMAT.STRING,
       },
     ],
     template: await getTransferAssetTransaction(getSenderWithoutSecondSecret(), bfchainCore),

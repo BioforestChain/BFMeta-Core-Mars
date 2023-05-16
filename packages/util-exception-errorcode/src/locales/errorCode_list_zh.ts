@@ -79,8 +79,8 @@ export const ERROR_CODE_LIST_ZH = {
     "事件不应该携带发起账户的安全公钥，事件签名 {signature} 事件发起账户地址 {senderId} 事件发起高度 {applyBlockHeight} 事件类型 {type}",
   "001-11006":
     "件不应该携带安全签名，事件签名 {signature} 事件发起账户地址 {senderId} 事件发起高度 {applyBlockHeight} 事件类型 {type}",
-  "001-11007": "事件的发起高度不合法，原因 {reason}",
-  "001-11008": "事件的有效高度不合法，原因 {reason}",
+  "001-11007": "事件（{signature}）的发起高度不合法，原因 {reason}",
+  "001-11008": "事件（{signature}）的有效高度不合法，原因 {reason}",
   "001-11009":
     "事件的来源链的网络标识符不合法，原因 {reason}，事件签名 {signature} 事件发起账户地址 {senderId} 事件发起高度 {applyBlockHeight} 事件类型 {type}",
   "001-11010":
@@ -150,6 +150,7 @@ export const ERROR_CODE_LIST_ZH = {
   "001-11072":
     "链上的冻结资产 frozenAddress {frozenAddress} signature {signature} assetType {assetType} 不存在或者已经过期",
   "001-11073": "模板没有足够的发行 entity 次数，entityFactory {entityFactory}",
+  "001-11074": "承诺尚未开始兑现，promiseId {promiseId}",
 
   // block logic
   "001-12001":
