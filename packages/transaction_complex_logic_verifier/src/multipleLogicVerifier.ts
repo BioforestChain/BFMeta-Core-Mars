@@ -59,10 +59,10 @@ export class MultipleLogicVerifier extends TransactionLogicVerifier {
       accountMap.set(recipientId, recipient);
     }
     for (const subTransaction of transactions) {
+      const { senderId: subSenderId, recipientId: subRecipientId } = subTransaction;
       const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
         subTransaction.type,
       );
-      const { senderId: subSenderId, recipientId: subRecipientId } = subTransaction;
       let subSender = accountMap.get(subSenderId);
       if (!subSender) {
         const result = await accountGetterHelper.getAccountInfoAndAssets(
@@ -80,18 +80,21 @@ export class MultipleLogicVerifier extends TransactionLogicVerifier {
       }
       let subRecipient: BFChainCore.AccountInfoAndAssets | undefined;
       if (subRecipientId) {
-        const result = await accountGetterHelper.getAccountInfoAndAssets(
-          subRecipientId,
-          currentBlockHeight,
-        );
-        if (!result) {
-          throw new ConsensusException(ERROR_LIST.NOT_EXIST, {
-            prop: `Account with address ${subSenderId}`,
-            target: "blockChain",
-          });
+        subRecipient = accountMap.get(subRecipientId);
+        if (!subRecipient) {
+          const result = await accountGetterHelper.getAccountInfoAndAssets(
+            subRecipientId,
+            currentBlockHeight,
+          );
+          if (!result) {
+            throw new ConsensusException(ERROR_LIST.NOT_EXIST, {
+              prop: `Account with address ${subSenderId}`,
+              target: "blockChain",
+            });
+          }
+          subRecipient = result;
+          accountMap.set(subRecipientId, subRecipient);
         }
-        subRecipient = result;
-        accountMap.set(subRecipientId, subRecipient);
       }
       await logicVerify.verify(
         subTransaction,
@@ -105,5 +108,47 @@ export class MultipleLogicVerifier extends TransactionLogicVerifier {
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     return true;
+  }
+
+  /**
+   * 查询交易是否已经在链上
+   *
+   * @param transaction
+   * @param currentBlockHeight
+   * @param numberOfTransaction
+   * @param transactionGetterHelper
+   */
+  async checkRepeatInBlockChainTransaction(
+    transaction: MultipleTransaction,
+    currentBlockHeight: number,
+    numberOfTransaction: 0 | 1 = 0,
+    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
+  ) {
+    const { transactions } = transaction.asset.multiple;
+    const signatures = [transaction.signature];
+    let applyBlockHeight = transaction.applyBlockHeight;
+    for (const subTransaction of transactions) {
+      signatures.push(subTransaction.signature);
+      if (applyBlockHeight > subTransaction.applyBlockHeight) {
+        applyBlockHeight = subTransaction.applyBlockHeight;
+      }
+    }
+    const txCount = await transactionGetterHelper.countTransactionsInBlockChainBySignature(
+      signatures,
+      this.transactionHelper.calcTransactionQueryRangeByApplyBlockHeight(
+        applyBlockHeight,
+        currentBlockHeight,
+      ),
+    );
+    const maxTxCount = numberOfTransaction === 0 ? 0 : transactions.length + 1;
+    if (txCount > maxTxCount) {
+      throw new ConsensusException(ERROR_LIST.ALREADY_EXIST, {
+        prop: `One of transactions with signatures ${signatures
+          .slice(0, 3)
+          .map((item) => item.slice(0, 8))
+          .join(",")}`,
+        target: "blockChain",
+      });
+    }
   }
 }
