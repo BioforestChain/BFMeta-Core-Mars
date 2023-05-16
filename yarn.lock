@@ -642,6 +642,11 @@
     "@bfchain/util-type-detect" "4.12.44"
     "@bfchain/util-typings" "4.12.44"
 
+"@bnqkl/calc@^0.1.1":
+  version "0.1.1"
+  resolved "http://192.168.250.245:4873/@bnqkl%2fcalc/-/calc-0.1.1.tgz#ee320e0a9d529c4775077692508fb6ef12a6c362"
+  integrity sha512-oq+Sr5VddvpuP5XBDuoiVJ22sYJ7dspJwId2sht0isKiogBQiNeGvuKYLKDm7jvjOVoWvIS4qPLlBWTMLTqdQA==
+
 "@evocateur/libnpmaccess@^3.1.2":
   version "3.1.2"
   resolved "http://192.168.250.245:4873/@evocateur%2flibnpmaccess/-/libnpmaccess-3.1.2.tgz#ecf7f6ce6b004e9f942b098d92200be4a4b1c845"
