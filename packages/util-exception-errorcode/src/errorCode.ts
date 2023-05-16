@@ -181,11 +181,11 @@ export const ERROR_LIST = {
   ),
   INVALID_TRANSACTION_APPLY_BLOCK_HEIGHT: new ErrorCode(
     "001-11007",
-    "Invalid transaction apply block height, reason {reason}",
+    "Invalid transaction({signature}) apply block height, reason {reason}",
   ),
   INVALID_TRANSACTION_EFFECTIVE_BLOCK_HEIGHT: new ErrorCode(
     "001-11008",
-    "Invalid transaction effective block height, reason {reason}",
+    "Invalid transaction({signature}) effective block height, reason {reason}",
   ),
   INVALID_TRANSACTION_FROM_MAGIC: new ErrorCode(
     "001-11009",
@@ -398,6 +398,10 @@ export const ERROR_LIST = {
   NOT_ENOUGH_ISSUE_ENTITY_TIMES: new ErrorCode(
     "001-11073",
     "Not enough issue entity times, entityFactory {entityFactory}",
+  ),
+  NOT_BEGIN_RESOLVE_YET: new ErrorCode(
+    "001-11074",
+    "Promise is not begin to resolve yet, promiseId {promiseId}",
   ),
 
   // block logic

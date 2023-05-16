@@ -61,13 +61,7 @@ export class MacroCallLogicVerifier extends TransactionLogicVerifier {
     );
     if (!macroTransactionJson) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-        prop: `Transaction with signature ${macroId}`,
-        target: "blockChain",
-      });
-    }
-    if (macroTransactionJson.effectiveBlockHeight < currentBlockHeight) {
-      throw new NoFoundException(ERROR_LIST.ALREADY_EXPIRED, {
-        prop: `Transaction with signature ${macroId}`,
+        prop: `Macro call transaction with macroId ${macroId}`,
         target: "blockChain",
       });
     }
@@ -100,18 +94,21 @@ export class MacroCallLogicVerifier extends TransactionLogicVerifier {
     }
     let subRecipient: BFChainCore.AccountInfoAndAssets | undefined;
     if (subRecipientId) {
-      const result = await accountGetterHelper.getAccountInfoAndAssets(
-        subRecipientId,
-        currentBlockHeight,
-      );
-      if (!result) {
-        throw new ConsensusException(ERROR_LIST.NOT_EXIST, {
-          prop: `Account with address ${subSenderId}`,
-          target: "blockChain",
-        });
+      subRecipient = accountMap.get(subRecipientId);
+      if (!subRecipient) {
+        const result = await accountGetterHelper.getAccountInfoAndAssets(
+          subRecipientId,
+          currentBlockHeight,
+        );
+        if (!result) {
+          throw new ConsensusException(ERROR_LIST.NOT_EXIST, {
+            prop: `Account with address ${subSenderId}`,
+            target: "blockChain",
+          });
+        }
+        subRecipient = result;
+        accountMap.set(subRecipientId, subRecipient);
       }
-      subRecipient = result;
-      accountMap.set(subRecipientId, subRecipient);
     }
     const macroTransaction = await this.transactionCore.recombineTransaction(macroTransactionJson);
     await logicVerify.verify(
@@ -125,5 +122,48 @@ export class MacroCallLogicVerifier extends TransactionLogicVerifier {
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     return true;
+  }
+
+  /**
+   * 查询交易是否已经在链上
+   *
+   * @param transaction
+   * @param currentBlockHeight
+   * @param numberOfTransaction
+   * @param transactionGetterHelper
+   */
+  async checkRepeatInBlockChainTransaction(
+    transaction: MacroCallTransaction,
+    currentBlockHeight: number,
+    numberOfTransaction: 0 | 1 = 0,
+    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
+  ) {
+    const { macroId, inputs } = transaction.asset.call;
+    const macroTransaction = await transactionGetterHelper.getMacroCallTransaction(macroId, inputs);
+    if (!macroTransaction) {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
+        prop: `Macro transaction with macroId ${macroId}`,
+        target: "blockChain",
+      });
+    }
+    const signatures = [transaction.signature, macroTransaction.signature];
+    const applyBlockHeight =
+      transaction.applyBlockHeight > macroTransaction.applyBlockHeight
+        ? macroTransaction.applyBlockHeight
+        : transaction.applyBlockHeight;
+    const txCount = await transactionGetterHelper.countTransactionsInBlockChainBySignature(
+      signatures,
+      this.transactionHelper.calcTransactionQueryRangeByApplyBlockHeight(
+        applyBlockHeight,
+        currentBlockHeight,
+      ),
+    );
+    const maxTxCount = numberOfTransaction === 0 ? 0 : 2;
+    if (txCount > maxTxCount) {
+      throw new ConsensusException(ERROR_LIST.ALREADY_EXIST, {
+        prop: `One of transactions with signatures ${signatures.join(",")}`,
+        target: "blockChain",
+      });
+    }
   }
 }

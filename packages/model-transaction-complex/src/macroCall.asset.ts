@@ -26,7 +26,7 @@ export class MacroCallModel
     this.macroIdBuffer = parseHexToArrayBuffer(value);
   }
   @MapField.d(MacroCallModel.INC++, "string", "string")
-  inputs!: { [key: string]: string };
+  inputs!: BFChainCore.MacroCallInputs;
   get inputMap() {
     const inputMap = CallInputsMapWM.forceGet(this);
     return inputMap;
