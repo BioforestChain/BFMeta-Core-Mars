@@ -22,10 +22,10 @@ export class NumberInputModel<T extends MACRO_INPUT_TYPE = MACRO_INPUT_TYPE.NUMB
     const resp: BFChainCore.Macro.NumberInputJSON<T> = {
       ...super.toJSON(),
       format: this.format,
-      min: this.min?.toJSON(),
-      max: this.max?.toJSON(),
-      step: this.step?.toJSON(),
     };
+    this.min && (resp.min = this.min.toJSON());
+    this.max && (resp.max = this.max.toJSON());
+    this.step && (resp.step = this.step.toJSON());
     return resp;
   }
 }

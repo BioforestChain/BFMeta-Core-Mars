@@ -7,6 +7,7 @@ import {
   BFChainCore,
   MACRO_INPUT_TYPE,
   Transaction,
+  MACRO_NUMBER_FORMAT,
 } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
@@ -159,6 +160,7 @@ async function getMacroTransaction(
         name: "qaq",
         keyPath: "qwq",
         calc: "a+b",
+        format: MACRO_NUMBER_FORMAT.STRING,
       },
       {
         type: MACRO_INPUT_TYPE.NUMBER,
@@ -176,6 +178,7 @@ async function getMacroTransaction(
           numerator: "20",
           denominator: "1",
         },
+        format: MACRO_NUMBER_FORMAT.LITERAL,
       },
     ],
     template: await getTransferAssetTransaction(getSenderWithoutSecondSecret(), bfchainCore),

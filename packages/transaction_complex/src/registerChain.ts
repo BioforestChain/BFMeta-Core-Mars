@@ -10,13 +10,7 @@ import {
   RegisterChainCertificateHelper,
 } from "@bfchain/core-helper";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
-import {
-  Injectable,
-  Inject,
-  TaskList,
-  getHexFromArrayBuffer,
-  parseHexToArrayBuffer,
-} from "@bfchain/util";
+import { Injectable, Inject, TaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
   "RegisterChainTransactionFactory",

@@ -1,10 +1,5 @@
 import { Injectable, Inject, wrapTaskList, $safeEnd } from "@bfchain/util";
-import {
-  MacroCallTransaction,
-  MACRO_INPUT_TYPE,
-  MACRO_NUMBER_FORMAT,
-  ToExchangeAnyMultiAssetModel,
-} from "@bfchain/core-model";
+import { MacroCallTransaction, MACRO_INPUT_TYPE, MACRO_NUMBER_FORMAT } from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,

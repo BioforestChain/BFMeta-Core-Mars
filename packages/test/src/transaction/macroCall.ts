@@ -9,6 +9,7 @@ import {
   BFChainCore,
   MACRO_INPUT_TYPE,
   Transaction,
+  MACRO_NUMBER_FORMAT,
 } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
@@ -196,7 +197,9 @@ async function getMacroCallTransaction(
 
   const xx = await bfchainCore.transaction.recombineTransaction<MacroCallTransaction>(trsJson);
 
-  const factory = bfchainCore.transaction.getTransactionFactoryFromType(xx.type);
+  const factory = bfchainCore.transaction.getTransactionFactoryFromType<MacroCallTransaction>(
+    xx.type,
+  );
 
   await factory.verifySignature(xx);
 
@@ -214,6 +217,7 @@ async function getMacroCallTransaction(
         name: "qaq",
         keyPath: "qwq",
         calc: "a+b",
+        format: MACRO_NUMBER_FORMAT.STRING,
       },
       {
         type: MACRO_INPUT_TYPE.NUMBER,
@@ -231,6 +235,7 @@ async function getMacroCallTransaction(
           numerator: "20",
           denominator: "1",
         },
+        format: MACRO_NUMBER_FORMAT.LITERAL,
       },
     ],
     template: await getTransferAssetTransaction(getSenderWithoutSecondSecret(), bfchainCore),
