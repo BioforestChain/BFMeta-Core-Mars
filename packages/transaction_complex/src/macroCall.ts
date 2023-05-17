@@ -56,7 +56,7 @@ export class MacroCallTransactionFactory extends TransactionFactory<MacroCallTra
           break;
         case MACRO_INPUT_TYPE.SIGNATURE:
           if (this.transactionHelper.isValidTransactionSignature(value) === false) {
-            throw new TypeError(`input:${defineInput.name} should be an address`);
+            throw new TypeError(`input:${defineInput.name} should be an signature`);
           }
           break;
         case MACRO_INPUT_TYPE.TEXT:
