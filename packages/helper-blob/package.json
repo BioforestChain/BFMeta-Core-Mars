@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-helper-blob",
-  "version": "8.0.83",
+  "version": "8.0.90",
   "main": "build/cjs/index.js",
   "type": "commonjs",
   "types": "build/cjs/index.d.ts",
@@ -8,9 +8,9 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-helper-chain-time": "8.0.83",
-    "@bfchain/core-model-channel": "8.0.83",
-    "@bfchain/core-typings": "8.0.83"
+    "@bfchain/core-helper-chain-time": "8.0.90",
+    "@bfchain/core-model-channel": "8.0.90",
+    "@bfchain/core-typings": "8.0.90"
   },
   "module": "build/esm/index.js"
 }
