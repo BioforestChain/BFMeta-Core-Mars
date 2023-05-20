@@ -659,7 +659,10 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
         core.transactionLogicVerifier.getTransactionLogicVerifierFromType<TransferAssetTransaction>(
           trs.type,
         );
-      const result = yy.checkTrsFeeAndWebFee(trs, trs.getBytes().length);
+      const result = yy.checkTrsFeeAndWebFee(
+        trs as TransferAssetTransaction,
+        trs.getBytes().length,
+      );
       if (!result.isFeeEnough) {
         console.log(trs.toJSON());
         throw new Error(`Tx fee not enough, minFee ${result.minFee}`);
