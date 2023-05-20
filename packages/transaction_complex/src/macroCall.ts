@@ -33,6 +33,7 @@ export class MacroCallTransactionFactory extends TransactionFactory<MacroCallTra
   }
   @Inject("bfchain-core:TransactionCore", { dynamics: true })
   public transactionCore!: TransactionCore;
+
   async generateTransaction<T extends BFChainCore.Transaction>(
     template: T,
     defineInputs: BFChainCore.Macro.InputJSON[],
@@ -80,6 +81,7 @@ export class MacroCallTransactionFactory extends TransactionFactory<MacroCallTra
     const transactionModel = await this.transactionCore.recombineTransaction<T>(transaction);
     return transactionModel;
   }
+
   trySet(target: object, keyPath: string, value: unknown) {
     let setPath: string;
     if (keyPath.includes(".")) {
@@ -101,6 +103,7 @@ export class MacroCallTransactionFactory extends TransactionFactory<MacroCallTra
     (target as any)[setPath] = value;
     return true;
   }
+
   /**
    * 校验输入信息
    *
@@ -197,10 +200,6 @@ export class MacroCallTransactionFactory extends TransactionFactory<MacroCallTra
         prop: "inputs",
         ...MacroCallAsset_Exception_Detail,
       });
-    }
-
-    for (const input in inputs) {
-      ///
     }
 
     if (storage.value !== macroId) {

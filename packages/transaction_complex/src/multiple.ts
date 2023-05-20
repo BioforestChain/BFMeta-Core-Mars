@@ -114,7 +114,15 @@ export class MultipleTransactionFactory extends TransactionFactory<MultipleTrans
       });
     }
 
+    const signatureSet = new Set<string>();
     for (const trsJson of transactions) {
+      if (signatureSet.has(trsJson.signature)) {
+        throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_DUPLICATE, {
+          prop: "transactions",
+          ...MultipleAsset_Exception_Detail,
+        });
+      }
+      signatureSet.add(trsJson.signature);
       const factory = this.transactionCore.getTransactionFactoryFromType(trsJson.type);
       const transaction = await factory.fromJSON(trsJson);
       await factory.verify(transaction);
