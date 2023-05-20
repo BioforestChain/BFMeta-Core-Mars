@@ -536,7 +536,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    * @param transaction
    * @param byteLength
    */
-  checkTrsFeeAndWebFee(transaction: BFChainCore.Transaction, byteLength: number) {
+  checkTrsFeeAndWebFee(transaction: T, byteLength: number) {
     return this.isFeeEnough(
       transaction.fee,
       (
@@ -554,7 +554,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    * @param miningMachineMinFeePerByte
    */
   checkTrsFeeAndMiningMachineFeeAndWebFee(
-    transaction: BFChainCore.Transaction,
+    transaction: T,
     byteLength: number,
     miningMachineMinFeePerByte: BFChainCore.FractionJSON,
   ) {
@@ -573,20 +573,14 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   /**
    * 查询交易是否已经在未处理交易中
    *
-   * @param senderId
-   * @param signature
+   * @param transaction
+   * @param transactionGetterHelper
    */
   async checkRepeatInUntreatedTransaction(
-    senderId: string,
-    signature: string,
-    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
+    transaction: T,
+    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    if (!transactionGetterHelper) {
-      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-        prop: "transactionGetterHelper",
-        target: "moduleStroge",
-      });
-    }
+    const { senderId, signature } = transaction;
     const txCount = await transactionGetterHelper.countTransactionInUntreatedBySignature(
       senderId,
       signature,
@@ -602,19 +596,18 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   /**
    * 查询交易是否已经在链上
    *
-   * @param signature 事件签名
-   * @param applyBlockHeight 事件发起高度
-   * @param currentBlockHeight 事件最大有效高度
+   * @param transaction
+   * @param currentBlockHeight
    * @param numberOfTransaction
    * @param transactionGetterHelper
    */
   async checkRepeatInBlockChainTransaction(
-    signature: string,
-    applyBlockHeight: number,
+    transaction: T,
     currentBlockHeight: number,
     numberOfTransaction = 0,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
+    const { signature, applyBlockHeight } = transaction;
     const txCount = await transactionGetterHelper.countTransactionInBlockChainBySignature(
       signature,
       this.transactionHelper.calcTransactionQueryRangeByApplyBlockHeight(
@@ -656,10 +649,6 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       parseHexToArrayBuffer(transaction.signature),
       tranSenderCount,
       participation,
-      // {
-      //   accountParticipation: participation,
-      //   accountNumberOfTransactionInBlock: tranSenderCount,
-      // },
     );
     if (!powCheckResult) {
       throw new ConsensusException(ERROR_LIST.VERIFY_TRANSACTION_POW_OF_WORK_ERROR, {
@@ -677,7 +666,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   checkSecondaryTransaction?(
     transaction: T,
     currentBlockHeight: number,
-    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
+    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ): Promise<void>;
 
   /**
