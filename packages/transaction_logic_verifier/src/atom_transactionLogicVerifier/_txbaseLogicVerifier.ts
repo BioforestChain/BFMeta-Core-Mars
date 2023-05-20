@@ -598,13 +598,13 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    *
    * @param transaction
    * @param currentBlockHeight
-   * @param numberOfTransaction
+   * @param numberOfTransaction 0 表示链上不存在相关交易，1 表示链上有且只有 1 笔相关交易（携带的子交易也是）
    * @param transactionGetterHelper
    */
   async checkRepeatInBlockChainTransaction(
     transaction: T,
     currentBlockHeight: number,
-    numberOfTransaction = 0,
+    numberOfTransaction: 0 | 1 = 0,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const { signature, applyBlockHeight } = transaction;
