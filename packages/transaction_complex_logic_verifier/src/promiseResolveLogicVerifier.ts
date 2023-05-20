@@ -67,16 +67,6 @@ export class PromiseResolveLogicVerifier extends TransactionLogicVerifier {
         target: "blockChain",
       });
     }
-    const result = await transactionGetterHelper.getTransactionBySignature(
-      promiseTransactionJson.signature,
-      this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
-    );
-    if (result) {
-      throw new ConsensusException(ERROR_LIST.ALREADY_EXIST, {
-        prop: `Promise transaction ${promiseTransactionJson.signature}`,
-        target: "blockChain",
-      });
-    }
 
     eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
 
