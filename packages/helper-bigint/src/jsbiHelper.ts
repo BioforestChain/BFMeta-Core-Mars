@@ -13,7 +13,7 @@ type BI = bigint | number | string;
 function formatParam(param: BI) {
   try {
     if (typeof param === "string") {
-      if (/^[0-9]*$/.test(param) === false) {
+      if (/^[0-9-]*$/.test(param) === false) {
         throw new Error("QAQ");
       }
       param = parseInt(param);
