@@ -1,12 +1,12 @@
 {
   "name": "@types/bfchain__core-block",
   "types": "index.d.ts",
-  "version": "8.0.83",
+  "version": "8.0.90",
   "dependencies": {
-    "@types/bfchain__core-channel": "8.0.83",
-    "@types/bfchain__core-helper": "8.0.83",
-    "@types/bfchain__core-model": "8.0.83",
-    "@types/bfchain__core-transaction-logic-verifier": "8.0.83",
-    "@types/bfchain__core-typings": "8.0.83"
+    "@types/bfchain__core-channel": "8.0.90",
+    "@types/bfchain__core-helper": "8.0.90",
+    "@types/bfchain__core-model": "8.0.90",
+    "@types/bfchain__core-transaction-logic-verifier": "8.0.90",
+    "@types/bfchain__core-typings": "8.0.90"
   }
 }
