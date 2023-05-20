@@ -26,7 +26,7 @@ function formatParam(param: BI) {
   } catch (err) {
     throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
       prop: `param ${param}`,
-      type: "jsbi|string|number",
+      target: "fraction",
     });
   }
 }
