@@ -437,9 +437,13 @@ export class BaseHelper {
     if (!(value.numerator && value.denominator)) {
       return false;
     }
-    const denominator = BigInt(value.denominator);
-    const minNumber = BigInt(0);
-    if (denominator === minNumber) {
+    try {
+      const denominator = BigInt(value.denominator);
+      const minNumber = BigInt(0);
+      if (denominator === minNumber) {
+        return false;
+      }
+    } catch (error) {
       return false;
     }
     return true;
