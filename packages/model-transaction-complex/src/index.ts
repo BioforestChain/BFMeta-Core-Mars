@@ -1,4 +1,5 @@
 import type {} from "@bfchain/util";
+import type {} from "@bnqkl/calc";
 import "@bfchain/core-typings";
 import "./@types";
 export * from "./custom.asset";

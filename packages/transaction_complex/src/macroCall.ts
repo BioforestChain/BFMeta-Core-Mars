@@ -7,6 +7,7 @@ import {
   ConfigHelper,
   ChainAssetInfoHelper,
   JSBIHelper,
+  AsymmetricHelper,
 } from "@bfchain/core-helper";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { TransactionCore, TransactionFactory } from "@bfchain/core-transaction";
@@ -25,6 +26,7 @@ const { ArgumentIllegalException } = CoreExceptionGenerator(
 export class MacroCallTransactionFactory extends TransactionFactory<MacroCallTransaction> {
   constructor(
     public accountBaseHelper: AccountBaseHelper,
+    public asymmetricHelper: AsymmetricHelper,
     public transactionHelper: TransactionHelper,
     public baseHelper: BaseHelper,
     public configHelper: ConfigHelper,
@@ -40,6 +42,7 @@ export class MacroCallTransactionFactory extends TransactionFactory<MacroCallTra
     template: T,
     defineInputs: BFChainCore.Macro.InputJSON[],
     inputs: BFChainCore.MacroCallInputs,
+    skipVerify = true,
   ) {
     /// 复制出一份JSON
     const transaction = template.toJSON();
@@ -130,7 +133,54 @@ export class MacroCallTransactionFactory extends TransactionFactory<MacroCallTra
       }
     }
     const transactionModel = await this.transactionCore.recombineTransaction<T>(transaction);
+    if (skipVerify === false) {
+      const factory = this.transactionCore.getTransactionFactoryFromType(transactionModel.type);
+      await factory.verify(transactionModel, this.configHelper);
+    }
     return transactionModel;
+  }
+
+  async signTransaction<T extends BFChainCore.Transaction>(
+    xx: T,
+    secret: string,
+    secondSecret?: string,
+    pow?: BFChainCore.TransactionPoWOptions<T>,
+    skipPow?: boolean,
+  ) {
+    const template = await this.transactionCore.recombineTransaction<T>(xx.toJSON());
+    const { accountBaseHelper, asymmetricHelper } = this;
+    const keypair = await accountBaseHelper.createSecretKeypair(secret);
+    template.signatureBuffer = await asymmetricHelper.detachedSign(
+      template.getBytes(true, true),
+      keypair.secretKey,
+    );
+    let secondKeypair!: BFChainCore.Keypair;
+    if (secondSecret) {
+      secondKeypair = await accountBaseHelper.createSecondSecretKeypair(secret, secondSecret);
+      template.signSignatureBuffer = await asymmetricHelper.detachedSign(
+        template.getBytes(false, true),
+        secondKeypair.secretKey,
+      );
+      await this.transactionHelper.verifyTransactionSignature(template);
+    }
+    // 在异步中执行交易POW
+    if (pow && !skipPow) {
+      if (pow.calculator) {
+        return await pow.calculator(template, pow, keypair, secondKeypair);
+      } else {
+        // 使用内置的计算器去计算
+        return await this.transactionCore.transactionPowCalculator(
+          template,
+          pow,
+          keypair,
+          secondKeypair,
+        );
+      }
+    } else {
+      // 交易的 nonce 必须携带，默认为 0，并且加入签名
+      template.nonce = 0;
+    }
+    return template;
   }
 
   trySet(target: object, keyPath: string, value: unknown) {
