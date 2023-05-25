@@ -13,5 +13,6 @@ matchRemover(
     deep === 2 && fs.statSync(fullpath).isDirectory() && file.includes("build"),
   2,
 );
-matchRemover(cachePath, _ => true);
+matchRemover(cachePath, (_) => true);
 matchRemover(typePath, (file, _, deep) => deep > 1 && file !== "package.json");
+fs.rmSync(path.join(process.cwd(), ".cache"), { recursive: true, force: true });
