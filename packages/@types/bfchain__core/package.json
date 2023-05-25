@@ -14,6 +14,7 @@
     "@types/bfchain__core-patch": "9.0.0",
     "@types/bfchain__core-transaction": "9.0.0",
     "@types/bfchain__core-transaction-complex": "9.0.0",
+    "@types/bfchain__core-transaction-complex-logic-verifier": "9.0.0",
     "@types/bfchain__core-transaction-logic-verifier": "9.0.0",
     "@types/bfchain__core-typings": "9.0.0",
     "@types/bfchain__core-util-base58": "9.0.0",

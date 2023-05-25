@@ -19,7 +19,8 @@
     "@bfchain/core-model-common": "9.0.0",
     "@bfchain/core-model-constants": "9.0.0",
     "@bfchain/core-model-transaction": "9.0.0",
-    "@bfchain/core-typings": "9.0.0"
+    "@bfchain/core-typings": "9.0.0",
+    "@bnqkl/calc": "^0.1.1"
   },
   "gitHead": "ef41eb359371b11aafbec0516df1eba01f16ebfd",
   "types": "build/cjs/index.d.ts"
