@@ -14,12 +14,13 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-model-block": "9.0.2",
-    "@bfchain/core-model-cacher": "9.0.2",
-    "@bfchain/core-model-common": "9.0.2",
-    "@bfchain/core-model-constants": "9.0.2",
-    "@bfchain/core-model-transaction": "9.0.2",
-    "@bfchain/core-typings": "9.0.2"
+    "@bfchain/core-model-block": "9.0.0",
+    "@bfchain/core-model-cacher": "9.0.0",
+    "@bfchain/core-model-common": "9.0.0",
+    "@bfchain/core-model-constants": "9.0.0",
+    "@bfchain/core-model-transaction": "9.0.0",
+    "@bfchain/core-typings": "9.0.0",
+    "@bnqkl/calc": "^0.1.1"
   },
   "gitHead": "95741cca2912a529edb553afb42a9400d56ce5b3",
   "types": "build/cjs/index.d.ts"
