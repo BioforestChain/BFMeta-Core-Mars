@@ -196,40 +196,36 @@ async function getMacroCallTransaction(
 
   const trsJson = trs.toJSON();
 
-  const xx = await bfchainCore.transaction.recombineTransaction<MacroCallTransaction>(trsJson);
+  const xx = await bfchainCore.transaction.recombineTransaction(trsJson);
 
-  const factory = bfchainCore.transaction.getTransactionFactoryFromType<MacroCallTransaction>(
-    xx.type,
-  ) as unknown as MacroCallTransactionFactory;
-
-  await factory.verifySignature(xx);
-
-  const { template, inputs } = macroTrs.asset.macro;
-  const yy = await factory.generateTransaction(template, inputs, macroCall.inputs);
-  console.log(yy.toJSON());
-
-  // console.log(trsJson.asset.call);
-  // console.log(`json equal ${util.isDeepStrictEqual(trsJson, xx.toJSON())}`);
+  console.log(trsJson.asset.call);
+  console.log(`json equal ${util.isDeepStrictEqual(trsJson, xx.toJSON())}`);
 }
 
 (async () => {
   const bfchainCore = await getBfchainCoreEntry();
+  const sender = getSenderWithSecondSecret();
 
   const macroAsset: BFChainCore.MacroJSON = {
     inputs: [
       {
         type: MACRO_INPUT_TYPE.ADDRESS,
-        name: "qaq",
+        name: "recipientId",
         keyPath: "recipientId",
       },
       {
         type: MACRO_INPUT_TYPE.SIGNATURE,
-        name: "qqq",
+        name: "signature",
         keyPath: "signature",
       },
       {
+        type: MACRO_INPUT_TYPE.SIGNATURE,
+        name: "signSignature",
+        keyPath: "signSignature",
+      },
+      {
         type: MACRO_INPUT_TYPE.NUMBER,
-        name: "qwq",
+        name: "amount",
         keyPath: "asset.transferAsset.amount",
         min: {
           numerator: "10",
@@ -245,20 +241,57 @@ async function getMacroCallTransaction(
         },
         format: MACRO_NUMBER_FORMAT.STRING,
       },
+      {
+        type: MACRO_INPUT_TYPE.NUMBER,
+        name: "nonce",
+        keyPath: "nonce",
+        min: {
+          numerator: "0",
+          denominator: "1",
+        },
+        format: MACRO_NUMBER_FORMAT.LITERAL,
+      },
     ],
-    template: await getTransferAssetTransaction(getSenderWithoutSecondSecret(), bfchainCore),
+    template: await getTransferAssetTransaction(sender, bfchainCore),
   };
 
-  const macroTrs = await getMacroTransaction(getSenderWithSecondSecret(), macroAsset, bfchainCore);
+  const macroTrs = await getMacroTransaction(sender, macroAsset, bfchainCore);
+
+  const inputs = {
+    recipientId: "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
+    amount: "100",
+    signature:
+      "82b37cd5461c8624d8b7fda89ff3612c32eee7272331b26db407f594c7a750e89a582074bfe83197146fbad32a94b11665795fe8d476554e50ea7a03a99ddc05",
+    signSignature:
+      "82b37cd5461c8624d8b7fda89ff3612c32eee7272331b26db407f594c7a750e89a582074bfe83197146fbad32a94b11665795fe8d476554e50ea7a03a99ddc05",
+    nonce: "0",
+  };
+
+  const { template, inputs: defaultInputs } = macroTrs.asset.macro;
+
+  const factory = bfchainCore.transaction.getTransactionFactoryFromType<MacroCallTransaction>(
+    bfchainCore.transactionHelper.MACRO_CALL,
+  ) as unknown as MacroCallTransactionFactory;
+
+  const trsWithoutSign = await factory.generateTransaction(template, defaultInputs, inputs);
+  const newTrs = await factory.signTransaction(
+    trsWithoutSign,
+    sender.secret,
+    sender.secondSecret,
+    {
+      count: 1,
+      participation: "1000000000000",
+    },
+    false,
+  );
+
+  await bfchainCore.transactionHelper.verifyTransactionSignature(newTrs);
+
   await getMacroCallTransaction(
-    getSenderWithSecondSecret(),
+    sender,
     {
       macroId: macroTrs.signature,
-      inputs: {
-        qaq: "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
-        qwq: "100",
-        qqq: "82b37cd5461c8624d8b7fda89ff3612c32eee7272331b26db407f594c7a750e89a582074bfe83197146fbad32a94b11665795fe8d476554e50ea7a03a99ddc05",
-      },
+      inputs,
     },
     macroTrs,
     bfchainCore,

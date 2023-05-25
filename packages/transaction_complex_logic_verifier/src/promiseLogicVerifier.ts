@@ -1,9 +1,9 @@
 import { NewTransactionRefuseReason, PromiseTransaction } from "@bfchain/core-model";
+import { Injectable, Inject, QueneEventEmitter } from "@bfchain/util";
 import {
   TransactionLogicVerifier,
   TransactionLogicVerifierCore,
 } from "@bfchain/core-transaction-logic-verifier";
-import { Injectable, Inject, QueneEventEmitter } from "@bfchain/util";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
@@ -23,32 +23,11 @@ export class PromiseLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: PromiseTransaction,
     currentBlockHeight: number,
-    accountsInfo: {
-      sender: BFChainCore.AccountInfoAndAssets;
-      recipient?: BFChainCore.AccountInfoAndAssets;
-    },
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
+    skipListenEvent = false,
   ) {
-    const { sender } = await this.logicVerify(
-      transaction,
-      currentBlockHeight,
-      accountsInfo,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
-
-    const cloneAccountsAssets = {
-      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
-    };
-    const cloneAccountsInfo = {
-      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountInfo),
-    };
-
-    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
-
-    const { eventLogicVerifier } = this;
-
     const { signature } = transaction.asset.promise.transaction;
     const promiseTransaction = await transactionGetterHelper.getTransactionBySignature(
       signature,
@@ -62,7 +41,26 @@ export class PromiseLogicVerifier extends TransactionLogicVerifier {
       });
     }
 
-    eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
+    await this.logicVerify(
+      transaction,
+      currentBlockHeight,
+      accountMap,
+      accountGetterHelper,
+      transactionGetterHelper,
+    );
+
+    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
+
+    const { eventLogicVerifier } = this;
+
+    if (skipListenEvent === false) {
+      eventLogicVerifier.listenEvent(
+        accountMap,
+        currentBlockHeight,
+        accountGetterHelper,
+        eventEmitter,
+      );
+    }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
