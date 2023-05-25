@@ -1,5 +1,10 @@
 import { Injectable, Inject, wrapTaskList } from "@bfchain/util";
-import { MacroTransaction, MACRO_INPUT_TYPE, MACRO_NUMBER_FORMAT } from "@bfchain/core-model";
+import {
+  MacroTransaction,
+  MACRO_INPUT_TYPE,
+  MACRO_NUMBER_FORMAT,
+  Transaction,
+} from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
@@ -95,7 +100,8 @@ export class MacroTransactionFactory extends TransactionFactory<MacroTransaction
       target: "macro",
     } as const;
 
-    const { inputs, template } = macro;
+    const { inputs, template: tempTemplate } = macro;
+    const template = tempTemplate instanceof Transaction ? tempTemplate.toJSON() : tempTemplate;
     if (!inputs) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "inputs",
@@ -192,19 +198,19 @@ export class MacroTransactionFactory extends TransactionFactory<MacroTransaction
             target: `macro.inputs.input ${JSON.stringify(input)}`,
           });
         }
-        if (min && baseHelper.isPositiveBigFloatNotContainZero(min) === false) {
+        if (min && baseHelper.isPositiveBigFloatContainZero(min) === false) {
           throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
             prop: "min",
             target: `macro.inputs.input ${JSON.stringify(input)}`,
           });
         }
-        if (max && baseHelper.isPositiveBigFloatNotContainZero(max) === false) {
+        if (max && baseHelper.isPositiveBigFloatContainZero(max) === false) {
           throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
             prop: "max",
             target: `macro.inputs.input ${JSON.stringify(input)}`,
           });
         }
-        if (step && baseHelper.isPositiveBigFloatNotContainZero(step) === false) {
+        if (step && baseHelper.isPositiveBigFloatContainZero(step) === false) {
           throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
             prop: "step",
             target: `macro.inputs.input ${JSON.stringify(input)}`,
