@@ -1,6 +1,6 @@
 import type { RejectVoteTransaction } from "@bfchain/core-model";
-import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
+import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 
 @Injectable()
 export class RejectVoteLogicVerifier extends TransactionLogicVerifier {
@@ -11,35 +11,31 @@ export class RejectVoteLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: RejectVoteTransaction,
     currentBlockHeight: number,
-    accountsInfo: {
-      sender: BFChainCore.AccountInfoAndAssets;
-      recipient?: BFChainCore.AccountInfoAndAssets;
-    },
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
+    skipListenEvent = false,
   ) {
-    const { sender } = await this.logicVerify(
+    await this.logicVerify(
       transaction,
       currentBlockHeight,
-      accountsInfo,
+      accountMap,
       accountGetterHelper,
       transactionGetterHelper,
     );
-
-    const cloneAccountsAssets = {
-      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
-    };
-    const cloneAccountsInfo = {
-      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountInfo),
-    };
 
     const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
     const { eventLogicVerifier } = this;
 
-    eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
-
-    eventLogicVerifier.listenEventRejectVote(cloneAccountsInfo, eventEmitter);
+    if (skipListenEvent === false) {
+      eventLogicVerifier.listenEvent(
+        accountMap,
+        currentBlockHeight,
+        accountGetterHelper,
+        eventEmitter,
+      );
+    }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 

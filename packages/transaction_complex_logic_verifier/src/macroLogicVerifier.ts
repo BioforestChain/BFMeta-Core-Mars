@@ -1,19 +1,21 @@
-import type { IssueEntityFactoryTransaction } from "@bfchain/core-model";
+import type { MacroTransaction } from "@bfchain/core-model";
 import { Injectable, Inject, QueneEventEmitter } from "@bfchain/util";
-import { AccountBaseHelper, TransactionHelper } from "@bfchain/core-helper";
-import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
+import {
+  TransactionLogicVerifier,
+  TransactionLogicVerifierCore,
+} from "@bfchain/core-transaction-logic-verifier";
 
 @Injectable()
-export class IssueEntityFactoryLogicVerifier extends TransactionLogicVerifier {
-  constructor(
-    @Inject(AccountBaseHelper) public accountBaseHelper: AccountBaseHelper,
-    @Inject(TransactionHelper) public transactionHelper: TransactionHelper,
-  ) {
+export class MacroLogicVerifier extends TransactionLogicVerifier {
+  @Inject("bfchain-core:TransactionLogicVerifierCore", { dynamics: true })
+  public transactionLogicVerifierCore!: TransactionLogicVerifierCore;
+
+  constructor() {
     super();
   }
 
   async verify(
-    transaction: IssueEntityFactoryTransaction,
+    transaction: MacroTransaction,
     currentBlockHeight: number,
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
@@ -44,14 +46,5 @@ export class IssueEntityFactoryLogicVerifier extends TransactionLogicVerifier {
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     return true;
-  }
-
-  /**
-   * 获取需要被加锁的数据
-   *
-   * @param transaction
-   */
-  getLockData(transaction: IssueEntityFactoryTransaction) {
-    return [transaction.type];
   }
 }

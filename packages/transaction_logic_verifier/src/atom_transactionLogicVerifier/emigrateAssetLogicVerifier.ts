@@ -1,17 +1,17 @@
+import { Injectable, Inject, QueneEventEmitter } from "@bfchain/util";
 import {
   EmigrateAssetTransaction,
   NewTransactionRefuseReason,
   PARENT_ASSET_TYPE,
 } from "@bfchain/core-model";
-import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
-import { Injectable, Inject, QueneEventEmitter } from "@bfchain/util";
-import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import {
   AccountBaseHelper,
   ConfigHelper,
   ConfigHelperMap,
   MigrateCertificateHelper,
 } from "@bfchain/core-helper";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
+import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 
 const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "EmigrateAssetLogicVerifier");
 
@@ -29,18 +29,67 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: EmigrateAssetTransaction,
     currentBlockHeight: number,
-    accountsInfo: {
-      sender: BFChainCore.AccountInfoAndAssets;
-      recipient?: BFChainCore.AccountInfoAndAssets;
-    },
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
+    skipListenEvent = false,
   ) {
-    if (accountsInfo.sender.accountInfo.isDelegate) {
+    const { senderId, toMagic } = transaction;
+
+    const account = await this.helperLogicVerifier.getAccountForce(
+      accountMap,
+      senderId,
+      currentBlockHeight,
+      accountGetterHelper,
+    );
+
+    const { accountInfo, accountAssets } = account;
+    if (accountInfo.isDelegate) {
       throw new ConsensusException(ERROR_LIST.DELEGATE_CAN_NOT_MIGRATE_ASSET);
     }
 
-    const { senderId, toMagic } = transaction;
+    const isVote = await accountGetterHelper.isVoteRecently(
+      senderId,
+      this.blockHelper.calcRoundByHeight(currentBlockHeight),
+    );
+    if (isVote) {
+      throw new ConsensusException(ERROR_LIST.VOTE_RECENTLY);
+    }
+
+    const isFrozenAsset = await accountGetterHelper.isFrozenAsset(senderId);
+    if (isFrozenAsset) {
+      throw new ConsensusException(ERROR_LIST.POSSESS_FROZEN_ASSET);
+    }
+
+    await this.helperLogicVerifier.isPossessAssetExceptChainAsset(
+      senderId,
+      accountAssets,
+      accountGetterHelper,
+    );
+
+    await this.helperLogicVerifier.isDAppPossessor(
+      senderId,
+      this.configHelper,
+      accountGetterHelper,
+    );
+
+    await this.helperLogicVerifier.isLnsPossessorOrManager(
+      senderId,
+      this.configHelper,
+      accountGetterHelper,
+    );
+
+    await this.helperLogicVerifier.isEntityFactoryPossessor(
+      senderId,
+      this.configHelper,
+      accountGetterHelper,
+    );
+
+    await this.helperLogicVerifier.isEntityPossessor(
+      senderId,
+      this.configHelper,
+      accountGetterHelper,
+    );
 
     let migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON;
     try {
@@ -133,92 +182,40 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       }
     }
 
-    const { sender, recipient } = await this.logicVerify(
-      transaction,
-      currentBlockHeight,
-      accountsInfo,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
-
-    const cloneAccountsAssets = {
-      [senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
-    };
-    const cloneAccountsInfo = {
-      [senderId]: this.helperLogicVerifier.deepClone(sender.accountInfo),
-    };
-    if (recipient && recipient.accountInfo && recipient.accountAssets) {
-      const address = recipient.accountInfo.address;
-      cloneAccountsAssets[address] = this.helperLogicVerifier.deepClone(recipient.accountAssets);
-      cloneAccountsInfo[address] = this.helperLogicVerifier.deepClone(recipient.accountInfo);
-    }
-
-    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
-
-    const { eventLogicVerifier } = this;
-
-    eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
-
-    eventLogicVerifier.listenEventFrozenAccount(cloneAccountsInfo, eventEmitter);
-
-    await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
-
-    const assets = sender.accountAssets;
-
-    const isVote = await accountGetterHelper.isVoteRecently(
-      senderId,
-      this.blockHelper.calcRoundByHeight(currentBlockHeight),
-    );
-    if (isVote) {
-      throw new ConsensusException(ERROR_LIST.VOTE_RECENTLY);
-    }
-
-    const isFrozenAsset = await accountGetterHelper.isFrozenAsset(senderId);
-    if (isFrozenAsset) {
-      throw new ConsensusException(ERROR_LIST.POSSESS_FROZEN_ASSET);
-    }
-
-    await this.helperLogicVerifier.isPossessAssetExceptChainAsset(
-      senderId,
-      assets,
-      accountGetterHelper,
-    );
-
-    await this.helperLogicVerifier.isDAppPossessor(
-      senderId,
-      this.configHelper,
-      accountGetterHelper,
-    );
-
-    await this.helperLogicVerifier.isLnsPossessorOrManager(
-      senderId,
-      this.configHelper,
-      accountGetterHelper,
-    );
-
-    await this.helperLogicVerifier.isEntityFactoryPossessor(
-      address,
-      this.configHelper,
-      accountGetterHelper,
-    );
-
-    await this.helperLogicVerifier.isEntityPossessor(
-      address,
-      this.configHelper,
-      accountGetterHelper,
-    );
-
     if (asset.parentAssetType === PARENT_ASSET_TYPE.ASSETS) {
       const totalSpend =
         asset.assetType === this.configHelper.assetType
           ? BigInt(transaction.fee) + BigInt(body.assetPrealnum)
           : BigInt(body.assetPrealnum);
-      if (assets[magic][asset.assetType].assetNumber !== totalSpend) {
+      if (accountAssets[magic][asset.assetType].assetNumber !== totalSpend) {
         throw new ConsensusException(ERROR_LIST.NEED_EMIGRATE_TOTAL_ASSET, {
           address: senderId,
         });
       }
     }
+
+    await this.logicVerify(
+      transaction,
+      currentBlockHeight,
+      accountMap,
+      accountGetterHelper,
+      transactionGetterHelper,
+    );
+
+    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
+
+    const { eventLogicVerifier } = this;
+
+    if (skipListenEvent === false) {
+      eventLogicVerifier.listenEvent(
+        accountMap,
+        currentBlockHeight,
+        accountGetterHelper,
+        eventEmitter,
+      );
+    }
+
+    await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     return true;
   }

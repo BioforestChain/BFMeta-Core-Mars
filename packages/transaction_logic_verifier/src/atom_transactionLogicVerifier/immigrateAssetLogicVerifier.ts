@@ -1,7 +1,5 @@
 import type { ImmigrateAssetTransaction } from "@bfchain/core-model";
-import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
-import { Injectable, Inject, QueneEventEmitter, parseHexToArrayBuffer } from "@bfchain/util";
-import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
+import { Injectable, Inject, QueneEventEmitter } from "@bfchain/util";
 import {
   AccountBaseHelper,
   ConfigHelperMap,
@@ -9,6 +7,8 @@ import {
   ConfigHelper,
   MigrateCertificateHelper,
 } from "@bfchain/core-helper";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
+import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
@@ -31,12 +31,10 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: ImmigrateAssetTransaction,
     currentBlockHeight: number,
-    accountsInfo: {
-      sender: BFChainCore.AccountInfoAndAssets;
-      recipient?: BFChainCore.AccountInfoAndAssets;
-    },
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
+    skipListenEvent = false,
   ) {
     let migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON;
     try {
@@ -112,27 +110,26 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       }
     }
 
-    const { sender } = await this.logicVerify(
+    await this.logicVerify(
       transaction,
       currentBlockHeight,
-      accountsInfo,
+      accountMap,
       accountGetterHelper,
       transactionGetterHelper,
     );
-
-    const cloneAccountsAssets = {
-      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
-    };
 
     const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
     const { eventLogicVerifier } = this;
 
-    eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
-
-    eventLogicVerifier.listenEventAsset(cloneAccountsAssets, eventEmitter);
-
-    eventLogicVerifier.listenEventMigrateCertificate(accountGetterHelper, eventEmitter);
+    if (skipListenEvent === false) {
+      eventLogicVerifier.listenEvent(
+        accountMap,
+        currentBlockHeight,
+        accountGetterHelper,
+        eventEmitter,
+      );
+    }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 

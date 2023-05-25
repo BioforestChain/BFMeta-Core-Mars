@@ -1,7 +1,7 @@
 import type { DestoryAssetTransaction } from "@bfchain/core-model";
-import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
+import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 
 const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "TransactionLogicVerifier");
 
@@ -14,12 +14,10 @@ export class DestoryAssetLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: DestoryAssetTransaction,
     currentBlockHeight: number,
-    accountsInfo: {
-      sender: BFChainCore.AccountInfoAndAssets;
-      recipient?: BFChainCore.AccountInfoAndAssets;
-    },
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
+    skipListenEvent = false,
   ) {
     const { sourceChainMagic, assetType, sourceChainName } = transaction.asset.destoryAsset;
 
@@ -38,32 +36,26 @@ export class DestoryAssetLogicVerifier extends TransactionLogicVerifier {
       });
     }
 
-    const { sender, recipient } = await this.logicVerify(
+    await this.logicVerify(
       transaction,
       currentBlockHeight,
-      accountsInfo,
+      accountMap,
       accountGetterHelper,
       transactionGetterHelper,
     );
-
-    const cloneAccountsAssets = {
-      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
-    };
-
-    if (recipient && recipient.accountInfo && recipient.accountAssets) {
-      const address = recipient.accountInfo.address;
-      cloneAccountsAssets[address] = this.helperLogicVerifier.deepClone(recipient.accountAssets);
-    }
 
     const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
     const { eventLogicVerifier } = this;
 
-    eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
-
-    eventLogicVerifier.listenEventAsset(cloneAccountsAssets, eventEmitter);
-
-    eventLogicVerifier.listenEventDestoryAsset(accountGetterHelper, eventEmitter);
+    if (skipListenEvent === false) {
+      eventLogicVerifier.listenEvent(
+        accountMap,
+        currentBlockHeight,
+        accountGetterHelper,
+        eventEmitter,
+      );
+    }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 

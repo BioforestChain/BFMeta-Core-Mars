@@ -64,14 +64,16 @@ export class EventLogicVerifier {
     }
   }
 
-  listenEventFee(
-    accountsAssets: { [asddress: string]: BFChainCore.AccountAssets },
+  private __listenEventFee(
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     // 扣除手续费
     eventEmitter.on(
       "fee",
-      ({ transaction, applyInfo }, next) => {
+      async ({ transaction, applyInfo }, next) => {
         // 手续费扣除的只能是链资产
         const { magic, assetType } = this.configHelper;
         if (magic !== this.configHelper.magic) {
@@ -90,15 +92,20 @@ export class EventLogicVerifier {
         }
         const fee = BigInt(applyInfo.amount);
         const address = applyInfo.address;
-        accountsAssets[address] = accountsAssets[address] || {};
-        accountsAssets[address][magic] = accountsAssets[address][magic] || {};
-        accountsAssets[address][magic][assetType] = accountsAssets[address][magic][assetType] || {
+        const accountAssets = await this.helperLogicVerifier.getAccountAssetsForce(
+          accountMap,
+          address,
+          currentBlockHeight,
+          accountGetterHelper,
+        );
+        accountAssets[magic] = accountAssets[magic] || {};
+        accountAssets[magic][assetType] = accountAssets[magic][assetType] || {
           sourceChainMagic: magic,
           assetType,
           assetNumber: BigInt(0),
           history: {},
         };
-        const hodingAsset = accountsAssets[address][magic][assetType];
+        const hodingAsset = accountAssets[magic][assetType];
         const remainAsset = hodingAsset.assetNumber;
         hodingAsset.assetNumber += fee;
         if (hodingAsset.assetNumber < BigInt(0)) {
@@ -118,8 +125,9 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventDestoryMainAsset(
-    accountsAssets: { [asddress: string]: BFChainCore.AccountAssets },
+  private __listenEventDestoryMainAsset(
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -146,15 +154,20 @@ export class EventLogicVerifier {
         const { amount, sourceAmount } = applyInfo;
         const destoryAmount = BigInt(amount);
         const address = applyInfo.address;
-        accountsAssets[address] = accountsAssets[address] || {};
-        accountsAssets[address][magic] = accountsAssets[address][magic] || {};
-        accountsAssets[address][magic][assetType] = accountsAssets[address][magic][assetType] || {
+        const accountAssets = await this.helperLogicVerifier.getAccountAssetsForce(
+          accountMap,
+          address,
+          currentBlockHeight,
+          accountGetterHelper,
+        );
+        accountAssets[magic] = accountAssets[magic] || {};
+        accountAssets[magic][assetType] = accountAssets[magic][assetType] || {
           sourceChainMagic: magic,
           assetType,
           assetNumber: BigInt(0),
           history: {},
         };
-        const hodingAsset = accountsAssets[address][magic][assetType];
+        const hodingAsset = accountAssets[magic][assetType];
         const remainAsset = hodingAsset.assetNumber;
         hodingAsset.assetNumber += destoryAmount;
         if (hodingAsset.assetNumber < BigInt(0)) {
@@ -190,25 +203,32 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventAsset(
-    accountsAssets: { [asddress: string]: BFChainCore.AccountAssets },
+  private __listenEventAsset(
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     // 扣除资产
     eventEmitter.on(
       "asset",
-      ({ transaction, applyInfo }, next) => {
+      async ({ transaction, applyInfo }, next) => {
         const { magic, assetType } = applyInfo.assetInfo;
         const address = applyInfo.address;
-        accountsAssets[address] = accountsAssets[address] || {};
-        accountsAssets[address][magic] = accountsAssets[address][magic] || {};
-        accountsAssets[address][magic][assetType] = accountsAssets[address][magic][assetType] || {
+        const accountAssets = await this.helperLogicVerifier.getAccountAssetsForce(
+          accountMap,
+          address,
+          currentBlockHeight,
+          accountGetterHelper,
+        );
+        accountAssets[magic] = accountAssets[magic] || {};
+        accountAssets[magic][assetType] = accountAssets[magic][assetType] || {
           sourceChainMagic: magic,
           assetType,
           assetNumber: BigInt(0),
           history: {},
         };
-        const hodingAsset = accountsAssets[address][magic][assetType];
+        const hodingAsset = accountAssets[magic][assetType];
         const remainAsset = hodingAsset.assetNumber;
         hodingAsset.assetNumber += BigInt(applyInfo.amount);
         if (hodingAsset.assetNumber < BigInt(0)) {
@@ -228,8 +248,10 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventFrozenAsset(
-    accountsAssets: { [asddress: string]: BFChainCore.AccountAssets },
+  private __listenEventFrozenAsset(
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     // 冻结资产
@@ -238,15 +260,20 @@ export class EventLogicVerifier {
       async ({ transaction, applyInfo }, next) => {
         const { magic, assetType } = applyInfo.assetInfo;
         const address = applyInfo.address;
-        accountsAssets[address] = accountsAssets[address] || {};
-        accountsAssets[address][magic] = accountsAssets[address][magic] || {};
-        accountsAssets[address][magic][assetType] = accountsAssets[address][magic][assetType] || {
+        const accountAssets = await this.helperLogicVerifier.getAccountAssetsForce(
+          accountMap,
+          address,
+          currentBlockHeight,
+          accountGetterHelper,
+        );
+        accountAssets[magic] = accountAssets[magic] || {};
+        accountAssets[magic][assetType] = accountAssets[magic][assetType] || {
           sourceChainMagic: magic,
           assetType,
           assetNumber: BigInt(0),
           history: {},
         };
-        const hodingAsset = accountsAssets[address][magic][assetType];
+        const hodingAsset = accountAssets[magic][assetType];
         const remainAsset = hodingAsset.assetNumber;
         hodingAsset.assetNumber += BigInt(applyInfo.amount);
         if (hodingAsset.assetNumber < BigInt(0)) {
@@ -266,7 +293,7 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventUnfrozenAsset(
+  private __listenEventUnfrozenAsset(
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -341,7 +368,7 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventSignForAsset(
+  private __listenEventSignForAsset(
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -410,20 +437,26 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventVoteEquity(
-    accountsInfo: { [address: string]: BFChainCore.AccountInfo },
-    accountAssets: BFChainCore.AccountAssets,
-    curRound: number,
+  private __listenEventVoteEquity(
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     // 扣除权益
     eventEmitter.on(
       "voteEquity",
-      ({ transaction, applyInfo }, next) => {
-        const round = curRound - 1;
+      async ({ transaction, applyInfo }, next) => {
+        const round = this.blockHelper.calcRoundByHeight(currentBlockHeight) - 1;
         const address = applyInfo.address;
-        accountsInfo[address] = accountsInfo[address] || {};
-        const equityInfo = accountsInfo[address].equityInfo;
+        const account = await this.helperLogicVerifier.getAccountForce(
+          accountMap,
+          address,
+          currentBlockHeight,
+          accountGetterHelper,
+        );
+        const { accountInfo, accountAssets } = account;
+        const equityInfo = accountInfo.equityInfo;
         const minEquity = BigInt(0);
         let accountEquity = equityInfo.round === round ? equityInfo.equity : minEquity;
         const remainEquity = accountEquity;
@@ -440,8 +473,7 @@ export class EventLogicVerifier {
         }
 
         const { magic, assetType, voteMinChainAsset } = this.configHelper;
-        const remainChainAsset =
-          accountAssets[magic][assetType].assetNumber - BigInt(transaction.fee);
+        const remainChainAsset = accountAssets[magic][assetType].assetNumber;
         if (BigInt(voteMinChainAsset) > remainChainAsset) {
           throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
             reason: `No enough asset, vote account need min remain asset ${voteMinChainAsset}, remain Assets: ${remainChainAsset}`,
@@ -455,17 +487,24 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventFrozenAccount(
-    accountsInfo: { [address: string]: BFChainCore.AccountInfo },
+  private __listenEventFrozenAccount(
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     // 冻结账户
     eventEmitter.on(
       "frozenAccount",
-      ({ applyInfo }, next) => {
+      async ({ applyInfo }, next) => {
         const { address } = applyInfo;
-        accountsInfo[address] = accountsInfo[address] || {};
-        const accountStatus = accountsInfo[address].accountStatus;
+        const accountInfo = await this.helperLogicVerifier.getAccountInfoForce(
+          accountMap,
+          address,
+          currentBlockHeight,
+          accountGetterHelper,
+        );
+        const accountStatus = accountInfo.accountStatus;
         if (
           accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
           accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
@@ -483,7 +522,7 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventSetUsername(
+  private __listenEventSetUsername(
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -513,7 +552,7 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventSetSecondPublicKey(eventEmitter: BFChainCore.ApplyTransactionEventEmitter) {
+  private __listenEventSetSecondPublicKey(eventEmitter: BFChainCore.ApplyTransactionEventEmitter) {
     // 设置二次密码
     eventEmitter.on(
       "setSecondPublicKey",
@@ -524,8 +563,10 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventRegisterToDelegate(
-    accountsInfo: { [address: string]: BFChainCore.AccountInfo },
+  private __listenEventRegisterToDelegate(
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     // 注册成为受托人
@@ -533,8 +574,13 @@ export class EventLogicVerifier {
       "registerToDelegate",
       async ({ applyInfo }, next) => {
         const { address } = applyInfo;
-        accountsInfo[address] = accountsInfo[address] || {};
-        if (accountsInfo[address].isDelegate) {
+        const accountInfo = await this.helperLogicVerifier.getAccountInfoForce(
+          accountMap,
+          address,
+          currentBlockHeight,
+          accountGetterHelper,
+        );
+        if (accountInfo.isDelegate) {
           throw new ConsensusException(ERROR_LIST.ACCOUNT_IS_ALREADY_AN_DELEGATE, {
             address,
             errorId: NewTransactionRefuseReason.ACCOUNT_ALREADY_DELEGATE,
@@ -547,24 +593,31 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventAcceptVote(
-    accountsInfo: { [address: string]: BFChainCore.AccountInfo },
+  private __listenEventAcceptVote(
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     // 开启接收投票
     eventEmitter.on(
       "acceptVote",
-      ({ applyInfo }, next) => {
+      async ({ applyInfo }, next) => {
         const { address } = applyInfo;
-        accountsInfo[address] = accountsInfo[address] || {};
-        if (!accountsInfo[address].isDelegate) {
+        const accountInfo = await this.helperLogicVerifier.getAccountInfoForce(
+          accountMap,
+          address,
+          currentBlockHeight,
+          accountGetterHelper,
+        );
+        if (!accountInfo.isDelegate) {
           throw new ConsensusException(ERROR_LIST.ACCOUNT_IS_NOT_AN_DELEGATE, {
             address,
             errorId: NewTransactionRefuseReason.ACCOUNT_IS_NOT_AN_DELEGATE,
           });
         }
 
-        if (accountsInfo[address].isAcceptVote) {
+        if (accountInfo.isAcceptVote) {
           throw new ConsensusException(ERROR_LIST.DELEGATE_IS_ALREADY_ACCEPT_VOTE, {
             address,
             errorId: NewTransactionRefuseReason.DELEGATE_IS_ALREADY_ACCEPT_VOTE,
@@ -577,24 +630,31 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventRejectVote(
-    accountsInfo: { [address: string]: BFChainCore.AccountInfo },
+  private __listenEventRejectVote(
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     // 关闭接收投票
     eventEmitter.on(
       "rejectVote",
-      ({ applyInfo }, next) => {
+      async ({ applyInfo }, next) => {
         const { address } = applyInfo;
-        accountsInfo[address] = accountsInfo[address] || {};
-        if (!accountsInfo[address].isDelegate) {
+        const accountInfo = await this.helperLogicVerifier.getAccountInfoForce(
+          accountMap,
+          address,
+          currentBlockHeight,
+          accountGetterHelper,
+        );
+        if (!accountInfo.isDelegate) {
           throw new ConsensusException(ERROR_LIST.ACCOUNT_IS_NOT_AN_DELEGATE, {
             address,
             errorId: NewTransactionRefuseReason.ACCOUNT_IS_NOT_AN_DELEGATE,
           });
         }
 
-        if (!accountsInfo[address].isAcceptVote) {
+        if (!accountInfo.isAcceptVote) {
           throw new ConsensusException(ERROR_LIST.DELEGATE_IS_ALREADY_REJECT_VOTE, {
             address,
             errorId: NewTransactionRefuseReason.DELEGATE_IS_ALREADY_REJECT_VOTE,
@@ -660,8 +720,9 @@ export class EventLogicVerifier {
     }
   }
 
-  listenEventIssueAsset(
-    accountAssets: BFChainCore.AccountAssets,
+  private __listenEventIssueAsset(
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -674,6 +735,12 @@ export class EventLogicVerifier {
 
         await this.__checkAsset(genesisAddress, assetType, accountGetterHelper);
 
+        const accountAssets = await this.helperLogicVerifier.getAccountAssetsForce(
+          accountMap,
+          address,
+          currentBlockHeight,
+          accountGetterHelper,
+        );
         // 是否持有除链资产外的其他资产
         await this.helperLogicVerifier.isPossessAssetExceptChainAsset(
           address,
@@ -715,8 +782,7 @@ export class EventLogicVerifier {
           assetType: chainAssetType,
           issueAssetMinChainAsset,
         } = this.configHelper;
-        const remainChainAsset =
-          accountAssets[chainMagic][chainAssetType].assetNumber - BigInt(transaction.fee);
+        const remainChainAsset = accountAssets[chainMagic][chainAssetType].assetNumber;
         if (BigInt(issueAssetMinChainAsset) > remainChainAsset) {
           throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
             reason: `No enough asset, Min account asset ${issueAssetMinChainAsset}, remain Assets: ${remainChainAsset}`,
@@ -743,7 +809,7 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventDestoryAsset(
+  private __listenEventDestoryAsset(
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -776,7 +842,7 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventIssueDAppid(
+  private __listenEventIssueDAppid(
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -824,7 +890,7 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventFrozenDAppid(
+  private __listenEventFrozenDAppid(
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -861,7 +927,7 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventUnfrozenDAppid(
+  private __listenEventUnfrozenDAppid(
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -913,7 +979,7 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventChangeDAppidPossessor(
+  private __listenEventChangeDAppidPossessor(
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -970,8 +1036,9 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventRegisterChain(
-    accountAssets: BFChainCore.AccountAssets,
+  private __listenEventRegisterChain(
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -981,6 +1048,12 @@ export class EventLogicVerifier {
       async ({ transaction, applyInfo }, next) => {
         const { address, genesisBlock } = applyInfo;
 
+        const accountAssets = await this.helperLogicVerifier.getAccountAssetsForce(
+          accountMap,
+          address,
+          currentBlockHeight,
+          accountGetterHelper,
+        );
         // 是否持有除链资产外的其他资产
         await this.helperLogicVerifier.isPossessAssetExceptChainAsset(
           address,
@@ -994,8 +1067,7 @@ export class EventLogicVerifier {
           assetType: chainAssetType,
           registerChainMinChainAsset,
         } = this.configHelper;
-        const remainBalance =
-          accountAssets[chainMagic][chainAssetType].assetNumber - BigInt(transaction.fee);
+        const remainBalance = accountAssets[chainMagic][chainAssetType].assetNumber;
         if (BigInt(registerChainMinChainAsset) > remainBalance) {
           throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
             reason: `No enough asset, Min account asset ${registerChainMinChainAsset}, remain Assets: ${remainBalance}`,
@@ -1078,7 +1150,7 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventRegisterLocationName(
+  private __listenEventRegisterLocationName(
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -1153,7 +1225,7 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventCancelLocationName(
+  private __listenEventCancelLocationName(
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -1233,7 +1305,7 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventSetLnsManager(
+  private __listenEventSetLnsManager(
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -1327,7 +1399,7 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventSetLnsRecordValue(
+  private __listenEventSetLnsRecordValue(
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -1405,7 +1477,7 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventFrozenLocationName(
+  private __listenEventFrozenLocationName(
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -1447,7 +1519,7 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventUnfrozenLocationName(
+  private __listenEventUnfrozenLocationName(
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -1504,7 +1576,7 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventChangeLocationNamePossessor(
+  private __listenEventChangeLocationNamePossessor(
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -1603,8 +1675,8 @@ export class EventLogicVerifier {
     }
   }
 
-  listenEventIssueEntityFactoryByFrozen(
-    accountAssets: BFChainCore.AccountAssets,
+  private __listenEventIssueEntityFactoryByFrozen(
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -1624,6 +1696,12 @@ export class EventLogicVerifier {
           accountGetterHelper,
         );
 
+        const accountAssets = await this.helperLogicVerifier.getAccountAssetsForce(
+          accountMap,
+          address,
+          currentBlockHeight,
+          accountGetterHelper,
+        );
         // 是否持有除链资产外的其他资产
         await this.helperLogicVerifier.isPossessAssetExceptChainAsset(
           address,
@@ -1658,8 +1736,7 @@ export class EventLogicVerifier {
           assetType: chainAssetType,
           issueEntityFactoryMinChainAsset,
         } = this.configHelper;
-        const remainChainAsset =
-          accountAssets[chainMagic][chainAssetType].assetNumber - BigInt(transaction.fee);
+        const remainChainAsset = accountAssets[chainMagic][chainAssetType].assetNumber;
         if (BigInt(issueEntityFactoryMinChainAsset) > remainChainAsset) {
           throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
             reason: `No enough asset, Min account asset ${issueEntityFactoryMinChainAsset}, remain Assets: ${remainChainAsset}`,
@@ -1690,7 +1767,7 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventIssueEntityFactoryByDestory(
+  private __listenEventIssueEntityFactoryByDestory(
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -1744,8 +1821,8 @@ export class EventLogicVerifier {
     }
   }
 
-  listenEventIssueEntity(
-    accountAssets: BFChainCore.AccountAssets,
+  private __listenEventIssueEntity(
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -1842,9 +1919,14 @@ export class EventLogicVerifier {
           }
         }
 
+        const accountAssets = await this.helperLogicVerifier.getAccountAssetsForce(
+          accountMap,
+          address,
+          currentBlockHeight,
+          accountGetterHelper,
+        );
         const { magic: chainMagic, assetType: chainAssetType } = this.configHelper;
-        let remainBalance =
-          accountAssets[chainMagic][chainAssetType].assetNumber - BigInt(transaction.fee);
+        let remainBalance = accountAssets[chainMagic][chainAssetType].assetNumber;
         const purchaseAssetPrealnum = memEntityFactory.purchaseAssetPrealnum;
         if (purchaseAssetPrealnum !== "0") {
           remainBalance -= BigInt(purchaseAssetPrealnum);
@@ -1870,8 +1952,8 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventIssueEntityV1(
-    accountAssets: BFChainCore.AccountAssets,
+  private __listenEventIssueEntityV1(
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -1964,9 +2046,14 @@ export class EventLogicVerifier {
           });
         }
 
+        const accountAssets = await this.helperLogicVerifier.getAccountAssetsForce(
+          accountMap,
+          address,
+          currentBlockHeight,
+          accountGetterHelper,
+        );
         const { magic: chainMagic, assetType: chainAssetType } = this.configHelper;
-        let remainBalance =
-          accountAssets[chainMagic][chainAssetType].assetNumber - BigInt(transaction.fee);
+        let remainBalance = accountAssets[chainMagic][chainAssetType].assetNumber;
         const purchaseAssetPrealnum = memEntityFactory.purchaseAssetPrealnum;
         if (purchaseAssetPrealnum !== "0") {
           remainBalance -= BigInt(purchaseAssetPrealnum);
@@ -1992,8 +2079,8 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventIssueEntityMultiV1(
-    accountAssets: BFChainCore.AccountAssets,
+  private __listenEventIssueEntityMultiV1(
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -2091,9 +2178,14 @@ export class EventLogicVerifier {
           }
         }
 
+        const accountAssets = await this.helperLogicVerifier.getAccountAssetsForce(
+          accountMap,
+          address,
+          currentBlockHeight,
+          accountGetterHelper,
+        );
         const { magic: chainMagic, assetType: chainAssetType } = this.configHelper;
-        let remainBalance =
-          accountAssets[chainMagic][chainAssetType].assetNumber - BigInt(transaction.fee);
+        let remainBalance = accountAssets[chainMagic][chainAssetType].assetNumber;
         const purchaseAssetPrealnum = memEntityFactory.purchaseAssetPrealnum;
         if (purchaseAssetPrealnum !== "0") {
           remainBalance -= BigInt(purchaseAssetPrealnum);
@@ -2119,7 +2211,7 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventDestoryEntity(
+  private __listenEventDestoryEntity(
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -2216,7 +2308,7 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventFrozenEntity(
+  private __listenEventFrozenEntity(
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -2261,7 +2353,7 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventUnfrozenEntity(
+  private __listenEventUnfrozenEntity(
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -2320,7 +2412,7 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventChangeEntityPossessor(
+  private __listenEventChangeEntityPossessor(
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -2385,7 +2477,7 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventMigrateCertificate(
+  private __listenEventMigrateCertificate(
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -2411,7 +2503,7 @@ export class EventLogicVerifier {
     );
   }
 
-  listenEventPayTax(
+  private __listenEventPayTax(
     currentBlockHeight: number,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
@@ -2455,6 +2547,105 @@ export class EventLogicVerifier {
       },
       { taskname: `applyTransaction/logicVerifier/payTax` },
     );
+  }
+
+  listenEvent(
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
+  ) {
+    this.__listenEventFee(accountMap, currentBlockHeight, accountGetterHelper, eventEmitter);
+    this.__listenEventDestoryMainAsset(
+      accountMap,
+      currentBlockHeight,
+      accountGetterHelper,
+      eventEmitter,
+    );
+    this.__listenEventAsset(accountMap, currentBlockHeight, accountGetterHelper, eventEmitter);
+    this.__listenEventFrozenAsset(
+      accountMap,
+      currentBlockHeight,
+      accountGetterHelper,
+      eventEmitter,
+    );
+    this.__listenEventUnfrozenAsset(currentBlockHeight, accountGetterHelper, eventEmitter);
+    this.__listenEventSignForAsset(currentBlockHeight, accountGetterHelper, eventEmitter);
+    this.__listenEventVoteEquity(accountMap, currentBlockHeight, accountGetterHelper, eventEmitter);
+    this.__listenEventFrozenAccount(
+      accountMap,
+      currentBlockHeight,
+      accountGetterHelper,
+      eventEmitter,
+    );
+    this.__listenEventSetUsername(accountGetterHelper, eventEmitter);
+    this.__listenEventSetSecondPublicKey(eventEmitter);
+    this.__listenEventRegisterToDelegate(
+      accountMap,
+      currentBlockHeight,
+      accountGetterHelper,
+      eventEmitter,
+    );
+    this.__listenEventAcceptVote(accountMap, currentBlockHeight, accountGetterHelper, eventEmitter);
+    this.__listenEventRejectVote(accountMap, currentBlockHeight, accountGetterHelper, eventEmitter);
+    this.__listenEventIssueAsset(accountMap, currentBlockHeight, accountGetterHelper, eventEmitter);
+    this.__listenEventDestoryAsset(accountGetterHelper, eventEmitter);
+    this.__listenEventIssueDAppid(currentBlockHeight, accountGetterHelper, eventEmitter);
+    this.__listenEventFrozenDAppid(currentBlockHeight, accountGetterHelper, eventEmitter);
+    this.__listenEventUnfrozenDAppid(currentBlockHeight, accountGetterHelper, eventEmitter);
+    this.__listenEventChangeDAppidPossessor(currentBlockHeight, accountGetterHelper, eventEmitter);
+    this.__listenEventRegisterChain(
+      accountMap,
+      currentBlockHeight,
+      accountGetterHelper,
+      eventEmitter,
+    );
+    this.__listenEventRegisterLocationName(currentBlockHeight, accountGetterHelper, eventEmitter);
+    this.__listenEventCancelLocationName(currentBlockHeight, accountGetterHelper, eventEmitter);
+    this.__listenEventSetLnsManager(currentBlockHeight, accountGetterHelper, eventEmitter);
+    this.__listenEventSetLnsRecordValue(currentBlockHeight, accountGetterHelper, eventEmitter);
+    this.__listenEventFrozenLocationName(currentBlockHeight, accountGetterHelper, eventEmitter);
+    this.__listenEventUnfrozenLocationName(currentBlockHeight, accountGetterHelper, eventEmitter);
+    this.__listenEventChangeLocationNamePossessor(
+      currentBlockHeight,
+      accountGetterHelper,
+      eventEmitter,
+    );
+    this.__listenEventIssueEntityFactoryByFrozen(
+      accountMap,
+      currentBlockHeight,
+      accountGetterHelper,
+      eventEmitter,
+    );
+    this.__listenEventIssueEntityFactoryByDestory(
+      currentBlockHeight,
+      accountGetterHelper,
+      eventEmitter,
+    );
+    this.__listenEventIssueEntity(
+      accountMap,
+      currentBlockHeight,
+      accountGetterHelper,
+      eventEmitter,
+    );
+    this.__listenEventIssueEntityV1(
+      accountMap,
+      currentBlockHeight,
+      accountGetterHelper,
+      eventEmitter,
+    );
+    this.__listenEventIssueEntityMultiV1(
+      accountMap,
+      currentBlockHeight,
+      accountGetterHelper,
+      eventEmitter,
+    );
+    this.__listenEventDestoryEntity(currentBlockHeight, accountGetterHelper, eventEmitter);
+    this.__listenEventFrozenEntity(currentBlockHeight, accountGetterHelper, eventEmitter);
+    this.__listenEventUnfrozenEntity(currentBlockHeight, accountGetterHelper, eventEmitter);
+    this.__listenEventChangeEntityPossessor(currentBlockHeight, accountGetterHelper, eventEmitter);
+    this.__listenEventMigrateCertificate(accountGetterHelper, eventEmitter);
+    this.__listenEventPayTax(currentBlockHeight, accountGetterHelper, eventEmitter);
   }
 
   /**

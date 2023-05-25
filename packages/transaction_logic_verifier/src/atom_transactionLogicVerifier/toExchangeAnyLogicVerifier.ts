@@ -1,12 +1,12 @@
+import { Injectable, QueneEventEmitter } from "@bfchain/util";
 import {
   ASSET_STATUS,
   NewTransactionRefuseReason,
   PARENT_ASSET_TYPE,
   ToExchangeAnyTransaction,
 } from "@bfchain/core-model";
-import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
-import { Injectable, QueneEventEmitter } from "@bfchain/util";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
+import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 
 const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "ToExchangeAnyLogicVerifier");
 
@@ -19,85 +19,26 @@ export class ToExchangeAnyLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: ToExchangeAnyTransaction,
     currentBlockHeight: number,
-    accountsInfo: {
-      sender: BFChainCore.AccountInfoAndAssets;
-      recipient?: BFChainCore.AccountInfoAndAssets;
-    },
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
+    skipListenEvent = false,
   ) {
-    const { sender } = await this.logicVerify(
+    await this.logicVerify(
       transaction,
       currentBlockHeight,
-      accountsInfo,
+      accountMap,
       accountGetterHelper,
       transactionGetterHelper,
     );
 
-    const cloneAccountsAssets = {
-      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
-    };
-
     const toExchangeAny = transaction.asset.toExchangeAny;
     const {
-      toExchangeChainName,
-      toExchangeSource,
-      toExchangeParentAssetType,
-      toExchangeAssetType,
       beExchangeSource,
       beExchangeChainName,
       beExchangeParentAssetType,
       beExchangeAssetType,
     } = toExchangeAny;
-
-    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
-
-    const { eventLogicVerifier } = this;
-
-    eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
-
-    if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
-      await this.helperLogicVerifier.isAssetExist(
-        toExchangeChainName,
-        toExchangeSource,
-        toExchangeAssetType,
-        accountGetterHelper,
-      );
-      eventLogicVerifier.listenEventFrozenAsset(cloneAccountsAssets, eventEmitter);
-    }
-    // 冻结 dappid
-    else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.DAPP) {
-      eventLogicVerifier.listenEventFrozenDAppid(
-        currentBlockHeight,
-        accountGetterHelper,
-        eventEmitter,
-      );
-    }
-    // 冻结 locationName
-    else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME) {
-      eventLogicVerifier.listenEventFrozenLocationName(
-        currentBlockHeight,
-        accountGetterHelper,
-        eventEmitter,
-      );
-    }
-    // 冻结 entity
-    else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
-      eventLogicVerifier.listenEventFrozenEntity(
-        currentBlockHeight,
-        accountGetterHelper,
-        eventEmitter,
-      );
-
-      eventLogicVerifier.listenEventFrozenAsset(cloneAccountsAssets, eventEmitter);
-
-      eventLogicVerifier.listenEventPayTax(currentBlockHeight, accountGetterHelper, eventEmitter);
-    } else {
-      throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: `toExchangeParentAssetType ${toExchangeParentAssetType}`,
-        target: "transaction.asset.toExchangeAny",
-      });
-    }
 
     if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
       await this.helperLogicVerifier.isAssetExist(
@@ -156,6 +97,19 @@ export class ToExchangeAnyLogicVerifier extends TransactionLogicVerifier {
         prop: `beExchangeParentAssetType ${beExchangeParentAssetType}`,
         target: "transaction.asset.toExchangeAny",
       });
+    }
+
+    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
+
+    const { eventLogicVerifier } = this;
+
+    if (skipListenEvent === false) {
+      eventLogicVerifier.listenEvent(
+        accountMap,
+        currentBlockHeight,
+        accountGetterHelper,
+        eventEmitter,
+      );
     }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);

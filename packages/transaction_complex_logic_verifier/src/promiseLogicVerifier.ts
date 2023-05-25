@@ -1,43 +1,43 @@
-import { Injectable, QueneEventEmitter } from "@bfchain/util";
-import { VoteTransaction, NewTransactionRefuseReason } from "@bfchain/core-model";
+import { NewTransactionRefuseReason, PromiseTransaction } from "@bfchain/core-model";
+import { Injectable, Inject, QueneEventEmitter } from "@bfchain/util";
+import {
+  TransactionLogicVerifier,
+  TransactionLogicVerifierCore,
+} from "@bfchain/core-transaction-logic-verifier";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
-import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
-  "VoteLogicVerifier",
+  "PromiseLogicVerifier",
 );
 
 @Injectable()
-export class VoteLogicVerifier extends TransactionLogicVerifier {
+export class PromiseLogicVerifier extends TransactionLogicVerifier {
+  @Inject("bfchain-core:TransactionLogicVerifierCore", { dynamics: true })
+  public transactionLogicVerifierCore!: TransactionLogicVerifierCore;
+
   constructor() {
     super();
   }
 
   async verify(
-    transaction: VoteTransaction,
+    transaction: PromiseTransaction,
     currentBlockHeight: number,
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
     skipListenEvent = false,
   ) {
-    const accountInfo = await this.helperLogicVerifier.getAccountInfoForce(
-      accountMap,
-      transaction.recipientId,
-      currentBlockHeight,
-      accountGetterHelper,
+    const { signature } = transaction.asset.promise.transaction;
+    const promiseTransaction = await transactionGetterHelper.getTransactionBySignature(
+      signature,
+      this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
     );
-    if (!accountInfo.isDelegate) {
-      throw new ConsensusException(ERROR_LIST.ACCOUNT_IS_NOT_AN_DELEGATE, {
-        address: accountInfo.address,
-        errorId: NewTransactionRefuseReason.ACCOUNT_IS_NOT_AN_DELEGATE,
-      });
-    }
-    if (!accountInfo.isAcceptVote) {
-      throw new ConsensusException(ERROR_LIST.DELEGATE_IS_ALREADY_REJECT_VOTE, {
-        address: accountInfo.address,
-        errorId: NewTransactionRefuseReason.DELEGATE_IS_ALREADY_REJECT_VOTE,
+    if (promiseTransaction) {
+      throw new ConsensusException(ERROR_LIST.ALREADY_EXIST, {
+        prop: `promiseTransaction ${signature}`,
+        target: "blockChain",
+        errorId: NewTransactionRefuseReason.TRANSACTION_IN_TRS,
       });
     }
 

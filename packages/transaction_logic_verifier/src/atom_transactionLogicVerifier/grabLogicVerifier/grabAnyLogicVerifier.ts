@@ -22,12 +22,10 @@ export class GrabAnyLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: GrabAnyTransaction,
     currentBlockHeight: number,
-    accountsInfo: {
-      sender: BFChainCore.AccountInfoAndAssets;
-      recipient?: BFChainCore.AccountInfoAndAssets;
-    },
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
+    skipListenEvent = false,
   ) {
     const grabAny = transaction.asset.grabAny;
 
@@ -58,75 +56,25 @@ export class GrabAnyLogicVerifier extends TransactionLogicVerifier {
     this.isDependentTransactionMatch(transaction, trs);
     await this.isValidAmount(transaction);
 
-    const { sender, recipient } = await this.logicVerify(
+    await this.logicVerify(
       transaction,
       currentBlockHeight,
-      accountsInfo,
+      accountMap,
       accountGetterHelper,
       transactionGetterHelper,
     );
-
-    const cloneAccountsAssets = {
-      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
-    };
-    const cloneAccountsInfo = {
-      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountInfo),
-    };
-    if (recipient && recipient.accountInfo && recipient.accountAssets) {
-      const address = recipient.accountInfo.address;
-      cloneAccountsAssets[address] = this.helperLogicVerifier.deepClone(recipient.accountAssets);
-      cloneAccountsInfo[address] = this.helperLogicVerifier.deepClone(recipient.accountInfo);
-    }
 
     const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
     const { eventLogicVerifier } = this;
 
-    eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
-
-    const { parentAssetType, taxInformation } = giftAny;
-
-    if (parentAssetType === PARENT_ASSET_TYPE.ASSETS) {
-      eventLogicVerifier.listenEventUnfrozenAsset(
+    if (skipListenEvent === false) {
+      eventLogicVerifier.listenEvent(
+        accountMap,
         currentBlockHeight,
         accountGetterHelper,
         eventEmitter,
       );
-    } else if (parentAssetType === PARENT_ASSET_TYPE.DAPP) {
-      eventLogicVerifier.listenEventUnfrozenDAppid(
-        currentBlockHeight,
-        accountGetterHelper,
-        eventEmitter,
-      );
-    } else if (parentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME) {
-      eventLogicVerifier.listenEventUnfrozenLocationName(
-        currentBlockHeight,
-        accountGetterHelper,
-        eventEmitter,
-      );
-    } else if (parentAssetType === PARENT_ASSET_TYPE.ENTITY) {
-      eventLogicVerifier.listenEventUnfrozenEntity(
-        currentBlockHeight,
-        accountGetterHelper,
-        eventEmitter,
-      );
-
-      if (taxInformation) {
-        if (taxInformation.taxAssetPrealnum === "0") {
-          eventLogicVerifier.listenEventAsset(cloneAccountsAssets, eventEmitter);
-          eventLogicVerifier.listenEventPayTax(
-            currentBlockHeight,
-            accountGetterHelper,
-            eventEmitter,
-          );
-        } else {
-          eventLogicVerifier.listenEventUnfrozenAsset(
-            currentBlockHeight,
-            accountGetterHelper,
-            eventEmitter,
-          );
-        }
-      }
     }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);

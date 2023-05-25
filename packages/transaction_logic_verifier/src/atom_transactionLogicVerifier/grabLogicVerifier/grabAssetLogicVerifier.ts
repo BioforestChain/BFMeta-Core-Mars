@@ -1,7 +1,7 @@
-import { TransactionLogicVerifier } from "../_txbaseLogicVerifier";
-import { GrabAssetTransaction, RANGE_TYPE, GIFT_DISTRIBUTION_RULE } from "@bfchain/core-model";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
+import { GrabAssetTransaction, RANGE_TYPE, GIFT_DISTRIBUTION_RULE } from "@bfchain/core-model";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
+import { TransactionLogicVerifier } from "../_txbaseLogicVerifier";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
@@ -17,12 +17,10 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: GrabAssetTransaction,
     currentBlockHeight: number,
-    accountsInfo: {
-      sender: BFChainCore.AccountInfoAndAssets;
-      recipient?: BFChainCore.AccountInfoAndAssets;
-    },
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
+    skipListenEvent = false,
   ) {
     const grabAsset = transaction.asset.grabAsset;
 
@@ -53,37 +51,26 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
     this.isDependentTransactionMatch(transaction, trs);
     await this.isValidAmount(transaction);
 
-    const { sender, recipient } = await this.logicVerify(
+    await this.logicVerify(
       transaction,
       currentBlockHeight,
-      accountsInfo,
+      accountMap,
       accountGetterHelper,
       transactionGetterHelper,
     );
-
-    const cloneAccountsAssets = {
-      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
-    };
-    const cloneAccountsInfo = {
-      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountInfo),
-    };
-    if (recipient && recipient.accountInfo && recipient.accountAssets) {
-      const address = recipient.accountInfo.address;
-      cloneAccountsAssets[address] = this.helperLogicVerifier.deepClone(recipient.accountAssets);
-      cloneAccountsInfo[address] = this.helperLogicVerifier.deepClone(recipient.accountInfo);
-    }
 
     const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
     const { eventLogicVerifier } = this;
 
-    eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
-
-    eventLogicVerifier.listenEventUnfrozenAsset(
-      currentBlockHeight,
-      accountGetterHelper,
-      eventEmitter,
-    );
+    if (skipListenEvent === false) {
+      eventLogicVerifier.listenEvent(
+        accountMap,
+        currentBlockHeight,
+        accountGetterHelper,
+        eventEmitter,
+      );
+    }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 

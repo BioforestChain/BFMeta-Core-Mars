@@ -242,4 +242,54 @@ export class HelperLogicVerifier {
 
     return memEntity;
   }
+
+  async getAccountForce(
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    address: string,
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+  ) {
+    let account = accountMap.get(address);
+    if (!(account && account.accountInfo && account.accountAssets)) {
+      account = await accountGetterHelper.getAccountInfoAndAssets(address, currentBlockHeight);
+      if (!account) {
+        throw new ConsensusException(ERROR_LIST.NOT_EXIST, {
+          prop: `Account with address ${address}`,
+          target: "blockChain",
+        });
+      }
+      accountMap.set(address, account);
+    }
+    return account;
+  }
+
+  async getAccountInfoForce(
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    address: string,
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+  ) {
+    const account = await this.getAccountForce(
+      accountMap,
+      address,
+      currentBlockHeight,
+      accountGetterHelper,
+    );
+    return account.accountInfo;
+  }
+
+  async getAccountAssetsForce(
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    address: string,
+    currentBlockHeight: number,
+    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
+  ) {
+    const account = await this.getAccountForce(
+      accountMap,
+      address,
+      currentBlockHeight,
+      accountGetterHelper,
+    );
+    return account.accountAssets;
+  }
 }

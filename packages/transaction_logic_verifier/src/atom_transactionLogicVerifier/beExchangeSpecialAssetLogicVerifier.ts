@@ -1,12 +1,12 @@
-import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
+import { Injectable, QueneEventEmitter } from "@bfchain/util";
 import {
   BeExchangeSpecialAssetTransaction,
   RANGE_TYPE,
   EXCHANGE_DIRECTION,
   SPECIAL_ASSET_TYPE,
 } from "@bfchain/core-model";
-import { Injectable, QueneEventEmitter } from "@bfchain/util";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
+import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
@@ -22,12 +22,10 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
   async verify(
     transaction: BeExchangeSpecialAssetTransaction,
     currentBlockHeight: number,
-    accountsInfo: {
-      sender: BFChainCore.AccountInfoAndAssets;
-      recipient?: BFChainCore.AccountInfoAndAssets;
-    },
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
+    skipListenEvent = false,
   ) {
     const beExchangeSpecialAsset = transaction.asset.beExchangeSpecialAsset;
     const { transactionSignature } = beExchangeSpecialAsset;
@@ -51,82 +49,25 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
     this.isValidRecipientId(transaction, toExchangeSpecialAssetJson);
     this.isDependentTransactionMatch(transaction, toExchangeSpecialAssetJson);
 
-    const { sender, recipient } = await this.logicVerify(
+    await this.logicVerify(
       transaction,
       currentBlockHeight,
-      accountsInfo,
+      accountMap,
       accountGetterHelper,
       transactionGetterHelper,
     );
-
-    const cloneAccountsAssets = {
-      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
-    };
-    const cloneAccountsInfo = {
-      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountInfo),
-    };
-    if (recipient && recipient.accountInfo && recipient.accountAssets) {
-      const address = recipient.accountInfo.address;
-      cloneAccountsAssets[address] = this.helperLogicVerifier.deepClone(recipient.accountAssets);
-      cloneAccountsInfo[address] = this.helperLogicVerifier.deepClone(recipient.accountInfo);
-    }
 
     const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
     const { eventLogicVerifier } = this;
 
-    eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
-
-    const { exchangeDirection, exchangeAssetType } =
-      transaction.asset.beExchangeSpecialAsset.exchangeSpecialAsset;
-    if (exchangeDirection === EXCHANGE_DIRECTION.ASSET_FROM_RECIPIENT) {
-      eventLogicVerifier.listenEventUnfrozenAsset(
+    if (skipListenEvent === false) {
+      eventLogicVerifier.listenEvent(
+        accountMap,
         currentBlockHeight,
         accountGetterHelper,
         eventEmitter,
       );
-
-      if (exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID) {
-        eventLogicVerifier.listenEventChangeDAppidPossessor(
-          currentBlockHeight,
-          accountGetterHelper,
-          eventEmitter,
-        );
-      } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME) {
-        eventLogicVerifier.listenEventChangeLocationNamePossessor(
-          currentBlockHeight,
-          accountGetterHelper,
-          eventEmitter,
-        );
-      } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.ENTITY) {
-        eventLogicVerifier.listenEventChangeEntityPossessor(
-          currentBlockHeight,
-          accountGetterHelper,
-          eventEmitter,
-        );
-      }
-    } else {
-      eventLogicVerifier.listenEventAsset(cloneAccountsAssets, eventEmitter);
-
-      if (exchangeAssetType === SPECIAL_ASSET_TYPE.DAPP_ID) {
-        eventLogicVerifier.listenEventUnfrozenDAppid(
-          currentBlockHeight,
-          accountGetterHelper,
-          eventEmitter,
-        );
-      } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.LOCATION_NAME) {
-        eventLogicVerifier.listenEventUnfrozenLocationName(
-          currentBlockHeight,
-          accountGetterHelper,
-          eventEmitter,
-        );
-      } else if (exchangeAssetType === SPECIAL_ASSET_TYPE.ENTITY) {
-        eventLogicVerifier.listenEventUnfrozenEntity(
-          currentBlockHeight,
-          accountGetterHelper,
-          eventEmitter,
-        );
-      }
     }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
