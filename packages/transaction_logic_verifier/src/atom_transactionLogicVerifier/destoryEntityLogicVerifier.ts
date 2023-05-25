@@ -1,7 +1,7 @@
 import type { DestoryEntityTransaction } from "@bfchain/core-model";
-import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
+import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
@@ -17,12 +17,10 @@ export class DestoryEntityLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: DestoryEntityTransaction,
     currentBlockHeight: number,
-    accountsInfo: {
-      sender: BFChainCore.AccountInfoAndAssets;
-      recipient?: BFChainCore.AccountInfoAndAssets;
-    },
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
+    skipListenEvent = false,
   ) {
     const destoryEntity = transaction.asset.destoryEntity;
 
@@ -78,42 +76,28 @@ export class DestoryEntityLogicVerifier extends TransactionLogicVerifier {
       });
     }
 
-    const { sender, recipient } = await this.logicVerify(
+    await this.logicVerify(
       transaction,
       currentBlockHeight,
-      accountsInfo,
+      accountMap,
       accountGetterHelper,
       transactionGetterHelper,
     );
 
-    const cloneAccountsAssets = {
-      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
-    };
-    if (recipient && recipient.accountInfo && recipient.accountAssets) {
-      const address = recipient.accountInfo.address;
-      cloneAccountsAssets[address] = this.helperLogicVerifier.deepClone(recipient.accountAssets);
-    }
-
     const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
-    // 手续费
-    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
+    const { eventLogicVerifier } = this;
 
-    // 赎回单项冻结的资产
-    this.eventLogicVerifier.listenEventUnfrozenAsset(
-      currentBlockHeight,
-      accountGetterHelper,
-      eventEmitter,
-    );
+    if (skipListenEvent === false) {
+      eventLogicVerifier.listenEvent(
+        accountMap,
+        currentBlockHeight,
+        accountGetterHelper,
+        eventEmitter,
+      );
+    }
 
-    // 销毁 entity
-    this.eventLogicVerifier.listenEventDestoryEntity(
-      currentBlockHeight,
-      accountGetterHelper,
-      eventEmitter,
-    );
-
-    await this.eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
+    await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     return true;
   }

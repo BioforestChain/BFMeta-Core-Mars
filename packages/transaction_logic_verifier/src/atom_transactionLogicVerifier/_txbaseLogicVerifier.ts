@@ -37,29 +37,22 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   protected eventLogicVerifier!: EventLogicVerifier;
   @Inject(HelperLogicVerifier)
   protected helperLogicVerifier!: HelperLogicVerifier;
-  @Inject("customTransactionCenter", { optional: true, dynamics: true })
-  customTransactionCenter?: BFChainCore.CustomTrCenterInterface;
   abstract verify(
     transaction: T,
     currentBlockHeight: number,
-    accountsInfo: {
-      sender: BFChainCore.AccountInfoAndAssets;
-      recipient?: BFChainCore.AccountInfoAndAssets;
-    },
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
-    customTransactionCenter?: BFChainCore.CustomTrCenterInterface,
+    skipListenEvent: boolean,
   ): Promise<boolean>;
 
   async logicVerify(
     transaction: T,
     currentBlockHeight: number,
-    accountsInfo: {
-      sender: BFChainCore.AccountInfoAndAssets;
-      recipient?: BFChainCore.AccountInfoAndAssets;
-    },
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
+    skipListenEvent = false,
   ) {
     // 校验交易版本号
     if (transaction.version > this.configHelper.version) {
@@ -70,14 +63,14 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       });
     }
 
-    const { recipientId } = transaction;
+    const { senderId, recipientId } = transaction;
     // 获取账户信息和资产信息
-    const sender = accountsInfo.sender;
-    if (!(sender && sender.accountInfo && sender.accountAssets)) {
-      throw new NoFoundException(ERROR_LIST.NOT_FOUND, {
-        prop: "sender",
-      });
-    }
+    const sender = await this.helperLogicVerifier.getAccountForce(
+      accountMap,
+      senderId,
+      currentBlockHeight,
+      accountGetterHelper,
+    );
     const senderAccountInfo = sender.accountInfo;
     // 校验发起账户状态
     this.checkSenderAccountStatus(senderAccountInfo);
@@ -94,24 +87,14 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     // 校验交易的接收范围
     await this.checkTransactionRange(transaction, currentBlockHeight, accountGetterHelper);
     // 校验交易的接收账户状态
-    let recipient: BFChainCore.AccountInfoAndAssets | undefined;
     if (recipientId) {
-      recipient = accountsInfo.recipient;
-      if (!recipient) {
-        recipient = await accountGetterHelper.getAccountInfoAndAssets(
-          recipientId,
-          currentBlockHeight,
-        );
-        if (!recipient) {
-          throw new ConsensusException(ERROR_LIST.NOT_EXIST, {
-            prop: `Account with address ${recipientId}`,
-            target: "blockChain",
-          });
-        }
-      }
-      if (recipient && recipient.accountInfo && recipient.accountAssets) {
-        this.checkRecipientAccountStatus(recipient.accountInfo);
-      }
+      const recipient = await this.helperLogicVerifier.getAccountForce(
+        accountMap,
+        recipientId,
+        currentBlockHeight,
+        accountGetterHelper,
+      );
+      this.checkRecipientAccountStatus(recipient.accountInfo);
     }
     // 校验交易的最大字节数
     this.checkTrsMaxBytes(transaction.getBytes().length);
@@ -125,9 +108,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     // 校验交易的 lns
     await this.checkLocationName(transaction, currentBlockHeight, accountGetterHelper);
 
-    const curRound = this.blockHelper.calcRoundByHeight(currentBlockHeight);
-
-    return { sender, recipient, curRound };
+    return true;
   }
 
   /**

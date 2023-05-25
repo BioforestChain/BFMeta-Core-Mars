@@ -1,7 +1,7 @@
 import type { IssueEntityTransactionV1 } from "@bfchain/core-model";
-import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 import { Injectable, Inject, QueneEventEmitter } from "@bfchain/util";
 import { AccountBaseHelper, TransactionHelper } from "@bfchain/core-helper";
+import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 
 @Injectable()
 export class IssueEntityV1LogicVerifier extends TransactionLogicVerifier {
@@ -15,48 +15,31 @@ export class IssueEntityV1LogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: IssueEntityTransactionV1,
     currentBlockHeight: number,
-    accountsInfo: {
-      sender: BFChainCore.AccountInfoAndAssets;
-      recipient?: BFChainCore.AccountInfoAndAssets;
-    },
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
+    skipListenEvent = false,
   ) {
-    const { sender, recipient } = await this.logicVerify(
+    await this.logicVerify(
       transaction,
       currentBlockHeight,
-      accountsInfo,
+      accountMap,
       accountGetterHelper,
       transactionGetterHelper,
     );
 
-    const cloneAccountsAssets = {
-      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
-    };
-    if (recipient && recipient.accountInfo && recipient.accountAssets) {
-      const address = recipient.accountInfo.address;
-      cloneAccountsAssets[address] = this.helperLogicVerifier.deepClone(recipient.accountAssets);
-    }
-
     const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
-    // 手续费
-    this.eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
+    const { eventLogicVerifier } = this;
 
-    // 单项冻结
-    this.eventLogicVerifier.listenEventFrozenAsset(cloneAccountsAssets, eventEmitter);
-
-    // 购买 entityFactory 使用权
-    this.eventLogicVerifier.listenEventAsset(cloneAccountsAssets, eventEmitter);
-
-    // 发行 entityId
-    const accountAssets = this.helperLogicVerifier.deepClone(sender.accountAssets);
-    this.eventLogicVerifier.listenEventIssueEntityV1(
-      accountAssets,
-      currentBlockHeight,
-      accountGetterHelper,
-      eventEmitter,
-    );
+    if (skipListenEvent === false) {
+      eventLogicVerifier.listenEvent(
+        accountMap,
+        currentBlockHeight,
+        accountGetterHelper,
+        eventEmitter,
+      );
+    }
 
     await this.eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 

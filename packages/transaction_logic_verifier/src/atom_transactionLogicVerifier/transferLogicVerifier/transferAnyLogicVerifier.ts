@@ -1,7 +1,7 @@
 import { TransferAnyTransaction, ACCOUNT_STATUS, PARENT_ASSET_TYPE } from "@bfchain/core-model";
-import { TransactionLogicVerifier } from "../_txbaseLogicVerifier";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
+import { TransactionLogicVerifier } from "../_txbaseLogicVerifier";
 
 const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "TransactionLogicVerifier");
 
@@ -14,42 +14,13 @@ export class TransferAnyLogicVerifier extends TransactionLogicVerifier<TransferA
   async verify(
     transaction: TransferAnyTransaction,
     currentBlockHeight: number,
-    accountsInfo: {
-      sender: BFChainCore.AccountInfoAndAssets;
-      recipient?: BFChainCore.AccountInfoAndAssets;
-    },
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
+    skipListenEvent = false,
   ) {
-    const { sender, recipient } = await this.logicVerify(
-      transaction,
-      currentBlockHeight,
-      accountsInfo,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
-
     const { sourceChainName, sourceChainMagic, parentAssetType, assetType } =
       transaction.asset.transferAny;
-
-    const cloneAccountsAssets = {
-      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
-    };
-    const cloneAccountsInfo = {
-      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountInfo),
-    };
-    if (recipient && recipient.accountInfo && recipient.accountAssets) {
-      this.checkRecipientStatus(assetType, recipient.accountInfo);
-      const address = recipient.accountInfo.address;
-      cloneAccountsAssets[address] = this.helperLogicVerifier.deepClone(recipient.accountAssets);
-      cloneAccountsInfo[address] = this.helperLogicVerifier.deepClone(recipient.accountInfo);
-    }
-
-    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
-
-    const { eventLogicVerifier } = this;
-
-    eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
 
     if (parentAssetType === PARENT_ASSET_TYPE.ASSETS) {
       await this.helperLogicVerifier.isAssetExist(
@@ -58,30 +29,27 @@ export class TransferAnyLogicVerifier extends TransactionLogicVerifier<TransferA
         assetType,
         accountGetterHelper,
       );
+    }
 
-      eventLogicVerifier.listenEventAsset(cloneAccountsAssets, eventEmitter);
-    } else if (parentAssetType === PARENT_ASSET_TYPE.DAPP) {
-      eventLogicVerifier.listenEventChangeDAppidPossessor(
+    await this.logicVerify(
+      transaction,
+      currentBlockHeight,
+      accountMap,
+      accountGetterHelper,
+      transactionGetterHelper,
+    );
+
+    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
+
+    const { eventLogicVerifier } = this;
+
+    if (skipListenEvent === false) {
+      eventLogicVerifier.listenEvent(
+        accountMap,
         currentBlockHeight,
         accountGetterHelper,
         eventEmitter,
       );
-    } else if (parentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME) {
-      eventLogicVerifier.listenEventChangeLocationNamePossessor(
-        currentBlockHeight,
-        accountGetterHelper,
-        eventEmitter,
-      );
-    } else if (parentAssetType === PARENT_ASSET_TYPE.ENTITY) {
-      eventLogicVerifier.listenEventChangeEntityPossessor(
-        currentBlockHeight,
-        accountGetterHelper,
-        eventEmitter,
-      );
-
-      eventLogicVerifier.listenEventAsset(cloneAccountsAssets, eventEmitter);
-
-      eventLogicVerifier.listenEventPayTax(currentBlockHeight, accountGetterHelper, eventEmitter);
     }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);

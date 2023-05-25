@@ -1,6 +1,6 @@
+import { Injectable, QueneEventEmitter } from "@bfchain/util";
 import { GiftAnyTransaction, PARENT_ASSET_TYPE } from "@bfchain/core-model";
 import { TransactionLogicVerifier } from "../_txbaseLogicVerifier";
-import { Injectable, QueneEventEmitter } from "@bfchain/util";
 
 @Injectable()
 export class GiftAnyLogicVerifier extends TransactionLogicVerifier {
@@ -11,33 +11,13 @@ export class GiftAnyLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: GiftAnyTransaction,
     currentBlockHeight: number,
-    accountsInfo: {
-      sender: BFChainCore.AccountInfoAndAssets;
-      recipient?: BFChainCore.AccountInfoAndAssets;
-    },
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
+    skipListenEvent = false,
   ) {
-    const { sourceChainMagic, assetType, parentAssetType, sourceChainName, totalGrabableTimes } =
+    const { sourceChainMagic, assetType, parentAssetType, sourceChainName } =
       transaction.asset.giftAny;
-
-    const { sender } = await this.logicVerify(
-      transaction,
-      currentBlockHeight,
-      accountsInfo,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
-
-    const cloneAccountsAssets = {
-      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
-    };
-
-    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
-
-    const { eventLogicVerifier } = this;
-
-    eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
 
     if (parentAssetType === PARENT_ASSET_TYPE.ASSETS) {
       await this.helperLogicVerifier.isAssetExist(
@@ -46,35 +26,27 @@ export class GiftAnyLogicVerifier extends TransactionLogicVerifier {
         assetType,
         accountGetterHelper,
       );
-
-      eventLogicVerifier.listenEventFrozenAsset(cloneAccountsAssets, eventEmitter);
-    } // 冻结 dappid
-    else if (parentAssetType === PARENT_ASSET_TYPE.DAPP) {
-      eventLogicVerifier.listenEventFrozenDAppid(
-        currentBlockHeight,
-        accountGetterHelper,
-        eventEmitter,
-      );
     }
-    // 冻结 locationName
-    else if (parentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME) {
-      eventLogicVerifier.listenEventFrozenLocationName(
+
+    await this.logicVerify(
+      transaction,
+      currentBlockHeight,
+      accountMap,
+      accountGetterHelper,
+      transactionGetterHelper,
+    );
+
+    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
+
+    const { eventLogicVerifier } = this;
+
+    if (skipListenEvent === false) {
+      eventLogicVerifier.listenEvent(
+        accountMap,
         currentBlockHeight,
         accountGetterHelper,
         eventEmitter,
       );
-    }
-    // 冻结 entity
-    else if (parentAssetType === PARENT_ASSET_TYPE.ENTITY) {
-      eventLogicVerifier.listenEventFrozenEntity(
-        currentBlockHeight,
-        accountGetterHelper,
-        eventEmitter,
-      );
-
-      eventLogicVerifier.listenEventFrozenAsset(cloneAccountsAssets, eventEmitter);
-
-      eventLogicVerifier.listenEventPayTax(currentBlockHeight, accountGetterHelper, eventEmitter);
     }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);

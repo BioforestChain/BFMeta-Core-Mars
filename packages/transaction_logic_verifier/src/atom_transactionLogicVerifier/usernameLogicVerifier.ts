@@ -1,7 +1,7 @@
-import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
-import { NewTransactionRefuseReason, UsernameTransaction } from "@bfchain/core-model";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
+import { NewTransactionRefuseReason, UsernameTransaction } from "@bfchain/core-model";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
+import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 
 const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "UsernameLogicVerifier");
 
@@ -14,40 +14,45 @@ export class UsernameLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: UsernameTransaction,
     currentBlockHeight: number,
-    accountsInfo: {
-      sender: BFChainCore.AccountInfoAndAssets;
-      recipient?: BFChainCore.AccountInfoAndAssets;
-    },
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
+    skipListenEvent = false,
   ) {
-    const { sender } = await this.logicVerify(
+    const accountInfo = await this.helperLogicVerifier.getAccountInfoForce(
+      accountMap,
+      transaction.senderId,
+      currentBlockHeight,
+      accountGetterHelper,
+    );
+    if (accountInfo.username) {
+      throw new ConsensusException(ERROR_LIST.ACCOUNT_ALREADY_HAVE_USERNAME, {
+        errorId: NewTransactionRefuseReason.ACCOUNT_ALREADY_HAVE_USERNAME,
+      });
+    }
+
+    await this.logicVerify(
       transaction,
       currentBlockHeight,
-      accountsInfo,
+      accountMap,
       accountGetterHelper,
       transactionGetterHelper,
     );
-
-    const cloneAccountsAssets = {
-      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
-    };
 
     const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
     const { eventLogicVerifier } = this;
 
-    eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
-
-    eventLogicVerifier.listenEventSetUsername(accountGetterHelper, eventEmitter);
+    if (skipListenEvent === false) {
+      eventLogicVerifier.listenEvent(
+        accountMap,
+        currentBlockHeight,
+        accountGetterHelper,
+        eventEmitter,
+      );
+    }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
-
-    if (sender.accountInfo.username) {
-      throw new ConsensusException(ERROR_LIST.ACCOUNT_ALREADY_HAVE_USERNAME, {
-        errorId: NewTransactionRefuseReason.ACCOUNT_ALREADY_HAVE_USERNAME,
-      });
-    }
 
     return true;
   }

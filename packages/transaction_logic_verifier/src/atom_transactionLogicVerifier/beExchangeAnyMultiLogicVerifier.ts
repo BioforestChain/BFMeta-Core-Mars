@@ -1,13 +1,13 @@
-import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
+import { Injectable, QueneEventEmitter } from "@bfchain/util";
 import {
   BeExchangeAnyMultiTransaction,
   RANGE_TYPE,
   PARENT_ASSET_TYPE,
   NewTransactionRefuseReason,
 } from "@bfchain/core-model";
-import { Injectable, QueneEventEmitter } from "@bfchain/util";
-import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { JSBIHelper } from "@bfchain/core-helper-bigint";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
+import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
@@ -23,12 +23,10 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: BeExchangeAnyMultiTransaction,
     currentBlockHeight: number,
-    accountsInfo: {
-      sender: BFChainCore.AccountInfoAndAssets;
-      recipient?: BFChainCore.AccountInfoAndAssets;
-    },
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
+    skipListenEvent = false,
   ) {
     this.__checkTrsFee(transaction);
 
@@ -63,148 +61,25 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
 
     this.isDependentTransactionMatch(transaction, toExchangeAnyMultiJson);
 
-    const { sender, recipient } = await this.logicVerify(
+    await this.logicVerify(
       transaction,
       currentBlockHeight,
-      accountsInfo,
+      accountMap,
       accountGetterHelper,
       transactionGetterHelper,
     );
-
-    const cloneAccountsAssets = {
-      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
-    };
-    const cloneAccountsInfo = {
-      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountInfo),
-    };
-    if (recipient && recipient.accountInfo && recipient.accountAssets) {
-      const address = recipient.accountInfo.address;
-      cloneAccountsAssets[address] = this.helperLogicVerifier.deepClone(recipient.accountAssets);
-      cloneAccountsInfo[address] = this.helperLogicVerifier.deepClone(recipient.accountInfo);
-    }
 
     const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
     const { eventLogicVerifier } = this;
 
-    eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
-
-    const { toExchangeAssets, beExchangeAsset } = beExchangeAnyMulti;
-
-    const { beExchangeParentAssetType, taxInformation } = beExchangeAsset;
-
-    let alreadyListenAsset = false;
-    let alreadyListenUnfrozenAsset = false;
-    let alreadyListenUnfrozenDAppid = false;
-    let alreadyListenUnfrozenLocationName = false;
-    let alreadyListenUnfrozenEntity = false;
-
-    if (beExchangeAsset.beExchangeAssetPrealnum !== "0") {
-      if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
-        eventLogicVerifier.listenEventAsset(cloneAccountsAssets, eventEmitter);
-        alreadyListenAsset = true;
-      } else if (beExchangeParentAssetType === PARENT_ASSET_TYPE.DAPP) {
-        eventLogicVerifier.listenEventChangeDAppidPossessor(
-          currentBlockHeight,
-          accountGetterHelper,
-          eventEmitter,
-        );
-      } else if (beExchangeParentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME) {
-        eventLogicVerifier.listenEventChangeLocationNamePossessor(
-          currentBlockHeight,
-          accountGetterHelper,
-          eventEmitter,
-        );
-      } else if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
-        eventLogicVerifier.listenEventChangeEntityPossessor(
-          currentBlockHeight,
-          accountGetterHelper,
-          eventEmitter,
-        );
-      } else {
-        throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
-          prop: `beExchangeParentAssetType ${beExchangeParentAssetType}`,
-          target: "beExchangeAnyMulti.toExchangeAssets.beExchangeAsset",
-        });
-      }
-    }
-
-    if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
-      eventLogicVerifier.listenEventPayTax(currentBlockHeight, accountGetterHelper, eventEmitter);
-    }
-
-    for (const toExchangeAsset of toExchangeAssets) {
-      const { toExchangeParentAssetType, taxInformation } = toExchangeAsset;
-      if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
-        if (alreadyListenUnfrozenAsset) {
-          continue;
-        }
-        eventLogicVerifier.listenEventUnfrozenAsset(
-          currentBlockHeight,
-          accountGetterHelper,
-          eventEmitter,
-        );
-        alreadyListenUnfrozenAsset = true;
-      } else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.DAPP) {
-        if (alreadyListenUnfrozenDAppid) {
-          continue;
-        }
-        eventLogicVerifier.listenEventUnfrozenDAppid(
-          currentBlockHeight,
-          accountGetterHelper,
-          eventEmitter,
-        );
-        alreadyListenUnfrozenDAppid = true;
-      } else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME) {
-        if (alreadyListenUnfrozenLocationName) {
-          continue;
-        }
-        eventLogicVerifier.listenEventUnfrozenLocationName(
-          currentBlockHeight,
-          accountGetterHelper,
-          eventEmitter,
-        );
-        alreadyListenUnfrozenLocationName = true;
-      } else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
-        if (!alreadyListenUnfrozenEntity) {
-          eventLogicVerifier.listenEventUnfrozenEntity(
-            currentBlockHeight,
-            accountGetterHelper,
-            eventEmitter,
-          );
-          alreadyListenUnfrozenEntity = true;
-        }
-
-        if (taxInformation) {
-          if (taxInformation.taxAssetPrealnum === "0") {
-            if (!alreadyListenAsset) {
-              eventLogicVerifier.listenEventAsset(cloneAccountsAssets, eventEmitter);
-              alreadyListenAsset = true;
-            }
-          } else {
-            if (!alreadyListenUnfrozenAsset) {
-              eventLogicVerifier.listenEventUnfrozenAsset(
-                currentBlockHeight,
-                accountGetterHelper,
-                eventEmitter,
-              );
-              alreadyListenUnfrozenAsset = true;
-            }
-          }
-        }
-      } else {
-        throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
-          prop: `toExchangeParentAssetType ${toExchangeParentAssetType}`,
-          target: "beExchangeAnyMulti.toExchangeAssets.toExchangeAsset",
-        });
-      }
-    }
-
-    if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
-      eventLogicVerifier.listenEventPayTax(currentBlockHeight, accountGetterHelper, eventEmitter);
-      if (!alreadyListenAsset) {
-        eventLogicVerifier.listenEventAsset(cloneAccountsAssets, eventEmitter);
-      }
+    if (skipListenEvent === false) {
+      eventLogicVerifier.listenEvent(
+        accountMap,
+        currentBlockHeight,
+        accountGetterHelper,
+        eventEmitter,
+      );
     }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
@@ -400,7 +275,7 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
 
     // 逻辑校验
     const { beExchangeAssetPrealnum, beExchangeParentAssetType } = nextBeExchangeAsset;
-    const beapn = BigInt(beExchangeAssetPrealnum);
+    const beapn = BigInt(beExchangeAssetPrealnum as string);
     // 主动解冻
     if (transaction.senderId === transaction.recipientId) {
       for (const toExchangeAsset of nextToExchangeAssets) {

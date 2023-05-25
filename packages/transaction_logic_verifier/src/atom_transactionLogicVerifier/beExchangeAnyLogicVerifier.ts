@@ -1,8 +1,8 @@
-import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
-import { BeExchangeAnyTransaction, RANGE_TYPE, PARENT_ASSET_TYPE } from "@bfchain/core-model";
 import { Injectable, QueneEventEmitter } from "@bfchain/util";
-import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
+import { BeExchangeAnyTransaction, RANGE_TYPE, PARENT_ASSET_TYPE } from "@bfchain/core-model";
 import { JSBIHelper } from "@bfchain/core-helper-bigint";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
+import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
@@ -18,12 +18,10 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: BeExchangeAnyTransaction,
     currentBlockHeight: number,
-    accountsInfo: {
-      sender: BFChainCore.AccountInfoAndAssets;
-      recipient?: BFChainCore.AccountInfoAndAssets;
-    },
+    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
+    skipListenEvent = false,
   ) {
     const beExchangeAny = transaction.asset.beExchangeAny;
     const { transactionSignature } = beExchangeAny;
@@ -56,117 +54,25 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
 
     this.isDependentTransactionMatch(transaction, toExchangeAnyJson);
 
-    const { sender, recipient } = await this.logicVerify(
+    await this.logicVerify(
       transaction,
       currentBlockHeight,
-      accountsInfo,
+      accountMap,
       accountGetterHelper,
       transactionGetterHelper,
     );
-
-    const cloneAccountsAssets = {
-      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountAssets),
-    };
-    const cloneAccountsInfo = {
-      [transaction.senderId]: this.helperLogicVerifier.deepClone(sender.accountInfo),
-    };
-    if (recipient && recipient.accountInfo && recipient.accountAssets) {
-      const address = recipient.accountInfo.address;
-      cloneAccountsAssets[address] = this.helperLogicVerifier.deepClone(recipient.accountAssets);
-      cloneAccountsInfo[address] = this.helperLogicVerifier.deepClone(recipient.accountInfo);
-    }
 
     const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
     const { eventLogicVerifier } = this;
 
-    eventLogicVerifier.listenEventFee(cloneAccountsAssets, eventEmitter);
-
-    const { toExchangeParentAssetType, beExchangeParentAssetType, taxInformation } =
-      beExchangeAny.exchangeAny;
-
-    let alreadyListenAsset = false;
-    if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
-      eventLogicVerifier.listenEventUnfrozenAsset(
+    if (skipListenEvent === false) {
+      eventLogicVerifier.listenEvent(
+        accountMap,
         currentBlockHeight,
         accountGetterHelper,
         eventEmitter,
       );
-    } else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.DAPP) {
-      eventLogicVerifier.listenEventUnfrozenDAppid(
-        currentBlockHeight,
-        accountGetterHelper,
-        eventEmitter,
-      );
-    } else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME) {
-      eventLogicVerifier.listenEventUnfrozenLocationName(
-        currentBlockHeight,
-        accountGetterHelper,
-        eventEmitter,
-      );
-    } else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
-      eventLogicVerifier.listenEventUnfrozenEntity(
-        currentBlockHeight,
-        accountGetterHelper,
-        eventEmitter,
-      );
-
-      if (taxInformation) {
-        if (taxInformation.taxAssetPrealnum === "0") {
-          eventLogicVerifier.listenEventAsset(cloneAccountsAssets, eventEmitter);
-          alreadyListenAsset = true;
-        } else {
-          eventLogicVerifier.listenEventUnfrozenAsset(
-            currentBlockHeight,
-            accountGetterHelper,
-            eventEmitter,
-          );
-        }
-      }
-    } else {
-      throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: `toExchangeParentAssetType ${toExchangeParentAssetType}`,
-        target: "transaction.asset.beExchangeAny.exchangeAny",
-      });
-    }
-
-    if (beExchangeAny.beExchangeAssetPrealnum !== "0") {
-      if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
-        if (!alreadyListenAsset) {
-          eventLogicVerifier.listenEventAsset(cloneAccountsAssets, eventEmitter);
-          alreadyListenAsset = true;
-        }
-      } else if (beExchangeParentAssetType === PARENT_ASSET_TYPE.DAPP) {
-        eventLogicVerifier.listenEventChangeDAppidPossessor(
-          currentBlockHeight,
-          accountGetterHelper,
-          eventEmitter,
-        );
-      } else if (beExchangeParentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME) {
-        eventLogicVerifier.listenEventChangeLocationNamePossessor(
-          currentBlockHeight,
-          accountGetterHelper,
-          eventEmitter,
-        );
-      } else if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
-        eventLogicVerifier.listenEventChangeEntityPossessor(
-          currentBlockHeight,
-          accountGetterHelper,
-          eventEmitter,
-        );
-      } else {
-        throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
-          prop: `beExchangeParentAssetType ${beExchangeParentAssetType}`,
-          target: "transaction.asset.beExchangeAny.exchangeAny",
-        });
-      }
-    }
-
-    if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ENTITY) {
-      eventLogicVerifier.listenEventPayTax(currentBlockHeight, accountGetterHelper, eventEmitter);
-      if (!alreadyListenAsset) {
-        eventLogicVerifier.listenEventAsset(cloneAccountsAssets, eventEmitter);
-      }
     }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
@@ -393,7 +299,9 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
         // 允许多付钱
         if (exchangeAny.beExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
           // 这里的 to 就是 to 交易发起人给出权益，be 是 be 交易发起人给出的权益
-          if (BigInt(beExchangeAssetPrealnum) < BigInt(exchangeAny.beExchangeAssetPrealnum)) {
+          if (
+            BigInt(beExchangeAssetPrealnum) < BigInt(exchangeAny.beExchangeAssetPrealnum as string)
+          ) {
             throw new ConsensusException(ERROR_LIST.PROP_SHOULD_GTE_FIELD, {
               prop: `beExchangeAssetPrealnum ${beExchangeAssetPrealnum}`,
               field: exchangeAny.beExchangeAssetPrealnum,
