@@ -157,12 +157,12 @@ export class MultipleTransactionFactory extends TransactionFactory<MultipleTrans
     config = this.configHelper,
   ) {
     return wrapTaskList((taskList) => {
+      /// 这里不做娃子交易的的 applyTransaction，再合适的时机自己调用，避免重复触发事件
+      /// multiple 交易由于娃子交易是完整的，所以可以在这里触发，但是 macroCall 和
+      /// promiseResolve 这里是没有完善的娃子交易的，所以这里统一不做触发
+      /// pc 是在 logicVerify(逻辑校验) 和 applyTransaction(上下帐)
+      /// 参见 packages\transaction_complex_logic_verifier\src\multipleLogicVerifier.ts
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
-      const { transactions } = transaction.asset.multiple;
-      for (const subTransaction of transactions) {
-        const factory = this.transactionCore.getTransactionFactoryFromType(subTransaction.type);
-        taskList.next = factory.applyTransaction(subTransaction, eventEmitter, config);
-      }
     });
   }
 

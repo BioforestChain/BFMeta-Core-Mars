@@ -256,8 +256,14 @@ export class GenesisAssetModel
   @Field.d(GenesisAssetModel.INC++, "string", "required")
   voteMinChainAsset!: string;
   /**每笔交易允许携带的最大 blob 长度 */
-  @Field.d(GenesisAssetModel.INC++, "uint32", "required")
-  maxBlobSizePerTransaction!: number;
+  @Field.d(GenesisAssetModel.INC++, "uint64", "required")
+  maxBlobSizePerTransactionLong!: Long;
+  get maxBlobSizePerTransaction() {
+    return this.maxBlobSizePerTransactionLong.toNumber();
+  }
+  set maxBlobSizePerTransaction(v) {
+    this.maxBlobSizePerTransactionLong = Long.fromNumber(v, true);
+  }
   toJSON(): BFChainCore.GenesisAssetJSON {
     const res: BFChainCore.GenesisAssetJSON = Object.assign(
       {
@@ -319,6 +325,8 @@ export class GenesisAssetModel
     const res = super.fromObject(object) as GenesisAssetModel;
     if (res !== object) {
       object.beginEpochTime !== undefined && (res.beginEpochTime = object.beginEpochTime);
+      object.maxBlobSizePerTransaction !== undefined &&
+        (res.maxBlobSizePerTransaction = object.maxBlobSizePerTransaction);
 
       object.maxMultipleOfAssetAndMainAsset &&
         (res.maxMultipleOfAssetAndMainAsset = FractionBigIntModel.fromObject<FractionBigIntModel>(
