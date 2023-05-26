@@ -579,12 +579,12 @@ export class ReplayBlockCore<T extends Block> {
         });
       }
 
-      const numberOfTransactions = transactionInBlockBufferList.length;
-      if (block.numberOfTransactions !== numberOfTransactions) {
-        /// 区块的交易数对不上
+      // 校验 offset
+      const offset = transactionInBlockBufferList.length;
+      if (block.offset !== offset) {
         throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
-          to_compare_prop: `numberOfTransactions ${block.numberOfTransactions}`,
-          be_compare_prop: `numberOfTransactions ${numberOfTransactions}`,
+          to_compare_prop: `offset ${block.offset}`,
+          be_compare_prop: `offset ${offset}`,
           to_target: "block",
           be_target: "calculate",
         });
@@ -618,6 +618,18 @@ export class ReplayBlockCore<T extends Block> {
         });
       }
 
+      const statisticsInfoModel = statisticsInfo.toModel();
+      const numberOfTransactions = statisticsInfoModel.numberOfTransactions;
+      if (block.numberOfTransactions !== numberOfTransactions) {
+        /// 区块的交易数对不上
+        throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
+          to_compare_prop: `numberOfTransactions ${block.numberOfTransactions}`,
+          be_compare_prop: `numberOfTransactions ${numberOfTransactions}`,
+          to_target: "block",
+          be_target: "calculate",
+        });
+      }
+
       if (!skipVerifyParticipation) {
         const blockParticipation = this.blockHelper.calcBlockParticipation({
           totalChainAsset: statisticsInfo.totalChainAsset,
@@ -637,12 +649,12 @@ export class ReplayBlockCore<T extends Block> {
         if (
           !this.baseHelper.isArrayEqual(
             blockStatisticsInfo.getBytes(),
-            statisticsInfo.toModel().getBytes(),
+            statisticsInfoModel.getBytes(),
           )
         ) {
           throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
             to_compare_prop: `statisticsInfo ${JSON.stringify(blockStatisticsInfo.toJSON())}`,
-            be_compare_prop: `statisticsInfo ${JSON.stringify(statisticsInfo.toModel().toJSON())}`,
+            be_compare_prop: `statisticsInfo ${JSON.stringify(statisticsInfoModel.toJSON())}`,
             to_target: "block",
             be_target: "calculate",
           });
