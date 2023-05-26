@@ -104,17 +104,12 @@ export class AccountBaseHelper {
   }
   /**
    * 根据主密码和二次密码生成密钥对
-   * 这里虽然用了md5,当因为sha256后,所以还算安全,不过也许可以换一种更加友好的方式
    *
    * @param secret 主密码
    * @param secondSecret 二次密码
    */
   async createSecondSecretKeypair(secret: string, secondSecret: string) {
-    const md5Second = `${secret}-${(
-      await this.cryptoHelper.md5(encodeUTF8ToBinary(secondSecret))
-    ).toString("hex")}`;
-    const secondHash = await this.cryptoHelper.sha256(encodeUTF8ToBinary(md5Second));
-    return this.createSecretKeypair(utf8Slice(secondHash, 0, secondHash.length));
+    return this.createSecretKeypair(`${secret}-${secondSecret}`);
   }
   /**根据私钥获取公钥Buffer */
   async getPublicKeyFromSecondSecret(secret: string, secondSecret: string) {
@@ -139,35 +134,4 @@ export class AccountBaseHelper {
       (await this.getPublicKeyStringFromSecondSecret(secret, secondSecret)) === secondPublicKey
     );
   }
-  //#region 新版
-
-  async createSecondSecretKeypairV2(secret: string, secondSecret: string) {
-    const fullSecondSecret = `v2:${secret}-${secondSecret}`;
-    return this.createSecretKeypair(fullSecondSecret);
-  }
-  /**根据私钥获取公钥Buffer */
-  async getPublicKeyFromSecondSecretV2(secret: string, secondSecret: string) {
-    return (await this.createSecondSecretKeypairV2(secret, secondSecret)).publicKey;
-  }
-
-  /**根据私钥获取公钥String */
-  async getPublicKeyStringFromSecondSecretV2(
-    secret: string,
-    secondSecret: string,
-    encode: BFChainUtil.HexBase64Latin1Encoding = "hex",
-  ) {
-    return (await this.getPublicKeyFromSecondSecretV2(secret, secondSecret)).toString(encode);
-  }
-  /**
-   * 校验二次密码公钥是否正确
-   * @param secret 主密码
-   * @param secondSecret 二次密码
-   * @param secondPublicKey 二次密码公钥
-   */
-  async checkSecondSecretV2(secret: string, secondSecret: string, secondPublicKey: string) {
-    return (
-      (await this.getPublicKeyStringFromSecondSecretV2(secret, secondSecret)) === secondPublicKey
-    );
-  }
-  //#endregion
 }

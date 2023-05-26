@@ -186,7 +186,7 @@ export class FromAuthSignatureV1Converter implements BFChainCore.CrossChain.Auth
       signatureBuffer,
     )}`;
     if (authSecondSecret) {
-      const secondKeypair = await accountBaseHelper.createSecondSecretKeypairV2(
+      const secondKeypair = await accountBaseHelper.createSecondSecretKeypair(
         authSecret,
         authSecondSecret,
       );

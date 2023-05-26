@@ -183,10 +183,7 @@ export class SignatureV1Converter implements BFChainCore.CrossChain.SignatureCon
     );
     migrateCertificate.signature += `/${publicKey}-${getHexFromArrayBuffer(signatureBuffer)}`;
     if (secondSecret) {
-      const secondKeypair = await accountBaseHelper.createSecondSecretKeypairV2(
-        secret,
-        secondSecret,
-      );
+      const secondKeypair = await accountBaseHelper.createSecondSecretKeypair(secret, secondSecret);
       const secondPublicKey = getHexFromArrayBuffer(secondKeypair.publicKey);
       const signSignatureBuffer = await asymmetricHelper.detachedSign(
         Buffer.from(

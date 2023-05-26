@@ -185,7 +185,7 @@ export class ToAuthSignatureV1Converter implements BFChainCore.CrossChain.AuthSi
     );
     migrateCertificate.toAuthSignature += `/${publicKey}-${getHexFromArrayBuffer(signatureBuffer)}`;
     if (authSecondSecret) {
-      const secondKeypair = await accountBaseHelper.createSecondSecretKeypairV2(
+      const secondKeypair = await accountBaseHelper.createSecondSecretKeypair(
         authSecret,
         authSecondSecret,
       );
