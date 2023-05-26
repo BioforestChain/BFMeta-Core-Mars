@@ -22,8 +22,14 @@
     }
   ],
   "files": [
+    "src/complexTransactionLogicHelper.ts",
     "src/customLogicVerifier.ts",
     "src/index.ts",
+    "src/macroCallLogicVerifier.ts",
+    "src/macroLogicVerifier.ts",
+    "src/multipleLogicVerifier.ts",
+    "src/promiseLogicVerifier.ts",
+    "src/promiseResolveLogicVerifier.ts",
     "src/registerChainLogicVerifier.ts"
   ]
 }

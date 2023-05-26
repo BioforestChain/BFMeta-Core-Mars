@@ -1,19 +1,19 @@
 import type { MacroCallTransaction } from "@bfchain/core-model";
-import { Injectable, Inject, QueneEventEmitter } from "@bfchain/util";
+import { Injectable, Inject } from "@bfchain/util";
 import { TransactionCore } from "@bfchain/core-transaction";
 import {
   TransactionLogicVerifier,
   TransactionLogicVerifierCore,
 } from "@bfchain/core-transaction-logic-verifier";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
+import { ComplexTransactionLogicHelper } from "./complexTransactionLogicHelper";
 
-const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
-  "VERIFIER",
-  "MacroCallLogicVerifier",
-);
+const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "MacroCallLogicVerifier");
 
 @Injectable()
 export class MacroCallLogicVerifier extends TransactionLogicVerifier {
+  @Inject(ComplexTransactionLogicHelper)
+  protected complexTransactionLogicHelper!: ComplexTransactionLogicHelper;
   @Inject("bfchain-core:TransactionCore", { dynamics: true })
   public transactionCore!: TransactionCore;
   @Inject("bfchain-core:TransactionLogicVerifierCore", { dynamics: true })
@@ -27,60 +27,92 @@ export class MacroCallLogicVerifier extends TransactionLogicVerifier {
     transaction: MacroCallTransaction,
     currentBlockHeight: number,
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
-    skipListenEvent = false,
+    skipListenEvent: boolean,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    await this.logicVerify(
-      transaction,
-      currentBlockHeight,
-      accountMap,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
-
-    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
+    await this.logicVerify(transaction, currentBlockHeight, accountMap);
 
     const { eventLogicVerifier } = this;
 
     if (skipListenEvent === false) {
-      eventLogicVerifier.listenEvent(
-        accountMap,
-        currentBlockHeight,
-        accountGetterHelper,
-        eventEmitter,
-      );
+      eventLogicVerifier.listenEvent(accountMap, currentBlockHeight, eventEmitter);
     }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
-    const { macroId, inputs } = transaction.asset.call;
-
-    const macroTransactionJson = await transactionGetterHelper.getMacroCallTransaction(
-      macroId,
-      inputs,
+    const macroTransaction = await this.complexTransactionLogicHelper.getMacroTransaction(
+      transaction,
     );
-    if (!macroTransactionJson) {
-      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-        prop: `Macro call transaction with macroId ${macroId}`,
-        target: "blockChain",
-      });
-    }
-
     const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
-      macroTransactionJson.type,
+      macroTransaction.type,
     );
-    const macroTransaction = await this.transactionCore.recombineTransaction(macroTransactionJson);
-    await logicVerify.verify(
-      macroTransaction,
-      currentBlockHeight,
-      accountMap,
-      accountGetterHelper,
-      transactionGetterHelper,
-      true,
-    );
+    await logicVerify.verify(macroTransaction, currentBlockHeight, accountMap, true, eventEmitter);
 
     return true;
+  }
+
+  /**
+   * 校验交易的手续费是否大于等于网络手续费
+   *
+   * @param transaction
+   * @param byteLength
+   */
+  async checkTrsFeeAndWebFee(transaction: MacroCallTransaction, byteLength: number) {
+    const resp = await super.checkTrsFeeAndWebFee(transaction, byteLength);
+    if (resp.isFeeEnough === false) {
+      return resp;
+    }
+    const macroTransaction = await this.complexTransactionLogicHelper.getMacroTransaction(
+      transaction,
+    );
+    const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
+      macroTransaction.type,
+    );
+    const result = await logicVerify.checkTrsFeeAndWebFee(
+      macroTransaction,
+      macroTransaction.getBytes().length,
+    );
+    if (result.isFeeEnough === false) {
+      return result;
+    }
+    return resp;
+  }
+
+  /**
+   * 检验交易的手续费是否大于等于矿机手续费和网络手续费
+   *
+   * @param transaction
+   * @param byteLength
+   * @param miningMachineMinFeePerByte
+   */
+  async checkTrsFeeAndMiningMachineFeeAndWebFee(
+    transaction: MacroCallTransaction,
+    byteLength: number,
+    miningMachineMinFeePerByte: BFChainCore.FractionJSON,
+  ) {
+    const resp = await super.checkTrsFeeAndMiningMachineFeeAndWebFee(
+      transaction,
+      byteLength,
+      miningMachineMinFeePerByte,
+    );
+    if (resp.isFeeEnough === false) {
+      return resp;
+    }
+    const macroTransaction = await this.complexTransactionLogicHelper.getMacroTransaction(
+      transaction,
+    );
+    const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
+      macroTransaction.type,
+    );
+    const result = await logicVerify.checkTrsFeeAndMiningMachineFeeAndWebFee(
+      macroTransaction,
+      macroTransaction.getBytes().length,
+      miningMachineMinFeePerByte,
+    );
+    if (result.isFeeEnough === false) {
+      return result;
+    }
+    return resp;
   }
 
   /**
@@ -89,38 +121,29 @@ export class MacroCallLogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    * @param currentBlockHeight
    * @param numberOfTransaction
-   * @param transactionGetterHelper
    */
   async checkRepeatInBlockChainTransaction(
     transaction: MacroCallTransaction,
     currentBlockHeight: number,
     numberOfTransaction: 0 | 1 = 0,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const { macroId, inputs } = transaction.asset.call;
-    const macroTransaction = await transactionGetterHelper.getMacroCallTransaction(macroId, inputs);
-    if (!macroTransaction) {
-      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-        prop: `Macro transaction with macroId ${macroId}`,
-        target: "blockChain",
-      });
-    }
-    const signatures = [transaction.signature, macroTransaction.signature];
-    const applyBlockHeight =
-      transaction.applyBlockHeight > macroTransaction.applyBlockHeight
-        ? macroTransaction.applyBlockHeight
-        : transaction.applyBlockHeight;
-    const txCount = await transactionGetterHelper.countTransactionsInBlockChainBySignature(
-      signatures,
+    const { minHeight, count, ids } = await this.complexTransactionLogicHelper.getCheckRepeatInfo(
+      transaction,
+      numberOfTransaction !== 0,
+    );
+    const txCount = await this.transactionGetterHelper.countTransactionsInBlockChainBySignature(
+      ids,
       this.transactionHelper.calcTransactionQueryRangeByApplyBlockHeight(
-        applyBlockHeight,
+        minHeight,
         currentBlockHeight,
       ),
     );
-    const maxTxCount = numberOfTransaction === 0 ? 0 : 2;
+    const maxTxCount = numberOfTransaction === 0 ? 0 : count;
     if (txCount > maxTxCount) {
       throw new ConsensusException(ERROR_LIST.ALREADY_EXIST, {
-        prop: `One of transactions with signatures ${signatures.join(",")}`,
+        prop: `One of transactions with signatures [${ids.slice(0, 3).join(",")}${
+          ids.length > 3 ? "..." : ""
+        }]`,
         target: "blockChain",
       });
     }

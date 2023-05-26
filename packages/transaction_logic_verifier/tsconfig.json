@@ -71,6 +71,7 @@
     "src/atom_transactionLogicVerifier/voteLogicVerifier.ts",
     "src/atom_transactionLogicVerifier/_txbaseLogicVerifier.ts",
     "src/index.ts",
+    "src/memoryCache.ts",
     "src/transactionLogicVerifier.ts"
   ]
 }

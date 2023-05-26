@@ -132,9 +132,10 @@ export class ToExchangeAnyMultiAllLogicVerifier extends TransactionLogicVerifier
    * @param transaction
    * @param byteLength
    */
-  checkTrsFeeAndWebFee(transaction: ToExchangeAnyMultiAllTransaction, byteLength: number) {
+  async checkTrsFeeAndWebFee(transaction: ToExchangeAnyMultiAllTransaction, byteLength: number) {
     const { toExchangeAssets, beExchangeAssets } = transaction.asset.toExchangeAnyMultiAll;
     return this.isFeeEnough(
+      transaction.signature,
       transaction.fee,
       (
         this.transactionHelper.calcTransactionMinFeeByMulti(
@@ -152,13 +153,14 @@ export class ToExchangeAnyMultiAllLogicVerifier extends TransactionLogicVerifier
    * @param byteLength
    * @param miningMachineMinFeePerByte
    */
-  checkTrsFeeAndMiningMachineFeeAndWebFee(
+  async checkTrsFeeAndMiningMachineFeeAndWebFee(
     transaction: ToExchangeAnyMultiAllTransaction,
     byteLength: number,
     miningMachineMinFeePerByte: BFChainCore.FractionJSON,
   ) {
     const { toExchangeAssets, beExchangeAssets } = transaction.asset.toExchangeAnyMultiAll;
     return this.isFeeEnough(
+      transaction.signature,
       transaction.fee,
       (
         this.transactionHelper.calcTransactionMinFeeByMulti(

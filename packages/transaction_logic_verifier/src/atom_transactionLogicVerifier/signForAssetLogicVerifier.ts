@@ -123,8 +123,9 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    * @param byteLength
    */
-  checkTrsFeeAndWebFee(transaction: SignForAssetTransaction, byteLength: number) {
+  async checkTrsFeeAndWebFee(transaction: SignForAssetTransaction, byteLength: number) {
     return this.isFeeEnough(
+      transaction.signature,
       transaction.fee,
       this.transactionHelper.calcTransactionBlobFee(transaction).toString(),
     );
@@ -137,12 +138,13 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
    * @param byteLength
    * @param miningMachineMinFeePerByte
    */
-  checkTrsFeeAndMiningMachineFeeAndWebFee(
+  async checkTrsFeeAndMiningMachineFeeAndWebFee(
     transaction: SignForAssetTransaction,
     byteLength: number,
     miningMachineMinFeePerByte: BFChainCore.FractionJSON,
   ) {
     return this.isFeeEnough(
+      transaction.signature,
       transaction.fee,
       this.transactionHelper
         .calcTransactionBlobFee(transaction, miningMachineMinFeePerByte)

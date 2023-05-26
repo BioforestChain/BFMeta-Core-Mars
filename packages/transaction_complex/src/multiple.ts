@@ -115,15 +115,25 @@ export class MultipleTransactionFactory extends TransactionFactory<MultipleTrans
     }
 
     const signatureSet = new Set<string>();
-    for (const trsJson of transactions) {
-      const { signature } = trsJson;
-      if (signatureSet.has(signature)) {
+    const MULTIPLE = this.transactionHelper.MULTIPLE;
+    const func = (trs: BFChainCore.TransactionJSON) => {
+      if (signatureSet.has(trs.signature)) {
         throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_DUPLICATE, {
-          prop: `transactions ${signature}`,
+          prop: `transactions ${trs.signature}`,
           ...MultipleAsset_Exception_Detail,
         });
       }
-      signatureSet.add(signature);
+      if (trs.type === MULTIPLE) {
+        const subTransactions = (trs as BFChainCore.MultipleTransactionJSON).asset.multiple
+          .transactions;
+        for (const subTransaction of subTransactions) {
+          func(subTransaction);
+        }
+      }
+      signatureSet.add(trs.signature);
+    };
+    for (const trsJson of transactions) {
+      func(trsJson);
       const factory = this.transactionCore.getTransactionFactoryFromType(trsJson.type);
       const transaction = await factory.fromJSON(trsJson);
       await factory.verify(transaction);
@@ -157,12 +167,12 @@ export class MultipleTransactionFactory extends TransactionFactory<MultipleTrans
     config = this.configHelper,
   ) {
     return wrapTaskList((taskList) => {
+      /// 这里不做娃子交易的的 applyTransaction，再合适的时机自己调用，避免重复触发事件
+      /// multiple 交易由于娃子交易是完整的，所以可以在这里触发，但是 macroCall 和
+      /// promiseResolve 这里是没有完善的娃子交易的，所以这里统一不做触发
+      /// pc 是在 logicVerify(逻辑校验) 和 applyTransaction(上下帐)
+      /// 参见 packages\transaction_complex_logic_verifier\src\multipleLogicVerifier.ts
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
-      const { transactions } = transaction.asset.multiple;
-      for (const subTransaction of transactions) {
-        const factory = this.transactionCore.getTransactionFactoryFromType(subTransaction.type);
-        taskList.next = factory.applyTransaction(subTransaction, eventEmitter, config);
-      }
     });
   }
 

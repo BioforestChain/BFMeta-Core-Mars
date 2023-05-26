@@ -93,9 +93,9 @@ async function getGiftAssetTransaction(
   console.log(trs.getBytes().length);
   console.log(bfchainCore.config.maxTransactionSize);
 
-  const result = yy.checkTrsFeeAndWebFee(trs, trs.getBytes().length);
+  const result = await yy.checkTrsFeeAndWebFee(trs, trs.getBytes().length);
 
-  const result2 = yy.checkTrsFeeAndMiningMachineFeeAndWebFee(trs, trs.getBytes().length, {
+  const result2 = await yy.checkTrsFeeAndMiningMachineFeeAndWebFee(trs, trs.getBytes().length, {
     numerator: 200,
     denominator: 1024,
   });

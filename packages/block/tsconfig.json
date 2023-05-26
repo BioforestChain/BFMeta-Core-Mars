@@ -28,6 +28,7 @@
     "src/@types.ts",
     "src/atom_block/blockForkCheck.ts",
     "src/atom_block/blockGeneratorCalculator.ts",
+    "src/atom_block/blockUtils.ts",
     "src/atom_block/commonBlock.ts",
     "src/atom_block/commonBlockVerify.ts",
     "src/atom_block/generateBlock.ts",

@@ -529,16 +529,25 @@ declare namespace BFChainCore {
     promiseId: string;
     recipientId: string;
   }
-  type ApplyTransactionPromiseResolveEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_PromiseResolve, EVENTNAME, T>;
+  type ApplyTransactionPromiseResolveEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_PromiseResolve, EVENTNAME, T>;
 
   interface ApplyInfo_MacroCall {
     /**承诺的索引 */
     macroId: string;
     inputs: { [key: string]: string };
   }
-  type ApplyTransactionMacroCallEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_MacroCall, EVENTNAME, T>;
+  type ApplyTransactionMacroCallEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_MacroCall, EVENTNAME, T>;
+
+  interface ApplyTransactionCountEvent<EVENTNAME, T extends Transaction = Transaction> {
+    type: EVENTNAME;
+    transaction: T;
+  }
 
   type ApplyTransactionEventMap<EM extends BFChainUtil.EventInOutMap = {}> = EM & {
     /**交易交易的POW */
@@ -924,6 +933,12 @@ declare namespace BFChainCore {
         "macroCall",
         import("@bfchain/core-model-transaction-complex").MacroCallTransaction
       >
+    >;
+
+    /**交易计数 */
+    count: BFChainUtil.EventInOut<
+      ApplyTransactionCountEvent<"count", BFChainCore.Transaction>,
+      void
     >;
 
     endDealTransaction: BFChainUtil.EventInOut<{
