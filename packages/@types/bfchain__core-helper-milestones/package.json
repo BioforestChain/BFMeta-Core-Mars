@@ -1,11 +1,11 @@
 {
   "name": "@types/bfchain__core-helper-milestones",
   "types": "index.d.ts",
-  "version": "8.0.90",
+  "version": "9.0.0",
   "dependencies": {
-    "@types/bfchain__core-helper-config": "8.0.90",
-    "@types/bfchain__core-helper-type": "8.0.90",
-    "@types/bfchain__core-typings": "8.0.90",
-    "@types/bfchain__core-util-exception-errorcode": "8.0.90"
+    "@types/bfchain__core-helper-config": "9.0.0",
+    "@types/bfchain__core-helper-type": "9.0.0",
+    "@types/bfchain__core-typings": "9.0.0",
+    "@types/bfchain__core-util-exception-errorcode": "9.0.0"
   }
 }

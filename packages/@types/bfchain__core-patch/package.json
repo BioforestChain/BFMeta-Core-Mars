@@ -1,10 +1,10 @@
 {
   "name": "@types/bfchain__core-patch",
   "types": "index.d.ts",
-  "version": "8.0.90",
+  "version": "9.0.0",
   "dependencies": {
-    "@types/bfchain__core-patch-1": "8.0.90",
-    "@types/bfchain__core-patch-base": "8.0.90",
-    "@types/bfchain__core-typings": "8.0.90"
+    "@types/bfchain__core-patch-1": "9.0.0",
+    "@types/bfchain__core-patch-base": "9.0.0",
+    "@types/bfchain__core-typings": "9.0.0"
   }
 }

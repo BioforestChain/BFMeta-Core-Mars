@@ -1,13 +1,13 @@
 {
   "name": "@types/bfchain__core-model-transaction",
   "types": "index.d.ts",
-  "version": "8.0.90",
+  "version": "9.0.0",
   "dependencies": {
-    "@types/bfchain__core-model-cacher": "8.0.90",
-    "@types/bfchain__core-model-common": "8.0.90",
-    "@types/bfchain__core-model-transaction-asset": "8.0.90",
-    "@types/bfchain__core-model-transaction-base": "8.0.90",
-    "@types/bfchain__core-typings": "8.0.90",
-    "@types/bfchain__core-util-exception": "8.0.90"
+    "@types/bfchain__core-model-cacher": "9.0.0",
+    "@types/bfchain__core-model-common": "9.0.0",
+    "@types/bfchain__core-model-transaction-asset": "9.0.0",
+    "@types/bfchain__core-model-transaction-base": "9.0.0",
+    "@types/bfchain__core-typings": "9.0.0",
+    "@types/bfchain__core-util-exception": "9.0.0"
   }
 }
