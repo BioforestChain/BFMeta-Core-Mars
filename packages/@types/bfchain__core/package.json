@@ -17,6 +17,7 @@
     "@types/bfchain__core-transaction-logic-verifier": "9.0.2",
     "@types/bfchain__core-typings": "9.0.2",
     "@types/bfchain__core-util-base58": "9.0.2",
-    "@types/bfchain__core-util-exception": "9.0.2"
+    "@types/bfchain__core-util-exception": "9.0.2",
+    "@types/bfchain__core-transaction-complex-logic-verifier": "9.0.2"
   }
 }

@@ -389,18 +389,9 @@ export class GenerateBlockCore<T extends Block> {
         });
       }
 
-      const numberOfTransactions = transactions.length;
-      // if (block.numberOfTransactions !== 0 && block.numberOfTransactions !== numberOfTransactions) {
-      //   /// 区块的交易数对不上
-      //   throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-      //     to_compare_prop: `numberOfTransactions ${block.numberOfTransactions}`,
-      //     be_compare_prop: "block",
-      //     to_target: `numberOfTransactions ${numberOfTransactions}`,
-      //     be_target: "calculate",
-      //   });
-      // }
-      block.transactionInfo.numberOfTransactions = numberOfTransactions;
-      if (numberOfTransactions > 0) {
+      const offset = transactions.length;
+      block.transactionInfo.offset = offset;
+      if (offset > 0) {
         block.transactionInfo.startTindex = transactions[0].tIndex;
       } else {
         if (!eventEmitter.startTindexGetter) {
@@ -416,6 +407,8 @@ export class GenerateBlockCore<T extends Block> {
       block.transactionInfo.payloadLength = payloadLength;
       block.transactionInfo.blobSize = blobSize;
       block.transactionInfo.transactionInBlocks = transactions;
+      const numberOfTransactions = block.transactionInfo.statisticInfo.numberOfTransactions;
+      block.transactionInfo.numberOfTransactions = numberOfTransactions;
       block.blockParticipation = this.blockHelper.calcBlockParticipation({
         totalChainAsset: statisticsInfo.totalChainAsset,
         numberOfTransactions,

@@ -38,6 +38,25 @@ export class StatisticInfoModel
       ))
     );
   }
+  /**计数信息 */
+  @MapField.d(StatisticInfoModel.INC++, "string", "uint32")
+  numberOfTransactionsHashMap!: { [assetType: string]: number };
+  _numberOfTransactionsMap?: StringKeyMap<number>;
+  get numberOfTransactionsMap() {
+    return (
+      this._numberOfTransactionsMap ||
+      (this._numberOfTransactionsMap = new StringKeyMap<number>(this.numberOfTransactionsHashMap))
+    );
+  }
+
+  get numberOfTransactions() {
+    let sum = 0;
+    const hashMap = this.numberOfTransactionsHashMap;
+    for (const baseType in hashMap) {
+      sum += hashMap[baseType];
+    }
+    return sum;
+  }
 
   toJSON() {
     return {
@@ -46,6 +65,7 @@ export class StatisticInfoModel
       totalChainAsset: this.totalChainAsset,
       totalAccount: this.totalAccount,
       magicAssetTypeTypeStatisticHashMap: this.magicAssetTypeTypeStatisticMap.toJSON(),
+      numberOfTransactionsHashMap: this.numberOfTransactionsHashMap,
     };
   }
   @cacheBytesGetter
