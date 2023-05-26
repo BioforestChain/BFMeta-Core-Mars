@@ -41,9 +41,10 @@ export class GiftAnyLogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    * @param byteLength
    */
-  checkTrsFeeAndWebFee(transaction: GiftAnyTransaction, byteLength: number) {
+  async checkTrsFeeAndWebFee(transaction: GiftAnyTransaction, byteLength: number) {
     const times = transaction.asset.giftAny.totalGrabableTimes + 1;
     return this.isFeeEnough(
+      transaction.signature,
       transaction.fee,
       (
         this.transactionHelper.calcTransactionMinFeeByMaxBytes(times) +
@@ -59,13 +60,14 @@ export class GiftAnyLogicVerifier extends TransactionLogicVerifier {
    * @param byteLength
    * @param miningMachineMinFeePerByte
    */
-  checkTrsFeeAndMiningMachineFeeAndWebFee(
+  async checkTrsFeeAndMiningMachineFeeAndWebFee(
     transaction: GiftAnyTransaction,
     byteLength: number,
     miningMachineMinFeePerByte: BFChainCore.FractionJSON,
   ) {
     const times = transaction.asset.giftAny.totalGrabableTimes + 1;
     return this.isFeeEnough(
+      transaction.signature,
       transaction.fee,
       (
         this.transactionHelper.calcTransactionMinFeeByMaxBytes(times, miningMachineMinFeePerByte) +

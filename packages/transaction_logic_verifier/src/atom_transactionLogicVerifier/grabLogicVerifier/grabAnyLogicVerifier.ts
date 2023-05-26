@@ -340,8 +340,9 @@ export class GrabAnyLogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    * @param byteLength
    */
-  checkTrsFeeAndWebFee(transaction: GrabAnyTransaction, byteLength: number) {
+  async checkTrsFeeAndWebFee(transaction: GrabAnyTransaction, byteLength: number) {
     return this.isFeeEnough(
+      transaction.signature,
       transaction.fee,
       this.transactionHelper.calcTransactionBlobFee(transaction).toString(),
     );
@@ -354,12 +355,13 @@ export class GrabAnyLogicVerifier extends TransactionLogicVerifier {
    * @param byteLength
    * @param miningMachineMinFeePerByte
    */
-  checkTrsFeeAndMiningMachineFeeAndWebFee(
+  async checkTrsFeeAndMiningMachineFeeAndWebFee(
     transaction: GrabAnyTransaction,
     byteLength: number,
     miningMachineMinFeePerByte: BFChainCore.FractionJSON,
   ) {
     return this.isFeeEnough(
+      transaction.signature,
       transaction.fee,
       this.transactionHelper
         .calcTransactionBlobFee(transaction, miningMachineMinFeePerByte)

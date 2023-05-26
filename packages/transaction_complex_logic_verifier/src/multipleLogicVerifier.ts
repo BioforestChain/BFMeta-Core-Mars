@@ -1,18 +1,18 @@
 import type { MultipleTransaction } from "@bfchain/core-model";
-import { Injectable, Inject, QueneEventEmitter } from "@bfchain/util";
+import { Injectable, Inject } from "@bfchain/util";
 import {
   TransactionLogicVerifier,
   TransactionLogicVerifierCore,
 } from "@bfchain/core-transaction-logic-verifier";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
+import { ComplexTransactionLogicHelper } from "./complexTransactionLogicHelper";
 
-const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
-  "VERIFIER",
-  "MultipleLogicVerifier",
-);
+const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "MultipleLogicVerifier");
 
 @Injectable()
 export class MultipleLogicVerifier extends TransactionLogicVerifier {
+  @Inject(ComplexTransactionLogicHelper)
+  protected complexTransactionLogicHelper!: ComplexTransactionLogicHelper;
   @Inject("bfchain-core:TransactionLogicVerifierCore", { dynamics: true })
   public transactionLogicVerifierCore!: TransactionLogicVerifierCore;
 
@@ -24,29 +24,15 @@ export class MultipleLogicVerifier extends TransactionLogicVerifier {
     transaction: MultipleTransaction,
     currentBlockHeight: number,
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
-    skipListenEvent = false,
+    skipListenEvent: boolean,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    await this.logicVerify(
-      transaction,
-      currentBlockHeight,
-      accountMap,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
-
-    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
+    await this.logicVerify(transaction, currentBlockHeight, accountMap);
 
     const { eventLogicVerifier } = this;
 
     if (skipListenEvent === false) {
-      eventLogicVerifier.listenEvent(
-        accountMap,
-        currentBlockHeight,
-        accountGetterHelper,
-        eventEmitter,
-      );
+      eventLogicVerifier.listenEvent(accountMap, currentBlockHeight, eventEmitter);
     }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
@@ -58,17 +44,84 @@ export class MultipleLogicVerifier extends TransactionLogicVerifier {
         subTransaction.type,
       );
 
-      await logicVerify.verify(
-        subTransaction,
-        currentBlockHeight,
-        accountMap,
-        accountGetterHelper,
-        transactionGetterHelper,
-        true,
-      );
+      await logicVerify.verify(subTransaction, currentBlockHeight, accountMap, true, eventEmitter);
     }
 
     return true;
+  }
+
+  /**
+   * 校验交易的手续费是否大于等于网络手续费
+   *
+   * @param transaction
+   * @param byteLength
+   */
+  async checkTrsFeeAndWebFee(transaction: MultipleTransaction, byteLength: number) {
+    const resp = await super.checkTrsFeeAndWebFee(transaction, byteLength);
+    if (resp.isFeeEnough === false) {
+      return resp;
+    }
+    let result!: {
+      signature: string;
+      isFeeEnough: boolean;
+      minFee: string;
+    };
+    const { transactions } = transaction.asset.multiple;
+    for (const subTransaction of transactions) {
+      const verifier = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
+        subTransaction.type,
+      );
+      result = await verifier.checkTrsFeeAndWebFee(
+        subTransaction,
+        subTransaction.getBytes().length,
+      );
+      if (result.isFeeEnough === false) {
+        return result;
+      }
+    }
+    return resp;
+  }
+
+  /**
+   * 检验交易的手续费是否大于等于矿机手续费和网络手续费
+   *
+   * @param transaction
+   * @param byteLength
+   * @param miningMachineMinFeePerByte
+   */
+  async checkTrsFeeAndMiningMachineFeeAndWebFee(
+    transaction: MultipleTransaction,
+    byteLength: number,
+    miningMachineMinFeePerByte: BFChainCore.FractionJSON,
+  ) {
+    const resp = await super.checkTrsFeeAndMiningMachineFeeAndWebFee(
+      transaction,
+      byteLength,
+      miningMachineMinFeePerByte,
+    );
+    if (resp.isFeeEnough === false) {
+      return resp;
+    }
+    let result!: {
+      signature: string;
+      isFeeEnough: boolean;
+      minFee: string;
+    };
+    const { transactions } = transaction.asset.multiple;
+    for (const subTransaction of transactions) {
+      const verifier = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
+        subTransaction.type,
+      );
+      result = await verifier.checkTrsFeeAndMiningMachineFeeAndWebFee(
+        subTransaction,
+        subTransaction.getBytes().length,
+        miningMachineMinFeePerByte,
+      );
+      if (result.isFeeEnough === false) {
+        return result;
+      }
+    }
+    return resp;
   }
 
   /**
@@ -77,37 +130,30 @@ export class MultipleLogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    * @param currentBlockHeight
    * @param numberOfTransaction
-   * @param transactionGetterHelper
    */
   async checkRepeatInBlockChainTransaction(
     transaction: MultipleTransaction,
     currentBlockHeight: number,
     numberOfTransaction: 0 | 1 = 0,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const { transactions } = transaction.asset.multiple;
-    const signatures = [transaction.signature];
-    let applyBlockHeight = transaction.applyBlockHeight;
-    for (const subTransaction of transactions) {
-      signatures.push(subTransaction.signature);
-      if (applyBlockHeight > subTransaction.applyBlockHeight) {
-        applyBlockHeight = subTransaction.applyBlockHeight;
-      }
-    }
-    const txCount = await transactionGetterHelper.countTransactionsInBlockChainBySignature(
-      signatures,
+    /// 这里写的这么麻烦是为了减少查询，简单粗暴就直接调用每个交易各自的 checkRepeat
+    const { minHeight, count, ids } = await this.complexTransactionLogicHelper.getCheckRepeatInfo(
+      transaction,
+      numberOfTransaction !== 0,
+    );
+    const txCount = await this.transactionGetterHelper.countTransactionsInBlockChainBySignature(
+      ids,
       this.transactionHelper.calcTransactionQueryRangeByApplyBlockHeight(
-        applyBlockHeight,
+        minHeight,
         currentBlockHeight,
       ),
     );
-    const maxTxCount = numberOfTransaction === 0 ? 0 : transactions.length + 1;
+    const maxTxCount = numberOfTransaction === 0 ? 0 : count;
     if (txCount > maxTxCount) {
       throw new ConsensusException(ERROR_LIST.ALREADY_EXIST, {
-        prop: `One of transactions with signatures ${signatures
-          .slice(0, 3)
-          .map((item) => item.slice(0, 8))
-          .join(",")}`,
+        prop: `One of transactions with signatures [${ids.slice(0, 3).join(",")}${
+          ids.length > 3 ? "..." : ""
+        }]`,
         target: "blockChain",
       });
     }

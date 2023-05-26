@@ -107,9 +107,9 @@ async function getTransferAnyTransaction(sender: AccountModel, bfchainCore: BFCh
       trs.type,
     );
 
-  const result = yy.checkTrsFeeAndWebFee(trs, trs.getBytes().length);
+  const result = await yy.checkTrsFeeAndWebFee(trs, trs.getBytes().length);
   if (result.isFeeEnough) {
-    const result2 = yy.checkTrsFeeAndMiningMachineFeeAndWebFee(trs, trs.getBytes().length, {
+    const result2 = await yy.checkTrsFeeAndMiningMachineFeeAndWebFee(trs, trs.getBytes().length, {
       numerator: 1000,
       denominator: 1024,
     });

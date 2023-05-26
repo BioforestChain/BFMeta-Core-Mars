@@ -16,6 +16,7 @@ import {
   TransactionHelper,
 } from "@bfchain/core-helper";
 import { HelperLogicVerifier } from "./helperLogicVerifier";
+import { MemoryCache } from "../memoryCache";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
@@ -43,6 +44,8 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   protected blockGetterHelper!: BFChainCore.BlockGetterHelperInterface;
   @Inject("accountGetterHelper", { dynamics: true })
   protected accountGetterHelper!: BFChainCore.AccountGetterHelperInterface;
+  @Inject(MemoryCache)
+  protected memoryCache!: MemoryCache;
 
   abstract verify(
     transaction: T,
@@ -473,17 +476,20 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   /**
    * 手续费是否充足
    *
+   * @param signature
    * @param fee
    * @param minFee
    */
-  isFeeEnough(fee: string, minFee: string) {
+  isFeeEnough(signature: string, fee: string, minFee: string) {
     if (BigInt(fee) < BigInt(minFee)) {
       return {
+        signature,
         isFeeEnough: false,
         minFee,
       };
     }
     return {
+      signature,
       isFeeEnough: true,
       minFee,
     };
@@ -495,8 +501,9 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    * @param transaction
    * @param byteLength
    */
-  checkTrsFeeAndWebFee(transaction: T, byteLength: number) {
+  async checkTrsFeeAndWebFee(transaction: T, byteLength: number) {
     return this.isFeeEnough(
+      transaction.signature,
       transaction.fee,
       (
         this.transactionHelper.calcTransactionMinFeeByBytes(transaction, byteLength) +
@@ -512,12 +519,13 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    * @param byteLength
    * @param miningMachineMinFeePerByte
    */
-  checkTrsFeeAndMiningMachineFeeAndWebFee(
+  async checkTrsFeeAndMiningMachineFeeAndWebFee(
     transaction: T,
     byteLength: number,
     miningMachineMinFeePerByte: BFChainCore.FractionJSON,
   ) {
     return this.isFeeEnough(
+      transaction.signature,
       transaction.fee,
       (
         this.transactionHelper.calcTransactionMinFeeByBytes(
@@ -630,5 +638,15 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    */
   getLockData(transaction: T): string[] {
     return [];
+  }
+
+  getCache<T>(key: string) {
+    return this.memoryCache.getCache(key);
+  }
+  setCache(key: string, transaction: BFChainCore.Transaction) {
+    this.memoryCache.setCache(key, transaction);
+  }
+  clearCache() {
+    this.memoryCache.clearCache();
   }
 }

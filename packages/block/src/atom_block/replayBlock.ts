@@ -24,6 +24,7 @@ import {
 import { BLOCK_FORK_CAUSE } from "@bfchain/core-model";
 import { BlockGeneratorCalculator } from "./blockGeneratorCalculator";
 import { CommonBlockVerify } from "./commonBlockVerify";
+import { BlockUtils } from "./blockUtils";
 const {
   ArgumentIllegalException,
   OutOfRangeException,
@@ -55,6 +56,7 @@ export class ReplayBlockCore<T extends Block> {
     public blockGeneratorCalculator: BlockGeneratorCalculator,
     public moduleMap: ModuleStroge,
     public commonBlockVerify: CommonBlockVerify<T>,
+    public blockUtils: BlockUtils,
     @Inject("cryptoHelper")
     public cryptoHelper: BFChainCore.CryptoHelperInterface,
   ) {}
@@ -256,6 +258,17 @@ export class ReplayBlockCore<T extends Block> {
     options: BFChainCore.ReplayBlockOptions,
     config = this.config,
   ) {
+    let transactionGetterHelper =
+      options.transactionGetterHelper as BFChainCore.TransactionGetterHelperInterface;
+    if (!transactionGetterHelper) {
+      transactionGetterHelper = this.moduleMap.get("transactionGetterHelper");
+      if (!transactionGetterHelper) {
+        throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
+          prop: "transactionGetterHelper",
+          target: "moduleStroge",
+        });
+      }
+    }
     const { verifySignature, skipVerifyStatisticInfo, skipVerifyParticipation } = options;
     const {
       height,
@@ -280,7 +293,7 @@ export class ReplayBlockCore<T extends Block> {
       signature,
     );
     const transactionInBlockBufferList: Uint8Array[] = [];
-    const { transactionCore, asymmetricHelper, transactionHelper, baseHelper } = this;
+    const { transactionCore, asymmetricHelper, transactionHelper, baseHelper, blockUtils } = this;
     const { VOTE, GRAB_ASSET, SIGN_FOR_ASSET } = transactionHelper;
     const abortForbiddenTransaction = transactionCore.abortForbiddenTransaction;
     const trsSet = new Set();
@@ -431,7 +444,7 @@ export class ReplayBlockCore<T extends Block> {
           /// 交易生效
           const txFactory = transactionCore.getTransactionFactoryFromType(type);
           await txFactory.beginDealTransaction(trs, eventEmitter);
-          await txFactory.applyTransaction(trs, eventEmitter);
+          await blockUtils.applyTransaction(eventEmitter, transactionGetterHelper, trs);
           if (!skipVerifyStatisticInfo) {
             // 在 apply 之后，获取权益资产信息
             const assetPrealnum = tranItem.assetPrealnum;
@@ -541,12 +554,12 @@ export class ReplayBlockCore<T extends Block> {
         });
       }
 
-      const numberOfTransactions = transactionInBlockBufferList.length;
-      if (block.numberOfTransactions !== numberOfTransactions) {
-        /// 区块的交易数对不上
+      // 校验 offset
+      const offset = transactionInBlockBufferList.length;
+      if (block.offset !== offset) {
         throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
-          to_compare_prop: `numberOfTransactions ${block.numberOfTransactions}`,
-          be_compare_prop: `numberOfTransactions ${numberOfTransactions}`,
+          to_compare_prop: `offset ${block.offset}`,
+          be_compare_prop: `offset ${offset}`,
           to_target: "block",
           be_target: "calculate",
         });
@@ -580,6 +593,18 @@ export class ReplayBlockCore<T extends Block> {
         });
       }
 
+      const statisticsInfoModel = statisticsInfo.toModel();
+      const numberOfTransactions = statisticsInfoModel.numberOfTransactions;
+      if (block.numberOfTransactions !== numberOfTransactions) {
+        /// 区块的交易数对不上
+        throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
+          to_compare_prop: `numberOfTransactions ${block.numberOfTransactions}`,
+          be_compare_prop: `numberOfTransactions ${numberOfTransactions}`,
+          to_target: "block",
+          be_target: "calculate",
+        });
+      }
+
       if (!skipVerifyParticipation) {
         const blockParticipation = this.blockHelper.calcBlockParticipation({
           totalChainAsset: statisticsInfo.totalChainAsset,
@@ -599,12 +624,12 @@ export class ReplayBlockCore<T extends Block> {
         if (
           !this.baseHelper.isArrayEqual(
             blockStatisticsInfo.getBytes(),
-            statisticsInfo.toModel().getBytes(),
+            statisticsInfoModel.getBytes(),
           )
         ) {
           throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
             to_compare_prop: `statisticsInfo ${JSON.stringify(blockStatisticsInfo.toJSON())}`,
-            be_compare_prop: `statisticsInfo ${JSON.stringify(statisticsInfo.toModel().toJSON())}`,
+            be_compare_prop: `statisticsInfo ${JSON.stringify(statisticsInfoModel.toJSON())}`,
             to_target: "block",
             be_target: "calculate",
           });

@@ -141,6 +141,7 @@
   },
   "transactionInfo": {
     "startTindex": 0,
+    "offset": 41,
     "numberOfTransactions": 41,
     "payloadHash": "8e3d221da939a8f931ea0e15a2dfed0004044ee4b0db69a37119372e32fa69c1",
     "payloadLength": 14993,
@@ -1392,6 +1393,13 @@
             }
           }
         }
+      },
+      "numberOfTransactionsHashMap": {
+        "LNS-00": 1,
+        "AST-01": 10,
+        "BSE-04": 10,
+        "BSE-02": 10,
+        "BSE-05": 10
       }
     }
   },

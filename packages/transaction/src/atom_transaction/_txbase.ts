@@ -902,6 +902,10 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
         sourceAmount: trs.fee,
       },
     });
+    await event.emit("count", {
+      type: "count",
+      transaction: trs,
+    });
     return;
   }
 

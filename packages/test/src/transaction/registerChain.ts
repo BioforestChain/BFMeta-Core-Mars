@@ -679,6 +679,7 @@ registerchainAssetData.delegates = registerchainAssetData.blockPerRound * 2;
 
   async function getCommonBlockAsync(sender: AccountModel) {
     const fullBfchainCore = await getFullBfchainCoreEntry(57, 128);
+    fullBfchainCore.moduleMap.set("transactionGetterHelper", {});
     const randomMagic = false;
 
     if (randomMagic) {
@@ -698,6 +699,7 @@ registerchainAssetData.delegates = registerchainAssetData.blockPerRound * 2;
       keypairHelper: NodeJsKeypairHelper,
       ed2curveHelper,
     });
+    registerBfchainCore.moduleMap.set("transactionGetterHelper", {});
 
     const statistics = Resolve(BlockBaseStatisticsHelper, fullBfchainCore.moduleMap);
     const trsWithIndex = await getRegisterChainTransaction(

@@ -1,9 +1,9 @@
 {
   "version": 1,
   "height": 1,
-  "blockSize": 144205,
+  "blockSize": 144268,
   "timestamp": 0,
-  "signature": "d0e14bd212ce8cb1072f7d6c7f2dae4dd4cc12bacf00d5206d2e4ea7fd7ad6eb2c4abc6a0649a82b0d5540147715538e2a933c5e896cb3583e57a8b3b900ab06",
+  "signature": "c9fbc0141420bae89402b41e0a2d2839b4f52ff2c7da2c26a89c89ef03efe4ea1b2fe93459fa4a49409357017d98cee8fde5376d9756fde4ec7bfd69c149820a",
   "generatorPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
   "generatorEquity": "0",
   "previousBlockSignature": "",
@@ -451,6 +451,7 @@
   },
   "transactionInfo": {
     "startTindex": 0,
+    "offset": 457,
     "numberOfTransactions": 457,
     "payloadHash": "a8175c830c80cefa0936bd33a8398006e1ca0a9caf9db52e7e6751ce1a3e0f5f",
     "payloadLength": 135551,
@@ -12854,6 +12855,13 @@
             }
           }
         }
+      },
+      "numberOfTransactionsHashMap": {
+        "LNS-00": 1,
+        "AST-01": 114,
+        "BSE-04": 114,
+        "BSE-02": 114,
+        "BSE-05": 114
       }
     }
   },

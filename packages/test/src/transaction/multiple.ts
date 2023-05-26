@@ -190,18 +190,26 @@ async function getMultipleTransaction(
 
   await factory.verifySignature(xx);
 
-  console.log(xx.toJSON());
+  return trsJson;
 }
 
 (async () => {
   try {
     const bfchainCore = await getBfchainCoreEntry();
-    const transactions = [
-      await getTransferAssetTransaction(getSenderWithoutSecondSecret(), bfchainCore),
-      await getAcceptVoteTransaction(getSenderWithoutSecondSecret(), bfchainCore),
-    ];
-
-    await getMultipleTransaction(getSenderWithoutSecondSecret(), transactions, bfchainCore);
+    const trs1 = await getTransferAssetTransaction(getSenderWithoutSecondSecret(), bfchainCore);
+    const trs2 = await getAcceptVoteTransaction(getSenderWithoutSecondSecret(), bfchainCore);
+    const transactions = [trs1, trs2];
+    const trs3 = await getMultipleTransaction(
+      getSenderWithoutSecondSecret(),
+      transactions,
+      bfchainCore,
+    );
+    const trs4 = await getMultipleTransaction(
+      getSenderWithoutSecondSecret(),
+      [trs3, await getAcceptVoteTransaction(getSenderWithoutSecondSecret(), bfchainCore)],
+      bfchainCore,
+    );
+    console.log(trs4);
   } catch (error) {
     console.log(error);
   }
