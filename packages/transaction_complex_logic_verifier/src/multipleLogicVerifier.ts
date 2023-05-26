@@ -1,5 +1,5 @@
 import type { MultipleTransaction } from "@bfchain/core-model";
-import { Injectable, Inject, QueneEventEmitter } from "@bfchain/util";
+import { Injectable, Inject } from "@bfchain/util";
 import {
   TransactionLogicVerifier,
   TransactionLogicVerifierCore,
@@ -26,7 +26,8 @@ export class MultipleLogicVerifier extends TransactionLogicVerifier {
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
-    skipListenEvent = false,
+    skipListenEvent: boolean,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     await this.logicVerify(
       transaction,
@@ -35,8 +36,6 @@ export class MultipleLogicVerifier extends TransactionLogicVerifier {
       accountGetterHelper,
       transactionGetterHelper,
     );
-
-    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
     const { eventLogicVerifier } = this;
 
@@ -65,6 +64,7 @@ export class MultipleLogicVerifier extends TransactionLogicVerifier {
         accountGetterHelper,
         transactionGetterHelper,
         true,
+        eventEmitter,
       );
     }
 

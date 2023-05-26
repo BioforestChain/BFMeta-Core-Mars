@@ -196,6 +196,20 @@ export class BlockBaseStatisticsHelper {
      */
     statistics_info.addTotalAccount(applyInfo.address);
   }
+  /**count事件 */
+  private _applyCount(
+    event: BFChainCore.ApplyTransactionCountEvent<"count">,
+    statistics_info: StatisticsInfo,
+  ) {
+    const { transaction } = event;
+    const { baseType } = this.transactionHelper.parseType(transaction.type);
+    const numberOfTransactions = statistics_info.numberOfTransactions;
+    if (numberOfTransactions[baseType]) {
+      numberOfTransactions[baseType]++;
+    } else {
+      numberOfTransactions[baseType] = 1;
+    }
+  }
 
   static eventEmitterStatisticsWM = new EasyWeakMap(
     (_: BFChainCore.ApplyTransactionEventEmitter) => new WeakSet<StatisticsInfo>(),
@@ -263,6 +277,10 @@ export class BlockBaseStatisticsHelper {
       },
       { taskname: "applyTransaction/blockStatistic/issueAsset" },
     );
+    eventEmitter.on("count", (event, next) => {
+      this._applyCount(event, statistics_info);
+      return next();
+    });
     return true;
   }
 }
@@ -306,6 +324,14 @@ export class StatisticsInfo extends EventEmitter<{ destroy: [] }> {
   }
   public set totalChainAsset(value) {
     this._totalChainAsset = value;
+  }
+  /**累计链资产总量 */
+  private _numberOfTransactions?: { [baseType: string]: number };
+  public get numberOfTransactions() {
+    return (
+      this._numberOfTransactions ||
+      (this._numberOfTransactions = this.source_data.numberOfTransactionsHashMap)
+    );
   }
   /**累计账户数量 */
   private _accountAddressSet = new Set();
