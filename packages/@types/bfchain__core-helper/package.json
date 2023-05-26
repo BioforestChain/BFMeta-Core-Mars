@@ -16,11 +16,11 @@
     "@types/bfchain__core-helper-migrate-certificate": "9.0.0",
     "@types/bfchain__core-helper-milestones": "9.0.0",
     "@types/bfchain__core-helper-parity-bit": "9.0.0",
+    "@types/bfchain__core-helper-register-chain-certificate": "9.0.0",
     "@types/bfchain__core-helper-transaction": "9.0.0",
     "@types/bfchain__core-helper-transaction-pow": "9.0.0",
     "@types/bfchain__core-helper-type": "9.0.0",
     "@types/bfchain__core-typings": "9.0.0",
-    "@types/bfchain__core-util-exception-errorcode": "9.0.0",
-    "@types/bfchain__core-helper-register-chain-certificate": "9.0.0"
+    "@types/bfchain__core-util-exception-errorcode": "9.0.0"
   }
 }

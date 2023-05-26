@@ -6,10 +6,7 @@
     "@types/bfchain__core-helper-account-base": "9.0.0",
     "@types/bfchain__core-helper-asymmetric": "9.0.0",
     "@types/bfchain__core-helper-chain-time": "9.0.0",
-    "@types/bfchain__core-helper-config": "8.0.7",
-    "@types/bfchain__core-helper-transaction": "8.0.7",
     "@types/bfchain__core-helper-type": "9.0.0",
-    "@types/bfchain__core-model-common": "8.0.7",
     "@types/bfchain__core-typings": "9.0.0"
   }
 }
