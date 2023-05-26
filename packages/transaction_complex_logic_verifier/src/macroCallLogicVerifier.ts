@@ -1,5 +1,5 @@
 import type { MacroCallTransaction } from "@bfchain/core-model";
-import { Injectable, Inject, QueneEventEmitter } from "@bfchain/util";
+import { Injectable, Inject } from "@bfchain/util";
 import { TransactionCore } from "@bfchain/core-transaction";
 import {
   TransactionLogicVerifier,
@@ -27,36 +27,22 @@ export class MacroCallLogicVerifier extends TransactionLogicVerifier {
     transaction: MacroCallTransaction,
     currentBlockHeight: number,
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
-    skipListenEvent = false,
+    skipListenEvent: boolean,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    await this.logicVerify(
-      transaction,
-      currentBlockHeight,
-      accountMap,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
-
-    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
+    await this.logicVerify(transaction, currentBlockHeight, accountMap);
 
     const { eventLogicVerifier } = this;
 
     if (skipListenEvent === false) {
-      eventLogicVerifier.listenEvent(
-        accountMap,
-        currentBlockHeight,
-        accountGetterHelper,
-        eventEmitter,
-      );
+      eventLogicVerifier.listenEvent(accountMap, currentBlockHeight, eventEmitter);
     }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     const { macroId, inputs } = transaction.asset.call;
 
-    const macroTransactionJson = await transactionGetterHelper.getMacroCallTransaction(
+    const macroTransactionJson = await this.transactionGetterHelper.getMacroCallTransaction(
       macroId,
       inputs,
     );
@@ -71,14 +57,7 @@ export class MacroCallLogicVerifier extends TransactionLogicVerifier {
       macroTransactionJson.type,
     );
     const macroTransaction = await this.transactionCore.recombineTransaction(macroTransactionJson);
-    await logicVerify.verify(
-      macroTransaction,
-      currentBlockHeight,
-      accountMap,
-      accountGetterHelper,
-      transactionGetterHelper,
-      true,
-    );
+    await logicVerify.verify(macroTransaction, currentBlockHeight, accountMap, true, eventEmitter);
 
     return true;
   }
@@ -89,16 +68,17 @@ export class MacroCallLogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    * @param currentBlockHeight
    * @param numberOfTransaction
-   * @param transactionGetterHelper
    */
   async checkRepeatInBlockChainTransaction(
     transaction: MacroCallTransaction,
     currentBlockHeight: number,
     numberOfTransaction: 0 | 1 = 0,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const { macroId, inputs } = transaction.asset.call;
-    const macroTransaction = await transactionGetterHelper.getMacroCallTransaction(macroId, inputs);
+    const macroTransaction = await this.transactionGetterHelper.getMacroCallTransaction(
+      macroId,
+      inputs,
+    );
     if (!macroTransaction) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: `Macro transaction with macroId ${macroId}`,
@@ -110,7 +90,7 @@ export class MacroCallLogicVerifier extends TransactionLogicVerifier {
       transaction.applyBlockHeight > macroTransaction.applyBlockHeight
         ? macroTransaction.applyBlockHeight
         : transaction.applyBlockHeight;
-    const txCount = await transactionGetterHelper.countTransactionsInBlockChainBySignature(
+    const txCount = await this.transactionGetterHelper.countTransactionsInBlockChainBySignature(
       signatures,
       this.transactionHelper.calcTransactionQueryRangeByApplyBlockHeight(
         applyBlockHeight,

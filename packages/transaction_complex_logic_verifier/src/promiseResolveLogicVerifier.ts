@@ -1,5 +1,5 @@
 import type { PromiseResolveTransaction } from "@bfchain/core-model";
-import { Injectable, Inject, QueneEventEmitter } from "@bfchain/util";
+import { Injectable, Inject } from "@bfchain/util";
 import { TransactionCore } from "@bfchain/core-transaction";
 import {
   TransactionLogicVerifier,
@@ -27,35 +27,23 @@ export class PromiseResolveLogicVerifier extends TransactionLogicVerifier {
     transaction: PromiseResolveTransaction,
     currentBlockHeight: number,
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
-    skipListenEvent = false,
+    skipListenEvent: boolean,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    await this.logicVerify(
-      transaction,
-      currentBlockHeight,
-      accountMap,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
-
-    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
+    await this.logicVerify(transaction, currentBlockHeight, accountMap);
 
     const { eventLogicVerifier } = this;
 
     if (skipListenEvent === false) {
-      eventLogicVerifier.listenEvent(
-        accountMap,
-        currentBlockHeight,
-        accountGetterHelper,
-        eventEmitter,
-      );
+      eventLogicVerifier.listenEvent(accountMap, currentBlockHeight, eventEmitter);
     }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     const { promiseId } = transaction.asset.resolve;
-    const promiseTransactionJson = await transactionGetterHelper.getPromiseTransaction(promiseId);
+    const promiseTransactionJson = await this.transactionGetterHelper.getPromiseTransaction(
+      promiseId,
+    );
     if (!promiseTransactionJson) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: `Promise transaction ${promiseId}`,
@@ -83,9 +71,8 @@ export class PromiseResolveLogicVerifier extends TransactionLogicVerifier {
       promiseTransaction,
       currentBlockHeight,
       accountMap,
-      accountGetterHelper,
-      transactionGetterHelper,
       true,
+      eventEmitter,
     );
 
     return true;
@@ -97,16 +84,14 @@ export class PromiseResolveLogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    * @param currentBlockHeight
    * @param numberOfTransaction
-   * @param transactionGetterHelper
    */
   async checkRepeatInBlockChainTransaction(
     transaction: PromiseResolveTransaction,
     currentBlockHeight: number,
     numberOfTransaction = 0,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const { promiseId } = transaction.asset.resolve;
-    const promiseTransaction = await transactionGetterHelper.getPromiseTransaction(promiseId);
+    const promiseTransaction = await this.transactionGetterHelper.getPromiseTransaction(promiseId);
     if (!promiseTransaction) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: `Promise transaction ${promiseId}`,
@@ -118,7 +103,7 @@ export class PromiseResolveLogicVerifier extends TransactionLogicVerifier {
       transaction.applyBlockHeight > promiseTransaction.applyBlockHeight
         ? promiseTransaction.applyBlockHeight
         : transaction.applyBlockHeight;
-    const txCount = await transactionGetterHelper.countTransactionsInBlockChainBySignature(
+    const txCount = await this.transactionGetterHelper.countTransactionsInBlockChainBySignature(
       signatures,
       this.transactionHelper.calcTransactionQueryRangeByApplyBlockHeight(
         applyBlockHeight,
