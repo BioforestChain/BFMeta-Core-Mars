@@ -1,5 +1,5 @@
 import type { LocationNameTransaction } from "@bfchain/core-model";
-import { Injectable, QueneEventEmitter } from "@bfchain/util";
+import { Injectable } from "@bfchain/util";
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 
 @Injectable()
@@ -14,7 +14,8 @@ export class LocationNameLogicVerifier extends TransactionLogicVerifier {
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
-    skipListenEvent = false,
+    skipListenEvent: boolean,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     await this.logicVerify(
       transaction,
@@ -23,8 +24,6 @@ export class LocationNameLogicVerifier extends TransactionLogicVerifier {
       accountGetterHelper,
       transactionGetterHelper,
     );
-
-    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
     const { eventLogicVerifier } = this;
 

@@ -1,4 +1,4 @@
-import { Injectable, QueneEventEmitter } from "@bfchain/util";
+import { Injectable } from "@bfchain/util";
 import { NewTransactionRefuseReason, UsernameTransaction } from "@bfchain/core-model";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
@@ -17,7 +17,8 @@ export class UsernameLogicVerifier extends TransactionLogicVerifier {
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
-    skipListenEvent = false,
+    skipListenEvent: boolean,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     const accountInfo = await this.helperLogicVerifier.getAccountInfoForce(
       accountMap,
@@ -38,8 +39,6 @@ export class UsernameLogicVerifier extends TransactionLogicVerifier {
       accountGetterHelper,
       transactionGetterHelper,
     );
-
-    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
     const { eventLogicVerifier } = this;
 

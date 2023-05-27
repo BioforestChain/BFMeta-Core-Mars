@@ -1,4 +1,4 @@
-import { Injectable, QueneEventEmitter } from "@bfchain/util";
+import { Injectable } from "@bfchain/util";
 import {
   TrustAssetTransaction,
   NewTransactionRefuseReason,
@@ -21,7 +21,8 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
-    skipListenEvent = false,
+    skipListenEvent: boolean,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     const { sourceChainMagic, assetType, sourceChainName, numberOfSignFor } =
       transaction.asset.trustAsset;
@@ -50,8 +51,6 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
       accountGetterHelper,
       transactionGetterHelper,
     );
-
-    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
     const { eventLogicVerifier } = this;
 

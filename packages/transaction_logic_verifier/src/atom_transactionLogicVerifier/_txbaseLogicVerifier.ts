@@ -44,6 +44,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
     skipListenEvent: boolean,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ): Promise<boolean>;
 
   async logicVerify(
@@ -52,7 +53,6 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
-    skipListenEvent = false,
   ) {
     // 校验交易版本号
     if (transaction.version > this.configHelper.version) {

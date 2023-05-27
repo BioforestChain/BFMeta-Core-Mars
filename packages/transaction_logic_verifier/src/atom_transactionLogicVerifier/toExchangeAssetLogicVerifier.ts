@@ -1,5 +1,5 @@
 import type { ToExchangeAssetTransaction, ToExchangeAssetModel } from "@bfchain/core-model";
-import { Injectable, QueneEventEmitter } from "@bfchain/util";
+import { Injectable } from "@bfchain/util";
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 
 @Injectable()
@@ -14,7 +14,8 @@ export class ToExchangeAssetLogicVerifier extends TransactionLogicVerifier {
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
-    skipListenEvent = false,
+    skipListenEvent: boolean,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     const toExchangeAsset = transaction.asset.toExchangeAsset;
     await this.isExchangeAssetAlreadyExist(toExchangeAsset, accountGetterHelper);
@@ -26,8 +27,6 @@ export class ToExchangeAssetLogicVerifier extends TransactionLogicVerifier {
       accountGetterHelper,
       transactionGetterHelper,
     );
-
-    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
     const { eventLogicVerifier } = this;
 

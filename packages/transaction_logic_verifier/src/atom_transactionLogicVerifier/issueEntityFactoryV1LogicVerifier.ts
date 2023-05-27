@@ -1,5 +1,5 @@
 import type { IssueEntityFactoryTransaction } from "@bfchain/core-model";
-import { Injectable, Inject, QueneEventEmitter } from "@bfchain/util";
+import { Injectable, Inject } from "@bfchain/util";
 import { AccountBaseHelper, TransactionHelper } from "@bfchain/core-helper";
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 
@@ -18,7 +18,8 @@ export class IssueEntityFactoryV1LogicVerifier extends TransactionLogicVerifier 
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
-    skipListenEvent = false,
+    skipListenEvent: boolean,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     await this.logicVerify(
       transaction,
@@ -27,8 +28,6 @@ export class IssueEntityFactoryV1LogicVerifier extends TransactionLogicVerifier 
       accountGetterHelper,
       transactionGetterHelper,
     );
-
-    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
     const { eventLogicVerifier } = this;
 

@@ -1,4 +1,4 @@
-import { Injectable, QueneEventEmitter } from "@bfchain/util";
+import { Injectable } from "@bfchain/util";
 import {
   ToExchangeSpecialAssetTransaction,
   EXCHANGE_DIRECTION,
@@ -24,7 +24,8 @@ export class ToExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
-    skipListenEvent = false,
+    skipListenEvent: boolean,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     const toExchangeSpecialAssetAsset = transaction.asset.toExchangeSpecialAsset;
     const {
@@ -67,8 +68,6 @@ export class ToExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
       accountGetterHelper,
       transactionGetterHelper,
     );
-
-    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
     const { eventLogicVerifier } = this;
 

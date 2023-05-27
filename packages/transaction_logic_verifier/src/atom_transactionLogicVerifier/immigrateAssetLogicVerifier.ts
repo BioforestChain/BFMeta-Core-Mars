@@ -1,5 +1,5 @@
 import type { ImmigrateAssetTransaction } from "@bfchain/core-model";
-import { Injectable, Inject, QueneEventEmitter } from "@bfchain/util";
+import { Injectable, Inject } from "@bfchain/util";
 import {
   AccountBaseHelper,
   ConfigHelperMap,
@@ -34,7 +34,8 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
-    skipListenEvent = false,
+    skipListenEvent: boolean,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     let migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON;
     try {
@@ -118,8 +119,6 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       transactionGetterHelper,
     );
 
-    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
-
     const { eventLogicVerifier } = this;
 
     if (skipListenEvent === false) {
@@ -135,39 +134,4 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
 
     return true;
   }
-
-  // /**
-  //  * 不能二次操作同一笔交易(权益迁入)
-  //  *
-  //  * @param transaction
-  //  * @param currentBlockHeight
-  //  * @param transactionGetterHelper
-  //  */
-  // async checkSecondaryTransaction(
-  //   transaction: ImmigrateAssetTransaction,
-  //   currentBlockHeight: number,
-  //   transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
-  // ) {
-  //   let migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON;
-  //   try {
-  //     migrateCertificate = JSON.parse(transaction.asset.immigrateAsset.migrateCertificate);
-  //   } catch (e) {
-  //     throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
-  //       prop: "migrateCertificate",
-  //       target: "transaction.asset.immigrateAsset",
-  //     });
-  //   }
-  //   const converter = this.migrateCertificateHelper.getMigrateCertificateConverter(migrateCertificate);
-  //   const migrateCertificateId = converter.getUUID(migrateCertificate);
-  //   const isSecondary = await transactionGetterHelper.checkSecondaryTransaction({
-  //     type: this.transactionHelper.IMMIGRATE_ASSET,
-  //     migrateCertificateId,
-  //     heightRange: this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
-  //   });
-  //   if (isSecondary) {
-  //     throw new ConsensusException(ERROR_LIST.ASSET_IS_ALREADY_MIGRATION, {
-  //       migrateCertificateId,
-  //     });
-  //   }
-  // }
 }

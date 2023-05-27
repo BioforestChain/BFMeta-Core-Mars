@@ -1,4 +1,4 @@
-import { Injectable, QueneEventEmitter } from "@bfchain/util";
+import { Injectable } from "@bfchain/util";
 import { BeExchangeAnyTransaction, RANGE_TYPE, PARENT_ASSET_TYPE } from "@bfchain/core-model";
 import { JSBIHelper } from "@bfchain/core-helper-bigint";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
@@ -21,7 +21,8 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
-    skipListenEvent = false,
+    skipListenEvent: boolean,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     const beExchangeAny = transaction.asset.beExchangeAny;
     const { transactionSignature } = beExchangeAny;
@@ -61,8 +62,6 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
       accountGetterHelper,
       transactionGetterHelper,
     );
-
-    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
     const { eventLogicVerifier } = this;
 

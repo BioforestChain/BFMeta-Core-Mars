@@ -1,5 +1,5 @@
-import { Injectable, QueneEventEmitter } from "@bfchain/util";
 import { GiftAnyTransaction, PARENT_ASSET_TYPE } from "@bfchain/core-model";
+import { Injectable } from "@bfchain/util";
 import { TransactionLogicVerifier } from "../_txbaseLogicVerifier";
 
 @Injectable()
@@ -14,7 +14,8 @@ export class GiftAnyLogicVerifier extends TransactionLogicVerifier {
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
-    skipListenEvent = false,
+    skipListenEvent: boolean,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     const { sourceChainMagic, assetType, parentAssetType, sourceChainName } =
       transaction.asset.giftAny;
@@ -35,8 +36,6 @@ export class GiftAnyLogicVerifier extends TransactionLogicVerifier {
       accountGetterHelper,
       transactionGetterHelper,
     );
-
-    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
     const { eventLogicVerifier } = this;
 

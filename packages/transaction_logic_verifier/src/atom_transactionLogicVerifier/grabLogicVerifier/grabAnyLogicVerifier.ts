@@ -1,12 +1,12 @@
-import { TransactionLogicVerifier } from "../_txbaseLogicVerifier";
+import { Injectable } from "@bfchain/util";
 import {
   GrabAnyTransaction,
   RANGE_TYPE,
   GIFT_DISTRIBUTION_RULE,
   PARENT_ASSET_TYPE,
 } from "@bfchain/core-model";
-import { Injectable, QueneEventEmitter } from "@bfchain/util";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
+import { TransactionLogicVerifier } from "../_txbaseLogicVerifier";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
@@ -25,7 +25,8 @@ export class GrabAnyLogicVerifier extends TransactionLogicVerifier {
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
-    skipListenEvent = false,
+    skipListenEvent: boolean,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     const grabAny = transaction.asset.grabAny;
 
@@ -63,8 +64,6 @@ export class GrabAnyLogicVerifier extends TransactionLogicVerifier {
       accountGetterHelper,
       transactionGetterHelper,
     );
-
-    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
     const { eventLogicVerifier } = this;
 

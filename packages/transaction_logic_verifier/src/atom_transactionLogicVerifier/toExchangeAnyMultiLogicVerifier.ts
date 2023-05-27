@@ -1,4 +1,4 @@
-import { Injectable, QueneEventEmitter } from "@bfchain/util";
+import { Injectable } from "@bfchain/util";
 import {
   ASSET_STATUS,
   NewTransactionRefuseReason,
@@ -25,7 +25,8 @@ export class ToExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
-    skipListenEvent = false,
+    skipListenEvent: boolean,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     this.__checkTrsFee(transaction);
 
@@ -105,8 +106,6 @@ export class ToExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
         target: "transaction.asset.toExchangeAnyMulti",
       });
     }
-
-    const eventEmitter = new QueneEventEmitter() as BFChainCore.ApplyTransactionEventEmitter;
 
     const { eventLogicVerifier } = this;
 
