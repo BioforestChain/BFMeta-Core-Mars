@@ -812,7 +812,9 @@ async function getAcceptVoteTransaction(sender: DelegateInfo) {
     statisticsInfo.unref("getGenesisBlock");
     const _genesisBlock = genesisBlock.toJSON();
     const __genesisBlock = await core.block.recombineBlock(_genesisBlock);
-    await core.block.getBlockFactoryFromHeight(__genesisBlock.height).verify(__genesisBlock);
+    const factory = core.block.getBlockFactoryFromHeight(__genesisBlock.height);
+    factory.commonBlockVerify.verifyBlockSize(__genesisBlock);
+    await factory.verify(__genesisBlock);
     await core.blockHelper.verifyBlockSignature(__genesisBlock, {
       taskLabel: "self genesis Block",
     });

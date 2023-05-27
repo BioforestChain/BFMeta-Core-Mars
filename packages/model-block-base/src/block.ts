@@ -324,6 +324,7 @@ export class Block<AJ extends object = object>
         props.transactionInfo = {
           value: {
             startTindex: transactionInfo.startTindex,
+            offset: transactionInfo.offset,
             numberOfTransactions: transactionInfo.numberOfTransactions,
             payloadHashBuffer: transactionInfo.payloadHashBuffer,
             payloadLength: transactionInfo.payloadLength,
@@ -337,6 +338,7 @@ export class Block<AJ extends object = object>
         props.transactionInfo = {
           value: {
             startTindex: transactionInfo.startTindex,
+            offset: transactionInfo.offset,
             numberOfTransactions: skipOrCustomTransactions.length,
             payloadHashBuffer: transactionInfo.payloadHashBuffer,
             payloadLength: transactionInfo.payloadLength,
