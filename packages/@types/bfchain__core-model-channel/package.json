@@ -1,12 +1,12 @@
 {
   "name": "@types/bfchain__core-model-channel",
   "types": "index.d.ts",
-  "version": "9.0.0",
+  "version": "9.0.2",
   "dependencies": {
-    "@types/bfchain__core-model-block": "9.0.0",
-    "@types/bfchain__core-model-constants": "9.0.0",
-    "@types/bfchain__core-model-progress": "9.0.0",
-    "@types/bfchain__core-model-transaction": "9.0.0",
-    "@types/bfchain__core-typings": "9.0.0"
+    "@types/bfchain__core-model-block": "9.0.2",
+    "@types/bfchain__core-model-constants": "9.0.2",
+    "@types/bfchain__core-model-progress": "9.0.2",
+    "@types/bfchain__core-model-transaction": "9.0.2",
+    "@types/bfchain__core-typings": "9.0.2"
   }
 }
