@@ -149,7 +149,7 @@ async function getIssueEntityTransaction(
       trs.type,
     );
 
-  await yy.verify(trs, 10, {} as any, {} as any, {} as any, false);
+  await yy.verify(trs, 10, {} as any, {} as any, {} as any, false, {} as any);
 
   console.log(trs.toJSON());
 }

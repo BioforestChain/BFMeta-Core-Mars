@@ -24,6 +24,7 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
     accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
     skipListenEvent = false,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ): Promise<boolean> {
     await this.logicVerify(
       transaction,
