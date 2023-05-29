@@ -9,9 +9,6 @@
   },
   "references": [
     {
-      "path": "../block/tsconfig.esm.json"
-    },
-    {
       "path": "../transaction/tsconfig.esm.json"
     },
     {

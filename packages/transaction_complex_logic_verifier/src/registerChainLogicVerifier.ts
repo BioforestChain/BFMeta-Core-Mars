@@ -1,6 +1,6 @@
 import type { RegisterChainTransaction } from "@bfchain/core-model";
 import { Injectable } from "@bfchain/util";
-import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
+import { TransactionLogicVerifier } from "@bfchain/core-transaction-logic-verifier";
 
 @Injectable()
 export class RegisterChainLogicVerifier extends TransactionLogicVerifier {

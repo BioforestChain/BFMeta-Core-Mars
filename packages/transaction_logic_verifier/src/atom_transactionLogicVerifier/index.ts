@@ -33,15 +33,12 @@ export * from "./immigrateAssetLogicVerifier";
 export * from "./locationNameLogicVerifier";
 export * from "./setLnsManagerLogicVerifier";
 export * from "./setLnsRecordValueLogicVerifier";
-export * from "./registerChainLogicVerifier";
 
 export * from "./issueEntityFactoryLogicVerifier";
 export * from "./issueEntityFactoryV1LogicVerifier";
 export * from "./issueEntityLogicVerifier";
 export * from "./issueEntityV1LogicVerifier";
 export * from "./destoryEntityLogicVerifier";
-
-export * from "./customLogicVerifier";
 
 export * from "./eventLogicVerifier";
 

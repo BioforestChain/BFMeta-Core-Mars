@@ -5,16 +5,13 @@
     "../../config/tsconfig_base/base.tsconfig.@types.json"
   ],
   "compilerOptions": {
-    "declarationDir": "../@types/bfchain__core-block",
+    "declarationDir": "../@types/bfchain__core-transaction-complex-logic-verifier",
     "declaration": true,
-    "outDir": "../../.cache/block",
-    "tsBuildInfoFile": "../../.cache/block/@types.tsbuildinfo",
+    "outDir": "../../.cache/transaction_complex_logic_verifier",
+    "tsBuildInfoFile": "../../.cache/transaction_complex_logic_verifier/@types.tsbuildinfo",
     "declarationMap": false
   },
   "references": [
-    {
-      "path": "../channel/tsconfig.@types.json"
-    },
     {
       "path": "../helper/tsconfig.@types.json"
     },
@@ -22,13 +19,13 @@
       "path": "../model/tsconfig.@types.json"
     },
     {
-      "path": "../transaction_complex_logic_verifier/tsconfig.@types.json"
-    },
-    {
       "path": "../transaction_logic_verifier/tsconfig.@types.json"
     },
     {
       "path": "../typings/tsconfig.@types.json"
+    },
+    {
+      "path": "../util-exception/tsconfig.@types.json"
     }
   ]
 }

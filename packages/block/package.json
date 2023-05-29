@@ -17,6 +17,7 @@
     "@bfchain/core-channel": "9.0.2",
     "@bfchain/core-helper": "9.0.2",
     "@bfchain/core-model": "9.0.2",
+    "@bfchain/core-transaction-complex-logic-verifier": "9.0.2",
     "@bfchain/core-transaction-logic-verifier": "9.0.2",
     "@bfchain/core-typings": "9.0.2"
   },

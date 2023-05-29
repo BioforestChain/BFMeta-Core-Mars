@@ -8,7 +8,6 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-block": "9.0.2",
     "@bfchain/core-transaction": "9.0.2",
     "@bfchain/core-typings": "9.0.2"
   },

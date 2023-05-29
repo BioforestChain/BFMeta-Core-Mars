@@ -6,9 +6,6 @@
   },
   "references": [
     {
-      "path": "../block/tsconfig.json"
-    },
-    {
       "path": "../transaction/tsconfig.json"
     },
     {

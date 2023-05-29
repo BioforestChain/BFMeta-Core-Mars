@@ -7,6 +7,7 @@
     "@types/bfchain__core-helper": "9.0.2",
     "@types/bfchain__core-model": "9.0.2",
     "@types/bfchain__core-transaction-logic-verifier": "9.0.2",
-    "@types/bfchain__core-typings": "9.0.2"
+    "@types/bfchain__core-typings": "9.0.2",
+    "@types/bfchain__core-transaction-complex-logic-verifier": "9.0.2"
   }
 }

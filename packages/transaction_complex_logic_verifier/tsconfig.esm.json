@@ -9,22 +9,19 @@
   },
   "references": [
     {
-      "path": "../channel/tsconfig.esm.json"
-    },
-    {
       "path": "../helper/tsconfig.esm.json"
     },
     {
       "path": "../model/tsconfig.esm.json"
     },
     {
-      "path": "../transaction_complex_logic_verifier/tsconfig.esm.json"
-    },
-    {
       "path": "../transaction_logic_verifier/tsconfig.esm.json"
     },
     {
       "path": "../typings/tsconfig.esm.json"
+    },
+    {
+      "path": "../util-exception/tsconfig.esm.json"
     }
   ]
 }

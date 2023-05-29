@@ -15,6 +15,9 @@
       "path": "../model/tsconfig.json"
     },
     {
+      "path": "../transaction_complex_logic_verifier/tsconfig.json"
+    },
+    {
       "path": "../transaction_logic_verifier/tsconfig.json"
     },
     {

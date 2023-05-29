@@ -1,0 +1,29 @@
+{
+  "extends": "../../config/tsconfig_base/base.tsconfig.cjs",
+  "compilerOptions": {
+    "outDir": "./build/cjs",
+    "rootDir": "./src"
+  },
+  "references": [
+    {
+      "path": "../helper/tsconfig.json"
+    },
+    {
+      "path": "../model/tsconfig.json"
+    },
+    {
+      "path": "../transaction_logic_verifier/tsconfig.json"
+    },
+    {
+      "path": "../typings/tsconfig.json"
+    },
+    {
+      "path": "../util-exception/tsconfig.json"
+    }
+  ],
+  "files": [
+    "src/customLogicVerifier.ts",
+    "src/index.ts",
+    "src/registerChainLogicVerifier.ts"
+  ]
+}

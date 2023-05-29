@@ -13,9 +13,6 @@
   },
   "references": [
     {
-      "path": "../block/tsconfig.@types.json"
-    },
-    {
       "path": "../transaction/tsconfig.@types.json"
     },
     {
