@@ -1,9 +1,8 @@
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
-import { parseHexToArrayBuffer, Injectable, Inject } from "@bfchain/util";
+import { parseHexToArrayBuffer, Injectable } from "@bfchain/util";
 import {
   ACCOUNT_STATUS,
   CustomTransaction,
-  RECORD_TYPE,
   DAPP_TYPE,
   RECORD_OPERATION_TYPE,
   ASSET_STATUS,
@@ -519,9 +518,6 @@ export class CustomTransactionEvent {
       ...Function_Exception_Detail,
     });
   }
-
-  @Inject("bfchain-core:BlockCore")
-  private _blockCore!: import("@bfchain/core-block").BlockCore;
 
   combineApplyEvent(
     transaction: CustomTransaction,

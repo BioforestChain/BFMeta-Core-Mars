@@ -10,13 +10,7 @@ import {
   RegisterChainCertificateHelper,
 } from "@bfchain/core-helper";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
-import {
-  Injectable,
-  Inject,
-  TaskList,
-  getHexFromArrayBuffer,
-  parseHexToArrayBuffer,
-} from "@bfchain/util";
+import { Injectable, TaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
   "RegisterChainTransactionFactory",
@@ -174,9 +168,6 @@ export class RegisterChainTransactionFactory extends TransactionFactory<Register
       });
     }
   }
-
-  @Inject("bfchain-core:BlockCore")
-  private _blockCore!: import("@bfchain/core-block").BlockCore;
 
   /**
    * 初始化 registerChain 交易
