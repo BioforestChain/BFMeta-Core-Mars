@@ -10,10 +10,17 @@ import {
 } from "@bfchain/core-helper";
 import { TransactionInBlock, TRANSACTION_TYPES_MAP } from "@bfchain/core-model-transaction";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
-import { QueneEventEmitter, EasyMap, isFlagInDev, Injectable, Inject } from "@bfchain/util";
+import {
+  QueneEventEmitter,
+  EasyMap,
+  isFlagInDev,
+  Injectable,
+  Inject,
+  ModuleStroge,
+} from "@bfchain/util";
+import { BlockUtils } from "./blockUtils";
 const {
   ArgumentIllegalException,
-  OutOfRangeException,
   ArgumentFormatException,
   NoFoundException,
   log,
@@ -36,8 +43,10 @@ export class GenerateBlockCore<T extends Block> {
     public asymmetricHelper: AsymmetricHelper,
     public blockGeneratorCalculator: BlockGeneratorCalculator,
     public commonBlockVerify: CommonBlockVerify<T>,
+    public blockUtils: BlockUtils,
     @Inject("cryptoHelper")
     public cryptoHelper: BFChainCore.CryptoHelperInterface,
+    public moduleMap: ModuleStroge,
   ) {}
 
   /**
@@ -139,12 +148,20 @@ export class GenerateBlockCore<T extends Block> {
       secretKey: Buffer;
     },
     eventEmitter?: BFChainCore.GenerateBlockEventEmitter,
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
     config = this.config,
   ) {
     // 绑定magic
     block.magic = config.magic;
     // 绑定交易相关的信息
-    await this.insertTransactions(block, transactions, keypair, secondKeypair, eventEmitter);
+    await this.insertTransactions(
+      block,
+      transactions,
+      keypair,
+      secondKeypair,
+      eventEmitter,
+      transactionGetterHelper,
+    );
 
     isDevGenerateBlock && log("before signatureBlock");
     eventEmitter &&
@@ -203,8 +220,18 @@ export class GenerateBlockCore<T extends Block> {
       secretKey: Buffer;
     },
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter = new QueneEventEmitter(),
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const transactionCore = this.transactionCore;
+    if (!transactionGetterHelper) {
+      transactionGetterHelper = this.moduleMap.get("transactionGetterHelper");
+      if (!transactionGetterHelper) {
+        throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
+          prop: "transactionGetterHelper",
+          target: "moduleStroge",
+        });
+      }
+    }
+    const { transactionCore, blockUtils } = this;
     const abortForbiddenTransaction = transactionCore.abortForbiddenTransaction;
     const VOTE = transactionCore.transactionHelper.VOTE;
     const MAX_VOTES_PER_BLOCK = this.config.maxVotesPerBlock;
@@ -298,7 +325,7 @@ export class GenerateBlockCore<T extends Block> {
           /// 交易生效
           const txFactory = transactionCore.getTransactionFactoryFromType(type);
           await txFactory.beginDealTransaction(trs, eventEmitter);
-          await txFactory.applyTransaction(trs, eventEmitter);
+          await blockUtils.applyTransaction(eventEmitter, transactionGetterHelper, trs);
           // 在 apply 之后，获取变更记录
           eventEmitter.assetChangesGetter &&
             (tranItem.transactionAssetChanges = await eventEmitter.assetChangesGetter(tranItem));

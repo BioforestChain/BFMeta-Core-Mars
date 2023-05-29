@@ -24,6 +24,7 @@ import {
 import { BLOCK_FORK_CAUSE } from "@bfchain/core-model";
 import { BlockGeneratorCalculator } from "./blockGeneratorCalculator";
 import { CommonBlockVerify } from "./commonBlockVerify";
+import { BlockUtils } from "./blockUtils";
 const {
   ArgumentIllegalException,
   OutOfRangeException,
@@ -55,6 +56,7 @@ export class ReplayBlockCore<T extends Block> {
     public blockGeneratorCalculator: BlockGeneratorCalculator,
     public moduleMap: ModuleStroge,
     public commonBlockVerify: CommonBlockVerify<T>,
+    public blockUtils: BlockUtils,
     @Inject("cryptoHelper")
     public cryptoHelper: BFChainCore.CryptoHelperInterface,
   ) {}
@@ -254,6 +256,17 @@ export class ReplayBlockCore<T extends Block> {
     options: BFChainCore.ReplayBlockOptions,
     config = this.config,
   ) {
+    let transactionGetterHelper =
+      options.transactionGetterHelper as BFChainCore.TransactionGetterHelperInterface;
+    if (!transactionGetterHelper) {
+      transactionGetterHelper = this.moduleMap.get("transactionGetterHelper");
+      if (!transactionGetterHelper) {
+        throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
+          prop: "transactionGetterHelper",
+          target: "moduleStroge",
+        });
+      }
+    }
     const { verifySignature, skipVerifyStatisticInfo, skipVerifyParticipation } = options;
     const {
       height,
@@ -278,7 +291,7 @@ export class ReplayBlockCore<T extends Block> {
       signature,
     );
     const transactionInBlockBufferList: Uint8Array[] = [];
-    const { transactionCore, asymmetricHelper, transactionHelper, baseHelper } = this;
+    const { transactionCore, asymmetricHelper, transactionHelper, baseHelper, blockUtils } = this;
     const { VOTE, GRAB_ASSET, SIGN_FOR_ASSET } = transactionHelper;
     const abortForbiddenTransaction = transactionCore.abortForbiddenTransaction;
     const trsSet = new Set();
@@ -436,7 +449,7 @@ export class ReplayBlockCore<T extends Block> {
           /// 交易生效
           const txFactory = transactionCore.getTransactionFactoryFromType(type);
           await txFactory.beginDealTransaction(trs, eventEmitter);
-          await txFactory.applyTransaction(trs, eventEmitter);
+          await blockUtils.applyTransaction(eventEmitter, transactionGetterHelper, trs);
           if (!skipVerifyStatisticInfo) {
             // 在 apply 之后，获取变更记录
             const calcTransactionAssetChanges = await eventEmitter.assetChangesGetter(tranItem);
