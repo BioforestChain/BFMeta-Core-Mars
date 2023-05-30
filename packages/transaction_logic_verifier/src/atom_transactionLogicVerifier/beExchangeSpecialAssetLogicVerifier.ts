@@ -210,9 +210,8 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
   async checkSecondaryTransaction(
     transaction: BeExchangeSpecialAssetTransaction,
     currentBlockHeight: number,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const isSecondary = await transactionGetterHelper.checkSecondaryTransaction({
+    const isSecondary = await this.transactionGetterHelper.checkSecondaryTransaction({
       senderId: transaction.senderId,
       storageValue: transaction.storageValue as string,
       heightRange: this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),

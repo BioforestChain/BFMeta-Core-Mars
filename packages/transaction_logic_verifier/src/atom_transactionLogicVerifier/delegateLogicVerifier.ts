@@ -31,12 +31,9 @@ export class DelegateLogicVerifier extends TransactionLogicVerifier {
     return true;
   }
 
-  async checkRegisterDelegateQuota(
-    currentBlockHeight: number,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
-  ) {
+  async checkRegisterDelegateQuota(currentBlockHeight: number) {
     const { maxDelegateTxsPerRound } = this.configHelper;
-    const txCount = await transactionGetterHelper.getNumberOfNewDelegate();
+    const txCount = await this.transactionGetterHelper.getNumberOfNewDelegate();
     let realMaxDelegateTxsPerRound = maxDelegateTxsPerRound;
 
     const curRound = this.blockHelper.calcRoundByHeight(currentBlockHeight);

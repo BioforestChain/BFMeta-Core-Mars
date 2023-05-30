@@ -569,6 +569,7 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
     const { magic, assetType } = core.config;
     setAccountAsset(magic, genesisAccountInfo.address, assetType, mainChainAssetData.genesisAmount);
     const transactionHelper = core.transactionHelper;
+    let totalFee = BigInt(0);
     for (let i = 0; i < txWithIndexList.length; i++) {
       const { trs } = txWithIndexList[i];
       const trsInBlock = TransactionInBlock.fromObject({
@@ -579,12 +580,14 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
       blockTrsItems.push(trsInBlock);
       const { type, senderId, recipientId, fee } = trs;
       setAccountAsset(magic, senderId, assetType, `-${fee}`);
+      totalFee += BigInt(fee);
       if (type === transactionHelper.TRANSFER_ASSET) {
         const amount = (trs as TransferAssetTransaction).asset.transferAsset.amount;
         setAccountAsset(magic, senderId, assetType, `-${amount}`);
         setAccountAsset(magic, recipientId as string, assetType, amount);
       }
     }
+    setAccountAsset(magic, genesisAccountInfo.address, assetType, totalFee.toString());
     const assetChangeHash = await core.blockHelper.calcAssetChangeHash(accountsAssets);
     const genesisBlock = await core.block.generateBlock(
       GenesisBlockFactory,

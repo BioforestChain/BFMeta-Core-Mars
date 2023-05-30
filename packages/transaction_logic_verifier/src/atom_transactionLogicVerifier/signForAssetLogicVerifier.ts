@@ -155,14 +155,12 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
    *
    * @param transaction
    * @param currentBlockHeight
-   * @param transactionGetterHelper
    */
   async checkSecondaryTransaction(
     transaction: SignForAssetTransaction,
     currentBlockHeight: number,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
-    const isSecondary = await transactionGetterHelper.checkSecondaryTransaction({
+    const isSecondary = await this.transactionGetterHelper.checkSecondaryTransaction({
       senderId: transaction.senderId,
       storageValue: transaction.storageValue as string,
       heightRange: this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),

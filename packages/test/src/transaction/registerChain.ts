@@ -427,10 +427,6 @@ registerchainAssetData.delegates = registerchainAssetData.blockPerRound * 2;
       publicKeyBuffer: genesisAccountKeypair.publicKey,
     };
 
-    const generatorPublicKey =
-      await registerBfchainCore.accountBaseHelper.getPublicKeyStringFromSecret(
-        config.genesisSecret,
-      );
     const txWithIndexList: { index: number; trs: Transaction }[] = [];
     txWithIndexList.push(
       await getLocationNameTransaction(
@@ -509,6 +505,7 @@ registerchainAssetData.delegates = registerchainAssetData.blockPerRound * 2;
       registerchainAssetData.genesisAmount,
     );
     const transactionHelper = registerBfchainCore.transactionHelper;
+    let totalFee = BigInt(0);
     for (let i = 0; i < txWithIndexList.length; i++) {
       const { trs } = txWithIndexList[i];
       const trsInBlock = TransactionInBlock.fromObject({
@@ -519,12 +516,14 @@ registerchainAssetData.delegates = registerchainAssetData.blockPerRound * 2;
       blockTrsItems[blockTrsItems.length] = trsInBlock;
       const { type, senderId, recipientId, fee } = trs;
       setAccountAsset(magic, senderId, assetType, `-${fee}`);
+      totalFee += BigInt(fee);
       if (type === transactionHelper.TRANSFER_ASSET) {
         const amount = (trs as TransferAssetTransaction).asset.transferAsset.amount;
         setAccountAsset(magic, senderId, assetType, `-${amount}`);
         setAccountAsset(magic, recipientId as string, assetType, amount);
       }
     }
+    setAccountAsset(magic, genesisAccountInfo.address, assetType, totalFee.toString());
     const generatorKeypair = await registerBfchainCore.accountBaseHelper.createSecretKeypair(
       config.genesisSecret,
     );
@@ -544,7 +543,7 @@ registerchainAssetData.delegates = registerchainAssetData.blockPerRound * 2;
         version: registerBfchainCore.config.version,
         height: 1,
         timestamp: 0,
-        generatorPublicKey,
+        generatorPublicKey: genesisAccountInfo.publicKey,
         generatorEquity: "0",
         previousBlockSignature: "",
         remark: {

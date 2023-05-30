@@ -372,14 +372,9 @@ export class GrabAnyLogicVerifier extends TransactionLogicVerifier {
    *
    * @param transaction
    * @param currentBlockHeight
-   * @param transactionGetterHelper
    */
-  async checkSecondaryTransaction(
-    transaction: GrabAnyTransaction,
-    currentBlockHeight: number,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
-  ) {
-    const isSecondary = await transactionGetterHelper.checkSecondaryTransaction({
+  async checkSecondaryTransaction(transaction: GrabAnyTransaction, currentBlockHeight: number) {
+    const isSecondary = await this.transactionGetterHelper.checkSecondaryTransaction({
       senderId: transaction.senderId,
       storageValue: transaction.storageValue as string,
       heightRange: this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),

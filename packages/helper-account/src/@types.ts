@@ -300,6 +300,6 @@ declare namespace BFChainCore {
      *
      * @param height
      */
-    getAssetChanges(height: number): Promise<BFChainCore.AccountsAssetsChange>;
+    getAccountsAssetsChange(height: number): Promise<BFChainCore.AccountsAssetsChange>;
   }
 }

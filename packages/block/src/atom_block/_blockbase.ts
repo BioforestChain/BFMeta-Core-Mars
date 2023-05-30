@@ -139,7 +139,7 @@ export abstract class BlockFactory<T extends Block> {
         });
       }
     }
-    const assetChanges = await accountGetterHelper.getAssetChanges(height);
+    const assetChanges = await accountGetterHelper.getAccountsAssetsChange(height);
     const calcHash = await this.blockHelper.calcAssetChangeHash(assetChanges);
     if (calcHash !== hash) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {

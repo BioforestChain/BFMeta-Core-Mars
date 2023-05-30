@@ -531,14 +531,10 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    * 查询交易是否已经在未处理交易中
    *
    * @param transaction
-   * @param transactionGetterHelper
    */
-  async checkRepeatInUntreatedTransaction(
-    transaction: T,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
-  ) {
+  async checkRepeatInUntreatedTransaction(transaction: T) {
     const { senderId, signature } = transaction;
-    const txCount = await transactionGetterHelper.countTransactionInUntreatedBySignature(
+    const txCount = await this.transactionGetterHelper.countTransactionInUntreatedBySignature(
       senderId,
       signature,
     );
@@ -556,16 +552,14 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    * @param transaction
    * @param currentBlockHeight
    * @param numberOfTransaction 0 表示链上不存在相关交易，1 表示链上有且只有 1 笔相关交易（携带的子交易也是）
-   * @param transactionGetterHelper
    */
   async checkRepeatInBlockChainTransaction(
     transaction: T,
     currentBlockHeight: number,
     numberOfTransaction: 0 | 1 = 0,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const { signature, applyBlockHeight } = transaction;
-    const txCount = await transactionGetterHelper.countTransactionInBlockChainBySignature(
+    const txCount = await this.transactionGetterHelper.countTransactionInBlockChainBySignature(
       signature,
       this.transactionHelper.calcTransactionQueryRangeByApplyBlockHeight(
         applyBlockHeight,
@@ -586,15 +580,13 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    * @param transaction
    * @param currentBlockHeight
    * @param participation
-   * @param accountGetterHelper
    */
   async checkTransactionPowOfWork(
     transaction: T,
     currentBlockHeight: number,
     participation: string,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
   ) {
-    const tranSenderCount = await accountGetterHelper.getAccountTxCountInBlock(
+    const tranSenderCount = await this.accountGetterHelper.getAccountTxCountInBlock(
       transaction.senderId,
     );
     if (tranSenderCount === undefined) {
@@ -620,22 +612,14 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    *
    * @param transaction
    */
-  checkSecondaryTransaction?(
-    transaction: T,
-    currentBlockHeight: number,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
-  ): Promise<void>;
+  checkSecondaryTransaction?(transaction: T, currentBlockHeight: number): Promise<void>;
 
   /**
    * 校验注册受托人名额是否充足
    *
    * @param currentBlockHeight
-   * @param transactionGetterHelper
    */
-  checkRegisterDelegateQuota?(
-    currentBlockHeight: number,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
-  ): Promise<void>;
+  checkRegisterDelegateQuota?(currentBlockHeight: number): Promise<void>;
 
   /**
    * 获取需要被加锁的数据

@@ -47,7 +47,7 @@ declare namespace BFChainCore {
       >
     >;
     accountGetterHelper?: Required<
-      Pick<BFChainCore.AccountGetterHelperInterface, "getAssetChanges">
+      Pick<BFChainCore.AccountGetterHelperInterface, "getAccountsAssetsChange">
     >;
   };
 
