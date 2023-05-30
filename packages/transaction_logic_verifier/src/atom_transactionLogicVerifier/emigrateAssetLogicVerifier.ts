@@ -30,18 +30,16 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
     transaction: EmigrateAssetTransaction,
     currentBlockHeight: number,
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
+    const { accountGetterHelper } = this;
     const { senderId, toMagic } = transaction;
 
     const account = await this.helperLogicVerifier.getAccountForce(
       accountMap,
       senderId,
       currentBlockHeight,
-      accountGetterHelper,
     );
 
     const { accountInfo, accountAssets } = account;
@@ -62,35 +60,15 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       throw new ConsensusException(ERROR_LIST.POSSESS_FROZEN_ASSET);
     }
 
-    await this.helperLogicVerifier.isPossessAssetExceptChainAsset(
-      senderId,
-      accountAssets,
-      accountGetterHelper,
-    );
+    await this.helperLogicVerifier.isPossessAssetExceptChainAsset(senderId, accountAssets);
 
-    await this.helperLogicVerifier.isDAppPossessor(
-      senderId,
-      this.configHelper,
-      accountGetterHelper,
-    );
+    await this.helperLogicVerifier.isDAppPossessor(senderId, this.configHelper);
 
-    await this.helperLogicVerifier.isLnsPossessorOrManager(
-      senderId,
-      this.configHelper,
-      accountGetterHelper,
-    );
+    await this.helperLogicVerifier.isLnsPossessorOrManager(senderId, this.configHelper);
 
-    await this.helperLogicVerifier.isEntityFactoryPossessor(
-      senderId,
-      this.configHelper,
-      accountGetterHelper,
-    );
+    await this.helperLogicVerifier.isEntityFactoryPossessor(senderId, this.configHelper);
 
-    await this.helperLogicVerifier.isEntityPossessor(
-      senderId,
-      this.configHelper,
-      accountGetterHelper,
-    );
+    await this.helperLogicVerifier.isEntityPossessor(senderId, this.configHelper);
 
     let migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON;
     try {
@@ -195,23 +173,12 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       }
     }
 
-    await this.logicVerify(
-      transaction,
-      currentBlockHeight,
-      accountMap,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
+    await this.logicVerify(transaction, currentBlockHeight, accountMap);
 
     const { eventLogicVerifier } = this;
 
     if (skipListenEvent === false) {
-      eventLogicVerifier.listenEvent(
-        accountMap,
-        currentBlockHeight,
-        accountGetterHelper,
-        eventEmitter,
-      );
+      eventLogicVerifier.listenEvent(accountMap, currentBlockHeight, eventEmitter);
     }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);

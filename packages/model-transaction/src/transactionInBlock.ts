@@ -4,57 +4,6 @@ import { cacheBytesGetter } from "@bfchain/core-model-cacher";
 import type { Transaction } from "@bfchain/core-model-transaction-base";
 import { SomeTransactionModel } from "./someTransaction";
 
-export enum TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE {
-  SENDER = 0,
-  /**
-   * 现在`recipient`是一个数组，这里应该说是`1+`的正整数
-   */
-  RECIPIENT = 1,
-  /**非同质资产模板的发起者 */
-  ENTITY_FACTORY_APPLICANT = 2,
-  /**非同质资产模板的拥有者 */
-  ENTITY_FACTORY_POSSESSOR = 3,
-  /**非同质资产的发起者 */
-  ENTITY_APPLICANT = 4,
-  /**非同质资产的拥有者 */
-  ENTITY_POSSESSOR = 5,
-}
-
-@Type.d("TransactionAssetChangeModel")
-export class TransactionAssetChangeModel
-  extends Message
-  implements BFChainUtil.JSONAble<BFChainCore.TransactionAssetChangeJSON>
-{
-  static INC = 1;
-  /**账户类型 */
-  @Field.d(TransactionAssetChangeModel.INC++, "uint32")
-  accountType!: TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE;
-  /**资产所属链网络标识符 */
-  @Field.d(TransactionAssetChangeModel.INC++, "string")
-  sourceChainMagic!: string;
-  /**资产名 */
-  @Field.d(TransactionAssetChangeModel.INC++, "string")
-  assetType!: string;
-  /**交易校验完成后账户持有的资产余额 */
-  @Field.d(TransactionAssetChangeModel.INC++, "string")
-  assetPrealnum!: string;
-  toJSON() {
-    return {
-      accountType: this.accountType,
-      sourceChainMagic: this.sourceChainMagic,
-      assetType: this.assetType,
-      assetPrealnum: this.assetPrealnum,
-    };
-  }
-  @cacheBytesGetter
-  getBytes() {
-    const props: PropertyDescriptorMap = {};
-    const trsWrapper = Object.create(this, props);
-    const bytes = this.$type.encode(trsWrapper).finish();
-    return bytes;
-  }
-}
-
 @Type.d("AssetPrealnumModel")
 export class AssetPrealnumModel
   extends Message<AssetPrealnumModel>
@@ -85,9 +34,6 @@ export class TransactionInBlock<
   /**交易所属的区块高度 */
   @Field.d(TransactionInBlock.INC++, "uint32")
   height!: number;
-  /**交易验证完成后账户变动 */
-  @Field.d(TransactionInBlock.INC++, TransactionAssetChangeModel, "repeated")
-  transactionAssetChanges!: TransactionAssetChangeModel[];
   /**非同质资产信息 */
   @Field.d(TransactionInBlock.INC++, AssetPrealnumModel, "optional")
   assetPrealnum?: AssetPrealnumModel;
@@ -129,9 +75,6 @@ export class TransactionInBlock<
     const res: BFChainCore.TransactionInBlockJSON<BFChainUtil.ToJSONType<T>> = {
       tIndex: this.tIndex,
       height: this.height,
-      transactionAssetChanges: this.transactionAssetChanges.map((transactionAssetChange) =>
-        transactionAssetChange.toJSON(),
-      ),
       signature: this.signature,
       transaction: this.transaction.toJSON() as BFChainUtil.ToJSONType<T>,
     };

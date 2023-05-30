@@ -32,11 +32,10 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
     transaction: ImmigrateAssetTransaction,
     currentBlockHeight: number,
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
+    const accountGetterHelper = this.accountGetterHelper;
     let migrateCertificate: BFChainCore.CrossChain.MigrateCertificateJSON;
     try {
       migrateCertificate = JSON.parse(transaction.asset.immigrateAsset.migrateCertificate);
@@ -111,23 +110,12 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       }
     }
 
-    await this.logicVerify(
-      transaction,
-      currentBlockHeight,
-      accountMap,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
+    await this.logicVerify(transaction, currentBlockHeight, accountMap);
 
     const { eventLogicVerifier } = this;
 
     if (skipListenEvent === false) {
-      eventLogicVerifier.listenEvent(
-        accountMap,
-        currentBlockHeight,
-        accountGetterHelper,
-        eventEmitter,
-      );
+      eventLogicVerifier.listenEvent(accountMap, currentBlockHeight, eventEmitter);
     }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);

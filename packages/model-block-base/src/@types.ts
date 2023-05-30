@@ -152,7 +152,14 @@ declare namespace BFChainCore {
   //#endregion
 
   //#region CommonBlock
-  interface CommonBlockAssetJSON {}
+  interface CommonAssetJSON {
+    /**块内资产变动 hash */
+    assetChangeHash: string;
+  }
+  interface CommonBlockAssetJSON {
+    /**普通块附带信息 */
+    commonAsset: CommonAssetJSON;
+  }
   type CommonBlockJSON = BlockJSON<CommonBlockAssetJSON>;
   //#endregion
 
@@ -176,8 +183,10 @@ declare namespace BFChainCore {
     rate: string;
   }
   interface RoundLastAssetJSON extends RoundDelegateJSON {
-    /**链上链hash */
-    hash: string;
+    /**块内资产变动 hash */
+    assetChangeHash: string;
+    /**链上链 hash */
+    chainOnChainHash: string;
   }
   interface RoundLastBlockAssetJSON {
     /**轮末块附带信息 */
@@ -245,6 +254,8 @@ declare namespace BFChainCore {
     minTransactionFeePerByte: FractionJSON;
     /**链上事件体最大字节数 */
     maxTransactionSize: number;
+    /**每笔交易允许携带的最大 blob 长度 */
+    maxTransactionBlobSize: number;
     /**链上区块体最大字节数 */
     maxBlockSize: number;
     /**链上区块体最大处理的事件 tps */
@@ -255,8 +266,18 @@ declare namespace BFChainCore {
     maxDelegateTxsPerRound: number;
     /**权益赠送事件最大可抢次数 */
     maxGrabTimesOfGiftAsset: number;
+    /**每个区块最大能处理的投票数 */
+    maxVotesPerBlock: number;
+    /**投票账户最少持有的主权益数 */
+    voteMinChainAsset: string;
     /**发行权益的账户最少持有的链主权益数量 */
     issueAssetMinChainAsset: string;
+    /**冻结的主权益数允许发行的最大权益数量 */
+    maxMultipleOfAssetAndMainAsset: FractionJSON<string>;
+    /**发行非同质资产模板的账户最少持有的链主权益数量 */
+    issueEntityFactoryMinChainAsset: string;
+    /**冻结的主权益数允许发行的最大非同质权益数量 */
+    maxMultipleOfEntityAndMainAsset: FractionJSON<string>;
     /**注册创世块的账户最小持有的主权益数量 */
     registerChainMinChainAsset: string;
     /**最大的过期区块间隔数量 */
@@ -285,20 +306,8 @@ declare namespace BFChainCore {
     tpowOfWorkExemptionBlocks: number;
     /**tpow配置，JSON对象 */
     transactionPowOfWorkConfig: TransactionPowOfWorkConfigJSON;
-
-    /**冻结的主权益数允许发行的最大权益数量 */
-    maxMultipleOfAssetAndMainAsset: FractionJSON<string>;
-
-    /**发行非同质资产模板的账户最少持有的链主权益数量 */
-    issueEntityFactoryMinChainAsset: string;
-    /**冻结的主权益数允许发行的最大非同质权益数量 */
-    maxMultipleOfEntityAndMainAsset: FractionJSON<string>;
-    /**每个区块最大能处理的投票数 */
-    maxVotesPerBlock: number;
-    /**投票账户最少持有的主权益数 */
-    voteMinChainAsset: string;
-    /**每笔交易允许携带的最大 blob 长度 */
-    maxBlobSizePerTransaction: number;
+    /**块内资产变动 hash */
+    assetChangeHash: string;
   }
   interface GenesisBlockAssetJSON {
     /**创世块附带信息 */

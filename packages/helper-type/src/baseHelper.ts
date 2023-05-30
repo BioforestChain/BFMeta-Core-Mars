@@ -620,6 +620,15 @@ export class BaseHelper {
    *
    * @param hash
    */
+  isValidAssetChangeHash(hash: any) {
+    return this.isValidBufferSize(hash, 32);
+  }
+
+  /**
+   * 链上链 hash 是否合法
+   *
+   * @param hash
+   */
   isValidChainOnChainHash(hash: any) {
     return this.isValidBufferSize(hash, 32);
   }

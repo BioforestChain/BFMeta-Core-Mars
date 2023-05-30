@@ -15,8 +15,6 @@ export class UsernameLogicVerifier extends TransactionLogicVerifier {
     transaction: UsernameTransaction,
     currentBlockHeight: number,
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -24,7 +22,6 @@ export class UsernameLogicVerifier extends TransactionLogicVerifier {
       accountMap,
       transaction.senderId,
       currentBlockHeight,
-      accountGetterHelper,
     );
     if (accountInfo.username) {
       throw new ConsensusException(ERROR_LIST.ACCOUNT_ALREADY_HAVE_USERNAME, {
@@ -32,23 +29,12 @@ export class UsernameLogicVerifier extends TransactionLogicVerifier {
       });
     }
 
-    await this.logicVerify(
-      transaction,
-      currentBlockHeight,
-      accountMap,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
+    await this.logicVerify(transaction, currentBlockHeight, accountMap);
 
     const { eventLogicVerifier } = this;
 
     if (skipListenEvent === false) {
-      eventLogicVerifier.listenEvent(
-        accountMap,
-        currentBlockHeight,
-        accountGetterHelper,
-        eventEmitter,
-      );
+      eventLogicVerifier.listenEvent(accountMap, currentBlockHeight, eventEmitter);
     }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);

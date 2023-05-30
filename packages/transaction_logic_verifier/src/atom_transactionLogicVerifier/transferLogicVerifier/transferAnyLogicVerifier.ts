@@ -15,8 +15,6 @@ export class TransferAnyLogicVerifier extends TransactionLogicVerifier<TransferA
     transaction: TransferAnyTransaction,
     currentBlockHeight: number,
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -24,31 +22,15 @@ export class TransferAnyLogicVerifier extends TransactionLogicVerifier<TransferA
       transaction.asset.transferAny;
 
     if (parentAssetType === PARENT_ASSET_TYPE.ASSETS) {
-      await this.helperLogicVerifier.isAssetExist(
-        sourceChainName,
-        sourceChainMagic,
-        assetType,
-        accountGetterHelper,
-      );
+      await this.helperLogicVerifier.isAssetExist(sourceChainName, sourceChainMagic, assetType);
     }
 
-    await this.logicVerify(
-      transaction,
-      currentBlockHeight,
-      accountMap,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
+    await this.logicVerify(transaction, currentBlockHeight, accountMap);
 
     const { eventLogicVerifier } = this;
 
     if (skipListenEvent === false) {
-      eventLogicVerifier.listenEvent(
-        accountMap,
-        currentBlockHeight,
-        accountGetterHelper,
-        eventEmitter,
-      );
+      eventLogicVerifier.listenEvent(accountMap, currentBlockHeight, eventEmitter);
     }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);

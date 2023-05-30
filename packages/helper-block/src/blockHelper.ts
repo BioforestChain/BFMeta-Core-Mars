@@ -1,19 +1,16 @@
-import { Reader } from "@bfchain/protobuf";
 import { BaseHelper } from "@bfchain/core-helper-type";
 import { JSBIHelper } from "@bfchain/core-helper-bigint";
 import { ConfigHelper } from "@bfchain/core-helper-config";
-import {
-  BLOCK_TYPES_BASE,
-  Block,
-  GenesisBlockAssetModel,
-  StatisticInfoModel,
-  BlockTransactionInfoModel,
-  GenesisBlock,
-} from "@bfchain/core-model-block";
-import { TRANSACTION_TYPES_BASE, TransactionInBlock } from "@bfchain/core-model-transaction";
+import { BLOCK_TYPES_BASE, Block } from "@bfchain/core-model-block";
 import { AccountBaseHelper } from "@bfchain/core-helper-account-base";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
-import { Injectable, Inject, getHexFromArrayBuffer, decodeBinaryToHex } from "@bfchain/util";
+import {
+  Injectable,
+  Inject,
+  getHexFromArrayBuffer,
+  decodeBinaryToHex,
+  BBuffer as Buffer,
+} from "@bfchain/util";
 type RoundLastBlock = import("@bfchain/core-model-block").RoundLastBlock;
 
 const {
@@ -562,9 +559,46 @@ export class BlockHelper {
   }
 
   /**
-   * 计算链上链的hash
+   * 计算块内资产变动的hash
+   *
+   * @param accountsAssetsChange
+   * @param encoding
+   * @returns
+   */
+  async calcAssetChangeHash(
+    accountsAssetsChange: BFChainCore.AccountsAssetsChange,
+    encoding = "utf-8",
+  ) {
+    const assetsChanges: string[] = [];
+    for (const magic in accountsAssetsChange) {
+      const magicAssetsChange = accountsAssetsChange[magic];
+      for (const address in magicAssetsChange) {
+        const accountAssetsChange = magicAssetsChange[address];
+        for (const assetType in accountAssetsChange) {
+          assetsChanges.push(`${magic}-${address}-${assetType}-${accountAssetsChange[assetType]}`);
+        }
+      }
+    }
+    assetsChanges.sort((prev, next) => (prev > next ? 1 : -1));
+    const hashCreater = this.cryptoHelper.sha256();
+    for (const assetChange of assetsChanges) {
+      hashCreater.update(Buffer.from(assetChange, encoding));
+    }
+    return (await hashCreater.digest()).toString("hex");
+    // return (
+    //   await this.cryptoHelper
+    //     .sha256()
+    //     .update(Buffer.from(JSON.stringify(accountsAssetsChange), encoding))
+    //     .digest()
+    // ).toString("hex");
+  }
+
+  /**
+   * 计算链上链的 hash
+   *
    * @param currentHeight
    * @param blockGetterHelper
+   * @returns
    */
   async calcChainOnChainHash(
     currentHeight: number,
@@ -574,26 +608,22 @@ export class BlockHelper {
     let lastRoundLastBlockHeight =
       (this.calcRoundByHeight(currentHeight) - 1) * this.config.blockPerRound;
     lastRoundLastBlockHeight = lastRoundLastBlockHeight === 0 ? 1 : lastRoundLastBlockHeight;
-
-    const payloadHash = await this.cryptoHelper.sha256();
+    const hashCreater = this.cryptoHelper.sha256();
     if (lastRoundLastBlockHeight !== 1) {
       const block = await this.forceGetBlockByHeight<RoundLastBlock>(
         lastRoundLastBlockHeight,
         blockGetterHelper,
       );
-      payloadHash.update(block.asset.roundLastAsset.hashBuffer);
+      hashCreater.update(block.asset.roundLastAsset.chainOnChainBuffer);
     }
     for (let height = lastRoundLastBlockHeight; height < currentHeight; height++) {
       const blockSignatureBuffer = await this.forceGetBlockSignatureBufferByHeight(
         height,
         blockGetterHelper,
       );
-      payloadHash.update(blockSignatureBuffer);
+      hashCreater.update(blockSignatureBuffer);
     }
-
-    const hashString = (await payloadHash.digest()).toString("hex");
-
-    return hashString;
+    return (await hashCreater.digest()).toString("hex");
   }
 
   /**

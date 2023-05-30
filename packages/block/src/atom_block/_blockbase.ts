@@ -8,12 +8,13 @@ import type {
   BlockBaseStatisticsHelper,
 } from "@bfchain/core-helper";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
-import { isFlagInDev } from "@bfchain/util";
+import { isFlagInDev, ModuleStroge } from "@bfchain/util";
 import type { CommonBlockVerify } from "./commonBlockVerify";
 import type { VerifyBlockCore } from "./verifyBlock";
 import type { ReplayBlockCore } from "./replayBlock";
 import type { GenerateBlockCore } from "./generateBlock";
-const { ArgumentIllegalException, info } = CoreExceptionGenerator("CONTROLLER", "_blockbase");
+const { ArgumentIllegalException, NoFoundException, ConsensusException, info } =
+  CoreExceptionGenerator("CONTROLLER", "_blockbase");
 const isDevGenerateBlock = isFlagInDev("generateBlock");
 
 export abstract class BlockFactory<T extends Block> {
@@ -30,6 +31,7 @@ export abstract class BlockFactory<T extends Block> {
   abstract verifyBlockCore: VerifyBlockCore<T>;
   abstract generateBlockCore: GenerateBlockCore<T>;
   abstract replayBlockCore: ReplayBlockCore<T>;
+  abstract moduleMap: ModuleStroge;
 
   abstract fromJSON(blockBody: BFChainCore.BlockJSON<BFChainCore.GetBlockAssetJSON<T>>): Promise<T>;
 
@@ -113,6 +115,40 @@ export abstract class BlockFactory<T extends Block> {
       options,
       config,
     );
+  }
+
+  /**
+   * 块内资产变动 hash
+   *
+   * @param height
+   * @param hash
+   * @param options
+   */
+  async checkAssetChangeHash(
+    height: number,
+    hash: string,
+    options: BFChainCore.ReplayBlockOptions = {},
+  ) {
+    let accountGetterHelper = options.accountGetterHelper;
+    if (!accountGetterHelper) {
+      accountGetterHelper = this.moduleMap.get("accountGetterHelper");
+      if (!accountGetterHelper) {
+        throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
+          prop: "accountGetterHelper",
+          target: "moduleStroge",
+        });
+      }
+    }
+    const assetChanges = await accountGetterHelper.getAssetChanges(height);
+    const calcHash = await this.blockHelper.calcAssetChangeHash(assetChanges);
+    if (calcHash !== hash) {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+        to_compare_prop: `assetChangeHash ${hash}`,
+        be_compare_prop: `assetChangeHash ${calcHash}`,
+        to_target: "block",
+        be_target: "calculate",
+      });
+    }
   }
 
   /**

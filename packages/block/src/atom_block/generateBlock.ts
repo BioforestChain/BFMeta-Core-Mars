@@ -299,29 +299,16 @@ export class GenerateBlockCore<T extends Block> {
           const txFactory = transactionCore.getTransactionFactoryFromType(type);
           await txFactory.beginDealTransaction(trs, eventEmitter);
           await txFactory.applyTransaction(trs, eventEmitter);
-          // 在 apply 之后，获取变更记录
-          eventEmitter.assetChangesGetter &&
-            (tranItem.transactionAssetChanges = await eventEmitter.assetChangesGetter(tranItem));
-          const transactionAssetChanges = tranItem.transactionAssetChanges;
-          const trsInfo = `height ${tranItem.height} tIndex ${
-            tranItem.tIndex
-          } type ${type} senderId ${senderId} ${
-            trs.recipientId ? " recipientId " + trs.recipientId : " "
-          } signature ${tranItem.transaction.signature}`;
-          for (const transactionAssetChange of transactionAssetChanges) {
-            if (BigInt(transactionAssetChange.assetPrealnum) < BigInt(0)) {
-              throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-                prop: `assetBalance ${transactionAssetChange.assetPrealnum}  ${transactionAssetChange.sourceChainMagic} ${transactionAssetChange.assetType}`,
-                target: "transactionAssetChanges",
-                detail: trsInfo,
-              });
-            }
-          }
           // 在 apply 之后，获取权益资产信息
           eventEmitter.assetPrealnumGetter &&
             (tranItem.assetPrealnum = await eventEmitter.assetPrealnumGetter(tranItem));
           const assetPrealnum = tranItem.assetPrealnum;
           if (assetPrealnum) {
+            const trsInfo = `height ${tranItem.height} tIndex ${
+              tranItem.tIndex
+            } type ${type} senderId ${senderId} ${
+              trs.recipientId ? " recipientId " + trs.recipientId : " "
+            } signature ${tranItem.transaction.signature}`;
             const { remainAssetPrealnum, frozenMainAssetPrealnum } = assetPrealnum;
             if (BigInt(remainAssetPrealnum) < BigInt(0)) {
               throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {

@@ -11,19 +11,29 @@ export class RoundLastAssetModel
   extends RoundDelegateModel<RoundLastAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.RoundLastAssetJSON>
 {
-  /**链上链区块HASH, 包含当轮除最后一个区块外的区块signature以及上一轮 hash 合并后生成的hash*/
+  /**块内资产变动账户生成的 hash */
   @Field.d(RoundLastAssetModel.INC++, "bytes")
-  hashBuffer!: Uint8Array;
-  get hash(): string {
-    return getHexFromArrayBuffer(this.hashBuffer);
+  assetChangeBuffer!: Uint8Array;
+  get assetChangeHash(): string {
+    return getHexFromArrayBuffer(this.assetChangeBuffer);
   }
-  set hash(value: string) {
-    this.hashBuffer = parseHexToArrayBuffer(value);
+  set assetChangeHash(value: string) {
+    this.assetChangeBuffer = parseHexToArrayBuffer(value);
+  }
+  /**链上链区块 hash, 包含当轮除最后一个区块外的区块 signature 以及上一轮 hash 合并后生成的 hash */
+  @Field.d(RoundLastAssetModel.INC++, "bytes")
+  chainOnChainBuffer!: Uint8Array;
+  get chainOnChainHash(): string {
+    return getHexFromArrayBuffer(this.chainOnChainBuffer);
+  }
+  set chainOnChainHash(value: string) {
+    this.chainOnChainBuffer = parseHexToArrayBuffer(value);
   }
   toJSON(): BFChainCore.RoundLastAssetJSON {
     return Object.assign(
       {
-        hash: this.hash,
+        assetChangeHash: this.assetChangeHash,
+        chainOnChainHash: this.chainOnChainHash,
       },
       super.toJSON(),
     );
@@ -38,7 +48,8 @@ export class RoundLastAssetModel
   ) {
     const res = super.fromObject(object) as RoundLastAssetModel;
     if (res !== object) {
-      object.hash && (res.hash = object.hash);
+      object.assetChangeHash && (res.assetChangeHash = object.assetChangeHash);
+      object.chainOnChainHash && (res.chainOnChainHash = object.chainOnChainHash);
     }
     return res as unknown as T;
   }

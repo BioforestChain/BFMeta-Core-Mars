@@ -12,8 +12,6 @@ import {
   DestoryAssetTransactionFactory,
   EXCHANGE_DIRECTION,
   BlockBaseStatisticsHelper,
-  TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE,
-  TransactionAssetChangeModel,
   StatisticsInfo,
   JSBIHelper,
   SPECIAL_ASSET_TYPE,
@@ -500,35 +498,6 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
     bfchainCore: BFChainCore,
   ) {
     //#region
-    const accountAssetMap = new Map<string, bigint>();
-    accountAssetMap.set(
-      `${bfchainCore.accountBaseHelper.getAddressFromPublicKeyString(
-        bfchainCore.config.generatorPublicKey,
-      )}_${bfchainCore.config.magic}_${bfchainCore.config.assetType}`,
-      BigInt(bfchainCore.config.genesisAmount),
-    );
-
-    function setAccountAsset(key: string, assetNumber: bigint) {
-      const remainAsset = accountAssetMap.get(key);
-      if (remainAsset) {
-        accountAssetMap.set(key, remainAsset + assetNumber);
-      } else {
-        accountAssetMap.set(key, assetNumber);
-      }
-    }
-
-    function getAccountAsset(key: string) {
-      const assetNumber = accountAssetMap.get(key);
-      return assetNumber ? assetNumber.toString() : "0";
-    }
-
-    const assetInBlock: {
-      [magicAndAssetType: string]: number;
-    } = {};
-    const assetIndexInBlock = 0;
-
-    //#endregion
-    //#region
     const txs: {
       trs: BFChainCore.Transaction<any>;
       applyResult: {
@@ -608,41 +577,11 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
     const blockTrsItems: TransactionInBlock[] = [];
     for (let i = 0; i < txs.length; i++) {
       const { trs, applyResult } = txs[i];
-      const transactionAssetChanges: BFChainCore.TransactionAssetChangeJSON[] = [];
-      for (const result of applyResult) {
-        const { address, magic, assetType, assetNumber } = result;
-        const chainAssetInfo = bfchainCore.chainAssetInfoHelper.getAssetInfo(
-          magic.toLowerCase(),
-          assetType,
-        );
-        const assetStatistic = statisticsInfo.initAssetStatistic(chainAssetInfo);
-        const key = `${address}_${magic}_${assetType}`;
-        setAccountAsset(key, assetNumber);
-        if (trs.senderId === address) {
-          transactionAssetChanges[transactionAssetChanges.length] =
-            TransactionAssetChangeModel.fromObject<TransactionAssetChangeModel>({
-              accountType: TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE.SENDER,
-              sourceChainMagic: magic,
-              assetType,
-              assetPrealnum: getAccountAsset(key),
-            });
-        } else {
-          transactionAssetChanges[transactionAssetChanges.length] =
-            TransactionAssetChangeModel.fromObject<TransactionAssetChangeModel>({
-              accountType: TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE.RECIPIENT,
-              sourceChainMagic: magic,
-              assetType,
-              assetPrealnum: getAccountAsset(key),
-            });
-        }
-      }
       const trsInBlock = TransactionInBlock.fromObject({
         tIndex: i,
         height,
-        transactionAssetChanges:
-          bfchainCore.transactionHelper.sortTransactionAssetChanges(transactionAssetChanges),
+        transaction: trs,
       });
-      trsInBlock.transaction = trs;
       blockTrsItems[blockTrsItems.length] = trsInBlock;
     }
     return blockTrsItems;
@@ -684,10 +623,9 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
         previousBlockSignature: "6ed38b5fd642f79689ade7cff598bdf9548de56182c85f05b244c66b17a89dc1",
       },
       {
-        debug: "debug",
-        info: "info",
-        blockParticipation: "0",
-        generatorEquity: "0",
+        commonAsset: {
+          assetChangeHash: "",
+        },
       },
       (async function* zz() {
         for (const item of blockTrsItems) {
@@ -709,7 +647,6 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
   const xx = bfchainCore.block.recombineBlock(commonBlockJSON);
   commonBlockJSON.transactionInfo.transactionInBlocks.map((transaction) => {
     // console.log(transaction.signature);
-    // console.log(transaction.transactionAssetChanges);
   });
   // console.log(commonBlockJSON.statisticInfo.assetStatisticHashMap);
   // console.log(commonBlockJSON.remark);

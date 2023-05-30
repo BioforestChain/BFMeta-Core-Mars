@@ -131,6 +131,11 @@ export class ConfigHelper {
   get maxTransactionSize() {
     return this.hookedGenesisBlock.asset.genesisAsset.maxTransactionSize;
   }
+  /**每笔交易允许携带的最大 blob 长度 */
+  @cacheGetter
+  get maxTransactionBlobSize() {
+    return this.hookedGenesisBlock.asset.genesisAsset.maxTransactionBlobSize;
+  }
   /**链上区块体最大字节数 */
   @cacheGetter
   get maxBlockSize() {
@@ -161,11 +166,6 @@ export class ConfigHelper {
   get maxVotesPerBlock() {
     return this.hookedGenesisBlock.asset.genesisAsset.maxVotesPerBlock;
   }
-  /**每笔交易允许携带的最大 blob 长度 */
-  @cacheGetter
-  get maxBlobSizePerTransaction() {
-    return this.hookedGenesisBlock.asset.genesisAsset.maxBlobSizePerTransaction;
-  }
   /**投票账户最少持有的主权益数 */
   @cacheGetter
   get voteMinChainAsset() {
@@ -181,11 +181,6 @@ export class ConfigHelper {
   get maxMultipleOfAssetAndMainAsset() {
     return this.hookedGenesisBlock.asset.genesisAsset.maxMultipleOfAssetAndMainAsset;
   }
-  /**注册创世块的账户最小持有的主权益数量 */
-  @cacheGetter
-  get registerChainMinChainAsset() {
-    return this.hookedGenesisBlock.asset.genesisAsset.registerChainMinChainAsset;
-  }
   /**发行非同质资产模板的账户最小持有的主权益数量 */
   @cacheGetter
   get issueEntityFactoryMinChainAsset() {
@@ -195,6 +190,11 @@ export class ConfigHelper {
   @cacheGetter
   get maxMultipleOfEntityAndMainAsset() {
     return this.hookedGenesisBlock.asset.genesisAsset.maxMultipleOfEntityAndMainAsset;
+  }
+  /**注册创世块的账户最小持有的主权益数量 */
+  @cacheGetter
+  get registerChainMinChainAsset() {
+    return this.hookedGenesisBlock.asset.genesisAsset.registerChainMinChainAsset;
   }
   /**最大的过期区块间隔数量 */
   @cacheGetter
@@ -312,12 +312,18 @@ export class ConfigHelper {
       genesisAmount: this.genesisAmount,
       minTransactionFeePerByte: this.minTransactionFeePerByte,
       maxTransactionSize: this.maxTransactionSize,
+      maxTransactionBlobSize: this.maxTransactionBlobSize,
       maxBlockSize: this.maxBlockSize,
       maxTPSPerBlock: this.maxTPSPerBlock,
       consessusBeforeSyncBlockDiff: this.consessusBeforeSyncBlockDiff,
       maxDelegateTxsPerRound: this.maxDelegateTxsPerRound,
       maxGrabTimesOfGiftAsset: this.maxGrabTimesOfGiftAsset,
+      maxVotesPerBlock: this.maxVotesPerBlock,
+      voteMinChainAsset: this.voteMinChainAsset,
       issueAssetMinChainAsset: this.issueAssetMinChainAsset,
+      maxMultipleOfAssetAndMainAsset: this.maxMultipleOfAssetAndMainAsset,
+      issueEntityFactoryMinChainAsset: this.issueEntityFactoryMinChainAsset,
+      maxMultipleOfEntityAndMainAsset: this.maxMultipleOfEntityAndMainAsset,
       registerChainMinChainAsset: this.registerChainMinChainAsset,
       maxApplyAndConfirmedBlockHeightDiff: this.maxApplyAndConfirmedBlockHeightDiff,
       blockPerRound: this.blockPerRound,
@@ -332,12 +338,6 @@ export class ConfigHelper {
       averageComputingPower: this.averageComputingPower,
       tpowOfWorkExemptionBlocks: this.tpowOfWorkExemptionBlocks,
       transactionPowOfWorkConfig: this.transactionPowOfWorkConfig,
-      maxMultipleOfAssetAndMainAsset: this.maxMultipleOfAssetAndMainAsset,
-      issueEntityFactoryMinChainAsset: this.issueEntityFactoryMinChainAsset,
-      maxMultipleOfEntityAndMainAsset: this.maxMultipleOfEntityAndMainAsset,
-      maxVotesPerBlock: this.maxVotesPerBlock,
-      voteMinChainAsset: this.voteMinChainAsset,
-      maxBlobSizePerTransaction: this.maxBlobSizePerTransaction
     };
   }
   //#endregion

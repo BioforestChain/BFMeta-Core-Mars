@@ -22,8 +22,6 @@ export class ToExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
     transaction: ToExchangeSpecialAssetTransaction,
     currentBlockHeight: number,
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -44,7 +42,6 @@ export class ToExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
         beExchangeChainName,
         beExchangeSource,
         beExchangeAsset,
-        accountGetterHelper,
       );
     } else if (exchangeDirection === EXCHANGE_DIRECTION.ASSET_FROM_RECIPIENT) {
       // 特殊资产来自发起账户，则要交换的 数字资产必须存在
@@ -52,7 +49,6 @@ export class ToExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
         toExchangeChainName,
         toExchangeSource,
         toExchangeAsset,
-        accountGetterHelper,
       );
     } else {
       throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
@@ -61,23 +57,12 @@ export class ToExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
       });
     }
 
-    await this.logicVerify(
-      transaction,
-      currentBlockHeight,
-      accountMap,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
+    await this.logicVerify(transaction, currentBlockHeight, accountMap);
 
     const { eventLogicVerifier } = this;
 
     if (skipListenEvent === false) {
-      eventLogicVerifier.listenEvent(
-        accountMap,
-        currentBlockHeight,
-        accountGetterHelper,
-        eventEmitter,
-      );
+      eventLogicVerifier.listenEvent(accountMap, currentBlockHeight, eventEmitter);
     }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);

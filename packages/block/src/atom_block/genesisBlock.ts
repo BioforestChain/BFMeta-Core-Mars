@@ -1,3 +1,4 @@
+import type { TransactionInBlock } from "@bfchain/core-model-transaction";
 import { BlockFactory } from "./_blockbase";
 import { BNID_TYPE } from "@bfchain/core-model-constants";
 import { GenesisBlock } from "@bfchain/core-model-block";
@@ -11,7 +12,7 @@ import {
   BlockBaseStatisticsHelper,
 } from "@bfchain/core-helper";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
-import { Injectable, Inject } from "@bfchain/util";
+import { Injectable, Inject, ModuleStroge } from "@bfchain/util";
 import { BlockGeneratorCalculator } from "./blockGeneratorCalculator";
 import { CommonBlockVerify } from "./commonBlockVerify";
 import { GenerateBlockCore } from "./generateBlock";
@@ -44,6 +45,8 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
     public verifyBlockCore: VerifyBlockCore<GenesisBlock>,
     public generateBlockCore: GenerateBlockCore<GenesisBlock>,
     public replayBlockCore: ReplayBlockCore<GenesisBlock>,
+
+    public moduleMap: ModuleStroge,
   ) {
     super();
   }
@@ -218,6 +221,19 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       });
     }
 
+    if (genesisAsset.maxTransactionBlobSize === undefined) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
+        prop: `maxTransactionBlobSize ${genesisAsset.maxTransactionBlobSize}`,
+        ...GenesisBlockAsset_Exception_Detail,
+      });
+    }
+    if (!baseHelper.isNaturalNumber(genesisAsset.maxTransactionBlobSize)) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+        prop: `maxTransactionBlobSize ${genesisAsset.maxTransactionBlobSize}`,
+        ...GenesisBlockAsset_Exception_Detail,
+      });
+    }
+
     if (!baseHelper.isPositiveInteger(genesisAsset.maxBlockSize)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `maxBlockSize ${genesisAsset.maxBlockSize}`,
@@ -246,43 +262,28 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       });
     }
 
-    const { maxVotesPerBlock, voteMinChainAsset, maxBlobSizePerTransaction } = genesisAsset;
-
-    if (maxVotesPerBlock === undefined) {
+    if (genesisAsset.maxVotesPerBlock === undefined) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
-        prop: `maxVotesPerBlock ${maxVotesPerBlock}`,
+        prop: `maxVotesPerBlock ${genesisAsset.maxVotesPerBlock}`,
         ...GenesisBlockAsset_Exception_Detail,
       });
     }
-    if (!baseHelper.isNaturalNumber(maxVotesPerBlock)) {
+    if (!baseHelper.isNaturalNumber(genesisAsset.maxVotesPerBlock)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: `maxVotesPerBlock ${maxVotesPerBlock}`,
+        prop: `maxVotesPerBlock ${genesisAsset.maxVotesPerBlock}`,
         ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (maxBlobSizePerTransaction === undefined) {
+    if (!genesisAsset.voteMinChainAsset) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
-        prop: `maxBlobSizePerTransaction ${maxBlobSizePerTransaction}`,
+        prop: `voteMinChainAsset ${genesisAsset.voteMinChainAsset}`,
         ...GenesisBlockAsset_Exception_Detail,
       });
     }
-    if (!baseHelper.isNaturalNumber(maxBlobSizePerTransaction)) {
+    if (!baseHelper.isValidAssetNumber(genesisAsset.voteMinChainAsset)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: `maxBlobSizePerTransaction ${maxBlobSizePerTransaction}`,
-        ...GenesisBlockAsset_Exception_Detail,
-      });
-    }
-
-    if (!voteMinChainAsset) {
-      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
-        prop: `voteMinChainAsset ${voteMinChainAsset}`,
-        ...GenesisBlockAsset_Exception_Detail,
-      });
-    }
-    if (!baseHelper.isValidAssetNumber(voteMinChainAsset)) {
-      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: `voteMinChainAsset ${voteMinChainAsset}`,
+        prop: `voteMinChainAsset ${genesisAsset.voteMinChainAsset}`,
         ...GenesisBlockAsset_Exception_Detail,
       });
     }
@@ -300,47 +301,43 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       });
     }
 
-    const {
-      maxMultipleOfAssetAndMainAsset,
-      issueEntityFactoryMinChainAsset,
-      maxMultipleOfEntityAndMainAsset,
-    } = genesisAsset;
-
-    if (!maxMultipleOfAssetAndMainAsset) {
+    if (!genesisAsset.maxMultipleOfAssetAndMainAsset) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "maxMultipleOfAssetAndMainAsset",
         ...GenesisBlockAsset_Exception_Detail,
       });
     }
-    if (!baseHelper.isPositiveBigFloatNotContainZero(maxMultipleOfAssetAndMainAsset)) {
+    if (!baseHelper.isPositiveBigFloatNotContainZero(genesisAsset.maxMultipleOfAssetAndMainAsset)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: `maxMultipleOfAssetAndMainAsset ${maxMultipleOfAssetAndMainAsset}`,
+        prop: `maxMultipleOfAssetAndMainAsset ${genesisAsset.maxMultipleOfAssetAndMainAsset}`,
         ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!issueEntityFactoryMinChainAsset) {
+    if (!genesisAsset.issueEntityFactoryMinChainAsset) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "issueEntityFactoryMinChainAsset",
         ...GenesisBlockAsset_Exception_Detail,
       });
     }
-    if (!baseHelper.isValidAssetNumber(issueEntityFactoryMinChainAsset)) {
+    if (!baseHelper.isValidAssetNumber(genesisAsset.issueEntityFactoryMinChainAsset)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: `issueEntityFactoryMinChainAsset ${issueEntityFactoryMinChainAsset}`,
+        prop: `issueEntityFactoryMinChainAsset ${genesisAsset.issueEntityFactoryMinChainAsset}`,
         ...GenesisBlockAsset_Exception_Detail,
       });
     }
 
-    if (!maxMultipleOfEntityAndMainAsset) {
+    if (!genesisAsset.maxMultipleOfEntityAndMainAsset) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "maxMultipleOfEntityAndMainAsset",
         ...GenesisBlockAsset_Exception_Detail,
       });
     }
-    if (!baseHelper.isPositiveBigFloatNotContainZero(maxMultipleOfEntityAndMainAsset)) {
+    if (
+      !baseHelper.isPositiveBigFloatNotContainZero(genesisAsset.maxMultipleOfEntityAndMainAsset)
+    ) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: `maxMultipleOfEntityAndMainAsset ${maxMultipleOfEntityAndMainAsset}`,
+        prop: `maxMultipleOfEntityAndMainAsset ${genesisAsset.maxMultipleOfEntityAndMainAsset}`,
         ...GenesisBlockAsset_Exception_Detail,
       });
     }
@@ -563,16 +560,6 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       }
     }
 
-    if (genesisAsset.nextRoundDelegates.length !== config.blockPerRound) {
-      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
-        to_compare_prop: `nextRoundDelegates length ${genesisAsset.nextRoundDelegates.length}`,
-        be_compare_prop: `config.blockPerRound: ${config.blockPerRound}`,
-        to_target: "genesisBlockRemark",
-        be_target: "config",
-        ...GenesisBlockAsset_Exception_Detail,
-      });
-    }
-
     if (genesisAsset.maxBeginBalance !== "0") {
       throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `maxBeginBalance ${genesisAsset.maxBeginBalance}`,
@@ -589,33 +576,6 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
         be_compare_prop: "0",
         ...GenesisBlockAsset_Exception_Detail,
       });
-    }
-
-    const nextRoundDelegates = genesisAsset.nextRoundDelegates;
-    if (baseHelper.getVariableType(nextRoundDelegates) !== "[object Array]") {
-      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
-        to_compare_prop: "nextRoundDelegates",
-        to_target: "genesisBlock",
-        be_compare_prop: "array",
-        ...GenesisBlockAsset_Exception_Detail,
-      });
-    }
-
-    for (let i = 0; i < nextRoundDelegates.length; i++) {
-      const nextRoundDelegate = nextRoundDelegates[i];
-      if (!(await this.accountBaseHelper.isAddress(nextRoundDelegate.address))) {
-        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-          prop: `nextRoundDelegates[${i}].address ${nextRoundDelegates[i].address}`,
-          target: "genesisBlock.nextRoundDelegates",
-        });
-      }
-
-      if (!this.baseHelper.isValidAccountEquity(nextRoundDelegate.equity)) {
-        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-          prop: `nextRoundDelegates[${i}].equity ${nextRoundDelegates[i].equity}`,
-          target: "genesisBlock.nextRoundDelegates",
-        });
-      }
     }
 
     // 校验 TPOW 难度计算公式是否合法
@@ -667,6 +627,88 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
         ...GenesisBlockAsset_Exception_Detail,
       });
     }
+
+    if (!genesisAsset.assetChangeHash) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
+        prop: `assetChangeHash`,
+        ...GenesisBlockAsset_Exception_Detail,
+      });
+    }
+    if (!baseHelper.isValidAssetChangeHash(genesisAsset.assetChangeHash)) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+        prop: `assetChangeHash ${genesisAsset.assetChangeHash}`,
+        ...GenesisBlockAsset_Exception_Detail,
+      });
+    }
+
+    const { newDelegates, nextRoundDelegates } = genesisAsset;
+    if (!newDelegates) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
+        prop: `newDelegates`,
+        ...GenesisBlockAsset_Exception_Detail,
+      });
+    }
+    if (!baseHelper.isArray(newDelegates)) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+        prop: `newDelegates`,
+        ...GenesisBlockAsset_Exception_Detail,
+      });
+    }
+    if (newDelegates.length !== genesisAsset.delegates) {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
+        to_compare_prop: `newDelegates's length ${newDelegates.length}`,
+        to_target: "genesisBlock",
+        be_compare_prop: `delegates ${genesisAsset.delegates}`,
+        be_target: "genesisBlock",
+      });
+    }
+    for (let i = 0; i < newDelegates.length; i++) {
+      const newDelegate = newDelegates[i];
+      if (!(await this.accountBaseHelper.isAddress(newDelegate))) {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+          prop: `newDelegates[${i}].address ${newDelegate}`,
+          target: "genesisBlock.newDelegates",
+        });
+      }
+    }
+
+    if (!nextRoundDelegates) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
+        prop: `nextRoundDelegates`,
+        ...GenesisBlockAsset_Exception_Detail,
+      });
+    }
+    if (!baseHelper.isArray(nextRoundDelegates)) {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
+        to_compare_prop: "nextRoundDelegates",
+        to_target: "genesisBlock",
+        be_compare_prop: "array",
+        ...GenesisBlockAsset_Exception_Detail,
+      });
+    }
+    if (nextRoundDelegates.length !== genesisAsset.blockPerRound) {
+      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
+        to_compare_prop: `nextRoundDelegates's length ${nextRoundDelegates.length}`,
+        to_target: "genesisBlock",
+        be_compare_prop: `blockPerRound: ${config.blockPerRound}`,
+        be_target: "genesisBlock",
+      });
+    }
+    for (let i = 0; i < nextRoundDelegates.length; i++) {
+      const nextRoundDelegate = nextRoundDelegates[i];
+      if (!newDelegates.includes(nextRoundDelegate.address)) {
+        throw new ArgumentIllegalException(ERROR_LIST.NOT_EXIST, {
+          prop: `genesisBlock.nextRoundDelegates[${i}].address ${nextRoundDelegate.address}`,
+          target: "genesisBlock.newDelegates",
+        });
+      }
+      if (!this.baseHelper.isValidAccountEquity(nextRoundDelegate.equity)) {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+          prop: `nextRoundDelegates[${i}].equity ${nextRoundDelegate.equity}`,
+          target: "genesisBlock.nextRoundDelegates",
+        });
+      }
+    }
   }
 
   /**
@@ -686,6 +728,26 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
     block.generatorPublicKey = body.generatorPublicKey;
     // 绑定区块奖励
     block.reward = "0";
+
+    return block;
+  }
+
+  async replayBlock(
+    block: BFChainCore.GenesisBlock,
+    transactions: AsyncIterable<TransactionInBlock>,
+    eventEmitter?: BFChainCore.GenerateBlockEventEmitter,
+    options: BFChainCore.ReplayBlockOptions = {},
+    config = this.config,
+  ) {
+    await super.replayBlock(block, transactions, eventEmitter, options, config);
+
+    if (options.verifyAsset) {
+      await this.checkAssetChangeHash(
+        block.height,
+        block.asset.genesisAsset.assetChangeHash,
+        options,
+      );
+    }
 
     return block;
   }

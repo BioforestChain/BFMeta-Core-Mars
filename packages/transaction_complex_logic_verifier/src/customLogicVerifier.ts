@@ -21,28 +21,15 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
     transaction: CustomTransaction,
     currentBlockHeight: number,
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
     skipListenEvent = false,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ): Promise<boolean> {
-    await this.logicVerify(
-      transaction,
-      currentBlockHeight,
-      accountMap,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
+    const { eventLogicVerifier } = this;
 
-    const { eventLogicVerifier, helperLogicVerifier } = this;
+    await this.logicVerify(transaction, currentBlockHeight, accountMap);
 
     if (skipListenEvent === false) {
-      eventLogicVerifier.listenEvent(
-        accountMap,
-        currentBlockHeight,
-        accountGetterHelper,
-        eventEmitter,
-      );
+      eventLogicVerifier.listenEvent(accountMap, currentBlockHeight, eventEmitter);
     }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);

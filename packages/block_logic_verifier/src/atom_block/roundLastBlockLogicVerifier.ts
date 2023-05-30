@@ -1,6 +1,7 @@
-import { BlockLogicVerifier, PROCESSBLOCK_TYPE } from "./_blockbaseLogicVerifier";
 import type { RoundLastBlock } from "@bfchain/core-model-block";
+import { BlockLogicVerifier, PROCESSBLOCK_TYPE } from "./_blockbaseLogicVerifier";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
+
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
   "BlockLogicVerifier",
@@ -11,37 +12,24 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
     block: RoundLastBlock,
     processBlockType: PROCESSBLOCK_TYPE,
     generatorInfo: BFChainCore.AccountInfo,
-    transactionGetterHelper = this.transactionGetterHelper,
-    blockGetterHelper = this.blockGetterHelper,
   ) {
-    // body check
-    await this.verifyBlockBase(
-      block,
-      processBlockType,
-      generatorInfo,
-      transactionGetterHelper,
-      blockGetterHelper,
-    );
-    await this.checkPreviousBlock(block, blockGetterHelper);
-    await this.isValidBlockSlot(block, blockGetterHelper);
-    // 由于 remark 部分数据涉及交易流程，所以在外部手动调用校验
-    // remark check
-    // await this.verifyBlockRemark(block, blockGetterHelper, transactionGetterHelper);
-
+    await this.verifyBlockBase(block, processBlockType, generatorInfo);
+    await this.checkPreviousBlock(block);
+    await this.isValidBlockSlot(block);
     return true;
   }
 
-  async verifyBlockAsset(
-    block: RoundLastBlock,
-    transactionGetterHelper = this.transactionGetterHelper,
-    blockGetterHelper = this.blockGetterHelper,
-  ) {
-    // 校验链上链 hash
+  async verifyBlockAsset(block: RoundLastBlock) {
     const { height, asset } = block;
-    const { newDelegates, hash } = asset.roundLastAsset;
-    await this.checkChainOnChainHash(height, hash, blockGetterHelper);
-    await this.isValidNewDelegates(height, newDelegates, transactionGetterHelper);
-    await this.checkNewForgingDelegates(block, blockGetterHelper);
+    const { newDelegates, chainOnChainHash } = asset.roundLastAsset;
+    // 检验块内资产变动
+    await this.checkAssetChangeHash(height, chainOnChainHash);
+    // 校验链上链 hash
+    await this.checkChainOnChainHash(height, chainOnChainHash);
+    // 校验新注册的受托人
+    await this.isValidNewDelegates(height, newDelegates);
+    // 校验新一轮的打块账户
+    await this.checkNewForgingDelegates(block);
   }
 
   /**
@@ -50,13 +38,9 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
    * @param height
    * @param newDelegates
    */
-  async isValidNewDelegates(
-    height: number,
-    newDelegates: string[],
-    transactionGetterHelper = this.transactionGetterHelper,
-  ) {
+  async isValidNewDelegates(height: number, newDelegates: string[]) {
     // 校验新注册的受托人
-    const realNewDelegates = await this.checkNewDelegates(height, transactionGetterHelper);
+    const realNewDelegates = await this.checkNewDelegates(height);
     if (newDelegates.length !== realNewDelegates.length) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `newDelegates length ${newDelegates.length}`,
@@ -83,14 +67,9 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
    *
    * @param height
    * @param hash
-   * @param blockGetterHelper
    */
-  async checkChainOnChainHash(
-    height: number,
-    hash: string,
-    blockGetterHelper = this.blockGetterHelper,
-  ) {
-    const hashString = await this.blockHelper.calcChainOnChainHash(height, blockGetterHelper);
+  async checkChainOnChainHash(height: number, hash: string) {
+    const hashString = await this.blockHelper.calcChainOnChainHash(height, this.blockGetterHelper);
     if (hashString !== hash) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `hashString ${hashString}`,
@@ -105,18 +84,9 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
    * 校验新一轮的打块账户是否合法
    *
    * @param block
-   * @param blockGetterHelper
    */
-  async checkNewForgingDelegates(
-    block: RoundLastBlock,
-    blockGetterHelper = this.blockGetterHelper,
-  ) {
-    if (!blockGetterHelper) {
-      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-        prop: "blockGetterHelper",
-        target: "moduleStroge",
-      });
-    }
+  async checkNewForgingDelegates(block: RoundLastBlock) {
+    const blockGetterHelper = this.blockGetterHelper;
     if (typeof blockGetterHelper.getNewForgingDelegates !== "function") {
       throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "getNewForgingDelegates",
@@ -184,5 +154,6 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
         be_target: "calculate",
       });
     }
+    return true;
   }
 }

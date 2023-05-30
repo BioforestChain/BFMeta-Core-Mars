@@ -1,6 +1,7 @@
 import { Message, Field, Type, Long } from "@bfchain/protobuf";
 import { Fraction, FractionBigIntModel } from "@bfchain/core-model-common";
 import { cacheBytesGetter } from "@bfchain/core-model-cacher";
+import { getHexFromArrayBuffer, parseHexToArrayBuffer } from "@bfchain/util-encoding-hex";
 import { RoundDelegateModel } from "./roundDelegate";
 import { BNID_TYPE } from "@bfchain/core-model-constants";
 
@@ -176,6 +177,9 @@ export class GenesisAssetModel
   /**最大交易长度 */
   @Field.d(GenesisAssetModel.INC++, "uint32")
   maxTransactionSize!: number;
+  /**每笔交易允许携带的最大 blob 长度 */
+  @Field.d(GenesisAssetModel.INC++, "uint32", "required")
+  maxTransactionBlobSize!: number;
   /**最大区块长度，包含区块头和 asset */
   @Field.d(GenesisAssetModel.INC++, "uint32")
   maxBlockSize!: number;
@@ -191,9 +195,24 @@ export class GenesisAssetModel
   /**资产赠送最大可获取次数 */
   @Field.d(GenesisAssetModel.INC++, "uint32")
   maxGrabTimesOfGiftAsset!: number;
+  /**每个区块最大能处理的投票数 */
+  @Field.d(GenesisAssetModel.INC++, "uint32", "required")
+  maxVotesPerBlock!: number;
+  /**投票账户最少持有的主权益数 */
+  @Field.d(GenesisAssetModel.INC++, "string", "required")
+  voteMinChainAsset!: string;
   /**发行资产最小的持有本链资产数量 */
   @Field.d(GenesisAssetModel.INC++, "string")
   issueAssetMinChainAsset!: string;
+  /**冻结的主权益数允许发行的最大权益数量 */
+  @Field.d(GenesisAssetModel.INC++, FractionBigIntModel)
+  maxMultipleOfAssetAndMainAsset!: FractionBigIntModel;
+  /**发行非同质资产模板最小的持有本链资产数量 */
+  @Field.d(GenesisAssetModel.INC++, "string", "required")
+  issueEntityFactoryMinChainAsset!: string;
+  /**冻结的主权益数允许发行的最大非同质权益数量 */
+  @Field.d(GenesisAssetModel.INC++, FractionBigIntModel)
+  maxMultipleOfEntityAndMainAsset!: FractionBigIntModel;
   /**注册链最小的持有本链资产数量 */
   @Field.d(GenesisAssetModel.INC++, "string")
   registerChainMinChainAsset!: string;
@@ -227,10 +246,7 @@ export class GenesisAssetModel
   /**区块参与度权重比 */
   @Field.d(GenesisAssetModel.INC++, BlockParticipationWeightRatioModel, "required")
   blockParticipationWeightRatio!: BlockParticipationWeightRatioModel;
-  // /**tpow 计算公式 */
-  // @Field.d(GenesisAssetModel.INC++, "string", "required")
-  // tpowDiffFormula!: string;
-  /**全网平均算了 */
+  /**全网平均算力 */
   @Field.d(GenesisAssetModel.INC++, "uint32", "required")
   averageComputingPower!: number;
   /**前 n 个块 交易的 pow豁免 */
@@ -238,26 +254,16 @@ export class GenesisAssetModel
   tpowOfWorkExemptionBlocks!: number;
   @Field.d(GenesisAssetModel.INC++, TransactionPowOfWorkConfigModel)
   transactionPowOfWorkConfig!: TransactionPowOfWorkConfigModel;
+  /**块内资产变动账户生成的 hash */
+  @Field.d(GenesisAssetModel.INC++, "bytes")
+  assetChangeBuffer!: Uint8Array;
+  get assetChangeHash(): string {
+    return getHexFromArrayBuffer(this.assetChangeBuffer);
+  }
+  set assetChangeHash(value: string) {
+    this.assetChangeBuffer = parseHexToArrayBuffer(value);
+  }
 
-  /**冻结的主权益数允许发行的最大权益数量 */
-  @Field.d(GenesisAssetModel.INC++, FractionBigIntModel)
-  maxMultipleOfAssetAndMainAsset!: FractionBigIntModel;
-
-  /**发行非同质资产模板最小的持有本链资产数量 */
-  @Field.d(GenesisAssetModel.INC++, "string", "required")
-  issueEntityFactoryMinChainAsset!: string;
-  /**冻结的主权益数允许发行的最大非同质权益数量 */
-  @Field.d(GenesisAssetModel.INC++, FractionBigIntModel)
-  maxMultipleOfEntityAndMainAsset!: FractionBigIntModel;
-  /**每个区块最大能处理的投票数 */
-  @Field.d(GenesisAssetModel.INC++, "uint32", "required")
-  maxVotesPerBlock!: number;
-  /**投票账户最少持有的主权益数 */
-  @Field.d(GenesisAssetModel.INC++, "string", "required")
-  voteMinChainAsset!: string;
-  /**每笔交易允许携带的最大 blob 长度 */
-  @Field.d(GenesisAssetModel.INC++, "uint32", "required")
-  maxBlobSizePerTransaction!: number;
   toJSON(): BFChainCore.GenesisAssetJSON {
     const res: BFChainCore.GenesisAssetJSON = Object.assign(
       {
@@ -270,12 +276,18 @@ export class GenesisAssetModel
         genesisAmount: this.genesisAmount,
         minTransactionFeePerByte: this.minTransactionFeePerByte.toJSON(),
         maxTransactionSize: this.maxTransactionSize,
+        maxTransactionBlobSize: this.maxTransactionBlobSize,
         maxBlockSize: this.maxBlockSize,
         maxTPSPerBlock: this.maxTPSPerBlock,
         consessusBeforeSyncBlockDiff: this.consessusBeforeSyncBlockDiff,
         maxDelegateTxsPerRound: this.maxDelegateTxsPerRound,
         maxGrabTimesOfGiftAsset: this.maxGrabTimesOfGiftAsset,
+        maxVotesPerBlock: this.maxVotesPerBlock,
+        voteMinChainAsset: this.voteMinChainAsset,
         issueAssetMinChainAsset: this.issueAssetMinChainAsset,
+        maxMultipleOfAssetAndMainAsset: this.maxMultipleOfAssetAndMainAsset.toJSON(),
+        issueEntityFactoryMinChainAsset: this.issueEntityFactoryMinChainAsset,
+        maxMultipleOfEntityAndMainAsset: this.maxMultipleOfEntityAndMainAsset.toJSON(),
         registerChainMinChainAsset: this.registerChainMinChainAsset,
         maxApplyAndConfirmedBlockHeightDiff: this.maxApplyAndConfirmedBlockHeightDiff,
         blockPerRound: this.blockPerRound,
@@ -287,24 +299,13 @@ export class GenesisAssetModel
         rewardPerBlock: this.rewardPerBlock.toJSON(),
         accountParticipationWeightRatio: this.accountParticipationWeightRatio.toJSON(),
         blockParticipationWeightRatio: this.blockParticipationWeightRatio.toJSON(),
-        // tpowDiffFormula: this.tpowDiffFormula,
         averageComputingPower: this.averageComputingPower,
         tpowOfWorkExemptionBlocks: this.tpowOfWorkExemptionBlocks,
         transactionPowOfWorkConfig: this.transactionPowOfWorkConfig.toJSON(),
+        assetChangeHash: this.assetChangeHash,
       },
       super.toJSON(),
     ) as any;
-
-    this.maxMultipleOfAssetAndMainAsset &&
-      (res.maxMultipleOfAssetAndMainAsset = this.maxMultipleOfAssetAndMainAsset.toJSON());
-    this.issueEntityFactoryMinChainAsset &&
-      (res.issueEntityFactoryMinChainAsset = this.issueEntityFactoryMinChainAsset);
-    this.maxMultipleOfEntityAndMainAsset &&
-      (res.maxMultipleOfEntityAndMainAsset = this.maxMultipleOfEntityAndMainAsset.toJSON());
-    this.maxVotesPerBlock !== undefined && (res.maxVotesPerBlock = this.maxVotesPerBlock);
-    this.voteMinChainAsset && (res.voteMinChainAsset = this.voteMinChainAsset);
-    this.maxBlobSizePerTransaction &&
-      (res.maxBlobSizePerTransaction = this.maxBlobSizePerTransaction);
 
     return res;
   }
@@ -319,22 +320,15 @@ export class GenesisAssetModel
     const res = super.fromObject(object) as GenesisAssetModel;
     if (res !== object) {
       object.beginEpochTime !== undefined && (res.beginEpochTime = object.beginEpochTime);
-
       object.maxMultipleOfAssetAndMainAsset &&
         (res.maxMultipleOfAssetAndMainAsset = FractionBigIntModel.fromObject<FractionBigIntModel>(
           object.maxMultipleOfAssetAndMainAsset,
         ));
-
-      const { maxMultipleOfEntityAndMainAsset } = object;
-      if (
-        maxMultipleOfEntityAndMainAsset &&
-        maxMultipleOfEntityAndMainAsset.numerator &&
-        maxMultipleOfEntityAndMainAsset.denominator
-      ) {
-        res.maxMultipleOfEntityAndMainAsset = FractionBigIntModel.fromObject<FractionBigIntModel>(
-          maxMultipleOfEntityAndMainAsset,
-        );
-      }
+      object.maxMultipleOfEntityAndMainAsset &&
+        (res.maxMultipleOfEntityAndMainAsset = FractionBigIntModel.fromObject<FractionBigIntModel>(
+          object.maxMultipleOfEntityAndMainAsset,
+        ));
+      object.assetChangeHash !== undefined && (res.assetChangeHash = object.assetChangeHash);
     }
     return res as unknown as T;
   }

@@ -942,10 +942,9 @@ function print(obj: any) {
             CommonBlockFactory,
             newBlock,
             {
-              debug: "debug",
-              info: "info",
-              blockParticipation: "0",
-              generatorEquity: "0",
+              commonAsset: {
+                assetChangeHash: "",
+              },
             },
             asyncIteratorGenerator,
             delegate.keypair,
@@ -1006,7 +1005,8 @@ function print(obj: any) {
                 maxTxCount: 0,
                 rate: "0",
                 newDelegates: [],
-                hash: getChainOnChainHash(lastBlock.height),
+                chainOnChainHash: getChainOnChainHash(lastBlock.height),
+                assetChangeHash: "",
               },
             },
             asyncIteratorGenerator,

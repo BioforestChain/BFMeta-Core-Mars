@@ -37,12 +37,17 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   protected eventLogicVerifier!: EventLogicVerifier;
   @Inject(HelperLogicVerifier)
   protected helperLogicVerifier!: HelperLogicVerifier;
+  @Inject("transactionGetterHelper", { dynamics: true })
+  protected transactionGetterHelper!: BFChainCore.TransactionGetterHelperInterface;
+  @Inject("blockGetterHelper", { dynamics: true })
+  protected blockGetterHelper!: BFChainCore.BlockGetterHelperInterface;
+  @Inject("accountGetterHelper", { dynamics: true })
+  protected accountGetterHelper!: BFChainCore.AccountGetterHelperInterface;
+
   abstract verify(
     transaction: T,
     currentBlockHeight: number,
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ): Promise<boolean>;
@@ -51,8 +56,6 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     transaction: T,
     currentBlockHeight: number,
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
   ) {
     // 校验交易版本号
     if (transaction.version > this.configHelper.version) {
@@ -69,7 +72,6 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       accountMap,
       senderId,
       currentBlockHeight,
-      accountGetterHelper,
     );
     const senderAccountInfo = sender.accountInfo;
     // 校验发起账户状态
@@ -81,32 +83,26 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     // 检验交易的有效高度
     this.checkEffectiveBlockHeight(transaction, currentBlockHeight);
     // 校验交易的 magic
-    await this.checkTransactionMagic(transaction, accountGetterHelper);
+    await this.checkTransactionMagic(transaction);
     // 校验交易的时间戳
     this.checkTransactionTimestamp(transaction);
     // 校验交易的接收范围
-    await this.checkTransactionRange(transaction, currentBlockHeight, accountGetterHelper);
+    await this.checkTransactionRange(transaction, currentBlockHeight);
     // 校验交易的接收账户状态
     if (recipientId) {
       const recipient = await this.helperLogicVerifier.getAccountForce(
         accountMap,
         recipientId,
         currentBlockHeight,
-        accountGetterHelper,
       );
       this.checkRecipientAccountStatus(recipient.accountInfo);
     }
     // 校验交易的最大字节数
     this.checkTrsMaxBytes(transaction.getBytes().length);
     // 校验交易的 dappid
-    await this.checkDAppId(
-      transaction,
-      currentBlockHeight,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
+    await this.checkDAppId(transaction, currentBlockHeight);
     // 校验交易的 lns
-    await this.checkLocationName(transaction, currentBlockHeight, accountGetterHelper);
+    await this.checkLocationName(transaction, currentBlockHeight);
 
     return true;
   }
@@ -252,10 +248,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    *
    * @param tr
    */
-  private async checkTransactionMagic(
-    tr: T,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-  ) {
+  private async checkTransactionMagic(tr: T) {
     const fromMagic = tr.fromMagic;
     const toMagic = tr.toMagic;
     const chainMagic = this.configHelper.magic;
@@ -267,7 +260,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       }
 
       // 去往的注册链的交易, 去往的链必须已经在链上注册过
-      const chain = await accountGetterHelper.getChain(toMagic);
+      const chain = await this.accountGetterHelper.getChain(toMagic);
       if (!chain) {
         throw new ConsensusException(ERROR_LIST.INVALID_TRANSACTION_TO_MAGIC, {
           reason: "Transaction toMagic chain not exists",
@@ -280,7 +273,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     } else {
       // 来自外链的交易
       // 来自的外链必须已经在链上注册过
-      const chain = await accountGetterHelper.getChain(fromMagic);
+      const chain = await this.accountGetterHelper.getChain(fromMagic);
       if (!chain) {
         throw new ConsensusException(ERROR_LIST.INVALID_TRANSACTION_FROM_MAGIC, {
           reason: "Transaction fromMagic chain not exists",
@@ -332,17 +325,8 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    * @param currentBlockHeight
    * @param accountGetterHelper
    */
-  private async checkTransactionRange(
-    tr: T,
-    currentBlockHeight: number,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-  ) {
-    if (!accountGetterHelper) {
-      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-      });
-    }
+  private async checkTransactionRange(tr: T, currentBlockHeight: number) {
+    const { accountGetterHelper } = this;
     const { rangeType, range } = tr;
     const { magic } = this.configHelper;
     switch (rangeType) {
@@ -408,16 +392,12 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    * @param trs
    * @param currentBlockHeight
    */
-  private async checkDAppId(
-    trs: T,
-    currentBlockHeight: number,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
-  ) {
+  private async checkDAppId(trs: T, currentBlockHeight: number) {
     const { dappid, senderId } = trs;
     if (!dappid) {
       return;
     }
+    const { accountGetterHelper, transactionGetterHelper } = this;
     const dapp = (await accountGetterHelper.getDApp(
       trs.fromMagic,
       dappid,
@@ -470,16 +450,12 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    * @param tr
    * @param currentBlockHeight
    */
-  private async checkLocationName(
-    tr: T,
-    currentBlockHeight: number,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-  ) {
+  private async checkLocationName(tr: T, currentBlockHeight: number) {
     const lns = tr.lns;
     if (!lns) {
       return;
     }
-    const memLns = await accountGetterHelper.getLocationName(
+    const memLns = await this.accountGetterHelper.getLocationName(
       this.configHelper.magic,
       lns,
       currentBlockHeight,

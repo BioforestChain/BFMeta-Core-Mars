@@ -95,10 +95,9 @@ async function getCommonBlockAsync(sender: AccountModel) {
       previousBlockSignature: "",
     },
     {
-      debug: "debug",
-      info: "info",
-      blockParticipation: "0",
-      generatorEquity: "0",
+      commonAsset: {
+        assetChangeHash: "",
+      },
     },
     (async function* zz() {
       for (const item of blockTrsItems) {

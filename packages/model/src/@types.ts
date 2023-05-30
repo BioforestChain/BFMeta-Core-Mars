@@ -18,8 +18,10 @@ declare namespace BFChainCore {
     sourceAmount: string;
   };
   /**资产相关事件 */
-  type ApplyTransactionAssetEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_Asset, EVENTNAME, T>;
+  type ApplyTransactionAssetEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_Asset, EVENTNAME, T>;
   interface ApplyInfo_FeeFromUnfrozenAsset extends ApplyInfo_Asset {
     /**冻结的索引 */
     frozenId: string;
@@ -33,8 +35,10 @@ declare namespace BFChainCore {
 
   interface ApplyInfo_DestoryMainAsset extends ApplyInfo_Asset {}
   /**销毁主权益的相关事件 */
-  type ApplyTransactionDestoryMainAssetEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_DestoryMainAsset, EVENTNAME, T>;
+  type ApplyTransactionDestoryMainAssetEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_DestoryMainAsset, EVENTNAME, T>;
 
   interface ApplyInfo_FrozenAsset extends ApplyInfo_Asset {
     /**冻结的索引 */
@@ -46,8 +50,10 @@ declare namespace BFChainCore {
     /**总可解冻次数 */
     totalUnfrozenTimes?: number;
   }
-  type ApplyTransactionFrozenAssetEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_FrozenAsset, EVENTNAME, T>;
+  type ApplyTransactionFrozenAssetEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_FrozenAsset, EVENTNAME, T>;
 
   interface ApplyInfo_UnfrozenAsset extends ApplyInfo_Asset {
     /**冻结的索引 */
@@ -58,8 +64,10 @@ declare namespace BFChainCore {
      */
     recipientId: string;
   }
-  type ApplyTransactionUnfrozenAssetEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_UnfrozenAsset, EVENTNAME, T>;
+  type ApplyTransactionUnfrozenAssetEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_UnfrozenAsset, EVENTNAME, T>;
 
   interface ApplyInfo_SignForAsset {
     address: string;
@@ -74,8 +82,10 @@ declare namespace BFChainCore {
     recipientId: string;
     assetInfo: AssetInfoJSON;
   }
-  type ApplyTransactionSignForAssetEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_SignForAsset, EVENTNAME, T>;
+  type ApplyTransactionSignForAssetEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_SignForAsset, EVENTNAME, T>;
 
   type ApplyInfo_Account = {
     address: string;
@@ -99,8 +109,10 @@ declare namespace BFChainCore {
     recipientId: string;
   };
   /**投票权益的相关事件 */
-  type ApplyTransactionEquityEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_Equity, EVENTNAME, T>;
+  type ApplyTransactionEquityEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_Equity, EVENTNAME, T>;
 
   type ApplyInfo_Username = {
     address: string;
@@ -109,8 +121,10 @@ declare namespace BFChainCore {
     alias: string;
   };
   /**设置用户名的相关事件 */
-  type ApplyTransactionUsernameEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_Username, EVENTNAME, T>;
+  type ApplyTransactionUsernameEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_Username, EVENTNAME, T>;
 
   type ApplyInfo_Signature = {
     address: string;
@@ -118,8 +132,10 @@ declare namespace BFChainCore {
     secondPublicKeyBuffer: Uint8Array;
   };
   /**设置二次密码的相关事件 */
-  type ApplyTransactionSignatureEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_Signature, EVENTNAME, T>;
+  type ApplyTransactionSignatureEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_Signature, EVENTNAME, T>;
 
   type ACCOUNT_STATUS = import("@bfchain/core-model-constants").ACCOUNT_STATUS;
   type ApplyInfo_FrozenAccount = {
@@ -128,8 +144,10 @@ declare namespace BFChainCore {
     accountStatus: ACCOUNT_STATUS;
   };
   /**账户冻结的相关事件 */
-  type ApplyTransactionFrozenAccountEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_FrozenAccount, EVENTNAME, T>;
+  type ApplyTransactionFrozenAccountEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_FrozenAccount, EVENTNAME, T>;
 
   /**dapp 相关事件 */
   type ApplyInfo_IssueDAppid = {
@@ -145,8 +163,10 @@ declare namespace BFChainCore {
     status: ASSET_STATUS;
   };
   /**发行 dappid 的相关事件 */
-  type ApplyTransactionIssueDAppidEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_IssueDAppid, EVENTNAME, T>;
+  type ApplyTransactionIssueDAppidEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_IssueDAppid, EVENTNAME, T>;
 
   type ApplyInfo_FrozenDAppid = {
     address: string;
@@ -160,8 +180,10 @@ declare namespace BFChainCore {
     frozenId: string;
   };
   /**冻结 dappid */
-  type ApplyTransactionFrozenDAppidEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_FrozenDAppid, EVENTNAME, T>;
+  type ApplyTransactionFrozenDAppidEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_FrozenDAppid, EVENTNAME, T>;
 
   type ApplyInfo_UnfrozenDAppid = {
     address: string;
@@ -175,8 +197,10 @@ declare namespace BFChainCore {
     frozenId: string;
   };
   /**解冻 dappid */
-  type ApplyTransactionUnfrozenDAppidEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_UnfrozenDAppid, EVENTNAME, T>;
+  type ApplyTransactionUnfrozenDAppidEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_UnfrozenDAppid, EVENTNAME, T>;
 
   type ApplyInfo_ChangeDAppidPossessor = {
     address: string;
@@ -188,8 +212,10 @@ declare namespace BFChainCore {
     dappid: string;
   };
   /**更改 dappid 拥有者 */
-  type ApplyTransactionChangeDAppidPossessorEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_ChangeDAppidPossessor, EVENTNAME, T>;
+  type ApplyTransactionChangeDAppidPossessorEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_ChangeDAppidPossessor, EVENTNAME, T>;
 
   interface ApplyInfo_IssueAsset extends ApplyInfo_Asset {
     address: string;
@@ -198,8 +224,10 @@ declare namespace BFChainCore {
     genesisAddress: string;
   }
   /**发行数字资产的相关事件 */
-  type ApplyTransactionIssueAssetEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_IssueAsset, EVENTNAME, T>;
+  type ApplyTransactionIssueAssetEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_IssueAsset, EVENTNAME, T>;
 
   interface ApplyInfo_DestoryAsset extends ApplyInfo_Asset {
     address: string;
@@ -207,8 +235,10 @@ declare namespace BFChainCore {
     assetsApplyAddress: string;
   }
   /**销毁数字资产的相关事件 */
-  type ApplyTransactionDestoryAssetEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_DestoryAsset, EVENTNAME, T>;
+  type ApplyTransactionDestoryAssetEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_DestoryAsset, EVENTNAME, T>;
 
   type ApplyInfo_RegisterChain = {
     address: string;
@@ -216,8 +246,10 @@ declare namespace BFChainCore {
     genesisBlock: BFChainCore.RegisterChainBlockInfoJSON;
   };
   /**注册链的相关事件 */
-  type ApplyTransactionRegisterChainEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_RegisterChain, EVENTNAME, T>;
+  type ApplyTransactionRegisterChainEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_RegisterChain, EVENTNAME, T>;
 
   /**位名相关事件 */
   type ApplyInfo_LocationNameRegistration = {
@@ -231,8 +263,10 @@ declare namespace BFChainCore {
     status: ASSET_STATUS;
   };
   /**注册位名 */
-  type ApplyTransactionRegisterLocationNameEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_LocationNameRegistration, EVENTNAME, T>;
+  type ApplyTransactionRegisterLocationNameEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_LocationNameRegistration, EVENTNAME, T>;
 
   type ApplyInfo_LocationNameCancellation = {
     address: string;
@@ -243,8 +277,10 @@ declare namespace BFChainCore {
     status: ASSET_STATUS;
   };
   /**注销位名 */
-  type ApplyTransactionCancelLocationNameEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_LocationNameCancellation, EVENTNAME, T>;
+  type ApplyTransactionCancelLocationNameEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_LocationNameCancellation, EVENTNAME, T>;
 
   type ApplyInfo_SetLnsManager = {
     address: string;
@@ -255,8 +291,10 @@ declare namespace BFChainCore {
     manager: string;
   };
   /**设置位名管理员 */
-  type ApplyTransactionSetLnsManagerEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_SetLnsManager, EVENTNAME, T>;
+  type ApplyTransactionSetLnsManagerEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_SetLnsManager, EVENTNAME, T>;
 
   type ApplyInfo_SetLnsRecordValue = {
     address: string;
@@ -269,8 +307,10 @@ declare namespace BFChainCore {
     deleteRecord?: LocationNameRecordJSON;
   };
   /**设置位名解析值 */
-  type ApplyTransactionSetLnsRecordValueEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_SetLnsRecordValue, EVENTNAME, T>;
+  type ApplyTransactionSetLnsRecordValueEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_SetLnsRecordValue, EVENTNAME, T>;
 
   type ApplyInfo_FrozenLocationName = {
     address: string;
@@ -284,8 +324,10 @@ declare namespace BFChainCore {
     frozenId: string;
   };
   /**冻结位名 */
-  type ApplyTransactionFrozenLocationNameEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_FrozenLocationName, EVENTNAME, T>;
+  type ApplyTransactionFrozenLocationNameEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_FrozenLocationName, EVENTNAME, T>;
 
   type ApplyInfo_UnfrozenLocationName = {
     address: string;
@@ -299,8 +341,10 @@ declare namespace BFChainCore {
     frozenId: string;
   };
   /**解冻位名 */
-  type ApplyTransactionUnfrozenLocationNameEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_UnfrozenLocationName, EVENTNAME, T>;
+  type ApplyTransactionUnfrozenLocationNameEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_UnfrozenLocationName, EVENTNAME, T>;
 
   type ApplyInfo_ChangeLocationNamePossessor = {
     address: string;
@@ -334,8 +378,10 @@ declare namespace BFChainCore {
     status: ASSET_STATUS;
   };
   /**发行 entityFactory */
-  type ApplyTransactionIssueEntityFactoryEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_IssueEntityFactory, EVENTNAME, T>;
+  type ApplyTransactionIssueEntityFactoryEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_IssueEntityFactory, EVENTNAME, T>;
 
   interface ApplyInfo_IssueEntity_Base {
     address: string;
@@ -359,22 +405,28 @@ declare namespace BFChainCore {
     entityId: string;
   }
   /**发行 entity */
-  type ApplyTransactionIssueEntityEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_IssueEntity, EVENTNAME, T>;
+  type ApplyTransactionIssueEntityEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_IssueEntity, EVENTNAME, T>;
 
   interface ApplyInfo_IssueEntityV1 extends ApplyInfo_IssueEntity {
     taxAssetPrealnum: string;
   }
   /**发行 entity */
-  type ApplyTransactionIssueEntityV1Event<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_IssueEntityV1, EVENTNAME, T>;
+  type ApplyTransactionIssueEntityV1Event<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_IssueEntityV1, EVENTNAME, T>;
 
   interface ApplyInfo_IssueEntityMultiV1 extends ApplyInfo_IssueEntity_Base {
     entityStructList: BFChainCore.EntityStructJSON[];
   }
   /**发行 entity */
-  type ApplyTransactionIssueEntityMultiV1Event<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_IssueEntityMultiV1, EVENTNAME, T>;
+  type ApplyTransactionIssueEntityMultiV1Event<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_IssueEntityMultiV1, EVENTNAME, T>;
 
   type ApplyInfo_DestoryEntity = {
     address: string;
@@ -393,8 +445,10 @@ declare namespace BFChainCore {
     status: ASSET_STATUS;
   };
   /**销毁 entity */
-  type ApplyTransactionDestoryEntityEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_DestoryEntity, EVENTNAME, T>;
+  type ApplyTransactionDestoryEntityEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_DestoryEntity, EVENTNAME, T>;
 
   type ApplyInfo_FrozenEntity = {
     address: string;
@@ -408,8 +462,10 @@ declare namespace BFChainCore {
     frozenId: string;
   };
   /**冻结 entityId */
-  type ApplyTransactionFrozenEntityEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_FrozenEntity, EVENTNAME, T>;
+  type ApplyTransactionFrozenEntityEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_FrozenEntity, EVENTNAME, T>;
 
   type ApplyInfo_UnfrozenEntity = {
     address: string;
@@ -423,8 +479,10 @@ declare namespace BFChainCore {
     frozenId: string;
   };
   /**解冻 entityId */
-  type ApplyTransactionUnfrozenEntityEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_UnfrozenEntity, EVENTNAME, T>;
+  type ApplyTransactionUnfrozenEntityEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_UnfrozenEntity, EVENTNAME, T>;
 
   type ApplyInfo_ChangeEntityPossessor = {
     address: string;
@@ -436,8 +494,10 @@ declare namespace BFChainCore {
     possessorAddress: string;
   };
   /**更改 entityId 拥有者 */
-  type ApplyTransactionChangeEntityPossessorEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_ChangeEntityPossessor, EVENTNAME, T>;
+  type ApplyTransactionChangeEntityPossessorEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_ChangeEntityPossessor, EVENTNAME, T>;
 
   type ApplyInfo_MigrateCertificate = {
     migrateCertificateId: string;
@@ -446,8 +506,10 @@ declare namespace BFChainCore {
     migrateIdBuffer: Uint8Array;
   };
   /**跨链凭证 */
-  type ApplyTransactionMigrateCertificateEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_MigrateCertificate, EVENTNAME, T>;
+  type ApplyTransactionMigrateCertificateEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_MigrateCertificate, EVENTNAME, T>;
 
   type ApplyInfo_PayTax = {
     sourceChainName: string;
@@ -457,8 +519,10 @@ declare namespace BFChainCore {
     taxInformation: BFChainCore.TaxInformationJson;
   };
   /**验证纳税信息 */
-  type ApplyTransactionPayTaxEvent<EVENTNAME, T extends Transaction = Transaction> =
-    ApplyTransactionEvent<ApplyInfo_PayTax, EVENTNAME, T>;
+  type ApplyTransactionPayTaxEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_PayTax, EVENTNAME, T>;
 
   type ApplyTransactionEventMap<EM extends BFChainUtil.EventInOutMap = {}> = EM & {
     /**交易交易的POW */
@@ -858,9 +922,6 @@ declare namespace BFChainCore {
       tib: TransactionInBlock,
     ) => BFChainUtil.PromiseMaybe<TransactionInBlock["tIndex"]>;
     startTindexGetter?: () => BFChainUtil.PromiseMaybe<TransactionInBlock["tIndex"]>;
-    assetChangesGetter?: (
-      tib: TransactionInBlock,
-    ) => BFChainUtil.PromiseMaybe<TransactionInBlock["transactionAssetChanges"]>;
     assetPrealnumGetter?: (
       tib: TransactionInBlock,
     ) => BFChainUtil.PromiseMaybe<

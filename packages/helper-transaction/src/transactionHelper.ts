@@ -11,7 +11,6 @@ import {
   TRANSACTION_TYPES_BASE,
   GiftAssetTransaction,
   GrabAssetModel,
-  TransactionAssetChangeModel,
 } from "@bfchain/core-model-transaction";
 import { AccountSignatureModel } from "@bfchain/core-model-common";
 import { TPOWHelper } from "@bfchain/core-helper-transaction-pow";
@@ -326,15 +325,7 @@ export class TransactionHelper {
 
   /**获取创世块里所有的受托人 */
   genesisDelegates(config = this.config) {
-    const delegatesArr: string[] = [];
-    const transactions = config.genesisBlock.transactionInfo.transactionInBlocks;
-    for (const tr of transactions) {
-      const { baseType } = this.parseType(tr.transaction.type);
-      if (baseType === TRANSACTION_TYPES_BASE.DELEGATE) {
-        delegatesArr.push(tr.transaction.senderId);
-      }
-    }
-    return delegatesArr;
+    return config.newDelegates;
   }
   async getGensisAcountAddress(config = this.config) {
     return this.accountBaseHelper.getAddressFromPublicKeyString(config.genesisAccountPublicKey);
@@ -411,12 +402,12 @@ export class TransactionHelper {
    * @param transaction
    */
   verifyTransactionBlobSize<SOME_TRS extends BFChainCore.Transaction>(transaction: SOME_TRS) {
-    const { maxBlobSizePerTransaction } = this.config;
-    if (transaction.blobSize > maxBlobSizePerTransaction) {
+    const { maxTransactionBlobSize } = this.config;
+    if (transaction.blobSize > maxTransactionBlobSize) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
         prop: `transaction blob size ${transaction.blobSize}`,
         target: "transaction",
-        field: maxBlobSizePerTransaction,
+        field: maxTransactionBlobSize,
       });
     }
   }
@@ -938,45 +929,6 @@ export class TransactionHelper {
    */
   @Inject(ABORT_FORBIDDEN_TRANSACTION_SYMBOL, { dynamics: true })
   abortForbiddenTransaction = true;
-
-  /**
-   * 对 transactionAssetChanges 进行排序
-   *
-   * @param transactionAssetChanges
-   */
-  sortTransactionAssetChanges<
-    T extends TransactionAssetChangeModel | BFChainCore.TransactionAssetChangeJSON,
-  >(transactionAssetChanges: T[]) {
-    return transactionAssetChanges.sort((a, b) => {
-      if (a.accountType > b.accountType) {
-        return 1;
-      }
-      if (a.accountType < b.accountType) {
-        return -1;
-      }
-      if (a.sourceChainMagic > b.sourceChainMagic) {
-        return 1;
-      }
-      if (a.sourceChainMagic < b.sourceChainMagic) {
-        return -1;
-      }
-      if (a.assetType > b.assetType) {
-        return 1;
-      }
-      if (a.assetType < b.assetType) {
-        return -1;
-      }
-      const prevAsset = BigInt(a.assetPrealnum);
-      const nextAsset = BigInt(b.assetPrealnum);
-      if (prevAsset > nextAsset) {
-        return 1;
-      }
-      if (prevAsset < nextAsset) {
-        return -1;
-      }
-      return 0;
-    });
-  }
 
   /**
    * 计算事件的查询范围

@@ -23,17 +23,16 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
     transaction: BeExchangeSpecialAssetTransaction,
     currentBlockHeight: number,
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     const beExchangeSpecialAsset = transaction.asset.beExchangeSpecialAsset;
     const { transactionSignature } = beExchangeSpecialAsset;
-    const toExchangeSpecialAssetJson = (await transactionGetterHelper.getTransactionBySignature(
-      transactionSignature,
-      this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
-    )) as BFChainCore.ToExchangeSpecialAssetTransactionJSON | undefined;
+    const toExchangeSpecialAssetJson =
+      (await this.transactionGetterHelper.getTransactionBySignature(
+        transactionSignature,
+        this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
+      )) as BFChainCore.ToExchangeSpecialAssetTransactionJSON | undefined;
     if (!toExchangeSpecialAssetJson) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST_OR_EXPIRED, {
         prop: `Transaction with signature ${transactionSignature}`,
@@ -50,23 +49,12 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
     this.isValidRecipientId(transaction, toExchangeSpecialAssetJson);
     this.isDependentTransactionMatch(transaction, toExchangeSpecialAssetJson);
 
-    await this.logicVerify(
-      transaction,
-      currentBlockHeight,
-      accountMap,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
+    await this.logicVerify(transaction, currentBlockHeight, accountMap);
 
     const { eventLogicVerifier } = this;
 
     if (skipListenEvent === false) {
-      eventLogicVerifier.listenEvent(
-        accountMap,
-        currentBlockHeight,
-        accountGetterHelper,
-        eventEmitter,
-      );
+      eventLogicVerifier.listenEvent(accountMap, currentBlockHeight, eventEmitter);
     }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);

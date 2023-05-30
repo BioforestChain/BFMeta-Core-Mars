@@ -9,6 +9,9 @@
       "path": "../helper-account_base/tsconfig.json"
     },
     {
+      "path": "../helper-account/tsconfig.json"
+    },
+    {
       "path": "../helper-bigint/tsconfig.json"
     },
     {

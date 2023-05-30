@@ -103,7 +103,8 @@ export const mainChainAssetData: BFChainCore.GenesisAssetJSON = {
   nextRoundDelegates: [] as BFChainCore.NextRoundDelegateJSON[],
   newDelegates: [] as string[],
   rate: "0",
-  maxBlobSizePerTransaction: 1024 * 1024 * 1024,
+  maxTransactionBlobSize: 1024 * 1024 * 1024,
+  assetChangeHash: "",
 };
 
 export const registerchainAssetData: BFChainCore.GenesisAssetJSON = {
@@ -180,5 +181,6 @@ export const registerchainAssetData: BFChainCore.GenesisAssetJSON = {
   nextRoundDelegates: [] as BFChainCore.NextRoundDelegateJSON[],
   newDelegates: [] as string[],
   rate: "0",
-  maxBlobSizePerTransaction: 1024 * 1024 * 1024,
+  maxTransactionBlobSize: 1024 * 1024 * 1024,
+  assetChangeHash: "",
 };

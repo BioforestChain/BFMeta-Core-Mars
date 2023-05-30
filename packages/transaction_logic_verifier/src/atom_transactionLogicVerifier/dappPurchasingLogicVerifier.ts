@@ -15,30 +15,17 @@ export class DAppPurchasingLogicVerifier extends TransactionLogicVerifier {
     transaction: DAppPurchasingTransaction,
     currentBlockHeight: number,
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    await this.isDAppidMatch(transaction, currentBlockHeight, accountGetterHelper);
+    await this.isDAppidMatch(transaction, currentBlockHeight);
 
-    await this.logicVerify(
-      transaction,
-      currentBlockHeight,
-      accountMap,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
+    await this.logicVerify(transaction, currentBlockHeight, accountMap);
 
     const { eventLogicVerifier } = this;
 
     if (skipListenEvent === false) {
-      eventLogicVerifier.listenEvent(
-        accountMap,
-        currentBlockHeight,
-        accountGetterHelper,
-        eventEmitter,
-      );
+      eventLogicVerifier.listenEvent(accountMap, currentBlockHeight, eventEmitter);
     }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
@@ -53,14 +40,14 @@ export class DAppPurchasingLogicVerifier extends TransactionLogicVerifier {
    * @param currentBlockHeight
    * @param accountGetterHelper
    */
-  private async isDAppidMatch(
-    transaction: DAppPurchasingTransaction,
-    currentBlockHeight: number,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-  ) {
+  private async isDAppidMatch(transaction: DAppPurchasingTransaction, currentBlockHeight: number) {
     const { dappAsset } = transaction.asset.dappPurchasing;
     const { sourceChainMagic, dappid } = dappAsset;
-    const memDapp = await accountGetterHelper.getDApp(sourceChainMagic, dappid, currentBlockHeight);
+    const memDapp = await this.accountGetterHelper.getDApp(
+      sourceChainMagic,
+      dappid,
+      currentBlockHeight,
+    );
     if (!memDapp) {
       throw new ConsensusException(ERROR_LIST.DAPPID_IS_NOT_EXIST, {
         dappid,

@@ -85,7 +85,7 @@ async function getTrustAssetTransaction(
       trs.type,
     );
 
-  await yy.verify(trs, 10, {} as any, {} as any, {} as any, false, {} as any);
+  await yy.verify(trs, 10, {} as any, false, {} as any);
 
   console.log(xx);
 }

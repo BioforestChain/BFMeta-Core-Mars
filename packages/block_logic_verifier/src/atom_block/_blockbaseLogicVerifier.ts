@@ -1,3 +1,4 @@
+import type { Block } from "@bfchain/core-model-block";
 import {
   AccountBaseHelper,
   BlockHelper,
@@ -5,10 +6,8 @@ import {
   ChainTimeHelper,
   MilestonesHelper,
   ChainAssetInfoHelper,
-  StatisticsInfo,
 } from "@bfchain/core-helper";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
-import type { Block } from "@bfchain/core-model-block";
 import { Inject } from "@bfchain/util";
 import { BlockGeneratorCalculator } from "@bfchain/core-block";
 import { BLOCK_FORK_CAUSE } from "@bfchain/core-model";
@@ -45,55 +44,31 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
   protected blockCore!: import("@bfchain/core-block").BlockCore;
   @Inject(BlockGeneratorCalculator)
   protected blockGeneratorCalculator!: BlockGeneratorCalculator;
-  @Inject("transactionGetterHelper", { optional: true, dynamics: true })
-  protected transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface;
-  @Inject("blockGetterHelper", { optional: true, dynamics: true })
-  protected blockGetterHelper?: BFChainCore.BlockGetterHelperInterface;
+  @Inject("transactionGetterHelper", { dynamics: true })
+  protected transactionGetterHelper!: BFChainCore.TransactionGetterHelperInterface;
+  @Inject("blockGetterHelper", { dynamics: true })
+  protected blockGetterHelper!: BFChainCore.BlockGetterHelperInterface;
+  @Inject("accountGetterHelper", { dynamics: true })
+  protected accountGetterHelper!: BFChainCore.AccountGetterHelperInterface;
 
   abstract verify(
     block: T,
     processBlockType: PROCESSBLOCK_TYPE,
     generatorInfo: BFChainCore.AccountInfo,
-    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
-    blockGetterHelper?: BFChainCore.BlockGetterHelperInterface,
   ): Promise<boolean>;
 
-  abstract verifyBlockAsset(
-    block: T,
-    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
-    blockGetterHelper?: BFChainCore.BlockGetterHelperInterface,
-  ): Promise<void>;
-
-  abstract checkMaxBeginBalanceAndMaxTxCount(
-    block: T,
-    tickResult: BFChainCore.TickResultInfo,
-  ): void;
+  abstract verifyBlockAsset(block: T): Promise<void>;
 
   async verifyBlockBase(
     block: T,
     processBlockType: PROCESSBLOCK_TYPE,
     generatorInfo: BFChainCore.AccountInfo,
-    transactionGetterHelper = this.transactionGetterHelper,
-    blockGetterHelper = this.blockGetterHelper,
   ) {
     this.blockHelper.verifyBlockVersion(block, this.configHelper);
 
-    if (!transactionGetterHelper) {
-      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-        prop: "transactionGetterHelper",
-        target: "moduleStroge",
-      });
-    }
-    if (!blockGetterHelper) {
-      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-        prop: "blockGetterHelper",
-        target: "moduleStroge",
-      });
-    }
-
     // 除了重建时，应该验证区块是否存在
     if (processBlockType !== PROCESSBLOCK_TYPE.REBUILD) {
-      await this.isBlockAlreadyExist(block.signature, block.height, blockGetterHelper);
+      await this.isBlockAlreadyExist(block.signature, block.height);
     }
 
     // 验证区块时间戳
@@ -105,7 +80,7 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
 
     // 校验区块前块 signature
     if (block.height !== 1) {
-      await this.checkPreviousBlock(block, blockGetterHelper);
+      await this.checkPreviousBlock(block);
     }
 
     // 校验区块的二次签名
@@ -188,19 +163,9 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
    *
    * @param signature
    * @param height
-   * @param blockGetterHelper
    */
-  async isBlockAlreadyExist(
-    signature: string,
-    height: number,
-    blockGetterHelper = this.blockGetterHelper,
-  ) {
-    if (!blockGetterHelper) {
-      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-        prop: "blockGetterHelper",
-        target: "moduleStroge",
-      });
-    }
+  async isBlockAlreadyExist(signature: string, height: number) {
+    const blockGetterHelper = this.blockGetterHelper;
     if (typeof blockGetterHelper.getCountBlock !== "function") {
       throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "getCountBlock",
@@ -235,15 +200,9 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
    * 校验前块信息
    *
    * @param block
-   * @param blockGetterHelper
    */
-  async checkPreviousBlock(block: T, blockGetterHelper = this.blockGetterHelper) {
-    if (!blockGetterHelper) {
-      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-        prop: "blockGetterHelper",
-        target: "moduleStroge",
-      });
-    }
+  async checkPreviousBlock(block: T) {
+    const blockGetterHelper = this.blockGetterHelper;
     if (typeof blockGetterHelper.chainBlockFork !== "function") {
       throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "chainBlockFork",
@@ -287,17 +246,9 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
    * 校验打块账户
    *
    * @param block
-   * @param blockGetterHelper
    */
-  async isValidBlockSlot(block: T, blockGetterHelper = this.blockGetterHelper) {
-    if (!blockGetterHelper) {
-      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-        prop: "blockGetterHelper",
-        target: "moduleStroge",
-      });
-    }
-
-    const { timeHelper, blockGeneratorCalculator } = this;
+  async isValidBlockSlot(block: T) {
+    const { timeHelper, blockGeneratorCalculator, blockGetterHelper } = this;
 
     const generatorAddress = await this.accountBaseHelper.getAddressFromPublicKeyString(
       block.generatorPublicKey,
@@ -364,25 +315,19 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
     }
   }
 
+  checkMaxBeginBalanceAndMaxTxCount(block: T, tickResult: BFChainCore.TickResultInfo) {
+    return true;
+  }
+
   /**
    * 校验新生成的受托人
    *
    * @param height
-   * @param transactionGetterHelper
+   * @returns
    */
-  async checkNewDelegates(
-    height: number,
-    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
-  ) {
-    if (!transactionGetterHelper) {
-      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-        prop: "transactionGetterHelper",
-        target: "moduleStroge",
-      });
-    }
-
+  async checkNewDelegates(height: number) {
     const round = this.blockHelper.calcRoundByHeight(height);
-    const newDelegates = await transactionGetterHelper.getRegisterNewDelegates(height);
+    const newDelegates = await this.transactionGetterHelper.getRegisterNewDelegates(height);
     const { delegates, maxDelegateTxsPerRound } = this.configHelper;
     const delegateCount = newDelegates.length;
     if (round === 1) {
@@ -403,5 +348,24 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
       }
     }
     return newDelegates;
+  }
+
+  /**
+   * 块内资产变动 hash
+   *
+   * @param height
+   * @param hash
+   */
+  async checkAssetChangeHash(height: number, hash: string) {
+    const assetChanges = await this.accountGetterHelper.getAssetChanges(height);
+    const calcHash = await this.blockHelper.calcAssetChangeHash(assetChanges);
+    if (calcHash !== hash) {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+        to_compare_prop: `assetChangeHash ${hash}`,
+        be_compare_prop: `assetChangeHash ${calcHash}`,
+        to_target: "block",
+        be_target: "calculate",
+      });
+    }
   }
 }

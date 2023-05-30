@@ -1,9 +1,9 @@
 {
   "version": 1,
   "height": 1,
-  "blockSize": 18002,
+  "blockSize": 16535,
   "timestamp": 0,
-  "signature": "b7649d9819987010bfcffe87958b6e41b3890beb18e04e2b51a09a2a906814a29138d080bb5926cc04fcb5b2f814bcd9e31488e7a6f8091302faa46a842a3800",
+  "signature": "9bb3ca006fd796c4ac0d6bc50b9d534bacdef21d22a691cbc22da3e6eda6ad51b7267d249d08256ef4243425c47fb89a022c06763dc10281d01b4423842a450f",
   "generatorPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
   "generatorEquity": "0",
   "previousBlockSignature": "",
@@ -27,16 +27,28 @@
         "denominator": 100
       },
       "maxTransactionSize": 409600,
+      "maxTransactionBlobSize": 1073741824,
       "maxBlockSize": 838860800,
       "maxTPSPerBlock": 1000,
       "consessusBeforeSyncBlockDiff": 7,
       "maxDelegateTxsPerRound": 10,
       "maxGrabTimesOfGiftAsset": 1000000,
+      "maxVotesPerBlock": 128000,
+      "voteMinChainAsset": "0",
       "issueAssetMinChainAsset": "10000000000000",
+      "maxMultipleOfAssetAndMainAsset": {
+        "numerator": "100000",
+        "denominator": "1"
+      },
+      "issueEntityFactoryMinChainAsset": "50000000000000",
+      "maxMultipleOfEntityAndMainAsset": {
+        "numerator": "100000",
+        "denominator": "1"
+      },
       "registerChainMinChainAsset": "10000000000000",
       "maxApplyAndConfirmedBlockHeightDiff": 57,
       "blockPerRound": 5,
-      "delegates": 114,
+      "delegates": 10,
       "whetherToAllowDelegateContinusElections": false,
       "forgeInterval": 128,
       "rewardPercent": {
@@ -55,56 +67,14 @@
       },
       "rewardPerBlock": {
         "heights": [
-          1,
-          100000,
-          18900000,
-          37800000,
-          56700000,
-          75600000,
-          94500000,
-          113400000,
-          132300000,
-          151200000,
-          170100000,
-          189000000,
-          207900000,
-          226800000,
-          245700000,
-          264600000,
-          283500000,
-          302400000,
-          321300000,
-          340200000,
-          359100000,
-          378000000,
-          396900000,
-          403200000
+          48712,
+          9806288,
+          40193712
         ],
         "rewards": [
           "0",
-          "3500000000",
-          "9000000000",
-          "4500000000",
-          "2250000000",
-          "1125000000",
-          "562500000",
-          "281250000",
-          "140625000",
-          "70312500",
-          "35156250",
-          "17578125",
-          "8789062",
-          "4394531",
-          "2197265",
-          "1098632",
-          "549316",
-          "274658",
-          "137329",
-          "68664",
-          "34332",
-          "17166",
-          "8583",
-          "4291",
+          "4000000000",
+          "2000000000",
           "0"
         ]
       },
@@ -128,6 +98,7 @@
           "denominator": 1
         }
       },
+      "assetChangeHash": "c6d01aa20bfe3852c527c36add79d2a1d0e1cb0a367337861126e30fb20cd5fc",
       "newDelegates": [
         "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
         "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
@@ -164,46 +135,22 @@
           "equity": "0"
         }
       ],
-      "rate": "0",
-      "maxMultipleOfAssetAndMainAsset": {
-        "numerator": "100000",
-        "denominator": "1"
-      },
-      "issueEntityFactoryMinChainAsset": "50000000000000",
-      "maxMultipleOfEntityAndMainAsset": {
-        "numerator": "100000",
-        "denominator": "1"
-      },
-      "maxVotesPerBlock": 128000,
-      "voteMinChainAsset": "0"
+      "rate": "0"
     }
   },
   "transactionInfo": {
     "startTindex": 0,
     "numberOfTransactions": 41,
-    "payloadHash": "c7ea604f162987e9b9540da83965754455e47033529a752539f358ea96b05ef7",
-    "payloadLength": 16219,
+    "payloadHash": "8e3d221da939a8f931ea0e15a2dfed0004044ee4b0db69a37119372e32fa69c1",
+    "payloadLength": 14993,
+    "blobSize": 0,
     "totalAmount": "17394",
     "totalFee": "10292",
     "transactionInBlocks": [
       {
         "tIndex": 0,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "99999999999760"
-          },
-          {
-            "accountType": 1,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "99999999999760"
-          }
-        ],
-        "signature": "9d7d4969a6b816c8e28af8d2a8bee472bd344a7c1312792e09913ef001be12b592f0451f984505e1b02ff102997b53d5325bfe4fea16451c3436c0bfdd24450c",
+        "signature": "c5d96ce6e2c43e16b8e266618c46d193f48c2ac22b0a54533aa9139819f7704c50c1b233c62169ce1e2c1868eeb26214110069ef5d474e97edacea62b443fa0d",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-LNS-00",
@@ -236,21 +183,7 @@
       {
         "tIndex": 1,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "99999999998755"
-          },
-          {
-            "accountType": 1,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "710"
-          }
-        ],
-        "signature": "000e53d5903ec3ae1c99c0e7dcedc6f7b08e5241ed599901187c65fc785b8983e8399e9191791b70e1c3a31d1c366ba658493a4a8c70773517db5130bc30d70d",
+        "signature": "b0a7495fc32710076e6706c6629a5a4e5f036242bd035fb72c2713765b141d00dba3873a2653281c823ac56c5666013931a942a1902b8c4dbec4ea47f913ec04",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-AST-01",
@@ -285,15 +218,7 @@
       {
         "tIndex": 2,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "456"
-          }
-        ],
-        "signature": "d9f8582eabb1846edcd57e2c4902530f39f359b770ec99dca89d8b77e180f449dda8ada5ee5b1e2e17ec2fe43ffc1d4d610d1d0852455e672774fde0e9fad404",
+        "signature": "7d64920aa46ea7baafe5bea353458f132ac072b26f087c1062a417100308e240af27cf3bc80dc5febc5dc4ca9f122748d2b96a990fd9a97e1e1b35a5ebe39a03",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-BSE-04",
@@ -324,15 +249,7 @@
       {
         "tIndex": 3,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "227"
-          }
-        ],
-        "signature": "112974753ba7dc1a2767308c191d7736755019b590368aa2b8a629d05a182239746e99205de77016629b40981abee09a78363b90119ba2683aad0dee2af77c0b",
+        "signature": "6cae0f96cd7a556d7d991d27941d957c0e2c75703277d986169f7e03823ef20ab5090860c00b89640a08ee30fee7eadf114ab93e6aee8a570f0673284924ec09",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-BSE-02",
@@ -357,15 +274,7 @@
       {
         "tIndex": 4,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "0"
-          }
-        ],
-        "signature": "e632823e8aaebd4be8495a721d4ebb5a58fdd484c36a89a5a2c91b66183748035bff09d22e802dc31175642db00c987465f7467515e0f03fba8c8a6371cbc109",
+        "signature": "fe3acae86f465c9ca9f5af9b44bc6b445822d5102aa3a6d5e006417feb66d379df7f3c3bf90f338006a87ff4245ba433297918d1d96a8cfc42d15c3b1acb0e06",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-BSE-05",
@@ -390,21 +299,7 @@
       {
         "tIndex": 5,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "99999999997750"
-          },
-          {
-            "accountType": 1,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "710"
-          }
-        ],
-        "signature": "ad6916061c4140ea17b3b5c17aa4d1f8a915ebb7dcb677996cd58b4f4f9ec8ce9b12a197c403b2e52a3bbae1ac9ba8c08ab21175b764b00db2dc1ba4ffccf40b",
+        "signature": "dec32b5754086ddd078badb746cf6e95008d1054f456cd4a2df62fabb50b984e4a731016dadf8dcf6296559c9aab22e6b6dcf03a4821c7674aa428c5e5214d04",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-AST-01",
@@ -439,15 +334,7 @@
       {
         "tIndex": 6,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "456"
-          }
-        ],
-        "signature": "5bb13ce269a005ab22f3555585da92c6bece45f6801e43b9923b9fc042a29717a8ead811cb9106fe5cbd707dc9cb6b80fd56a42d1f23f76f8be6bd66c2931e08",
+        "signature": "4adf4ca724e3fb79f471d6f440743acdfa1e85508091ff13a8aff6ec4a2b86c2b5fba76fdfeef70e925ff7d538757908dc64ca41bc4e886c762830e4643bc20f",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-BSE-04",
@@ -478,15 +365,7 @@
       {
         "tIndex": 7,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "227"
-          }
-        ],
-        "signature": "e03c78f88de4c3046a8f83f11c8f023fa77aa48c9c14dbee6985813552a56a656a9ac5ed2887ecdbf1931f61f7f005cd14d8cd64f22cfe808848fb6c5a8b6704",
+        "signature": "faf623aa034b33bb13dec4fa275febbb5a3ba42a9dc57d7a54f67b0f848a8991f164b1ab98e141f100f0b7fe9bdd0a67e6ffaa148a5c3a18409f26262180290d",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-BSE-02",
@@ -511,15 +390,7 @@
       {
         "tIndex": 8,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "0"
-          }
-        ],
-        "signature": "59fff984b77edd52924d050e7952ee560cc8c3cf6643b2b408994a6e2c0d2ba95d4daae556bd0945ccfeba398d96d8bf2a62dd8124c9a272de3f4152a064be0b",
+        "signature": "3f862bae65b29288389193e1ad7e4a1bde9173338dafd52ff5748bf82605195b9ba4de34c0e1da0a4c86767adfd5d2a8e48fb9b19840930c8817f9dbedc20e00",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-BSE-05",
@@ -544,21 +415,7 @@
       {
         "tIndex": 9,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "99999999996745"
-          },
-          {
-            "accountType": 1,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "710"
-          }
-        ],
-        "signature": "7afe22310f7a553577e3120675e721429782eba9464739b3f159a988ad5cae841d3efdec0247bae15724daca3fc4392e4e079ab34e88820c563dc83a428cc206",
+        "signature": "2f581cdf53a2831b67e847fef3975a2a8942ab373f2dc5d33022f30e7284665cf0093c15a54eff5704cdea241de9ea8227326d1ead4884ae05e1e52d93e0b80a",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-AST-01",
@@ -593,15 +450,7 @@
       {
         "tIndex": 10,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "456"
-          }
-        ],
-        "signature": "3388d5d2090537ae759e08f0f0f849643b55f6af8b11c781a7a896daa09be323c69bf3a5dce8d2321e57241c2e11ed146ff58de6760dc4f751a586e174672809",
+        "signature": "81e542a3d8b0b7069306108d26c70197f2c3c6ad60badd212879fe2f8ff0ee11cff2380330cc7cef284ace2181ba66a6075da87417c79ba3b5c32d7e87622606",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-BSE-04",
@@ -632,15 +481,7 @@
       {
         "tIndex": 11,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "227"
-          }
-        ],
-        "signature": "001bf921b367b7300c554acefa6bf29b2f77d2377a3463c815de2c6a2d3cc13effe8147a5a242a769a191d3a2c929a9ca0df3d588a1e6c964f81cc7bc6417d0b",
+        "signature": "830805023f88c313b813d50cf600b27a5cda6c81d27824995555346b6cce022ca19d8b071176b6dd3048a0774931bf720cad79f91f267d9b59935ba36f9add00",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-BSE-02",
@@ -665,15 +506,7 @@
       {
         "tIndex": 12,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "0"
-          }
-        ],
-        "signature": "b3b7e8652b936243eb6a38beaf203bbb04e45ae87c90616c1558fcb11c152ba04ee69e40e74cc67a13c5f7c9885a89316ab9f27e6f486d0b68878a7f1b7b1100",
+        "signature": "a0ae96c502a93ac13cae3b10eb88f43df339874ec7da27d5c8b41748f8a9e34e4d96d05bffaf3270b2a1fe036cb8bdde650ac4f3318b92273182bfd0b207bd02",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-BSE-05",
@@ -698,21 +531,7 @@
       {
         "tIndex": 13,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "99999999995740"
-          },
-          {
-            "accountType": 1,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "710"
-          }
-        ],
-        "signature": "a748286aaa6a4195a094c0ef6c56286bd7e57e2d7f11bc942f1fa68d98fa33f04b20aa19f428b2313dcb52b7dd6740e697b5a5216269c311637050d63ae4f505",
+        "signature": "c51bf658bb98f6e4826b9d7f9beb9541f6a22e13509fa5e9bff24d41fdcfc72fa608313bec4142d62bcc77f931488185720082ad6f9a22acd27ffcd5b9b77a0a",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-AST-01",
@@ -747,15 +566,7 @@
       {
         "tIndex": 14,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "456"
-          }
-        ],
-        "signature": "1b8eafeba0f036bc69e2bba63b98ba9c49ca7a87fd63b0dfde972c2bf6d6654fbe9f154ee8b03d16596de6ec9380fb1984995d03a61ad877208656602f9dd606",
+        "signature": "9050808b89c72272292e12a6a3293f2e17fe980e09a3867896c7c590b505ae00ef9d65f71f2e680d42a881d5a190c109d42e91bb830d4179033f85a6e96f7a05",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-BSE-04",
@@ -786,15 +597,7 @@
       {
         "tIndex": 15,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "227"
-          }
-        ],
-        "signature": "efb3eb4693674308bfa3c5464903c115f81778c62471342f09510bb14e0419912039df46396e1756369ff1572b88fd7f54ddff35c0e47ec6d3cb99efbc21620d",
+        "signature": "985dd91aff02971b237dc6ad7e7c6a144094f26f7597b3f06f2dc431ef98d3033ebc20be96fc11d47eb6b5dcfaa217cb28e33493a83d05180f363935b9c02208",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-BSE-02",
@@ -819,15 +622,7 @@
       {
         "tIndex": 16,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "0"
-          }
-        ],
-        "signature": "152dd45cfae9f6471f1c9ffd38f0cdd68fdaa4e71af0acd073d96e2393bf7add9f1c5a1f58b091f4cb66ca30d528cd0f4a208d17a179e4345ca74da20fefda0a",
+        "signature": "4fc15f4fca14088a45bd6ab9037484223c5561e2d325704f37f7ad6ec2f87ea6d3f0012e9e36d8b9333b20ae230938e7441c5b8949b66f505168a94470b1ec02",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-BSE-05",
@@ -852,21 +647,7 @@
       {
         "tIndex": 17,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "99999999994735"
-          },
-          {
-            "accountType": 1,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "710"
-          }
-        ],
-        "signature": "641d2db0dccbed7bb0c4a402173726f14a327458f4e415c8d942b6872134bfc644bf04b8e98cea3b4c5503d55147c678acead90556e43e369a04f0d9c83dcc05",
+        "signature": "1e5ecbcbdd4159882b4908cc3aef87c33930b68d5c95841764c7c4e065b73dbd93e53247c9e77ffe3a6d2ce9811d3b58d05e9daffb8983da4f59ed229f60810a",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-AST-01",
@@ -901,15 +682,7 @@
       {
         "tIndex": 18,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "456"
-          }
-        ],
-        "signature": "7fcab0236062a257735f5c6505a8b83e5339dc2a55602a91a91e8173bd2f094250f384029e3b61e2868f82814318857b2284fad3544c9814fae4270a1903be02",
+        "signature": "511d7b502e5e30acdde34d617ad3f99d83e89d6baf859985a43e44a4ede85f59078e74c84a23769dfb803433ee397f706db99fdd3fb599e91dd8a952b9c6dd0c",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-BSE-04",
@@ -940,15 +713,7 @@
       {
         "tIndex": 19,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "227"
-          }
-        ],
-        "signature": "0017e1332d197afb3761f9da78fab458ddb235740140c65a8424093e19d1ca74f2518271ff2c348b7db109fe631ffa17d3597cf4d78d7ac36be947f54e49420d",
+        "signature": "30c30095fd7e7fa2198f7e64bde3947f49f89485c7913b8cf4a3871564e07923073a7c0bed29a8ca425de5520cea26e77e126ea49d138c5dcd8cf00661925f04",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-BSE-02",
@@ -973,15 +738,7 @@
       {
         "tIndex": 20,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "0"
-          }
-        ],
-        "signature": "eabb9705c0d73f14c3ada0f8d87fe1d4cbd91e056f7e12ece870862de73795a995058e3e1b4a8ba6e8f76a1f0e8ff208b1204528746bd6a0b3c9bc43c445b705",
+        "signature": "c9a9f8ce47df7de5348727cb305ad02a20a97c8738d2f4897fa4f13a2f0195f5698dcd44a4d28fef384a8ad592ef82c22a8c3093b67138f61a6ed9ad560e3e00",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-BSE-05",
@@ -1006,21 +763,7 @@
       {
         "tIndex": 21,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "99999999993730"
-          },
-          {
-            "accountType": 1,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "710"
-          }
-        ],
-        "signature": "575e889b640e7ab4d9decacfb782c2be49b3c1c4d7f5850dda259b8f2b4fd4603986beff92a5c0aa2e2aa131f99466d0f0fdaf599ce408f977334f6c9d6f3c04",
+        "signature": "31bf105ce1ec94cecd25af26173506bbbab9ee9e3cdb033d1e80242a1a2bfa35b174a68fbfbb7435823f466cd86f36a3946fa6b1a94c6db09c82a1efd1bf3903",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-AST-01",
@@ -1055,15 +798,7 @@
       {
         "tIndex": 22,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "456"
-          }
-        ],
-        "signature": "ff44e990607ab38590446cc3213797344c5d761a997a67f1e6bbec470f155f245b66b707c0431dead64bdb583f0a1e76fce5b4c905f1ff51480223ce0916ec01",
+        "signature": "8ce9ce63d7d90ed9a5f476bd80c19f9e70b6776c45ce4ae05636bd6703f93391038f98e4959b0aefe1f5944fc2c4e0fb55c7b65c04d0437fc66f61ae3c9bf609",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-BSE-04",
@@ -1094,15 +829,7 @@
       {
         "tIndex": 23,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "227"
-          }
-        ],
-        "signature": "9c7f08092e56c0e700f5ace4794be39fe029f41b5456096784d7c8acac78acaa6a3984676fa0457da50c276a229e810bccd9940edc3d3d69456058d630e2b609",
+        "signature": "9b8b89c19b5685ac04ef9cc4947a6737789e7cd685de22a51650b0f5de9e49dfe4645cf447bd154088f79156e923b2d21d55a248a5971f4f66f4ab2edeb22a0c",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-BSE-02",
@@ -1127,15 +854,7 @@
       {
         "tIndex": 24,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "0"
-          }
-        ],
-        "signature": "b33912f3342b892842bc0e10fa37dd64c2e05b089f10db76f9d83ffb06d1bdbbb2175517d2bcc0e7503b00721669fc27e393959adfeada2cc4a399a2517a9c07",
+        "signature": "afbc9d52d5050014d3649eb666430611090a7b692f1915ce216c069db025ad80557b6dbf9b485aba21940465a50b3d8897b266b24fb524f42d6be998b591ab05",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-BSE-05",
@@ -1160,21 +879,7 @@
       {
         "tIndex": 25,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "99999999992725"
-          },
-          {
-            "accountType": 1,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "710"
-          }
-        ],
-        "signature": "8ec5eef806f33b6406c96679c3b55a37d84880cb686fa09871b0fd2ffb9b5022171d090ec828e7f76770b9fac879375287e041fec4b2e9d1495ef093f6785a0d",
+        "signature": "4f02f248d6b68bb7b9c25b32feba53c69e600941b0abda3fcb91e0c71ace14aa69823df9300768b3b9c7d74be00d93b73a148379a7450ce093dc4ff9dfba200c",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-AST-01",
@@ -1209,15 +914,7 @@
       {
         "tIndex": 26,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "456"
-          }
-        ],
-        "signature": "58cec04d192bdcd72d1bca386cff8fae72eae9f8c7d2264252ff1a87ee6027e4dccdfb7103e51415bcb0473d1bd4dbb16dd6dd81784288f22ed138d5e52bbd00",
+        "signature": "0be8ed18426597affa841a3fff62971c3023aa16b4f32584ad1005ddf8ade5a050d93abf9436a122467bcbdd4a88cd41d2035faf35039706e6dde702c30f8c02",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-BSE-04",
@@ -1248,15 +945,7 @@
       {
         "tIndex": 27,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "227"
-          }
-        ],
-        "signature": "06359a54d738d51c2c6bfaaf1501b59147ff893bc92e5d947534cd52e6a8ef675b78660b044bf32829d494de95dfa5852fafc4be15b3c07d3b5ecd80c9711a09",
+        "signature": "8bdf95b27675690cfc0ee034df007b15c04f6530a224c5b9473a7c39dc55a307fef76a0b4fb3535f5659383fd54f048f471916fdb534d2893aef917a3ab9f203",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-BSE-02",
@@ -1281,15 +970,7 @@
       {
         "tIndex": 28,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "0"
-          }
-        ],
-        "signature": "2240282ce1cbcd4219fa0dfe99289c241aa9eaa09670284bb70160a221fc96f0785b0edaff247fa7cd8e3c0a54cf352b78023a8371df31555c5936c9a452fb01",
+        "signature": "35bd6f615fbe44bd24b569863dbf305d728472bc266a2d05ca2fca0a6710d7cd94e5e22363c999d0612ffaee463d94c1a908e14fd6a3ca141b1e1f618a760b0a",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-BSE-05",
@@ -1314,21 +995,7 @@
       {
         "tIndex": 29,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "99999999991720"
-          },
-          {
-            "accountType": 1,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "710"
-          }
-        ],
-        "signature": "1348d7a751717a46f7e2b643f1dfbbaf30693d9e052148ca484279bf4552d82665f97bbd40aae3b5453188e9c56f3c8ea7c924cf238fd82f124671543f0f7a03",
+        "signature": "3245ecf7b68be50d1f823837933fce45dbeac88f679a472a1203431a26dc227ec03580665626928a79cc1118acb8d49432aa631705d0f6ef0b883d713c78ae0a",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-AST-01",
@@ -1363,15 +1030,7 @@
       {
         "tIndex": 30,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "456"
-          }
-        ],
-        "signature": "2a1977a318d972fb32704fe63fe2a6c33cd8ca64d8095f76d89610000fdef31c7562307ff0fd520c1fd288d037aebd15e67ee1fa63d000baa8b3c9fc5023ca0a",
+        "signature": "d27d773ae069c5b2c2302a8a2733d4131a7d39cb1605e2cd5836d266cb5dec19f052bb9d20a6b580d1ec6955f565b498a588c7ea3201ecc15d8af4144039f607",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-BSE-04",
@@ -1402,15 +1061,7 @@
       {
         "tIndex": 31,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "227"
-          }
-        ],
-        "signature": "e15938952d78ad8dac801a1850bdf5b767c6b4af8013a202b1a569908ff5112df1d52ba11cbb063e6e30ebc3adb6ee901b84b4e1d4c52132e7d494da627c8206",
+        "signature": "5f77a65eb4b45dc72ef8db3667ddfc6236bf8b3bfb4746d9b99a114601e30c21ce934d795f972ae68658f67603fa2a28029d712c3959673515e708ab49090806",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-BSE-02",
@@ -1435,15 +1086,7 @@
       {
         "tIndex": 32,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "0"
-          }
-        ],
-        "signature": "1aa8f1b4791cfee95b22b9f171496ef6c0abbb6ed98263e4a40404276e92644ccd9b52e2478a8d2afd815adec34dfc7b1281882cfac2e91ccda825a09b58b70d",
+        "signature": "0e011bcceb8e3a94fcdacc504b708f0dd7342f26d2f8d92c9d77fd42723f7a267c86ffd1552191d05fc16d9ed1cafb810c912800bb6d71376d622a334fe2a404",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-BSE-05",
@@ -1468,21 +1111,7 @@
       {
         "tIndex": 33,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "99999999990715"
-          },
-          {
-            "accountType": 1,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "710"
-          }
-        ],
-        "signature": "6d358991576ddd7fa221aa6cbca2cd17512b20be58c7550f7aca7ff5de23809f5c28c02eb576a452466e2923a0256ebdb43a046cf90ed16c15a86501343c2200",
+        "signature": "c2e8eeaa0c7c8c40375d95308e68029aa7d2ea560ebb4fb916d6498080bf0c4171145bc4852d1b95e86a05b91f5265021350206c68dbdfa429f812387923c106",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-AST-01",
@@ -1517,15 +1146,7 @@
       {
         "tIndex": 34,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "456"
-          }
-        ],
-        "signature": "7240cd4e0e1a2b1ff772d51e6c6a90f64323dbe269e2236a77efcd315dcc9cb6832077324d50be6f2ec1353b85d199377b0079106d43cbc8a95b88c0f4b1200e",
+        "signature": "361ecea07d571b1191c49f4554eca3fd4e5a741aae88b71ae269f7981288bf12e4de101d0a2ab3b840397ed78a63b709bca27b8ae2b18e1b5c0dbf0f66c4bd03",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-BSE-04",
@@ -1556,15 +1177,7 @@
       {
         "tIndex": 35,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "227"
-          }
-        ],
-        "signature": "3442381fe56b9acdb041e6e9f8cf5b5afb718e912afc5e5c5952d2e3d783c04faf6a8888e5bf2eb9f7c9ba165ce29d1098d26f0ae75a0da9705681e524d64600",
+        "signature": "9ca323ad1233505e58d24810668171ef8a490978f1448f20df9a5d3444cfc26fae6dd9d5595b262f814e4da34375f9b6f9a5d984327f2fb9e15919e100c71b0d",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-BSE-02",
@@ -1589,15 +1202,7 @@
       {
         "tIndex": 36,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "0"
-          }
-        ],
-        "signature": "1b5f288671567711631e25e5660efb3caa16ef0fe9bcf18746860e10f2bc89b34005ba95cfd98541778c90b9f5be4ff51b035768653fa8693c4265fb41409e00",
+        "signature": "09963fafa6a19b03eb376fff5b463f2cbba49f426ae5dc5ede999c7a0f27fd925679f360edf9790dae876ef5f3ee9a59a6a8b60e9af1ca63e2b453b5b9765107",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-BSE-05",
@@ -1622,21 +1227,7 @@
       {
         "tIndex": 37,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "99999999989708"
-          },
-          {
-            "accountType": 1,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "712"
-          }
-        ],
-        "signature": "1276dfbb0a778de34809e7d73571a39569d6fa31ae0b8302babce6b70cfda8bf81978a1dd2c598389b15f8fa34a417eccc1b02dbf1724a4ea4f462dd7dee140e",
+        "signature": "a8da1f7112e382178f0abf045e68c719c5344fc7a2b04b8677b56bd630d2835a8513e967993ee1c3a10a37920d2eb78b9ef39c53b1b7470e68f04e106fd45f00",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-AST-01",
@@ -1671,15 +1262,7 @@
       {
         "tIndex": 38,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "456"
-          }
-        ],
-        "signature": "8f35d988e04dbf5682693cf534c2e6a733fdb3874cbe1e8293acffbc1af31360ddba5087de95a62d1b04519cba5cf850cebb36fdf77c5a12bfdd8d4952aed407",
+        "signature": "bb167883dc18b65e2097cd5b3198583b9e96b9c5290a78fb2cc5a3d70fc9ce157d56c2496dab718506bf91812b8925531a46f6e982397de20ca322e6bb8ae108",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-BSE-04",
@@ -1710,15 +1293,7 @@
       {
         "tIndex": 39,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "227"
-          }
-        ],
-        "signature": "22a3c367c9503e00351c68bf03046dfd01feb1c9f334af65b35c4619c403552e5d177748167f1be0c21d7c179a26120a0ecba2bbe4394df2e6f8d45e3d6cca08",
+        "signature": "63301aa9fb3e1272a6df102263d949b175f703609fd6ac32352082a5699d188058da95b153a0a17e313c4544f1230443d0afa793fd66047f259b524c7d296b0f",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-BSE-02",
@@ -1743,15 +1318,7 @@
       {
         "tIndex": 40,
         "height": 1,
-        "transactionAssetChanges": [
-          {
-            "accountType": 0,
-            "sourceChainMagic": "NMQX0",
-            "assetType": "QAWAQ",
-            "assetPrealnum": "0"
-          }
-        ],
-        "signature": "f5f9199ce7bf31446ac9a9f28f104b42c90883753550e0a9e79dd1c5f0dcd68ed9bda2a2b3462b17cd2c1f67c4617ea3e5a0b6ae1cd6056a46f2944852f03302",
+        "signature": "75c61586d8893ce714297a186abe3a7b80659ec58f3b3bbce7048bdb38f0a6f130867ca5dc451603fcbf61fb71e3a90a28cf7f00e578008998b813f21249ab0c",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-BSE-05",

@@ -2,7 +2,7 @@ import { FieldConverter } from "./1";
 import { Injectable } from "@bfchain/util-dep-inject";
 
 const fieldConverter = FieldConverter();
-type DefaultType = typeof fieldConverter["$TYPE"];
+type DefaultType = (typeof fieldConverter)["$TYPE"];
 type DefaultKeys = DefaultType[0];
 type SomeFieldNameVersion<K, N> = K extends `${infer _}/${infer FieldName}/${infer K}`
   ? N extends FieldName

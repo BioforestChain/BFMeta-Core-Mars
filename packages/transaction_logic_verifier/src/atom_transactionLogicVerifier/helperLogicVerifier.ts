@@ -2,12 +2,15 @@ import { Injectable, Inject } from "@bfchain/util";
 import { ConfigHelper } from "@bfchain/core-helper";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { NewTransactionRefuseReason } from "@bfchain/core-model-channel";
+
 const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "HelperLogicVerifier");
 
 @Injectable()
 export class HelperLogicVerifier {
   @Inject(ConfigHelper)
   protected configHelper!: ConfigHelper;
+  @Inject("accountGetterHelper", { dynamics: true })
+  protected accountGetterHelper!: BFChainCore.AccountGetterHelperInterface;
 
   deepClone<T>(obj: T): T {
     const result = Array.isArray(obj) ? ([] as any) : ({} as T);
@@ -36,7 +39,6 @@ export class HelperLogicVerifier {
   async isPossessAssetExceptChainAsset(
     address: string,
     assets: BFChainCore.AccountAssets,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
     configHelper = this.configHelper,
   ) {
     for (const magic in assets) {
@@ -49,19 +51,18 @@ export class HelperLogicVerifier {
         }
       }
     }
-    const isPossess = await accountGetterHelper.isPossessFrozenAssetExceptMain(address);
+    const isPossess = await this.accountGetterHelper.isPossessFrozenAssetExceptMain(address);
     if (isPossess) {
       throw new ConsensusException(ERROR_LIST.POSSESS_FROZEN_ASSET_EXCEPT_CHAIN_ASSET);
     }
   }
 
-  async isDAppPossessor(
-    address: string,
-    configHelper = this.configHelper,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-  ) {
+  async isDAppPossessor(address: string, configHelper = this.configHelper) {
     // 资产的发行账户不能是dapp的拥有者
-    const isDAppPossessor = await accountGetterHelper.isDAppPossessor(configHelper.magic, address);
+    const isDAppPossessor = await this.accountGetterHelper.isDAppPossessor(
+      configHelper.magic,
+      address,
+    );
     if (isDAppPossessor) {
       throw new ConsensusException(ERROR_LIST.ACCOUNT_CAN_NOT_BE_FROZEN, {
         address,
@@ -70,13 +71,9 @@ export class HelperLogicVerifier {
     }
   }
 
-  async isLnsPossessorOrManager(
-    address: string,
-    configHelper = this.configHelper,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-  ) {
+  async isLnsPossessorOrManager(address: string, configHelper = this.configHelper) {
     // 资产的发行账户不能是位名的拥有者账户或管理账户
-    const isLnsPossessor = await accountGetterHelper.isLocationNamePossessor(
+    const isLnsPossessor = await this.accountGetterHelper.isLocationNamePossessor(
       configHelper.magic,
       address,
     );
@@ -88,13 +85,9 @@ export class HelperLogicVerifier {
     }
   }
 
-  async isEntityFactoryPossessor(
-    address: string,
-    configHelper = this.configHelper,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-  ) {
+  async isEntityFactoryPossessor(address: string, configHelper = this.configHelper) {
     // 发起账户账户不能是entityFactory拥有者
-    const isEntityFactoryPossessor = await accountGetterHelper.isEntityFactoryPossessor(
+    const isEntityFactoryPossessor = await this.accountGetterHelper.isEntityFactoryPossessor(
       configHelper.magic,
       address,
     );
@@ -106,13 +99,9 @@ export class HelperLogicVerifier {
     }
   }
 
-  async isEntityPossessor(
-    address: string,
-    configHelper = this.configHelper,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-  ) {
+  async isEntityPossessor(address: string, configHelper = this.configHelper) {
     // 发起账户不能是entity拥有者
-    const isEntityPossessor = await accountGetterHelper.isEntityPossessor(
+    const isEntityPossessor = await this.accountGetterHelper.isEntityPossessor(
       configHelper.magic,
       address,
     );
@@ -124,13 +113,8 @@ export class HelperLogicVerifier {
     }
   }
 
-  async isAssetExist(
-    sourceChainName: string,
-    sourceChainMagic: string,
-    assetType: string,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-  ) {
-    const memAsset = await accountGetterHelper.getAsset(sourceChainMagic, assetType);
+  async isAssetExist(sourceChainName: string, sourceChainMagic: string, assetType: string) {
+    const memAsset = await this.accountGetterHelper.getAsset(sourceChainMagic, assetType);
 
     if (!memAsset) {
       throw new ConsensusException(ERROR_LIST.NOT_EXIST, {
@@ -156,9 +140,12 @@ export class HelperLogicVerifier {
     sourceChainMagic: string,
     dappid: string,
     currentBlockHeight: number,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
   ) {
-    const memDApp = await accountGetterHelper.getDApp(sourceChainMagic, dappid, currentBlockHeight);
+    const memDApp = await this.accountGetterHelper.getDApp(
+      sourceChainMagic,
+      dappid,
+      currentBlockHeight,
+    );
 
     if (!memDApp) {
       throw new ConsensusException(ERROR_LIST.DAPPID_IS_NOT_EXIST, {
@@ -184,9 +171,8 @@ export class HelperLogicVerifier {
     sourceChainMagic: string,
     locationName: string,
     currentBlockHeight: number,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
   ) {
-    const memLocationName = await accountGetterHelper.getLocationName(
+    const memLocationName = await this.accountGetterHelper.getLocationName(
       sourceChainMagic,
       locationName,
       currentBlockHeight,
@@ -216,9 +202,8 @@ export class HelperLogicVerifier {
     sourceChainMagic: string,
     entityId: string,
     currentBlockHeight: number,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
   ) {
-    const memEntity = await accountGetterHelper.getEntity(
+    const memEntity = await this.accountGetterHelper.getEntity(
       sourceChainMagic,
       entityId,
       currentBlockHeight,
@@ -247,11 +232,10 @@ export class HelperLogicVerifier {
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     address: string,
     currentBlockHeight: number,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
   ) {
     let account = accountMap.get(address);
     if (!(account && account.accountInfo && account.accountAssets)) {
-      account = await accountGetterHelper.getAccountInfoAndAssets(address, currentBlockHeight);
+      account = await this.accountGetterHelper.getAccountInfoAndAssets(address, currentBlockHeight);
       if (!account) {
         throw new ConsensusException(ERROR_LIST.NOT_EXIST, {
           prop: `Account with address ${address}`,
@@ -267,14 +251,8 @@ export class HelperLogicVerifier {
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     address: string,
     currentBlockHeight: number,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
   ) {
-    const account = await this.getAccountForce(
-      accountMap,
-      address,
-      currentBlockHeight,
-      accountGetterHelper,
-    );
+    const account = await this.getAccountForce(accountMap, address, currentBlockHeight);
     return account.accountInfo;
   }
 
@@ -282,14 +260,8 @@ export class HelperLogicVerifier {
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     address: string,
     currentBlockHeight: number,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
   ) {
-    const account = await this.getAccountForce(
-      accountMap,
-      address,
-      currentBlockHeight,
-      accountGetterHelper,
-    );
+    const account = await this.getAccountForce(accountMap, address, currentBlockHeight);
     return account.accountAssets;
   }
 }

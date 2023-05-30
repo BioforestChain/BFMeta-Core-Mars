@@ -19,8 +19,6 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
     transaction: TrustAssetTransaction,
     currentBlockHeight: number,
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -36,31 +34,15 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
       });
     }
 
-    await this.isTrusteesFrozen(transaction.asset.trustAsset.trustees, accountGetterHelper);
-    await this.helperLogicVerifier.isAssetExist(
-      sourceChainName,
-      sourceChainMagic,
-      assetType,
-      accountGetterHelper,
-    );
+    await this.isTrusteesFrozen(transaction.asset.trustAsset.trustees);
+    await this.helperLogicVerifier.isAssetExist(sourceChainName, sourceChainMagic, assetType);
 
-    await this.logicVerify(
-      transaction,
-      currentBlockHeight,
-      accountMap,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
+    await this.logicVerify(transaction, currentBlockHeight, accountMap);
 
     const { eventLogicVerifier } = this;
 
     if (skipListenEvent === false) {
-      eventLogicVerifier.listenEvent(
-        accountMap,
-        currentBlockHeight,
-        accountGetterHelper,
-        eventEmitter,
-      );
+      eventLogicVerifier.listenEvent(accountMap, currentBlockHeight, eventEmitter);
     }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
@@ -73,13 +55,10 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
    *
    * @param trustees
    */
-  private async isTrusteesFrozen(
-    trustees: string[],
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-  ) {
+  private async isTrusteesFrozen(trustees: string[]) {
     // 委托资产的委托账户不能是冻结账户
     for (const trustee of trustees) {
-      const trusteeAccountInfo = await accountGetterHelper.getAccountInfo(trustee);
+      const trusteeAccountInfo = await this.accountGetterHelper.getAccountInfo(trustee);
       if (trusteeAccountInfo) {
         if (trusteeAccountInfo.accountStatus !== ACCOUNT_STATUS.NORMAL) {
           throw new ConsensusException(ERROR_LIST.ACCOUNT_FROZEN, {

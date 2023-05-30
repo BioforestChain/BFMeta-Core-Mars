@@ -297,13 +297,6 @@ export class ReplayBlockCore<T extends Block> {
       });
     }
 
-    if (!eventEmitter.assetChangesGetter) {
-      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-        prop: "assetChangesGetter",
-        target: "eventEmitter",
-      });
-    }
-
     if (!eventEmitter.assetPrealnumGetter) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "assetPrealnumGetter",
@@ -438,39 +431,6 @@ export class ReplayBlockCore<T extends Block> {
           await txFactory.beginDealTransaction(trs, eventEmitter);
           await txFactory.applyTransaction(trs, eventEmitter);
           if (!skipVerifyStatisticInfo) {
-            // 在 apply 之后，获取变更记录
-            const calcTransactionAssetChanges = await eventEmitter.assetChangesGetter(tranItem);
-            // 校验 transactionAssetChanges
-            const transactionAssetChanges = tranItem.transactionAssetChanges;
-            const calcLength = calcTransactionAssetChanges.length;
-            const realLength = transactionAssetChanges.length;
-            if (calcLength !== realLength) {
-              throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
-                to_compare_prop: `transactionAssetChanges lenght ${realLength}`,
-                be_compare_prop: `transactionAssetChanges lenght ${calcLength}`,
-                to_target: `transactionInBlock ${senderId} ${signature}`,
-                be_target: "calculate",
-              });
-            }
-            for (let i = 0; i < calcLength; i++) {
-              if (
-                !baseHelper.isArrayEqual(
-                  calcTransactionAssetChanges[i].getBytes(),
-                  transactionAssetChanges[i].getBytes(),
-                )
-              ) {
-                throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
-                  to_compare_prop: `transactionAssetChanges with index ${i} ${JSON.stringify(
-                    transactionAssetChanges[i],
-                  )}`,
-                  be_compare_prop: `transactionAssetChanges with index ${i} ${JSON.stringify(
-                    calcTransactionAssetChanges[i],
-                  )}`,
-                  to_target: `transactionInBlock ${senderId} ${signature}`,
-                  be_target: "calculate",
-                });
-              }
-            }
             // 在 apply 之后，获取权益资产信息
             const assetPrealnum = tranItem.assetPrealnum;
             if (assetPrealnum) {

@@ -18,24 +18,12 @@ declare namespace BFChainCore {
     tIndex: number;
     /**区块高度 */
     height: number;
-    /**事件涉及的账户权益变动信息 */
-    transactionAssetChanges: TransactionAssetChangeJSON[];
     /**权益销毁前权益的最新信息 */
     assetPrealnum?: AssetPrealnumJSON;
     /**区块锻造者的签名 */
     signature: string;
     /**区块锻造者的安全签名 */
     signSignature?: string;
-  }
-  interface TransactionAssetChangeJSON {
-    /**账户类型 */
-    accountType: number;
-    /**变动的权益所属网络标识符 */
-    sourceChainMagic: string;
-    /**变动的权益名 */
-    assetType: string;
-    /**变动后的权益数 */
-    assetPrealnum: string;
   }
   type TransactionInBlock<T extends Transaction = Transaction> = import("./").TransactionInBlock<T>;
 }

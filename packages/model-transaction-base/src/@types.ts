@@ -13,12 +13,14 @@ declare namespace BFChainCore {
 
   //#region Transaction
 
-  type TransactionMixJSON<AssetJSON extends object = object, Opts extends TransactionOptions = {}> =
-    Opts["hasRecipientId"] extends true
-      ? Omit<TransactionJSON<AssetJSON>, "recipientId"> & { recipientId: string }
-      : Opts["hasRecipientId"] extends false
-      ? Omit<TransactionJSON<AssetJSON>, "recipientId"> & { recipientId: undefined }
-      : TransactionJSON<AssetJSON>;
+  type TransactionMixJSON<
+    AssetJSON extends object = object,
+    Opts extends TransactionOptions = {},
+  > = Opts["hasRecipientId"] extends true
+    ? Omit<TransactionJSON<AssetJSON>, "recipientId"> & { recipientId: string }
+    : Opts["hasRecipientId"] extends false
+    ? Omit<TransactionJSON<AssetJSON>, "recipientId"> & { recipientId: undefined }
+    : TransactionJSON<AssetJSON>;
 
   type TransactionOptions = {
     hasRecipientId?: boolean;

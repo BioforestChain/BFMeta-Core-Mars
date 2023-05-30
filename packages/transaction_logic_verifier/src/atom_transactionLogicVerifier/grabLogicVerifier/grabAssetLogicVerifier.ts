@@ -18,8 +18,6 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
     transaction: GrabAssetTransaction,
     currentBlockHeight: number,
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -27,7 +25,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
 
     const { transactionSignature } = grabAsset;
     const trsWithBlockSign =
-      await transactionGetterHelper.getTransactionAndBlockSignatureBySignature(
+      await this.transactionGetterHelper.getTransactionAndBlockSignatureBySignature(
         transactionSignature,
         this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
       );
@@ -52,23 +50,12 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
     this.isDependentTransactionMatch(transaction, trs);
     await this.isValidAmount(transaction);
 
-    await this.logicVerify(
-      transaction,
-      currentBlockHeight,
-      accountMap,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
+    await this.logicVerify(transaction, currentBlockHeight, accountMap);
 
     const { eventLogicVerifier } = this;
 
     if (skipListenEvent === false) {
-      eventLogicVerifier.listenEvent(
-        accountMap,
-        currentBlockHeight,
-        accountGetterHelper,
-        eventEmitter,
-      );
+      eventLogicVerifier.listenEvent(accountMap, currentBlockHeight, eventEmitter);
     }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);

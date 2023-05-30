@@ -11,12 +11,18 @@ declare namespace BFChainCore {
     genesisAmount: string;
     minTransactionFeePerByte: BFChainCore.FractionJSON<number>;
     maxTransactionSize: number;
+    maxTransactionBlobSize: number;
     maxBlockSize: number;
     maxTPSPerBlock: number;
     consessusBeforeSyncBlockDiff: number;
     maxDelegateTxsPerRound: number;
     maxGrabTimesOfGiftAsset: number;
+    maxVotesPerBlock: number;
+    voteMinChainAsset: string;
     issueAssetMinChainAsset: string;
+    maxMultipleOfAssetAndMainAsset: BFChainCore.FractionJSON<string>;
+    issueEntityFactoryMinChainAsset: string;
+    maxMultipleOfEntityAndMainAsset: BFChainCore.FractionJSON<string>;
     registerChainMinChainAsset: string;
     maxApplyAndConfirmedBlockHeightDiff: number;
     blockPerRound: number;
@@ -31,11 +37,5 @@ declare namespace BFChainCore {
     averageComputingPower: number;
     tpowOfWorkExemptionBlocks: number;
     transactionPowOfWorkConfig: BFChainCore.TransactionPowOfWorkConfigJSON;
-    maxMultipleOfAssetAndMainAsset: BFChainCore.FractionJSON<string>;
-    issueEntityFactoryMinChainAsset: string;
-    maxMultipleOfEntityAndMainAsset: BFChainCore.FractionJSON<string>;
-    maxVotesPerBlock: number;
-    voteMinChainAsset: string;
-    maxBlobSizePerTransaction: number;
   }>;
 }

@@ -46,6 +46,9 @@ declare namespace BFChainCore {
         "chainBlockFork" | "getNewForgingDelegates" | "getLastBlock" | "getBlockByHeight"
       >
     >;
+    accountGetterHelper?: Required<
+      Pick<BFChainCore.AccountGetterHelperInterface, "getAssetChanges">
+    >;
   };
 
   type ForgeInfos = {

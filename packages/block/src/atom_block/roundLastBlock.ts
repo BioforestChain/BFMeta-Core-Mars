@@ -123,9 +123,9 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
       });
     }
 
-    if (!baseHelper.isValidChainOnChainHash(roundLastAsset.hash)) {
+    if (!baseHelper.isValidChainOnChainHash(roundLastAsset.chainOnChainHash)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: `chainOnChainHash ${roundLastAsset.hash}`,
+        prop: `chainOnChainHash ${roundLastAsset.chainOnChainHash}`,
         type: "chainOnChainHash",
         ...RoundLastBlockAsset_Exception_Detail,
       });
@@ -202,9 +202,15 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
         }
       }
 
-      await this.checkBlockChainOnChainHash(height, roundLastAsset.hash, blockGetterHelper);
+      await this.checkAssetChangeHash(height, roundLastAsset.assetChangeHash, options);
 
-      await this.checkBlockNewForgingDelegates(block, blockGetterHelper);
+      await this.__checkChainOnChainHash(
+        height,
+        roundLastAsset.chainOnChainHash,
+        blockGetterHelper,
+      );
+
+      await this.__checkNewForgingDelegates(block, blockGetterHelper);
     }
 
     return block;
@@ -292,7 +298,7 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
    * @param hash
    * @param blockGetterHelper
    */
-  private async checkBlockChainOnChainHash(
+  private async __checkChainOnChainHash(
     height: number,
     hash: string,
     blockGetterHelper: BFChainUtil.SecondArgument<BlockHelper["calcChainOnChainHash"]>,
@@ -300,8 +306,8 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
     const calcHash = await this.blockHelper.calcChainOnChainHash(height, blockGetterHelper);
     if (calcHash !== hash) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-        to_compare_prop: `remark hash ${hash}`,
-        be_compare_prop: `remark hash ${calcHash}`,
+        to_compare_prop: `chainOnChainHash ${hash}`,
+        be_compare_prop: `chainOnChainHash ${calcHash}`,
         to_target: "block",
         be_target: "calculate",
       });
@@ -314,7 +320,7 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
    * @param block
    * @param blockGetterHelper
    */
-  private async checkBlockNewForgingDelegates(
+  private async __checkNewForgingDelegates(
     block: RoundLastBlock,
     blockGetterHelper: Required<
       Pick<BFChainCore.BlockGetterHelperInterface, "getNewForgingDelegates" | "getLastBlock">

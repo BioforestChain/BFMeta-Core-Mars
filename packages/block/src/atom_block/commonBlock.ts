@@ -1,3 +1,4 @@
+import type { TransactionInBlock } from "@bfchain/core-model-transaction";
 import { BlockFactory } from "./_blockbase";
 import { CommonBlock } from "@bfchain/core-model-block";
 import {
@@ -8,7 +9,7 @@ import {
   AsymmetricHelper,
   BlockBaseStatisticsHelper,
 } from "@bfchain/core-helper";
-import { Injectable, Inject } from "@bfchain/util";
+import { Injectable, Inject, ModuleStroge } from "@bfchain/util";
 import { BlockGeneratorCalculator } from "./blockGeneratorCalculator";
 import { CommonBlockVerify } from "./commonBlockVerify";
 import { VerifyBlockCore } from "./verifyBlock";
@@ -37,6 +38,8 @@ export class CommonBlockFactory extends BlockFactory<CommonBlock> {
     public verifyBlockCore: VerifyBlockCore<CommonBlock>,
     public generateBlockCore: GenerateBlockCore<CommonBlock>,
     public replayBlockCore: ReplayBlockCore<CommonBlock>,
+
+    public moduleMap: ModuleStroge,
   ) {
     super();
   }
@@ -90,6 +93,26 @@ export class CommonBlockFactory extends BlockFactory<CommonBlock> {
     const block = CommonBlock.fromObject({ ...body, asset: commonBlockAset });
     // 绑定区块奖励
     block.reward = this.milestonesHelper.calcReward(block.height);
+
+    return block;
+  }
+
+  async replayBlock(
+    block: BFChainCore.CommonBlock,
+    transactions: AsyncIterable<TransactionInBlock>,
+    eventEmitter?: BFChainCore.GenerateBlockEventEmitter,
+    options: BFChainCore.ReplayBlockOptions = {},
+    config = this.config,
+  ) {
+    await super.replayBlock(block, transactions, eventEmitter, options, config);
+
+    if (options.verifyAsset) {
+      await this.checkAssetChangeHash(
+        block.height,
+        block.asset.commonAsset.assetChangeHash,
+        options,
+      );
+    }
 
     return block;
   }

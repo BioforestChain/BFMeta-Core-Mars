@@ -124,14 +124,6 @@ declare namespace BFChainCore {
       chainChannelGroup?: ChainChannelGroup<CC>;
     };
 
-  type ForSortAccountInfo = {
-    productivity: number;
-    address: string;
-    publicKey: string;
-    vote: bigint;
-    isAcceptVote: boolean;
-  };
-
   type AccountChangeResultInfo = {
     [address: string]: {
       [magicAndAssetType: string]: string;

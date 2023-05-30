@@ -14,7 +14,7 @@ import {
   getRandomDAppid,
 } from "../include";
 import { sleep } from "@bfchain/util";
-import{Long} from "@bfchain/protobuf"
+import { Long } from "@bfchain/protobuf";
 
 const _powCount: { [add: string]: number } = {};
 function getPOWInfo<T extends Transaction>(address: string) {

@@ -20,19 +20,9 @@ export class ToExchangeAnyLogicVerifier extends TransactionLogicVerifier {
     transaction: ToExchangeAnyTransaction,
     currentBlockHeight: number,
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    await this.logicVerify(
-      transaction,
-      currentBlockHeight,
-      accountMap,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
-
     const toExchangeAny = transaction.asset.toExchangeAny;
     const {
       beExchangeSource,
@@ -41,12 +31,12 @@ export class ToExchangeAnyLogicVerifier extends TransactionLogicVerifier {
       beExchangeAssetType,
     } = toExchangeAny;
 
+    const accountGetterHelper = this.accountGetterHelper;
     if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
       await this.helperLogicVerifier.isAssetExist(
         beExchangeChainName,
         beExchangeSource,
         beExchangeAssetType,
-        accountGetterHelper,
       );
     } else if (beExchangeParentAssetType === PARENT_ASSET_TYPE.DAPP) {
       const memDapp = await accountGetterHelper.getDApp(
@@ -100,15 +90,12 @@ export class ToExchangeAnyLogicVerifier extends TransactionLogicVerifier {
       });
     }
 
+    await this.logicVerify(transaction, currentBlockHeight, accountMap);
+
     const { eventLogicVerifier } = this;
 
     if (skipListenEvent === false) {
-      eventLogicVerifier.listenEvent(
-        accountMap,
-        currentBlockHeight,
-        accountGetterHelper,
-        eventEmitter,
-      );
+      eventLogicVerifier.listenEvent(accountMap, currentBlockHeight, eventEmitter);
     }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);

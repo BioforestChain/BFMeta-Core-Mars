@@ -19,14 +19,12 @@ export class BeExchangeAssetLogicVerifier extends TransactionLogicVerifier {
     transaction: BeExchangeAssetTransaction,
     currentBlockHeight: number,
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     const beExchangeAssetAsset = transaction.asset.beExchangeAsset;
     const { transactionSignature } = beExchangeAssetAsset;
-    const trs = (await transactionGetterHelper.getTransactionBySignature(
+    const trs = (await this.transactionGetterHelper.getTransactionBySignature(
       transactionSignature,
       this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
     )) as BFChainCore.ToExchangeAssetTransactionJSON | undefined;
@@ -46,23 +44,12 @@ export class BeExchangeAssetLogicVerifier extends TransactionLogicVerifier {
     this.isValidRecipientId(transaction, trs);
     this.isDependentTransactionMatch(transaction, trs);
 
-    await this.logicVerify(
-      transaction,
-      currentBlockHeight,
-      accountMap,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
+    await this.logicVerify(transaction, currentBlockHeight, accountMap);
 
     const { eventLogicVerifier } = this;
 
     if (skipListenEvent === false) {
-      eventLogicVerifier.listenEvent(
-        accountMap,
-        currentBlockHeight,
-        accountGetterHelper,
-        eventEmitter,
-      );
+      eventLogicVerifier.listenEvent(accountMap, currentBlockHeight, eventEmitter);
     }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);

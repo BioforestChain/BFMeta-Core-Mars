@@ -12,31 +12,18 @@ export class ToExchangeAssetLogicVerifier extends TransactionLogicVerifier {
     transaction: ToExchangeAssetTransaction,
     currentBlockHeight: number,
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-    transactionGetterHelper: BFChainCore.TransactionGetterHelperInterface,
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     const toExchangeAsset = transaction.asset.toExchangeAsset;
-    await this.isExchangeAssetAlreadyExist(toExchangeAsset, accountGetterHelper);
+    await this.isExchangeAssetAlreadyExist(toExchangeAsset);
 
-    await this.logicVerify(
-      transaction,
-      currentBlockHeight,
-      accountMap,
-      accountGetterHelper,
-      transactionGetterHelper,
-    );
+    await this.logicVerify(transaction, currentBlockHeight, accountMap);
 
     const { eventLogicVerifier } = this;
 
     if (skipListenEvent === false) {
-      eventLogicVerifier.listenEvent(
-        accountMap,
-        currentBlockHeight,
-        accountGetterHelper,
-        eventEmitter,
-      );
+      eventLogicVerifier.listenEvent(accountMap, currentBlockHeight, eventEmitter);
     }
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
@@ -49,10 +36,7 @@ export class ToExchangeAssetLogicVerifier extends TransactionLogicVerifier {
    *
    * @param toExchangeAssetAsset
    */
-  private async isExchangeAssetAlreadyExist(
-    toExchangeAssetAsset: ToExchangeAssetModel,
-    accountGetterHelper: BFChainCore.AccountGetterHelperInterface,
-  ) {
+  private async isExchangeAssetAlreadyExist(toExchangeAssetAsset: ToExchangeAssetModel) {
     const {
       toExchangeSource,
       toExchangeChainName,
@@ -66,14 +50,12 @@ export class ToExchangeAssetLogicVerifier extends TransactionLogicVerifier {
       toExchangeChainName,
       toExchangeSource,
       toExchangeAsset,
-      accountGetterHelper,
     );
 
     await this.helperLogicVerifier.isAssetExist(
       beExchangeChainName,
       beExchangeSource,
       beExchangeAsset,
-      accountGetterHelper,
     );
   }
 }

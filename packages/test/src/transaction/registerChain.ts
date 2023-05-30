@@ -12,26 +12,19 @@ import {
   Transaction,
   BFChainCore,
   BlockBaseStatisticsHelper,
-  TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE,
   CommonBlock,
   CommonBlockFactory,
   TransferAssetTransaction,
   TransferAssetTransactionFactory,
-  IssueEntityTransaction,
-  DestoryEntityTransaction,
   RANGE_TYPE,
-  RECORD_OPERATION_TYPE,
   LocationNameTransactionFactory,
-  SetLnsRecordValueTransactionFactory,
   LOCATION_NAME_OPERATION_TYPE,
   DelegateTransaction,
   LocationNameTransaction,
-  SetLnsRecordValueTransaction,
   BFChainCoreFactory,
   ConfigHelper,
-  TRANSACTION_TYPES_BASE,
 } from "@bfchain/core";
-import { QueneEventEmitter, Resolve, getHexFromArrayBuffer } from "@bfchain/util";
+import { QueneEventEmitter, Resolve } from "@bfchain/util";
 import * as path from "path";
 import {
   getSenderWithoutSecondSecret,
@@ -46,7 +39,6 @@ import {
   getRandomMagic,
   getRandomDAppid,
 } from "../include";
-import * as fs from "fs";
 
 const defaultIpsPath = path.join(process.cwd(), "./assets/defaultIps.json");
 
@@ -79,8 +71,27 @@ const getTxs = (address: string) => {
 };
 
 registerchainAssetData.blockPerRound = 5;
+registerchainAssetData.delegates = registerchainAssetData.blockPerRound * 2;
 
 (async () => {
+  const accountsAssets: BFChainCore.AccountsAssetsChange = {};
+  function setAccountAsset(magic: string, address: string, assetType: string, amount: string) {
+    if (!accountsAssets[magic]) {
+      accountsAssets[magic] = {};
+    }
+    if (!accountsAssets[magic][address]) {
+      accountsAssets[magic][address] = {};
+    }
+    if (accountsAssets[magic][address][assetType]) {
+      accountsAssets[magic][address][assetType] = (
+        BigInt(accountsAssets[magic][address][assetType]) + BigInt(amount)
+      ).toString();
+    } else {
+      accountsAssets[magic][address][assetType] = amount;
+    }
+  }
+
+  // #region
   async function getUsernameTransaction(sender: DelegateInfo, registerBfchainCore: BFChainCore) {
     const keypair = await registerBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
     const secondKeypair =
@@ -146,7 +157,6 @@ registerchainAssetData.blockPerRound = 5;
       trs,
     };
   }
-
   async function getDelegateTransaction(sender: DelegateInfo, registerBfchainCore: BFChainCore) {
     const keypair = await registerBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
     const secondKeypair =
@@ -204,7 +214,6 @@ registerchainAssetData.blockPerRound = 5;
       trs,
     };
   }
-
   async function getAcceptVoteTransaction(sender: DelegateInfo, registerBfchainCore: BFChainCore) {
     const keypair = await registerBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
     const secondKeypair =
@@ -262,7 +271,6 @@ registerchainAssetData.blockPerRound = 5;
       trs,
     };
   }
-
   async function getLocationNameTransaction(
     registerBfchainCore: BFChainCore,
     genesisAccountInfo: {
@@ -333,82 +341,6 @@ registerchainAssetData.blockPerRound = 5;
       trs,
     };
   }
-
-  async function getSetLnsRecordValueTransaction(
-    sender: DelegateInfo,
-    record: BFChainCore.LocationNameRecordJSON,
-    registerBfchainCore: BFChainCore,
-  ) {
-    const keypair = await registerBfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
-    const secondKeypair =
-      (sender.secondSecret &&
-        (await registerBfchainCore.accountBaseHelper.createSecondSecretKeypair(
-          sender.secret,
-          sender.secondSecret,
-        ))) ||
-      undefined;
-    const pow =
-      1 > registerBfchainCore.config.tpowOfWorkExemptionBlocks
-        ? getPOWInfo<SetLnsRecordValueTransaction>(sender.address)
-        : undefined;
-    const createTrs = (fee = "AUTO") => {
-      return registerBfchainCore.transaction.createTransaction(
-        SetLnsRecordValueTransactionFactory,
-        {
-          version: registerBfchainCore.config.version,
-          type: registerBfchainCore.transactionHelper.SET_LNS_RECORD_VALUE, // 交易类型
-          senderId: sender.address, // 发起者地址
-          senderPublicKey: sender.publicKey, // 发起者公钥
-          rangeType: RANGE_TYPE.EMPTY,
-          range: [], // 接收范围
-          timestamp: 0, // 生成交易时间戳
-          fee: fee === "AUTO" ? "1" : fee, // 交易手续费
-          fromMagic: registerBfchainCore.config.magic, // 交易来源链的 magic
-          toMagic: registerBfchainCore.config.magic, // 交易去往链的 magic
-          applyBlockHeight: 1, // 交易发起高度
-          effectiveBlockHeight: 1,
-          remark: {},
-          storage: {
-            key: "name",
-            value: registerBfchainCore.config.genesisLocationName,
-          },
-        },
-        {
-          lnsRecordValue: {
-            sourceChainName: registerBfchainCore.config.chainName,
-            sourceChainMagic: registerBfchainCore.config.magic,
-            name: registerBfchainCore.config.genesisLocationName,
-            operationType: RECORD_OPERATION_TYPE.ADD,
-            addRecord: record,
-          },
-        },
-        keypair,
-        secondKeypair,
-        undefined,
-        // fee === "AUTO" ? undefined : getPOWInfo(genesisAccountInfo.address),
-      );
-    };
-    let trs = await createTrs();
-    if (pow) {
-      trs = await registerBfchainCore.transaction.transactionPowCalculator(
-        trs,
-        pow,
-        keypair,
-        secondKeypair,
-      );
-    }
-    trs = await createTrs(
-      registerBfchainCore.transactionHelper.calcTransactionFee(
-        trs,
-        registerBfchainCore.config.minTransactionFeePerByte,
-      ),
-    );
-    return {
-      index: getTxs(trs.senderId),
-      trs,
-    };
-  }
-
   async function getTransferAssetTransaction(
     bfchainCore: BFChainCore,
     recipient: DelegateInfo,
@@ -479,6 +411,7 @@ registerchainAssetData.blockPerRound = 5;
       trs,
     };
   }
+  // #endregion
 
   async function getGenesisBlockAsync(registerBfchainCore: BFChainCore) {
     const registerStatistics = Resolve(BlockBaseStatisticsHelper, registerBfchainCore.moduleMap);
@@ -498,31 +431,6 @@ registerchainAssetData.blockPerRound = 5;
       await registerBfchainCore.accountBaseHelper.getPublicKeyStringFromSecret(
         config.genesisSecret,
       );
-    //#region 模拟账户表的变更
-    const registerChainAccountAssetMap = new Map<string, bigint>();
-    registerChainAccountAssetMap.set(
-      `${genesisAccountInfo.address}_${registerBfchainCore.config.magic}_${registerBfchainCore.config.assetType}`,
-      BigInt(registerBfchainCore.config.genesisAmount),
-    );
-
-    function getRegisterChainAccountAssetKey(address: string, magic: string, assetType: string) {
-      return `${address}_${magic}_${assetType}`;
-    }
-
-    function setRegisterChainAccountAsset(key: string, assetNumber: bigint) {
-      const remainAsset = registerChainAccountAssetMap.get(key);
-      if (remainAsset) {
-        registerChainAccountAssetMap.set(key, remainAsset + assetNumber);
-      } else {
-        registerChainAccountAssetMap.set(key, assetNumber);
-      }
-    }
-
-    function getAccountAsset(key: string) {
-      const assetNumber = registerChainAccountAssetMap.get(key);
-      return assetNumber ? assetNumber.toString() : "0";
-    }
-    //#endregion
     const txWithIndexList: { index: number; trs: Transaction }[] = [];
     txWithIndexList.push(
       await getLocationNameTransaction(
@@ -532,14 +440,9 @@ registerchainAssetData.blockPerRound = 5;
       ),
     );
     const delegatesSecret = config.delegatesSecret;
-    for (
-      let i = 0;
-      i < delegatesSecret.slice(0, registerchainAssetData.blockPerRound * 2).length;
-      i++
-    ) {
+    for (let i = 0; i < delegatesSecret.slice(0, registerchainAssetData.delegates).length; i++) {
       const secret = delegatesSecret[i];
       const address = await registerBfchainCore.accountBaseHelper.getAddressFromSecret(secret);
-
       registerchainAssetData.newDelegates.push(address);
       if (
         registerchainAssetData.nextRoundDelegates.length < registerBfchainCore.config.blockPerRound
@@ -598,84 +501,43 @@ registerchainAssetData.blockPerRound = 5;
       "generateRegisterChainGenesisBlock",
     );
     registerStatistics.bindApplyTransactionEventEmiter(eventEmitter, statisticsInfo);
+    const { magic, assetType } = registerBfchainCore.config;
+    setAccountAsset(
+      magic,
+      genesisAccountInfo.address,
+      assetType,
+      registerchainAssetData.genesisAmount,
+    );
     const transactionHelper = registerBfchainCore.transactionHelper;
     for (let i = 0; i < txWithIndexList.length; i++) {
-      const { index, trs } = txWithIndexList[i];
-      const { senderId, recipientId, fee, fromMagic, type } = trs;
-      const assetType = registerBfchainCore.config.assetType;
-      let amount = "0";
-      if (type === registerBfchainCore.transactionHelper.TRANSFER_ASSET) {
-        amount = (trs as TransferAssetTransaction).asset.transferAsset.amount;
-      }
-      const chainAssetInfo = registerBfchainCore.chainAssetInfoHelper.getAssetInfo(
-        fromMagic,
-        assetType,
-      );
-      const assetChanges: {
-        accountType: number;
-        magic: string;
-        assetType: string;
-        assetNumber: string;
-      }[] = [];
-      const key = getRegisterChainAccountAssetKey(senderId, fromMagic, assetType);
-      const totalSpend = BigInt("-" + amount) + BigInt("-" + fee);
-      setRegisterChainAccountAsset(key, totalSpend);
-      assetChanges[assetChanges.length] = {
-        accountType: TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE.SENDER,
-        magic: fromMagic,
-        assetType,
-        assetNumber: getAccountAsset(key),
-      };
-      if (recipientId) {
-        const rkey = getRegisterChainAccountAssetKey(recipientId, fromMagic, assetType);
-        setRegisterChainAccountAsset(rkey, BigInt(amount));
-        assetChanges[assetChanges.length] = {
-          accountType: TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE.RECIPIENT,
-          magic: fromMagic,
-          assetType,
-          assetNumber: getAccountAsset(rkey),
-        };
-      }
-      const transactionAssetChanges: BFChainCore.TransactionAssetChangeJSON[] = [];
-      for (const assetChange of assetChanges) {
-        const { accountType, magic, assetType, assetNumber } = assetChange;
-        const asset = statisticsInfo.getAssetStatistic(chainAssetInfo);
-        if (!asset) {
-          throw new Error("Statistic asset lose");
-        }
-        transactionAssetChanges[transactionAssetChanges.length] = {
-          accountType,
-          sourceChainMagic: magic,
-          assetType,
-          assetPrealnum: assetNumber,
-        };
-      }
+      const { trs } = txWithIndexList[i];
       const trsInBlock = TransactionInBlock.fromObject({
         tIndex: i,
         height,
-        transactionAssetChanges:
-          registerBfchainCore.transactionHelper.sortTransactionAssetChanges(
-            transactionAssetChanges,
-          ),
         transaction: trs,
       });
       blockTrsItems[blockTrsItems.length] = trsInBlock;
+      const { type, senderId, recipientId, fee } = trs;
+      setAccountAsset(magic, senderId, assetType, `-${fee}`);
+      if (type === transactionHelper.TRANSFER_ASSET) {
+        const amount = (trs as TransferAssetTransaction).asset.transferAsset.amount;
+        setAccountAsset(magic, senderId, assetType, `-${amount}`);
+        setAccountAsset(magic, recipientId as string, assetType, amount);
+      }
     }
     const generatorKeypair = await registerBfchainCore.accountBaseHelper.createSecretKeypair(
       config.genesisSecret,
     );
     eventEmitter.on("verifyTransactionProfOfWork", ({ transaction, count }) => {
       return registerBfchainCore.transactionHelper.checkTransactionProfOfWork(
-        // transaction.signatureBuffer,
-        // {
-        //   accountParticipation: "0",
-        //   accountNumberOfTransactionInBlock: count,
-        // },
         transaction.signatureBuffer,
         count,
         "0",
       );
     });
+    const assetChangeHash = await registerBfchainCore.blockHelper.calcAssetChangeHash(
+      accountsAssets,
+    );
     const genesisBlock = await registerBfchainCore.block.generateBlock<GenesisBlock>(
       GenesisBlockFactory,
       {
@@ -690,7 +552,7 @@ registerchainAssetData.blockPerRound = 5;
         },
       },
       {
-        genesisAsset: registerchainAssetData,
+        genesisAsset: { ...registerchainAssetData, assetChangeHash },
       },
       (async function* zz() {
         for (const item of blockTrsItems) {
@@ -781,7 +643,9 @@ registerchainAssetData.blockPerRound = 5;
           delegates: genesisAsset.delegates,
           forgeInterval: genesisAsset.forgeInterval,
           genesisDelegates: transactionInfo.transactionInBlocks
-            .filter((tib) => tib.transaction.type === TRANSACTION_TYPES_BASE.DELEGATE)
+            .filter(
+              (tib) => tib.transaction.type === registerBfchainCore.transactionHelper.DELEGATE,
+            )
             .map((tib) => {
               return {
                 address: tib.transaction.senderId,
@@ -837,28 +701,6 @@ registerchainAssetData.blockPerRound = 5;
     });
 
     const statistics = Resolve(BlockBaseStatisticsHelper, fullBfchainCore.moduleMap);
-
-    //#region 模拟账户表的变更
-    const accountAssetMap = new Map<string, bigint>();
-    accountAssetMap.set(
-      `${sender.address}_${fullBfchainCore.config.magic}_${fullBfchainCore.config.assetType}`,
-      BigInt("1000000000"),
-    );
-
-    function setAccountAsset(subkey: string, assetNumber: bigint) {
-      const remainAsset = accountAssetMap.get(subkey);
-      if (remainAsset) {
-        accountAssetMap.set(subkey, remainAsset + assetNumber);
-      } else {
-        accountAssetMap.set(subkey, assetNumber);
-      }
-    }
-
-    function getAccountAsset(subkey: string) {
-      const assetNumber = accountAssetMap.get(subkey);
-      return assetNumber ? assetNumber.toString() : "0";
-    }
-    //#endregion
     const trsWithIndex = await getRegisterChainTransaction(
       sender,
       fullBfchainCore,
@@ -874,46 +716,14 @@ registerchainAssetData.blockPerRound = 5;
     );
     statistics.bindApplyTransactionEventEmiter(eventEmitter, statisticsInfo);
 
-    const { index, trs } = trsWithIndex;
-    const { senderId, fee, fromMagic } = trs;
+    const { trs } = trsWithIndex;
+    const { fromMagic } = trs;
     const assetType = fullBfchainCore.config.assetType;
-    const amount = "0";
     const chainAssetInfo = fullBfchainCore.chainAssetInfoHelper.getAssetInfo(fromMagic, assetType);
     statisticsInfo.initAssetStatistic(chainAssetInfo);
-    const assetChanges: {
-      accountType: number;
-      magic: string;
-      assetType: string;
-      assetNumber: string;
-    }[] = [];
-    const key = `${senderId}_${fromMagic}_${assetType}`;
-    const totalSpend = BigInt("-" + amount) + BigInt("-" + fee);
-    setAccountAsset(key, totalSpend);
-    assetChanges[assetChanges.length] = {
-      accountType: TRANSACTION_ASSET_CHANGE_ACCOUNT_TYPE.SENDER,
-      magic: fromMagic,
-      assetType,
-      assetNumber: getAccountAsset(key),
-    };
-    const transactionAssetChanges: BFChainCore.TransactionAssetChangeJSON[] = [];
-    for (const assetChange of assetChanges) {
-      const { accountType, magic, assetType, assetNumber } = assetChange;
-      const asset = statisticsInfo.getAssetStatistic(chainAssetInfo);
-      if (!asset) {
-        throw new Error("Statistic asset lose");
-      }
-      transactionAssetChanges[transactionAssetChanges.length] = {
-        accountType,
-        sourceChainMagic: magic,
-        assetType,
-        assetPrealnum: assetNumber,
-      };
-    }
     const trsInBlock = TransactionInBlock.fromObject({
       tIndex: 0,
       height,
-      transactionAssetChanges:
-        fullBfchainCore.transactionHelper.sortTransactionAssetChanges(transactionAssetChanges),
     });
     trsInBlock.transaction = trs;
     blockTrsItems[blockTrsItems.length] = trsInBlock;
@@ -947,8 +757,9 @@ registerchainAssetData.blockPerRound = 5;
           "a8b6f856eae3d0cf57ace98d6d5890db6713a2356f06159a5e34e8924431895a2c0b19f1444120a632bf48442a2b033003a262fb78691bdcc4513ca255c57a11",
       },
       {
-        debug: "debug",
-        info: "info",
+        commonAsset: {
+          assetChangeHash: "",
+        },
       },
       (async function* zz() {
         for (const item of blockTrsItems) {
@@ -969,7 +780,6 @@ registerchainAssetData.blockPerRound = 5;
     // await getRegisterChainTransaction(getSenderWithSecondSecret());
     // await getRegisterChainTransaction(getSenderWithoutSecondSecret());
     const xx = await getCommonBlockAsync(getSenderWithoutSecondSecret());
-    console.log(xx.transactions[0].transactionAssetChanges.map((item) => item.getBytes()));
   } catch (e) {
     console.log(e);
   }

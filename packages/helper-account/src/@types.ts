@@ -118,6 +118,14 @@ declare namespace BFChainCore {
     isAcceptVote: boolean;
   };
 
+  type ForSortAccountInfo = {
+    productivity: number;
+    address: string;
+    publicKey: string;
+    vote: bigint;
+    isAcceptVote: boolean;
+  };
+
   type CurrencyInfo = {
     name: string;
     height: number;
@@ -168,6 +176,14 @@ declare namespace BFChainCore {
   type MigrateCertificateInfo = {
     migrateCertificateId: string;
     height: number;
+  };
+
+  type AccountsAssetsChange = {
+    [magic: string]: {
+      [address: string]: {
+        [assetType: string]: string;
+      };
+    };
   };
 
   interface AccountGetterHelperInterface<
@@ -279,5 +295,11 @@ declare namespace BFChainCore {
     isEntityFactoryPossessor(sourceChainMagic: string, address: string): Promise<boolean>;
     /**指定账户是否持有某个 entity */
     isEntityPossessor(sourceChainMagic: string, address: string): Promise<boolean>;
+    /**
+     * 根据高度获取区块的资产变动信息
+     *
+     * @param height
+     */
+    getAssetChanges(height: number): Promise<BFChainCore.AccountsAssetsChange>;
   }
 }
