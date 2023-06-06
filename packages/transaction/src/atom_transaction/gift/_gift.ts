@@ -114,7 +114,6 @@ export abstract class GiftTransactionFactory<
       throw new ArgumentIllegalException(ERROR_LIST.TRANSACTION_FEE_NOT_ENOUGH, {
         errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
         minFee: minFee.toString(),
-        target: "body",
       });
     }
   }

@@ -116,10 +116,10 @@ export class ToExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
       transaction.asset.toExchangeAnyMulti.toExchangeAssets.length,
     );
     if (BigInt(transaction.fee) < BigInt(minFee)) {
-      throw new ConsensusException(ERROR_LIST.TRANSACTION_FEE_NOT_ENOUGH, {
+      throw new ConsensusException(ERROR_LIST.TRANSACTION_LOGIC_FEE_NOT_ENOUGH, {
+        signature: transaction.signature,
         errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
         minFee,
-        target: "transaction",
       });
     }
   }
@@ -141,11 +141,13 @@ export class ToExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
       ).toString(),
     );
     if (result.isFeeEnough === false) {
-      throw new ConsensusException(ERROR_LIST.TRANSACTION_FEE_NOT_ENOUGH, {
+      throw new ConsensusException(ERROR_LIST.TRANSACTION_LOGIC_FEE_NOT_ENOUGH, {
+        signature: transaction.signature,
         minFee: result.minFee,
         errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
       });
     }
+    return result.minFee;
   }
 
   /**
@@ -172,11 +174,13 @@ export class ToExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
       ).toString(),
     );
     if (result.isFeeEnough === false) {
-      throw new ConsensusException(ERROR_LIST.TRANSACTION_FEE_NOT_ENOUGH, {
+      throw new ConsensusException(ERROR_LIST.TRANSACTION_LOGIC_FEE_NOT_ENOUGH, {
+        signature: transaction.signature,
         minFee: result.minFee,
         errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
       });
     }
+    return result.minFee;
   }
 
   /**

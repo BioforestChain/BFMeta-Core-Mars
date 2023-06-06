@@ -397,6 +397,10 @@ export const ERROR_LIST = {
     "001-11073",
     "Not enough issue entity times, entityFactory {entityFactory}",
   ),
+  TRANSACTION_LOGIC_FEE_NOT_ENOUGH: new ErrorCode(
+    "001-11074",
+    "Transaction fee is not enough, signature {signature} errorId {errorId}, minFee {minFee}",
+  ),
 
   // block logic
   BLOCK_SIGN_SIGNATURE_IS_REQUIRED: new ErrorCode(

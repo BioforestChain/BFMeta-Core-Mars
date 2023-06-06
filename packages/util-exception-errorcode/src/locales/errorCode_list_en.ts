@@ -152,6 +152,8 @@ export const ERROR_CODE_LIST_EN = {
   "001-11072":
     "Frozen asset with frozenAddress {frozenAddress} signature {signature} assetType {assetType} in blockChain not exist or expired",
   "001-11073": "Not enough issue entity times, entityFactory {entityFactory}",
+  "001-11074":
+    "Transaction fee is not enough, signature {signature} errorId {errorId}, minFee {minFee}",
 
   // block logic
   "001-12001":

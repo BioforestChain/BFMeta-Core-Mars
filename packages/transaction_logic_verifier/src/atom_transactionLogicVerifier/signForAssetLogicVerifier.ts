@@ -129,11 +129,13 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
       this.transactionHelper.calcTransactionBlobFee(transaction).toString(),
     );
     if (result.isFeeEnough === false) {
-      throw new ConsensusException(ERROR_LIST.TRANSACTION_FEE_NOT_ENOUGH, {
+      throw new ConsensusException(ERROR_LIST.TRANSACTION_LOGIC_FEE_NOT_ENOUGH, {
+        signature: transaction.signature,
         minFee: result.minFee,
         errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
       });
     }
+    return result.minFee;
   }
 
   /**
@@ -155,11 +157,13 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
         .toString(),
     );
     if (result.isFeeEnough === false) {
-      throw new ConsensusException(ERROR_LIST.TRANSACTION_FEE_NOT_ENOUGH, {
+      throw new ConsensusException(ERROR_LIST.TRANSACTION_LOGIC_FEE_NOT_ENOUGH, {
+        signature: transaction.signature,
         minFee: result.minFee,
         errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
       });
     }
+    return result.minFee;
   }
 
   /**

@@ -502,11 +502,13 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       ).toString(),
     );
     if (result.isFeeEnough === false) {
-      throw new ConsensusException(ERROR_LIST.TRANSACTION_FEE_NOT_ENOUGH, {
+      throw new ConsensusException(ERROR_LIST.TRANSACTION_LOGIC_FEE_NOT_ENOUGH, {
+        signature: transaction.signature,
         minFee: result.minFee,
         errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
       });
     }
+    return result.minFee;
   }
 
   /**
@@ -532,11 +534,13 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       ).toString(),
     );
     if (result.isFeeEnough === false) {
-      throw new ConsensusException(ERROR_LIST.TRANSACTION_FEE_NOT_ENOUGH, {
+      throw new ConsensusException(ERROR_LIST.TRANSACTION_LOGIC_FEE_NOT_ENOUGH, {
+        signature: transaction.signature,
         minFee: result.minFee,
         errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
       });
     }
+    return result.minFee;
   }
 
   /**
