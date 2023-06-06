@@ -550,14 +550,7 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
         core.transactionLogicVerifier.getTransactionLogicVerifierFromType<TransferAssetTransaction>(
           trs.type,
         );
-      const result = yy.checkTrsFeeAndWebFee(
-        trs as TransferAssetTransaction,
-        trs.getBytes().length,
-      );
-      if (!result.isFeeEnough) {
-        console.log(trs.toJSON());
-        throw new Error(`Tx fee not enough, minFee ${result.minFee}`);
-      }
+      yy.checkTrsFeeAndWebFee(trs as TransferAssetTransaction, trs.getBytes().length);
     }
 
     const height = 1;

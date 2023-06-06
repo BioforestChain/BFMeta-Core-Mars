@@ -98,23 +98,13 @@ async function getGiftAnyTransaction(
 
   console.log(trs.getBytes().length);
   console.log(bfchainCore.config.maxTransactionSize);
-
-  const result = yy.checkTrsFeeAndWebFee(trs, trs.getBytes().length);
-
-  const result2 = yy.checkTrsFeeAndMiningMachineFeeAndWebFee(trs, trs.getBytes().length, {
+  yy.checkTrsFeeAndWebFee(trs, trs.getBytes().length);
+  yy.checkTrsFeeAndMiningMachineFeeAndWebFee(trs, trs.getBytes().length, {
     numerator: 200,
     denominator: 1024,
   });
 
-  if (result.isFeeEnough) {
-    if (result2.isFeeEnough) {
-      console.log((xx.asset as any).giftAsset);
-    } else {
-      throw new Error(JSON.stringify(result2));
-    }
-  } else {
-    throw new Error(JSON.stringify(result));
-  }
+  console.log((xx.asset as any).giftAsset);
 }
 
 (async () => {

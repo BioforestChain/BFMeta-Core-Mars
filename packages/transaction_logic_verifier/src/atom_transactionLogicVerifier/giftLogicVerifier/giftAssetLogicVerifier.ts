@@ -1,6 +1,12 @@
-import type { GiftAssetTransaction } from "@bfchain/core-model";
+import { GiftAssetTransaction, NewTransactionRefuseReason } from "@bfchain/core-model";
 import { Injectable } from "@bfchain/util";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { TransactionLogicVerifier } from "../_txbaseLogicVerifier";
+
+const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
+  "VERIFIER",
+  "GiftAssetLogicVerifier",
+);
 
 @Injectable()
 export class GiftAssetLogicVerifier extends TransactionLogicVerifier {
@@ -41,13 +47,19 @@ export class GiftAssetLogicVerifier extends TransactionLogicVerifier {
    */
   checkTrsFeeAndWebFee(transaction: GiftAssetTransaction, byteLength: number) {
     const times = transaction.asset.giftAsset.totalGrabableTimes + 1;
-    return this.isFeeEnough(
+    const result = this.isFeeEnough(
       transaction.fee,
       (
         this.transactionHelper.calcTransactionMinFeeByMaxBytes(times) +
         this.transactionHelper.calcTransactionBlobFee(transaction)
       ).toString(),
     );
+    if (result.isFeeEnough === false) {
+      throw new ConsensusException(ERROR_LIST.TRANSACTION_FEE_NOT_ENOUGH, {
+        minFee: result.minFee,
+        errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
+      });
+    }
   }
 
   /**
@@ -63,12 +75,18 @@ export class GiftAssetLogicVerifier extends TransactionLogicVerifier {
     miningMachineMinFeePerByte: BFChainCore.FractionJSON,
   ) {
     const times = transaction.asset.giftAsset.totalGrabableTimes + 1;
-    return this.isFeeEnough(
+    const result = this.isFeeEnough(
       transaction.fee,
       (
         this.transactionHelper.calcTransactionMinFeeByMaxBytes(times, miningMachineMinFeePerByte) +
         this.transactionHelper.calcTransactionBlobFee(transaction, miningMachineMinFeePerByte)
       ).toString(),
     );
+    if (result.isFeeEnough === false) {
+      throw new ConsensusException(ERROR_LIST.TRANSACTION_FEE_NOT_ENOUGH, {
+        minFee: result.minFee,
+        errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
+      });
+    }
   }
 }

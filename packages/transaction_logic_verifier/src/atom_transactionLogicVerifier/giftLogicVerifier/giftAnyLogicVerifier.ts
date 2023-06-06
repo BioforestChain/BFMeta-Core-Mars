@@ -1,6 +1,16 @@
-import { GiftAnyTransaction, PARENT_ASSET_TYPE } from "@bfchain/core-model";
+import {
+  GiftAnyTransaction,
+  NewTransactionRefuseReason,
+  PARENT_ASSET_TYPE,
+} from "@bfchain/core-model";
 import { Injectable } from "@bfchain/util";
+import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { TransactionLogicVerifier } from "../_txbaseLogicVerifier";
+
+const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
+  "VERIFIER",
+  "GiftAnyLogicVerifier",
+);
 
 @Injectable()
 export class GiftAnyLogicVerifier extends TransactionLogicVerifier {
@@ -43,13 +53,19 @@ export class GiftAnyLogicVerifier extends TransactionLogicVerifier {
    */
   checkTrsFeeAndWebFee(transaction: GiftAnyTransaction, byteLength: number) {
     const times = transaction.asset.giftAny.totalGrabableTimes + 1;
-    return this.isFeeEnough(
+    const result = this.isFeeEnough(
       transaction.fee,
       (
         this.transactionHelper.calcTransactionMinFeeByMaxBytes(times) +
         this.transactionHelper.calcTransactionBlobFee(transaction)
       ).toString(),
     );
+    if (result.isFeeEnough === false) {
+      throw new ConsensusException(ERROR_LIST.TRANSACTION_FEE_NOT_ENOUGH, {
+        minFee: result.minFee,
+        errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
+      });
+    }
   }
 
   /**
@@ -65,13 +81,19 @@ export class GiftAnyLogicVerifier extends TransactionLogicVerifier {
     miningMachineMinFeePerByte: BFChainCore.FractionJSON,
   ) {
     const times = transaction.asset.giftAny.totalGrabableTimes + 1;
-    return this.isFeeEnough(
+    const result = this.isFeeEnough(
       transaction.fee,
       (
         this.transactionHelper.calcTransactionMinFeeByMaxBytes(times, miningMachineMinFeePerByte) +
         this.transactionHelper.calcTransactionBlobFee(transaction, miningMachineMinFeePerByte)
       ).toString(),
     );
+    if (result.isFeeEnough === false) {
+      throw new ConsensusException(ERROR_LIST.TRANSACTION_FEE_NOT_ENOUGH, {
+        minFee: result.minFee,
+        errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
+      });
+    }
   }
 
   /**

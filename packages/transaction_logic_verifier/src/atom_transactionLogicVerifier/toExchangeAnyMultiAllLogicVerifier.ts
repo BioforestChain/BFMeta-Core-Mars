@@ -134,7 +134,7 @@ export class ToExchangeAnyMultiAllLogicVerifier extends TransactionLogicVerifier
    */
   checkTrsFeeAndWebFee(transaction: ToExchangeAnyMultiAllTransaction, byteLength: number) {
     const { toExchangeAssets, beExchangeAssets } = transaction.asset.toExchangeAnyMultiAll;
-    return this.isFeeEnough(
+    const result = this.isFeeEnough(
       transaction.fee,
       (
         this.transactionHelper.calcTransactionMinFeeByMulti(
@@ -143,6 +143,12 @@ export class ToExchangeAnyMultiAllLogicVerifier extends TransactionLogicVerifier
         ) + this.transactionHelper.calcTransactionBlobFee(transaction)
       ).toString(),
     );
+    if (result.isFeeEnough === false) {
+      throw new ConsensusException(ERROR_LIST.TRANSACTION_FEE_NOT_ENOUGH, {
+        minFee: result.minFee,
+        errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
+      });
+    }
   }
 
   /**
@@ -158,7 +164,7 @@ export class ToExchangeAnyMultiAllLogicVerifier extends TransactionLogicVerifier
     miningMachineMinFeePerByte: BFChainCore.FractionJSON,
   ) {
     const { toExchangeAssets, beExchangeAssets } = transaction.asset.toExchangeAnyMultiAll;
-    return this.isFeeEnough(
+    const result = this.isFeeEnough(
       transaction.fee,
       (
         this.transactionHelper.calcTransactionMinFeeByMulti(
@@ -169,6 +175,12 @@ export class ToExchangeAnyMultiAllLogicVerifier extends TransactionLogicVerifier
         ) + this.transactionHelper.calcTransactionBlobFee(transaction, miningMachineMinFeePerByte)
       ).toString(),
     );
+    if (result.isFeeEnough === false) {
+      throw new ConsensusException(ERROR_LIST.TRANSACTION_FEE_NOT_ENOUGH, {
+        minFee: result.minFee,
+        errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
+      });
+    }
   }
 
   /**

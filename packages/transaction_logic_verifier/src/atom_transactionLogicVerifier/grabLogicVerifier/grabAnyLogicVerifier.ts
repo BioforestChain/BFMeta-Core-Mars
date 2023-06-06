@@ -4,6 +4,7 @@ import {
   RANGE_TYPE,
   GIFT_DISTRIBUTION_RULE,
   PARENT_ASSET_TYPE,
+  NewTransactionRefuseReason,
 } from "@bfchain/core-model";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { TransactionLogicVerifier } from "../_txbaseLogicVerifier";
@@ -341,10 +342,16 @@ export class GrabAnyLogicVerifier extends TransactionLogicVerifier {
    * @param byteLength
    */
   checkTrsFeeAndWebFee(transaction: GrabAnyTransaction, byteLength: number) {
-    return this.isFeeEnough(
+    const result = this.isFeeEnough(
       transaction.fee,
       this.transactionHelper.calcTransactionBlobFee(transaction).toString(),
     );
+    if (result.isFeeEnough === false) {
+      throw new ConsensusException(ERROR_LIST.TRANSACTION_FEE_NOT_ENOUGH, {
+        minFee: result.minFee,
+        errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
+      });
+    }
   }
 
   /**
@@ -359,12 +366,18 @@ export class GrabAnyLogicVerifier extends TransactionLogicVerifier {
     byteLength: number,
     miningMachineMinFeePerByte: BFChainCore.FractionJSON,
   ) {
-    return this.isFeeEnough(
+    const result = this.isFeeEnough(
       transaction.fee,
       this.transactionHelper
         .calcTransactionBlobFee(transaction, miningMachineMinFeePerByte)
         .toString(),
     );
+    if (result.isFeeEnough === false) {
+      throw new ConsensusException(ERROR_LIST.TRANSACTION_FEE_NOT_ENOUGH, {
+        minFee: result.minFee,
+        errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
+      });
+    }
   }
 
   /**

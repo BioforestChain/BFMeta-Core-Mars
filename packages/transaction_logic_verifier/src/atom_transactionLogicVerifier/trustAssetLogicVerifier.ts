@@ -78,13 +78,19 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
    */
   checkTrsFeeAndWebFee(transaction: TrustAssetTransaction, byteLength: number) {
     const times = transaction.asset.trustAsset.numberOfSignFor + 1;
-    return this.isFeeEnough(
+    const result = this.isFeeEnough(
       transaction.fee,
       (
         this.transactionHelper.calcTransactionMinFeeByMaxBytes(times) +
         this.transactionHelper.calcTransactionBlobFee(transaction)
       ).toString(),
     );
+    if (result.isFeeEnough === false) {
+      throw new ConsensusException(ERROR_LIST.TRANSACTION_FEE_NOT_ENOUGH, {
+        minFee: result.minFee,
+        errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
+      });
+    }
   }
 
   /**
@@ -100,12 +106,18 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
     miningMachineMinFeePerByte: BFChainCore.FractionJSON,
   ) {
     const times = transaction.asset.trustAsset.numberOfSignFor + 1;
-    return this.isFeeEnough(
+    const result = this.isFeeEnough(
       transaction.fee,
       (
         this.transactionHelper.calcTransactionMinFeeByMaxBytes(times, miningMachineMinFeePerByte) +
         this.transactionHelper.calcTransactionBlobFee(transaction, miningMachineMinFeePerByte)
       ).toString(),
     );
+    if (result.isFeeEnough === false) {
+      throw new ConsensusException(ERROR_LIST.TRANSACTION_FEE_NOT_ENOUGH, {
+        minFee: result.minFee,
+        errorId: NewTransactionRefuseReason.TRANSACTION_FEE_NOT_ENOUGH,
+      });
+    }
   }
 }

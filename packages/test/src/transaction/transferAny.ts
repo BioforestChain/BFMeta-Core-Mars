@@ -107,20 +107,12 @@ async function getTransferAnyTransaction(sender: AccountModel, bfchainCore: BFCh
       trs.type,
     );
 
-  const result = yy.checkTrsFeeAndWebFee(trs, trs.getBytes().length);
-  if (result.isFeeEnough) {
-    const result2 = yy.checkTrsFeeAndMiningMachineFeeAndWebFee(trs, trs.getBytes().length, {
-      numerator: 1000,
-      denominator: 1024,
-    });
-    if (result2.isFeeEnough) {
-      console.log(xx.toJSON());
-    } else {
-      throw new Error(JSON.stringify(result2));
-    }
-  } else {
-    throw new Error(JSON.stringify(result));
-  }
+  yy.checkTrsFeeAndWebFee(trs, trs.getBytes().length);
+  yy.checkTrsFeeAndMiningMachineFeeAndWebFee(trs, trs.getBytes().length, {
+    numerator: 1000,
+    denominator: 1024,
+  });
+  console.log(trsJson);
 }
 
 (async () => {
