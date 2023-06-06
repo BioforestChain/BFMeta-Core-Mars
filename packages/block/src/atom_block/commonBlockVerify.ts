@@ -3,6 +3,7 @@ import {
   BaseHelper,
   MilestonesHelper,
   ChainAssetInfoHelper,
+  ConfigHelper,
 } from "@bfchain/core-helper";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { Writer } from "@bfchain/protobuf";
@@ -20,6 +21,7 @@ export class CommonBlockVerify<T extends Block> {
   public transactionCore!: import("@bfchain/core-transaction").TransactionCore;
 
   constructor(
+    public config: ConfigHelper,
     public blockHelper: BlockHelper,
     public baseHelper: BaseHelper,
     public milestonesHelper: MilestonesHelper,
@@ -149,6 +151,29 @@ export class CommonBlockVerify<T extends Block> {
         be_compare_prop: `blockSize ${blockSize}`,
         to_target: "block",
         be_target: "calculate",
+      });
+    }
+    const { maxBlockSize } = this.config;
+    if (blockSize > maxBlockSize) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
+        prop: `block size ${blockSize}`,
+        target: "block",
+        field: maxBlockSize,
+      });
+    }
+  }
+
+  /**
+   * 校验区块携带的 blob 大小
+   *
+   */
+  verifyBlockBlobSize(block: T) {
+    const { maxBlockBlobSize } = this.config;
+    if (block.blobSize > maxBlockBlobSize) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
+        prop: `block blob size ${block.blobSize}`,
+        target: "block",
+        field: maxBlockBlobSize,
       });
     }
   }

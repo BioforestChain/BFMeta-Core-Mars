@@ -141,6 +141,11 @@ export class ConfigHelper {
   get maxBlockSize() {
     return this.hookedGenesisBlock.asset.genesisAsset.maxBlockSize;
   }
+  /**每个区块允许携带的最大 blob 长度 */
+  @cacheGetter
+  get maxBlockBlobSize() {
+    return this.hookedGenesisBlock.asset.genesisAsset.maxBlockBlobSize;
+  }
   /**链上区块体最大处理的事件 tps */
   @cacheGetter
   get maxTPSPerBlock() {
@@ -314,6 +319,7 @@ export class ConfigHelper {
       maxTransactionSize: this.maxTransactionSize,
       maxTransactionBlobSize: this.maxTransactionBlobSize,
       maxBlockSize: this.maxBlockSize,
+      maxBlockBlobSize: this.maxBlockBlobSize,
       maxTPSPerBlock: this.maxTPSPerBlock,
       consessusBeforeSyncBlockDiff: this.consessusBeforeSyncBlockDiff,
       maxDelegateTxsPerRound: this.maxDelegateTxsPerRound,

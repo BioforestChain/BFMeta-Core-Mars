@@ -126,5 +126,7 @@ export class VerifyBlockCore<T extends Block> {
     this.commonBlockVerify.verifyBlockReward(block);
 
     this.commonBlockVerify.verifyBlockSize(block);
+
+    this.commonBlockVerify.verifyBlockBlobSize(block);
   }
 }

@@ -189,6 +189,15 @@ export class GenesisAssetModel
   /**最大区块长度，包含区块头和 asset */
   @Field.d(GenesisAssetModel.INC++, "uint32")
   maxBlockSize!: number;
+  /**每个区块允许携带的最大 blob 长度 */
+  @Field.d(GenesisAssetModel.INC++, "uint64", "required")
+  maxBlockBlobSizeLong!: Long;
+  get maxBlockBlobSize() {
+    return this.maxBlockBlobSizeLong.toNumber();
+  }
+  set maxBlockBlobSize(v) {
+    this.maxBlockBlobSizeLong = Long.fromNumber(v, true);
+  }
   /**区块最大 tps */
   @Field.d(GenesisAssetModel.INC++, "uint32")
   maxTPSPerBlock!: number;
@@ -284,6 +293,7 @@ export class GenesisAssetModel
         maxTransactionSize: this.maxTransactionSize,
         maxTransactionBlobSize: this.maxTransactionBlobSize,
         maxBlockSize: this.maxBlockSize,
+        maxBlockBlobSize: this.maxBlockBlobSize,
         maxTPSPerBlock: this.maxTPSPerBlock,
         consessusBeforeSyncBlockDiff: this.consessusBeforeSyncBlockDiff,
         maxDelegateTxsPerRound: this.maxDelegateTxsPerRound,
@@ -328,6 +338,7 @@ export class GenesisAssetModel
       object.beginEpochTime !== undefined && (res.beginEpochTime = object.beginEpochTime);
       object.maxTransactionBlobSize !== undefined &&
         (res.maxTransactionBlobSize = object.maxTransactionBlobSize);
+      object.maxBlockBlobSize !== undefined && (res.maxBlockBlobSize = object.maxBlockBlobSize);
       object.maxMultipleOfAssetAndMainAsset &&
         (res.maxMultipleOfAssetAndMainAsset = FractionBigIntModel.fromObject<FractionBigIntModel>(
           object.maxMultipleOfAssetAndMainAsset,

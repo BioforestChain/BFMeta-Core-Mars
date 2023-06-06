@@ -258,6 +258,8 @@ declare namespace BFChainCore {
     maxTransactionBlobSize: number;
     /**链上区块体最大字节数 */
     maxBlockSize: number;
+    /**每个区块允许携带的最大 blob 长度 */
+    maxBlockBlobSize: number;
     /**链上区块体最大处理的事件 tps */
     maxTPSPerBlock: number;
     /**删除分叉时至少需要落后的高度 */

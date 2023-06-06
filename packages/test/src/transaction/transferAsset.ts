@@ -171,6 +171,7 @@ async function getTransferAssetTransaction(sender: AccountModel, bfchainCore: BF
 
   // debugger
   yy.commonBlockVerify.verifyBlockSize(xxx);
+  yy.commonBlockVerify.verifyBlockBlobSize(xxx);
 
   xxx.transactionInfo.blobSize = 0;
   // console.log(xxx.transactionInfo);

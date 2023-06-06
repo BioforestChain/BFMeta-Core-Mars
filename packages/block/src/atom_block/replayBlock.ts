@@ -231,6 +231,8 @@ export class ReplayBlockCore<T extends Block> {
     // 验证区块大小
     this.commonBlockVerify.verifyBlockSize(block, transactionBufferList);
 
+    this.commonBlockVerify.verifyBlockBlobSize(block);
+
     // 校验区块签名
     verifySignature && (await this.commonBlockVerify.verifySignature(block));
 

@@ -43,7 +43,9 @@ export const mainChainAssetData: BFChainCore.GenesisAssetJSON = {
   },
   maxTPSPerBlock: 1000,
   maxTransactionSize: 409600,
+  maxTransactionBlobSize: 1024 * 1024 * 1024,
   maxBlockSize: 33554432,
+  maxBlockBlobSize: 4 * 1024 * 1024 * 1024,
   consessusBeforeSyncBlockDiff: 7,
   maxDelegateTxsPerRound: 10,
   maxGrabTimesOfGiftAsset: 1000000,
@@ -103,7 +105,6 @@ export const mainChainAssetData: BFChainCore.GenesisAssetJSON = {
   nextRoundDelegates: [] as BFChainCore.NextRoundDelegateJSON[],
   newDelegates: [] as string[],
   rate: "0",
-  maxTransactionBlobSize: 1024 * 1024 * 1024,
   assetChangeHash: "",
 };
 
@@ -121,7 +122,9 @@ export const registerchainAssetData: BFChainCore.GenesisAssetJSON = {
   },
   maxTPSPerBlock: 1000,
   maxTransactionSize: 409600,
+  maxTransactionBlobSize: 1024 * 1024 * 1024,
   maxBlockSize: 838860800,
+  maxBlockBlobSize: 4 * 1024 * 1024 * 1024,
   consessusBeforeSyncBlockDiff: 7,
   maxDelegateTxsPerRound: 10,
   maxGrabTimesOfGiftAsset: 1000000,
@@ -181,6 +184,5 @@ export const registerchainAssetData: BFChainCore.GenesisAssetJSON = {
   nextRoundDelegates: [] as BFChainCore.NextRoundDelegateJSON[],
   newDelegates: [] as string[],
   rate: "0",
-  maxTransactionBlobSize: 1024 * 1024 * 1024,
   assetChangeHash: "",
 };

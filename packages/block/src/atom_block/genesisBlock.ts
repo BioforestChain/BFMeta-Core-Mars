@@ -241,6 +241,19 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       });
     }
 
+    if (genesisAsset.maxBlockBlobSize === undefined) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
+        prop: `maxBlockBlobSize ${genesisAsset.maxBlockBlobSize}`,
+        ...GenesisBlockAsset_Exception_Detail,
+      });
+    }
+    if (!baseHelper.isNaturalNumber(genesisAsset.maxBlockBlobSize)) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+        prop: `maxBlockBlobSize ${genesisAsset.maxBlockBlobSize}`,
+        ...GenesisBlockAsset_Exception_Detail,
+      });
+    }
+
     if (!baseHelper.isNaturalNumber(genesisAsset.consessusBeforeSyncBlockDiff)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `consessusBeforeSyncBlockDiff ${genesisAsset.consessusBeforeSyncBlockDiff}`,

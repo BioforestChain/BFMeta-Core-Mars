@@ -13,6 +13,7 @@ declare namespace BFChainCore {
     maxTransactionSize: number;
     maxTransactionBlobSize: number;
     maxBlockSize: number;
+    maxBlockBlobSize: number;
     maxTPSPerBlock: number;
     consessusBeforeSyncBlockDiff: number;
     maxDelegateTxsPerRound: number;
