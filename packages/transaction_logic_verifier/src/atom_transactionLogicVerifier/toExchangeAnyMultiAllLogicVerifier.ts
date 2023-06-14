@@ -84,10 +84,10 @@ export class ToExchangeAnyMultiAllLogicVerifier extends TransactionLogicVerifier
             errorId: NewTransactionRefuseReason.ENTITY_NOT_EXIST,
           });
         }
-        if (memEntity.status === ASSET_STATUS.DESTORY) {
-          throw new ConsensusException(ERROR_LIST.ENTITY_ALREADY_DESTORY, {
+        if (memEntity.status === ASSET_STATUS.DESTROY) {
+          throw new ConsensusException(ERROR_LIST.ENTITY_ALREADY_DESTROY, {
             entityId: beExchangeAssetType,
-            reason: "Entity already be destory",
+            reason: "Entity already be destroy",
           });
         }
       } else {

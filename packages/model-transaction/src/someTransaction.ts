@@ -35,7 +35,7 @@ export enum TRANSACTION_TYPES_BASE {
   /**权益转移 */
   TRANSFER_ASSET = "AST-01",
   /**权益销毁 */
-  DESTORY_ASSET = "AST-02",
+  DESTROY_ASSET = "AST-02",
   /**发起权益赠送 */
   GIFT_ASSET = "AST-03",
   /**接受权益赠送 */
@@ -67,7 +67,7 @@ export enum TRANSACTION_TYPES_BASE {
   /**创建非同质资产 */
   ISSUE_ENTITY = "ETY-01",
   /**销毁非同质资产 */
-  DESTORY_ENTITY = "ETY-02",
+  DESTROY_ENTITY = "ETY-02",
 
   /**创建非同质资产模板 - V1 版，销毁发行 */
   ISSUE_ENTITY_FACTORY_V1 = "ETY-03",
@@ -127,7 +127,7 @@ export const TRANSACTION_TYPES_MAP = (() => {
       [TRANSACTION_TYPES_BASE.MARK, ATOM_TRS.MarkTransaction],
 
       [TRANSACTION_TYPES_BASE.ISSUE_ASSET, ATOM_TRS.IssueAssetTransaction],
-      [TRANSACTION_TYPES_BASE.DESTORY_ASSET, ATOM_TRS.DestoryAssetTransaction],
+      [TRANSACTION_TYPES_BASE.DESTROY_ASSET, ATOM_TRS.DestroyAssetTransaction],
       [TRANSACTION_TYPES_BASE.TRANSFER_ASSET, ATOM_TRS.TransferAssetTransaction],
       [TRANSACTION_TYPES_BASE.TO_EXCHANGE_ASSET, ATOM_TRS.ToExchangeAssetTransaction],
       [TRANSACTION_TYPES_BASE.BE_EXCHANGE_ASSET, ATOM_TRS.BeExchangeAssetTransaction],
@@ -153,7 +153,7 @@ export const TRANSACTION_TYPES_MAP = (() => {
       [TRANSACTION_TYPES_BASE.ISSUE_ENTITY_FACTORY, ATOM_TRS.IssueEntityFactoryTransaction],
       [TRANSACTION_TYPES_BASE.ISSUE_ENTITY_FACTORY_V1, ATOM_TRS.IssueEntityFactoryTransactionV1],
       [TRANSACTION_TYPES_BASE.ISSUE_ENTITY, ATOM_TRS.IssueEntityTransactionV1],
-      [TRANSACTION_TYPES_BASE.DESTORY_ENTITY, ATOM_TRS.DestoryEntityTransaction],
+      [TRANSACTION_TYPES_BASE.DESTROY_ENTITY, ATOM_TRS.DestroyEntityTransaction],
 
       [TRANSACTION_TYPES_BASE.TRANSFER_ANY, ATOM_TRS.TransferAnyTransaction],
       [TRANSACTION_TYPES_BASE.GIFT_ANY, ATOM_TRS.GiftAnyTransaction],

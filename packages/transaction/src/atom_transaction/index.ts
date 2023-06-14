@@ -12,7 +12,7 @@ export * from "./issueAsset";
 
 export * from "./transfer";
 
-export * from "./destoryAsset";
+export * from "./destroyAsset";
 export * from "./toExchangeAsset";
 export * from "./beExchangeAsset";
 
@@ -32,7 +32,7 @@ export * from "./issueEntityFactory";
 export * from "./issueEntityFactoryV1";
 export * from "./issueEntity";
 export * from "./issueEntityV1";
-export * from "./destoryEntity";
+export * from "./destroyEntity";
 
 export * from "./toExchangeAny";
 export * from "./beExchangeAny";

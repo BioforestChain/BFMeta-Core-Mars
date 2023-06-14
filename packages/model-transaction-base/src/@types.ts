@@ -181,7 +181,7 @@ declare namespace BFChainCore {
     /**权益转移事件附带信息 */
     transferAsset: TransferAssetJSON;
   }
-  interface DestoryAssetJSON {
+  interface DestroyAssetJSON {
     /**销毁的权益所属链名，小写字母组成，5-20 位 */
     sourceChainName: string;
     /**销毁的的权益所属链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
@@ -191,9 +191,9 @@ declare namespace BFChainCore {
     /**销毁的权益数量，0-9 组成并且不包含小数点，必须大于0 */
     amount: string;
   }
-  interface DestoryAssetAssetJSON {
+  interface DestroyAssetAssetJSON {
     /**权益销毁事件附带信息 */
-    destoryAsset: DestoryAssetJSON;
+    destroyAsset: DestroyAssetJSON;
   }
   interface EmigrateAssetJSON {
     /**迁移凭证 */
@@ -468,7 +468,7 @@ declare namespace BFChainCore {
     issueEntity: IssueEntityV1JSON;
   }
 
-  interface DestoryEntityJSON {
+  interface DestroyEntityJSON {
     /**要销毁的非同质资产发行事件的唯一标识符 */
     transactionSignature: string;
     /**要销毁的非同质资产来源链名，小写字母组成，5-20 位 */
@@ -484,9 +484,9 @@ declare namespace BFChainCore {
     /**非同质资产的模板 */
     entityFactory: IssueEntityFactoryJSON;
   }
-  interface DestoryEntityAssetJSON {
+  interface DestroyEntityAssetJSON {
     /**销毁非同质资产事件附带信息 */
-    destoryEntity: DestoryEntityJSON;
+    destroyEntity: DestroyEntityJSON;
   }
 
   interface TransferAnyJSON {
@@ -786,8 +786,8 @@ declare namespace BFChainCore {
     TransferAssetAssetJSON,
     { hasRecipientId: true }
   >;
-  type DestoryAssetTransactionJSON = TransactionMixJSON<
-    DestoryAssetAssetJSON,
+  type DestroyAssetTransactionJSON = TransactionMixJSON<
+    DestroyAssetAssetJSON,
     { hasRecipientId: true }
   >;
   type EmigrateAssetTransactionJSON = TransactionMixJSON<
@@ -850,8 +850,8 @@ declare namespace BFChainCore {
     IssueEntityAssetV1JSON,
     { hasRecipientId: true }
   >;
-  type DestoryEntityTransactionJSON = TransactionMixJSON<
-    DestoryEntityAssetJSON,
+  type DestroyEntityTransactionJSON = TransactionMixJSON<
+    DestroyEntityAssetJSON,
     { hasRecipientId: true }
   >;
 

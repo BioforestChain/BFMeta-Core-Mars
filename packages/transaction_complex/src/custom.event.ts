@@ -221,7 +221,7 @@ export class CustomTransactionEvent {
       }
       return;
     }
-    if (applyResult.type === "destoryAsset") {
+    if (applyResult.type === "destroyAsset") {
       const { magic, assetType, amount } = applyResult.applyInfo;
       this.verifyAssetNumber(amount);
       this.verifyMagic(magic);
@@ -610,12 +610,12 @@ export class CustomTransactionEvent {
         },
       });
     }
-    if (applyResult.type === "destoryAsset") {
+    if (applyResult.type === "destroyAsset") {
       const { address, publicKey, magic, assetType, amount, assetsApplyAddress } =
         applyResult.applyInfo;
       const assetInfo = this.chainAssetInfoHelper.getAssetInfo(magic, assetType);
-      return eventEmitter.emit("destoryAsset", {
-        type: "destoryAsset",
+      return eventEmitter.emit("destroyAsset", {
+        type: "destroyAsset",
         transaction,
         applyInfo: {
           address,
@@ -845,7 +845,7 @@ export class CustomTransactionEvent {
           sourceChainName,
           sourceChainMagic,
           name,
-          status: ASSET_STATUS.DESTORY,
+          status: ASSET_STATUS.DESTROY,
         },
       });
     }

@@ -190,7 +190,7 @@
     }
   ```
 
-## "destoryAsset"
+## "destroyAsset"
 
     销毁数字资产
 
@@ -210,7 +210,7 @@
 
   ```
     {
-        type: "destoryAsset",
+        type: "destroyAsset",
         transaction: Transaction<customAsset>,
         applyInfo: {
             address: "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",

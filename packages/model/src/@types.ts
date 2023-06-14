@@ -33,12 +33,12 @@ declare namespace BFChainCore {
     ? ApplyTransactionEvent<ApplyInfo_Asset, "fee", T>
     : ApplyTransactionEvent<ApplyInfo_FeeFromUnfrozenAsset, "feeFromUnfrozen", T>;
 
-  interface ApplyInfo_DestoryMainAsset extends ApplyInfo_Asset {}
+  interface ApplyInfo_DestroyMainAsset extends ApplyInfo_Asset {}
   /**销毁主权益的相关事件 */
-  type ApplyTransactionDestoryMainAssetEvent<
+  type ApplyTransactionDestroyMainAssetEvent<
     EVENTNAME,
     T extends Transaction = Transaction,
-  > = ApplyTransactionEvent<ApplyInfo_DestoryMainAsset, EVENTNAME, T>;
+  > = ApplyTransactionEvent<ApplyInfo_DestroyMainAsset, EVENTNAME, T>;
 
   interface ApplyInfo_FrozenAsset extends ApplyInfo_Asset {
     /**冻结的索引 */
@@ -229,16 +229,16 @@ declare namespace BFChainCore {
     T extends Transaction = Transaction,
   > = ApplyTransactionEvent<ApplyInfo_IssueAsset, EVENTNAME, T>;
 
-  interface ApplyInfo_DestoryAsset extends ApplyInfo_Asset {
+  interface ApplyInfo_DestroyAsset extends ApplyInfo_Asset {
     address: string;
     publicKeyBuffer?: Uint8Array;
     assetsApplyAddress: string;
   }
   /**销毁数字资产的相关事件 */
-  type ApplyTransactionDestoryAssetEvent<
+  type ApplyTransactionDestroyAssetEvent<
     EVENTNAME,
     T extends Transaction = Transaction,
-  > = ApplyTransactionEvent<ApplyInfo_DestoryAsset, EVENTNAME, T>;
+  > = ApplyTransactionEvent<ApplyInfo_DestroyAsset, EVENTNAME, T>;
 
   type ApplyInfo_RegisterChain = {
     address: string;
@@ -428,7 +428,7 @@ declare namespace BFChainCore {
     T extends Transaction = Transaction,
   > = ApplyTransactionEvent<ApplyInfo_IssueEntityMultiV1, EVENTNAME, T>;
 
-  type ApplyInfo_DestoryEntity = {
+  type ApplyInfo_DestroyEntity = {
     address: string;
     publicKeyBuffer?: Uint8Array;
     sourceChainName: string;
@@ -445,10 +445,10 @@ declare namespace BFChainCore {
     status: ASSET_STATUS;
   };
   /**销毁 entity */
-  type ApplyTransactionDestoryEntityEvent<
+  type ApplyTransactionDestroyEntityEvent<
     EVENTNAME,
     T extends Transaction = Transaction,
-  > = ApplyTransactionEvent<ApplyInfo_DestoryEntity, EVENTNAME, T>;
+  > = ApplyTransactionEvent<ApplyInfo_DestroyEntity, EVENTNAME, T>;
 
   type ApplyInfo_FrozenEntity = {
     address: string;
@@ -541,9 +541,9 @@ declare namespace BFChainCore {
     feeFromUnfrozen: BFChainUtil.EventInOut<ApplyTransactionFeeEvent<"feeFromUnfrozen">>;
 
     /**销毁主权益 */
-    destoryMainAsset: BFChainUtil.EventInOut<
-      ApplyTransactionDestoryMainAssetEvent<
-        "destoryMainAsset",
+    destroyMainAsset: BFChainUtil.EventInOut<
+      ApplyTransactionDestroyMainAssetEvent<
+        "destroyMainAsset",
         | import("@bfchain/core-model-transaction").IssueEntityFactoryTransactionV1
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >,
@@ -602,10 +602,10 @@ declare namespace BFChainCore {
       >
     >;
     /**销毁资产 */
-    destoryAsset: BFChainUtil.EventInOut<
-      ApplyTransactionDestoryAssetEvent<
-        "destoryAsset",
-        | import("@bfchain/core-model-transaction").DestoryAssetTransaction
+    destroyAsset: BFChainUtil.EventInOut<
+      ApplyTransactionDestroyAssetEvent<
+        "destroyAsset",
+        | import("@bfchain/core-model-transaction").DestroyAssetTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
@@ -648,7 +648,7 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction").GrabAssetTransaction
         | import("@bfchain/core-model-transaction").SignForAssetTransaction
         | import("@bfchain/core-model-transaction").BeExchangeSpecialAssetTransaction
-        | import("@bfchain/core-model-transaction").DestoryEntityTransaction
+        | import("@bfchain/core-model-transaction").DestroyEntityTransaction
         | import("@bfchain/core-model-transaction").BeExchangeAnyTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
         | import("@bfchain/core-model-transaction").BeExchangeAnyMultiTransaction
@@ -799,9 +799,9 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;
-    issueEntityFactoryByDestory: BFChainUtil.EventInOut<
+    issueEntityFactoryByDestroy: BFChainUtil.EventInOut<
       ApplyTransactionIssueEntityFactoryEvent<
-        "issueEntityFactoryByDestory",
+        "issueEntityFactoryByDestroy",
         | import("@bfchain/core-model-transaction").IssueEntityFactoryTransactionV1
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
@@ -829,10 +829,10 @@ declare namespace BFChainCore {
       >
     >;
     /**销毁 entity */
-    destoryEntity: BFChainUtil.EventInOut<
-      ApplyTransactionDestoryEntityEvent<
-        "destoryEntity",
-        | import("@bfchain/core-model-transaction").DestoryEntityTransaction
+    destroyEntity: BFChainUtil.EventInOut<
+      ApplyTransactionDestroyEntityEvent<
+        "destroyEntity",
+        | import("@bfchain/core-model-transaction").DestroyEntityTransaction
         | import("@bfchain/core-model-transaction-complex").CustomTransaction
       >
     >;

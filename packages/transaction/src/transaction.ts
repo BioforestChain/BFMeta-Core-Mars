@@ -441,7 +441,7 @@ export const TRANSACTION_FACTORY_TYPES_MAP = (() => {
       [TRANSACTION_TYPES_BASE.MARK, ATOM_TRSFAC.MarkTransactionFactory],
 
       [TRANSACTION_TYPES_BASE.ISSUE_ASSET, ATOM_TRSFAC.IssueAssetTransactionFactory],
-      [TRANSACTION_TYPES_BASE.DESTORY_ASSET, ATOM_TRSFAC.DestoryAssetTransactionFactory],
+      [TRANSACTION_TYPES_BASE.DESTROY_ASSET, ATOM_TRSFAC.DestroyAssetTransactionFactory],
       [TRANSACTION_TYPES_BASE.TRANSFER_ASSET, ATOM_TRSFAC.TransferAssetTransactionFactory],
       [TRANSACTION_TYPES_BASE.TO_EXCHANGE_ASSET, ATOM_TRSFAC.ToExchangeAssetTransactionFactory],
       [TRANSACTION_TYPES_BASE.BE_EXCHANGE_ASSET, ATOM_TRSFAC.BeExchangeAssetTransactionFactory],
@@ -476,7 +476,7 @@ export const TRANSACTION_FACTORY_TYPES_MAP = (() => {
         ATOM_TRSFAC.IssueEntityFactoryTransactionFactoryV1,
       ],
       [TRANSACTION_TYPES_BASE.ISSUE_ENTITY, ATOM_TRSFAC.IssueEntityTransactionFactoryV1],
-      [TRANSACTION_TYPES_BASE.DESTORY_ENTITY, ATOM_TRSFAC.DestoryEntityTransactionFactory],
+      [TRANSACTION_TYPES_BASE.DESTROY_ENTITY, ATOM_TRSFAC.DestroyEntityTransactionFactory],
 
       [TRANSACTION_TYPES_BASE.TRANSFER_ANY, ATOM_TRSFAC.TransferAnyTransactionFactory],
       [TRANSACTION_TYPES_BASE.GIFT_ANY, ATOM_TRSFAC.GiftAnyTransactionFactory],

@@ -1,5 +1,5 @@
 import { TransactionFactory } from "./_txbase";
-import { DestoryEntityTransaction, ASSET_STATUS } from "@bfchain/core-model";
+import { DestroyEntityTransaction, ASSET_STATUS } from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
@@ -12,15 +12,15 @@ import { Injectable, wrapTaskList } from "@bfchain/util";
 import { IssueEntityFactoryTransactionFactory } from "./issueEntityFactory";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
-  "DestoryEntityTransactionFactory",
+  "DestroyEntityTransactionFactory",
 );
 
 /**
- * destoryEntity 交易工厂
+ * destroyEntity 交易工厂
  *
  */
 @Injectable()
-export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryEntityTransaction> {
+export class DestroyEntityTransactionFactory extends TransactionFactory<DestroyEntityTransaction> {
   constructor(
     public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,
@@ -36,14 +36,14 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
    * 校验输入信息
    *
    * @param body
-   * @param destoryEntityAsset
+   * @param destroyEntityAsset
    */
   async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
-    destoryEntityAsset: BFChainCore.DestoryEntityAssetJSON,
+    destroyEntityAsset: BFChainCore.DestroyEntityAssetJSON,
     config = this.configHelper,
   ) {
-    await super.verifyTransactionBody(body, destoryEntityAsset, config);
+    await super.verifyTransactionBody(body, destroyEntityAsset, config);
 
     const Function_Exception_Detail = {
       target: "body",
@@ -93,17 +93,17 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
       });
     }
 
-    const destoryEntity = destoryEntityAsset.destoryEntity;
+    const destroyEntity = destroyEntityAsset.destroyEntity;
 
-    if (!destoryEntity) {
+    if (!destroyEntity) {
       throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
-        param: "destoryEntity",
+        param: "destroyEntity",
       });
     }
 
-    const DestoryEntityAsset_Exception_Detail = {
+    const DestroyEntityAsset_Exception_Detail = {
       ...Function_Exception_Detail,
-      target: "destoryAssetAsset",
+      target: "destroyAssetAsset",
     } as const;
 
     const {
@@ -114,14 +114,14 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
       entityFactoryPossessor,
       entityFactory,
       transactionSignature,
-    } = destoryEntity;
+    } = destroyEntity;
 
     if (sourceChainName !== config.chainName) {
       throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: "sourceChainName",
         to_target: "body",
         be_compare_prop: "local chain name",
-        ...DestoryEntityAsset_Exception_Detail,
+        ...DestroyEntityAsset_Exception_Detail,
       });
     }
 
@@ -130,7 +130,7 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
         to_compare_prop: "sourceChainMagic",
         to_target: "body",
         be_compare_prop: "local chain magic",
-        ...DestoryEntityAsset_Exception_Detail,
+        ...DestroyEntityAsset_Exception_Detail,
       });
     }
 
@@ -139,7 +139,7 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
     if (!entityId) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "entityId",
-        ...DestoryEntityAsset_Exception_Detail,
+        ...DestroyEntityAsset_Exception_Detail,
       });
     }
 
@@ -147,7 +147,7 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `entityId ${entityId}`,
         type: "entityId",
-        ...DestoryEntityAsset_Exception_Detail,
+        ...DestroyEntityAsset_Exception_Detail,
       });
     }
 
@@ -156,7 +156,7 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
         to_compare_prop: `storage.value ${storage.value}`,
         be_compare_prop: `entityId ${entityId}`,
         to_target: "storage",
-        be_target: "destoryEntity",
+        be_target: "destroyEntity",
         ...Function_Exception_Detail,
       });
     }
@@ -173,7 +173,7 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
         prop: `entityFactoryPossessor ${entityFactoryPossessor}`,
         type: "account address",
         ...Function_Exception_Detail,
-        target: "destoryEntity",
+        target: "destroyEntity",
       });
     }
 
@@ -189,7 +189,7 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
         prop: `entityFactoryApplicant ${entityFactoryApplicant}`,
         type: "account address",
         ...Function_Exception_Detail,
-        target: "destoryEntity",
+        target: "destroyEntity",
       });
     }
 
@@ -209,7 +209,7 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
     if (!transactionSignature) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "transactionSignature",
-        ...DestoryEntityAsset_Exception_Detail,
+        ...DestroyEntityAsset_Exception_Detail,
       });
     }
 
@@ -217,21 +217,21 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `transactionSignature ${transactionSignature}`,
         type: "transaction signature",
-        ...DestoryEntityAsset_Exception_Detail,
+        ...DestroyEntityAsset_Exception_Detail,
       });
     }
   }
 
   /**
-   * 初始化 destoryEntity 交易
+   * 初始化 destroyEntity 交易
    *
    * @param body
-   * @param destoryEntity
+   * @param destroyEntity
    */
-  init(body: BFChainCore.TxBodyJSON, destoryEntity: BFChainCore.DestoryEntityAssetJSON) {
-    const transaction = DestoryEntityTransaction.fromObject({
+  init(body: BFChainCore.TxBodyJSON, destroyEntity: BFChainCore.DestroyEntityAssetJSON) {
+    const transaction = DestroyEntityTransaction.fromObject({
       ...body,
-      asset: destoryEntity,
+      asset: destroyEntity,
     });
 
     return transaction;
@@ -244,7 +244,7 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
    * @param eventEmitter
    */
   async applyTransaction(
-    transaction: DestoryEntityTransaction,
+    transaction: DestroyEntityTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ) {
@@ -259,10 +259,10 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
         entityFactoryPossessor,
         entityFactory,
         transactionSignature,
-      } = transaction.asset.destoryEntity;
+      } = transaction.asset.destroyEntity;
       // 销毁 entity
-      taskList.next = eventEmitter.emit("destoryEntity", {
-        type: "destoryEntity",
+      taskList.next = eventEmitter.emit("destroyEntity", {
+        type: "destroyEntity",
         transaction,
         applyInfo: {
           address: senderId,
@@ -274,7 +274,7 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
           entityFactoryPossessorAddress: entityFactoryPossessor,
           entityFactory: entityFactory.toJSON(),
           frozenId: transactionSignature,
-          status: ASSET_STATUS.DESTORY,
+          status: ASSET_STATUS.DESTROY,
         },
       });
       const entityFrozenAssetPrealnum = entityFactory.entityFrozenAssetPrealnum;
@@ -309,13 +309,13 @@ export class DestoryEntityTransactionFactory extends TransactionFactory<DestoryE
    * @returns
    */
   getMoveAmount(
-    transaction: DestoryEntityTransaction,
+    transaction: DestroyEntityTransaction,
     argv = {
       magic: this.configHelper.magic,
       assetType: this.configHelper.assetType,
     },
   ) {
-    const { sourceChainMagic, entityFactory } = transaction.asset.destoryEntity;
+    const { sourceChainMagic, entityFactory } = transaction.asset.destroyEntity;
     if (argv.magic === sourceChainMagic && argv.assetType === this.configHelper.assetType) {
       return entityFactory.entityFrozenAssetPrealnum;
     }

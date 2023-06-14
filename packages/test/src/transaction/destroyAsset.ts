@@ -1,6 +1,6 @@
 import {
-  DestoryAssetTransaction,
-  DestoryAssetTransactionFactory,
+  DestroyAssetTransaction,
+  DestroyAssetTransactionFactory,
   RANGE_TYPE,
   BFChainCore,
 } from "@bfchain/core";
@@ -14,11 +14,11 @@ import {
 } from "../include";
 
 const genesisAddress = getGenesisAccount().address;
-async function getDestoryAssetTransaction(sender: AccountModel, bfchainCore: BFChainCore) {
+async function getDestroyAssetTransaction(sender: AccountModel, bfchainCore: BFChainCore) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: bfchainCore.config.version,
-    type: bfchainCore.transactionHelper.DESTORY_ASSET, // 交易类型
+    type: bfchainCore.transactionHelper.DESTROY_ASSET, // 交易类型
     senderId: sender.address, // 发起者地址
     senderPublicKey: sender.publicKey, // 发起者公钥
     senderSecondPublicKey: "", // 发起者二次公钥
@@ -52,11 +52,11 @@ async function getDestoryAssetTransaction(sender: AccountModel, bfchainCore: BFC
         sender.secondSecret,
       );
   }
-  const trs = await bfchainCore.transaction.createTransaction<DestoryAssetTransaction>(
-    DestoryAssetTransactionFactory,
+  const trs = await bfchainCore.transaction.createTransaction<DestroyAssetTransaction>(
+    DestroyAssetTransactionFactory,
     data,
     {
-      destoryAsset: {
+      destroyAsset: {
         sourceChainName: "bfchain",
         sourceChainMagic: bfchainCore.config.magic,
         assetType: "ZEK", // 交易的资产类型
@@ -71,6 +71,6 @@ async function getDestoryAssetTransaction(sender: AccountModel, bfchainCore: BFC
 (async () => {
   const bfchainCore = await getBfchainCoreEntry();
 
-  await getDestoryAssetTransaction(getSenderWithSecondSecret(), bfchainCore);
-  await getDestoryAssetTransaction(getSenderWithoutSecondSecret(), bfchainCore);
+  await getDestroyAssetTransaction(getSenderWithSecondSecret(), bfchainCore);
+  await getDestroyAssetTransaction(getSenderWithoutSecondSecret(), bfchainCore);
 })();

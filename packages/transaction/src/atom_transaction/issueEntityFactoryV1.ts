@@ -79,7 +79,7 @@ export class IssueEntityFactoryTransactionFactoryV1 extends IssueEntityFactoryTr
       } = transaction.asset.issueEntityFactory;
 
       // 计算需要销毁的主权益数
-      const destoryAssets = this.transactionHelper.calcDestoryMainAssetsOfIsseuEntityFactory(
+      const destroyAssets = this.transactionHelper.calcDestroyMainAssetsOfIsseuEntityFactory(
         entityPrealnum,
         config,
       );
@@ -92,27 +92,27 @@ export class IssueEntityFactoryTransactionFactoryV1 extends IssueEntityFactoryTr
           address: senderId,
           publicKeyBuffer: senderPublicKeyBuffer,
           assetInfo,
-          amount: "-" + destoryAssets,
-          sourceAmount: destoryAssets,
+          amount: "-" + destroyAssets,
+          sourceAmount: destroyAssets,
         },
       });
 
       // 销毁主权益
-      taskList.next = eventEmitter.emit("destoryMainAsset", {
-        type: "destoryMainAsset",
+      taskList.next = eventEmitter.emit("destroyMainAsset", {
+        type: "destroyMainAsset",
         transaction,
         applyInfo: {
           address: senderId,
           publicKeyBuffer: senderPublicKeyBuffer,
           assetInfo,
-          amount: "-" + destoryAssets,
-          sourceAmount: destoryAssets,
+          amount: "-" + destroyAssets,
+          sourceAmount: destroyAssets,
         },
       });
 
       // 发行 entityFactory
-      taskList.next = eventEmitter.emit("issueEntityFactoryByDestory", {
-        type: "issueEntityFactoryByDestory",
+      taskList.next = eventEmitter.emit("issueEntityFactoryByDestroy", {
+        type: "issueEntityFactoryByDestroy",
         transaction,
         applyInfo: {
           address: transaction.senderId,

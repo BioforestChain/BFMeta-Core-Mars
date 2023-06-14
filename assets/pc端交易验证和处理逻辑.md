@@ -2041,7 +2041,7 @@
                   checkAmount(transferAsset.amount);
               ```
 
-        - DESTORY_ASSET -- AST-02 -- 销毁数字资产交易
+        - DESTROY_ASSET -- AST-02 -- 销毁数字资产交易
 
           - 交易的手续费必须大于 0
             ```
@@ -2076,17 +2076,17 @@
                 if (storate.key !== "assetType") {
                     throw new Error
                 }
-                if (storage.value !== asset.destoryAsset.assetType) {
+                if (storage.value !== asset.destroyAsset.assetType) {
                     throw new Error
                 }
             ```
           - 必须携带生成销毁数字资产的合法数据
             ```
-                destoryAsset = destoryAssetAsset.destoryAsset;
-                if (!destoryAsset) {
+                destroyAsset = destroyAssetAsset.destroyAsset;
+                if (!destroyAsset) {
                     throw new Error
                 }
-                const { sourceChainMagic, sourceChainName, assetType } = destoryAsset;
+                const { sourceChainMagic, sourceChainName, assetType } = destroyAsset;
             ```
             - 必须携带合法的要销毁的数字资产所属链名，且等于当前链链名
               ```
@@ -2123,7 +2123,7 @@
               ```
             - 必须携带合法的要销毁的数字资产数量，且大于 0
               ```
-                  checkAmount(destoryAsset.amount);
+                  checkAmount(destroyAsset.amount);
               ```
 
         - GIFT_ASSET -- AST-03 -- 发红包交易
@@ -4302,7 +4302,7 @@
 
      - TRANSFER_ASSET -- AST-01 -- 数字资产转账交易
 
-     - DESTORY_ASSET -- AST-02 -- 销毁数字资产交易
+     - DESTROY_ASSET -- AST-02 -- 销毁数字资产交易
 
        - 如果销毁的数字资产不存在则报错
          ```
@@ -5198,7 +5198,7 @@
                同 SIGNATURE
            ```
 
-       - DESTORY_ASSET -- AST-02 -- 销毁数字资产交易
+       - DESTROY_ASSET -- AST-02 -- 销毁数字资产交易
 
          - 计算赎回的链资产并扣除资产发行账户的链资产
            ```

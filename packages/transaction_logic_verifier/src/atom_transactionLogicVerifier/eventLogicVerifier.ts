@@ -9,7 +9,7 @@ import {
   TOKEN_TO_BEN,
   PARENT_ASSET_TYPE,
   IssueEntityTransaction,
-  DestoryEntityTransaction,
+  DestroyEntityTransaction,
   IssueEntityTransactionV1,
   IssueEntityMultiTransactionV1,
 } from "@bfchain/core-model";
@@ -125,14 +125,14 @@ export class EventLogicVerifier {
     );
   }
 
-  private __listenEventDestoryMainAsset(
+  private __listenEventDestroyMainAsset(
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     currentBlockHeight: number,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     // 扣除手续费
     eventEmitter.on(
-      "destoryMainAsset",
+      "destroyMainAsset",
       async ({ transaction, applyInfo }, next) => {
         // 手续费扣除的只能是链资产
         const { magic, assetType } = this.configHelper;
@@ -151,7 +151,7 @@ export class EventLogicVerifier {
           });
         }
         const { amount, sourceAmount } = applyInfo;
-        const destoryAmount = BigInt(amount);
+        const destroyAmount = BigInt(amount);
         const address = applyInfo.address;
         const accountAssets = await this.helperLogicVerifier.getAccountAssetsForce(
           accountMap,
@@ -167,14 +167,14 @@ export class EventLogicVerifier {
         };
         const hodingAsset = accountAssets[magic][assetType];
         const remainAsset = hodingAsset.assetNumber;
-        hodingAsset.assetNumber += destoryAmount;
+        hodingAsset.assetNumber += destroyAmount;
         if (hodingAsset.assetNumber < BigInt(0)) {
           throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
             reason: `Transaction signature: ${transaction.signature} address: ${address} magic ${
               applyInfo.assetInfo.magic
             } assetType: ${
               applyInfo.assetInfo.assetType
-            } hodingAsset: ${remainAsset.toString()} destoryAsset: ${amount}`,
+            } hodingAsset: ${remainAsset.toString()} destroyAsset: ${amount}`,
             errorId: NewTransactionRefuseReason.ASSET_NOT_ENOUGH,
           });
         }
@@ -190,14 +190,14 @@ export class EventLogicVerifier {
         }
         if (memAssets.remainAssetPrealnum < BigInt(sourceAmount)) {
           throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
-            reason: `Asset ${magic} ${assetType} remain: ${memAssets.remainAssetPrealnum.toString()} destoryAsset: ${amount}`,
+            reason: `Asset ${magic} ${assetType} remain: ${memAssets.remainAssetPrealnum.toString()} destroyAsset: ${amount}`,
             errorId: NewTransactionRefuseReason.ASSET_NOT_ENOUGH,
           });
         }
 
         next();
       },
-      { taskname: `applyTransaction/logicVerifier/destoryMainAsset` },
+      { taskname: `applyTransaction/logicVerifier/destroyMainAsset` },
     );
   }
 
@@ -762,10 +762,10 @@ export class EventLogicVerifier {
     );
   }
 
-  private __listenEventDestoryAsset(eventEmitter: BFChainCore.ApplyTransactionEventEmitter) {
+  private __listenEventDestroyAsset(eventEmitter: BFChainCore.ApplyTransactionEventEmitter) {
     // 资产销毁
     eventEmitter.on(
-      "destoryAsset",
+      "destroyAsset",
       async ({ applyInfo }, next) => {
         const { sourceAmount, assetInfo } = applyInfo;
         const { magic, assetType } = assetInfo;
@@ -781,14 +781,14 @@ export class EventLogicVerifier {
 
         if (memAssets.remainAssetPrealnum < BigInt(sourceAmount)) {
           throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
-            reason: `Asset ${magic} ${assetType} remain: ${memAssets.remainAssetPrealnum.toString()} destoryAsset: ${sourceAmount}`,
+            reason: `Asset ${magic} ${assetType} remain: ${memAssets.remainAssetPrealnum.toString()} destroyAsset: ${sourceAmount}`,
             errorId: NewTransactionRefuseReason.ASSET_NOT_ENOUGH,
           });
         }
 
         next();
       },
-      { taskname: `applyTransaction/logicVerifier/destoryAsset` },
+      { taskname: `applyTransaction/logicVerifier/destroyAsset` },
     );
   }
 
@@ -1181,7 +1181,7 @@ export class EventLogicVerifier {
         }
 
         // 冻结状态的位名不能删除
-        if (memLocation.status === ASSET_STATUS.DESTORY) {
+        if (memLocation.status === ASSET_STATUS.DESTROY) {
           throw new ConsensusException(ERROR_LIST.CAN_NOT_DELETE_LOCATION_NAME, {
             locationName: name,
             reason: "Location name has been deleted",
@@ -1655,13 +1655,13 @@ export class EventLogicVerifier {
     );
   }
 
-  private __listenEventIssueEntityFactoryByDestory(
+  private __listenEventIssueEntityFactoryByDestroy(
     currentBlockHeight: number,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     // 发行 entityFactory
     eventEmitter.on(
-      "issueEntityFactoryByDestory",
+      "issueEntityFactoryByDestroy",
       async ({ transaction, applyInfo }, next) => {
         const { factoryId, sourceChainMagic, possessorAddress } = applyInfo;
 
@@ -1674,7 +1674,7 @@ export class EventLogicVerifier {
 
         next();
       },
-      { taskname: `applyTransaction/logicVerifier/issueEntityFactoryByDestory` },
+      { taskname: `applyTransaction/logicVerifier/issueEntityFactoryByDestroy` },
     );
   }
 
@@ -2091,13 +2091,13 @@ export class EventLogicVerifier {
     );
   }
 
-  private __listenEventDestoryEntity(
+  private __listenEventDestroyEntity(
     currentBlockHeight: number,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     // 资产销毁
     eventEmitter.on(
-      "destoryEntity",
+      "destroyEntity",
       async ({ transaction, applyInfo }, next) => {
         const {
           sourceChainMagic,
@@ -2122,16 +2122,16 @@ export class EventLogicVerifier {
         }
 
         this.__isEntityFactoryMatch(
-          (transaction as DestoryEntityTransaction).asset.destoryEntity.entityFactory.toJSON(),
+          (transaction as DestroyEntityTransaction).asset.destroyEntity.entityFactory.toJSON(),
           memEntityFactory,
-          "DestoryEntityTransaction",
+          "DestroyEntityTransaction",
         );
 
         if (entityFactoryApplicantAddress !== memEntityFactory.applyAddress) {
           throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
             to_compare_prop: `entityFactoryApplicant ${entityFactoryApplicantAddress}`,
             be_compare_prop: `applyAddress ${memEntityFactory.applyAddress}`,
-            to_target: `destoryEntity`,
+            to_target: `destroyEntity`,
             be_target: "memEntityFactory",
           });
         }
@@ -2140,7 +2140,7 @@ export class EventLogicVerifier {
           throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
             to_compare_prop: `entityFactoryPossessor ${entityFactoryPossessorAddress}`,
             be_compare_prop: `possessorAddress ${memEntityFactory.possessorAddress}`,
-            to_target: `destoryEntity`,
+            to_target: `destroyEntity`,
             be_target: "memEntityFactory",
           });
         }
@@ -2159,23 +2159,23 @@ export class EventLogicVerifier {
 
         // 冻结状态的位名不能销毁
         if (memEntity.status === ASSET_STATUS.FROZEN) {
-          throw new ConsensusException(ERROR_LIST.CAN_NOT_DESTORY_ENTITY, {
+          throw new ConsensusException(ERROR_LIST.CAN_NOT_DESTROY_ENTITY, {
             entityId,
-            reason: "Frozen entity can not be destory",
+            reason: "Frozen entity can not be destroy",
           });
         }
 
         // 冻结状态的位名不能销毁
-        if (memEntity.status === ASSET_STATUS.DESTORY) {
-          throw new ConsensusException(ERROR_LIST.ENTITY_ALREADY_DESTORY, {
+        if (memEntity.status === ASSET_STATUS.DESTROY) {
+          throw new ConsensusException(ERROR_LIST.ENTITY_ALREADY_DESTROY, {
             entityId,
-            reason: "Entity already be destory",
+            reason: "Entity already be destroy",
           });
         }
 
         // 只有 entity 的拥有者才能删除位名
         if (memEntity.possessorAddress !== transaction.senderId) {
-          throw new ConsensusException(ERROR_LIST.CAN_NOT_DESTORY_ENTITY, {
+          throw new ConsensusException(ERROR_LIST.CAN_NOT_DESTROY_ENTITY, {
             entityId,
             reason: `Only entity possessor can deestory entity ${entityId}`,
           });
@@ -2183,7 +2183,7 @@ export class EventLogicVerifier {
 
         next();
       },
-      { taskname: `applyTransaction/logicVerifier/destoryEntity` },
+      { taskname: `applyTransaction/logicVerifier/destroyEntity` },
     );
   }
 
@@ -2218,8 +2218,8 @@ export class EventLogicVerifier {
           });
         }
         // 实体已经销毁
-        if (memEntity.status === ASSET_STATUS.DESTORY) {
-          throw new ConsensusException(ERROR_LIST.ENTITY_ALREADY_DESTORY, {
+        if (memEntity.status === ASSET_STATUS.DESTROY) {
+          throw new ConsensusException(ERROR_LIST.ENTITY_ALREADY_DESTROY, {
             entityId,
           });
         }
@@ -2262,8 +2262,8 @@ export class EventLogicVerifier {
           });
         }
         // 销毁状态的 entity 不能解冻
-        if (memEntity.status === ASSET_STATUS.DESTORY) {
-          throw new ConsensusException(ERROR_LIST.ENTITY_ALREADY_DESTORY, {
+        if (memEntity.status === ASSET_STATUS.DESTROY) {
+          throw new ConsensusException(ERROR_LIST.ENTITY_ALREADY_DESTROY, {
             entityId,
           });
         }
@@ -2330,8 +2330,8 @@ export class EventLogicVerifier {
           });
         }
         // 销毁状态的 entity 不能更改拥有者
-        if (memEntity.status === ASSET_STATUS.DESTORY) {
-          throw new ConsensusException(ERROR_LIST.ENTITY_ALREADY_DESTORY, {
+        if (memEntity.status === ASSET_STATUS.DESTROY) {
+          throw new ConsensusException(ERROR_LIST.ENTITY_ALREADY_DESTROY, {
             entityId,
           });
         }
@@ -2423,7 +2423,7 @@ export class EventLogicVerifier {
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     this.__listenEventFee(accountMap, currentBlockHeight, eventEmitter);
-    this.__listenEventDestoryMainAsset(accountMap, currentBlockHeight, eventEmitter);
+    this.__listenEventDestroyMainAsset(accountMap, currentBlockHeight, eventEmitter);
     this.__listenEventAsset(accountMap, currentBlockHeight, eventEmitter);
     this.__listenEventFrozenAsset(accountMap, currentBlockHeight, eventEmitter);
     this.__listenEventUnfrozenAsset(currentBlockHeight, eventEmitter);
@@ -2436,7 +2436,7 @@ export class EventLogicVerifier {
     this.__listenEventAcceptVote(accountMap, currentBlockHeight, eventEmitter);
     this.__listenEventRejectVote(accountMap, currentBlockHeight, eventEmitter);
     this.__listenEventIssueAsset(accountMap, currentBlockHeight, eventEmitter);
-    this.__listenEventDestoryAsset(eventEmitter);
+    this.__listenEventDestroyAsset(eventEmitter);
     this.__listenEventIssueDAppid(currentBlockHeight, eventEmitter);
     this.__listenEventFrozenDAppid(currentBlockHeight, eventEmitter);
     this.__listenEventUnfrozenDAppid(currentBlockHeight, eventEmitter);
@@ -2450,11 +2450,11 @@ export class EventLogicVerifier {
     this.__listenEventUnfrozenLocationName(currentBlockHeight, eventEmitter);
     this.__listenEventChangeLocationNamePossessor(currentBlockHeight, eventEmitter);
     this.__listenEventIssueEntityFactoryByFrozen(accountMap, currentBlockHeight, eventEmitter);
-    this.__listenEventIssueEntityFactoryByDestory(currentBlockHeight, eventEmitter);
+    this.__listenEventIssueEntityFactoryByDestroy(currentBlockHeight, eventEmitter);
     this.__listenEventIssueEntity(accountMap, currentBlockHeight, eventEmitter);
     this.__listenEventIssueEntityV1(accountMap, currentBlockHeight, eventEmitter);
     this.__listenEventIssueEntityMultiV1(accountMap, currentBlockHeight, eventEmitter);
-    this.__listenEventDestoryEntity(currentBlockHeight, eventEmitter);
+    this.__listenEventDestroyEntity(currentBlockHeight, eventEmitter);
     this.__listenEventFrozenEntity(currentBlockHeight, eventEmitter);
     this.__listenEventUnfrozenEntity(currentBlockHeight, eventEmitter);
     this.__listenEventChangeEntityPossessor(currentBlockHeight, eventEmitter);

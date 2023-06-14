@@ -16,7 +16,7 @@ export * from "./issueAssetLogicVerifier";
 
 export * from "./transferLogicVerifier";
 
-export * from "./destoryAssetLogicVerifier";
+export * from "./destroyAssetLogicVerifier";
 
 export * from "./giftLogicVerifier";
 export * from "./grabLogicVerifier";
@@ -38,7 +38,7 @@ export * from "./issueEntityFactoryLogicVerifier";
 export * from "./issueEntityFactoryV1LogicVerifier";
 export * from "./issueEntityLogicVerifier";
 export * from "./issueEntityV1LogicVerifier";
-export * from "./destoryEntityLogicVerifier";
+export * from "./destroyEntityLogicVerifier";
 
 export * from "./eventLogicVerifier";
 

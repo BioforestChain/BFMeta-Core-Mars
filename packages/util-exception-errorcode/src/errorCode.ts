@@ -326,11 +326,11 @@ export const ERROR_LIST = {
     "001-11050",
     "Only top level location name can exchange",
   ),
-  CAN_NOT_DESTORY_ENTITY: new ErrorCode(
+  CAN_NOT_DESTROY_ENTITY: new ErrorCode(
     "001-11051",
-    "Can not destory entityId {entityId}, reason {reason}",
+    "Can not destroy entityId {entityId}, reason {reason}",
   ),
-  ENTITY_ALREADY_DESTORY: new ErrorCode("001-11052", "Entity already destory, entityId {entityId}"),
+  ENTITY_ALREADY_DESTROY: new ErrorCode("001-11052", "Entity already destroy, entityId {entityId}"),
   ASSET_IS_ALREADY_MIGRATION: new ErrorCode(
     "001-11053",
     "Asset is already migration, migrateCertificateId {migrateCertificateId}",

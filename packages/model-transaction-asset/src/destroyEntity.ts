@@ -6,14 +6,14 @@ import { IssueEntityFactoryModel } from "./issueEntityFactory";
  * 销毁非同质资产的交易 asset 模型
  *
  */
-@Type.d("DestoryEntityModel")
-export class DestoryEntityModel
-  extends Message<DestoryEntityModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.DestoryEntityJSON>
+@Type.d("DestroyEntityModel")
+export class DestroyEntityModel
+  extends Message<DestroyEntityModel>
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.DestroyEntityJSON>
 {
   static INC = 1;
   /**要抢的红包交易的签名 */
-  @Field.d(DestoryEntityModel.INC++, "bytes")
+  @Field.d(DestroyEntityModel.INC++, "bytes")
   transactionSignatureBuffer!: Uint8Array;
   public get transactionSignature(): string {
     return getHexFromArrayBuffer(this.transactionSignatureBuffer);
@@ -22,25 +22,25 @@ export class DestoryEntityModel
     this.transactionSignatureBuffer = parseHexToArrayBuffer(value);
   }
   /**非同质资产的所属链名 */
-  @Field.d(DestoryEntityModel.INC++, "string")
+  @Field.d(DestroyEntityModel.INC++, "string")
   sourceChainName!: string;
   /**非同质资产的所属链网络标识符 */
-  @Field.d(DestoryEntityModel.INC++, "string")
+  @Field.d(DestroyEntityModel.INC++, "string")
   sourceChainMagic!: string;
   /**非同质资产的 id */
-  @Field.d(DestoryEntityModel.INC++, "string")
+  @Field.d(DestroyEntityModel.INC++, "string")
   entityId!: string;
   /**非同质资产模板的申请者 */
-  @Field.d(DestoryEntityModel.INC++, "string")
+  @Field.d(DestroyEntityModel.INC++, "string")
   entityFactoryApplicant!: string;
   /**非同质资产模板的拥有者 */
-  @Field.d(DestoryEntityModel.INC++, "string")
+  @Field.d(DestroyEntityModel.INC++, "string")
   entityFactoryPossessor!: string;
   /**非同质资产模板 */
-  @Field.d(DestoryEntityModel.INC++, IssueEntityFactoryModel)
+  @Field.d(DestroyEntityModel.INC++, IssueEntityFactoryModel)
   entityFactory!: IssueEntityFactoryModel;
   toJSON() {
-    const res: BFChainCore.DestoryEntityJSON = {
+    const res: BFChainCore.DestroyEntityJSON = {
       transactionSignature: this.transactionSignature,
       sourceChainName: this.sourceChainName,
       sourceChainMagic: this.sourceChainMagic,
@@ -54,9 +54,9 @@ export class DestoryEntityModel
   }
   static fromObject<T extends Message>(
     this: BFChainProtobuf.Constructor<T>,
-    object: BFChainProtobuf.ObjectFromType<DestoryEntityModel>,
+    object: BFChainProtobuf.ObjectFromType<DestroyEntityModel>,
   ) {
-    const res = super.fromObject(object) as DestoryEntityModel;
+    const res = super.fromObject(object) as DestroyEntityModel;
     if (res !== object) {
       object.transactionSignature && (res.transactionSignature = object.transactionSignature);
     }
@@ -68,16 +68,16 @@ export class DestoryEntityModel
  * 销毁非同质资产的交易 asset 外层模型
  *
  */
-@Type.d("DestoryEntityAssetModel")
-export class DestoryEntityAssetModel
-  extends Message<DestoryEntityAssetModel>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.DestoryEntityAssetJSON>
+@Type.d("DestroyEntityAssetModel")
+export class DestroyEntityAssetModel
+  extends Message<DestroyEntityAssetModel>
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.DestroyEntityAssetJSON>
 {
-  @Field.d(1, DestoryEntityModel)
-  destoryEntity!: DestoryEntityModel;
+  @Field.d(1, DestroyEntityModel)
+  destroyEntity!: DestroyEntityModel;
   toJSON() {
     return {
-      destoryEntity: this.destoryEntity.toJSON(),
+      destroyEntity: this.destroyEntity.toJSON(),
     };
   }
 }

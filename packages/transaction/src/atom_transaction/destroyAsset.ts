@@ -1,5 +1,5 @@
 import { TransactionFactory } from "./_txbase";
-import { DestoryAssetTransaction } from "@bfchain/core-model";
+import { DestroyAssetTransaction } from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
@@ -11,15 +11,15 @@ import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception
 import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
-  "DestoryAssetTransactionFactory",
+  "DestroyAssetTransactionFactory",
 );
 
 /**
- * destoryAsset 交易工厂
+ * destroyAsset 交易工厂
  *
  */
 @Injectable()
-export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAssetTransaction> {
+export class DestroyAssetTransactionFactory extends TransactionFactory<DestroyAssetTransaction> {
   constructor(
     public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,
@@ -32,14 +32,14 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
 
   /**
    * 校验输入信息
-   * 要验证 destoryAsset 交易的基础信息是否合法和 asset 信息是否存在
+   * 要验证 destroyAsset 交易的基础信息是否合法和 asset 信息是否存在
    * 交易的手续费必须大于 0
    * 交易的 rangeType 必须是 empty
    * 不能携带交易的接收者账户
    * 交易的来源链和去往链的网络标识符必须是本链的网络标识符
    * 必须携带查询用的索引存储
    * key 值必须是 "assetType" value 值必须是设定的值
-   * asset 是完整的 destoryAsset 信息
+   * asset 是完整的 destroyAsset 信息
    * 需要携带合法的资产所属链名称,并且是本链
    * 需要携带合法的资产所属链的网络标识符,并且是本链
    * 需要携带合法的资产名称，并且不是链资产
@@ -47,14 +47,14 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
    *
    *
    * @param body
-   * @param destoryAssetAsset
+   * @param destroyAssetAsset
    */
   async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
-    destoryAssetAsset: BFChainCore.DestoryAssetAssetJSON,
+    destroyAssetAsset: BFChainCore.DestroyAssetAssetJSON,
     config = this.configHelper,
   ) {
-    await super.verifyTransactionBody(body, destoryAssetAsset, config);
+    await super.verifyTransactionBody(body, destroyAssetAsset, config);
 
     const Function_Exception_Detail = {
       target: "body",
@@ -115,51 +115,51 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
       });
     }
 
-    const destoryAsset = destoryAssetAsset.destoryAsset;
+    const destroyAsset = destroyAssetAsset.destroyAsset;
 
-    if (!destoryAsset) {
+    if (!destroyAsset) {
       throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
-        param: "destoryAsset",
+        param: "destroyAsset",
       });
     }
 
-    const DestoryAssetAsset_Exception_Detail = {
+    const DestroyAssetAsset_Exception_Detail = {
       ...Function_Exception_Detail,
-      target: "destoryAssetAsset",
+      target: "destroyAssetAsset",
     } as const;
 
-    const { sourceChainMagic, sourceChainName, assetType } = destoryAsset;
+    const { sourceChainMagic, sourceChainName, assetType } = destroyAsset;
 
-    // this.checkChainName(sourceChainName, "sourceChainName", DestoryAssetAsset_Exception_Detail);
+    // this.checkChainName(sourceChainName, "sourceChainName", DestroyAssetAsset_Exception_Detail);
 
     if (sourceChainName !== config.chainName) {
       throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: "sourceChainName",
         to_target: "body",
         be_compare_prop: "local chain name",
-        ...DestoryAssetAsset_Exception_Detail,
+        ...DestroyAssetAsset_Exception_Detail,
       });
     }
 
-    // this.checkChainMagic(sourceChainMagic, "sourceChainMagic", DestoryAssetAsset_Exception_Detail);
+    // this.checkChainMagic(sourceChainMagic, "sourceChainMagic", DestroyAssetAsset_Exception_Detail);
 
     if (sourceChainMagic !== config.magic) {
       throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: "sourceChainMagic",
         to_target: "body",
         be_compare_prop: "local chain magic",
-        ...DestoryAssetAsset_Exception_Detail,
+        ...DestroyAssetAsset_Exception_Detail,
       });
     }
 
-    this.checkAsset(assetType, "assetType", DestoryAssetAsset_Exception_Detail);
+    this.checkAsset(assetType, "assetType", DestroyAssetAsset_Exception_Detail);
 
     if (assetType === config.assetType) {
       throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
         to_compare_prop: "assetType",
-        to_target: "destoryAsset",
+        to_target: "destroyAsset",
         be_compare_prop: config.assetType,
-        ...DestoryAssetAsset_Exception_Detail,
+        ...DestroyAssetAsset_Exception_Detail,
       });
     }
 
@@ -168,24 +168,24 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
         to_compare_prop: `storage.value ${storage.value}`,
         be_compare_prop: `assetType ${assetType}`,
         to_target: "storage",
-        be_target: "destoryAsset",
+        be_target: "destroyAsset",
         ...Function_Exception_Detail,
       });
     }
 
-    this.checkAssetAmount(destoryAsset.amount, "amount", DestoryAssetAsset_Exception_Detail);
+    this.checkAssetAmount(destroyAsset.amount, "amount", DestroyAssetAsset_Exception_Detail);
   }
 
   /**
-   * 初始化 destoryAsset 交易
+   * 初始化 destroyAsset 交易
    *
    * @param body
-   * @param destoryAsset
+   * @param destroyAsset
    */
-  init(body: BFChainCore.TxBodyJSON, destoryAsset: BFChainCore.DestoryAssetAssetJSON) {
-    const transaction = DestoryAssetTransaction.fromObject({
+  init(body: BFChainCore.TxBodyJSON, destroyAsset: BFChainCore.DestroyAssetAssetJSON) {
+    const transaction = DestroyAssetTransaction.fromObject({
       ...body,
-      asset: destoryAsset,
+      asset: destroyAsset,
     });
 
     return transaction;
@@ -198,14 +198,14 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
    * @param eventEmitter
    */
   applyTransaction(
-    transaction: DestoryAssetTransaction,
+    transaction: DestroyAssetTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ) {
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
       const { senderId, senderPublicKeyBuffer, recipientId } = transaction;
-      const { amount, assetType, sourceChainMagic } = transaction.asset.destoryAsset;
+      const { amount, assetType, sourceChainMagic } = transaction.asset.destroyAsset;
       const assetInfo = this.chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
 
       // 发起账户扣除资产
@@ -233,8 +233,8 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
         },
       });
       // 赎回链资产
-      taskList.next = eventEmitter.emit("destoryAsset", {
-        type: "destoryAsset",
+      taskList.next = eventEmitter.emit("destroyAsset", {
+        type: "destroyAsset",
         transaction,
         applyInfo: {
           address: senderId,
@@ -256,13 +256,13 @@ export class DestoryAssetTransactionFactory extends TransactionFactory<DestoryAs
    * @returns
    */
   getMoveAmount(
-    transaction: DestoryAssetTransaction,
+    transaction: DestroyAssetTransaction,
     argv = {
       magic: this.configHelper.magic,
       assetType: this.configHelper.assetType,
     },
   ) {
-    const { sourceChainMagic, assetType, amount } = transaction.asset.destoryAsset;
+    const { sourceChainMagic, assetType, amount } = transaction.asset.destroyAsset;
     if (argv.magic === sourceChainMagic && argv.assetType === assetType) {
       return amount;
     }

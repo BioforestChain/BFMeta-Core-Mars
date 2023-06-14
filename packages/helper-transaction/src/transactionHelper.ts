@@ -142,9 +142,9 @@ export class TransactionHelper {
   get ISSUE_ASSET() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.ISSUE_ASSET);
   }
-  /** DESTORY_ASSET: 销毁权益 */
-  get DESTORY_ASSET() {
-    return this.getTransactionType(TRANSACTION_TYPES_BASE.DESTORY_ASSET);
+  /** DESTROY_ASSET: 销毁权益 */
+  get DESTROY_ASSET() {
+    return this.getTransactionType(TRANSACTION_TYPES_BASE.DESTROY_ASSET);
   }
   /** TRANSFER_ASSET: 权益转移 */
   get TRANSFER_ASSET() {
@@ -222,9 +222,9 @@ export class TransactionHelper {
   get ISSUE_ENTITY() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.ISSUE_ENTITY);
   }
-  /** DESTORY_ENTITY: 销毁非同质资产 */
-  get DESTORY_ENTITY() {
-    return this.getTransactionType(TRANSACTION_TYPES_BASE.DESTORY_ENTITY);
+  /** DESTROY_ENTITY: 销毁非同质资产 */
+  get DESTROY_ENTITY() {
+    return this.getTransactionType(TRANSACTION_TYPES_BASE.DESTROY_ENTITY);
   }
 
   /** TRANSFER_ANY: 任意资产转移 */
@@ -287,7 +287,7 @@ export class TransactionHelper {
     this.REGISTER_CHAIN,
     this.MARK,
     this.ISSUE_ASSET,
-    this.DESTORY_ASSET,
+    this.DESTROY_ASSET,
     this.TRANSFER_ASSET,
     this.TO_EXCHANGE_ASSET,
     this.BE_EXCHANGE_ASSET,
@@ -304,7 +304,7 @@ export class TransactionHelper {
     this.SET_LNS_MANAGER,
     this.ISSUE_ENTITY_FACTORY,
     this.ISSUE_ENTITY,
-    this.DESTORY_ENTITY,
+    this.DESTROY_ENTITY,
 
     this.TRANSFER_ANY,
 
@@ -977,7 +977,7 @@ export class TransactionHelper {
    * @param config
    * @returns
    */
-  calcDestoryMainAssetsOfIsseuEntityFactory(entityPrealnum: string, config = this.config) {
+  calcDestroyMainAssetsOfIsseuEntityFactory(entityPrealnum: string, config = this.config) {
     const jsbiHelper = this.jsbiHelper;
     // 一共需要多少 个 主权益
     const mainAssetPrealnum = jsbiHelper.divisionFraction(
@@ -985,10 +985,10 @@ export class TransactionHelper {
       config.maxMultipleOfEntityAndMainAsset,
     );
     // 一共需要多少 本 主权益
-    const destoryAssets = jsbiHelper
+    const destroyAssets = jsbiHelper
       .multiplyCeilFraction(TOKEN_TO_BEN, mainAssetPrealnum)
       .toString();
-    return destoryAssets;
+    return destroyAssets;
   }
 
   /**

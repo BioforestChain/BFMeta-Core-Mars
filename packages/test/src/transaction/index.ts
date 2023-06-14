@@ -10,7 +10,7 @@ import "./mark";
 import "./registerChain";
 import "./issueAsset";
 import "./transferAsset";
-import "./destoryAsset";
+import "./destroyAsset";
 import "./toExchangeAsset";
 import "./beExchangeAsset";
 import "./giftAsset";
@@ -27,7 +27,7 @@ import "./setLnsRecordValue";
 import "./issueEntityFactory";
 import "./issueEntity";
 import "./issueEntityV1";
-import "./destoryEntity";
+import "./destroyEntity";
 
 import "./transferAny";
 import "./giftAny";

@@ -3,8 +3,8 @@ import {
   IssueEntityFactoryTransactionFactory,
   IssueEntityTransaction,
   IssueEntityTransactionFactory,
-  DestoryEntityTransaction,
-  DestoryEntityTransactionFactory,
+  DestroyEntityTransaction,
+  DestroyEntityTransactionFactory,
   RANGE_TYPE,
   BFChainCore,
 } from "@bfchain/core";
@@ -143,7 +143,7 @@ async function getIssueEntityTransaction(
   return trs.toJSON();
 }
 
-async function getDestoryEntityTransaction(
+async function getDestroyEntityTransaction(
   sender: AccountModel,
   transactionSignature: string,
   issueEntityTrs: BFChainCore.IssueEntityTransactionJSON,
@@ -156,7 +156,7 @@ async function getDestoryEntityTransaction(
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
 
-    type: bfchainCore.transactionHelper.DESTORY_ENTITY, // 交易类型
+    type: bfchainCore.transactionHelper.DESTROY_ENTITY, // 交易类型
     senderId: sender.address, // 发起者地址
     senderPublicKey: sender.publicKey, // 发起者公钥
     senderSecondPublicKey: "", // 发起者二次公钥
@@ -191,11 +191,11 @@ async function getDestoryEntityTransaction(
         sender.secondSecret,
       );
   }
-  const trs = await bfchainCore.transaction.createTransaction<DestoryEntityTransaction>(
-    DestoryEntityTransactionFactory,
+  const trs = await bfchainCore.transaction.createTransaction<DestroyEntityTransaction>(
+    DestroyEntityTransactionFactory,
     data,
     {
-      destoryEntity: {
+      destroyEntity: {
         transactionSignature,
         sourceChainName: bfchainCore.config.chainName,
         sourceChainMagic: bfchainCore.config.magic,
@@ -233,13 +233,13 @@ async function getDestoryEntityTransaction(
     bfchainCore,
   );
 
-  await getDestoryEntityTransaction(
+  await getDestroyEntityTransaction(
     getSenderWithSecondSecret(),
     entityTrs1.signature,
     entityTrs1,
     bfchainCore,
   );
-  await getDestoryEntityTransaction(
+  await getDestroyEntityTransaction(
     getSenderWithoutSecondSecret(),
     entityTrs2.signature,
     entityTrs2,

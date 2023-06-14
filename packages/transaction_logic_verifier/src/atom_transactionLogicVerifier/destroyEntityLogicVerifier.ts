@@ -1,4 +1,4 @@
-import type { DestoryEntityTransaction } from "@bfchain/core-model";
+import type { DestroyEntityTransaction } from "@bfchain/core-model";
 import { Injectable } from "@bfchain/util";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
@@ -9,21 +9,21 @@ const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
 );
 
 @Injectable()
-export class DestoryEntityLogicVerifier extends TransactionLogicVerifier {
+export class DestroyEntityLogicVerifier extends TransactionLogicVerifier {
   constructor() {
     super();
   }
 
   async verify(
-    transaction: DestoryEntityTransaction,
+    transaction: DestroyEntityTransaction,
     currentBlockHeight: number,
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const destoryEntity = transaction.asset.destoryEntity;
+    const destroyEntity = transaction.asset.destroyEntity;
 
-    const { transactionSignature } = destoryEntity;
+    const { transactionSignature } = destroyEntity;
     const trsWithBlockSign =
       await this.transactionGetterHelper.getTransactionAndBlockSignatureBySignature(
         transactionSignature,
@@ -33,16 +33,16 @@ export class DestoryEntityLogicVerifier extends TransactionLogicVerifier {
     if (!trsWithBlockSign) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST_OR_EXPIRED, {
         prop: `Transaction with signature ${transactionSignature}`,
-        target: "destoryEntity",
+        target: "destroyEntity",
       });
     }
 
     const trs = trsWithBlockSign.transaction;
     if (trs.type === this.transactionHelper.ISSUE_ENTITY) {
       const entityInfo = (trs as BFChainCore.IssueEntityTransactionJSON).asset.issueEntity;
-      if (entityInfo.entityId !== destoryEntity.entityId) {
+      if (entityInfo.entityId !== destroyEntity.entityId) {
         throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-          to_compare_prop: `entityId ${destoryEntity.entityId}`,
+          to_compare_prop: `entityId ${destroyEntity.entityId}`,
           be_compare_prop: `entityId ${entityInfo.entityId}`,
           to_target: "transaction",
           be_target: "issueEntityTransaction",
@@ -52,9 +52,9 @@ export class DestoryEntityLogicVerifier extends TransactionLogicVerifier {
       const entityList = (
         trs as BFChainCore.IssueEntityMultiTransactionV1JSON
       ).asset.issueEntityMulti.entityStructList.map((item) => item.entityId);
-      if (!entityList.includes(destoryEntity.entityId)) {
+      if (!entityList.includes(destroyEntity.entityId)) {
         throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-          to_compare_prop: `entityId ${destoryEntity.entityId}`,
+          to_compare_prop: `entityId ${destroyEntity.entityId}`,
           be_compare_prop: `entityId [${entityList.slice(0, 3).join(",")}...]`,
           to_target: "transaction",
           be_target: "issueEntityMultiTransaction",
@@ -93,9 +93,9 @@ export class DestoryEntityLogicVerifier extends TransactionLogicVerifier {
    *
    * @param transaction
    */
-  getLockData(transaction: DestoryEntityTransaction) {
+  getLockData(transaction: DestroyEntityTransaction) {
     const { entityFactoryApplicant, entityFactoryPossessor, entityId } =
-      transaction.asset.destoryEntity;
+      transaction.asset.destroyEntity;
     return [entityFactoryApplicant, entityFactoryPossessor, entityId];
   }
 }

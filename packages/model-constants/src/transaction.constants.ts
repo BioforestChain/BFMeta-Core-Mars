@@ -89,9 +89,9 @@ export const enum ASSET_STATUS {
    */
   FROZEN = 0x11,
   /**
-   * DESTORY: 已销毁
+   * DESTROY: 已销毁
    */
-  DESTORY = 0xff,
+  DESTROY = 0xff,
 }
 // #endregion
 

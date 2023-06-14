@@ -8,8 +8,8 @@ import {
   ToExchangeAssetTransactionFactory,
   BeExchangeAssetTransaction,
   BeExchangeAssetTransactionFactory,
-  DestoryAssetTransaction,
-  DestoryAssetTransactionFactory,
+  DestroyAssetTransaction,
+  DestroyAssetTransactionFactory,
   EXCHANGE_DIRECTION,
   BlockBaseStatisticsHelper,
   StatisticsInfo,
@@ -121,11 +121,11 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
     };
   }
 
-  async function getDestoryAssetTransaction(sender: AccountModel, bfchainCore: BFChainCore) {
+  async function getDestroyAssetTransaction(sender: AccountModel, bfchainCore: BFChainCore) {
     const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
     const data: BFChainCore.TxBodyJSON = {
       version: bfchainCore.config.version,
-      type: bfchainCore.transactionHelper.DESTORY_ASSET, // 交易类型
+      type: bfchainCore.transactionHelper.DESTROY_ASSET, // 交易类型
       senderId: sender.address, // 发起者地址
       senderPublicKey: sender.publicKey, // 发起者公钥
       senderSecondPublicKey: "", // 发起者二次公钥
@@ -158,17 +158,17 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
           sender.secondSecret,
         );
     }
-    const destoryAsset = {
+    const destroyAsset = {
       sourceChainName: "bfchain",
       sourceChainMagic: "5F720C81E82CFC99",
       assetType: "ZEK",
       amount: "1000",
     };
-    const trs = await bfchainCore.transaction.createTransaction<DestoryAssetTransaction>(
-      DestoryAssetTransactionFactory,
+    const trs = await bfchainCore.transaction.createTransaction<DestroyAssetTransaction>(
+      DestroyAssetTransactionFactory,
       data,
       {
-        destoryAsset,
+        destroyAsset,
       },
       keypair,
       secondKeypair,
@@ -184,9 +184,9 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
         },
         {
           address: sender.address,
-          magic: destoryAsset.sourceChainMagic,
-          assetType: destoryAsset.assetType,
-          assetNumber: BigInt("-" + destoryAsset.amount),
+          magic: destroyAsset.sourceChainMagic,
+          assetType: destroyAsset.assetType,
+          assetNumber: BigInt("-" + destroyAsset.amount),
         },
       ],
     };
@@ -525,7 +525,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
       bfchainCore,
     );
     const recipient: string[] = [];
-    txs[txs.length] = await getDestoryAssetTransaction(sender4, bfchainCore);
+    txs[txs.length] = await getDestroyAssetTransaction(sender4, bfchainCore);
     const toExchangeAsset: BFChainCore.ToExchangeAssetJSON = {
       cipherPublicKeys: [],
       toExchangeSource: "5F720C81E82CFC99",

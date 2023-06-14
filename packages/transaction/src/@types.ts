@@ -110,8 +110,8 @@ declare namespace BFChainCore {
       action: string;
     };
   }
-  interface ApplyResult_DestoryAssetJSON {
-    type: "destoryAsset";
+  interface ApplyResult_DestroyAssetJSON {
+    type: "destroyAsset";
     applyInfo: {
       address: string;
       publicKey: string;
@@ -357,7 +357,7 @@ declare namespace BFChainCore {
     | ApplyResult_RejectVoteJSON
     | ApplyResult_VoteEquityJSON
     | ApplyResult_AssetJSON
-    | ApplyResult_DestoryAssetJSON
+    | ApplyResult_DestroyAssetJSON
     | ApplyResult_FrozenAssetJSON
     | ApplyResult_UnfrozenAssetJSON
     | ApplyResult_SignForAssetJSON

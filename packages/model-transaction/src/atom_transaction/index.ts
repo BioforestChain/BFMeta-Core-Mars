@@ -9,7 +9,7 @@ export * from "./dappPurchasing.transaction";
 export * from "./mark.transaction";
 export * from "./issueAsset.transaction";
 export * from "./transferAsset.transaction";
-export * from "./destoryAsset.transaction";
+export * from "./destroyAsset.transaction";
 export * from "./toExchangeAsset.transaction";
 export * from "./beExchangeAsset.transaction";
 export * from "./giftAsset.transaction";
@@ -27,7 +27,7 @@ export * from "./issueEntityFactory.transaction";
 export * from "./issueEntityFactoryV1.transaction";
 export * from "./issueEntity.transaction";
 export * from "./issueEntityV1.transaction";
-export * from "./destoryEntity.transaction";
+export * from "./destroyEntity.transaction";
 
 export * from "./transferAny.transaction";
 export * from "./giftAny.transaction";
