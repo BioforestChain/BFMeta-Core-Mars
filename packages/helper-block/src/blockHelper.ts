@@ -580,6 +580,9 @@ export class BlockHelper {
       }
     }
     assetsChanges.sort((prev, next) => (prev > next ? 1 : -1));
+    if (assetsChanges.length === 0) {
+      return undefined;
+    }
     const hashCreater = this.cryptoHelper.sha256();
     for (const assetChange of assetsChanges) {
       hashCreater.update(Buffer.from(assetChange, encoding));

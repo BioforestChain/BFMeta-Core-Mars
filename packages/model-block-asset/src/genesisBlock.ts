@@ -270,12 +270,15 @@ export class GenesisAssetModel
   @Field.d(GenesisAssetModel.INC++, TransactionPowOfWorkConfigModel)
   transactionPowOfWorkConfig!: TransactionPowOfWorkConfigModel;
   /**块内资产变动账户生成的 hash */
-  @Field.d(GenesisAssetModel.INC++, "bytes")
-  assetChangeBuffer!: Uint8Array;
-  get assetChangeHash(): string {
+  @Field.d(GenesisAssetModel.INC++, "bytes", "optional")
+  assetChangeBuffer?: Uint8Array;
+  get assetChangeHash() {
+    if (this.assetChangeBuffer === undefined) {
+      return undefined;
+    }
     return getHexFromArrayBuffer(this.assetChangeBuffer);
   }
-  set assetChangeHash(value: string) {
+  set assetChangeHash(value: string | undefined) {
     this.assetChangeBuffer = parseHexToArrayBuffer(value);
   }
 
@@ -318,11 +321,10 @@ export class GenesisAssetModel
         averageComputingPower: this.averageComputingPower,
         tpowOfWorkExemptionBlocks: this.tpowOfWorkExemptionBlocks,
         transactionPowOfWorkConfig: this.transactionPowOfWorkConfig.toJSON(),
-        assetChangeHash: this.assetChangeHash,
       },
       super.toJSON(),
     ) as any;
-
+    this.assetChangeHash && (res.assetChangeHash = this.assetChangeHash);
     return res;
   }
   @cacheBytesGetter
@@ -339,14 +341,6 @@ export class GenesisAssetModel
       object.maxTransactionBlobSize !== undefined &&
         (res.maxTransactionBlobSize = object.maxTransactionBlobSize);
       object.maxBlockBlobSize !== undefined && (res.maxBlockBlobSize = object.maxBlockBlobSize);
-      object.maxMultipleOfAssetAndMainAsset &&
-        (res.maxMultipleOfAssetAndMainAsset = FractionBigIntModel.fromObject<FractionBigIntModel>(
-          object.maxMultipleOfAssetAndMainAsset,
-        ));
-      object.maxMultipleOfEntityAndMainAsset &&
-        (res.maxMultipleOfEntityAndMainAsset = FractionBigIntModel.fromObject<FractionBigIntModel>(
-          object.maxMultipleOfEntityAndMainAsset,
-        ));
       object.assetChangeHash !== undefined && (res.assetChangeHash = object.assetChangeHash);
     }
     return res as unknown as T;

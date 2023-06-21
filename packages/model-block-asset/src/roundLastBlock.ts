@@ -12,12 +12,15 @@ export class RoundLastAssetModel
   implements BFChainCore.AssetJSONToModelType<BFChainCore.RoundLastAssetJSON>
 {
   /**块内资产变动账户生成的 hash */
-  @Field.d(RoundLastAssetModel.INC++, "bytes")
-  assetChangeBuffer!: Uint8Array;
-  get assetChangeHash(): string {
+  @Field.d(RoundLastAssetModel.INC++, "bytes", "optional")
+  assetChangeBuffer?: Uint8Array;
+  get assetChangeHash() {
+    if (this.assetChangeBuffer === undefined) {
+      return undefined;
+    }
     return getHexFromArrayBuffer(this.assetChangeBuffer);
   }
-  set assetChangeHash(value: string) {
+  set assetChangeHash(value: string | undefined) {
     this.assetChangeBuffer = parseHexToArrayBuffer(value);
   }
   /**链上链区块 hash, 包含当轮除最后一个区块外的区块 signature 以及上一轮 hash 合并后生成的 hash */
@@ -29,14 +32,15 @@ export class RoundLastAssetModel
   set chainOnChainHash(value: string) {
     this.chainOnChainBuffer = parseHexToArrayBuffer(value);
   }
-  toJSON(): BFChainCore.RoundLastAssetJSON {
-    return Object.assign(
+  toJSON() {
+    const res: BFChainCore.RoundLastAssetJSON = Object.assign(
       {
-        assetChangeHash: this.assetChangeHash,
         chainOnChainHash: this.chainOnChainHash,
       },
       super.toJSON(),
     );
+    this.assetChangeHash && (res.assetChangeHash = this.assetChangeHash);
+    return res;
   }
   @cacheBytesGetter
   getBytes() {

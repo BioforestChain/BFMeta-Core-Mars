@@ -1,3 +1,4 @@
+import { getHexFromArrayBuffer, parseHexToArrayBuffer } from "@bfchain/util-encoding-hex";
 import { cacheBytesGetter } from "@bfchain/core-model-cacher";
 import { Message, Type, Field } from "@bfchain/protobuf";
 
@@ -11,12 +12,20 @@ export class CommonAssetModel
 {
   static INC = 1;
   /**块内资产变动账户生成的 hash */
-  @Field.d(CommonAssetModel.INC++, "string")
-  assetChangeHash!: string;
+  @Field.d(CommonAssetModel.INC++, "bytes", "optional")
+  assetChangeBuffer?: Uint8Array;
+  get assetChangeHash() {
+    if (this.assetChangeBuffer === undefined) {
+      return undefined;
+    }
+    return getHexFromArrayBuffer(this.assetChangeBuffer);
+  }
+  set assetChangeHash(value: string | undefined) {
+    this.assetChangeBuffer = parseHexToArrayBuffer(value);
+  }
   toJSON() {
-    const res: BFChainCore.CommonAssetJSON = {
-      assetChangeHash: this.assetChangeHash,
-    };
+    const res: BFChainCore.CommonAssetJSON = {};
+    this.assetChangeHash && (res.assetChangeHash = this.assetChangeHash);
     return res;
   }
   @cacheBytesGetter
