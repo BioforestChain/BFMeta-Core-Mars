@@ -356,7 +356,7 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
    * @param height
    * @param hash
    */
-  async checkAssetChangeHash(height: number, hash: string) {
+  async checkAssetChangeHash(height: number, hash?: string) {
     const assetChanges = await this.accountGetterHelper.getAccountsAssetsChange(height);
     const calcHash = await this.blockHelper.calcAssetChangeHash(assetChanges);
     if (calcHash !== hash) {

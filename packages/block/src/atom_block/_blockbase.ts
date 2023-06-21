@@ -126,7 +126,7 @@ export abstract class BlockFactory<T extends Block> {
    */
   async checkAssetChangeHash(
     height: number,
-    hash: string,
+    hash?: string,
     options: BFChainCore.ReplayBlockOptions = {},
   ) {
     let accountGetterHelper = options.accountGetterHelper;

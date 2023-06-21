@@ -1,9 +1,9 @@
 {
   "version": 1,
   "height": 1,
-  "blockSize": 16535,
+  "blockSize": 16542,
   "timestamp": 0,
-  "signature": "5da90ae9a21392cc9de9be4bd849ce2d6aecd0250ebdeb0a837aced3f9862edbafe94ca748f822a7ed523222952eeb71711e794a73bd448b05882007a01c4507",
+  "signature": "d07a372d753546756f175e77039b8bd250dab4435b44dd25387a746704e726500b9c5aae4a2e56691d90f93a76ff4f1a666bacbef5721d8b6bf6ec9774d4d80c",
   "generatorPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
   "generatorEquity": "0",
   "previousBlockSignature": "",
@@ -29,6 +29,7 @@
       "maxTransactionSize": 409600,
       "maxTransactionBlobSize": 1073741824,
       "maxBlockSize": 838860800,
+      "maxBlockBlobSize": 4294967296,
       "maxTPSPerBlock": 1000,
       "consessusBeforeSyncBlockDiff": 7,
       "maxDelegateTxsPerRound": 10,
@@ -98,7 +99,6 @@
           "denominator": 1
         }
       },
-      "assetChangeHash": "569030b37631c6a1896da00cc01a118e2eb4e706d96da879325a4f5f8412c1cb",
       "newDelegates": [
         "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
         "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
@@ -135,7 +135,8 @@
           "equity": "0"
         }
       ],
-      "rate": "0"
+      "rate": "0",
+      "assetChangeHash": "569030b37631c6a1896da00cc01a118e2eb4e706d96da879325a4f5f8412c1cb"
     }
   },
   "transactionInfo": {

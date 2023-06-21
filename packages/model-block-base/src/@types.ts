@@ -154,7 +154,7 @@ declare namespace BFChainCore {
   //#region CommonBlock
   interface CommonAssetJSON {
     /**块内资产变动 hash */
-    assetChangeHash: string;
+    assetChangeHash?: string;
   }
   interface CommonBlockAssetJSON {
     /**普通块附带信息 */
@@ -184,7 +184,7 @@ declare namespace BFChainCore {
   }
   interface RoundLastAssetJSON extends RoundDelegateJSON {
     /**块内资产变动 hash */
-    assetChangeHash: string;
+    assetChangeHash?: string;
     /**链上链 hash */
     chainOnChainHash: string;
   }
@@ -309,7 +309,7 @@ declare namespace BFChainCore {
     /**tpow配置，JSON对象 */
     transactionPowOfWorkConfig: TransactionPowOfWorkConfigJSON;
     /**块内资产变动 hash */
-    assetChangeHash: string;
+    assetChangeHash?: string;
   }
   interface GenesisBlockAssetJSON {
     /**创世块附带信息 */

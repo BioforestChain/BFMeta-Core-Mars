@@ -97,7 +97,6 @@
           "denominator": 1
         }
       },
-      "assetChangeHash": "25d7b43d2d63915d0daabca7528ccb704c85e068673a2a7c03739f444b7ac892",
       "newDelegates": [
         "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
         "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
@@ -446,7 +445,8 @@
           "equity": "0"
         }
       ],
-      "rate": "0"
+      "rate": "0",
+      "assetChangeHash": "25d7b43d2d63915d0daabca7528ccb704c85e068673a2a7c03739f444b7ac892"
     }
   },
   "transactionInfo": {
