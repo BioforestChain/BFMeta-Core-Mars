@@ -302,16 +302,6 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
             ...ToExchangeAssets_Exception_Detail,
           });
         }
-        if (beExchangeParentAssetType !== PARENT_ASSET_TYPE.ASSETS) {
-          // 没必要自己和自己换
-          if (beExchangeAssetType === toExchangeAssetType) {
-            throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
-              to_compare_prop: `beExchangeAssetType ${beExchangeAssetType}`,
-              to_target: "toExchangeAnyMulti.beExchangeAsset",
-              be_compare_prop: toExchangeAssetType,
-            });
-          }
-        }
       } else {
         if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
           if (!assetExchangeWeightRatio) {
@@ -337,6 +327,13 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
           isNeedBeExchangeAssetPrealnum = true;
         }
       }
+    }
+    if (assetTypeSet.has(beExchangeAssetType)) {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
+        to_compare_prop: `beExchangeAssetType ${beExchangeAssetType}`,
+        to_target: "toExchangeAsset",
+        be_compare_prop: beExchangeAssetType,
+      });
     }
     if (isNeedBeExchangeAssetPrealnum) {
       if (!beExchangeAssetPrealnum) {

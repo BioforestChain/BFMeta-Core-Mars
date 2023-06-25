@@ -292,15 +292,16 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
             be_compare_prop: "1",
           });
         }
-        // 没必要自己和自己换
-        if (beExchangeAssetType === toExchangeAssetType) {
-          throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
-            to_compare_prop: `beExchangeAssetType ${beExchangeAssetType}`,
-            to_target: "toExchangeAny",
-            be_compare_prop: toExchangeAssetType,
-          });
-        }
       }
+    }
+
+    // 没必要自己和自己换
+    if (toExchangeAssetType === beExchangeAssetType) {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
+        to_compare_prop: `toExchangeAssetType ${toExchangeAssetType}`,
+        to_target: "toExchangeAny",
+        be_compare_prop: beExchangeAssetType,
+      });
     }
 
     // 只有 to 是 entity 时需要携带 taxInformation

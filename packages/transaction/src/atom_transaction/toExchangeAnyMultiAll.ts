@@ -271,13 +271,6 @@ export class ToExchangeAnyMultiAllTransactionFactory extends TransactionFactory<
         taxInformation,
       } = beExchangeAsset;
       const key = `${beExchangeSource}-${beExchangeAssetType}`;
-      if (beAssetTypeSet.has(key)) {
-        throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_DUPLICATE, {
-          prop: `beExchangeAssets.beExchangeAsset ${JSON.stringify(beExchangeAsset)}`,
-          target: propName,
-        });
-      }
-      beAssetTypeSet.add(key);
       if (toAssetTypeSet.has(key)) {
         throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
           to_compare_prop: `beExchangeAssetType ${beExchangeAssetType}`,
@@ -285,6 +278,13 @@ export class ToExchangeAnyMultiAllTransactionFactory extends TransactionFactory<
           be_compare_prop: beExchangeAssetType,
         });
       }
+      if (beAssetTypeSet.has(key)) {
+        throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_DUPLICATE, {
+          prop: `beExchangeAssets.beExchangeAsset ${JSON.stringify(beExchangeAsset)}`,
+          target: propName,
+        });
+      }
+      beAssetTypeSet.add(key);
       this.checkParentAssetType(
         beExchangeParentAssetType,
         "beExchangeParentAssetType",
