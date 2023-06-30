@@ -606,7 +606,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       safePromiseThen(resultPromise, undefined, verboseGenerator.reject);
       const offCatch = (_: unknown, next: () => void) => {
         safePromiseOffThen(resultPromise, undefined, verboseGenerator.reject);
-        next();
+        return next();
       };
       verboseGenerator.on("done", offCatch);
       verboseGenerator.on("error", offCatch);
@@ -689,7 +689,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       verboseGenerator.on("requestAll", (_, next) => {
         freeIteratorLock();
         maxOffset = Infinity;
-        next();
+        return next();
       });
       let resultIndex = 0;
       /// 还是一个个请求
@@ -699,7 +699,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
           maxOffset = queryOffset;
           freeIteratorLock();
         }
-        next();
+        return next();
       });
       //#endregion
 
@@ -977,7 +977,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       safePromiseThen(resultPromise, undefined, verboseGenerator.reject);
       const offCatch = (_: unknown, next: () => void) => {
         safePromiseOffThen(resultPromise, undefined, verboseGenerator.reject);
-        next();
+        return next();
       };
       verboseGenerator.on("done", offCatch);
       verboseGenerator.on("error", offCatch);
@@ -1059,7 +1059,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       verboseGenerator.on("requestAll", (_, next) => {
         freeIteratorLock();
         maxOffset = Infinity;
-        next();
+        return next();
       });
       let resultIndex = 0;
       /// 还是一个个请求
@@ -1069,7 +1069,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
           maxOffset = queryOffset;
           freeIteratorLock();
         }
-        next();
+        return next();
       });
       //#endregion
 
@@ -1477,7 +1477,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
       verboseGenerator.on("requestAll", (_, next) => {
         freeIteratorLock();
         nextYieldIndex = Infinity;
-        next();
+        return next();
       });
       /// 还是一个个请求
       verboseGenerator.on("requestItem", (index, next) => {
@@ -1485,7 +1485,7 @@ export class ChainChannelGroup<DH extends BFChainCore.SimpleChainChannel = Chain
           nextYieldIndex = index + 1;
           freeIteratorLock();
         }
-        next();
+        return next();
       });
       //#endregion
       /**

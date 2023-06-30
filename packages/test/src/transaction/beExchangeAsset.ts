@@ -214,7 +214,7 @@ async function client(transaction: BFChainCore.Transaction, bfchainCore: BFChain
     const asset = accountAssets[address][magic][assetType];
     asset.amount = asset.amount + bigIntAmount;
     asset.paidFee = asset.paidFee - bigIntAmount;
-    next();
+    return next();
   });
 
   // 扣除交易的资产数量
@@ -229,7 +229,7 @@ async function client(transaction: BFChainCore.Transaction, bfchainCore: BFChain
     };
     const asset = accountAssets[address][magic][assetType];
     asset.amount = asset.amount + BigInt(applyInfo.amount);
-    next();
+    return next();
   });
 
   // 冻结交易的资产数量
@@ -244,7 +244,7 @@ async function client(transaction: BFChainCore.Transaction, bfchainCore: BFChain
     };
     const asset = accountAssets[address][magic][assetType];
     asset.amount = asset.amount + BigInt(applyInfo.amount);
-    next();
+    return next();
   });
 
   // 解冻交易的资产数量
@@ -259,7 +259,7 @@ async function client(transaction: BFChainCore.Transaction, bfchainCore: BFChain
     };
     const asset = accountAssets[address][magic][assetType];
     asset.amount = asset.amount + BigInt(applyInfo.amount);
-    next();
+    return next();
   });
 
   await bfchainCore.transaction

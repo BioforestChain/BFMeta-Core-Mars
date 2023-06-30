@@ -119,7 +119,7 @@ export class EventLogicVerifier {
           });
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/fee` },
     );
@@ -195,7 +195,7 @@ export class EventLogicVerifier {
           });
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/destroyMainAsset` },
     );
@@ -238,7 +238,7 @@ export class EventLogicVerifier {
           });
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/asset` },
     );
@@ -281,7 +281,7 @@ export class EventLogicVerifier {
           });
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/frozenAsset` },
     );
@@ -355,7 +355,7 @@ export class EventLogicVerifier {
           }
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/unfrozenAsset` },
     );
@@ -423,7 +423,7 @@ export class EventLogicVerifier {
           }
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/signForAsset` },
     );
@@ -471,7 +471,7 @@ export class EventLogicVerifier {
           });
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/voteEquity` },
     );
@@ -504,7 +504,7 @@ export class EventLogicVerifier {
           });
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/frozenAccount` },
     );
@@ -531,7 +531,7 @@ export class EventLogicVerifier {
           });
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/setUsername` },
     );
@@ -542,7 +542,7 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "setSecondPublicKey",
       ({ applyInfo }, next) => {
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/setSecondPublicKey` },
     );
@@ -570,7 +570,7 @@ export class EventLogicVerifier {
           });
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/registerToDelegate` },
     );
@@ -605,7 +605,7 @@ export class EventLogicVerifier {
           });
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/acceptVote` },
     );
@@ -640,7 +640,7 @@ export class EventLogicVerifier {
           });
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/rejectVote` },
     );
@@ -756,7 +756,7 @@ export class EventLogicVerifier {
           });
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/issueAsset` },
     );
@@ -786,7 +786,7 @@ export class EventLogicVerifier {
           });
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/destroyAsset` },
     );
@@ -833,7 +833,7 @@ export class EventLogicVerifier {
           });
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/issueDAppid` },
     );
@@ -868,7 +868,7 @@ export class EventLogicVerifier {
           });
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/frozenDAppid` },
     );
@@ -918,7 +918,7 @@ export class EventLogicVerifier {
           });
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/unfrozenDAppid` },
     );
@@ -973,7 +973,7 @@ export class EventLogicVerifier {
           });
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/changeDAppidPossessor` },
     );
@@ -1065,7 +1065,7 @@ export class EventLogicVerifier {
           });
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/registerChain` },
     );
@@ -1139,7 +1139,7 @@ export class EventLogicVerifier {
           }
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/registerLocationName` },
     );
@@ -1217,7 +1217,7 @@ export class EventLogicVerifier {
           });
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/cancelLocationName` },
     );
@@ -1309,7 +1309,7 @@ export class EventLogicVerifier {
           }
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/setLnsManager` },
     );
@@ -1385,7 +1385,7 @@ export class EventLogicVerifier {
           this.addRecord(name, addRecord, records);
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/setLnsRecordValue` },
     );
@@ -1425,7 +1425,7 @@ export class EventLogicVerifier {
           });
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/frozenLocationName` },
     );
@@ -1480,7 +1480,7 @@ export class EventLogicVerifier {
           });
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/unfrozenLocationName` },
     );
@@ -1540,7 +1540,7 @@ export class EventLogicVerifier {
           });
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/changeLocationNamePossessor` },
     );
@@ -1649,7 +1649,7 @@ export class EventLogicVerifier {
           });
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/issueEntityFactoryByFrozen` },
     );
@@ -1672,7 +1672,7 @@ export class EventLogicVerifier {
           factoryId,
         );
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/issueEntityFactoryByDestroy` },
     );
@@ -1830,7 +1830,7 @@ export class EventLogicVerifier {
           }
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/issueEntity` },
     );
@@ -1955,7 +1955,7 @@ export class EventLogicVerifier {
           }
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/issueEntityV1` },
     );
@@ -2085,7 +2085,7 @@ export class EventLogicVerifier {
           }
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/issueEntityV1` },
     );
@@ -2181,7 +2181,7 @@ export class EventLogicVerifier {
           });
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/destroyEntity` },
     );
@@ -2224,7 +2224,7 @@ export class EventLogicVerifier {
           });
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/frozenEntity` },
     );
@@ -2281,7 +2281,7 @@ export class EventLogicVerifier {
           });
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/unfrozenEntity` },
     );
@@ -2344,7 +2344,7 @@ export class EventLogicVerifier {
           });
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/changeEntityPossessor` },
     );
@@ -2367,7 +2367,7 @@ export class EventLogicVerifier {
           });
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/migrateCertificate` },
     );
@@ -2411,7 +2411,7 @@ export class EventLogicVerifier {
           }
         }
 
-        next();
+        return next();
       },
       { taskname: `applyTransaction/logicVerifier/payTax` },
     );
