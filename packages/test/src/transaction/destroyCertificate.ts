@@ -1,10 +1,11 @@
 import {
-  IssueEntityFactoryTransaction,
-  IssueEntityFactoryTransactionFactory,
-  IssueEntityMultiTransactionV1,
-  IssueEntityMultiTransactionFactoryV1,
+  IssueCertificateTransaction,
+  IssueCertificateTransactionFactory,
+  DestroyCertificateTransaction,
+  DestroyCertificateTransactionFactory,
   RANGE_TYPE,
   BFChainCore,
+  CERTIFICATE_TYPE,
 } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
@@ -15,36 +16,37 @@ import {
   getRandomDAppId,
   getRecipientWithSecondSecret,
   getRecipientWithoutSecondSecret,
+  getRandomCertificateId,
 } from "../include";
 
 const genesisAddress = getGenesisAccount().address;
-async function getIssueEntityFactoryTransaction(sender: AccountModel, bfchainCore: BFChainCore) {
+
+const certificateId = getRandomCertificateId();
+async function getIssueCertificateTransaction(sender: AccountModel, bfchainCore: BFChainCore) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
-    version: 1,
-
-    type: bfchainCore.transactionHelper.ISSUE_ENTITY_FACTORY, // 交易类型
+    version: bfchainCore.config.version,
+    type: bfchainCore.transactionHelper.ISSUE_CERTIFICATE, // 交易类型
     senderId: sender.address, // 发起者地址
     senderPublicKey: sender.publicKey, // 发起者公钥
     senderSecondPublicKey: "", // 发起者二次公钥
     recipientId: genesisAddress,
     rangeType: RANGE_TYPE.EMPTY,
     range: [], // 资产创世账户地址
+    timestamp: 770880, // 生成交易时间戳
+    fee: "78622", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
     dappid: getRandomDAppId(), // 交易所属的 dappid
-    lns: bfchainCore.config.genesisBlock.asset.genesisAsset.genesisLocationName,
+    lns: bfchainCore.config.genesisLocationName,
+    sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic
-    storage: {
-      key: "factoryId",
-      value: "skyrim",
-    },
-
-    fee: "666", // 交易手续费
-    timestamp: 770880, // 生成交易时间戳
     applyBlockHeight: 10086, // 交易发起高度
     effectiveBlockHeight: 10100,
-    sourceIP: "127.0.0.1", // 交易来源 ip
+    storage: {
+      key: "certificateId",
+      value: certificateId,
+    },
   };
   let secondKeypair;
   if (sender.secondSecret) {
@@ -58,17 +60,15 @@ async function getIssueEntityFactoryTransaction(sender: AccountModel, bfchainCor
         sender.secondSecret,
       );
   }
-  const trs = await bfchainCore.transaction.createTransaction<IssueEntityFactoryTransaction>(
-    IssueEntityFactoryTransactionFactory,
+  const trs = await bfchainCore.transaction.createTransaction<IssueCertificateTransaction>(
+    IssueCertificateTransactionFactory,
     data,
     {
-      issueEntityFactory: {
+      issueCertificate: {
         sourceChainName: bfchainCore.config.chainName,
         sourceChainMagic: bfchainCore.config.magic,
-        factoryId: "skyrim",
-        entityPrealnum: "88888888",
-        entityFrozenAssetPrealnum: "88888888",
-        purchaseAssetPrealnum: "88888888",
+        certificateId,
+        type: CERTIFICATE_TYPE.DESTORY_BY_APPLICANT,
       },
     },
     keypair,
@@ -78,36 +78,40 @@ async function getIssueEntityFactoryTransaction(sender: AccountModel, bfchainCor
   return trs.toJSON();
 }
 
-async function getIssueEntityTransaction(
+async function getdestroyCertificateTransaction(
   sender: AccountModel,
-  entityFactory: BFChainCore.IssueEntityFactoryJSON,
+  issueCertificateTrs: BFChainCore.IssueCertificateTransactionJSON,
   bfchainCore: BFChainCore,
 ) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
+
+  const issueCertificate = issueCertificateTrs.asset.issueCertificate;
+
   const data: BFChainCore.TxBodyJSON = {
     version: 1,
-    type: bfchainCore.transactionHelper.ISSUE_ENTITY_MULTI, // 交易类型
+
+    type: bfchainCore.transactionHelper.DESTROY_CERTIFICATE, // 交易类型
     senderId: sender.address, // 发起者地址
     senderPublicKey: sender.publicKey, // 发起者公钥
     senderSecondPublicKey: "", // 发起者二次公钥
-    recipientId: sender.address,
+    recipientId: genesisAddress,
     rangeType: RANGE_TYPE.EMPTY,
-    range: [], // 资产创世账户地址
+    range: [],
     remark: { remark: "body.remark" }, // 交易备注，任意信息
     dappid: getRandomDAppId(), // 交易所属的 dappid
     lns: bfchainCore.config.genesisBlock.asset.genesisAsset.genesisLocationName,
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic
     storage: {
-      key: "factoryId",
-      value: entityFactory.factoryId,
+      key: "certificateId",
+      value: issueCertificate.certificateId,
     },
 
     fee: "666", // 交易手续费
     timestamp: 770880, // 生成交易时间戳
+    sourceIP: "127.0.0.1", // 交易来源 ip
     applyBlockHeight: 10086, // 交易发起高度
     effectiveBlockHeight: 10100,
-    sourceIP: "127.0.0.1", // 交易来源 ip
   };
   let secondKeypair;
   if (sender.secondSecret) {
@@ -121,59 +125,31 @@ async function getIssueEntityTransaction(
         sender.secondSecret,
       );
   }
-  const trs = await bfchainCore.transaction.createTransaction<IssueEntityMultiTransactionV1>(
-    IssueEntityMultiTransactionFactoryV1,
+  const trs = await bfchainCore.transaction.createTransaction<DestroyCertificateTransaction>(
+    DestroyCertificateTransactionFactory,
     data,
     {
-      issueEntityMulti: {
+      destroyCertificate: {
         sourceChainName: bfchainCore.config.chainName,
         sourceChainMagic: bfchainCore.config.magic,
-        entityStructList: [
-          {
-            entityId: `m_${entityFactory.factoryId}_dragonborn`,
-            taxAssetPrealnum: "0",
-          },
-        ],
-        entityFactoryPossessor: genesisAddress,
-        entityFactory,
+        certificateId: issueCertificate.certificateId,
+        type: issueCertificate.type,
       },
     },
     keypair,
     secondKeypair,
   );
-
-  await bfchainCore.transaction.getTransactionFactoryFromType(trs.type).verify(trs);
-
-  const yy =
-    bfchainCore.transactionLogicVerifier.getTransactionLogicVerifierFromType<IssueEntityMultiTransactionV1>(
-      trs.type,
-    );
-
-  await yy.verify(trs, 10, {} as any, false, {} as any);
-
   console.log(trs.toJSON());
 }
-
 (async () => {
   const bfchainCore = await getBfchainCoreEntry();
 
-  const entityFactoryTrs1 = await getIssueEntityFactoryTransaction(
-    getRecipientWithSecondSecret(),
-    bfchainCore,
-  );
-  const entityFactoryTrs2 = await getIssueEntityFactoryTransaction(
-    getRecipientWithoutSecondSecret(),
+  const certTrs1 = await getIssueCertificateTransaction(getSenderWithSecondSecret(), bfchainCore);
+  const certTrs2 = await getIssueCertificateTransaction(
+    getSenderWithoutSecondSecret(),
     bfchainCore,
   );
 
-  await getIssueEntityTransaction(
-    getSenderWithSecondSecret(),
-    entityFactoryTrs1.asset.issueEntityFactory,
-    bfchainCore,
-  );
-  await getIssueEntityTransaction(
-    getSenderWithoutSecondSecret(),
-    entityFactoryTrs2.asset.issueEntityFactory,
-    bfchainCore,
-  );
+  await getdestroyCertificateTransaction(getSenderWithSecondSecret(), certTrs1, bfchainCore);
+  await getdestroyCertificateTransaction(getSenderWithoutSecondSecret(), certTrs2, bfchainCore);
 })();

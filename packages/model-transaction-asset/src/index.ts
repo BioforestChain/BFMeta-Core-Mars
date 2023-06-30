@@ -50,3 +50,6 @@ export * from "./beExchangeAnyMulti";
 
 export * from "./toExchangeAnyMultiAll";
 export * from "./beExchangeAnyMultiAll";
+
+export * from "./issueCertificate";
+export * from "./destroyCertificate";

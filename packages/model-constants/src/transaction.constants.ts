@@ -140,6 +140,21 @@ export const enum SPECIAL_ASSET_TYPE {
 }
 // #endregion
 
+// #region certificate
+/**
+ * 凭证 类型
+ *
+ */
+export const enum CERTIFICATE_TYPE {
+  /**禁止销毁 */
+  DESTORY_FORBIDDEN = 0,
+  /**申请者销毁 */
+  DESTORY_BY_APPLICANT = 1,
+  /**拥有者销毁 */
+  DESTORY_BY_POSSESSOR = 2,
+}
+// #endregion
+
 // #region exchange asset
 export enum PARENT_ASSET_TYPE {
   /**资产类型：dapp */
@@ -152,6 +167,8 @@ export enum PARENT_ASSET_TYPE {
   // ENTITY_FACTORY = 4,
   /**资产类型: 权益 */
   ASSETS = 5,
+  /**凭证 */
+  CERTIFICATE = 6,
 }
 // #endregion
 

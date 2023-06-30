@@ -2,6 +2,7 @@ import { Injectable, Inject } from "@bfchain/util";
 import { ConfigHelper } from "@bfchain/core-helper";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { NewTransactionRefuseReason } from "@bfchain/core-model-channel";
+import { ACCOUNT_STATUS } from "@bfchain/core-model-constants";
 
 const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "HelperLogicVerifier");
 
@@ -25,6 +26,16 @@ export class HelperLogicVerifier {
       return result;
     } else {
       return obj;
+    }
+  }
+
+  async isAccountFrozen(address: string) {
+    const account = await this.accountGetterHelper.getAccountInfo(address);
+    if (account && account.accountStatus !== ACCOUNT_STATUS.NORMAL) {
+      throw new ConsensusException(ERROR_LIST.ACCOUNT_FROZEN, {
+        address: address,
+        status: account.accountStatus,
+      });
     }
   }
 
@@ -113,16 +124,41 @@ export class HelperLogicVerifier {
     }
   }
 
+  async isCertApplicantOrPossessor(address: string, configHelper = this.configHelper) {
+    // 发起账户不能是凭证的发行者或拥有者
+    const isCertPossessor = await this.accountGetterHelper.isCertApplicantOrPossessor(
+      configHelper.magic,
+      address,
+    );
+    if (isCertPossessor) {
+      throw new ConsensusException(ERROR_LIST.ACCOUNT_CAN_NOT_BE_FROZEN, {
+        address,
+        reason: "Certificate applicant or possessor can not initiate a frozen account transaction",
+      });
+    }
+  }
+
+  async isChainAssetPossessor(address: string) {
+    // 账户不能是 dapp 的拥有者
+    await this.isDAppPossessor(address, this.configHelper);
+    // 账户不能是 locationName 的拥有者或管理员
+    await this.isLnsPossessorOrManager(address, this.configHelper);
+    // 账户不能是 entityFactory 拥有者
+    await this.isEntityFactoryPossessor(address, this.configHelper);
+    // 账户不能是 entity 拥有者
+    await this.isEntityPossessor(address, this.configHelper);
+    // 账户不能是 certificate 的发行者或拥有者
+    await this.isCertApplicantOrPossessor(address, this.configHelper);
+  }
+
   async isAssetExist(sourceChainName: string, sourceChainMagic: string, assetType: string) {
     const memAsset = await this.accountGetterHelper.getAsset(sourceChainMagic, assetType);
-
     if (!memAsset) {
       throw new ConsensusException(ERROR_LIST.NOT_EXIST, {
         prop: `asset with magic ${sourceChainMagic} assetType ${assetType}`,
         target: "blockChain",
       });
     }
-
     if (memAsset.sourceChainName !== sourceChainName) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `sourceChainName ${memAsset.sourceChainName}`,
@@ -131,7 +167,6 @@ export class HelperLogicVerifier {
         be_target: `transaction magic ${sourceChainMagic} assetType ${assetType}`,
       });
     }
-
     return memAsset;
   }
 
@@ -146,14 +181,12 @@ export class HelperLogicVerifier {
       dappid,
       currentBlockHeight,
     );
-
     if (!memDApp) {
       throw new ConsensusException(ERROR_LIST.DAPPID_IS_NOT_EXIST, {
         dappid,
         errorId: NewTransactionRefuseReason.DAPPID_NOT_EXIST,
       });
     }
-
     if (memDApp.sourceChainName !== sourceChainName) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `sourceChainName ${memDApp.sourceChainName}`,
@@ -162,7 +195,6 @@ export class HelperLogicVerifier {
         be_target: `transaction magic ${sourceChainMagic} dappid ${dappid}`,
       });
     }
-
     return memDApp;
   }
 
@@ -177,14 +209,12 @@ export class HelperLogicVerifier {
       locationName,
       currentBlockHeight,
     );
-
     if (!memLocationName) {
       throw new ConsensusException(ERROR_LIST.LOCATION_NAME_IS_NOT_EXIST, {
         locationName,
         errorId: NewTransactionRefuseReason.LOCATION_NAME_NOT_EXIST,
       });
     }
-
     if (memLocationName.sourceChainName !== sourceChainName) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `sourceChainName ${memLocationName.sourceChainName}`,
@@ -195,6 +225,34 @@ export class HelperLogicVerifier {
     }
 
     return memLocationName;
+  }
+
+  async isEntityFactoryExist(
+    sourceChainName: string,
+    sourceChainMagic: string,
+    factoryId: string,
+    currentBlockHeight: number,
+  ) {
+    const memEntityFactory = await this.accountGetterHelper.getEntityFactory(
+      sourceChainMagic,
+      factoryId,
+      currentBlockHeight,
+    );
+    if (!memEntityFactory) {
+      throw new ConsensusException(ERROR_LIST.ENTITY_FACTORY_IS_NOT_EXIST, {
+        factoryId,
+        errorId: NewTransactionRefuseReason.ENTITY_FACTORY_NOT_EXIST,
+      });
+    }
+    if (memEntityFactory.sourceChainName !== sourceChainName) {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+        to_compare_prop: `sourceChainName ${memEntityFactory.sourceChainName}`,
+        be_compare_prop: `sourceChainName ${sourceChainName}`,
+        to_target: `blockChain magic ${sourceChainMagic} factoryId ${factoryId}`,
+        be_target: `transaction magic ${sourceChainMagic} factoryId ${factoryId}`,
+      });
+    }
+    return memEntityFactory;
   }
 
   async isEntityExist(
@@ -208,14 +266,12 @@ export class HelperLogicVerifier {
       entityId,
       currentBlockHeight,
     );
-
     if (!memEntity) {
       throw new ConsensusException(ERROR_LIST.ENTITY_IS_NOT_EXIST, {
         entityId,
         errorId: NewTransactionRefuseReason.ENTITY_NOT_EXIST,
       });
     }
-
     if (memEntity.sourceChainName !== sourceChainName) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `sourceChainName ${memEntity.sourceChainName}`,
@@ -224,8 +280,35 @@ export class HelperLogicVerifier {
         be_target: `transaction magic ${sourceChainMagic} entityId ${entityId}`,
       });
     }
-
     return memEntity;
+  }
+
+  async isCertificateExist(
+    sourceChainName: string,
+    sourceChainMagic: string,
+    certificateId: string,
+    currentBlockHeight: number,
+  ) {
+    const memCertificate = await this.accountGetterHelper.getCertificate(
+      sourceChainMagic,
+      certificateId,
+      currentBlockHeight,
+    );
+    if (!memCertificate) {
+      throw new ConsensusException(ERROR_LIST.CERTIFICATE_IS_NOT_EXIST, {
+        certificateId,
+        errorId: NewTransactionRefuseReason.CERTIFICATE_NOT_EXIST,
+      });
+    }
+    if (memCertificate.sourceChainName !== sourceChainName) {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+        to_compare_prop: `sourceChainName ${memCertificate.sourceChainName}`,
+        be_compare_prop: `sourceChainName ${sourceChainName}`,
+        to_target: `blockChain magic ${sourceChainMagic} certificateId ${certificateId}`,
+        be_target: `transaction magic ${sourceChainMagic} certificateId ${certificateId}`,
+      });
+    }
+    return memCertificate;
   }
 
   async getAccountForce(

@@ -151,6 +151,13 @@ export const ERROR_CODE_LIST_ZH = {
     "链上的冻结资产 frozenAddress {frozenAddress} signature {signature} assetType {assetType} 不存在或者已经过期",
   "001-11073": "模板没有足够的发行 entity 次数，entityFactory {entityFactory}",
   "001-11074": "承诺尚未开始兑现，promiseId {promiseId}",
+  "001-11075": "凭证不存在， certificateId {certificateId}",
+  "001-11076": "凭证已经存在，certificateId {certificateId}，错误 id {errorId}",
+  "001-11077": "无法销毁凭证，certificateId {certificateId}，reason {reason}",
+  "001-11078": "账户 address {address} 不是凭证 {certificateId} 的拥有者，错误 id {errorId}",
+  "001-11079": "凭证尚未被冻结，certificateId {certificateId}",
+  "001-11080": "凭证已经被冻结，certificateId {certificateId}",
+  "001-11081": "凭证已经被销毁，certificateId {certificateId}",
 
   // block logic
   "001-12001":

@@ -706,7 +706,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
    * @param propName
    * @param Function_Exception_Detail
    */
-  checkDAppid(dappid: any, propName: string, Function_Exception_Detail: FunctionExceptionDetail) {
+  checkDAppId(dappid: any, propName: string, Function_Exception_Detail: FunctionExceptionDetail) {
     if (!dappid) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: propName,
@@ -800,6 +800,32 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
   }
 
   /**
+   * certificate id 是否合法
+   *
+   * @param certificateId
+   * @param propName
+   * @param Function_Exception_Detail
+   */
+  checkCertificateId(
+    certificateId: any,
+    propName: string,
+    Function_Exception_Detail: FunctionExceptionDetail,
+  ) {
+    if (!certificateId) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
+        prop: propName,
+        ...Function_Exception_Detail,
+      });
+    }
+    if (!this.baseHelper.isValidCertificateId(certificateId)) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+        prop: `${propName} ${certificateId}`,
+        ...Function_Exception_Detail,
+      });
+    }
+  }
+
+  /**
    * 资产名是否合法
    *
    * @param parentAssetType
@@ -819,7 +845,7 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
       return;
     }
     if (parentAssetType === PARENT_ASSET_TYPE.DAPP) {
-      this.checkDAppid(assetType, propName, Function_Exception_Detail);
+      this.checkDAppId(assetType, propName, Function_Exception_Detail);
       return;
     }
     if (parentAssetType === PARENT_ASSET_TYPE.LOCATION_NAME) {
@@ -828,6 +854,10 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     }
     if (parentAssetType === PARENT_ASSET_TYPE.ENTITY) {
       this.checkEntityId(assetType, propName, Function_Exception_Detail);
+      return;
+    }
+    if (parentAssetType === PARENT_ASSET_TYPE.CERTIFICATE) {
+      this.checkCertificateId(assetType, propName, Function_Exception_Detail);
       return;
     }
     throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {

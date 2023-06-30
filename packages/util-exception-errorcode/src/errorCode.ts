@@ -403,6 +403,34 @@ export const ERROR_LIST = {
     "001-11074",
     "Promise is not begin to resolve yet, promiseId {promiseId}",
   ),
+  CERTIFICATE_IS_NOT_EXIST: new ErrorCode(
+    "001-11075",
+    "Certificate is not exist, certificateId {certificateId}",
+  ),
+  CERTIFICATE_IS_ALREADY_EXIST: new ErrorCode(
+    "001-11076",
+    "Certificate is already exist, certificateId {certificateId}, errorId {errorId}",
+  ),
+  CAN_NOT_DESTROY_CERTIFICATE: new ErrorCode(
+    "001-11077",
+    "Can not destroy certificate, certificateId {certificateId}, reason {reason}",
+  ),
+  ACCOUNT_NOT_CERTIFICATE_POSSESSOR: new ErrorCode(
+    "001-11078",
+    "Account with address {address} not certificate {certificateId} possessor, errorId {errorId}",
+  ),
+  CERTIFICATE_NOT_FROZEN: new ErrorCode(
+    "001-11079",
+    "Certificate not frozen, certificateId {certificateId}",
+  ),
+  CERTIFICATE_ALREADY_FROZEN: new ErrorCode(
+    "001-11080",
+    "Certificate already frozen, certificateId {certificateId}",
+  ),
+  CERTIFICATE_ALREADY_DESTROY: new ErrorCode(
+    "001-11081",
+    "Certificate already destroy, certificateId {certificateId}",
+  ),
 
   // block logic
   BLOCK_SIGN_SIGNATURE_IS_REQUIRED: new ErrorCode(

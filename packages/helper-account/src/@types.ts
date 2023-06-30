@@ -178,6 +178,20 @@ declare namespace BFChainCore {
     height: number;
   };
 
+  type IssueCertificateInfo = {
+    issueId: string;
+    applyAddress: string;
+    possessorAddress: string;
+    sourceChainName: string;
+    sourceChainMagic: string;
+    certificateId: string;
+    type: BFChainCore.CERTIFICATE_TYPE;
+    height: number;
+    status: number;
+    maxFrozenBlockHeight: number;
+    frozenId: string;
+  };
+
   type AccountsAssetsChange = {
     [magic: string]: {
       [address: string]: {
@@ -202,6 +216,7 @@ declare namespace BFChainCore {
     IEFI extends IssueEntityFactoryInfo = IssueEntityFactoryInfo,
     IEI extends IssueEntityInfo = IssueEntityInfo,
     MCI extends MigrateCertificateInfo = MigrateCertificateInfo,
+    ICI extends IssueCertificateInfo = IssueCertificateInfo,
   > {
     /**根据地址数组获取账户 */
     getAccounts(addressArr: string[], curRound: number): Promise<FSAI[]>;
@@ -295,6 +310,14 @@ declare namespace BFChainCore {
     isEntityFactoryPossessor(sourceChainMagic: string, address: string): Promise<boolean>;
     /**指定账户是否持有某个 entity */
     isEntityPossessor(sourceChainMagic: string, address: string): Promise<boolean>;
+    /**查询指定的 certificateId */
+    getCertificate(
+      sourceChainMagic: string,
+      certificateId: string,
+      currentBlockHeight: number,
+    ): Promise<ICI | undefined>;
+    /**指定账户是否发行或者持有某个 certificate */
+    isCertApplicantOrPossessor(sourceChainMagic: string, address: string): Promise<boolean>;
     /**
      * 根据高度获取区块的资产变动信息
      *

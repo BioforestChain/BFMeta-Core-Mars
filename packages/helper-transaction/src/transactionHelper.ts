@@ -274,6 +274,15 @@ export class TransactionHelper {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.BE_EXCHANGE_ANY_MULTI_ALL);
   }
 
+  /** ISSUE_CERTIFICATE: 创建凭证 */
+  get ISSUE_CERTIFICATE() {
+    return this.getTransactionType(TRANSACTION_TYPES_BASE.ISSUE_CERTIFICATE);
+  }
+  /** DESTROY_CERTIFICATE: 销毁凭证 */
+  get DESTROY_CERTIFICATE() {
+    return this.getTransactionType(TRANSACTION_TYPES_BASE.DESTROY_CERTIFICATE);
+  }
+
   /** MULTIPLE: 组合 */
   get MULTIPLE() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.MULTIPLE);
@@ -342,6 +351,9 @@ export class TransactionHelper {
 
     this.TO_EXCHANGE_ANY_MULTI_ALL,
     this.BE_EXCHANGE_ANY_MULTI_ALL,
+
+    this.ISSUE_CERTIFICATE,
+    this.DESTROY_CERTIFICATE,
 
     this.MULTIPLE,
     this.PROMISE,

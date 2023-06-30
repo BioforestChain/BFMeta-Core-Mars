@@ -15,9 +15,10 @@ import {
   getGenesisAccount,
   AccountModel,
   getBfchainCoreEntry,
-  getRandomDAppid,
+  getRandomDAppId,
   getRecipientWithSecondSecret,
   getRecipientWithoutSecondSecret,
+  getRandomCertificateId,
 } from "../include";
 
 const jsbiHelper = new JSBIHelper();
@@ -41,7 +42,7 @@ async function getToExchangeAnyTransaction(
     timestamp: 770880, // 生成交易时间戳
     fee: "78622", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
-    dappid: getRandomDAppid(), // 交易所属的 dappid
+    dappid: getRandomDAppId(), // 交易所属的 dappid
     lns: bfchainCore.config.genesisLocationName,
     sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
@@ -101,7 +102,7 @@ async function getBeExchangeAnyTransaction(
     timestamp: 770880, // 生成交易时间戳
     fee: "78622", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
-    dappid: getRandomDAppid(), // 交易所属的 dappid
+    dappid: getRandomDAppId(), // 交易所属的 dappid
     lns: bfchainCore.config.genesisLocationName,
     sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
@@ -236,7 +237,7 @@ async function getBeExchangeAnyTransaction(
     const toExchangeAnyCopy = { ...toExchangeAny };
     toExchangeAnyCopy.toExchangeParentAssetType = PARENT_ASSET_TYPE.DAPP;
     toExchangeAnyCopy.beExchangeParentAssetType = PARENT_ASSET_TYPE.ASSETS;
-    toExchangeAnyCopy.toExchangeAssetType = getRandomDAppid();
+    toExchangeAnyCopy.toExchangeAssetType = getRandomDAppId();
     toExchangeAnyCopy.toExchangeAssetPrealnum = "1";
     toExchangeAnyCopy.beExchangeAssetPrealnum = "1000";
     toExchangeAnyCopy.assetExchangeWeightRatio = undefined;
@@ -324,7 +325,7 @@ async function getBeExchangeAnyTransaction(
     const toExchangeAnyCopy = { ...toExchangeAny };
     toExchangeAnyCopy.toExchangeParentAssetType = PARENT_ASSET_TYPE.ASSETS;
     toExchangeAnyCopy.beExchangeParentAssetType = PARENT_ASSET_TYPE.DAPP;
-    toExchangeAnyCopy.beExchangeAssetType = getRandomDAppid();
+    toExchangeAnyCopy.beExchangeAssetType = getRandomDAppId();
     toExchangeAnyCopy.beExchangeAssetPrealnum = "1";
     toExchangeAnyCopy.assetExchangeWeightRatio = undefined;
 
@@ -405,7 +406,7 @@ async function getBeExchangeAnyTransaction(
     const toExchangeAnyCopy = { ...toExchangeAny };
     toExchangeAnyCopy.toExchangeParentAssetType = PARENT_ASSET_TYPE.DAPP;
     toExchangeAnyCopy.beExchangeParentAssetType = PARENT_ASSET_TYPE.ENTITY;
-    toExchangeAnyCopy.toExchangeAssetType = getRandomDAppid();
+    toExchangeAnyCopy.toExchangeAssetType = getRandomDAppId();
     toExchangeAnyCopy.beExchangeAssetType = "skyrim_hylq";
     toExchangeAnyCopy.toExchangeAssetPrealnum = "1";
     toExchangeAnyCopy.beExchangeAssetPrealnum = "1";
@@ -434,7 +435,7 @@ async function getBeExchangeAnyTransaction(
     const toExchangeAnyCopy = { ...toExchangeAny };
     toExchangeAnyCopy.toExchangeParentAssetType = PARENT_ASSET_TYPE.DAPP;
     toExchangeAnyCopy.beExchangeParentAssetType = PARENT_ASSET_TYPE.LOCATION_NAME;
-    toExchangeAnyCopy.toExchangeAssetType = getRandomDAppid();
+    toExchangeAnyCopy.toExchangeAssetType = getRandomDAppId();
     toExchangeAnyCopy.beExchangeAssetType = `hylq.${bfchainCore.config.chainName}`;
     toExchangeAnyCopy.toExchangeAssetPrealnum = "1";
     toExchangeAnyCopy.beExchangeAssetPrealnum = "1";
@@ -492,6 +493,39 @@ async function getBeExchangeAnyTransaction(
     await getBeExchangeAnyTransaction(aaa, t20, [cc, dd], bfchainCore);
   };
 
+  const test10 = async () => {
+    const toExchangeAnyCopy = { ...toExchangeAny };
+    toExchangeAnyCopy.toExchangeParentAssetType = PARENT_ASSET_TYPE.ENTITY;
+    toExchangeAnyCopy.beExchangeParentAssetType = PARENT_ASSET_TYPE.CERTIFICATE;
+    toExchangeAnyCopy.toExchangeAssetType = "skyrim_hylq";
+    toExchangeAnyCopy.beExchangeAssetType = getRandomCertificateId();
+    toExchangeAnyCopy.toExchangeAssetPrealnum = "1";
+    toExchangeAnyCopy.beExchangeAssetPrealnum = "1";
+    toExchangeAnyCopy.assetExchangeWeightRatio = undefined;
+    toExchangeAnyCopy.taxInformation = {
+      taxCollector: aa.address,
+      taxAssetPrealnum: "1000",
+    };
+
+    const t19 = await getToExchangeAnyTransaction(
+      aa,
+      { ...toExchangeAnyCopy },
+      bfchainCore,
+      [cc, dd],
+      true,
+    );
+    await getBeExchangeAnyTransaction(dd, t19, [cc, dd], bfchainCore);
+    const t20 = await getToExchangeAnyTransaction(
+      aaa,
+      { ...toExchangeAnyCopy },
+      bfchainCore,
+      [cc, dd],
+      false,
+    );
+    await getBeExchangeAnyTransaction(ddd, t20, [cc, dd], bfchainCore);
+    await getBeExchangeAnyTransaction(aaa, t20, [cc, dd], bfchainCore);
+  };
+
   // asset => asset
   // await test0();
   // dappid => asset
@@ -512,4 +546,5 @@ async function getBeExchangeAnyTransaction(
   // await test8();
   // entityId => lns
   // await test9();
+  await test10();
 })();

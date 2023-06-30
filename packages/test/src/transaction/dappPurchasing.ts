@@ -13,12 +13,12 @@ import {
   getRecipientWithSecondSecret,
   AccountModel,
   getBfchainCoreEntry,
-  getRandomDAppid,
+  getRandomDAppId,
 } from "../include";
 
 async function getDappTransaction(sender: AccountModel, bfchainCore: BFChainCore) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
-  const dappid = getRandomDAppid();
+  const dappid = getRandomDAppId();
   const data: BFChainCore.TxBodyJSON = {
     version: bfchainCore.config.version,
     type: bfchainCore.transactionHelper.DAPP, // 交易类型

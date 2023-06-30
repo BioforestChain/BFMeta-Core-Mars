@@ -1,38 +1,37 @@
 import {
-  DAppTransaction,
-  DAppTransactionFactory,
-  DAPP_TYPE,
+  IssueCertificateTransaction,
+  IssueCertificateTransactionFactory,
   RANGE_TYPE,
   BFChainCore,
+  CERTIFICATE_TYPE,
 } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,
+  getGenesisAccount,
   AccountModel,
   getBfchainCoreEntry,
-  getGenesisAccount,
   getRandomDAppId,
+  getRandomCertificateId,
 } from "../include";
 
 const genesisAddress = getGenesisAccount().address;
-async function getDappTransaction(
-  sender: AccountModel,
-  dapp: BFChainCore.DAppJSON,
-  bfchainCore: BFChainCore,
-) {
+const certificateId = getRandomCertificateId();
+async function getIssueCertificateTransaction(sender: AccountModel, bfchainCore: BFChainCore) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: bfchainCore.config.version,
-    type: bfchainCore.transactionHelper.DAPP, // 交易类型
+    type: bfchainCore.transactionHelper.ISSUE_CERTIFICATE, // 交易类型
     senderId: sender.address, // 发起者地址
     senderPublicKey: sender.publicKey, // 发起者公钥
     senderSecondPublicKey: "", // 发起者二次公钥
     recipientId: genesisAddress,
     rangeType: RANGE_TYPE.EMPTY,
-    range: [],
+    range: [], // 资产创世账户地址
     timestamp: 770880, // 生成交易时间戳
     fee: "78622", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
+    dappid: getRandomDAppId(), // 交易所属的 dappid
     lns: bfchainCore.config.genesisLocationName,
     sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
@@ -40,8 +39,8 @@ async function getDappTransaction(
     applyBlockHeight: 10086, // 交易发起高度
     effectiveBlockHeight: 10100,
     storage: {
-      key: "dappid",
-      value: dapp.dappid,
+      key: "certificateId",
+      value: certificateId,
     },
   };
   let secondKeypair;
@@ -56,48 +55,26 @@ async function getDappTransaction(
         sender.secondSecret,
       );
   }
-  const trs = await bfchainCore.transaction.createTransaction<DAppTransaction>(
-    DAppTransactionFactory,
+  const trs = await bfchainCore.transaction.createTransaction<IssueCertificateTransaction>(
+    IssueCertificateTransactionFactory,
     data,
     {
-      dapp,
+      issueCertificate: {
+        sourceChainName: bfchainCore.config.chainName,
+        sourceChainMagic: bfchainCore.config.magic,
+        certificateId,
+        type: CERTIFICATE_TYPE.DESTORY_BY_APPLICANT,
+      },
     },
     keypair,
     secondKeypair,
   );
-
-  // const yy = bfchainCore.transactionLogicVerifier.getTransactionLogicVerifierFromType<
-  //   DAppTransaction
-  // >(trs.type);
-
-  // await yy.verify(trs, 10, {} as any, {} as any, {} as any);
-
+  await bfchainCore.transaction.getTransactionFactoryFromType(trs.type).verify(trs);
   console.log(trs.toJSON());
 }
 (async () => {
   const bfchainCore = await getBfchainCoreEntry();
 
-  const xx = getSenderWithSecondSecret();
-  await getDappTransaction(
-    xx,
-    {
-      dappid: getRandomDAppId(),
-      sourceChainName: "bfchain",
-      sourceChainMagic: bfchainCore.config.magic,
-      type: DAPP_TYPE.PAID_APP,
-      purchaseAsset: "1000",
-    },
-    bfchainCore,
-  );
-  const xxx = getSenderWithoutSecondSecret();
-  await getDappTransaction(
-    xxx,
-    {
-      dappid: getRandomDAppId(),
-      sourceChainName: "bfchain",
-      sourceChainMagic: bfchainCore.config.magic,
-      type: DAPP_TYPE.FREE_APP,
-    },
-    bfchainCore,
-  );
+  await getIssueCertificateTransaction(getSenderWithSecondSecret(), bfchainCore);
+  await getIssueCertificateTransaction(getSenderWithoutSecondSecret(), bfchainCore);
 })();

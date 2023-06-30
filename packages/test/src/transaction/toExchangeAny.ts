@@ -11,7 +11,8 @@ import {
   getGenesisAccount,
   AccountModel,
   getBfchainCoreEntry,
-  getRandomDAppid,
+  getRandomDAppId,
+  getRandomCertificateId,
 } from "../include";
 
 async function getToExchangeAnyTransaction(
@@ -32,7 +33,7 @@ async function getToExchangeAnyTransaction(
     timestamp: 770880, // 生成交易时间戳
     fee: "78622", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
-    dappid: getRandomDAppid(), // 交易所属的 dappid
+    dappid: getRandomDAppId(), // 交易所属的 dappid
     lns: bfchainCore.config.genesisLocationName,
     sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
@@ -80,7 +81,7 @@ async function getToExchangeAnyTransaction(
     toExchangeParentAssetType: PARENT_ASSET_TYPE.ASSETS,
     beExchangeParentAssetType: PARENT_ASSET_TYPE.ASSETS,
     toExchangeAssetType: "BFT",
-    beExchangeAssetType: "BFT",
+    beExchangeAssetType: "QAQ",
     toExchangeAssetPrealnum: "100",
     assetExchangeWeightRatio: {
       toExchangeAssetWeight: "1",
@@ -101,7 +102,7 @@ async function getToExchangeAnyTransaction(
     const toExchangeAnyCopy = { ...toExchangeAny };
     toExchangeAnyCopy.toExchangeParentAssetType = PARENT_ASSET_TYPE.DAPP;
     toExchangeAnyCopy.beExchangeParentAssetType = PARENT_ASSET_TYPE.ASSETS;
-    toExchangeAnyCopy.toExchangeAssetType = getRandomDAppid();
+    toExchangeAnyCopy.toExchangeAssetType = getRandomDAppId();
     toExchangeAnyCopy.toExchangeAssetPrealnum = "1";
     toExchangeAnyCopy.beExchangeAssetPrealnum = "1000";
     toExchangeAnyCopy.assetExchangeWeightRatio = undefined;
@@ -144,7 +145,7 @@ async function getToExchangeAnyTransaction(
     const toExchangeAnyCopy = { ...toExchangeAny };
     toExchangeAnyCopy.toExchangeParentAssetType = PARENT_ASSET_TYPE.ASSETS;
     toExchangeAnyCopy.beExchangeParentAssetType = PARENT_ASSET_TYPE.DAPP;
-    toExchangeAnyCopy.beExchangeAssetType = getRandomDAppid();
+    toExchangeAnyCopy.beExchangeAssetType = getRandomDAppId();
     toExchangeAnyCopy.beExchangeAssetPrealnum = "1";
     toExchangeAnyCopy.assetExchangeWeightRatio = undefined;
 
@@ -180,7 +181,7 @@ async function getToExchangeAnyTransaction(
     const toExchangeAnyCopy = { ...toExchangeAny };
     toExchangeAnyCopy.toExchangeParentAssetType = PARENT_ASSET_TYPE.DAPP;
     toExchangeAnyCopy.beExchangeParentAssetType = PARENT_ASSET_TYPE.ENTITY;
-    toExchangeAnyCopy.toExchangeAssetType = getRandomDAppid();
+    toExchangeAnyCopy.toExchangeAssetType = getRandomDAppId();
     toExchangeAnyCopy.beExchangeAssetType = "skyrim_hylq";
     toExchangeAnyCopy.toExchangeAssetPrealnum = "1";
     toExchangeAnyCopy.beExchangeAssetPrealnum = "1";
@@ -194,8 +195,22 @@ async function getToExchangeAnyTransaction(
     const toExchangeAnyCopy = { ...toExchangeAny };
     toExchangeAnyCopy.toExchangeParentAssetType = PARENT_ASSET_TYPE.DAPP;
     toExchangeAnyCopy.beExchangeParentAssetType = PARENT_ASSET_TYPE.LOCATION_NAME;
-    toExchangeAnyCopy.toExchangeAssetType = getRandomDAppid();
+    toExchangeAnyCopy.toExchangeAssetType = getRandomDAppId();
     toExchangeAnyCopy.beExchangeAssetType = `hylq.${bfchainCore.config.chainName}`;
+    toExchangeAnyCopy.toExchangeAssetPrealnum = "1";
+    toExchangeAnyCopy.beExchangeAssetPrealnum = "1";
+    toExchangeAnyCopy.assetExchangeWeightRatio = undefined;
+
+    await getToExchangeAnyTransaction(aa, "", toExchangeAnyCopy, bfchainCore);
+    await getToExchangeAnyTransaction(aaa, recipientId, toExchangeAnyCopy, bfchainCore);
+  };
+
+  const test9 = async () => {
+    const toExchangeAnyCopy = { ...toExchangeAny };
+    toExchangeAnyCopy.toExchangeParentAssetType = PARENT_ASSET_TYPE.DAPP;
+    toExchangeAnyCopy.beExchangeParentAssetType = PARENT_ASSET_TYPE.CERTIFICATE;
+    toExchangeAnyCopy.toExchangeAssetType = getRandomDAppId();
+    toExchangeAnyCopy.beExchangeAssetType = getRandomCertificateId();
     toExchangeAnyCopy.toExchangeAssetPrealnum = "1";
     toExchangeAnyCopy.beExchangeAssetPrealnum = "1";
     toExchangeAnyCopy.assetExchangeWeightRatio = undefined;
@@ -213,4 +228,5 @@ async function getToExchangeAnyTransaction(
   await test6();
   await test7();
   await test8();
+  await test9();
 })();

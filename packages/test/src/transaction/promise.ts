@@ -15,7 +15,7 @@ import {
   getGenesisAccount,
   AccountModel,
   getBfchainCoreEntry,
-  getRandomDAppid,
+  getRandomDAppId,
 } from "../include";
 
 const _powCount: { [add: string]: number } = {};
@@ -43,7 +43,7 @@ async function getTransferAssetTransaction(sender: AccountModel, bfchainCore: BF
     timestamp: 770880, // 生成交易时间戳
     fee: "10", // 交易手续费
     remark: { remark: "create transfer asset" }, // 交易备注，任意信息
-    dappid: getRandomDAppid(), // 交易所属的 dappid
+    dappid: getRandomDAppId(), // 交易所属的 dappid
     lns: bfchainCore.config.genesisLocationName,
     sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
@@ -106,7 +106,7 @@ async function getAcceptVoteTransaction(sender: AccountModel, bfchainCore: BFCha
     timestamp: 770880, // 生成交易时间戳
     fee: "10", // 交易手续费
     remark: { remark: "create accept vote" }, // 交易备注，任意信息
-    dappid: getRandomDAppid(), // 交易所属的 dappid
+    dappid: getRandomDAppId(), // 交易所属的 dappid
     lns: bfchainCore.config.genesisLocationName,
     sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
@@ -154,7 +154,7 @@ async function getPromiseTransaction(
     timestamp: 770880, // 生成交易时间戳
     fee: "10000", // 交易手续费
     remark: { remark: "create promise" }, // 交易备注，任意信息
-    dappid: getRandomDAppid(), // 交易所属的 dappid
+    dappid: getRandomDAppId(), // 交易所属的 dappid
     lns: bfchainCore.config.genesisLocationName,
     sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic

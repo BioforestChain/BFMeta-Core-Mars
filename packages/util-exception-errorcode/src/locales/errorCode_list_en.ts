@@ -155,6 +155,14 @@ export const ERROR_CODE_LIST_EN = {
     "Frozen asset with frozenAddress {frozenAddress} signature {signature} assetType {assetType} in blockChain not exist or expired",
   "001-11073": "Not enough issue entity times, entityFactory {entityFactory}",
   "001-11074": "Promise is not begin to resolve yet, promiseId {promiseId}",
+  "001-11075": "Certificate is not exist, certificateId {certificateId}",
+  "001-11076": "Certificate is already exist, certificateId {certificateId}, errorId {errorId}",
+  "001-11077": "Can not destroy certificate, certificateId {certificateId}, reason {reason}",
+  "001-11078":
+    "Account with address {address} not certificate {certificateId} possessor, errorId {errorId}",
+  "001-11079": "Certificate not frozen, certificateId {certificateId}",
+  "001-11080": "Certificate already frozen, certificateId {certificateId}",
+  "001-11081": "Certificate already destroy, certificateId {certificateId}",
 
   // block logic
   "001-12001":
