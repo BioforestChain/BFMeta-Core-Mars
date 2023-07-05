@@ -59,6 +59,7 @@ export class BlockCore {
     keypair: BFChainCore.Keypair,
     secondKeypair?: BFChainCore.Keypair,
     eventEmitter?: BFChainCore.GenerateBlockEventEmitter<B>,
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
   ) {
     const blockFactory = this.getBlockFactory(BlockFactory);
 
@@ -79,6 +80,7 @@ export class BlockCore {
       keypair,
       secondKeypair,
       eventEmitter,
+      transactionGetterHelper,
     );
 
     // Cannot assign to read only property 'signatureBuffer' of object '#<GenesisBlock>'

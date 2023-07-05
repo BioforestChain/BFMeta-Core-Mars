@@ -524,6 +524,114 @@ declare namespace BFChainCore {
     T extends Transaction = Transaction,
   > = ApplyTransactionEvent<ApplyInfo_PayTax, EVENTNAME, T>;
 
+  interface ApplyInfo_PromiseResolve {
+    /**承诺的索引 */
+    promiseId: string;
+    recipientId: string;
+  }
+  type ApplyTransactionPromiseResolveEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_PromiseResolve, EVENTNAME, T>;
+
+  interface ApplyInfo_MacroCall {
+    /**承诺的索引 */
+    macroId: string;
+    inputs: { [key: string]: string };
+  }
+  type ApplyTransactionMacroCallEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_MacroCall, EVENTNAME, T>;
+
+  type ApplyInfo_IssueCertificate = {
+    address: string;
+    publicKeyBuffer?: Uint8Array;
+    /**certificateId 的拥有者地址 */
+    possessorAddress: string;
+    sourceChainName: string;
+    sourceChainMagic: string;
+    certificateId: string;
+    type: BFChainCore.CERTIFICATE_TYPE;
+    status: ASSET_STATUS;
+    issueId: string;
+  };
+  /**发行凭证 */
+  type ApplyTransactionIssueCertificateEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_IssueCertificate, EVENTNAME, T>;
+
+  type ApplyInfo_DestroyCertificate = {
+    address: string;
+    publicKeyBuffer?: Uint8Array;
+    /**certificateId 的拥有者地址 */
+    possessorAddress: string;
+    sourceChainName: string;
+    sourceChainMagic: string;
+    certificateId: string;
+    status: ASSET_STATUS;
+  };
+  /**销毁凭证 */
+  type ApplyTransactionDestroyCertificateEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_DestroyCertificate, EVENTNAME, T>;
+
+  type ApplyInfo_FrozenCertificate = {
+    address: string;
+    publicKeyBuffer?: Uint8Array;
+    sourceChainName: string;
+    sourceChainMagic: string;
+    certificateId: string;
+    minEffectiveHeight: number;
+    maxEffectiveHeight: number;
+    status: ASSET_STATUS;
+    frozenId: string;
+  };
+  /**冻结 certificateId */
+  type ApplyTransactionFrozenCertificateEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_FrozenCertificate, EVENTNAME, T>;
+
+  type ApplyInfo_UnfrozenCertificate = {
+    address: string;
+    publicKeyBuffer?: Uint8Array;
+    sourceChainMagic: string;
+    sourceChainName: string;
+    certificateId: string;
+    /**新的 certificateId 的拥有者地址 */
+    possessorAddress: string;
+    status: ASSET_STATUS;
+    frozenId: string;
+  };
+  /**解冻 certificateId */
+  type ApplyTransactionUnfrozenCertificateEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_UnfrozenCertificate, EVENTNAME, T>;
+
+  type ApplyInfo_ChangeCertificatePossessor = {
+    address: string;
+    publicKeyBuffer?: Uint8Array;
+    sourceChainName: string;
+    sourceChainMagic: string;
+    /**新的 certificateId 的拥有者地址 */
+    possessorAddress: string;
+    certificateId: string;
+  };
+  /**更改 certificateId 拥有者 */
+  type ApplyTransactionChangeCertificatePossessorEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_ChangeCertificatePossessor, EVENTNAME, T>;
+
+  interface ApplyTransactionCountEvent<EVENTNAME, T extends Transaction = Transaction> {
+    type: EVENTNAME;
+    transaction: T;
+  }
+
   type ApplyTransactionEventMap<EM extends BFChainUtil.EventInOutMap = {}> = EM & {
     /**交易交易的POW */
     verifyTransactionProfOfWork: BFChainUtil.EventInOut<
@@ -894,6 +1002,75 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction").ToExchangeAnyMultiAllTransaction
         | import("@bfchain/core-model-transaction").BeExchangeAnyMultiAllTransaction
       >
+    >;
+
+    promiseResolve: BFChainUtil.EventInOut<
+      ApplyTransactionPromiseResolveEvent<
+        "promiseResolve",
+        import("@bfchain/core-model-transaction-complex").PromiseResolveTransaction
+      >
+    >;
+
+    macroCall: BFChainUtil.EventInOut<
+      ApplyTransactionMacroCallEvent<
+        "macroCall",
+        import("@bfchain/core-model-transaction-complex").MacroCallTransaction
+      >
+    >;
+
+    issueCertificate: BFChainUtil.EventInOut<
+      ApplyTransactionIssueCertificateEvent<
+        "issueCertificate",
+        import("@bfchain/core-model-transaction").IssueCertificateTransaction
+      >
+    >;
+    destroyCertificate: BFChainUtil.EventInOut<
+      ApplyTransactionDestroyCertificateEvent<
+        "destroyCertificate",
+        import("@bfchain/core-model-transaction").DestroyCertificateTransaction
+      >
+    >;
+    /**冻结 certificateId */
+    frozenCertificate: BFChainUtil.EventInOut<
+      ApplyTransactionFrozenCertificateEvent<
+        "frozenCertificate",
+        | import("@bfchain/core-model-transaction").GiftAnyTransaction
+        | import("@bfchain/core-model-transaction").ToExchangeSpecialAssetTransaction
+        | import("@bfchain/core-model-transaction").ToExchangeAnyTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
+        | import("@bfchain/core-model-transaction").ToExchangeAnyMultiTransaction
+        | import("@bfchain/core-model-transaction").ToExchangeAnyMultiAllTransaction
+      >
+    >;
+    /**解冻 certificateId */
+    unfrozenCertificate: BFChainUtil.EventInOut<
+      ApplyTransactionUnfrozenCertificateEvent<
+        "unfrozenCertificate",
+        | import("@bfchain/core-model-transaction").GrabAnyTransaction
+        | import("@bfchain/core-model-transaction").BeExchangeSpecialAssetTransaction
+        | import("@bfchain/core-model-transaction").BeExchangeAnyTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
+        | import("@bfchain/core-model-transaction").BeExchangeAnyMultiTransaction
+        | import("@bfchain/core-model-transaction").BeExchangeAnyMultiAllTransaction
+      >
+    >;
+    /**更改 certificateId 拥有者 */
+    changeCertificatePossessor: BFChainUtil.EventInOut<
+      ApplyTransactionChangeCertificatePossessorEvent<
+        "changeCertificatePossessor",
+        | import("@bfchain/core-model-transaction").TransferAnyTransaction
+        | import("@bfchain/core-model-transaction").BeExchangeSpecialAssetTransaction
+        | import("@bfchain/core-model-transaction").BeExchangeAnyTransaction
+        | import("@bfchain/core-model-transaction-complex").CustomTransaction
+        | import("@bfchain/core-model-transaction").BeExchangeAnyMultiTransaction
+        | import("@bfchain/core-model-transaction").BeExchangeAnyMultiAllTransaction
+      >
+    >;
+
+    /**交易计数 */
+    count: BFChainUtil.EventInOut<
+      ApplyTransactionCountEvent<"count", BFChainCore.Transaction>,
+      void
     >;
 
     endDealTransaction: BFChainUtil.EventInOut<{

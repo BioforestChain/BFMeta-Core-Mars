@@ -42,3 +42,6 @@ export * from "./beExchangeAnyMulti.transaction";
 
 export * from "./toExchangeAnyMultiAll.transaction";
 export * from "./beExchangeAnyMultiAll.transaction";
+
+export * from "./issueCertificate.transaction";
+export * from "./destroyCertificate.transaction";

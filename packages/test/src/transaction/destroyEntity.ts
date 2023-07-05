@@ -14,7 +14,7 @@ import {
   getGenesisAccount,
   AccountModel,
   getBfchainCoreEntry,
-  getRandomDAppid,
+  getRandomDAppId,
   getRecipientWithSecondSecret,
   getRecipientWithoutSecondSecret,
 } from "../include";
@@ -33,7 +33,7 @@ async function getIssueEntityFactoryTransaction(sender: AccountModel, bfchainCor
     rangeType: RANGE_TYPE.EMPTY,
     range: [], // 资产创世账户地址
     remark: { remark: "body.remark" }, // 交易备注，任意信息
-    dappid: getRandomDAppid(), // 交易所属的 dappid
+    dappid: getRandomDAppId(), // 交易所属的 dappid
     lns: bfchainCore.config.genesisBlock.asset.genesisAsset.genesisLocationName,
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic
@@ -97,7 +97,7 @@ async function getIssueEntityTransaction(
     rangeType: RANGE_TYPE.EMPTY,
     range: [], // 资产创世账户地址
     remark: { remark: "body.remark" }, // 交易备注，任意信息
-    dappid: getRandomDAppid(), // 交易所属的 dappid
+    dappid: getRandomDAppId(), // 交易所属的 dappid
     lns: bfchainCore.config.genesisBlock.asset.genesisAsset.genesisLocationName,
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic
@@ -164,7 +164,7 @@ async function getDestroyEntityTransaction(
     rangeType: RANGE_TYPE.EMPTY,
     range: [],
     remark: { remark: "body.remark" }, // 交易备注，任意信息
-    dappid: getRandomDAppid(), // 交易所属的 dappid
+    dappid: getRandomDAppId(), // 交易所属的 dappid
     lns: bfchainCore.config.genesisBlock.asset.genesisAsset.genesisLocationName,
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
     toMagic: bfchainCore.config.magic, // 交易去往链的 magic

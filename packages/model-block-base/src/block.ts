@@ -27,6 +27,9 @@ export class BlockTransactionInfoModel
   /**交易起始索引 */
   @Field.d(BlockTransactionInfoModel.INC++, "uint32")
   startTindex!: number;
+  /**偏移量 */
+  @Field.d(BlockTransactionInfoModel.INC++, "uint32")
+  offset!: number;
   /**区块块交易量 */
   @Field.d(BlockTransactionInfoModel.INC++, "uint32")
   numberOfTransactions!: number;
@@ -92,6 +95,7 @@ export class BlockTransactionInfoModel
   toJSON() {
     const res: BFChainCore.BlockTransactionInfoJSON = {
       startTindex: this.startTindex,
+      offset: this.offset,
       numberOfTransactions: this.numberOfTransactions,
       payloadHash: this.payloadHash,
       payloadLength: this.payloadLength,
@@ -241,6 +245,10 @@ export class Block<AJ extends object = object>
   get startTindex() {
     return this.transactionInfo.startTindex;
   }
+  /**区块事件结束索引 */
+  get offset() {
+    return this.transactionInfo.offset;
+  }
   /**区块事件量 */
   get numberOfTransactions() {
     return this.transactionInfo.numberOfTransactions;
@@ -316,6 +324,7 @@ export class Block<AJ extends object = object>
         props.transactionInfo = {
           value: {
             startTindex: transactionInfo.startTindex,
+            offset: transactionInfo.offset,
             numberOfTransactions: transactionInfo.numberOfTransactions,
             payloadHashBuffer: transactionInfo.payloadHashBuffer,
             payloadLength: transactionInfo.payloadLength,
@@ -329,6 +338,7 @@ export class Block<AJ extends object = object>
         props.transactionInfo = {
           value: {
             startTindex: transactionInfo.startTindex,
+            offset: transactionInfo.offset,
             numberOfTransactions: skipOrCustomTransactions.length,
             payloadHashBuffer: transactionInfo.payloadHashBuffer,
             payloadLength: transactionInfo.payloadLength,

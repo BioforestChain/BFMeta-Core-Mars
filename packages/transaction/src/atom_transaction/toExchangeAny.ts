@@ -468,6 +468,24 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
             });
           }
         }
+      } else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.CERTIFICATE) {
+        // 冻结 certificateId
+        taskList.next = eventEmitter.emit("frozenCertificate", {
+          type: "frozenCertificate",
+          transaction,
+          applyInfo: {
+            address: senderId,
+            sourceChainName: toExchangeChainName,
+            sourceChainMagic: toExchangeSource,
+            certificateId: toExchangeAssetType,
+            minEffectiveHeight:
+              this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
+            maxEffectiveHeight:
+              this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
+            status: ASSET_STATUS.FROZEN,
+            frozenId: signature,
+          },
+        });
       } else {
         throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `toExchangeParentAssetType ${toExchangeParentAssetType}`,

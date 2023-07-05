@@ -221,6 +221,22 @@ export class TransferAnyTransactionFactory extends TransferTransactionFactory<Tr
             assetInfo: chainAssetInfo,
           },
         );
+      }
+      // 凭证转移
+      else if (parentAssetType === PARENT_ASSET_TYPE.CERTIFICATE) {
+        // 发起账户成为凭证的拥有者
+        taskList.next = eventEmitter.emit("changeCertificatePossessor", {
+          type: "changeCertificatePossessor",
+          transaction,
+          applyInfo: {
+            address: senderId,
+            publicKeyBuffer: senderPublicKeyBuffer,
+            possessorAddress: recipientId,
+            sourceChainName,
+            sourceChainMagic,
+            certificateId: assetType,
+          },
+        });
       } else {
         throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `parentAssetType ${parentAssetType}`,

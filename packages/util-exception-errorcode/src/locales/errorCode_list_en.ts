@@ -64,6 +64,8 @@ export const ERROR_CODE_LIST_EN = {
   "001-00062": "Invalid {taskLabel} fromAuthSignSignature",
   "001-00063": "Invalid {taskLabel} toAuthSignature",
   "001-00064": "Invalid {taskLabel} toAuthSignSignature",
+  "001-00065": "Invalid macro input type: {type}",
+  "001-00066": "{prop} in {target} already expired",
   // #endregion
 
   // #region logic
@@ -77,8 +79,8 @@ export const ERROR_CODE_LIST_EN = {
     "Transaction should not have senderSecondPublicKey, signature {signature} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type}",
   "001-11006":
     "Transaction should not have signSignature, signature {signature} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type}",
-  "001-11007": "Invalid transaction apply block height, reason {reason}",
-  "001-11008": "Invalid transaction effective block height, reason {reason}",
+  "001-11007": "Invalid transaction({signature}) apply block height, reason {reason}",
+  "001-11008": "Invalid transaction({signature}) effective block height, reason {reason}",
   "001-11009":
     "Invalid transaction from magic, reason {reason} signature {signature} senderId {senderId} applyBlockHeight {applyBlockHeight} type {type}",
   "001-11010":
@@ -152,6 +154,15 @@ export const ERROR_CODE_LIST_EN = {
   "001-11072":
     "Frozen asset with frozenAddress {frozenAddress} signature {signature} assetType {assetType} in blockChain not exist or expired",
   "001-11073": "Not enough issue entity times, entityFactory {entityFactory}",
+  "001-11074": "Promise is not begin to resolve yet, promiseId {promiseId}",
+  "001-11075": "Certificate is not exist, certificateId {certificateId}",
+  "001-11076": "Certificate is already exist, certificateId {certificateId}, errorId {errorId}",
+  "001-11077": "Can not destroy certificate, certificateId {certificateId}, reason {reason}",
+  "001-11078":
+    "Account with address {address} not certificate {certificateId} possessor, errorId {errorId}",
+  "001-11079": "Certificate not frozen, certificateId {certificateId}",
+  "001-11080": "Certificate already frozen, certificateId {certificateId}",
+  "001-11081": "Certificate already destroy, certificateId {certificateId}",
 
   // block logic
   "001-12001":

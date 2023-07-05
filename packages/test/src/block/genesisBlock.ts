@@ -93,7 +93,7 @@ const core = BFChainCoreFactory({
   keypairHelper: NodeJsKeypairHelper,
   ed2curveHelper,
 });
-
+core.moduleMap.set("transactionGetterHelper", {});
 // if (!core.transaction.tpowHelper.isValidTpowDiffFormula(mainChainAssetData.tpowDiffFormula)) {
 //   throw new Error(`tpowDiffFormula 不合法`);
 // }
@@ -550,7 +550,7 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
         core.transactionLogicVerifier.getTransactionLogicVerifierFromType<TransferAssetTransaction>(
           trs.type,
         );
-      const result = yy.checkTrsFeeAndWebFee(
+      const result = await yy.checkTrsFeeAndWebFee(
         trs as TransferAssetTransaction,
         trs.getBytes().length,
       );
@@ -614,7 +614,9 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
     statisticsInfo.unref("getGenesisBlock");
     const _genesisBlock = genesisBlock.toJSON();
     const __genesisBlock = await core.block.recombineBlock(_genesisBlock);
-    await core.block.getBlockFactoryFromHeight(__genesisBlock.height).verify(__genesisBlock);
+    const factory = core.block.getBlockFactoryFromHeight(__genesisBlock.height);
+    factory.commonBlockVerify.verifyBlockSize(__genesisBlock);
+    await factory.verify(__genesisBlock);
     await core.blockHelper.verifyBlockSignature(__genesisBlock, {
       taskLabel: "self genesis Block",
     });

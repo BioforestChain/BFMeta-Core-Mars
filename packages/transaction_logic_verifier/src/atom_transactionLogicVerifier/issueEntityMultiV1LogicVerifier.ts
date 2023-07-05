@@ -60,8 +60,9 @@ export class IssueEntityMultiV1LogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    * @param byteLength
    */
-  checkTrsFeeAndWebFee(transaction: IssueEntityMultiTransactionV1, byteLength: number) {
+  async checkTrsFeeAndWebFee(transaction: IssueEntityMultiTransactionV1, byteLength: number) {
     return this.isFeeEnough(
+      transaction.signature,
       transaction.fee,
       (
         this.transactionHelper.calcTransactionMinFeeByMulti(
@@ -79,12 +80,13 @@ export class IssueEntityMultiV1LogicVerifier extends TransactionLogicVerifier {
    * @param byteLength
    * @param miningMachineMinFeePerByte
    */
-  checkTrsFeeAndMiningMachineFeeAndWebFee(
+  async checkTrsFeeAndMiningMachineFeeAndWebFee(
     transaction: IssueEntityMultiTransactionV1,
     byteLength: number,
     miningMachineMinFeePerByte: BFChainCore.FractionJSON,
   ) {
     return this.isFeeEnough(
+      transaction.signature,
       transaction.fee,
       (
         this.transactionHelper.calcTransactionMinFeeByMulti(

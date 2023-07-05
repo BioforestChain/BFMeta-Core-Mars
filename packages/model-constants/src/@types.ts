@@ -16,4 +16,5 @@ declare namespace BFChainCore {
   type FORK_CAUSE = import("./").BLOCK_FORK_CAUSE;
   type PARENT_ASSET_TYPE = import("./").PARENT_ASSET_TYPE;
   type ASSET_STATUS = import("./").ASSET_STATUS;
+  type CERTIFICATE_TYPE = import("./").CERTIFICATE_TYPE;
 }

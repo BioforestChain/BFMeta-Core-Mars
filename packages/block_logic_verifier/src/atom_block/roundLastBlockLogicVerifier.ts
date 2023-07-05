@@ -21,9 +21,9 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
 
   async verifyBlockAsset(block: RoundLastBlock) {
     const { height, asset } = block;
-    const { newDelegates, chainOnChainHash } = asset.roundLastAsset;
+    const { newDelegates, assetChangeHash, chainOnChainHash } = asset.roundLastAsset;
     // 检验块内资产变动
-    await this.checkAssetChangeHash(height, chainOnChainHash);
+    await this.checkAssetChangeHash(height, assetChangeHash);
     // 校验链上链 hash
     await this.checkChainOnChainHash(height, chainOnChainHash);
     // 校验新注册的受托人

@@ -8,7 +8,7 @@ import {
   getSenderWithoutSecondSecret,
   AccountModel,
   getBfchainCoreEntry,
-  getRandomDAppid,
+  getRandomDAppId,
 } from "../include";
 import { I18N_LANGUAGE_TYPE } from "@bfchain/util-i18n";
 
@@ -23,9 +23,9 @@ async function getAcceptVoteTransaction(sender: AccountModel, bfchainCore: BFCha
     rangeType: RANGE_TYPE.EMPTY,
     range: [],
     timestamp: 770880, // 生成交易时间戳
-    fee: "--", // 交易手续费
+    fee: "100", // 交易手续费
     remark: { remark: "body.remark".repeat(1000) }, // 交易备注，任意信息
-    dappid: getRandomDAppid(), // 交易所属的 dappid
+    dappid: getRandomDAppId(), // 交易所属的 dappid
     lns: bfchainCore.config.genesisLocationName,
     sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic

@@ -12,7 +12,7 @@ import {
   getGenesisAccount,
   AccountModel,
   getBfchainCoreEntry,
-  getRandomDAppid,
+  getRandomDAppId,
 } from "../include";
 import { sleep } from "@bfchain/util";
 
@@ -47,7 +47,7 @@ async function getTransferAnyTransaction(sender: AccountModel, bfchainCore: BFCh
     timestamp: 770880, // 生成交易时间戳
     fee: "666", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
-    dappid: getRandomDAppid(), // 交易所属的 dappid
+    dappid: getRandomDAppId(), // 交易所属的 dappid
     lns: bfchainCore.config.genesisLocationName,
     sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
@@ -107,9 +107,9 @@ async function getTransferAnyTransaction(sender: AccountModel, bfchainCore: BFCh
       trs.type,
     );
 
-  const result = yy.checkTrsFeeAndWebFee(trs, trs.getBytes().length);
+  const result = await yy.checkTrsFeeAndWebFee(trs, trs.getBytes().length);
   if (result.isFeeEnough) {
-    const result2 = yy.checkTrsFeeAndMiningMachineFeeAndWebFee(trs, trs.getBytes().length, {
+    const result2 = await yy.checkTrsFeeAndMiningMachineFeeAndWebFee(trs, trs.getBytes().length, {
       numerator: 1000,
       denominator: 1024,
     });

@@ -342,6 +342,22 @@ export class GiftAnyTransactionFactory extends GiftTransactionFactory<GiftAnyTra
             },
           });
         }
+      } else if (parentAssetType === PARENT_ASSET_TYPE.CERTIFICATE) {
+        // 冻结 certificateId
+        taskList.next = eventEmitter.emit("frozenCertificate", {
+          type: "frozenCertificate",
+          transaction,
+          applyInfo: {
+            address: senderId,
+            sourceChainName,
+            sourceChainMagic,
+            certificateId: assetType,
+            minEffectiveHeight,
+            maxEffectiveHeight,
+            status: ASSET_STATUS.FROZEN,
+            frozenId: signature,
+          },
+        });
       } else {
         throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `parentAssetType ${parentAssetType}`,

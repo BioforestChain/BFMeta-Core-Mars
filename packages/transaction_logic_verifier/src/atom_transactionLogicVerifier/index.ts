@@ -52,3 +52,6 @@ export * from "./beExchangeAnyMultiLogicVerifier";
 
 export * from "./toExchangeAnyMultiAllLogicVerifier";
 export * from "./beExchangeAnyMultiAllLogicVerifier";
+
+export * from "./issueCertificateLogicVerifier";
+export * from "./destroyCertificateLogicVerifier";

@@ -754,6 +754,34 @@ declare namespace BFChainCore {
     beExchangeAnyMultiAll: BeExchangeAnyMultiAllJSON;
   }
 
+  interface IssueCertificateJSON {
+    /**非同质资产来源链名，小写字母组成，5-20 位 */
+    sourceChainName: string;
+    /**非同质资产来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
+    sourceChainMagic: string;
+    /**凭证 */
+    certificateId: string;
+    /**凭证类型 */
+    type: CERTIFICATE_TYPE;
+  }
+  interface IssueCertificateAssetJSON {
+    /**发行凭证事件附带信息 */
+    issueCertificate: IssueCertificateJSON;
+  }
+  interface DestroyCertificateJSON {
+    /**非同质资产来源链名，小写字母组成，5-20 位 */
+    sourceChainName: string;
+    /**非同质资产来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
+    sourceChainMagic: string;
+    /**凭证 */
+    certificateId: string;
+    /**凭证类型 */
+    type: CERTIFICATE_TYPE;
+  }
+  interface DestroyCertificateAssetJSON {
+    /**销毁凭证事件附带信息 */
+    destroyCertificate: DestroyCertificateJSON;
+  }
   //#endregion
 
   //#region Atom Transaction
@@ -890,6 +918,15 @@ declare namespace BFChainCore {
   >;
   type BeExchangeAnyMultiAllTransactionJSON = TransactionMixJSON<
     BeExchangeAnyMultiAllAssetJSON,
+    { hasRecipientId: true }
+  >;
+
+  type IssueCertificateTransactionJSON = TransactionMixJSON<
+    IssueCertificateAssetJSON,
+    { hasRecipientId: true }
+  >;
+  type DestroyCertificateTransactionJSON = TransactionMixJSON<
+    DestroyCertificateAssetJSON,
     { hasRecipientId: true }
   >;
   //#endregion

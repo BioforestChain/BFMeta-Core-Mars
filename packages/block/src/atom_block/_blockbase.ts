@@ -72,6 +72,7 @@ export abstract class BlockFactory<T extends Block> {
       secretKey: Buffer;
     },
     eventEmitter?: BFChainCore.GenerateBlockEventEmitter,
+    transactionGetterHelper?: BFChainCore.TransactionGetterHelperInterface,
     config = this.config,
   ) {
     isDevGenerateBlock && info("begin generateBlock");
@@ -85,6 +86,7 @@ export abstract class BlockFactory<T extends Block> {
       keypair,
       secondKeypair,
       eventEmitter,
+      transactionGetterHelper,
       config,
     );
 

@@ -350,6 +350,21 @@ export class GrabAnyTransactionFactory extends TransactionFactory<GrabAnyTransac
             });
           }
         }
+      } else if (parentAssetType === PARENT_ASSET_TYPE.CERTIFICATE) {
+        taskList.next = eventEmitter.emit("unfrozenCertificate", {
+          type: "unfrozenCertificate",
+          transaction,
+          applyInfo: {
+            address: senderId,
+            publicKeyBuffer: senderPublicKeyBuffer,
+            possessorAddress: senderId,
+            sourceChainName,
+            sourceChainMagic,
+            certificateId: assetType,
+            status: ASSET_STATUS.NORMAL,
+            frozenId: transactionSignature,
+          },
+        });
       } else {
         throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `parentAssetType ${parentAssetType}`,

@@ -82,6 +82,7 @@ declare namespace BFChainCore {
 
   type BlockTransactionInfoJSON = {
     startTindex: number;
+    offset: number;
     numberOfTransactions: number;
     payloadHash: string;
     payloadLength: number;
@@ -147,6 +148,8 @@ declare namespace BFChainCore {
     totalAccount: number;
     /**区块打包的权益统计明细，JSON 对象 */
     magicAssetTypeTypeStatisticHashMap: { [magic: string]: AssetTypeAssetStatisticJSON };
+    /**区块打包的交易数量 */
+    numberOfTransactionsHashMap: { [baseType: string]: number };
   }
 
   //#endregion

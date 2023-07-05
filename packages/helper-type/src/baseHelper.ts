@@ -1275,4 +1275,29 @@ export class BaseHelper {
     }
     return true;
   }
+
+  /**
+   * certificateId 是否合法：大小写字母，数字，_- 1-100
+   *
+   * @param certificateId
+   */
+  isValidCertificateId(certificateId: string) {
+    if (!this.isString(certificateId)) {
+      return false;
+    }
+    if (certificateId.length < 3 || certificateId.length > 100) {
+      return false;
+    }
+    if (certificateId.includes(":") === false) {
+      return false;
+    }
+    const items = certificateId.split(":");
+    if (items.length !== 2) {
+      return false;
+    }
+    if (this.isPositiveStringNumber(items[0]) === false) {
+      return false;
+    }
+    return /^[A-Za-z0-9\-_]*$/.test(items[1]);
+  }
 }

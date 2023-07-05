@@ -12,6 +12,7 @@ import {
   DestroyEntityTransaction,
   IssueEntityTransactionV1,
   IssueEntityMultiTransactionV1,
+  CERTIFICATE_TYPE,
 } from "@bfchain/core-model";
 import { ConfigHelper, BlockHelper, TransactionHelper, JSBIHelper } from "@bfchain/core-helper";
 import { HelperLogicVerifier } from "./helperLogicVerifier";
@@ -648,20 +649,7 @@ export class EventLogicVerifier {
 
   private async __checkAsset(genesisAddress: string, assetType: string) {
     // 不能将冻结账户设置为同质资产的创世账户
-    const possessor = await this.accountGetterHelper.getAccountInfo(genesisAddress);
-    if (possessor) {
-      const accountStatus = possessor.accountStatus;
-      if (
-        accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
-        accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
-        accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
-      ) {
-        throw new ConsensusException(ERROR_LIST.ACCOUNT_FROZEN, {
-          address: genesisAddress,
-          status: accountStatus,
-        });
-      }
-    }
+    await this.helperLogicVerifier.isAccountFrozen(genesisAddress);
 
     const chainMagic = this.configHelper.magic;
 
@@ -717,17 +705,8 @@ export class EventLogicVerifier {
         // 是否持有除链资产外的其他资产
         await this.helperLogicVerifier.isPossessAssetExceptChainAsset(address, accountAssets);
 
-        // 资产的发行账户不能是dapp的拥有者
-        await this.helperLogicVerifier.isDAppPossessor(address, this.configHelper);
-
-        // 资产的发行账户不能是位名的拥有者账户或管理账户
-        await this.helperLogicVerifier.isLnsPossessorOrManager(address, this.configHelper);
-
-        // 资产的发行账户不能是 entityFactory 拥有者
-        await this.helperLogicVerifier.isEntityFactoryPossessor(address, this.configHelper);
-
-        // 资产的发行账户不能是 entity 拥有者
-        await this.helperLogicVerifier.isEntityPossessor(address, this.configHelper);
+        // 是否持有链上资产
+        await this.helperLogicVerifier.isChainAssetPossessor(address);
 
         // 保证账户上足够的本链资产，避免 py 操作
         const {
@@ -804,20 +783,7 @@ export class EventLogicVerifier {
 
         if (address !== possessorAddress) {
           // 不能将冻结账户设置为 dapp 的拥有者
-          const possessor = await this.accountGetterHelper.getAccountInfo(possessorAddress);
-          if (possessor) {
-            const accountStatus = possessor.accountStatus;
-            if (
-              accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
-              accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
-              accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
-            ) {
-              throw new ConsensusException(ERROR_LIST.ACCOUNT_FROZEN, {
-                address: possessorAddress,
-                status: accountStatus,
-              });
-            }
-          }
+          await this.helperLogicVerifier.isAccountFrozen(possessorAddress);
         }
 
         // dappid 是否已经存在
@@ -936,20 +902,7 @@ export class EventLogicVerifier {
 
         if (address !== possessorAddress) {
           // 不能将冻结账户设置为 dappid 的拥有者
-          const possessor = await this.accountGetterHelper.getAccountInfo(possessorAddress);
-          if (possessor) {
-            const accountStatus = possessor.accountStatus;
-            if (
-              accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
-              accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
-              accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
-            ) {
-              throw new ConsensusException(ERROR_LIST.ACCOUNT_FROZEN, {
-                address: possessorAddress,
-                status: accountStatus,
-              });
-            }
-          }
+          await this.helperLogicVerifier.isAccountFrozen(possessorAddress);
         }
 
         const memDapp = await this.helperLogicVerifier.isDAppExist(
@@ -998,6 +951,9 @@ export class EventLogicVerifier {
         // 是否持有除链资产外的其他资产
         await this.helperLogicVerifier.isPossessAssetExceptChainAsset(address, accountAssets);
 
+        // 是否持有链上资产
+        await this.helperLogicVerifier.isChainAssetPossessor(address);
+
         // 保证账户上足够的本链资产，避免 py 操作
         const {
           magic: chainMagic,
@@ -1011,18 +967,6 @@ export class EventLogicVerifier {
             errorId: NewTransactionRefuseReason.CHAIN_ASSET_NOT_ENOUGH,
           });
         }
-
-        // 资产的发行账户不能是dapp的拥有者
-        await this.helperLogicVerifier.isDAppPossessor(address, this.configHelper);
-
-        // 资产的发行账户不能是位名的拥有者账户或管理账户
-        await this.helperLogicVerifier.isLnsPossessorOrManager(address, this.configHelper);
-
-        // 注册链的发行账户不能是 entityFactory 拥有者
-        await this.helperLogicVerifier.isEntityFactoryPossessor(address, this.configHelper);
-
-        // 注册链的发行账户不能是 entity 拥有者
-        await this.helperLogicVerifier.isEntityPossessor(address, this.configHelper);
 
         const { magic, assetType, chainName } = genesisBlock;
 
@@ -1083,20 +1027,7 @@ export class EventLogicVerifier {
 
         if (address !== possessorAddress) {
           // 不能将冻结账户设置为 lns 的拥有者
-          const possessor = await this.accountGetterHelper.getAccountInfo(possessorAddress);
-          if (possessor) {
-            const accountStatus = possessor.accountStatus;
-            if (
-              accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
-              accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
-              accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
-            ) {
-              throw new ConsensusException(ERROR_LIST.ACCOUNT_FROZEN, {
-                address: possessorAddress,
-                status: accountStatus,
-              });
-            }
-          }
+          await this.helperLogicVerifier.isAccountFrozen(possessorAddress);
         }
 
         // 已存在的位名不能重复添加
@@ -1234,20 +1165,7 @@ export class EventLogicVerifier {
         const { address, sourceChainName, sourceChainMagic, name, manager } = applyInfo;
 
         // 不能将冻结账户设置为管理员
-        const newManager = await this.accountGetterHelper.getAccountInfo(manager);
-        if (newManager) {
-          const accountStatus = newManager.accountStatus;
-          if (
-            accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
-            accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
-            accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
-          ) {
-            throw new ConsensusException(ERROR_LIST.ACCOUNT_FROZEN, {
-              address: manager,
-              errorId: NewTransactionRefuseReason.CAN_NOT_SET_FROZEN_ACCOUNT_AS_MANAGER,
-            });
-          }
-        }
+        await this.helperLogicVerifier.isAccountFrozen(manager);
 
         // 位名不存在不能设置管理员
         const memLocation = await this.helperLogicVerifier.isLocationNameExist(
@@ -1498,20 +1416,7 @@ export class EventLogicVerifier {
 
         if (address !== possessorAddress) {
           // 不能将冻结账户设置为链域名的拥有者
-          const possessor = await this.accountGetterHelper.getAccountInfo(possessorAddress);
-          if (possessor) {
-            const accountStatus = possessor.accountStatus;
-            if (
-              accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
-              accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
-              accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
-            ) {
-              throw new ConsensusException(ERROR_LIST.ACCOUNT_FROZEN, {
-                address: possessorAddress,
-                status: accountStatus,
-              });
-            }
-          }
+          await this.helperLogicVerifier.isAccountFrozen(possessorAddress);
         }
 
         // 位名是否存在
@@ -1553,20 +1458,7 @@ export class EventLogicVerifier {
     factoryId: string,
   ) {
     // 不能将冻结账户设置为非同质资产模板的拥有者账户
-    const possessor = await this.accountGetterHelper.getAccountInfo(possessorAddress);
-    if (possessor) {
-      const accountStatus = possessor.accountStatus;
-      if (
-        accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
-        accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
-        accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
-      ) {
-        throw new ConsensusException(ERROR_LIST.ACCOUNT_FROZEN, {
-          address: possessorAddress,
-          status: accountStatus,
-        });
-      }
-    }
+    await this.helperLogicVerifier.isAccountFrozen(possessorAddress);
 
     // entityFactory 是否已经存在
     const memEntityFactory = await this.accountGetterHelper.getEntityFactory(
@@ -1609,14 +1501,8 @@ export class EventLogicVerifier {
         // 是否持有除链资产外的其他资产
         await this.helperLogicVerifier.isPossessAssetExceptChainAsset(address, accountAssets);
 
-        // entityFactory 的发行账户不能是dapp的拥有者
-        await this.helperLogicVerifier.isDAppPossessor(address, this.configHelper);
-
-        // entityFactory 的发行账户不能是位名的拥有者账户或管理账户
-        await this.helperLogicVerifier.isLnsPossessorOrManager(address, this.configHelper);
-
-        // entityFactory 的发行账户不能是 entity 拥有者
-        await this.helperLogicVerifier.isEntityPossessor(address, this.configHelper);
+        // 是否持有链上资产
+        await this.helperLogicVerifier.isChainAssetPossessor(address);
 
         // 保证账户上足够的本链资产，避免 py 操作
         const {
@@ -1722,40 +1608,23 @@ export class EventLogicVerifier {
           entityFactoryPossessorAddress,
           factoryId,
           entityId,
+          sourceChainName,
           sourceChainMagic,
           entityFrozenAssetPrealnum,
         } = applyInfo;
 
         if (address !== possessorAddress) {
           // 不能将冻结账户设置为非同质资产的拥有者
-          const possessor = await this.accountGetterHelper.getAccountInfo(possessorAddress);
-          if (possessor) {
-            const accountStatus = possessor.accountStatus;
-            if (
-              accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
-              accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
-              accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
-            ) {
-              throw new ConsensusException(ERROR_LIST.ACCOUNT_FROZEN, {
-                address: possessorAddress,
-                status: accountStatus,
-              });
-            }
-          }
+          await this.helperLogicVerifier.isAccountFrozen(possessorAddress);
         }
 
         // entityFactory 是否已经存在
-        const memEntityFactory = await this.accountGetterHelper.getEntityFactory(
+        const memEntityFactory = await this.helperLogicVerifier.isEntityFactoryExist(
+          sourceChainName,
           sourceChainMagic,
           factoryId,
           currentBlockHeight,
         );
-        if (!memEntityFactory) {
-          throw new ConsensusException(ERROR_LIST.ENTITY_FACTORY_IS_NOT_EXIST, {
-            factoryId,
-            errorId: NewTransactionRefuseReason.ENTITY_FACTORY_NOT_EXIST,
-          });
-        }
 
         this.__isEntityFactoryMatch(
           (transaction as IssueEntityTransaction).asset.issueEntity.entityFactory.toJSON(),
@@ -1851,40 +1720,23 @@ export class EventLogicVerifier {
           entityFactoryPossessorAddress,
           factoryId,
           entityId,
+          sourceChainName,
           sourceChainMagic,
           entityFrozenAssetPrealnum,
         } = applyInfo;
 
         if (address !== possessorAddress) {
           // 不能将冻结账户设置为非同质资产的拥有者
-          const possessor = await this.accountGetterHelper.getAccountInfo(possessorAddress);
-          if (possessor) {
-            const accountStatus = possessor.accountStatus;
-            if (
-              accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
-              accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
-              accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
-            ) {
-              throw new ConsensusException(ERROR_LIST.ACCOUNT_FROZEN, {
-                address: possessorAddress,
-                status: accountStatus,
-              });
-            }
-          }
+          await this.helperLogicVerifier.isAccountFrozen(possessorAddress);
         }
 
         // entityFactory 是否已经存在
-        const memEntityFactory = await this.accountGetterHelper.getEntityFactory(
+        const memEntityFactory = await this.helperLogicVerifier.isEntityFactoryExist(
+          sourceChainName,
           sourceChainMagic,
           factoryId,
           currentBlockHeight,
         );
-        if (!memEntityFactory) {
-          throw new ConsensusException(ERROR_LIST.ENTITY_FACTORY_IS_NOT_EXIST, {
-            factoryId,
-            errorId: NewTransactionRefuseReason.ENTITY_FACTORY_NOT_EXIST,
-          });
-        }
 
         this.__isEntityFactoryMatch(
           (transaction as IssueEntityTransactionV1).asset.issueEntity.entityFactory.toJSON(),
@@ -1976,40 +1828,23 @@ export class EventLogicVerifier {
           entityFactoryPossessorAddress,
           factoryId,
           entityStructList,
+          sourceChainName,
           sourceChainMagic,
           entityFrozenAssetPrealnum,
         } = applyInfo;
 
         if (address !== possessorAddress) {
           // 不能将冻结账户设置为非同质资产的拥有者
-          const possessor = await this.accountGetterHelper.getAccountInfo(possessorAddress);
-          if (possessor) {
-            const accountStatus = possessor.accountStatus;
-            if (
-              accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
-              accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
-              accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
-            ) {
-              throw new ConsensusException(ERROR_LIST.ACCOUNT_FROZEN, {
-                address: possessorAddress,
-                status: accountStatus,
-              });
-            }
-          }
+          await this.helperLogicVerifier.isAccountFrozen(possessorAddress);
         }
 
         // entityFactory 是否已经存在
-        const memEntityFactory = await this.accountGetterHelper.getEntityFactory(
+        const memEntityFactory = await this.helperLogicVerifier.isEntityFactoryExist(
+          sourceChainName,
           sourceChainMagic,
           factoryId,
           currentBlockHeight,
         );
-        if (!memEntityFactory) {
-          throw new ConsensusException(ERROR_LIST.ENTITY_FACTORY_IS_NOT_EXIST, {
-            factoryId,
-            errorId: NewTransactionRefuseReason.ENTITY_FACTORY_NOT_EXIST,
-          });
-        }
 
         this.__isEntityFactoryMatch(
           (
@@ -2100,6 +1935,7 @@ export class EventLogicVerifier {
       "destroyEntity",
       async ({ transaction, applyInfo }, next) => {
         const {
+          sourceChainName,
           sourceChainMagic,
           entityId,
           entityFactoryApplicantAddress,
@@ -2109,17 +1945,12 @@ export class EventLogicVerifier {
 
         const factoryId = entityFactory.factoryId;
         // entityFactory 是否已经存在
-        const memEntityFactory = await this.accountGetterHelper.getEntityFactory(
+        const memEntityFactory = await this.helperLogicVerifier.isEntityFactoryExist(
+          sourceChainName,
           sourceChainMagic,
           factoryId,
           currentBlockHeight,
         );
-        if (!memEntityFactory) {
-          throw new ConsensusException(ERROR_LIST.ENTITY_FACTORY_IS_NOT_EXIST, {
-            factoryId,
-            errorId: NewTransactionRefuseReason.ENTITY_FACTORY_NOT_EXIST,
-          });
-        }
 
         this.__isEntityFactoryMatch(
           (transaction as DestroyEntityTransaction).asset.destroyEntity.entityFactory.toJSON(),
@@ -2145,17 +1976,12 @@ export class EventLogicVerifier {
           });
         }
 
-        const memEntity = await this.accountGetterHelper.getEntity(
+        const memEntity = await this.helperLogicVerifier.isEntityExist(
+          sourceChainName,
           sourceChainMagic,
           entityId,
           currentBlockHeight,
         );
-        if (!memEntity) {
-          throw new ConsensusException(ERROR_LIST.ENTITY_IS_NOT_EXIST, {
-            entityId,
-            errorId: NewTransactionRefuseReason.ENTITY_NOT_EXIST,
-          });
-        }
 
         // 冻结状态的位名不能销毁
         if (memEntity.status === ASSET_STATUS.FROZEN) {
@@ -2300,20 +2126,7 @@ export class EventLogicVerifier {
 
         if (address !== possessorAddress) {
           // 不能将冻结账户设置为非同质资产的拥有者
-          const possessor = await this.accountGetterHelper.getAccountInfo(possessorAddress);
-          if (possessor) {
-            const accountStatus = possessor.accountStatus;
-            if (
-              accountStatus === ACCOUNT_STATUS.FROZEN_IN ||
-              accountStatus === ACCOUNT_STATUS.FROZEN_OUT ||
-              accountStatus === ACCOUNT_STATUS.FROZEN_IN_AND_OUT
-            ) {
-              throw new ConsensusException(ERROR_LIST.ACCOUNT_FROZEN, {
-                address: possessorAddress,
-                status: accountStatus,
-              });
-            }
-          }
+          await this.helperLogicVerifier.isAccountFrozen(possessorAddress);
         }
 
         // entity 是否存在
@@ -2417,6 +2230,247 @@ export class EventLogicVerifier {
     );
   }
 
+  private __listenEventIssueCertificate(
+    currentBlockHeight: number,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
+  ) {
+    // 发行凭证
+    eventEmitter.on(
+      "issueCertificate",
+      async ({ transaction, applyInfo }, next) => {
+        const { address, possessorAddress, sourceChainMagic, sourceChainName, certificateId } =
+          applyInfo;
+
+        if (address !== possessorAddress) {
+          // 不能将冻结账户设置为非同质资产的拥有者
+          await this.helperLogicVerifier.isAccountFrozen(possessorAddress);
+        }
+
+        // certificate 是否已经存在
+        const memCertificate = await this.accountGetterHelper.getCertificate(
+          sourceChainMagic,
+          certificateId,
+          currentBlockHeight,
+        );
+        if (memCertificate) {
+          throw new ConsensusException(ERROR_LIST.CERTIFICATE_IS_ALREADY_EXIST, {
+            certificateId,
+            errorId: NewTransactionRefuseReason.CERTIFICATE_ALREADY_EXIST,
+          });
+        }
+
+        return next();
+      },
+      { taskname: `applyTransaction/logicVerifier/issueCertificate` },
+    );
+  }
+
+  private __listenEventDestroyCertificate(
+    currentBlockHeight: number,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
+  ) {
+    // 资产销毁
+    eventEmitter.on(
+      "destroyCertificate",
+      async ({ transaction, applyInfo }, next) => {
+        const { sourceChainMagic, sourceChainName, certificateId } = applyInfo;
+
+        const memCertificate = await this.helperLogicVerifier.isCertificateExist(
+          sourceChainName,
+          sourceChainMagic,
+          certificateId,
+          currentBlockHeight,
+        );
+        // 凭证已经被销毁
+        if (memCertificate.status === ASSET_STATUS.DESTROY) {
+          throw new ConsensusException(ERROR_LIST.CERTIFICATE_ALREADY_DESTROY, {
+            certificateId,
+          });
+        }
+        // 冻结状态的凭证不能销毁
+        if (memCertificate.status === ASSET_STATUS.FROZEN) {
+          throw new ConsensusException(ERROR_LIST.CAN_NOT_DESTROY_CERTIFICATE, {
+            certificateId,
+            reason: "Frozen certificate can not be destroy",
+          });
+        }
+        if (memCertificate.type === CERTIFICATE_TYPE.DESTORY_FORBIDDEN) {
+          throw new ConsensusException(ERROR_LIST.CAN_NOT_DESTROY_CERTIFICATE, {
+            certificateId,
+            reason: `Certificate with type ${CERTIFICATE_TYPE.DESTORY_FORBIDDEN} can not be destroy`,
+          });
+        } else if (memCertificate.type === CERTIFICATE_TYPE.DESTORY_BY_APPLICANT) {
+          // 只有凭证的发行者才能删除位名
+          if (memCertificate.applyAddress !== transaction.senderId) {
+            throw new ConsensusException(ERROR_LIST.CAN_NOT_DESTROY_CERTIFICATE, {
+              certificateId,
+              reason: `Only certificate applicant can deestory certificate ${certificateId}`,
+            });
+          }
+        }
+
+        // 只有凭证的拥有者才能删除位名
+        if (memCertificate.possessorAddress !== transaction.senderId) {
+          throw new ConsensusException(ERROR_LIST.CAN_NOT_DESTROY_CERTIFICATE, {
+            certificateId,
+            reason: `Only certificate possessor can deestory certificate ${certificateId}`,
+          });
+        }
+
+        return next();
+      },
+      { taskname: `applyTransaction/logicVerifier/destroyCertificate` },
+    );
+  }
+
+  private __listenEventFrozenCertificate(
+    currentBlockHeight: number,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
+  ) {
+    // 冻结凭证
+    eventEmitter.on(
+      "frozenCertificate",
+      async ({ applyInfo }, next) => {
+        const { address, sourceChainName, sourceChainMagic, certificateId } = applyInfo;
+
+        // 凭证是否存在
+        const memCertificate = await this.helperLogicVerifier.isCertificateExist(
+          sourceChainName,
+          sourceChainMagic,
+          certificateId,
+          currentBlockHeight,
+        );
+        // 凭证已经被销毁
+        if (memCertificate.status === ASSET_STATUS.DESTROY) {
+          throw new ConsensusException(ERROR_LIST.CERTIFICATE_ALREADY_DESTROY, {
+            certificateId,
+          });
+        }
+        if (memCertificate.status === ASSET_STATUS.FROZEN) {
+          throw new ConsensusException(ERROR_LIST.CERTIFICATE_ALREADY_FROZEN, {
+            certificateId,
+          });
+        }
+        if (memCertificate.possessorAddress !== address) {
+          throw new ConsensusException(ERROR_LIST.ACCOUNT_NOT_CERTIFICATE_POSSESSOR, {
+            address,
+            certificateId,
+            errorId: NewTransactionRefuseReason.ACCOUNT_NOT_CERTIFICATE_POSSESSOR,
+          });
+        }
+
+        return next();
+      },
+      { taskname: `applyTransaction/logicVerifier/frozenCertificate` },
+    );
+  }
+
+  private __listenEventUnfrozenCertificate(
+    currentBlockHeight: number,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
+  ) {
+    // 解冻位名，更换拥有者
+    eventEmitter.on(
+      "unfrozenCertificate",
+      async ({ transaction, applyInfo }, next) => {
+        const { address, sourceChainName, sourceChainMagic, certificateId, frozenId } = applyInfo;
+
+        // 凭证是否存在
+        const memCertificate = await this.helperLogicVerifier.isCertificateExist(
+          sourceChainName,
+          sourceChainMagic,
+          certificateId,
+          currentBlockHeight,
+        );
+        // 凭证已经被销毁
+        if (memCertificate.status === ASSET_STATUS.DESTROY) {
+          throw new ConsensusException(ERROR_LIST.CERTIFICATE_ALREADY_DESTROY, {
+            certificateId,
+          });
+        }
+        // 位名尚未冻结
+        if (memCertificate.status !== ASSET_STATUS.FROZEN) {
+          throw new ConsensusException(ERROR_LIST.CERTIFICATE_NOT_FROZEN, {
+            certificateId,
+          });
+        }
+        // 冻结 id 不匹配
+        if (memCertificate.frozenId !== frozenId) {
+          throw new ConsensusException(ERROR_LIST.SHOULD_BE, {
+            to_compare_prop: `frozenId ${frozenId}`,
+            to_target: "transaction",
+            be_compare_prop: `certificate frozenId ${memCertificate.frozenId}`,
+          });
+        }
+        // if (memCertificate.possessorAddress === address) {
+        //   throw new ConsensusException(ERROR_LIST.NO_NEED_TO_PURCHASE_SPECIAL_ASSET, {
+        //     type: "certificate",
+        //     asset: certificateId,
+        //   });
+        // }
+        if (transaction.recipientId !== memCertificate.possessorAddress) {
+          throw new ConsensusException(ERROR_LIST.SHOULD_BE, {
+            to_compare_prop: `recipientId ${transaction.recipientId}`,
+            to_target: "transaction",
+            be_compare_prop: `Certificate possessor ${memCertificate.possessorAddress}`,
+          });
+        }
+
+        return next();
+      },
+      { taskname: `applyTransaction/logicVerifier/unfrozenCertificate` },
+    );
+  }
+
+  private __listenEventChangeCertificatePossessor(
+    currentBlockHeight: number,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
+  ) {
+    // 更改凭证的拥有者
+    eventEmitter.on(
+      "changeCertificatePossessor",
+      async ({ transaction, applyInfo }, next) => {
+        const { address, possessorAddress, sourceChainName, sourceChainMagic, certificateId } =
+          applyInfo;
+
+        if (address !== possessorAddress) {
+          // 不能将冻结账户设置为凭证的拥有者
+          await this.helperLogicVerifier.isAccountFrozen(possessorAddress);
+        }
+        // 凭证是否存在
+        const memCertificate = await this.helperLogicVerifier.isCertificateExist(
+          sourceChainName,
+          sourceChainMagic,
+          certificateId,
+          currentBlockHeight,
+        );
+        // 凭证已经被销毁
+        if (memCertificate.status === ASSET_STATUS.DESTROY) {
+          throw new ConsensusException(ERROR_LIST.CERTIFICATE_ALREADY_DESTROY, {
+            certificateId,
+          });
+        }
+        // 处于冻结状态的凭证不能更改拥有者
+        if (memCertificate.status === ASSET_STATUS.FROZEN) {
+          throw new ConsensusException(ERROR_LIST.CERTIFICATE_ALREADY_FROZEN, {
+            certificateId,
+          });
+        }
+        // 凭证的拥有者才能更改拥有者
+        if (transaction.senderId !== memCertificate.possessorAddress) {
+          throw new ConsensusException(ERROR_LIST.SHOULD_BE, {
+            to_compare_prop: `senderId ${transaction.senderId}`,
+            to_target: "transaction",
+            be_compare_prop: `Certificate possessor ${memCertificate.possessorAddress}`,
+          });
+        }
+
+        return next();
+      },
+      { taskname: `applyTransaction/logicVerifier/changeCertificatePossessor` },
+    );
+  }
+
   listenEvent(
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     currentBlockHeight: number,
@@ -2460,6 +2514,11 @@ export class EventLogicVerifier {
     this.__listenEventChangeEntityPossessor(currentBlockHeight, eventEmitter);
     this.__listenEventMigrateCertificate(eventEmitter);
     this.__listenEventPayTax(currentBlockHeight, eventEmitter);
+    this.__listenEventIssueCertificate(currentBlockHeight, eventEmitter);
+    this.__listenEventDestroyCertificate(currentBlockHeight, eventEmitter);
+    this.__listenEventFrozenCertificate(currentBlockHeight, eventEmitter);
+    this.__listenEventUnfrozenCertificate(currentBlockHeight, eventEmitter);
+    this.__listenEventChangeCertificatePossessor(currentBlockHeight, eventEmitter);
   }
 
   /**

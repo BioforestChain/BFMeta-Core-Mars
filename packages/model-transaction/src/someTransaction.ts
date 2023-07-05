@@ -95,8 +95,26 @@ export enum TRANSACTION_TYPES_BASE {
   /**接受批量任意资产全量交换 */
   BE_EXCHANGE_ANY_MULTI_ALL = "ECA-05",
 
+  /**创建凭证 */
+  ISSUE_CERTIFICATE = "CRT-00",
+  /**销毁凭证 */
+  DESTROY_CERTIFICATE = "CRT-01",
+
   /**个性事件 */
   CUSTOM = "CUS-00",
+
+  /**组合事件 */
+  MULTIPLE = "MTP-00",
+
+  /**承诺事件 */
+  PROMISE = "PMS-00",
+  /**承诺兑现事件 */
+  PROMISE_RESOLVE = "PMS-01",
+
+  /**宏事件 */
+  MACRO = "MAC-00",
+  /**宏调用事件 */
+  MACRO_CALL = "MAC-01",
 }
 
 /**
@@ -168,6 +186,9 @@ export const TRANSACTION_TYPES_MAP = (() => {
 
       [TRANSACTION_TYPES_BASE.TO_EXCHANGE_ANY_MULTI_ALL, ATOM_TRS.ToExchangeAnyMultiAllTransaction],
       [TRANSACTION_TYPES_BASE.BE_EXCHANGE_ANY_MULTI_ALL, ATOM_TRS.BeExchangeAnyMultiAllTransaction],
+
+      [TRANSACTION_TYPES_BASE.ISSUE_CERTIFICATE, ATOM_TRS.IssueCertificateTransaction],
+      [TRANSACTION_TYPES_BASE.DESTROY_CERTIFICATE, ATOM_TRS.DestroyCertificateTransaction],
     ] as [TRANSACTION_TYPES_BASE, typeof Transaction][]
   ).forEach(([K, M]) => {
     BASE_MODEL.set(K, M);

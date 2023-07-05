@@ -11,7 +11,7 @@ import {
   AccountModel,
   getBfchainCoreEntry,
   getGenesisAccount,
-  getRandomDAppid,
+  getRandomDAppId,
 } from "../include";
 
 const genesisAddress = getGenesisAccount().address;
@@ -81,7 +81,7 @@ async function getDappTransaction(
   await getDappTransaction(
     xx,
     {
-      dappid: getRandomDAppid(),
+      dappid: getRandomDAppId(),
       sourceChainName: "bfchain",
       sourceChainMagic: bfchainCore.config.magic,
       type: DAPP_TYPE.PAID_APP,
@@ -93,7 +93,7 @@ async function getDappTransaction(
   await getDappTransaction(
     xxx,
     {
-      dappid: getRandomDAppid(),
+      dappid: getRandomDAppId(),
       sourceChainName: "bfchain",
       sourceChainMagic: bfchainCore.config.magic,
       type: DAPP_TYPE.FREE_APP,

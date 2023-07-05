@@ -408,6 +408,21 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
               });
             }
           }
+        } else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.CERTIFICATE) {
+          taskList.next = eventEmitter.emit("unfrozenCertificate", {
+            type: "unfrozenCertificate",
+            transaction,
+            applyInfo: {
+              address: senderId,
+              publicKeyBuffer: senderPublicKeyBuffer,
+              possessorAddress,
+              sourceChainName: toExchangeChainName,
+              sourceChainMagic: toExchangeSource,
+              certificateId: toExchangeAssetType,
+              status: ASSET_STATUS.NORMAL,
+              frozenId: transactionSignature,
+            },
+          });
         } else {
           throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
             prop: `toExchangeParentAssetType ${toExchangeParentAssetType}`,
@@ -543,6 +558,21 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
             },
           );
         }
+      }
+      // 接收账户成为 certificateId 的拥有者
+      else if (beExchangeParentAssetType === PARENT_ASSET_TYPE.CERTIFICATE) {
+        taskList.next = eventEmitter.emit("changeCertificatePossessor", {
+          type: "changeCertificatePossessor",
+          transaction,
+          applyInfo: {
+            address: senderId,
+            publicKeyBuffer: senderPublicKeyBuffer,
+            possessorAddress: recipientId,
+            sourceChainName: beExchangeChainName,
+            sourceChainMagic: beExchangeSource,
+            certificateId: beExchangeAssetType,
+          },
+        });
       } else {
         throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `beExchangeParentAssetType ${beExchangeParentAssetType}`,

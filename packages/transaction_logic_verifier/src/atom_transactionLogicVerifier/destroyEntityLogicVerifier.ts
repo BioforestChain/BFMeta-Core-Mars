@@ -5,7 +5,7 @@ import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 
 const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
   "VERIFIER",
-  "GrabAssetLogicVerifier",
+  "DestroyEntityLogicVerifier",
 );
 
 @Injectable()

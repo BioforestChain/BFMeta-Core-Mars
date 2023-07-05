@@ -153,6 +153,8 @@ export const ERROR_LIST = {
     "001-00064",
     "Invalid {taskLabel} toAuthSignSignature",
   ),
+  INVALID_MACRO_INPUT_TYPE: new ErrorCode("001-00065", "Invalid macro input type: {type}"),
+  ALREADY_EXPIRED: new ErrorCode("001-00066", "{prop} in {target} already expired"),
   // #endregion
 
   // #region logic
@@ -179,11 +181,11 @@ export const ERROR_LIST = {
   ),
   INVALID_TRANSACTION_APPLY_BLOCK_HEIGHT: new ErrorCode(
     "001-11007",
-    "Invalid transaction apply block height, reason {reason}",
+    "Invalid transaction({signature}) apply block height, reason {reason}",
   ),
   INVALID_TRANSACTION_EFFECTIVE_BLOCK_HEIGHT: new ErrorCode(
     "001-11008",
-    "Invalid transaction effective block height, reason {reason}",
+    "Invalid transaction({signature}) effective block height, reason {reason}",
   ),
   INVALID_TRANSACTION_FROM_MAGIC: new ErrorCode(
     "001-11009",
@@ -396,6 +398,38 @@ export const ERROR_LIST = {
   NOT_ENOUGH_ISSUE_ENTITY_TIMES: new ErrorCode(
     "001-11073",
     "Not enough issue entity times, entityFactory {entityFactory}",
+  ),
+  NOT_BEGIN_RESOLVE_YET: new ErrorCode(
+    "001-11074",
+    "Promise is not begin to resolve yet, promiseId {promiseId}",
+  ),
+  CERTIFICATE_IS_NOT_EXIST: new ErrorCode(
+    "001-11075",
+    "Certificate is not exist, certificateId {certificateId}",
+  ),
+  CERTIFICATE_IS_ALREADY_EXIST: new ErrorCode(
+    "001-11076",
+    "Certificate is already exist, certificateId {certificateId}, errorId {errorId}",
+  ),
+  CAN_NOT_DESTROY_CERTIFICATE: new ErrorCode(
+    "001-11077",
+    "Can not destroy certificate, certificateId {certificateId}, reason {reason}",
+  ),
+  ACCOUNT_NOT_CERTIFICATE_POSSESSOR: new ErrorCode(
+    "001-11078",
+    "Account with address {address} not certificate {certificateId} possessor, errorId {errorId}",
+  ),
+  CERTIFICATE_NOT_FROZEN: new ErrorCode(
+    "001-11079",
+    "Certificate not frozen, certificateId {certificateId}",
+  ),
+  CERTIFICATE_ALREADY_FROZEN: new ErrorCode(
+    "001-11080",
+    "Certificate already frozen, certificateId {certificateId}",
+  ),
+  CERTIFICATE_ALREADY_DESTROY: new ErrorCode(
+    "001-11081",
+    "Certificate already destroy, certificateId {certificateId}",
   ),
 
   // block logic

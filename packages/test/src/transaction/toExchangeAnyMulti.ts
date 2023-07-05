@@ -11,7 +11,8 @@ import {
   getGenesisAccount,
   AccountModel,
   getBfchainCoreEntry,
-  getRandomDAppid,
+  getRandomDAppId,
+  getRandomCertificateId,
 } from "../include";
 
 async function getToExchangeAnyMultiTransaction(
@@ -32,7 +33,7 @@ async function getToExchangeAnyMultiTransaction(
     timestamp: 770880, // 生成交易时间戳
     fee: "78622", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
-    dappid: getRandomDAppid(), // 交易所属的 dappid
+    dappid: getRandomDAppId(), // 交易所属的 dappid
     lns: bfchainCore.config.genesisLocationName,
     sourceIP: "127.0.0.1", // 交易来源 ip
     fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
@@ -105,7 +106,7 @@ async function getToExchangeAnyMultiTransaction(
           toExchangeSource: bfchainCore.config.magic,
           toExchangeChainName: "bfchain",
           toExchangeParentAssetType: PARENT_ASSET_TYPE.DAPP,
-          toExchangeAssetType: getRandomDAppid(),
+          toExchangeAssetType: getRandomDAppId(),
           toExchangeAssetPrealnum: "1",
         },
       ],
@@ -113,7 +114,7 @@ async function getToExchangeAnyMultiTransaction(
         beExchangeSource: bfchainCore.config.magic,
         beExchangeChainName: "bfchain",
         beExchangeParentAssetType: PARENT_ASSET_TYPE.ASSETS,
-        beExchangeAssetType: "BFT",
+        beExchangeAssetType: "QAQ",
         beExchangeAssetPrealnum: "1000",
 
         // beExchangeSource: bfchainCore.config.magic,
@@ -145,7 +146,7 @@ async function getToExchangeAnyMultiTransaction(
           toExchangeSource: bfchainCore.config.magic,
           toExchangeChainName: "bfchain",
           toExchangeParentAssetType: PARENT_ASSET_TYPE.DAPP,
-          toExchangeAssetType: getRandomDAppid(),
+          toExchangeAssetType: getRandomDAppId(),
           toExchangeAssetPrealnum: "1",
         },
       ],
@@ -229,7 +230,7 @@ async function getToExchangeAnyMultiTransaction(
         beExchangeSource: bfchainCore.config.magic,
         beExchangeChainName: "bfchain",
         beExchangeParentAssetType: PARENT_ASSET_TYPE.DAPP,
-        beExchangeAssetType: getRandomDAppid(),
+        beExchangeAssetType: getRandomDAppId(),
         beExchangeAssetPrealnum: "1",
       },
     };
@@ -297,7 +298,7 @@ async function getToExchangeAnyMultiTransaction(
           toExchangeSource: bfchainCore.config.magic,
           toExchangeChainName: "bfchain",
           toExchangeParentAssetType: PARENT_ASSET_TYPE.DAPP,
-          toExchangeAssetType: getRandomDAppid(),
+          toExchangeAssetType: getRandomDAppId(),
           toExchangeAssetPrealnum: "1",
         },
       ],
@@ -332,7 +333,7 @@ async function getToExchangeAnyMultiTransaction(
           toExchangeSource: bfchainCore.config.magic,
           toExchangeChainName: "bfchain",
           toExchangeParentAssetType: PARENT_ASSET_TYPE.DAPP,
-          toExchangeAssetType: getRandomDAppid(),
+          toExchangeAssetType: getRandomDAppId(),
           toExchangeAssetPrealnum: "1",
         },
         {
@@ -340,6 +341,13 @@ async function getToExchangeAnyMultiTransaction(
           toExchangeChainName: "bfchain",
           toExchangeParentAssetType: PARENT_ASSET_TYPE.LOCATION_NAME,
           toExchangeAssetType: `llq.${bfchainCore.config.chainName}`,
+          toExchangeAssetPrealnum: "1",
+        },
+        {
+          toExchangeSource: bfchainCore.config.magic,
+          toExchangeChainName: "bfchain",
+          toExchangeParentAssetType: PARENT_ASSET_TYPE.CERTIFICATE,
+          toExchangeAssetType: getRandomCertificateId(),
           toExchangeAssetPrealnum: "1",
         },
       ],
