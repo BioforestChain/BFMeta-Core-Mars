@@ -237,6 +237,12 @@ export class GenerateBlockCore<T extends Block> {
     const MAX_VOTES_PER_BLOCK = this.config.maxVotesPerBlock;
     const { height, generatorPublicKey, statisticInfo: blockStatisticsInfo } = block;
     const { tpowOfWorkExemptionBlocks, maxBlockSize } = this.config;
+    let maxBlockBlobSize = this.config.maxBlockBlobSize;
+    if (eventEmitter.customMaxBlobSizeGetter) {
+      const customMaxBlobSize = eventEmitter.customMaxBlobSizeGetter();
+      maxBlockBlobSize =
+        customMaxBlobSize < maxBlockBlobSize ? customMaxBlobSize : maxBlockBlobSize;
+    }
     /**所有事件的sha256hash */
     const payloadHash = this.cryptoHelper.sha256();
     /**区块打包的投票交易数 */
@@ -377,6 +383,9 @@ export class GenerateBlockCore<T extends Block> {
           }
           // 更新 blob 长度
           blobSize += tranItem.transaction.blobSize;
+          if (blobSize > maxBlockBlobSize * 0.95) {
+            await eventEmitter.emit("nearMaxBlobSize", { blobSize });
+          }
           await txFactory.endDealTransaction(tranItem, eventEmitter);
           if (type === VOTE) {
             numberOfVotes++;

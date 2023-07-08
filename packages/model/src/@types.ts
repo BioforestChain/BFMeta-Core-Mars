@@ -1079,6 +1079,9 @@ declare namespace BFChainCore {
     nearMaxPayloadLength: BFChainUtil.EventInOut<{
       payloadLength: number;
     }>;
+    nearMaxBlobSize: BFChainUtil.EventInOut<{
+      blobSize: number;
+    }>;
     /**处理完成所有交易 */
     finishedDealTransactions: BFChainUtil.EventInOut<Block>;
 
@@ -1095,6 +1098,7 @@ declare namespace BFChainCore {
   };
   type ApplyTransactionEventEmitter<ES extends BFChainUtil.EventInOutMap = {}> = {
     taskname?: string;
+    customMaxBlobSizeGetter?: () => number;
     tIndexGetter?: (
       tib: TransactionInBlock,
     ) => BFChainUtil.PromiseMaybe<TransactionInBlock["tIndex"]>;

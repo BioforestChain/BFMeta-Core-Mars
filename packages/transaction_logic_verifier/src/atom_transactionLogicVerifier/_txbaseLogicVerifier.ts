@@ -538,6 +538,25 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   }
 
   /**
+   * 检验交易的 blobSize 是否大于矿机和网络最大 blobSize
+   *
+   * @param transaction
+   * @param miningMachineMaxBlobSize
+   */
+  checkTransactionBlobSize(transaction: T, miningMachineMaxBlobSize: number) {
+    const { maxBlockBlobSize } = this.configHelper;
+    const maxBlobSize =
+      maxBlockBlobSize < miningMachineMaxBlobSize ? maxBlockBlobSize : miningMachineMaxBlobSize;
+    if (transaction.blobSize > maxBlobSize) {
+      throw new ConsensusException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
+        prop: `transaction blob size ${transaction.blobSize}`,
+        target: "transaction",
+        field: maxBlobSize,
+      });
+    }
+  }
+
+  /**
    * 查询交易是否已经在未处理交易中
    *
    * @param transaction
