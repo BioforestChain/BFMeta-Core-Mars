@@ -54,21 +54,8 @@ export class IssueEntityFactoryTransactionFactoryV1 extends IssueEntityFactoryTr
   ) {
     return wrapTaskList((taskList) => {
       const { senderId, recipientId, senderPublicKeyBuffer, fee } = transaction;
-
-      // 扣除手续费
-      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(config.magic, config.assetType);
-      taskList.next = eventEmitter.emit("fee", {
-        type: "fee",
-        transaction,
-        applyInfo: {
-          address: senderId,
-          publicKeyBuffer: senderPublicKeyBuffer,
-          assetInfo,
-          amount: "-" + fee,
-          sourceAmount: fee,
-        },
-      });
-
+      // 扣除手续费并且统计交易数量
+      taskList.next = super.applyTransaction(transaction, eventEmitter, config);
       const {
         sourceChainName,
         sourceChainMagic,
@@ -77,13 +64,12 @@ export class IssueEntityFactoryTransactionFactoryV1 extends IssueEntityFactoryTr
         entityFrozenAssetPrealnum,
         purchaseAssetPrealnum,
       } = transaction.asset.issueEntityFactory;
-
       // 计算需要销毁的主权益数
       const destroyAssets = this.transactionHelper.calcDestroyMainAssetsOfIsseuEntityFactory(
         entityPrealnum,
         config,
       );
-
+      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(config.magic, config.assetType);
       // 发起账户扣除主权益
       taskList.next = eventEmitter.emit("asset", {
         type: "asset",

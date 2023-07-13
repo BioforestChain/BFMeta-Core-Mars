@@ -921,22 +921,23 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     config = this.configHelper,
   ): Promise<unknown> {
     const assetInfo = this.chainAssetInfoHelper.getAssetInfo(config.magic, config.assetType);
-    await event.emit("fee", {
-      type: "fee",
-      transaction: trs,
-      applyInfo: {
-        address: trs.senderId,
-        publicKeyBuffer: trs.senderPublicKeyBuffer,
-        assetInfo,
-        amount: "-" + trs.fee,
-        sourceAmount: trs.fee,
-      },
+    return wrapTaskList((taskList) => {
+      taskList.next = event.emit("fee", {
+        type: "fee",
+        transaction: trs,
+        applyInfo: {
+          address: trs.senderId,
+          publicKeyBuffer: trs.senderPublicKeyBuffer,
+          assetInfo,
+          amount: "-" + trs.fee,
+          sourceAmount: trs.fee,
+        },
+      });
+      taskList.next = event.emit("count", {
+        type: "count",
+        transaction: trs,
+      });
     });
-    await event.emit("count", {
-      type: "count",
-      transaction: trs,
-    });
-    return;
   }
 
   /**

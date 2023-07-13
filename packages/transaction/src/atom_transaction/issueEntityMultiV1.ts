@@ -297,19 +297,9 @@ export class IssueEntityMultiTransactionFactoryV1 extends TransactionFactory<Iss
         entityFactory,
       } = transaction.asset.issueEntityMulti;
       const { factoryId, entityFrozenAssetPrealnum, purchaseAssetPrealnum } = entityFactory;
-      // 扣除手续费
-      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(config.magic, config.assetType);
-      taskList.next = eventEmitter.emit("fee", {
-        type: "fee",
-        transaction,
-        applyInfo: {
-          address: senderId,
-          publicKeyBuffer: senderPublicKeyBuffer,
-          assetInfo,
-          amount: "-" + fee,
-          sourceAmount: fee,
-        },
-      });
+      // 扣除手续费并且统计交易数量
+      taskList.next = super.applyTransaction(transaction, eventEmitter, config);
+
       // 发行 entity
       taskList.next = eventEmitter.emit("issueEntityMultiV1", {
         type: "issueEntityMultiV1",
@@ -330,6 +320,7 @@ export class IssueEntityMultiTransactionFactoryV1 extends TransactionFactory<Iss
       });
       const numberOfEntities = entityStructList.length;
       // 冻结主权益，销毁时赎回
+      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(config.magic, config.assetType);
       if (entityFrozenAssetPrealnum !== "0") {
         const sourceAmount = (
           BigInt(entityFrozenAssetPrealnum) * BigInt(numberOfEntities)

@@ -85,19 +85,8 @@ export class IssueEntityTransactionFactoryV1 extends IssueEntityTransactionFacto
         entityFactory,
       } = transaction.asset.issueEntity;
       const { factoryId, entityFrozenAssetPrealnum, purchaseAssetPrealnum } = entityFactory;
-      // 扣除手续费
-      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(config.magic, config.assetType);
-      taskList.next = eventEmitter.emit("fee", {
-        type: "fee",
-        transaction,
-        applyInfo: {
-          address: senderId,
-          publicKeyBuffer: senderPublicKeyBuffer,
-          assetInfo,
-          amount: "-" + fee,
-          sourceAmount: fee,
-        },
-      });
+      // 扣除手续费并且统计交易数量
+      taskList.next = super.applyTransaction(transaction, eventEmitter, config);
       // 发行 entity
       taskList.next = eventEmitter.emit("issueEntityV1", {
         type: "issueEntityV1",
@@ -117,6 +106,7 @@ export class IssueEntityTransactionFactoryV1 extends IssueEntityTransactionFacto
           status: ASSET_STATUS.NORMAL,
         },
       });
+      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(config.magic, config.assetType);
       // 冻结主权益，销毁时赎回
       if (entityFrozenAssetPrealnum !== "0") {
         const minEffectiveHeight =
