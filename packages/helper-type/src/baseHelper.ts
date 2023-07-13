@@ -375,8 +375,11 @@ export class BaseHelper {
     if (!(value && typeof value.denominator === "string" && typeof value.numerator === "string")) {
       return false;
     }
-    // 分母不能为 0
-    if (value.denominator === "0") {
+    const { numerator, denominator } = value;
+    if (this.isStringNumber(numerator) === false) {
+      return false;
+    }
+    if (this.isPositiveStringNumber(denominator) === false) {
       return false;
     }
     return condition(value);
@@ -789,7 +792,7 @@ export class BaseHelper {
    *
    * @param stringNumber
    */
-  isValidStringNumber(stringNumber: any) {
+  isStringNumber(stringNumber: any) {
     if (!this.isString(stringNumber)) {
       return false;
     }
@@ -797,23 +800,23 @@ export class BaseHelper {
   }
 
   isPositiveStringNumber(stringNumber: any) {
-    return this.isValidStringNumber(stringNumber) && BigInt(stringNumber) > BigInt(0);
+    return this.isStringNumber(stringNumber) && BigInt(stringNumber) > BigInt(0);
   }
 
   /**资产数量是否合法： 只能是数字组成的字符串 */
-  isValidAssetNumber = this.isValidStringNumber;
+  isValidAssetNumber = this.isStringNumber;
 
   /**权益数量是否合法： 只能是数字组成的字符串 */
-  isValidAccountEquity = this.isValidStringNumber;
+  isValidAccountEquity = this.isStringNumber;
 
   /**区块的参与度是否合法： 只能是数字组成的字符串 */
-  isValidBlockParticipation = this.isValidStringNumber;
+  isValidBlockParticipation = this.isStringNumber;
 
   /**权益比例是否合法： 只能是数字组成的字符串 */
-  isValidEquityRate = this.isValidStringNumber;
+  isValidEquityRate = this.isStringNumber;
 
   /**权益数量是否合法： 只能是数字组成的字符串 */
-  isValidAssetPrealnum = this.isValidStringNumber;
+  isValidAssetPrealnum = this.isStringNumber;
 
   /**
    * 位名是否合法
@@ -1180,8 +1183,8 @@ export class BaseHelper {
     const { toExchangeAssetWeight, beExchangeAssetWeight } = rate;
     if (
       !(
-        this.isValidStringNumber(rate.toExchangeAssetWeight) &&
-        this.isValidStringNumber(rate.beExchangeAssetWeight)
+        this.isStringNumber(rate.toExchangeAssetWeight) &&
+        this.isStringNumber(rate.beExchangeAssetWeight)
       )
     ) {
       return false;
