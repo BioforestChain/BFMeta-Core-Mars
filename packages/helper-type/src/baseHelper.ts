@@ -365,6 +365,7 @@ export class BaseHelper {
       /**分母 */
       denominator: string;
     }) => R,
+    max = 32,
   ): value is {
     /**分子 */
     numerator: string;
@@ -376,10 +377,10 @@ export class BaseHelper {
       return false;
     }
     const { numerator, denominator } = value;
-    if (this.isStringNumber(numerator) === false) {
+    if (this.isStringNumber(numerator) === false || numerator.length > max) {
       return false;
     }
-    if (this.isPositiveStringNumber(denominator) === false) {
+    if (this.isPositiveStringNumber(denominator) === false || denominator.length > max) {
       return false;
     }
     return condition(value);
@@ -390,7 +391,10 @@ export class BaseHelper {
    *
    * @param value
    */
-  isPositiveBigFloatContainZero(value: unknown): value is {
+  isPositiveBigFloatContainZero(
+    value: unknown,
+    max = 32,
+  ): value is {
     /**分子 */
     numerator: string;
     /**分母 */
@@ -403,6 +407,7 @@ export class BaseHelper {
           numerator: 0,
           denominator: 888,
         }) >= 0,
+      max,
     );
   }
 
@@ -411,7 +416,10 @@ export class BaseHelper {
    *
    * @param value
    */
-  isPositiveBigFloatNotContainZero(value: unknown): value is {
+  isPositiveBigFloatNotContainZero(
+    value: unknown,
+    max = 32,
+  ): value is {
     /**分子 */
     numerator: string;
     /**分母 */
@@ -424,6 +432,7 @@ export class BaseHelper {
           numerator: 0,
           denominator: 888,
         }) > 0,
+      max,
     );
   }
 
