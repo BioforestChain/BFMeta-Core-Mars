@@ -1312,4 +1312,11 @@ export class BaseHelper {
     }
     return /^[A-Za-z0-9\-_]*$/.test(items[1]);
   }
+
+  isValidMacroInputName(name: string) {
+    if (this.isString(name) === false) {
+      return false;
+    }
+    return /^\S.{1,30}\S$/.test(name);
+  }
 }

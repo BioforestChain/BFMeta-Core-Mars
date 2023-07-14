@@ -131,6 +131,12 @@ export class MacroTransactionFactory extends TransactionFactory<MacroTransaction
           target: `macro.inputs.input ${JSON.stringify(input)}`,
         });
       }
+      if (baseHelper.isValidMacroInputName(name) === false) {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
+          prop: "name",
+          target: `macro.inputs.input ${JSON.stringify(input)}`,
+        });
+      }
       if (nameSet.has(name)) {
         throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_DUPLICATE, {
           prop: `name ${name}`,
