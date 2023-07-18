@@ -43,6 +43,10 @@ export class MacroCallLogicVerifier extends TransactionLogicVerifier {
     const macroTransaction = await this.complexTransactionLogicHelper.getMacroTransaction(
       transaction,
     );
+    /// 基础校验
+    const factory = this.transactionCore.getTransactionFactoryFromType(macroTransaction.type);
+    await factory.verify(macroTransaction);
+    /// 逻辑校验
     const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
       macroTransaction.type,
     );
