@@ -332,6 +332,8 @@ export class Block<AJ extends object = object>
             blobSizeLong: transactionInfo.blobSizeLong,
             statisticInfo: transactionInfo.statisticInfo,
             transactionInBlockBufferList: [],
+            totalAmount: transactionInfo.totalAmount,
+            totalFee: transactionInfo.totalFee,
           },
         };
       } else {
@@ -339,13 +341,15 @@ export class Block<AJ extends object = object>
           value: {
             startTindex: transactionInfo.startTindex,
             offset: transactionInfo.offset,
-            numberOfTransactions: skipOrCustomTransactions.length,
+            numberOfTransactions: transactionInfo.numberOfTransactions,
             payloadHashBuffer: transactionInfo.payloadHashBuffer,
             payloadLength: transactionInfo.payloadLength,
             /// 这 protobuf 秀的我头皮发麻 🌾
             blobSizeLong: transactionInfo.blobSizeLong,
             statisticInfo: transactionInfo.statisticInfo,
             transactionInBlockBufferList: skipOrCustomTransactions,
+            totalAmount: transactionInfo.totalAmount,
+            totalFee: transactionInfo.totalFee,
           },
         };
       }
