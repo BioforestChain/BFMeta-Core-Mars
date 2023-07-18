@@ -74,6 +74,16 @@ export class MacroCallTransactionFactory extends TransactionFactory<MacroCallTra
             });
           }
           break;
+        case MACRO_INPUT_TYPE.PUBLICKEY:
+          if (this.baseHelper.isValidPublicKey(value) === false) {
+            throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
+              to_compare_prop: `${name} ${value}`,
+              to_target: "inputs",
+              be_compare_prop: `pattern chain publicKey`,
+              be_target: "defineInput",
+            });
+          }
+          break;
         case MACRO_INPUT_TYPE.SIGNATURE:
           if (this.transactionHelper.isValidTransactionSignature(value) === false) {
             throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
@@ -132,7 +142,9 @@ export class MacroCallTransactionFactory extends TransactionFactory<MacroCallTra
         });
       }
     }
+    console.log(transaction);
     const transactionModel = await this.transactionCore.recombineTransaction<T>(transaction);
+    console.log(transactionModel);
     if (skipVerify === false) {
       const factory = this.transactionCore.getTransactionFactoryFromType(transactionModel.type);
       await factory.verify(transactionModel, this.configHelper);

@@ -19,12 +19,8 @@ export * from "@bfchain/core-util-base58";
 
 export * from "./templateRemark";
 
-import { TransactionCore } from "@bfchain/core-transaction";
-import { TransactionLogicVerifierCore } from "@bfchain/core-transaction-logic-verifier";
-import { ChannelCore } from "@bfchain/core-channel";
-import { BlockCore } from "@bfchain/core-block";
-import { BlockLogicVerifierCore } from "@bfchain/core-block-logic-verifier";
-import { BlockTickerCore } from "@bfchain/core-block-ticker";
+import { Injectable, Inject, ModuleStroge, Resolve, I18N } from "@bfchain/util";
+
 import {
   ConfigHelper,
   Base58Helper,
@@ -42,7 +38,13 @@ import {
   RegisterChainCertificateHelper,
   JSBIHelper,
 } from "@bfchain/core-helper";
-import { Injectable, Inject, ModuleStroge, Resolve, I18N } from "@bfchain/util";
+import { ChannelCore } from "@bfchain/core-channel";
+import { BlockCore } from "@bfchain/core-block";
+import { TransactionCore } from "@bfchain/core-transaction";
+import { BlockTickerCore } from "@bfchain/core-block-ticker";
+import { BlockLogicVerifierCore } from "@bfchain/core-block-logic-verifier";
+import { TransactionLogicVerifierCore } from "@bfchain/core-transaction-logic-verifier";
+import { ComplexTransactionLogicHelper } from "@bfchain/core-transaction-complex-logic-verifier";
 
 import { PatchInstaller } from "@bfchain/core-patch";
 import { ERROR_LIST, translatedErrorCodeListMap } from "@bfchain/core-util-exception-errorcode";
@@ -68,6 +70,7 @@ export class BFChainCore {
     public chainAssetInfoHelper: ChainAssetInfoHelper,
     public migrateCertificateHelper: MigrateCertificateHelper,
     public registerChainCertificateHelper: RegisterChainCertificateHelper,
+    public complexTransactionLogicHelper: ComplexTransactionLogicHelper,
     public configMap: ConfigHelperMap,
     //#region 核心模块
     /**区块 */

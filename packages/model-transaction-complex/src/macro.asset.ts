@@ -4,10 +4,7 @@ import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception
 import { Transaction } from "@bfchain/core-model-transaction-base";
 import { TRANSACTION_TYPES_MAP } from "@bfchain/core-model-transaction";
 
-const { ArgumentFormatException, error, IllegalStateException } = CoreExceptionGenerator(
-  "MODEL",
-  "transactionModel",
-);
+const { ArgumentFormatException } = CoreExceptionGenerator("MODEL", "transactionModel");
 
 /**
  * macro 交易 asset 模型

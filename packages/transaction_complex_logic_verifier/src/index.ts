@@ -56,6 +56,7 @@ TRANSACTION_LOGIC_VERIFIER_TYPES_MAP.LVK.set(
 TRANSACTION_LOGIC_VERIFIER_TYPES_MAP.KLV.set(TRANSACTION_TYPES_BASE.CUSTOM, CustomLogicVerifier);
 TRANSACTION_LOGIC_VERIFIER_TYPES_MAP.LVK.set(CustomLogicVerifier, TRANSACTION_TYPES_BASE.CUSTOM);
 
+export * from "./complexTransactionLogicHelper";
 export * from "./registerChainLogicVerifier";
 export * from "./multipleLogicVerifier";
 export * from "./promiseLogicVerifier";

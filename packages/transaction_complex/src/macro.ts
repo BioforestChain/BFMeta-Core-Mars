@@ -234,6 +234,7 @@ export class MacroTransactionFactory extends TransactionFactory<MacroTransaction
       } else if (
         (type === MACRO_INPUT_TYPE.TEXT ||
           type === MACRO_INPUT_TYPE.ADDRESS ||
+          type === MACRO_INPUT_TYPE.PUBLICKEY ||
           type === MACRO_INPUT_TYPE.SIGNATURE) === false
       ) {
         throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {

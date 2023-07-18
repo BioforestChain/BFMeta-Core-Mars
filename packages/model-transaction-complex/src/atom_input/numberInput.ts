@@ -1,4 +1,4 @@
-import { Message, Field, Type } from "@bfchain/protobuf";
+import { Field, Type } from "@bfchain/protobuf";
 import { FractionBigIntModel } from "@bfchain/core-model-common";
 import { BaseInputModel } from "./_baseInput";
 import { MACRO_INPUT_TYPE, MACRO_NUMBER_FORMAT } from "./constants";

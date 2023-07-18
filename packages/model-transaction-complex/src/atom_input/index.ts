@@ -14,6 +14,7 @@ import { NumberInputModel } from "./numberInput";
 import { CalcInputModel } from "./calcInput";
 import { TextInputModel } from "./textInput";
 import { AddressInputModel } from "./addressInput";
+import { PublicKeyInputModel } from "./publicKeyInput";
 import { SignatureInputModel } from "./signatureInput";
 import { MACRO_INPUT_TYPE } from "./constants";
 
@@ -31,6 +32,7 @@ export const MACRO_INPUT_TYPES_MAP = (() => {
       [MACRO_INPUT_TYPE.CALC, CalcInputModel],
       [MACRO_INPUT_TYPE.TEXT, TextInputModel],
       [MACRO_INPUT_TYPE.ADDRESS, AddressInputModel],
+      [MACRO_INPUT_TYPE.PUBLICKEY, PublicKeyInputModel],
       [MACRO_INPUT_TYPE.SIGNATURE, SignatureInputModel],
     ] as [MACRO_INPUT_TYPE, typeof BaseInputModel][]
   ).forEach(([K, M]) => {

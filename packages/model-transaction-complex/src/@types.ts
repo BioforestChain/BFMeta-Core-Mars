@@ -70,6 +70,8 @@ declare namespace BFChainCore {
     > extends BaseInputJSON<T> {}
     interface AddressInputJSON
       extends TextInputJSON<import("./atom_input/constants").MACRO_INPUT_TYPE.ADDRESS> {}
+    interface PublicKeyInputJSON
+      extends TextInputJSON<import("./atom_input/constants").MACRO_INPUT_TYPE.PUBLICKEY> {}
     interface SignatureInputJSON
       extends TextInputJSON<import("./atom_input/constants").MACRO_INPUT_TYPE.SIGNATURE> {}
 
@@ -91,6 +93,7 @@ declare namespace BFChainCore {
     type InputJSON =
       | TextInputJSON
       | AddressInputJSON
+      | PublicKeyInputJSON
       | SignatureInputJSON
       | NumberInputJSON
       | CalcInputJSON;

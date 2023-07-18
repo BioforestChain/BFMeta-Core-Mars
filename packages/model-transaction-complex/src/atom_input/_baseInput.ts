@@ -1,5 +1,5 @@
+import type { MACRO_INPUT_TYPE } from "./constants";
 import { Message, Field, Type } from "@bfchain/protobuf";
-import type{ MACRO_INPUT_TYPE } from "./constants";
 
 @Type.d("BaseInputModel")
 export class BaseInputModel<T extends MACRO_INPUT_TYPE>

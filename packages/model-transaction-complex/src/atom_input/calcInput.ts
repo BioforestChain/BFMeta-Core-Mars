@@ -1,6 +1,6 @@
-import { Message, Field, Type } from "@bfchain/protobuf";
-import { NumberInputModel } from "./numberInput";
 import * as calc from "@bnqkl/calc";
+import { Field, Type } from "@bfchain/protobuf";
+import { NumberInputModel } from "./numberInput";
 import { MACRO_CALC_PRECISION, MACRO_INPUT_TYPE } from "./constants";
 
 @Type.d("CalcInputModel")

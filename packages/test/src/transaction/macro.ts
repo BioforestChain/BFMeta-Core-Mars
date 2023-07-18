@@ -1,3 +1,5 @@
+import * as util from "util";
+import { getHexFromArrayBuffer } from "@bfchain/util";
 import {
   TransferAssetTransaction,
   TransferAssetTransactionFactory,
@@ -8,6 +10,8 @@ import {
   MACRO_INPUT_TYPE,
   Transaction,
   MACRO_NUMBER_FORMAT,
+  MacroCallTransaction,
+  MacroCallTransactionFactory,
 } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
@@ -17,7 +21,6 @@ import {
   getRandomDAppId,
   getGenesisAccount,
 } from "../include";
-import * as util from "util";
 
 const _powCount: { [add: string]: number } = {};
 function getPOWInfo<T extends Transaction>(address: string) {
@@ -89,9 +92,14 @@ async function getTransferAssetTransaction(sender: AccountModel, bfchainCore: BF
     undefined,
   );
   if (pow) {
-    trs = await bfchainCore.transaction.transactionPowCalculator(trs, pow, keypair, secondKeypair);
+    trs = await bfchainCore.transaction.transactionPowCalculator<TransferAssetTransaction>(
+      trs,
+      pow,
+      keypair,
+      secondKeypair,
+    );
   }
-  return trs.toJSON();
+  return trs;
 }
 
 async function getMacroTransaction(
@@ -140,54 +148,80 @@ async function getMacroTransaction(
   );
 
   const trsJson = trs.toJSON();
+
   const xx = await bfchainCore.transaction.recombineTransaction<MacroTransaction>(trsJson);
 
   const factory = bfchainCore.transaction.getTransactionFactoryFromType(xx.type);
 
   await factory.verifySignature(xx);
 
-  console.log(trsJson);
-  console.log(trsJson.asset.macro);
+  // console.log(trsJson);
+  // console.log(trsJson.asset.macro);
   console.log(`json equal ${util.isDeepStrictEqual(trsJson, xx.toJSON())}`);
 }
 
 (async () => {
   const bfchainCore = await getBfchainCoreEntry();
 
+  const sender = getSenderWithoutSecondSecret();
+  const template = await getTransferAssetTransaction(sender, bfchainCore);
+  const defaultInputs: BFChainCore.Macro.InputJSON[] = [
+    {
+      type: MACRO_INPUT_TYPE.ADDRESS,
+      name: "senderId",
+      keyPath: "senderId",
+    },
+    {
+      type: MACRO_INPUT_TYPE.PUBLICKEY,
+      name: "senderPublicKey",
+      keyPath: "senderPublicKey",
+    },
+    {
+      type: MACRO_INPUT_TYPE.ADDRESS,
+      name: "recipientId",
+      keyPath: "recipientId",
+    },
+    {
+      type: MACRO_INPUT_TYPE.SIGNATURE,
+      name: "signature",
+      keyPath: "signature",
+    },
+    {
+      type: MACRO_INPUT_TYPE.NUMBER,
+      name: "amount",
+      keyPath: "asset.transferAsset.amount",
+      min: {
+        numerator: "10",
+        denominator: "1",
+      },
+      max: {
+        numerator: "200",
+        denominator: "2",
+      },
+      step: {
+        numerator: "20",
+        denominator: "1",
+      },
+      format: MACRO_NUMBER_FORMAT.STRING,
+    },
+    {
+      type: MACRO_INPUT_TYPE.NUMBER,
+      name: "nonce",
+      keyPath: "nonce",
+      format: MACRO_NUMBER_FORMAT.LITERAL,
+    },
+    {
+      type: MACRO_INPUT_TYPE.NUMBER,
+      name: "applyBlockHeight",
+      keyPath: "applyBlockHeight",
+      format: MACRO_NUMBER_FORMAT.STRING,
+    },
+  ];
   const macroAsset: BFChainCore.MacroJSON = {
-    inputs: [
-      {
-        type: MACRO_INPUT_TYPE.ADDRESS,
-        name: "qaq",
-        keyPath: "recipientId",
-      },
-      {
-        type: MACRO_INPUT_TYPE.SIGNATURE,
-        name: "qqq",
-        keyPath: "signature",
-      },
-      {
-        type: MACRO_INPUT_TYPE.NUMBER,
-        name: "qwq",
-        keyPath: "asset.transferAsset.amount",
-        min: {
-          numerator: "10",
-          denominator: "1",
-        },
-        max: {
-          numerator: "100",
-          denominator: "1",
-        },
-        step: {
-          numerator: "20",
-          denominator: "1",
-        },
-        format: MACRO_NUMBER_FORMAT.STRING,
-      },
-    ],
-    template: await getTransferAssetTransaction(getSenderWithoutSecondSecret(), bfchainCore),
+    inputs: defaultInputs,
+    template: template.toJSON(),
   };
 
-  await getMacroTransaction(getSenderWithSecondSecret(), macroAsset, bfchainCore);
+  await getMacroTransaction(sender, macroAsset, bfchainCore);
   // await getMacroTransaction(getSenderWithoutSecondSecret(), macroAsset, bfchainCore);
 })();

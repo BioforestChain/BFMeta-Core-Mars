@@ -1,6 +1,7 @@
 export enum MACRO_INPUT_TYPE {
   TEXT = "text", // = 1 << INC++,
   ADDRESS = "address", // = (1 << INC++) | MACRO_INPUT_TYPE.TEXT,
+  PUBLICKEY = "publickey", // = (1 << INC++) | MACRO_INPUT_TYPE.TEXT,
   SIGNATURE = "signature", // = (1 << INC++) | MACRO_INPUT_TYPE.TEXT,
   NUMBER = "number", // = 1 << INC++,
   CALC = "calc", // = (1 << INC++) | MACRO_INPUT_TYPE.NUMBER,

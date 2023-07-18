@@ -31,6 +31,7 @@
     "src/atom_input/constants.ts",
     "src/atom_input/index.ts",
     "src/atom_input/numberInput.ts",
+    "src/atom_input/publicKeyInput.ts",
     "src/atom_input/signatureInput.ts",
     "src/atom_input/textInput.ts",
     "src/atom_input/_baseInput.ts",
