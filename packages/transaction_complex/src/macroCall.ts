@@ -142,9 +142,7 @@ export class MacroCallTransactionFactory extends TransactionFactory<MacroCallTra
         });
       }
     }
-    console.log(transaction);
     const transactionModel = await this.transactionCore.recombineTransaction<T>(transaction);
-    console.log(transactionModel);
     if (skipVerify === false) {
       const factory = this.transactionCore.getTransactionFactoryFromType(transactionModel.type);
       await factory.verify(transactionModel, this.configHelper);
