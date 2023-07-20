@@ -1,9 +1,9 @@
 {
   "version": 1,
   "height": 1,
-  "blockSize": 16542,
+  "blockSize": 16604,
   "timestamp": 0,
-  "signature": "d07a372d753546756f175e77039b8bd250dab4435b44dd25387a746704e726500b9c5aae4a2e56691d90f93a76ff4f1a666bacbef5721d8b6bf6ec9774d4d80c",
+  "signature": "d72e88404dfbfc60ad40fd1df5b9e931e3699138b4b15d2e27926871e4c1e98b05ba966f2a97be1267448e896a7efd351fca50cabe3294c790a960397f7f8603",
   "generatorPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
   "generatorEquity": "0",
   "previousBlockSignature": "",

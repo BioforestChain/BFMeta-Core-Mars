@@ -278,8 +278,9 @@ export class Block<AJ extends object = object>
     return this.transactionInfo.statisticInfo;
   }
   /**区块事件 */
-  @Field.d(Block.INC++, "bytes", "repeated")
-  transactionBufferList!: Uint8Array[];
+  get transactionBufferList() {
+    return this.transactionInfo.transactionInBlockBufferList;
+  }
   get transactions() {
     return this.transactionInfo.transactionInBlocks;
   }
