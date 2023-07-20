@@ -1,6 +1,6 @@
-import { Transaction } from "@bfchain/core-model-transaction-base";
-import { MarkAssetModel } from "@bfchain/core-model-transaction-asset";
 import { Type, Field } from "@bfchain/protobuf";
+import { MarkAssetModel } from "@bfchain/core-model-transaction-asset";
+import { AbstractTransaction } from "../abstractTransaction";
 
 /**
  * mark 交易模型
@@ -8,7 +8,7 @@ import { Type, Field } from "@bfchain/protobuf";
  */
 @Type.d("MarkTransaction")
 export class MarkTransaction
-  extends Transaction<BFChainCore.MarkAssetJSON>
+  extends AbstractTransaction<BFChainCore.MarkAssetJSON>
   implements BFChainCore.MarkTransactionJSON
 {
   toJSON!: () => BFChainCore.MarkTransactionJSON;

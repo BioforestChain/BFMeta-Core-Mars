@@ -1,5 +1,10 @@
-import type { DestroyEntityTransaction } from "@bfchain/core-model";
-import { Injectable } from "@bfchain/util";
+import {
+  IssueEntityTransactionV1,
+  IssueEntityMultiTransactionV1,
+  DestroyEntityTransaction,
+} from "@bfchain/core-model";
+import { Injectable, Inject } from "@bfchain/util";
+import { TransactionCore } from "@bfchain/core-transaction";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 
@@ -10,6 +15,9 @@ const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
 
 @Injectable()
 export class DestroyEntityLogicVerifier extends TransactionLogicVerifier {
+  @Inject("bfchain-core:TransactionCore", { dynamics: true })
+  public transactionCore!: TransactionCore;
+
   constructor() {
     super();
   }
@@ -29,17 +37,18 @@ export class DestroyEntityLogicVerifier extends TransactionLogicVerifier {
         transactionSignature,
         this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
       );
-
     if (!trsWithBlockSign) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST_OR_EXPIRED, {
         prop: `Transaction with signature ${transactionSignature}`,
         target: "destroyEntity",
       });
     }
-
-    const trs = trsWithBlockSign.transaction;
-    if (trs.type === this.transactionHelper.ISSUE_ENTITY) {
-      const entityInfo = (trs as BFChainCore.IssueEntityTransactionJSON).asset.issueEntity;
+    let issueEntitySenderId = "";
+    const trsJson = trsWithBlockSign.transaction;
+    const model = await this.transactionCore.recombineTransaction(trsJson);
+    const issueEntityTransaction = model.as(IssueEntityTransactionV1, transactionSignature);
+    if (issueEntityTransaction) {
+      const entityInfo = issueEntityTransaction.asset.issueEntity;
       if (entityInfo.entityId !== destroyEntity.entityId) {
         throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
           to_compare_prop: `entityId ${destroyEntity.entityId}`,
@@ -48,10 +57,20 @@ export class DestroyEntityLogicVerifier extends TransactionLogicVerifier {
           be_target: "issueEntityTransaction",
         });
       }
-    } else if (trs.type === this.transactionHelper.ISSUE_ENTITY_MULTI) {
-      const entityList = (
-        trs as BFChainCore.IssueEntityMultiTransactionV1JSON
-      ).asset.issueEntityMulti.entityStructList.map((item) => item.entityId);
+      issueEntitySenderId = issueEntityTransaction.senderId;
+    } else {
+      const issueEntityMultiTransaction = model.as(
+        IssueEntityMultiTransactionV1,
+        transactionSignature,
+      );
+      if (!issueEntityMultiTransaction) {
+        throw new ConsensusException(ERROR_LIST.NOT_EXPECTED_RELATED_TRANSACTION, {
+          signature: `${transactionSignature}`,
+        });
+      }
+      const entityList = issueEntityMultiTransaction.asset.issueEntityMulti.entityStructList.map(
+        (item) => item.entityId,
+      );
       if (!entityList.includes(destroyEntity.entityId)) {
         throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
           to_compare_prop: `entityId ${destroyEntity.entityId}`,
@@ -60,16 +79,12 @@ export class DestroyEntityLogicVerifier extends TransactionLogicVerifier {
           be_target: "issueEntityMultiTransaction",
         });
       }
-    } else {
-      throw new ConsensusException(ERROR_LIST.NOT_EXPECTED_RELATED_TRANSACTION, {
-        signature: `${transactionSignature}`,
-      });
+      issueEntitySenderId = issueEntityMultiTransaction.senderId;
     }
-
-    if (transaction.recipientId !== trs.senderId) {
+    if (transaction.recipientId !== issueEntitySenderId) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `recipientId ${transaction.recipientId}`,
-        be_compare_prop: `entityApplicant ${trs.senderId}`,
+        be_compare_prop: `entityApplicant ${issueEntitySenderId}`,
         to_target: "transaction",
         be_target: "issueEntityTransaction",
       });

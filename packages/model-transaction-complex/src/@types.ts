@@ -39,6 +39,7 @@ declare namespace BFChainCore {
 
   interface PromiseResolveJSON {
     promiseId: string;
+    transaction: BFChainCore.TransactionJSON;
   }
   interface PromiseResolveAssetJSON {
     resolve: PromiseResolveJSON;
@@ -78,6 +79,7 @@ declare namespace BFChainCore {
     interface NumberInputJSON<
       T extends MACRO_INPUT_TYPE = import("./atom_input/constants").MACRO_INPUT_TYPE.NUMBER,
     > extends BaseInputJSON<T> {
+      base?: FractionJSON<string>;
       min?: FractionJSON<string>;
       max?: FractionJSON<string>;
       step?: FractionJSON<string>;
@@ -107,11 +109,12 @@ declare namespace BFChainCore {
   }
   type MacroTransactionJSON = TransactionMixJSON<MacroAssetJSON, { hasRecipientId: false }>;
 
+  type MacroCallInputs = { [key: string]: string };
   interface MacroCallJSON {
     macroId: string;
-    inputs: { [name: string]: string };
+    inputs: MacroCallInputs;
+    transaction: BFChainCore.TransactionJSON;
   }
-  type MacroCallInputs = { [key: string]: string };
   interface MacroCallAssetJSON {
     call: MacroCallJSON;
   }

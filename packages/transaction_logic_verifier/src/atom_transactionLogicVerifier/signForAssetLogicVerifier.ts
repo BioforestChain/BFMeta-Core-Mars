@@ -1,14 +1,21 @@
-import type { SignForAssetTransaction } from "@bfchain/core-model";
+import { TrustAssetTransaction, SignForAssetTransaction } from "@bfchain/core-model";
 import { Injectable, Inject } from "@bfchain/util";
 import { AccountBaseHelper } from "@bfchain/core-helper";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
+import { TransactionCore } from "@bfchain/core-transaction";
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 
 const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "SignForAssetLogicVerifier");
 
 @Injectable()
 export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
-  constructor(@Inject(AccountBaseHelper) public accountBaseHelper: AccountBaseHelper) {
+  @Inject("bfchain-core:TransactionCore", { dynamics: true })
+  public transactionCore!: TransactionCore;
+
+  constructor(
+    @Inject(AccountBaseHelper)
+    public accountBaseHelper: AccountBaseHelper,
+  ) {
     super();
   }
 
@@ -21,25 +28,24 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
   ) {
     const { transactionSignature } = transaction.asset.signForAsset;
 
-    const trs = (await this.transactionGetterHelper.getTransactionBySignature(
+    const trustAssetTransactionJson = (await this.transactionGetterHelper.getTransactionBySignature(
       transactionSignature,
       this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
     )) as BFChainCore.TrustAssetTransactionJSON;
-
-    if (!trs) {
+    if (!trustAssetTransactionJson) {
       throw new ConsensusException(ERROR_LIST.NOT_EXIST_OR_EXPIRED, {
         prop: `Transaction with signature ${transactionSignature}`,
         target: "blockChain",
       });
     }
-
-    if (trs.type !== this.transactionHelper.TRUST_ASSET) {
+    const model = await this.transactionCore.recombineTransaction(trustAssetTransactionJson);
+    const trustAssetTransaction = model.as(TrustAssetTransaction, transactionSignature);
+    if (!trustAssetTransaction) {
       throw new ConsensusException(ERROR_LIST.NOT_EXPECTED_RELATED_TRANSACTION, {
         signature: `${transactionSignature}`,
       });
     }
-
-    await this.isDependentTransactionMatch(transaction, trs);
+    await this.isDependentTransactionMatch(transaction, trustAssetTransaction);
 
     await this.logicVerify(transaction, currentBlockHeight, accountMap);
 
@@ -58,29 +64,29 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
    * 依赖的交易是否匹配
    *
    * @param transaction
-   * @param trustAssetJson
+   * @param trustAssetTransaction
    */
   private async isDependentTransactionMatch(
     transaction: SignForAssetTransaction,
-    trustAssetJson: BFChainCore.TransactionJSON<BFChainCore.TrustAssetAssetJSON>,
+    trustAssetTransaction: TrustAssetTransaction,
   ) {
     const { trustAsset, trustSenderId, trustRecipientId } = transaction.asset.signForAsset;
-    const trsAsset = trustAssetJson.asset.trustAsset;
+    const trsAsset = trustAssetTransaction.asset.trustAsset;
 
-    if (trustSenderId !== trustAssetJson.senderId) {
+    if (trustSenderId !== trustAssetTransaction.senderId) {
       throw new ConsensusException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `trustSenderId ${trustSenderId}`,
-        be_compare_prop: `trustSenderId ${trustAssetJson.senderId}`,
+        be_compare_prop: `trustSenderId ${trustAssetTransaction.senderId}`,
         to_target: "SignForAssetTransaction.asset.signForAsset",
         be_target: "TrustAssetTransaction",
       });
     }
 
     // 签收交易的接收账户必须是委托交易的接收账户
-    if (trustRecipientId !== trustAssetJson.recipientId) {
+    if (trustRecipientId !== trustAssetTransaction.recipientId) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `recipientId ${transaction.recipientId}`,
-        be_compare_prop: `recipientId ${trustAssetJson.recipientId}`,
+        be_compare_prop: `recipientId ${trustAssetTransaction.recipientId}`,
         to_target: "SignForAssetTransaction",
         be_target: "TrustAssetTransaction",
       });

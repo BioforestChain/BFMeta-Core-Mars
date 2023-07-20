@@ -41,6 +41,9 @@ import {
   GetTransactionInBlockArgModel,
   GetTransactionInBlockReturnModel,
   BLOB_STORAGE_STRATEGY,
+  MacroCallTransaction,
+  PromiseResolveTransaction,
+  MultipleTransaction,
 } from "@bfchain/core-model";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { Message } from "@bfchain/protobuf";
@@ -881,6 +884,28 @@ export class ChainChannel<
   async downloadBlobFromTrs(trs: Transaction) {
     for (const [algorithm, hash, hashBuffer, size] of trs.blobMap.values()) {
       await this.downloadBlob({ algorithm, hash, downloadSize: size });
+    }
+    const transactionHelper = this.transactionCore.transactionHelper;
+    switch (trs.type) {
+      case transactionHelper.MACRO_CALL: {
+        const { transaction } = (trs as MacroCallTransaction).asset.call;
+        await this.downloadBlobFromTrs(transaction);
+        break;
+      }
+      case transactionHelper.PROMISE_RESOLVE: {
+        const { transaction } = (trs as PromiseResolveTransaction).asset.resolve;
+        await this.downloadBlobFromTrs(transaction);
+        break;
+      }
+      case transactionHelper.MULTIPLE: {
+        const { transactions } = (trs as MultipleTransaction).asset.multiple;
+        for (const transaction of transactions) {
+          await this.downloadBlobFromTrs(transaction);
+        }
+        break;
+      }
+      default:
+        break;
     }
   }
 

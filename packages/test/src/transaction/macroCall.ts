@@ -12,6 +12,7 @@ import {
   MACRO_INPUT_TYPE,
   Transaction,
   MACRO_NUMBER_FORMAT,
+  MacroCallLogicVerifier,
 } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
@@ -200,12 +201,24 @@ async function getMacroCallTransaction(
     secondKeypair,
   );
 
+  const xxxx = trs.as(TransferAssetTransaction, trs.asset.call.transaction.signature);
+  if (xxxx) {
+    const ff = bfchainCore.transaction.getTransactionFactoryFromType(xxxx.type);
+    await ff.verify(xxxx);
+  }
+
   const trsJson = trs.toJSON();
 
   const xx = await bfchainCore.transaction.recombineTransaction(trsJson);
 
   console.log(trsJson.asset.call);
   console.log(`json equal ${util.isDeepStrictEqual(trsJson, xx.toJSON())}`);
+
+  const logicVerifier =
+    bfchainCore.transactionLogicVerifier.getTransactionLogicVerifierFromType<MacroCallTransaction>(
+      trs.type,
+    ) as MacroCallLogicVerifier;
+  logicVerifier.isInputMatch(macroCall.inputs, macroTrs.asset.macro.inputs);
 }
 
 (async () => {
@@ -238,6 +251,10 @@ async function getMacroCallTransaction(
       type: MACRO_INPUT_TYPE.NUMBER,
       name: "amount",
       keyPath: "asset.transferAsset.amount",
+      base: {
+        numerator: "0",
+        denominator: "9999999999999",
+      },
       min: {
         numerator: "10",
         denominator: "1",
@@ -252,6 +269,24 @@ async function getMacroCallTransaction(
       },
       format: MACRO_NUMBER_FORMAT.STRING,
     },
+    {
+      type: MACRO_INPUT_TYPE.NUMBER,
+      name: "applyBlockHeight",
+      keyPath: "applyBlockHeight",
+      base: {
+        numerator: "0",
+        denominator: "9999999999999",
+      },
+      min: {
+        numerator: "10",
+        denominator: "1",
+      },
+      step: {
+        numerator: "1",
+        denominator: "10",
+      },
+      format: MACRO_NUMBER_FORMAT.LITERAL,
+    },
   ];
 
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair("secret");
@@ -264,9 +299,11 @@ async function getMacroCallTransaction(
     senderId: sender1.address,
     senderPublicKey: sender1.publicKey,
     recipientId: "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
-    amount: "100",
+    amount: "20",
     signature:
       "82b37cd5461c8624d8b7fda89ff3612c32eee7272331b26db407f594c7a750e89a582074bfe83197146fbad32a94b11665795fe8d476554e50ea7a03a99ddc05",
+    applyBlockHeight: "1000",
+    // effectiveBlockHeight: "1000",
   };
 
   const factory = bfchainCore.transaction.getTransactionFactoryFromType<MacroCallTransaction>(
@@ -298,6 +335,7 @@ async function getMacroCallTransaction(
     {
       macroId: macroTrs.signature,
       inputs,
+      transaction: macroCall.toJSON(),
     },
     macroTrs,
     bfchainCore,

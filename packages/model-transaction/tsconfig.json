@@ -26,6 +26,7 @@
   ],
   "files": [
     "src/@types.ts",
+    "src/abstractTransaction.ts",
     "src/atom_transaction/acceptVote.transaction.ts",
     "src/atom_transaction/beExchangeAny.transaction.ts",
     "src/atom_transaction/beExchangeAnyMulti.transaction.ts",
@@ -69,6 +70,7 @@
     "src/atom_transaction/trustAsset.transaction.ts",
     "src/atom_transaction/username.transaction.ts",
     "src/atom_transaction/vote.transaction.ts",
+    "src/constants.ts",
     "src/index.ts",
     "src/someTransaction.ts",
     "src/transactionInBlock.ts"

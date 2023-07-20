@@ -235,7 +235,10 @@ async function getPromiseResolveTransaction(
     PromiseResolveTransactionFactory,
     data,
     {
-      resolve: { promiseId: transaction.signature },
+      resolve: {
+        promiseId: transaction.signature,
+        transaction: transaction.asset.promise.transaction,
+      },
     },
     keypair,
     secondKeypair,

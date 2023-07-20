@@ -1,6 +1,6 @@
-import { Transaction } from "@bfchain/core-model-transaction-base";
-import { IssueEntityMultiAssetV1Model } from "@bfchain/core-model-transaction-asset";
 import { Type, Field } from "@bfchain/protobuf";
+import { IssueEntityMultiAssetV1Model } from "@bfchain/core-model-transaction-asset";
+import { AbstractTransaction } from "../abstractTransaction";
 
 /**
  * issueEntityFactory 交易模型
@@ -8,7 +8,7 @@ import { Type, Field } from "@bfchain/protobuf";
  */
 @Type.d("IssueEntityMultiTransactionV1")
 export class IssueEntityMultiTransactionV1
-  extends Transaction<BFChainCore.IssueEntityMultiAssetV1JSON>
+  extends AbstractTransaction<BFChainCore.IssueEntityMultiAssetV1JSON>
   implements BFChainCore.IssueEntityMultiTransactionV1JSON
 {
   toJSON!: () => BFChainCore.IssueEntityMultiTransactionV1JSON;

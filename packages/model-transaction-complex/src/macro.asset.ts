@@ -1,8 +1,8 @@
 import { Message, Field, Type } from "@bfchain/protobuf";
-import { BaseInputModel, MACRO_INPUT_TYPES_MAP } from "./atom_input";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { Transaction } from "@bfchain/core-model-transaction-base";
 import { TRANSACTION_TYPES_MAP } from "@bfchain/core-model-transaction";
+import { BaseInputModel, MACRO_INPUT_TYPES_MAP } from "./atom_input";
 
 const { ArgumentFormatException } = CoreExceptionGenerator("MODEL", "transactionModel");
 
@@ -38,7 +38,7 @@ export class MacroModel
     });
     this.inputBufferList = inputBufferList;
   }
-  /**交易 */
+  /**交易模板 */
   @Field.d(MacroModel.INC++, "bytes")
   templateBuffer!: Uint8Array;
   get template() {

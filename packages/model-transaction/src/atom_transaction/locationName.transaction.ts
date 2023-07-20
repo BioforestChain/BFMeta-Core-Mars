@@ -1,6 +1,6 @@
-import { Transaction } from "@bfchain/core-model-transaction-base";
-import { LocationNameAssetModel } from "@bfchain/core-model-transaction-asset";
 import { Type, Field } from "@bfchain/protobuf";
+import { LocationNameAssetModel } from "@bfchain/core-model-transaction-asset";
+import { AbstractTransaction } from "../abstractTransaction";
 
 /**
  * locationName 交易模型
@@ -8,7 +8,7 @@ import { Type, Field } from "@bfchain/protobuf";
  */
 @Type.d("LocationNameTransaction")
 export class LocationNameTransaction
-  extends Transaction<BFChainCore.LocationNameAssetJSON>
+  extends AbstractTransaction<BFChainCore.LocationNameAssetJSON>
   implements BFChainCore.LocationNameTransactionJSON
 {
   toJSON!: () => BFChainCore.LocationNameTransactionJSON;

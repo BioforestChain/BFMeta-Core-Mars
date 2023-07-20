@@ -1,6 +1,6 @@
 declare namespace BFChainCore {
   type Transaction<AJ extends object = object> = import("./transaction").Transaction<AJ>;
-  type TransactionModelConstructor = typeof import("./transaction").Transaction;
+  type TransactionModelConstructor<T extends Transaction> = new (...args: any[]) => T;
 
   type GetMessageAssetModel<T> = T extends TransactionJSON<infer U> ? U : any;
   type GetAssetModel<T> = GetMessageAssetModel<T> extends import("@bfchain/protobuf").Message<

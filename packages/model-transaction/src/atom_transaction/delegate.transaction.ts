@@ -1,6 +1,6 @@
-import { Transaction } from "@bfchain/core-model-transaction-base";
-import { DelegateAssetModel } from "@bfchain/core-model-transaction-asset";
 import { Type, Field } from "@bfchain/protobuf";
+import { DelegateAssetModel } from "@bfchain/core-model-transaction-asset";
+import { AbstractTransaction } from "../abstractTransaction";
 
 /**
  * delegate 交易模型
@@ -8,7 +8,7 @@ import { Type, Field } from "@bfchain/protobuf";
  */
 @Type.d("DelegateTransaction")
 export class DelegateTransaction
-  extends Transaction<BFChainCore.DelegateAssetJSON>
+  extends AbstractTransaction<BFChainCore.DelegateAssetJSON>
   implements BFChainCore.DelegateTransactionJSON
 {
   toJSON!: () => BFChainCore.DelegateTransactionJSON;

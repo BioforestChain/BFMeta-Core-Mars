@@ -1,5 +1,5 @@
 import type { PromiseResolveTransaction } from "@bfchain/core-model";
-import { Injectable, Inject } from "@bfchain/util";
+import { Injectable, Inject, getHexFromArrayBuffer } from "@bfchain/util";
 import { TransactionCore } from "@bfchain/core-transaction";
 import {
   TransactionLogicVerifier,
@@ -40,32 +40,37 @@ export class PromiseResolveLogicVerifier extends TransactionLogicVerifier {
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
-    const { promiseId } = transaction.asset.resolve;
+    const { promiseId, transaction: subTransaction } = transaction.asset.resolve;
     const promiseTransaction = await this.complexTransactionLogicHelper.getPromiseTransaction(
       promiseId,
     );
+    if (
+      getHexFromArrayBuffer(subTransaction.getBytes()) !==
+      getHexFromArrayBuffer(promiseTransaction.getBytes())
+    ) {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+        to_compare_prop: `transaction with promiseId ${promiseId}`,
+        be_compare_prop: `transaction with promiseId ${promiseId}`,
+        to_target: "PromiseResolveTransaction",
+        be_target: "blockChain",
+      });
+    }
     const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
       promiseTransaction.type,
     );
-    if (promiseTransaction.applyBlockHeight > currentBlockHeight) {
+    if (subTransaction.applyBlockHeight > currentBlockHeight) {
       throw new ConsensusException(ERROR_LIST.NOT_BEGIN_RESOLVE_YET, {
         promiseId,
       });
     }
-    if (promiseTransaction.effectiveBlockHeight < currentBlockHeight) {
+    if (subTransaction.effectiveBlockHeight < currentBlockHeight) {
       throw new ConsensusException(ERROR_LIST.ALREADY_EXPIRED, {
         prop: `Promise transaction ${promiseId}`,
         target: "blockChain",
       });
     }
 
-    await logicVerify.verify(
-      promiseTransaction,
-      currentBlockHeight,
-      accountMap,
-      true,
-      eventEmitter,
-    );
+    await logicVerify.verify(subTransaction, currentBlockHeight, accountMap, true, eventEmitter);
 
     return true;
   }
@@ -81,9 +86,7 @@ export class PromiseResolveLogicVerifier extends TransactionLogicVerifier {
     if (resp.isFeeEnough === false) {
       return resp;
     }
-    const promiseTransaction = await this.complexTransactionLogicHelper.getPromiseTransaction(
-      transaction.asset.resolve.promiseId,
-    );
+    const promiseTransaction = transaction.asset.resolve.transaction;
     const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
       promiseTransaction.type,
     );
@@ -117,9 +120,7 @@ export class PromiseResolveLogicVerifier extends TransactionLogicVerifier {
     if (resp.isFeeEnough === false) {
       return resp;
     }
-    const promiseTransaction = await this.complexTransactionLogicHelper.getPromiseTransaction(
-      transaction.asset.resolve.promiseId,
-    );
+    const promiseTransaction = transaction.asset.resolve.transaction;
     const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
       promiseTransaction.type,
     );
@@ -166,5 +167,20 @@ export class PromiseResolveLogicVerifier extends TransactionLogicVerifier {
         target: "blockChain",
       });
     }
+  }
+
+  /**
+   * 获取需要被加锁的数据
+   *
+   * @param transaction
+   */
+  getLockData(transaction: PromiseResolveTransaction) {
+    const { transaction: subTransaction, promiseId } = transaction.asset.resolve;
+    const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
+      subTransaction.type,
+    );
+    const locks = logicVerify.getLockData(subTransaction);
+    locks.push(promiseId);
+    return locks;
   }
 }

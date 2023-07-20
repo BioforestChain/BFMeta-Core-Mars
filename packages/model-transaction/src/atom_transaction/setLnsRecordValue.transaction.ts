@@ -1,6 +1,6 @@
-import { Transaction } from "@bfchain/core-model-transaction-base";
-import { SetLnsRecordValueAssetModel } from "@bfchain/core-model-transaction-asset";
 import { Type, Field } from "@bfchain/protobuf";
+import { SetLnsRecordValueAssetModel } from "@bfchain/core-model-transaction-asset";
+import { AbstractTransaction } from "../abstractTransaction";
 
 /**
  * setLnsRecordValue 交易模型
@@ -8,7 +8,7 @@ import { Type, Field } from "@bfchain/protobuf";
  */
 @Type.d("SetLnsRecordValueTransaction")
 export class SetLnsRecordValueTransaction
-  extends Transaction<BFChainCore.SetLnsRecordValueAssetJSON>
+  extends AbstractTransaction<BFChainCore.SetLnsRecordValueAssetJSON>
   implements BFChainCore.SetLnsRecordValueTransactionJSON
 {
   toJSON!: () => BFChainCore.SetLnsRecordValueTransactionJSON;

@@ -1,4 +1,4 @@
-import { Injectable, wrapTaskList } from "@bfchain/util";
+import { Injectable, Inject, wrapTaskList } from "@bfchain/util";
 import { PromiseResolveTransaction } from "@bfchain/core-model";
 import {
   AccountBaseHelper,
@@ -8,7 +8,7 @@ import {
   ChainAssetInfoHelper,
 } from "@bfchain/core-helper";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
-import { TransactionFactory } from "@bfchain/core-transaction";
+import { TransactionFactory, TransactionCore } from "@bfchain/core-transaction";
 
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
@@ -30,6 +30,9 @@ export class PromiseResolveTransactionFactory extends TransactionFactory<Promise
   ) {
     super();
   }
+
+  @Inject("bfchain-core:TransactionCore", { dynamics: true })
+  public transactionCore!: TransactionCore;
 
   /**
    * 校验输入信息
@@ -105,7 +108,7 @@ export class PromiseResolveTransactionFactory extends TransactionFactory<Promise
       target: "resolve",
     } as const;
 
-    const { promiseId } = resolve;
+    const { promiseId, transaction } = resolve;
     if (!promiseId) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "promiseId",
@@ -119,6 +122,18 @@ export class PromiseResolveTransactionFactory extends TransactionFactory<Promise
         ...PromiseResolveAsset_Exception_Detail,
       });
     }
+
+    if (!transaction) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
+        prop: "transaction",
+        ...PromiseResolveAsset_Exception_Detail,
+      });
+    }
+
+    /// 基础校验
+    const trs = await this.transactionCore.recombineTransaction(transaction);
+    const factory = this.transactionCore.getTransactionFactoryFromType(trs.type);
+    await factory.verify(trs);
 
     if (storage.value !== promiseId) {
       throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {

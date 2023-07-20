@@ -190,6 +190,10 @@ async function getMacroTransaction(
       type: MACRO_INPUT_TYPE.NUMBER,
       name: "amount",
       keyPath: "asset.transferAsset.amount",
+      base: {
+        numerator: "10",
+        denominator: "1",
+      },
       min: {
         numerator: "10",
         denominator: "1",

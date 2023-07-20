@@ -1,6 +1,6 @@
-import { Transaction } from "@bfchain/core-model-transaction-base";
-import { SetLnsManagerAssetModel } from "@bfchain/core-model-transaction-asset";
 import { Type, Field } from "@bfchain/protobuf";
+import { SetLnsManagerAssetModel } from "@bfchain/core-model-transaction-asset";
+import { AbstractTransaction } from "../abstractTransaction";
 
 /**
  * setLnsManager 交易模型
@@ -8,7 +8,7 @@ import { Type, Field } from "@bfchain/protobuf";
  */
 @Type.d("SetLnsManagerTransaction")
 export class SetLnsManagerTransaction
-  extends Transaction<BFChainCore.SetLnsManagerAssetJSON>
+  extends AbstractTransaction<BFChainCore.SetLnsManagerAssetJSON>
   implements BFChainCore.SetLnsManagerTransactionJSON
 {
   toJSON!: () => BFChainCore.SetLnsManagerTransactionJSON;

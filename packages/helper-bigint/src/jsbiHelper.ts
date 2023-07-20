@@ -243,7 +243,7 @@ export class JSBIHelper {
     return this.floorFraction(this.divisionFraction(x, y));
   }
   /**
-   * 两个分数相除，并且下取整
+   * 两个分数相除，并且上取整
    *
    * @param x
    * @param y
@@ -272,5 +272,61 @@ export class JSBIHelper {
     const frac1 = frac1Numerator * frac2Denominator;
     const frac2 = frac2Numerator * frac1Denominator;
     return frac1 === frac2 ? 0 : frac1 > frac2 ? 1 : -1;
+  }
+
+  /**
+   * 求最大公约数，欧几里得 - 辗转相除
+   *
+   * @param prev
+   * @param next
+   * @returns
+   */
+  greatestCommonDivisor(prev: bigint, next: bigint): bigint {
+    return next === BigInt(0) ? prev : this.greatestCommonDivisor(next, prev % next);
+  }
+
+  /**
+   * 将数转成分数
+   *
+   * @param value
+   * @returns
+   */
+  toFraction(value: string) {
+    if (value.includes(".")) {
+      const items = value.split(".");
+      let numerator = BigInt(items[0] + items[1]);
+      let denominator = BigInt("1" + "0".repeat(items[1].length));
+      const gcd = this.greatestCommonDivisor(numerator, denominator);
+      return {
+        numerator: (numerator / gcd).toString(),
+        denominator: (denominator / gcd).toString(),
+      };
+    } else {
+      return {
+        numerator: value,
+        denominator: "1",
+      };
+    }
+  }
+
+  /**
+   * 两个分数相减
+   *
+   * @param fraction1
+   * @param fraction2
+   * @returns
+   */
+  minusFraction(fraction1: BFChainCore.FractionJSON<BI>, fraction2: BFChainCore.FractionJSON<BI>) {
+    const frac1Numerator = formatParam(fraction1.numerator);
+    const frac1Denominator = formatParam(fraction1.denominator);
+    const frac2Numerator = formatParam(fraction2.numerator);
+    const frac2Denominator = formatParam(fraction2.denominator);
+    const denominator = frac1Denominator * frac2Denominator;
+    const numerator = frac1Numerator * frac2Denominator - frac2Numerator * frac1Denominator;
+    const gcd = this.greatestCommonDivisor(numerator, denominator);
+    return {
+      numerator: (numerator / gcd).toString(),
+      denominator: (denominator / gcd).toString(),
+    };
   }
 }

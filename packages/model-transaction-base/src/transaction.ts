@@ -269,4 +269,11 @@ export class Transaction<AJ extends object = object>
     }
     return res as unknown as M;
   }
+
+  as<T extends Transaction>(
+    TransactionCtor: BFChainCore.TransactionModelConstructor<T>,
+    subId?: string,
+  ): T | undefined {
+    return undefined;
+  }
 }
