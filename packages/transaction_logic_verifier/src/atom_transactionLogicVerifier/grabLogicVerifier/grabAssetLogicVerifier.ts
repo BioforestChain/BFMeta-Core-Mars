@@ -1,5 +1,11 @@
-import { Injectable } from "@bfchain/util";
-import { GrabAssetTransaction, RANGE_TYPE, GIFT_DISTRIBUTION_RULE } from "@bfchain/core-model";
+import { Injectable, Inject } from "@bfchain/util";
+import {
+  GiftAssetTransaction,
+  GrabAssetTransaction,
+  RANGE_TYPE,
+  GIFT_DISTRIBUTION_RULE,
+} from "@bfchain/core-model";
+import { TransactionCore } from "@bfchain/core-transaction";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { TransactionLogicVerifier } from "../_txbaseLogicVerifier";
 
@@ -10,6 +16,9 @@ const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
 
 @Injectable()
 export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
+  @Inject("bfchain-core:TransactionCore", { dynamics: true })
+  public transactionCore!: TransactionCore;
+
   constructor() {
     super();
   }
@@ -29,7 +38,6 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
         transactionSignature,
         this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
       );
-
     if (!trsWithBlockSign) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST_OR_EXPIRED, {
         prop: `Transaction with signature ${transactionSignature}`,
@@ -37,17 +45,17 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
       });
     }
 
-    const trs = trsWithBlockSign.transaction as BFChainCore.GiftAssetTransactionJSON;
-
-    if (trs.type !== this.transactionHelper.GIFT_ASSET) {
+    const giftAssetTransactionJson = trsWithBlockSign.transaction;
+    const model = await this.transactionCore.recombineTransaction(giftAssetTransactionJson);
+    const giftAssetTransaction = model.as(GiftAssetTransaction, transactionSignature);
+    if (!giftAssetTransaction) {
       throw new ConsensusException(ERROR_LIST.NOT_EXPECTED_RELATED_TRANSACTION, {
         signature: `${transactionSignature}`,
       });
     }
-
-    this.isValidRecipientId(transaction, trs);
+    this.isValidRecipientId(transaction, giftAssetTransaction);
     this.isBlockSignatureMatch(transaction, trsWithBlockSign.blockSignature);
-    this.isDependentTransactionMatch(transaction, trs);
+    this.isDependentTransactionMatch(transaction, giftAssetTransaction);
     await this.isValidAmount(transaction);
 
     await this.logicVerify(transaction, currentBlockHeight, accountMap);
@@ -120,16 +128,16 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
    * 接收账户是否合法
    *
    * @param transaction
-   * @param giftAssetJson
+   * @param giftAssetTransaction
    */
   private isValidRecipientId(
     transaction: GrabAssetTransaction,
-    giftAssetJson: BFChainCore.TransactionJSON<BFChainCore.GiftAssetAssetJSON>,
+    giftAssetTransaction: GiftAssetTransaction,
   ) {
-    if (transaction.recipientId !== giftAssetJson.senderId) {
+    if (transaction.recipientId !== giftAssetTransaction.senderId) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `GrabAssetTransaction.recipientId ${transaction.recipientId}`,
-        be_compare_prop: `GiftAssetTransaction.senderId ${giftAssetJson.senderId}`,
+        be_compare_prop: `GiftAssetTransaction.senderId ${giftAssetTransaction.senderId}`,
         to_target: "GrabAssetTransaction",
         be_target: "GiftAssetTransaction",
       });
@@ -157,11 +165,11 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
    * 依赖的交易是否匹配
    *
    * @param transaction
-   * @param giftAssetJson
+   * @param giftAssetTransaction
    */
   private isDependentTransactionMatch(
     transaction: GrabAssetTransaction,
-    giftAssetJson: BFChainCore.TransactionJSON<BFChainCore.GiftAssetAssetJSON>,
+    giftAssetTransaction: GiftAssetTransaction,
   ) {
     const grabAsset = transaction.asset.grabAsset;
     const { giftAsset, ciphertextSignature } = grabAsset;
@@ -177,7 +185,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
       beginUnfrozenBlockHeight,
     } = giftAsset;
 
-    const trsAsset = giftAssetJson.asset.giftAsset;
+    const trsAsset = giftAssetTransaction.asset.giftAsset;
 
     if (
       trsAsset.sourceChainMagic !== sourceChainMagic ||
@@ -263,7 +271,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
       }
     }
 
-    const { rangeType, range } = giftAssetJson;
+    const { rangeType, range } = giftAssetTransaction;
 
     if (rangeType & RANGE_TYPE.MULTI_ADDRESS) {
       if (!range.includes(transaction.senderId)) {

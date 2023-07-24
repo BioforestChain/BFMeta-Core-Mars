@@ -1,6 +1,6 @@
-import { Transaction } from "@bfchain/core-model-transaction-base";
-import { DestroyEntityAssetModel } from "@bfchain/core-model-transaction-asset";
 import { Type, Field } from "@bfchain/protobuf";
+import { DestroyEntityAssetModel } from "@bfchain/core-model-transaction-asset";
+import { AbstractTransaction } from "../abstractTransaction";
 
 /**
  * destroyEntity 交易模型
@@ -8,7 +8,7 @@ import { Type, Field } from "@bfchain/protobuf";
  */
 @Type.d("DestroyEntityTransaction")
 export class DestroyEntityTransaction
-  extends Transaction<BFChainCore.DestroyEntityAssetJSON>
+  extends AbstractTransaction<BFChainCore.DestroyEntityAssetJSON>
   implements BFChainCore.DestroyEntityTransactionJSON
 {
   toJSON!: () => BFChainCore.DestroyEntityTransactionJSON;

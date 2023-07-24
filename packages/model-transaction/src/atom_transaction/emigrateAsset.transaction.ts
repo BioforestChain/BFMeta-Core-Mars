@@ -1,6 +1,6 @@
-import { Transaction } from "@bfchain/core-model-transaction-base";
-import { EmigrateAssetAssetModel } from "@bfchain/core-model-transaction-asset";
 import { Type, Field } from "@bfchain/protobuf";
+import { EmigrateAssetAssetModel } from "@bfchain/core-model-transaction-asset";
+import { AbstractTransaction } from "../abstractTransaction";
 
 /**
  * emigrateAsset 交易模型
@@ -8,7 +8,7 @@ import { Type, Field } from "@bfchain/protobuf";
  */
 @Type.d("EmigrateAssetTransaction")
 export class EmigrateAssetTransaction
-  extends Transaction<BFChainCore.EmigrateAssetAssetJSON>
+  extends AbstractTransaction<BFChainCore.EmigrateAssetAssetJSON>
   implements BFChainCore.EmigrateAssetTransactionJSON
 {
   toJSON!: () => BFChainCore.EmigrateAssetTransactionJSON;

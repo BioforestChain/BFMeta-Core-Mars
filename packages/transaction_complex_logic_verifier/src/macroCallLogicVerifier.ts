@@ -1,5 +1,5 @@
-import type { MacroCallTransaction } from "@bfchain/core-model";
-import { Injectable, Inject } from "@bfchain/util";
+import { MacroTransaction, MacroCallTransaction } from "@bfchain/core-model";
+import { Injectable, Inject, getHexFromArrayBuffer } from "@bfchain/util";
 import { TransactionCore } from "@bfchain/core-transaction";
 import {
   TransactionLogicVerifier,
@@ -8,7 +8,10 @@ import {
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { ComplexTransactionLogicHelper } from "./complexTransactionLogicHelper";
 
-const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "MacroCallLogicVerifier");
+const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
+  "VERIFIER",
+  "MacroCallLogicVerifier",
+);
 
 @Injectable()
 export class MacroCallLogicVerifier extends TransactionLogicVerifier {
@@ -30,6 +33,27 @@ export class MacroCallLogicVerifier extends TransactionLogicVerifier {
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
+    const { macroId, inputs } = transaction.asset.call;
+    const macroTransactionJson = await this.transactionGetterHelper.getTransactionBySignature(
+      macroId,
+      this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
+    );
+    if (!macroTransactionJson) {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST_OR_EXPIRED, {
+        prop: `Transaction with signature ${macroId}`,
+        target: "blockChain",
+      });
+    }
+    const model = await this.transactionCore.recombineTransaction(macroTransactionJson);
+    const macroTransaction = model.as(MacroTransaction, macroId);
+    if (!macroTransaction) {
+      throw new ConsensusException(ERROR_LIST.NOT_EXPECTED_RELATED_TRANSACTION, {
+        signature: `${macroId}`,
+      });
+    }
+    this.isInputMatch(inputs, macroTransaction.asset.macro.inputs);
+    const subTransaction = await this.isTransactionMatch(macroId, transaction);
+
     await this.logicVerify(transaction, currentBlockHeight, accountMap);
 
     const { eventLogicVerifier } = this;
@@ -40,19 +64,44 @@ export class MacroCallLogicVerifier extends TransactionLogicVerifier {
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
-    const macroTransaction = await this.complexTransactionLogicHelper.getMacroTransaction(
-      transaction,
-    );
-    /// 基础校验
-    const factory = this.transactionCore.getTransactionFactoryFromType(macroTransaction.type);
-    await factory.verify(macroTransaction);
     /// 逻辑校验
     const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
-      macroTransaction.type,
+      subTransaction.type,
     );
-    await logicVerify.verify(macroTransaction, currentBlockHeight, accountMap, true, eventEmitter);
+    await logicVerify.verify(subTransaction, currentBlockHeight, accountMap, true, eventEmitter);
 
     return true;
+  }
+
+  isInputMatch(inputs: BFChainCore.MacroCallInputs, defaultInputs: BFChainCore.Macro.InputJSON[]) {
+    const inputNames = defaultInputs.map((input) => input.name);
+    for (const inputName in inputs) {
+      if (inputNames.includes(inputName) === false) {
+        throw new ConsensusException(ERROR_LIST.SHOULD_NOT_EXIST, {
+          prop: `input ${inputName}`,
+          target: `inputs`,
+        });
+      }
+    }
+  }
+
+  async isTransactionMatch(macroId: string, transaction: MacroCallTransaction) {
+    const callTransaction = await this.complexTransactionLogicHelper.getMacroCallTransaction(
+      transaction,
+    );
+    const subTransaction = transaction.asset.call.transaction;
+    if (
+      getHexFromArrayBuffer(subTransaction.getBytes()) !==
+      getHexFromArrayBuffer(callTransaction.getBytes())
+    ) {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+        to_compare_prop: `transaction with macroId ${macroId}`,
+        be_compare_prop: `transaction with macroId ${macroId}`,
+        to_target: "MacroCallTransaction",
+        be_target: "blockChain",
+      });
+    }
+    return subTransaction;
   }
 
   /**
@@ -66,9 +115,7 @@ export class MacroCallLogicVerifier extends TransactionLogicVerifier {
     if (resp.isFeeEnough === false) {
       return resp;
     }
-    const macroTransaction = await this.complexTransactionLogicHelper.getMacroTransaction(
-      transaction,
-    );
+    const macroTransaction = transaction.asset.call.transaction;
     const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
       macroTransaction.type,
     );
@@ -102,9 +149,7 @@ export class MacroCallLogicVerifier extends TransactionLogicVerifier {
     if (resp.isFeeEnough === false) {
       return resp;
     }
-    const macroTransaction = await this.complexTransactionLogicHelper.getMacroTransaction(
-      transaction,
-    );
+    const macroTransaction = transaction.asset.call.transaction;
     const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
       macroTransaction.type,
     );
@@ -151,5 +196,20 @@ export class MacroCallLogicVerifier extends TransactionLogicVerifier {
         target: "blockChain",
       });
     }
+  }
+
+  /**
+   * 获取需要被加锁的数据
+   *
+   * @param transaction
+   */
+  getLockData(transaction: MacroCallTransaction) {
+    const { transaction: subTransaction, macroId } = transaction.asset.call;
+    const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
+      subTransaction.type,
+    );
+    const locks = logicVerify.getLockData(subTransaction);
+    locks.push(macroId);
+    return locks;
   }
 }

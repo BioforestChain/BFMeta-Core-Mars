@@ -126,14 +126,33 @@ async function getTransferAnyTransaction(sender: AccountModel, bfchainCore: BFCh
 (async () => {
   const bfchainCore = await getBfchainCoreEntry();
 
-  await getTransferAnyTransaction(getSenderWithoutSecondSecret(), bfchainCore);
-  await getTransferAnyTransaction(getSenderWithSecondSecret(), bfchainCore);
+  console.log(
+    bfchainCore.jsbiHelper.minusFraction(
+      { numerator: "1", denominator: "4" },
+      { numerator: "1", denominator: "5" },
+    ),
+  );
+  console.log(
+    bfchainCore.jsbiHelper.minusFraction(
+      { numerator: "3", denominator: "10" },
+      { numerator: "2", denominator: "4" },
+    ),
+  );
+  console.log(
+    bfchainCore.jsbiHelper.minusFraction(
+      { numerator: "0", denominator: "10" },
+      { numerator: "1", denominator: "4" },
+    ),
+  );
 
-  console.log(bfchainCore.config.version);
+  // await getTransferAnyTransaction(getSenderWithoutSecondSecret(), bfchainCore);
+  // await getTransferAnyTransaction(getSenderWithSecondSecret(), bfchainCore);
 
-  bfchainCore.patchInstaller.changeHeight(50000000);
+  // console.log(bfchainCore.config.version);
 
-  await sleep(1000);
+  // bfchainCore.patchInstaller.changeHeight(50000000);
 
-  console.log(bfchainCore.config.version);
+  // await sleep(1000);
+
+  // console.log(bfchainCore.config.version);
 })();

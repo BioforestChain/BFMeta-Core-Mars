@@ -9,6 +9,8 @@ export class NumberInputModel<T extends MACRO_INPUT_TYPE = MACRO_INPUT_TYPE.NUMB
   implements BFChainCore.AssetJSONToModelType<BFChainCore.Macro.NumberInputJSON<T>>
 {
   @Field.d(NumberInputModel.INC++, FractionBigIntModel, "optional")
+  base?: FractionBigIntModel;
+  @Field.d(NumberInputModel.INC++, FractionBigIntModel, "optional")
   min?: FractionBigIntModel;
   @Field.d(NumberInputModel.INC++, FractionBigIntModel, "optional")
   max?: FractionBigIntModel;
@@ -23,6 +25,7 @@ export class NumberInputModel<T extends MACRO_INPUT_TYPE = MACRO_INPUT_TYPE.NUMB
       ...super.toJSON(),
       format: this.format,
     };
+    this.base && (resp.base = this.base.toJSON());
     this.min && (resp.min = this.min.toJSON());
     this.max && (resp.max = this.max.toJSON());
     this.step && (resp.step = this.step.toJSON());

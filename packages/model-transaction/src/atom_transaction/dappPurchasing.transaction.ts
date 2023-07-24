@@ -1,6 +1,6 @@
-import { Transaction } from "@bfchain/core-model-transaction-base";
-import { DAppPurchasingAssetModel } from "@bfchain/core-model-transaction-asset";
 import { Type, Field } from "@bfchain/protobuf";
+import { DAppPurchasingAssetModel } from "@bfchain/core-model-transaction-asset";
+import { AbstractTransaction } from "../abstractTransaction";
 
 /**
  * dappPurchasing 交易模型
@@ -8,7 +8,7 @@ import { Type, Field } from "@bfchain/protobuf";
  */
 @Type.d("DAppPurchasingTransaction")
 export class DAppPurchasingTransaction
-  extends Transaction<BFChainCore.DAppPurchasingAssetJSON>
+  extends AbstractTransaction<BFChainCore.DAppPurchasingAssetJSON>
   implements BFChainCore.DAppPurchasingTransactionJSON
 {
   toJSON!: () => BFChainCore.DAppPurchasingTransactionJSON;

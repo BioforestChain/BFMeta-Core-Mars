@@ -1,6 +1,6 @@
-import { Transaction } from "@bfchain/core-model-transaction-base";
-import { RejectVoteAssetModel } from "@bfchain/core-model-transaction-asset";
 import { Type, Field } from "@bfchain/protobuf";
+import { RejectVoteAssetModel } from "@bfchain/core-model-transaction-asset";
+import { AbstractTransaction } from "../abstractTransaction";
 
 /**
  * transfer 交易模型
@@ -8,7 +8,7 @@ import { Type, Field } from "@bfchain/protobuf";
  */
 @Type.d("RejectVoteTransaction")
 export class RejectVoteTransaction
-  extends Transaction<BFChainCore.RejectVoteAssetJSON>
+  extends AbstractTransaction<BFChainCore.RejectVoteAssetJSON>
   implements BFChainCore.RejectVoteTransactionJSON
 {
   toJSON!: () => BFChainCore.RejectVoteTransactionJSON;

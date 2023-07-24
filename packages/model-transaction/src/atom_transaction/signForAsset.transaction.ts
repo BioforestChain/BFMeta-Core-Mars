@@ -1,6 +1,6 @@
-import { Transaction } from "@bfchain/core-model-transaction-base";
-import { SignForAssetAssetModel } from "@bfchain/core-model-transaction-asset";
 import { Type, Field } from "@bfchain/protobuf";
+import { SignForAssetAssetModel } from "@bfchain/core-model-transaction-asset";
+import { AbstractTransaction } from "../abstractTransaction";
 
 /**
  * signForAsset 交易模型
@@ -8,7 +8,7 @@ import { Type, Field } from "@bfchain/protobuf";
  */
 @Type.d("SignForAssetTransaction")
 export class SignForAssetTransaction
-  extends Transaction<BFChainCore.SignForAssetAssetJSON>
+  extends AbstractTransaction<BFChainCore.SignForAssetAssetJSON>
   implements BFChainCore.SignForAssetTransactionJSON
 {
   toJSON!: () => BFChainCore.SignForAssetTransactionJSON;

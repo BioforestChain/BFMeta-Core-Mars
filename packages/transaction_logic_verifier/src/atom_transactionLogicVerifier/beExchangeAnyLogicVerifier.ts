@@ -1,6 +1,12 @@
-import { Injectable } from "@bfchain/util";
-import { BeExchangeAnyTransaction, RANGE_TYPE, PARENT_ASSET_TYPE } from "@bfchain/core-model";
+import { Injectable, Inject } from "@bfchain/util";
+import {
+  ToExchangeAnyTransaction,
+  BeExchangeAnyTransaction,
+  RANGE_TYPE,
+  PARENT_ASSET_TYPE,
+} from "@bfchain/core-model";
 import { JSBIHelper } from "@bfchain/core-helper-bigint";
+import { TransactionCore } from "@bfchain/core-transaction";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 
@@ -11,6 +17,9 @@ const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
 
 @Injectable()
 export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
+  @Inject("bfchain-core:TransactionCore", { dynamics: true })
+  public transactionCore!: TransactionCore;
+
   constructor(public jsbiHelper: JSBIHelper) {
     super();
   }
@@ -24,34 +33,35 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
   ) {
     const beExchangeAny = transaction.asset.beExchangeAny;
     const { transactionSignature } = beExchangeAny;
-    const toExchangeAnyJson = (await this.transactionGetterHelper.getTransactionBySignature(
-      transactionSignature,
-      this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
-    )) as BFChainCore.ToExchangeAnyTransactionJSON | undefined;
-    if (!toExchangeAnyJson) {
+    const toExchangeAnyTransactionJson =
+      await this.transactionGetterHelper.getTransactionBySignature(
+        transactionSignature,
+        this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
+      );
+    if (!toExchangeAnyTransactionJson) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST_OR_EXPIRED, {
         prop: `Transaction with signature ${transactionSignature}`,
         target: "blockChain",
       });
     }
-
-    if (toExchangeAnyJson.type !== this.transactionHelper.TO_EXCHANGE_ANY) {
+    const model = await this.transactionCore.recombineTransaction(toExchangeAnyTransactionJson);
+    const toExchangeAnyTransaction = model.as(ToExchangeAnyTransaction, transactionSignature);
+    if (!toExchangeAnyTransaction) {
       throw new ConsensusException(ERROR_LIST.NOT_EXPECTED_RELATED_TRANSACTION, {
         signature: `${transactionSignature}`,
       });
     }
-
     // be交易的接收账户必须是to交易的发起账户
-    if (transaction.recipientId !== toExchangeAnyJson.senderId) {
+    if (transaction.recipientId !== toExchangeAnyTransaction.senderId) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `recipientId ${transaction.recipientId}`,
-        be_compare_prop: `senderId ${toExchangeAnyJson.senderId}`,
+        be_compare_prop: `senderId ${toExchangeAnyTransaction.senderId}`,
         to_target: "BeExchangeAnyTransaction",
         be_target: "ToExchangeAnyTransaction",
       });
     }
 
-    this.isDependentTransactionMatch(transaction, toExchangeAnyJson);
+    this.isDependentTransactionMatch(transaction, toExchangeAnyTransaction);
 
     await this.logicVerify(transaction, currentBlockHeight, accountMap);
 
@@ -70,16 +80,16 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
    * 依赖的交易是否匹配
    *
    * @param transaction
-   * @param toExchangeAnyJson
+   * @param toExchangeAnyTransaction
    */
   isDependentTransactionMatch(
     transaction: BeExchangeAnyTransaction,
-    toExchangeAnyJson: BFChainCore.TransactionJSON<BFChainCore.ToExchangeAnyAssetJSON>,
+    toExchangeAnyTransaction: ToExchangeAnyTransaction,
   ) {
     const beExchangeAny = transaction.asset.beExchangeAny;
     const { exchangeAny, ciphertextSignature } = beExchangeAny;
     const { cipherPublicKeys, assetExchangeWeightRatio, taxInformation } = exchangeAny;
-    const trsAsset = toExchangeAnyJson.asset.toExchangeAny;
+    const trsAsset = toExchangeAnyTransaction.asset.toExchangeAny;
     if (
       trsAsset.toExchangeSource !== exchangeAny.toExchangeSource ||
       trsAsset.beExchangeSource !== exchangeAny.beExchangeSource ||
@@ -306,7 +316,7 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
       }
     }
 
-    const { rangeType, range } = toExchangeAnyJson;
+    const { rangeType, range } = toExchangeAnyTransaction;
 
     if (rangeType & RANGE_TYPE.MULTI_ADDRESS) {
       if (!range.includes(transaction.senderId)) {

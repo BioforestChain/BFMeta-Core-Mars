@@ -11,6 +11,7 @@ import {
   BaseHelper,
   ConfigHelper,
   ChainAssetInfoHelper,
+  JSBIHelper,
 } from "@bfchain/core-helper";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { TransactionFactory, TransactionCore } from "@bfchain/core-transaction";
@@ -32,6 +33,7 @@ export class MacroTransactionFactory extends TransactionFactory<MacroTransaction
     public baseHelper: BaseHelper,
     public configHelper: ConfigHelper,
     public chainAssetInfoHelper: ChainAssetInfoHelper,
+    public jsbiHelper: JSBIHelper,
   ) {
     super();
   }
@@ -191,7 +193,7 @@ export class MacroTransactionFactory extends TransactionFactory<MacroTransaction
         }
       }
       if (type === MACRO_INPUT_TYPE.NUMBER || type === MACRO_INPUT_TYPE.CALC) {
-        const { min, max, step, format } = input as BFChainCore.Macro.NumberInputJSON;
+        const { base, min, max, step, format } = input as BFChainCore.Macro.NumberInputJSON;
         if (format === undefined) {
           throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
             prop: "format",
@@ -204,17 +206,32 @@ export class MacroTransactionFactory extends TransactionFactory<MacroTransaction
             target: `macro.inputs.input ${JSON.stringify(input)}`,
           });
         }
+        if (base && baseHelper.isPositiveBigFloatContainZero(base) === false) {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+            prop: "base",
+            target: `macro.inputs.input ${JSON.stringify(input)}`,
+          });
+        }
         if (min && baseHelper.isPositiveBigFloatContainZero(min) === false) {
           throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
             prop: "min",
             target: `macro.inputs.input ${JSON.stringify(input)}`,
           });
         }
-        if (max && baseHelper.isPositiveBigFloatContainZero(max) === false) {
-          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-            prop: "max",
-            target: `macro.inputs.input ${JSON.stringify(input)}`,
-          });
+        if (max) {
+          if (baseHelper.isPositiveBigFloatContainZero(max) === false) {
+            throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+              prop: "max",
+              target: `macro.inputs.input ${JSON.stringify(input)}`,
+            });
+          }
+          if (base && this.jsbiHelper.compareFraction(max, base) === -1) {
+            throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
+              prop: "base",
+              target: `macro.inputs.input ${JSON.stringify(input)}`,
+              field: JSON.stringify(max),
+            });
+          }
         }
         if (step && baseHelper.isPositiveBigFloatContainZero(step) === false) {
           throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {

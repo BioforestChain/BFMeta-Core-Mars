@@ -28,11 +28,11 @@ export class PromiseLogicVerifier extends TransactionLogicVerifier {
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     const { signature } = transaction.asset.promise.transaction;
-    const promiseTransaction = await this.transactionGetterHelper.getTransactionBySignature(
+    const promiseTransactionJson = await this.transactionGetterHelper.getTransactionBySignature(
       signature,
       this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
     );
-    if (promiseTransaction) {
+    if (promiseTransactionJson) {
       throw new ConsensusException(ERROR_LIST.ALREADY_EXIST, {
         prop: `promiseTransaction ${signature}`,
         target: "blockChain",

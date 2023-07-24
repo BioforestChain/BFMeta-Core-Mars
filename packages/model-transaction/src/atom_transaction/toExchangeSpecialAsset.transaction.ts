@@ -1,6 +1,6 @@
-import { Transaction } from "@bfchain/core-model-transaction-base";
-import { ToExchangeSpecialAssetAssetModel } from "@bfchain/core-model-transaction-asset";
 import { Type, Field } from "@bfchain/protobuf";
+import { ToExchangeSpecialAssetAssetModel } from "@bfchain/core-model-transaction-asset";
+import { AbstractTransaction } from "../abstractTransaction";
 
 /**
  * exchangeSpecialAsset 交易模型
@@ -8,7 +8,7 @@ import { Type, Field } from "@bfchain/protobuf";
  */
 @Type.d("ToExchangeSpecialAssetTransaction")
 export class ToExchangeSpecialAssetTransaction
-  extends Transaction<BFChainCore.ToExchangeSpecialAssetAssetJSON>
+  extends AbstractTransaction<BFChainCore.ToExchangeSpecialAssetAssetJSON>
   implements BFChainCore.ToExchangeSpecialAssetTransactionJSON
 {
   toJSON!: () => BFChainCore.ToExchangeSpecialAssetTransactionJSON;

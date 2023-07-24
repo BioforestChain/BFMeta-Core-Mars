@@ -29,7 +29,7 @@ export class ComplexTransactionLogicHelper {
   @Inject("transactionGetterHelper", { dynamics: true })
   protected transactionGetterHelper!: BFChainCore.TransactionGetterHelperInterface;
 
-  async getMacroTransaction(transaction: MacroCallTransaction) {
+  async getMacroCallTransaction(transaction: MacroCallTransaction) {
     const { macroId, inputs } = transaction.asset.call;
     let macroTransaction = this.memoryCache.getCache(macroId);
     if (macroTransaction === undefined) {
@@ -81,7 +81,7 @@ export class ComplexTransactionLogicHelper {
           break;
         }
         case this.transactionHelper.MACRO_CALL: {
-          const macroTransaction = await this.getMacroTransaction(trs as MacroCallTransaction);
+          const macroTransaction = await this.getMacroCallTransaction(trs as MacroCallTransaction);
           await func(macroTransaction);
           break;
         }

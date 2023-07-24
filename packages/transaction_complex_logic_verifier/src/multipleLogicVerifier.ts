@@ -158,4 +158,22 @@ export class MultipleLogicVerifier extends TransactionLogicVerifier {
       });
     }
   }
+
+  /**
+   * 获取需要被加锁的数据
+   *
+   * @param transaction
+   */
+  getLockData(transaction: MultipleTransaction) {
+    const { transactions } = transaction.asset.multiple;
+    const locks: string[] = [];
+    for (const subTransaction of transactions) {
+      const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
+        subTransaction.type,
+      );
+      const results = logicVerify.getLockData(subTransaction);
+      locks.push(...results);
+    }
+    return locks;
+  }
 }
