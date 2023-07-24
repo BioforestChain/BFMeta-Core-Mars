@@ -1,4 +1,4 @@
-import { Transaction } from "@bfchain/core-model-transaction-base";
+import { AbstractTransaction } from "@bfchain/core-model-transaction";
 import { PromiseAssetModel } from "./promise.asset";
 import { Type, Field } from "@bfchain/protobuf";
 
@@ -8,7 +8,7 @@ import { Type, Field } from "@bfchain/protobuf";
  */
 @Type.d("PromiseTransaction")
 export class PromiseTransaction
-  extends Transaction<BFChainCore.PromiseAssetJSON>
+  extends AbstractTransaction<BFChainCore.PromiseAssetJSON>
   implements BFChainCore.PromiseTransactionJSON
 {
   recipientId!: string;

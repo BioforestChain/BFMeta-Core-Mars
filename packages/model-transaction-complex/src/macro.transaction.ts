@@ -1,4 +1,4 @@
-import { Transaction } from "@bfchain/core-model-transaction-base";
+import { AbstractTransaction } from "@bfchain/core-model-transaction";
 import { MacroAssetModel } from "./macro.asset";
 import { Type, Field } from "@bfchain/protobuf";
 
@@ -7,7 +7,7 @@ import { Type, Field } from "@bfchain/protobuf";
  *
  */
 @Type.d("MacroTransaction")
-export class MacroTransaction extends Transaction<BFChainCore.MacroAssetJSON> {
+export class MacroTransaction extends AbstractTransaction<BFChainCore.MacroAssetJSON> {
   @Field.d(MacroTransaction.INC++, MacroAssetModel)
   asset!: MacroAssetModel;
 }
