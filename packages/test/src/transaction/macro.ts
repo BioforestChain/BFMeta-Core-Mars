@@ -156,7 +156,7 @@ async function getMacroTransaction(
   await factory.verifySignature(xx);
 
   // console.log(trsJson);
-  // console.log(trsJson.asset.macro);
+  console.log(trsJson.asset.macro);
   console.log(`json equal ${util.isDeepStrictEqual(trsJson, xx.toJSON())}`);
 }
 

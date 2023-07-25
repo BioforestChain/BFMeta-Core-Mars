@@ -209,9 +209,9 @@ async function getMacroCallTransaction(
 
   const trsJson = trs.toJSON();
 
-  const xx = await bfchainCore.transaction.recombineTransaction(trsJson);
+  const xx = await bfchainCore.transaction.recombineTransaction<MacroCallTransaction>(trsJson);
 
-  console.log(trsJson.asset.call);
+  console.log(xx.asset.call);
   console.log(`json equal ${util.isDeepStrictEqual(trsJson, xx.toJSON())}`);
 
   const logicVerifier =
@@ -287,6 +287,18 @@ async function getMacroCallTransaction(
       },
       format: MACRO_NUMBER_FORMAT.LITERAL,
     },
+    // {
+    //   type: MACRO_INPUT_TYPE.NUMBER,
+    //   name: "rangeType",
+    //   keyPath: "rangeType",
+    //   format: MACRO_NUMBER_FORMAT.LITERAL,
+    // },
+    // {
+    //   type: MACRO_INPUT_TYPE.ADDRESS,
+    //   name: "range",
+    //   keyPath: "range",
+    //   repeat: true,
+    // },
   ];
 
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair("secret");
@@ -295,7 +307,7 @@ async function getMacroCallTransaction(
     address: await bfchainCore.accountBaseHelper.getAddressFromPublicKey(keypair.publicKey),
     publicKey: getHexFromArrayBuffer(keypair.publicKey),
   };
-  const inputs = {
+  const inputs: { [name: string]: any } = {
     senderId: sender1.address,
     senderPublicKey: sender1.publicKey,
     recipientId: "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
@@ -310,7 +322,7 @@ async function getMacroCallTransaction(
     bfchainCore.transactionHelper.MACRO_CALL,
   ) as unknown as MacroCallTransactionFactory;
 
-  const trsWithoutSign = await factory.generateTransaction(template, defaultInputs, inputs);
+  const trsWithoutSign = await factory.generateTransaction(template, defaultInputs, inputs, true);
   const macroCall = await factory.signTransaction(
     trsWithoutSign,
     sender1.secret,

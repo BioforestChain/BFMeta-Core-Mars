@@ -65,6 +65,7 @@ declare namespace BFChainCore {
       keyPath: string;
       // regexp
       pattern?: string;
+      repeat?: boolean;
     }
     interface TextInputJSON<
       T extends MACRO_INPUT_TYPE = import("./atom_input/constants").MACRO_INPUT_TYPE.TEXT,

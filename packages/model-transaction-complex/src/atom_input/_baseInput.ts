@@ -16,6 +16,8 @@ export class BaseInputModel<T extends MACRO_INPUT_TYPE>
   keyPath!: string;
   @Field.d(BaseInputModel.INC++, "string", "optional")
   pattern?: string;
+  @Field.d(BaseInputModel.INC++, "bool", "optional")
+  repeat?: boolean;
 
   toJSON() {
     const resp: BFChainCore.Macro.BaseInputJSON<T> = {
@@ -24,6 +26,7 @@ export class BaseInputModel<T extends MACRO_INPUT_TYPE>
       keyPath: this.keyPath,
     };
     this.pattern && (resp.pattern = this.pattern);
+    this.repeat !== undefined && (resp.repeat = this.repeat);
     return resp;
   }
 }

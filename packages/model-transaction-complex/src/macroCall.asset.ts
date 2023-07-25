@@ -1,13 +1,15 @@
 import { getHexFromArrayBuffer, parseHexToArrayBuffer, EasyWeakMap } from "@bfchain/util";
 import { Message, Field, MapField, Type } from "@bfchain/protobuf";
-import { StringKeyMap } from "@bfchain/core-model-common";
+import { StringKeyJsonValueMap } from "@bfchain/core-model-common";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { Transaction } from "@bfchain/core-model-transaction-base";
 import { TRANSACTION_TYPES_MAP } from "@bfchain/core-model-transaction";
 
 const { ArgumentFormatException } = CoreExceptionGenerator("MODEL", "transactionModel");
 
-const CallInputsMapWM = new EasyWeakMap((call: MacroCallModel) => new StringKeyMap(call.inputs));
+const CallInputsMapWM = new EasyWeakMap(
+  (call: MacroCallModel) => new StringKeyJsonValueMap(call.inputs),
+);
 
 /**
  * macroCall 交易 asset 模型

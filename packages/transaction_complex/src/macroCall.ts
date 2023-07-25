@@ -1,5 +1,10 @@
 import { Injectable, Inject, wrapTaskList, $safeEnd } from "@bfchain/util";
-import { MacroCallTransaction, MACRO_INPUT_TYPE, MACRO_NUMBER_FORMAT } from "@bfchain/core-model";
+import {
+  MacroCallTransaction,
+  MACRO_INPUT_TYPE,
+  MACRO_NUMBER_FORMAT,
+  StringKeyJsonValueMap,
+} from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
@@ -63,135 +68,162 @@ export class MacroCallTransactionFactory extends TransactionFactory<MacroCallTra
   async generateTransaction<T extends BFChainCore.Transaction>(
     template: T,
     defineInputs: BFChainCore.Macro.InputJSON[],
-    inputs: BFChainCore.MacroCallInputs,
+    jsonInputs: BFChainCore.MacroCallInputs,
+    parseInput = false,
     skipVerify = true,
   ) {
+    let parsedInput = jsonInputs;
+    if (parseInput) {
+      parsedInput = Object.fromEntries(
+        Object.entries(jsonInputs).map((kv) => {
+          return [kv[0], JSON.stringify(kv[1])] as const;
+        }),
+      );
+    }
+    const inputMap = new StringKeyJsonValueMap(parsedInput);
+    const baseHelper = this.baseHelper;
     /// 复制出一份JSON
     const transaction = template.toJSON();
     for (const defineInput of defineInputs) {
-      const { name, pattern } = defineInput;
-      let value: unknown = inputs[name];
-      if (typeof value !== "string") {
-        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-          prop: `${defineInput.name} ${value}`,
-          target: "inputs",
-        });
-      }
-      if (pattern && new RegExp(pattern).test(value) === false) {
-        throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
-          to_compare_prop: `${name} ${value}`,
-          to_target: "inputs",
-          be_compare_prop: `pattern ${pattern}`,
-          be_target: "defineInput",
-        });
-      }
-      switch (defineInput.type) {
-        case MACRO_INPUT_TYPE.ADDRESS:
-          if ((await this.accountBaseHelper.isAddress(value)) === false) {
-            throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
-              to_compare_prop: `${name} ${value}`,
-              to_target: "inputs",
-              be_compare_prop: `pattern chain address`,
-              be_target: "defineInput",
-            });
-          }
-          break;
-        case MACRO_INPUT_TYPE.PUBLICKEY:
-          if (this.baseHelper.isValidPublicKey(value) === false) {
-            throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
-              to_compare_prop: `${name} ${value}`,
-              to_target: "inputs",
-              be_compare_prop: `pattern chain publicKey`,
-              be_target: "defineInput",
-            });
-          }
-          break;
-        case MACRO_INPUT_TYPE.SIGNATURE:
-          if (this.transactionHelper.isValidTransactionSignature(value) === false) {
-            throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
-              to_compare_prop: `${name} ${value}`,
-              to_target: "inputs",
-              be_compare_prop: `pattern chain signature`,
-              be_target: "defineInput",
-            });
-          }
-          break;
-        case MACRO_INPUT_TYPE.TEXT:
-          break;
-        case MACRO_INPUT_TYPE.CALC:
-          /// 不知道咋验证啊
-          value = calc.evaluate(defineInput.calc, inputs);
-        case MACRO_INPUT_TYPE.NUMBER: {
-          if ((value as string).includes(".")) {
-            const items = (value as string).split(".");
-            /// 拦截 0.0，10.0，20.0 ...
-            if (BigInt(items[1]) === BigInt(0)) {
-              throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
-                to_compare_prop: `name ${name}(${value})`,
+      const { name, pattern, repeat } = defineInput;
+      let result = inputMap.get(name);
+      const verifyFunc = async (value: unknown) => {
+        if (typeof value !== "string") {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+            prop: `${defineInput.name} ${value}`,
+            target: "inputs",
+          });
+        }
+        if (pattern && new RegExp(pattern).test(value) === false) {
+          throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
+            to_compare_prop: `${name} ${value}`,
+            to_target: "inputs",
+            be_compare_prop: `pattern ${pattern}`,
+            be_target: "defineInput",
+          });
+        }
+        switch (defineInput.type) {
+          case MACRO_INPUT_TYPE.ADDRESS:
+            if ((await this.accountBaseHelper.isAddress(value)) === false) {
+              throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
+                to_compare_prop: `${name} ${value}`,
                 to_target: "inputs",
-                be_compare_prop: items[0],
+                be_compare_prop: `pattern chain address`,
+                be_target: "defineInput",
               });
             }
+            break;
+          case MACRO_INPUT_TYPE.PUBLICKEY:
+            if (this.baseHelper.isValidPublicKey(value) === false) {
+              throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
+                to_compare_prop: `${name} ${value}`,
+                to_target: "inputs",
+                be_compare_prop: `pattern chain publicKey`,
+                be_target: "defineInput",
+              });
+            }
+            break;
+          case MACRO_INPUT_TYPE.SIGNATURE:
+            if (this.transactionHelper.isValidTransactionSignature(value) === false) {
+              throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
+                to_compare_prop: `${name} ${value}`,
+                to_target: "inputs",
+                be_compare_prop: `pattern chain signature`,
+                be_target: "defineInput",
+              });
+            }
+            break;
+          case MACRO_INPUT_TYPE.TEXT:
+            break;
+          case MACRO_INPUT_TYPE.CALC:
+            /// 不知道咋验证啊
+            /// FIXME: @GauBee
+            value = calc.evaluate(defineInput.calc, inputMap.toObject() as any);
+          case MACRO_INPUT_TYPE.NUMBER: {
+            if ((value as string).includes(".")) {
+              const items = (value as string).split(".");
+              /// 拦截 0.0，10.0，20.0 ...
+              if (BigInt(items[1]) === BigInt(0)) {
+                throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
+                  to_compare_prop: `name ${name}(${value})`,
+                  to_target: "inputs",
+                  be_compare_prop: items[0],
+                });
+              }
+            }
+            const base = defineInput.base || {
+              numerator: "0",
+              denominator: "1",
+            };
+            let formatValue = this.jsbiHelper.toFraction(value as string);
+            formatValue = this.jsbiHelper.minusFraction(formatValue, base);
+            if (
+              defineInput.min &&
+              this.jsbiHelper.compareFraction(defineInput.min, formatValue) === 1
+            ) {
+              throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GTE_FIELD, {
+                prop: `name ${name} ${value}`,
+                target: "inputs",
+                field: JSON.stringify(defineInput.min),
+              });
+            }
+            if (
+              defineInput.max &&
+              this.jsbiHelper.compareFraction(defineInput.max, formatValue) === -1
+            ) {
+              throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
+                prop: `name ${name} ${value}`,
+                target: "inputs",
+                field: JSON.stringify(defineInput.max),
+              });
+            }
+            const step = defineInput.step || {
+              numerator: "1",
+              denominator: "1",
+            };
+            const multiple = this.jsbiHelper.divisionFractionAndCeil(formatValue, step);
+            if (
+              this.jsbiHelper.compareFraction(
+                formatValue,
+                this.jsbiHelper.multiplyFraction(
+                  {
+                    numerator: multiple,
+                    denominator: BigInt(1),
+                  },
+                  step,
+                ),
+              ) !== 0
+            ) {
+              throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
+                to_compare_prop: `name ${name}(${value})'s step`,
+                to_target: "inputs",
+                be_compare_prop: JSON.stringify(defineInput.step),
+              });
+            }
+            if (defineInput.format === MACRO_NUMBER_FORMAT.LITERAL) {
+              value = Number(value);
+            }
+            break;
           }
-          const base = defineInput.base || {
-            numerator: "0",
-            denominator: "1",
-          };
-          let formatValue = this.jsbiHelper.toFraction(value as string);
-          formatValue = this.jsbiHelper.minusFraction(formatValue, base);
-          if (
-            defineInput.min &&
-            this.jsbiHelper.compareFraction(defineInput.min, formatValue) === 1
-          ) {
-            throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GTE_FIELD, {
-              prop: `name ${name} ${value}`,
-              target: "inputs",
-              field: JSON.stringify(defineInput.min),
-            });
-          }
-          if (
-            defineInput.max &&
-            this.jsbiHelper.compareFraction(defineInput.max, formatValue) === -1
-          ) {
-            throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
-              prop: `name ${name} ${value}`,
-              target: "inputs",
-              field: JSON.stringify(defineInput.max),
-            });
-          }
-          const step = defineInput.step || {
-            numerator: "1",
-            denominator: "1",
-          };
-          const multiple = this.jsbiHelper.divisionFractionAndCeil(formatValue, step);
-          if (
-            this.jsbiHelper.compareFraction(
-              formatValue,
-              this.jsbiHelper.multiplyFraction(
-                {
-                  numerator: multiple,
-                  denominator: BigInt(1),
-                },
-                step,
-              ),
-            ) !== 0
-          ) {
-            throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
-              to_compare_prop: `name ${name}(${value})'s step`,
-              to_target: "inputs",
-              be_compare_prop: JSON.stringify(defineInput.step),
-            });
-          }
-          if (defineInput.format === MACRO_NUMBER_FORMAT.LITERAL) {
-            value = Number(value);
-          }
-          break;
+          default:
+            $safeEnd(defineInput);
         }
-        default:
-          $safeEnd(defineInput);
+      };
+      if (repeat) {
+        if (baseHelper.isArray(result) === false) {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+            prop: `${defineInput.name}(repeat ${repeat}) ${result}`,
+            target: "inputs",
+          });
+        }
+        for (const item of result as unknown[]) {
+          await verifyFunc(item);
+        }
+      } else {
+        await verifyFunc(result);
       }
       /// 写入值
-      if (this.trySet(transaction, defineInput.keyPath, value) === false) {
+      if (this.trySet(transaction, defineInput.keyPath, result) === false) {
         throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
           prop: `name ${name}`,
           target: "inputs",

@@ -1,44 +1,53 @@
 import { cacheGetter } from "@bfchain/util-decorator";
 
+type Keyof<V> = keyof V & string;
 /**
  * 传入一个普通的object对象，其属性会被当做Map一样操作
  */
-class TypedMap<T extends string | number, V> {
-  private _m: Map<T, V>;
+class TypedMap<KV extends Record<string, any>, MKV extends Record<Keyof<KV>, any> = KV> {
+  private _m: Map<Keyof<MKV>, MKV[string]>;
   constructor(
-    private _hm: {
-      [key in T]: V;
+    private _raw: KV,
+    private valueCode: {
+      decode: <K extends Keyof<KV>>(rvalue: KV[K], key: K) => MKV[K];
+      encode: <K extends Keyof<KV>>(mvalue: MKV[K], key: K) => KV[K];
     },
-    parseMapToEntries: (map: { [key: string]: V }) => [T, V][],
   ) {
-    this._m = new Map(parseMapToEntries(_hm));
+    this._m = new Map();
+    for (const [key, rvalue] of Object.entries(this._raw)) {
+      this._m.set(key, valueCode.decode(rvalue, key));
+    }
   }
   /**
    * 因为`set`会在构造函数调用`super`的时候去运作，那时候`._map`属性还没赋值，所以延迟设置
    */
-  set(key: T, val: V) {
+  set<K extends Keyof<KV>>(key: K, val: MKV[K]) {
     this._m.set(key, val);
-    this._hm[key] = val;
+    this._raw[key] = this.valueCode.encode(val, key);
     return this;
   }
-  delete(key: T) {
-    delete this._hm[key];
-    return this._m.delete(key);
+  delete(key: Keyof<KV>) {
+    if (this._m.delete(key)) {
+      delete this._raw[key];
+      return true;
+    }
+    return false;
   }
   clear() {
-    for (const num in this._hm) {
-      delete this._hm[num];
+    for (const key in this._raw) {
+      delete this._raw[key];
     }
     return this._m.clear();
   }
-  toJSON() {
-    const res = {} as { [key in T]: V };
-
-    for (const item of this._m.entries()) {
-      const value = item[1] as { toJSON?: Function } | undefined;
-      res[item[0]] = value && typeof value.toJSON === "function" ? value.toJSON() : value;
+  toObject() {
+    const res: any = {};
+    for (const [item, value] of this._m) {
+      res[item[0]] = value;
     }
-    return res;
+    return res as MKV;
+  }
+  toJSON() {
+    return { ...this._raw };
   }
   //#region Map属性与方法的继承
   @cacheGetter
@@ -86,16 +95,23 @@ class TypedMap<T extends string | number, V> {
   }
   //#endregion
 }
-export class NumberKeyMap<V> extends TypedMap<number, V> {
+// export class NumberKeyMap<V> extends TypedMap<number, V> {
+//   constructor(map: { [key: string]: V }) {
+//     super(Object.keys(map).map((num) => [Number.parseInt(num), map[num]] as [number, V]));
+//   }
+// }
+export class StringKeyMap<V> extends TypedMap<Record<string, V>> {
   constructor(map: { [key: string]: V }) {
-    super(map, (map) =>
-      Object.keys(map).map((num) => [Number.parseInt(num), map[num]] as [number, V]),
-    );
+    super(map, { decode: (value) => value, encode: (value) => value });
   }
 }
-export class StringKeyMap<V> extends TypedMap<string, V> {
-  constructor(map: { [key: string]: V }) {
-    super(map, (map) => Object.entries(map));
+
+export class StringKeyJsonValueMap<KV extends Record<string, any>> extends TypedMap<
+  Record<string, string>,
+  KV
+> {
+  constructor(map: { [key: string]: string }) {
+    super(map, { decode: (value) => JSON.parse(value), encode: (value) => JSON.stringify(value) });
   }
 }
 
