@@ -322,7 +322,11 @@ async function getMacroCallTransaction(
     bfchainCore.transactionHelper.MACRO_CALL,
   ) as unknown as MacroCallTransactionFactory;
 
-  const trsWithoutSign = await factory.generateTransaction(template, defaultInputs, inputs, true);
+  const trsWithoutSign = await factory.generateTransactionWithJsonInput(
+    template,
+    defaultInputs,
+    inputs,
+  );
   const macroCall = await factory.signTransaction(
     trsWithoutSign,
     sender1.secret,
@@ -346,7 +350,7 @@ async function getMacroCallTransaction(
     sender,
     {
       macroId: macroTrs.signature,
-      inputs,
+      inputs: factory.parseMacroInput(inputs),
       transaction: macroCall.toJSON(),
     },
     macroTrs,

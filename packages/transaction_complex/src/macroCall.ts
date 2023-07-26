@@ -65,22 +65,35 @@ export class MacroCallTransactionFactory extends TransactionFactory<MacroCallTra
     return true;
   }
 
+  parseMacroInput(inputs: { [name: string]: any }): BFChainCore.MacroCallInputs {
+    return Object.fromEntries(
+      Object.entries(inputs).map((kv) => {
+        return [kv[0], JSON.stringify(kv[1])] as const;
+      }),
+    );
+  }
+
+  async generateTransactionWithJsonInput<T extends BFChainCore.Transaction>(
+    template: T,
+    defineInputs: BFChainCore.Macro.InputJSON[],
+    jsonInputs: { [name: string]: any },
+    skipVerify = true,
+  ) {
+    return await this.generateTransaction(
+      template,
+      defineInputs,
+      this.parseMacroInput(jsonInputs),
+      skipVerify,
+    );
+  }
+
   async generateTransaction<T extends BFChainCore.Transaction>(
     template: T,
     defineInputs: BFChainCore.Macro.InputJSON[],
     jsonInputs: BFChainCore.MacroCallInputs,
-    parseInput = false,
     skipVerify = true,
   ) {
-    let parsedInput = jsonInputs;
-    if (parseInput) {
-      parsedInput = Object.fromEntries(
-        Object.entries(jsonInputs).map((kv) => {
-          return [kv[0], JSON.stringify(kv[1])] as const;
-        }),
-      );
-    }
-    const inputMap = new StringKeyJsonValueMap(parsedInput);
+    const inputMap = new StringKeyJsonValueMap(jsonInputs);
     const baseHelper = this.baseHelper;
     /// 复制出一份JSON
     const transaction = template.toJSON();
