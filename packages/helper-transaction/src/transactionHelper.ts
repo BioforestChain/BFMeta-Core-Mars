@@ -17,7 +17,7 @@ import { TPOWHelper } from "@bfchain/core-helper-transaction-pow";
 import { JSBIHelper } from "@bfchain/core-helper-bigint";
 import { AsymmetricHelper } from "@bfchain/core-helper-asymmetric";
 import { Injectable, Inject } from "@bfchain/util-dep-inject";
-import { decodeBinaryToHex } from "@bfchain/util-encoding-hex";
+import { decodeBinaryToHex, parseHexToArrayBuffer } from "@bfchain/util-encoding-hex";
 import { cacheGetter } from "@bfchain/util-decorator";
 import { AccountBaseHelper } from "@bfchain/core-helper-account-base";
 
@@ -806,7 +806,7 @@ export class TransactionHelper {
    * @param grabId
    * @param giftTransactionInBlock
    */
-  calcGrabGiftAssetNumber(
+  async calcGrabGiftAssetNumber(
     grabId: string,
     giftTransaction: GiftAssetTransaction,
     blockSignatureBuffer: Uint8Array,
@@ -816,7 +816,7 @@ export class TransactionHelper {
       case GIFT_DISTRIBUTION_RULE.AVERAGE:
         return this.calcGrabAverageGiftAssetNumber(giftAsset.amount, giftAsset.totalGrabableTimes);
       case GIFT_DISTRIBUTION_RULE.RANDOM:
-        return this.calcGrabRandomGiftAssetNumber(
+        return await this.calcGrabRandomGiftAssetNumber(
           grabId,
           blockSignatureBuffer,
           giftTransaction.signatureBuffer,
@@ -825,13 +825,58 @@ export class TransactionHelper {
           giftAsset.totalGrabableTimes,
         );
       case GIFT_DISTRIBUTION_RULE.RECIPIENT_RANDOM:
-        return this.calcGrabRandomGiftAssetNumber(
+        return await this.calcGrabRandomGiftAssetNumber(
           grabId,
           blockSignatureBuffer,
           giftTransaction.signatureBuffer,
           giftTransaction.senderId,
           giftAsset.amount,
           giftAsset.totalGrabableTimes,
+        );
+    }
+  }
+
+  /**
+   * 计算用户抢到的资产数量
+   *
+   * @param grabberId 抢的用户 id
+   * @param blockSignature 礼物所在的区块 id
+   * @param giftId 礼物的 id
+   * @param giverId 赠送者 id
+   * @param amount 赠送的数量
+   * @param totalGrabableTimes 赠送可被获取的总次数
+   * @param giftDistributionRule 赠送规则
+   * @returns
+   */
+  async calcGrabbedAssetNumber(
+    grabberId: string,
+    blockSignature: string,
+    giftId: string,
+    giverId: string,
+    amount: string,
+    totalGrabableTimes: number,
+    giftDistributionRule: GIFT_DISTRIBUTION_RULE,
+  ) {
+    switch (giftDistributionRule) {
+      case GIFT_DISTRIBUTION_RULE.AVERAGE:
+        return this.calcGrabAverageGiftAssetNumber(amount, totalGrabableTimes);
+      case GIFT_DISTRIBUTION_RULE.RANDOM:
+        return await this.calcGrabRandomGiftAssetNumber(
+          grabberId,
+          parseHexToArrayBuffer(blockSignature),
+          parseHexToArrayBuffer(giftId),
+          giverId,
+          amount,
+          totalGrabableTimes,
+        );
+      case GIFT_DISTRIBUTION_RULE.RECIPIENT_RANDOM:
+        return this.calcGrabRandomGiftAssetNumber(
+          grabberId,
+          parseHexToArrayBuffer(blockSignature),
+          parseHexToArrayBuffer(giftId),
+          giverId,
+          amount,
+          totalGrabableTimes,
         );
     }
   }
