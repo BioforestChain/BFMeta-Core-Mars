@@ -208,6 +208,7 @@ export class MacroCallTransactionFactory extends TransactionFactory<MacroCallTra
           default:
             $safeEnd(defineInput);
         }
+        return value as string;
       };
       if (repeat) {
         if (baseHelper.isArray(result) === false) {
@@ -216,18 +217,26 @@ export class MacroCallTransactionFactory extends TransactionFactory<MacroCallTra
             target: "inputs",
           });
         }
-        for (const item of result as unknown[]) {
-          await verifyFunc(item);
+        const values: string[] = [];
+        for (const item of result) {
+          values.push(await verifyFunc(item));
+        }
+        /// 写入值
+        if (this.trySet(transaction, defineInput.keyPath, values) === false) {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+            prop: `name ${name}`,
+            target: "inputs",
+          });
         }
       } else {
-        await verifyFunc(result);
-      }
-      /// 写入值
-      if (this.trySet(transaction, defineInput.keyPath, result) === false) {
-        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-          prop: `name ${name}`,
-          target: "inputs",
-        });
+        const value = await verifyFunc(result);
+        /// 写入值
+        if (this.trySet(transaction, defineInput.keyPath, value) === false) {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+            prop: `name ${name}`,
+            target: "inputs",
+          });
+        }
       }
     }
     const transactionModel = await this.transactionCore.recombineTransaction<T>(transaction);
@@ -239,13 +248,13 @@ export class MacroCallTransactionFactory extends TransactionFactory<MacroCallTra
   }
 
   async signTransaction<T extends BFChainCore.Transaction>(
-    xx: T,
+    transaction: T,
     secret: string,
     secondSecret?: string,
     pow?: BFChainCore.TransactionPoWOptions<T>,
     skipPow?: boolean,
   ) {
-    const template = await this.transactionCore.recombineTransaction<T>(xx.toJSON());
+    const template = await this.transactionCore.recombineTransaction<T>(transaction.toJSON());
     const { accountBaseHelper, asymmetricHelper } = this;
     const keypair = await accountBaseHelper.createSecretKeypair(secret);
     template.signatureBuffer = await asymmetricHelper.detachedSign(
