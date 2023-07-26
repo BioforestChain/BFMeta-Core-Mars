@@ -65,7 +65,7 @@ export class MacroCallTransactionFactory extends TransactionFactory<MacroCallTra
     return true;
   }
 
-  parseMacroInput(inputs: { [name: string]: any }): BFChainCore.MacroCallInputs {
+  parseToMacroCallInputs(inputs: { [name: string]: any }): BFChainCore.MacroCallInputs {
     return Object.fromEntries(
       Object.entries(inputs).map((kv) => {
         return [kv[0], JSON.stringify(kv[1])] as const;
@@ -82,7 +82,7 @@ export class MacroCallTransactionFactory extends TransactionFactory<MacroCallTra
     return await this.generateTransaction(
       template,
       defineInputs,
-      this.parseMacroInput(jsonInputs),
+      this.parseToMacroCallInputs(jsonInputs),
       skipVerify,
     );
   }

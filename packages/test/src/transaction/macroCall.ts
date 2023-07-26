@@ -350,7 +350,7 @@ async function getMacroCallTransaction(
     sender,
     {
       macroId: macroTrs.signature,
-      inputs: factory.parseMacroInput(inputs),
+      inputs: factory.parseToMacroCallInputs(inputs),
       transaction: macroCall.toJSON(),
     },
     macroTrs,
