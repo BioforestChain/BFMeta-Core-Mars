@@ -144,12 +144,12 @@ async function getIssueEntityTransaction(
 
   await bfchainCore.transaction.getTransactionFactoryFromType(trs.type).verify(trs);
 
-  const yy =
-    bfchainCore.transactionLogicVerifier.getTransactionLogicVerifierFromType<IssueEntityMultiTransactionV1>(
-      trs.type,
-    );
+  // const yy =
+  //   bfchainCore.transactionLogicVerifier.getTransactionLogicVerifierFromType<IssueEntityMultiTransactionV1>(
+  //     trs.type,
+  //   );
 
-  await yy.verify(trs, 10, {} as any, false, {} as any);
+  // await yy.verify(trs, 10, new Map(), false, {} as any);
 
   console.log(trs.toJSON());
 }

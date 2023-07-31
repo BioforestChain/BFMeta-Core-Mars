@@ -169,7 +169,6 @@ export class MacroCallTransactionFactory extends TransactionFactory<MacroCallTra
               denominator: "1",
             };
             let formatValue = this.jsbiHelper.toFraction(value as string);
-            formatValue = this.jsbiHelper.minusFraction(formatValue, base);
             if (
               defineInput.min &&
               this.jsbiHelper.compareFraction(defineInput.min, formatValue) === 1
@@ -190,6 +189,8 @@ export class MacroCallTransactionFactory extends TransactionFactory<MacroCallTra
                 field: JSON.stringify(defineInput.max),
               });
             }
+            // 扣除 base 后验证步长
+            formatValue = this.jsbiHelper.minusFraction(formatValue, base);
             const step = defineInput.step || {
               numerator: "1",
               denominator: "1",
