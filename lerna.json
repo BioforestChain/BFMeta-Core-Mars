@@ -3,7 +3,7 @@
     "packages/*",
     "packages/@types/*"
   ],
-  "version": "9.0.30",
+  "version": "9.0.31",
   "useWorkspaces": true,
   "npmClient": "yarn",
   "publishConifg": {
