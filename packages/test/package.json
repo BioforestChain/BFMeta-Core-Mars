@@ -1,7 +1,7 @@
 {
   "name": "@bfchain/core-test",
   "private": true,
-  "version": "9.0.32",
+  "version": "9.0.33",
   "description": "",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -15,9 +15,9 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core": "9.0.32",
-    "@bfchain/core-crypto": "9.0.32",
-    "@bfchain/core-typings": "9.0.32",
+    "@bfchain/core": "9.0.33",
+    "@bfchain/core-crypto": "9.0.33",
+    "@bfchain/core-typings": "9.0.33",
     "@types/ed2curve": "^0.2.2",
     "@types/optimist": "^0.0.29",
     "json-dry-factory": "^1.1.9",
