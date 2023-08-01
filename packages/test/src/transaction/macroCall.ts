@@ -316,6 +316,8 @@ async function getMacroCallTransaction(
       "82b37cd5461c8624d8b7fda89ff3612c32eee7272331b26db407f594c7a750e89a582074bfe83197146fbad32a94b11665795fe8d476554e50ea7a03a99ddc05",
     applyBlockHeight: "1000",
     // effectiveBlockHeight: "1000",
+    // rangeType: RANGE_TYPE.MULTI_ADDRESS.toString(),
+    // range: [sender.address, sender1.address],
   };
 
   const factory = bfchainCore.transaction.getTransactionFactoryFromType<MacroCallTransaction>(

@@ -47,7 +47,15 @@ class TypedMap<KV extends Record<string, any>, MKV extends Record<Keyof<KV>, any
     return res as MKV;
   }
   toJSON() {
-    return { ...this._raw };
+    // return { ...this._raw };
+    const res = {} as {
+      [key in Keyof<MKV>]: MKV[string];
+    };
+    for (const item of this._m.entries()) {
+      const value = item[1] as { toJSON?: Function } | undefined;
+      res[item[0]] = value && typeof value.toJSON === "function" ? value.toJSON() : value;
+    }
+    return res;
   }
   //#region Map属性与方法的继承
   @cacheGetter
