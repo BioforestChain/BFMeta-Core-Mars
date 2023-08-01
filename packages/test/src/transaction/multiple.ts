@@ -42,7 +42,10 @@ async function getTransferAssetTransaction(sender: AccountModel, bfchainCore: BF
     range: [], // 接收资产账户地址
     timestamp: 770880, // 生成交易时间戳
     fee: "10", // 交易手续费
-    remark: { remark: "create transfer asset" }, // 交易备注，任意信息
+    remark: {
+      blobSeed1:
+        "blob+sha256+hex://1b21dd8a2e42b5c742e0f4f7437cec25e636942c40038881cfdd462a2b5a7336?size=10",
+    }, // 交易备注，任意信息
     dappid: getRandomDAppId(), // 交易所属的 dappid
     lns: bfchainCore.config.genesisLocationName,
     sourceIP: "127.0.0.1", // 交易来源 ip
@@ -105,7 +108,10 @@ async function getAcceptVoteTransaction(sender: AccountModel, bfchainCore: BFCha
     range: [],
     timestamp: 770880, // 生成交易时间戳
     fee: "10", // 交易手续费
-    remark: { remark: "create accept vote" }, // 交易备注，任意信息
+    remark: {
+      blobSeed1:
+        "blob+sha256+hex://1b21dd8a2e42b5c742e0f4f7437cec25e636942c40038881cfdd462a2b5a7336?size=10",
+    }, // 交易备注，任意信息
     dappid: getRandomDAppId(), // 交易所属的 dappid
     lns: bfchainCore.config.genesisLocationName,
     sourceIP: "127.0.0.1", // 交易来源 ip
@@ -152,7 +158,10 @@ async function getMultipleTransaction(
     range: [],
     timestamp: 770880, // 生成交易时间戳
     fee: "10000", // 交易手续费
-    remark: { remark: "create multiple" }, // 交易备注，任意信息
+    remark: {
+      blobSeed1:
+        "blob+sha256+hex://1b21dd8a2e42b5c742e0f4f7437cec25e636942c40038881cfdd462a2b5a7336?size=10",
+    }, // 交易备注，任意信息
     dappid: getRandomDAppId(), // 交易所属的 dappid
     lns: bfchainCore.config.genesisLocationName,
     sourceIP: "127.0.0.1", // 交易来源 ip
@@ -209,7 +218,7 @@ async function getMultipleTransaction(
       [trs3, await getAcceptVoteTransaction(getSenderWithoutSecondSecret(), bfchainCore)],
       bfchainCore,
     );
-    console.log(trs4);
+    console.log(JSON.stringify(trs4, null, 4));
   } catch (error) {
     console.log(error);
   }

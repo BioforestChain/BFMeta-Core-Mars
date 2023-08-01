@@ -37,4 +37,14 @@ export class PromiseResolveTransaction
     const { transaction } = this.asset.resolve;
     return transaction.as(TransactionCtor, subId);
   }
+
+  get blobSize() {
+    let totalSize = 0;
+    const blobMap = this.blobMap.values();
+    for (const items of blobMap) {
+      totalSize += items[3];
+    }
+    totalSize += this.asset.resolve.transaction.blobSize;
+    return totalSize;
+  }
 }
