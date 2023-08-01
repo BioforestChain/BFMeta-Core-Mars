@@ -31,8 +31,9 @@ export class ComplexTransactionLogicHelper {
 
   async getMacroCallTransaction(transaction: MacroCallTransaction) {
     const { macroId, inputs } = transaction.asset.call;
-    let macroTransaction = this.memoryCache.getCache(macroId);
-    if (macroTransaction === undefined) {
+    const cacheKey = `${macroId}_${transaction.signature}`;
+    let macroCallTransaction = this.memoryCache.getCache(cacheKey);
+    if (macroCallTransaction === undefined) {
       const macroTransactionJson = await this.transactionGetterHelper.getMacroCallTransaction(
         macroId,
         inputs,
@@ -43,10 +44,10 @@ export class ComplexTransactionLogicHelper {
           target: "blockChain",
         });
       }
-      macroTransaction = await this.transactionCore.recombineTransaction(macroTransactionJson);
-      this.memoryCache.setCache(macroId, macroTransaction);
+      macroCallTransaction = await this.transactionCore.recombineTransaction(macroTransactionJson);
+      this.memoryCache.setCache(cacheKey, macroCallTransaction);
     }
-    return macroTransaction;
+    return macroCallTransaction;
   }
 
   async getPromiseTransaction(promiseId: string) {

@@ -659,12 +659,6 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     return [];
   }
 
-  getCache<T>(key: string) {
-    return this.memoryCache.getCache(key);
-  }
-  setCache(key: string, transaction: BFChainCore.Transaction) {
-    this.memoryCache.setCache(key, transaction);
-  }
   clearCache() {
     this.memoryCache.clearCache();
   }
