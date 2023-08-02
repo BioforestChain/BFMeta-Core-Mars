@@ -547,9 +547,10 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     const { maxBlockBlobSize } = this.configHelper;
     const maxBlobSize =
       maxBlockBlobSize < miningMachineMaxBlobSize ? maxBlockBlobSize : miningMachineMaxBlobSize;
-    if (transaction.blobSize > maxBlobSize) {
+    const blobSize = transaction.getBlobSize(true);
+    if (blobSize > maxBlobSize) {
       throw new ConsensusException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
-        prop: `transaction blob size ${transaction.blobSize}`,
+        prop: `transaction blob size ${blobSize}`,
         target: "transaction",
         field: maxBlobSize,
       });

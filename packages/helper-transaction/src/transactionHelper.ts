@@ -442,9 +442,11 @@ export class TransactionHelper {
    */
   verifyTransactionBlobSize<SOME_TRS extends BFChainCore.Transaction>(transaction: SOME_TRS) {
     const { maxTransactionBlobSize } = this.config;
-    if (transaction.blobSize > maxTransactionBlobSize) {
+    // 子交易自己校验
+    const blobSize = transaction.getBlobSize(true);
+    if (blobSize > maxTransactionBlobSize) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
-        prop: `transaction blob size ${transaction.blobSize}`,
+        prop: `transaction blob size ${blobSize}`,
         target: "transaction",
         field: maxTransactionBlobSize,
       });
@@ -527,7 +529,8 @@ export class TransactionHelper {
   }
   /**计算 blob 的最低手续费 */
   calcTransactionBlobFee(transaction: Transaction, customMinFeePerByte?: BFChainCore.FractionJSON) {
-    const blobSize = transaction.blobSize;
+    // 子交易自己校验
+    const blobSize = transaction.getBlobSize(true);
     if (blobSize === 0) {
       return BigInt(0);
     }

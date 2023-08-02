@@ -192,7 +192,7 @@ export class Transaction<AJ extends object = object>
     const blobMap = blobMapWM.forceGet(this);
     return blobMap;
   }
-  get blobSize() {
+  getBlobSize(skipSubTransaction = false) {
     let totalSize = 0;
     const blobMap = this.blobMap.values();
     for (const items of blobMap) {

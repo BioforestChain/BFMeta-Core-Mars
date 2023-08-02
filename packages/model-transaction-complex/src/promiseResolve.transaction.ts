@@ -38,13 +38,15 @@ export class PromiseResolveTransaction
     return transaction.as(TransactionCtor, subId);
   }
 
-  get blobSize() {
+  getBlobSize(skipSubTransaction = false) {
     let totalSize = 0;
     const blobMap = this.blobMap.values();
     for (const items of blobMap) {
       totalSize += items[3];
     }
-    totalSize += this.asset.resolve.transaction.blobSize;
+    if (skipSubTransaction === false) {
+      totalSize += this.asset.resolve.transaction.getBlobSize(skipSubTransaction);
+    }
     return totalSize;
   }
 }

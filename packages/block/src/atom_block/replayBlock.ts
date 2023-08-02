@@ -527,7 +527,7 @@ export class ReplayBlockCore<T extends Block> {
           // 更新总字节长度
           payloadLength += tranItemBinary.length;
           // 更新 blob 长度
-          blobSize += tranItem.transaction.blobSize;
+          blobSize += tranItem.transaction.getBlobSize();
           await txFactory.endDealTransaction(tranItem, eventEmitter);
           if (type === VOTE) {
             numberOfVotes++;

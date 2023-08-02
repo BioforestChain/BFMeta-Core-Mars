@@ -382,7 +382,7 @@ export class GenerateBlockCore<T extends Block> {
             await eventEmitter.emit("nearMaxPayloadLength", { payloadLength });
           }
           // 更新 blob 长度
-          blobSize += tranItem.transaction.blobSize;
+          blobSize += tranItem.transaction.getBlobSize();
           if (blobSize > maxBlockBlobSize * 0.95) {
             await eventEmitter.emit("nearMaxBlobSize", { blobSize });
           }

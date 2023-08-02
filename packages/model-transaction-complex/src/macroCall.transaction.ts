@@ -31,13 +31,15 @@ export class MacroCallTransaction extends Transaction<BFChainCore.MacroCallAsset
     return transaction.as(TransactionCtor, subId);
   }
 
-  get blobSize() {
+  getBlobSize(skipSubTransaction = false) {
     let totalSize = 0;
     const blobMap = this.blobMap.values();
     for (const items of blobMap) {
       totalSize += items[3];
     }
-    totalSize += this.asset.call.transaction.blobSize;
+    if (skipSubTransaction === false) {
+      totalSize += this.asset.call.transaction.getBlobSize(skipSubTransaction);
+    }
     return totalSize;
   }
 }

@@ -37,15 +37,17 @@ export class MultipleTransaction extends Transaction<BFChainCore.MultipleAssetJS
     return undefined;
   }
 
-  get blobSize() {
+  getBlobSize(skipSubTransaction = false) {
     let totalSize = 0;
     const blobMap = this.blobMap.values();
     for (const items of blobMap) {
       totalSize += items[3];
     }
-    const { transactions } = this.asset.multiple;
-    for (const transaction of transactions) {
-      totalSize += transaction.blobSize;
+    if (skipSubTransaction === false) {
+      const { transactions } = this.asset.multiple;
+      for (const transaction of transactions) {
+        totalSize += transaction.getBlobSize(skipSubTransaction);
+      }
     }
     return totalSize;
   }

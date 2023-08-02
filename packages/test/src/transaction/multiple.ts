@@ -192,6 +192,8 @@ async function getMultipleTransaction(
     secondKeypair,
   );
 
+  console.log(trs.getBlobSize());
+
   const trsJson = trs.toJSON();
   const xx = await bfchainCore.transaction.recombineTransaction<MultipleTransaction>(trsJson);
 
@@ -218,7 +220,9 @@ async function getMultipleTransaction(
       [trs3, await getAcceptVoteTransaction(getSenderWithoutSecondSecret(), bfchainCore)],
       bfchainCore,
     );
-    console.log(JSON.stringify(trs4, null, 4));
+    const trs5 = await getMultipleTransaction(getSenderWithoutSecondSecret(), [trs4], bfchainCore);
+    const trs6 = await getMultipleTransaction(getSenderWithoutSecondSecret(), [trs5], bfchainCore);
+    console.log(JSON.stringify(trs6, null, 4));
   } catch (error) {
     console.log(error);
   }
