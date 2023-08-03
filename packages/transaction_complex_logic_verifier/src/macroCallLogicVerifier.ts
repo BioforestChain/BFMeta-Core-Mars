@@ -199,6 +199,38 @@ export class MacroCallLogicVerifier extends TransactionLogicVerifier {
   }
 
   /**
+   * 不能二次操作同一笔交易(权益赠送/权益委托/权益迁入)
+   *
+   * @param transaction
+   * @param currentBlockHeight
+   */
+  async checkSecondaryTransaction(transaction: MacroCallTransaction, currentBlockHeight: number) {
+    const subTransaction = transaction.asset.call.transaction;
+    const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
+      subTransaction.type,
+    );
+    if (logicVerify.checkSecondaryTransaction) {
+      await logicVerify.checkSecondaryTransaction(subTransaction, currentBlockHeight);
+    }
+  }
+
+  /**
+   * 校验注册受托人名额是否充足
+   *
+   * @param transaction
+   * @param currentBlockHeight
+   */
+  async checkRegisterDelegateQuota(transaction: MacroCallTransaction, currentBlockHeight: number) {
+    const subTransaction = transaction.asset.call.transaction;
+    const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
+      subTransaction.type,
+    );
+    if (logicVerify.checkRegisterDelegateQuota) {
+      await logicVerify.checkRegisterDelegateQuota(subTransaction, currentBlockHeight);
+    }
+  }
+
+  /**
    * 获取需要被加锁的数据
    *
    * @param transaction

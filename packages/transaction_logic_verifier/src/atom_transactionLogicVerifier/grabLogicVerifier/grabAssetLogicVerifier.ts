@@ -340,7 +340,6 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
    *
    * @param transaction
    * @param currentBlockHeight
-   * @param transactionGetterHelper
    */
   async checkSecondaryTransaction(transaction: GrabAssetTransaction, currentBlockHeight: number) {
     const isSecondary = await this.transactionGetterHelper.checkSecondaryTransaction({

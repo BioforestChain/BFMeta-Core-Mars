@@ -254,6 +254,13 @@ export class MacroCallTransactionFactory extends TransactionFactory<MacroCallTra
       }
     }
     const transactionModel = await this.transactionCore.recombineTransaction<T>(transaction);
+    /// 验证 json
+    for (const defineInput of defineInputs) {
+      const { type, keyPath } = defineInput;
+      if (defineInput.type === MACRO_INPUT_TYPE.NUMBER) {
+        const format = defineInput.format;
+      }
+    }
     if (skipVerify === false) {
       const factory = this.transactionCore.getTransactionFactoryFromType(transactionModel.type);
       await factory.verify(transactionModel, this.configHelper);

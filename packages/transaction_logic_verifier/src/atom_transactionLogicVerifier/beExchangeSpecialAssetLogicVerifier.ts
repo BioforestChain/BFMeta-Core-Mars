@@ -205,7 +205,6 @@ export class BeExchangeSpecialAssetLogicVerifier extends TransactionLogicVerifie
    *
    * @param transaction
    * @param currentBlockHeight
-   * @param transactionGetterHelper
    */
   async checkSecondaryTransaction(
     transaction: BeExchangeSpecialAssetTransaction,

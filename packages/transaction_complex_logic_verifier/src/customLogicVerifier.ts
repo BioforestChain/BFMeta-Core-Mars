@@ -53,7 +53,7 @@ export class CustomLogicVerifier extends TransactionLogicVerifier {
     return true;
   }
 
-  async checkRegisterDelegateQuota(currentBlockHeight: number) {
+  async checkRegisterDelegateQuota(transaction: CustomTransaction, currentBlockHeight: number) {
     const { maxDelegateTxsPerRound } = this.configHelper;
     const txCount = await this.transactionGetterHelper.getNumberOfNewDelegate();
     let realMaxDelegateTxsPerRound = maxDelegateTxsPerRound;

@@ -649,7 +649,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    *
    * @param currentBlockHeight
    */
-  checkRegisterDelegateQuota?(currentBlockHeight: number): Promise<void>;
+  checkRegisterDelegateQuota?(transaction: T, currentBlockHeight: number): Promise<void>;
 
   /**
    * 获取需要被加锁的数据
