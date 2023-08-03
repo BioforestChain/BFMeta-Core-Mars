@@ -652,6 +652,22 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   checkRegisterDelegateQuota?(transaction: T, currentBlockHeight: number): Promise<void>;
 
   /**
+   * 检验凭证上链高度是否合法
+   *
+   * @param transaction
+   * @param currentBlockHeight
+   */
+  checkCertificateOnChainHeight?(transaction: T, currentBlockHeight: number): void;
+
+  /**
+   * 是否是凭证上链高度
+   *
+   * @param transaction
+   * @param currentBlockHeight
+   */
+  isCertificateOnChainHeight?(transaction: T, currentBlockHeight: number): void;
+
+  /**
    * 获取需要被加锁的数据
    *
    * @param transaction

@@ -41,10 +41,14 @@ export class IssueCertificateLogicVerifier extends TransactionLogicVerifier {
   /**
    * 接收交易时调用
    *
-   * @param certificateId
+   * @param transaction
    * @param currentBlockHeight
    */
-  checkOnChainHeight(certificateId: string, currentBlockHeight: number) {
+  checkCertificateOnChainHeight(
+    transaction: IssueCertificateTransaction,
+    currentBlockHeight: number,
+  ) {
+    const certificateId = transaction.asset.issueCertificate.certificateId;
     const onChainHeight = Number(certificateId.split(":")[0]);
     if (onChainHeight < currentBlockHeight) {
       throw new ConsensusException(ERROR_LIST.PROP_SHOULD_GTE_FIELD, {
@@ -58,10 +62,11 @@ export class IssueCertificateLogicVerifier extends TransactionLogicVerifier {
   /**
    * 在锻造区块，同步和重建时调用
    *
-   * @param certificateId
+   * @param transaction
    * @param currentBlockHeight
    */
-  isOnChainHeight(certificateId: string, currentBlockHeight: number) {
+  isCertificateOnChainHeight(transaction: IssueCertificateTransaction, currentBlockHeight: number) {
+    const certificateId = transaction.asset.issueCertificate.certificateId;
     const onChainHeight = Number(certificateId.split(":")[0]);
     if (onChainHeight !== currentBlockHeight) {
       throw new ConsensusException(ERROR_LIST.SHOULD_BE, {

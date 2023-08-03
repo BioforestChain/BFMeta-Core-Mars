@@ -231,6 +231,38 @@ export class MacroCallLogicVerifier extends TransactionLogicVerifier {
   }
 
   /**
+   * 接收交易时调用
+   *
+   * @param transaction
+   * @param currentBlockHeight
+   */
+  checkCertificateOnChainHeight(transaction: MacroCallTransaction, currentBlockHeight: number) {
+    const subTransaction = transaction.asset.call.transaction;
+    const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
+      subTransaction.type,
+    );
+    if (logicVerify.checkCertificateOnChainHeight) {
+      logicVerify.checkCertificateOnChainHeight(subTransaction, currentBlockHeight);
+    }
+  }
+
+  /**
+   * 在锻造区块，同步和重建时调用
+   *
+   * @param transaction
+   * @param currentBlockHeight
+   */
+  isCertificateOnChainHeight(transaction: MacroCallTransaction, currentBlockHeight: number) {
+    const subTransaction = transaction.asset.call.transaction;
+    const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
+      subTransaction.type,
+    );
+    if (logicVerify.isCertificateOnChainHeight) {
+      logicVerify.isCertificateOnChainHeight(subTransaction, currentBlockHeight);
+    }
+  }
+
+  /**
    * 获取需要被加锁的数据
    *
    * @param transaction
