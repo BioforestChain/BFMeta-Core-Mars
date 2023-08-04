@@ -254,11 +254,24 @@ export class MacroCallTransactionFactory extends TransactionFactory<MacroCallTra
       }
     }
     const transactionModel = await this.transactionCore.recombineTransaction<T>(transaction);
-    /// 验证 json
+    /// 验证 json，number 类型的会被 protobuf 自动转换 100.1 => 100
     for (const defineInput of defineInputs) {
-      const { type, keyPath } = defineInput;
       if (defineInput.type === MACRO_INPUT_TYPE.NUMBER) {
-        const format = defineInput.format;
+        if (defineInput.format === MACRO_NUMBER_FORMAT.LITERAL) {
+          const items = defineInput.keyPath.split(".");
+          let prev = transaction as any;
+          let next = transactionModel as any;
+          for (const item of items) {
+            prev = prev[item];
+            next = next[item];
+          }
+          if (prev.toString() !== next.toString()) {
+            throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+              prop: `${defineInput.name} ${prev}`,
+              target: "inputs",
+            });
+          }
+        }
       }
     }
     if (skipVerify === false) {
