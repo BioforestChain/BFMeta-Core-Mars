@@ -233,11 +233,20 @@ export class MacroTransactionFactory extends TransactionFactory<MacroTransaction
             });
           }
         }
-        if (step && baseHelper.isPositiveBigFloatContainZero(step) === false) {
-          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-            prop: "step",
-            target: `macro.inputs.input ${JSON.stringify(input)}`,
-          });
+        if (step) {
+          if (baseHelper.isPositiveBigFloatContainZero(step) === false) {
+            throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+              prop: "step",
+              target: `macro.inputs.input ${JSON.stringify(input)}`,
+            });
+          }
+          if (this.jsbiHelper.compareFraction(step, { numerator: "0", denominator: "1" }) < 1) {
+            throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
+              prop: "step",
+              target: `macro.inputs.input ${JSON.stringify(input)}`,
+              field: "0",
+            });
+          }
         }
         if (type === MACRO_INPUT_TYPE.CALC) {
           const { calc } = input as BFChainCore.Macro.CalcInputJSON;

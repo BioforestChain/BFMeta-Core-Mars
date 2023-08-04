@@ -203,7 +203,7 @@ async function getMacroTransaction(
         denominator: "2",
       },
       step: {
-        numerator: "20",
+        numerator: "1",
         denominator: "1",
       },
       format: MACRO_NUMBER_FORMAT.STRING,
