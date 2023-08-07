@@ -207,13 +207,15 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
     /**
      * 校验`trustAsset`的基本格式
      */
-    await this.trustAssetTransactionFactory.verifyTrustAsset(trustAsset);
+    await this.trustAssetTransactionFactory.verifyTrustAsset(
+      trustAsset,
+      trustSenderId,
+      trustRecipientId,
+    );
 
     const { trustees } = trustAsset;
 
-    const tempTrustees = [...trustees];
-    tempTrustees[tempTrustees.length] = trustSenderId;
-    tempTrustees[tempTrustees.length] = trustRecipientId;
+    const tempTrustees = [...new Set([...trustees, trustSenderId, trustRecipientId])];
 
     if (!tempTrustees.includes(senderId)) {
       throw new ArgumentIllegalException(ERROR_LIST.PERMISSION_DENIED, {

@@ -13,6 +13,7 @@ import {
   getBfchainCoreEntry,
   getRandomDAppId,
   BFChainCore,
+  getGenesisAccount,
 } from "../include";
 
 async function getTrustAssetTransaction(
@@ -65,8 +66,8 @@ async function getTrustAssetTransaction(
     data,
     {
       trustAsset: {
-        trustees,
-        numberOfSignFor: 2,
+        trustees: [...new Set(trustees)],
+        numberOfSignFor: 3,
         sourceChainName: bfchainCore.config.chainName,
         sourceChainMagic: bfchainCore.config.magic,
         assetType: bfchainCore.config.assetType,
@@ -141,7 +142,8 @@ async function getSignForAssetTransaction(
   const trsJson = trs.toJSON();
   const xx = await bfchainCore.transaction.recombineTransaction(trsJson);
   await bfchainCore.transactionHelper.verifyTransactionSignature(xx);
-  console.log(xx);
+  console.log(trustAssetTrs.senderId, trustAssetTrs.recipientId);
+  console.log(trs.asset.signForAsset);
   return trs;
 }
 
@@ -152,13 +154,13 @@ async function getSignForAssetTransaction(
   const trusAssetTrsWithSecret = await getTrustAssetTransaction(
     getSenderWithSecondSecret(),
     getRecipientWithSecondSecret().address,
-    [trustee.address],
+    [trustee.address, getGenesisAccount().address],
     bfchainCore,
   );
   const trusAssetTrsWithoutSecret = await getTrustAssetTransaction(
     getSenderWithoutSecondSecret(),
     getRecipientWithoutSecondSecret().address,
-    [trustee.address],
+    [trustee.address, getGenesisAccount().address],
     bfchainCore,
   );
 

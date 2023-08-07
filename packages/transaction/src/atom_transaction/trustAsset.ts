@@ -120,7 +120,7 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
 
     const trustAsset = trustAssetAsset.trustAsset;
 
-    await this.verifyTrustAsset(trustAsset);
+    await this.verifyTrustAsset(trustAsset, senderId, recipientId);
 
     const trustees = trustAsset.trustees;
 
@@ -153,7 +153,11 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
     }
   }
 
-  async verifyTrustAsset(trustAsset: BFChainCore.TrustAssetJSON) {
+  async verifyTrustAsset(
+    trustAsset: BFChainCore.TrustAssetJSON,
+    trustSenderId: string,
+    trustRecipientId: string,
+  ) {
     const { baseHelper, accountBaseHelper } = this;
 
     if (!trustAsset) {
@@ -194,8 +198,7 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
       }
     }
 
-    const trusteeList = [...new Set(trustees)];
-
+    const trusteeList = [...new Set([...trustees, trustSenderId, trustRecipientId])];
     if (trustees.length !== trusteeList.length) {
       throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_DUPLICATE, {
         prop: "trustee",
@@ -212,11 +215,10 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
     }
 
     // max = 发起账户 + 接收账户 + 委托账户数量
-    const maxSifnFor = trustees.length + 2;
-    if (numberOfSignFor > maxSifnFor) {
+    if (numberOfSignFor > trusteeList.length) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
         prop: `numberOfSignFor ${numberOfSignFor}`,
-        field: maxSifnFor,
+        field: trusteeList.length,
         ...TrustAssetAsset_Exception_Detail,
         target: "trustAsset",
       });
