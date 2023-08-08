@@ -386,6 +386,7 @@ async function getMacroCallTransaction(
         denominator: "10",
       },
       format: MACRO_NUMBER_FORMAT.LITERAL,
+      pattern: "^(([0-9])|([1-9](\\d)+?))$",
     },
     // {
     //   type: MACRO_INPUT_TYPE.NUMBER,

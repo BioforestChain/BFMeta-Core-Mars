@@ -126,12 +126,22 @@ export class MacroTransactionFactory extends TransactionFactory<MacroTransaction
     const nameSet = new Set<string>();
     const keyPathSet = new Set<string>();
     for (const input of inputs) {
-      const { type, name, keyPath } = input;
+      const { type, name, keyPath, pattern } = input;
       if (!name) {
         throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
           prop: "name",
           target: `macro.inputs.input ${JSON.stringify(input)}`,
         });
+      }
+      if (pattern) {
+        try {
+          new RegExp(pattern);
+        } catch (error) {
+          throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+            prop: "pattern",
+            target: `macro.inputs.input ${JSON.stringify(input)}`,
+          });
+        }
       }
       if (baseHelper.isValidMacroInputName(name) === false) {
         throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
