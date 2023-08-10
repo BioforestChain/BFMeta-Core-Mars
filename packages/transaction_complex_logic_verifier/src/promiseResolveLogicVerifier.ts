@@ -1,4 +1,4 @@
-import type { PromiseResolveTransaction } from "@bfchain/core-model";
+import { PromiseResolveTransaction, PromiseTransaction } from "@bfchain/core-model";
 import { Injectable, Inject, getHexFromArrayBuffer } from "@bfchain/util";
 import { TransactionCore } from "@bfchain/core-transaction";
 import {
@@ -8,7 +8,10 @@ import {
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { ComplexTransactionLogicHelper } from "./complexTransactionLogicHelper";
 
-const { ConsensusException } = CoreExceptionGenerator("VERIFIER", "PromiseResolveLogicVerifier");
+const { ConsensusException, NoFoundException } = CoreExceptionGenerator(
+  "VERIFIER",
+  "PromiseResolveLogicVerifier",
+);
 
 @Injectable()
 export class PromiseResolveLogicVerifier extends TransactionLogicVerifier {
@@ -41,6 +44,39 @@ export class PromiseResolveLogicVerifier extends TransactionLogicVerifier {
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
     const { promiseId, transaction: subTransaction } = transaction.asset.resolve;
+    const promiseTransactionJson = await this.transactionGetterHelper.getTransactionBySignature(
+      promiseId,
+      this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
+    );
+    if (!promiseTransactionJson) {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST_OR_EXPIRED, {
+        prop: `Transaction with signature ${promiseId}`,
+        target: "blockChain",
+      });
+    }
+    const model = await this.transactionCore.recombineTransaction(promiseTransactionJson);
+    const doPomiseTransaction = model.as(PromiseTransaction, promiseId);
+    if (!doPomiseTransaction) {
+      throw new ConsensusException(ERROR_LIST.NOT_EXPECTED_RELATED_TRANSACTION, {
+        signature: `${promiseId}`,
+      });
+    }
+    if (transaction.senderId !== doPomiseTransaction.recipientId) {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+        to_compare_prop: `senderId ${transaction.senderId}`,
+        be_compare_prop: `recipientId ${doPomiseTransaction.recipientId}`,
+        to_target: "promiseResolveTransaction",
+        be_target: "doPromiseTransaction",
+      });
+    }
+    if (transaction.recipientId !== doPomiseTransaction.senderId) {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+        to_compare_prop: `recipientId ${transaction.recipientId}`,
+        be_compare_prop: `senderId ${doPomiseTransaction.senderId}`,
+        to_target: "promiseResolveTransaction",
+        be_target: "doPromiseTransaction",
+      });
+    }
     const promiseTransaction = await this.complexTransactionLogicHelper.getPromiseTransaction(
       promiseId,
     );
@@ -51,12 +87,12 @@ export class PromiseResolveLogicVerifier extends TransactionLogicVerifier {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `transaction with promiseId ${promiseId}`,
         be_compare_prop: `transaction with promiseId ${promiseId}`,
-        to_target: "PromiseResolveTransaction",
+        to_target: "promiseResolveTransaction",
         be_target: "blockChain",
       });
     }
     const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
-      promiseTransaction.type,
+      subTransaction.type,
     );
     if (subTransaction.applyBlockHeight > currentBlockHeight) {
       throw new ConsensusException(ERROR_LIST.NOT_BEGIN_RESOLVE_YET, {
@@ -65,7 +101,7 @@ export class PromiseResolveLogicVerifier extends TransactionLogicVerifier {
     }
     if (subTransaction.effectiveBlockHeight < currentBlockHeight) {
       throw new ConsensusException(ERROR_LIST.ALREADY_EXPIRED, {
-        prop: `Promise transaction ${promiseId}`,
+        prop: `promise transaction ${promiseId}`,
         target: "blockChain",
       });
     }

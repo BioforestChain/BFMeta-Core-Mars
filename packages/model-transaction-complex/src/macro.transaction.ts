@@ -8,6 +8,8 @@ import { Type, Field } from "@bfchain/protobuf";
  */
 @Type.d("MacroTransaction")
 export class MacroTransaction extends AbstractTransaction<BFChainCore.MacroAssetJSON> {
+  toJSON!: () => BFChainCore.MacroTransactionJSON;
+  recipientId!: undefined;
   @Field.d(MacroTransaction.INC++, MacroAssetModel)
   asset!: MacroAssetModel;
 }

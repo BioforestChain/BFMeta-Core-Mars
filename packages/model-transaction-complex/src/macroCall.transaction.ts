@@ -9,6 +9,8 @@ import { MacroCallAssetModel } from "./macroCall.asset";
  */
 @Type.d("MacroCallTransaction")
 export class MacroCallTransaction extends Transaction<BFChainCore.MacroCallAssetJSON> {
+  toJSON!: () => BFChainCore.MacroCallTransactionJSON;
+  recipientId!: undefined;
   @Field.d(MacroCallTransaction.INC++, MacroCallAssetModel)
   asset!: MacroCallAssetModel;
 

@@ -9,6 +9,8 @@ import { TRANSACTION_TYPES_MAP } from "@bfchain/core-model-transaction";
  */
 @Type.d("MultipleTransaction")
 export class MultipleTransaction extends Transaction<BFChainCore.MultipleAssetJSON> {
+  toJSON!: () => BFChainCore.MultipleTransactionJSON;
+  recipientId!: undefined;
   @Field.d(MultipleTransaction.INC++, MultipleAssetModel)
   asset!: MultipleAssetModel;
 

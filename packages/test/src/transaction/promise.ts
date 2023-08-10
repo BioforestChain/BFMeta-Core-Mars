@@ -191,7 +191,7 @@ async function getPromiseTransaction(
 
   await factory.verifySignature(xx);
 
-  console.log(xx.toJSON());
+  console.log(JSON.stringify(xx.toJSON(), null, 4));
 }
 
 (async () => {
