@@ -87,6 +87,14 @@ export class GiftAnyTransactionFactory extends GiftTransactionFactory<GiftAnyTra
       target: "giftAnyAsset",
     } as const;
 
+    const cipherPublicKeys = giftAny.cipherPublicKeys;
+    const cipherPublicKeySet = new Set(cipherPublicKeys);
+    if (cipherPublicKeys.length !== cipherPublicKeySet.size) {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_DUPLICATE, {
+        prop: "cipherPublicKeys",
+        ...GiftAnyAsset_Exception_Detail,
+      });
+    }
     if (!baseHelper.isValidCipherPublicKeys(giftAny.cipherPublicKeys)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "cipherPublicKeys",

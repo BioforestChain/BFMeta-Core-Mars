@@ -113,10 +113,17 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<ToExch
       target: "toExchangeAssetAsset",
     } as const;
 
-    if (!baseHelper.isValidCipherPublicKeys(toExchangeAsset.cipherPublicKeys)) {
+    const cipherPublicKeys = toExchangeAsset.cipherPublicKeys;
+    const cipherPublicKeySet = new Set(cipherPublicKeys);
+    if (cipherPublicKeys.length !== cipherPublicKeySet.size) {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_DUPLICATE, {
+        prop: "cipherPublicKeys",
+        ...ToExchangeAssetAsset_Exception_Detail,
+      });
+    }
+    if (!baseHelper.isValidCipherPublicKeys(cipherPublicKeys)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: "cipherPublicKeys",
-        type: "cipher publicKeys",
         ...ToExchangeAssetAsset_Exception_Detail,
       });
     }

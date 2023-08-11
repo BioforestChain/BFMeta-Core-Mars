@@ -216,7 +216,17 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
       }
     }
 
-    if (!(await this.baseHelper.isValidRange(body.rangeType, body.range))) {
+    const { range } = body;
+    if (range.length > 0) {
+      const rangeSet = new Set(range);
+      if (range.length !== rangeSet.size) {
+        throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_DUPLICATE, {
+          prop: "range",
+          ...TransactionBody_Exception_Detail,
+        });
+      }
+    }
+    if (!(await this.baseHelper.isValidRange(body.rangeType, range))) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `range ${body.rangeType}`,
         type: "transaction range",

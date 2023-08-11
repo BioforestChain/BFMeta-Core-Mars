@@ -87,10 +87,18 @@ export class ToExchangeAnyMultiAllTransactionFactory extends TransactionFactory<
       });
     }
 
-    if (!this.baseHelper.isValidCipherPublicKeys(toExchangeAnyMultiAll.cipherPublicKeys)) {
+    const cipherPublicKeys = toExchangeAnyMultiAll.cipherPublicKeys;
+    const cipherPublicKeySet = new Set(cipherPublicKeys);
+    if (cipherPublicKeys.length !== cipherPublicKeySet.size) {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_DUPLICATE, {
+        prop: "cipherPublicKeys",
+        target: "toExchangeAnyMultiAll",
+      });
+    }
+    if (!this.baseHelper.isValidCipherPublicKeys(cipherPublicKeys)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: "toExchangeAnyMultiAll.cipherPublicKeys",
-        ...Function_Exception_Detail,
+        prop: "cipherPublicKeys",
+        target: "toExchangeAnyMultiAll",
       });
     }
 
