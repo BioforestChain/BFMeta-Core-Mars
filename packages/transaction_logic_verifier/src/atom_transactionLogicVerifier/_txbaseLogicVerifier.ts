@@ -501,7 +501,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    * @param transaction
    * @param byteLength
    */
-  async checkTrsFeeAndWebFee(transaction: T, byteLength: number) {
+  checkTrsFeeAndWebFee(transaction: T, byteLength: number) {
     return this.isFeeEnough(
       transaction.signature,
       transaction.fee,
@@ -519,7 +519,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    * @param byteLength
    * @param miningMachineMinFeePerByte
    */
-  async checkTrsFeeAndMiningMachineFeeAndWebFee(
+  checkTrsFeeAndMiningMachineFeeAndWebFee(
     transaction: T,
     byteLength: number,
     miningMachineMinFeePerByte: BFChainCore.FractionJSON,
@@ -543,10 +543,14 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
    * @param transaction
    * @param miningMachineMaxBlobSize
    */
-  checkTransactionBlobSize(transaction: T, miningMachineMaxBlobSize: number) {
+  checkTransactionBlobSize(transaction: T, miningMachineMaxBlobSize?: number) {
     const { maxBlockBlobSize } = this.configHelper;
     const maxBlobSize =
-      maxBlockBlobSize < miningMachineMaxBlobSize ? maxBlockBlobSize : miningMachineMaxBlobSize;
+      miningMachineMaxBlobSize === undefined
+        ? maxBlockBlobSize
+        : maxBlockBlobSize < miningMachineMaxBlobSize
+        ? maxBlockBlobSize
+        : miningMachineMaxBlobSize;
     const blobSize = transaction.getBlobSize(true);
     if (blobSize > maxBlobSize) {
       throw new ConsensusException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {

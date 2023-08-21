@@ -306,7 +306,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    * @param byteLength
    */
-  async checkTrsFeeAndWebFee(transaction: GrabAssetTransaction, byteLength: number) {
+  checkTrsFeeAndWebFee(transaction: GrabAssetTransaction, byteLength: number) {
     return this.isFeeEnough(
       transaction.signature,
       transaction.fee,
@@ -321,7 +321,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
    * @param byteLength
    * @param miningMachineMinFeePerByte
    */
-  async checkTrsFeeAndMiningMachineFeeAndWebFee(
+  checkTrsFeeAndMiningMachineFeeAndWebFee(
     transaction: GrabAssetTransaction,
     byteLength: number,
     miningMachineMinFeePerByte: BFChainCore.FractionJSON,

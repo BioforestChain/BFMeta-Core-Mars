@@ -56,8 +56,8 @@ export class MultipleLogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    * @param byteLength
    */
-  async checkTrsFeeAndWebFee(transaction: MultipleTransaction, byteLength: number) {
-    const resp = await super.checkTrsFeeAndWebFee(transaction, byteLength);
+  checkTrsFeeAndWebFee(transaction: MultipleTransaction, byteLength: number) {
+    const resp = super.checkTrsFeeAndWebFee(transaction, byteLength);
     if (resp.isFeeEnough === false) {
       return resp;
     }
@@ -71,10 +71,7 @@ export class MultipleLogicVerifier extends TransactionLogicVerifier {
       const verifier = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
         subTransaction.type,
       );
-      result = await verifier.checkTrsFeeAndWebFee(
-        subTransaction,
-        subTransaction.getBytes().length,
-      );
+      result = verifier.checkTrsFeeAndWebFee(subTransaction, subTransaction.getBytes().length);
       if (result.isFeeEnough === false) {
         return result;
       }
@@ -89,12 +86,12 @@ export class MultipleLogicVerifier extends TransactionLogicVerifier {
    * @param byteLength
    * @param miningMachineMinFeePerByte
    */
-  async checkTrsFeeAndMiningMachineFeeAndWebFee(
+  checkTrsFeeAndMiningMachineFeeAndWebFee(
     transaction: MultipleTransaction,
     byteLength: number,
     miningMachineMinFeePerByte: BFChainCore.FractionJSON,
   ) {
-    const resp = await super.checkTrsFeeAndMiningMachineFeeAndWebFee(
+    const resp = super.checkTrsFeeAndMiningMachineFeeAndWebFee(
       transaction,
       byteLength,
       miningMachineMinFeePerByte,
@@ -112,7 +109,7 @@ export class MultipleLogicVerifier extends TransactionLogicVerifier {
       const verifier = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
         subTransaction.type,
       );
-      result = await verifier.checkTrsFeeAndMiningMachineFeeAndWebFee(
+      result = verifier.checkTrsFeeAndMiningMachineFeeAndWebFee(
         subTransaction,
         subTransaction.getBytes().length,
         miningMachineMinFeePerByte,
@@ -122,6 +119,37 @@ export class MultipleLogicVerifier extends TransactionLogicVerifier {
       }
     }
     return resp;
+  }
+
+  /**
+   * 检验交易的 blobSize 是否大于矿机和网络最大 blobSize
+   *
+   * @param transaction
+   * @param miningMachineMaxBlobSize
+   */
+  checkTransactionBlobSize(transaction: MultipleTransaction, miningMachineMaxBlobSize?: number) {
+    const { maxBlockBlobSize } = this.configHelper;
+    const maxBlobSize =
+      miningMachineMaxBlobSize === undefined
+        ? maxBlockBlobSize
+        : maxBlockBlobSize < miningMachineMaxBlobSize
+        ? maxBlockBlobSize
+        : miningMachineMaxBlobSize;
+    const blobSize = transaction.getBlobSize(true);
+    if (blobSize > maxBlobSize) {
+      throw new ConsensusException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
+        prop: `transaction blob size ${blobSize}`,
+        target: "transaction",
+        field: maxBlobSize,
+      });
+    }
+    const { transactions } = transaction.asset.multiple;
+    for (const subTransaction of transactions) {
+      const verifier = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
+        subTransaction.type,
+      );
+      verifier.checkTransactionBlobSize(subTransaction, miningMachineMaxBlobSize);
+    }
   }
 
   /**

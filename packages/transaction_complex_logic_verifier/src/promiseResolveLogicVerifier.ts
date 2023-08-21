@@ -117,8 +117,8 @@ export class PromiseResolveLogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    * @param byteLength
    */
-  async checkTrsFeeAndWebFee(transaction: PromiseResolveTransaction, byteLength: number) {
-    const resp = await super.checkTrsFeeAndWebFee(transaction, byteLength);
+  checkTrsFeeAndWebFee(transaction: PromiseResolveTransaction, byteLength: number) {
+    const resp = super.checkTrsFeeAndWebFee(transaction, byteLength);
     if (resp.isFeeEnough === false) {
       return resp;
     }
@@ -126,7 +126,7 @@ export class PromiseResolveLogicVerifier extends TransactionLogicVerifier {
     const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
       promiseTransaction.type,
     );
-    const result = await logicVerify.checkTrsFeeAndWebFee(
+    const result = logicVerify.checkTrsFeeAndWebFee(
       promiseTransaction,
       promiseTransaction.getBytes().length,
     );
@@ -143,12 +143,12 @@ export class PromiseResolveLogicVerifier extends TransactionLogicVerifier {
    * @param byteLength
    * @param miningMachineMinFeePerByte
    */
-  async checkTrsFeeAndMiningMachineFeeAndWebFee(
+  checkTrsFeeAndMiningMachineFeeAndWebFee(
     transaction: PromiseResolveTransaction,
     byteLength: number,
     miningMachineMinFeePerByte: BFChainCore.FractionJSON,
   ) {
-    const resp = await super.checkTrsFeeAndMiningMachineFeeAndWebFee(
+    const resp = super.checkTrsFeeAndMiningMachineFeeAndWebFee(
       transaction,
       byteLength,
       miningMachineMinFeePerByte,
@@ -160,7 +160,7 @@ export class PromiseResolveLogicVerifier extends TransactionLogicVerifier {
     const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
       promiseTransaction.type,
     );
-    const result = await logicVerify.checkTrsFeeAndMiningMachineFeeAndWebFee(
+    const result = logicVerify.checkTrsFeeAndMiningMachineFeeAndWebFee(
       promiseTransaction,
       promiseTransaction.getBytes().length,
       miningMachineMinFeePerByte,
@@ -169,6 +169,38 @@ export class PromiseResolveLogicVerifier extends TransactionLogicVerifier {
       return result;
     }
     return resp;
+  }
+
+  /**
+   * 检验交易的 blobSize 是否大于矿机和网络最大 blobSize
+   *
+   * @param transaction
+   * @param miningMachineMaxBlobSize
+   */
+  checkTransactionBlobSize(
+    transaction: PromiseResolveTransaction,
+    miningMachineMaxBlobSize?: number,
+  ) {
+    const { maxBlockBlobSize } = this.configHelper;
+    const maxBlobSize =
+      miningMachineMaxBlobSize === undefined
+        ? maxBlockBlobSize
+        : maxBlockBlobSize < miningMachineMaxBlobSize
+        ? maxBlockBlobSize
+        : miningMachineMaxBlobSize;
+    const blobSize = transaction.getBlobSize(true);
+    if (blobSize > maxBlobSize) {
+      throw new ConsensusException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
+        prop: `transaction blob size ${blobSize}`,
+        target: "transaction",
+        field: maxBlobSize,
+      });
+    }
+    const promiseTransaction = transaction.asset.resolve.transaction;
+    const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
+      promiseTransaction.type,
+    );
+    logicVerify.checkTransactionBlobSize(promiseTransaction, miningMachineMaxBlobSize);
   }
 
   /**

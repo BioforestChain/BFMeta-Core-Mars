@@ -447,7 +447,7 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    * @param byteLength
    */
-  async checkTrsFeeAndWebFee(transaction: BeExchangeAnyMultiTransaction, byteLength: number) {
+  checkTrsFeeAndWebFee(transaction: BeExchangeAnyMultiTransaction, byteLength: number) {
     return this.isFeeEnough(
       transaction.signature,
       transaction.fee,
@@ -467,7 +467,7 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
    * @param byteLength
    * @param miningMachineMinFeePerByte
    */
-  async checkTrsFeeAndMiningMachineFeeAndWebFee(
+  checkTrsFeeAndMiningMachineFeeAndWebFee(
     transaction: BeExchangeAnyMultiTransaction,
     byteLength: number,
     miningMachineMinFeePerByte: BFChainCore.FractionJSON,

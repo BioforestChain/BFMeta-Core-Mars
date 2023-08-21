@@ -110,8 +110,8 @@ export class MacroCallLogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    * @param byteLength
    */
-  async checkTrsFeeAndWebFee(transaction: MacroCallTransaction, byteLength: number) {
-    const resp = await super.checkTrsFeeAndWebFee(transaction, byteLength);
+  checkTrsFeeAndWebFee(transaction: MacroCallTransaction, byteLength: number) {
+    const resp = super.checkTrsFeeAndWebFee(transaction, byteLength);
     if (resp.isFeeEnough === false) {
       return resp;
     }
@@ -119,7 +119,7 @@ export class MacroCallLogicVerifier extends TransactionLogicVerifier {
     const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
       macroTransaction.type,
     );
-    const result = await logicVerify.checkTrsFeeAndWebFee(
+    const result = logicVerify.checkTrsFeeAndWebFee(
       macroTransaction,
       macroTransaction.getBytes().length,
     );
@@ -136,12 +136,12 @@ export class MacroCallLogicVerifier extends TransactionLogicVerifier {
    * @param byteLength
    * @param miningMachineMinFeePerByte
    */
-  async checkTrsFeeAndMiningMachineFeeAndWebFee(
+  checkTrsFeeAndMiningMachineFeeAndWebFee(
     transaction: MacroCallTransaction,
     byteLength: number,
     miningMachineMinFeePerByte: BFChainCore.FractionJSON,
   ) {
-    const resp = await super.checkTrsFeeAndMiningMachineFeeAndWebFee(
+    const resp = super.checkTrsFeeAndMiningMachineFeeAndWebFee(
       transaction,
       byteLength,
       miningMachineMinFeePerByte,
@@ -153,7 +153,7 @@ export class MacroCallLogicVerifier extends TransactionLogicVerifier {
     const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
       macroTransaction.type,
     );
-    const result = await logicVerify.checkTrsFeeAndMiningMachineFeeAndWebFee(
+    const result = logicVerify.checkTrsFeeAndMiningMachineFeeAndWebFee(
       macroTransaction,
       macroTransaction.getBytes().length,
       miningMachineMinFeePerByte,
@@ -162,6 +162,35 @@ export class MacroCallLogicVerifier extends TransactionLogicVerifier {
       return result;
     }
     return resp;
+  }
+
+  /**
+   * 检验交易的 blobSize 是否大于矿机和网络最大 blobSize
+   *
+   * @param transaction
+   * @param miningMachineMaxBlobSize
+   */
+  checkTransactionBlobSize(transaction: MacroCallTransaction, miningMachineMaxBlobSize?: number) {
+    const { maxBlockBlobSize } = this.configHelper;
+    const maxBlobSize =
+      miningMachineMaxBlobSize === undefined
+        ? maxBlockBlobSize
+        : maxBlockBlobSize < miningMachineMaxBlobSize
+        ? maxBlockBlobSize
+        : miningMachineMaxBlobSize;
+    const blobSize = transaction.getBlobSize(true);
+    if (blobSize > maxBlobSize) {
+      throw new ConsensusException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
+        prop: `transaction blob size ${blobSize}`,
+        target: "transaction",
+        field: maxBlobSize,
+      });
+    }
+    const macroTransaction = transaction.asset.call.transaction;
+    const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
+      macroTransaction.type,
+    );
+    logicVerify.checkTransactionBlobSize(macroTransaction, miningMachineMaxBlobSize);
   }
 
   /**

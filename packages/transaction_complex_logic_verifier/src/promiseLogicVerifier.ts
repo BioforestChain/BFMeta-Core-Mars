@@ -27,7 +27,8 @@ export class PromiseLogicVerifier extends TransactionLogicVerifier {
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const { signature } = transaction.asset.promise.transaction;
+    const subTransaction = transaction.asset.promise.transaction;
+    const { signature } = subTransaction;
     const promiseTransactionJson = await this.transactionGetterHelper.getTransactionBySignature(
       signature,
       this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
@@ -50,6 +51,11 @@ export class PromiseLogicVerifier extends TransactionLogicVerifier {
 
     await eventLogicVerifier.awaitEventResult(transaction, eventEmitter);
 
+    const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
+      subTransaction.type,
+    );
+    await logicVerify.verify(subTransaction, currentBlockHeight, accountMap, true, eventEmitter);
+
     return true;
   }
 
@@ -59,16 +65,19 @@ export class PromiseLogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    * @param byteLength
    */
-  async checkTrsFeeAndWebFee(transaction: PromiseTransaction, byteLength: number) {
-    const resp = await super.checkTrsFeeAndWebFee(transaction, byteLength);
+  checkTrsFeeAndWebFee(transaction: PromiseTransaction, byteLength: number) {
+    const resp = super.checkTrsFeeAndWebFee(transaction, byteLength);
     if (resp.isFeeEnough === false) {
       return resp;
     }
-    const promise = transaction.asset.promise.transaction;
+    const promiseTransaction = transaction.asset.promise.transaction;
     const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
-      promise.type,
+      promiseTransaction.type,
     );
-    const result = await logicVerify.checkTrsFeeAndWebFee(promise, promise.getBytes().length);
+    const result = logicVerify.checkTrsFeeAndWebFee(
+      promiseTransaction,
+      promiseTransaction.getBytes().length,
+    );
     if (result.isFeeEnough === false) {
       return result;
     }
@@ -82,12 +91,12 @@ export class PromiseLogicVerifier extends TransactionLogicVerifier {
    * @param byteLength
    * @param miningMachineMinFeePerByte
    */
-  async checkTrsFeeAndMiningMachineFeeAndWebFee(
+  checkTrsFeeAndMiningMachineFeeAndWebFee(
     transaction: PromiseTransaction,
     byteLength: number,
     miningMachineMinFeePerByte: BFChainCore.FractionJSON,
   ) {
-    const resp = await super.checkTrsFeeAndMiningMachineFeeAndWebFee(
+    const resp = super.checkTrsFeeAndMiningMachineFeeAndWebFee(
       transaction,
       byteLength,
       miningMachineMinFeePerByte,
@@ -95,19 +104,48 @@ export class PromiseLogicVerifier extends TransactionLogicVerifier {
     if (resp.isFeeEnough === false) {
       return resp;
     }
-    const promise = transaction.asset.promise.transaction;
+    const promiseTransaction = transaction.asset.promise.transaction;
     const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
-      promise.type,
+      promiseTransaction.type,
     );
-    const result = await logicVerify.checkTrsFeeAndMiningMachineFeeAndWebFee(
-      promise,
-      promise.getBytes().length,
+    const result = logicVerify.checkTrsFeeAndMiningMachineFeeAndWebFee(
+      promiseTransaction,
+      promiseTransaction.getBytes().length,
       miningMachineMinFeePerByte,
     );
     if (result.isFeeEnough === false) {
       return result;
     }
     return resp;
+  }
+
+  /**
+   * 检验交易的 blobSize 是否大于矿机和网络最大 blobSize
+   *
+   * @param transaction
+   * @param miningMachineMaxBlobSize
+   */
+  checkTransactionBlobSize(transaction: PromiseTransaction, miningMachineMaxBlobSize?: number) {
+    const { maxBlockBlobSize } = this.configHelper;
+    const maxBlobSize =
+      miningMachineMaxBlobSize === undefined
+        ? maxBlockBlobSize
+        : maxBlockBlobSize < miningMachineMaxBlobSize
+        ? maxBlockBlobSize
+        : miningMachineMaxBlobSize;
+    const blobSize = transaction.getBlobSize(true);
+    if (blobSize > maxBlobSize) {
+      throw new ConsensusException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
+        prop: `transaction blob size ${blobSize}`,
+        target: "transaction",
+        field: maxBlobSize,
+      });
+    }
+    const promiseTransaction = transaction.asset.promise.transaction;
+    const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
+      promiseTransaction.type,
+    );
+    logicVerify.checkTransactionBlobSize(promiseTransaction, miningMachineMaxBlobSize);
   }
 
   /**
