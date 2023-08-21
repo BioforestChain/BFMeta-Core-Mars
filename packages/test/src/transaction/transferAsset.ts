@@ -119,76 +119,14 @@ async function getTransferAssetTransaction(sender: AccountModel, bfchainCore: BF
 (async () => {
   const bfchainCore = await getBfchainCoreEntry();
 
-  // await getTransferAssetTransaction(getSenderWithoutSecondSecret(), bfchainCore);
-  // await getTransferAssetTransaction(getSenderWithSecondSecret(), bfchainCore);
+  await getTransferAssetTransaction(getSenderWithoutSecondSecret(), bfchainCore);
+  await getTransferAssetTransaction(getSenderWithSecondSecret(), bfchainCore);
 
-  // console.log(bfchainCore.config.version);
+  console.log(bfchainCore.config.version);
 
-  // bfchainCore.patchInstaller.changeHeight(50000000);
+  bfchainCore.patchInstaller.changeHeight(50000000);
 
-  // await sleep(1000);
+  await sleep(1000);
 
-  // console.log(bfchainCore.config.version);
-
-  const xx: BFChainCore.PromiseTransactionJSON = {
-    v: 1,
-    t: "BFMTEST-BFMETATEST-PMS-00",
-    ts: 8364250,
-    s: "cLf9RnBioXaj5o5ES6SzBsTdn8ZC3tcCsf",
-    s_p: "9a2f94b0e8bdadab78c5730880f19b7ec96f13b6fe4814db07188b841f8c6aa1",
-    f: "100000",
-    sign: "9c6d01d61d66e287880d071ede65eb1c7362a74f49c7debdc512a7f34026df8e73b287223f1067516d6815b4fb9e7c445848b7023719bf7cd88f69454e372f0d",
-    aph: 14437,
-    ebh: 54937,
-    a: {
-      promise: {
-        transaction: {
-          version: 1,
-          type: "BFMTEST-BFMETATEST-AST-13",
-          senderId: "cLf9RnBioXaj5o5ES6SzBsTdn8ZC3tcCsf",
-          senderPublicKey: "9a2f94b0e8bdadab78c5730880f19b7ec96f13b6fe4814db07188b841f8c6aa1",
-          rangeType: 0,
-          range: [],
-          fee: "755822655",
-          timestamp: 8364250,
-          fromMagic: "MMB4K",
-          toMagic: "MMB4K",
-          applyBlockHeight: 14437,
-          effectiveBlockHeight: 14494,
-          signature:
-            "c150e89757b980bff45c73455603691e11df57b1d927b57eccc3c5efa8e52095ca3a9878e72445378c431625dadf12569f39be2f1e78fb2c2cd883e480a1ef09",
-          remark: {
-            message: "create transferAny",
-            blobSeed2:
-              "blob+sha256+hex://7c2a8c7304095c975e97319057c7e677cba75a564f2a12c032f546c6c45b3e81?size=251940254",
-          },
-          asset: {
-            transferAny: {
-              sourceChainName: "bfmetatest",
-              sourceChainMagic: "MMB4K",
-              parentAssetType: 3,
-              assetType: "bfchain0801_vdragonborn130001",
-              amount: "1",
-              taxInformation: {
-                taxCollector: "cLf9RnBioXaj5o5ES6SzBsTdn8ZC3tcCsf",
-                taxAssetPrealnum: "0",
-              },
-            },
-          },
-          nonce: 0,
-          recipientId: "c8FXFDGGaHMnWM1y3PAvTmwz7ahSNYjsXx",
-          senderSecondPublicKey: "abddae311010c2474408fb22ba6fc1789a7c84970f32e1ee45f6be2c8a7a4483",
-          signSignature:
-            "76a0f4cef231661739400f2f6f28a5e858400b09ca3d364ef1086096c0404cff77881a29e3efb769f63f4b602a4e3c1f846a108382e765e62613322fca67e506",
-          storageKey: "assetType",
-          storageValue: "bfchain0801_vdragonborn130001",
-        },
-      },
-    },
-    n: 0,
-    r: "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
-    rmk: {
-      message: "create promise",
-    },
-  };
+  console.log(bfchainCore.config.version);
 })();
