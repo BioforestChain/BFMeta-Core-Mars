@@ -115,7 +115,10 @@ export class MultipleTransactionFactory extends TransactionFactory<MultipleTrans
     }
 
     const signatureSet = new Set<string>();
-    const MULTIPLE = this.transactionHelper.MULTIPLE;
+    const grabFilter = new Set<string>();
+    const signForFilter = new Set<string>();
+    const { GRAB_ANY, GRAB_ASSET, SIGN_FOR_ASSET, MULTIPLE, PROMISE_RESOLVE, MACRO_CALL } =
+      this.transactionHelper;
     const func = (trs: BFChainCore.TransactionJSON) => {
       if (signatureSet.has(trs.signature)) {
         throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_DUPLICATE, {
@@ -123,11 +126,55 @@ export class MultipleTransactionFactory extends TransactionFactory<MultipleTrans
           ...MultipleAsset_Exception_Detail,
         });
       }
-      if (trs.type === MULTIPLE) {
-        const subTransactions = (trs as BFChainCore.MultipleTransactionJSON).asset.multiple
-          .transactions;
-        for (const subTransaction of subTransactions) {
-          func(subTransaction);
+      switch (trs.type) {
+        case GRAB_ASSET: {
+          const filterKey = `${trs.senderId}-${trs.storageValue}`;
+          if (grabFilter.has(filterKey)) {
+            throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_DUPLICATE, {
+              prop: `transactions ${filterKey}`,
+              ...MultipleAsset_Exception_Detail,
+            });
+          }
+          grabFilter.add(filterKey);
+          break;
+        }
+        case GRAB_ANY: {
+          const filterKey = `${trs.senderId}-${trs.storageValue}`;
+          if (grabFilter.has(filterKey)) {
+            throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_DUPLICATE, {
+              prop: `transactions ${filterKey}`,
+              ...MultipleAsset_Exception_Detail,
+            });
+          }
+          grabFilter.add(filterKey);
+          break;
+        }
+        case SIGN_FOR_ASSET: {
+          const filterKey = `${trs.senderId}-${trs.storageValue}`;
+          if (signForFilter.has(filterKey)) {
+            throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_DUPLICATE, {
+              prop: `transactions ${filterKey}`,
+              ...MultipleAsset_Exception_Detail,
+            });
+          }
+          signForFilter.add(filterKey);
+          break;
+        }
+        case MULTIPLE: {
+          const subTransactions = (trs as BFChainCore.MultipleTransactionJSON).asset.multiple
+            .transactions;
+          for (const subTransaction of subTransactions) {
+            func(subTransaction);
+          }
+          break;
+        }
+        case PROMISE_RESOLVE: {
+          func((trs as BFChainCore.PromiseResolveTransactionJSON).asset.resolve.transaction);
+          break;
+        }
+        case MACRO_CALL: {
+          func((trs as BFChainCore.MacroCallTransactionJSON).asset.call.transaction);
+          break;
         }
       }
       signatureSet.add(trs.signature);
