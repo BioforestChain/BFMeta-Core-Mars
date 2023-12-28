@@ -152,34 +152,6 @@ export class EventLogicVerifier {
           });
         }
         const { amount, sourceAmount } = applyInfo;
-        const destroyAmount = BigInt(amount);
-        const address = applyInfo.address;
-        const accountAssets = await this.helperLogicVerifier.getAccountAssetsForce(
-          accountMap,
-          address,
-          currentBlockHeight,
-        );
-        accountAssets[magic] = accountAssets[magic] || {};
-        accountAssets[magic][assetType] = accountAssets[magic][assetType] || {
-          sourceChainMagic: magic,
-          assetType,
-          assetNumber: BigInt(0),
-          history: {},
-        };
-        const hodingAsset = accountAssets[magic][assetType];
-        const remainAsset = hodingAsset.assetNumber;
-        hodingAsset.assetNumber += destroyAmount;
-        if (hodingAsset.assetNumber < BigInt(0)) {
-          throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
-            reason: `Transaction signature: ${transaction.signature} address: ${address} magic ${
-              applyInfo.assetInfo.magic
-            } assetType: ${
-              applyInfo.assetInfo.assetType
-            } hodingAsset: ${remainAsset.toString()} destroyAsset: ${amount}`,
-            errorId: NewTransactionRefuseReason.ASSET_NOT_ENOUGH,
-          });
-        }
-
         // 是否有足够的剩余主权益
         const memAssets = await this.accountGetterHelper.getAsset(magic, assetType);
         if (!memAssets) {
