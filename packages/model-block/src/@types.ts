@@ -40,10 +40,6 @@ declare namespace BFChainCore {
     // version: number;
     // /**区块所属的网络标识符 */
     // magic: string;
-    /**掉块信息 */
-    roundOfflineGeneratersHashMap?: BFChainCore.RoundOfflineGeneratersHashMap;
-    /**掉块信息是否可信 */
-    isTrustRoundOfflineGeneraters?: boolean;
     /**交易的备注信息 */
     remark?: { [key: string]: string };
   };

@@ -117,7 +117,6 @@ export class ReplayBlockCore<T extends Block> {
     this.blockHelper.verifyBlockVersion(block, config);
 
     if (block.height > 1) {
-      const realRoundOfflineGeneratersHashMap = block.roundOfflineGeneratersHashMap;
       /// 主动生成掉块信息
       const lastBlock = await this.blockHelper.forceGetBlockByHeight(block.height - 1);
       // 校验区块的前块签名
@@ -160,7 +159,7 @@ export class ReplayBlockCore<T extends Block> {
 
       const {
         address: calcGeneratorAddress,
-        roundOfflineGeneratersReadonlyMap: calcRoundOfflineGeneratersReadonlyMap,
+        // roundOfflineGeneratersReadonlyMap: calcRoundOfflineGeneratersReadonlyMap,
       } = await this.blockGeneratorCalculator.calcGenerateBlockDelegate(lastBlock, {
         toTimestamp: block.timestamp,
       });
@@ -179,32 +178,6 @@ export class ReplayBlockCore<T extends Block> {
           )} 该区块的打块人校验不通过，区块signature：${block.signature} height: ${
             block.height
           } 当前slot为 ${currentSlot}，当前应该由委托人 ${calcGeneratorAddress} 打块，实际是由 ${generatorAddress} 打块，校验无法通过`,
-        });
-      }
-
-      // 校验区块的掉线账户信息
-      let mapSize = 0;
-      for (const offsetRound in realRoundOfflineGeneratersHashMap) {
-        const delegateList = calcRoundOfflineGeneratersReadonlyMap.get(+offsetRound);
-        if (
-          !delegateList ||
-          delegateList.join(",") !== realRoundOfflineGeneratersHashMap[offsetRound]
-        ) {
-          throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
-            to_compare_prop: "roundOfflineGeneratersHashMap",
-            be_compare_prop: "roundOfflineGeneratersHashMap",
-            to_target: "block",
-            be_target: "calculate",
-          });
-        }
-        mapSize++;
-      }
-      if (mapSize !== calcRoundOfflineGeneratersReadonlyMap.size) {
-        throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
-          to_compare_prop: `roundOfflineGeneratersHashMap size ${mapSize}`,
-          be_compare_prop: `roundOfflineGeneratersHashMap size ${calcRoundOfflineGeneratersReadonlyMap.size}`,
-          to_target: "block",
-          be_target: "calculate",
         });
       }
     }

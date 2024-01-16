@@ -285,27 +285,6 @@ export class Block<AJ extends object = object>
     return this.transactionInfo.transactionInBlocks;
   }
 
-  @MapField.d(Block.INC++, "uint32", "string")
-  roundOfflineGeneratersHashMap!: BFChainCore.RoundOfflineGeneratersHashMap;
-  _roundOfflineGeneratersReadonlyMap?: BFChainCore.RoundOfflineGeneratersReadonlyMap;
-  get roundOfflineGeneratersReadonlyMap(): BFChainCore.RoundOfflineGeneratersReadonlyMap {
-    const map = new Map<number, readonly string[]>();
-    for (const rIndex in this.roundOfflineGeneratersHashMap) {
-      const offlineGeneraters = this.roundOfflineGeneratersHashMap[rIndex];
-      const offlineGeneraterList: string[] = offlineGeneraters.split(",");
-
-      map.set(parseInt(rIndex), offlineGeneraterList);
-    }
-    return map;
-  }
-
-  get delay() {
-    for (let k in this.roundOfflineGeneratersHashMap) {
-      return true;
-    }
-    return false;
-  }
-
   @cacheBytesGetter
   getBytes(
     skipSignature?: boolean,
@@ -375,7 +354,6 @@ export class Block<AJ extends object = object>
       remark: this.remark,
       asset: this.asset.toJSON(),
       transactionInfo: this.transactionInfo.toJSON(),
-      roundOfflineGeneratersHashMap: this.roundOfflineGeneratersHashMap,
     };
 
     this.generatorSecondPublicKey && (res.generatorSecondPublicKey = this.generatorSecondPublicKey);

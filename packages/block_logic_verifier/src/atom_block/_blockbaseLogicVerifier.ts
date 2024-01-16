@@ -275,44 +275,6 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
         }打块，实际是由${generatorAddress}打块，校验无法通过`,
       });
     }
-
-    const blockRoundOfflineGeneratersHashMap = block.roundOfflineGeneratersHashMap;
-    for (const [
-      roundOffset,
-      calcRoundOfflineGeneraters,
-    ] of calcResult.roundOfflineGeneratersReadonlyMap) {
-      if (!blockRoundOfflineGeneratersHashMap[roundOffset]) {
-        throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-          to_compare_prop: "roundOfflineGeneratersHashMap",
-          be_compare_prop: "roundOfflineGeneratersHashMap",
-          to_target: "calcGenerateBlockDelegate",
-          be_target: `block with height ${block.height}, signature ${block.signature}`,
-        });
-      }
-      if (
-        calcRoundOfflineGeneraters.join(",") !== blockRoundOfflineGeneratersHashMap[roundOffset]
-      ) {
-        const blockRoundOfflineGeneraters =
-          blockRoundOfflineGeneratersHashMap[roundOffset].split(",");
-        if (calcRoundOfflineGeneraters.length !== blockRoundOfflineGeneraters.length) {
-          throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-            to_compare_prop: `calcRoundOfflineGeneraters.length: ${calcRoundOfflineGeneraters.length}`,
-            be_compare_prop: `blockRoundOfflineGeneraters.length: ${blockRoundOfflineGeneraters.length}`,
-            to_target: "calcGenerateBlockDelegate",
-            be_target: `block with height ${block.height}, signature ${block.signature}`,
-          });
-        }
-        for (const generator of calcRoundOfflineGeneraters) {
-          // 正常来说如果掉线顺序不一致也是错误的
-          if (!blockRoundOfflineGeneraters.includes(generator)) {
-            throw new ConsensusException(ERROR_LIST.NOT_EXIST, {
-              prop: `offlineGenerater ${generator}`,
-              target: `block.roundOfflineGeneratersHashMap with height ${block.height}, signature ${block.signature}`,
-            });
-          }
-        }
-      }
-    }
   }
 
   checkMaxBeginBalanceAndMaxTxCount(block: T, tickResult: BFChainCore.TickResultInfo) {

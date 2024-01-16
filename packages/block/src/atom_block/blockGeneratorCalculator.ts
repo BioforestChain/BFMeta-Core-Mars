@@ -195,24 +195,8 @@ export class BlockGeneratorCalculator {
             那一轮可使用的受托人.add(d.address);
           }
         } else {
-          const 那一轮的最低高度 = this.blockHelper.calcRoundStartHeight(掉到哪一轮);
-          const 那一轮的最高高度 = Math.min(
-            this.blockHelper.calcRoundEndHeight(掉到哪一轮),
-            currentBlock.height,
-          );
-          /**
-           * @TODO 也许这里可以使用异步迭代器优化
-           */
-          for (let h = 那一轮的最低高度; h <= 那一轮的最高高度; h++) {
-            那一轮可使用的受托人.add(
-              await this.blockHelper.forceGetBlockGeneratorAddressByHeight(h, blockGetterHelper),
-            );
-          }
-          /// 如果选出来的人不够, 那么使用选举出来的受托人进行候补
-          if (那一轮可使用的受托人.size < this.config.blockPerRound) {
-            for (const d of nextRoundDelegates) {
-              那一轮可使用的受托人.add(d.address);
-            }
+          for (const d of nextRoundDelegates) {
+            那一轮可使用的受托人.add(d.address);
           }
         }
       }
@@ -229,30 +213,17 @@ export class BlockGeneratorCalculator {
       }
       //#endregion
 
-      //#region 那一轮已经掉线的受托人
-      const 那一轮已经掉线的受托人 = new Set<string>();
-      for (const block of 这一轮已经出来的区块) {
-        const 那一轮这个块掉线的受托人 = block.roundOfflineGeneratersHashMap[掉了多少轮];
-        if (那一轮这个块掉线的受托人) {
-          for (const address of 那一轮这个块掉线的受托人.split(",")) {
-            那一轮已经掉线的受托人.add(address);
-          }
-        }
-      }
-      //#endregion
-
       /// RESULT
       const 剩余可用的受托人 = [] as string[];
       for (const address of 那一轮可使用的受托人) {
-        if (那一轮已经使用的受托人.has(address) || 那一轮已经掉线的受托人.has(address)) {
+        if (那一轮已经使用的受托人.has(address)) {
           continue;
         }
         剩余可用的受托人.push(address);
       }
-
       return 剩余可用的受托人;
     };
-    const 基于前块的排序种子 = 上一个块的信息.generatorPublicKeyBuffer.reduce((r, v) => r + v, 0);
+    const 基于前块的排序种子 = 上一个块的信息.signatureBuffer.reduce((r, v) => r + v, 0);
 
     const 对受托人排序 = (候选名单: string[]) => {
       return 候选名单.slice().sort((a1, a2) => {
@@ -268,20 +239,7 @@ export class BlockGeneratorCalculator {
     };
 
     const getResult = (选中的受托人: string) => {
-      let roundOfflineGeneratersHashMap: BFChainCore.RoundOfflineGeneratersHashMap | undefined;
-
       return {
-        roundOfflineGeneratersReadonlyMap:
-          结果掉块信息 as BFChainCore.RoundOfflineGeneratersReadonlyMap,
-        get roundOfflineGeneratersHashMap() {
-          if (!roundOfflineGeneratersHashMap) {
-            roundOfflineGeneratersHashMap = {};
-            for (const [roundOffset, OfflineGeneraterList] of 结果掉块信息) {
-              roundOfflineGeneratersHashMap[roundOffset] = OfflineGeneraterList.join(",");
-            }
-          }
-          return roundOfflineGeneratersHashMap;
-        },
         address: 选中的受托人,
         timestamp: this.timeHelper.getTimestampBySlotNumber(
           this.timeHelper.getSlotNumberByTimestamp(nowTimestamp),

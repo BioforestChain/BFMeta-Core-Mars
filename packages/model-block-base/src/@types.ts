@@ -76,8 +76,6 @@ declare namespace BFChainCore {
     remark: { [key: string]: string };
     /**区块附加信息 */
     asset: AssetJSON;
-    /**锻造者掉线列表 */
-    roundOfflineGeneratersHashMap: RoundOfflineGeneratersHashMap;
   }
 
   type BlockTransactionInfoJSON = {
@@ -97,20 +95,6 @@ declare namespace BFChainCore {
     extends BlockWithoutTransactionJSON<AssetJSON> {
     /**事件 */
     transactionInfo: BlockTransactionInfoJSON;
-  }
-  type RoundOfflineGeneratersReadonlyMap = Omit<
-    Map<number, readonly string[]>,
-    "set" | "delete" | "clear"
-  > &
-    ReadonlyMap<number, readonly string[]>;
-  // interface RoundOfflineGeneratersMap {
-  //   [roundOffset: string]: Uint8Array[];
-  // }
-  interface RoundOfflineGeneratersHashMap {
-    /**
-     * 使用逗号分隔的地址
-     * address,address */
-    [roundOffset: string]: string;
   }
 
   //#region Statistic Info

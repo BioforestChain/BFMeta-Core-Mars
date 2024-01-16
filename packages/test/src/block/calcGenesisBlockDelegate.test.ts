@@ -6,7 +6,7 @@ import {
   TransactionInBlock,
   RoundLastBlockFactory,
 } from "@bfchain/core";
-import { AsyncIteratorGenerator } from "@bfchain/util";
+import { AsyncIteratorGenerator, QueneEventEmitter } from "@bfchain/util";
 import { getFullBfchainCoreEntry } from "../include";
 import { console } from "@bfchain/devkit";
 import * as fs from "fs";
@@ -40,13 +40,19 @@ function print(obj: any) {
   } as BFChainCore.BlockGetterHelperInterface);
 
   /**已绑定的受托人个数 */
-  const pickDelegates = bfchainCore.transactionHelper.genesisDelegates().slice(50, 80);
+  let pickDelegates = bfchainCore.transactionHelper.genesisDelegates()[0]; //.slice(50, 80);
+  // pickDelegates = pickDelegates.filter((v) => {
+  //   if (["c4q2hHccaS3qcXGMqsGcasjbvj9aJsCuuy"].includes(v)) {
+  //     return false;
+  //   }
+  //   return true;
+  // });
   /**生成的区块数 */
   const generateCount = 500;
   /**生成完以后是否验证 */
   const isVerify = true;
   /**第一笔交易开始的时间戳 */
-  const fakeTimestamp = bfchainCore.config.forgeInterval * 300;
+  const fakeTimestamp = bfchainCore.config.forgeInterval * bfchainCore.config.blockPerRound * 10;
   const delegatesArr = [
     {
       secret:
@@ -884,7 +890,7 @@ function print(obj: any) {
     if (firstRow.height === 1) {
       payloadHash.update(Buffer.from(firstRow.signature, "hex"));
     } else {
-      payloadHash.update(Buffer.from(firstRow.asset.roundLastAsset.hash, "hex"));
+      payloadHash.update(Buffer.from(firstRow.asset.roundLastAsset.chainOnChainHash, "hex"));
     }
     for (let i = 1; i < blocks.length; i++) {
       payloadHash.update(Buffer.from(blocks[i].signature, "hex"));
@@ -916,7 +922,6 @@ function print(obj: any) {
     result: {
       address: string;
       timestamp: number;
-      roundOfflineGeneratersHashMap: BFChainCore.RoundOfflineGeneratersHashMap;
     },
     label = "",
     disableLog?: boolean,
@@ -935,7 +940,10 @@ function print(obj: any) {
           generatorPublicKey: delegate.pk,
           generatorEquity: "0",
           previousBlockSignature: lastBlock.previousBlockSignature,
-          roundOfflineGeneratersHashMap: result.roundOfflineGeneratersHashMap,
+        };
+        const generateBlockEventEmitter: any = new QueneEventEmitter<any>();
+        generateBlockEventEmitter.startTindexGetter = async () => {
+          return 0;
         };
         if (lastBlock.height % bfchainCore.config.blockPerRound !== 0) {
           const commonBlock = await bfchainCore.block.generateBlock<CommonBlock>(
@@ -948,6 +956,9 @@ function print(obj: any) {
             },
             asyncIteratorGenerator,
             delegate.keypair,
+            undefined,
+            generateBlockEventEmitter,
+            {} as any,
           );
           lastBlock.previousBlockSignature = lastBlock.signature;
           lastBlock.signature = commonBlock.signature;
@@ -1011,6 +1022,9 @@ function print(obj: any) {
             },
             asyncIteratorGenerator,
             delegate.keypair,
+            undefined,
+            generateBlockEventEmitter,
+            {} as any,
           );
           lastBlock.previousBlockSignature = roundLastBlock.signature;
           lastBlock.signature = roundLastBlock.signature;
@@ -1050,9 +1064,7 @@ function print(obj: any) {
       hasResult = true;
       if (result.timestamp % (bfchainCore.config.forgeInterval * 1000) === 0) {
         console.line(
-          `预生成中:${Math.min(100, (result.timestamp / MAX_TO_TIMESTAMP) * 100).toFixed(2)}% ${
-            Object.keys(result.roundOfflineGeneratersHashMap).length
-          }`,
+          `预生成中:${Math.min(100, (result.timestamp / MAX_TO_TIMESTAMP) * 100).toFixed(2)}%  `,
         );
       }
       const fastResult =
@@ -1135,6 +1147,7 @@ function print(obj: any) {
   // print(`共循环${count} . 区块: ${total}`);
   // console.log(blockMap)
   console.log(isVerify);
+  let addressCount: { [address: string]: number } = {};
   if (isVerify) {
     for (let i = 2; i < blockMap.size; i++) {
       const block = blockMap.get(i);
@@ -1153,7 +1166,12 @@ function print(obj: any) {
             const _address = await bfchainCore.accountBaseHelper.getAddressFromPublicKeyString(
               block.generatorPublicKey,
             );
-            print(`verify ${i} right address: ${address} timestamp: ${timestamp}`);
+            if (addressCount[_address]) {
+              addressCount[_address]++;
+            } else {
+              addressCount[_address] = 1;
+            }
+            // print(`verify ${i} right address: ${address} timestamp: ${timestamp}`);
             if (address !== _address) {
               throw new Error(`${i} eee ${address} .. ${_address}`);
             }
@@ -1164,6 +1182,7 @@ function print(obj: any) {
       // console.timeEnd(`cost`);
     }
   }
+  console.log(addressCount);
 })().catch((e) => {
   print(e);
 });
