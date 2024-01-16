@@ -68,7 +68,7 @@ async function getIssueCertificateTransaction(sender: AccountModel, bfchainCore:
         sourceChainName: bfchainCore.config.chainName,
         sourceChainMagic: bfchainCore.config.magic,
         certificateId,
-        type: CERTIFICATE_TYPE.DESTORY_BY_APPLICANT,
+        type: CERTIFICATE_TYPE.DESTROY_BY_APPLICANT,
       },
     },
     keypair,
