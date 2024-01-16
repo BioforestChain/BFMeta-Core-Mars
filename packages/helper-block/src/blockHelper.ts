@@ -675,7 +675,9 @@ export class BlockHelper {
    * @returns
    */
   calcRewardsForForginAndVoting<T extends Block>(block: T, generatorVote: bigint) {
-    const blockFee = BigInt(block.totalFee);
+    // const blockFee = BigInt(block.totalFee);
+    // 手续费直接销毁
+    const blockFee = BigInt(0);
     const blockReward = BigInt(block.reward);
     const result = {
       blockFee,

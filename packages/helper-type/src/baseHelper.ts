@@ -654,7 +654,7 @@ export class BaseHelper {
     if (!this.isString(chainName)) {
       return false;
     }
-    return /^[A-Z]{5,20}$/.test(chainName);
+    return /^[A-Z0-9]{5,20}$/.test(chainName);
   }
 
   /**
@@ -666,7 +666,7 @@ export class BaseHelper {
     if (!this.isString(chainName)) {
       return false;
     }
-    return /^[a-z]{5,20}$/.test(chainName);
+    return /^[a-z0-9]{5,20}$/.test(chainName);
   }
 
   /**

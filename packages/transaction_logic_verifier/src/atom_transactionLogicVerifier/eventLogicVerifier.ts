@@ -2266,12 +2266,12 @@ export class EventLogicVerifier {
             reason: "Frozen certificate can not be destroy",
           });
         }
-        if (memCertificate.type === CERTIFICATE_TYPE.DESTORY_FORBIDDEN) {
+        if (memCertificate.type === CERTIFICATE_TYPE.DESTROY_FORBIDDEN) {
           throw new ConsensusException(ERROR_LIST.CAN_NOT_DESTROY_CERTIFICATE, {
             certificateId,
-            reason: `Certificate with type ${CERTIFICATE_TYPE.DESTORY_FORBIDDEN} can not be destroy`,
+            reason: `Certificate with type ${CERTIFICATE_TYPE.DESTROY_FORBIDDEN} can not be destroy`,
           });
-        } else if (memCertificate.type === CERTIFICATE_TYPE.DESTORY_BY_APPLICANT) {
+        } else if (memCertificate.type === CERTIFICATE_TYPE.DESTROY_BY_APPLICANT) {
           // 只有凭证的发行者才能删除位名
           if (memCertificate.applyAddress !== transaction.senderId) {
             throw new ConsensusException(ERROR_LIST.CAN_NOT_DESTROY_CERTIFICATE, {

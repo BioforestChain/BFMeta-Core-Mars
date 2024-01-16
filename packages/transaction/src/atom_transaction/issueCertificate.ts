@@ -151,9 +151,9 @@ export class IssueCertificateTransactionFactory extends TransactionFactory<Issue
     }
 
     if (
-      type !== CERTIFICATE_TYPE.DESTORY_FORBIDDEN &&
-      type !== CERTIFICATE_TYPE.DESTORY_BY_APPLICANT &&
-      type !== CERTIFICATE_TYPE.DESTORY_BY_POSSESSOR
+      type !== CERTIFICATE_TYPE.DESTROY_FORBIDDEN &&
+      type !== CERTIFICATE_TYPE.DESTROY_BY_APPLICANT &&
+      type !== CERTIFICATE_TYPE.DESTROY_BY_POSSESSOR
     ) {
       throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `type ${type}`,

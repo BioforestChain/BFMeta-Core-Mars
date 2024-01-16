@@ -304,6 +304,27 @@ export class ConfigHelper {
     return this.hookedGenesisBlock.asset.genesisAsset.rate;
   }
 
+  /**blob 手续费的倍数比例，创世账户初始余额 / blobFeeMultipleRatio = 倍数 */
+  get blobFeeMultipleRatio() {
+    const ratio: BFChainCore.FractionJSON<bigint> = {
+      numerator: BigInt(this.genesisAmount),
+      denominator: BigInt(3145600000000000),
+    };
+    return ratio;
+  }
+
+  @cacheGetter
+  get totalMainAssets() {
+    const { heights, rewards } = this.milestones;
+    const calHeights = [0, ...heights];
+    let sum = BigInt(0);
+    for (let i = 1; i < calHeights.length; i++) {
+      sum += BigInt(calHeights[i] - calHeights[i - 1]) * BigInt(rewards[i - 1]);
+    }
+    sum += BigInt(this.genesisAmount);
+    return sum;
+  }
+
   toJSON(): BFChainCore.ConfigHelper {
     return {
       version: this.version,

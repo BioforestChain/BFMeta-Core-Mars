@@ -539,8 +539,7 @@ export class TransactionHelper {
       blobSize,
       this.__calcStandardMinFee(customMinFeePerByte),
     );
-    /// 先按照 100000 倍收费
-    return BigInt(minFee) * BigInt(100000);
+    return this.jsbiHelper.multiplyCeilFraction(BigInt(minFee), this.config.blobFeeMultipleRatio);
   }
   /**
    * 计算事件最小手续费

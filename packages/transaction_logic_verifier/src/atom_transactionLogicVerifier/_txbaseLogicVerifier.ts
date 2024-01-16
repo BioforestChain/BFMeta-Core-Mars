@@ -88,7 +88,9 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     // 校验交易的 magic
     await this.checkTransactionMagic(transaction);
     // 校验交易的时间戳
-    this.checkTransactionTimestamp(transaction);
+    if (currentBlockHeight > 1) {
+      this.checkTransactionTimestamp(transaction);
+    }
     // 校验交易的接收范围
     await this.checkTransactionRange(transaction, currentBlockHeight);
     // 校验交易的接收账户状态

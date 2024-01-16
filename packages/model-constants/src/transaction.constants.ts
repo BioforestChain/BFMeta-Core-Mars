@@ -147,11 +147,11 @@ export const enum SPECIAL_ASSET_TYPE {
  */
 export const enum CERTIFICATE_TYPE {
   /**禁止销毁 */
-  DESTORY_FORBIDDEN = 0,
+  DESTROY_FORBIDDEN = 0,
   /**申请者销毁 */
-  DESTORY_BY_APPLICANT = 1,
+  DESTROY_BY_APPLICANT = 1,
   /**拥有者销毁 */
-  DESTORY_BY_POSSESSOR = 2,
+  DESTROY_BY_POSSESSOR = 2,
 }
 // #endregion
 
