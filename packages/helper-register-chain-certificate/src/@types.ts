@@ -54,8 +54,6 @@ declare namespace BFChainCore {
         genesisLocationName: string;
         /**每轮的区块数量 */
         blockPerRound: number;
-        /**创世受托人数量 */
-        delegates: number;
         /**区块间隔 */
         forgeInterval: number;
         /**创世受托人列表 */

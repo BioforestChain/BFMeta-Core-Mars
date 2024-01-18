@@ -1,5 +1,5 @@
 import { Message, Type, Field } from "@bfchain/protobuf";
-import { RoundDelegateModel } from "./roundDelegate";
+import { RoundGeneratorModel } from "./roundGenerator";
 import { getHexFromArrayBuffer, parseHexToArrayBuffer } from "@bfchain/util-encoding-hex";
 import { cacheBytesGetter } from "@bfchain/core-model-cacher";
 
@@ -8,7 +8,7 @@ import { cacheBytesGetter } from "@bfchain/core-model-cacher";
  */
 @Type.d("RoundLastAssetModel")
 export class RoundLastAssetModel
-  extends RoundDelegateModel<RoundLastAssetModel>
+  extends RoundGeneratorModel<RoundLastAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.RoundLastAssetJSON>
 {
   /**块内资产变动账户生成的 hash */

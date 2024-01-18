@@ -1,24 +1,16 @@
-import {
-  BlockHelper,
-  ConfigHelper,
-  AccountBaseHelper,
-  TransactionHelper,
-} from "@bfchain/core-helper";
-import { CoreExceptionGenerator } from "@bfchain/core-util-exception";
-import { Injectable, Inject } from "@bfchain/util";
+import { BlockHelper, ConfigHelper, TransactionHelper } from "@bfchain/core-helper";
+import { Injectable } from "@bfchain/util";
 import { AccountHelper } from "@bfchain/core-helper-account";
-const { NoFoundException } = CoreExceptionGenerator("Core", "PickNextRoundDelegates");
 
 /**
  * 区块锻造者计算器
  */
 @Injectable()
-export class PickNextRoundDelegates {
+export class PickNextRoundGenerators {
   constructor(
     private config: ConfigHelper,
     private blockHelper: BlockHelper,
     private accountHelper: AccountHelper,
-    private accountBaseHelper: AccountBaseHelper,
     private transactionHelper: TransactionHelper,
   ) {}
 
@@ -26,11 +18,11 @@ export class PickNextRoundDelegates {
    * 获取受托人列表
    * @param currentHeight 当前高度
    */
-  async getNextRoundDelegates(
+  async getNextRoundGenerators(
     currentHeight: number,
     accountGetterHelper?: Pick<
       BFChainCore.AccountGetterHelperInterface,
-      "getNextRoundDelegates" | "getAccounts"
+      "getNextRoundGenerators" | "getAccounts"
     >,
   ) {
     const currentRound = this.blockHelper.calcRoundByHeight(currentHeight);
@@ -43,10 +35,10 @@ export class PickNextRoundDelegates {
     round: number,
     accountGetterHelper?: Pick<
       BFChainCore.AccountGetterHelperInterface<any, T>,
-      "getNextRoundDelegates" | "getAccounts"
+      "getNextRoundGenerators" | "getAccounts"
     >,
   ) {
-    let results = await this.accountHelper.getNextRoundDelegates(accountGetterHelper);
+    let results = await this.accountHelper.getNextRoundGenerators(accountGetterHelper);
     const reSorted = results.length < this.config.blockPerRound ? true : false;
     let pickAddressArr = results.map((result) => result.address);
     let tempRound = round - 1;
@@ -147,11 +139,7 @@ export class PickNextRoundDelegates {
     const right: any = [];
     for (let i = 0; i < temp_array.length; i++) {
       // float 类型，直接比较
-      if (temp_array[i].productivity > pivot.productivity) {
-        left[left.length] = temp_array[i];
-      } else {
-        right[right.length] = temp_array[i];
-      }
+      right[right.length] = temp_array[i];
     }
     return this.__sortByProductivity(left).concat([pivot], this.__sortByProductivity(right));
   }

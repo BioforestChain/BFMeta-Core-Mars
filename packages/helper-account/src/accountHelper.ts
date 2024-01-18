@@ -56,10 +56,10 @@ export class AccountHelper<
     return accountGetterHelper.getAccounts(addressArr, currentBlockHeight);
   }
 
-  getNextRoundDelegates<T extends BFChainCore.ForSortAccountInfo = BFChainCore.ForSortAccountInfo>(
+  getNextRoundGenerators<T extends BFChainCore.ForSortAccountInfo = BFChainCore.ForSortAccountInfo>(
     accountGetterHelper = this.accountGetterHelper as Pick<
       BFChainCore.AccountGetterHelperInterface,
-      "getNextRoundDelegates"
+      "getNextRoundGenerators"
     >,
   ) {
     if (!accountGetterHelper) {
@@ -70,23 +70,9 @@ export class AccountHelper<
         });
       }
     }
-    return accountGetterHelper.getNextRoundDelegates() as Promise<T[]>;
+    return accountGetterHelper.getNextRoundGenerators() as Promise<T[]>;
   }
-  getDelegates(
-    currentGeneraterPublicKeyList: (string | Uint8Array)[],
-    accountGetterHelper = this.accountGetterHelper as Pick<
-      BFChainCore.AccountGetterHelperInterface,
-      "getDelegates"
-    >,
-  ) {
-    if (!accountGetterHelper) {
-      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-      });
-    }
-    return accountGetterHelper.getDelegates(currentGeneraterPublicKeyList);
-  }
+
   getAccountInfo(
     address: string,
     accountGetterHelper = this.accountGetterHelper as Pick<
@@ -182,23 +168,7 @@ export class AccountHelper<
     }
     return accountGetterHelper.isDAppPossessor(sourceChainMagic, address);
   }
-  isVoteForDelegate(
-    address: string,
-    delegate: string,
-    round: number,
-    accountGetterHelper = this.accountGetterHelper as Pick<
-      BFChainCore.AccountGetterHelperInterface,
-      "isVoteForDelegate"
-    >,
-  ): Promise<boolean> {
-    if (!accountGetterHelper) {
-      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-      });
-    }
-    return accountGetterHelper.isVoteForDelegate(address, delegate, round);
-  }
+
   getLocationName(
     sourceChainMagic: string,
     locationName: string,
@@ -433,19 +403,5 @@ export class AccountHelper<
       });
     }
     return accountGetterHelper.getAccountVoteInfo(height, address);
-  }
-  getMemoryDelegates(
-    accountGetterHelper = this.accountGetterHelper as Pick<
-      BFChainCore.AccountGetterHelperInterface,
-      "getMemoryDelegates"
-    >,
-  ): Promise<string[]> {
-    if (!accountGetterHelper) {
-      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-      });
-    }
-    return accountGetterHelper.getMemoryDelegates();
   }
 }

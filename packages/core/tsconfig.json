@@ -6,9 +6,6 @@
   },
   "references": [
     {
-      "path": "../account/tsconfig.json"
-    },
-    {
       "path": "../block_logic_verifier/tsconfig.json"
     },
     {

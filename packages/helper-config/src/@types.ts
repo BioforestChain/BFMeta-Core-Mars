@@ -25,8 +25,7 @@ declare namespace BFChainCore {
     registerChainMinChainAsset: string;
     maxApplyAndConfirmedBlockHeightDiff: number;
     blockPerRound: number;
-    delegates: number;
-    whetherToAllowDelegateContinusElections: boolean;
+    whetherToAllowGeneratorContinusElections: boolean;
     forgeInterval: number;
     basicRewards: string;
     ports: BFChainCore.PortsJSON;

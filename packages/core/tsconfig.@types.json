@@ -13,9 +13,6 @@
   },
   "references": [
     {
-      "path": "../account/tsconfig.@types.json"
-    },
-    {
       "path": "../block_logic_verifier/tsconfig.@types.json"
     },
     {

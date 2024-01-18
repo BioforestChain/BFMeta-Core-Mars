@@ -52,7 +52,6 @@ const getTxs = (address: string) => {
 };
 
 registerchainAssetData.blockPerRound = 5;
-registerchainAssetData.delegates = registerchainAssetData.blockPerRound * 2;
 
 (async () => {
   const accountsAssets: BFChainCore.AccountsAssetsChange = {};
@@ -343,13 +342,13 @@ registerchainAssetData.delegates = registerchainAssetData.blockPerRound * 2;
       return "0".repeat(4 - entityIndex.toString().length) + entityIndex;
     };
     const delegatesSecret = config.delegatesSecret;
-    for (let i = 0; i < delegatesSecret.slice(0, registerchainAssetData.delegates).length; i++) {
+    for (let i = 0; i < delegatesSecret.length; i++) {
       const secret = delegatesSecret[i];
       const address = await registerBfchainCore.accountBaseHelper.getAddressFromSecret(secret);
       if (
-        registerchainAssetData.nextRoundDelegates.length < registerBfchainCore.config.blockPerRound
+        registerchainAssetData.nextRoundGenerators.length < registerBfchainCore.config.blockPerRound
       ) {
-        registerchainAssetData.nextRoundDelegates.push({
+        registerchainAssetData.nextRoundGenerators.push({
           address,
           numberOfEntities: 0,
         });
@@ -543,7 +542,6 @@ registerchainAssetData.delegates = registerchainAssetData.blockPerRound * 2;
           beginEpochTime: genesisAsset.beginEpochTime,
           genesisLocationName: genesisAsset.genesisLocationName,
           blockPerRound: genesisAsset.blockPerRound,
-          delegates: genesisAsset.delegates,
           forgeInterval: genesisAsset.forgeInterval,
           genesisDelegates: transactionInfo.transactionInBlocks
             .filter(

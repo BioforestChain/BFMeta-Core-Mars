@@ -198,15 +198,10 @@ export class ConfigHelper {
   get blockPerRound() {
     return this.hookedGenesisBlock.asset.genesisAsset.blockPerRound;
   }
-  /**创世受托人数量 */
+  /**是否允许锻造者连续参与竞选 */
   @cacheGetter
-  get delegates() {
-    return this.hookedGenesisBlock.asset.genesisAsset.delegates;
-  }
-  /**是否允许受托人连续参与竞选 */
-  @cacheGetter
-  get whetherToAllowDelegateContinusElections() {
-    return this.hookedGenesisBlock.asset.genesisAsset.whetherToAllowDelegateContinusElections;
+  get whetherToAllowGeneratorContinusElections() {
+    return this.hookedGenesisBlock.asset.genesisAsset.whetherToAllowGeneratorContinusElections;
   }
   /**区块间隔 */
   @cacheGetter
@@ -236,8 +231,8 @@ export class ConfigHelper {
   }
   /**下一轮的打块账户列表 */
   @cacheGetter
-  get nextRoundDelegates() {
-    return this.hookedGenesisBlock.asset.genesisAsset.nextRoundDelegates;
+  get nextRoundGenerators() {
+    return this.hookedGenesisBlock.asset.genesisAsset.nextRoundGenerators;
   }
 
   /**blob 手续费的倍数比例，创世账户初始余额 / blobFeeMultipleRatio = 倍数 */
@@ -276,8 +271,7 @@ export class ConfigHelper {
       registerChainMinChainAsset: this.registerChainMinChainAsset,
       maxApplyAndConfirmedBlockHeightDiff: this.maxApplyAndConfirmedBlockHeightDiff,
       blockPerRound: this.blockPerRound,
-      delegates: this.delegates,
-      whetherToAllowDelegateContinusElections: this.whetherToAllowDelegateContinusElections,
+      whetherToAllowGeneratorContinusElections: this.whetherToAllowGeneratorContinusElections,
       forgeInterval: this.forgeInterval,
       basicRewards: this.basicRewards,
       ports: this.ports,

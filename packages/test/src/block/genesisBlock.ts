@@ -64,7 +64,6 @@ const config = {
   delegatesSecret: require(defaultSecretPath).delegates as string[],
 };
 mainChainAssetData.blockPerRound = blockPerRound;
-mainChainAssetData.delegates = blockPerRound * 2;
 mainChainAssetData.forgeInterval = forgeInterval;
 
 if (randomMagic) {
@@ -336,8 +335,7 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
     txWithIndexList.push(await getLocationNameTransaction());
     const entityFactory = await getIssueEntityFactoryTransaction();
     txWithIndexList.push(entityFactory);
-    const totalDelegates = core.config.delegates;
-    const delegatesSecret = config.delegatesSecret.slice(0, totalDelegates);
+    const delegatesSecret = config.delegatesSecret;
     const eventEmitter: BFChainCore.ApplyTransactionEventEmitter<any> =
       new QueneEventEmitter<any>();
     let entityIndex = 0;
@@ -348,8 +346,8 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
     for (let i = 0; i < delegatesSecret.length; i++) {
       const secret = delegatesSecret[i];
       const address = await core.accountBaseHelper.getAddressFromSecret(secret);
-      if (mainChainAssetData.nextRoundDelegates.length < core.config.blockPerRound) {
-        mainChainAssetData.nextRoundDelegates.push({
+      if (mainChainAssetData.nextRoundGenerators.length < core.config.blockPerRound) {
+        mainChainAssetData.nextRoundGenerators.push({
           address,
           numberOfEntities: 0,
         });

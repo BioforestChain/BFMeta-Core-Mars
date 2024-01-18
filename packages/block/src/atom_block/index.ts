@@ -4,7 +4,7 @@ export * from "./commonBlock";
 export * from "./genesisBlock";
 export * from "./roundLastBlock";
 export * from "./blockGeneratorCalculator";
-export * from "./pickNextRoundDelegates";
+export * from "./pickNextRoundGenerators";
 export * from "./blockForkCheck";
 export * from "./recommendedDelegateCalculator";
 

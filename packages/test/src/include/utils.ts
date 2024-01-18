@@ -52,14 +52,13 @@ export const mainChainAssetData: BFChainCore.GenesisAssetJSON = {
   registerChainMinChainAsset: "50000000000000",
   maxApplyAndConfirmedBlockHeightDiff: 259200,
   blockPerRound: 57,
-  delegates: 114,
-  whetherToAllowDelegateContinusElections: false,
+  whetherToAllowGeneratorContinusElections: false,
   forgeInterval: 128,
   basicRewards: "100000000",
   ports: {
     port: 19000,
   },
-  nextRoundDelegates: [] as BFChainCore.NextRoundDelegateJSON[],
+  nextRoundGenerators: [] as BFChainCore.NextRoundGeneratorJSON[],
   assetChangeHash: "",
 };
 
@@ -95,14 +94,13 @@ export const registerchainAssetData: BFChainCore.GenesisAssetJSON = {
   issueEntityFactoryMinChainAsset: "50000000000000",
   registerChainMinChainAsset: "10000000000000",
   maxApplyAndConfirmedBlockHeightDiff: 57,
-  whetherToAllowDelegateContinusElections: false,
-  delegates: 114,
+  whetherToAllowGeneratorContinusElections: false,
   blockPerRound: 57,
   forgeInterval: 128,
   basicRewards: "100000000",
   ports: {
     port: 19000,
   },
-  nextRoundDelegates: [] as BFChainCore.NextRoundDelegateJSON[],
+  nextRoundGenerators: [] as BFChainCore.NextRoundGeneratorJSON[],
   assetChangeHash: "",
 };

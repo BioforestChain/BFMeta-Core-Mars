@@ -5,5 +5,5 @@ import "./@types";
 
 export * from "./commonBlock";
 export * from "./genesisBlock";
-export * from "./roundDelegate";
+export * from "./roundGenerator";
 export * from "./roundLastBlock";

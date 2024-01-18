@@ -111,14 +111,12 @@ declare namespace BFChainCore {
   };
 
   type AccountBaseInfo = {
-    productivity: number;
     address: string;
     publicKey: string;
     numberOfEntities: bigint;
   };
 
   type ForSortAccountInfo = {
-    productivity: number;
     address: string;
     publicKey: string;
     numberOfEntities: number;
@@ -219,7 +217,7 @@ declare namespace BFChainCore {
     /**根据地址数组获取账户 */
     getAccounts(addressArr: string[], curRound: number): Promise<FSAI[]>;
     /**获取准备下一轮上榜的受托人 */
-    getNextRoundDelegates(): Promise<FSAI[]>;
+    getNextRoundGenerators(): Promise<FSAI[]>;
     /**获取准备计算的受托人 */
     getDelegates(currentGeneraterPublicKeyList: (Uint8Array | string)[]): Promise<ABI[]>;
     /**获取全新的受托人账户(在线率 100%)  */

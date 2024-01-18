@@ -612,7 +612,7 @@ export class BlockHelper {
    * @param itemA
    * @param itemB
    */
-  nextRoundDelegatesCompareFn<T extends BFChainCore.ForSortAccountInfo>(itemA: T, itemB: T) {
+  nextRoundGeneratorsCompareFn<T extends BFChainCore.ForSortAccountInfo>(itemA: T, itemB: T) {
     /**
      * 因为要从大到小排序，所以这里使用`b-a`
      */
@@ -621,14 +621,7 @@ export class BlockHelper {
     } else if (itemB.numberOfEntities < itemA.numberOfEntities) {
       return -1;
     }
-    /// (b === a)
-    if (itemB.productivity > itemA.productivity) {
-      return 1;
-    } else if (itemB.productivity < itemA.productivity) {
-      return -1;
-    }
 
-    /// itemB.productivity === itemA.productivity
     /**
      * 因为pk是等长的字符串，所以这里不需要使用`String.localCompare`
      */
@@ -640,7 +633,7 @@ export class BlockHelper {
    * @param accountInfoList
    */
   sortInRankAccountInfoList<T extends BFChainCore.ForSortAccountInfo>(accountInfoList: T[]) {
-    return accountInfoList.sort(this.nextRoundDelegatesCompareFn);
+    return accountInfoList.sort(this.nextRoundGeneratorsCompareFn);
   }
 
   // #region 区块奖励分配相关

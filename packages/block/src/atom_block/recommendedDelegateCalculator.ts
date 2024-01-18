@@ -104,24 +104,14 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
     const jsbiHelper = this.jsbiHelper;
     // 过滤掉在线率不符合，已经关闭投票的账户
     for (const account of accounts) {
-      if (
-        jsbiHelper.compareFraction(
-          jsbiHelper.numberToFraction(account.productivity),
-          minBeSelectProductivity,
-        ) >= 0
-      ) {
-        const forgeInfo = forgeInfoMap.get(account.address) as BFChainCore.ForgeInfos;
-        const info: BFChainCore.CanBePickAccount = {
-          address: account.address,
-          productivity: account.productivity,
-          forgedBlocks: forgeInfo.producedblocks,
-          applyTxNumber: forgeInfo.applyTxNumber,
-          numberOfEntities: account.numberOfEntities,
-        };
-        canBePickAccounts[canBePickAccounts.length] = info;
-      } else {
-        forgeInfoMap.delete(account.address);
-      }
+      const forgeInfo = forgeInfoMap.get(account.address) as BFChainCore.ForgeInfos;
+      const info: BFChainCore.CanBePickAccount = {
+        address: account.address,
+        forgedBlocks: forgeInfo.producedblocks,
+        applyTxNumber: forgeInfo.applyTxNumber,
+        numberOfEntities: account.numberOfEntities,
+      };
+      canBePickAccounts[canBePickAccounts.length] = info;
     }
 
     return canBePickAccounts;
@@ -381,15 +371,15 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
           this.blockHelper.forceGetBlockByHeight(blockHeight, blockGetterHelper),
         )
       : await this.blockHelper.forceGetBlockByHeight(blockHeight, blockGetterHelper);
-    let nextRoundDelegates: BFChainCore.NextRoundDelegateJSON[] = [];
+    let nextRoundGenerators: BFChainCore.NextRoundGeneratorJSON[] = [];
     if (blockHeight === 1) {
-      nextRoundDelegates = (block as BFChainCore.Block<BFChainCore.GenesisBlockAssetJSON>).asset
-        .genesisAsset.nextRoundDelegates;
+      nextRoundGenerators = (block as BFChainCore.Block<BFChainCore.GenesisBlockAssetJSON>).asset
+        .genesisAsset.nextRoundGenerators;
     } else {
-      nextRoundDelegates = (block as BFChainCore.Block<BFChainCore.RoundLastBlockAssetJSON>).asset
-        .roundLastAsset.nextRoundDelegates;
+      nextRoundGenerators = (block as BFChainCore.Block<BFChainCore.RoundLastBlockAssetJSON>).asset
+        .roundLastAsset.nextRoundGenerators;
     }
-    const activeDelegates = nextRoundDelegates.map((delegate) => delegate.address);
+    const activeDelegates = nextRoundGenerators.map((delegate) => delegate.address);
     // 不推荐本轮打块账户,剔除第一轮
     if (blockHeight > blockPerRound) {
       for (const address of activeDelegates) {

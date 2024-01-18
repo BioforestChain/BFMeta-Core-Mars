@@ -93,9 +93,9 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
     };
 
     const { baseHelper } = this;
-    if (!roundLastAsset.nextRoundDelegates) {
+    if (!roundLastAsset.nextRoundGenerators) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
-        prop: "nextRoundDelegates",
+        prop: "nextRoundGenerators",
         ...RoundLastBlockAsset_Exception_Detail,
       });
     }
@@ -214,36 +214,36 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
       Pick<BFChainCore.BlockGetterHelperInterface, "getNewForgingDelegates" | "getLastBlock">
     >,
   ) {
-    const calcNextRoundDelegates = await blockGetterHelper.getNewForgingDelegates(
+    const calcNextRoundGenerators = await blockGetterHelper.getNewForgingDelegates(
       await blockGetterHelper.getLastBlock(),
       block.generatorPublicKey,
     );
-    const nextRoundDelegates = block.asset.roundLastAsset.nextRoundDelegates;
-    const delegateLength = calcNextRoundDelegates.length;
-    if (delegateLength !== nextRoundDelegates.length) {
+    const nextRoundGenerators = block.asset.roundLastAsset.nextRoundGenerators;
+    const delegateLength = calcNextRoundGenerators.length;
+    if (delegateLength !== nextRoundGenerators.length) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-        to_compare_prop: `nextRoundDelegates length ${nextRoundDelegates.length}`,
-        be_compare_prop: `nextRoundDelegates length ${calcNextRoundDelegates.length}`,
+        to_compare_prop: `nextRoundGenerators length ${nextRoundGenerators.length}`,
+        be_compare_prop: `nextRoundGenerators length ${calcNextRoundGenerators.length}`,
         to_target: "block remark",
         be_target: "calculate",
       });
     }
 
     for (let i = 0; i < delegateLength; i++) {
-      const { address, numberOfEntities } = calcNextRoundDelegates[i];
-      const nextRoundDelegate = nextRoundDelegates[i];
-      if (nextRoundDelegate.address !== address) {
+      const { address, numberOfEntities } = calcNextRoundGenerators[i];
+      const nextRoundGenerator = nextRoundGenerators[i];
+      if (nextRoundGenerator.address !== address) {
         throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-          to_compare_prop: `nextRoundDelegates index ${i} address ${nextRoundDelegate.address}`,
-          be_compare_prop: `nextRoundDelegates index ${i} address ${address}`,
+          to_compare_prop: `nextRoundGenerators index ${i} address ${nextRoundGenerator.address}`,
+          be_compare_prop: `nextRoundGenerators index ${i} address ${address}`,
           to_target: "block remark",
           be_target: "calculate",
         });
       }
-      if (nextRoundDelegate.numberOfEntities !== numberOfEntities) {
+      if (nextRoundGenerator.numberOfEntities !== numberOfEntities) {
         throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-          to_compare_prop: `nextRoundDelegates index ${i} address ${nextRoundDelegate.address} numberOfEntities ${nextRoundDelegate.numberOfEntities}`,
-          be_compare_prop: `nextRoundDelegates index ${i} address ${address} numberOfEntities ${numberOfEntities}`,
+          to_compare_prop: `nextRoundGenerators index ${i} address ${nextRoundGenerator.address} numberOfEntities ${nextRoundGenerator.numberOfEntities}`,
+          be_compare_prop: `nextRoundGenerators index ${i} address ${address} numberOfEntities ${numberOfEntities}`,
           to_target: "block remark",
           be_target: "calculate",
         });

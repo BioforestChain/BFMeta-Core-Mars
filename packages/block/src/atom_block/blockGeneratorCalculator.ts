@@ -175,27 +175,27 @@ export class BlockGeneratorCalculator {
       }
     }
 
-    const nextRoundDelegates =
+    const nextRoundGenerators =
       上一轮轮末块.height === 1
-        ? (上一轮轮末块 as BFChainCore.GenesisBlock).asset.genesisAsset.nextRoundDelegates
-        : (上一轮轮末块 as BFChainCore.RoundLastBlock).asset.roundLastAsset.nextRoundDelegates;
+        ? (上一轮轮末块 as BFChainCore.GenesisBlock).asset.genesisAsset.nextRoundGenerators
+        : (上一轮轮末块 as BFChainCore.RoundLastBlock).asset.roundLastAsset.nextRoundGenerators;
 
     const 取得剩余可用受托人 = async (掉了多少轮: number) => {
       //#region 那一轮可使用的受托人
       const 那一轮可使用的受托人 = new Set<string>();
       if (掉了多少轮 === 0) {
-        for (const d of nextRoundDelegates) {
+        for (const d of nextRoundGenerators) {
           那一轮可使用的受托人.add(d.address);
         }
       } else {
         const 掉到哪一轮 = 当前轮次 - 掉了多少轮;
         if (掉到哪一轮 <= 1) {
           /// 创世块那一轮,直接使用传世受托人,不用管第一轮到底是谁在打块
-          for (const d of this.config.genesisBlock.asset.genesisAsset.nextRoundDelegates) {
+          for (const d of this.config.genesisBlock.asset.genesisAsset.nextRoundGenerators) {
             那一轮可使用的受托人.add(d.address);
           }
         } else {
-          for (const d of nextRoundDelegates) {
+          for (const d of nextRoundGenerators) {
             那一轮可使用的受托人.add(d.address);
           }
         }

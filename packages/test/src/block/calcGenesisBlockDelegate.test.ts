@@ -997,20 +997,20 @@ function print(obj: any) {
           } else {
             chosenAddress = bfchainCore.transactionHelper.genesisDelegates().slice(57, 114);
           }
-          const nextRoundDelegates = chosenAddress.map((v) => {
+          const nextRoundGenerators = chosenAddress.map((v) => {
             return { address: v, numberOfEntities: 0 };
           });
-          // const nextRoundDelegates = randomNextDelegates(_pickDelegates,).map(v => {
+          // const nextRoundGenerators = randomNextDelegates(_pickDelegates,).map(v => {
           //   return { address: v, equity: "0" };
           // });
-          // print(`height: ${lastBlock.height} nextRoundDelegates`);
-          // print(nextRoundDelegates);
+          // print(`height: ${lastBlock.height} nextRoundGenerators`);
+          // print(nextRoundGenerators);
           const roundLastBlock = await bfchainCore.block.generateBlock<RoundLastBlock>(
             RoundLastBlockFactory,
             newBlock,
             {
               roundLastAsset: {
-                nextRoundDelegates,
+                nextRoundGenerators: nextRoundGenerators,
                 chainOnChainHash: getChainOnChainHash(lastBlock.height),
                 assetChangeHash: "",
               },

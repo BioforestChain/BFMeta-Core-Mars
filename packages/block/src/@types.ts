@@ -58,7 +58,6 @@ declare namespace BFChainCore {
 
   type CanBePickAccount = {
     address: string;
-    productivity: number;
     forgedBlocks: number;
     applyTxNumber: number;
     numberOfEntities: number;

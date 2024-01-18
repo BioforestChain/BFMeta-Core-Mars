@@ -354,24 +354,12 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       });
     }
 
-    const {
-      blockPerRound,
-      forgeInterval,
-      delegates,
-      basicRewards,
-      whetherToAllowDelegateContinusElections,
-    } = genesisAsset;
+    const { blockPerRound, forgeInterval, basicRewards, whetherToAllowGeneratorContinusElections } =
+      genesisAsset;
 
     if (!baseHelper.isPositiveInteger(blockPerRound)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `blockPerRound ${blockPerRound}`,
-        ...GenesisBlockAsset_Exception_Detail,
-      });
-    }
-
-    if (!baseHelper.isPositiveInteger(delegates)) {
-      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: `delegates ${delegates}`,
         ...GenesisBlockAsset_Exception_Detail,
       });
     }
@@ -389,29 +377,11 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       });
     }
 
-    if (!baseHelper.isBoolean(whetherToAllowDelegateContinusElections)) {
+    if (!baseHelper.isBoolean(whetherToAllowGeneratorContinusElections)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: `whetherToAllowDelegateContinusElections ${whetherToAllowDelegateContinusElections}`,
+        prop: `whetherToAllowGeneratorContinusElections ${whetherToAllowGeneratorContinusElections}`,
         ...GenesisBlockAsset_Exception_Detail,
       });
-    }
-
-    if (whetherToAllowDelegateContinusElections) {
-      if (delegates < blockPerRound) {
-        throw new ArgumentIllegalException(ERROR_LIST.GENESIS_DELEGATE_NOT_ENOUGH, {
-          expected: blockPerRound,
-          actual: delegates,
-          ...GenesisBlockAsset_Exception_Detail,
-        });
-      }
-    } else {
-      if (delegates < blockPerRound * 2) {
-        throw new ArgumentIllegalException(ERROR_LIST.GENESIS_DELEGATE_NOT_ENOUGH, {
-          expected: blockPerRound * 2,
-          actual: delegates,
-          ...GenesisBlockAsset_Exception_Detail,
-        });
-      }
     }
 
     if (!baseHelper.isPositiveInteger(forgeInterval)) {
@@ -455,41 +425,41 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       });
     }
 
-    const { nextRoundDelegates } = genesisAsset;
-    if (!nextRoundDelegates) {
+    const { nextRoundGenerators } = genesisAsset;
+    if (!nextRoundGenerators) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
-        prop: `nextRoundDelegates`,
+        prop: `nextRoundGenerators`,
         ...GenesisBlockAsset_Exception_Detail,
       });
     }
-    if (!baseHelper.isArray(nextRoundDelegates)) {
+    if (!baseHelper.isArray(nextRoundGenerators)) {
       throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
-        to_compare_prop: "nextRoundDelegates",
+        to_compare_prop: "nextRoundGenerators",
         to_target: "genesisBlock",
         be_compare_prop: "array",
         ...GenesisBlockAsset_Exception_Detail,
       });
     }
-    if (nextRoundDelegates.length !== genesisAsset.blockPerRound) {
+    if (nextRoundGenerators.length !== genesisAsset.blockPerRound) {
       throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
-        to_compare_prop: `nextRoundDelegates's length ${nextRoundDelegates.length}`,
+        to_compare_prop: `nextRoundGenerators's length ${nextRoundGenerators.length}`,
         to_target: "genesisBlock",
         be_compare_prop: `blockPerRound: ${config.blockPerRound}`,
         be_target: "genesisBlock",
       });
     }
-    for (let i = 0; i < nextRoundDelegates.length; i++) {
-      const nextRoundDelegate = nextRoundDelegates[i];
-      if (!(await this.accountBaseHelper.isAddress(nextRoundDelegate.address))) {
+    for (let i = 0; i < nextRoundGenerators.length; i++) {
+      const nextRoundGenerator = nextRoundGenerators[i];
+      if (!(await this.accountBaseHelper.isAddress(nextRoundGenerator.address))) {
         throw new ArgumentIllegalException(ERROR_LIST.NOT_EXIST, {
-          prop: `genesisBlock.nextRoundDelegates[${i}].address ${nextRoundDelegate.address}`,
-          target: "genesisBlock.newDelegates",
+          prop: `genesisBlock.nextRoundGenerators[${i}].address ${nextRoundGenerator.address}`,
+          target: "genesisBlock.newGenerators",
         });
       }
-      if (!this.baseHelper.isNaturalNumber(nextRoundDelegate.numberOfEntities)) {
+      if (!this.baseHelper.isNaturalNumber(nextRoundGenerator.numberOfEntities)) {
         throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-          prop: `nextRoundDelegates[${i}].numberOfEntities ${nextRoundDelegate.numberOfEntities}`,
-          target: "genesisBlock.nextRoundDelegates",
+          prop: `nextRoundGenerators[${i}].numberOfEntities ${nextRoundGenerator.numberOfEntities}`,
+          target: "genesisBlock.nextRoundGenerators",
         });
       }
     }

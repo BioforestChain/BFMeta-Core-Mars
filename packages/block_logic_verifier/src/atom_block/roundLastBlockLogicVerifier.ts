@@ -65,11 +65,11 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
       await blockGetterHelper.getLastBlock(),
       block.generatorPublicKey,
     );
-    const nextRoundDelegates = block.asset.roundLastAsset.nextRoundDelegates;
-    if (delegates.length !== nextRoundDelegates.length) {
+    const nextRoundGenerators = block.asset.roundLastAsset.nextRoundGenerators;
+    if (delegates.length !== nextRoundGenerators.length) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `delegates length ${delegates.length}`,
-        be_compare_prop: `delegates length ${nextRoundDelegates.length}`,
+        be_compare_prop: `delegates length ${nextRoundGenerators.length}`,
         to_target: "block asset",
         be_target: "calculate",
       });
@@ -77,20 +77,20 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
 
     for (let i = 0; i < delegates.length; i++) {
       const address = delegates[i].address;
-      const nextRoundDelegate = nextRoundDelegates[i];
-      if (nextRoundDelegate.address !== address) {
+      const nextRoundGenerator = nextRoundGenerators[i];
+      if (nextRoundGenerator.address !== address) {
         throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-          to_compare_prop: `nextRoundDelegates index ${i} address ${nextRoundDelegate.address}`,
-          be_compare_prop: `nextRoundDelegates index ${i} address ${address}`,
+          to_compare_prop: `nextRoundGenerators index ${i} address ${nextRoundGenerator.address}`,
+          be_compare_prop: `nextRoundGenerators index ${i} address ${address}`,
           to_target: "block asset",
           be_target: "calculate",
         });
       }
       const numberOfEntities = delegates[i].numberOfEntities;
-      if (nextRoundDelegate.numberOfEntities !== numberOfEntities) {
+      if (nextRoundGenerator.numberOfEntities !== numberOfEntities) {
         throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-          to_compare_prop: `nextRoundDelegates index ${i} address ${nextRoundDelegate.address} numberOfEntities ${nextRoundDelegate.numberOfEntities}`,
-          be_compare_prop: `nextRoundDelegates index ${i} address ${address} numberOfEntities ${numberOfEntities}`,
+          to_compare_prop: `nextRoundGenerators index ${i} address ${nextRoundGenerator.address} numberOfEntities ${nextRoundGenerator.numberOfEntities}`,
+          be_compare_prop: `nextRoundGenerators index ${i} address ${address} numberOfEntities ${numberOfEntities}`,
           to_target: "block asset",
           be_target: "calculate",
         });

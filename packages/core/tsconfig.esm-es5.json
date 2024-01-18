@@ -9,9 +9,6 @@
   },
   "references": [
     {
-      "path": "../account/tsconfig.esm-es5.json"
-    },
-    {
       "path": "../block_logic_verifier/tsconfig.esm-es5.json"
     },
     {

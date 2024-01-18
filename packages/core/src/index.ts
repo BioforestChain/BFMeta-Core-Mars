@@ -2,7 +2,6 @@ import "@bfchain/core-typings";
 export * from "@bfchain/core-model";
 export * from "@bfchain/core-helper";
 
-export * from "@bfchain/core-account";
 export * from "@bfchain/core-transaction";
 export * from "@bfchain/core-transaction-logic-verifier";
 export * from "@bfchain/core-transaction-complex-logic-verifier";

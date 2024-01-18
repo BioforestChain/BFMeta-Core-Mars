@@ -23,7 +23,7 @@
     "src/commonBlock.ts",
     "src/genesisBlock.ts",
     "src/index.ts",
-    "src/roundDelegate.ts",
+    "src/roundGenerator.ts",
     "src/roundLastBlock.ts"
   ]
 }

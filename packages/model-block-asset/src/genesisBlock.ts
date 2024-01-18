@@ -2,7 +2,7 @@ import { Message, Field, Type, Long } from "@bfchain/protobuf";
 import { Fraction, FractionBigIntModel } from "@bfchain/core-model-common";
 import { cacheBytesGetter } from "@bfchain/core-model-cacher";
 import { getHexFromArrayBuffer, parseHexToArrayBuffer } from "@bfchain/util-encoding-hex";
-import { RoundDelegateModel } from "./roundDelegate";
+import { RoundGeneratorModel } from "./roundGenerator";
 import { BNID_TYPE } from "@bfchain/core-model-constants";
 
 /**
@@ -30,7 +30,7 @@ export class PortsModel
  */
 @Type.d("GenesisAssetModel")
 export class GenesisAssetModel
-  extends RoundDelegateModel<GenesisAssetModel>
+  extends RoundGeneratorModel<GenesisAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.GenesisAssetJSON>
 {
   /**链名 */
@@ -120,12 +120,9 @@ export class GenesisAssetModel
   /**每轮的区块数量 */
   @Field.d(GenesisAssetModel.INC++, "uint32")
   blockPerRound!: number;
-  /**创世受托人数量 */
-  @Field.d(GenesisAssetModel.INC++, "uint32")
-  delegates!: number;
   /**是否允许受托人连续参与打块竞选 */
   @Field.d(GenesisAssetModel.INC++, "bool")
-  whetherToAllowDelegateContinusElections!: boolean;
+  whetherToAllowGeneratorContinusElections!: boolean;
   /**区块时间间隔 */
   @Field.d(GenesisAssetModel.INC++, "uint32", "required")
   forgeInterval!: number;
@@ -174,8 +171,7 @@ export class GenesisAssetModel
         registerChainMinChainAsset: this.registerChainMinChainAsset,
         maxApplyAndConfirmedBlockHeightDiff: this.maxApplyAndConfirmedBlockHeightDiff,
         blockPerRound: this.blockPerRound,
-        delegates: this.delegates,
-        whetherToAllowDelegateContinusElections: this.whetherToAllowDelegateContinusElections,
+        whetherToAllowGeneratorContinusElections: this.whetherToAllowGeneratorContinusElections,
         forgeInterval: this.forgeInterval,
         basicRewards: this.basicRewards,
         ports: this.ports.toJSON(),

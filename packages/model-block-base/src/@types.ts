@@ -32,8 +32,6 @@ declare namespace BFChainCore {
     genesisLocationName: string;
     /**每轮的区块数量 */
     blockPerRound: number;
-    /**创世受托人数量 */
-    delegates: number;
     /**区块间隔 */
     forgeInterval: number;
     /**创世受托人列表 */
@@ -147,17 +145,17 @@ declare namespace BFChainCore {
   //#endregion
 
   //#region RoundLastBlock
-  interface NextRoundDelegateJSON {
+  interface NextRoundGeneratorJSON {
     /**受托人账户地址 */
     address: string;
     /**受托人上一轮轮末持有的 entity 数量 */
     numberOfEntities: number;
   }
-  interface RoundDelegateJSON {
+  interface RoundGeneratorJSON {
     /**下一轮的打块账户列表 */
-    nextRoundDelegates: NextRoundDelegateJSON[];
+    nextRoundGenerators: NextRoundGeneratorJSON[];
   }
-  interface RoundLastAssetJSON extends RoundDelegateJSON {
+  interface RoundLastAssetJSON extends RoundGeneratorJSON {
     /**块内资产变动 hash */
     assetChangeHash?: string;
     /**链上链 hash */
@@ -176,7 +174,7 @@ declare namespace BFChainCore {
     port: number;
   }
 
-  interface GenesisAssetJSON extends RoundDelegateJSON {
+  interface GenesisAssetJSON extends RoundGeneratorJSON {
     /**链名 */
     chainName: string;
     /**链主权益名 */
@@ -223,16 +221,14 @@ declare namespace BFChainCore {
     maxApplyAndConfirmedBlockHeightDiff: number;
     /**每轮的区块数量 */
     blockPerRound: number;
-    /**创世受托人数量 */
-    delegates: number;
     /**区块间隔 */
     forgeInterval: number;
     /**区块基础奖励 */
     basicRewards: string;
     /**区块链端口号，JSON 对象 */
     ports: PortsJSON;
-    /**是否允许受托人连续参与竞选 */
-    whetherToAllowDelegateContinusElections: boolean;
+    /**是否允许锻造者连续参与竞选 */
+    whetherToAllowGeneratorContinusElections: boolean;
     /**块内资产变动 hash */
     assetChangeHash?: string;
   }
