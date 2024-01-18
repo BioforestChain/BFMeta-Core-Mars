@@ -39,9 +39,6 @@
       "path": "../helper-migrate-certificate/tsconfig.json"
     },
     {
-      "path": "../helper-milestones/tsconfig.json"
-    },
-    {
       "path": "../helper-parity-bit/tsconfig.json"
     },
     {

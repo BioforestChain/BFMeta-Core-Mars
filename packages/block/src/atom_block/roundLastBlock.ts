@@ -5,7 +5,6 @@ import {
   BlockHelper,
   BaseHelper,
   ConfigHelper,
-  MilestonesHelper,
   AsymmetricHelper,
   BlockBaseStatisticsHelper,
 } from "@bfchain/core-helper";
@@ -34,7 +33,6 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
     public baseHelper: BaseHelper,
     public config: ConfigHelper,
     public statisticsHelper: BlockBaseStatisticsHelper,
-    public milestonesHelper: MilestonesHelper,
     public asymmetricHelper: AsymmetricHelper,
     @Inject("cryptoHelper") public cryptoHelper: BFChainCore.CryptoHelperInterface,
     public blockGeneratorCalculator: BlockGeneratorCalculator,
@@ -123,8 +121,8 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
       ...body,
       asset: roundLastBlockAsset,
     });
-    // 绑定区块奖励
-    block.reward = this.milestonesHelper.calcReward(block.height);
+    /**@TODO 这里要加上手续费奖励 */
+    block.reward = this.config.basicRewards;
 
     return block;
   }

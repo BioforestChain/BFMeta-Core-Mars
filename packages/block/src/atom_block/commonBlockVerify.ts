@@ -1,10 +1,4 @@
-import {
-  BlockHelper,
-  BaseHelper,
-  MilestonesHelper,
-  ChainAssetInfoHelper,
-  ConfigHelper,
-} from "@bfchain/core-helper";
+import { BlockHelper, BaseHelper, ChainAssetInfoHelper, ConfigHelper } from "@bfchain/core-helper";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { Writer } from "@bfchain/protobuf";
 import { Block } from "@bfchain/core-model-block";
@@ -24,7 +18,6 @@ export class CommonBlockVerify<T extends Block> {
     public config: ConfigHelper,
     public blockHelper: BlockHelper,
     public baseHelper: BaseHelper,
-    public milestonesHelper: MilestonesHelper,
     public chainAssetInfoHelper: ChainAssetInfoHelper,
   ) {}
 
@@ -120,15 +113,7 @@ export class CommonBlockVerify<T extends Block> {
    * @param block
    */
   verifyBlockReward(block: T) {
-    const expectedReward = this.milestonesHelper.calcReward(block.height).toString();
-    if (expectedReward !== block.reward) {
-      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
-        to_compare_prop: `blockReward ${block.reward}`,
-        be_compare_prop: `expectedReward ${expectedReward}`,
-        to_target: "block",
-        be_target: "calculate",
-      });
-    }
+    throw new Error(`not impl yet`);
   }
 
   /**

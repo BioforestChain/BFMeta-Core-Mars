@@ -19,8 +19,6 @@ export * from "@bfchain/core-helper-chain-asset-info";
 export * from "@bfchain/core-helper-block-base-statistics";
 export * from "@bfchain/core-helper-block";
 
-export * from "@bfchain/core-helper-milestones";
-
 export * from "@bfchain/core-helper-migrate-certificate";
 
 export * from "@bfchain/core-helper-register-chain-certificate";

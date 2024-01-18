@@ -7,7 +7,6 @@ import {
   BaseHelper,
   AccountBaseHelper,
   ConfigHelper,
-  MilestonesHelper,
   AsymmetricHelper,
   BlockBaseStatisticsHelper,
 } from "@bfchain/core-helper";
@@ -34,7 +33,6 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
     public baseHelper: BaseHelper,
     public config: ConfigHelper,
     public statisticsHelper: BlockBaseStatisticsHelper,
-    public milestonesHelper: MilestonesHelper,
     public asymmetricHelper: AsymmetricHelper,
     @Inject("cryptoHelper") public cryptoHelper: BFChainCore.CryptoHelperInterface,
     public blockGeneratorCalculator: BlockGeneratorCalculator,

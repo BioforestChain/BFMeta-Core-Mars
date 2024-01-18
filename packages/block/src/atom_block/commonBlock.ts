@@ -5,7 +5,6 @@ import {
   BlockHelper,
   BaseHelper,
   ConfigHelper,
-  MilestonesHelper,
   AsymmetricHelper,
   BlockBaseStatisticsHelper,
 } from "@bfchain/core-helper";
@@ -29,7 +28,6 @@ export class CommonBlockFactory extends BlockFactory<CommonBlock> {
     public baseHelper: BaseHelper,
     public config: ConfigHelper,
     public statisticsHelper: BlockBaseStatisticsHelper,
-    public milestonesHelper: MilestonesHelper,
     public asymmetricHelper: AsymmetricHelper,
     @Inject("cryptoHelper") public cryptoHelper: BFChainCore.CryptoHelperInterface,
     public blockGeneratorCalculator: BlockGeneratorCalculator,
@@ -92,7 +90,8 @@ export class CommonBlockFactory extends BlockFactory<CommonBlock> {
   _generateBlock(body: BFChainCore.BlockBody, commonBlockAset: BFChainCore.CommonBlockAssetJSON) {
     const block = CommonBlock.fromObject({ ...body, asset: commonBlockAset });
     // 绑定区块奖励
-    block.reward = this.milestonesHelper.calcReward(block.height);
+    /**@TODO 这里要加上手续费奖励 */
+    block.reward = this.config.basicRewards;
 
     return block;
   }

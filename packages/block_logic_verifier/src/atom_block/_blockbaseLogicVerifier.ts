@@ -4,7 +4,6 @@ import {
   BlockHelper,
   ConfigHelper,
   ChainTimeHelper,
-  MilestonesHelper,
   ChainAssetInfoHelper,
 } from "@bfchain/core-helper";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
@@ -36,8 +35,6 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
   protected configHelper!: ConfigHelper;
   @Inject(ChainTimeHelper)
   protected timeHelper!: ChainTimeHelper;
-  @Inject(MilestonesHelper)
-  protected milestonesHelper!: MilestonesHelper;
   @Inject(ChainAssetInfoHelper)
   protected chainAssetInfoHelper!: ChainAssetInfoHelper;
   @Inject("bfchain-core:BlockCore")

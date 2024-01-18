@@ -14,7 +14,6 @@
     "@types/bfchain__core-helper-chain-time": "10.0.0",
     "@types/bfchain__core-helper-config": "10.0.0",
     "@types/bfchain__core-helper-migrate-certificate": "10.0.0",
-    "@types/bfchain__core-helper-milestones": "10.0.0",
     "@types/bfchain__core-helper-parity-bit": "10.0.0",
     "@types/bfchain__core-helper-register-chain-certificate": "10.0.0",
     "@types/bfchain__core-helper-transaction": "10.0.0",

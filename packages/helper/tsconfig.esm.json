@@ -42,9 +42,6 @@
       "path": "../helper-migrate-certificate/tsconfig.esm.json"
     },
     {
-      "path": "../helper-milestones/tsconfig.esm.json"
-    },
-    {
       "path": "../helper-parity-bit/tsconfig.esm.json"
     },
     {

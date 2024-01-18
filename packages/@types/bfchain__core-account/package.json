@@ -1,9 +1,0 @@
-{
-  "name": "@types/bfchain__core-account",
-  "types": "index.d.ts",
-  "version": "10.0.0",
-  "dependencies": {
-    "@types/bfchain__core-helper-account-base": "10.0.0",
-    "@types/bfchain__core-typings": "10.0.0"
-  }
-}
