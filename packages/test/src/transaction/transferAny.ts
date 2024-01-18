@@ -14,22 +14,6 @@ import {
   getBfchainCoreEntry,
   getRandomDAppId,
 } from "../include";
-import { sleep } from "@bfchain/util";
-
-const _powCount: { [add: string]: number } = {};
-function getPOWInfo<T extends Transaction>(address: string) {
-  const count = _powCount[address] || 0;
-  _powCount[address] = count + 1;
-  // const res: BFChainCore.TransactionPoWOptions<T> = {
-  //   accountNumberOfTransactionInBlock: count,
-  //   accountParticipation: "8888888" + "0".repeat(8),
-  // };
-  const res: BFChainCore.TransactionPoWOptions<T> = {
-    count,
-    participation: "8888888" + "0".repeat(8),
-  };
-  return res;
-}
 
 async function getTransferAnyTransaction(sender: AccountModel, bfchainCore: BFChainCore) {
   const assetType = "skyrim_dragonborn";
@@ -71,10 +55,6 @@ async function getTransferAnyTransaction(sender: AccountModel, bfchainCore: BFCh
         sender.secondSecret,
       );
   }
-  const pow =
-    data.applyBlockHeight > bfchainCore.config.tpowOfWorkExemptionBlocks
-      ? getPOWInfo<TransferAnyTransaction>(sender.address)
-      : undefined;
   let trs = await bfchainCore.transaction.createTransaction<TransferAnyTransaction>(
     TransferAnyTransactionFactory,
     data,
@@ -94,11 +74,7 @@ async function getTransferAnyTransaction(sender: AccountModel, bfchainCore: BFCh
     keypair,
     secondKeypair,
     undefined,
-    undefined,
   );
-  if (pow) {
-    trs = await bfchainCore.transaction.transactionPowCalculator(trs, pow, keypair, secondKeypair);
-  }
   const trsJson = trs.toJSON();
   const xx = await bfchainCore.transaction.recombineTransaction(trsJson);
 

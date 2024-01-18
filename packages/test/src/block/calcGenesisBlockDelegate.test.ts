@@ -938,7 +938,6 @@ function print(obj: any) {
           height: lastBlock.height,
           timestamp: result.timestamp,
           generatorPublicKey: delegate.pk,
-          generatorEquity: "0",
           previousBlockSignature: lastBlock.previousBlockSignature,
         };
         const generateBlockEventEmitter: any = new QueneEventEmitter<any>();
@@ -999,7 +998,7 @@ function print(obj: any) {
             chosenAddress = bfchainCore.transactionHelper.genesisDelegates().slice(57, 114);
           }
           const nextRoundDelegates = chosenAddress.map((v) => {
-            return { address: v, equity: "0" };
+            return { address: v, numberOfEntities: 0 };
           });
           // const nextRoundDelegates = randomNextDelegates(_pickDelegates,).map(v => {
           //   return { address: v, equity: "0" };
@@ -1012,10 +1011,6 @@ function print(obj: any) {
             {
               roundLastAsset: {
                 nextRoundDelegates,
-                maxBeginBalance: "0",
-                maxTxCount: 0,
-                rate: "0",
-                newDelegates: [],
                 chainOnChainHash: getChainOnChainHash(lastBlock.height),
                 assetChangeHash: "",
               },

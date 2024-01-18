@@ -100,8 +100,6 @@ declare namespace BFChainCore {
   type BlockPlotChecker = Readonly<{
     height: number;
     timestamp: number;
-    /**参与度 */
-    blockParticipation: bigint;
     /**交易量 */
     numberOfTransactions: number;
     /**手续费 */
@@ -142,16 +140,12 @@ declare namespace BFChainCore {
     generatorPublicKey: string;
     /**锻造者的安全公钥 */
     generatorSecondPublicKey?: string;
-    /**锻造者权益 */
-    generatorEquity: string;
     /**前块签名 */
     previousBlockSignature: string;
     /**区块奖励值 */
     reward: string;
     /**区块的链标识符 */
     magic: string;
-    /**区块参与度 */
-    blockParticipation: string;
     /**区块签名 */
     signature: string;
     /**区块安全签名 */

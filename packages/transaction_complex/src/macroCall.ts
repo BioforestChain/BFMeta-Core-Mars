@@ -283,8 +283,6 @@ export class MacroCallTransactionFactory extends TransactionFactory<MacroCallTra
     transaction: T,
     secret: string,
     secondSecret?: string,
-    pow?: BFChainCore.TransactionPoWOptions<T>,
-    skipPow?: boolean,
   ) {
     const template = await this.transactionCore.recombineTransaction<T>(transaction.toJSON());
     const { accountBaseHelper, asymmetricHelper } = this;
@@ -301,23 +299,6 @@ export class MacroCallTransactionFactory extends TransactionFactory<MacroCallTra
         secondKeypair.secretKey,
       );
       await this.transactionHelper.verifyTransactionSignature(template);
-    }
-    // 在异步中执行交易POW
-    if (pow && !skipPow) {
-      if (pow.calculator) {
-        return await pow.calculator(template, pow, keypair, secondKeypair);
-      } else {
-        // 使用内置的计算器去计算
-        return await this.transactionCore.transactionPowCalculator(
-          template,
-          pow,
-          keypair,
-          secondKeypair,
-        );
-      }
-    } else {
-      // 交易的 nonce 必须携带，默认为 0，并且加入签名
-      template.nonce = 0;
     }
     return template;
   }

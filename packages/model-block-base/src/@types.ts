@@ -62,16 +62,12 @@ declare namespace BFChainCore {
     generatorPublicKey: string;
     /**锻造者的安全公钥 */
     generatorSecondPublicKey?: string;
-    /**锻造者权益 */
-    generatorEquity: string;
     /**前块签名 */
     previousBlockSignature: string;
     /**区块奖励值 */
     reward: string;
     /**区块的链标识符 */
     magic: string;
-    /**区块参与度 */
-    blockParticipation: string;
     /**区块备注信息 */
     remark: { [key: string]: string };
     /**区块附加信息 */
@@ -154,20 +150,12 @@ declare namespace BFChainCore {
   interface NextRoundDelegateJSON {
     /**受托人账户地址 */
     address: string;
-    /**受托人上一轮获得的权益 */
-    equity: string;
+    /**受托人上一轮轮末持有的 entity 数量 */
+    numberOfEntities: number;
   }
   interface RoundDelegateJSON {
     /**下一轮的打块账户列表 */
     nextRoundDelegates: NextRoundDelegateJSON[];
-    /**新注册的受托人 */
-    newDelegates: string[];
-    /**上一轮投票账户中的最大轮末主权益量 */
-    maxBeginBalance: string;
-    /**上一轮投票账户中最大的事件量 */
-    maxTxCount: number;
-    /**上一轮投票账户的最大轮末主权益量和上一轮投票账户的最大事件的比 */
-    rate: string;
   }
   interface RoundLastAssetJSON extends RoundDelegateJSON {
     /**块内资产变动 hash */
@@ -183,43 +171,9 @@ declare namespace BFChainCore {
   //#endregion
 
   //#region GenesisBlock
-  interface RewardPercentJSON {
-    /**投票占区块总奖励的百分比 */
-    votePercent: FractionJSON;
-    /**打块占区块总奖励的百分比 */
-    forgePercent: FractionJSON;
-  }
   interface PortsJSON {
     /**共识端口号 */
     port: number;
-    /**节点扫描端口号 */
-    scan_peer_port: number;
-  }
-  interface RewardPerBlockJSON {
-    /**奖励变动的区块里程 */
-    readonly heights: number[];
-    /**每个区块里程对应奖励的资产数量 */
-    readonly rewards: string[];
-  }
-  interface TransactionPowOfWorkConfigJSON {
-    /**链的 pow 难度增长系数 */
-    growthFactor: FractionJSON<string>;
-    /**链的 pow 计算参与比率 */
-    participationRatio: FractionJSON;
-  }
-
-  interface AccountParticipationWeightRatioJSON {
-    /**账户上一轮末持有的主权益量的权重 */
-    balanceWeight: number;
-    /**账户上一轮事件量的权重 */
-    numberOfTransactionsWeight: number;
-  }
-
-  interface BlockParticipationWeightRatioJSON {
-    /**区块打包的主权益量的权重 */
-    balanceWeight: number;
-    /**区块打包的事件量的权重 */
-    numberOfTransactionsWeight: number;
   }
 
   interface GenesisAssetJSON extends RoundDelegateJSON {
@@ -237,6 +191,8 @@ declare namespace BFChainCore {
     genesisLocationName: string;
     /**链创世账户初始持有的主权益量 */
     genesisAmount: string;
+    /**链主权益总量 */
+    maxSupply: string;
     /**链事件每字节需要支付的最小手续费 */
     minTransactionFeePerByte: FractionJSON;
     /**链上事件体最大字节数 */
@@ -251,14 +207,8 @@ declare namespace BFChainCore {
     maxTPSPerBlock: number;
     /**删除分叉时至少需要落后的高度 */
     consessusBeforeSyncBlockDiff: number;
-    /**每轮能处理的注册受托人数量 */
-    maxDelegateTxsPerRound: number;
     /**权益赠送事件最大可抢次数 */
     maxGrabTimesOfGiftAsset: number;
-    /**每个区块最大能处理的投票数 */
-    maxVotesPerBlock: number;
-    /**投票账户最少持有的主权益数 */
-    voteMinChainAsset: string;
     /**发行权益的账户最少持有的链主权益数量 */
     issueAssetMinChainAsset: string;
     /**冻结的主权益数允许发行的最大权益数量 */
@@ -275,26 +225,14 @@ declare namespace BFChainCore {
     blockPerRound: number;
     /**创世受托人数量 */
     delegates: number;
-    /**是否允许受托人连续参与竞选 */
-    whetherToAllowDelegateContinusElections: boolean;
     /**区块间隔 */
     forgeInterval: number;
-    /**奖励分配比例，JSON 对象 */
-    rewardPercent: RewardPercentJSON;
+    /**区块基础奖励 */
+    basicRewards: string;
     /**区块链端口号，JSON 对象 */
     ports: PortsJSON;
-    /**区块奖励，JSON 对象 */
-    rewardPerBlock: RewardPerBlockJSON;
-    /**账户参与度权重比，JSON 对象 */
-    accountParticipationWeightRatio: AccountParticipationWeightRatioJSON;
-    /**区块参与度权重比，JSON 对象 */
-    blockParticipationWeightRatio: BlockParticipationWeightRatioJSON;
-    /**构建tpow的难度系数 */
-    averageComputingPower: number;
-    /**tpow豁免的区块高度 */
-    tpowOfWorkExemptionBlocks: number;
-    /**tpow配置，JSON对象 */
-    transactionPowOfWorkConfig: TransactionPowOfWorkConfigJSON;
+    /**是否允许受托人连续参与竞选 */
+    whetherToAllowDelegateContinusElections: boolean;
     /**块内资产变动 hash */
     assetChangeHash?: string;
   }

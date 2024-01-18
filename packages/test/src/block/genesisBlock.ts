@@ -2,15 +2,9 @@ require("source-map-support").install();
 import {
   NodeJsCryptoHelper,
   NodeJsKeypairHelper,
-  getIps,
   TransactionInBlock,
-  UsernameTransaction,
-  UsernameTransactionFactory,
-  DelegateTransactionFactory,
   GenesisBlockFactory,
   GenesisBlock,
-  AcceptVoteTransaction,
-  AcceptVoteTransactionFactory,
   Transaction,
   BlockBaseStatisticsHelper,
   TransferAssetTransactionFactory,
@@ -23,8 +17,9 @@ import {
   getRandomMagic,
   ed2curveHelper,
   mainChainAssetData,
-  DelegateTransaction,
-  LocationNameTransaction,
+  IssueEntityFactoryTransactionFactoryV1,
+  IssueEntityFactoryModel,
+  IssueEntityTransactionFactoryV1,
 } from "../include";
 import { QueneEventEmitter, Resolve } from "@bfchain/util";
 import optimist from "optimist";
@@ -69,15 +64,8 @@ const config = {
   delegatesSecret: require(defaultSecretPath).delegates as string[],
 };
 mainChainAssetData.blockPerRound = blockPerRound;
-mainChainAssetData.tpowOfWorkExemptionBlocks = blockPerRound;
 mainChainAssetData.delegates = blockPerRound * 2;
 mainChainAssetData.forgeInterval = forgeInterval;
-mainChainAssetData.maxVotesPerBlock =
-  mainChainAssetData.maxTPSPerBlock * mainChainAssetData.forgeInterval;
-// mainChainAssetData.tpowOfWorkExemptionBlocks = 0;
-// mainChainAssetData.tpowDiffFormula = mainChainAssetData.tpowDiffFormula
-//   .trim()
-//   .replace(/\s+/gi, " ");
 
 if (randomMagic) {
   mainChainAssetData.magic = getRandomMagic();
@@ -94,9 +82,6 @@ const core = BFChainCoreFactory({
   ed2curveHelper,
 });
 core.moduleMap.set("transactionGetterHelper", {});
-// if (!core.transaction.tpowHelper.isValidTpowDiffFormula(mainChainAssetData.tpowDiffFormula)) {
-//   throw new Error(`tpowDiffFormula 不合法`);
-// }
 
 const statistics = Resolve(BlockBaseStatisticsHelper, core.moduleMap);
 
@@ -107,21 +92,6 @@ type DelegateInfo = {
   publicKey: string;
   secondSecret?: string;
 };
-
-const _powCount: { [add: string]: number } = {};
-function getPOWInfo<T extends Transaction>(address: string) {
-  const count = _powCount[address] || 0;
-  _powCount[address] = count + 1;
-  // const res: BFChainCore.TransactionPoWOptions<T> = {
-  //   accountNumberOfTransactionInBlock: count,
-  //   accountParticipation: "0",
-  // };
-  const res: BFChainCore.TransactionPoWOptions<T> = {
-    count,
-    participation: "0",
-  };
-  return res;
-}
 
 const _txs: { [address: string]: number } = {};
 const getTxs = (address: string) => {
@@ -166,10 +136,6 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
 
   // #region 交易
   async function getLocationNameTransaction() {
-    const pow =
-      1 > core.config.tpowOfWorkExemptionBlocks
-        ? getPOWInfo<LocationNameTransaction>(genesisAccountInfo.address)
-        : undefined;
     const createTrs = (fee = "AUTO") => {
       return core.transaction.createTransaction(
         LocationNameTransactionFactory,
@@ -204,39 +170,18 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
         genesisAccountKeypair,
         undefined,
         undefined,
-        undefined,
       );
     };
     let trs = await createTrs();
-    if (pow) {
-      trs = await core.transaction.transactionPowCalculator(
-        trs,
-        pow,
-        genesisAccountKeypair,
-        undefined,
-      );
-    }
     trs = await createTrs(
-      core.transactionHelper.calcTransactionFee(trs, core.config.minTransactionFeePerByte),
+      core.transactionHelper.calcTransactionMinFee(trs, trs.getBytes().length).toString(),
     );
-    if (pow) {
-      trs = await core.transaction.transactionPowCalculator(
-        trs,
-        pow,
-        genesisAccountKeypair,
-        undefined,
-      );
-    }
     return {
       index: getTxs(trs.senderId),
       trs,
     };
   }
   async function getTransferAssetTransaction(recipient: DelegateInfo, amount: string) {
-    const pow =
-      1 > core.config.tpowOfWorkExemptionBlocks
-        ? getPOWInfo<TransferAssetTransaction>(genesisAccountInfo.address)
-        : undefined;
     const createTrs = (fee = "AUTO", nonce = 0) => {
       return core.transaction.createTransaction(
         TransferAssetTransactionFactory,
@@ -259,7 +204,6 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
             key: "assetType",
             value: core.config.assetType,
           },
-          nonce,
         },
         {
           transferAsset: {
@@ -272,60 +216,29 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
         genesisAccountKeypair,
         undefined,
         undefined,
-        undefined,
       );
     };
     let trs = await createTrs();
-    if (pow) {
-      trs = await core.transaction.transactionPowCalculator(
-        trs,
-        pow,
-        genesisAccountKeypair,
-        undefined,
-      );
-    }
     trs = await createTrs(
-      core.transactionHelper.calcTransactionFee(trs, core.config.minTransactionFeePerByte),
-      trs.nonce,
+      core.transactionHelper.calcTransactionMinFee(trs, trs.getBytes().length).toString(),
     );
-    if (pow) {
-      trs = await core.transaction.transactionPowCalculator(
-        trs,
-        pow,
-        genesisAccountKeypair,
-        undefined,
-      );
-    }
-    const { magic, assetType } = core.config;
     return {
       index: getTxs(trs.senderId),
       trs,
     };
   }
-  async function getUsernameTransaction(sender: DelegateInfo) {
-    const keypair = await core.accountBaseHelper.createSecretKeypair(sender.secret);
-    const secondKeypair =
-      (sender.secondSecret &&
-        (await core.accountBaseHelper.createSecondSecretKeypair(
-          sender.secret,
-          sender.secondSecret,
-        ))) ||
-      undefined;
-    const pow =
-      1 > core.config.tpowOfWorkExemptionBlocks
-        ? getPOWInfo<UsernameTransaction>(sender.address)
-        : undefined;
+  async function getIssueEntityFactoryTransaction() {
     const createTrs = (fee = "AUTO") => {
-      return core.transaction.createTransaction<UsernameTransaction>(
-        UsernameTransactionFactory,
+      return core.transaction.createTransaction(
+        IssueEntityFactoryTransactionFactoryV1,
         {
           version: core.config.version,
-          type: core.transactionHelper.USERNAME, // 交易类型
-          senderId: sender.address, // 发起者地址
-          senderPublicKey: sender.publicKey, // 发起者公钥
-          senderSecondPublicKey: secondKeypair && secondKeypair.publicKey.toString("hex"), // 发起者二次公钥
+          type: core.transactionHelper.ISSUE_ENTITY_FACTORY_V1, // 交易类型
+          senderId: genesisAccountInfo.address, // 发起者地址
+          senderPublicKey: genesisAccountInfo.publicKey, // 发起者公钥
+          recipientId: genesisAccountInfo.address,
           rangeType: RANGE_TYPE.EMPTY,
-          range: [],
+          range: [], // 接收范围
           timestamp: 0, // 生成交易时间戳
           fee: fee === "AUTO" ? "1" : fee, // 交易手续费
           fromMagic: core.config.magic, // 交易来源链的 magic
@@ -334,70 +247,51 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
           effectiveBlockHeight: 1,
           remark: {},
           storage: {
-            key: "alias",
-            value: sender.username,
+            key: "factoryId",
+            value: "generator",
           },
         },
         {
-          username: {
-            alias: sender.username,
+          issueEntityFactory: {
+            sourceChainName: core.config.chainName,
+            sourceChainMagic: core.config.magic,
+            factoryId: "generator",
+            entityPrealnum: "1000",
+            entityFrozenAssetPrealnum: "0",
+            purchaseAssetPrealnum: "0",
           },
         },
-        keypair,
-        secondKeypair,
+        genesisAccountKeypair,
         undefined,
         undefined,
       );
     };
     let trs = await createTrs();
-    if (pow) {
-      trs = await core.transaction.transactionPowCalculator<UsernameTransaction>(
-        trs,
-        pow,
-        keypair,
-        secondKeypair,
-      );
-    }
     trs = await createTrs(
-      core.transactionHelper.calcTransactionFee(trs, core.config.minTransactionFeePerByte),
+      core.transactionHelper.calcTransactionMinFee(trs, trs.getBytes().length).toString(),
     );
-    if (pow) {
-      trs = await core.transaction.transactionPowCalculator<UsernameTransaction>(
-        trs,
-        pow,
-        keypair,
-        secondKeypair,
-      );
-    }
     return {
       index: getTxs(trs.senderId),
       trs,
     };
   }
-  async function getDelegateTransaction(sender: DelegateInfo) {
-    const keypair = await core.accountBaseHelper.createSecretKeypair(sender.secret);
-    const secondKeypair =
-      (sender.secondSecret &&
-        (await core.accountBaseHelper.createSecondSecretKeypair(
-          sender.secret,
-          sender.secondSecret,
-        ))) ||
-      undefined;
-    const pow =
-      1 > core.config.tpowOfWorkExemptionBlocks
-        ? getPOWInfo<DelegateTransaction>(sender.address)
-        : undefined;
+  async function getIssueEntityTransaction(
+    delegate: DelegateInfo,
+    factory: IssueEntityFactoryModel,
+    index: string,
+  ) {
+    const entityId = `${factory.factoryId}_${factory.factoryId}${index}`;
     const createTrs = (fee = "AUTO") => {
       return core.transaction.createTransaction(
-        DelegateTransactionFactory,
+        IssueEntityTransactionFactoryV1,
         {
           version: core.config.version,
-          type: core.transactionHelper.DELEGATE, // 交易类型
-          senderId: sender.address, // 发起者地址
-          senderPublicKey: sender.publicKey, // 发起者公钥
-          senderSecondPublicKey: secondKeypair && secondKeypair.publicKey.toString("hex"), // 发起者二次公钥
+          type: core.transactionHelper.ISSUE_ENTITY, // 交易类型
+          senderId: delegate.address, // 发起者地址
+          senderPublicKey: delegate.publicKey, // 发起者公钥
+          recipientId: delegate.address,
           rangeType: RANGE_TYPE.EMPTY,
-          range: [],
+          range: [], // 接收范围
           timestamp: 0, // 生成交易时间戳
           fee: fee === "AUTO" ? "1" : fee, // 交易手续费
           fromMagic: core.config.magic, // 交易来源链的 magic
@@ -405,78 +299,30 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
           applyBlockHeight: 1, // 交易发起高度
           effectiveBlockHeight: 1,
           remark: {},
+          storage: {
+            key: "entityId",
+            value: entityId,
+          },
         },
-        {},
-        keypair,
-        secondKeypair,
-        undefined,
-        undefined,
-      );
-    };
-    let trs = await createTrs();
-    if (pow) {
-      trs = await core.transaction.transactionPowCalculator(trs, pow, keypair, secondKeypair);
-    }
-    trs = await createTrs(
-      core.transactionHelper.calcTransactionFee(trs, core.config.minTransactionFeePerByte),
-    );
-    if (pow) {
-      trs = await core.transaction.transactionPowCalculator(trs, pow, keypair, secondKeypair);
-    }
-    return {
-      index: getTxs(trs.senderId),
-      trs,
-    };
-  }
-  async function getAcceptVoteTransaction(sender: DelegateInfo) {
-    const keypair = await core.accountBaseHelper.createSecretKeypair(sender.secret);
-    const secondKeypair =
-      (sender.secondSecret &&
-        (await core.accountBaseHelper.createSecondSecretKeypair(
-          sender.secret,
-          sender.secondSecret,
-        ))) ||
-      undefined;
-    const pow =
-      1 > core.config.tpowOfWorkExemptionBlocks
-        ? getPOWInfo<AcceptVoteTransaction>(sender.address)
-        : undefined;
-    const createTrs = (fee = "AUTO") => {
-      return core.transaction.createTransaction<AcceptVoteTransaction>(
-        AcceptVoteTransactionFactory,
         {
-          version: core.config.version,
-          type: core.transactionHelper.ACCEPT_VOTE, // 交易类型
-          senderId: sender.address, // 发起者地址
-          senderPublicKey: sender.publicKey, // 发起者公钥
-          senderSecondPublicKey: secondKeypair && secondKeypair.publicKey.toString("hex"), // 发起者二次公钥
-          rangeType: RANGE_TYPE.EMPTY,
-          range: [], // 接收账户地址
-          timestamp: 0, // 生成交易时间戳
-          fee: fee === "AUTO" ? "1" : fee, // 交易手续费
-          remark: {}, // 交易备注，任意信息
-          fromMagic: core.config.magic, // 交易来源链的 magic
-          toMagic: core.config.magic, // 交易去往链的 magic
-          applyBlockHeight: 1, // 交易发起高度
-          effectiveBlockHeight: 1,
+          issueEntity: {
+            sourceChainName: core.config.chainName,
+            sourceChainMagic: core.config.magic,
+            entityId,
+            entityFactoryPossessor: genesisAccountInfo.address,
+            entityFactory: factory,
+            taxAssetPrealnum: "0",
+          },
         },
-        {},
-        keypair,
-        secondKeypair,
+        genesisAccountKeypair,
         undefined,
         undefined,
       );
     };
     let trs = await createTrs();
-    if (pow) {
-      trs = await core.transaction.transactionPowCalculator(trs, pow, keypair, secondKeypair);
-    }
     trs = await createTrs(
-      core.transactionHelper.calcTransactionFee(trs, core.config.minTransactionFeePerByte),
+      core.transactionHelper.calcTransactionMinFee(trs, trs.getBytes().length).toString(),
     );
-    if (pow) {
-      trs = await core.transaction.transactionPowCalculator(trs, pow, keypair, secondKeypair);
-    }
     return {
       index: getTxs(trs.senderId),
       trs,
@@ -488,33 +334,24 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
     await core.patchInstaller.changeHeight(3);
     const txWithIndexList: { index: number; trs: Transaction }[] = [];
     txWithIndexList.push(await getLocationNameTransaction());
+    const entityFactory = await getIssueEntityFactoryTransaction();
+    txWithIndexList.push(entityFactory);
     const totalDelegates = core.config.delegates;
-    let ips: string[] = [];
-    if (inputIpsPath) {
-      ips = require(path.join(process.cwd(), inputIpsPath));
-    } else {
-      ips = getIps(totalDelegates, randomIps, defaultIpsPath);
-    }
-    if (!ips) {
-      throw new Error("Failed to get ips");
-    }
-    if (!core.baseHelper.isArray(ips)) {
-      throw new Error("Require ips should be array");
-    }
-    if (ips.length < totalDelegates) {
-      throw new Error(`Ips too short min ${totalDelegates}`);
-    }
     const delegatesSecret = config.delegatesSecret.slice(0, totalDelegates);
     const eventEmitter: BFChainCore.ApplyTransactionEventEmitter<any> =
       new QueneEventEmitter<any>();
+    let entityIndex = 0;
+    const getEntityIndex = () => {
+      entityIndex++;
+      return "0".repeat(4 - entityIndex.toString().length) + entityIndex;
+    };
     for (let i = 0; i < delegatesSecret.length; i++) {
       const secret = delegatesSecret[i];
       const address = await core.accountBaseHelper.getAddressFromSecret(secret);
-      mainChainAssetData.newDelegates.push(address);
       if (mainChainAssetData.nextRoundDelegates.length < core.config.blockPerRound) {
         mainChainAssetData.nextRoundDelegates.push({
           address,
-          equity: "0",
+          numberOfEntities: 0,
         });
       }
       const publicKey = await core.accountBaseHelper.getPublicKeyStringFromSecret(secret);
@@ -525,17 +362,24 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
         username: `${core.config.chainName}${i + 1}`,
       };
       // 要在创始块中实施的交易
-      const tempTrsWithIndexList = [
-        await getUsernameTransaction(delegate),
-        await getDelegateTransaction(delegate),
-        await getAcceptVoteTransaction(delegate),
-      ];
+      const tempTrsWithIndexList: {
+        index: number;
+        trs: Transaction;
+      }[] = [];
+      for (let i = 0; i < 4; i++) {
+        tempTrsWithIndexList.push(
+          await getIssueEntityTransaction(
+            delegate,
+            entityFactory.trs.asset.issueEntityFactory,
+            getEntityIndex(),
+          ),
+        );
+      }
       // 实施这些交易需要的手续费由创始账户给予
       const total_fee = tempTrsWithIndexList.reduce(
         (acc_fee, twi) => (BigInt(twi.trs.fee) + BigInt(acc_fee)).toString(),
         "0",
       );
-
       if (total_fee !== "0") {
         txWithIndexList.push(await getTransferAssetTransaction(delegate, total_fee));
       }
@@ -596,7 +440,6 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
         height,
         timestamp: 0,
         generatorPublicKey: genesisAccountInfo.publicKey,
-        generatorEquity: "0",
         previousBlockSignature: "",
       },
       {

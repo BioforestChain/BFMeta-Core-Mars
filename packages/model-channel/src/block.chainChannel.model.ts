@@ -87,8 +87,6 @@ export class NewBlockArgModel
   set generatorPublicKey(value: string) {
     this.generatorPublicKeyBuffer = parseHexToArrayBuffer(value);
   }
-  @Field.d(NewBlockArgModel.INC++, "string")
-  blockParticipation!: string;
   @Field.d(NewBlockArgModel.INC++, "uint32")
   version!: number;
   toJSON() {
@@ -100,7 +98,6 @@ export class NewBlockArgModel
       totalFee: this.totalFee,
       numberOfTransactions: this.numberOfTransactions,
       generatorPublicKey: this.generatorPublicKey,
-      blockParticipation: this.blockParticipation,
       version: this.version,
     };
   }

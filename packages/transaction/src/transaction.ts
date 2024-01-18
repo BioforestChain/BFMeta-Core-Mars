@@ -3,7 +3,6 @@ import {
   AccountBaseHelper,
   ConfigHelper,
   TransactionHelper,
-  TPOWHelper,
   AsymmetricHelper,
 } from "@bfchain/core-helper";
 import { Injectable, Inject, ModuleStroge, Resolve } from "@bfchain/util";
@@ -24,7 +23,6 @@ const { ArgumentFormatException, OutOfRangeException, ConsensusException, warn }
 export class TransactionCore {
   constructor(
     public transactionHelper: TransactionHelper,
-    public tpowHelper: TPOWHelper,
     public accountBaseHelper: AccountBaseHelper,
     public asymmetricHelper: AsymmetricHelper,
     @Inject("keypairHelper")
@@ -119,7 +117,6 @@ export class TransactionCore {
       applyBlockHeight: body.applyBlockHeight, // 交易发起高度
       effectiveBlockHeight: body.effectiveBlockHeight, // 有效区块数量
       storage: body.storage, // 查询用的索引存储
-      nonce: body.nonce || 0,
     };
     // 生成交易体
     const trs: T = transactionFactory.init(txbody, asset);
@@ -151,9 +148,6 @@ export class TransactionCore {
     keypair: BFChainCore.Keypair,
     secondKeypair?: BFChainCore.Keypair,
     config = this.config,
-    pow?: BFChainCore.TransactionPoWOptions<T>,
-    /**跳过pow: 目前用在browser中的_createSomeTransaction */
-    skipPow?: boolean,
   ) {
     const trsType =
       body.type || this.getTransactionTypeFromTransactionFactoryConstructor(TxFactory);
@@ -194,7 +188,6 @@ export class TransactionCore {
       applyBlockHeight: body.applyBlockHeight, // 交易发起高度
       effectiveBlockHeight: body.effectiveBlockHeight, // 有效区块数量
       storage: body.storage, // 查询用的索引存储
-      nonce: body.nonce,
     };
     // 生成交易体
     const trs: T = transactionFactory.init(txbody, asset);
@@ -203,25 +196,11 @@ export class TransactionCore {
       trs.getBytes(true, true),
       keypair.secretKey,
     );
-    // 需要再tpow之前进行签名，因为pow可能是0难度，就直接拿传入的那比交易进行处理了
     if (secondKeypair) {
       trs.signSignatureBuffer = await this.asymmetricHelper.detachedSign(
         trs.getBytes(false, true),
         secondKeypair.secretKey,
       );
-    }
-
-    // 在异步中执行交易POW
-    if (pow && !skipPow) {
-      if (pow.calculator) {
-        pow.calculator(trs, pow, keypair, secondKeypair);
-      } else {
-        // 使用内置的计算器去计算
-        this.transactionPowCalculator(trs, pow, keypair, secondKeypair);
-      }
-    } else {
-      // 交易的 nonce 必须携带，默认为 0，并且加入签名
-      trs.nonce = 0;
     }
 
     // 校验交易的大小
@@ -230,90 +209,6 @@ export class TransactionCore {
     this.transactionHelper.verifyTransactionBlobSize(trs);
 
     return trs;
-  }
-  /**通用的交易POW计算器 */
-  async transactionPowCalculator<T extends Transaction>(
-    trs: T,
-    pow: BFChainCore.TransactionPoWOptions<T>,
-    keypair: BFChainCore.Keypair,
-    secondKeypair?: BFChainCore.Keypair,
-  ) {
-    const event = pow.event;
-    // const tpowOptions: BFChainCore.TPOWDiffCalculateOptions = {};
-    // pow.accountParticipation !== undefined &&
-    //   (tpowOptions.accountParticipation = pow.accountParticipation);
-    // pow.accountPossessMainAssets !== undefined &&
-    //   (tpowOptions.accountPossessMainAssets = pow.accountPossessMainAssets);
-    // pow.accountNumberOfTransactionInBlock !== undefined &&
-    //   (tpowOptions.accountNumberOfTransactionInBlock = pow.accountNumberOfTransactionInBlock);
-    // pow.blockHeight !== undefined && (tpowOptions.blockHeight = pow.blockHeight);
-
-    const done = async (break_off: boolean, nonce: number) => {
-      const eventName = break_off ? "error" : "done";
-      if (!break_off) {
-        if (secondKeypair) {
-          trs.signSignatureBuffer = await this.asymmetricHelper.detachedSign(
-            trs.getBytes(false, true),
-            secondKeypair.secretKey,
-          );
-        }
-      }
-      event && (await event.emit(eventName, { transaction: trs, nonce }));
-      return trs;
-    };
-    /**难度值 */
-    // const diff_BI = this.tpowHelper.calcDiffOfTransactionProfOfWork(tpowOptions);
-    const diff_BI = this.tpowHelper.calcDiffOfTransactionProfOfWork(pow.count, pow.participation);
-    /**是否中断 */
-    let is_break = false;
-    /**记录算力 */
-    let recordNonce = 0;
-    /// 校验交易POW，如果POW校验不通过，强制开始生成交易
-    if (diff_BI > BigInt(1)) {
-      const res =
-        event &&
-        (await event.emit("start", {
-          diff: diff_BI.toString(),
-          count: pow.count,
-          participation: pow.participation,
-          // count: pow.accountNumberOfTransactionInBlock as number,
-          // participation: pow.accountParticipation as string,
-          transaction: trs,
-        }));
-      if (res && res.break) {
-        is_break = res.break;
-        return done(is_break, recordNonce);
-      }
-      for (const { uint8array: trsBytes, nonce, offset } of this.tpowHelper.nonceWriter(trs)) {
-        recordNonce = nonce;
-        const signatureBuffer = await this.asymmetricHelper.detachedSign(
-          trsBytes,
-          keypair.secretKey,
-        );
-        const checked = await this.tpowHelper.checkTransactionProfOfWork(
-          signatureBuffer,
-          pow.count,
-          pow.participation,
-          // tpowOptions,
-          diff_BI,
-        );
-        const res = event && (await event.emit("work", { nonce, transaction: trs, offset }));
-        if (res && res.break) {
-          trs.nonce = nonce;
-          trs.signatureBuffer = signatureBuffer;
-          is_break = res.break;
-          break;
-        }
-
-        if (checked) {
-          trs.nonce = nonce;
-          trs.signatureBuffer = signatureBuffer;
-          break;
-        }
-      }
-    }
-
-    return done(is_break, recordNonce);
   }
 
   /**

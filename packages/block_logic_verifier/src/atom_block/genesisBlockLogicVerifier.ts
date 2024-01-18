@@ -12,8 +12,6 @@ export class GenesisBlockLogicVerifier extends BlockLogicVerifier {
   }
 
   async verifyBlockAsset(block: GenesisBlock) {
-    // 校验新注册的受托人
-    await this.checkNewDelegates(block.height);
     // 检验块内资产变动
     await this.checkAssetChangeHash(block.height, block.asset.genesisAsset.assetChangeHash);
   }

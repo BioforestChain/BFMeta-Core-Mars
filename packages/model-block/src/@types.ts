@@ -21,7 +21,7 @@ declare namespace BFChainCore {
     generatorPublicKey: string;
     generatorSecondPublicKey?: string;
     /**打块账户权益 */
-    generatorEquity: string;
+    // generatorEquity: string;
     // /**处理的交易量 */
     // numberOfTransactions: number;
     // /**所有交易 hash 值 */

@@ -32,18 +32,17 @@ export class DelegateLogicVerifier extends TransactionLogicVerifier {
   }
 
   async checkRegisterDelegateQuota(transaction: DelegateTransaction, currentBlockHeight: number) {
-    const { maxDelegateTxsPerRound } = this.configHelper;
-    const txCount = await this.transactionGetterHelper.getNumberOfNewDelegate();
-    let realMaxDelegateTxsPerRound = maxDelegateTxsPerRound;
-
-    const curRound = this.blockHelper.calcRoundByHeight(currentBlockHeight);
-    if (currentBlockHeight < this.configHelper.blockPerRound) {
-      realMaxDelegateTxsPerRound = realMaxDelegateTxsPerRound + this.configHelper.delegates;
-    }
-    if (txCount >= realMaxDelegateTxsPerRound) {
-      throw new ConsensusException(ERROR_LIST.REGISTER_DELEGTE_QUOTA_FULL, {
-        round: curRound,
-      });
-    }
+    // const { maxDelegateTxsPerRound } = this.configHelper;
+    // const txCount = await this.transactionGetterHelper.getNumberOfNewDelegate();
+    // let realMaxDelegateTxsPerRound = maxDelegateTxsPerRound;
+    // const curRound = this.blockHelper.calcRoundByHeight(currentBlockHeight);
+    // if (currentBlockHeight < this.configHelper.blockPerRound) {
+    //   realMaxDelegateTxsPerRound = realMaxDelegateTxsPerRound + this.configHelper.delegates;
+    // }
+    // if (txCount >= realMaxDelegateTxsPerRound) {
+    //   throw new ConsensusException(ERROR_LIST.REGISTER_DELEGTE_QUOTA_FULL, {
+    //     round: curRound,
+    //   });
+    // }
   }
 }

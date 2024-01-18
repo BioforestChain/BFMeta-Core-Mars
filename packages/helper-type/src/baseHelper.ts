@@ -916,7 +916,7 @@ export class BaseHelper {
       return false;
     }
 
-    return this.isValidPort(ports.port) && this.isValidPort(ports.scan_peer_port);
+    return this.isValidPort(ports.port);
   }
 
   /**
@@ -950,60 +950,6 @@ export class BaseHelper {
     const denominator = votePercent.denominator;
     if (votePercent.numerator + forgePercent.numerator !== denominator) {
       return false;
-    }
-    return true;
-  }
-
-  /**
-   * 链奖励里程是否合法
-   * 不能是空对象
-   * 必须包含里程高度数组和里程奖励数组
-   * 里程高度数组中每个值只能是数字，并且下一个里程高度大于上一个里程高度
-   * 里程奖励数组中每个值只能是字符串，并且是一个合法的资产数量
-   * 里程奖励数组长度和里程高度数组长度相差 1
-   *
-   * @param milestones
-   */
-  isValidChainRewardMilestones(milestones: any): milestones is BFChainCore.RewardPerBlockJSON {
-    if (!(milestones && milestones.heights && milestones.rewards)) {
-      return false;
-    }
-    const heights = milestones.heights;
-    const rewards = milestones.rewards;
-    if (!(this.isArray(heights) && this.isArray(rewards))) {
-      return false;
-    }
-    const hlen = heights.length;
-    const rlen = rewards.length;
-    if (hlen < 1) {
-      return false;
-    }
-    if (rlen < 2) {
-      return false;
-    }
-    if (rlen - hlen !== 1) {
-      return false;
-    }
-    if (rewards[rlen - 1] !== "0") {
-      return false;
-    }
-    if (Number.isNaN(heights[0]) || !this.isValidNumber(heights[0])) {
-      return false;
-    }
-    if (hlen > 1) {
-      for (let i = 0; i < hlen - 1; i++) {
-        if (Number.isNaN(heights[i + 1]) || !this.isValidNumber(heights[i + 1])) {
-          return false;
-        }
-        if (heights[i] >= heights[i + 1]) {
-          return false;
-        }
-      }
-    }
-    for (let i = 0; i < rlen; i++) {
-      if (!this.isValidAssetNumber(rewards[i])) {
-        return false;
-      }
     }
     return true;
   }
@@ -1137,26 +1083,6 @@ export class BaseHelper {
     return true;
   }
 
-  isValidAccountParticipationWeightRatio(
-    accountParticipationWeightRatio: BFChainCore.AccountParticipationWeightRatioJSON,
-  ) {
-    if (!accountParticipationWeightRatio) {
-      return false;
-    }
-    const { balanceWeight, numberOfTransactionsWeight } = accountParticipationWeightRatio;
-    return this.isNaturalNumber(balanceWeight) && this.isNaturalNumber(numberOfTransactionsWeight);
-  }
-
-  isValidBlockParticipationWeightRatio(
-    blockParticipationWeightRatio: BFChainCore.BlockParticipationWeightRatioJSON,
-  ) {
-    if (!blockParticipationWeightRatio) {
-      return false;
-    }
-    const { balanceWeight, numberOfTransactionsWeight } = blockParticipationWeightRatio;
-    return this.isNaturalNumber(balanceWeight) && this.isNaturalNumber(numberOfTransactionsWeight);
-  }
-
   /**
    * 兑换比例是否合法
    *
@@ -1201,15 +1127,6 @@ export class BaseHelper {
     if (toExchangeAssetWeight === "0" || beExchangeAssetWeight === "0") {
       return false;
     }
-    return true;
-  }
-
-  /**
-   * tpow 计算公式是否合法
-   *
-   * @param tpowDiffFormula
-   */
-  isValidTpowDiffFormula(tpowDiffFormula: string) {
     return true;
   }
 

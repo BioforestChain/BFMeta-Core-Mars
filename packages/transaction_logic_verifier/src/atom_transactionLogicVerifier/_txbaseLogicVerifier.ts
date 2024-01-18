@@ -611,39 +611,6 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   }
 
   /**
-   * 校验交易的 pow
-   *
-   * @param transaction
-   * @param currentBlockHeight
-   * @param participation
-   */
-  async checkTransactionPowOfWork(
-    transaction: T,
-    currentBlockHeight: number,
-    participation: string,
-  ) {
-    const tranSenderCount = await this.accountGetterHelper.getAccountTxCountInBlock(
-      transaction.senderId,
-    );
-    if (tranSenderCount === undefined) {
-      throw new ConsensusException(ERROR_LIST.NOT_FOUND, {
-        prop: "account number of transaction in block",
-      });
-    }
-    const powCheckResult = await this.transactionHelper.checkTransactionProfOfWork(
-      parseHexToArrayBuffer(transaction.signature),
-      tranSenderCount,
-      participation,
-    );
-    if (!powCheckResult) {
-      throw new ConsensusException(ERROR_LIST.VERIFY_TRANSACTION_POW_OF_WORK_ERROR, {
-        errorId: NewTransactionRefuseReason.TRANSACTION_POW_CHECK_FIELD,
-        reason: `Transaction pow check field, block height ${currentBlockHeight} transaction signature ${transaction.signature} sender ${transaction.senderId} participation ${participation} sender transaction count in block ${tranSenderCount}`,
-      });
-    }
-  }
-
-  /**
    * 不能二次操作同一笔交易(权益赠送/权益委托/权益迁入)
    *
    * @param transaction

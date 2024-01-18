@@ -34,8 +34,6 @@ declare namespace BFChainCore {
     applyBlockHeight: number;
     /**交易的有效区块高度 */
     effectiveBlockHeight: number;
-    /**交易POW噪点 */
-    nonce?: number;
     /**交易的备注信息 */
     remark: { [key: string]: string };
     /**查询用的索引存储 */

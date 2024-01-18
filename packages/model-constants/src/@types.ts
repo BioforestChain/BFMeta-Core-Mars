@@ -10,9 +10,6 @@ declare namespace BFChainCore {
   type GIFT_DISTRIBUTION_RULE = import("./").GIFT_DISTRIBUTION_RULE;
   type RANGE_TYPE = import("./").RANGE_TYPE;
   type PARITY_BIT_MAPPING = keyof typeof import("./").PARITY_BIT_MAPPING;
-  type TPOW_PARAMETER = import("./").TPOW_PARAMETER;
-  type TPOW_OPERATOR = import("./").TPOW_OPERATOR;
-  type TPOW_AUXILIARY_SYMBOL = import("./").TPOW_AUXILIARY_SYMBOL;
   type FORK_CAUSE = import("./").BLOCK_FORK_CAUSE;
   type PARENT_ASSET_TYPE = import("./").PARENT_ASSET_TYPE;
   type ASSET_STATUS = import("./").ASSET_STATUS;

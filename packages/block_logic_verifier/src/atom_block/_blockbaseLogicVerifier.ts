@@ -282,37 +282,6 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
   }
 
   /**
-   * 校验新生成的受托人
-   *
-   * @param height
-   * @returns
-   */
-  async checkNewDelegates(height: number) {
-    const round = this.blockHelper.calcRoundByHeight(height);
-    const newDelegates = await this.transactionGetterHelper.getRegisterNewDelegates(height);
-    const { delegates, maxDelegateTxsPerRound } = this.configHelper;
-    const delegateCount = newDelegates.length;
-    if (round === 1) {
-      if (delegateCount > maxDelegateTxsPerRound + delegates) {
-        throw new ConsensusException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
-          prop: `delegateCount ${delegateCount}`,
-          target: "block",
-          field: `maxDelegateTxsPerRound ${maxDelegateTxsPerRound + delegates}`,
-        });
-      }
-    } else {
-      if (delegateCount > maxDelegateTxsPerRound) {
-        throw new ConsensusException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
-          prop: `delegateCount ${delegateCount}`,
-          target: "block",
-          field: `maxDelegateTxsPerRound ${maxDelegateTxsPerRound}`,
-        });
-      }
-    }
-    return newDelegates;
-  }
-
-  /**
    * 块内资产变动 hash
    *
    * @param height

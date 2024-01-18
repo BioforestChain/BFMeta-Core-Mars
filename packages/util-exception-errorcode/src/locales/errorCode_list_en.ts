@@ -99,7 +99,6 @@ export const ERROR_CODE_LIST_EN = {
   "001-11021": "Invalid transaction byte length, reason {reason}",
   "001-11022": "Need purchase dappid before use, dappid {dappid}",
   "001-11023": "Need vote for dappid possessor before use, dappid {dappid}, errorId {errorId}",
-  "001-11024": "Verify transaction pow of work error, errorId {errorId}, reason {reason}",
   "001-11025": "Can not delete locationName {locationName}, reason {reason}",
   "001-11026": "Set locationName {locationName} manager field, reason {reason}, errorId {errorId}",
   "001-11027":

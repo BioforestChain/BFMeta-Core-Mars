@@ -84,14 +84,6 @@ export class CommonBlockVerify<T extends Block> {
       });
     }
 
-    if (!baseHelper.isValidAccountEquity(body.generatorEquity)) {
-      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: "generatorEquity",
-        type: "account equity",
-        ...BlockBody_Exception_Detail,
-      });
-    }
-
     const remark = body.remark;
     if (!remark) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {

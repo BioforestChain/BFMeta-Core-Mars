@@ -249,13 +249,8 @@ export class ReplayBlockCore<T extends Block> {
       generatorPublicKeyBuffer,
       statisticInfo: blockStatisticsInfo,
     } = block;
-    const { tpowOfWorkExemptionBlocks } = config;
-    const needTPow = height > tpowOfWorkExemptionBlocks;
-    const MAX_VOTES_PER_BLOCK = this.config.maxVotesPerBlock;
     /**所有交易的sha256hash */
     const payloadHash = this.cryptoHelper.sha256();
-    /**区块打包的投票交易数 */
-    let numberOfVotes = 0;
     /**所有交易体的总字节长度 */
     let payloadLength = 0;
     /**区块打包的事件携带的 blob 长度 */
@@ -310,17 +305,6 @@ export class ReplayBlockCore<T extends Block> {
       });
     }
 
-    // 获取打块账户获得的权益
-    const generatorEquity = await eventEmitter.blockGeneratorEquityGetter(block.generatorPublicKey);
-    if (block.generatorEquity !== generatorEquity) {
-      throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
-        to_compare_prop: `generatorEquity ${block.generatorEquity}`,
-        be_compare_prop: `generatorEquity ${generatorEquity}`,
-        to_target: "block",
-        be_target: "calculate",
-      });
-    }
-
     const trSignWithIndex = new Map<string, BFChainCore.Transaction[]>();
     try {
       /**绑定统计功能到事件触发器上 */
@@ -359,40 +343,6 @@ export class ReplayBlockCore<T extends Block> {
               throw exp;
             }
             warn(exp);
-          }
-
-          if (needTPow) {
-            //#region 校验交易pow
-            {
-              const count = tranSenderCountMap.forceGet(senderId);
-              /**
-               * 再共识里头强制触发校验
-               * 但这里的校验的实现是由外部来自定义实现的
-               * 校验函数为：`transactionHelper.verifyTransactionProfOfWork`
-               *
-               * ## 在现有架构中，如果是`nodejs`
-               * 1. 在处理交易进程中，各个进程需要各自计算当前处于第N笔交易，这个数据可以跟账户信息一同带过来，如果校验不通过，那么直接跳过这笔交易，返回到未处理交易列表中
-               * 2. 在锻造区块的线程中，将`verifyTransactionProfOfWork`的事件监听并始终返回`true`即可
-               *
-               * ## 在`browser`平台中
-               * 单线程打块，那么直接在线程中实现`verifyTransactionProfOfWork`
-               */
-              const checkResult = await eventEmitter.emit("verifyTransactionProfOfWork", {
-                transaction: trs,
-                count,
-              });
-              if (checkResult === undefined) {
-                throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-                  prop: "verifyTransactionProfOfWork",
-                  target: "ApplyTransactionEventEmitter",
-                });
-              }
-              if (!checkResult) {
-                throw new ArgumentFormatException(ERROR_LIST.TRAN_POW_VERIFY_FAIL);
-              }
-              tranSenderCountMap.set(senderId, count + 1);
-            }
-            //#endregion
           }
           // 保存交易
           transactionInBlockBufferList.push(tranItem.getBytes());
@@ -502,9 +452,6 @@ export class ReplayBlockCore<T extends Block> {
           // 更新 blob 长度
           blobSize += tranItem.transaction.getBlobSize();
           await txFactory.endDealTransaction(tranItem, eventEmitter);
-          if (type === VOTE) {
-            numberOfVotes++;
-          }
         } catch (error) {
           const res = await eventEmitter.emit("error", {
             error,
@@ -518,14 +465,6 @@ export class ReplayBlockCore<T extends Block> {
         }
       }
       isDevGenerateBlock && info("finish insertTransactionsForReplay");
-
-      if (numberOfVotes > MAX_VOTES_PER_BLOCK) {
-        throw new ConsensusException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
-          prop: `numberOfVotes ${numberOfVotes}`,
-          target: "block",
-          field: `maxVotesPerBlock ${MAX_VOTES_PER_BLOCK}`,
-        });
-      }
 
       // 校验 offset
       const offset = transactionInBlockBufferList.length;
@@ -576,21 +515,6 @@ export class ReplayBlockCore<T extends Block> {
           to_target: "block",
           be_target: "calculate",
         });
-      }
-
-      if (!skipVerifyParticipation) {
-        const blockParticipation = this.blockHelper.calcBlockParticipation({
-          totalChainAsset: statisticsInfo.totalChainAsset,
-          numberOfTransactions,
-        });
-        if (block.blockParticipation !== blockParticipation) {
-          throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
-            to_compare_prop: `blockParticipation ${block.blockParticipation}`,
-            be_compare_prop: `blockParticipation ${blockParticipation}`,
-            to_target: "block",
-            be_target: "calculate",
-          });
-        }
       }
 
       if (!skipVerifyStatisticInfo) {

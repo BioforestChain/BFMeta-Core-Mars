@@ -1,11 +1,7 @@
 import { ConfigHelper } from "@bfchain/core-helper-config";
 import { BaseHelper } from "@bfchain/core-helper-type";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
-import {
-  GIFT_DISTRIBUTION_RULE,
-  PARENT_ASSET_TYPE,
-  TOKEN_TO_BEN,
-} from "@bfchain/core-model-constants";
+import { GIFT_DISTRIBUTION_RULE, TOKEN_TO_BEN } from "@bfchain/core-model-constants";
 import {
   TRANSACTION_TYPES_MAP,
   TRANSACTION_TYPES_BASE,
@@ -13,12 +9,10 @@ import {
   GrabAssetModel,
 } from "@bfchain/core-model-transaction";
 import { AccountSignatureModel } from "@bfchain/core-model-common";
-import { TPOWHelper } from "@bfchain/core-helper-transaction-pow";
 import { JSBIHelper } from "@bfchain/core-helper-bigint";
 import { AsymmetricHelper } from "@bfchain/core-helper-asymmetric";
 import { Injectable, Inject } from "@bfchain/util-dep-inject";
 import { decodeBinaryToHex, parseHexToArrayBuffer } from "@bfchain/util-encoding-hex";
-import { cacheGetter } from "@bfchain/util-decorator";
 import { AccountBaseHelper } from "@bfchain/core-helper-account-base";
 
 import { TRANSACTION_FILTER_SYMBOL, ABORT_FORBIDDEN_TRANSACTION_SYMBOL } from "./const";
@@ -38,8 +32,8 @@ export class TransactionHelper {
     @Inject("Buffer") public Buffer: BFChainUtil.BufferConstructor,
     private asymmetricHelper: AsymmetricHelper,
     private accountBaseHelper: AccountBaseHelper,
-    private tpowHelper: TPOWHelper,
   ) {}
+
   get _ASSETTYPE() {
     return this.config.assetType;
   }
@@ -364,7 +358,7 @@ export class TransactionHelper {
 
   /**获取创世块里所有的受托人 */
   genesisDelegates(config = this.config) {
-    return config.newDelegates;
+    return [] as string[];
   }
   async getGensisAcountAddress(config = this.config) {
     return this.accountBaseHelper.getAddressFromPublicKeyString(config.genesisAccountPublicKey);
@@ -630,44 +624,6 @@ export class TransactionHelper {
     minTransactionFeePerByte = this.config.minTransactionFeePerByte,
   ) {
     return this.calcMinFeePerBytes(trs.fee, trs.getBytes().length, minTransactionFeePerByte);
-  }
-
-  /**
-   * 根据参与度计算一轮需要在线的时间
-   * 0.2* Round ~ 1.3* Round
-   */
-  @cacheGetter
-  get calcNeedOnlineTime() {
-    return this.tpowHelper.calcNeedOnlineTime.bind(this.tpowHelper);
-  }
-
-  @cacheGetter
-  get calcTpowParticipationBI() {
-    return this.tpowHelper.calcTpowParticipationBI.bind(this.tpowHelper);
-  }
-
-  /**
-   * 计算交易POW的难度
-   */
-  // @cacheGetter
-  get calcDiffOfTransactionProfOfWork() {
-    return this.tpowHelper.calcDiffOfTransactionProfOfWork.bind(this.tpowHelper);
-  }
-
-  /**
-   * 校验交易POW
-   * DIFF = (E ^ N) * N / (1 + B + P * R)
-   * @param transaction 交易体
-   * @param num 在一个区块中用户的第N比交易
-   */
-  @cacheGetter
-  get checkTransactionProfOfWork() {
-    return this.tpowHelper.checkTransactionProfOfWork.bind(this.tpowHelper);
-  }
-
-  /**交易的噪点生成器 */
-  nonceWriter<T extends Transaction>(trs: T) {
-    return this.tpowHelper.nonceWriter<T>(trs);
   }
 
   hashCode(str: string) {

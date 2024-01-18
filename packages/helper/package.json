@@ -29,7 +29,6 @@
     "@bfchain/core-helper-parity-bit": "10.0.0",
     "@bfchain/core-helper-register-chain-certificate": "10.0.0",
     "@bfchain/core-helper-transaction": "10.0.0",
-    "@bfchain/core-helper-transaction-pow": "10.0.0",
     "@bfchain/core-helper-type": "10.0.0",
     "@bfchain/core-typings": "10.0.0",
     "@bfchain/core-util-exception-errorcode": "10.0.0"

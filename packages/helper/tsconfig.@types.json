@@ -55,9 +55,6 @@
       "path": "../helper-register-chain-certificate/tsconfig.@types.json"
     },
     {
-      "path": "../helper-transaction-pow/tsconfig.@types.json"
-    },
-    {
       "path": "../helper-transaction/tsconfig.@types.json"
     },
     {

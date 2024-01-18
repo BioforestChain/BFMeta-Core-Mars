@@ -7,14 +7,14 @@ const { ArgumentFormatException } = CoreExceptionGenerator("HELPER", "milestones
 
 @Injectable()
 export class MilestonesHelper {
-  heights: number[];
-  rewards: string[];
-  genesisAmount: string;
+  heights: number[] = [];
+  rewards: string[] = [];
+  genesisAmount: string = "0";
   constructor(public config: ConfigHelper, public baseHelper: BaseHelper) {
     this.isVaildMilestones();
-    this.heights = this.config.milestones.heights;
-    this.rewards = this.config.milestones.rewards;
-    this.genesisAmount = this.config.genesisAmount;
+    // this.heights = this.config.milestones.heights;
+    // this.rewards = this.config.milestones.rewards;
+    // this.genesisAmount = this.config.genesisAmount;
   }
 
   /**
@@ -22,12 +22,12 @@ export class MilestonesHelper {
    *
    */
   isVaildMilestones() {
-    if (!this.baseHelper.isValidChainRewardMilestones(this.config.milestones)) {
-      throw new ArgumentFormatException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: "milestones",
-        target: "config",
-      });
-    }
+    // if (!this.baseHelper.isValidChainRewardMilestones(this.config.milestones)) {
+    //   throw new ArgumentFormatException(ERROR_LIST.PROP_IS_INVALID, {
+    //     prop: "milestones",
+    //     target: "config",
+    //   });
+    // }
   }
 
   /**

@@ -242,8 +242,6 @@ declare namespace BFChainCore {
     numberOfTransactions: number;
     /**区块的打开账户 */
     generatorPublicKey: string;
-    /**区块的参与度 */
-    blockParticipation: string;
     /**版本号 */
     version: number;
   };

@@ -1,15 +1,13 @@
 {
   "version": 1,
   "height": 1,
-  "blockSize": 16604,
+  "blockSize": 24406,
   "timestamp": 0,
-  "signature": "d72e88404dfbfc60ad40fd1df5b9e931e3699138b4b15d2e27926871e4c1e98b05ba966f2a97be1267448e896a7efd351fca50cabe3294c790a960397f7f8603",
+  "signature": "5d91358f623b66bd9e593ad5030451c621238bb40f0b7fedb87d46faa2e3b0a3280f58d3327ef1313e1cfee9db15596dbf91c55d0c7a2af98d43c91f1f80b90c",
   "generatorPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
-  "generatorEquity": "0",
   "previousBlockSignature": "",
   "reward": "0",
   "magic": "NMQX0",
-  "blockParticipation": "86970041",
   "remark": {
     "QWQ": "人定胜天"
   },
@@ -21,7 +19,8 @@
       "bnid": "c",
       "beginEpochTime": 1577808000000,
       "genesisLocationName": "qawaq.qawaq",
-      "genesisAmount": "100000000000000",
+      "genesisAmount": "10000000000000000",
+      "maxSupply": "4000000000000000000",
       "minTransactionFeePerByte": {
         "numerator": 88,
         "denominator": 100
@@ -32,10 +31,7 @@
       "maxBlockBlobSize": 4294967296,
       "maxTPSPerBlock": 1000,
       "consessusBeforeSyncBlockDiff": 7,
-      "maxDelegateTxsPerRound": 10,
       "maxGrabTimesOfGiftAsset": 1000000,
-      "maxVotesPerBlock": 128000,
-      "voteMinChainAsset": "0",
       "issueAssetMinChainAsset": "10000000000000",
       "maxMultipleOfAssetAndMainAsset": {
         "numerator": "100000",
@@ -52,107 +48,49 @@
       "delegates": 10,
       "whetherToAllowDelegateContinusElections": false,
       "forgeInterval": 128,
-      "rewardPercent": {
-        "votePercent": {
-          "numerator": 1,
-          "denominator": 2
-        },
-        "forgePercent": {
-          "numerator": 1,
-          "denominator": 2
-        }
-      },
+      "basicRewards": "100000000",
       "ports": {
-        "port": 19000,
-        "scan_peer_port": 19006
+        "port": 19000
       },
-      "rewardPerBlock": {
-        "heights": [
-          48712,
-          9806288,
-          40193712
-        ],
-        "rewards": [
-          "0",
-          "4000000000",
-          "2000000000",
-          "0"
-        ]
-      },
-      "accountParticipationWeightRatio": {
-        "balanceWeight": 5000,
-        "numberOfTransactionsWeight": 1
-      },
-      "blockParticipationWeightRatio": {
-        "balanceWeight": 5000,
-        "numberOfTransactionsWeight": 1
-      },
-      "averageComputingPower": 125,
-      "tpowOfWorkExemptionBlocks": 57,
-      "transactionPowOfWorkConfig": {
-        "growthFactor": {
-          "numerator": "2718281828459045",
-          "denominator": "1000000000000000"
-        },
-        "participationRatio": {
-          "numerator": 1,
-          "denominator": 1
-        }
-      },
-      "newDelegates": [
-        "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
-        "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
-        "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
-        "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
-        "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
-        "cGnmjV6fk5kFbTWztDtZhyr1a4Van4NPvR",
-        "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
-        "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
-        "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
-        "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA"
-      ],
-      "maxBeginBalance": "0",
-      "maxTxCount": 0,
       "nextRoundDelegates": [
         {
           "address": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
-          "equity": "0"
+          "numberOfEntities": 0
         },
         {
           "address": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
-          "equity": "0"
+          "numberOfEntities": 0
         },
         {
           "address": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
-          "equity": "0"
+          "numberOfEntities": 0
         },
         {
           "address": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
-          "equity": "0"
+          "numberOfEntities": 0
         },
         {
           "address": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
-          "equity": "0"
+          "numberOfEntities": 0
         }
       ],
-      "rate": "0",
-      "assetChangeHash": "569030b37631c6a1896da00cc01a118e2eb4e706d96da879325a4f5f8412c1cb"
+      "assetChangeHash": "509a0554e163ed5f9fba62b1bba4a4551bbcec7e4c9630c93e01305423789131"
     }
   },
   "transactionInfo": {
     "startTindex": 0,
-    "offset": 41,
-    "numberOfTransactions": 41,
-    "payloadHash": "8e3d221da939a8f931ea0e15a2dfed0004044ee4b0db69a37119372e32fa69c1",
-    "payloadLength": 14993,
+    "offset": 52,
+    "numberOfTransactions": 52,
+    "payloadHash": "bfb3e3ae36d588ded1b732b37423cd399371606d22b8e2092467ea86cd98457a",
+    "payloadLength": 23287,
     "blobSize": 0,
-    "totalAmount": "17394",
-    "totalFee": "10292",
+    "totalAmount": "1030171",
+    "totalFee": "16811",
     "transactionInBlocks": [
       {
         "tIndex": 0,
         "height": 1,
-        "signature": "c5d96ce6e2c43e16b8e266618c46d193f48c2ac22b0a54533aa9139819f7704c50c1b233c62169ce1e2c1868eeb26214110069ef5d474e97edacea62b443fa0d",
+        "signature": "77e2da6e0bb1da83abdf65c54d9db4d4df3dbe1c0ad722913368693ee4408501b6438a13f0f787420d173a371d384dd0c1bf4a508ae46644ec8ccefd0761b006",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-LNS-00",
@@ -166,7 +104,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "db27b0de08554c9979c7221363e490f87892714ad3328070716cbba971a68e6a317b6d1fa27338d42aacc92c09359638aa96c8d5b4bf781059af25a81434700c",
+          "signature": "bae419292559ff8386711f8e455b166c168ae5ce93d6df9d6520c66ce6cbb7965992f50c526f786891a393e5a8511c4ed4d15c99259734cb87ca27d3aeac180c",
           "remark": {},
           "asset": {
             "locationName": {
@@ -176,7 +114,6 @@
               "operationType": 0
             }
           },
-          "nonce": 0,
           "recipientId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
           "storageKey": "name",
           "storageValue": "qawaq.qawaq"
@@ -185,7 +122,41 @@
       {
         "tIndex": 1,
         "height": 1,
-        "signature": "b0a7495fc32710076e6706c6629a5a4e5f036242bd035fb72c2713765b141d00dba3873a2653281c823ac56c5666013931a942a1902b8c4dbec4ea47f913ec04",
+        "signature": "1b4cee178a413812fbad8dd685a3d5fa4e26d8560eb5a5e30bf78edd91cf9330f5bb9a0c37ffd131e2fd977a4cc62aca574fda942bcf7cd6a25aa8cf1c23fa0e",
+        "transaction": {
+          "version": 1,
+          "type": "QAWAQ-QAWAQ-ETY-03",
+          "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+          "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
+          "rangeType": 0,
+          "range": [],
+          "fee": "251",
+          "timestamp": 0,
+          "fromMagic": "NMQX0",
+          "toMagic": "NMQX0",
+          "applyBlockHeight": 1,
+          "effectiveBlockHeight": 1,
+          "signature": "00d920517436b859f3d6fd281cabf5ce2b95541cce340914e20d006c26f1a99462e67ceb31d44da27802b6659660a30a4b558817ba2838527837def4f7d25d0b",
+          "remark": {},
+          "asset": {
+            "issueEntityFactory": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "factoryId": "generator",
+              "entityPrealnum": "1000",
+              "entityFrozenAssetPrealnum": "0",
+              "purchaseAssetPrealnum": "0"
+            }
+          },
+          "recipientId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+          "storageKey": "factoryId",
+          "storageValue": "generator"
+        }
+      },
+      {
+        "tIndex": 2,
+        "height": 1,
+        "signature": "74ea0a19ec970fc38354e5c2bfe6ae0217dd790a29d58877efbaf9e89db143771cc9d4a65badb865755b30a0cf9cedb80e098b7d74db331f2b8d8c3f59661c02",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-AST-01",
@@ -193,13 +164,13 @@
           "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
           "rangeType": 0,
           "range": [],
-          "fee": "295",
+          "fee": "296",
           "timestamp": 0,
           "fromMagic": "NMQX0",
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "d5f842635d2cbd8625fc88e1c7149c5ad7c7ace16884c8147d75241872fb2c3a68e6dafc1cb409651bbaccabca76f01da945cbec877ad1ef30635643f8c1d606",
+          "signature": "1bdd174d8688d865999d2bb8cdbb0bde20a4a982557989be98fe348c361dc919b86b2e4fcada39723e07a84a9adaf4d59b753d2e6fcd856278ae4f822e598505",
           "remark": {
             "remark": "交易备注，任意信息，这个是转账交易"
           },
@@ -208,100 +179,182 @@
               "sourceChainName": "qawaq",
               "sourceChainMagic": "NMQX0",
               "assetType": "QAWAQ",
-              "amount": "710"
+              "amount": "1336"
             }
           },
-          "nonce": 0,
           "recipientId": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
           "storageKey": "assetType",
           "storageValue": "QAWAQ"
         }
       },
       {
-        "tIndex": 2,
-        "height": 1,
-        "signature": "7d64920aa46ea7baafe5bea353458f132ac072b26f087c1062a417100308e240af27cf3bc80dc5febc5dc4ca9f122748d2b96a990fd9a97e1e1b35a5ebe39a03",
-        "transaction": {
-          "version": 1,
-          "type": "QAWAQ-QAWAQ-BSE-04",
-          "senderId": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
-          "senderPublicKey": "6e8330144a8c123c017a8f5c363531868d3ce21c45b4a668cc1767c2b4695c84",
-          "rangeType": 0,
-          "range": [],
-          "fee": "254",
-          "timestamp": 0,
-          "fromMagic": "NMQX0",
-          "toMagic": "NMQX0",
-          "applyBlockHeight": 1,
-          "effectiveBlockHeight": 1,
-          "signature": "1bf1478f0df8149394442bc9f37fc51c5985488884b375de6a8f9463670834ca836d0bd77839544584460c99cf250e5d31fbdab241fa4b5179a34a9ce69d800b",
-          "remark": {
-            "remark": "交易备注，任意信息，这个是设置用户名交易"
-          },
-          "asset": {
-            "username": {
-              "alias": "qawaq1"
-            }
-          },
-          "nonce": 0,
-          "storageKey": "alias",
-          "storageValue": "qawaq1"
-        }
-      },
-      {
         "tIndex": 3,
         "height": 1,
-        "signature": "6cae0f96cd7a556d7d991d27941d957c0e2c75703277d986169f7e03823ef20ab5090860c00b89640a08ee30fee7eadf114ab93e6aee8a570f0673284924ec09",
+        "signature": "96811284c744fbf4724886b80c5d7a2d43a4536ad1ca8156cb406ed7949664d22080677be84096d2f44570c8e76771678360abb2a1c31fc3e6eee3e2bb300307",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-BSE-02",
+          "type": "QAWAQ-QAWAQ-ETY-01",
           "senderId": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
           "senderPublicKey": "6e8330144a8c123c017a8f5c363531868d3ce21c45b4a668cc1767c2b4695c84",
           "rangeType": 0,
           "range": [],
-          "fee": "229",
+          "fee": "334",
           "timestamp": 0,
           "fromMagic": "NMQX0",
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "54c5e91bb3c75fb3bdfdcfab183225b20440b132e4130e0c03111b9dcc8dba051bf54f02298fc493cc05488c369292c238062777402460a64bb721773d33920b",
-          "remark": {
-            "remark": "交易备注，任意信息，这个是注册受托人交易"
+          "signature": "05b065491b2d61e3f0a249245fd2a5955d5047ae883abd80305de871f05e5882199fb23a567907aea4585f524a78bf7ed972b33a0e7f0bf238606fdfcaf7c206",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0001",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
           },
-          "asset": {},
-          "nonce": 0
+          "recipientId": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0001"
         }
       },
       {
         "tIndex": 4,
         "height": 1,
-        "signature": "fe3acae86f465c9ca9f5af9b44bc6b445822d5102aa3a6d5e006417feb66d379df7f3c3bf90f338006a87ff4245ba433297918d1d96a8cfc42d15c3b1acb0e06",
+        "signature": "f200135670c2305cd9086b39bdd5ba2697e8d9c92cfb6c18aa38f635283011f81e9f1d483885186c880aac276c4cb00347c61d3b4678d333d112d9945181b108",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-BSE-05",
+          "type": "QAWAQ-QAWAQ-ETY-01",
           "senderId": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
           "senderPublicKey": "6e8330144a8c123c017a8f5c363531868d3ce21c45b4a668cc1767c2b4695c84",
           "rangeType": 0,
           "range": [],
-          "fee": "227",
+          "fee": "334",
           "timestamp": 0,
           "fromMagic": "NMQX0",
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "aa020fe53ddf239a5ac1882aae753f2c5853d8b05ef653004cc0bd8778e73bacdf4c8fe4feecf6f0a5aa0628765818e2684c9c4ae65004bf33c7bb32056c4c06",
-          "remark": {
-            "remark": "交易备注，任意信息，这个是接收投票交易"
+          "signature": "7109b543afecca787c07a8f3e21872d5b777551cfd09900285044095913ae023d0906d36f823002480cc336e6f4b665c469cd156b92a2cf85e54d4838224ba0e",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0002",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
           },
-          "asset": {},
-          "nonce": 0
+          "recipientId": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0002"
         }
       },
       {
         "tIndex": 5,
         "height": 1,
-        "signature": "dec32b5754086ddd078badb746cf6e95008d1054f456cd4a2df62fabb50b984e4a731016dadf8dcf6296559c9aab22e6b6dcf03a4821c7674aa428c5e5214d04",
+        "signature": "446f190171570de6351d30a96b47cf810926ce4b558397f0979544c3cbf51c7187e1d2edc5d183fbc29a3d4293dbec9e88017ac1b341bae6048252b4b080a70f",
+        "transaction": {
+          "version": 1,
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
+          "senderPublicKey": "6e8330144a8c123c017a8f5c363531868d3ce21c45b4a668cc1767c2b4695c84",
+          "rangeType": 0,
+          "range": [],
+          "fee": "334",
+          "timestamp": 0,
+          "fromMagic": "NMQX0",
+          "toMagic": "NMQX0",
+          "applyBlockHeight": 1,
+          "effectiveBlockHeight": 1,
+          "signature": "d0d04fc996ec0b29137c3465071c1d13bc83191f39eb15719ffb9b1ec9452d03647a36424f180c5f87ec6ab6d7f1fe13cae2e9aed77b3901397db0f895fb1e05",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0003",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
+          },
+          "recipientId": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0003"
+        }
+      },
+      {
+        "tIndex": 6,
+        "height": 1,
+        "signature": "e5810cc81054a45689abbf0943584db651aebe0f611a6e5f9f49d9ee1df67a7a3537c52f931b293bb228a16fa392e5520432c8e260e1c921b749e458025a560e",
+        "transaction": {
+          "version": 1,
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
+          "senderPublicKey": "6e8330144a8c123c017a8f5c363531868d3ce21c45b4a668cc1767c2b4695c84",
+          "rangeType": 0,
+          "range": [],
+          "fee": "334",
+          "timestamp": 0,
+          "fromMagic": "NMQX0",
+          "toMagic": "NMQX0",
+          "applyBlockHeight": 1,
+          "effectiveBlockHeight": 1,
+          "signature": "2747a826f038216af995fac8c704185e9735cdc2df931a7ba26bc4bf9582bc16001be3cf45eeb1d32802583ea0eb6c4a88ae03c0450e9fefda4a318ebaff7807",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0004",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
+          },
+          "recipientId": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0004"
+        }
+      },
+      {
+        "tIndex": 7,
+        "height": 1,
+        "signature": "6d8b317a7951d9fbf72ec8175a5114bee088e79e903ccba24493dc56d1554fb3db11e871b9bc8c39d6d2814116f450cc12d5f89197c3a1c8d7157f5725ddcf0f",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-AST-01",
@@ -309,13 +362,13 @@
           "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
           "rangeType": 0,
           "range": [],
-          "fee": "295",
+          "fee": "296",
           "timestamp": 0,
           "fromMagic": "NMQX0",
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "8814e2a7e3e06d7d8c9b5337e23e648e7e6adaf0cc161b2992d497c92f5225adaca181a8ac6ea94c2787dca44b52c4f41ebb5258a38214746951f7a234086001",
+          "signature": "1ca755c49aa88931f302c0186d7b8df2a95169e0838dc21f15b05196c9db0318cfc5b2db9441d5d11eac1cb92887e85a84d8a53b5075d86b368a60c0d488d20a",
           "remark": {
             "remark": "交易备注，任意信息，这个是转账交易"
           },
@@ -324,100 +377,182 @@
               "sourceChainName": "qawaq",
               "sourceChainMagic": "NMQX0",
               "assetType": "QAWAQ",
-              "amount": "710"
+              "amount": "1336"
             }
           },
-          "nonce": 0,
           "recipientId": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
           "storageKey": "assetType",
           "storageValue": "QAWAQ"
         }
       },
       {
-        "tIndex": 6,
-        "height": 1,
-        "signature": "4adf4ca724e3fb79f471d6f440743acdfa1e85508091ff13a8aff6ec4a2b86c2b5fba76fdfeef70e925ff7d538757908dc64ca41bc4e886c762830e4643bc20f",
-        "transaction": {
-          "version": 1,
-          "type": "QAWAQ-QAWAQ-BSE-04",
-          "senderId": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
-          "senderPublicKey": "0f88fe3a155927907b507c10ccd0318a7f3b2f55aeb6c90913756ef43db4e836",
-          "rangeType": 0,
-          "range": [],
-          "fee": "254",
-          "timestamp": 0,
-          "fromMagic": "NMQX0",
-          "toMagic": "NMQX0",
-          "applyBlockHeight": 1,
-          "effectiveBlockHeight": 1,
-          "signature": "b9460e73826729848f1b03592fe6c20150ffe53709a18dd122ed40c66fc5dc6fd34f0d199769bbd127044e5efa05d517c1191135378b4d431410eb12de018e0a",
-          "remark": {
-            "remark": "交易备注，任意信息，这个是设置用户名交易"
-          },
-          "asset": {
-            "username": {
-              "alias": "qawaq2"
-            }
-          },
-          "nonce": 0,
-          "storageKey": "alias",
-          "storageValue": "qawaq2"
-        }
-      },
-      {
-        "tIndex": 7,
-        "height": 1,
-        "signature": "faf623aa034b33bb13dec4fa275febbb5a3ba42a9dc57d7a54f67b0f848a8991f164b1ab98e141f100f0b7fe9bdd0a67e6ffaa148a5c3a18409f26262180290d",
-        "transaction": {
-          "version": 1,
-          "type": "QAWAQ-QAWAQ-BSE-02",
-          "senderId": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
-          "senderPublicKey": "0f88fe3a155927907b507c10ccd0318a7f3b2f55aeb6c90913756ef43db4e836",
-          "rangeType": 0,
-          "range": [],
-          "fee": "229",
-          "timestamp": 0,
-          "fromMagic": "NMQX0",
-          "toMagic": "NMQX0",
-          "applyBlockHeight": 1,
-          "effectiveBlockHeight": 1,
-          "signature": "12546cc0277dc207f80754ccbfa727f897daf14840ffe21ebd0ea51610e3b5b05c783c1debc18ddfa9e845f5567bd72bf7de2aaf95452e54be09415989235c0e",
-          "remark": {
-            "remark": "交易备注，任意信息，这个是注册受托人交易"
-          },
-          "asset": {},
-          "nonce": 0
-        }
-      },
-      {
         "tIndex": 8,
         "height": 1,
-        "signature": "3f862bae65b29288389193e1ad7e4a1bde9173338dafd52ff5748bf82605195b9ba4de34c0e1da0a4c86767adfd5d2a8e48fb9b19840930c8817f9dbedc20e00",
+        "signature": "ae3cab54a0e81a0e36cd20e73019a37462562586139171754a962247a65ac5c27abd37c8e9f513b051bd7ed110c8129d4e57af64b5ef15d287f50405c029d003",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-BSE-05",
+          "type": "QAWAQ-QAWAQ-ETY-01",
           "senderId": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
           "senderPublicKey": "0f88fe3a155927907b507c10ccd0318a7f3b2f55aeb6c90913756ef43db4e836",
           "rangeType": 0,
           "range": [],
-          "fee": "227",
+          "fee": "334",
           "timestamp": 0,
           "fromMagic": "NMQX0",
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "5d57574d0465e89459517810dc7832594eb2f7e33cbc831c233010c550c8938b104aecc616f0925c85c1ea386c571c21017513a8c861a9ef12e7a8afbcf1860e",
-          "remark": {
-            "remark": "交易备注，任意信息，这个是接收投票交易"
+          "signature": "4d1539a220eee9f6bf745958d7f5331d2c03e4ead3b3d449705ce0976fe2c7a7e24066ee080738f3a336b5312dc939c178e7e1d8c78e5eef67fc4e32a24acf03",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0005",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
           },
-          "asset": {},
-          "nonce": 0
+          "recipientId": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0005"
         }
       },
       {
         "tIndex": 9,
         "height": 1,
-        "signature": "2f581cdf53a2831b67e847fef3975a2a8942ab373f2dc5d33022f30e7284665cf0093c15a54eff5704cdea241de9ea8227326d1ead4884ae05e1e52d93e0b80a",
+        "signature": "60f2109ca86b1d7f0f404edddac20fd817455ff16464d8a8d12ab9f0223ffb1f9a0d1f96fb692b382ca38db2ef3a7e50e9538a18e41b190f1defcaab4656f600",
+        "transaction": {
+          "version": 1,
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
+          "senderPublicKey": "0f88fe3a155927907b507c10ccd0318a7f3b2f55aeb6c90913756ef43db4e836",
+          "rangeType": 0,
+          "range": [],
+          "fee": "334",
+          "timestamp": 0,
+          "fromMagic": "NMQX0",
+          "toMagic": "NMQX0",
+          "applyBlockHeight": 1,
+          "effectiveBlockHeight": 1,
+          "signature": "4d2755a2012851070d7dc45030c457928c38028895443c6068614529e2178a37d83087cc1c178115bcdfd6fbe36fafcd03a1b3fe743f070b7e43fe3025c28703",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0006",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
+          },
+          "recipientId": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0006"
+        }
+      },
+      {
+        "tIndex": 10,
+        "height": 1,
+        "signature": "850a295d1d623c801f69fca2264db60420c366495e3200295a1d4faca7c72aec9b831d5c8167448bfa2eb5677f7a567f6a1e13acd48f104edd8b459d89d97604",
+        "transaction": {
+          "version": 1,
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
+          "senderPublicKey": "0f88fe3a155927907b507c10ccd0318a7f3b2f55aeb6c90913756ef43db4e836",
+          "rangeType": 0,
+          "range": [],
+          "fee": "334",
+          "timestamp": 0,
+          "fromMagic": "NMQX0",
+          "toMagic": "NMQX0",
+          "applyBlockHeight": 1,
+          "effectiveBlockHeight": 1,
+          "signature": "4d52ea3324c87a1498ffdd11d6f3b6d6047c54ac36caa3672437bdb4fb19bbd48573985dd1aaad8c776ba189a22c5eaaa6f349f957f72fde584eaa4d3c49a204",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0007",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
+          },
+          "recipientId": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0007"
+        }
+      },
+      {
+        "tIndex": 11,
+        "height": 1,
+        "signature": "cd9160ee1f199be402f6bb9d4edc0f8c54066c0b7a004d37f9aaf9430471ab85d8a71e5c18bb9a42c4c797334907e8125a939e622652accb42773c62d087820d",
+        "transaction": {
+          "version": 1,
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
+          "senderPublicKey": "0f88fe3a155927907b507c10ccd0318a7f3b2f55aeb6c90913756ef43db4e836",
+          "rangeType": 0,
+          "range": [],
+          "fee": "334",
+          "timestamp": 0,
+          "fromMagic": "NMQX0",
+          "toMagic": "NMQX0",
+          "applyBlockHeight": 1,
+          "effectiveBlockHeight": 1,
+          "signature": "aafbf05669d3f2b0b5febbdef43e7025fbd3e562a8ab00deb48bd14c7d1ed9d9b4bde5c6698ec1833e8dabf70e7aa2bd6ee9ebbd3e22b95cbd84af658277a400",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0008",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
+          },
+          "recipientId": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0008"
+        }
+      },
+      {
+        "tIndex": 12,
+        "height": 1,
+        "signature": "428de26dbd10b41e925bb9f82c1e2e4af3a74ad525f62f4b51e14f9c34699bfe7af363607eeb2b1cd91b03ed3db87ad15b73296eb633606194298071db5e5001",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-AST-01",
@@ -425,13 +560,13 @@
           "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
           "rangeType": 0,
           "range": [],
-          "fee": "295",
+          "fee": "296",
           "timestamp": 0,
           "fromMagic": "NMQX0",
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "352b55a545c4c37598035ded871b23aa7ca79b3eae8f12bb1cabbf66b44d0332c8fccfb7407a24f8d0c0ca34d5ae6810bb42334570d686d74d62975cd607f60e",
+          "signature": "ebe8d85c15fd9168f6b69b3c53b40a9d57563332686069528542fbf23149ee1cfd29d5a2a6e1fcfd0626c50fc988d22954eb3561f12b035569db229257b9f80c",
           "remark": {
             "remark": "交易备注，任意信息，这个是转账交易"
           },
@@ -440,216 +575,182 @@
               "sourceChainName": "qawaq",
               "sourceChainMagic": "NMQX0",
               "assetType": "QAWAQ",
-              "amount": "710"
+              "amount": "1336"
             }
           },
-          "nonce": 0,
           "recipientId": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
           "storageKey": "assetType",
           "storageValue": "QAWAQ"
         }
       },
       {
-        "tIndex": 10,
-        "height": 1,
-        "signature": "81e542a3d8b0b7069306108d26c70197f2c3c6ad60badd212879fe2f8ff0ee11cff2380330cc7cef284ace2181ba66a6075da87417c79ba3b5c32d7e87622606",
-        "transaction": {
-          "version": 1,
-          "type": "QAWAQ-QAWAQ-BSE-04",
-          "senderId": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
-          "senderPublicKey": "526b2c534f8e0b2c75394e8c2968196510f912ebee80c17193baea45c73c07fa",
-          "rangeType": 0,
-          "range": [],
-          "fee": "254",
-          "timestamp": 0,
-          "fromMagic": "NMQX0",
-          "toMagic": "NMQX0",
-          "applyBlockHeight": 1,
-          "effectiveBlockHeight": 1,
-          "signature": "c884c9fdce75d5317ddd0dbaf93f0e744fb6310047d991ea3c1f3c45248ca79e5daa68bf56ddc4041c5b30bb46702c4ce5f62e56a037eed6d890615d4b883101",
-          "remark": {
-            "remark": "交易备注，任意信息，这个是设置用户名交易"
-          },
-          "asset": {
-            "username": {
-              "alias": "qawaq3"
-            }
-          },
-          "nonce": 0,
-          "storageKey": "alias",
-          "storageValue": "qawaq3"
-        }
-      },
-      {
-        "tIndex": 11,
-        "height": 1,
-        "signature": "830805023f88c313b813d50cf600b27a5cda6c81d27824995555346b6cce022ca19d8b071176b6dd3048a0774931bf720cad79f91f267d9b59935ba36f9add00",
-        "transaction": {
-          "version": 1,
-          "type": "QAWAQ-QAWAQ-BSE-02",
-          "senderId": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
-          "senderPublicKey": "526b2c534f8e0b2c75394e8c2968196510f912ebee80c17193baea45c73c07fa",
-          "rangeType": 0,
-          "range": [],
-          "fee": "229",
-          "timestamp": 0,
-          "fromMagic": "NMQX0",
-          "toMagic": "NMQX0",
-          "applyBlockHeight": 1,
-          "effectiveBlockHeight": 1,
-          "signature": "793271eef73ec2d14d1ecca0242a4a4b59c08fe51757ebd6c4f581bb99bd8f755d6a5437d6ca9210489da6c08e05e8a1a574dbd8350bf60229a26fb40c230d01",
-          "remark": {
-            "remark": "交易备注，任意信息，这个是注册受托人交易"
-          },
-          "asset": {},
-          "nonce": 0
-        }
-      },
-      {
-        "tIndex": 12,
-        "height": 1,
-        "signature": "a0ae96c502a93ac13cae3b10eb88f43df339874ec7da27d5c8b41748f8a9e34e4d96d05bffaf3270b2a1fe036cb8bdde650ac4f3318b92273182bfd0b207bd02",
-        "transaction": {
-          "version": 1,
-          "type": "QAWAQ-QAWAQ-BSE-05",
-          "senderId": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
-          "senderPublicKey": "526b2c534f8e0b2c75394e8c2968196510f912ebee80c17193baea45c73c07fa",
-          "rangeType": 0,
-          "range": [],
-          "fee": "227",
-          "timestamp": 0,
-          "fromMagic": "NMQX0",
-          "toMagic": "NMQX0",
-          "applyBlockHeight": 1,
-          "effectiveBlockHeight": 1,
-          "signature": "a56bc7344e7b64a29321030145e5b076f355ef0861b95a0b4a23ea8c6f92c9d05dceb28babf40ef0364bb371cc82e8e2d86bab17a50f1f98eaa0065468854403",
-          "remark": {
-            "remark": "交易备注，任意信息，这个是接收投票交易"
-          },
-          "asset": {},
-          "nonce": 0
-        }
-      },
-      {
         "tIndex": 13,
         "height": 1,
-        "signature": "c51bf658bb98f6e4826b9d7f9beb9541f6a22e13509fa5e9bff24d41fdcfc72fa608313bec4142d62bcc77f931488185720082ad6f9a22acd27ffcd5b9b77a0a",
+        "signature": "aa85e05908e52d37d1db7d754c4697d2dc83afa702abedf15f49926a4f4dbce53e7873622be0c2a5cdf5c879ef18993d4f95626e20233d08723b284389c99102",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-AST-01",
-          "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
-          "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
+          "senderPublicKey": "526b2c534f8e0b2c75394e8c2968196510f912ebee80c17193baea45c73c07fa",
           "rangeType": 0,
           "range": [],
-          "fee": "295",
+          "fee": "334",
           "timestamp": 0,
           "fromMagic": "NMQX0",
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "8b9473c09c0fc9da506d9af5713fbd4fd0f2f16a17cc46f3ebbdbf9941619a70c00dc9da2cdd74a1ba1cc7b0a45336338b39d22c8c0c02c4b241b64c41d23e08",
-          "remark": {
-            "remark": "交易备注，任意信息，这个是转账交易"
-          },
+          "signature": "e828f16cec7c86b31d3856ad84b764bb3a1e762e274547c7a3dda658cc0bdf8a9736f4bbbf059bbe9b918814a069030fedb5c520ebaa7746157df1c0d483a206",
+          "remark": {},
           "asset": {
-            "transferAsset": {
+            "issueEntity": {
               "sourceChainName": "qawaq",
               "sourceChainMagic": "NMQX0",
-              "assetType": "QAWAQ",
-              "amount": "710"
+              "entityId": "generator_generator0009",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
             }
           },
-          "nonce": 0,
-          "recipientId": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
-          "storageKey": "assetType",
-          "storageValue": "QAWAQ"
+          "recipientId": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0009"
         }
       },
       {
         "tIndex": 14,
         "height": 1,
-        "signature": "9050808b89c72272292e12a6a3293f2e17fe980e09a3867896c7c590b505ae00ef9d65f71f2e680d42a881d5a190c109d42e91bb830d4179033f85a6e96f7a05",
+        "signature": "1f20863d778ca4677a58fedf9477f4e7084f33a92cc3ce3f01cc65a8fb645ddea98ae5ad1583236dafa1227ab4dfdb7b7085fa722fad7a89527a5ac32e4b1807",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-BSE-04",
-          "senderId": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
-          "senderPublicKey": "72eb8d56261b211e0f77029cd8010b6378fa23342cb21c1169e4ac2c00debaa0",
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
+          "senderPublicKey": "526b2c534f8e0b2c75394e8c2968196510f912ebee80c17193baea45c73c07fa",
           "rangeType": 0,
           "range": [],
-          "fee": "254",
+          "fee": "334",
           "timestamp": 0,
           "fromMagic": "NMQX0",
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "55d2d418cd77f0b17c9848eecba27fe9e2e76d90523b9e509465911193a3c8e0ca7875bfd9e9be80395afec4aa2ed29f2dfafce78f4b7da4dd5cd206fc0cb806",
-          "remark": {
-            "remark": "交易备注，任意信息，这个是设置用户名交易"
-          },
+          "signature": "e96d0e848afc386ef6c4d7c7a50665c0cd925948a0d2803b802f685cee49d51f1d2ed1ddae49f3bb2e813808c53ad375b2edc9fa3d25ed01979995b79756a309",
+          "remark": {},
           "asset": {
-            "username": {
-              "alias": "qawaq4"
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0010",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
             }
           },
-          "nonce": 0,
-          "storageKey": "alias",
-          "storageValue": "qawaq4"
+          "recipientId": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0010"
         }
       },
       {
         "tIndex": 15,
         "height": 1,
-        "signature": "985dd91aff02971b237dc6ad7e7c6a144094f26f7597b3f06f2dc431ef98d3033ebc20be96fc11d47eb6b5dcfaa217cb28e33493a83d05180f363935b9c02208",
+        "signature": "bf792ddd369217b87fc1047682eab51ed321a38b96694ee01b12d05718089f662ac4b84511d38d6cbd6faaf5cb7b9393c010adcdd3c2daaa125ea6e2f461a80c",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-BSE-02",
-          "senderId": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
-          "senderPublicKey": "72eb8d56261b211e0f77029cd8010b6378fa23342cb21c1169e4ac2c00debaa0",
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
+          "senderPublicKey": "526b2c534f8e0b2c75394e8c2968196510f912ebee80c17193baea45c73c07fa",
           "rangeType": 0,
           "range": [],
-          "fee": "229",
+          "fee": "334",
           "timestamp": 0,
           "fromMagic": "NMQX0",
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "486a94834a5f502b52f93d5efb4f5b3da9113526df2f99f050e9d64521594e2dfa84c60891b7a5b66fcc3850f9c5be9e70fe3576b6a14e5949cfee877c10470f",
-          "remark": {
-            "remark": "交易备注，任意信息，这个是注册受托人交易"
+          "signature": "453beb77d43d79c7da9b06980751abdebffcb5d96e72c9a101ebabc0238e28e858bd7169989b5ae0eb7c0174ba3dc2649cc37c6395ef2a7cc58b5cd8dc5b370e",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0011",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
           },
-          "asset": {},
-          "nonce": 0
+          "recipientId": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0011"
         }
       },
       {
         "tIndex": 16,
         "height": 1,
-        "signature": "4fc15f4fca14088a45bd6ab9037484223c5561e2d325704f37f7ad6ec2f87ea6d3f0012e9e36d8b9333b20ae230938e7441c5b8949b66f505168a94470b1ec02",
+        "signature": "851c3635b8be28fbb5268d15d89546fbde4289cbcd585fcb32c0cb19ee9c30b91c449f0b1a2530116ffae77d69cd867e1fcf5b6a7ce46ce1fe77cddcefa08408",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-BSE-05",
-          "senderId": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
-          "senderPublicKey": "72eb8d56261b211e0f77029cd8010b6378fa23342cb21c1169e4ac2c00debaa0",
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
+          "senderPublicKey": "526b2c534f8e0b2c75394e8c2968196510f912ebee80c17193baea45c73c07fa",
           "rangeType": 0,
           "range": [],
-          "fee": "227",
+          "fee": "334",
           "timestamp": 0,
           "fromMagic": "NMQX0",
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "cca29b9bb8d8cbacc42ec77fbe8a37fef1dddeddd8c4535725ddfd49393b7bcb5ba2c584390d17e82249a1c432ed2bda491072df0c852566c1cfcf30b1fab70c",
-          "remark": {
-            "remark": "交易备注，任意信息，这个是接收投票交易"
+          "signature": "0ce91ff16a0c2725e0d51fa0ba2d3eca8f839cd725305be01d94f109eb25e306083c617bc3ea6d5c3a99a09d9a6b3faf1c783998c3120c3796f2f738d8cf0706",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0012",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
           },
-          "asset": {},
-          "nonce": 0
+          "recipientId": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0012"
         }
       },
       {
         "tIndex": 17,
         "height": 1,
-        "signature": "1e5ecbcbdd4159882b4908cc3aef87c33930b68d5c95841764c7c4e065b73dbd93e53247c9e77ffe3a6d2ce9811d3b58d05e9daffb8983da4f59ed229f60810a",
+        "signature": "10fb4ff78f537feeb3fa176005c3ad1ca8f7173af905f11410ec42602e7f04d6f3fbd561bc8477eaa0b258cf05b62a47a259f5f6d2137bcd5bd41f908198820e",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-AST-01",
@@ -657,13 +758,13 @@
           "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
           "rangeType": 0,
           "range": [],
-          "fee": "295",
+          "fee": "296",
           "timestamp": 0,
           "fromMagic": "NMQX0",
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "7a980f1d137c4273289c74720e916413cb8b965192d92af5808c0a5e3b3390d0966fe47c303644bcfbea3ef131eab399d3ca513cbff88d79eddde6f305773c03",
+          "signature": "3ac4c3a6da19c670447170af998c2b687e3326b8811bb417150c13b408e3fd4a17a4a4b23201fced109727e13a1adf42f354072880011f1215d43e6dc875be0f",
           "remark": {
             "remark": "交易备注，任意信息，这个是转账交易"
           },
@@ -672,11 +773,10 @@
               "sourceChainName": "qawaq",
               "sourceChainMagic": "NMQX0",
               "assetType": "QAWAQ",
-              "amount": "710"
+              "amount": "1336"
             }
           },
-          "nonce": 0,
-          "recipientId": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
+          "recipientId": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
           "storageKey": "assetType",
           "storageValue": "QAWAQ"
         }
@@ -684,88 +784,171 @@
       {
         "tIndex": 18,
         "height": 1,
-        "signature": "511d7b502e5e30acdde34d617ad3f99d83e89d6baf859985a43e44a4ede85f59078e74c84a23769dfb803433ee397f706db99fdd3fb599e91dd8a952b9c6dd0c",
+        "signature": "21f0a7d37c773f6f86586ae9fb9495902793fc3369b2776065227db011ce053b20ec98a72f2528801613daf8c9b0b031ba638bef07f0a8a9d77b43cb2f289600",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-BSE-04",
-          "senderId": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
-          "senderPublicKey": "58f751e6ffd7e67d1ddf3d687f02e828a4f855a6ba78fd06bdbeb934ba56ec77",
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
+          "senderPublicKey": "72eb8d56261b211e0f77029cd8010b6378fa23342cb21c1169e4ac2c00debaa0",
           "rangeType": 0,
           "range": [],
-          "fee": "254",
+          "fee": "334",
           "timestamp": 0,
           "fromMagic": "NMQX0",
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "dacd8410089e7548ba9db9469a6631b0c6091cd3e5d97b7336f2f873f5eb417a069ba36f58ee35f87959dcd8ee7158eb0b7509c53b3c916bae85bf9a709e1206",
-          "remark": {
-            "remark": "交易备注，任意信息，这个是设置用户名交易"
-          },
+          "signature": "3ea9ff08002ae9f647a928a7f25d733f366e5937bff8fcd682ce15b7e8d98ebfe2cdf8b7d1612dfd9151dc0a6b0944bbd648ca8aeb35ff9261ac36113f2ac706",
+          "remark": {},
           "asset": {
-            "username": {
-              "alias": "qawaq5"
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0013",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
             }
           },
-          "nonce": 0,
-          "storageKey": "alias",
-          "storageValue": "qawaq5"
+          "recipientId": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0013"
         }
       },
       {
         "tIndex": 19,
         "height": 1,
-        "signature": "30c30095fd7e7fa2198f7e64bde3947f49f89485c7913b8cf4a3871564e07923073a7c0bed29a8ca425de5520cea26e77e126ea49d138c5dcd8cf00661925f04",
+        "signature": "b5f122148f15618e408764e37efc6084d187909ca515644d4f4593b222c689a60fd886a88ea6ecdd5e8682c6eec0eea2ee2c6d01c7d0c02dc8d8c8c39ee2de03",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-BSE-02",
-          "senderId": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
-          "senderPublicKey": "58f751e6ffd7e67d1ddf3d687f02e828a4f855a6ba78fd06bdbeb934ba56ec77",
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
+          "senderPublicKey": "72eb8d56261b211e0f77029cd8010b6378fa23342cb21c1169e4ac2c00debaa0",
           "rangeType": 0,
           "range": [],
-          "fee": "229",
+          "fee": "334",
           "timestamp": 0,
           "fromMagic": "NMQX0",
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "f4dd48f23677ce28389f865cc2e2b3b488e5720f587e42b554df57942582db47154edbe2704299ae67dcba513356c2347e731d5ffaa69e1e2f0d1af3e8929200",
-          "remark": {
-            "remark": "交易备注，任意信息，这个是注册受托人交易"
+          "signature": "d9d2e254012eca9cb23dde89c92956dd757724dbfc20af04bc49f41a6b8d1e5b28a550ba653c14ff0efc376a63c3d6d5ba6aa5490297ba1c7e8736e23badb700",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0014",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
           },
-          "asset": {},
-          "nonce": 0
+          "recipientId": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0014"
         }
       },
       {
         "tIndex": 20,
         "height": 1,
-        "signature": "c9a9f8ce47df7de5348727cb305ad02a20a97c8738d2f4897fa4f13a2f0195f5698dcd44a4d28fef384a8ad592ef82c22a8c3093b67138f61a6ed9ad560e3e00",
+        "signature": "16c8577b4163ba9358dadea8a58be8c02364a9b9b1fb7eeb5be3e75e840243dad56eb52d0d4886120b7af8c2546fc691da5c04c06dbae5f83a3f8c31ba473600",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-BSE-05",
-          "senderId": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
-          "senderPublicKey": "58f751e6ffd7e67d1ddf3d687f02e828a4f855a6ba78fd06bdbeb934ba56ec77",
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
+          "senderPublicKey": "72eb8d56261b211e0f77029cd8010b6378fa23342cb21c1169e4ac2c00debaa0",
           "rangeType": 0,
           "range": [],
-          "fee": "227",
+          "fee": "334",
           "timestamp": 0,
           "fromMagic": "NMQX0",
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "03db41047d855ade08b50ec779392351142b22ca4609d7f63a44cba1fb78ba54aba01298397ab3ec826618ebabe097c6b3342e90cf2f48d87d2ccdc815b01803",
-          "remark": {
-            "remark": "交易备注，任意信息，这个是接收投票交易"
+          "signature": "e2f2d1c0dbdd5dfffb801f697572e540cbc96b605aebdcb7b554f18588f54b902ab10d717c7ab8c2b3670fa560210f159b064d98daa80e53deb4683fb65a3b00",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0015",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
           },
-          "asset": {},
-          "nonce": 0
+          "recipientId": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0015"
         }
       },
       {
         "tIndex": 21,
         "height": 1,
-        "signature": "31bf105ce1ec94cecd25af26173506bbbab9ee9e3cdb033d1e80242a1a2bfa35b174a68fbfbb7435823f466cd86f36a3946fa6b1a94c6db09c82a1efd1bf3903",
+        "signature": "bc62b68c322c924c8ac46078bc9e6eb31eee72fd65768818c53b51866d8781408331e5793cd43014e37e324b9a5d873dd31293a1f68b6fb8da38cbecdb5d6e07",
+        "transaction": {
+          "version": 1,
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
+          "senderPublicKey": "72eb8d56261b211e0f77029cd8010b6378fa23342cb21c1169e4ac2c00debaa0",
+          "rangeType": 0,
+          "range": [],
+          "fee": "334",
+          "timestamp": 0,
+          "fromMagic": "NMQX0",
+          "toMagic": "NMQX0",
+          "applyBlockHeight": 1,
+          "effectiveBlockHeight": 1,
+          "signature": "db7c9ddc223a200088d9bc02e25425e7ddede6408ebe3ea2d9c0d1f7a900c7ed9fa7cd0ef98e7bad07f943bbc407fa81322dacd1ac745c53d322b5faa529420b",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0016",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
+          },
+          "recipientId": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0016"
+        }
+      },
+      {
+        "tIndex": 22,
+        "height": 1,
+        "signature": "d11f6500d33a7fd832e14dfe6ada58d5f638a0e287b01fe9ad0e458196e1b7a1be5f08d40f2f287c85530b019bf89aa8f8d29c5af48439358379a23eb48ca60f",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-AST-01",
@@ -773,13 +956,13 @@
           "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
           "rangeType": 0,
           "range": [],
-          "fee": "295",
+          "fee": "296",
           "timestamp": 0,
           "fromMagic": "NMQX0",
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "8ac3a0ebb6721a7c2730a7d2a4074990468cf70e19e0e8f704e8a137c882a9cd900e280e0f00bf21c6cd2da1559a27bc64bc07aa2dd143c759c35661a6032f0d",
+          "signature": "731a17fd60c703b43ecdb7c7a0ee09285f1db2c0bbfa2179889cb411fa756708f599b04abe557f853ab48dd6f0ca9689a77709029fd317570fc16151c9e86e07",
           "remark": {
             "remark": "交易备注，任意信息，这个是转账交易"
           },
@@ -788,100 +971,380 @@
               "sourceChainName": "qawaq",
               "sourceChainMagic": "NMQX0",
               "assetType": "QAWAQ",
-              "amount": "710"
+              "amount": "1336"
             }
           },
-          "nonce": 0,
+          "recipientId": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
+          "storageKey": "assetType",
+          "storageValue": "QAWAQ"
+        }
+      },
+      {
+        "tIndex": 23,
+        "height": 1,
+        "signature": "f7375fb0ea7d97f4c3d093a90ee5316aee19c0a1611a8d6b60cc6a2d6e5f193de5207ff3e06c4e6b933e0f53053044cb7caf7e1acb87110aa2387186f3fcea0f",
+        "transaction": {
+          "version": 1,
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
+          "senderPublicKey": "58f751e6ffd7e67d1ddf3d687f02e828a4f855a6ba78fd06bdbeb934ba56ec77",
+          "rangeType": 0,
+          "range": [],
+          "fee": "334",
+          "timestamp": 0,
+          "fromMagic": "NMQX0",
+          "toMagic": "NMQX0",
+          "applyBlockHeight": 1,
+          "effectiveBlockHeight": 1,
+          "signature": "873399a2722ec230ee0fd65af8b7752a51052cb7d0e7bbbcd8a649c4988c009a606b37c14cf3b174402b980ed64c6dbd647700de35b2b934b3ca1d52a8e6e80f",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0017",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
+          },
+          "recipientId": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0017"
+        }
+      },
+      {
+        "tIndex": 24,
+        "height": 1,
+        "signature": "6e8320a080c4676ef154dacfdd80063348e5d5265b2fd0a72573c4c5c7da6855b63d5fccc695f29c4f43b72fb290e7f5715901b8782726a6dd856696ee489e01",
+        "transaction": {
+          "version": 1,
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
+          "senderPublicKey": "58f751e6ffd7e67d1ddf3d687f02e828a4f855a6ba78fd06bdbeb934ba56ec77",
+          "rangeType": 0,
+          "range": [],
+          "fee": "334",
+          "timestamp": 0,
+          "fromMagic": "NMQX0",
+          "toMagic": "NMQX0",
+          "applyBlockHeight": 1,
+          "effectiveBlockHeight": 1,
+          "signature": "60b1eab1ddb572a5f184cad8dcc1ca1afc2a057a0cffc2854e49fba88b22c2790903bb50bacc1701d1a6fddb7faca5d846802ccb86a2e3d97112c90b674b030f",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0018",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
+          },
+          "recipientId": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0018"
+        }
+      },
+      {
+        "tIndex": 25,
+        "height": 1,
+        "signature": "92bf24e11c5e79c4717c17b5c3d3887e00e1dbaee7b31beea140ed495f9db37aaa0711761c5eab263324b00f295d9a8753ee04c35c219172d17a405e34026003",
+        "transaction": {
+          "version": 1,
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
+          "senderPublicKey": "58f751e6ffd7e67d1ddf3d687f02e828a4f855a6ba78fd06bdbeb934ba56ec77",
+          "rangeType": 0,
+          "range": [],
+          "fee": "334",
+          "timestamp": 0,
+          "fromMagic": "NMQX0",
+          "toMagic": "NMQX0",
+          "applyBlockHeight": 1,
+          "effectiveBlockHeight": 1,
+          "signature": "09564b157ba703368a32969bbf296c9adc69b99f68a86358aac2b1ddf98a1ce861805d3b8af43767af6533c43cb828ae7bb04d8f7d554890253d41b04c88c80d",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0019",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
+          },
+          "recipientId": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0019"
+        }
+      },
+      {
+        "tIndex": 26,
+        "height": 1,
+        "signature": "e79b4f1379c5be3124d59f59a92f91198046e480a16953dee1c6db4d14e383c0170e893fe34c9745bb1c07bb44e10e3cde03ffa27ac262511e15b7b99590c50f",
+        "transaction": {
+          "version": 1,
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
+          "senderPublicKey": "58f751e6ffd7e67d1ddf3d687f02e828a4f855a6ba78fd06bdbeb934ba56ec77",
+          "rangeType": 0,
+          "range": [],
+          "fee": "334",
+          "timestamp": 0,
+          "fromMagic": "NMQX0",
+          "toMagic": "NMQX0",
+          "applyBlockHeight": 1,
+          "effectiveBlockHeight": 1,
+          "signature": "06ce16333d794495187a743995b4cfde3848f6553212985d498538dbdef61d73e41127b4690dbef4a25a9a8e7d0fa9a4d0e3cbc06f0fae038a26586ee78bf802",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0020",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
+          },
+          "recipientId": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0020"
+        }
+      },
+      {
+        "tIndex": 27,
+        "height": 1,
+        "signature": "733bbcb7961928c54f1edb484a433583e2cc1523369a3796bd29491676664a5dcc552759d260d4fd37e69cea5f08db159e7feeee634cc58e3296891a6f3f4107",
+        "transaction": {
+          "version": 1,
+          "type": "QAWAQ-QAWAQ-AST-01",
+          "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+          "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
+          "rangeType": 0,
+          "range": [],
+          "fee": "296",
+          "timestamp": 0,
+          "fromMagic": "NMQX0",
+          "toMagic": "NMQX0",
+          "applyBlockHeight": 1,
+          "effectiveBlockHeight": 1,
+          "signature": "11dbae423a5610e4fbef328eb3cb4e5b3162864f80906a69dff8a16bcb0caf5298b9bcfc885c83177ac28b187de22c4abd5e7a3e593ea416f17ef78202745909",
+          "remark": {
+            "remark": "交易备注，任意信息，这个是转账交易"
+          },
+          "asset": {
+            "transferAsset": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "assetType": "QAWAQ",
+              "amount": "1336"
+            }
+          },
           "recipientId": "cGnmjV6fk5kFbTWztDtZhyr1a4Van4NPvR",
           "storageKey": "assetType",
           "storageValue": "QAWAQ"
         }
       },
       {
-        "tIndex": 22,
+        "tIndex": 28,
         "height": 1,
-        "signature": "8ce9ce63d7d90ed9a5f476bd80c19f9e70b6776c45ce4ae05636bd6703f93391038f98e4959b0aefe1f5944fc2c4e0fb55c7b65c04d0437fc66f61ae3c9bf609",
+        "signature": "722582356c1b38a2f2f2fd8b146fea478fff591df764e9a27794c66fee9cdc8109131a518d75b5880b2be62208836ba135da13deedd13c3661780e077a20900e",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-BSE-04",
+          "type": "QAWAQ-QAWAQ-ETY-01",
           "senderId": "cGnmjV6fk5kFbTWztDtZhyr1a4Van4NPvR",
           "senderPublicKey": "a210c3565083922100ce8ba1c2f99da5769fbc78e90594b052ccb0388d3155c2",
           "rangeType": 0,
           "range": [],
-          "fee": "254",
+          "fee": "334",
           "timestamp": 0,
           "fromMagic": "NMQX0",
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "1aab75b2eaabd656d360d140999477780dd5ad77bce6eb027a8a8067d6debff90dda25f6320f24f07d90d4009449ec78f4001756f2b05c3163d4ee29829d4604",
-          "remark": {
-            "remark": "交易备注，任意信息，这个是设置用户名交易"
-          },
+          "signature": "7d363d229836d618d06b4deac13ed3ef1bc30edda74af2dee1ee57598342d0313213afb76e3373abc07f58cb3c6d1acb6e8b52da5cb22be614b4dbed312e380c",
+          "remark": {},
           "asset": {
-            "username": {
-              "alias": "qawaq6"
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0021",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
             }
           },
-          "nonce": 0,
-          "storageKey": "alias",
-          "storageValue": "qawaq6"
+          "recipientId": "cGnmjV6fk5kFbTWztDtZhyr1a4Van4NPvR",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0021"
         }
       },
       {
-        "tIndex": 23,
+        "tIndex": 29,
         "height": 1,
-        "signature": "9b8b89c19b5685ac04ef9cc4947a6737789e7cd685de22a51650b0f5de9e49dfe4645cf447bd154088f79156e923b2d21d55a248a5971f4f66f4ab2edeb22a0c",
+        "signature": "94fc35d177ec46ef83365dcb7fabb43ac32078193d021dc537c2ab6b25df0aa21e43cd74b134265e22508954ee1b4c7131a17d268c6ac2c9627bf1516872f403",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-BSE-02",
+          "type": "QAWAQ-QAWAQ-ETY-01",
           "senderId": "cGnmjV6fk5kFbTWztDtZhyr1a4Van4NPvR",
           "senderPublicKey": "a210c3565083922100ce8ba1c2f99da5769fbc78e90594b052ccb0388d3155c2",
           "rangeType": 0,
           "range": [],
-          "fee": "229",
+          "fee": "334",
           "timestamp": 0,
           "fromMagic": "NMQX0",
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "b8dd2deb917b34015ed56a09fb31d684b1a97fa16e434ac5b0e63465ee4927bd01e548e548f7ae060e0b10d3130252ffebf0e7c27658b3068cf101c40b979d01",
-          "remark": {
-            "remark": "交易备注，任意信息，这个是注册受托人交易"
+          "signature": "8459d12318bf4d8b108057cfab8f9fa0faa2f0a79ccfe39876ffcf61c9e99b703c8f03015d0d8bbc3b043372e3d199cb0aaddb3a48a3d322657e3b356806b106",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0022",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
           },
-          "asset": {},
-          "nonce": 0
+          "recipientId": "cGnmjV6fk5kFbTWztDtZhyr1a4Van4NPvR",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0022"
         }
       },
       {
-        "tIndex": 24,
+        "tIndex": 30,
         "height": 1,
-        "signature": "afbc9d52d5050014d3649eb666430611090a7b692f1915ce216c069db025ad80557b6dbf9b485aba21940465a50b3d8897b266b24fb524f42d6be998b591ab05",
+        "signature": "1e482acf6176d5a1f61b1ee487e1dc0139058d05d3da1485eb43b1a1d4b50043b3e17df8f84154f9bf6147ad31828852a47e9014a888023090021c374509be05",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-BSE-05",
+          "type": "QAWAQ-QAWAQ-ETY-01",
           "senderId": "cGnmjV6fk5kFbTWztDtZhyr1a4Van4NPvR",
           "senderPublicKey": "a210c3565083922100ce8ba1c2f99da5769fbc78e90594b052ccb0388d3155c2",
           "rangeType": 0,
           "range": [],
-          "fee": "227",
+          "fee": "334",
           "timestamp": 0,
           "fromMagic": "NMQX0",
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "72002a81560198b6b9b30862ff755c17179c03fc6748389ed41fc81c6d699fbb03f7b110525fa30e14817cadabbee9aeaa2764f7ddc7062d269119b770735705",
-          "remark": {
-            "remark": "交易备注，任意信息，这个是接收投票交易"
+          "signature": "af49405b4c9675744de2d4b78c173450ed5ce84ce4c5106cfb02ec3d8a23cf2bbcfbf49f0ec872c1ff95e19fddf0c14861ff1bac50db849c4a55d5775b12570f",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0023",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
           },
-          "asset": {},
-          "nonce": 0
+          "recipientId": "cGnmjV6fk5kFbTWztDtZhyr1a4Van4NPvR",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0023"
         }
       },
       {
-        "tIndex": 25,
+        "tIndex": 31,
         "height": 1,
-        "signature": "4f02f248d6b68bb7b9c25b32feba53c69e600941b0abda3fcb91e0c71ace14aa69823df9300768b3b9c7d74be00d93b73a148379a7450ce093dc4ff9dfba200c",
+        "signature": "855ec89925498a0feac6b5d55881dd0f975e9af38f05276328fcd1e867b7e47eb2d0eb9bae0d1588647bf2c79167770b7709a615624d52318868f2e598582d00",
+        "transaction": {
+          "version": 1,
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "cGnmjV6fk5kFbTWztDtZhyr1a4Van4NPvR",
+          "senderPublicKey": "a210c3565083922100ce8ba1c2f99da5769fbc78e90594b052ccb0388d3155c2",
+          "rangeType": 0,
+          "range": [],
+          "fee": "334",
+          "timestamp": 0,
+          "fromMagic": "NMQX0",
+          "toMagic": "NMQX0",
+          "applyBlockHeight": 1,
+          "effectiveBlockHeight": 1,
+          "signature": "d8b3bb6acc0faf03b8cca166f7a67a87bd75a078f35b2c8b02e8d756b535189c7f878a79769395c0a05c868b27c6cb93f3447c44e051203b2ab0fccc349ff406",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0024",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
+          },
+          "recipientId": "cGnmjV6fk5kFbTWztDtZhyr1a4Van4NPvR",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0024"
+        }
+      },
+      {
+        "tIndex": 32,
+        "height": 1,
+        "signature": "349a3a2acb876c962f3a314ad57a210365d61254516136c42f76365408d0b47d2162be2a7e87146384e7c9f8aacfcac5a2944eafeb125161adbea41634f49a01",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-AST-01",
@@ -889,13 +1352,13 @@
           "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
           "rangeType": 0,
           "range": [],
-          "fee": "295",
+          "fee": "296",
           "timestamp": 0,
           "fromMagic": "NMQX0",
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "ec6ba8ef532107f7c3add5b4c471f5058345806ddbb2a1a862781f0299c58cfa53b5f4afb97f25c358693f9dab126ae2cf0b7c46156e7ef36d27ced94243bd06",
+          "signature": "ef1559ec6075f97a88e7bbfe6e99eda8ee4df8e07c512f4e7930ef84f9ac44fadf6ea242015f9b3b61340c23d5715e244fa162ce050b20448a30edf08a8dc30e",
           "remark": {
             "remark": "交易备注，任意信息，这个是转账交易"
           },
@@ -904,332 +1367,182 @@
               "sourceChainName": "qawaq",
               "sourceChainMagic": "NMQX0",
               "assetType": "QAWAQ",
-              "amount": "710"
+              "amount": "1336"
             }
           },
-          "nonce": 0,
           "recipientId": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
           "storageKey": "assetType",
           "storageValue": "QAWAQ"
         }
       },
       {
-        "tIndex": 26,
-        "height": 1,
-        "signature": "0be8ed18426597affa841a3fff62971c3023aa16b4f32584ad1005ddf8ade5a050d93abf9436a122467bcbdd4a88cd41d2035faf35039706e6dde702c30f8c02",
-        "transaction": {
-          "version": 1,
-          "type": "QAWAQ-QAWAQ-BSE-04",
-          "senderId": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
-          "senderPublicKey": "ca78e16aad7980933da93844a1b91a719bf7793a05c566de8c9806efd90761e2",
-          "rangeType": 0,
-          "range": [],
-          "fee": "254",
-          "timestamp": 0,
-          "fromMagic": "NMQX0",
-          "toMagic": "NMQX0",
-          "applyBlockHeight": 1,
-          "effectiveBlockHeight": 1,
-          "signature": "97093d59a7ce3549986a577cd95ca47e2374e37d8e3e6f0e25d370202dbfa67eaa549886734d47b3aa293e70df632ae44d8b6f25221ce77fe596bf8982e55009",
-          "remark": {
-            "remark": "交易备注，任意信息，这个是设置用户名交易"
-          },
-          "asset": {
-            "username": {
-              "alias": "qawaq7"
-            }
-          },
-          "nonce": 0,
-          "storageKey": "alias",
-          "storageValue": "qawaq7"
-        }
-      },
-      {
-        "tIndex": 27,
-        "height": 1,
-        "signature": "8bdf95b27675690cfc0ee034df007b15c04f6530a224c5b9473a7c39dc55a307fef76a0b4fb3535f5659383fd54f048f471916fdb534d2893aef917a3ab9f203",
-        "transaction": {
-          "version": 1,
-          "type": "QAWAQ-QAWAQ-BSE-02",
-          "senderId": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
-          "senderPublicKey": "ca78e16aad7980933da93844a1b91a719bf7793a05c566de8c9806efd90761e2",
-          "rangeType": 0,
-          "range": [],
-          "fee": "229",
-          "timestamp": 0,
-          "fromMagic": "NMQX0",
-          "toMagic": "NMQX0",
-          "applyBlockHeight": 1,
-          "effectiveBlockHeight": 1,
-          "signature": "8a57ff566bd09161624b79ff3db79e0152839b11a25699ce335086b71dfdb399613b25481738f4661d1bc609e1c680a9c9ae2ce0dfc10412d3768f9ed6c7a002",
-          "remark": {
-            "remark": "交易备注，任意信息，这个是注册受托人交易"
-          },
-          "asset": {},
-          "nonce": 0
-        }
-      },
-      {
-        "tIndex": 28,
-        "height": 1,
-        "signature": "35bd6f615fbe44bd24b569863dbf305d728472bc266a2d05ca2fca0a6710d7cd94e5e22363c999d0612ffaee463d94c1a908e14fd6a3ca141b1e1f618a760b0a",
-        "transaction": {
-          "version": 1,
-          "type": "QAWAQ-QAWAQ-BSE-05",
-          "senderId": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
-          "senderPublicKey": "ca78e16aad7980933da93844a1b91a719bf7793a05c566de8c9806efd90761e2",
-          "rangeType": 0,
-          "range": [],
-          "fee": "227",
-          "timestamp": 0,
-          "fromMagic": "NMQX0",
-          "toMagic": "NMQX0",
-          "applyBlockHeight": 1,
-          "effectiveBlockHeight": 1,
-          "signature": "d37f8fc53e1d6fb275e5e5933b2da79f62c8676f4b45b8638010c775ab8116fe3109918d37b7d1c6352900b0969254dc73d8668af58ac35211a96cb742ee4e0c",
-          "remark": {
-            "remark": "交易备注，任意信息，这个是接收投票交易"
-          },
-          "asset": {},
-          "nonce": 0
-        }
-      },
-      {
-        "tIndex": 29,
-        "height": 1,
-        "signature": "3245ecf7b68be50d1f823837933fce45dbeac88f679a472a1203431a26dc227ec03580665626928a79cc1118acb8d49432aa631705d0f6ef0b883d713c78ae0a",
-        "transaction": {
-          "version": 1,
-          "type": "QAWAQ-QAWAQ-AST-01",
-          "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
-          "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
-          "rangeType": 0,
-          "range": [],
-          "fee": "295",
-          "timestamp": 0,
-          "fromMagic": "NMQX0",
-          "toMagic": "NMQX0",
-          "applyBlockHeight": 1,
-          "effectiveBlockHeight": 1,
-          "signature": "6c7a83f318553266faa429bda7c5913bec5e339f039f621f6582f2e76f66cb98e031c8bcbc7931c6721dcf46aa89ee5130916c8df71bc0f8f0d762288561f501",
-          "remark": {
-            "remark": "交易备注，任意信息，这个是转账交易"
-          },
-          "asset": {
-            "transferAsset": {
-              "sourceChainName": "qawaq",
-              "sourceChainMagic": "NMQX0",
-              "assetType": "QAWAQ",
-              "amount": "710"
-            }
-          },
-          "nonce": 0,
-          "recipientId": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
-          "storageKey": "assetType",
-          "storageValue": "QAWAQ"
-        }
-      },
-      {
-        "tIndex": 30,
-        "height": 1,
-        "signature": "d27d773ae069c5b2c2302a8a2733d4131a7d39cb1605e2cd5836d266cb5dec19f052bb9d20a6b580d1ec6955f565b498a588c7ea3201ecc15d8af4144039f607",
-        "transaction": {
-          "version": 1,
-          "type": "QAWAQ-QAWAQ-BSE-04",
-          "senderId": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
-          "senderPublicKey": "85ea51eefe25fecfa3e7fcb7b47c28dc8e1e47b7152c6a94791b5f2d50ae165a",
-          "rangeType": 0,
-          "range": [],
-          "fee": "254",
-          "timestamp": 0,
-          "fromMagic": "NMQX0",
-          "toMagic": "NMQX0",
-          "applyBlockHeight": 1,
-          "effectiveBlockHeight": 1,
-          "signature": "a526cb09c993eaf7bd36ba7f7cd56a6dcd5453611e419840a472a29bccb98bbbfd12b1a829ba573a2b7803ac1d9a80ed832ed1c9a0e94b0f73ecf8bd6b817501",
-          "remark": {
-            "remark": "交易备注，任意信息，这个是设置用户名交易"
-          },
-          "asset": {
-            "username": {
-              "alias": "qawaq8"
-            }
-          },
-          "nonce": 0,
-          "storageKey": "alias",
-          "storageValue": "qawaq8"
-        }
-      },
-      {
-        "tIndex": 31,
-        "height": 1,
-        "signature": "5f77a65eb4b45dc72ef8db3667ddfc6236bf8b3bfb4746d9b99a114601e30c21ce934d795f972ae68658f67603fa2a28029d712c3959673515e708ab49090806",
-        "transaction": {
-          "version": 1,
-          "type": "QAWAQ-QAWAQ-BSE-02",
-          "senderId": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
-          "senderPublicKey": "85ea51eefe25fecfa3e7fcb7b47c28dc8e1e47b7152c6a94791b5f2d50ae165a",
-          "rangeType": 0,
-          "range": [],
-          "fee": "229",
-          "timestamp": 0,
-          "fromMagic": "NMQX0",
-          "toMagic": "NMQX0",
-          "applyBlockHeight": 1,
-          "effectiveBlockHeight": 1,
-          "signature": "e92a67db43e3e1bf1aa70ccefcf583289ae786ab8c812b7ce6c4eb665b730678142dd2be99da6fb035ba2e96398aec1e82a77d0bc3627a838d9e99d2e8627906",
-          "remark": {
-            "remark": "交易备注，任意信息，这个是注册受托人交易"
-          },
-          "asset": {},
-          "nonce": 0
-        }
-      },
-      {
-        "tIndex": 32,
-        "height": 1,
-        "signature": "0e011bcceb8e3a94fcdacc504b708f0dd7342f26d2f8d92c9d77fd42723f7a267c86ffd1552191d05fc16d9ed1cafb810c912800bb6d71376d622a334fe2a404",
-        "transaction": {
-          "version": 1,
-          "type": "QAWAQ-QAWAQ-BSE-05",
-          "senderId": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
-          "senderPublicKey": "85ea51eefe25fecfa3e7fcb7b47c28dc8e1e47b7152c6a94791b5f2d50ae165a",
-          "rangeType": 0,
-          "range": [],
-          "fee": "227",
-          "timestamp": 0,
-          "fromMagic": "NMQX0",
-          "toMagic": "NMQX0",
-          "applyBlockHeight": 1,
-          "effectiveBlockHeight": 1,
-          "signature": "def5519abc6fc80290cff34556ed4db510278d8ad2e5065ca23d3d44258c10b0bb1b6ecbe3a4988fdb0a41713ac8b322de7333e60ee7eaf1836638694ccf110d",
-          "remark": {
-            "remark": "交易备注，任意信息，这个是接收投票交易"
-          },
-          "asset": {},
-          "nonce": 0
-        }
-      },
-      {
         "tIndex": 33,
         "height": 1,
-        "signature": "c2e8eeaa0c7c8c40375d95308e68029aa7d2ea560ebb4fb916d6498080bf0c4171145bc4852d1b95e86a05b91f5265021350206c68dbdfa429f812387923c106",
+        "signature": "5bc0da6007994664fde6d3252b5afdd4f300bc03e93e0d1ddec81cb6e977ae9fbb1c270588c673588fdb216bebf9320a20b995b24b7ed53e71abb6498f148207",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-AST-01",
-          "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
-          "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
+          "senderPublicKey": "ca78e16aad7980933da93844a1b91a719bf7793a05c566de8c9806efd90761e2",
           "rangeType": 0,
           "range": [],
-          "fee": "295",
+          "fee": "334",
           "timestamp": 0,
           "fromMagic": "NMQX0",
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "95302872361b3d3b5fde47cc9562f29201d283d06817de5e6255b8931204121b462c75a28955a7dff336676ce9b512e6e85dce56c770183fb25b6548286a6002",
-          "remark": {
-            "remark": "交易备注，任意信息，这个是转账交易"
-          },
+          "signature": "68dbb599b082440f7fa720ca9faa2484c05402b296db7151c9a9b162b3f866e7cc60315efdaf7bd866701d0248ccbce82381aac271e3a01342bf4af48a848501",
+          "remark": {},
           "asset": {
-            "transferAsset": {
+            "issueEntity": {
               "sourceChainName": "qawaq",
               "sourceChainMagic": "NMQX0",
-              "assetType": "QAWAQ",
-              "amount": "710"
+              "entityId": "generator_generator0025",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
             }
           },
-          "nonce": 0,
-          "recipientId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
-          "storageKey": "assetType",
-          "storageValue": "QAWAQ"
+          "recipientId": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0025"
         }
       },
       {
         "tIndex": 34,
         "height": 1,
-        "signature": "361ecea07d571b1191c49f4554eca3fd4e5a741aae88b71ae269f7981288bf12e4de101d0a2ab3b840397ed78a63b709bca27b8ae2b18e1b5c0dbf0f66c4bd03",
+        "signature": "98acc0c1ba49b0a8128cb1183f1ec4bbc7e59bdc15e3b415d5aa789d65fa445bdc378725bb4d3913a16fa38220f8a017cf96d736cdcddaab5031f57ce9c98803",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-BSE-04",
-          "senderId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
-          "senderPublicKey": "846f681c2d957b372f9b606737dbf8bcc99a8cb8de989c02d8ca162a10132903",
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
+          "senderPublicKey": "ca78e16aad7980933da93844a1b91a719bf7793a05c566de8c9806efd90761e2",
           "rangeType": 0,
           "range": [],
-          "fee": "254",
+          "fee": "334",
           "timestamp": 0,
           "fromMagic": "NMQX0",
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "eb75561065f58531eba40358e34427db52e66197ed7124cb2280213d7f2fbf1b3a5ae9906ef724efcdb4bd58558d53393792137d67c14abb2bb27520d0991409",
-          "remark": {
-            "remark": "交易备注，任意信息，这个是设置用户名交易"
-          },
+          "signature": "24471114be30ce5cff4100747596821153890e70f2d0b3954d7ac2d6e71e52af5808f925706aee53a6a1b7e55c086eb74f7b83e4d305cc7e75de25bdf27c330f",
+          "remark": {},
           "asset": {
-            "username": {
-              "alias": "qawaq9"
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0026",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
             }
           },
-          "nonce": 0,
-          "storageKey": "alias",
-          "storageValue": "qawaq9"
+          "recipientId": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0026"
         }
       },
       {
         "tIndex": 35,
         "height": 1,
-        "signature": "9ca323ad1233505e58d24810668171ef8a490978f1448f20df9a5d3444cfc26fae6dd9d5595b262f814e4da34375f9b6f9a5d984327f2fb9e15919e100c71b0d",
+        "signature": "06f40f77d00afedf0389793c4bad686ceace018a20c96981fa7ec5ce2fa7bbe9a5b78ab94729ddbe5ecb158d64caf17815f9d2ea58a72901e9e423d94f09fa07",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-BSE-02",
-          "senderId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
-          "senderPublicKey": "846f681c2d957b372f9b606737dbf8bcc99a8cb8de989c02d8ca162a10132903",
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
+          "senderPublicKey": "ca78e16aad7980933da93844a1b91a719bf7793a05c566de8c9806efd90761e2",
           "rangeType": 0,
           "range": [],
-          "fee": "229",
+          "fee": "334",
           "timestamp": 0,
           "fromMagic": "NMQX0",
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "3fbcfc2eaf86e7b65e9a415646fd196682f37b3107f38bf6c40a8be33986d8c218afed49e52f65c0eff76adc772199f705c64c1b16df84cb5c0f5a51a7b47305",
-          "remark": {
-            "remark": "交易备注，任意信息，这个是注册受托人交易"
+          "signature": "6a9f538495ba864e78b29a968d8d2cd601d501d53e395c147a27a0fa40e97707b07a32aa52d4a0f5c163a219a29e97b5517cdc9564684c7410f8b1e2e367020b",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0027",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
           },
-          "asset": {},
-          "nonce": 0
+          "recipientId": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0027"
         }
       },
       {
         "tIndex": 36,
         "height": 1,
-        "signature": "09963fafa6a19b03eb376fff5b463f2cbba49f426ae5dc5ede999c7a0f27fd925679f360edf9790dae876ef5f3ee9a59a6a8b60e9af1ca63e2b453b5b9765107",
+        "signature": "88d74389e6e71b4ab02270dbe55ce0118d60fc9ecde71aadb5e9eeadcb661a1870399dadb2e80a5bd715b542e8bb94e04d301e7549e6a3cf3053f7214f0d5603",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-BSE-05",
-          "senderId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
-          "senderPublicKey": "846f681c2d957b372f9b606737dbf8bcc99a8cb8de989c02d8ca162a10132903",
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
+          "senderPublicKey": "ca78e16aad7980933da93844a1b91a719bf7793a05c566de8c9806efd90761e2",
           "rangeType": 0,
           "range": [],
-          "fee": "227",
+          "fee": "334",
           "timestamp": 0,
           "fromMagic": "NMQX0",
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "2089d706d9cd6118253648337e4a0dfc10086cc810305f9976f5076f9f87e340a6cd601d5ba7e871965e236749f0b1e56fb1d86a87fb3752469229bc21c9ed0b",
-          "remark": {
-            "remark": "交易备注，任意信息，这个是接收投票交易"
+          "signature": "53dd9c1c8da0e0be029435510fe0e823b8a42392ae2b7d52174a8dcffec6c658e1a2c4276b704e9750b26d08528cb0a5e2bc71ba3bfa76ffa743d5ce995ec606",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0028",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
           },
-          "asset": {},
-          "nonce": 0
+          "recipientId": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0028"
         }
       },
       {
         "tIndex": 37,
         "height": 1,
-        "signature": "a8da1f7112e382178f0abf045e68c719c5344fc7a2b04b8677b56bd630d2835a8513e967993ee1c3a10a37920d2eb78b9ef39c53b1b7470e68f04e106fd45f00",
+        "signature": "edc2df7501a5f9be8d5c547c5d4b20ac5ee17284530325c1f8bd39023648dd88ed09ba48c2acf1ac20faf9e8d579f3a501b7a640373d170bd68196e2c2aac708",
         "transaction": {
           "version": 1,
           "type": "QAWAQ-QAWAQ-AST-01",
@@ -1237,13 +1550,13 @@
           "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
           "rangeType": 0,
           "range": [],
-          "fee": "295",
+          "fee": "296",
           "timestamp": 0,
           "fromMagic": "NMQX0",
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "c4bd6b88beb704f91da869c6154eed24be27c05cb055b080757be50312e7e2c246291a6be43beedf773fdd9a89a16190bfec688c23d5bc21c722a8923ab33606",
+          "signature": "d41ff117dffba5b3d42a237155a30e1de4cdb9c59a45342aff865babd6645eee1e9d96f172d80fb7add462707d3d98ea28d9964c102d9dd6bc69cd9a02aeed0d",
           "remark": {
             "remark": "交易备注，任意信息，这个是转账交易"
           },
@@ -1252,11 +1565,10 @@
               "sourceChainName": "qawaq",
               "sourceChainMagic": "NMQX0",
               "assetType": "QAWAQ",
-              "amount": "712"
+              "amount": "1336"
             }
           },
-          "nonce": 0,
-          "recipientId": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
+          "recipientId": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
           "storageKey": "assetType",
           "storageValue": "QAWAQ"
         }
@@ -1264,89 +1576,568 @@
       {
         "tIndex": 38,
         "height": 1,
-        "signature": "bb167883dc18b65e2097cd5b3198583b9e96b9c5290a78fb2cc5a3d70fc9ce157d56c2496dab718506bf91812b8925531a46f6e982397de20ca322e6bb8ae108",
+        "signature": "3ac8793adba23079798ea6e9980527bf038e760b5dde961ff6af87ff3407a837101828ab21c9962cb4692dec61a27e2046ae9b41130164e15a9d9e1d4f46730f",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-BSE-04",
-          "senderId": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
-          "senderPublicKey": "5ff43d2626b6a60602645333df040189db9339ca424ac2dc4fa7f32cd4da1923",
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
+          "senderPublicKey": "85ea51eefe25fecfa3e7fcb7b47c28dc8e1e47b7152c6a94791b5f2d50ae165a",
           "rangeType": 0,
           "range": [],
-          "fee": "256",
+          "fee": "334",
           "timestamp": 0,
           "fromMagic": "NMQX0",
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "d5e724c8fdd5c3298f669721a00cd02d2ca2f81fc5b8174e88310702a0db7ded15f1d453c465047b48081365e3bf1e50719fe438d878469cfcbc6b4b8d805e02",
-          "remark": {
-            "remark": "交易备注，任意信息，这个是设置用户名交易"
-          },
+          "signature": "056b7de843618c048eefe714c4d313bc0f5fa3a7c1969dbba381342ccd4afb46fea07a6f4053a2f15a413cca24a016f0527051c8e92672a52215dcb601e54006",
+          "remark": {},
           "asset": {
-            "username": {
-              "alias": "qawaq10"
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0029",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
             }
           },
-          "nonce": 0,
-          "storageKey": "alias",
-          "storageValue": "qawaq10"
+          "recipientId": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0029"
         }
       },
       {
         "tIndex": 39,
         "height": 1,
-        "signature": "63301aa9fb3e1272a6df102263d949b175f703609fd6ac32352082a5699d188058da95b153a0a17e313c4544f1230443d0afa793fd66047f259b524c7d296b0f",
+        "signature": "bd3361c74d2bdf75973931339c528e9465c0ffe500583560398a260674b2782553116e622e2f4330cd748d2f5b72c72e3b807f91d1f7d1479d4c92dd3ae20d09",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-BSE-02",
-          "senderId": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
-          "senderPublicKey": "5ff43d2626b6a60602645333df040189db9339ca424ac2dc4fa7f32cd4da1923",
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
+          "senderPublicKey": "85ea51eefe25fecfa3e7fcb7b47c28dc8e1e47b7152c6a94791b5f2d50ae165a",
           "rangeType": 0,
           "range": [],
-          "fee": "229",
+          "fee": "334",
           "timestamp": 0,
           "fromMagic": "NMQX0",
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "e08a5694f4d657bcbafff5ed9222b83cf3e92845bdc679778e6f57b494314b3bf598733e31b5532d82216fe0709fdb242702c322bbe061f1f7f63c7af8b1120d",
-          "remark": {
-            "remark": "交易备注，任意信息，这个是注册受托人交易"
+          "signature": "7550e1e0fa5bc1029854b20802e2c736cf05f55127b5ceeaa84e76437492f1b69d57be6e209e8ca4b63726c95260a30823db97930062916ef3ad86346ae9e205",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0030",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
           },
-          "asset": {},
-          "nonce": 0
+          "recipientId": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0030"
         }
       },
       {
         "tIndex": 40,
         "height": 1,
-        "signature": "75c61586d8893ce714297a186abe3a7b80659ec58f3b3bbce7048bdb38f0a6f130867ca5dc451603fcbf61fb71e3a90a28cf7f00e578008998b813f21249ab0c",
+        "signature": "3be9a894d739529ab0156bd5d551852657af9994265dd01faebd003e6fce08e23958be8f3bcd5f985ee27fa7918804f8d91c2a754449ef3107e518388b285806",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-BSE-05",
-          "senderId": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
-          "senderPublicKey": "5ff43d2626b6a60602645333df040189db9339ca424ac2dc4fa7f32cd4da1923",
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
+          "senderPublicKey": "85ea51eefe25fecfa3e7fcb7b47c28dc8e1e47b7152c6a94791b5f2d50ae165a",
           "rangeType": 0,
           "range": [],
-          "fee": "227",
+          "fee": "334",
           "timestamp": 0,
           "fromMagic": "NMQX0",
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "75d86aa8992d43ca46d3ef67e4f0aa97dec848fcc23d0f6286d937d4ba1249473f0916413e36c9cb927f235b83051efc3fbdb0a02f735bc5dc92a76d11da2e0e",
-          "remark": {
-            "remark": "交易备注，任意信息，这个是接收投票交易"
+          "signature": "bc475ed63f3da89701aa3e22641129fd1ded6749108c89b3936b96518b68cf07c58962fcaaee1d7315895a6cf5939671eed83f9af3727394c4ce25f037389d03",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0031",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
           },
-          "asset": {},
-          "nonce": 0
+          "recipientId": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0031"
+        }
+      },
+      {
+        "tIndex": 41,
+        "height": 1,
+        "signature": "ab74f49815a8337ad06d342a93df6fad3ccab3d4cb8408f4c9cb356618b56dfabadfcf0a1ff3ecfc09255a6b6f4cc102f61153bb459cc53809121b2c52d1fc09",
+        "transaction": {
+          "version": 1,
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
+          "senderPublicKey": "85ea51eefe25fecfa3e7fcb7b47c28dc8e1e47b7152c6a94791b5f2d50ae165a",
+          "rangeType": 0,
+          "range": [],
+          "fee": "334",
+          "timestamp": 0,
+          "fromMagic": "NMQX0",
+          "toMagic": "NMQX0",
+          "applyBlockHeight": 1,
+          "effectiveBlockHeight": 1,
+          "signature": "17ed9a244ddc1619868d817e0c94f3771d9f6c6d859ac39c75f2a66e8d33aa768e2082f6b8200ece7b6d364f756cfeb26e056cfef347d9b15ed5542e666e4a05",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0032",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
+          },
+          "recipientId": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0032"
+        }
+      },
+      {
+        "tIndex": 42,
+        "height": 1,
+        "signature": "1a5809f365eecc43e060e5fab19594f6a9a16b69c7bf2e828f99dc1c07fa1286f4e4a2f12bbd9160c36dfe85d686bbae9c976ba5399871456578cd0610b3ff0a",
+        "transaction": {
+          "version": 1,
+          "type": "QAWAQ-QAWAQ-AST-01",
+          "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+          "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
+          "rangeType": 0,
+          "range": [],
+          "fee": "296",
+          "timestamp": 0,
+          "fromMagic": "NMQX0",
+          "toMagic": "NMQX0",
+          "applyBlockHeight": 1,
+          "effectiveBlockHeight": 1,
+          "signature": "204ab4597560983888f87ecf80cbfca6f596fc591762c9ec0e2130c40f5e258ede2d38381b541f945420c6f3a0b6ef4542abdfb6043c1e19c8ce9b921f6c010b",
+          "remark": {
+            "remark": "交易备注，任意信息，这个是转账交易"
+          },
+          "asset": {
+            "transferAsset": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "assetType": "QAWAQ",
+              "amount": "1336"
+            }
+          },
+          "recipientId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
+          "storageKey": "assetType",
+          "storageValue": "QAWAQ"
+        }
+      },
+      {
+        "tIndex": 43,
+        "height": 1,
+        "signature": "c43944c7581e78b7e7426be38fe99df990c1065b86af323772a3219c9e49558976362d582d7fd8871b6a895c6ff045781efb3ac0290b54667fc58985dae8a20a",
+        "transaction": {
+          "version": 1,
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
+          "senderPublicKey": "846f681c2d957b372f9b606737dbf8bcc99a8cb8de989c02d8ca162a10132903",
+          "rangeType": 0,
+          "range": [],
+          "fee": "334",
+          "timestamp": 0,
+          "fromMagic": "NMQX0",
+          "toMagic": "NMQX0",
+          "applyBlockHeight": 1,
+          "effectiveBlockHeight": 1,
+          "signature": "ac7b3073c8033ed6d7a56120f63d955ce00dc3cff2ade8fcebdbd67507054b7ab23c118a9ca539efdd4b750fc367fc0e2153557cf8217c18cd999ed9aa556708",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0033",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
+          },
+          "recipientId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0033"
+        }
+      },
+      {
+        "tIndex": 44,
+        "height": 1,
+        "signature": "0046f51598694ccf0e6d8610ff56f19b58765b17faeabbe039367f3523896b7630e8c2b85b097bc5489ac891f7d2f554fa1fb4fdaa440f94b5f49e0e1bd8b70d",
+        "transaction": {
+          "version": 1,
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
+          "senderPublicKey": "846f681c2d957b372f9b606737dbf8bcc99a8cb8de989c02d8ca162a10132903",
+          "rangeType": 0,
+          "range": [],
+          "fee": "334",
+          "timestamp": 0,
+          "fromMagic": "NMQX0",
+          "toMagic": "NMQX0",
+          "applyBlockHeight": 1,
+          "effectiveBlockHeight": 1,
+          "signature": "75e1198f56a44f64735af540f2fb863a418467f84457d099b77e562f6558f0d2bb728e43baec28f6dbd8db52e138d41d246a88eaaefdf20ecc7becb1c50f7002",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0034",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
+          },
+          "recipientId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0034"
+        }
+      },
+      {
+        "tIndex": 45,
+        "height": 1,
+        "signature": "94488d2d6587e0f960a2beef9df85ea700b5dc3605c9c57c29893df6d7445ef65a0970212a77696379f8458cee54eb585ef8f350214ab7251c853dab8706be0a",
+        "transaction": {
+          "version": 1,
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
+          "senderPublicKey": "846f681c2d957b372f9b606737dbf8bcc99a8cb8de989c02d8ca162a10132903",
+          "rangeType": 0,
+          "range": [],
+          "fee": "334",
+          "timestamp": 0,
+          "fromMagic": "NMQX0",
+          "toMagic": "NMQX0",
+          "applyBlockHeight": 1,
+          "effectiveBlockHeight": 1,
+          "signature": "f513d596adc470a5b290b223d297c27649bed77b7efeef4e8d5abad3bccc14078f252060bfcaa8d90242c25b17ce770b0cbb0ca1d16eca9415d18fa18531a20d",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0035",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
+          },
+          "recipientId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0035"
+        }
+      },
+      {
+        "tIndex": 46,
+        "height": 1,
+        "signature": "5fcee63e26259b6208f50bba4467acffaec54da352c76a508872f5961cb6d90d37a9ba1a61898c974a3856d3980438d6f4902276fbeec5b1a4d296551ad2340b",
+        "transaction": {
+          "version": 1,
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
+          "senderPublicKey": "846f681c2d957b372f9b606737dbf8bcc99a8cb8de989c02d8ca162a10132903",
+          "rangeType": 0,
+          "range": [],
+          "fee": "334",
+          "timestamp": 0,
+          "fromMagic": "NMQX0",
+          "toMagic": "NMQX0",
+          "applyBlockHeight": 1,
+          "effectiveBlockHeight": 1,
+          "signature": "8d7e9d7bd079fca801e0879379167ecd3d6479744b100b0563222a6358b0eee7041294b0d99713b597f4b79ce5cbfc147462418c5f3455afd363e79a2bf65101",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0036",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
+          },
+          "recipientId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0036"
+        }
+      },
+      {
+        "tIndex": 47,
+        "height": 1,
+        "signature": "e8254cec367af64eaa53f2e669fb5b0b8e5c656ec4078b330e5121d5e6fe9754ed2fd23b559ffb059b869729746f3dda47c2a9805765b38dd9ac713d9c332a0f",
+        "transaction": {
+          "version": 1,
+          "type": "QAWAQ-QAWAQ-AST-01",
+          "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+          "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
+          "rangeType": 0,
+          "range": [],
+          "fee": "296",
+          "timestamp": 0,
+          "fromMagic": "NMQX0",
+          "toMagic": "NMQX0",
+          "applyBlockHeight": 1,
+          "effectiveBlockHeight": 1,
+          "signature": "4ff9beb76c60091b125c1e784d2a856a817dba060a7d84c3ddc5d4c834ff621ad4b8c49b8d06d2ee52aa26b93517bc025a599ec297eb7480b5d0d09ba6bd4a0d",
+          "remark": {
+            "remark": "交易备注，任意信息，这个是转账交易"
+          },
+          "asset": {
+            "transferAsset": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "assetType": "QAWAQ",
+              "amount": "1336"
+            }
+          },
+          "recipientId": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
+          "storageKey": "assetType",
+          "storageValue": "QAWAQ"
+        }
+      },
+      {
+        "tIndex": 48,
+        "height": 1,
+        "signature": "b8081f639347cf1e5c34587ec071261658d0fd16f00b546a96abc752fa74ebabd8bef442ad934fafcad16a47cc19d4bb09223a4697d23bcad2bf857c44138a09",
+        "transaction": {
+          "version": 1,
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
+          "senderPublicKey": "5ff43d2626b6a60602645333df040189db9339ca424ac2dc4fa7f32cd4da1923",
+          "rangeType": 0,
+          "range": [],
+          "fee": "334",
+          "timestamp": 0,
+          "fromMagic": "NMQX0",
+          "toMagic": "NMQX0",
+          "applyBlockHeight": 1,
+          "effectiveBlockHeight": 1,
+          "signature": "47ce56c6e4f6b09be485d4844e98e0b1b72650807834ae9147f90a6b5f8884d189119f4cc3cdd3f0055cb4e6e1bbfdba9548409a7ed1e562a0774e742ef1150e",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0037",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
+          },
+          "recipientId": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0037"
+        }
+      },
+      {
+        "tIndex": 49,
+        "height": 1,
+        "signature": "9de15fefefb096adb6dd051009286d754f3eae7de064ef480de907907338c98fb86fb3c68da188ff7a9f0659dcbbf266d7feaf57a922528f1abe5d59028cb006",
+        "transaction": {
+          "version": 1,
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
+          "senderPublicKey": "5ff43d2626b6a60602645333df040189db9339ca424ac2dc4fa7f32cd4da1923",
+          "rangeType": 0,
+          "range": [],
+          "fee": "334",
+          "timestamp": 0,
+          "fromMagic": "NMQX0",
+          "toMagic": "NMQX0",
+          "applyBlockHeight": 1,
+          "effectiveBlockHeight": 1,
+          "signature": "90ef8ecbf33b0f6ec2cf5d526f5beb403603d6d88c5596305357367527c5341237248eeda663c8a38cd3bbd8a88a6452bc4c56ae34e9338cb59c5cc88951ee0c",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0038",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
+          },
+          "recipientId": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0038"
+        }
+      },
+      {
+        "tIndex": 50,
+        "height": 1,
+        "signature": "06d566b47f8b256694c7bf4e7cc1c119826fa4c9a69e1053448f318cb62f2e591743e912283db2fedacc39aa68476c2833c8cfc6a4097459662568070353cd0f",
+        "transaction": {
+          "version": 1,
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
+          "senderPublicKey": "5ff43d2626b6a60602645333df040189db9339ca424ac2dc4fa7f32cd4da1923",
+          "rangeType": 0,
+          "range": [],
+          "fee": "334",
+          "timestamp": 0,
+          "fromMagic": "NMQX0",
+          "toMagic": "NMQX0",
+          "applyBlockHeight": 1,
+          "effectiveBlockHeight": 1,
+          "signature": "c5bbca58602c7495b5f789fc48698556fbcb7c34e4d0360b28060aac0e00cf34d7d4b731259a20622f283a63372c83e9c27c1ea4b10c26cefca6297d24223808",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0039",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
+          },
+          "recipientId": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0039"
+        }
+      },
+      {
+        "tIndex": 51,
+        "height": 1,
+        "signature": "860a8b482ed21a483dd199bd6ec57ca070dc1bc9f63b6aab4cdcfed55b609b94e53cdb1fe9c8362c117174b1f5ca989e53aea7200b42c9cb1c003803c814dd00",
+        "transaction": {
+          "version": 1,
+          "type": "QAWAQ-QAWAQ-ETY-01",
+          "senderId": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
+          "senderPublicKey": "5ff43d2626b6a60602645333df040189db9339ca424ac2dc4fa7f32cd4da1923",
+          "rangeType": 0,
+          "range": [],
+          "fee": "334",
+          "timestamp": 0,
+          "fromMagic": "NMQX0",
+          "toMagic": "NMQX0",
+          "applyBlockHeight": 1,
+          "effectiveBlockHeight": 1,
+          "signature": "a60137709d902a47fb96506ffc07e247a468362e7b0bf2e43ab38d43371b2c28481a39587ec823180f8ce4681199ba3c412be73c2778d7e4f9668e9a5204290d",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "qawaq",
+              "sourceChainMagic": "NMQX0",
+              "entityId": "generator_generator0040",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "qawaq",
+                "sourceChainMagic": "NMQX0",
+                "factoryId": "generator",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
+          },
+          "recipientId": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
+          "storageKey": "entityId",
+          "storageValue": "generator_generator0040"
         }
       }
     ],
     "statisticInfo": {
-      "totalFee": "10292",
-      "totalAsset": "17394",
-      "totalChainAsset": "17394",
+      "totalFee": "16811",
+      "totalAsset": "1030171",
+      "totalChainAsset": "1030171",
       "totalAccount": 11,
       "magicAssetTypeTypeStatisticHashMap": {
         "NMQX0": {
@@ -1354,28 +2145,22 @@
             "QAWAQ": {
               "typeStatisticHashMap": {
                 "AST-01": {
-                  "changeAmount": "17154",
+                  "changeAmount": "29680",
                   "changeCount": 30,
-                  "moveAmount": "10052",
+                  "moveAmount": "16320",
                   "transactionCount": 10
                 },
-                "BSE-02": {
-                  "changeAmount": "2290",
-                  "changeCount": 10,
-                  "moveAmount": "2290",
-                  "transactionCount": 10
+                "ETY-01": {
+                  "changeAmount": "13360",
+                  "changeCount": 120,
+                  "moveAmount": "13360",
+                  "transactionCount": 40
                 },
-                "BSE-04": {
-                  "changeAmount": "2542",
-                  "changeCount": 10,
-                  "moveAmount": "2542",
-                  "transactionCount": 10
-                },
-                "BSE-05": {
-                  "changeAmount": "2270",
-                  "changeCount": 10,
-                  "moveAmount": "2270",
-                  "transactionCount": 10
+                "ETY-03": {
+                  "changeAmount": "1000251",
+                  "changeCount": 2,
+                  "moveAmount": "1000251",
+                  "transactionCount": 1
                 },
                 "LNS-00": {
                   "changeAmount": "240",
@@ -1385,10 +2170,10 @@
                 }
               },
               "total": {
-                "changeAmount": "24496",
-                "changeCount": 61,
-                "moveAmount": "17394",
-                "transactionCount": 41
+                "changeAmount": "1043531",
+                "changeCount": 153,
+                "moveAmount": "1030171",
+                "transactionCount": 52
               }
             }
           }
@@ -1396,12 +2181,10 @@
       },
       "numberOfTransactionsHashMap": {
         "LNS-00": 1,
+        "ETY-03": 1,
         "AST-01": 10,
-        "BSE-04": 10,
-        "BSE-02": 10,
-        "BSE-05": 10
+        "ETY-01": 40
       }
     }
-  },
-  "roundOfflineGeneratersHashMap": {}
+  }
 }

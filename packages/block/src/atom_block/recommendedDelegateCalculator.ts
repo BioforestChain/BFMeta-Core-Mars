@@ -108,8 +108,7 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
         jsbiHelper.compareFraction(
           jsbiHelper.numberToFraction(account.productivity),
           minBeSelectProductivity,
-        ) >= 0 &&
-        account.isAcceptVote
+        ) >= 0
       ) {
         const forgeInfo = forgeInfoMap.get(account.address) as BFChainCore.ForgeInfos;
         const info: BFChainCore.CanBePickAccount = {
@@ -117,7 +116,7 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
           productivity: account.productivity,
           forgedBlocks: forgeInfo.producedblocks,
           applyTxNumber: forgeInfo.applyTxNumber,
-          vote: account.vote,
+          numberOfEntities: account.numberOfEntities,
         };
         canBePickAccounts[canBePickAccounts.length] = info;
       } else {
@@ -277,9 +276,7 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
       : await accountGetterHelper.getRecommendedNewDelegates(newNum, currentBlockHeight);
     const newArray: string[] = [];
     for (const delegate of newDelegates) {
-      if (delegate.isAcceptVote) {
-        newArray[newArray.length] = delegate.address;
-      }
+      newArray[newArray.length] = delegate.address;
     }
     // 新人太少，从打块列表中补足
     if (newArray.length < newNum) {
@@ -418,9 +415,7 @@ export class RecommendedDelegateCalculator<T extends BFChainCore.ForSortAccountI
         : await accountGetterHelper.getAccounts(memoryDelegates, curRound);
     }
     for (const delegate of delegates) {
-      if (!delegate.isAcceptVote) {
-        noLongerVoteSet.add(delegate.address);
-      }
+      noLongerVoteSet.add(delegate.address);
     }
     for (const address of memoryDelegates) {
       if (!noLongerVoteSet.has(address)) {

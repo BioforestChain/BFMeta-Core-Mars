@@ -9,6 +9,7 @@ declare namespace BFChainCore {
     beginEpochTime: number;
     genesisLocationName: string;
     genesisAmount: string;
+    maxSupply: string;
     minTransactionFeePerByte: BFChainCore.FractionJSON<number>;
     maxTransactionSize: number;
     maxTransactionBlobSize: number;
@@ -16,10 +17,7 @@ declare namespace BFChainCore {
     maxBlockBlobSize: number;
     maxTPSPerBlock: number;
     consessusBeforeSyncBlockDiff: number;
-    maxDelegateTxsPerRound: number;
     maxGrabTimesOfGiftAsset: number;
-    maxVotesPerBlock: number;
-    voteMinChainAsset: string;
     issueAssetMinChainAsset: string;
     maxMultipleOfAssetAndMainAsset: BFChainCore.FractionJSON<string>;
     issueEntityFactoryMinChainAsset: string;
@@ -30,13 +28,7 @@ declare namespace BFChainCore {
     delegates: number;
     whetherToAllowDelegateContinusElections: boolean;
     forgeInterval: number;
-    rewardPercent: BFChainCore.RewardPercentJSON;
+    basicRewards: string;
     ports: BFChainCore.PortsJSON;
-    rewardPerBlock: BFChainCore.RewardPerBlockJSON;
-    accountParticipationWeightRatio: BFChainCore.AccountParticipationWeightRatioJSON;
-    blockParticipationWeightRatio: BFChainCore.BlockParticipationWeightRatioJSON;
-    averageComputingPower: number;
-    tpowOfWorkExemptionBlocks: number;
-    transactionPowOfWorkConfig: BFChainCore.TransactionPowOfWorkConfigJSON;
   }>;
 }

@@ -21,9 +21,6 @@
       "path": "../helper-config/tsconfig.esm.json"
     },
     {
-      "path": "../helper-transaction-pow/tsconfig.esm.json"
-    },
-    {
       "path": "../helper-type/tsconfig.esm.json"
     },
     {

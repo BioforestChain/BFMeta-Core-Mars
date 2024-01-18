@@ -22,17 +22,6 @@ import {
   getGenesisAccount,
 } from "../include";
 
-const _powCount: { [add: string]: number } = {};
-function getPOWInfo<T extends Transaction>(address: string) {
-  const count = _powCount[address] || 0;
-  _powCount[address] = count + 1;
-  const res: BFChainCore.TransactionPoWOptions<T> = {
-    count,
-    participation: "8888888" + "0".repeat(8),
-  };
-  return res;
-}
-
 async function getTransferAssetTransaction(sender: AccountModel, bfchainCore: BFChainCore) {
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
@@ -71,10 +60,6 @@ async function getTransferAssetTransaction(sender: AccountModel, bfchainCore: BF
         sender.secondSecret,
       );
   }
-  const pow =
-    data.applyBlockHeight > bfchainCore.config.tpowOfWorkExemptionBlocks
-      ? getPOWInfo<TransferAssetTransaction>(sender.address)
-      : undefined;
   let trs = await bfchainCore.transaction.createTransaction<TransferAssetTransaction>(
     TransferAssetTransactionFactory,
     data,
@@ -89,16 +74,7 @@ async function getTransferAssetTransaction(sender: AccountModel, bfchainCore: BF
     keypair,
     secondKeypair,
     undefined,
-    undefined,
   );
-  if (pow) {
-    trs = await bfchainCore.transaction.transactionPowCalculator<TransferAssetTransaction>(
-      trs,
-      pow,
-      keypair,
-      secondKeypair,
-    );
-  }
   return trs;
 }
 

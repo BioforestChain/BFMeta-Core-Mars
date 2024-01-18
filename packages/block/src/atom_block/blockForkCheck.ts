@@ -139,20 +139,16 @@ export class BlockForkChecker {
         pc1.previousBlockSignature === pc2.previousBlockSignature &&
         pc1.timestamp === pc2.timestamp
       ) {
-        if (pc1.blockParticipation > pc2.blockParticipation) {
+        if (pc1.numberOfTransactions > pc2.numberOfTransactions) {
           return BLOCK_CHAIN_PLOT.KEEP;
-        } else if (pc1.blockParticipation === pc2.blockParticipation) {
-          if (pc1.numberOfTransactions > pc2.numberOfTransactions) {
+        } else {
+          if (pc1.totalFee > pc2.totalFee) {
             return BLOCK_CHAIN_PLOT.KEEP;
-          } else {
-            if (pc1.totalFee > pc2.totalFee) {
+          } else if (pc1.totalFee === pc2.totalFee) {
+            if (pc1.signature > pc2.signature) {
               return BLOCK_CHAIN_PLOT.KEEP;
-            } else if (pc1.totalFee === pc2.totalFee) {
-              if (pc1.signature > pc2.signature) {
-                return BLOCK_CHAIN_PLOT.KEEP;
-              } else if (pc1.signature === pc2.signature) {
-                return BLOCK_CHAIN_PLOT.MERGE;
-              }
+            } else if (pc1.signature === pc2.signature) {
+              return BLOCK_CHAIN_PLOT.MERGE;
             }
           }
         }

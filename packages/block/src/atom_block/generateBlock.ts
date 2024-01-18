@@ -213,10 +213,8 @@ export class GenerateBlockCore<T extends Block> {
     }
     const { transactionCore, blockUtils } = this;
     const abortForbiddenTransaction = transactionCore.abortForbiddenTransaction;
-    const VOTE = transactionCore.transactionHelper.VOTE;
-    const MAX_VOTES_PER_BLOCK = this.config.maxVotesPerBlock;
     const { height, generatorPublicKey, statisticInfo: blockStatisticsInfo } = block;
-    const { tpowOfWorkExemptionBlocks, maxBlockSize } = this.config;
+    const { maxBlockSize } = this.config;
     let maxBlockBlobSize = this.config.maxBlockBlobSize;
     if (eventEmitter.customMaxBlobSizeGetter) {
       const customMaxBlobSize = eventEmitter.customMaxBlobSizeGetter();
@@ -225,8 +223,6 @@ export class GenerateBlockCore<T extends Block> {
     }
     /**所有事件的sha256hash */
     const payloadHash = this.cryptoHelper.sha256();
-    /**区块打包的投票交易数 */
-    let numberOfVotes = 0;
     /**区块打包的事件的总字节长度 */
     let payloadLength = 0;
     /**区块打包的事件携带的 blob 长度 */
@@ -238,7 +234,6 @@ export class GenerateBlockCore<T extends Block> {
       blockStatisticsInfo,
     );
     const transactions: TransactionInBlock[] = [];
-    const needTPow = height > tpowOfWorkExemptionBlocks;
     const trsSet = new Set<string>();
     try {
       /**绑定统计功能到事件触发器上 */
@@ -270,40 +265,6 @@ export class GenerateBlockCore<T extends Block> {
               throw exp;
             }
             warn(exp);
-          }
-
-          if (needTPow) {
-            //#region 校验交易pow
-            {
-              const count = tranSenderCountMap.forceGet(senderId);
-              /**
-               * 再共识里头强制触发校验
-               * 但这里的校验的实现是由外部来自定义实现的
-               * 校验函数为：`transactionHelper.verifyTransactionProfOfWork`
-               *
-               * ## 在现有架构中，如果是`nodejs`
-               * 1. 在处理交易进程中，各个进程需要各自计算当前处于第N笔交易，这个数据可以跟账户信息一同带过来，如果校验不通过，那么直接跳过这笔交易，返回到未处理交易列表中
-               * 2. 在锻造区块的线程中，将`verifyTransactionProfOfWork`的事件监听并始终返回`true`即可
-               *
-               * ## 在`browser`平台中
-               * 单线程打块，那么直接在线程中实现`verifyTransactionProfOfWork`
-               */
-              const checkResult = await eventEmitter.emit("verifyTransactionProfOfWork", {
-                transaction: trs,
-                count,
-              });
-              if (checkResult === undefined) {
-                throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-                  prop: `verifyTransactionProfOfWork count ${count} signature ${signature} senderId ${senderId} nonce ${trs.nonce}`,
-                  target: "ApplyTransactionEventEmitter",
-                });
-              }
-              if (!checkResult) {
-                throw new ArgumentFormatException(ERROR_LIST.TRAN_POW_VERIFY_FAIL);
-              }
-              tranSenderCountMap.set(senderId, count + 1);
-            }
-            //#endregion
           }
           // 保存交易
           transactions.push(tranItem);
@@ -367,9 +328,6 @@ export class GenerateBlockCore<T extends Block> {
             await eventEmitter.emit("nearMaxBlobSize", { blobSize });
           }
           await txFactory.endDealTransaction(tranItem, eventEmitter);
-          if (type === VOTE) {
-            numberOfVotes++;
-          }
         } catch (error) {
           const res = await eventEmitter.emit("error", {
             error,
@@ -383,14 +341,6 @@ export class GenerateBlockCore<T extends Block> {
         }
       }
       isDevGenerateBlock && info("finish insertTransactions");
-
-      if (numberOfVotes > MAX_VOTES_PER_BLOCK) {
-        throw new ConsensusException(ERROR_LIST.PROP_SHOULD_LTE_FIELD, {
-          prop: `numberOfVotes ${numberOfVotes}`,
-          target: "block",
-          field: `maxVotesPerBlock ${MAX_VOTES_PER_BLOCK}`,
-        });
-      }
 
       const offset = transactions.length;
       block.transactionInfo.offset = offset;
@@ -412,15 +362,16 @@ export class GenerateBlockCore<T extends Block> {
       block.transactionInfo.transactionInBlocks = transactions;
       const numberOfTransactions = block.transactionInfo.statisticInfo.numberOfTransactions;
       block.transactionInfo.numberOfTransactions = numberOfTransactions;
-      block.blockParticipation = this.blockHelper.calcBlockParticipation({
-        totalChainAsset: statisticsInfo.totalChainAsset,
-        numberOfTransactions,
-      });
-      // 获取打块账户获得的权益
-      eventEmitter.blockGeneratorEquityGetter &&
-        (block.generatorEquity = await eventEmitter.blockGeneratorEquityGetter(
-          block.generatorPublicKey,
-        ));
+      // block.blockParticipation = this.blockHelper.calcBlockParticipation({
+      //   totalChainAsset: statisticsInfo.totalChainAsset,
+
+      //   numberOfTransactions,
+      // });
+      // // 获取打块账户获得的权益
+      // eventEmitter.blockGeneratorEquityGetter &&
+      //   (block.generatorEquity = await eventEmitter.blockGeneratorEquityGetter(
+      //     block.generatorPublicKey,
+      //   ));
 
       /// 临时恢复的操作，但会曝出警告
       if (eventEmitter.has("finishedDealTransactions")) {

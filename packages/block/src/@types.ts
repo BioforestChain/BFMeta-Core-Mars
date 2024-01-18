@@ -61,7 +61,7 @@ declare namespace BFChainCore {
     productivity: number;
     forgedBlocks: number;
     applyTxNumber: number;
-    vote: bigint;
+    numberOfEntities: number;
   };
   // #endregion
 }

@@ -144,10 +144,6 @@ export class Transaction<AJ extends object = object>
   /**交易的有效区块高度 */
   @Field.d(Transaction.INC++, "uint32")
   effectiveBlockHeight!: number;
-  /**交易POW的随机数
-   * 放在`signature`的前面，方便同时修改二者 */
-  @Field.d(Transaction.INC++, "fixed32", "required")
-  nonce!: number;
   /**交易的发起者签名 */
   @Field.d(Transaction.INC++, "bytes")
   signatureBuffer!: Uint8Array;
@@ -232,7 +228,6 @@ export class Transaction<AJ extends object = object>
       signature: this.signature,
       remark: this.remark,
       asset: this.asset.toJSON() as AJ,
-      nonce: this.nonce,
     };
     this.recipientId && (res.recipientId = this.recipientId);
     this.dappid && (res.dappid = this.dappid);

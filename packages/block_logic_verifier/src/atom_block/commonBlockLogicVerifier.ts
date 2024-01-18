@@ -14,8 +14,6 @@ export class CommonBlockLogicVerifier extends BlockLogicVerifier {
   }
 
   async verifyBlockAsset(block: CommonBlock) {
-    // 校验新注册的受托人
-    await this.checkNewDelegates(block.height);
     // 检验块内资产变动
     await this.checkAssetChangeHash(block.height, block.asset.commonAsset.assetChangeHash);
   }

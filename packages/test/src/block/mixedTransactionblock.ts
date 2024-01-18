@@ -601,17 +601,6 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
 
     const blockTrsItems = await getTrsInBlock(height, statisticsInfo, bfchainCore);
 
-    eventEmitter.on("verifyTransactionProfOfWork", ({ transaction, count }) => {
-      // return bfchainCore.transactionHelper.checkTransactionProfOfWork(transaction.signatureBuffer, {
-      //   accountNumberOfTransactionInBlock: count,
-      //   accountParticipation: "0",
-      // });
-      return bfchainCore.transactionHelper.checkTransactionProfOfWork(
-        transaction.signatureBuffer,
-        count,
-        "0",
-      );
-    });
     const commonBlock: BFChainCore.Block = await bfchainCore.block.generateBlock<CommonBlock>(
       CommonBlockFactory,
       {
@@ -619,7 +608,6 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
         height,
         timestamp: 0,
         generatorPublicKey,
-        generatorEquity: "0",
         previousBlockSignature: "6ed38b5fd642f79689ade7cff598bdf9548de56182c85f05b244c66b17a89dc1",
       },
       {

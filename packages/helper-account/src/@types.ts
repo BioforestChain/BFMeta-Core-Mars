@@ -114,16 +114,14 @@ declare namespace BFChainCore {
     productivity: number;
     address: string;
     publicKey: string;
-    vote: bigint;
-    isAcceptVote: boolean;
+    numberOfEntities: bigint;
   };
 
   type ForSortAccountInfo = {
     productivity: number;
     address: string;
     publicKey: string;
-    vote: bigint;
-    isAcceptVote: boolean;
+    numberOfEntities: number;
   };
 
   type CurrencyInfo = {

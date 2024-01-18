@@ -435,14 +435,14 @@ export class EventLogicVerifier {
           });
         }
 
-        const { magic, assetType, voteMinChainAsset } = this.configHelper;
-        const remainChainAsset = accountAssets[magic][assetType].assetNumber;
-        if (BigInt(voteMinChainAsset) > remainChainAsset) {
-          throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
-            reason: `No enough asset, vote account need min remain asset ${voteMinChainAsset}, remain Assets: ${remainChainAsset}`,
-            errorId: NewTransactionRefuseReason.CHAIN_ASSET_NOT_ENOUGH,
-          });
-        }
+        // const { magic, assetType, voteMinChainAsset } = this.configHelper;
+        // const remainChainAsset = accountAssets[magic][assetType].assetNumber;
+        // if (BigInt(voteMinChainAsset) > remainChainAsset) {
+        //   throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
+        //     reason: `No enough asset, vote account need min remain asset ${voteMinChainAsset}, remain Assets: ${remainChainAsset}`,
+        //     errorId: NewTransactionRefuseReason.CHAIN_ASSET_NOT_ENOUGH,
+        //   });
+        // }
 
         return next();
       },

@@ -220,12 +220,6 @@ export class Block<AJ extends object = object>
   /**区块大小 */
   @Field.d(Block.INC++, "uint32")
   blockSize!: number;
-  /**区块参与度 */
-  @Field.d(Block.INC++, "string")
-  blockParticipation!: string;
-  /**打块账户权益 */
-  @Field.d(Block.INC++, "string")
-  generatorEquity!: string;
   /**交易的备注信息 */
   @MapField.d(Block.INC++, "string", "string")
   remark!: { [key: string]: string };
@@ -346,11 +340,9 @@ export class Block<AJ extends object = object>
       timestamp: this.timestamp,
       signature: this.signature,
       generatorPublicKey: this.generatorPublicKey,
-      generatorEquity: this.generatorEquity,
       previousBlockSignature: this.previousBlockSignature,
       reward: this.reward,
       magic: this.magic,
-      blockParticipation: this.blockParticipation,
       remark: this.remark,
       asset: this.asset.toJSON(),
       transactionInfo: this.transactionInfo.toJSON(),

@@ -75,9 +75,6 @@ export class ConfigHelper {
   get initials() {
     return this.bnid;
   }
-  get milestones() {
-    return this.rewardPerBlock;
-  }
 
   /**创世账户公钥 */
   @cacheGetter
@@ -121,6 +118,11 @@ export class ConfigHelper {
   get genesisAmount() {
     return this.hookedGenesisBlock.asset.genesisAsset.genesisAmount;
   }
+  /**链主权益总量 */
+  @cacheGetter
+  get maxSupply() {
+    return this.hookedGenesisBlock.asset.genesisAsset.maxSupply;
+  }
   /**链事件每字节需要支付的最小手续费 */
   @cacheGetter
   get minTransactionFeePerByte() {
@@ -156,25 +158,10 @@ export class ConfigHelper {
   get consessusBeforeSyncBlockDiff() {
     return this.hookedGenesisBlock.asset.genesisAsset.consessusBeforeSyncBlockDiff;
   }
-  /**每轮能处理的注册受托人数量 */
-  @cacheGetter
-  get maxDelegateTxsPerRound() {
-    return this.hookedGenesisBlock.asset.genesisAsset.maxDelegateTxsPerRound;
-  }
   /**权益赠送事件最大可抢次数 */
   @cacheGetter
   get maxGrabTimesOfGiftAsset() {
     return this.hookedGenesisBlock.asset.genesisAsset.maxGrabTimesOfGiftAsset;
-  }
-  /**每个区块最大能处理的投票数 */
-  @cacheGetter
-  get maxVotesPerBlock() {
-    return this.hookedGenesisBlock.asset.genesisAsset.maxVotesPerBlock;
-  }
-  /**投票账户最少持有的主权益数 */
-  @cacheGetter
-  get voteMinChainAsset() {
-    return this.hookedGenesisBlock.asset.genesisAsset.voteMinChainAsset || "0";
   }
   /**发行权益的账户最小持有的链主权益数量 */
   @cacheGetter
@@ -226,47 +213,16 @@ export class ConfigHelper {
   get forgeInterval() {
     return this.hookedGenesisBlock.asset.genesisAsset.forgeInterval;
   }
-  /**奖励分配比例，JSON 对象 */
+  /**区块基础奖励 */
   @cacheGetter
-  get rewardPercent() {
-    return this.hookedGenesisBlock.asset.genesisAsset.rewardPercent;
+  get basicRewards() {
+    return this.hookedGenesisBlock.asset.genesisAsset.basicRewards;
   }
   /**区块链端口号，JSON 对象 */
   @cacheGetter
   get ports() {
     return this.hookedGenesisBlock.asset.genesisAsset.ports;
   }
-  /**区块奖励，JSON 对象 */
-  @cacheGetter
-  get rewardPerBlock() {
-    return this.hookedGenesisBlock.asset.genesisAsset.rewardPerBlock;
-  }
-  /**账户参与度权重比，JSON 对象 */
-  @cacheGetter
-  get accountParticipationWeightRatio() {
-    return this.hookedGenesisBlock.asset.genesisAsset.accountParticipationWeightRatio;
-  }
-  /**区块参与度权重比，JSON 对象 */
-  @cacheGetter
-  get blockParticipationWeightRatio() {
-    return this.hookedGenesisBlock.asset.genesisAsset.blockParticipationWeightRatio;
-  }
-  /**构建tpow的难度系数 */
-  @cacheGetter
-  get averageComputingPower() {
-    return this.hookedGenesisBlock.asset.genesisAsset.averageComputingPower;
-  }
-  /**tpow豁免的区块高度 */
-  @cacheGetter
-  get tpowOfWorkExemptionBlocks() {
-    return this.hookedGenesisBlock.asset.genesisAsset.tpowOfWorkExemptionBlocks;
-  }
-  /**tpow配置，JSON对象 */
-  @cacheGetter
-  get transactionPowOfWorkConfig() {
-    return this.hookedGenesisBlock.asset.genesisAsset.transactionPowOfWorkConfig;
-  }
-
   //#endregion
 
   //#region 一些特殊的字段，也是来自传世快，但理论上不应该允许改动的
@@ -283,26 +239,6 @@ export class ConfigHelper {
   get nextRoundDelegates() {
     return this.hookedGenesisBlock.asset.genesisAsset.nextRoundDelegates;
   }
-  /**新注册的受托人 */
-  @cacheGetter
-  get newDelegates() {
-    return this.hookedGenesisBlock.asset.genesisAsset.newDelegates;
-  }
-  /**上一轮投票账户中的最大轮末主权益量 */
-  @cacheGetter
-  get maxBeginBalance() {
-    return this.hookedGenesisBlock.asset.genesisAsset.maxBeginBalance;
-  }
-  /**上一轮投票账户中最大的事件量 */
-  @cacheGetter
-  get maxTxCount() {
-    return this.hookedGenesisBlock.asset.genesisAsset.maxTxCount;
-  }
-  /**上一轮投票账户的最大轮末主权益量和上一轮投票账户的最大事件的比 */
-  @cacheGetter
-  get rate() {
-    return this.hookedGenesisBlock.asset.genesisAsset.rate;
-  }
 
   /**blob 手续费的倍数比例，创世账户初始余额 / blobFeeMultipleRatio = 倍数 */
   get blobFeeMultipleRatio() {
@@ -311,18 +247,6 @@ export class ConfigHelper {
       denominator: BigInt(3145600000000000),
     };
     return ratio;
-  }
-
-  @cacheGetter
-  get totalMainAssets() {
-    const { heights, rewards } = this.milestones;
-    const calHeights = [0, ...heights];
-    let sum = BigInt(0);
-    for (let i = 1; i < calHeights.length; i++) {
-      sum += BigInt(calHeights[i] - calHeights[i - 1]) * BigInt(rewards[i - 1]);
-    }
-    sum += BigInt(this.genesisAmount);
-    return sum;
   }
 
   toJSON(): BFChainCore.ConfigHelper {
@@ -336,6 +260,7 @@ export class ConfigHelper {
       beginEpochTime: this.beginEpochTime,
       genesisLocationName: this.genesisLocationName,
       genesisAmount: this.genesisAmount,
+      maxSupply: this.maxSupply,
       minTransactionFeePerByte: this.minTransactionFeePerByte,
       maxTransactionSize: this.maxTransactionSize,
       maxTransactionBlobSize: this.maxTransactionBlobSize,
@@ -343,10 +268,7 @@ export class ConfigHelper {
       maxBlockBlobSize: this.maxBlockBlobSize,
       maxTPSPerBlock: this.maxTPSPerBlock,
       consessusBeforeSyncBlockDiff: this.consessusBeforeSyncBlockDiff,
-      maxDelegateTxsPerRound: this.maxDelegateTxsPerRound,
       maxGrabTimesOfGiftAsset: this.maxGrabTimesOfGiftAsset,
-      maxVotesPerBlock: this.maxVotesPerBlock,
-      voteMinChainAsset: this.voteMinChainAsset,
       issueAssetMinChainAsset: this.issueAssetMinChainAsset,
       maxMultipleOfAssetAndMainAsset: this.maxMultipleOfAssetAndMainAsset,
       issueEntityFactoryMinChainAsset: this.issueEntityFactoryMinChainAsset,
@@ -357,14 +279,8 @@ export class ConfigHelper {
       delegates: this.delegates,
       whetherToAllowDelegateContinusElections: this.whetherToAllowDelegateContinusElections,
       forgeInterval: this.forgeInterval,
-      rewardPercent: this.rewardPercent,
+      basicRewards: this.basicRewards,
       ports: this.ports,
-      rewardPerBlock: this.rewardPerBlock,
-      accountParticipationWeightRatio: this.accountParticipationWeightRatio,
-      blockParticipationWeightRatio: this.blockParticipationWeightRatio,
-      averageComputingPower: this.averageComputingPower,
-      tpowOfWorkExemptionBlocks: this.tpowOfWorkExemptionBlocks,
-      transactionPowOfWorkConfig: this.transactionPowOfWorkConfig,
     };
   }
   //#endregion

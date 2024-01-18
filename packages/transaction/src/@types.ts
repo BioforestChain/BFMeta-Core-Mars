@@ -7,51 +7,6 @@ declare namespace BFChainCore {
   ) => TransactionFactory<T>;
   // #endregion
 
-  // #region TransactonPoW
-  type TransactionPoWOptions<T extends TransactionJSON = TransactionJSON> = {
-    count: number;
-    participation: string;
-    event?: BFChainUtil.QueneEventEmitter<TransactionPoWControllerEvents<T>>;
-    calculator?: (
-      trs: T,
-      pow: BFChainCore.TransactionPoWOptions<T>, // this
-      keypair: BFChainCore.Keypair,
-      secondKeypair?: BFChainCore.Keypair,
-    ) => BFChainUtil.PromiseMaybe<T>;
-  };
-  // type TransactionPoWOptions<T extends TransactionJSON = TransactionJSON> = {
-  //   accountParticipation?: string;
-  //   accountPossessMainAssets?: string;
-  //   accountNumberOfTransactionInBlock?: number;
-  //   blockHeight?: number;
-
-  //   event?: BFChainUtil.QueneEventEmitter<TransactionPoWControllerEvents<T>>;
-  //   calculator?: (
-  //     trs: T,
-  //     pow: BFChainCore.TransactionPoWOptions<T>, // this
-  //     keypair: BFChainCore.Keypair,
-  //     secondKeypair?: BFChainCore.Keypair,
-  //   ) => BFChainUtil.PromiseMaybe<T>;
-  // };
-  type TransactionPoWControllerEvents<T extends TransactionJSON = TransactionJSON> = {
-    start: BFChainUtil.EventInOut<
-      { diff: string; count: number; participation: string; transaction: T },
-      { break: boolean }
-    >;
-    work: BFChainUtil.EventInOut<
-      {
-        nonce: number;
-        transaction: T;
-        offset?: number;
-      },
-      { break: boolean }
-    >;
-    milestone: BFChainUtil.EventInOut<{ progress: number; nonce: number; transaction: T }, unknown>;
-    done: BFChainUtil.EventInOut<{ transaction: T; nonce: number }, unknown>;
-    error: BFChainUtil.EventInOut<{ transaction: T; nonce: number }, unknown>;
-  };
-  // #endregion
-
   //#region SubChainCenter
   interface ApplyResult_SetSecondPublicKeyJSON {
     type: "setSecondPublicKey";

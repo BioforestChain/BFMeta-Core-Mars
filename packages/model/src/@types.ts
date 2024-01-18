@@ -633,14 +633,6 @@ declare namespace BFChainCore {
   }
 
   type ApplyTransactionEventMap<EM extends BFChainUtil.EventInOutMap = {}> = EM & {
-    /**交易交易的POW */
-    verifyTransactionProfOfWork: BFChainUtil.EventInOut<
-      {
-        transaction: Transaction;
-        count: number;
-      },
-      boolean
-    >;
     /**开始处理某一笔交易 */
     beginDealTransaction: BFChainUtil.EventInOut<ApplyTransactionFlowEvent<"beginDealTransaction">>;
 

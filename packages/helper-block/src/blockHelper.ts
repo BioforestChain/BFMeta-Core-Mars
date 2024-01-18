@@ -407,12 +407,12 @@ export class BlockHelper {
         height: block.height,
         timestamp: block.timestamp,
         /**参与度 */
-        get blockParticipation() {
-          Object.defineProperty(this, "blockParticipation", {
-            value: BigInt(block.blockParticipation),
-          });
-          return this.blockParticipation;
-        },
+        // get blockParticipation() {
+        //   Object.defineProperty(this, "blockParticipation", {
+        //     value: BigInt(block.blockParticipation),
+        //   });
+        //   return this.blockParticipation;
+        // },
         /**交易量 */
         numberOfTransactions: block.numberOfTransactions,
         /**手续费 */
@@ -443,12 +443,12 @@ export class BlockHelper {
       height: newBlock.height,
       timestamp: newBlock.timestamp,
       /**参与度 */
-      get blockParticipation() {
-        Object.defineProperty(this, "blockParticipation", {
-          value: BigInt(newBlock.blockParticipation),
-        });
-        return this.blockParticipation;
-      },
+      // get blockParticipation() {
+      //   Object.defineProperty(this, "blockParticipation", {
+      //     value: BigInt(newBlock.blockParticipation),
+      //   });
+      //   return this.blockParticipation;
+      // },
       /**交易量 */
       numberOfTransactions: newBlock.numberOfTransactions,
       /**手续费 */
@@ -471,12 +471,12 @@ export class BlockHelper {
       height: last.height,
       timestamp: last.timestamp,
       /**参与度 */
-      get blockParticipation() {
-        Object.defineProperty(this, "blockParticipation", {
-          value: list.reduce((p, pc1) => p + pc1.blockParticipation, BigInt(0)),
-        });
-        return this.blockParticipation;
-      },
+      // get blockParticipation() {
+      //   Object.defineProperty(this, "blockParticipation", {
+      //     value: list.reduce((p, pc1) => p + pc1.blockParticipation, BigInt(0)),
+      //   });
+      //   return this.blockParticipation;
+      // },
       /**交易量 */
       get numberOfTransactions() {
         Object.defineProperty(this, "numberOfTransactions", {
@@ -501,29 +501,6 @@ export class BlockHelper {
       previousBlockSignature: first.previousBlockSignature,
     };
     return blockPlotChecker;
-  }
-
-  /**计算 TPOW参与度 */
-  calcTpowParticipation(accTxCount: number, accBalance: string) {
-    return BigInt(accTxCount + 1) * BigInt(accBalance);
-  }
-
-  /**计算账户一轮下来对应的票数 */
-  calcAccountRoundEquity(accTxCount: number, accBalance: string, roundLastBlock: RoundLastBlock) {
-    const { balanceWeight, numberOfTransactionsWeight } =
-      this.config.accountParticipationWeightRatio;
-    const tradingEquity = BigInt(accTxCount) * BigInt(numberOfTransactionsWeight);
-    const equity = BigInt(accBalance) * BigInt(balanceWeight) + tradingEquity;
-    return equity.toString() as string;
-  }
-
-  /**计算区块的参与度 */
-  calcBlockParticipation(args: { totalChainAsset: bigint; numberOfTransactions: number }) {
-    const { totalChainAsset, numberOfTransactions } = args;
-    const { balanceWeight, numberOfTransactionsWeight } = this.config.blockParticipationWeightRatio;
-    const jsbiX = BigInt(totalChainAsset) * BigInt(balanceWeight);
-    const jsbiY = BigInt(numberOfTransactions) * BigInt(numberOfTransactionsWeight);
-    return (jsbiX + jsbiY).toString();
   }
 
   async forceGetBlockGeneratorAddressByRound(
@@ -639,9 +616,9 @@ export class BlockHelper {
     /**
      * 因为要从大到小排序，所以这里使用`b-a`
      */
-    if (itemB.vote > itemA.vote) {
+    if (itemB.numberOfEntities > itemA.numberOfEntities) {
       return 1;
-    } else if (itemB.vote < itemA.vote) {
+    } else if (itemB.numberOfEntities < itemA.numberOfEntities) {
       return -1;
     }
     /// (b === a)
@@ -687,17 +664,17 @@ export class BlockHelper {
       vrewardsRemaining: BigInt(0),
     };
     // 打块账户上一轮获得的权益大于 0 才需要把奖励分配给投票账户
-    if (block.height !== 1 && generatorVote > BigInt(0)) {
-      const { jsbiHelper, config } = this;
-      // 上一轮 给打块账户投票的用户 大于 0
-      const votePercent = config.rewardPercent.votePercent;
-      const fee = jsbiHelper.multiplyFloorFraction(blockFee, votePercent);
-      const reward = jsbiHelper.multiplyFloorFraction(blockReward, votePercent);
-      result.blockFee = blockFee - fee;
-      result.blockReward = blockReward - reward;
-      result.reward = result.blockFee + result.blockReward;
-      result.vrewards = fee + reward;
-    }
+    // if (block.height !== 1 && generatorVote > BigInt(0)) {
+    //   const { jsbiHelper, config } = this;
+    //   // 上一轮 给打块账户投票的用户 大于 0
+    //   const votePercent = config.rewardPercent.votePercent;
+    //   const fee = jsbiHelper.multiplyFloorFraction(blockFee, votePercent);
+    //   const reward = jsbiHelper.multiplyFloorFraction(blockReward, votePercent);
+    //   result.blockFee = blockFee - fee;
+    //   result.blockReward = blockReward - reward;
+    //   result.reward = result.blockFee + result.blockReward;
+    //   result.vrewards = fee + reward;
+    // }
     return result;
   }
 

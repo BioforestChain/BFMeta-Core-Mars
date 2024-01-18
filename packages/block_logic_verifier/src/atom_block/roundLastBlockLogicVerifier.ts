@@ -21,45 +21,13 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
 
   async verifyBlockAsset(block: RoundLastBlock) {
     const { height, asset } = block;
-    const { newDelegates, assetChangeHash, chainOnChainHash } = asset.roundLastAsset;
+    const { assetChangeHash, chainOnChainHash } = asset.roundLastAsset;
     // 检验块内资产变动
     await this.checkAssetChangeHash(height, assetChangeHash);
     // 校验链上链 hash
     await this.checkChainOnChainHash(height, chainOnChainHash);
-    // 校验新注册的受托人
-    await this.isValidNewDelegates(height, newDelegates);
     // 校验新一轮的打块账户
     await this.checkNewForgingDelegates(block);
-  }
-
-  /**
-   * 新注册的受托人是否合法
-   *
-   * @param height
-   * @param newDelegates
-   */
-  async isValidNewDelegates(height: number, newDelegates: string[]) {
-    // 校验新注册的受托人
-    const realNewDelegates = await this.checkNewDelegates(height);
-    if (newDelegates.length !== realNewDelegates.length) {
-      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-        to_compare_prop: `newDelegates length ${newDelegates.length}`,
-        be_compare_prop: `newDelegates length ${realNewDelegates.length}`,
-        to_target: "block",
-        be_target: "blockChain",
-      });
-    }
-    // 校验新注册的受托人是否与区块携带的一致
-    for (const address of newDelegates) {
-      if (!realNewDelegates.includes(address)) {
-        throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-          to_compare_prop: `newDelegates ${JSON.stringify(realNewDelegates)}`,
-          be_compare_prop: `newDelegates ${address}`,
-          to_target: "block",
-          be_target: "blockChain",
-        });
-      }
-    }
   }
 
   /**
@@ -118,42 +86,15 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
           be_target: "calculate",
         });
       }
-      const calcEquity = delegates[i].vote.toString();
-      if (nextRoundDelegate.equity !== calcEquity) {
+      const numberOfEntities = delegates[i].numberOfEntities;
+      if (nextRoundDelegate.numberOfEntities !== numberOfEntities) {
         throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-          to_compare_prop: `nextRoundDelegates index ${i} address ${nextRoundDelegate.address} equity ${nextRoundDelegate.equity}`,
-          be_compare_prop: `nextRoundDelegates index ${i} address ${address} equity ${calcEquity}`,
+          to_compare_prop: `nextRoundDelegates index ${i} address ${nextRoundDelegate.address} numberOfEntities ${nextRoundDelegate.numberOfEntities}`,
+          be_compare_prop: `nextRoundDelegates index ${i} address ${address} numberOfEntities ${numberOfEntities}`,
           to_target: "block asset",
           be_target: "calculate",
         });
       }
     }
-  }
-
-  /**
-   * 校验链上上一轮末投票账户中最大初始余额和交易量
-   *
-   * @param block
-   * @param tickResult
-   */
-  checkMaxBeginBalanceAndMaxTxCount(block: RoundLastBlock, tickResult: BFChainCore.TickResultInfo) {
-    const roundLastAsset = block.asset.roundLastAsset;
-    if (roundLastAsset.maxBeginBalance !== tickResult.maxBeginBalance) {
-      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-        to_compare_prop: `maxBeginBalance ${roundLastAsset.maxBeginBalance}`,
-        be_compare_prop: `maxBeginBalance ${tickResult.maxBeginBalance}`,
-        to_target: "block asset",
-        be_target: "calculate",
-      });
-    }
-    if (roundLastAsset.maxTxCount !== tickResult.maxTxCount) {
-      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-        to_compare_prop: `maxTxCount ${roundLastAsset.maxTxCount}`,
-        be_compare_prop: `maxTxCount ${tickResult.maxTxCount}`,
-        to_target: "block asset",
-        be_target: "calculate",
-      });
-    }
-    return true;
   }
 }

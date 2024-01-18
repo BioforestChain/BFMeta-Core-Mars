@@ -83,7 +83,6 @@ export const ERROR_LIST = {
   ),
   PROP_SHOULD_BE_ARRAY: new ErrorCode("001-00036", "{prop} in {target} should be an array"),
   INVALID_BLOCK_GENERATOR: new ErrorCode("001-00037", "Invalid block generator, reason {reason}"),
-  TRAN_POW_VERIFY_FAIL: new ErrorCode("001-00038", "Transaction's porf of work verify fail"),
   NOT_FOUND: new ErrorCode("001-00039", "{prop} not found"),
   TOO_LARGE: new ErrorCode("001-00040", "{prop} is too large, reason {reason}, errorId {errorId}"),
   PROP_LENGTH_SHOULD_LT_FIELD: new ErrorCode(
@@ -237,10 +236,6 @@ export const ERROR_LIST = {
   NEED_VOTE_FOR_DAPPID_POSSESSOR_BFCORE_USE: new ErrorCode(
     "001-11023",
     "Need vote for dappid possessor before use, dappid {dappid}, errorId {errorId}",
-  ),
-  VERIFY_TRANSACTION_POW_OF_WORK_ERROR: new ErrorCode(
-    "001-11024",
-    "Verify transaction pow of work error, errorId {errorId}, reason {reason}",
   ),
   CAN_NOT_DELETE_LOCATION_NAME: new ErrorCode(
     "001-11025",

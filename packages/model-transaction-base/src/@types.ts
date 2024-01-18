@@ -80,8 +80,6 @@ declare namespace BFChainCore {
     storageKey?: TransactionStorageJSON["key"];
     /**事件的索引值，提供额外查询使用的字段值 */
     storageValue?: TransactionStorageJSON["value"];
-    /**事件 pow 噪点 */
-    nonce: number;
   }
   //#endregion
 

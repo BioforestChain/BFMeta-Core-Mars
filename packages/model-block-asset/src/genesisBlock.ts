@@ -6,52 +6,6 @@ import { RoundDelegateModel } from "./roundDelegate";
 import { BNID_TYPE } from "@bfchain/core-model-constants";
 
 /**
- * RewardPercent 模型
- *
- */
-@Type.d("RewardPercentModel")
-export class RewardPercentModel
-  extends Message<RewardPercentModel>
-  implements BFChainCore.JSONToModelType<BFChainCore.RewardPercentJSON>
-{
-  /**分配给投票账户的奖励占区块总奖励的比例 */
-  @Field.d(1, Fraction)
-  votePercent!: Fraction;
-  /**分配给打块账户的奖励占区块总奖励的比例 */
-  @Field.d(2, Fraction)
-  forgePercent!: Fraction;
-  toJSON() {
-    return {
-      votePercent: this.votePercent.toJSON(),
-      forgePercent: this.forgePercent.toJSON(),
-    };
-  }
-}
-
-/**
- * Rewards 模型
- *
- */
-@Type.d("RewardPerBlock")
-export class RewardPerBlock
-  extends Message<RewardPerBlock>
-  implements BFChainCore.JSONToModelType<BFChainCore.RewardPerBlockJSON>
-{
-  /**奖励变更区块高度 */
-  @Field.d(1, "uint32", "repeated")
-  heights!: number[];
-  /**每阶段奖励资产数量 */
-  @Field.d(2, "string", "repeated")
-  rewards!: string[];
-  toJSON() {
-    return {
-      heights: this.heights.slice(),
-      rewards: this.rewards.slice(),
-    };
-  }
-}
-
-/**
  * ports 模型
  *
  */
@@ -63,74 +17,9 @@ export class PortsModel
   /**默认端口号/区块链端口号 */
   @Field.d(1, "uint32")
   port!: number;
-  /**节点扫描端口 */
-  @Field.d(2, "uint32")
-  scan_peer_port!: number;
   toJSON() {
     return {
       port: this.port,
-      scan_peer_port: this.scan_peer_port,
-    };
-  }
-}
-
-@Type.d("TransactionPowOfWorkConfigModel")
-export class TransactionPowOfWorkConfigModel
-  extends Message<TransactionPowOfWorkConfigModel>
-  implements BFChainCore.JSONToModelType<BFChainCore.TransactionPowOfWorkConfigJSON>
-{
-  @Field.d(1, FractionBigIntModel)
-  growthFactor!: FractionBigIntModel;
-  @Field.d(2, Fraction)
-  participationRatio!: Fraction;
-  toJSON() {
-    return {
-      growthFactor: this.growthFactor.toJSON(),
-      participationRatio: this.participationRatio.toJSON(),
-    };
-  }
-}
-
-/**
- * 比例模型
- */
-@Type.d("AccountParticipationWeightRatioModel")
-export class AccountParticipationWeightRatioModel
-  extends Message<AccountParticipationWeightRatioModel>
-  implements BFChainUtil.JSONAble<BFChainCore.AccountParticipationWeightRatioJSON>
-{
-  /**账户持有权益量权重 */
-  @Field.d(1, "uint32")
-  balanceWeight!: number;
-  /**账户事件量权重 */
-  @Field.d(2, "uint32")
-  numberOfTransactionsWeight!: number;
-  toJSON() {
-    return {
-      balanceWeight: this.balanceWeight,
-      numberOfTransactionsWeight: this.numberOfTransactionsWeight,
-    };
-  }
-}
-
-/**
- * 比例模型
- */
-@Type.d("BlockParticipationWeightRatioModel")
-export class BlockParticipationWeightRatioModel
-  extends Message<BlockParticipationWeightRatioModel>
-  implements BFChainUtil.JSONAble<BFChainCore.BlockParticipationWeightRatioJSON>
-{
-  /**块内涉及的权益总量权重 */
-  @Field.d(1, "uint32")
-  balanceWeight!: number;
-  /**块内事件量权重 */
-  @Field.d(2, "uint32")
-  numberOfTransactionsWeight!: number;
-  toJSON() {
-    return {
-      balanceWeight: this.balanceWeight,
-      numberOfTransactionsWeight: this.numberOfTransactionsWeight,
     };
   }
 }
@@ -171,6 +60,9 @@ export class GenesisAssetModel
   /**创始账户初始余额 */
   @Field.d(GenesisAssetModel.INC++, "string")
   genesisAmount!: string;
+  /**链主权益总量 */
+  @Field.d(GenesisAssetModel.INC++, "string")
+  maxSupply!: string;
   /**交易每个字节最小手续费 */
   @Field.d(GenesisAssetModel.INC++, Fraction)
   minTransactionFeePerByte!: Fraction;
@@ -204,18 +96,9 @@ export class GenesisAssetModel
   /**区块不同数量大于某个值时同步前需要先共识的 */
   @Field.d(GenesisAssetModel.INC++, "uint32")
   consessusBeforeSyncBlockDiff!: number;
-  /**每轮可处理的受托人交易数量 */
-  @Field.d(GenesisAssetModel.INC++, "uint32")
-  maxDelegateTxsPerRound!: number;
   /**资产赠送最大可获取次数 */
   @Field.d(GenesisAssetModel.INC++, "uint32")
   maxGrabTimesOfGiftAsset!: number;
-  /**每个区块最大能处理的投票数 */
-  @Field.d(GenesisAssetModel.INC++, "uint32", "required")
-  maxVotesPerBlock!: number;
-  /**投票账户最少持有的主权益数 */
-  @Field.d(GenesisAssetModel.INC++, "string", "required")
-  voteMinChainAsset!: string;
   /**发行资产最小的持有本链资产数量 */
   @Field.d(GenesisAssetModel.INC++, "string")
   issueAssetMinChainAsset!: string;
@@ -246,29 +129,12 @@ export class GenesisAssetModel
   /**区块时间间隔 */
   @Field.d(GenesisAssetModel.INC++, "uint32", "required")
   forgeInterval!: number;
-  /**奖励比例 */
-  @Field.d(GenesisAssetModel.INC++, RewardPercentModel, "required")
-  rewardPercent!: RewardPercentModel;
+  @Field.d(GenesisAssetModel.INC++, "string")
+  /**区块基础奖励 */
+  basicRewards!: string;
   /**端口号 */
   @Field.d(GenesisAssetModel.INC++, PortsModel, "required")
   ports!: PortsModel;
-  /**奖励里程 */
-  @Field.d(GenesisAssetModel.INC++, RewardPerBlock, "required")
-  rewardPerBlock!: RewardPerBlock;
-  /**账户参与度权重比 */
-  @Field.d(GenesisAssetModel.INC++, AccountParticipationWeightRatioModel, "required")
-  accountParticipationWeightRatio!: AccountParticipationWeightRatioModel;
-  /**区块参与度权重比 */
-  @Field.d(GenesisAssetModel.INC++, BlockParticipationWeightRatioModel, "required")
-  blockParticipationWeightRatio!: BlockParticipationWeightRatioModel;
-  /**全网平均算力 */
-  @Field.d(GenesisAssetModel.INC++, "uint32", "required")
-  averageComputingPower!: number;
-  /**前 n 个块 交易的 pow豁免 */
-  @Field.d(GenesisAssetModel.INC++, "uint32", "required")
-  tpowOfWorkExemptionBlocks!: number;
-  @Field.d(GenesisAssetModel.INC++, TransactionPowOfWorkConfigModel)
-  transactionPowOfWorkConfig!: TransactionPowOfWorkConfigModel;
   /**块内资产变动账户生成的 hash */
   @Field.d(GenesisAssetModel.INC++, "bytes", "optional")
   assetChangeBuffer?: Uint8Array;
@@ -292,6 +158,7 @@ export class GenesisAssetModel
         beginEpochTime: this.beginEpochTime,
         genesisLocationName: this.genesisLocationName,
         genesisAmount: this.genesisAmount,
+        maxSupply: this.maxSupply,
         minTransactionFeePerByte: this.minTransactionFeePerByte.toJSON(),
         maxTransactionSize: this.maxTransactionSize,
         maxTransactionBlobSize: this.maxTransactionBlobSize,
@@ -299,10 +166,7 @@ export class GenesisAssetModel
         maxBlockBlobSize: this.maxBlockBlobSize,
         maxTPSPerBlock: this.maxTPSPerBlock,
         consessusBeforeSyncBlockDiff: this.consessusBeforeSyncBlockDiff,
-        maxDelegateTxsPerRound: this.maxDelegateTxsPerRound,
         maxGrabTimesOfGiftAsset: this.maxGrabTimesOfGiftAsset,
-        maxVotesPerBlock: this.maxVotesPerBlock,
-        voteMinChainAsset: this.voteMinChainAsset,
         issueAssetMinChainAsset: this.issueAssetMinChainAsset,
         maxMultipleOfAssetAndMainAsset: this.maxMultipleOfAssetAndMainAsset.toJSON(),
         issueEntityFactoryMinChainAsset: this.issueEntityFactoryMinChainAsset,
@@ -313,14 +177,8 @@ export class GenesisAssetModel
         delegates: this.delegates,
         whetherToAllowDelegateContinusElections: this.whetherToAllowDelegateContinusElections,
         forgeInterval: this.forgeInterval,
-        rewardPercent: this.rewardPercent.toJSON(),
+        basicRewards: this.basicRewards,
         ports: this.ports.toJSON(),
-        rewardPerBlock: this.rewardPerBlock.toJSON(),
-        accountParticipationWeightRatio: this.accountParticipationWeightRatio.toJSON(),
-        blockParticipationWeightRatio: this.blockParticipationWeightRatio.toJSON(),
-        averageComputingPower: this.averageComputingPower,
-        tpowOfWorkExemptionBlocks: this.tpowOfWorkExemptionBlocks,
-        transactionPowOfWorkConfig: this.transactionPowOfWorkConfig.toJSON(),
       },
       super.toJSON(),
     ) as any;
