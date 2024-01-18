@@ -49,12 +49,12 @@ declare namespace BFChainCore {
      */
     chainBlockFork?(block: BFChainCore.Block, cause: string): Promise<void>;
     /**
-     * 获取新一轮的打块受托人
+     * 获取新一轮的打块锻造者
      *
      * @param lastBlock
      * @param currentGeneraterPublicKey
      */
-    getNewForgingDelegates?<T extends Block>(
+    getNewForgingGenerators?<T extends Block>(
       lastBlock: T,
       currentGeneraterPublicKey: string,
     ): Promise<BFChainCore.ForSortAccountInfo[]>;
@@ -73,13 +73,6 @@ declare namespace BFChainCore {
       /**区块的版本号 */
       version?: number;
     }): Promise<number>;
-    /**
-     * 获取给某个账户投票的账户
-     *
-     * @param generatorAddress
-     * @param height
-     */
-    getVoteForDelegate?(generatorAddress: string, height: number): Promise<VoterInfo[]>;
     /**
      * 获取投票记录
      *

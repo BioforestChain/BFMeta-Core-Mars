@@ -433,22 +433,6 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
         });
       }
     }
-    // dapp 的拥有者不需要投票使用
-    if (accountInfo.isAcceptVote /* && senderId !== possessorAddress */) {
-      const curRound = this.blockHelper.calcRoundByHeight(currentBlockHeight);
-      // 判断当前账户是否给 dapp 开发者投过票
-      const isVote = await accountGetterHelper.isVoteForDelegate(
-        senderId,
-        possessorAddress,
-        curRound,
-      );
-      if (!isVote) {
-        throw new ConsensusException(ERROR_LIST.NEED_VOTE_FOR_DAPPID_POSSESSOR_BFCORE_USE, {
-          dappid: `${dappid} user ${senderId} possessor ${possessorAddress}`,
-          errorId: NewTransactionRefuseReason.MUSET_VOTE_FOR_DAPP_POSSESSOR,
-        });
-      }
-    }
   }
 
   /**

@@ -47,14 +47,6 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       throw new ConsensusException(ERROR_LIST.DELEGATE_CAN_NOT_MIGRATE_ASSET);
     }
 
-    const isVote = await accountGetterHelper.isVoteRecently(
-      senderId,
-      this.blockHelper.calcRoundByHeight(currentBlockHeight),
-    );
-    if (isVote) {
-      throw new ConsensusException(ERROR_LIST.VOTE_RECENTLY);
-    }
-
     const isFrozenAsset = await accountGetterHelper.isFrozenAsset(senderId);
     if (isFrozenAsset) {
       throw new ConsensusException(ERROR_LIST.POSSESS_FROZEN_ASSET);

@@ -42,7 +42,7 @@ export class RoundLastBlockTicker extends BlockTicker {
     blockTickGetterHelper = this.blockTickGetterHelper,
   ) {
     // 保存受托人账户的累计权益和所有受托人的总权益（用于参与竞争打块，计算得票率）
-    const equities = await this.saveDelegatesVoteAndTotalVote(
+    const equities = await this.saveGeneratorsVoteAndTotalVote(
       block.height,
       blockGetterHelper,
       accountGetterHelper,
@@ -64,7 +64,7 @@ export class RoundLastBlockTicker extends BlockTicker {
    * @param blockGetterHelper
    * @param accountGetterHelper
    */
-  async saveDelegatesVoteAndTotalVote(
+  async saveGeneratorsVoteAndTotalVote(
     height: number,
     blockGetterHelper = this.blockGetterHelper,
     accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
@@ -83,25 +83,25 @@ export class RoundLastBlockTicker extends BlockTicker {
     }
     if (typeof blockGetterHelper.getVoteRecords !== "function") {
       throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: "getVoteForDelegate",
+        prop: "getVoteForGenerator",
         target: "blockGetterHelper",
       });
     }
-    const delegatesEquity: BFChainCore.AccountEquityInfo = {};
+    const generatorsEquity: BFChainCore.AccountEquityInfo = {};
     const voteRecords = await blockGetterHelper.getVoteRecords();
     let totalEquity = BigInt(0);
     for (const address in voteRecords) {
       const voteInfos = voteRecords[address];
-      for (const delegateAddress in voteInfos) {
-        if (!delegatesEquity[delegateAddress]) {
-          delegatesEquity[delegateAddress] = BigInt(0);
+      for (const generatorAddress in voteInfos) {
+        if (!generatorsEquity[generatorAddress]) {
+          generatorsEquity[generatorAddress] = BigInt(0);
         }
-        delegatesEquity[delegateAddress] += voteInfos[delegateAddress];
-        totalEquity += delegatesEquity[delegateAddress];
+        generatorsEquity[generatorAddress] += voteInfos[generatorAddress];
+        totalEquity += generatorsEquity[generatorAddress];
       }
     }
     // 设置受托人账户获得的权益
-    await accountGetterHelper.mergeAccountEquity(height, delegatesEquity);
+    await accountGetterHelper.mergeAccountEquity(height, generatorsEquity);
     return totalEquity;
   }
 

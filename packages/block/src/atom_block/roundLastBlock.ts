@@ -173,7 +173,7 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
         blockGetterHelper,
       );
 
-      await this.__checkNewForgingDelegates(block, blockGetterHelper);
+      await this.__checkNewForgingGenerators(block, blockGetterHelper);
     }
 
     return block;
@@ -208,13 +208,13 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
    * @param block
    * @param blockGetterHelper
    */
-  private async __checkNewForgingDelegates(
+  private async __checkNewForgingGenerators(
     block: RoundLastBlock,
     blockGetterHelper: Required<
-      Pick<BFChainCore.BlockGetterHelperInterface, "getNewForgingDelegates" | "getLastBlock">
+      Pick<BFChainCore.BlockGetterHelperInterface, "getNewForgingGenerators" | "getLastBlock">
     >,
   ) {
-    const calcNextRoundGenerators = await blockGetterHelper.getNewForgingDelegates(
+    const calcNextRoundGenerators = await blockGetterHelper.getNewForgingGenerators(
       await blockGetterHelper.getLastBlock(),
       block.generatorPublicKey,
     );

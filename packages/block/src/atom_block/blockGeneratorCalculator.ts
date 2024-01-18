@@ -28,7 +28,7 @@ export class BlockGeneratorCalculator {
    * @param currentBlock
    * @param opts
    */
-  async fastCalcGenerateBlockDelegate(
+  async fastCalcGenerateBlockGenerator(
     currentBlock: { timestamp: number; height: number },
     opts: ({ nowTimestamp?: number } | { toTimestamp: number }) & {
       blockGetterHelper?: BFChainCore.BlockGetterHelperSimpleInterface;
@@ -51,7 +51,7 @@ export class BlockGeneratorCalculator {
       );
     }
     /// 这里使用fromTimestamp，直接导致掉线人的顺序都直接跳过了，因为我们的目的只是快速地得出当下时间节点应该由谁来打块而已
-    for await (const result of this.calcGenerateBlockDelegateGenerator(currentBlock, {
+    for await (const result of this.calcGenerateBlockGeneratorIterator(currentBlock, {
       toTimestamp,
       blockGetterHelper: opts.blockGetterHelper,
       ignoreOfflineGeneraters: true,
@@ -70,7 +70,7 @@ export class BlockGeneratorCalculator {
    * @param currentBlock 最新的区块
    * @param opts nowTimestamp为区块间隔的整数倍，为当前区块时间戳的前置时间，例如当前时间戳为77，传入的时间应为70.因为锻造区块从70开始算，而不是80
    */
-  async calcGenerateBlockDelegate(
+  async calcGenerateBlockGenerator(
     currentBlock: { timestamp: number; height: number },
     opts: {
       toTimestamp: number;
@@ -78,14 +78,14 @@ export class BlockGeneratorCalculator {
     },
   ) {
     /// 这里使用fromTimestamp，直接导致掉线人的顺序都直接跳过了，因为我们的目的只是快速地得出当下时间节点应该由谁来打块而已
-    for await (const result of this.calcGenerateBlockDelegateGenerator(currentBlock, opts)) {
+    for await (const result of this.calcGenerateBlockGeneratorIterator(currentBlock, opts)) {
       if (result.timestamp === opts.toTimestamp) {
         return result;
       }
     }
     throw new Error();
   }
-  async *calcGenerateBlockDelegateGenerator(
+  async *calcGenerateBlockGeneratorIterator(
     currentBlock: { timestamp: number; height: number },
     opts: {
       // fromTimestamp?: number;
@@ -305,7 +305,7 @@ export class BlockGeneratorCalculator {
   async calcNextBlockGenerator(block: BFChainCore.Block) {
     const toTimestamp = block.timestamp + this.config.forgeInterval;
     /// 这里使用fromTimestamp，直接导致掉线人的顺序都直接跳过了，因为我们的目的只是快速地得出当下时间节点应该由谁来打块而已
-    for await (const result of this.calcGenerateBlockDelegateGenerator(
+    for await (const result of this.calcGenerateBlockGeneratorIterator(
       {
         timestamp: block.timestamp,
         height: block.height,

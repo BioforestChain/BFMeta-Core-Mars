@@ -216,12 +216,10 @@ declare namespace BFChainCore {
   > {
     /**根据地址数组获取账户 */
     getAccounts(addressArr: string[], curRound: number): Promise<FSAI[]>;
-    /**获取准备下一轮上榜的受托人 */
+    /**获取准备下一轮上榜的锻造者 */
     getNextRoundGenerators(): Promise<FSAI[]>;
-    /**获取准备计算的受托人 */
-    getDelegates(currentGeneraterPublicKeyList: (Uint8Array | string)[]): Promise<ABI[]>;
-    /**获取全新的受托人账户(在线率 100%)  */
-    getRecommendedNewDelegates(limit: number, height: number): Promise<FSAI[]>;
+    /**获取准备计算的锻造者 */
+    getGenerators(currentGeneraterPublicKeyList: (Uint8Array | string)[]): Promise<ABI[]>;
     /**获取账户信息 */
     getAccountInfo(address: string): Promise<AI | undefined>;
     /**获取账户的块内交易 */
@@ -238,15 +236,6 @@ declare namespace BFChainCore {
     ): Promise<DI | undefined>;
     /**是否是某个的 dappid 的持有者 */
     isDAppPossessor(sourceChainMagic: string, address: string): Promise<boolean>;
-    /**近期是否给指定收托人投票（2 轮内） */
-    isVoteForDelegate(
-      address: string,
-      delegate: string,
-      /**当前轮次 */
-      round: number,
-    ): Promise<boolean>;
-    /**近期是否参与投票（2 轮内） */
-    isVoteRecently(address: string, round: number): Promise<boolean>;
     /**查询指定的 LocationName */
     getLocationName(
       sourceChainMagic: string,
@@ -288,8 +277,6 @@ declare namespace BFChainCore {
     mergeAccountEquity(height: number, accountEquity: AccountEquityInfo): Promise<void>;
     /**获取某个账户的投票信息 */
     getAccountVoteInfo(height: number, address: string): Promise<string[]>;
-    /**获取矿机中的受托人账户 */
-    getMemoryDelegates(): Promise<string[]>;
     /**查询指定的 factoryId */
     getEntityFactory(
       sourceChainMagic: string,

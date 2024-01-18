@@ -40,7 +40,7 @@ function print(obj: any) {
   } as BFChainCore.BlockGetterHelperInterface);
 
   /**已绑定的受托人个数 */
-  let pickDelegates = bfchainCore.transactionHelper.genesisDelegates()[0]; //.slice(50, 80);
+  let pickGenerators = bfchainCore.transactionHelper.genesisDelegates()[0]; //.slice(50, 80);
   // pickDelegates = pickDelegates.filter((v) => {
   //   if (["c4q2hHccaS3qcXGMqsGcasjbvj9aJsCuuy"].includes(v)) {
   //     return false;
@@ -53,7 +53,7 @@ function print(obj: any) {
   const isVerify = true;
   /**第一笔交易开始的时间戳 */
   const fakeTimestamp = bfchainCore.config.forgeInterval * bfchainCore.config.blockPerRound * 10;
-  const delegatesArr = [
+  const generatorsArr = [
     {
       secret:
         "scan pass carpet coral pumpkin spell present decrease veteran text flower pioneer top speak jaguar wreck ask always hazard good know gift uncle frost",
@@ -854,12 +854,12 @@ function print(obj: any) {
     },
   ];
   /** 随机获取下一轮的打块人*/
-  const randomNextDelegates = (
-    delegates: string[] = bfchainCore.transactionHelper.genesisDelegates(),
+  const randomNextGenerators = (
+    generators: string[] = bfchainCore.transactionHelper.genesisDelegates(),
   ) => {
     const randoms: number[] = [];
     while (true) {
-      const random = Math.floor(Math.random() * delegates.length);
+      const random = Math.floor(Math.random() * generators.length);
       if (!randoms.includes(random)) {
         randoms.push(random);
       }
@@ -867,7 +867,7 @@ function print(obj: any) {
         break;
       }
     }
-    return randoms.map((v) => delegates[v]);
+    return randoms.map((v) => generators[v]);
   };
   const blockMap = new Map<number, BFChainCore.BlockJSON<any>>();
   blockMap.set(1, bfchainCore.config.genesisBlock);
@@ -900,13 +900,13 @@ function print(obj: any) {
     return hashString;
   }
 
-  const delegatesMap = new Map<
+  const generatorsMap = new Map<
     string,
     { pk: string; address: string; keypair: BFChainCore.Keypair }
   >();
-  for (const v of delegatesArr) {
+  for (const v of generatorsArr) {
     const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(v.secret);
-    delegatesMap.set(v.address, { pk: v.publicKey, address: v.address, keypair });
+    generatorsMap.set(v.address, { pk: v.publicKey, address: v.address, keypair });
   }
 
   //const map = new Map();
@@ -926,18 +926,18 @@ function print(obj: any) {
     label = "",
     disableLog?: boolean,
   ) => {
-    if (pickDelegates.includes(result.address)) {
+    if (pickGenerators.includes(result.address)) {
       lastBlock.timestamp = result.timestamp;
       lastBlock.height += 1;
-      const delegate = delegatesMap.get(result.address);
-      if (delegate) {
+      const generator = generatorsMap.get(result.address);
+      if (generator) {
         const asyncIteratorGenerator = new AsyncIteratorGenerator<TransactionInBlock>();
         asyncIteratorGenerator.done();
         const newBlock: BFChainCore.BlockBody = {
           version: bfchainCore.config.version,
           height: lastBlock.height,
           timestamp: result.timestamp,
-          generatorPublicKey: delegate.pk,
+          generatorPublicKey: generator.pk,
           previousBlockSignature: lastBlock.previousBlockSignature,
         };
         const generateBlockEventEmitter: any = new QueneEventEmitter<any>();
@@ -954,7 +954,7 @@ function print(obj: any) {
               },
             },
             asyncIteratorGenerator,
-            delegate.keypair,
+            generator.keypair,
             undefined,
             generateBlockEventEmitter,
             {} as any,
@@ -967,7 +967,7 @@ function print(obj: any) {
           const roundStartHeight = bfchainCore.blockHelper.calcRoundStartHeight(
             bfchainCore.blockHelper.calcRoundByHeight(lastBlock.height),
           );
-          const thisRoundDelegates: string[] = [];
+          const thisRoundGenerators: string[] = [];
 
           for (let _h = roundStartHeight; _h < lastBlock.height; _h++) {
             if (_h === 1) {
@@ -975,7 +975,7 @@ function print(obj: any) {
             }
             const _block = blockMap.get(_h);
             if (_block) {
-              thisRoundDelegates.push(
+              thisRoundGenerators.push(
                 await bfchainCore.accountBaseHelper.getAddressFromPublicKeyString(
                   _block.generatorPublicKey,
                 ),
@@ -983,11 +983,11 @@ function print(obj: any) {
             }
           }
 
-          thisRoundDelegates.push(delegate.address);
-          const _pickDelegates: string[] = [];
-          delegatesArr.forEach((v) => {
-            if (!thisRoundDelegates.includes(v.address)) {
-              _pickDelegates.push(v.address);
+          thisRoundGenerators.push(generator.address);
+          const _pickGenerators: string[] = [];
+          generatorsArr.forEach((v) => {
+            if (!thisRoundGenerators.includes(v.address)) {
+              _pickGenerators.push(v.address);
             }
           });
 
@@ -1000,7 +1000,7 @@ function print(obj: any) {
           const nextRoundGenerators = chosenAddress.map((v) => {
             return { address: v, numberOfEntities: 0 };
           });
-          // const nextRoundGenerators = randomNextDelegates(_pickDelegates,).map(v => {
+          // const nextRoundGenerators = randomNextGenerators(_pickGenerators,).map(v => {
           //   return { address: v, equity: "0" };
           // });
           // print(`height: ${lastBlock.height} nextRoundGenerators`);
@@ -1016,7 +1016,7 @@ function print(obj: any) {
               },
             },
             asyncIteratorGenerator,
-            delegate.keypair,
+            generator.keypair,
             undefined,
             generateBlockEventEmitter,
             {} as any,
@@ -1032,7 +1032,7 @@ function print(obj: any) {
             result.address
           } time: ${result.timestamp} `,
         );
-      return delegate;
+      return generator;
     } else {
       disableLog ||
         print(`${label}这个人掉线了 ${result.address} ${lastBlock.height}. ${result.timestamp} `);
@@ -1049,7 +1049,7 @@ function print(obj: any) {
     if (lastBlock.height === 9) {
       debugger;
     }
-    for await (const result of bfchainCore.block.blockGeneratorCalculator.calcGenerateBlockDelegateGenerator(
+    for await (const result of bfchainCore.block.blockGeneratorCalculator.calcGenerateBlockGeneratorIterator(
       {
         timestamp: lastBlock.timestamp,
         height: lastBlock.height,
@@ -1063,7 +1063,7 @@ function print(obj: any) {
         );
       }
       const fastResult =
-        await bfchainCore.block.blockGeneratorCalculator.fastCalcGenerateBlockDelegate(
+        await bfchainCore.block.blockGeneratorCalculator.fastCalcGenerateBlockGenerator(
           {
             timestamp: lastBlock.timestamp,
             height: lastBlock.height,
@@ -1151,7 +1151,7 @@ function print(obj: any) {
       if (block && _lastBlock) {
         // print(`开始验证${block.height}`);
         const calcGenerateBlockGenerator =
-          bfchainCore.block.blockGeneratorCalculator.calcGenerateBlockDelegateGenerator({
+          bfchainCore.block.blockGeneratorCalculator.calcGenerateBlockGeneratorIterator({
             timestamp: _lastBlock.timestamp,
             height: _lastBlock.height,
           });

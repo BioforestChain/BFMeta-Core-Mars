@@ -26,10 +26,10 @@ export class PickNextRoundGenerators {
     >,
   ) {
     const currentRound = this.blockHelper.calcRoundByHeight(currentHeight);
-    return await this.calcForgingDelegates(currentRound, accountGetterHelper);
+    return await this.calcForgingGenerators(currentRound, accountGetterHelper);
   }
 
-  async calcForgingDelegates<
+  async calcForgingGenerators<
     T extends BFChainCore.ForSortAccountInfo = BFChainCore.ForSortAccountInfo,
   >(
     round: number,
@@ -44,7 +44,7 @@ export class PickNextRoundGenerators {
     let tempRound = round - 1;
     while (results.length < this.config.blockPerRound) {
       if (tempRound === 0) break;
-      const queryResult = await this.__getAlternateDelegates(
+      const queryResult = await this.__getAlternateGenerators(
         tempRound,
         results,
         pickAddressArr,
@@ -68,16 +68,12 @@ export class PickNextRoundGenerators {
    * @param pickAddressArr
    * @param accountGetterHelper
    */
-  private async __getAlternateDelegates(
+  private async __getAlternateGenerators(
     round: number,
     results: BFChainCore.ForSortAccountInfo[],
     pickAddressArr: string[],
     accountGetterHelper?: Pick<BFChainCore.AccountGetterHelperInterface, "getAccounts">,
   ) {
-    if (round === 1) {
-      return await this.getGenesisDelegates(results, pickAddressArr, accountGetterHelper);
-    }
-
     const generatorAddressArr: string[] =
       await this.blockHelper.forceGetBlockGeneratorAddressByRound(round);
     const newGeneratorAddressArr: string[] = [];
@@ -87,39 +83,13 @@ export class PickNextRoundGenerators {
         newGeneratorAddressArr[newGeneratorAddressArr.length] = address;
       }
     }
-    let delegates = await this.accountHelper.getAccounts(
+    let generators = await this.accountHelper.getAccounts(
       newGeneratorAddressArr,
       round,
       accountGetterHelper,
     );
-    delegates = this.__sortByProductivity(delegates);
-    results.push.apply(results, delegates.slice(0, this.config.blockPerRound - results.length));
-    return {
-      results,
-      pickAddressArr,
-    };
-  }
-  /**
-   * 从创世受托人中补足缺失的账户
-   * @param {*} results
-   */
-  async getGenesisDelegates(
-    results: BFChainCore.ForSortAccountInfo[],
-    pickAddressArr: string[],
-    accountGetterHelper?: Pick<BFChainCore.AccountGetterHelperInterface, "getAccounts">,
-  ) {
-    // 创世账户不能再出块
-    const genesisDelegates = this.transactionHelper.genesisDelegates(this.config);
-    const addressArray: string[] = [];
-    for (const address of genesisDelegates) {
-      if (!pickAddressArr.includes(address)) {
-        addressArray[addressArray.length] = address;
-        pickAddressArr[pickAddressArr.length] = address;
-      }
-    }
-    let delegates = await this.accountHelper.getAccounts(addressArray, 1, accountGetterHelper);
-    delegates = this.__sortByProductivity(delegates);
-    results.push.apply(results, delegates.slice(0, this.config.blockPerRound - results.length));
+    generators = this.__sortByProductivity(generators);
+    results.push.apply(results, generators.slice(0, this.config.blockPerRound - results.length));
     return {
       results,
       pickAddressArr,

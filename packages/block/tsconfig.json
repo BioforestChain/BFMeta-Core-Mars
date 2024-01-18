@@ -35,7 +35,6 @@
     "src/atom_block/genesisBlock.ts",
     "src/atom_block/index.ts",
     "src/atom_block/pickNextRoundGenerators.ts",
-    "src/atom_block/recommendedDelegateCalculator.ts",
     "src/atom_block/replayBlock.ts",
     "src/atom_block/roundLastBlock.ts",
     "src/atom_block/verifyBlock.ts",

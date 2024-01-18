@@ -255,7 +255,7 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
     );
     const currentSlot = timeHelper.getSlotNumberByTimestamp(block.timestamp);
     const lastBlock = await blockGetterHelper.getLastBlock();
-    const calcResult = await blockGeneratorCalculator.calcGenerateBlockDelegate(
+    const calcResult = await blockGeneratorCalculator.calcGenerateBlockGenerator(
       {
         timestamp: lastBlock.timestamp,
         height: lastBlock.height,

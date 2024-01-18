@@ -6,7 +6,6 @@ export * from "./roundLastBlock";
 export * from "./blockGeneratorCalculator";
 export * from "./pickNextRoundGenerators";
 export * from "./blockForkCheck";
-export * from "./recommendedDelegateCalculator";
 
 import type { CommonBlockFactory } from "./commonBlock";
 import type { GenesisBlockFactory } from "./genesisBlock";

@@ -160,7 +160,7 @@ export class ReplayBlockCore<T extends Block> {
       const {
         address: calcGeneratorAddress,
         // roundOfflineGeneratersReadonlyMap: calcRoundOfflineGeneratersReadonlyMap,
-      } = await this.blockGeneratorCalculator.calcGenerateBlockDelegate(lastBlock, {
+      } = await this.blockGeneratorCalculator.calcGenerateBlockGenerator(lastBlock, {
         toTimestamp: block.timestamp,
       });
 

@@ -65,19 +65,8 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
     height: number,
     blockGetterHelper = this.blockGetterHelper,
   ) {
-    if (!blockGetterHelper) {
-      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-        prop: "blockGetterHelper",
-        target: "moduleStroge",
-      });
-    }
-    if (typeof blockGetterHelper.getVoteForDelegate !== "function") {
-      throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: "getVoteForDelegate",
-        target: "blockGetterHelper",
-      });
-    }
-    const voterArray = await blockGetterHelper.getVoteForDelegate(generatorAddress, height);
+    const voterArray: any[] = []; //
+    /**这里要重写 */
     const voters: BFChainCore.VoterInfo[] = [];
     const minEquity = BigInt(0);
     let totalEquity = BigInt(0);

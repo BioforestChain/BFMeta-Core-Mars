@@ -29,7 +29,7 @@ const jsbiHelper = new JSBIHelper();
 
 const genesisSecret = require(require("path").join(process.cwd(), "././assets/secret.json"))
   .genesis as string;
-const delegatesSecret = require(require("path").join(process.cwd(), "./assets/secret.json"))
+const generatorsSecret = require(require("path").join(process.cwd(), "./assets/secret.json"))
   .delegates as string[];
 
 (async () => {
@@ -507,15 +507,15 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
         assetNumber: bigint;
       }[];
     }[] = [];
-    const sender0 = await getAccountWithSecret(delegatesSecret[0], bfchainCore);
-    const sender1 = await getAccountWithSecret(delegatesSecret[1], bfchainCore);
-    const sender2 = await getAccountWithSecret(delegatesSecret[2], bfchainCore);
-    const sender3 = await getAccountWithSecret(delegatesSecret[3], bfchainCore);
-    const sender4 = await getAccountWithSecret(delegatesSecret[4], bfchainCore);
-    const sender5 = await getAccountWithSecret(delegatesSecret[5], bfchainCore);
-    const sender6 = await getAccountWithSecret(delegatesSecret[6], bfchainCore);
-    const sender7 = await getAccountWithSecret(delegatesSecret[7], bfchainCore);
-    const sender8 = await getAccountWithSecret(delegatesSecret[8], bfchainCore);
+    const sender0 = await getAccountWithSecret(generatorsSecret[0], bfchainCore);
+    const sender1 = await getAccountWithSecret(generatorsSecret[1], bfchainCore);
+    const sender2 = await getAccountWithSecret(generatorsSecret[2], bfchainCore);
+    const sender3 = await getAccountWithSecret(generatorsSecret[3], bfchainCore);
+    const sender4 = await getAccountWithSecret(generatorsSecret[4], bfchainCore);
+    const sender5 = await getAccountWithSecret(generatorsSecret[5], bfchainCore);
+    const sender6 = await getAccountWithSecret(generatorsSecret[6], bfchainCore);
+    const sender7 = await getAccountWithSecret(generatorsSecret[7], bfchainCore);
+    const sender8 = await getAccountWithSecret(generatorsSecret[8], bfchainCore);
     txs[txs.length] = await getTransferAssetTransaction(
       sender2,
       sender3.address,
@@ -630,7 +630,7 @@ const delegatesSecret = require(require("path").join(process.cwd(), "./assets/se
 
   //#region 开始测试
 
-  const sender = await getAccountWithSecret(delegatesSecret[9], bfchainCore);
+  const sender = await getAccountWithSecret(generatorsSecret[9], bfchainCore);
   const commonBlockJSON = (await getCommonBlockAsync(sender)).toJSON();
   const xx = bfchainCore.block.recombineBlock(commonBlockJSON);
   commonBlockJSON.transactionInfo.transactionInBlocks.map((transaction) => {

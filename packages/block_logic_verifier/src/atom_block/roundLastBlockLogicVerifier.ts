@@ -27,7 +27,7 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
     // 校验链上链 hash
     await this.checkChainOnChainHash(height, chainOnChainHash);
     // 校验新一轮的打块账户
-    await this.checkNewForgingDelegates(block);
+    await this.checkNewForgingGenerators(block);
   }
 
   /**
@@ -53,30 +53,30 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
    *
    * @param block
    */
-  async checkNewForgingDelegates(block: RoundLastBlock) {
+  async checkNewForgingGenerators(block: RoundLastBlock) {
     const blockGetterHelper = this.blockGetterHelper;
-    if (typeof blockGetterHelper.getNewForgingDelegates !== "function") {
+    if (typeof blockGetterHelper.getNewForgingGenerators !== "function") {
       throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: "getNewForgingDelegates",
+        prop: "checkNewForgingGenerators",
         target: "blockGetterHelper",
       });
     }
-    const delegates = await blockGetterHelper.getNewForgingDelegates(
+    const generators = await blockGetterHelper.getNewForgingGenerators(
       await blockGetterHelper.getLastBlock(),
       block.generatorPublicKey,
     );
     const nextRoundGenerators = block.asset.roundLastAsset.nextRoundGenerators;
-    if (delegates.length !== nextRoundGenerators.length) {
+    if (generators.length !== nextRoundGenerators.length) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-        to_compare_prop: `delegates length ${delegates.length}`,
-        be_compare_prop: `delegates length ${nextRoundGenerators.length}`,
+        to_compare_prop: `generators length ${generators.length}`,
+        be_compare_prop: `generators length ${nextRoundGenerators.length}`,
         to_target: "block asset",
         be_target: "calculate",
       });
     }
 
-    for (let i = 0; i < delegates.length; i++) {
-      const address = delegates[i].address;
+    for (let i = 0; i < generators.length; i++) {
+      const address = generators[i].address;
       const nextRoundGenerator = nextRoundGenerators[i];
       if (nextRoundGenerator.address !== address) {
         throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
@@ -86,7 +86,7 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
           be_target: "calculate",
         });
       }
-      const numberOfEntities = delegates[i].numberOfEntities;
+      const numberOfEntities = generators[i].numberOfEntities;
       if (nextRoundGenerator.numberOfEntities !== numberOfEntities) {
         throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
           to_compare_prop: `nextRoundGenerators index ${i} address ${nextRoundGenerator.address} numberOfEntities ${nextRoundGenerator.numberOfEntities}`,
