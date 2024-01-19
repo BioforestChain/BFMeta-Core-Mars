@@ -270,5 +270,9 @@ declare namespace BFChainCore {
      * @param height
      */
     getAccountsAssetsChange(height: number): Promise<BFChainCore.AccountsAssetsChange>;
+    /**获取锻造dp持有者 按照持有量sort */
+    getGeneratorDpHolders(offset?: number): Promise<AI[]>;
+    /**获取收益dp持有者 按照持有量sort*/
+    getRewardDpHolders(offset?: number): Promise<AI[]>;
   }
 }

@@ -34,8 +34,8 @@ const argv = optimist
   .alias("rm", "random magic")
   .alias("o", "out")
   .alias("p", "genesisblock out path")
-  .default("b", 5)
-  .default("f", 10)
+  .default("b", 50)
+  .default("f", 15)
   .default("ri", false)
   .default("rm", false).argv;
 console.log(argv);
@@ -61,7 +61,7 @@ const config = {
   url: "http://localhost:19002",
   genesisSecret: require(defaultSecretPath).genesis as string,
   genesisSecondSecret: "genesisSecondSecret",
-  delegatesSecret: require(defaultSecretPath).delegates as string[],
+  delegatesSecret: (require(defaultSecretPath).delegates as string[]).slice(0, 100),
 };
 mainChainAssetData.blockPerRound = blockPerRound;
 mainChainAssetData.forgeInterval = forgeInterval;

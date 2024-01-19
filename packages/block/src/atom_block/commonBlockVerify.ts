@@ -113,7 +113,17 @@ export class CommonBlockVerify<T extends Block> {
    * @param block
    */
   verifyBlockReward(block: T) {
-    throw new Error(`not impl yet`);
+    if (block.height !== 1) {
+      const expectedReward = this.config.basicRewards + block.transactionInfo.totalFee;
+      if (expectedReward !== block.reward) {
+        throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
+          to_compare_prop: `blockReward ${block.reward}`,
+          be_compare_prop: `expectedReward ${expectedReward}`,
+          to_target: "block",
+          be_target: "calculate",
+        });
+      }
+    }
   }
 
   /**
