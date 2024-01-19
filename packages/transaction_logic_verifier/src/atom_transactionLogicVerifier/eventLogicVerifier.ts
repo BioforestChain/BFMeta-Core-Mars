@@ -402,54 +402,6 @@ export class EventLogicVerifier {
     );
   }
 
-  private __listenEventVoteEquity(
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
-    currentBlockHeight: number,
-    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
-  ) {
-    // 扣除权益
-    eventEmitter.on(
-      "voteEquity",
-      async ({ transaction, applyInfo }, next) => {
-        const round = this.blockHelper.calcRoundByHeight(currentBlockHeight) - 1;
-        const address = applyInfo.address;
-        const account = await this.helperLogicVerifier.getAccountForce(
-          accountMap,
-          address,
-          currentBlockHeight,
-        );
-        const { accountInfo, accountAssets } = account;
-        const equityInfo = accountInfo.equityInfo;
-        const minEquity = BigInt(0);
-        let accountEquity = equityInfo.round === round ? equityInfo.equity : minEquity;
-        const remainEquity = accountEquity;
-        accountEquity += BigInt(applyInfo.equity);
-        if (accountEquity < minEquity) {
-          throw new ConsensusException(ERROR_LIST.ACCOUNT_REMAIN_EQUITY_NOT_ENOUGH, {
-            errorId: NewTransactionRefuseReason.ACCOUNT_REMAIN_EQUITY_NOT_ENOUGH,
-            reason: `Transaction signature: ${
-              transaction.signature
-            } address: ${address} hodingEquity: ${remainEquity.toString()} spendEquity: ${
-              applyInfo.equity
-            }`,
-          });
-        }
-
-        // const { magic, assetType, voteMinChainAsset } = this.configHelper;
-        // const remainChainAsset = accountAssets[magic][assetType].assetNumber;
-        // if (BigInt(voteMinChainAsset) > remainChainAsset) {
-        //   throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
-        //     reason: `No enough asset, vote account need min remain asset ${voteMinChainAsset}, remain Assets: ${remainChainAsset}`,
-        //     errorId: NewTransactionRefuseReason.CHAIN_ASSET_NOT_ENOUGH,
-        //   });
-        // }
-
-        return next();
-      },
-      { taskname: `applyTransaction/logicVerifier/voteEquity` },
-    );
-  }
-
   private __listenEventFrozenAccount(
     accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
     currentBlockHeight: number,
@@ -483,33 +435,6 @@ export class EventLogicVerifier {
     );
   }
 
-  private __listenEventSetUsername(eventEmitter: BFChainCore.ApplyTransactionEventEmitter) {
-    // 设置用户名
-    eventEmitter.on(
-      "setUsername",
-      async ({ applyInfo }, next) => {
-        const { address, alias } = applyInfo;
-        // 这个不统一做
-        // if (accountsInfo[address].username) {
-        //   throw new ConsensusException(ERROR_LIST.ACCOUNT_ALREADY_HAVE_USERNAME, {
-        //     errorId: NewTransactionRefuseReason.ACCOUNT_ALREADY_HAVE_USERNAME,
-        //     ...Function_Exception_Detail,
-        //   });
-        // }
-
-        const memUsername = await this.accountGetterHelper.getAlias(alias);
-        if (memUsername) {
-          throw new ConsensusException(ERROR_LIST.USERNAME_ALREADY_EXIST, {
-            errorId: NewTransactionRefuseReason.USERNAME_ALREADY_EXIST,
-          });
-        }
-
-        return next();
-      },
-      { taskname: `applyTransaction/logicVerifier/setUsername` },
-    );
-  }
-
   private __listenEventSetSecondPublicKey(eventEmitter: BFChainCore.ApplyTransactionEventEmitter) {
     // 设置二次密码
     eventEmitter.on(
@@ -518,104 +443,6 @@ export class EventLogicVerifier {
         return next();
       },
       { taskname: `applyTransaction/logicVerifier/setSecondPublicKey` },
-    );
-  }
-
-  private __listenEventRegisterToDelegate(
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
-    currentBlockHeight: number,
-    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
-  ) {
-    // 注册成为受托人
-    eventEmitter.on(
-      "registerToDelegate",
-      async ({ applyInfo }, next) => {
-        const { address } = applyInfo;
-        const accountInfo = await this.helperLogicVerifier.getAccountInfoForce(
-          accountMap,
-          address,
-          currentBlockHeight,
-        );
-        if (accountInfo.isDelegate) {
-          throw new ConsensusException(ERROR_LIST.ACCOUNT_IS_ALREADY_AN_DELEGATE, {
-            address,
-            errorId: NewTransactionRefuseReason.ACCOUNT_ALREADY_DELEGATE,
-          });
-        }
-
-        return next();
-      },
-      { taskname: `applyTransaction/logicVerifier/registerToDelegate` },
-    );
-  }
-
-  private __listenEventAcceptVote(
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
-    currentBlockHeight: number,
-    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
-  ) {
-    // 开启接收投票
-    eventEmitter.on(
-      "acceptVote",
-      async ({ applyInfo }, next) => {
-        const { address } = applyInfo;
-        const accountInfo = await this.helperLogicVerifier.getAccountInfoForce(
-          accountMap,
-          address,
-          currentBlockHeight,
-        );
-        if (!accountInfo.isDelegate) {
-          throw new ConsensusException(ERROR_LIST.ACCOUNT_IS_NOT_AN_DELEGATE, {
-            address,
-            errorId: NewTransactionRefuseReason.ACCOUNT_IS_NOT_AN_DELEGATE,
-          });
-        }
-
-        if (accountInfo.isAcceptVote) {
-          throw new ConsensusException(ERROR_LIST.DELEGATE_IS_ALREADY_ACCEPT_VOTE, {
-            address,
-            errorId: NewTransactionRefuseReason.DELEGATE_IS_ALREADY_ACCEPT_VOTE,
-          });
-        }
-
-        return next();
-      },
-      { taskname: `applyTransaction/logicVerifier/acceptVote` },
-    );
-  }
-
-  private __listenEventRejectVote(
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
-    currentBlockHeight: number,
-    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
-  ) {
-    // 关闭接收投票
-    eventEmitter.on(
-      "rejectVote",
-      async ({ applyInfo }, next) => {
-        const { address } = applyInfo;
-        const accountInfo = await this.helperLogicVerifier.getAccountInfoForce(
-          accountMap,
-          address,
-          currentBlockHeight,
-        );
-        if (!accountInfo.isDelegate) {
-          throw new ConsensusException(ERROR_LIST.ACCOUNT_IS_NOT_AN_DELEGATE, {
-            address,
-            errorId: NewTransactionRefuseReason.ACCOUNT_IS_NOT_AN_DELEGATE,
-          });
-        }
-
-        if (!accountInfo.isAcceptVote) {
-          throw new ConsensusException(ERROR_LIST.DELEGATE_IS_ALREADY_REJECT_VOTE, {
-            address,
-            errorId: NewTransactionRefuseReason.DELEGATE_IS_ALREADY_REJECT_VOTE,
-          });
-        }
-
-        return next();
-      },
-      { taskname: `applyTransaction/logicVerifier/rejectVote` },
     );
   }
 
@@ -2454,13 +2281,8 @@ export class EventLogicVerifier {
     this.__listenEventFrozenAsset(accountMap, currentBlockHeight, eventEmitter);
     this.__listenEventUnfrozenAsset(currentBlockHeight, eventEmitter);
     this.__listenEventSignForAsset(currentBlockHeight, eventEmitter);
-    this.__listenEventVoteEquity(accountMap, currentBlockHeight, eventEmitter);
     this.__listenEventFrozenAccount(accountMap, currentBlockHeight, eventEmitter);
-    this.__listenEventSetUsername(eventEmitter);
     this.__listenEventSetSecondPublicKey(eventEmitter);
-    this.__listenEventRegisterToDelegate(accountMap, currentBlockHeight, eventEmitter);
-    this.__listenEventAcceptVote(accountMap, currentBlockHeight, eventEmitter);
-    this.__listenEventRejectVote(accountMap, currentBlockHeight, eventEmitter);
     this.__listenEventIssueAsset(accountMap, currentBlockHeight, eventEmitter);
     this.__listenEventDestroyAsset(eventEmitter);
     this.__listenEventIssueDAppid(currentBlockHeight, eventEmitter);

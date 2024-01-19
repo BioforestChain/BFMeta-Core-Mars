@@ -3,16 +3,7 @@ import type { Transaction } from "@bfchain/core-model-transaction-base";
 export enum TRANSACTION_TYPES_BASE {
   /**设置安全密码 */
   SIGNATURE = "BSE-01",
-  /**注册锻造者 */
-  DELEGATE = "BSE-02",
-  /**治理投票 */
-  VOTE = "BSE-03",
-  /**设置用户名 */
-  USERNAME = "BSE-04",
-  /**开启收票 */
-  ACCEPT_VOTE = "BSE-05",
-  /**关闭收票 */
-  REJECT_VOTE = "BSE-06",
+
   /**创建DAPPID */
   DAPP = "WOD-00",
   /**DAPPID付费 */
@@ -21,6 +12,7 @@ export enum TRANSACTION_TYPES_BASE {
   REGISTER_CHAIN = "WOD-02",
   /**数据存证 */
   MARK = "EXT-00",
+
   /**创建权益 */
   ISSUE_ASSET = "AST-00",
   /**权益转移 */
@@ -43,10 +35,6 @@ export enum TRANSACTION_TYPES_BASE {
   TO_EXCHANGE_ASSET = "AST-09",
   /**接受权益交换 */
   BE_EXCHANGE_ASSET = "AST-10",
-  /**发起资产交换 */
-  TO_EXCHANGE_SPECIAL_ASSET = "AST-11",
-  /**接受资产交换 */
-  BE_EXCHANGE_SPECIAL_ASSET = "AST-12",
   /**注册/注销位名 */
   LOCATION_NAME = "LNS-00",
   /**设置位名解析值 */
@@ -55,44 +43,38 @@ export enum TRANSACTION_TYPES_BASE {
   SET_LNS_MANAGER = "LNS-02",
   /**创建非同质资产模板 - V0 版，冻结发行 */
   ISSUE_ENTITY_FACTORY = "ETY-00",
-  /**创建非同质资产 */
-  ISSUE_ENTITY = "ETY-01",
-  /**销毁非同质资产 */
-  DESTROY_ENTITY = "ETY-02",
-
   /**创建非同质资产模板 - V1 版，销毁发行 */
-  ISSUE_ENTITY_FACTORY_V1 = "ETY-03",
+  ISSUE_ENTITY_FACTORY_V1 = "ETY-01",
+  /**创建非同质资产 */
+  ISSUE_ENTITY = "ETY-02",
+  /**销毁非同质资产 */
+  DESTROY_ENTITY = "ETY-03",
   /**批量创建非同质资产 */
   ISSUE_ENTITY_MULTI = "ETY-04",
 
   /**任意资产转移 */
-  TRANSFER_ANY = "AST-13",
+  TRANSFER_ANY = "ANY-00",
   /**发起任意资产赠送 */
-  GIFT_ANY = "AST-14",
+  GIFT_ANY = "ANY-01",
   /**接受任意资产赠送 */
-  GRAB_ANY = "AST-15",
+  GRAB_ANY = "ANY-02",
   /**发起任意资产交换 */
-  TO_EXCHANGE_ANY = "ECA-00",
+  TO_EXCHANGE_ANY = "ANY-03",
   /**接受任意资产交换 */
-  BE_EXCHANGE_ANY = "ECA-01",
-
+  BE_EXCHANGE_ANY = "ANY-04",
   /**发起批量任意资产交换 */
-  TO_EXCHANGE_ANY_MULTI = "ECA-02",
+  TO_EXCHANGE_ANY_MULTI = "ANY-05",
   /**接受批量任意资产交换 */
-  BE_EXCHANGE_ANY_MULTI = "ECA-03",
-
+  BE_EXCHANGE_ANY_MULTI = "ANY-06",
   /**发起批量任意资产全量交换 */
-  TO_EXCHANGE_ANY_MULTI_ALL = "ECA-04",
+  TO_EXCHANGE_ANY_MULTI_ALL = "ANY-07",
   /**接受批量任意资产全量交换 */
-  BE_EXCHANGE_ANY_MULTI_ALL = "ECA-05",
+  BE_EXCHANGE_ANY_MULTI_ALL = "ANY-08",
 
   /**创建凭证 */
   ISSUE_CERTIFICATE = "CRT-00",
   /**销毁凭证 */
   DESTROY_CERTIFICATE = "CRT-01",
-
-  /**个性事件 */
-  CUSTOM = "CUS-00",
 
   /**组合事件 */
   MULTIPLE = "MTP-00",

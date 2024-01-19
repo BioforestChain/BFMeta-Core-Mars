@@ -325,12 +325,7 @@ export const TRANSACTION_FACTORY_TYPES_MAP = (() => {
   >();
   (
     [
-      [TRANSACTION_TYPES_BASE.USERNAME, ATOM_TRSFAC.UsernameTransactionFactory],
       [TRANSACTION_TYPES_BASE.SIGNATURE, ATOM_TRSFAC.SignatureTransactionFactory],
-      [TRANSACTION_TYPES_BASE.DELEGATE, ATOM_TRSFAC.DelegateTransactionFactory],
-      [TRANSACTION_TYPES_BASE.VOTE, ATOM_TRSFAC.VoteTransactionFactory],
-      [TRANSACTION_TYPES_BASE.ACCEPT_VOTE, ATOM_TRSFAC.AcceptVoteTransactionFactory],
-      [TRANSACTION_TYPES_BASE.REJECT_VOTE, ATOM_TRSFAC.RejectVoteTransactionFactory],
       [TRANSACTION_TYPES_BASE.DAPP, ATOM_TRSFAC.DAppTransactionFactory],
       [TRANSACTION_TYPES_BASE.DAPP_PURCHASING, ATOM_TRSFAC.DAppPurchasingTransactionFactory],
       [TRANSACTION_TYPES_BASE.MARK, ATOM_TRSFAC.MarkTransactionFactory],
@@ -346,14 +341,6 @@ export const TRANSACTION_FACTORY_TYPES_MAP = (() => {
       [TRANSACTION_TYPES_BASE.SIGN_FOR_ASSET, ATOM_TRSFAC.SignForAssetTransactionFactory],
       [TRANSACTION_TYPES_BASE.EMIGRATE_ASSET, ATOM_TRSFAC.EmigrateAssetTransactionFactory],
       [TRANSACTION_TYPES_BASE.IMMIGRATE_ASSET, ATOM_TRSFAC.ImmigrateAssetTransactionFactory],
-      [
-        TRANSACTION_TYPES_BASE.TO_EXCHANGE_SPECIAL_ASSET,
-        ATOM_TRSFAC.ToExchangeSpecialAssetTransactionFactory,
-      ],
-      [
-        TRANSACTION_TYPES_BASE.BE_EXCHANGE_SPECIAL_ASSET,
-        ATOM_TRSFAC.BeExchangeSpecialAssetTransactionFactory,
-      ],
 
       [TRANSACTION_TYPES_BASE.LOCATION_NAME, ATOM_TRSFAC.LocationNameTransactionFactory],
       [
@@ -372,16 +359,13 @@ export const TRANSACTION_FACTORY_TYPES_MAP = (() => {
       ],
       [TRANSACTION_TYPES_BASE.ISSUE_ENTITY, ATOM_TRSFAC.IssueEntityTransactionFactoryV1],
       [TRANSACTION_TYPES_BASE.DESTROY_ENTITY, ATOM_TRSFAC.DestroyEntityTransactionFactory],
+      [TRANSACTION_TYPES_BASE.ISSUE_ENTITY_MULTI, ATOM_TRSFAC.IssueEntityMultiTransactionFactoryV1],
 
       [TRANSACTION_TYPES_BASE.TRANSFER_ANY, ATOM_TRSFAC.TransferAnyTransactionFactory],
       [TRANSACTION_TYPES_BASE.GIFT_ANY, ATOM_TRSFAC.GiftAnyTransactionFactory],
       [TRANSACTION_TYPES_BASE.GRAB_ANY, ATOM_TRSFAC.GrabAnyTransactionFactory],
-
       [TRANSACTION_TYPES_BASE.TO_EXCHANGE_ANY, ATOM_TRSFAC.ToExchangeAnyTransactionFactory],
       [TRANSACTION_TYPES_BASE.BE_EXCHANGE_ANY, ATOM_TRSFAC.BeExchangeAnyTransactionFactory],
-
-      [TRANSACTION_TYPES_BASE.ISSUE_ENTITY_MULTI, ATOM_TRSFAC.IssueEntityMultiTransactionFactoryV1],
-
       [
         TRANSACTION_TYPES_BASE.TO_EXCHANGE_ANY_MULTI,
         ATOM_TRSFAC.ToExchangeAnyMultiTransactionFactory,
@@ -390,7 +374,6 @@ export const TRANSACTION_FACTORY_TYPES_MAP = (() => {
         TRANSACTION_TYPES_BASE.BE_EXCHANGE_ANY_MULTI,
         ATOM_TRSFAC.BeExchangeAnyMultiTransactionFactory,
       ],
-
       [
         TRANSACTION_TYPES_BASE.TO_EXCHANGE_ANY_MULTI_ALL,
         ATOM_TRSFAC.ToExchangeAnyMultiAllTransactionFactory,

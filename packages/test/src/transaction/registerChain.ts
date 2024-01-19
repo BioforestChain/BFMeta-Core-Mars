@@ -545,7 +545,7 @@ registerchainAssetData.blockPerRound = 5;
           forgeInterval: genesisAsset.forgeInterval,
           genesisDelegates: transactionInfo.transactionInBlocks
             .filter(
-              (tib) => tib.transaction.type === registerBfchainCore.transactionHelper.DELEGATE,
+              (tib) => tib.transaction.type === registerBfchainCore.transactionHelper.ISSUE_ENTITY,
             )
             .map((tib) => {
               return {

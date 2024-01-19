@@ -23,15 +23,12 @@
   ],
   "files": [
     "src/@types.ts",
-    "src/acceptVote.ts",
     "src/beExchangeAny.ts",
     "src/beExchangeAnyMulti.ts",
     "src/beExchangeAnyMultiAll.ts",
     "src/beExchangeAsset.ts",
-    "src/beExchangeSpecialAsset.ts",
     "src/dapp.ts",
     "src/dappPurchasing.ts",
-    "src/delegate.ts",
     "src/destroyAsset.ts",
     "src/destroyCertificate.ts",
     "src/destroyEntity.ts",
@@ -52,7 +49,6 @@
     "src/locationName.ts",
     "src/locationNameRecord.ts",
     "src/mark.ts",
-    "src/rejectVote.ts",
     "src/setLnsManager.ts",
     "src/setLnsRecordValue.ts",
     "src/signature.ts",
@@ -61,11 +57,8 @@
     "src/toExchangeAnyMulti.ts",
     "src/toExchangeAnyMultiAll.ts",
     "src/toExchangeAsset.ts",
-    "src/toExchangeSpecialAsset.ts",
     "src/transferAny.ts",
     "src/transferAsset.ts",
-    "src/trustAsset.ts",
-    "src/username.ts",
-    "src/vote.ts"
+    "src/trustAsset.ts"
   ]
 }

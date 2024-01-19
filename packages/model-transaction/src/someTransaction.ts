@@ -22,12 +22,8 @@ const { ArgumentFormatException, error, IllegalStateException } = CoreExceptionG
   const MODEL_BASE = new Map<typeof Transaction, TRANSACTION_TYPES_BASE>();
   (
     [
-      [TRANSACTION_TYPES_BASE.USERNAME, ATOM_TRS.UsernameTransaction],
       [TRANSACTION_TYPES_BASE.SIGNATURE, ATOM_TRS.SignatureTransaction],
-      [TRANSACTION_TYPES_BASE.DELEGATE, ATOM_TRS.DelegateTransaction],
-      [TRANSACTION_TYPES_BASE.VOTE, ATOM_TRS.VoteTransaction],
-      [TRANSACTION_TYPES_BASE.ACCEPT_VOTE, ATOM_TRS.AcceptVoteTransaction],
-      [TRANSACTION_TYPES_BASE.REJECT_VOTE, ATOM_TRS.RejectVoteTransaction],
+
       [TRANSACTION_TYPES_BASE.DAPP, ATOM_TRS.DAppTransaction],
       [TRANSACTION_TYPES_BASE.DAPP_PURCHASING, ATOM_TRS.DAppPurchasingTransaction],
       [TRANSACTION_TYPES_BASE.MARK, ATOM_TRS.MarkTransaction],
@@ -43,14 +39,6 @@ const { ArgumentFormatException, error, IllegalStateException } = CoreExceptionG
       [TRANSACTION_TYPES_BASE.SIGN_FOR_ASSET, ATOM_TRS.SignForAssetTransaction],
       [TRANSACTION_TYPES_BASE.EMIGRATE_ASSET, ATOM_TRS.EmigrateAssetTransaction],
       [TRANSACTION_TYPES_BASE.IMMIGRATE_ASSET, ATOM_TRS.ImmigrateAssetTransaction],
-      [
-        TRANSACTION_TYPES_BASE.TO_EXCHANGE_SPECIAL_ASSET,
-        ATOM_TRS.ToExchangeSpecialAssetTransaction,
-      ],
-      [
-        TRANSACTION_TYPES_BASE.BE_EXCHANGE_SPECIAL_ASSET,
-        ATOM_TRS.BeExchangeSpecialAssetTransaction,
-      ],
 
       [TRANSACTION_TYPES_BASE.LOCATION_NAME, ATOM_TRS.LocationNameTransaction],
       [TRANSACTION_TYPES_BASE.SET_LNS_RECORD_VALUE, ATOM_TRS.SetLnsRecordValueTransaction],
@@ -66,12 +54,9 @@ const { ArgumentFormatException, error, IllegalStateException } = CoreExceptionG
       [TRANSACTION_TYPES_BASE.GRAB_ANY, ATOM_TRS.GrabAnyTransaction],
       [TRANSACTION_TYPES_BASE.TO_EXCHANGE_ANY, ATOM_TRS.ToExchangeAnyTransaction],
       [TRANSACTION_TYPES_BASE.BE_EXCHANGE_ANY, ATOM_TRS.BeExchangeAnyTransaction],
-
       [TRANSACTION_TYPES_BASE.ISSUE_ENTITY_MULTI, ATOM_TRS.IssueEntityMultiTransactionV1],
-
       [TRANSACTION_TYPES_BASE.TO_EXCHANGE_ANY_MULTI, ATOM_TRS.ToExchangeAnyMultiTransaction],
       [TRANSACTION_TYPES_BASE.BE_EXCHANGE_ANY_MULTI, ATOM_TRS.BeExchangeAnyMultiTransaction],
-
       [TRANSACTION_TYPES_BASE.TO_EXCHANGE_ANY_MULTI_ALL, ATOM_TRS.ToExchangeAnyMultiAllTransaction],
       [TRANSACTION_TYPES_BASE.BE_EXCHANGE_ANY_MULTI_ALL, ATOM_TRS.BeExchangeAnyMultiAllTransaction],
 

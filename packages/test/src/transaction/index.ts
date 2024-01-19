@@ -1,9 +1,4 @@
 import "./signature";
-import "./username";
-import "./delegate";
-import "./vote";
-import "./acceptVote";
-import "./rejectVote";
 import "./dapp";
 import "./dappPurchasing";
 import "./mark";
@@ -19,8 +14,6 @@ import "./trustAsset";
 import "./signForAsset";
 import "./emigrateAsset";
 import "./immigrateAsset";
-import "./toExchangeSpecialAsset";
-import "./beExchangeSpecialAsset";
 import "./locationName";
 import "./setLnsManager";
 import "./setLnsRecordValue";

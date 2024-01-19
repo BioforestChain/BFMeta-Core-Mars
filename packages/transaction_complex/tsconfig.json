@@ -13,8 +13,6 @@
     }
   ],
   "files": [
-    "src/custom.event.ts",
-    "src/custom.ts",
     "src/index.ts",
     "src/macro.ts",
     "src/macroCall.ts",

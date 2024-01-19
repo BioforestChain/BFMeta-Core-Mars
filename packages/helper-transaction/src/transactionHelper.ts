@@ -89,31 +89,7 @@ export class TransactionHelper {
   get SIGNATURE() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.SIGNATURE);
   }
-  /** DELEGATE: 注册锻造者 */
-  get DELEGATE() {
-    return this.getTransactionType(TRANSACTION_TYPES_BASE.DELEGATE);
-  }
-  /** VOTE: 治理投票 */
-  get VOTE() {
-    return this.getTransactionType(TRANSACTION_TYPES_BASE.VOTE);
-  }
-  /** USERNAME: 设置用户名 */
-  get USERNAME() {
-    return this.getTransactionType(TRANSACTION_TYPES_BASE.USERNAME);
-  }
-  /** ACCEPT_VOTE: 开始收票 */
-  get ACCEPT_VOTE() {
-    return this.getTransactionType(TRANSACTION_TYPES_BASE.ACCEPT_VOTE);
-  }
-  /** REJECT_VOTE: 停止收票 */
-  get REJECT_VOTE() {
-    return this.getTransactionType(TRANSACTION_TYPES_BASE.REJECT_VOTE);
-  }
-  /** WOD: 拓展交易 */
-  /** CUSTOM: 个性事件 */
-  get CUSTOM() {
-    return this.getTransactionType(TRANSACTION_TYPES_BASE.CUSTOM);
-  }
+
   /** DAPP: 创建DAPPID */
   get DAPP() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.DAPP);
@@ -130,6 +106,7 @@ export class TransactionHelper {
   get MARK() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.MARK);
   }
+
   /** SOC */
   /** AST: 权益 */
   /** ISSUE_ASSET: 创建权益 */
@@ -176,14 +153,7 @@ export class TransactionHelper {
   get BE_EXCHANGE_ASSET() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.BE_EXCHANGE_ASSET);
   }
-  /**TO_EXCHANGE_SPECIAL_ASSET: 发起资产交换 */
-  get TO_EXCHANGE_SPECIAL_ASSET() {
-    return this.getTransactionType(TRANSACTION_TYPES_BASE.TO_EXCHANGE_SPECIAL_ASSET);
-  }
-  /**BE_EXCHANGE_SPECIAL_ASSET: 接受资产交换 */
-  get BE_EXCHANGE_SPECIAL_ASSET() {
-    return this.getTransactionType(TRANSACTION_TYPES_BASE.BE_EXCHANGE_SPECIAL_ASSET);
-  }
+
   /** LNS: 未知名称系统/Location Name System */
   /**
    * TOP_LEVEL_CHAIN: 一级链名(根：链名称)
@@ -220,12 +190,15 @@ export class TransactionHelper {
   get DESTROY_ENTITY() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.DESTROY_ENTITY);
   }
+  /** ISSUE_ENTITY_MULTI: 批量发行非同质资产 */
+  get ISSUE_ENTITY_MULTI() {
+    return this.getTransactionType(TRANSACTION_TYPES_BASE.ISSUE_ENTITY_MULTI);
+  }
 
   /** TRANSFER_ANY: 任意资产转移 */
   get TRANSFER_ANY() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.TRANSFER_ANY);
   }
-
   /** GIFT_ANY: 任意资产赠送 */
   get GIFT_ANY() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.GIFT_ANY);
@@ -234,7 +207,6 @@ export class TransactionHelper {
   get GRAB_ANY() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.GRAB_ANY);
   }
-
   /** ECA: 任意资产交换 */
   /** TO_EXCHANGE_ANY: 发起资产交换 */
   get TO_EXCHANGE_ANY() {
@@ -244,12 +216,6 @@ export class TransactionHelper {
   get BE_EXCHANGE_ANY() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.BE_EXCHANGE_ANY);
   }
-
-  /** ISSUE_ENTITY_MULTI: 批量发行非同质资产 */
-  get ISSUE_ENTITY_MULTI() {
-    return this.getTransactionType(TRANSACTION_TYPES_BASE.ISSUE_ENTITY_MULTI);
-  }
-
   /** TO_EXCHANGE_ANY_MULTI: 发起批量任意资产交换 */
   get TO_EXCHANGE_ANY_MULTI() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.TO_EXCHANGE_ANY_MULTI);
@@ -258,7 +224,6 @@ export class TransactionHelper {
   get BE_EXCHANGE_ANY_MULTI() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.BE_EXCHANGE_ANY_MULTI);
   }
-
   /** TO_EXCHANGE_ANY_MULTI_ALL: 发起批量任意资产全量交换 */
   get TO_EXCHANGE_ANY_MULTI_ALL() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.TO_EXCHANGE_ANY_MULTI_ALL);
@@ -300,12 +265,7 @@ export class TransactionHelper {
 
   ALL_TRANSACTION_TYPES = [
     this.SIGNATURE,
-    this.DELEGATE,
-    this.VOTE,
-    this.USERNAME,
-    this.ACCEPT_VOTE,
-    this.REJECT_VOTE,
-    this.CUSTOM,
+
     this.DAPP,
     this.DAPP_PURCHASING,
     this.REGISTER_CHAIN,
@@ -321,28 +281,23 @@ export class TransactionHelper {
     this.SIGN_FOR_ASSET,
     this.EMIGRATE_ASSET,
     this.IMMIGRATE_ASSET,
-    this.TO_EXCHANGE_SPECIAL_ASSET,
-    this.BE_EXCHANGE_SPECIAL_ASSET,
+
     this.LOCATION_NAME,
     this.SET_LNS_RECORD_VALUE,
     this.SET_LNS_MANAGER,
+
     this.ISSUE_ENTITY_FACTORY,
     this.ISSUE_ENTITY,
     this.DESTROY_ENTITY,
-
-    this.TRANSFER_ANY,
-
-    this.GIFT_ANY,
-    this.GRAB_ANY,
-
-    this.TO_EXCHANGE_ANY,
-    this.BE_EXCHANGE_ANY,
-
     this.ISSUE_ENTITY_MULTI,
 
+    this.TRANSFER_ANY,
+    this.GIFT_ANY,
+    this.GRAB_ANY,
+    this.TO_EXCHANGE_ANY,
+    this.BE_EXCHANGE_ANY,
     this.TO_EXCHANGE_ANY_MULTI,
     this.BE_EXCHANGE_ANY_MULTI,
-
     this.TO_EXCHANGE_ANY_MULTI_ALL,
     this.BE_EXCHANGE_ANY_MULTI_ALL,
 
@@ -358,7 +313,10 @@ export class TransactionHelper {
 
   /**获取创世块里所有的受托人 */
   genesisDelegates(config = this.config) {
-    return [] as string[];
+    const delegates = config.genesisBlock.transactionInfo.transactionInBlocks
+      .filter((tib) => tib.transaction.type === this.ISSUE_ENTITY)
+      .map((tib) => tib.transaction.senderId);
+    return [...new Set(delegates)];
   }
   async getGensisAcountAddress(config = this.config) {
     return this.accountBaseHelper.getAddressFromPublicKeyString(config.genesisAccountPublicKey);

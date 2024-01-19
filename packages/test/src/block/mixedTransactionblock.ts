@@ -10,15 +10,9 @@ import {
   BeExchangeAssetTransactionFactory,
   DestroyAssetTransaction,
   DestroyAssetTransactionFactory,
-  EXCHANGE_DIRECTION,
   BlockBaseStatisticsHelper,
   StatisticsInfo,
   JSBIHelper,
-  SPECIAL_ASSET_TYPE,
-  ToExchangeSpecialAssetTransaction,
-  ToExchangeSpecialAssetTransactionFactory,
-  BeExchangeSpecialAssetTransaction,
-  BeExchangeSpecialAssetTransactionFactory,
   RANGE_TYPE,
   BFChainCore,
 } from "@bfchain/core";
@@ -348,127 +342,6 @@ const generatorsSecret = require(require("path").join(process.cwd(), "./assets/s
     };
   }
 
-  async function getToExchangeSpecialAssetTransaction(
-    sender: AccountModel,
-    recipientId: string,
-    bfchainCore: BFChainCore,
-  ) {
-    const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
-    const data: BFChainCore.TxBodyJSON = {
-      version: bfchainCore.config.version,
-      type: bfchainCore.transactionHelper.TO_EXCHANGE_SPECIAL_ASSET, // 交易类型
-      senderId: sender.address, // 发起者地址
-      senderPublicKey: sender.publicKey, // 发起者公钥
-      senderSecondPublicKey: "", // 发起者二次公钥
-      rangeType: RANGE_TYPE.EMPTY,
-      range: [],
-      timestamp: 770880, // 生成交易时间戳
-      fee: "78622", // 交易手续费
-      remark: { remark: "body.remark" }, // 交易备注，任意信息
-      dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
-      lns: bfchainCore.config.genesisLocationName,
-      sourceIP: "127.0.0.1", // 交易来源 ip
-      fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
-      toMagic: bfchainCore.config.magic, // 交易去往链的 magic
-      applyBlockHeight: 10086, // 交易发起高度
-      effectiveBlockHeight: 10100,
-    };
-    let secondKeypair;
-    if (sender.secondSecret) {
-      secondKeypair = await bfchainCore.accountBaseHelper.createSecondSecretKeypair(
-        sender.secret,
-        sender.secondSecret,
-      );
-      data.senderSecondPublicKey =
-        await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
-          sender.secret,
-          sender.secondSecret,
-        );
-    }
-    const info: BFChainCore.ToExchangeSpecialAssetAssetJSON = {
-      toExchangeSpecialAsset: {
-        cipherPublicKeys: [],
-        toExchangeSource: bfchainCore.config.magic,
-        beExchangeSource: bfchainCore.config.magic,
-        toExchangeChainName: "bfchain",
-        beExchangeChainName: "bfchain",
-        toExchangeAsset: "CAPCOM123456789QWQQAQ",
-        beExchangeAsset: "BFT",
-        exchangeNumber: "1000000",
-        exchangeAssetType: SPECIAL_ASSET_TYPE.DAPP_ID,
-        exchangeDirection: EXCHANGE_DIRECTION.ASSET_FROM_SENDER,
-      },
-    };
-    const trs = await bfchainCore.transaction.createTransaction<ToExchangeSpecialAssetTransaction>(
-      ToExchangeSpecialAssetTransactionFactory,
-      data,
-      info,
-      keypair,
-      secondKeypair,
-    );
-
-    return trs;
-  }
-
-  async function getBeExchangeSpecialAssetTransaction(
-    sender: AccountModel,
-    toExchangeSpecialAssetTrs: BFChainCore.TransactionMixJSON<BFChainCore.ToExchangeSpecialAssetAssetJSON>,
-    bfchainCore: BFChainCore,
-  ) {
-    const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
-    const data: BFChainCore.TxBodyJSON = {
-      version: bfchainCore.config.version,
-      type: bfchainCore.transactionHelper.BE_EXCHANGE_SPECIAL_ASSET, // 交易类型
-      senderId: sender.address, // 发起者地址
-      senderPublicKey: sender.publicKey, // 发起者公钥
-      senderSecondPublicKey: "", // 发起者二次公钥
-      recipientId: toExchangeSpecialAssetTrs.senderId,
-      rangeType: RANGE_TYPE.EMPTY,
-      range: [],
-      timestamp: 770880, // 生成交易时间戳
-      fee: "78622", // 交易手续费
-      remark: { remark: "body.remark" }, // 交易备注，任意信息
-      dappid: "CAPCOM123456789QWQQAQ", // 交易所属的 dappid
-      lns: bfchainCore.config.genesisLocationName,
-      sourceIP: "127.0.0.1", // 交易来源 ip
-      fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
-      toMagic: bfchainCore.config.magic, // 交易去往链的 magic
-      applyBlockHeight: 10086, // 交易发起高度
-      effectiveBlockHeight: 10100,
-      storage: {
-        key: "transactionSignature",
-        value: toExchangeSpecialAssetTrs.signature,
-      },
-    };
-    let secondKeypair;
-    if (sender.secondSecret) {
-      secondKeypair = await bfchainCore.accountBaseHelper.createSecondSecretKeypair(
-        sender.secret,
-        sender.secondSecret,
-      );
-      data.senderSecondPublicKey =
-        await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
-          sender.secret,
-          sender.secondSecret,
-        );
-    }
-    const info: BFChainCore.BeExchangeSpecialAssetAssetJSON = {
-      beExchangeSpecialAsset: {
-        transactionSignature: toExchangeSpecialAssetTrs.signature,
-        exchangeSpecialAsset: toExchangeSpecialAssetTrs.asset.toExchangeSpecialAsset,
-      },
-    };
-    const trs = await bfchainCore.transaction.createTransaction<BeExchangeSpecialAssetTransaction>(
-      BeExchangeSpecialAssetTransactionFactory,
-      data,
-      info,
-      keypair,
-      secondKeypair,
-    );
-
-    return { trs, applyResult: [] };
-  }
-
   async function getAddressFromSecret(secret: string, bfchainCore: BFChainCore) {
     return bfchainCore.accountBaseHelper.getAddressFromSecret(secret);
   }
@@ -564,16 +437,6 @@ const generatorsSecret = require(require("path").join(process.cwd(), "./assets/s
     txs[txs.length] = data;
     txs[txs.length] = await getBeExchangeAssetTransaction(sender5, sender6, data.trs, bfchainCore);
     //#endregion
-    const toExchangeAssetSpecialAssetTrs = await getToExchangeSpecialAssetTransaction(
-      sender8,
-      sender7.address,
-      bfchainCore,
-    );
-    txs[txs.length] = await getBeExchangeSpecialAssetTransaction(
-      sender7,
-      toExchangeAssetSpecialAssetTrs,
-      bfchainCore,
-    );
     const blockTrsItems: TransactionInBlock[] = [];
     for (let i = 0; i < txs.length; i++) {
       const { trs, applyResult } = txs[i];

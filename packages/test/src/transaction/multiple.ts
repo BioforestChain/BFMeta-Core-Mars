@@ -3,10 +3,7 @@ import {
   TransferAssetTransaction,
   TransferAssetTransactionFactory,
   RANGE_TYPE,
-  Transaction,
   BFChainCore,
-  AcceptVoteTransaction,
-  AcceptVoteTransactionFactory,
   MultipleTransaction,
   MultipleTransactionFactory,
   GrabAssetTransactionFactory,
@@ -86,52 +83,6 @@ async function getTransferAssetTransaction(sender: AccountModel, bfchainCore: BF
     keypair,
     secondKeypair,
     undefined,
-  );
-  return trs.toJSON();
-}
-
-async function getAcceptVoteTransaction(sender: AccountModel, bfchainCore: BFChainCore) {
-  const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
-  const data: BFChainCore.TxBodyJSON = {
-    version: bfchainCore.config.version,
-    type: bfchainCore.transactionHelper.ACCEPT_VOTE, // 交易类型
-    senderId: sender.address, // 发起者地址
-    senderPublicKey: sender.publicKey, // 发起者公钥
-    senderSecondPublicKey: "", // 发起者二次公钥
-    rangeType: RANGE_TYPE.EMPTY,
-    range: [],
-    timestamp: 770880, // 生成交易时间戳
-    fee: "10", // 交易手续费
-    remark: {
-      blobSeed1:
-        "blob+sha256+hex://1b21dd8a2e42b5c742e0f4f7437cec25e636942c40038881cfdd462a2b5a7336?size=10",
-    }, // 交易备注，任意信息
-    dappid: getRandomDAppId(), // 交易所属的 dappid
-    lns: bfchainCore.config.genesisLocationName,
-    sourceIP: "127.0.0.1", // 交易来源 ip
-    fromMagic: bfchainCore.config.magic, // 交易来源链的 magic
-    toMagic: bfchainCore.config.magic, // 交易去往链的 magic
-    applyBlockHeight: 10086, // 交易发起高度
-    effectiveBlockHeight: 10100,
-  };
-  let secondKeypair;
-  if (sender.secondSecret) {
-    secondKeypair = await bfchainCore.accountBaseHelper.createSecondSecretKeypair(
-      sender.secret,
-      sender.secondSecret,
-    );
-    data.senderSecondPublicKey =
-      await bfchainCore.accountBaseHelper.getPublicKeyStringFromSecondSecret(
-        sender.secret,
-        sender.secondSecret,
-      );
-  }
-  const trs = await bfchainCore.transaction.createTransaction<AcceptVoteTransaction>(
-    AcceptVoteTransactionFactory,
-    data,
-    {},
-    keypair,
-    secondKeypair,
   );
   return trs.toJSON();
 }
@@ -515,7 +466,7 @@ async function getMultipleTransaction(
   try {
     const bfchainCore = await getFullBfchainCoreEntry(5, 10);
     const trs1 = await getTransferAssetTransaction(getSenderWithoutSecondSecret(), bfchainCore);
-    const trs2 = await getAcceptVoteTransaction(getSenderWithoutSecondSecret(), bfchainCore);
+    const trs2 = await getTransferAssetTransaction(getSenderWithoutSecondSecret(), bfchainCore);
     const transactions = [trs1, trs2];
     const trs3 = await getMultipleTransaction(
       getSenderWithoutSecondSecret(),
@@ -524,7 +475,7 @@ async function getMultipleTransaction(
     );
     const trs4 = await getMultipleTransaction(
       getSenderWithoutSecondSecret(),
-      [trs3, await getAcceptVoteTransaction(getSenderWithoutSecondSecret(), bfchainCore)],
+      [trs3, await getTransferAssetTransaction(getSenderWithoutSecondSecret(), bfchainCore)],
       bfchainCore,
     );
     const trs5 = await getMultipleTransaction(getSenderWithoutSecondSecret(), [trs4], bfchainCore);

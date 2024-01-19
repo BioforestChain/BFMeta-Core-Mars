@@ -35,8 +35,6 @@
     "src/atom_input/signatureInput.ts",
     "src/atom_input/textInput.ts",
     "src/atom_input/_baseInput.ts",
-    "src/custom.asset.ts",
-    "src/custom.transaction.ts",
     "src/index.ts",
     "src/macro.asset.ts",
     "src/macro.transaction.ts",

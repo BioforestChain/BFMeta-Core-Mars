@@ -14,7 +14,6 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-account": "10.0.0",
     "@bfchain/core-block": "10.0.0",
     "@bfchain/core-block-logic-verifier": "10.0.0",
     "@bfchain/core-block-ticker": "10.0.0",

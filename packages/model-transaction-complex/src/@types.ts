@@ -1,13 +1,4 @@
 declare namespace BFChainCore {
-  interface CustomJSON {
-    type: string;
-    data: string;
-  }
-  interface CustomAssetJSON {
-    custom: CustomJSON;
-  }
-  type CustomTransactionJSON = TransactionJSON<CustomAssetJSON>;
-
   interface RegisterChainJSON {
     genesisBlock: string;
   }

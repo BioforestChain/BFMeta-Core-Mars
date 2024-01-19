@@ -122,24 +122,6 @@ export const enum GIFT_DISTRIBUTION_RULE {
 }
 // #endregion
 
-// #region exchange asset
-export const enum EXCHANGE_DIRECTION {
-  /**特殊资产来自 to 交易的发起账户，即出售 */
-  ASSET_FROM_SENDER = 0,
-  /**特殊资产来自 be 交易的发起账户，即求购 */
-  ASSET_FROM_RECIPIENT = 1,
-}
-
-export const enum SPECIAL_ASSET_TYPE {
-  /**特殊资产类型：dapp */
-  DAPP_ID,
-  /**特殊资产类型：位名 */
-  LOCATION_NAME,
-  /**特殊资产类型：非同质资产（非同质化权益） */
-  ENTITY,
-}
-// #endregion
-
 // #region certificate
 /**
  * 凭证 类型

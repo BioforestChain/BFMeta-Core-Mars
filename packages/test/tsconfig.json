@@ -17,7 +17,6 @@
   ],
   "files": [
     "src/block/calcGenesisBlockDelegate.test.ts",
-    "src/block/commonBlock.ts",
     "src/block/genesisBlock.ts",
     "src/block/mixedTransactionblock.ts",
     "src/block/syncBlock.test.ts",
@@ -36,16 +35,12 @@
     "src/protobuf-json-dry.ts",
     "src/protobuf-reader.ts",
     "src/red-envelop-calc-rate-demo.test.ts",
-    "src/transaction/acceptVote.test.ts",
-    "src/transaction/acceptVote.ts",
     "src/transaction/beExchangeAny.ts",
     "src/transaction/beExchangeAnyMulti.ts",
     "src/transaction/beExchangeAnyMultiAll.ts",
     "src/transaction/beExchangeAsset.ts",
-    "src/transaction/beExchangeSpecialAsset.ts",
     "src/transaction/dapp.ts",
     "src/transaction/dappPurchasing.ts",
-    "src/transaction/delegate.ts",
     "src/transaction/destroyAsset.ts",
     "src/transaction/destroyCertificate.ts",
     "src/transaction/destroyEntity.ts",
@@ -70,7 +65,6 @@
     "src/transaction/promise.ts",
     "src/transaction/promiseResolve.ts",
     "src/transaction/registerChain.ts",
-    "src/transaction/rejectVote.ts",
     "src/transaction/setLnsManager.ts",
     "src/transaction/setLnsRecordValue.ts",
     "src/transaction/signature.ts",
@@ -80,11 +74,8 @@
     "src/transaction/toExchangeAnyMulti.ts",
     "src/transaction/toExchangeAnyMultiAll.ts",
     "src/transaction/toExchangeAsset.ts",
-    "src/transaction/toExchangeSpecialAsset.ts",
     "src/transaction/transferAny.ts",
     "src/transaction/transferAsset.ts",
-    "src/transaction/trustAsset.ts",
-    "src/transaction/username.ts",
-    "src/transaction/vote.ts"
+    "src/transaction/trustAsset.ts"
   ]
 }

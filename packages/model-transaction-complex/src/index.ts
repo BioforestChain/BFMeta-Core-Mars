@@ -2,8 +2,6 @@ import type {} from "@bfchain/util";
 import type {} from "@bnqkl/calc";
 import "@bfchain/core-typings";
 import "./@types";
-export * from "./custom.asset";
-export * from "./custom.transaction";
 export * from "./registerChain.asset";
 export * from "./registerChain.transaction";
 
@@ -20,7 +18,6 @@ export * from "./macroCall.asset";
 export * from "./macroCall.transaction";
 
 import { TRANSACTION_TYPES_MAP, TRANSACTION_TYPES_BASE } from "@bfchain/core-model-transaction";
-import { CustomTransaction } from "./custom.transaction";
 /// 注册链交易
 import { RegisterChainTransaction } from "./registerChain.transaction";
 /// 组合交易
@@ -34,15 +31,6 @@ import { MacroTransaction } from "./macro.transaction";
 /// 宏交易
 import { MacroCallTransaction } from "./macroCall.transaction";
 import type { Transaction } from "@bfchain/core-model-transaction-base";
-
-TRANSACTION_TYPES_MAP.VM.set(
-  TRANSACTION_TYPES_BASE.CUSTOM,
-  CustomTransaction as typeof Transaction,
-);
-TRANSACTION_TYPES_MAP.MV.set(
-  CustomTransaction as typeof Transaction,
-  TRANSACTION_TYPES_BASE.CUSTOM,
-);
 
 TRANSACTION_TYPES_MAP.VM.set(
   TRANSACTION_TYPES_BASE.REGISTER_CHAIN,

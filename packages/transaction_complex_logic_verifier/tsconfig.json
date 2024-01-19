@@ -23,7 +23,6 @@
   ],
   "files": [
     "src/complexTransactionLogicHelper.ts",
-    "src/customLogicVerifier.ts",
     "src/index.ts",
     "src/macroCallLogicVerifier.ts",
     "src/macroLogicVerifier.ts",

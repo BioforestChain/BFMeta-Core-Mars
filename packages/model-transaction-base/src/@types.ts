@@ -84,26 +84,6 @@ declare namespace BFChainCore {
   //#endregion
 
   //#region Transaction Asset
-  interface UsernameJSON {
-    /**用户名字符串，大小写字母、数字、下划线组成，1-20 个字符，不能包含本链名 */
-    alias: string;
-  }
-  interface UsernameAssetJSON {
-    /**地址名命事件附带信息 */
-    username: UsernameJSON;
-  }
-  interface DelegateAssetJSON {}
-  interface AcceptVoteAssetJSON {}
-  interface RejectVoteAssetJSON {}
-  interface VoteJSON {
-    /**投出的权益数，0-9 组成并且不包含小数点，允许为 0 */
-    equity: string;
-  }
-  interface VoteAssetJSON {
-    /**投票事件附带信息 */
-    vote: VoteJSON;
-  }
-
   interface DAppJSON {
     /**dappid 所属的链名，小写字母组成，5-20 位 */
     sourceChainName: string; // chain_name;
@@ -330,45 +310,6 @@ declare namespace BFChainCore {
   interface BeExchangeAssetAssetJSON {
     /**接收权益交换事件附带信息 */
     beExchangeAsset: BeExchangeAssetJSON;
-  }
-
-  interface ToExchangeSpecialAssetJSON {
-    /**加密密钥生成的公钥数组 */
-    cipherPublicKeys: string[];
-    /**用于交换的权益/资产来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
-    toExchangeSource: string;
-    /**被交换的资产/权益来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
-    beExchangeSource: string;
-    /**用于交换的权益/资产来源链名，小写字母组成，5-20 位 */
-    toExchangeChainName: string;
-    /**被交换的资产/权益来源链名，小写字母组成，5-20 位 */
-    beExchangeChainName: string;
-    /**用于交换的权益/资产名，大写字母组成，3-10 个字符 */
-    toExchangeAsset: string;
-    /**被交换的资产/权益名，大写字母组成，3-10 个字符 */
-    beExchangeAsset: string;
-    /**用于交换或交换得到的权益数量，权益数量由0-9共十个数字组成，权益数量不包含小数点且必须大于0 */
-    exchangeNumber: string;
-    /**资产的类型，只能为 0 或 1，0 为 dappid，1 为位名 */
-    exchangeAssetType: BFChainCore.SPECIAL_ASSET_TYPE;
-    /**资产的来源，只能为 0 或 1，0 为出售，1 为求购 */
-    exchangeDirection: BFChainCore.EXCHANGE_DIRECTION;
-  }
-  interface ToExchangeSpecialAssetAssetJSON {
-    /**发起资产交换事件附带信息 */
-    toExchangeSpecialAsset: ToExchangeSpecialAssetJSON;
-  }
-  interface BeExchangeSpecialAssetJSON {
-    /**发起资产交换的事件签名，128 个字节的 16 进制字符串 */
-    transactionSignature: string;
-    /**加密密钥生成的签名数组 */
-    ciphertextSignature?: AccountSignatureJSON;
-    /**资产交换信息 */
-    exchangeSpecialAsset: ToExchangeSpecialAssetJSON;
-  }
-  interface BeExchangeSpecialAssetAssetJSON {
-    /**接收资产交换事件附带信息 */
-    beExchangeSpecialAsset: BeExchangeSpecialAssetJSON;
   }
 
   interface LocationNameJSON {
@@ -783,18 +724,7 @@ declare namespace BFChainCore {
   //#endregion
 
   //#region Atom Transaction
-  type UsernameTransactionJSON = TransactionMixJSON<UsernameAssetJSON, { hasRecipientId: false }>;
   type SignatureTransactionJSON = TransactionMixJSON<SignatureAssetJSON, { hasRecipientId: false }>;
-  type DelegateTransactionJSON = TransactionMixJSON<DelegateAssetJSON, { hasRecipientId: false }>;
-  type AcceptVoteTransactionJSON = TransactionMixJSON<
-    AcceptVoteAssetJSON,
-    { hasRecipientId: false }
-  >;
-  type RejectVoteTransactionJSON = TransactionMixJSON<
-    RejectVoteAssetJSON,
-    { hasRecipientId: false }
-  >;
-  type VoteTransactionJSON = TransactionMixJSON<VoteAssetJSON, { hasRecipientId: true }>;
 
   type DAppTransactionJSON = TransactionMixJSON<DAppAssetJSON, { hasRecipientId: true }>;
   type DAppPurchasingTransactionJSON = TransactionMixJSON<
@@ -840,14 +770,6 @@ declare namespace BFChainCore {
   >;
   type BeExchangeAssetTransactionJSON = TransactionMixJSON<
     BeExchangeAssetAssetJSON,
-    { hasRecipientId: true }
-  >;
-  type ToExchangeSpecialAssetTransactionJSON = TransactionMixJSON<
-    ToExchangeSpecialAssetAssetJSON,
-    { hasRecipientId: false }
-  >;
-  type BeExchangeSpecialAssetTransactionJSON = TransactionMixJSON<
-    BeExchangeSpecialAssetAssetJSON,
     { hasRecipientId: true }
   >;
 
