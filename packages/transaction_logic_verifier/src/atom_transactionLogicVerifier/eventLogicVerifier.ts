@@ -68,7 +68,7 @@ export class EventLogicVerifier {
   }
 
   private __listenEventFee(
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    accountMap: Map<string, BFChainCore.AccountInfo>,
     currentBlockHeight: number,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -94,19 +94,19 @@ export class EventLogicVerifier {
         }
         const fee = BigInt(applyInfo.amount);
         const address = applyInfo.address;
-        const accountAssets = await this.helperLogicVerifier.getAccountAssetsForce(
+        const { assets } = await this.helperLogicVerifier.getAccountForce(
           accountMap,
           address,
           currentBlockHeight,
         );
-        accountAssets[magic] = accountAssets[magic] || {};
-        accountAssets[magic][assetType] = accountAssets[magic][assetType] || {
+        assets[magic] = assets[magic] || {};
+        assets[magic][assetType] = assets[magic][assetType] || {
           sourceChainMagic: magic,
           assetType,
           assetNumber: BigInt(0),
           history: {},
         };
-        const hodingAsset = accountAssets[magic][assetType];
+        const hodingAsset = assets[magic][assetType];
         const remainAsset = hodingAsset.assetNumber;
         hodingAsset.assetNumber += fee;
         if (hodingAsset.assetNumber < BigInt(0)) {
@@ -127,7 +127,7 @@ export class EventLogicVerifier {
   }
 
   private __listenEventDestroyMainAsset(
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    accountMap: Map<string, BFChainCore.AccountInfo>,
     currentBlockHeight: number,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -175,7 +175,7 @@ export class EventLogicVerifier {
   }
 
   private __listenEventAsset(
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    accountMap: Map<string, BFChainCore.AccountInfo>,
     currentBlockHeight: number,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -185,19 +185,19 @@ export class EventLogicVerifier {
       async ({ transaction, applyInfo }, next) => {
         const { magic, assetType } = applyInfo.assetInfo;
         const address = applyInfo.address;
-        const accountAssets = await this.helperLogicVerifier.getAccountAssetsForce(
+        const { assets } = await this.helperLogicVerifier.getAccountForce(
           accountMap,
           address,
           currentBlockHeight,
         );
-        accountAssets[magic] = accountAssets[magic] || {};
-        accountAssets[magic][assetType] = accountAssets[magic][assetType] || {
+        assets[magic] = assets[magic] || {};
+        assets[magic][assetType] = assets[magic][assetType] || {
           sourceChainMagic: magic,
           assetType,
           assetNumber: BigInt(0),
           history: {},
         };
-        const hodingAsset = accountAssets[magic][assetType];
+        const hodingAsset = assets[magic][assetType];
         const remainAsset = hodingAsset.assetNumber;
         hodingAsset.assetNumber += BigInt(applyInfo.amount);
         if (hodingAsset.assetNumber < BigInt(0)) {
@@ -218,7 +218,7 @@ export class EventLogicVerifier {
   }
 
   private __listenEventFrozenAsset(
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    accountMap: Map<string, BFChainCore.AccountInfo>,
     currentBlockHeight: number,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -228,19 +228,19 @@ export class EventLogicVerifier {
       async ({ transaction, applyInfo }, next) => {
         const { magic, assetType } = applyInfo.assetInfo;
         const address = applyInfo.address;
-        const accountAssets = await this.helperLogicVerifier.getAccountAssetsForce(
+        const { assets } = await this.helperLogicVerifier.getAccountForce(
           accountMap,
           address,
           currentBlockHeight,
         );
-        accountAssets[magic] = accountAssets[magic] || {};
-        accountAssets[magic][assetType] = accountAssets[magic][assetType] || {
+        assets[magic] = assets[magic] || {};
+        assets[magic][assetType] = assets[magic][assetType] || {
           sourceChainMagic: magic,
           assetType,
           assetNumber: BigInt(0),
           history: {},
         };
-        const hodingAsset = accountAssets[magic][assetType];
+        const hodingAsset = assets[magic][assetType];
         const remainAsset = hodingAsset.assetNumber;
         hodingAsset.assetNumber += BigInt(applyInfo.amount);
         if (hodingAsset.assetNumber < BigInt(0)) {
@@ -403,7 +403,7 @@ export class EventLogicVerifier {
   }
 
   private __listenEventFrozenAccount(
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    accountMap: Map<string, BFChainCore.AccountInfo>,
     currentBlockHeight: number,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -412,7 +412,7 @@ export class EventLogicVerifier {
       "frozenAccount",
       async ({ applyInfo }, next) => {
         const { address } = applyInfo;
-        const accountInfo = await this.helperLogicVerifier.getAccountInfoForce(
+        const accountInfo = await this.helperLogicVerifier.getAccountForce(
           accountMap,
           address,
           currentBlockHeight,
@@ -446,9 +446,13 @@ export class EventLogicVerifier {
     );
   }
 
-  private async __checkAsset(genesisAddress: string, assetType: string) {
+  private async __checkAsset(
+    genesisAddress: string,
+    assetType: string,
+    currentBlockHeight: number,
+  ) {
     // 不能将冻结账户设置为同质资产的创世账户
-    await this.helperLogicVerifier.isAccountFrozen(genesisAddress);
+    await this.helperLogicVerifier.isAccountFrozen(genesisAddress, currentBlockHeight);
 
     const chainMagic = this.configHelper.magic;
 
@@ -483,7 +487,7 @@ export class EventLogicVerifier {
   }
 
   private __listenEventIssueAsset(
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    accountMap: Map<string, BFChainCore.AccountInfo>,
     currentBlockHeight: number,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -494,15 +498,15 @@ export class EventLogicVerifier {
         const { address, assetInfo, genesisAddress, sourceAmount } = applyInfo;
         const { assetType } = assetInfo;
 
-        await this.__checkAsset(genesisAddress, assetType);
+        await this.__checkAsset(genesisAddress, assetType, currentBlockHeight);
 
-        const accountAssets = await this.helperLogicVerifier.getAccountAssetsForce(
+        const { assets } = await this.helperLogicVerifier.getAccountForce(
           accountMap,
           address,
           currentBlockHeight,
         );
         // 是否持有除链资产外的其他资产
-        await this.helperLogicVerifier.isPossessAssetExceptChainAsset(address, accountAssets);
+        await this.helperLogicVerifier.isPossessAssetExceptChainAsset(address, assets);
 
         // 是否持有链上资产
         await this.helperLogicVerifier.isChainAssetPossessor(address);
@@ -513,7 +517,7 @@ export class EventLogicVerifier {
           assetType: chainAssetType,
           issueAssetMinChainAsset,
         } = this.configHelper;
-        const remainChainAsset = accountAssets[chainMagic][chainAssetType].assetNumber;
+        const remainChainAsset = assets[chainMagic][chainAssetType].assetNumber;
         if (BigInt(issueAssetMinChainAsset) > remainChainAsset) {
           throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
             reason: `No enough asset, Min account asset ${issueAssetMinChainAsset}, remain Assets: ${remainChainAsset}`,
@@ -582,7 +586,7 @@ export class EventLogicVerifier {
 
         if (address !== possessorAddress) {
           // 不能将冻结账户设置为 dapp 的拥有者
-          await this.helperLogicVerifier.isAccountFrozen(possessorAddress);
+          await this.helperLogicVerifier.isAccountFrozen(possessorAddress, currentBlockHeight);
         }
 
         // dappid 是否已经存在
@@ -701,7 +705,7 @@ export class EventLogicVerifier {
 
         if (address !== possessorAddress) {
           // 不能将冻结账户设置为 dappid 的拥有者
-          await this.helperLogicVerifier.isAccountFrozen(possessorAddress);
+          await this.helperLogicVerifier.isAccountFrozen(possessorAddress, currentBlockHeight);
         }
 
         const memDapp = await this.helperLogicVerifier.isDAppExist(
@@ -732,7 +736,7 @@ export class EventLogicVerifier {
   }
 
   private __listenEventRegisterChain(
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    accountMap: Map<string, BFChainCore.AccountInfo>,
     currentBlockHeight: number,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -742,13 +746,13 @@ export class EventLogicVerifier {
       async ({ transaction, applyInfo }, next) => {
         const { address, genesisBlock } = applyInfo;
 
-        const accountAssets = await this.helperLogicVerifier.getAccountAssetsForce(
+        const { assets } = await this.helperLogicVerifier.getAccountForce(
           accountMap,
           address,
           currentBlockHeight,
         );
         // 是否持有除链资产外的其他资产
-        await this.helperLogicVerifier.isPossessAssetExceptChainAsset(address, accountAssets);
+        await this.helperLogicVerifier.isPossessAssetExceptChainAsset(address, assets);
 
         // 是否持有链上资产
         await this.helperLogicVerifier.isChainAssetPossessor(address);
@@ -759,7 +763,7 @@ export class EventLogicVerifier {
           assetType: chainAssetType,
           registerChainMinChainAsset,
         } = this.configHelper;
-        const remainBalance = accountAssets[chainMagic][chainAssetType].assetNumber;
+        const remainBalance = assets[chainMagic][chainAssetType].assetNumber;
         if (BigInt(registerChainMinChainAsset) > remainBalance) {
           throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
             reason: `No enough asset, Min account asset ${registerChainMinChainAsset}, remain Assets: ${remainBalance}`,
@@ -826,7 +830,7 @@ export class EventLogicVerifier {
 
         if (address !== possessorAddress) {
           // 不能将冻结账户设置为 lns 的拥有者
-          await this.helperLogicVerifier.isAccountFrozen(possessorAddress);
+          await this.helperLogicVerifier.isAccountFrozen(possessorAddress, currentBlockHeight);
         }
 
         // 已存在的位名不能重复添加
@@ -964,7 +968,7 @@ export class EventLogicVerifier {
         const { address, sourceChainName, sourceChainMagic, name, manager } = applyInfo;
 
         // 不能将冻结账户设置为管理员
-        await this.helperLogicVerifier.isAccountFrozen(manager);
+        await this.helperLogicVerifier.isAccountFrozen(manager, currentBlockHeight);
 
         // 位名不存在不能设置管理员
         const memLocation = await this.helperLogicVerifier.isLocationNameExist(
@@ -1215,7 +1219,7 @@ export class EventLogicVerifier {
 
         if (address !== possessorAddress) {
           // 不能将冻结账户设置为链域名的拥有者
-          await this.helperLogicVerifier.isAccountFrozen(possessorAddress);
+          await this.helperLogicVerifier.isAccountFrozen(possessorAddress, currentBlockHeight);
         }
 
         // 位名是否存在
@@ -1257,7 +1261,7 @@ export class EventLogicVerifier {
     factoryId: string,
   ) {
     // 不能将冻结账户设置为非同质资产模板的拥有者账户
-    await this.helperLogicVerifier.isAccountFrozen(possessorAddress);
+    await this.helperLogicVerifier.isAccountFrozen(possessorAddress, currentBlockHeight);
 
     // entityFactory 是否已经存在
     const memEntityFactory = await this.accountGetterHelper.getEntityFactory(
@@ -1274,7 +1278,7 @@ export class EventLogicVerifier {
   }
 
   private __listenEventIssueEntityFactoryByFrozen(
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    accountMap: Map<string, BFChainCore.AccountInfo>,
     currentBlockHeight: number,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -1292,13 +1296,13 @@ export class EventLogicVerifier {
           factoryId,
         );
 
-        const accountAssets = await this.helperLogicVerifier.getAccountAssetsForce(
+        const { assets } = await this.helperLogicVerifier.getAccountForce(
           accountMap,
           address,
           currentBlockHeight,
         );
         // 是否持有除链资产外的其他资产
-        await this.helperLogicVerifier.isPossessAssetExceptChainAsset(address, accountAssets);
+        await this.helperLogicVerifier.isPossessAssetExceptChainAsset(address, assets);
 
         // 是否持有链上资产
         await this.helperLogicVerifier.isChainAssetPossessor(address);
@@ -1309,7 +1313,7 @@ export class EventLogicVerifier {
           assetType: chainAssetType,
           issueEntityFactoryMinChainAsset,
         } = this.configHelper;
-        const remainChainAsset = accountAssets[chainMagic][chainAssetType].assetNumber;
+        const remainChainAsset = assets[chainMagic][chainAssetType].assetNumber;
         if (BigInt(issueEntityFactoryMinChainAsset) > remainChainAsset) {
           throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
             reason: `No enough asset, Min account asset ${issueEntityFactoryMinChainAsset}, remain Assets: ${remainChainAsset}`,
@@ -1393,7 +1397,7 @@ export class EventLogicVerifier {
   }
 
   private __listenEventIssueEntity(
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    accountMap: Map<string, BFChainCore.AccountInfo>,
     currentBlockHeight: number,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -1414,7 +1418,7 @@ export class EventLogicVerifier {
 
         if (address !== possessorAddress) {
           // 不能将冻结账户设置为非同质资产的拥有者
-          await this.helperLogicVerifier.isAccountFrozen(possessorAddress);
+          await this.helperLogicVerifier.isAccountFrozen(possessorAddress, currentBlockHeight);
         }
 
         // entityFactory 是否已经存在
@@ -1472,13 +1476,13 @@ export class EventLogicVerifier {
           }
         }
 
-        const accountAssets = await this.helperLogicVerifier.getAccountAssetsForce(
+        const { assets } = await this.helperLogicVerifier.getAccountForce(
           accountMap,
           address,
           currentBlockHeight,
         );
         const { magic: chainMagic, assetType: chainAssetType } = this.configHelper;
-        let remainBalance = accountAssets[chainMagic][chainAssetType].assetNumber;
+        let remainBalance = assets[chainMagic][chainAssetType].assetNumber;
         const purchaseAssetPrealnum = memEntityFactory.purchaseAssetPrealnum;
         if (purchaseAssetPrealnum !== "0") {
           remainBalance -= BigInt(purchaseAssetPrealnum);
@@ -1505,7 +1509,7 @@ export class EventLogicVerifier {
   }
 
   private __listenEventIssueEntityV1(
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    accountMap: Map<string, BFChainCore.AccountInfo>,
     currentBlockHeight: number,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -1526,7 +1530,7 @@ export class EventLogicVerifier {
 
         if (address !== possessorAddress) {
           // 不能将冻结账户设置为非同质资产的拥有者
-          await this.helperLogicVerifier.isAccountFrozen(possessorAddress);
+          await this.helperLogicVerifier.isAccountFrozen(possessorAddress, currentBlockHeight);
         }
 
         // entityFactory 是否已经存在
@@ -1580,13 +1584,13 @@ export class EventLogicVerifier {
           });
         }
 
-        const accountAssets = await this.helperLogicVerifier.getAccountAssetsForce(
+        const { assets } = await this.helperLogicVerifier.getAccountForce(
           accountMap,
           address,
           currentBlockHeight,
         );
         const { magic: chainMagic, assetType: chainAssetType } = this.configHelper;
-        let remainBalance = accountAssets[chainMagic][chainAssetType].assetNumber;
+        let remainBalance = assets[chainMagic][chainAssetType].assetNumber;
         const purchaseAssetPrealnum = memEntityFactory.purchaseAssetPrealnum;
         if (purchaseAssetPrealnum !== "0") {
           remainBalance -= BigInt(purchaseAssetPrealnum);
@@ -1613,7 +1617,7 @@ export class EventLogicVerifier {
   }
 
   private __listenEventIssueEntityMultiV1(
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    accountMap: Map<string, BFChainCore.AccountInfo>,
     currentBlockHeight: number,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -1634,7 +1638,7 @@ export class EventLogicVerifier {
 
         if (address !== possessorAddress) {
           // 不能将冻结账户设置为非同质资产的拥有者
-          await this.helperLogicVerifier.isAccountFrozen(possessorAddress);
+          await this.helperLogicVerifier.isAccountFrozen(possessorAddress, currentBlockHeight);
         }
 
         // entityFactory 是否已经存在
@@ -1693,13 +1697,13 @@ export class EventLogicVerifier {
           }
         }
 
-        const accountAssets = await this.helperLogicVerifier.getAccountAssetsForce(
+        const { assets } = await this.helperLogicVerifier.getAccountForce(
           accountMap,
           address,
           currentBlockHeight,
         );
         const { magic: chainMagic, assetType: chainAssetType } = this.configHelper;
-        let remainBalance = accountAssets[chainMagic][chainAssetType].assetNumber;
+        let remainBalance = assets[chainMagic][chainAssetType].assetNumber;
         const purchaseAssetPrealnum = memEntityFactory.purchaseAssetPrealnum;
         if (purchaseAssetPrealnum !== "0") {
           remainBalance -= BigInt(purchaseAssetPrealnum);
@@ -1925,7 +1929,7 @@ export class EventLogicVerifier {
 
         if (address !== possessorAddress) {
           // 不能将冻结账户设置为非同质资产的拥有者
-          await this.helperLogicVerifier.isAccountFrozen(possessorAddress);
+          await this.helperLogicVerifier.isAccountFrozen(possessorAddress, currentBlockHeight);
         }
 
         // entity 是否存在
@@ -2042,7 +2046,7 @@ export class EventLogicVerifier {
 
         if (address !== possessorAddress) {
           // 不能将冻结账户设置为非同质资产的拥有者
-          await this.helperLogicVerifier.isAccountFrozen(possessorAddress);
+          await this.helperLogicVerifier.isAccountFrozen(possessorAddress, currentBlockHeight);
         }
 
         // certificate 是否已经存在
@@ -2234,7 +2238,7 @@ export class EventLogicVerifier {
 
         if (address !== possessorAddress) {
           // 不能将冻结账户设置为凭证的拥有者
-          await this.helperLogicVerifier.isAccountFrozen(possessorAddress);
+          await this.helperLogicVerifier.isAccountFrozen(possessorAddress, currentBlockHeight);
         }
         // 凭证是否存在
         const memCertificate = await this.helperLogicVerifier.isCertificateExist(
@@ -2271,7 +2275,7 @@ export class EventLogicVerifier {
   }
 
   listenEvent(
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    accountMap: Map<string, BFChainCore.AccountInfo>,
     currentBlockHeight: number,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {

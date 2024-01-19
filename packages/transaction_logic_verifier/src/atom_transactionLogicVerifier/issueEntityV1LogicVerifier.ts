@@ -15,7 +15,7 @@ export class IssueEntityV1LogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: IssueEntityTransactionV1,
     currentBlockHeight: number,
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    accountMap: Map<string, BFChainCore.AccountInfo>,
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {

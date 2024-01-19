@@ -29,8 +29,8 @@ export class HelperLogicVerifier {
     }
   }
 
-  async isAccountFrozen(address: string) {
-    const account = await this.accountGetterHelper.getAccountInfo(address);
+  async isAccountFrozen(address: string, height: number) {
+    const account = await this.accountGetterHelper.getAccountInfo(address, height);
     if (account && account.accountStatus !== ACCOUNT_STATUS.NORMAL) {
       throw new ConsensusException(ERROR_LIST.ACCOUNT_FROZEN, {
         address: address,
@@ -312,13 +312,13 @@ export class HelperLogicVerifier {
   }
 
   async getAccountForce(
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    accountMap: Map<string, BFChainCore.AccountInfo>,
     address: string,
     currentBlockHeight: number,
   ) {
     let account = accountMap.get(address);
-    if (!(account && account.accountInfo && account.accountAssets)) {
-      account = await this.accountGetterHelper.getAccountInfoAndAssets(address, currentBlockHeight);
+    if (!account) {
+      account = await this.accountGetterHelper.getAccountInfo(address, currentBlockHeight);
       if (!account) {
         throw new ConsensusException(ERROR_LIST.NOT_EXIST, {
           prop: `Account with address ${address}`,
@@ -328,23 +328,5 @@ export class HelperLogicVerifier {
       accountMap.set(address, account);
     }
     return account;
-  }
-
-  async getAccountInfoForce(
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
-    address: string,
-    currentBlockHeight: number,
-  ) {
-    const account = await this.getAccountForce(accountMap, address, currentBlockHeight);
-    return account.accountInfo;
-  }
-
-  async getAccountAssetsForce(
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
-    address: string,
-    currentBlockHeight: number,
-  ) {
-    const account = await this.getAccountForce(accountMap, address, currentBlockHeight);
-    return account.accountAssets;
   }
 }

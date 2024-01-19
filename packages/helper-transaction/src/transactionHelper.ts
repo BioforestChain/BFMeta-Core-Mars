@@ -195,6 +195,7 @@ export class TransactionHelper {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.ISSUE_ENTITY_MULTI);
   }
 
+  /** ANY: 任意资产操作 */
   /** TRANSFER_ANY: 任意资产转移 */
   get TRANSFER_ANY() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.TRANSFER_ANY);

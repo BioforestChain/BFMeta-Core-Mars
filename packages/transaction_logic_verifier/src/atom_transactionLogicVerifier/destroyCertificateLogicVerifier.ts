@@ -14,7 +14,7 @@ export class DestroyCertificateLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: DestroyCertificateTransaction,
     currentBlockHeight: number,
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    accountMap: Map<string, BFChainCore.AccountInfo>,
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {

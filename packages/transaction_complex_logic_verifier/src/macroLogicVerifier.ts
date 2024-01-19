@@ -17,7 +17,7 @@ export class MacroLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: MacroTransaction,
     currentBlockHeight: number,
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    accountMap: Map<string, BFChainCore.AccountInfo>,
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {

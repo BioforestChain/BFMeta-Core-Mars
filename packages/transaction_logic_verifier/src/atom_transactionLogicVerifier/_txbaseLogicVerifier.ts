@@ -50,7 +50,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   abstract verify(
     transaction: T,
     currentBlockHeight: number,
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    accountMap: Map<string, BFChainCore.AccountInfo>,
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ): Promise<boolean>;
@@ -58,7 +58,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   async logicVerify(
     transaction: T,
     currentBlockHeight: number,
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    accountMap: Map<string, BFChainCore.AccountInfo>,
   ) {
     // 校验交易版本号
     if (transaction.version > this.configHelper.version) {
@@ -76,11 +76,10 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
       senderId,
       currentBlockHeight,
     );
-    const senderAccountInfo = sender.accountInfo;
     // 校验发起账户状态
-    this.checkSenderAccountStatus(senderAccountInfo);
+    this.checkSenderAccountStatus(sender);
     // 检验二次密码
-    this.checkSecondPublicKey(senderAccountInfo, transaction);
+    this.checkSecondPublicKey(sender, transaction);
     // 校验交易的发起高度
     this.checkApplyBlockHeight(transaction, currentBlockHeight);
     // 检验交易的有效高度
@@ -100,7 +99,7 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
         recipientId,
         currentBlockHeight,
       );
-      this.checkRecipientAccountStatus(recipient.accountInfo);
+      this.checkRecipientAccountStatus(recipient);
     }
     // 校验交易的最大字节数
     this.checkTrsMaxBytes(transaction.getBytes().length);
@@ -417,7 +416,10 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
     }
     const possessorAddress = dapp.possessorAddress;
     // 获取dapp开发账户
-    const accountInfo = await accountGetterHelper.getAccountInfo(possessorAddress);
+    const accountInfo = await accountGetterHelper.getAccountInfo(
+      possessorAddress,
+      currentBlockHeight,
+    );
     if (!accountInfo) {
       throw new ConsensusException(ERROR_LIST.NOT_FOUND, {
         porp: `Dapp possessor ${possessorAddress}`,

@@ -14,7 +14,7 @@ export class TransferAnyLogicVerifier extends TransactionLogicVerifier<TransferA
   async verify(
     transaction: TransferAnyTransaction,
     currentBlockHeight: number,
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    accountMap: Map<string, BFChainCore.AccountInfo>,
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {

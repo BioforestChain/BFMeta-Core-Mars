@@ -11,7 +11,7 @@ export class GiftAnyLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: GiftAnyTransaction,
     currentBlockHeight: number,
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    accountMap: Map<string, BFChainCore.AccountInfo>,
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {

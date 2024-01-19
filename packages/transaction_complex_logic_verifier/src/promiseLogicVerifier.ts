@@ -23,7 +23,7 @@ export class PromiseLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: PromiseTransaction,
     currentBlockHeight: number,
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    accountMap: Map<string, BFChainCore.AccountInfo>,
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {

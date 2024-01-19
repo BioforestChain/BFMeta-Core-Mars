@@ -11,7 +11,7 @@ export class RegisterChainLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: RegisterChainTransaction,
     currentBlockHeight: number,
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    accountMap: Map<string, BFChainCore.AccountInfo>,
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {

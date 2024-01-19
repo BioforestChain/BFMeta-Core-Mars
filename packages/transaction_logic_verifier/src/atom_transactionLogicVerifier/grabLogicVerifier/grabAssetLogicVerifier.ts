@@ -26,7 +26,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: GrabAssetTransaction,
     currentBlockHeight: number,
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    accountMap: Map<string, BFChainCore.AccountInfo>,
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {

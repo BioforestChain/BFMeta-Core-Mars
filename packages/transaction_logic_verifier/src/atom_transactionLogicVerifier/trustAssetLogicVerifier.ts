@@ -18,7 +18,7 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: TrustAssetTransaction,
     currentBlockHeight: number,
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    accountMap: Map<string, BFChainCore.AccountInfo>,
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -34,7 +34,7 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
       });
     }
 
-    await this.isTrusteesFrozen(transaction.asset.trustAsset.trustees);
+    await this.isTrusteesFrozen(transaction.asset.trustAsset.trustees, currentBlockHeight);
     await this.helperLogicVerifier.isAssetExist(sourceChainName, sourceChainMagic, assetType);
 
     await this.logicVerify(transaction, currentBlockHeight, accountMap);
@@ -55,10 +55,13 @@ export class TrustAssetLogicVerifier extends TransactionLogicVerifier {
    *
    * @param trustees
    */
-  private async isTrusteesFrozen(trustees: string[]) {
+  private async isTrusteesFrozen(trustees: string[], currentBlockHeight: number) {
     // 委托资产的委托账户不能是冻结账户
     for (const trustee of trustees) {
-      const trusteeAccountInfo = await this.accountGetterHelper.getAccountInfo(trustee);
+      const trusteeAccountInfo = await this.accountGetterHelper.getAccountInfo(
+        trustee,
+        currentBlockHeight,
+      );
       if (trusteeAccountInfo) {
         if (trusteeAccountInfo.accountStatus !== ACCOUNT_STATUS.NORMAL) {
           throw new ConsensusException(ERROR_LIST.ACCOUNT_FROZEN, {

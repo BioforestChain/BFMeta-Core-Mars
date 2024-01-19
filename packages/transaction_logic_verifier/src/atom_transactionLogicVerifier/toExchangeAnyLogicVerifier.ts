@@ -19,7 +19,7 @@ export class ToExchangeAnyLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: ToExchangeAnyTransaction,
     currentBlockHeight: number,
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    accountMap: Map<string, BFChainCore.AccountInfo>,
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {

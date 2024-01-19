@@ -7,8 +7,6 @@ export class AccountHelper<
   ABI extends BFChainCore.AccountBaseInfo = BFChainCore.AccountBaseInfo,
   FSAI extends BFChainCore.ForSortAccountInfo = BFChainCore.ForSortAccountInfo,
   AI extends BFChainCore.AccountInfo = BFChainCore.AccountInfo,
-  AA extends BFChainCore.AccountAssets = BFChainCore.AccountAssets,
-  AIAA extends BFChainCore.AccountInfoAndAssets = BFChainCore.AccountInfoAndAssets,
   DI extends BFChainCore.DAppInfo = BFChainCore.DAppInfo,
   LNI extends BFChainCore.LocationNameInfo = BFChainCore.LocationNameInfo,
   FA extends BFChainCore.FrozenAsset = BFChainCore.FrozenAsset,
@@ -25,8 +23,6 @@ export class AccountHelper<
     ABI,
     FSAI,
     AI,
-    AA,
-    AIAA,
     DI,
     LNI,
     FA,
@@ -75,6 +71,7 @@ export class AccountHelper<
 
   getAccountInfo(
     address: string,
+    currentBlockHeight: number,
     accountGetterHelper = this.accountGetterHelper as Pick<
       BFChainCore.AccountGetterHelperInterface,
       "getAccountInfo"
@@ -86,7 +83,7 @@ export class AccountHelper<
         target: "moduleStroge",
       });
     }
-    return accountGetterHelper.getAccountInfo(address);
+    return accountGetterHelper.getAccountInfo(address, currentBlockHeight);
   }
   getAccountTxCountInBlock(
     address: string,
@@ -102,38 +99,6 @@ export class AccountHelper<
       });
     }
     return accountGetterHelper.getAccountTxCountInBlock(address);
-  }
-  getAccountAssets(
-    address: string,
-    currentBlockHeight: number,
-    accountGetterHelper = this.accountGetterHelper as Pick<
-      BFChainCore.AccountGetterHelperInterface,
-      "getAccountAssets"
-    >,
-  ): Promise<BFChainCore.AccountAssets | undefined> {
-    if (!accountGetterHelper) {
-      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-      });
-    }
-    return accountGetterHelper.getAccountAssets(address, currentBlockHeight);
-  }
-  getAccountInfoAndAssets(
-    address: string,
-    currentBlockHeight: number,
-    accountGetterHelper = this.accountGetterHelper as Pick<
-      BFChainCore.AccountGetterHelperInterface,
-      "getAccountInfoAndAssets"
-    >,
-  ): Promise<BFChainCore.AccountInfoAndAssets | undefined> {
-    if (!accountGetterHelper) {
-      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-      });
-    }
-    return accountGetterHelper.getAccountInfoAndAssets(address, currentBlockHeight);
   }
   getDApp(
     sourceChainMagic: string,
@@ -326,21 +291,6 @@ export class AccountHelper<
     }
     return accountGetterHelper.getChain(magic);
   }
-  getAlias(
-    alias: string,
-    accountGetterHelper = this.accountGetterHelper as Pick<
-      BFChainCore.AccountGetterHelperInterface,
-      "getAlias"
-    >,
-  ): Promise<BFChainCore.AliasInfo | undefined> {
-    if (!accountGetterHelper) {
-      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-      });
-    }
-    return accountGetterHelper.getAlias(alias);
-  }
   getMigrateCertificate(
     migrateCertificateId: string,
     accountGetterHelper = this.accountGetterHelper as Pick<
@@ -355,53 +305,5 @@ export class AccountHelper<
       });
     }
     return accountGetterHelper.getMigrateCertificate(migrateCertificateId);
-  }
-  mergeAccountMissedBlock(
-    height: number,
-    accountAccumulation: BFChainCore.AccountAccumulationInfo,
-    accountGetterHelper = this.accountGetterHelper as Pick<
-      BFChainCore.AccountGetterHelperInterface,
-      "mergeAccountMissedBlock"
-    >,
-  ): Promise<void> {
-    if (!accountGetterHelper) {
-      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-      });
-    }
-    return accountGetterHelper.mergeAccountMissedBlock(height, accountAccumulation);
-  }
-  mergeAccountEquity(
-    height: number,
-    accountEquity: BFChainCore.AccountEquityInfo,
-    accountGetterHelper = this.accountGetterHelper as Pick<
-      BFChainCore.AccountGetterHelperInterface,
-      "mergeAccountEquity"
-    >,
-  ): Promise<void> {
-    if (!accountGetterHelper) {
-      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-      });
-    }
-    return accountGetterHelper.mergeAccountEquity(height, accountEquity);
-  }
-  getAccountVoteInfo(
-    height: number,
-    address: string,
-    accountGetterHelper = this.accountGetterHelper as Pick<
-      BFChainCore.AccountGetterHelperInterface,
-      "getAccountVoteInfo"
-    >,
-  ): Promise<string[]> {
-    if (!accountGetterHelper) {
-      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-      });
-    }
-    return accountGetterHelper.getAccountVoteInfo(height, address);
   }
 }

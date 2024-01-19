@@ -22,7 +22,7 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: SignForAssetTransaction,
     currentBlockHeight: number,
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    accountMap: Map<string, BFChainCore.AccountInfo>,
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {

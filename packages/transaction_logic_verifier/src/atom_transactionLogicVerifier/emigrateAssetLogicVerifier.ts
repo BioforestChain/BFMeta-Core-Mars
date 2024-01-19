@@ -29,7 +29,7 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: EmigrateAssetTransaction,
     currentBlockHeight: number,
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    accountMap: Map<string, BFChainCore.AccountInfo>,
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -42,17 +42,12 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       currentBlockHeight,
     );
 
-    const { accountInfo, accountAssets } = account;
-    if (accountInfo.isDelegate) {
-      throw new ConsensusException(ERROR_LIST.DELEGATE_CAN_NOT_MIGRATE_ASSET);
-    }
-
     const isFrozenAsset = await accountGetterHelper.isFrozenAsset(senderId);
     if (isFrozenAsset) {
       throw new ConsensusException(ERROR_LIST.POSSESS_FROZEN_ASSET);
     }
 
-    await this.helperLogicVerifier.isPossessAssetExceptChainAsset(senderId, accountAssets);
+    await this.helperLogicVerifier.isPossessAssetExceptChainAsset(senderId, account.assets);
 
     await this.helperLogicVerifier.isDAppPossessor(senderId, this.configHelper);
 
@@ -109,7 +104,7 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       true,
     );
     const address = await this.accountBaseHelper.getAddressFromPublicKeyString(publicKey);
-    const delegate = await accountGetterHelper.getAccountInfo(address);
+    const delegate = await accountGetterHelper.getAccountInfo(address, currentBlockHeight);
 
     if (!delegate) {
       throw new ConsensusException(ERROR_LIST.NOT_EXIST, {
@@ -158,7 +153,7 @@ export class EmigrateAssetLogicVerifier extends TransactionLogicVerifier {
         asset.assetType === this.configHelper.assetType
           ? BigInt(transaction.fee) + BigInt(body.assetPrealnum)
           : BigInt(body.assetPrealnum);
-      if (accountAssets[magic][asset.assetType].assetNumber !== totalSpend) {
+      if (account.assets[magic][asset.assetType].assetNumber !== totalSpend) {
         throw new ConsensusException(ERROR_LIST.NEED_EMIGRATE_TOTAL_ASSET, {
           address: senderId,
         });

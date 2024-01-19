@@ -1,26 +1,10 @@
 declare namespace BFChainCore {
   type AccountInfo = {
     address: string;
-    publicKey?: string;
-    username?: string;
+    publicKey: string;
     secondPublicKey?: string;
     accountStatus: number;
-    isDelegate: boolean;
-    isAcceptVote: boolean;
-    voteInfo: {
-      round: number;
-      vote: bigint;
-    };
-    equityInfo: {
-      round: number;
-      equity: bigint;
-      fixedEquity: bigint;
-    };
-    lastRoundInfo: {
-      round: number;
-      assetNumber: bigint;
-      txCount: number;
-    };
+    assets: AccountAssets;
   };
   type AssetInfo = {
     sourceChainMagic: string;
@@ -32,10 +16,6 @@ declare namespace BFChainCore {
     [sourceChainMagic: string]: {
       [assetType: string]: AssetInfo;
     };
-  };
-  type AccountInfoAndAssets = {
-    accountInfo: AccountInfo;
-    accountAssets: AccountAssets;
   };
   type DAppInfo = {
     dappid: string;
@@ -200,8 +180,6 @@ declare namespace BFChainCore {
     ABI extends AccountBaseInfo = AccountBaseInfo,
     FSAI extends BFChainCore.ForSortAccountInfo = BFChainCore.ForSortAccountInfo,
     AI extends AccountInfo = AccountInfo,
-    AA extends AccountAssets = AccountAssets,
-    AIAA extends AccountInfoAndAssets = AccountInfoAndAssets,
     DI extends DAppInfo = DAppInfo,
     LNI extends LocationNameInfo = LocationNameInfo,
     FA extends FrozenAsset = FrozenAsset,
@@ -221,13 +199,9 @@ declare namespace BFChainCore {
     /**获取准备计算的锻造者 */
     getGenerators(currentGeneraterPublicKeyList: (Uint8Array | string)[]): Promise<ABI[]>;
     /**获取账户信息 */
-    getAccountInfo(address: string): Promise<AI | undefined>;
+    getAccountInfo(address: string, currentBlockHeight: number): Promise<AI | undefined>;
     /**获取账户的块内交易 */
     getAccountTxCountInBlock(address: string): Promise<number | undefined>;
-    /**获取账户资产信息 */
-    getAccountAssets(address: string, currentBlockHeight: number): Promise<AA | undefined>;
-    /**获取账户信息和账户资产信息 */
-    getAccountInfoAndAssets(address: string, currentBlockHeight: number): Promise<AIAA | undefined>;
     /**获取指定的 dapp */
     getDApp(
       sourceChainMagic: string,
@@ -264,19 +238,8 @@ declare namespace BFChainCore {
     getMagic(magic: string): Promise<MG | undefined>;
     /**查询指定的链 */
     getChain(magic: string): Promise<ChainInfo | undefined>;
-    /**查询指定的用户名 */
-    getAlias(alias: string): Promise<ALI | undefined>;
-    /**查询指定的用户名 */
+    /**查询迁移凭证 */
     getMigrateCertificate(migrateCertificateId: string): Promise<MCI | undefined>;
-    /**更新账户掉块数量 */
-    mergeAccountMissedBlock(
-      height: number,
-      accountAccumulation: AccountAccumulationInfo,
-    ): Promise<void>;
-    /**更新账户权益 */
-    mergeAccountEquity(height: number, accountEquity: AccountEquityInfo): Promise<void>;
-    /**获取某个账户的投票信息 */
-    getAccountVoteInfo(height: number, address: string): Promise<string[]>;
     /**查询指定的 factoryId */
     getEntityFactory(
       sourceChainMagic: string,

@@ -48,6 +48,15 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
     blockGetterHelper = this.blockGetterHelper,
     blockTickGetterHelper = this.blockTickGetterHelper,
   ) {
+    /**
+     * 普通区块
+     * 1. + 打块账户打块数
+     * 2. 分配锻造dp的收益
+     * 轮末块
+     * 1. 做普通块做的事情
+     * 2. 分配收益dp的收益
+     */
+    throw new Error(`not impl 这里要重写`)
     const blockUpdateData = await this.calcForgingAndVotingReward(block, blockGetterHelper);
 
     // 更新打块账户和投票账户（分配奖励）

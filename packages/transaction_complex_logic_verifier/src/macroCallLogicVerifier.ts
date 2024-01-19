@@ -29,7 +29,7 @@ export class MacroCallLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: MacroCallTransaction,
     currentBlockHeight: number,
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    accountMap: Map<string, BFChainCore.AccountInfo>,
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {

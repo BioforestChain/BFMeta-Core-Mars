@@ -69,40 +69,41 @@ export class RoundLastBlockTicker extends BlockTicker {
     blockGetterHelper = this.blockGetterHelper,
     accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
   ) {
-    if (!accountGetterHelper) {
-      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-      });
-    }
-    if (!blockGetterHelper) {
-      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-        prop: "blockGetterHelper",
-        target: "moduleStroge",
-      });
-    }
-    if (typeof blockGetterHelper.getVoteRecords !== "function") {
-      throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: "getVoteForGenerator",
-        target: "blockGetterHelper",
-      });
-    }
-    const generatorsEquity: BFChainCore.AccountEquityInfo = {};
-    const voteRecords = await blockGetterHelper.getVoteRecords();
-    let totalEquity = BigInt(0);
-    for (const address in voteRecords) {
-      const voteInfos = voteRecords[address];
-      for (const generatorAddress in voteInfos) {
-        if (!generatorsEquity[generatorAddress]) {
-          generatorsEquity[generatorAddress] = BigInt(0);
-        }
-        generatorsEquity[generatorAddress] += voteInfos[generatorAddress];
-        totalEquity += generatorsEquity[generatorAddress];
-      }
-    }
-    // 设置受托人账户获得的权益
-    await accountGetterHelper.mergeAccountEquity(height, generatorsEquity);
-    return totalEquity;
+    throw new Error(`not impl`)
+    // if (!accountGetterHelper) {
+    //   throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
+    //     prop: "accountGetterHelper",
+    //     target: "moduleStroge",
+    //   });
+    // }
+    // if (!blockGetterHelper) {
+    //   throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
+    //     prop: "blockGetterHelper",
+    //     target: "moduleStroge",
+    //   });
+    // }
+    // if (typeof blockGetterHelper.getVoteRecords !== "function") {
+    //   throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
+    //     prop: "getVoteForGenerator",
+    //     target: "blockGetterHelper",
+    //   });
+    // }
+    // const generatorsEquity: BFChainCore.AccountEquityInfo = {};
+    // const voteRecords = await blockGetterHelper.getVoteRecords();
+    // let totalEquity = BigInt(0);
+    // for (const address in voteRecords) {
+    //   const voteInfos = voteRecords[address];
+    //   for (const generatorAddress in voteInfos) {
+    //     if (!generatorsEquity[generatorAddress]) {
+    //       generatorsEquity[generatorAddress] = BigInt(0);
+    //     }
+    //     generatorsEquity[generatorAddress] += voteInfos[generatorAddress];
+    //     totalEquity += generatorsEquity[generatorAddress];
+    //   }
+    // }
+    // // 设置受托人账户获得的权益
+    // await accountGetterHelper.mergeAccountEquity(height, generatorsEquity);
+    // return totalEquity;
   }
 
   /**

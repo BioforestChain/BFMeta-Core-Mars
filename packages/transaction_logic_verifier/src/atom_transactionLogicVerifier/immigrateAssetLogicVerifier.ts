@@ -31,7 +31,7 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: ImmigrateAssetTransaction,
     currentBlockHeight: number,
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    accountMap: Map<string, BFChainCore.AccountInfo>,
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
@@ -73,7 +73,7 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       true,
     );
     const address = await this.accountBaseHelper.getAddressFromPublicKeyString(publicKey);
-    const delegate = await accountGetterHelper.getAccountInfo(address);
+    const delegate = await accountGetterHelper.getAccountInfo(address, currentBlockHeight);
     if (!delegate) {
       throw new ConsensusException(ERROR_LIST.NOT_EXIST, {
         prop: `Account with address ${address}`,

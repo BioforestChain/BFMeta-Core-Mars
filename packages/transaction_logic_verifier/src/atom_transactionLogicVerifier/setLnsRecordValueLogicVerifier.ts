@@ -11,7 +11,7 @@ export class SetLnsRecordValueLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: SetLnsRecordValueTransaction,
     currentBlockHeight: number,
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    accountMap: Map<string, BFChainCore.AccountInfo>,
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {

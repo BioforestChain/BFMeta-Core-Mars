@@ -11,7 +11,7 @@ export class LocationNameLogicVerifier extends TransactionLogicVerifier {
   async verify(
     transaction: LocationNameTransaction,
     currentBlockHeight: number,
-    accountMap: Map<string, BFChainCore.AccountInfoAndAssets>,
+    accountMap: Map<string, BFChainCore.AccountInfo>,
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
