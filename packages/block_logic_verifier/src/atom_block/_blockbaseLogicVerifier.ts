@@ -99,7 +99,7 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
     );
     if (!generatorInfo) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-        prop: `delegate with address ${generatorAddress}`,
+        prop: `generator with address ${generatorAddress}`,
         target: "blockChain",
       });
     }

@@ -92,12 +92,6 @@ export class ServicePeerInfoModel
   serviceNotesName!: string;
   @Field.d(ServicePeerInfoModel.INC++, "string")
   noteIP!: string;
-  @Field.d(ServicePeerInfoModel.INC++, "string")
-  delegateAddress!: string;
-  @Field.d(ServicePeerInfoModel.INC++, "bool")
-  developerVote!: boolean;
-  @Field.d(ServicePeerInfoModel.INC++, "bool")
-  systemDelegateVote!: boolean;
   @Field.d(ServicePeerInfoModel.INC++, "bool")
   dappOnChainBuy!: boolean;
 
@@ -113,9 +107,6 @@ export class ServicePeerInfoModel
       paidType: this.paidType,
       serviceNotesName: this.serviceNotesName,
       noteIP: this.noteIP,
-      delegateAddress: this.delegateAddress,
-      developerVote: this.developerVote,
-      systemDelegateVote: this.systemDelegateVote,
       dappOnChainBuy: this.dappOnChainBuy,
     };
   }
@@ -131,9 +122,6 @@ export class ServicePeerInfoModel
     this.paidType = data.paidType;
     this.serviceNotesName = data.serviceNotesName;
     this.noteIP = data.noteIP;
-    this.delegateAddress = data.delegateAddress;
-    this.developerVote = data.developerVote;
-    this.systemDelegateVote = data.systemDelegateVote;
     this.dappOnChainBuy = data.dappOnChainBuy;
   }
 
@@ -149,9 +137,6 @@ export class ServicePeerInfoModel
       paidType: this.paidType,
       serviceNotesName: this.serviceNotesName,
       noteIP: this.noteIP,
-      delegateAddress: this.delegateAddress,
-      developerVote: this.developerVote,
-      systemDelegateVote: this.systemDelegateVote,
       dappOnChainBuy: this.dappOnChainBuy,
     };
   }
@@ -171,9 +156,6 @@ export class ServicePeerInfoModel
       object.paidType && (res.paidType = object.paidType);
       object.serviceNotesName && (res.serviceNotesName = object.serviceNotesName);
       object.noteIP && (res.noteIP = object.noteIP);
-      object.delegateAddress && (res.delegateAddress = object.delegateAddress);
-      object.developerVote && (res.developerVote = object.developerVote);
-      object.systemDelegateVote && (res.systemDelegateVote = object.systemDelegateVote);
       object.dappOnChainBuy && (res.dappOnChainBuy = object.dappOnChainBuy);
     }
     return res as unknown as T;
@@ -206,12 +188,6 @@ export class ServicePeerInfoModel
 //   serviceNotesName!: string;
 //   @Field.d(ServiceInfoModel.INC++, "string")
 //   noteIP!: string;
-//   @Field.d(ServiceInfoModel.INC++, "string")
-//   delegateAddress!: string;
-//   @Field.d(ServiceInfoModel.INC++, "bool")
-//   developerVote!: boolean;
-//   @Field.d(ServiceInfoModel.INC++, "bool")
-//   systemDelegateVote!: boolean;
 //   @Field.d(ServiceInfoModel.INC++, "bool")
 //   dappOnChainBuy!: boolean;
 
@@ -227,9 +203,6 @@ export class ServicePeerInfoModel
 //       paidType: this.paidType,
 //       serviceNotesName: this.serviceNotesName,
 //       noteIP: this.noteIP,
-//       delegateAddress: this.delegateAddress,
-//       developerVote: this.developerVote,
-//       systemDelegateVote: this.systemDelegateVote,
 //       dappOnChainBuy: this.dappOnChainBuy,
 //     };
 //   }
@@ -245,9 +218,6 @@ export class ServicePeerInfoModel
 //     this.paidType = data.paidType;
 //     this.serviceNotesName = data.serviceNotesName;
 //     this.noteIP = data.noteIP;
-//     this.delegateAddress = data.delegateAddress;
-//     this.developerVote = data.developerVote;
-//     this.systemDelegateVote = data.systemDelegateVote;
 //     this.dappOnChainBuy = data.dappOnChainBuy;
 //   }
 
@@ -263,9 +233,6 @@ export class ServicePeerInfoModel
 //       paidType: this.paidType,
 //       serviceNotesName: this.serviceNotesName,
 //       noteIP: this.noteIP,
-//       delegateAddress: this.delegateAddress,
-//       developerVote: this.developerVote,
-//       systemDelegateVote: this.systemDelegateVote,
 //       dappOnChainBuy: this.dappOnChainBuy,
 //     };
 //   }
@@ -285,9 +252,6 @@ export class ServicePeerInfoModel
 //       object.paidType && (res.paidType = object.paidType);
 //       object.serviceNotesName && (res.serviceNotesName = object.serviceNotesName);
 //       object.noteIP && (res.noteIP = object.noteIP);
-//       object.delegateAddress && (res.delegateAddress = object.delegateAddress);
-//       object.developerVote && (res.developerVote = object.developerVote);
-//       object.systemDelegateVote && (res.systemDelegateVote = object.systemDelegateVote);
 //       object.dappOnChainBuy && (res.dappOnChainBuy = object.dappOnChainBuy);
 //     }
 //     return (res as unknown) as T;

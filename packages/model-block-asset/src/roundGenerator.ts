@@ -26,15 +26,15 @@ export class RoundGeneratorModel<T extends RoundGeneratorModel<T>>
   /**下一轮的打块账户以及其相关信息 */
   @Field.d(RoundGeneratorModel.INC++, NextRoundGeneratorModel, "repeated")
   nextRoundGenerators!: NextRoundGeneratorModel[];
-  private _next_round_delegate_address_list?: string[];
-  get nextRoundDelegateAddressList() {
-    if (!this._next_round_delegate_address_list) {
-      this._next_round_delegate_address_list = [];
+  private _next_round_generator_address_list?: string[];
+  get nextRoundGeneratorAddressList() {
+    if (!this._next_round_generator_address_list) {
+      this._next_round_generator_address_list = [];
       for (const equ of this.nextRoundGenerators) {
-        this._next_round_delegate_address_list.push(equ.address);
+        this._next_round_generator_address_list.push(equ.address);
       }
     }
-    return this._next_round_delegate_address_list;
+    return this._next_round_generator_address_list;
   }
   toJSON() {
     const res: BFChainCore.RoundGeneratorJSON = {

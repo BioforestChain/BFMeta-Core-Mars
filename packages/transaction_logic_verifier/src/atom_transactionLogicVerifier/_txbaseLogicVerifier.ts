@@ -604,13 +604,6 @@ export abstract class TransactionLogicVerifier<T extends Transaction<any> = Tran
   checkSecondaryTransaction?(transaction: T, currentBlockHeight: number): Promise<void>;
 
   /**
-   * 校验注册受托人名额是否充足
-   *
-   * @param currentBlockHeight
-   */
-  checkRegisterDelegateQuota?(transaction: T, currentBlockHeight: number): Promise<void>;
-
-  /**
    * 检验凭证上链高度是否合法
    *
    * @param transaction

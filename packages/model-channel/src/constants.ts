@@ -62,8 +62,6 @@ export enum NewTransactionRefuseReason {
   TRANSACTION_RECIPIENT_ASSET_FROZEN,
   /**交易的手续费不足 */
   TRANSACTION_FEE_NOT_ENOUGH,
-  /**必须给 dapp 的开发者投票 */
-  MUSET_VOTE_FOR_DAPP_POSSESSOR,
   /**交易资产负债 */
   TRANSACTION_ASSET_DEBT,
   /**位名不存在 */
@@ -72,8 +70,6 @@ export enum NewTransactionRefuseReason {
   ACCOUNT_NOT_LNS_POSSESSOR,
   /**dapp 已经存在 */
   DAPP_ALREADY_EXISTS,
-  /**账户已经是一个受托人 */
-  ACCOUNT_ALREADY_DELEGATE,
   /**缩写名已经存在 */
   ASSETTYPE_ALREADY_EXIST,
   /**链名已经存在 */
@@ -114,8 +110,6 @@ export enum NewTransactionRefuseReason {
   ENTITY_NOT_EXIST,
   /**账户不是 entity 拥有者 */
   ACCOUNT_NOT_ENTITY_POSSESSOR,
-  /**受托人拒绝收票 */
-  DELEGATE_IS_ALREADY_ACCEPT_VOTE,
   /**账户不是 entity 拥有者 */
   ACCOUNT_NOT_DAPPID_POSSESSOR,
   /**资产不存在 */

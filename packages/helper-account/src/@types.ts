@@ -93,9 +93,6 @@ declare namespace BFChainCore {
   type AccountAccumulationInfo = {
     [address: string]: number;
   };
-  type AccountEquityInfo = {
-    [delegateAddress: string]: bigint;
-  };
 
   type AccountBaseInfo = {
     address: string;

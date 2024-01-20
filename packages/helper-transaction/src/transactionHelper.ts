@@ -312,12 +312,12 @@ export class TransactionHelper {
     this.MACRO_CALL,
   ];
 
-  /**获取创世块里所有的受托人 */
-  genesisDelegates(config = this.config) {
-    const delegates = config.genesisBlock.transactionInfo.transactionInBlocks
+  /**获取创世块里所有的锻造者 */
+  genesisGenerator(config = this.config) {
+    const generators = config.genesisBlock.transactionInfo.transactionInBlocks
       .filter((tib) => tib.transaction.type === this.ISSUE_ENTITY)
       .map((tib) => tib.transaction.senderId);
-    return [...new Set(delegates)];
+    return [...new Set(generators)];
   }
   async getGensisAcountAddress(config = this.config) {
     return this.accountBaseHelper.getAddressFromPublicKeyString(config.genesisAccountPublicKey);

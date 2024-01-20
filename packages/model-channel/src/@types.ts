@@ -331,8 +331,6 @@ declare namespace BFChainCore {
     //     description?: string;
     //   };
     // };
-    /**是否需要向矿工投票才能使用服务 */
-    needVote: boolean;
     /**用户用的服务包信息 */
     userUI: {
       fileName: string;
@@ -357,9 +355,6 @@ declare namespace BFChainCore {
     paidType: string; // 支付类型： 0:付费运用 1:免费运用
     serviceNotesName: string; // 节点服务名称
     noteIP: string; // 节点IP
-    delegateAddress: string; // 受托人地址
-    developerVote: boolean; // 开发者投票(数据上链投票)
-    systemDelegateVote: boolean; // 矿机机主投票(使用投票)
     dappOnChainBuy: boolean; // DAPP上链付费
   };
 

@@ -40,8 +40,8 @@ function print(obj: any) {
   } as BFChainCore.BlockGetterHelperInterface);
 
   /**已绑定的受托人个数 */
-  let pickGenerators = bfchainCore.transactionHelper.genesisDelegates()[0]; //.slice(50, 80);
-  // pickDelegates = pickDelegates.filter((v) => {
+  let pickGenerators = bfchainCore.transactionHelper.genesisGenerator()[0]; //.slice(50, 80);
+  // pickGenerators = pickGenerators.filter((v) => {
   //   if (["c4q2hHccaS3qcXGMqsGcasjbvj9aJsCuuy"].includes(v)) {
   //     return false;
   //   }
@@ -741,7 +741,7 @@ function print(obj: any) {
   ];
   /** 随机获取下一轮的打块人*/
   const randomNextGenerators = (
-    generators: string[] = bfchainCore.transactionHelper.genesisDelegates(),
+    generators: string[] = bfchainCore.transactionHelper.genesisGenerator(),
   ) => {
     const randoms: number[] = [];
     while (true) {
@@ -879,9 +879,9 @@ function print(obj: any) {
 
           let chosenAddress: string[];
           if (bfchainCore.blockHelper.calcRoundByHeight(lastBlock.height) % 2 === 0) {
-            chosenAddress = bfchainCore.transactionHelper.genesisDelegates().slice(0, 57);
+            chosenAddress = bfchainCore.transactionHelper.genesisGenerator().slice(0, 57);
           } else {
-            chosenAddress = bfchainCore.transactionHelper.genesisDelegates().slice(57, 114);
+            chosenAddress = bfchainCore.transactionHelper.genesisGenerator().slice(57, 114);
           }
           const nextRoundGenerators = chosenAddress.map((v) => {
             return { address: v, numberOfEntities: 0 };
@@ -988,7 +988,7 @@ function print(obj: any) {
 
   // do {
   //   count++;
-  //   const result = await bfchainCore.block.blockGeneratorCalculator.calcGenerateBlockDelegate({
+  //   const result = await bfchainCore.block.blockGeneratorCalculator.calcGenerateBlockGenerator({
   //     timestamp: lastBlock.timestamp,
   //     height: lastBlock.height,
   //   });
@@ -1068,12 +1068,12 @@ function print(obj: any) {
   print(e);
 });
 // {
-//   test("calcGenerateBlockDelegate", async t => {
+//   test("calcGenerateBlockGenerator", async t => {
 //     const currentHeight = 98;
 //     const curBlock = await bfchainCore.blockHelper.forceGetBlockByHeight(currentHeight);
 //     const curTime = 1557388690881;
 //     let usedPublicKeys = new Map();
-//     const res = await bfchainCore.block.blockGeneratorCalculator.calcGenerateBlockDelegate(
+//     const res = await bfchainCore.block.blockGeneratorCalculator.calcGenerateBlockGenerator(
 //       curBlock,
 //       {
 //         usedPublicKeys,
@@ -1092,12 +1092,12 @@ function print(obj: any) {
 //   });
 // }
 // {
-//   test("calcGenerateBlockDelegate_genesisBlock", async t => {
+//   test("calcGenerateBlockGenerator_genesisBlock", async t => {
 //     const currentHeight = 3;
 //     const curBlock = await bfchainCore.blockHelper.forceGetBlockByHeight(currentHeight);
 //     const curTime = 1557388690881;
 //     let usedPublicKeys = new Map();
-//     const res = await bfchainCore.block.blockGeneratorCalculator.calcGenerateBlockDelegate(
+//     const res = await bfchainCore.block.blockGeneratorCalculator.calcGenerateBlockGenerator(
 //       curBlock,
 //       {
 //         usedPublicKeys,

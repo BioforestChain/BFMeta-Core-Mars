@@ -244,22 +244,6 @@ export class MacroCallLogicVerifier extends TransactionLogicVerifier {
   }
 
   /**
-   * 校验注册受托人名额是否充足
-   *
-   * @param transaction
-   * @param currentBlockHeight
-   */
-  async checkRegisterDelegateQuota(transaction: MacroCallTransaction, currentBlockHeight: number) {
-    const subTransaction = transaction.asset.call.transaction;
-    const logicVerify = this.transactionLogicVerifierCore.getTransactionLogicVerifierFromType(
-      subTransaction.type,
-    );
-    if (logicVerify.checkRegisterDelegateQuota) {
-      await logicVerify.checkRegisterDelegateQuota(subTransaction, currentBlockHeight);
-    }
-  }
-
-  /**
    * 接收交易时调用
    *
    * @param transaction

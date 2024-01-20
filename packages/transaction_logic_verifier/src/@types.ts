@@ -89,12 +89,6 @@ declare namespace BFChainCore {
       heightRange: { startHeight: number; endHeight: number };
     }): Promise<boolean>;
     /**
-     * 查询新注册的受托人
-     *
-     * @param height 区块高度
-     */
-    getRegisterNewGenerators(height: number): Promise<string[]>;
-    /**
      * 根据 promiseId 获取承诺交易
      *
      * @param promiseId 事件签名

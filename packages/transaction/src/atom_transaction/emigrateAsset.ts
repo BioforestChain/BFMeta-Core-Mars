@@ -136,7 +136,7 @@ export class EmigrateAssetTransactionFactory extends TransactionFactory<Emigrate
           magic: config.magic,
           generatorPublicKey: config.generatorPublicKey,
           genesisBlockSignature: config.signature,
-          genesisDelegates: this.transactionHelper.genesisDelegates(config),
+          genesisDelegates: this.transactionHelper.genesisGenerator(config),
         },
         forceCheckFromAuthSignature: true,
       },

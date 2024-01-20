@@ -217,8 +217,8 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
       block.generatorPublicKey,
     );
     const nextRoundGenerators = block.asset.roundLastAsset.nextRoundGenerators;
-    const delegateLength = calcNextRoundGenerators.length;
-    if (delegateLength !== nextRoundGenerators.length) {
+    const generatorLength = calcNextRoundGenerators.length;
+    if (generatorLength !== nextRoundGenerators.length) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `nextRoundGenerators length ${nextRoundGenerators.length}`,
         be_compare_prop: `nextRoundGenerators length ${calcNextRoundGenerators.length}`,
@@ -227,7 +227,7 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
       });
     }
 
-    for (let i = 0; i < delegateLength; i++) {
+    for (let i = 0; i < generatorLength; i++) {
       const { address, numberOfEntities } = calcNextRoundGenerators[i];
       const nextRoundGenerator = nextRoundGenerators[i];
       if (nextRoundGenerator.address !== address) {

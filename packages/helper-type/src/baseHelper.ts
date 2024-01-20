@@ -888,41 +888,6 @@ export class BaseHelper {
   }
 
   /**
-   * 奖励比例是否合法
-   * 不能是空对象
-   * 必须要有投票奖励比例和打块奖励比例
-   * 比例之和必须等于 1
-   *
-   * @param rewardPercent
-   */
-  isValidChainRewardPercent(rewardPercent: any) {
-    if (this.isEmptyObject(rewardPercent)) {
-      return false;
-    }
-    if (!(rewardPercent.votePercent && rewardPercent.forgePercent)) {
-      return false;
-    }
-    const votePercent = rewardPercent.votePercent;
-    const forgePercent = rewardPercent.forgePercent;
-    if (
-      !(
-        this.isPositiveFloatNotContainZero(votePercent.denominator) &&
-        this.isPositiveFloatNotContainZero(forgePercent.denominator)
-      )
-    ) {
-      return false;
-    }
-    if (votePercent.denominator !== forgePercent.denominator) {
-      return false;
-    }
-    const denominator = votePercent.denominator;
-    if (votePercent.numerator + forgePercent.numerator !== denominator) {
-      return false;
-    }
-    return true;
-  }
-
-  /**
    * 是否是纯大写
    *
    * @param value

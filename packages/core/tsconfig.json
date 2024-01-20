@@ -52,7 +52,6 @@
     }
   ],
   "files": [
-    "src/@types.ts",
     "src/index.ts",
     "src/templateRemark.ts"
   ]

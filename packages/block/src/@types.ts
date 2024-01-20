@@ -19,9 +19,7 @@ declare namespace BFChainCore {
     skipVerifyStatisticInfo?: boolean;
     skipVerifyParticipation?: boolean;
     recordForkBlock?: boolean;
-    transactionGetterHelper?: Required<
-      Pick<BFChainCore.TransactionGetterHelperInterface, "getRegisterNewGenerators">
-    >;
+    transactionGetterHelper?: Required<BFChainCore.TransactionGetterHelperInterface>;
     blockGetterHelper?: Required<
       Pick<
         BFChainCore.BlockGetterHelperInterface,

@@ -233,10 +233,6 @@ export const ERROR_LIST = {
     "001-11022",
     "Need purchase dappid before use, dappid {dappid}",
   ),
-  NEED_VOTE_FOR_DAPPID_POSSESSOR_BFCORE_USE: new ErrorCode(
-    "001-11023",
-    "Need vote for dappid possessor before use, dappid {dappid}, errorId {errorId}",
-  ),
   CAN_NOT_DELETE_LOCATION_NAME: new ErrorCode(
     "001-11025",
     "Can not delete locationName {locationName}, reason {reason}",
@@ -335,7 +331,6 @@ export const ERROR_LIST = {
   ),
   CAN_NOT_CARRY_SECOND_PUBLICKEY: new ErrorCode("001-11060", "Can not carry second publicKey"),
   CAN_NOT_CARRY_SECOND_SIGNATURE: new ErrorCode("001-11061", "Can not carry second signature"),
-  VOTE_RECENTLY: new ErrorCode("001-11062", "Account participate vote recently"),
   POSSESS_FROZEN_ASSET: new ErrorCode("001-11063", "Account possess frozen asset"),
   NEED_EMIGRATE_TOTAL_ASSET: new ErrorCode(
     "001-11064",
