@@ -170,6 +170,14 @@ export class BlockHelper {
   calcBlockChainRoundByHeight(height: number) {
     return this.calcRoundByHeight(height + 1);
   }
+  /**是否是轮末块 */
+  isRoundLastBlock(height: number) {
+    return height % this.config.blockPerRound === 0;
+  }
+  /**是否轮次切换 */
+  isRoundChange(prevHeight: number, nextHeight: number) {
+    return this.calcRoundByHeight(prevHeight) === this.calcRoundByHeight(nextHeight);
+  }
   //#region block getter
 
   async forceGetBlockByHeight<B extends BFChainCore.Block = BFChainCore.Block>(
@@ -406,13 +414,6 @@ export class BlockHelper {
       blockPlotChecker = {
         height: block.height,
         timestamp: block.timestamp,
-        /**参与度 */
-        // get blockParticipation() {
-        //   Object.defineProperty(this, "blockParticipation", {
-        //     value: BigInt(block.blockParticipation),
-        //   });
-        //   return this.blockParticipation;
-        // },
         /**交易量 */
         numberOfTransactions: block.numberOfTransactions,
         /**手续费 */
@@ -442,13 +443,6 @@ export class BlockHelper {
     return {
       height: newBlock.height,
       timestamp: newBlock.timestamp,
-      /**参与度 */
-      // get blockParticipation() {
-      //   Object.defineProperty(this, "blockParticipation", {
-      //     value: BigInt(newBlock.blockParticipation),
-      //   });
-      //   return this.blockParticipation;
-      // },
       /**交易量 */
       numberOfTransactions: newBlock.numberOfTransactions,
       /**手续费 */
@@ -470,13 +464,6 @@ export class BlockHelper {
     const blockPlotChecker: BFChainCore.BlockPlotChecker = {
       height: last.height,
       timestamp: last.timestamp,
-      /**参与度 */
-      // get blockParticipation() {
-      //   Object.defineProperty(this, "blockParticipation", {
-      //     value: list.reduce((p, pc1) => p + pc1.blockParticipation, BigInt(0)),
-      //   });
-      //   return this.blockParticipation;
-      // },
       /**交易量 */
       get numberOfTransactions() {
         Object.defineProperty(this, "numberOfTransactions", {
@@ -638,98 +625,43 @@ export class BlockHelper {
 
   // #region 区块奖励分配相关
   /**
-   * 计算打块账户和投票账户可分配的奖励总额
+   * 计算打块账户和持股账户的奖励
    *
    * @param block
-   * @param generatorVote 打块账户上一轮获得的权益
+   * @param numberOfEntities
    * @returns
    */
-  calcRewardsForForginAndVoting<T extends Block>(block: T, generatorVote: bigint) {
-    // const blockFee = BigInt(block.totalFee);
-    // 手续费直接销毁
-    const blockFee = BigInt(0);
-    const blockReward = BigInt(block.reward);
-    const result = {
-      blockFee,
-      blockReward,
-      reward: blockReward + blockFee,
-      vrewards: BigInt(0),
-      vrewardsRemaining: BigInt(0),
-    };
-    // 打块账户上一轮获得的权益大于 0 才需要把奖励分配给投票账户
-    // if (block.height !== 1 && generatorVote > BigInt(0)) {
-    //   const { jsbiHelper, config } = this;
-    //   // 上一轮 给打块账户投票的用户 大于 0
-    //   const votePercent = config.rewardPercent.votePercent;
-    //   const fee = jsbiHelper.multiplyFloorFraction(blockFee, votePercent);
-    //   const reward = jsbiHelper.multiplyFloorFraction(blockReward, votePercent);
-    //   result.blockFee = blockFee - fee;
-    //   result.blockReward = blockReward - reward;
-    //   result.reward = result.blockFee + result.blockReward;
-    //   result.vrewards = fee + reward;
-    // }
-    return result;
-  }
-
-  /**
-   * 计算打块账户和投票账户可分配的奖励总额
-   *
-   * @param block
-   * @param voters 给打块账户投票的账户
-   * @param generatorVote 打块账户上一轮获得的权益
-   */
-  calcForgingAndVotingReward<T extends Block>(
+  calcForginAndHoldingRewards<T extends Block>(
     block: T,
-    voters: BFChainCore.VoterInfo[],
-    generatorVote: bigint,
+    numberOfEntities: number,
+    holders: BFChainCore.EntityHolderInfo[],
   ) {
-    const result = this.calcRewardsForForginAndVoting(block, generatorVote);
-    const blockUpdateData = {
-      ...result,
-      voters,
-      totalEquity: generatorVote,
+    const blockFee = BigInt(block.totalFee);
+    const blockReward = BigInt(block.totalFee);
+    const result: BFChainCore.BlockUpdateDataInfo = {
+      forgingRewards: blockFee + blockReward,
+      holdingRewardsList: [],
+      circulations: BigInt(0),
     };
-    return blockUpdateData;
-  }
-
-  /**
-   * 计算投票账户获得的奖励
-   *
-   * @param voteEquity 账户投出的权益
-   * @param generatorVote 打块账户上一轮获得的权益
-   * @param voteTotalReward 可分配的投票总奖励
-   */
-  calcVotingRewards(voteEquity: bigint, generatorVote: bigint, voteTotalReward: bigint) {
-    return (voteTotalReward * voteEquity) / generatorVote;
-  }
-
-  /**
-   * 计算某个区块的所有投票账户获得的奖励
-   *
-   * @param voters 投票账户
-   * @param generatorVote 打块账户上一轮获得的权益
-   * @param voteTotalReward 可分配的投票总奖励
-   *
-   */
-  calcBlockVotesRewards(
-    voters: BFChainCore.VoterInfo[],
-    generatorVote: bigint,
-    voteTotalReward: bigint,
-  ) {
-    // 每个投票账户得到的奖励 voteRewardList[address] = voteReward
-    const voteRewardList: BFChainCore.VoterRewardListInfo = {};
-    let sumVoteReward = BigInt(0);
-    for (const voter of voters) {
-      const voteReward = this.calcVotingRewards(voter.equity, generatorVote, voteTotalReward);
-      sumVoteReward += voteReward;
-      voteRewardList[voter.address] = voteReward;
+    let circulations = blockReward;
+    // 还有剩余的未流通的主权益，块内有交易，分红 entity 总量大于 0
+    if (blockReward > BigInt(0) && blockFee > BigInt(0) && numberOfEntities > 0) {
+      const totalEntities = BigInt(numberOfEntities);
+      const holdingRewardsList: BFChainCore.EntityHolderRewardInfo[] = [];
+      for (const holder of holders) {
+        const holderRewards = (blockFee * BigInt(holder.numberOfEntities)) / totalEntities;
+        if (holderRewards > BigInt(0)) {
+          circulations = circulations + holderRewards;
+          holdingRewardsList.push({
+            address: holder.address,
+            rewards: holderRewards,
+          });
+        }
+      }
+      result.holdingRewardsList = holdingRewardsList;
+      result.circulations = circulations;
     }
-    // 分配剩余的奖励
-    const vrewardsRemaining = voteTotalReward - sumVoteReward;
-    return {
-      voteRewardList,
-      vrewardsRemaining,
-    };
+    return result;
   }
   // #endregion
 }

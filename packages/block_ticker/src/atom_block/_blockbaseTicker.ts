@@ -38,125 +38,130 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
 
   abstract tick(
     block: T,
-    blockGetterHelper?: BFChainCore.BlockGetterHelperInterface,
-    blockTickGetterHelper?: BFChainCore.BlockTickGetterHelperInterface,
     accountGetterHelper?: BFChainCore.AccountGetterHelperInterface,
-  ): Promise<BFChainCore.TickResultInfo>;
+    blockTickGetterHelper?: BFChainCore.BlockTickGetterHelperInterface,
+  ): Promise<void>;
 
+  /**
+   * 普通区块
+   * 1. 累加打块账户打块数
+   * 2. 分配锻造区块的收益
+   *
+   * 轮末块
+   * 1. 做普通块做的事情
+   * 2. 分配持仓账户的收益
+   */
   async tickBlockBase(
     block: T,
-    blockGetterHelper = this.blockGetterHelper,
+    accountGetterHelper = this.accountGetterHelper,
     blockTickGetterHelper = this.blockTickGetterHelper,
   ) {
-    /**
-     * 普通区块
-     * 1. + 打块账户打块数
-     * 2. 分配锻造dp的收益 getGeneratorDpHolders()
-     * 轮末块
-     * 1. 做普通块做的事情
-     * 2. 分配收益dp的收益 getRewardDpHolders()
-     */
-    throw new Error(`not impl 这里要重写`);
-    const blockUpdateData = await this.calcForgingAndVotingReward(block, blockGetterHelper);
+    const blockUpdateData = await this.__calcForginAndHoldingRewards(block, accountGetterHelper);
 
     // 更新打块账户和投票账户（分配奖励）
-    await this.updateForgingAndVotingAccount(block, blockUpdateData, blockTickGetterHelper);
+    await this.__updateForgingAndHoldingAccount(
+      block,
+      blockUpdateData,
+      accountGetterHelper,
+      blockTickGetterHelper,
+    );
   }
 
   /**
-   * 获取给打块账户投票的账户
+   * 获取持股账户
    *
-   * @param generatorAddress
-   * @param height
+   * @param accountGetterHelper
+   * @returns
    */
-  async getVoteForDelegate(
-    generatorAddress: string,
-    height: number,
-    blockGetterHelper = this.blockGetterHelper,
-  ) {
-    const voterArray: any[] = []; //
-    /**这里要重写 */
-    const voters: BFChainCore.VoterInfo[] = [];
-    const minEquity = BigInt(0);
-    let totalEquity = BigInt(0);
-    // 只有投票权益大于 0 的账户才能得到奖励
-    for (const voter of voterArray) {
-      if (voter.equity > minEquity) {
-        totalEquity += voter.equity;
-        voters[voters.length] = voter;
-      }
+  private async __getEntityHolders(accountGetterHelper = this.accountGetterHelper) {
+    if (!accountGetterHelper) {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
+        prop: "accountGetterHelper",
+        target: "moduleStroge",
+      });
     }
-    // 不需要进行排序，得到的奖励只和账户的投出权益有关，分配剩余的奖励给打块账户
+    const holders = await accountGetterHelper.getEntityHolders();
+    let totalEntities = 0;
+    for (const holder of holders) {
+      totalEntities += holder.numberOfEntities;
+    }
+    // 不需要进行排序，得到的奖励只和账户持仓数量有关，分配剩余的奖励不处理
     return {
-      voters,
-      totalEquity,
+      holders,
+      totalEntities,
     };
   }
 
   /**
-   * 计算打块和投票奖励
+   * 计算打块奖励和持股分红
    *
    * @param block
-   * @param blockGetterHelper
+   * @param accountGetterHelper
    */
-  async calcForgingAndVotingReward(block: T, blockGetterHelper = this.blockGetterHelper) {
-    if (!blockGetterHelper) {
+  private async __calcForginAndHoldingRewards(
+    block: T,
+    accountGetterHelper = this.accountGetterHelper,
+  ) {
+    if (!accountGetterHelper) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-        prop: "blockGetterHelper",
+        prop: "accountGetterHelper",
         target: "moduleStroge",
       });
     }
-
-    const { accountBaseHelper } = this;
-    const { height } = block;
-    const generatorAddress = await accountBaseHelper.getAddressFromPublicKeyString(
-      block.generatorPublicKey,
-    );
-    const { totalEquity, voters } = await this.getVoteForDelegate(
-      generatorAddress,
-      height,
-      blockGetterHelper,
-    );
-
-    const blockUpdateData = await this.blockHelper.calcForgingAndVotingReward(
+    const { blockHelper } = this;
+    let totalEntities = 0;
+    let holders: BFChainCore.EntityHolderInfo[] = [];
+    // 轮末块并且还有未流通的主权益
+    if (blockHelper.isRoundLastBlock(block.height) && block.reward !== "0") {
+      const result = await this.__getEntityHolders(accountGetterHelper);
+      totalEntities = result.totalEntities;
+      holders = result.holders;
+    }
+    const blockUpdateData = this.blockHelper.calcForginAndHoldingRewards(
       block,
-      voters,
-      totalEquity,
+      totalEntities,
+      holders,
     );
-
     return blockUpdateData;
   }
 
   /**
-   * 更新打块账户和投票账户
+   * 更新打块账户和持仓账户
    *
    * @param block
    * @param blockUpdateData
+   * @param accountGetterHelper
    * @param blockTickGetterHelper
    */
-  async updateForgingAndVotingAccount(
+  private async __updateForgingAndHoldingAccount(
     block: T,
     blockUpdateData: BFChainCore.BlockUpdateDataInfo,
+    accountGetterHelper = this.accountGetterHelper,
     blockTickGetterHelper = this.blockTickGetterHelper,
   ) {
-    if (!blockTickGetterHelper) {
+    if (!accountGetterHelper) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-        prop: "blockGetterHelper",
+        prop: "accountGetterHelper",
         target: "moduleStroge",
       });
     }
-    const { voters, totalEquity } = blockUpdateData;
-    if (block.height !== 1 && totalEquity > BigInt(0)) {
-      const voteTotalReward = BigInt(blockUpdateData.vrewards);
-      const { voteRewardList, vrewardsRemaining } = this.blockHelper.calcBlockVotesRewards(
-        voters,
-        totalEquity,
-        voteTotalReward,
-      );
-      // 分配剩余的奖励给打块账户
-      blockUpdateData.reward = blockUpdateData.reward + vrewardsRemaining;
-      await blockTickGetterHelper.updateVotingAccount(block, voteRewardList);
+    if (!blockTickGetterHelper) {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
+        prop: "blockTickGetterHelper",
+        target: "moduleStroge",
+      });
     }
-    await blockTickGetterHelper.updateForgingAccount(block, blockUpdateData.reward);
+    const { forgingRewards, holdingRewardsList, circulations } = blockUpdateData;
+    if (holdingRewardsList.length > 0) {
+      await blockTickGetterHelper.updateHoldingAccount(block, holdingRewardsList);
+    }
+    await blockTickGetterHelper.updateForgingAccount(block, forgingRewards);
+    if (circulations > BigInt(0)) {
+      await accountGetterHelper.accumulateCirculations(
+        this.configHelper.magic,
+        this.configHelper.assetType,
+        circulations,
+      );
+    }
   }
 }

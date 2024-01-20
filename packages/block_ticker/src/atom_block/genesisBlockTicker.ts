@@ -9,11 +9,9 @@ const { ConsensusException } = CoreExceptionGenerator("CONTROLLER", "BlockLogicV
 export class GenesisBlockTicker extends BlockTicker {
   async tick(
     block: GenesisBlock,
-    blockGetterHelper = this.blockGetterHelper,
+    accountGetterHelper = this.accountGetterHelper,
     blockTickGetterHelper = this.blockTickGetterHelper,
   ) {
-    await this.tickBlockBase(block, blockGetterHelper, blockTickGetterHelper);
-
-    return {};
+    await this.tickBlockBase(block, accountGetterHelper, blockTickGetterHelper);
   }
 }

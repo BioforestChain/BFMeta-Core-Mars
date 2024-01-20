@@ -6,11 +6,9 @@ import { Injectable } from "@bfchain/util";
 export class CommonBlockTicker extends BlockTicker {
   async tick(
     block: CommonBlock,
-    blockGetterHelper = this.blockGetterHelper,
+    accountGetterHelper = this.accountGetterHelper,
     blockTickGetterHelper = this.blockTickGetterHelper,
   ) {
-    await this.tickBlockBase(block, blockGetterHelper, blockTickGetterHelper);
-
-    return {};
+    await this.tickBlockBase(block, accountGetterHelper, blockTickGetterHelper);
   }
 }

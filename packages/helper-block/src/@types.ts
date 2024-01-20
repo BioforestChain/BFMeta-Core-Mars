@@ -74,11 +74,6 @@ declare namespace BFChainCore {
       version?: number;
     }): Promise<number>;
     /**
-     * 获取投票记录
-     *
-     */
-    getVoteRecords?(): Promise<VoteRecord>;
-    /**
      * 根据高度范围获取区块
      *
      * @param minHeight
@@ -150,34 +145,18 @@ declare namespace BFChainCore {
     /**区块附加信息 */
     asset: GetBlockAssetJSON<T>;
   };
-  type TickResultInfo = {
-    maxBeginBalance?: string;
-    maxTxCount?: number;
-    rate?: string;
-  };
-  type VoterInfo = {
-    equity: bigint;
+  type EntityHolderRewardInfo = {
     address: string;
+    rewards: bigint;
   };
   type BlockUpdateDataInfo = {
-    reward: bigint;
-    vrewards: bigint;
-    vrewardsRemaining: bigint;
-    blockFee: bigint;
-    blockReward: bigint;
-    totalEquity: bigint;
-    voters: VoterInfo[];
+    /**打块奖励 */
+    forgingRewards: bigint;
+    /**持仓分红奖励 */
+    holdingRewardsList: EntityHolderRewardInfo[];
+    /**流通量 */
+    circulations: bigint;
   };
-  type VoteRecordInfo = {
-    [address: string]: bigint;
-  };
-  type VoteRecord = {
-    [address: string]: VoteRecordInfo;
-  };
-  type VoterRewardListInfo = {
-    [address: string]: bigint;
-  };
-
   //#region ChainChannel Base Interface
 
   interface ChainChannelGroup<CC extends SimpleChainChannel> {

@@ -1,9 +1,15 @@
 declare namespace BFChainCore {
+  type EntityHolderInfo = {
+    address: string;
+    numberOfEntities: number;
+  };
   type AccountInfo = {
     address: string;
     publicKey: string;
     secondPublicKey?: string;
     accountStatus: number;
+    numberOfGeneratorEntities: number;
+    numberOfRewardEntities: number;
     assets: AccountAssets;
   };
   type AssetInfo = {
@@ -61,8 +67,9 @@ declare namespace BFChainCore {
     sourceChainMagic: string;
     assetType: string;
     issuedAssetPrealnum: bigint;
-    frozenMainAssetPrealnum: bigint;
     remainAssetPrealnum: bigint;
+    circulatedAssetPrealnum: bigint;
+    frozenMainAssetPrealnum: bigint;
     height: number;
   };
 
@@ -191,6 +198,7 @@ declare namespace BFChainCore {
     IEI extends IssueEntityInfo = IssueEntityInfo,
     MCI extends MigrateCertificateInfo = MigrateCertificateInfo,
     ICI extends IssueCertificateInfo = IssueCertificateInfo,
+    EHI extends EntityHolderInfo = EntityHolderInfo,
   > {
     /**根据地址数组获取账户 */
     getAccounts(addressArr: string[], curRound: number): Promise<FSAI[]>;
@@ -200,6 +208,8 @@ declare namespace BFChainCore {
     getGenerators(currentGeneraterPublicKeyList: (Uint8Array | string)[]): Promise<ABI[]>;
     /**获取账户信息 */
     getAccountInfo(address: string, currentBlockHeight: number): Promise<AI | undefined>;
+    /**获取持股账户信息 */
+    getEntityHolders(): Promise<EHI[]>;
     /**获取账户的块内交易 */
     getAccountTxCountInBlock(address: string): Promise<number | undefined>;
     /**获取指定的 dapp */
@@ -230,6 +240,8 @@ declare namespace BFChainCore {
     isFrozenAsset(address: string): Promise<boolean>;
     /**查询指定的数字资产 */
     getAsset(magic: string, assetType: string): Promise<IAI | undefined>;
+    /**查询指定的数字资产 */
+    getAssetForce(magic: string, assetType: string): Promise<IAI>;
     /**查询指定的资产名 */
     getCurrency(currencyName: string): Promise<CI | undefined>;
     /**资产名是否被禁用 */
@@ -274,5 +286,7 @@ declare namespace BFChainCore {
     getGeneratorDpHolders(offset?: number): Promise<AI[]>;
     /**获取收益dp持有者 按照持有量sort*/
     getRewardDpHolders(offset?: number): Promise<AI[]>;
+    /**累加流通量 */
+    accumulateCirculations(magic: string, assetType: string, circulations: bigint): Promise<void>;
   }
 }

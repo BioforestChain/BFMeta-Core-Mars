@@ -274,10 +274,6 @@ export abstract class BlockLogicVerifier<T extends Block<any> = Block<any>> {
     }
   }
 
-  checkMaxBeginBalanceAndMaxTxCount(block: T, tickResult: BFChainCore.TickResultInfo) {
-    return true;
-  }
-
   /**
    * 块内资产变动 hash
    *
