@@ -40,7 +40,6 @@ type DelegateInfo = {
   address: string;
   secret: string;
   publicKey: string;
-  username: string;
   secondSecret?: string;
 };
 
@@ -360,7 +359,6 @@ registerchainAssetData.blockPerRound = 5;
         secret,
         address,
         publicKey,
-        username: `${registerBfchainCore.config.chainName}${i + 1}`,
       };
       // 要在创始块中实施的交易
       const tempTrsWithIndexList: {

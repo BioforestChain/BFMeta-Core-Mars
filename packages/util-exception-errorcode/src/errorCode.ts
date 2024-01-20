@@ -269,23 +269,6 @@ export const ERROR_LIST = {
     "001-11032",
     "Gift asset unfrozen time use up, frozenId {frozenId}",
   ),
-  USERNAME_ALREADY_EXIST: new ErrorCode("001-11033", "Username already exist, errorId {errorId}"),
-  ACCOUNT_IS_ALREADY_AN_DELEGATE: new ErrorCode(
-    "001-11034",
-    "Account with address {address} is already an delegate, errorId {errorId}",
-  ),
-  ACCOUNT_IS_NOT_AN_DELEGATE: new ErrorCode(
-    "001-11035",
-    "Account with address {address} is not an delegate, errorId {errorId}",
-  ),
-  DELEGATE_IS_ALREADY_ACCEPT_VOTE: new ErrorCode(
-    "001-11036",
-    "Delegate with address {address} is already accept vote",
-  ),
-  DELEGATE_IS_ALREADY_REJECT_VOTE: new ErrorCode(
-    "001-11037",
-    "Delegate with address {address} is already reject vote, errorId {errorId}",
-  ),
   FORBIDDEN: new ErrorCode("001-11038", "{prop} in {target} is forbidden"),
   ASSET_NOT_EXIST: new ErrorCode(
     "001-11039",
@@ -373,10 +356,6 @@ export const ERROR_LIST = {
   TRUST_MAIN_ASSET_ONLY: new ErrorCode(
     "001-11068",
     "You can only trust main asset, {assetType} is not main asset {mainAsset}",
-  ),
-  ACCOUNT_ALREADY_HAVE_USERNAME: new ErrorCode(
-    "001-11069",
-    "Account already has a username, errorId {errorId}",
   ),
   ISSUE_ENTITY_TIMES_USE_UP: new ErrorCode(
     "001-11070",

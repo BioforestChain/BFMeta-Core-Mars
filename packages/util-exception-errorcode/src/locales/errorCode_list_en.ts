@@ -108,7 +108,6 @@ export const ERROR_CODE_LIST_EN = {
   "001-11030": "Frozen asset is not begin to unfrozen yet, frozenId {frozenId}",
   "001-11031": "Frozen asset is already expiration, frozenId {frozenId}",
   "001-11032": "Gift asset unfrozen time use up, frozenId {frozenId}",
-  "001-11033": "Username already exist, errorId {errorId}",
   "001-11034": "Account with address {address} is already an delegate, errorId {errorId}",
   "001-11035": "Account with address {address} is not an delegate, errorId {errorId}",
   "001-11036": "Delegate with address {address} is already accept vote, errorId {errorId}",
@@ -147,7 +146,6 @@ export const ERROR_CODE_LIST_EN = {
   "001-11067":
     "Account with address {address} can not be frozen, reason {reason}, errorId {errorId}",
   "001-11068": "You can only trust main asset, {assetType} is not main asset {mainAsset}",
-  "001-11069": "Account already has a username, errorId {errorId}",
   "001-11070": "Issue entity times use up, entityFactory {entityFactory}",
   "001-11071": "Asset already exist, magic {magic} assetType {assetType}",
   "001-11072":

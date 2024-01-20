@@ -114,18 +114,6 @@ declare namespace BFChainCore {
     T extends Transaction = Transaction,
   > = ApplyTransactionEvent<ApplyInfo_Equity, EVENTNAME, T>;
 
-  type ApplyInfo_Username = {
-    address: string;
-    publicKeyBuffer: Uint8Array;
-    /**新的用户名 */
-    alias: string;
-  };
-  /**设置用户名的相关事件 */
-  type ApplyTransactionUsernameEvent<
-    EVENTNAME,
-    T extends Transaction = Transaction,
-  > = ApplyTransactionEvent<ApplyInfo_Username, EVENTNAME, T>;
-
   type ApplyInfo_Signature = {
     address: string;
     publicKeyBuffer: Uint8Array;

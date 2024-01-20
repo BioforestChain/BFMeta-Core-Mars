@@ -756,38 +756,6 @@ export class BaseHelper {
   }
 
   /**
-   * 是否是合法的创世受托人名
-   *
-   * 大小写字母、数字、下划线 1-20
-   *
-   * @param username
-   */
-  isValidGenesisUsername(username: any) {
-    if (!this.isString(username)) {
-      return false;
-    }
-    return /^[A-Za-z0-9_]{1,20}$/.test(username);
-  }
-
-  /**
-   * 用户名是否合法
-   *
-   * 不能包含本链名
-   * 只能由大小写字母、数字、下划线 1-20
-   *
-   * @param username
-   */
-  isValidUsername(username: string, chainName = this.configHelper.chainName) {
-    if (!this.isValidGenesisUsername(username)) {
-      return false;
-    }
-    if (username.toLowerCase().includes(chainName)) {
-      return false;
-    }
-    return true;
-  }
-
-  /**
    * 数字组成
    *
    * @param stringNumber

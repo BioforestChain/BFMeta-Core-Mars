@@ -119,11 +119,6 @@ declare namespace BFChainCore {
     height: Number;
   };
 
-  type AliasInfo = {
-    alias: string;
-    height: number;
-  };
-
   type IssueEntityFactoryInfo = {
     applyAddress: string;
     possessorAddress: string;
@@ -193,7 +188,6 @@ declare namespace BFChainCore {
     IAI extends IssuedAssetInfo = IssuedAssetInfo,
     CI extends CurrencyInfo = CurrencyInfo,
     MG extends MagicInfo = MagicInfo,
-    ALI extends AliasInfo = AliasInfo,
     IEFI extends IssueEntityFactoryInfo = IssueEntityFactoryInfo,
     IEI extends IssueEntityInfo = IssueEntityInfo,
     MCI extends MigrateCertificateInfo = MigrateCertificateInfo,

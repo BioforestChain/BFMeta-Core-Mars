@@ -51,7 +51,6 @@ export class TransactionBaseStorageModel
     BFChainUtil.JSONAble<BFChainCore.TransactionStorageJSON>
 {
   static INC = 1;
-  /// 'username'
   @Field.d(TransactionBaseStorageModel.INC++, "string")
   key!: string;
   @Field.d(TransactionBaseStorageModel.INC++, "string")

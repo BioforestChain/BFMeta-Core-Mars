@@ -85,7 +85,6 @@ core.moduleMap.set("transactionGetterHelper", {});
 const statistics = Resolve(BlockBaseStatisticsHelper, core.moduleMap);
 
 type DelegateInfo = {
-  username: string;
   address: string;
   secret: string;
   publicKey: string;
@@ -357,7 +356,6 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
         secret,
         address,
         publicKey,
-        username: `${core.config.chainName}${i + 1}`,
       };
       // 要在创始块中实施的交易
       const tempTrsWithIndexList: {

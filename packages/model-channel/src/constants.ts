@@ -90,12 +90,6 @@ export enum NewTransactionRefuseReason {
   SET_LNS_MANAGER_PERMISSION_DENIED,
   /**没有设置位名管理员的权限 */
   SET_LNS_RECORD_VALUE_PERMISSION_DENIED,
-  /**账户已经设置了用户名 */
-  ACCOUNT_ALREADY_HAVE_USERNAME,
-  /**用户名已经存在 */
-  USERNAME_ALREADY_EXIST,
-  /**账户已经给受托人投票 */
-  ACCOUNT_ALREADY_VOTED_FOR_DELEGATE,
   /**交易来自未来 */
   TRS_IN_FEATURE,
   /**只能见证主权益 */
@@ -104,10 +98,6 @@ export enum NewTransactionRefuseReason {
   USE_MAIN_ASSET_PURCHASE_ONLY,
   /**账户剩余权益不足 */
   ACCOUNT_REMAIN_EQUITY_NOT_ENOUGH,
-  /**账户不是受托人 */
-  ACCOUNT_IS_NOT_AN_DELEGATE,
-  /**受托人拒绝收票 */
-  DELEGATE_IS_ALREADY_REJECT_VOTE,
   /**只能迁移主权益 */
   MIGRATE_MAIN_ASSET_ONLY,
   /**权益已经迁入 */

@@ -13,7 +13,6 @@ export class AccountHelper<
   IAI extends BFChainCore.IssuedAssetInfo = BFChainCore.IssuedAssetInfo,
   CI extends BFChainCore.CurrencyInfo = BFChainCore.CurrencyInfo,
   MG extends BFChainCore.MagicInfo = BFChainCore.MagicInfo,
-  ALI extends BFChainCore.AliasInfo = BFChainCore.AliasInfo,
   IEFI extends BFChainCore.IssueEntityFactoryInfo = BFChainCore.IssueEntityFactoryInfo,
   IEI extends BFChainCore.IssueEntityInfo = BFChainCore.IssueEntityInfo,
   MCI extends BFChainCore.MigrateCertificateInfo = BFChainCore.MigrateCertificateInfo,
@@ -29,7 +28,6 @@ export class AccountHelper<
     IAI,
     CI,
     MG,
-    ALI,
     IEFI,
     IEI,
     MCI
