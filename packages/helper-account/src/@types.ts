@@ -97,7 +97,7 @@ declare namespace BFChainCore {
   type AccountBaseInfo = {
     address: string;
     publicKey: string;
-    numberOfGeneratorEntities: bigint;
+    numberOfGeneratorEntities: number;
   };
 
   type ForSortAccountInfo = {
