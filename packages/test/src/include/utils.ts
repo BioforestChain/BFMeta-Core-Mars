@@ -15,8 +15,8 @@ export const config = {
   url: "http://localhost:19002",
   genesisSecret: require(require("path").join(process.cwd(), "./assets/secret.json"))
     .genesis as string,
-  delegatesSecret: require(require("path").join(process.cwd(), "./assets/secret.json"))
-    .delegates as string[],
+  generatorsSecret: require(require("path").join(process.cwd(), "./assets/secret.json"))
+    .genesisGenerators as string[],
 };
 
 export const mainChainAssetData: BFChainCore.GenesisAssetJSON = {

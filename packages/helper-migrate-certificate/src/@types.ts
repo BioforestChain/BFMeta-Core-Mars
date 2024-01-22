@@ -219,7 +219,7 @@ declare namespace BFChainCore {
 
     interface ChainBaseConfig extends ChainBaseInfo {
       generatorPublicKey: string;
-      genesisDelegates: string[];
+      genesisGenerators: string[];
     }
 
     interface MigrateCertificateVerifyOptions {

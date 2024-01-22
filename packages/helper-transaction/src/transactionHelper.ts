@@ -313,7 +313,7 @@ export class TransactionHelper {
   ];
 
   /**获取创世块里所有的锻造者 */
-  genesisGenerator(config = this.config) {
+  genesisGenerators(config = this.config) {
     const generators = config.genesisBlock.transactionInfo.transactionInBlocks
       .filter((tib) => tib.transaction.type === this.ISSUE_ENTITY)
       .map((tib) => tib.transaction.senderId);

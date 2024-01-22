@@ -16,7 +16,7 @@
     }
   ],
   "files": [
-    "src/block/calcGenesisBlockDelegate.test.ts",
+    "src/block/calcGenesisBlockGenerator.test.ts",
     "src/block/genesisBlock.ts",
     "src/block/mixedTransactionblock.ts",
     "src/block/syncBlock.test.ts",

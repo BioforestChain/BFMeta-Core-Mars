@@ -77,9 +77,9 @@ export const ERROR_LIST = {
   SHOULD_INCLUDE: new ErrorCode("001-00032", "{prop} in {target} should inclue {value}"),
   SHOULD_NOT_DUPLICATE: new ErrorCode("001-00033", "{prop} in {target} should not duplicate"),
   ALREADY_EXIST: new ErrorCode("001-00034", "{prop} in {target} already exist, errorId {errorId}"),
-  GENESIS_DELEGATE_NOT_ENOUGH: new ErrorCode(
+  GENESIS_GENERATOR_NOT_ENOUGH: new ErrorCode(
     "001-00035",
-    "Genesis delegate not enough, at least {expected}, actual {actual}",
+    "Genesis generator not enough, at least {expected}, actual {actual}",
   ),
   PROP_SHOULD_BE_ARRAY: new ErrorCode("001-00036", "{prop} in {target} should be an array"),
   INVALID_BLOCK_GENERATOR: new ErrorCode("001-00037", "Invalid block generator, reason {reason}"),
@@ -320,11 +320,11 @@ export const ERROR_LIST = {
     "001-11056",
     "Can not secondary transaction, reason {reason}",
   ),
-  REGISTER_DELEGTE_QUOTA_FULL: new ErrorCode(
+  REGISTER_GENERATOR_QUOTA_FULL: new ErrorCode(
     "001-11057",
-    "The register delegate quota is full in round {round}",
+    "The register generator quota is full in round {round}",
   ),
-  DELEGATE_CAN_NOT_MIGRATE_ASSET: new ErrorCode("001-11058", "Delegate can not migrate asset"),
+  GENERATOR_CAN_NOT_MIGRATE_ASSET: new ErrorCode("001-11058", "Generator can not migrate asset"),
   MIGRATE_MAIN_ASSET_ONLY: new ErrorCode(
     "001-11059",
     "You can only migrate main asset, {assetType} is not main asset {mainAsset}",

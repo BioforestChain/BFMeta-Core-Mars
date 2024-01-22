@@ -45,7 +45,7 @@ function getGenesisAccount() {
   };
 }
 
-function getDelegateWithSecondSecret() {
+function getGeneratorWithSecondSecret() {
   return {
     secret:
       "upgrade jump sugar congress glare expect other firm morning donate motor pride minute frame amount chimney wood gallery twelve barely dose blame convince enhance",
@@ -55,7 +55,7 @@ function getDelegateWithSecondSecret() {
   };
 }
 
-function getDelegateWithoutSecondSecret() {
+function getGeneratorWithoutSecondSecret() {
   return {
     secret:
       "upgrade jump sugar congress glare expect other firm morning donate motor pride minute frame amount chimney wood gallery twelve barely dose blame convince enhance",
@@ -70,6 +70,6 @@ export {
   getGenesisAccount,
   getRecipientWithSecondSecret,
   getRecipientWithoutSecondSecret,
-  getDelegateWithSecondSecret,
-  getDelegateWithoutSecondSecret,
+  getGeneratorWithSecondSecret,
+  getGeneratorWithoutSecondSecret,
 };

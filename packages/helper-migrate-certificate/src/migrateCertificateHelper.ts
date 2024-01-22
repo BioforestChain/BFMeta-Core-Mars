@@ -357,15 +357,15 @@ export class MigrateCertificateHelper {
     const address = await this.accountBaseHelper.getAddressFromPublicKeyString(
       authSignature.publicKey,
     );
-    const genesisDelegates = config.genesisDelegates;
+    const genesisGenerators = config.genesisGenerators;
     const genesisAddress = await this.accountBaseHelper.getAddressFromPublicKeyString(
       config.generatorPublicKey,
     );
-    genesisDelegates.push(genesisAddress);
-    if (!genesisDelegates.includes(address)) {
+    genesisGenerators.push(genesisAddress);
+    if (!genesisGenerators.includes(address)) {
       throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `${key} auth signature address ${address}`,
-        be_compare_prop: "genesis delegate address",
+        be_compare_prop: "genesis generator address",
         to_target: "migrateCertificate",
         be_target: "fromChain",
       });

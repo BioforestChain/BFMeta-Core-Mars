@@ -24,7 +24,7 @@ const jsbiHelper = new JSBIHelper();
 const genesisSecret = require(require("path").join(process.cwd(), "././assets/secret.json"))
   .genesis as string;
 const generatorsSecret = require(require("path").join(process.cwd(), "./assets/secret.json"))
-  .delegates as string[];
+  .genesisGenerators as string[];
 
 (async () => {
   const bfchainCore = await getBfchainCoreEntry();

@@ -65,7 +65,7 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       magic: genesisBlock.magic,
       generatorPublicKey: genesisBlock.genesisAccount.publicKey,
       genesisBlockSignature: genesisBlock.genesisBlockSignature,
-      genesisDelegates: genesisBlock.genesisDelegates.map((item) => item.address),
+      genesisGenerators: genesisBlock.genesisGenerators.map((item) => item.address),
     });
 
     const { publicKey, secondPublicKey, signSignature } = converter.toAuthSignature.decode(
@@ -73,32 +73,32 @@ export class ImmigrateAssetLogicVerifier extends TransactionLogicVerifier {
       true,
     );
     const address = await this.accountBaseHelper.getAddressFromPublicKeyString(publicKey);
-    const delegate = await accountGetterHelper.getAccountInfo(address, currentBlockHeight);
-    if (!delegate) {
+    const generator = await accountGetterHelper.getAccountInfo(address, currentBlockHeight);
+    if (!generator) {
       throw new ConsensusException(ERROR_LIST.NOT_EXIST, {
         prop: `Account with address ${address}`,
         target: "blockChain",
       });
     }
-    if (delegate.secondPublicKey) {
+    if (generator.secondPublicKey) {
       if (!secondPublicKey) {
         throw new ConsensusException(ERROR_LIST.PROP_IS_REQUIRE, {
           prop: `secondPublicKey`,
-          target: "genesisDelegateSignature",
+          target: "genesisGeneratorsignature",
         });
       }
       if (!signSignature) {
         throw new ConsensusException(ERROR_LIST.PROP_IS_REQUIRE, {
           prop: `signSignature`,
-          target: "genesisDelegateSignature",
+          target: "genesisGeneratorsignature",
         });
       }
-      if (delegate.secondPublicKey !== secondPublicKey) {
+      if (generator.secondPublicKey !== secondPublicKey) {
         throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-          to_compare_prop: `secondPublicKey ${delegate.secondPublicKey}`,
+          to_compare_prop: `secondPublicKey ${generator.secondPublicKey}`,
           be_compare_prop: `secondPublicKey ${secondPublicKey}`,
           to_target: "transaction",
-          be_target: "delegate",
+          be_target: "generator",
         });
       }
     } else {

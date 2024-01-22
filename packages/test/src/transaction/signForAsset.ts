@@ -9,7 +9,7 @@ import {
   getRecipientWithSecondSecret,
   getRecipientWithoutSecondSecret,
   AccountModel,
-  getDelegateWithSecondSecret,
+  getGeneratorWithSecondSecret,
   getBfchainCoreEntry,
   getRandomDAppId,
   BFChainCore,
@@ -150,7 +150,7 @@ async function getSignForAssetTransaction(
 (async () => {
   const bfchainCore = await getBfchainCoreEntry();
 
-  const trustee = getDelegateWithSecondSecret();
+  const trustee = getGeneratorWithSecondSecret();
   const trusAssetTrsWithSecret = await getTrustAssetTransaction(
     getSenderWithSecondSecret(),
     getRecipientWithSecondSecret().address,

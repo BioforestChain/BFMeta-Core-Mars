@@ -61,7 +61,7 @@ const config = {
   url: "http://localhost:19002",
   genesisSecret: require(defaultSecretPath).genesis as string,
   genesisSecondSecret: "genesisSecondSecret",
-  delegatesSecret: (require(defaultSecretPath).delegates as string[]).slice(0, 100),
+  generatorsSecret: (require(defaultSecretPath).genesisGenerators as string[]).slice(0, 100),
 };
 mainChainAssetData.blockPerRound = blockPerRound;
 mainChainAssetData.forgeInterval = forgeInterval;
@@ -84,7 +84,7 @@ core.moduleMap.set("transactionGetterHelper", {});
 
 const statistics = Resolve(BlockBaseStatisticsHelper, core.moduleMap);
 
-type DelegateInfo = {
+type GeneratorInfo = {
   address: string;
   secret: string;
   publicKey: string;
@@ -179,7 +179,7 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
       trs,
     };
   }
-  async function getTransferAssetTransaction(recipient: DelegateInfo, amount: string) {
+  async function getTransferAssetTransaction(recipient: GeneratorInfo, amount: string) {
     const createTrs = (fee = "AUTO", nonce = 0) => {
       return core.transaction.createTransaction(
         TransferAssetTransactionFactory,
@@ -274,7 +274,7 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
     };
   }
   async function getIssueEntityTransaction(
-    delegate: DelegateInfo,
+    generator: GeneratorInfo,
     factory: IssueEntityFactoryModel,
     index: string,
   ) {
@@ -285,9 +285,9 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
         {
           version: core.config.version,
           type: core.transactionHelper.ISSUE_ENTITY, // 交易类型
-          senderId: delegate.address, // 发起者地址
-          senderPublicKey: delegate.publicKey, // 发起者公钥
-          recipientId: delegate.address,
+          senderId: generator.address, // 发起者地址
+          senderPublicKey: generator.publicKey, // 发起者公钥
+          recipientId: generator.address,
           rangeType: RANGE_TYPE.EMPTY,
           range: [], // 接收范围
           timestamp: 0, // 生成交易时间戳
@@ -335,7 +335,7 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
     const forgingEntityFactory = await getIssueEntityFactoryTransaction("forging", "1000");
     txWithIndexList.push(forgingEntityFactory);
     txWithIndexList.push(await getIssueEntityFactoryTransaction("share", "10000"));
-    const delegatesSecret = config.delegatesSecret.slice(0, core.config.blockPerRound * 2);
+    const generatorsSecret = config.generatorsSecret.slice(0, core.config.blockPerRound * 2);
     const eventEmitter: BFChainCore.ApplyTransactionEventEmitter<any> =
       new QueneEventEmitter<any>();
     let entityIndex = 0;
@@ -343,8 +343,8 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
       entityIndex++;
       return "0".repeat(4 - entityIndex.toString().length) + entityIndex;
     };
-    for (let i = 0; i < delegatesSecret.length; i++) {
-      const secret = delegatesSecret[i];
+    for (let i = 0; i < generatorsSecret.length; i++) {
+      const secret = generatorsSecret[i];
       const address = await core.accountBaseHelper.getAddressFromSecret(secret);
       if (mainChainAssetData.nextRoundGenerators.length < core.config.blockPerRound) {
         mainChainAssetData.nextRoundGenerators.push({
@@ -353,7 +353,7 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
         });
       }
       const publicKey = await core.accountBaseHelper.getPublicKeyStringFromSecret(secret);
-      const delegate: DelegateInfo = {
+      const generator: GeneratorInfo = {
         secret,
         address,
         publicKey,
@@ -366,7 +366,7 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
       for (let i = 0; i < 4; i++) {
         tempTrsWithIndexList.push(
           await getIssueEntityTransaction(
-            delegate,
+            generator,
             forgingEntityFactory.trs.asset.issueEntityFactory,
             getEntityIndex(),
           ),
@@ -378,7 +378,7 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
         "0",
       );
       if (total_fee !== "0") {
-        txWithIndexList.push(await getTransferAssetTransaction(delegate, total_fee));
+        txWithIndexList.push(await getTransferAssetTransaction(generator, total_fee));
       }
       txWithIndexList.push(...tempTrsWithIndexList);
       console.log(`第 ${i} 组交易创建完成`);

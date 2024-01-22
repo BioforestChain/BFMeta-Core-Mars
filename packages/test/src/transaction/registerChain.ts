@@ -36,7 +36,7 @@ import {
   getRandomDAppId,
 } from "../include";
 
-type DelegateInfo = {
+type GeneratorInfo = {
   address: string;
   secret: string;
   publicKey: string;
@@ -129,7 +129,7 @@ registerchainAssetData.blockPerRound = 5;
     };
   }
   async function getTransferAssetTransaction(
-    recipient: DelegateInfo,
+    recipient: GeneratorInfo,
     amount: string,
     genesisAccountInfo: {
       address: string;
@@ -246,7 +246,7 @@ registerchainAssetData.blockPerRound = 5;
     };
   }
   async function getIssueEntityTransaction(
-    delegate: DelegateInfo,
+    generator: GeneratorInfo,
     factory: IssueEntityFactoryModel,
     index: string,
     genesisAccountInfo: {
@@ -264,9 +264,9 @@ registerchainAssetData.blockPerRound = 5;
         {
           version: registerBfchainCore.config.version,
           type: registerBfchainCore.transactionHelper.ISSUE_ENTITY, // 交易类型
-          senderId: delegate.address, // 发起者地址
-          senderPublicKey: delegate.publicKey, // 发起者公钥
-          recipientId: delegate.address,
+          senderId: generator.address, // 发起者地址
+          senderPublicKey: generator.publicKey, // 发起者公钥
+          recipientId: generator.address,
           rangeType: RANGE_TYPE.EMPTY,
           range: [], // 接收范围
           timestamp: 0, // 生成交易时间戳
@@ -353,12 +353,12 @@ registerchainAssetData.blockPerRound = 5;
       entityIndex++;
       return "0".repeat(4 - entityIndex.toString().length) + entityIndex;
     };
-    const delegatesSecret = config.delegatesSecret.slice(
+    const generatorsSecret = config.generatorsSecret.slice(
       0,
       registerBfchainCore.config.blockPerRound * 2,
     );
-    for (let i = 0; i < delegatesSecret.length; i++) {
-      const secret = delegatesSecret[i];
+    for (let i = 0; i < generatorsSecret.length; i++) {
+      const secret = generatorsSecret[i];
       const address = await registerBfchainCore.accountBaseHelper.getAddressFromSecret(secret);
       if (
         registerchainAssetData.nextRoundGenerators.length < registerBfchainCore.config.blockPerRound
@@ -371,7 +371,7 @@ registerchainAssetData.blockPerRound = 5;
       const publicKey = await registerBfchainCore.accountBaseHelper.getPublicKeyStringFromSecret(
         secret,
       );
-      const delegate: DelegateInfo = {
+      const generator: GeneratorInfo = {
         secret,
         address,
         publicKey,
@@ -384,7 +384,7 @@ registerchainAssetData.blockPerRound = 5;
       for (let i = 0; i < 4; i++) {
         tempTrsWithIndexList.push(
           await getIssueEntityTransaction(
-            delegate,
+            generator,
             entityFactory.trs.asset.issueEntityFactory,
             getEntityIndex(),
             genesisAccountInfo,
@@ -401,7 +401,7 @@ registerchainAssetData.blockPerRound = 5;
       if (total_fee !== "0") {
         txWithIndexList.push(
           await getTransferAssetTransaction(
-            delegate,
+            generator,
             total_fee,
             genesisAccountInfo,
             genesisAccountKeypair,
@@ -557,7 +557,7 @@ registerchainAssetData.blockPerRound = 5;
           genesisLocationName: genesisAsset.genesisLocationName,
           blockPerRound: genesisAsset.blockPerRound,
           forgeInterval: genesisAsset.forgeInterval,
-          genesisDelegates: transactionInfo.transactionInBlocks
+          genesisGenerators: transactionInfo.transactionInBlocks
             .filter(
               (tib) => tib.transaction.type === registerBfchainCore.transactionHelper.ISSUE_ENTITY,
             )

@@ -40,7 +40,7 @@ function print(obj: any) {
   } as BFChainCore.BlockGetterHelperInterface);
 
   /**已绑定的受托人个数 */
-  let pickGenerators = bfchainCore.transactionHelper.genesisGenerator()[0]; //.slice(50, 80);
+  let pickGenerators = bfchainCore.transactionHelper.genesisGenerators()[0]; //.slice(50, 80);
   // pickGenerators = pickGenerators.filter((v) => {
   //   if (["c4q2hHccaS3qcXGMqsGcasjbvj9aJsCuuy"].includes(v)) {
   //     return false;
@@ -741,7 +741,7 @@ function print(obj: any) {
   ];
   /** 随机获取下一轮的打块人*/
   const randomNextGenerators = (
-    generators: string[] = bfchainCore.transactionHelper.genesisGenerator(),
+    generators: string[] = bfchainCore.transactionHelper.genesisGenerators(),
   ) => {
     const randoms: number[] = [];
     while (true) {
@@ -879,9 +879,9 @@ function print(obj: any) {
 
           let chosenAddress: string[];
           if (bfchainCore.blockHelper.calcRoundByHeight(lastBlock.height) % 2 === 0) {
-            chosenAddress = bfchainCore.transactionHelper.genesisGenerator().slice(0, 57);
+            chosenAddress = bfchainCore.transactionHelper.genesisGenerators().slice(0, 57);
           } else {
-            chosenAddress = bfchainCore.transactionHelper.genesisGenerator().slice(57, 114);
+            chosenAddress = bfchainCore.transactionHelper.genesisGenerators().slice(57, 114);
           }
           const nextRoundGenerators = chosenAddress.map((v) => {
             return { address: v, numberOfGeneratorEntities: 0 };

@@ -8,17 +8,17 @@ import {
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,
-  getDelegateWithoutSecondSecret,
+  getGeneratorWithoutSecondSecret,
   getFullBfchainCoreEntry,
   AccountModel,
-  getDelegateWithSecondSecret,
+  getGeneratorWithSecondSecret,
   getFullRegisterBfchainCoreEntry,
   getRandomDAppId,
 } from "../include";
 
 async function getEmigrateAssetTransaction(
   sender: AccountModel,
-  genesisDelegate: AccountModel,
+  genesisGenerator: AccountModel,
   fullBfchainCore: BFChainCore,
   fullRegisterBfchainCore: BFChainCore,
   recipientId?: string,
@@ -82,8 +82,8 @@ async function getEmigrateAssetTransaction(
     await fullBfchainCore.migrateCertificateHelper.generateMigrateCertificate(args);
   migrateCertificate =
     await fullBfchainCore.migrateCertificateHelper.fromAuthSignMigrateCertificate({
-      authSecret: genesisDelegate.secret,
-      authSecondSecret: genesisDelegate.secondSecret,
+      authSecret: genesisGenerator.secret,
+      authSecondSecret: genesisGenerator.secondSecret,
       migrateCertificate: migrateCertificate,
     });
 
@@ -111,13 +111,13 @@ async function getEmigrateAssetTransaction(
 
     await getEmigrateAssetTransaction(
       getSenderWithSecondSecret(),
-      getDelegateWithoutSecondSecret(),
+      getGeneratorWithoutSecondSecret(),
       fullBfchainCore,
       fullRegisterBfchainCore,
     );
     await getEmigrateAssetTransaction(
       getSenderWithoutSecondSecret(),
-      getDelegateWithSecondSecret(),
+      getGeneratorWithSecondSecret(),
       fullBfchainCore,
       fullRegisterBfchainCore,
     );

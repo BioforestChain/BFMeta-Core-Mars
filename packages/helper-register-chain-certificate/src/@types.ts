@@ -57,7 +57,7 @@ declare namespace BFChainCore {
         /**区块间隔 */
         forgeInterval: number;
         /**创世受托人列表 */
-        genesisDelegates: {
+        genesisGenerators: {
           /**创世受托人地址 */
           address: string;
           /**创世受托人公钥 */
