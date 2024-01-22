@@ -18,7 +18,7 @@ import {
   ConfigHelper,
   IssueEntityFactoryTransactionFactoryV1,
   IssueEntityFactoryModel,
-  IssueEntityTransactionFactoryV1,
+  IssueEntityTransactionFactory,
 } from "@bfchain/core";
 import { QueneEventEmitter, Resolve } from "@bfchain/util";
 import * as path from "path";
@@ -192,6 +192,8 @@ registerchainAssetData.blockPerRound = 5;
       publicKeyBuffer: Buffer;
     },
     genesisAccountKeypair: BFChainCore.Keypair,
+    factoryId: string,
+    entityPrealnum: string,
     registerBfchainCore: BFChainCore,
   ) {
     const createTrs = (fee = "AUTO") => {
@@ -258,7 +260,7 @@ registerchainAssetData.blockPerRound = 5;
     const entityId = `${factory.factoryId}_${factory.factoryId}${index}`;
     const createTrs = (fee = "AUTO") => {
       return registerBfchainCore.transaction.createTransaction(
-        IssueEntityTransactionFactoryV1,
+        IssueEntityTransactionFactory,
         {
           version: registerBfchainCore.config.version,
           type: registerBfchainCore.transactionHelper.ISSUE_ENTITY, // 交易类型
@@ -332,15 +334,29 @@ registerchainAssetData.blockPerRound = 5;
     const entityFactory = await getIssueEntityFactoryTransaction(
       genesisAccountInfo,
       genesisAccountKeypair,
+      "forging",
+      "1000",
       registerBfchainCore,
     );
     txWithIndexList.push(entityFactory);
+    txWithIndexList.push(
+      await getIssueEntityFactoryTransaction(
+        genesisAccountInfo,
+        genesisAccountKeypair,
+        "share",
+        "10000",
+        registerBfchainCore,
+      ),
+    );
     let entityIndex = 0;
     const getEntityIndex = () => {
       entityIndex++;
       return "0".repeat(4 - entityIndex.toString().length) + entityIndex;
     };
-    const delegatesSecret = config.delegatesSecret;
+    const delegatesSecret = config.delegatesSecret.slice(
+      0,
+      registerBfchainCore.config.blockPerRound * 2,
+    );
     for (let i = 0; i < delegatesSecret.length; i++) {
       const secret = delegatesSecret[i];
       const address = await registerBfchainCore.accountBaseHelper.getAddressFromSecret(secret);
@@ -349,7 +365,7 @@ registerchainAssetData.blockPerRound = 5;
       ) {
         registerchainAssetData.nextRoundGenerators.push({
           address,
-          numberOfEntities: 0,
+          numberOfGeneratorEntities: 0,
         });
       }
       const publicKey = await registerBfchainCore.accountBaseHelper.getPublicKeyStringFromSecret(
@@ -567,7 +583,6 @@ registerchainAssetData.blockPerRound = 5;
     );
 
     const trsJson = trs.toJSON();
-    console.log(trsJson.asset.registerChain.genesisBlock);
     const xx = await fullBfchainCore.transaction.recombineTransaction(trsJson);
     await fullBfchainCore.transactionHelper.verifyTransactionSignature(xx);
 
@@ -578,7 +593,7 @@ registerchainAssetData.blockPerRound = 5;
   }
 
   async function getCommonBlockAsync(sender: AccountModel) {
-    const fullBfchainCore = await getFullBfchainCoreEntry(57, 128);
+    const fullBfchainCore = await getFullBfchainCoreEntry(50, 15);
     fullBfchainCore.moduleMap.set("transactionGetterHelper", {});
     const randomMagic = false;
 

@@ -30,19 +30,15 @@ export * from "./setLnsRecordValueLogicVerifier";
 export * from "./issueEntityFactoryLogicVerifier";
 export * from "./issueEntityFactoryV1LogicVerifier";
 export * from "./issueEntityLogicVerifier";
-export * from "./issueEntityV1LogicVerifier";
 export * from "./destroyEntityLogicVerifier";
+export * from "./issueEntityMultiLogicVerifier";
 
 export * from "./eventLogicVerifier";
 
 export * from "./toExchangeAnyLogicVerifier";
 export * from "./beExchangeAnyLogicVerifier";
-
-export * from "./issueEntityMultiV1LogicVerifier";
-
 export * from "./toExchangeAnyMultiLogicVerifier";
 export * from "./beExchangeAnyMultiLogicVerifier";
-
 export * from "./toExchangeAnyMultiAllLogicVerifier";
 export * from "./beExchangeAnyMultiAllLogicVerifier";
 

@@ -4,7 +4,7 @@ import { AccountBaseHelper, TransactionHelper } from "@bfchain/core-helper";
 import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 
 @Injectable()
-export class IssueEntityLogicVerifier extends TransactionLogicVerifier {
+export class IssueEntityV1LogicVerifier extends TransactionLogicVerifier {
   constructor(
     @Inject(AccountBaseHelper) public accountBaseHelper: AccountBaseHelper,
     @Inject(TransactionHelper) public transactionHelper: TransactionHelper,

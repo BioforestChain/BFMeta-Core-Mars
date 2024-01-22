@@ -391,6 +391,7 @@ declare namespace BFChainCore {
 
   interface ApplyInfo_IssueEntity extends ApplyInfo_IssueEntity_Base {
     entityId: string;
+    taxAssetPrealnum: string;
   }
   /**发行 entity */
   type ApplyTransactionIssueEntityEvent<
@@ -398,23 +399,14 @@ declare namespace BFChainCore {
     T extends Transaction = Transaction,
   > = ApplyTransactionEvent<ApplyInfo_IssueEntity, EVENTNAME, T>;
 
-  interface ApplyInfo_IssueEntityV1 extends ApplyInfo_IssueEntity {
-    taxAssetPrealnum: string;
-  }
-  /**发行 entity */
-  type ApplyTransactionIssueEntityV1Event<
-    EVENTNAME,
-    T extends Transaction = Transaction,
-  > = ApplyTransactionEvent<ApplyInfo_IssueEntityV1, EVENTNAME, T>;
-
-  interface ApplyInfo_IssueEntityMultiV1 extends ApplyInfo_IssueEntity_Base {
+  interface ApplyInfo_IssueEntityMulti extends ApplyInfo_IssueEntity_Base {
     entityStructList: BFChainCore.EntityStructJSON[];
   }
   /**发行 entity */
-  type ApplyTransactionIssueEntityMultiV1Event<
+  type ApplyTransactionIssueEntityMultiEvent<
     EVENTNAME,
     T extends Transaction = Transaction,
-  > = ApplyTransactionEvent<ApplyInfo_IssueEntityMultiV1, EVENTNAME, T>;
+  > = ApplyTransactionEvent<ApplyInfo_IssueEntityMulti, EVENTNAME, T>;
 
   type ApplyInfo_DestroyEntity = {
     address: string;
@@ -675,8 +667,7 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction").SignForAssetTransaction
         | import("@bfchain/core-model-transaction").ToExchangeAssetTransaction
         | import("@bfchain/core-model-transaction").IssueEntityTransaction
-        | import("@bfchain/core-model-transaction").IssueEntityTransactionV1
-        | import("@bfchain/core-model-transaction").IssueEntityMultiTransactionV1
+        | import("@bfchain/core-model-transaction").IssueEntityMultiTransaction
         | import("@bfchain/core-model-transaction").ToExchangeAnyTransaction
         | import("@bfchain/core-model-transaction").ToExchangeAnyMultiTransaction
         | import("@bfchain/core-model-transaction").ToExchangeAnyMultiAllTransaction
@@ -832,18 +823,11 @@ declare namespace BFChainCore {
         import("@bfchain/core-model-transaction").IssueEntityTransaction
       >
     >;
-    /**发行 entity */
-    issueEntityV1: BFChainUtil.EventInOut<
-      ApplyTransactionIssueEntityV1Event<
-        "issueEntityV1",
-        import("@bfchain/core-model-transaction").IssueEntityTransactionV1
-      >
-    >;
     /**批量发行 entity */
-    issueEntityMultiV1: BFChainUtil.EventInOut<
-      ApplyTransactionIssueEntityMultiV1Event<
-        "issueEntityMultiV1",
-        import("@bfchain/core-model-transaction").IssueEntityMultiTransactionV1
+    issueEntityMulti: BFChainUtil.EventInOut<
+      ApplyTransactionIssueEntityMultiEvent<
+        "issueEntityMulti",
+        import("@bfchain/core-model-transaction").IssueEntityMultiTransaction
       >
     >;
     /**销毁 entity */

@@ -132,6 +132,7 @@ async function getIssueEntityTransaction(
         sourceChainName: bfchainCore.config.chainName,
         sourceChainMagic: bfchainCore.config.magic,
         entityId: `${entityFactory.factoryId}_dragonborn`,
+        taxAssetPrealnum: "0",
         entityFactoryPossessor: genesisAddress,
         entityFactory,
       },

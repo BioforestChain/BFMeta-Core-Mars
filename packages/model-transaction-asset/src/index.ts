@@ -25,22 +25,16 @@ export * from "./feeRate";
 export * from "./locationNameRecord";
 export * from "./issueEntityFactory";
 export * from "./issueEntity";
-export * from "./issueEntityV1";
 export * from "./destroyEntity";
+export * from "./issueEntityMulti";
 
 export * from "./transferAny";
-
 export * from "./giftAny";
 export * from "./grabAny";
-
 export * from "./toExchangeAny";
 export * from "./beExchangeAny";
-
-export * from "./issueEntityMultiV1";
-
 export * from "./toExchangeAnyMulti";
 export * from "./beExchangeAnyMulti";
-
 export * from "./toExchangeAnyMultiAll";
 export * from "./beExchangeAnyMultiAll";
 

@@ -1,9 +1,9 @@
 {
   "version": 1,
   "height": 1,
-  "blockSize": 24406,
+  "blockSize": 24402,
   "timestamp": 0,
-  "signature": "5d91358f623b66bd9e593ad5030451c621238bb40f0b7fedb87d46faa2e3b0a3280f58d3327ef1313e1cfee9db15596dbf91c55d0c7a2af98d43c91f1f80b90c",
+  "signature": "611a10616874d0eced48201a29833281b659df3601c20be10cfd5043e554f44c0e703c38335f854dc2ab1f9945664cf30c73cd6a911a15221edba3c43e0e7f0f",
   "generatorPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
   "previousBlockSignature": "",
   "reward": "0",
@@ -45,33 +45,32 @@
       "registerChainMinChainAsset": "10000000000000",
       "maxApplyAndConfirmedBlockHeightDiff": 57,
       "blockPerRound": 5,
-      "delegates": 10,
-      "whetherToAllowDelegateContinusElections": false,
-      "forgeInterval": 128,
+      "whetherToAllowGeneratorContinusElections": false,
+      "forgeInterval": 15,
       "basicRewards": "100000000",
       "ports": {
         "port": 19000
       },
-      "nextRoundDelegates": [
+      "nextRoundGenerators": [
         {
           "address": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
-          "numberOfEntities": 0
+          "numberOfGeneratorEntities": 0
         },
         {
           "address": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
-          "numberOfEntities": 0
+          "numberOfGeneratorEntities": 0
         },
         {
           "address": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
-          "numberOfEntities": 0
+          "numberOfGeneratorEntities": 0
         },
         {
           "address": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
-          "numberOfEntities": 0
+          "numberOfGeneratorEntities": 0
         },
         {
           "address": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
-          "numberOfEntities": 0
+          "numberOfGeneratorEntities": 0
         }
       ],
       "assetChangeHash": "509a0554e163ed5f9fba62b1bba4a4551bbcec7e4c9630c93e01305423789131"
@@ -81,7 +80,7 @@
     "startTindex": 0,
     "offset": 52,
     "numberOfTransactions": 52,
-    "payloadHash": "bfb3e3ae36d588ded1b732b37423cd399371606d22b8e2092467ea86cd98457a",
+    "payloadHash": "20d52781ab318a2bf8ff47a220148b75284c4bd58b385581175b7b9fd27d159b",
     "payloadLength": 23287,
     "blobSize": 0,
     "totalAmount": "1030171",
@@ -122,10 +121,10 @@
       {
         "tIndex": 1,
         "height": 1,
-        "signature": "1b4cee178a413812fbad8dd685a3d5fa4e26d8560eb5a5e30bf78edd91cf9330f5bb9a0c37ffd131e2fd977a4cc62aca574fda942bcf7cd6a25aa8cf1c23fa0e",
+        "signature": "cfc8811c05703e3ffa5e4a2c3c3653fc35753027fb2b0bfe5f38b0bcadf0dfdebe3db999b1e8a0c1f606505e40630924b6812d50e0b2b90978bcf0f6c824a301",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-03",
+          "type": "QAWAQ-QAWAQ-ETY-01",
           "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
           "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
           "rangeType": 0,
@@ -136,7 +135,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "00d920517436b859f3d6fd281cabf5ce2b95541cce340914e20d006c26f1a99462e67ceb31d44da27802b6659660a30a4b558817ba2838527837def4f7d25d0b",
+          "signature": "c59d45705c6821493b7a5d4f82f87f03f43d0d7f633e0d9a3919758881b466fb53d8bf79dbdcc7ce482a93223a1bc482242cfaed3aa53640c54dcbb98a163a0a",
           "remark": {},
           "asset": {
             "issueEntityFactory": {
@@ -190,10 +189,10 @@
       {
         "tIndex": 3,
         "height": 1,
-        "signature": "96811284c744fbf4724886b80c5d7a2d43a4536ad1ca8156cb406ed7949664d22080677be84096d2f44570c8e76771678360abb2a1c31fc3e6eee3e2bb300307",
+        "signature": "fa830b1709cfddc4102da8e221b88ddbb7baf1504f83993cc7ee69feffc4ade604461033adb66bff9aff8aba111771de3fcdfd77dc3f88d4a500f133aac70206",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
           "senderPublicKey": "6e8330144a8c123c017a8f5c363531868d3ce21c45b4a668cc1767c2b4695c84",
           "rangeType": 0,
@@ -204,7 +203,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "05b065491b2d61e3f0a249245fd2a5955d5047ae883abd80305de871f05e5882199fb23a567907aea4585f524a78bf7ed972b33a0e7f0bf238606fdfcaf7c206",
+          "signature": "f019cf37c8de8c982d5db20e7fe8190c3f98d4d1872d89199d3a377648550d108ba0c6d768409094b5189b126b638860592e3ce2422d48a4d0034aaf5bd0a909",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -231,10 +230,10 @@
       {
         "tIndex": 4,
         "height": 1,
-        "signature": "f200135670c2305cd9086b39bdd5ba2697e8d9c92cfb6c18aa38f635283011f81e9f1d483885186c880aac276c4cb00347c61d3b4678d333d112d9945181b108",
+        "signature": "5f54b086975127f36d3f464706969fd917f2b82f27deef19c853ea634c371a01a3bddef89d79bb5913fc508c34592d3ae8098ad7daca1566745b967bb7ba6a0c",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
           "senderPublicKey": "6e8330144a8c123c017a8f5c363531868d3ce21c45b4a668cc1767c2b4695c84",
           "rangeType": 0,
@@ -245,7 +244,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "7109b543afecca787c07a8f3e21872d5b777551cfd09900285044095913ae023d0906d36f823002480cc336e6f4b665c469cd156b92a2cf85e54d4838224ba0e",
+          "signature": "f2edd2e030d0f1d8cd46735eb6ce27aa719d9a3c12126e1bb2824624e1479ea19f4af3be7e65e5a4b684a04f05d448d2e0449d9dfcc575da54fd48c7e350db0c",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -272,10 +271,10 @@
       {
         "tIndex": 5,
         "height": 1,
-        "signature": "446f190171570de6351d30a96b47cf810926ce4b558397f0979544c3cbf51c7187e1d2edc5d183fbc29a3d4293dbec9e88017ac1b341bae6048252b4b080a70f",
+        "signature": "bafc4790df4209b6244244cbcc3a9331f26da13b7244c57ac3a00f21a94b7b16a20769bf1c0266fb3496f56c2a3e9475eecc30e5b60ddcb61088580be7fc1a0c",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
           "senderPublicKey": "6e8330144a8c123c017a8f5c363531868d3ce21c45b4a668cc1767c2b4695c84",
           "rangeType": 0,
@@ -286,7 +285,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "d0d04fc996ec0b29137c3465071c1d13bc83191f39eb15719ffb9b1ec9452d03647a36424f180c5f87ec6ab6d7f1fe13cae2e9aed77b3901397db0f895fb1e05",
+          "signature": "bccf43780adff48a844660d506826be5fdf58fb4475a6140d6474c7b69cdf02aba236ad6d192e6ab523eecab70dfbc37e6bb8a4099d8e7a589a070787f555d0e",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -313,10 +312,10 @@
       {
         "tIndex": 6,
         "height": 1,
-        "signature": "e5810cc81054a45689abbf0943584db651aebe0f611a6e5f9f49d9ee1df67a7a3537c52f931b293bb228a16fa392e5520432c8e260e1c921b749e458025a560e",
+        "signature": "9dcbbc9c343e52454e033495fca50380d2567de4f032b4c1295b4ddd9f9a7ce99f85ad65f6d73415bdaa680fa517c43ae4ca028512a0485106ce4ff19f4fab0d",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
           "senderPublicKey": "6e8330144a8c123c017a8f5c363531868d3ce21c45b4a668cc1767c2b4695c84",
           "rangeType": 0,
@@ -327,7 +326,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "2747a826f038216af995fac8c704185e9735cdc2df931a7ba26bc4bf9582bc16001be3cf45eeb1d32802583ea0eb6c4a88ae03c0450e9fefda4a318ebaff7807",
+          "signature": "7d905069901170fa951037eb81adf4ace2710ed7a1359be21952259c648b4de6a2cf4d6d3d42f2a6a82e556cc338946cc7d22d0d073ebacfe5191737eb503f0e",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -388,10 +387,10 @@
       {
         "tIndex": 8,
         "height": 1,
-        "signature": "ae3cab54a0e81a0e36cd20e73019a37462562586139171754a962247a65ac5c27abd37c8e9f513b051bd7ed110c8129d4e57af64b5ef15d287f50405c029d003",
+        "signature": "2952290e5975000c249c01c8e840264a59ce245b38ff9feb8435ee8731d76fb5ce3498fa747e4845785dd782560aa10019d66f141798ba1584b0461de7de510e",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
           "senderPublicKey": "0f88fe3a155927907b507c10ccd0318a7f3b2f55aeb6c90913756ef43db4e836",
           "rangeType": 0,
@@ -402,7 +401,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "4d1539a220eee9f6bf745958d7f5331d2c03e4ead3b3d449705ce0976fe2c7a7e24066ee080738f3a336b5312dc939c178e7e1d8c78e5eef67fc4e32a24acf03",
+          "signature": "f08b8b9eb8ce435d905f8e279d9a356f7f81cf3200cf656714b5361637a9256f84d26a2aa08932be936c180fd83682dc82f19c398e6feb37b1d476829fe0b80c",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -429,10 +428,10 @@
       {
         "tIndex": 9,
         "height": 1,
-        "signature": "60f2109ca86b1d7f0f404edddac20fd817455ff16464d8a8d12ab9f0223ffb1f9a0d1f96fb692b382ca38db2ef3a7e50e9538a18e41b190f1defcaab4656f600",
+        "signature": "5ed60d808130a2f9e4ebe42aabb9e22b8cec8075d71192a3fd14686f849450123e064f1f30667468cbbe40c5212e29e81452e277d7701e8bf0e6d2f00fa64b0d",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
           "senderPublicKey": "0f88fe3a155927907b507c10ccd0318a7f3b2f55aeb6c90913756ef43db4e836",
           "rangeType": 0,
@@ -443,7 +442,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "4d2755a2012851070d7dc45030c457928c38028895443c6068614529e2178a37d83087cc1c178115bcdfd6fbe36fafcd03a1b3fe743f070b7e43fe3025c28703",
+          "signature": "8ab81f473ea89f81332f5a979c0d24e5ff3caeca711681f106111910eee410506b3f71144c328e03e670f292dc0f968817b6c64acb1e5a9ceca95934e4284902",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -470,10 +469,10 @@
       {
         "tIndex": 10,
         "height": 1,
-        "signature": "850a295d1d623c801f69fca2264db60420c366495e3200295a1d4faca7c72aec9b831d5c8167448bfa2eb5677f7a567f6a1e13acd48f104edd8b459d89d97604",
+        "signature": "c24ff701fb8a629859e4b57228a182aae36746b90fda2e5393186f8005e3422c28d96e92caeca18025595a0ee5edbf4df1aa47e012c5d276d716a150b7636601",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
           "senderPublicKey": "0f88fe3a155927907b507c10ccd0318a7f3b2f55aeb6c90913756ef43db4e836",
           "rangeType": 0,
@@ -484,7 +483,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "4d52ea3324c87a1498ffdd11d6f3b6d6047c54ac36caa3672437bdb4fb19bbd48573985dd1aaad8c776ba189a22c5eaaa6f349f957f72fde584eaa4d3c49a204",
+          "signature": "06c613d5cfddd6e3e304d817cfd7eb481bcf988fc682ccc0077ecb1fd18120bed76c33717e31ae1e31b9ce5a2cb527e83e8ae7c5f39c38b72d70bb6375bece07",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -511,10 +510,10 @@
       {
         "tIndex": 11,
         "height": 1,
-        "signature": "cd9160ee1f199be402f6bb9d4edc0f8c54066c0b7a004d37f9aaf9430471ab85d8a71e5c18bb9a42c4c797334907e8125a939e622652accb42773c62d087820d",
+        "signature": "13d7144ea01790f9be07ab96016d1c3287cf711b81031ec5803910efd12831ae07f6ede615d6b772438acaad88cf3d4684ec276c1f4877c4f3242bea90e3fc02",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
           "senderPublicKey": "0f88fe3a155927907b507c10ccd0318a7f3b2f55aeb6c90913756ef43db4e836",
           "rangeType": 0,
@@ -525,7 +524,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "aafbf05669d3f2b0b5febbdef43e7025fbd3e562a8ab00deb48bd14c7d1ed9d9b4bde5c6698ec1833e8dabf70e7aa2bd6ee9ebbd3e22b95cbd84af658277a400",
+          "signature": "e154e983b393f14c3ad8b8e3515b5ba870fc2d45b9adbb17c91916fcf40aab2d50e6c985f8ac2e1f5c6fd1c772ed21c7ce87643874a7b2258d2a88ea6dc32d04",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -586,10 +585,10 @@
       {
         "tIndex": 13,
         "height": 1,
-        "signature": "aa85e05908e52d37d1db7d754c4697d2dc83afa702abedf15f49926a4f4dbce53e7873622be0c2a5cdf5c879ef18993d4f95626e20233d08723b284389c99102",
+        "signature": "e5b1190f2685e1f9a5b4e5afc6ad04f3b18fbb2975edec64d30a6b510e4b38acbd8316ff9d0f2ffb907703b45ed5a04f74fe22eee5eff2af096b7cd462c30a00",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
           "senderPublicKey": "526b2c534f8e0b2c75394e8c2968196510f912ebee80c17193baea45c73c07fa",
           "rangeType": 0,
@@ -600,7 +599,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "e828f16cec7c86b31d3856ad84b764bb3a1e762e274547c7a3dda658cc0bdf8a9736f4bbbf059bbe9b918814a069030fedb5c520ebaa7746157df1c0d483a206",
+          "signature": "4438cfe2d948b46a5f53af9ff9b6ec8167c658a79d4d05499420ea961222a329a3a2d4135110ff04ee9fcdd75422314d2253e15878098e4f9cb4adbbada6610d",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -627,10 +626,10 @@
       {
         "tIndex": 14,
         "height": 1,
-        "signature": "1f20863d778ca4677a58fedf9477f4e7084f33a92cc3ce3f01cc65a8fb645ddea98ae5ad1583236dafa1227ab4dfdb7b7085fa722fad7a89527a5ac32e4b1807",
+        "signature": "2b6af0817d5b601dbde9e083be9a56fea0f97d1138317921faa657b368cd7b395b985b510449e8ab2307c339edebe303549292fb381671c069be919ab4bbc60f",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
           "senderPublicKey": "526b2c534f8e0b2c75394e8c2968196510f912ebee80c17193baea45c73c07fa",
           "rangeType": 0,
@@ -641,7 +640,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "e96d0e848afc386ef6c4d7c7a50665c0cd925948a0d2803b802f685cee49d51f1d2ed1ddae49f3bb2e813808c53ad375b2edc9fa3d25ed01979995b79756a309",
+          "signature": "de5062b272be8e3c6f426f9fb59ccef145488a28a9f9844b02c24de7fe1654361668e9f9c6966cdf47312dc44359371e0626b9a888e67703b87e238d4e2fe604",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -668,10 +667,10 @@
       {
         "tIndex": 15,
         "height": 1,
-        "signature": "bf792ddd369217b87fc1047682eab51ed321a38b96694ee01b12d05718089f662ac4b84511d38d6cbd6faaf5cb7b9393c010adcdd3c2daaa125ea6e2f461a80c",
+        "signature": "d92be4c4f10022fae6c6dc5b6a5a2491eac217372dd6116f6e560de46dec99695cc76e6615124974526efd14858db9afa398f2b968cda395cc77a03c50ce6a0e",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
           "senderPublicKey": "526b2c534f8e0b2c75394e8c2968196510f912ebee80c17193baea45c73c07fa",
           "rangeType": 0,
@@ -682,7 +681,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "453beb77d43d79c7da9b06980751abdebffcb5d96e72c9a101ebabc0238e28e858bd7169989b5ae0eb7c0174ba3dc2649cc37c6395ef2a7cc58b5cd8dc5b370e",
+          "signature": "e1507379330065066fae5b964fd047b239c67d8cb6d514509c5716d5c5bfd2092127a3f0fbf9a9212e972b0e7d3c7b6f4792f9543885e9aefa0ca201702ffd06",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -709,10 +708,10 @@
       {
         "tIndex": 16,
         "height": 1,
-        "signature": "851c3635b8be28fbb5268d15d89546fbde4289cbcd585fcb32c0cb19ee9c30b91c449f0b1a2530116ffae77d69cd867e1fcf5b6a7ce46ce1fe77cddcefa08408",
+        "signature": "3fd107764df895e021ca7ddf62ad83ff025911797a2e4ec20b923d3d6eaf55da2eecc8735bbe1a639075800f80df231f98d79d8ad47ca4a93193dcf5dc44d30f",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
           "senderPublicKey": "526b2c534f8e0b2c75394e8c2968196510f912ebee80c17193baea45c73c07fa",
           "rangeType": 0,
@@ -723,7 +722,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "0ce91ff16a0c2725e0d51fa0ba2d3eca8f839cd725305be01d94f109eb25e306083c617bc3ea6d5c3a99a09d9a6b3faf1c783998c3120c3796f2f738d8cf0706",
+          "signature": "94381c2bf8f79d25cec7295a2ec017ebdfb1adbb7297f31db38c652c6e1839e97b5aed2e5fb3d47e47320c416bbc6cca6cb8738e51e1b3cb7719e75e950bb101",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -784,10 +783,10 @@
       {
         "tIndex": 18,
         "height": 1,
-        "signature": "21f0a7d37c773f6f86586ae9fb9495902793fc3369b2776065227db011ce053b20ec98a72f2528801613daf8c9b0b031ba638bef07f0a8a9d77b43cb2f289600",
+        "signature": "e8f6a0d9f2716b3f109a755016bd7d6c2af4977a2285adf54e78711e1dca0db796826dec594b6f3e2a5a8b8744b4e78b3e91f8359a6721e6b05cb19abce4fa0f",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
           "senderPublicKey": "72eb8d56261b211e0f77029cd8010b6378fa23342cb21c1169e4ac2c00debaa0",
           "rangeType": 0,
@@ -798,7 +797,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "3ea9ff08002ae9f647a928a7f25d733f366e5937bff8fcd682ce15b7e8d98ebfe2cdf8b7d1612dfd9151dc0a6b0944bbd648ca8aeb35ff9261ac36113f2ac706",
+          "signature": "10180443be66d55a69f0249d6b319b567c0c6bf0117d6528870289e377a122b9e205908f78b9da8c4161bc3b2212f37ca1f25de5902aba20435cb6665c433906",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -825,10 +824,10 @@
       {
         "tIndex": 19,
         "height": 1,
-        "signature": "b5f122148f15618e408764e37efc6084d187909ca515644d4f4593b222c689a60fd886a88ea6ecdd5e8682c6eec0eea2ee2c6d01c7d0c02dc8d8c8c39ee2de03",
+        "signature": "84a331872180fefab2ba4d143e13f8bc516475c8534760bfd69856f3da6b4813651fe3a55e2ee49193f8ae234cea5d4eba4a415fb67a81b8abb0dd523972dd04",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
           "senderPublicKey": "72eb8d56261b211e0f77029cd8010b6378fa23342cb21c1169e4ac2c00debaa0",
           "rangeType": 0,
@@ -839,7 +838,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "d9d2e254012eca9cb23dde89c92956dd757724dbfc20af04bc49f41a6b8d1e5b28a550ba653c14ff0efc376a63c3d6d5ba6aa5490297ba1c7e8736e23badb700",
+          "signature": "a7bb31097a5d5ce5d4f5fd329c427f188c546f16f88755468fd9412ffc3880146a91cd07a5e51728d78dc8b53ed0e452031b170231731a13e2a7eb0542098809",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -866,10 +865,10 @@
       {
         "tIndex": 20,
         "height": 1,
-        "signature": "16c8577b4163ba9358dadea8a58be8c02364a9b9b1fb7eeb5be3e75e840243dad56eb52d0d4886120b7af8c2546fc691da5c04c06dbae5f83a3f8c31ba473600",
+        "signature": "d54b0025038d59cc6eaf9f3f081b44ad0f4f5aceda89ce6a02aac3e7efe0fc9115328a613249d0a531b73e3e772937f294aa8a429db12f028bd3e9a7567cda01",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
           "senderPublicKey": "72eb8d56261b211e0f77029cd8010b6378fa23342cb21c1169e4ac2c00debaa0",
           "rangeType": 0,
@@ -880,7 +879,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "e2f2d1c0dbdd5dfffb801f697572e540cbc96b605aebdcb7b554f18588f54b902ab10d717c7ab8c2b3670fa560210f159b064d98daa80e53deb4683fb65a3b00",
+          "signature": "eb5f741f6ffc96d1f963b0d413b7908beb229b7349ab2c717ac58e5f364432a2c8209d016a6bb24845751fcf25efe3b786667578624330c57d2d7df1979e7808",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -907,10 +906,10 @@
       {
         "tIndex": 21,
         "height": 1,
-        "signature": "bc62b68c322c924c8ac46078bc9e6eb31eee72fd65768818c53b51866d8781408331e5793cd43014e37e324b9a5d873dd31293a1f68b6fb8da38cbecdb5d6e07",
+        "signature": "8c000550210ce91c5066ead174ad583a52323868d4ce5643e06008e83022ec4abbc368cc4508bd01a9c1f744e53c02db73e91bc9ca74c7604ca947015bedb706",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
           "senderPublicKey": "72eb8d56261b211e0f77029cd8010b6378fa23342cb21c1169e4ac2c00debaa0",
           "rangeType": 0,
@@ -921,7 +920,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "db7c9ddc223a200088d9bc02e25425e7ddede6408ebe3ea2d9c0d1f7a900c7ed9fa7cd0ef98e7bad07f943bbc407fa81322dacd1ac745c53d322b5faa529420b",
+          "signature": "b76d504d9ccdf646d08fa0b92e9a9612f61272137360c00f4c4c8a2d84fafe440c285b9d0ba134476519793d8aac7315bfc85d0b5cc5ea8214a0ff9802254e00",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -982,10 +981,10 @@
       {
         "tIndex": 23,
         "height": 1,
-        "signature": "f7375fb0ea7d97f4c3d093a90ee5316aee19c0a1611a8d6b60cc6a2d6e5f193de5207ff3e06c4e6b933e0f53053044cb7caf7e1acb87110aa2387186f3fcea0f",
+        "signature": "d3c216492a1030d9e24c81b508e661b8a278cfd783c0d04a55f8e139236664448e715316dcbec8403b4fe15d5993f2d0852c9eed858b038d547c895e4fb60b06",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
           "senderPublicKey": "58f751e6ffd7e67d1ddf3d687f02e828a4f855a6ba78fd06bdbeb934ba56ec77",
           "rangeType": 0,
@@ -996,7 +995,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "873399a2722ec230ee0fd65af8b7752a51052cb7d0e7bbbcd8a649c4988c009a606b37c14cf3b174402b980ed64c6dbd647700de35b2b934b3ca1d52a8e6e80f",
+          "signature": "ca66a7382016b80cc7631871cc000465d9826152f439d1cb7395b95a85d65131c25f10dd0c59e98abaf99faa4281b9e534692c714f10af5152370c9e6893e70b",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -1023,10 +1022,10 @@
       {
         "tIndex": 24,
         "height": 1,
-        "signature": "6e8320a080c4676ef154dacfdd80063348e5d5265b2fd0a72573c4c5c7da6855b63d5fccc695f29c4f43b72fb290e7f5715901b8782726a6dd856696ee489e01",
+        "signature": "a2e94cb81a963008115aa1c053a9a15019e890d1d248d33739d9a0db4a1699d290b980b2049f4b9a62cd06987da0da46fe385e31095d914bf78ee72d06f1160a",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
           "senderPublicKey": "58f751e6ffd7e67d1ddf3d687f02e828a4f855a6ba78fd06bdbeb934ba56ec77",
           "rangeType": 0,
@@ -1037,7 +1036,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "60b1eab1ddb572a5f184cad8dcc1ca1afc2a057a0cffc2854e49fba88b22c2790903bb50bacc1701d1a6fddb7faca5d846802ccb86a2e3d97112c90b674b030f",
+          "signature": "fe4c48b9024083dc9d87e433f1f25c141cd5eb0a10a414dfba211b7f57e331459c2f24ffc48fb794f7d1d4ddf3ae3c0abff302124e6fe1b21a2f14b1eeb24007",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -1064,10 +1063,10 @@
       {
         "tIndex": 25,
         "height": 1,
-        "signature": "92bf24e11c5e79c4717c17b5c3d3887e00e1dbaee7b31beea140ed495f9db37aaa0711761c5eab263324b00f295d9a8753ee04c35c219172d17a405e34026003",
+        "signature": "3b560afd36c070bc72a3b9f259f3b3d7697ba6568a23057bf64b730ca9c5cda13a4882e3e023351939e37096b0683598eab04ac6a381f2db790d21f0cbee5106",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
           "senderPublicKey": "58f751e6ffd7e67d1ddf3d687f02e828a4f855a6ba78fd06bdbeb934ba56ec77",
           "rangeType": 0,
@@ -1078,7 +1077,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "09564b157ba703368a32969bbf296c9adc69b99f68a86358aac2b1ddf98a1ce861805d3b8af43767af6533c43cb828ae7bb04d8f7d554890253d41b04c88c80d",
+          "signature": "881866d7a3da4650a5943147a7584d3ec827c8952880fef3949741864f1663529971eb625347494ec2e98e1d711cc34889160447cdd743ce6e1b0b9276d1d30f",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -1105,10 +1104,10 @@
       {
         "tIndex": 26,
         "height": 1,
-        "signature": "e79b4f1379c5be3124d59f59a92f91198046e480a16953dee1c6db4d14e383c0170e893fe34c9745bb1c07bb44e10e3cde03ffa27ac262511e15b7b99590c50f",
+        "signature": "9191875642b68412de91e0f52dcbfd70c4b1ac479ba94f0ed1ff4bd8b9b45ee8180b0189be3e3d7643863f1e2e4e9dbdcfe4f19bcd540c6a0c56938edb3f670b",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
           "senderPublicKey": "58f751e6ffd7e67d1ddf3d687f02e828a4f855a6ba78fd06bdbeb934ba56ec77",
           "rangeType": 0,
@@ -1119,7 +1118,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "06ce16333d794495187a743995b4cfde3848f6553212985d498538dbdef61d73e41127b4690dbef4a25a9a8e7d0fa9a4d0e3cbc06f0fae038a26586ee78bf802",
+          "signature": "2f01201f3740af2de4632d4b9b502ca178eb4be0c0e6450e29395a1c19953508a0970a789e95684363bc33c8c1ebd73a06c3da82047e3ae8d537d8662e25020f",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -1180,10 +1179,10 @@
       {
         "tIndex": 28,
         "height": 1,
-        "signature": "722582356c1b38a2f2f2fd8b146fea478fff591df764e9a27794c66fee9cdc8109131a518d75b5880b2be62208836ba135da13deedd13c3661780e077a20900e",
+        "signature": "99b89b919a122ceb674c76c7b8ac3932f19a9e8abd5c09fc094d154bf0d2e29e139773fed87a678f64cc06af237d80bd5b39408b8d47376a39f623c3238fa90e",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "cGnmjV6fk5kFbTWztDtZhyr1a4Van4NPvR",
           "senderPublicKey": "a210c3565083922100ce8ba1c2f99da5769fbc78e90594b052ccb0388d3155c2",
           "rangeType": 0,
@@ -1194,7 +1193,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "7d363d229836d618d06b4deac13ed3ef1bc30edda74af2dee1ee57598342d0313213afb76e3373abc07f58cb3c6d1acb6e8b52da5cb22be614b4dbed312e380c",
+          "signature": "87cfc6184b891595bce9f2960695e18c4f2dc051e3e7ddd48bd56fa10aa68dfc070d5bff5b7260b9281205dfc9a1809c8ac4acfaa6f6be43ccb8fa38eb47b500",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -1221,10 +1220,10 @@
       {
         "tIndex": 29,
         "height": 1,
-        "signature": "94fc35d177ec46ef83365dcb7fabb43ac32078193d021dc537c2ab6b25df0aa21e43cd74b134265e22508954ee1b4c7131a17d268c6ac2c9627bf1516872f403",
+        "signature": "c4e9815aa55910988c2675999e9ad5ed2f52409adb438cdb2fde76f714473a7f6fbb2a8e726bc1782b68d8491a1d7ccd8575c595852c4536fdf223c1a704aa05",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "cGnmjV6fk5kFbTWztDtZhyr1a4Van4NPvR",
           "senderPublicKey": "a210c3565083922100ce8ba1c2f99da5769fbc78e90594b052ccb0388d3155c2",
           "rangeType": 0,
@@ -1235,7 +1234,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "8459d12318bf4d8b108057cfab8f9fa0faa2f0a79ccfe39876ffcf61c9e99b703c8f03015d0d8bbc3b043372e3d199cb0aaddb3a48a3d322657e3b356806b106",
+          "signature": "3c19cb3999da971d80851ddc0729795df9d1f8b146cd06fd7a732728022521d19c3cdc0483c1f3dc1602c0938a2c919051c6c185333a992edebf97766ec36702",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -1262,10 +1261,10 @@
       {
         "tIndex": 30,
         "height": 1,
-        "signature": "1e482acf6176d5a1f61b1ee487e1dc0139058d05d3da1485eb43b1a1d4b50043b3e17df8f84154f9bf6147ad31828852a47e9014a888023090021c374509be05",
+        "signature": "b8209516bf009b6a603d98217547703c96044b7ba6a56f52cac538f54e990b438b7ab7fe99dd4d4ce91e6ad9f3c057f5c150560b39cfad80b52921d7cab59a0b",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "cGnmjV6fk5kFbTWztDtZhyr1a4Van4NPvR",
           "senderPublicKey": "a210c3565083922100ce8ba1c2f99da5769fbc78e90594b052ccb0388d3155c2",
           "rangeType": 0,
@@ -1276,7 +1275,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "af49405b4c9675744de2d4b78c173450ed5ce84ce4c5106cfb02ec3d8a23cf2bbcfbf49f0ec872c1ff95e19fddf0c14861ff1bac50db849c4a55d5775b12570f",
+          "signature": "d2a4adb3c12c5578f461d69c369010842785d93b0d927acacc6dbd3aaf46139808a397586914c0a4accd9abbfba683edfc8e37c109adc2ce180b281350aec904",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -1303,10 +1302,10 @@
       {
         "tIndex": 31,
         "height": 1,
-        "signature": "855ec89925498a0feac6b5d55881dd0f975e9af38f05276328fcd1e867b7e47eb2d0eb9bae0d1588647bf2c79167770b7709a615624d52318868f2e598582d00",
+        "signature": "119e61fbd3140c386ed1b4fe03303189a19c3ed1d046224d1b6f4cecc2a95d6e4e4c25a7f112ae342b5969883a8896c11ecfe83c9a84f6fd4e90b17d31c20804",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "cGnmjV6fk5kFbTWztDtZhyr1a4Van4NPvR",
           "senderPublicKey": "a210c3565083922100ce8ba1c2f99da5769fbc78e90594b052ccb0388d3155c2",
           "rangeType": 0,
@@ -1317,7 +1316,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "d8b3bb6acc0faf03b8cca166f7a67a87bd75a078f35b2c8b02e8d756b535189c7f878a79769395c0a05c868b27c6cb93f3447c44e051203b2ab0fccc349ff406",
+          "signature": "1fb4337ee6cd8270b44198de069c3730bce6d6596d35559860b58a0fcb27ffdbf6091e4f726c5838970906ae2f693f588e6b11026af0aafb5c7bb8a82eb68a0b",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -1378,10 +1377,10 @@
       {
         "tIndex": 33,
         "height": 1,
-        "signature": "5bc0da6007994664fde6d3252b5afdd4f300bc03e93e0d1ddec81cb6e977ae9fbb1c270588c673588fdb216bebf9320a20b995b24b7ed53e71abb6498f148207",
+        "signature": "a5187e9a2cf79906c94a6cce386c02a7317a4453eb63009f6ab4d0e2c750cf749310d304cf37bddf088dcf8eb01b0204481a61fa0c281a4d8cdd30ed71fdd305",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
           "senderPublicKey": "ca78e16aad7980933da93844a1b91a719bf7793a05c566de8c9806efd90761e2",
           "rangeType": 0,
@@ -1392,7 +1391,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "68dbb599b082440f7fa720ca9faa2484c05402b296db7151c9a9b162b3f866e7cc60315efdaf7bd866701d0248ccbce82381aac271e3a01342bf4af48a848501",
+          "signature": "bb63070cd5c5ddd8d6a55f4133655001be82e8908b11e1e914a889067172dd61fa4f6daf1ed012f008c531109ba100ef69b4ca31adfb186afefb1ab55a257105",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -1419,10 +1418,10 @@
       {
         "tIndex": 34,
         "height": 1,
-        "signature": "98acc0c1ba49b0a8128cb1183f1ec4bbc7e59bdc15e3b415d5aa789d65fa445bdc378725bb4d3913a16fa38220f8a017cf96d736cdcddaab5031f57ce9c98803",
+        "signature": "6df8bfcd0df1de12514b7e1afecb43ba98d6c1681fa616d86ff045126225c91b9afc7e2a4e237a579859bb3ec7b8c8736ec9b075772351cf76996bd8a824e209",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
           "senderPublicKey": "ca78e16aad7980933da93844a1b91a719bf7793a05c566de8c9806efd90761e2",
           "rangeType": 0,
@@ -1433,7 +1432,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "24471114be30ce5cff4100747596821153890e70f2d0b3954d7ac2d6e71e52af5808f925706aee53a6a1b7e55c086eb74f7b83e4d305cc7e75de25bdf27c330f",
+          "signature": "3391871bb59437573183d3a5ed2755f15edf9e0f63e6a7c8f5993ba86d04482e25ba533797298ab77daf1ee9d2c736d054da1279d69dce0f164baf3a8417a80d",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -1460,10 +1459,10 @@
       {
         "tIndex": 35,
         "height": 1,
-        "signature": "06f40f77d00afedf0389793c4bad686ceace018a20c96981fa7ec5ce2fa7bbe9a5b78ab94729ddbe5ecb158d64caf17815f9d2ea58a72901e9e423d94f09fa07",
+        "signature": "b7d443bc37701d96d65242cd6a29e32c96e81ecf4d3614752d561449c5819fc5cd1d4d8c6561a26694507ceb510fe33284d6461b5cce0d2eea1af250dad09504",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
           "senderPublicKey": "ca78e16aad7980933da93844a1b91a719bf7793a05c566de8c9806efd90761e2",
           "rangeType": 0,
@@ -1474,7 +1473,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "6a9f538495ba864e78b29a968d8d2cd601d501d53e395c147a27a0fa40e97707b07a32aa52d4a0f5c163a219a29e97b5517cdc9564684c7410f8b1e2e367020b",
+          "signature": "f4c70eecf9702dd9b06f9cbec685b7111354727f5dae0ccb5a376f17ebaf8939d92fa7d0bd0d7deda213621465839e72546eba47b9be59efe69e51559fd8660d",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -1501,10 +1500,10 @@
       {
         "tIndex": 36,
         "height": 1,
-        "signature": "88d74389e6e71b4ab02270dbe55ce0118d60fc9ecde71aadb5e9eeadcb661a1870399dadb2e80a5bd715b542e8bb94e04d301e7549e6a3cf3053f7214f0d5603",
+        "signature": "9afa466450ac9b91319e80a3b29f92b475241f0d1455aedff02de0603ad92cdac60cc3455e8ae9ae84d474d973d2d1753c251ec742f4c5e6fce3d1f81d22c50a",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
           "senderPublicKey": "ca78e16aad7980933da93844a1b91a719bf7793a05c566de8c9806efd90761e2",
           "rangeType": 0,
@@ -1515,7 +1514,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "53dd9c1c8da0e0be029435510fe0e823b8a42392ae2b7d52174a8dcffec6c658e1a2c4276b704e9750b26d08528cb0a5e2bc71ba3bfa76ffa743d5ce995ec606",
+          "signature": "a7812c4a945d1db099931fe794a89d1ed7229f8219af26b0b71c8d51f45a96fac0dc93645f8ae9221c0ac30380bba4f6a05e3d827daadc28f358ee66af053a03",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -1576,10 +1575,10 @@
       {
         "tIndex": 38,
         "height": 1,
-        "signature": "3ac8793adba23079798ea6e9980527bf038e760b5dde961ff6af87ff3407a837101828ab21c9962cb4692dec61a27e2046ae9b41130164e15a9d9e1d4f46730f",
+        "signature": "924671e15bec90bd7bf9b9d5d0db983db35a6db2800c6ff5c15b18d369ed8e57d8ab56401ddb7e022d8c6483be80f5cde160c33024bf9b9f69c1ff365aebb50f",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
           "senderPublicKey": "85ea51eefe25fecfa3e7fcb7b47c28dc8e1e47b7152c6a94791b5f2d50ae165a",
           "rangeType": 0,
@@ -1590,7 +1589,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "056b7de843618c048eefe714c4d313bc0f5fa3a7c1969dbba381342ccd4afb46fea07a6f4053a2f15a413cca24a016f0527051c8e92672a52215dcb601e54006",
+          "signature": "14494e653553558f2759810479bb01dccb0c86dc9bdc73419c341f9bc15d900ca60f2dc94c052f1bd6dc250f00ea6ee09ab2a54b83f6b283b4d2609de33d190c",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -1617,10 +1616,10 @@
       {
         "tIndex": 39,
         "height": 1,
-        "signature": "bd3361c74d2bdf75973931339c528e9465c0ffe500583560398a260674b2782553116e622e2f4330cd748d2f5b72c72e3b807f91d1f7d1479d4c92dd3ae20d09",
+        "signature": "24dfd7455d9ce11c1f85a3c749dd5579d55cd4ffbb68f07fb587c87480fc90696c050bdc99efee536012278047a3b9c5883a8bd45dfcd6ce19a7fd51db7c4c0d",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
           "senderPublicKey": "85ea51eefe25fecfa3e7fcb7b47c28dc8e1e47b7152c6a94791b5f2d50ae165a",
           "rangeType": 0,
@@ -1631,7 +1630,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "7550e1e0fa5bc1029854b20802e2c736cf05f55127b5ceeaa84e76437492f1b69d57be6e209e8ca4b63726c95260a30823db97930062916ef3ad86346ae9e205",
+          "signature": "f797b78da29fa2484e6f2ee665536ec1029a0f7c70aaaa99d748d9db7d0371dfd148e6b6151b2fa459e8964bdfccb645ea1045039e68f439f1adeb5f2ff81505",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -1658,10 +1657,10 @@
       {
         "tIndex": 40,
         "height": 1,
-        "signature": "3be9a894d739529ab0156bd5d551852657af9994265dd01faebd003e6fce08e23958be8f3bcd5f985ee27fa7918804f8d91c2a754449ef3107e518388b285806",
+        "signature": "fe3dbf56711b492660d7ebdef556b45cd3e5a365308329f6b4ac6c19c09ff10fbd7a8818500f7e799a69eb2c92cb0a815d95cbe1fd306834353ec84857342a0e",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
           "senderPublicKey": "85ea51eefe25fecfa3e7fcb7b47c28dc8e1e47b7152c6a94791b5f2d50ae165a",
           "rangeType": 0,
@@ -1672,7 +1671,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "bc475ed63f3da89701aa3e22641129fd1ded6749108c89b3936b96518b68cf07c58962fcaaee1d7315895a6cf5939671eed83f9af3727394c4ce25f037389d03",
+          "signature": "c54ce98c48c9566f1f4145f8c3d698dd54cdca050798f60d069f7addded5b86a4102e00dbbf486ed4cedb567591f3e872700100a3df78dde749e4acf3d1e5d0f",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -1699,10 +1698,10 @@
       {
         "tIndex": 41,
         "height": 1,
-        "signature": "ab74f49815a8337ad06d342a93df6fad3ccab3d4cb8408f4c9cb356618b56dfabadfcf0a1ff3ecfc09255a6b6f4cc102f61153bb459cc53809121b2c52d1fc09",
+        "signature": "3873e70520e199d7486eb199c199c7f01aba77bb69df6b11b84d0d8c9e61542fdb446cbda7a8ad566e739e70d89f0a555c953d6d7f19e9762192ad1153b54907",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
           "senderPublicKey": "85ea51eefe25fecfa3e7fcb7b47c28dc8e1e47b7152c6a94791b5f2d50ae165a",
           "rangeType": 0,
@@ -1713,7 +1712,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "17ed9a244ddc1619868d817e0c94f3771d9f6c6d859ac39c75f2a66e8d33aa768e2082f6b8200ece7b6d364f756cfeb26e056cfef347d9b15ed5542e666e4a05",
+          "signature": "cf1c57429c2f43f72697f262a1115f47e47f22def05b369ede2ab2dcd1be2f4bdfc0a6c12f742d4af4d8efe6e235cb0a5fa029ad43ec75c5d2651e500a12910c",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -1774,10 +1773,10 @@
       {
         "tIndex": 43,
         "height": 1,
-        "signature": "c43944c7581e78b7e7426be38fe99df990c1065b86af323772a3219c9e49558976362d582d7fd8871b6a895c6ff045781efb3ac0290b54667fc58985dae8a20a",
+        "signature": "539dfd07d96cc89d4eeb34dd16ab92a41a358e9b05664ae8b852faf9260d2d55bdca48fb00efb8ad82dc30e41ccc9b28adef45b319ce3be2d59d4d629ae9dd05",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
           "senderPublicKey": "846f681c2d957b372f9b606737dbf8bcc99a8cb8de989c02d8ca162a10132903",
           "rangeType": 0,
@@ -1788,7 +1787,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "ac7b3073c8033ed6d7a56120f63d955ce00dc3cff2ade8fcebdbd67507054b7ab23c118a9ca539efdd4b750fc367fc0e2153557cf8217c18cd999ed9aa556708",
+          "signature": "8389c7cd41f8b69548c04a08d155c15b9f02940470895d8bca8b178459988d38fc640f6ef80847445a74332a9a7922c615053a972c32506a535618e95295a80a",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -1815,10 +1814,10 @@
       {
         "tIndex": 44,
         "height": 1,
-        "signature": "0046f51598694ccf0e6d8610ff56f19b58765b17faeabbe039367f3523896b7630e8c2b85b097bc5489ac891f7d2f554fa1fb4fdaa440f94b5f49e0e1bd8b70d",
+        "signature": "87db35f139be3f955dbccd71236db509f623814304cdb3f19978c0a678af8ffee7202da7f4c102c73c367da2f311b75188b782978c32a477b7b985e0b86d5a0c",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
           "senderPublicKey": "846f681c2d957b372f9b606737dbf8bcc99a8cb8de989c02d8ca162a10132903",
           "rangeType": 0,
@@ -1829,7 +1828,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "75e1198f56a44f64735af540f2fb863a418467f84457d099b77e562f6558f0d2bb728e43baec28f6dbd8db52e138d41d246a88eaaefdf20ecc7becb1c50f7002",
+          "signature": "35316fa56a372db74ffbfbcb72e49621b637fd84ff0edca1ed0e262ca35391e38866bdcfffbee4b6728a35b1faf74220888c6e757b6b07c1ef9314cf218da704",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -1856,10 +1855,10 @@
       {
         "tIndex": 45,
         "height": 1,
-        "signature": "94488d2d6587e0f960a2beef9df85ea700b5dc3605c9c57c29893df6d7445ef65a0970212a77696379f8458cee54eb585ef8f350214ab7251c853dab8706be0a",
+        "signature": "b4e44a716bb316f331dfe9deed582cead93ec10df693939639f5c7d659c00734d98b2a830b7aaa1e42df00ee88eaa6b4bdfe41102da5c7d2e5a926b34bbaff08",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
           "senderPublicKey": "846f681c2d957b372f9b606737dbf8bcc99a8cb8de989c02d8ca162a10132903",
           "rangeType": 0,
@@ -1870,7 +1869,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "f513d596adc470a5b290b223d297c27649bed77b7efeef4e8d5abad3bccc14078f252060bfcaa8d90242c25b17ce770b0cbb0ca1d16eca9415d18fa18531a20d",
+          "signature": "8e1e7abc4dd5de79bd8867a4dac38bbdea371c5fe29d4eb0b47fda36d8db37b6fab485a3790d0cab90b7622598877315dc8870dc3385ffa7267f4a5a1c4af00d",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -1897,10 +1896,10 @@
       {
         "tIndex": 46,
         "height": 1,
-        "signature": "5fcee63e26259b6208f50bba4467acffaec54da352c76a508872f5961cb6d90d37a9ba1a61898c974a3856d3980438d6f4902276fbeec5b1a4d296551ad2340b",
+        "signature": "178fbcf933e906949892bd0f3fe763cfa642f64b18aaeca1fef213429fbdcefeda601d942e0a68b46f8645a99bd2ff9a1822b9faeb35770bbd1c533a04ebcb08",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
           "senderPublicKey": "846f681c2d957b372f9b606737dbf8bcc99a8cb8de989c02d8ca162a10132903",
           "rangeType": 0,
@@ -1911,7 +1910,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "8d7e9d7bd079fca801e0879379167ecd3d6479744b100b0563222a6358b0eee7041294b0d99713b597f4b79ce5cbfc147462418c5f3455afd363e79a2bf65101",
+          "signature": "da60cc000302a542ee1913303546f3b50f9e81be0d9c09b48e69aae8aa0f0380c7f7b4107c83dfc4b641fdcf995dae30d3f53da486eca4e870d090b8222cc105",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -1972,10 +1971,10 @@
       {
         "tIndex": 48,
         "height": 1,
-        "signature": "b8081f639347cf1e5c34587ec071261658d0fd16f00b546a96abc752fa74ebabd8bef442ad934fafcad16a47cc19d4bb09223a4697d23bcad2bf857c44138a09",
+        "signature": "3b119509ebf855ec615b0e235ca68749f112e0e9e9a109deebfb525541a1948eb2a8aaa08f98c4ac2192d11a92a2ab0b38a37ee702dc10f1e50e12c7e663a00a",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
           "senderPublicKey": "5ff43d2626b6a60602645333df040189db9339ca424ac2dc4fa7f32cd4da1923",
           "rangeType": 0,
@@ -1986,7 +1985,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "47ce56c6e4f6b09be485d4844e98e0b1b72650807834ae9147f90a6b5f8884d189119f4cc3cdd3f0055cb4e6e1bbfdba9548409a7ed1e562a0774e742ef1150e",
+          "signature": "1d75a702b69e71167e98eb3c9b0a72510a9fd9036ee581957256ac5af62fbdf7dd484c05bc5624d28298ac37d58f3dc97f5d3a6d0633815035983c8eb888a10f",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -2013,10 +2012,10 @@
       {
         "tIndex": 49,
         "height": 1,
-        "signature": "9de15fefefb096adb6dd051009286d754f3eae7de064ef480de907907338c98fb86fb3c68da188ff7a9f0659dcbbf266d7feaf57a922528f1abe5d59028cb006",
+        "signature": "a4c563297d34fbb10ade05d0e5398a4078c209b3251989cd33228bf5dde899b0c034605109c3a53d217063a8239309087d6e3aee23f8d62fb4ecf99dbef7ad02",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
           "senderPublicKey": "5ff43d2626b6a60602645333df040189db9339ca424ac2dc4fa7f32cd4da1923",
           "rangeType": 0,
@@ -2027,7 +2026,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "90ef8ecbf33b0f6ec2cf5d526f5beb403603d6d88c5596305357367527c5341237248eeda663c8a38cd3bbd8a88a6452bc4c56ae34e9338cb59c5cc88951ee0c",
+          "signature": "3f51688e2887678f2420261ffd779111cbe6cb232aa226dd5afa0cfa1fbfa65c57990359d9d85aec9053d5dbbeab3bef9e38104f82c1aeed6b40d0977e90080a",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -2054,10 +2053,10 @@
       {
         "tIndex": 50,
         "height": 1,
-        "signature": "06d566b47f8b256694c7bf4e7cc1c119826fa4c9a69e1053448f318cb62f2e591743e912283db2fedacc39aa68476c2833c8cfc6a4097459662568070353cd0f",
+        "signature": "0af2435aa3455adb0bd978a0e594a26ad379c9415f0a9c52e6fec1e30c4050e721783dbed9b942a38f9584d253c6fb8a9578266e23009aecbd85300d04c96007",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
           "senderPublicKey": "5ff43d2626b6a60602645333df040189db9339ca424ac2dc4fa7f32cd4da1923",
           "rangeType": 0,
@@ -2068,7 +2067,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "c5bbca58602c7495b5f789fc48698556fbcb7c34e4d0360b28060aac0e00cf34d7d4b731259a20622f283a63372c83e9c27c1ea4b10c26cefca6297d24223808",
+          "signature": "eb9b27d91a877f9925282ac2d1e178cec0a625418cba1044fcf5b09d80ca1cc1ada8c3d267dde2160c5a2e73c692299fb3030f780f0896ad294998094eec8407",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -2095,10 +2094,10 @@
       {
         "tIndex": 51,
         "height": 1,
-        "signature": "860a8b482ed21a483dd199bd6ec57ca070dc1bc9f63b6aab4cdcfed55b609b94e53cdb1fe9c8362c117174b1f5ca989e53aea7200b42c9cb1c003803c814dd00",
+        "signature": "8e7ec0289de394fe39c877939e77aa966a74d4640350e9cca01c8ba2641162bef076f15719af67e5ba62e3fe0efb7232941921572bb5d0911163968e9cd00d00",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-ETY-01",
+          "type": "QAWAQ-QAWAQ-ETY-02",
           "senderId": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
           "senderPublicKey": "5ff43d2626b6a60602645333df040189db9339ca424ac2dc4fa7f32cd4da1923",
           "rangeType": 0,
@@ -2109,7 +2108,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "a60137709d902a47fb96506ffc07e247a468362e7b0bf2e43ab38d43371b2c28481a39587ec823180f8ce4681199ba3c412be73c2778d7e4f9668e9a5204290d",
+          "signature": "c86730f0d37744f73402a70e70299c43900a760fe7a404c80e3eb924845cdf3ad88aa29cb1aeac0b1b6f51bb0be5440d332df684f1cab49f70da1eba7aae680b",
           "remark": {},
           "asset": {
             "issueEntity": {
@@ -2151,16 +2150,16 @@
                   "transactionCount": 10
                 },
                 "ETY-01": {
-                  "changeAmount": "13360",
-                  "changeCount": 120,
-                  "moveAmount": "13360",
-                  "transactionCount": 40
-                },
-                "ETY-03": {
                   "changeAmount": "1000251",
                   "changeCount": 2,
                   "moveAmount": "1000251",
                   "transactionCount": 1
+                },
+                "ETY-02": {
+                  "changeAmount": "13360",
+                  "changeCount": 120,
+                  "moveAmount": "13360",
+                  "transactionCount": 40
                 },
                 "LNS-00": {
                   "changeAmount": "240",
@@ -2181,9 +2180,9 @@
       },
       "numberOfTransactionsHashMap": {
         "LNS-00": 1,
-        "ETY-03": 1,
+        "ETY-01": 1,
         "AST-01": 10,
-        "ETY-01": 40
+        "ETY-02": 40
       }
     }
   }

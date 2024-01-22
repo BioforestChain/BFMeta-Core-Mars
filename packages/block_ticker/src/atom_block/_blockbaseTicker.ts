@@ -83,7 +83,7 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
     const holders = await accountGetterHelper.getEntityHolders();
     let totalEntities = 0;
     for (const holder of holders) {
-      totalEntities += holder.numberOfEntities;
+      totalEntities += holder.numberOfGeneratorEntities;
     }
     // 不需要进行排序，得到的奖励只和账户持仓数量有关，分配剩余的奖励不处理
     return {

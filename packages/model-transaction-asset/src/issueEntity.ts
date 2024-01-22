@@ -20,6 +20,9 @@ export class IssueEntityModel
   /**非同质资产的 id */
   @Field.d(IssueEntityModel.INC++, "string")
   entityId!: string;
+  /**非同质资产流通需要缴纳的版税 */
+  @Field.d(IssueEntityFactoryModel.INC++, "string")
+  taxAssetPrealnum!: string;
   /**非同质资产模板的拥有者 */
   @Field.d(IssueEntityModel.INC++, "string")
   entityFactoryPossessor!: string;
@@ -31,6 +34,7 @@ export class IssueEntityModel
       sourceChainName: this.sourceChainName,
       sourceChainMagic: this.sourceChainMagic,
       entityId: this.entityId,
+      taxAssetPrealnum: this.taxAssetPrealnum,
       entityFactoryPossessor: this.entityFactoryPossessor,
       entityFactory: this.entityFactory.toJSON(),
     };

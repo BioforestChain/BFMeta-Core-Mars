@@ -381,6 +381,7 @@ declare namespace BFChainCore {
     /**发行非同质资产模板事件附带信息 */
     issueEntityFactory: IssueEntityFactoryJSON;
   }
+
   interface IssueEntityJSON {
     /**非同质资产来源链名，小写字母组成，5-20 位 */
     sourceChainName: string;
@@ -388,6 +389,8 @@ declare namespace BFChainCore {
     sourceChainMagic: string;
     /**非同质资产名称 */
     entityId: string;
+    /**非同质资产流通需要缴纳的版税 */
+    taxAssetPrealnum: string;
     /**非同质资产模板的拥有者 */
     entityFactoryPossessor: string;
     /**非同质资产的模板 */
@@ -396,15 +399,6 @@ declare namespace BFChainCore {
   interface IssueEntityAssetJSON {
     /**发行非同质资产事件附带信息 */
     issueEntity: IssueEntityJSON;
-  }
-
-  interface IssueEntityV1JSON extends IssueEntityJSON {
-    /**非同质资产流通需要缴纳的版税 */
-    taxAssetPrealnum: string;
-  }
-  interface IssueEntityAssetV1JSON {
-    /**发行非同质资产事件附带信息 */
-    issueEntity: IssueEntityV1JSON;
   }
 
   interface DestroyEntityJSON {
@@ -562,7 +556,7 @@ declare namespace BFChainCore {
     taxAssetPrealnum: string;
   }
 
-  interface IssueEntityMultiV1JSON {
+  interface IssueEntityMultiJSON {
     /**非同质资产来源链名，小写字母组成，5-20 位 */
     sourceChainName: string;
     /**非同质资产来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
@@ -574,9 +568,9 @@ declare namespace BFChainCore {
     /**非同质资产的模板 */
     entityFactory: IssueEntityFactoryJSON;
   }
-  interface IssueEntityMultiAssetV1JSON {
+  interface IssueEntityMultiAssetJSON {
     /**发行非同质资产事件附带信息 */
-    issueEntityMulti: IssueEntityMultiV1JSON;
+    issueEntityMulti: IssueEntityMultiJSON;
   }
 
   interface ToExchangeAssetV1JSON {
@@ -794,10 +788,6 @@ declare namespace BFChainCore {
     IssueEntityAssetJSON,
     { hasRecipientId: true }
   >;
-  type IssueEntityTransactionV1JSON = TransactionMixJSON<
-    IssueEntityAssetV1JSON,
-    { hasRecipientId: true }
-  >;
   type DestroyEntityTransactionJSON = TransactionMixJSON<
     DestroyEntityAssetJSON,
     { hasRecipientId: true }
@@ -819,7 +809,7 @@ declare namespace BFChainCore {
   >;
 
   type IssueEntityMultiTransactionV1JSON = TransactionMixJSON<
-    IssueEntityMultiAssetV1JSON,
+    IssueEntityMultiAssetJSON,
     { hasRecipientId: true }
   >;
 

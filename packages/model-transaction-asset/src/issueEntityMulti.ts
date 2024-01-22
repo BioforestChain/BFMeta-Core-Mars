@@ -25,29 +25,29 @@ export class EntityStructModel
  * 批量发行非同质资产的交易 asset 模型
  *
  */
-@Type.d("IssueEntityMultiV1Model")
-export class IssueEntityMultiV1Model
-  extends Message<IssueEntityMultiV1Model>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.IssueEntityMultiV1JSON>
+@Type.d("IssueEntityMultiModel")
+export class IssueEntityMultiModel
+  extends Message<IssueEntityMultiModel>
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.IssueEntityMultiJSON>
 {
   static INC = 1;
   /**非同质资产的所属链名 */
-  @Field.d(IssueEntityMultiV1Model.INC++, "string")
+  @Field.d(IssueEntityMultiModel.INC++, "string")
   sourceChainName!: string;
   /**非同质资产的所属链网络标识符 */
-  @Field.d(IssueEntityMultiV1Model.INC++, "string")
+  @Field.d(IssueEntityMultiModel.INC++, "string")
   sourceChainMagic!: string;
   /**非同质资产的 id 列表 */
-  @Field.d(IssueEntityMultiV1Model.INC++, EntityStructModel, "repeated")
+  @Field.d(IssueEntityMultiModel.INC++, EntityStructModel, "repeated")
   entityStructList!: EntityStructModel[];
   /**非同质资产模板的拥有者 */
-  @Field.d(IssueEntityMultiV1Model.INC++, "string")
+  @Field.d(IssueEntityMultiModel.INC++, "string")
   entityFactoryPossessor!: string;
   /**非同质资产模板 */
-  @Field.d(IssueEntityMultiV1Model.INC++, IssueEntityFactoryModel)
+  @Field.d(IssueEntityMultiModel.INC++, IssueEntityFactoryModel)
   entityFactory!: IssueEntityFactoryModel;
   toJSON() {
-    const res: BFChainCore.IssueEntityMultiV1JSON = {
+    const res: BFChainCore.IssueEntityMultiJSON = {
       sourceChainName: this.sourceChainName,
       sourceChainMagic: this.sourceChainMagic,
       entityStructList: this.entityStructList.map((entityStruct) => entityStruct.toJSON()),
@@ -62,13 +62,13 @@ export class IssueEntityMultiV1Model
  * 批量发行非同质资产的交易 asset 外层模型
  *
  */
-@Type.d("IssueEntityMultiAssetV1Model")
-export class IssueEntityMultiAssetV1Model
-  extends Message<IssueEntityMultiAssetV1Model>
-  implements BFChainCore.AssetJSONToModelType<BFChainCore.IssueEntityMultiAssetV1JSON>
+@Type.d("IssueEntityMultiAssetModel")
+export class IssueEntityMultiAssetModel
+  extends Message<IssueEntityMultiAssetModel>
+  implements BFChainCore.AssetJSONToModelType<BFChainCore.IssueEntityMultiAssetJSON>
 {
-  @Field.d(1, IssueEntityMultiV1Model)
-  issueEntityMulti!: IssueEntityMultiV1Model;
+  @Field.d(1, IssueEntityMultiModel)
+  issueEntityMulti!: IssueEntityMultiModel;
   toJSON() {
     return {
       issueEntityMulti: this.issueEntityMulti.toJSON(),

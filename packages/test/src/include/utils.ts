@@ -95,8 +95,8 @@ export const registerchainAssetData: BFChainCore.GenesisAssetJSON = {
   registerChainMinChainAsset: "10000000000000",
   maxApplyAndConfirmedBlockHeightDiff: 57,
   whetherToAllowGeneratorContinusElections: false,
-  blockPerRound: 57,
-  forgeInterval: 128,
+  blockPerRound: 10,
+  forgeInterval: 15,
   basicRewards: "100000000",
   ports: {
     port: 19000,

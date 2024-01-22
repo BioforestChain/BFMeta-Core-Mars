@@ -1,9 +1,9 @@
 {
   "version": 1,
   "height": 1,
-  "blockSize": 23819,
+  "blockSize": 23888,
   "timestamp": 0,
-  "signature": "c53efb66e731df6cab43643ee0fae3efc50743b2f0b2cecbfe34e3cb1adbd0e98b46ebf70fa529612476e8d21dfb2b07e69b55fd4b617e1c53affd165c773508",
+  "signature": "b668699de65e470271f27ffd4da15cbb37813c5012c3aca441d584703fc28bdab3ec693b62c8f394140e80c1f34c24f1858fe03ec5d9ee894c65424b0c159f03",
   "generatorPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
   "previousBlockSignature": "",
   "reward": "0",
@@ -20,14 +20,14 @@
       "genesisAmount": "10000000000000000",
       "maxSupply": "4000000000000000000",
       "minTransactionFeePerByte": {
-        "numerator": 100,
-        "denominator": 1024
+        "numerator": 3,
+        "denominator": 1
       },
       "maxTransactionSize": 409600,
-      "maxTransactionBlobSize": 1073741824,
+      "maxTransactionBlobSize": 10485760,
       "maxBlockSize": 33554432,
       "maxBlockBlobSize": 4294967296,
-      "maxTPSPerBlock": 1000,
+      "maxTPSPerBlock": 300,
       "consessusBeforeSyncBlockDiff": 7,
       "maxGrabTimesOfGiftAsset": 1000000,
       "issueAssetMinChainAsset": "50000000000000",
@@ -41,35 +41,34 @@
         "denominator": "1"
       },
       "registerChainMinChainAsset": "50000000000000",
-      "maxApplyAndConfirmedBlockHeightDiff": 259200,
+      "maxApplyAndConfirmedBlockHeightDiff": 5760,
       "blockPerRound": 5,
-      "delegates": 10,
-      "whetherToAllowDelegateContinusElections": false,
+      "whetherToAllowGeneratorContinusElections": false,
       "forgeInterval": 10,
       "basicRewards": "100000000",
       "ports": {
         "port": 19000
       },
-      "nextRoundDelegates": [
+      "nextRoundGenerators": [
         {
           "address": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
-          "numberOfEntities": 0
+          "numberOfGeneratorEntities": 0
         },
         {
           "address": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
-          "numberOfEntities": 0
+          "numberOfGeneratorEntities": 0
         },
         {
           "address": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
-          "numberOfEntities": 0
+          "numberOfGeneratorEntities": 0
         },
         {
           "address": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
-          "numberOfEntities": 0
+          "numberOfGeneratorEntities": 0
         },
         {
           "address": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
-          "numberOfEntities": 0
+          "numberOfGeneratorEntities": 0
         }
       ],
       "assetChangeHash": "9c582e98ce0ec2cdf0db32fc897e6f144b015200e3b348f348effcab2ff34015"
@@ -77,18 +76,18 @@
   },
   "transactionInfo": {
     "startTindex": 0,
-    "offset": 52,
-    "numberOfTransactions": 52,
-    "payloadHash": "7b8c7c89ed9235beb311ec86e551e13c7830d9f3243746af06427c2b705e47c6",
-    "payloadLength": 22729,
+    "offset": 53,
+    "numberOfTransactions": 53,
+    "payloadHash": "bf33f99de5b19208b42ca44a3c0160a4efee71b0a9968c0c0ecd43c128d9361b",
+    "payloadLength": 22788,
     "blobSize": 0,
-    "totalAmount": "1003365",
-    "totalFee": "1845",
+    "totalAmount": "11100371",
+    "totalFee": "55491",
     "transactionInBlocks": [
       {
         "tIndex": 0,
         "height": 1,
-        "signature": "ef64a09bc89fdb5c71c051fdc280e4a8b42d425908327bf35e96a60236e8a86f1d688fc99c9d5b8de3b64889d4e278b3586d3869c0b567d410594c90fb242f02",
+        "signature": "2e956bd8a80644cabfdcaaf63110fcdeb8afbf0b05053d43370a389d99a26db3f40c4096149ea9bc07da092d937a80c510dc034414873fd8f1fdca1d4ec2e002",
         "transaction": {
           "version": 1,
           "type": "BFT-BFCHAIN-LNS-00",
@@ -96,13 +95,13 @@
           "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
           "rangeType": 0,
           "range": [],
-          "fee": "27",
+          "fee": "822",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "77f27f7ad4122459b039ae5b2f143a8f3402f0368a67bc74551485ffe1d04cf02004a0e1d727d1eca2b00aa0500d4b19ddb21c667585e09d3509ba887a58a507",
+          "signature": "cefcb886e7b70522a58b842544b7af7c13b5718875050ee40ff8d14a04e266db7802aa35d95259f8991a1f1d974113fe34a8ce31a71310a5beeb8a3dd461a705",
           "remark": {},
           "asset": {
             "locationName": {
@@ -120,27 +119,27 @@
       {
         "tIndex": 1,
         "height": 1,
-        "signature": "457f2456b12b55a09a345f693ace6b7a7e6c133b93a2aef3d4fc81114d76d83eb48f4513c5d8d66c69bbd9de4b1a20139be44c8859dd778b161ad56373843100",
+        "signature": "c40b902db1ee088cfb656e7966f7f9f493e36a20f1e62256a11cb90c3c38fb3538b21893e122405183cd7d618d6d6ebbfd8c6b84d133a8b20f26d3826dbaa906",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-03",
+          "type": "BFT-BFCHAIN-ETY-01",
           "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
           "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
           "rangeType": 0,
           "range": [],
-          "fee": "28",
+          "fee": "849",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "184894b24b9441bd4ad4e0aa020613ba45da420429cd5351f9cd3935b07f1960b40cf70beadfedb7e432c7ab61d0e5a8942c0174e1bd8ea21f6f46d35c379a03",
+          "signature": "e273ed11b902b23f31c215839078be473754cea9b8e7c3935f9bc9702e0a87ca81f22bec50d896203a8d53b18466171bd6a9b8187f944c0fd292ffa88ace7802",
           "remark": {},
           "asset": {
             "issueEntityFactory": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "factoryId": "generator",
+              "factoryId": "forging",
               "entityPrealnum": "1000",
               "entityFrozenAssetPrealnum": "0",
               "purchaseAssetPrealnum": "0"
@@ -148,112 +147,105 @@
           },
           "recipientId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
           "storageKey": "factoryId",
-          "storageValue": "generator"
+          "storageValue": "forging"
         }
       },
       {
         "tIndex": 2,
         "height": 1,
-        "signature": "6ae2ed352d48d175e07dfee6fed9e697b12f16a52bc395a1f5a506694c625fed3c691841effc0d72f1453bdbeb01fabad210bc774ae10c9e5347be271673aa0a",
+        "signature": "ef3e49309897b4ff7e274092e6aa10ddbb0efdc65bbaa78ea181bc3d86ebc688ddf495134db2829ea4146bee2b16ffe689c0f1192d849d662d12a17148a1c107",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-AST-01",
+          "type": "BFT-BFCHAIN-ETY-01",
           "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
           "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
           "rangeType": 0,
           "range": [],
-          "fee": "27",
+          "fee": "840",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "d0094d09ade156bc61015cc077a79b417891c152f201b620e87e962555b07bea309774519fe57452dfc815bbe75c76a937f04541ebb47ab5c0e56edfcfc94403",
+          "signature": "72287d1bd1742530f72da3e8c59c07a737a6586e469bdaabe64f1d5195039af3840fcdb9b2558f3024587ef7afad93772abb216a9273fe86416303761b5e3501",
           "remark": {},
           "asset": {
-            "transferAsset": {
+            "issueEntityFactory": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "assetType": "BFT",
-              "amount": "152"
+              "factoryId": "share",
+              "entityPrealnum": "10000",
+              "entityFrozenAssetPrealnum": "0",
+              "purchaseAssetPrealnum": "0"
             }
           },
-          "recipientId": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
-          "storageKey": "assetType",
-          "storageValue": "BFT"
+          "recipientId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+          "storageKey": "factoryId",
+          "storageValue": "share"
         }
       },
       {
         "tIndex": 3,
         "height": 1,
-        "signature": "b24999763f16ebbaf6d372c60b0602766e6ce4ac08f046b1da83bb11430b17439ade6f78f8988b98d48681ade0a35d1b2645d4a5289b3fe46bc4ac620f1c450e",
+        "signature": "99dc962d34bcadc81cafd7d10402d5586f131718795b474471926e736eab7fb980b2f578b0b745adafa72023279e3b90a1519b5e8535160edfc97f924dc29803",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
-          "senderId": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
-          "senderPublicKey": "6e8330144a8c123c017a8f5c363531868d3ce21c45b4a668cc1767c2b4695c84",
+          "type": "BFT-BFCHAIN-AST-01",
+          "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+          "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "810",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "2e020021393a4be5d6258e034248f03ef4332133405ce06eff70809bdddc32ca22646bf1e5abc9363c8fad22723087eb36cf71654796421865a98794959a4e09",
+          "signature": "5288613de2064675847258b96e245f4418bde224efb9f1a4802004bc0879eaeeec221c9c21e9705487027c8c4b8ce9f879a9f4cf7e066ea2cdef7f52c1be540a",
           "remark": {},
           "asset": {
-            "issueEntity": {
+            "transferAsset": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0001",
-              "taxAssetPrealnum": "0",
-              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
-              "entityFactory": {
-                "sourceChainName": "bfchain",
-                "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
-                "entityPrealnum": "1000",
-                "entityFrozenAssetPrealnum": "0",
-                "purchaseAssetPrealnum": "0"
-              }
+              "assetType": "BFT",
+              "amount": "4488"
             }
           },
           "recipientId": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
-          "storageKey": "entityId",
-          "storageValue": "generator_generator0001"
+          "storageKey": "assetType",
+          "storageValue": "BFT"
         }
       },
       {
         "tIndex": 4,
         "height": 1,
-        "signature": "159772785ac00248889fae9c84c3747d0480b505dd58fe6ff28aa924cb28b86bb80691d889f17d0aeef5b86f1bd27afc091974307d13391db6eb1b6b21723f09",
+        "signature": "db71c26f270c9f5e39ee3149911c4ee3df819b31bf956a1ed01102b71ba27800b686dd70070cb195948cdd98d42b3f8eb74ef048b111fc9475c34345b3cf9403",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
+          "type": "BFT-BFCHAIN-ETY-02",
           "senderId": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
           "senderPublicKey": "6e8330144a8c123c017a8f5c363531868d3ce21c45b4a668cc1767c2b4695c84",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "75fc66e3527941a0f582f919c77c4ab7e1c85fde32d924e3078e4778bab78d1a55bba97b16212c336a4e72de380540d4d3643a2a9ab1dc3a57e97a8da30d650b",
+          "signature": "72473fb1a06a95b2e0816df5abd1bd28939b28a395f0c00014cb06eb4b1511a985a9d1b8b9dcbf0c85a69a26c499d1f569050a36b5fbacc3297d0e98b9a13e0d",
           "remark": {},
           "asset": {
             "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0002",
+              "entityId": "forging_forging0001",
               "taxAssetPrealnum": "0",
               "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
               "entityFactory": {
                 "sourceChainName": "bfchain",
                 "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
+                "factoryId": "forging",
                 "entityPrealnum": "1000",
                 "entityFrozenAssetPrealnum": "0",
                 "purchaseAssetPrealnum": "0"
@@ -262,39 +254,39 @@
           },
           "recipientId": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
           "storageKey": "entityId",
-          "storageValue": "generator_generator0002"
+          "storageValue": "forging_forging0001"
         }
       },
       {
         "tIndex": 5,
         "height": 1,
-        "signature": "495654fc74f7c8bd375b8f0b6ef14401a9393b0b679d7c4e9e7de341d476b747498126b31e4715763a2235e89f48575c88289bc1bf8677d53831d3b4e6b3560e",
+        "signature": "f1ab902b35e2fc0e1057d0015cec7e664c729d8479a93e4a2be010f094515f0c28e397ac805f62a97ed4a4d1f957ccc2d2649d808842f2c393dc943da2d72c0e",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
+          "type": "BFT-BFCHAIN-ETY-02",
           "senderId": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
           "senderPublicKey": "6e8330144a8c123c017a8f5c363531868d3ce21c45b4a668cc1767c2b4695c84",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "29f2f5a8bafda32ff73e3c443f6fa8acc4aa1ae8d4ce5d62248dcc52f86c824430cfaa252e4cb890b66745be45078c1e40db3bff233b9e869f051773d720ac08",
+          "signature": "b8e11118ac1d211386530a2ff9493932dd2ed19ecb8acde33e13d4f27702c202f0a4844c2502d569e3c649af5d327a8cd17d248937b8aeb1a53845583dab8303",
           "remark": {},
           "asset": {
             "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0003",
+              "entityId": "forging_forging0002",
               "taxAssetPrealnum": "0",
               "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
               "entityFactory": {
                 "sourceChainName": "bfchain",
                 "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
+                "factoryId": "forging",
                 "entityPrealnum": "1000",
                 "entityFrozenAssetPrealnum": "0",
                 "purchaseAssetPrealnum": "0"
@@ -303,39 +295,39 @@
           },
           "recipientId": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
           "storageKey": "entityId",
-          "storageValue": "generator_generator0003"
+          "storageValue": "forging_forging0002"
         }
       },
       {
         "tIndex": 6,
         "height": 1,
-        "signature": "36313f054c54484cac4a5471d73394e72c7e3288161f5191768035d5376a064cd394f74bab44812f2b901b6e275619be7b3decc264ed59104b6e61df60481306",
+        "signature": "4838746f48024aa8ee0d00fc1d7ca4c56ea27f9df112da147f1ba72358c39e43491dd7fbf8d45b4209d68701d822688ed11615d8378a58127184f608f7162b09",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
+          "type": "BFT-BFCHAIN-ETY-02",
           "senderId": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
           "senderPublicKey": "6e8330144a8c123c017a8f5c363531868d3ce21c45b4a668cc1767c2b4695c84",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "dbf4a6b23ce310308e44ce80ba37c08287127cc6888ac5d77c118741191d0b8f388a1208eb4044485c52f7c52ebd46a518ddac9dc89ff6825c27ae00f69a6506",
+          "signature": "4a2c830792b2bef4dd104b2f142d18ce951baaf2bcedc8022bff8862a017613fc6e74195d8e8c013f10c68e50264be7f3f96a9191f10fe1ee4158d20b995c90f",
           "remark": {},
           "asset": {
             "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0004",
+              "entityId": "forging_forging0003",
               "taxAssetPrealnum": "0",
               "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
               "entityFactory": {
                 "sourceChainName": "bfchain",
                 "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
+                "factoryId": "forging",
                 "entityPrealnum": "1000",
                 "entityFrozenAssetPrealnum": "0",
                 "purchaseAssetPrealnum": "0"
@@ -344,112 +336,112 @@
           },
           "recipientId": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
           "storageKey": "entityId",
-          "storageValue": "generator_generator0004"
+          "storageValue": "forging_forging0003"
         }
       },
       {
         "tIndex": 7,
         "height": 1,
-        "signature": "f7617dae2a07fe2a005a1893642e603a2ee44b2eede335409c905663fab465bd2288524fbc9a0c88ce4ec8d76ffa16afa946f86740be05bd45726d82b3bacc03",
+        "signature": "741be2b20040f223af68d31c6b9a0ec748c18a769150b0afdab3334d7b07bbd98672fe895c3bc414b452f6b2b5f215c93f0f3e146a3d6dfee8c8da2c4fbd7606",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-AST-01",
-          "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
-          "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
+          "type": "BFT-BFCHAIN-ETY-02",
+          "senderId": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
+          "senderPublicKey": "6e8330144a8c123c017a8f5c363531868d3ce21c45b4a668cc1767c2b4695c84",
           "rangeType": 0,
           "range": [],
-          "fee": "27",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "eda2b0dedc352f62e354a8b1264eab3eabd64a7d419383cd2fbabfc3624de0db2f2980af737109013dbd4cb956523ac4d010f05115bfa63a17a6a38e9577540f",
+          "signature": "9d13899268d07ade4d21a02739998047215778f96146a1fd10bd716ddac61d7e6918bb61d0c7cc63b339a32acb29a8310006c883ee17b442af3d29f05d05370f",
           "remark": {},
           "asset": {
-            "transferAsset": {
+            "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "assetType": "BFT",
-              "amount": "152"
+              "entityId": "forging_forging0004",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "bfchain",
+                "sourceChainMagic": "E00EI",
+                "factoryId": "forging",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
             }
           },
-          "recipientId": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
-          "storageKey": "assetType",
-          "storageValue": "BFT"
+          "recipientId": "cCET2Sxt2LPDhx44wxJ9uhkpviKNrSacvE",
+          "storageKey": "entityId",
+          "storageValue": "forging_forging0004"
         }
       },
       {
         "tIndex": 8,
         "height": 1,
-        "signature": "1080f7cec7b26b033b530de46cc9a97521ea3ebac4a58abd16fc59b7a636777f00b7c03ac06911f36a82bad8e1303912b983e8df065854fcd2a2f7999173670d",
+        "signature": "a62b0d3bd7cb296379a5d59f0e0d36a43d6e60380c8495b288d12da19aafe76cc3fbe45653d4dcf8b802c90133a4f997fabfc6ab18d1185e8722569dc751040b",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
-          "senderId": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
-          "senderPublicKey": "0f88fe3a155927907b507c10ccd0318a7f3b2f55aeb6c90913756ef43db4e836",
+          "type": "BFT-BFCHAIN-AST-01",
+          "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+          "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "810",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "b33e708aa82b030c58525a8b9d66e9f4d212af4cff62f9b3ed7dcb56125f2a81d0c0d4d8c94eb99da9113a7067dbb7d1a17c7df53618c9aac561839f72707e0f",
+          "signature": "17e43f82f2ad1b0efcf1cb9adaf0641c3df6417e017f9749424d1f6db7bff26812ddc78608e2687501e6c1b9525d9651ec8892d3fbc073ce34abd5b6a5ec1f06",
           "remark": {},
           "asset": {
-            "issueEntity": {
+            "transferAsset": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0005",
-              "taxAssetPrealnum": "0",
-              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
-              "entityFactory": {
-                "sourceChainName": "bfchain",
-                "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
-                "entityPrealnum": "1000",
-                "entityFrozenAssetPrealnum": "0",
-                "purchaseAssetPrealnum": "0"
-              }
+              "assetType": "BFT",
+              "amount": "4488"
             }
           },
           "recipientId": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
-          "storageKey": "entityId",
-          "storageValue": "generator_generator0005"
+          "storageKey": "assetType",
+          "storageValue": "BFT"
         }
       },
       {
         "tIndex": 9,
         "height": 1,
-        "signature": "f711b26db19c64f42952e871cd75ff370f3b9815aa5b9444e5ccb922eacf64741c8ba19cf5d01e00988974ce54a63a897b42a46fc6936684e490a932a148bb04",
+        "signature": "79acc556072f1c3c2d0df9562a7365ec8a9cb390114339ce395ad9e8fbdcc4d7c5839636e6b6494df5450865beb89da53f240cc09fc6221b354bc4d5dc3ff603",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
+          "type": "BFT-BFCHAIN-ETY-02",
           "senderId": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
           "senderPublicKey": "0f88fe3a155927907b507c10ccd0318a7f3b2f55aeb6c90913756ef43db4e836",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "293f90c22e5aaff6ac3398d27417dc74cc8dd236783024c62fb67244a67e451cecaee09648291fb3a9ffc0ce41eecc66ae025a7f8d52556578307b583d2e3503",
+          "signature": "49173fa56fc8822a05cc918990b25e6d8c9ac4faf3220e778689c2207a1ddb85991d5ead08a6be93f4c9d2865d5ebf9599eef5e3ac3b597085e03fadc676c201",
           "remark": {},
           "asset": {
             "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0006",
+              "entityId": "forging_forging0005",
               "taxAssetPrealnum": "0",
               "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
               "entityFactory": {
                 "sourceChainName": "bfchain",
                 "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
+                "factoryId": "forging",
                 "entityPrealnum": "1000",
                 "entityFrozenAssetPrealnum": "0",
                 "purchaseAssetPrealnum": "0"
@@ -458,39 +450,39 @@
           },
           "recipientId": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
           "storageKey": "entityId",
-          "storageValue": "generator_generator0006"
+          "storageValue": "forging_forging0005"
         }
       },
       {
         "tIndex": 10,
         "height": 1,
-        "signature": "317044043e2c71d1afe252400a86cf12cabdfe1f8f1b7b9604bc6327193bd0ba2242dd684d81e96811a88e0cf20f3dfaf850a758ba571077d3a68317d79b5f01",
+        "signature": "5b2de8e733b095a86fde44eba9ca87960a13b93fe45fe52b118bc6de27679a2804c413c89b00bb327d646408176a3445141b6da36ef3f9daf020cc2d9e2cc00e",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
+          "type": "BFT-BFCHAIN-ETY-02",
           "senderId": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
           "senderPublicKey": "0f88fe3a155927907b507c10ccd0318a7f3b2f55aeb6c90913756ef43db4e836",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "6475ae5e55734e6f3469d10db1f7fb1702dbae8b92725f0b32a000dc288748dd580a87e98260f016279fe73f55d4902e11e537505709f7c4a8325b12efbebd07",
+          "signature": "e15865693a3a45d4932d1bdd0840acfe968a750424ff7188890502c1efb9675fb56f662cee54ac9353e61f72c3c064c7fd138d2332acfcbc22d6a39fbad4730c",
           "remark": {},
           "asset": {
             "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0007",
+              "entityId": "forging_forging0006",
               "taxAssetPrealnum": "0",
               "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
               "entityFactory": {
                 "sourceChainName": "bfchain",
                 "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
+                "factoryId": "forging",
                 "entityPrealnum": "1000",
                 "entityFrozenAssetPrealnum": "0",
                 "purchaseAssetPrealnum": "0"
@@ -499,39 +491,39 @@
           },
           "recipientId": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
           "storageKey": "entityId",
-          "storageValue": "generator_generator0007"
+          "storageValue": "forging_forging0006"
         }
       },
       {
         "tIndex": 11,
         "height": 1,
-        "signature": "9cbf5233080eee06e4a08e98688e25648fe96d0a7e1a2661d454b87c201c7f8ce3b7395aadadacb40c39cb58f24998177bfbe215c9c53e394899be0177972b0a",
+        "signature": "27530393777a4debf7768638c3d9ccf8d679d9c95b042e31d446aa88b4aef8eeefa560c45993b36d15543393fecd952ce8006eb7bb0d3a7ee785d4f7d127a406",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
+          "type": "BFT-BFCHAIN-ETY-02",
           "senderId": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
           "senderPublicKey": "0f88fe3a155927907b507c10ccd0318a7f3b2f55aeb6c90913756ef43db4e836",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "a37c431e7e5c4801ecb7dfa0e7f7712c087b6749bb0ad1c99a10e1a59c36776c99b34f92f69ce5f1418a65ca72bab285a513362f0b57fe0b1d46f9e72b4afc0f",
+          "signature": "33ad447a61a971ec6d0ad11ed66b1fc50df33896f42c7ae18b2d276fc3a1d4704fe77b70e7d0c5ec310d20b5a8da7b35fa316a68e31c76de2ba034e17a5bfa06",
           "remark": {},
           "asset": {
             "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0008",
+              "entityId": "forging_forging0007",
               "taxAssetPrealnum": "0",
               "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
               "entityFactory": {
                 "sourceChainName": "bfchain",
                 "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
+                "factoryId": "forging",
                 "entityPrealnum": "1000",
                 "entityFrozenAssetPrealnum": "0",
                 "purchaseAssetPrealnum": "0"
@@ -540,112 +532,112 @@
           },
           "recipientId": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
           "storageKey": "entityId",
-          "storageValue": "generator_generator0008"
+          "storageValue": "forging_forging0007"
         }
       },
       {
         "tIndex": 12,
         "height": 1,
-        "signature": "519b5a7080881c1b689d5f6bd586bd2480bf75c9feea07cf93b119cf960b94c372cf9071b83703dd91ef00cad13c084c51b46c5707970b59a8a783adf155b10a",
+        "signature": "77647791e38930cbc4ddfdbd83e6dd008573b969e491b3a4429ed89cde6edd5523d5dd3a88dceb38a02f2a2dce0b3aee7b895b882b9de2cd4bfd438cb067640e",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-AST-01",
-          "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
-          "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
+          "type": "BFT-BFCHAIN-ETY-02",
+          "senderId": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
+          "senderPublicKey": "0f88fe3a155927907b507c10ccd0318a7f3b2f55aeb6c90913756ef43db4e836",
           "rangeType": 0,
           "range": [],
-          "fee": "27",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "301bfa34ec0468615c609d2208a80ac78ec6385d33d3b4c478ba0593591c239d7307b61b3a5f32a15a6fc0063916aa42a4ff46b007d9a9d2043e85fa6f637405",
+          "signature": "6f8857ca236943d4e28f4e2330fe68981db2627e3872486e5e6eb2e535b0d6786314c673f5e7c17185e3860a6324d893796d03b86b994ecbb16c3d1ceff74906",
           "remark": {},
           "asset": {
-            "transferAsset": {
+            "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "assetType": "BFT",
-              "amount": "152"
+              "entityId": "forging_forging0008",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "bfchain",
+                "sourceChainMagic": "E00EI",
+                "factoryId": "forging",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
             }
           },
-          "recipientId": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
-          "storageKey": "assetType",
-          "storageValue": "BFT"
+          "recipientId": "cLrUCNAWPyPH96bqqC3JQXZ3CtsvvXmNj1",
+          "storageKey": "entityId",
+          "storageValue": "forging_forging0008"
         }
       },
       {
         "tIndex": 13,
         "height": 1,
-        "signature": "12129f11340d6be895a0bb922e7dc406dcf0a14c330e7a5cdb118ec716ef6da7db75607093dc0fd889691de6871e42502ccdcf6f368c1d3290cdd26060e6390d",
+        "signature": "5fc16c50a7cbfc6611cc00ec1eadca528c2ba94f257678022ec673b218127d93ecabff448090279d59bf9aba7f4cabaca12d650f694fe21272bb08560413cf07",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
-          "senderId": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
-          "senderPublicKey": "526b2c534f8e0b2c75394e8c2968196510f912ebee80c17193baea45c73c07fa",
+          "type": "BFT-BFCHAIN-AST-01",
+          "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+          "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "810",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "3ea74f6537d607fd310f46d78880475cd1717f3458631021717c3b470d58710dd7dbfcd5b614f8416aa4ee100c4ab64e0db9692863d0e81f2ba76fb9da7ee70c",
+          "signature": "a964b63640631345a43324895e714c9c5957a8e7910493a63dfa00ced75f4706d8a5e1b3671c9bf1ece6a40d7d4ddb74ea05e05a6668334966edc987dcde280f",
           "remark": {},
           "asset": {
-            "issueEntity": {
+            "transferAsset": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0009",
-              "taxAssetPrealnum": "0",
-              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
-              "entityFactory": {
-                "sourceChainName": "bfchain",
-                "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
-                "entityPrealnum": "1000",
-                "entityFrozenAssetPrealnum": "0",
-                "purchaseAssetPrealnum": "0"
-              }
+              "assetType": "BFT",
+              "amount": "4488"
             }
           },
           "recipientId": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
-          "storageKey": "entityId",
-          "storageValue": "generator_generator0009"
+          "storageKey": "assetType",
+          "storageValue": "BFT"
         }
       },
       {
         "tIndex": 14,
         "height": 1,
-        "signature": "1fdf772d8f6dae08e1ea5887703bf971895f1a4186b505958cac8429ad215e2083304385211147ca0010c49d92d5c270f8250350ab0a88662f3592bc8fed100c",
+        "signature": "7094bb998aefb346b019670a43408e18b376504800866b47a2ffb9a4fc98ad1fb33a99d61f9fac3265476034d3268df9a4d72bcf500fe2948abe1e8c1d959a0f",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
+          "type": "BFT-BFCHAIN-ETY-02",
           "senderId": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
           "senderPublicKey": "526b2c534f8e0b2c75394e8c2968196510f912ebee80c17193baea45c73c07fa",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "823875f0761f1f7ad26ff7585b2e48e16601ada48a42f2eca66c11c358cbe0763f5244114221adf88410d27e2010b4204f6ae3227eee84107f7caf75bb5ac30b",
+          "signature": "38b70921724960aa3b0e49bb1cc678b8fd0f8eeec8797ab4af7feac52a38fda68e578dffd27cdd4702c189ef017f48490baa39ddb45250ced68ccfb817c44707",
           "remark": {},
           "asset": {
             "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0010",
+              "entityId": "forging_forging0009",
               "taxAssetPrealnum": "0",
               "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
               "entityFactory": {
                 "sourceChainName": "bfchain",
                 "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
+                "factoryId": "forging",
                 "entityPrealnum": "1000",
                 "entityFrozenAssetPrealnum": "0",
                 "purchaseAssetPrealnum": "0"
@@ -654,39 +646,39 @@
           },
           "recipientId": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
           "storageKey": "entityId",
-          "storageValue": "generator_generator0010"
+          "storageValue": "forging_forging0009"
         }
       },
       {
         "tIndex": 15,
         "height": 1,
-        "signature": "0f06d45f4e118fa25f4d8ffc9d72c78602b73bf2232020a9d055e061e667f798da93dcdcc3e6577b0e6f2249fbcc3fe3b80b4c83d84b862dda036629c9dfd00b",
+        "signature": "9720b51a8d1035c97c056977af721d44ce5a289cff6a8db15dd9ffbce3a44baec1f72896747070909b8f94c2cd194070fd193c2bf7776d1dc9ee84ecd985aa09",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
+          "type": "BFT-BFCHAIN-ETY-02",
           "senderId": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
           "senderPublicKey": "526b2c534f8e0b2c75394e8c2968196510f912ebee80c17193baea45c73c07fa",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "ccaa662dfd9b1d05a42e3f748a76b9c76d91731c3f0ff7678b6a3415b5c85e2c2ec860d3c6e33795019bb67145f3909fd8b289b71914cdf0605e9467a3a82b0b",
+          "signature": "6f9307c2f4829a381f307b7f93e21971ab5dcade87fad69f8f4f07dc2e7e4fb1c45cccd39e379ec9dc0761734888b799cac51e5f61e9a8074fe7e3bdc7a01a03",
           "remark": {},
           "asset": {
             "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0011",
+              "entityId": "forging_forging0010",
               "taxAssetPrealnum": "0",
               "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
               "entityFactory": {
                 "sourceChainName": "bfchain",
                 "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
+                "factoryId": "forging",
                 "entityPrealnum": "1000",
                 "entityFrozenAssetPrealnum": "0",
                 "purchaseAssetPrealnum": "0"
@@ -695,39 +687,39 @@
           },
           "recipientId": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
           "storageKey": "entityId",
-          "storageValue": "generator_generator0011"
+          "storageValue": "forging_forging0010"
         }
       },
       {
         "tIndex": 16,
         "height": 1,
-        "signature": "5a8560e470508b567adfcd66d9d799944b3d8c05c07a007c6e4a77545716944ace93a66588175e6684632386910c364ddaf3d63dd74eb238c10ecd4d26ea5d09",
+        "signature": "1f14861176aa4d3ad39779628d16752f94ae16367aee73b459c8ca10471a7038ada740f21968c25b07da44a980fa5c0782fce69f973a32d12c5898dab4534a08",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
+          "type": "BFT-BFCHAIN-ETY-02",
           "senderId": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
           "senderPublicKey": "526b2c534f8e0b2c75394e8c2968196510f912ebee80c17193baea45c73c07fa",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "4333334759f9facb1251ebbf5dfff9c2522e8470c7b258b161baed8c26229988b149b056e4e4daf698720046e0778f1eaa531e1c4402badd439c038f7dd93100",
+          "signature": "82a0d5baee791a333d7089b399dcf32cec99a40090cd9843c536a6c038b6150dcfd8da98ed9d2ad36c3bb632477922c4770603f567495d6de8a5e8d4ddd1b20c",
           "remark": {},
           "asset": {
             "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0012",
+              "entityId": "forging_forging0011",
               "taxAssetPrealnum": "0",
               "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
               "entityFactory": {
                 "sourceChainName": "bfchain",
                 "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
+                "factoryId": "forging",
                 "entityPrealnum": "1000",
                 "entityFrozenAssetPrealnum": "0",
                 "purchaseAssetPrealnum": "0"
@@ -736,112 +728,112 @@
           },
           "recipientId": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
           "storageKey": "entityId",
-          "storageValue": "generator_generator0012"
+          "storageValue": "forging_forging0011"
         }
       },
       {
         "tIndex": 17,
         "height": 1,
-        "signature": "225e233f44c41ba807be3e62137d51da4bc0df3dcaa4d88be056c5efb19cc311a26d53a7e626a178fe7c5f77bdddaea72ef9c7fb3773397aef74c2cb6c8ac90a",
+        "signature": "cb3b8577628b62159265ad02ffdc36d6b1c2c3039d8c7929a4eedd587583ce502824e831af50fe282c8fcf76b03e98b7a66090a1e361634087328e1f829a5701",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-AST-01",
-          "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
-          "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
+          "type": "BFT-BFCHAIN-ETY-02",
+          "senderId": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
+          "senderPublicKey": "526b2c534f8e0b2c75394e8c2968196510f912ebee80c17193baea45c73c07fa",
           "rangeType": 0,
           "range": [],
-          "fee": "27",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "36432ec9a73c4eae90d3d090079bbc292150a7aaa49be0f22e12465ad6ff12b0805a057fbd8c8b0323cdd14687872db1db27de3c674197fb715fbfacee43c700",
+          "signature": "a5b56b8f2e817652fd114e7b18ec3357a9f5fcead680ab6efcef9b604d638252aefdede8308f246288f3ee59b582f85d251199c3219126c27a6d145b5ffb950f",
           "remark": {},
           "asset": {
-            "transferAsset": {
+            "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "assetType": "BFT",
-              "amount": "152"
+              "entityId": "forging_forging0012",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "bfchain",
+                "sourceChainMagic": "E00EI",
+                "factoryId": "forging",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
             }
           },
-          "recipientId": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
-          "storageKey": "assetType",
-          "storageValue": "BFT"
+          "recipientId": "cKySkYVB4MhWhKczSUmY7WhF638hPx6U8N",
+          "storageKey": "entityId",
+          "storageValue": "forging_forging0012"
         }
       },
       {
         "tIndex": 18,
         "height": 1,
-        "signature": "d9d9997cce006c5967693d1d7a3e6be619c1beac7f10682fab0358a871b13d364bbf894e031c76a595c1ff1793139c6cd5fcfb673a394e9d03135ebf4a939d02",
+        "signature": "3cbb2f9aa39a6809fe287b1aaaddf06c053b1292b9452e18028d3fb560509697e838b900b9e8089a0c25b74e6df5d02403129dacbdeba85dc3241cca7003ec04",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
-          "senderId": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
-          "senderPublicKey": "72eb8d56261b211e0f77029cd8010b6378fa23342cb21c1169e4ac2c00debaa0",
+          "type": "BFT-BFCHAIN-AST-01",
+          "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+          "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "810",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "d9e74eb00a19a0e35c6a2770adf9a98c090e1e140ac6fc8a7a8a1c1a6a56fce8813b7de07e632f4ca45d6d36e62293a541effc41cfda5fee873c3a161b8df00c",
+          "signature": "1068ef24f96baa151c5108c0488233babd67c37078cd639a7a84140f48a744038cc957d1053dd8bf86b46be7c933035282097776243cec60a2f21c66a2a9dd03",
           "remark": {},
           "asset": {
-            "issueEntity": {
+            "transferAsset": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0013",
-              "taxAssetPrealnum": "0",
-              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
-              "entityFactory": {
-                "sourceChainName": "bfchain",
-                "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
-                "entityPrealnum": "1000",
-                "entityFrozenAssetPrealnum": "0",
-                "purchaseAssetPrealnum": "0"
-              }
+              "assetType": "BFT",
+              "amount": "4488"
             }
           },
           "recipientId": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
-          "storageKey": "entityId",
-          "storageValue": "generator_generator0013"
+          "storageKey": "assetType",
+          "storageValue": "BFT"
         }
       },
       {
         "tIndex": 19,
         "height": 1,
-        "signature": "d3edc3f7ebf5d0519666bcc06d7aae5371c1c20bb7ce0166cd6668d851da3db1cf9947ebf5c44664ee15f7bc86eea5667ee98c013c9f017c4028f9e2db63d401",
+        "signature": "eb3845920a73cf34cd744dd2b26552d7ce0c777d232e31277029d2926ceba9c9e46f4ac318d7d36101549bcdd86eb9665f05274337c4513b25c4343ba258ae01",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
+          "type": "BFT-BFCHAIN-ETY-02",
           "senderId": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
           "senderPublicKey": "72eb8d56261b211e0f77029cd8010b6378fa23342cb21c1169e4ac2c00debaa0",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "9df109651001400a2f19fd0ca728bf4f0c1b6e5a74634d1dc9f885699513bc40181598b03517347eaeee647a32a48de2ad5931e509e082e91678f21e019dbe02",
+          "signature": "bb6e7c5c6f129bd408838ef70e24e9326ea63d92a5ce661fce4ecf14c28c10e2dc83468fd1aca9ecec8fa3262017fcc8f1467a77bb60e4b0aada852bf0c61d04",
           "remark": {},
           "asset": {
             "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0014",
+              "entityId": "forging_forging0013",
               "taxAssetPrealnum": "0",
               "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
               "entityFactory": {
                 "sourceChainName": "bfchain",
                 "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
+                "factoryId": "forging",
                 "entityPrealnum": "1000",
                 "entityFrozenAssetPrealnum": "0",
                 "purchaseAssetPrealnum": "0"
@@ -850,39 +842,39 @@
           },
           "recipientId": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
           "storageKey": "entityId",
-          "storageValue": "generator_generator0014"
+          "storageValue": "forging_forging0013"
         }
       },
       {
         "tIndex": 20,
         "height": 1,
-        "signature": "942633948e462ee56995be24d2c4e32b6a00a0366d2436c8454a603e291e7f175b8c7d9761c9587485fd888c3a931cf604df14f79047c92498819a5a4db93205",
+        "signature": "953520fe7fa8af9fca506ec15b3f22ee8e3e84fb62cd5420f4c52cd9e4cabb89c069a065ae40b60f0464c22ca215af965f3ef7449b1ce8c5e8b713007c8e470c",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
+          "type": "BFT-BFCHAIN-ETY-02",
           "senderId": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
           "senderPublicKey": "72eb8d56261b211e0f77029cd8010b6378fa23342cb21c1169e4ac2c00debaa0",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "595648915f8b5268302c8acf73d2b3daff3ec7d6e52a72f175d3a33e8b9b7d63cf4321ca435fef7b9a804474e837b140e0a45457189166fdbb3866d8e1efaf0b",
+          "signature": "1517860be73f92a1c396c636e296f80b3ed817d8dabbdef7d8f1796c6c610bfe33f86b7338edfa38a250028f8de9817067ec4fa95250c72f06492767d8fcd707",
           "remark": {},
           "asset": {
             "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0015",
+              "entityId": "forging_forging0014",
               "taxAssetPrealnum": "0",
               "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
               "entityFactory": {
                 "sourceChainName": "bfchain",
                 "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
+                "factoryId": "forging",
                 "entityPrealnum": "1000",
                 "entityFrozenAssetPrealnum": "0",
                 "purchaseAssetPrealnum": "0"
@@ -891,39 +883,39 @@
           },
           "recipientId": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
           "storageKey": "entityId",
-          "storageValue": "generator_generator0015"
+          "storageValue": "forging_forging0014"
         }
       },
       {
         "tIndex": 21,
         "height": 1,
-        "signature": "4f10c4e7ff7a09cb9b04fc02899550128e972ccc2d40a9592476845bd954a6fcdd3e65fd12ceef55721f5e29dbe98915ccdf523ae825d8f0941b6f201dfebc05",
+        "signature": "57114edde878896ad0bb7ac66dc69a7051d4aa273d224caa7ddbaf9106a7903e819d75f39c05435bd4468ce901a1b4ea927983a6ff743d7787a094207465c90c",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
+          "type": "BFT-BFCHAIN-ETY-02",
           "senderId": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
           "senderPublicKey": "72eb8d56261b211e0f77029cd8010b6378fa23342cb21c1169e4ac2c00debaa0",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "6722cdcf4068f2a1023e87bb1ebda0a83e16a4daca9c964832f0f832789536f30f9fade933e99e151d718cda9e829400fc2b95c06739bd55ea6f1d081f24fc0a",
+          "signature": "3fe3df9ac4bde134b71fb0d59a9d2af1b33f8e22832756ffd6336fc609949aaeb480bcf7c3698c0f681ec969c2d5c7440c8c7df3659e142228d9ba5b2b8a8c0d",
           "remark": {},
           "asset": {
             "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0016",
+              "entityId": "forging_forging0015",
               "taxAssetPrealnum": "0",
               "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
               "entityFactory": {
                 "sourceChainName": "bfchain",
                 "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
+                "factoryId": "forging",
                 "entityPrealnum": "1000",
                 "entityFrozenAssetPrealnum": "0",
                 "purchaseAssetPrealnum": "0"
@@ -932,112 +924,112 @@
           },
           "recipientId": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
           "storageKey": "entityId",
-          "storageValue": "generator_generator0016"
+          "storageValue": "forging_forging0015"
         }
       },
       {
         "tIndex": 22,
         "height": 1,
-        "signature": "d6de965bd0809e5d24a1251921d8f4f6b0ec5f895b77a79d6d7bb2c5bf30b8d5dd1cf260c4e52df4948c97d9f8f08f3059f230cc1e6d38e07411531f08426b0d",
+        "signature": "483e730eccf93d4172f75fbc6bd9138196fb52034249e9431e1bde864301af7397c73979910163c1da4b26f6c04eabe92a12c9316218ee4845c9e8ee27786200",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-AST-01",
-          "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
-          "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
+          "type": "BFT-BFCHAIN-ETY-02",
+          "senderId": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
+          "senderPublicKey": "72eb8d56261b211e0f77029cd8010b6378fa23342cb21c1169e4ac2c00debaa0",
           "rangeType": 0,
           "range": [],
-          "fee": "27",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "3dae4e0df53633d066ef066e2594bd764bb0ff839adddc13079b5b730e77d2f5e86934e71c05d5adaec6983fb011c3422f7ab43358b06d5bba8d970edbdc2e06",
+          "signature": "26881d6e7ec6abd3e7a8f7f80cfbaf5a93e467a4de7b06bb8aa3d61194a0c06d50128673b2e95c9c34c9e296658a64ce90cfec4e295631f79aff5aa8abd35903",
           "remark": {},
           "asset": {
-            "transferAsset": {
+            "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "assetType": "BFT",
-              "amount": "152"
+              "entityId": "forging_forging0016",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "bfchain",
+                "sourceChainMagic": "E00EI",
+                "factoryId": "forging",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
             }
           },
-          "recipientId": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
-          "storageKey": "assetType",
-          "storageValue": "BFT"
+          "recipientId": "cNQzoCNDDYY2uqBEW6fb7B6HzFjyz6oCt8",
+          "storageKey": "entityId",
+          "storageValue": "forging_forging0016"
         }
       },
       {
         "tIndex": 23,
         "height": 1,
-        "signature": "c6d1962494b53b0568d21aac481fc5e6cc63846c98ea29d270e19a6c3a2e030e8a3e17aa9bf77e1f81c3c8571b75dbdecc14d6c663a86997c0a6105cfcf37109",
+        "signature": "7249a171f831622fe7a04c19818dd526893f12f2a20b6788692136413cf294728fbadb8c8306ee256c5605e844c0dfa3040f6d12a73935649343d4934eed4909",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
-          "senderId": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
-          "senderPublicKey": "58f751e6ffd7e67d1ddf3d687f02e828a4f855a6ba78fd06bdbeb934ba56ec77",
+          "type": "BFT-BFCHAIN-AST-01",
+          "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+          "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "810",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "2394dddc6c884a9ff79aab3c2c592bba16832c2d826c236cf3116d5b809591ea0a1eddd2e96443858fda219da1f48ef486888c1a6f1bf6692f734531baf28501",
+          "signature": "50ef6aef7c10a45d6e8d86fb53d94ca19f74d6100234f41549e465e54c4329145704e353aa6e5eafcf51e132698a9d29cadbc439901f4c393148a0bac7323404",
           "remark": {},
           "asset": {
-            "issueEntity": {
+            "transferAsset": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0017",
-              "taxAssetPrealnum": "0",
-              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
-              "entityFactory": {
-                "sourceChainName": "bfchain",
-                "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
-                "entityPrealnum": "1000",
-                "entityFrozenAssetPrealnum": "0",
-                "purchaseAssetPrealnum": "0"
-              }
+              "assetType": "BFT",
+              "amount": "4488"
             }
           },
           "recipientId": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
-          "storageKey": "entityId",
-          "storageValue": "generator_generator0017"
+          "storageKey": "assetType",
+          "storageValue": "BFT"
         }
       },
       {
         "tIndex": 24,
         "height": 1,
-        "signature": "cb7058caef0ead388690f11c7302203542c227c614e4295ce37473ba44d31fdea27a0557f7655f550999ea11febbe6aacc0d593e3cb343b79cf68c03c1998b06",
+        "signature": "b3f4f0d6328bb5acc8e044550c873487bca12f451fa8b9f78b479b5a8017e190d6318e94d35c6d082cd474cce2bf9e8bd27d70f987f783ca04f0f063846d6506",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
+          "type": "BFT-BFCHAIN-ETY-02",
           "senderId": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
           "senderPublicKey": "58f751e6ffd7e67d1ddf3d687f02e828a4f855a6ba78fd06bdbeb934ba56ec77",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "401c2f8a864e169fc946df2dc559dcba590c7560f05e91c167cb9a8bcf7758f70e8ee92ae2e6d18f251e8ffc0ce5b2dfe8d6f392b223f48beecbc195fd85ce06",
+          "signature": "217bed47f103ffac49c2a0f24a42b93274cd34a3e3fdf5300014b01fab2b14195efca845a438631d5e244ec1ca5ed7341f28d9bdb039df4d05e1a35814170108",
           "remark": {},
           "asset": {
             "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0018",
+              "entityId": "forging_forging0017",
               "taxAssetPrealnum": "0",
               "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
               "entityFactory": {
                 "sourceChainName": "bfchain",
                 "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
+                "factoryId": "forging",
                 "entityPrealnum": "1000",
                 "entityFrozenAssetPrealnum": "0",
                 "purchaseAssetPrealnum": "0"
@@ -1046,39 +1038,39 @@
           },
           "recipientId": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
           "storageKey": "entityId",
-          "storageValue": "generator_generator0018"
+          "storageValue": "forging_forging0017"
         }
       },
       {
         "tIndex": 25,
         "height": 1,
-        "signature": "6d938ecd033588232650d6a95a41a21d396f01bbc41241f5c3e88523c8f655fbaaf2dc87a25520da58e0cf59128235e587900cf5c63c1dbecd5b18dd17170c08",
+        "signature": "d0bc44810a1d004b029b35f9f3dbf97fddab1e63e6b8f2c4809ddec03bdd739c2250f4adc70e303d3b4cd1586d25aba739bb56293cf38b2ba2dbd0f50ea52c09",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
+          "type": "BFT-BFCHAIN-ETY-02",
           "senderId": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
           "senderPublicKey": "58f751e6ffd7e67d1ddf3d687f02e828a4f855a6ba78fd06bdbeb934ba56ec77",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "36d99dba3f49528579385e833805c8155f70d2b8e032be2322d4ceb1228261b3419af3ae3b70d8d3c1010a28ca939c0f65162ce44baee31cc2ed0a06e37acb08",
+          "signature": "3e7f56a6771f4c3d4a6d58dfdbf121ff2561dd896a8096bca5e40d5e876932a55edf4ea381339c8dbfe13aa5e945febf0c67fb07dadfe026eb712cfb52272300",
           "remark": {},
           "asset": {
             "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0019",
+              "entityId": "forging_forging0018",
               "taxAssetPrealnum": "0",
               "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
               "entityFactory": {
                 "sourceChainName": "bfchain",
                 "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
+                "factoryId": "forging",
                 "entityPrealnum": "1000",
                 "entityFrozenAssetPrealnum": "0",
                 "purchaseAssetPrealnum": "0"
@@ -1087,39 +1079,39 @@
           },
           "recipientId": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
           "storageKey": "entityId",
-          "storageValue": "generator_generator0019"
+          "storageValue": "forging_forging0018"
         }
       },
       {
         "tIndex": 26,
         "height": 1,
-        "signature": "9914913f7fc37077dc934abe7f642d91f5191393682f6ee3c15e6f0e6eabbc2fc501cc5e03f0aa34a53dcb384ae8d59ef34ead5c5359faeaf3bc8fcd902a4b00",
+        "signature": "97ac6096c31429e272765b7bf51b827feb1a7f9ce49514ff810e15f7d27b6f039e65b92abd58f15cad99b33c1cbf72548be35b3c8326577806c248e309e78d03",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
+          "type": "BFT-BFCHAIN-ETY-02",
           "senderId": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
           "senderPublicKey": "58f751e6ffd7e67d1ddf3d687f02e828a4f855a6ba78fd06bdbeb934ba56ec77",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "1040d318227856d57a90b8ce146c25856978e932b1bb067a0c7f537f53d9629a295ff71ac4ecf0e722a175c87decee1e88d07fce459b4b1c27f961144a4d750e",
+          "signature": "2575511e884ec7d0c2132b0fc868d6decf08ceb3b09a8ac2d4e12c9c5a3a42f4ba01a7287171b90bbc2de7652ffcb96d6879139700ae8cb7e2ace4346ca5df05",
           "remark": {},
           "asset": {
             "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0020",
+              "entityId": "forging_forging0019",
               "taxAssetPrealnum": "0",
               "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
               "entityFactory": {
                 "sourceChainName": "bfchain",
                 "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
+                "factoryId": "forging",
                 "entityPrealnum": "1000",
                 "entityFrozenAssetPrealnum": "0",
                 "purchaseAssetPrealnum": "0"
@@ -1128,112 +1120,112 @@
           },
           "recipientId": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
           "storageKey": "entityId",
-          "storageValue": "generator_generator0020"
+          "storageValue": "forging_forging0019"
         }
       },
       {
         "tIndex": 27,
         "height": 1,
-        "signature": "cd89b70defc715ed86e856e13f8e6077d342c5f03482c7b2615641fdcb25f38c158588e69d8c294d7391bba017043b6d3d38d5d0676990ce0658812ca5c1c007",
+        "signature": "25d093365b310d4fe414e5ddf6eacaf7b67723145bd318e73fd7de91333c2cd1ba96e7803449fbd5855e9573321541b3aa764357edc2b2f5fe85214a24459f01",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-AST-01",
-          "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
-          "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
+          "type": "BFT-BFCHAIN-ETY-02",
+          "senderId": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
+          "senderPublicKey": "58f751e6ffd7e67d1ddf3d687f02e828a4f855a6ba78fd06bdbeb934ba56ec77",
           "rangeType": 0,
           "range": [],
-          "fee": "27",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "2efe29cc9195bce8dade2978bb2221838ba325e273f7fdad85ed2d3e5b193acf29d5b8de1383ebb26995c40bb7173689d20b9c593c15ce313897ae465f28b704",
+          "signature": "477b852844c323f1296f4231d7e6a93b12e9a0d51eb2550ab481774ad232b71e116346db2590af60f7e60e01d41f64de607be623065684cf367452672619f60d",
           "remark": {},
           "asset": {
-            "transferAsset": {
+            "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "assetType": "BFT",
-              "amount": "152"
+              "entityId": "forging_forging0020",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "bfchain",
+                "sourceChainMagic": "E00EI",
+                "factoryId": "forging",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
             }
           },
-          "recipientId": "cGnmjV6fk5kFbTWztDtZhyr1a4Van4NPvR",
-          "storageKey": "assetType",
-          "storageValue": "BFT"
+          "recipientId": "cCuaHXAe1hcEGgqz6eg8QC9UKQHZ1Cq2Qo",
+          "storageKey": "entityId",
+          "storageValue": "forging_forging0020"
         }
       },
       {
         "tIndex": 28,
         "height": 1,
-        "signature": "8cfa1f45138e83fbfc4e45a021144aa583afb8e0591b783695b8ed9f2376dfa8c01477742913efbc60e479c7dad4b484fc73bd8117c11ccc9fbab837ed748c0d",
+        "signature": "6e74e623303423e7228ae8e12da94555790a97f77c211dfac53232afd7bc4c02702084f26ce89697ea1e20a79d00fa9ce450c959f80c41e339619459e3ef160c",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
-          "senderId": "cGnmjV6fk5kFbTWztDtZhyr1a4Van4NPvR",
-          "senderPublicKey": "a210c3565083922100ce8ba1c2f99da5769fbc78e90594b052ccb0388d3155c2",
+          "type": "BFT-BFCHAIN-AST-01",
+          "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+          "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "810",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "c9178d90110b2aec5ad4ba1fd263a0acd8b7be86a40874e498fe3336a79ab212e861092be15bc80be9c6b8c9742c2f424721faea238d22ec5d90f8af7b6a1303",
+          "signature": "56e131118f7bb2d265810049e34c3aea52c17a08376f09a0e6d46bc31ff21e0c62be253b928263f5ed872bc128b3cef7d2730efecc14e2c3db0ccca338690707",
           "remark": {},
           "asset": {
-            "issueEntity": {
+            "transferAsset": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0021",
-              "taxAssetPrealnum": "0",
-              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
-              "entityFactory": {
-                "sourceChainName": "bfchain",
-                "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
-                "entityPrealnum": "1000",
-                "entityFrozenAssetPrealnum": "0",
-                "purchaseAssetPrealnum": "0"
-              }
+              "assetType": "BFT",
+              "amount": "4488"
             }
           },
           "recipientId": "cGnmjV6fk5kFbTWztDtZhyr1a4Van4NPvR",
-          "storageKey": "entityId",
-          "storageValue": "generator_generator0021"
+          "storageKey": "assetType",
+          "storageValue": "BFT"
         }
       },
       {
         "tIndex": 29,
         "height": 1,
-        "signature": "f0ff5a4f5202b0dd26b7ff4a1902ada54d948cc1a522175b41ee8327b0fff7cce863b01b81b3bbb8aaee953b11e3ede74f8db1acd1fe0e1bc3baa96644250d0a",
+        "signature": "a438c1f31cb6fb76b7cbbe8f8077b85d935ac29888d68067540dfb995f903c07724c8da3e221994eb0ba6946d6a6aeb4f69333d718bed6bed4ef7ebf84b0fe0a",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
+          "type": "BFT-BFCHAIN-ETY-02",
           "senderId": "cGnmjV6fk5kFbTWztDtZhyr1a4Van4NPvR",
           "senderPublicKey": "a210c3565083922100ce8ba1c2f99da5769fbc78e90594b052ccb0388d3155c2",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "7cb8d5347a536a1e4d747e0737f88bf86de81d69944a494d6f30c2af383d858599acaa264b858a52155869dcb9ccccb312351baac4d1026192ba8d20e913960d",
+          "signature": "6c2ccc375b2053adb5773a96e96de368c07045f0b618aa7b3d875cdc04ceae6099ffa0049e7a94c2a940548060ad3b8b2d77f3ac467307de1963b2cc19a0ef00",
           "remark": {},
           "asset": {
             "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0022",
+              "entityId": "forging_forging0021",
               "taxAssetPrealnum": "0",
               "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
               "entityFactory": {
                 "sourceChainName": "bfchain",
                 "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
+                "factoryId": "forging",
                 "entityPrealnum": "1000",
                 "entityFrozenAssetPrealnum": "0",
                 "purchaseAssetPrealnum": "0"
@@ -1242,39 +1234,39 @@
           },
           "recipientId": "cGnmjV6fk5kFbTWztDtZhyr1a4Van4NPvR",
           "storageKey": "entityId",
-          "storageValue": "generator_generator0022"
+          "storageValue": "forging_forging0021"
         }
       },
       {
         "tIndex": 30,
         "height": 1,
-        "signature": "fc8c7223f45f2b1076f9e772ec9d52f873ca48f7c0d07e01063d5ffb1ac5c4923c48186c52bc93f8c1fd6a1dfb854369266e8b1fed660dd1607344c72fda440a",
+        "signature": "da968a8cb55d9220e6fd0467ce1887909b2b6327d9aae9f0d40e4a9554b9265766ad497c7abb13958646815c97b4e0a82b4ac8a931c1da0227d87bd27e46ad04",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
+          "type": "BFT-BFCHAIN-ETY-02",
           "senderId": "cGnmjV6fk5kFbTWztDtZhyr1a4Van4NPvR",
           "senderPublicKey": "a210c3565083922100ce8ba1c2f99da5769fbc78e90594b052ccb0388d3155c2",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "b51ce8a3fba25a6257900e9d3897e644ffb9d4a3d434e8e315d72a8564025fb9c84c94a080c45d999350a3bcc442f0df887dccabac79378b3bb5c934386e5c0f",
+          "signature": "9a5282dca17aa9bb0332664cc3f5b88151afe666fd401bceeacdc960a0f7ec381b396cc98e7865eaf9e1dfb1ec68b4ec5be8ecd666909d23174f00b0cf938000",
           "remark": {},
           "asset": {
             "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0023",
+              "entityId": "forging_forging0022",
               "taxAssetPrealnum": "0",
               "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
               "entityFactory": {
                 "sourceChainName": "bfchain",
                 "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
+                "factoryId": "forging",
                 "entityPrealnum": "1000",
                 "entityFrozenAssetPrealnum": "0",
                 "purchaseAssetPrealnum": "0"
@@ -1283,39 +1275,39 @@
           },
           "recipientId": "cGnmjV6fk5kFbTWztDtZhyr1a4Van4NPvR",
           "storageKey": "entityId",
-          "storageValue": "generator_generator0023"
+          "storageValue": "forging_forging0022"
         }
       },
       {
         "tIndex": 31,
         "height": 1,
-        "signature": "e51569adc2e4560d23775f2142cf0f9bb5a28ba38fa729ec4953cc68399cce35c7f0ab06665369bafdd269f6dd2e75aac601f8094f68799cbc7f9c5f1f5ca208",
+        "signature": "0ecdbee963100d33ece904a2702b3ccf61223b7774dcc5f437bd7977653b3d413ab0b51408bd130185513aef0655f4885037dfd0134ac58a9b55110e28da0d04",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
+          "type": "BFT-BFCHAIN-ETY-02",
           "senderId": "cGnmjV6fk5kFbTWztDtZhyr1a4Van4NPvR",
           "senderPublicKey": "a210c3565083922100ce8ba1c2f99da5769fbc78e90594b052ccb0388d3155c2",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "bef9a39e46d7f898411e3326337ae849ef933e5210088f25c1aff570ea25db0b722f7c7807380562894cfdb83e4ce7deaa9743b81fa11f247aceddac9c41af0d",
+          "signature": "745007972208fe330296902db84cd9de54ed860a014c9971b93f8b4d76a9c741d236a89b2f85ef4a23f278f3b9ef78b459b40d81362ab575288738bcf27c7100",
           "remark": {},
           "asset": {
             "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0024",
+              "entityId": "forging_forging0023",
               "taxAssetPrealnum": "0",
               "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
               "entityFactory": {
                 "sourceChainName": "bfchain",
                 "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
+                "factoryId": "forging",
                 "entityPrealnum": "1000",
                 "entityFrozenAssetPrealnum": "0",
                 "purchaseAssetPrealnum": "0"
@@ -1324,112 +1316,112 @@
           },
           "recipientId": "cGnmjV6fk5kFbTWztDtZhyr1a4Van4NPvR",
           "storageKey": "entityId",
-          "storageValue": "generator_generator0024"
+          "storageValue": "forging_forging0023"
         }
       },
       {
         "tIndex": 32,
         "height": 1,
-        "signature": "10a2db2eb76208b45b75dfe4778efcdf2503fc0b3f5ebd64f58b8f1a3d29dc0b2fcdc146fed575c77172ddf741888c7e67ca053cb84315650d7a06bd2d08a108",
+        "signature": "1605d1f12a63ab83466531d4a9fd35d707d57c2e6762017c109c19fba223e10783c2adc6f0b7a90512ddf4e3631e5fb6bd8ca99fc818f2ad7511d3243309bf04",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-AST-01",
-          "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
-          "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
+          "type": "BFT-BFCHAIN-ETY-02",
+          "senderId": "cGnmjV6fk5kFbTWztDtZhyr1a4Van4NPvR",
+          "senderPublicKey": "a210c3565083922100ce8ba1c2f99da5769fbc78e90594b052ccb0388d3155c2",
           "rangeType": 0,
           "range": [],
-          "fee": "27",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "1e4d633192b2b2b476ff58578f8374c7cc8090fcacfcad5240f8321f94485ab5c55e00840c424c96f1fc1e383bf3a4411842445dcd066f4c1d03588748914e0a",
+          "signature": "4af7a54d0ca894e829498c209840b0060030456031df4c0784587d2e859aa24da3a65b2c9e23d21948706c059506d65593c021c532255fb40edfb68dac09a30f",
           "remark": {},
           "asset": {
-            "transferAsset": {
+            "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "assetType": "BFT",
-              "amount": "152"
+              "entityId": "forging_forging0024",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "bfchain",
+                "sourceChainMagic": "E00EI",
+                "factoryId": "forging",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
             }
           },
-          "recipientId": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
-          "storageKey": "assetType",
-          "storageValue": "BFT"
+          "recipientId": "cGnmjV6fk5kFbTWztDtZhyr1a4Van4NPvR",
+          "storageKey": "entityId",
+          "storageValue": "forging_forging0024"
         }
       },
       {
         "tIndex": 33,
         "height": 1,
-        "signature": "ca35053ac1e2c8f26f6dfb21f3819d1f074b157180a469360da416b70e65b1c00683c930c6218d95e268266f23a788a2b17027bccaa4512ce273d6d347f6fe06",
+        "signature": "e4f31c4f8011a79e56a0d92509bb09380bad6a11dbd62f3a027c693d2aeb0aa2a6c5fa171b32f97834c1e28091af79ec5b2cbbe1af90ce87ea0ad3128b8e1b05",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
-          "senderId": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
-          "senderPublicKey": "ca78e16aad7980933da93844a1b91a719bf7793a05c566de8c9806efd90761e2",
+          "type": "BFT-BFCHAIN-AST-01",
+          "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+          "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "810",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "109c47ebc6b837349f7f96365a7b137ae5b94065fb1d95dec0ba7c7e0976471a6d742679271fc15162dc9de0f4f188c5976ec21eb67a4f19480182fe258a6f05",
+          "signature": "63e625a485808f83a4028a9f5996a0620123f11bb73a20285f7ae22d98389c62bc77d84222c3501096e5007162fbd1645046d1cb68d9fa5a1b304cbf91b7d50b",
           "remark": {},
           "asset": {
-            "issueEntity": {
+            "transferAsset": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0025",
-              "taxAssetPrealnum": "0",
-              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
-              "entityFactory": {
-                "sourceChainName": "bfchain",
-                "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
-                "entityPrealnum": "1000",
-                "entityFrozenAssetPrealnum": "0",
-                "purchaseAssetPrealnum": "0"
-              }
+              "assetType": "BFT",
+              "amount": "4488"
             }
           },
           "recipientId": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
-          "storageKey": "entityId",
-          "storageValue": "generator_generator0025"
+          "storageKey": "assetType",
+          "storageValue": "BFT"
         }
       },
       {
         "tIndex": 34,
         "height": 1,
-        "signature": "bc55a6abb377aa196b1cd59a1cde5eab0dd0edee1c6ee0a09b059490deee20ea1db085e904742daa385ae970ba233e0e68dc7ec1698e06ce7bd8223643260e07",
+        "signature": "eb45b0d393119e4660bb75f397f60c2e875fb6fa64546fa7817ded5224a13505544d78ce64593130d7dbb53441a567c713c111d19a1b9eaa11250ab07ef74505",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
+          "type": "BFT-BFCHAIN-ETY-02",
           "senderId": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
           "senderPublicKey": "ca78e16aad7980933da93844a1b91a719bf7793a05c566de8c9806efd90761e2",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "00dd27178f680547d392102adf3532fb7f44efa372fd2ffb08dda805cfce841839910acaf8e20d0ea2ef01f699f298d3ddc3b264cced6dc71c390e777cc5e30e",
+          "signature": "112638cacb4e9e0e25e66e655e9d4af7088d0ded3cc18da413ca2ac4e079cff00eb242c4b358f2aa5c97f9731edfe4f6c0a50a51edea005459816699a1e0c708",
           "remark": {},
           "asset": {
             "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0026",
+              "entityId": "forging_forging0025",
               "taxAssetPrealnum": "0",
               "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
               "entityFactory": {
                 "sourceChainName": "bfchain",
                 "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
+                "factoryId": "forging",
                 "entityPrealnum": "1000",
                 "entityFrozenAssetPrealnum": "0",
                 "purchaseAssetPrealnum": "0"
@@ -1438,39 +1430,39 @@
           },
           "recipientId": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
           "storageKey": "entityId",
-          "storageValue": "generator_generator0026"
+          "storageValue": "forging_forging0025"
         }
       },
       {
         "tIndex": 35,
         "height": 1,
-        "signature": "df0dbecf22f2d2ebabf30158ce394f552d32684bf41ee5a5026e5b8e63eef0861d274e8981d6b1cbb5ad2bf82c15d58fea58e0cd7ccd9ab980d20b27b64b4906",
+        "signature": "3ecbf578ea42d7ef5e526302b247ee93040106b1d92157bef494fa8b2e0a0ec885b70e70a823f36339f947d8659a5606a714b9e7b8e6bfe9a97143a10460f607",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
+          "type": "BFT-BFCHAIN-ETY-02",
           "senderId": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
           "senderPublicKey": "ca78e16aad7980933da93844a1b91a719bf7793a05c566de8c9806efd90761e2",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "d40d5aa7a7eb68af85b708b2df7784379fc23f68184a3a003b011d226fdeda47b2592f45b2bb5d1623e5899604529e782914ffb6941e35dcead095a7f925fb07",
+          "signature": "23ca9a154fd77310fe5d77872f7ae6050c805cfba9f31bcda18f7f1da0a1d177c5aae2296dc47a026c39107a7e99ab6ab9e7ce513e7bbd392f7bf398efd86b05",
           "remark": {},
           "asset": {
             "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0027",
+              "entityId": "forging_forging0026",
               "taxAssetPrealnum": "0",
               "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
               "entityFactory": {
                 "sourceChainName": "bfchain",
                 "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
+                "factoryId": "forging",
                 "entityPrealnum": "1000",
                 "entityFrozenAssetPrealnum": "0",
                 "purchaseAssetPrealnum": "0"
@@ -1479,39 +1471,39 @@
           },
           "recipientId": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
           "storageKey": "entityId",
-          "storageValue": "generator_generator0027"
+          "storageValue": "forging_forging0026"
         }
       },
       {
         "tIndex": 36,
         "height": 1,
-        "signature": "a4d16e713e0ad40b0f3a7bdb738125b41e38ae367cb98981197cc08cdf9723ca335c7fdd777885ac27c670ed8786a7bd4807497f981c7485383e76315a368f08",
+        "signature": "ea4479acaca531a866d626a53406780974d21618e150c6745a52f467b2befa701d79a621ae1cfe6d57a9ea120011589b138d5da1c290dc93e6b4c1c4ddabab00",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
+          "type": "BFT-BFCHAIN-ETY-02",
           "senderId": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
           "senderPublicKey": "ca78e16aad7980933da93844a1b91a719bf7793a05c566de8c9806efd90761e2",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "c525ac59eeaa93a07cd485b71bc9bdd8aa15f201b50980b2a7ef1ac2f10271be2c55c6dcfa7f93fe7cea21a7fe8575b9216dc1a251b5c0dd70a7d58d4bcb5200",
+          "signature": "5bea4400d35dfd66b8393d5818af773aa31a03d425cad5132b6bb5b7a29f7bc777e2a71110bc7f28fc30245a37adf0bdd7f2c27ed604203ae7c875c6c615b80c",
           "remark": {},
           "asset": {
             "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0028",
+              "entityId": "forging_forging0027",
               "taxAssetPrealnum": "0",
               "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
               "entityFactory": {
                 "sourceChainName": "bfchain",
                 "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
+                "factoryId": "forging",
                 "entityPrealnum": "1000",
                 "entityFrozenAssetPrealnum": "0",
                 "purchaseAssetPrealnum": "0"
@@ -1520,112 +1512,112 @@
           },
           "recipientId": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
           "storageKey": "entityId",
-          "storageValue": "generator_generator0028"
+          "storageValue": "forging_forging0027"
         }
       },
       {
         "tIndex": 37,
         "height": 1,
-        "signature": "5e6138a9f8ade23f8bdfe838fc69e431830ac46306d0f85b991fa48367892126a1b8197a3b19aa1fa295b27c8e47bdfec964cabf7835093494464df14d61f30d",
+        "signature": "cc59b4c697ea08d155a322a952dbef9c239198b298ffd28bce08750b54b5b3d60a65f459d08af578bb0ddc1c465df6b8d75209e4385b64d09800f4d691172707",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-AST-01",
-          "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
-          "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
+          "type": "BFT-BFCHAIN-ETY-02",
+          "senderId": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
+          "senderPublicKey": "ca78e16aad7980933da93844a1b91a719bf7793a05c566de8c9806efd90761e2",
           "rangeType": 0,
           "range": [],
-          "fee": "27",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "38e90bce454db4ea366efdb95dacd0625cfff25814f305e24e0620e6e7afd086a35b0b13f3de01d7cde88fed27541b480b20b68596091e7fc741609122aebe00",
+          "signature": "74b4c7a2ba64a24c2b07a723423a04b6e93eeea5512b1f1b26105e004035b536a919044d515e1a6ea69595ba0d4bba21e24d3fac142da48bebc450c8e6f45504",
           "remark": {},
           "asset": {
-            "transferAsset": {
+            "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "assetType": "BFT",
-              "amount": "152"
+              "entityId": "forging_forging0028",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "bfchain",
+                "sourceChainMagic": "E00EI",
+                "factoryId": "forging",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
             }
           },
-          "recipientId": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
-          "storageKey": "assetType",
-          "storageValue": "BFT"
+          "recipientId": "cCmcRqAdKd24ft1Nuwzc6p1Uf5R47RSAUF",
+          "storageKey": "entityId",
+          "storageValue": "forging_forging0028"
         }
       },
       {
         "tIndex": 38,
         "height": 1,
-        "signature": "2278ec81dd7ce20c156a8c7c123d8b69d5757e15b16a5cafe548ab3ded5233e93872dee9cfa2c41ae3dd9a2a46e9d0d68b170f49460e780b543225515d82970c",
+        "signature": "98d5228c50c60f795871d67f1d69125954a1f35f74619f4af7865c2cf17c8afcf44d50eb2d006281169fcf46aa7e258690584d7c08a95691c86b85c64cf2e30a",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
-          "senderId": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
-          "senderPublicKey": "85ea51eefe25fecfa3e7fcb7b47c28dc8e1e47b7152c6a94791b5f2d50ae165a",
+          "type": "BFT-BFCHAIN-AST-01",
+          "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+          "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "810",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "fa2c4554ed7896cb7540ad236058a47f7497f160d51c618349626018c78e9ea0ee9f1678273aaf88d9ff39928446f65078f64f32e3f0905a05b5704b11db540f",
+          "signature": "389041017b3f41739742049894b3e676ea59fd37640255bec25770047707f6dfc637e4770f2eaae94ada4e408f482191daf207ace715fb4fb69ce922124ea20c",
           "remark": {},
           "asset": {
-            "issueEntity": {
+            "transferAsset": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0029",
-              "taxAssetPrealnum": "0",
-              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
-              "entityFactory": {
-                "sourceChainName": "bfchain",
-                "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
-                "entityPrealnum": "1000",
-                "entityFrozenAssetPrealnum": "0",
-                "purchaseAssetPrealnum": "0"
-              }
+              "assetType": "BFT",
+              "amount": "4488"
             }
           },
           "recipientId": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
-          "storageKey": "entityId",
-          "storageValue": "generator_generator0029"
+          "storageKey": "assetType",
+          "storageValue": "BFT"
         }
       },
       {
         "tIndex": 39,
         "height": 1,
-        "signature": "235a44d88af835d6bbdd741f23ac9c0ca2ca52c9db647edabc3acc8178f47c3e5d61e56aabdb7ca09381367bdb8e4a055935c96852094ae30b0e9491c4796208",
+        "signature": "6fa4d2566253f0963e38a61bbb7b4b731bce6aa2da85919588e9395836c4a7cb3a2f6557369e8ef4d706554f5fad111b0d3f8c73d7e48c960c4ddd26eb2b290b",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
+          "type": "BFT-BFCHAIN-ETY-02",
           "senderId": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
           "senderPublicKey": "85ea51eefe25fecfa3e7fcb7b47c28dc8e1e47b7152c6a94791b5f2d50ae165a",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "1bd217f3cc9cbc3a5e4bb13436143ffedfc2db134dd8b80ada7e17ef36c9b5d553b69d532e88916d2cdd25d68d5bdee8ee067a77e0bb00410b6085e61e1d480c",
+          "signature": "00705a97cfaf4d1bf9a24ff4dbcb3d07ed8a36faf6074e15e150949d78d340fa8bda9ef0911136382da95b743bc369c85cf75cd074787be7edb06692b3177c0b",
           "remark": {},
           "asset": {
             "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0030",
+              "entityId": "forging_forging0029",
               "taxAssetPrealnum": "0",
               "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
               "entityFactory": {
                 "sourceChainName": "bfchain",
                 "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
+                "factoryId": "forging",
                 "entityPrealnum": "1000",
                 "entityFrozenAssetPrealnum": "0",
                 "purchaseAssetPrealnum": "0"
@@ -1634,39 +1626,39 @@
           },
           "recipientId": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
           "storageKey": "entityId",
-          "storageValue": "generator_generator0030"
+          "storageValue": "forging_forging0029"
         }
       },
       {
         "tIndex": 40,
         "height": 1,
-        "signature": "22fb65dd99e9e2ae3b2e9b72a840d7d6adba005975dac18e316be1c5d60b2ed046b268954c3365d499e0dfde3412e8e6d906515675691753e230aa77a9e02300",
+        "signature": "d004d6393efaeebdad56d32646145df1fd16405944b3a767b6ea5bb680f81e69c48e9fcb37e6c2a0557043892b2bd29d78acf30bbac35287f2421b9b8d0ad102",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
+          "type": "BFT-BFCHAIN-ETY-02",
           "senderId": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
           "senderPublicKey": "85ea51eefe25fecfa3e7fcb7b47c28dc8e1e47b7152c6a94791b5f2d50ae165a",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "bd02b1fd2e2304cbfbee58a13a83829685e181000259cd5e8e0ce4d54504a0705c44327157a7a3e2c33f6b09a2527626100c26d2a524379b192b01b891da5200",
+          "signature": "31e7e68d1f243be7e4797e435a1b98b058317ea57ba01e13846f26ecd90e55829ba29d57370033dede2185611dedc69f2b96d9b79a2f54f71499565367a0fb06",
           "remark": {},
           "asset": {
             "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0031",
+              "entityId": "forging_forging0030",
               "taxAssetPrealnum": "0",
               "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
               "entityFactory": {
                 "sourceChainName": "bfchain",
                 "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
+                "factoryId": "forging",
                 "entityPrealnum": "1000",
                 "entityFrozenAssetPrealnum": "0",
                 "purchaseAssetPrealnum": "0"
@@ -1675,39 +1667,39 @@
           },
           "recipientId": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
           "storageKey": "entityId",
-          "storageValue": "generator_generator0031"
+          "storageValue": "forging_forging0030"
         }
       },
       {
         "tIndex": 41,
         "height": 1,
-        "signature": "fb25c20dda545983c95e599277f4dcfa4858859b338c57e4248400aaa30390a4ee64f243a47f2e1256e8cd3fb5f82eefc89abc06163c787f53cd743b59432808",
+        "signature": "8c9260e05566d7f850c065704bb4c60be1ab9bc6b06281727c664df1b216419fb0fa634c32d197667979a77795b6485a5a8693d06e9d056d37b0abc7f60b9406",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
+          "type": "BFT-BFCHAIN-ETY-02",
           "senderId": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
           "senderPublicKey": "85ea51eefe25fecfa3e7fcb7b47c28dc8e1e47b7152c6a94791b5f2d50ae165a",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "78a3a96a703ffa6063eb12631c4e7e6c3f1ee7abb64c0c501440d6c384318ae2456aa47f3ddb48e516e9c24f2a7121cd0831d021dc1a6f8c2a6b6561a403c10d",
+          "signature": "b2c1b0d746dff9a846834e3468366a5001888e71b8bdaec66ae4bfddd66cea9d670d98e2e0817d4f9636411261ea766cb2da1233685fab6ce045faaff61f4d0a",
           "remark": {},
           "asset": {
             "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0032",
+              "entityId": "forging_forging0031",
               "taxAssetPrealnum": "0",
               "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
               "entityFactory": {
                 "sourceChainName": "bfchain",
                 "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
+                "factoryId": "forging",
                 "entityPrealnum": "1000",
                 "entityFrozenAssetPrealnum": "0",
                 "purchaseAssetPrealnum": "0"
@@ -1716,209 +1708,54 @@
           },
           "recipientId": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
           "storageKey": "entityId",
-          "storageValue": "generator_generator0032"
+          "storageValue": "forging_forging0031"
         }
       },
       {
         "tIndex": 42,
         "height": 1,
-        "signature": "a0bb9bb5728f75c4f65403601c597cf3fc7a237490fd73255bdff2e6e2836e42182a6dbcdaf5f45eaa58b1c089f9171df10a3e46b4eb4a7cb1d7541e5e331c0a",
+        "signature": "a395fe7360cc2784eb0e8119365c659bd752f3a74dc401c8f75dfeb35f29d08dda5f208b9125cfed25831c21c9f1690c9a97f28d337ed651bef5831367f96c0e",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-AST-01",
-          "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
-          "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
+          "type": "BFT-BFCHAIN-ETY-02",
+          "senderId": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
+          "senderPublicKey": "85ea51eefe25fecfa3e7fcb7b47c28dc8e1e47b7152c6a94791b5f2d50ae165a",
           "rangeType": 0,
           "range": [],
-          "fee": "27",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "1f82ea04bb73587bf0c574b8da137f3265a288f6d64669b35e24a394abb32d0375c46a0f2cfce5a20e2cf1e95d691c61e9818251dd1844c30737c1ba5d32070d",
+          "signature": "2a1004e299c52f9e99af0600de91b6e724324cfeb370be2dae6af1243b4ddbdac16cc3773c2b0f4e38fdf685abb9269c173d10182c524aeb03c92c212f71970e",
           "remark": {},
           "asset": {
-            "transferAsset": {
+            "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "assetType": "BFT",
-              "amount": "152"
+              "entityId": "forging_forging0032",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "bfchain",
+                "sourceChainMagic": "E00EI",
+                "factoryId": "forging",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
             }
           },
-          "recipientId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
-          "storageKey": "assetType",
-          "storageValue": "BFT"
+          "recipientId": "cKqjHi8u4n5RJJa1CxHgZbwHXS9cKC5Ekw",
+          "storageKey": "entityId",
+          "storageValue": "forging_forging0032"
         }
       },
       {
         "tIndex": 43,
         "height": 1,
-        "signature": "cda62d93bed123a3e9494cc9c0229950579b148cf236e848b99b8c5f7777bb2026d3cbcf06f05ebf95a2d6b4e80b423099501cdb888d038ce6b272b4e6876007",
-        "transaction": {
-          "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
-          "senderId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
-          "senderPublicKey": "846f681c2d957b372f9b606737dbf8bcc99a8cb8de989c02d8ca162a10132903",
-          "rangeType": 0,
-          "range": [],
-          "fee": "38",
-          "timestamp": 0,
-          "fromMagic": "E00EI",
-          "toMagic": "E00EI",
-          "applyBlockHeight": 1,
-          "effectiveBlockHeight": 1,
-          "signature": "6e4ca7a67ebf252aedefabc4c0b5649783173b8cc8d80792925043005d4c1064c46901af348d7f4b69fff31991267feb4a3b28928279b7eac426d761fffb3a0f",
-          "remark": {},
-          "asset": {
-            "issueEntity": {
-              "sourceChainName": "bfchain",
-              "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0033",
-              "taxAssetPrealnum": "0",
-              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
-              "entityFactory": {
-                "sourceChainName": "bfchain",
-                "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
-                "entityPrealnum": "1000",
-                "entityFrozenAssetPrealnum": "0",
-                "purchaseAssetPrealnum": "0"
-              }
-            }
-          },
-          "recipientId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
-          "storageKey": "entityId",
-          "storageValue": "generator_generator0033"
-        }
-      },
-      {
-        "tIndex": 44,
-        "height": 1,
-        "signature": "91f5c35a0cb9a6888b0963be48d5409ebdf6874a79e8691f9194f2c59507783d1f6284e3570c02c64dd8e037c2db2e3b85c0c9e6978274297d166c62cde79e0c",
-        "transaction": {
-          "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
-          "senderId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
-          "senderPublicKey": "846f681c2d957b372f9b606737dbf8bcc99a8cb8de989c02d8ca162a10132903",
-          "rangeType": 0,
-          "range": [],
-          "fee": "38",
-          "timestamp": 0,
-          "fromMagic": "E00EI",
-          "toMagic": "E00EI",
-          "applyBlockHeight": 1,
-          "effectiveBlockHeight": 1,
-          "signature": "9793ad6c1f977828982814362509b9e17a3655d879dad3d2ca2074ce1e83edc9a7c65c880dd35572763a03f4d5e53355f97c04b7ad4acd2ad9d5a10c5949390d",
-          "remark": {},
-          "asset": {
-            "issueEntity": {
-              "sourceChainName": "bfchain",
-              "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0034",
-              "taxAssetPrealnum": "0",
-              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
-              "entityFactory": {
-                "sourceChainName": "bfchain",
-                "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
-                "entityPrealnum": "1000",
-                "entityFrozenAssetPrealnum": "0",
-                "purchaseAssetPrealnum": "0"
-              }
-            }
-          },
-          "recipientId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
-          "storageKey": "entityId",
-          "storageValue": "generator_generator0034"
-        }
-      },
-      {
-        "tIndex": 45,
-        "height": 1,
-        "signature": "6a2d7d43d25c7528aec77ff1630abc93ff5131bcb0ceac47d36055fa8019bd667cefac14efc227b0a5752bb7dda8f72ecf5850bd02319f27e4990e857d8e6703",
-        "transaction": {
-          "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
-          "senderId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
-          "senderPublicKey": "846f681c2d957b372f9b606737dbf8bcc99a8cb8de989c02d8ca162a10132903",
-          "rangeType": 0,
-          "range": [],
-          "fee": "38",
-          "timestamp": 0,
-          "fromMagic": "E00EI",
-          "toMagic": "E00EI",
-          "applyBlockHeight": 1,
-          "effectiveBlockHeight": 1,
-          "signature": "8a817d6c4cb614de65be69167e2c1b24be523f7a75ae6b7c261ec577dd0bc8e4936dcd12072f5f05d74ce13df512007b64bde0d4fa547f0704c06993451a0d07",
-          "remark": {},
-          "asset": {
-            "issueEntity": {
-              "sourceChainName": "bfchain",
-              "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0035",
-              "taxAssetPrealnum": "0",
-              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
-              "entityFactory": {
-                "sourceChainName": "bfchain",
-                "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
-                "entityPrealnum": "1000",
-                "entityFrozenAssetPrealnum": "0",
-                "purchaseAssetPrealnum": "0"
-              }
-            }
-          },
-          "recipientId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
-          "storageKey": "entityId",
-          "storageValue": "generator_generator0035"
-        }
-      },
-      {
-        "tIndex": 46,
-        "height": 1,
-        "signature": "3799b0c055127ca9e0e64181a1bc0b3258e945a7cdb08c2f55ea841575656250cfac090ad35611e8fc7b7c49da93614d62a3dfae04e6f9b6ac411f81844f8507",
-        "transaction": {
-          "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
-          "senderId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
-          "senderPublicKey": "846f681c2d957b372f9b606737dbf8bcc99a8cb8de989c02d8ca162a10132903",
-          "rangeType": 0,
-          "range": [],
-          "fee": "38",
-          "timestamp": 0,
-          "fromMagic": "E00EI",
-          "toMagic": "E00EI",
-          "applyBlockHeight": 1,
-          "effectiveBlockHeight": 1,
-          "signature": "a575a8444c866f405d6697a744f7c15d4cfe1d54c0583f16db0d66b8c54e1124268dd5f4429cdda6826b1da7710c63a53d4d8f296f024490e400d52d252aeb01",
-          "remark": {},
-          "asset": {
-            "issueEntity": {
-              "sourceChainName": "bfchain",
-              "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0036",
-              "taxAssetPrealnum": "0",
-              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
-              "entityFactory": {
-                "sourceChainName": "bfchain",
-                "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
-                "entityPrealnum": "1000",
-                "entityFrozenAssetPrealnum": "0",
-                "purchaseAssetPrealnum": "0"
-              }
-            }
-          },
-          "recipientId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
-          "storageKey": "entityId",
-          "storageValue": "generator_generator0036"
-        }
-      },
-      {
-        "tIndex": 47,
-        "height": 1,
-        "signature": "d9d3970a22c0f5be1691e5797fe0e872e8e98396e544eaf00676090cc0c8c215ac5a354530fe2c6cdbc7c1a4f0ba0903df3b282555d1151e815222354c60500b",
+        "signature": "407e37afcfbaaf2b8d339277cdb92b11d40147d7e946e280eaca72435ba5d989b03c2d0cb23202c735615f36ac9dd4100f8121e48af0630c16e125ab26255401",
         "transaction": {
           "version": 1,
           "type": "BFT-BFCHAIN-AST-01",
@@ -1926,20 +1763,216 @@
           "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
           "rangeType": 0,
           "range": [],
-          "fee": "27",
+          "fee": "810",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "f1904d356d42bfcde773e9017fa65ea8bfe5a12c14d906b4c98c3831707808746eeeac922ab9d495ed37e9a71d3395709c8ee7dc6aae043f76114d0032c6c90d",
+          "signature": "9a646e3b7e190fe4c4d578dd0b6bea54feeae427350033b9ffdb89174a3c676ca046e3f8590b3d16a4bc53656e84747c3521e139375594579f73676939bd5a0f",
           "remark": {},
           "asset": {
             "transferAsset": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
               "assetType": "BFT",
-              "amount": "152"
+              "amount": "4488"
+            }
+          },
+          "recipientId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
+          "storageKey": "assetType",
+          "storageValue": "BFT"
+        }
+      },
+      {
+        "tIndex": 44,
+        "height": 1,
+        "signature": "cc321266582f13e259c0bba0515c07a53a1e02ea8202b75023c2059964c12d2c8d068ee8298e9cdcc2d43c200255d9d3b192806e8eb90aba53f24c1b8d6e8e01",
+        "transaction": {
+          "version": 1,
+          "type": "BFT-BFCHAIN-ETY-02",
+          "senderId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
+          "senderPublicKey": "846f681c2d957b372f9b606737dbf8bcc99a8cb8de989c02d8ca162a10132903",
+          "rangeType": 0,
+          "range": [],
+          "fee": "1122",
+          "timestamp": 0,
+          "fromMagic": "E00EI",
+          "toMagic": "E00EI",
+          "applyBlockHeight": 1,
+          "effectiveBlockHeight": 1,
+          "signature": "5f3e548cad2ce6a3b3d78f88bbe778a6d6fd68c827abe5535ccf41e64ec29f0927fb936bed2b3e8b0aba96f79af14a71dc4081b5f918c9558b3fe3b91f46e003",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "bfchain",
+              "sourceChainMagic": "E00EI",
+              "entityId": "forging_forging0033",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "bfchain",
+                "sourceChainMagic": "E00EI",
+                "factoryId": "forging",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
+          },
+          "recipientId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
+          "storageKey": "entityId",
+          "storageValue": "forging_forging0033"
+        }
+      },
+      {
+        "tIndex": 45,
+        "height": 1,
+        "signature": "b6cfcb1bd31109d4ffdff0c807f9ac6885af1bb814f42b03c20cbfcb6f851aa5637cc2f58b14f8cbde492fc4aae8c93bf9bd6c31f620647fa61fdb456261330c",
+        "transaction": {
+          "version": 1,
+          "type": "BFT-BFCHAIN-ETY-02",
+          "senderId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
+          "senderPublicKey": "846f681c2d957b372f9b606737dbf8bcc99a8cb8de989c02d8ca162a10132903",
+          "rangeType": 0,
+          "range": [],
+          "fee": "1122",
+          "timestamp": 0,
+          "fromMagic": "E00EI",
+          "toMagic": "E00EI",
+          "applyBlockHeight": 1,
+          "effectiveBlockHeight": 1,
+          "signature": "79af35ae4d9236e98dd35bedb358a642e6d346bceda8e5ff78ad7471ea34c37c54ec333963730d8e883342af444f3df04fbd4217e7c490b1c10af1cbac33550c",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "bfchain",
+              "sourceChainMagic": "E00EI",
+              "entityId": "forging_forging0034",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "bfchain",
+                "sourceChainMagic": "E00EI",
+                "factoryId": "forging",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
+          },
+          "recipientId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
+          "storageKey": "entityId",
+          "storageValue": "forging_forging0034"
+        }
+      },
+      {
+        "tIndex": 46,
+        "height": 1,
+        "signature": "79fc86fa8456a27e535e543b8bfdb7f0b603044d880af00202249d25d18b4df388206072393c6cc95185be100ebccfb79725220950e59b33e8a4546d894b5202",
+        "transaction": {
+          "version": 1,
+          "type": "BFT-BFCHAIN-ETY-02",
+          "senderId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
+          "senderPublicKey": "846f681c2d957b372f9b606737dbf8bcc99a8cb8de989c02d8ca162a10132903",
+          "rangeType": 0,
+          "range": [],
+          "fee": "1122",
+          "timestamp": 0,
+          "fromMagic": "E00EI",
+          "toMagic": "E00EI",
+          "applyBlockHeight": 1,
+          "effectiveBlockHeight": 1,
+          "signature": "cf45d35b43e127c585dbf899e3a952c6e1a0ad59f61bbc2d82923b99cf36bb1ffd07a28c1d0a457bce93ceaaafbd36e760e7ca23aed07502ec6e0593ef3f410b",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "bfchain",
+              "sourceChainMagic": "E00EI",
+              "entityId": "forging_forging0035",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "bfchain",
+                "sourceChainMagic": "E00EI",
+                "factoryId": "forging",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
+          },
+          "recipientId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
+          "storageKey": "entityId",
+          "storageValue": "forging_forging0035"
+        }
+      },
+      {
+        "tIndex": 47,
+        "height": 1,
+        "signature": "b2d326b1103188730bb51efc13cfb786fa5a12b05357442f9bd00f0630aae0dfd5a712c68047d0e36a2501acb66258d9f5798e3930c2049cb1bf1203f4224604",
+        "transaction": {
+          "version": 1,
+          "type": "BFT-BFCHAIN-ETY-02",
+          "senderId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
+          "senderPublicKey": "846f681c2d957b372f9b606737dbf8bcc99a8cb8de989c02d8ca162a10132903",
+          "rangeType": 0,
+          "range": [],
+          "fee": "1122",
+          "timestamp": 0,
+          "fromMagic": "E00EI",
+          "toMagic": "E00EI",
+          "applyBlockHeight": 1,
+          "effectiveBlockHeight": 1,
+          "signature": "0c0a08193e602ec8f3e17a7391fc354e21f5ba4fd76a68a2f803be044e76ca0c25c628c1e49a3494784c6e745927f3f406090a738789d1355de471cbf69cc00a",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "bfchain",
+              "sourceChainMagic": "E00EI",
+              "entityId": "forging_forging0036",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "bfchain",
+                "sourceChainMagic": "E00EI",
+                "factoryId": "forging",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
+          },
+          "recipientId": "c81E6nEaLHJ25mFRTDSMar5YjmrYLsNr5v",
+          "storageKey": "entityId",
+          "storageValue": "forging_forging0036"
+        }
+      },
+      {
+        "tIndex": 48,
+        "height": 1,
+        "signature": "35c6de9b0a14cc8a6777549899283668852b45d2f726e5ff24e90a57f8e19b61ca0d8008f7e926c87ed3b3ed04dd0e7a760be195098de1ceecb71e5a8a39f500",
+        "transaction": {
+          "version": 1,
+          "type": "BFT-BFCHAIN-AST-01",
+          "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+          "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
+          "rangeType": 0,
+          "range": [],
+          "fee": "810",
+          "timestamp": 0,
+          "fromMagic": "E00EI",
+          "toMagic": "E00EI",
+          "applyBlockHeight": 1,
+          "effectiveBlockHeight": 1,
+          "signature": "2dd12111e78b687076288100e4724c7f6ce8c22f2b4e414b34a29c9c30cfea5db090ec01fa5f832000f4a560b3edb0b6ae82f5a73cad631be860d3100e1d4f00",
+          "remark": {},
+          "asset": {
+            "transferAsset": {
+              "sourceChainName": "bfchain",
+              "sourceChainMagic": "E00EI",
+              "assetType": "BFT",
+              "amount": "4488"
             }
           },
           "recipientId": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
@@ -1948,76 +1981,35 @@
         }
       },
       {
-        "tIndex": 48,
-        "height": 1,
-        "signature": "5423a7e973c9a0c884b08a5f5af1ea6664054638277627766c0397478762b356545fdbeb5797747fbf4fd39931fa52684f460da18a52e3e806f9306821bd8808",
-        "transaction": {
-          "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
-          "senderId": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
-          "senderPublicKey": "5ff43d2626b6a60602645333df040189db9339ca424ac2dc4fa7f32cd4da1923",
-          "rangeType": 0,
-          "range": [],
-          "fee": "38",
-          "timestamp": 0,
-          "fromMagic": "E00EI",
-          "toMagic": "E00EI",
-          "applyBlockHeight": 1,
-          "effectiveBlockHeight": 1,
-          "signature": "57e70409dec724efb7be9d03be830941ebfd67bebea495e0f9bd950c0a1e206b1562fc995c9903be7339220a8c049e5df87bab0fe1c69390da1a0b4239789205",
-          "remark": {},
-          "asset": {
-            "issueEntity": {
-              "sourceChainName": "bfchain",
-              "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0037",
-              "taxAssetPrealnum": "0",
-              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
-              "entityFactory": {
-                "sourceChainName": "bfchain",
-                "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
-                "entityPrealnum": "1000",
-                "entityFrozenAssetPrealnum": "0",
-                "purchaseAssetPrealnum": "0"
-              }
-            }
-          },
-          "recipientId": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
-          "storageKey": "entityId",
-          "storageValue": "generator_generator0037"
-        }
-      },
-      {
         "tIndex": 49,
         "height": 1,
-        "signature": "78aa099086c04a1ddda9058dd7f685bebbe04610101ebe2bb35727a3f9f44131ccaeeff7c6dc3229cf9cf973c26c93333ceaff6544770c492714af1b297d6a0b",
+        "signature": "5299253ed18e14b8dfa1183df4794d41183f5cd69ddfd74c6fcd36c882776b8c076a5f01da7706ea8cbc98c9e14d31434daa4558c06afa067f288455097cd803",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
+          "type": "BFT-BFCHAIN-ETY-02",
           "senderId": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
           "senderPublicKey": "5ff43d2626b6a60602645333df040189db9339ca424ac2dc4fa7f32cd4da1923",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "d03596c0e3685ff7e7658c8c456e3616ff96e19cb45c963405b40d5ac2a51edc63b8376758195203453139a01279e365a62ccb7b4b085150b9d36928b558660f",
+          "signature": "f5432eacc239a33b6e7b2bcce2bc816ca88956eb97addab5f2f5a764d568b14415354a56ebab32f167dd2fc3e155e6321525db7c94c7311cdeeaf996966c120a",
           "remark": {},
           "asset": {
             "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0038",
+              "entityId": "forging_forging0037",
               "taxAssetPrealnum": "0",
               "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
               "entityFactory": {
                 "sourceChainName": "bfchain",
                 "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
+                "factoryId": "forging",
                 "entityPrealnum": "1000",
                 "entityFrozenAssetPrealnum": "0",
                 "purchaseAssetPrealnum": "0"
@@ -2026,39 +2018,39 @@
           },
           "recipientId": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
           "storageKey": "entityId",
-          "storageValue": "generator_generator0038"
+          "storageValue": "forging_forging0037"
         }
       },
       {
         "tIndex": 50,
         "height": 1,
-        "signature": "2b839fcfa78d4ddd3c7e1acbaf440c170b96d4b8000cbf5348e5b1256c7dfb618644f1665c47d9178fdc319206b74537012f34c5e42c4403acd77d10d231e40f",
+        "signature": "c240064a3c77639e45f811ec02fce2ceba0caea49e74235236b6d68112cbdf15a6c1da4389058572c8c63782f3cc0952021389147c19968139ea3e0286ceb60a",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
+          "type": "BFT-BFCHAIN-ETY-02",
           "senderId": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
           "senderPublicKey": "5ff43d2626b6a60602645333df040189db9339ca424ac2dc4fa7f32cd4da1923",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "3ff5609663915f65ea89dae1b2d3b0605d2c44caae82dcd4673066206c518a4338f8ce2c8738da13aaf52626cb6cf1cdbdadbaa5ee1903d89bc2ec2db91a1d0e",
+          "signature": "cdf2ac28ea368a5b255c3c6e35b300e008ff8d7e17dc9aa8fdd66d1900069693500298838318c4664f334f606e7d294fcd7e288ad1e9ace864b6c183b4f9fb0e",
           "remark": {},
           "asset": {
             "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0039",
+              "entityId": "forging_forging0038",
               "taxAssetPrealnum": "0",
               "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
               "entityFactory": {
                 "sourceChainName": "bfchain",
                 "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
+                "factoryId": "forging",
                 "entityPrealnum": "1000",
                 "entityFrozenAssetPrealnum": "0",
                 "purchaseAssetPrealnum": "0"
@@ -2067,39 +2059,39 @@
           },
           "recipientId": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
           "storageKey": "entityId",
-          "storageValue": "generator_generator0039"
+          "storageValue": "forging_forging0038"
         }
       },
       {
         "tIndex": 51,
         "height": 1,
-        "signature": "289b3bd180228f45d1926759f97a61406825fe42f2330bbe3ac357d1c61c1cb6178c7c496fd77f029c2dc0cac2dc248d9fbf3a1a5b5ca3bdb8dfc8fa77c9540b",
+        "signature": "d960c3ee92b1d4863c8f19319137a9a8758123fe91d2ab5361c9776751c6aa738aeb6c409f1cf2dd27a3864c55c3558aa907ea0e3d9333c54d4982e2d988800c",
         "transaction": {
           "version": 1,
-          "type": "BFT-BFCHAIN-ETY-01",
+          "type": "BFT-BFCHAIN-ETY-02",
           "senderId": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
           "senderPublicKey": "5ff43d2626b6a60602645333df040189db9339ca424ac2dc4fa7f32cd4da1923",
           "rangeType": 0,
           "range": [],
-          "fee": "38",
+          "fee": "1122",
           "timestamp": 0,
           "fromMagic": "E00EI",
           "toMagic": "E00EI",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "552657beaa15794601e4308d0234d124b44ccbb0f559f9545d62b3f5a93760c79433e654ded1e8ed7d5f203394ab6c3590dcb4581c0fcd9a8334da267b7c750f",
+          "signature": "981d405fc7e9109808c6b7c0a906188264d8c914893d521179b6c2c153ebab18ffa8c157408a642dca72208c3d32bc1e5b24d64c608bfcb491f3b49ead85660f",
           "remark": {},
           "asset": {
             "issueEntity": {
               "sourceChainName": "bfchain",
               "sourceChainMagic": "E00EI",
-              "entityId": "generator_generator0040",
+              "entityId": "forging_forging0039",
               "taxAssetPrealnum": "0",
               "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
               "entityFactory": {
                 "sourceChainName": "bfchain",
                 "sourceChainMagic": "E00EI",
-                "factoryId": "generator",
+                "factoryId": "forging",
                 "entityPrealnum": "1000",
                 "entityFrozenAssetPrealnum": "0",
                 "purchaseAssetPrealnum": "0"
@@ -2108,14 +2100,55 @@
           },
           "recipientId": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
           "storageKey": "entityId",
-          "storageValue": "generator_generator0040"
+          "storageValue": "forging_forging0039"
+        }
+      },
+      {
+        "tIndex": 52,
+        "height": 1,
+        "signature": "4ee22f09253b8e72b8ccbf2e4ca93e64d05cab45667203df7fe188106d6c6c16e304e1f9d6202a59dd4b154ebd1917269e5ef370ad8069eb4f7e72a0c5b4ba0b",
+        "transaction": {
+          "version": 1,
+          "type": "BFT-BFCHAIN-ETY-02",
+          "senderId": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
+          "senderPublicKey": "5ff43d2626b6a60602645333df040189db9339ca424ac2dc4fa7f32cd4da1923",
+          "rangeType": 0,
+          "range": [],
+          "fee": "1122",
+          "timestamp": 0,
+          "fromMagic": "E00EI",
+          "toMagic": "E00EI",
+          "applyBlockHeight": 1,
+          "effectiveBlockHeight": 1,
+          "signature": "6e39adfeae74c726699c5613b730d1cb8beb560a397fef5fd6ba8c089b936d3804844382916d2d34433b14a309b8ad7786da20548b550cdd9976678e5ff82a08",
+          "remark": {},
+          "asset": {
+            "issueEntity": {
+              "sourceChainName": "bfchain",
+              "sourceChainMagic": "E00EI",
+              "entityId": "forging_forging0040",
+              "taxAssetPrealnum": "0",
+              "entityFactoryPossessor": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
+              "entityFactory": {
+                "sourceChainName": "bfchain",
+                "sourceChainMagic": "E00EI",
+                "factoryId": "forging",
+                "entityPrealnum": "1000",
+                "entityFrozenAssetPrealnum": "0",
+                "purchaseAssetPrealnum": "0"
+              }
+            }
+          },
+          "recipientId": "c4wQ1qXmKFBBGeHeiT5QsB9oKwsGYmK2eA",
+          "storageKey": "entityId",
+          "storageValue": "forging_forging0040"
         }
       }
     ],
     "statisticInfo": {
-      "totalFee": "1845",
-      "totalAsset": "1003365",
-      "totalChainAsset": "1003365",
+      "totalFee": "55491",
+      "totalAsset": "11100371",
+      "totalChainAsset": "11100371",
       "totalAccount": 11,
       "magicAssetTypeTypeStatisticHashMap": {
         "E00EI": {
@@ -2123,35 +2156,35 @@
             "BFT": {
               "typeStatisticHashMap": {
                 "AST-01": {
-                  "changeAmount": "3310",
+                  "changeAmount": "97860",
                   "changeCount": 30,
-                  "moveAmount": "1790",
+                  "moveAmount": "52980",
                   "transactionCount": 10
                 },
                 "ETY-01": {
-                  "changeAmount": "1520",
+                  "changeAmount": "11001689",
+                  "changeCount": 4,
+                  "moveAmount": "11001689",
+                  "transactionCount": 2
+                },
+                "ETY-02": {
+                  "changeAmount": "44880",
                   "changeCount": 120,
-                  "moveAmount": "1520",
+                  "moveAmount": "44880",
                   "transactionCount": 40
                 },
-                "ETY-03": {
-                  "changeAmount": "1000028",
-                  "changeCount": 2,
-                  "moveAmount": "1000028",
-                  "transactionCount": 1
-                },
                 "LNS-00": {
-                  "changeAmount": "27",
+                  "changeAmount": "822",
                   "changeCount": 1,
-                  "moveAmount": "27",
+                  "moveAmount": "822",
                   "transactionCount": 1
                 }
               },
               "total": {
-                "changeAmount": "1004885",
-                "changeCount": 153,
-                "moveAmount": "1003365",
-                "transactionCount": 52
+                "changeAmount": "11145251",
+                "changeCount": 155,
+                "moveAmount": "11100371",
+                "transactionCount": 53
               }
             }
           }
@@ -2159,9 +2192,9 @@
       },
       "numberOfTransactionsHashMap": {
         "LNS-00": 1,
-        "ETY-03": 1,
+        "ETY-01": 2,
         "AST-01": 10,
-        "ETY-01": 40
+        "ETY-02": 40
       }
     }
   }

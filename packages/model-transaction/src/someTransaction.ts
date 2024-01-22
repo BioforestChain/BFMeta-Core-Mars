@@ -46,15 +46,15 @@ const { ArgumentFormatException, error, IllegalStateException } = CoreExceptionG
 
       [TRANSACTION_TYPES_BASE.ISSUE_ENTITY_FACTORY, ATOM_TRS.IssueEntityFactoryTransaction],
       [TRANSACTION_TYPES_BASE.ISSUE_ENTITY_FACTORY_V1, ATOM_TRS.IssueEntityFactoryTransactionV1],
-      [TRANSACTION_TYPES_BASE.ISSUE_ENTITY, ATOM_TRS.IssueEntityTransactionV1],
+      [TRANSACTION_TYPES_BASE.ISSUE_ENTITY, ATOM_TRS.IssueEntityTransaction],
       [TRANSACTION_TYPES_BASE.DESTROY_ENTITY, ATOM_TRS.DestroyEntityTransaction],
+      [TRANSACTION_TYPES_BASE.ISSUE_ENTITY_MULTI, ATOM_TRS.IssueEntityMultiTransaction],
 
       [TRANSACTION_TYPES_BASE.TRANSFER_ANY, ATOM_TRS.TransferAnyTransaction],
       [TRANSACTION_TYPES_BASE.GIFT_ANY, ATOM_TRS.GiftAnyTransaction],
       [TRANSACTION_TYPES_BASE.GRAB_ANY, ATOM_TRS.GrabAnyTransaction],
       [TRANSACTION_TYPES_BASE.TO_EXCHANGE_ANY, ATOM_TRS.ToExchangeAnyTransaction],
       [TRANSACTION_TYPES_BASE.BE_EXCHANGE_ANY, ATOM_TRS.BeExchangeAnyTransaction],
-      [TRANSACTION_TYPES_BASE.ISSUE_ENTITY_MULTI, ATOM_TRS.IssueEntityMultiTransactionV1],
       [TRANSACTION_TYPES_BASE.TO_EXCHANGE_ANY_MULTI, ATOM_TRS.ToExchangeAnyMultiTransaction],
       [TRANSACTION_TYPES_BASE.BE_EXCHANGE_ANY_MULTI, ATOM_TRS.BeExchangeAnyMultiTransaction],
       [TRANSACTION_TYPES_BASE.TO_EXCHANGE_ANY_MULTI_ALL, ATOM_TRS.ToExchangeAnyMultiAllTransaction],
