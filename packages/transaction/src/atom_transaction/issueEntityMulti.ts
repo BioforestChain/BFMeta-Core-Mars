@@ -1,5 +1,5 @@
 import { Injectable, wrapTaskList } from "@bfchain/util";
-import { IssueEntityMultiTransactionV1, ASSET_STATUS } from "@bfchain/core-model";
+import { IssueEntityMultiTransaction, ASSET_STATUS } from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
@@ -21,7 +21,7 @@ const { ArgumentIllegalException } = CoreExceptionGenerator(
  *
  */
 @Injectable()
-export class IssueEntityMultiTransactionFactoryV1 extends TransactionFactory<IssueEntityMultiTransactionV1> {
+export class IssueEntityMultiTransactionFactory extends TransactionFactory<IssueEntityMultiTransaction> {
   constructor(
     public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,
@@ -43,7 +43,7 @@ export class IssueEntityMultiTransactionFactoryV1 extends TransactionFactory<Iss
    */
   async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
-    issueEntityMultiAsset: BFChainCore.IssueEntityMultiAssetV1JSON,
+    issueEntityMultiAsset: BFChainCore.IssueEntityMultiAssetJSON,
     config = this.configHelper,
   ) {
     await super.verifyTransactionBody(body, issueEntityMultiAsset, config);
@@ -264,11 +264,8 @@ export class IssueEntityMultiTransactionFactoryV1 extends TransactionFactory<Iss
    * @param body
    * @param issueEntityMultiAsset
    */
-  init(
-    body: BFChainCore.TxBodyJSON,
-    issueEntityMultiAsset: BFChainCore.IssueEntityMultiAssetV1JSON,
-  ) {
-    const transaction = IssueEntityMultiTransactionV1.fromObject({
+  init(body: BFChainCore.TxBodyJSON, issueEntityMultiAsset: BFChainCore.IssueEntityMultiAssetJSON) {
+    const transaction = IssueEntityMultiTransaction.fromObject({
       ...body,
       asset: issueEntityMultiAsset,
     });
@@ -283,7 +280,7 @@ export class IssueEntityMultiTransactionFactoryV1 extends TransactionFactory<Iss
    * @param eventEmitter
    */
   async applyTransaction(
-    transaction: IssueEntityMultiTransactionV1,
+    transaction: IssueEntityMultiTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ) {
@@ -301,8 +298,8 @@ export class IssueEntityMultiTransactionFactoryV1 extends TransactionFactory<Iss
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
 
       // 发行 entity
-      taskList.next = eventEmitter.emit("issueEntityMultiV1", {
-        type: "issueEntityMultiV1",
+      taskList.next = eventEmitter.emit("issueEntityMulti", {
+        type: "issueEntityMulti",
         transaction,
         applyInfo: {
           address: senderId,
@@ -368,7 +365,7 @@ export class IssueEntityMultiTransactionFactoryV1 extends TransactionFactory<Iss
    * @returns
    */
   getMoveAmount(
-    transaction: IssueEntityMultiTransactionV1,
+    transaction: IssueEntityMultiTransaction,
     argv = {
       magic: this.configHelper.magic,
       assetType: this.configHelper.assetType,

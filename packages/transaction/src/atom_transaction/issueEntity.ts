@@ -1,9 +1,5 @@
 import { TransactionFactory } from "./_txbase";
-import {
-  IssueEntityTransaction,
-  ASSET_STATUS,
-  IssueEntityTransactionV1,
-} from "@bfchain/core-model";
+import { IssueEntityTransaction, ASSET_STATUS } from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
@@ -24,9 +20,7 @@ const { ArgumentIllegalException } = CoreExceptionGenerator(
  *
  */
 @Injectable()
-export class IssueEntityTransactionFactory<
-  T extends IssueEntityTransaction = IssueEntityTransaction,
-> extends TransactionFactory<T> {
+export class IssueEntityTransactionFactory extends TransactionFactory<IssueEntityTransaction> {
   constructor(
     public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,
@@ -116,8 +110,14 @@ export class IssueEntityTransactionFactory<
       target: "issueEntityAsset",
     } as const;
 
-    const { sourceChainName, sourceChainMagic, entityId, entityFactoryPossessor, entityFactory } =
-      issueEntity;
+    const {
+      sourceChainName,
+      sourceChainMagic,
+      entityId,
+      taxAssetPrealnum,
+      entityFactoryPossessor,
+      entityFactory,
+    } = issueEntity;
 
     if (sourceChainName !== config.chainName) {
       throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
@@ -194,6 +194,20 @@ export class IssueEntityTransactionFactory<
       });
     }
 
+    if (!taxAssetPrealnum) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
+        prop: "taxAssetPrealnum",
+        ...IssueEntityAsset_Exception_Detail,
+      });
+    }
+
+    if (!this.baseHelper.isValidAssetPrealnum(taxAssetPrealnum)) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+        prop: `taxAssetPrealnum ${taxAssetPrealnum}`,
+        ...IssueEntityAsset_Exception_Detail,
+      });
+    }
+
     if (storage.value !== entityId) {
       throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `storage.value ${storage.value}`,
@@ -229,7 +243,7 @@ export class IssueEntityTransactionFactory<
       asset: issueEntityAsset,
     });
 
-    return transaction as T;
+    return transaction;
   }
 
   /**
@@ -239,16 +253,38 @@ export class IssueEntityTransactionFactory<
    * @param eventEmitter
    */
   async applyTransaction(
-    transaction: T,
+    transaction: IssueEntityTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ) {
     return wrapTaskList((taskList) => {
-      taskList.next = super.applyTransaction(transaction, eventEmitter, config);
       const { senderId, recipientId, senderPublicKeyBuffer, signature } = transaction;
-      const { sourceChainName, sourceChainMagic, entityId, entityFactoryPossessor, entityFactory } =
-        transaction.asset.issueEntity;
+      const {
+        sourceChainName,
+        sourceChainMagic,
+        entityId,
+        taxAssetPrealnum,
+        entityFactoryPossessor,
+        entityFactory,
+      } = transaction.asset.issueEntity;
       const { factoryId, entityFrozenAssetPrealnum, purchaseAssetPrealnum } = entityFactory;
+      // 扣除手续费并且统计交易数量
+      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(config.magic, config.assetType);
+      taskList.next = eventEmitter.emit("fee", {
+        type: "fee",
+        transaction: transaction,
+        applyInfo: {
+          address: transaction.senderId,
+          publicKeyBuffer: transaction.senderPublicKeyBuffer,
+          assetInfo,
+          amount: "-" + transaction.fee,
+          sourceAmount: transaction.fee,
+        },
+      });
+      taskList.next = eventEmitter.emit("count", {
+        type: "count",
+        transaction: transaction,
+      });
       // 发行 entity
       taskList.next = eventEmitter.emit("issueEntity", {
         type: "issueEntity",
@@ -260,6 +296,7 @@ export class IssueEntityTransactionFactory<
           sourceChainMagic,
           factoryId,
           entityId,
+          taxAssetPrealnum,
           possessorAddress: recipientId,
           entityFactoryPossessorAddress: entityFactoryPossessor,
           entityFrozenAssetPrealnum,
@@ -267,10 +304,6 @@ export class IssueEntityTransactionFactory<
           status: ASSET_STATUS.NORMAL,
         },
       });
-      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(
-        this.configHelper.magic,
-        this.configHelper.assetType,
-      );
       // 冻结主权益，销毁时赎回
       if (entityFrozenAssetPrealnum !== "0") {
         const minEffectiveHeight =

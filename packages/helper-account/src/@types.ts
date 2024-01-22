@@ -1,7 +1,7 @@
 declare namespace BFChainCore {
   type EntityHolderInfo = {
     address: string;
-    numberOfEntities: number;
+    numberOfGeneratorEntities: number;
   };
   type AccountInfo = {
     address: string;
@@ -97,13 +97,13 @@ declare namespace BFChainCore {
   type AccountBaseInfo = {
     address: string;
     publicKey: string;
-    numberOfEntities: bigint;
+    numberOfGeneratorEntities: bigint;
   };
 
   type ForSortAccountInfo = {
     address: string;
     publicKey: string;
-    numberOfEntities: number;
+    numberOfGeneratorEntities: number;
   };
 
   type CurrencyInfo = {

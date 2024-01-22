@@ -1,6 +1,6 @@
 import {
-  IssueEntityTransactionV1,
-  IssueEntityMultiTransactionV1,
+  IssueEntityTransaction,
+  IssueEntityMultiTransaction,
   DestroyEntityTransaction,
 } from "@bfchain/core-model";
 import { Injectable, Inject } from "@bfchain/util";
@@ -46,7 +46,7 @@ export class DestroyEntityLogicVerifier extends TransactionLogicVerifier {
     let issueEntitySenderId = "";
     const trsJson = trsWithBlockSign.transaction;
     const model = await this.transactionCore.recombineTransaction(trsJson);
-    const issueEntityTransaction = model.as(IssueEntityTransactionV1, transactionSignature);
+    const issueEntityTransaction = model.as(IssueEntityTransaction, transactionSignature);
     if (issueEntityTransaction) {
       const entityInfo = issueEntityTransaction.asset.issueEntity;
       if (entityInfo.entityId !== destroyEntity.entityId) {
@@ -60,7 +60,7 @@ export class DestroyEntityLogicVerifier extends TransactionLogicVerifier {
       issueEntitySenderId = issueEntityTransaction.senderId;
     } else {
       const issueEntityMultiTransaction = model.as(
-        IssueEntityMultiTransactionV1,
+        IssueEntityMultiTransaction,
         transactionSignature,
       );
       if (!issueEntityMultiTransaction) {

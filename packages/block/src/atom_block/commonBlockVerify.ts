@@ -114,7 +114,7 @@ export class CommonBlockVerify<T extends Block> {
    */
   verifyBlockReward(block: T) {
     if (block.height !== 1) {
-      const expectedReward = this.config.basicRewards + block.transactionInfo.totalFee;
+      const expectedReward = this.config.basicRewards;
       if (expectedReward !== block.reward) {
         throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
           to_compare_prop: `blockReward ${block.reward}`,

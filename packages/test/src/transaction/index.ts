@@ -28,4 +28,4 @@ import "./grabAny";
 import "./toExchangeAny";
 import "./beExchangeAny";
 
-import "./issueEntityMultiV1";
+import "./issueEntityMulti";

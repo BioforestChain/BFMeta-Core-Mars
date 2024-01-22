@@ -30,17 +30,5 @@ declare namespace BFChainCore {
       Pick<BFChainCore.AccountGetterHelperInterface, "getAccountsAssetsChange">
     >;
   };
-
-  type ForgeInfos = {
-    producedblocks: number;
-    applyTxNumber: number;
-  };
-
-  type CanBePickAccount = {
-    address: string;
-    forgedBlocks: number;
-    applyTxNumber: number;
-    numberOfEntities: number;
-  };
   // #endregion
 }

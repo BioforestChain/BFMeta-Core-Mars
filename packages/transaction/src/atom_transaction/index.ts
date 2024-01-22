@@ -24,13 +24,12 @@ export * from "./setLnsRecordValue";
 export * from "./issueEntityFactory";
 export * from "./issueEntityFactoryV1";
 export * from "./issueEntity";
-export * from "./issueEntityV1";
 export * from "./destroyEntity";
 
 export * from "./toExchangeAny";
 export * from "./beExchangeAny";
 
-export * from "./issueEntityMultiV1";
+export * from "./issueEntityMulti";
 
 export * from "./toExchangeAnyMulti";
 export * from "./beExchangeAnyMulti";

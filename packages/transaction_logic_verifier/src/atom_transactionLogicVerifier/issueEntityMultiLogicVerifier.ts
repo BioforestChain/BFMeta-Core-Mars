@@ -1,4 +1,4 @@
-import { IssueEntityMultiTransactionV1, NewTransactionRefuseReason } from "@bfchain/core-model";
+import { IssueEntityMultiTransaction, NewTransactionRefuseReason } from "@bfchain/core-model";
 import { Injectable, Inject } from "@bfchain/util";
 import { AccountBaseHelper, TransactionHelper } from "@bfchain/core-helper";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
@@ -6,11 +6,11 @@ import { TransactionLogicVerifier } from "./_txbaseLogicVerifier";
 
 const { ConsensusException } = CoreExceptionGenerator(
   "CONTROLLER",
-  "IssueEntityMultiV1LogicVerifier",
+  "IssueEntityMultiLogicVerifier",
 );
 
 @Injectable()
-export class IssueEntityMultiV1LogicVerifier extends TransactionLogicVerifier {
+export class IssueEntityMultiLogicVerifier extends TransactionLogicVerifier {
   constructor(
     @Inject(AccountBaseHelper) public accountBaseHelper: AccountBaseHelper,
     @Inject(TransactionHelper) public transactionHelper: TransactionHelper,
@@ -19,7 +19,7 @@ export class IssueEntityMultiV1LogicVerifier extends TransactionLogicVerifier {
   }
 
   async verify(
-    transaction: IssueEntityMultiTransactionV1,
+    transaction: IssueEntityMultiTransaction,
     currentBlockHeight: number,
     accountMap: Map<string, BFChainCore.AccountInfo>,
     skipListenEvent: boolean,
@@ -40,7 +40,7 @@ export class IssueEntityMultiV1LogicVerifier extends TransactionLogicVerifier {
     return true;
   }
 
-  private __checkTrsFee(transaction: IssueEntityMultiTransactionV1) {
+  private __checkTrsFee(transaction: IssueEntityMultiTransaction) {
     const minFee = this.transactionHelper.calcTransactionMinFeeByMulti(
       transaction,
       transaction.asset.issueEntityMulti.entityStructList.length,
@@ -60,7 +60,7 @@ export class IssueEntityMultiV1LogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    * @param byteLength
    */
-  checkTrsFeeAndWebFee(transaction: IssueEntityMultiTransactionV1, byteLength: number) {
+  checkTrsFeeAndWebFee(transaction: IssueEntityMultiTransaction, byteLength: number) {
     return this.isFeeEnough(
       transaction.signature,
       transaction.fee,
@@ -81,7 +81,7 @@ export class IssueEntityMultiV1LogicVerifier extends TransactionLogicVerifier {
    * @param miningMachineMinFeePerByte
    */
   checkTrsFeeAndMiningMachineFeeAndWebFee(
-    transaction: IssueEntityMultiTransactionV1,
+    transaction: IssueEntityMultiTransaction,
     byteLength: number,
     miningMachineMinFeePerByte: BFChainCore.FractionJSON,
   ) {
@@ -104,7 +104,7 @@ export class IssueEntityMultiV1LogicVerifier extends TransactionLogicVerifier {
    *
    * @param transaction
    */
-  getLockData(transaction: IssueEntityMultiTransactionV1) {
+  getLockData(transaction: IssueEntityMultiTransaction) {
     return [transaction.asset.issueEntityMulti.entityFactoryPossessor];
   }
 }

@@ -19,16 +19,14 @@ export * from "./setLnsRecordValue.transaction";
 export * from "./issueEntityFactory.transaction";
 export * from "./issueEntityFactoryV1.transaction";
 export * from "./issueEntity.transaction";
-export * from "./issueEntityV1.transaction";
 export * from "./destroyEntity.transaction";
+export * from "./issueEntityMulti.transaction";
 
 export * from "./transferAny.transaction";
 export * from "./giftAny.transaction";
 export * from "./grabAny.transaction";
 export * from "./toExchangeAny.transaction";
 export * from "./beExchangeAny.transaction";
-
-export * from "./issueEntityMultiV1.transaction";
 
 export * from "./toExchangeAnyMulti.transaction";
 export * from "./beExchangeAnyMulti.transaction";

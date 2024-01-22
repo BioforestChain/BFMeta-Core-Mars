@@ -86,11 +86,11 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
           be_target: "calculate",
         });
       }
-      const numberOfEntities = generators[i].numberOfEntities;
-      if (nextRoundGenerator.numberOfEntities !== numberOfEntities) {
+      const numberOfGeneratorEntities = generators[i].numberOfGeneratorEntities;
+      if (nextRoundGenerator.numberOfGeneratorEntities !== numberOfGeneratorEntities) {
         throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-          to_compare_prop: `nextRoundGenerators index ${i} address ${nextRoundGenerator.address} numberOfEntities ${nextRoundGenerator.numberOfEntities}`,
-          be_compare_prop: `nextRoundGenerators index ${i} address ${address} numberOfEntities ${numberOfEntities}`,
+          to_compare_prop: `nextRoundGenerators index ${i} address ${nextRoundGenerator.address} numberOfGeneratorEntities ${nextRoundGenerator.numberOfGeneratorEntities}`,
+          be_compare_prop: `nextRoundGenerators index ${i} address ${address} numberOfGeneratorEntities ${numberOfGeneratorEntities}`,
           to_target: "block asset",
           be_target: "calculate",
         });

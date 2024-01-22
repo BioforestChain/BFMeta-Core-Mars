@@ -228,7 +228,7 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
     }
 
     for (let i = 0; i < generatorLength; i++) {
-      const { address, numberOfEntities } = calcNextRoundGenerators[i];
+      const { address, numberOfGeneratorEntities } = calcNextRoundGenerators[i];
       const nextRoundGenerator = nextRoundGenerators[i];
       if (nextRoundGenerator.address !== address) {
         throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
@@ -238,10 +238,10 @@ export class RoundLastBlockFactory extends BlockFactory<RoundLastBlock> {
           be_target: "calculate",
         });
       }
-      if (nextRoundGenerator.numberOfEntities !== numberOfEntities) {
+      if (nextRoundGenerator.numberOfGeneratorEntities !== numberOfGeneratorEntities) {
         throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-          to_compare_prop: `nextRoundGenerators index ${i} address ${nextRoundGenerator.address} numberOfEntities ${nextRoundGenerator.numberOfEntities}`,
-          be_compare_prop: `nextRoundGenerators index ${i} address ${address} numberOfEntities ${numberOfEntities}`,
+          to_compare_prop: `nextRoundGenerators index ${i} address ${nextRoundGenerator.address} numberOfGeneratorEntities ${nextRoundGenerator.numberOfGeneratorEntities}`,
+          be_compare_prop: `nextRoundGenerators index ${i} address ${address} numberOfGeneratorEntities ${numberOfGeneratorEntities}`,
           to_target: "block remark",
           be_target: "calculate",
         });

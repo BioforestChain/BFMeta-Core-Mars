@@ -10,8 +10,7 @@ import {
   PARENT_ASSET_TYPE,
   IssueEntityTransaction,
   DestroyEntityTransaction,
-  IssueEntityTransactionV1,
-  IssueEntityMultiTransactionV1,
+  IssueEntityMultiTransaction,
   CERTIFICATE_TYPE,
 } from "@bfchain/core-model";
 import { ConfigHelper, BlockHelper, TransactionHelper, JSBIHelper } from "@bfchain/core-helper";
@@ -1453,118 +1452,6 @@ export class EventLogicVerifier {
         //   });
         // }
 
-        const { remainEntityPrealnum } = memEntityFactory;
-        if (remainEntityPrealnum === BigInt(0)) {
-          throw new ConsensusException(ERROR_LIST.ISSUE_ENTITY_TIMES_USE_UP, {
-            entityFactory: factoryId,
-          });
-        }
-
-        // 如果模板没有被使用过，则不需要校验 entity 是否已经存在
-        if (memEntityFactory.entityPrealnum !== remainEntityPrealnum) {
-          // entityFactory 是否已经存在
-          const memEntity = await this.accountGetterHelper.getEntity(
-            sourceChainMagic,
-            entityId,
-            currentBlockHeight,
-          );
-          if (memEntity) {
-            throw new ConsensusException(ERROR_LIST.ENTITY_IS_ALREADY_EXIST, {
-              entityId,
-              errorId: NewTransactionRefuseReason.ENTITY_ALREADY_EXIST,
-            });
-          }
-        }
-
-        const { assets } = await this.helperLogicVerifier.getAccountForce(
-          accountMap,
-          address,
-          currentBlockHeight,
-        );
-        const { magic: chainMagic, assetType: chainAssetType } = this.configHelper;
-        let remainBalance = assets[chainMagic][chainAssetType].assetNumber;
-        const purchaseAssetPrealnum = memEntityFactory.purchaseAssetPrealnum;
-        if (purchaseAssetPrealnum !== "0") {
-          remainBalance -= BigInt(purchaseAssetPrealnum);
-          if (remainBalance < BigInt(0)) {
-            throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
-              reason: `No enough asset, Min account asset ${purchaseAssetPrealnum}, remain Assets: ${remainBalance}`,
-              errorId: NewTransactionRefuseReason.CHAIN_ASSET_NOT_ENOUGH,
-            });
-          }
-        }
-        if (entityFrozenAssetPrealnum !== "0") {
-          if (BigInt(entityFrozenAssetPrealnum) > remainBalance) {
-            throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
-              reason: `No enough asset, Min account asset ${entityFrozenAssetPrealnum}, remain Assets: ${remainBalance}`,
-              errorId: NewTransactionRefuseReason.CHAIN_ASSET_NOT_ENOUGH,
-            });
-          }
-        }
-
-        return next();
-      },
-      { taskname: `applyTransaction/logicVerifier/issueEntity` },
-    );
-  }
-
-  private __listenEventIssueEntityV1(
-    accountMap: Map<string, BFChainCore.AccountInfo>,
-    currentBlockHeight: number,
-    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
-  ) {
-    // 发行 entityId
-    eventEmitter.on(
-      "issueEntityV1",
-      async ({ transaction, applyInfo }, next) => {
-        const {
-          address,
-          possessorAddress,
-          entityFactoryPossessorAddress,
-          factoryId,
-          entityId,
-          sourceChainName,
-          sourceChainMagic,
-          entityFrozenAssetPrealnum,
-        } = applyInfo;
-
-        if (address !== possessorAddress) {
-          // 不能将冻结账户设置为非同质资产的拥有者
-          await this.helperLogicVerifier.isAccountFrozen(possessorAddress, currentBlockHeight);
-        }
-
-        // entityFactory 是否已经存在
-        const memEntityFactory = await this.helperLogicVerifier.isEntityFactoryExist(
-          sourceChainName,
-          sourceChainMagic,
-          factoryId,
-          currentBlockHeight,
-        );
-
-        this.__isEntityFactoryMatch(
-          (transaction as IssueEntityTransactionV1).asset.issueEntity.entityFactory.toJSON(),
-          memEntityFactory,
-          "IssueEntityTransactionV1",
-        );
-
-        if (entityFactoryPossessorAddress !== memEntityFactory.possessorAddress) {
-          throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-            to_compare_prop: `entityFactoryPossessor ${entityFactoryPossessorAddress}`,
-            be_compare_prop: `possessorAddress ${memEntityFactory.possessorAddress}`,
-            to_target: `issueEntity`,
-            be_target: "memEntityFactory",
-          });
-        }
-
-        // if (possessorAddress === memEntityFactory.applyAddress) {
-        //   throw new ConsensusException(ERROR_LIST.SHOULD_NOT_BE, {
-        //     to_compare_prop: `entityPossessor ${possessorAddress}`,
-        //     be_compare_prop: `entityFactoryApplicant ${memEntityFactory.applyAddress}`,
-        //     to_target: `issueEntity`,
-        //     be_target: "memEntityFactory",
-        //   });
-        // }
-
         if (memEntityFactory.remainEntityPrealnum === BigInt(0)) {
           throw new ConsensusException(ERROR_LIST.ISSUE_ENTITY_TIMES_USE_UP, {
             entityFactory: factoryId,
@@ -1616,14 +1503,14 @@ export class EventLogicVerifier {
     );
   }
 
-  private __listenEventIssueEntityMultiV1(
+  private __listenEventIssueEntityMulti(
     accountMap: Map<string, BFChainCore.AccountInfo>,
     currentBlockHeight: number,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     // 批量发行 entityId
     eventEmitter.on(
-      "issueEntityMultiV1",
+      "issueEntityMulti",
       async ({ transaction, applyInfo }, next) => {
         const {
           address,
@@ -1651,7 +1538,7 @@ export class EventLogicVerifier {
 
         this.__isEntityFactoryMatch(
           (
-            transaction as IssueEntityMultiTransactionV1
+            transaction as IssueEntityMultiTransaction
           ).asset.issueEntityMulti.entityFactory.toJSON(),
           memEntityFactory,
           "IssueEntityMultiTransactionV1",
@@ -2304,8 +2191,7 @@ export class EventLogicVerifier {
     this.__listenEventIssueEntityFactoryByFrozen(accountMap, currentBlockHeight, eventEmitter);
     this.__listenEventIssueEntityFactoryByDestroy(currentBlockHeight, eventEmitter);
     this.__listenEventIssueEntity(accountMap, currentBlockHeight, eventEmitter);
-    this.__listenEventIssueEntityV1(accountMap, currentBlockHeight, eventEmitter);
-    this.__listenEventIssueEntityMultiV1(accountMap, currentBlockHeight, eventEmitter);
+    this.__listenEventIssueEntityMulti(accountMap, currentBlockHeight, eventEmitter);
     this.__listenEventDestroyEntity(currentBlockHeight, eventEmitter);
     this.__listenEventFrozenEntity(currentBlockHeight, eventEmitter);
     this.__listenEventUnfrozenEntity(currentBlockHeight, eventEmitter);

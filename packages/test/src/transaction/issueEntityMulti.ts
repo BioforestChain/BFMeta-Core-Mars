@@ -1,8 +1,8 @@
 import {
   IssueEntityFactoryTransaction,
   IssueEntityFactoryTransactionFactory,
-  IssueEntityMultiTransactionV1,
-  IssueEntityMultiTransactionFactoryV1,
+  IssueEntityMultiTransaction,
+  IssueEntityMultiTransactionFactory,
   RANGE_TYPE,
   BFChainCore,
 } from "@bfchain/core";
@@ -121,8 +121,8 @@ async function getIssueEntityTransaction(
         sender.secondSecret,
       );
   }
-  const trs = await bfchainCore.transaction.createTransaction<IssueEntityMultiTransactionV1>(
-    IssueEntityMultiTransactionFactoryV1,
+  const trs = await bfchainCore.transaction.createTransaction<IssueEntityMultiTransaction>(
+    IssueEntityMultiTransactionFactory,
     data,
     {
       issueEntityMulti: {

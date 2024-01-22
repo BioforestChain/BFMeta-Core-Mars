@@ -19,7 +19,7 @@ import {
   mainChainAssetData,
   IssueEntityFactoryTransactionFactoryV1,
   IssueEntityFactoryModel,
-  IssueEntityTransactionFactoryV1,
+  IssueEntityTransactionFactory,
 } from "../include";
 import { QueneEventEmitter, Resolve } from "@bfchain/util";
 import optimist from "optimist";
@@ -225,7 +225,7 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
       trs,
     };
   }
-  async function getIssueEntityFactoryTransaction() {
+  async function getIssueEntityFactoryTransaction(factoryId: string, entityPrealnum: string) {
     const createTrs = (fee = "AUTO") => {
       return core.transaction.createTransaction(
         IssueEntityFactoryTransactionFactoryV1,
@@ -246,15 +246,15 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
           remark: {},
           storage: {
             key: "factoryId",
-            value: "generator",
+            value: factoryId,
           },
         },
         {
           issueEntityFactory: {
             sourceChainName: core.config.chainName,
             sourceChainMagic: core.config.magic,
-            factoryId: "generator",
-            entityPrealnum: "1000",
+            factoryId: factoryId,
+            entityPrealnum,
             entityFrozenAssetPrealnum: "0",
             purchaseAssetPrealnum: "0",
           },
@@ -281,7 +281,7 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
     const entityId = `${factory.factoryId}_${factory.factoryId}${index}`;
     const createTrs = (fee = "AUTO") => {
       return core.transaction.createTransaction(
-        IssueEntityTransactionFactoryV1,
+        IssueEntityTransactionFactory,
         {
           version: core.config.version,
           type: core.transactionHelper.ISSUE_ENTITY, // 交易类型
@@ -332,9 +332,10 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
     await core.patchInstaller.changeHeight(3);
     const txWithIndexList: { index: number; trs: Transaction }[] = [];
     txWithIndexList.push(await getLocationNameTransaction());
-    const entityFactory = await getIssueEntityFactoryTransaction();
-    txWithIndexList.push(entityFactory);
-    const delegatesSecret = config.delegatesSecret;
+    const forgingEntityFactory = await getIssueEntityFactoryTransaction("forging", "1000");
+    txWithIndexList.push(forgingEntityFactory);
+    txWithIndexList.push(await getIssueEntityFactoryTransaction("share", "10000"));
+    const delegatesSecret = config.delegatesSecret.slice(0, core.config.blockPerRound * 2);
     const eventEmitter: BFChainCore.ApplyTransactionEventEmitter<any> =
       new QueneEventEmitter<any>();
     let entityIndex = 0;
@@ -348,7 +349,7 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
       if (mainChainAssetData.nextRoundGenerators.length < core.config.blockPerRound) {
         mainChainAssetData.nextRoundGenerators.push({
           address,
-          numberOfEntities: 0,
+          numberOfGeneratorEntities: 0,
         });
       }
       const publicKey = await core.accountBaseHelper.getPublicKeyStringFromSecret(secret);
@@ -366,7 +367,7 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
         tempTrsWithIndexList.push(
           await getIssueEntityTransaction(
             delegate,
-            entityFactory.trs.asset.issueEntityFactory,
+            forgingEntityFactory.trs.asset.issueEntityFactory,
             getEntityIndex(),
           ),
         );

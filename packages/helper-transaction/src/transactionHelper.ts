@@ -540,7 +540,7 @@ export class TransactionHelper {
       return (
         this.calcTransactionMinFeeByMulti(
           transaction,
-          (transaction as BFChainCore.Transaction<BFChainCore.IssueEntityMultiAssetV1JSON>).asset
+          (transaction as BFChainCore.Transaction<BFChainCore.IssueEntityMultiAssetJSON>).asset
             .issueEntityMulti.entityStructList.length,
           undefined,
           customMinFeePerByte,
