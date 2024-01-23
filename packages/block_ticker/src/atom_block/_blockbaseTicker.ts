@@ -73,14 +73,14 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
    * @param accountGetterHelper
    * @returns
    */
-  private async __getEntityHolders(accountGetterHelper = this.accountGetterHelper) {
+  private async __getShareEntityHolders(accountGetterHelper = this.accountGetterHelper) {
     if (!accountGetterHelper) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "accountGetterHelper",
         target: "moduleStroge",
       });
     }
-    const holders = await accountGetterHelper.getEntityHolders();
+    const holders = await accountGetterHelper.getShareEntityHolders();
     let totalEntities = 0;
     for (const holder of holders) {
       totalEntities += holder.numberOfGeneratorEntities;
@@ -113,7 +113,7 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
     let holders: BFChainCore.EntityHolderInfo[] = [];
     // 轮末块并且还有未流通的主权益
     if (blockHelper.isRoundLastBlock(block.height) && block.reward !== "0") {
-      const result = await this.__getEntityHolders(accountGetterHelper);
+      const result = await this.__getShareEntityHolders(accountGetterHelper);
       totalEntities = result.totalEntities;
       holders = result.holders;
     }

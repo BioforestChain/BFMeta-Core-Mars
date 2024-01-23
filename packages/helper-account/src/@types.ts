@@ -9,7 +9,7 @@ declare namespace BFChainCore {
     secondPublicKey?: string;
     accountStatus: number;
     numberOfGeneratorEntities: number;
-    numberOfRewardEntities: number;
+    numberOfShareEntities: number;
     assets: AccountAssets;
   };
   type AssetInfo = {
@@ -199,8 +199,6 @@ declare namespace BFChainCore {
     getGenerators(currentGeneraterPublicKeyList: (Uint8Array | string)[]): Promise<ABI[]>;
     /**获取账户信息 */
     getAccountInfo(address: string, currentBlockHeight: number): Promise<AI | undefined>;
-    /**获取持股账户信息 */
-    getEntityHolders(): Promise<EHI[]>;
     /**获取账户的块内交易 */
     getAccountTxCountInBlock(address: string): Promise<number | undefined>;
     /**获取指定的 dapp */
@@ -231,8 +229,6 @@ declare namespace BFChainCore {
     isFrozenAsset(address: string): Promise<boolean>;
     /**查询指定的数字资产 */
     getAsset(magic: string, assetType: string): Promise<IAI | undefined>;
-    /**查询指定的数字资产 */
-    getAssetForce(magic: string, assetType: string): Promise<IAI>;
     /**查询指定的资产名 */
     getCurrency(currencyName: string): Promise<CI | undefined>;
     /**资产名是否被禁用 */
@@ -273,10 +269,10 @@ declare namespace BFChainCore {
      * @param height
      */
     getAccountsAssetsChange(height: number): Promise<BFChainCore.AccountsAssetsChange>;
-    /**获取锻造dp持有者 按照持有量sort */
-    getGeneratorDpHolders(offset?: number): Promise<AI[]>;
-    /**获取收益dp持有者 按照持有量sort*/
-    getRewardDpHolders(offset?: number): Promise<AI[]>;
+    /**获取 锻造entity 持有者 按照持有量sort */
+    getGeneratorEntityHolders(offset?: number): Promise<AI[]>;
+    /**获取 分红entity 持有者 按照持有量sort */
+    getShareEntityHolders(offset?: number): Promise<EHI[]>;
     /**累加流通量 */
     accumulateCirculations(magic: string, assetType: string, circulations: bigint): Promise<void>;
   }
