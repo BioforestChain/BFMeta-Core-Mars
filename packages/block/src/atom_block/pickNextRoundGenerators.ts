@@ -88,7 +88,7 @@ export class PickNextRoundGenerators {
       round,
       accountGetterHelper,
     );
-    generators = this.__sortByProductivity(generators);
+    generators = this.__sortByProducedblocks(generators);
     results.push.apply(results, generators.slice(0, this.config.blockPerRound - results.length));
     return {
       results,
@@ -96,7 +96,7 @@ export class PickNextRoundGenerators {
     };
   }
 
-  private __sortByProductivity(
+  private __sortByProducedblocks(
     array: BFChainCore.ForSortAccountInfo[],
   ): BFChainCore.ForSortAccountInfo[] {
     if (array.length <= 1) {
@@ -108,9 +108,12 @@ export class PickNextRoundGenerators {
     const left: any = [];
     const right: any = [];
     for (let i = 0; i < temp_array.length; i++) {
-      // float 类型，直接比较
-      right[right.length] = temp_array[i];
+      if (temp_array[i].producedblocks > pivot.producedblocks) {
+        left[left.length] = temp_array[i];
+      } else {
+        right[right.length] = temp_array[i];
+      }
     }
-    return this.__sortByProductivity(left).concat([pivot], this.__sortByProductivity(right));
+    return this.__sortByProducedblocks(left).concat([pivot], this.__sortByProducedblocks(right));
   }
 }

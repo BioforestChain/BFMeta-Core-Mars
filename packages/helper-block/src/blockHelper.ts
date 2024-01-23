@@ -609,6 +609,13 @@ export class BlockHelper {
       return -1;
     }
 
+    /// (b === a)
+    if (itemB.producedblocks > itemA.producedblocks) {
+      return 1;
+    } else if (itemB.producedblocks < itemA.producedblocks) {
+      return -1;
+    }
+
     /**
      * 因为pk是等长的字符串，所以这里不需要使用`String.localCompare`
      */

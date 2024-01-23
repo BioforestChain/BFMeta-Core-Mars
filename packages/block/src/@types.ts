@@ -23,7 +23,7 @@ declare namespace BFChainCore {
     blockGetterHelper?: Required<
       Pick<
         BFChainCore.BlockGetterHelperInterface,
-        "chainBlockFork" | "getNewForgingGenerators" | "getLastBlock" | "getBlockByHeight"
+        "chainBlockFork" | "getNextRoundGenerators" | "getLastBlock" | "getBlockByHeight"
       >
     >;
     accountGetterHelper?: Required<

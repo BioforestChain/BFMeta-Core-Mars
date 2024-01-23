@@ -98,13 +98,10 @@ declare namespace BFChainCore {
     address: string;
     publicKey: string;
     numberOfGeneratorEntities: number;
+    numberOfShareEntities: number;
+    producedblocks: number;
   };
-
-  type ForSortAccountInfo = {
-    address: string;
-    publicKey: string;
-    numberOfGeneratorEntities: number;
-  };
+  type ForSortAccountInfo = AccountBaseInfo;
 
   type CurrencyInfo = {
     name: string;

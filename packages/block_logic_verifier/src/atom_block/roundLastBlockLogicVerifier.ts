@@ -27,7 +27,7 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
     // 校验链上链 hash
     await this.checkChainOnChainHash(height, chainOnChainHash);
     // 校验新一轮的打块账户
-    await this.checkNewForgingGenerators(block);
+    await this.checkNextRoundGenerators(block);
   }
 
   /**
@@ -53,15 +53,15 @@ export class RoundLastBlockLogicVerifier extends BlockLogicVerifier {
    *
    * @param block
    */
-  async checkNewForgingGenerators(block: RoundLastBlock) {
+  async checkNextRoundGenerators(block: RoundLastBlock) {
     const blockGetterHelper = this.blockGetterHelper;
-    if (typeof blockGetterHelper.getNewForgingGenerators !== "function") {
+    if (typeof blockGetterHelper.getNextRoundGenerators !== "function") {
       throw new ConsensusException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: "checkNewForgingGenerators",
+        prop: "checkNextRoundGenerators",
         target: "blockGetterHelper",
       });
     }
-    const generators = await blockGetterHelper.getNewForgingGenerators(
+    const generators = await blockGetterHelper.getNextRoundGenerators(
       await blockGetterHelper.getLastBlock(),
       block.generatorPublicKey,
     );

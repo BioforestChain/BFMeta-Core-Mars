@@ -54,7 +54,7 @@ declare namespace BFChainCore {
      * @param lastBlock
      * @param currentGeneraterPublicKey
      */
-    getNewForgingGenerators?<T extends Block>(
+    getNextRoundGenerators?<T extends Block>(
       lastBlock: T,
       currentGeneraterPublicKey: string,
     ): Promise<BFChainCore.ForSortAccountInfo[]>;
