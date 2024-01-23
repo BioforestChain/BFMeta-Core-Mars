@@ -362,16 +362,6 @@ export class GenerateBlockCore<T extends Block> {
       block.transactionInfo.transactionInBlocks = transactions;
       const numberOfTransactions = block.transactionInfo.statisticInfo.numberOfTransactions;
       block.transactionInfo.numberOfTransactions = numberOfTransactions;
-      // block.blockParticipation = this.blockHelper.calcBlockParticipation({
-      //   totalChainAsset: statisticsInfo.totalChainAsset,
-
-      //   numberOfTransactions,
-      // });
-      // // 获取打块账户获得的权益
-      // eventEmitter.blockGeneratorEquityGetter &&
-      //   (block.generatorEquity = await eventEmitter.blockGeneratorEquityGetter(
-      //     block.generatorPublicKey,
-      //   ));
 
       /// 临时恢复的操作，但会曝出警告
       if (eventEmitter.has("finishedDealTransactions")) {

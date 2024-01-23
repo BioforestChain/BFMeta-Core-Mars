@@ -35,14 +35,6 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
-"@bfchain/core-account@10.0.0":
-  version "10.0.0"
-  resolved "http://192.168.250.245:4873/@bfchain/core-account/-/core-account-10.0.0.tgz#469c3a832863e7bdcd66593a18bbefa850b695aa"
-  integrity sha512-0RRvqsXtj+5Is78tAUrOsZxaQKEjdTck03CV60/2k2MNvsH++8AWj0fi0R+1/iEbduJZp37IdGS5lguzGuIcxQ==
-  dependencies:
-    "@bfchain/core-helper-account-base" "10.0.0"
-    "@bfchain/core-typings" "10.0.0"
-
 "@bfchain/devkit-ts-creator@^1.3.4":
   version "1.3.4"
   resolved "http://192.168.250.245:4873/@bfchain%2fdevkit-ts-creator/-/devkit-ts-creator-1.3.4.tgz#1d49b54dc30d8aad6e16bd6ca1051aec471d778a"

@@ -285,13 +285,6 @@ export class ReplayBlockCore<T extends Block> {
       });
     }
 
-    if (!eventEmitter.blockGeneratorEquityGetter) {
-      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-        prop: "blockGeneratorEquityGetter",
-        target: "eventEmitter",
-      });
-    }
-
     // 校验 startTindex
     const startTindex = await eventEmitter.startTindexGetter();
     if (block.startTindex !== startTindex) {
