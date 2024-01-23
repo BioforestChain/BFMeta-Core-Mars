@@ -1,6 +1,6 @@
 {
   "name": "@bfchain/core-crypto-ed2curve",
-  "version": "10.0.6",
+  "version": "10.0.7",
   "main": "build/cjs/index.js",
   "type": "commonjs",
   "module": "build/esm/index.js",
@@ -8,8 +8,8 @@
     "build"
   ],
   "dependencies": {
-    "@bfchain/core-crypto-tweetnacl": "10.0.6",
-    "@bfchain/core-typings": "10.0.6"
+    "@bfchain/core-crypto-tweetnacl": "10.0.7",
+    "@bfchain/core-typings": "10.0.7"
   },
   "gitHead": "8df3a41e078af6ff932f68102af9e3afce7843fd",
   "types": "build/cjs/index.d.ts"
