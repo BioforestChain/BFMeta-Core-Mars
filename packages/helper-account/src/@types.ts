@@ -270,7 +270,5 @@ declare namespace BFChainCore {
     getGeneratorEntityHolders(offset?: number): Promise<AI[]>;
     /**获取 分红entity 持有者 按照持有量sort */
     getShareEntityHolders(offset?: number): Promise<EHI[]>;
-    /**累加流通量 */
-    accumulateCirculations(magic: string, assetType: string, circulations: bigint): Promise<void>;
   }
 }

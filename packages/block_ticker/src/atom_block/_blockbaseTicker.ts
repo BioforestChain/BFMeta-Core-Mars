@@ -59,12 +59,7 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
     const blockUpdateData = await this.__calcForginAndHoldingRewards(block, accountGetterHelper);
 
     // 更新打块账户和投票账户（分配奖励）
-    await this.__updateForgingAndHoldingAccount(
-      block,
-      blockUpdateData,
-      accountGetterHelper,
-      blockTickGetterHelper,
-    );
+    await this.__updateForgingAndHoldingAccount(block, blockUpdateData, blockTickGetterHelper);
   }
 
   /**
@@ -136,15 +131,8 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
   private async __updateForgingAndHoldingAccount(
     block: T,
     blockUpdateData: BFChainCore.BlockUpdateDataInfo,
-    accountGetterHelper = this.accountGetterHelper,
     blockTickGetterHelper = this.blockTickGetterHelper,
   ) {
-    if (!accountGetterHelper) {
-      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
-        prop: "accountGetterHelper",
-        target: "moduleStroge",
-      });
-    }
     if (!blockTickGetterHelper) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "blockTickGetterHelper",
@@ -157,7 +145,7 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
     }
     await blockTickGetterHelper.updateForgingAccount(block, forgingRewards);
     if (circulations > BigInt(0)) {
-      await accountGetterHelper.accumulateCirculations(
+      await blockTickGetterHelper.accumulateCirculations(
         this.configHelper.magic,
         this.configHelper.assetType,
         circulations,
