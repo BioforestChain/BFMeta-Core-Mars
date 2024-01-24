@@ -270,17 +270,21 @@ export class ReplayBlockCore<T extends Block> {
         target: "eventEmitter",
       });
     }
-
     if (!eventEmitter.tIndexGetter) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "tIndexGetter",
         target: "eventEmitter",
       });
     }
-
     if (!eventEmitter.assetPrealnumGetter) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "assetPrealnumGetter",
+        target: "eventEmitter",
+      });
+    }
+    if (!eventEmitter.blockRewardsGetter) {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
+        prop: "blockRewardsGetter",
         target: "eventEmitter",
       });
     }
@@ -300,8 +304,6 @@ export class ReplayBlockCore<T extends Block> {
     try {
       /**绑定统计功能到事件触发器上 */
       this.statisticsHelper.bindApplyTransactionEventEmiter(eventEmitter, statisticsInfo);
-      /**用于快速地计算发送者的交易量 */
-      const tranSenderCountMap = new EasyMap<string, number>((address) => 0);
       isDevGenerateBlock && info("begin insertTransactionsForReplay");
       for await (const tranItem of trsGenerator) {
         const tIndex = eventEmitter.tIndexGetter(tranItem);

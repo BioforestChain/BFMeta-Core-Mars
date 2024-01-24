@@ -211,6 +211,13 @@ export class GenerateBlockCore<T extends Block> {
         });
       }
     }
+    if (!eventEmitter.blockRewardsGetter) {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
+        prop: "blockRewardsGetter",
+        target: "eventEmitter",
+      });
+    }
+
     const { transactionCore, blockUtils } = this;
     const abortForbiddenTransaction = transactionCore.abortForbiddenTransaction;
     const { height, generatorPublicKey, statisticInfo: blockStatisticsInfo } = block;
@@ -342,6 +349,7 @@ export class GenerateBlockCore<T extends Block> {
       }
       isDevGenerateBlock && info("finish insertTransactions");
 
+      block.reward = await eventEmitter.blockRewardsGetter(height);
       const offset = transactions.length;
       block.transactionInfo.offset = offset;
       if (offset > 0) {

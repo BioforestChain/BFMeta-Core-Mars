@@ -19,6 +19,7 @@ import {
   IssueEntityFactoryTransactionFactoryV1,
   IssueEntityFactoryModel,
   IssueEntityTransactionFactory,
+  IssueEntityFactoryTransactionV1,
 } from "@bfchain/core";
 import { QueneEventEmitter, Resolve } from "@bfchain/util";
 import * as path from "path";
@@ -416,13 +417,17 @@ registerchainAssetData.blockPerRound = 5;
     const blockTrsItems: TransactionInBlock[] = [];
     const eventEmitter: BFChainCore.ApplyTransactionEventEmitter<any> =
       new QueneEventEmitter<any>();
+    eventEmitter.blockRewardsGetter = async (height: number) => {
+      return registerBfchainCore.config.basicRewards;
+    };
     const taskname = (eventEmitter.taskname = `test-registerChainGenesisBlock-${height}`);
     const statisticsInfo = registerStatistics.forceGetStatisticsInfoByBlock(
       taskname,
       "generateRegisterChainGenesisBlock",
     );
     registerStatistics.bindApplyTransactionEventEmiter(eventEmitter, statisticsInfo);
-    const { magic, assetType } = registerBfchainCore.config;
+    const { magic, assetType, basicRewards } = registerBfchainCore.config;
+    let totalRewards = BigInt(basicRewards);
     setAccountAsset(
       magic,
       genesisAccountInfo.address,
@@ -440,12 +445,21 @@ registerchainAssetData.blockPerRound = 5;
       blockTrsItems[blockTrsItems.length] = trsInBlock;
       const { type, senderId, recipientId, fee } = trs;
       setAccountAsset(magic, senderId, assetType, `-${fee}`);
+      totalRewards += BigInt(fee);
       if (type === transactionHelper.TRANSFER_ASSET) {
         const amount = (trs as TransferAssetTransaction).asset.transferAsset.amount;
         setAccountAsset(magic, senderId, assetType, `-${amount}`);
         setAccountAsset(magic, recipientId as string, assetType, amount);
       }
+      if (type === transactionHelper.ISSUE_ENTITY_FACTORY_V1) {
+        const destoryAmount =
+          registerBfchainCore.transactionHelper.calcDestroyMainAssetsOfIsseuEntityFactory(
+            (trs as IssueEntityFactoryTransactionV1).asset.issueEntityFactory.entityPrealnum,
+          );
+        setAccountAsset(magic, senderId, assetType, `-${destoryAmount}`);
+      }
     }
+    setAccountAsset(magic, genesisAccountInfo.address, assetType, totalRewards.toString());
     const generatorKeypair = await registerBfchainCore.accountBaseHelper.createSecretKeypair(
       config.genesisSecret,
     );

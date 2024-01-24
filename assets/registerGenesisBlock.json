@@ -1,12 +1,12 @@
 {
   "version": 1,
   "height": 1,
-  "blockSize": 24366,
+  "blockSize": 24377,
   "timestamp": 0,
-  "signature": "a1d0b67acbdc62b3e720059803477ec8916ae31bb17a89157cc95af5211d6f583ffc8578e7b6970a8c7c3414753e2bd1da5f0d9219f4c963e65aa53c236d0f01",
+  "signature": "b5a6bc9b94ede4cc009c08a07bc02b745ad094c296d22cf94ea5e58c3adc749579143f9a8b515caf6cea468dd0477370c4923d27e56eb97f22ba05c733b8f807",
   "generatorPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
   "previousBlockSignature": "",
-  "reward": "0",
+  "reward": "100000000",
   "magic": "NMQX0",
   "remark": {
     "QWQ": "人定胜天"
@@ -73,7 +73,7 @@
           "numberOfGeneratorEntities": 0
         }
       ],
-      "assetChangeHash": "7e0f09000278f055ad8a90da3742b1490dda70d363c3eee7f891437f0187dd38"
+      "assetChangeHash": "b8225afe913a0633ad877c2b81980f5e0464cf658a2d277649744b00bc9b3c11"
     }
   },
   "transactionInfo": {

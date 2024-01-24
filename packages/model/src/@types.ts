@@ -988,6 +988,7 @@ declare namespace BFChainCore {
     ) => BFChainUtil.PromiseMaybe<
       import("@bfchain/core-model-transaction").AssetPrealnumModel | undefined
     >;
+    blockRewardsGetter?: (height: number) => BFChainUtil.PromiseMaybe<string>;
   } & BFChainUtil.QueneEventEmitter<ApplyTransactionEventMap<ES>>;
 
   type GenerateBlockEventEmitter<

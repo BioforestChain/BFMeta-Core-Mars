@@ -644,7 +644,7 @@ export class BlockHelper {
     holders: BFChainCore.EntityHolderInfo[],
   ) {
     const blockFee = BigInt(block.totalFee);
-    const blockReward = BigInt(block.totalFee);
+    const blockReward = BigInt(block.reward);
     const result: BFChainCore.BlockUpdateDataInfo = {
       forgingRewards: blockFee + blockReward,
       holdingRewardsList: [],

@@ -20,6 +20,7 @@ import {
   IssueEntityFactoryTransactionFactoryV1,
   IssueEntityFactoryModel,
   IssueEntityTransactionFactory,
+  IssueEntityFactoryTransactionV1,
 } from "../include";
 import { QueneEventEmitter, Resolve } from "@bfchain/util";
 import optimist from "optimist";
@@ -34,8 +35,8 @@ const argv = optimist
   .alias("rm", "random magic")
   .alias("o", "out")
   .alias("p", "genesisblock out path")
-  .default("b", 10)
-  .default("f", 20)
+  .default("b", 50)
+  .default("f", 15)
   .default("ri", false)
   .default("rm", false).argv;
 console.log(argv);
@@ -338,6 +339,9 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
     const generatorsSecret = config.generatorsSecret.slice(0, core.config.blockPerRound * 2);
     const eventEmitter: BFChainCore.ApplyTransactionEventEmitter<any> =
       new QueneEventEmitter<any>();
+    eventEmitter.blockRewardsGetter = async (height: number) => {
+      return core.config.basicRewards;
+    };
     let entityIndex = 0;
     const getEntityIndex = () => {
       entityIndex++;
@@ -408,6 +412,7 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
     const statisticsInfo = statistics.forceGetStatisticsInfoByBlock(taskname, "getGenesisBlock");
     statistics.bindApplyTransactionEventEmiter(eventEmitter, statisticsInfo);
     const { magic, assetType } = core.config;
+    let totalRewards = BigInt(core.config.basicRewards);
     setAccountAsset(magic, genesisAccountInfo.address, assetType, mainChainAssetData.genesisAmount);
     const transactionHelper = core.transactionHelper;
     for (let i = 0; i < txWithIndexList.length; i++) {
@@ -420,12 +425,20 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
       blockTrsItems.push(trsInBlock);
       const { type, senderId, recipientId, fee } = trs;
       setAccountAsset(magic, senderId, assetType, `-${fee}`);
+      totalRewards += BigInt(fee);
       if (type === transactionHelper.TRANSFER_ASSET) {
         const amount = (trs as TransferAssetTransaction).asset.transferAsset.amount;
         setAccountAsset(magic, senderId, assetType, `-${amount}`);
         setAccountAsset(magic, recipientId as string, assetType, amount);
       }
+      if (type === transactionHelper.ISSUE_ENTITY_FACTORY_V1) {
+        const destoryAmount = core.transactionHelper.calcDestroyMainAssetsOfIsseuEntityFactory(
+          (trs as IssueEntityFactoryTransactionV1).asset.issueEntityFactory.entityPrealnum,
+        );
+        setAccountAsset(magic, senderId, assetType, `-${destoryAmount}`);
+      }
     }
+    setAccountAsset(magic, genesisAccountInfo.address, assetType, totalRewards.toString());
     const assetChangeHash = await core.blockHelper.calcAssetChangeHash(accountsAssets);
     const genesisBlock = await core.block.generateBlock(
       GenesisBlockFactory,
