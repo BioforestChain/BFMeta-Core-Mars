@@ -3,7 +3,7 @@
   "height": 1,
   "blockSize": 45942,
   "timestamp": 0,
-  "signature": "fb2b6b3191ad8f529c491adcc56f826ee13af188760f5ba01a8dedcb457f42a95683c61db0c284a34db8f081072b22863f91272edb201bb6d92681ce08012d0e",
+  "signature": "67324539b54e463a1430857effff1a8d98717dbdd0ea65e30d8f6fc61e9b6e0bf2511fc59b4a6700d7fdf76e55a1703f4dee0efc7b6bdece544cdca0e0b27704",
   "generatorPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
   "previousBlockSignature": "",
   "reward": "0",
@@ -91,7 +91,7 @@
           "numberOfGeneratorEntities": 0
         }
       ],
-      "assetChangeHash": "f227cf295f83d965ac3da9227d6e000e777c3d0e4e895a2e8e0ad88b6ffb720c"
+      "assetChangeHash": "b0ffcefeb30b13e56d8785fee14adbb8dee35f496921c5772ef7725228f48dd2"
     }
   },
   "transactionInfo": {

@@ -216,15 +216,15 @@ registerchainAssetData.blockPerRound = 5;
           remark: {},
           storage: {
             key: "factoryId",
-            value: "generator",
+            value: factoryId,
           },
         },
         {
           issueEntityFactory: {
             sourceChainName: registerBfchainCore.config.chainName,
             sourceChainMagic: registerBfchainCore.config.magic,
-            factoryId: "generator",
-            entityPrealnum: "1000",
+            factoryId,
+            entityPrealnum,
             entityFrozenAssetPrealnum: "0",
             purchaseAssetPrealnum: "0",
           },
@@ -430,7 +430,6 @@ registerchainAssetData.blockPerRound = 5;
       registerchainAssetData.genesisAmount,
     );
     const transactionHelper = registerBfchainCore.transactionHelper;
-    let totalFee = BigInt(0);
     for (let i = 0; i < txWithIndexList.length; i++) {
       const { trs } = txWithIndexList[i];
       const trsInBlock = TransactionInBlock.fromObject({
@@ -441,14 +440,12 @@ registerchainAssetData.blockPerRound = 5;
       blockTrsItems[blockTrsItems.length] = trsInBlock;
       const { type, senderId, recipientId, fee } = trs;
       setAccountAsset(magic, senderId, assetType, `-${fee}`);
-      totalFee += BigInt(fee);
       if (type === transactionHelper.TRANSFER_ASSET) {
         const amount = (trs as TransferAssetTransaction).asset.transferAsset.amount;
         setAccountAsset(magic, senderId, assetType, `-${amount}`);
         setAccountAsset(magic, recipientId as string, assetType, amount);
       }
     }
-    setAccountAsset(magic, genesisAccountInfo.address, assetType, totalFee.toString());
     const generatorKeypair = await registerBfchainCore.accountBaseHelper.createSecretKeypair(
       config.genesisSecret,
     );
