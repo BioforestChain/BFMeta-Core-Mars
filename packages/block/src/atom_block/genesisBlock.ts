@@ -454,9 +454,9 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
           target: "genesisBlock.newGenerators",
         });
       }
-      if (!this.baseHelper.isNaturalNumber(nextRoundGenerator.numberOfGeneratorEntities)) {
+      if (!this.baseHelper.isNaturalNumber(nextRoundGenerator.numberOfForgeEntities)) {
         throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-          prop: `nextRoundGenerators[${i}].numberOfGeneratorEntities ${nextRoundGenerator.numberOfGeneratorEntities}`,
+          prop: `nextRoundGenerators[${i}].numberOfForgeEntities ${nextRoundGenerator.numberOfForgeEntities}`,
           target: "genesisBlock.nextRoundGenerators",
         });
       }

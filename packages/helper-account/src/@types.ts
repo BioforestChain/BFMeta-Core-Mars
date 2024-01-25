@@ -1,14 +1,14 @@
 declare namespace BFChainCore {
   type EntityHolderInfo = {
     address: string;
-    numberOfGeneratorEntities: number;
+    numberOfForgeEntities: number;
   };
   type AccountInfo = {
     address: string;
     publicKey: string;
     secondPublicKey?: string;
     accountStatus: number;
-    numberOfGeneratorEntities: number;
+    numberOfForgeEntities: number;
     numberOfShareEntities: number;
     assets: AccountAssets;
   };
@@ -97,7 +97,7 @@ declare namespace BFChainCore {
   type AccountBaseInfo = {
     address: string;
     publicKey: string;
-    numberOfGeneratorEntities: number;
+    numberOfForgeEntities: number;
     numberOfShareEntities: number;
     producedblocks: number;
   };

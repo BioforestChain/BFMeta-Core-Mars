@@ -335,7 +335,7 @@ registerchainAssetData.blockPerRound = 5;
     const entityFactory = await getIssueEntityFactoryTransaction(
       genesisAccountInfo,
       genesisAccountKeypair,
-      "forging",
+      "forge",
       "1000",
       registerBfchainCore,
     );
@@ -366,7 +366,7 @@ registerchainAssetData.blockPerRound = 5;
       ) {
         registerchainAssetData.nextRoundGenerators.push({
           address,
-          numberOfGeneratorEntities: 0,
+          numberOfForgeEntities: 0,
         });
       }
       const publicKey = await registerBfchainCore.accountBaseHelper.getPublicKeyStringFromSecret(

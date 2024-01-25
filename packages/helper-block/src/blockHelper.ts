@@ -603,9 +603,9 @@ export class BlockHelper {
     /**
      * 因为要从大到小排序，所以这里使用`b-a`
      */
-    if (itemB.numberOfGeneratorEntities > itemA.numberOfGeneratorEntities) {
+    if (itemB.numberOfForgeEntities > itemA.numberOfForgeEntities) {
       return 1;
-    } else if (itemB.numberOfGeneratorEntities < itemA.numberOfGeneratorEntities) {
+    } else if (itemB.numberOfForgeEntities < itemA.numberOfForgeEntities) {
       return -1;
     }
 
@@ -635,12 +635,12 @@ export class BlockHelper {
    * 计算打块账户和持股账户的奖励
    *
    * @param block
-   * @param numberOfGeneratorEntities
+   * @param numberOfForgeEntities
    * @returns
    */
   calcForginAndHoldingRewards<T extends Block>(
     block: T,
-    numberOfGeneratorEntities: number,
+    numberOfForgeEntities: number,
     holders: BFChainCore.EntityHolderInfo[],
   ) {
     const blockFee = BigInt(block.totalFee);
@@ -652,11 +652,11 @@ export class BlockHelper {
     };
     let circulations = blockReward;
     // 还有剩余的未流通的主权益，块内有交易，分红 entity 总量大于 0
-    if (blockReward > BigInt(0) && blockFee > BigInt(0) && numberOfGeneratorEntities > 0) {
-      const totalEntities = BigInt(numberOfGeneratorEntities);
+    if (blockReward > BigInt(0) && blockFee > BigInt(0) && numberOfForgeEntities > 0) {
+      const totalEntities = BigInt(numberOfForgeEntities);
       const holdingRewardsList: BFChainCore.EntityHolderRewardInfo[] = [];
       for (const holder of holders) {
-        const holderRewards = (blockFee * BigInt(holder.numberOfGeneratorEntities)) / totalEntities;
+        const holderRewards = (blockFee * BigInt(holder.numberOfForgeEntities)) / totalEntities;
         if (holderRewards > BigInt(0)) {
           circulations = circulations + holderRewards;
           holdingRewardsList.push({

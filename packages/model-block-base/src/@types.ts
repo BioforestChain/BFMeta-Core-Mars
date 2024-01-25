@@ -149,7 +149,7 @@ declare namespace BFChainCore {
     /**受托人账户地址 */
     address: string;
     /**受托人上一轮轮末持有的打块 entity 数量 */
-    numberOfGeneratorEntities: number;
+    numberOfForgeEntities: number;
   }
   interface RoundGeneratorJSON {
     /**下一轮的打块账户列表 */

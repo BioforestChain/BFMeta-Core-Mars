@@ -8,11 +8,11 @@ export class NextRoundGeneratorModel
   @Field.d(NextRoundGeneratorModel.INC++, "string")
   address!: string;
   @Field.d(NextRoundGeneratorModel.INC++, "uint32")
-  numberOfGeneratorEntities!: number;
+  numberOfForgeEntities!: number;
   toJSON() {
     return {
       address: this.address,
-      numberOfGeneratorEntities: this.numberOfGeneratorEntities,
+      numberOfForgeEntities: this.numberOfForgeEntities,
     };
   }
 }

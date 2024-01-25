@@ -333,7 +333,7 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
     await core.patchInstaller.changeHeight(3);
     const txWithIndexList: { index: number; trs: Transaction }[] = [];
     txWithIndexList.push(await getLocationNameTransaction());
-    const forgingEntityFactory = await getIssueEntityFactoryTransaction("forging", "1000");
+    const forgingEntityFactory = await getIssueEntityFactoryTransaction("forge", "1000");
     txWithIndexList.push(forgingEntityFactory);
     txWithIndexList.push(await getIssueEntityFactoryTransaction("share", "10000"));
     const generatorsSecret = config.generatorsSecret.slice(0, core.config.blockPerRound * 2);
@@ -353,7 +353,7 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
       if (mainChainAssetData.nextRoundGenerators.length < core.config.blockPerRound) {
         mainChainAssetData.nextRoundGenerators.push({
           address,
-          numberOfGeneratorEntities: 0,
+          numberOfForgeEntities: 0,
         });
       }
       const publicKey = await core.accountBaseHelper.getPublicKeyStringFromSecret(secret);

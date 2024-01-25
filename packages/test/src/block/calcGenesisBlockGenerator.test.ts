@@ -884,7 +884,7 @@ function print(obj: any) {
             chosenAddress = bfchainCore.transactionHelper.genesisGenerators().slice(57, 114);
           }
           const nextRoundGenerators = chosenAddress.map((v) => {
-            return { address: v, numberOfGeneratorEntities: 0 };
+            return { address: v, numberOfForgeEntities: 0 };
           });
           // const nextRoundGenerators = randomNextGenerators(_pickGenerators,).map(v => {
           //   return { address: v, equity: "0" };
