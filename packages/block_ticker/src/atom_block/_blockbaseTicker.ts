@@ -96,6 +96,7 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
   private async __calcForginAndHoldingRewards(
     block: T,
     accountGetterHelper = this.accountGetterHelper,
+    blockGetterHelper = this.blockGetterHelper,
   ) {
     if (!accountGetterHelper) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
@@ -103,17 +104,36 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
         target: "moduleStroge",
       });
     }
+    if (!blockGetterHelper) {
+      throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
+        prop: "blockGetterHelper",
+        target: "moduleStroge",
+      });
+    }
     const { blockHelper } = this;
     let totalEntities = 0;
     let holders: BFChainCore.EntityHolderInfo[] = [];
+    let totalShareRewards = BigInt(0);
     // 轮末块并且还有未流通的主权益
     if (blockHelper.isRoundLastBlock(block.height) && block.reward !== "0") {
       const result = await this.__getShareEntityHolders(accountGetterHelper);
       totalEntities = result.totalEntities;
       holders = result.holders;
+      if (!blockGetterHelper.getBlocksByRange) {
+        throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
+          prop: "blockGetterHelper.getBlocksByRange",
+          target: "moduleStroge",
+        });
+      }
+      const minHeight = this.blockHelper.calcRoundStartHeightByHeight(block.height);
+      const blocks = await blockGetterHelper.getBlocksByRange(minHeight, block.height);
+      for (const block of blocks) {
+        totalShareRewards += BigInt(block.totalFee);
+      }
     }
     const blockUpdateData = this.blockHelper.calcForginAndHoldingRewards(
       block,
+      totalShareRewards,
       totalEntities,
       holders,
     );

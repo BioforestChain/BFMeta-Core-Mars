@@ -640,6 +640,7 @@ export class BlockHelper {
    */
   calcForginAndHoldingRewards<T extends Block>(
     block: T,
+    totalShareRewards: bigint,
     numberOfForgeEntities: number,
     holders: BFChainCore.EntityHolderInfo[],
   ) {
@@ -656,7 +657,8 @@ export class BlockHelper {
       const totalEntities = BigInt(numberOfForgeEntities);
       const holdingRewardsList: BFChainCore.EntityHolderRewardInfo[] = [];
       for (const holder of holders) {
-        const holderRewards = (blockFee * BigInt(holder.numberOfForgeEntities)) / totalEntities;
+        const holderRewards =
+          (totalShareRewards * BigInt(holder.numberOfForgeEntities)) / totalEntities;
         if (holderRewards > BigInt(0)) {
           circulations = circulations + holderRewards;
           holdingRewardsList.push({
