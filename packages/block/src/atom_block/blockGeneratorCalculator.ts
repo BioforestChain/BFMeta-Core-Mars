@@ -109,15 +109,17 @@ export class BlockGeneratorCalculator {
     let nowTimestamp = fromTimestamp;
 
     /// RESULT
-    const 结果掉块信息 = new EasyMap<number, string[]>(() => []);
+    const resultMisBlockMap = new EasyMap<number, string[]>(() => []);
 
     /// 1
-    const 这一轮已经出来的区块 = [] as BFChainCore.Block[];
-    const 当前轮已经锻造的区块数 = currentBlock.height % this.config.blockPerRound;
+    /**这一轮已经出来的区块 */
+    const thisRoundGeneratorBlocks = [] as BFChainCore.Block[];
+    /**当前轮已经锻造的区块数 */
+    const currentRoundGeneratorblockCount = currentBlock.height % this.config.blockPerRound;
     const blockCache = opts.blockCache || {};
-    for (let i = 0; i < 当前轮已经锻造的区块数; i++) {
+    for (let i = 0; i < currentRoundGeneratorblockCount; i++) {
       const targetHeight = currentBlock.height - i;
-      这一轮已经出来的区块.push(
+      thisRoundGeneratorBlocks.push(
         blockCache[targetHeight] ||
           (await this.blockHelper.forceGetBlockByHeight(targetHeight, blockGetterHelper)),
       );
@@ -129,21 +131,23 @@ export class BlockGeneratorCalculator {
         this.blockHelper.calcRoundByHeight(currentBlock.height + 1) - 1,
       ),
     );
-    const 上一轮轮末块 =
+    const lastRoundEndBlock =
       blockCache[roundLastBlockHeight] ||
       (await this.blockHelper.forceGetBlockByHeight<
         BFChainCore.RoundLastBlock | BFChainCore.GenesisBlock
       >(roundLastBlockHeight, blockGetterHelper));
-    const 当前轮次 = this.blockHelper.calcRoundByHeight(上一轮轮末块.height + 1);
+    /**当前轮次 */
+    const currentRound = this.blockHelper.calcRoundByHeight(lastRoundEndBlock.height + 1);
 
     /**
+     * 计算轮次间隔
      * 指定时间来说,应该到了哪一轮
      * @return 从0开始的正整数
      * @param timestamp
      */
-    const 计算轮次间隔 = (timestamp: number) => {
+    const calcRoundInterval = (timestamp: number) => {
       const roundOffset =
-        (timestamp - 上一轮轮末块.timestamp) /
+        (timestamp - lastRoundEndBlock.timestamp) /
         this.config.forgeInterval /
         this.config.blockPerRound;
       if (roundOffset % 1 === 0 && roundOffset > 0) {
@@ -152,15 +156,17 @@ export class BlockGeneratorCalculator {
       return Math.floor(roundOffset);
     };
 
-    const 计算某一轮次间隔开始的时间戳 = (轮次间隔: number) => {
+    /**计算某一轮次间隔开始的时间戳 */
+    const calcRoundStartTimestamp = (轮次间隔: number) => {
       return (
         (轮次间隔 * this.config.blockPerRound + 1) * this.config.forgeInterval +
-        上一轮轮末块.timestamp
+        lastRoundEndBlock.timestamp
       );
     };
 
     /// 3
-    const 上一个块的信息 =
+    /**上一个块的信息 */
+    const lastBlockInfo =
       blockCache[currentBlock.height] ||
       (await this.blockHelper.forceGetBlockByHeight(currentBlock.height, blockGetterHelper));
     if (ignoreOfflineGeneraters) {
@@ -168,45 +174,49 @@ export class BlockGeneratorCalculator {
         throw new RangeError("toTimestamp must be an integer, when you ignore Offline Generaters.");
       }
       /// 快速的跳转到最后一轮，中间掉的轮次都可以忽略
-      const fromTimestamp轮次间隔 = 计算轮次间隔(fromTimestamp);
-      const toTimestamp轮次间隔 = 计算轮次间隔(toTimestamp);
-      if (toTimestamp轮次间隔 > fromTimestamp轮次间隔) {
-        nowTimestamp = 计算某一轮次间隔开始的时间戳(toTimestamp轮次间隔);
+      const fromTimestampInterval = calcRoundInterval(fromTimestamp);
+      const toTimestampInterval = calcRoundInterval(toTimestamp);
+      if (toTimestampInterval > fromTimestampInterval) {
+        nowTimestamp = calcRoundStartTimestamp(toTimestampInterval);
       }
     }
 
     const nextRoundGenerators =
-      上一轮轮末块.height === 1
-        ? (上一轮轮末块 as BFChainCore.GenesisBlock).asset.genesisAsset.nextRoundGenerators
-        : (上一轮轮末块 as BFChainCore.RoundLastBlock).asset.roundLastAsset.nextRoundGenerators;
+      lastRoundEndBlock.height === 1
+        ? (lastRoundEndBlock as BFChainCore.GenesisBlock).asset.genesisAsset.nextRoundGenerators
+        : (lastRoundEndBlock as BFChainCore.RoundLastBlock).asset.roundLastAsset
+            .nextRoundGenerators;
 
-    const 取得剩余可用受托人 = async (掉了多少轮: number) => {
-      //#region 那一轮可使用的受托人
-      const 那一轮可使用的受托人 = new Set<string>();
-      if (掉了多少轮 === 0) {
+    /**取得剩余可用受托人 */
+    const getRestGenerator = async (misRound: number) => {
+      //#region
+      /**那一轮可使用的受托人 */
+      const roundUseableGenertor = new Set<string>();
+      if (misRound === 0) {
         for (const d of nextRoundGenerators) {
-          那一轮可使用的受托人.add(d.address);
+          roundUseableGenertor.add(d.address);
         }
       } else {
-        const 掉到哪一轮 = 当前轮次 - 掉了多少轮;
-        if (掉到哪一轮 <= 1) {
+        /**掉到哪一轮 */
+        const theRound = currentRound - misRound;
+        if (theRound <= 1) {
           /// 创世块那一轮,直接使用传世受托人,不用管第一轮到底是谁在打块
           for (const d of this.config.genesisBlock.asset.genesisAsset.nextRoundGenerators) {
-            那一轮可使用的受托人.add(d.address);
+            roundUseableGenertor.add(d.address);
           }
         } else {
           for (const d of nextRoundGenerators) {
-            那一轮可使用的受托人.add(d.address);
+            roundUseableGenertor.add(d.address);
           }
         }
       }
       //#endregion
 
       //#region 那一轮已经使用的受托人
-      const 那一轮已经使用的受托人 = new Set<string>();
-      for (const block of 这一轮已经出来的区块) {
-        if (计算轮次间隔(block.timestamp) === 掉了多少轮) {
-          那一轮已经使用的受托人.add(
+      const usedGenerators = new Set<string>();
+      for (const block of thisRoundGeneratorBlocks) {
+        if (calcRoundInterval(block.timestamp) === misRound) {
+          usedGenerators.add(
             await this.accountBaseHelper.getAddressFromPublicKey(block.generatorPublicKeyBuffer),
           );
         }
@@ -214,33 +224,34 @@ export class BlockGeneratorCalculator {
       //#endregion
 
       /// RESULT
-      const 剩余可用的受托人 = [] as string[];
-      for (const address of 那一轮可使用的受托人) {
-        if (那一轮已经使用的受托人.has(address)) {
+      /**剩余可用的受托人 */
+      const restGenertors = [] as string[];
+      for (const address of roundUseableGenertor) {
+        if (usedGenerators.has(address)) {
           continue;
         }
-        剩余可用的受托人.push(address);
+        restGenertors.push(address);
       }
-      return 剩余可用的受托人;
+      return restGenertors;
     };
-    const 基于前块的排序种子 = 上一个块的信息.signatureBuffer.reduce((r, v) => r + v, 0);
+    const sortSeed = lastBlockInfo.signatureBuffer.reduce((r, v) => r + v, 0);
 
-    const 对受托人排序 = (候选名单: string[]) => {
-      return 候选名单.slice().sort((a1, a2) => {
+    const sortGenerators = (_generators: string[]) => {
+      return _generators.slice().sort((a1, a2) => {
         const sortRes =
-          this.getAddressSeedMap(基于前块的排序种子).forceGet(a1) -
-          this.getAddressSeedMap(基于前块的排序种子).forceGet(a2);
+          this.getAddressSeedMap(sortSeed).forceGet(a1) -
+          this.getAddressSeedMap(sortSeed).forceGet(a2);
         if (sortRes === 0) {
           // 确保排序稳定
-          return 候选名单.indexOf(a1) - 候选名单.indexOf(a2);
+          return _generators.indexOf(a1) - _generators.indexOf(a2);
         }
         return sortRes;
       });
     };
 
-    const getResult = (选中的受托人: string) => {
+    const getResult = (theAddress: string) => {
       return {
-        address: 选中的受托人,
+        address: theAddress,
         timestamp: this.timeHelper.getTimestampBySlotNumber(
           this.timeHelper.getSlotNumberByTimestamp(nowTimestamp),
         ),
@@ -251,23 +262,25 @@ export class BlockGeneratorCalculator {
 
     //#region 在某一轮轮选择受托人
     while (nowTimestamp <= toTimestamp) {
-      const 现在掉了多少轮 = 计算轮次间隔(nowTimestamp); // <0 的轮次统一使用第一轮的数据
-      const 剩余可用的受托人 = await 取得剩余可用受托人(现在掉了多少轮);
-      const 可用受托人列表元素个数 =
-        (计算某一轮次间隔开始的时间戳(现在掉了多少轮 + 1) - nowTimestamp) /
-        this.config.forgeInterval;
-      if (剩余可用的受托人.length > 可用受托人列表元素个数) {
-        剩余可用的受托人.length = 可用受托人列表元素个数;
+      /**现在掉了多少轮 */
+      const nowMisRound = calcRoundInterval(nowTimestamp); // <0 的轮次统一使用第一轮的数据
+      /**剩余可用的受托人 */
+      const restEnableGenerators = await getRestGenerator(nowMisRound);
+      /**可用受托人列表元素个数 */
+      const count =
+        (calcRoundStartTimestamp(nowMisRound + 1) - nowTimestamp) / this.config.forgeInterval;
+      if (restEnableGenerators.length > count) {
+        restEnableGenerators.length = count;
       }
 
-      const 排序后的受托人列表 = 对受托人排序(剩余可用的受托人);
+      const list = sortGenerators(restEnableGenerators);
 
-      let 当前轮的掉线列表: string[] | undefined;
+      let misList: string[] | undefined;
 
       do {
-        const 选中的受托人 = 排序后的受托人列表.shift();
+        const theAddress = list.shift();
 
-        if (!选中的受托人) {
+        if (!theAddress) {
           break;
         }
 
@@ -275,31 +288,29 @@ export class BlockGeneratorCalculator {
         if (yieldSkip > 1) {
           if (++yieldCount === yieldSkip || nowTimestamp === toTimestamp) {
             yieldCount = 0;
-            yield getResult(选中的受托人);
+            yield getResult(theAddress);
           }
         } else {
-          yield getResult(选中的受托人);
+          yield getResult(theAddress);
         }
 
         // 外界否定这个选中的受托人，那么将之推到掉线的列表中
-        (当前轮的掉线列表 || (当前轮的掉线列表 = 结果掉块信息.forceGet(现在掉了多少轮))).push(
-          选中的受托人,
-        );
+        (misList || (misList = resultMisBlockMap.forceGet(nowMisRound))).push(theAddress);
         nowTimestamp += this.config.forgeInterval;
-      } while (排序后的受托人列表.length);
+      } while (list.length);
     }
     //#endregion
   }
 
   getAddressSeedMap = (seed: number) => {
-    const 种子与地址结果值缓存 = new EasyMap((address: string) => {
+    const cacheMap = new EasyMap((address: string) => {
       let num = 0;
       for (let i = 1; i < address.length; i++) {
         num += address.charCodeAt(i);
       }
       return (num * seed) % 256;
     });
-    return 种子与地址结果值缓存;
+    return cacheMap;
   };
 
   async calcNextBlockGenerator(block: BFChainCore.Block) {
