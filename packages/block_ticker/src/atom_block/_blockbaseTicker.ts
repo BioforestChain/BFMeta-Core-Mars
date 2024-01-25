@@ -179,6 +179,7 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
     await blockTickGetterHelper.updateForgingAccount(block, forgingRewards);
     if (circulations > BigInt(0)) {
       await blockTickGetterHelper.accumulateCirculations(
+        block,
         this.configHelper.magic,
         this.configHelper.assetType,
         circulations,

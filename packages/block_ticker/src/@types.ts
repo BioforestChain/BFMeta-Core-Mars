@@ -12,6 +12,11 @@ declare namespace BFChainCore {
       holdingRewardsList: BFChainCore.EntityHolderRewardInfo[],
     ): Promise<void>;
     /**累加流通量 */
-    accumulateCirculations(magic: string, assetType: string, circulations: bigint): Promise<void>;
+    accumulateCirculations(
+      block: Block,
+      magic: string,
+      assetType: string,
+      circulations: bigint,
+    ): Promise<void>;
   }
 }
