@@ -654,21 +654,23 @@ export class BlockHelper {
     };
     let circulations = blockReward;
     // 还有剩余的未流通的主权益，分红总量大于 0，分红 entity 总量大于 0
-    if (blockReward > BigInt(0) && totalShareRewards > BigInt(0) && numberOfShareEntities > 0) {
-      const totalEntities = BigInt(numberOfShareEntities);
-      const holdingRewardsList: BFChainCore.EntityHolderRewardInfo[] = [];
-      for (const holder of holders) {
-        const holderRewards =
-          (totalShareRewards * BigInt(holder.numberOfShareEntities)) / totalEntities;
-        if (holderRewards > BigInt(0)) {
-          circulations = circulations + holderRewards;
-          holdingRewardsList.push({
-            address: holder.address,
-            rewards: holderRewards,
-          });
+    if (blockReward > BigInt(0)) {
+      if (totalShareRewards > BigInt(0) && numberOfShareEntities > 0) {
+        const totalEntities = BigInt(numberOfShareEntities);
+        const holdingRewardsList: BFChainCore.EntityHolderRewardInfo[] = [];
+        for (const holder of holders) {
+          const holderRewards =
+            (totalShareRewards * BigInt(holder.numberOfShareEntities)) / totalEntities;
+          if (holderRewards > BigInt(0)) {
+            circulations = circulations + holderRewards;
+            holdingRewardsList.push({
+              address: holder.address,
+              rewards: holderRewards,
+            });
+          }
         }
+        result.holdingRewardsList = holdingRewardsList;
       }
-      result.holdingRewardsList = holdingRewardsList;
       result.circulations = circulations;
     }
     return result;
