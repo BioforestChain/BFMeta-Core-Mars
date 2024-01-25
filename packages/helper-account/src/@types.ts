@@ -1,7 +1,7 @@
 declare namespace BFChainCore {
   type EntityHolderInfo = {
     address: string;
-    numberOfForgeEntities: number;
+    numberOfShareEntities: number;
   };
   type AccountInfo = {
     address: string;

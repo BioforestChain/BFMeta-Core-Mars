@@ -78,7 +78,7 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
     const holders = await accountGetterHelper.getShareEntityHolders();
     let totalEntities = 0;
     for (const holder of holders) {
-      totalEntities += holder.numberOfForgeEntities;
+      totalEntities += holder.numberOfShareEntities;
     }
     // 不需要进行排序，得到的奖励只和账户持仓数量有关，分配剩余的奖励不处理
     return {
@@ -129,6 +129,19 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
       const blocks = await blockGetterHelper.getBlocksByRange(minHeight, block.height);
       for (const block of blocks) {
         totalShareRewards += BigInt(block.totalFee);
+      }
+      const assets = await accountGetterHelper.getAsset(
+        this.configHelper.magic,
+        this.configHelper.assetType,
+      );
+      if (!assets) {
+        throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
+          prop: `asset(${this.configHelper.magic}-${this.configHelper.assetType})`,
+          target: "blockChain",
+        });
+      }
+      if (assets.issuedAssetPrealnum - assets.circulatedAssetPrealnum < totalShareRewards) {
+        totalShareRewards = assets.issuedAssetPrealnum - assets.circulatedAssetPrealnum;
       }
     }
     const blockUpdateData = this.blockHelper.calcForginAndHoldingRewards(

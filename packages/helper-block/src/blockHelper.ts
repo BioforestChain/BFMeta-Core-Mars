@@ -635,30 +635,31 @@ export class BlockHelper {
    * 计算打块账户和持股账户的奖励
    *
    * @param block
-   * @param numberOfForgeEntities
+   * @param totalShareRewards
+   * @param numberOfShareEntities
+   * @param holders
    * @returns
    */
   calcForginAndHoldingRewards<T extends Block>(
     block: T,
     totalShareRewards: bigint,
-    numberOfForgeEntities: number,
+    numberOfShareEntities: number,
     holders: BFChainCore.EntityHolderInfo[],
   ) {
-    const blockFee = BigInt(block.totalFee);
     const blockReward = BigInt(block.reward);
     const result: BFChainCore.BlockUpdateDataInfo = {
-      forgingRewards: blockFee + blockReward,
+      forgingRewards: BigInt(block.totalFee) + blockReward,
       holdingRewardsList: [],
       circulations: BigInt(0),
     };
     let circulations = blockReward;
-    // 还有剩余的未流通的主权益，块内有交易，分红 entity 总量大于 0
-    if (blockReward > BigInt(0) && blockFee > BigInt(0) && numberOfForgeEntities > 0) {
-      const totalEntities = BigInt(numberOfForgeEntities);
+    // 还有剩余的未流通的主权益，分红总量大于 0，分红 entity 总量大于 0
+    if (blockReward > BigInt(0) && totalShareRewards > BigInt(0) && numberOfShareEntities > 0) {
+      const totalEntities = BigInt(numberOfShareEntities);
       const holdingRewardsList: BFChainCore.EntityHolderRewardInfo[] = [];
       for (const holder of holders) {
         const holderRewards =
-          (totalShareRewards * BigInt(holder.numberOfForgeEntities)) / totalEntities;
+          (totalShareRewards * BigInt(holder.numberOfShareEntities)) / totalEntities;
         if (holderRewards > BigInt(0)) {
           circulations = circulations + holderRewards;
           holdingRewardsList.push({
