@@ -4,6 +4,7 @@ import "./dappPurchasing";
 import "./mark";
 import "./registerChain";
 import "./issueAsset";
+import "./increaseAsset";
 import "./transferAsset";
 import "./destroyAsset";
 import "./toExchangeAsset";

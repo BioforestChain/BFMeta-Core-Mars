@@ -42,6 +42,7 @@
     "src/atom_transaction/grabAny.transaction.ts",
     "src/atom_transaction/grabAsset.transaction.ts",
     "src/atom_transaction/immigrateAsset.transaction.ts",
+    "src/atom_transaction/increaseAsset.transaction.ts",
     "src/atom_transaction/index.ts",
     "src/atom_transaction/issueAsset.transaction.ts",
     "src/atom_transaction/issueCertificate.transaction.ts",

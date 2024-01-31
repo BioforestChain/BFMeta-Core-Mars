@@ -331,6 +331,7 @@ export const TRANSACTION_FACTORY_TYPES_MAP = (() => {
       [TRANSACTION_TYPES_BASE.MARK, ATOM_TRSFAC.MarkTransactionFactory],
 
       [TRANSACTION_TYPES_BASE.ISSUE_ASSET, ATOM_TRSFAC.IssueAssetTransactionFactory],
+      [TRANSACTION_TYPES_BASE.INCREASE_ASSET, ATOM_TRSFAC.IncreaseAssetTransactionFactory],
       [TRANSACTION_TYPES_BASE.DESTROY_ASSET, ATOM_TRSFAC.DestroyAssetTransactionFactory],
       [TRANSACTION_TYPES_BASE.TRANSFER_ASSET, ATOM_TRSFAC.TransferAssetTransactionFactory],
       [TRANSACTION_TYPES_BASE.TO_EXCHANGE_ASSET, ATOM_TRSFAC.ToExchangeAssetTransactionFactory],

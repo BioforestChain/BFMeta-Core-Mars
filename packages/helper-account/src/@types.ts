@@ -224,7 +224,7 @@ declare namespace BFChainCore {
     isPossessFrozenAssetExceptMain(address: string): Promise<boolean>;
     /**是否冻结权益 */
     isFrozenAsset(address: string): Promise<boolean>;
-    /**查询指定的数字资产 */
+    /**查询指定的同质资产 */
     getAsset(magic: string, assetType: string): Promise<IAI | undefined>;
     /**查询指定的资产名 */
     getCurrency(currencyName: string): Promise<CI | undefined>;

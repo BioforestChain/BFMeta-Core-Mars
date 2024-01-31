@@ -205,7 +205,7 @@ export class IssueCertificateTransactionFactory extends TransactionFactory<Issue
       const { senderId, recipientId, senderPublicKeyBuffer } = transaction;
       const { sourceChainName, sourceChainMagic, certificateId, type } =
         transaction.asset.issueCertificate;
-      // 发行数字资产
+      // 发行凭证
       taskList.next = eventEmitter.emit("issueCertificate", {
         type: "issueCertificate",
         transaction,

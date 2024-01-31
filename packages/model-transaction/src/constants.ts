@@ -15,26 +15,28 @@ export enum TRANSACTION_TYPES_BASE {
 
   /**创建权益 */
   ISSUE_ASSET = "AST-00",
+  /**增发权益 */
+  INCREASE_ASSET = "AST-01",
   /**权益转移 */
-  TRANSFER_ASSET = "AST-01",
+  TRANSFER_ASSET = "AST-02",
   /**权益销毁 */
-  DESTROY_ASSET = "AST-02",
+  DESTROY_ASSET = "AST-03",
   /**发起权益赠送 */
-  GIFT_ASSET = "AST-03",
+  GIFT_ASSET = "AST-04",
   /**接受权益赠送 */
-  GRAB_ASSET = "AST-04",
+  GRAB_ASSET = "AST-05",
   /**发起权益委托 */
-  TRUST_ASSET = "AST-05",
+  TRUST_ASSET = "AST-06",
   /**签收权益委托 */
-  SIGN_FOR_ASSET = "AST-06",
+  SIGN_FOR_ASSET = "AST-07",
   /**权益迁出 */
-  EMIGRATE_ASSET = "AST-07",
+  EMIGRATE_ASSET = "AST-08",
   /**权益迁入 */
-  IMMIGRATE_ASSET = "AST-08",
+  IMMIGRATE_ASSET = "AST-09",
   /**发起权益交换 */
-  TO_EXCHANGE_ASSET = "AST-09",
+  TO_EXCHANGE_ASSET = "AST-10",
   /**接受权益交换 */
-  BE_EXCHANGE_ASSET = "AST-10",
+  BE_EXCHANGE_ASSET = "AST-11",
   /**注册/注销位名 */
   LOCATION_NAME = "LNS-00",
   /**设置位名解析值 */

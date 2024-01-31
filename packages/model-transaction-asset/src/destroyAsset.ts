@@ -9,16 +9,16 @@ export class DestroyAssetModel
   extends Message<DestroyAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.DestroyAssetJSON>
 {
-  /**欲销毁的数字资产来源链名 */
+  /**欲销毁的同质资产来源链名 */
   @Field.d(1, "string")
   sourceChainName!: string;
-  /**欲销毁的数字资产来源链网络标识符 */
+  /**欲销毁的同质资产来源链网络标识符 */
   @Field.d(2, "string")
   sourceChainMagic!: string;
-  /**欲销毁的数字资产名 */
+  /**欲销毁的同质资产名 */
   @Field.d(3, "string")
   assetType!: string;
-  /**欲销毁的数字资产数量 */
+  /**欲销毁的同质资产数量 */
   @Field.d(4, "string")
   amount!: string;
   toJSON() {

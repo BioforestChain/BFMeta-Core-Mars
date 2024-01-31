@@ -113,6 +113,10 @@ export class TransactionHelper {
   get ISSUE_ASSET() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.ISSUE_ASSET);
   }
+  /** INCREASE_ASSET: 增发权益 */
+  get INCREASE_ASSET() {
+    return this.getTransactionType(TRANSACTION_TYPES_BASE.INCREASE_ASSET);
+  }
   /** DESTROY_ASSET: 销毁权益 */
   get DESTROY_ASSET() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.DESTROY_ASSET);
@@ -272,6 +276,7 @@ export class TransactionHelper {
     this.REGISTER_CHAIN,
     this.MARK,
     this.ISSUE_ASSET,
+    this.INCREASE_ASSET,
     this.DESTROY_ASSET,
     this.TRANSFER_ASSET,
     this.TO_EXCHANGE_ASSET,

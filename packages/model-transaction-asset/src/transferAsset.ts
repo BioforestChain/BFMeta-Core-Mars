@@ -9,10 +9,10 @@ export class TransferAssetModel
   extends Message<TransferAssetModel>
   implements BFChainCore.AssetJSONToModelType<BFChainCore.TransferAssetJSON>
 {
-  /**欲转账的数字资产所属链名 */
+  /**欲转账的同质资产所属链名 */
   @Field.d(1, "string")
   sourceChainName!: string;
-  /**欲转账的数字资产所属链网络标识符 */
+  /**欲转账的同质资产所属链网络标识符 */
   @Field.d(2, "string")
   sourceChainMagic!: string;
   @Field.d(3, "string")

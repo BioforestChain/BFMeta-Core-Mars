@@ -145,6 +145,22 @@ declare namespace BFChainCore {
     /**发行权益事件附带信息 */
     issueAsset: IssueAssetJSON;
   }
+  interface IncreaseAssetJSON {
+    /**权益所属链名，小写字母组成，5-20 位 */
+    sourceChainName: string;
+    /**权益所属链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
+    sourceChainMagic: string;
+    /**权益名称，大写字母组成，3-10 个字符 */
+    assetType: string;
+    /**增发的权益数量 */
+    increasedAssetPrealnum: string;
+    /**质押的主权益数量 */
+    frozenMainAssetPrealnum: string;
+  }
+  interface IncreaseAssetAssetJSON {
+    /**发行权益事件附带信息 */
+    increaseAsset: IncreaseAssetJSON;
+  }
   interface TransferAssetJSON {
     /**转移的权益所属链名，小写字母组成，5-20 位 */
     sourceChainName: string;
@@ -731,7 +747,10 @@ declare namespace BFChainCore {
     IssueAssetAssetJSON,
     { hasRecipientId: true }
   >;
-  type IssueAssetTransactionV1JSON = IssueAssetTransactionJSON;
+  type IncreaseAssetTransactionJSON = TransactionMixJSON<
+    IncreaseAssetAssetJSON,
+    { hasRecipientId: true }
+  >;
   type TransferAssetTransactionJSON = TransactionMixJSON<
     TransferAssetAssetJSON,
     { hasRecipientId: true }

@@ -42,6 +42,7 @@
     "src/atom_transactionLogicVerifier/grabLogicVerifier/index.ts",
     "src/atom_transactionLogicVerifier/helperLogicVerifier.ts",
     "src/atom_transactionLogicVerifier/immigrateAssetLogicVerifier.ts",
+    "src/atom_transactionLogicVerifier/increaseAssetLogicVerifier.ts",
     "src/atom_transactionLogicVerifier/index.ts",
     "src/atom_transactionLogicVerifier/issueAssetLogicVerifier.ts",
     "src/atom_transactionLogicVerifier/issueCertificateLogicVerifier.ts",

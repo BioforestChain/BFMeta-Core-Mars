@@ -211,18 +211,30 @@ declare namespace BFChainCore {
     sourceChainName: string;
     genesisAddress: string;
   }
-  /**发行数字资产的相关事件 */
+  /**发行同质资产的相关事件 */
   type ApplyTransactionIssueAssetEvent<
     EVENTNAME,
     T extends Transaction = Transaction,
   > = ApplyTransactionEvent<ApplyInfo_IssueAsset, EVENTNAME, T>;
+
+  interface ApplyInfo_IncreaseAsset extends ApplyInfo_Asset {
+    address: string;
+    publicKeyBuffer?: Uint8Array;
+    sourceChainName: string;
+    applyAddress: string;
+  }
+  /**增发同质资产的相关事件 */
+  type ApplyTransactionIncreaseAssetEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_IncreaseAsset, EVENTNAME, T>;
 
   interface ApplyInfo_DestroyAsset extends ApplyInfo_Asset {
     address: string;
     publicKeyBuffer?: Uint8Array;
     assetsApplyAddress: string;
   }
-  /**销毁数字资产的相关事件 */
+  /**销毁同质资产的相关事件 */
   type ApplyTransactionDestroyAssetEvent<
     EVENTNAME,
     T extends Transaction = Transaction,
@@ -731,11 +743,18 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction").BeExchangeAnyMultiAllTransaction
       >
     >;
-    /**发行数字资产 */
+    /**发行同质资产 */
     issueAsset: BFChainUtil.EventInOut<
       ApplyTransactionIssueAssetEvent<
         "issueAsset",
         import("@bfchain/core-model-transaction").IssueAssetTransaction
+      >
+    >;
+    /**增发同质资产 */
+    increaseAsset: BFChainUtil.EventInOut<
+      ApplyTransactionIncreaseAssetEvent<
+        "increaseAsset",
+        import("@bfchain/core-model-transaction").IncreaseAssetTransaction
       >
     >;
     /**注册链 */

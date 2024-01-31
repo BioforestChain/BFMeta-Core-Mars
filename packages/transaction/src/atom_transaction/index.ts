@@ -4,6 +4,7 @@ export * from "./dapp";
 export * from "./dappPurchasing";
 export * from "./mark";
 export * from "./issueAsset";
+export * from "./increaseAsset";
 
 export * from "./transfer";
 

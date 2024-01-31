@@ -82,7 +82,7 @@ async function getToExchangeAnyMultiTransaction(
       toExchangeAssets: [
         {
           toExchangeSource: bfchainCore.config.magic,
-          toExchangeChainName: "bfchain",
+          toExchangeChainName: bfchainCore.config.chainName,
           toExchangeParentAssetType: PARENT_ASSET_TYPE.ASSETS,
           toExchangeAssetType: "BFT",
           toExchangeAssetPrealnum: "100",
@@ -93,7 +93,7 @@ async function getToExchangeAnyMultiTransaction(
         },
         {
           toExchangeSource: bfchainCore.config.magic,
-          toExchangeChainName: "bfchain",
+          toExchangeChainName: bfchainCore.config.chainName,
           toExchangeParentAssetType: PARENT_ASSET_TYPE.ASSETS,
           toExchangeAssetType: "CCC",
           toExchangeAssetPrealnum: "100",
@@ -104,7 +104,7 @@ async function getToExchangeAnyMultiTransaction(
         },
         {
           toExchangeSource: bfchainCore.config.magic,
-          toExchangeChainName: "bfchain",
+          toExchangeChainName: bfchainCore.config.chainName,
           toExchangeParentAssetType: PARENT_ASSET_TYPE.DAPP,
           toExchangeAssetType: getRandomDAppId(),
           toExchangeAssetPrealnum: "1",
@@ -112,19 +112,19 @@ async function getToExchangeAnyMultiTransaction(
       ],
       beExchangeAsset: {
         beExchangeSource: bfchainCore.config.magic,
-        beExchangeChainName: "bfchain",
+        beExchangeChainName: bfchainCore.config.chainName,
         beExchangeParentAssetType: PARENT_ASSET_TYPE.ASSETS,
         beExchangeAssetType: "QAQ",
         beExchangeAssetPrealnum: "1000",
 
         // beExchangeSource: bfchainCore.config.magic,
-        // beExchangeChainName: "bfchain",
+        // beExchangeChainName: bfchainCore.config.chainName,
         // beExchangeParentAssetType: PARENT_ASSET_TYPE.LOCATION_NAME,
         // beExchangeAssetType: `hylq.${bfchainCore.config.chainName}`,
         // beExchangeAssetPrealnum: "1",
 
         //   beExchangeSource: bfchainCore.config.magic,
-        //   beExchangeChainName: "bfchain",
+        //   beExchangeChainName: bfchainCore.config.chainName,
         //   beExchangeParentAssetType: PARENT_ASSET_TYPE.ENTITY,
         //   beExchangeAssetType: "skyrim_hylq",
         //   beExchangeAssetPrealnum: "1",
@@ -144,7 +144,7 @@ async function getToExchangeAnyMultiTransaction(
       toExchangeAssets: [
         {
           toExchangeSource: bfchainCore.config.magic,
-          toExchangeChainName: "bfchain",
+          toExchangeChainName: bfchainCore.config.chainName,
           toExchangeParentAssetType: PARENT_ASSET_TYPE.DAPP,
           toExchangeAssetType: getRandomDAppId(),
           toExchangeAssetPrealnum: "1",
@@ -152,7 +152,7 @@ async function getToExchangeAnyMultiTransaction(
       ],
       beExchangeAsset: {
         beExchangeSource: bfchainCore.config.magic,
-        beExchangeChainName: "bfchain",
+        beExchangeChainName: bfchainCore.config.chainName,
         beExchangeParentAssetType: PARENT_ASSET_TYPE.ASSETS,
         beExchangeAssetType: "BFT",
         beExchangeAssetPrealnum: "100",
@@ -168,7 +168,7 @@ async function getToExchangeAnyMultiTransaction(
       toExchangeAssets: [
         {
           toExchangeSource: bfchainCore.config.magic,
-          toExchangeChainName: "bfchain",
+          toExchangeChainName: bfchainCore.config.chainName,
           toExchangeParentAssetType: PARENT_ASSET_TYPE.LOCATION_NAME,
           toExchangeAssetType: `hylq.${bfchainCore.config.chainName}`,
           toExchangeAssetPrealnum: "1",
@@ -176,7 +176,7 @@ async function getToExchangeAnyMultiTransaction(
       ],
       beExchangeAsset: {
         beExchangeSource: bfchainCore.config.magic,
-        beExchangeChainName: "bfchain",
+        beExchangeChainName: bfchainCore.config.chainName,
         beExchangeParentAssetType: PARENT_ASSET_TYPE.ASSETS,
         beExchangeAssetType: "BFT",
         beExchangeAssetPrealnum: "100",
@@ -192,7 +192,7 @@ async function getToExchangeAnyMultiTransaction(
       toExchangeAssets: [
         {
           toExchangeSource: bfchainCore.config.magic,
-          toExchangeChainName: "bfchain",
+          toExchangeChainName: bfchainCore.config.chainName,
           toExchangeParentAssetType: PARENT_ASSET_TYPE.ENTITY,
           toExchangeAssetType: `skyrim_hylq`,
           toExchangeAssetPrealnum: "1",
@@ -204,7 +204,7 @@ async function getToExchangeAnyMultiTransaction(
       ],
       beExchangeAsset: {
         beExchangeSource: bfchainCore.config.magic,
-        beExchangeChainName: "bfchain",
+        beExchangeChainName: bfchainCore.config.chainName,
         beExchangeParentAssetType: PARENT_ASSET_TYPE.ASSETS,
         beExchangeAssetType: "BFT",
         beExchangeAssetPrealnum: "100",
@@ -220,7 +220,7 @@ async function getToExchangeAnyMultiTransaction(
       toExchangeAssets: [
         {
           toExchangeSource: bfchainCore.config.magic,
-          toExchangeChainName: "bfchain",
+          toExchangeChainName: bfchainCore.config.chainName,
           toExchangeParentAssetType: PARENT_ASSET_TYPE.ASSETS,
           toExchangeAssetType: "BFT",
           toExchangeAssetPrealnum: "100",
@@ -228,7 +228,7 @@ async function getToExchangeAnyMultiTransaction(
       ],
       beExchangeAsset: {
         beExchangeSource: bfchainCore.config.magic,
-        beExchangeChainName: "bfchain",
+        beExchangeChainName: bfchainCore.config.chainName,
         beExchangeParentAssetType: PARENT_ASSET_TYPE.DAPP,
         beExchangeAssetType: getRandomDAppId(),
         beExchangeAssetPrealnum: "1",
@@ -244,7 +244,7 @@ async function getToExchangeAnyMultiTransaction(
       toExchangeAssets: [
         {
           toExchangeSource: bfchainCore.config.magic,
-          toExchangeChainName: "bfchain",
+          toExchangeChainName: bfchainCore.config.chainName,
           toExchangeParentAssetType: PARENT_ASSET_TYPE.ASSETS,
           toExchangeAssetType: "BFT",
           toExchangeAssetPrealnum: "100",
@@ -252,7 +252,7 @@ async function getToExchangeAnyMultiTransaction(
       ],
       beExchangeAsset: {
         beExchangeSource: bfchainCore.config.magic,
-        beExchangeChainName: "bfchain",
+        beExchangeChainName: bfchainCore.config.chainName,
         beExchangeParentAssetType: PARENT_ASSET_TYPE.LOCATION_NAME,
         beExchangeAssetType: `hylq.${bfchainCore.config.chainName}`,
         beExchangeAssetPrealnum: "1",
@@ -268,7 +268,7 @@ async function getToExchangeAnyMultiTransaction(
       toExchangeAssets: [
         {
           toExchangeSource: bfchainCore.config.magic,
-          toExchangeChainName: "bfchain",
+          toExchangeChainName: bfchainCore.config.chainName,
           toExchangeParentAssetType: PARENT_ASSET_TYPE.ASSETS,
           toExchangeAssetType: "BFT",
           toExchangeAssetPrealnum: "100",
@@ -276,7 +276,7 @@ async function getToExchangeAnyMultiTransaction(
       ],
       beExchangeAsset: {
         beExchangeSource: bfchainCore.config.magic,
-        beExchangeChainName: "bfchain",
+        beExchangeChainName: bfchainCore.config.chainName,
         beExchangeParentAssetType: PARENT_ASSET_TYPE.ENTITY,
         beExchangeAssetType: "skyrim_hylq",
         beExchangeAssetPrealnum: "1",
@@ -296,7 +296,7 @@ async function getToExchangeAnyMultiTransaction(
       toExchangeAssets: [
         {
           toExchangeSource: bfchainCore.config.magic,
-          toExchangeChainName: "bfchain",
+          toExchangeChainName: bfchainCore.config.chainName,
           toExchangeParentAssetType: PARENT_ASSET_TYPE.DAPP,
           toExchangeAssetType: getRandomDAppId(),
           toExchangeAssetPrealnum: "1",
@@ -304,7 +304,7 @@ async function getToExchangeAnyMultiTransaction(
       ],
       beExchangeAsset: {
         beExchangeSource: bfchainCore.config.magic,
-        beExchangeChainName: "bfchain",
+        beExchangeChainName: bfchainCore.config.chainName,
         beExchangeParentAssetType: PARENT_ASSET_TYPE.ENTITY,
         beExchangeAssetType: "skyrim_hylq",
         beExchangeAssetPrealnum: "1",
@@ -324,28 +324,28 @@ async function getToExchangeAnyMultiTransaction(
       toExchangeAssets: [
         {
           toExchangeSource: bfchainCore.config.magic,
-          toExchangeChainName: "bfchain",
+          toExchangeChainName: bfchainCore.config.chainName,
           toExchangeParentAssetType: PARENT_ASSET_TYPE.ASSETS,
           toExchangeAssetType: "BFT",
           toExchangeAssetPrealnum: "100",
         },
         {
           toExchangeSource: bfchainCore.config.magic,
-          toExchangeChainName: "bfchain",
+          toExchangeChainName: bfchainCore.config.chainName,
           toExchangeParentAssetType: PARENT_ASSET_TYPE.DAPP,
           toExchangeAssetType: getRandomDAppId(),
           toExchangeAssetPrealnum: "1",
         },
         {
           toExchangeSource: bfchainCore.config.magic,
-          toExchangeChainName: "bfchain",
+          toExchangeChainName: bfchainCore.config.chainName,
           toExchangeParentAssetType: PARENT_ASSET_TYPE.LOCATION_NAME,
           toExchangeAssetType: `llq.${bfchainCore.config.chainName}`,
           toExchangeAssetPrealnum: "1",
         },
         {
           toExchangeSource: bfchainCore.config.magic,
-          toExchangeChainName: "bfchain",
+          toExchangeChainName: bfchainCore.config.chainName,
           toExchangeParentAssetType: PARENT_ASSET_TYPE.CERTIFICATE,
           toExchangeAssetType: getRandomCertificateId(),
           toExchangeAssetPrealnum: "1",
@@ -353,7 +353,7 @@ async function getToExchangeAnyMultiTransaction(
       ],
       beExchangeAsset: {
         beExchangeSource: bfchainCore.config.magic,
-        beExchangeChainName: "bfchain",
+        beExchangeChainName: bfchainCore.config.chainName,
         beExchangeParentAssetType: PARENT_ASSET_TYPE.ENTITY,
         beExchangeAssetType: "skyrim_hylq",
         beExchangeAssetPrealnum: "1",

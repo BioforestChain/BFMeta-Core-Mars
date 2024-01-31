@@ -1,5 +1,5 @@
 import { TransactionFactory } from "./_txbase";
-import { IssueAssetTransaction, ACCOUNT_STATUS } from "@bfchain/core-model";
+import { IncreaseAssetTransaction, PARENT_ASSET_TYPE } from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
@@ -11,15 +11,15 @@ import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception
 import { Injectable, wrapTaskList } from "@bfchain/util";
 const { ArgumentIllegalException } = CoreExceptionGenerator(
   "CONTROLLER",
-  "IssueAssetTransactionFactory",
+  "IncreaseAssetTransactionFactory",
 );
 
 /**
- * issueAsset 交易工厂
+ * increaseAsset 交易工厂
  *
  */
 @Injectable()
-export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetTransaction> {
+export class IncreaseAssetTransactionFactory extends TransactionFactory<IncreaseAssetTransaction> {
   constructor(
     public accountBaseHelper: AccountBaseHelper,
     public transactionHelper: TransactionHelper,
@@ -34,14 +34,14 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
    * 校验输入信息
    *
    * @param body
-   * @param issueAssetAsset
+   * @param increaseAssetAsset
    */
   async verifyTransactionBody(
     body: BFChainCore.TxBodyJSON,
-    issueAssetAsset: BFChainCore.IssueAssetAssetJSON,
+    increaseAssetAsset: BFChainCore.IncreaseAssetAssetJSON,
     config = this.configHelper,
   ) {
-    await super.verifyTransactionBody(body, issueAssetAsset, config);
+    await super.verifyTransactionBody(body, increaseAssetAsset, config);
 
     const Function_Exception_Detail = {
       target: "body",
@@ -104,23 +104,28 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
       });
     }
 
-    const issueAsset = issueAssetAsset.issueAsset;
+    const increaseAsset = increaseAssetAsset.increaseAsset;
 
-    if (!issueAsset) {
+    if (!increaseAsset) {
       throw new ArgumentIllegalException(ERROR_LIST.PARAM_LOST, {
-        param: "issueAsset",
+        param: "increaseAsset",
       });
     }
 
-    const IssueAssetAsset_Exception_Detail = {
+    const IncreaseAssetAsset_Exception_Detail = {
       ...Function_Exception_Detail,
-      target: "issueAssetAsset",
+      target: "increaseAssetAsset",
     } as const;
 
-    const { sourceChainName, sourceChainMagic, assetType, expectedIssuedAssets } = issueAsset;
+    const {
+      sourceChainName,
+      sourceChainMagic,
+      assetType,
+      increasedAssetPrealnum,
+      frozenMainAssetPrealnum,
+    } = increaseAsset;
 
-    this.checkChainName(sourceChainName, "sourceChainName", IssueAssetAsset_Exception_Detail);
-
+    this.checkChainName(sourceChainName, "sourceChainName", IncreaseAssetAsset_Exception_Detail);
     if (sourceChainName !== config.chainName) {
       throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `sourceChainName ${sourceChainName}`,
@@ -130,8 +135,7 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
       });
     }
 
-    this.checkChainMagic(sourceChainMagic, "sourceChainMagic", IssueAssetAsset_Exception_Detail);
-
+    this.checkChainMagic(sourceChainMagic, "sourceChainMagic", IncreaseAssetAsset_Exception_Detail);
     if (sourceChainMagic !== config.magic) {
       throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
         to_compare_prop: `sourceChainMagic ${sourceChainMagic}`,
@@ -141,29 +145,18 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
       });
     }
 
-    if (!assetType) {
-      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
-        prop: "assetType",
-        ...IssueAssetAsset_Exception_Detail,
-      });
-    }
-
-    if (!baseHelper.isUpperCaseLetter(assetType)) {
-      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: `assetType ${assetType}`,
-        type: "uppercase",
-        ...IssueAssetAsset_Exception_Detail,
-      });
-    }
-
-    const len = assetType.length;
-    if (len < 3 || len > 5) {
-      throw new ArgumentIllegalException(ERROR_LIST.NOT_IN_EXPECTED_RANGE, {
-        prop: `assetType ${assetType}`,
-        type: "string length",
-        min: 3,
-        max: 5,
-        ...IssueAssetAsset_Exception_Detail,
+    this.checkAssetType(
+      PARENT_ASSET_TYPE.ASSETS,
+      assetType,
+      "assetType",
+      IncreaseAssetAsset_Exception_Detail,
+    );
+    if (assetType === config.assetType) {
+      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
+        to_compare_prop: `assetType ${assetType}`,
+        to_target: "body",
+        be_compare_prop: "local chain assetType",
+        ...Function_Exception_Detail,
       });
     }
 
@@ -172,45 +165,57 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
         to_compare_prop: `storage.value ${storage.value}`,
         be_compare_prop: `assetType ${assetType}`,
         to_target: "storage",
-        be_target: "issueAsset",
+        be_target: "increaseAsset",
         ...Function_Exception_Detail,
       });
     }
 
-    if (!expectedIssuedAssets) {
+    if (!increasedAssetPrealnum) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
-        prop: "expectedIssuedAssets",
-        ...IssueAssetAsset_Exception_Detail,
+        prop: "increasedAssetPrealnum",
+        ...IncreaseAssetAsset_Exception_Detail,
       });
     }
-
-    if (!baseHelper.isValidAssetNumber(expectedIssuedAssets)) {
+    if (!baseHelper.isValidAssetNumber(increasedAssetPrealnum)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: `expectedIssuedAssets ${expectedIssuedAssets}`,
+        prop: `increasedAssetPrealnum ${increasedAssetPrealnum}`,
         type: "asset number",
-        ...IssueAssetAsset_Exception_Detail,
+        ...IncreaseAssetAsset_Exception_Detail,
+      });
+    }
+    if (BigInt(increasedAssetPrealnum) <= BigInt(0)) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
+        prop: "increasedAssetPrealnum",
+        field: "0",
+        ...IncreaseAssetAsset_Exception_Detail,
       });
     }
 
-    if (BigInt(expectedIssuedAssets) <= BigInt(0)) {
-      throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
-        prop: "expectedIssuedAssets",
-        field: "0",
-        ...IssueAssetAsset_Exception_Detail,
+    if (!frozenMainAssetPrealnum) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
+        prop: "frozenMainAssetPrealnum",
+        ...IncreaseAssetAsset_Exception_Detail,
+      });
+    }
+    if (!baseHelper.isValidAssetNumber(frozenMainAssetPrealnum)) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+        prop: `frozenMainAssetPrealnum ${frozenMainAssetPrealnum}`,
+        type: "asset number",
+        ...IncreaseAssetAsset_Exception_Detail,
       });
     }
   }
 
   /**
-   * 初始化 issueAsset 交易
+   * 初始化 increaseAsset 交易
    *
    * @param body
-   * @param issueAsset
+   * @param increaseAsset
    */
-  init(body: BFChainCore.TxBodyJSON, issueAsset: BFChainCore.IssueAssetAssetJSON) {
-    const transaction = IssueAssetTransaction.fromObject({
+  init(body: BFChainCore.TxBodyJSON, increaseAsset: BFChainCore.IncreaseAssetAssetJSON) {
+    const transaction = IncreaseAssetTransaction.fromObject({
       ...body,
-      asset: issueAsset,
+      asset: increaseAsset,
     });
 
     return transaction;
@@ -223,40 +228,48 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
    * @param eventEmitter
    */
   applyTransaction(
-    transaction: IssueAssetTransaction,
+    transaction: IncreaseAssetTransaction,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ) {
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
       const { senderId, recipientId, senderPublicKeyBuffer } = transaction;
-      const { sourceChainName, sourceChainMagic, assetType, expectedIssuedAssets } =
-        transaction.asset.issueAsset;
-      // 冻结发起账户
-      taskList.next = eventEmitter.emit("frozenAccount", {
-        type: "frozenAccount",
-        transaction,
-        applyInfo: {
-          address: senderId,
-          publicKeyBuffer: senderPublicKeyBuffer,
-          accountStatus: ACCOUNT_STATUS.FROZEN_OUT,
-        },
-      });
+      const {
+        sourceChainName,
+        sourceChainMagic,
+        assetType,
+        increasedAssetPrealnum,
+        frozenMainAssetPrealnum,
+      } = transaction.asset.increaseAsset;
       const assetInfo = this.chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
-      // 发行同质资产
-      taskList.next = eventEmitter.emit("issueAsset", {
-        type: "issueAsset",
+      // 增发同质资产
+      taskList.next = eventEmitter.emit("increaseAsset", {
+        type: "increaseAsset",
         transaction,
         applyInfo: {
           address: senderId,
-          genesisAddress: recipientId,
+          applyAddress: recipientId,
           publicKeyBuffer: senderPublicKeyBuffer,
           sourceChainName,
           assetInfo,
-          amount: expectedIssuedAssets,
-          sourceAmount: expectedIssuedAssets,
+          amount: increasedAssetPrealnum,
+          sourceAmount: increasedAssetPrealnum,
         },
       });
+      const mainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(config.magic, config.assetType);
+      // 扣除主权益
+      taskList.next = this._applyTransactionEmitAsset(
+        eventEmitter,
+        transaction,
+        frozenMainAssetPrealnum,
+        {
+          senderId: transaction.senderId,
+          senderPublicKeyBuffer: transaction.senderPublicKeyBuffer,
+          recipientId: transaction.recipientId,
+          assetInfo: mainAssetInfo,
+        },
+      );
     });
   }
 
@@ -268,15 +281,15 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
    * @returns
    */
   getMoveAmount(
-    transaction: IssueAssetTransaction,
+    transaction: IncreaseAssetTransaction,
     argv = {
       magic: this.configHelper.magic,
       assetType: this.configHelper.assetType,
     },
   ) {
-    const { sourceChainMagic, assetType, expectedIssuedAssets } = transaction.asset.issueAsset;
+    const { sourceChainMagic, assetType, increasedAssetPrealnum } = transaction.asset.increaseAsset;
     if (argv.magic === sourceChainMagic && argv.assetType === assetType) {
-      return expectedIssuedAssets;
+      return increasedAssetPrealnum;
     }
     return "0";
   }

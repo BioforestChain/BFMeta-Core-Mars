@@ -1,30 +1,31 @@
 import {
-  DestroyAssetTransaction,
-  DestroyAssetTransactionFactory,
+  IncreaseAssetTransaction,
+  IncreaseAssetTransactionFactory,
   RANGE_TYPE,
   BFChainCore,
 } from "@bfchain/core";
 import {
   getSenderWithSecondSecret,
   getSenderWithoutSecondSecret,
+  getGenesisAccount,
   AccountModel,
   getBfchainCoreEntry,
-  getGenesisAccount,
   getRandomDAppId,
 } from "../include";
 
 const genesisAddress = getGenesisAccount().address;
-async function getDestroyAssetTransaction(sender: AccountModel, bfchainCore: BFChainCore) {
+async function getIncreaseAssetTransaction(sender: AccountModel, bfchainCore: BFChainCore) {
+  const assetType = "ZEK";
   const keypair = await bfchainCore.accountBaseHelper.createSecretKeypair(sender.secret);
   const data: BFChainCore.TxBodyJSON = {
     version: bfchainCore.config.version,
-    type: bfchainCore.transactionHelper.DESTROY_ASSET, // 交易类型
+    type: bfchainCore.transactionHelper.INCREASE_ASSET, // 交易类型
     senderId: sender.address, // 发起者地址
     senderPublicKey: sender.publicKey, // 发起者公钥
     senderSecondPublicKey: "", // 发起者二次公钥
     recipientId: genesisAddress,
     rangeType: RANGE_TYPE.EMPTY,
-    range: [],
+    range: [], // 资产创世账户地址
     timestamp: 770880, // 生成交易时间戳
     fee: "78622", // 交易手续费
     remark: { remark: "body.remark" }, // 交易备注，任意信息
@@ -37,7 +38,7 @@ async function getDestroyAssetTransaction(sender: AccountModel, bfchainCore: BFC
     effectiveBlockHeight: 10100,
     storage: {
       key: "assetType",
-      value: "ZEK",
+      value: assetType,
     },
   };
   let secondKeypair;
@@ -52,25 +53,27 @@ async function getDestroyAssetTransaction(sender: AccountModel, bfchainCore: BFC
         sender.secondSecret,
       );
   }
-  const trs = await bfchainCore.transaction.createTransaction<DestroyAssetTransaction>(
-    DestroyAssetTransactionFactory,
+  const trs = await bfchainCore.transaction.createTransaction<IncreaseAssetTransaction>(
+    IncreaseAssetTransactionFactory,
     data,
     {
-      destroyAsset: {
+      increaseAsset: {
         sourceChainName: bfchainCore.config.chainName,
         sourceChainMagic: bfchainCore.config.magic,
-        assetType: "ZEK", // 交易的资产类型
-        amount: "10", // 交易资产数量
+        assetType: assetType,
+        increasedAssetPrealnum: "100000000000000",
+        frozenMainAssetPrealnum: "0",
       },
     },
     keypair,
     secondKeypair,
   );
+  await bfchainCore.transaction.getTransactionFactoryFromType(trs.type).verify(trs);
   console.log(trs.toJSON());
 }
 (async () => {
   const bfchainCore = await getBfchainCoreEntry();
 
-  await getDestroyAssetTransaction(getSenderWithSecondSecret(), bfchainCore);
-  await getDestroyAssetTransaction(getSenderWithoutSecondSecret(), bfchainCore);
+  await getIncreaseAssetTransaction(getSenderWithSecondSecret(), bfchainCore);
+  await getIncreaseAssetTransaction(getSenderWithoutSecondSecret(), bfchainCore);
 })();

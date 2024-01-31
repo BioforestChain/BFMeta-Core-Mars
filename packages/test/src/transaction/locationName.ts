@@ -58,7 +58,7 @@ async function getLocationNameTransaction(sender: AccountModel, bfchainCore: BFC
     {
       locationName: {
         name: `q_w_q.ibt.${bfchainCore.config.chainName}`,
-        sourceChainName: "bfchain",
+        sourceChainName: bfchainCore.config.chainName,
         sourceChainMagic: bfchainCore.config.magic,
         operationType: LOCATION_NAME_OPERATION_TYPE.REGISTRATION,
       },

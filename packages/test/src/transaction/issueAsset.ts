@@ -57,7 +57,7 @@ async function getIssueAssetTransaction(sender: AccountModel, bfchainCore: BFCha
     data,
     {
       issueAsset: {
-        sourceChainName: "bfchain",
+        sourceChainName: bfchainCore.config.chainName,
         sourceChainMagic: bfchainCore.config.magic,
         assetType: "ZEK",
         expectedIssuedAssets: "100000000000000",

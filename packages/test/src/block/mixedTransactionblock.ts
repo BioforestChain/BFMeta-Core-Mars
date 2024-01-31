@@ -153,7 +153,7 @@ const generatorsSecret = require(require("path").join(process.cwd(), "./assets/s
         );
     }
     const destroyAsset = {
-      sourceChainName: "bfchain",
+      sourceChainName: bfchainCore.config.chainName,
       sourceChainMagic: "5F720C81E82CFC99",
       assetType: "ZEK",
       amount: "1000",
@@ -403,7 +403,7 @@ const generatorsSecret = require(require("path").join(process.cwd(), "./assets/s
       cipherPublicKeys: [],
       toExchangeSource: "5F720C81E82CFC99",
       beExchangeSource: "RICH",
-      toExchangeChainName: "bfchain",
+      toExchangeChainName: bfchainCore.config.chainName,
       beExchangeChainName: "fucking",
       toExchangeAsset: "BFT",
       beExchangeAsset: "FUCK",
@@ -418,8 +418,8 @@ const generatorsSecret = require(require("path").join(process.cwd(), "./assets/s
     //   recipient,
     //   toExchangeSource: "5F720C81E82CFC99",
     //   beExchangeSource: "5F720C81E82CFC99",
-    //   toExchangeChainName: "bfchain",
-    //   beExchangeChainName: "bfchain",
+    //   toExchangeChainName: bfchainCore.config.chainName,
+    //   beExchangeChainName: bfchainCore.config.chainName,
     //   toExchangeAsset: "BFT",
     //   beExchangeAsset: "BFT",
     //   toExchangeNumber: "1000",

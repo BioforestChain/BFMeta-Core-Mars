@@ -15,10 +15,10 @@ export class IssueAssetModel
   /**发行的资产所属的链网络标识符 */
   @Field.d(2, "string")
   sourceChainMagic!: string;
-  /**发行的数字资产的缩写 */
+  /**发行的同质资产的缩写 */
   @Field.d(3, "string")
   assetType!: string;
-  /**计划发行的数字资产数量 */
+  /**计划发行的同质资产数量 */
   @Field.d(4, "string")
   expectedIssuedAssets!: string;
   toJSON() {

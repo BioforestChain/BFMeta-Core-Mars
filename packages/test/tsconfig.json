@@ -50,6 +50,7 @@
     "src/transaction/grabAny.ts",
     "src/transaction/grabAsset.ts",
     "src/transaction/immigrateAsset.ts",
+    "src/transaction/increaseAsset.ts",
     "src/transaction/index.ts",
     "src/transaction/issueAsset.ts",
     "src/transaction/issueCertificate.ts",

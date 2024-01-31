@@ -3,6 +3,7 @@ export * from "./dapp.transaction";
 export * from "./dappPurchasing.transaction";
 export * from "./mark.transaction";
 export * from "./issueAsset.transaction";
+export * from "./increaseAsset.transaction";
 export * from "./transferAsset.transaction";
 export * from "./destroyAsset.transaction";
 export * from "./toExchangeAsset.transaction";

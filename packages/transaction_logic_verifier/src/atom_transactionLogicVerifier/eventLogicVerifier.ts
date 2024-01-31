@@ -477,10 +477,10 @@ export class EventLogicVerifier {
     // 验证资产是否已经存在
     const memAssets = await this.accountGetterHelper.getAsset(chainMagic, assetType);
     if (memAssets) {
-      throw new ConsensusException(ERROR_LIST.ASSET_NOT_EXIST, {
+      throw new ConsensusException(ERROR_LIST.ASSET_ALREADY_EXIST, {
         magic: chainMagic,
         assetType,
-        errorId: NewTransactionRefuseReason.ASSET_NOT_EXIST,
+        errorId: NewTransactionRefuseReason.ASSET_ALREADY_EXIST,
       });
     }
   }
@@ -490,7 +490,7 @@ export class EventLogicVerifier {
     currentBlockHeight: number,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    // 发行数字资产
+    // 发行同质资产
     eventEmitter.on(
       "issueAsset",
       async ({ transaction, applyInfo }, next) => {
@@ -540,6 +540,57 @@ export class EventLogicVerifier {
         return next();
       },
       { taskname: `applyTransaction/logicVerifier/issueAsset` },
+    );
+  }
+
+  private __listenEventIncreaseAsset(
+    accountMap: Map<string, BFChainCore.AccountInfo>,
+    currentBlockHeight: number,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
+  ) {
+    // 增发同质资产
+    eventEmitter.on(
+      "increaseAsset",
+      async ({ transaction, applyInfo }, next) => {
+        const { address, assetInfo, applyAddress, sourceAmount } = applyInfo;
+        const { magic, assetType } = assetInfo;
+
+        const memAssets = await this.accountGetterHelper.getAsset(magic, assetType);
+        if (!memAssets) {
+          throw new ConsensusException(ERROR_LIST.ASSET_NOT_EXIST, {
+            magic,
+            assetType,
+            errorId: NewTransactionRefuseReason.ASSET_NOT_EXIST,
+          });
+        }
+
+        if (applyAddress !== memAssets.applyAddress) {
+          throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+            to_compare_prop: `applyAddress ${applyAddress}`,
+            to_target: "increaseAsset",
+            be_compare_prop: `applyAddress ${memAssets.applyAddress}`,
+            be_target: "blockChain",
+          });
+        }
+
+        if (address !== memAssets.genesisAddress) {
+          throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+            to_compare_prop: `genesisAddress ${address}`,
+            to_target: "increaseAsset",
+            be_compare_prop: `genesisAddress ${memAssets.genesisAddress}`,
+            be_target: "blockChain",
+          });
+        }
+
+        const { assets } = await this.helperLogicVerifier.getAccountForce(
+          accountMap,
+          address,
+          currentBlockHeight,
+        );
+
+        return next();
+      },
+      { taskname: `applyTransaction/logicVerifier/increaseAsset` },
     );
   }
 

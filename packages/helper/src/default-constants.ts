@@ -30,7 +30,7 @@ export const DEFAULT_CONSTANTS: BFChainCore.DefaultConstantsJSON = {
     // 回滚区块
     rollback: 5,
   },
-  // 禁用的数字资产名称、缩写
+  // 禁用的同质资产名称、缩写
   disableAssetType: [
     "HONGKONGDOLLARS",
     "HKD",

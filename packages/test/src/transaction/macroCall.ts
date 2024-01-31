@@ -73,7 +73,7 @@ async function getGiftAnyTransaction(
   }
   const giftAny: BFChainCore.GiftAnyJSON = {
     cipherPublicKeys: [],
-    sourceChainName: "bfchain",
+    sourceChainName: bfchainCore.config.chainName,
     sourceChainMagic: bfchainCore.config.magic,
     parentAssetType: PARENT_ASSET_TYPE.ASSETS,
     assetType: "BFT", // 交易的资产类型

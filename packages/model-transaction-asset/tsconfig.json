@@ -39,6 +39,7 @@
     "src/grabAny.ts",
     "src/grabAsset.ts",
     "src/immigrateAsset.ts",
+    "src/increaseAsset.ts",
     "src/index.ts",
     "src/issueAsset.ts",
     "src/issueCertificate.ts",

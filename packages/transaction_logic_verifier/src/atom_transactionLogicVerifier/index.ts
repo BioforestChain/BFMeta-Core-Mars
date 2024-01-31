@@ -8,6 +8,7 @@ export * from "./dappPurchasingLogicVerifier";
 export * from "./markLogicVerifier";
 
 export * from "./issueAssetLogicVerifier";
+export * from "./increaseAssetLogicVerifier";
 
 export * from "./transferLogicVerifier";
 

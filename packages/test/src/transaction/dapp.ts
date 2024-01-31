@@ -82,7 +82,7 @@ async function getDappTransaction(
     xx,
     {
       dappid: getRandomDAppId(),
-      sourceChainName: "bfchain",
+      sourceChainName: bfchainCore.config.chainName,
       sourceChainMagic: bfchainCore.config.magic,
       type: DAPP_TYPE.PAID_APP,
       purchaseAsset: "1000",
@@ -94,7 +94,7 @@ async function getDappTransaction(
     xxx,
     {
       dappid: getRandomDAppId(),
-      sourceChainName: "bfchain",
+      sourceChainName: bfchainCore.config.chainName,
       sourceChainMagic: bfchainCore.config.magic,
       type: DAPP_TYPE.FREE_APP,
     },

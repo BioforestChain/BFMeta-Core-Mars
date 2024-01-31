@@ -58,7 +58,7 @@ async function getGiftAssetTransaction(
   }
   const giftAsset: BFChainCore.GiftAssetJSON = {
     cipherPublicKeys: [],
-    sourceChainName: "bfchain",
+    sourceChainName: bfchainCore.config.chainName,
     sourceChainMagic: bfchainCore.config.magic,
     assetType: "ZEK", // 交易的资产类型
     amount: "100000", // 交易资产数量

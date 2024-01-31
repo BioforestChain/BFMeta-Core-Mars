@@ -61,7 +61,7 @@ async function getDappTransaction(sender: AccountModel, bfchainCore: BFChainCore
     {
       dapp: {
         dappid,
-        sourceChainName: "bfchain",
+        sourceChainName: bfchainCore.config.chainName,
         sourceChainMagic: bfchainCore.config.magic,
         type: DAPP_TYPE.PAID_APP,
         purchaseAsset: "1000",

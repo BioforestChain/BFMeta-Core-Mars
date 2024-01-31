@@ -1,8 +1,8 @@
 {
   "name": "@types/bfchain__core-helper-asymmetric",
   "types": "index.d.ts",
-  "version": "10.0.3",
+  "version": "10.0.18",
   "dependencies": {
-    "@types/bfchain__core-typings": "10.0.3"
+    "@types/bfchain__core-typings": "10.0.18"
   }
 }
