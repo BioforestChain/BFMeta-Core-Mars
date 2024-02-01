@@ -115,6 +115,7 @@ declare namespace BFChainCore {
 
   type IssueEntityFactoryInfo = {
     applyAddress: string;
+    genesisAddress: string;
     possessorAddress: string;
     sourceChainName: string;
     sourceChainMagic: string;
