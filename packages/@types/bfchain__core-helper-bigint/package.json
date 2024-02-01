@@ -1,9 +1,9 @@
 {
   "name": "@types/bfchain__core-helper-bigint",
   "types": "index.d.ts",
-  "version": "10.0.18",
+  "version": "10.0.21",
   "dependencies": {
-    "@types/bfchain__core-typings": "10.0.18",
-    "@types/bfchain__core-util-exception-errorcode": "10.0.18"
+    "@types/bfchain__core-typings": "10.0.21",
+    "@types/bfchain__core-util-exception-errorcode": "10.0.21"
   }
 }

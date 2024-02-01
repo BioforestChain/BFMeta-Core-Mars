@@ -29,6 +29,7 @@ const { ArgumentFormatException, error, IllegalStateException } = CoreExceptionG
       [TRANSACTION_TYPES_BASE.MARK, ATOM_TRS.MarkTransaction],
 
       [TRANSACTION_TYPES_BASE.ISSUE_ASSET, ATOM_TRS.IssueAssetTransaction],
+      [TRANSACTION_TYPES_BASE.ISSUE_ASSET, ATOM_TRS.IncreaseAssetTransaction],
       [TRANSACTION_TYPES_BASE.DESTROY_ASSET, ATOM_TRS.DestroyAssetTransaction],
       [TRANSACTION_TYPES_BASE.TRANSFER_ASSET, ATOM_TRS.TransferAssetTransaction],
       [TRANSACTION_TYPES_BASE.TO_EXCHANGE_ASSET, ATOM_TRS.ToExchangeAssetTransaction],
