@@ -255,6 +255,7 @@ export class IncreaseAssetTransactionFactory extends TransactionFactory<Increase
           assetInfo,
           amount: increasedAssetPrealnum,
           sourceAmount: increasedAssetPrealnum,
+          frozenMainAssetPrealnum,
         },
       });
       const mainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(config.magic, config.assetType);

@@ -582,12 +582,6 @@ export class EventLogicVerifier {
           });
         }
 
-        const { assets } = await this.helperLogicVerifier.getAccountForce(
-          accountMap,
-          address,
-          currentBlockHeight,
-        );
-
         return next();
       },
       { taskname: `applyTransaction/logicVerifier/increaseAsset` },
@@ -2226,6 +2220,7 @@ export class EventLogicVerifier {
     this.__listenEventFrozenAccount(accountMap, currentBlockHeight, eventEmitter);
     this.__listenEventSetSecondPublicKey(eventEmitter);
     this.__listenEventIssueAsset(accountMap, currentBlockHeight, eventEmitter);
+    this.__listenEventIncreaseAsset(accountMap, currentBlockHeight, eventEmitter);
     this.__listenEventDestroyAsset(eventEmitter);
     this.__listenEventIssueDAppid(currentBlockHeight, eventEmitter);
     this.__listenEventFrozenDAppid(currentBlockHeight, eventEmitter);

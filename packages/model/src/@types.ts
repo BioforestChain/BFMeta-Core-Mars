@@ -222,6 +222,7 @@ declare namespace BFChainCore {
     publicKeyBuffer?: Uint8Array;
     sourceChainName: string;
     applyAddress: string;
+    frozenMainAssetPrealnum: string;
   }
   /**增发同质资产的相关事件 */
   type ApplyTransactionIncreaseAssetEvent<
