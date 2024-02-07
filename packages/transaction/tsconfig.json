@@ -52,6 +52,7 @@
     "src/atom_transaction/setLnsRecordValue.ts",
     "src/atom_transaction/signature.ts",
     "src/atom_transaction/signForAsset.ts",
+    "src/atom_transaction/stakeAsset.ts",
     "src/atom_transaction/toExchangeAny.ts",
     "src/atom_transaction/toExchangeAnyMulti.ts",
     "src/atom_transaction/toExchangeAnyMultiAll.ts",
@@ -61,6 +62,7 @@
     "src/atom_transaction/transfer/transferAsset.ts",
     "src/atom_transaction/transfer/_transfer.ts",
     "src/atom_transaction/trustAsset.ts",
+    "src/atom_transaction/unstakeAsset.ts",
     "src/atom_transaction/_txbase.ts",
     "src/index.ts",
     "src/transaction.ts"

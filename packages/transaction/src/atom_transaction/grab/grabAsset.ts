@@ -1,6 +1,6 @@
 import { TransactionFactory } from "../_txbase";
 import { GiftAssetTransactionFactory } from "../gift";
-import { GrabAssetTransaction } from "@bfchain/core-model";
+import { FROZEN_REASON, GrabAssetTransaction } from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
@@ -260,8 +260,9 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
           assetInfo,
           amount,
           sourceAmount: amount,
-          frozenId: transactionSignature,
           recipientId, // 资产冻结账户
+          frozenId: transactionSignature,
+          frozenReason: FROZEN_REASON.GIFT,
         },
       });
     });

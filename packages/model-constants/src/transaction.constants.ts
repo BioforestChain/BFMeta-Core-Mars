@@ -165,3 +165,17 @@ export const enum RANGE_TYPE {
   /**位名范围 */
   MULTI_LOCATION_NAME = 4,
 }
+
+/**冻结原因 */
+export enum FROZEN_REASON {
+  /**赠送 */
+  GIFT = 0,
+  /**交换 */
+  EXCHANGE = 1,
+  /**见证 */
+  TRUST = 2,
+  /**发行非同质资产 */
+  ENTITY = 3,
+  /**质押 */
+  STAKE = 4,
+}

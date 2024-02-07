@@ -328,6 +328,42 @@ declare namespace BFChainCore {
     beExchangeAsset: BeExchangeAssetJSON;
   }
 
+  interface StakeAssetJSON {
+    /**质押的唯一索引：1-30个 小写字母 + 数字 */
+    stakeId: string;
+    /**质押的同质资产所属链名，小写字母组成，5-20 位 */
+    sourceChainName: string;
+    /**质押的同质资产所属链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
+    sourceChainMagic: string;
+    /**质押的同质资产名称，大写字母组成，3-10 个字符 */
+    assetType: string;
+    /**质押的同质资产数量，0-9 组成并且不包含小数点，必须大于0 */
+    assetPrealnum: string;
+    /**解除质押的区块高度 */
+    unstakeHeight: number;
+  }
+  interface StakeAssetAssetJSON {
+    /**同质资产质押事件附带信息 */
+    stakeAsset: StakeAssetJSON;
+  }
+
+  interface UnstakeAssetJSON {
+    /**质押的唯一索引：1-30个 小写字母 + 数字 */
+    stakeId: string;
+    /**质押的同质资产所属链名，小写字母组成，5-20 位 */
+    sourceChainName: string;
+    /**质押的同质资产所属链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
+    sourceChainMagic: string;
+    /**质押的同质资产名称，大写字母组成，3-10 个字符 */
+    assetType: string;
+    /**解除质押的同质资产数量，0-9 组成并且不包含小数点，必须大于0 */
+    assetPrealnum: string;
+  }
+  interface UnstakeAssetAssetJSON {
+    /**解除资产质押事件附带信息 */
+    unstakeAsset: UnstakeAssetJSON;
+  }
+
   interface LocationNameJSON {
     /**注册/注销的位名，1-512 个字符，每级位名最大长度为 128 个字符，一级位名只能是小写字母组成，二级及以上开头及结尾只能由小写字母或数字组成，中间可以包含下划线，根位名必须是本链链名 */
     name: string;
@@ -436,6 +472,29 @@ declare namespace BFChainCore {
   interface DestroyEntityAssetJSON {
     /**销毁非同质资产事件附带信息 */
     destroyEntity: DestroyEntityJSON;
+  }
+
+  interface EntityStructJSON {
+    /**非同质资产名称 */
+    entityId: string;
+    /**非同质资产流通需要缴纳的版税 */
+    taxAssetPrealnum: string;
+  }
+  interface IssueEntityMultiJSON {
+    /**非同质资产来源链名，小写字母组成，5-20 位 */
+    sourceChainName: string;
+    /**非同质资产来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
+    sourceChainMagic: string;
+    /**非同质资产列表 */
+    entityStructList: EntityStructJSON[];
+    /**非同质资产模板的拥有者 */
+    entityFactoryPossessor: string;
+    /**非同质资产的模板 */
+    entityFactory: IssueEntityFactoryJSON;
+  }
+  interface IssueEntityMultiAssetJSON {
+    /**发行非同质资产事件附带信息 */
+    issueEntityMulti: IssueEntityMultiJSON;
   }
 
   interface TransferAnyJSON {
@@ -563,30 +622,6 @@ declare namespace BFChainCore {
   interface BeExchangeAnyAssetJSON {
     /**接收资产交换事件附带信息 */
     beExchangeAny: BeExchangeAnyJSON;
-  }
-
-  interface EntityStructJSON {
-    /**非同质资产名称 */
-    entityId: string;
-    /**非同质资产流通需要缴纳的版税 */
-    taxAssetPrealnum: string;
-  }
-
-  interface IssueEntityMultiJSON {
-    /**非同质资产来源链名，小写字母组成，5-20 位 */
-    sourceChainName: string;
-    /**非同质资产来源链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
-    sourceChainMagic: string;
-    /**非同质资产列表 */
-    entityStructList: EntityStructJSON[];
-    /**非同质资产模板的拥有者 */
-    entityFactoryPossessor: string;
-    /**非同质资产的模板 */
-    entityFactory: IssueEntityFactoryJSON;
-  }
-  interface IssueEntityMultiAssetJSON {
-    /**发行非同质资产事件附带信息 */
-    issueEntityMulti: IssueEntityMultiJSON;
   }
 
   interface ToExchangeAssetV1JSON {
@@ -785,6 +820,14 @@ declare namespace BFChainCore {
     BeExchangeAssetAssetJSON,
     { hasRecipientId: true }
   >;
+  type StakeAssetTransactionJSON = TransactionMixJSON<
+    StakeAssetAssetJSON,
+    { hasRecipientId: false }
+  >;
+  type UnstakeAssetTransactionJSON = TransactionMixJSON<
+    UnstakeAssetAssetJSON,
+    { hasRecipientId: false }
+  >;
 
   type LocationNameTransactionJSON = TransactionMixJSON<
     LocationNameAssetJSON,
@@ -811,6 +854,10 @@ declare namespace BFChainCore {
     DestroyEntityAssetJSON,
     { hasRecipientId: true }
   >;
+  type IssueEntityMultiTransactionV1JSON = TransactionMixJSON<
+    IssueEntityMultiAssetJSON,
+    { hasRecipientId: true }
+  >;
 
   type TransferAnyTransactionJSON = TransactionMixJSON<
     TransferAnyAssetJSON,
@@ -826,12 +873,6 @@ declare namespace BFChainCore {
     BeExchangeAnyAssetJSON,
     { hasRecipientId: true }
   >;
-
-  type IssueEntityMultiTransactionV1JSON = TransactionMixJSON<
-    IssueEntityMultiAssetJSON,
-    { hasRecipientId: true }
-  >;
-
   type ToExchangeAnyMultiTransactionJSON = TransactionMixJSON<
     ToExchangeAnyMultiAssetJSON,
     { hasRecipientId: false }
@@ -840,7 +881,6 @@ declare namespace BFChainCore {
     BeExchangeAnyMultiAssetJSON,
     { hasRecipientId: true }
   >;
-
   type ToExchangeAnyMultiAllTransactionJSON = TransactionMixJSON<
     ToExchangeAnyMultiAllAssetJSON,
     { hasRecipientId: false }

@@ -37,6 +37,11 @@ export enum TRANSACTION_TYPES_BASE {
   TO_EXCHANGE_ASSET = "AST-10",
   /**接受权益交换 */
   BE_EXCHANGE_ASSET = "AST-11",
+  /**权益质押 */
+  STAKE_ASSET = "AST-12",
+  /**权益解除质押 */
+  UNSTAKE_ASSET = "AST-13",
+
   /**注册/注销位名 */
   LOCATION_NAME = "LNS-00",
   /**设置位名解析值 */

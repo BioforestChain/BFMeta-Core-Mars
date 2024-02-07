@@ -1,5 +1,5 @@
 import { TransactionFactory } from "./_txbase";
-import { ToExchangeAssetTransaction } from "@bfchain/core-model";
+import { FROZEN_REASON, ToExchangeAssetTransaction } from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
@@ -251,6 +251,7 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<ToExch
           maxEffectiveHeight: this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
           minEffectiveHeight: this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
           frozenId: transaction.signature,
+          frozenReason: FROZEN_REASON.EXCHANGE,
         },
       });
     });

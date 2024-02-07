@@ -342,6 +342,8 @@ export const TRANSACTION_FACTORY_TYPES_MAP = (() => {
       [TRANSACTION_TYPES_BASE.SIGN_FOR_ASSET, ATOM_TRSFAC.SignForAssetTransactionFactory],
       [TRANSACTION_TYPES_BASE.EMIGRATE_ASSET, ATOM_TRSFAC.EmigrateAssetTransactionFactory],
       [TRANSACTION_TYPES_BASE.IMMIGRATE_ASSET, ATOM_TRSFAC.ImmigrateAssetTransactionFactory],
+      [TRANSACTION_TYPES_BASE.STAKE_ASSET, ATOM_TRSFAC.StakeAssetTransactionFactory],
+      [TRANSACTION_TYPES_BASE.UNSTAKE_ASSET, ATOM_TRSFAC.UnstakeAssetTransactionFactory],
 
       [TRANSACTION_TYPES_BASE.LOCATION_NAME, ATOM_TRSFAC.LocationNameTransactionFactory],
       [

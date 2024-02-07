@@ -1,5 +1,5 @@
 import { TransactionFactory } from "./_txbase";
-import { BeExchangeAssetTransaction } from "@bfchain/core-model";
+import { BeExchangeAssetTransaction, FROZEN_REASON } from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
@@ -336,8 +336,9 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<BeExch
           assetInfo: toAssetInfo,
           amount: toExchangeNumber,
           sourceAmount: toExchangeNumber,
-          frozenId: transaction.asset.beExchangeAsset.transactionSignature,
           recipientId, // 资产冻结账户
+          frozenId: transaction.asset.beExchangeAsset.transactionSignature,
+          frozenReason: FROZEN_REASON.EXCHANGE,
         },
       });
     });

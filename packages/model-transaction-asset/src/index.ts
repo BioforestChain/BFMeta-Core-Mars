@@ -7,6 +7,7 @@ export * from "./signature";
 export * from "./dapp";
 export * from "./dappPurchasing";
 export * from "./mark";
+
 export * from "./issueAsset";
 export * from "./increaseAsset";
 export * from "./transferAsset";
@@ -15,10 +16,13 @@ export * from "./giftAsset";
 export * from "./grabAsset";
 export * from "./trustAsset";
 export * from "./signForAsset";
-export * from "./toExchangeAsset";
-export * from "./beExchangeAsset";
 export * from "./emigrateAsset";
 export * from "./immigrateAsset";
+export * from "./toExchangeAsset";
+export * from "./beExchangeAsset";
+export * from "./stakeAsset";
+export * from "./unstakeAsset";
+
 export * from "./locationName";
 export * from "./setLnsManager";
 export * from "./setLnsRecordValue";

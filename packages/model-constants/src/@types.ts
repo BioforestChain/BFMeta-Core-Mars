@@ -12,4 +12,5 @@ declare namespace BFChainCore {
   type PARENT_ASSET_TYPE = import("./").PARENT_ASSET_TYPE;
   type ASSET_STATUS = import("./").ASSET_STATUS;
   type CERTIFICATE_TYPE = import("./").CERTIFICATE_TYPE;
+  type FROZEN_REASON = import("./").FROZEN_REASON;
 }

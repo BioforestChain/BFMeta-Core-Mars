@@ -1,5 +1,5 @@
 import { Injectable, wrapTaskList } from "@bfchain/util";
-import { IssueEntityMultiTransaction, ASSET_STATUS } from "@bfchain/core-model";
+import { IssueEntityMultiTransaction, ASSET_STATUS, FROZEN_REASON } from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
@@ -334,10 +334,11 @@ export class IssueEntityMultiTransactionFactory extends TransactionFactory<Issue
             assetInfo,
             amount: `-${sourceAmount}`,
             sourceAmount,
-            frozenId: signature,
             minEffectiveHeight,
             maxEffectiveHeight,
             totalUnfrozenTimes: numberOfEntities,
+            frozenId: signature,
+            frozenReason: FROZEN_REASON.ENTITY,
           },
         });
       }

@@ -1,5 +1,10 @@
 import { TransactionFactory } from "./_txbase";
-import { ASSET_STATUS, PARENT_ASSET_TYPE, ToExchangeAnyTransaction } from "@bfchain/core-model";
+import {
+  ASSET_STATUS,
+  FROZEN_REASON,
+  PARENT_ASSET_TYPE,
+  ToExchangeAnyTransaction,
+} from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
@@ -383,6 +388,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
             minEffectiveHeight:
               this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
             frozenId: signature,
+            frozenReason: FROZEN_REASON.EXCHANGE,
           },
         });
       } else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.DAPP) {
@@ -472,6 +478,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
                 minEffectiveHeight:
                   this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
                 frozenId: signature,
+                frozenReason: FROZEN_REASON.EXCHANGE,
               },
             });
           }

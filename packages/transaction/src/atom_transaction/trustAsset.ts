@@ -1,5 +1,5 @@
 import { TransactionFactory } from "./_txbase";
-import { TrustAssetTransaction } from "@bfchain/core-model";
+import { FROZEN_REASON, TrustAssetTransaction } from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
@@ -279,8 +279,9 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
           sourceAmount: amount,
           maxEffectiveHeight: this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
           minEffectiveHeight: this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
-          frozenId: transaction.signature,
           totalUnfrozenTimes: numberOfSignFor,
+          frozenId: transaction.signature,
+          frozenReason: FROZEN_REASON.TRUST,
         },
       });
     });

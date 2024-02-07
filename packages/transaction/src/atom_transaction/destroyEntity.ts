@@ -1,5 +1,5 @@
 import { TransactionFactory } from "./_txbase";
-import { DestroyEntityTransaction, ASSET_STATUS } from "@bfchain/core-model";
+import { DestroyEntityTransaction, ASSET_STATUS, FROZEN_REASON } from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
@@ -293,8 +293,9 @@ export class DestroyEntityTransactionFactory extends TransactionFactory<DestroyE
             assetInfo,
             amount: entityFrozenAssetPrealnum,
             sourceAmount: entityFrozenAssetPrealnum,
-            frozenId: transactionSignature,
             recipientId, // 资产冻结账户
+            frozenId: transactionSignature,
+            frozenReason: FROZEN_REASON.ENTITY,
           },
         });
       }

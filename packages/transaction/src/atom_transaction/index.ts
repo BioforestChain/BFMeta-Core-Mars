@@ -19,6 +19,9 @@ export * from "./trustAsset";
 export * from "./signForAsset";
 export * from "./emigrateAsset";
 export * from "./immigrateAsset";
+export * from "./stakeAsset";
+export * from "./unstakeAsset";
+
 export * from "./locationName";
 export * from "./setLnsManager";
 export * from "./setLnsRecordValue";

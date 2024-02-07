@@ -267,23 +267,16 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "unfrozenAsset",
       async ({ transaction, applyInfo }, next) => {
-        const { assetInfo, frozenId, amount: spendAsset, recipientId } = applyInfo;
+        const { assetInfo, frozenId, amount: spendAsset, recipientId, frozenReason } = applyInfo;
         const { magic, assetType } = assetInfo;
 
         // 获取冻结信息
-        const frozenAsset = await this.accountGetterHelper.getFrozenAsset(
+        const frozenAsset = await this.helperLogicVerifier.getFrozenAssetForce(
           recipientId,
           frozenId,
+          frozenReason,
           assetType,
         );
-
-        if (!frozenAsset) {
-          throw new ConsensusException(ERROR_LIST.FROZEN_ASSET_NOT_EXIST_OR_EXPIRED, {
-            frozenAddress: recipientId,
-            signature: frozenId,
-            assetType,
-          });
-        }
 
         const {
           maxEffectiveHeight,
@@ -341,22 +334,15 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "signForAsset",
       async ({ transaction, applyInfo }, next) => {
-        const { frozenId, frozenAddress, assetInfo } = applyInfo;
+        const { frozenId, frozenAddress, assetInfo, frozenReason } = applyInfo;
 
         // 获取冻结信息
-        const frozenAsset = await this.accountGetterHelper.getFrozenAsset(
+        const frozenAsset = await this.helperLogicVerifier.getFrozenAssetForce(
           frozenAddress,
           frozenId,
+          frozenReason,
           assetInfo.assetType,
         );
-
-        if (!frozenAsset) {
-          throw new ConsensusException(ERROR_LIST.FROZEN_ASSET_NOT_EXIST_OR_EXPIRED, {
-            address: frozenAddress,
-            signature: frozenId,
-            assetType: assetInfo.assetType,
-          });
-        }
 
         const { maxEffectiveHeight, minEffectiveHeight, remainUnfrozenTimes, amount } = frozenAsset;
         // 是否到达解冻高度

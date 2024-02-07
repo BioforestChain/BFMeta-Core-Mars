@@ -41,14 +41,16 @@ declare namespace BFChainCore {
   > = ApplyTransactionEvent<ApplyInfo_DestroyMainAsset, EVENTNAME, T>;
 
   interface ApplyInfo_FrozenAsset extends ApplyInfo_Asset {
-    /**冻结的索引 */
-    frozenId: string;
     /**最小有效高度 */
     minEffectiveHeight: number;
     /**最大有效高度 */
     maxEffectiveHeight: number;
     /**总可解冻次数 */
     totalUnfrozenTimes?: number;
+    /**冻结的索引 */
+    frozenId: string;
+    /**冻结原因 */
+    frozenReason: FROZEN_REASON;
   }
   type ApplyTransactionFrozenAssetEvent<
     EVENTNAME,
@@ -58,6 +60,8 @@ declare namespace BFChainCore {
   interface ApplyInfo_UnfrozenAsset extends ApplyInfo_Asset {
     /**冻结的索引 */
     frozenId: string;
+    /**冻结原因 */
+    frozenReason: FROZEN_REASON;
     /**解冻者的账户地址
      * 这里的解冻者本质是资金的接收者
      * 如果要将解冻资产是否要回到冻结者账户上,那就填自己就完事了
@@ -74,6 +78,9 @@ declare namespace BFChainCore {
     publicKeyBuffer: Uint8Array;
     /**冻结的索引 */
     frozenId: string;
+    /**冻结原因 */
+    frozenReason: FROZEN_REASON;
+    /**冻结者的账户地址*/
     frozenAddress: string;
     /**解冻者的账户地址
      * 这里的解冻者本质是资金的接收者
@@ -684,6 +691,7 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction").ToExchangeAnyTransaction
         | import("@bfchain/core-model-transaction").ToExchangeAnyMultiTransaction
         | import("@bfchain/core-model-transaction").ToExchangeAnyMultiAllTransaction
+        | import("@bfchain/core-model-transaction").StakeAssetTransaction
       >
     >;
     /**解冻资产 */
@@ -698,6 +706,7 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction").BeExchangeAnyTransaction
         | import("@bfchain/core-model-transaction").BeExchangeAnyMultiTransaction
         | import("@bfchain/core-model-transaction").BeExchangeAnyMultiAllTransaction
+        | import("@bfchain/core-model-transaction").UnstakeAssetTransaction
       >
     >;
     /**签收资产 */

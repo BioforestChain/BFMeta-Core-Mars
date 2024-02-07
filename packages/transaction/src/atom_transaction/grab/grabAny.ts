@@ -1,6 +1,11 @@
 import { TransactionFactory } from "../_txbase";
 import { GiftAnyTransactionFactory } from "../gift";
-import { ASSET_STATUS, GrabAnyTransaction, PARENT_ASSET_TYPE } from "@bfchain/core-model";
+import {
+  ASSET_STATUS,
+  FROZEN_REASON,
+  GrabAnyTransaction,
+  PARENT_ASSET_TYPE,
+} from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
@@ -265,6 +270,7 @@ export class GrabAnyTransactionFactory extends TransactionFactory<GrabAnyTransac
             sourceAmount: amount,
             recipientId, // 资产冻结账户
             frozenId: transactionSignature,
+            frozenReason: FROZEN_REASON.GIFT,
           },
         });
       } else if (parentAssetType === PARENT_ASSET_TYPE.DAPP) {
@@ -346,6 +352,7 @@ export class GrabAnyTransactionFactory extends TransactionFactory<GrabAnyTransac
                 sourceAmount: taxAssetPrealnum,
                 recipientId, // 资产冻结账户
                 frozenId: transactionSignature,
+                frozenReason: FROZEN_REASON.GIFT,
               },
             });
           }

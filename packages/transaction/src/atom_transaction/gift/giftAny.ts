@@ -5,6 +5,7 @@ import {
   RANGE_TYPE,
   PARENT_ASSET_TYPE,
   ASSET_STATUS,
+  FROZEN_REASON,
 } from "@bfchain/core-model";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { Injectable, wrapTaskList } from "@bfchain/util";
@@ -265,6 +266,7 @@ export class GiftAnyTransactionFactory extends GiftTransactionFactory<GiftAnyTra
             maxEffectiveHeight,
             totalUnfrozenTimes: totalGrabableTimes,
             frozenId: signature,
+            frozenReason: FROZEN_REASON.GIFT,
           },
         });
       } else if (parentAssetType === PARENT_ASSET_TYPE.DAPP) {
@@ -347,6 +349,7 @@ export class GiftAnyTransactionFactory extends GiftTransactionFactory<GiftAnyTra
               minEffectiveHeight:
                 this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
               frozenId: signature,
+              frozenReason: FROZEN_REASON.GIFT,
             },
           });
         }

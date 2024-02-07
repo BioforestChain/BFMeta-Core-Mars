@@ -70,12 +70,14 @@
     "src/transaction/signature.ts",
     "src/transaction/signForAsset.ts",
     "src/transaction/someTransaction.test.ts",
+    "src/transaction/stakeAsset.ts",
     "src/transaction/toExchangeAny.ts",
     "src/transaction/toExchangeAnyMulti.ts",
     "src/transaction/toExchangeAnyMultiAll.ts",
     "src/transaction/toExchangeAsset.ts",
     "src/transaction/transferAny.ts",
     "src/transaction/transferAsset.ts",
-    "src/transaction/trustAsset.ts"
+    "src/transaction/trustAsset.ts",
+    "src/transaction/unstakeAsset.ts"
   ]
 }

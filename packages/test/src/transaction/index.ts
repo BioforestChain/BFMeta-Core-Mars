@@ -15,6 +15,9 @@ import "./trustAsset";
 import "./signForAsset";
 import "./emigrateAsset";
 import "./immigrateAsset";
+import "./stakeAsset";
+import "./unstakeAsset";
+
 import "./locationName";
 import "./setLnsManager";
 import "./setLnsRecordValue";

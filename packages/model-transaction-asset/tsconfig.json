@@ -53,12 +53,14 @@
     "src/setLnsRecordValue.ts",
     "src/signature.ts",
     "src/signForAsset.ts",
+    "src/stakeAsset.ts",
     "src/toExchangeAny.ts",
     "src/toExchangeAnyMulti.ts",
     "src/toExchangeAnyMultiAll.ts",
     "src/toExchangeAsset.ts",
     "src/transferAny.ts",
     "src/transferAsset.ts",
-    "src/trustAsset.ts"
+    "src/trustAsset.ts",
+    "src/unstakeAsset.ts"
   ]
 }

@@ -23,6 +23,8 @@ export * from "./toExchangeAssetLogicVerifier";
 export * from "./beExchangeAssetLogicVerifier";
 export * from "./emigrateAssetLogicVerifier";
 export * from "./immigrateAssetLogicVerifier";
+export * from "./stakeAssetLogicVerifier";
+export * from "./unstakeAssetLogicVerifier";
 
 export * from "./locationNameLogicVerifier";
 export * from "./setLnsManagerLogicVerifier";

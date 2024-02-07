@@ -2,6 +2,7 @@ import { TransactionFactory } from "./_txbase";
 import {
   ASSET_STATUS,
   BeExchangeAnyMultiAllTransaction,
+  FROZEN_REASON,
   PARENT_ASSET_TYPE,
 } from "@bfchain/core-model";
 import {
@@ -249,6 +250,7 @@ export class BeExchangeAnyMultiAllTransactionFactory extends TransactionFactory<
               sourceAmount: toExchangeAssetPrealnum,
               frozenId: transactionSignature,
               recipientId, // 资产冻结账户
+              frozenReason: FROZEN_REASON.EXCHANGE,
             },
           });
         } else {
@@ -332,11 +334,12 @@ export class BeExchangeAnyMultiAllTransactionFactory extends TransactionFactory<
                     assetInfo: chainAssetInfo,
                     amount: taxAssetPrealnum,
                     sourceAmount: taxAssetPrealnum,
+                    recipientId, // 资产冻结账户
                     // 因为 nft 的版税，导致一条交易出现多条冻结记录，但是又不能混合
                     // 这里就简单的把冻结 id 搞一些花里胡哨的东西
                     // 这个交易本来就比尿还骚，加一些骚东西也是没办法的
                     frozenId: transactionSignature + this.Buffer.from("_entity").toString("hex"),
-                    recipientId, // 资产冻结账户
+                    frozenReason: FROZEN_REASON.EXCHANGE,
                   },
                 });
               }

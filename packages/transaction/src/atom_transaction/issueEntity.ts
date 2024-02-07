@@ -1,5 +1,5 @@
 import { TransactionFactory } from "./_txbase";
-import { IssueEntityTransaction, ASSET_STATUS } from "@bfchain/core-model";
+import { IssueEntityTransaction, ASSET_STATUS, FROZEN_REASON } from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
@@ -318,10 +318,11 @@ export class IssueEntityTransactionFactory extends TransactionFactory<IssueEntit
             assetInfo,
             amount: `-${entityFrozenAssetPrealnum}`,
             sourceAmount: entityFrozenAssetPrealnum,
-            frozenId: signature,
             minEffectiveHeight,
             maxEffectiveHeight,
             totalUnfrozenTimes: 1,
+            frozenId: signature,
+            frozenReason: FROZEN_REASON.ENTITY,
           },
         });
       }

@@ -1,6 +1,7 @@
 import { TransactionFactory } from "./_txbase";
 import {
   ASSET_STATUS,
+  FROZEN_REASON,
   PARENT_ASSET_TYPE,
   ToExchangeAnyMultiAllTransaction,
 } from "@bfchain/core-model";
@@ -406,6 +407,7 @@ export class ToExchangeAnyMultiAllTransactionFactory extends TransactionFactory<
               minEffectiveHeight:
                 this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
               frozenId: signature,
+              frozenReason: FROZEN_REASON.EXCHANGE,
             },
           });
         } else if (toExchangeParentAssetType === PARENT_ASSET_TYPE.DAPP) {
@@ -527,6 +529,7 @@ export class ToExchangeAnyMultiAllTransactionFactory extends TransactionFactory<
             // 这里就简单的把冻结 id 搞一些花里胡哨的东西
             // 这个交易本来就比尿还骚，加一些骚东西也是没办法的
             frozenId: signature + this.Buffer.from("_entity").toString("hex"),
+            frozenReason: FROZEN_REASON.EXCHANGE,
           },
         });
       }

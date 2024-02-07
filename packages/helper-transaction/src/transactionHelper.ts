@@ -7,6 +7,7 @@ import {
   TRANSACTION_TYPES_BASE,
   GiftAssetTransaction,
   GrabAssetModel,
+  GiftAnyTransaction,
 } from "@bfchain/core-model-transaction";
 import { AccountSignatureModel } from "@bfchain/core-model-common";
 import { JSBIHelper } from "@bfchain/core-helper-bigint";
@@ -156,6 +157,14 @@ export class TransactionHelper {
   /** BE_EXCHANGE_ASSET: 接受权益交换 */
   get BE_EXCHANGE_ASSET() {
     return this.getTransactionType(TRANSACTION_TYPES_BASE.BE_EXCHANGE_ASSET);
+  }
+  /** STAKE_ASSET: 质押权益 */
+  get STAKE_ASSET() {
+    return this.getTransactionType(TRANSACTION_TYPES_BASE.STAKE_ASSET);
+  }
+  /** UNSTAKE_ASSET: 解除质押权益 */
+  get UNSTAKE_ASSET() {
+    return this.getTransactionType(TRANSACTION_TYPES_BASE.UNSTAKE_ASSET);
   }
 
   /** LNS: 未知名称系统/Location Name System */
@@ -903,6 +912,9 @@ export class TransactionHelper {
     if (transaction instanceof GiftAssetTransaction) {
       const beginUnfrozenBlockHeight = transaction.asset.giftAsset.beginUnfrozenBlockHeight;
       beginUnfrozenBlockHeight && (minEffectiveHeight = beginUnfrozenBlockHeight);
+    } else if (transaction instanceof GiftAnyTransaction) {
+      const beginUnfrozenBlockHeight = transaction.asset.giftAny.beginUnfrozenBlockHeight;
+      beginUnfrozenBlockHeight && (minEffectiveHeight = beginUnfrozenBlockHeight);
     }
     return minEffectiveHeight;
   }
@@ -1035,5 +1047,9 @@ export class TransactionHelper {
       results.push(curTindex - 1);
     }
     return results;
+  }
+
+  getStakeSaveId(stakeId: string, senderId: string) {
+    return `${senderId}_${stakeId}`;
   }
 }

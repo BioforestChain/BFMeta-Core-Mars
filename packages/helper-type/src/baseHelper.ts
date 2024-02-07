@@ -987,6 +987,19 @@ export class BaseHelper {
   }
 
   /**
+   * 小写字母或者数字，1-30 个字符
+   *
+   * @param stakeId
+   * @returns
+   */
+  isValidStakeId(stakeId: string) {
+    if (!this.isString(stakeId)) {
+      return false;
+    }
+    return /^[a-z0-9]{1,30}$/.test(stakeId);
+  }
+
+  /**
    * 手续费比例是否合法
    *
    * @param feeRate

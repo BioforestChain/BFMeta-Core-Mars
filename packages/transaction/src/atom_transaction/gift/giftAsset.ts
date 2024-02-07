@@ -1,5 +1,10 @@
 import { GiftTransactionFactory } from "./_gift";
-import { GiftAssetTransaction, GIFT_DISTRIBUTION_RULE, RANGE_TYPE } from "@bfchain/core-model";
+import {
+  FROZEN_REASON,
+  GiftAssetTransaction,
+  GIFT_DISTRIBUTION_RULE,
+  RANGE_TYPE,
+} from "@bfchain/core-model";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
 import { Injectable, wrapTaskList } from "@bfchain/util";
 
@@ -206,6 +211,7 @@ export class GiftAssetTransactionFactory extends GiftTransactionFactory<GiftAsse
           maxEffectiveHeight,
           totalUnfrozenTimes: totalGrabableTimes,
           frozenId: transaction.signature,
+          frozenReason: FROZEN_REASON.GIFT,
         },
       });
     });

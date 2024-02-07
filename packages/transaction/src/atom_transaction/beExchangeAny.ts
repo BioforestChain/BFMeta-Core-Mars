@@ -1,5 +1,10 @@
 import { TransactionFactory } from "./_txbase";
-import { ASSET_STATUS, BeExchangeAnyTransaction, PARENT_ASSET_TYPE } from "@bfchain/core-model";
+import {
+  ASSET_STATUS,
+  BeExchangeAnyTransaction,
+  FROZEN_REASON,
+  PARENT_ASSET_TYPE,
+} from "@bfchain/core-model";
 import {
   AccountBaseHelper,
   TransactionHelper,
@@ -312,8 +317,9 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
             assetInfo: toAssetInfo,
             amount: toExchangeAssetPrealnum,
             sourceAmount: toExchangeAssetPrealnum,
-            frozenId: transactionSignature,
             recipientId, // 资产冻结账户
+            frozenId: transactionSignature,
+            frozenReason: FROZEN_REASON.EXCHANGE,
           },
         });
       } else {
@@ -404,6 +410,7 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
                   sourceAmount: taxAssetPrealnum,
                   frozenId: transactionSignature,
                   recipientId, // 资产冻结账户
+                  frozenReason: FROZEN_REASON.EXCHANGE,
                 },
               });
             }
