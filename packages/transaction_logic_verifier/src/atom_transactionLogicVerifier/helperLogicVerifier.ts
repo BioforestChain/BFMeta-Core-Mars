@@ -330,21 +330,12 @@ export class HelperLogicVerifier {
     return account;
   }
 
-  async getFrozenAssetForce(
-    address: string,
-    signature: string,
-    frozenReason: BFChainCore.FROZEN_REASON,
-    assetType: string,
-  ) {
-    const frozenAsset = await this.accountGetterHelper.getFrozenAsset(
-      address,
-      signature,
-      frozenReason,
-    );
+  async getFrozenAssetForce(address: string, frozenId: string, assetType: string) {
+    const frozenAsset = await this.accountGetterHelper.getFrozenAsset(address, frozenId, assetType);
     if (!frozenAsset) {
       throw new ConsensusException(ERROR_LIST.FROZEN_ASSET_NOT_EXIST_OR_EXPIRED, {
         frozenAddress: address,
-        signature,
+        signature: frozenId,
         assetType,
       });
     }

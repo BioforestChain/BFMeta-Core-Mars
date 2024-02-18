@@ -267,14 +267,13 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "unfrozenAsset",
       async ({ transaction, applyInfo }, next) => {
-        const { assetInfo, frozenId, amount: spendAsset, recipientId, frozenReason } = applyInfo;
+        const { assetInfo, frozenId, amount: spendAsset, recipientId } = applyInfo;
         const { magic, assetType } = assetInfo;
 
         // 获取冻结信息
         const frozenAsset = await this.helperLogicVerifier.getFrozenAssetForce(
           recipientId,
           frozenId,
-          frozenReason,
           assetType,
         );
 
@@ -334,13 +333,12 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "signForAsset",
       async ({ transaction, applyInfo }, next) => {
-        const { frozenId, frozenAddress, assetInfo, frozenReason } = applyInfo;
+        const { frozenId, frozenAddress, assetInfo } = applyInfo;
 
         // 获取冻结信息
         const frozenAsset = await this.helperLogicVerifier.getFrozenAssetForce(
           frozenAddress,
           frozenId,
-          frozenReason,
           assetInfo.assetType,
         );
 

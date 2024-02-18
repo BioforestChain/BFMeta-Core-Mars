@@ -1,4 +1,4 @@
-import { FROZEN_REASON, StakeAssetTransaction, UnstakeAssetTransaction } from "@bfchain/core-model";
+import type { UnstakeAssetTransaction } from "@bfchain/core-model";
 import { Injectable, Inject } from "@bfchain/util";
 import { AccountBaseHelper } from "@bfchain/core-helper";
 import { CoreExceptionGenerator, ERROR_LIST } from "@bfchain/core-util-exception";
@@ -32,7 +32,6 @@ export class UnstakeAssetLogicVerifier extends TransactionLogicVerifier {
     const frozenAsset = await this.helperLogicVerifier.getFrozenAssetForce(
       transaction.senderId,
       stakeId,
-      FROZEN_REASON.STAKE,
       assetType,
     );
     if (
