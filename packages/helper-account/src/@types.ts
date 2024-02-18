@@ -80,7 +80,8 @@ declare namespace BFChainCore {
   };
 
   interface FrozenAssetBaseInfo extends FrozenAssetInfo {
-    transactionSignature: string;
+    frozenId: string;
+    frozenReason: BFChainCore.FROZEN_REASON;
     address: string;
     minEffectiveHeight: number;
     maxEffectiveHeight: number;
