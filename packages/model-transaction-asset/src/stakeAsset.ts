@@ -25,9 +25,9 @@ export class StakeAssetModel
   /**质押的同质资产数量，0-9 组成并且不包含小数点，必须大于0 */
   @Field.d(StakeAssetModel.INC++, "string")
   assetPrealnum!: string;
-  /**解除质押的区块高度 */
+  /**开始解除质押的区块高度 */
   @Field.d(StakeAssetModel.INC++, "uint32")
-  unstakeHeight!: number;
+  beginUnstakeHeight!: number;
   toJSON() {
     return {
       stakeId: this.stakeId,
@@ -35,7 +35,7 @@ export class StakeAssetModel
       sourceChainMagic: this.sourceChainMagic,
       assetType: this.assetType,
       assetPrealnum: this.assetPrealnum,
-      unstakeHeight: this.unstakeHeight,
+      beginUnstakeHeight: this.beginUnstakeHeight,
     };
   }
 }

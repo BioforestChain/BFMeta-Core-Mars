@@ -326,9 +326,6 @@ export class IssueEntityMultiTransactionFactory extends TransactionFactory<Issue
         const sourceAmount = (
           BigInt(entityFrozenAssetPrealnum) * BigInt(numberOfEntities)
         ).toString();
-        const minEffectiveHeight =
-          this.transactionHelper.getTransactionMinEffectiveHeight(transaction);
-        const maxEffectiveHeight = Number.MAX_SAFE_INTEGER;
         taskList.next = eventEmitter.emit("frozenAsset", {
           type: "frozenAsset",
           transaction,
@@ -338,8 +335,10 @@ export class IssueEntityMultiTransactionFactory extends TransactionFactory<Issue
             assetInfo,
             amount: `-${sourceAmount}`,
             sourceAmount,
-            minEffectiveHeight,
-            maxEffectiveHeight,
+            minEffectiveHeight:
+              this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
+            maxEffectiveHeight:
+              this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
             totalUnfrozenTimes: numberOfEntities,
             frozenId: signature,
             frozenReason: FROZEN_REASON.ENTITY,

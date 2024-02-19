@@ -269,11 +269,11 @@ declare namespace BFChainCore {
     trustAsset: TrustAssetJSON;
   }
   interface SignForAssetJSON {
-    /**见证交易的签名，*/
+    /**见证事件的签名，*/
     transactionSignature: string;
-    /**见证交易的发起账户地址，base58 编码的 16 进制字符串 */
+    /**见证事件的发起账户地址，base58 编码的 16 进制字符串 */
     trustSenderId: string;
-    /**见证交易的接收账户地址，base58 编码的 16 进制字符串 */
+    /**见证事件的接收账户地址，base58 编码的 16 进制字符串 */
     trustRecipientId: string;
     /**见证信息 */
     trustAsset: TrustAssetJSON;
@@ -339,8 +339,8 @@ declare namespace BFChainCore {
     assetType: string;
     /**质押的同质资产数量，0-9 组成并且不包含小数点，必须大于0 */
     assetPrealnum: string;
-    /**解除质押的区块高度 */
-    unstakeHeight: number;
+    /**开始解除质押的区块高度，必须大于或者等于事件的发起高度 */
+    beginUnstakeHeight: number;
   }
   interface StakeAssetAssetJSON {
     /**同质资产质押事件附带信息 */

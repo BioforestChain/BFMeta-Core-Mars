@@ -310,9 +310,6 @@ export class IssueEntityTransactionFactory extends TransactionFactory<IssueEntit
       });
       // 冻结主权益，销毁时赎回
       if (entityFrozenAssetPrealnum !== "0") {
-        const minEffectiveHeight =
-          this.transactionHelper.getTransactionMinEffectiveHeight(transaction);
-        const maxEffectiveHeight = Number.MAX_SAFE_INTEGER;
         taskList.next = eventEmitter.emit("frozenAsset", {
           type: "frozenAsset",
           transaction,
@@ -322,8 +319,10 @@ export class IssueEntityTransactionFactory extends TransactionFactory<IssueEntit
             assetInfo,
             amount: `-${entityFrozenAssetPrealnum}`,
             sourceAmount: entityFrozenAssetPrealnum,
-            minEffectiveHeight,
-            maxEffectiveHeight,
+            minEffectiveHeight:
+              this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
+            maxEffectiveHeight:
+              this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
             totalUnfrozenTimes: 1,
             frozenId: signature,
             frozenReason: FROZEN_REASON.ENTITY,

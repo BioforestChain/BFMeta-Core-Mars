@@ -8,6 +8,9 @@ import {
   GiftAssetTransaction,
   GrabAssetModel,
   GiftAnyTransaction,
+  StakeAssetTransaction,
+  IssueEntityTransaction,
+  IssueEntityMultiTransaction,
 } from "@bfchain/core-model-transaction";
 import { AccountSignatureModel } from "@bfchain/core-model-common";
 import { JSBIHelper } from "@bfchain/core-helper-bigint";
@@ -900,7 +903,15 @@ export class TransactionHelper {
    * @param transaction
    */
   getTransactionMaxEffectiveHeight(transaction: Transaction) {
-    return transaction.effectiveBlockHeight;
+    let maxEffectiveHeight = transaction.effectiveBlockHeight;
+    if (
+      transaction instanceof IssueEntityTransaction ||
+      transaction instanceof IssueEntityMultiTransaction ||
+      transaction instanceof StakeAssetTransaction
+    ) {
+      maxEffectiveHeight = Number.MAX_SAFE_INTEGER;
+    }
+    return maxEffectiveHeight;
   }
 
   /**
@@ -915,6 +926,8 @@ export class TransactionHelper {
     } else if (transaction instanceof GiftAnyTransaction) {
       const beginUnfrozenBlockHeight = transaction.asset.giftAny.beginUnfrozenBlockHeight;
       beginUnfrozenBlockHeight && (minEffectiveHeight = beginUnfrozenBlockHeight);
+    } else if (transaction instanceof StakeAssetTransaction) {
+      minEffectiveHeight = transaction.asset.stakeAsset.beginUnstakeHeight;
     }
     return minEffectiveHeight;
   }

@@ -60,7 +60,7 @@ async function getStakeAssetTransaction(sender: AccountModel, bfchainCore: BFCha
         sourceChainMagic: bfchainCore.config.magic,
         assetType: bfchainCore.config.assetType,
         assetPrealnum: "1000",
-        unstakeHeight: 10086 + 10,
+        beginUnstakeHeight: 10086 + 10,
       },
     },
     keypair,

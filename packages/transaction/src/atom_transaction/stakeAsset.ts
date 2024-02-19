@@ -105,8 +105,14 @@ export class StakeAssetTransactionFactory extends TransactionFactory<StakeAssetT
 
     const { baseHelper } = this;
 
-    const { stakeId, sourceChainName, sourceChainMagic, assetType, assetPrealnum, unstakeHeight } =
-      stakeAsset;
+    const {
+      stakeId,
+      sourceChainName,
+      sourceChainMagic,
+      assetType,
+      assetPrealnum,
+      beginUnstakeHeight,
+    } = stakeAsset;
 
     if (baseHelper.isValidStakeId(stakeId) === false) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
@@ -133,17 +139,17 @@ export class StakeAssetTransactionFactory extends TransactionFactory<StakeAssetT
       });
     }
 
-    if (baseHelper.isPositiveInteger(unstakeHeight) === false) {
+    if (baseHelper.isPositiveInteger(beginUnstakeHeight) === false) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
-        prop: `unstakeHeight ${unstakeHeight}`,
+        prop: `beginUnstakeHeight ${beginUnstakeHeight}`,
         ...StakeAssetAsset_Exception_Detail,
       });
     }
 
-    if (stakeAsset.unstakeHeight <= body.applyBlockHeight) {
+    if (stakeAsset.beginUnstakeHeight < body.applyBlockHeight) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
-        prop: `unstakeHeight ${stakeAsset.unstakeHeight}`,
-        fueld: body.applyBlockHeight,
+        prop: `beginUnstakeHeight ${stakeAsset.beginUnstakeHeight}`,
+        field: body.applyBlockHeight,
         target: "stakeAssetAsset",
       });
     }
@@ -188,14 +194,8 @@ export class StakeAssetTransactionFactory extends TransactionFactory<StakeAssetT
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
       const { senderId, senderPublicKeyBuffer } = transaction;
-      const {
-        stakeId,
-        assetType,
-        sourceChainName,
-        sourceChainMagic,
-        assetPrealnum,
-        unstakeHeight,
-      } = transaction.asset.stakeAsset;
+      const { stakeId, assetType, sourceChainName, sourceChainMagic, assetPrealnum } =
+        transaction.asset.stakeAsset;
       const assetInfo = this.chainAssetInfoHelper.getAssetInfo(
         sourceChainName,
         sourceChainMagic,
@@ -211,7 +211,7 @@ export class StakeAssetTransactionFactory extends TransactionFactory<StakeAssetT
           assetInfo,
           amount: `-${assetPrealnum}`,
           sourceAmount: assetPrealnum,
-          minEffectiveHeight: unstakeHeight,
+          minEffectiveHeight: this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
           maxEffectiveHeight: this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
           frozenId: this.transactionHelper.getStakeSaveId(stakeId, senderId),
           frozenReason: FROZEN_REASON.STAKE,
