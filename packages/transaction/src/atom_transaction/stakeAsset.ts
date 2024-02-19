@@ -188,9 +188,19 @@ export class StakeAssetTransactionFactory extends TransactionFactory<StakeAssetT
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
       const { senderId, senderPublicKeyBuffer } = transaction;
-      const { stakeId, assetType, sourceChainMagic, assetPrealnum, unstakeHeight } =
-        transaction.asset.stakeAsset;
-      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
+      const {
+        stakeId,
+        assetType,
+        sourceChainName,
+        sourceChainMagic,
+        assetPrealnum,
+        unstakeHeight,
+      } = transaction.asset.stakeAsset;
+      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(
+        sourceChainName,
+        sourceChainMagic,
+        assetType,
+      );
       // 冻结发起账户用于交换的资产
       taskList.next = eventEmitter.emit("frozenAsset", {
         type: "frozenAsset",

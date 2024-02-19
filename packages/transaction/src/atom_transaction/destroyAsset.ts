@@ -205,8 +205,13 @@ export class DestroyAssetTransactionFactory extends TransactionFactory<DestroyAs
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
       const { senderId, senderPublicKeyBuffer, recipientId } = transaction;
-      const { amount, assetType, sourceChainMagic } = transaction.asset.destroyAsset;
-      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
+      const { amount, assetType, sourceChainMagic, sourceChainName } =
+        transaction.asset.destroyAsset;
+      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(
+        sourceChainName,
+        sourceChainMagic,
+        assetType,
+      );
 
       // 发起账户扣除资产
       taskList.next = eventEmitter.emit("asset", {

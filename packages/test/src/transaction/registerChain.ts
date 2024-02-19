@@ -642,8 +642,12 @@ registerchainAssetData.blockPerRound = 5;
 
     const { trs } = trsWithIndex;
     const { fromMagic } = trs;
-    const assetType = fullBfchainCore.config.assetType;
-    const chainAssetInfo = fullBfchainCore.chainAssetInfoHelper.getAssetInfo(fromMagic, assetType);
+    const { chainName, assetType } = fullBfchainCore.config;
+    const chainAssetInfo = fullBfchainCore.chainAssetInfoHelper.getAssetInfo(
+      chainName,
+      fromMagic,
+      assetType,
+    );
     statisticsInfo.initAssetStatistic(chainAssetInfo);
     const trsInBlock = TransactionInBlock.fromObject({
       tIndex: 0,

@@ -370,6 +370,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
 
       if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
         const toAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
+          toExchangeChainName,
           toExchangeSource,
           toExchangeAssetType,
         );
@@ -461,6 +462,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
           const { taxAssetPrealnum } = taxInformation;
           if (taxAssetPrealnum !== "0") {
             const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
+              config.chainName,
               config.magic,
               config.assetType,
             );

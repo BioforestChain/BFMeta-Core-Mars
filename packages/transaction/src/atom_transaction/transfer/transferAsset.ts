@@ -92,8 +92,13 @@ export class TransferAssetTransactionFactory extends TransferTransactionFactory<
   ) {
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
-      const { amount, assetType, sourceChainMagic } = transaction.asset.transferAsset;
-      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
+      const { amount, assetType, sourceChainMagic, sourceChainName } =
+        transaction.asset.transferAsset;
+      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(
+        sourceChainName,
+        sourceChainMagic,
+        assetType,
+      );
       // 扣除资产
       taskList.next = this._applyTransactionEmitAsset(eventEmitter, transaction, amount, {
         senderId: transaction.senderId,

@@ -187,9 +187,13 @@ export class UnstakeAssetTransactionFactory extends TransactionFactory<UnstakeAs
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
       const { senderId } = transaction;
-      const { stakeId, sourceChainMagic, assetType, assetPrealnum } =
+      const { stakeId, sourceChainName, sourceChainMagic, assetType, assetPrealnum } =
         transaction.asset.unstakeAsset;
-      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
+      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(
+        sourceChainName,
+        sourceChainMagic,
+        assetType,
+      );
       // 接收账户(委托交易指定的签收人)将得到的资产解冻并收入账下
       taskList.next = eventEmitter.emit("unfrozenAsset", {
         type: "unfrozenAsset",

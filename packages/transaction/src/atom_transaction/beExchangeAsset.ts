@@ -294,10 +294,20 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<BeExch
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
       const { exchangeAsset, toExchangeNumber, beExchangeNumber } =
         transaction.asset.beExchangeAsset;
-      const { toExchangeSource, toExchangeAsset, beExchangeSource, beExchangeAsset } =
-        exchangeAsset;
+      const {
+        toExchangeChainName,
+        toExchangeSource,
+        toExchangeAsset,
+        beExchangeChainName,
+        beExchangeSource,
+        beExchangeAsset,
+      } = exchangeAsset;
 
-      const beAssetInfo = this.chainAssetInfoHelper.getAssetInfo(beExchangeSource, beExchangeAsset);
+      const beAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
+        beExchangeChainName,
+        beExchangeSource,
+        beExchangeAsset,
+      );
       // 扣除发起账户用于交换资产
       taskList.next = eventEmitter.emit("asset", {
         type: "asset",
@@ -324,7 +334,11 @@ export class BeExchangeAssetTransactionFactory extends TransactionFactory<BeExch
         },
       });
 
-      const toAssetInfo = this.chainAssetInfoHelper.getAssetInfo(toExchangeSource, toExchangeAsset);
+      const toAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
+        toExchangeChainName,
+        toExchangeSource,
+        toExchangeAsset,
+      );
 
       // 累加发起账户交换得到的资产
       taskList.next = eventEmitter.emit("unfrozenAsset", {

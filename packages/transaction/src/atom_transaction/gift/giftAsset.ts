@@ -189,9 +189,13 @@ export class GiftAssetTransactionFactory extends GiftTransactionFactory<GiftAsse
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
       const { chainAssetInfoHelper } = this;
-      const { amount, assetType, sourceChainMagic, totalGrabableTimes } =
+      const { amount, assetType, sourceChainMagic, sourceChainName, totalGrabableTimes } =
         transaction.asset.giftAsset;
-      const assetInfo = chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
+      const assetInfo = chainAssetInfoHelper.getAssetInfo(
+        sourceChainName,
+        sourceChainMagic,
+        assetType,
+      );
       const minEffectiveHeight =
         this.transactionHelper.getTransactionMinEffectiveHeight(transaction);
       const maxEffectiveHeight =

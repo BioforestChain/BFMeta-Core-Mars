@@ -167,10 +167,10 @@ export class DAppPurchasingTransactionFactory extends TransactionFactory<DAppPur
   ) {
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
-      const { magic, assetType } = config;
+      const { chainName, magic, assetType } = config;
       const { purchaseAsset } = transaction.asset.dappPurchasing.dappAsset;
 
-      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(magic, assetType);
+      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(chainName, magic, assetType);
       // 扣除资产
       taskList.next = this._applyTransactionEmitAsset(
         eventEmitter,

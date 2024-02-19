@@ -930,7 +930,11 @@ export abstract class TransactionFactory<T extends Transaction = Transaction> {
     event: BFChainCore.ApplyTransactionEventEmitter,
     config = this.configHelper,
   ): Promise<unknown> {
-    const assetInfo = this.chainAssetInfoHelper.getAssetInfo(config.magic, config.assetType);
+    const assetInfo = this.chainAssetInfoHelper.getAssetInfo(
+      config.chainName,
+      config.magic,
+      config.assetType,
+    );
     return wrapTaskList((taskList) => {
       taskList.next = event.emit("fee", {
         type: "fee",

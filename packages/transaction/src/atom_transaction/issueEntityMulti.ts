@@ -317,7 +317,11 @@ export class IssueEntityMultiTransactionFactory extends TransactionFactory<Issue
       });
       const numberOfEntities = entityStructList.length;
       // 冻结主权益，销毁时赎回
-      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(config.magic, config.assetType);
+      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(
+        config.chainName,
+        config.magic,
+        config.assetType,
+      );
       if (entityFrozenAssetPrealnum !== "0") {
         const sourceAmount = (
           BigInt(entityFrozenAssetPrealnum) * BigInt(numberOfEntities)

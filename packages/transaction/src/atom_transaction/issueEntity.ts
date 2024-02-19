@@ -269,7 +269,11 @@ export class IssueEntityTransactionFactory extends TransactionFactory<IssueEntit
       } = transaction.asset.issueEntity;
       const { factoryId, entityFrozenAssetPrealnum, purchaseAssetPrealnum } = entityFactory;
       // 扣除手续费并且统计交易数量
-      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(config.magic, config.assetType);
+      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(
+        config.chainName,
+        config.magic,
+        config.assetType,
+      );
       taskList.next = eventEmitter.emit("fee", {
         type: "fee",
         transaction: transaction,

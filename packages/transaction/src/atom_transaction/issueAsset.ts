@@ -242,7 +242,11 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
           accountStatus: ACCOUNT_STATUS.FROZEN_OUT,
         },
       });
-      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
+      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(
+        sourceChainName,
+        sourceChainMagic,
+        assetType,
+      );
       // 发行同质资产
       taskList.next = eventEmitter.emit("issueAsset", {
         type: "issueAsset",

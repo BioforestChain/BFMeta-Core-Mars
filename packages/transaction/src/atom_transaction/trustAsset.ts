@@ -265,8 +265,13 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
   ) {
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
-      const { amount, assetType, sourceChainMagic, numberOfSignFor } = transaction.asset.trustAsset;
-      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
+      const { amount, assetType, sourceChainMagic, sourceChainName, numberOfSignFor } =
+        transaction.asset.trustAsset;
+      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(
+        sourceChainName,
+        sourceChainMagic,
+        assetType,
+      );
       // 冻结发起账户用于交换的资产
       taskList.next = eventEmitter.emit("frozenAsset", {
         type: "frozenAsset",

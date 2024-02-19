@@ -235,9 +235,13 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<ToExch
   ) {
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
-      const { toExchangeSource, toExchangeAsset, toExchangeNumber } =
+      const { toExchangeChainName, toExchangeSource, toExchangeAsset, toExchangeNumber } =
         transaction.asset.toExchangeAsset;
-      const toAssetInfo = this.chainAssetInfoHelper.getAssetInfo(toExchangeSource, toExchangeAsset);
+      const toAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
+        toExchangeChainName,
+        toExchangeSource,
+        toExchangeAsset,
+      );
       // 冻结发起账户用于交换的资产
       taskList.next = eventEmitter.emit("frozenAsset", {
         type: "frozenAsset",

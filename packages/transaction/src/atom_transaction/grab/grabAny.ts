@@ -254,7 +254,11 @@ export class GrabAnyTransactionFactory extends TransactionFactory<GrabAnyTransac
       const { amount, giftAny, transactionSignature } = asset.grabAny;
       const { assetType, parentAssetType, sourceChainMagic, sourceChainName } = giftAny;
 
-      const assetInfo = chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
+      const assetInfo = chainAssetInfoHelper.getAssetInfo(
+        sourceChainName,
+        sourceChainMagic,
+        assetType,
+      );
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
 
       if (parentAssetType === PARENT_ASSET_TYPE.ASSETS) {
@@ -320,11 +324,12 @@ export class GrabAnyTransactionFactory extends TransactionFactory<GrabAnyTransac
         });
         if (giftAny.taxInformation) {
           const { taxCollector, taxAssetPrealnum } = giftAny.taxInformation;
+          const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
+            config.chainName,
+            config.magic,
+            config.assetType,
+          );
           if (taxAssetPrealnum === "0") {
-            const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
-              config.magic,
-              config.assetType,
-            );
             taskList.next = this._applyTransactionEmitAsset(
               eventEmitter,
               transaction,
@@ -337,10 +342,6 @@ export class GrabAnyTransactionFactory extends TransactionFactory<GrabAnyTransac
               },
             );
           } else {
-            const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
-              config.magic,
-              config.assetType,
-            );
             taskList.next = eventEmitter.emit("unfrozenAsset", {
               type: "unfrozenAsset",
               transaction,

@@ -10,6 +10,8 @@ declare namespace BFChainCore {
   type JSONToModelType<J extends object = object> = J & BFChainUtil.JSONAble<J>;
   type AssetJSONToModelType<J extends object = object> = JSONToModelType<J>;
   type AssetInfoJSON = {
+    /**权益所属的链名 */
+    chainName: string;
     /**权益所属的链网络标识，大写字母或数字组成，5 个字符，最后一位是校验位 */
     magic: string;
     /**权益名，大写字母组成，3-10 个字符 */

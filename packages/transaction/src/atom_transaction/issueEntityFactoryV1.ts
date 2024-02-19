@@ -54,7 +54,11 @@ export class IssueEntityFactoryTransactionFactoryV1 extends IssueEntityFactoryTr
   ) {
     return wrapTaskList((taskList) => {
       const { senderId, recipientId, senderPublicKeyBuffer, fee } = transaction;
-      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(config.magic, config.assetType);
+      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(
+        config.chainName,
+        config.magic,
+        config.assetType,
+      );
       // 扣除手续费并且统计交易数量
       taskList.next = eventEmitter.emit("fee", {
         type: "fee",

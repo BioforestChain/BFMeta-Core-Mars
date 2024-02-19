@@ -138,7 +138,11 @@ export class TransferAnyTransactionFactory extends TransferTransactionFactory<Tr
 
       // 同质资产转移
       if (parentAssetType === PARENT_ASSET_TYPE.ASSETS) {
-        const assetInfo = this.chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
+        const assetInfo = this.chainAssetInfoHelper.getAssetInfo(
+          sourceChainName,
+          sourceChainMagic,
+          assetType,
+        );
         // 扣除资产
         taskList.next = this._applyTransactionEmitAsset(eventEmitter, transaction, amount, {
           senderId,
@@ -207,6 +211,7 @@ export class TransferAnyTransactionFactory extends TransferTransactionFactory<Tr
           },
         });
         const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
+          config.chainName,
           config.magic,
           config.assetType,
         );

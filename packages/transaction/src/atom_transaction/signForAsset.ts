@@ -238,6 +238,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
       const { transactionSignature, trustSenderId, trustRecipientId, trustAsset } =
         transaction.asset.signForAsset;
       const assetInfo = this.chainAssetInfoHelper.getAssetInfo(
+        trustAsset.sourceChainName,
         trustAsset.sourceChainMagic,
         trustAsset.assetType,
       );

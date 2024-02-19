@@ -242,7 +242,11 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
       const { parentAssetType, assetType } = asset;
 
       if (parentAssetType === PARENT_ASSET_TYPE.ASSETS) {
-        const assetInfo = this.chainAssetInfoHelper.getAssetInfo(fromChain.magic, assetType);
+        const assetInfo = this.chainAssetInfoHelper.getAssetInfo(
+          fromChain.chainName,
+          fromChain.magic,
+          assetType,
+        );
         // 累加资产
         taskList.next = eventEmitter.emit("asset", {
           type: "asset",
@@ -266,6 +270,7 @@ export class ImmigrateAssetTransactionFactory extends TransactionFactory<Immigra
         applyInfo: {
           migrateCertificateId: converter.getUUID(migrateCertificate),
           assetInfo: {
+            chainName: fromChain.chainName,
             magic: fromChain.magic,
             assetType,
           },

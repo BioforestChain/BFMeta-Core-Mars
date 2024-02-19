@@ -242,7 +242,11 @@ export class IncreaseAssetTransactionFactory extends TransactionFactory<Increase
         increasedAssetPrealnum,
         frozenMainAssetPrealnum,
       } = transaction.asset.increaseAsset;
-      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
+      const assetInfo = this.chainAssetInfoHelper.getAssetInfo(
+        sourceChainName,
+        sourceChainMagic,
+        assetType,
+      );
       // 增发同质资产
       taskList.next = eventEmitter.emit("increaseAsset", {
         type: "increaseAsset",
@@ -258,7 +262,11 @@ export class IncreaseAssetTransactionFactory extends TransactionFactory<Increase
           frozenMainAssetPrealnum,
         },
       });
-      const mainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(config.magic, config.assetType);
+      const mainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
+        config.chainName,
+        config.magic,
+        config.assetType,
+      );
       // 扣除主权益
       taskList.next = this._applyTransactionEmitAsset(
         eventEmitter,

@@ -251,7 +251,11 @@ export class GiftAnyTransactionFactory extends GiftTransactionFactory<GiftAnyTra
         this.transactionHelper.getTransactionMaxEffectiveHeight(transaction);
 
       if (parentAssetType === PARENT_ASSET_TYPE.ASSETS) {
-        const assetInfo = chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
+        const assetInfo = chainAssetInfoHelper.getAssetInfo(
+          sourceChainName,
+          sourceChainMagic,
+          assetType,
+        );
         // 冻结资产
         taskList.next = eventEmitter.emit("frozenAsset", {
           type: "frozenAsset",
@@ -332,6 +336,7 @@ export class GiftAnyTransactionFactory extends GiftTransactionFactory<GiftAnyTra
         const { taxAssetPrealnum } = taxInformation;
         if (taxAssetPrealnum !== "0") {
           const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
+            config.chainName,
             config.magic,
             config.assetType,
           );

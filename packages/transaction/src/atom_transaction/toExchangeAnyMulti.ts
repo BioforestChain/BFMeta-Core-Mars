@@ -420,6 +420,7 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
 
         if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
           const toAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
+            toExchangeChainName,
             toExchangeSource,
             toExchangeAssetType,
           );
@@ -540,6 +541,7 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
       }
       if (frozenAmount !== BigInt(0)) {
         const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
+          config.chainName,
           config.magic,
           config.assetType,
         );

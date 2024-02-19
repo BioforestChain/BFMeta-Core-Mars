@@ -281,8 +281,9 @@ export class DestroyEntityTransactionFactory extends TransactionFactory<DestroyE
       if (entityFrozenAssetPrealnum !== "0") {
         // 赎回链资产
         const assetInfo = this.chainAssetInfoHelper.getAssetInfo(
-          this.configHelper.magic,
-          this.configHelper.assetType,
+          config.chainName,
+          config.magic,
+          config.assetType,
         );
         taskList.next = eventEmitter.emit("unfrozenAsset", {
           type: "unfrozenAsset",

@@ -246,9 +246,13 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
       const { chainAssetInfoHelper } = this;
       const { grabAsset } = transaction.asset;
       const { amount, transactionSignature } = grabAsset;
-      const { assetType, sourceChainMagic /* unitReserveFee */ } = grabAsset.giftAsset;
+      const { assetType, sourceChainMagic, sourceChainName } = grabAsset.giftAsset;
       const recipientId = transaction.recipientId;
-      const assetInfo = chainAssetInfoHelper.getAssetInfo(sourceChainMagic, assetType);
+      const assetInfo = chainAssetInfoHelper.getAssetInfo(
+        sourceChainName,
+        sourceChainMagic,
+        assetType,
+      );
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
       // 发起账户将得到的资产解冻并收入账下
       taskList.next = eventEmitter.emit("unfrozenAsset", {

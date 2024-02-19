@@ -456,6 +456,7 @@ export class BeExchangeAnyMultiTransactionFactory extends TransactionFactory<BeE
         if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
           // 发起账户将得到的资产解冻并收入账下
           const toAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
+            toExchangeChainName,
             toExchangeSource,
             toExchangeAssetType,
           );
@@ -533,11 +534,12 @@ export class BeExchangeAnyMultiTransactionFactory extends TransactionFactory<BeE
             if (taxInformation) {
               const { taxCollector, taxAssetPrealnum } = taxInformation;
               /// 就算是 taxAssetPrealnum 0，也要让 taxCollector 出现在 assetChange 里面
+              const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
+                config.chainName,
+                config.magic,
+                config.assetType,
+              );
               if (taxAssetPrealnum === "0") {
-                const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
-                  config.magic,
-                  config.assetType,
-                );
                 taskList.next = this._applyTransactionEmitAsset(
                   eventEmitter,
                   transaction,
@@ -550,10 +552,6 @@ export class BeExchangeAnyMultiTransactionFactory extends TransactionFactory<BeE
                   },
                 );
               } else {
-                const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
-                  config.magic,
-                  config.assetType,
-                );
                 taskList.next = eventEmitter.emit("unfrozenAsset", {
                   type: "unfrozenAsset",
                   transaction,
@@ -619,6 +617,7 @@ export class BeExchangeAnyMultiTransactionFactory extends TransactionFactory<BeE
         /// 就算是 taxAssetPrealnum 退回，也要让 taxCollector 出现在 assetChange 里面
         if (beExchangeAsset.taxInformation) {
           const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
+            config.chainName,
             config.magic,
             config.assetType,
           );
@@ -637,6 +636,7 @@ export class BeExchangeAnyMultiTransactionFactory extends TransactionFactory<BeE
       if (beExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
         // 扣除发起账户用于交换资产
         const beAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
+          beExchangeChainName,
           beExchangeSource,
           beExchangeAssetType,
         );
@@ -712,6 +712,7 @@ export class BeExchangeAnyMultiTransactionFactory extends TransactionFactory<BeE
         });
         if (beExchangeAsset.taxInformation) {
           const chainAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
+            config.chainName,
             config.magic,
             config.assetType,
           );
