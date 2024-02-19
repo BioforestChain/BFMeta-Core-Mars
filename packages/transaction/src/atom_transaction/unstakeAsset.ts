@@ -205,7 +205,7 @@ export class UnstakeAssetTransactionFactory extends TransactionFactory<UnstakeAs
           amount: assetPrealnum,
           sourceAmount: assetPrealnum,
           recipientId: senderId, // 资产冻结账户
-          frozenId: stakeId,
+          frozenId: this.transactionHelper.getStakeSaveId(stakeId, senderId),
           frozenReason: FROZEN_REASON.STAKE,
         },
       });
