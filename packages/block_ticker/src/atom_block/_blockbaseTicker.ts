@@ -140,8 +140,10 @@ export abstract class BlockTicker<T extends Block<any> = Block<any>> {
           target: "blockChain",
         });
       }
-      if (assets.issuedAssetPrealnum - assets.circulatedAssetPrealnum < totalShareRewards) {
-        totalShareRewards = assets.issuedAssetPrealnum - assets.circulatedAssetPrealnum;
+      const remainAssetPrealnum =
+        assets.issuedAssetPrealnum - assets.circulatedAssetPrealnum - BigInt(block.reward);
+      if (remainAssetPrealnum < totalShareRewards) {
+        totalShareRewards = remainAssetPrealnum;
       }
     }
     const blockUpdateData = this.blockHelper.calcForginAndHoldingRewards(
