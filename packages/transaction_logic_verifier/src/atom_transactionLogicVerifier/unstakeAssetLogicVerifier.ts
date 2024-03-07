@@ -29,21 +29,20 @@ export class UnstakeAssetLogicVerifier extends TransactionLogicVerifier {
     const { stakeId, sourceChainMagic, sourceChainName, assetType } =
       transaction.asset.unstakeAsset;
 
-    const frozenAsset = await this.helperLogicVerifier.getFrozenAssetForce(
+    const stakeAsset = await this.helperLogicVerifier.getStakeAssetForce(
       transaction.senderId,
       stakeId,
-      assetType,
     );
     if (
-      frozenAsset.sourceChainMagic !== sourceChainMagic ||
-      frozenAsset.sourceChainName !== sourceChainName ||
-      frozenAsset.assetType !== assetType
+      stakeAsset.sourceChainMagic !== sourceChainMagic ||
+      stakeAsset.sourceChainName !== sourceChainName ||
+      stakeAsset.assetType !== assetType
     ) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `stakeAsset: ${JSON.stringify({
-          sourceChainMagic: frozenAsset.sourceChainMagic,
-          sourceChainName: frozenAsset.sourceChainName,
-          assetType: frozenAsset.assetType,
+          sourceChainMagic: stakeAsset.sourceChainMagic,
+          sourceChainName: stakeAsset.sourceChainName,
+          assetType: stakeAsset.assetType,
         })}`,
         be_compare_prop: `unstakeAsset: ${JSON.stringify({
           sourceChainMagic,

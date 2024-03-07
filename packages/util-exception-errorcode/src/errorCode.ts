@@ -400,6 +400,22 @@ export const ERROR_LIST = {
     "001-11081",
     "Certificate already destroy, certificateId {certificateId}",
   ),
+  FROZEN_ASSET_NOT_ENOUGH: new ErrorCode(
+    "001-11082",
+    "Frozen asset not enough, frozenId {frozenId}, reason {reason}",
+  ),
+  STAKE_ASSET_NOT_EXIST_OR_EXPIRED: new ErrorCode(
+    "001-11083",
+    "Stake asset with stakeAddress {stakeAddress} stakeId {stakeId} in blockChain not exist or expired",
+  ),
+  NOT_BEGIN_UNSTAKE_YET: new ErrorCode(
+    "001-11084",
+    "Stake asset is not begin to unstake yet, stakeId {stakeId}",
+  ),
+  STAKE_ASSET_NOT_ENOUGH: new ErrorCode(
+    "001-11085",
+    "Stake asset not enough, stakeId {stakeId}, reason {reason}",
+  ),
 
   // block logic
   BLOCK_SIGN_SIGNATURE_IS_REQUIRED: new ErrorCode(

@@ -9,13 +9,16 @@ export class AccountHelper<
   AI extends BFChainCore.AccountInfo = BFChainCore.AccountInfo,
   DI extends BFChainCore.DAppInfo = BFChainCore.DAppInfo,
   LNI extends BFChainCore.LocationNameInfo = BFChainCore.LocationNameInfo,
-  FA extends BFChainCore.FrozenAsset = BFChainCore.FrozenAsset,
+  FAI extends BFChainCore.FrozenAssetInfo = BFChainCore.FrozenAssetInfo,
   IAI extends BFChainCore.IssuedAssetInfo = BFChainCore.IssuedAssetInfo,
   CI extends BFChainCore.CurrencyInfo = BFChainCore.CurrencyInfo,
   MG extends BFChainCore.MagicInfo = BFChainCore.MagicInfo,
   IEFI extends BFChainCore.IssueEntityFactoryInfo = BFChainCore.IssueEntityFactoryInfo,
   IEI extends BFChainCore.IssueEntityInfo = BFChainCore.IssueEntityInfo,
   MCI extends BFChainCore.MigrateCertificateInfo = BFChainCore.MigrateCertificateInfo,
+  ICI extends BFChainCore.IssueCertificateInfo = BFChainCore.IssueCertificateInfo,
+  EHI extends BFChainCore.EntityHolderInfo = BFChainCore.EntityHolderInfo,
+  SAI extends BFChainCore.StakeAssetInfo = BFChainCore.StakeAssetInfo,
 > {
   @Inject("accountGetterHelper", { optional: true })
   private accountGetterHelper?: BFChainCore.AccountGetterHelperInterface<
@@ -24,13 +27,16 @@ export class AccountHelper<
     AI,
     DI,
     LNI,
-    FA,
+    FAI,
     IAI,
     CI,
     MG,
     IEFI,
     IEI,
-    MCI
+    MCI,
+    ICI,
+    EHI,
+    SAI
   >;
 
   getAccounts(
@@ -204,7 +210,7 @@ export class AccountHelper<
       BFChainCore.AccountGetterHelperInterface,
       "getFrozenAsset"
     >,
-  ): Promise<BFChainCore.FrozenAsset | undefined> {
+  ): Promise<BFChainCore.FrozenAssetInfo | undefined> {
     if (!accountGetterHelper) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST, {
         prop: "accountGetterHelper",

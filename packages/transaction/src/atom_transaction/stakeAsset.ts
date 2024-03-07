@@ -194,16 +194,22 @@ export class StakeAssetTransactionFactory extends TransactionFactory<StakeAssetT
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
       const { senderId, senderPublicKeyBuffer } = transaction;
-      const { stakeId, assetType, sourceChainName, sourceChainMagic, assetPrealnum } =
-        transaction.asset.stakeAsset;
+      const {
+        stakeId,
+        assetType,
+        sourceChainName,
+        sourceChainMagic,
+        assetPrealnum,
+        beginUnstakeHeight,
+      } = transaction.asset.stakeAsset;
       const assetInfo = this.chainAssetInfoHelper.getAssetInfo(
         sourceChainName,
         sourceChainMagic,
         assetType,
       );
-      // 冻结发起账户用于交换的资产
-      taskList.next = eventEmitter.emit("frozenAsset", {
-        type: "frozenAsset",
+      // 扣除发起账户用于质押的资产
+      taskList.next = eventEmitter.emit("stakeAsset", {
+        type: "stakeAsset",
         transaction,
         applyInfo: {
           address: senderId,
@@ -211,10 +217,8 @@ export class StakeAssetTransactionFactory extends TransactionFactory<StakeAssetT
           assetInfo,
           amount: `-${assetPrealnum}`,
           sourceAmount: assetPrealnum,
-          minEffectiveHeight: this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
-          maxEffectiveHeight: this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
-          frozenId: this.transactionHelper.getStakeSaveId(stakeId, senderId),
-          frozenReason: FROZEN_REASON.STAKE,
+          beginUnstakeHeight,
+          stakeId,
         },
       });
     });

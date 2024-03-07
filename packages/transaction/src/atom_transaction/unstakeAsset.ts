@@ -194,9 +194,9 @@ export class UnstakeAssetTransactionFactory extends TransactionFactory<UnstakeAs
         sourceChainMagic,
         assetType,
       );
-      // 接收账户(委托交易指定的签收人)将得到的资产解冻并收入账下
-      taskList.next = eventEmitter.emit("unfrozenAsset", {
-        type: "unfrozenAsset",
+      // 扣除解除质押的资产
+      taskList.next = eventEmitter.emit("unstakeAsset", {
+        type: "unstakeAsset",
         transaction,
         applyInfo: {
           address: senderId,
@@ -204,9 +204,7 @@ export class UnstakeAssetTransactionFactory extends TransactionFactory<UnstakeAs
           assetInfo,
           amount: assetPrealnum,
           sourceAmount: assetPrealnum,
-          recipientId: senderId, // 资产冻结账户
-          frozenId: this.transactionHelper.getStakeSaveId(stakeId, senderId),
-          frozenReason: FROZEN_REASON.STAKE,
+          stakeId,
         },
       });
     });

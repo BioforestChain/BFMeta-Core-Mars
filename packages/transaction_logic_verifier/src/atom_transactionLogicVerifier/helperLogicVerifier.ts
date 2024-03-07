@@ -138,6 +138,17 @@ export class HelperLogicVerifier {
     }
   }
 
+  async isStakeAsset(address: string) {
+    // 发起账户不能质押资产
+    const isStakeAsset = await this.accountGetterHelper.isStakeAsset(address);
+    if (isStakeAsset) {
+      throw new ConsensusException(ERROR_LIST.ACCOUNT_CAN_NOT_BE_FROZEN, {
+        address,
+        reason: "Already stake asset can not initiate a frozen account transaction",
+      });
+    }
+  }
+
   async isChainAssetPossessor(address: string) {
     // 账户不能是 dapp 的拥有者
     await this.isDAppPossessor(address, this.configHelper);
@@ -149,6 +160,8 @@ export class HelperLogicVerifier {
     await this.isEntityPossessor(address, this.configHelper);
     // 账户不能是 certificate 的发行者或拥有者
     await this.isCertApplicantOrPossessor(address, this.configHelper);
+    // 账户不能质押资产
+    await this.isStakeAsset(address);
   }
 
   async isAssetExist(sourceChainName: string, sourceChainMagic: string, assetType: string) {
@@ -340,5 +353,16 @@ export class HelperLogicVerifier {
       });
     }
     return frozenAsset;
+  }
+
+  async getStakeAssetForce(address: string, stakeId: string) {
+    const stakeAsset = await this.accountGetterHelper.getStakeAsset(address, stakeId);
+    if (!stakeAsset) {
+      throw new ConsensusException(ERROR_LIST.STAKE_ASSET_NOT_EXIST_OR_EXPIRED, {
+        stakeAddress: address,
+        stakeId,
+      });
+    }
+    return stakeAsset;
   }
 }

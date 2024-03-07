@@ -55,12 +55,6 @@ declare namespace BFChainCore {
     isDelete?: boolean;
     frozenId: string;
   };
-  type FrozenAssetInfo = {
-    sourceChainName: string;
-    sourceChainMagic: string;
-    assetType: string;
-    amount: bigint;
-  };
   type IssuedAssetInfo = {
     applyAddress: string;
     genesisAddress: string;
@@ -79,19 +73,19 @@ declare namespace BFChainCore {
     height: number;
   };
 
-  interface FrozenAssetBaseInfo extends FrozenAssetInfo {
+  type FrozenAssetInfo = {
     frozenId: string;
+    sourceChainName: string;
+    sourceChainMagic: string;
+    assetType: string;
+    amount: bigint;
     frozenReason: BFChainCore.FROZEN_REASON;
     address: string;
     minEffectiveHeight: number;
     maxEffectiveHeight: number;
-    blockSignature?: string;
     remainUnfrozenTimes?: number;
-  }
-
-  interface FrozenAsset extends FrozenAssetBaseInfo {
     height: number;
-  }
+  };
   type AccountAccumulationInfo = {
     [address: string]: number;
   };
@@ -175,13 +169,24 @@ declare namespace BFChainCore {
     };
   };
 
+  type StakeAssetInfo = {
+    stakeId: string;
+    sourceChainName: string;
+    sourceChainMagic: string;
+    assetType: string;
+    amount: bigint;
+    address: string;
+    beginUnstakeHeight: number;
+    height: number;
+  };
+
   interface AccountGetterHelperInterface<
     ABI extends AccountBaseInfo = AccountBaseInfo,
     FSAI extends BFChainCore.ForSortAccountInfo = BFChainCore.ForSortAccountInfo,
     AI extends AccountInfo = AccountInfo,
     DI extends DAppInfo = DAppInfo,
     LNI extends LocationNameInfo = LocationNameInfo,
-    FA extends FrozenAsset = FrozenAsset,
+    FAI extends FrozenAssetInfo = FrozenAssetInfo,
     IAI extends IssuedAssetInfo = IssuedAssetInfo,
     CI extends CurrencyInfo = CurrencyInfo,
     MG extends MagicInfo = MagicInfo,
@@ -190,6 +195,7 @@ declare namespace BFChainCore {
     MCI extends MigrateCertificateInfo = MigrateCertificateInfo,
     ICI extends IssueCertificateInfo = IssueCertificateInfo,
     EHI extends EntityHolderInfo = EntityHolderInfo,
+    SAI extends StakeAssetInfo = StakeAssetInfo,
   > {
     /**根据地址数组获取账户 */
     getAccounts(addressArr: string[], curRound: number): Promise<FSAI[]>;
@@ -222,7 +228,7 @@ declare namespace BFChainCore {
     /**位名是否被禁用 */
     isLocationNameForbidden(locationName: string): Promise<boolean>;
     /**查询冻结的资产 */
-    getFrozenAsset(address: string, frozenId: string, assetType: string): Promise<FA | undefined>;
+    getFrozenAsset(address: string, frozenId: string, assetType: string): Promise<FAI | undefined>;
     /**账户是否持有冻结的非主权益 */
     isPossessFrozenAssetExceptMain(address: string): Promise<boolean>;
     /**是否冻结权益 */
@@ -273,5 +279,9 @@ declare namespace BFChainCore {
     getForgeEntityHolders(offset?: number): Promise<AI[]>;
     /**获取 分红entity 持有者 按照持有量sort */
     getShareEntityHolders(offset?: number): Promise<EHI[]>;
+    /**查询质押的资产 */
+    getStakeAsset(address: string, stakeId: string): Promise<SAI | undefined>;
+    /**是否质押权益 */
+    isStakeAsset(address: string): Promise<boolean>;
   }
 }

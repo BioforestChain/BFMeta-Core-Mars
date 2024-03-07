@@ -73,6 +73,26 @@ declare namespace BFChainCore {
     T extends Transaction = Transaction,
   > = ApplyTransactionEvent<ApplyInfo_UnfrozenAsset, EVENTNAME, T>;
 
+  interface ApplyInfo_StakeAsset extends ApplyInfo_Asset {
+    /**开始解质押的区块高度 */
+    beginUnstakeHeight: number;
+    /**质押的索引 */
+    stakeId: string;
+  }
+  type ApplyTransactionStakeAssetEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_StakeAsset, EVENTNAME, T>;
+
+  interface ApplyInfo_UnstakeAsset extends ApplyInfo_Asset {
+    /**质押的索引 */
+    stakeId: string;
+  }
+  type ApplyTransactionUnstakeAssetEvent<
+    EVENTNAME,
+    T extends Transaction = Transaction,
+  > = ApplyTransactionEvent<ApplyInfo_UnstakeAsset, EVENTNAME, T>;
+
   interface ApplyInfo_SignForAsset {
     address: string;
     publicKeyBuffer: Uint8Array;
@@ -707,6 +727,20 @@ declare namespace BFChainCore {
         | import("@bfchain/core-model-transaction").BeExchangeAnyMultiTransaction
         | import("@bfchain/core-model-transaction").BeExchangeAnyMultiAllTransaction
         | import("@bfchain/core-model-transaction").UnstakeAssetTransaction
+      >
+    >;
+    /**质押同质资产 */
+    stakeAsset: BFChainUtil.EventInOut<
+      ApplyTransactionStakeAssetEvent<
+        "stakeAsset",
+        import("@bfchain/core-model-transaction").StakeAssetTransaction
+      >
+    >;
+    /**解除质押同质资产 */
+    unstakeAsset: BFChainUtil.EventInOut<
+      ApplyTransactionUnstakeAssetEvent<
+        "unstakeAsset",
+        import("@bfchain/core-model-transaction").UnstakeAssetTransaction
       >
     >;
     /**签收资产 */

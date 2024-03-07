@@ -176,6 +176,4 @@ export enum FROZEN_REASON {
   TRUST = 2,
   /**发行非同质资产 */
   ENTITY = 3,
-  /**质押 */
-  STAKE = 4,
 }

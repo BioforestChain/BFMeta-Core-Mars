@@ -305,8 +305,9 @@ export class EventLogicVerifier {
 
         // 剩余资产是否足够
         if (BigInt(spendAsset) > BigInt(remainAsset)) {
-          throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
+          throw new ConsensusException(ERROR_LIST.FROZEN_ASSET_NOT_ENOUGH, {
             reason: `No enough asset to unfrozen magic ${magic} assetType ${assetType} remain ${remainAsset} spend ${spendAsset}`,
+            frozenId,
           });
         }
 
@@ -2190,6 +2191,84 @@ export class EventLogicVerifier {
     );
   }
 
+  private __listenEventStakeAsset(
+    accountMap: Map<string, BFChainCore.AccountInfo>,
+    currentBlockHeight: number,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
+  ) {
+    eventEmitter.on(
+      "stakeAsset",
+      async ({ transaction, applyInfo }, next) => {
+        const { magic, assetType } = applyInfo.assetInfo;
+        const address = applyInfo.address;
+        const { assets } = await this.helperLogicVerifier.getAccountForce(
+          accountMap,
+          address,
+          currentBlockHeight,
+        );
+        assets[magic] = assets[magic] || {};
+        assets[magic][assetType] = assets[magic][assetType] || {
+          sourceChainMagic: magic,
+          assetType,
+          assetNumber: BigInt(0),
+          history: {},
+        };
+        const hodingAsset = assets[magic][assetType];
+        const remainAsset = hodingAsset.assetNumber;
+        hodingAsset.assetNumber += BigInt(applyInfo.amount);
+        if (hodingAsset.assetNumber < BigInt(0)) {
+          throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
+            reason: `Transaction signature: ${transaction.signature} address: ${address} magic ${
+              applyInfo.assetInfo.magic
+            } assetType: ${
+              applyInfo.assetInfo.assetType
+            } hodingAsset: ${remainAsset.toString()} frozenAsset: ${applyInfo.amount}`,
+            errorId: NewTransactionRefuseReason.ASSET_NOT_ENOUGH,
+          });
+        }
+
+        return next();
+      },
+      { taskname: `applyTransaction/logicVerifier/stakeAsset` },
+    );
+  }
+
+  private __listenEventUnstakeAsset(
+    currentBlockHeight: number,
+    eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
+  ) {
+    // 解冻资产
+    eventEmitter.on(
+      "unstakeAsset",
+      async ({ transaction, applyInfo }, next) => {
+        const { address, assetInfo, stakeId, amount: spendAsset } = applyInfo;
+        const { magic, assetType } = assetInfo;
+
+        // 获取质押信息
+        const stakeAsset = await this.helperLogicVerifier.getStakeAssetForce(address, stakeId);
+
+        const { beginUnstakeHeight, amount: remainAsset } = stakeAsset;
+        // 是否到达解质押高度
+        if (beginUnstakeHeight > currentBlockHeight) {
+          throw new ConsensusException(ERROR_LIST.NOT_BEGIN_UNSTAKE_YET, {
+            stakeId,
+          });
+        }
+
+        // 剩余资产是否足够
+        if (BigInt(spendAsset) > BigInt(remainAsset)) {
+          throw new ConsensusException(ERROR_LIST.STAKE_ASSET_NOT_ENOUGH, {
+            reason: `No enough asset to unstake magic ${magic} assetType ${assetType} remain ${remainAsset} spend ${spendAsset}`,
+            stakeId,
+          });
+        }
+
+        return next();
+      },
+      { taskname: `applyTransaction/logicVerifier/unstakeAsset` },
+    );
+  }
+
   listenEvent(
     accountMap: Map<string, BFChainCore.AccountInfo>,
     currentBlockHeight: number,
@@ -2233,6 +2312,8 @@ export class EventLogicVerifier {
     this.__listenEventFrozenCertificate(currentBlockHeight, eventEmitter);
     this.__listenEventUnfrozenCertificate(currentBlockHeight, eventEmitter);
     this.__listenEventChangeCertificatePossessor(currentBlockHeight, eventEmitter);
+    this.__listenEventStakeAsset(accountMap, currentBlockHeight, eventEmitter);
+    this.__listenEventUnstakeAsset(currentBlockHeight, eventEmitter);
   }
 
   /**
