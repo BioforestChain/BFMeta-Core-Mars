@@ -199,6 +199,7 @@ declare namespace BFChainCore {
   /**接收交易的返回 */
   interface NewTransactionReturnJSON extends CommonResponseJSON, NewTransactionReturnParams {
     errorCode?: string;
+    errorMessage?: string;
   }
   interface NewTransactionReturnParams {
     /**交易的接收状态 */
@@ -209,6 +210,8 @@ declare namespace BFChainCore {
     refuseReason?: import("./").NewTransactionRefuseReason;
     /**错误码 */
     errorCode?: string;
+    /**错误信息 */
+    errorMessage?: string;
   }
   /**查询交易的查询条件 */
   type BlockQueryOptionsJSON = {

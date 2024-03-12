@@ -1354,6 +1354,7 @@ export class ChainChannel<
                 response.newTrsStatus = broadcastResult.newTrsStatus;
                 response.refuseReason = broadcastResult.refuseReason;
                 response.errorCode = broadcastResult.errorCode;
+                response.errorMessage = broadcastResult.errorMessage;
               }
 
               // 绑定返回结果
