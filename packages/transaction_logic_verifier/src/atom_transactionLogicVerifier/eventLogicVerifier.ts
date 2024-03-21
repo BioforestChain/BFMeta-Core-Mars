@@ -2200,14 +2200,32 @@ export class EventLogicVerifier {
       "stakeAsset",
       async ({ transaction, applyInfo }, next) => {
         const { address, stakeId, beginUnstakeHeight, assetInfo } = applyInfo;
-        const { magic, assetType } = assetInfo;
+        const { magic, chainName, assetType } = assetInfo;
         const stakeAsset = await this.accountGetterHelper.getStakeAsset(address, stakeId);
-        if (stakeAsset && beginUnstakeHeight < stakeAsset.beginUnstakeHeight) {
-          throw new ConsensusException(ERROR_LIST.PROP_SHOULD_GTE_FIELD, {
-            prop: `beginUnstakeHeight ${beginUnstakeHeight}`,
-            target: "stakeAsset",
-            field: stakeAsset.beginUnstakeHeight,
-          });
+        if (stakeAsset) {
+          if (beginUnstakeHeight < stakeAsset.beginUnstakeHeight) {
+            throw new ConsensusException(ERROR_LIST.PROP_SHOULD_GTE_FIELD, {
+              prop: `beginUnstakeHeight ${beginUnstakeHeight}`,
+              target: "stakeAsset",
+              field: stakeAsset.beginUnstakeHeight,
+            });
+          }
+          if (magic !== stakeAsset.sourceChainMagic || assetType !== stakeAsset.assetType) {
+            throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+              to_compare_prop: `stakeAsset: ${JSON.stringify({
+                sourceChainMagic: magic,
+                sourceChainName: chainName,
+                assetType,
+              })}`,
+              be_compare_prop: `stakeAsset: ${JSON.stringify({
+                sourceChainMagic: stakeAsset.sourceChainMagic,
+                sourceChainName: stakeAsset.sourceChainName,
+                assetType: stakeAsset.assetType,
+              })}`,
+              to_target: "StakeAssetTransaction.asset.stakeAsset",
+              be_target: "blockChain",
+            });
+          }
         }
         const { assets } = await this.helperLogicVerifier.getAccountForce(
           accountMap,
