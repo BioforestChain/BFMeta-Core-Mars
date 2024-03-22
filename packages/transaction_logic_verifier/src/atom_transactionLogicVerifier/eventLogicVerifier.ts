@@ -537,7 +537,8 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "increaseAsset",
       async ({ transaction, applyInfo }, next) => {
-        const { address, assetInfo, applyAddress, sourceAmount } = applyInfo;
+        const { address, assetInfo, applyAddress, sourceAmount, frozenMainAssetPrealnum } =
+          applyInfo;
         const { magic, assetType } = assetInfo;
 
         const memAssets = await this.accountGetterHelper.getAsset(magic, assetType);
@@ -564,6 +565,31 @@ export class EventLogicVerifier {
             to_target: "increaseAsset",
             be_compare_prop: `genesisAddress ${memAssets.genesisAddress}`,
             be_target: "blockChain",
+          });
+        }
+
+        const { assets } = await this.helperLogicVerifier.getAccountForce(
+          accountMap,
+          address,
+          currentBlockHeight,
+        );
+        const { magic: chainMagic, assetType: chainAssetType } = this.configHelper;
+        assets[chainMagic] = assets[chainMagic] || {};
+        assets[chainMagic][chainAssetType] = assets[chainMagic][chainAssetType] || {
+          sourceChainMagic: chainMagic,
+          assetType: chainAssetType,
+          assetNumber: BigInt(0),
+          history: {},
+        };
+        const hodingAsset = assets[chainMagic][chainAssetType];
+        const remainAsset = hodingAsset.assetNumber;
+        hodingAsset.assetNumber -= BigInt(frozenMainAssetPrealnum);
+        if (hodingAsset.assetNumber < BigInt(0)) {
+          throw new ConsensusException(ERROR_LIST.ASSET_NOT_ENOUGH, {
+            reason: `Transaction signature: ${
+              transaction.signature
+            } address: ${address} magic ${chainMagic} assetType: ${chainAssetType} hodingAsset: ${remainAsset.toString()} frozenAsset: ${frozenMainAssetPrealnum}`,
+            errorId: NewTransactionRefuseReason.ASSET_NOT_ENOUGH,
           });
         }
 
@@ -2248,7 +2274,7 @@ export class EventLogicVerifier {
               applyInfo.assetInfo.magic
             } assetType: ${
               applyInfo.assetInfo.assetType
-            } hodingAsset: ${remainAsset.toString()} frozenAsset: ${applyInfo.amount}`,
+            } hodingAsset: ${remainAsset.toString()} stakeAsset: ${applyInfo.amount}`,
             errorId: NewTransactionRefuseReason.ASSET_NOT_ENOUGH,
           });
         }
