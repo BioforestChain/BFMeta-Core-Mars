@@ -192,7 +192,7 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
       });
     }
 
-    if (BigInt(expectedIssuedAssets) <= BigInt(0)) {
+    if (BigInt(expectedIssuedAssets) < BigInt(0)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GT_FIELD, {
         prop: "expectedIssuedAssets",
         field: "0",
