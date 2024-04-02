@@ -118,12 +118,22 @@ export class IncreaseAssetTransactionFactory extends TransactionFactory<Increase
     } as const;
 
     const {
+      applyAddress,
       sourceChainName,
       sourceChainMagic,
       assetType,
       increasedAssetPrealnum,
       frozenMainAssetPrealnum,
     } = increaseAsset;
+
+    if (!(await this.accountBaseHelper.isAddress(applyAddress))) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+        prop: `applyAddress ${applyAddress}`,
+        type: "account address",
+        ...Function_Exception_Detail,
+        target: "increaseAsset",
+      });
+    }
 
     this.checkChainName(sourceChainName, "sourceChainName", IncreaseAssetAsset_Exception_Detail);
     if (sourceChainName !== config.chainName) {
@@ -236,6 +246,7 @@ export class IncreaseAssetTransactionFactory extends TransactionFactory<Increase
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
       const { senderId, recipientId, senderPublicKeyBuffer } = transaction;
       const {
+        applyAddress,
         sourceChainName,
         sourceChainMagic,
         assetType,
@@ -253,7 +264,8 @@ export class IncreaseAssetTransactionFactory extends TransactionFactory<Increase
         transaction,
         applyInfo: {
           address: senderId,
-          applyAddress: recipientId,
+          recipientId,
+          applyAddress,
           publicKeyBuffer: senderPublicKeyBuffer,
           sourceChainName,
           assetInfo,
@@ -275,7 +287,7 @@ export class IncreaseAssetTransactionFactory extends TransactionFactory<Increase
         {
           senderId: transaction.senderId,
           senderPublicKeyBuffer: transaction.senderPublicKeyBuffer,
-          recipientId: transaction.recipientId,
+          recipientId: applyAddress,
           assetInfo: mainAssetInfo,
         },
       );
