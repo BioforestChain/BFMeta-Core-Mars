@@ -58,6 +58,7 @@ async function getIncreaseAssetTransaction(sender: AccountModel, bfchainCore: BF
     data,
     {
       increaseAsset: {
+        applyAddress: genesisAddress,
         sourceChainName: bfchainCore.config.chainName,
         sourceChainMagic: bfchainCore.config.magic,
         assetType: assetType,

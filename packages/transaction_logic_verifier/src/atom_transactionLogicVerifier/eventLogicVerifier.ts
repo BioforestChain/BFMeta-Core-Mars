@@ -537,7 +537,7 @@ export class EventLogicVerifier {
     eventEmitter.on(
       "increaseAsset",
       async ({ transaction, applyInfo }, next) => {
-        const { address, assetInfo, applyAddress, sourceAmount } = applyInfo;
+        const { address, recipientId, assetInfo, applyAddress, sourceAmount } = applyInfo;
         const { magic, assetType } = assetInfo;
 
         const memAssets = await this.accountGetterHelper.getAsset(magic, assetType);

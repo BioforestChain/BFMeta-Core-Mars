@@ -245,10 +245,15 @@ declare namespace BFChainCore {
   > = ApplyTransactionEvent<ApplyInfo_IssueAsset, EVENTNAME, T>;
 
   interface ApplyInfo_IncreaseAsset extends ApplyInfo_Asset {
+    /**权益创世账户 */
     address: string;
+    /**权益接收账户 */
+    recipientId: string;
     publicKeyBuffer?: Uint8Array;
     sourceChainName: string;
+    /**权益发行账户 */
     applyAddress: string;
+    /**冻结的主权益数量 */
     frozenMainAssetPrealnum: string;
   }
   /**增发同质资产的相关事件 */

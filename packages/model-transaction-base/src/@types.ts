@@ -146,6 +146,8 @@ declare namespace BFChainCore {
     issueAsset: IssueAssetJSON;
   }
   interface IncreaseAssetJSON {
+    /**权益发行账户 */
+    applyAddress: string;
     /**权益所属链名，小写字母组成，5-20 位 */
     sourceChainName: string;
     /**权益所属链网络标识符，大写字母或数字组成，5 个字符，最后一位是校验位 */
