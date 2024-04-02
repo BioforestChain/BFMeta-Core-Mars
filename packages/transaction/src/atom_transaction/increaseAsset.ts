@@ -51,20 +51,9 @@ export class IncreaseAssetTransactionFactory extends TransactionFactory<Increase
 
     const { baseHelper } = this;
 
-    const recipientId = body.recipientId;
-
     if (!body.recipientId) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
         prop: "recipientId",
-        ...Function_Exception_Detail,
-      });
-    }
-
-    if (body.senderId === recipientId) {
-      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
-        to_compare_prop: `senderId ${body.senderId}`,
-        to_target: "body",
-        be_compare_prop: `recipientId ${recipientId}`,
         ...Function_Exception_Detail,
       });
     }
