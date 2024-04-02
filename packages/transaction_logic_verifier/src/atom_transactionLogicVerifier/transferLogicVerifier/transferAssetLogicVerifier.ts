@@ -22,6 +22,14 @@ export class TransferAssetLogicVerifier extends TransactionLogicVerifier {
 
     await this.helperLogicVerifier.isAssetExist(sourceChainName, sourceChainMagic, assetType);
 
+    const account = await this.helperLogicVerifier.getAccountForce(
+      accountMap,
+      transaction.recipientId,
+      currentBlockHeight,
+    );
+
+    this.checkRecipientStatus(assetType, account);
+
     await this.logicVerify(transaction, currentBlockHeight, accountMap);
 
     const { eventLogicVerifier } = this;
