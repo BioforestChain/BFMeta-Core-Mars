@@ -166,11 +166,22 @@ export class ConfigHelper {
   /**发行权益的账户最小持有的链主权益数量 */
   @cacheGetter
   get issueAssetMinChainAsset() {
+    // btgm 1000 个
+    if (this.magic === "RRJJO") {
+      return "100000000000";
+    }
     return this.hookedGenesisBlock.asset.genesisAsset.issueAssetMinChainAsset;
   }
   /**冻结的主权益数允许发行的最大权益数量 */
   @cacheGetter
   get maxMultipleOfAssetAndMainAsset() {
+    // btgm 100w倍
+    if (this.magic === "RRJJO") {
+      return {
+        numerator: "1000000",
+        denominator: "1",
+      };
+    }
     return this.hookedGenesisBlock.asset.genesisAsset.maxMultipleOfAssetAndMainAsset;
   }
   /**发行非同质资产模板的账户最小持有的主权益数量 */
