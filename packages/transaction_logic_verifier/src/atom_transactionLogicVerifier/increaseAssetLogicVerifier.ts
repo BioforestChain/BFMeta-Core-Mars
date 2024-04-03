@@ -69,6 +69,6 @@ export class IncreaseAssetLogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    */
   getLockData(transaction: IncreaseAssetTransaction) {
-    return [transaction.type];
+    return [transaction.asset.increaseAsset.applyAddress];
   }
 }
