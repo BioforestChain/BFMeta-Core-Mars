@@ -157,12 +157,12 @@ export class IssueAssetTransactionFactory extends TransactionFactory<IssueAssetT
     }
 
     const len = assetType.length;
-    if (len < 3 || len > 5) {
+    if (len < 3 || len > 10) {
       throw new ArgumentIllegalException(ERROR_LIST.NOT_IN_EXPECTED_RANGE, {
         prop: `assetType ${assetType}`,
         type: "string length",
         min: 3,
-        max: 5,
+        max: 10,
         ...IssueAssetAsset_Exception_Detail,
       });
     }
