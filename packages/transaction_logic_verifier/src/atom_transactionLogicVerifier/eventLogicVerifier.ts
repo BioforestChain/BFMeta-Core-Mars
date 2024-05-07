@@ -1910,7 +1910,7 @@ export class EventLogicVerifier {
     currentBlockHeight: number,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    // 记录迁移凭证
+    // 纳税
     eventEmitter.on(
       "payTax",
       async ({ applyInfo }, next) => {
@@ -1925,9 +1925,9 @@ export class EventLogicVerifier {
             currentBlockHeight,
           );
 
-          if (memEntity.applyAddress !== taxInformation.taxCollector) {
+          if (memEntity.taxAssetRecipientId !== taxInformation.taxCollector) {
             throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
-              to_compare_prop: `entityApplicant ${memEntity.applyAddress}`,
+              to_compare_prop: `taxAssetRecipientId ${memEntity.taxAssetRecipientId}`,
               be_compare_prop: `taxCollector ${taxInformation.taxCollector}`,
               to_target: `taxInformation`,
               be_target: "memEntity",

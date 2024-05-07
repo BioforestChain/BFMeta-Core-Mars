@@ -307,7 +307,12 @@ export class IssueEntityMultiTransactionFactory extends TransactionFactory<Issue
           sourceChainName,
           sourceChainMagic,
           factoryId,
-          entityStructList,
+          entityStructList: entityStructList.map((item) => {
+            return {
+              ...item,
+              taxAssetRecipientId: item.taxAssetRecipientId || senderId,
+            };
+          }),
           possessorAddress: recipientId,
           entityFactoryPossessorAddress: entityFactoryPossessor,
           entityFrozenAssetPrealnum,

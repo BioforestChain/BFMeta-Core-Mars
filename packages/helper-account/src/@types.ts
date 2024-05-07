@@ -139,6 +139,7 @@ declare namespace BFChainCore {
     status: number;
     maxFrozenBlockHeight: number;
     taxAssetPrealnum: string;
+    taxAssetRecipientId: string;
     frozenId: string;
   };
 

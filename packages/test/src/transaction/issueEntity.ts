@@ -132,6 +132,7 @@ async function getIssueEntityTransaction(
         taxAssetPrealnum: "0",
         entityFactoryPossessor: genesisAddress,
         entityFactory,
+        taxAssetRecipientId: sender.address,
       },
     },
     keypair,
@@ -139,6 +140,10 @@ async function getIssueEntityTransaction(
   );
 
   await bfchainCore.transaction.getTransactionFactoryFromType(trs.type).verify(trs);
+
+  const yy = await bfchainCore.transaction.recombineTransaction(trs.toJSON());
+
+  await bfchainCore.transactionHelper.verifyTransactionSignature(yy);
   console.log(trs.toJSON());
 }
 

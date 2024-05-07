@@ -151,6 +151,10 @@ async function getIssueEntityTransaction(
 
   // await yy.verify(trs, 10, new Map(), false, {} as any);
 
+  const yy = await bfchainCore.transaction.recombineTransaction(trs.toJSON());
+
+  await bfchainCore.transactionHelper.verifyTransactionSignature(yy);
+
   console.log(trs.toJSON());
 }
 

@@ -449,6 +449,8 @@ declare namespace BFChainCore {
     entityFactoryPossessor: string;
     /**非同质资产的模板 */
     entityFactory: IssueEntityFactoryJSON;
+    /**非同质资产版税接收账户 */
+    taxAssetRecipientId?: string;
   }
   interface IssueEntityAssetJSON {
     /**发行非同质资产事件附带信息 */
@@ -481,6 +483,8 @@ declare namespace BFChainCore {
     entityId: string;
     /**非同质资产流通需要缴纳的版税 */
     taxAssetPrealnum: string;
+    /**非同质资产版税接收账户 */
+    taxAssetRecipientId?: string;
   }
   interface IssueEntityMultiJSON {
     /**非同质资产来源链名，小写字母组成，5-20 位 */

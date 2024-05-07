@@ -437,6 +437,7 @@ declare namespace BFChainCore {
   interface ApplyInfo_IssueEntity extends ApplyInfo_IssueEntity_Base {
     entityId: string;
     taxAssetPrealnum: string;
+    taxAssetRecipientId: string;
   }
   /**发行 entity */
   type ApplyTransactionIssueEntityEvent<
@@ -445,7 +446,7 @@ declare namespace BFChainCore {
   > = ApplyTransactionEvent<ApplyInfo_IssueEntity, EVENTNAME, T>;
 
   interface ApplyInfo_IssueEntityMulti extends ApplyInfo_IssueEntity_Base {
-    entityStructList: BFChainCore.EntityStructJSON[];
+    entityStructList: Required<BFChainCore.EntityStructJSON>[];
   }
   /**发行 entity */
   type ApplyTransactionIssueEntityMultiEvent<

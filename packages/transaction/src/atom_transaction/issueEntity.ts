@@ -266,6 +266,7 @@ export class IssueEntityTransactionFactory extends TransactionFactory<IssueEntit
         taxAssetPrealnum,
         entityFactoryPossessor,
         entityFactory,
+        taxAssetRecipientId,
       } = transaction.asset.issueEntity;
       const { factoryId, entityFrozenAssetPrealnum, purchaseAssetPrealnum } = entityFactory;
       // 扣除手续费并且统计交易数量
@@ -306,6 +307,7 @@ export class IssueEntityTransactionFactory extends TransactionFactory<IssueEntit
           entityFrozenAssetPrealnum,
           issueId: signature,
           status: ASSET_STATUS.NORMAL,
+          taxAssetRecipientId: taxAssetRecipientId || senderId,
         },
       });
       // 冻结主权益，销毁时赎回

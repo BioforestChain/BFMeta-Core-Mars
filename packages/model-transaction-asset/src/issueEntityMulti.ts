@@ -12,11 +12,15 @@ export class EntityStructModel
   /**非同质资产流通需要缴纳的版税 */
   @Field.d(2, "string")
   taxAssetPrealnum!: string;
+  /**非同质资产流通需要缴纳的版税 */
+  @Field.d(3, "string", "optional")
+  taxAssetRecipientId?: string;
   toJSON() {
     const res: BFChainCore.EntityStructJSON = {
       entityId: this.entityId,
       taxAssetPrealnum: this.taxAssetPrealnum,
     };
+    this.taxAssetRecipientId && (res.taxAssetRecipientId = this.taxAssetRecipientId);
     return res;
   }
 }

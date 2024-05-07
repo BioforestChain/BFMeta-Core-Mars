@@ -29,6 +29,9 @@ export class IssueEntityModel
   /**非同质资产模板 */
   @Field.d(IssueEntityModel.INC++, IssueEntityFactoryModel)
   entityFactory!: IssueEntityFactoryModel;
+  /**非同质资产版税接收账户 */
+  @Field.d(IssueEntityFactoryModel.INC++, "string", "optional")
+  taxAssetRecipientId?: string;
   toJSON() {
     const res: BFChainCore.IssueEntityJSON = {
       sourceChainName: this.sourceChainName,
@@ -38,6 +41,8 @@ export class IssueEntityModel
       entityFactoryPossessor: this.entityFactoryPossessor,
       entityFactory: this.entityFactory.toJSON(),
     };
+
+    this.taxAssetRecipientId && (res.taxAssetRecipientId = this.taxAssetRecipientId);
 
     return res;
   }
