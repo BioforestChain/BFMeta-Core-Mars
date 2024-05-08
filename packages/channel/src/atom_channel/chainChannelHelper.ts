@@ -699,7 +699,6 @@ export class ChainChannelHelper {
         params,
       });
     }
-    // FIXME: @wmc
     /// 参数校验
     //#region 交易签名校验
     const { someBlock } = arg;

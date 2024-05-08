@@ -87,7 +87,7 @@ export class BlockBaseStatisticsHelper {
       BigInt(assetStatistic.total.moveAmount) + sourceAmount
     ).toString();
     assetStatistic.total.changeCount += 1;
-    // FIXME: subId @wmc
+    // FIXME: subId
     const subId = transaction.signature;
     if (!statistics_info.subIdMap.has(subId)) {
       assetStatistic.total.transactionCount += 1;
@@ -147,7 +147,7 @@ export class BlockBaseStatisticsHelper {
       BigInt(assetStatistic.total.changeAmount) + sourceAmount
     ).toString();
     assetStatistic.total.changeCount += 1;
-    // FIXME: subId @wmc
+    // FIXME: subId
     const subId = transaction.signature;
     if (!statistics_info.subIdMap.has(subId)) {
       assetStatistic.total.transactionCount += 1;
