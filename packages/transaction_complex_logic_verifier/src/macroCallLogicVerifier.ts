@@ -287,6 +287,6 @@ export class MacroCallLogicVerifier extends TransactionLogicVerifier {
     );
     const locks = logicVerify.getLockData(subTransaction);
     locks.push(macroId);
-    return locks;
+    return [...new Set(locks)];
   }
 }

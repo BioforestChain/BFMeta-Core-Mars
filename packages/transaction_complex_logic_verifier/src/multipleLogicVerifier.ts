@@ -256,6 +256,6 @@ export class MultipleLogicVerifier extends TransactionLogicVerifier {
       const results = logicVerify.getLockData(subTransaction);
       locks.push(...results);
     }
-    return locks;
+    return [...new Set(locks)];
   }
 }

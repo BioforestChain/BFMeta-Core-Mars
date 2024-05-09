@@ -303,6 +303,6 @@ export class PromiseResolveLogicVerifier extends TransactionLogicVerifier {
     );
     const locks = logicVerify.getLockData(subTransaction);
     locks.push(promiseId);
-    return locks;
+    return [...new Set(locks)];
   }
 }
