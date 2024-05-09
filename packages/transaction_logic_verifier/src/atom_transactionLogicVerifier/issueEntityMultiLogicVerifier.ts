@@ -105,13 +105,6 @@ export class IssueEntityMultiLogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    */
   getLockData(transaction: IssueEntityMultiTransaction) {
-    const { entityFactoryPossessor, entityStructList } = transaction.asset.issueEntityMulti;
-    const locks = [entityFactoryPossessor];
-    for (const { taxAssetRecipientId } of entityStructList) {
-      if (taxAssetRecipientId) {
-        locks.push(taxAssetRecipientId);
-      }
-    }
-    return [...new Set(locks)];
+    return [transaction.asset.issueEntityMulti.entityFactoryPossessor];
   }
 }

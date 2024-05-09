@@ -38,11 +38,6 @@ export class IssueEntityV1LogicVerifier extends TransactionLogicVerifier {
    * @param transaction
    */
   getLockData(transaction: IssueEntityTransaction) {
-    const { entityFactoryPossessor, taxAssetRecipientId } = transaction.asset.issueEntity;
-    const locks = [entityFactoryPossessor];
-    if (taxAssetRecipientId) {
-      locks.push(taxAssetRecipientId);
-    }
-    return [...new Set(locks)];
+    return [transaction.asset.issueEntity.entityFactoryPossessor];
   }
 }
