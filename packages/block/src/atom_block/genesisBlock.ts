@@ -210,6 +210,14 @@ export class GenesisBlockFactory extends BlockFactory<GenesisBlock> {
       });
     }
 
+    if (BigInt(genesisAsset.maxSupply) < BigInt(genesisAsset.genesisAmount)) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GTE_FIELD, {
+        prop: "maxSupply",
+        ...GenesisBlockAsset_Exception_Detail,
+        field: genesisAsset.genesisAmount,
+      });
+    }
+
     if (!baseHelper.isPositiveFloatContainZero(genesisAsset.minTransactionFeePerByte)) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
         prop: `minTransactionFeePerByte ${genesisAsset.minTransactionFeePerByte}`,

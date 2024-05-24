@@ -418,7 +418,15 @@ registerchainAssetData.blockPerRound = 5;
     const eventEmitter: BFChainCore.ApplyTransactionEventEmitter<any> =
       new QueneEventEmitter<any>();
     eventEmitter.blockRewardsGetter = async (height: number) => {
-      return registerBfchainCore.config.basicRewards;
+      const diff =
+        BigInt(registerBfchainCore.config.maxSupply) -
+        BigInt(registerBfchainCore.config.genesisAmount);
+      const basicRewards = BigInt(registerBfchainCore.config.basicRewards);
+      return diff > BigInt(0)
+        ? diff >= basicRewards
+          ? basicRewards.toString()
+          : diff.toString()
+        : "0";
     };
     const taskname = (eventEmitter.taskname = `test-registerChainGenesisBlock-${height}`);
     const statisticsInfo = registerStatistics.forceGetStatisticsInfoByBlock(

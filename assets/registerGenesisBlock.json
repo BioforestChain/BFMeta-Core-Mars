@@ -3,7 +3,7 @@
   "height": 1,
   "blockSize": 23973,
   "timestamp": 0,
-  "signature": "06fead9c3d62084789331103693e166b5f3f4a88be94f1562de535f7c709c76df4342c76d5a85e527415afac208fbac7da19cefda8bb7810eeaf2fbb48231505",
+  "signature": "7a593469bfe813ae225ac2eec599dd46a7152f311480e4700d8aac523854fc6832113b47763aaeb9bd1b961bad52ae0693259c4c3a34ff806607f4c18e4f150f",
   "generatorPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
   "previousBlockSignature": "",
   "reward": "100000000",
@@ -80,7 +80,7 @@
     "startTindex": 0,
     "offset": 53,
     "numberOfTransactions": 53,
-    "payloadHash": "f940187f931fd3d43e01ad8625c742f750e299b3b7a5b08494aa23e45257f0bf",
+    "payloadHash": "dc8db263751f6ce8eb2f76a804a0c1b4d45475af9be113f86f0ec84b58a43bfb",
     "payloadLength": 22838,
     "blobSize": 0,
     "totalAmount": "11028969",
@@ -189,10 +189,10 @@
       {
         "tIndex": 3,
         "height": 1,
-        "signature": "b4fdddb298a83dd141c03df726515438f03ec06f880ad505f6e11df931014b5a6c303ab4eaa4c455335fedeede1f82cac21682c7280efc656854ca44ceed2e01",
+        "signature": "0a16f2fc46a1229091944ebc2352e99d725af47b69bbe56e5153c612240af0fd097609b629ad206b697c65c1fed8d3dd964c0e30ef42b47e8653eab0619ab508",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-AST-01",
+          "type": "QAWAQ-QAWAQ-AST-02",
           "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
           "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
           "rangeType": 0,
@@ -203,7 +203,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "d97a46c4bf65716c27b642b2e6a1e9b3875e7ed4735654ed6e58c52f116a9d3f025819f007a19177c65b397a99cefda302f2c7ebd84fea72c3bae10ad9c9910a",
+          "signature": "70be9d45fc6535b785d3d1e72b39e60b351208fca57d54f1fb6f0428790d67e8e9c6a25af1c8095e8920dc02c4d0bce9d08cc64f65f9be8175f6d3fd5dfa7f0b",
           "remark": {
             "remark": "交易备注，任意信息，这个是转账交易"
           },
@@ -387,10 +387,10 @@
       {
         "tIndex": 8,
         "height": 1,
-        "signature": "7179b3768c4c47c87dc19660d0bbd9458bb0496b19e40862fef3fe4b607789f2565aa4b4f9373719c3c55b8e2e82decdbcc8ed0e24bffeb4189111990aba780a",
+        "signature": "d79ca0ca0cc122cef600db528f1c6f7a10a6bc5676f702d0e67f5abe8440ea71fcdbcd4b46ad352a3df6d4a1f5be5876532bc428dd42d903b3cee1e0fcff6d05",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-AST-01",
+          "type": "QAWAQ-QAWAQ-AST-02",
           "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
           "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
           "rangeType": 0,
@@ -401,7 +401,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "44693adb96c61a732f51d82525c66263a60938017c29d6584b7be1a4afba9741fbbee48fee1e84846dbe785969655c04a9176b330b50300cd162cdfcda3f2d02",
+          "signature": "a9e861bb6fec1aee11ee05a002eb2cf66dfc7334c6e684657040665be55a3d5089ce1740086e8b5e4c36e9c8babe908ab4cd0fc73af5eb07305ec04ac431ec00",
           "remark": {
             "remark": "交易备注，任意信息，这个是转账交易"
           },
@@ -585,10 +585,10 @@
       {
         "tIndex": 13,
         "height": 1,
-        "signature": "9418e84626b96278a04c8a461061e5f7b1d0b3fe7d1b9f0821f9e4be00aa41f636340ae73f8cb9464ab21d51b10446a7015cfcd095f64cb97691e11356462f0e",
+        "signature": "0e068e20745568d40e48c1a84b580da791421cd6a993430c683d569b3f9eeee331f56e2d9fc1aa17993234ff9deadd5e3be97a6aaf73f314f4786b132498c800",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-AST-01",
+          "type": "QAWAQ-QAWAQ-AST-02",
           "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
           "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
           "rangeType": 0,
@@ -599,7 +599,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "1cf8b6d8413ff622214cb2abe88235472236ff18579b6ebda30a143dada7a7597f4ae1c5ec80ff176b7ed97e063b401ae19ee59840f99a1412f75cce0a72f005",
+          "signature": "6360d24cf26ce05f37c8619852fcc59eaf7a563d03832bb13e62804654fa4d3e05dc2cd76c71f4163d8801d1ca1a31d7ec7f5d2691ac3d6f2e6f1f79b544df00",
           "remark": {
             "remark": "交易备注，任意信息，这个是转账交易"
           },
@@ -783,10 +783,10 @@
       {
         "tIndex": 18,
         "height": 1,
-        "signature": "64c530ff1301f9ac652ac5717c7eb299fcd6c13992e1f70337d7718194bd79cb25ddda0c8023e6789af98171375d1269db630161d6232a9093e26a75974de905",
+        "signature": "d159a8c6b4dd4b2414b122a53e7af2745624e25b3c804327d853c4ce93adaa0d14e100fc1710e36b804805fff01d28d10ee4382d62bfe663db469f2b63a1850c",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-AST-01",
+          "type": "QAWAQ-QAWAQ-AST-02",
           "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
           "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
           "rangeType": 0,
@@ -797,7 +797,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "5d7bdab337f886084db60c8e63f17428c31f30346204485a393674446318ecfbe2fe097998f9edfbcdfab153b2afdc5a9db734b866791f8ff4a6b095f2b93500",
+          "signature": "017191072de87fb20f728c091a6ab5ca2e77700279b56a7e7b004a222053194cc18374844f6f7ca2133a4a01509381de196a7ae8cb28b47b6e8b0b1786474f04",
           "remark": {
             "remark": "交易备注，任意信息，这个是转账交易"
           },
@@ -981,10 +981,10 @@
       {
         "tIndex": 23,
         "height": 1,
-        "signature": "d4b13341d3390a78101d042ce56d21ce73058fa1c8714a57ffc4c93ebe1a7f3a0e6a3e1086ce6b42053330bbb09bf7889884448c919ca2b06911e07069bba208",
+        "signature": "6674fbc6cb5b1f7a5b8fd52105619c15ba362ab539bd9861202032b7639197d2dca583209badd1911bafc458ec9c03318bc46f6a8c524316a0e232bcc9e63200",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-AST-01",
+          "type": "QAWAQ-QAWAQ-AST-02",
           "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
           "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
           "rangeType": 0,
@@ -995,7 +995,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "20d83ec7045c4df1265024af8d24bf65f5b0d192827cb33ab030c79fecab130e06baa964388eb247f0cd8dfee5de17d1eacaab50d10d40c3986b38170493a50c",
+          "signature": "d8cee97b95a4aaabd5a6dacf0bbc96099e7228f855bbe7a2a644f7bb4f1ef5b4607b50eeb45267d3397b8b8b9feb6de83d4a5bd5df5d22deedc38c40f45f7c0f",
           "remark": {
             "remark": "交易备注，任意信息，这个是转账交易"
           },
@@ -1179,10 +1179,10 @@
       {
         "tIndex": 28,
         "height": 1,
-        "signature": "67535f4dee794873c6e740fc5fe6ee884781c990fc4c84ab5ccfd39f48e811881a958192930b7b9ebe34abf1d7818bb662ebe380db2c1b4b3e9c504a97f61609",
+        "signature": "df53f73d820fd3d71ea0866c7595473d6a71150caa73f2a85b8a4c931bed152e189cc05070cc4ffc00dcb2677ef7a07119e2e81118957bc24a19410d5c44e205",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-AST-01",
+          "type": "QAWAQ-QAWAQ-AST-02",
           "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
           "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
           "rangeType": 0,
@@ -1193,7 +1193,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "6c07e651392f93f6b8195f5b2bb9f548e066c0f09cd7d4a45f0b61907342279f8e3c28a5b08064a7e7f7928a8e09a1de379564f6a9935d2ba36812ef049f9405",
+          "signature": "a22574516c3ce27c506ae0a4c2900bc69e9433f546559cc99d41938315b19118c156e93bd9b9bdbd8d1f57df410a6271c92fa5634ae3aaa95ec0afa2fdbb5905",
           "remark": {
             "remark": "交易备注，任意信息，这个是转账交易"
           },
@@ -1377,10 +1377,10 @@
       {
         "tIndex": 33,
         "height": 1,
-        "signature": "e7c3eb51e51036fdfee9b8201f2b6524f8e7f4bca3f895efb49aaf775e3c039176f9f15cb6555cb587f917378326a7725c3a1c3c48af4f1b54bcc934f1675c05",
+        "signature": "4a7d4921fff5fa7dd070c33f02171dae60591a0eefc6e444b345ede31391ec69fd82755218645aa66aad8506f1ac689fa46220f28acfdc2347e883d134062605",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-AST-01",
+          "type": "QAWAQ-QAWAQ-AST-02",
           "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
           "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
           "rangeType": 0,
@@ -1391,7 +1391,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "cf1a7e17485a59227cd34989c8c3672e9aae65406623664f88b30200a25ac7958b986c6d3e9c5ecc7e672201f94080e4d826f59280891116ed58d3d89e80cb0d",
+          "signature": "ece38a73f1df8c07a792853e0d08eae2046f74c2c5afc3788099a7cf1aa1fa0aef292ae8435c2bd70b60fa2ac8ca66d3f47823b2c56881035b4b93784b2b9e08",
           "remark": {
             "remark": "交易备注，任意信息，这个是转账交易"
           },
@@ -1575,10 +1575,10 @@
       {
         "tIndex": 38,
         "height": 1,
-        "signature": "f1e54709590b91789757a3bd56006fc288524da0f7524263138a983f9d1e56acb6723e98c497055dd8f1274067e5fdaa0a5ec79b0ad671e8a62dad7c3244e70a",
+        "signature": "77d041ca4c13f9ab2eb2dbaf2d44df1ff7f16cc52505f6ee8e08839e2a2db7d397e75dbae0c2e8312ab242547a43b412b2fa007c8624e0612f3c2bd2f2618c0f",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-AST-01",
+          "type": "QAWAQ-QAWAQ-AST-02",
           "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
           "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
           "rangeType": 0,
@@ -1589,7 +1589,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "cff6981c92a8a7c54341d6e1384390cbe72d15db805963c0ddca98247474790cd56bed53cd212e738dd7311850584c68b6b48a021b4492f3103d15e6a8cfc901",
+          "signature": "64b38bb83b5f4182884ef94749c80f5d9a5e5c0c803e027bdbd5a8b98cf52e94209051acaa43a74f78d79e08e73b1ee07e94da905248dea08e4aa151cc1d4f06",
           "remark": {
             "remark": "交易备注，任意信息，这个是转账交易"
           },
@@ -1773,10 +1773,10 @@
       {
         "tIndex": 43,
         "height": 1,
-        "signature": "79a97c7b729cd6ec6a20907eb15f1a11ad9140da13cbca89ed2c5be41155dbc357fe18512a38ed2a75712a75e4a5f967e6386de9b20b191ab86f6087f5e6f403",
+        "signature": "47c6abfe5231ae21dc8b30def4a0fd0d22c2bc8b306b6ebab253c37d2ffe9c699ee5ff8ec79c1903c7512e73b7a13740cdcc25785354c9ac3fd43fe7ef642907",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-AST-01",
+          "type": "QAWAQ-QAWAQ-AST-02",
           "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
           "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
           "rangeType": 0,
@@ -1787,7 +1787,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "baf845e3edf8edcd1fa4f36af4f4c8dcf1e8fa0dfe2dec1967ab4dfa9580ef775bda0525bf89df8d72da51c49a3e47ecbab7d16c5877beb049f6a7b638abbc02",
+          "signature": "dba9b5377b95814436f801a123dbcfe425ba5774f6cf6d767c82c08209db8ccb4caee91a79781d27db5a244160f0b73ec7134ec33586bd3b01e99cda57917c0c",
           "remark": {
             "remark": "交易备注，任意信息，这个是转账交易"
           },
@@ -1971,10 +1971,10 @@
       {
         "tIndex": 48,
         "height": 1,
-        "signature": "81abe99757fff4c0ec469771b61cae986359867518be21fb35782bca40b3229da169687005f9ce491de550f1a319f6bd87b0015362406f7759ac7894082fee03",
+        "signature": "e2b3cb60985551e2dafd48a3bb35b892b66ba27fff7557d2a9022c0afd908df023813f417cba15ae0cb5ac585d497c02132dd7b4e5d61bc9d9bd9224fe24e503",
         "transaction": {
           "version": 1,
-          "type": "QAWAQ-QAWAQ-AST-01",
+          "type": "QAWAQ-QAWAQ-AST-02",
           "senderId": "cEAXDkaEJgWKMM61KYz2dYU1RfuxbB8Ma",
           "senderPublicKey": "4bda2c5366b10e709c560e846e4041d355446c910dd6238e418092af5736c227",
           "rangeType": 0,
@@ -1985,7 +1985,7 @@
           "toMagic": "NMQX0",
           "applyBlockHeight": 1,
           "effectiveBlockHeight": 1,
-          "signature": "01f75de57e0783159757586c9da9b970d6c6900998e92299d2e0c6699de5c4213f3ad0f17809355a6a605ce4d78b3ce2a658d4ce35c36021fbab96886c4da308",
+          "signature": "210b5387245aacb458e2e33c481d47d61565bff7b667dacf5b92456821e46eff11b44329b46e07f1504c44b03c72d422279e92e08941130cf1b9e7334cea5b08",
           "remark": {
             "remark": "交易备注，任意信息，这个是转账交易"
           },
@@ -2177,7 +2177,7 @@
           "assetTypeTypeStatisticHashMap": {
             "QAWAQ": {
               "typeStatisticHashMap": {
-                "AST-01": {
+                "AST-02": {
                   "changeAmount": "28240",
                   "changeCount": 30,
                   "moveAmount": "15600",
@@ -2215,7 +2215,7 @@
       "numberOfTransactionsHashMap": {
         "LNS-00": 1,
         "ETY-01": 2,
-        "AST-01": 10,
+        "AST-02": 10,
         "ETY-02": 40
       }
     }

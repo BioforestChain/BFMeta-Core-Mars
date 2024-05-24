@@ -340,7 +340,13 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
     const eventEmitter: BFChainCore.ApplyTransactionEventEmitter<any> =
       new QueneEventEmitter<any>();
     eventEmitter.blockRewardsGetter = async (height: number) => {
-      return core.config.basicRewards;
+      const diff = BigInt(core.config.maxSupply) - BigInt(core.config.genesisAmount);
+      const basicRewards = BigInt(core.config.basicRewards);
+      return diff > BigInt(0)
+        ? diff >= basicRewards
+          ? basicRewards.toString()
+          : diff.toString()
+        : "0";
     };
     let entityIndex = 0;
     const getEntityIndex = () => {
