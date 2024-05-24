@@ -108,25 +108,6 @@ export class CommonBlockVerify<T extends Block> {
   }
 
   /**
-   * 校验区块奖励数
-   *
-   * @param block
-   */
-  verifyBlockReward(block: T) {
-    if (block.height !== 1) {
-      const expectedReward = this.config.basicRewards;
-      if (expectedReward !== block.reward) {
-        throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
-          to_compare_prop: `blockReward ${block.reward}`,
-          be_compare_prop: `expectedReward ${expectedReward}`,
-          to_target: "block",
-          be_target: "calculate",
-        });
-      }
-    }
-  }
-
-  /**
    * 校验区块大小
    *
    */

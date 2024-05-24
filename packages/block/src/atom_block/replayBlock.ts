@@ -189,9 +189,6 @@ export class ReplayBlockCore<T extends Block> {
       config,
     );
 
-    // 校验区块奖励数
-    this.commonBlockVerify.verifyBlockReward(block);
-
     isDevGenerateBlock && log("before signatureBlock");
     eventEmitter &&
       (await this._wrapBlockError(
@@ -458,6 +455,16 @@ export class ReplayBlockCore<T extends Block> {
         }
       }
       isDevGenerateBlock && info("finish insertTransactionsForReplay");
+
+      const expectedReward = await eventEmitter.blockRewardsGetter(height);
+      if (block.reward !== expectedReward) {
+        throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
+          to_compare_prop: `blockReward ${block.reward}`,
+          be_compare_prop: `expectedReward ${expectedReward}`,
+          to_target: "block",
+          be_target: "calculate",
+        });
+      }
 
       // 校验 offset
       const offset = transactionInBlockBufferList.length;
