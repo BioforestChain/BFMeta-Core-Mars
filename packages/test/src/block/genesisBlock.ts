@@ -418,7 +418,7 @@ function setAccountAsset(magic: string, address: string, assetType: string, amou
     const statisticsInfo = statistics.forceGetStatisticsInfoByBlock(taskname, "getGenesisBlock");
     statistics.bindApplyTransactionEventEmiter(eventEmitter, statisticsInfo);
     const { magic, assetType } = core.config;
-    let totalRewards = BigInt(core.config.basicRewards);
+    let totalRewards = BigInt(await eventEmitter.blockRewardsGetter(1));
     setAccountAsset(magic, genesisAccountInfo.address, assetType, mainChainAssetData.genesisAmount);
     const transactionHelper = core.transactionHelper;
     for (let i = 0; i < txWithIndexList.length; i++) {
