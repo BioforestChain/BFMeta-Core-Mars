@@ -126,6 +126,9 @@ export class ToExchangeAnyMultiModel
   /**收税信息 */
   @Field.d(ToExchangeAnyMultiModel.INC++, BeExchangeAssetV1Model)
   beExchangeAsset!: BeExchangeAssetV1Model;
+  /**有效区块数 */
+  @Field.d(ToExchangeAnyMultiModel.INC++, "uint32", "optional")
+  numberOfEffectiveBlocks?: number;
 
   @cacheGetter
   get to() {
@@ -140,6 +143,8 @@ export class ToExchangeAnyMultiModel
       toExchangeAssets: this.toExchangeAssets.map((item) => item.toJSON()),
       beExchangeAsset: this.beExchangeAsset.toJSON(),
     };
+    this.numberOfEffectiveBlocks !== undefined &&
+      (res.numberOfEffectiveBlocks = this.numberOfEffectiveBlocks);
 
     return res;
   }

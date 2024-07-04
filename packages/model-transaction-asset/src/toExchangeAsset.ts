@@ -63,6 +63,9 @@ export class ToExchangeAssetModel
   /**交换的资产比例 */
   @Field.d(ToExchangeAssetModel.INC++, RateModel)
   exchangeRate!: RateModel;
+  /**有效区块数 */
+  @Field.d(ToExchangeAssetModel.INC++, "uint32", "optional")
+  numberOfEffectiveBlocks?: number;
   @cacheGetter
   get to() {
     return {
@@ -81,7 +84,7 @@ export class ToExchangeAssetModel
     };
   }
   toJSON() {
-    return {
+    const res: BFChainCore.ToExchangeAssetJSON = {
       cipherPublicKeys: this.cipherPublicKeys,
       toExchangeSource: this.toExchangeSource,
       beExchangeSource: this.beExchangeSource,
@@ -92,6 +95,10 @@ export class ToExchangeAssetModel
       toExchangeNumber: this.toExchangeNumber,
       exchangeRate: this.exchangeRate.toJSON(),
     };
+    this.numberOfEffectiveBlocks !== undefined &&
+      (res.numberOfEffectiveBlocks = this.numberOfEffectiveBlocks);
+
+    return res;
   }
   static fromObject<T extends Message>(
     this: BFChainProtobuf.Constructor<T>,

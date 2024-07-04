@@ -909,7 +909,7 @@ export class TransactionHelper {
       transaction instanceof IssueEntityMultiTransaction ||
       transaction instanceof StakeAssetTransaction
     ) {
-      maxEffectiveHeight = Number.MAX_SAFE_INTEGER;
+      return Number.MAX_SAFE_INTEGER;
     }
     return maxEffectiveHeight;
   }
@@ -967,8 +967,8 @@ export class TransactionHelper {
    * @param currentBlockHeight 当前区块高度
    * @param config 配置文件
    */
-  calcTransactionQueryRange(currentBlockHeight: number, config = this.config) {
-    const startHeight = currentBlockHeight - config.maxApplyAndConfirmedBlockHeightDiff;
+  calcTransactionQueryRange(currentBlockHeight: number, offset?: number, config = this.config) {
+    const startHeight = currentBlockHeight - (offset || config.maxApplyAndConfirmedBlockHeightDiff);
     return {
       startHeight: startHeight <= 0 ? 1 : startHeight,
       endHeight: currentBlockHeight - 1,

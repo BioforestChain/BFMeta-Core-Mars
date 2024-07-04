@@ -103,7 +103,7 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
       });
     }
 
-    const { toExchangeAssets, beExchangeAsset } = toExchangeAnyMulti;
+    const { toExchangeAssets, beExchangeAsset, numberOfEffectiveBlocks } = toExchangeAnyMulti;
     const isNeedBeExchangeAssetPrealnum = await this.verifyToExchangeAnyMulti(
       "toExchangeAnyMulti",
       toExchangeAssets,
@@ -146,6 +146,22 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
         throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
           prop: "beExchangeAssetPrealnum",
           target: "toExchangeAnyMulti.beExchangeAsset",
+        });
+      }
+    }
+
+    if (numberOfEffectiveBlocks !== undefined) {
+      if (this.baseHelper.isPositiveInteger(numberOfEffectiveBlocks) === false) {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+          prop: `numberOfEffectiveBlocks ${numberOfEffectiveBlocks}`,
+          target: "toExchangeAnyMulti",
+        });
+      }
+      if (numberOfEffectiveBlocks + body.applyBlockHeight < body.effectiveBlockHeight) {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GTE_FIELD, {
+          prop: `numberOfEffectiveBlocks ${numberOfEffectiveBlocks}`,
+          target: "toExchangeAnyMulti",
+          field: body.effectiveBlockHeight - body.applyBlockHeight,
         });
       }
     }
@@ -404,8 +420,13 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
   ) {
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
-      const { senderId, senderPublicKeyBuffer, signature } = transaction;
-      const { toExchangeAssets, beExchangeAsset } = transaction.asset.toExchangeAnyMulti;
+      const { senderId, senderPublicKeyBuffer, applyBlockHeight, signature } = transaction;
+      const { toExchangeAssets, beExchangeAsset, numberOfEffectiveBlocks } =
+        transaction.asset.toExchangeAnyMulti;
+      let maxEffectiveHeight = this.transactionHelper.getTransactionMaxEffectiveHeight(transaction);
+      if (numberOfEffectiveBlocks !== undefined) {
+        maxEffectiveHeight = applyBlockHeight + numberOfEffectiveBlocks;
+      }
 
       let frozenAmount = BigInt(0);
       for (const toExchangeAsset of toExchangeAssets) {
@@ -434,8 +455,7 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
               assetInfo: toAssetInfo,
               amount: `-${toExchangeAssetPrealnum}`,
               sourceAmount: toExchangeAssetPrealnum,
-              maxEffectiveHeight:
-                this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
+              maxEffectiveHeight,
               minEffectiveHeight:
                 this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
               frozenId: signature,
@@ -454,8 +474,7 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
               dappid: toExchangeAssetType,
               minEffectiveHeight:
                 this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
-              maxEffectiveHeight:
-                this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
+              maxEffectiveHeight,
               status: ASSET_STATUS.FROZEN,
               frozenId: signature,
             },
@@ -472,8 +491,7 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
               name: toExchangeAssetType,
               minEffectiveHeight:
                 this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
-              maxEffectiveHeight:
-                this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
+              maxEffectiveHeight,
               status: ASSET_STATUS.FROZEN,
               frozenId: signature,
             },
@@ -490,8 +508,7 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
               entityId: toExchangeAssetType,
               minEffectiveHeight:
                 this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
-              maxEffectiveHeight:
-                this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
+              maxEffectiveHeight,
               status: ASSET_STATUS.FROZEN,
               frozenId: signature,
             },
@@ -526,8 +543,7 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
               certificateId: toExchangeAssetType,
               minEffectiveHeight:
                 this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
-              maxEffectiveHeight:
-                this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
+              maxEffectiveHeight,
               status: ASSET_STATUS.FROZEN,
               frozenId: signature,
             },
@@ -554,8 +570,7 @@ export class ToExchangeAnyMultiTransactionFactory extends TransactionFactory<ToE
             assetInfo: chainAssetInfo,
             amount: `-${frozenAmount.toString()}`,
             sourceAmount: frozenAmount.toString(),
-            maxEffectiveHeight:
-              this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
+            maxEffectiveHeight,
             minEffectiveHeight:
               this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
             // 因为 nft 的版税，导致一条交易出现多条冻结记录，但是又不能混合

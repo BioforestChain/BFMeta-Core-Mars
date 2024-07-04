@@ -93,6 +93,9 @@ export class ToExchangeAnyModel
   /**收税信息 */
   @Field.d(ToExchangeAnyModel.INC++, TaxInformationModel, "optional")
   taxInformation?: TaxInformationModel;
+  /**有效区块数 */
+  @Field.d(ToExchangeAnyModel.INC++, "uint32", "optional")
+  numberOfEffectiveBlocks?: number;
 
   @cacheGetter
   get to() {
@@ -131,6 +134,8 @@ export class ToExchangeAnyModel
     this.assetExchangeWeightRatio &&
       (res.assetExchangeWeightRatio = this.assetExchangeWeightRatio.toJSON());
     this.taxInformation && (res.taxInformation = this.taxInformation.toJSON());
+    this.numberOfEffectiveBlocks !== undefined &&
+      (res.numberOfEffectiveBlocks = this.numberOfEffectiveBlocks);
 
     return res;
   }

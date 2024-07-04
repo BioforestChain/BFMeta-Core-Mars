@@ -149,7 +149,8 @@ export class BeExchangeAnyMultiAllTransactionFactory extends TransactionFactory<
       });
     }
 
-    const { toExchangeAssets, beExchangeAssets, ciphertextSignature } = beExchangeAnyMultiAll;
+    const { toExchangeAssets, beExchangeAssets, ciphertextSignature, numberOfEffectiveBlocks } =
+      beExchangeAnyMultiAll;
 
     /**校验`beExchangeAnyMulti`的基本格式 */
     await this.toExchangeAnyMultiAllTransactionFactory.verifyExchangeAnyMultiAll(
@@ -183,6 +184,16 @@ export class BeExchangeAnyMultiAllTransactionFactory extends TransactionFactory<
           ...BeExchangeAnyMultiAllAsset_Exception_Detail,
         });
       }
+    }
+
+    if (
+      numberOfEffectiveBlocks !== undefined &&
+      baseHelper.isPositiveInteger(numberOfEffectiveBlocks) === false
+    ) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
+        prop: "numberOfEffectiveBlocks",
+        ...BeExchangeAnyMultiAllAsset_Exception_Detail,
+      });
     }
   }
 

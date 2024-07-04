@@ -28,6 +28,10 @@ export class TrustAssetModel
   /**要托管的资产数量 */
   @Field.d(TrustAssetModel.INC++, "string")
   amount!: string;
+  /**有效区块数 */
+  @Field.d(TrustAssetModel.INC++, "uint32", "optional")
+  numberOfEffectiveBlocks?: number;
+
   toJSON() {
     const res: BFChainCore.TrustAssetJSON = {
       trustees: this.trustees,
@@ -37,6 +41,9 @@ export class TrustAssetModel
       assetType: this.assetType,
       amount: this.amount,
     };
+    this.numberOfEffectiveBlocks !== undefined &&
+      (res.numberOfEffectiveBlocks = this.numberOfEffectiveBlocks);
+
     return res;
   }
 }

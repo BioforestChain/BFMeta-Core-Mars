@@ -32,11 +32,14 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     const beExchangeAny = transaction.asset.beExchangeAny;
-    const { transactionSignature } = beExchangeAny;
+    const { transactionSignature, exchangeAny } = beExchangeAny;
     const toExchangeAnyTransactionJson =
       await this.transactionGetterHelper.getTransactionBySignature(
         transactionSignature,
-        this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
+        this.transactionHelper.calcTransactionQueryRange(
+          currentBlockHeight,
+          exchangeAny.numberOfEffectiveBlocks,
+        ),
       );
     if (!toExchangeAnyTransactionJson) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST_OR_EXPIRED, {
@@ -88,7 +91,8 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
   ) {
     const beExchangeAny = transaction.asset.beExchangeAny;
     const { exchangeAny, ciphertextSignature } = beExchangeAny;
-    const { cipherPublicKeys, assetExchangeWeightRatio, taxInformation } = exchangeAny;
+    const { cipherPublicKeys, assetExchangeWeightRatio, taxInformation, numberOfEffectiveBlocks } =
+      exchangeAny;
     const trsAsset = toExchangeAnyTransaction.asset.toExchangeAny;
     if (
       trsAsset.toExchangeSource !== exchangeAny.toExchangeSource ||
@@ -97,7 +101,8 @@ export class BeExchangeAnyLogicVerifier extends TransactionLogicVerifier {
       trsAsset.beExchangeParentAssetType !== exchangeAny.beExchangeParentAssetType ||
       trsAsset.toExchangeAssetType !== exchangeAny.toExchangeAssetType ||
       trsAsset.beExchangeAssetType !== exchangeAny.beExchangeAssetType ||
-      trsAsset.toExchangeAssetPrealnum !== exchangeAny.toExchangeAssetPrealnum
+      trsAsset.toExchangeAssetPrealnum !== exchangeAny.toExchangeAssetPrealnum ||
+      trsAsset.numberOfEffectiveBlocks !== exchangeAny.numberOfEffectiveBlocks
     ) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `trsAsset: ${JSON.stringify(trsAsset)}`,

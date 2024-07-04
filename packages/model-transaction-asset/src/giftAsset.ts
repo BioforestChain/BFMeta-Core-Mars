@@ -58,6 +58,10 @@ export class GiftAssetModel
   /**资产的分配规则 */
   @Field.d(GiftAssetModel.INC++, "uint32")
   giftDistributionRule!: GIFT_DISTRIBUTION_RULE;
+  /**有效区块数 */
+  @Field.d(GiftAssetModel.INC++, "uint32", "optional")
+  numberOfEffectiveBlocks?: number;
+
   toJSON() {
     const res: BFChainCore.GiftAssetJSON = {
       cipherPublicKeys: this.cipherPublicKeys,
@@ -70,7 +74,10 @@ export class GiftAssetModel
       giftDistributionRule: this.giftDistributionRule,
     };
 
-    this.beginUnfrozenBlockHeight && (res.beginUnfrozenBlockHeight = this.beginUnfrozenBlockHeight);
+    this.beginUnfrozenBlockHeight !== undefined &&
+      (res.beginUnfrozenBlockHeight = this.beginUnfrozenBlockHeight);
+    this.numberOfEffectiveBlocks !== undefined &&
+      (res.numberOfEffectiveBlocks = this.numberOfEffectiveBlocks);
 
     return res;
   }

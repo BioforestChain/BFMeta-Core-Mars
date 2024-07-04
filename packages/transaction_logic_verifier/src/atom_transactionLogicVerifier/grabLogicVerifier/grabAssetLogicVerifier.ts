@@ -32,11 +32,14 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
   ) {
     const grabAsset = transaction.asset.grabAsset;
 
-    const { transactionSignature } = grabAsset;
+    const { transactionSignature, giftAsset } = grabAsset;
     const trsWithBlockSign =
       await this.transactionGetterHelper.getTransactionAndBlockSignatureBySignature(
         transactionSignature,
-        this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
+        this.transactionHelper.calcTransactionQueryRange(
+          currentBlockHeight,
+          giftAsset.numberOfEffectiveBlocks,
+        ),
       );
     if (!trsWithBlockSign) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST_OR_EXPIRED, {
@@ -183,6 +186,7 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
       totalGrabableTimes,
       cipherPublicKeys,
       beginUnfrozenBlockHeight,
+      numberOfEffectiveBlocks,
     } = giftAsset;
 
     const trsAsset = giftAssetTransaction.asset.giftAsset;
@@ -193,7 +197,8 @@ export class GrabAssetLogicVerifier extends TransactionLogicVerifier {
       trsAsset.assetType !== assetType ||
       trsAsset.totalGrabableTimes !== totalGrabableTimes ||
       trsAsset.amount !== amount ||
-      trsAsset.giftDistributionRule !== giftDistributionRule
+      trsAsset.giftDistributionRule !== giftDistributionRule ||
+      trsAsset.numberOfEffectiveBlocks !== numberOfEffectiveBlocks
     ) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `grabAsset.giftAsset: ${JSON.stringify(giftAsset.toJSON())}`,

@@ -35,11 +35,14 @@ export class BeExchangeAnyMultiAllLogicVerifier extends TransactionLogicVerifier
     this.__checkTrsFee(transaction);
 
     const beExchangeAnyMultiAll = transaction.asset.beExchangeAnyMultiAll;
-    const { transactionSignature } = beExchangeAnyMultiAll;
+    const { transactionSignature, numberOfEffectiveBlocks } = beExchangeAnyMultiAll;
     const toExchangeAnyMultiAllTransactionJson =
       await this.transactionGetterHelper.getTransactionBySignature(
         transactionSignature,
-        this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
+        this.transactionHelper.calcTransactionQueryRange(
+          currentBlockHeight,
+          numberOfEffectiveBlocks,
+        ),
       );
     if (!toExchangeAnyMultiAllTransactionJson) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST_OR_EXPIRED, {
@@ -98,11 +101,13 @@ export class BeExchangeAnyMultiAllLogicVerifier extends TransactionLogicVerifier
       toExchangeAssets: prevToExchangeAssets,
       beExchangeAssets: prevBeExchangeAssets,
       cipherPublicKeys,
+      numberOfEffectiveBlocks: prevNumberOfEffectiveBlocks,
     } = toExchangeAnyMultiAllTransaction.asset.toExchangeAnyMultiAll;
     const {
       toExchangeAssets: nextToExchangeAssets,
       beExchangeAssets: nextBeExchangeAssets,
       ciphertextSignature,
+      numberOfEffectiveBlocks: nextNumberOfEffectiveBlocks,
     } = transaction.asset.beExchangeAnyMultiAll;
 
     if (prevToExchangeAssets.length !== nextToExchangeAssets.length) {
@@ -117,6 +122,14 @@ export class BeExchangeAnyMultiAllLogicVerifier extends TransactionLogicVerifier
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `beExchangeAssets.length: ${prevBeExchangeAssets.length}`,
         be_compare_prop: `beExchangeAssets.length: ${nextBeExchangeAssets.length}`,
+        to_target: "toExchangeAnyMultiAll",
+        be_target: "beExchangeAnyMultiAll",
+      });
+    }
+    if (prevNumberOfEffectiveBlocks !== nextNumberOfEffectiveBlocks) {
+      throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
+        to_compare_prop: `numberOfEffectiveBlocks: ${prevNumberOfEffectiveBlocks}`,
+        be_compare_prop: `numberOfEffectiveBlocks: ${nextNumberOfEffectiveBlocks}`,
         to_target: "toExchangeAnyMultiAll",
         be_target: "beExchangeAnyMultiAll",
       });

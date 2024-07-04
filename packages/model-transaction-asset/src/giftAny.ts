@@ -60,6 +60,9 @@ export class GiftAnyModel
   /**收税信息 */
   @Field.d(GiftAnyModel.INC++, TaxInformationModel, "optional")
   taxInformation?: TaxInformationModel;
+  /**有效区块数 */
+  @Field.d(GiftAnyModel.INC++, "uint32", "optional")
+  numberOfEffectiveBlocks?: number;
   toJSON() {
     const res: BFChainCore.GiftAnyJSON = {
       cipherPublicKeys: this.cipherPublicKeys,
@@ -75,6 +78,8 @@ export class GiftAnyModel
       (res.giftDistributionRule = this.giftDistributionRule);
     this.beginUnfrozenBlockHeight && (res.beginUnfrozenBlockHeight = this.beginUnfrozenBlockHeight);
     this.taxInformation && (res.taxInformation = this.taxInformation.toJSON());
+    this.numberOfEffectiveBlocks !== undefined &&
+      (res.numberOfEffectiveBlocks = this.numberOfEffectiveBlocks);
 
     return res;
   }

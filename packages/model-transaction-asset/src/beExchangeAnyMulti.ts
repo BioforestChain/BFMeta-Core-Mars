@@ -63,6 +63,9 @@ export class BeExchangeAnyMultiModel
   /**收税信息 */
   @Field.d(BeExchangeAnyMultiModel.INC++, BeExchangeAssetV1Model)
   beExchangeAsset!: BeExchangeAssetV1Model;
+  /**有效区块数 */
+  @Field.d(BeExchangeAnyMultiModel.INC++, "uint32", "optional")
+  numberOfEffectiveBlocks?: number;
 
   toJSON() {
     const res: BFChainCore.BeExchangeAnyMultiJSON = {
@@ -72,6 +75,8 @@ export class BeExchangeAnyMultiModel
     };
 
     this.ciphertextSignature && (res.ciphertextSignature = this.ciphertextSignature.toJSON());
+    this.numberOfEffectiveBlocks !== undefined &&
+      (res.numberOfEffectiveBlocks = this.numberOfEffectiveBlocks);
 
     return res;
   }

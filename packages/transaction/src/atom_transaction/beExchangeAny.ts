@@ -200,7 +200,7 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
       }
     }
 
-    const { cipherPublicKeys } = exchangeAny;
+    const { cipherPublicKeys, numberOfEffectiveBlocks } = exchangeAny;
     /**如果是公钥模式，那么必须存在密文 */
     if (cipherPublicKeys.length > 0) {
       if (!ciphertextSignature) {
@@ -251,6 +251,15 @@ export class BeExchangeAnyTransactionFactory extends TransactionFactory<BeExchan
           ...BeExchangeAnyAsset_Exception_Detail,
         });
       }
+    }
+    if (
+      numberOfEffectiveBlocks !== undefined &&
+      baseHelper.isPositiveInteger(numberOfEffectiveBlocks) === false
+    ) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+        prop: `numberOfEffectiveBlocks ${numberOfEffectiveBlocks}`,
+        target: "beExchangeAny.exchangeAny",
+      });
     }
   }
 

@@ -38,7 +38,10 @@ export class GiftAnyTransactionFactory extends GiftTransactionFactory<GiftAnyTra
 
     await this.verifyGiftAny(giftAny, config);
 
-    if (giftAny.giftDistributionRule === GIFT_DISTRIBUTION_RULE.RECIPIENT_RANDOM) {
+    const { giftDistributionRule, beginUnfrozenBlockHeight, assetType, numberOfEffectiveBlocks } =
+      giftAny;
+
+    if (giftDistributionRule === GIFT_DISTRIBUTION_RULE.RECIPIENT_RANDOM) {
       if (body.rangeType !== RANGE_TYPE.MULTI_ADDRESS) {
         throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
           to_compare_prop: `rangeType ${body.rangeType}`,
@@ -48,23 +51,39 @@ export class GiftAnyTransactionFactory extends GiftTransactionFactory<GiftAnyTra
       }
     }
 
-    if (giftAny.beginUnfrozenBlockHeight) {
-      if (giftAny.beginUnfrozenBlockHeight >= body.effectiveBlockHeight) {
+    if (beginUnfrozenBlockHeight) {
+      if (beginUnfrozenBlockHeight >= body.effectiveBlockHeight) {
         throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_LT_FIELD, {
-          prop: `beginUnfrozenBlockHeight ${giftAny.beginUnfrozenBlockHeight}`,
+          prop: `beginUnfrozenBlockHeight ${beginUnfrozenBlockHeight}`,
           field: body.effectiveBlockHeight,
           target: "giftAsset",
         });
       }
     }
 
-    if (storage.value !== giftAny.assetType) {
+    if (storage.value !== assetType) {
       throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `storage.value ${storage.value}`,
-        be_compare_prop: `assetType ${giftAny.assetType}`,
+        be_compare_prop: `assetType ${assetType}`,
         to_target: "storage",
         be_target: "giftAsset",
       });
+    }
+
+    if (numberOfEffectiveBlocks !== undefined) {
+      if (this.baseHelper.isPositiveInteger(numberOfEffectiveBlocks) === false) {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+          prop: `numberOfEffectiveBlocks ${numberOfEffectiveBlocks}`,
+          target: "giftAsset",
+        });
+      }
+      if (numberOfEffectiveBlocks + body.applyBlockHeight < body.effectiveBlockHeight) {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GTE_FIELD, {
+          prop: `numberOfEffectiveBlocks ${numberOfEffectiveBlocks}`,
+          target: "giftAsset",
+          field: body.effectiveBlockHeight - body.applyBlockHeight,
+        });
+      }
     }
 
     this.checkTransactionFee(body.fee, giftAny.totalGrabableTimes, config);
@@ -234,7 +253,7 @@ export class GiftAnyTransactionFactory extends GiftTransactionFactory<GiftAnyTra
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
       const { chainAssetInfoHelper } = this;
-      const { senderId, senderPublicKeyBuffer, signature, asset } = transaction;
+      const { senderId, senderPublicKeyBuffer, applyBlockHeight, signature, asset } = transaction;
       const {
         taxInformation,
         amount,
@@ -243,12 +262,15 @@ export class GiftAnyTransactionFactory extends GiftTransactionFactory<GiftAnyTra
         sourceChainMagic,
         sourceChainName,
         totalGrabableTimes,
+        numberOfEffectiveBlocks,
       } = asset.giftAny;
 
       const minEffectiveHeight =
         this.transactionHelper.getTransactionMinEffectiveHeight(transaction);
-      const maxEffectiveHeight =
-        this.transactionHelper.getTransactionMaxEffectiveHeight(transaction);
+      let maxEffectiveHeight = this.transactionHelper.getTransactionMaxEffectiveHeight(transaction);
+      if (numberOfEffectiveBlocks !== undefined) {
+        maxEffectiveHeight = applyBlockHeight + numberOfEffectiveBlocks;
+      }
 
       if (parentAssetType === PARENT_ASSET_TYPE.ASSETS) {
         const assetInfo = chainAssetInfoHelper.getAssetInfo(
@@ -349,10 +371,8 @@ export class GiftAnyTransactionFactory extends GiftTransactionFactory<GiftAnyTra
               assetInfo: chainAssetInfo,
               amount: `-${taxAssetPrealnum}`,
               sourceAmount: taxAssetPrealnum,
-              maxEffectiveHeight:
-                this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
-              minEffectiveHeight:
-                this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
+              maxEffectiveHeight,
+              minEffectiveHeight,
               frozenId: signature,
               frozenReason: FROZEN_REASON.GIFT,
             },

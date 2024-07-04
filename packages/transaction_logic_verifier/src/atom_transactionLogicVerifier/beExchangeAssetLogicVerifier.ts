@@ -31,11 +31,14 @@ export class BeExchangeAssetLogicVerifier extends TransactionLogicVerifier {
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
     const beExchangeAssetAsset = transaction.asset.beExchangeAsset;
-    const { transactionSignature } = beExchangeAssetAsset;
+    const { transactionSignature, exchangeAsset } = beExchangeAssetAsset;
     const toExchangeAssetTransactionJson =
       await this.transactionGetterHelper.getTransactionBySignature(
         transactionSignature,
-        this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
+        this.transactionHelper.calcTransactionQueryRange(
+          currentBlockHeight,
+          exchangeAsset.numberOfEffectiveBlocks,
+        ),
       );
     if (!toExchangeAssetTransactionJson) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST_OR_EXPIRED, {
@@ -109,7 +112,8 @@ export class BeExchangeAssetLogicVerifier extends TransactionLogicVerifier {
       trsAsset.beExchangeChainName !== exchangeAsset.beExchangeChainName ||
       trsAsset.toExchangeAsset !== exchangeAsset.toExchangeAsset ||
       trsAsset.beExchangeAsset !== exchangeAsset.beExchangeAsset ||
-      trsAsset.toExchangeNumber !== exchangeAsset.toExchangeNumber
+      trsAsset.toExchangeNumber !== exchangeAsset.toExchangeNumber ||
+      trsAsset.numberOfEffectiveBlocks !== exchangeAsset.numberOfEffectiveBlocks
     ) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `trsAsset: ${JSON.stringify(trsAsset)}`,

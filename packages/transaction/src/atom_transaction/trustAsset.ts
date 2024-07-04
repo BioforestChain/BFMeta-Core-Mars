@@ -106,7 +106,7 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
 
     await this.verifyTrustAsset(trustAsset, senderId, recipientId);
 
-    const trustees = trustAsset.trustees;
+    const { trustees, numberOfEffectiveBlocks } = trustAsset;
 
     if (!trustees.includes(senderId)) {
       throw new ArgumentIllegalException(ERROR_LIST.SHOULD_INCLUDE, {
@@ -124,6 +124,22 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
         ...Function_Exception_Detail,
         target: "trustAsset",
       });
+    }
+
+    if (numberOfEffectiveBlocks !== undefined) {
+      if (this.baseHelper.isPositiveInteger(numberOfEffectiveBlocks) === false) {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+          prop: `numberOfEffectiveBlocks ${numberOfEffectiveBlocks}`,
+          target: "trustAsset",
+        });
+      }
+      if (numberOfEffectiveBlocks + body.applyBlockHeight < body.effectiveBlockHeight) {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GTE_FIELD, {
+          prop: `numberOfEffectiveBlocks ${numberOfEffectiveBlocks}`,
+          target: "trustAsset",
+          field: body.effectiveBlockHeight - body.applyBlockHeight,
+        });
+      }
     }
 
     if (storage.value !== trustAsset.assetType) {
@@ -265,8 +281,18 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
   ) {
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
-      const { amount, assetType, sourceChainMagic, sourceChainName, numberOfSignFor } =
-        transaction.asset.trustAsset;
+      const {
+        amount,
+        assetType,
+        sourceChainMagic,
+        sourceChainName,
+        numberOfSignFor,
+        numberOfEffectiveBlocks,
+      } = transaction.asset.trustAsset;
+      let maxEffectiveHeight = this.transactionHelper.getTransactionMaxEffectiveHeight(transaction);
+      if (numberOfEffectiveBlocks !== undefined) {
+        maxEffectiveHeight = transaction.applyBlockHeight + numberOfEffectiveBlocks;
+      }
       const assetInfo = this.chainAssetInfoHelper.getAssetInfo(
         sourceChainName,
         sourceChainMagic,
@@ -282,7 +308,7 @@ export class TrustAssetTransactionFactory extends TransactionFactory<TrustAssetT
           assetInfo,
           amount: `-${amount}`,
           sourceAmount: amount,
-          maxEffectiveHeight: this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
+          maxEffectiveHeight,
           minEffectiveHeight: this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
           totalUnfrozenTimes: numberOfSignFor,
           frozenId: transaction.signature,

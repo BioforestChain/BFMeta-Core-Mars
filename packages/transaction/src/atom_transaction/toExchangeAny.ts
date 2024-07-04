@@ -94,6 +94,17 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
         ...Function_Exception_Detail,
       });
     }
+
+    const { numberOfEffectiveBlocks } = toExchangeAny;
+    if (numberOfEffectiveBlocks !== undefined) {
+      if (numberOfEffectiveBlocks + body.applyBlockHeight < body.effectiveBlockHeight) {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GTE_FIELD, {
+          prop: "toExchangeAny.numberOfEffectiveBlocks",
+          ...Function_Exception_Detail,
+          field: body.effectiveBlockHeight - body.applyBlockHeight,
+        });
+      }
+    }
   }
 
   /**
@@ -198,7 +209,18 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
       beExchangeAssetPrealnum,
       assetExchangeWeightRatio,
       taxInformation,
+      numberOfEffectiveBlocks,
     } = toExchangeAny;
+
+    if (
+      numberOfEffectiveBlocks !== undefined &&
+      baseHelper.isPositiveInteger(numberOfEffectiveBlocks) === false
+    ) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+        prop: "numberOfEffectiveBlocks",
+        ...ToExchangeAnyAsset_Exception_Detail,
+      });
+    }
 
     if (!toExchangeAssetPrealnum) {
       throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_REQUIRE, {
@@ -358,7 +380,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
   ) {
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
-      const { senderId, senderPublicKeyBuffer, signature } = transaction;
+      const { senderId, senderPublicKeyBuffer, applyBlockHeight, signature } = transaction;
       const {
         toExchangeChainName,
         toExchangeSource,
@@ -366,7 +388,12 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
         toExchangeAssetType,
         toExchangeAssetPrealnum,
         taxInformation,
+        numberOfEffectiveBlocks,
       } = transaction.asset.toExchangeAny;
+      let maxEffectiveHeight = this.transactionHelper.getTransactionMaxEffectiveHeight(transaction);
+      if (numberOfEffectiveBlocks !== undefined) {
+        maxEffectiveHeight = applyBlockHeight + numberOfEffectiveBlocks;
+      }
 
       if (toExchangeParentAssetType === PARENT_ASSET_TYPE.ASSETS) {
         const toAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
@@ -384,8 +411,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
             assetInfo: toAssetInfo,
             amount: `-${toExchangeAssetPrealnum}`,
             sourceAmount: toExchangeAssetPrealnum,
-            maxEffectiveHeight:
-              this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
+            maxEffectiveHeight,
             minEffectiveHeight:
               this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
             frozenId: signature,
@@ -404,8 +430,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
             dappid: toExchangeAssetType,
             minEffectiveHeight:
               this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
-            maxEffectiveHeight:
-              this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
+            maxEffectiveHeight,
             status: ASSET_STATUS.FROZEN,
             frozenId: signature,
           },
@@ -422,8 +447,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
             name: toExchangeAssetType,
             minEffectiveHeight:
               this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
-            maxEffectiveHeight:
-              this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
+            maxEffectiveHeight,
             status: ASSET_STATUS.FROZEN,
             frozenId: signature,
           },
@@ -440,8 +464,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
             entityId: toExchangeAssetType,
             minEffectiveHeight:
               this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
-            maxEffectiveHeight:
-              this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
+            maxEffectiveHeight,
             status: ASSET_STATUS.FROZEN,
             frozenId: signature,
           },
@@ -475,8 +498,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
                 assetInfo: chainAssetInfo,
                 amount: `-${taxAssetPrealnum}`,
                 sourceAmount: taxAssetPrealnum,
-                maxEffectiveHeight:
-                  this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
+                maxEffectiveHeight,
                 minEffectiveHeight:
                   this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
                 frozenId: signature,
@@ -497,8 +519,7 @@ export class ToExchangeAnyTransactionFactory extends TransactionFactory<ToExchan
             certificateId: toExchangeAssetType,
             minEffectiveHeight:
               this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
-            maxEffectiveHeight:
-              this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
+            maxEffectiveHeight,
             status: ASSET_STATUS.FROZEN,
             frozenId: signature,
           },

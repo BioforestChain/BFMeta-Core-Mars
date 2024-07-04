@@ -196,7 +196,7 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
       trustRecipientId,
     );
 
-    const { trustees } = trustAsset;
+    const { trustees, numberOfEffectiveBlocks } = trustAsset;
 
     const tempTrustees = [...new Set([...trustees, trustSenderId, trustRecipientId])];
 
@@ -204,6 +204,15 @@ export class SignForAssetTransactionFactory extends TransactionFactory<SignForAs
       throw new ArgumentIllegalException(ERROR_LIST.PERMISSION_DENIED, {
         operationName: `sign for asset ${transactionSignature}`,
         ...SignForAssetAsset_Exception_Detail,
+      });
+    }
+    if (
+      numberOfEffectiveBlocks !== undefined &&
+      baseHelper.isPositiveInteger(numberOfEffectiveBlocks) === false
+    ) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+        prop: `numberOfEffectiveBlocks ${numberOfEffectiveBlocks}`,
+        target: "signForAssetAsset.trustAsset",
       });
     }
   }

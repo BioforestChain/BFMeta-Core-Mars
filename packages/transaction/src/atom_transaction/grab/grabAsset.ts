@@ -161,7 +161,7 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
      */
     this.__giftAssetTransactionFactory.verifyGiftAsset(giftAsset);
 
-    const { cipherPublicKeys } = giftAsset;
+    const { cipherPublicKeys, numberOfEffectiveBlocks } = giftAsset;
     /**如果是公钥模式，那么必须存在密文 */
     if (cipherPublicKeys.length > 0) {
       if (!ciphertextSignature) {
@@ -213,6 +213,15 @@ export class GrabAssetTransactionFactory extends TransactionFactory<GrabAssetTra
           ...GrabAssetAsset_Exception_Detail,
         });
       }
+    }
+    if (
+      numberOfEffectiveBlocks !== undefined &&
+      baseHelper.isPositiveInteger(numberOfEffectiveBlocks) === false
+    ) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+        prop: `numberOfEffectiveBlocks ${numberOfEffectiveBlocks}`,
+        target: "grabAsset.giftAsset",
+      });
     }
   }
 

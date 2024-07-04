@@ -35,11 +35,14 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
     this.__checkTrsFee(transaction);
 
     const beExchangeAnyMulti = transaction.asset.beExchangeAnyMulti;
-    const { transactionSignature } = beExchangeAnyMulti;
+    const { transactionSignature, numberOfEffectiveBlocks } = beExchangeAnyMulti;
     const toExchangeAnyMultiTransactionJson =
       (await this.transactionGetterHelper.getTransactionBySignature(
         transactionSignature,
-        this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
+        this.transactionHelper.calcTransactionQueryRange(
+          currentBlockHeight,
+          numberOfEffectiveBlocks,
+        ),
       )) as BFChainCore.ToExchangeAnyMultiTransactionJSON | undefined;
     if (!toExchangeAnyMultiTransactionJson) {
       throw new NoFoundException(ERROR_LIST.NOT_EXIST_OR_EXPIRED, {
@@ -98,11 +101,13 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
       toExchangeAssets: prevToExchangeAssets,
       beExchangeAsset: prevBeExchangeAsset,
       cipherPublicKeys,
+      numberOfEffectiveBlocks: prevNumberOfEffectiveBlocks,
     } = toExchangeAnyMultiTransaction.asset.toExchangeAnyMulti;
     const {
       toExchangeAssets: nextToExchangeAssets,
       beExchangeAsset: nextBeExchangeAsset,
       ciphertextSignature,
+      numberOfEffectiveBlocks: nextNumberOfEffectiveBlocks,
     } = transaction.asset.beExchangeAnyMulti;
 
     const prevAssets: {
@@ -260,7 +265,8 @@ export class BeExchangeAnyMultiLogicVerifier extends TransactionLogicVerifier {
       prevBeExchangeAsset.beExchangeChainName !== nextBeExchangeAsset.beExchangeChainName ||
       prevBeExchangeAsset.beExchangeParentAssetType !==
         nextBeExchangeAsset.beExchangeParentAssetType ||
-      prevBeExchangeAsset.beExchangeAssetType !== nextBeExchangeAsset.beExchangeAssetType
+      prevBeExchangeAsset.beExchangeAssetType !== nextBeExchangeAsset.beExchangeAssetType ||
+      prevNumberOfEffectiveBlocks !== nextNumberOfEffectiveBlocks
     ) {
       throw new ConsensusException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `beExchangeAsset: ${JSON.stringify(prevBeExchangeAsset)}`,

@@ -120,6 +120,9 @@ export class ToExchangeAnyMultiAllModel
   /**收税信息 */
   @Field.d(ToExchangeAnyMultiAllModel.INC++, BeExchangeAssetV2Model, "repeated")
   beExchangeAssets!: BeExchangeAssetV2Model[];
+  /**有效区块数 */
+  @Field.d(ToExchangeAnyMultiAllModel.INC++, "uint32", "optional")
+  numberOfEffectiveBlocks?: number;
 
   @cacheGetter
   get to() {
@@ -134,6 +137,8 @@ export class ToExchangeAnyMultiAllModel
       toExchangeAssets: this.toExchangeAssets.map((item) => item.toJSON()),
       beExchangeAssets: this.beExchangeAssets.map((item) => item.toJSON()),
     };
+    this.numberOfEffectiveBlocks !== undefined &&
+      (res.numberOfEffectiveBlocks = this.numberOfEffectiveBlocks);
 
     return res;
   }

@@ -36,7 +36,10 @@ export class GiftAssetTransactionFactory extends GiftTransactionFactory<GiftAsse
 
     this.verifyGiftAsset(giftAsset, config);
 
-    if (giftAsset.giftDistributionRule === GIFT_DISTRIBUTION_RULE.RECIPIENT_RANDOM) {
+    const { giftDistributionRule, beginUnfrozenBlockHeight, assetType, numberOfEffectiveBlocks } =
+      giftAsset;
+
+    if (giftDistributionRule === GIFT_DISTRIBUTION_RULE.RECIPIENT_RANDOM) {
       if (body.rangeType !== RANGE_TYPE.MULTI_ADDRESS) {
         throw new ArgumentIllegalException(ERROR_LIST.SHOULD_BE, {
           to_compare_prop: `rangeType ${body.rangeType}`,
@@ -46,23 +49,39 @@ export class GiftAssetTransactionFactory extends GiftTransactionFactory<GiftAsse
       }
     }
 
-    if (giftAsset.beginUnfrozenBlockHeight) {
-      if (giftAsset.beginUnfrozenBlockHeight >= body.effectiveBlockHeight) {
+    if (beginUnfrozenBlockHeight) {
+      if (beginUnfrozenBlockHeight >= body.effectiveBlockHeight) {
         throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_LT_FIELD, {
-          prop: `beginUnfrozenBlockHeight ${giftAsset.beginUnfrozenBlockHeight}`,
+          prop: `beginUnfrozenBlockHeight ${beginUnfrozenBlockHeight}`,
           field: body.effectiveBlockHeight,
           target: "giftAsset",
         });
       }
     }
 
-    if (storage.value !== giftAsset.assetType) {
+    if (storage.value !== assetType) {
       throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
         to_compare_prop: `storage.value ${storage.value}`,
-        be_compare_prop: `assetType ${giftAsset.assetType}`,
+        be_compare_prop: `assetType ${assetType}`,
         to_target: "storage",
         be_target: "giftAsset",
       });
+    }
+
+    if (numberOfEffectiveBlocks !== undefined) {
+      if (this.baseHelper.isPositiveInteger(numberOfEffectiveBlocks) === false) {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+          prop: `numberOfEffectiveBlocks ${numberOfEffectiveBlocks}`,
+          target: "giftAsset",
+        });
+      }
+      if (numberOfEffectiveBlocks + body.applyBlockHeight < body.effectiveBlockHeight) {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GTE_FIELD, {
+          prop: `numberOfEffectiveBlocks ${numberOfEffectiveBlocks}`,
+          target: "giftAsset",
+          field: body.effectiveBlockHeight - body.applyBlockHeight,
+        });
+      }
     }
 
     this.checkTransactionFee(body.fee, giftAsset.totalGrabableTimes, config);
@@ -189,8 +208,14 @@ export class GiftAssetTransactionFactory extends GiftTransactionFactory<GiftAsse
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
       const { chainAssetInfoHelper } = this;
-      const { amount, assetType, sourceChainMagic, sourceChainName, totalGrabableTimes } =
-        transaction.asset.giftAsset;
+      const {
+        amount,
+        assetType,
+        sourceChainMagic,
+        sourceChainName,
+        totalGrabableTimes,
+        numberOfEffectiveBlocks,
+      } = transaction.asset.giftAsset;
       const assetInfo = chainAssetInfoHelper.getAssetInfo(
         sourceChainName,
         sourceChainMagic,
@@ -198,8 +223,10 @@ export class GiftAssetTransactionFactory extends GiftTransactionFactory<GiftAsse
       );
       const minEffectiveHeight =
         this.transactionHelper.getTransactionMinEffectiveHeight(transaction);
-      const maxEffectiveHeight =
-        this.transactionHelper.getTransactionMaxEffectiveHeight(transaction);
+      let maxEffectiveHeight = this.transactionHelper.getTransactionMaxEffectiveHeight(transaction);
+      if (numberOfEffectiveBlocks !== undefined) {
+        maxEffectiveHeight = transaction.applyBlockHeight + numberOfEffectiveBlocks;
+      }
 
       // 冻结资产
       taskList.next = eventEmitter.emit("frozenAsset", {

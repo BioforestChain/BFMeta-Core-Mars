@@ -83,6 +83,22 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<ToExch
         target: "toExchangeAsset",
       });
     }
+    const { numberOfEffectiveBlocks } = toExchangeAsset;
+    if (numberOfEffectiveBlocks !== undefined) {
+      if (this.baseHelper.isPositiveInteger(numberOfEffectiveBlocks) === false) {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+          prop: `numberOfEffectiveBlocks ${numberOfEffectiveBlocks}`,
+          target: "toExchangeAsset",
+        });
+      }
+      if (numberOfEffectiveBlocks + body.applyBlockHeight < body.effectiveBlockHeight) {
+        throw new ArgumentIllegalException(ERROR_LIST.PROP_SHOULD_GTE_FIELD, {
+          prop: `numberOfEffectiveBlocks ${numberOfEffectiveBlocks}`,
+          target: "toExchangeAsset",
+          field: body.effectiveBlockHeight - body.applyBlockHeight,
+        });
+      }
+    }
 
     if (body.storage) {
       throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
@@ -235,8 +251,18 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<ToExch
   ) {
     return wrapTaskList((taskList) => {
       taskList.next = super.applyTransaction(transaction, eventEmitter, config);
-      const { toExchangeChainName, toExchangeSource, toExchangeAsset, toExchangeNumber } =
-        transaction.asset.toExchangeAsset;
+      const {
+        toExchangeChainName,
+        toExchangeSource,
+        toExchangeAsset,
+        toExchangeNumber,
+        numberOfEffectiveBlocks,
+      } = transaction.asset.toExchangeAsset;
+      let maxEffectiveHeight = this.transactionHelper.getTransactionMaxEffectiveHeight(transaction);
+      if (numberOfEffectiveBlocks !== undefined) {
+        maxEffectiveHeight = transaction.applyBlockHeight + numberOfEffectiveBlocks;
+      }
+
       const toAssetInfo = this.chainAssetInfoHelper.getAssetInfo(
         toExchangeChainName,
         toExchangeSource,
@@ -252,7 +278,7 @@ export class ToExchangeAssetTransactionFactory extends TransactionFactory<ToExch
           assetInfo: toAssetInfo,
           amount: `-${toExchangeNumber}`,
           sourceAmount: toExchangeNumber,
-          maxEffectiveHeight: this.transactionHelper.getTransactionMaxEffectiveHeight(transaction),
+          maxEffectiveHeight,
           minEffectiveHeight: this.transactionHelper.getTransactionMinEffectiveHeight(transaction),
           frozenId: transaction.signature,
           frozenReason: FROZEN_REASON.EXCHANGE,

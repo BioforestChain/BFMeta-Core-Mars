@@ -153,7 +153,7 @@ export class GrabAnyTransactionFactory extends TransactionFactory<GrabAnyTransac
         to_compare_prop: `storage.value ${storage.value}`,
         be_compare_prop: `transactionSignature ${transactionSignature}`,
         to_target: "storage",
-        be_target: "grabAsset",
+        be_target: "grabAny",
         ...Function_Exception_Detail,
       });
     }
@@ -167,7 +167,7 @@ export class GrabAnyTransactionFactory extends TransactionFactory<GrabAnyTransac
      */
     await this.__giftAnyTransactionFactory.verifyGiftAny(giftAny);
 
-    const { cipherPublicKeys } = giftAny;
+    const { cipherPublicKeys, numberOfEffectiveBlocks } = giftAny;
     /**如果是公钥模式，那么必须存在密文 */
     if (cipherPublicKeys.length > 0) {
       if (!ciphertextSignature) {
@@ -215,10 +215,19 @@ export class GrabAnyTransactionFactory extends TransactionFactory<GrabAnyTransac
       if (ciphertextSignature) {
         throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_EXIST, {
           prop: `ciphertextSignature ${ciphertextSignature}`,
-          type: "grabAsset",
+          type: "grabAny",
           ...GrabAnyAsset_Exception_Detail,
         });
       }
+    }
+    if (
+      numberOfEffectiveBlocks !== undefined &&
+      baseHelper.isPositiveInteger(numberOfEffectiveBlocks) === false
+    ) {
+      throw new ArgumentIllegalException(ERROR_LIST.PROP_IS_INVALID, {
+        prop: `numberOfEffectiveBlocks ${numberOfEffectiveBlocks}`,
+        target: "grabAny.giftAny",
+      });
     }
   }
 

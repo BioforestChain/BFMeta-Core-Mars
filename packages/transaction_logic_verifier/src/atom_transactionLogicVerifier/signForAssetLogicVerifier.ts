@@ -26,11 +26,14 @@ export class SignForAssetLogicVerifier extends TransactionLogicVerifier {
     skipListenEvent: boolean,
     eventEmitter: BFChainCore.ApplyTransactionEventEmitter,
   ) {
-    const { transactionSignature } = transaction.asset.signForAsset;
+    const { transactionSignature, trustAsset } = transaction.asset.signForAsset;
 
     const trustAssetTransactionJson = (await this.transactionGetterHelper.getTransactionBySignature(
       transactionSignature,
-      this.transactionHelper.calcTransactionQueryRange(currentBlockHeight),
+      this.transactionHelper.calcTransactionQueryRange(
+        currentBlockHeight,
+        trustAsset.numberOfEffectiveBlocks,
+      ),
     )) as BFChainCore.TrustAssetTransactionJSON;
     if (!trustAssetTransactionJson) {
       throw new ConsensusException(ERROR_LIST.NOT_EXIST_OR_EXPIRED, {

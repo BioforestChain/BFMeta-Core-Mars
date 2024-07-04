@@ -224,6 +224,8 @@ declare namespace BFChainCore {
     beginUnfrozenBlockHeight?: number;
     /**接收规则，只能为 0，1 或 2，0 表示平均分配，1 表示根据任意账户的地址的随机分配，2 表示根据接收者列表中账户地址的随机分配 */
     giftDistributionRule: BFChainCore.GIFT_DISTRIBUTION_RULE;
+    /**有效区块数 */
+    numberOfEffectiveBlocks?: number;
   }
   interface GiftAssetAssetJSON {
     /**权益赠送事件附带信息 */
@@ -265,6 +267,8 @@ declare namespace BFChainCore {
     assetType: string;
     /**见证的权益数量，0-9 组成并且不包含小数点，必须大于0 */
     amount: string;
+    /**有效区块数 */
+    numberOfEffectiveBlocks?: number;
   }
   interface TrustAssetAssetJSON {
     /**见证事件附带信息 */
@@ -307,6 +311,8 @@ declare namespace BFChainCore {
     toExchangeNumber: string;
     /**权益的交换比例 */
     exchangeRate: BFChainCore.RateJSON<string>;
+    /**有效区块数 */
+    numberOfEffectiveBlocks?: number;
   }
   interface ToExchangeAssetAssetJSON {
     /**发起权益交换事件附带信息 */
@@ -543,6 +549,8 @@ declare namespace BFChainCore {
     giftDistributionRule?: BFChainCore.GIFT_DISTRIBUTION_RULE;
     /**收税信息 */
     taxInformation?: BFChainCore.TaxInformationJson;
+    /**有效区块数 */
+    numberOfEffectiveBlocks?: number;
   }
   interface GiftAnyAssetJSON {
     /**任意资产赠送事件附带信息 */
@@ -605,6 +613,8 @@ declare namespace BFChainCore {
     assetExchangeWeightRatio?: AssetExchangeWeightRatioJSON;
     /**收税信息 */
     taxInformation?: BFChainCore.TaxInformationJson;
+    /**有效区块数 */
+    numberOfEffectiveBlocks?: number;
   }
   interface ToExchangeAnyAssetJSON {
     /**发起资产交换事件附带信息 */
@@ -667,6 +677,8 @@ declare namespace BFChainCore {
     toExchangeAssets: ToExchangeAssetV1JSON[];
     /**被交换的资产信息 */
     beExchangeAsset: BeExchangeAssetV1JSON;
+    /**有效区块数 */
+    numberOfEffectiveBlocks?: number;
   }
   interface ToExchangeAnyMultiAssetJSON {
     /**发起资产交换事件附带信息 */
@@ -682,6 +694,8 @@ declare namespace BFChainCore {
     toExchangeAssets: ToExchangeAssetV1JSON[];
     /**被交换的资产信息 */
     beExchangeAsset: BeExchangeAssetV1JSON;
+    /**有效区块数 */
+    numberOfEffectiveBlocks?: number;
   }
   interface BeExchangeAnyMultiAssetJSON {
     /**接收资产交换事件附带信息 */
@@ -723,6 +737,8 @@ declare namespace BFChainCore {
     toExchangeAssets: ToExchangeAssetV2JSON[];
     /**被交换的资产信息 */
     beExchangeAssets: BeExchangeAssetV2JSON[];
+    /**有效区块数 */
+    numberOfEffectiveBlocks?: number;
   }
   interface ToExchangeAnyMultiAllAssetJSON {
     /**发起批量全量任意资产交换事件附带信息 */
@@ -738,6 +754,8 @@ declare namespace BFChainCore {
     toExchangeAssets: ToExchangeAssetV2JSON[];
     /**被交换的资产信息 */
     beExchangeAssets: BeExchangeAssetV2JSON[];
+    /**有效区块数 */
+    numberOfEffectiveBlocks?: number;
   }
   interface BeExchangeAnyMultiAllAssetJSON {
     /**接收批量全量任意资产交换事件附带信息 */

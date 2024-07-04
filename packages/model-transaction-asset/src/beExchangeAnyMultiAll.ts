@@ -56,6 +56,9 @@ export class BeExchangeAnyMultiAllModel
   /**收税信息 */
   @Field.d(BeExchangeAnyMultiAllModel.INC++, BeExchangeAssetV2Model, "repeated")
   beExchangeAssets!: BeExchangeAssetV2Model[];
+  /**有效区块数 */
+  @Field.d(BeExchangeAnyMultiAllModel.INC++, "uint32", "optional")
+  numberOfEffectiveBlocks?: number;
 
   toJSON() {
     const res: BFChainCore.BeExchangeAnyMultiAllJSON = {
@@ -65,6 +68,8 @@ export class BeExchangeAnyMultiAllModel
     };
 
     this.ciphertextSignature && (res.ciphertextSignature = this.ciphertextSignature.toJSON());
+    this.numberOfEffectiveBlocks !== undefined &&
+      (res.numberOfEffectiveBlocks = this.numberOfEffectiveBlocks);
 
     return res;
   }
