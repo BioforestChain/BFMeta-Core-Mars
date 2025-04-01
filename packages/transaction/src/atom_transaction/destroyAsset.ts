@@ -154,14 +154,14 @@ export class DestroyAssetTransactionFactory extends TransactionFactory<DestroyAs
 
     this.checkAsset(assetType, "assetType", DestroyAssetAsset_Exception_Detail);
 
-    if (assetType === config.assetType) {
-      throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
-        to_compare_prop: "assetType",
-        to_target: "destroyAsset",
-        be_compare_prop: config.assetType,
-        ...DestroyAssetAsset_Exception_Detail,
-      });
-    }
+    // if (assetType === config.assetType) {
+    //   throw new ArgumentIllegalException(ERROR_LIST.SHOULD_NOT_BE, {
+    //     to_compare_prop: "assetType",
+    //     to_target: "destroyAsset",
+    //     be_compare_prop: config.assetType,
+    //     ...DestroyAssetAsset_Exception_Detail,
+    //   });
+    // }
 
     if (storage.value !== assetType) {
       throw new ArgumentIllegalException(ERROR_LIST.NOT_MATCH, {
