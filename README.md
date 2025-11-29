@@ -1,4 +1,5 @@
 # BFMeta-Core-Mars (English)
+For Chinese version please see [README-zh](README-zh.md).
 
 ## Overview
 TypeScript monorepo for BFMeta core chain logic (blocks, transactions, crypto, helpers) managed with Lerna + Yarn workspaces and bdk tooling. Provides reusable building blocks for nodes, SDKs, and tooling.

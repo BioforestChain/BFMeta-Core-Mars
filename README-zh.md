@@ -1,4 +1,5 @@
 # BFMeta-Core-Mars（中文）
+英文版请参见 [README](README.md)。
 
 ## 简介
 BFMeta 核心链逻辑的 TypeScript monorepo，涵盖区块、交易、密码学与辅助工具。采用 Lerna + Yarn workspaces 与 bdk 工具链，面向节点、SDK、工具复用。
