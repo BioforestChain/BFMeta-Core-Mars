@@ -1,7 +1,23 @@
-1. 改文件夹的名字
-   `_`分割级别,`-`辅助语义
-1. 树立依赖关系,在 tsconfig 中书写兄弟项目的依赖,在 package.json 中书写其它项目的依赖
-1. 执行 `bdk-mono` 梳理 package.json 与 tsconfig.json 的内容
-1. 执行 `yarn lsts` 梳理 tsconfig.json
-1. 执行 `yarn dev` 进行开发修复，这里确保`build`文件夹生成成功，使得模块可用
-1. 进行下一个模块之前，执行`yarn[ install]`，确保模块出现在顶层的`node_modules`里
+# BFMeta-Core-Mars (English)
+
+## Overview
+TypeScript monorepo for BFMeta core chain logic (blocks, transactions, crypto, helpers) managed with Lerna + Yarn workspaces and bdk tooling. Provides reusable building blocks for nodes, SDKs, and tooling.
+
+## Architecture
+- `packages/model-*` / `transaction*`: block & transaction models, serialization, validation pipelines.
+- `packages/crypto*`, `helper-*`, `util-*`: key/signature utilities, time/config/migration helpers.
+- `packages/core`, `transaction_logic_verifier`: core verification/forging composition layer.
+- `scripts/`: cleanup, publishing, and tsconfig generation (`bdk-mono`, `bdk-tsc`).
+
+## Getting Started
+1) `yarn install`
+2) Sync tsconfig: `yarn mono && yarn lsts`
+3) Dev build: `yarn dev` or `yarn dev:all`
+4) Prod build: `yarn rebuild`
+
+## Contribution Guide
+- Node 16+; Yarn only. Keep TS strict, avoid `any` / `@ts-ignore`.
+- SRP/DRY: place shared logic in `helper-*`/`util-*`; evaluate reuse before creating new packages.
+- Document API/type changes with comments or examples; leave contextual `TODO`/`FIXME` for known gaps.
+- Run `yarn build` (or targeted `bdk-tsc --build`) before committing to ensure `build/` artifacts.
+- Branches: `feature/<scope>`, `fix/<issue>`; concise verb-based commits.
